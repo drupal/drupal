@@ -1,5 +1,5 @@
 <?php
-// $Id: chameleon.theme,v 1.6 2004/01/14 22:30:09 dries Exp $
+// $Id: chameleon.theme,v 1.7 2004/01/26 19:05:21 dries Exp $
 
 function chameleon_help($section) {
 
@@ -32,7 +32,13 @@ function chameleon_settings() {
   return $output;
 }
 
-function chameleon_header($title = "") {
+function chameleon_page($content, $title = NULL, $breadcrumb = NULL) {
+  if (isset($title)) {
+    drupal_set_title($title);
+  }
+  if (isset($breadcrumb)) {
+    drupal_set_breadcrumb($breadcrumb);
+  }
 
   $output  = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n";
   $output .= "<html xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"en\" xml:lang=\"en\">\n";
@@ -69,6 +75,22 @@ function chameleon_header($title = "") {
     list($message, $type) = $message;
     $output .= "<strong>". t("Status") ."</strong>: $message<hr />";
   }
+
+  $output .= "\n<!-- begin content -->\n";
+  $output .= $content;
+  $output .= "\n<!-- end content -->\n";
+
+  $output  .= "   </td>\n";
+
+  if ($blocks = theme_blocks("right")) {
+    $output .= "   <td id=\"sidebar-right\">$blocks</td>\n";
+  }
+
+  $output .= "  </tr>\n";
+  $output .= " </table>\n";
+  $output .=  theme_closure();
+  $output .= " </body>\n";
+  $output .= "</html>\n";
 
   return $output;
 }
@@ -121,20 +143,4 @@ function chameleon_comment($comment, $link = "") {
   return $output;
 }
 
-function chameleon_footer() {
-
-  $output  = "   </td>\n";
-
-  if ($blocks = theme_blocks("right")) {
-    $output .= "   <td id=\"sidebar-right\">$blocks</td>\n";
-  }
-
-  $output .= "  </tr>\n";
-  $output .= " </table>\n";
-  $output .=  theme_closure();
-  $output .= " </body>\n";
-  $output .= "</html>\n";
-
-  return $output;
-}
 ?>

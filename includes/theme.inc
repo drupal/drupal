@@ -1,5 +1,5 @@
 <?php
-/* $Id: theme.inc,v 1.181 2004/01/14 22:30:08 dries Exp $ */
+/* $Id: theme.inc,v 1.182 2004/01/26 19:05:20 dries Exp $ */
 
 /**
  * @file
@@ -117,22 +117,26 @@ function path_to_theme() {
   return dirname($themes[$theme]->filename);
 }
 
-/**
- * @defgroup themeable Themeable functions
- * @{
- *
- * Themeable functions - functions that can be styled differently in themes.
- *
- * @see theme
- * @see theme.inc
- */
 
 /**
- * Returns the theme header.
+ * Returns an entire Drupal page displaying the supplied content.
  *
- * @return a string containing the @a header output.
+ * @param $content a string containing the content to display
+ * @param $title (optional) page title (\<head>\<title>)
+ * @param $breadcrumb (optional) page breadcrumb
+ *
+ * @see drupal_breadcrumb
+ *
+ * @return a string containing the @a page output.
  */
-function theme_header() {
+function theme_page($content, $title = NULL, $breadcrumb = NULL) {
+  if (isset($title)) {
+    drupal_set_title($title);
+  }
+  if (isset($breadcrumb)) {
+    drupal_set_breadcrumb($breadcrumb);
+  }
+
   $output = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
   $output .= "<html xmlns=\"http://www.w3.org/1999/xhtml\">";
   $output .= "<head>";
@@ -156,31 +160,13 @@ function theme_header() {
     $output .= "<small>$help</small><hr />";
   }
 
-  return $output;
-}
-
-/**
- * Returns an entire Drupal page displaying the supplied content.
- *
- * @param $content a string containing the content to display
- * @param $title (optional) page title (\<head>\<title>)
- * @param $breadcrumb (optional) page breadcrumb
- *
- * @see drupal_breadcrumb
- *
- * @return a string containing the @a page output.
- */
-function theme_page($content, $title = NULL, $breadcrumb = NULL) {
-  if (isset($title)) {
-    drupal_set_title($title);
-  }
-  if (isset($breadcrumb)) {
-    drupal_set_breadcrumb($breadcrumb);
-  }
-
-  $output = theme("header");
+  $output .= "\n<!-- begin content -->\n";
   $output .= $content;
-  $output .= theme("footer");
+  $output .= "\n<!-- end content -->\n";
+
+  $output .= "</td></tr></table>";
+  $output .= theme_closure();
+  $output .= "</body></html>";
 
   return $output;
 }
@@ -391,18 +377,6 @@ function theme_block($block) {
   $output .= " <h2 class=\"title\">$block->subject</h2>\n";
   $output .= " <div class=\"content\">$block->content</div>\n";
   $output .= "</div>\n";
-  return $output;
-}
-
-/**
- * Returns themed page footer.
- *
- * @return a string containing the @a footer output.
- */
-function theme_footer() {
-  $output = "</td></tr></table>";
-  $output .= theme_closure();
-  $output .= "</body></html>";
   return $output;
 }
 

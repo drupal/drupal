@@ -1,5 +1,5 @@
 <?php
-// $Id: xtemplate.theme,v 1.46 2004/01/14 22:30:09 dries Exp $
+// $Id: xtemplate.theme,v 1.47 2004/01/26 19:05:21 dries Exp $
 
 if (!class_exists("XTemplate")) {
   include_once("themes/xtemplate/xtemplate.inc");
@@ -86,7 +86,14 @@ function xtemplate_comment($comment, $links = 0) {
   return $output;
 }
 
-function xtemplate_header() {
+function xtemplate_page($content, $title = NULL, $breadcrumb = NULL) {
+  if (isset($title)) {
+    drupal_set_title($title);
+  }
+  if (isset($breadcrumb)) {
+    drupal_set_breadcrumb($breadcrumb);
+  }
+
   global $xtemplate;
 
   $xtemplate->template->assign(array(
@@ -140,8 +147,29 @@ function xtemplate_header() {
   }
 
   $xtemplate->template->parse("header");
-  return $xtemplate->template->text("header");
+  $output = $xtemplate->template->text("header");
 
+  $output .= "\n<!-- begin content -->\n";
+  $output .= $content;
+  $output .= "\n<!-- end content -->\n";
+
+  if ($blocks = theme("blocks", "right")) {
+    $xtemplate->template->assign("blocks", $blocks);
+    $xtemplate->template->parse("footer.blocks");
+  }
+
+  // only parse the footer block if site_footer is set
+  if ($footer_message = variable_get("site_footer", FALSE)) {
+    $xtemplate->template->assign("footer_message", $footer_message);
+    $xtemplate->template->parse("footer.message");
+  }
+
+  $xtemplate->template->assign("footer", theme_closure());
+  $xtemplate->template->parse("footer");
+
+  $output .= $xtemplate->template->text("footer");
+
+  return $output;
 }
 
 function xtemplate_block(&$block) {
@@ -168,26 +196,6 @@ function xtemplate_box($title, $content, $region = "main") {
   $output = $xtemplate->template->text("box");
   $xtemplate->template->reset("box");
   return $output;
-}
-
-function xtemplate_footer() {
-  global $xtemplate;
-
-  if ($blocks = theme("blocks", "right")) {
-    $xtemplate->template->assign("blocks", $blocks);
-    $xtemplate->template->parse("footer.blocks");
-  }
-
-  // only parse the footer block if site_footer is set
-  if ($footer_message = variable_get("site_footer", FALSE)) {
-    $xtemplate->template->assign("footer_message", $footer_message);
-    $xtemplate->template->parse("footer.message");
-  }
-
-  $xtemplate->template->assign("footer", theme_closure());
-  $xtemplate->template->parse("footer");
-
-  return $xtemplate->template->text("footer");
 }
 
 ?>
