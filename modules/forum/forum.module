@@ -386,7 +386,7 @@ function _forum_num_replies($term) {
 }
 
 function _forum_topics_read($uid) {
-  $result = db_query("SELECT tid, count(*) AS c FROM history h, term_node r, node n WHERE r.nid = h.nid AND n.nid = h.nid AND n.type = 'forum' AND n.status = 1 AND h.uid = '%d' GROUP BY tid", $uid);
+  $result = db_query("SELECT tid, count(*) AS c FROM history h, term_node r, node n, forum f WHERE f.nid = r.nid AND r.nid = h.nid AND n.nid = h.nid AND f.shadow = 0 AND n.type = 'forum' AND n.status = 1 AND h.uid = '%d' GROUP BY tid", $uid);
 
   while ($obj = db_fetch_object($result)) {
     $topics_read[$obj->tid] = $obj->c;
