@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.189 2003/04/03 22:18:27 dries Exp $
+// $Id: common.inc,v 1.190 2003/04/13 13:42:41 dries Exp $
 
 function conf_init() {
   global $HTTP_HOST, $PHP_SELF;
@@ -261,7 +261,7 @@ function table($header, $rows) {
  *
  * @param $mail  a email address
  */
-function validate_email_address($mail) {
+function valid_email_address($mail) {
   $user = '[a-zA-Z0-9_\-\.\+\^!#\$%&*+\/\=\?\`\|\{\}~\']+';
   $domain = '(?:[a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9]\.?)+';
   $ipv4 = '[0-9]{1,3}(\.[0-9]{1,3}){3}';
@@ -765,6 +765,10 @@ function form($form, $method = "post", $action = 0, $options = 0) {
 
 function form_item($title, $value, $description = 0) {
   return "<p>". ($title ? "<b>$title:</b><br />" : "") . $value . ($description ? "<br /><small><i>$description</i></small>" : "") ."</p>\n";
+}
+
+function form_radio($title, $name, $value = 1, $checked = 0, $description = 0) {
+  return form_item(0, "<input type=\"radio\" name=\"edit[$name]\" value=\"". $value ."\"". ($checked ? " checked=\"checked\"" : "") ." /> $title", $description);
 }
 
 function form_checkbox($title, $name, $value = 1, $checked = 0, $description = 0) {
