@@ -596,11 +596,12 @@ function valid_email_address($mail) {
  *   TRUE if the URL is in a valid format.
  */
 function valid_url($url, $absolute = FALSE) {
+  $allowed_characters = '[a-z0-9\/:_\-_\.\?\$,~=#&%\+]';
   if ($absolute) {
-    return preg_match("/^(http|https|ftp):\/\/[a-z0-9\/:_\-_\.\?,~=#&%\+]+$/i", $url);
+    return preg_match("/^(http|https|ftp):\/\/". $allowed_characters ."+$/i", $url);
   }
   else {
-    return preg_match("/^[a-z0-9\/:_\-_\.,\+]+$/i", $url);
+    return preg_match("/^". $allowed_characters ."+$/i", $url);
   }
 }
 
