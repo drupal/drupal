@@ -171,7 +171,7 @@ function poll_insert($node) {
     $node->active = 1;
   }
 
-  db_query("INSERT INTO {poll} (nid, runtime, voters, active) VALUES (%d, %d, '', %d)", $node->nid, $node->runtime, $node->active);
+  db_query("INSERT INTO {poll} (nid, runtime, polled, active) VALUES (%d, %d, '', %d)", $node->nid, $node->runtime, $node->active);
 
   foreach ($node->choice as $choice) {
     if ($choice['chtext'] != '') {
@@ -239,7 +239,7 @@ function poll_uid() {
  */
 function poll_load($node) {
   // Load the appropriate choices into the $node object
-  $poll = db_fetch_object(db_query("SELECT runtime, voters, active FROM {poll} WHERE nid = %d", $node->nid));
+  $poll = db_fetch_object(db_query("SELECT runtime, polled, active FROM {poll} WHERE nid = %d", $node->nid));
 
   $result = db_query("SELECT chtext, chvotes, chorder FROM {poll_choices} WHERE nid=%d ORDER BY chorder", $node->nid);
   while ($choice = db_fetch_array($result)) {
@@ -249,7 +249,7 @@ function poll_load($node) {
   // Determine whether or not this user is allowed to vote
   $poll->allowvotes = false;
   if (user_access('vote on polls')) {
-    if (!strstr($poll->voters, poll_uid())) {
+    if (!strstr($poll->polled, poll_uid())) {
       $poll->allowvotes = $poll->active;
     }
   }
@@ -381,8 +381,8 @@ function poll_vote(&$node) {
     if (isset($choice) && isset($node->choice[$choice])) {
       if ($node->allowvotes) {
         $id = poll_uid();
-        $node->voters = $node->voters ? ($node->voters .' '. $id) : $id;
-        db_query("UPDATE {poll} SET voters='%s' WHERE nid = %d", $node->voters, $node->nid);
+        $node->polled = $node->polled ? ($node->polled .' '. $id) : $id;
+        db_query("UPDATE {poll} SET polled='%s' WHERE nid = %d", $node->polled, $node->nid);
         db_query("UPDATE {poll_choices} SET chvotes = chvotes + 1 WHERE nid = %d AND chorder = %d", $node->nid, $choice);
         $node->allowvotes = false;
         $node->choice[$choice]['chvotes']++;
