@@ -26,7 +26,7 @@ function block_link($type) {
 
 function block_admin_save($edit) {
   foreach ($edit as $key=>$value) {
-    db_query("UPDATE blocks SET region = '". check_input($value[region]) ."', status = '". check_input($value[status]) ."', path = '". check_input($value[path]) ."', weight = '". check_input($value[weight]) ."' WHERE name = '". check_input($key) ."'");
+    db_query("UPDATE blocks SET region = '". check_input($value["region"]) ."', status = '". check_input($value["status"]) ."', path = '". check_input($value["path"]) ."', weight = '". check_input($value["weight"]) ."' WHERE name = '". check_input($key) ."'");
   }
 }
 
