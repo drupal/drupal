@@ -2,15 +2,15 @@
 
   class Theme {
 
-    // color set #1:
-    var $bgc1 = "#6C6C6C";   // header color
-    var $fgc1 = "#000000";   // link color
-    var $hlc1 = "#";         // ? color
-
-    // color set #2:
-    var $bgc2 = "#E7E7E7";   // color
-    var $fgc2 = "#FEFEFE";   // header-text color
-    var $hlc2 = "#E09226";   // rust color
+    /*
+      I am going to use some colors throughout this theme:
+      #000000 : black used for all links and the table in every box you'll see, I use it to create the thin black border around each.
+      #E7E7E7 : light grey bgcolor for every box you'll see before the background gets drawn over it.
+      #6C6C6C : grey used as bgcolor before the articles' and abstacts' background is drawn.
+      #202020 : dark grey text used on the headers in abstract and article.
+      #FEFEFE : white text on the dark grey headers of all boxes with the drop.org background in it.
+      #E09226 : orange-brown rust color used to give some finishing touches around links, you'll see. :)
+    */
 
     function header() {
       global $site_name;
@@ -98,7 +98,7 @@ PHP?>
                           <TABLE BORDER="0" CELLPADDING="2" CELLSPACING="0" WIDTH="100%">
                             <TR>
                               <TD ALIGN="left" BACKGROUND="themes/jeroen/images/menutitle.gif" NOWRAP>
-                                <FONT COLOR="<?PHP echo $this->fgc2; PHP?>">
+                                <FONT COLOR="#FEFEFE">
 
 <?PHP
 
@@ -131,7 +131,7 @@ PHP?>
 <?PHP
  
                                       if ($story->updates)
-                                        echo "<P><FONT COLOR=\"$this->hlc2\">". t("Editor's note") .":</FONT>". check_output($story->updates, 1) ."</P>";
+                                        echo "<P><FONT COLOR=\"#E09226\">". t("Editor's note") .":</FONT>". check_output($story->updates, 1) ."</P>";
                                       if ($story->abstract)
                                         echo "<P>". check_output($story->abstract, 1) ."</P>";
 
@@ -140,7 +140,7 @@ PHP?>
                                   </TR>
                                   <TR>
                                     <TD ALIGN="right">
-                                      <FONT COLOR="<? echo $this->hlc2; ?>"><? echo theme_morelink($this, $story); ?></FONT>
+                                      <FONT COLOR="#E09226"><? echo theme_morelink($this, $story); ?></FONT>
                                     </TD>
                                   </TR>
                                 </TABLE>
@@ -181,7 +181,7 @@ PHP?>
                           <TABLE BORDER="0" CELLPADDING="2" CELLSPACING="0" WIDTH="100%">
                             <TR>
                               <TD ALIGN="left" BACKGROUND="themes/jeroen/images/menutitle.gif" NOWRAP>
-                                <FONT COLOR="<?PHP echo $this->fgc2; PHP?>">
+                                <FONT COLOR="#FEFEFE">
 
 <?PHP
 
@@ -224,7 +224,7 @@ PHP?>
 <?PHP
 
                                       if ($story->updates)
-                                        echo "<P>check_output($story->abstract, 1)</P><P><FONT COLOR=\"$this->hlc2\">Editor's note by <A HREF=\"account.php?op=userinfo&uname=$story->editor\">$story->editor</A>:</FONT>$story->updates</P>";
+                                        echo "<P>check_output($story->abstract, 1)</P><P><FONT COLOR=\"#E09226\">Editor's note by <A HREF=\"account.php?op=userinfo&uname=$story->editor\">$story->editor</A>:</FONT>$story->updates</P>";
                                       else 
                                         echo check_output($story->abstract, 1);
                                       if ($story->article)
@@ -236,7 +236,7 @@ PHP?>
                                   </TR>
                                   <TR>
                                     <TD ALIGN="right">
-                                      <FONT COLOR="<? echo $this->hlc2; ?>"><? echo $reply; ?></FONT>
+                                      <FONT COLOR="#E09226"><? echo $reply; ?></FONT>
                                     </TD>
                                   </TR>
                                 </TABLE>
@@ -277,8 +277,10 @@ PHP?>
       // Subject:
       echo "                      <TR>";
       echo "                        <TD ALIGN=\"right\" WIDTH=\"5%\">";
-      echo "                          <FONT COLOR=\"#FEFEFE\"><B>". t("Subject") .":</B></TD><TD WIDTH=\"80%\">";
-      echo "                            <B>". check_output($comment->$subject) ."</B>";
+      echo "                          <FONT COLOR=\"#FEFEFE\"><B>". t("Subject") .":</B>";
+      echo "                            </TD>";
+      echo "                            <TD WIDTH=\"80%\">";
+      echo "                          <B>". check_output($comment->subject) ."</B>";
       echo "                          </FONT>";
       echo "                        </TD>";
  
@@ -327,7 +329,7 @@ PHP?>
     } // close comment function
 
     function box($subject, $content, $options = "") {
-      $img = (rand(0, 50) == 25) ? "boxbottomright2.gif" : "boxbottomright1.gif";
+      $img = (rand(0, 5) == 2) ? "boxbottomright3.gif" : "boxbottomright1.gif";
       $width = rand(10, 200);
       $img2 = (rand(0, 100) == 50) ? "boxtopleftside2.gif" : "boxtopleftside1.gif";
 
@@ -344,13 +346,13 @@ PHP?>
                 <TR>
                   <TD BACKGROUND="themes/jeroen/images/<? echo $img2; ?>" HEIGHT="20">&nbsp;</TD>
                   <TD ALIGN="center" WIDTH="100%" COLSPAN="3" BACKGROUND="themes/jeroen/images/menutitle.gif" NOWRAP>
-                    <FONT COLOR="<? echo $this->fgc2; ?>"><? echo $subject; ?></FONT>
+                    <FONT COLOR="#FEFEFE"><? echo $subject; ?></FONT>
                   </TD>
                   <TD BACKGROUND="themes/jeroen/images/boxtoprightside.gif">&nbsp;</TD>
                 </TR>
                 <TR>
                   <TD BACKGROUND="themes/jeroen/images/boxleft.gif" NOWRAP>&nbsp;</TD>
-                  <TD COLSPAN="3" BGCOLOR="#E7E7E7" ALIGN="center" BACKGROUND="themes/jeroen/images/sketch.gif">
+                  <TD COLSPAN="3" ALIGN="center" BGCOLOR="#E7E7E7" BACKGROUND="themes/jeroen/images/sketch.gif">
                     <TABLE>
                       <TR>
                         <TD>
@@ -398,7 +400,7 @@ PHP?>
                 <TR>
                   <TD ALIGN="left" WIDTH="20" HEIGHT="20" BACKGROUND="themes/jeroen/images/footerleft.gif" NOWRAP>&nbsp;</TD>
                   <TD WIDTH="100%" BACKGROUND="themes/jeroen/images/footer.gif" ALIGN="center" VALIGN="middle">
-                    <FONT COLOR="<? echo $this->hlc2; ?>" SIZE="2">[ <A HREF="">Home</A> | <A HREF="module.php?mod=faq">Faq</A> | <A HREF="search.php">Search</A> | <A HREF="module.php?mod=diary">Diary</A>| <A HREF="submit.php">Submit news</A> | <A HREF="account.php">Account</A> ] </FONT>
+                    <FONT COLOR="#E09226" SIZE="2">[ <A HREF="">Home</A> | <A HREF="module.php?mod=faq">Faq</A> | <A HREF="search.php">Search</A> | <A HREF="module.php?mod=diary">Diary</A>| <A HREF="submit.php">Submit news</A> | <A HREF="account.php">Account</A> ] </FONT>
                   </TD>
                   <TD ALIGN="right" WIDTH="20" BACKGROUND="themes/jeroen/images/footerright.gif" NOWRAP>&nbsp;</TD>
                 </TR>
