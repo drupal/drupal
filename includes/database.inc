@@ -8,9 +8,9 @@ function db_connect($host, $user, $pass, $name) {
 
 function db_query($query, $debug = 0) {
   $result = mysql_query($query);
-  if ($debug) print "<P>query: $query<BR>error". mysql_error() ."</P>";
+  if ($debug) print "<P>query: $query<BR>error:". mysql_error() ."</P>";
   if ($result) return $result;
-  else watchdog("error", "database: ". mysql_error() ."<BR>query: ". htmlspecialchars($query));
+  else watchdog("error", "database: ". mysql_error() ."\nquery: ". htmlspecialchars($query));
 }
 
 function db_fetch_object($qid) {

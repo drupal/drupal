@@ -22,7 +22,7 @@
           <TABLE BORDER="1">
             <TR>
               <TD>
-                Logo? <!-- I left a TD to add a logo of some kind -->
+                <BIG><A HREF="index.php"><?php print variable_get(site_name, "drupal"); ?></A></BIG>
               </TD>
               <TD ALIGN="right" COLSPAN="2">
 
@@ -191,9 +191,8 @@
           </TR>
           <TR>
             <TD ALIGN="center" COLSPAN="3">
-<?php
-                   print theme_link(" | ");
-?>
+              <P><?php print theme_link(" | "); ?></P>
+              <P><SMALL><?php print variable_get(theme_footer, ""); ?></SMALL></P>
             </TD>
           </TR>
         </TABLE>
