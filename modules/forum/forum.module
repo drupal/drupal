@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.68 2002/12/21 15:53:30 dries Exp $
+// $Id: forum.module,v 1.69 2002/12/30 09:26:05 dries Exp $
 
 function forum_system($field){
   $system["description"] = t("Enable threaded discussions about general topics.");
@@ -482,7 +482,7 @@ function forum_page() {
 
   if (user_access("access content")) {
     if (module_exist("taxonomy")) {
-      if ($op == "Update settings") {
+      if ($op == "Update settings" && $user->uid) {
         $user = user_save($user, array("sortby" => $sortby, "forum_per_page" => $forum_per_page));
       }
 
