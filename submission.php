@@ -29,29 +29,28 @@ function submission_display_item($id) {
   $result = db_query("SELECT s.*, u.userid FROM stories s LEFT JOIN users u ON s.author = u.id WHERE s.id = $id");
   $submission = db_fetch_object($result);
 
-  if ($user->id == $submission->author || user_get_history($user->history, "s$id")) {
-    header("Location: story.php?id=$id");
+  if ($user->id == $submission->author || user_get_history($user->history, "s$submission->id")) {
+    header("Location: story.php?id=$submission->id");
   }
   else {
+    $output .= "<FORM ACTION=\"submission.php\" METHOD=\"post\">\n";
+    $output .= "<P>\n";
+    $output .= " <B>Vote:</B><BR>\n";
+    $output .= " <SELECT NAME=\"vote\">\n";
+    foreach ($submission_votes as $key=>$value) $output .= "  <OPTION VALUE=\"$value\">$key</OPTION>\n";
+    $output .= " </SELECT>\n";
+    $output .= "</P>\n";
+    $output .= "<P>\n";
+    $output .= " <B>Comment:</B><BR>\n";
+    $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"7\" NAME=\"comment\"></TEXTAREA>\n";
+    $output .= "</P>\n";
+    $output .= "<INPUT TYPE=\"hidden\" NAME=\"id\" VALUE=\"$submission->id\">\n";
+    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Vote\">\n";
+    $output .= "</FORM>\n";
+
     $theme->header();
     $theme->article($submission, "[ <A HREF=\"submission.php\"><FONT COLOR=\"$theme->link\">back</FONT></A> ]");
-
-    print "<FORM ACTION=\"submission.php\" METHOD=\"post\">\n";
-
-    print "<P>\n";
-    print " <B>Vote:</B><BR>\n";
-    print " <SELECT NAME=\"vote\">\n";
-    foreach ($submission_votes as $key=>$value) print "  <OPTION VALUE=\"$value\">$key</OPTION>\n";
-    print " </SELECT>\n";
-    print "</P>\n";
-    print "<P>\n";
-    print " <B>Comment:</B><BR>\n";
-    print " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"7\" NAME=\"comment\"></TEXTAREA>\n";
-    print "</P>\n";
-    print "<INPUT TYPE=\"hidden\" NAME=\"id\" VALUE=\"$submission->id\">\n";
-    print "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Vote\">\n";
-    print "</FORM>\n";
-
+    $theme->box("Moderate story", $output);
     $theme->footer();
   }
 }
