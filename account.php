@@ -427,7 +427,7 @@ function account_track_comments() {
 function account_track_nodes() {
   global $status, $theme, $user;
 
-  $result = db_query("SELECT n.nid, n.type, n.title, n.timestamp, COUNT(c.cid) AS count FROM nodes n LEFT JOIN comments c ON c.lid = n.nid WHERE n.status = '$status[posted]' AND n.author = '$user->id' GROUP BY n.nid DESC");
+  $result = db_query("SELECT n.nid, n.type, n.title, n.timestamp, COUNT(c.cid) AS count FROM nodes n LEFT JOIN comments c ON c.lid = n.nid WHERE n.status = '$status[posted]' AND n.author = '$user->id' GROUP BY n.nid DESC LIMIT 25");
 
   while ($node = db_fetch_object($result)) {
     $output .= "<TABLE BORDER=\"0\" CELLPADDING=\"1\" CELLSPACING=\"1\">\n";
