@@ -273,7 +273,7 @@ function statistics_admin() {
       switch (stripslashes($op)) {
         case "Submit \"top nodes\" block changes":
           statistics_save_topnodes_block($edit);
-          print status(t("Saved top nodes block changes"));
+          print status(t("saved 'top nodes' block changes."));
         case "top nodes block":
           print statistics_config_topnodes_block(array(
             "statistics_block_top_title" => variable_get("statistics_block_top_title", "Top nodes"),
@@ -287,7 +287,7 @@ function statistics_admin() {
           break;
         case "Submit \"who's online\" block changes":
           statistics_save_online_block($edit);
-          print status(t("Saved who's online block changes"));
+          print status(t("saved 'who's online' block changes."));
         case "whos online block":
           print statistics_config_online_block(array(
             "statistics_block_online_title" => variable_get("statistics_block_online_title", "Whos online"),
@@ -299,7 +299,7 @@ function statistics_admin() {
           break;
         case "Submit \"top nodes\" page changes":
           statistics_save_userconfig($edit);
-          print status(t("Saved top nodes page changes"));
+          print status(t("saved 'top nodes' page changes."));
         case "top nodes page":
           print statistics_admin_userpage_config(array(
             "statistics_userpage_link" => variable_get("statistics_userpage_link", ""),
