@@ -6,13 +6,11 @@ function defaultDisplay() {
   $theme->header();
 
   global $user;
-  if (isset($user)) getusrinfo($user);
 
   print "<FORM ACTION=\"submit.php\" METHOD=\"post\">";
 
   print "<P>\n <B>Your name:</B><BR>";
   if ($user) {
-    cookiedecode($user);
     echo " <A HREF=\"account.php\">$user->userid</A> &nbsp; &nbsp; <FONT SIZE=\"2\">[ <A HREF=\"account.php?op=logout\">logout</A> ]</FONT>";
   } else {
     echo "$anonymous &nbsp; &nbsp; <FONT SIZE=\"2\">[ <A HREF=\"account.php\">login</A> | <A HREF=\"account.php\">create an account</A> ]</FONT>";
@@ -66,13 +64,14 @@ function PreviewStory($name, $address, $subject, $abstract, $story, $category) {
   include "theme.inc";
   $theme->header();
 
+
   print "<B>Preview:</B><BR>";
   $theme->preview("", $user->userid, date("l, F d, Y - H:i A", time()), stripslashes($subject), "we-hate-typoes", stripslashes($abstract), "", stripslashes($story));
+
   print "<FORM ACTION=\"submit.php\" METHOD=\"post\">";
 
   print "<P>\n <B>Your name:</B><BR>";
   if ($user) {
-    cookiedecode($user);
     echo " <A HREF=\"account.php\">$user->userid</A> &nbsp; &nbsp; <FONT SIZE=\"2\"> [ <A HREF=\"account.php?op=logout\">logout</A> ]</FONT>";
   } else {
     echo "$anonymous &nbsp; &nbsp; <FONT SIZE=\"2\">[ <A HREF=\"$account.php\">login</A> | <A HREF=\"account.php\">create an account</A> ]</FONT>";
@@ -135,7 +134,6 @@ function submitStory($name, $address, $subject, $abstract, $article, $category) 
   ### Add submission to queue:
   dbconnect();
   if ($user) {
-    cookiedecode($user);
     $uid = $user->id;
     $name = $user->userid;
   }
