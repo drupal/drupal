@@ -57,7 +57,7 @@ hr {
   top: 0px;
   margin: 0 0 0 0;
   padding: 0 0 .85em 0;
-  width: 200px;
+  width: 14em;
   z-index: 1;
   overflow: hidden;
   background-color: #69c;
@@ -79,12 +79,12 @@ hr {
 #menu ul {
   list-style: none;
   margin: 0;
-  padding: 0 0 0 .85em;
+  padding: 0 0 0.25em 1.5em;
   border: none;
 }
 #menu li {
   margin: 0;
-  padding: .5em .25em 0 0;
+  padding: 0.2em 0.5em 0 0;
 }
 #menu li a {
   display: block;
@@ -92,8 +92,20 @@ hr {
   color: #fff;
   text-decoration: none;
 }
+#menu li a:hover {
+  color: #009;
+}
+#menu li.expanded {
+  list-style-image: url(menu-expanded.gif);
+}
+#menu li.collapsed {
+  list-style-image: url(menu-collapsed.gif);
+}
+#menu li {
+  list-style-image: url(menu-leaf.gif);
+}
 #main {
-  margin: 0 0 0 220px;
+  margin: 0 0 0 16em;
   padding: 1em 1em 1em 0;
   z-index: 2;
 }
