@@ -4,8 +4,8 @@
 # Licence: GPL
 # First version: 2001-10-15
 
-# Originally written for Drupal (http://www.drupal.org/) to ensure stylish 
-# code.  This program tries to show as many improvements as possible with 
+# Originally written for Drupal (http://www.drupal.org/) to ensure stylish
+# code.  This program tries to show as many improvements as possible with
 # no false positives.
 
 # $id$
@@ -30,10 +30,10 @@ while (<>) {
   # handles comments /**/ over several lines
   if ($comment == 1) {
     if (s/.*\*\///) {
-      $comment = 0; 
-    } 
+      $comment = 0;
+    }
     else {
-      next; 
+      next;
     }
   }
   if (s/\/\*.*//) {
@@ -49,8 +49,8 @@ while (<>) {
   if (/\?>/) {
     $program = 0;
   }
-  
-  # enfoce "bar". foo() ."bar" syntax 
+
+  # enfoce "bar". foo() ."bar" syntax
   if (/^("[^"]*"|[^"])*("[^"]*")\.[^ ]/ && $program) {
     $msg = "'\".' -> '\". '";
   }
@@ -68,17 +68,17 @@ while (<>) {
   elsif (/[<]br[>]/i) {
     $msg = "'<b"."r>' -> '<b"."r />'";
   }
-  # XHTML compatibility mode suggests a blank before / 
+  # XHTML compatibility mode suggests a blank before /
   # i.e. <br />
   elsif (/<[a-z][^>]*[^ >]\/>/i) {
     $msg = "'<foo/".">' -> '<foo />'";
   }
   # we write '{' on the same line, not on the next
   elsif (/^\s*{/ && $program) {
-    $msg = "take '{' to previous line"; 
+    $msg = "take '{' to previous line";
   }
   elsif (/function ([a-zA-Z_][a-zA-Z_0-9]*[A-Z][a-zA-Z_0-9]*)\(/) {
-    $msg = "no mixedcase, use lowercase and _";  
+    $msg = "no mixedcase, use lowercase and _";
   }
   elsif (/<[\/]*[A-Z]+[^>]*>/) {
     $msg = "XHTML demands tags to be lowercase";
@@ -86,7 +86,7 @@ while (<>) {
   # trying to recognize splitted lines
   # there are only a few valid last characters in programming mode,
   # only sometimes it is ( if you use if/else with a single statement
-  
+
   # from here on we need no more strings
   while (s/^([^"]*)"[^"]*"/$1#/) {};
   while (s/^([^']*)'[^']*'/$1#/) {};
@@ -110,7 +110,7 @@ while (<>) {
   elsif (/ ([\)\]])/ && $program) {
     $msg = "' $1' -> '$1'";
   }
-  # but no brackets 
+  # but no brackets
   elsif (/([a-z-A-Z_][a-zA-Z0-9_-]*)\s+\(/ && $program) {
     if ($1 ne "switch" and $1 ne "if" and $1 ne "while" and $1 ne "foreach" and $1 ne "return" and $1 ne "for" and $1 ne "elseif") {
       $msg = "'$1 (' -> '$1('";
@@ -133,7 +133,7 @@ while (<>) {
       print $ARGV .":". $. .": $msg : ". $org;
     }
     undef $msg;
-  } 
+  }
   elsif ($debug==1) {
     print $org;
   }
