@@ -279,165 +279,6 @@ function user_fields() {
 
 /*** Module hooks **********************************************************/
 
-function user_help() {
- ?>
-<h3>Introduction</h3>
-<p>Drupal offers a powerful and open user system. This system allows users to
-  register, login, logout, maintain user profiles, etc. No participant can use
-  his own name to post comments until he signs up and submits his e-mail address.
-  Those who do not register may participate as anonymous users, but they will
-  suffer numerous disadvantages, for example their posts beginning at a lower
-  score. </p>
-<p>In contrast, those with a user account can use their own name or handle and
-  are granted various privileges: the most important are probably the ability
-  to moderate new submissions, to rate comments, and to fine-tune the site to
-  their personal liking.  Drupal themes make fine tuning quite a pleasure.</p>
-<p>Registered users need to authenticate by supplying a username and password.
-  Users may authenticate locally or via an external authentication source like
-  <a href="http://www.jabber.org/">Jabber</a>, <a href="http://www.delphiforums.com/">Delphi</a>,
-  and other <a href="http://www.drupal.org/">Drupal</a> websites. See <a href="#da">Distributed
-  Authentication</a> for more information on this innovative feature. The username
-  and password are kept in your database, where the password is hashed so that
-  no one can read nor use it. When a username and password needs to be checked
-  the system goes down the list of registered users until it finds a matching
-  username, and then hashes the password that was supplied and compares it to
-  the listed value. If the hashes match, the username and password are correct.
-  Once a user authenticated session is started, and until that session is over,
-  the user won't have to re-authenticate. To keep track of the individual sessions,
-  Drupal relies on <a href="http://www.php.net/manual/en/ref.session.php">PHP's
-  session support</a>. A visitor accessing your website is assigned an unique
-  ID, the so-called session ID, which is stored in a cookie. For security's sake,
-  the cookie does not contain personal information but acts as a key to retrieve
-  the information stored on your server's side. When a visitor accesses your site,
-  Drupal will check whether a specific session ID has been sent with the request.
-  If this is the case, the prior saved environment is recreated.</p>
-<p>Authenticated users can select entirely different appearances for the site,
-  utilizing their own preferences for how the pages are structured, how navigation
-  lists and other page components are presented and much more. <br />
-</p>
-<h3>User administration</h3>
-<p>Administrators manage user accounts by clicking on the <i>User management</i> link in
-  their Admin interface. There, you will find several configuration pages and
-  reports which help you manage your users. The following pages are available:</p>
-
-<h4>add new user</h4>
-<p>If your site is completely private, and doesn't allow registration for
-  any old web user (see <a href="#settings">settings</a> for this feature), then
-  you'll need to add new users manually. This web page allows any administrator
-  to register a new user.</p>
-<h4>access rules<a name="access"></a></h4>
-<p>Access rules enable administrators to filter out usernames and e-mail addresses
-  which are not allowed in Drupal. An administrator creates a 'mask' against which
-  each new registration is checked. Disallowed names and e-mail addresses are denied
-  access to the site. Another handy use for this page is to disallow registration
-  to your site from an untrusted external authentication server. Just add their
-  server address to the username mask section and you've effectively blocked all
-  logins from that server.</p>
-<p>To do describe access rules you can use the following wild-card characters:</p>
-  <ul>
-   <li>&nbsp;% : matches any number of characters, including zero characters.</li>
-   <li>&nbsp;_ : matches exactly one character.</li>
-  </ul>
-<p><u>Examples:</u></p>
-  <ul>
-   <li>E-mail address bans <code>%@hotmail.com</code>, <code>%@altavista.%</code>, <code>%@usa.net</code>, etc.  Used to prevent users from using free e-mail accounts, which might be used to cause trouble.</li>
-   <li>Username bans <code>root</code>, <code>webmaster</code>, <code>admin%</code>, etc.  Used to prevent administrator impersonators.</li>
-  </ul>
-<p>If no access rules are provided, access control is turned off and everybody will be able to access your website.  The 'allow' rules are processed prior to the 'deny' rules and are thus considered to be stronger.</p>
-<h4>user accounts</h4>
-<p>This page is quite powerful. It allows an administrator to review any user's
-  profile. In addition, administrators may block any user, or assign him a <a href="#roles">role</a>,
-  using this page.</p>
-<h4>user roles<a name="roles"></a></h4>
-<p>Roles allow you to fine tune the security and administration of drupal. A role
-defines a group of users which have certain privileges. Examples of roles
-include: <I>anonymous user</I>, <I>authenticated user</I>, <I>moderator</I>,
-<I>administrator</I> and so on. By default, Drupal comes with two commonly used
-roles:
-<UL>
-  <LI>Anonymous user: this role is used for users that don't have a user account
-    or that are not authenticated.
-  <LI>Registered user: this role is assigned automatically to authenticated users.
-    Most users will belong to this user role unless specified otherwise.</LI>
-</UL></p>
-<p>These common roles will suffice for most sites. However, for a more complex site where you need to give several users different access privileges, you will
-  need to add a new role by clicking the "add new role" link. Then define what privileges that role will have by clicking the "permission overview" link and   checking the appropriate boxes to give that role the permissions you desire.
-  <p>To attach a specific user to a role, use the "account" section of the drupal Administration. </p>
-  <p>Note: If you intend for a user to access certain sections of the administration
-  pages, they must have "access administration page" privileges. </p>
-<h4>user permissions<a name="permissions"></a></h4>
-<p>Each role has certain things that its users are allowed to do, and some that
-  are disallowed. For example, authenticated users may usually post a story but
-  Anonymous users may not. </p>
-<p>Each permission describes a fine-grained logical operation such as <i>access administration pages</i> or <i>add and modify user accounts</i>. You could say a permission represents access granted to a user to perform a set of operations.</p>
-<h4>search account</h4>
-<p>Search Account enables an admin to query for any username in the user table
-  and return users which match that query. For example, one may search for 'br'
-  and Drupal might return 'brian', 'brad', and 'brenda'.</p>
-<h4>settings<a name="settings"></a></h4>
-<p>Administrators may choose to restrict registration to their site. That restriction
-  may be accomplished on this page. Also, the list of words which may be included
-  in a system generated password is also listed on this page. Drupal generates
-  passwords by joining small words from the password list until the new password
-  is greater than 6 characters.</p>
-<h4>active users - report</h4>
-<p>All users sorted by most recent login.</p>
-<h4> new users - report</h4>
-<p>All users sorted by most recent registration</p>
-<h4> blocked users - report</h4>
-<p>All users who have been blocked (status = 0) sorted by most recent registration</p>
-<h4> special users - report</h4>
-<p>All users with a <a href="#roles">role</a> other than Authenticated User</p>
-<h3>Distributed authentication<a name="da"> </a></h3>
-<p>One of the more tedious moments in visiting a new website is filling out the
-  registration form. The reg form provides helpful information to the website
-  owner, but not much value for the user. The value for the end user is usually
-  a the ability to post a messages or receive personalized news, etc. Distributed
-  authentication (DA) gives the user what he wants without having to fill out
-  the reg form. Removing this obstacle yields more registered and active users
-  for the website.</p>
-<p>DA enables a new user to input a username and password into the login box and
-  immediately be recognized, even if that user never registered on your site.
-  This works because Drupal knows how to communicate with external registration
-  databases. For example, lets say that your new user 'Joe' is already a registered
-  member of Delphi Forums. If your Drupal has delphi.module installed, then Drupal
-  will inform Joe on the registration and login screens that he may login with
-  his Delphi ID instead of registering with your Drupal instance. Joe likes that
-  idea, and logs in with a username of joe@remote.delphiforums.com and his usual
-  Delphi password. Drupal then communicates with remote.delphiforums.com (usually using <a href="http://www.xmlrpc.com/">XML-RPC</a>,
-  <a href="http://www.w3.org/Protocols/">HTTP POST</a>, or <a href="http://www.soapware.org/">SOAP</a>) behind
-  the scenes and asks &quot;is this password for username=joe? If Delphi replies
-  yes, then Drupal will create a new local account for joe and log joe into it.
-  Joe may keep on logging into your Drupal instance in the same manner, and he
-  will be logged into the same joe@remote.delphiforums.com account.</p>
-<p>One key element of DA is the 'authmap' table, which maps a user's authname
-  (e.g. joe@remote.delphiforums.com) to his local UID (i.e. universal identification
-  number). This map is checked whenever a user successfully logs into an external
-  authentication source. Once Drupal knows that the current user is definately
-  joe@remote.delphiforums.com (because Delphi says so), he looks up Joe's UID
-  and logs Joe into that account.</p>
-<p>Drupal is setup so that it is very easy to add support for any external authentication
-  source. See the <a href="http://www.drupal.org/">Drupal Handbook</a> for information
-  on authoring authentication modules. You currently have the following authentication modules installed ...</p>
-  <?
-    foreach (module_list() as $module) {
-      if (module_hook($module, "auth")) {
-        print "<h4>" . module_invoke($module, "info", "name") . "</h4>";
-        print module_invoke($module, "auth_help");
-      }
-    }
-  ?>
-<h3><br />
-  User preferences and profiles</h3>
-<p>Drupal comes with a set of user preferences and profile which a user may edit by
-  clicking on the user account link. Of course, a user must be logged into reach those pages.
-  There, users will find a page for changing their preferred timezone, language, username, e-mail address, password, theme, signature, homepage, and <a href="#da">distributed authentication</a> names.
-  Changes made here take effect immediately. Also, administrators may make profile and preferences changes in the Admin Center on behalf of their users.</p>
-  <p>Module developers are provided several hooks for adding custom fields to the user view/edit pages. These hooks are described in the Developer section of the <A href="http://www.drupal.org">Drupal Handbook</a>. For an example, see the <code>jabber_user()</code> function in <i>/modules/jabber.module</i>.
-  </p>
- <?
-}
-
 function user_perm() {
   return array("administer users");
 }
@@ -617,45 +458,6 @@ function user_set_authmaps($account, $authmaps) {
     }
   }
   return $result;
-}
-
-function user_help_da() {
-  $site = variable_get("site_name", "this website");
-
-  $output = "
-   <h3>Distributed authentication<a name=\"da\"></a></h3>
-   <p>One of the more tedious moments in visiting a new website is filling out the
-    registration form. Here at %s, you do not have to fill out a registration form
-    if you are already a member of ";
-    $output .= implode(", ", user_auth_help_links());
-    $output .= ".  This capability is called <i>Distributed
-    Authentication</i>, and is unique to <a href=\"http://www.drupal.org\">Drupal</a>,
-    the software which powers %s.</p>
-   <p>Distributed Authentication enables a new user to input a username and password into the login box,
-    and immediately be recognized, even if that user never registered at %s. This
-    works because Drupal knows how to communicate with external registration databases.
-    For example, lets say that new user 'Joe' is already a registered member of
-    <a href=\"http://www.delphiforums.com\">Delphi Forums</a>. Drupal informs Joe
-    on registration and login screens that he may login with his Delphi ID instead
-    of registering with %s. Joe likes that idea, and logs in with a username
-    of joe@remote.delphiforums.com and his usual Delphi password. Drupal then contacts
-    the <i>remote.delphiforums.com</i> server behind the scenes (usually using <a href=\"http://www.xmlrpc.com\">XML-RPC</a>,
-    <a href=\"http://www.w3.org/Protocols/\">HTTP POST</a>, or <a href=\"http://www.soapware.org\">SOAP</a>)
-    and asks: \"Is the password for user Joe correct?\".  If Delphi replies yes, then
-    we create a new $site account for Joe and log him into it.  Joe may keep
-    on logging into %s in the same manner, and he will always be logged into the
-    same account.</p>";
-
-  $output = t($output, array("%s" => $site));
-
-  foreach (module_list() as $module) {
-    if (module_hook($module, "auth")) {
-      $output .= "<h4><a name=\"$module\"></a>" . module_invoke($module, "info", "name") . "</h4>";
-      $output .= module_invoke($module, "auth_help");
-    }
-  }
-
-  return $output;
 }
 
 function user_auth_help_links() {
@@ -1252,7 +1054,7 @@ function user_page() {
       break;
     case "help":
       $theme->header();
-      $theme->box(t("Distributed Authentication"), user_help_da());
+      $theme->box(t("Distributed Authentication"), user_help_users_da());
       $theme->footer();
       break;
     default:
@@ -1741,5 +1543,421 @@ function user_admin() {
     }
   }
 }
+// this help is for end users
+function user_help_users_da() {
+  $site = "<i>". variable_get("site_name", "this website"). "</i>";
 
+  $output = "
+   <h3>Distributed authentication<a name=\"da\"></a></h3>
+   <p>One of the more tedious moments in visiting a new website is filling out the
+    registration form. Here at %s, you do not have to fill out a registration form
+    if you are already a member of ";
+
+  $output .= implode(", ", user_auth_help_links());
+  $output .= ".  This capability is called <i>Distributed
+    Authentication</i>, and is unique to <a href=\"http://www.drupal.org\">Drupal</a>,
+    the software which powers %s.</p>
+   <p>Distributed Authentication enables a new user to input a username and password into the login box,
+    and immediately be recognized, even if that user never registered at %s. This
+    works because Drupal knows how to communicate with external registration databases.
+    For example, lets say that new user 'Joe' is already a registered member of
+    <a href=\"http://www.delphiforums.com\">Delphi Forums</a>. Drupal informs Joe
+    on registration and login screens that he may login with his Delphi ID instead
+    of registering with %s. Joe likes that idea, and logs in with a username
+    of joe@remote.delphiforums.com and his usual Delphi password. Drupal then contacts
+    the <i>remote.delphiforums.com</i> server behind the scenes (usually using <a href=\"http://www.xmlrpc.com\">XML-RPC</a>,
+    <a href=\"http://www.w3.org/Protocols/\">HTTP POST</a>, or <a href=\"http://www.soapware.org\">SOAP</a>)
+    and asks: \"Is the password for user Joe correct?\".  If Delphi replies yes, then
+    we create a new $site account for Joe and log him into it.  Joe may keep
+    on logging into %s in the same manner, and he will always be logged into the
+    same account.</p>";
+
+  $output = strtr($output, array("%s" => $site));
+
+  foreach (module_list() as $module) {
+    if (module_hook($module, "auth")) {
+      $output .= "<h4><a name=\"$module\"></a>" . module_invoke($module, "info", "name") . "</h4>";
+      $output .= module_invoke($module, "auth_help");
+    }
+  }
+
+  return $output;
+}
+
+// the following functions comprise help for admins and developers
+function user_help() {
+ user_help_admin();
+ user_help_admin_da();
+ user_help_devel_da();
+ user_help_devel_userhook();
+}
+
+function user_help_admin() {
+ ?>
+<h3>Introduction</h3>
+<p>Drupal offers a powerful and open user system. This system allows users to
+  register, login, logout, maintain user profiles, etc. No participant can use
+  his own name to post comments until he signs up and submits his e-mail address.
+  Those who do not register may participate as anonymous users, but they will
+  suffer numerous disadvantages, for example their posts beginning at a lower
+  score. </p>
+<p>In contrast, those with a user account can use their own name or handle and
+  are granted various privileges: the most important are probably the ability
+  to moderate new submissions, to rate comments, and to fine-tune the site to
+  their personal liking.  Drupal themes make fine tuning quite a pleasure.</p>
+<p>Registered users need to authenticate by supplying a username and password.
+  Users may authenticate locally or via an external authentication source like
+  <a href="http://www.jabber.org/">Jabber</a>, <a href="http://www.delphiforums.com/">Delphi</a>,
+  and other <a href="http://www.drupal.org/">Drupal</a> websites. See <a href="#da">Distributed
+  Authentication</a> for more information on this innovative feature. The username
+  and password are kept in your database, where the password is hashed so that
+  no one can read nor use it. When a username and password needs to be checked
+  the system goes down the list of registered users until it finds a matching
+  username, and then hashes the password that was supplied and compares it to
+  the listed value. If the hashes match, the username and password are correct.
+  Once a user authenticated session is started, and until that session is over,
+  the user won't have to re-authenticate. To keep track of the individual sessions,
+  Drupal relies on <a href="http://www.php.net/manual/en/ref.session.php">PHP's
+  session support</a>. A visitor accessing your website is assigned an unique
+  ID, the so-called session ID, which is stored in a cookie. For security's sake,
+  the cookie does not contain personal information but acts as a key to retrieve
+  the information stored on your server's side. When a visitor accesses your site,
+  Drupal will check whether a specific session ID has been sent with the request.
+  If this is the case, the prior saved environment is recreated.</p>
+<p>Authenticated users can select entirely different appearances for the site,
+  utilizing their own preferences for how the pages are structured, how navigation
+  lists and other page components are presented and much more. <br />
+</p>
+<h3>User administration</h3>
+<p>Administrators manage user accounts by clicking on the <i>User management</i> link in
+  their Admin interface. There, you will find several configuration pages and
+  reports which help you manage your users. The following pages are available:</p>
+
+<h4>Add new user</h4>
+<p>If your site is completely private, and doesn't allow registration for
+  any old web user (see <a href="#settings">settings</a> for this feature), then
+  you'll need to add new users manually. This web page allows any administrator
+  to register a new user.</p>
+<h4>Access rules<a name="access"></a></h4>
+<p>Access rules enable administrators to filter out usernames and e-mail addresses
+  which are not allowed in Drupal. An administrator creates a 'mask' against which
+  each new registration is checked. Disallowed names and e-mail addresses are denied
+  access to the site. Another handy use for this page is to disallow registration
+  to your site from an untrusted external authentication server. Just add their
+  server address to the username mask section and you've effectively blocked all
+  logins from that server.</p>
+<p>To do describe access rules you can use the following wild-card characters:</p>
+  <ul>
+   <li>&nbsp;% : matches any number of characters, including zero characters.</li>
+   <li>&nbsp;_ : matches exactly one character.</li>
+  </ul>
+<p><u>Examples:</u></p>
+  <ul>
+   <li>E-mail address bans <code>%@hotmail.com</code>, <code>%@altavista.%</code>, <code>%@usa.net</code>, etc.  Used to prevent users from using free e-mail accounts, which might be used to cause trouble.</li>
+   <li>Username bans <code>root</code>, <code>webmaster</code>, <code>admin%</code>, etc.  Used to prevent administrator impersonators.</li>
+  </ul>
+<p>If no access rules are provided, access control is turned off and everybody will be able to access your website.  The 'allow' rules are processed prior to the 'deny' rules and are thus considered to be stronger.</p>
+<h4>User accounts</h4>
+<p>This page is quite powerful. It allows an administrator to review any user's
+  profile. In addition, administrators may block any user, or assign him a <a href="#roles">role</a>,
+  using this page.</p>
+<h4>User roles<a name="roles"></a></h4>
+<p>Roles allow you to fine tune the security and administration of drupal. A role
+defines a group of users which have certain privileges. Examples of roles
+include: <I>anonymous user</I>, <I>authenticated user</I>, <I>moderator</I>,
+<I>administrator</I> and so on. By default, Drupal comes with two commonly used
+roles:
+<UL>
+  <LI>Anonymous user: this role is used for users that don't have a user account
+    or that are not authenticated.
+  <LI>Registered user: this role is assigned automatically to authenticated users.
+    Most users will belong to this user role unless specified otherwise.</LI>
+</UL></p>
+<p>These common roles will suffice for most sites. However, for a more complex site where you need to give several users different access privileges, you will
+  need to add a new role by clicking the "add new role" link. Then define what privileges that role will have by clicking the "permission overview" link and   checking the appropriate boxes to give that role the permissions you desire.
+  <p>To attach a specific user to a role, use the "account" section of the drupal Administration. </p>
+  <p>Note: If you intend for a user to access certain sections of the administration
+  pages, they must have "access administration page" privileges. </p>
+<h4>User permissions<a name="permissions"></a></h4>
+<p>Each role has certain things that its users are allowed to do, and some that
+  are disallowed. For example, authenticated users may usually post a story but
+  Anonymous users may not. </p>
+<p>Each permission describes a fine-grained logical operation such as <i>access administration pages</i> or <i>add and modify user accounts</i>. You could say a permission represents access granted to a user to perform a set of operations.</p>
+<h4>Search account</h4>
+<p>Search Account enables an admin to query for any username in the user table
+  and return users which match that query. For example, one may search for 'br'
+  and Drupal might return 'brian', 'brad', and 'brenda'.</p>
+<h4>Settings<a name="settings"></a></h4>
+<p>Administrators may choose to restrict registration to their site. That restriction
+  may be accomplished on this page. Also, the list of words which may be included
+  in a system generated password is also listed on this page. Drupal generates
+  passwords by joining small words from the password list until the new password
+  is greater than 6 characters.</p>
+<h4>Active users - report</h4>
+<p>All users sorted by most recent login.</p>
+<h4>New users - report</h4>
+<p>All users sorted by most recent registration</p>
+<h4>Blocked users - report</h4>
+<p>All users who have been blocked (status = 0) sorted by most recent registration</p>
+<h4>Authenticated users, administrators, etc. - reports</h4>
+<p>All <a href="#roles">roles</a> present a report listing their members</p>
+<h3>User preferences and profiles</h3>
+<p>Drupal comes with a set of user preferences and profile which a user may edit by
+  clicking on the user account link. Of course, a user must be logged into reach those pages.
+  There, users will find a page for changing their preferred timezone, language, username, e-mail address, password, theme, signature, homepage, and <a href="#da">distributed authentication</a> names.
+  Changes made here take effect immediately. Also, administrators may make profile and preferences changes in the Admin Center on behalf of their users.</p>
+  <p>Module developers are provided several hooks for adding custom fields to the user view/edit pages. These hooks are described in the Developer section of the <A href="http://www.drupal.org">Drupal Handbook</a>. For an example, see the <code>jabber_user()</code> function in <i>/modules/jabber.module</i>.
+</p>
+ <?
+}
+
+function user_help_admin_da() {
+?>
+
+<h3>Distributed authentication<a name="da"> </a></h3>
+<p>One of the more tedious moments in visiting a new website is filling out the
+  registration form. The reg form provides helpful information to the website
+  owner, but not much value for the user. The value for the end user is usually
+  a the ability to post a messages or receive personalized news, etc. Distributed
+  authentication (DA) gives the user what he wants without having to fill out
+  the reg form. Removing this obstacle yields more registered and active users
+  for the website.</p>
+<p>DA enables a new user to input a username and password into the login box and
+  immediately be recognized, even if that user never registered on your site.
+  This works because Drupal knows how to communicate with external registration
+  databases. For example, lets say that your new user 'Joe' is already a registered
+  member of Delphi Forums. If your Drupal has delphi.module installed, then Drupal
+  will inform Joe on the registration and login screens that he may login with
+  his Delphi ID instead of registering with your Drupal instance. Joe likes that
+  idea, and logs in with a username of joe@remote.delphiforums.com and his usual
+  Delphi password. Drupal then communicates with remote.delphiforums.com (usually using <a href="http://www.xmlrpc.com/">XML-RPC</a>,
+  <a href="http://www.w3.org/Protocols/">HTTP POST</a>, or <a href="http://www.soapware.org/">SOAP</a>) behind
+  the scenes and asks &quot;is this password for username=joe? If Delphi replies
+  yes, then Drupal will create a new local account for joe and log joe into it.
+  Joe may keep on logging into your Drupal instance in the same manner, and he
+  will be logged into the same joe@remote.delphiforums.com account.</p>
+<p>One key element of DA is the 'authmap' table, which maps a user's authname
+  (e.g. joe@remote.delphiforums.com) to his local UID (i.e. universal identification
+  number). This map is checked whenever a user successfully logs into an external
+  authentication source. Once Drupal knows that the current user is definately
+  joe@remote.delphiforums.com (because Delphi says so), he looks up Joe's UID
+  and logs Joe into that account.</p>
+<p>To disable Distributed Authentication, simply disable or remove all DA modules. For a virgin
+install, that means removing/disabling <i>jabber.module</i> and <i>drupal.module</i>
+</p>
+<p>Drupal is setup so that it is very easy to add support for any external authentication
+  source. You currently have the following authentication modules installed ...</p>
+  <?
+    foreach (module_list() as $module) {
+      if (module_hook($module, "auth")) {
+        print "<h4>" . module_invoke($module, "info", "name") . "</h4>";
+        print module_invoke($module, "auth_help");
+      }
+    }
+}
+
+function user_help_devel_da() {
+  ?>
+  <h3>Writing Distributed Authentication Modules</h3>
+<p>Drupal is specifically architected to enable easy authoring of new authentication
+  modules. I'll deconstruct the <a href="http://www.blogger.com">Blogger</a> authentication
+  module here, and hopefully provide all the details you'll need to write a new
+  auth module. If you want to download the full text of this module, visit the
+  <a href="http://cvs.drupal.org/viewcvs.cgi/contributions/modules/authentication/Blogger/?cvsroot=contrib">Drupal-Contrib
+  repository</a>. </p>
+<h4>Code review</h4>
+<pre>&lt;?php</pre>
+<p>The first line of every authentication module is the same. It is the standard
+  processing instruction for any PHP file. Authentication modules are always written
+  in PHP, although they typically interact with systems written in many different
+  programming languages and operating systems languages.</p>
+<pre>function blogger_info($field = NULL) {
+  $info["name"] = "Blogger";
+  $info["protocol"] = "XML-RPC";
+  $info["link"] = "<a href=\"module.php?mod=user&op=da_help#blogger\">Blogger</a>";
+  $info["maintainer"] = "Moshe Weitzman";
+  $info["maintaineremail"] = "weitzman at tejasa.com";
+  if ($field) return $info[$field];
+  else return $info;
+}</pre>
+<p>The <i>_info</i> function is always the first function defined in your module.
+  This function populates an array called <i>$info</i> with various pieces of
+  data. Some of this data is used by Drupal (&quot;name&quot;, &quot;link&quot;),
+  and some of it just informs the users of your module. Your goal is to simply
+  copy the b<i>logger_info</i> function in your module - but wherever it says
+  <i>blogger</i> here, substitute your own module name.</p>
+<pre>function blogger_auth($name, $pass, $server) {
+  if ($server !== &quot;blogger.com&quot;) return 0; // user did not present a Blogger ID so don't bother trying.
+  $appkey = &quot;6D4A2D6811A6E1F75148DC1155D33C0C958107BC&quot;; //provided to Drupal by Ev@Blogger
+  $message = new xmlrpcmsg(&quot;blogger.getUsersBlogs&quot;, array(new xmlrpcval($appkey, &quot;string&quot;), new xmlrpcval($name, &quot;string&quot;), new xmlrpcval($pass, &quot;string&quot;)));
+  $client = new xmlrpc_client(&quot;/api/RPC2&quot;, &quot;plant.blogger.com&quot;);<br>  $result = $client-&gt;send($message, 5);
+  // since Blogger doesn't return properly formed FaultCode, we just search for the string 'fault'
+  if ($result &amp;&amp; !stristr($result-&gt;serialize(), &quot;fault&quot;)) {
+    // watchdog(&quot;user&quot;, &quot;Success Blogger Auth. Response: &quot; .
+    $result-&gt;serialize());
+    return 1;
+  }
+  else if ($result) {
+    // watchdog(&quot;user&quot;, &quot;Blogger Auth failure. Response was &quot; . $result-&gt;serialize());
+    return 0;
+  }
+  else {
+    // watchdog(&quot;user&quot;, &quot;Blogger Auth failure. Could not connect.&quot;);
+    return 0;
+  }
+}</pre>
+<p>The <i>_auth</i> function is the heart of any authentication module. This function
+  is called whenever a user is attempting to login using your authentication module.
+  For successful authentications, this function returns TRUE. Otherwise, it returns
+  FALSE. This function always accepts 3 parameters, as shown above. These parameters
+  are passed by the user system (user.module). The user system parses the username
+  as typed by the user into 2 substrings - $name and $server. The parsing rules
+  are:</p>
+<p>&nbsp;</p>
+<table width="80%" border="0" cellspacing="0" cellpadding="0" align="center">
+  <tr>
+    <td colspan="2">
+      <div align="center"><b>_auth function parameters</b></div>
+    </td>
+  </tr>
+  <tr>
+    <td><b>$name</b></td>
+    <td>The substring before the final <i>'@'</i> character in the username field</td>
+  </tr>
+  <tr>
+    <td><b>$pass</b></td>
+    <td>The whole string submitted by the user in the password field</td>
+  </tr>
+  <tr>
+    <td><b>$server</b></td>
+    <td>The substring after the final <i>'@'</i> symbol in the username field</td>
+  </tr>
+</table>
+<p>So now lets use that $name, $pass, and $server which has been passed to our
+  <i>_auth</i> function. Blogger authenticates users via <a href="http://www.xmlrpc.com">XML-RPC</a>.
+  Your module may authenticate using a different technique. Drupal doesn't reallly
+  care how your module communicates with its registration source. It just <b>trusts</b>
+  the module. </p>
+<p>The lines above illustrate a typical <a href="http://www.xmlrpc.com">XML-RPC</a>
+  method call. Here we build up a message and send it to Blogger, storing the
+  response in a variable called <i>$response</i>. The message we pass conforms
+  to the published <a href="http://plant.blogger.com/API">Blogger XML-RPC API</a>.
+  Your module will no doubt implement a different API. One peculiarity of this
+  module is that we don't actually use the $server parameter. Blogger only accepts
+  authentication at <i>plant.blogger.com</i>, so we hard-code that value into
+  the <i>xmlrpc_client()</i> function. A more typical example might be the jabber
+  module, which uses the <i>$server</i> parameter to determine where to send the
+  authentication request. Also of note is the '5' parameter in the <i>$client-&gt;send()</i>
+  call. This is a timeout value in seconds. All authentication modules should
+  implement a timeout on their external calls. This makes sure to return control
+  to the user.module if your registration database has become inoperable or unreachable.</p>
+<pre>
+  if ($result &amp;&amp; !stristr($result-&gt;serialize(), &quot;fault&quot;)) {
+    // watchdog(&quot;user&quot;, &quot;Success Blogger auth. Response was &quot; . $result-&gt;serialize());
+    return 1;
+  }
+  else if ($result) {
+    // watchdog(&quot;user&quot;, &quot;Blogger auth failure.  Response was &quot; . $result-&gt;serialize());
+    return 0;
+  }
+  else {
+    // watchdog(&quot;user&quot;, &quot;Blogger auth failure.  Could not connect.&quot;);<br>
+    return 0;
+  }
+</pre>
+<p>This second half of the <i>_auth</i> function examines the <i>$response</i>
+  from plant.blogger.com and returns a TRUE or FALSE as appropriate. This is a
+  critical decision, so do be sure you have good logic here, and perform sufficient
+  testing for all cases. In the case of Blogger, we search for the string 'fault'
+  in the response. If that string is present, or there is no repsonse, our function
+  returns FALSE. Otherwise, Blogger has returned valid data to our method request
+  and we return TRUE. There are several watchdog() calls here which are commented
+  out. These are useful for debugging, so I've left them in the code as comments.
+</p>
+<pre>function blogger_page() {
+  global $theme;
+  $theme-&gt;header();
+  $theme-&gt;box(&quot;Blogger&quot;, blogger_auth_help());
+  $theme-&gt;footer();
+}</pre>
+<p>The _page function is not currently used, but it might be in the future. For
+  now, just copy what you see here, substituting your module name for <i>blogger</i>.</p>
+<pre>function blogger_auth_help() {
+  $site = variable_get(&quot;site_name&quot;, &quot;this web site&quot;);
+  $html_output = &quot;
+  &lt;p&gt;You may login to &lt;i&gt;%s&lt;/i&gt; using a &lt;b&gt;Blogger ID&lt;/b&gt;
+  and password. A Blogger ID consists of your Blogger username followed by &lt;i&gt;@blogger.com&lt;/i&gt;.
+  So a valid blogger ID is mwlily@blogger.com. If you are a Blogger member, go
+  ahead and login now.&lt;/p&gt;<br>
+  &lt;p&gt;Blogger offers you instant communication power by letting you post
+  your thoughts to the web whenever the urge strikes.
+  Blogger will publish to your current web site or help you create one. &lt;a
+  href=\&quot;http://www.blogger.com/about.pyra\&quot;&gt;Learn more about it&lt;/a&gt;.&quot;;
+
+  return sprintf(t($html_output), $site);
+}
+</pre>
+<p>The <i>_auth_help</i> function is prominently linked within Drupal, so you'll
+  want to write the best possible user help here. You'll want to tell users what
+  a proper username looks like for your authentication module. Also, you may advertise
+  a bit about your service at the end. Note that your help text is passed through
+  a t() function in the last line. This is Drupal's localization function. Translators
+  may localize your help text just like any other text in Drupal.</p>
+<h4>Publishing your module</h4>
+<p>Once you've written and tested your authentication module, you'll have to usually
+  want to share it with the world. The best way to do this is to add the module
+  to the <a href="http://cvs.drupal.org/viewcvs.cgi/contributions/modules/authentication/Blogger/?cvsroot=contrib">Drupal-Contrib
+  repository</a>. You'll need to request priveleges in this repository - see <a href="http://cvs.drupal.org/viewcvs.cgi/contributions/README?rev=HEAD&cvsroot=contrib&content-type=text/vnd.viewcvs-markup">README</a>
+  for the details. Then you'll want to announce your contribution on the <a href="http://www.drop.org/node.php?title=mailing%2Blists">Drupal_devel
+  and Drupal_support mailing lists</a>. You might also want to post a story on
+  <a href="http://www.drop.org">Drop.org</a>.<br>
+</p>
+  <?
+}
+
+function user_help_devel_userhook() {
+  ?>
+  <h3><a name="userhook">module_user()</a></h3>
+  <p>The <b>_user()</b> hook provides to Module Authors a mechanism for inserting text and form fields into the registration page, the user account view/edit pages, and the administer users page. This is useful if you want to add a custom field for your particular community. This is best illustrated by an example called <a href="http://cvs.drupal.org/viewcvs.cgi/contributions/modules/profile/?cvsroot=contrib">profile.module</a> in the Contrib repository. Profile.module is meant to be customized for your needs. Please download it and hack away until it does what you need.</p>
+
+<p>Consider this simpler example from a fictional recipe community web site called Julia's Kitchen. Julia customizes her Drupal powered site by creating a new file called <i>julia.module</i>. That file does the following:
+- new members must agree to Julia's Privacy Policy on the reg page.
+- members may list their favorite ingredients on their public user profile page</p>
+
+<p>Julia achieves this with the following code. The comments below should help you understand what is going on.</p>
+
+<pre>
+function julia_user($type, $edit, &$user) {
+    switch ($type) {
+      case "register_form":
+        $output .= form_item("Privacy Policy", "Julia would never sell your user information. She is just nice old French chef who lives near me in Cambridge, Massachussetts USA.");
+        $output .= form_checkbox("Accept <i>Julia's Kitchen</i> privacy policy.", julia_accept, 1, $edit["julia_accept"]);
+        return $output;
+      case "register_validate":
+        if ($edit["julia_accept"] == "1") {
+          // on success return the values you want to store
+          return array("julia_accept" => 1);
+        }
+        else {
+          // on error return an error message
+          return "You must accept the Julia's Kitchen privacy policy to register.";
+        }
+      case "view_public":
+        // when others look at user data
+        return form_item("Favorite Ingredient", $user->julia_favingredient);
+      case "view_private":
+        // when user tries to view his own user page.
+        return form_item("Favorite Ingredient", $user->julia_favingredient);
+      case "edit_form":
+        // when user tries to edit his own user page.
+        return form_textfield("Favorite Ingredient", "julia_favingredient", $user->julia_favingredient, 50, 65, "Tell everyone your secret spice");
+      case "edit_validate":
+        return user_save($user, array("julia_favingredient" => $edit["julia_favingredient"]));
+    }
+  }
+</pre>
+
+<p>Extra credit: use the <a href="http://cvs.drupal.org/viewcvs.cgi/contributions/modules/hotlist/?cvsroot=contrib">hotlist.module</a> to provide Julia users a mechanism for bookmarking their favorite recipes.</p>
+  <?
+}
 ?>
