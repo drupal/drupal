@@ -906,6 +906,10 @@ function taxonomy_term_page($str_tids = '', $depth = 0, $op = 'page') {
     while ($term = db_fetch_object($result)) {
       $names[] = $term->name;
     }
+    if (count($names) == 0) {
+      drupal_not_found();
+      return;
+    }
     drupal_set_title($title = implode(', ', $names));
 
     switch ($op) {
