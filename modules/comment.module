@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.82 2002/11/20 20:59:54 dries Exp $
+// $Id: comment.module,v 1.83 2002/11/20 21:01:45 dries Exp $
 
 $GLOBALS["cmodes"] = array(1 => t("Flat list - collapsed"), 2 => t("Flat list - expanded"), 3 => t("Threaded list - collapsed"), 4 => t("Threaded list - expanded"));
 $GLOBALS["corder"] = array(1 => t("Date - newest first"), 2 => t("Date - oldest first"));
@@ -260,7 +260,7 @@ function comment_post($edit) {
 
         $edit["cid"] = db_next_id("comments");
 
-        db_query("INSERT INTO comments (cid, nid, pid, uid, subject, comment, hostname, timestamp, status, score, users) VALUES ('%d', '%d', '%d', '$user->uid', '%s', '%s', '%s', '%s', '%s', $score, '%s')", $edit["cid"], $edit["nid"], $edit["pid"], $edit["subject"], $edit["comment"], getenv("REMOTE_ADDR"), time(), $status, $users);
+        db_query("INSERT INTO comments (cid, nid, pid, uid, subject, comment, hostname, timestamp, status, score, users) VALUES ('%d', '%d', '%d', '$user->uid', '%s', '%s', '%s', '%s', '%s', '%s', '%s')", $edit["cid"], $edit["nid"], $edit["pid"], $edit["subject"], $edit["comment"], getenv("REMOTE_ADDR"), time(), $status, $score, $users);
 
         /*
         ** Tell the other modules a new comment has been submitted:
