@@ -144,7 +144,7 @@ function account_stories($id) {
 function account_comments($id) {
   $result = db_query("SELECT * FROM comments WHERE link = 'story' AND author = $id ORDER BY timestamp DESC");
   while ($comment = db_fetch_object($result)) {
-    $output .= "<LI><A HREF=\"story.php?id=$comment->sid&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A></LI>\n";
+    $output .= "<LI><A HREF=\"story.php?id=$comment->lid&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A></LI>\n";
   }
   return $output;
 }
