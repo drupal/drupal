@@ -11,15 +11,11 @@
 
  if ($op == "reply") Header("Location: comments.php?op=reply&pid=0&sid=$sid&mode=$mode&order=$order&thold=$thold");
 
- $result = db_query("SELECT * FROM stories WHERE id = $id");
+ $result = db_query("SELECT stories.*, users.userid FROM stories LEFT JOIN users ON stories.author = users.id WHERE stories.status = 2 AND stories.id = $id");
  $story = db_fetch_object($result);
 
  $theme->header();
- $reply = "[ <A HREF=\"\"><FONT COLOR=\"$theme->hlcolor2\">home</FONT></A> | <A HREF=\"comments.php?op=reply&pid=0&sid=$story->sid\"><FONT COLOR=\"$theme->hlcolor2\">add a comment</FONT></A> ]";
- $theme->article($story, $reply);
-
- // if ($mode != "nocomments") include "comments.php";
- // 21/06/2000 - temporary disabled commnents
-
+ $theme->article($story, "[ <A HREF=\"\"><FONT COLOR=\"$theme->hlcolor2\">home</FONT></A> | <A HREF=\"comments.php?op=reply&pid=0&sid=$story->id\"><FONT COLOR=\"$theme->hlcolor2\">add a comment</FONT></A> ]");
+ if ($mode != "nocomments") include "comments.php";
  $theme->footer();
 ?>

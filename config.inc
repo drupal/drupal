@@ -64,7 +64,7 @@ $anonymous = "Anonymous Chicken";
 #
 # Default theme:
 #
-$cfg_theme = "default";
+$cfg_theme = "Dries";
 
 #
 # Submission moderation votes:

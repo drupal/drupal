@@ -47,6 +47,10 @@ function db_fetch_array($qid) {
   if ($qid) return mysql_fetch_array($qid);
 }
 
+function db_result($qid, $field) {
+  if ($qid) return mysql_result($qid, $field);
+}
+
 #
 # Automatically connect to database:
 #
