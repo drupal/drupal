@@ -91,7 +91,7 @@ function node_admin_edit($id) {
 }
 
 function node_delete($id) {
-  return (node_del("nid", $id) ? "node has been deleted." : "failed to delete node: node must be dumped first.");
+  return (node_del(array("nid" => $id)) ? "node has been deleted." : "failed to delete node: node must be dumped first.");
 }
 
 function node_query($type = "") {
