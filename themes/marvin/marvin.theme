@@ -62,11 +62,11 @@ function marvin_header() {
   }
 
   if ($help = menu_get_active_help()) {
-    $output .= "<small>$help</small><hr />";
+    $output .= "<div id=\"help\">$help</div>";
   }
 
   if ($message = drupal_get_message()) {
-    $output .= "<b>". t("Status") ."</b>: ". $message->message ."<hr />";
+    $output .= "<div class=\"message\"><strong>". t('Status') ."</strong>: $message->message</div>";
   }
 
   return $output;
