@@ -83,17 +83,18 @@ function system_user($type, &$edit, $user) {
       foreach ($themes as $key => $value) {
         $options .= "<option value=\"$key\"". (($edit["theme"] == $key) ? " selected=\"selected\"" : "") .">$key - $value->description</option>\n";
       }
-      $output .= form_item(t("Theme"), "<select name=\"edit[theme]\">$options</select>", t("Selecting a different theme will change the look and feel of the site."));
+      $data[t('Theme settings')] = form_item(t("Theme"), "<select name=\"edit[theme]\">$options</select>", t("Selecting a different theme will change the look and feel of the site."));
     }
+
     $zonelist = array(-11, -10, -9.5, -9, -8, -7, -6, -5, -4, -3.5, -3, -2, -1, 0, 1, 2, 3, 3.5, 4, 5, 5.5, 5.75, 6, 6.5, 7, 8, 9, 9.5, 10, 10.5, 11, 11.5, 12, 12.75, 13, 14);
     foreach ($zonelist as $offset) {
       $zone = $offset * 3600;
       $zones["$zone"] = date(variable_get("date_format_long", "l, F dS, Y - g:ia"), time() - date("Z") + $zone) . sprintf(" (GMT %s%02d:%02d)\n", ($offset >= 0) ? "+" : "-", floor(abs($offset)), (abs($offset) * 60) % 60);
     }
-    $output .= form_select(t("Time zone"), "timezone", $edit["timezone"], $zones, t("Select what time you currently have and your time zone settings will be set appropriate."));
+    $data[t('Locale settings')] = form_select(t("Time zone"), "timezone", $edit["timezone"], $zones, t("Select what time you currently have and your time zone settings will be set appropriate."));
   }
 
-  return $output;
+  return $data;
 }
 
 function system_view_general() {

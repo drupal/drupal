@@ -789,23 +789,6 @@ function user_register($edit = array()) {
     else if (variable_get("user_register", 1) == 0) {
       $error = t("Public registrations have been disabled by the site administrator.");
     }
-    else {
-      foreach (module_list() as $module) {
-        if (module_hook($module, 'user')) {
-          $result = module_invoke($module, 'user', "register_validate", $edit, $user);
-          if (is_array($result)) {
-            $data = array_merge($data, $result);
-          }
-          elseif (is_string($result)) {
-            $error = $result;
-            break;
-          }
-        }
-      }
-      if (!$error) {
-        $success = 1;
-      }
-    }
   }
 
   if ($success) {
@@ -869,11 +852,6 @@ function user_register($edit = array()) {
   }
   $output .= form_textfield(t("Username"), 'name', $edit['name'], 30, 64, t("Your full name or your preferred username: only letters, numbers and spaces are allowed."));
   $output .= form_textfield(t("E-mail address"), "mail", $edit['mail'], 30, 64, t("A password and instructions will be sent to this e-mail address, so make sure it is accurate."));
-  foreach (module_list() as $module) {
-    if (module_hook($module, 'user')) {
-      $output .= module_invoke($module, 'user', "register_form", $edit, $user);
-    }
-  }
   $output .= form_submit(t("Create new account"));
   $items[] = l(t("Request new password"), "user/password");
   $items[] = l(t("Log in"), "user/login");
@@ -969,12 +947,11 @@ function user_edit($edit = array()) {
       $edit = object2array($user);
     }
 
-    $output .= form_textfield(t("Username"), 'name', $edit['name'], 30, 55, t("Your full name or your preferred username: only letters, numbers and spaces are allowed."));
+    $output  = form_textfield(t("Username"), 'name', $edit['name'], 30, 55, t("Your full name or your preferred username: only letters, numbers and spaces are allowed."));
     $output .= form_textfield(t("E-mail address"), "mail", $edit['mail'], 30, 55, t("Insert a valid e-mail address.  All e-mails from the system will be sent to this address. The e-mail address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by e-mail."));
-
-    $output .= implode("\n", module_invoke_all('user', "edit_form", $edit, $user));
-
     $output .= form_item(t("Password"), "<input type=\"password\" name=\"edit[pass1]\" size=\"12\" maxlength=\"24\" /> <input type=\"password\" name=\"edit[pass2]\" size=\"12\" maxlength=\"24\" />", t("Enter your new password twice if you want to change your current password or leave it blank if you are happy with your current password."));
+    $output  = form_group(t('Account information'), $output);
+    $output .= _user_settings();
     $output .= form_submit(t("Save user information"));
 
     $output = form($output, "post", 0, array("enctype" => "multipart/form-data"));
@@ -982,6 +959,24 @@ function user_edit($edit = array()) {
   }
   else {
     $output = user_login();
+  }
+
+  return $output;
+}
+
+function _user_settings($style = 'edit_form') {
+
+  foreach (module_list() as $module) {
+    if ($data = module_invoke($module, 'user', $style, $edit, $user)) {
+      foreach ($data as $title => $form) {
+        $groups[$title] .= $form;
+      }
+    }
+  }
+
+  $output = '';
+  foreach ($groups as $title => $form) {
+    $output .= form_group($title, $form);
   }
 
   return $output;
@@ -1697,24 +1692,7 @@ function user_help($section = "admin/help#user") {
       function julia_user(\$type, \$edit, &\$user) {
         // What type of registration action are we taking?
         switch (\$type) {
-          case t(\"register_form\"):
-            // Add two items to the resigtration form.
-            \$output .= form_item(\"Privacy Policy\", \"Julia would never sell your user information. She is just a nice \".
-                                  \"old French chef who lives near me in Cambridge, Massachussetts USA.\");
-            \$output .= form_checkbox(\"Accept <i>Julia's Kitchen</i> privacy policy.\",
-                                      julia_accept, 1, \$edit[\"julia_accept\"]);
-            return \$output;
-          case t(\"register_validate\"):
-            // The user has filled out the form and checked the \"accept\" box.
-            if (\$edit[\"julia_accept\"] == \"1\") {
-              // on success return the values you want to store
-              return array(\"julia_accept\" => 1);
-            }
-            else {
-              // on error return an error message
-              return \"You must accept the Julia's Kitchen privacy policy to register.\";
-            }
-          case t(\"view_public\"):
+         case t(\"view_public\"):
             // when others look at user data
             return form_item(\"Favorite Ingredient\", \$user->julia_favingredient);
           case t(\"view_private\"):
