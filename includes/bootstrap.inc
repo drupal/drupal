@@ -1,5 +1,5 @@
 <?php
-/* $Id: bootstrap.inc,v 1.7 2004/01/13 19:25:36 dries Exp $ */
+/* $Id: bootstrap.inc,v 1.8 2004/01/14 22:30:08 dries Exp $ */
 
 function conf_init() {
 
@@ -60,14 +60,14 @@ function variable_del($name) {
 }
 
 function cache_get($key) {
-  $cache = db_fetch_object(db_query("SELECT data, created FROM {cache} WHERE cid = '%s'", $key));
+  $cache = db_fetch_object(db_query("SELECT data, created, headers FROM {cache} WHERE cid = '%s'", $key));
   return $cache->data ? $cache : 0;
 }
 
-function cache_set($cid, $data, $expire = 0) {
-  db_query("UPDATE {cache} SET data = '%s', created = %d, expire = %d WHERE cid = '%s'", $data, time(), $expire, $cid);
+function cache_set($cid, $data, $expire = 0, $headers = NULL) {
+  db_query("UPDATE {cache} SET data = '%s', created = %d, expire = %d, headers = '%s' WHERE cid = '%s'", $data, time(), $expire, $headers, $cid);
   if (!db_affected_rows()) {
-    db_query("INSERT INTO {cache} (cid, data, created, expire) VALUES('%s', '%s', %d, %d)", $cid, $data, time(), $expire);
+    db_query("INSERT INTO {cache} (cid, data, created, expire, headers) VALUES('%s', '%s', %d, %d, '%s')", $cid, $data, time(), $expire, $headers);
   }
 }
 
@@ -85,7 +85,7 @@ function page_set_cache() {
 
   if (!$user->uid && $_SERVER["REQUEST_METHOD"] == "GET") {
     if ($data = ob_get_contents()) {
-      cache_set(request_uri(), $data, 1);
+      cache_set(request_uri(), $data, 1, drupal_get_headers());
     }
   }
 }
@@ -137,6 +137,7 @@ function drupal_page_header() {
       // Send appropriate response:
       header("Last-Modified: $date");
       header("ETag: $etag");
+      header($cache->headers);
       print $cache->data;
 
       /*

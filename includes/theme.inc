@@ -1,5 +1,5 @@
 <?php
-/* $Id: theme.inc,v 1.180 2004/01/11 15:05:20 dries Exp $ */
+/* $Id: theme.inc,v 1.181 2004/01/14 22:30:08 dries Exp $ */
 
 /**
  * @file
@@ -137,7 +137,7 @@ function theme_header() {
   $output .= "<html xmlns=\"http://www.w3.org/1999/xhtml\">";
   $output .= "<head>";
   $output .= " <title>". (drupal_get_title() ? drupal_get_title() : variable_get('site_name', "drupal")) ."</title>";
-  $output .= theme_head();
+  $output .= drupal_get_html_head();
   $output .= " <style type=\"text/css\" media=\"all\">";
   $output .= "  @import url(misc/drupal.css);";
   $output .= " </style>";
@@ -459,26 +459,6 @@ function theme_error($message) {
  */
 function theme_xml_icon($url) {
   return "<div class=\"xml-icon\"><a href=\"$url\"><img src=\"misc/xml.gif\" width=\"36\" height=\"14\" alt=\"". t('XML feed') ."\" /></a></div>";
-}
-
-/**
- * Execute hook _head which is run at the start of the page, and output should
- * be in the head tags.
- *
- * @param $main (optional)
- *
- * @return a string containing the @a error output.
- */
-function theme_head($main = 0) {
-  global $base_url;
-  $output .= "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />";
-  $output .= "<base href=\"$base_url/\" />\n";
-  $output .= "<style type=\"text/css\">\n";
-  $output .= "@import url(misc/drupal.css);\n";
-  $output .= "</style>\n";
-  $head = module_invoke_all("head", $main);
-  $output .= implode($head, "\n");
-  return $output;
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.157 2004/01/11 20:16:26 dries Exp $
+// $Id: blog.module,v 1.158 2004/01/14 22:30:09 dries Exp $
 
 function blog_settings() {
   $output = form_textarea(t("Explanation or submission guidelines"), "blog_help", variable_get("blog_help", ""), 70, 4, t("This text is displayed at the top of the blog submission form.  It's useful for helping or instructing your users."));
@@ -125,6 +125,7 @@ function blog_page_user($uid) {
   $output .= theme('pager', NULL, variable_get("default_nodes_main", 10));
   $output .= theme('xml_icon', url("blog/feed/$account->uid"));
 
+  drupal_set_html_head('<link rel="alternate" type="application/rss+xml" title="RSS - '. $title .'" href="'. url("blog/feed/$account->uid") .'">');
   print theme("page", $output, $title);
 }
 
@@ -141,6 +142,7 @@ function blog_page_last() {
   $output .= theme('pager', NULL, variable_get("default_nodes_main", 10));
   $output .= theme('xml_icon', url('blog/feed'));
 
+  drupal_set_html_head('<link rel="alternate" type="application/rss+xml" title="RSS - blogs" href="'. url('blog/feed') .'">');
   print theme("page", $output);
 }
 

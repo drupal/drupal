@@ -1,5 +1,5 @@
 <?php
-/* $Id: aggregator.module,v 1.155 2004/01/11 20:31:25 dries Exp $ */
+/* $Id: aggregator.module,v 1.156 2004/01/14 22:30:09 dries Exp $ */
 
 function aggregator_help($section) {
   switch ($section) {
@@ -729,8 +729,7 @@ function aggregator_page_opml() {
   $output .= "</body>\n";
   $output .= "</opml>\n";
 
-  header("Content-Type: text/xml");
-
+  drupal_set_header("Content-Type: text/xml; charset=utf-8");
   print $output;
 }
 

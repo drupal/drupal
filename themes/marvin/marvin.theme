@@ -1,5 +1,5 @@
 <?php
-// $Id: marvin.theme,v 1.122 2003/12/30 12:10:51 dries Exp $
+// $Id: marvin.theme,v 1.123 2004/01/14 22:30:09 dries Exp $
 
 function marvin_help($section) {
 
@@ -19,7 +19,7 @@ function marvin_header() {
   $output  = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
   $output .= "<html>\n";
   $output .= "<head>\n";
-  $output .= theme_head($main);
+  $output .= drupal_get_html_head();
   $output .= "<title>";
 
   if ($title = drupal_get_title()) {

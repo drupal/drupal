@@ -68,7 +68,8 @@ CREATE TABLE [dbo].[cache] (
   [cid] [varchar] (255) NOT NULL ,
   [data] [text] NULL ,
   [expire] [int] NOT NULL ,
-  [created] [int] NOT NULL
+  [created] [int] NOT NULL ,
+  [headers] [text] NOT NULL
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
