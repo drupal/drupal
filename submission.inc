@@ -1,7 +1,7 @@
 <?
 
 function submission_count() {
-  $result = db_query("SELECT COUNT(id) FROM submissions");
+  $result = db_query("SELECT COUNT(id) FROM submissions WHERE status = 1");
   return ($result) ? mysql_result($result, 0) : 0;
 }
 
