@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.module,v 1.22 2002/05/13 22:16:33 kjartan Exp $
+// $Id: tracker.module,v 1.23 2002/05/20 07:32:01 dries Exp $
 
 function tracker_help() {
   $output .= "The tracker module is a handy module for displaying the most recent comments happenning all over your web site.  By following the <i>view new comments</i> link in the user block, a user may quickly review all recent comments.  When a user first arrives at the main tracker page, she sees all recent comments in reverse chronological order, grouped by post.  In addition, a self-centered user may choose to display only his own comments.</p>";
@@ -15,8 +15,14 @@ function tracker_link($type) {
   return $links ? $links : array();
 }
 
+function tracker_conf_options() {
+  $period = array(3600 => format_interval(3600), 10800 => format_interval(10800), 21600 => format_interval(21600), 32400 => format_interval(32400), 43200 => format_interval(43200), 86400 => format_interval(86400), 172800 => format_interval(172800), 259200 => format_interval(259200), 604800 => format_interval(604800), 1209600 => format_interval(1209600), 2419200 => format_interval(2419200), 1000000000 => "All");
+  $output .= form_select("Show comments more recent than", "tracker_period", variable_get("tracker_period", 259200), $period, "Comments younger than this get displayed.");
+  return $output;
+}
+
 function tracker_comments($id = 0) {
-  $period = time() - 259200 *20;  // all comments of the past 3 days
+  $period = time() - variable_get("tracker_period", 259200);  // all comments of the past 3 days if not configured to a different value
 
   if ($id) {
     $sresult = db_query("SELECT n.nid, n.title, COUNT(n.nid) AS comments, MAX(c.timestamp) AS last_comment FROM comments c LEFT JOIN node n ON c.nid = n.nid WHERE c.timestamp > $period AND c.uid = '%s' GROUP BY n.nid, n.title DESC ORDER BY last_comment DESC LIMIT 10", $id);
