@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.143 2003/06/19 17:26:27 dries Exp $
+// $Id: comment.module,v 1.144 2003/06/22 06:47:08 dries Exp $
 
 $GLOBALS["cmodes"] = array(1 => t("Flat list - collapsed"), 2 => t("Flat list - expanded"), 3 => t("Threaded list - collapsed"), 4 => t("Threaded list - expanded"));
 $GLOBALS["corder"] = array(1 => t("Date - newest first"), 2 => t("Date - oldest first"));
@@ -499,10 +499,6 @@ function comment_render($node, $cid = 0) {
       */
 
       $query .= "SELECT c.cid as cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name, u.data, c.score, c.users FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.nid = '". check_query($nid) ."' AND c.status = 0";
-
-      if ($cid) {
-        $query .= " AND pid = '". check_query($cid) ."'";
-      }
 
       $query .= " GROUP BY c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name, u.data, c.score, c.users";
 
