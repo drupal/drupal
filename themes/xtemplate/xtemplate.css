@@ -48,37 +48,35 @@ img {
 .header .menu {
   background-color: #69c;
   padding: 5px 5px 0px 5px;
-
 }
 .menu #logo {
   vertical-align: bottom;
-  float: left;
+  border: 0px;
 }
 .menu #primary {
-  padding: 5px 10px 5px 0px;
-  position: absolute;
-  text-align: right;
   font-size: 1.0em;
-  float: right;
+  padding: 0em 0.8em 0.5em 0;
   color: #9cf;
-  left: 225px;
 }
 .menu #primary a {
   font-weight: bold;
   color: #fff;
 }
 .menu #secondary {
-  padding: 0px 10px 5px 0px;
-  position: absolute;
-  text-align: right;
+  padding: 0 1em 0.5em 0;
   font-size: 0.8em;
-  float: right;
   color: #9cf;
-  left: 225px;
 }
 .menu #secondary a {
   font-weight: bold;
   color: #9cf;
+}
+.menu .search-form {
+  padding: 0 0.5em 0 0.5em;
+  margin: 0 0 0.5em 0;
+}
+.menu .search-form input {
+  border: 1px solid #369;
 }
 #secondary form {
   display: inline;
