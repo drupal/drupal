@@ -799,7 +799,7 @@ $config = conf_init();
 
 include_once "includes/$config.php";
 include_once "includes/database.inc";
-//include_once "includes/xmlrpc.inc";
+include_once "includes/xmlrpc.inc";
 include_once "includes/module.inc";
 include_once "includes/theme.inc";
 include_once "includes/pager.inc";
@@ -807,14 +807,14 @@ include_once "includes/pager.inc";
 // initialize configuration variables, using values from conf.php if available:
 $conf = variable_init(isset($conf) ? $conf : array());
 
-// initialize installed modules:
-module_init();
-
 // initialize localization system:
 $locale = locale_init();
 
 // initialize theme:
 $theme = theme_init();
+
+// initialize installed modules:
+module_init();
 
 // set error handler:
 set_error_handler("error_handler");
