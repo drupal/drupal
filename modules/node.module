@@ -376,6 +376,7 @@ function node_block() {
 }
 
 function node_feed() {
+ 
   $result = db_query("SELECT nid, type FROM node WHERE promote = '1' AND status = '". node_status("posted") ."' ORDER BY timestamp DESC LIMIT 15");
 
   while ($node = db_fetch_object($result)) {
@@ -392,6 +393,8 @@ function node_feed() {
   $output .= "<rss version=\"0.91\">\n";
   $output .= format_rss_channel(variable_get("site_name", "drupal"), path_uri() ."module.php?mod=node&op=feed", variable_get("site_slogan", ""), $items);
   $output .= "</rss>\n";
+
+  header("Content-Type: text/xml");
 
   print $output;
 
