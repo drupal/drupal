@@ -187,7 +187,7 @@ function user_validate_mail($mail) {
   ** allowed.
   */
 
-  if ($mail && !eregi("^[_+\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,3}$", $mail)) {
+  if ($mail && !eregi("^[a-z0-9]+([_.-][a-z0-9]+)*@([a-z0-9]+([.-][a-z0-9]+)*)+\\.[a-z]{2,4}$")) {
     return t("The e-mail address '$mail' is not valid.");
   }
 }
