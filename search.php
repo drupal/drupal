@@ -53,7 +53,7 @@
 
  while ($entry = db_fetch_object($result)) {
    $num++;
-   $output .= "<P>$num) <B>". format_story_link($entry) ."</B> (". format_plural($entry->comments, "comment", comments) .")<BR><SMALL>by ". format_username($entry->userid) ."</B>, posted on ". format_date($entry->timestamp) .".</SMALL></P>\n";
+   $output .= "<P>$num) <B><A HREF=\"discussion.php?id=$entry->id\">$entry->subject</A></B> (". format_plural($entry->comments, "comment", comments) .")<BR><SMALL>by ". format_username($entry->userid) ."</B>, posted on ". format_date($entry->timestamp) .".</SMALL></P>\n";
  }
 
  if ($num == 0) $output .= "<P>Your search did <B>not</B> match any articles in our database: <UL><LI>Try using fewer words.</LI><LI>Try using more general keywords.</LI><LI>Try using different keywords.</LI></UL></P>\n";

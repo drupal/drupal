@@ -1,7 +1,7 @@
 <?
 
 function discussion_score($comment) {
-  $value = ($comments->votes) ? $comment->score / $comment->votes : $comments->score;
+  $value = ($comments->votes) ? $comment->score / $comment->votes : ($comments->score) ? $comments->score : 0;
   return (strpos($value, ".")) ? substr($value ."00", 0, 4) : $value .".00";
 }
 
@@ -21,7 +21,7 @@ function discussion_moderate($moderate) {
   }
 }
 
-function discussion_kids($cid, $mode, $order = 0, $thold = 0, $level = 0, $dummy = 0) {
+function discussion_kids($cid, $mode, $level = 0, $dummy = 0) {
   global $user, $theme;
 
   $comments = 0;
@@ -34,25 +34,22 @@ function discussion_kids($cid, $mode, $order = 0, $thold = 0, $level = 0, $dummy
         if ($level && !$comments) print "<UL>";
         $comments++;
 
-        $link = "<A HREF=\"discussion.php?op=reply&sid=$comment->sid&pid=$comment->cid&mode=$mode&order=$order&thold=$thold\"><FONT COLOR=\"$theme->hlcolor2\">reply to this comment</FONT></A>";
-        $theme->comment($comment->userid, stripslashes($comment->subject), stripslashes($comment->comment), $comment->timestamp, stripslashes($comment->url), stripslashes($comment->femail), $comment->score, $comment->cid, $link);
+        $link = "<A HREF=\"discussion.php?op=reply&sid=$comment->sid&pid=$comment->cid\"><FONT COLOR=\"$theme->hlcolor2\">reply to this comment</FONT></A>";
+        $theme->comment($comment->userid, stripslashes($comment->subject), stripslashes($comment->comment), $comment->timestamp, stripslashes($comment->url), stripslashes($comment->femail), discussion_score($comment), $comment->cid, $link);
         
-        discussion_kids($comment->cid, $mode, $order, $thold, $level + 1, $dummy + 1);
+        discussion_kids($comment->cid, $mode, $level + 1, $dummy + 1);
       }
     }
   } 
   elseif ($mode == "flat") {
     while ($comment = db_fetch_object($result)) {
       if ($comment->score >= $thold) {
-        $link = "<A HREF=\"discussion.php?op=reply&sid=$comment->sid&pid=$comment->cid&mode=$mode&order=$order&thold=$thold\"><FONT COLOR=\"$theme->hlcolor2\">reply to this comment</FONT></A>";
-        $theme->comment($comment->userid, check($comment->subject), check($comment->comment), $comment->timestamp, $comment->url, $comment->femail, $comment->score, $comment->cid, $link);
+        $link = "<A HREF=\"discussion.php?op=reply&sid=$comment->sid&pid=$comment->cid\"><FONT COLOR=\"$theme->hlcolor2\">reply to this comment</FONT></A>";
+        $theme->comment($comment->userid, check_output($comment->subject), check_output($comment->comment), $comment->timestamp, $comment->url, $comment->femail, discussion_score($comment), $comment->cid, $link);
       } 
-      discussion_kids($comment->cid, $mode, $order, $thold);
+      discussion_kids($comment->cid, $mode);
     }
   } 
-  elseif ($mode == "disabled") {
-    // do nothing
-  }
   else {
     print "ERROR: we should not get here!";
   }
@@ -62,8 +59,8 @@ function discussion_kids($cid, $mode, $order = 0, $thold = 0, $level = 0, $dummy
   }
 }
 
-function discussion_childs($cid, $mode, $order, $thold, $level = 0, $thread) {
-  global $anonymous, $theme, $user;
+function discussion_childs($cid, $level = 0, $thread) {
+  global $theme, $user;
 
   ### Perform SQL query:
   $result = db_query("SELECT c.*, u.* FROM comments c LEFT JOIN users u ON c.author = u.id WHERE c.pid = $cid ORDER BY c.timestamp, c.cid");
@@ -79,16 +76,10 @@ function discussion_childs($cid, $mode, $order, $thold, $level = 0, $thread) {
     $comments++;
 
     ### Compose link:
-    $thread .= "<LI><A HREF=\"discussion.php?id=$comment->sid&cid=$comment->cid&pid=$comment->pid";
-    $thread .= ($mode) ? "&mode=$mode" : "&mode=threaded";
-    $thread .= ($order) ? "&order=$order" : "&order=0";
-    $thread .= ($thold) ? "&thold=$thold" : "&thold=0";
-    $thread .= "\">". check($comment->subject) ."</A> by ";
-    $thread .= ($comment->userid) ? $comment->userid : $anonymous;
-    $thread .= " <SMALL>(". discussion_score($comment) .")<SMALL></LI>";
+    $thread .= "<LI><A HREF=\"discussion.php?id=$comment->sid&cid=$comment->cid&pid=$comment->pid\">". check_output($comment->subject) ."</A> by ". format_username($comment->userid) ." <SMALL>(". discussion_score($comment) .")<SMALL></LI>";
 
     ### Recursive:
-    discussion_childs($comment->cid, $mode, $order, $thold, $level + 1, &$thread);
+    discussion_childs($comment->cid, $level + 1, &$thread);
   } 
 
   if ($level && $comments) {
@@ -98,22 +89,41 @@ function discussion_childs($cid, $mode, $order, $thold, $level = 0, $thread) {
   return $thread;
 }
 
-function discussion_display($sid, $pid, $cid, $mode, $order, $thold, $level = 0) {
+function discussion_settings($mode, $order, $thold) {
+  global $user;
+
+  if ($user) {
+    db_query("UPDATE users SET umode = '$mode', uorder = '$order', thold = '$thold' WHERE id = '$user->id'");
+    user_rehash();
+  }
+}
+
+function discussion_display($sid, $pid, $cid, $level = 0) {
   global $user, $theme;
 
   ### Pre-process variables:
   $pid = (empty($pid)) ? 0 : $pid;
-  $cid = (empty($pid)) ? 0 : $cid;
+  $cid = (empty($cid)) ? 0 : $cid;
+  $mode  = ($user) ? $user->umode  : "threaded";
+  $order = ($user) ? $user->uorder : "1";
+  $thold = ($user) ? $user->thold  : "0";
 
   ### Compose story-query:
-  $result = db_query("SELECT stories.*, users.userid FROM stories LEFT JOIN users ON stories.author = users.id WHERE stories.status != 0 AND stories.id = $sid");
+  $result = db_query("SELECT s.*, u.userid FROM stories s LEFT JOIN users u ON s.author = u.id WHERE s.status != 0 AND s.id = $sid");
   $story = db_fetch_object($result);
 
   ### Display story:
-  $theme->article($story, "[ <A HREF=\"\"><FONT COLOR=\"$theme->hlcolor2\">home</FONT></A> | <A HREF=\"discussion.php?op=reply&sid=$story->id&pid=0\"><FONT COLOR=\"$theme->hlcolor2\">add a comment</FONT></A> ]");
+  if ($story->status == 1) {
+    $theme->article($story, "[ <A HREF=\"submission.php\"><FONT COLOR=\"$theme->hlcolor2\">submission queue</FONT></A> | <A HREF=\"discussion.php?op=reply&sid=$story->id&pid=0\"><FONT COLOR=\"$theme->hlcolor2\">add a comment</FONT></A> ]");
+  }
+  else {
+    $theme->article($story, "[ <A HREF=\"\"><FONT COLOR=\"$theme->hlcolor2\">home</FONT></A> | <A HREF=\"discussion.php?op=reply&sid=$story->id&pid=0\"><FONT COLOR=\"$theme->hlcolor2\">add a comment</FONT></A> ]");
+  }
 
   ### Display `comment control'-box:
-  $theme->commentControl($sid, $title, $thold, $mode, $order);
+  if ($user) {
+    $theme->commentControl($sid, $title, $thold, $mode, $order);
+  }
 
   ### Compose query:
   $query = "SELECT c.*, u.* FROM comments c LEFT JOIN users u ON c.author = u.id WHERE c.sid = $sid AND c.pid = $pid";
@@ -132,20 +142,20 @@ function discussion_display($sid, $pid, $cid, $mode, $order, $thold, $level = 0)
     ### Dynamically compose the `reply'-link:
     if ($pid != 0) {
       list($pid) = mysql_fetch_row(mysql_query("SELECT pid FROM comments WHERE cid = $comment->pid"));
-      $link = "<A HREF=\"discussion.php?id=$comment->sid&pid=$pid&mode=$mode&order=$order&thold=$thold\"><FONT COLOR=\"$theme->hlcolor2\">return to parent</FONT></A> | <A HREF=\"discussion.php?op=reply&sid=$comment->sid&pid=$comment->cid&mode=$mode&order=$order&thold=$thold\"><FONT COLOR=\"$theme->hlcolor2\">reply to this comment</FONT></A>";
+      $link = "<A HREF=\"discussion.php?id=$comment->sid&pid=$pid\"><FONT COLOR=\"$theme->hlcolor2\">return to parent</FONT></A> | <A HREF=\"discussion.php?op=reply&sid=$comment->sid&pid=$comment->cid\"><FONT COLOR=\"$theme->hlcolor2\">reply to this comment</FONT></A>";
     }
     else {
-      $link = "<A HREF=\"discussion.php?op=reply&sid=$comment->sid&pid=$comment->cid&mode=$mode&order=$order&thold=$thold\"><FONT COLOR=\"$theme->hlcolor2\">reply to this comment</FONT></A> ";
+      $link = "<A HREF=\"discussion.php?op=reply&sid=$comment->sid&pid=$comment->cid\"><FONT COLOR=\"$theme->hlcolor2\">reply to this comment</FONT></A> ";
     }
 
     ### Display the comments:
     if (empty($mode) || $mode == "threaded") {
-      $thread = discussion_childs($comment->cid, $mode, $order, $thold);
-      $theme->comment($comment->userid, check($comment->subject), check($comment->comment), $comment->timestamp, $comment->url, $comment->femail, $comment->score, $comment->cid, $link, $thread);
+      $thread = discussion_childs($comment->cid);
+      $theme->comment($comment->userid, check_output($comment->subject), check_output($comment->comment), $comment->timestamp, $comment->url, $comment->femail, $comment->score, $comment->cid, $link, $thread);
     }
     else {
-      $theme->comment($comment->userid, check($comment->subject), check($comment->comment), $comment->timestamp, $comment->url, $comment->femail, $comment->score, $comment->cid, $link);
-      discussion_kids($comment->cid, $mode, $order, $thold, $level);
+      $theme->comment($comment->userid, check_output($comment->subject), check_output($comment->comment), $comment->timestamp, $comment->url, $comment->femail, $comment->score, $comment->cid, $link);
+      discussion_kids($comment->cid, $mode, $level);
     }
   }
 
@@ -154,13 +164,13 @@ function discussion_display($sid, $pid, $cid, $mode, $order, $thold, $level = 0)
   print "</FORM>\n";
 }
 
-function discussion_reply($pid, $sid, $mode, $order, $thold) {
+function discussion_reply($pid, $sid) {
   global $anonymous, $user, $theme;
 
   ### Extract parent-information/data:
   if ($pid) {
     $item = db_fetch_object(db_query("SELECT comments.*, users.userid FROM comments LEFT JOIN users ON comments.author = users.id WHERE comments.cid = $pid"));
-    $theme->comment($item->userid, check(stripslashes($item->subject)), check(stripslashes($item->comment)), $item->timestamp, stripslashes($item->url), stripslashes($item->femail), $item->score, $item->cid, "reply to this comment");
+    $theme->comment($item->userid, check_output(stripslashes($item->subject)), check_output(stripslashes($item->comment)), $item->timestamp, stripslashes($item->url), stripslashes($item->femail), $item->score, $item->cid, "reply to this comment");
   }
   else {
     $item = db_fetch_object(db_query("SELECT stories.*, users.userid FROM stories LEFT JOIN users ON stories.author = users.id WHERE stories.status != 0 AND stories.id = $sid"));
@@ -187,23 +197,18 @@ function discussion_reply($pid, $sid, $mode, $order, $thold) {
   ### Subject field:
   $output .= "<P>\n";
   $output .= " <B>Subject:</B><BR>\n";
-  if (!eregi("Re:",$item->subject)) $item->subject = "Re: $item->subject"; 
-    // Only one 'Re:' will just do fine. ;)
-  $output .= " <INPUT TYPE=\"text\" NAME=\"subject\" SIZE=\"50\" MAXLENGTH=\"60\" VALUE=\"". stripslashes($item->subject) ."\">\n";
+  $output .= " <INPUT TYPE=\"text\" NAME=\"subject\" SIZE=\"50\" MAXLENGTH=\"60\">\n";
   $output .= "</P>\n";
 
   ### Comment field:
   $output .= "<P>\n";
   $output .= " <B>Comment:</B><BR>\n";
-  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"comment\">". stripslashes($user->signature) ."</TEXTAREA><BR>\n";
+  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"comment\">". check_input($user->signature) ."</TEXTAREA><BR>\n";
   $output .= "</P>\n";
  
   ### Hidden fields:
   $output .= "<INPUT TYPE=\"hidden\" NAME=\"pid\" VALUE=\"$pid\">\n";
   $output .= "<INPUT TYPE=\"hidden\" NAME=\"sid\" VALUE=\"$sid\">\n";
-  $output .= "<INPUT TYPE=\"hidden\" NAME=\"mode\" VALUE=\"$mode\">\n";
-  $output .= "<INPUT TYPE=\"hidden\" NAME=\"order\" VALUE=\"$order\">\n";
-  $output .= "<INPUT TYPE=\"hidden\" NAME=\"thold\" VALUE=\"$thold\">\n";
 
   ### Preview button:
   $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Preview comment\"> (You must preview at least once before you can submit.)\n";
@@ -212,12 +217,12 @@ function discussion_reply($pid, $sid, $mode, $order, $thold) {
   $theme->box("Reply", $output); 
 }
 
-function comment_preview($pid, $sid, $subject, $comment, $mode, $order, $thold) {
+function comment_preview($pid, $sid, $subject, $comment) {
   global $anonymous, $user, $theme;
 
   ### Preview comment:
-  if ($user) $theme->comment("", check(stripslashes($subject)), check(stripslashes($comment)), time(), "", "", "na", "", "reply to this comment");
-  else $theme->comment($user->userid,  check(stripslashes($subject)), check(stripslashes($comment)), time(), stripslashes($user->url), stripslashes($user->femail), "na", "", "reply to this comment");
+  if ($user) $theme->comment("", check_output(stripslashes($subject)), check_output(stripslashes($comment)), time(), "", "", "na", "", "reply to this comment");
+  else $theme->comment($user->userid,  check_output(stripslashes($subject)), check_output(stripslashes($comment)), time(), stripslashes($user->url), stripslashes($user->femail), "na", "", "reply to this comment");
 
   ### Build reply form:
   $output .= "<FORM ACTION=\"discussion.php\" METHOD=\"post\">\n";
@@ -239,41 +244,36 @@ function comment_preview($pid, $sid, $subject, $comment, $mode, $order, $thold) 
   ### Subject field:
   $output .= "<P>\n";
   $output .= " <B>Subject:</B><BR>\n";
-  $output .= " <INPUT TYPE=\"text\" NAME=\"subject\" SIZE=\"50\" MAXLENGTH=\"60\" VALUE=\"". stripslashes($subject) ."\">\n";
+  $output .= " <INPUT TYPE=\"text\" NAME=\"subject\" SIZE=\"50\" MAXLENGTH=\"60\" VALUE=\"". check_input($subject) ."\">\n";
   $output .= "</P>\n";
 
   ### Comment field:
   $output .= "<P>\n";
   $output .= " <B>Comment:</B><BR>\n";
-  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"comment\">". stripslashes($comment) ."</TEXTAREA><BR>\n";
+  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"comment\">". check_input($comment) ."</TEXTAREA><BR>\n";
   $output .= "</P>\n";
   
   ### Hidden fields:
   $output .= "<INPUT TYPE=\"hidden\" NAME=\"pid\" VALUE=\"$pid\">\n";
   $output .= "<INPUT TYPE=\"hidden\" NAME=\"sid\" VALUE=\"$sid\">\n";
-  $output .= "<INPUT TYPE=\"hidden\" NAME=\"mode\" VALUE=\"$mode\">\n";
-  $output .= "<INPUT TYPE=\"hidden\" NAME=\"order\" VALUE=\"$order\">\n";
-  $output .= "<INPUT TYPE=\"hidden\" NAME=\"thold\" VALUE=\"$thold\">\n";
 
-  ### Preview and submit buttons:
   if (empty($subject)) {
     $output .= "<P>\n";
     $output .= " <FONT COLOR=\"red\"><B>Warning:</B></FONT> you did not supply a <U>subject</U>.\n";
     $outout .= "</P>\n";
-    $output .= "<P>\n";
-    $output .= " <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Preview comment\">\n";
-    $output .= "</P>\n";
   }
-  else {
-    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Preview comment\">\n";
-    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Post comment\">\n";
-    $output .= "</FORM>\n";
-  }
+
+  ### Preview and submit button:
+  $output .= "<P>\n";
+  $output .= " <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Preview comment\">\n";
+  $output .= " <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Post comment\">\n";
+  $output .= " </FORM>\n";
+  $output .= "</P>\n";
 
   $theme->box("Reply", $output); 
 }
 
-function comment_post($pid, $sid, $subject, $comment, $mode, $order, $thold) {
+function comment_post($pid, $sid, $subject, $comment) {
   global $user, $theme;
 
   ### Check for fake threads:
@@ -283,30 +283,22 @@ function comment_post($pid, $sid, $subject, $comment, $mode, $order, $thold) {
   $duplicate = db_result(db_query("SELECT COUNT(*) FROM comments WHERE pid = '$pid' AND sid = '$sid' AND subject = '". addslashes($subject) ."' AND comment = '". addslashes($comment) ."'"), 0);
 
   if ($fake != 1) {
+    watchdog(3, "attemp to insert fake comment");
     $theme->box("fake comment", "fake comment: $fake");
   }
   elseif ($duplicate != 0) {
+    watchdog(3, "attemp to insert duplicate comment");
     $theme->box("duplicate comment", "duplicate comment: $duplicate");
   }
   else { 
-    if ($user) {
-      ### Add comment to database:
-      db_insert("INSERT INTO comments (pid, sid, author, subject, comment, hostname, timestamp) VALUES ($pid, $sid, $user->id, '". addslashes($subject) ."', '". addslashes($comment) ."', '". getenv("REMOTE_ADDR") ."', '". time() ."')");
+    ### Validate subject:
+    $subject = ($subject) ? $subject : substr($comment, 0, 29);
 
-      ### Compose header:
-      $header = "discussion.php?id=$sid";
-      $header .= ($mode) ? "&mode=$mode" : "&mode=threaded";
-      $header .= ($order) ? "&order=$order" : "&order=0";
-      $header .= ($thold) ? "&thold=$thold" : "&thold=0";
-    }
-    else {
-      ### Add comment to database:
-      db_insert("INSERT INTO comments (pid, sid, subject, comment, hostname, timestamp) VALUES ($pid, $sid, '". addslashes($subject) ."', '". addslashes($comment) ."', '". getenv("REMOTE_ADDR") ."', '". time() ."')");
+    ### Add comment to database:
+    db_insert("INSERT INTO comments (pid, sid, author, subject, comment, hostname, timestamp) VALUES ($pid, $sid, $user->id, '". addslashes($subject) ."', '". addslashes($comment) ."', '". getenv("REMOTE_ADDR") ."', '". time() ."')");
 
-      ### Compose header:
-      $header .= "discussion.php?id=$sid&mode=threaded&order=1&thold=0";
-    }
-    header("Location: $header");
+    ### Compose header:
+    header("Location: discussion.php?id=$sid");
   }
 }
 
@@ -314,30 +306,35 @@ include "function.inc";
 include "config.inc";
 include "theme.inc";
 
-if ($save) {
-  db_query("UPDATE users SET umode = '$mode', uorder = '$order', thold = '$thold' where id = '$user->id'");
-  $user->rehash();
-}
-
 switch($op) {  
   case "Preview comment":
     $theme->header();
-    comment_preview($pid, $sid, $subject, $comment, $mode, $order, $thold);
+    comment_preview($pid, $sid, $subject, $comment);
     $theme->footer();
     break;
   case "Post comment":
-    comment_post($pid, $sid, $subject, $comment, $mode, $order, $thold);
+    comment_post($pid, $sid, $subject, $comment);
     break;
   case "reply":
     $theme->header();
-    discussion_reply($pid, $sid, $mode, $order, $thold);
+    discussion_reply($pid, $sid);
+    $theme->footer();
+    break;
+  case "Save":
+    discussion_settings($mode, $order, $thold);
+    $theme->header();
+    discussion_display($id, $pid, $sid);
     $theme->footer();
     break;
   case "Moderate comments":
     discussion_moderate($moderate);
+    $theme->header();
+    discussion_display($id, $pid, $sid);
+    $theme->footer();
+    break;
   default:
     $theme->header();
-    discussion_display($id, $pid, $sid, $mode, $order, $thold);
+    discussion_display($id, $pid, $sid);
     $theme->footer();
 }
 

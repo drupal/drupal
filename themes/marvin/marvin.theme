@@ -30,7 +30,7 @@
      <STYLE type="text/css"> 
       <!--
        BODY,TD,P,UL,LI,DIV,FORM,EM,BLOCKQUOTE { font-size: 10pt; font-family: Lucida,Verdana,Helvetica,Arial; }
-       TH { font-size: 11pt; font-family: Lucida,Verdana,Helvetica,Arial; }
+       TH { font-size: 10pt; font-family: Lucida,Verdana,Helvetica,Arial; }
       -->
      </STYLE>
      <BODY TEXT="#000000" BGCOLOR="#FFFFFF" ALINK="#CCCCCC" LINK="#665555" VLINK="#665555">
@@ -43,7 +43,7 @@
         <TD ALIGN="right" COLSPAN="2"><SMALL><A HREF="">home</A> | <A HREF="faq.php">faq</A> | <A HREF="diary.php">diary</A> | <A HREF="search.php">search</A> | <A HREF="submit.php">submit news</A> | <A HREF="account.php">user account</A></SMALL></TD>
        </TR>
        <TR>
-        <TD VALIGN="top" WIDTH="500">
+        <TD VALIGN="top" WIDTH="470">
     <?
    }
 
@@ -131,8 +131,9 @@
          </TR>
          <TR>
           <TD ALIGN="center" BGCOLOR="<? echo "$this->bgcolor1"; ?>">
-           <FORM METHOD="get" ACTION="discussion.php">
+           <FORM METHOD="post" ACTION="discussion.php">
             <SMALL> 
+            <INPUT TYPE="hidden" NAME="id" VALUE="<? echo "$sid"; ?>"> 
             <SELECT NAME="thold">
              <OPTION VALUE="-1" <? if ($thold == -1) { echo "SELECTED"; } ?>>Threshold: -1
              <OPTION VALUE="0" <? if ($thold == 0) { echo "SELECTED"; } ?>>Threshold: 0
@@ -152,11 +153,7 @@
              <OPTION VALUE="1" <? if ($order==1) { echo "SELECTED"; } ?>>Newest first
              <OPTION VALUE="2" <? if ($order==2) { echo "SELECTED"; } ?>>Highest scoring first
             </SELECT> 
-            <INPUT TYPE="hidden" NAME="id" VALUE="<? echo "$sid"; ?>"> 
-            <INPUT TYPE="submit" VALUE="Refresh">
-            <?
-             if (isset($user)) echo "<BR><CENTER><INPUT TYPE=\"checkbox\" NAME=\"save\"> Save preferences</CENTER>"; 
-            ?>
+            <INPUT TYPE="submit" NAME="op" VALUE="Save">
             </SMALL>
            </FORM>
           </TD>
@@ -293,7 +290,7 @@
    function footer() {
      ?>
        </TD>
-       <TD VALIGN="top" WIDTH="150">
+       <TD VALIGN="top" WIDTH="180">
          <?
          global $PHP_SELF;  
 

@@ -19,7 +19,7 @@ function diary_overview($num = 20) {
     $output .= "<DL>\n";
     $output .= " <DD><P><B>$diary->userid wrote:</B></P></DD>\n";
     $output .= " <DL>\n";
-    $output .= "  <DD><P>". check($diary->text) ."</P><P>[ <A HREF=\"diary.php?op=view&name=$diary->userid\">more</A> ]</P></DD>\n";
+    $output .= "  <DD><P>". check_output($diary->text) ."</P><P>[ <A HREF=\"diary.php?op=view&name=$diary->userid\">more</A> ]</P></DD>\n";
     $output .= " </DL>\n";
     $output .= "</DL>\n";
   }
@@ -34,13 +34,13 @@ function diary_entry($timestamp, $text, $id = 0) {
   if ($id) {
     $output .= "<DL>\n";
     $output .= " <DT><B>". date("l, F jS", $timestamp) .":</B> </DT>\n";
-    $output .= " <DD><P>[ <A HREF=\"diary.php?op=edit&id=$id\">edit</A> ]</P><P>". check($text) ."</P></DD>\n";
+    $output .= " <DD><P>[ <A HREF=\"diary.php?op=edit&id=$id\">edit</A> ]</P><P>". check_output($text) ."</P></DD>\n";
     $output .= "</DL>\n";
   }
   else {
     $output .= "<DL>\n";
     $output .= " <DT><B>". date("l, F jS", $timestamp) .":</B></DT>\n";
-    $output .= " <DD><P>". check($text) ."</P></DD>\n";
+    $output .= " <DD><P>". check_output($text) ."</P></DD>\n";
     $output .= "</DL>\n";
   }
   return $output;
@@ -74,7 +74,7 @@ function diary_add() {
   $output .= "<P>\n"; 
   $output .= " <B>Enter new diary entry:</B><BR>\n";
   $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"15\" NAME=\"text\" MAXLENGTH=\"20\"></TEXTAREA><BR>\n";
-  $output .= " <SMALL><I>Allowed HTML tags: ". htmlspecialchars($allowed_html) ."</I></SMALL>\n";
+  $output .= " <SMALL><I>Allowed HTML tags: ". htmlspecialchars($allowed_html) .".</I></SMALL>\n";
   $output .= "</P>\n";
 
   $output .= "<P>\n";
@@ -101,7 +101,7 @@ function diary_edit($id) {
   $output .= "<P>\n";
   $output .= " <B>Edit diary entry:</B><BR>\n";
   $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"15\" NAME=\"text\">". stripslashes($diary->text) ."</TEXTAREA><BR>\n";
-  $output .= " <SMALL><I>Allowed HTML tags: ". htmlspecialchars($allowed_html) ."</I></SMALL>\n";
+  $output .= " <SMALL><I>Allowed HTML tags: ". htmlspecialchars($allowed_html) .".</I></SMALL>\n";
   $output .= "</P>\n";
 
   $output .= "<P>\n";
@@ -127,7 +127,7 @@ function diary_preview($text, $timestamp, $id = 0) {
   $output .= "<P>\n";
   $output .= " <B>Preview diary entry:</B><BR>\n";
   $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"15\" NAME=\"text\">". stripslashes($text) ."</TEXTAREA><BR>\n";
-  $output .= " <SMALL><I>Allowed HTML tags: ". htmlspecialchars($allowed_html) ."</I></SMALL>\n";
+  $output .= " <SMALL><I>Allowed HTML tags: ". htmlspecialchars($allowed_html) .".</I></SMALL>\n";
   $output .= "</P>\n";
 
   $output .= "<P>\n";
