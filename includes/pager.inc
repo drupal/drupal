@@ -265,7 +265,7 @@ function pager_list($limit, $element = 0, $quantity = 5, $text = "", $attributes
         $output .= pager_previous($i, $limit, $element, ($pager_current - $i), $attributes) ." ";
       }
       if ($i == $pager_current) {
-        $output .= "<b>$i</b> ";
+        $output .= "<strong>$i</strong> ";
       }
       if ($i > $pager_current) {
         $output .= pager_next($i, $limit, $element, ($i - $pager_current), $attributes) ." ";
