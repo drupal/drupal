@@ -116,6 +116,19 @@ function format_plural($count, $singular, $plural) {
   return ($count == 1) ? "$count ". t($singular) : "$count ". t($plural);
 }
 
+function format_size($size) {
+  $suffix = "bytes";
+  if ($size > 1024) {
+    $size = round($size / 1024, 2);
+    $suffix = "KB";
+  }
+  if ($size > 1024) {
+    $size = round($size / 1024, 2);
+    $suffix = "MB";
+  }
+  return "$size $suffix";
+}
+
 function cache_clear($interval = 0) {
   db_query("DELETE FROM cache WHERE ". time() ." - timestamp > $interval");
 }
