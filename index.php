@@ -2,6 +2,8 @@
 
 include_once "includes/common.inc";
 
+if (variable_get(dev_timing, 0)) timer_start();
+
 // Initialize/pre-process variables:
 $number = ($user->nodes) ? $user->nodes : 10;
 $date = ($date > 0) ? $date : time();
@@ -13,5 +15,7 @@ $result = db_query("SELECT n.*, s.*, u.userid, COUNT(c.lid) AS comments FROM nod
 $theme->header();
 while ($story = db_fetch_object($result)) $theme->story($story);
 $theme->footer();
+
+if (variable_get(dev_timing, 0)) timer_print();
 
 ?>

@@ -124,7 +124,7 @@
                   <tr><td bgcolor="<?php echo $color; ?>"><img src="themes/jeroen2/images/pixel.gif" width="1" height="1" alt="" border="0" /></td></tr>
                   <tr>
                     <td>
-                      
+
 <?php
 
                       echo "<br /><font face=\"Helvetica\">". check_output($story->abstract, 1) ."<br />";
@@ -160,7 +160,7 @@
         <tr>
           <td class="box">
             <img src="themes/jeroen2/images/square.gif" />&nbsp;<b><?php echo check_output($comment->subject); ?></b>
-	    <font face="Helvetica" size="-1"><?php echo strtr(t(" by %a on %b"), array("%a" => format_username($comment->userid), "%b" => format_date($comment->timestamp), "small")); ?></font>
+      <font face="Helvetica" size="-1"><?php echo strtr(t(" by %a on %b"), array("%a" => format_username($comment->userid), "%b" => format_date($comment->timestamp), "small")); ?></font>
           </td>
           <td align="right"><?php echo comment_moderation($comment); ?></td>
         </tr>
@@ -201,7 +201,7 @@
 
       <table width="90%" border="0" cellpadding="0" cellspacing="1">
         <tr>
-	  <td class="box"><img src="themes/jeroen2/images/square.gif" />&nbsp;<b><font face="Helvetica"><?php echo $subject; ?></font></b></td>
+    <td class="box"><img src="themes/jeroen2/images/square.gif" />&nbsp;<b><font face="Helvetica"><?php echo $subject; ?></font></b></td>
         </tr>
         <tr><td class="spacer1"><img src="themes/jeroen2/images/pixel.gif" width="1" height="1" alt="" border="0" /><br></td></tr>
         <tr>
@@ -222,7 +222,7 @@
     function footer() {
 
 ?>
-              
+
                 &nbsp; <!-- I call this the super-space, withouth it, the comment section looks crappy at the bottom :) -->
               </td>
             </tr>

@@ -145,7 +145,7 @@
       <TR>
        <TD ALIGN="center" COLSPAN="3">
         <?php
-          print "<P><SMALL>[ ". theme_link(" | ") ." ]</SMALL></P><P>". varaible_get(theme_footer, "") ."</P>\n";
+          print "<P><SMALL>[ ". theme_link(" | ") ." ]</SMALL></P><P>". variable_get(site_footer, "") ."</P>\n";
         ?>
        </TD>
       </TR>

@@ -267,7 +267,7 @@ function book_update($id) {
 function book_user() {
   global $edit, $id, $op, $theme, $user;
 
-  $title = t("Submit a book page");
+  $title = t("Submit");
 
   switch($op) {
     case "update":

@@ -22,11 +22,26 @@ function category_save($edit) {
   foreach ($edit as $key=>$value) db_query("UPDATE category SET $key = '". check_input($value) ."' WHERE cid = '$edit[cid]'");
 }
 
-function category_del($id) {
-  db_query("DELETE FROM category WHERE cid = '$id'");
+// delete category $cid:
+function category_del($cid) {
+  db_query("DELETE FROM category WHERE cid = '". check_input($cid) ."'");
+  db_query("DELETE FROM node_category WHERE cid = '". check_input($cid) ."'");
+}
+
+function category_node($nid, $cid) {
+  db_query("INSERT INTO node_category (nid, cid) VALUES ('". check_input($nid) ."', '". check_input($cid) ."')", 1);
+}
+
+function category_form_select($type, $edit = array(), $size = 1) {
+  $result = db_query("SELECT * FROM category WHERE type = '$type'");
+  while ($category = db_fetch_object($result)) {
+    $options .= "<OPTION VALUE=\"$category->cid\"". ($edit[$category->cid] ? "SELECTED" : "") .">". check_select($category->name) ."</OPTION>";
+  }
+  return "<SELECT NAME=\"category[]\" SIZE=\"$size\"". ($size > 1 ? "MULTIPLE" : "") .">$options</SELECT>\n";
 }
 
 // ----- topic -----
+
 function _topic_get($field, $value) {
   return db_query("SELECT * FROM topic WHERE $field = '$value'");
 }
@@ -57,16 +72,39 @@ function topic_tree($parent = 0, $name = "", $tree = array()) {
   return $tree;
 }
 
-// renders a form to select one or more topics:
-function topic_form_select($type, $topics = array(), $size = 1) {
-  foreach (topic_tree() as $tid=>$name) {
-    $options .= "<OPTION VALUE=\"$tid\">$name</OPTION>\n";
-  }
-  return "<B>". t("Topic") .":</B><BR><SELECT NAME=\"edit[topic][]\" SIZE=\"$size\"". ($size > 1 ? "MULTIPLE" : "") .">$options</SELECT><P>\n";
+// delete topic $tid:
+function topic_del($tid) {
+  db_query("DELETE FROM topic WHERE tid = '". check_input($tid) ."'");
+  db_query("DELETE FROM node_topic WHERE tid = '". check_input($tid) ."'");
 }
 
-function topic_del($id) {
-  db_query("DELETE FROM topic WHERE tid = '$id'");
+// add node $nid to topic $tid:
+function topic_node($nid, $tid) {
+  db_query("INSERT INTO node_topic (nid, tid) VALUES ('". check_input($nid) ."', '". check_input($tid) ."')", 1);
+}
+
+// renders a HTML form to select one or more topics:
+function topic_form_select($edit = array(), $size = 1) {
+  foreach (topic_tree() as $tid=>$name) {
+    $options .= "<OPTION VALUE=\"$tid\"". ($edit[$tid] ? "SELECTED" : "") .">". check_select($name) ."</OPTION>";
+  }
+  return "<SELECT NAME=\"topic[]\" SIZE=\"$size\"". ($size > 1 ? "MULTIPLE" : "") .">$options</SELECT>\n";
+}
+
+// ----- structure -----
+
+// add node $nid to category $cid and topic $tid:
+function structure_save($nid, $cid, $tid) {
+  category_node($nid, $cid);
+  topic_node($nid, $tid);
+}
+
+// render a HMTL selection form:
+function structure_form($type, $edit = array(), $size = 1) {
+  $output .= "<B>Category and topic:</B><BR>\n";
+  $output .= category_form_select($type, $edit, $size) ." ". topic_form_select($edit, $size) ."<BR>";
+  $output .= "<SMALL><I>". t("Select the category and the topic this sumbission belongs in.") ."</I></SMALL><P>";
+  return $output;
 }
 
 ?>

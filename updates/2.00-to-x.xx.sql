@@ -1,15 +1,57 @@
 # 14/04/2001:
+CREATE TABLE category (
+  cid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
+  name varchar(32) DEFAULT '' NOT NULL,
+  type varchar(16) DEFAULT '' NOT NULL,
+  post int(3) DEFAULT '0' NOT NULL,
+  dump int(3) DEFAULT '0' NOT NULL,
+  expire int(3) DEFAULT '0' NOT NULL,
+  comment int(2) unsigned DEFAULT '0' NOT NULL,
+  submission int(2) unsigned DEFAULT '0' NOT NULL,
+  UNIQUE (name),
+  PRIMARY KEY (cid)
+);
+
+CREATE TABLE topic (
+  tid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
+  pid int(10) unsigned DEFAULT '0' NOT NULL,
+  name varchar(32) DEFAULT '' NOT NULL,
+  UNIQUE (name),
+  PRIMARY KEY (tid)
+);
+
+CREATE TABLE node_category (
+  cid int(10) unsigned DEFAULT '0' NOT NULL,
+  nid int(10) unsigned DEFAULT '0' NOT NULL,
+  PRIMARY KEY (cid, nid)
+);
+
+CREATE TABLE node_topic (
+  tid int(10) unsigned DEFAULT '0' NOT NULL,
+  nid int(10) unsigned DEFAULT '0' NOT NULL,
+  PRIMARY KEY (tid, nid)
+);
+
+///// revise
+
 CREATE TABLE section (
   sid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
   pid int(10) unsigned DEFAULT '0' NOT NULL,
   name varchar(32) DEFAULT '' NOT NULL,
+  UNIQUE (name),
   PRIMARY KEY (sid)
 );
 
 CREATE TABLE section_type (
-  sid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
+  sid int(10) unsigned DEFAULT '0' NOT NULL,
   type varchar(16) DEFAULT '' NOT NULL,
   PRIMARY KEY (sid, type)
+);
+
+CREATE TABLE section_node (
+  sid int(10) unsigned DEFAULT '0' NOT NULL,
+  nid int(10) unsigned DEFAULT '0' NOT NULL,
+  PRIMARY KEY (sid, nid)
 );
 
 # 07/04/2001:
@@ -23,7 +65,7 @@ CREATE TABLE page (
 
 CREATE TABLE variable (
   name varchar(32) DEFAULT '' NOT NULL,
-  value varchar(128) DEFAULT '' NOT NULL,
+  value text DEFAULT '' NOT NULL,
   PRIMARY KEY (name)
 );
 

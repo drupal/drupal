@@ -289,7 +289,7 @@ function comment_render($lid, $cid) {
 
   if ($user->id) {
     // Comment control:
-    $theme->box(t("Comment control"), "<DIV ALIGN=\"center\">". comment_controls($threshold, $mode, $order) ."</DIV>");
+    $theme->box(t("Comment control"), comment_controls($threshold, $mode, $order));
 
     // Print moderation form:
     print "<FORM METHOD=\"post\" ACTION=\"$REQUEST_URI\">\n";
