@@ -289,7 +289,7 @@ function statistics_admin() {
           print status(t("Saved who's online block changes"));
         case "whos online block":
           print statistics_config_online_block(array(
-            "statistics_block_online_title" => variable_get("statistics_block_online_title", "Whos online"),
+            "statistics_block_online_title" => variable_get("statistics_block_online_title", "Who's online"),
             "statistics_block_online_subtitle" => variable_get("statistics_block_online_subtitle", "Online users:"),
             "statistics_block_online_time" => variable_get("statistics_block_online_time", 2700),
             "statistics_block_online_max_len" => variable_get("statistics_block_online_max_len", 15),
