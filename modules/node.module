@@ -444,7 +444,7 @@ function node_save($node) {
 
     // Prepare the query:
     foreach ($node as $key => $value) {
-      if (in_array($key, $fields)) {
+      if (in_array((string) $key, $fields)) {
         $k[] = db_escape_string($key);
         $v[] = $value;
         $s[] = "'%s'";
