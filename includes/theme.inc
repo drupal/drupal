@@ -107,7 +107,7 @@ function theme_block($block) {
 
 function theme_footer() {
   $output = "</td></tr></table>";
-  $output .= theme_footer();
+  $output .= theme_closure();
   $output .= "</body></html>";
   print $output;
 }
