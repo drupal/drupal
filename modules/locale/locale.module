@@ -4,7 +4,7 @@
 function locale_help() {
  ?>
   <P>Normally programs are written and documented in English, and use English to interact with users.  This is true for a great deal of websites.  However, most people are less comfortable with English than with their own native language, and would prefer to use their mother tongue as much as possible.  Many people love see their website showing a lot less of English, and far more of their own language.</P>
-  <P>Therefore drupal provides a framework to setup a multi-lingual website, or to overwrite the default texts in English.  We explored the various alternatives to support internationalization and decided to design the framework in such a way that the impact of internationalization on drupal's sources is minimized, modular and that it doesn't require a HTML or PHP wizard to maintain translations.  Maintaining translations had to be simple so it became as easy as filling out forms on the administration page.  A side effect is that translation support adds significant overhead to the dynamic generation of your website.  If you don't need translation support, consider to turning it off from the "conf" section.</P>
+  <P>Therefore drupal provides a framework to setup a multi-lingual website, or to overwrite the default texts in English.  We explored the various alternatives to support internationalization and decided to design the framework in such a way that the impact of internationalization on drupal's sources is minimized, modular and that it doesn't require a HTML or PHP wizard to maintain translations.  Maintaining translations had to be simple so it became as easy as filling out forms on the administration page.</P>";
 
   <H3>How to translate texts</H3>
 
@@ -53,16 +53,31 @@ function locale_conf_options() {
 
 function locale_delete($lid) {
   db_query("DELETE FROM locales WHERE lid = '$lid'");
+  locale_refresh_cache();
 }
 
 function locale_save($lid, $edit) {
   foreach ($edit as $key=>$value) {
-    db_query("UPDATE locales SET $key = '". check_input($value) ."' WHERE lid = '$lid'");
+    db_query("UPDATE locales SET $key = '". check_query($value) ."' WHERE lid = '$lid'");
+  }
+  locale_refresh_cache();
+}
+
+function locale_refresh_cache() {
+  global $languages;
+
+  foreach (array_keys($languages) as $locale) {
+    $result = db_query("SELECT string, ". check_query($locale) ." FROM locales");
+    while ($data = db_fetch_object($result)) {
+      $t[$data->string] = $data->$locale;
+    }
+    cache_set("locale:$locale", serialize($t));
   }
 }
 
 function locale_edit($lid) {
   global $languages;
+
   $result = db_query("SELECT * FROM locales WHERE lid = '$lid'");
   if ($translation = db_fetch_object($result)) {
     $form .= form_item(t("Original text"), "<PRE>". wordwrap(check_output($translation->string)) ."</PRE>");
@@ -151,22 +166,22 @@ function locale_seek() {
       switch ($edit[language]) {
         case "all":
           foreach ($languages as $key=>$value) {
-            $tmp[] = $key . (check_input($edit[status]) == 1 ? " !=" : " =") ." ''";
+            $tmp[] = $key . (check_query($edit[status]) == 1 ? " !=" : " =") ." ''";
           }
           $query[] = implode(" && ", $tmp);
           break;
         case "any":
           foreach ($languages as $key=>$value) {
-            $tmp[] = $key . (check_input($edit[status]) == 1 ? " !=" : " =") ." ''";
+            $tmp[] = $key . (check_query($edit[status]) == 1 ? " !=" : " =") ." ''";
           }
           $query[] = "(". implode(" || ", $tmp) .")";
           break;
         default:
-          $query[] = check_input($edit[language]) . (check_input($edit[status]) == 1 ? " !=" : " =") ." ''";
+          $query[] = check_query($edit[language]) . (check_query($edit[status]) == 1 ? " !=" : " =") ." ''";
       }
     }
-    if ($edit[module]) $query[] = "location LIKE '%mod=". (check_input($edit[module]) != "all" ? check_input($edit[module]) : "") ."%'";
-    if ($edit[string]) $query[] = "string RLIKE '". check_input($edit[string]) ."'";
+    if ($edit[module]) $query[] = "location LIKE '%mod=". (check_query($edit[module]) != "all" ? check_query($edit[module]) : "") ."%'";
+    if ($edit[string]) $query[] = "string RLIKE '". check_query($edit[string]) ."'";
 
     $result = db_query("SELECT * FROM locales". (count($query) ? " WHERE ". implode(" && ", $query) : ""));
 
@@ -200,14 +215,14 @@ function locale_admin() {
 
     switch ($op) {
       case "delete":
-        print status(locale_delete(check_input($id)));
+        print status(locale_delete(check_query($id)));
         print locale_overview();
         break;
       case "help":
         print locale_help();
         break;
       case "edit":
-        print locale_edit(check_input($id));
+        print locale_edit(check_query($id));
         break;
       case "translated":
         print locale_translated($language);
@@ -219,7 +234,7 @@ function locale_admin() {
         print locale_overview();
         break;
       case "Save translations":
-        print locale_save(check_input($id), $edit);
+        print locale_save(check_query($id), $edit);
       default:
         print locale_seek();
     }
@@ -231,11 +246,24 @@ function locale_admin() {
 
 function locale($string) {
   global $locale;
+  static $locale_t;
+
   if (variable_get("locale", 0)) {
-    $result = db_query("SELECT lid, $locale FROM locales WHERE STRCMP(string, '". addslashes($string) ."') = 0");
-    if ($translation = db_fetch_object($result)) $string = ($translation->$locale) ? check_output($translation->$locale) : $string;
-    else db_query("INSERT INTO locales (string, location) VALUES ('". addslashes($string) ."', '". check_input(getenv("REQUEST_URI")) ."')");
+    if (!isset($locale_t)) {
+      $locale_t = unserialize(cache_get("locale:$locale"));
+    }
+
+    if ($locale_t[$string] != "") {
+      $string = check_output($locale_t[$string]);
+    }
+    else {
+      $result = db_query("SELECT lid, $locale FROM locales WHERE STRCMP(string, '". addslashes($string) ."') = 0");
+      if (!db_fetch_object($result)) {
+        db_query("INSERT INTO locales (string, location) VALUES ('". check_query($string) ."', '". check_query(getenv("REQUEST_URI")) ."')");
+      }
+    }
   }
+
   return $string;
 }
 
