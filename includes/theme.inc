@@ -11,7 +11,7 @@
   @{
 **/
 
-/* $Id: theme.inc,v 1.154 2003/11/09 23:27:15 dries Exp $ */
+/* $Id: theme.inc,v 1.155 2003/11/10 09:03:53 dries Exp $ */
 
 /**
   Returns the theme header.
@@ -25,9 +25,15 @@ function theme_header($title = "") {
 
   $output = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
   $output .= "<html xmlns=\"http://www.w3.org/1999/xhtml\">";
-  $output .= "<head><title>". $title ? $title : variable_get(site_name, "drupal") ."</title>";
+  $output .= "<head>";
+  $output .= " <title>". $title ? $title : variable_get(site_name, "drupal") ."</title>";
   $output .= theme_head($main);
-  $output .= "</head><body style=\"background-color: #fff; color: #000;\"". theme("onload_attribute"). "\">";
+  $output .= " <style type=\"text/css\" media=\"all\">";
+  $output .= "  @import url(misc/drupal.css);";
+  $output .= " </style>";
+
+  $output .= " </head>";
+  $output .= " <body style=\"background-color: #fff; color: #000;\"". theme("onload_attribute"). "\">";
   $output .= "<table border=\"0\" cellspacing=\"4\" cellpadding=\"4\"><tr><td style=\"vertical-align: top; width: 170px;\">";
 
   $output .= theme("box", t("Navigation"), @implode("<br />", link_page()));
