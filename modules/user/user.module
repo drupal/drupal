@@ -1219,6 +1219,8 @@ function user_admin_perm($edit = array()) {
       if ($perm) {
         db_query("INSERT INTO {permission} (rid, perm) VALUES (%d, '%s')", $role->rid, $perm);
       }
+      // clear the cache, we might have changed the anonymous user's permissions
+      cache_clear_all();
     }
   }
 
