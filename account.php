@@ -448,7 +448,7 @@ function account_track_site() {
 
   $period = 259200; // 3 days
 
-  $sresult = db_query("SELECT s.subject, s.id, COUNT(c.lid) AS count FROM comments c LEFT JOIN stories s ON c.lid = s.id WHERE s.status = 2 AND c.link = 'story' AND ". time() ." - c.timestamp < $period GROUP BY c.lid ORDER BY count DESC LIMIT 10");
+  $sresult = db_query("SELECT s.subject, s.id, COUNT(c.lid) AS count FROM comments c LEFT JOIN stories s ON c.lid = s.id WHERE s.status = 2 AND c.link = 'story' AND ". time() ." - c.timestamp < $period GROUP BY c.lid ORDER BY s.timestamp DESC LIMIT 10");
   while ($story = db_fetch_object($sresult)) {
     $output .= "<LI>". format_plural($story->count, "comment", "comments") ." ". t("attached to story") ." '<A HREF=\"story.php?id=$story->id\">". check_output($story->subject) ."</A>':</LI>";
 
