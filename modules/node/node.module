@@ -1218,9 +1218,6 @@ function node_validate($node) {
     form_set_error('changed', t('This content has been modified by another user, unable to save changes.'));
   }
 
-  // Create a new revision when required.
-  $node = node_revision_create($node);
-
   if (user_access('administer nodes')) {
     // Set up default values, if required.
     if (!$node->created) {
@@ -1265,6 +1262,9 @@ function node_validate($node) {
     $node->revision = in_array('revision', $node_options);
     unset($node->created);
   }
+
+  // Create a new revision when required.
+  $node = node_revision_create($node);
 
   // Do node-type-specific validation checks.
   node_invoke($node, 'validate');
