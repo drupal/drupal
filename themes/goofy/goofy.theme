@@ -176,7 +176,7 @@ function c(subject,mod,author,date,body) {document.writeln("<table border=\"0\" 
    </table>
   </body>
  </html>
-<?
+<?php
     } // close footer function
   } // close theme-class
 
