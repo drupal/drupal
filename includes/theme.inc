@@ -347,8 +347,8 @@ function theme_table($header, $rows) {
  *
  * @return a string containing the @a box output.
  */
-function theme_box($subject, $content, $region = "main") {
-  $output = "<h2>$subject</h2><p>$content</p>";
+function theme_box($title, $content, $region = "main") {
+  $output = "<h2 class=\"title\">$title</h2><p>$content</p>";
   return $output;
 }
 
@@ -368,7 +368,7 @@ function theme_box($subject, $content, $region = "main") {
  */
 function theme_block($block) {
   $output  = "<div class=\"block block-$block->module\" id=\"block-$block->module-$block->delta\">";
-  $output .= " <h3>$block->subject</h3>";
+  $output .= " <h2 class=\"title\">$block->subject</h2>";
   $output .= " <div class=\"content\">$block->content</div>";
   $output .= "</div>";
   return $output;
