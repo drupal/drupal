@@ -193,8 +193,8 @@ function referer_uri() {
 function arg($index) {
   static $arguments, $q;
 
-  if (empty($arguments) || $q != $_GET["q"]) {
-    $arguments = explode("/", $_GET["q"]);
+  if (empty($arguments) || $q != $_GET['q']) {
+    $arguments = explode('/', $_GET['q']);
   }
 
   return $arguments[$index];

@@ -94,7 +94,7 @@ function file_check_upload($source) {
     $file->path = $_FILES["edit"]["tmp_name"][$source];
     $file->error = $_FILES["edit"]["error"][$source];
     $file->size = $_FILES["edit"]["size"][$source];
-    $file->source = $_FILES["edit"]["size"][$source];
+    $file->source = $_FILES["edit"]["source"][$source];
     return $file;
   }
 }
