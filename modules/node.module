@@ -583,7 +583,8 @@ function node_search($op = 'search', $keys = null) {
       $remaining = db_result(db_query('SELECT COUNT(*) FROM {node} n LEFT JOIN {node_comment_statistics} c ON n.nid = c.nid WHERE n.status = 1 AND n.moderate = 0 AND (n.created > %d OR n.changed > %d OR c.last_comment_timestamp > %d) ORDER BY GREATEST(n.created, n.changed, c.last_comment_timestamp) ASC', $last, $last, $last));
       return array('remaining' => $remaining, 'total' => $total);
     case 'search':
-      $find = do_search($keys, 'node', 'INNER JOIN {node} n ON n.nid = i.sid '. node_access_join_sql() .' INNER JOIN {users} u ON n.uid = u.uid', 'n.status = 1 AND '. node_access_where_sql());
+      list($join, $where) = _node_rewrite_sql();
+      $find = do_search($keys, 'node', 'INNER JOIN {node} n ON n.nid = i.sid '. $join .' INNER JOIN {users} u ON n.uid = u.uid', 'n.status = 1 AND '. $where);
       $results = array();
       foreach ($find as $item) {
         $node = node_load(array('nid' => $item));
@@ -1017,7 +1018,7 @@ function node_feed($nodes = 0, $channel = array()) {
   global $base_url, $locale;
 
   if (!$nodes) {
-    $nodes = db_query_range('SELECT n.nid FROM {node} n '. node_access_join_sql() .' WHERE '. node_access_where_sql() .' AND n.promote = 1 AND n.status = 1 ORDER BY n.created DESC', 0, 15);
+    $nodes = db_query_range(node_rewrite_sql('SELECT n.nid FROM {node} n  WHERE n.promote = 1 AND n.status = 1 ORDER BY n.created DESC'), 0, 15);
   }
 
   while ($node = db_fetch_object($nodes)) {
@@ -1468,7 +1469,7 @@ function node_delete($edit) {
  * Generate a listing of promoted nodes.
  */
 function node_page_default() {
-  $result = pager_query('SELECT DISTINCT(n.nid), n.sticky, n.created FROM {node} n '. node_access_join_sql() .' WHERE n.promote = 1 AND n.status = 1 AND '. node_access_where_sql() .' ORDER BY n.sticky DESC, n.created DESC', variable_get('default_nodes_main', 10));
+  $result = pager_query(node_rewrite_sql('SELECT n.nid, n.sticky, n.created FROM {node} n WHERE n.promote = 1 AND n.status = 1 ORDER BY n.sticky DESC, n.created DESC'), variable_get('default_nodes_main', 10));
 
   if (db_num_rows($result)) {
     drupal_set_html_head('<link rel="alternate" type="application/rss+xml" title="RSS" href="'. url('node/feed', NULL, NULL, TRUE) .'" />');
@@ -1724,7 +1725,7 @@ function node_access($op, $node = NULL, $uid = NULL) {
  *   An SQL join clause.
  */
 function node_access_join_sql($node_alias = 'n', $node_access_alias = 'na') {
-  if (user_access('administer nodes')) {
+  if (module_implements('access_grants')==array('node') || user_access('administer nodes')) {
     return '';
   }
 
@@ -1745,7 +1746,7 @@ function node_access_join_sql($node_alias = 'n', $node_access_alias = 'na') {
  *   An SQL where clause.
  */
 function node_access_where_sql($op = 'view', $node_access_alias = 'na', $uid = NULL) {
-  if (user_access('administer nodes')) {
+  if (module_implements('access_grants')==array('node') || user_access('administer nodes')) {
     // This number is being used in a SQL query as a boolean.
     // It is "'1'" instead of "1" for database compatibility, as both
     // PostgreSQL and MySQL treat it as boolean in this case.
@@ -1794,5 +1795,102 @@ function node_access_grants($op, $uid = NULL) {
 /**
  * @} End of "defgroup node_access".
  */
+
+/**
+ * Implementation of hook_node_rewrite_sql
+ */
+function node_node_rewrite_sql () {
+  $return['join'] = node_access_join_sql();
+  $return['where'] = node_access_where_sql();
+  $return['distinct'] = !empty($return['join']);
+  return $return;
+}
+
+/*
+ * Helper function for node_rewrite_sql.
+ *
+ * Collects JOIN and WHERE statements via hook_sql.
+ * Decides whether to select nid or DISTINCT(nid)
+ *
+ * @param $query
+ *    query to be rewritten
+ * @param $nid_alias
+ *   Alias of the table which has the nid field for this query. Defaults to 'n'.
+ * @param $args
+ *  array of additional args
+ * @return
+ *   An associative array: join => join statements, where => where statements, nid_to_select => nid or DISTINCT(nid)
+ */
+function _node_rewrite_sql($query = '', $nid_alias = 'n', $args = array()) {
+
+  $where = array();
+  $join = array();
+  $distinct = FALSE;
+  foreach (module_implements('node_rewrite_sql') as $module) {
+    $result = module_invoke($module, 'node_rewrite_sql', $query, $nid_alias, $args);
+    if (is_array($result)) {
+      if (isset($result['where'])) {
+        $where[] .= $result['where'];
+      }
+      if (isset($result['join'])) {
+        $join[] .= $result['join'];
+      }
+      if (isset($result['distinct']) && $result['distinct']) {
+        $distinct = TRUE;
+      }
+    }
+    elseif (isset($result)) {
+      $where[] .= $result;
+    }
+  }
+
+  $swhere = empty($where) ? '' : '('. implode(') AND (',$where).')';
+  $sjoin = empty($join) ? '' : implode(' ',$join);
+
+  return array($sjoin, $swhere, $distinct ? 'DISTINCT('.$nid_alias.'.nid)' : $nid_alias.'.nid');
+}
+
+/*
+ * Rewrites node queries.
+ *
+ * @param $query
+ *    query to be rewritten
+ * @param $nid_alias
+ *   Alias of the table which has the nid field for this query. Defaults to 'n'.
+ * @param $args
+ *  an array of arguments, passed to the implementations of hook_node_rewrite_sql
+ * @return
+ *   The original query with JOIN and WHERE statements inserted from hook_node_rewrite_sql implementations. nid is rewritten if needed.
+ */
+function node_rewrite_sql($query, $nid_alias = 'n', $args = array()) {
+
+  list($join, $where,$nid_to_select) = _node_rewrite_sql($query, $nid_alias, $args);
+
+  $query = preg_replace('/(SELECT.*)('.$nid_alias.'\.)?nid(.*FROM)/AUs', '\1'. $nid_to_select .'\3', $query);
+
+  $query = preg_replace('|FROM[^[:upper:]/,]+|','\0 '.$join.' ', $query);
+  if (strpos($query, 'WHERE')) {
+    $replace = 'WHERE';
+    $add = 'AND';
+  }
+  elseif (strpos($query, 'GROUP')) {
+    $replace = 'GROUP';
+    $add = 'GROUP';
+  }
+  elseif (strpos($query, 'ORDER')) {
+    $replace = 'ORDER';
+    $add = 'ORDER';
+  }
+  elseif (strpos($query, 'LIMIT')) {
+    $replace = 'LIMIT';
+    $add = 'LIMIT';
+  }
+  else
+    $query .= ' WHERE '. $where;
+  if (isset($replace)) {
+    $query = str_replace($replace, 'WHERE  '.$where.' '.$add.' ', $query);
+  }
+  return $query;
+}
 
 ?>

@@ -157,7 +157,7 @@ function comment_block($op = 'list', $delta = 0) {
     return $blocks;
   }
   else if ($op == 'view' && user_access('access comments')) {
-    $result = db_query_range('SELECT * FROM {comments} WHERE status = 0 ORDER BY timestamp DESC', 0, 10);
+    $result = db_query_range(node_rewrite_sql('SELECT c.nid,c.* FROM {comments} c WHERE status = 0 ORDER BY timestamp DESC', 'c'), 0, 10);
     $items = array();
     while ($comment = db_fetch_object($result)) {
       $items[] = l($comment->subject, 'node/'. $comment->nid, NULL, NULL, 'comment-'. $comment->cid) .'<br />'. t('%time ago', array('%time' => format_interval(time() - $comment->timestamp)));
@@ -1286,7 +1286,6 @@ function comment_save_settings() {
 
   global $user;
   $edit = $_POST['edit'];
-
   // this functions perform doubletime: it either saves the
   // user's comment viewing options, or it handles comment
   // moderation. let's figure out which one we're using, eh?
@@ -1302,7 +1301,6 @@ function comment_save_settings() {
     $_SESSION['comment_threshold'] = $threshold;
     $_SESSION['comment_comments_per_page'] = $comments_per_page;
   }
-
   drupal_goto('node/'. $edit['nid'] .'#comment');
 }
 

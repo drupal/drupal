@@ -123,7 +123,10 @@ function queue_overview() {
 
   $header = array(array('data' => t('Subject')), array('data' => t('Author')), array('data' => t('Type')), array('data' => t('Score')));
 
-  $sresult = pager_query('SELECT DISTINCT(n.nid), n.title, n.type, u.name, u.uid, SUM(IF(q.uid = %d, 1, 0)) AS voted, SUM(q.vote) AS score FROM {node} n '. node_access_join_sql() .' INNER JOIN {users} u ON n.uid = u.uid INNER JOIN {queue} q ON n.nid = q.nid WHERE n.moderate = 1 AND '. node_access_where_sql() .' GROUP BY n.nid, n.title, n.type, u.name, u.uid, q.uid, q.vote', 10, 0, 'SELECT DISTINCT(n.nid) FROM {node} n '. node_access_join_sql() .' INNER JOIN {queue} q ON n.nid = q.nid WHERE n.moderate = 1 AND '. node_access_where_sql(), $user->uid);
+  $sql = 'SELECT n.nid, n.title, n.type, u.name, u.uid, SUM(IF(q.uid = %d, 1, 0)) AS voted, SUM(q.vote) AS score FROM {node} n INNER JOIN {users} u ON n.uid = u.uid INNER JOIN {queue} q ON n.nid = q.nid WHERE n.moderate = 1 GROUP BY n.nid, n.title, n.type, u.name, u.uid, q.uid, q.vote';
+  $sql = node_rewrite_sql($sql);
+  $sql_count = node_rewrite_sql('SELECT COUNT(n.nid) FROM {node} n INNER JOIN {queue} q ON n.nid = q.nid WHERE n.moderate = 1');
+  $sresult = pager_query($sql, 10, 0,$sql_count , $user->uid);
 
   while ($node = db_fetch_object($sresult)) {
     if ($user->uid == $node->uid || $node->voted) {

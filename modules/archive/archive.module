@@ -72,7 +72,9 @@ function archive_calendar($original = 0) {
   $nextmonth = mktime(23, 59, 59, $month + 1, 1, $year);
   $next = mktime(23, 59, 59, $month + 1, min(date('t', $nextmonth), $day), $year);
 
-  $result = db_query('SELECT DISTINCT(n.nid), n.created FROM {node} n '. node_access_join_sql() .' WHERE n.status = 1 AND n.created > %d AND n.created < %d AND '. node_access_where_sql() .' ORDER BY n.created', $start_of_month, $end_of_month);
+  $sql = 'SELECT n.nid, n.created FROM {node} n WHERE n.status = 1 AND n.created > %d AND n.created < %d ORDER BY n.created';
+  $sql = node_rewrite_sql($sql);
+  $result = db_query($sql, $start_of_month, $end_of_month);
 
   $days_with_posts = array();
   while ($day_with_post = db_fetch_object($result)) {
@@ -239,7 +241,9 @@ function archive_page($year = 0, $month = 0, $day = 0) {
 
   if ($year && $month && $day) {
     // Fetch nodes for the selected date, if one was specified.
-    $result = db_query_range('SELECT DISTINCT(n.nid), n.created FROM {node} n '. node_access_join_sql() .' WHERE n.status = 1 AND n.created > %d AND n.created < %d AND '. node_access_where_sql() .' ORDER BY n.created', $date, $date_end, 0, 20);
+    $sql = 'SELECT n.nid, n.created FROM {node} n WHERE n.status = 1 AND n.created > %d AND n.created < %d  ORDER BY n.created';
+    $sql = node_rewrite_sql($sql);
+    $result = db_query_range($sql, $date, $date_end, 0, 20);
 
     while ($nid = db_fetch_object($result)) {
       $output .= node_view(node_load(array('nid' => $nid->nid)), 1);

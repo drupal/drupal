@@ -73,10 +73,18 @@ function tracker_page($uid = 0) {
   $output .= '';
 
   if ($uid) {
-    $result = pager_query('SELECT DISTINCT n.nid, n.title, n.type, n.changed, n.uid, u.name, l.last_comment_timestamp AS last_post, l.comment_count FROM {node} n '. node_access_join_sql() .' INNER JOIN {node_comment_statistics} l ON n.nid = l.nid INNER JOIN {users} u ON n.uid = u.uid LEFT JOIN {comments} c ON n.nid = c.nid AND c.status = 0 WHERE n.status = 1 AND '. node_access_where_sql() .' AND (n.uid = %d OR c.uid = %d) ORDER BY last_post DESC', 25, 0, 'SELECT COUNT(DISTINCT(n.nid)) FROM {node} n '. node_access_join_sql() .' LEFT JOIN {comments} c ON n.nid = c.nid AND c.status = 0 WHERE n.status = 1 AND '. node_access_where_sql() .' AND (n.uid = %d OR c.uid = %d)', $uid, $uid);
+    $sql = 'SELECT n.nid, n.title, n.type, n.changed, n.uid, u.name, l.last_comment_timestamp AS last_post, l.comment_count FROM {node} n INNER JOIN {node_comment_statistics} l ON n.nid = l.nid INNER JOIN {users} u ON n.uid = u.uid LEFT JOIN {comments} c ON n.nid = c.nid AND c.status = 0 WHERE n.status = 1 AND (n.uid = %d OR c.uid = %d) ORDER BY last_post DESC';
+    $sql = node_rewrite_sql($sql);
+    $sql_count = 'SELECT n.nid FROM {node} n LEFT JOIN {comments} c ON n.nid = c.nid AND c.status = 0 WHERE n.status = 1 AND (n.uid = %d OR c.uid = %d)';
+    $sql_count = node_rewrite_sql($sql_count);
+    $result = pager_query($sql, 25, 0,$sql_count , $uid, $uid);
   }
   else {
-    $result = pager_query('SELECT n.nid, n.title, n.type, n.changed, n.uid, u.name, l.last_comment_timestamp AS last_post, l.comment_count FROM {node} n '. node_access_join_sql() .' INNER JOIN {users} u ON n.uid = u.uid INNER JOIN {node_comment_statistics} l ON n.nid = l.nid WHERE n.status = 1 AND '. node_access_where_sql() .' ORDER BY last_post DESC', 25, 0, 'SELECT COUNT(n.nid) FROM {node} n '. node_access_join_sql() .' WHERE n.status = 1 AND '. node_access_where_sql());
+    $sql = 'SELECT n.nid, n.title, n.type, n.changed, n.uid, u.name, l.last_comment_timestamp AS last_post, l.comment_count FROM {node} n INNER JOIN {users} u ON n.uid = u.uid INNER JOIN {node_comment_statistics} l ON n.nid = l.nid WHERE n.status = 1 ORDER BY last_post DESC';
+    $sql = node_rewrite_sql($sql);
+    $sql_count = 'SELECT COUNT(n.nid) FROM {node} n WHERE n.status = 1';
+    $sql_count = node_rewrite_sql($sql_count);
+    $result = pager_query($sql, 25, 0,$sql_count);
   }
 
   while ($node = db_fetch_object($result)) {

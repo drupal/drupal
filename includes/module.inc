@@ -137,6 +137,30 @@ function module_hook($module, $hook) {
 }
 
 /**
+ * Determine which modules are implementing a hook.
+ *
+ * @param $hook
+ *   The name of the hook (e.g. "help" or "menu").
+ * @return
+ *   An array with the names of the modules which are implementing this hook.
+ */
+function module_implements($hook) {
+  static $implementations;
+
+  if (!isset($implementations[$hook])) {
+    $implementations[$hook] = array();
+    $list = module_list();
+    foreach ($list as $module) {
+      if (module_hook($module, $hook)) {
+        $implementations[$hook][] = $module;
+      }
+    }
+  }
+
+  return $implementations[$hook];
+}
+
+/**
  * Invoke a hook in a particular module.
  *
  * @param $module
