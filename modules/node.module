@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.351 2004/05/03 17:38:40 dries Exp $
+// $Id: node.module,v 1.352 2004/06/02 19:01:40 dries Exp $
 
 define('NODE_NEW_LIMIT', time() - 30 * 24 * 60 * 60);
 
@@ -1422,7 +1422,7 @@ function node_submit($node) {
 
     if (node_access('update', $node)) {
       $node->nid = node_save($node);
-      watchdog('special', "$node->type: updated '$node->title'", l(t('view post'), "node/view/$node->nid"));
+      watchdog('special', t('%node-type: updated "%node-title"', array('%node-type' => t("$node->type"), '%node-title' => $node->title)), l(t('view post'), "node/view/$node->nid"));
       $msg = t('the %name was updated.', array ('%name' => node_invoke($node, 'node_name')));
     }
   }
@@ -1435,7 +1435,7 @@ function node_submit($node) {
 
     if (node_access('create', $node)) {
       $node->nid = node_save($node);
-      watchdog('special', "$node->type: added '$node->title'", l(t('view post'), "node/view/$node->nid"));
+      watchdog('special', t('%node-type: added "%node-title"', array('%node-type' => t("$node->type"), '%node->title' => $node->title)), l(t('view post'), "node/view/$node->nid"));
       $msg = t('your %name was created.', array ('%name' => node_invoke($node, 'node_name')));
     }
   }
@@ -1474,7 +1474,7 @@ function node_delete($edit) {
 
       cache_clear_all();
 
-      watchdog('special', "$node->type: deleted '$node->title'");
+      watchdog('special', t('%node-type: deleted "%node-title"', array('%node-type' => t("$node->type"), '%node-title' => $node->title)));
       $output = t('The node has been deleted.');
     }
     else {

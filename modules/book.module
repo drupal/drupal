@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.221 2004/05/17 22:00:06 dries Exp $
+// $Id: book.module,v 1.222 2004/06/02 19:01:40 dries Exp $
 
 /**
  * Implementation of hook_node_name().
@@ -837,8 +837,8 @@ function book_admin_save($nid, $edit = array()) {
       }
     }
 
-    $message = t("updated book '%title'", array("%title" => $book->title));
-    watchdog("special", $message);
+    $message = t('updated book "%title"', array('%title' => $book->title));
+    watchdog('special', $message);
 
     return $message;
   }

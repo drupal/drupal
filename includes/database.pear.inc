@@ -1,5 +1,5 @@
 <?php
-// $Id: database.pear.inc,v 1.23 2004/04/30 05:12:36 dries Exp $
+// $Id: database.pear.inc,v 1.24 2004/06/02 19:01:40 dries Exp $
 
 require_once 'DB.php';
 
@@ -130,7 +130,7 @@ function db_next_id($name) {
   $name = db_prefix_tables($name);
   $result = $active_db->nextID($name);
   if (DB::isError($result)) {
-    watchdog("error", "database: ". $result->getMessage() ."\nsequence table: $name");
+    watchdog('error', t('database: %db\nsequence table: %name', array('%db' => $result->getMessage(), '%name' => $name)));
   }
   else {
     return $result;
@@ -183,7 +183,7 @@ function db_query_range($query) {
   }
 
   if (DB::isError($result)) {
-    watchdog("error", "database: ". $result->getMessage() ."\nquery: ". htmlspecialchars($query));
+    watchdog('error', t('database: %db\nquery: %query', array('%db' => $result->getMessage(), '%query' => htmlspecialchars($query))));
   }
   else {
     return $result;
