@@ -617,7 +617,7 @@ function update_info() {
   print "ALTER TABLE users ADD rid INT UNSIGNED NOT NULL;\n";
   print "</pre></li>\n";
   print "<li><p>You might have to by-pass the access check near the bottom of the file called update.php such that you can gain access to the updates: search for <i>user_access()</i>.</p></li>";
-  print "<li><p>Choose one of the links below to either upgrade from Drupal 3.x or update from a CVS checkout. The upgrade will by default enable the standard Drupal themes and modules as well as setting some default values. The update will require modules and themes enabled manually under <i>Administer | Site configureation | modules</i>.</p></li>";
+  print "<li><p>Choose one of the links below to either upgrade from Drupal 3.x or update from a CVS checkout. The upgrade will by default enable the standard Drupal themes and modules as well as setting some default values. The update will require modules and themes enabled manually under <i>Administer | Site configuration | modules</i>.</p></li>";
   print "<li><p>Go through the various administration pages to change the existing and new settings to your liking.</p></li>\n";
   print "<li><p>Remove or disable access to update.php so nobody else can possible tamper with the database.</p></li>\n";
   print "<li><p>Thanks for using Drupal!</p></li>\n";
