@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.163 2003/01/31 08:32:41 dries Exp $
+// $Id: common.inc,v 1.164 2003/02/02 10:13:13 dries Exp $
 
 function conf_init() {
   global $HTTP_HOST, $PHP_SELF;
@@ -689,15 +689,24 @@ function format_date($timestamp, $type = "medium", $format = "") {
 }
 
 function format_name($object) {
-  global $PHP_SELF;
 
   if ($object->uid && $object->name) {
-    if (strstr($PHP_SELF, "admin")) {
+    if (arg(0) == "admin") {
       $output = l($object->name, "admin/user/edit/$object->uid", array("title" => t("Administer user profile.")));
     }
     else {
       $output = l($object->name, "user/view/$object->uid", array("title" => t("View user profile.")));
     }
+  }
+  else if ($object->name) {
+    /*
+    ** Sometimes modules display content composed by people who are
+    ** not registers members of the site (i.e. mailing list or news
+    ** aggregator modules).  This clause enables modules to display
+    ** the true author of the content.
+    */
+
+    $output = $object->name;
   }
   else {
     $output = t(variable_get(anonymous, "Anonymous"));
