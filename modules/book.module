@@ -26,14 +26,6 @@ function book_perm() {
 function book_access($op, $node) {
   global $user;
 
-  if ($op == 'view') {
-    // Everyone can access all published book pages whether these pages
-    // are still waiting for approval or not.  We might not always want
-    // to display pages that are waiting for approval, but we take care
-    // of that problem in the book_content() function.
-    return ($node->status ? $node->status : ($node->uid == $user->uid && user_access('edit own book pages')));
-  }
-
   if ($op == 'create') {
     // Only registered users can create book pages.  Given the nature
     // of the book module this is considered to be a good/safe idea.
@@ -44,11 +36,10 @@ function book_access($op, $node) {
     // Only registered users can update book pages.  Given the nature
     // of the book module this is considered to be a good/safe idea.
     // One can only update a book page if there are no suggested updates
-    // of that page waiting for approval and as long as the "create new
-    // revision"-bit is set.  That is, only updates that don't overwrite
-    // the current or pending information are allowed.
+    // of that page waiting for approval.  That is, only updates that
+    // don't overwrite the current or pending information are allowed.
 
-    return ((user_access('maintain books') && !$node->moderate && $node->revision) || ($node->uid == $user->uid && user_access('edit own book pages')));
+    return ((user_access('maintain books') && !$node->moderate) || ($node->uid == $user->uid && user_access('edit own book pages')));
   }
 }
 
