@@ -537,7 +537,7 @@ CREATE TABLE users (
 --
 
 CREATE TABLE variable (
-  name varchar(32) NOT NULL default '',
+  name varchar(48) NOT NULL default '',
   value text NOT NULL,
   PRIMARY KEY  (name)
 ) TYPE=MyISAM;
