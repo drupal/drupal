@@ -99,17 +99,17 @@ br {
 .block {
   width: 180px;
 }
-.message {
+.messages {
   padding: 0.3em;
-  margin: 1em 0em 1em 0em;
+  margin: 0.5em 0em 0.5em 0em;
 }
 .status {
-  border: 1px solid #696;
-  color: #696;
+  border: 1px solid #3a3;
+  color: #3a3;
 }
 .error, form-item input.error {
-  border: 1px solid #930;
-  color: #930;
+  border: 1px solid red;
+  color: red;
 }
 
 /*

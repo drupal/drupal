@@ -261,12 +261,16 @@ function watchdog($type, $message, $link = NULL) {
  * @{
  */
 function drupal_set_message($message = NULL, $type = "status") {
-  if (!isset($_SESSION['messages'])) {
-    $_SESSION['messages'] = array();
-  }
-
   if (isset($message)) {
-    $_SESSION['messages'][] = array($message, $type);
+    if (!isset($_SESSION['messages'])) {
+      $_SESSION['messages'] = array();
+    }
+
+    if (!isset($_SESSION['messages'][$type])) {
+      $_SESSION['messages'][$type] = array();
+    }
+
+    $_SESSION['messages'][$type][] = $message;
   }
 
   return $_SESSION['messages'];

@@ -184,6 +184,35 @@ function theme_page($content, $title = NULL, $breadcrumb = NULL) {
 }
 
 /**
+ * Returns themed set of status and/or error messages.  The messages are grouped
+ * by type.
+ *
+ * @return a string containing the messages.
+ */
+function theme_status_messages() {
+  if ($data = drupal_get_messages()) {
+    $output = '';
+    foreach ($data as $type => $messages) {
+      $output .= "<div class=\"messages $type\">\n";
+      if (count($messages) > 1) {
+        $output .= " <ul>\n";
+        foreach($messages as $message) {
+          $output .= "  <li>". ucfirst($message) ."</li>\n";
+        }
+        $output .= " </ul>\n";
+      }
+      else {
+        $output .= ucfirst($messages[0]);
+      }
+      $output .= "</div>\n";
+    }
+
+    return $output;
+  }
+}
+
+
+/**
  * Returns themed set of links.
  *
  * @param $links an array of @a links to be themed.
@@ -283,7 +312,6 @@ function theme_node($node, $main = 0, $page = 0) {
 function theme_form_element($title, $value, $description = NULL, $id = NULL, $required = FALSE, $error = FALSE) {
 
   $output  = "<div class=\"form-item\">\n";
-
   $required = $required ? theme('mark') : '';
 
   if ($title) {
@@ -446,6 +474,7 @@ function theme_item_list($items = array(), $title = NULL) {
 
 /**
  * Returns themed error message.
+ * REMOVE: this function is deprecated an no longer used in core.
  *
  * @param $message the error message to be themed.
  *

@@ -77,10 +77,7 @@ function chameleon_page($content, $title = NULL, $breadcrumb = NULL) {
     $output .= "<div id=\"help\">$help</div><hr />";
   }
 
-  foreach (drupal_get_messages() as $message) {
-    list($message, $type) = $message;
-    $output .= "<div class=\"message $type\">". ucfirst($message) ."</div>";
-  }
+  $output .= theme_status_messages();
 
   $output .= "\n<!-- begin content -->\n";
   $output .= $content;

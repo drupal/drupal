@@ -164,10 +164,8 @@ function xtemplate_page($content, $title = NULL, $breadcrumb = NULL) {
     $xtemplate->template->parse("header.help");
   }
 
-  foreach (drupal_get_messages() as $message) {
-    list($message, $type) = $message;
-    $xtemplate->template->assign("message", ucfirst($message));
-    $xtemplate->template->assign("type", $type);
+  if ($message = theme_status_messages()) {
+    $xtemplate->template->assign("message", $message);
     $xtemplate->template->parse("header.message");
   }
 
