@@ -63,32 +63,4 @@ function user_ban($mask, $type) {
   return db_fetch_object($result);
 }
 
-function user_gravity($id) {
-  global $status;
-
-  $period = 5184000;    // maximum 60 days
-  $number = 30;         // maximum 30 comments
-
-  $r1 = db_query("SELECT COUNT(nid) AS number FROM node WHERE author = '$id' AND (". time() ." - timestamp < $period) AND status = '$status[posted]'");
-  if ($story = db_fetch_object($r1)) {
-    $bonus += $story->number;
-  }
-
-  $r2 = db_query("SELECT COUNT(nid) AS number FROM node WHERE author = '$id' AND (". time() ." - timestamp < $period) AND status = '$status[dumped]'");
-  if ($story = db_fetch_object($r2)) {
-    $bonus -= $story->number;
-  }
-
-  $r3 = db_query("SELECT score, votes FROM comments WHERE author = '$id' AND votes > 0 AND (". time() ." - timestamp < $period) ORDER BY timestamp LIMIT $number");
-  while ($comment = db_fetch_object($r3)) {
-    $weight++;
-    $score += $weight * $comment->score;
-    $votes += $weight * $comment->votes;
-  }
-
-  $bonus += $weight / 5;
-
-  return ($votes ? ($score + $weight) / $votes + $bonus : $bonus);
-}
-
 ?>

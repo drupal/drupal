@@ -12,7 +12,7 @@ function headline_help() {
 }
 
 function headline_conf_options() {
-  $period = array(900 => format_interval(900), 1800 => format_interval(1800), 3600 => format_interval(3600), 7200 => format_interval(7200), 10800 => format_interval(10800), 21600 => format_interval(21600), 32400 => format_interval(32400), 43200 => format_interval(43200), 64800 => format_interval(64800), 86400 => format_interval(86400), 1000000000 => t("never"));
+  $period = array(900 => format_interval(900), 1800 => format_interval(1800), 3600 => format_interval(3600), 7200 => format_interval(7200), 10800 => format_interval(10800), 21600 => format_interval(21600), 32400 => format_interval(32400), 43200 => format_interval(43200), 64800 => format_interval(64800), 86400 => format_interval(86400), 1000000000 => t("Never"));
   $output .= form_select(t("Update interval"), "headline_cron_time" , variable_get("headline_cron_time", 86400), $period, t("The update interval indicating how often you want to update your headline channels.  Requires crontab."));
   return $output;
 }
