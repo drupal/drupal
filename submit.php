@@ -1,7 +1,7 @@
-<?PHP
+<?
 
 function submit_enter() {
-  global $user, $theme, $categories;
+  global $anonymous, $categories, $theme, $user;
   
   ### Guidlines:
   $output .= "<P>Got some news or some thoughts you would like to share?  Fill out this form and they will automatically get whisked away to our submission queue where our moderators will frown at it, poke at it and hopefully post it.  Every registered user is automatically a moderator and can vote whether or not your sumbission should be carried to the front page for discussion.</P>\n";
@@ -56,14 +56,14 @@ function submit_enter() {
 }
 
 function submit_preview($subject, $abstract, $story, $category) {
-  global $user, $theme, $categories;
+  global $anonymous, $categories, $theme, $user;
 
   $output .= "<FORM ACTION=\"submit.php\" METHOD=\"post\">\n";
 
   $output .= "<P>\n";
   $output .= " <B>Your name:</B><BR>\n";
   if ($user) $output .= " <A HREF=\"account.php\">$user->userid</A> &nbsp; &nbsp; <SMALL> [ <A HREF=\"account.php?op=logout\">logout</A> ]</SMALL>\n";
-  else $output .= " $anonymous &nbsp; &nbsp; <SMALL>[ <A HREF=\"$account.php\">login</A> | <A HREF=\"account.php\">create an account</A> ]</SMALL>\n";
+  else $output .= " $anonymous &nbsp; &nbsp; <SMALL>[ <A HREF=\"account.php\">login</A> | <A HREF=\"account.php\">create an account</A> ]</SMALL>\n";
   $output .= "</P>\n";
 
   $output .= "<P>\n";
