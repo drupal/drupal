@@ -162,12 +162,19 @@ function book_delete(&$node) {
 }
 
 function book_form(&$node, &$help, &$error) {
-  global $user;
+  global $user, $op;
 
   $output .= form_select(t("Parent"), "parent", $node->parent, book_toc(), t("The parent subject or category the page belongs in."));
 
-  if ($node->teaser && !$node->format) {
-    $output .= form_textarea(t("Teaser"), "teaser", $node->teaser, 60, 5, $error["teaser"]);
+  if ($node->format) {
+    if ($op != t("Preview")) {
+      $node->body = addslashes($node->body);
+    }
+  }
+  else {
+    if ($node->teaser) {
+      $output .= form_textarea(t("Teaser"), "teaser", $node->teaser, 60, 5, $error["teaser"]);
+    }
   }
 
   $output .= form_textarea(t("Body"), "body", $node->body, 60, 20, t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")));
@@ -313,7 +320,7 @@ function book_body($node) {
     ob_end_clean();
   }
   else {
-    $output = check_output($node->body, 1);
+    $output = check_output(filter($node->body), 1);
   }
 
   return $output;

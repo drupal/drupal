@@ -2,8 +2,8 @@
 // $Id$
 
 function page_node($field) {
-  $info["name"] = t("static page");
-  $info["description"] = t("If you just want to add a static page with a link in the menu to your site, this would be the best choice.  Unlike a story, a page by-passes the submission queue.");
+  $info["name"] = t("page");
+  $info["description"] = t("If you just want to add a page with a link in the menu to your site, this would be the best choice.  Unlike a story, a page by-passes the submission queue.");
 
   return $info[$field];
 }
@@ -48,7 +48,6 @@ function page_delete(&$node) {
 function page_load($node) {
   $page = db_fetch_object(db_query("SELECT format, link FROM page WHERE nid = '$node->nid'"));
 
-
   return $page;
 }
 
@@ -66,15 +65,16 @@ function page_link($type) {
 function page_body($node) {
   global $theme, $op;
 
+  /*
+  ** Make sure only authorized users can preview static (PHP)
+  ** pages.
+  */
+
+  if ($op == t("Preview") && !user_access("adminster nodes")) {
+    return;
+  }
+
   if ($node->format) {
-    /*
-    ** Make sure only authorized users can preview PHP pages.
-    */
-
-    if ($op == t("Preview") && !user_access("adminster nodes")) {
-      return;
-    }
-
     ob_start();
     eval($node->body);
     $output = ob_get_contents();
@@ -95,23 +95,30 @@ function page_view($node, $main = 0) {
   ** will be generated.
   */
 
-  $theme->box($node->title, page_body($body));
+  $output .= page_body($node);
+
+  /*
+  ** Add the node specific links:
+  */
+
+  $output .= "<div align=\"right\">". $theme->links(link_node($node, $main)) ."</div>";
+
+  $theme->box($node->title, $output);
 }
 
 function page_form(&$node, &$help, &$error) {
   global $op;
 
-  if ($node->teaser && !$node->format) {
-    $output .= form_textarea(t("Teaser"), "teaser", $node->teaser, 60, 5, $error["teaser"]);
+  if ($node->format) {
+    if ($op != t("Preview")) {
+      $node->body = addslashes($node->body);
+    }
   }
-
-  /*
-  ** Q: s this still required?
-  **
-  **   if ($op != t("Preview") && $node->format) {
-  **     $node->body = addslashes($node->body);
-  **   }
-  */
+  else {
+    if ($node->teaser) {
+      $output .= form_textarea(t("Teaser"), "teaser", $node->teaser, 60, 5, $error["teaser"]);
+    }
+  }
 
   $output .= form_textarea("Body", "body", $node->body, 60, 20);
   $output .= form_textfield("Link", "link", $node->link, 60, 64);
