@@ -90,6 +90,14 @@ function user_load($array = array()) {
 
 function user_save($account, $array = array()) {
 
+  if (!user_access("administer users")) {
+    if (array_intersect(array_keys($array), array("rid", "init", "rating", "session"))) {
+      watchdog("warning", "detected malicious attempt to alter a protected database field");
+    }
+
+    unset($array["rid"], $array["init"], $array["rating"], $array["session"]);
+  }
+
   /*
   ** Dynamically compose a SQL query:
   */
@@ -171,14 +179,14 @@ function user_validate_name($name) {
   ** Verify the syntax of the given name:
   */
 
-  if (!$name) return t("You must enter a Username.");
-  if (ereg("^ ", $name)) return t("The Username cannot begin with a space.");
-  if (ereg(" \$", $name)) return t("The Username cannot end with a space.");
-  if (ereg("  ", $name)) return t("The Username cannot contain multiple spaces in a row.");
-  // if (ereg("[^a-zA-Z0-9@-@]", $name)) return t("The Username contains an illegal character.");
-  if (ereg('@', $name) && !eregi('@([0-9a-z](-?[0-9a-z])*\.)+[a-z]{2}([zmuvtg]|fo|me)?$', $name)) return t("The Username is not a valid authentication ID.");
+  if (!$name) return t("You must enter a username.");
+  if (ereg("^ ", $name)) return t("The username cannot begin with a space.");
+  if (ereg(" \$", $name)) return t("The username cannot end with a space.");
+  if (ereg("  ", $name)) return t("The username cannot contain multiple spaces in a row.");
+  // if (ereg("[^a-zA-Z0-9@-@]", $name)) return t("The username contains an illegal character.");
+  if (ereg('@', $name) && !eregi('@([0-9a-z](-?[0-9a-z])*\.)+[a-z]{2}([zmuvtg]|fo|me)?$', $name)) return t("The username is not a valid authentication ID.");
   if (!eregi('^[[:print:]]+', $name)) return t("The name contains an illegal character.");
-  if (strlen($name) > 56) return t("The Username '$name' is too long: it must be less than 56 characters.");
+  if (strlen($name) > 56) return t("The username '$name' is too long: it must be less than 56 characters.");
 }
 
 function user_validate_mail($mail) {
@@ -188,7 +196,7 @@ function user_validate_mail($mail) {
   ** allowed.
   */
 
-  if ($mail && !eregi("^[a-z0-9]+([_.-][a-z0-9]+)*@([a-z0-9]+([.-][a-z0-9]+)*)+\\.[a-z]{2,4}$", $mail)) {
+  if ($mail && !eregi("^[0-9a-z_\.-]+@(([0-9]{1,3}\.){3}[0-9]{1,3}|([0-9a-z][0-9a-z-]*[0-9a-z]\.)+[a-z]{2,})$", $mail)) {
     return t("The e-mail address '$mail' is not valid.");
   }
 }
@@ -332,9 +340,9 @@ function user_block() {
     $output .= "<input name=\"edit[op]\" type=\"submit\" value=\"". t("Log in") ."\" /><br />\n";
     $output .= "</form></div>\n";
     if (variable_get("user_register", 1)) {
-      $output .= "&raquo; ". lm(t("Register"), array("mod" => "user", "op" => "register"), "", array("title" => t("Create a new user account."))) ."<br />\n";
+      $output .= "&raquo; ". lm(t("Create account?"), array("mod" => "user", "op" => "register"), "", array("title" => t("Create a new user account."))) ."<br />\n";
     }
-    $output .= "&raquo; ". lm(t("New password"), array("mod" => "user", "op" => "password"), "", array("title" => t("Request new password via e-mail.")));
+    $output .= "&raquo; ". lm(t("Forgot password?"), array("mod" => "user", "op" => "password"), "", array("title" => t("Request new password via e-mail.")));
 
     $block[1]["content"] = $output;
   }
@@ -345,10 +353,7 @@ function user_block() {
   $block[1]["info"] = t("Log in");
   $block[1]["link"] = drupal_url(array("mod" => "user"), "module");
 
-  // Who's online block
-  $time = 60 * 60;  // minutes * seconds
-
-  $result = db_query("SELECT uid, name FROM users WHERE timestamp > %d - %d ORDER BY timestamp DESC", time(), $time);
+  $result = db_query("SELECT uid, name FROM users WHERE timestamp > %d - %d ORDER BY timestamp DESC", time(), 30 * 60);
 
   if (db_num_rows($result)) {
     $output = "";
@@ -1676,12 +1681,12 @@ defines a group of users which have certain privileges. Examples of roles
 include: <I>anonymous user</I>, <I>authenticated user</I>, <I>moderator</I>,
 <I>administrator</I> and so on. By default, Drupal comes with two commonly used
 roles:
-<UL>
-  <LI>Anonymous user: this role is used for users that don't have a user account
+<ul>
+  <li>Anonymous user: this role is used for users that don't have a user account
     or that are not authenticated.
-  <LI>Registered user: this role is assigned automatically to authenticated users.
-    Most users will belong to this user role unless specified otherwise.</LI>
-</UL></p>
+  <li>Registered user: this role is assigned automatically to authenticated users.
+    Most users will belong to this user role unless specified otherwise.</li>
+</ul></p>
 <p>These common roles will suffice for most sites. However, for a more complex site where you need to give several users different access privileges, you will
   need to add a new role by clicking the "add new role" link. Then define what privileges that role will have by clicking the "permission overview" link and   checking the appropriate boxes to give that role the permissions you desire.
   <p>To attach a specific user to a role, use the "account" section of the drupal Administration. </p>
@@ -1715,7 +1720,7 @@ roles:
   clicking on the user account link. Of course, a user must be logged into reach those pages.
   There, users will find a page for changing their preferred timezone, language, username, e-mail address, password, theme, signature, homepage, and <a href="#da">distributed authentication</a> names.
   Changes made here take effect immediately. Also, administrators may make profile and preferences changes in the Admin Center on behalf of their users.</p>
-  <p>Module developers are provided several hooks for adding custom fields to the user view/edit pages. These hooks are described in the Developer section of the <A href="http://www.drupal.org">Drupal Handbook</a>. For an example, see the <code>jabber_user()</code> function in <i>/modules/jabber.module</i>.
+  <p>Module developers are provided several hooks for adding custom fields to the user view/edit pages. These hooks are described in the Developer section of the <a href="http://www.drupal.org">Drupal Handbook</a>. For an example, see the <code>jabber_user()</code> function in <i>/modules/jabber.module</i>.
 </p>
  <?php
 }
