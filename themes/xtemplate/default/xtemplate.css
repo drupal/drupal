@@ -203,7 +203,7 @@ table {
 .node {
   margin: .5em 0 1em 0;
 }
-.static {
+.sticky {
   padding: .5em;
   background-color: #eee;
   border: solid 1px #ddd;
