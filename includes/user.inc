@@ -71,4 +71,8 @@ function user_setHistory(&$user, $field, $value) {
   db_query($query);
 }
 
+function user_clean() {
+  // todo -  called by cron job
+}
+
 ?>

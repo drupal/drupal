@@ -23,27 +23,28 @@ function admin_header() {
     td	    { font-family: helvetica, arial; }
    </STYLE>
    <BODY BGCOLOR="#FFFFFF" LINK="#006699" VLINK="#004499" ALINK="#FF0000">
-   <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="2" WIDTH="780">
+   <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="2">
     <TR><TD COLSPAN="10"><H1><? echo "$site_name"; ?> administration center</H1></TD></TR>
-    <TR><TD BGCOLOR="#000000" COLSPAN="10" WIDTH="100%"><IMG SRC="images/pixel.gif" WIDTH="1" HEIGHT="1" ALT=""></TD></TR>
+    <TR><TD BGCOLOR="#000000" COLSPAN="11" WIDTH="100%"><IMG SRC="images/pixel.gif" WIDTH="1" HEIGHT="1" ALT=""></TD></TR>
     <TR>
      <?
        admin_icon("stories");
        admin_icon("comments");
        admin_icon("diaries");
        admin_icon("accounts");
-       admin_icon("misc");
-       admin_icon("bans");
        admin_icon("watchdog");
+       admin_icon("blobs");
+       admin_icon("cron");
+       admin_icon("bans");
        admin_icon("stats");
        admin_icon("info");
        admin_icon("home");
      ?>
     </TR>
-    <TR><TD BGCOLOR="#000000" COLSPAN="10" WIDTH="100%"><IMG SRC="images/pixel.gif" WIDTH="1" HEIGHT="0" ALT=""></TD></TR>
+    <TR><TD BGCOLOR="#000000" COLSPAN="11" WIDTH="100%"><IMG SRC="images/pixel.gif" WIDTH="1" HEIGHT="0" ALT=""></TD></TR>
     <TR><TD COLSPAN="10">&nbsp;</TD></TR>
     <TR>
-     <TD COLSPAN="10">
+     <TD COLSPAN="11">
      <?
 }
 

@@ -22,12 +22,11 @@ function watchdog($id, $message) {
 
   // Perform query to add new watchdog entry:
   db_query("INSERT INTO watchdog (level, timestamp, user, message, location, hostname) VALUES ('". $watchdog[$id][0] ."', '". time() ."', '". check_input($user->id) ."', '". check_input($message) ."', '". check_input(getenv("REQUEST_URI")) ."', '". check_input(getenv("REMOTE_ADDR")) ."')");
+}
 
-  // Periodically remove old watchdog entries:
-  if (time() % 20 == 0) {
-    $timestamp = time() - $watchdog_history;
-    db_query("DELETE FROM watchdog WHERE timestamp < $timestamp");
-  }
+function watchdog_clean($history = "604800") {
+  $timestamp = time() - $history;
+  db_query("DELETE FROM watchdog WHERE timestamp < $timestamp");
 }
  
 ?>
