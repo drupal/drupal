@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.276 2004/08/21 06:42:35 dries Exp $
+// $Id: comment.module,v 1.277 2004/08/22 17:03:41 unconed Exp $
 
 /**
  * @file
@@ -502,6 +502,7 @@ function comment_preview($edit) {
 
   $output = '';
 
+  $comment = new StdClass();
   foreach ($edit as $key => $value) {
     $comment->$key = $value;
   }

@@ -1,5 +1,5 @@
 <?php
-// $Id: chameleon.theme,v 1.19 2004/08/21 06:42:37 dries Exp $
+// $Id: chameleon.theme,v 1.20 2004/08/22 17:03:41 unconed Exp $
 
 /**
  * @file
@@ -129,6 +129,7 @@ function chameleon_node($node, $main = 0, $page = 0) {
 
   $submitted = theme_get_setting("toggle_node_info_$node->type") ? array(t("By %author at %date", array('%author' => format_name($node), '%date' => format_date($node->created, 'small')))) : array();
 
+  $terms = array();
   if (module_exist('taxonomy')) {
     $terms = taxonomy_link("taxonomy terms", $node);
   }

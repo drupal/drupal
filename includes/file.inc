@@ -1,5 +1,5 @@
 <?php
-/* $Id: file.inc,v 1.20 2004/08/21 06:42:35 dries Exp $ */
+/* $Id: file.inc,v 1.21 2004/08/22 17:03:40 unconed Exp $ */
 
 /**
  * @file
@@ -442,6 +442,7 @@ function file_scan_directory($dir, $mask, $nomask = array('.', '..', 'CVS'), $ca
         }
         elseif (ereg($mask, $file)) {
           $name = basename($file);
+          $files["$dir/$file"] = new stdClass();
           $files["$dir/$file"]->filename = "$dir/$file";
           $files["$dir/$file"]->name = substr($name, 0, strrpos($name, '.'));
           if ($callback) {
