@@ -456,9 +456,9 @@ function book_nodeapi(&$node, $op, $teaser, $page) {
             $node->$key = $value;
           }
           $node = book_navigation($node);
-        }
-        if ($page) {
-          menu_set_location($node->breadcrumb);
+          if ($page) {
+            menu_set_location($node->breadcrumb);
+          }
         }
       }
       break;
