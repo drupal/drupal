@@ -125,8 +125,10 @@ function import_block($op, $delta) {
 }
 
 function import_get_bundles($attributes = 0) {
-  $result = db_query("SELECT * FROM bundle ORDER BY title");
 
+  $block = array();
+
+  $result = db_query("SELECT * FROM bundle ORDER BY title");
   while ($bundle = db_fetch_object($result)) {
     $block[$bundle->bid]["subject"] = $bundle->title;
     $block[$bundle->bid]["content"] = import_bundle_block($bundle->attributes) ."<p><div align=\"right\">". lm(t("more"), array("mod" => "import", "op" => "bundle", "id" => $bundle->bid), "", array("title" => t("View this bundle's recent news."))) ."</div></p>";
@@ -137,8 +139,10 @@ function import_get_bundles($attributes = 0) {
 }
 
 function import_get_feeds($attributes = 0) {
-  $result = db_query("SELECT * FROM feed ORDER BY fid");
 
+  $block = array();
+
+  $result = db_query("SELECT * FROM feed ORDER BY fid");
   while ($feed = db_fetch_object($result)) {
     $block[$feed->fid]["subject"] = $feed->title;
     $block[$feed->fid]["content"] = import_feed_block($feed) ."<p><div align=\"right\">". lm(t("more"), array("mod" => "import", "op" => "feed", "id" => $feed->fid), "", array("title" => t("View this feed's recent news."))) ."</div></p>";
