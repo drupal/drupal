@@ -472,7 +472,7 @@ function node_link($type, $node = 0, $main = 0) {
     menu("admin/node/nodes", "post overview");
     menu("admin/node/nodes/0", "new or updated posts", "node_admin", NULL, 0);
     menu("admin/node/nodes/1", "approval queue", "node_admin", NULL, 1);
-    menu("admin/node/search", "search post", "node_admin", $help["search"], 8);
+    menu("admin/node/search", "search posts", "node_admin", $help["search"], 8);
     menu("admin/node/help", "help", "node_help", NULL, 9);
     menu("admin/node/edit", "edit node", "node_admin", NULL, 0, 1);
   }

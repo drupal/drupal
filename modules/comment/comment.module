@@ -664,7 +664,7 @@ function comment_link($type, $node = 0, $main = 0) {
     menu("admin/comment", "comment management", "comment_admin", $help["general"], 2);
     menu("admin/comment/0", "new or updated comments", "comment_admin");
     menu("admin/comment/1", "comments that await approval", "comment_admin");
-    menu("admin/comment/search", "search comment", "comment_admin", NULL, 8);
+    menu("admin/comment/search", "search comments", "comment_admin", NULL, 8);
     menu("admin/comment/help", "help", "comment_help", NULL, 9);
     menu("admin/comment/edit", "edit comment", "comment_admin", NULL, 0, 1);
 

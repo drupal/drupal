@@ -424,7 +424,7 @@ function user_link($type) {
     menu("admin/user/access/user", "username rules", "user_admin", $help["access"]);
     menu("admin/user/role", "user roles", "user_admin", $help["role"], 4);
     menu("admin/user/permission", "user permissions", "user_admin", $help["permission"], 5);
-    menu("admin/user/search", "search account", "user_admin", $help["search"], 8);
+    menu("admin/user/search", "search accounts", "user_admin", $help["search"], 8);
     menu("admin/user/help", "help", "user_help", NULL, 9);
     menu("admin/user/edit", "edit user account", "user_admin", NULL, 0, 1); // hidden menu
     menu("admin/user/account/0", "active users", "user_admin", $help["view"], 1);

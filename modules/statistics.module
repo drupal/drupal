@@ -117,7 +117,7 @@ function statistics_link($type, $node = 0, $main = 0) {
     $help["who is online block"] = "This statistics module exports a block that can display how many user's and guests are currently online.  You can configure the name of the block, the name of a sub-block for displaying names of user's currently online, how recently a user must have been active to be considered online, the maximum characters to display from a user's name and the maximum number of user names to display.";
 
     menu("admin/statistics", "site statistics", "statistics_admin", $help["statistics"], 6);
-    menu("admin/statistics/statistics", "post popular posts", "statistics_admin", $help["statistics"]);
+    menu("admin/statistics/statistics", "most popular posts", "statistics_admin", $help["statistics"]);
     menu("admin/statistics/referrers", "referrer log", "statistics_admin", $help["referrers"]);
     menu("admin/statistics/referrers/internal", "internal referrers only", "statistics_admin", $help["referrers"]);
     menu("admin/statistics/referrers/external", "external referrers only", "statistics_admin", $help["referrers"]);
