@@ -18,17 +18,14 @@ function _node_get($conditions) {
   }
 
   if ($type) {
-    $result = db_query("SELECT n.*, l.*, u.uid, u.name FROM node n LEFT JOIN $type l ON n.lid = l.lid AND n.nid = l.nid LEFT JOIN users u ON n.author = u.uid WHERE $where ORDER BY n.timestamp DESC");
 
-/*
-    db_query ("BEGIN");
-    db_query ("CREATE TEMPORARY TABLE modhole AS SELECT n.nid, SUM(m.score) / COUNT(m.cid) AS score, COUNT(m.cid) AS votes FROM node n LEFT JOIN $type l ON n.lid = l.lid AND n.nid = l.nid LEFT JOIN users u ON n.author = u.uid LEFT JOIN moderate m ON m.nid = n.nid WHERE $where GROUP BY n.nid");
-    $result = db_query ("SELECT n.*, l.*, u.uid, u.name, m.score AS score, m.votes AS votes FROM node n INNER JOIN modhole m ON m.nid = n.nid LEFT JOIN $type l ON n.lid = l.lid AND n.nid = l.nid LEFT JOIN users u ON n.author = u.uid WHERE $where ORDER BY n.timestamp DESC");
+   // $result = db_query("SELECT n.*, l.*, u.uid, u.name FROM node n LEFT JOIN $type l ON n.nid = l.nid LEFT JOIN users u ON n.uid = u.uid WHERE $where ORDER BY n.timestamp DESC");
+
+    db_query("BEGIN");
+    db_query("CREATE TEMPORARY TABLE modhole AS SELECT n.nid FROM node n LEFT JOIN $type l ON n.nid = l.nid LEFT JOIN users u ON n.uid = u.uid WHERE $where GROUP BY n.nid");
+    $result = db_query("SELECT n.*, l.*, u.uid, u.name FROM node n INNER JOIN modhole m ON m.nid = n.nid LEFT JOIN $type l ON n.nid = l.nid LEFT JOIN users u ON n.uid = u.uid WHERE $where ORDER BY n.timestamp DESC");
     db_query("DROP TABLE modhole");
     db_query("COMMIT");
-
-    'score' isn't in GROUP BY
-*/
 
     return $result;
   }
@@ -62,7 +59,7 @@ function node_del($conditions) {
   if ($node = node_get_object($conditions)) {
     module_invoke($node->type, "delete", $node);
     db_query("DELETE FROM node WHERE nid = '$node->nid'");
-    db_query("DELETE FROM $node->type WHERE lid = '$node->lid' AND nid = '$node->nid'");
+    db_query("DELETE FROM $node->type WHERE nid = '$node->nid'");
     db_query("DELETE FROM comments WHERE lid = '$node->nid'");
     db_query("DELETE FROM moderate WHERE nid = '$node->nid'");
     watchdog("special", "node: deleted '$node->title'");
@@ -78,7 +75,7 @@ function node_get_comments($nid) {
 function node_save($node, $filter) {
   global $db_handle;
 
-  $rows = array(nid, lid, cid, tid, type, title, score, votes, author, status, comment, promote, moderate, attributes, timestamp, timestamp_posted, timestamp_queued, timestamp_hidden);
+  $rows = array(nid, cid, tid, type, title, score, votes, uid, status, comment, promote, moderate, attributes, timestamp, timestamp_posted, timestamp_queued, timestamp_hidden);
 
   if ($node[nid] > 0) {
     $n = node_get_object(array("nid" => $node[nid]));
@@ -141,15 +138,14 @@ function node_save($node, $filter) {
       else {
 
         $nid = $db_handle->nextId("node");
-        $lid = $db_handle->nextId($filter[type]);
 
-        $result = db_query("INSERT INTO node ($f1, nid, lid) VALUES ($v1, '$nid', '$lid')");
+        $result = db_query("INSERT INTO node ($f1, nid) VALUES ($v1, '$nid')");
         if (db_error($result)) {
           watchdog("warning", "node: added $filter[type] '$node[title]' - failed");
           $db_handle->rollback();
         }
         else {
-          $result = db_query("INSERT INTO $filter[type] ($f2, nid, lid) VALUES ($v2, '$nid', '$lid')");
+          $result = db_query("INSERT INTO $filter[type] ($f2, nid) VALUES ($v2, '$nid')");
           if (db_error($result)) {
             watchdog("warning", "node: added $filter[type] '$node[title]' - failed");
             $db_handle->rollback();

@@ -78,7 +78,7 @@ function comment_reply($pid, $id) {
   global $theme;
 
   if ($pid) {
-    $item = db_fetch_object(db_query("SELECT c.*, u.uid, u.name FROM comments c LEFT JOIN users u ON c.author = u.uid WHERE c.cid = '$pid'"));
+    $item = db_fetch_object(db_query("SELECT c.*, u.uid, u.name FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.cid = '$pid'"));
     comment_view(new Comment($item->uid, $item->name, $item->subject, $item->comment, $item->timestamp, $item->url, $item->cid, $item->lid), t("reply to this comment"));
   }
   else {
@@ -124,7 +124,7 @@ function comment_post($edit) {
       watchdog("special", "comment: added '$edit[subject]'");
 
       // add comment to database:
-      db_query("INSERT INTO comments (lid, pid, author, subject, comment, hostname, timestamp) VALUES ('". check_input($edit[id]) ."', '". check_input($edit[pid]) ."', '$user->uid', '". check_input($edit[subject]) ."', '". check_input($edit[comment]) ."', '". getenv("REMOTE_ADDR") ."', '". time() ."')");
+      db_query("INSERT INTO comments (lid, pid, uid, subject, comment, hostname, timestamp) VALUES ('". check_input($edit[id]) ."', '". check_input($edit[pid]) ."', '$user->uid', '". check_input($edit[subject]) ."', '". check_input($edit[comment]) ."', '". getenv("REMOTE_ADDR") ."', '". time() ."')");
 
       // clear cache:
       cache_clear();
@@ -176,7 +176,7 @@ function comment_order($order) {
 
 function comment_query($lid, $order, $pid = -1) {
 
-  $query .= "SELECT c.cid, c.pid, c.lid, c.subject, c.comment, c.timestamp, u.uid, u.name, AVG(m.score) AS score, COUNT(m.cid) AS votes FROM comments c LEFT JOIN users u ON c.author = u.uid LEFT JOIN moderate m ON c.cid = m.cid WHERE c.lid = '$lid'";
+  $query .= "SELECT c.cid, c.pid, c.lid, c.subject, c.comment, c.timestamp, u.uid, u.name, AVG(m.score) AS score, COUNT(m.cid) AS votes FROM comments c LEFT JOIN users u ON c.uid = u.uid LEFT JOIN moderate m ON c.cid = m.cid WHERE c.lid = '$lid'";
 
   if ($pid >= 0) {
     $query .= " AND pid = '$pid'";
@@ -235,7 +235,7 @@ function comment_view($comment, $folded = 0) {
 function comment_thread_min($cid, $threshold) {
   global $user;
 
-  $result = db_query("SELECT c.cid, c.pid, c.lid, c.subject, c.comment, c.timestamp, u.uid, u.name, AVG(m.score) AS score, COUNT(m.cid) AS votes FROM comments c LEFT JOIN users u ON c.author = u.uid LEFT JOIN moderate m ON c.cid = m.cid WHERE c.pid = '$cid' GROUP BY c.cid, c.pid, c.lid, c.subject, c.comment, c.timestamp, u.uid, u.name ORDER BY c.timestamp");
+  $result = db_query("SELECT c.cid, c.pid, c.lid, c.subject, c.comment, c.timestamp, u.uid, u.name, AVG(m.score) AS score, COUNT(m.cid) AS votes FROM comments c LEFT JOIN users u ON c.uid = u.uid LEFT JOIN moderate m ON c.cid = m.cid WHERE c.pid = '$cid' GROUP BY c.cid, c.pid, c.lid, c.subject, c.comment, c.timestamp, u.uid, u.name ORDER BY c.timestamp");
 
   while ($comment = db_fetch_object($result)) {
     print "<ul>";
@@ -257,7 +257,7 @@ function comment_thread_max($cid, $mode, $threshold, $level = 0, $dummy = 0) {
   ** in terms of speed and size.
   */
 
-  $result = db_query("SELECT c.cid, c.pid, c.lid, c.subject, c.comment, c.timestamp, u.uid, u.name, AVG(m.score) AS score, COUNT(m.cid) AS votes FROM comments c LEFT JOIN users u ON c.author = u.uid LEFT JOIN moderate m ON c.cid = m.cid WHERE c.pid = '$cid' GROUP BY c.cid, c.pid, c.lid, c.subject, c.comment, c.timestamp, u.uid, u.name ORDER BY c.timestamp");
+  $result = db_query("SELECT c.cid, c.pid, c.lid, c.subject, c.comment, c.timestamp, u.uid, u.name, AVG(m.score) AS score, COUNT(m.cid) AS votes FROM comments c LEFT JOIN users u ON c.uid = u.uid LEFT JOIN moderate m ON c.cid = m.cid WHERE c.pid = '$cid' GROUP BY c.cid, c.pid, c.lid, c.subject, c.comment, c.timestamp, u.uid, u.name ORDER BY c.timestamp");
 
   while ($comment = db_fetch_object($result)) {
     print "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr><td width=\"". ($level * 25) ."\">&nbsp;</td><td>\n";
@@ -307,7 +307,7 @@ function comment_render($lid, $cid) {
     $theme->box(t("Control panel"), $theme->comment_controls($threshold, $mode, $order));
 
     if ($cid > 0) {
-      $result = db_query("SELECT c.cid, c.pid, c.lid, c.subject, c.comment, c.timestamp, u.uid, u.name, AVG(m.score) AS score, COUNT(m.cid) AS votes  FROM comments c LEFT JOIN users u ON c.author = u.uid LEFT JOIN moderate m ON c.cid = m.cid WHERE c.cid = '$cid' GROUP BY c.cid, c.pid, c.lid, c.subject, c.comment, c.timestamp, u.uid, u.name");
+      $result = db_query("SELECT c.cid, c.pid, c.lid, c.subject, c.comment, c.timestamp, u.uid, u.name, AVG(m.score) AS score, COUNT(m.cid) AS votes  FROM comments c LEFT JOIN users u ON c.uid = u.uid LEFT JOIN moderate m ON c.cid = m.cid WHERE c.cid = '$cid' GROUP BY c.cid, c.pid, c.lid, c.subject, c.comment, c.timestamp, u.uid, u.name");
       if ($comment = db_fetch_object($result)) {
         comment_view($comment, comment_links($comment));
       }

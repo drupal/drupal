@@ -88,11 +88,11 @@ function node_history($node) {
 $number = ($title ? db_num_rows(db_query("SELECT nid FROM node WHERE title = '$title' AND status = '". node_status("posted") ."'")) : 1);
 
 if ($number > 1) {
-  $result = db_query("SELECT n.*, u.name, u.uid FROM node n LEFT JOIN user u ON n.author = u.uid WHERE n.title = '$title' AND n.status = '". node_status("posted") ."' ORDER BY timestamp DESC");
+  $result = db_query("SELECT n.*, u.name, u.uid FROM node n LEFT JOIN user u ON n.uid = u.uid WHERE n.title = '$title' AND n.status = '". node_status("posted") ."' ORDER BY timestamp DESC");
 
   while ($node = db_fetch_object($result)) {
     if (node_access($node)) {
-      $output .= "<P><B><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></B><BR><SMALL>$node->type - ". format_name($node) ." - ". format_date($node->timestamp, "small") ."</SMALL></P>";
+      $output .= "<p><b><a href=\"node.php?id=$node->nid\">". check_output($node->title) ."</a></b><br /><small>$node->type - ". format_name($node) ." - ". format_date($node->timestamp, "small") ."</small></p>";
     }
   }
 

@@ -13,7 +13,7 @@ function tracker_comments($id = 0) {
   global $theme, $user;
 
   if ($id) {
-    $sresult = db_query("SELECT n.nid, n.title, COUNT(n.nid) AS comments, MAX(c.timestamp) AS last_comment FROM comments c LEFT JOIN node n ON c.lid = n.nid WHERE c.author = '". check_input($id) ."' GROUP BY n.nid, n.title DESC ORDER BY last_comment DESC LIMIT 10");
+    $sresult = db_query("SELECT n.nid, n.title, COUNT(n.nid) AS comments, MAX(c.timestamp) AS last_comment FROM comments c LEFT JOIN node n ON c.lid = n.nid WHERE c.uid = '". check_input($id) ."' GROUP BY n.nid, n.title DESC ORDER BY last_comment DESC LIMIT 10");
   }
   else {
     $sresult = db_query("SELECT n.nid, n.title, COUNT(n.nid) AS comments, MAX(c.timestamp) AS last_comment FROM comments c LEFT JOIN node n ON c.lid = n.nid GROUP BY n.nid, n.title DESC ORDER BY last_comment DESC LIMIT 10");
@@ -23,7 +23,7 @@ function tracker_comments($id = 0) {
     $output .= format_plural($node->comments, "comment", "comments") ." ". t("attached to node") ." <a href=\"node.php?id=$node->nid\">". check_output($node->title) ."</a>:\n";
 
     if ($id) {
-      $cresult = db_query("SELECT * FROM comments WHERE author = '". check_input($id) ."' AND lid = '$node->nid' ORDER BY cid DESC");
+      $cresult = db_query("SELECT * FROM comments WHERE uid = '". check_input($id) ."' AND lid = '$node->nid' ORDER BY cid DESC");
     }
     else {
       $cresult = db_query("SELECT * FROM comments WHERE lid = '$node->nid' ORDER BY cid DESC");

@@ -40,7 +40,7 @@ function blog_feed_user($uid = 0, $date = 0) {
     $date = time();
   }
 
-  $result = db_query("SELECT n.nid, n.title, n.timestamp, b.body, u.name, u.uid FROM blog b LEFT JOIN node n ON b.nid = n.nid LEFT JOIN users u ON n.author = u.uid WHERE u.uid = '$uid' AND n.timestamp > '". ($date - 2592000) ."' ORDER BY b.lid DESC LIMIT 15");
+  $result = db_query("SELECT n.nid, n.title, n.timestamp, b.body, u.name, u.uid FROM blog b LEFT JOIN node n ON b.nid = n.nid LEFT JOIN users u ON n.uid = u.uid WHERE u.uid = '$uid' AND n.timestamp > '". ($date - 2592000) ."' ORDER BY b.nid DESC LIMIT 15");
   while ($blog = db_fetch_object($result)) {
     $items .= format_rss_item($blog->title, path_uri() ."node.php?id=$blog->nid", $blog->body);
   }
@@ -59,7 +59,7 @@ function blog_feed_user($uid = 0, $date = 0) {
 }
 
 function blog_feed_last() {
-  $result = db_query("SELECT n.nid, n.title, n.timestamp, b.body, u.name, u.uid FROM blog b LEFT JOIN node n ON b.nid = n.nid LEFT JOIN users u ON n.author = u.uid ORDER BY b.lid DESC LIMIT 15");
+  $result = db_query("SELECT n.nid, n.title, n.timestamp, b.body, u.name, u.uid FROM blog b LEFT JOIN node n ON b.nid = n.nid LEFT JOIN users u ON n.uid = u.uid ORDER BY b.nid DESC LIMIT 15");
   while ($blog = db_fetch_object($result)) {
     $items .= format_rss_item($blog->title, path_uri() ."module.php?mod=blog&op=view&id=$blog->uid", $blog->body);
   }
@@ -89,7 +89,7 @@ function blog_page_user($uid = 0, $date = 0) {
     $date = time();
   }
 
-  $result = db_query("SELECT n.nid, n.title, n.comment, COUNT(c.cid) AS comments, n.timestamp, b.body, u.uid, u.name FROM blog b LEFT JOIN node n ON b.nid = n.nid LEFT JOIN users u ON n.author = u.uid LEFT JOIN comments c ON n.nid = c.lid WHERE u.uid = '$account->uid' AND n.timestamp <= '$date' AND n.timestamp >= '". ($date - 2592000) ."' GROUP BY n.nid, n.title, n.comment, n.timestamp, b.body, u.uid, u.name ORDER BY n.nid DESC LIMIT 20");
+  $result = db_query("SELECT n.nid, n.title, n.comment, COUNT(c.cid) AS comments, n.timestamp, b.body, u.uid, u.name FROM blog b LEFT JOIN node n ON b.nid = n.nid LEFT JOIN users u ON n.uid = u.uid LEFT JOIN comments c ON n.nid = c.lid WHERE u.uid = '$account->uid' AND n.timestamp <= '$date' AND n.timestamp >= '". ($date - 2592000) ."' GROUP BY n.nid, n.title, n.comment, n.timestamp, b.body, u.uid, u.name ORDER BY n.nid DESC LIMIT 20");
 
   $output .= "<table border=\"0\" cellpadding=\"4\" cellspacing=\"4\">";
 
@@ -128,7 +128,7 @@ function blog_page_user($uid = 0, $date = 0) {
 function blog_page_last() {
   global $theme, $user;
 
-  $result = db_query("SELECT n.nid, n.title, n.comment, COUNT(c.cid) AS comments, n.timestamp, b.body, u.uid, u.name FROM blog b LEFT JOIN node n ON b.nid = n.nid LEFT JOIN users u ON n.author = u.uid LEFT JOIN comments c ON n.nid = c.lid GROUP BY n.nid, n.title, n.comment, n.timestamp, b.body, u.uid, u.name ORDER BY n.nid DESC LIMIT 20");
+  $result = db_query("SELECT n.nid, n.title, n.comment, COUNT(c.cid) AS comments, n.timestamp, b.body, u.uid, u.name FROM blog b LEFT JOIN node n ON b.nid = n.nid LEFT JOIN users u ON n.uid = u.uid LEFT JOIN comments c ON n.nid = c.lid GROUP BY n.nid, n.title, n.comment, n.timestamp, b.body, u.uid, u.name ORDER BY n.nid DESC LIMIT 20");
 
   $output .= "<table border=\"0\" cellpadding=\"4\" cellspacing=\"4\">";
 
@@ -239,7 +239,7 @@ function blog_save($edit) {
       node_save($edit, array(title, body, type => "blog"));
     }
     else {
-      node_save($edit, array(attributes => node_attributes_save("blog", $edit), author => $user->uid, body, comment => variable_get("blog_comment", 0), moderate => variable_get("blog_moderate", ""), promote => variable_get("blog_promote", 0), score => 0, status => variable_get("blog_status", $status[posted]), timestamp => time(), title, type => "blog", votes => 0));
+      node_save($edit, array(attributes => node_attributes_save("blog", $edit), uid => $user->uid, body, comment => variable_get("blog_comment", 0), moderate => variable_get("blog_moderate", ""), promote => variable_get("blog_promote", 0), score => 0, status => variable_get("blog_status", $status[posted]), timestamp => time(), title, type => "blog", votes => 0));
     }
   }
 }
@@ -247,7 +247,7 @@ function blog_save($edit) {
 function blog_edit_history($nid) {
   global $user;
 
-  $result = db_query("SELECT n.nid, n.title, n.timestamp, b.body FROM blog b LEFT JOIN node n ON b.nid = n.nid WHERE n.author = '$user->uid' AND n.nid <= '". check_input($nid) ."' ORDER BY b.lid DESC LIMIT 15");
+  $result = db_query("SELECT n.nid, n.title, n.timestamp, b.body FROM blog b LEFT JOIN node n ON b.nid = n.nid WHERE n.uid = '$user->uid' AND n.nid <= '". check_input($nid) ."' ORDER BY b.nid DESC LIMIT 15");
 
   $output .= "<table cellpadding=\"3\" cellspacing=\"3\" border=\"0\" width=\"100%\">";
   while ($blog = db_fetch_object($result)) {
@@ -340,13 +340,15 @@ function blog_link($type, $node = 0) {
 function blog_block() {
   global $user;
 
-  $result = db_query("SELECT u.uid, u.name, n.timestamp, n.title, n.nid FROM node n LEFT JOIN users u ON n.author = u.uid WHERE n.type = 'blog' ORDER BY n.nid DESC LIMIT 10");
+  $result = db_query("SELECT u.uid, u.name, n.timestamp, n.title, n.nid FROM node n LEFT JOIN users u ON n.uid = u.uid WHERE n.type = 'blog' ORDER BY n.nid DESC LIMIT 10");
 
   while ($node = db_fetch_object($result)) {
     $output .= "<a href=\"node.php?id=$node->nid\">". check_output($node->title) ."</a><br />\n";
   }
 
-  $block[0]["subject"] = "<a href=\"module.php?mod=blog\">". t("User blogs") ."</a>";
+  $output .= "<br /><div align=\"right\"><a href=\"module.php?mod=blog\">". t("more") ."</a></div>";
+
+  $block[0]["subject"] = t("User blogs");
   $block[0]["content"] = $output;
   $block[0]["info"] = t("User blogs");
   $block[0]["link"] = "module.php?mod=blog";
@@ -358,7 +360,7 @@ function blog_block() {
 function blog_search($keys) {
   global $PHP_SELF, $status;
 
-  $result = db_query("SELECT n.*, b.* FROM blog b LEFT JOIN node n ON n.nid = b.nid AND n.lid = b.lid WHERE (n.title LIKE '%$keys%' OR b.body LIKE '%$keys%') ORDER BY n.timestamp DESC LIMIT 20");
+  $result = db_query("SELECT n.*, b.* FROM blog b LEFT JOIN node n ON n.nid = b.nid WHERE (n.title LIKE '%$keys%' OR b.body LIKE '%$keys%') ORDER BY n.timestamp DESC LIMIT 20");
   while ($blog = db_fetch_object($result)) {
     $find[$i++] = array("title" => check_output($blog->title), "link" => (strstr($PHP_SELF, "admin.php") ? "admin.php?mod=node&type=blog&op=edit&id=$blog->nid" : "node.php?id=$blog->nid"), "user" => $blog->name, "date" => $blog->timestamp);
   }

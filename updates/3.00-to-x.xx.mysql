@@ -56,10 +56,41 @@ ALTER TABLE rating CHANGE user userid int(10) DEFAULT '0' NOT NULL;
 ALTER TABLE layout CHANGE user userid int(10) DEFAULT '0' NOT NULL;
 ALTER TABLE blocks CHANGE offset delta tinyint(2) DEFAULT '0' NOT NULL;
 
-# 14/10/01
+# 14/10/01 (updated 16/10/01!)
 
 ALTER TABLE watchdog CHANGE id wid int(5) DEFAULT '0' NOT NULL auto_increment;
+ALTER TABLE locales CHANGE id lid int(10) DEFAULT '0' NOT NULL auto_increment;
 ALTER TABLE watchdog CHANGE userid uid int(10) DEFAULT '0' NOT NULL;
 ALTER TABLE layout CHANGE userid uid int(10) DEFAULT '0' NOT NULL;
 ALTER TABLE rating CHANGE userid uid int(10) DEFAULT '0' NOT NULL;
-ALTER TABLE locales CHANGE id lid int(10) DEFAULT '0' NOT NULL;
+
+## 16/10/01
+
+# remove the "auto_increment"s:
+ALTER TABLE story CHANGE nid nid int(10) unsigned DEFAULT '0' NOT NULL;
+ALTER TABLE blog CHANGE nid nid int(10) unsigned DEFAULT '0' NOT NULL;
+ALTER TABLE page CHANGE nid nid int(10) unsigned DEFAULT '0' NOT NULL;
+ALTER TABLE forum CHANGE nid nid int(10) unsigned DEFAULT '0' NOT NULL;
+ALTER TABLE book CHANGE nid nid int(10) unsigned DEFAULT '0' NOT NULL;
+
+# drop the "lid"s:
+ALTER TABLE story DROP lid;
+ALTER TABLE blog DROP lid;
+ALTER TABLE page DROP lid;
+ALTER TABLE forum DROP lid;
+ALTER TABLE book DROP lid;
+
+# rename "author" to "uid":
+ALTER TABLE comments CHANGE author uid int(10) DEFAULT '0' NOT NULL;
+ALTER TABLE node CHANGE author uid int(10) DEFAULT '0' NOT NULL;
+ALTER TABLE node DROP KEY author;
+ALTER TABLE node ADD KEY uid (uid);
+
+# resize some "id"s:
+ALTER TABLE feed CHANGE fid fid int(10) NOT NULL auto_increment;
+ALTER TABLE bundle CHANGE bid bid int(10) NOT NULL auto_increment;
+ALTER TABLE item CHANGE iid iid int(10) NOT NULL auto_increment;
+ALTER TABLE item CHANGE fid fid int(10) NOT NULL;
+ALTER TABLE comments CHANGE cid cid int(10) NOT NULL auto_increment;
+ALTER TABLE comments CHANGE pid pid int(10) NOT NULL;
+ALTER TABLE comments CHANGE lid lid int(10) NOT NULL;

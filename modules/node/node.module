@@ -114,7 +114,7 @@ function node_overview($query) {
   $color = array("#ffffff", "#e5e5e5");
   $query = node_query($query ? $query : 0);
 
-  $result = db_query("SELECT n.*, u.name, u.uid FROM node n LEFT JOIN users u ON n.author = u.uid  $query[1] LIMIT 50");
+  $result = db_query("SELECT n.*, u.name, u.uid FROM node n LEFT JOIN users u ON n.uid = u.uid  $query[1] LIMIT 50");
 
   $output .= status($query[0]);
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";

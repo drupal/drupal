@@ -1,6 +1,6 @@
 <?php
 
-include_once("includes/xmlrpcs.inc");
+include_once "includes/xmlrpcs.inc";
 include_once "includes/common.inc";
 
 $functions = array();

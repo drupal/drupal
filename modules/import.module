@@ -95,7 +95,7 @@ function import_get_bundles($attributes = 0) {
   $i = 0;
   while ($bundle = db_fetch_object($result)) {
     $block[$i][subject] = $bundle->title;
-    $block[$i][content] = import_bundle_block($bundle->attributes) ."<p><div align=\"right\"><a href=\"module.php?mod=import&op=bundle&id=$bundle->bid\">". t("details") ."</a></div></p>";
+    $block[$i][content] = import_bundle_block($bundle->attributes) ."<p><div align=\"right\"><a href=\"module.php?mod=import&op=bundle&id=$bundle->bid\">". t("more") ."</a></div></p>";
     $block[$i][info] = "$bundle->title bundle";
 
     $i++;
@@ -110,7 +110,7 @@ function import_get_feeds($attributes = 0) {
   $i = 0;
   while ($feed = db_fetch_object($result)) {
     $block[$i][subject] = $feed->title;
-    $block[$i][content] = import_feed_block($feed) ."<p><div align=\"right\"><a href=\"module.php?mod=import&op=feed&id=$feed->fid\">". t("details") ."</a></div></p>";
+    $block[$i][content] = import_feed_block($feed) ."<p><div align=\"right\"><a href=\"module.php?mod=import&op=feed&id=$feed->fid\">". t("more") ."</a></div></p>";
     $block[$i][info] = "$feed->title feed";
 
     $i++;
