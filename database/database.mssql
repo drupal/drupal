@@ -83,6 +83,7 @@ CREATE TABLE [dbo].[comments] (
   [link] [varchar] (16) NULL ,
   [score] [int] NOT NULL ,
   [status] [tinyint] NOT NULL ,
+  [thread] [varchar] (255) NOT NULL ,
   [users] [varchar] (8000) NULL
 ) ON [PRIMARY]
 GO
