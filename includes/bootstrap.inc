@@ -1,5 +1,5 @@
 <?php
-/* $Id: bootstrap.inc,v 1.21 2004/08/10 18:34:28 unconed Exp $ */
+/* $Id: bootstrap.inc,v 1.22 2004/08/16 22:39:48 unconed Exp $ */
 
 /**
  * @file
@@ -104,7 +104,7 @@ function variable_del($name) {
  */
 function cache_get($key) {
   $cache = db_fetch_object(db_query("SELECT data, created, headers FROM {cache} WHERE cid = '%s'", $key));
-  return $cache->data ? $cache : 0;
+  return isset($cache->data) ? $cache : 0;
 }
 
 /**
