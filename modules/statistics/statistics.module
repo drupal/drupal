@@ -353,7 +353,7 @@ function statistics_admin_accesslog_table($type, $id) {
     }
     else {
       /* retrieve recent access logs for all users */
-      $result = db_query("SELECT nid, url, hostname, uid, MAX(timestamp) AS timestamp FROM accesslog WHERE uid <> '0' GROUP BY uid ORDER BY timestamp DESC LIMIT %s", $limit1);
+      $result = db_query("SELECT nid, url, hostname, uid, MAX(timestamp) AS timestamp FROM accesslog WHERE uid <> '0' GROUP BY uid, nid, url, hostname ORDER BY timestamp DESC LIMIT %s", $limit1);
     }
   }
   else if ($type == 2) {
