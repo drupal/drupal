@@ -641,48 +641,52 @@ function book_admin_view_book($nid, $depth = 1) {
 
 function book_admin_view($nid, $depth = 0) {
 
-  $node = node_load(array("nid" => $nid));
+  if ($nid) {
+    $node = node_load(array("nid" => $nid));
 
-  $output .= "<h3>$node->title</h3>";
+    $output .= "<h3>$node->title</h3>";
 
-  $header = array(t("title"), t("weight"), array("data" => t("operations"), "colspan" => 3));
-  $rows[] = book_admin_view_line($node);
-  $rows = array_merge($rows, book_admin_view_book($nid));
+    $header = array(t("title"), t("weight"), array("data" => t("operations"), "colspan" => 3));
+    $rows[] = book_admin_view_line($node);
+    $rows = array_merge($rows, book_admin_view_book($nid));
 
-  $output .= table($header, $rows);
-  $output .= form_submit(t("Save book pages"));
+    $output .= table($header, $rows);
+    $output .= form_submit(t("Save book pages"));
 
-  return form($output);
+    return form($output);
+  }
 }
 
 function book_admin_save($nid, $edit = array()) {
 
-  $book = node_load(array("nid" => $nid));
+  if ($nid) {
+    $book = node_load(array("nid" => $nid));
 
-  foreach ($edit as $nid => $value) {
-    /*
-    ** Check to see whether the title needs updating:
-    */
+    foreach ($edit as $nid => $value) {
+      /*
+      ** Check to see whether the title needs updating:
+      */
 
-    $title = db_result(db_query("SELECT title FROM node WHERE nid = %d", $nid));
-    if ($title != $value["title"]) {
-      db_query("UPDATE node SET title = '%s' WHERE nid = %d", $value["title"], $nid);
+      $title = db_result(db_query("SELECT title FROM node WHERE nid = %d", $nid));
+      if ($title != $value["title"]) {
+        db_query("UPDATE node SET title = '%s' WHERE nid = %d", $value["title"], $nid);
+      }
+
+      /*
+      ** Check to see whether the weight needs updating:
+      */
+
+      $weight = db_result(db_query("SELECT weight FROM book WHERE nid = %d", $nid));
+      if ($weight != $value["weight"]) {
+        db_query("UPDATE book SET weight = %d WHERE nid = %d", $value["weight"], $nid);
+      }
     }
 
-    /*
-    ** Check to see whether the weight needs updating:
-    */
+    $message = t("updated book '%title'", array("%title" => $book->title));
+    watchdog("special", $message);
 
-    $weight = db_result(db_query("SELECT weight FROM book WHERE nid = %d", $nid));
-    if ($weight != $value["weight"]) {
-      db_query("UPDATE book SET weight = %d WHERE nid = %d", $value["weight"], $nid);
-    }
+    return $message;
   }
-
-  $message = t("updated book '%title'", array("%title" => $book->title));
-  watchdog("special", $message);
-
-  return $message;
 }
 
 function book_admin_orphan() {
