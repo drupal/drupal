@@ -15,10 +15,10 @@ function watchdog_cron() {
   db_query("DELETE FROM watchdog WHERE ". time() ." - timestamp > ". variable_get(watchdog_clear, "302400"));
 }
 
-function watchdog_overview($order = "date") {
+function watchdog_overview() {
   $colors = array(message => "#FFFFFF", special => "#836FFF", warning => "#FFAA22", error => "#EE2C2C");
 
-  $result = db_query("SELECT w.*, u.userid FROM watchdog w LEFT JOIN users u ON w.user = u.id");
+  $result = db_query("SELECT w.*, u.userid FROM watchdog w LEFT JOIN users u ON w.user = u.id ORDER BY timestamp DESC LIMIT 1000");
 
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
   $output .= " <TR><TH>date</TH><TH>type</TH><TH>message</TH><TH>user</TH><TH>operations</TH></TR>\n";

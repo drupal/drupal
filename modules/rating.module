@@ -6,10 +6,17 @@ $module = array("cron" => "rating_cron",
                 "block" => "rating_block");
 
 function rating_cron() {
-  $result = db_query("SELECT id FROM users");
-
-  while ($account = db_fetch_object($result)) {
+  $r1 = db_query("SELECT id FROM users ORDER BY rating DESC");
+  while ($account = db_fetch_object($r1)) {
     db_query("UPDATE users SET rating = '". user_gravity($account->id) ."' WHERE id = '$account->id'");
+    $rating[$account->id] = ++$i;
+  }
+
+  db_query("DELETE FROM rating");
+
+  $r2 = db_query("SELECT id FROM users ORDER BY rating DESC");
+  while ($account = db_fetch_object($r2)) {
+    db_query("INSERT INTO rating (user, new, old) VALUES ('$account->id', '". ++$j ."', '". $rating[$account->id] ."')");
   }
 }
 
@@ -20,11 +27,12 @@ function rating_help() {
 }
 
 function rating_list($limit) {
-  $result = db_query("SELECT userid, rating FROM users ORDER BY rating DESC LIMIT $limit");
+  $result = db_query("SELECT u.userid, u.rating, r.* FROM users u LEFT JOIN rating r ON u.id = r.user ORDER BY u.rating DESC LIMIT $limit");
 
   $output .= "<TABLE CELLPADDING=\"1\" CELLSPACING=\"1\">\n";
   while ($account = db_fetch_object($result)) {
-    $output .= "<TR><TD ALIGN=\"right\">". ++$i ."</TD><TD>". format_username($account->userid) ."</TD><TD>". check_output($account->rating) ."</TD></TR>";
+    $ranking = $account->old - $account->new;
+    $output .= "<TR><TD ALIGN=\"right\">". ++$i ."</TD><TD>". format_username($account->userid) ."</TD><TD ALIGN=\"right\">". check_output($account->rating) ."</TD><TD>(". ($ranking < 0 ? "" : "+") ."$ranking)</TD></TR>";
   }
   $output .= "</TABLE>\n";
   return $output;
