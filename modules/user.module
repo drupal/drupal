@@ -207,6 +207,19 @@ function user_help() {
  <?php
 }
 
+function account_perm() {
+  return array("administer users");
+}
+
+function user_search($keys) {
+  global $PHP_SELF;
+  $result = db_query("SELECT * FROM user WHERE name LIKE '%$keys%' LIMIT 20");
+  while ($account = db_fetch_object($result)) {
+    $find[$i++] = array("title" => $account->name, "link" => ($PHP_SELF == "/admin.php" ? "admin.php?mod=user&op=edit&id=$account->uid" : "module.php?mod=user&op=view&id=$account->uid"), "user" => $account->name);
+  }
+  return $find;
+}
+
 function user_link($type) {
   if ($type == "page") {
     $links[] = "<a href=\"module.php?mod=user\">". t("user account") ."</a>";
@@ -479,7 +492,7 @@ function user_login($edit = array()) {
   ** Display login form:
   */
 
-  $output .= form_textfield(t("Username"), "name", $edit["name"], 20, 64, t("Enter yourlocal  username, a Drupal ID or a Jabber ID."));
+  $output .= form_textfield(t("Username"), "name", $edit["name"], 20, 64, t("Enter your local  username, a Drupal ID or a Jabber ID."));
   $output .= form_password(t("Password"), "pass", $pass, 20, 64, t("Enter the password that accompanies your username."));
   $output .= form_hidden("type", "local");
   $output .= form_submit(t("Log in"));
@@ -1115,63 +1128,71 @@ function admin_access_init() {
 
 
 function user_admin() {
-  global $edit, $id, $op, $user;
+  global $edit, $id, $keys, $op, $user;
 
-  /*
-  ** Initialize all the roles and permissions:
-  */
+  if (user_access("administer users")) {
 
-  admin_access_init();
+    /*
+    ** Initialize all the roles and permissions:
+    */
 
-  /*
-  ** Compile all the administrative links:
-  */
+    admin_access_init();
 
-  $links[] = "<a href=\"admin.php?mod=user&op=create\">add new user</a>";
-  $links[] = "<a href=\"admin.php?mod=user&op=access\">access rules</a>";
-  $links[] = "<a href=\"admin.php?mod=user&op=account\">user accounts</a>";
-  $links[] = "<a href=\"admin.php?mod=user&op=role\">user roles</a>";
-  $links[] = "<a href=\"admin.php?mod=user&op=permission\">user permissions</a>";
-  $links[] = "<a href=\"admin.php?mod=user&op=settings\">settings</a>";
-  $links[] = "<a href=\"admin.php?mod=user&op=help\">help</a>";
+    /*
+    ** Compile all the administrative links:
+    */
 
-  print "<small>". implode(" &middot; ", $links) ."</small><hr />";
+    $links[] = "<a href=\"admin.php?mod=user&op=create\">add new user</a>";
+    $links[] = "<a href=\"admin.php?mod=user&op=access\">access rules</a>";
+    $links[] = "<a href=\"admin.php?mod=user&op=account\">user accounts</a>";
+    $links[] = "<a href=\"admin.php?mod=user&op=role\">user roles</a>";
+    $links[] = "<a href=\"admin.php?mod=user&op=permission\">user permissions</a>";
+    $links[] = "<a href=\"admin.php?mod=user&op=search\">search account</a>";
+    $links[] = "<a href=\"admin.php?mod=user&op=settings\">settings</a>";
+    $links[] = "<a href=\"admin.php?mod=user&op=help\">help</a>";
 
-  switch ($op) {
-    case "help":
-      print user_help();
-      break;
-    case "Save configuration":
-    case "Reset to defaults":
-    case "settings":
-      print user_admin_settings($edit);
-      break;
-    case "Add rule":
-    case "Check":
-    case "access":
-      print user_admin_access($edit);
-      break;
-    case "Save permissions":
-    case "permission":
-      print user_admin_perm($edit);
-      break;
-    case "Create account":
-    case "create":
-      print user_admin_create($edit);
-      break;
-    case "Add role":
-    case "Delete role":
-    case "Save role":
-    case "role":
-      print user_admin_role($edit);
-      break;
-    case "Delete account":
-    case "Save account":
-    case "edit":
-      print user_admin_edit($edit);
-      break;
-    default:
-      print user_admin_account();
+    print "<small>". implode(" &middot; ", $links) ."</small><hr />";
+
+    switch ($op) {
+      case "help":
+        print user_help();
+        break;
+      case "search":
+        print search_form($keys);
+        print search_data($keys, "user");
+        break;
+      case "Save configuration":
+      case "Reset to defaults":
+      case "settings":
+        print user_admin_settings($edit);
+        break;
+      case "Add rule":
+      case "Check":
+      case "access":
+        print user_admin_access($edit);
+        break;
+      case "Save permissions":
+      case "permission":
+        print user_admin_perm($edit);
+        break;
+      case "Create account":
+      case "create":
+        print user_admin_create($edit);
+        break;
+      case "Add role":
+      case "Delete role":
+      case "Save role":
+      case "role":
+        print user_admin_role($edit);
+        break;
+      case "Delete account":
+      case "Save account":
+      case "edit":
+        print user_admin_edit($edit);
+        break;
+      default:
+        print user_admin_account();
+    }
   }
 }
 
