@@ -119,7 +119,7 @@ function headline_admin_display() {
   print $output;
 }
 
-function headline_admin_add($id) {
+function headline_admin_add() {
   $output .= " <FORM ACTION=\"admin.php?mod=headline\" METHOD=\"post\">\n";
   $output .= "  <P>\n";
   $output .= "   <B>Site name:</B><BR>\n";
