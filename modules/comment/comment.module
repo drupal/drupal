@@ -359,6 +359,7 @@ function comment_view($comment, $links = "", $visible = 1) {
 
   if (comment_is_new($comment)) {
     $comment->new = 1;
+    print "<a name=\"new\"></a>\n";
   }
 
   print "<a name=\"$comment->cid\"></a>\n";
@@ -370,7 +371,6 @@ function comment_view($comment, $links = "", $visible = 1) {
     theme_invoke("comment_folded", $comment);
   }
 }
-
 
 function comment_render($node, $cid = 0) {
   global $user, $theme, $mode, $order, $threshold, $comment_page;
@@ -618,13 +618,13 @@ function comment_link($type, $node = 0, $main = 0) {
 
       if (user_access("access comments")) {
         $all = comment_num_all($node->nid);
-        $new = comment_num_new($node->nid); // array!
+        $new = comment_num_new($node->nid);
 
         if ($all) {
           $links[] = l(format_plural($all, "comment", "comments"), "node/view/$node->nid#comment", array("title" => t('Jump to first comment of this posting.')));
 
-          if ($new["count_new"]) {
-            $links[] = l($new["count_new"] ." ". t("new"), "node/view/$node->nid#". $new["id_first_new"], array("title" => t('Jump to first NEW comment of this posting.')));
+          if ($new) {
+            $links[] = l("$new ". t("new"), "node/view/$node->nid#new", array("title" => t('Jump to first new comment of this posting.')));
           }
         }
         else {
@@ -1161,7 +1161,6 @@ function comment_moderation_form($comment) {
 }
 
 function comment($comment, $link = 0) {
-  $output .= "<a name=\"$comment->cid\"></a>";
   $output .= "<div style=\"border: 1px solid; padding: 10px;\">";
   $output .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">";
   $output .= " <tr><td><div style=\"font-size: 110%; font-weight: bold;\">$comment->subject ". ($comment->new ? theme_invoke("theme_mark") : "") ."</div></td><td align=\"right\" rowspan=\"2\" valign=\"top\">". $comment->moderation ."</td></tr>";
@@ -1236,7 +1235,7 @@ function comment_post_forbidden() {
     return t("You can't post comments.");
   }
   else {
-    return t("Please %login, or %register, to add comments.", array("%login" => l(t("login"), "user/login"), "%register" => l(t("register"), "user/register")));
+    return t("%login or %register to post comments", array("%login" => l(t("login"), "user/login"), "%register" => l(t("register"), "user/register")));
   }
 }
 
@@ -1332,8 +1331,6 @@ function comment_num_replies($id) {
  *
  * @param $nid       node-id to count comments for
  * @param $timestamp time to count from (defaults to time of last user access to node)
- *
- * @return array("count_new" => $count_new, "id_first_new" => $id_first_new)
  */
 function comment_num_new($nid, $timestamp = 0) {
   global $user;
@@ -1354,12 +1351,12 @@ function comment_num_new($nid, $timestamp = 0) {
     ** ID of first new comment.
     */
 
-    $result = db_fetch_array(db_query("SELECT COUNT(c.cid) AS count_new, MIN(c.cid) AS id_first_new FROM node n LEFT JOIN comments c ON n.nid = c.nid WHERE n.nid = '%d' AND timestamp > '%d' AND c.status = 0", $nid, $timestamp));
+    $result = db_result(db_query("SELECT COUNT(c.cid) FROM node n LEFT JOIN comments c ON n.nid = c.nid WHERE n.nid = '%d' AND timestamp > '%d' AND c.status = 0", $nid, $timestamp));
 
     return $result;
   }
   else {
-    return array(0, 0);
+    return 0;
   }
 
 }
