@@ -266,7 +266,7 @@ function drupal_not_found() {
     menu_execute_active_handler();
   }
   else {
-    print theme("page", '<h1>'. t('Page not found') .'</h1>');
+    print theme('page', '', t('Page not found'));
   }
 }
 
