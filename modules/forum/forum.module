@@ -1,8 +1,9 @@
 <?php
-// $Id: forum.module,v 1.26 2001/11/03 18:38:29 dries Exp $
+// $Id: forum.module,v 1.27 2001/11/07 18:14:46 dries Exp $
 
 function forum_node($field) {
-  $info = array("name" => "discussion forum");
+  $info["name"] = t("discussion forum");
+  $info["description"] = t("A forum is a threaded discussion, enabling users to communicate about a particular topic.");
 
   return $info[$field];
 }

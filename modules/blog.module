@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.41 2001/11/03 18:38:29 dries Exp $
+// $Id: blog.module,v 1.42 2001/11/07 18:14:46 dries Exp $
 
 function blog_conf_options() {
  $output .= form_textarea("Explanation or submission guidelines", "blog_help", variable_get("blog_help", ""), 55, 4, "This text will be displayed at the top of the blog submission form.  Useful for helping or instructing your users.");
@@ -12,7 +12,8 @@ function blog_conf_options() {
 function blog_node($field) {
   global $user;
 
-  $info = array("name" => "personal blog");
+  $info["name"] = t("personal blog");
+  $info["description"] = t("A blog is your personal diary or journal.  It is made up of individual entries that are time stamped and are typically arranged by the day, as normal a diary. Blogs often contain links to things you've seen, or on which you agree/disagree.  Since a Blog is your personal, you and only you have full control on what you publish.  The most insteresting blogs, or those blogs that fits the site's topic might get promoted to the front page.");
 
   return $info[$field];
 }

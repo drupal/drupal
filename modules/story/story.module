@@ -1,5 +1,5 @@
 <?php
-// $Id: story.module,v 1.83 2001/11/03 18:38:29 dries Exp $
+// $Id: story.module,v 1.84 2001/11/07 18:14:46 dries Exp $
 
 function story_conf_options() {
  $output .= form_textarea("Explanation or submission guidelines", "story_help", variable_get("story_help", ""), 55, 4, "This text will be displayed at the top of the story submission form.  Useful for helping or instructing your users.");
@@ -9,7 +9,8 @@ function story_conf_options() {
 }
 
 function story_node($field) {
-  $info = array("name" => "story");
+  $info["name"] = t("story");
+  $info["description"] = t("A story is a post that is submitted to the attention of other users and is queued in the submission queue.  Users and moderators vote on the posts they like or dislike, promoting or demoting them.  When a post gets above a certain threshold it gets authomatically published to front page.");
 
   return $info[$field];
 }

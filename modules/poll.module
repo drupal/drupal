@@ -1,5 +1,8 @@
 <?php
-// $Id: poll.module,v 1.41 2001/11/01 11:00:48 dries Exp $
+// $Id: poll.module,v 1.42 2001/11/07 18:14:46 dries Exp $
+
+// description:
+//   A multiple choice Poll allows you to submit a question to other users to which anyone can answer. To be published on Tipic, the Poll has to be approved by the moderators.
 
 /*
 
