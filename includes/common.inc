@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.419 2005/01/17 18:56:11 unconed Exp $ */
+/* $Id: common.inc,v 1.420 2005/01/22 11:15:24 dries Exp $ */
 
 /**
  * @file
@@ -223,6 +223,8 @@ function drupal_access_denied() {
  *   data, and redirect status.
  */
 function drupal_http_request($url, $headers = array(), $method = 'GET', $data = NULL, $retry = 3) {
+  $result = new StdClass();
+
   // Parse the URL, and make sure we can handle the schema.
   $uri = parse_url($url);
   switch ($uri['scheme']) {
@@ -385,7 +387,7 @@ function fix_gpc_magic() {
  */
 function array2object($array) {
   if (is_array($array)) {
-    $object = new stdClass();
+    $object = new StdClass();
     foreach ($array as $key => $value) {
       $object->$key = $value;
     }
