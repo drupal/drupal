@@ -1,4 +1,4 @@
-/* $Id: xtemplate.css,v 1.2 2004/03/11 20:33:58 dries Exp $ */
+/* $Id: xtemplate.css,v 1.3 2004/03/20 13:23:34 dries Exp $ */
 
 /*
 ** HTML elements
@@ -267,18 +267,6 @@ table {
 }
 #aggregator h3 {
   margin-top: 1em;
-}
-#tracker th {
-  text-align: left;
-  border-bottom: 1px solid #ddd;
-}
-#tracker tr.light, #tracker tr.dark {
-  background-color: #fff;
-}
-#tracker td {
-  vertical-align: top;
-  padding: 1em 1em 1em 0;
-  border-bottom: 1px solid #bbb;
 }
 #forum table {
   width: 100%;
