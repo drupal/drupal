@@ -32,7 +32,7 @@ function profile_browse() {
   $value = arg(2) ? arg(2) : 1;
 
   // Determine the field to group users by:
-  $field = db_fetch_object(db_query("SELECT DISTINCT(f.fid), f.type, f.title FROM {profile_fields} f INNER JOIN {profile_values} v ON f.fid = v.fid WHERE f.name = '%s' AND v.value = '%s' ORDER BY f.category, f.weight", arg(1), $value));
+  $field = db_fetch_object(db_query("SELECT DISTINCT(f.fid), f.type, f.title, f.page FROM {profile_fields} f INNER JOIN {profile_values} v ON f.fid = v.fid WHERE f.name = '%s' AND v.value = '%s' ORDER BY f.category, f.weight", arg(1), $value));
 
   if ($field->fid) {
     // Compile a list of fields to show:
@@ -45,18 +45,19 @@ function profile_browse() {
     // Extract the affected users:
     $result = pager_query("SELECT u.uid FROM {users} u INNER JOIN {profile_values} v ON u.uid = v.uid WHERE v.fid = $field->fid AND v.value = '". check_query($value) ."' ORDER BY u.changed DESC", 20);
 
-    $output = '';
+    $output = '<div id="profile">';
     while ($account = db_fetch_object($result)) {
       $output .= theme('profile_profile', user_load(array('uid' => $account->uid)), $fields);
     }
     $output .= theme('pager', NULL, 20);
 
     if ($field->type == "selection") {
-      $title = arg(2);
+      $title = strtr($field->page, array('%value' => arg(2)));
     }
     else {
-      $title = $field->title;
+      $title = $field->page;
     }
+    $output .= "</div>";
 
     print theme('page', $output, $title);
   }
@@ -192,7 +193,7 @@ function profile_admin_add($type) {
       drupal_set_message($error, 'error');
     }
     else {
-      db_query("INSERT INTO {profile_fields} (title, name, explanation, category, type, weight, overview, options) VALUES ('%s', '%s', '%s', '%s', '%s', %d, %d, '%s')", $data['title'], $data['name'], $data['explanation'], $data['category'], $type, $data['weight'], $data['overview'], $data['options']);
+      db_query("INSERT INTO {profile_fields} (title, name, explanation, category, type, weight, overview, options, page) VALUES ('%s', '%s', '%s', '%s', '%s', %d, %d, '%s', '%s')", $data['title'], $data['name'], $data['explanation'], $data['category'], $type, $data['weight'], $data['overview'], $data['options'], $data['page']);
 
       drupal_set_message(t('the field has been created.'));
     }
@@ -214,7 +215,7 @@ function profile_admin_edit($fid) {
 
     }
     else {
-      db_query("UPDATE {profile_fields} SET title = '%s', name = '%s', explanation = '%s', category = '%s', weight = %d, overview = %d, options = '%s' WHERE fid = %d", $data['title'], $data['name'], $data['explanation'], $data['category'], $data['weight'], $data['overview'], $data['options'], $fid);
+      db_query("UPDATE {profile_fields} SET title = '%s', name = '%s', explanation = '%s', category = '%s', weight = %d, overview = %d, options = '%s', page = '%s' WHERE fid = %d", $data['title'], $data['name'], $data['explanation'], $data['category'], $data['weight'], $data['overview'], $data['options'], $data['page'], $fid);
 
       drupal_set_message(t('the field has been updated.'));
     }
@@ -234,18 +235,27 @@ function profile_admin_delete($fid) {
 
 function _profile_field_form($type, $edit = array()) {
 
-  $output  = form_textfield(t('Title'), 'title', $edit['title'], 70, 128, t("The title of the new field.  The title will be shown to the user.  An example title is 'Favorite color'."), NULL, FORM_REQUIRED);
-  $output .= form_textfield(t('Form name'), 'name', $edit['name'], 70, 128, t("The name of the field.  The form name is not shown to the user but used internally in the HTML code and URLs.
+  $group  = form_textfield(t('Category'), 'category', $edit['category'], 70, 128, t("The category the new field should be part of.  Categories are used to group fields logically.  An example category is 'Personal information'."));
+  $group .= form_textfield(t('Title'), 'title', $edit['title'], 70, 128, t("The title of the new field.  The title will be shown to the user.  An example title is 'Favorite color'."));
+  $group .= form_textfield(t('Form name'), 'name', $edit['name'], 70, 128, t("The name of the field.  The form name is not shown to the user but used internally in the HTML code and URLs.
 Unless you know what you are doing, it is highly recommended that you prefix the form name with <code>profile_</code> to avoid name clashes with other fields.  Spaces or any other special characters except dash (-) and underscore (_) are not allowed. An example name is 'profile_favorite_color' or perhaps just 'profile_color'."));
-  $output .= form_textarea(t('Explanation'), 'explanation', $edit['explanation'], 70, 3, t("An optional explanation to go with the new field.  The explanation will be shown to the user."));
-  $output  .= form_textfield(t('Category'), 'category', $edit['category'], 70, 128, t("The category the new field should be part of.  Categories are used to group fields logically.  An example category is 'Personal information'."));
-  $output .= form_weight(t('Weight'), 'weight', $edit['weight'], 5, t("The weights define the order in which the form fields are shown.  Lighter fields \"float up\" towards the top of the category."));
-  $output .= form_checkbox(t('Display this field in member lists'), 'overview', 1, $edit['overview']);
-
+  $group .= form_textarea(t('Explanation'), 'explanation', $edit['explanation'], 70, 3, t("An optional explanation to go with the new field.  The explanation will be shown to the user."));
   if ($type == 'selection') {
-    $output .= form_textarea(t('Selection options'), 'options', $edit['options'], 70, 8, t("A list of all options.  Put each option on a separate line.  Example options are 'red', 'blue', 'green', etc."));
+    $group .= form_textarea(t('Selection options'), 'options', $edit['options'], 70, 8, t("A list of all options.  Put each option on a separate line.  Example options are 'red', 'blue', 'green', etc."));
   }
+  $group .= form_weight(t('Weight'), 'weight', $edit['weight'], 5, t("The weights define the order in which the form fields are shown.  Lighter fields \"float up\" towards the top of the category."));
+  $output = form_group(t('Field settings'), $group);
 
+  $group = '';
+  if ($type == 'selection') {
+    $group .= form_textfield(t('Page title'), 'page', $edit['page'], 70, 128, t("The title of the page showing all users with the specified field.  The word <code>%value</code> will be substituted with the corresponding value.  An example page title is 'People whose favorite color is %value'."));
+  }
+  else {
+    $group .= form_textfield(t('Page title'), 'page', $edit['page'], 70, 128, t("The title of the page showing all users with the specified field."));
+  }
+  $group .= form_checkbox(t('Should this field be shown on the member listing pages.'), 'overview', 1, $edit['overview']);
+
+  $output .= form_group(t('Browsability'), $group);
   $output .= form_submit(t('Save field'));
 
   return form($output);
@@ -280,10 +290,10 @@ function theme_profile_profile($user, $fields = array()) {
   foreach ($fields as $field) {
     if ($user->{$field->name}) {
       if ($field->type == 'checkbox') {
-        $output .= "<div class=\"field\">". $field->title ."</div>";
+        $output .= " <div class=\"field\">". $field->title ."</div>\n";
       }
       else {
-        $output .= "<div class=\"field\">". $user->{$field->name} ."</div>";
+        $output .= " <div class=\"field\">". $user->{$field->name} ."</div>\n";
       }
     }
   }

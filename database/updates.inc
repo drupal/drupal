@@ -51,7 +51,8 @@ $sql_updates = array(
   "2004-01-13" => "update_77",
   "2004-02-03" => "update_78",
   "2004-02-21" => "update_79",
-  "2004-03-11: first update since Drupal 4.4.0 release" => "update_80"
+  "2004-03-11: first update since Drupal 4.4.0 release" => "update_80",
+  "2004-02-20" => "update_81"
 );
 
 function update_32() {
@@ -764,15 +765,15 @@ function update_79() {
 function update_80() {
 
   // Add a 'created' field to the users table:
-  update_sql('ALTER TABLE {users} ADD created INT(11) NOT NULL');
-  update_sql('ALTER TABLE {users} CHANGE timestamp changed INT(11) NOT NULL');
+  $ret[] = update_sql('ALTER TABLE {users} ADD created INT(11) NOT NULL');
+  $ret[] = update_sql('ALTER TABLE {users} CHANGE timestamp changed INT(11) NOT NULL');
 
   // Add some indices to speed up the update process:
-  update_sql('ALTER TABLE {comments} ADD index (timestamp)');
-  update_sql('ALTER TABLE {node} ADD index (created)');
+  $ret[] = update_sql('ALTER TABLE {comments} ADD index (timestamp)');
+  $ret[] = update_sql('ALTER TABLE {node} ADD index (created)');
 
   // Assign everyone a created timestamp to begin with:
-  update_sql("UPDATE {users} SET created = changed WHERE created = ''");
+  $ret[] = update_sql("UPDATE {users} SET created = changed WHERE created = ''");
 
   // Print a status message:"
   print '<p>Note: this might take a while ...</p>';
@@ -798,7 +799,7 @@ function update_80() {
   }
 
   // Add profile module related tables:
-  update_sql("CREATE TABLE {profile_fields} (
+  $ret[] = update_sql("CREATE TABLE {profile_fields} (
     fid int(10) NOT NULL auto_increment,
     title varchar(255) default NULL,
     name varchar(128) default NULL,
@@ -813,7 +814,7 @@ function update_80() {
     PRIMARY KEY (fid)
    );");
 
-  update_sql("CREATE TABLE {profile_values} (
+  $ret[] = update_sql("CREATE TABLE {profile_values} (
     fid int(11) unsigned default '0',
     uid int(11) unsigned default '0',
     value text,
@@ -879,8 +880,16 @@ function update_80() {
     // Save the update record:
     user_save($account, $edit);
   }
+ 
+  return $ret;
 }
 
+function update_81() {
+  $ret[] = update_sql('ALTER TABLE {profile_fields} ADD page varchar(255) default NULL');
+
+  return $ret;
+}
+ 
 function update_sql($sql) {
   $edit = $_POST["edit"];
   $result = db_query($sql);
