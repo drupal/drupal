@@ -4,16 +4,13 @@ include_once "includes/common.inc";
 
 page_header();
 
-if ($category) {
-  $c = "AND cid = '". check_input($category) ."'";
+foreach(explode("&", $QUERY_STRING) as $attribute) {
+  if ($attribute) $query .= "attribute LIKE '%". check_input(strtr($attribute, "=", ":")) ."%' AND ";
 }
 
-if ($topic) {
-  foreach (topic_tree($topic) as $key=>$value) $t .= "tid = '$key' OR ";
-  $t = "AND ($t tid = '". check_input($topic) ."')";
-}
+$query = !$date ? $query : "";
 
-$result = db_query("SELECT nid, type FROM node WHERE promote = '1' AND status = '". node_status("posted") ."' AND timestamp <= '". ($date > 0 ? check_input($date) : time()) ."' $c $t ORDER BY timestamp DESC LIMIT ". ($user->nodes ? $user->nodes : variable_get(default_nodes_main, 10)));
+$result = db_query("SELECT nid, type FROM node WHERE $query promote = '1' AND status = '". node_status("posted") ."' AND timestamp <= '". ($date > 0 ? check_input($date) : time()) ."' ORDER BY timestamp DESC LIMIT ". ($user->nodes ? $user->nodes : variable_get(default_nodes_main, 10)));
 
 $theme->header();
 while ($node = db_fetch_object($result)) {

@@ -12,7 +12,7 @@
   *********************************************************************/
 
   class Theme extends BaseTheme {
-    // General colorset that can be used for this theme 
+    // General colorset that can be used for this theme
     var $foreground = "#000000";
     var $background = "#FFFFFF";
 
@@ -103,11 +103,10 @@ function c(subject,mod,author,date,body) {document.writeln("<table border=\"0\" 
       echo "\n<!-- node: \"$node->title\" -->\n";
       $title = check_output($node->title);
       $subleft = strtr(t("Submitted by %a on %b"), array("%a" => format_username($node->userid), "%b" => format_date($node->timestamp, "large")));
-      $subright = category_name($node->cid) ." / ". topic_name($node->tid);
+      $subright = node_index($node->attribute);
       $body = check_output($node->body, 1) . ($main || $links ? "<hr color=\"#404040\" size=\"1\"><div align=\"right\">" . $this->links($links, $main, $node) . "</div>" : "");
       print "<script language=\"JavaScript\"><!--\ns(\"". $this->stripbreaks(addslashes($title)) ."\",\"". $this->stripbreaks(addslashes($subleft)) ."\",\"". $this->stripbreaks(addslashes($subright)) ."\",\"". $this->stripbreaks(addslashes($body)) ."\"); // -->\n</script>\n";
     } // close node function
-
 
 
     function comment($comment, $link = "") {
@@ -125,7 +124,6 @@ function c(subject,mod,author,date,body) {document.writeln("<table border=\"0\" 
     } // close comment function
 
 
-
     function stripbreaks($a) { // helper function for generating the javascripted boxes
       return str_replace("\n","\\n",str_replace("\r","\\r",$a));
     } // close stripbreaks function
@@ -134,9 +132,6 @@ function c(subject,mod,author,date,body) {document.writeln("<table border=\"0\" 
     function box($subject, $content, $options = "") {
       print "<script language=\"JavaScript\"><!--\nb(\"". $this->stripbreaks(addslashes($subject)) ."\",\"". $this->stripbreaks(addslashes($content)) ."\"); // -->\n</script>\n";
     } // close box function
-
-
-
 
 
     function footer() {

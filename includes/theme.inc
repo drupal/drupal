@@ -1,15 +1,17 @@
 <?php
 
 class BaseTheme {
-    function links($links = array(), $status = 0, $node = 0) {
-      if ($status == 1)
-        $links = array_merge(theme_morelink($node), $links);
-      foreach ($links as $link) {
-        $_links[] = count($link) == 2 ? "<A HREF=\"$link[0]\"><FONT COLOR=\"$theme->link\">". t($link[1]) ."</FONT></A>" : t($link[0]);
-      }
-      if ($status == 2) return ($_links ? implode(" | ", $_links) : "");
-      else return ($_links ? "[ ". implode(" | ", $_links) ." ]" : "");
+  function links($links = array(), $status = 0, $node = 0) {
+    if ($status == 1)
+      $links = array_merge(theme_morelink($node), $links);
+
+    foreach ($links as $link) {
+      $_links[] = count($link) == 2 ? "<A HREF=\"$link[0]\"><FONT COLOR=\"$theme->link\">". t($link[1]) ."</FONT></A>" : t($link[0]);
     }
+
+    if ($status == 2) return ($_links ? implode(" | ", $_links) : "");
+    else return ($_links ? "[ ". implode(" | ", $_links) ." ]" : "");
+  }
 }
 
 function theme_init() {

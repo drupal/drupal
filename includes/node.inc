@@ -211,8 +211,12 @@ function node_preview($node) {
   return $node;
 }
 
+function node_index($string) {
+  return $string ? implode(" / ", node_attributes_view($string)) : "&nbsp;";
+}
+
 function node_attributes_edit($edit) {
-  return index_collection_form("section", ($edit[section] ? $edit[section] : "section:". field_get($edit[attribute], "section")));
+  return index_collection_form("section", ($edit[section] ? $edit[section] : "section:". field_get($edit[attribute], "section") .";"));
 }
 
 function node_attributes_save($edit) {
@@ -222,6 +226,16 @@ function node_attributes_save($edit) {
   else {
     return $edit[section];
   }
+}
+
+function node_attributes_view($string) {
+  foreach (explode(";", $string) as $data) {
+    $entry = explode(":", $data);
+    if (in_array($entry[0], array("section"))) {
+      $array[] = "<a href=\"?$entry[0]=$entry[1]\">$entry[1]</a>";
+    }
+  }
+  return $array ? $array : array();
 }
 
 function node_visible($node) {

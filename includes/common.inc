@@ -258,7 +258,6 @@ function page_footer() {
 $conf = conf_init();
 
 include_once "includes/$conf.php";
-include_once "includes/structure.inc";
 include_once "includes/database.inc";
 include_once "includes/variable.inc";
 include_once "includes/comment.inc";

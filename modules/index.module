@@ -7,13 +7,13 @@ function index_get_array($id) {
   return db_fetch_array(db_query("SELECT * FROM entry WHERE eid = '". check_input($id) ."'"));
 }
 
-function index_collection_form($name) {
+function index_collection_form($name, $selected = "") {
   $result = db_query("SELECT * FROM entry WHERE collection = '$name'");
   while ($entry = db_fetch_object($result)) {
     $options[$entry->keyword] = $entry->name;
   }
 
-  return form_select($name, $name, "", $options);
+  return form_select(ucfirst($name), $name, $selected, $options);
 }
 
 function index_collection_link($name) {
