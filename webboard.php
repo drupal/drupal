@@ -74,7 +74,7 @@ function displayThreadedOverview($id = 0) {
   print "  <TABLE BORDER=\"0\" CELLPADDING=\"4\" WIDTH=\"100%\">\n";
   print "   <TR>\n";
   print "    <TD ALIGN=\"left\"><FONT COLOR=\"$theme->fgcolor1\" SIZE=\"+1\"><B>Threaded overview</B></FONT></TD>\n";
-  print "    <TD ALIGN=\"right\">[ <A NAME=\"top\"><A HREF=\"#post\"><FONT COLOR=\"$theme->hlcolor1\">post</FONT></A></A> | <A HREF=\"$PHP_SELF?threaded=0\"><FONT COLOR=\"$theme->hlcolor1\">chronological</FONT></A> ]</FONT></TD>\n";
+  print "    <TD ALIGN=\"right\">[ <A NAME=\"top\"><A HREF=\"#post\"><FONT COLOR=\"$theme->hlcolor2\">post</FONT></A></A> | <A HREF=\"$PHP_SELF?threaded=0\"><FONT COLOR=\"$theme->hlcolor2\">chronological</FONT></A> ]</FONT></TD>\n";
   print "   </TR>\n";
   print "  </TABLE>\n";
   print " </TD></TR>\n";
@@ -88,9 +88,9 @@ function displayThreadedOverview($id = 0) {
   print " <TR BGCOLOR=\"$theme->bgcolor1\"><TD>\n";
   print "  <TABLE BORDER=\"0\" CELLPADDING=\"4\" WIDTH=\"100%\">\n";
   print "   <TR>\n";
-  print "    <TD ALIGN=\"left\"><FONT COLOR=\"$theme->fgcolor1\"[ <A HREF=\"javascript: history.back()\"><FONT COLOR=\"$theme->hlcolor1\">back</FONT></A> | <A HREF=\"/\"><FONT COLOR=\"$theme->hlcolor1\">home</FONT></A> | <A NAME=\"post\"><A HREF=\"#top\"><FONT COLOR=\"$theme->hlcolor1\">top</FONT></A></A> ]</FONT></TD>\n";
+  print "    <TD ALIGN=\"left\"><FONT COLOR=\"$theme->fgcolor1\"[ <A HREF=\"javascript: history.back()\"><FONT COLOR=\"$theme->hlcolor2\">back</FONT></A> | <A HREF=\"/\"><FONT COLOR=\"$theme->hlcolor2\">home</FONT></A> | <A NAME=\"post\"><A HREF=\"#top\"><FONT COLOR=\"$theme->hlcolor2\">top</FONT></A></A> ]</FONT></TD>\n";
   print "    <TD ALIGN=\"center\"><FONT COLOR=\"$theme->fgcolor1\">[ current: $current | total: $total ]</FONT></TD>\n";
-  print "    <TD ALIGN=\"right\"><FONT COLOR=\"$theme->fgcolor1\">[ <A HREF=\"$PHP_SELF?threaded=0\"><FONT COLOR=\"$theme->hlcolor1\">chronological</FONT></A> | <A HREF=\"$PHP_SELF?threaded=1\"><FONT COLOR=\"$theme->hlcolor1\">threaded</FONT></A> ]</FONT></TD>\n";
+  print "    <TD ALIGN=\"right\"><FONT COLOR=\"$theme->fgcolor1\">[ <A HREF=\"$PHP_SELF?threaded=0\"><FONT COLOR=\"$theme->hlcolor2\">chronological</FONT></A> | <A HREF=\"$PHP_SELF?threaded=1\"><FONT COLOR=\"$theme->hlcolor2\">threaded</FONT></A> ]</FONT></TD>\n";
   print "   </TR>\n";
   print "  </TABLE>\n";
   print " </TD></TR>\n";
@@ -118,7 +118,7 @@ function displayChronologicalOverview($id = 0) {
   print " <TABLE BORDER=\"0\" CELLPADDING=\"4\" WIDTH=\"100%\">\n";
   print "  <TR>\n";
   print "   <TD ALIGN=\"left\"><FONT COLOR=\"$theme->fgcolor1\" SIZE=\"+1\"><B>Chronological overview</B></FONT></TD>\n"; 
-  print "   <TD ALIGN=\"right\"><FONT COLOR=\"$theme->fgcolor1\"[ <A NAME=\"top\"><A HREF=\"#post\"><FONT COLOR=\"$theme->hlcolor1\">post</FONT></A></A> | <A HREF=\"$PHP_SELF?threaded=1\"><FONT COLOR=\"$theme->hlcolor1\">threaded</FONT></A> ]</FONT></TD>\n";
+  print "   <TD ALIGN=\"right\"><FONT COLOR=\"$theme->fgcolor1\"[ <A NAME=\"top\"><A HREF=\"#post\"><FONT COLOR=\"$theme->hlcolor2\">post</FONT></A></A> | <A HREF=\"$PHP_SELF?threaded=1\"><FONT COLOR=\"$theme->hlcolor2\">threaded</FONT></A> ]</FONT></TD>\n";
   print "  </TR>\n";
   print " </TABLE>\n";
   print " </TD></TR>\n";
@@ -137,9 +137,9 @@ function displayChronologicalOverview($id = 0) {
   print " <TR BGCOLOR=\"$theme->bgcolor1\"><TD COLSPAN=\"3\">\n";
   print "  <TABLE BORDER=\"0\" CELLPADDING=\"4\" WIDTH=\"100%\">\n";
   print "   <TR>\n";
-  print "    <TD ALIGN=\"left\"><FONT COLOR=\"$theme->fgcolor1\"[ <A HREF=\"javascript: history.back()\"><FONT COLOR=\"$theme->hlcolor1\">back</FONT></A> | <A HREF=\"/\"><FONT COLOR=\"$theme->hlcolor1\">home</FONT></A> | <A NAME=\"post\"><A HREF=\"#top\"><FONT COLOR=\"$theme->hlcolor1\">top</FONT></A></A> ]</FONT></TD>\n";
+  print "    <TD ALIGN=\"left\"><FONT COLOR=\"$theme->fgcolor1\"[ <A HREF=\"javascript: history.back()\"><FONT COLOR=\"$theme->hlcolor2\">back</FONT></A> | <A HREF=\"/\"><FONT COLOR=\"$theme->hlcolor2\">home</FONT></A> | <A NAME=\"post\"><A HREF=\"#top\"><FONT COLOR=\"$theme->hlcolor2\">top</FONT></A></A> ]</FONT></TD>\n";
   print "    <TD ALIGN=\"center\"><FONT COLOR=\"$theme->fgcolor1\"[ current: $current | total: $total ]</FONT></TD>\n";
-  print "    <TD ALIGN=\"right\"><FONT COLOR=\"$theme->fgcolor1\"[ <A HREF=\"$PHP_SELF?threaded=0\"><FONT COLOR=\"$theme->hlcolor1\">chronological</FONT></A> | <A HREF=\"$PHP_SELF?threaded=1\"><FONT COLOR=\"$theme->hlcolor1\">threaded</FONT></A> ]</FONT></TD>\n";
+  print "    <TD ALIGN=\"right\"><FONT COLOR=\"$theme->fgcolor1\"[ <A HREF=\"$PHP_SELF?threaded=0\"><FONT COLOR=\"$theme->hlcolor2\">chronological</FONT></A> | <A HREF=\"$PHP_SELF?threaded=1\"><FONT COLOR=\"$theme->hlcolor2\">threaded</FONT></A> ]</FONT></TD>\n";
   print "   </TR>\n";
   print "  </TABLE>\n";
   print " </TD></TR>\n";
@@ -227,12 +227,12 @@ function displayMessage($id = 0) {
 
     ### generate output table:
     print "<TABLE BORDER=\"0\" CELLPADDING=\"4\" WIDTH=\"$width\">\n";
-    print " <TR BGCOLOR=\"$theme->bgcolor1\"><TD COLSPAN=\"2\"><TABLE BORDER=\"0\" WIDTH=\"100%\"><TR><TD><FONT COLOR=\"$theme->fgcolor1\"><A NAME=\"top\">Current message</A></FONT></TD><TD ALIGN=\"right\"><FONT COLOR=\"$theme->fgcolor1\">[ <A HREF=\"$PHP_SELF?display=$prev_msg\"><FONT COLOR=\"$theme->hlcolor1\">previous message</FONT></A> | <A HREF=\"$PHP_SELF?display=$next_msg\"><FONT COLOR=\"$theme->hlcolor1\">next message</FONT></A> ]</FONT></TD></TR></TABLE></TD></TR>\n";
+    print " <TR BGCOLOR=\"$theme->bgcolor1\"><TD COLSPAN=\"2\"><TABLE BORDER=\"0\" WIDTH=\"100%\"><TR><TD><FONT COLOR=\"$theme->fgcolor1\"><A NAME=\"top\">Current message</A></FONT></TD><TD ALIGN=\"right\"><FONT COLOR=\"$theme->fgcolor1\">[ <A HREF=\"$PHP_SELF?display=$prev_msg\"><FONT COLOR=\"$theme->hlcolor2\">previous message</FONT></A> | <A HREF=\"$PHP_SELF?display=$next_msg\"><FONT COLOR=\"$theme->hlcolor2\">next message</FONT></A> ]</FONT></TD></TR></TABLE></TD></TR>\n";
     print " <TR BGCOLOR=\"$theme->bgcolor2\"><TD COLSPAN=\"2\">Subject: <B>$subject</B></TD></TR>\n";
     print " <TR BGCOLOR=\"$theme->bgcolor2\"><TD><FONT COLOR=\"$theme->hlcolor2\">by <B>$author</B> on $date</FONT></TD><TD ALIGN=\"right\">Hostname/IP: $hostname</TD></TR>\n";
     print " <TR BGCOLOR=\"$theme->bgcolor2\"><TD COLSPAN=\"2\">$message</TD></TR>\n";
     print " <TR><TD COLSPAN=\"2\"></TD></TR>\n";
-    print " <TR BGCOLOR=\"$theme->bgcolor1\"><TD COLSPAN=\"2\"><TABLE BORDER=\"0\" WIDTH=\"100%\"><TR><TD><FONT COLOR=\"$theme->fgcolor1\">Current thread</FONT></TD><TD ALIGN=\"right\"><FONT COLOR=\"$theme->fgcolor1\">[ <A HREF=\"$PHP_SELF?display=$prev_thread\"><FONT COLOR=\"$theme->hlcolor1\">previous thread</FONT></A> | <A HREF=\"$PHP_SELF?display=$next_thread\"><FONT COLOR=\"$theme->hlcolor1\">next thread</FONT></A> ]</FONT></TD></TR></TABLE></TD></TR>\n";
+    print " <TR BGCOLOR=\"$theme->bgcolor1\"><TD COLSPAN=\"2\"><TABLE BORDER=\"0\" WIDTH=\"100%\"><TR><TD><FONT COLOR=\"$theme->fgcolor1\">Current thread</FONT></TD><TD ALIGN=\"right\"><FONT COLOR=\"$theme->fgcolor1\">[ <A HREF=\"$PHP_SELF?display=$prev_thread\"><FONT COLOR=\"$theme->hlcolor2\">previous thread</FONT></A> | <A HREF=\"$PHP_SELF?display=$next_thread\"><FONT COLOR=\"$theme->hlcolor2\">next thread</FONT></A> ]</FONT></TD></TR></TABLE></TD></TR>\n";
     print " <TR BGCOLOR=\"$theme->bgcolor2\"><TD COLSPAN=\"2\">\n";    
     displayThread($root_id, $id);
     print " </TD></TR>\n";
@@ -240,9 +240,9 @@ function displayMessage($id = 0) {
     print " <TR BGCOLOR=\"$theme->bgcolor1\"><TD COLSPAN=\"2\">\n";
     print "  <TABLE BORDER=\"0\" CELLPADDING=\"4\" WIDTH=\"100%\">\n";
     print "   <TR>\n";
-    print "    <TD ALIGN=\"left\"><FONT COLOR=\"$theme->fgcolor1\">[ <A HREF=\"javascript: history.back()\"><FONT COLOR=\"$theme->hlcolor1\">back</FONT></A> | <A HREF=\"/\"><FONT COLOR=\"$theme->hlcolor1\">home</FONT></A> | <A HREF=\"#top\"><FONT COLOR=\"$theme->hlcolor1\">top</FONT></A> ]</FONT></TD>\n";
+    print "    <TD ALIGN=\"left\"><FONT COLOR=\"$theme->fgcolor1\">[ <A HREF=\"javascript: history.back()\"><FONT COLOR=\"$theme->hlcolor2\">back</FONT></A> | <A HREF=\"/\"><FONT COLOR=\"$theme->hlcolor2\">home</FONT></A> | <A HREF=\"#top\"><FONT COLOR=\"$theme->hlcolor2\">top</FONT></A> ]</FONT></TD>\n";
     print "    <TD ALIGN=\"center\">&nbsp;</TD>\n";
-    print "    <TD ALIGN=\"right\"><FONT COLOR=\"$theme->fgcolor1\">[ <A HREF=\"$PHP_SELF?threaded=0\"><FONT COLOR=\"$theme->hlcolor1\">chronological</FONT></A> | <A HREF=\"$PHP_SELF?threaded=1\"><FONT COLOR=\"$theme->fgcolor1\">threaded</FONT></A> ]</FONT></TD>\n";
+    print "    <TD ALIGN=\"right\"><FONT COLOR=\"$theme->fgcolor1\">[ <A HREF=\"$PHP_SELF?threaded=0\"><FONT COLOR=\"$theme->hlcolor2\">chronological</FONT></A> | <A HREF=\"$PHP_SELF?threaded=1\"><FONT COLOR=\"$theme->fgcolor1\">threaded</FONT></A> ]</FONT></TD>\n";
     print "   </TR>\n";
     print "  </TABLE>\n";
     print " </TD></TR>\n";
