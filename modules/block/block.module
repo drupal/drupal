@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.157 2005/03/05 09:09:07 dries Exp $
+// $Id: block.module,v 1.158 2005/03/05 23:00:32 dries Exp $
 
 /**
  * @file
@@ -230,7 +230,7 @@ function block_admin_display() {
     $rows = array_merge($rows, $left);
   }
   if (count($right)) {
-    $rows[] = array(array('data' => t('Right sidabar'), 'class' => 'region', 'colspan' => (module_exist('throttle') ? 7 : 6)));
+    $rows[] = array(array('data' => t('Right sidebar'), 'class' => 'region', 'colspan' => (module_exist('throttle') ? 7 : 6)));
     $rows = array_merge($rows, $right);
   }
   if (count($disabled)) {
