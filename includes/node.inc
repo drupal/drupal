@@ -1,5 +1,5 @@
 <?php
-// $Id: node.inc,v 1.73 2001/11/03 18:38:28 dries Exp $
+// $Id: node.inc,v 1.74 2001/11/03 21:28:57 dries Exp $
 
 // TODO: still used by themes, yet doesn't return anything at the moment
 function node_index() {
@@ -135,13 +135,13 @@ function node_save($node, $filter) {
     if (is_numeric($key)) {
       if (isset($node->$value)) {
           // The above check is mandatory.
-        $edit->$value = check_query($node->$value);
+        $edit->$value = $node->$value;
       }
     }
     else {
       if (isset($value)) {
           // The above check is mandatory.
-        $edit->$key = check_query($value);
+        $edit->$key = $value;
       }
     }
   }
@@ -176,8 +176,8 @@ function node_save($node, $filter) {
     // prepare the query:
     foreach ($node as $key => $value) {
       if (in_array($key, $fields)) {
-        $k[] = $key;
-        $v[] = "'$value'";
+        $k[] = check_query($key);
+        $v[] = "'". check_query($value) ."'";
       }
     }
 
@@ -201,7 +201,7 @@ function node_save($node, $filter) {
     // prepare the query:
     foreach ($node as $key => $value) {
       if (in_array($key, $fields)) {
-        $q[] = "$key = '$value'";
+        $q[] = check_query($key) ." = '". check_query($value) ."'";
       }
     }
 
