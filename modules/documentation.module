@@ -5,7 +5,7 @@ $module = array("page" => "documentation_page");
 function documentation_page() {
   ?>
   <H1>Documentation</H1>
-  <SMALL><I>$Id: documentation.module,v 1.5 2000/12/16 14:32:21 dries Exp $</I></SMALL>
+  <SMALL><I>$Id: documentation.module,v 1.6 2000/12/27 12:44:27 dries Exp $</I></SMALL>
  
   <H2>Chapter 1: installation guide</H2>
 
@@ -99,8 +99,8 @@ function documentation_page() {
     <TD VALIGN="top">If a module requires a spot in the administrator section it should implement <CODE>module_admin</CODE>.  The engine will automatically add a link to the administration menus and will call <CODE>module_admin</CODE> when this link is followed.  In order to make virtually any module maintainer's life easier, you don't have to worry about access rights or permissions for that matter.  The engine will only allow priveleged users to call exported <CODE>admin</CODE> functions.</TD>
    </TR>
    <TR>
-    <TD VALIGN="top"></TD>
-    <TD VALIGN="top"></TD>
+    <TD VALIGN="top"><CODE>export</CODE></TD>
+    <TD VALIGN="top">... All you have to do is examine the string and figure out where you're at.</TD>
    </TR>
    <TR>
     <TD VALIGN="top"></TD>

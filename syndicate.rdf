@@ -1,9 +1,0 @@
-<?
-
-include "includes/common.inc";
-
-if ($repository["backend"]) {
-  backend_rdf();
-}
-
-?>
