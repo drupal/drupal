@@ -25,7 +25,7 @@ function poll_cron() {
 }
 
 function poll_get_choices_array($poll) {
-  if (!$poll[choice]) {
+  if (!is_array($poll[choice])) {
     $result = db_query("SELECT * FROM poll_choices WHERE nid='" . $poll[nid] . "'");
     if ($result) {
       while ($choices = db_fetch_array($result)) {
@@ -44,7 +44,7 @@ function poll_get_choices_array($poll) {
 }
 
 function poll_get_choices_obj($poll) {
-  if (!$poll->choice) {
+  if (!is_array($poll->choice)) {
     $result = db_query("SELECT * FROM poll_choices WHERE nid='" . $poll->nid . "'");
     if ($result) {
       while ($choices = db_fetch_array($result)) {
@@ -99,7 +99,7 @@ function poll_view($node, $main = 0, $block = 0) {
         $result = db_query("UPDATE poll_choices SET chvotes=chvotes+1 WHERE nid='" . $node->nid . "' && chid='" . check_input($chid) . "'");
         if (($result) && ($user)) {
           $new = node_get_array(array("nid" => $node->nid));
-          $new[voters] = field_set($node->voters, $user->userid,1);
+          $new[voters] = field_set($node->voters, $user->userid, 1);
           node_save($new, array(voters));
           $node = node_get_object(array("nid" => $node->nid));
         }
@@ -229,8 +229,8 @@ function poll_save($edit) {
 
 function poll_block() {
   $result = _node_get(array("type" => "poll"));
-  while ($poll = db_fetch_array($result)) {
-    if ($poll[active]) {
+  while ($poll = db_fetch_object($result)) {
+    if ($poll->active) {
       $poll = poll_view($poll, 0, 1);
       $output = "<b>" . $poll[title] . "</b><br>" . $poll[content];
       break;
