@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.148 2003/04/04 06:17:02 dries Exp $
+// $Id: book.module,v 1.149 2003/04/14 21:03:59 dries Exp $
 
 function book_system($field){
   $system["description"] = t("Allows users to collaboratively author a book.");
@@ -480,11 +480,12 @@ function book_tree_recurse($nid, $depth, $children) {
   if ($depth > 0) {
     if ($children[$nid]) {
       foreach ($children[$nid] as $foo => $node) {
-        $output .= "<li>". l($node->title, "node/view/$node->nid") ."</li>";
-
+        $output .= "<li>";
+        $output .= l($node->title, "node/view/$node->nid");
         if ($tree = book_tree_recurse($node->nid, $depth - 1, $children)) {
           $output .= "<ul>$tree</ul>";
         }
+        $output .= "</li>";
       }
     }
   }
