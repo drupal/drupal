@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.110 2003/10/22 20:20:35 dries Exp $
+// $Id: statistics.module,v 1.111 2003/10/23 06:58:29 dries Exp $
 
 function statistics_init() {
   global $recent_activity;
@@ -46,7 +46,7 @@ function statistics_exit() {
       // if we affected 0 rows, this is the first time viewing the node
       if (!db_affected_rows()) {
         // must create a new row to store counter's for new node
-        db_query("INSERT INTO {node_counter} (nid, daycount, totalcount) VALUES(%d, 1, 1)", arg(2));
+        db_query("INSERT INTO {node_counter} (nid, daycount, totalcount, timestamp) VALUES(%d, 1, 1, %d)", arg(2), time());
       }
     }
   }
