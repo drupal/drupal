@@ -1531,7 +1531,7 @@ function user_admin_account() {
     array('data' => t('Status'), 'field' => 'u.status'),
     array('data' => t('Roles')),
     array('data' => t('Last access'), 'field'  => 'u.changed', 'sort' => 'desc'),
-    t('operations')
+    t('Operations')
   );
   $sql = 'SELECT u.uid, u.name, u.status, u.changed FROM {users} u WHERE uid != 0';
   $sql .= tablesort_sql($header);
