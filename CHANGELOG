@@ -15,6 +15,7 @@ drupal x.xx, xx/xx/xxxx (CVS, unstable)
     * added "auto-post new submissions" feature versus "moderate new submissions".
 - rewrote configuration file resolving:
     * Drupal tries to locate a configuration file that matches your domainname or uses conf.php if the former failed.  Note also that the configuration files got renamed from .conf to .php for security's sake on mal-configured Drupal sites.
+- added caching support which makes Drupal extremely scalable.
 - added access.module:
     * allows you to setup 'roles' (groups) and to bind a set of permissions to each group.
 - added poll.module.
