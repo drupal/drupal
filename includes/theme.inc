@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.103 2002/05/20 18:00:59 kjartan Exp $
+// $Id: theme.inc,v 1.104 2002/05/25 06:47:47 dries Exp $
 
 /**
 * Basic theme
@@ -40,7 +40,7 @@ class BaseTheme {
         $terms[] = l($term->name, array("or" => $term->tid), "index");
       }
     }
-    
+
     $output = "<b>". check_output($node->title) ."</b> by ". format_name($node) ."<br />";
     if (count($terms)) {
       $output .= "<small>(". $this->links($terms) .")</small><br />";
@@ -97,7 +97,9 @@ function theme_list() {
     $list = array();
     $result = db_query("SELECT * FROM system where type = 'theme' AND status = '1' ORDER BY name");
     while ($theme = db_fetch_object($result)) {
-      $list[$theme->name] = $theme;
+      if (file_exists($theme->filename)) {
+        $list[$theme->name] = $theme;
+      }
     }
   }
 
