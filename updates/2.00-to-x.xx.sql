@@ -1,3 +1,11 @@
+# 05/04/2001:
+
+CREATE TABLE variable (
+  name varchar(32) DEFAULT '' NOT NULL,
+  value varchar(128) DEFAULT '' NOT NULL,
+  PRIMARY KEY (name)
+);
+
 # 01/04/2001:
 
 CREATE TABLE access (

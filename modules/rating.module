@@ -15,17 +15,8 @@ function rating_cron() {
 
 function rating_help() {
  ?>
-  <H3>User rating</H3>
-  <P>The rating cron will periodically calculate an overall rating of each user's contributed value that is a time-weighted average of his or her comments ratings with an additional bonus for the nodes he or she contributed.  The system can be best compared with <A HREF="http://slashcode.com/">SlashCode</A>'s karma and is - in fact - even more similar to <A HREF="http://scoop.kuro5hin.org/">Scoop</A>'s mojo implementation.</P>
-  <P>I won't elaborate on all the funny math involved and it suffices to say that the actual weighting is done in such a way:</P>
-  <OL>
-   <LI>that comments with a lot of votes count more then comments with only one or two votes.</LI>
-   <LI>that newer comments count for more then older comments.</LI>
-  </OL>
-  <P>The idea of (1) is that it favors comments that more people voted on, and thus whose rating is more likely to be accurate or justified.</P>
-  <P>The latter (2) makes the user rating that comes out of the calulations temporary, based on users' most recent activity and responsive to their current state.  This is accomplished by taking each user's last 30 comments, or however many he or she posted in the last 60 days - whatever comes first.</P>
-  <P>Additionally, users that posted one or more succesful nodes in the last 60 days gain extra bonus points which will boost up their overall rating.</P>
- <?php
+  <P>The rating cron will periodically calculate each user's gravity, the overall time-weighted rating of each user's contributions.</P>
+ <?
 }
 
 function rating_list($limit) {
