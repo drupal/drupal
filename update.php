@@ -51,7 +51,8 @@ $mysql_updates = array(
   "2002-08-16" => "update_36",
   "2002-08-19" => "update_37",
   "2002-08-26" => "update_38",
-  "2002-09-15" => "update_39"
+  "2002-09-15" => "update_39",
+  "2002-09-17" => "update_40"
 );
 
 // Update functions
@@ -579,6 +580,12 @@ function update_39() {
     icon varchar(255) not null,
     shadow int unsigned not null
   );");
+}
+
+function update_40() {
+  if ($max = db_result(db_query("SELECT MAX(cid) FROM comments;"))) {
+    update_sql("REPLACE INTO sequences VALUES ('comments', $max);");
+  }
 }
 
 function update_upgrade3() {
