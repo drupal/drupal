@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.282 2005/01/29 22:02:36 dries Exp $
+// $Id: book.module,v 1.283 2005/01/30 08:53:05 dries Exp $
 
 /**
  * @file
@@ -642,7 +642,7 @@ function book_print($nid = 0, $depth = 1) {
 }
 
 function book_print_recurse($parent = '', $depth = 1) {
-  $result = db_query(db_rewrite_sql('SELECT n.nid, n.title, b.weight FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE n.status = 1 AND b.parent = %d AND n.moderate = 0 ORDER BY b.weight, n.title', $parent));
+  $result = db_query(db_rewrite_sql('SELECT n.nid, n.title, b.weight FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE n.status = 1 AND b.parent = %d AND n.moderate = 0 ORDER BY b.weight, n.title'), $parent);
 
   while ($page = db_fetch_object($result)) {
     // Load the node:
