@@ -4,20 +4,19 @@
 # MySQL settings:
 #
 
-
-### www.drop.org:
+### http://www.drop.org/:
 #$dbhost = "zind.net";
 #$dbuname = "droporg";
 #$dbpass = "DropIes";
 #$dbname = "droporg";
 
-### beta.drop.org:
+### http://beta.drop.org/:
 $dbhost = "zind.net";
 $dbuname = "dries";
 $dbpass = "Abc123";
 $dbname = "dries";
 
-### localhost Dries:
+### http://dione/:
 #$dbhost = "";
 #$dbuname = "dries";
 #$dbpass = "oakley";
@@ -27,12 +26,13 @@ $dbname = "dries";
 # Name of the site
 #
 $sitename = "drop.org";
+$siteurl  = "http://www.drop.org/";
 
 #
 # Contact information:
 #  The contact information will be used to send out automated mails
 #  to users, account holders or visitors.
-$contact_email = "droppies@zind.net";
+$contact_email = "droppies@drop.org";
 
 #
 # Notify:
@@ -49,12 +49,19 @@ $notify = 0;
 $notify_email   = $contact_email;
 $notify_subject = "submission: ";
 $notify_message = "New submission: '$subject'\n\n$story";
-$notify_from    = "droppies@zind.net";
+$notify_from    = "droppies@drop.org";
 
 #
 # Comment meta reasons:
 #
-$comment_votes = array("none" => "none", "-1" => "- 1", "0" => "+ 0", "+1" => "+ 1", "+2" => "+ 2", "+3" => "+ 3", "+4" => "+ 4", "+5" => "+ 5");
+$comment_votes = array("none" => "none", 
+                       "-1" => "- 1", 
+                       "0" => "+ 0",
+                       "+1" => "+ 1",
+                       "+2" => "+ 2",
+                       "+3" => "+ 3", 
+                       "+4" => "+ 4", 
+                       "+5" => "+ 5");
 
 #
 # Categories:
@@ -81,7 +88,6 @@ $allowed_html = "<A><B><BR><DD><DL><DT><EM><HR><I><IL><SMALL><OL><U><UL>";
 # Name of the 'anonymous' user account:
 #
 $anonymous = "Anonymous Chicken";
-
 
 #
 # Themes:

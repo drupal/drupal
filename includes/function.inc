@@ -24,12 +24,14 @@ function check_field($message) {
 }
 
 function check_input($message) {
-  return strip_tags($message);
+  global $allowed_html;
+  return strip_tags(addslashes($message), $allowed_html);
 }
 
-function check_output($message) {
+function check_output($message, $nl2br = 0) {
   global $allowed_html;
-  return strip_tags(stripslashes($message), $allowed_html);
+  if ($nl2br == 1) return nl2br(strip_tags(stripslashes($message), $allowed_html));
+  else return strip_tags(stripslashes($message), $allowed_html);
 }
 
 function discussion_num_replies($id, $count = 0) {
@@ -49,6 +51,10 @@ function format_plural($count, $one, $more) {
 }
 
 function format_date($timestamp, $type = "medium") {
+  global $user;
+
+  $timestamp += ($user->timezone) ? $user->timezone - date("Z") : 0;
+
   switch ($type) {
     case "small":
       $date = date("D, m/d/y - H:i", $timestamp);

@@ -10,6 +10,7 @@ if ($user->userid != "Dries") exit();
 function account_display($order = "username") {
   $sort = array("ID" => "id", "fake e-mail address" => "fake_email", "homepage" => "url", "hostname" => "last_host", "last access date" => "last_access", "real e-mail address" => "real_email", "real name" => "name", "status" => "status", "theme" => "theme", "username" => "userid");
   $show = array("ID" => "id", "username" => "userid", "$order" => "$sort[$order]", "status" => "status");
+  $stat = array(0 => "blocked", 1 => "not confirmed", 2 => "open");
 
   ### Perform query:
   $result = db_query("SELECT u.id, u.userid, u.$sort[$order], u.status FROM users u ORDER BY $sort[$order]");
@@ -46,7 +47,7 @@ function account_display($order = "username") {
           $output .= "  <TD>". format_date($account[$value]) ."</TD>\n";
           break;
 	case "status":         
-          $output .= "  <TD ALIGN=\"center\"><I>todo</I></TD>\n";
+          $output .= "  <TD ALIGN=\"center\">". $stat[$account[$value]] ."</TD>\n";
           break;
         case "url":
           $output .= "  <TD>". format_url($account[$value]) ."</TD>\n";
@@ -83,12 +84,14 @@ function account_comments($id) {
 }
 
 function account_view($name) {
-  ### Perform query:
+  $status = array(0 => "blocked", 1 => "not confirmed", 2 => "open");
+
   $result = db_query("SELECT * FROM users WHERE userid = '$name'");
 
   if ($account = db_fetch_object($result)) {
     $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\">\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>ID:</B></TD><TD>$account->id</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>Status:</B></TD><TD>". $status[$account->status] ."</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>Username:</B></TD><TD>$account->userid</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>Real name:</B></TD><TD>". format_data($account->name) ."</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>Real e-mail address:</B></TD><TD>". format_email($account->real_email) ."</TD></TR>\n";
@@ -137,7 +140,7 @@ function log_display($order = "date") {
   $output .= " </TR>\n";
 
   while ($log = db_fetch_object($result)) {
-    $output .= " <TR BGCOLOR=\"". $colors[$log->level] ."\"><TD>". date("D d/m, H:m:s", $log->timestamp) ."</TD><TD ALIGN=\"center\">". format_username($log->userid, 1) ."</A></TD><TD>". substr($log->message, 0, 44) ."</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?section=logs&op=view&id=$log->id\">more</A></TD></TR>\n";
+    $output .= " <TR BGCOLOR=\"". $colors[$log->level] ."\"><TD>". format_date($log->timestamp) ."</TD><TD ALIGN=\"center\">". format_username($log->userid, 1) ."</A></TD><TD>". substr($log->message, 0, 44) ."</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?section=logs&op=view&id=$log->id\">more</A></TD></TR>\n";
   }
 
   $output .= "</TABLE>\n";
