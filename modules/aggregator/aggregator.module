@@ -208,10 +208,19 @@ function import_refresh($feed) {
         // print "<pre>title = ". htmlentities($title) ."\n\ndescription = ". htmlentities($description) ."\n\nlink = ". htmlentities($link) ."</pre><hr />";
 
         /*
-        ** Save this item:
+        ** Save this item.  Try to avoid duplicate entries as much as
+        ** possible.  If we find a duplicate entry, we resolve it and
+        ** pass along its ID such that we can update it (when needed).
         */
 
-        import_save_item(array(fid => $feed["fid"], title => $title, link => $link, author => $author, description => $description, attributes => $feed["attributes"]));
+        if ($link && $link != $feed["link"] && $link != $feed["url"]) {
+          $entry = db_fetch_object(db_query("SELECT iid FROM item WHERE fid = '". check_query($feed["fid"]) ."' AND link = '". check_query($link) ."'"));
+        }
+        else {
+          $entry = db_fetch_object(db_query("SELECT iid FROM item WHERE fid = '". check_query($feed["fid"]) ."' AND title = '". check_query($title) ."'"));
+        }
+
+        import_save_item(array(iid => $entry->iid, fid => $feed["fid"], title => $title, link => $link, author => $author, description => $description, attributes => $feed["attributes"]));
       }
     }
 
@@ -247,9 +256,7 @@ function import_save_item($edit) {
     db_query("DELETE FROM item WHERE iid = '". check_input($edit["iid"]) ."'");
   }
   else if ($edit["title"] && $edit["link"]) {
-    if (!db_fetch_object(db_query("SELECT iid FROM item WHERE title = '". check_input($edit["title"]) ."' AND link = '". check_input($edit["link"]) ."' AND description = '". check_input($edit["description"]) ."'"))) {
-      db_query("INSERT INTO item (fid, title, link, author, description, attributes, timestamp) VALUES ('". check_input($edit["fid"]) ."', '". check_input($edit["title"]) ."', '". check_input($edit["link"]) ."', '". check_input($edit["author"]) ."', '". check_input($edit["description"]) ."', '". check_input($edit["attributes"]) ."', '". time() ."')");
-    }
+    db_query("INSERT INTO item (fid, title, link, author, description, attributes, timestamp) VALUES ('". check_input($edit["fid"]) ."', '". check_input($edit["title"]) ."', '". check_input($edit["link"]) ."', '". check_input($edit["author"]) ."', '". check_input($edit["description"]) ."', '". check_input($edit["attributes"]) ."', '". time() ."')");
   }
 }
 
