@@ -307,7 +307,7 @@ function file_transfer($source, $headers) {
   // Transfer file in 1024 byte chunks to save memory usage.
   $fd = fopen($source, 'rb');
   while (!feof($fd)) {
-    print fgets($fd);
+    print fgets($fd, 1024);
   }
   fclose($fd);
   exit();

@@ -333,7 +333,7 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
   fwrite($fp, $request);
 
   // Fetch response.
-  while (!feof($fp) && $data = fgets($fp)) {
+  while (!feof($fp) && $data = fgets($fp, 1024)) {
     $response[] = $data;
   }
   fclose($fp);
