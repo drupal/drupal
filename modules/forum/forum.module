@@ -122,9 +122,9 @@ function forum_block($op = 'list', $delta = 0) {
   }
   else {
     if (user_access('access content')) {
-      $content  = node_title_list(db_query_range("SELECT DISTINCT(n.nid), n.title, GREATEST(n.created, MAX(c.timestamp)) AS sort FROM {node} n ". node_access_join_sql() ." LEFT JOIN {comments} c ON n.nid = c.nid WHERE n.type = 'forum' AND n.status = 1 AND ". node_access_where_sql() ." GROUP BY n.nid, n.title, n.created ORDER BY sort DESC", 0, variable_get('forum_block_num', '5')), t('Active forum topics:'));
+      $content  = node_title_list(db_query_range("SELECT n.nid, n.title, l.last_comment_timestamp FROM {node} n INNER JOIN {node_comment_statistics} l ON n.nid = l.nid ". node_access_join_sql() ." WHERE n.status = 1 AND n.type='forum' AND ". node_access_where_sql() ." ORDER BY l.last_comment_timestamp DESC", 0, variable_get('forum_block_num', '5')), t('Active forum topics:'));
 
-      $content .= node_title_list(db_query_range("SELECT DISTINCT(n.nid), n.title FROM {node} n ". node_access_join_sql() ." WHERE n.type = 'forum' AND n.status = 1 AND ". node_access_where_sql() ." ORDER BY n.nid DESC", 0, variable_get('forum_block_num', '5')), t('New forum topics:'));
+      $content .= node_title_list(db_query_range("SELECT n.nid, n.title FROM {node} n ". node_access_join_sql() ." WHERE n.type = 'forum' AND n.status = 1 AND ". node_access_where_sql() ." ORDER BY n.nid DESC", 0, variable_get('forum_block_num', '5')), t('New forum topics:'));
 
       if ($content) {
         $content .= '<div class="more-link">'. l(t('more'), 'forum', array('title' => t('Read the latest forum topics.'))) .'</div>';
@@ -153,7 +153,7 @@ function forum_link($type, $node = 0, $main = 0) {
   if (!$main && $type == 'node' && $node->type == 'forum') {
     // get previous and next topic
 
-    $result = db_query('SELECT DISTINCT(n.nid), n.title, n.sticky, GREATEST(n.created, MAX(c.timestamp)) AS date_sort FROM {node} n '. node_access_join_sql() .' INNER JOIN {forum} f ON n.nid = f.nid LEFT JOIN {comments} c ON n.nid = c.nid WHERE n.nid = f.nid AND f.tid = %d AND n.status = 1 AND '. node_access_where_sql() .' GROUP BY n.nid, n.title, n.created ORDER BY n.sticky DESC, '. _forum_get_topic_order_sql(variable_get('forum_order', 1)), $node->tid);
+    $result = db_query("SELECT n.nid, n.title, n.sticky, l.comment_count, l.last_comment_timestamp FROM {node} n INNER JOIN {node_comment_statistics} l ON n.nid = l.nid " . node_access_join_sql() . " INNER JOIN {term_node} r ON n.nid = r.nid AND r.tid = %d WHERE n.status = 1 AND n.type='forum' AND " . node_access_where_sql() . ' ORDER BY n.sticky DESC, '. _forum_get_topic_order_sql(variable_get('forum_order', 1)), $node->tid);
 
     while ($topic = db_fetch_object($result)) {
       if ($stop == 1) {
@@ -238,7 +238,6 @@ function forum_view(&$node, $teaser = FALSE, $page = FALSE) {
 function forum_validate(&$node) {
   // Make sure all fields are set properly:
   $node->icon = $node->icon ? $node->icon : '';
-  $node->shadow = $node->shadow ? $node->shadow : 0;
 
   if ($node->taxonomy) {
     // Extract the node's proper topic ID.
@@ -255,7 +254,21 @@ function forum_validate(&$node) {
         }
       }
     }
+    if ($node->tid && $node->shadow) {
+      $terms = array_keys(taxonomy_node_get_terms($node->nid));
+      if (!in_array($node->tid, $terms)) {
+        $terms[] = $node->tid;
+      }
+      $node->taxonomy = $terms;
+    }
   }
+}
+
+/**
+ * Implementation of hook_update().
+ */
+function forum_update($node) {
+  db_query('UPDATE {forum} SET tid = %d WHERE nid = %d', $node->tid, $node->nid);
 }
 
 /**
@@ -266,12 +279,16 @@ function forum_form(&$node) {
     // new topic
     $node->taxonomy[] = arg(3);
   }
+  else {
+    $node->taxonomy = array($node->tid);
+  }
 
   $output = implode('', taxonomy_node_form('forum', $node));
 
   if ($node->nid) {
     // if editing, give option to leave shadows
-    $output .= form_checkbox(t('Leave shadow copy'), 'shadow', 1, $node->shadow, t('If you move this topic, you can leave a link in the old forum to the new forum.'));
+    $shadow = (count(taxonomy_node_get_terms($node->nid)) > 1);
+    $output .= form_checkbox(t('Leave shadow copy'), 'shadow', 1, $shadow, t('If you move this topic, you can leave a link in the old forum to the new forum.'));
   }
 
   $output .= form_textarea(t('Body'), 'body', $node->body, 60, 10, '');
@@ -283,14 +300,8 @@ function forum_form(&$node) {
  * Implementation of hook_insert().
  */
 function forum_insert($node) {
-  db_query('INSERT INTO {forum} (nid, shadow, tid) VALUES (%d, %d, %d)', $node->nid, $node->shadow, $node->tid);
-}
-
-/**
- * Implementation of hook_update().
- */
-function forum_update($node) {
-  db_query('UPDATE {forum} SET shadow = %d, tid = %d WHERE nid = %d', $node->shadow, $node->tid, $node->nid);
+  global $user;
+  db_query('INSERT INTO {forum} (nid, tid) VALUES (%d, %d)', $node->nid, $node->tid);
 }
 
 /**
@@ -300,27 +311,11 @@ function forum_delete(&$node) {
   db_query('DELETE FROM {forum} WHERE nid = %d', $node->nid);
 }
 
-function _forum_num_comments($nid) {
-  $value = db_fetch_object(db_query('SELECT COUNT(cid) AS count FROM {comments} WHERE nid = %d AND status = 0', $nid));
-  return ($value) ? $value->count : 0;
-}
-
-function _forum_last_comment($nid) {
-  $value = db_fetch_object(db_query_range('SELECT timestamp FROM {comments} WHERE nid = %d AND status = 0 ORDER BY timestamp DESC', $nid, 0, 1));
-  return ($value) ? format_date($value->timestamp, 'small') : '&nbsp;';
-}
-
-function _forum_last_reply($nid) {
-  $value = db_fetch_object(db_query_range('SELECT c.timestamp, c.name AS anonymous_name, u.name, u.uid FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.nid = %d AND c.status = 0 ORDER BY c.timestamp DESC', $nid, 0, 1));
-  if ($value) {
-    $value->name = $value->uid ? $value->name : $value->anonymous_name;
-  }
-  else {
-    $value = new StdClass();
-  }
-  return $value;
-}
-
+/**
+ * Formats a topic for display
+ *
+ * @TODO Give a better description. Not sure where this funciton is used yet.
+ */
 function _forum_format($topic) {
   if ($topic && $topic->timestamp) {
     return t('%time ago<br />by %author', array('%time' => format_interval(time() - $topic->timestamp), '%author' => format_name($topic)));
@@ -330,66 +325,74 @@ function _forum_format($topic) {
   }
 }
 
+/**
+ * Returns a list of all forums for a given taxonomy id
+ *
+ * Forum objects containt the following fields
+ * -num_topics Number of topics in the forum
+ * -num_posts Total number of posts in all topics
+ * -last_post Most recent post for the forum
+ *
+ * @param $tid
+ *   Taxonomy ID of the vocabulary that holds the forum list.
+ * @return
+ *   Array of object containing the forum information.
+ */
 function forum_get_forums($tid = 0) {
   if (!$tid) {
     $tid = 0;
   }
 
-  $cache = cache_get("forum:$tid");
+  $forums = array();
+  $_forums = taxonomy_get_tree(variable_get('forum_nav_vocabulary', ''), $tid);
 
-  if (empty($cache)) {
-    $forums = array();
-    $_forums = taxonomy_get_tree(variable_get('forum_nav_vocabulary', ''), $tid);
-    foreach ($_forums as $forum) {
-      if (in_array($forum->tid, variable_get('forum_containers', array()))) {
-        $forum->container = 1;
-      }
-      $forum->num_topics = _forum_num_topics($forum->tid);
-      $forum->num_posts = _forum_num_replies($forum->tid) + $forum->num_topics;
-      $forum->last_post = _forum_last_post($forum->tid);
-      $forums[$forum->tid] = $forum;
+  if (count($_forums)) {
+
+    $counts = array();
+
+    $_counts = db_query("SELECT r.tid, COUNT(n.nid) AS topic_count, SUM(l.comment_count) AS comment_count FROM {node} n INNER JOIN {node_comment_statistics} l ON n.nid = l.nid INNER JOIN {term_node} r ON n.nid = r.nid " . node_access_join_sql() . " WHERE n.status = 1 AND n.type = 'forum' AND " . node_access_where_sql() . " GROUP BY r.tid", $forum->tid);
+    while ($count = db_fetch_object($_counts)) {
+      $counts[$count->tid] = $count;
+    }
+  }
+
+  foreach ($_forums as $forum) {
+    if (in_array($forum->tid, variable_get('forum_containers', array()))) {
+      $forum->container = 1;
     }
 
-    cache_set("forum:$tid", serialize($forums), 1);
-  }
-  else {
-    $forums = unserialize($cache->data);
+    if ($counts[$forum->tid]) {
+      $forum->num_topics = $counts[$forum->tid]->topic_count;
+      $forum->num_posts = $counts[$forum->tid]->topic_count + $counts[$forum->tid]->comment_count;
+    }
+    else {
+      $forum->num_topics = 0;
+      $forum->num_posts = 0;
+    }
+
+    // This query does not use full ANSI syntax since MySQL 3.x does not support
+    // table1 INNER JOIN table2 INNER JOIN table3 ON table2_criteria ON table3_criteria
+    // used to join node_comment_statistics to users
+    $topic = db_fetch_object(db_query_range('SELECT n.nid, l.last_comment_timestamp, IF(l.last_comment_uid, cu.name, l.last_comment_name) as last_comment_name, l.last_comment_uid FROM {node} n ' . node_access_join_sql() . ", {node_comment_statistics} l /*! USE INDEX (node_comment_timestamp) */, {users} cu, {term_node} r WHERE  n.nid = r.nid AND r.tid = %d AND n.status = 1 AND n.type = 'forum' AND l.last_comment_uid = cu.uid AND n.nid = l.nid AND " . node_access_where_sql() . ' ORDER BY l.last_comment_timestamp DESC', $forum->tid, 0, 1));
+    $last_post->timestamp = $topic->last_comment_timestamp;
+    $last_post->name = $topic->last_comment_name;
+    $last_post->uid = $topic->last_comment_uid;
+    $forum->last_post = $last_post;
+
+    $forums[$forum->tid] = $forum;
   }
 
   return $forums;
-}
-
-function _forum_num_topics($term) {
-  return db_result(db_query('SELECT COUNT(DISTINCT(n.nid)) FROM {forum} f INNER JOIN {node} n ON n.nid = f.nid '. node_access_join_sql() .' WHERE f.tid = %d AND n.status = 1 AND '. node_access_where_sql() .' AND f.shadow = 0', $term));
-}
-
-function _forum_num_replies($term) {
-  return db_result(db_query('SELECT COUNT(DISTINCT(n.nid)) AS count FROM {comments} c INNER JOIN {node} n ON n.nid = c.nid '. node_access_join_sql() .' INNER JOIN {forum} f ON n.nid = f.nid WHERE f.tid = %d AND n.nid = f.nid AND n.nid = c.nid AND n.status = 1 AND '. node_access_where_sql() ." AND c.status = 0 AND n.type = 'forum'", $term));
 }
 
 function _forum_topics_read($term, $uid) {
   // Calculate the number of topics the user has read. Assume all entries older
   // than NODE_NEW_LIMIT are read, and include the recent posts that user has
   // read.
-  $ancient = db_result(db_query('SELECT COUNT(DISTINCT(n.nid)) FROM {forum} f INNER JOIN {node} n ON f.nid = n.nid '. node_access_join_sql() .' WHERE f.tid = %d AND n.status = 1 AND '. node_access_where_sql() .' AND n.created <= %d AND f.shadow = 0', $term, NODE_NEW_LIMIT));
-  $recent = db_result(db_query('SELECT COUNT(DISTINCT(n.nid)) FROM {forum} f INNER JOIN {node} n ON f.nid = n.nid '. node_access_join_sql() .' INNER JOIN {history} h ON n.nid = h.nid WHERE n.status = 1 AND '. node_access_where_sql() .' AND f.tid = %d AND h.uid = %d AND n.created > %d AND f.shadow = 0', $term, $uid, NODE_NEW_LIMIT));
+  $ancient = db_result(db_query('SELECT COUNT(n.nid) FROM {node} n INNER JOIN {term_node} r ON n.nid = r.nid AND r.tid = %d '. node_access_join_sql() .' WHERE n.created <= %d AND n.status = 1 AND '. node_access_where_sql(), $term, NODE_NEW_LIMIT));
+  $recent = db_result(db_query('SELECT COUNT(n.nid) FROM {node} n '. node_access_join_sql() .' INNER JOIN {history} h ON n.nid = h.nid AND h.uid = %d INNER JOIN {term_node} r ON n.nid = r.nid AND r.tid = %d WHERE n.status = 1 AND n.created > %d AND '. node_access_where_sql(), $uid, $term, NODE_NEW_LIMIT));
 
   return $ancient + $recent;
-}
-
-function _forum_last_post($term) {
-  $topic = db_fetch_object(db_query_range("SELECT DISTINCT(n.nid), n.created AS timestamp, u.name AS name, u.uid AS uid FROM {forum} f INNER JOIN {node} n ON n.nid = f.nid ". node_access_join_sql() ." INNER JOIN {users} u ON n.uid = u.uid WHERE f.tid = %d AND n.nid = f.nid AND n.type = 'forum' AND n.status = 1 AND ". node_access_where_sql() ." ORDER BY timestamp DESC", $term, 0, 1));
-  $reply = db_fetch_object(db_query_range("SELECT DISTINCT(n.nid), c.timestamp, c.name AS anonymous_name, u.name AS name, u.uid AS uid FROM {forum} f INNER JOIN {node} n ON n.nid = f.nid ". node_access_join_sql() ." INNER JOIN {comments} c ON n.nid = c.nid INNER JOIN {users} u ON c.uid = u.uid WHERE f.tid = %d AND n.nid = f.nid AND n.type = 'forum' AND n.status = 1 AND ". node_access_where_sql() ." AND c.status = 0 ORDER BY c.timestamp DESC", $term, 0, 1));
-  if ($reply) {
-    $reply->name = $reply->uid ? $reply->name : $reply->anonymous_name;
-  }
-  else {
-    $reply = new StdClass();
-  }
-
-  $value = ($topic->timestamp > $reply->timestamp) ? $topic : $reply;
-
-  return $value;
 }
 
 function forum_get_topics($tid, $sortby, $forum_per_page) {
@@ -398,9 +401,9 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
   $forum_topic_list_header = array(
     array('data' => '&nbsp;'),
     array('data' => t('Topic'), 'field' => 'n.title'),
-    array('data' => t('Replies'), 'field' => 'num_comments'),
+    array('data' => t('Replies'), 'field' => 'l.comment_count'),
     array('data' => t('Created'), 'field' => 'n.created'),
-    array('data' => t('Last reply'), 'field' => 'date_sort'),
+    array('data' => t('Last reply'), 'field' => 'l.last_comment_timestamp'),
   );
 
   $order = _forum_get_topic_order($sortby);
@@ -413,25 +416,22 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
   $term = taxonomy_get_term($tid);
   $check_tid = $tid ? "'". check_query($tid) ."'" : 'NULL';
 
-  // show topics with the correct tid, or in the forum but with shadow = 1
-  // @TODO: this is not ANSI SQL! ("user error: 'n.created' isn't in GROUP BY")
-  // @TODO: timestamp is a sql reserved word. are there more?
-  $sql = "SELECT DISTINCT(n.nid), n.title, n.sticky, u.name AS name, u.uid AS uid, n.created AS timestamp, GREATEST(n.created, MAX(c.timestamp)) AS date_sort, COUNT(c.nid) AS num_comments, n.comment AS comment_mode, f.tid FROM {node} n ". node_access_join_sql() ." INNER JOIN {term_node} r ON n.nid = r.nid INNER JOIN {users} u ON n.uid = u.uid LEFT JOIN {comments} c ON n.nid = c.nid INNER JOIN {forum} f ON n.nid = f.nid WHERE ((r.tid = $check_tid AND f.shadow = 1) OR f.tid = $check_tid) AND n.status = 1 AND ". node_access_where_sql() ." AND n.type = 'forum' GROUP BY n.nid, n.title, u.name, u.uid, n.created, n.comment, f.tid";
+  $sql = "SELECT n.nid, f.tid, n.title, n.sticky, u.name, u.uid, n.created AS timestamp, n.comment AS comment_mode, l.last_comment_timestamp, IF(l.last_comment_uid, cu.name, l.last_comment_name) as last_comment_name, l.last_comment_uid, l.comment_count AS num_comments FROM {node} n ". node_access_join_sql() .", {node_comment_statistics} l, {users} cu, {term_node} r, {users} u, {forum} f WHERE n.status = 1 AND l.last_comment_uid = cu.uid AND n.nid = l.nid AND n.nid = r.nid AND r.tid = $check_tid AND n.uid = u.uid AND n.nid = f.nid AND ". node_access_where_sql();
   $sql .= tablesort_sql($forum_topic_list_header, 'n.sticky DESC,');
 
-  $sql_count = "SELECT COUNT(DISTINCT(n.nid)) FROM {node} n ". node_access_join_sql() ." INNER JOIN {forum} f ON n.nid = f.nid INNER JOIN {term_node} r ON n.nid = r.nid WHERE ( (r.tid = $check_tid AND f.shadow = 1) OR f.tid = $check_tid) AND n.status = 1 AND ". node_access_where_sql() ." AND n.type = 'forum'";
+  $sql_count = "SELECT COUNT(n.nid) FROM {node} n ". node_access_join_sql() ." INNER JOIN {term_node} r ON n.nid = r.nid AND r.tid = $check_tid WHERE n.status = 1 AND n.type = 'forum' AND ". node_access_where_sql();
 
   $result = pager_query($sql, $forum_per_page, 0, $sql_count);
 
   while ($topic = db_fetch_object($result)) {
     if ($user->uid) {
       // folder is new if topic is new or there are new comments since last visit
-      if ($topic->shadow > 0) {
+      if ($topic->tid != $tid) {
         $topic->new = 0;
       }
       else {
         $history = _forum_user_last_visit($topic->nid);
-        $topic->new_replies = db_result(db_query('SELECT COUNT(DISTINCT(c.nid)) FROM {node} n '. node_access_join_sql() .' INNER JOIN {comments} c ON n.nid = c.nid WHERE n.nid = %d AND n.status = 1 AND '. node_access_where_sql() .' AND c.status = 0 AND c.timestamp > %d', $topic->nid, $history));
+        $topic->new_replies = comment_num_new($topic->nid, $history);
         $topic->new = $topic->new_replies || ($topic->timestamp > $history);
       }
     }
@@ -441,21 +441,25 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
       $topic->new = 0;
     }
 
-    $topic->last_reply = _forum_last_reply($topic->nid);
+    if ($topic->num_comments > 0) {
+      $last_reply->timestamp = $topic->last_comment_timestamp;
+      $last_reply->name = $topic->last_comment_name;
+      $last_reply->uid = $topic->last_comment_uid;
+      $topic->last_reply = $last_reply;
+    }
     $topics[] = $topic;
   }
 
   return $topics;
 }
 
+/**
+ * Finds the first unread node for a given forum.
+ */
 function _forum_new($tid) {
   global $user;
-  $result = db_query("SELECT DISTINCT(n.nid) FROM {node} n, {history} h, {forum} f ". node_access_join_sql() ." WHERE n.type = 'forum' AND n.status = 1 AND ". node_access_where_sql() ." AND h.nid = n.nid AND f.nid = h.nid AND f.tid = %d AND h.uid = %d", $tid, $user->uid);
-  while ($r = db_fetch_object($result)) {
-    $read[] = $r->nid;
-  }
 
-  $nid = db_result(db_query_range("SELECT DISTINCT(n.nid) FROM {node} n ". node_access_join_sql() ." INNER JOIN {forum} f ON n.nid = f.nid WHERE n.type = 'forum' AND f.nid = n.nid AND n.status = 1 AND ". node_access_where_sql() ." AND f.tid = %d AND n.created > %d ". ($read ? 'AND NOT (n.nid IN ('. implode(',', $read) .')) ' : '') .'ORDER BY created', $tid, NODE_NEW_LIMIT, 0, 1));
+  $nid = db_result(db_query_range("SELECT n.nid FROM {node} n LEFT JOIN {history} h ON n.nid = h.hid AND h.uid = %d INNER JOIN {term_node} r ON n.nid = r.nid AND r.tid = %d " . node_access_join_sql() . " WHERE n.status = 1 AND n.type = 'forum' AND h.nid IS NULL AND n.created > %d AND " . node_access_where_sql() . " ORDER BY created", $user->uid, $tid, NODE_NEW_LIMIT, 0, 1));
 
   return $nid ? $nid : 0;
 }
@@ -704,16 +708,16 @@ function _forum_user_last_visit($nid) {
 function _forum_get_topic_order($sortby) {
   switch ($sortby) {
     case 1:
-      return array('field' => 'date_sort', 'sort' => 'desc');
+      return array('field' => 'l.last_comment_timestamp', 'sort' => 'desc');
       break;
     case 2:
-      return array('field' => 'date_sort', 'sort' => 'asc');
+      return array('field' => 'l.last_comment_timestamp', 'sort' => 'asc');
       break;
     case 3:
-      return array('field' => 'num_comments', 'sort' => 'desc');
+      return array('field' => 'l.comment_count', 'sort' => 'desc');
       break;
     case 4:
-      return array('field' => 'num_comments', 'sort' => 'asc');
+      return array('field' => 'l.comment_count', 'sort' => 'asc');
       break;
   }
 }

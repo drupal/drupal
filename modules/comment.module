@@ -226,6 +226,7 @@ function comment_link($type, $node = 0, $main = 0) {
 
 /**
  * Implementation of hook_nodeapi().
+ *
  */
 function comment_nodeapi(&$node, $op, $arg = 0) {
   switch ($op) {
@@ -241,14 +242,20 @@ function comment_nodeapi(&$node, $op, $arg = 0) {
         return form_group(t('User comments'), $output);
       }
       break;
+    case 'load':
+      return db_fetch_array(db_query("SELECT last_comment_timestamp, last_comment_name, last_comment_name, comment_count, cid as last_comment_cid FROM {node_comment_statistics} WHERE nid = %d", $node->nid));
     case 'validate':
       if (!user_access('administer nodes')) {
         // Force default for normal users:
         $node->comment = variable_get("comment_$node->type", 2);
       }
       break;
+    case 'insert':
+      db_query('INSERT INTO {node_comment_statistics} (nid, cid, last_comment_timestamp, last_comment_name, last_comment_uid, comment_count) VALUES (%d,0,%d,NULL,%d,0)', $node->nid, $node->created, $node->uid);
+      break;
     case 'delete':
-      db_query("DELETE FROM {comments} WHERE nid = '$node->nid'");
+      db_query('DELETE FROM {comments} WHERE nid = %d', $node->nid);
+      db_query('DELETE FROM {node_comment_statistics} WHERE nid = %d', $node->nid);
       break;
   }
 }
@@ -558,6 +565,8 @@ function comment_post($edit) {
         // user.
         db_query("UPDATE {comments} SET subject = '%s', comment = '%s' WHERE cid = %d AND uid = '$user->uid'", $edit['subject'], $edit['comment'], $edit["cid"]);
 
+        _comment_update_node_statistics($edit['nid']);
+
         // Allow modules to respond to the updating of a comment.
         module_invoke_all('comment', 'update', $edit);
 
@@ -664,8 +673,16 @@ function comment_post($edit) {
 
 
         $edit["cid"] = db_next_id("{comments}_cid");
+        $edit['timestamp'] = time();
 
-        db_query("INSERT INTO {comments} (cid, nid, pid, uid, subject, comment, hostname, timestamp, status, score, users, thread, name, mail, homepage) VALUES (%d, %d, %d, %d, '%s', '%s', '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s')", $edit["cid"], $edit["nid"], $edit["pid"], $user->uid, $edit['subject'], $edit['comment'], $_SERVER['REMOTE_ADDR'], time(), $status, $score, $users, $thread, $edit["name"], $edit['mail'], $edit["homepage"]);
+        if ($edit['uid'] = $user->uid) {
+          $edit['name'] = $user->name;
+        }
+
+
+        db_query("INSERT INTO {comments} (cid, nid, pid, uid, subject, comment, hostname, timestamp, status, score, users, thread, name, mail, homepage) VALUES (%d, %d, %d, %d, '%s', '%s', '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s')", $edit["cid"], $edit["nid"], $edit["pid"], $edit['uid'], $edit['subject'], $edit['comment'], $_SERVER['REMOTE_ADDR'], $edit['timestamp'], $status, $score, $users, $thread, $edit["name"], $edit['mail'], $edit["homepage"]);
+
+        _comment_update_node_statistics($edit['nid']);
 
         // Tell the other modules a new comment has been submitted.
         module_invoke_all('comment', 'insert', $edit);
@@ -985,9 +1002,12 @@ function comment_delete($cid) {
     // Delete comment and its replies.
     _comment_delete_thread($comment);
 
+    _comment_update_node_statistics($comment->nid);
+
     // Clear the cache so an anonymous user
     // can see his comment being added.
     cache_clear_all();
+
   }
 
   // Print a confirmation.
@@ -1326,7 +1346,7 @@ function comment_num_all($nid) {
   static $cache;
 
   if (!isset($cache[$nid])) {
-    $cache[$nid] = db_result(db_query('SELECT COUNT(cid) FROM {comments} WHERE nid = %d AND status = 0', $nid));
+    $cache[$nid] = db_result(db_query('SELECT comment_count FROM {node_comment_statistics} WHERE nid = %d', $nid));
   }
   return $cache[$nid];
 }
@@ -1631,9 +1651,12 @@ function _comment_delete_thread($comment) {
   db_query('DELETE FROM {comments} WHERE cid = %d', $comment->cid);
   watchdog('special', t('Comment: deleted %subject.', array('%subject' => "<em>$comment->subject</em>")));
 
+  module_invoke_all('comment', 'delete', $comment);
+
   // Delete the comment's replies:
-  $result = db_query('SELECT cid, subject FROM {comments} WHERE pid = %d', $comment->cid);
+  $result = db_query('SELECT c.*, u.name AS registered_name, u.uid FROM {comments} c INNER JOIN {users} u ON u.uid = c.uid WHERE pid = %d', $comment->cid);
   while ($comment = db_fetch_object($result)) {
+    $comment->name = $comment->registered_name ? $comment->registered_name : $comment->name;
     _comment_delete_thread($comment);
   }
 }
@@ -1664,6 +1687,24 @@ function _comment_get_orders() {
  */
 function _comment_per_page() {
   return drupal_map_assoc(array(10, 30, 50, 70, 90));
+}
+
+/**
+ * Updates the comment statistics for a given node.  This should be called any
+ * time a comment is added, deleted, or updated.
+ *
+ * The following fields are contained in the node_comment_statistics table.
+ * - cid: cid of the last comment to be created for the node.
+ * - last_comment_timestamp: the timestamp of the last comment for this node or the node create stamp if no comments exist for the node.
+ * - last_comment_name: the name of the anonymous poster for the last comment
+ * - last_comment_uid: the uid of the poster for the last comment for this node or the node authors uid if no comments exists for the node.
+ * - comment_count: the total number of comments on this node.
+ */
+function _comment_update_node_statistics($nid) {
+  $count = db_result(db_query('SELECT COUNT(c.cid) FROM {comments} c WHERE c.nid = %d AND c.status = 0', $nid));
+  $node = node_load(array('nid' => $nid));
+  $last_reply = db_fetch_object(db_query_range('SELECT c.cid, c.name, c.timestamp, c.uid FROM {comments} c WHERE c.nid = %d AND c.status = 0 ORDER BY c.cid DESC', $nid, 0, 1));
+  db_query("UPDATE {node_comment_statistics} n SET n.comment_count = %d, last_comment_timestamp = '%s', n.last_comment_name = '%s', n.last_comment_uid = %d WHERE n.nid = %d", $count, $last_reply ? $last_reply->timestamp : $node->created, $last_reply->name, $last_reply ? $last_reply->uid : $node->uid, $comment->nid);
 }
 
 ?>

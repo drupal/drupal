@@ -80,7 +80,8 @@ $sql_updates = array(
   "2004-08-11" => "update_101",
   "2004-08-12" => "update_102",
   "2004-08-17" => "update_103",
-  "2004-08-19" => "update_104"
+  "2004-08-19" => "update_104",
+  "2004-09-14" => "update_105"
 );
 
 function update_32() {
@@ -1750,6 +1751,51 @@ function update_104() {
   return $ret;
 }
 
+function update_105() {
+  $ret = array();
+
+  $shadowupdates = db_query("SELECT nid,tid FROM {forum} WHERE shadow=0");
+  while ($shadowrecord = db_fetch_object($shadowupdates)) {
+    db_query("DELETE FROM term_node WHERE nid = %d AND tid <> %d", $shadowrecord->nid, $shadowrecord-tid);
+  }
+
+  $ret[] = update_sql("ALTER TABLE {forum} DROP shadow");
+  $ret[] = update_sql('ALTER TABLE node ADD INDEX node_status_type (status, type, nid)');
+
+  $ret[] = update_sql("CREATE TABLE node_comment_statistics (
+  nid int(10) unsigned NOT NULL auto_increment,
+  cid int(10) unsigned NOT NULL default '0',
+  last_comment_timestamp int(11) NOT NULL default '0',
+  last_comment_name varchar(60) default NULL,
+  last_comment_uid int(10) NOT NULL default '0',
+  comment_count int(10) unsigned NOT NULL default '0',
+  PRIMARY KEY (nid),
+  KEY node_comment_timestamp (last_comment_timestamp)
+) TYPE=MyISAM");
+  $ret[] = update_sql("INSERT INTO {node_comment_statistics} (nid, cid, last_comment_timestamp, last_comment_name, last_comment_uid, comment_count) SELECT n.nid, 0, n.created, NULL, n.uid, 0 FROM {node} n");
+
+  $ret[] = update_sql("CREATE TABLE {forum_conv_temp} (
+    nid int(10) unsigned NOT NULL default '0',
+    cid int(10) unsigned NOT NULL default '0',
+    comment_count int(10) unsigned NOT NULL default '0',
+    PRIMARY KEY (nid)
+    )");
+
+  $ret[] = update_sql('INSERT INTO {forum_conv_temp} SELECT f.nid, MAX(c.cid), COUNT(c.nid) FROM {forum} f INNER JOIN {comments} c ON f.nid = c.nid WHERE c.status = 0 GROUP BY f.nid');
+
+  /* This would be faster but only works with MySQL 4.0.4 or higher
+  $ret[] = update_sql('UPDATE {node_comment_statistics} n, {forum_conv_temp} t, {comments} c SET n.comment_count = t.comment_count, n.last_comment_timestamp = c.timestamp, n.last_comment_name = c.name, n.last_comment_uid = c.uid, n.cid = t.cid WHERE t.cid = c.cid AND n.nid = t.nid');
+  */
+
+  $commentupdates = db_query("SELECT t.nid, t.cid, t.comment_count, c.timestamp, c.name, c.uid FROM {forum_conv_temp} t INNER JOIN {comments} c ON t.cid = c.cid");
+  while ($commentrecord = db_fetch_object($commentupdates)) {
+    db_query("UPDATE {node_comment_statistics} SET comment_count = %d, last_comment_timestamp = %d, last_comment_name = '%s', last_comment_uid = %d, cid = %d WHERE nid = %d", $commentrecord->comment_count, $commentrecord->timestamp, $commentrecord->name, $commentrecord->uid, $commentrecord->cid, $commentrecord->nid);
+  }
+
+  $ret[] = update_sql("DROP TABLE {forum_conv_temp}");
+
+  return $ret;
+}
 
 function update_sql($sql) {
   $edit = $_POST["edit"];
