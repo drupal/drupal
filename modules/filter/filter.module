@@ -65,7 +65,7 @@ function filter_admin_order() {
   filter_refresh();
   $filters = filter_list();
 
-  $header = array("name", "weight");
+  $header = array(t('name'), t('weight'));
   $rows = array();
 
   // Standard HTML filters are always run first, we add a dummy row to indicate this
