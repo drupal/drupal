@@ -100,15 +100,15 @@ function headline_admin_main() {
     $output .= " <TD><A HREF=\"$backend->url\">$backend->site</A></TD>\n";
     $output .= " <TD><A HREF=\"mailto:$backend->contact\">$backend->contact</A></TD>\n";
     $output .= " <TD ALIGN=\"center\">". format_interval(time() - $backend->timestamp) ." ago</TD>\n";
-    $output .= " <TD ALIGN=\"center\"><A HREF=\"admin.php?mod=backend&op=refresh&id=$backend->id\">refresh</A></TD>\n";
-    $output .= " <TD ALIGN=\"center\"><A HREF=\"admin.php?mod=backend&op=delete&id=$backend->id\">delete</A></TD>\n";
+    $output .= " <TD ALIGN=\"center\"><A HREF=\"admin.php?mod=headline&op=refresh&id=$backend->id\">refresh</A></TD>\n";
+    $output .= " <TD ALIGN=\"center\"><A HREF=\"admin.php?mod=headline&op=delete&id=$backend->id\">delete</A></TD>\n";
     $output .= "</TR>\n";
   }  
 
   $output .= "</TABLE>\n";
   $output .= "<BR><BR>\n";
   $output .= "<HR>\n";
-  $output .= " <FORM ACTION=\"admin.php?mod=backend\" METHOD=\"post\">\n";
+  $output .= " <FORM ACTION=\"admin.php?mod=headline\" METHOD=\"post\">\n";
   $output .= "  <P>\n";
   $output .= "   <B>Site name:</B><BR>\n";
   $output .= "   <INPUT TYPE=\"text\" NAME=\"site\" SIZE=\"50\">\n";
