@@ -69,7 +69,7 @@ function book_search($keys) {
   global $status, $user;
   $result = db_query("SELECT n.*, u.userid FROM node n LEFT JOIN book b ON n.nid = b.nid AND n.lid = b.lid LEFT JOIN users u ON n.author = u.id WHERE n.type = 'book' AND n.status = '$status[posted]' AND (n.title LIKE '%". check_input($keys) ."%' OR b.body LIKE '%". check_input($keys) ."%') ORDER BY n.timestamp DESC LIMIT 20");
   while ($node = db_fetch_object($result)) {
-    $find[$i++] = array("title" => check_output($node->title), "link" => (user_access($user, "book") ? "admin.php?mod=book&op=edit&id=$node->nid" : "node.php?id=$node->nid"), "user" => $node->userid, "date" => $node->timestamp);
+    $find[$i++] = array("title" => check_output($node->title), "link" => (user_access($user, "book") ? "admin.php?mod=node&type=book&op=edit&id=$node->nid" : "node.php?id=$node->nid"), "user" => $node->userid, "date" => $node->timestamp);
   }
   return $find;
 }
@@ -180,7 +180,7 @@ function book_tree($parent = "", $depth = 0) {
 
     // render output:
     while ($node = db_fetch_object($result)) {
-      $output .= "<LI><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A>". ($PHP_SELF == "/admin.php" ? " <SMALL>(weight: $node->weight/$node->parent, status: $node->status) (<A HREF=\"admin.php?mod=book&op=edit&id=$node->nid\">edit</A>)</SMALL>" : "") ."</LI>\n";
+      $output .= "<LI><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A>". ($PHP_SELF == "/admin.php" ? " <SMALL>(weight: $node->weight/$node->parent, status: $node->status) (<A HREF=\"admin.php?mod=node&type=book&op=edit&id=$node->nid\">edit</A>)</SMALL>" : "") ."</LI>\n";
       $output .= book_tree($node->nid, $depth + 1);
     }
     $output = "<UL>$output</UL>";
@@ -188,50 +188,8 @@ function book_tree($parent = "", $depth = 0) {
   return $output;
 }
 
-function book_list($query = array()) {
-  return node_overview($query);
-}
-
-function book_query($type = "") {
-  global $status;
-  $queries =  array(array("recent book pages", "WHERE n.type = 'book' ORDER BY n.timestamp DESC"), array("posted book pages", "WHERE n.type = 'book' AND n.status = '$status[posted]' ORDER BY n.timestamp DESC"), array("queued book pages", "WHERE n.type = 'book' AND n.status = '$status[queued]' ORDER BY n.timestamp DESC"), array("dumped book pages", "WHERE n.type = 'book' AND n.status = '$status[dumped]' ORDER BY n.timestamp DESC"));
-  return ($queries[$type] ? $queries[$type] : $queries);
-}
-
 function book_admin() {
-  global $op, $id, $edit, $mod, $keys, $type, $user;
-
-  print "<SMALL><A HREF=\"admin.php?mod=book&op=add\">add new page</A> | <A HREF=\"admin.php?mod=book&op=listing\">book listing</A> | <A HREF=\"admin.php?mod=book&op=search\">search book</A> | <A HREF=\"admin.php?mod=book\">list overview</A> | <A HREF=\"admin.php?mod=book&op=tree\">tree overview</A></SMALL><HR>\n";
-
-  $type = $type ? $type : 0;
-
-  switch ($op) {
-    case "add":
-      print book_form();
-      break;
-    case "edit":
-      print book_form(node_get_array(array(nid => $id)));
-      break;
-    case "listing":
-      print node_listing(book_query());
-      break;
-    case "search":
-      print search_form($keys);
-      print search_data($keys, $mod);
-      break;
-    case "tree":
-      print book_tree();
-      break;
-    case t("Preview"):
-      book_view(new Book(node_preview($edit)));
-      print book_form($edit);
-      break;
-    case t("Submit"):
-      book_save($edit);
-      // fall through:
-    default:
-      print book_list(book_query($type));
-  }
+  print book_tree();
 }
 
 function book_page() {
