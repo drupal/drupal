@@ -1,5 +1,5 @@
 <?php
-/* $Id: path.module,v 1.26 2004/02/01 10:52:25 dries Exp $ */
+/* $Id: path.module,v 1.27 2004/02/14 10:19:45 dries Exp $ */
 
 function path_admin() {
   $op = $_POST["op"];
@@ -25,13 +25,13 @@ function path_admin() {
         break;
 
       case "delete":
-        drupal_set_message(path_delete(arg(3)));
+        path_delete(arg(3));
         $output .= path_overview();
         break;
 
       case t("Create new alias"):
       case t("Update alias"):
-        drupal_set_message(path_save($edit));
+        $output = path_save($edit);
         break;
 
       default:
@@ -81,12 +81,6 @@ function path_set_alias($path = NULL, $alias = NULL) {
 }
 
 function path_form($edit = "", $error = "") {
-
-  if ($error) {
-    foreach ($error as $message) {
-      $form .= theme("error", $message);
-    }
-  }
 
   $form .= form_textfield(t("Existing path"), "src", $edit["src"], 50, 64, t("Specify the existing path you wish to alias. For example: node/view/28, forum/1, taxonomy/page/or/1,2."));
   $form .= form_textfield(t("New path alias"), "dst", $edit["dst"], 50, 64, t("Specify an alternative path by which this data can be accessed.  For example, type 'about' when writing an about page.  Use a relative path and don't add a trailing slash or the URL alias won't work."));
@@ -247,7 +241,7 @@ function path_load($pid) {
 
 function path_delete($pid) {
   db_query("DELETE FROM {url_alias} WHERE pid = '%d'", $pid);
-  return t("the alias has been deleted.");
+  drupal_set_message(t("the alias has been deleted."));
 }
 
 function path_save($edit) {
@@ -256,22 +250,23 @@ function path_save($edit) {
   $pid = $edit["pid"];
 
   if (!valid_url($src)) {
-    $error[] = t("the normal path '%src' is invalid.", array("%src" => $src));
+    $error = t("the normal path '%src' is invalid.", array("%src" => $src));
   }
 
   if (db_result(db_query("SELECT COUNT(src) FROM {url_alias} WHERE pid != '%d' AND src = '%s'", $pid, $src))) {
-    $error[] = t("the normal path '%src' is already aliased.", array("%src" => $src));
+    $error = t("the normal path '%src' is already aliased.", array("%src" => $src));
   }
 
   if (!valid_url($dst)) {
-    $error[] = t("the alias '%dst' is invalid.", array("%dst" => $dst));
+    $error = t("the alias '%dst' is invalid.", array("%dst" => $dst));
   }
 
   if (db_result(db_query("SELECT COUNT(dst) FROM {url_alias} WHERE pid != '%d' AND dst = '%s'", $pid, $dst))) {
-    $error[] = t("the alias '%dst' is already in use.", array("%dst" => $dst));
+    $error = t("the alias '%dst' is already in use.", array("%dst" => $dst));
   }
 
   if ($error) {
+    drupal_set_message($error, 'error');
     return path_form($edit, $error);
   }
   else {
@@ -289,7 +284,8 @@ function path_save($edit) {
     }
   }
 
-  return t("the alias has been saved.") . path_overview();
+  drupal_set_message(t('the alias has been saved.'));
+  return  path_overview();
 }
 
 ?>
