@@ -192,10 +192,10 @@ function block_admin_display() {
 
   foreach ($blocks as $block) {
     if ($block['module'] == 'block') {
-      $operation = l(t('delete'), 'admin/block/delete/'. $block['delta']);
+      $delete = l(t('delete'), 'admin/block/delete/'. $block['delta']);
     }
     else {
-      $operation = '';
+      $delete = '';
     }
 
     $row = array($block['info'], array('data' => form_checkbox(NULL, $block['module'] .']['. $block['delta'] .'][status', 1, $block['status']), 'align' => 'center'), form_weight(NULL, $block['module'] .']['. $block['delta'] .'][weight', $block['weight']), form_radios(NULL, $block['module'] .']['. $block['delta'] .'][region', $block['region'], array(t('left'), t('right'))));
@@ -204,7 +204,8 @@ function block_admin_display() {
     if (module_exist('throttle')) {
       $row[] = array('data' => form_checkbox(NULL, $block['module'] .']['. $block['delta'] .'][throttle', 1, $block['throttle']), 'align' => 'center');
     }
-    $row[] = array('data' => l(t('configure'), 'admin/block/configure/'. $block['module'] .'/'. $block['delta']), $operation);
+    $row[] = l(t('configure'), 'admin/block/configure/'. $block['module'] .'/'. $block['delta']);
+    $row[] = $delete;
     $rows[] = $row;
   }
 
