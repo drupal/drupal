@@ -48,22 +48,17 @@
 
 <?php
 
-                $this->box("Drop where?", "
-                                           <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\">
-                                             <tr>
-                                               <td align=\"left\" valign=\"top\">
-                                                 <a href=\"index.php\">home</A><br />
-                                                 <a href=\"module.php?mod=book\">help</A><br />
-                                                 <a href=\"search.php\">search</A>
-                                               </td>
-                                               <td align=\"right\" valign=\"top\">
-                                                 <a href=\"module.php?mod=diary\">diary</A><br />
-                                                 <a href=\"submit.php\">submit</A><br />
-                                                 <a href=\"account.php\">account</A>
-                                               </td>
-                                             </tr>
-                                           </table>
-                                           ");
+		$mybox = 1;
+                $this->box("Drop where?", "<td align=\"left\" valign=\"top\">
+                                             <a href=\"index.php\">home</a><br />
+                                             <a href=\"module.php?mod=book\">handbook</a><br />
+                                             <a href=\"search.php\">search</a>
+                                           </td>
+                                           <td align=\"right\" valign=\"top\">
+                                             <a href=\"module.php?mod=diary\">diary</a><br />
+                                             <a href=\"submit.php\">submit</a><br />
+                                             <a href=\"account.php\">account</a>
+                                           </td>");
 
 ?>
 
@@ -123,7 +118,7 @@
                                   </FONT>
                                 </td>
                                 <td align=\"right\" background=\"themes/jeroen/images/menutitle.gif\" nowrap>
-                                  <B><a href=\"search.php?category=". urlencode($story->section) ."\"><FONT COLOR=\"#000000\">". check_output($story->section) ."</FONT></A></B>";
+                                  <B><a href=\"search.php?category=". urlencode($story->section) ."\"><FONT COLOR=\"#000000\">". check_output($story->section) ."</FONT></a></B>";
 
 ?>
 
@@ -170,7 +165,7 @@
     } // close story function
 
     function comment($comment, $link = "") {
-      echo "<A NAME=\"$comment->cid\"></A>\n";
+      echo "<A NAME=\"$comment->cid\"></a>\n";
 
       // Create comment header:
       echo "    <table border=\"0\" cellpadding=\"4\" cellspacing=\"0\" width=\"100%\">";
@@ -263,11 +258,23 @@
                   <tr>
                     <td background="themes/jeroen/images/boxleft.gif" nowrap>&nbsp;</td>
                     <td colspan="3" align="center" BGCOLOR="#E7E7E7" background="themes/jeroen/images/sketch.gif">
-                      <table>
+                      <table width="100%" border="0">
                         <tr>
-                          <td>
-                            <?php echo $content; ?>
-                          </td>
+
+<?php
+
+			if ($mybox == 1) {
+			  echo $content;
+                          $mybox = 0;
+                        }
+                        else {
+                          echo "<td>";
+                            echo $content;
+                          echo "</td>";
+                       }
+
+?>
+
                         </tr>
                       </table>
                     </td>
