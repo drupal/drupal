@@ -53,7 +53,6 @@ function system_view_options() {
   $output .= form_textfield("Anonymous user", "anonymous", variable_get("anonymous", "Anonymous"), 55, 55, "The name used to indicate anonymous users.");
   foreach (module_list() as $name) { if (module_hook($name, "page")) $pages[$name] = $name; }
   $output .= form_select("Default front page", "site_frontpage", variable_get("site_frontpage", "node"), $pages, "The home page displays content from this module (usually <b>node</b>).");
-  $output .= form_textarea("Extra front page PHP", "site_frontpage_extra", variable_get("site_frontpage_extra", ""), 55, 5, "Insert arbitrary PHP into the home page. This PHP executes via <b>eval()</b> after the page header but before the main page content.");
   $output .= "<hr />\n";
 
   // caching:
@@ -73,13 +72,6 @@ function system_view_options() {
   // date settings:
   $output .= "<h3>Date format setting</h3>\n";
   $output .= form_select("Date format", "date_format", variable_get("date_format", "m/d/Y - H:i"), array("m/d/Y - H:i" => "m/d/Y - H:i", "d/m/Y - H:i" => "d/m/Y - H:i", "Y/m/d - H:i" => "Y/m/d - H:i"), "The format in which dates are displayed");
-  $output .= "<hr />\n";
-
-  // comment settings:
-  $output .= "<h3>Comment settings</h3>\n";
-  $output .= form_select("Default display mode", "default_comment_mode", $conf["default_comment_mode"], $cmodes, "The default mode in which comments are displayed.");
-  $output .= form_select("Default display order", "default_comment_order", $conf["default_comment_order"], $corder, "The default order in which comments are displayed.");
-  for ($count = -1; $count < 6; $count++) $threshold[$count] = "Filter - $count";
   $output .= "<hr />\n";
 
   // layout settings:
@@ -182,9 +174,9 @@ function system_modules() {
     $output .= "<td>$name</td>";
     $output .= "<td>". check_output(module_invoke($name, "system", "description")) ."</td>";
     $output .= "<td align=\"center\">". (in_array($name, $required) ? "required" : form_checkbox("", "status][$name", 1, $module["status"])) ."</td>";
-    $output .= "<td>". (module_hook($name, "page") ? lm(t("view"), array("mod" => $name)) : "&nbsp;") ."</td>";
-    $output .= "<td>". (module_hook($name, "admin") ? la(t("admin"), array("mod" => $name)) : "&nbsp;") ."</td>";
-    // $output .= "<td>". (module_hook($name, "help") ? la(t("help"), array("mod" => $name, "op" => "help")) : "&nbsp;") ."</td>";
+    $output .= "<td>". (module_hook($name, "page") ? $module["status"] || in_array($name, $required) ? lm(t("view"), array("mod" => $name)) : t("view") : "&nbsp;") ."</td>";
+    $output .= "<td>". (module_hook($name, "admin") ? $module["status"] || in_array($name, $required) ? la(t("admin"), array("mod" => $name)) : t("admin")  : "&nbsp;") ."</td>";
+//  $output .= "<td>". (module_hook($name, "help") ? $module["status"]   || in_array($name, $required) ? la(t("help"), array("mod" => $name, "op" => "help")) : t("help")  : "&nbsp;") ."</td>";
     $output .= "</tr>\n";
     if (!in_array($name, $required)) {
       db_query("INSERT INTO system SET name = '$name', type = 'module', filename = '$module[filename]', status = '$module[status]'");
