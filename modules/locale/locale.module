@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.72 2003/09/23 19:28:03 kjartan Exp $
+// $Id: locale.module,v 1.73 2003/09/26 10:04:09 dries Exp $
 
 function locale_help($section = "admin/locale/help") {
   $output = "";
@@ -69,18 +69,20 @@ function locale_perm() {
 function locale_link($type) {
   global $languages;
 
-  if ($type == "admin" && user_access("administer locales")) {
+  if ($type == "system") {
+    if (user_access("administer locales")) {
 
-    menu("admin/locale", "localization", NULL, locale_help("admin/locale"), 5);
-    menu("admin/locale/search", "search string", "locale_admin", locale_help("admin/locale/search"), 8);
-    menu("admin/locale/help", "help", "locale_help", NULL, 9);
-    menu("admin/locale/edit", "edit string", "locale_admin", NULL, 0, 1); // hidden menu
-    menu("admin/locale/delete", "delete string", "locale_admin", NULL, 0, 1); // hidden menu
+      menu("admin/locale", "localization", NULL, locale_help("admin/locale"), 5);
+      menu("admin/locale/search", "search string", "locale_admin", locale_help("admin/locale/search"), 8);
+      menu("admin/locale/help", "help", "locale_help", NULL, 9);
+      menu("admin/locale/edit", "edit string", "locale_admin", NULL, 0, 1); // hidden menu
+      menu("admin/locale/delete", "delete string", "locale_admin", NULL, 0, 1); // hidden menu
 
-    foreach ($languages as $key => $value) {
-      menu("admin/locale/$key", "$value", NULL, locale_help("admin/locale"));
-      menu("admin/locale/$key/translated", "translated strings", "locale_admin", locale_help("admin/locale/translated"));
-      menu("admin/locale/$key/untranslated", "untranslated strings", "locale_admin", locale_help("admin/locale/untranslated"));
+      foreach ($languages as $key => $value) {
+        menu("admin/locale/$key", "$value", NULL, locale_help("admin/locale"));
+        menu("admin/locale/$key/translated", "translated strings", "locale_admin", locale_help("admin/locale/translated"));
+        menu("admin/locale/$key/untranslated", "untranslated strings", "locale_admin", locale_help("admin/locale/untranslated"));
+      }
     }
   }
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: queue.module,v 1.86 2003/09/23 19:28:03 kjartan Exp $
+// $Id: queue.module,v 1.87 2003/09/26 10:04:09 dries Exp $
 
 function queue_system($field){
   $output = "";
@@ -42,8 +42,10 @@ function queue_perm() {
 }
 
 function queue_link($type) {
-  if ($type == "menu.view" && user_access("access submission queue")) {
-    $links[] = l(t("view submissions"), "queue", array("title" => t("Moderate the content in the submission queue."))) ." (<span class=\"queue-user-numeral\">". queue_count() ."</span>)";
+  if ($type == "system") {
+    if (user_access("access submission queue")) {
+      menu("queue", t("view submissions"), NULL, NULL, 1);
+    }
   }
 
   return $links ? $links : array();

@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.136 2003/09/20 16:08:57 dries Exp $
+// $Id: blog.module,v 1.137 2003/09/26 10:04:09 dries Exp $
 
 function blog_system($field){
   $output = "";
@@ -259,16 +259,17 @@ function blog_link($type, $node = 0, $main) {
 
   $links = array();
 
+  if ($type == "system") {
+    if (user_access("maintain personal blog")) {
+      menu("node/add/blog", t("create blog entry"), NULL, NULL, 0);
+    }
+    if (user_access("maintain personal blog")) {
+      menu("blog/" . $user->uid,t("view personal blog"), NULL, NULL, 1);
+    }
+  }
+
   if ($type == "page" && user_access("access content")) {
     $links[] = l(t("blogs"), "blog", array("title" => t("Read the latest blog entries.")));
-  }
-
-  if ($type == "menu.create" && user_access("maintain personal blog")) {
-    $links[] = l(t("create blog entry"), "node/add/blog", array("title" => t("Add a new personal blog entry.")));
-  }
-
-  if ($type == "menu.view" && user_access("maintain personal blog")) {
-    $links[] = l(t("view personal blog"), "blog/$user->uid", array("title" => t("Read your latest blog entries.")));
   }
 
   if ($type == "node" && $node->type == "blog") {

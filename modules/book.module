@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.178 2003/09/20 15:11:41 dries Exp $
+// $Id: book.module,v 1.179 2003/09/26 10:04:09 dries Exp $
 
 function book_system($field){
   $output = "";
@@ -68,10 +68,6 @@ function book_link($type, $node = 0, $main = 0) {
     $links[] = l(t("books"), "book", array("title" => t("Read and contribute to the collaborative books.")));
   }
 
-  if ($type == "menu.create" && user_access("maintain books")) {
-    $links[] = l(t("create book page"), "node/add/book", array("title" => t("Add a new book page.")));
-  }
-
   if ($type == "node" && $node->type == "book") {
     if (book_access("update", $node)) {
       $links[] = l(t("edit this page"), "node/edit/$node->nid", array("title" => t("Suggest an update for this book page.")));
@@ -81,15 +77,20 @@ function book_link($type, $node = 0, $main = 0) {
     }
   }
 
-  if ($type == "admin" && user_access("maintain books")) {
-    menu("admin/node/book", "books", "book_admin", book_help("admin/node/book"), 4);
-    menu("admin/node/book/orphan", "orphan pages", "book_admin", book_help("admin/node/book/orphan"), 8);
-    menu("admin/node/book/help", "help", "book_help", NULL, 9);
+  if ($type == "system") {
+    if (user_access("maintain books")) {
+      menu("node/add/book",t("create book page"),NULL, NULL,0);
 
-    $result = db_query("SELECT n.nid, n.title FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE b.parent = 0 ORDER BY b.weight, n.title");
-    while ($book = db_fetch_object($result)) {
-      menu("admin/node/book/$book->nid", "'$book->title' book", "book_admin");
+      menu("admin/node/book", "books", NULL, NULL, 4);
+      menu("admin/node/book/orphan", "orphan pages", NULL, NULL, 8);
+      menu("admin/node/book/help", "help", NULL, NULL, 9);
+
+      $result = db_query("SELECT n.nid, n.title FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE b.parent = 0 ORDER BY b.weight, n.title");
+      while ($book = db_fetch_object($result)) {
+        menu("admin/node/book/$book->nid", "'$book->title' book", "book_admin");
+      }
     }
+
   }
 
   return $links;

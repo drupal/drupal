@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.117 2003/09/19 07:41:54 dries Exp $
+// $Id: aggregator.module,v 1.118 2003/09/26 10:04:09 dries Exp $
 
 
 function import_help($section = "admin/import/help") {
@@ -105,14 +105,16 @@ function import_link($type) {
     $links[] = l(t("news feeds"), "import", array("title" => t("Read the latest news from syndicated web sites.")));
   }
 
-  if ($type == "admin" && user_access("administer news feeds")) {
+  if ($type == "system") {
+    if (user_access("administer news feeds")) {
 
-    menu("admin/syndication", "content syndication", NULL, NULL, 5);
-    menu("admin/syndication/news", "news aggregation", "import_admin", import_help("admin/syndication/news") );
-    menu("admin/syndication/news/add/feed", "add new feed", "import_admin", import_help("admin/syndication/news/add/feed"), 2);
-    menu("admin/syndication/news/add/bundle", "add new bundle", "import_admin", import_help("admin/syndication/news/add/bundle"), 3);
-    menu("admin/syndication/news/tag", "tag news items", "import_admin", import_help("admin/syndication/news/tag"), 4);
-    menu("admin/syndication/news/help", "help", "import_help", NULL, 9);
+      menu("admin/syndication", "content syndication", NULL, NULL, 5);
+      menu("admin/syndication/news", "news aggregation", "import_admin", import_help("admin/syndication/news") );
+      menu("admin/syndication/news/add/feed", "add new feed", "import_admin", import_help("admin/syndication/news/add/feed"), 2);
+      menu("admin/syndication/news/add/bundle", "add new bundle", "import_admin", import_help("admin/syndication/news/add/bundle"), 3);
+      menu("admin/syndication/news/tag", "tag news items", "import_admin", import_help("admin/syndication/news/tag"), 4);
+      menu("admin/syndication/news/help", "help", "import_help", NULL, 9);
+    }
   }
 
   return $links;

@@ -1,5 +1,5 @@
 <?php
-// $Id: story.module,v 1.125 2003/09/20 16:03:05 dries Exp $
+// $Id: story.module,v 1.126 2003/09/26 10:04:09 dries Exp $
 
 function story_help($section = "admin/story/help") {
   switch ($section) {
@@ -54,8 +54,10 @@ function story_access($op, $node) {
 function story_link($type) {
   $links = array();
 
-  if ($type == "menu.create" && user_access("create stories")) {
-    $links[] = l(t("create story"), "node/add/story", array("title" => t("Add a new story.")));
+  if ($type == "system") {
+    if (user_access("create stories")) {
+      menu("node/add/story", t("create story"), NULL, NULL, 0);
+    }
   }
 
   return $links;

@@ -1,5 +1,5 @@
 <?php
-// $Id: cloud.module,v 1.55 2003/09/19 07:41:54 dries Exp $
+// $Id: cloud.module,v 1.56 2003/09/26 10:04:09 dries Exp $
 
 function cloud_help($section = "admin/syndication/cloud/help") {
   $output = "";
@@ -58,11 +58,13 @@ function cloud_link($type) {
     $links[] = l(t("site cloud"), "cloud", array("title" => t("Monitor other sites in the cloud.")));
   }
 
-  if ($type == "admin" && user_access("administer site cloud")) {
-    menu("admin/syndication", "content syndication", NULL, NULL, 5);
-    menu("admin/syndication/cloud", "site cloud", "cloud_admin", cloud_help("admin/syndication/cloud"));
-    menu("admin/syndication/cloud/add", "add new site", "cloud_admin", cloud_help("admin/syndication/cloud/add"));
-    menu("admin/syndication/cloud/help", "help", "cloud_help", NULL, 9);
+  if ($type == "system") {
+    if (user_access("administer site cloud")) {
+      menu("admin/syndication", "content syndication", NULL, NULL, 5);
+      menu("admin/syndication/cloud", "site cloud", "cloud_admin", cloud_help("admin/syndication/cloud"));
+      menu("admin/syndication/cloud/add", "add new site", "cloud_admin", cloud_help("admin/syndication/cloud/add"));
+      menu("admin/syndication/cloud/help", "help", "cloud_help", NULL, 9);
+    }
   }
 
   return $links;

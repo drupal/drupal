@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.89 2003/09/19 07:41:55 dries Exp $
+// $Id: system.module,v 1.90 2003/09/26 10:04:09 dries Exp $
 
 function system_help($section = "admin/system/help") {
   switch ($section) {
@@ -52,33 +52,35 @@ function system_perm() {
 }
 
 function system_link($type) {
-  if ($type == "admin" && user_access("administer site configuration")) {
-    $help["general"] = t("General configuration options for your site. Set up the name of the site, e-mail address used in mail-outs, clean URL options, caching, etc.");
-    $help["themes"] = t("Select which themes are available to your users and specify the default theme.");
-    $help["modules"] = t("Modules are plugins for Drupal that extend its core functionality.  Here you can select which modules are enabled. On the left hand side click on the name of the module for their individual configurations.  Once a module is enabled, you will need to grant permissions to users in user management.");
-    $help["filters"] = t("Filters fit between the raw text in a node and the HTML output. They allow you to replace text selectively. Uses include automatic conversion of emoticons into graphics and filtering HTML content from users' submissions.");
+  if ($type == "system") {
+    if (user_access("administer site configuration")) {
+      $help["general"] = t("General configuration options for your site. Set up the name of the site, e-mail address used in mail-outs, clean URL options, caching, etc.");
+      $help["themes"] = t("Select which themes are available to your users and specify the default theme.");
+      $help["modules"] = t("Modules are plugins for Drupal that extend its core functionality.  Here you can select which modules are enabled. On the left hand side click on the name of the module for their individual configurations.  Once a module is enabled, you will need to grant permissions to users in user management.");
+      $help["filters"] = t("Filters fit between the raw text in a node and the HTML output. They allow you to replace text selectively. Uses include automatic conversion of emoticons into graphics and filtering HTML content from users' submissions.");
 
-    menu("admin/system", "site configuration", "system_admin", system_help("admin/system"), 3);
-    menu("admin/system/themes", "themes", "system_admin", system_help("admin/system/themes"), 2);
+      menu("admin/system", "site configuration", "system_admin", system_help("admin/system"), 3);
+      menu("admin/system/themes", "themes", "system_admin", system_help("admin/system/themes"), 2);
 
-    foreach (theme_list(1) as $theme) {
-      // NOTE: refresh the list because some themes might have been enabled/disabled.
-      include_once "$theme->filename";
-      $function = $theme->name ."_settings";
-      if (function_exists($function)) {
-        menu("admin/system/themes/$theme->name", $theme->name, "system_admin");
+      foreach (theme_list(1) as $theme) {
+        // NOTE: refresh the list because some themes might have been enabled/disabled.
+        include_once "$theme->filename";
+        $function = $theme->name ."_settings";
+        if (function_exists($function)) {
+          menu("admin/system/themes/$theme->name", $theme->name, "system_admin");
+        }
       }
-    }
 
-    menu("admin/system/modules", "modules", "system_admin", system_help("admin/system/modules"), 3);
-    foreach (module_list(1) as $name) {
-      // NOTE: refresh the list because some modules might have been enabled/disabled.
-      if (module_hook($name, "settings")) {
-        menu("admin/system/modules/$name", $name, "system_admin", module_invoke($name, "system", "admin_help"));
+      menu("admin/system/modules", "modules", "system_admin", system_help("admin/system/modules"), 3);
+      foreach (module_list(1) as $name) {
+        // NOTE: refresh the list because some modules might have been enabled/disabled.
+        if (module_hook($name, "settings")) {
+          menu("admin/system/modules/$name", $name, "system_admin", module_invoke($name, "system", "admin_help"));
+        }
       }
+      menu("admin/system/filters", "filters", "system_admin", system_help("admin/system/filters"), 4);
+      menu("admin/system/help", "help", "system_help", NULL, 9);
     }
-    menu("admin/system/filters", "filters", "system_admin", system_help("admin/system/filters"), 4);
-    menu("admin/system/help", "help", "system_help", NULL, 9);
   }
 }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: help.module,v 1.19 2003/09/19 07:41:54 dries Exp $
+// $Id: help.module,v 1.20 2003/09/26 10:04:09 dries Exp $
 
 function help_system($field){
   $system["description"] = t("Manages displaying online help.");
@@ -7,7 +7,7 @@ function help_system($field){
 }
 
 function help_link($type) {
-  if ($type == "admin") {
+  if ($type == "system") {
     menu("admin/help/glossary", "glossary", "help_glossary", NULL, 8);
     menu("admin/help", "help", "help_admin", NULL, 9);
   }
@@ -48,7 +48,6 @@ function help_admin() {
       }
     }
   }
-
   $output = "<small>". implode(" &middot; ", $links) ."</small><hr />". $output;
   return $output;
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: admin.module,v 1.24 2003/08/05 18:33:38 dries Exp $
+// $Id: admin.module,v 1.25 2003/09/26 10:04:09 dries Exp $
 
 include_once "includes/common.inc";
 
@@ -13,112 +13,73 @@ function admin_help($section) {
   $output = "";
 
   switch ($section) {
-    case 'admin/system/modules':
+    case "admin/system/modules":
       $output .= "Handles the administration pages.";
       break;
-    case 'admin':
+    case "admin":
       $output .= "Welcome to the administration section. Below are the most recent system events.  To get started please choose an item in the left column. If there is an arrow it will expand into a submenu. To jump up a level use the link,bread crumbs, above this block of text. To return to the home page click on the site name, and to go to Drupal's home page click on Druplicon, the drop on to the right.";
       break;
-    case 'admin':
+    case "admin":
       $output = "This is a complete overview of the site administration page.";
       break;
   }
-
   return t($output);
 }
+
 function admin_system($field){
   $output = "";
-
-  if ($field == "description") { $output = admin_help("admin/system/modules"); }
+  if ($field == "description") {
+    $output = admin_help("admin/system/modules");
+  }
 
   return $output;
 }
 
 function admin_link($type) {
-  if ($type == "admin") {
-    menu("admin", "Administration", NULL, admin_help("admin"));
+  if ($type == "system") {
+    menu("admin", t("administer %a", array("%a" => variable_get("site_name", "drupal"))) , NULL, NULL, 9);
     menu("admin/overview", "sitemap", "overview_callback", admin_help("admin/overview"), 8);
   }
 }
 
 function overview_callback() {
-  return menu_map("admin");
+  return menu_map();
 }
 
 function admin_admin() {
-  print menu_map();
+  return menu_map();
 }
 
+
 function admin_page() {
-  global $base_url;
-
   if (user_access("access administration pages")) {
-   ?>
-    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
-    <html>
-     <head>
-      <title><?php echo t("%sitename administration pages", array("%sitename" => variable_get("site_name", "drupal"))); ?></title>
-      <?php print theme_head(); ?>
-      <link rel="shortcut icon" type="image/ico" href="favicon.ico" />
-      <link rel="stylesheet" type="text/css" media="print" href="misc/print.css" />
-      <style type="text/css" title="layout" media="Screen">
-        @import url("misc/admin.css");
-      </style>
-     </head>
-     <body<?php print theme_onload_attribute(); ?>>
-      <?php
-        // NOTE: we include a dummy "print.css" to remove the "flash of unstyled content" (FUOC) problems in IE.
+    if (!isset($GLOBALS["_gmenu"])) {
+      menu_build("system");
+    }
+    if ($help = menu_help()) {
+      $contents = "<small>$help</small><hr />";
+    }
+    if (arg(1)) {
+      $contents .= menu_execute_action();
+    }
+    else {
+      $contents.= watchdog_overview("actions");
+      $title = t("System messages");
+    }
 
-        menu_build("admin");
+    $breadcrumb = menu_path();
+    array_pop($breadcrumb);
+    $title = menu_title();
 
-        /*
-        ** Body:
-        */
-
-        print "<div id=\"logo\"><a href=\"http://drupal.org/\"><img src=\"misc/druplicon-small.gif\" alt=\"Druplicon - Drupal logo\" title=\"Druplicon - Drupal logo\" /></a></div>";
-        print "<div id=\"main\">";
-
-        if ($path = menu_path()) {
-          print "<h2>$path</h2>";
-        }
-
-        if ($help = menu_help()) {
-          print "<small>$help</small>";
-        }
-
-        print "<hr />";
-
-        if (arg(1)) {
-          //print module_invoke(arg(1), "admin");
-          print menu_execute_action();
-        }
-        else {
-          print "<h2>". t("System messages") ."</h2>";
-          print watchdog_overview("actions");
-        }
-
-        print "</div>";
-
-        /*
-        ** Menu:
-        **   We rebuild the admin menu once more because one might have
-        **   enabled/disabled themes or modules, changed permissions, etc.
-        */
-
-        menu_build("admin");
-
-        print "<div id=\"menu\">";
-        echo "<h1><a href=\"$base_url/\">". variable_get("site_name", "drupal") ."</a></h1>";
-        print menu_tree("admin") ;
-        print "</div>";
-        print theme_footer();
-      ?>
-    </body>
-   </html>
-   <?php
+    theme("header");
+    theme("breadcrumb", $breadcrumb);
+    theme("box", $title, $contents);
+    theme("footer");
   }
   else {
-    print message_access();
+    theme("header");
+    theme("box", t("Access denied"), message_access());
+    theme("footer");
   }
 }
 

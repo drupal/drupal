@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.18 2003/06/08 08:20:39 dries Exp $
+// $Id: menu.inc,v 1.19 2003/09/26 10:04:07 dries Exp $
 
 function menu($path, $title, $callback = NULL, $help = NULL, $weight = 0, $hidden = 0) {
   global $_gmenu;
@@ -46,6 +46,17 @@ function menu_item($in_path) {
   return "<a href=\"". url($in_path) ."\"$css>". t($_gmenu[$in_path]["title"]) ."</a>";
 }
 
+function menu_title($in_path = null) {
+  global $_gmenu;
+
+  if ($in_path == null) {
+    $trail = menu_trail();
+    $in_path = array_pop($trail);
+  }
+
+  return ucfirst($_gmenu[$in_path]["title"]);
+}
+
 function menu_trail() {
   global $_gmenu;
   static $trail; // cache
@@ -72,13 +83,13 @@ function menu_path() {
 
   $trail = menu_trail();
 
-  $links = array();
+  $links[] = l(t("Home"), "");
 
   foreach ($trail as $item) {
     $links[] = menu_item($item);
   }
 
-  return implode(" &raquo; ", $links);
+  return $links;
 }
 
 function menu_help() {

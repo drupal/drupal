@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.module,v 1.56 2003/09/09 18:18:43 dries Exp $
+// $Id: tracker.module,v 1.57 2003/09/26 10:04:09 dries Exp $
 
 function tracker_help($section = "admin/tracker/help") {
 
@@ -18,8 +18,10 @@ function tracker_link($type) {
 
   $links = array();
 
-  if ($type == "menu.view" && user_access("access content")) {
-    $links[] = l(t("view recent posts"), "tracker", array("title" => t("Display an overview of the recent posts.")));
+  if ($type == "system") {
+    if (user_access("access content")) {
+      menu("tracker", t("view recent posts"), NULL, NULL, 1);
+    }
   }
 
   return $links;

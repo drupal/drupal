@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.73 2003/09/19 07:41:54 dries Exp $
+// $Id: block.module,v 1.74 2003/09/26 10:04:09 dries Exp $
 
 function block_help($section = "admin/block/help") {
   $output = "";
@@ -66,7 +66,7 @@ function block_perm() {
 }
 
 function block_link($type) {
-  if ($type == "admin" && user_access("administer blocks")) {
+  if ($type == "system" && user_access("administer blocks")) {
 
     menu("admin/block", "block management", "block_admin", block_help("admin/block"), 3);
     menu("admin/block/add", "create new block", "block_admin", block_help("admin/block/add"), 2);
@@ -169,10 +169,7 @@ function block_admin_display() {
       $delete = "";
     }
 
-    $status = form_checkbox(NULL, $block["module"]."][".$block["delta"]."][status", 1, $block["status"]);
-    $custom = form_checkbox(NULL, $block["module"]."][".$block["delta"]."][custom", 1, $block["custom"]);
-
-    $rows[] = array($block["info"], array("data" => $status, "align" => "center"), array("data" => $custom, "align" => "center"), form_weight(NULL, $block["module"]."][".$block["delta"]."][weight", $block["weight"]), form_select(NULL, $block["module"]."][".$block["delta"]."][region", $block["region"], array(t("left"), t("right"))), form_textfield(NULL, $block["module"]."][".$block["delta"]."][path", $block["path"], 10, 255), $edit, $delete);
+    $rows[] = array($block["info"], array("data" => form_checkbox(NULL, $block["module"]."][".$block["delta"]."][status", 1, $block["status"]), "align" => "center"), array("data" => form_checkbox(NULL, $block["module"]."][".$block["delta"]."][custom", 1, $block["custom"]), "align" => "center"), form_weight(NULL, $block["module"]."][".$block["delta"]."][weight", $block["weight"]), form_select(NULL, $block["module"]."][".$block["delta"]."][region", $block["region"], array(t("left"), t("right"))), form_textfield(NULL, $block["module"]."][".$block["delta"]."][path", $block["path"], 10, 255), $edit, $delete);
   }
 
   $output = table($header, $rows);
