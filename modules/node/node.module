@@ -60,11 +60,11 @@ function node_overview($query) {
   while ($node = db_fetch_object($result)) {
     unset ($link);
 
-    $link[] = user_access($user, $node->type) ? "<A HREF=\"admin.php?mod=node&type=$node->type&op=edit&id=$node->nid\">edit content</A>" : "edit content";
-    $link[] = user_access($user, "node") ? "<A HREF=\"admin.php?mod=node&op=option&id=$node->nid\">edit options</A>" : "edit options";
-    $link[] = user_access($user, "node") ? "<A HREF=\"admin.php?mod=node&op=status&id=$node->nid\">edit status</A>" : "edit status";
-    $link[] = user_access($user, "node") ? "<A HREF=\"admin.php?mod=node&op=attribute&id=$node->nid\">edit attributes</A>" : "edit attributes";
-    $link[] = user_access($user, "node") ? "<A HREF=\"admin.php?mod=node&op=delete&id=$node->nid\">delete node</A>" : "delete node";
+    $link[] = "<A HREF=\"admin.php?mod=node&type=$node->type&op=edit&id=$node->nid\">edit content</A>";
+    $link[] = "<A HREF=\"admin.php?mod=node&op=option&id=$node->nid\">edit options</A>";
+    $link[] = "<A HREF=\"admin.php?mod=node&op=status&id=$node->nid\">edit status</A>";
+    $link[] = "<A HREF=\"admin.php?mod=node&op=attribute&id=$node->nid\">edit attributes</A>";
+    $link[] = "<A HREF=\"admin.php?mod=node&op=delete&id=$node->nid\">delete node</A>";
 
     $bg = $color[$i++ % sizeof($color)];
 
