@@ -87,13 +87,13 @@ function profile_load_profile(&$user) {
   }
 }
 
-function profile_save_profile($edit, $user) {
+function profile_save_profile(&$edit, &$user) {
   db_query('DELETE FROM {profile_values} WHERE uid = %d', $user->uid);
   $result = db_query('SELECT fid, name FROM {profile_fields}');
   while ($field = db_fetch_object($result)) {
     if ($edit[$field->name]) {
       db_query("INSERT INTO {profile_values} (fid, uid, value) VALUES (%d, %d, '%s')", $field->fid, $user->uid, $edit[$field->name]);
-      unset($edit[$field->name]);
+      unset($edit[$field->name], $user->{$field->name});
     }
   }
 }
@@ -194,7 +194,7 @@ function profile_validate_profile($edit) {
   return $edit;
 }
 
-function profile_user($type, $edit, &$user) {
+function profile_user($type, &$edit, &$user) {
   switch ($type) {
     case 'load':
       return profile_load_profile($user);
