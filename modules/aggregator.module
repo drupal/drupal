@@ -52,7 +52,7 @@ function import_format_item($item, $feed = 0) {
   global $theme, $user;
 
   if ($user->uid && user_access("post blogs")) {
-    $output .= "<a href=\"submit.php?mod=blog&type=import&id=$item->iid\"><img src=\"". $theme->image("blog.gif") ."\" border=\"0\" width=\"12\" height=\"16\" alt=\"" . t("Blog this item") . "\" /></a> ";
+    $output .= "<a href=\"module.php?mod=node&op=add&type=blog&iid=$item->iid\"><img src=\"". $theme->image("blog.gif") ."\" border=\"0\" width=\"12\" height=\"16\" alt=\"" . t("Blog this item") . "\" /></a> ";
   }
 
   $output .= "<a href=\"". check_output($item->link) ."\" target=\"new\">". check_output($item->title) ."</a>";
