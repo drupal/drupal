@@ -3,11 +3,13 @@
 function variable_init($conf = array()) {
   $result = db_query("SELECT * FROM variable");
   while ($variable = db_fetch_object($result)) $conf[$variable->name] = $variable->value;
+
   return $conf;
 }
 
 function variable_get($name, $default, $object = 0) {
   global $conf;
+
   return isset($conf[$name]) ? $conf[$name] : $default;
 }
 
@@ -25,7 +27,7 @@ function variable_del($name) {
 
   db_query("DELETE FROM variable WHERE name = '". check_query($name) ."'");
 
-  $conf[$name] = "";
+  unset($conf[$name]);
 }
 
 ?>
