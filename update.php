@@ -218,7 +218,12 @@ function update_45() {
 }
 
 function update_46() {
-  update_sql("ALTER TABLE cache ADD created int(11) NOT NULL default '0'");
+  if ($GLOBALS["db_type"] == "pgsql") {
+    update_sql("ALTER TABLE cache ADD created integer");
+  }
+  else {
+    update_sql("ALTER TABLE cache ADD created int(11) NOT NULL default '0'");
+  }
 }
 
 function update_47() {
