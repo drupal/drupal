@@ -189,7 +189,9 @@ function block_admin_display() {
   }
   $header[] = array('data' => t('Operations'), 'colspan' => 2);
 
-
+  $left = array();
+  $right = array();
+  $disabled = array();
   foreach ($blocks as $block) {
     if ($block['module'] == 'block') {
       $delete = l(t('delete'), 'admin/block/delete/'. $block['delta']);
@@ -198,13 +200,7 @@ function block_admin_display() {
       $delete = '';
     }
 
-    $row = array($block['info'],
-      form_checkbox(NULL, $block['module'] .']['. $block['delta'] .'][status', 1, $block['status']),
-      form_weight(NULL, $block['module'] .']['. $block['delta'] .'][weight', $block['weight']),
-      form_radios(NULL, $block['module'] .']['. $block['delta'] .'][region', $block['region'],
-      array(t('left'), t('right'))));
-
-    $row = array($block['info'],
+    $row = array(array('data' => $block['info'], 'class' => 'block'),
       form_checkbox(NULL, $block['module'] .']['. $block['delta'] .'][status', 1, $block['status']),
       form_weight(NULL, $block['module'] .']['. $block['delta'] .'][weight', $block['weight']),
       form_radios(NULL, $block['module'] .']['. $block['delta'] .'][region', $block['region'],
@@ -215,10 +211,33 @@ function block_admin_display() {
     }
     $row[] = l(t('configure'), 'admin/block/configure/'. $block['module'] .'/'. $block['delta']);
     $row[] = $delete;
-    $rows[] = $row;
+    if ($block['status']) {
+      if ($block['region'] == 0) {
+        $left[] = $row;
+      }
+      else {
+        $right[] = $row;
+      }
+    }
+    else {
+      $disabled[] = $row;
+    }
   }
 
-  $output = theme('table', $header, $rows);
+  $rows = array();
+  if (count($left)) {
+    $rows[] = array(array('data' => t('Left sidebar'), 'class' => 'region', 'colspan' => (module_exist('throttle') ? 7 : 6)));
+    $rows = array_merge($rows, $left);
+  }
+  if (count($right)) {
+    $rows[] = array(array('data' => t('Right sidabar'), 'class' => 'region', 'colspan' => (module_exist('throttle') ? 7 : 6)));
+    $rows = array_merge($rows, $right);
+  }
+  if (count($disabled)) {
+    $rows[] = array(array('data' => t('Disabled'), 'class' => 'region', 'colspan' => (module_exist('throttle') ? 7 : 6)));
+    $rows = array_merge($rows, $disabled);
+  }
+  $output = theme('table', $header, $rows, array('id' => 'blocks'));
   $output .= form_submit(t('Save blocks'));
 
   return form($output, 'post', url('admin/block'));
