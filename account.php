@@ -157,7 +157,7 @@ function account_page_edit() {
     $output .= "<B>Timezone:</B><BR>\n";
 
     $date = time() - date("Z");
-    for ($zone = -43200; $zone <= 43200; $zone += 3600) {
+    for ($zone = -43200; $zone <= 46800; $zone += 3600) {
       $options2 .= " <OPTION VALUE=\"$zone\"". (($user->timezone == $zone) ? " SELECTED" : "") .">". date("l, F dS, Y - h:i A", $date + $zone) ." (GMT ". $zone / 3600 .")</OPTION>\n";
     }
 
