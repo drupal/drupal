@@ -450,19 +450,6 @@ CREATE INDEX node_counter_daycount_idx ON node_counter(daycount);
 CREATE INDEX node_counter_timestamp_idx ON node_counter(timestamp);
 
 --
--- Table structure for page
---
-
-CREATE TABLE page (
-  nid integer NOT NULL default '0',
-  link varchar(128) NOT NULL default '',
-  format smallint NOT NULL default '0',
-  description varchar(128) NOT NULL default '',
-  PRIMARY KEY  (nid)
-);
-CREATE INDEX page_nid_idx ON page(nid);
-
---
 -- Table structure for table 'url_alias'
 --
 

@@ -457,10 +457,6 @@ function node_save($node) {
       }
     }
 
-    $keysfmt = implode(', ', $s);
-    // We need to quote the placeholders for the values.
-    $valsfmt = "'". implode("', '", $s) ."'";
-
     // Insert the node into the database:
     db_query("INSERT INTO {node} (". implode(", ", $k) .") VALUES(". implode(", ", $s) .")", $v);
 
