@@ -13,21 +13,23 @@ function tracker_link($type) {
 function tracker_comments($id = 0) {
   global $theme, $user;
 
+  $period = time() - 259200;  // all comments of the past 3 days
+
   if ($id) {
-    $sresult = db_query("SELECT n.nid, n.title, COUNT(n.nid) AS comments, MAX(c.timestamp) AS last_comment FROM comments c LEFT JOIN node n ON c.lid = n.nid WHERE c.uid = '". check_input($id) ."' GROUP BY n.nid, n.title DESC ORDER BY last_comment DESC LIMIT 10");
+    $sresult = db_query("SELECT n.nid, n.title, COUNT(n.nid) AS comments, MAX(c.timestamp) AS last_comment FROM comments c LEFT JOIN node n ON c.lid = n.nid WHERE c.timestamp > $period AND c.uid = '". check_input($id) ."' GROUP BY n.nid, n.title DESC ORDER BY last_comment DESC LIMIT 10");
   }
   else {
-    $sresult = db_query("SELECT n.nid, n.title, COUNT(n.nid) AS comments, MAX(c.timestamp) AS last_comment FROM comments c LEFT JOIN node n ON c.lid = n.nid GROUP BY n.nid, n.title DESC ORDER BY last_comment DESC LIMIT 10");
+    $sresult = db_query("SELECT n.nid, n.title, COUNT(n.nid) AS comments, MAX(c.timestamp) AS last_comment FROM comments c LEFT JOIN node n ON c.lid = n.nid WHERE c.timestamp > $period GROUP BY n.nid, n.title DESC ORDER BY last_comment DESC LIMIT 10");
   }
 
   while ($node = db_fetch_object($sresult)) {
     $output .= format_plural($node->comments, "comment", "comments") ." ". t("attached to node") ." <a href=\"node.php?id=$node->nid\">". check_output($node->title) ."</a>:\n";
 
     if ($id) {
-      $cresult = db_query("SELECT * FROM comments WHERE uid = '". check_input($id) ."' AND lid = '$node->nid' ORDER BY cid DESC");
+      $cresult = db_query("SELECT * FROM comments WHERE timestamp > $period AND uid = '". check_input($id) ."' AND lid = '$node->nid' ORDER BY cid DESC");
     }
     else {
-      $cresult = db_query("SELECT * FROM comments WHERE lid = '$node->nid' ORDER BY cid DESC");
+      $cresult = db_query("SELECT * FROM comments WHERE timestamp > $period AND lid = '$node->nid' ORDER BY cid DESC");
     }
 
     $output .= "<ul>";
