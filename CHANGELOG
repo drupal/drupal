@@ -1,4 +1,4 @@
-drupal 4.0.0, xx/xx/xxxx
+drupal 4.0.0, 2002-06-15
 ------------------------
 - added tracker.module:
     * replaces the previous "your [site]" links (recent comments and nodes).
@@ -51,13 +51,13 @@ drupal 4.0.0, xx/xx/xxxx
     * usability changes (renamed links, better UI, etc)
 - collaboratively revised and expanded the drupal documentation.
 
-drupal 3.0.1, 15/10/2001
+drupal 3.0.1, 2001-10-15
 ------------------------
 - various updates:
     * added missing translations
     * updated the themes: tidied up some HTML code and added new Drupal logos.
 
-drupal 3.0.0, 15/09/2001
+drupal 3.0.0, 2001-09-15
 ------------------------
 - major overhaul of the entire underlying design:
     * everything is based on nodes: nodes are a conceptual "black box" to couple and manage different types of content and that promotes reusing existing code, thus reducing the complexity and size of drupal as well as improving long-term stability.
@@ -120,7 +120,7 @@ drupal 3.0.0, 15/09/2001
         + added theme "goofy".
 - collaboratively revised and expanded the drupal documentation.
 
-drupal 2.0.0, 15/03/2001
+drupal 2.0.0, 2001-03-15
 ------------------------
 - rewrote the comment/discussion code:
     * comment navigation should be less confusing now.
@@ -161,6 +161,6 @@ drupal 2.0.0, 15/03/2001
     * added CREDITS file
 - revised documentation
 
-drupal 1.0.0, 15/01/2001
+drupal 1.0.0, 2001-01-15
 ------------------------
 - initial release
