@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.242 2003/09/14 08:57:18 dries Exp $
+// $Id: common.inc,v 1.243 2003/09/28 17:21:57 dries Exp $
 
 function conf_init() {
 
@@ -1046,19 +1046,21 @@ function drupal_page_header() {
 
   if (variable_get("cache", 0)) {
     if ($cache = page_get_cache()) {
+
+      // Set default values:
       $date = gmdate("D, d M Y H:i:s", $cache->created) ." GMT";
+      $etag = '"'. md5($date) .'"';
+
+      // Check http headers:
+      $modified_since = isset($_SERVER["HTTP_IF_MODIFIED_SINCE"]) ? $_SERVER["HTTP_IF_MODIFIED_SINCE"] == $date : true;
+      $none_match = isset($_SERVER["HTTP_IF_NONE_MATCH"]) ? $_SERVER["HTTP_IF_NONE_MATCH"] == $etag : true;
+
+      // Send appropriate response:
       header("Last-Modified: $date");
-      header("ETag: \"$date\"");
-      if (function_exists("getallheaders") && $headers = getallheaders()) {
-        /*
-        ** Notice that the above is an optional Apache-ism so for the
-        ** time being we don't send 304 headers when "getallheaders()"
-        ** is not supported (eg. on IIS webservers).
-        */
-        if ($headers["If-Modified-Since"] == $date && $headers["If-None-Match"] == "\"$date\"") {
-          header("HTTP/1.0 304 Not Modified");
-          exit();
-        }
+      header("ETag: $etag");
+      if ($modified_since && $none_match) {
+        header("HTTP/1.0 304 Not Modified");
+        exit();
       }
 
       print $cache->data;
