@@ -65,7 +65,7 @@ function check_code($text) {
 }
 
 function check_mail($mail) {
-  return eregi("^[_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,3}$", $mail) ? 1 : 0;
+  return eregi("^[_+\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,3}$", $mail) ? 1 : 0;
 }
 
 function check_name($name) {
