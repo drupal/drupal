@@ -1,16 +1,14 @@
 <?php
 // $Id$
 
+/**
+ * Implementation of hook_help().
+ */
 function title_help($section) {
-  $output = "";
-
   switch ($section) {
     case 'admin/system/modules#description':
-      $output = t("Enables users to link to stories, articles or similar content by title.");
-      break;
+      return t('Enables users to link to stories, articles or similar content by title.');
   }
-
-  return $output;
 }
 
 /**
@@ -22,71 +20,80 @@ function title_link($type) {
   }
 }
 
-function title_page() {
-
-  $title = urldecode(arg(1));
+/**
+ * Menu callback; displays the matching node or a list of search results.
+ */
+function title_page($query) {
+  $title = urldecode($query);
   $result = db_query("SELECT n.*, u.name, u.uid FROM {node} n INNER JOIN {users} u ON n.uid = u.uid WHERE n.title = '%s' AND n.status = 1 ORDER BY n.created DESC", $title);
 
   $title = trim(str_replace(array('_', '%', '*'), ' ', $title));
   if (db_num_rows($result) == 0) {
-    // No node with exact title found, try substring.
+    // No node with exact title found; try a substring.
     $result = db_query("SELECT n.*, u.name, u.uid FROM {node} n INNER JOIN {users} u ON n.uid = u.uid WHERE n.title LIKE '%%%s%%' AND n.status = 1 ORDER BY n.created DESC", $title);
   }
 
-  if (db_num_rows($result) == 0 && module_exist("search")) {
-    // still no matches ... return a full text search
+  if (db_num_rows($result) == 0 && module_exist('search')) {
+    // Still no matches, so return a full-text search.
     search_view($title);
   }
   else if (db_num_rows($result) == 1) {
     $node = db_fetch_object($result);
-    $node = node_load(array("nid" => $node->nid));
-    print theme("page", node_show($node, NULL), $node->title);
+    $node = node_load(array('nid' => $node->nid));
+    print theme('page', node_show($node, NULL), $node->title);
   }
   else {
-    $header = array(t("Type"), t("Title"), t("Author"));
+    $header = array(t('Type'), t('Title'), t('Author'));
     while ($node = db_fetch_object($result)) {
-      $type = ucfirst(module_invoke($node->type, "node", "name"));
+      $type = ucfirst(module_invoke($node->type, 'node', 'name'));
       $title = l($node->title, "node/view/$node->nid");
       $author = format_name($node);
-      $rows[] = array(array("data" => $type, "class" => "type"), array("data" => $title, "class" => "content"), array("data" => $author, "class" => "author"));
+      $rows[] = array(array('data' => $type, 'class' => 'type'), array('data' => $title, 'class' => 'content'), array('data' => $author, 'class' => 'author'));
     }
 
-    $output  = "<div id=\"title\">";
-    $output .= theme("table", $header, $rows);
-    $output .= "</div>";
+    $output  = '<div id="title">';
+    $output .= theme('table', $header, $rows);
+    $output .= '</div>';
 
-    drupal_set_title(t("Matching Posts"));
-    print theme("page", $output);
+    drupal_set_title(t('Matching Posts'));
+    print theme('page', $output);
   }
 }
 
-function title_filter($op, $text = "") {
+/**
+ * Implementation of hook_filter().
+ */
+function title_filter($op, $text = '') {
   switch ($op) {
-    case "name":
-      return t("Title filter");
-    case "process":
+    case 'name':
+      return t('Title filter');
+    case 'process':
       return _title_filter_process($text);
-    case "settings":
+    case 'settings':
       return _title_filter_settings($text);
     default:
       return $text;
   }
 }
 
-// filter [node title|description] links. '|description' is optional.
+/**
+ * Filter [Node title|Description] links. '|Description' is optional.
+ */
 function _title_filter_process($text) {
-  $pattern = '\[([^\|\]\n]+)(?>\|?)([^\]\n]*)\]';  // $1 == title: matches at least 1 char up to the first '|' or ']'
-                                           // $2 == text: matches all after a following '|' (if there is) up to the next ']'. may include '|'s.
+  $pattern = '\[([^\|\]\n]+)(?>\|?)([^\]\n]*)\]';
+  // $1 == title: matches at least 1 char up to the first '|' or ']'.
+  // $2 == text: matches all after a following '|' (if there is) up to the next ']'.
+  //   May include '|'s.
   $replacement = 'l(\'$2\' ? \'$2\' : \'$1\', \'title/\'. urlencode(\'$1\'))';
   return preg_replace("/$pattern/e", $replacement, $text);
 }
 
 function _title_filter_settings() {
-  return form_group(t("Title filter"), t("Wiki-like [node title|text] links are enabled. These shortcuts generate a link labeled 'text' to the node with the title 'node title'. If you omit '|text', the label becomes 'node title'. You may use a substring of a node title if desired. When multiple matching titles are found, a list of matching nodes will be displayed. If no matching titles are found, a full-text search is returned."));
+  return form_group(t('Title filter'), t('Wiki-like [node title|text] links are enabled. These shortcuts generate a link labeled "text" to the node with the title "node title". If you omit "|text", the label becomes "node title". You may use a substring of a node title if desired. When multiple matching titles are found, a list of matching nodes will be displayed. If no matching titles are found, a full-text search is returned.'));
 }
 
 function title_compose_tips() {
-  return array(t("You may quickly link to another node using this syntax: <em>[node title|text]</em>. This will generate a link labeled 'text' to the node with the title 'node title'. If you omit '|text', the label becomes 'node title'."));
+  return array(t('You may quickly link to another node using this syntax: <em>[node title|text]</em>. This will generate a link labeled "text" to the node with the title "node title". If you omit "|text", the label becomes "node title".'));
 }
 
 ?>

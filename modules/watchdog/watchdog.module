@@ -1,52 +1,43 @@
 <?php
 // $Id$
 
-function watchdog_help($section = "admin/help#watchdog") {
-  $output = "";
-
+/**
+ * Implementation of hook_help().
+ */
+function watchdog_help($section = 'admin/help#watchdog') {
   switch ($section) {
     case 'admin/help#watchdog':
-      $output .= t("
-      <p>Watchdog module monitors your web site, capturing system events in a log to be reviewed by an authorized individual at a later time.  The watchdog log is simply a list of recorded events containing usage data, performance data, errors, warnings and operational information.  It is vital to <a href=\"%watchdog\">check the watchdog report</a> on a regular basis as it is often the only way to tell what is going on.</p>
-      <p>To ease administration, the watchdog will automatically discard old log entries, <a href=\"%log-entry\">as configured</a>. Needs \"cron.php\" to discard the entries.</p>", array("%watchdog" => url("admin/logs"), "%log-entry" => url("admin/system/modules/watchdog")));
-      break;
+      return t('
+      <p>Watchdog module monitors your web site, capturing system events in a log to be reviewed by an authorized individual at a later time.  The watchdog log is simply a list of recorded events containing usage data, performance data, errors, warnings and operational information.  It is vital to <a href="%watchdog">check the watchdog report</a> on a regular basis as it is often the only way to tell what is going on.</p>
+      <p>To ease administration, the watchdog will automatically discard old log entries, <a href="%log-entry">as configured</a>. Needs "cron.php" to discard the entries.</p>', array('%watchdog' => url('admin/logs'), '%log-entry' => url('admin/system/modules/watchdog')));
     case 'admin/logs':
-      $output = t("The watchdog module monitors your web site, captures system events in a log and records them to be reviewed by an authorized individual at a later time.  The watchdog log is simply a list of events recorded during operation and contains usage data, performance data, errors, warnings and operational information. It is vital to check the watchdog report on a regular basis as it is often the only way to tell what is going on.");
-      break;
+      return t('The watchdog module monitors your web site, captures system events in a log and records them to be reviewed by an authorized individual at a later time.  The watchdog log is simply a list of events recorded during operation and contains usage data, performance data, errors, warnings and operational information. It is vital to check the watchdog report on a regular basis as it is often the only way to tell what is going on.');
     case 'admin/logs/user':
-       $output = t("Watchdog events that have to do with users.");
-       break;
+      return t('Watchdog events that have to do with users.');
     case 'admin/logs/regular':
-      $output = t("Watchdog events that are \"normal\" and have no other classification.");
-      break;
+      return t('Watchdog events that are "normal" and have no other classification.');
     case 'admin/logs/httpd':
-      $output = t("Watchdog events that are from the web server.");
-      break;
+      return t('Watchdog events that are from the web server.');
     case 'admin/logs/special':
-      $output = t("Watchdog events about adding, changing, and moderating nodes and comments.");
-      break;
+      return t('Watchdog events about adding, changing, and moderating nodes and comments.');
     case 'admin/logs/search':
-      $output = t("Watchdog events showing what users searched for.");
-      break;
+      return t('Watchdog events showing what users searched for.');
     case 'admin/logs/error':
-      $output = t("Watchdog events about PHP and database errors.");
-      break;
+      return t('Watchdog events about PHP and database errors.');
     case 'admin/logs/warning':
-      $output = t("Watchdog warning events. These events don't stop Drupal from running, but are things you should know.");
-      break;
+      return t('Watchdog warning events. These events don\'t stop Drupal from running, but are things you should know.');
     case 'admin/system/modules#description':
-      $output = t("Logs and records system events.");
-      break;
+      return t('Logs and records system events.');
     case 'admin/system/modules/watchdog':
-      $output = t("Watchdog logs your system events.  To see these events go to the <a href=\"%watchdog\">logs</a>. Since these logs can grow out of control if kept around forever, below set how long an item should be kept in the log.  Note that to discard entries as set below you must run \"cron.php\" regularly.", array("%watchdog" => url("admin/logs")));
-      break;
+      return t('Watchdog logs your system events.  To see these events go to the <a href="%watchdog">logs</a>. Since these logs can grow out of control if kept around forever, below set how long an item should be kept in the log.  Note that to discard entries as set below you must run "cron.php" regularly.', array('%watchdog' => url('admin/logs')));
   }
-
-  return $output;
 }
 
+/**
+ * Implementation of hook_perm().
+ */
 function watchdog_perm() {
-  return array("administer watchdog");
+  return array('administer watchdog');
 }
 
 /**
@@ -54,102 +45,99 @@ function watchdog_perm() {
  */
 function watchdog_link($type) {
   if ($type == 'system') {
-    menu('admin/logs', t('logs'), user_access('administer watchdog') ? 'watchdog_admin' : MENU_DENIED, 7);
-    menu('admin/logs/view', t('view details'), user_access('administer watchdog') ? 'watchdog_admin' : MENU_DENIED, 0, MENU_HIDE, MENU_LOCKED);
+    menu('admin/logs', t('logs'), user_access('administer watchdog') ? 'watchdog_overview' : MENU_DENIED, 7);
+    menu('admin/logs/view', t('view details'), user_access('administer watchdog') ? 'watchdog_view' : MENU_DENIED, 0, MENU_HIDE, MENU_LOCKED);
 
     if (arg(1) == 'logs') {
       foreach (_watchdog_get_message_types() as $type) {
-        menu("admin/logs/$type", t($type), user_access('administer watchdog') ? 'watchdog_admin' : MENU_DENIED, 0, MENU_SHOW, MENU_LOCKED);
+        menu("admin/logs/$type", t($type), user_access('administer watchdog') ? 'watchdog_overview' : MENU_DENIED, 0, MENU_SHOW, MENU_LOCKED);
       }
     }
   }
 }
 
+/**
+ * Implementation of hook_settings().
+ */
 function watchdog_settings() {
-  $period = drupal_map_assoc(array(3600, 10800, 21600, 32400, 43200, 86400, 172800, 259200, 604800, 1209600, 2419200), "format_interval");
+  $period = drupal_map_assoc(array(3600, 10800, 21600, 32400, 43200, 86400, 172800, 259200, 604800, 1209600, 2419200), 'format_interval');
   $period[1000000000] = t('Never');
-  $output .= form_select(t("Discard entries older than"), "watchdog_clear", variable_get("watchdog_clear", 604800), $period, t("The time watchdog entries should be kept.  Older entries will be automatically discarded.  Requires crontab."));
+  $output .= form_select(t('Discard entries older than'), 'watchdog_clear', variable_get('watchdog_clear', 604800), $period, t('The time watchdog entries should be kept.  Older entries will be automatically discarded.  Requires crontab.'));
   return $output;
 }
 
+/**
+ * Implementation of hook_cron().
+ *
+ * Remove expired log messages.
+ */
 function watchdog_cron() {
-  db_query("DELETE FROM {watchdog} WHERE ". time() ." - timestamp > ". variable_get("watchdog_clear", 604800));
+  db_query('DELETE FROM {watchdog} WHERE '. time() .' - timestamp > '. variable_get('watchdog_clear', 604800));
 }
 
-function watchdog_overview($type) {
+/**
+ * Menu callback; displays a listing of log messages.
+ */
+function watchdog_overview($type = '') {
   foreach (_watchdog_get_message_types() as $key) {
     $query[$key] = "WHERE type = '". check_query($key) ."'";
   }
   $query['actions'] = "WHERE link != ''";
 
   $header = array(
-    array("data" => t("date"), "field" => "w.timestamp", "sort" => "desc"),
-    array("data" => t("message"), "field" => "w.message"),
-    array("data" => t("user"), "field" => "u.name"),
-    array("data" => t("operations"), "colspan" => "2")
+    array('data' => t('date'), 'field' => 'w.timestamp', 'sort' => 'desc'),
+    array('data' => t('message'), 'field' => 'w.message'),
+    array('data' => t('user'), 'field' => 'u.name'),
+    array('data' => t('operations'), 'colspan' => '2')
   );
-  $sql = "SELECT w.*, u.name, u.uid FROM {watchdog} w INNER JOIN {users} u ON w.uid = u.uid ". ($type ? $query[$type] : "");
+  $sql = 'SELECT w.*, u.name, u.uid FROM {watchdog} w INNER JOIN {users} u ON w.uid = u.uid '. ($type ? $query[$type] : '');
   $sql .= tablesort_sql($header);
   $result = pager_query($sql, 50);
 
   while ($watchdog = db_fetch_object($result)) {
     $rows[] = array(
-      array("data" => format_date($watchdog->timestamp, "small"), "class" => "watchdog-$watchdog->type"),
-      array("data" => truncate_utf8(strip_tags($watchdog->message), 64), "class" => "watchdog-$watchdog->type"),
-      array("data" => format_name($watchdog), "class" => "watchdog-$watchdog->type"),
-      array("data" => $watchdog->link, "class" => "watchdog-$watchdog->type"),
-      array("data" => l(t("view details"), "admin/logs/view/$watchdog->wid"), "class" => "watchdog-$watchdog->type")
+      array('data' => format_date($watchdog->timestamp, 'small'), 'class' => "watchdog-$watchdog->type"),
+      array('data' => truncate_utf8(strip_tags($watchdog->message), 64), 'class' => "watchdog-$watchdog->type"),
+      array('data' => format_name($watchdog), 'class' => "watchdog-$watchdog->type"),
+      array('data' => $watchdog->link, 'class' => "watchdog-$watchdog->type"),
+      array('data' => l(t('view details'), "admin/logs/view/$watchdog->wid"), 'class' => "watchdog-$watchdog->type")
     );
   }
 
   if (!$rows) {
-    $rows[] = array(array("data" => t("No log messages available."), "colspan" => "5"));
+    $rows[] = array(array('data' => t('No log messages available.'), 'colspan' => '5'));
   }
 
-  $pager = theme("pager", NULL, 50, 0, tablesort_pager());
+  $pager = theme('pager', NULL, 50, 0, tablesort_pager());
   if (!empty($pager)) {
-    $rows[] = array(array("data" => $pager, "colspan" => "5"));
+    $rows[] = array(array('data' => $pager, 'colspan' => '5'));
   }
-  return theme("table", $header, $rows);
+  print theme('page', theme('table', $header, $rows));
 }
 
+/**
+ * Menu callback; displays details about a log message.
+ */
 function watchdog_view($id) {
-
-  $result = db_query("SELECT w.*, u.name, u.uid FROM {watchdog} w INNER JOIN {users} u ON w.uid = u.uid WHERE w.wid = %d", $id);
-
+  $output = '';
+  $result = db_query('SELECT w.*, u.name, u.uid FROM {watchdog} w INNER JOIN {users} u ON w.uid = u.uid WHERE w.wid = %d', $id);
   if ($watchdog = db_fetch_object($result)) {
-    $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";
-    $output .= " <tr><th>". t("Type") ."</th><td>$watchdog->type</td></tr>";
-    $output .= " <tr><th>". t("Date") ."</th><td>". format_date($watchdog->timestamp, "large") ."</td></tr>";
-    $output .= " <tr><th>". t("User") ."</th><td>". format_name($watchdog) ."</td></tr>";
-    $output .= " <tr><th>". t("Location") ."</th><td>$watchdog->location</td></tr>";
-    $output .= " <tr><th>". t("Message") ."</th><td>$watchdog->message</td></tr>";
-    $output .= " <tr><th>". t("Hostname") ."</th><td>$watchdog->hostname</td></tr>";
-    $output .= "</table>";
-
-    return $output;
+    $output .= '<table border="1" cellpadding="2" cellspacing="2">';
+    $output .= ' <tr><th>'. t('Type') ."</th><td>$watchdog->type</td></tr>";
+    $output .= ' <tr><th>'. t('Date') .'</th><td>'. format_date($watchdog->timestamp, 'large') .'</td></tr>';
+    $output .= ' <tr><th>'. t('User') .'</th><td>'. format_name($watchdog) .'</td></tr>';
+    $output .= ' <tr><th>'. t('Location') ."</th><td>$watchdog->location</td></tr>";
+    $output .= ' <tr><th>'. t('Message') ."</th><td>$watchdog->message</td></tr>";
+    $output .= ' <tr><th>'. t('Hostname') ."</th><td>$watchdog->hostname</td></tr>";
+    $output .= '</table>';
   }
-}
-
-function watchdog_admin() {
-
-  switch (arg(2)) {
-    case "help":
-      $output = watchdog_help();
-      break;
-    case "view":
-      $output = watchdog_view(arg(3));
-      break;
-    default:
-      $output = watchdog_overview(arg(2));
-  }
-  print theme("page", $output);
+  print theme('page', $output);
 }
 
 function _watchdog_get_message_types() {
   $types = array();
 
-  $result = db_query("SELECT DISTINCT(type) FROM {watchdog}");
+  $result = db_query('SELECT DISTINCT(type) FROM {watchdog}');
   while ($object = db_fetch_object($result)) {
     $types[] = $object->type;
   }

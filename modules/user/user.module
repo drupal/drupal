@@ -1,9 +1,12 @@
 <?php
 // $Id$
 
-/*** Common functions ******************************************************/
-
-// we cannot use module_invoke because we need passing by reference
+/**
+ * Invokes hook_user() in every module.
+ *
+ * We cannot use module_invoke() for this, becuse the arguments need to
+ * be passed by reference.
+ */
 function user_module_invoke($type, &$array, &$user) {
   foreach (module_list() as $module) {
     $function = $module .'_user';
@@ -22,12 +25,19 @@ function user_external_load($authname) {
   }
 }
 
+/**
+ * Fetch a user object.
+ *
+ * @param $array
+ *   An associative array of attributes to search for in selecting the
+ *   user, such as user name or email address.
+ *
+ * @return
+ *   A fully-loaded $user object.
+ */
 function user_load($array = array()) {
-  /*
-  ** Dynamically compose a SQL query:
-  */
-
-  $query = "";
+  // Dynamically compose a SQL query:
+  $query = '';
 
   foreach ($array as $key => $value) {
     if ($key == 'pass') {
@@ -37,14 +47,14 @@ function user_load($array = array()) {
       $query .= "LOWER(u.$key) = '". strtolower(check_query($value)) ."' AND ";
     }
   }
-  $result = db_query_range("SELECT u.* FROM {users} u WHERE $query u.status < 3", 0, 1);
+  $result = db_query_range('SELECT u.* FROM {users} u WHERE $query u.status < 3', 0, 1);
 
   $user = db_fetch_object($result);
   $user = drupal_unpack($user);
-  user_module_invoke("load", $array, $user);
+  user_module_invoke('load', $array, $user);
 
   $user->roles = array();
-  $result = db_query("SELECT r.rid, r.name FROM {role} r INNER JOIN {users_roles} ur ON ur.rid = r.rid WHERE ur.uid = %d", $user->uid);
+  $result = db_query('SELECT r.rid, r.name FROM {role} r INNER JOIN {users_roles} ur ON ur.rid = r.rid WHERE ur.uid = %d', $user->uid);
   while ($role = db_fetch_object($result)) {
     $user->roles[$role->rid] = $role->name;
   }
@@ -53,24 +63,21 @@ function user_load($array = array()) {
 }
 
 function user_save($account, $array = array()) {
-  /*
-  ** Dynamically compose a SQL query:
-  */
-
+  // Dynamically compose a SQL query:
   $user_fields = user_fields();
   if ($account->uid) {
-    user_module_invoke("update", $array, $account);
+    user_module_invoke('update', $array, $account);
 
-    $data = unserialize(db_result(db_query("SELECT data FROM {users} WHERE uid = %d", $account->uid)));
+    $data = unserialize(db_result(db_query('SELECT data FROM {users} WHERE uid = %d', $account->uid)));
     foreach ($array as $key => $value) {
       if ($key == 'pass') {
         $query .= "$key = '%s', ";
         $v[] = md5($value);
       }
-      else if (substr($key, 0, 4) !== "auth") {
+      else if (substr($key, 0, 4) !== 'auth') {
         if (in_array($key, $user_fields)) {
           // escape '%'s:
-          $value = str_replace("%", "%%", $value);
+          $value = str_replace('%', '%%', $value);
           $query .= "$key = '%s', ";
           $v[] = $value;
         }
@@ -86,10 +93,10 @@ function user_save($account, $array = array()) {
 
     // reload user roles if provided
     if (is_array($array['rid'])) {
-      db_query("DELETE FROM {users_roles} WHERE uid = %d", $account->uid);
+      db_query('DELETE FROM {users_roles} WHERE uid = %d', $account->uid);
 
       foreach ($array['rid'] as $rid) {
-        db_query("INSERT INTO {users_roles} (uid, rid) VALUES (%d, %d)", $account->uid, $rid);
+        db_query('INSERT INTO {users_roles} (uid, rid) VALUES (%d, %d)', $account->uid, $rid);
       }
     }
 
@@ -98,7 +105,7 @@ function user_save($account, $array = array()) {
   else {
     $array['created'] = time();
     $array['changed'] = time();
-    $array['uid'] = db_next_id("{users}_uid");
+    $array['uid'] = db_next_id('{users}_uid');
 
     foreach ($array as $key => $value) {
       if ($key == 'pass') {
@@ -106,7 +113,7 @@ function user_save($account, $array = array()) {
         $values[] = md5($value);
         $s[] = "'%s'";
       }
-      else if (substr($key, 0, 4) !== "auth") {
+      else if (substr($key, 0, 4) !== 'auth') {
         if (in_array($key, $user_fields)) {
           $fields[] = check_query($key);
           $values[] = $value;
@@ -118,17 +125,17 @@ function user_save($account, $array = array()) {
       }
     }
 
-    $fields[] = "data";
+    $fields[] = 'data';
     $values[] = serialize($data);
     $s[] = "'%s'";
 
-    db_query("INSERT INTO {users} (". implode(", ", $fields) .") VALUES (". implode(", ", $s) .")", $values);
+    db_query('INSERT INTO {users} ('. implode(', ', $fields) .') VALUES ('. implode(', ', $s) .')', $values);
 
-    // reload user roles (delete just to be safe)
-    db_query("DELETE FROM {users_roles} WHERE uid = %d", $array['uid']);
+    // Reload user roles (delete just to be safe).
+    db_query('DELETE FROM {users_roles} WHERE uid = %d', $array['uid']);
 
     foreach ($array['rid'] as $rid) {
-      db_query("INSERT INTO {users_roles} (uid, rid) VALUES (%d, %d)", $array['uid'], $rid);
+      db_query('INSERT INTO {users_roles} (uid, rid) VALUES (%d, %d)', $array['uid'], $rid);
     }
 
     $user = user_load(array('name' => $array['name']));
@@ -149,51 +156,50 @@ function user_save($account, $array = array()) {
   return $user;
 }
 
+/**
+ * Verify the syntax of the given name.
+ */
 function user_validate_name($name) {
-  /*
-  ** Verify the syntax of the given name:
-  */
-
-  if (!$name) return t("You must enter a username.");
-  if (substr($name, 0, 1) == ' ') return t("The username cannot begin with a space.");
-  if (substr($name, -1) == ' ') return t("The username cannot end with a space.");
-  if (ereg('  ', $name)) return t("The username cannot contain multiple spaces in a row.");
-  if (ereg('[^ [:alnum:]@_.-]', $name)) return t("The username contains an illegal character.");
-  if (ereg('@', $name) && !eregi('@([0-9a-z](-?[0-9a-z])*.)+[a-z]{2}([zmuvtg]|fo|me)?$', $name)) return t("The username is not a valid authentication ID.");
-  if (strlen($name) > 56) return t("The username '%name' is too long: it must be less than 56 characters.", array("%name" => $name));
+  if (!$name) return t('You must enter a username.');
+  if (substr($name, 0, 1) == ' ') return t('The username cannot begin with a space.');
+  if (substr($name, -1) == ' ') return t('The username cannot end with a space.');
+  if (ereg('  ', $name)) return t('The username cannot contain multiple spaces in a row.');
+  if (ereg('[^ [:alnum:]@_.-]', $name)) return t('The username contains an illegal character.');
+  if (ereg('@', $name) && !eregi('@([0-9a-z](-?[0-9a-z])*.)+[a-z]{2}([zmuvtg]|fo|me)?$', $name)) return t('The username is not a valid authentication ID.');
+  if (strlen($name) > 56) return t('The username "%name" is too long: it must be less than 56 characters.', array('%name' => $name));
 }
 
 function user_validate_mail($mail) {
-  if (!$mail) return t("You must enter an e-mail address.");
+  if (!$mail) return t('You must enter an e-mail address.');
   if ($mail && !valid_email_address($mail)) {
-    return t("The e-mail address '%mail' is not valid.", array("%mail" => $mail));
+    return t('The e-mail address "%mail" is not valid.', array('%mail' => $mail));
   }
 }
 
 function user_validate_picture($file, &$edit, $user) {
-
-  // initialize the picture:
+  // Initialize the picture:
   $edit['picture'] = $user->picture;
 
-  // check that uploaded file is an image, with a maximum file size and maximum height/width
-  $extension = strtolower(strrchr($file->name, "."));
+  // Check that uploaded file is an image, with a maximum file size
+  // and maximum height/width.
+  $extension = strtolower(strrchr($file->name, '.'));
   $size = getimagesize($file->path);
-  list($maxwidth, $maxheight) = explode("x", variable_get('user_picture_dimensions', "85x85"));
+  list($maxwidth, $maxheight) = explode('x', variable_get('user_picture_dimensions', '85x85'));
 
-  if ((!in_array($size[2], array(1, 2, 3))) || (!in_array($extension, array(".gif", ".jpg", ".png", ".jpeg")))) {
-    $error = t("The uploaded file was not an image.");
+  if ((!in_array($size[2], array(1, 2, 3))) || (!in_array($extension, array('.gif', '.jpg', '.png', '.jpeg')))) {
+    $error = t('The uploaded file was not an image.');
   }
-  else if ($file->size > (variable_get('user_picture_file_size', "30") * 1000)) {
-    $error = t("The uploaded image is too large; the maximum file size is %a kB.", array("%a" => variable_get('user_picture_file_size', "30")));
+  else if ($file->size > (variable_get('user_picture_file_size', '30') * 1000)) {
+    $error = t('The uploaded image is too large; the maximum file size is %a kB.', array('%a' => variable_get('user_picture_file_size', '30')));
   }
   else if ($size[0] > $maxwidth || $size[1] > $maxheight) {
-    $error = t("The uploaded image is too large; the maximum dimensions are %a pixels.", array("%a" => variable_get('user_picture_dimensions', "85x85")));
+    $error = t('The uploaded image is too large; the maximum dimensions are %a pixels.', array('%a' => variable_get('user_picture_dimensions', '85x85')));
   }
-  else if ($file = file_save_upload('picture', variable_get('user_picture_path', "pictures") . FILE_SEPARATOR .'picture-'. $user->uid . $extension, 1)) {
+  else if ($file = file_save_upload('picture', variable_get('user_picture_path', 'pictures') . FILE_SEPARATOR .'picture-'. $user->uid . $extension, 1)) {
     $edit['picture'] = $file->path;
   }
   else {
-    $error = t("Failed to upload the picture image; the '%directory' directory doesn't exist.", array("%directory" => variable_get('user_picture_path', "pictures")));
+    $error = t('Failed to upload the picture image; the "%directory" directory doesn\'t exist.', array('%directory' => variable_get('user_picture_path', 'pictures')));
   }
 
   return $error;
@@ -203,30 +209,30 @@ function user_validate_authmap($account, $authname, $module) {
   $result = db_query("SELECT COUNT(*) from {authmap} WHERE uid != %d AND authname = '%s'", $account->uid, $authname);
   if (db_result($result) > 0) {
     $name = module_invoke($module, 'info', 'name');
-    return t("The %u ID %s is already taken.", array("%u" => ucfirst($name), "%s" => "<i>$authname</i>"));
+    return t('The %u ID %s is already taken.', array('%u' => ucfirst($name), '%s' => "<i>$authname</i>"));
   }
 }
 
+/**
+ * Generate a random alphanumeric password.
+ */
 function user_password($length = 10) {
-  /*
-  ** Generate a random alphanumeric password.
-  */
-
   // This variable contains the list of allowable characters for the
   // password.  Note that the number 0 and the letter 'O' have been
   // removed to avoid confusion between the two.  The same is true
   // of 'I' and 1.
-  $allowable_characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  $allowable_characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+
   // We see how many characters are in the allowable list:
   $len = strlen($allowable_characters);
 
-  // Seed the random number generator with the microtime stamp:
+  // Seed the random number generator with the microtime stamp.
   mt_srand((double)microtime() * 1000000);
 
-  // Declare the password as a blank string:
-  $pass = "";
+  // Declare the password as a blank string.
+  $pass = '';
 
-  // Loop the number of times specified by $length:
+  // Loop the number of times specified by $length.
   for ($i = 0; $i < $length; $i++) {
 
     // Each iteration, pick a random character from the
@@ -237,6 +243,19 @@ function user_password($length = 10) {
   return $pass;
 }
 
+/**
+ * Determine whether the user has a given privilege.
+ *
+ * @param $string
+ *   The permission, such as "administer nodes", being checked for.
+ *
+ * @return
+ *   TRUE iff the current user has the requested permission.
+ *
+ * All permission checks in Drupal should go through this function. This
+ * way, we guarantee consistent behavior, and ensure that the superuser
+ * can perform all actions.
+ */
 function user_access($string) {
   global $user;
   static $perm = 0;
@@ -246,13 +265,10 @@ function user_access($string) {
     return 1;
   }
 
-  /*
-  ** To reduce the number of SQL queries, we cache the user's permissions
-  ** in a static variable.
-  */
-
+  // To reduce the number of SQL queries, we cache the user's permissions
+  // in a static variable.
   if ($perm === 0) {
-    $result = db_query("SELECT DISTINCT p.perm FROM {role} r INNER JOIN {permission} p ON p.rid = r.rid INNER JOIN {users_roles} ur ON ur.rid = r.rid WHERE ur.uid = %d", $user->uid);
+    $result = db_query('SELECT DISTINCT p.perm FROM {role} r INNER JOIN {permission} p ON p.rid = r.rid INNER JOIN {users_roles} ur ON ur.rid = r.rid WHERE ur.uid = %d', $user->uid);
 
     while ($row = db_fetch_object($result)) {
       $perm .= "$row->perm, ";
@@ -262,9 +278,12 @@ function user_access($string) {
   return strstr($perm, "$string, ");
 }
 
+/**
+ * Send an e-mail message.
+ */
 function user_mail($mail, $subject, $message, $header) {
-  if (variable_get("smtp_library", "") && file_exists(variable_get("smtp_library", ""))) {
-    include_once variable_get("smtp_library", "");
+  if (variable_get('smtp_library', '') && file_exists(variable_get('smtp_library', ''))) {
+    include_once variable_get('smtp_library', '');
     return user_mail_wrapper($mail, $subject, $message, $header);
   }
   else {
@@ -291,13 +310,13 @@ function user_mail($mail, $subject, $message, $header) {
     return mail(
       $mail,
       user_mail_encode($subject),
-      str_replace("\r", "", $message),
+      str_replace("\r", '', $message),
       "MIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8; format=flowed\nContent-transfer-encoding: 8Bit\n" . $header
     );
   }
 }
 
-function user_mail_encode($string, $charset = "UTF-8") {
+function user_mail_encode($string, $charset = 'UTF-8') {
   /*
   ** Used to encodes mail headers that contain non US- ASCII
   ** characters.
@@ -322,8 +341,8 @@ function user_mail_encode($string, $charset = "UTF-8") {
 }
 
 function user_deny($type, $mask) {
-  $allow = db_fetch_object(db_query("SELECT * FROM {access} WHERE status = '1' AND type = '%s' AND LOWER('%s') LIKE LOWER(mask)", $type, $mask));
-  $deny = db_fetch_object(db_query("SELECT * FROM {access} WHERE status = '0' AND type = '%s' AND LOWER('%s') LIKE LOWER(mask)", $type, $mask));
+  $allow = db_fetch_object(db_query("SELECT * FROM {access} WHERE status = 1 AND type = '%s' AND LOWER('%s') LIKE LOWER(mask)", $type, $mask));
+  $deny = db_fetch_object(db_query("SELECT * FROM {access} WHERE status = 0 AND type = '%s' AND LOWER('%s') LIKE LOWER(mask)", $type, $mask));
 
   return $deny && !$allow;
 }
@@ -332,7 +351,7 @@ function user_fields() {
   static $fields;
 
   if (!$fields) {
-    $result = db_query("SELECT * FROM {users} WHERE uid = 1");
+    $result = db_query('SELECT * FROM {users} WHERE uid = 1');
     if (db_num_rows($result)) {
       $fields = array_keys(db_fetch_array($result));
     }
@@ -345,14 +364,20 @@ function user_fields() {
   return $fields;
 }
 
-/*** Module hooks **********************************************************/
-
+/**
+ * Implementation of hook_perm().
+ */
 function user_perm() {
-  return array("administer users", "access user list");
+  return array('administer users', 'access user list');
 }
 
+/**
+ * Implementation of hook_file_download().
+ *
+ * Ensure that user pictures (avatars) are always downloadable.
+ */
 function user_file_download($file) {
-  if (strpos($file, variable_get('user_picture_path', "pictures") . FILE_SEPARATOR . 'picture-') === 0) {
+  if (strpos($file, variable_get('user_picture_path', 'pictures') . FILE_SEPARATOR . 'picture-') === 0) {
     list($width, $height, $type, $attr) = getimagesize(file_create_path($file));
     $types = array(
       IMAGETYPE_GIF => 'image/gif',
@@ -376,33 +401,42 @@ function user_file_download($file) {
   }
 }
 
+/**
+ * Implementation of hook_search().
+ */
 function user_search($keys) {
   $find = array();
 
-  // Replace wildcards with (MySQL/PostgreSQL wildcards
-  $keys = str_replace("*", "%", $keys);
+  // Replace wildcards with MySQL/PostgreSQL wildcards.
+  $keys = str_replace('*', '%', $keys);
 
   $result = db_query_range("SELECT * FROM {users} WHERE LOWER(name) LIKE '%%%s%%'", strtolower($keys), 0, 20);
   while ($account = db_fetch_object($result)) {
-    $find[] = array("title" => $account->name, "link" => (strstr(request_uri(), "admin") ? url("admin/user/edit/$account->uid") : url("user/view/$account->uid")), 'user' => $account->name);
+    $find[] = array('title' => $account->name, 'link' => (strstr(request_uri(), 'admin') ? url("admin/user/edit/$account->uid") : url("user/view/$account->uid")), 'user' => $account->name);
   }
-  return array(t("Matching users"), $find);
+  return array(t('Matching users'), $find);
 }
 
+/**
+ * Implementation of hook_user().
+ */
 function user_user($type, &$edit, &$user) {
   if ($type == 'view') {
     return array(t('History') => form_item(t('Member for'), format_interval(time() - $user->created)));
   }
 }
 
-function user_block($op = "list", $delta = 0) {
+/**
+ * Implementation of hook_block().
+ */
+function user_block($op = 'list', $delta = 0) {
   global $user;
 
-  if ($op == "list") {
-     $blocks[0]['info'] = t("User login");
-     $blocks[1]['info'] = t("Navigation");
-     $blocks[2]['info'] = t("Who's new");
-     $blocks[3]['info'] = t("Who's online");
+  if ($op == 'list') {
+     $blocks[0]['info'] = t('User login');
+     $blocks[1]['info'] = t('Navigation');
+     $blocks[2]['info'] = t('Who\'s new');
+     $blocks[3]['info'] = t('Who\'s online');
 
      return $blocks;
   }
@@ -413,90 +447,85 @@ function user_block($op = "list", $delta = 0) {
       case 0:
 
         if (!$user->uid) {
-          /*
-          ** For usability's sake, avoid showing two login forms on one
-          ** page.
-          */
-
-          if (arg(0) == 'user' && arg(1) != "view") {
+          // For usability's sake, avoid showing two login forms on one page.
+          if (arg(0) == 'user' && arg(1) != 'view') {
             return;
           }
 
-          $edit = $_POST["edit"];
+          $edit = $_POST['edit'];
 
           $output = "<div class=\"user-login-block\">\n";
 
-          /*
-          ** Save the referer.  We record where the user came from such
-          ** that we/ can redirect him after having completed the login
-          ** form.
-          */
+          // Save the referer.  We record where the user came from such
+          // that we can redirect him after having completed the login form.
 
           if (empty($edit)) {
-            $edit["destination"] = $_GET["q"];
+            $edit['destination'] = $_GET['q'];
           }
-          // NOTE: special care needs to be taken because on pages with forms, such as node and comment submission pages, the $edit variable might already be set.
+          // NOTE: special care needs to be taken because on pages with forms,
+          // such as node and comment submission pages, the $edit variable
+          // might already be set.
 
-          $output .= form_hidden("destination", $edit["destination"]);
-          $output .= form_textfield(t("Username"), 'name', $edit['name'], 15, 64);
-          $output .= form_password(t("Password"), 'pass', $pass, 15, 64);
-          $output .= form_submit(t("Log in"));
+          $output .= form_hidden('destination', $edit['destination']);
+          $output .= form_textfield(t('Username'), 'name', $edit['name'], 15, 64);
+          $output .= form_password(t('Password'), 'pass', $pass, 15, 64);
+          $output .= form_submit(t('Log in'));
           $output .= "</div>\n";
 
-          $output  = form($output, "post", url("user/login"));
+          $output  = form($output, 'post', url('user/login'));
 
-          if (variable_get("user_register", 1)) {
-            $items[] = l(t("Create new account"), "user/register", array("title" => t("Create a new user account.")));
+          if (variable_get('user_register', 1)) {
+            $items[] = l(t('Create new account'), 'user/register', array('title' => t('Create a new user account.')));
           }
-          $items[] = l(t("Request new password"), "user/password", array("title" => t("Request new password via e-mail.")));
+          $items[] = l(t('Request new password'), 'user/password', array('title' => t('Request new password via e-mail.')));
 
-          $output .= theme("item_list", $items);
+          $output .= theme('item_list', $items);
 
-          $block["subject"] = t("User login");
-          $block["content"] = $output;
+          $block['subject'] = t('User login');
+          $block['content'] = $output;
         }
         return $block;
       case 1:
         if ($menu = menu_tree()) {
-           $block["subject"] = $user->uid ? $user->name : t("Navigation");
-           $block["content"] = "<div class=\"menu\">". $menu ."</div>";
+           $block['subject'] = $user->uid ? $user->name : t('Navigation');
+           $block['content'] = '<div class="menu">'. $menu .'</div>';
         }
         return $block;
       case 2:
-        if (user_access("access content")) {
-          $result = db_query_range("SELECT uid, name FROM {users} WHERE status != '0' ORDER BY uid DESC", 0, 5);
+        if (user_access('access content')) {
+          $result = db_query_range('SELECT uid, name FROM {users} WHERE status != 0 ORDER BY uid DESC', 0, 5);
           while ($account = db_fetch_object($result)) {
             $items[] = format_name($account);
           }
 
-          $output = theme("user_list", $items);
+          $output = theme('user_list', $items);
 
-          $block["subject"] = t("Who's new");
-          $block["content"] = $output;
+          $block['subject'] = t('Who\'s new');
+          $block['content'] = $output;
           return $block;
         }
       case 3:
-        if (user_access("access content")) {
-          /* count users with activity in the past defined period */
-          $time_period = variable_get("user_block_seconds_online", 2700);
+        if (user_access('access content')) {
+          // Count users with activity in the past defined period.
+          $time_period = variable_get('user_block_seconds_online', 2700);
 
-          /* perform database queries to gather online user lists */
-          $guests = db_fetch_object(db_query("SELECT COUNT(DISTINCT sid) AS count FROM {sessions} WHERE timestamp >= %d AND uid = 0", time() - $time_period));
-          $users = db_query("SELECT DISTINCT uid, MAX(timestamp) AS max_timestamp FROM {sessions} WHERE timestamp >= %d AND uid != 0 GROUP BY uid ORDER BY max_timestamp DESC", time() - $time_period );
+          // Perform database queries to gather online user lists.
+          $guests = db_fetch_object(db_query('SELECT COUNT(DISTINCT sid) AS count FROM {sessions} WHERE timestamp >= %d AND uid = 0', time() - $time_period));
+          $users = db_query('SELECT DISTINCT uid, MAX(timestamp) AS max_timestamp FROM {sessions} WHERE timestamp >= %d AND uid != 0 GROUP BY uid ORDER BY max_timestamp DESC', time() - $time_period );
           $total_users = db_num_rows($users);
 
-          /* format the output with proper grammar */
+          // Format the output with proper grammar.
           if ($total_users == 1 && $guests->count == 1) {
-            $output = t("There is currently %members and %visitors online.", array("%members" => format_plural($total_users, "1 user", "%count users"), "%visitors" => format_plural($guests->count, "1 guest", "%count guests")));
+            $output = t('There is currently %members and %visitors online.', array('%members' => format_plural($total_users, '1 user', '%count users'), '%visitors' => format_plural($guests->count, '1 guest', '%count guests')));
           }
           else {
-            $output = t("There are currently %members and %visitors online.", array("%members" => format_plural($total_users, "1 user", "%count users"), "%visitors" => format_plural($guests->count, "1 guest", "%count guests")));
+            $output = t('There are currently %members and %visitors online.', array('%members' => format_plural($total_users, '1 user', '%count users'), '%visitors' => format_plural($guests->count, '1 guest', '%count guests')));
           }
 
-          if (user_access("access user list") && $total_users) {
+          if (user_access('access user list') && $total_users) {
 
-            // Display a list of currently online users
-            $max_users = variable_get("user_block_max_list_count", 10);
+            // Display a list of currently online users.
+            $max_users = variable_get('user_block_max_list_count', 10);
             if ($max_users) {
               $items = array();
 
@@ -506,14 +535,14 @@ function user_block($op = "list", $delta = 0) {
 
               if ($items) {
                 if (db_fetch_object($users)) {
-                  $items[] = "...";
+                  $items[] = '...';
                 }
-                $output .= theme("item_list", $items, t("Online users:"));
+                $output .= theme('item_list', $items, t('Online users:'));
               }
             }
           }
-          $block["subject"] = t("Who's online");
-          $block["content"] = $output;
+          $block['subject'] = t('Who\'s online');
+          $block['content'] = $output;
         }
         return $block;
     }
@@ -530,9 +559,9 @@ function theme_user_picture($account) {
     }
 
     if ($picture) {
-      $picture = "<img src=\"$picture\" alt=\"" . t("%user's picture", array("%user" => $account->name ? $account->name : t(variable_get("anonymous", "Anonymous")))) . "\" />";
+      $picture = "<img src=\"$picture\" alt=\"" . t('%user\'s picture', array('%user' => $account->name ? $account->name : t(variable_get('anonymous', 'Anonymous')))) . '" />';
       if ($account->uid) {
-        $picture = l($picture, "user/view/$account->uid", array("title" => t("View user profile.")));
+        $picture = l($picture, "user/view/$account->uid", array('title' => t('View user profile.')));
       }
 
       return "<div class=\"picture\">$picture</div>";
@@ -547,8 +576,8 @@ function theme_user_profile($account, $fields) {
     $output .= "<h2>$category</h2>$value";
   }
 
-  if (user_access("administer users")) {
-    $output .= form_item(t("Administration"), l(t("edit account"), "admin/user/edit/$account->uid"));
+  if (user_access('administer users')) {
+    $output .= form_item(t('Administration'), l(t('edit account'), "admin/user/edit/$account->uid"));
   }
 
   $output .= "</div>\n";
@@ -557,7 +586,7 @@ function theme_user_profile($account, $fields) {
 }
 
 function theme_user_list($items, $title = NULL) {
-  return theme("item_list", $items, $title);
+  return theme('item_list', $items, $title);
 }
 
 /**
@@ -594,26 +623,19 @@ function user_link($type) {
   }
 }
 
-/*** Authentication methods ************************************************/
-
+/**
+ * Called by authentication modules in order to edit/view their authmap information.
+ */
 function user_get_authname($account, $module) {
-
-  /*
-  **  Called by authentication modules in order to edit/view their authmap information.
-  */
-
   $result = db_query("SELECT authname FROM {authmap} WHERE uid = %d AND module = '%s'", $account->uid, $module);
   return db_result($result);
 }
 
-
+/**
+ * Accepts an user object, $account, or a DA name and returns an associative
+ * array of modules and DA names. Called at external login.
+ */
 function user_get_authmaps($authname = NULL) {
-
-  /*
-  ** Accepts an user object, $account, or an DA name and returns an
-  ** associtive array of modules and DA names. Called at external login.
-  */
-
   $result = db_query("SELECT authname, module FROM {authmap} WHERE authname = '%s'", $authname);
   if (db_num_rows($result) > 0) {
     while ($authmap = db_fetch_object($result)) {
@@ -628,15 +650,15 @@ function user_get_authmaps($authname = NULL) {
 
 function user_set_authmaps($account, $authmaps) {
   foreach ($authmaps as $key => $value) {
-    $module = explode("_", $key, 2);
+    $module = explode('_', $key, 2);
     if ($value) {
-      db_query("UPDATE {authmap} SET authname = '%s' WHERE uid = %d AND module = '%s'", $value, $account->uid, $module["1"]);
+      db_query("UPDATE {authmap} SET authname = '%s' WHERE uid = %d AND module = '%s'", $value, $account->uid, $module['1']);
       if (!db_affected_rows()) {
         db_query("INSERT INTO {authmap} (authname, uid, module) VALUES ('%s', %d, '%s')", $value, $account->uid, $module[1]);
       }
     }
     else {
-      db_query("DELETE FROM {authmap} WHERE uid = %d AND module = '%s'", $account->uid, $module["1"]);
+      db_query("DELETE FROM {authmap} WHERE uid = %d AND module = '%s'", $account->uid, $module['1']);
     }
   }
 }
@@ -644,7 +666,7 @@ function user_set_authmaps($account, $authmaps) {
 function user_auth_help_links() {
   $links = array();
   foreach (module_list() as $module) {
-    if (module_hook($module, "auth")) {
+    if (module_hook($module, 'auth')) {
       $links[] = l(module_invoke($module, 'info', 'name'), "user/help#$module");
     }
   }
@@ -653,69 +675,54 @@ function user_auth_help_links() {
 
 /*** User features *********************************************************/
 
-function user_login($edit = array(), $msg = "") {
+function user_login($edit = array(), $msg = '') {
   global $user, $base_url;
 
-  /*
-  ** If we are already logged on, go to the user page instead.
-  */
-
+  // If we are already logged on, go to the user page instead.
   if ($user->uid) {
     drupal_goto('user');
   }
 
   if (user_deny('user', $edit['name'])) {
-    $error = t("The name '%s' has been denied access.", array("%s" => $edit['name']));
+    $error = t('The name "%s" has been denied access.', array('%s' => $edit['name']));
   }
   else if ($edit['name'] && $edit['pass']) {
 
-    /*
-    ** Try to log in the user locally:
-    */
-
+    // Try to log in the user locally:
     if (!$user->uid) {
       $name = $edit['name'];
       $pass = $edit['pass'];
-      $user = user_load(array('name' => $name, 'pass' => $pass, "status" => 1));
+      $user = user_load(array('name' => $name, 'pass' => $pass, 'status' => 1));
     }
 
-    /*
-    ** Strip name and server from ID:
-    */
-
-    if ($server = strrchr($edit['name'], "@")) {
+    // Strip name and server from ID:
+    if ($server = strrchr($edit['name'], '@')) {
       $name = substr($edit['name'], 0, strlen($edit['name']) - strlen($server));
       $server = substr($server, 1);
       $pass = $edit['pass'];
     }
 
-    /*
-    ** When possible, determine corresponding external auth source. Invoke
-    ** source, and login user if successful:
-    */
-
+    // When possible, determine corresponding external auth source. Invoke
+    // source, and log in user if successful:
     if (!$user->uid && $server && $result = user_get_authmaps("$name@$server")) {
-      if (module_invoke(key($result), "auth", $name, $pass, $server)) {
+      if (module_invoke(key($result), 'auth', $name, $pass, $server)) {
         $user = user_external_load("$name@$server");
         watchdog('user', "external load: $name@$server, module: ". key($result));
       }
       else {
-        $error = t("Invalid password for %s.", array("%s" => "<i>$name@$server</i>"));
+        $error = t('Invalid password for %s.', array('%s' => "<i>$name@$server</i>"));
       }
     }
 
-    /*
-    ** Try each external authentication source in series. Register user if
-    ** successful.
-    */
-
+    // Try each external authentication source in series. Register user if
+    // successful.
     else if (!$user->uid && $server) {
       foreach (module_list() as $module) {
-        if (module_hook($module, "auth")) {
-          if (module_invoke($module, "auth", $name, $pass, $server)) {
-            if (variable_get("user_register", 1) == 1 && !user_load(array('name' => "$name@$server"))) { //register this new user
+        if (module_hook($module, 'auth')) {
+          if (module_invoke($module, 'auth', $name, $pass, $server)) {
+            if (variable_get('user_register', 1) == 1 && !user_load(array('name' => "$name@$server"))) { // Register this new user.
               $user = user_save('', array('name' => "$name@$server", 'pass' => user_password(), 'init' => "$name@$server", 'status' => 1, "authname_$module" => "$name@$server", 'rid' => array(_user_authenticated_id())));
-              watchdog('user', "new user: $name@$server ($module ID)", l(t("edit user"), "admin/user/edit/$user->uid"));
+              watchdog('user', "new user: $name@$server ($module ID)", l(t('edit user'), "admin/user/edit/$user->uid"));
               break;
             }
           }
@@ -724,30 +731,24 @@ function user_login($edit = array(), $msg = "") {
     }
 
     if ($user->uid) {
-      watchdog('user', "session opened for '$user->name'");
+      watchdog('user', 'session opened for "'. $user->name .'"');
 
-      // update the user table timestamp noting user has logged in
+      // Update the user table timestamp noting user has logged in.
       db_query("UPDATE {users} SET changed = '%d' WHERE uid = '%s'", time(), $user->uid);
 
-      user_module_invoke("login", $edit, $user);
+      user_module_invoke('login', $edit, $user);
 
-      /*
-      ** If the user wants to be remembered, set the proper cookie such
-      ** that the session won't expire.
-      */
-
+      // If the user wants to be remembered, set the proper cookie such
+      // that the session won't expire.
       $path = preg_replace("/.+\/\/[^\/]+(.*)/", "\$1/", $base_url);
       setcookie(session_name(), session_id(), FALSE, $path);
 
-      /*
-      ** Redirect the user to the page he logged on from.
-      */
-
-      drupal_goto($edit["destination"]);
+      // Redirect the user to the page he logged on from.
+      drupal_goto($edit['destination']);
     }
     else {
       if (!$error) {
-        $error = t("Sorry.  Unrecognized username or password.") ." ". l(t("Have you forgotten your password?"), "user/password");
+        $error = t('Sorry.  Unrecognized username or password.') .' '. l(t('Have you forgotten your password?'), 'user/password');
       }
       if ($server) {
         watchdog('user', "failed login for '$name@$server': $error");
@@ -758,64 +759,55 @@ function user_login($edit = array(), $msg = "") {
     }
   }
 
-  /*
-  ** Display error message (if any):
-  */
-
+  // Display error message (if any):
   if ($error) {
     drupal_set_message($error, 'error');
   }
 
-  /*
-  ** Save the referrer.  We record where the user came from such that we
-  ** can redirect him after having completed the login form.
-  */
-
+  // Save the referrer.  We record where the user came from such that we
+  // can redirect him after having completed the login form.
   if (empty($edit)) {
-    $edit["destination"] = $_GET["q"];
+    $edit['destination'] = $_GET['q'];
   }
-  $output .= form_hidden("destination", $edit["destination"]);
+  $output .= form_hidden('destination', $edit['destination']);
 
-  /*
-  ** Display login form:
-  */
-
+  // Display login form:
   if ($msg) {
     $output .= "<p>$msg</p>";
   }
   if (count(user_auth_help_links()) > 0) {
-    $output .= form_textfield(t("Username"), 'name', $edit['name'], 30, 64, t("Enter your %s username, or an ID from one of our affiliates: %a.", array("%s" => variable_get("site_name", "local"), "%a" => implode(", ", user_auth_help_links()))));
+    $output .= form_textfield(t('Username'), 'name', $edit['name'], 30, 64, t('Enter your %s username, or an ID from one of our affiliates: %a.', array('%s' => variable_get('site_name', 'local'), '%a' => implode(', ', user_auth_help_links()))));
   }
   else {
-    $output .= form_textfield(t("Username"), 'name', $edit['name'], 30, 64, t("Enter your %s username.", array("%s" => variable_get("site_name", "local"))));
+    $output .= form_textfield(t('Username'), 'name', $edit['name'], 30, 64, t('Enter your %s username.', array('%s' => variable_get('site_name', 'local'))));
   }
-  $output .= form_password(t("Password"), 'pass', $pass, 30, 64, t("Enter the password that accompanies your username."));
-  $output .= form_submit(t("Log in"));
-  $items[] = l(t("Request new password"), "user/password");
-  if (variable_get("user_register", 1)) {
-    $items[] = l(t("Create new account"), "user/register");
+  $output .= form_password(t('Password'), 'pass', $pass, 30, 64, t('Enter the password that accompanies your username.'));
+  $output .= form_submit(t('Log in'));
+  $items[] = l(t('Request new password'), 'user/password');
+  if (variable_get('user_register', 1)) {
+    $items[] = l(t('Create new account'), 'user/register');
   }
-  $output .= theme("item_list", $items);
+  $output .= theme('item_list', $items);
 
   $output  = form_group(t('User login'), $output);
 
-  return form($output, "post", url('user/login'));
+  return form($output, 'post', url('user/login'));
 }
 
 function _user_authenticated_id() {
   return db_result(db_query("SELECT rid FROM {role} WHERE name = 'authenticated user'"));
 }
 
+/**
+ * Menu callback; logs the current user out, and redirects to the home page.
+ */
 function user_logout() {
   global $user;
 
   if ($user->uid) {
-    watchdog('user', "session closed for '$user->name'");
+    watchdog('user', 'session closed for "'. $user->name .'"');
 
-    /*
-    ** Destroy the current session:
-    */
-
+    // Destroy the current session:
     session_destroy();
     module_invoke_all('user', 'logout', NULL, $user);
     unset($user);
@@ -829,40 +821,34 @@ function user_pass($edit = array()) {
 
   if ($edit['name']) {
     $account = db_fetch_object(db_query("SELECT uid, name, mail FROM {users} WHERE status = 1 AND LOWER(name) = '%s'", strtolower($edit['name'])));
-    if (!$account) $error = t("Sorry. The username <i>%s</i> is not recognized.", array("%s" => $edit['name']));
+    if (!$account) $error = t('Sorry. The username "<i>%s</i>" is not recognized.', array('%s' => $edit['name']));
   }
   else if ($edit['mail']) {
     $account = db_fetch_object(db_query("SELECT uid, name, mail FROM {users} WHERE status = 1 AND LOWER(mail) = '%s'", strtolower($edit['mail'])));
-    if (!$account) $error = t("Sorry. The e-mail address <i>%s</i> is not recognized.", array("%s" => $edit['mail']));
+    if (!$account) $error = t('Sorry. The e-mail address "<i>%s</i>" is not recognized.', array('%s' => $edit['mail']));
   }
   if ($account) {
 
-      $from = variable_get("site_mail", ini_get("sendmail_from"));
+      $from = variable_get('site_mail', ini_get('sendmail_from'));
       $pass = user_password();
 
-      /*
-      ** Save new password:
-      */
-
+      // Save new password:
       user_save($account, array('pass' => $pass));
 
-      /*
-      ** Mail new password:
-      */
-
-      $variables = array("%username" => $account->name, "%site" => variable_get("site_name", "drupal"), "%password" => $pass, "%uri" => $base_url, "%uri_brief" => substr($base_url, strlen("http://")), "%mailto" => $account->mail, "%date" => format_date(time()), '%login_uri' => url('user/login', NULL, NULL, TRUE), '%edit_uri' => url('user/edit', NULL, NULL, TRUE));
-      $subject = _user_mail_text("pass_subject", $variables);
-      $body = _user_mail_text("pass_body", $variables);
+      // Mail new password:
+      $variables = array('%username' => $account->name, '%site' => variable_get('site_name', 'drupal'), '%password' => $pass, '%uri' => $base_url, '%uri_brief' => substr($base_url, strlen('http://')), '%mailto' => $account->mail, '%date' => format_date(time()), '%login_uri' => url('user/login', NULL, NULL, TRUE), '%edit_uri' => url('user/edit', NULL, NULL, TRUE));
+      $subject = _user_mail_text('pass_subject', $variables);
+      $body = _user_mail_text('pass_body', $variables);
       $headers = "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from";
       $mail_success = user_mail($account->mail, $subject, $body, $headers);
 
       if ($mail_success) {
-        watchdog('user', "mail password: '". $account->name ."' &lt;". $account->mail ."&gt;");
-        return t("Your password and further instructions have been sent to your e-mail address.");
+        watchdog('user', 'mail password: "'. $account->name .'" &lt;'. $account->mail .'&gt;');
+        return t('Your password and further instructions have been sent to your e-mail address.');
       }
       else {
-        watchdog('error', "error mailing new password: '". $account->name ."' &lt;". $account->mail ."&gt;");
-        return t("Unable to send mail. Please contact the site admin.");
+        watchdog('error', 'error mailing new password: "'. $account->name .'" &lt;'. $account->mail .'&gt;');
+        return t('Unable to send mail. Please contact the site admin.');
       }
     }
     else {
@@ -872,56 +858,50 @@ function user_pass($edit = array()) {
       drupal_set_message($error, 'error');
     }
 
-    /*
-    ** Display form:
-    */
-
-    $output .= "<p>". t("Enter your username <strong><em>or</em></strong> your e-mail address.") ."</p>";
-    $output .= form_textfield(t("Username"), 'name', $edit['name'], 30, 64);
-    $output .= form_textfield(t("E-mail address"), "mail", $edit['mail'], 30, 64);
-    $output .= form_submit(t("E-mail new password"));
-    $items[] = l(t("Log in"), "user/login");
-    if (variable_get("user_register", 1)) {
-      $items[] = l(t("Create new account"), "user/register");
+    // Display form:
+    $output .= '<p>'. t('Enter your username <strong><em>or</em></strong> your e-mail address.') .'</p>';
+    $output .= form_textfield(t('Username'), 'name', $edit['name'], 30, 64);
+    $output .= form_textfield(t('E-mail address'), 'mail', $edit['mail'], 30, 64);
+    $output .= form_submit(t('E-mail new password'));
+    $items[] = l(t('Log in'), 'user/login');
+    if (variable_get('user_register', 1)) {
+      $items[] = l(t('Create new account'), 'user/register');
     }
-    $output .= theme("item_list", $items);
+    $output .= theme('item_list', $items);
     $output  = form_group(t('Request new password'), $output);
-    return form($output, "post", url('user/password'));
+    return form($output, 'post', url('user/password'));
   }
 }
 
 function user_register($edit = array()) {
   global $user, $base_url;
 
-  /*
-  ** If we are already logged on, go to the user page instead.
-  */
-
+  // If we are already logged on, go to the user page instead.
   if ($user->uid) {
-    drupal_goto("user/edit");
+    drupal_goto('user/edit');
   }
 
   if (!(is_null($edit['name']) && is_null($edit['mail']))) {
     if ($error = user_validate_name($edit['name'])) {
-      // do nothing
+      // Do nothing.
     }
     else if ($error = user_validate_mail($edit['mail'])) {
-      // do nothing
+      // Do nothing.
     }
     else if (user_deny('user', $edit['name'])) {
-      $error = t("The name '%s' has been denied access.", array("%s" => $edit['name']));
+      $error = t('The name "%s" has been denied access.', array('%s' => $edit['name']));
     }
-    else if (user_deny("mail", $edit['mail'])) {
-      $error = t("The e-mail address '%s' has been denied access.", array("%s" => $edit['mail']));
+    else if (user_deny('mail', $edit['mail'])) {
+      $error = t('The e-mail address "%s" has been denied access.', array('%s' => $edit['mail']));
     }
     else if (db_num_rows(db_query("SELECT name FROM {users} WHERE LOWER(name) = LOWER('%s')", $edit['name'])) > 0) {
-      $error = t("The name '%s' is already taken.", array("%s" => $edit['name']));
+      $error = t('The name "%s" is already taken.', array('%s' => $edit['name']));
     }
     else if (db_num_rows(db_query("SELECT mail FROM {users} WHERE LOWER(mail) = LOWER('%s') OR LOWER(init) = LOWER('%s')", $edit['mail'], $edit['mail'])) > 0) {
-      $error = t("The e-mail address '%s' is already taken.", array("%s" => $edit['mail']));
+      $error = t('The e-mail address "%s" is already taken.', array('%s' => $edit['mail']));
     }
-    else if (variable_get("user_register", 1) == 0) {
-      $error = t("Public registrations have been disabled by the site administrator.");
+    else if (variable_get('user_register', 1) == 0) {
+      $error = t('Public registrations have been disabled by the site administrator.');
     }
     else {
       foreach (module_list() as $module) {
@@ -943,49 +923,43 @@ function user_register($edit = array()) {
   }
 
   if ($success) {
-
-    $from = variable_get("site_mail", ini_get("sendmail_from"));
+    $from = variable_get('site_mail', ini_get('sendmail_from'));
     $pass = user_password();
 
-    // TODO: is this necessary? Won't session_write replicate this?
-    unset($edit["session"]);
+    // TODO: Is this necessary? Won't session_write() replicate this?
+    unset($edit['session']);
     $account = user_save('', array_merge(array('name' => $edit['name'], 'pass' => $pass, 'init' => $edit['mail'], 'mail' => $edit['mail'], 'rid' => array(_user_authenticated_id()), 'status' => (variable_get('user_register', 1) == 1 ? 1 : 0)), $data));
-    watchdog('user', "new user: '". $edit['name'] ."' &lt;". $edit['mail'] ."&gt;", l(t("edit user"), "admin/user/edit/$account->uid"));
+    watchdog('user', 'new user: "'. $edit['name'] .'" &lt;'. $edit['mail'] .'&gt;', l(t('edit user'), "admin/user/edit/$account->uid"));
 
-    $variables = array("%username" => $edit['name'], "%site" => variable_get("site_name", "drupal"), "%password" => $pass, "%uri" => $base_url, "%uri_brief" => substr($base_url, strlen("http://")), "%mailto" => $edit['mail'], "%date" => format_date(time()), "%login_uri" => url('user/login', NULL, NULL, TRUE), "%edit_uri" => url("user/edit", NULL, NULL, TRUE));
+    $variables = array('%username' => $edit['name'], '%site' => variable_get('site_name', 'drupal'), '%password' => $pass, '%uri' => $base_url, '%uri_brief' => substr($base_url, strlen('http://')), '%mailto' => $edit['mail'], '%date' => format_date(time()), '%login_uri' => url('user/login', NULL, NULL, TRUE), '%edit_uri' => url('user/edit', NULL, NULL, TRUE));
 
-    //the first user may login immediately, and receives a customized welcome e-mail.
+    // The first user may login immediately, and receives a customized welcome e-mail.
     if ($account->uid == 1) {
-      user_mail($edit['mail'], t("drupal user account details for %s", array("%s" => $edit['name'])), strtr(t("%username,\n\nYou may now login to %uri using the following username and password:\n\n  username: %username\n  password: %password\n\n%edit_uri\n\n--drupal"), $variables), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
-      // This should not be t()'ed. No point as its only shown once in the sites lifetime, and it would be bad to store the password
+      user_mail($edit['mail'], t('drupal user account details for %s', array('%s' => $edit['name'])), strtr(t("%username,\n\nYou may now login to %uri using the following username and password:\n\n  username: %username\n  password: %password\n\n%edit_uri\n\n--drupal"), $variables), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
+      // This should not be t()'ed. No point as its only shown once in the sites lifetime, and it would be bad to store the password.
       $output .= "<p>Welcome to Drupal. You are user #1, which gives you full and immediate access.  All future registrants will receive their passwords via e-mail, so please configure your e-mail settings using the Administration pages.</p><p> Your password is <strong>$pass</strong>. You may change your password on the next page.</p><p>Please login below.</p>";
-      $output .= form_hidden("destination", "user/edit");
+      $output .= form_hidden('destination', 'user/edit');
       $output .= form_hidden('name', $account->name);
       $output .= form_hidden('pass', $pass);
-      $output .= form_submit(t("Log in"));
+      $output .= form_submit(t('Log in'));
       return form($output);
     }
     else {
       if ($account->status) {
-        /*
-        ** Create new user account, no administrator approval required:
-        */
-
-        $subject = _user_mail_text("welcome_subject", $variables);
-        $body = _user_mail_text("welcome_body", $variables);
+        // Create new user account, no administrator approval required.
+        $subject = _user_mail_text('welcome_subject', $variables);
+        $body = _user_mail_text('welcome_body', $variables);
         user_mail($edit['mail'], $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
-        return t("Your password and further instructions have been sent to your e-mail address.");
+        return t('Your password and further instructions have been sent to your e-mail address.');
       }
       else {
-        /*
-        ** Create new user account, administrator approval required:
-        */
-        $subject = _user_mail_text("approval_subject", $variables);
-        $body = _user_mail_text("approval_body", $variables);
+        // Create new user account, administrator approval required.
+        $subject = _user_mail_text('approval_subject', $variables);
+        $body = _user_mail_text('approval_body', $variables);
 
         user_mail($edit['mail'], $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
-        user_mail(variable_get("site_mail", ini_get("sendmail_from")), $subject, t("%u has applied for an account.\n\n%uri", array("%u" => $account->name, "%uri" => url("admin/user/edit/$account->uid", NULL, NULL, TRUE))), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
-        return t("Thank you for applying for an account. Your account is currently pending approval by the site administrator.<br />In the meantime, your password and further instructions have been sent to your e-mail address.");
+        user_mail(variable_get('site_mail', ini_get('sendmail_from')), $subject, t("%u has applied for an account.\n\n%uri", array('%u' => $account->name, '%uri' => url("admin/user/edit/$account->uid", NULL, NULL, TRUE))), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
+        return t('Thank you for applying for an account. Your account is currently pending approval by the site administrator.<br />In the meantime, your password and further instructions have been sent to your e-mail address.');
       }
     }
   }
@@ -995,20 +969,20 @@ function user_register($edit = array()) {
     }
   }
 
-  // display the registration form
-  $output .= variable_get("user_registration_help", "");
+  // Display the registration form.
+  $output .= variable_get('user_registration_help', '');
   $affiliates = user_auth_help_links();
   if (count($affiliates) > 0) {
-    $affiliates = implode(", ", $affiliates);
-    $output .= "<p>". t("Note: if you have an account with one of our affiliates (%s), you may <a href=\"%login_uri\">login now</a> instead of registering.", array("%s" => $affiliates, "%login_uri" => url("user/login"))) ."</p>";
+    $affiliates = implode(', ', $affiliates);
+    $output .= '<p>'. t('Note: if you have an account with one of our affiliates (%s), you may <a href="%login_uri">login now</a> instead of registering.', array('%s' => $affiliates, '%login_uri' => url('user/login'))) .'</p>';
   }
-  $output .= form_textfield(t("Username"), 'name', $edit['name'], 30, 64, t("Your full name or your preferred username: only letters, numbers and spaces are allowed."));
-  $output .= form_textfield(t("E-mail address"), "mail", $edit['mail'], 30, 64, t("A password and instructions will be sent to this e-mail address, so make sure it is accurate."));
+  $output .= form_textfield(t('Username'), 'name', $edit['name'], 30, 64, t('Your full name or your preferred username; only letters, numbers and spaces are allowed.'));
+  $output .= form_textfield(t('E-mail address'), 'mail', $edit['mail'], 30, 64, t('A password and instructions will be sent to this e-mail address, so make sure it is accurate.'));
   $output .= _user_profile($edit, $edit);
-  $output .= form_submit(t("Create new account"));
-  $items[] = l(t("Request new password"), "user/password");
-  $items[] = l(t("Log in"), "user/login");
-  $output .= theme("item_list", $items);
+  $output .= form_submit(t('Create new account'));
+  $items[] = l(t('Request new password'), 'user/password');
+  $items[] = l(t('Log in'), 'user/login');
+  $output .= theme('item_list', $items);
   $output  = form_group(t('Create new user account'), $output);
 
   return form($output);
@@ -1020,49 +994,40 @@ function user_edit($edit = array()) {
   if ($user->uid) {
     if (!(is_null($edit['name']) && is_null($edit['mail']))) {
       if ($error = user_validate_name($edit['name'])) {
-        // do nothing
+        // Do nothing.
       }
       else if ($error = user_validate_mail($edit['mail'])) {
-        // do nothing
+        // Do nothing.
       }
-      else if (db_num_rows(db_query("SELECT uid FROM {users} WHERE uid != '$user->uid' AND LOWER(name) = LOWER('%s')", $edit['name'])) > 0) {
-        $error = t("The name '%s' is already taken.", array("%s" => $edit['name']));
+      else if (db_num_rows(db_query("SELECT uid FROM {users} WHERE uid != $user->uid AND LOWER(name) = LOWER('%s')", $edit['name'])) > 0) {
+        $error = t('The name "%s" is already taken.', array('%s' => $edit['name']));
       }
-      else if ($edit['mail'] && db_num_rows(db_query("SELECT uid FROM {users} WHERE uid != '$user->uid' AND LOWER(mail) = LOWER('%s')", $edit['mail'])) > 0) {
-        $error = t("The e-mail address '%s' is already taken.", array("%s" => $edit['mail']));
+      else if ($edit['mail'] && db_num_rows(db_query("SELECT uid FROM {users} WHERE uid != $user->uid AND LOWER(mail) = LOWER('%s')", $edit['mail'])) > 0) {
+        $error = t('The e-mail address "%s" is already taken.', array('%s' => $edit['mail']));
       }
       else {
-        /*
-        ** If required, validate the picture.
-        */
-
+        // If required, validate the picture.
         if ($file = file_check_upload('picture')) {
           $error = user_validate_picture($file, $edit, $user);
         }
 
-        /*
-        ** If required, check that proposed passwords match.  If so,
-        ** add new password to $edit.
-        */
-
+        // If required, check that proposed passwords match.  If so,
+        // add new password to $edit.
         if ($edit['pass1']) {
           if ($edit['pass1'] == $edit['pass2']) {
             $edit['pass'] = $edit['pass1'];
           }
           else {
-            $error = t("The specified passwords do not match.");
+            $error = t('The specified passwords do not match.');
           }
         }
         unset($edit['pass1'], $edit['pass2']);
 
-        /*
-        ** Validate input fields to make sure users don't submit
-        ** invalid form data.
-        */
-
-        if (!user_access("administer users")) {
-           if (array_intersect(array_keys($edit), array("rid", "init", "session"))) {
-             watchdog("warning", "detected malicious attempt to alter a protected database field");
+        // Validate input fields to make sure users don't submit
+        // invalid form data.
+        if (!user_access('administer users')) {
+           if (array_intersect(array_keys($edit), array('rid', 'init', 'session'))) {
+             watchdog('warning', 'detected malicious attempt to alter a protected database field');
            }
 
            $edit['rid'] = array_keys($user->roles);
@@ -1070,11 +1035,8 @@ function user_edit($edit = array()) {
            $edit['session'] = $user->session;
         }
 
-        /*
-        ** Have the modules that extend the user information validate
-        ** their data.
-        */
-
+        // Have the modules that extend the user information validate
+        // their data.
         foreach (module_list() as $module) {
           if (module_hook($module, 'user')) {
             $result = module_invoke($module, 'user', 'validate', $edit, $user);
@@ -1089,10 +1051,7 @@ function user_edit($edit = array()) {
         }
 
         if (!$error) {
-          /*
-          ** Save user information:
-          */
-
+          // Save user information.
           $user = user_save($user, array_merge($edit, $data));
 
           drupal_set_message(t('your user information changes have been saved.'));
@@ -1108,9 +1067,9 @@ function user_edit($edit = array()) {
       $edit = object2array($user);
     }
 
-    $group  = form_textfield(t("Username"), 'name', $edit['name'], 30, 55, t("Your full name or your preferred username: only letters, numbers and spaces are allowed."));
-    $group .= form_textfield(t("E-mail address"), "mail", $edit['mail'], 30, 55, t("Insert a valid e-mail address.  All e-mails from the system will be sent to this address. The e-mail address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by e-mail."));
-    $group .= form_item(t("Password"), "<input type=\"password\" name=\"edit[pass1]\" size=\"12\" maxlength=\"24\" /> <input type=\"password\" name=\"edit[pass2]\" size=\"12\" maxlength=\"24\" />", t("Enter your new password twice if you want to change your current password or leave it blank if you are happy with your current password."));
+    $group  = form_textfield(t('Username'), 'name', $edit['name'], 30, 55, t('Your full name or your preferred username: only letters, numbers and spaces are allowed.'));
+    $group .= form_textfield(t('E-mail address'), 'mail', $edit['mail'], 30, 55, t('Insert a valid e-mail address.  All e-mails from the system will be sent to this address. The e-mail address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by e-mail.'));
+    $group .= form_item(t('Password'), '<input type="password" name="edit[pass1]" size="12" maxlength="24" /> <input type="password" name="edit[pass2]" size="12" maxlength="24" />', t('Enter your new password twice if you want to change your current password, or leave it blank if you are happy with your current password.'));
     $output = form_group(t('Account information'), $group);
 
     if (variable_get('user_pictures', 0)) {
@@ -1118,15 +1077,15 @@ function user_edit($edit = array()) {
       if (file_exists($user->picture)) {
         $group .= '<img src="'. file_create_url($edit['picture']) .'" alt="" title="" />';
       }
-      $group .= form_file(t('Upload picture'), 'picture', 48, t("Your virtual face or picture.  Maximum dimensions are %dimensions and the maximum size is %size kB.", array("%dimensions" => variable_get('user_picture_dimensions', "85x85"), "%size" => variable_get('user_picture_file_size', "30"))) ." ". variable_get('user_picture_guidelines', ''));
+      $group .= form_file(t('Upload picture'), 'picture', 48, t('Your virtual face or picture.  Maximum dimensions are %dimensions and the maximum size is %size kB.', array('%dimensions' => variable_get('user_picture_dimensions', '85x85'), '%size' => variable_get('user_picture_file_size', '30'))) .' '. variable_get('user_picture_guidelines', ''));
       $output .= form_group(t('Picture'), $group);
     }
 
     $output .= _user_profile($edit, $user, 'form');
-    $output .= form_submit(t("Save user information"));
+    $output .= form_submit(t('Save user information'));
 
-    $output = form($output, "post", 0, array("enctype" => "multipart/form-data"));
-      // the "enctype" attribute is required to upload files such as pictures
+    $output = form($output, 'post', 0, array('enctype' => 'multipart/form-data'));
+      // The "enctype" attribute is required to upload files such as pictures.
   }
   else {
     $output = user_login();
@@ -1136,7 +1095,6 @@ function user_edit($edit = array()) {
 }
 
 function _user_profile($edit, $account, $mode = 'form') {
-
   $groups = array();
   foreach (module_list() as $module) {
     if ($data = module_invoke($module, 'user', $mode, $edit, $account)) {
@@ -1172,16 +1130,16 @@ function user_view($uid = 0) {
     }
     else {
       $output = user_login();
-      if (variable_get("user_register", 1)) {
+      if (variable_get('user_register', 1)) {
         $output .= user_register();
       }
       $output .= user_pass();
 
-      print theme('page', $output, t("User login"));
+      print theme('page', $output, t('User login'));
     }
   }
   else {
-    if ($account = user_load(array('uid' => $uid, "status" => 1))) {
+    if ($account = user_load(array('uid' => $uid, 'status' => 1))) {
       // Retrieve and merge all profile fields:
       $fields = array();
       foreach (module_list() as $module) {
@@ -1201,49 +1159,45 @@ function user_view($uid = 0) {
 }
 
 function user_page() {
-
-  $edit = $_POST["edit"];
-  $op = $_POST["op"];
+  $edit = $_POST['edit'];
+  $op = $_POST['op'];
 
   if (empty($op)) {
     $op = arg(1);
   }
 
   switch ($op) {
-    case t("E-mail new password"):
-    case "password":
-      print theme('page', user_pass($edit), t("E-mail new password"));
+    case t('E-mail new password'):
+    case 'password':
+      print theme('page', user_pass($edit), t('E-mail new password'));
       break;
-    case t("Create new account"):
-    case "register":
+    case t('Create new account'):
+    case 'register':
       $output = user_register($edit);
-      if (variable_get("user_register", 1)) {
-        print theme('page', $output, t("Create new account"));
+      if (variable_get('user_register', 1)) {
+        print theme('page', $output, t('Create new account'));
       }
       else {
         drupal_access_denied();
       }
       break;
-    case t("Log in"):
-    case "login":
+    case t('Log in'):
+    case 'login':
       $output = user_login($edit);
-      print theme('page', $output, t("Log in"));
+      print theme('page', $output, t('Log in'));
       break;
-    case t("Save user information"):
-    case "edit":
+    case t('Save user information'):
+    case 'edit':
       $output = user_edit($edit);
-      $GLOBALS["theme"] = init_theme();
-      print theme('page', $output, t("Edit account"));
+      $GLOBALS['theme'] = init_theme();
+      print theme('page', $output, t('Edit account'));
       break;
-    case "view":
+    case 'view':
       user_view(arg(2));
       break;
-    case t("Logout"):
-    case "logout":
+    case t('Logout'):
+    case 'logout':
       print user_logout();
-      break;
-    case "help":
-      print theme('page', user_help("user/help#user"), t("Distributed authentication"));
       break;
     default:
       print user_view();
@@ -1255,69 +1209,66 @@ function user_page() {
 
 function _user_mail_text($messageid, $variables = array()) {
 
-  // Check if an admin setting overrides the default string
+  // Check if an admin setting overrides the default string.
   if ($admin_setting = variable_get('user_mail_' . $messageid, FALSE)) {
     return strtr($admin_setting, $variables);
   }
-  // No override, return with default strings
+  // No override, return with default strings.
   else {
-
     switch ($messageid) {
-      case "welcome_subject":
-        return t("Account details for %username at %site", $variables);
-
-      case "welcome_body":
+      case 'welcome_subject':
+        return t('Account details for %username at %site', $variables);
+      case 'welcome_body':
       return t("%username,\n\nThank you for registering at %site. You may now log in to %login_uri using the following username and password:\n\nusername: %username\npassword: %password\n\nAfter logging in, you may wish to change your password at %edit_uri\n\nYour new %site membership also enables to you to login to other Drupal powered websites (e.g. http://www.drop.org/) without registering. Just use the following Drupal ID and password:\n\nDrupal ID: %username@%uri_brief\npassword: %password\n\n\n--  %site team", $variables);
-
-      case "approval_subject":
-        return t("Account details for %username at %site (pending admin approval)", $variables);
-
-      case "approval_body":
+      case 'approval_subject':
+        return t('Account details for %username at %site (pending admin approval)', $variables);
+      case 'approval_body':
         return t("%username,\n\nThank you for registering at %site. Your application for an account is currently pending approval. Once it has been granted, you may log in to %login_uri using the following username and password:\n\nusername: %username\npassword: %password\n\nAfter logging in, you may wish to change your password at %edit_uri\n\nYour new %site membership also enables to you to login to other Drupal powered websites (e.g. http://www.drop.org/) without registering. Just use the following Drupal ID and password:\n\nDrupal ID: %username@%uri_brief\npassword: %password\n\n\n--  %site team", $variables);
-
-      case "pass_subject":
-        return t("Replacement login information for %username at %site", $variables);
-
-      case "pass_body":
+      case 'pass_subject':
+        return t('Replacement login information for %username at %site', $variables);
+      case 'pass_body':
         return t("%username,\n\nHere is your new password for %site. You may now login to %login_uri using the following username and password:\n\nusername: %username\npassword: %password\n\nAfter logging in, you may wish to change your password at %edit_uri", $variables);
     }
   }
 }
 
+/**
+ * Implementation of hook_settings().
+ */
 function user_settings() {
-  // user registration settings
-  $group = form_radios(t("Public registrations"), "user_register", variable_get("user_register", 1), array(t("Only site administrators can create new user accounts."), t("Visitors can create accounts and no administrator approval is required."), t("Visitors can create accounts but administrator approval is required.")));
-  $group .= form_textarea(t("User registration guidelines"), "user_registration_help", variable_get("user_registration_help", ""), 70, 4, t("This text is displayed at the top of the user registration form.  It's useful for helping or instructing your users."));
-  $output = form_group(t("User registration settings"), $group);
+  // User registration settings.
+  $group = form_radios(t('Public registrations'), 'user_register', variable_get('user_register', 1), array(t('Only site administrators can create new user accounts.'), t('Visitors can create accounts and no administrator approval is required.'), t('Visitors can create accounts but administrator approval is required.')));
+  $group .= form_textarea(t('User registration guidelines'), 'user_registration_help', variable_get('user_registration_help', ''), 70, 4, t('This text is displayed at the top of the user registration form.  It\'s useful for helping or instructing your users.'));
+  $output = form_group(t('User registration settings'), $group);
 
-  // user email settings
-  $group = form_textfield(t("Subject of welcome e-mail"), "user_mail_welcome_subject", _user_mail_text("welcome_subject"), 70, 180, t("Customize the subject of your welcome e-mail, which is sent to new members upon registering.") ." ". t("Available variables are:") ." %username, %site, %password, %uri, %uri_brief, %mailto, %date, %login_uri, %edit_uri.");
-  $group .= form_textarea(t("Body of welcome e-mail"), "user_mail_welcome_body", _user_mail_text("welcome_body"), 70, 10, t("Customize the body of the welcome e-mail, which is sent to new members upon registering.") ." ". t("Available variables are:") ." %username, %site, %password, %uri, %uri_brief, %mailto, , %login_uri, %edit_uri.");
-  $group .= form_textfield(t("Subject of welcome e-mail (awaiting admin approval)"), "user_mail_approval_subject", _user_mail_text("approval_subject"), 70, 180, t("Customize the subject of your awaiting approval welcome e-mail, which is sent to new members upon registering.") ." ". t("Available variables are:") ." %username, %site, %password, %uri, %uri_brief, %mailto, %date, %login_uri, %edit_uri.");
-  $group .= form_textarea(t("Body of welcome e-mail (awaiting admin approval)"), "user_mail_approval_body", _user_mail_text("approval_body"), 70, 10, t("Customize the body of the awaiting approval welcome e-mail, which is sent to new members upon registering.") ." ". t("Available variables are:") ." %username, %site, %password, %uri, %uri_brief, %mailto, %login_uri, %edit_uri.");
-  $group .= form_textfield(t("Subject of password recovery e-mail"), "user_mail_pass_subject", _user_mail_text("pass_subject"), 70, 180, t("Customize the Subject of your forgotten password e-mail.") ." ". t("Available variables are:") ." %username, %site, %password, %uri, %uri_brief, %mailto, %date, %login_uri, %edit_uri.");
-  $group .= form_textarea(t("Body of password recovery e-mail"), "user_mail_pass_body", _user_mail_text("pass_body"), 70, 10, t("Customize the body of the forgotten password e-mail.") ." ". t("Available variables are:") ." %username, %site, %password, %uri, %uri_brief, %mailto, %login_uri, %edit_uri.");
-  $output .= form_group(t("User email settings"), $group);
+  // User e-mail settings.
+  $group = form_textfield(t('Subject of welcome e-mail'), 'user_mail_welcome_subject', _user_mail_text('welcome_subject'), 70, 180, t('Customize the subject of your welcome e-mail, which is sent to new members upon registering.') .' '. t('Available variables are:') .' %username, %site, %password, %uri, %uri_brief, %mailto, %date, %login_uri, %edit_uri.');
+  $group .= form_textarea(t('Body of welcome e-mail'), 'user_mail_welcome_body', _user_mail_text('welcome_body'), 70, 10, t('Customize the body of the welcome e-mail, which is sent to new members upon registering.') .' '. t('Available variables are:') .' %username, %site, %password, %uri, %uri_brief, %mailto, %login_uri, %edit_uri.');
+  $group .= form_textfield(t('Subject of welcome e-mail (awaiting admin approval)'), 'user_mail_approval_subject', _user_mail_text('approval_subject'), 70, 180, t('Customize the subject of your awaiting approval welcome e-mail, which is sent to new members upon registering.') .' '. t('Available variables are:') .' %username, %site, %password, %uri, %uri_brief, %mailto, %date, %login_uri, %edit_uri.');
+  $group .= form_textarea(t('Body of welcome e-mail (awaiting admin approval)'), 'user_mail_approval_body', _user_mail_text('approval_body'), 70, 10, t('Customize the body of the awaiting approval welcome e-mail, which is sent to new members upon registering.') .' '. t('Available variables are:') .' %username, %site, %password, %uri, %uri_brief, %mailto, %login_uri, %edit_uri.');
+  $group .= form_textfield(t('Subject of password recovery e-mail'), 'user_mail_pass_subject', _user_mail_text('pass_subject'), 70, 180, t('Customize the Subject of your forgotten password e-mail.') .' '. t('Available variables are:') .' %username, %site, %password, %uri, %uri_brief, %mailto, %date, %login_uri, %edit_uri.');
+  $group .= form_textarea(t('Body of password recovery e-mail'), 'user_mail_pass_body', _user_mail_text('pass_body'), 70, 10, t('Customize the body of the forgotten password e-mail.') .' '. t('Available variables are:') .' %username, %site, %password, %uri, %uri_brief, %mailto, %login_uri, %edit_uri.');
+  $output .= form_group(t('User email settings'), $group);
 
-  // picture settings:
+  // Picture settings.
   if (!file_check_directory(file_create_path(variable_get('user_picture_path', 'pictures')))) {
     $error = theme('error', t('The picture directory does not exist, or is not writable.'));
   }
 
   $group  = form_radios(t('Picture support'), 'user_pictures', variable_get('user_pictures', 0), array(t('Disabled'), t('Enabled')), t('Enable picture support.'));
-  $group .= form_textfield(t("Picture image path"), 'user_picture_path', variable_get('user_picture_path', "pictures"), 45, 255, t("Subdirectory in the directory '%dir' where pictures will be stored.", array('%dir' => variable_get('file_directory_path', 'files') . FILE_SEPARATOR)) . $error);
+  $group .= form_textfield(t('Picture image path'), 'user_picture_path', variable_get('user_picture_path', 'pictures'), 45, 255, t('Subdirectory in the directory "%dir" where pictures will be stored.', array('%dir' => variable_get('file_directory_path', 'files') . FILE_SEPARATOR)) . $error);
   $group .= form_textfield(t('Default picture'), 'user_picture_default', variable_get('user_picture_default', ''), 45, 255, t('URL of picture to display for users with no custom picture selected. Leave blank for none.'));
-  $group .= form_textfield(t("Picture maximum dimensions"), 'user_picture_dimensions', variable_get('user_picture_dimensions', "85x85"), 10, 10, t("Maximum dimensions for pictures."));
-  $group .= form_textfield(t("Picture maximum file size"), 'user_picture_file_size', variable_get('user_picture_file_size', "30"), 10, 10, t("Maximum file size for pictures, in kB."));
-  $group .= form_textarea(t("Picture guidelines"), 'user_picture_guidelines', variable_get('user_picture_guidelines', ''), 70, 4, t("This text is displayed at the picture upload form in addition to the default guidelines.  It's useful for helping or instructing your users."));
+  $group .= form_textfield(t('Picture maximum dimensions'), 'user_picture_dimensions', variable_get('user_picture_dimensions', '85x85'), 10, 10, t('Maximum dimensions for pictures.'));
+  $group .= form_textfield(t('Picture maximum file size'), 'user_picture_file_size', variable_get('user_picture_file_size', '30'), 10, 10, t('Maximum file size for pictures, in kB.'));
+  $group .= form_textarea(t('Picture guidelines'), 'user_picture_guidelines', variable_get('user_picture_guidelines', ''), 70, 4, t('This text is displayed at the picture upload form in addition to the default guidelines.  It\'s useful for helping or instructing your users.'));
 
   $output .= form_group(t('Pictures'), $group);
 
-  // "Who's online" block settings
-  $period = drupal_map_assoc(array(30, 60, 120, 180, 300, 600, 900, 1800, 2700, 3600, 5400, 7200, 10800, 21600, 43200, 86400), "format_interval");
-  $group = form_select(t("User activity"), "user_block_seconds_online", variable_get("user_block_seconds_online", 900), $period, t("Affects \"Who's online\" block.  A user is considered online for this long after they have last viewed a page."));
-  $group .= form_select(t("User list length"), "user_block_max_list_count", variable_get("user_block_max_list_count", 10), drupal_map_assoc(array(0, 5, 10, 15, 20, 25, 30, 40, 50, 75, 100)), t("Affects \"Who's online\" block.  Maximum number of currently online user's to display."));
-  $output .= form_group(t("\"Who's online\" block settings"), $group);
+  // "Who's online" block settings.
+  $period = drupal_map_assoc(array(30, 60, 120, 180, 300, 600, 900, 1800, 2700, 3600, 5400, 7200, 10800, 21600, 43200, 86400), 'format_interval');
+  $group = form_select(t('User activity'), 'user_block_seconds_online', variable_get('user_block_seconds_online', 900), $period, t('Affects "Who\'s online" block.  A user is considered online for this long after they have last viewed a page.'));
+  $group .= form_select(t('User list length'), 'user_block_max_list_count', variable_get('user_block_max_list_count', 10), drupal_map_assoc(array(0, 5, 10, 15, 20, 25, 30, 40, 50, 75, 100)), t('Affects "Who\'s online" block.  Maximum number of currently online users to display.'));
+  $output .= form_group(t('"Who\'s online" block settings'), $group);
 
   return $output;
 }
@@ -1325,16 +1276,16 @@ function user_settings() {
 function user_admin_create($edit = array()) {
   if ($edit['name'] || $edit['mail']) {
     if ($error = user_validate_name($edit['name'])) {
-      // do nothing
+      // Do nothing.
     }
     else if ($error = user_validate_mail($edit['mail'])) {
-      // do nothing
+      // Do nothing.
     }
     else if (db_num_rows(db_query("SELECT name FROM {users} WHERE LOWER(name) = LOWER('%s')", $edit['name'])) > 0) {
-      $error = t("The name '%s' is already taken.", array("%s" => $edit['name']));
+      $error = t('The name "%s" is already taken.', array('%s' => $edit['name']));
     }
     else if (db_num_rows(db_query("SELECT mail FROM {users} WHERE LOWER(mail) = LOWER('%s')", $edit['mail'])) > 0) {
-      $error = t("The e-mail address '%s' is already taken.", array("%s" => $edit['mail']));
+      $error = t('The e-mail address "%s" is already taken.', array('%s' => $edit['mail']));
     }
     else {
       $success = 1;
@@ -1342,7 +1293,7 @@ function user_admin_create($edit = array()) {
   }
 
   if ($success) {
-    watchdog('user', "new user: '". $edit['name'] ."' &lt;". $edit['mail'] ."&gt;");
+    watchdog('user', 'new user: "'. $edit['name'] .'" &lt;'. $edit['mail'] .'&gt;');
 
     user_save('', array('name' => $edit['name'], 'pass' => $edit['pass'], 'init' => $edit['mail'], 'mail' => $edit['mail'], 'rid' => array(_user_authenticated_id()), 'status' => 1));
 
@@ -1354,11 +1305,11 @@ function user_admin_create($edit = array()) {
       drupal_set_message($error, 'error');
     }
 
-    $output  = form_textfield(t("Username"), 'name', $edit['name'], 30, 55, t("Provide the username of the new account."));
-    $output .= form_textfield(t("E-mail address"), "mail", $edit['mail'], 30, 55, t("Provide the e-mail address associated with the new account."));
+    $output  = form_textfield(t('Username'), 'name', $edit['name'], 30, 55, t('Provide the username of the new account.'));
+    $output .= form_textfield(t('E-mail address'), 'mail', $edit['mail'], 30, 55, t('Provide the e-mail address associated with the new account.'));
     $output .= _user_profile($edit, $edit, 'form');
-    $output .= form_textfield(t("Password"), 'pass', $edit['pass'], 30, 55, t("Provide a password for the new account."));
-    $output .= form_submit(t("Create account"));
+    $output .= form_textfield(t('Password'), 'pass', $edit['pass'], 30, 55, t('Provide a password for the new account.'));
+    $output .= form_submit(t('Create account'));
 
     $output = form_group(t('Create new user account'), $output);
 
@@ -1373,59 +1324,59 @@ function user_admin_access($edit = array()) {
     return;
   }
 
-  $op = $_POST["op"];
+  $op = $_POST['op'];
   $id = arg(4);
 
-  if ($op == t("Add rule")) {
-    $aid = db_next_id("{access}_aid");
-    db_query("INSERT INTO {access} (aid, mask, type, status) VALUES ('%s', '%s', '%s', %d)", $aid, $edit["mask"], $type, $edit['status']);
-    drupal_set_message(t("access rule added."));
+  if ($op == t('Add rule')) {
+    $aid = db_next_id('{access}_aid');
+    db_query("INSERT INTO {access} (aid, mask, type, status) VALUES ('%s', '%s', '%s', %d)", $aid, $edit['mask'], $type, $edit['status']);
+    drupal_set_message(t('access rule added.'));
   }
-  else if ($op == t("Check")) {
-    if (user_deny($type, $edit["test"])) {
-      drupal_set_message(t("<i>%test</i> is not allowed.", array("%test" => $edit["test"])));
+  else if ($op == t('Check')) {
+    if (user_deny($type, $edit['test'])) {
+      drupal_set_message(t('<i>%test</i> is not allowed.', array('%test' => $edit['test'])));
     }
     else {
-      drupal_set_message(t("<i>%test</i> is allowed.", array("%test" => $edit["test"])));
+      drupal_set_message(t('<i>%test</i> is allowed.', array('%test' => $edit['test'])));
     }
   }
   else if ($id) {
-    db_query("DELETE FROM {access} WHERE aid = %d", $id);
-    drupal_set_message(t("access rule deleted."));
+    db_query('DELETE FROM {access} WHERE aid = %d', $id);
+    drupal_set_message(t('access rule deleted.'));
   }
 
-  $header = array(t("type"), t("mask"), t("operations"));
-  $result = db_query("SELECT * FROM {access} WHERE type = '%s' AND status = '1' ORDER BY mask", $type);
+  $header = array(t('type'), t('mask'), t('operations'));
+  $result = db_query("SELECT * FROM {access} WHERE type = '%s' AND status = 1 ORDER BY mask", $type);
   while ($rule = db_fetch_object($result)) {
-    $rows[] = array(t("Allow"), $rule->mask, array("data" => l(t("delete rule"), "admin/user/access/$type/$rule->aid"), "align" => "center"));
+    $rows[] = array(t('Allow'), $rule->mask, array('data' => l(t('delete rule'), "admin/user/access/$type/$rule->aid"), 'align' => 'center'));
   }
 
-  $result = db_query("SELECT * FROM {access} WHERE type = '%s' AND status = '0' ORDER BY mask", $type);
+  $result = db_query("SELECT * FROM {access} WHERE type = '%s' AND status = 0 ORDER BY mask", $type);
   while ($rule = db_fetch_object($result)) {
-    $rows[] = array(t("Deny"), $rule->mask, l(t("delete rule"), "admin/user/access/$type/$rule->aid"));
+    $rows[] = array(t('Deny'), $rule->mask, l(t('delete rule'), "admin/user/access/$type/$rule->aid"));
   }
 
-  $options = array("1" => t("Allow"), "0" => t("Deny"));
-  $rows[] = array(form_radios(NUll, "status", $edit['status'], $options), form_textfield(NULL, "mask", $edit["mask"], 32, 64), form_submit(t("Add rule")));
-  $output .= theme("table", $header, $rows);
+  $options = array('1' => t('Allow'), '0' => t('Deny'));
+  $rows[] = array(form_radios(NUll, 'status', $edit['status'], $options), form_textfield(NULL, 'mask', $edit['mask'], 32, 64), form_submit(t('Add rule')));
+  $output .= theme('table', $header, $rows);
 
-  $output .= "<p><small>%: ". t("Matches any number of characters, even zero characters") .".<br />_: ". t("Matches exactly one character.") ."</small></p>";
+  $output .= '<p><small>%: '. t('Matches any number of characters, even zero characters') .'.<br />_: '. t('Matches exactly one character.') .'</small></p>';
 
   if ($type != 'user') {
-    $title = t("Check e-mail address");
+    $title = t('Check e-mail address');
   }
   else {
-    $title = t("Check username");
+    $title = t('Check username');
   }
-  $output .= form_textfield($title, "test", $edit["test"], 32, 64). form_submit(t("Check"));
+  $output .= form_textfield($title, 'test', $edit['test'], 32, 64). form_submit(t('Check'));
 
   return form($output);
 }
 
 function user_roles($membersonly = 0) {
-  $result = db_query("SELECT * FROM {role} ORDER BY name");
+  $result = db_query('SELECT * FROM {role} ORDER BY name');
   while ($role = db_fetch_object($result)) {
-    if (!$membersonly || ($membersonly && $role->name != "anonymous user")) {
+    if (!$membersonly || ($membersonly && $role->name != 'anonymous user')) {
       $roles[$role->rid] = $role->name;
     }
   }
@@ -1434,131 +1385,111 @@ function user_roles($membersonly = 0) {
 
 function user_admin_perm($edit = array()) {
   if ($edit) {
-    /*
-    ** Save permissions:
-    */
-
-    $result = db_query("SELECT * FROM {role} ");
+    // Save permissions:
+    $result = db_query('SELECT * FROM {role} ');
     while ($role = db_fetch_object($result)) {
-      // delete, so if we clear every checkbox we reset that role;
-      // otherwise permissions are active and denied everywhere
-      db_query("DELETE FROM {permission} WHERE rid = %d", $role->rid);
-      $perm = $edit[$role->rid] ? implode(", ", array_keys($edit[$role->rid])) : "";
+      // Delete, so if we clear every checkbox we reset that role;
+      // otherwise permissions are active and denied everywhere.
+      db_query('DELETE FROM {permission} WHERE rid = %d', $role->rid);
+      $perm = $edit[$role->rid] ? implode(', ', array_keys($edit[$role->rid])) : '';
       if ($perm) {
         db_query("INSERT INTO {permission} (rid, perm) VALUES (%d, '%s')", $role->rid, $perm);
       }
     }
 
-    /*
-    ** Clear the cache, we might have changed the anonymous user's
-    ** permissions.
-    */
+    // Clear the cache, as we might have changed the anonymous user's
+    // permissions.
     cache_clear_all();
   }
 
-  /*
-  ** Compile permission array:
-  */
-
+  // Compile permission array:
   $perms = module_invoke_all('perm');
   asort($perms);
 
-  /*
-  ** Compile role array:
-  */
-
-  $result = db_query("SELECT r.rid, p.perm FROM {role} r LEFT JOIN {permission} p ON r.rid = p.rid ORDER BY name");
+  // Compile role array:
+  $result = db_query('SELECT r.rid, p.perm FROM {role} r LEFT JOIN {permission} p ON r.rid = p.rid ORDER BY name');
   $roles = array();
   while ($role = db_fetch_object($result)) {
     $role_perms[$role->rid] = $role->perm;
   }
 
-  $result = db_query("SELECT rid, name FROM {role} ORDER BY name");
+  $result = db_query('SELECT rid, name FROM {role} ORDER BY name');
   $role_names = array();
   while ($role = db_fetch_object($result)) {
     $role_names[$role->rid] = $role->name;
   }
 
-  /*
-  ** Render roles / permission overview:
-  */
-
-  $header = array_merge(array("&nbsp;"), $role_names);
+  // Render role/permission overview:
+  $header = array_merge(array('&nbsp;'), $role_names);
 
   foreach ($perms as $perm) {
     $row[] = t($perm);
     foreach ($role_names as $rid => $name) {
-      $row[] = "<input type=\"checkbox\" name=\"edit[$rid][$perm]\"". (strstr($role_perms[$rid], $perm) ? " checked=\"checked\"" : "") ." />";
+      $row[] = "<input type=\"checkbox\" name=\"edit[$rid][$perm]\"". (strstr($role_perms[$rid], $perm) ? ' checked="checked"' : '') .' />';
     }
     $rows[] = $row;
     unset($row);
   }
 
-  $output = theme("table", $header, $rows);
-  $output .= form_submit(t("Save permissions"));
+  $output = theme('table', $header, $rows);
+  $output .= form_submit(t('Save permissions'));
 
   return form($output);
 }
 
 function user_admin_role($edit = array()) {
-  $op = $_POST["op"];
+  $op = $_POST['op'];
   $id = arg(3);
 
-  if ($op == t("Save role")) {
+  if ($op == t('Save role')) {
     db_query("UPDATE {role} SET name = '%s' WHERE rid = %d", $edit['name'], $id);
   }
-  else if ($op == t("Delete role")) {
-    db_query("DELETE FROM {role} WHERE rid = %d", $id);
-    db_query("DELETE FROM {permission} WHERE rid = %d", $id);
+  else if ($op == t('Delete role')) {
+    db_query('DELETE FROM {role} WHERE rid = %d', $id);
+    db_query('DELETE FROM {permission} WHERE rid = %d', $id);
 
-    // Users with only the deleted role are put back in the authenticated users pool
+    // Users with only the deleted role are put back in the authenticated users pool.
     $aid = _user_authenticated_id();
-    $result = db_query("SELECT DISTINCT ur1.uid FROM {users_roles} ur1 LEFT JOIN {users_roles} ur2 ON ur2.uid = ur1.uid WHERE ur1.rid = %d AND ur2.rid != ur1.rid", $id);
+    $result = db_query('SELECT DISTINCT ur1.uid FROM {users_roles} ur1 LEFT JOIN {users_roles} ur2 ON ur2.uid = ur1.uid WHERE ur1.rid = %d AND ur2.rid != ur1.rid', $id);
     $uid = array();
 
     while ($u = db_fetch_object($result)) {
       $uid[] = $u->uid;
     }
 
-    db_query("DELETE FROM {users_roles} WHERE rid = %d AND uid IN (%s)", $id, implode(', ', $uid));
-    db_query("UPDATE {users_roles} SET rid = %d WHERE rid = %d", $aid, $id);
+    db_query('DELETE FROM {users_roles} WHERE rid = %d AND uid IN (%s)', $id, implode(', ', $uid));
+    db_query('UPDATE {users_roles} SET rid = %d WHERE rid = %d', $aid, $id);
   }
-  else if ($op == t("Add role")) {
+  else if ($op == t('Add role')) {
     db_query("INSERT INTO {role} (name) VALUES ('%s')", $edit['name']);
   }
   else if ($id) {
-    /*
-    ** Display role form:
-    */
+    // Display the role form.
+    $role = db_fetch_object(db_query('SELECT * FROM {role} WHERE rid = %d', $id));
 
-    $role = db_fetch_object(db_query("SELECT * FROM {role} WHERE rid = %d", $id));
-
-    $output .= form_textfield(t("Role name"), 'name', $role->name, 32, 64, t("The name for this role.  Example: 'moderator', 'editorial board', 'site architect'."));
-    $output .= form_submit(t("Save role"));
-    $output .= form_submit(t("Delete role"));
+    $output .= form_textfield(t('Role name'), 'name', $role->name, 32, 64, t('The name for this role.  Example: "moderator", "editorial board", "site architect".'));
+    $output .= form_submit(t('Save role'));
+    $output .= form_submit(t('Delete role'));
 
     $output = form($output);
   }
 
   if (!$output) {
-    /*
-    ** Render role overview:
-    */
+    // Render the role overview.
+    $result = db_query('SELECT * FROM {role} ORDER BY name');
 
-    $result = db_query("SELECT * FROM {role} ORDER BY name");
-
-    $header = array(t('name'), t("operations"));
+    $header = array(t('name'), t('operations'));
     while ($role = db_fetch_object($result)) {
-      if ($role->name != "anonymous user" && $role->name != "authenticated user") {
-        $rows[] = array($role->name, array("data" => l(t("edit role"), "admin/user/role/$role->rid"), "align" => "center"));
+      if ($role->name != 'anonymous user' && $role->name != 'authenticated user') {
+        $rows[] = array($role->name, array('data' => l(t('edit role'), "admin/user/role/$role->rid"), 'align' => 'center'));
       }
       else {
-        $rows[] = array($role->name, array("data" => "<span class=\"disabled\">". t("locked") ."</span>", "align" => "center"));
+        $rows[] = array($role->name, array('data' => '<span class="disabled">'. t('locked') .'</span>', 'align' => 'center'));
       }
     }
-    $rows[] = array("<input type=\"text\" size=\"32\" maxlength=\"64\" name=\"edit[name]\" />", "<input type=\"submit\" name=\"op\" value=\"". t("Add role") ."\" />");
+    $rows[] = array('<input type="text" size="32" maxlength="64" name="edit[name]" />', '<input type="submit" name="op" value="'. t('Add role') .'" />');
 
-    $output = theme("table", $header, $rows);
+    $output = theme('table', $header, $rows);
     $output = form($output);
   }
 
@@ -1566,33 +1497,31 @@ function user_admin_role($edit = array()) {
 }
 
 function user_admin_edit($edit = array()) {
-  $op = $_POST["op"];
+  $op = $_POST['op'];
   $id = arg(3);
 
   if ($account = user_load(array('uid' => $id))) {
 
-    if ($op == t("Save account")) {
-      // TODO: this display/edit/validate should be moved to a new profile module implementing the _user hooks
+    if ($op == t('Save account')) {
+      // TODO: This display/edit/validate should be moved to a new profile
+      // module implementing hook_user().
       if ($error = user_validate_name($edit['name'])) {
-        // do nothing
+        // Do nothing.
       }
       else if ($error = user_validate_mail($edit['mail'])) {
-        // do nothing
+        // Do nothing.
       }
       else if (count($edit['rid']) < 1) {
         $error = t('The user must have at least one role.');
       }
       else if (db_num_rows(db_query("SELECT uid FROM {users} WHERE uid != %d AND LOWER(name) = LOWER('%s')", $account->uid, $edit['name'])) > 0) {
-        $error = t("The name '%s' is already taken.", array("%s" => $edit['name']));
+        $error = t('The name "%s" is already taken.', array('%s' => $edit['name']));
       }
       else if ($edit['mail'] && db_num_rows(db_query("SELECT uid FROM {users} WHERE uid != %d AND LOWER(mail) = LOWER('%s')", $account->uid, $edit['mail'])) > 0) {
-        $error = t("The e-mail address '%s' is already taken.", array("%s" => $edit['mail']));
+        $error = t('The e-mail address "%s" is already taken.', array('%s' => $edit['mail']));
       }
 
-      /*
-      ** Validate fields added by other modules.
-      */
-
+      // Validate fields added by other modules.
       foreach (module_list() as $module) {
         if (module_hook($module, 'user')) {
           $result = module_invoke($module, 'user', 'validate', $edit, $account);
@@ -1606,48 +1535,42 @@ function user_admin_edit($edit = array()) {
         }
       }
 
-      /*
-      ** If required, validate the picture.
-      */
-
+      // If required, validate the picture.
       if ($file = file_check_upload('picture')) {
         $error = user_validate_picture($file, $edit, $account);
       }
 
-      /*
-      ** If required, check that proposed passwords match.  If so,
-      ** add new password to $edit.
-      */
-
+      // If required, check that proposed passwords match.  If so,
+      // add new password to $edit.
       if ($edit['pass1']) {
         if ($edit['pass1'] == $edit['pass2']) {
           $edit['pass'] = $edit['pass1'];
         }
         else {
-          $error = t("The specified passwords do not match.");
+          $error = t('The specified passwords do not match.');
         }
       }
 
       unset($edit['pass1'], $edit['pass2']);
       if (!$error) {
         $account = user_save($account, array_merge($edit, $data));
-        drupal_set_message(t("user information changes have been saved."));
+        drupal_set_message(t('user information changes have been saved.'));
       }
       else {
         drupal_set_message($error, 'error');
       }
     }
-    else if ($op == t("Delete account")) {
+    else if ($op == t('Delete account')) {
       if ($edit['status'] == 0) {
-        db_query("DELETE FROM {users} WHERE uid = %d", $account->uid);
-        db_query("DELETE FROM {users_roles} WHERE uid = %d", $account->uid);
-        db_query("DELETE FROM {authmap} WHERE uid = %d", $account->uid);
-        drupal_set_message(t("the account has been deleted."));
+        db_query('DELETE FROM {users} WHERE uid = %d', $account->uid);
+        db_query('DELETE FROM {users_roles} WHERE uid = %d', $account->uid);
+        db_query('DELETE FROM {authmap} WHERE uid = %d', $account->uid);
+        drupal_set_message(t('the account has been deleted.'));
         module_invoke_all('user', 'delete', $edit, $account);
         return user_admin_account();
       }
       else {
-        $error = t("Failed to delete account: the account has to be blocked first.");
+        $error = t('Failed to delete account: the account has to be blocked first.');
         drupal_set_message($error, 'error');
       }
     }
@@ -1656,16 +1579,13 @@ function user_admin_edit($edit = array()) {
       $edit = object2array($account);
     }
 
-    /*
-    ** Display user form:
-    */
-
-    $group  = form_item(t("User ID"), $account->uid);
-    $group .= form_textfield(t("Username"), 'name', $account->name, 30, 55, t("Your full name or your preferred username: only letters, numbers and spaces are allowed."));
-    $group .= form_textfield(t("E-mail address"), "mail", $account->mail, 30, 55, t("Insert a valid e-mail address.  All e-mails from the system will be sent to this address. The e-mail address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by e-mail."));
-    $group .= form_item(t("Password"), "<input type=\"password\" name=\"edit[pass1]\" size=\"12\" maxlength=\"24\" /> <input type=\"password\" name=\"edit[pass2]\" size=\"12\" maxlength=\"24\" />", t("Enter a new password twice if you want to change the current password for this user or leave it blank if you are happy with the current password."));
-    $group .= form_radios(t("Status"), "status", $account->status, array(t("Blocked"), t("Active")));
-    $group .= form_checkboxes(t('Roles'), 'rid', array_keys($account->roles), user_roles(1), t("Select at least one role.  The user receives the combined permissions of all of the selected roles."));
+    // Display user form:
+    $group  = form_item(t('User ID'), $account->uid);
+    $group .= form_textfield(t('Username'), 'name', $account->name, 30, 55, t('Your full name or your preferred username: only letters, numbers and spaces are allowed.'));
+    $group .= form_textfield(t('E-mail address'), 'mail', $account->mail, 30, 55, t('Insert a valid e-mail address.  All e-mails from the system will be sent to this address. The e-mail address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by e-mail.'));
+    $group .= form_item(t('Password'), '<input type="password" name="edit[pass1]" size="12" maxlength="24" /> <input type="password" name="edit[pass2]" size="12" maxlength="24" />', t('Enter a new password twice if you want to change the current password for this user or leave it blank if you are happy with the current password.'));
+    $group .= form_radios(t('Status'), 'status', $account->status, array(t('Blocked'), t('Active')));
+    $group .= form_checkboxes(t('Roles'), 'rid', array_keys($account->roles), user_roles(1), t('Select at least one role.  The user receives the combined permissions of all of the selected roles.'));
 
     $output  = form_group(t('Account information'), $group);
 
@@ -1674,19 +1594,19 @@ function user_admin_edit($edit = array()) {
       if (file_exists($account->picture)) {
         $group .= '<img src="'. file_create_url($account->picture) .'" alt="" title="" />';
       }
-      $group .= form_file(t('Upload picture or picture'), 'picture', 48, t("Maximum dimensions are %dimensions and the maximum size is %size kB.", array("%dimensions" => variable_get('user_picture_dimensions', "85x85"), "%size" => variable_get('user_picture_file_size', "30"))));
+      $group .= form_file(t('Upload picture or picture'), 'picture', 48, t('Maximum dimensions are %dimensions and the maximum size is %size kB.', array('%dimensions' => variable_get('user_picture_dimensions', '85x85'), '%size' => variable_get('user_picture_file_size', '30'))));
       $output .= form_group(t('Picture'), $group);
     }
 
     $output .= _user_profile($edit, $account, 'edit');
 
-    $output .= form_submit(t("Save account"));
-    $output .= form_submit(t("Delete account"));
+    $output .= form_submit(t('Save account'));
+    $output .= form_submit(t('Delete account'));
 
-    $output = form($output, "post", 0, array("enctype" => "multipart/form-data"));
+    $output = form($output, 'post', 0, array('enctype' => 'multipart/form-data'));
   }
   else {
-    $output = t("No such user");
+    $output = t('No such user');
   }
 
   return $output;
@@ -1694,20 +1614,20 @@ function user_admin_edit($edit = array()) {
 
 function user_admin_account() {
   $header = array(
-    array("data" => t("ID"), "field" => "u.uid"),
-    array("data" => t("username"), "field" => "u.name"),
-    array("data" => t("status"), "field" => "u.status"),
+    array('data' => t('ID'), 'field' => 'u.uid'),
+    array('data' => t('username'), 'field' => 'u.name'),
+    array('data' => t('status'), 'field' => 'u.status'),
     array('data' => t('roles')),
-    array("data" => t("last access"), "field"  => "u.changed", "sort" => "desc"),
-    t("operations")
+    array('data' => t('last access'), 'field'  => 'u.changed', 'sort' => 'desc'),
+    t('operations')
   );
-  $sql = "SELECT u.uid, u.name, u.status, u.changed FROM {users} u WHERE uid != 0";
+  $sql = 'SELECT u.uid, u.name, u.status, u.changed FROM {users} u WHERE uid != 0';
   $sql .= tablesort_sql($header);
   $result = pager_query($sql, 50);
 
-  $status = array(t("blocked"), t("active"));
+  $status = array(t('blocked'), t('active'));
   while ($account = db_fetch_object($result)) {
-    $rolesresult = db_query("SELECT r.name FROM {role} r INNER JOIN {users_roles} ur ON ur.rid = r.rid WHERE ur.uid = %d", $account->uid);
+    $rolesresult = db_query('SELECT r.name FROM {role} r INNER JOIN {users_roles} ur ON ur.rid = r.rid WHERE ur.uid = %d', $account->uid);
     $roles = array();
 
     while ($role = db_fetch_object($rolesresult)) {
@@ -1717,49 +1637,49 @@ function user_admin_account() {
     $rows[] = array($account->uid, format_name($account), $status[$account->status], implode(',<br />', $roles), format_date($account->changed, 'small'), l(t('edit account'), "admin/user/edit/$account->uid"));
   }
 
-  $pager = theme("pager", NULL, 50, 0, tablesort_pager());
+  $pager = theme('pager', NULL, 50, 0, tablesort_pager());
   if (!empty($pager)) {
-    $rows[] = array(array("data" => $pager, "colspan" => 6));
+    $rows[] = array(array('data' => $pager, 'colspan' => 6));
   }
-  return theme("table", $header, $rows);
+  return theme('table', $header, $rows);
 }
 
 function user_admin() {
-  $op = $_POST["op"];
-  $edit = $_POST["edit"];
+  $op = $_POST['op'];
+  $edit = $_POST['edit'];
 
   if (empty($op)) {
     $op = arg(2);
   }
 
   switch ($op) {
-    case "search":
-      $output = search_type('user', url("admin/user/search"), $_POST["keys"]);
+    case 'search':
+      $output = search_type('user', url('admin/user/search'), $_POST['keys']);
       break;
-    case t("Add rule"):
-    case t("Check"):
-    case "access":
+    case t('Add rule'):
+    case t('Check'):
+    case 'access':
       $output .= user_admin_access($edit);
       break;
-    case t("Save permissions"):
-      drupal_set_message(t("user permissions saved."));
-    case "permission":
+    case t('Save permissions'):
+      drupal_set_message(t('user permissions saved.'));
+    case 'permission':
       $output .= user_admin_perm($edit);
       break;
-    case t("Create account"):
-    case "create":
+    case t('Create account'):
+    case 'create':
       $output = user_admin_create($edit);
       break;
-    case t("Add role"):
-    case t("Delete role"):
-    case t("Save role"):
-      drupal_set_message(t("your role changes were saved."));
-    case "role":
+    case t('Add role'):
+    case t('Delete role'):
+    case t('Save role'):
+      drupal_set_message(t('your role changes were saved.'));
+    case 'role':
       $output .= user_admin_role($edit);
       break;
-    case t("Delete account"):
-    case t("Save account"):
-    case "edit":
+    case t('Delete account'):
+    case t('Save account'):
+    case 'edit':
       $output = user_admin_edit($edit);
       break;
     default:
@@ -1767,55 +1687,56 @@ function user_admin() {
   }
   print theme('page', $output);
 }
-// the following functions comprise help for admins and developers
-function user_help($section = "admin/help#user") {
+
+/**
+ * Implementation of hook_help().
+ */
+function user_help($section) {
 
   switch ($section) {
     case 'admin/user':
-      return t("<p>Drupal allows users to register, login, logout, maintain user profiles, etc.  No participant can use his own name to post content until he signs up for a user account.</p>");
+      return t('<p>Drupal allows users to register, login, logout, maintain user profiles, etc.  No participant can use his own name to post content until he signs up for a user account.</p>');
     case 'admin/user/create':
     case 'admin/user/account/create':
       return t('This web page allows the administrators to register a new users by hand.  Note that you cannot have a user where either the e-mail address or the username match another user in the system.');
     case 'admin/user/access':
-      return t("Access rules allow Drupal administrators to choose usernames and e-mail address that are prevented from using drupal. To enter the mask for e-mail addresses click on <a href=\"%e-mail\">e-mail rules</a>, for the username mask click on <a href=\"%username\">name rules</a>.", array("%e-mail" => url("admin/user/access/mail"), "%username" => url("admin/user/access/user")));
+      return t('Access rules allow Drupal administrators to choose usernames and e-mail address that are prevented from using drupal. To enter the mask for e-mail addresses click on <a href="%e-mail">e-mail rules</a>, for the username mask click on <a href="%username">name rules</a>.', array('%e-mail' => url('admin/user/access/mail'), '%username' => url('admin/user/access/user')));
     case 'admin/user/access/mail':
-      return t("Setup and test the e-mail access rules. The access function checks if you match a deny and <strong>not</strong> an allow. If you match <strong>only</strong> a deny then it is denied. Any other case, such as both a deny and an allow pattern matching, allows the pattern.<br />Notes: <ul><li>To delete a rule click on \"delete rule\".</li><li>The order of the rules does <strong>not</strong> matter.</li></ul>");
+      return t('Setup and test the e-mail access rules. The access function checks if you match a deny and <strong>not</strong> an allow. If you match <strong>only</strong> a deny then it is denied. Any other case, such as both a deny and an allow pattern matching, allows the pattern.<br />Notes: <ul><li>To delete a rule click on "delete rule".</li><li>The order of the rules does <strong>not</strong> matter.</li></ul>');
     case 'admin/user/access/user':
-      return t("Setup and test the Username access rules. The access function checks if you match a deny and <strong>not</strong> an allow. If you do then it is denied. Any other case, such as a deny pattern and an allow pattern, allows the pattern.<br />Notes: <ul><li>To delete a rule click on \"delete rule\".</li><li>The order of the rules does <strong>not</strong> matter.</li></ul>");
+      return t('Setup and test the Username access rules. The access function checks if you match a deny and <strong>not</strong> an allow. If you do then it is denied. Any other case, such as a deny pattern and an allow pattern, allows the pattern.<br />Notes: <ul><li>To delete a rule click on "delete rule".</li><li>The order of the rules does <strong>not</strong> matter.</li></ul>');
     case 'admin/user/permission':
-      return t("In this area you will define the <strong>permissions</strong> for each user role (role names are defined on the <a href=\"%role\">user roles page</a>). Each permission describes a fine-grained logical operation, such as being able to access the administration pages, or adding/modifying a user account. You could say a permission represents access granted to a user to perform a set of operations.", array("%role" => url("admin/user/role")));
+      return t('In this area you will define the <strong>permissions</strong> for each user role (role names are defined on the <a href="%role">user roles page</a>). Each permission describes a fine-grained logical operation, such as being able to access the administration pages, or adding/modifying a user account. You could say a permission represents access granted to a user to perform a set of operations.', array('%role' => url('admin/user/role')));
     case 'admin/user/role':
-      return t("
-      Roles allow you to fine tune the security and administration of drupal.  A role defines a group of users that have certain privileges as defined in <a href=\"%permission\">user permissions</a>.  Examples of roles include: anonymous user, authenticated user, moderator, administrator and so on. In this area you will define the <strong>names</strong> of the various roles. To delete a role choose \"edit role\".<br />By default, Drupal comes with two user roles:
+      return t('
+      Roles allow you to fine tune the security and administration of drupal.  A role defines a group of users that have certain privileges as defined in <a href="%permission">user permissions</a>.  Examples of roles include: anonymous user, authenticated user, moderator, administrator and so on. In this area you will define the <strong>names</strong> of the various roles. To delete a role choose "edit role".<br />By default, Drupal comes with two user roles:
       <ul>
-      <li>Anonymous user: this role is used for users that don't have a user account or that are not authenticated.</li>
+      <li>Anonymous user: this role is used for users that don\'t have a user account or that are not authenticated.</li>
       <li>Authenticated user: this role is assigned automatically to authenticated users.  Most registered users will belong to this user role unless specified otherwise.</li>
-      </ul>", array("%permission" => url("admin/user/permission")));
+      </ul>', array('%permission' => url('admin/user/permission')));
     case 'admin/user/search':
-      return t("Enter a simple pattern ( '*' may be user as a wildcard match) to search for a username.  For example, one may search for 'br' and Drupal might return 'brian', 'brad', and 'brenda'.");
+      return t('Enter a simple pattern ("*" may be user as a wildcard match) to search for a username.  For example, one may search for "br" and Drupal might return "brian", "brad", and "brenda".');
     case 'admin/system/modules#description':
-      return t("Enables the user registration and login system.");
+      return t('Enables the user registration and login system.');
     case 'admin/system/modules/user':
-      return t("In order to use the full power of Drupal a visitor must sign up for an account. This page lets you setup how a user signs up, logs out, the guidelines from the system about user subscriptions, and the e-mails the system will send to the user.");
+      return t('In order to use the full power of Drupal a visitor must sign up for an account. This page lets you setup how a user signs up, logs out, the guidelines from the system about user subscriptions, and the e-mails the system will send to the user.');
     case 'user/help#user':
-      $site = variable_get("site_name", "this website");
+      $site = variable_get('site_name', 'this website');
 
       $output = t("
       <h3>Distributed authentication<a id=\"da\"></a></h3>
       <p>One of the more tedious moments in visiting a new website is filling out the registration form. Here at %site, you do not have to fill out a registration form if you are already a member of %help-links. This capability is called <i>distributed authentication</i>, and is unique to <a href=\"%drupal\">Drupal</a>, the software which powers %site.</p>
-      <p>Distributed authentication enables a new user to input a username and password into the login box, and immediately be recognized, even if that user never registered at %site. This works because Drupal knows how to communicate with external registration databases. For example, lets say that new user 'Joe' is already a registered member of <a href=\"%delphi-forums\">Delphi Forums</a>. Drupal informs Joe on registration and login screens that he may login with his Delphi ID instead of registering with %site. Joe likes that idea, and logs in with a username of joe@remote.delphiforums.com and his usual Delphi password. Drupal then contacts the <i>remote.delphiforums.com</i> server behind the scenes (usually using <a href=\"%xml\">XML-RPC</a>, <a href=\"%http-post\">HTTP POST</a>, or <a href=\"%soap\">SOAP</a>) and asks: \"Is the password for user Joe correct?\".  If Delphi replies yes, then we create a new %site account for Joe and log him into it.  Joe may keep on logging into %site in the same manner, and he will always be logged into the same account.</p>", array("%help-links" => (implode(", ", user_auth_help_links())), "%site" => "<i>$site</i>", "%drupal" => "http://www.drupal.org", "%delphi-forums" => "http://www.delphiforums.com", "%xml" => "http://www.xmlrpc.com", "%http-post" => "http://www.w3.org/Protocols/", "%soap" => "http://www.soapware.org"));
+      <p>Distributed authentication enables a new user to input a username and password into the login box, and immediately be recognized, even if that user never registered at %site. This works because Drupal knows how to communicate with external registration databases. For example, lets say that new user 'Joe' is already a registered member of <a href=\"%delphi-forums\">Delphi Forums</a>. Drupal informs Joe on registration and login screens that he may login with his Delphi ID instead of registering with %site. Joe likes that idea, and logs in with a username of joe@remote.delphiforums.com and his usual Delphi password. Drupal then contacts the <i>remote.delphiforums.com</i> server behind the scenes (usually using <a href=\"%xml\">XML-RPC</a>, <a href=\"%http-post\">HTTP POST</a>, or <a href=\"%soap\">SOAP</a>) and asks: \"Is the password for user Joe correct?\".  If Delphi replies yes, then we create a new %site account for Joe and log him into it.  Joe may keep on logging into %site in the same manner, and he will always be logged into the same account.</p>", array('%help-links' => (implode(', ', user_auth_help_links())), '%site' => "<i>$site</i>", '%drupal' => 'http://www.drupal.org', '%delphi-forums' => 'http://www.delphiforums.com', '%xml' => 'http://www.xmlrpc.com', '%http-post' => 'http://www.w3.org/Protocols/', '%soap' => 'http://www.soapware.org'));
 
         foreach (module_list() as $module) {
-          if (module_hook($module, "auth")) {
-            $output .= "<h4><a id=\"$module\"></a>". module_invoke($module, 'info', 'name') ."</h4>";
-            $output .= module_invoke($module, "help", "user/help#$module");
+          if (module_hook($module, 'auth')) {
+            $output .= "<h4><a id=\"$module\"></a>". module_invoke($module, 'info', 'name') .'</h4>';
+            $output .= module_invoke($module, 'help', "user/help#$module");
           }
         }
 
         return $output;
     case 'admin/help#user':
-
-      // Start of user_help_admin
       $output = t("
       <h3>Introduction</h3>
       <p>Drupal offers a powerful access system that allows users to register, login, logout, maintain user profiles, etc. By using <a href=\"%user-role\">roles</a> you can setup fine grained <a href=\"%user-permission\">permissions</a> allowing each role to do only what you want them to. Each user is assigned to one or more roles. By default there are two roles \"anonymous\" - a user who has not logged in, and \"authorized\" a user who has signed up and who has been authorized. As anonymous users, participants suffer numerous disadvantages, for example they cannot sign their names to nodes, and their moderated posts beginning at a lower score.</p>
@@ -1823,134 +1744,33 @@ function user_help($section = "admin/help#user") {
       <p>Registered users need to authenticate by supplying either a local username and password, or a remote username and password such as a <a href=\"%jabber\">Jabber ID</a>, <a href=\"%delphiforums\">DelphiForums ID</a>, or one from a <a href=\"%drupal\">Drupal powered</a> website. See the <a href=\"%da-auth\">distributed authentication help</a> for more information on this innovative feature.
       The local username and password, hashed with Message Digest 5 (MD5), are stored in your database. When you enter a password it is also hashed with MD5 and compaired with what is in the database. If the hashes match, the username and password are correct. Once a user authenticated session is started, and until that session is over, the user won't have to re-authenticate. To keep track of the individual sessions, Drupal relies on <a href=\"%php-sess\">PHP sessions</a>. A visitor accessing your website is assigned an unique ID, the so-called session ID, which is stored in a cookie. For security's sake, the cookie does not contain personal information but acts as a key to retrieve the information stored on your server. When a visitor accesses your site, Drupal will check whether a specific session ID has been sent with the request. If this is the case, the prior saved environment is recreated.</p>
       <h3>User preferences and profiles</h3><p>Each Drupal user has a profile, and a set of preferences which may be edited by clicking on the \"<a href=\"%user-prefs\">my account</a>\" link. Of course, a user must be logged into reach those pages. There, users will find a page for changing their preferred time zone, language, username, e-mail address, password, theme, signature, and <a href\"%da-auth\">distributed authentication names</a>. Changes made here take effect immediately. Also, administrators may make profile and preferences changes in <a href=\"%admin-user\">account administration</a> on behalf of their users.</p>
-      <p>Module developers are provided several hooks for adding custom fields to the user view/edit pages. These hooks are described in the Developer section of the <a href=\"%da-devel\">developers guide</a>. For an example, see the <code>jabber_user()</code> function in <i>/modules/jabber.module</i>.</p>
 
       <h3>Distributed authentication<a id=\"da\"></a></h3>
       <p>One of the more tedious moments in visiting a new website is filling out the registration form. The reg form provides helpful information to the website owner, but not much value for the user. The value for the end user is usually the ability to post a messages or receive personalized news, etc. Distributed authentication (DA) gives the user what they want without having to fill out the reg form. Removing this obstacle yields more registered and active users for the website.</p>
-      <p>DA enables a new user to input a username and password into the login box and immediately be recognized, even if that user never registered on your site. This works because Drupal knows how to communicate with external registration databases. For example, lets say that your new user 'Joe' is already a registered member of Delphi Forums. If your Drupal has the delphi module installed, then Drupal will inform Joe on the registration and login screens that he may login with his Delphi ID instead of registering with your Drupal instance. Joe likes that idea, and logs in with a username of joe@remote.delphiforums.com and his usual Delphi password. Drupal then communicates with remote.delphiforums.com (usually using <a href=\"%xml\">%xml</a>, <a href=\"%http-post\">%http-post</a>, or <a href=\"%soap\">%soap</a>) behind the scenes and asks &quot;is this password for username=joe?&quot; If Delphi replies yes, then Drupal will create a new local account for joe and log joe into it. Joe may keep on logging into your Drupal instance in the same manner, and he will be logged into the same joe@remote.delphiforums.com account.</p>
+      <p>DA enables a new user to input a username and password into the login box and immediately be recognized, even if that user never registered on your site. This works because Drupal knows how to communicate with external registration databases. For example, lets say that your new user 'Joe' is already a registered member of Delphi Forums. If your Drupal has the delphi module installed, then Drupal will inform Joe on the registration and login screens that he may login with his Delphi ID instead of registering with your Drupal instance. Joe likes that idea, and logs in with a username of joe@remote.delphiforums.com and his usual Delphi password. Drupal then communicates with remote.delphiforums.com (usually using <a href=\"%xml\">XML</a>, <a href=\"%http-post\">HTTP-POST</a>, or <a href=\"%soap\">SOAP</a>) behind the scenes and asks &quot;is this password for username=joe?&quot; If Delphi replies yes, then Drupal will create a new local account for joe and log joe into it. Joe may keep on logging into your Drupal instance in the same manner, and he will be logged into the same joe@remote.delphiforums.com account.</p>
       <p>One key element of DA is the 'authmap' table, which maps a user's authname (e.g. joe@remote.delphiforums.com) to his local UID (i.e. user identification number). This map is checked whenever a user successfully logs into an external authentication source. Once Drupal knows that the current user is definately joe@remote.delphiforums.com (because Delphi says so), he looks up Joe's UID and logs Joe into that account.</p>
       <p>To disable distributed authentication, simply <a href=\"%dis-module\">disable</a> or remove all DA modules. For a virgin install, that means removing/disabling the jabber module and the drupal module.</p>
       <p>Drupal is setup so that it is very easy to add support for any external authentication source. You currently have the following authentication modules installed ...</p>
       %module-list
-
-      <h3>Writing distributed authentication modules</h3>
-      <p>Drupal is specifically architected to enable easy authoring of new authentication modules. I'll deconstruct the <a href=\"%blogger\">blogger authentication</a> module, and hopefully provide all the details you'll need to write your own auth module. If you want to download the full text of this module, visit the <a href=\"%blogger-source\">module</a> in the <a href=\"%contrib-cvs\">contributions repository</a>.</p>
-      <h4>Code review</h4>
-      <pre>function blogger_auth(\$name, \$pass, \$server) {
-        // user did not present a Blogger ID so don't bother trying.
-        if (\$server !== &quot;blogger.com&quot;) {
-          return 0;
-        }
-        //provided to Drupal by Ev@Blogger
-        \$appkey = &quot;6D4A2D6811A6E1F75148DC1155D33C0C958107BC&quot;
-
-        \$message = new xmlrpcmsg(&quot;blogger.getUsersBlogs&quot;,
-                           array(new xmlrpcval(\$appkey, &quot;string&quot;),
-                           new xmlrpcval(\$name, &quot;string&quot;),
-                           new xmlrpcval(\$pass, &quot;string&quot;)));
-        \$client = new xmlrpc_client(&quot;/api/RPC2&quot;, &quot;plant.blogger.com&quot;);
-        // \$client->setDebug(1);
-        \$result = \$client-&gt;send(\$message, 5);
-        // Since Blogger doesn't return a properly formed FaultCode, we just search for the string 'fault'.
-        if (\$result &amp;&amp; !stristr(\$result-&gt;serialize(), &quot;fault&quot;)) {
-          // watchdog(\"user\", \"Success Blogger Auth. Response: \" . \$result->serialize());
-          return 1;
-        }
-        else if (\$result) {
-          // watchdog(\"user\", \"Blogger Auth failure. Response was \" . \$result->serialize());
-          return 0;
-        }
-        else {
-          // watchdog(\"user\", \"Blogger Auth failure. Could not connect.\");
-          return 0;
-        }
-      }</pre>
-      <p>The <i>_auth</i> function is the heart of any authentication module. This function is called whenever a user is attempting to login using your authentication module. For successful authentications, this function returns TRUE. Otherwise, it returns FALSE. This function always accepts 3 parameters, as shown above. These parameters are passed by the user system (user module). The user system parses the username as typed by the user into 2 substrings - \$name and \$server. The parsing rules are:</p>
-      <table border=\"0\" cellspacing=\"4\" cellpadding=\"4\" style=\"margin: auto; width: 80%;\"><tr><th colspan=\"2\" style=\"text-align: left;\">_auth function parameters</th></tr><tr><th>\$name</th><td>The substring before the final <i>'@'</i> character in the username field</td></tr><tr><th>\$pass</th><td>The whole string submitted by the user in the password field</td></tr><tr><th>\$server</th><td>The substring after the final <i>'@'</i> symbol in the username field</td></tr></table>
-      <p>So now lets use that \$name, \$pass, and \$server which was passed to our <i>_auth</i> function. Blogger authenticates users via <a href=\"%xml\">XML-RPC</a>. Your module may authenticate using a different technique. Drupal doesn't reallly care how your module communicates with its registration source. It just <strong>trusts</strong> the module.</p>
-      <p>The lines above illustrate a typical <a href=\"%xml\">XML-RPC</a> method call. Here we build up a message and send it to Blogger, storing the response in a variable called <i>\$response</i>. The message we pass conforms to the published <a href=\"%blogger-api\">Blogger XML-RPC Application Programmers Interface (API)</a>. Your module will no doubt implement a different API. One peculiarity of this module is that we don't actually use the \$server parameter. Blogger only accepts authentication at <i>plant.blogger.com</i>, so we hard-code that value into the <i>xmlrpc_client()</i> function. A more typical example might be the jabber module, which uses the <i>\$server</i> parameter to determine where to send the authentication request. Also of note is the '5'th parameter in the <i>\$client-&gt;send()</i> call. This is a timeout value in seconds. All authentication modules should implement a timeout on their external calls. This makes sure to return control to the user module if your registration database has become inoperable or unreachable.</p>
-      <pre>
-      if (\$result &amp;&amp; !stristr(\$result-&gt;serialize(), &quot;fault&quot;)) {
-        // watchdog(\"user\", \"Success Blogger Auth. Response: \" . \$result->serialize());
-        return 1;
-      }
-      else if (\$result) {
-        // watchdog(\"user\", \"Blogger Auth failure. Response was \" . \$result->serialize());
-        return 0;
-      }
-      else {
-        // watchdog(\"user\", \"Blogger Auth failure. Could not connect.\");
-        return 0;
-      }
-      </pre>
-      <p>This second half of the <i>_auth</i> function examines the <i>\$response</i> from plant.blogger.com and returns a TRUE (1) or FALSE (0) as appropriate. This is a critical decision, so be sure that you have good logic here, and perform sufficient testing for all cases. In the case of Blogger, we search for the string 'fault' in the response. If that string is present, or there is no repsonse, our function returns FALSE. Otherwise, Blogger has returned valid data to our method request and we return TRUE. Note: Everything starting with \"//\" is a comment and is not executed.</p>
-      <pre>function blogger_page() {
-        print theme(&quot;header&quot;);
-        print theme(&quot;box&quot;, &quot;Blogger&quot;, blogger_help(\"user/help\"));
-        print theme(&quot;footer&quot;);
-      }</pre>
-      <p>The _page function is not currently used, but it might be in the future. For now, just copy what you see here, substituting your module name for <i>blogger</i>.</p>
-      <pre><code>function blogger_help(\$section) {
-        \$output = &quot;&quot;;
-
-        switch (\$section) {
-          case 'user/help':
-          \$site = variable_get(&quot;site_name&quot;, &quot;this web site&quot;);<br />
-          \$output .= &quot;&lt;p&gt;You may login to %site using a &lt;b&gt;Blogger ID&lt;/b&gt; and password. &quot;;
-          \$output .= &quot;A Blogger ID consists of your Blogger username followed by &lt;i&gt;@blogger.com&lt;/i&gt;. &quot;;
-          \$output .= &quot;So a valid blogger ID is &lt;i&gt;mwlily&lt;/i&gt;@&lt;b&gt;blogger.com&lt;/b&gt;. If you are a Blogger member, go ahead and login now.&lt;/p&gt;&quot;;
-          \$output .= &quot;&lt;p&gt;Blogger offers you instant communication power by letting you post your thoughts to the web whenever the urge strikes. &quot;;
-          \$output .= &quot;Blogger will publish to your current web site or help you create one. &quot;;
-          \$output .= &quot;&lt;a href=\&quot;http://www.blogger.com/about.pyra\&quot;&gt;Learn more about it&lt;/a&gt;.&quot;;
-          \$output = t(\$output, array(\"%site\" =&gt; \"&lt;i&gt;\$site&lt;/i&gt;\"));
-        }
-
-        return output;
-      }</code></pre>
-      <p>The <i>_help</i> function is prominently linked within Drupal, so you'll want to write the best possible user help here. You'll want to tell users what a proper username looks like and you may also want to advertise a bit about your service at the end. Note that your help text is passed through a t() function in the last line. This is Drupal's localization function. Translators may localize your help text just like any other text in Drupal.</p>
-      <h4>Publishing your module</h4>
-      <p>Once you've written and tested your authentication module, you'll usually want to share it with the world. The best way to do this is to add the module to the <a href=\"%contrib-cvs\">Drupal contributions CVS repository</a>. You'll need to request priveleges to this repository - see <a href=\"%cvs\">the CVS README file</a> for the details. Then you should announce your contribution on the <a href=\"%drupal-lists\">drupal-devel and drupal-support mailing lists</a>. You might also want to post a story on <a href=\"%drupal-org\">Drupal.org</a>.</p>
-
-      <h3><a id=\"userhook\">module_user()</a></h3>
-      <p>The <strong>_user()</strong> hook provides a mechanism for inserting text and form fields into the <a href=\"%registration\">registration</a>, <a href=\"%user-acct\">user account view/edit</a>, and <a href=\"%user-admin\">administer &raquo; accounts</a> pages. This is useful if you want to add a custom field for your particular community. This is best illustrated by the <a href=\"%profile-module\">profile module</a>. The profile module is meant to be customized for your needs. Please download it and hack away until it does what you need.</p>
-
-      <p>Consider this simpler example from a fictional recipe community web site called Julia's Kitchen. Julia customizes her Drupal powered site by creating a new file called <i>julia.module</i>. That file does the following:<ul>
-      <li>new members must agree to Julia's Privacy Policy on the reg page.</li>
-      <li>members may list their favorite ingredients on their public user profile page</li>
-      </ul></p>
-      <p>Julia achieves this with the following code. The comments below should help you understand what is going on.</p>
-
-      <pre>
-      function julia_user(\$type, \$edit, &\$user) {
-        // What type of registration action are we taking?
-        switch (\$type) {
-          case t(\"view\"):
-            return form_item(\"Favorite Ingredient\", \$user->julia_favingredient);
-          case t(\"edit\"):
-            // when user tries to edit his own user page.
-            return form_textfield(\"Favorite Ingredient\", \"julia_favingredient\",
-                                  \$user->julia_favingredient, 50, 65,
-                                  \"Tell everyone your secret spice\");
-          case t(\"validate\"): // Make sure the data they edited is \"valid\".
-            return user_save(\$user, array(\"julia_favingredient\" => \$edit[\"julia_favingredient\"]));
-        }
-      }
-    </pre>", array("%user-role" => url("admin/user/role"), "%user-permission" => url("admin/user/permission"), "%jabber" => "http://www.jabber.org", "%delphiforums" => "http://www.delphiforums.com", "%drupal" => "http://www.drupal.org", "%da-auth" => url("user/help", NULL, 'da'), "%php-sess" => "http://www.php.net/manual/en/ref.session.php", "%user-prefs" => url("user/edit"), "%admin-user" => url("admin/user"), "%da-devel" => "http://www.drupal.org/node/view/316", "%xml" => "http://www.xmlrpc.org", "%http-post" => "http://www.w3.org/Protocols/", "%soap" => "http://www.soapware.org", "%dis-module" => url("admin/system/modules"), "%blogger" => "http://www.blogger.com", "%blogger-source" => "http://cvs.drupal.org/viewcvs.cgi/contributions/modules/authentication/Bloggar/?cvsroot=contrib", "%contrib-cvs" => "http://cvs.drupal.org/viewcvs/contributions/?cvsroot=contrib", "%blogger-api" => "http://plant.blogger.com/API", "%cvs" => "http://cvs.drupal.org/viewcvs.cgi/contributions/README?rev=HEAD&amp;cvsroot=contrib&amp;content-type=text/vnd.viewcvs-markup", "%drupal-lists" => "http://drupal.org/mailing-lists", "%drupal-org" => "http://www.drupal.org", "%registration" => url("user/register"), "%user-acct" => url('user'), "%user-admin" => url("admin/user"), "%profile-module" => "http://cvs.drupal.org/viewcvs/drupal/modules/profile.module"));
+", array('%user-role' => url('admin/user/role'), '%user-permission' => url('admin/user/permission'), '%jabber' => 'http://www.jabber.org', '%delphiforums' => 'http://www.delphiforums.com', '%drupal' => 'http://www.drupal.org', '%da-auth' => url('user/help', NULL, 'da'), '%php-sess' => 'http://www.php.net/manual/en/ref.session.php', '%user-prefs' => url('user/edit'), '%admin-user' => url('admin/user'), '%xml' => 'http://www.xmlrpc.org', '%http-post' => 'http://www.w3.org/Protocols/', '%soap' => 'http://www.soapware.org', '%dis-module' => url('admin/system/modules'), '%blogger' => 'http://www.blogger.com', '%blogger-api' => 'http://plant.blogger.com/API', '%drupal-lists' => 'http://drupal.org/mailing-lists', '%drupal-org' => 'http://www.drupal.org', '%registration' => url('user/register'), '%user-acct' => url('user'), '%user-admin' => url('admin/user')));
 
       foreach (module_list() as $module) {
-        if (module_hook($module, "auth")) {
-          $output = strtr($output, array("%module-list" => "<h4>". module_invoke($module, 'info', 'name') ."</h4>\n%module-list"));
-          $output = strtr($output, array("%module-list" => module_invoke($module, "help", "user/help") . "\n%module-list"));
+        if (module_hook($module, 'auth')) {
+          $output = strtr($output, array('%module-list' => '<h4>'. module_invoke($module, 'info', 'name') ."</h4>\n%module-list"));
+          $output = strtr($output, array('%module-list' => module_invoke($module, 'help', 'user/help') . "\n%module-list"));
         }
       }
 
-      return strtr($output, array("%module-list" => ""));
+      return strtr($output, array('%module-list' => ''));
   }
 
 }
 
+/**
+ * Menu callback; Prints user-specific information from admin/help.
+ */
 function user_help_page() {
-  print theme('page', user_help());
+  print theme('page', user_help('admin/help#user'));
 }
 
 ?>

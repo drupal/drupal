@@ -1,68 +1,70 @@
 <?php
 // $Id$
 
-/*  Call the throttle_status() function from your own modules, themes, blocks,
- * etc, to determine the current throttle status.  For example, in your theme
+/**
+ * Determine the current load on the site.
+ *
+ * Call the throttle_status() function from your own modules, themes, blocks,
+ * etc. to determine the current throttle status. For example, in your theme
  * you might choose to disable pictures when your site is too busy (reducing
  * bandwidth), or in your modules you might choose to disable some complicated
  * logic when your site is too busy (reducing CPU utilization).
- *  To determine the current throttle level from your own php code, you can add
- * the following line:
- *    $throttle_level = module_invoke("throttle", "status");
- *  This will return a number from 0 to 5.  0 meaning that the current load is
- * very small, 5 meaning that the current load is as heavy as it gets.  You
- * should consider disabling logic when the throttle_level gets to 4 or 5.
+ *
+ * @return
+ *   A number from 0 to 5.  0 means that the current load is very small; 5
+ *   means that the current load is as heavy as it gets.  You should
+ *   consider disabling logic when the throttle level gets to 4 or 5.
  */
 function throttle_status() {
   return variable_get('throttle_level', 0);
 }
 
-
+/**
+ * Implementation of hook_exit().
+ *
+ * Changes the current throttle level based on page hits.
+ */
 function throttle_exit() {
-  /*
-  ** The following logic determines what the current throttle level should
-  **  be, and can be disabled by the admin.  If enabled, the rand() function
-  **  returns a number between 0 and N, N being specified by the admin. If
-  **  0 is returned, the throttle logic is run, adding on additional database
-  **  query.  Otherwise, the following logic is skipped.  This mechanism is
-  **  referred to in the admin page as the 'probability limiter', roughly
-  **  limiting throttle related database calls to 1 in N.
-  */
-  if (!rand(0, variable_get("throttle_probability_limiter", 9))) {
-    /*
-    ** Note:  The rand() function is supported by PHP 3+.  However, prior to
-    ** PHP 4.2.0 it needs to be seeded with a call to srand().  It is important
-    ** that this only happens once, so this should be managed by the Drupal
-    ** engine, not this module.  The Drupal engine should use phpversion() to
-    ** detect and automatically seed pre-4.2.0 systems.
-    */
+  // The following logic determines what the current throttle level should
+  //  be, and can be disabled by the admin.  If enabled, the rand() function
+  //  returns a number between 0 and N, N being specified by the admin. If
+  //  0 is returned, the throttle logic is run, adding on additional database
+  //  query.  Otherwise, the following logic is skipped.  This mechanism is
+  //  referred to in the admin page as the 'probability limiter', roughly
+  //  limiting throttle related database calls to 1 in N.
+  if (!rand(0, variable_get('throttle_probability_limiter', 9))) {
+    // Note:  The rand() function is supported by PHP 3+.  However, prior to
+    // PHP 4.2.0 it needs to be seeded with a call to srand().  It is important
+    // that this only happens once, so this should be managed by the Drupal
+    // engine, not this module.  The Drupal engine should use phpversion() to
+    // detect and automatically seed pre-4.2.0 systems.
 
     $throttle = throttle_status();
     $multiplier = variable_get('throttle_multiplier', 60);
-    // count all hits in past sixty seconds
-    $recent_activity = db_fetch_object(db_query("SELECT COUNT(timestamp) AS hits FROM {accesslog} WHERE timestamp >= %d", (time() - 60)));
+    // Count all hits in the past sixty seconds.
+    $recent_activity = db_fetch_object(db_query('SELECT COUNT(timestamp) AS hits FROM {accesslog} WHERE timestamp >= %d', (time() - 60)));
     _throttle_update($recent_activity->hits);
   }
 }
 
+/**
+ * Implementation of hook_perm().
+ */
 function throttle_perm() {
-  /*
-  ** throttle module defines the following permissions:
-  **   access throttle block - see throttle statistics
-  */
   return array('access throttle block');
 }
 
-function throttle_help($section = "admin/help#throttle") {
-
+/**
+ * Implementation of hook_help().
+ */
+function throttle_help($section) {
   switch ($section) {
-    case "admin/system/modules#description":
-      $output = t("Allows configuration of congestion control auto-throttle mechanism.");
-      break;
-    case "admin/system/modules/throttle":
-      return t("If your site gets linked to by a popular website, or otherwise comes under a \"Denial of Service\" (DoS) attack, your webserver might become overwhelmed.  This module provides a mechanism for automatically detecting a surge in incoming traffic.  This mechanism is utilized by other Drupal models to automatically optimize their performance by temporarily disabling CPU-intensive functionality.  To use the auto-throttle, the access log must be enabled.  It is advised that you carefully read the explainations below and then properly tune this module based on your site's requirements and your webserver's capabilities.", array("%access" => url("admin/system/modules/statistics")));
-    case "admin/help#throttle":
-      $output .= t("
+    case 'admin/system/modules#description':
+      return t('Allows configuration of congestion control auto-throttle mechanism.');
+    case 'admin/system/modules/throttle':
+      return t('If your site gets linked to by a popular website, or otherwise comes under a "Denial of Service" (DoS) attack, your webserver might become overwhelmed.  This module provides a mechanism for automatically detecting a surge in incoming traffic.  This mechanism is utilized by other Drupal models to automatically optimize their performance by temporarily disabling CPU-intensive functionality.  To use the auto-throttle, the access log must be enabled.  It is advised that you carefully read the explainations below and then properly tune this module based on your site\'s requirements and your webserver\'s capabilities.', array('%access' => url('admin/system/modules/statistics')));
+    case 'admin/help#throttle':
+      return t("
       <h3>Introduction</h3>
       <p>This Drupal module allows you to enable and configure the auto-throttle congestion control mechanism offered by the <a href=\"%statistics-module\">statistics module</a>.  The auto-throttle mechanism allows your site to automatically adapt to different server levels.</p>
       <p>This module also adds a block that displays the current status of the throttle.  You must have \"<a href=\"%throttle-block\">access throttle block</a>\" privileges to view the block.  As a general rule of thumb, only site administrators should be granted access to this block.</p>
@@ -94,64 +96,66 @@ function throttle_help($section = "admin/help#throttle") {
         else {
           // throttle limit not reached, execute normally
        }</pre>
-      </p>", array("%statistics-module" => url("admin/statistics"), "%throttle-block" => url("admin/user/permission"), "%modules-enable" => url("admin/system/modules"), "%throttle-config" => url("admin/system/modules/throttle"), "%statistics-config" => url("admin/system/modules/statistics"), "%throttle-access" => url("admin/user/permission"), "%throttle-block-enable" => url("admin/block"), "%permissions" => url("admin/user/permission")));
-    break;
+      </p>", array('%statistics-module' => url('admin/statistics'), '%throttle-block' => url('admin/user/permission'), '%modules-enable' => url('admin/system/modules'), '%throttle-config' => url('admin/system/modules/throttle'), '%statistics-config' => url('admin/system/modules/statistics'), '%throttle-access' => url('admin/user/permission'), '%throttle-block-enable' => url('admin/block'), '%permissions' => url('admin/user/permission')));
   }
-
-  return $output;
 }
 
-
-// throttle module configuration options
+/**
+ * Implementation of hook_settings().
+ */
 function throttle_settings() {
-  // tune auto-throttle
-  $throttles = array(1 => "1 (0,1,2,3,4,5)", 5 => "5 (0,5,10,15,20,25)", 10 => "10 (0,10,20,30,40,50)", 12 => "12 (0,12,24,36,48,60)", 15 => "15 (0,15,30,45,60,75)", 20 => "20 (0,20,40,60,80,100)", 30 => "30 (0,30,60,90,120,150)", 50 => "50 (0,50,100,150,200,250)", 60 => "60 (0,60,120,180,240,300)", 100 => "100 (0,100,200,300,400,500", 500 => "500 (0,500,1000,1500,2000,2500", 1000 => "1000 (0,1000,2000,3000,4000,5000)");
-  $group = form_select(t("Auto-throttle multiplier"), 'throttle_multiplier', variable_get('throttle_multiplier', 60), $throttles, "The 'auto-throttle multiplier' is the number of hits in the past 60 seconds required to trigger a higher throttle level.  For example, if you set the multiplier to 60, and your site is getting less than 60 hits a minute, then the throttle will be at a level of 0.  Only once you start getting more than 60 hits a minute will the throttle level go to 1.  If you start getting more than 120 hits a minute, the throttle becomes 2.  This continues until your site is sustaining more than 300 hits per minute, at which time the throttle reaches a maximum level of 5.  In the pop down menu, the first number is the multiplier, and the numbers in parenthesis are how many hits are required to switch to each throttle level.  The more powerful your server, the higher you should set the multiplier value.");
-  $probabilities = array(0 => "100%", 1 => "50%", 2 => "33.3%", 3 => "25%", 4 => "20%", 5 => "16.6%", 7 => "12.5%", 9 => "10%", 19 => "5%", 99 => "1%", 199 => ".5%", 399 => ".25%", 989 => ".1%");
-  $group .= form_select(t("Auto-throttle probability limiter"), "throttle_probability_limiter", variable_get("throttle_probability_limiter", 9), $probabilities, "The auto-throttle probability limiter is an efficiency mechanism to statistically reduce the overhead of the auto-throttle.  The limiter is expressed as a percentage of page views, so for example if set to the default of 10% we only perform the extra database query to update the current level 1 out of every 10 page views.  The busier your site, the lower you should set the limiter value.");
-  $period = drupal_map_assoc(array(1800, 3600, 7200, 10800, 14400, 18000, 21600, 43200, 64800, 86400, 172800, 259200, 604800), "format_interval");
-  $output .= form_group(t("Auto-throttle tuning"), $group);
+  // Tune auto-throttle.
+  $throttles = array(1 => '1 (0,1,2,3,4,5)', 5 => '5 (0,5,10,15,20,25)', 10 => '10 (0,10,20,30,40,50)', 12 => '12 (0,12,24,36,48,60)', 15 => '15 (0,15,30,45,60,75)', 20 => '20 (0,20,40,60,80,100)', 30 => '30 (0,30,60,90,120,150)', 50 => '50 (0,50,100,150,200,250)', 60 => '60 (0,60,120,180,240,300)', 100 => '100 (0,100,200,300,400,500', 500 => '500 (0,500,1000,1500,2000,2500', 1000 => '1000 (0,1000,2000,3000,4000,5000)');
+  $group = form_select(t('Auto-throttle multiplier'), 'throttle_multiplier', variable_get('throttle_multiplier', 60), $throttles, 'The "auto-throttle multiplier" is the number of hits in the past 60 seconds required to trigger a higher throttle level.  For example, if you set the multiplier to 60, and your site is getting less than 60 hits a minute, then the throttle will be at a level of 0.  Only once you start getting more than 60 hits a minute will the throttle level go to 1.  If you start getting more than 120 hits a minute, the throttle becomes 2.  This continues until your site is sustaining more than 300 hits per minute, at which time the throttle reaches a maximum level of 5.  In the pop down menu, the first number is the multiplier, and the numbers in parenthesis are how many hits are required to switch to each throttle level.  The more powerful your server, the higher you should set the multiplier value.');
+  $probabilities = array(0 => '100%', 1 => '50%', 2 => '33.3%', 3 => '25%', 4 => '20%', 5 => '16.6%', 7 => '12.5%', 9 => '10%', 19 => '5%', 99 => '1%', 199 => '.5%', 399 => '.25%', 989 => '.1%');
+  $group .= form_select(t('Auto-throttle probability limiter'), 'throttle_probability_limiter', variable_get('throttle_probability_limiter', 9), $probabilities, 'The auto-throttle probability limiter is an efficiency mechanism to statistically reduce the overhead of the auto-throttle.  The limiter is expressed as a percentage of page views, so for example if set to the default of 10% we only perform the extra database query to update the current level 1 out of every 10 page views.  The busier your site, the lower you should set the limiter value.');
+  $period = drupal_map_assoc(array(1800, 3600, 7200, 10800, 14400, 18000, 21600, 43200, 64800, 86400, 172800, 259200, 604800), 'format_interval');
+  $output .= form_group(t('Auto-throttle tuning'), $group);
 
   return $output;
 }
 
-// displays admin oriented "Throttle status" block
+/**
+ * Displays admin-oriented "Throttle status" block.
+ */
 function throttle_display_throttle_block() {
   if (user_access('access throttle block')) {
-    /* the throttle is enabled:  display the status of all throttle config */
-    $throttle = module_invoke("throttle", "status");
+    // The throttle is enabled:  display the status of all throttle config.
+    $throttle = module_invoke('throttle', 'status');
     $multiplier = variable_get('throttle_multiplier', 60);
     $minimum = $throttle * $multiplier;
-    $limiter = variable_get("throttle_probability_limiter", 9);
-    /* calculate probability limiter's odds of updating throttle */
+    $limiter = variable_get('throttle_probability_limiter', 9);
+    // Calculate probability limiter's odds of updating the throttle level.
     $probability = substr((($limiter / ($limiter + 1) * 100) - 100) * -1, 0, 4);
 
     if ($throttle < 5) {
       $maximum = (($throttle + 1) * $multiplier) - 1;
-      $output .= t("Current level: %level (%min - %max)", array("%level" => $throttle, "%min" => $minimum, "%max" => $maximum)) ."<br />\n";
+      $output .= t('Current level: %level (%min - %max)', array('%level' => $throttle, '%min' => $minimum, '%max' => $maximum)) ."<br />\n";
     }
     else {
-      $output .= t("Current level: %level (%min+)", array("%level" => $throttle, "%min" => $minimum)) ."<br />\n";
+      $output .= t('Current level: %level (%min+)', array('%level' => $throttle, '%min' => $minimum)) ."<br />\n";
     }
-    $output .= t("Probability: %probability%", array("%probability" => $probability)) ."<br />\n";
+    $output .= t('Probability: %probability%', array('%probability' => $probability)) ."<br />\n";
     if ($throttle < 5) {
-      $recent_activity = db_fetch_object(db_query("SELECT COUNT(timestamp) AS hits FROM {accesslog} WHERE timestamp >= %d", (time() - 60)));
-      $output .= "<br />". t("This site has served %pages in the past minute.", array("%pages" => format_plural($recent_activity->hits , "1 page", "%count pages")));
+      $recent_activity = db_fetch_object(db_query('SELECT COUNT(timestamp) AS hits FROM {accesslog} WHERE timestamp >= %d', (time() - 60)));
+      $output .= '<br />'. t('This site has served %pages pages in the past minute.', array('%pages' => format_plural($recent_activity->hits , '1 page', '%count pages')));
       _throttle_update($recent_activity->hits);
     }
   }
   return $output;
 }
 
-// block hook
-function throttle_block($op = "list", $delta = 0) {
-  if ($op == "list") {
-    $blocks[0]["info"] = t("Throttle status");
+/**
+ * Implementation of hook_block().
+ */
+function throttle_block($op = 'list', $delta = 0) {
+  if ($op == 'list') {
+    $blocks[0]['info'] = t('Throttle status');
     return $blocks;
   }
   else {
-    $block["subject"] = t("Throttle status");
-    $block["content"] = throttle_display_throttle_block();
+    $block['subject'] = t('Throttle status');
+    $block['content'] = throttle_display_throttle_block();
     return $block;
   }
 }
@@ -171,11 +175,11 @@ function _throttle_update($hits) {
   // log the change
   if ($throttle_new < $throttle) {
     variable_set('throttle_level', $throttle - 1);
-    watchdog($type, "throttle: $hits hits in past minute; throttle decreased to level ". ($throttle - 1));
+    watchdog($type, 'throttle: $hits hits in past minute; throttle decreased to level '. ($throttle - 1));
   }
   if ($throttle_new > $throttle) {
     variable_set('throttle_level', $throttle + 1);
-    watchdog($type, "throttle: $hits hits in past minute; throttle increased to level ". ($throttle + 1));
+    watchdog($type, 'throttle: $hits hits in past minute; throttle increased to level '. ($throttle + 1));
   }
 }
 
