@@ -2,12 +2,14 @@ Drupal x.x.x, xxxx-xx-xx
 ------------------------
 
 - added support for the MetaWeblog API and MovableType extensions.
+- added a file API: enables better document management.
 - comment module:
     * made it possible to disable the "comment viewing controls".
 - performance:
     * improved module loading when serving cached pages.
     * made it possible to automatically disable modules when under heavy load.
     * made it possible to automatically disable blocks when under heavy load.
+    * improved performance of locale module and reduced memory footprint.
 - theme system:
     * made all theme functions start with 'theme_'.
     * made all theme functions return their output.
