@@ -654,7 +654,7 @@ function node_admin_nodes() {
     $operation = $operations[$_POST["edit"]["operation"]][1];
     foreach ($_POST["edit"]["status"] as $nid => $value) {
       if ($value) {
-        db_queryd($operation, $nid);
+        db_query($operation, $nid);
       }
     }
 
