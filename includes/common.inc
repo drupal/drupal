@@ -803,10 +803,10 @@ function format_date($timestamp, $type = "medium", $format = "") {
   }
 
   for ($i = strlen($format); $i >= 0; $c = $format[--$i]) {
-    if (strstr("DFlMSw", $c)) {
+    if (strstr("AaDFlM", $c)) {
       $date = t(date($c, $timestamp)) . $date;
     }
-    else if (strstr("AaBdgGhHiIjLmnOrstTUWYyZz", $c)) {
+    else if (strstr("BdgGhHiIjLmnOrsStTUwWYyZz", $c)) {
       $date = date($c, $timestamp) . $date;
     }
     else {
