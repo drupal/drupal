@@ -1,5 +1,5 @@
 <?php
-// $Id: chameleon.theme,v 1.4 2003/12/30 12:10:51 dries Exp $
+// $Id: chameleon.theme,v 1.5 2004/01/07 19:42:12 dries Exp $
 
 function chameleon_help($section) {
 
@@ -40,7 +40,7 @@ function chameleon_header($title = "") {
   $output .= " <title>". ($title ? $title ." | ". variable_get("site_name", "drupal") : variable_get("site_name", "drupal") ." | ". variable_get("site_slogan", "")) ."</title>\n";
   $output .= theme_head();
   $output .= " <link rel=\"stylesheet\" type=\"text/css\" href=\"themes/chameleon/default.css\" />\n";
-  $output .= " <link rel=\"stylesheet\" type=\"text/css\" href=\"". variable_get("chameleon_stylesheet", "themes/chameleon/default.css") ."\" />\n";
+  $output .= " <link rel=\"stylesheet\" type=\"text/css\" href=\"". variable_get("chameleon_stylesheet", "themes/chameleon/pure.css") ."\" />\n";
   $output .= "</head>";
   $output .= "<body ". theme_onload_attribute() .">\n";
   $output .= " <div id=\"header\">";
