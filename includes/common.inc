@@ -1787,6 +1787,7 @@ include_once 'includes/menu.inc';
 include_once 'includes/tablesort.inc';
 include_once 'includes/file.inc';
 include_once 'includes/xmlrpc.inc';
+include_once 'includes/js.inc';
 
 // Set the Drupal custom error handler.
 set_error_handler('error_handler');

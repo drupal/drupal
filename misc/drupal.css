@@ -330,6 +330,37 @@ tr.light .form-item, tr.dark .form-item {
 #forum td.posts, #forum td.topics, #forum td.replies, #forum td.pager {
   text-align: center;
 }
+#node-admin-filter {
+  list-style-type: none;
+  padding: 0px;
+  margin: 0px;
+}
+.node-admin-filter {
+  float: left;
+  margin-left: 1em;
+}
+html.js dl.js-multiselect dd .form-item {
+  display: none;
+}
+dl.js-multiselect dd, dl.js-multiselect .form-item, dl.js-multiselect select {
+  font-family: inherit;
+  font-size: inherit;
+  width: 15em;
+}
+dl.js-multiselect dt, dl.js-multiselect dd {
+  float: left;
+  line-height: 1.9em;
+  padding: 0px;
+  margin: 0px 1em 0px 0px;
+}
+dl.js-multiselect .form-item {
+  height: 1.9em;
+  margin: 0px;
+}
+#node-admin-update {
+  margin-top: 1.5em;
+  clear: left;
+}
 #permissions td.module {
   font-weight: bold;
 }
