@@ -71,7 +71,7 @@ function comment_form($edit) {
     $form .= form_submit(t("Preview comment"));
     $form .= form_submit(t("Post comment"));
   }
-  
+
   return form($REQUEST_URL, $form);
 }
 
@@ -230,7 +230,7 @@ function comment_thread_min($cid, $threshold) {
 
   while ($comment = db_fetch_object($result)) {
     print "<UL>";
-    print " <LI>". comment_view($comment) ."</LI>\n";
+    print comment_view($comment);
     comment_thread_min($comment->cid, $threshold);
     print "</UL>";
   }

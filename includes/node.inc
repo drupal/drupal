@@ -63,7 +63,7 @@ function node_get_comments($nid) {
 }
 
 function node_save($node, $filter) {
-  $rows = array(nid, pid, lid, cid, tid, log, type, title, score, votes, author, status, comment, promote, moderate, attributes, timestamp, timestamp_posted, timestamp_queued, timestamp_hidden);
+  $rows = array(nid, lid, cid, tid, type, title, score, votes, author, status, comment, promote, moderate, attributes, timestamp, timestamp_posted, timestamp_queued, timestamp_hidden);
 
   if ($node[nid] > 0) {
     $n = node_get_object(array("nid" => $node[nid]));
@@ -82,7 +82,8 @@ function node_save($node, $filter) {
 
     if ($u1) db_query("UPDATE node SET ". implode(", ", $u1) ." WHERE nid = '$node[nid]'");
     if ($u2) db_query("UPDATE $n->type SET ". implode(", ", $u2) ." WHERE nid = '$node[nid]'");
-    if ($n->pid && ($node[status] == node_status("posted"))) db_query("UPDATE node SET status = '". node_status("expired") ."' WHERE nid = '$n->pid'");
+
+    if ($node[nid]) module_invoke($n->type, "update", node_get_object(array(nid => $n->nid)));
 
     return $node[nid];
   }
@@ -123,9 +124,6 @@ function node_save($node, $filter) {
         if ($result && $lid = db_insert_id()) {
           $result = db_query("UPDATE node SET lid = '$lid' WHERE nid = '$nid'");
           if ($result) {
-            if (($node[pid]) && ($node[status] == node_status("posted"))) {
-              db_query("UPDATE node SET status = '". node_status(expired) ."' WHERE nid = '$node[pid]'");
-            }
             watchdog("special", "node: added $filter[type] '$node[title]'");
           }
           else {
@@ -141,6 +139,8 @@ function node_save($node, $filter) {
         watchdog("warning", "node: added $filter[type] '$node[title]' - failed");
       }
     }
+
+    if ($nid) module_invoke($filter[type], "insert", node_get_object(array(nid => $nid)));
 
     return $nid;
   }
@@ -222,10 +222,9 @@ function node_attributes_save($type, $edit) {
 }
 
 function node_attributes_view($string) {
-  foreach (explode(",", $string) as $data) {
-    $entry = explode("=", $data);
-    if ($entry[0] && $entry[1]) {
-      $array[] = "<a href=\"?$entry[0]=$entry[1]\">$entry[1]</a>";
+  foreach (explode(",", $string) as $attribute) {
+    if ($attribute = trim($attribute)) {
+      $array[] = "<a href=\"?meta=". urlencode($attribute) ."\">$attribute</a>";
     }
   }
   return $array ? $array : array();

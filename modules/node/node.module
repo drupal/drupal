@@ -60,6 +60,18 @@ function node_cron() {
   db_query("UPDATE node SET status = '". node_status("dumped") ."', timestamp_posted = '' WHERE timestamp_hidden > 0 AND timestamp_hidden < ". time());
 }
 
+function node_link($nid, $type) {
+  global $op;
+
+  $link[] = ($op == "view") ? "view node" : "<A HREF=\"node.php?id$nid\">view node</A>";
+  $link[] = ($op == "content") ? "edit content" : "<A HREF=\"admin.php?mod=node&type=$type&op=content&id=$nid\">edit content</A>";
+  $link[] = ($op == "option") ? "edit options" : "<A HREF=\"admin.php?mod=node&op=option&id=$nid\">edit options</A>";
+  $link[] = ($op == "status") ? "edit status" : "<A HREF=\"admin.php?mod=node&op=status&id=$nid\">edit status</A>";
+  $link[] = ($op == "attribute") ? "edit attribute" : "<A HREF=\"admin.php?mod=node&op=attribute&id=$nid\">edit attributes</A>";
+  $link[] = ($op == "delete") ? "delete node" : "<A HREF=\"admin.php?mod=node&op=delete&id=$nid\">delete node</A>";
+  return $link;
+}
+
 function node_overview($query) {
   global $user;
 
@@ -73,18 +85,10 @@ function node_overview($query) {
   $output .= " <TR><TH>title</TH><TH>type</TH><TH>status</TH><TH>meta attributes</TH><TH>author</TH><TH>date</TH></TR>\n";
 
   while ($node = db_fetch_object($result)) {
-    unset ($link);
-
-    $link[] = "<A HREF=\"admin.php?mod=node&type=$node->type&op=edit&id=$node->nid\">edit content</A>";
-    $link[] = "<A HREF=\"admin.php?mod=node&op=option&id=$node->nid\">edit options</A>";
-    $link[] = "<A HREF=\"admin.php?mod=node&op=status&id=$node->nid\">edit status</A>";
-    $link[] = "<A HREF=\"admin.php?mod=node&op=attribute&id=$node->nid\">edit attributes</A>";
-    $link[] = "<A HREF=\"admin.php?mod=node&op=delete&id=$node->nid\">delete node</A>";
-
     $bg = $color[$i++ % sizeof($color)];
 
     $output .= " <TR BGCOLOR=\"$bg\"><TD><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></TD><TD ALIGN=\"center\">$node->type</TD><TD>". node_status($node->status) ."</TD><TD>". check_output($node->attributes) ."</TD><TD>". format_username($node->userid) ."</TD><TD>". format_date($node->timestamp, "small") ."</TD></TR>\n";
-    $output .= " <TR BGCOLOR=\"$bg\"><TD ALIGN=\"right\" COLSPAN=\"6\"><SMALL>". implode(", ", $link) ."</SMALL></TD>\n";
+    $output .= " <TR BGCOLOR=\"$bg\"><TD ALIGN=\"right\" COLSPAN=\"6\"><SMALL>". implode(", ", node_link($node->nid, $node->type)) ."</SMALL></TD>\n";
   }
   $output .= "</TABLE>\n";
 
@@ -96,9 +100,10 @@ function node_edit_option($id) {
 
   $node = node_get_object(array("nid" => $id));
 
-  $form .= form_item("Document title", check_output($node->title));
-  $form .= form_select("Comment", "comment", $node->comment, node_comment_status(), "Allow users to post comments to this document.");
-  $form .= form_select("Promote", "promote", $node->promote, node_promote_status(), "Promote this document on the main page.");
+  $form .= form_item("Title", check_output($node->title));
+  $form .= form_item("Operations", implode("<br />", node_link($node->nid, $node->type)));
+  $form .= form_select("Comment", "comment", $node->comment, node_comment_status(), "Allow users to post comments to this node.");
+  $form .= form_select("Promote", "promote", $node->promote, node_promote_status(), "Promote this node on the main page.");
   $form .= form_textfield("Moderate", "moderate", $node->moderate, 35, 255, t("A comma-seperated list of the moderators their usernames."));
   $form .= form_hidden("nid", $node->nid);
   $form .= form_submit("Save node");
@@ -111,8 +116,9 @@ function node_edit_attribute($id) {
 
   $node = node_get_object(array("nid" => $id));
 
-  $form .= form_item("Document title", check_output($node->title));
-  $form .= form_textfield("Attributes", "attributes", $node->attributes, 50, 128, htmlentities("A list meta attributes.  Format: <type>:<value>;<type>:<value>;.  Example: 'software=apache,type=webserver,os=linux,'."));
+  $form .= form_item("Title", check_output($node->title));
+  $form .= form_item("Operations", implode("<br />", node_link($node->nid, $node->type)));
+  $form .= form_textfield("Attributes", "attributes", $node->attributes, 64, 128, "A comma-seperated list of attributes.  Example: 'Software, Webserver, Apache'.");
   $form .= form_hidden("nid", $node->nid);
   $form .= form_submit("Save node");
 
@@ -124,7 +130,8 @@ function node_edit_status($id) {
 
   $node = node_get_object(array("nid" => $id));
 
-  $form .= form_item("Document title", check_output($node->title));
+  $form .= form_item("Title", check_output($node->title));
+  $form .= form_item("Operations", implode("<br />", node_link($node->nid, $node->type)));
   $form .= form_select("Current status", "status", $node->status, node_status($node->type));
   $form .= form_textfield("Automatically post document", "timestamp_posted", ($node->timestamp_posted ? format_date($node->timestamp_posted) : ""), 30, 55, "The date at which your document will be automatically posted.  Leave empty if you don't want to schedule this document, or fill out a string containing an English date format.  Example input: '". date("j F Y G:i") ."', '". date("m/d/y H:i") ."', '". date("F j, Y H:i") ."', ...");
   $form .= form_textfield("Automatically queue document", "timestamp_queued", ($node->timestamp_queued ? format_date($node->timestamp_queued) : ""), 30, 55, "The date at which your document will be automatically queued.  Leave empty if you don't want to schedule this document, or fill out a string containing an English date format.  Example input: '". date("j F Y G:i") ."', '". date("m/d/y H:i") ."', '". date("F j, Y H:i") ."', ...");
@@ -135,8 +142,18 @@ function node_edit_status($id) {
   return form($REQUEST_URI, $form);
 }
 
+function node_edit_content($edit, $type) {
+  $edit[type] = $type;
+  return node_invoke($edit, "form");
+}
+
+function node_save_content($edit, $type) {
+  $edit[type] = $type;
+  return node_invoke($edit, "save");
+}
+
 function node_delete($id) {
-  return (node_del(array("nid" => $id)) ? "node has been deleted." : "failed to delete node: node must be dumped first.");
+  return (node_del(array("nid" => $id)) ? "node has been deleted." : "failed to delete node: set node status to 'dumped' first.");
 }
 
 function node_query($type = -1) {
@@ -230,14 +247,11 @@ function node_module_find() {
   return $output;
 }
 
-function node_module_edit($edit, $type) {
-  $edit[type] = $type;
-  return node_invoke($edit, "form");
-}
 
-function node_module_save($edit, $type) {
-  $edit[type] = $type;
-  return node_invoke($edit, "save");
+function node_edit($node) {
+  $output .= form_item("Title", $node->title);
+  $output .= form_item("Operations", implode("<br />", node_link($node->nid, $node->type)));
+  return $output;
 }
 
 function node_admin() {
@@ -273,6 +287,9 @@ function node_admin() {
     case "attribute":
       print node_edit_attribute($id);
       break;
+    case "content":
+      print node_edit_content(node_get_array(array("nid" => $id)), $type);
+      break;
     case "default":
       print node_setting();
       break;
@@ -296,13 +313,16 @@ function node_admin() {
       print node_overview($query);
       break;
     case "edit":
-      print node_module_edit(node_get_array(array("nid" => $id)), $type);
+      print node_edit(node_get_object(array("nid" => $id)));
+      break;
+    case "view":
+      print node_module_view(node_get_array(array("nid" => $id)), $type);
       break;
     case "Preview":
-      print node_module_edit($edit, $type);
+      print node_edit_content($edit, $type);
       break;
     case "Submit":
-      print status(node_module_save($edit, $type));
+      print status(node_save_content($edit, $type));
       // fall through:
     default:
       print node_overview($query);

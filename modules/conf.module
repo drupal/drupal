@@ -31,7 +31,7 @@ function conf_view_system() {
 
   // node settings:
   $output .= "<H3>Node settings</H3>\n";
-  $output .= form_select(t("Default number of nodes to display"), "default_nodes_main", variable_get("default_nodes_main", 10), array(10 => 10, 15 => 15, 20 => 20, 25 => 25, 30 => 30), t("The default maximum number of nodes to display on the main page."));
+  $output .= form_select(t("Default number of nodes to display"), "default_nodes_main", variable_get("default_nodes_main", 10), array(1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 =>  5, 6 => 6, 7 => 7, 8 => 8, 9 => 9, 10 => 10, 15 => 15, 20 => 20, 25 => 25, 30 => 30), t("The default maximum number of nodes to display on the main page."));
   $output .= "<HR>\n";
 
   // comment settings:

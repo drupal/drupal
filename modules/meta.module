@@ -22,7 +22,7 @@ function meta_form($type, $edit = array()) {
 function meta_save($type, $edit = array()) {
   $result = db_query("SELECT * FROM collection WHERE types LIKE '%". check_input($type) ."%'");
   while ($collection = db_fetch_object($result)) {
-    $output = field_merge($output, $edit[$collection->name]);
+    $output .= ", ". $edit[$collection->name];
   }
   return $output;
 }
@@ -54,8 +54,8 @@ function meta_form_tag($edit = array()) {
   global $REQUEST_URI;
 
   $form .= form_textfield("Meta-tag name", "name", $edit[name], 50, 64, "Required.  The name for this meta-tag.  Example: 'Apache'.");
-  $form .= form_textfield("Attributes", "attributes", $edit[attributes], 50, 64, htmlentities("Required.  Format: <type>=<value>,<type>=<value>;.  Example: 'software=apache,type=webserver,os=linux,'."));
-  $form .= form_textfield("Collections", "collections", $edit[collections], 50, 64, "Required.  A comma-seperated list of collections you want to associate this meta-tag with.  Example: 'Software, Internet'");
+  $form .= form_textfield("Attributes", "attributes", $edit[attributes], 50, 64, "Required.  A comma-seperated list of keywords you want to associate this meta-tag with.  Example: 'Computers, Software, Webservers'.");
+  $form .= form_textfield("Collections", "collections", $edit[collections], 50, 64, "Required.  A comma-seperated list of collections you want to associate this meta-tag with.  Example: 'Section'.");
   $form .= form_submit("Submit");
 
   if ($edit[tid]) {
