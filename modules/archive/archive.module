@@ -1,5 +1,5 @@
 <?php
-// $Id: archive.module,v 1.78 2005/03/31 09:25:33 unconed Exp $
+// $Id: archive.module,v 1.79 2005/04/01 15:54:58 dries Exp $
 
 /**
  * @file
@@ -12,7 +12,7 @@
 function archive_help($section) {
   switch ($section) {
     case 'admin/modules#description':
-      return t('Displays a calendar to navigate old content.');
+      return t('Displays a calendar for navigating older content.');
   }
 }
 

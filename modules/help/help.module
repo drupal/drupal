@@ -1,5 +1,5 @@
 <?php
-// $Id: help.module,v 1.44 2005/02/08 19:17:51 dries Exp $
+// $Id: help.module,v 1.45 2005/04/01 15:55:00 dries Exp $
 
 /**
  * @file
@@ -85,7 +85,7 @@ function help_links_as_list() {
 function help_help($section) {
   switch ($section) {
     case 'admin/modules#description':
-      return t('Manages displaying online help.');
+      return t('Manages the display of online help.');
   }
 }
 
