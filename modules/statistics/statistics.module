@@ -1,54 +1,57 @@
 <?php
 
-global $id, $mod, $nid, $user, $recent_activity;
+// Initialization hook, runs each time statistic module is loaded
+function statistics_init() {
+  global $id, $mod, $nid, $user, $recent_activity;
 
-if (variable_get("statistics_enable_node_counter", 0)) {
-  /* node view counters are enabled */
-  if (isset($id) && empty($mod)) {
-    /* a node has been viewed, so updated the node's counters */
-    db_query("UPDATE statistics SET daycount = daycount + 1, totalcount = totalcount + 1, timestamp = '%s' WHERE nid = '%s'", time(), $id);
-    /* if we affected 0 rows, this is the first time viewing the node */
-    if (!db_affected_rows()) {
-      /* must create a new row to store counter's for new node */
-      db_query("INSERT INTO statistics (nid, daycount, totalcount) VALUES('%s', daycount + 1, totalcount + 1)", $id);
+  if (variable_get("statistics_enable_node_counter", 0)) {
+    // node view counters are enabled
+    if (isset($id) && empty($mod)) {
+      // a node has been viewed, so updated the node's counters
+      db_query("UPDATE statistics SET daycount = daycount + 1, totalcount = totalcount + 1, timestamp = '%s' WHERE nid = '%s'", time(), $id);
+      // if we affected 0 rows, this is the first time viewing the node
+      if (!db_affected_rows()) {
+        // must create a new row to store counter's for new node
+        db_query("INSERT INTO statistics (nid, daycount, totalcount) VALUES('%s', daycount + 1, totalcount + 1)", $id);
+      }
     }
   }
-}
 
-if ((variable_get("statistics_enable_access_log", 0)) && (throttle_status() < 5)) {
-  /* statistical logs are enabled */
-  $referrer = getenv("HTTP_REFERER");
-  $hostname = getenv("REMOTE_ADDR");
-  /* log this page access */
-  db_query("INSERT INTO accesslog (nid, url, hostname, uid, timestamp) values('%s', '%s', '%s', '%s', '%s')", $id, $referrer, $hostname, $user->uid, time());
-}
+  if ((variable_get("statistics_enable_access_log", 0)) && (throttle_status() < 5)) {
+    // statistical logs are enabled
+    $referrer = getenv("HTTP_REFERER");
+    $hostname = getenv("REMOTE_ADDR");
+    // log this page access
+    db_query("INSERT INTO accesslog (nid, url, hostname, uid, timestamp) values('%s', '%s', '%s', '%s', '%s')", $id, $referrer, $hostname, $user->uid, time());
+  }
 
-/*
-** The following logic determines what the current throttle level should
-**  be, and can be disabled by the admin.  If enabled, the rand() function
-**  returns a number between 0 and N, N being specified by the admin. If
-**  0 is returned, the throttle logic is run, adding on additional database
-**  query.  Otherwise, the following logic is skipped.  This mechanism is
-**  referred to in the admin page as the 'probability limiter', roughly
-**  limiting throttle related database calls to 1 in N.
-*/
-if ((variable_get("statistics_enable_auto_throttle", 0)) && (!rand(0, variable_get("statistics_probability_limiter", 9)))) {
   /*
-  ** Note:  The rand() function is supported by PHP 3+.  However, prior to
-  ** PHP 4.2.0 it needs to be seeded with a call to srand().  It is important
-  ** that this only happens once, so this should be managed by the Drupal
-  ** engine, not this module.  The Drupal engine should use phpversion() to
-  ** detect and automatically seed pre-4.2.0 systems.
+  ** The following logic determines what the current throttle level should
+  **  be, and can be disabled by the admin.  If enabled, the rand() function
+  **  returns a number between 0 and N, N being specified by the admin. If
+  **  0 is returned, the throttle logic is run, adding on additional database
+  **  query.  Otherwise, the following logic is skipped.  This mechanism is
+  **  referred to in the admin page as the 'probability limiter', roughly
+  **  limiting throttle related database calls to 1 in N.
   */
+  if ((variable_get("statistics_enable_auto_throttle", 0)) && (!rand(0, variable_get("statistics_probability_limiter", 9)))) {
+    /*
+    ** Note:  The rand() function is supported by PHP 3+.  However, prior to
+    ** PHP 4.2.0 it needs to be seeded with a call to srand().  It is important
+    ** that this only happens once, so this should be managed by the Drupal
+    ** engine, not this module.  The Drupal engine should use phpversion() to
+    ** detect and automatically seed pre-4.2.0 systems.
+    */
 
-  $throttle = throttle_status();
-  /* if we're at throttle level 5, we don't do anything */
-  if ($throttle < 5) {
-    $multiplier = variable_get("statistics_throttle_multiplier", 60);
-    /* count all hits in past sixty seconds */
-    $result = db_query("SELECT COUNT(timestamp) AS hits FROM accesslog WHERE timestamp >= %s", (time() - 60));
-    $recent_activity = db_fetch_array($result);
-    throttle_update($recent_activity["hits"]);
+    $throttle = throttle_status();
+    // if we're at throttle level 5, we don't do anything
+    if ($throttle < 5) {
+      $multiplier = variable_get("statistics_throttle_multiplier", 60);
+      // count all hits in past sixty seconds
+      $result = db_query("SELECT COUNT(timestamp) AS hits FROM accesslog WHERE timestamp >= %s", (time() - 60));
+      $recent_activity = db_fetch_array($result);
+      throttle_update($recent_activity["hits"]);
+    }
   }
 }
 

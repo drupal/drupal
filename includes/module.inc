@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.38 2002/11/17 16:26:06 kjartan Exp $
+// $Id: module.inc,v 1.39 2002/11/29 05:53:40 dries Exp $
 
 // initialize modules:
 function module_init() {
@@ -8,6 +8,7 @@ function module_init() {
   require_once "modules/system.module";
   require_once "modules/watchdog.module";
   module_list();
+  module_invoke_all("init");
 }
 
 // apply function $function to every known module:
