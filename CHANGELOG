@@ -2,7 +2,7 @@ drupal 4.0.0, xx/xx/xxxx
 ------------------------
 - added tracker.module:
     * replaces the previous "your [site]" links (recent comments and nodes).
-- added weblogs.module. 
+- added weblogs.module.
     * this will ping weblogs.com when new content is promoted.
 - added taxonomy module which replaces the meta module.
     * supports relations, hierarchies and synonyms.
@@ -34,18 +34,20 @@ drupal 4.0.0, xx/xx/xxxx
     * improved error checking and usability changes.
     * content versioning support.
 - improved book module to support text, html and php pages.
+- improved comment module to mark new comments.
 - added a general outliner which will let any node type be linked to a book.
+- added an update script that lets you upgrade from previous releases or on a day to day basis when using the development tree.
 - search:
     * improved the search system by making it context sensitive.
-    * added proper indexing.
+    * added indexing.
 - various updates:
     * changed output to valid XHTML.
     * improved multiple sites using the same Drupal database support.
-    * added support for session ids in URLs instead of cookies.
+    * added support for session IDs in URLs instead of cookies.
     * made front page a configuration setting.
     * made each cloud site have its own settings.
     * modules and themes can now be enabled/disabled using the administrative pages.
-    * added url abstraction for links.
+    * added URL abstraction for links.
     * usability changes (renamed links, better UI, etc)
 
 drupal 3.0.1, 15/10/2001
