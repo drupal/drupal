@@ -42,6 +42,8 @@ function blog_feed_user($name = 0, $date = 0) {
   $output .= format_rss_channel("$name's blog", path_uri() ."module.php?mod=blog&op=view&name=". urlencode($name), "$name's blog", $items);
   $output .= "</rss>\n";
 
+  header("Content-Type: text/xml");
+
   print $output;
 
 }
@@ -56,6 +58,8 @@ function blog_feed_last() {
   $output .= "<rss version=\"0.91\">\n";
   $output .= format_rss_channel(variable_get("site_name", "drupal") .": user blogs", path_uri() ."module.php?mod=blog", "Recently updated blogs.", $items);
   $output .= "</rss>\n";
+
+  header("Content-Type: text/xml");
 
   print $output;
 

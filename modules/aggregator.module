@@ -629,6 +629,7 @@ function import_page_fd() {
 
   $output .= "</rssfeeds>\n";
 
+  header("Content-Type: text/xml");
 
   print $output;
 }
