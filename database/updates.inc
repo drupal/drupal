@@ -1,5 +1,5 @@
 <?php
-/* $Id: updates.inc,v 1.98 2005/03/03 20:21:51 dries Exp $ */
+/* $Id: updates.inc,v 1.99 2005/03/18 08:02:02 unconed Exp $ */
 
 /**
  * @file
@@ -102,7 +102,8 @@ $sql_updates = array(
   "2005-01-28" => "update_123",
   "2005-02-11" => "update_124",
   "2005-02-23" => "update_125",
-  "2005-03-03" => "update_126"
+  "2005-03-03" => "update_126",
+  "2005-03-18" => "update_127"
 );
 
 function update_32() {
@@ -2311,6 +2312,17 @@ function update_126() {
   variable_del('forum_block_num');
 
   return array();
+}
+
+function update_127() {
+  $ret = array();
+  if ($GLOBALS['db_type'] == 'pgsql') {
+    $ret[] = update_sql("ALTER TABLE {poll} RENAME voters TO polled");
+  }
+  else if ($GLOBALS['db_type'] == 'mysql') {
+    $ret[] = update_sql("ALTER TABLE {poll} CHANGE voters polled longtext");
+  }
+  return $ret;
 }
 
 function update_sql($sql) {
