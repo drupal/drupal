@@ -86,7 +86,8 @@ $sql_updates = array(
   "2004-09-17" => "update_107",
   "2004-10-16" => "update_108",
   "2004-10-18" => "update_109",
-  "2004-10-31: first update since Drupal 4.5.0 release" => "update_110"
+  "2004-10-31: first update since Drupal 4.5.0 release" => "update_110",
+  "2004-11-07" => "update_111"
 );
 
 function update_32() {
@@ -1962,6 +1963,16 @@ function update_110() {
   }
 
   $ret[] = update_sql('UPDATE {blocks} SET status = 1, custom = 2 WHERE status = 0 AND custom = 1');
+
+  return $ret;
+}
+
+function update_111() {
+  $ret = array();
+
+  if ($GLOBALS['db_type'] == 'mysql') {
+    $ret[] = update_sql('ALTER TABLE {sessions} ADD PRIMARY KEY sid (sid)');
+  }
 
   return $ret;
 }
