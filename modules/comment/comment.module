@@ -1,9 +1,6 @@
 <?php
 // $Id$
 
-$GLOBALS["cmodes"] = array(1 => t("Flat list - collapsed"), 2 => t("Flat list - expanded"), 3 => t("Threaded list - collapsed"), 4 => t("Threaded list - expanded"));
-$GLOBALS["corder"] = array(1 => t("Date - newest first"), 2 => t("Date - oldest first"));
-
 function comment_help($section = "admin/comment/help") {
   $output = "";
 
@@ -123,10 +120,9 @@ function comment_system($field) {
 }
 
 function comment_settings() {
-  global $cmodes, $corder;
 
-  $output .= form_select(t("Default display mode"), "comment_default_mode", variable_get("comment_default_mode", 4), $cmodes, t("The default view for comments. Expanded views display the body of the comment. Threaded views keep replies together."));
-  $output .= form_select(t("Default display order"), "comment_default_order", variable_get("comment_default_order", 1), $corder, t("The default sorting for new users and anonymous users while viewing comments. These users may change their view using the comment control panel. For registered users, this change is remembered as a persistent user preference."));
+  $output .= form_select(t("Default display mode"), "comment_default_mode", variable_get("comment_default_mode", 4), _comment_get_modes(), t("The default view for comments. Expanded views display the body of the comment. Threaded views keep replies together."));
+  $output .= form_select(t("Default display order"), "comment_default_order", variable_get("comment_default_order", 1), _comment_get_orders(), t("The default sorting for new users and anonymous users while viewing comments. These users may change their view using the comment control panel. For registered users, this change is remembered as a persistent user preference."));
   $output .= form_textfield(t("Default comments per page"), "comment_default_per_page", variable_get("comment_default_per_page", "50"), 5, 5, t("Default number of comments for each page; more comments are distributed in several pages."));
 
   $result = db_query("SELECT fid, filter FROM {moderation_filters} ");
@@ -1279,9 +1275,9 @@ function comment_admin() {
 */
 
 function comment_mode_form($mode) {
-  global $cmodes;
 
-  foreach ($cmodes as $key => $value) {
+  $modes = _comment_get_modes();
+  foreach ($modes as $key => $value) {
     $options .= " <option value=\"$key\"". ($mode == $key ? " selected=\"selected\"" : "") .">". t($value) ."</option>\n";
   }
 
@@ -1289,9 +1285,9 @@ function comment_mode_form($mode) {
 }
 
 function comment_order_form($order) {
-  global $corder;
 
-  foreach ($corder as $key=>$value) {
+  $order = _comment_get_orders();
+  foreach ($order as $key=>$value) {
     $options .= " <option value=\"$key\"". ($order == $key ? " selected=\"selected\"" : "") .">". t($value) ."</option>\n";
   }
 
@@ -1650,6 +1646,23 @@ function comment_nodeapi(&$node, $op, $arg = 0) {
       db_query("DELETE FROM {comments} WHERE nid = '$node->nid'");
       break;
   }
+}
+
+function _comment_get_modes() {
+  /*
+  ** We can't use a global variable array because the locale system
+  ** is not initialized yet when the comment module is loaded.
+  */
+
+  return array(1 => t("Flat list - collapsed"), 2 => t("Flat list - expanded"), 3 => t("Threaded list - collapsed"), 4 => t("Threaded list - expanded"));
+}
+
+function _comment_get_orders() {
+   /*
+  ** We can't use a global variable array because the locale system
+  ** is not initialized yet when the comment module is loaded.
+  */
+  return array(1 => t("Date - newest first"), 2 => t("Date - oldest first"));
 }
 
 ?>
