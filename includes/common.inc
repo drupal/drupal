@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.387 2004/09/09 05:51:08 dries Exp $ */
+/* $Id: common.inc,v 1.388 2004/09/09 13:36:00 unconed Exp $ */
 
 /**
  * @file
@@ -508,7 +508,9 @@ function locale_initialize() {
     $languages = $languages['name'];
   }
   else {
-    $languages = array();
+    // Ensure the locale/language is correctly returned, even without locale.module.
+    // Useful for e.g. XML/HTML 'lang' attributes.
+    $languages = array('en' => 'English');
   }
   if ($user->uid && $languages[$user->language]) {
     return $user->language;
