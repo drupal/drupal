@@ -755,9 +755,9 @@ function comment_link($type, $node = 0, $main = 0) {
     }
     else {
       // Node page: add a "post comment" link if the user is allowed to
-      // post comments and if this node is not read-only
+      // post comments, if this node is not read-only, and if the comment form isn't already shown
 
-      if ($node->comment == 2) {
+      if ($node->comment == 2 && variable_get('comment_form_location', 0) == 0) {
         if (user_access('post comments')) {
           $links[] = l(t('add new comment'), "comment/reply/$node->nid", array('title' => t('Share your thoughts and opinions related to this posting.')), NULL, 'comment');
         }
