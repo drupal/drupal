@@ -12,7 +12,7 @@
 function blogapi_help($section) {
   switch ($section) {
     case 'admin/help#blogapi':
-      return t('<p>This module adds support for several XML-RPC based blogging APIs. Specifically, it currently implements the %bloggerAPI, %metaweblogAPI, and most of the %moveabletype extensions.  This allows users to contribute to drupal using external GUI applications, which can often offer richer functionality that online forms based editing.</p>', array('%bloggerAPI' => '<a href="http://www.blogger.com/developers/api/1_docs/">Blogger API</a>', '%metaweblogAPI' => '<a href="http://www.xmlrpc.com/metaWeblogApi">MetaWeblog API</a>', '%moveabletype' => '<a href="http://www.movabletype.org/docs/mtmanual_programmatic.html">Moveable Type API</a>'));
+      return t('<p>This module adds support for several XML-RPC based blogging APIs. Specifically, it currently implements the %bloggerAPI, %metaweblogAPI, and most of the %moveabletype extensions.  This allows users to contribute to Drupal using external GUI applications, which can often offer richer functionality that online forms based editing.</p><p>This module also allows site administrators to configure which node types can be posted via the external applications. So, for instance, users can post forum topics as well as blog posts. Where supported, the external applications will display each node type as a separate "blog".</p>', array('%bloggerAPI' => '<a href="http://www.blogger.com/developers/api/1_docs/">Blogger API</a>', '%metaweblogAPI' => '<a href="http://www.xmlrpc.com/metaWeblogApi">MetaWeblog API</a>', '%moveabletype' => '<a href="http://www.movabletype.org/docs/mtmanual_programmatic.html">Movable Type API</a>. '));
     case 'admin/modules#description':
       return t('Enable users to post using applications that support XML-RPC blog APIs.');
   }
@@ -59,11 +59,15 @@ function blogapi_get_users_blogs($req_params) {
 
   $user = blogapi_validate_user($params[1], $params[2]);
   if ($user->uid) {
-    $struct = new xmlrpcval(array('url' => new xmlrpcval(url('blog/' . $user->uid, NULL, NULL, true)),
-                                  'blogid' => new xmlrpcval($user->uid),
-                                  'blogName' => new xmlrpcval($user->name . "'s blog")),
+    $types = _blogapi_get_node_types();
+    $structs = array();
+    foreach ($types as $type) {
+      $structs[] = new xmlrpcval(array('url' => new xmlrpcval(url('blog/' . $user->uid, NULL, NULL, true)),
+                                      'blogid' => new xmlrpcval($type, 'string'),
+                                      'blogName' => new xmlrpcval($user->name . ": " . $type)),
                             'struct');
-    $resp = new xmlrpcval(array($struct), 'array');
+    }
+    $resp = new xmlrpcval($structs, 'array');
     return new xmlrpcresp($resp);
   }
   else {
@@ -86,7 +90,7 @@ function blogapi_get_user_info($req_params) {
                                   'firstname' => new xmlrpcval($name[0], 'string'),
                                   'nickname' => new xmlrpcval($user->name, 'string'),
                                   'email' => new xmlrpcval($user->mail, 'string'),
-                                  'url' => new xmlrpcval(url('blog/view/' . $user->uid, NULL, NULL, true), 'string')),
+                                  'url' => new xmlrpcval(url('blog/' . $user->uid, NULL, NULL, true), 'string')),
                             'struct');
     return new xmlrpcresp($struct);
   }
@@ -112,7 +116,7 @@ function blogapi_new_post($req_params) {
   }
 
   $edit = array();
-  $edit['type'] = 'blog';
+  $edit['type'] = _blogapi_blogid($params[0]);
   $edit['uid'] = $user->uid;
   $edit['name'] = $user->name;
   $edit['promote'] = variable_get('node_promote_blog', 1);
@@ -175,6 +179,8 @@ function blogapi_edit_post($req_params) {
   if (!$node) {
     return blogapi_error(message_na());
   }
+  // Let the teaser be re-generated.
+  unset($node->teaser);
 
   if (!node_access('update', $node)) {
     return blogapi_error(message_access());
@@ -280,7 +286,9 @@ function blogapi_new_media_object($req_params) {
  * associated with a blog node.
  */
 function blogapi_get_category_list($req_params) {
-  $vocabularies = module_invoke('taxonomy', 'get_vocabularies', 'blog', 'vid');
+  $params = blogapi_convert($req_params);
+  $type = _blogapi_blogid($params[0]);
+  $vocabularies = module_invoke('taxonomy', 'get_vocabularies', $type, 'vid');
   $categories = array();
   if ($vocabularies) {
     foreach ($vocabularies as $vocabulary) {
@@ -361,7 +369,8 @@ function blogapi_get_recent_posts($req_params, $bodies = TRUE) {
     return blogapi_error($user);
   }
 
-  $result = db_query_range('SELECT n.nid, n.title,'. ($bodies ? ' n.body,' : '') ." n.created, u.name FROM {node} n, {users} u WHERE n.uid=u.uid AND n.type = 'blog' AND n.uid = %d ORDER BY n.created DESC",  $user->uid, 0, $params[3]);
+  $type = _blogapi_blogid($params[0]);
+  $result = db_query_range('SELECT n.nid, n.title,'. ($bodies ? ' n.body,' : '') ." n.created, u.name FROM {node} n, {users} u WHERE n.uid=u.uid AND n.type = '%s' AND n.uid = %d ORDER BY n.created DESC",  $type, $user->uid, 0, $params[3]);
   while ($blog = db_fetch_object($result)) {
     $xmlrpcval = _blogapi_get_post($blog, $bodies);
     $blogs[] = $xmlrpcval;
@@ -505,6 +514,13 @@ function blogapi_blogger_title(&$contents) {
 
 function blogapi_settings() {
   $output = form_select(t('XML-RPC Engine'), 'blogapi_engine', variable_get('blogapi_engine', 0), array(0 => 'Blogger', 1 => 'MetaWeblog', 2 => 'Movabletype'), t('RSD or Really-Simple-Discovery is a mechanism which allows external blogger tools to discover the APIs they can use to interact with Drupal. Here you can set the preferred method for blogger tools to interact with your site. The common XML-RPC engines are Blogger, MetaWeblog and Movabletype. If you are not sure which is the correct setting, choose Blogger.'));
+  foreach (node_list() as $type) {
+      $node_types[$type] = node_invoke($type, 'node_name');
+      if (in_array($type, array('blog'))) {
+          $defaults[] = $type;
+      }
+  }
+  $output .= form_checkboxes(t('Blog types'), "blogapi_node_types", variable_get('blogapi_node_types', $defaults), $node_types, t('Select the content types for which you wish to enable posting via blogapi. Each type will appear as a different "blog" in the client application (if supported).'), 0, 1);
   return $output;
 }
 
@@ -516,7 +532,7 @@ function blogapi_menu($may_cache) {
   }
 
   if ($may_cache) {
-    $items[] = array('path' => 'blogapi', 'title' => t('RSD'), 'callback' => 'blogapi_blogapi', 'access' => user_access('access_content'), 'type' => MENU_CALLBACK);
+    $items[] = array('path' => 'blogapi', 'title' => t('RSD'), 'callback' => 'blogapi_blogapi', 'access' => user_access('access content'), 'type' => MENU_CALLBACK);
   }
 
   return $items;
@@ -653,5 +669,26 @@ function _blogapi_get_post($node, $bodies = true) {
   }
 
   return new xmlrpcval($xmlrpcval, 'struct');
+}
+
+function _blogapi_blogid($id) {
+  if (is_numeric($id)) {
+    return 'blog';
+  }
+  else {
+    return $id;
+  }
+}
+
+function _blogapi_get_node_types() {
+  $available_types = variable_get('blogapi_node_types', array('blog'));
+  $types = array();
+  foreach (node_list() as $type) {
+    if (node_access('create', $type) && in_array($type, $available_types)) {
+      $types[] = $type;
+    }
+  }
+
+  return $types;
 }
 ?>
