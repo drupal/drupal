@@ -346,13 +346,6 @@ function arg($index) {
 }
 
 /**
- * Prepare user input for use in a database query, preventing SQL injection attacks.
- */
-function check_query($text) {
-  return addslashes($text);
-}
-
-/**
  * Prepare user input for use in a URI.
  *
  * We replace ( and ) with their entity equivalents to prevent XSS attacks.

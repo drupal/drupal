@@ -773,7 +773,7 @@ function _taxonomy_depth($depth, $graphic = '--') {
 
 function _taxonomy_prepare_update($data) {
   foreach ($data as $key => $value) {
-    $q[] = "$key = '". str_replace('%', '%%', check_query($value)) ."'";
+    $q[] = "$key = '". str_replace('%', '%%', db_escape_string($value)) ."'";
   }
   $result = implode(', ', $q);
   return $result;
@@ -785,7 +785,7 @@ function _taxonomy_prepare_insert($data, $stage) {
   }
   else {
     foreach (array_values($data) as $value) {
-      $q[] = "'". str_replace('%', '%%', check_query($value)) ."'";
+      $q[] = "'". str_replace('%', '%%', db_escape_string($value)) ."'";
     }
     $result = implode(', ', $q);
   }

@@ -1012,16 +1012,16 @@ function _locale_string_seek() {
     // Compute LIKE section
     switch ($query->searchin) {
       case 'translated':
-        $where = "WHERE (t.translation LIKE '%". check_query($query->string) ."%' AND t.translation != '')";
+        $where = "WHERE (t.translation LIKE '%". db_escape_string($query->string) ."%' AND t.translation != '')";
         $orderby = "ORDER BY t.translation";
         break;
       case 'untranslated':
-        $where = "WHERE (s.source LIKE '%". check_query($query->string) ."%' AND t.translation = '')";
+        $where = "WHERE (s.source LIKE '%". db_escape_string($query->string) ."%' AND t.translation = '')";
         $orderby = "ORDER BY s.source";
         break;
       case 'all' :
       default:
-        $where = "WHERE (s.source LIKE '%". check_query($query->string) ."%' OR t.translation LIKE '%". check_query($query->string) ."%')";
+        $where = "WHERE (s.source LIKE '%". db_escape_string($query->string) ."%' OR t.translation LIKE '%". db_escape_string($query->string) ."%')";
         $orderby = '';
         break;
     }
@@ -1029,7 +1029,7 @@ function _locale_string_seek() {
     switch ($query->language) {
       // Force search in source strings
       case "en":
-        $sql = $join ." WHERE s.source LIKE '%". check_query($query->string) ."%' ORDER BY s.source";
+        $sql = $join ." WHERE s.source LIKE '%". db_escape_string($query->string) ."%' ORDER BY s.source";
         break;
       // Search in all languages
       case "all":
@@ -1037,7 +1037,7 @@ function _locale_string_seek() {
         break;
       // Some different language
       default:
-        $sql = "$join $where AND t.locale = '". check_query($query->language) ."' $orderby";
+        $sql = "$join $where AND t.locale = '". db_escape_string($query->language) ."' $orderby";
     }
 
     $result = pager_query($sql, 50);

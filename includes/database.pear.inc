@@ -45,11 +45,11 @@ function db_query($query) {
   $query = db_prefix_tables($query);
   if (count($args) > 1) {
     if(is_array($args[1])){
-      $args1 = array_map('check_query', $args[1]);
+      $args1 = array_map('db_escape_string', $args[1]);
       $nargs = array_merge(array($query), $args1);
     }
     else {
-      $nargs = array_map('check_query', $args);
+      $nargs = array_map('db_escape_string', $args);
       $nargs[0] = $query;
     }
     return _db_query(call_user_func_array('sprintf', $nargs));
@@ -69,11 +69,11 @@ function db_queryd($query) {
   $query = db_prefix_tables($query);
   if (count($args) > 1) {
     if(is_array($args[1])){
-      $args1 = array_map('check_query', $args[1]);
+      $args1 = array_map('db_escape_string', $args[1]);
       $nargs = array_merge(array($query), $args1);
     }
     else {
-      $nargs = array_map('check_query', $args);
+      $nargs = array_map('db_escape_string', $args);
       $nargs[0] = $query;
     }
     return _db_query(call_user_func_array('sprintf', $nargs), 1);
@@ -252,7 +252,7 @@ function db_query_range($query) {
   $count = array_pop($args);
   $from = array_pop($args);
   if (count(func_get_args()) > 3) {
-    $args = array_map('check_query', $args);
+    $args = array_map('db_escape_string', $args);
     $query = db_prefix_tables($query);
     $args[0] = $query;
     $result = $active_db->limitQuery(call_user_func_array('sprintf', $args), $from, $count);
@@ -276,6 +276,13 @@ function db_query_range($query) {
   else {
     return $result;
   }
+}
+
+/**
+ * Prepare user input for use in a database query, preventing SQL injection attacks.
+ */
+function db_escape_string($text) {
+  return addslashes($text);
 }
 
 ?>

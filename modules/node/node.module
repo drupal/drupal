@@ -386,7 +386,7 @@ function node_load($conditions, $revision = NULL, $reset = NULL) {
 
   // Turn the conditions into a query.
   foreach ($conditions as $key => $value) {
-    $cond[] = 'n.'. check_query($key) ." = '". check_query($value) ."'";
+    $cond[] = 'n.'. db_escape_string($key) ." = '". db_escape_string($value) ."'";
   }
 
   // Retrieve the node.
@@ -452,7 +452,7 @@ function node_save($node) {
     // Prepare the query:
     foreach ($node as $key => $value) {
       if (in_array($key, $fields)) {
-        $k[] = check_query($key);
+        $k[] = db_escape_string($key);
         $v[] = $value;
         $s[] = "'%s'";
       }
@@ -478,7 +478,7 @@ function node_save($node) {
     // Prepare the query:
     foreach ($node as $key => $value) {
       if (in_array($key, $fields)) {
-        $q[] = check_query($key) ." = '%s'";
+        $q[] = db_escape_string($key) ." = '%s'";
         $v[] = $value;
       }
     }

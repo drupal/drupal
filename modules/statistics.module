@@ -207,7 +207,7 @@ function statistics_admin_displaylog($type = 'all', $id = 0) {
         // retrieve recent access logs for specific user $id
         $user = user_load(array('uid' => $id));
         $page_title = t('Recent hits for "%username"', array('%username' => $user->name));
-        $sql = 'SELECT title, path, url, hostname, uid, timestamp FROM {accesslog} WHERE uid = \''. check_query($id) ."'";
+        $sql = 'SELECT title, path, url, hostname, uid, timestamp FROM {accesslog} WHERE uid = \''. db_escape_string($id) ."'";
       }
       else {
         // retrieve recent access logs for all users (not guests)
@@ -218,12 +218,12 @@ function statistics_admin_displaylog($type = 'all', $id = 0) {
     case 'page':
       // retrieve recent access logs for title $id
       $page_title = t('Recent hits for "%title"', array('%title' => $id));
-      $sql = 'SELECT title, path, url, hostname, uid, timestamp FROM {accesslog} WHERE title = \''. check_query($id) ."'";
+      $sql = 'SELECT title, path, url, hostname, uid, timestamp FROM {accesslog} WHERE title = \''. db_escape_string($id) ."'";
       break;
     case 'host':
       // retrieve recent access logs for hostname $id
       $page_title = t('Recent hits for "%hostname"', array('%hostname' => $id));
-      $sql = 'SELECT title, path, url, hostname, uid, timestamp, title FROM {accesslog} WHERE hostname = \''. check_query($id) ."'";
+      $sql = 'SELECT title, path, url, hostname, uid, timestamp, title FROM {accesslog} WHERE hostname = \''. db_escape_string($id) ."'";
       break;
     case 'all':
     default:
@@ -380,14 +380,14 @@ function statistics_top_referrers($view = 'all') {
     $describe = t('Top referrers in the past %interval');
   }
   elseif ($view == 'internal') {
-    $query = "SELECT url, MAX(timestamp) AS last_hit, COUNT(url) AS hits FROM {accesslog} WHERE url LIKE '%". check_query($_SERVER['HTTP_HOST']) ."%' GROUP BY url";
-    $query_cnt = "SELECT COUNT(DISTINCT(url)) FROM {accesslog} WHERE url <> '' AND url LIKE '%". check_query($_SERVER['HTTP_HOST']) ."%'";
+    $query = "SELECT url, MAX(timestamp) AS last_hit, COUNT(url) AS hits FROM {accesslog} WHERE url LIKE '%". db_escape_string($_SERVER['HTTP_HOST']) ."%' GROUP BY url";
+    $query_cnt = "SELECT COUNT(DISTINCT(url)) FROM {accesslog} WHERE url <> '' AND url LIKE '%". db_escape_string($_SERVER['HTTP_HOST']) ."%'";
     $describe = t('Top internal referrers in the past %interval');
   }
   else {
     /* default to external */
-    $query = "SELECT url, MAX(timestamp) AS last_hit, COUNT(url) AS hits FROM {accesslog} WHERE url NOT LIKE '%". check_query($_SERVER['HTTP_HOST']) ."%' AND url <> '' GROUP BY url";
-    $query_cnt = "SELECT COUNT(DISTINCT(url)) FROM {accesslog} WHERE url <> '' AND url NOT LIKE '%". check_query($_SERVER['HTTP_HOST']) ."%'";
+    $query = "SELECT url, MAX(timestamp) AS last_hit, COUNT(url) AS hits FROM {accesslog} WHERE url NOT LIKE '%". db_escape_string($_SERVER['HTTP_HOST']) ."%' AND url <> '' GROUP BY url";
+    $query_cnt = "SELECT COUNT(DISTINCT(url)) FROM {accesslog} WHERE url <> '' AND url NOT LIKE '%". db_escape_string($_SERVER['HTTP_HOST']) ."%'";
     $describe = t('Top external referrers in the past %interval');
   }
 

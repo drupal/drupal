@@ -86,10 +86,10 @@ function profile_browse() {
         $query = 'v.value = 1';
         break;
       case 'selection':
-        $query = "v.value = '". check_query($value) ."'";
+        $query = "v.value = '". db_escape_string($value) ."'";
         break;
       case 'list':
-        $query = "v.value LIKE '%%". check_query($value) ."%%'";
+        $query = "v.value LIKE '%%". db_escape_string($value) ."%%'";
         break;
       default:
         drupal_not_found();

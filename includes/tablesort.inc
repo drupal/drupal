@@ -51,8 +51,8 @@ function tablesort_pager() {
 function tablesort_sql($header, $before = '') {
   $ts = tablesort_init($header);
   if ($ts['sql']) {
-    $sql = check_query($ts['sql']);
-    $sort = strtoupper(check_query($ts['sort']));
+    $sql = db_escape_string($ts['sql']);
+    $sort = strtoupper(db_escape_string($ts['sort']));
     return " ORDER BY $before $sql $sort";
   }
 }

@@ -226,7 +226,7 @@ function book_form(&$node) {
   global $user;
 
   $op = $_POST['op'];
-    
+
   $output = form_select(t('Parent'), 'parent', ($node->parent ? $node->parent : arg(4)), book_toc($node->nid), t('The parent that this page belongs in. Note that pages whose parent is &lt;top-level&gt; are regarded as independent, top-level books.'));
 
   if (function_exists('taxonomy_node_form')) {

@@ -428,11 +428,11 @@ function locale_admin_string() {
 
   switch ($op) {
     case 'delete':
-      $output .= _locale_string_delete(check_query(arg(4)));
+      $output .= _locale_string_delete(db_escape_string(arg(4)));
       $output .= _locale_string_seek();
       break;
     case 'edit':
-      $output .= _locale_string_edit(check_query(arg(4)));
+      $output .= _locale_string_edit(db_escape_string(arg(4)));
       $output .= _locale_string_seek();
       break;
     case t('Search'):
@@ -441,7 +441,7 @@ function locale_admin_string() {
       $output .= _locale_string_seek_form();
       break;
     case t('Save translations'):
-      $output .= _locale_string_save(check_query(arg(4)));
+      $output .= _locale_string_save(db_escape_string(arg(4)));
       drupal_goto('admin/locale/string/search');
       break;
     default:
