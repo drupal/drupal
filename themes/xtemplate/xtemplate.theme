@@ -1,5 +1,5 @@
 <?php
-// $Id: xtemplate.theme,v 1.32 2003/11/09 23:27:22 dries Exp $
+// $Id: xtemplate.theme,v 1.33 2003/11/11 13:01:45 dries Exp $
 
 if (!class_exists("XTemplate")) {
   include_once("themes/xtemplate/xtemplate.inc");
@@ -115,21 +115,17 @@ function xtemplate_header($title = "") {
     $xtemplate->template->parse("header.message");
   }
 
-  ob_start();
-
   if ($xtemplate->sidebar == "left") {
-    print render_blocks("all");
+    $blocks = render_blocks("all");
   }
   else if ($xtemplate->sidebar == "both") {
-    print render_blocks("left");
+    $blocks = render_blocks("left");
   }
 
-  if ($blocks = ob_get_contents()) {
+  if ($blocks) {
     $xtemplate->template->assign("blocks", $blocks);
     $xtemplate->template->parse("header.blocks");
   }
-
-  ob_end_clean();
 
   $xtemplate->template->parse("header");
   print $xtemplate->template->text("header");
