@@ -2,7 +2,7 @@
 
 // RSS 1.0 headline exporter (v0.1)
 //
-// Kristjan Jansen -- kika@sloleht.ee 
+// Kristjan Jansen -- kika@sloleht.ee
 
 $module = array("export" => "headlineRSS10_export");
 
@@ -10,7 +10,7 @@ include_once "includes/common.inc";
 include_once "modules/backend.class";
 
 function headlineRSS10_export($uri) {
-  global $site_name, $site_url, $HTTP_REFERER, $HTTP_USER_AGENT;
+  global $site_name, $site_url, $status, $HTTP_REFERER, $HTTP_USER_AGENT;
 
   if ($uri[1] == "headlinesRSS10.rdf") {
     watchdog("message", "grabbed 'headlinesRSS10.rdf' - referring url: $HTTP_REFERER - user agent: $HTTP_USER_AGENT");
@@ -19,40 +19,40 @@ function headlineRSS10_export($uri) {
 
     print "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
     print "<rdf:RDF\n";
-    
+
     print "xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"\n";
     print "xmlns=\"http://purl.org/rss/1.0/\">\n\n";
 
     print "<channel rdf:about=\"".$site_url."export/headlinesRSS10.rdf\">\n";
-    print " 	<title>$site_name</title>\n";
-    print " 	<link>$site_url</link>\n";
-    print " 	<description>$site_name</description>\n";
+    print "   <title>$site_name</title>\n";
+    print "   <link>$site_url</link>\n";
+    print "   <description>$site_name</description>\n";
 
 
-    print "	<items>\n";
-    print "		<rdf:Seq>\n";
-    
-    $result = db_query("SELECT * FROM stories WHERE status = 2 ORDER BY timestamp DESC LIMIT 10");
+    print "  <items>\n";
+    print "    <rdf:Seq>\n";
 
-    while ($story = db_fetch_object($result)) {
-      print "			<rdf:li resource=\"". $site_url ."story.php?id=$story->id\" />\n";
-      
+    $result = db_query("SELECT * FROM nodes WHERE type = 'story' AND status = '$status[posted]' ORDER BY timestamp DESC LIMIT 10");
+
+    while ($node = db_fetch_object($result)) {
+      print "      <rdf:li resource=\"". $site_url ."node.php?id=$node->nid\" />\n";
+
     }
 
-    print "		</rdf:Seq>\n";
-    print "	</items>\n";
+    print "    </rdf:Seq>\n";
+    print "  </items>\n";
     print "</channel>\n\n";
 
-    $result = db_query("SELECT * FROM stories WHERE status = 2 ORDER BY timestamp DESC LIMIT 10");
+    $result = db_query("SELECT * FROM node WHERE type = 'story' AND status = '$status[posted]' ORDER BY timestamp DESC LIMIT 10");
 
-    while ($story = db_fetch_object($result)) {
-      print "<item rdf:about=\"".$site_url ."story.php?id=$story->id\">\n";
-      print "	<title>". check_export($story->subject) ."</title>\n";
-      print "	<link>". $site_url ."story.php?id=$story->id</link>\n";
-      
-      if ($story->abstract)
-      print "	<description>". check_output($story->abstract, 1) ."</description>\n";	
-      
+    while ($node = db_fetch_object($result)) {
+      print "<item rdf:about=\"".$site_url ."node.php?id=$node->nid\">\n";
+      print "  <title>". check_export($node->title) ."</title>\n";
+      print "  <link>". $site_url ."node.php?id=$node->nid</link>\n";
+
+      if ($node->abstract)
+      print "  <description>". check_output($node->abstract, 1) ."</description>\n";
+
       print "</item>\n";
     }
 
