@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.103 2003/09/15 15:58:20 dries Exp $
+// $Id: poll.module,v 1.104 2003/09/18 13:50:45 dries Exp $
 
 function poll_allowvotes(&$node) {
   /*
@@ -293,7 +293,7 @@ function poll_view_results(&$node, $main, $block, $links) {
   if ($node->choice) {
     foreach ($node->choice as $key => $value) {
       if ($value != "") {
-        $width = round($node->chvotes[$key] * 100 / $votestotal);
+        $width = round($node->chvotes[$key] * 100 / max($votestotal, 1));
         $percentage = round($node->chvotes[$key] * 100 / max($votestotal, 1));
         $output .= "<div class=\"text\">". filter($value) ."</div>";
         $output .= "<div class=\"bar\">";
