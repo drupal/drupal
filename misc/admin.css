@@ -22,14 +22,14 @@ h2 {
   font-weight: bold;
   color: #006;
   margin: 0;
-  padding: 0 0 .5em 0;
+  padding: 0 0 0.5em 0;
 }
 h3 {
   font-size: 1.2em;
   font-weight: bold;
   color: #006;
   margin: 0;
-  padding: 0 0 .5em 0;
+  padding: 1em 0 0 0;
 }
 table {
   border-collapse: collapse;
@@ -126,4 +126,23 @@ dd {
 }
 #update {
   padding: 1em 1em 1em 1em;
+}
+.node-form .admin {
+  float: none; width: auto; margin-top: 0;
+}
+.node-form .standard {
+  margin-right: 0;
+  clear: both;
+}
+.node-form .admin .form-item .title {
+  margin-top: 0;
+}
+.node-form .admin .authored .form-item {
+  margin-bottom: 1.1em;
+}
+.node-form .admin .authored, .node-form .admin .options, .node-form .admin .extra {
+  float: left; margin-right: 2em; margin-bottom: 1em;
+}
+.node-form .admin .form-item .form-text {
+  width: auto;
 }

@@ -17,11 +17,7 @@ LEGEND
 --------------------------------------------------------------------------------
 
 BLOCK SYSTEM
-M: Kjartan Mannes <kjartan@drop.org>
-S: maintained
-
-BLOGGER API MODULE
-M: Greg Tyrelle <greg@nodalpoint.org>
+M: Kjartan Mannes <kjartan@drupal.org>
 S: maintained
 
 CODING STYLE CHECKER
@@ -37,7 +33,11 @@ M: Marco Molinari <marco@porciletto.org>
 S: maintained
 
 POLL MODULE
-M: Steven Wittens <unconed@drop.org>
+M: Alastair Maw <me@almaw.com>
+S: maintained
+
+LANGUAGE
+M: Alastair Maw <me@almaw.com>
 S: maintained
 
 MSSQL PORT
@@ -48,20 +48,12 @@ POSTGRES PORT
 M: James Arthur <j_a_arthur@yahoo.com>
 S: maintained
 
-SEARCH MODULE
-M: Simon Lindsay <simon@iseek.ws>
-S: maintained
-
 STATISTICS MODULE
 M: Jeremy Andrews <jeremy@kerneltrap.com>
 S: maintained
 
 TAXONOMY SYSTEM
 M: Marco Molinari <marco@porciletto.org>
-S: maintained
-
-THEME GOOFY, THEME UNCONED
-M: Steven Wittens <unconed@drop.org>
 S: maintained
 
 USER SYSTEM
