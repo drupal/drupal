@@ -127,7 +127,7 @@ function xtemplate_header() {
 
   // only parse the mission block if we are on the frontpage ...
   if ($_GET["q"] == variable_get("site_frontpage", "node") && ($mission = variable_get("xtemplate_mission", "edit mission"))) {
-    $xtemplate->template->assign("header_mission", $mission);
+    $xtemplate->template->assign("mission", $mission);
     $xtemplate->template->parse("header.mission");
   }
 
