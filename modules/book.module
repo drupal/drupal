@@ -39,7 +39,12 @@ function book_access($op, $node) {
     // of that page waiting for approval.  That is, only updates that
     // don't overwrite the current or pending information are allowed.
 
-    return ((user_access('maintain books') && !$node->moderate) || ($node->uid == $user->uid && user_access('edit own book pages')));
+    if ((user_access('maintain books') && !$node->moderate) || ($node->uid == $user->uid && user_access('edit own book pages'))) {
+      return TRUE;
+    }
+    else {
+       // do nothing. node-access() will determine further access
+    }
   }
 }
 
@@ -426,8 +431,11 @@ function book_nodeapi(&$node, $op, $teaser, $page) {
     case 'view':
       if (!$teaser) {
         $book = db_fetch_array(db_query('SELECT * FROM {book} WHERE nid = %d', $node->nid));
-
         if ($book) {
+          if ($node->moderate && user_access('administer nodes')) {
+            drupal_set_message(t("This update/post awaits moderation and won't be accessible until approved."));
+          }
+
           foreach ($book as $key => $value) {
             $node->$key = $value;
           }
