@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.270 2003/12/06 16:36:17 dries Exp $
+// $Id: user.module,v 1.271 2003/12/07 18:09:28 dries Exp $
 
 /*** Common functions ******************************************************/
 
@@ -402,19 +402,23 @@ function user_block($op = "list", $delta = 0) {
           }
 
           if (user_access("access user list") && $total_users) {
+
             // Display a list of currently online users
             $max_users = variable_get("user_block_max_list_count", 10);
-            $items = array();
-            while (($max_users--) && $uid = db_fetch_object($users)) {
-              $items[] = format_name(user_load(array("uid" => $uid->uid)));
-            }
+            if ($max_users) {
+              $items = array();
 
-            if (db_fetch_object($users)) {
-               $items[] = "...";
-            }
+              while ($max_users-- && $uid = db_fetch_object($users)) {
+                $items[] = format_name(user_load(array("uid" => $uid->uid)));
+              }
 
-            if ($items) {
-              $output .= theme("item_list", $items, t("Online users:"));
+              if (db_fetch_object($users)) {
+                $items[] = "...";
+              }
+
+              if ($items) {
+                $output .= theme("item_list", $items, t("Online users:"));
+              }
             }
           }
           $block["subject"] = t("Who's online");
