@@ -29,13 +29,6 @@ function wishlist_page() {
     <UL>
      <LI>blocks and flexible block placement strategies by means of "layout managers" (cfr. Java) and tightly integrated with the module support</LI>
      <LI>post/edit hash - magic cookie: to prevent malicious external access and to prevent duplicate posts because of hitting the "reload" button</LI>
-     <LI>cron job emulation:</LI>
-      <UL>
-       <LI>auto. set default theme according to popularity</LI>
-       <LI>auto. database clean-up (e.g. history field)</LI>
-       <LI>auto. recalculate adaptive/dynamic settings like thresholds</LI>
-       <LI>auto. mail digests</LI>
-      </UL>
      <LI>URL validator</LI>
      <LI>more adaptive submission queue</LI>
      <LI>archive function</LI>
@@ -60,6 +53,7 @@ function wishlist_page() {
      <LI>messaging system between users</LI>
      <LI>voting polls</LI>
      <LI>daily/weekly e-mail digest - mailing list</LI>
+     <LI>story overview grouped by category</LI>
      <LI>e-commerce/shop</LI> 
     </UL>
  

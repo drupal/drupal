@@ -7,22 +7,26 @@
   ForceType application/x-httpd-php
 </Files>
 
-# Protect .inc files:
-#  .inc files can be read from the web so make sure we keep it 
-#  away from the casual prying eyes.  Especially `config.inc'.
-<Files *.inc>
+# Protect includes-directory:
+<Files *includes>
+  order deny,allow
+  deny from all
+</Files>
+
+# Protect modules-directory:
+<Files *modules>
+  order deny,allow
+  deny from all
+</Files>
+
+# Protect themes-directory:
+<Files *themes>
   order deny,allow
   deny from all
 </Files>
 
 # Protect CVS directories:
 <Files *CVS>
-  order deny,allow
-  deny from all
-</Files>
-
-# Protect theme directories:
-<Files *themes>
   order deny,allow
   deny from all
 </Files>
@@ -47,4 +51,3 @@ ErrorDocument 500 /error.php
    php_value session.gc_maxlifetime  2000000
    php_value session.cache_expire    200000
 </IfModule>
-

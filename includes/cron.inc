@@ -1,24 +1,41 @@
 <?
 
-function cron_add($name, $help, $code, $scheduled, $message = "") {
-  if (empty($name) || empty($code) || empty($scheduled)) {
+include "includes/theme.inc";
+
+function cron_set($module, $scheduled, $message = "") {
+  if (empty($module) || empty($scheduled)) {
     $message = "failed: information missing";
   }
+  else if (db_fetch_object(db_query("SELECT * FROM cron WHERE module = '$module'"))) {
+    db_query("UPDATE cron SET scheduled = $scheduled WHERE module = '$module'");
+  }
   else {
-    $result = db_query("INSERT INTO cron (name, help, code, scheduled) VALUES ('". check_input($name) ."', '". check_input($help) ."', '". check_code($code) ."', '". check_input($scheduled) ."')");
+    db_query("INSERT INTO cron (module, scheduled, timestamp) VALUES ('". check_input($module) ."', '". check_input($scheduled) ."', '42')");
   } 
 }
 
-function cron_delete($id) {
-  $result = db_query("DELETE FROM cron WHERE id = $id");
+function cron_get($module) {
+  return db_fetch_object(db_query("SELECT * FROM cron WHERE module = '$module'"), 0);
 }
 
-function cron_execute($cron) {
-  eval($cron->code);
-  
-  db_query("UPDATE cron SET timestamp = '". time() ."' WHERE id = $cron->id");
+function cron_delete($module) {
+  $result = db_query("DELETE FROM cron WHERE module = '$module'");
+}
 
-  watchdog("message", "cron: executed '$cron->name'"); 
+function cron_run($cron) {
+  $time = time();
+  
+  $result = db_query("SELECT * FROM cron WHERE $time - timestamp > scheduled");
+
+  while ($task = db_fetch_object($result)) {
+    include "modules/". $task->module .".module";
+    if ($function = $module["cron"]) {
+      watchdog("message", "cron: executed '". $task->module ."_cron()'"); 
+      $function();
+    }
+  }
+
+  db_query("UPDATE cron SET timestamp = $time WHERE $time - timestamp > scheduled");
 }
 
 ?>

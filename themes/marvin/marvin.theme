@@ -46,7 +46,7 @@
         </TD>
        </TR>
        <TR>
-        <TD ALIGN="right" COLSPAN="2"><SMALL><A HREF="/">home</A> | <A HREF="module.php?mod=faq">faq</A> | <A HREF="diary.php">diary</A> | <A HREF="search.php">search</A> | <A HREF="submit.php">submit news</A> | <A HREF="account.php">user account</A></SMALL></TD>
+        <TD ALIGN="right" COLSPAN="2"><SMALL><A HREF="/">home</A> | <A HREF="module.php?mod=faq">faq</A> | <A HREF="module.php?mod=diary">diary</A> | <A HREF="search.php">search</A> | <A HREF="submit.php">submit news</A> | <A HREF="account.php">user account</A></SMALL></TD>
        </TR>
        <TR>
         <TD VALIGN="top" WIDTH="100%">
@@ -269,12 +269,9 @@
            ### Display account:
            display_account($this);
          }
-         elseif (strstr($PHP_SELF, "diary.php")) {
+         elseif (strstr($PHP_SELF, "module.php")) {
            ### Display account:
            display_account($this);
- 
-           ### Display new diary entries:
-           display_new_diaries($this);
          }
          elseif (strstr($PHP_SELF, "submission.php")) {
            ### Display account:
@@ -317,7 +314,7 @@
       </TR>
       <TR>
        <TD ALIGN="center" COLSPAN="3">
-        <SMALL>[ <A HREF="/">home</A> | <A HREF="moduled.php?mod=faq">faq</A> | <A HREF="diary.php">diary</A> | <A HREF="search.php">search</A> | <A HREF="submit.php">submit news</A> | <A HREF="account.php">user account</A> ]</SMALL>
+        <SMALL>[ <A HREF="/">home</A> | <A HREF="module.php?mod=faq">faq</A> | <A HREF="module.php?mod=diary">diary</A> | <A HREF="search.php">search</A> | <A HREF="submit.php">submit news</A> | <A HREF="account.php">user account</A> ]</SMALL>
        </TD>
       </TR>
      </TABLE>

@@ -32,7 +32,7 @@ function documentation_page() {
    -rw-rw-r--    1 drop    drop        includes/www.yourdomain1.com.conf
    -rw-rw-r--    1 drop    drop        includes/www.yourdomain2.com.conf
   </PRE>
-  <P>The only thing left to be done is to setup the corresponding vhosts in your Apache configuration file.  Note that the <CODE>DocumentRoot</CODE> points to the same source tree:</P>
+  <P>The only thing left to be done is to setup the corresponding vhosts in your Apache configuration file.  Note that the <CODE>DocumentRoot</CODE> points to the same source tree twice:</P>
   <PRE>
    NameVirtualHost 127.0.0.1
 
@@ -70,15 +70,15 @@ function documentation_page() {
    </TR>
    <TR>
     <TD VALIGN="top"><CODE>page</CODE></TD>
-    <TD VALIGN="top">If a module requires it's own page, typically exported as <CODE>http://www.yourdomain.com/module.php?mod=module</CODE>, the engine will invoke <CODE>module_page</CODE> to generate a modules page.</TD>
+    <TD VALIGN="top">If a module requires it's own page it should provide a function named <CODE>module_page</CODE>.  The page can then be publicly accessed via <CODE>http://www.yourdomain.com/module.php?mod=module</CODE> which will cause the engine to invoke <CODE>module_page</CODE> in order to generate the module's page.</TD>
    </TR>
    <TR>
-    <TD VALIGN="top"></TD>
-    <TD VALIGN="top"></TD>
+    <TD VALIGN="top"><CODE>cron</CODE></TD>
+    <TD VALIGN="top">Modules that require to schedule some commands to be executed on regular intervals can implement the <CODE>cron</CODE> interface: the engine will then call <CODE>module_cron</CODE> at the appropriate intervals defined by the administrator.  This interface is particulary handy to implement timers or to automate certain tasks like for instance database maintainance, recalculation of settings or parameters, automatic mailings and so on.</TD>
    </TR>
    <TR>
-    <TD VALIGN="top"></TD>
-    <TD VALIGN="top"></TD>
+    <TD VALIGN="top"><CODE>admin</CODE></TD>
+    <TD VALIGN="top">If a module requires a spot in the administrator section it should implement <CODE>module_admin</CODE>.  The engine will automatically add a link to the administration menus and will call <CODE>module_admin</CODE> when this link is followed.  In order to make virtually any module maintainer's life easier, you don't have to worry about access rights or permissions for that matter.  The engine will only allow priveleged users to call exported <CODE>admin</CODE> functions.</TD>
    </TR>
    <TR>
     <TD VALIGN="top"></TD>
@@ -101,7 +101,7 @@ function documentation_page() {
 
   <P>The site can be almost entirely configured through a web interface by using <I>droplets</I>.  Simply put, droplets are small bit of PHP code which will get plugged into the engine or modules powering the site.  Droplets are typically used to link modules with the mainstream engine or to customize various aspects of the engine itself.</P>
   <P>If you know how to script in PHP, droplets are pretty simple to create.  Don't get your panties in a knot if you are not confident with PHP: simply use the standard droplets (i.e. those available by default) as they are just fine or ask an expert dropletber to help you creating custom droplets that fit your need.</P>
-  <P>Each droplet consist of a key of maximum 255 characters and an associated block of PHP code which can be as long as you want it to be.  You can use any piece of PHP code to make up a droplet.  A droplet's code is stored in the database and the engine or a particular module will use the key to find the associated piece of PHP code which will then be dynamically embedded in the engine or the module just-in-time for execution.</P>
+  <P>Each droplet consists of a key of maximum 255 characters and an associated block of PHP code which can be as long as you want it to be.  You can use any piece of PHP code to make up a droplet.  A droplet's code is stored in the database and the engine or a particular module will use the key to find the associated piece of PHP code which will then be dynamically embedded in the engine or the module just-in-time for execution.</P>
   <P>There are however some factors to keep in mind when using and creating droplets: droplets can be extremly useful and flexible, yet be dangerous and insecure if not properly used.  If you are not confident with PHP, SQL or even with the site engine for that matter, avoid experimenting with droplets because you can - and you probably will - corrupt your database or even break your site!</P>
   <P>Remember that the code within each droplet must be valid PHP code, including things like terminating statements with a semicolon so the parser won't die.  Therefore, it is highly recommended to test your droplets seperatly using a simple test script on top of a test database before migrating to your production environment running your real database.</P>
   <P>Note that you can use any global variables, such as configuration parameters within the scope of a droplet and keep in mind that variables that have been given values in a droplet will retain these values in the engine or module afterwards.</P>
@@ -122,7 +122,22 @@ function documentation_page() {
   </PRE>
   <P>For more in depth example, we recommand you to check any of the available modules and to go from there.</P>
   <P>As said above, you can virtually use any piece of PHP code in a droplet: you can declare and use functions, consult the SQL database, access configuration settings and so on.</P>
-  <?
-}
+  
+  <H3>cron</H3>
+ 
+  <P>Cron (wich stands for chronograph) is a periodic command scheduler: it executes commands at intervals specified in seconds.  It can be used to control the execution of daily, weekly and monthly jobs (or anything with a period of n seconds).   Automating tasks is one of the best ways to keep a system running smoothly, and if most of your administration does not require your direct involvement, cron is an ideal solution.</P>
+  <P>Note that cron does not guarantee that the commands will be executed at the specified interval.  However, the engine will make sure that the commands are run at the specified intervals as closely as possible.</P>
+  <P>When <CODE>http://www.yourdomain.com/cron.php</CODE> is accessed, cron will run: it queries the database for the jobs cron controls, and their periods in seconds.  If a certain task wasn't executed in the last n seconds, where n is the period of that job, it will be executed.  It then records the date in the database so it can know when to run it again.  When all the executed commands terminate, cron is done.</P>
+  <P>Cron is handy to run daily, weekly and monthly tasks that
+take care of various "housekeeping chores" such as database maintainance,
+recalculating settings, periodic mailings, scheduled backups and so on.</P>
+  <P>The recommanded way to setup drop.org's cron job is to setup a real UNIX <CODE>crontab</CODE> that frequently visits <CODE>http://www.yourdomain.com/cron.php</CODE>: the more you visit the <CODE>cron.php</CODE>, the more accurate cron can and will be.  If your hosting company does not allow you to use <CODE>crontab</CODE>, you can always ask someone else to setup a <CODE>crontab</CODE> for you.  Afterall, virtually any host machine with access to the internet can run the <CODE>crontab</CODE> for you.<P>
+  <P>For the <CODE>crontab</CODE>, use a browser like <CODE>lynx</CODE> or <CODE>wget</CODE> but make sure the process terminates: either use <CODE>/usr/bin/lynx -source http://www.yourdomain.com/cron.php</CODE> or <CODE>/usr/bin/wgeti -O /dev/null http://www.yourdomain.com/cron.php</CODE>.  Take a look at the example scripts in the <CODE>scripts</CODE>-directory and make sure to adjust them to your needs.</P>
+  <P>A good <CODE>crontab</CODE>-line to run the <CODE>cron</CODE>-script once every hour would be:</P>
+  <PRE>
+    00 * * * * /home/www/drop/scripts/cron-lynx
+  </PRE>
 
+ <?
+ }
 ?>

@@ -4,6 +4,7 @@
 if (!$user->id || $user->id > 4) exit();
 
 include "includes/admin.inc";
+include "includes/cron.inc";
 
 // display admin header:
 admin_header();
@@ -17,6 +18,7 @@ while ($file = readdir($handle)) {
     }
     else {
       include_once "modules/$filename.module";
+      if ($module["cron"] && !cron_get($filename)) cron_set($filename, 172800); 
       if ($module["admin"]) $output .= "<A HREF=\"admin.php?mod=$filename\">$filename</A> | ";
     }
   }
