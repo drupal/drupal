@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.87 2003/12/01 13:45:32 dries Exp $
+// $Id: locale.module,v 1.88 2003/12/08 18:30:20 dries Exp $
 
 function locale_help($section = "admin/help#locale") {
   $output = "";
@@ -229,7 +229,7 @@ function locale_seek() {
       }
     }
 
-    if ($pager = pager_display(NULL, 50, 0, "admin", $request)) {
+    if ($pager = theme("pager", NULL, 50, 0, $request)) {
       $rows[] = array(array("data" => "$pager", "colspan" => "5"));
     }
 

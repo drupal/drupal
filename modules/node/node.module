@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.300 2003/12/08 18:01:41 dries Exp $
+// $Id: node.module,v 1.301 2003/12/08 18:30:20 dries Exp $
 
 function node_help($section = "admin/help#node") {
   global $mod;
@@ -694,7 +694,7 @@ function node_admin_nodes() {
     $rows[] = array(form_checkbox(NULL, "status][$node->nid", 1, 0), l($node->title, "node/view/$node->nid") ." ". (node_is_new($node->nid, $node->changed) ? theme_mark() : ""), module_invoke($node->type, "node", "name"), format_name($node), ($node->status ? t("published") : t("not published")), l(t("edit node"), "admin/node/edit/$node->nid"), l(t("delete node"), "admin/node/delete/$node->nid"));
   }
 
-  if ($pager = pager_display(NULL, 50, 0, "admin")) {
+  if ($pager = theme("pager", NULL, 50, 0)) {
     $rows[] = array(array("data" => $pager, "colspan" => 7));
   }
 

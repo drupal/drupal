@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.143 2003/12/08 06:32:19 dries Exp $
+// $Id: forum.module,v 1.144 2003/12/08 18:30:20 dries Exp $
 
 function forum_node($field) {
   $info["name"] = t("forum topic");
@@ -617,7 +617,7 @@ function theme_forum_topic_list($tid, $topics, $sortby, $forum_per_page, $offset
       }
     }
 
-    if ($pager = pager_display(NULL, $forum_per_page, 0, "default", tablesort_pager())) {
+    if ($pager = theme("pager", NULL, $forum_per_page, 0, tablesort_pager())) {
       $rows[] = array(array("data" => $pager, "colspan" => "5", "class" => "pager"));
     }
   }

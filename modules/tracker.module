@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.module,v 1.70 2003/11/25 19:26:21 dries Exp $
+// $Id: tracker.module,v 1.71 2003/12/08 18:30:20 dries Exp $
 
 function tracker_help($section = "admin/help#tracker") {
   $output = "";
@@ -79,7 +79,7 @@ function tracker_posts($id = 0) {
     $rows[] = array(array("data" => $type, "class" => "type"), array("data" => $title . $comments, "class" => "content"), array("data" => $author, "class" => "author"), array("data" => format_date($node->last_activity, "small"), "class" => "last_post"));
   }
 
-  if ($pager = pager_display(NULL, 10, 0, "default", tablesort_pager())) {
+  if ($pager = theme("pager", NULL, 10, 0, tablesort_pager())) {
    $rows[] = array(array("data" => $pager, "colspan" => 4));
   }
 
