@@ -14,7 +14,7 @@
 </Files>
 
 # Syndicate content:
-<Files ~ "(syndicate.rdf|syndicate.rss|syndicate.xml)">
+<Files export>
   ForceType application/x-httpd-php
 </Files>
 
