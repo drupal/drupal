@@ -2173,7 +2173,7 @@ function update_121() {
 function update_122() {
 
   $ret = array();
-  $ret[] = update_sql("ALTER TABLE {blocks} ADD type text");
+  $ret[] = update_sql("ALTER TABLE {blocks} ADD types text");
   return $ret;
 
 }
