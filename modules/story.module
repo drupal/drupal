@@ -39,9 +39,15 @@ function story_help() {
  <?php
 }
 
-function story_form($node) {
+function story_form($node, $error) {
 
-  $output = form_textarea(t("Body"), "body", $node->body, 60, 15, t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")));
+  if ($node->body) {
+    if (count(explode(" ", $node->body)) < variable_get("minimum_node_size", 0)) {
+      $error["body"] = "<div style=\"color: red;\">". t("The body of your story is too short.") ."</div>";
+    }
+  }
+
+  $output = form_textarea(t("Body"), "body", $node->body, 60, 15, $error["body"] ? $error["body"] : t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")));
 
   return $output;
 }

@@ -62,7 +62,7 @@ function page_view($node, $main = 0) {
 
 }
 
-function page_form($node) {
+function page_form($node, $error) {
   global $format, $op;
 
   if ($op != t("Preview") && $format[$node->format] == "PHP") {

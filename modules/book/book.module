@@ -155,7 +155,7 @@ function book_toc($parent = "", $indent = "", $toc = array()) {
   return $toc;
 }
 
-function book_form($node) {
+function book_form($node, $error) {
   global $user;
 
   $output .= form_select(t("Parent"), "parent", $node->parent, book_toc(), t("The parent subject or category the page belongs in."));

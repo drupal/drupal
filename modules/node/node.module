@@ -54,7 +54,9 @@ function node_search($keys) {
 }
 
 function node_conf_options() {
-  $output .= form_select("Default number of nodes to display", "default_nodes_main", variable_get("default_nodes_main", 10), array(1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 =>  5, 6 => 6, 7 => 7, 8 => 8, 9 => 9, 10 => 10, 15 => 15, 20 => 20, 25 => 25, 30 => 30), "The default maximum number of nodes to display on the main page.");
+
+  $output .= form_select(t("Default number of nodes to display"), "default_nodes_main", variable_get("default_nodes_main", 10), array(1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 =>  5, 6 => 6, 7 => 7, 8 => 8, 9 => 9, 10 => 10, 15 => 15, 20 => 20, 25 => 25, 30 => 30), t("The default maximum number of nodes to display on the main page."));
+  $output .= form_select(t("Minimum number of words in a node"), "minimum_node_size", variable_get("minimum_node_size", 0), array(0 => "0 words", 10 => "10 words", 25 => "25 words",  50 => "50 words", 75 => "75 words", 100 => "100 words", 125 => "125 words",  150 => "150 words", 175 => "175 words", 200 => "200 words"), t("The minimum number of words a node should have.  This can be useful to stop test post."));
 
   return $output;
 }
@@ -283,7 +285,7 @@ function node_feed() {
 }
 
 
-function node_fixup($edit) {
+function node_validate($node, $error) {
 
   global $user;
 
@@ -291,13 +293,13 @@ function node_fixup($edit) {
   ** Convert the node to an object if necessary:
   */
 
-  $edit = node_object($edit);
+  $node = node_object($node);
 
   /*
   ** Validate the title field:
   */
 
-  if (($edit->nid || $edit->body) && !$edit->title) {
+  if (($node->nid || $node->body) && !$node->title) {
     $error["title"] = "<div style=\"color: red;\">". t("You have to specify a valid title.") ."</div>";
   }
 
@@ -307,47 +309,56 @@ function node_fixup($edit) {
     ** Setup default values if required:
     */
 
-    if (!$edit->name) {
-      $edit->name = $user->name;
+    if (!$node->name) {
+      $node->name = $user->name;
     }
 
-    if (!$edit->created) {
-      $edit->created = time();
+    if (!$node->created) {
+      $node->created = time();
     }
 
-    if (!$edit->date) {
-      $edit->date = date("M j, Y g:i a", $edit->created);
+    if (!$node->date) {
+      $node->date = date("M j, Y g:i a", $node->created);
     }
 
     /*
     ** Validate the "authored by"-field:
     */
 
-    if ($account = user_load(array("name" => $edit->name))) {
-      $edit->uid = $account->uid;
+    if ($account = user_load(array("name" => $node->name))) {
+      $node->uid = $account->uid;
     }
     else {
-      $error["name"] = "<div style=\"color: red;\">". sprintf(t("The name '%s' does not exist."), $edit->name) ."</div>";
+      $error["name"] = "<div style=\"color: red;\">". sprintf(t("The name '%s' does not exist."), $node->name) ."</div>";
     }
 
     /*
     ** Validate the "authored on"-field:
     */
 
-    if (strtotime($edit->date) > 1000) {
-      $edit->created = strtotime($edit->date);
+    if (strtotime($node->date) > 1000) {
+      $node->created = strtotime($node->date);
     }
     else {
       $error["date"] = "<div style=\"color: red;\">". t("You have to specifiy a valid date.") ."</div>";
     }
+
+    /*
+    ** Validate the "teaser"-field:
+    */
+
+    if ($node->teaser && count(explode(" ", $node->teaser)) < variable_get("minimum_node_size", 0)) {
+      $error["teaser"] = "<div style=\"color: red;\">". t("Your teaser is too short.") ."</div>";
+    }
+
   }
 
-  return $error;
+  return $node;
 }
 
 function node_form($edit) {
 
-  $error = node_fixup(&$edit);
+  $edit = node_validate($edit, &$error);
 
   $output .= "<div style=\"margin-right: 40px; float: left;\">";
 
@@ -362,14 +373,17 @@ function node_form($edit) {
   }
 
   if ($edit->teaser) {
-    $output .= form_textarea(t("Teaser"), "teaser", $edit->teaser, 60, 5);
+    $output .= form_textarea(t("Teaser"), "teaser", $edit->teaser, 60, 5, $error["teaser"]);
   }
 
   /*
   ** Add the node specific parts:
   */
 
-  $output .= module_invoke($edit->type, "form", $edit);
+  $function = $edit->type ."_form";
+  if (function_exists($function)) {
+    $output .= $function($edit, &$error);
+  }
 
   /*
   ** Add the hidden fields:
@@ -430,8 +444,6 @@ function node_add($type) {
     $output = node_form(array("uid" => $user->uid, "type" => $type));
   }
   else {
-    // TODO: make building a node list generic and find an easy way to associate post permissions with them
-
     $links = array();
 
     foreach (module_list() as $name) {
@@ -450,7 +462,6 @@ function node_edit($id) {
   global $user;
 
   $node = node_load(array("nid" => $id));
-    // TODO: make this generic for all node types - temporary solution
 
   if (node_access("update", $node)) {
     $output = node_form($node);
@@ -502,7 +513,7 @@ function node_submit($node) {
   ** Fixup the node when required:
   */
 
-  node_fixup(&$node);
+  $node = node_validate($node);
 
   if ($node->nid) {
 

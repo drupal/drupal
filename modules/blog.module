@@ -178,20 +178,25 @@ function blog_page_last() {
   $theme->box(t("User blogs"), $output, "main");
 }
 
-function blog_form($edit) {
+function blog_form($node, $error) {
   global $nid, $iid;
 
-  if (!$edit->body) {
+  if ($node->body) {
+    if (count(explode(" ", $node->body)) < variable_get("minimum_node_size", 0)) {
+      $error["body"] = "<div style=\"color: red;\">". t("The body of your blog is too short.") ."</div>";
+    }
+  }
+  else {
     if ($nid && $blog = node_load(array("nid" => $nid))) {
-      $edit->body = "<i>". $blog->body ."</i> [<a href=\"module.php?mod=blog&id=$blog->uid&date=$blog->created\">$blog->name</a>]";
+      $node->body = "<i>". $blog->body ."</i> [<a href=\"module.php?mod=blog&id=$blog->uid&date=$blog->created\">$blog->name</a>]";
     }
 
     if ($iid && $item = db_fetch_object(db_query("SELECT i.*, f.title as ftitle, f.link as flink FROM item i, feed f WHERE i.iid = '". check_input($iid) ."' AND i.fid = f.fid"))) {
-      $edit->body = "<a href=\"$item->link\">$item->title</a> - <i>". check_output($item->description) ."</i> [<a href=\"$item->flink\">$item->ftitle</a>]\n";
+      $node->body = "<a href=\"$item->link\">$item->title</a> - <i>". check_output($item->description) ."</i> [<a href=\"$item->flink\">$item->ftitle</a>]\n";
     }
   }
 
-  $output = form_textarea(t("Body"), "body", $edit->body, 60, 15, t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")));
+  $output = form_textarea(t("Body"), "body", $node->body, 60, 15, $error["body"] ? $error["body"] : t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")));
 
   return $output;
 }
