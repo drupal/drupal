@@ -19,7 +19,7 @@ function taxonomy_feed() {
       foreach ((explode(",", $and)) as $t) {
         $terms[] = "'". check_query($t) ."'";
       }
-      $result = db_query("SELECT n.nid, type, count(*) AS c FROM node n LEFT JOIN term_node r ON n.nid = r.nid WHERE tid IN (". implode(",", $terms) .")  AND status = '1' GROUP BY n.nid HAVING c = ". count($terms) ." ORDER BY static DESC, created DESC LIMIT 15");
+      $result = db_query("SELECT n.nid, type, count(*) AS c FROM node n LEFT JOIN term_node r ON n.nid = r.nid WHERE tid IN (". implode(",", $terms) .") AND status = '1' GROUP BY n.nid, n.type HAVING c = ". count($terms) ." ORDER BY static DESC, created DESC LIMIT 15");
       $term = taxonomy_get_term($and);
     }
     else {
@@ -56,7 +56,7 @@ function taxonomy_form_vocabulary($edit = array()) {
       $nodetypes[$name] = $name;
     }
   }
-
+  
   $form .= form_textfield("Vocabulary name", "name", $edit["name"], 50, 64, "Required.  The name for this vocabulary.  Example: 'Topic'.");
   $form .= form_textarea("Description", "description", $edit["description"], 60, 5, "Optional.  Description of the vocabulary, can be used by modules.");
   $form .= form_select("Types", "types", explode(",", $edit["types"]), $nodetypes, "Required.  A list of node types you want to associate this vocabulary with.", "", 1);

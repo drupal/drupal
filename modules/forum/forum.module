@@ -55,6 +55,10 @@ function forum_view($node) {
 
 function forum_form(&$node, &$help, &$error) {
 
+  if (function_exists("taxonomy_node_form")) {
+    $output = implode("", taxonomy_node_form("forum", $node));
+  }
+
   $output .= form_textarea("Body", "body", $node->body, 60, 10);
 
   return $output;

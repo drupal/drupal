@@ -37,6 +37,7 @@ function system_link($type) {
 
 function system_view_options() {
   global $conf, $cmodes, $corder;
+  
   // general settings:
   $output .= "<h3>General settings</h3>\n";
   $output .= form_textfield("Name", "site_name", variable_get("site_name", "drupal"), 55, 55, "The name of this website.");
@@ -123,13 +124,20 @@ function system_view($type) {
       $form = system_view_filters();
       break;
     default:
+			foreach (module_list() as $name) {
+			  if (module_hook($name, "conf_options")) {
+			    $links[] = la($name, array("mod" => "system"), $name);
+			  }
+			}
+    
+      $output = "<small>". implode(" :: ", $links) ."</small><hr />";
       $form = system_view_options();
   }
 
   $form .= form_submit("Save configuration");
   $form .= form_submit("Reset to defaults");
 
-  return form($form);
+  return $output . form($form);
 }
 
 /**

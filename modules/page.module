@@ -140,6 +140,10 @@ function page_form(&$node, &$help, &$error) {
     }
   }
 
+  if (function_exists("taxonomy_node_form")) {
+    $output .= implode("", taxonomy_node_form("page", $node));
+  }
+
   $output .= form_textarea("Body", "body", $node->body, 60, 20);
   $output .= form_textfield("Link", "link", $node->link, 60, 64);
   $output .= form_select("Type", "format", $node->format, array(0 => "HTML / text", 1 => "PHP"));
