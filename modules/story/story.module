@@ -14,19 +14,13 @@ function story_help($section) {
     case 'admin/modules#description':
       return t('Enables users to submit stories, articles or similar content.');
     case 'admin/settings/story':
-      return t("<p>Stories are like newspaper articles. They tend to follow a publishing flow of <strong>submit -&gt; moderate -&gt; post to the main page -&gt; comments</strong>. Below you may fix a minimum word count for stories and also write some submission or content guidelines for users wanting to post a story.</p>");
+      return t("Stories are articles in their simplest form: they have a title, a teaser and a body, but can be extended by other modules. The teaser is part of the body too. Stories may be used as a personal blog or for news articles.");
     case 'admin/help#story':
-      return t("
-      <p>The story module lets your users submit articles for consideration by the rest of the community, who can vote on them if moderation is enabled.  Stories usually follow a publishing flow of <strong>submit -&gt; moderate -&gt; post to the main page -&gt; comments</strong>.  Administrators are able to shortcut this flow as desired.</p>
-      In <a href=\"%story-config\">administer &raquo; settings &raquo; story</a> you can set up an introductory text for story authors, and a floor on the number of words which may be included in a story. This is designed to help discourage the submission of trivially short stories.</p>
-      <h3>User access permissions for stories</h3>
-      <p><strong>create stories:</strong> Allows a role to create stories. They cannot edit or delete stories, even if they are the authors. You must enable this permission to in order for a role to create a story.</p>
-      <p><strong>edit own stories:</strong> Allows a role to add/edit stories if they own the story. Use this permission if you want users to be able to edit and maintain their own stories.</p>
-      ", array('%story-config' => url('admin/settings/story')));
+      return t("Stories are articles in their simplest form: they have a title, a teaser and a body, but can be extended by other modules. The teaser is part of the body too. Stories may be used as a personal blog or for news articles. By default, no menu item, or navigation element is created for a story. An extra feature of a story is, that an administrator can specify a submission guideline and enforce a minimum word count for user submitted stories");
     case 'node/add/story':
       return variable_get('story_help', '');
     case 'node/add#story':
-      return t('A story is similar to an article and usually gets promoted to the front page.  If you want to post news items, articles or maintain a group blog, use stories.');
+      return t('Stories are articles in their simplest form: they have a title, a teaser and a body, but can be extended by other modules. The teaser is part of the body too. Stories may be used as a personal blog or for news articles.');
   }
 }
 
