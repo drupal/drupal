@@ -1,5 +1,5 @@
 <?php
-// $Id: queue.module,v 1.101 2004/01/19 22:23:37 dries Exp $
+// $Id: queue.module,v 1.102 2004/01/21 18:08:17 dries Exp $
 
 function queue_help($section) {
   $output = "";
@@ -105,25 +105,29 @@ function queue_vote($node, $vote) {
 function queue_overview() {
   global $user;
 
-  $result = db_query("SELECT n.*, u.name, u.uid FROM {node} n INNER JOIN {users} u ON n.uid = u.uid WHERE n.moderate = 1");
+  $header = array(array("data" => t("subject")), array("data" => t("author")), array("data" => t("type")), array("data" => t("score")));
 
-  $output .= "<table border=\"0\" cellspacing=\"4\" cellpadding=\"4\">";
-  $output .= " <tr><th>". t("Subject") ."</th><th>". t("Author") ."</th><th>". t("Type") ."</th><th>". t("Score") ."</th></tr>";
-  while ($node = db_fetch_object($result)) {
+  $sresult = pager_query("SELECT n.*, u.name, u.uid FROM {node} n INNER JOIN {users} u ON n.uid = u.uid WHERE n.moderate = 1", 10, 0);
+
+  while ($node = db_fetch_object($sresult)) {
     if ($user->uid == $node->uid || field_get($node->users, $user->uid)) {
-      $output .= " <tr><td>". l($node->title, "queue/$node->nid") ."</td><td style=\"text-align: center;\">". format_name($node) ."</td><td style=\"text-align: center;\">". module_invoke($node->type, "node", "name") ."</td><td style=\"text-align: center;\">". queue_score($node->nid) ."</td></tr>";
+      $rows[] = array(array("data" => l($node->title, "queue/$node->nid"), "class" => "title"), array("data" => format_name($node), "class" => "name"), array("data" => module_invoke($node->type, "node", "name"), "class" => "type"), array("data" => queue_score($node->nid), "class" => "score"));
     }
     else {
-      $output .= " <tr><td>". l($node->title, "queue/$node->nid") ."</td><td style=\"text-align: center;\">". format_name($node) ."</td><td style=\"text-align: center;\">". module_invoke($node->type, "node", "name") ."</td><td style=\"text-align: center;\">". l(t("vote"), "queue/$node->nid") ."</td></tr>";
-    }
-
-    if ($node->teaser) {
-      $output .= " <tr><td colspan=\"4\"><div style=\"margin-left: 40px; margin-bottom: 20px;\">". check_output($node->teaser) ."</div></td></tr>";
+      $rows[] = array(array("data" => l($node->title, "queue/$node->nid"), "class" => "title"), array("data" => format_name($node), "class" => "name"), array("data" => module_invoke($node->type, "node", "name"), "class" => "type"), array("data" => l(t("vote"), "queue/$node->nid"), "class" => "score"));
     }
   }
-  $output .= "</table>";
+
+  if ($pager = theme("pager", NULL, 10, 0, tablesort_pager())) {
+   $rows[] = array(array("data" => $pager, "colspan" => 4));
+  }
+
+  $output  = "<div id=\"queue\">";
+  $output .= theme("table", $header, $rows);
+  $output .= "</div>";
 
   drupal_set_title(t("Submission queue"));
+
   print theme("page", $output);
 }
 
