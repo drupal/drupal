@@ -10,6 +10,7 @@ function queue_conf_options() {
   $output .= form_select(t("Post threshold"), "queue_threshold_post", variable_get("queue_threshold_post", 4), $threshold_post, t("If new submissions are subject to moderation, select a post threshold."));
   $output .= form_select(t("Dump threshold"), "queue_threshold_dump", variable_get("queue_threshold_dump", -2), $threshold_dump, t("If new submissions are subject to moderation, select a dump threshold."));
   $output .= form_select(t("Expiration threshold"),"queue_threshold_expire", variable_get("queue_threshold_expire", 8), $threshold_expire, t("If new submissions are subject to moderation, select an expiration threshold."));
+  $output .= form_select(t("Show comments"),"queue_show_comments", variable_get("queue_show_comments", 1), array(0 => "Disabled", 1 => "Enabled"), t("If enabled comments will be shown below the moderation form."));
 
   return $output;
 }
@@ -115,40 +116,43 @@ function queue_view($nid) {
 
   $node = node_load(array("nid" => $nid, "moderate" => 1));
 
-  if ($user->uid == $node->uid || field_get($node->users, $user->uid)) {
-    drupal_goto("node.php?id=$node->nid");
-  }
-
-  if ($op == t("Vote") && $votes[$edit["vote"]]) {
-    /*
-    ** If it is a valid vote, record it.
-    */
-
-    queue_vote($node, $edit["vote"]);
-
-    $output = t("Your vote has been recorded.");
-  }
-  else {
-    /*
-    ** Display some explanation or voting guidelines:
-    */
-
-    $output .= "<p>". t("When new content get submitted it goes to the submission queue.  Most, if not all, registered users can access this queue and can vote whether they think the content should be approved or not.  When enough people vote to approve the content, it is pushed over the threshold and up it goes.  On the other hand, when too many people voted to drop some content, the content will get trashed.") ."</p>";
-
-    /*
-    ** Display a voting form:
-    */
-
-    $output .= form_select(t("Your vote"), "vote", "", $votes);
-    $output .= form_hidden("id", $node->nid);
-    $output .= form_submit(t("Vote"));
-
-    $output = form($output);
-  }
+  if ($user->uid != $node->uid && !field_get($node->users, $user->uid)) {
+    if ($op == t("Vote") && $votes[$edit["vote"]]) {
+	    /*
+	    ** If it is a valid vote, record it.
+	    */
+	
+	    queue_vote($node, $edit["vote"]);
+	
+	    $output = t("Your vote has been recorded.");
+	  }
+	  else {
+	    /*
+	    ** Display some explanation or voting guidelines:
+	    */
+	
+	    $output .= "<p>". t("When new content get submitted it goes to the submission queue.  Most, if not all, registered users can access this queue and can vote whether they think the content should be approved or not.  When enough people vote to approve the content, it is pushed over the threshold and up it goes.  On the other hand, when too many people voted to drop some content, the content will get trashed.") ."</p>";
+	
+	    /*
+	    ** Display a voting form:
+	    */
+	
+	    $output .= form_select(t("Your vote"), "vote", "", $votes);
+	    $output .= form_hidden("id", $node->nid);
+	    $output .= form_submit(t("Vote"));
+	
+	    $output = form($output);
+	  }	  
+	}
 
   $theme->header();
   node_view($node);
-  $theme->box(t("Moderate"), $output);
+  if ($output) {
+    $theme->box(t("Moderate"), $output);
+  }
+  if ($node->comment && variable_get("queue_show_comments", 1)) {
+    comment_render($node->nid, 0);
+  }
   $theme->footer();
 }
 
