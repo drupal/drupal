@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.283 2003/12/19 10:52:37 kjartan Exp $ */
+/* $Id: common.inc,v 1.284 2003/12/19 13:44:08 kjartan Exp $ */
 
 /**
  * @name drupal_title
@@ -147,7 +147,7 @@ function _fix_gpc_magic(&$item, $key) {
     array_walk($item, '_fix_gpc_magic');
   }
   else {
-    $item = stripslashes($i);
+    $item = stripslashes($item);
   }
 }
 
