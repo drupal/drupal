@@ -1,5 +1,5 @@
 <?php
-/* $Id: menu.inc,v 1.70 2004/10/14 21:38:12 dries Exp $ */
+/* $Id: menu.inc,v 1.71 2004/10/16 19:42:52 unconed Exp $ */
 
 /**
  * @file
@@ -505,6 +505,12 @@ function menu_rebuild() {
     foreach ($menu['items'] as $mid => $item) {
       if ($mid < 0 && ($item['type'] & MENU_MODIFIABLE_BY_ADMIN)) {
         $new_mid = db_next_id('{menu}_mid');
+        // Check explicitly for mid 1. If the database was improperly prefixed,
+        // this would cause a nasty infinite loop.
+        // TODO: have automatic prefixing through an installer to prevent this.
+        if ($new_mid == 1) {
+          $new_mid = db_next_id('{menu}_mid');
+        }
         if (isset($new_items[$item['pid']])) {
           $new_pid = $new_items[$item['pid']]['mid'];
         }
