@@ -229,7 +229,7 @@
        <TD VALIGN="top" WIDTH="185">
         <?
           theme_account($this);
-	  theme_blocks("all", $this);
+    theme_blocks("all", $this);
         ?>
        </TD>
       </TR>
