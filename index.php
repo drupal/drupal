@@ -1,5 +1,5 @@
 <?php
-// $Id: index.php,v 1.72 2003/11/18 19:44:35 dries Exp $
+// $Id: index.php,v 1.73 2003/11/18 23:37:48 kjartan Exp $
 
 include_once "includes/bootstrap.inc";
 drupal_page_header();
@@ -32,13 +32,8 @@ else {
     module_invoke($mod, "page");
   }
   else {
-    if (module_hook(variable_get("site_frontpage", "node"), "page")) {
-      module_invoke(variable_get("site_frontpage", "node"), "page");
-    }
-    else {
-      print theme("header");
-      print theme("footer");
-    }
+    print theme("header");
+    print theme("footer");
   }
 }
 
