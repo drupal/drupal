@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.147 2004/09/16 07:17:55 dries Exp $
+// $Id: poll.module,v 1.148 2004/09/18 00:15:54 unconed Exp $
 
 /**
  * @file
@@ -310,7 +310,6 @@ function poll_teaser($node) {
  * Generates the voting form for a poll.
  */
 function poll_view_voting(&$node, $main, $page, $block) {
-  $url = request_uri();
   $output = '<div class="poll">';
 
   $form = '<div class="vote-form">';
