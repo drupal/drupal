@@ -40,6 +40,7 @@ function account_create($error = "") {
   $output .= "<B>". t("E-mail address") .":</B><BR>\n";
   $output .= "<INPUT NAME=\"email\"><BR>\n";
   $output .= "<SMALL><I>". t("You will be sent instructions on how to validate your account via this e-mail address: make sure it is accurate.") ."</I></SMALL><P>\n";
+
   $output .= "<INPUT NAME=\"op\" TYPE=\"submit\" VALUE=\"". t("Create account") ."\">\n";
   $output .= "</FORM>\n";
 
@@ -76,47 +77,20 @@ function account_user_edit() {
   global $allowed_html, $theme, $user;
 
   if ($user->id) {
-    // Generate output/content:
-    $output .= "<FORM ACTION=\"account.php\" METHOD=\"post\">\n";
+    // construct form:
+    $form .= form_item(t("Username"), $user->userid, t("Required, unique, and can not be changed."));
+    $form .= form_textfield(t("Real name"), "name", $user->name, 30, 55, t("Optional"));
+    $form .= form_item(t("Real e-mail address"), $user->real_email, t("Required, unique, can not be changed.") ." ". t("Your real e-mail address is never displayed publicly: only needed in case you lose your password."));
+    $form .= form_textfield(t("Fake e-mail address"), "fake_email", $user->fake_email, 30, 55, t("Optional") .". ". t("Displayed publicly so you may spam proof your real e-mail address if you want."));
+    $form .= form_textfield(t("Homepage"), "url", $user->url, 30, 55, t("Optional") .". ". t("Make sure you enter fully qualified URLs only.  That is, remember to include \"http://\"."));
+    $form .= form_textarea(t("Bio"), "bio", $user->bio, 35, 5, t("Optional") .". ". t("Maximal 255 characters.") ." ". t("This biographical information is publicly displayed on your user page.") ."<BR>". t("Allowed HTML tags") .": ". htmlspecialchars($allowed_html));
+    $form .= form_textarea(t("Signature"), "signature", $user->signature, 35, 5, t("Optional") .". ". t("Maximal 255 characters.") ." ". t("This information will be publicly displayed at the end of your comments.") ."<BR>". t("Allowed HTML tags") .": ". htmlspecialchars($allowed_html));
+    $form .= form_item(t("Password"), "<INPUT TYPE=\"password\" NAME=\"edit[pass1]\" SIZE=\"10\" MAXLENGTH=\"20\"> <INPUT TYPE=\"password\" NAME=\"edit[pass2]\" SIZE=\"10\" MAXLENGTH=\"20\">", t("Enter your new password twice if you want to change your current password or leave it blank if you are happy with your current password."));
+    $form .= form_submit(t("Save user information"));
 
-    $output .= "<B>". t("Username") .":</B><BR>\n";
-    $output .= "$user->userid<P>\n";
-    $output .= "<I><SMALL>". t("Required, unique, and can not be changed.") ."</SMALL></I><P>\n";
-
-    $output .= "<B>". t("Real name") .":</B><BR>\n";
-    $output .= "<INPUT NAME=\"edit[name]\" MAXLENGTH=\"55\" SIZE=\"30\" VALUE=\"$user->name\"><BR>\n";
-    $output .= "<I><SMALL>". t("Optional") .".</SMALL></I><P>\n";
-
-    $output .= "<B>". t("Real e-mail address") .":</B><BR>\n";
-    $output .= "$user->real_email<P>\n";
-    $output .= "<I><SMALL>". t("Required, unique, can not be changed.") ." ". t("Your real e-mail address is never displayed publicly: only needed in case you lose your password.") ."</SMALL></I><P>\n";
-
-    $output .= "<B>". t("Fake e-mail address") .":</B><BR>\n";
-    $output .= "<INPUT NAME=\"edit[fake_email]\" MAXLENGTH=\"55\" SIZE=\"30\" VALUE=\"$user->fake_email\"><BR>\n";
-    $output .= "<I><SMALL>". t("Optional") .". ". t("Displayed publicly so you may spam proof your real e-mail address if you want.") ."</SMALL></I><P>\n";
-
-    $output .= "<B>". t("Homepage") .":</B><BR>\n";
-    $output .= "<INPUT NAME=\"edit[url]\" MAXLENGTH=\"55\" SIZE=\"30\" VALUE=\"$user->url\"><BR>\n";
-    $output .= "<I><SMALL>". t("Optional") .". ". t("Make sure you enter fully qualified URLs only.  That is, remember to include \"http://\".") ."</SMALL></I><P>\n";
-
-    $output .= "<B>". t("Bio") .":</B> (". t("maximal 255 characters") .")<BR>\n";
-    $output .= "<TEXTAREA NAME=\"edit[bio]\" COLS=\"35\" ROWS=\"5\" WRAP=\"virtual\">$user->bio</TEXTAREA><BR>\n";
-    $output .= "<I><SMALL>". t("Optional") .". ". t("This biographical information is publicly displayed on your user page.") ."<BR>". t("Allowed HTML tags") .": ". htmlspecialchars($allowed_html) .".</SMALL></I><P>\n";
-
-    $output .= "<B>". t("Signature") .":</B> (". t("maximal 255 characters") .")<BR>\n";
-    $output .= "<TEXTAREA NAME=\"edit[signature]\" COLS=\"35\" ROWS=\"5\" WRAP=\"virtual\">$user->signature</TEXTAREA><BR>\n";
-    $output .= "<I><SMALL>". t("Optional") .". ". t("This information will be publicly displayed at the end of your comments.") ."<BR>". t("Allowed HTML tags") .": ". htmlspecialchars($allowed_html) .".</SMALL></I><P>\n";
-
-    $output .= "<B>". t("Password") .":</B><BR>\n";
-    $output .= "<INPUT TYPE=\"password\" NAME=\"edit[pass1]\" SIZE=\"10\" MAXLENGTH=\"20\"> <INPUT TYPE=\"password\" NAME=\"edit[pass2]\" SIZE=\"10\" MAXLENGTH=\"20\"><BR>\n";
-    $output .= "<I><SMALL>". t("Enter your new password twice if you want to change your current password or leave it blank if you are happy with your current password.") ."</SMALL></I><P>\n";
-
-    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Save user information") ."\"><BR>\n";
-    $output .= "</FORM>\n";
-
-    // Display output/content:
+    // display form:
     $theme->header();
-    $theme->box(t("Edit user information"), $output);
+    $theme->box(t("Edit user information"), form("account.php", $form));
     $theme->footer();
   }
   else {
@@ -139,47 +113,22 @@ function account_site_edit() {
   global $cmodes, $corder, $theme, $themes, $languages, $user;
 
   if ($user->id) {
-    $output .= "<FORM ACTION=\"account.php\" METHOD=\"post\">\n";
+    // construct form:
+    foreach ($themes as $key=>$value) $options .= "<OPTION VALUE=\"$key\"". (($user->theme == $key) ? " SELECTED" : "") .">$key - $value[1]</OPTION>\n";
+    $form .= form_item(t("Theme"), "<SELECT NAME=\"edit[theme]\">$options</SELECT>", t("Selecting a different theme will change the look and feel of the site."));
+    for ($zone = -43200; $zone <= 46800; $zone += 3600) $zones[$zone] = date("l, F dS, Y - h:i A", time() - date("Z") + $zone) ." (GMT ". $zone / 3600 .")";
+    $form .= form_select(t("Timezone"), "timezone", $user->timezone, $zones, t("Select what time you currently have and your timezone settings will be set appropriate."));
+    $form .= form_select(t("Language"), "language", $user->language, $languages, t("Selecting a different language will change the language of the site."));
+    $form .= form_select(t("Number of nodes to display"), "nodes", $user->nodes, array(10 => 10, 15 => 15, 20 => 20, 25 => 25, 30 => 30), t("The maximum number of nodes that will be displayed on the main page."));
+    $form .= form_select(t("Comment display mode"), "mode", $user->mode, $cmodes);
+    $form .= form_select(t("Comment display order"), "sort", $user->sort, $corder);
+    for ($count = -1; $count < 6; $count++) $threshold[$count] = t("Filter") ." - $count";
+    $form .= form_select(t("Comment filter"), "threshold", $user->threshold, $threshold, t("Comments that scored less than this threshold setting will be ignored.  Anonymous comments start at 0, comments of people logged on start at 1 and moderators can add and subtract points."));
+    $form .= form_submit(t("Save site settings"));
 
-    $output .= "<B>". t("Theme") .":</B><BR>\n";
-    foreach ($themes as $key=>$value) $options1 .= " <OPTION VALUE=\"$key\"". (($user->theme == $key) ? " SELECTED" : "") .">$key - $value[1]</OPTION>\n";
-    $output .= "<SELECT NAME=\"edit[theme]\">\n$options1</SELECT><BR>\n";
-    $output .= "<I><SMALL>". t("Selecting a different theme will change the look and feel of the site.") ."</SMALL></I><P>\n";
-
-    $output .= "<B>". t("Timezone") .":</B><BR>\n";
-    $date = time() - date("Z");
-    for ($zone = -43200; $zone <= 46800; $zone += 3600) $options2 .= " <OPTION VALUE=\"$zone\"". (($user->timezone == $zone) ? " SELECTED" : "") .">". date("l, F dS, Y - h:i A", $date + $zone) ." (GMT ". $zone / 3600 .")</OPTION>\n";
-    $output .= "<SELECT NAME=\"edit[timezone]\">\n$options2</SELECT><BR>\n";
-    $output .= "<I><SMALL>". t("Select what time you currently have and your timezone settings will be set appropriate.") ."</SMALL></I><P>\n";
-
-    $output .= "<B>". t("Language" ) .":</B><BR>\n";
-    foreach ($languages as $key=>$value) $options3 .= " <OPTION VALUE=\"$key\"". (($user->language == $key) ? " SELECTED" : "") .">$value - $key</OPTION>\n";
-    $output .= "<SELECT NAME=\"edit[language]\">\n$options3</SELECT><BR>\n";
-    $output .= "<I><SMALL>". t("Selecting a different language will change the language of the site.") ."</SMALL></I><P>\n";
-
-    $output .= "<B>". t("Maximum number of items to display") .":</B><BR>\n";
-    for ($nodes = 10; $nodes <= 30; $nodes += 5) $options4 .= "<OPTION VALUE=\"$nodes\"". (($user->nodes == $nodes) ? " SELECTED" : "") .">$nodes</OPTION>\n";
-    $output .= "<SELECT NAME=\"edit[nodes]\">\n$options4</SELECT><BR>\n";
-    $output .= "<I><SMALL>". t("The maximum number of nodes that will be displayed on the main page.") ."</SMALL></I><P>\n";
-
-    foreach ($cmodes as $key=>$value) $options5 .= "<OPTION VALUE=\"$key\"". ($user->mode == $key ? " SELECTED" : "") .">$value</OPTION>\n";
-    $output .= "<B>". t("Comment display mode") .":</B><BR>\n";
-    $output .= "<SELECT NAME=\"edit[mode]\">$options5</SELECT><P>\n";
-
-    foreach ($corder as $key=>$value) $options6 .= "<OPTION VALUE=\"$key\"". ($user->sort == $key ? " SELECTED" : "") .">$value</OPTION>\n";
-    $output .= "<B>". t("Comment sort order") .":</B><BR>\n";
-    $output .= "<SELECT NAME=\"edit[sort]\">$options6</SELECT><P>\n";
-
-    for ($i = -1; $i < 6; $i++) $options7 .= " <OPTION VALUE=\"$i\"". ($user->threshold == $i ? " SELECTED" : "") .">Filter - $i</OPTION>";
-    $output .= "<B>". t("Comment filter") .":</B><BR>\n";
-    $output .= "<SELECT NAME=\"edit[threshold]\">$options7</SELECT><BR>\n";
-    $output .= "<I><SMALL>". t("Comments that scored less than this threshold setting will be ignored.  Anonymous comments start at 0, comments of people logged on start at 1 and moderators can add and subtract points.") ."</SMALL></I><P>\n";
-
-    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Save site settings") ."\"><BR>\n";
-    $output .= "</FORM>\n";
-
+    // display form:
     $theme->header();
-    $theme->box(t("Edit your preferences"), $output);
+    $theme->box(t("Edit your preferences"), form("account.php", $form));
     $theme->footer();
   }
   else {
@@ -201,19 +150,19 @@ function account_content_edit() {
   global $theme, $user;
 
   if ($user->id) {
-    $output .= "<FORM ACTION=\"account.php\" METHOD=\"post\">\n";
-    $output .= "<B>". t("Blocks in side bars") .":</B><BR>\n";
+    // construct form:
     $result = db_query("SELECT * FROM blocks WHERE status = 1 ORDER BY module");
     while ($block = db_fetch_object($result)) {
       $entry = db_fetch_object(db_query("SELECT * FROM layout WHERE block = '$block->name' AND user = '$user->id'"));
-      $output .= "<INPUT TYPE=\"checkbox\" NAME=\"edit[$block->name]\"". ($entry->user ? " CHECKED" : "") ."> ". t($block->name) ."<BR>\n";
+      $options .= "<INPUT TYPE=\"checkbox\" NAME=\"edit[$block->name]\"". ($entry->user ? " CHECKED" : "") ."> ". t($block->name) ."<BR>\n";
     }
-    $output .= "<P><I><SMALL>". t("Enable the blocks you would like to see displayed in the side bars.") ."</SMALL></I></P>\n";
-    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Save content settings") ."\">\n";
-    $output .= "</FORM>\n";
 
+    $form .= form_item(t("Blocks in side bars"), $options, t("Enable the blocks you would like to see displayed in the side bars."));
+    $form .= form_submit(t("Save content settings"));
+
+    // display form:
     $theme->header();
-    $theme->box(t("Edit your content"), $output);
+    $theme->box(t("Edit your content"), form("account.php", $form));
     $theme->footer();
   }
   else {
@@ -265,19 +214,6 @@ function account_user($uname) {
     $block1 .= " <TR><TD ALIGN=\"right\"><B>". t("Homepage") .":</B></TD><TD>". format_url($account->url) ."</TD></TR>\n";
     $block1 .= " <TR><TD ALIGN=\"right\"><B>". t("Bio") .":</B></TD><TD>". check_output($account->bio) ."</TD></TR>\n";
     $block1 .= "</TABLE>\n";
-
-/*
-    $result = db_query("SELECT c.cid, c.pid, c.lid, c.subject, c.timestamp, n.title AS node FROM comments c LEFT JOIN users u ON u.id = c.author LEFT JOIN node ON n.id = c.lid WHERE u.userid = '$uname' AND n.status = '$status[posted]' AND s.timestamp > ". (time() - 1209600) ." ORDER BY cid DESC LIMIT 10");
-    while ($comment = db_fetch_object($result)) {
-      $block2 .= "<TABLE BORDER=\"0\" CELLPADDING=\"1\" CELLSPACING=\"1\">\n";
-      $block2 .= " <TR><TD ALIGN=\"right\"><B>". t("Comment") .":</B></TD><TD><A HREF=\"node.php?id=$comment->lid&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A></TD></TR>\n";
-      $block2 .= " <TR><TD ALIGN=\"right\"><B>". t("Date") .":</B></TD><TD>". format_date($comment->timestamp) ."</TD></TR>\n";
-      $block2 .= " <TR><TD ALIGN=\"right\"><B>". t("Story") .":</B></TD><TD><A HREF=\"node.php?id=$comment->lid\">". check_output($comment->story) ."</A></TD></TR>\n";
-      $block2 .= "</TABLE>\n";
-      $block2 .= "<P>\n";
-      $comments++;
-    }
-*/
 
     // Display account information:
     $theme->header();

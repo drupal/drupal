@@ -17,10 +17,7 @@ function cvs_cron() {
 }
 
 function cvs_conf() {
-  $output .= "<B>Recepient for log messages:</B><BR>\n";
-  $output .= "<INPUT NAME=\"edit[cvs_mail]\" MAXLENGTH=\"55\" SIZE=\"30\" VALUE=\"". variable_get(cvs_mail, "root@localhost") ."\"><BR>\n";
-  $output .= "<I><SMALL>The e-mail address to mail the CVS log messages to.  Multiple recipients can be specified by putting a comma between each address.</SMALL></I><P>\n";
-  return $output;
+  return form_textfield(t("CVS digest recepient"), "cvs_mail", variable_get(cvs_mail, "root@localhost"), 30, 55, t("The e-mail address to mail the CVS log messages to.  Multiple recipients can be specified by putting a comma between each address."));
 }
 
 function cvs_page() {

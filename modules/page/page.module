@@ -31,28 +31,16 @@ function page_status() {
 }
 
 function page_form($edit = array()) {
-  global $format;
+  global $format, $REQUEST_URI;
 
-  $output .= "<FORM ACTION=\"admin.php?mod=page\" METHOD=\"post\">\n";
+  $form .= form_textfield(t("Subject"), "title", $edit[title], 50, 64);
+  $form .= structure_form("page", $edit);
+  $form .= form_textarea(t("Body"), "body", $edit[body], 50, 10);
+  $form .= form_select(t("Type"), "format", $edit[format], $format);
+  $form .= form_hidden("nid", $edit[nid]);
+  $form .= form_submit("Save page");
 
-  $output .= "<B>Subject:</B><BR>\n";
-  $output .= "<INPUT NAME=\"edit[title]\" SIZE=\"55\" VALUE=\"". check_textfield($edit[title]) ."\"><P>\n";
-
-  $output .= structure_form("page", $edit);
-
-  $output .= "<B>Body:</B><BR>\n";
-  $output .= "<TEXTAREA NAME=\"edit[body]\" COLS=\"55\" ROWS=\"10\" WRAP=\"virtual\">". check_textarea($edit[body]) ."</TEXTAREA><P>\n";
-
-  $output .= "<B>Type:</B><BR>\n";
-  foreach ($format as $key=>$value) $options .= "<OPTION VALUE=\"$key\"". ($edit[format] == $key ? " SELECTED" : "") .">$value</OPTION>\n";
-  $output .= "<SELECT NAME=\"edit[format]\">$options</SELECT><P>\n";
-
-  $output .= "<INPUT TYPE=\"hidden\" NAME=\"edit[nid]\" VALUE=\"$edit[nid]\">\n";
-
-  $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Save page\">\n";
-  $output .= "</FORM>\n";
-
-  return $output;
+  return form($REQUEST_URI, $form);
 }
 
 function page_save($edit) {

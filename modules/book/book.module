@@ -94,47 +94,43 @@ function book_toc($parent = 0, $indent = "", $toc = array()) {
 function book_form($edit = array()) {
   global $allowed_html, $PHP_SELF, $REQUEST_URI, $user;
 
-  $output .= "<FORM ACTION=\"$REQUEST_URI\" METHOD=\"post\">\n";
-
-  $output .= form_item(t("Author"), format_username(($edit[userid] ? $edit[userid] : $user->userid)));
-  $output .= form_hidden(userid, $edit[userid]);
-  $output .= form_textfield(t("Subject"), "title", $edit[title], 50, 128);
-  $output .= form_item(t("Category"), category_form_select("book", $edit));
+  $form .= form_item(t("Author"), format_username(($edit[userid] ? $edit[userid] : $user->userid)));
+  $form .= form_hidden(userid, $edit[userid]);
+  $form .= form_textfield(t("Subject"), "title", $edit[title], 50, 64);
+  $form .= form_item(t("Category"), category_form_select("book", $edit));
 
   if ($edit[pid]) {
     $node = node_get_object("nid", $edit[pid]);
-    $output .= form_item(t("Parent"), "<A HREF=\"node.php?id=$node->id\">". check_output($node->title) ."</A>", t("The parent subject or category the page belongs in."));
-    $output .= form_hidden("parent". $edit[parent]);
+    $form .= form_item(t("Parent"), "<A HREF=\"node.php?id=$node->id\">". check_output($node->title) ."</A>", t("The parent subject or category the page belongs in."));
+    $form .= form_hidden("parent". $edit[parent]);
   }
   else {
-    $output .= form_select(t("Parent"), "parent", user_access($user, "book") ? array_merge(array(0 => "&nbsp;"), book_toc()) : book_toc(), $edit[parent], t("The parent subject or category the page belongs in."));
+    $form .= form_select(t("Parent"), "parent", $edit[parent], user_access($user, "book") ? array_merge(array(0 => "&nbsp;"), book_toc()) : book_toc(), t("The parent subject or category the page belongs in."));
   }
 
-  $output .= form_textarea(t("Content"), "body", $edit[body], 50, 10, t("Allowed HTML tags") .": ". htmlspecialchars($allowed_html));
-  $output .= form_textarea(t("Log message"), "log", $edit[log], 50, 5, t("An explanation of the additions or updates being made to help the group understand your motivations."));
+  $form .= form_textarea(t("Content"), "body", $edit[body], 50, 10, t("Allowed HTML tags") .": ". htmlspecialchars($allowed_html));
+  $form .= form_textarea(t("Log message"), "log", $edit[log], 50, 5, t("An explanation of the additions or updates being made to help the group understand your motivations."));
 
   if (user_access($user, "book")) {
-    $output .= form_select(t("Weight"), "weight", array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30), $edit[weight], t("The heavier nodes will sink and the lighter nodes will be positioned nearer the top."));
+    $form .= form_select(t("Weight"), "weight", $edit[weight], array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30), t("The heavier nodes will sink and the lighter nodes will be positioned nearer the top."));
   }
+
+  $form .= form_hidden("pid", $edit[pid]);
+  $form .= form_hidden("nid", $edit[nid]);
 
   if (!$edit) {
-    $output .= form_submit(t("Preview"));
+    $form .= form_submit(t("Preview"));
   }
   else if (!$edit[title]) {
-    $output .= "<FONT COLOR=\"red\">". t("Warning: you did not supply a title.") ."</FONT><P>\n";
-    $output .= form_submit(t("Preview"));
+    $form .= "<FONT COLOR=\"red\">". t("Warning: you did not supply a title.") ."</FONT><P>\n";
+    $form .= form_submit(t("Preview"));
   }
   else {
-    $output .= form_submit(t("Preview"));
-    $output .= form_submit(t("Submit"));
+    $form .= form_submit(t("Preview"));
+    $form .= form_submit(t("Submit"));
   }
 
-  $output .= form_hidden("pid", $edit[pid]);
-  $output .= form_hidden("nid", $edit[nid]);
-
-  $output .= "</FORM>\n";
-
-  return $output;
+  return form($REQUEST_URI, $form);
 }
 
 function book_save($edit) {

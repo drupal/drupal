@@ -151,8 +151,12 @@ function format_text($text) {
   return preg_replace($src, $dst, $text);
 }
 
+function form($action, $form, $method = "post") {
+  return "<FORM ACTION=\"$action\" METHOD=\"$method\">\n$form</FORM>\n";
+}
+
 function form_item($title, $value, $description = 0) {
-  return ($description) ? "<B>$title:</B><BR>$value<BR><SMALL><I>$description</I></SMALL><P>" : "<B>$title:</B><BR>$value<P>\n";
+  return ($description) ? "<B>$title:</B><BR>$value<BR><SMALL><I>$description</I></SMALL><P>\n" : "<B>$title:</B><BR>$value<P>\n";
 }
 
 function form_textfield($title, $name, $value, $size, $maxlength, $description = 0) {
@@ -163,17 +167,17 @@ function form_textarea($title, $name, $value, $cols, $rows, $description = 0) {
   return form_item($title, "<TEXTAREA WRAP=\"virtual\" COLS=\"$cols\" ROWS=\"$rows\" NAME=\"edit[$name]\">". check_textarea($value) ."</TEXTAREA>", $description);
 }
 
-function form_select($title, $name, $options, $value, $description = 0) {
+function form_select($title, $name, $value, $options, $description = 0) {
   foreach ($options as $key=>$choice) $select .= "<OPTION VALUE=\"$key\"". ($key == $value ? " SELECTED" : "") .">". check_select($choice) ."</OPTION>";
   return form_item($title, "<SELECT NAME=\"edit[$name]\">$select</SELECT>", $description);
 }
 
 function form_hidden($name, $value) {
-  return "<INPUT TYPE=\"hidden\" NAME=\"edit[$name]\" VALUE=\"$value\">";
+  return "<INPUT TYPE=\"hidden\" NAME=\"edit[$name]\" VALUE=\"". check_textfield($value) ."\">\n";
 }
 
 function form_submit($value) {
-  return "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"$value\">\n";
+  return "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". check_textfield($value) ."\">\n";
 }
 
 $conf = conf_init();

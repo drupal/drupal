@@ -55,48 +55,35 @@ function story_view($node, $main = 0) {
 function story_form($edit = array()) {
   global $allowed_html, $REQUEST_URI, $user;
 
-  $output .= "<FORM ACTION=\"$REQUEST_URI\" METHOD=\"post\">\n";
-
-  $output .= "<B>". t("Your name") .":</B><BR>\n";
-  $output .= "<INPUT TYPE=\"hidden\" NAME=\"edit[userid]\" VALUE=\"$edit[userid]\">\n";
-  $output .= format_username(($edit[userid] ? $edit[userid] : $user->userid)) ."<P>";
-
-  $output .= "<B>". t("Subject") .":</B><BR>\n";
-  $output .= "<INPUT TYPE=\"text\" NAME=\"edit[title]\" SIZE=\"50\" MAXLENGTH=\"60\" VALUE=\"". check_textfield($edit[title]) ."\"><P>\n";
-
-  $output .= structure_form("story", $edit);
-
-  $output .= "<B>". t("Abstract") .":</B><BR>\n";
-  $output .= "<TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"edit[abstract]\">". check_textarea($edit[abstract]) ."</TEXTAREA><BR>\n";
-  $output .= "<SMALL><I>". t("Allowed HTML tags") .": ". htmlspecialchars($allowed_html) .".</I></SMALL><P>\n";
-
-  $output .= "<B>". t("Body") .":</B><BR>\n";
-  $output .= "<TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"15\" NAME=\"edit[body]\">". check_textarea($edit[body]) ."</TEXTAREA><BR>\n";
-  $output .= "<SMALL><I>". t("Allowed HTML tags") .": ". htmlspecialchars($allowed_html) .".</I></SMALL><P>\n";
+  $form .= form_item(t("Your name"), format_username(($edit[userid] ? $edit[userid] : $user->userid)));
+  $form .= form_hidden("userid", $edit[userid]);
+  $form .= form_textfield(t("Subject"), "title", $edit[title], 50, 64);
+  $form .= structure_form("story", $edit);
+  $form .= form_textarea(t("Abstract"), "abstract", $edit[abstract], 50, 10, t("Allowed HTML tags") .": ". htmlspecialchars($allowed_html));
+  $form .= form_textarea(t("Body"), "body", $edit[body], 50, 15, t("Allowed HTML tags") .": ". htmlspecialchars($allowed_html));
 
   if (user_access($user, "story")) {
-    $output .= "<INPUT TYPE=\"hidden\" NAME=\"edit[timestamp]\" VALUE=\"$edit[timestamp]\">\n";
-    $output .= "<INPUT TYPE=\"hidden\" NAME=\"edit[nid]\" VALUE=\"$edit[nid]\">\n";
+    $form .= form_hidden("timestamp", $edit[timestamp]);
+    $form .= form_hidden("nid", $edit[nid]);
   }
 
   if (!$edit) {
-    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Preview") ."\">\n";
+    $form .= form_submit(t("Preview"));
   }
   else if (!$edit[title]) {
     $output .= "<FONT COLOR=\"red\">". t("Warning: you did not supply a subject.") ."</FONT><P>\n";
-    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Preview") ."\">\n";
+    $form .= form_submit(t("Preview"));
   }
   else if (!$edit[abstract]) {
     $output .= "<FONT COLOR=\"red\">". t("Warning: you did not supply an abstract.") ."</FONT><P>\n";
-    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Preview") ."\">\n";
+    $form .= form_submit(t("Preview"));
   }
   else {
-    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Preview") ."\">\n";
-    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Submit") ."\">\n";
+    $form .= form_submit(t("Preview"));
+    $form .= form_submit(t("Submit"));
   }
-  $output .= "</FORM>\n";
 
-  return $output;
+  return form($REQUEST_URI, $form);
 }
 
 function story_save($edit) {
