@@ -1,5 +1,5 @@
 <?
-// $Id: comment.module,v 1.48 2002/01/01 22:17:54 dries Exp $
+// $Id: comment.module,v 1.49 2002/01/01 22:20:41 dries Exp $
 
 $GLOBALS["cmodes"] = array(1 => "Flat list - collapsed", 2 => "Flat list - expanded", 3 => "Threaded list - collapsed", 4 => "Threaded list - expanded");
 $GLOBALS["corder"] = array(1 => "Date - oldest first", 2 => "Date - newest first");
@@ -544,7 +544,7 @@ function comment_link($type, $node = 0, $main = 0) {
 
 function comment_node_link($node) {
 
-  if (user_access("administer comments") && comment_all($node->nid)) {
+  if (user_access("administer comments") && comment_num_all($node->nid)) {
 
     /*
     ** Edit comments:
