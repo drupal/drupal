@@ -6,7 +6,8 @@ drupal x.xx, xx/xx/xxxx (CVS, unstable)
 - removed FAQ and documentation module and merged them into a "book module".
 - removed ban module and integrated it into account.module as "access control":
     * access control is based on much more powerful regular expressions (regex) now rather than on MySQL pattern matching.
-- rewrote watchdog and submission throttle
+- rewrote watchdog and submission throttle:
+    * improved watchdog messages and added watchdog filter.
 - rewrote headline code and renamed it to import.module and export.module:
     * added various improvements, including a better parser, bundles and better control over individual feeds.
 - rewrote section code and renamed it to structure.module:
