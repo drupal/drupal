@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.275 2003/12/13 17:59:49 dries Exp $
+// $Id: user.module,v 1.276 2003/12/17 22:27:23 dries Exp $
 
 /*** Common functions ******************************************************/
 
@@ -447,18 +447,16 @@ function theme_user_list($items, $title = NULL) {
 }
 
 function user_link($type) {
-
-  $links = array();
+  global $user;
 
   if ($type == "system") {
-    global $user;
     if ($user->uid) {
       menu("user", t("my account"), "user_page", 8);
       menu("user/edit", t("edit account"), "user_page", 0);
       menu("user/logout", t("log out"), "user_page", 10);
     }
     else {
-      menu("user", t("my account"), "user_page", 8, 1);
+      menu("user", t("my account"), "user_page", 8, MENU_HIDE);
     }
 
     if (user_access("administer users")) {
@@ -471,11 +469,9 @@ function user_link($type) {
       menu("admin/user/permission", t("permissions"), "user_admin", 5);
       menu("admin/user/search", t("search"), "user_admin", 8);
       menu("admin/user/help", t("help"), "user_help_page", 9);
-      menu("admin/user/edit", t("edit user account"), "user_admin", 0, 1); // hidden menu
+      menu("admin/user/edit", t("edit user account"), "user_admin", 0, MENU_HIDE);
     }
   }
-
-  return $links;
 }
 
 /*** Authentication methods ************************************************/

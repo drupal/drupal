@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.198 2003/12/15 19:41:24 dries Exp $
+// $Id: comment.module,v 1.199 2003/12/17 22:27:23 dries Exp $
 
 function comment_help($section = "admin/help#comment") {
   $output = "";
@@ -842,7 +842,7 @@ function comment_link($type, $node = 0, $main = 0) {
       menu("admin/comment/comments/1", t("approval queue"), "comment_admin", 2);
       menu("admin/comment/search", t("search"), "comment_admin", 8);
       menu("admin/comment/help", t("help"), "comment_help_page", 9);
-      menu("admin/comment/edit", t("edit comment"), "comment_admin", 0, 1);
+      menu("admin/comment/edit", t("edit comment"), "comment_admin", 0, MENU_HIDE);
 
       // comment settings:
       if (user_access("administer moderation")) {
@@ -853,7 +853,7 @@ function comment_link($type, $node = 0, $main = 0) {
         menu("admin/comment/moderation/roles", t("initial scores"), "comment_admin", 6);
       }
     }
-    menu("comment", t("comments"), "comment_page", 0, 1);
+    menu("comment", t("comments"), "comment_page", 0, MENU_HIDE);
   }
 
   return $links;

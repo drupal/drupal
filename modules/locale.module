@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.88 2003/12/08 18:30:20 dries Exp $
+// $Id: locale.module,v 1.89 2003/12/17 22:27:23 dries Exp $
 
 function locale_help($section = "admin/help#locale") {
   $output = "";
@@ -71,8 +71,8 @@ function locale_link($type) {
       menu("admin/locale", t("localization"), NULL, 5);
       menu("admin/locale/search", t("search string"), "locale_admin", 8);
       menu("admin/locale/help", t("help"), "locale_help_page", 9);
-      menu("admin/locale/edit", t("edit string"), "locale_admin", 0, 1); // hidden menu
-      menu("admin/locale/delete", t("delete string"), "locale_admin", 0, 1); // hidden menu
+      menu("admin/locale/edit", t("edit string"), "locale_admin", 0, MENU_HIDE);
+      menu("admin/locale/delete", t("delete string"), "locale_admin", 0, MENU_HIDE);
 
       foreach ($languages as $key => $value) {
         menu("admin/locale/$key", "$value", NULL);

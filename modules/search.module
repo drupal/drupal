@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.68 2003/12/08 06:32:19 dries Exp $
+// $Id: search.module,v 1.69 2003/12/17 22:27:23 dries Exp $
 
 function search_help($section = "admin/help#search") {
   $output = "";
@@ -43,7 +43,7 @@ function search_link($type) {
   }
 
   if ($type == "system" && user_access("search content")) {
-    menu("search", t("search"), "search_page", 0, 1);
+    menu("search", t("search"), "search_page", 0, MENU_HIDE);
   }
 
   return $links;
