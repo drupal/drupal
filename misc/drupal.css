@@ -1,8 +1,15 @@
+form                      { margin: 0; padding: 0;}
+
 #tracker table            { border-collapse: collapse; }
 #tracker td               { vertical-align: top; padding: 1em; }
 #tracker td ul            { margin-top: 0; margin-bottom: 0; }
 #tracker td ul a          { font-weight: normal; }
 #tracker th               { text-align: left; padding: 0.25em 1em; }
+
+#pager                    { text-align: center; }
+#pager div                { padding: 0.5em; }
+
+.queue-user-numeral       { color: red; }
 
 .calendar .row-week td a  { display: block; }
 .calendar .row-week td a:hover { background-color: #888; color: #fff; }
@@ -15,7 +22,7 @@
 
 .form-item .description   { font-size: 0.85em; }
 .form-item .title         { font-weight: bold; margin-top: 1.1em; margin-bottom: 1px; }
-.form-submit              { margin-top: 1em; }
+.form-submit              { margin: 0.5em 0; }
 
 .item-list .icon          { color: #555; float: right; padding-left: 0.25em; }
 .item-list .icon a        { color: #000; text-decoration: none; }
@@ -30,6 +37,18 @@
 .poll .links              { text-align: center; }
 .poll .percent            { text-align: right; }
 .poll .total              { text-align: center; }
+.poll .vote-form          { text-align: center; }
+
+.poll .vote-form .choices { text-align: left; margin: 0 auto; display: table; }
+
+.node-form .admin         { float: right; width: 14em; margin-top: -1.1em; }
+.node-form .standard      { margin-right: 14em; }
+.node-form .form-text     { width: 95%; }
+.node-form textarea       { width: 95%; }
+
+.marker                   { color: #f00; }
+.error                    { color: #f00; }
+.ok                       { color: #080; }
 
 .user-login-block         { text-align: center; }
 

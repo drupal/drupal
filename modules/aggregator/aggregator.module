@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.96 2003/05/30 05:53:10 dries Exp $
+// $Id: aggregator.module,v 1.97 2003/06/04 18:24:27 dries Exp $
 
 function import_help() {
   $output .= "<p>**REWRITE** In Drupal you have <i>feeds</i> and <i>bundles</i>.   Feeds define news sources and bundles categorize syndicated content by source, topic or any other heuristic.   Bundles provide a generalized way of creating composite feeds.  They allow you, for example, to combine various sport-related feeds into one bundle called \"Sport\".</p>";
@@ -711,8 +711,8 @@ function import_page_fd() {
 
   while ($feed = db_fetch_object($result)) {
     $output .= "<channel>\n";
-    $output .= " <title>". htmlentities($feed->title) ."</title>\n";
-    $output .= " <link>". htmlentities($feed->url) ."</link>\n";
+    $output .= " <title>". htmlspecialchars($feed->title) ."</title>\n";
+    $output .= " <link>". htmlspecialchars($feed->url) ."</link>\n";
     $output .= "</channel>\n\n";
   }
 

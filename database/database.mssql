@@ -354,7 +354,7 @@ CREATE TABLE [dbo].[vocabulary] (
   [hierarchy] [tinyint] NOT NULL ,
   [multiple] [tinyint] NOT NULL ,
   [required] [tinyint] NOT NULL ,
-  [types] [text] NULL ,
+  [nodes] [text] NULL ,
   [weight] [smallint] NOT NULL
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO

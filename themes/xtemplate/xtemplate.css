@@ -128,6 +128,14 @@ table {
   font-size: 1.3em;
   color: #777;
 }
+.form-item .title {
+  font-size: 1em;
+  color: #222;
+}
+.item-list .title {
+  font-size: 1em;
+  color: #222;
+}
 .node .author, .comment .author {
   color: #999;
   font-size: 0.8em;

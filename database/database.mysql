@@ -528,7 +528,7 @@ CREATE TABLE vocabulary (
   hierarchy tinyint(3) unsigned NOT NULL default '0',
   multiple tinyint(3) unsigned NOT NULL default '0',
   required tinyint(3) unsigned NOT NULL default '0',
-  types text,
+  nodes text,
   weight tinyint(4) NOT NULL default '0',
   PRIMARY KEY  (vid)
 ) TYPE=MyISAM;
