@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.25 2002/01/09 14:35:40 kjartan Exp $
+// $Id: module.inc,v 1.26 2002/01/13 13:18:48 kjartan Exp $
 
 // initialize modules:
 function module_init() {
