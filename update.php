@@ -187,7 +187,7 @@ function update_7() {
       case "book":
       case "page":
       case "blog":
-        node_save($node, array("nid", "body" => $old->body, "teaser" => ($old->abstract ? $old->abstract : node_teaser($old->body_old))));
+        node_save($node, array("nid", "body" => $old->body_old, "teaser" => ($old->abstract ? $old->abstract : node_teaser($old->body_old))));
         print "updated node $node->nid '$node->title' ($node->type)<br />";
         break;
       default:
