@@ -1,5 +1,5 @@
 <?php
-// $Id: page.module,v 1.36 2001/11/01 17:04:20 dries Exp $
+// $Id: page.module,v 1.37 2001/11/01 22:54:16 dries Exp $
 
 $GLOBALS["format"] = array(0 => "HTML", 1 => "PHP", 2 => "text");
 
@@ -62,7 +62,7 @@ function page_view($node, $main = 0) {
 
 }
 
-function page_form($node) {
+function page_form($node, $error) {
   global $format, $op;
 
   if ($op != t("Preview") && $format[$node->format] == "PHP") {
