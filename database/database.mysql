@@ -159,7 +159,8 @@ CREATE TABLE users (
   status tinyint(4) DEFAULT '0' NOT NULL,
   history text NOT NULL,
   hash varchar(12) DEFAULT '' NOT NULL,
-  timezone varchar(8),
+  rating decimal(8,4) DEFAULT '0' NOT NULL,
+  timezone varchar(8) DEFAULT '0' NOT NULL,
   PRIMARY KEY (id)
 );
 

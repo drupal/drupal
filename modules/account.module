@@ -1,7 +1,9 @@
 <?
 
-$module = array("help" => "account_help",
-                "cron"  => "account_cron",
+$module = array("cron" => "account_cron",
+                "help" => "account_help",
+                "find" => "account_find",
+                "block" => "account_block",
                 "admin" => "account_admin");
 
 function account_help() {
@@ -9,15 +11,62 @@ function account_help() {
   <P>The account-module is responsible for maintaining the user database. It automatically handles tasks like registration, authentication, access rights, password retrieval, user settings and much more.</P>
   <P>The required administration can be accomplished through the "account" interface of the administration section.  From here administrators can get a quick overview of all registered users and view/edit specific accounts using the links provided.  Some useful operations include blocking specific accounts (e.g. a troublesome user) and giving/taking administration permissions.  Note that you should only give these permissions to people you trust!</P>
   <P>Check the documentation page for detailed information about user management.</P>
+  <H3>User rating</H3>
+  <P>The account cron will periodically calculate an overall rating of each user's contributed value that is a time-weighted average of his or her comments ratings with an additional bonus for the stories he or she contributed.  The system can be best compared with <A HREF="http://slashcode.com/">SlashCode</A>'s karma and is - in fact - even more similar to <A HREF="http://scoop.kuro5hin.org/">Scoop</A>'s mojo implementation.</P>
+  <P>I won't elaborate on all the funny math involved and it suffices to say that the actual weighting is done in such a way:</P>
+  <OL>
+   <LI>that comments with a lot of votes count more then comments with only one or two votes.</LI>
+   <LI>that newer comments count for more then older comments.</LI>
+  </OL>
+  <P>The idea of (1) is that it favors comments that more people voted on, and thus whose rating is more likely to be accurate or justified.</P>
+  <P>The latter (2) makes the user rating that comes out of the calulations temporary, based on users' most recent activity and responsive to their current state.  This is accomplished by taking each user's last 30 comments, or however many he or she posted in the last 60 days - whatever comes first.</P>
+  <P>Additionally, users that posted one or more succesful stories in the last 60 days gain extra bonus points which will boost up their overall rating.</P>
  <?
 }
 
+function account_cron_ratings() {
+  $period = 5184000;  // 60 days
+  $number = 30;       // 30 comments
+
+  $r1 = db_query("SELECT id, userid FROM users");
+  while ($account = db_fetch_object($r1)) {
+    unset($bonus); unset($votes); unset($score); unset($value); unset($weight);
+
+    $r2 = db_query("SELECT COUNT(id) AS number FROM stories WHERE author = $account->id AND (". time() ." - timestamp < $period) AND status = 2");
+    if ($story = db_fetch_object($r2)) {
+      $bonus = $story->number;
+    }
+
+    $r3 = db_query("SELECT score, votes FROM comments WHERE author = $account->id AND (". time() ." - timestamp < $period) ORDER BY timestamp LIMIT $number");
+    while ($comment = db_fetch_object($r3)) {
+      $weight++;
+      $score += $weight * $comment->score;
+      $votes += $weight * $comment->votes;
+    }
+
+    if ($weight > 5 && $votes > 0) {
+      $value = ($score + $weight) / $votes + $bonus;
+      db_query("UPDATE users SET rating = '$value' WHERE id = $account->id");
+    }
+  }
+}
+
 function account_cron() {
-  // clean-up user database
+  // update user ratings:
+  account_cron_ratings();
+}
+
+function account_find($keys) {
+  $find = array();
+  $result = db_query("SELECT * FROM users WHERE userid LIKE '%". check_input($keys) ."%' LIMIT 20");
+  while ($account = db_fetch_object($result)) {
+    array_push($find, array("subject" => $account->userid, "link" => "account.php?op=view&name=$account->userid", "user" => $account->userid));
+  }
+  return $find;
 }
 
 function account_display($order = "username") {
-  $sort = array("ID" => "id", "fake e-mail address" => "fake_email", "hostname" => "last_host DESC", "last access date" => "last_access DESC", "real e-mail address" => "real_email", "real name" => "name", "permissions" => "permissions", "status" => "status", "theme" => "theme", "timezone" => "timezone DESC", "username" => "userid");
+  $sort = array("ID" => "id", "fake e-mail address" => "fake_email", "hostname" => "last_host DESC", "last access date" => "last_access DESC", "real e-mail address" => "real_email", "real name" => "name", "permissions" => "permissions", "rating" => "rating DESC", "status" => "status", "theme" => "theme", "timezone" => "timezone DESC", "username" => "userid");
   $show = array("ID" => "id", "username" => "userid", "$order" => "$sort[$order]", "homepage" => "url");
   $stat = array(0 => "blocked", 1 => "not confirmed", 2 => "open");
   $perm = array(0 => "regular user", 1 => "administrator");
@@ -177,6 +226,23 @@ function account_view($name) {
     $output .= "</TABLE>\n";
     print "$output";
   }
+}
+
+function account_block() {
+  $result = db_query("SELECT userid, rating FROM users ORDER BY rating DESC LIMIT 10");
+
+  $content .= "<TABLE CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
+  $content .= "<TR><TH>Username</TH><TH>Rating</TH></TR>\n";
+  while ($account = db_fetch_object($result)) {
+    $content .= "<TR><TD>". format_username($account->userid) ."</TD><TD>". format_data($account->rating) ."</TD></TR>";
+  }
+  $content .= "</TABLE>\n";
+
+  $block[0]["subject"] = "Top 10:<BR>users";
+  $block[0]["content"] = $content;
+  $block[0]["info"] = "Top 10: users";
+
+  return $block;
 }
 
 function account_admin() {

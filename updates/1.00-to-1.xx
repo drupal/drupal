@@ -10,3 +10,6 @@ alter table stories change category section varchar(64) DEFAULT '' NOT NULL;
 
 # 31/01/2001: block rehashing
 alter table blocks add remove tinyint(1) DEFAULT '0' NOT NULL;
+
+# 07/02/2001: value calculation
+alter table users add rating decimal(8,4) DEFAULT '0' NOT NULL;

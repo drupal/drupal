@@ -52,7 +52,7 @@
                                              <A HREF=\"account.php\">account</A>
                                           </TD>
                                        </TR>");
-?>         
+?>
             </TD>
           </TR>
           <TR>
@@ -86,13 +86,13 @@
                     <FONT COLOR="<? echo $this->fgc2; ?>">
 <?
                     switch (rand(0,13)) {
-		      case 0: $how = "Yelled at us"; break;   case 1: $how = "Whispered"; break;
-		      case 2: $how = "Reported"; break;       case 3: $how = "Posted"; break;
-		      case 4: $how = "Beamed through"; break; case 5: $how = "Faxed"; break;
-		      case 6: $how = "Tossed at us"; break;   case 7: $how = "Morsed"; break;
-		      case 8: $how = "Flagged"; break;        case 9: $how = "Written to us"; break;
-		      case 10: $how = "Made up"; break;       case 11: $how = "Uploaded"; break;
-		      case 12: $how = "Forged"; break;
+          case 0: $how = "Yelled at us"; break;   case 1: $how = "Whispered"; break;
+          case 2: $how = "Reported"; break;       case 3: $how = "Posted"; break;
+          case 4: $how = "Beamed through"; break; case 5: $how = "Faxed"; break;
+          case 6: $how = "Tossed at us"; break;   case 7: $how = "Morsed"; break;
+          case 8: $how = "Flagged"; break;        case 9: $how = "Written to us"; break;
+          case 10: $how = "Made up"; break;       case 11: $how = "Uploaded"; break;
+          case 12: $how = "Forged"; break;
                       default: $how = "Sneaked through";
 
                     }
@@ -172,14 +172,14 @@
                     <FONT COLOR="<? echo $this->fgc2; ?>">
 <?
                    switch (rand(0,13)) {
-	              case 0: $how = "Yelled at us"; break;   case 1: $how = "Whispered"; break;
-	              case 2: $how = "Reported"; break;       case 3: $how = "Posted"; break;
-	              case 4: $how = "Beamed through"; break; case 5: $how = "Faxed"; break;
-	              case 6: $how = "Tossed at us"; break;   case 7: $how = "Morsed"; break;
-	              case 8: $how = "Flagged"; break;        case 9: $how = "Written to us"; break;
-	              case 10: $how = "Made up"; break;       case 11: $how = "Uploaded"; break;
+                case 0: $how = "Yelled at us"; break;   case 1: $how = "Whispered"; break;
+                case 2: $how = "Reported"; break;       case 3: $how = "Posted"; break;
+                case 4: $how = "Beamed through"; break; case 5: $how = "Faxed"; break;
+                case 6: $how = "Tossed at us"; break;   case 7: $how = "Morsed"; break;
+                case 8: $how = "Flagged"; break;        case 9: $how = "Written to us"; break;
+                case 10: $how = "Made up"; break;       case 11: $how = "Uploaded"; break;
                       case 12: $how = "Forged"; break;
-	              default: $how = "Sneaked through";
+                default: $how = "Sneaked through";
 
                     }
 
@@ -194,7 +194,7 @@
                   </TD>
                   <TD ALIGN=\"center\" WIDTH=\"80\" BGOLOR=\"6C6C6C\" BACKGROUND=\"themes/jeroen/images/menutitle.gif\">
                     <A HREF=\"search.php?category=$category\"><FONT COLOR=\"<? $this->fgc3; ?>\">$story->category</FONT></A>";
-                    } 
+                    }
 
 ?>
                     </FONT>
@@ -218,7 +218,7 @@
                           else {
                             echo check_output($story->abstract, 1);
                           }
-	                  if ($story->article) 
+                    if ($story->article)
                             echo "<P>". check_output($story->article, 1) ."</P>";
 
 ?>
@@ -351,9 +351,9 @@
             </TD>
             <TD VALIGN="top" ALIGN="right">
 <?
-         global $PHP_SELF; 
- 
-	 
+         global $PHP_SELF;
+
+
 
            theme_account($this);
 ?>
