@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.48 2003/06/25 22:10:53 dries Exp $
+// $Id: search.module,v 1.49 2003/06/27 17:48:20 dries Exp $
 
 function search_help() {
   $output = "<b>". t("Search guidelines") ."</b>";
@@ -364,15 +364,7 @@ function search_view($keys) {
         theme("box", t("Search Results"), $output);
       }
       else {
-        // no results. try a substring search
-        $output = search_data("*". $keys. "*");
-
-        if ($output) {
-          theme("box", t("Search Results"), $output);
-        }
-        else {
-          theme("box", t("Search Results"), t("Your search yielded no results."));
-        }
+        theme("box", t("Search Results"), t("Your search yielded no results."));
       }
     }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.229 2003/06/24 18:26:32 dries Exp $
+// $Id: node.module,v 1.230 2003/06/27 17:48:20 dries Exp $
 
 function node_help() {
   global $mod;
@@ -499,11 +499,6 @@ function node_comment_mode($nid) {
 }
 
 function node_filter($text) {
-  $text = preg_replace("/\Wstyle\s*=[^>]+?>/i", ">", $text);
-  $text = preg_replace("/\Won[a-z]+\s*=[^>]+?>/i", ">", $text);
-  $text = preg_replace("/\Wsrc\s*=[\s'\"]*javascript[^>]+?>/i", ">", $text);
-  $text = preg_replace("/\Whref\s*=[\s'\"]*javascript:[^>]+?>/i", ">", $text);
-
   if (variable_get("filter_html", 0)) {
     $text = node_filter_html($text);
   }
