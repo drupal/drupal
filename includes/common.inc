@@ -181,48 +181,48 @@ function drupal_get_headers() {
  */
 
 /**
- * HTTP redirects. Makes sure the redirected url is formatted correctly and
- * includes the session ID.
+ * Send the user to a different Drupal page.
  *
- * @note This function ends the request.
+ * This issues an on-site HTTP redirect. The function makes sure the redirected
+ * URL is formatted correctly.
  *
- * @param $url A Drupal URL
- * @param $query Query string component
- * @param $fragment Fragment identifier
+ * It is advised to use drupal_goto() instead of PHP's header(), because
+ * drupal_goto() will append the user's session ID to the URI when PHP is
+ * compiled with "--enable-trans-sid".
+ *
+ * This function ends the request; use it rather than a print theme('page')
+ * statement in your menu callback.
+ *
+ * @param $path
+ *   A Drupal path.
+ * @param $query
+ *   The query string component, if any.
+ * @param $fragment
+ *   The destination fragment identifier (named anchor).
  */
-function drupal_goto($url = NULL, $query = NULL, $fragment = NULL) {
+function drupal_goto($path = '', $query = NULL, $fragment = NULL) {
+  // Translate &amp; to simply & in the absolute URL.
+  $url = str_replace('&amp;', '&', url($path, $query, $fragment, TRUE));
 
-  /*
-  ** Translate &amp; to simply & in the absolute URL
-  */
+  if (ini_get('session.use_trans_sid') && session_id() && !strstr($url, session_id())) {
+    $sid = session_name() . '=' . session_id();
 
-  $url = str_replace("&amp;", "&", url($url, $query, $fragment, TRUE));
-
-  /*
-  ** It is advised to use "drupal_goto()" instead of PHP's "header()" as
-  ** "drupal_goto()" will append the user's session ID to the URI when PHP
-  ** is compiled with "--enable-trans-sid".
-  */
-  if (!ini_get("session.use_trans_sid") || !session_id() || strstr($url, session_id())) {
-    header("Location: $url");
-  }
-  else {
-    $sid = session_name() . "=" . session_id();
-
-    if (strstr($url, "?") && !strstr($url, $sid)) {
-      header("Location: $url&". $sid);
+    if (strstr($url, '?') && !strstr($url, $sid)) {
+      $url = $url .'&'. $sid;
     }
     else {
-      header("Location: $url?". $sid);
+      $url = $url .'?'. $sid;
     }
   }
 
-  /*
-  ** The "Location" header sends a REDIRECT status code to the http
-  ** daemon.  In some cases this can go wrong, so we make sure none
-  ** of the code /below/ gets executed when we redirect.
-  */
+  // Before the redirect, allow modules to react to the end of the page request.
+  module_invoke_all('exit', $url);
 
+  header('Location: '. $url);
+
+  // The "Location" header sends a REDIRECT status code to the http
+  // daemon. In some cases this can go wrong, so we make sure none
+  // of the code below the drupal_goto() call gets executed when we redirect.
   exit();
 }
 
