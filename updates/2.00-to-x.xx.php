@@ -1,4 +1,5 @@
 <?php
+die("For now you will have to do the updates from the command line.")
 
 include "includes/common.inc";
 
