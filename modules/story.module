@@ -16,6 +16,9 @@ function story_help($section = "admin/help#story") {
       $output .= "In <a href=\"%story-config\">administer &raquo; configuration &raquo; modules &raquo; story</a> you can set up an introductory text for story authors, and a floor on the number of words which may be included in a story. This is designed to help discourage the submission of trivially short stories.";
       $output = t($output, array("%story-config" => url("admin/system/modules/story")));
       break;
+    case 'node/add/story':
+      $output = variable_get('story_help', '');
+      break;
   }
 
   return $output;
@@ -73,13 +76,7 @@ function story_validate(&$node) {
   return $error;
 }
 
-function story_form(&$node, &$help, &$error) {
-
-  /*
-  ** Carry out some explanation or submission guidelines:
-  */
-
-  $help = variable_get("story_help", "");
+function story_form(&$node, &$error) {
 
   if (function_exists("taxonomy_node_form")) {
     $output .= implode("", taxonomy_node_form("story", $node));

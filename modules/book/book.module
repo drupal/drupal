@@ -180,7 +180,7 @@ function book_validate(&$node) {
   }
 }
 
-function book_form(&$node, &$help, &$error) {
+function book_form(&$node, &$error) {
   global $user;
 
   $op = $_POST["op"];
@@ -200,13 +200,6 @@ function book_form(&$node, &$help, &$error) {
     }
   }
   else {
-
-    /*
-    ** Carry out some explanation or submission guidelines:
-    */
-
-    $help = book_node("description");
-
     /*
     ** If a regular user updates a book page, we create a new revision
     ** authored by that user:
@@ -906,7 +899,6 @@ function book_help($section = "admin/help#book") {
     case 'admin/node/book/orphan':
       $output = t("Pages in a book are like a tree. As pages are edited, reorganized and removed, child pages might be left with no link to the rest of the book.  Such pages are refered to as 'orphan pages'.  On this page, administrators can review their books for orphans and reattach those pages as desired.");
       break;
-
   }
 
   return $output;

@@ -123,7 +123,7 @@ function page_view($node, $main = 0, $page = 0) {
   return theme("node", $node, $main, $page);
 }
 
-function page_form(&$node, &$help, &$error) {
+function page_form(&$node, &$error) {
   if (function_exists("taxonomy_node_form")) {
     $output .= implode("", taxonomy_node_form("page", $node));
   }

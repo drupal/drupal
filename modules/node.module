@@ -1092,19 +1092,11 @@ function node_form($edit, $error = NULL) {
   // $error and $param must be passed by reference.
   $function = $edit->type ."_form";
   if (function_exists($function)) {
-    $form .= $function($edit, $help, $error, $param);
+    $form .= $function($edit, $error, $param);
   }
 
   // Append extra node form:
   $form .= implode("", node_invoke_nodeapi($edit, "form post", $error));
-
-  /*
-  ** Add the help text:
-  */
-
-  if ($help) {
-    $output .= "<p>$help</p>";
-  }
 
   $output .= "<div class=\"node-form\">";
 

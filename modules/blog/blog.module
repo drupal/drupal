@@ -82,6 +82,9 @@ function blog_help($section) {
     case 'admin/system/modules/blog':
       $output .= t("A weblog is a running journal of a users ideas.  Enter the minimum word count for a single entry, and the text displayed on the entry submission form");
       break;
+    case 'node/add/blog':
+      $output = variable_get('blog_help', '');
+      break;
   }
 
   return $output;
@@ -159,15 +162,9 @@ function blog_validate(&$node) {
   return $error;
 }
 
-function blog_form(&$node, &$help, &$error) {
+function blog_form(&$node, &$error) {
   global $nid;
   $iid = $_GET["iid"];
-
-  /*
-  ** Carry out some explanation or submission guidelines:
-  */
-
-  $help = variable_get("blog_help", "");
 
   if (empty($node->body)) {
     /*

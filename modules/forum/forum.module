@@ -181,7 +181,7 @@ function forum_validate(&$node) {
   }
 }
 
-function forum_form(&$node, &$help, &$error) {
+function forum_form(&$node, &$error) {
   if ($node->tid) {
     // editing
     $tid = $node->tid;
@@ -190,9 +190,6 @@ function forum_form(&$node, &$help, &$error) {
     // new topic
     $tid = arg(3);
   }
-
-  // outputs the compose guidelines
-  $help = variable_get("forum_help", "");
 
   $output .= _taxonomy_term_select(t("Forum"), "tid", $tid, variable_get("forum_nav_vocabulary", ""), "", 0, "", variable_get("forum_containers", array()));
 
@@ -692,6 +689,9 @@ function forum_help($section = "admin/help#forum") {
       break;
     case 'admin/system/modules/forum':
       $output = _forum_message_taxonomy();
+      break;
+    case 'node/add/forum':
+      $output = variable_get('forum_help', '');
       break;
   }
 
