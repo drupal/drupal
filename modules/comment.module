@@ -201,7 +201,7 @@ function comment_post($edit) {
     */
 
     $edit["subject"] = strip_tags($edit["subject"]);
-   
+
     if ($edit["subject"] == "") {
       $edit["subject"] = substr(strip_tags($edit["comment"]), 0, 29);
     }
@@ -249,7 +249,7 @@ function comment_post($edit) {
         ** Add entry to the watchdog log:
         */
 
-        watchdog("special", "comment: updated '". $edit["subject"] ."'");
+        watchdog("special", "comment: updated '". $edit["subject"] ."'", l(t("view comment"), array("id" => $edit["nid"], "cid" => $edit["cid"])));
       }
       else {
         /*
@@ -282,7 +282,7 @@ function comment_post($edit) {
         ** Add entry to the watchdog log:
         */
 
-        watchdog("special", "comment: added '". $edit["subject"] ."'");
+        watchdog("special", "comment: added '". $edit["subject"] ."'", l(t("view comment"), array("id" => $edit["nid"], "cid" => $edit["cid"])));
       }
 
       /*

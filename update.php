@@ -60,7 +60,8 @@ $mysql_updates = array(
   "2002-11-20" => "update_45",
   "2002-12-10" => "update_46",
   "2002-12-22" => "update_47",
-  "2002-12-29" => "update_48"
+  "2002-12-29" => "update_48",
+  "2003-01-03" => "update_49"
 );
 
 // Update functions
@@ -660,6 +661,10 @@ function update_48() {
   if ($max = db_result(db_query("SELECT MAX(vid) FROM vocabulary"))) {
     update_sql("REPLACE INTO sequences VALUES ('vocabulary', $max)");
   }
+}
+
+function update_49() {
+  update_sql("ALTER TABLE watchdog ADD link varchar(255) DEFAULT '' NULL");
 }
 
 function update_upgrade3() {

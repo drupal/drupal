@@ -62,8 +62,13 @@ function admin_page($mod) {
         print "<small>$help</small><br /><br />";
       }
 
+      if ($mod) {
+        print module_invoke($mod, "admin");
+      }
+      else {
+        print watchdog_overview("actions");
+      }
 
-      module_invoke($mod, "admin");
       print "</div>";
 
       db_query("DELETE FROM menu");

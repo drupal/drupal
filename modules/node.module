@@ -1085,7 +1085,7 @@ function node_submit($node) {
         taxonomy_node_save($nid, $node->taxonomy);
       }
 
-      watchdog("special", "$node->type: updated '$node->title'");
+      watchdog("special", "$node->type: updated '$node->title'", l("view post", array("id" => $node->nid)));
       $output = t("The node has been updated.");
     }
   }
@@ -1127,7 +1127,7 @@ function node_submit($node) {
         taxonomy_node_save($nid, $node->taxonomy);
       }
 
-      watchdog("special", "$node->type: added '$node->title'");
+      watchdog("special", "$node->type: added '$node->title'", l("view post", array("id" => $nid)));
       $output = t("Thanks for your submission.");
     }
   }
