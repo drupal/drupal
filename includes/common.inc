@@ -1,10 +1,10 @@
 <?php
-/* $Id: common.inc,v 1.353 2004/06/01 21:58:45 dries Exp $ */
+/* $Id: common.inc,v 1.354 2004/06/02 18:26:44 kjartan Exp $ */
 
 /**
  * @defgroup common Core functions
  */
-
+ 
 /**
  * @name Page title
  * @ingroup common
@@ -89,31 +89,6 @@ function drupal_get_breadcrumb() {
   }
 
   return $breadcrumb;
-}
-/* @} */
-
-/**
- * @name Page tabs
- * @ingroup common
- *
- * Functions to get and set the tabs of the current page.
- * @{
- */
-
-/**
- * @param $tab Array of links to use for tabs
- */
-function drupal_set_tab($tab = NULL) {
-  static $stored_tab = array();
-
-  if (!is_null($tab)) {
-    $stored_tab[] =  $tab;
-  }
-  return $stored_tab;
-}
-
-function drupal_get_tab() {
-  return drupal_set_tab();
 }
 /* @} */
 

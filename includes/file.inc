@@ -1,5 +1,5 @@
 <?php
-/* $Id: file.inc,v 1.12 2004/04/21 13:56:37 dries Exp $ */
+/* $Id: file.inc,v 1.13 2004/06/02 18:26:44 kjartan Exp $ */
 
 /**
  * @defgroup file File interface
@@ -94,7 +94,7 @@ function file_check_upload($source) {
     $file->path = $_FILES["edit"]["tmp_name"][$source];
     $file->error = $_FILES["edit"]["error"][$source];
     $file->size = $_FILES["edit"]["size"][$source];
-    $file->source = $_FILES["edit"]["size"][$source];
+    $file->source = $_FILES["edit"]["source"][$source];
     return $file;
   }
 }
