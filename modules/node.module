@@ -2,11 +2,12 @@
 
 $module = array("admin" => "node_admin");
 
-function node_overview($query = 0) {
+function node_overview($query = array()) {
   global $user, $rstatus;
 
-  $result = db_query("SELECT n.*, u.userid FROM node n LEFT JOIN users u ON n.author = u.id ". ($query ? "WHERE $query" : "") ." ORDER BY n.timestamp DESC");
+  $result = db_query("SELECT n.*, u.userid FROM node n LEFT JOIN users u ON n.author = u.id $query[1] LIMIT 50");
 
+  $output .= status($query[0]);
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
   $output .= " <TR><TH>title</TH><TH>type</TH><TH>status</TH><TH>author</TH><TH>date</TH><TH COLSPAN=\"3\">operations</TH></TR>\n";
   while ($node = db_fetch_object($result)) {
@@ -60,10 +61,26 @@ function node_delete($id) {
   return (node_del("nid", $id) ? "node has been deleted." : "failed to delete node: node must be dumped first.");
 }
 
+function node_query($type = "") {
+  global $status;
+  $queries =  array(0 => array("active nodes", "ORDER BY n.timestamp DESC"), 1 => array("posted nodes", "WHERE n.status = '$status[posted]' ORDER BY n.timestamp DESC"), 2 => array("queued nodes", "WHERE n.status = '$status[queued]' ORDER BY n.timestamp DESC"), 3 => array("dumped nodes", "WHERE n.status = '$status[dumped]' ORDER BY n.timestamp DESC"));
+  return ($queries[$type] ? $queries[$type] : $queries);
+}
+
+function node_listing() {
+  foreach (node_query() as $key=>$array) {
+    $output .= "<LI><A HREF=\"admin.php?mod=node&type=$key\">$array[0]</A></LI>\n";
+  }
+  return "<OL>$output</OL>\n";
+}
+
 function node_admin() {
-  global $op, $id, $edit;
+  global $op, $id, $edit, $type;
+
+  print "<SMALL><A HREF=\"admin.php?mod=node&op=listing\">node listings</A> | <A HREF=\"admin.php?mod=node\">overview</A></SMALL><HR>\n";
 
   $id = check_input($edit[nid] ? $edit[nid] : $id);
+  $type = ($type ? $type : 0);
 
   switch ($op) {
     case "Edit node":
@@ -74,6 +91,9 @@ function node_admin() {
       print status(node_delete($id));
       print node_overview();
       break;
+    case "listing":
+      print node_listing();
+      break;
     case "Save node":
       print status(node_save($edit));
       print node_admin_view($id);
@@ -83,7 +103,7 @@ function node_admin() {
       print node_admin_view($id);
       break;
     default:
-      print node_overview();
+      print node_overview(node_query($type));
   }
 }
 

@@ -48,7 +48,7 @@
 
 <?php
 
-		$mybox = 1;
+    $mybox = 1;
                 $this->box("Drop where?", "<td align=\"left\" valign=\"top\">
                                              <a href=\"index.php\">home</a><br />
                                              <a href=\"module.php?mod=book\">handbook</a><br />
@@ -263,8 +263,8 @@
 
 <?php
 
-			if ($mybox == 1) {
-			  echo $content;
+      if ($mybox == 1) {
+        echo $content;
                           $mybox = 0;
                         }
                         else {

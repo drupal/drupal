@@ -4,12 +4,6 @@ $module = array("help" => "account_help",
                 "find" => "account_find",
                 "admin" => "account_admin");
 
-$queries = array(0 => array("users recently visiting", "ORDER BY last_access DESC"),
-                 1 => array("users recently joining", "ORDER BY id DESC"),
-                 2 => array("users with access rights", "WHERE access != '' ORDER BY last_access DESC"),
-                 3 => array("users with pending accounts", "WHERE status = 1 ORDER BY last_access DESC"),
-                 4 => array("users with blocked accounts", "WHERE status = 0 ORDER BY last_access DESC"));
-
 function account_help() {
  ?>
   <P>The account-module is responsible for maintaining the user database. It automatically handles tasks like registration, authentication, access control, password retrieval, user settings and much more.</P>
@@ -90,12 +84,11 @@ function account_ac() {
   return $output;
 }
 
-function account_overview($query = 0) {
-  global $queries;
+function account_overview($query = array()) {
 
-  $result = db_query("SELECT id, userid, last_access FROM users ". $queries[$query][1] ." LIMIT 50");
+  $result = db_query("SELECT id, userid, last_access FROM users $query[1] LIMIT 50");
 
-  $output .= status($queries[$query][0]);
+  $output .= status($query[0]);
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
   $output .= " <TR><TH>username</TH><TH>last access</TH><TH COLSPAN=\"2\">operations</TH></TR>\n";
   while ($account = db_fetch_object($result)) {
@@ -227,18 +220,24 @@ function account_view($name) {
   }
 }
 
-function account_query() {
-  global $queries;
-  foreach ($queries as $key=>$array) {
-    $output .= "<LI><A HREF=\"admin.php?mod=account&query=$key\">$array[0]</A></LI>\n";
+function account_query($type = "") {
+  $queries = array(0 => array("users recently visiting", "ORDER BY last_access DESC"), 1 => array("users recently joining", "ORDER BY id DESC"), 2 => array("users with access rights", "WHERE access != '' ORDER BY last_access DESC"), 3 => array("users with pending accounts", "WHERE status = 1 ORDER BY last_access DESC"), 4 => array("users with blocked accounts", "WHERE status = 0 ORDER BY last_access DESC"));
+  return ($queries[$type] ? $queries[$type] : $queries);
+}
+
+function account_listing() {
+  foreach (account_query() as $key=>$array) {
+    $output .= "<LI><A HREF=\"admin.php?mod=account&type=$key\">$array[0]</A></LI>\n";
   }
   return "<OL>$output</OL>\n";
 }
 
 function account_admin() {
-  global $op, $edit, $id, $mod, $keys, $order, $name, $query;
+  global $op, $edit, $id, $mod, $keys, $order, $name, $type;
 
-  print "<SMALL><A HREF=\"admin.php?mod=account&op=access\">access control</A> | <A HREF=\"admin.php?mod=account&op=query\">account queries</A> | <A HREF=\"admin.php?mod=account&op=search\">search account</A> | <A HREF=\"admin.php?mod=account\">overview</A> | <A HREF=\"admin.php?mod=account&op=help\">help</A></SMALL><HR>";
+  print "<SMALL><A HREF=\"admin.php?mod=account&op=access\">access control</A> | <A HREF=\"admin.php?mod=account&op=listing\">account listings</A> | <A HREF=\"admin.php?mod=account&op=search\">search account</A> | <A HREF=\"admin.php?mod=account\">overview</A> | <A HREF=\"admin.php?mod=account&op=help\">help</A></SMALL><HR>";
+
+  $type = ($type ? $type : 1);
 
   switch ($op) {
     case "access":
@@ -259,7 +258,7 @@ function account_admin() {
     case "Delete account":
     case "delete":
       print status(account_delete(check_input($name)));
-      print account_overview();
+      print account_overview(account_query($type));
       break;
     case "Edit account":
     case "edit":
@@ -267,6 +266,9 @@ function account_admin() {
       break;
     case "help":
       print account_help();
+      break;
+    case "listing":
+      print account_listing();
       break;
     case "search":
       print search_form($keys);
@@ -280,11 +282,8 @@ function account_admin() {
     case "view":
       print account_view($name);
       break;
-    case "query":
-      print account_query();
-      break;
     default:
-      print account_overview($query);
+      print account_overview(account_query($type));
   }
 }
 
