@@ -490,7 +490,7 @@ function xss_check_input_data($data) {
     $match += preg_match("/\W(src|href)\s*=[\s'\"]*javascript[^>]+?>/i", $data);
 
     // check tags:
-    $match += preg_match("/<\s*(applet|script|object|style|embed|form|blink|meta|font|html|link|frame|iframe|layer|ilayer|head|frameset|xml)/i", $data);
+    $match += preg_match("/<\s*(applet|script|object|style|embed|form|blink|meta|html|frame|iframe|layer|ilayer|head|frameset|xml)/i", $data);
 
     if ($match) {
       watchdog("warning", "terminated request because of suspicious input data: ". drupal_specialchars($data));
