@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.107 2002/06/23 13:31:30 dries Exp $
+// $Id: theme.inc,v 1.108 2002/09/08 18:35:27 kjartan Exp $
 
 /**
 * Basic theme
@@ -120,7 +120,6 @@ function theme_init() {
     return $obj;
   }
 
-  watchdog("warning", "No valid themes enabled.");
   @$obj =& new BaseTheme;
   return $obj;
 }
