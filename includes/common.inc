@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.328 2004/03/01 19:45:32 dries Exp $ */
+/* $Id: common.inc,v 1.329 2004/03/08 18:35:04 dries Exp $ */
 
 /**
  * @defgroup common Core functions
@@ -266,7 +266,7 @@ function drupal_not_found() {
     menu_execute_active_handler();
   }
   else {
-    print theme("page", '<h1>'. t('Page not found') .'</h1>');
+    print theme('page', '', t('Page not found'));
   }
 }
 
