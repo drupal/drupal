@@ -2144,9 +2144,7 @@ function update_119() {
 }
 
 function update_120() {
-  // Add column to the blocks table.
   $ret = array();
-  $ret[] = update_sql("ALTER TABLE {blocks} ADD types varchar(16)");
 
   // Rewrite old URL aliases.  Works for both PostgreSQL and MySQL
   $result = db_query("SELECT pid, src FROM {url_alias} WHERE src LIKE 'blog/%%'");
