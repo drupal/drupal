@@ -52,7 +52,7 @@
                 location = navdrop.options[navdrop.selectedIndex].value;
               }
             }
-          -->
+          //-->
           </script>
         </head>
 
