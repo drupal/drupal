@@ -49,7 +49,8 @@ $mysql_updates = array(
   "2002-02-19" => "update_22",
   "2002-03-05" => "update_23",
   "2002-04-08" => "update_24",
-  "2002-03-11 : modules/themes web config" => "update_25"
+  "2002-04-14 : modules/themes web config" => "update_25",
+  "2002-04-14 : new taxonomy system" => "update_26"
 );
 
 // Update functions
@@ -352,7 +353,57 @@ function update_25() {
   update_sql("REPLACE system SET name = 'system', type = 'module', filename = 'system.module', status = '1';");
   update_sql("REPLACE system SET name = 'user', type = 'module', filename = 'user.module', status = '1';");
   update_sql("REPLACE system SET name = 'watchdog', type = 'module', filename = 'watchdog.module', status = '1';");
-  update_sql("UPDATE users SET theme = LOWER(theme);');
+  update_sql("UPDATE users SET theme = LOWER(theme);");
+}
+
+function update_26() {
+  update_sql("CREATE TABLE vocabulary (
+    vid int UNSIGNED NOT NULL PRIMARY KEY auto_increment,
+    name varchar(255) NOT NULL,
+    description TEXT,
+    relations TINYINT UNSIGNED NOT NULL,
+    hierarchy TINYINT UNSIGNED NOT NULL,
+    multiple TINYINT UNSIGNED NOT NULL,
+    required TINYINT UNSIGNED NOT NULL,
+    types TEXT,
+    weight TINYINT NOT NULL);");
+
+  update_sql("CREATE TABLE term_data (
+    tid int UNSIGNED NOT NULL PRIMARY KEY auto_increment,
+    vid int UNSIGNED NOT NULL,
+    name varchar(255) NOT NULL,
+    description TEXT,
+    weight TINYINT NOT NULL);");
+
+  update_sql("CREATE TABLE term_hierarchy (
+    tid int UNSIGNED NOT NULL,
+    parent int UNSIGNED NOT NULL
+  );");
+
+  update_sql("CREATE TABLE term_relation (
+    tid1 int UNSIGNED NOT NULL,
+    tid2 int UNSIGNED NOT NULL
+  );");
+
+  update_sql("CREATE TABLE term_synonym (
+    tid int UNSIGNED NOT NULL,
+    name varchar(255) NOT NULL
+  );");
+
+  update_sql("CREATE TABLE term_node (
+    nid int UNSIGNED NOT NULL,
+    tid int UNSIGNED NOT NULL
+  );");
+
+  update_sql("ALTER TABLE term_data ADD INDEX (vid);");
+  update_sql("ALTER TABLE term_hierarchy ADD INDEX (tid);");
+  update_sql("ALTER TABLE term_hierarchy ADD INDEX (parent);");
+  update_sql("ALTER TABLE term_relation ADD INDEX (tid1);");
+  update_sql("ALTER TABLE term_relation ADD INDEX (tid2);");
+  update_sql("ALTER TABLE term_synonym ADD INDEX (tid);");
+  update_sql("ALTER TABLE term_synonym ADD INDEX (name(3));");
+  update_sql("ALTER TABLE term_node ADD INDEX (nid);");
+  update_sql("ALTER TABLE term_node ADD INDEX (tid);");
 }
 
 /*

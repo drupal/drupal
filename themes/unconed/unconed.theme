@@ -1,5 +1,5 @@
 <?php
-// $Id: unconed.theme,v 1.75 2002/04/14 19:34:04 kjartan Exp $
+// $Id: unconed.theme,v 1.76 2002/04/14 20:46:41 dries Exp $
 
   /*********************************************************************
 
@@ -41,7 +41,7 @@
      $system["name"] = "UnConeD";
      $system["author"] = "Steven Wittens";
      $system["description"] = "Internet explorer, Netscape, Opera";
-     
+
      return $system[$field];
    }
 
