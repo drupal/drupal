@@ -178,8 +178,10 @@ function form_textarea($title, $name, $value, $cols, $rows, $description = 0) {
 }
 
 function form_select($title, $name, $value, $options, $description = 0) {
-  foreach ($options as $key=>$choice) $select .= "<option value=\"$key\"". ($key == $value ? " selected" : "") .">". check_form($choice) ."</option>";
-  return form_item($title, "<select name=\"edit[$name]\">$select</select>", $description);
+  if (count($options) > 0) {
+    foreach ($options as $key=>$choice) $select .= "<option value=\"$key\"". ($key == $value ? " selected" : "") .">". check_form($choice) ."</option>";
+    return form_item($title, "<select name=\"edit[$name]\">$select</select>", $description);
+  }
 }
 
 function form_file($title, $name, $size, $description = 0) {
