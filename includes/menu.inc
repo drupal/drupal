@@ -425,9 +425,11 @@ function menu_get_active_help() {
       if ($temp = module_invoke($name, 'help', $path)) {
         $output .= $temp . "\n";
       }
-      if (substr($path, 0, 6) == "admin/") {
-        if (module_invoke($name, 'help', 'admin/help#' . substr($path, 6))) {
-          $output .= theme("more_help_link", url('admin/help/' . substr($path, 6)));
+      if (module_hook('help', 'page')) {
+        if (substr($path, 0, 6) == "admin/") {
+          if (module_invoke($name, 'help', 'admin/help#' . substr($path, 6))) {
+            $output .= theme("more_help_link", url('admin/help/' . substr($path, 6)));
+          }
         }
       }
     }
