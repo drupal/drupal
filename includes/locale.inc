@@ -170,37 +170,46 @@ function _locale_import_po($file, $lang, $mode) {
       for ($i = 3; $i <= count($entries); $i++) {
         $english[] = $english[1];
       }
-      $translation = array_map("_locale_import_append_plural", $value['msgstr'], $entries);
-      $english = array_map("_locale_import_append_plural", $english, $entries);
+      $translation = array_map('_locale_import_append_plural', $value['msgstr'], $entries);
+      $english = array_map('_locale_import_append_plural', $english, $entries);
       foreach ($translation as $key => $trans) {
-        $loc = db_fetch_object(db_query("SELECT s.lid, t.translation FROM {locales_source} s INNER JOIN {locales_target} t ON s.lid = t.lid WHERE s.source = '%s' AND t.locale = '%s' AND t.translation != ''", $english[$key], $lang));
-        if ($loc->lid) { // a translated string exists
+        if ($key == 0) {
+          $plid = 0;
+        }
+        $loc = db_fetch_object(db_query("SELECT lid FROM {locales_source} WHERE source = '%s'", $english[$key]));
+        if ($loc->lid) { // a string exists
           $lid = $loc->lid;
           // update location field
           db_query("UPDATE {locales_source} SET location = '%s' WHERE lid = %d", $comments, $lid);
-        }
-        else { // no translation
-          $original = db_fetch_object(db_query("SELECT lid FROM {locales_source} WHERE source = '%s'", $english[$key]));
-          if (!$original->lid) { // original not present, insert
-            db_query("INSERT INTO {locales_source} (location, source) VALUES ('%s', '%s')", $comments, $english[$key]);
-            $lid = db_fetch_object(db_query("SELECT lid FROM {locales_source} WHERE source = '%s'", $english[$key]));
-            $lid = $lid->lid;
+          $trans2 = db_fetch_object(db_query("SELECT lid, translation, plid, plural FROM {locales_target} WHERE lid = %d AND locale = '%s'", $lid, $lang));
+          if (!$trans2->lid) { // no translation in current language
+            db_query("INSERT INTO {locales_target} (lid, locale, translation, plid, plural) VALUES (%d, '%s', '%s', %d, %d)", $lid, $lang, $trans, $plid, $key);
+            $additions++;
+          } // translation exists
+          else if ($mode == 'overwrite') { //overwrite in any case
+            db_query("UPDATE {locales_target} SET translation = '%s', plid = %d, plural = %d WHERE locale = '%s' AND lid = %d", $trans, $lang, $lid, $plid, $key);
+            if ($trans2->translation == '') {
+              $additions++;
+            }
+            else {
+              $updates++;
+            }
+          } // overwrite if empty string
+          else if ($trans2->translation == '') {
+            db_query("UPDATE {locales_target} SET translation = '%s', plid = %d, plural = %d WHERE locale = '%s' AND lid = %d", $trans, $lang, $lid, $plid, $key);
+            $additions++;
           }
-          else {
-            $lid = $original->lid;
+        }
+        else { // no string
+          db_query("INSERT INTO {locales_source} (location, source) VALUES ('%s', '%s')", $comments, $english);
+          $loc = db_fetch_object(db_query("SELECT lid FROM {locales_source} WHERE source = '%s'", $english));
+          $lid = $loc->lid;
+          db_query("INSERT INTO {locales_target} (lid, locale, translation, plid, plural) VALUES (%d, '%s', '%s')", $lid, $lang, $trans, $plid, $key);
+          if ($trans != '') {
+            $additions++;
           }
         }
-        if ($key == 0) {
-          $parent = $lid;
-        }
-        if (isset($loc->translation) && $mode == 'overwrite') {
-          db_query("UPDATE {locales_target} SET translation = '%s', plid = %d, plural = %d WHERE locale = '%s' AND lid = %d", $trans, $parent, $key, $lang, $lid);
-          $updates++;
-        }
-        elseif (!isset($loc->translation)) {
-          db_query("INSERT INTO {locales_target} (lid, locale, translation, plid, plural) VALUES (%d, '%s', '%s', %d, %d)", $lid, $lang, $trans, $parent, $key);
-          $additions++;
-        }
+        $plid = $lid;
       }
     }
 
@@ -208,30 +217,38 @@ function _locale_import_po($file, $lang, $mode) {
     else {
       $english = $value['msgid'];
       $translation = $value['msgstr'];
-      $loc = db_fetch_object(db_query("SELECT s.lid, t.translation FROM {locales_source} s INNER JOIN {locales_target} t ON s.lid = t.lid WHERE s.source = '%s' AND t.locale = '%s' AND t.translation != ''", $english, $lang));
-      if ($loc->lid) { // a translated string exists
+      $loc = db_fetch_object(db_query("SELECT lid FROM {locales_source} WHERE source = '%s'", $english));
+      if ($loc->lid) { // a string exists
         $lid = $loc->lid;
         // update location field
         db_query("UPDATE {locales_source} SET location = '%s' WHERE source = '%s'", $comments, $english);
-      }
-      else { // no translation
-        $original = db_fetch_object(db_query("SELECT lid FROM {locales_source} WHERE source = '%s'", $english[$key]));
-        if (!$original->lid) { // original not present, insert
-          db_query("INSERT INTO {locales_source} (location, source) VALUES ('%s', '%s')", $comments, $english);
-          $loc = db_fetch_object(db_query("SELECT lid FROM {locales_source} WHERE source = '%s'", $english));
-          $lid = $loc->lid;
+        $trans = db_fetch_object(db_query("SELECT lid, translation FROM {locales_target} WHERE lid = %d AND locale = '%s'", $lid, $lang));
+        if (!$trans->lid) { // no translation in current language
+          db_query("INSERT INTO {locales_target} (lid, locale, translation) VALUES (%d, '%s', '%s')", $lid, $lang, $translation);
+          $additions++;
+        } // translation exists
+        else if ($mode == 'overwrite') { //overwrite in any case
+          db_query("UPDATE {locales_target} SET translation = '%s' WHERE locale = '%s' AND lid = %d", $translation, $lang, $lid);
+          if ($trans->translation == '') {
+            $additions++;
+          }
+          else {
+            $updates++;
+          }
+        } // overwrite if empty string
+        else if ($trans->translation == '') {
+          db_query("UPDATE {locales_target} SET translation = '%s' WHERE locale = '%s' AND lid = %d", $translation, $lang, $lid);
+          $additions++;
         }
-        else {
-          $lid = $original->lid;
-        }
       }
-      if (isset($loc->translation) && $mode == 'overwrite') {
-        db_query("UPDATE {locales_target} SET translation = '%s' WHERE locale = '%s' AND lid = %d", $translation, $lang, $lid);
-        $updates++;
-      }
-      elseif (!isset($loc->translation)) {
+      else { // no string
+        db_query("INSERT INTO {locales_source} (location, source) VALUES ('%s', '%s')", $comments, $english);
+        $loc = db_fetch_object(db_query("SELECT lid FROM {locales_source} WHERE source = '%s'", $english));
+        $lid = $loc->lid;
         db_query("INSERT INTO {locales_target} (lid, locale, translation) VALUES (%d, '%s', '%s')", $lid, $lang, $translation);
-        $additions++;
+        if ($translation != '') {
+          $additions++;
+        }
       }
     }
   }
