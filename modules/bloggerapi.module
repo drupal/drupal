@@ -367,10 +367,6 @@ function bloggerapi_title($body) {
 ** Admin functions and module hooks
 */
 
-function bloggerapi_watchdog() {
-  return array("bloggerapi" => "#B600FF");
-}
-
 function bloggerapi_perm() {
   return array("access Blogger API");
 }
