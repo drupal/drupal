@@ -48,7 +48,7 @@ function documentation() {
   </PRE>
   <P>9. (optional) Create your site's theme or at least customize the existing themes.  To get started, head on to the <CODE>themes</CODE>-directory and make a custom logo for each theme.
   <P>10. (optional) Add and remove modules to customize the functionality of your site.  Adding and removing modules is plain easy.  You can add a module by copying the files into the <CODE>modules</CODE>-directory and you can remove a module by removing a module's file from the <CODE>modules</CODE>-directory.  The drupal engine will then automatically include or exclude this module.  If for some reason, this seems to fail, "manually" rehash the modules list from http://yourdomain.com/admin.php?mod=module.</P>
-  <P>11. If you get is to run, let us know at <A HREF="mailto:info@drop.org">info@drop.org</A> so we can add your site to our list of drupal sites.  If you can't get it to run, you can find support at the drupal site or you can contact us by e-mail at <A HREF="mailto:info@drop.org">info@drop.org</A>.</P>
+  <P>11. If you get it to run, let us know at <A HREF="mailto:info@drop.org">info@drop.org</A> so we can add your site to our list of drupal sites.  If you can't get it to run, you can find support at the drupal site or you can contact us by e-mail at <A HREF="mailto:info@drop.org">info@drop.org</A>.</P>
 
   <H2>More than one (sub)domain on one machine</H2>
 
@@ -193,7 +193,7 @@ function documentation() {
 
   <H2>User management</H2>
 
-  <P>drupal's user management system is capable of handling registrations, confirmation emails, account updates, authentication, access rights and user-based permissions among various other things.</P>
+  <P>Drupal's user management system is capable of handling registrations, confirmation emails, account updates, authentication, access rights and user-based permissions among various other things.</P>
   <P>No participant can use his own name or handle to post comments until they sign up and submit their e-mail address.  Those who do not may participate as anonymous users, but they will suffer numerous disadvantages, not the least that their posts begin at a lower score.</P>
   <P>In contrast, those with a user account can use their own name or handle and are granted various priveleges: the most important are probably the ability to moderate new submissions, to rate comments and to fine-tune the site to their personal liking.</P>
   <P>Registered users need to authenticate by supplying a username and password.  The username and password are kept in your database, where the password is hashed so that no one can read nor use it.  When a username and password need to be checked the system goes down the list of registered users till it finds a matching username, and then hashes the password that was supplied and compares it to the listed value.  If they match then that means the username and password supplied were correct.</P>
