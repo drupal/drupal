@@ -5,12 +5,12 @@ $module = array("page" => "wishlist_page",
 
 function wishlist_page() {
  ?>
-  <H1>Whislist</H1>
+  <H1>Wishlist</H1>
   <SMALL><I>$Id$</I></SMALL>
 
    <H3>Users</H3>
     <UL>
-     <LI>auto. set default theme according to popularity or date</LI>
+     <LI>auto-set default theme according to popularity or date</LI>
      <LI>enhance "track drop.org" functionality: should be made more complete and more comprehensive</LI>
      <LI>translation/localization support: let's not add this too soon as it will turn out to be a pain to maintain</LI>
      <LI>allow users to change their e-mail address: this will require validation through our confirmation procedure</LI>
@@ -20,8 +20,8 @@ function wishlist_page() {
  
    <H3>Adminstration</H3>
     <UL>
-     <LI>auto. backup functionality</LI>
-     <LI>auto. clean-up functionality (e.g. user's history field)</LI>
+     <LI>auto-backup functionality</LI>
+     <LI>auto-clean-up functionality (e.g. user's history field)</LI>
     </UL>
 
    <H3>Engine</H3>
@@ -48,7 +48,7 @@ function wishlist_page() {
      <LI>banner ad/rotation/tracking or affiliate program</LI>
      <LI>voting polls</LI>
      <LI>daily/weekly e-mail digest - mailing list</LI>
-     <LI>daily/weekly site rapports - mailing list</LI>
+     <LI>daily/weekly site reports - mailing list</LI>
      <LI>featured stories - story index grouped by category</LI>
      <LI>e-commerce/shop extension</LI>
      <LI>automatically post scheduled stories</LI>

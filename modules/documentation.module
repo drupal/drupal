@@ -15,8 +15,8 @@ function documentation() {
   
   <H1>Chapter 1: introduction</H1>
 
-  <P>Drupal is the English pronounciation for the dutch word 'druppel' which stands for 'drop'.  Drupal is a full-featured content management/discussion engine suitable to setup a news-driven community or portal site.  Drupal aims towards easy installation, excessive configuration and fine-grained maintainance capabilities.  Due to its modular design drupal is flexibel and easy to adapt or extend.</P>
-  <P>Drupal is primarily written by Dries Buytaert (dries_at_drop.org) and build after Slash (<A HREF="http://slashcode.com/">http://slashcode.com/</A>) and Scoop (<A HREF="http://scoop.kuro5hin.org/">http://scoop.kuro5hin.org/</A>).</P>
+  <P>Drupal is the English pronounciation for the dutch word 'druppel' which means 'drop'.  Drupal is a fully-featured content management/discussion engine suitable to setup a news-driven community or portal site.  Drupal aims to provide easy installation, excessive configuration and fine-grained maintainance capabilities.  Due to its modular design, drupal is flexible and easy to adapt or extend.</P>
+  <P>Drupal is primarily written by Dries Buytaert (dries_at_drop.org) and built after Slash (<A HREF="http://slashcode.com/">http://slashcode.com/</A>) and Scoop (<A HREF="http://scoop.kuro5hin.org/">http://scoop.kuro5hin.org/</A>).</P>
 
   <H1>Chapter 2: installation</H1>
 
@@ -31,16 +31,16 @@ function documentation() {
   <P>1. We assume that you have some working experience with Apache, MySQL and PHP.  If you still need to install Apache, MySQL or PHP, please install them now.  The installation of these required packages is beyond the scope of this document but make sure your Apache is setup to allow <CODE>.htaccess</CODE> files so that drupal can override Apache options from within the drupal directories.</P>
   <P>2. Unzip the distribution tarball into the directory you want to serve web files from:</P>
   <BLOCKQUOTE>$ tar -zxvf drupal-x.x.x.tar.gz</BLOCKQUOTE>
-  <P>3. Create a MySQL database for your drupal site (if not already done so):</P>
+  <P>3. Create a MySQL database for your drupal site (if you haven't already):</P>
   <BLOCKQUOTE>$ mysqladmin create &lt;database&gt;</BLOCKQUOTE>
-  <P>Make sure to check the MySQL documentation on how to setup the correct access rights and permissions in your MySQL grant tables.</P>
+  <P>Make sure to consult the MySQL documentation on how to setup the correct access rights and permissions in your MySQL grant tables.</P>
   <P>4. Once you have a proper database, dump the required tables into your database:</P>
   <BLOCKQUOTE>$ mysql -h &lt;hostname&gt; -u &lt;username&gt; -p&lt;password&gt; &lt;database&gt; < database/database.mysql </BLOCKQUOTE>
   <P>5. Copy the file <CODE>includes/hostname.conf</CODE> to match your server's hostname:</P>
   <BLOCKQUOTE>$ cp includes/hostname.conf includes/www.yourdomain.com.conf</BLOCKQUOTE>
   <P>6. Edit your configuration file to set the required settings such as the database options and to customize your site to your likings.</P>
   <P>7. Launch your browser and point it to http://yourdomain.com/, create an account, log in and head on to http://yourdomain.com/admin.php.  The first user will automatically have administrator permissions.  Play with it for a bit and spend some time getting used to the administration interfaces.</P>
-  <P>8. (optional) Optionally (yet recommended for smooth operation) setup a crontab to periodically visit http://yourdomain.com/cron.php.</P>
+  <P>8. Optionally (yet recommended for smooth operation) setup a crontab to periodically visit http://yourdomain.com/cron.php.</P>
   <P>Use a browser like lynx or wget but make sure the process terminates: either use /usr/bin/lynx -source http://yourdomain.com/cron.php or /usr/bin/wget -O /dev/null http://yourdomain.com/cron.php. Take a look at the example scripts in the <CODE>scripts</CODE>-directory and make sure to adjust them to your needs.</P>
   <P>A good crontab-line to run the cron-script once every hour would be:</P>
   <PRE>
@@ -62,7 +62,7 @@ function documentation() {
   </PRE>
 
   <H3>Multiple (sub)domains using different databases</H3>
-  <P>Apache supports both IP- and name-based virtual hosts (vhosts).  While running more than one engine (by using vhosts) can be very useful for development and testing purpose, it might even be more interesting for hosting companies.  Therefore, we tried to support vhosts in the best possible way in order to make life of any administrator easier.  We do so by making it possible to run an unlimited amount of vhosts on the same physical source tree, though by using different configuration files.  Moreover, you can setup multiple configuration files in your <CODE>includes</CODE>-directory.</P>
+  <P>Apache supports both IP- and name-based virtual hosts (vhosts).  While running more than one engine (by using vhosts) can be very useful for development and testing purpose, it might even be more interesting for hosting companies.  Therefor, we tried to support vhosts in the best possible way in order to make the life of any administrator easier.  We do so by making it possible to run an unlimited amount of vhosts on the same physical source tree, though by using different configuration files.  Moreover, you can setup multiple configuration files in your <CODE>includes</CODE>-directory.</P>
   <PRE>
    $ ls -l includes/*.conf
    -rw-rw-r--    1 drupal   drupal      includes/www.yourdomain1.com.conf
@@ -88,8 +88,7 @@ function documentation() {
   <P>While we in no way consider the design and implementation of the drupal engine to be finished, we feel that our own accompanying intensive experience has given us a fairly stable and well-proven design. The following provides a brief over-view of the different aspects of drupal's core engine and features.</P> 
 
   <H2>Blocks</H2>
-  
-  <P>Still under construction.</P>
+  <P>Blocks are the side-boxes of the site that provide the main interface to the engine. They can be fully customized by an administrator to suit his or her needs. (Full documentation still under construction)</P>
 
   <H2>Cron</H2>
  
@@ -97,7 +96,7 @@ function documentation() {
   <P>Note that cron does not guarantee that the commands will be executed at the specified interval.  However, the engine will make sure that the commands are run at the specified intervals as closely as possible.</P>
   <P>Whenever <CODE>http://yourdomain.com/cron.php</CODE> is accessed, cron will run: it queries the database for the jobs cron controls, and their periods in seconds.  If a certain task wasn't executed in the last n seconds, where n is the period of that job, it will be executed.  It then records the date in the database so it can know when to run it again.  When all the executed commands terminate, cron is done.</P>
   <P>Cron is handy to run daily, weekly and monthly tasks that take care of various "housekeeping chores" such as database maintainance, recalculating settings, periodic mailings, scheduled backups and so on.</P>
-  <P>The recommended way to setup drupal's cron system is to setup a  Unix/Linux <CODE>crontab</CODE> that frequently visits <CODE>http://yourdomain.com/cron.php</CODE>: the more you visit <CODE>cron.php</CODE>, the more accurate cron will be.  If your hosting company does not allow you to setup <CODE>crontabs</CODE>, you can always ask someone else to setup a <CODE>crontab</CODE> for you.  Afterall, virtually any Unix/Linux machine with access to the internet can setup a <CODE>crontab</CODE> to frequently visit <CODE>http://yourdomain.com/cron.php</CODE> for you.<P>
+  <P>The recommended way to setup drupal's cron system is to setup a Unix/Linux <CODE>crontab</CODE> that frequently visits <CODE>http://yourdomain.com/cron.php</CODE>: the more you visit <CODE>cron.php</CODE>, the more accurate cron will be.  If your hosting company does not allow you to setup <CODE>crontabs</CODE>, you can always ask someone else to setup a <CODE>crontab</CODE> for you.  After all, virtually any Unix/Linux machine with access to the internet can setup a <CODE>crontab</CODE> to frequently visit <CODE>http://yourdomain.com/cron.php</CODE> for you.<P>
   <P>For the <CODE>crontab</CODE> itself, use a browser like <CODE>lynx</CODE> or <CODE>wget</CODE> but make sure the process terminates: either use <CODE>/usr/bin/lynx -source http://yourdomain.com/cron.php</CODE> or <CODE>/usr/bin/wget -O /dev/null http://yourdomain.com/cron.php</CODE>.  Take a look at the example scripts in the <CODE>scripts</CODE>-directory and make sure to adjust them to your needs.</P>
   <P>A good <CODE>crontab</CODE>-line to run the <CODE>cron</CODE>-script once every hour would be:</P>
   <PRE>
@@ -113,15 +112,15 @@ function documentation() {
   <H2>Moderation, collaborative rating</H2>
 
   <P>We like to experiment with moderation, trust metrics and collaborative filtering.  Why?  To help individuals and communities address the challenges of information overload.</P>
-  <P>As each new piece of information competes for attention, people quickly tend to become overwhelmed and seek assistance in identifying the most interesting, worthwhile, valuable or enteraining items.  Not to mention the fact, reader-contributed content and other levels of interactivity tend to become chaotic, bloated and disreputable.</P>
-  <P>Therefore, we decided to develop a public system powered by a community that aims to bring quality content to everyone's attention and to filter out all junk: to <I>sort the wheat from the chaff</I>.  The output should be something clean and homogenized featuring quality content, and should slide down the gullet far more easily.</P>
+  <P>As each new piece of information competes for attention, people quickly tend to become overwhelmed and seek assistance in identifying the most interesting, worthwhile, valuable or enteraining items.  Not to mention the fact that reader-contributed content and other levels of interactivity tend to become chaotic, bloated and disreputable.</P>
+  <P>Therefor, we decided to develop a public system powered by a community that aims to bring quality content to everyone's attention and to filter out all junk: to <I>sort the wheat from the chaff</I>.  The output should be something clean and homogenized featuring quality content, and should slide down the gullet far more easily.</P>
   
   <H3>Open submission queue</H3>
-  <P>Anyone who happens by, and has some news or some thoughts they'd like to share, can submit new content for consideration.  After someone has submitted something, their story is added to a queue.  All registered users can access this list of pending stories, that is, stories that have been submitted, but do not yet appear on the public front page. Those registered users can vote whether they think the story should be posted or not. When enough people vote to post a story, the story is pushed over the threshold and up it goes on the public page. On the other hand, when too many people voted to drop a story, the story will get trashed.</P>
+  <P>Anyone who visits and has some news or some thoughts they'd like to share, can submit new content for consideration.  After someone has submitted something, their story is added to a queue.  All registered users can access this list of pending stories, that is, stories that have been submitted, but do not yet appear on the public front page. Those registered users can vote whether they think the story should be posted or not. When enough people vote to post a story, the story is pushed over the threshold and up it goes on the public page. On the other hand, when too many people voted to drop a story, the story will get trashed.</P>
 
   <H3>Comment rating</H3>
   
-  <P>Anyone with a user account will be able to moderate comments.  This lets people assign a score to a comment on how good they think the comment is or how visible they think it should be.  When more then one person rates a comment, the overall rating is just a simple average of all ratings.  Comments with a high ratings are more visible then comments with a lower rating.  Like that, comments that gain the approbation of participants will gradually move up through statistical effects and pointless comments will sink into oblivion.</P>
+  <P>Anyone with a user account will be able to moderate comments.  This lets people assign a score to a comment on how good they think the comment is or how visible they think it should be.  When more than one person rates a comment, the overall rating is just a simple average of all ratings.  Comments with high ratings are more visible than comments with a lower rating.  That way, comments that gain the approval of participants will gradually move up through statistical effects and pointless comments will sink into oblivion.</P>
   <P>Hence, the purpose of comment moderation is two-fold:</P>
   <UL>
    <LI>To bring the really good comments to everyone's attention.</LI>
@@ -132,7 +131,7 @@ function documentation() {
   <H2>Modules</H2>
     
   <P>When developing drupal it became clear that we wanted to have a system which is as modular as possible. A modular design will provide flexibility, adaptability, and continuity which in turn allows people to customize the site to their needs and likings.</P>
-  <P>A drupal module is simply a file containing a set of routines written in PHP.  When used, the module code executes entirely within the context of the site.  Hence it can use all the functions and access all variables and structures of the main engine.  In fact, a module is not any different from any other PHP file: it is more of a notion that automatically leads to good design principles and a good development model. Modularity better suits the open-source development model, because otherwise you can't easily have people working in parallel without risk of interference.</P>
+  <P>A drupal module is simply a file containing a set of routines written in PHP.  When used, the module code executes entirely within the context of the site.  Hence it can use all the functions and access all variables and structures of the main engine.  In fact, a module is not any different from a regular PHP file: it is more of a notion that automatically leads to good design principles and a good development model. Modularity better suits the open-source development model, because otherwise you can't easily have people working in parallel without risk of interference.</P>
   <P>The idea is to be able to run random code at given places in the engine.  This random code should then be able to do whatever needed to enhance the functionality.  The places where code can be executed are called "hooks" and are defined by a fixed interface.</P>
   <P>In places where hooks are made available, the engine calls each module's exported functions.  This is done by iterating through the <CODE>modules</CODE> directory where all modules must reside.  Say your module is named <CODE>foo</CODE> (i.e. <CODE>modules/foo.module</CODE>) and if there was a hook called <CODE>bar</CODE>, the engine will call <CODE>foo_bar()</CODE> if this was exported by your module.</P>
   <P>Each module has to declare an associative array named <CODE>$module</CODE> that serves as the list of hooks that a module wants to export or carry out.  Each entry in the array contains the name of a hook followed by the name of the exported function.</P>
@@ -151,7 +150,7 @@ function documentation() {
    </TR>
    <TR>
     <TD VALIGN="top"><CODE>block</CODE></TD>
-    <TD VALIGN="top">Any module can export block to be displayed by making the block function return an associative array of blocks.  Each block in the array requires a "subject", "content", "info" and "link" field.</TD>
+    <TD VALIGN="top">Any module can export a block to be displayed by making the block function return an associative array of blocks.  Each block in the array requires a "subject", "content", "info" and "link" field.</TD>
    </TR>
    <TR>
     <TD VALIGN="top"><CODE>cron</CODE></TD>
@@ -159,7 +158,7 @@ function documentation() {
    </TR>
    <TR>
     <TD VALIGN="top"><CODE>help<CODE></TD>
-    <TD VALIGN="top">By implementing the help hook a module can make documentation available to the engine or to other modules.</TD>
+    <TD VALIGN="top">By implementing the help hook, a module can make documentation available to the engine or to other modules.</TD>
    </TR>
    <TR>
     <TD VALIGN="top"><CODE>export</CODE></TD>
@@ -167,10 +166,10 @@ function documentation() {
    </TR>
    <TR>
     <TD VALIGN="top"><CODE>page</CODE></TD>
-    <TD VALIGN="top">If a module requires it's own page it should provide a function named <CODE>module_page</CODE>.  The page can then be publicly accessed via <CODE>http://yourdomain.com/module.php?mod=module</CODE> which will cause the engine to invoke <CODE>module_page</CODE> in order to generate the module's page.</TD>
+    <TD VALIGN="top">If a module requires its own page it should provide a function named <CODE>module_page</CODE>.  The page can then be publicly accessed via <CODE>http://yourdomain.com/module.php?mod=module</CODE> which will cause the engine to invoke <CODE>module_page</CODE> in order to generate the module's page.</TD>
    </TR>
   </TABLE>
-  <P>Even though we aim towards modularity, a basic rule is to avoid defined interfaces.  We are exceptionally careful when it comes down to adding hooks because once you give a hook to developers they will start coding to it and once somebody starts coding to it you are stuck with it.</P>
+  <P>Even though we aim towards modularity, a basic rule is to avoid defined interfaces.  We are exceptionally careful when it comes down to adding hooks because once you give a hook to developers they will start coding to it and once somebody's using it, you are stuck with it.</P>
 
   <H2>Theme system</H2>
   
@@ -189,15 +188,15 @@ function documentation() {
      // displays the footer of a page
   </PRE>
   <P>We have similar functions for things like comments (i.e. <CODE>$theme->comment($comment)</CODE>), generic boxes (i.e. <CODE>$theme->box($topic, $body)</CODE>) and so on.  To create your own theme, you simply need to provide a new implementation of these functions.</P>
-  <P>This simple and straight-forward approach has proven to be both flexible and fast.  If you want to learn more about the theme system, we recommand you to look athe code of the existing themes.  It is pretty straight-forward and doesn't require any further on in-depth knowledge about the engine itself.</P>
+  <P>This simple and straight-forward approach has proven to be both flexible and fast.  If you want to learn more about the theme system, we recommend you look at the code of the existing themes.  It is pretty straight-forward and doesn't require any further in-depth knowledge about the engine itself.</P>
 
   <H2>User management</H2>
 
   <P>Drupal's user management system is capable of handling registrations, confirmation emails, account updates, authentication, access rights and user-based permissions among various other things.</P>
-  <P>No participant can use his own name or handle to post comments until they sign up and submit their e-mail address.  Those who do not may participate as anonymous users, but they will suffer numerous disadvantages, not the least that their posts begin at a lower score.</P>
+  <P>No participant can use his own name or handle to post comments until they sign up and submit their e-mail address.  Those who do not may participate as anonymous users, but they will suffer numerous disadvantages, for example their posts beginning at a lower score.</P>
   <P>In contrast, those with a user account can use their own name or handle and are granted various priveleges: the most important are probably the ability to moderate new submissions, to rate comments and to fine-tune the site to their personal liking.</P>
-  <P>Registered users need to authenticate by supplying a username and password.  The username and password are kept in your database, where the password is hashed so that no one can read nor use it.  When a username and password need to be checked the system goes down the list of registered users till it finds a matching username, and then hashes the password that was supplied and compares it to the listed value.  If they match then that means the username and password supplied were correct.</P>
-  <P>Once a user authenticated a session is started and until that session is over they won't have to re-authenticate.  To keep track of the individual sessions, drupal relies on PHP's session support.  A visitor accessing your web site is assigned an unique id, the so-called session id which is stored in a cookie.  For security's sake, the cookie does not contain personal information but acts as a key to retrieve the information stored on your server's side.  When a visitor accesses your site, drupal will check whether a specific session id has been sent with the request.  If this is the case, the prior saved environment is recreated.</P>
+  <P>Registered users need to authenticate by supplying a username and password.  The username and password are kept in your database, where the password is hashed so that no one can read nor use it.  When a username and password needs to be checked the system goes down the list of registered users till it finds a matching username, and then hashes the password that was supplied and compares it to the listed value.  If they match then that means the username and password supplied were correct.</P>
+  <P>Once a user authenticated a session is started and until that session is over they won't have to re-authenticate.  To keep track of the individual sessions, drupal relies on PHP's session support.  A visitor accessing your web site is assigned an unique ID, the so-called session ID, which is stored in a cookie.  For security's sake, the cookie does not contain personal information but acts as a key to retrieve the information stored on your server's side.  When a visitor accesses your site, drupal will check whether a specific session ID has been sent with the request.  If this is the case, the prior saved environment is recreated.</P>
   <P>Drupal allows you to control who is allowed to get authenticated and who is not.  To accomplish this, you can ban certain hostnames, IPs, IP-ranges, e-mail address and usernames.  Any user that matches any of the given ban criteria will not be able to authenticate or to register as a new user.</P>
   <P>Authenticated users can themselves select entirely different appearances for the site, utilizing their own preferences for how the pages are structured, how navigation lists and other page components are presented and much more.</P>
   <P>An important feature of drupal is that any user can be granted administrator rights.  The ability to share maintainance responsibility with volunteers from across the globe can be considered valuable for most community-based projects.</P> 
@@ -219,12 +218,12 @@ function documentation() {
  
   <P>CVS is a tool to manage software revisions and release control in a multi-developer, multi-directory, multi-group environment.  It comes in very handy to maintain local modificiations.</P>
   <P>Thus, CVS helps you if you are part of a group of people working on the same project.  In large software development projects, it's usually necessary for more then one software developer to be modifying modules of the code at the same time.  Without CVS, it is all too easy to overwrite each others' changes unless you are extremely careful.</P>
-  <P>In addition, CVS helps to keep track of all changes.  Therefore, the CVS server has been setup to mail all CVS commits to all maintainers.  Thus, it does not require any effort to inform the other people about the work you have done, and by reading the mails everyone is kept up to date.</P>
+  <P>In addition, CVS helps to keep track of all changes.  Therefor, the CVS server has been setup to mail all CVS commits to all maintainers.  Thus, it does not require any effort to inform the other people about the work you have done, and by reading the mails everyone is kept up to date.</P>
 
   <H3>Linux</H3>
 
-  <P>To gain access via (anonymous) cvs use the following steps.  For this example it is assumed that you want a copy of the drupal source code.</P>
-  <P>1. Install a recent copy of CVS. All you really need is a copy of the CVS client binary.  Or you can download the latest CVS source code from <A HREF="http://www.cyclic.com">Cyclic Software</A>.  Don't get your panties in a knot; CVS is free software under the GNU GPL.</P>
+  <P>To gain access via (anonymous) CVS use the following steps. In this example it is assumed that you want a copy of the drupal source code.</P>
+  <P>1. Install a recent copy of CVS. All you really need is a copy of the CVS client binary. Alternatively you can download the latest CVS source code from <A HREF="http://www.cyclic.com">Cyclic Software</A>.  Don't worry: CVS is free software under the GNU GPL.</P>
   <P>2. Set CVSROOT in your environment:</P>
   <BLOCKQUOTE>$ export CVSROOT=":pserver:anonymous@drop.org:/home/dries/cvs"</BLOCKQUOTE>
   <P>3. Login by running the command:</P>

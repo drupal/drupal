@@ -14,7 +14,7 @@ function drupal_page() {
    <H2>Download</H2>
    <LI><A HREF=\"drupal/drupal-1.00-rc1.tgz\">drupal 1.00-rc1</A> (2000/01/01)</LI>
    <H2>Demo</H2>
-   <P>We don't have a real demo site yet but drupal is used by (and created for) <A HREF=\"http://drop.org/\">http://drop.org/</A>.  Create an account, play with it for a bit, read the <A HREF=\"module.php?mod=documentation\">documentation</A> and spend some time getting used to.</P>
+   <P>We don't have a real demo site yet but drupal is used by (and created for) <A HREF=\"http://drop.org/\">http://drop.org/</A>.  Create an account, play with it for a bit, read the <A HREF=\"module.php?mod=documentation\">documentation</A> and spend some time getting used to it.</P>
    <H2>Documentation</H2>
    <LI><A HREF=\"module.php?mod=documentation\">documentation</A></LI>
    <LI><A HREF=\"module.php?mod=wishlist\">wishlist</A></LI>
