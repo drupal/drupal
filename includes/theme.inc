@@ -284,12 +284,7 @@ function theme_get_setting($setting_name, $refresh = FALSE) {
       }
     }
 
-    if ($settings['toggle_primary_links']) {
-      if (!$settings['primary_links']) {
-        $settings['primary_links'] = theme('links', link_page());
-      }
-    }
-    else {
+    if (!$settings['toggle_primary_links']) {
       $settings['primary_links'] = '';
     }
 
@@ -370,7 +365,6 @@ function theme_page($content, $title = NULL, $breadcrumb = NULL) {
   $output .= ' <body style="background-color: #fff; color: #000;"'. theme('onload_attribute'). '">';
   $output .= '<table border="0" cellspacing="4" cellpadding="4"><tr><td style="vertical-align: top; width: 170px;">';
 
-  $output .= theme('box', t('Navigation'), @implode('<br />', link_page()));
   $output .= theme('blocks', 'all');
   $output .= '</td><td style="vertical-align: top;">';
 

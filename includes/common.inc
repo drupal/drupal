@@ -1578,24 +1578,6 @@ function field_set($string, $name, $value) {
 }
 
 /**
- * Fetch a set of global navigation links.
- *
- * The links are gathered by calls to hook_link('page') in each module.
- */
-function link_page() {
-  global $custom_links;
-
-  if (is_array($custom_links)) {
-    return $custom_links;
-  }
-  else {
-    $links = module_invoke_all('link', 'page');
-    array_unshift($links, l(t('home'), '', array('title' => t('Return to the main page.'))));
-    return $links;
-  }
-}
-
-/**
  * Perform end-of-request tasks.
  *
  * This function sets the page cache if appropriate, and allows modules to
