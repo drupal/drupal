@@ -490,7 +490,7 @@ function xss_check_input_data($data) {
 
     // check attributes:
     $match += preg_match("/\W(dynsrc|datasrc|data|lowsrc|on[a-z]+)\s*=[^>]+?>/i", $data);
-    
+
 
     // check tags:
     $match += preg_match("/<\s*(applet|script|object|style|embed|form|blink|meta|html|frame|iframe|layer|ilayer|head|frameset|xml)/i", $data);
@@ -721,7 +721,7 @@ function cache_clear_all($cid = NULL) {
     db_query("DELETE FROM cache WHERE expire <> 0");
   }
   else {
-    db_query("DELETE FROM cache WHERE cid = %d", $cid);
+    db_query("DELETE FROM cache WHERE cid = '%s'", $cid);
   }
 }
 
