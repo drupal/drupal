@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.67 2003/03/02 20:58:12 dries Exp $
+// $Id: system.module,v 1.68 2003/03/04 06:13:44 dries Exp $
 
 function system_help() {
   $output .= "<p>Drupal comes with system-wide defaults but the setting-module provides control over many Drupal preferences, behaviors including visual and operational settings.</p>";
@@ -131,7 +131,7 @@ function system_view_module($name) {
 }
 
 function system_view_theme($name) {
-  $themes = $theme_list();
+  $themes = theme_list();
   $theme = $themes[$name];
   if ($theme) {
     include_once "$theme->filename";
