@@ -1806,11 +1806,11 @@ else {
 module_init();
 
 if (!user_access('bypass input data check')) {
-  // We can't use $_REQUEST because it consists of the contents of $_POST, 
+  // We can't use $_REQUEST because it consists of the contents of $_POST,
   // $_GET and $_COOKIE: if any of the input arrays share a key, only one
   // value will be verified.
   if (!valid_input_data($_GET)
-   || !valid_input_data($_POST) 
+   || !valid_input_data($_POST)
    || !valid_input_data($_COOKIE)
    || !valid_input_data($_FILES)) {
     die('Terminated request because of suspicious input data.');

@@ -103,13 +103,13 @@ function db_set_active($name = 'default') {
     }
 
     $db_type = substr($connect_url, 0, strpos($connect_url, '://'));
+    $handler = "includes/database.$db_type.inc";
 
-    // TODO: Allow more than one database API to be present.
-    if ($db_type == 'mysql') {
-      include_once 'includes/database.mysql.inc';
+    if (is_file($handler)) {
+      include_once($handler);
     }
     else {
-      include_once 'includes/database.pgsql.inc';
+      die('Unsupported database type');
     }
 
     $db_conns[$name] = db_connect($connect_url);
