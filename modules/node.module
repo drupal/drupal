@@ -922,11 +922,8 @@ function node_form($edit, $error = NULL) {
     $output .= form_textfield(t("Authored by"), "name", $edit->name, 20, 60, $error["name"]);
     $output .= form_textfield(t("Authored on"), "date", $edit->date, 20, 25, $error["date"]);
     $output .= "<br />";
+    $output .= form_select(t("Moderation status"), "moderate", $edit->moderate, array(t("Approved"), t("Awaiting approval")));
     $output .= form_select(t("Set public/published"), "status", $edit->status, array(t("Disabled"), t("Enabled")));
-    // TODO: move this to the queue.module
-    if (module_exist("queue")) {
-      $output .= form_select(t("Queue for moderation"), "moderate", $edit->moderate, array(t("Disabled"), t("Enabled")));
-    }
     $output .= form_select(t("Promote to front page"), "promote", $edit->promote, array(t("Disabled"), t("Enabled")));
     $output .= form_select(t("Static on front page"), "static", $edit->static, array(t("Disabled"), t("Enabled")));
     // TODO: move this to the comment.module
