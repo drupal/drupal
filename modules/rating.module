@@ -35,7 +35,6 @@ function rating_cron() {
 
     if ($weight >= $offset && $votes > 0) {
       $value = ($score + $weight) / $votes + $bonus;
-      print "update $rating->id : $value<BR>";
       db_query("UPDATE users SET rating = '$value' WHERE id = '$rating->id'");
     }
   }
