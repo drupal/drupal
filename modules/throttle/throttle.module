@@ -1,5 +1,5 @@
 <?php
-// $Id: throttle.module,v 1.29 2004/02/15 15:19:35 dries Exp $
+// $Id: throttle.module,v 1.30 2004/02/22 06:18:21 dries Exp $
 
 /*  Call the throttle_status() function from your own modules, themes, blocks,
  * etc, to determine the current throttle status.  For example, in your theme
@@ -166,14 +166,16 @@ function _throttle_update($hits) {
     }
   }
 
+  $type = $throttle_new > 2 ? 'warning' : 'regular';
+
   // log the change
   if ($throttle_new < $throttle) {
     variable_set('throttle_level', $throttle - 1);
-    watchdog('regular', "message: '$hits' hits in past minute; throttle decreased to level ". ($throttle - 1));
+    watchdog($type, "throttle: '$hits' hits in past minute; throttle decreased to level ". ($throttle - 1));
   }
   if ($throttle_new > $throttle) {
     variable_set('throttle_level', $throttle + 1);
-    watchdog('warning', "warning: '$hits' hits in past minute; throttle increased to level ". ($throttle + 1));
+    watchdog($type, "throttle: '$hits' hits in past minute; throttle increased to level ". ($throttle + 1));
   }
 }
 
