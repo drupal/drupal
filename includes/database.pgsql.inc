@@ -145,7 +145,7 @@ function db_error() {
  * will be created.
  */
 function db_next_id($name) {
-  $id = db_result(db_query("SELECT nextval('public.%s_seq')", db_prefix_tables($name)));
+  $id = db_result(db_query("SELECT nextval('%s_seq')", db_prefix_tables($name)));
   return $id;
 }
 
