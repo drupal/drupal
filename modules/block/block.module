@@ -169,13 +169,16 @@ function block_admin_display() {
       $delete = "";
     }
 
-    $rows[] = array($block["info"], array("data" => form_checkbox(NULL, $block["module"]."][".$block["delta"]."][status", 1, $block["status"]), "align" => "center"), array("data" => form_checkbox(NULL, $block["module"]."][".$block["delta"]."][custom", 1, $block["custom"]), "align" => "center"), form_weight(NULL, $block["module"]."][".$block["delta"]."][weight", $block["weight"]), form_select(NULL, $block["module"]."][".$block["delta"]."][region", $block["region"], array(t("left"), t("right"))), form_textfield(NULL, $block["module"]."][".$block["delta"]."][path", $block["path"], 10, 255), $edit, $delete);
+    $status = form_checkbox(NULL, $block["module"]."][".$block["delta"]."][status", 1, $block["status"]);
+    $custom = form_checkbox(NULL, $block["module"]."][".$block["delta"]."][custom", 1, $block["custom"]);
+
+    $rows[] = array($block["info"], array("data" => $status, "align" => "center"), array("data" => $custom, "align" => "center"), form_weight(NULL, $block["module"]."][".$block["delta"]."][weight", $block["weight"]), form_select(NULL, $block["module"]."][".$block["delta"]."][region", $block["region"], array(t("left"), t("right"))), form_textfield(NULL, $block["module"]."][".$block["delta"]."][path", $block["path"], 10, 255), $edit, $delete);
   }
 
   $output = table($header, $rows);
   $output .= form_submit(t("Save blocks"));
 
-  print form($output);
+  return form($output);
 }
 
 function block_admin_preview() {
@@ -228,7 +231,7 @@ function block_admin_preview() {
   $output .= " <tr><td colspan=\"2\" style=\"text-align: center;\">". t("footer") ."</td></tr>\n";
   $output .= "</table>\n";
 
-  print $output;
+  return $output;
 }
 
 function block_box_get($bid) {
@@ -251,7 +254,7 @@ function block_box_form($edit = array()) {
 
   $form .= form_submit(t("Save block"));
 
-  print form($form);
+  return form($form);
 }
 
 function block_box_save($edit) {
@@ -288,34 +291,36 @@ function block_admin() {
 
     switch ($op) {
       case "preview":
-        block_admin_preview();
+        $output = block_admin_preview();
         break;
       case "add":
-        block_box_form();
+        $output = block_box_form();
         break;
       case "edit":
-        block_box_form(block_box_get(arg(3)));
+        $output = block_box_form(block_box_get(arg(3)));
         break;
       case "delete":
-        print status(block_box_delete(arg(3)));
+        $output = status(block_box_delete(arg(3)));
         cache_clear_all();
-        block_admin_display();
+        $output .= block_admin_display();
         break;
       case t("Save block"):
-        print status(block_box_save($edit));
+        $output = status(block_box_save($edit));
         cache_clear_all();
-        block_admin_display();
+        $output .= block_admin_display();
         break;
       case t("Save blocks"):
-        print status(block_admin_save($edit));
+        $output = status(block_admin_save($edit));
         cache_clear_all();
         // fall through
       default:
-        block_admin_display();
+        $output .= block_admin_display();
     }
+
+    return $output;
   }
   else {
-    print message_access();
+    return message_access();
   }
 }
 

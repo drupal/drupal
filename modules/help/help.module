@@ -49,8 +49,8 @@ function help_admin() {
     }
   }
 
-  print "<small>". implode(" &middot; ", $links) ."</small><hr />";
-  print $output;
+  $output = "<small>". implode(" &middot; ", $links) ."</small><hr />". $output;
+  return $output;
 }
 
 ?>

@@ -74,9 +74,10 @@ function search_admin() {
   if (user_access("administer search")) {
     if ($op == "reindex") {
       search_invalidate();
-      print t("index invalidated") ."<br />\n";
+      $output = t("index invalidated") ."<br />\n";
       search_cron();
-      print t("index recreated") ."<br /><hr />\n";
+      $output .= t("index recreated") ."<br /><hr />\n";
+      return $output;
     }
   }
 }

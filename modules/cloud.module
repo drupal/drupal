@@ -228,27 +228,28 @@ function cloud_admin() {
   if (user_access("administer site cloud")) {
     switch ($op) {
       case "add":
-        print cloud_form();
+        $output = cloud_form();
         break;
       case "edit":
-        print cloud_form(cloud_get_site(arg(4)));
+        $output = cloud_form(cloud_get_site(arg(4)));
         break;
       case "update":
-        print status(cloud_update(cloud_get_site(arg(4))));
-        print cloud_display();
+        $output = status(cloud_update(cloud_get_site(arg(4))));
+        $output .= cloud_display();
         break;
      case "Delete":
         $edit["name"] = 0;
         // fall through:
       case "Submit":
-        print status(cloud_save($edit));
+        $output = status(cloud_save($edit));
         // fall through:
       default:
-        print cloud_display();
+        $output .= cloud_display();
     }
+    return $output;
   }
   else {
-    print message_access();
+    return message_access();
   }
 }
 

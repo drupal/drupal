@@ -574,52 +574,54 @@ function import_admin() {
     switch ($op) {
       case "add":
         if (arg(4) == "bundle") {
-          print import_form_bundle();
+          $output = import_form_bundle();
         }
         else {
-          print import_form_feed();
+          $output = import_form_feed();
         }
         break;
       case "edit":
         if (arg(4) == "bundle") {
-          print import_form_bundle(import_get_bundle(arg(5)));
+          $output = import_form_bundle(import_get_bundle(arg(5)));
         }
         else {
-          print import_form_feed(import_get_feed(arg(5)));
+          $output = import_form_feed(import_get_feed(arg(5)));
         }
         break;
       case "remove":
-        print status(import_remove(import_get_feed(arg(4))));
-        print import_view();
+        $output = status(import_remove(import_get_feed(arg(4))));
+        $output .= import_view();
         break;
       case "update":
-        print status(import_refresh(import_get_feed(arg(4))));
-        print import_view();
+        $output = status(import_refresh(import_get_feed(arg(4))));
+        $output .= import_view();
         break;
       case "tag":
-        print import_tag();
+        $output = import_tag();
         break;
       case "Save attributes":
-        print status(import_save_attributes($edit));
-        print import_tag();
+        $output = status(import_save_attributes($edit));
+        $output .= import_tag();
         break;
       case "Delete":
         $edit["title"] = 0;
         // fall through:
       case "Submit":
         if (arg(4) == "bundle") {
-          print status(import_save_bundle($edit));
+          $output = status(import_save_bundle($edit));
         }
         else {
-          print status(import_save_feed($edit));
+          $output = status(import_save_feed($edit));
         }
         // fall through:
       default:
-        print import_view();
+        $output .=  import_view();
     }
+    return $output;
+
   }
   else {
-    print message_access();
+    return message_access();
   }
 }
 

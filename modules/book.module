@@ -628,7 +628,7 @@ function book_page() {
         theme("footer");
         break;
       case "print":
-        print book_print(arg(2), $depth = 1);
+        return book_print(arg(2), $depth = 1);
         break;
       default:
         book_render();
@@ -810,18 +810,19 @@ function book_admin() {
       case t("Add to book outline"):
       case t("Remove from book outline"):
       case t("Update book outline"):
-        print book_node_link();
+        $output = book_node_link();
         break;
       case "orphan":
-        print book_admin_orphan();
+        $output = book_admin_orphan();
         break;
       case t("Save book pages"):
-        print status(book_admin_save(arg(3), $edit));
+        $output = status(book_admin_save(arg(3), $edit));
         // fall through:
       default:
-        print book_admin_view(arg(3));
+        $output .= book_admin_view(arg(3));
         break;
     }
+    return $output;
   }
 }
 

@@ -126,17 +126,18 @@ function watchdog_admin() {
   if (user_access("administer watchdog")) {
     switch (arg(2)) {
       case "help":
-        watchdog_help();
+        $output = watchdog_help();
         break;
       case "view":
-        print watchdog_view(arg(3));
+        $output = watchdog_view(arg(3));
         break;
       default:
-        print watchdog_overview(arg(2));
+        $output = watchdog_overview(arg(2));
     }
+    return $output;
   }
   else {
-    print message_access();
+    return message_access();
   }
 }
 

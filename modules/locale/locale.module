@@ -241,22 +241,22 @@ function locale_admin() {
 
     switch ($op) {
       case "delete":
-        print status(locale_delete(check_query(arg(3))));
-        print locale_seek();
+        $output = status(locale_delete(check_query(arg(3))));
+        $output .= locale_seek();
         break;
       case "edit":
-        print locale_edit(check_query(arg(3)));
+        $output = locale_edit(check_query(arg(3)));
         break;
       case "search":
-        print locale_seek_form();
+        $output = locale_seek_form();
         break;
       case t("Search"):
-        print locale_seek();
-        print locale_seek_form();
+        $output = locale_seek();
+        $output .= locale_seek_form();
         break;
       case t("Save translations"):
-        print status(locale_save(check_query(arg(3))));
-        print locale_seek();
+        $output = status(locale_save(check_query(arg(3))));
+        $output .= locale_seek();
         break;
       default:
         if (arg(3) == "translated") {
@@ -267,12 +267,13 @@ function locale_admin() {
           $edit["status"] = 2;
           $edit["language"] = arg(2);
         }
-        print locale_seek();
-        print locale_seek_form();
+        $output = locale_seek();
+        $output .= locale_seek_form();
     }
+    return $output;
   }
   else {
-    print message_access();
+    return message_access();
   }
 }
 
