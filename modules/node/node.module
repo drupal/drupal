@@ -815,7 +815,7 @@ function node_admin_nodes() {
   }
   // Regular filters
   $filters = array(
-    'status'   => array('title' => t('status'), 
+    'status'   => array('title' => t('status'),
                         'options' => array('status-1'   => t('published'),     'status-0' => t('not published'),
                                            'moderate-1' => t('in moderation'), 'moderate-0' => t('not in moderation'),
                                            'promote-1'  => t('promoted'),      'promote-0' => t('not promoted'),
@@ -1493,16 +1493,18 @@ function node_preview($node) {
       $node->teaser = node_teaser($node->body);
     }
 
+    // Previewing alters $node so it needs to be cloned.
+    $edit = clone($node);
     // Display a preview of the node:
     if ($node->teaser && $node->teaser != $node->body) {
       $output = '<h3>'. t('Preview trimmed version') .'</h3>';
-      $output .= node_view($node, 1, FALSE, 0);
+      $output .= node_view($edit, 1, FALSE, 0);
       $output .= '<p><em>'. t('The trimmed version of your post shows what your post looks like when promoted to the main page or when exported for syndication. You can insert the delimiter "&lt;!--break--&gt;" (without the quotes) to fine-tune where your post gets split.') .'</em></p>';
       $output .= '<h3>'. t('Preview full version') .'</h3>';
-      $output .= node_view($node, 0, FALSE, 0);
+      $output .= node_view($edit, 0, FALSE, 0);
     }
     else {
-      $output .= node_view($node, 0, FALSE, 0);
+      $output .= node_view($edit, 0, FALSE, 0);
     }
 
     $output .= node_form($node);

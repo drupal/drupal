@@ -1837,6 +1837,17 @@ function drupal_get_path($type, $name) {
   return dirname(drupal_get_filename($type, $name));
 }
 
+/**
+ * Provide a substitute clone() function for PHP4.
+ */
+if (version_compare(phpversion(), '5.0') < 0) {
+  eval('
+    function clone($object) {
+      return $object;
+    }
+  ');
+}
+
 include_once 'includes/theme.inc';
 include_once 'includes/pager.inc';
 include_once 'includes/menu.inc';
