@@ -290,7 +290,7 @@ function comment_moderation($comment) {
     $options .= " <option value=\"$key\"". ($moderate->score == $key ? " selected=\"selected\"" : "") .">$value</option>\n";
   }
 
- $output .= "<select name=\"moderate[comment][$comment->cid]\">$options</select><br />". ($comment->score ? $comment->score : "--") ." / $comment->votes";
+  $output .= "<select name=\"moderate[comment][$comment->cid]\">$options</select><br />". ($comment->score ? $comment->score : "--") ." / $comment->votes";
 
   return $output;
 }
@@ -299,21 +299,21 @@ function comment_threshold($threshold) {
   // XXX: disabled for now
   return "";
 
-  for ($i = 0; $i < 6; $i++) $options .= " <option value=\"$i\"". ($threshold == $i ? " SELECTED" : "") .">". t("Visibility") ." - $i</option>";
+  for ($i = 0; $i < 6; $i++) $options .= " <option value=\"$i\"". ($threshold == $i ? " selected=\"selected\"" : "") .">". t("Visibility") ." - $i</option>";
   return "<select name=\"threshold\">$options</select>\n";
 }
 
 function comment_mode($mode) {
   global $cmodes;
 
-  foreach ($cmodes as $key => $value) $options .= " <option value=\"$key\"". ($mode == $key ? " SELECTED" : "") .">$value</option>\n";
+  foreach ($cmodes as $key => $value) $options .= " <option value=\"$key\"". ($mode == $key ? " selected=\"selected\"" : "") .">$value</option>\n";
   return "<select name=\"mode\">$options</select>\n";
 }
 
 function comment_order($order) {
   global $corder;
 
-  foreach ($corder as $key=>$value) $options .= " <option value=\"$key\"". ($order == $key ? " SELECTED" : "") .">$value</option>\n";
+  foreach ($corder as $key=>$value) $options .= " <option value=\"$key\"". ($order == $key ? " selected=\"selected\"" : "") .">$value</option>\n";
   return "<select name=\"order\">$options</select>\n";
 }
 
@@ -353,19 +353,19 @@ function comment_links($comment, $return = 1) {
   $links = array();
 
   if ($return) {
-    $links[] = "<a href=\"node.php?id=$comment->nid#$comment->cid\"><font color=\"$theme->type\">". t("return") ."</font></a>";
+    $links[] = "<a href=\"node.php?id=$comment->nid#$comment->cid\"><span style=\"color: $theme->type;\">". t("return") ."</span></a>";
   }
 
   if (user_access("administer comments")) {
-    $links[] = "<a href=\"admin.php?mod=comment&op=edit&id=$comment->cid\" title=\"". t("Administer this comment.") ."\"><font color=\"$theme->type\">". t("administer") ."</font></a>";
+    $links[] = "<a href=\"admin.php?mod=comment&op=edit&id=$comment->cid\" title=\"". t("Administer this comment.") ."\"><span style=\"color: $theme->type;\">". t("administer") ."</span></a>";
   }
 
   if (user_access("post comments")) {
     if (comment_access("edit", $comment)) {
-      $links[] = "<a href=\"module.php?mod=comment&op=edit&id=$comment->cid\"><font color=\"$theme->type\" title=\"". t("Make changes to your comment.") ."\">". t("edit your comment") ."</font></a>";
+      $links[] = "<a href=\"module.php?mod=comment&op=edit&id=$comment->cid\" title=\"". t("Make changes to your comment.") ."\"><span style=\"color: $theme->type\">". t("edit your comment") ."</span></a>";
     }
     else {
-      $links[] = "<a href=\"module.php?mod=comment&op=reply&id=$comment->nid&pid=$comment->cid\" title=\"". t("Reply to this comment.") ."\"><font color=\"$theme->type\">". t("reply to this comment") ."</font></a>";
+      $links[] = "<a href=\"module.php?mod=comment&op=reply&id=$comment->nid&pid=$comment->cid\" title=\"". t("Reply to this comment.") ."\"><span style=\"color: $theme->type;\">". t("reply to this comment") ."</span></a>";
     }
   }
 
@@ -377,7 +377,7 @@ function comment_view($comment, $folded = 0) {
   global $theme, $id;
 
   if (comment_is_new($comment)) {
-    $comment->subject = "$comment->subject <font color=\"red\">*</font>";
+    $comment->subject = "$comment->subject <span style=\"color: red;\">*</span>";
   }
 
   if ($folded) {

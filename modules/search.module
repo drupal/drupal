@@ -40,13 +40,13 @@ function search_page() {
     ** Construct the search form:
     */
 
-    $form .= " <input size=\"50\" value=\"". check_form($keys) ."\" name=\"keys\" type=\"text\">";
-    $form .= " <input type=\"submit\" value=\"". t("Search") ."\"><br />";
+    $form .= " <input size=\"50\" value=\"". check_form($keys) ."\" name=\"keys\" type=\"text\" />";
+    $form .= " <input type=\"submit\" value=\"". t("Search") ."\" /><br />";
     $form .= t("Restrict search to") .": ";
 
     foreach (module_list() as $name) {
       if (module_hook($name, "user") || module_hook($name, "search")) {
-        $form .= " <input type=\"checkbox\" name=\"edit[type][$name]\" ". ($edit["type"][$name] ? " checked=\"checked\"" : "") ."/> ". t($name);
+        $form .= " <input type=\"checkbox\" name=\"edit[type][$name]\"". ($edit["type"][$name] ? " checked=\"checked\"" : "") ." /> ". t($name);
       }
     }
 

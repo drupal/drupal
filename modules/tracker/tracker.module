@@ -34,7 +34,7 @@ function tracker_comments($id = 0) {
 
     $output .= "<ul>";
     while ($comment = db_fetch_object($cresult)) {
-      $output .= " <li><a href=\"node.php?id=$node->nid&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</a> (". t("replies") .": ". comment_num_replies($comment->cid) .")</li>\n";
+      $output .= " <li><a href=\"node.php?id=$node->nid&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</a> (". t("replies") .": ". comment_num_replies($comment->cid) .") ". (comment_is_new($comment) ? "<span style=\"color: red;\">*</span>" : "") ."</li>\n";
     }
     $output .= " </ul>\n";
   }

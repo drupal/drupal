@@ -10,7 +10,7 @@ function conf_init() {
   ** default value 'conf'.
   */
 
-  $file = strtolower(strtr($HTTP_HOST ."". substr($REQUEST_URI, 0, strrpos($REQUEST_URI, "/")), "/:", ".."));
+  $file = strtolower(strtr($HTTP_HOST . substr($REQUEST_URI, 0, strrpos($REQUEST_URI, "/")), "/:", ".."));
 
   while (strlen($file) > 4) {
     if (file_exists("includes/$file.php")) {
@@ -526,7 +526,9 @@ function form_textarea($title, $name, $value, $cols, $rows, $description = 0) {
 
 function form_select($title, $name, $value, $options, $description = 0, $extra = 0) {
   if (count($options) > 0) {
-    foreach ($options as $key=>$choice) $select .= "<option value=\"$key\"". (is_array($value) ? (in_array($key, $value) ? " selected" : "") : ($key == $value ? " selected" : "")) .">". check_form($choice) ."</option>";
+    foreach ($options as $key => $choice) {
+      $select .= "<option value=\"$key\"". (is_array($value) ? (in_array($key, $value) ? " selected=\"selected\"" : "") : ($key == $value ? " selected=\"selected\"" : "")) .">". check_form($choice) ."</option>";
+    }
     return form_item($title, "<select name=\"edit[$name]\"". ($extra ? " $extra" : "") .">$select</select>", $description);
   }
 }
@@ -637,6 +639,7 @@ function page_footer() {
 $config = conf_init();
 
 unset($conf);
+
 include_once "includes/$config.php";
 include_once "includes/database.inc";
 include_once "includes/xmlrpc.inc";
