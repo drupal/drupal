@@ -486,35 +486,11 @@ function xss_check_input_data($data) {
     */
 
     // check attributes:
-    $match  = preg_match("/\Wstyle\s*=[^>]+?>/i", $data);
-    $match += preg_match("/\Wdynsrc\s*=[^>]+?>/i", $data);
-    $match += preg_match("/\Wdatasrc\s*=[^>]+?>/i", $data);
-    $match += preg_match("/\Wdata\s*=[^>]+?>/i", $data);
-    $match += preg_match("/\Wlowsrc\s*=[^>]+?>/i", $data);
-    $match += preg_match("/\Wstyle\s*=[^>]+?>/i", $data);
-    $match += preg_match("/\Won[a-z]+\s*=[^>]+?>/i", $data);
-    $match += preg_match("/\Wsrc\s*=[\s'\"]*javascript[^>]+?>/i", $data);
-    $match += preg_match("/\Whref\s*=[\s'\"]*javascript:[^>]+?>/i", $data);
-    $match += preg_match("/\Whref\s*=[\s'\"]*javascript:[^>]+?>/i", $data);
+    $match  = preg_match("/\W(style|dynsrc|datasrc|data|lowsrc|style|on[a-z]+)\s*=[^>]+?>/i", $data);
+    $match += preg_match("/\W(src|href)\s*=[\s'\"]*javascript[^>]+?>/i", $data);
 
     // check tags:
-    $match += preg_match("/<\s*applet/i", $data);
-    $match += preg_match("/<\s*script/i", $data);
-    $match += preg_match("/<\s*object/i", $data);
-    $match += preg_match("/<\s*style/i", $data);
-    $match += preg_match("/<\s*embed/i", $data);
-    $match += preg_match("/<\s*form/i", $data);
-    $match += preg_match("/<\s*blink/i", $data);
-    $match += preg_match("/<\s*meta/i", $data);
-    $match += preg_match("/<\s*font/i", $data);
-    $match += preg_match("/<\s*html/i", $data);
-    $match += preg_match("/<\s*frame/i", $data);
-    $match += preg_match("/<\s*iframe/i", $data);
-    $match += preg_match("/<\s*layer/i", $data);
-    $match += preg_match("/<\s*ilayer/i", $data);
-    $match += preg_match("/<\s*head/i", $data);
-    $match += preg_match("/<\s*frameset/i", $data);
-    $match += preg_match("/<\s*xml/i", $data);
+    $match += preg_match("/<\s*(applet|script|object|style|embed|form|blink|meta|font|html|link|frame|iframe|layer|ilayer|head|frameset|xml)/i", $data);
 
     if ($match) {
       watchdog("warning", "terminated request because of suspicious input data: ". drupal_specialchars($data));
