@@ -1756,7 +1756,7 @@ function update_105() {
 
   $shadowupdates = db_query("SELECT nid,tid FROM {forum} WHERE shadow=0");
   while ($shadowrecord = db_fetch_object($shadowupdates)) {
-    db_query("DELETE FROM term_node WHERE nid = %d AND tid <> %d", $shadowrecord->nid, $shadowrecord-tid);
+    db_query("DELETE FROM term_node WHERE nid = %d AND tid <> %d", $shadowrecord->nid, $shadowrecord->tid);
   }
 
   $ret[] = update_sql("ALTER TABLE {forum} DROP shadow");
