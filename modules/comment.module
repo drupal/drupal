@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.109 2003/03/04 17:41:11 dries Exp $
+// $Id: comment.module,v 1.110 2003/03/06 08:19:01 dries Exp $
 
 $GLOBALS["cmodes"] = array(1 => t("Flat list - collapsed"), 2 => t("Flat list - expanded"), 3 => t("Threaded list - collapsed"), 4 => t("Threaded list - expanded"));
 $GLOBALS["corder"] = array(1 => t("Date - newest first"), 2 => t("Date - oldest first"));
@@ -107,7 +107,7 @@ function comment_form($edit) {
     $form .= form_submit(t("Post comment"));
   }
 
-  return form($form, "post", url("comment/reply". $edit["nid"]));
+  return form($form, "post", url("comment/reply/". $edit["nid"]));
 }
 
 function comment_edit($cid) {
