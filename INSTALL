@@ -1,4 +1,4 @@
-// $Id: INSTALL,v 1.13 2003/06/21 06:44:16 dries Exp $
+// $Id: INSTALL,v 1.14 2003/09/24 08:29:45 dries Exp $
 
 REQUIREMENTS
 ------------
@@ -154,12 +154,22 @@ INSTALLATION
 DRUPAL ADMINISTRATION
 ---------------------
 
-Your Drupal website defaults to a very basic configuration with only
-a few active modules, one theme, and no user access rights.
+Upon a new installation, your Drupal website defaults to a very basic
+configuration with only a few active modules, one theme, and no user
+access rights.
 
-Standard services can be selected and configured through the
-administration panel; additional community-contributed modules and
-themes are available from drupal.org.
+Use your administration panel to enable and configure services. For
+example, set some general settings for your site with "Administration -
+site configuration".  Enable modules via "Administration - site
+configuration - modules". User permissions can be set with
+"Administration - user management - user permissions".
+
+For more information on configuration options, read through the
+instructions which accompany the different configuration settings and
+consult the various help pages available in the administration panel.
+
+Note that additional community-contributed modules and themes are
+available at drupal.org.
 
 CUSTOMIZING YOUR THEME(S)
 -------------------------
