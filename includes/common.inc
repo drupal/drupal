@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.154 2003/01/11 10:46:11 dries Exp $
+// $Id: common.inc,v 1.155 2003/01/11 20:07:42 dries Exp $
 
 function conf_init() {
   global $HTTP_HOST, $PHP_SELF;
@@ -471,8 +471,28 @@ function filter($text) {
   return $text;
 }
 
+function rewrite_old_urls($text) {
+
+  /*
+  ** This is a *temporary* filter to rewrite old-style URLs to new-style
+  ** URLs (clean URLs).  Currently, URLs are being rewritten dynamically
+  ** (ie. "on output"), however When these rewrite rules have been tested
+  ** enough, we will use them to permanently rewrite the links in node 
+  ** and comment bodies.
+  */
+
+  // rewrite 'node.php?id=<number>[&cid=<number>]'
+  $text = eregi_replace("(node)\.php\?id=([[:digit:]]+)(&cid=)?([[:digit:]]*)", "?q=\\1/view/\\2/\\4", $text);
+
+  return $text;
+}
+
 function check_output($text) {
   if (isset($text)) {
+
+    // temporary: for development purpose
+    $text = rewrite_old_urls($text);
+
     $text = stripslashes($text);
 
     if (strip_tags($text, "<a><i><b><u><tt><code><cite><strong><img>") == $text) {
