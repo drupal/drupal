@@ -16,7 +16,7 @@ function admin_page($mod) {
   <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
   <html>
    <head>
-    <title><?php echo variable_get(site_name, "drupal"); ?> administration pages</title>
+    <title><?php echo variable_get("site_name", "drupal"); ?> administration pages</title>
    </head>
    <style>
     body { font-family: helvetica, arial; font-size: 12pt; }
@@ -49,6 +49,12 @@ function admin_page($mod) {
 }
 
 if (user_access("access administration pages")) {
+  page_header();  
   admin_page($mod);
+  page_footer();
 }
+else {
+  print message_access();
+}  
+
 ?>
