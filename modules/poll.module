@@ -91,7 +91,9 @@ function poll_help() {
  <?php
 }
 
-function poll_graph($val, $clrfill = "#000000", $clrempty = "#ffffff") {
+function poll_graph($val, $clrfill, $clrempty) {
+  $clrfill = $clrfill ? $clrfill : "#ffffff";
+  $clrempty = $clrempty ? $clrempty : "#000000";
   $p = round($val * 100);
   return "<table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\"><tr>" . ($p ? "<td width=\"" . $p . "%\" style=\"background-color: $clrfill;\"><span style=\"font-size: 4pt;\">&nbsp;</span></td>" : "") . ($p < 100 ? "<td style=\"background-color: $clrempty;\" width=\"" . (100 - $p) . "%\"><span style=\"font-size: 4pt;\">&nbsp;</span></td>":"") . "</tr></table>";
 }
