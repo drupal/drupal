@@ -273,7 +273,7 @@ CREATE INDEX filters_module_idx ON filters(module);
 CREATE TABLE flood (
   event varchar(64) NOT NULL default '',
   hostname varchar(128) NOT NULL default '',
-  timestamp int(11) NOT NULL default '0'
+  timestamp integer NOT NULL default '0'
 );
 
 --
@@ -549,7 +549,7 @@ CREATE TABLE queue (
   uid integer NOT NULL default '0',
   vote integer NOT NULL default '0',
   PRIMARY KEY (nid, uid)
-)
+);
 CREATE INDEX queue_nid_idx ON queue(nid);
 CREATE INDEX queue_uid_idx ON queue(uid);
 
