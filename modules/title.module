@@ -1,5 +1,5 @@
 <?php
-// $Id: title.module,v 1.25 2004/02/01 17:55:11 unconed Exp $
+// $Id: title.module,v 1.26 2004/02/06 19:07:56 dries Exp $
 
 function title_help($section) {
   $output = "";
@@ -64,15 +64,28 @@ function title_page() {
   }
 }
 
+function title_filter($op, $text = "") {
+  switch ($op) {
+    case "name":
+      return t("Title filter");
+    case "process":
+      return _title_filter_process($text);
+    case "settings":
+      return _title_filter_settings($text);
+    default:
+      return $text;
+  }
+}
+
 // filter [node title|description] links. '|description' is optional.
-function title_filter($text) {
+function _title_filter_process($text) {
   $pattern = '\[([^\|\]]+)(?>\|?)(.*?)\]';  // $1 == title: matches at least 1 char up to the first '|' or ']'
                                            // $2 == text: matches all after a following '|' (if there is) up to the next ']'. may include '|'s.
   $replacement = 'l("$2" ? "$2" : "$1", "title/". urlencode("$1"))';
   return preg_replace("/$pattern/e", $replacement, $text);
 }
 
-function title_conf_filters() {
+function _title_filter_settings() {
   return form_group(t("Title filter"), t("Wiki-like [node title|text] links are enabled. These shortcuts generate a link labeled 'text' to the node with the title 'node title'. If you omit '|text', the label becomes 'node title'. You may use a substring of a node title if desired. When multiple matching titles are found, a list of matching nodes will be displayed. If no matching titles are found, a full-text search is returned."));
 }
 
