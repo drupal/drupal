@@ -572,7 +572,7 @@ INSERT INTO system VALUES ('modules/story.module','story','module','',1,0,0);
 INSERT INTO system VALUES ('modules/taxonomy.module','taxonomy','module','',1,0,0);
 INSERT INTO system VALUES ('themes/xtemplate/xtemplate.theme','xtemplate','theme','Internet explorer, Netscape, Opera',1,0,0);
 
-INSERT INTO variable(name,value) VALUES('update_start', 's:10:"2003-10-27";');
+INSERT INTO variable(name,value) VALUES('update_start', 's:10:"2004-02-21";');
 INSERT INTO variable(name,value) VALUES('theme_default','s:9:"xtemplate";');
 INSERT INTO users(uid,name,mail,rid) VALUES(0,'','', '1');
 
