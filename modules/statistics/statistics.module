@@ -28,7 +28,7 @@ function statistics_help($section) {
       <h3><a href=\"%access\">access log</a></h3>
       <p>This admin page gives you an at-a-glance look at your most popular content.  It is useful for understanding what content on your Drupal site is the most popular.  Also on this page are links to the referrer statistics for each listed node.</p>
       <h3>Configuring the statistics module</h3>
-      <p>There are some configuration options added to the main <a href=\"%configuration\">administer &raquo; configuration</a> section:</p>
+      <p>There are some configuration options added to the main <a href=\"%configuration\">administer &raquo; settings &raquo; statistics</a> section:</p>
       <ul>
       <li><em>enable access log</em> -- allows you to turn the access log on and off.  This log is used to store data about every page accessed, such as the remote host's IP address, where they came from (referrer), what node they've viewed, and their user name.  Enabling the log adds one database call per page displayed by Drupal.</li>
       <li><em>discard access logs older than</em> -- allows you to configure how long an access log entry is saved, after which time it is deleted from the database table. To use this you need to run \"cron.php\"</li>

@@ -49,7 +49,7 @@ function aggregator_help($section) {
        <li>A description, the first few paragraphs or summary of the originating post (if any).</li>
        <li>The name of the source, which acts as a link to an individual feed page, listing information about that feed and incoming content for that feed only. This is not shown on feed pages.</li>
       </ul>
-      <p>Additionally, users with the administer news feeds permission will see a link to categorize the news items. Clicking this will add a right hand column to slect the categories which each news item is in.</p>
+      <p>Additionally, users with the administer news feeds permission will see a link to categorize the news items. Clicking this will add a right hand column to select the categories which each news item is in.</p>
       <h3>Technical details</h3>
       <p>Drupal automatically generates an OPML feed file that is available by selecting the XML icon on the News Sources page.</p>
       <p>When fetching feeds Drupal supports conditional GETs, this reduces the bandwidth usage for feeds that have not been updated since the last check.</p>
@@ -550,7 +550,7 @@ function aggregator_form_category($edit = array()) {
 
   $form = form_textfield(t('Title'), 'title', $edit['title'], 50, 64);
   $form .= form_textarea(t('Description'), 'description', $edit['description'], 60, 5);
-  $form .= form_select(t('Latest items block'), 'block', $edit['block'], $block_items, t('If enabled, a block containing the latest items in this category will be availiable for placement on the <a href="%url">block configuration</a> page.', array('%url' => url('admin/block'))));
+  $form .= form_select(t('Latest items block'), 'block', $edit['block'], $block_items, t('If enabled, a block containing the latest items in this category will be available for placement on the <a href="%url">block configuration</a> page.', array('%url' => url('admin/block'))));
   $form .= form_submit(t('Submit'));
 
   if ($edit['cid']) {
