@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.141 2003/06/15 19:06:22 dries Exp $
+// $Id: comment.module,v 1.142 2003/06/16 17:09:15 dries Exp $
 
 $GLOBALS["cmodes"] = array(1 => t("Flat list - collapsed"), 2 => t("Flat list - expanded"), 3 => t("Threaded list - collapsed"), 4 => t("Threaded list - expanded"));
 $GLOBALS["corder"] = array(1 => t("Date - newest first"), 2 => t("Date - oldest first"));
@@ -1293,7 +1293,7 @@ function comment_thread_max($comment, $threshold, $level = 0) {
   */
 
   if ($level) {
-    print "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr><td style=\"width: ". ($level * 25) ."px;\">&nbsp;</td><td>\n";
+    print "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%;\"><tr><td style=\"width: ". ($level * 25) ."px;\">&nbsp;</td><td>\n";
   }
 
   comment_view($comment, comment_links($comment, 0), comment_visible($comment, $threshold));

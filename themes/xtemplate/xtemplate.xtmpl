@@ -15,8 +15,8 @@
 
 <table border="0" cellpadding="0" cellspacing="0" class="header">
   <tr>
-    <td class="menu" valign="bottom"><a href="./"><img src="themes/xtemplate/images/druplicon.gif" alt="" /></a></td>
-    <td class="menu" align="right" valign="middle">
+    <td class="menu" style="vertical-align: bottom;"><a href="./"><img src="themes/xtemplate/images/druplicon.gif" alt="" title="" /></a></td>
+    <td class="menu" style="text-align: right; vertical-align: middle;">
       <div id="secondary">{secondary_links}</div>
       <div id="primary">{primary_links}</div>
       <!-- BEGIN: search_box -->
@@ -33,7 +33,7 @@
 <table border="0" cellpadding="0" cellspacing="0" class="header">
   <tr>
     <!-- BEGIN: blocks -->
-      <td valign="top" id="sidebar-left">
+      <td id="sidebar-left" style="vertical-align: top;">
         {blocks}
       </td>
     <!-- END: blocks -->
@@ -91,7 +91,7 @@
       </div><!-- main -->
     </td>
     <!-- BEGIN: blocks -->
-    <td valign="top" id="sidebar-right">
+    <td id="sidebar-right" style="vertical-align: top;">
       {blocks}
     </td>
     <!-- END: blocks -->

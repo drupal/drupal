@@ -1,5 +1,5 @@
 <?php
-// $Id: import.module,v 1.102 2003/06/15 19:41:13 dries Exp $
+// $Id: import.module,v 1.103 2003/06/16 17:09:15 dries Exp $
 
 function import_help() {
   $output .= "<p>**REWRITE** In Drupal you have <i>feeds</i> and <i>bundles</i>.   Feeds define news sources and bundles categorize syndicated content by source, topic or any other heuristic.   Bundles provide a generalized way of creating composite feeds.  They allow you, for example, to combine various sport-related feeds into one bundle called \"Sport\".</p>";
@@ -735,7 +735,7 @@ function import_page_blocks($blocks) {
 
   theme("header");
   theme("box", t("News feeds"), import_page_info());
-  print "<table cellpadding=\"0\" cellspacing=\"5\" border=\"0\" width=\"100%\">\n";
+  print "<table cellpadding=\"0\" cellspacing=\"5\" border=\"0\" style=\"width: 100%;\">\n";
   print " <tr>\n";
 
   for ($t = 0; $t < 3; $t++) {

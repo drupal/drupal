@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.62 2003/06/15 19:06:20 dries Exp $
+// $Id: block.module,v 1.63 2003/06/16 17:09:15 dries Exp $
 
 function block_help() {
   $output .= "<p>Blocks are the boxes visible in the sidebar(s) of your web site. These are usually generated automatically by modules (e.g. recent forum topics), but you can also create your own blocks using either static HTML or dynamic PHP content.</p>";
@@ -172,7 +172,7 @@ function block_admin_preview() {
   while ($block = db_fetch_object($result)) {
     $block_data = module_invoke($block->module, "block", "list");
     $name = $block_data[$block->delta]["info"];
-    $rblocks .= " <tr><td nowrap=\"nowrap\">". ($block->status == 2 ? "<b>$name</b>" : $name) ."</td><td>$block->weight</td></tr>\n";
+    $rblocks .= " <tr><td>". ($block->status == 2 ? "<b>$name</b>" : $name) ."</td><td>$block->weight</td></tr>\n";
   }
   $rblocks .= "</table>\n";
 
@@ -188,7 +188,7 @@ function block_admin_preview() {
   while ($block = db_fetch_object($result)) {
     $block_data = module_invoke($block->module, "block", "list");
     $name = $block_data[$block->delta]["info"];
-    $blocks .= " <tr><td nowrap=\"nowrap\">". ($block->status == 2 ? "<b>$name</b>" : $name) ."</td><td>$block->weight</td></tr>\n";
+    $blocks .= " <tr><td>". ($block->status == 2 ? "<b>$name</b>" : $name) ."</td><td>$block->weight</td></tr>\n";
   }
   $blocks .= "</table>\n";
 
