@@ -383,22 +383,24 @@ function import_view() {
   $result = db_query("SELECT f.*, COUNT(i.iid) AS items FROM feed f LEFT JOIN item i ON f.fid = i.fid GROUP BY f.fid, f.title, f.url, f.refresh, f.timestamp, f.attributes, f.link, f.description ORDER BY f.title");
 
   $output .= "<h3>Feed overview</h3>";
-  $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
-  $output .= " <tr><th>title</th><th>attributes</th><th>items</th><th>last update</th><th>next update</th><th colspan=\"3\">operations</th></tr>\n";
+
+  $header = array(t("title"), t("attributes"), t("items"), t("last update"), t("next update"), array("data" => t("operations"), "colspan" => 3));
+  unset($rows);
   while ($feed = db_fetch_object($result)) {
-    $output .= " <tr><td>". check_output($feed->title) ."</td><td>". check_output($feed->attributes) ."</td><td>". format_plural($feed->items, "item", "items") ."</td><td>". ($feed->timestamp ? format_interval(time() - $feed->timestamp) ." ago" : "never") ."</td><td>". ($feed->timestamp ? format_interval($feed->timestamp + $feed->refresh - time()) ." left" : "never") ."</td><td>". la(t("edit feed"), array("mod" => "import", "type" => "feed", "op" => "edit", "id" => $feed->fid)) ."</td><td>". la(t("remove items"), array("mod" => "import", "type" => "feed", "op" => "remove", "id" => $feed->fid)) ."</td><td>". la(t("update items"), array("mod" => "import", "type" => "feed", "op" => "update", "id" => $feed->fid)) ."</td></tr>\n";
+    $rows[] = array(check_output($feed->title), check_output($feed->attributes), format_plural($feed->items, "item", "items"), ($feed->timestamp ? format_interval(time() - $feed->timestamp) ." ago" : "never"), ($feed->timestamp ? format_interval($feed->timestamp + $feed->refresh - time()) ." left" : "never"), la(t("edit feed"), array("mod" => "import", "type" => "feed", "op" => "edit", "id" => $feed->fid)), la(t("remove items"), array("mod" => "import", "type" => "feed", "op" => "remove", "id" => $feed->fid)), la(t("update items"), array("mod" => "import", "type" => "feed", "op" => "update", "id" => $feed->fid)));
   }
-  $output .= "</table>\n";
+  $output .= table($header, $rows);
 
   $result = db_query("SELECT * FROM bundle ORDER BY title");
 
   $output .= "<h3>Bundle overview</h3>";
-  $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
-  $output .= " <tr><th>title</th><th>attributes</th><th>operations</th></tr>\n";
+
+  $header = array(t("title"), t("attributes"), t("operations"));
+  unset($rows);
   while ($bundle = db_fetch_object($result)) {
-    $output .= " <tr><td>". check_output($bundle->title) ."</td><td>". check_output($bundle->attributes) ."</td><td>". la(t("edit bundle"), array("mod" => "import", "type" => "bundle", "op" => "edit", "id" => $bundle->bid)) ."</td></tr>\n";
+    $rows[] = array(check_output($bundle->title), check_output($bundle->attributes), la(t("edit bundle"), array("mod" => "import", "type" => "bundle", "op" => "edit", "id" => $bundle->bid)));
   }
-  $output .= "</table>\n";
+  $output .= table($header, $rows);
 
   return $output;
 }
@@ -407,12 +409,12 @@ function import_tag() {
 
   $result = db_query("SELECT i.*, f.title AS feed FROM item i LEFT JOIN feed f ON i.fid = f.fid ORDER BY i.iid DESC LIMIT 50");
 
-  $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
-  $output .= " <tr><th>time</th><th>feed</th><th>item</th></tr>\n";
+  $header = array(t("date"), t("feed"), t("news item"));
   while ($item = db_fetch_object($result)) {
-    $output .= " <tr><td valign=\"top\" nowrap=\"nowrap\">". format_date($item->timestamp, "custom", "m/d/y") ."<br />". format_date($item->timestamp, "custom", "H:i") ."</td><td align=\"center\" valign=\"top\" nowrap=\"nowrap\">". la(check_output($item->feed), array("mod" => "import", "type" => "feed", "op" => "edit", "id" => $item->fid)) ."</td><td><a href=\"". check_output($item->link) ."\">". check_output($item->title) ."</a>". ($item->description ? "<br /><small><i>". check_output($item->description, 1) ."</i></small>" : "") ."<br /><input type=\"text\" name=\"edit[$item->iid]\" value=\"". check_form($item->attributes) ."\" size=\"50\" /></td></tr>\n";
+    $rows[] = array(array("data" => format_date($item->timestamp, "small"), "nowrap" => "nowrap", "valign" => "top"), array("data" => la(check_output($item->feed), array("mod" => "import", "type" => "feed", "op" => "edit", "id" => $item->fid)), "valign" => "top"), "<a href=\"". check_output($item->link) ."\">". check_output($item->title) ."</a>". ($item->description ? "<br /><small><i>". check_output($item->description, 1) ."</i></small>" : "") ."<br /><input type=\"text\" name=\"edit[$item->iid]\" value=\"". check_form($item->attributes) ."\" size=\"50\" />");
   }
-  $output .= "</table>\n";
+
+  $output .= table($header, $rows);
   $output .= "<input type=\"submit\" name=\"op\" value=\"Save attributes\" />\n";
 
   return form($output);
