@@ -14,12 +14,12 @@ function rating_cron() {
   while ($rating = db_fetch_object($r1)) {
     unset($bonus); unset($votes); unset($score); unset($value); unset($weight);
 
-    $r2 = db_query("SELECT COUNT(id) AS number FROM stories WHERE author = $rating->id AND (". time() ." - timestamp < $period) AND status = 2");
+    $r2 = db_query("SELECT COUNT(id) AS number FROM stories WHERE author = '$rating->id' AND (". time() ." - timestamp < $period) AND status = 2");
     if ($story = db_fetch_object($r2)) {
       $bonus = $story->number;
     }
 
-    $r3 = db_query("SELECT score, votes FROM comments WHERE author = $rating->id AND (". time() ." - timestamp < $period) ORDER BY timestamp LIMIT $number");
+    $r3 = db_query("SELECT score, votes FROM comments WHERE author = '$rating->id' AND (". time() ." - timestamp < $period) ORDER BY timestamp LIMIT $number");
     while ($comment = db_fetch_object($r3)) {
       $weight++;
       $score += $weight * $comment->score;
@@ -28,7 +28,7 @@ function rating_cron() {
 
     if ($weight >= $offset && $votes > 0) {
       $value = ($score + $weight) / $votes + $bonus;
-      db_query("UPDATE users SET rating = '$value' WHERE id = $rating->id");
+      db_query("UPDATE users SET rating = '$value' WHERE id = '$rating->id'");
     }
   }
 

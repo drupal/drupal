@@ -6,7 +6,7 @@ $module = array("find" => "comment_find",
 function comment_find($keys) {
   global $user;
   $find = array();
-  $result = db_query("SELECT c.*, u.userid FROM comments c LEFT JOIN users u ON c.author = u.id WHERE c.subject LIKE '%". check_input($keys) ."%' OR c.comment LIKE '%". check_input($keys) ."%' ORDER BY c.timestamp DESC LIMIT 20");
+  $result = db_query("SELECT c.*, u.userid FROM comments c LEFT JOIN users u ON c.author = u.id WHERE c.subject LIKE '%$keys%' OR c.comment LIKE '%$keys%' ORDER BY c.timestamp DESC LIMIT 20");
   while ($comment = db_fetch_object($result)) {
     array_push($find, array("subject" => check_output($comment->subject), "link" => (user_access($user, "comment") ? "admin.php?mod=comment&op=edit&id=$comment->cid" : "story.php?id=$comment->lid&cid=$comment->cid"), "user" => $story->userid, "date" => $comment->timestamp));
   }
@@ -20,7 +20,7 @@ function comment_search() {
 }
 
 function comment_edit($id) {
-  $result = db_query("SELECT c.*, u.userid FROM comments c LEFT JOIN users u ON c.author = u.id WHERE c.cid = $id");
+  $result = db_query("SELECT c.*, u.userid FROM comments c LEFT JOIN users u ON c.author = u.id WHERE c.cid = '$id'");
 
   $comment = db_fetch_object($result);
 
@@ -42,7 +42,7 @@ function comment_edit($id) {
 }
 
 function comment_save($id, $subject, $comment) {
-  db_query("UPDATE comments SET subject = '". check_input($subject) ."', comment = '". check_input($comment) ."' WHERE cid = $id");
+  db_query("UPDATE comments SET subject = '$subject', comment = '$comment' WHERE cid = '$id'");
   watchdog("message", "comment: modified '$subject'");
 }
 
@@ -96,11 +96,11 @@ function comment_admin() {
       comment_search();
       break;
     case "Save comment":
-      comment_save($id, $subject, $comment);
+      comment_save(check_input($id), check_input($subject), check_input($comment));
       comment_display();
       break;
     case "Update":
-      comment_display($order);
+      comment_display(check_input($order));
       break;
     default:
       comment_display();

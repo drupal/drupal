@@ -34,7 +34,7 @@ function comment_moderate($moderate) {
     foreach ($moderate as $id=>$vote) {
       if ($vote != $comment_votes[$none] && !user_get($user, "history", "c$id")) {
         // Update the comment's score:
-        $result = db_query("UPDATE comments SET score = score $vote, votes = votes + 1 WHERE cid = $id");
+        $result = db_query("UPDATE comments SET score = score ". check_input($vote) .", votes = votes + 1 WHERE cid = '". check_input($id) ."'");
 
         // Update the user's history:
         $user = user_set($user, "history", "c$id", $vote);
@@ -52,13 +52,13 @@ function comment_reply($pid, $id) {
   global $allowed_html, $link, $REQUEST_URI, $theme, $user;
 
   if ($pid) {
-    $item = db_fetch_object(db_query("SELECT comments.*, users.userid FROM comments LEFT JOIN users ON comments.author = users.id WHERE comments.cid = $pid"));
+    $item = db_fetch_object(db_query("SELECT comments.*, users.userid FROM comments LEFT JOIN users ON comments.author = users.id WHERE comments.cid = '$pid'"));
     comment_view(new Comment($item->userid, $item->subject, $item->comment, $item->timestamp, $item->url, $item->fake_email, comment_score($comment), $comment->votes, $item->cid, $item->lid), t("reply to this comment"));
   }
   else {
     $pid = 0;
     if ($link == "story") {
-      $item = db_fetch_object(db_query("SELECT stories.*, users.userid FROM stories LEFT JOIN users ON stories.author = users.id WHERE stories.status != 0 AND stories.id = $id"));
+      $item = db_fetch_object(db_query("SELECT stories.*, users.userid FROM stories LEFT JOIN users ON stories.author = users.id WHERE stories.status != 0 AND stories.id = '$id'"));
       $theme->article($item, "");
     }
   }
@@ -132,7 +132,7 @@ function comment_post($pid, $id, $subject, $comment) {
   global $theme, $link, $user;
 
   // Check for duplicate comments:
-  $duplicate = db_result(db_query("SELECT COUNT(cid) FROM comments WHERE link = '$link' AND pid = '$pid' AND lid = '$id' AND subject = '". check_input($subject) ."' AND comment = '". check_input($comment) ."'"), 0);
+  $duplicate = db_result(db_query("SELECT COUNT(cid) FROM comments WHERE link = '$link' AND pid = '$pid' AND lid = '$id' AND subject = '$subject' AND comment = '$comment'"), 0);
 
   if ($duplicate != 0) {
     watchdog("error", "comment: attempt to insert duplicate comment");
@@ -145,7 +145,7 @@ function comment_post($pid, $id, $subject, $comment) {
     watchdog("comment", "comment: added comment with subject '$subject'");
 
     // Add comment to database:
-    db_query("INSERT INTO comments (link, lid, pid, author, subject, comment, hostname, timestamp, score) VALUES ('". check_input($link) ."', $id, $pid, '$user->id', '". check_input($subject) ."', '". check_input($comment) ."', '". getenv("REMOTE_ADDR") ."', '". time() ."', '". ($user->userid ? 1 : 0) ."')");
+    db_query("INSERT INTO comments (link, lid, pid, author, subject, comment, hostname, timestamp, score) VALUES ('$link', '$id', '$pid', '$user->id', '$subject', '$comment', '". getenv("REMOTE_ADDR") ."', '". time() ."', '". ($user->userid ? 1 : 0) ."')");
   }
 }
 
@@ -155,7 +155,7 @@ function comment_score($comment) {
 }
 
 function comment_num_replies($id, $count = 0) {
-  $result = db_query("SELECT COUNT(cid) FROM comments WHERE pid = $id");
+  $result = db_query("SELECT COUNT(cid) FROM comments WHERE pid = '$id'");
   return ($result) ? db_result($result, 0) : 0;
 }
 
@@ -165,7 +165,7 @@ function comment_num_filtered($lid, $pid) {
   $threshold = ($user->id) ? $user->threshold  : "0";
   $pid = ($pid) ? $pid : 0;
 
-  $result = db_query("SELECT COUNT(cid) FROM comments WHERE lid = $lid AND pid = $pid AND ((votes = 0 AND score < $threshold) OR (score / votes < $threshold))");
+  $result = db_query("SELECT COUNT(cid) FROM comments WHERE lid = '$lid' AND pid = '$pid' AND ((votes = 0 AND score < $threshold) OR (score / votes < $threshold))");
   return ($result) ? db_result($result, 0) : 0;
 }
 
@@ -183,7 +183,7 @@ function comment_moderation($comment) {
   }
   else {
     // comment has already been moderated:
-    $output .= "<TABLE BORDER=\"0\" CELLSPACING=\"1\" CELLPADDING=\"1\"><TR><TD>". t("score") .":</TD><TD>". check_output($comment->score) ."</TD></TR><TR><TD>". t("votes") .":</TD><TD>". check_output($comment->votes) ."</TR></TABLE>\n";
+    $output .= "<TABLE BORDER=\"0\" CELLSPACING=\"1\" CELLPADDING=\"1\"><TR><TD ALIGN=\"right\">". t("score") .":</TD><TD>". check_output($comment->score) ."</TD></TR><TR><TD ALIGN=\"right\">". t("votes") .":</TD><TD>". check_output($comment->votes) ."</TR></TABLE>\n";
   }
 
   return $output;
@@ -221,8 +221,8 @@ function comment_order($order) {
 }
 
 function comment_query($link, $lid, $order, $pid = -1) {
-  $query .= "SELECT c.*, u.* FROM comments c LEFT JOIN users u ON c.author = u.id WHERE link = '$link' AND c.lid = $lid";
-  if ($pid >= 0) $query .= " AND pid = $pid";
+  $query .= "SELECT c.*, u.* FROM comments c LEFT JOIN users u ON c.author = u.id WHERE link = '$link' AND c.lid = '$lid'";
+  if ($pid >= 0) $query .= " AND pid = '$pid'";
   if ($order == 1) $query .= " ORDER BY c.timestamp DESC";
   else if ($order == 2) $query .= " ORDER BY c.timestamp";
   else if ($order == 3) $query .= " ORDER BY c.score DESC";
@@ -262,7 +262,7 @@ function comment_view($comment, $folded = 0) {
 function comment_thread_min($cid, $threshold) {
   global $user;
 
-  $result = db_query("SELECT c.*, u.* FROM comments c LEFT JOIN users u ON c.author = u.id WHERE c.pid = $cid ORDER BY c.timestamp, c.cid");
+  $result = db_query("SELECT c.*, u.* FROM comments c LEFT JOIN users u ON c.author = u.id WHERE c.pid = '$cid' ORDER BY c.timestamp, c.cid");
 
   print "<UL>";
   while ($comment = db_fetch_object($result)) {
@@ -275,7 +275,7 @@ function comment_thread_min($cid, $threshold) {
 function comment_thread_max($cid, $mode, $threshold, $level = 0, $dummy = 0) {
   global $link, $user;
 
-  $result = db_query("SELECT c.*, u.* FROM comments c LEFT JOIN users u ON c.author = u.id WHERE link = '$link' AND c.pid = $cid ORDER BY c.timestamp, c.cid");
+  $result = db_query("SELECT c.*, u.* FROM comments c LEFT JOIN users u ON c.author = u.id WHERE link = '$link' AND c.pid = '$cid' ORDER BY c.timestamp, c.cid");
 
   print "<UL>";
   while ($comment = db_fetch_object($result)) {
@@ -304,7 +304,7 @@ function comment_render($lid, $cid) {
   }
 
   if ($cid > 0) {
-    $result = db_query("SELECT c.*, u.* FROM comments c LEFT JOIN users u ON c.author = u.id WHERE cid = $cid");
+    $result = db_query("SELECT c.*, u.* FROM comments c LEFT JOIN users u ON c.author = u.id WHERE cid = '$cid'");
     if ($comment = db_fetch_object($result)) {
       comment_view($comment, comment_link($comment));
     }

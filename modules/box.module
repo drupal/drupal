@@ -89,7 +89,7 @@ function box_admin_new() {
 }
 
 function box_admin_add($subject, $content, $info, $link, $type) {
-  db_query("INSERT INTO boxes (subject, content, info, link, type) VALUES ('". check_input($subject) ."', '". check_code($content) ."', '". check_input($info) ."', '". check_input($link) ."', '". check_input($type) ."')");
+  db_query("INSERT INTO boxes (subject, content, info, link, type) VALUES ('$subject', '$content', '$info', '$link', '$type')");
 }
 
 function box_admin_delete($id) {
@@ -144,7 +144,7 @@ function box_admin_edit($id) {
 }
 
 function box_admin_save($id, $subject, $content, $info, $link, $type) {
-  db_query("UPDATE boxes SET subject = '". check_input($subject) ."', content = '". check_code($content) ."', info = '". check_input($info) ."', link = '". check_input($link) ."', type = '". check_input($type) ."' WHERE id = '$id'");
+  db_query("UPDATE boxes SET subject = '$subject', content = '$content', info = '$info', link = '$link', type = '$type' WHERE id = '$id'");
   watchdog("message", "modified box `$subject'");
 }
 
@@ -155,12 +155,12 @@ function box_admin() {
 
   switch ($op) {
     case "Add box":
-      box_admin_add($subject, $content, $info, $link, $type);
+      box_admin_add(check_input($subject), check_code($content), check_input($info), check_input($link), check_input($type));
       box_admin_display();
       box_admin_rehash();
       break;
     case "Save box":
-      box_admin_save($id, $subject, $content, $info, $link, $type);
+      box_admin_save(check_input($id), check_input($subject), check_code($content), check_input($info), check_input($link), check_input($type));
       box_admin_display();
       box_admin_rehash();
       break;
@@ -171,10 +171,10 @@ function box_admin() {
       box_admin_new();
       break;
     case "edit":
-      box_admin_edit($id);
+      box_admin_edit(check_input($id));
       break;
     case "delete":
-      box_admin_delete($id);
+      box_admin_delete(check_input($id));
       box_admin_rehash();
        // fall through
     default:

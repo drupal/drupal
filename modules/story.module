@@ -18,7 +18,7 @@ function story_cron() {
 function story_find($keys) {
   global $user;
   $find = array();
-  $result = db_query("SELECT s.*, u.userid FROM stories s LEFT JOIN users u ON s.author = u.id WHERE s.status = 2 AND (s.subject LIKE '%". check_input($keys) ."%' OR s.abstract LIKE '%". check_input($keys) ."%' OR s.article LIKE '%". check_input($keys) ."%') ORDER BY s.timestamp DESC LIMIT 20");
+  $result = db_query("SELECT s.*, u.userid FROM stories s LEFT JOIN users u ON s.author = u.id WHERE s.status = 2 AND (s.subject LIKE '%". check_input($keys) ."%' OR s.abstract LIKE '%". check_input($keys) ."%' OR s.article LIKE '%$keys%') ORDER BY s.timestamp DESC LIMIT 20");
   while ($story = db_fetch_object($result)) {
     array_push($find, array("subject" => check_output($story->subject), "link" => (user_access($user, "story") ? "admin.php?mod=story&op=edit&id=$story->id" : "story.php?id=$story->id"), "user" => $story->userid, "date" => $story->timestamp));
   }
@@ -107,7 +107,7 @@ function story_add_save($edit) {
 function story_edit($id) {
   global $allowed_html;
 
-  $result = db_query("SELECT s.*, u.userid FROM stories s LEFT JOIN users u ON s.author = u.id WHERE s.id = $id");
+  $result = db_query("SELECT s.*, u.userid FROM stories s LEFT JOIN users u ON s.author = u.id WHERE s.id = '$id'");
   $story = db_fetch_object($result);
 
   $output .= "<FORM ACTION=\"admin.php?mod=story&id=$id\" METHOD=\"post\">\n";
@@ -150,7 +150,7 @@ function story_edit($id) {
 function story_edit_save($id, $edit) {
   if ($edit[status] == 3 && strtotime($edit[date]) > time()) db_query("UPDATE stories SET subject = '". check_input($edit[subject]) ."', abstract = '". check_input($edit[abstract]) ."', updates = '". check_input($edit[updates]) ."', article = '". check_input($edit[article]) ."', section = '". check_input($edit[section]) ."', status = '$edit[status]', timestamp = '". strtotime($edit[date]) ."' WHERE id = '$id'");
   else db_query("UPDATE stories SET subject = '". check_input($edit[subject]) ."', abstract = '". check_input($edit[abstract]) ."', updates = '". check_input($edit[updates]) ."', article = '". check_input($edit[article]) ."', section = '". check_input($edit[section]) ."', status = '$edit[status]' WHERE id = '$id'");
-  watchdog("message", "story: modified `$edit[subject]'");
+  watchdog("message", "story: modified '$edit[subject]'");
 }
 
 function story_display() {
@@ -199,7 +199,7 @@ function story_admin() {
       story_add();
       break;
     case "edit":
-      story_edit($id);
+      story_edit(check_input($id));
       break;
     case "help":
       story_help();
@@ -212,7 +212,7 @@ function story_admin() {
       story_display();
       break;
     case "Save story":
-      story_edit_save($id, $edit);
+      story_edit_save(check_input($id), $edit);
       story_display();
       break;
     default:
