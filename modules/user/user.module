@@ -141,7 +141,7 @@ function user_save($account, $array = array()) {
     $values[] = serialize($data);
     $s[] = "'%s'";
 
-    db_query("INSERT INTO {users} (". implde(", ", $fields) .") VALUES (". implde(", ", $s) .")", $values);
+    db_query("INSERT INTO {users} (". implode(", ", $fields) .") VALUES (". implode(", ", $s) .")", $values);
 
     $user = user_load(array("name" => $array["name"]));
   }
