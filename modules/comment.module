@@ -937,21 +937,30 @@ function comment_render($node, $cid = 0) {
  */
 function comment_admin_edit($cid) {
 
-  // comment edits need to be saved.
+  // Comment edits need to be saved.
   if ($_POST['op'] == t('Submit')) {
     $edit = $_POST['edit'];
-    $output  = comment_save($edit['cid'], $edit);
+    comment_save($edit['cid'], $edit);
     drupal_goto('admin/comment');
   }
 
-  // if we're not saving our changes above, we're editing it.
+  // If we're not saving our changes above, we're editing it.
   $result = db_query('SELECT c.*, u.name AS registered_name, u.uid FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status != 2', $cid);
   $comment = db_fetch_object($result);
   $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
   $comment = drupal_unpack($comment);
 
   if ($comment) {
-    $form .= form_item(t('Author'), format_name($comment));
+    if (!$comment->uid) {
+      // If comment from non-registered user, allow admin to modify anonymous fields.
+      $form .= form_textfield(t('Name'), 'name', $comment->name ? $comment->name : variable_get('anonymous', 'Anonymous') , 20, 40);
+      $form .= form_textfield(t('E-mail'), 'mail', $comment->mail, 20, 40);
+      $form .= form_textfield(t('Homepage'), 'homepage', $comment->homepage, 20, 40);
+    }
+    else {
+      // Otherwise, just display the author's name.
+      $form .= form_item(t('Author'), format_name($comment));
+    }
     $form .= form_textfield(t('Subject'), 'subject', $comment->subject, 70, 128);
     $form .= form_textarea(t('Comment'), 'comment', $comment->comment, 70, 15, '');
     $form .= filter_form('format', $comment->format);
@@ -1002,7 +1011,7 @@ function comment_delete($cid) {
 }
 
 function comment_save($id, $edit) {
-  db_query("UPDATE {comments} SET subject = '%s', comment = '%s', status = %d, format = '%s' WHERE cid = %d", $edit['subject'], $edit['comment'], $edit['status'], $edit['format'], $id);
+  db_query("UPDATE {comments} SET subject = '%s', comment = '%s', status = %d, format = '%s', name = '%s', mail = '%s', homepage = '%s' WHERE cid = %d", $edit['subject'], $edit['comment'], $edit['status'], $edit['format'], $edit['name'], $edit['mail'], $edit['homepage'], $id);
   watchdog('special', t('Comment: modified %subject.', array('%subject' => '<em>'. $edit['subject'] .'</em>')));
   drupal_set_message(t('The comment has been saved.'));
 }
