@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.106 2002/06/20 18:52:32 dries Exp $
+// $Id: theme.inc,v 1.107 2002/06/23 13:31:30 dries Exp $
 
 /**
 * Basic theme
@@ -137,6 +137,20 @@ function theme_blocks($region, &$theme) {
         $theme->box($blocks[$block->delta]["subject"], $blocks[$block->delta]["content"], $region);
       }
     }
+  }
+}
+
+function theme_invoke() {
+  global $theme;
+  $args = func_get_args();
+  
+  $function = array_shift($args);
+
+  if (method_exists($theme, $function)) {
+    return call_user_method_array($function, $theme, $args);
+  } 
+  else {
+    return call_user_func_array($function, $args);
   }
 }
 
