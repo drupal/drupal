@@ -69,7 +69,7 @@ function locale_delete($lid) {
 }
 
 function locale_save($lid) {
-  $edit = $_POST["edit"];
+  $edit =& $_POST["edit"];
   foreach ($edit as $key=>$value) {
     db_query("UPDATE locales SET $key = '%s' WHERE lid = %d", $value, $lid);
   }
@@ -128,7 +128,7 @@ function locale_languages($translation) {
 function locale_seek() {
   global $id, $languages;
   $op = $_POST["op"];
-  $edit = $_POST["edit"];
+  $edit =& $_POST["edit"];
 
   if ($op != 'overview' && !$edit && isset($_SESSION["locale_settings"])) {
     $edit = $_SESSION["locale_settings"];
@@ -182,8 +182,12 @@ function locale_seek() {
     $output .= table($header, $rows);
   }
 
-  reset($languages);
+  return $output;
+}
 
+function locale_seek_form() {
+  global $languages;
+  $edit =& $_POST["edit"];
   $form .= form_textfield(t("Strings to search for"), "string", $edit["string"], 30, 30, t("Leave blank to show all strings."));
   $form .= form_select(t("Language"), "language", ($edit["language"] ? $edit["language"] : key($languages)), array_merge(array("any" => t("Any language"), "all" => t("All languages")), $languages), t("In which language must the string be translated/untranslated (see status)?"));
   $form .= form_select(t("Status"), "status", $edit["status"], array(2 => t("Untranslated"), 1 => t("Translated"), 0 => t("All")));
@@ -196,7 +200,7 @@ function locale_seek() {
 
 function locale_admin() {
   $op = $_POST["op"];
-  $edit = $_POST["edit"];
+  $edit =& $_POST["edit"];
 
   if (user_access("administer locales")) {
     locale_admin_initialize();
@@ -215,7 +219,7 @@ function locale_admin() {
         break;
       case "search":
       case t("Search"):
-        print locale_seek();
+        print locale_seek_form();
         break;
       case t("Save translations"):
         print status(locale_save(check_query(arg(3))));
@@ -225,13 +229,13 @@ function locale_admin() {
         if (arg(3) == "translated") {
           $edit["status"] = 1;
           $edit["language"] = arg(2);
-          print locale_seek();
         }
         else {
           $edit["status"] = 2;
           $edit["language"] = arg(2);
-          print locale_seek();
         }
+        print locale_seek();
+        print locale_seek_form();
     }
   }
   else {
