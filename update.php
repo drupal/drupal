@@ -657,7 +657,7 @@ function update_47() {
 }
 
 function update_48() {
-  if ($max = db_result(db_query("SELECT MAX(tid) FROM vocabulary"))) {
+  if ($max = db_result(db_query("SELECT MAX(vid) FROM vocabulary"))) {
     update_sql("REPLACE INTO sequences VALUES ('vocabulary', $max)");
   }
 }
