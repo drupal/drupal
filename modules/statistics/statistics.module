@@ -46,18 +46,24 @@ function statistics_help($section) {
       <li><em>administer statistics module</em> - enable for user roles that get to configure the statistics module.</li><li><em>administer statistics</em> - enable for user roles that get to view the referrer statistics.</li>
       </ul>
       <p>If '<em>administer statistics</em>' and '<em>access statistics</em>' are both enabled, the user will see a link from each node to that node's referrer statistics (if enabled).</p>",
-      array('%modules' => url('admin/modules'), '%permissions' => url('admin/user/configure/permission'), '%referer' => url('admin/logs/referrer'), '%access' => url('admin/logs/access'), '%configuration' => url('admin/settings/statistics'), '%block' => url('admin/block')));
+      array('%modules' => url('admin/modules'), '%permissions' => url('admin/user/configure/permission'), '%referer' => url('admin/logs/access/referrers'), '%access' => url('admin/logs/access'), '%configuration' => url('admin/settings/statistics'), '%block' => url('admin/block')));
     case 'admin/modules#description':
       return t('Logs access statistics for your site.');
     case 'admin/settings/statistics':
       return t('Settings for the statistical information that Drupal will keep about the site. See <a href="%statistics">site statistics</a> for the actual information.', array('%statistics' => url('admin/logs/topnodes')));
     case 'admin/logs/topnodes':
       return t('This page gives you an at-a-glance look at your most popular content.');
-    case 'admin/logs/referrer':
-      return t('This page shows your site-wide referrer statistics.  You can see "all referrers", "external referrers" or "internal referrers". Referrers are web pages, both local and on other sites, that point to your web site.');
-    case 'admin/logs/referrer/internal':
+    case 'admin/logs/access/titles':
+      return t('This page shows access statistics for each page of your website.');
+    case 'admin/logs/access/users':
+      return t('This page shows access statistics for each user of your website.');
+    case 'admin/logs/access/hostnames':
+      return t('This page shows access statistics for each hostname visiting your website.');
+    case 'admin/logs/access/referrers':
+      return t('This page shows your site-wide referrer statistics.  You can optionally view just the "external referrers" or the "internal referrers". Referrers are web pages, both local and on other sites, that point to your web site.');
+    case 'admin/logs/access/referrers/internal':
       return t('This page shows you only "internal referrers". These are links pointing to your web site from within your web site.');
-    case 'admin/logs/referrer/external':
+    case 'admin/logs/access/referrers/external':
       return t('This page shows you only "external referrers". These are links pointing to your web site from outside your web site.');
     case strstr($section, 'admin/logs/access'):
       return t("This page shows you who is accessing your web site.  You can see the hostnames and referrers.  In particular, it is easy to inspect a user's navigation history/trail by clicking on <em>track user</em>.");
@@ -89,14 +95,10 @@ function statistics_exit() {
     // Statistical logs are enabled.
     $referrer = referer_uri();
     $hostname = $_SERVER['REMOTE_ADDR'];
+    $path = (drupal_get_path_alias($_GET['q'])) ? drupal_get_path_alias($_GET['q']) : $_GET['q'];
 
     // Log this page access.
-    if ((arg(0) == 'node') && arg(1)) {
-      db_query("INSERT INTO {accesslog} (nid, url, hostname, uid, timestamp) values(%d, '%s', '%s', %d, %d)", arg(1), $referrer, $hostname, $user->uid, time());
-    }
-    else {
-      db_query("INSERT INTO {accesslog} (url, hostname, uid, timestamp) values('%s', '%s', %d, %d)", $referrer, $hostname, $user->uid, time());
-    }
+    db_query("INSERT INTO {accesslog} (title, path, url, hostname, uid, timestamp) values('%s', '%s', '%s', '%s', %d, %d)", drupal_get_title(), $path, $referrer, $hostname, $user->uid, time());
   }
 }
 
@@ -125,7 +127,7 @@ function statistics_link($type, $node = 0, $main = 0) {
     $statistics = statistics_get($node->nid);
     if ($statistics) {
       if (user_access('administer statistics')) {
-        $links[] = l(format_plural($statistics['totalcount'], '1 read', '%count reads'), "admin/logs/access/node/$node->nid");
+        $links[] = l(format_plural($statistics['totalcount'], '1 read', '%count reads'), 'admin/logs/access/title/'. urlencode($node->title));
       }
       else {
         $links[] = format_plural($statistics['totalcount'], '1 read', '%count reads');
@@ -157,16 +159,25 @@ function statistics_menu() {
   $items[] = array('path' => 'admin/logs/topnodes', 'title' => t('top nodes'),
     'callback' => 'statistics_admin_topnodes', 'access' => $access,
     'weight' => 1);
-  $items[] = array('path' => 'admin/logs/referrer', 'title' => t('referrer'),
-    'callback' => 'statistics_top_refer', 'access' => $access,
-    'weight' => 2);
-  $items[] = array('path' => 'admin/logs/referrer/internal', 'title' => t('internal'),
-    'access' => $access);
-  $items[] = array('path' => 'admin/logs/referrer/external', 'title' => t('external'),
-    'access' => $access);
   $items[] = array('path' => 'admin/logs/access', 'title' => t('access'),
     'callback' => 'statistics_admin_displaylog', 'access' => $access,
     'weight' => 3);
+  $items[] = array('path' => 'admin/logs/access/titles', 'title' => t('titles'),
+    'callback' => 'statistics_top_titles', 'access' => $access,
+    'weight' => 1);
+  $items[] = array('path' => 'admin/logs/access/users', 'title' => t('users'),
+    'callback' => 'statistics_top_users', 'access' => $access,
+    'weight' => 2);
+  $items[] = array('path' => 'admin/logs/access/hostnames',
+    'title' => t('hostnames'), 'callback' => 'statistics_top_hostnames',
+    'access' => $access, 'weight' => 3);
+  $items[] = array('path' => 'admin/logs/access/referrers',
+    'title' => t('referrers'), 'callback' => 'statistics_top_referrers',
+    'access' => $access, 'weight' => 4);
+  $items[] = array('path' => 'admin/logs/access/referrers/internal',
+    'title' => t('internal'), 'access' => $access);
+  $items[] = array('path' => 'admin/logs/access/referrers/external',
+    'title' => t('external'), 'access' => $access);
   return $items;
 }
 
@@ -193,35 +204,53 @@ function statistics_admin_topnodes_table() {
   return theme('table', $header, $rows);
 }
 
-function statistics_admin_accesslog_table($type, $id) {
-
-  if ($type == 1) {
-    /* retrieve user access logs */
-    if ($id) {
-      /* retrieve recent access logs for user $id */
-      $sql = 'SELECT a.nid, a.url, a.hostname, a.uid, a.timestamp, n.title FROM {accesslog} a LEFT JOIN {node} n ON a.nid = n.nid WHERE a.uid = '. check_query($id);
-    }
-    else {
-      /* retrieve recent access logs for all users */
-      $sql = 'SELECT a.nid, a.url, a.hostname, a.uid, MAX(a.timestamp) AS timestamp, n.title FROM {accesslog} a LEFT JOIN {node} n ON a.nid = n.nid WHERE a.uid <> 0 GROUP BY a.uid, a.nid, a.url, a.hostname';
-    }
-  }
-  else if ($type == 2) {
-    /* retrieve recent access logs for node $id */
-    $sql = 'SELECT a.nid, a.url, a.hostname, a.uid, a.timestamp, n.title FROM {accesslog} a INNER JOIN {node} n ON a.nid = n.nid WHERE a.nid = '. check_query($id);
-  }
-  else if ($type == 3) {
-    /* retrieve recent access logs for hostname $id */
-    $sql = "SELECT a.nid, a.url, a.hostname, a.uid, a.timestamp, n.title FROM {accesslog} a LEFT JOIN {node} n ON a.nid = n.nid WHERE a.hostname = '". check_query($id) ."'";
-  }
-  else {
-    /* retrieve all recent access logs */
-    $sql = 'SELECT a.nid, a.url, a.hostname, a.uid, a.timestamp, n.title FROM {accesslog} a LEFT JOIN {node} n ON a.nid = n.nid';
+/**
+ * Menu callback; presents the "Access logs" page.
+ *
+ * @param $type
+ *   - "user":  display accesses for a particular user.
+ *   - "title": display accesses of a particular title.
+ *   - "host":  display accesses originated at a given IP.
+ *   - "all":   display all accesses.
+ *
+ * @param $value
+ *   The user, host, or node to filter by.
+ */
+function statistics_admin_displaylog($type = 'all', $id = 0) {
+  switch ($type) {
+    case 'user':
+      if ($id) {
+        // retrieve recent access logs for specific user $id
+        $user = user_load(array('uid' => $id));
+        $page_title = t('Recent access logs for "%username"', array('%username' => $user->name));
+        $sql = 'SELECT title, path, url, hostname, uid, timestamp FROM {accesslog} WHERE uid = \''. check_query($id) ."'";
+      }
+      else {
+        // retrieve recent access logs for all users (not guests)
+        $page_title = t('Recent access logs for all users');
+        $sql = 'SELECT title, path, url, hostname, uid, MAX(timestamp) AS timestamp FROM {accesslog} WHERE uid <> 0 GROUP BY uid, title, path, url, hostname';
+      }
+      break;
+    case 'title':
+      // retrieve recent access logs for title $id
+      $page_title = t('Recent access logs for "%title"', array('%title' => $id));
+      $sql = 'SELECT title, path, url, hostname, uid, timestamp FROM {accesslog} WHERE title = \''. check_query($id) ."'";
+      break;
+    case 'host':
+      // retrieve recent access logs for hostname $id
+      $page_title = t('Recent access logs for "%hostname"', array('%hostname' => $id));
+      $sql = 'SELECT title, path, url, hostname, uid, timestamp, title FROM {accesslog} WHERE hostname = \''. check_query($id) ."'";
+      break;
+    case 'all':
+    default:
+      // retrieve all recent access logs
+      $page_title = t('Recent access logs');
+      $sql = 'SELECT title, path, url, hostname, uid, timestamp FROM {accesslog}';
   }
 
   $header = array(
     array('data' => t('timestamp'), 'field' => 'timestamp', 'sort' => 'desc'),
-    array('data' => t('post'), 'field' => 'nid'),
+    array('data' => t('title'), 'field' => 'title'),
     array('data' => t('user'), 'field' => 'uid'),
     array('data' => t('hostname'), 'field' => 'hostname'),
     array('data' => t('referrer'), 'field' => 'url'),
@@ -232,23 +261,124 @@ function statistics_admin_accesslog_table($type, $id) {
 
   $result = pager_query($sql, 50);
   while ($log = db_fetch_object($result)) {
-    $user = user_load(array('uid' => $log->uid));
 
-    if ($log->url) {
-      $url = "<a href=\"$log->url\" title=\"$log->url\">". (strlen($log->url) > 28 ? substr($log->url, 0, 28) . '...' : $log->url) .'</a>';
-    }
-    else {
+    // display title if possible, otherwise display path
+    if ($log->title)
+      $title = l(_statistics_column_width($log->title), urlencode($log->path), array('title' => $log->path));
+    else
+      $title = '('. l(_statistics_column_width($log->path), urlencode($log->path), array('title' => $log->path)) .')';
+
+    // display url if possible, constructing our own link as may not be local
+    if ($log->url)
+      $url = "<a href=\"$log->url\" title=\"$log->url\">". _statistics_column_width($log->url) .'</a>';
+    else
       $url = message_na();
-    }
 
-    $rows[] = array(array('data' => format_date($log->timestamp, 'small'), 'nowrap' => 'nowrap'), ($log->nid ? l($log->title, "node/$log->nid") : message_na()), format_name($user), $log->hostname ? $log->hostname : message_na(), $url, ($log->nid ? l(t('track node'), "admin/logs/access/node/$log->nid") : ''), ($user->uid ? l(t('track user'), "admin/logs/access/user/$user->uid") : ''), ($log->hostname ? l(t('track host'), "admin/logs/access/host/$log->hostname") : ''));
+    $user = user_load(array('uid' => $log->uid));
+    $rows[] = array(array('data' => format_date($log->timestamp, 'small'), 'nowrap' => 'nowrap'), $title, format_name($user), $log->hostname ? $log->hostname : message_na(), $url, ($user->uid ? l(t('track user'), "admin/logs/access/user/$user->uid") : ''), ($log->title ? l(t('track title'), 'admin/logs/access/title/'. urlencode($log->title)) : ''), ($log->hostname ? l(t('track host'), "admin/logs/access/host/$log->hostname") : ''));
   }
 
   if ($pager = theme('pager', NULL, 50, 0, tablesort_pager())) {
     $rows[] = array(array('data' => $pager, 'colspan' => 8));
   }
 
-  return theme('table', $header, $rows);
+  $output = theme('table', $header, $rows);
+  print theme('page', $output, $page_title);
+}
+
+/**
+ * Menu callback; presents the "Top titles" page.
+ */
+function statistics_top_titles() {
+  $sql = "SELECT title, path, MAX(timestamp) AS last_view, COUNT(title) AS count FROM {accesslog} WHERE title <> '' GROUP BY title";
+  $sql_cnt = "SELECT COUNT(DISTINCT(title)) FROM {accesslog} WHERE title <> ''";
+  $describe = t('Top titles in the past %interval');
+
+  $page_title = strtr($describe, array('%interval' => format_interval(variable_get('statistics_flush_accesslog_timer', 259200))));
+
+  $header = array(
+    array('data' => t('title'), 'field' => 'title'),
+    array('data' => t('last path'), 'field' => 'path'),
+    array('data' => t('last view'), 'field' => 'last_view'),
+    array('data' => t('hits'), 'field' => 'count', 'sort' => 'desc'),
+    array('data' => t('operations'))
+  );
+  $sql .= tablesort_sql($header);
+  $result = pager_query($sql, 50, 0, $sql_cnt);
+
+  while ($title = db_fetch_object($result)) {
+    $rows[] = array(l(_statistics_column_width($title->title, '_title', 56), urlencode($title->path)), _statistics_column_width($title->path, '_title', 56), format_date($title->last_view, 'small'), $title->count, ($title->title ? l(t('track title'), 'admin/logs/access/title/'. urlencode($title->title)) : ''));
+  }
+  if ($pager = theme('pager', NULL, 50, 0, tablesort_pager())) {
+    $rows[] = array(array('data' => $pager, 'colspan' => 3));
+  }
+
+  $output = theme('table', $header, $rows);
+  print theme('page', $output, $page_title);
+}
+
+/**
+ * Menu callback; presents the "Top users" page.
+ */
+function statistics_top_users() {
+  $sql = "SELECT uid, hostname, MAX(timestamp) AS last_view, COUNT(uid) AS count FROM {accesslog} GROUP BY uid";
+  $sql_cnt = "SELECT COUNT(DISTINCT(uid)) FROM {accesslog}";
+  $describe = t('Top users in the past %interval');
+
+  $page_title = strtr($describe, array('%interval' => format_interval(variable_get('statistics_flush_accesslog_timer', 259200))));
+
+  $header = array(
+    array('data' => t('user'), 'field' => 'user'),
+    array('data' => t('last hostname'), 'field' => 'hostname'),
+    array('data' => t('last view'), 'field' => 'last_view'),
+    array('data' => t('hits'), 'field' => 'count', 'sort' => 'desc'),
+    array('data' => t('operations'), 'colspan' => 2)
+  );
+  $sql .= tablesort_sql($header);
+  $result = pager_query($sql, 50, 0, $sql_cnt);
+
+  while ($u = db_fetch_object($result)) {
+    $user = user_load(array('uid' => $u->uid));
+    $rows[] = array(format_name($user), $u->hostname, format_date($u->last_view, 'small'), $u->count, ($u->uid ? l(t('track user'), "admin/logs/access/user/$user->uid") : ''), ($u->hostname ? l(t('track host'), "admin/logs/access/host/$u->hostname") : ''));
+  }
+  if ($pager = theme('pager', NULL, 50, 0, tablesort_pager())) {
+    $rows[] = array(array('data' => $pager, 'colspan' => 3));
+  }
+
+  $output = theme('table', $header, $rows);
+  print theme('page', $output, $page_title);
+}
+
+/**
+ * Menu callback; presents the "Top hostnames" page.
+ */
+function statistics_top_hostnames() {
+  $sql = "SELECT hostname, uid, MAX(timestamp) AS last_view, COUNT(hostname) AS count FROM {accesslog} GROUP BY hostname";
+  $sql_cnt = "SELECT COUNT(DISTINCT(hostname)) FROM {accesslog}";
+  $describe = t('Top hostnames in the past %interval');
+
+  $page_title = strtr($describe, array('%interval' => format_interval(variable_get('statistics_flush_accesslog_timer', 259200))));
+
+  $header = array(
+    array('data' => t('hostname'), 'field' => 'hostname'),
+    array('data' => t('last user'), 'field' => 'user'),
+    array('data' => t('last view'), 'field' => 'last_view'),
+    array('data' => t('hits'), 'field' => 'count', 'sort' => 'desc'),
+    array('data' => t('operations'), 'colspan' => 2)
+  );
+  $sql .= tablesort_sql($header);
+  $result = pager_query($sql, 50, 0, $sql_cnt);
+
+  while ($hostname = db_fetch_object($result)) {
+    $user = user_load(array('uid' => $hostname->uid));
+    $rows[] = array($hostname->hostname, format_name($user), format_date($hostname->last_view, 'small'), $hostname->count, ($hostname->hostname ? l(t('track host'), "admin/logs/access/host/$hostname->hostname") : ''), ($hostname->uid ? l(t('track user'), "admin/logs/access/$hostname->uid") :''));
+  }
+  if ($pager = theme('pager', NULL, 50, 0, tablesort_pager())) {
+    $rows[] = array(array('data' => $pager, 'colspan' => 3));
+  }
+
+  $output = theme('table', $header, $rows);
+  print theme('page', $output, $page_title);
 }
 
 /**
@@ -259,22 +389,22 @@ function statistics_admin_accesslog_table($type, $id) {
  *   - "external": Only display links from off-site.
  *   - "all": Display all referrers.
  */
-function statistics_top_refer($view = 'all') {
+function statistics_top_referrers($view = 'all') {
   if ($view == 'all') {
     $query = "SELECT url, MAX(timestamp) AS last_view, COUNT(url) AS count FROM {accesslog} WHERE url <> '' GROUP BY url";
     $query_cnt = "SELECT COUNT(DISTINCT(url)) FROM {accesslog} WHERE url <> ''";
-    $describe = t('Top referrers of the past %interval');
+    $describe = t('Top referrers in the past %interval');
   }
   elseif ($view == 'internal') {
     $query = "SELECT url, MAX(timestamp) AS last_view, COUNT(url) AS count FROM {accesslog} WHERE url LIKE '%". check_query($_SERVER['HTTP_HOST']) ."%' GROUP BY url";
     $query_cnt = "SELECT COUNT(DISTINCT(url)) FROM {accesslog} WHERE url <> '' AND url LIKE '%". check_query($_SERVER['HTTP_HOST']) ."%'";
-    $describe = t('Top internal referrers of the past %interval');
+    $describe = t('Top internal referrers in the past %interval');
   }
   else {
     /* default to external */
     $query = "SELECT url, MAX(timestamp) AS last_view, COUNT(url) AS count FROM {accesslog} WHERE url NOT LIKE '%". check_query($_SERVER['HTTP_HOST']) ."%' AND url <> '' GROUP BY url";
     $query_cnt = "SELECT COUNT(DISTINCT(url)) FROM {accesslog} WHERE url <> '' AND url NOT LIKE '%". check_query($_SERVER['HTTP_HOST']) ."%'";
-    $describe = t('Top external referrers of the past %interval');
+    $describe = t('Top external referrers in the past %interval');
   }
 
   $title = strtr($describe, array('%interval' => format_interval(variable_get('statistics_flush_accesslog_timer', 259200))));
@@ -282,14 +412,14 @@ function statistics_top_refer($view = 'all') {
   $header = array(
     array('data' => t('URL'), 'field' => 'url'),
     array('data' => t('last view'), 'field' => 'last_view'),
-    array('data' => t('count'), 'field' => 'count', 'sort' => 'desc')
+    array('data' => t('hits'), 'field' => 'count', 'sort' => 'desc')
   );
   $query .= tablesort_sql($header);
 
   $result = pager_query($query, 50, 0, $query_cnt);
 
-  while ($referrer = db_fetch_array($result)) {
-    $rows[] = array('<a href="'. $referrer['url'] .'">'. substr($referrer['url'], 0, 100) .'</a>', format_date($referrer['last_view'], 'small'), $referrer['count']);
+  while ($referrer = db_fetch_object($result)) {
+    $rows[] = array('<a href="'. $referrer->url .'">'. _statistics_column_width($referrer->url, '_refer', 75) .'</a>', format_date($referrer->last_view, 'small'), $referrer->count);
   }
   if ($pager = theme('pager', NULL, 50, 0, tablesort_pager())) {
     $rows[] = array(array('data' => $pager, 'colspan' => 3));
@@ -305,42 +435,6 @@ function statistics_top_refer($view = 'all') {
  */
 function statistics_admin_topnodes() {
   print theme('page', statistics_admin_topnodes_table());
-}
-
-/**
- * Menu callback; presents the "Access logs" page.
- *
- * @param $type
- *   - "user": display accesses for a particular user.
- *   - "host": display accesses originated at a given IP.
- *   - "node": display only accesses of a particular node.
- *   - "all": display all accesses.
- *
- * @param $value
- *   The user, host, or node to filter by.
- */
-function statistics_admin_displaylog($type = 'all', $value = 0) {
-  switch ($type) {
-    case 'user':
-      $user = user_load(array('uid' => $value));
-      $title = t('Recent access logs for "%name"', array('%name' => $user->name));
-      $output = statistics_admin_accesslog_table(1, $user->uid);
-      break;
-    case 'node':
-      $node = node_load(array('nid' => $value));
-      $title = t('Recent access logs for "%title"', array('%title' => $node->title));
-      $output = statistics_admin_accesslog_table(2, $value);
-      break;
-    case 'host':
-      $title = t('Recent access logs for "%hostname"', array('%hostname' => $value));
-      $output = statistics_admin_accesslog_table(3, $value);
-      break;
-    default:
-      $title = t('Recent access logs');
-      $output = statistics_admin_accesslog_table(0, 0);
-  }
-
-  print theme('page', $output, $title);
 }
 
 /**
@@ -534,6 +628,18 @@ function statistics_summary($dbfield, $dbrows) {
   }
 
   return $output;
+}
+
+/**
+ * It is possible to adjust the width of columns generated by the
+ * statistics module.  Currently this has to be done manually, by
+ * updating the appropriate variable.  There are several recognized variables:
+ * 'statistics_column_width', 'statistics_column_width_refer', and
+ * 'statistics_column_width_title'
+ */
+function _statistics_column_width($column, $type = "", $default = 26) {
+  $max_width = variable_get("statistics_column_width$type", $default);
+  return (strlen($column) > $max_width ? substr($column, 0, $max_width) . '...' : $column);
 }
 
 /**

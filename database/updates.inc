@@ -66,7 +66,8 @@ $sql_updates = array(
   "2004-07-07" => "update_92",
   "2004-07-11" => "update_93",
   "2004-07-22" => "update_94",
-  "2004-07-30" => "update_95"
+  "2004-07-30" => "update_95",
+  "2004-08-04" => "update_96"
 );
 
 function update_32() {
@@ -1201,6 +1202,14 @@ function update_95() {
    PRIMARY KEY  (nid,gid,realm)
    )");
   $ret[] = update_sql("INSERT INTO node_access VALUES (0, 0, 'all', 1, 0, 0);");
+  return $ret;
+}
+
+function update_96() {
+  $ret = array();
+  $ret[] = update_sql('ALTER TABLE {accesslog} DROP nid');
+  $ret[] = update_sql('ALTER TABLE {accesslog} ADD title VARCHAR(255) DEFAULT NULL');
+  $ret[] = update_sql('ALTER TABLE {accesslog} ADD path VARCHAR(255) DEFAULT NULL');
   return $ret;
 }
 

@@ -19,7 +19,8 @@ CREATE TABLE access (
 --
 
 CREATE TABLE accesslog (
-  nid integer default '0',
+  title varchar(255) default NULL,
+  path varchar(255) default NULL,
   url varchar(255) default NULL,
   hostname varchar(128) default NULL,
   uid integer default '0',
