@@ -314,18 +314,18 @@ function drupal_goto($url) {
   ** is compiled with "--enable-trans-sid".
   */
 
-  if (ini_get("session.use_trans_sid")) {
-    $sid = session_name() . "=" . session_id();
-  }
-
-  if (!session_id() || strstr($url, $sid)) {
+  if (!ini_get("session.use_trans_sid") || !session_id() || strstr($url, $sid)) {
     header("Location: $url");
   }
-  else if (strstr($url, "?") && !strstr($url, $sid)) {
-    header("Location: $url&". $sid);
-  }
   else {
-    header("Location: $url?". $sid);
+    $sid = session_name() . "=" . session_id();
+
+    if (strstr($url, "?") && !strstr($url, $sid)) {
+      header("Location: $url&". $sid);
+    }
+    else {
+      header("Location: $url?". $sid);
+    }
   }
 
   /*
