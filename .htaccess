@@ -16,7 +16,7 @@ Options +FollowSymLinks
 ErrorDocument 404 /index.php
 
 # Set the default handler to index.php:
-#DirectoryIndex index.php
+DirectoryIndex index.php
 
 # Overload PHP variables:
 <IfModule mod_php4.c>
