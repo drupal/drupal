@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.49 2004/01/10 15:31:24 dries Exp $ */
+/* $Id: drupal.css,v 1.50 2004/01/11 15:05:20 dries Exp $ */
 
 form {
   margin: 0;
@@ -126,14 +126,17 @@ img {
 .form-submit {
   margin: 0.5em 0;
 }
-.news-item .date {
+#aggregator .feed img {
+  float: right;
+}
+#aggregator .news-item .date {
   float: left;
 }
-.news-item .body {
+#aggregator .news-item .body {
   margin-top: 1em;
   margin-left: 4em;
 }
-.news-item .body .feed {
+#aggregator .news-item .body .feed {
   font-size: 0.9em;
 }
 #forum .description {

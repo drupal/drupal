@@ -7,13 +7,14 @@ Drupal x.x.x, xxxx-xx-xx
 - news aggregator:
     * added support for conditional GET.
     * added OPML feed subscription list.
+    * added support for <image>, <pubDate>, <dc:date>, <dcterms:created>, <dcterms:issued> and <dcterms:modified>.
 - comment module:
     * made it possible to disable the "comment viewing controls".
 - performance:
     * improved module loading when serving cached pages.
     * made it possible to automatically disable modules when under heavy load.
     * made it possible to automatically disable blocks when under heavy load.
-    * improved performance of locale module and reduced memory footprint.
+    * improved performance and memory footprint of the locale module.
 - theme system:
     * made all theme functions start with 'theme_'.
     * made all theme functions return their output.

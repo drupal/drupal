@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.311 2004/01/06 18:35:12 dries Exp $
+// $Id: node.module,v 1.312 2004/01/11 15:05:21 dries Exp $
 
 function node_help($section = "admin/help#node") {
   global $mod;
@@ -922,7 +922,7 @@ function node_block($op = "list", $delta = 0) {
   }
   else {
     $block["subject"] = t("Syndicate");
-    $block["content"] = "<div class=\"xml-icon\">". l("<img src=\"". theme("image", "xml.gif") ."\" width=\"36\" height=\"14\" style=\"border: 0px;\" alt=\"XML\" title=\"XML\" />", "node/feed", array("title" => t("Read the XML version of this page."))) ."</div>";
+    $block["content"] = theme('xml_icon', url('node/feed'));
 
     return $block;
   }

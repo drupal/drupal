@@ -1,5 +1,5 @@
 <?php
-/* $Id: theme.inc,v 1.179 2004/01/07 18:42:02 dries Exp $ */
+/* $Id: theme.inc,v 1.180 2004/01/11 15:05:20 dries Exp $ */
 
 /**
  * @file
@@ -450,6 +450,15 @@ function theme_item_list($items = array(), $title = NULL) {
  */
 function theme_error($message) {
   return "<div class=\"error\">$message</div>";
+}
+
+/**
+ * Returns code that emits an XML-icon.
+ *
+ * @return a string containing the @a output.
+ */
+function theme_xml_icon($url) {
+  return "<div class=\"xml-icon\"><a href=\"$url\"><img src=\"misc/xml.gif\" width=\"36\" height=\"14\" alt=\"". t('XML feed') ."\" /></a></div>";
 }
 
 /**

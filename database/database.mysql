@@ -160,6 +160,7 @@ CREATE TABLE feed (
   attributes varchar(255) NOT NULL default '',
   link varchar(255) NOT NULL default '',
   description longtext NOT NULL,
+  image longtext NOT NULL default '',
   etag varchar(255) NOT NULL default '',
   modified int(10) NOT NULL default '0',
   PRIMARY KEY  (fid),

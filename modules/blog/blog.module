@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.155 2004/01/02 16:30:09 dries Exp $
+// $Id: blog.module,v 1.156 2004/01/11 15:05:21 dries Exp $
 
 function blog_settings() {
   $output = form_textarea(t("Explanation or submission guidelines"), "blog_help", variable_get("blog_help", ""), 70, 4, t("This text is displayed at the top of the blog submission form.  It's useful for helping or instructing your users."));
@@ -122,8 +122,8 @@ function blog_page_user($uid) {
   while ($node = db_fetch_object($result)) {
     $output .= node_view(node_load(array("nid" => $node->nid)), 1);
   }
-  $output .= theme("pager", NULL, variable_get("default_nodes_main", 10));
-  $output .= "<div class=\"xml-icon\">". l("<img src=\"". theme("image", "xml.gif") ."\" width=\"36\" height=\"14\" style=\"border: 0px;\" alt=\"\" title=\"\" />", "blog/feed/$account->uid", array("title" => t("View the XML version of %username's blog", array("%username" => $account->name)))) . "</div>";
+  $output .= theme('pager', NULL, variable_get("default_nodes_main", 10));
+  $output .= theme('xml_icon', url("blog/feed/$account->uid"));
 
   print theme("page", $output, $title);
 }
@@ -138,8 +138,8 @@ function blog_page_last() {
   while ($node = db_fetch_object($result)) {
     $output .= node_view(node_load(array("nid" => $node->nid)), 1);
   }
-  $output .= theme("pager", NULL, variable_get("default_nodes_main", 10));
-  $output .= "<div class=\"xml-icon\">". l("<img src=\"". theme("image", "xml.gif") ."\" width=\"36\" height=\"14\" style=\"border: 0px;\" alt=\"\" title=\"\" />", "blog/feed", array("title" => t("Read the XML version of all blogs."))) ."</div>";
+  $output .= theme('pager', NULL, variable_get("default_nodes_main", 10));
+  $output .= theme('xml_icon', url('blog/feed'));
 
   print theme("page", $output);
 }

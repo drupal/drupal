@@ -108,6 +108,7 @@ CREATE TABLE [dbo].[feed] (
   [attributes] [varchar] (255) NULL ,
   [link] [varchar] (255) NULL ,
   [description] [varchar] (8000) NULL ,
+  [image] [varchar] (512) NULL ,
   [etag] [varchar] (255) NULL ,
   [modified] [int] NOT NULL
 ) ON [PRIMARY]
