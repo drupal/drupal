@@ -799,6 +799,7 @@ function link_page() {
   }
   else {
     $links[] = "<a href=\"index.php\" title=\"". t("Return to the main page.") ."\">". t("home") ."</a>";
+
     foreach (module_list() as $name) {
       if (module_hook($name, "link")) {
         $links = array_merge($links, module_invoke($name, "link", "page"));
@@ -810,13 +811,15 @@ function link_page() {
 }
 
 function link_node($node, $main = 0) {
+  $links = array();
+
   foreach (module_list() as $name) {
     if (module_hook($name, "link")) {
       $links = array_merge($links, module_invoke($name, "link", "node", $node, $main));
     }
   }
 
-  return $links ? $links : array();
+  return $links;
 }
 
 function timer_start() {
