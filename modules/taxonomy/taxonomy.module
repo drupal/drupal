@@ -30,13 +30,13 @@ function taxonomy_link($type, $node = NULL) {
     if (array_key_exists('taxonomy', $node)) {
       foreach ($node->taxonomy as $tid) {
         $term = taxonomy_get_term($tid);
-        $links[] = l($term->name, 'taxonomy/term/'. $term->tid, $term->description ? array ('title' => $term->description) : array());
+        $links[] = l($term->name, 'taxonomy/term/'. $term->tid, $term->description ? array ('title' => check_output($term->description)) : array());
       }
     }
     else {
       $links = array();
       foreach (taxonomy_node_get_terms($node->nid) as $term) {
-        $links[] = l($term->name, 'taxonomy/term/'. $term->tid, $term->description ? array ('title' => $term->description) : array());
+        $links[] = l($term->name, 'taxonomy/term/'. $term->tid, $term->description ? array ('title' => check_output($term->description)) : array());
       }
 
     }
