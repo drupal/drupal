@@ -29,6 +29,10 @@ function story_help() {
  <?php
 }
 
+function story_summary($node) {
+  return $node->abstract;
+}
+
 function story_view($node, $main = 0) {
   global $theme;
   $node->body = ((!$main) && ($node->body)) ? "$node->abstract<HR>$node->body" : $node->abstract;
