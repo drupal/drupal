@@ -147,11 +147,11 @@ function drupal_user($type, $edit, $user) {
     case "view_private":
       $result = user_get_authname($user, $module);
       if ($result) {
-        $output .= form_item("$name ID", $result);
+        $output .= form_item(t("$name ID"), $result);
       }
       else {
         // TODO: use a variation of path_uri() instead of $HTTP_HOST below
-        $output .= form_item("$name ID", "$user->name@$HTTP_HOST");
+        $output .= form_item(t("$name ID"), "$user->name@$HTTP_HOST");
       }
       return $output;
   }
