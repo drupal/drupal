@@ -23,7 +23,6 @@ pre, code {
 }
 table {
   border-collapse: collapse;
-  width: 100%;
 }
 th {
   text-align: left;
@@ -34,14 +33,14 @@ th {
 th.active img {
   display: inline;
 }
-tr.dark, tr.light {
+tr.dark td, tr.light td {
   background-color: #eee;
   border-bottom: 1px solid #ccc;
 }
 tr.dark td, tr.light td {
   padding: 0.1em 0.6em;
 }
-td.active {
+tr td.active {
   background-color: #ddd;
 }
 
