@@ -1,5 +1,5 @@
 <?php
-// $Id: page.module,v 1.51 2002/03/09 17:08:43 kjartan Exp $
+// $Id: page.module,v 1.52 2002/03/19 19:33:42 kjartan Exp $
 
 function page_help() {
   $output .= "<p>The page module is used to create a <i>site page</i>.  Unlike a story, a site page is a persistent web page on your site which usually shortcuts the typical lifecycle of user generated content (i.e. submit -&gt; moderate -&gt; post -&gt; comment).  A site page is usually linked from the main navigation bar, using whatever text the author wishes.  To create a site page without this navigation link, simply skip the form field which requests link text.  Administrators are the exclusive authors of site pages (i.e. requires the <i>adinister nodes</i> in <a href=\"/admin.php?mod=user&op=permission\">permission</a>).</p>";
@@ -105,20 +105,25 @@ function page_body($node) {
 function page_view($node, $main = 0) {
   global $theme;
 
-  /*
-  ** Extract the page body.  If body is dynamic (using PHP code), the body
-  ** will be generated.
-  */
-
-  $output .= page_body($node);
-
-  /*
-  ** Add the node specific links:
-  */
-
-  $output .= "<div align=\"right\">". $theme->links(link_node($node, $main)) ."</div>";
-
-  $theme->box($node->title, $output);
+  if ($main) {
+    $theme->node($node, $main);    
+  }
+  else {
+	  /*
+	  ** Extract the page body.  If body is dynamic (using PHP code), the body
+	  ** will be generated.
+	  */
+	
+	  $output .= page_body($node);
+	
+	  /*
+	  ** Add the node specific links:
+	  */
+	
+	  $output .= "<div align=\"right\">". $theme->links(link_node($node, $main)) ."</div>";
+	
+	  $theme->box($node->title, $output);
+	}
 }
 
 function page_form(&$node, &$help, &$error) {
