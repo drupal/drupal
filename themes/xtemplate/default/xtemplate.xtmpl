@@ -58,7 +58,7 @@
 <!-- END: header -->
 
 <!-- BEGIN: node -->
-  <div class="node {sticky}">
+  <div class="node {static}">
     <!-- BEGIN: picture -->
     {picture}
     <!-- END: picture -->
