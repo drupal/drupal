@@ -310,7 +310,8 @@ function _forum_last_comment($nid) {
 }
 
 function _forum_last_reply($nid) {
-  $value = db_fetch_object(db_query_range('SELECT c.timestamp, u.name, u.uid FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.nid = %d AND c.status = 0 ORDER BY c.timestamp DESC', $nid, 0, 1));
+  $value = db_fetch_object(db_query_range('SELECT c.timestamp, c.name AS anonymous_name, u.name, u.uid FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.nid = %d AND c.status = 0 ORDER BY c.timestamp DESC', $nid, 0, 1));
+  $value->name = $value->uid ? $value->name : $value->anonymous_name;
   return $value;
 }
 
@@ -377,7 +378,8 @@ function _forum_topics_read($term, $uid) {
 function _forum_last_post($term) {
   $topic = db_fetch_object(db_query_range("SELECT n.nid, n.created AS timestamp, u.name AS name, u.uid AS uid FROM {forum} f INNER JOIN {node} n ON n.nid = f.nid INNER JOIN {users} u ON n.uid = u.uid WHERE f.tid = %d AND n.nid = f.nid AND n.type = 'forum' AND n.status = 1 ORDER BY timestamp DESC", $term, 0, 1));
 
-  $reply = db_fetch_object(db_query_range("SELECT n.nid, c.timestamp, u.name AS name, u.uid AS uid FROM {forum} f INNER JOIN {node} n ON n.nid = f.nid INNER JOIN {comments} c ON n.nid = c.nid INNER JOIN {users} u ON c.uid = u.uid WHERE f.tid = %d AND n.nid = f.nid AND n.type = 'forum' AND n.status = 1 AND c.status = 0 ORDER BY c.timestamp DESC", $term, 0, 1));
+  $reply = db_fetch_object(db_query_range("SELECT n.nid, c.timestamp, c.name AS anonymous_name, u.name AS name, u.uid AS uid FROM {forum} f INNER JOIN {node} n ON n.nid = f.nid INNER JOIN {comments} c ON n.nid = c.nid INNER JOIN {users} u ON c.uid = u.uid WHERE f.tid = %d AND n.nid = f.nid AND n.type = 'forum' AND n.status = 1 AND c.status = 0 ORDER BY c.timestamp DESC", $term, 0, 1));
+  $reply->name = $reply->uid ? $reply->name : $reply->anonymous_name;
 
   $value = ($topic->timestamp > $reply->timestamp) ? $topic : $reply;
 
