@@ -1393,7 +1393,7 @@ function theme_comment($comment, $links = 0) {
   $output .= "<div class=\"subject\">$comment->subject". ($comment->new ? ' '. theme('mark') : '') ."</div>\n";
   $output .= "<div class=\"moderation\">". $comment->moderation ."</div>\n";
   $output .= "<div class=\"credit\">". t("by %a on %b", array("%a" => format_name($comment), "%b" => format_date($comment->timestamp))) ."</div>\n";
-  $output .= "<div class=\"body\">". check_output($comment->comment) ."</div>\n";
+  $output .= "<div class=\"body\">$comment->comment</div>\n";
   $output .= "<div class=\"links\">$links</div>\n";
   $output .= "</div>\n";
   return $output;
