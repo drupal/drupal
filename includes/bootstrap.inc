@@ -1,11 +1,11 @@
 <?php
-// $Id: bootstrap.inc,v 1.27 2004/09/15 20:34:35 unconed Exp $
+// $Id: bootstrap.inc,v 1.28 2004/09/16 07:17:54 dries Exp $
 
 /**
  * @file
  * Functions that need to be loaded on every Drupal request.
  */
- 
+
 define('CACHE_PERMANENT', 0);
 define('CACHE_TEMPORARY', -1);
 
