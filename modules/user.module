@@ -1284,7 +1284,7 @@ function user_admin_perm($edit = array()) {
   $output .= " <tr><th>&nbsp;</th><th>". implode("</th><th>", array_values($role_names)) ."</th></tr>";
   foreach ($perms as $perm) {
     $output .= " <tr>";
-    $output .= "  <td>". check_output($perm) ."</td>";
+    $output .= "  <td>". t($perm) ."</td>";
     foreach ($role_names as $rid => $name) {
       $output .= "  <td align=\"center\"><input type=\"checkbox\" name=\"edit[$rid][$perm]\"". (strstr($role_perms[$rid], $perm) ? " checked=\"checked\"" : "") ." /></td>";
     }
