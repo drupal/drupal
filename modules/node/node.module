@@ -1081,13 +1081,6 @@ function node_validate($node, &$error) {
 function node_form($edit, $error = NULL) {
 
   /*
-  ** Save the referer.  We record where the user came from such that we
-  ** can redirect him after having completed the node forms.
-  */
-
-  referer_save();
-
-  /*
   ** Validate the node:
   */
 
@@ -1412,10 +1405,6 @@ function node_submit($node) {
   ** For usability's sake, make sure to present the user with some
   ** useful links as where to go next.
   */
-
-  if ($referer = referer_load()) {
-    $links[] = "<a href=\"$referer\">". t("return") ."</a>";
-  }
 
   if ($node->nid && node_access("view", $node)) {
     $links[] = l(t("view"), "node/view/$node->nid");

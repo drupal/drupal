@@ -504,29 +504,6 @@ function drupal_goto($url) {
   exit();
 }
 
-/*
-** Stores the referer in a persistent variable:
-*/
-
-function referer_save() {
-  if (!strstr(referer_uri(), request_uri())) {
-    $_SESSION["referer"] = referer_uri();
-  }
-}
-
-/*
-** Restores the referer from a persistent variable:
-*/
-
-function referer_load() {
-  if (isset($_SESSION["referer"])) {
-    return $_SESSION["referer"];
-  }
-  else {
-    return 0;
-  }
-}
-
 function valid_input_data($data) {
 
   if (is_array($data) || is_object($data)) {
