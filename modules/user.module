@@ -1300,7 +1300,7 @@ function user_admin_create($edit = array()) {
 
   if ($edit) {
     // Because the admin form doesn't have roles selection they need to be set to validate properly
-    $edit['roles'] = array(_user_authenticated_id());
+    $edit['roles'] = array(_user_authenticated_id() => 'authenticated user');
     user_module_invoke('validate', $edit, $edit, 'account');
 
     if (!form_get_errors()) {
