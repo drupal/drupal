@@ -645,8 +645,8 @@ function cache_get($key) {
 }
 
 function cache_set($cid, $data, $expire = 0) {
-  if (db_fetch_object(db_query("SELECT cid FROM cache WHERE cid = '%d'", $cid))) {
-    db_query("UPDATE cache SET data = '%s', created = %d, expire = %d WHERE cid = '%d'", $data, time(), $expire, $cid);
+  if (db_fetch_object(db_query("SELECT cid FROM cache WHERE cid = '%s'", $cid))) {
+    db_query("UPDATE cache SET data = '%s', created = %d, expire = %d WHERE cid = '%s'", $data, time(), $expire, $cid);
   }
   else {
     db_query("INSERT INTO cache (cid, data, created, expire) VALUES('%s', '%s', %d, %d)", $cid, $data, time(), $expire);
