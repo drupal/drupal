@@ -65,7 +65,7 @@ PHP?>
             <TD VALIGN="top" ALIGN="right">
 
 <?PHP
-                theme_blocks("all", $this);
+                theme_blocks("left", $this);
 
 PHP?>
 
@@ -382,6 +382,7 @@ PHP?>
          global $PHP_SELF;
 
            theme_account($this);
+           theme_blocks("right", $this);
 
 PHP?>
 
