@@ -5,7 +5,7 @@ class Node {
     global $user;
     $this->userid = $node[userid] ? $node[userid] : $user->userid;
     $this->title = $node[title];
-    $this->timestamp = $node[attributes];
+    $this->attributes = $node[attributes];
     $this->timestamp = $node[timestamp] ? $node[timestamp] : time();
   }
 }
