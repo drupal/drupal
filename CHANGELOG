@@ -1,10 +1,16 @@
 Drupal x.x.x, xxxx-xx-xx (to be released)
 ------------------------
 
-- clean URLs.
-- reorganized the administration pages.
+- added support for clean URLs.
+- rewrote the RSS/RDF parser:
+    * it will now use PHP's built-in XML parser to parse news feeds.
+- rewrote the administration pages:
+    * improved the navigational elements and added breadcrumb navigation
+    * improved the look and feel
+    * added context-sensitive help
 - database backend:
-    * fixed numereous SQL queries to make Drupal work on PostgreSQL and MSSQL.
+    * fixed numereous SQL queries to make Drupal ANSI compliant.
+    * added MSSQL database scheme.
 - search module:
     * changed the search module to use implicit AND'ing instead of implicit OR'ing.
 - node system improvements:
@@ -12,7 +18,7 @@ Drupal x.x.x, xxxx-xx-xx (to be released)
     * improved content submission:
         + improved teasers: teasers are now optional, teaser length can be configured, teaser and body are edited in a single textarea, users will no longer be bother with teasers when the post is too short for a teaser.
         + added the ability to preview both the short and the full version of your posts.
-    * extended the node api, allows for more advanced uses and cleans up the interaction between modules.
+    * extended the node API which allows for better integration.
     * added default node settings to control the behaviour for promotion, moderation and other options.
 - themes:
     * replaced theme "Goofy" by "Xtemplate", a template driven theme.
