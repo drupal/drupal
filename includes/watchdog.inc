@@ -24,7 +24,7 @@ function watchdog($id, $message) {
   db_query("INSERT INTO watchdog (level, timestamp, user, message, location, hostname) VALUES ('". $watchdog[$id][0] ."', '". time() ."', '". check_input($user->id) ."', '". check_input($message) ."', '". check_input(getenv("REQUEST_URI")) ."', '". check_input(getenv("REMOTE_ADDR")) ."')");
 }
 
-function watchdog_clean($history = "604800") {
+function watchdog_clean($history = 302400) {
   $timestamp = time() - $history;
   db_query("DELETE FROM watchdog WHERE timestamp < $timestamp");
 }
