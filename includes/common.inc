@@ -462,7 +462,14 @@ function check_input($text) {
 }
 
 function filter($text) {
-  return module_invoke_all("filter", $text);;
+
+  foreach (module_list() as $name) {
+    if (module_hook($name, "filter")) {
+      $text = module_invoke($name, "filter", $text);
+    }
+  }
+
+  return $text;
 }
 
 function rewrite_old_urls($text) {
