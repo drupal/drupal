@@ -762,7 +762,11 @@ function format_name($object) {
 }
 
 function form($form, $method = "post", $action = 0, $options = 0) {
-  return "<form action=\"". ($action ? $action : htmlentities(request_uri())) ."\" method=\"$method\"". ($options ? " $options" : "") .">\n$form</form>\n";
+
+  if (!$action) {
+    $action = htmlentities(request_uri());
+  }
+  return "<form action=\"$action\" method=\"$method\"". ($options ? " $options" : "") .">\n$form</form>\n";
 }
 
 function form_item($title, $value, $description = 0) {
@@ -825,15 +829,15 @@ function url($url = NULL, $query = NULL) {
   if (variable_get("clean_url", "0") == "0") {
     if (isset($url)) {
       if (isset($query)) {
-        return "$base_url/?q=$url&amp;$query";
+        return "$base_url/index.php?q=$url&amp;$query";
       }
       else {
-        return "$base_url/?q=$url";
+        return "$base_url/index.php?q=$url";
       }
     }
     else {
       if (isset($query)) {
-        return "$base_url/?$query";
+        return "$base_url/index.php?$query";
       }
       else {
         return "$base_url/";
@@ -851,7 +855,7 @@ function url($url = NULL, $query = NULL) {
     }
     else {
       if (isset($query)) {
-        return "$base_url/?$query";
+        return "$base_url/$index.php?$query";
       }
       else {
         return "$base_url/";
@@ -904,13 +908,6 @@ function timer_start() {
   global $timer;
   list($usec, $sec) = explode(" ", microtime());
   $timer = (float)$usec + (float)$sec;
-}
-
-function query_print() {
-  global $queries;
-  print "<pre>";
-  print_r($queries);
-  print "</pre>";
 }
 
 function drupal_page_header() {
