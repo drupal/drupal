@@ -27,8 +27,8 @@ function drupal_page() {
    <LI><A HREF=\"module.php?mod=documentation\">documentation</A></LI>
    <LI><A HREF=\"module.php?mod=wishlist\">wishlist</A></LI>
    <H2>Mailing list</H2>
-   The <CODE>drupal-support@drop.org</CODE> list discusses drupal development. All submissions relevant to that, such as bug reports, enhancement ideas, patches or reports that a patch fixed a bug are appropriate.
-   <LI>To subscribe to the <CODE>drupal-support@drop.org</CODE> mailing list, send an e-mail to <A HREF=\"mailto:drupal-support-request@drop.org\">drupal-support-request@drop.org</A> with no subject and put <B>subscribe<B> in the body  of your message.</LI>
+   <P>The <CODE>drupal-support@drop.org</CODE> list discusses drupal development. All submissions relevant to that, such as bug reports, enhancement ideas, patches or reports that a patch fixed a bug are appropriate.</P>
+   <LI>To subscribe to the <CODE>drupal-support@drop.org</CODE> mailing list, send an e-mail to <A HREF=\"mailto:drupal-support-request@drop.org\">drupal-support-request@drop.org</A> with no subject and put <B>subscribe</B> in the body of your message.</LI>
    <LI>To unsubscribe from the <CODE>drupal-support@drop.org</CODE> mailing list, send an e-mail to <A HREF=\"mailto:drupal-support-request@drop.org\">drupal-support-request@drop.org</A> and put <B>unsubscribe</B> in the body of your mail.
   ";
 
