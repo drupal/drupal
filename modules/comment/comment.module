@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.71 2002/06/08 16:17:28 kjartan Exp $
+// $Id: comment.module,v 1.72 2002/06/09 13:52:08 dries Exp $
 
 $GLOBALS["cmodes"] = array(1 => "Flat list - collapsed", 2 => "Flat list - expanded", 3 => "Threaded list - collapsed", 4 => "Threaded list - expanded");
 $GLOBALS["corder"] = array(1 => "Date - newest first", 2 => "Date - oldest first");
@@ -763,9 +763,12 @@ function comment_admin() {
 
   if (user_access("administer comments")) {
 
-    print "<small>". la(t("overview"), array("mod" => "comment")) ." | ". la(t("search comment"), array("mod" => "comment", "op" => "search")) ."</small><hr />\n";
+    print "<small>". la(t("overview"), array("mod" => "comment")) ." | ". la(t("search comment"), array("mod" => "comment", "op" => "search")) ." | ". la(t("help"), array("mod" => "comment", "op" => "help")) ."</small><hr />\n";
 
     switch ($op) {
+      case "help":
+        print comment_help();
+        break;
       case "edit":
         print comment_admin_edit($id);
         break;
