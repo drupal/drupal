@@ -108,9 +108,9 @@ function aggregator_link($type) {
     menu('admin/syndication', t('syndication'), $access ? 'aggregator_help_page' : MENU_DENIED, 5);
     menu('admin/syndication/news', t('RSS/RDF'), $access ? 'aggregator_admin_overview' : MENU_DENIED);
     menu('admin/syndication/news/add/feed', t('new feed'), $access ? 'aggregator_admin_edit_feed' : MENU_DENIED, 2);
-    menu('admin/syndication/news/edit/feed', t('new feed'), $access ? 'aggregator_admin_edit_feed' : MENU_DENIED, 2);
+    menu('admin/syndication/news/edit/feed', t('edit feed'), $access ? 'aggregator_admin_edit_feed' : MENU_DENIED, 2, MENU_HIDE);
     menu('admin/syndication/news/add/category', t('new category'), $access ? 'aggregator_admin_edit_category' : MENU_DENIED, 3);
-    menu('admin/syndication/news/edit/category', t('new category'), $access ? 'aggregator_admin_edit_category' : MENU_DENIED, 3);
+    menu('admin/syndication/news/edit/category', t('edit category'), $access ? 'aggregator_admin_edit_category' : MENU_DENIED, 3, MENU_HIDE);
     menu('admin/syndication/news/remove', t('remove items'), $access ? 'aggregator_admin_remove_feed' : MENU_DENIED, 0, MENU_HIDE, MENU_LOCKED);
     menu('admin/syndication/news/update', t('update items'), $access ? 'aggregator_admin_refresh_feed' : MENU_DENIED, 0, MENU_HIDE, MENU_LOCKED);
     menu('admin/syndication/news/help', t('help'), $access ? 'aggregator_help_page' : MENU_DENIED, 9);
