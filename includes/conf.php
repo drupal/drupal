@@ -18,6 +18,13 @@
 $db_url = "mysql://drupal:drupal@localhost/drupal";
 
 #
+# Base URL:
+#
+#   The URL of your website's main page.
+#
+$base_url = "http://localhost";
+
+#
 # PHP settings:
 #
 #   To see what PHP settings are known to work well, take a look at

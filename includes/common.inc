@@ -107,6 +107,7 @@ function path_uri($brief = 0) {
   if (!$brief) {
     $path = "http://". $path;
   }
+
   return $path;
 }
 
@@ -482,13 +483,24 @@ function rewrite_old_urls($text) {
   ** and comment bodies.
   */
 
-  // rewrite 'node.php?id=<number>[&cid=<number>]' style URLs:
-  $text = eregi_replace("(node)\.php\?id=([[:digit:]]+)(&cid=)?([[:digit:]]*)", "?q=\\1/view/\\2/\\4", $text);
+  if (variable_get("clean_url", "1")) {
+    // rewrite 'node.php?id=<number>[&cid=<number>]' style URLs:
+    $text = eregi_replace("(node)\.php\?id=([[:digit:]]+)(&cid=)?([[:digit:]]*)", "\\1/view/\\2/\\4", $text);
 
-  // rewrite 'module.php?mod=<name>{&<op>=<value>}' style URLs:
-  $text = ereg_replace("module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "?q=\\2/\\4/\\6" , $text);
-  $text = ereg_replace("module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "?q=\\2/\\4" , $text);
-  $text = ereg_replace("module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))", "?q=\\2" , $text);
+    // rewrite 'module.php?mod=<name>{&<op>=<value>}' style URLs:
+    $text = ereg_replace("module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "\\2/\\4/\\6" , $text);
+    $text = ereg_replace("module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "\\2/\\4" , $text);
+    $text = ereg_replace("module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))", "\\2" , $text);
+  }
+  else {
+    // rewrite 'node.php?id=<number>[&cid=<number>]' style URLs:
+    $text = eregi_replace("(node)\.php\?id=([[:digit:]]+)(&cid=)?([[:digit:]]*)", "?q=\\1/view/\\2/\\4", $text);
+
+    // rewrite 'module.php?mod=<name>{&<op>=<value>}' style URLs:
+    $text = ereg_replace("module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "?q=\\2/\\4/\\6" , $text);
+    $text = ereg_replace("module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "?q=\\2/\\4" , $text);
+    $text = ereg_replace("module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))", "?q=\\2" , $text);
+  }
 
   return $text;
 }
@@ -769,21 +781,42 @@ function form_weight($title = NULL, $name = "weight", $value = 0, $delta = 10, $
 }
 
 function url($url = NULL, $query = NULL) {
+  global $base_url;
 
-  if (isset($url)) {
-    if (isset($query)) {
-      return "?q=$url&amp;$query";
+  if (variable_get("clean_url", "1")) {
+    if (isset($url)) {
+      if (isset($query)) {
+        return "$base_url/$url?$query";
+      }
+      else {
+        return "$base_url/$url";
+      }
     }
     else {
-      return "?q=$url";
+      if (isset($query)) {
+        return "$base_url/?$query";
+      }
+      else {
+        return "$base_url";
+      }
     }
   }
   else {
-    if (isset($query)) {
-      return "?$query";
+    if (isset($url)) {
+      if (isset($query)) {
+        return "?q=$url&amp;$query";
+      }
+      else {
+        return "?q=$url";
+      }
     }
     else {
-      return "";
+      if (isset($query)) {
+        return "?$query";
+      }
+      else {
+        return "";
+      }
     }
   }
 }
@@ -812,14 +845,14 @@ function field_set($string, $name, $value) {
 }
 
 function link_page() {
-  global $custom_links;
+  global $custom_links, $base_url;
 
   if (is_array($custom_links)) {
     return $custom_links;
   }
   else {
     $links = module_invoke_all("link", "page");
-    array_unshift($links, "<a href=\"index.php\" title=\"". t("Return to the main page.") ."\">". t("home") ."</a>");
+    array_unshift($links, "<a href=\"$base_url\" title=\"". t("Return to the main page.") ."\">". t("home") ."</a>");
     return $links;
   }
 }

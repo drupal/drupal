@@ -60,9 +60,12 @@ class Theme_xtemplate extends BaseTheme {
   }
 
   function header($title = "") {
+    global $base_url;
+
     $this->template->assign(array(
       "title" => ($title ? $title." | ". variable_get("site_name", "drupal") : variable_get("site_name", "drupal") ." | ". variable_get("site_slogan", "")),
       "head" => theme_head(),
+      "base" => "$base_url/",
       "links" => $this->links(link_page())
     ));
 

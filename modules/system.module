@@ -57,6 +57,8 @@ function system_view_modules() {
   $output .= form_textfield(t("Anonymous user"), "anonymous", variable_get("anonymous", "Anonymous"), 55, 55, t("The name used to indicate anonymous users."));
   foreach (module_list() as $name) { if (module_hook($name, "page")) $pages[$name] = $name; }
   $output .= form_select(t("Default front page"), "site_frontpage", variable_get("site_frontpage", "node"), $pages, t("The home page displays content from this module (usually node)."));
+  $output .= form_select(t("Clean URLs"), "clean_url", variable_get("clean_url", 0), array(t("Disabled"), t("Enabled")), t("Enable or disable clean URLs.  If enabled, you'll need <code>ModRewrite</code> support.  See also the <code>.htaccess</code> file in Drupal's top-level directory."));
+
   $output .= "<hr />\n";
 
   // caching:

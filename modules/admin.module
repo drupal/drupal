@@ -20,7 +20,7 @@ function admin_admin() {
 }
 
 function admin_page() {
-  global $user;
+  global $user, $base_url;
 
   if (user_access("access administration pages")) {
     page_header();
@@ -30,6 +30,7 @@ function admin_page() {
     <html>
      <head>
       <title><?php echo variable_get("site_name", "drupal") . " " . t("administration pages"); ?></title>
+      <base href="<?php echo "$base_url/" ?>" />
       <link rel="stylesheet" type="text/css" media="print" href="misc/print.css" />
       <style type="text/css" title="layout" media="Screen">
         @import url("misc/admin.css");

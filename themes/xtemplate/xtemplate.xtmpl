@@ -5,6 +5,7 @@
 
 <head>
   <title>{title}</title>
+  <base href="{base}" />
   <style type="text/css" media="all">
     @import "themes/xtemplate/xtemplate.css";
   </style>
