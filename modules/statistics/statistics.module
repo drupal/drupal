@@ -241,9 +241,9 @@ function statistics_admin_displaylog($type = 'all', $id = 0) {
 
     // display title if possible, otherwise display path
     if ($log->title)
-      $title = l(_statistics_column_width($log->title), urlencode($log->path), array('title' => $log->path));
+      $title = l(_statistics_column_width($log->title), $log->path, array('title' => $log->path));
     else
-      $title = '('. l(_statistics_column_width($log->path), urlencode($log->path), array('title' => $log->path)) .')';
+      $title = '('. l(_statistics_column_width($log->path), $log->path, array('title' => $log->path)) .')';
 
     // display url if possible, constructing our own link as may not be local
     if ($log->url)
@@ -284,7 +284,7 @@ function statistics_top_titles() {
   $result = pager_query($sql, 50, 0, $sql_cnt);
 
   while ($title = db_fetch_object($result)) {
-    $rows[] = array(l(_statistics_column_width($title->title, '_title', 56), urlencode($title->path)), _statistics_column_width($title->path, '_title', 56), $title->hits, format_date($title->last_hit, 'small'), ($title->title ? l(t('track title'), 'admin/logs/hits/page/'. urlencode($title->title)) : ''));
+    $rows[] = array(l(_statistics_column_width($title->title, '_title', 56), $title->path), _statistics_column_width($title->path, '_title', 56), $title->hits, format_date($title->last_hit, 'small'), ($title->title ? l(t('track title'), 'admin/logs/hits/page/'. urlencode($title->title)) : ''));
   }
   if ($pager = theme('pager', NULL, 50, 0, tablesort_pager())) {
     $rows[] = array(array('data' => $pager, 'colspan' => 3));
