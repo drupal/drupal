@@ -40,7 +40,7 @@ function title_page() {
     else if (db_num_rows($result) == 1) {
       $node = db_fetch_object($result);
       $node = node_load(array("nid" => $node->nid));
-      print theme("page", node_show($node, NULL));
+      print theme("page", node_show($node, NULL), $node->title);
     }
     else {
       $header = array(t("Type"), t("Title"), t("Author"));
