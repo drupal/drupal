@@ -7,8 +7,6 @@ define('NODE_NEW_LIMIT', time() - 30 * 24 * 60 * 60);
  * Implementation of hook_help().
  */
 function node_help($section) {
-  global $mod;
-
   switch ($section) {
     case 'admin/help#node':
       $output = t("
@@ -33,12 +31,11 @@ function node_help($section) {
       <dt>Published</dt><dd>When using Drupal's moderation system a node remains unpublished -- unavailable to non-moderators -- until it is marked Published.</dd></dl>
       <p>Now that you know what is in a node, here are some of the types of nodes available.</p>", array("%teaser" => url("admin/node/configure/settings")));
 
-      if ($mod == 'admin') {
-        foreach (node_list() as $type) {
-          $output .= '<h3>'. t('Node type: %module', array('%module' => node_invoke($type, 'node_name'))). '</h3>';
-          $output .= implode("\n", module_invoke_all('help', 'node/add#'. $type));
-        }
+      foreach (node_list() as $type) {
+        $output .= '<h3>'. t('Node type: %module', array('%module' => node_invoke($type, 'node_name'))). '</h3>';
+        $output .= implode("\n", module_invoke_all('help', 'node/add#'. $type));
       }
+
       return $output;
 
     case 'admin/modules#description':
