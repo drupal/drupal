@@ -679,13 +679,15 @@ function node_menu() {
     'weight' => 1);
 
   if (arg(0) == 'node' && is_numeric(arg(1))) {
+    $node = node_load(array('nid' => arg(1)));
+
     $items[] = array('path' => 'node/'. arg(1), 'title' => t('view'),
       'callback' => 'node_page',
       'access' => user_access('access content'),
       'type' => MENU_CALLBACK);
     $items[] = array('path' => 'node/'. arg(1) .'/edit', 'title' => t('edit'),
       'callback' => 'node_page',
-      'access' => user_access('administer nodes'),
+      'access' => node_access('update', $node),
       'type' => MENU_LOCAL_TASK);
   }
 
