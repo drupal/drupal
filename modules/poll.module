@@ -45,7 +45,7 @@ function poll_form(&$node, &$help, &$error) {
   $_duration = array(0 => t("Unlimited"), 86400 => format_interval(86400), 172800 => format_interval(172800), 345600 => format_interval(345600), 604800 => format_interval(604800), 1209600 => format_interval(1209600), 2419200 => format_interval(2419200), 4838400 => format_interval(4838400), 9676800 => format_interval(9676800), 31536000 => format_interval(31536000));
   $_active = array(0 => t("Closed"), 1 => t("Active"));
 
-  $node->choices = $node->choices ? $node->choices : max(2, count($node->choices) ? count($node->choices) : 5);
+  $node->choices = $node->choices ? $node->choices : max(2, count($node->choice) ? count($node->choice) : 5);
 
   if (isset($node->title)) {
     // Check for at least two options and validate amount of votes:
@@ -263,7 +263,7 @@ function poll_view(&$node, $main = 0, $block = 0) {
         }
       }
     }
-    $output .= "<br /><div align=\"center\">Total votes: ". $votestotal ."</div>";
+    $output .= "<br /><div align=\"center\">Total votes: ". $votestotal . ($block ? "<br />" . $theme->links(link_node($node, 1)) : "") ."</div>";
   }
   // Force the output on both the mainpage and elsewhere
   $node->body = $output;
