@@ -979,7 +979,14 @@ function format_name($object) {
     ** the true author of the content.
     */
 
-    $output = $object->name;
+    if ($object->homepage) {
+      $output = "<a href=\"$object->homepage\">$object->name</a>";
+    }
+    else {
+      $output = $object->name;
+    }
+
+    $output .= ' ('. t('not verified') .')';
   }
   else {
     $output = t(variable_get("anonymous", "Anonymous"));

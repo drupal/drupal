@@ -9,6 +9,8 @@ Drupal x.x.x, xxxx-xx-xx
 - user management:
     * added support for multiple roles per user.
 - refactored 403 (forbidden) handling and added support for custom 403 pages.
+- comment module:
+    * made it possible for anonymous users to leave their name, e-mail address and the URL of their homepage.
 - syndication:
     * added support for RSS ping-notifications of http://technorati.com/.
     * refactored the categorization of syndicated news items.

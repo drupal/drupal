@@ -120,7 +120,11 @@ function comment_settings() {
   $group .= form_radios(t("Comment controls"), "comment_controls", variable_get("comment_controls", 0), array(t("Display above the comments"), t("Display below the comments"), t("Display above and below the comments"), t("Do not display")), t("Position of the comment controls box.  The comment controls let the user change the default display mode and display order of comments."));
   $output = form_group(t('Comment viewing options'), $group);
 
-  $group  = form_radios(t("Preview comment"), "comment_preview", variable_get("comment_preview", 1), array(t("Optional"), t("Required")), t("Must users preview comments before submitting?"));
+  $group  = form_checkbox(t('Show subject field'), 'comment_subject_field', 1, variable_get('comment_subject_field', 1));
+  $group .= form_checkbox(t('Show name field for anonymous users'), 'comment_name_field', 1, variable_get('comment_name_field', 0));
+  $group .= form_checkbox(t('Show e-mail address field for anonymous users'), 'comment_mail_field', 1, variable_get('comment_mail_field', 0));
+  $group .= form_checkbox(t('Show homepage field for anonymous users'), 'comment_homepage_field', 1, variable_get('comment_homepage_field', 0));
+  $group .= form_radios(t("Preview comment"), "comment_preview", variable_get("comment_preview", 1), array(t("Optional"), t("Required")), t("Must users preview comments before submitting?"));
   $group .= form_radios(t("Location of comment submission form"), "comment_form_location", variable_get("comment_form_location", 0), array(t("Display on separate page"), t("Display below post or comments")), t("The location of the comment submission form."));
   $output .= form_group(t('Comment posting settings'), $group);
 
@@ -171,8 +175,9 @@ function comment_node_url() {
 function comment_edit($cid) {
   global $user;
 
-  $comment = db_fetch_object(db_query("SELECT c.*, u.uid, u.name, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status != 2", $cid));
+  $comment = db_fetch_object(db_query('SELECT c.*, u.uid, u.name AS registered_name, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status != 2', $cid));
   $comment = drupal_unpack($comment);
+  $comment->name = $comment->registered_name ? $comment->registered_name : $comment->name;
   if (comment_access("edit", $comment)) {
     return comment_preview(object2array($comment));
   }
@@ -189,8 +194,9 @@ function comment_reply($pid, $nid) {
     */
 
     if ($pid) {
-      $comment = db_fetch_object(db_query("SELECT c.*, u.uid, u.name, u.picture, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = 0", $pid));
+      $comment = db_fetch_object(db_query('SELECT c.*, u.uid, u.name AS registered_name, u.picture, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = 0', $pid));
       $comment = drupal_unpack($comment);
+      $comment->name = $comment->registered_name ? $comment->registered_name : $comment->name;
       $output .= theme("comment_view", $comment);
     }
     else if (user_access("access content")) {
@@ -233,7 +239,7 @@ function comment_preview($edit) {
   */
 
   $comment->uid = $user->uid;
-  $comment->name = $user->name;
+  $comment->name = $user->name ? $user->name : $comment->name;
   $comment->timestamp = time();
 
   /*
@@ -244,8 +250,9 @@ function comment_preview($edit) {
   $output .= theme("comment_form", $edit, t("Reply"));
 
   if ($edit["pid"]) {
-    $comment = db_fetch_object(db_query("SELECT c.*, u.uid, u.name, u.picture, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = 0", $edit["pid"]));
+    $comment = db_fetch_object(db_query('SELECT c.*, u.uid, u.name AS registered_name, u.picture, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = 0', $edit["pid"]));
     $comment = drupal_unpack($comment);
+    $comment->name = $comment->registered_name ? $comment->registered_name : $comment->name;
     $output .= theme("comment_view", $comment);
   }
   else {
@@ -278,6 +285,35 @@ function comment_post($edit) {
 
     if ($edit["comment"] == "") {
       return array(t("Empty comment"), t("The comment you submitted is empty."));
+    }
+
+    /*
+    ** Check validity of name, mail and homepage (if given)
+    */
+
+    // if '' then ''
+    // else if variable_get('anonymous', 'Anonymous') then ''
+    // else let it be
+    $edit['name'] = $edit['name'] == variable_get('anonymous', 'Anonymous') ? '' : strip_tags($edit['name']);
+
+    if (!$user->uid && $edit['name']) {
+      $nametaken = db_result(db_query("SELECT COUNT(uid) FROM {users} WHERE name = '%s'", $edit['name']), 0);
+
+      if ($nametaken != 0) {
+        return array(t('Name already taken'), t('The name you used as your signature belongs to a registered user.'));
+      }
+    }
+
+    if ($edit['mail']) {
+      if (!valid_email_address($edit['mail'])) {
+        return array(t('Invalid e-mail address'), t('The e-mail address you specifed is not valid.'));
+      }
+    }
+
+    if ($edit['homepage']) {
+      if (!valid_url($edit['homepage'], TRUE)) {
+        return array(t('Invalid URL for homepage'), t('The URL (web address) you specifed is not valid. Remember that it must be fully qualified, i.e. of the form <code>http://yourhomepage.com/directory</code>.'));
+      }
     }
 
     /*
@@ -419,7 +455,7 @@ function comment_post($edit) {
 
         $edit["cid"] = db_next_id("{comments}_cid");
 
-        db_query("INSERT INTO {comments} (cid, nid, pid, uid, subject, comment, hostname, timestamp, status, score, users, thread) VALUES (%d, %d, %d, %d, '%s', '%s', '%s', %d, %d, %d, '%s', '%s')", $edit["cid"], $edit["nid"], $edit["pid"], $user->uid, $edit["subject"], $edit["comment"], $_SERVER['REMOTE_ADDR'], time(), $status, $score, $users, $thread);
+        db_query("INSERT INTO {comments} (cid, nid, pid, uid, subject, comment, hostname, timestamp, status, score, users, thread, name, mail, homepage) VALUES (%d, %d, %d, %d, '%s', '%s', '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s')", $edit["cid"], $edit["nid"], $edit["pid"], $user->uid, $edit["subject"], $edit["comment"], $_SERVER['REMOTE_ADDR'], time(), $status, $score, $users, $thread, $edit["name"], $edit['mail'], $edit["homepage"]);
 
         /*
         ** Tell the other modules a new comment has been submitted:
@@ -542,9 +578,10 @@ function comment_render($node, $cid = 0) {
       $output .= "<form method=\"post\" action=\"". url("comment") ."\"><div>\n";
       $output .= form_hidden("nid", $nid);
 
-      $result = db_query("SELECT c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name, u.picture, u.data, c.score, c.users FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = 0 GROUP BY c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name, u.picture, u.data, c.score, c.users", $cid);
+      $result = db_query('SELECT c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, c.name, c.mail, c.homepage, u.uid, u.name AS registered_name, u.picture, u.data, c.score, c.users FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = 0 GROUP BY c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name, u.picture, u.data, c.score, c.users', $cid);
 
       if ($comment = db_fetch_object($result)) {
+        $comment->name = $comment->registered_name ? $comment->registered_name : $comment->name;
         $output .= theme("comment_view", $comment, theme('links', module_invoke_all('link', 'comment', $comment, 1)));
       }
 
@@ -559,7 +596,7 @@ function comment_render($node, $cid = 0) {
       ** Multiple comments view
       */
 
-      $query .= "SELECT c.cid as cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name, u.picture, u.data, c.score, c.users, c.thread FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.nid = '". check_query($nid) ."' AND c.status = 0";
+      $query .= "SELECT c.cid as cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, c.name , c.mail, c.homepage, u.uid, u.name AS registered_name, u.picture, u.data, c.score, c.users, c.thread FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.nid = '". check_query($nid) ."' AND c.status = 0";
 
       $query .= " GROUP BY c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name, u.picture, u.data, c.score, c.users, c.thread";
 
@@ -861,12 +898,12 @@ function comment_node_link($node) {
     ** Edit comments:
     */
 
-    $result = db_query("SELECT c.cid, c.subject, u.uid, u.name FROM {comments} c INNER JOIN {users} u ON u.uid = c.uid WHERE nid = %d AND c.status = 0 ORDER BY c.timestamp", $node->nid);
-
+    $result = db_query('SELECT c.cid, c.subject, c.name, c.homepage, u.uid, u.name AS registered_name, c.name FROM {comments} c INNER JOIN {users} u ON u.uid = c.uid WHERE nid = %d AND c.status = 0 ORDER BY c.timestamp', $node->nid);
 
     $header = array(t("title"), t("author"), array("data" => t("operations"), "colspan" => 3));
 
     while ($comment = db_fetch_object($result)) {
+      $comment->name = $comment->registered_name ? $comment->registered_name : $comment->name;
       $rows[] = array(l($comment->subject, "node/view/$node->nid", NULL, NULL, "comment-$comment->cid"), format_name($comment), l(t("view comment"), "node/view/$node->nid", NULL, NULL, $comment->cid), l(t("edit comment"), "admin/comment/edit/$comment->cid"), l(t("delete comment"), "admin/comment/delete/$comment->cid"));
     }
 
@@ -881,8 +918,9 @@ function comment_node_link($node) {
 
 function comment_admin_edit($id) {
 
-  $result = db_query("SELECT c.*, u.name, u.uid FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status != 2", $id);
+  $result = db_query('SELECT c.*, u.name AS registered_name, u.uid FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status != 2', $id);
   $comment = db_fetch_object($result);
+  $comment->name = $comment->registered_name ? $comment->registered_name : $comment->name;
   $comment = drupal_unpack($comment);
 
   if ($comment) {
@@ -910,7 +948,8 @@ function _comment_delete_thread($comment) {
 }
 
 function comment_delete($cid, $confirmed = 0) {
-  $comment = db_fetch_object(db_query("SELECT c.*, u.name, u.uid FROM {comments} c INNER JOIN {users} u ON u.uid = c.uid WHERE c.cid = %d", $cid));
+  $comment = db_fetch_object(db_query('SELECT c.*, u.name AS registered_name, u.uid FROM {comments} c INNER JOIN {users} u ON u.uid = c.uid WHERE c.cid = %d', $cid));
+  $comment->name = $comment->registered_name ? $comment->registered_name : $comment->name;
 
   if ($comment->cid) {
     if ($confirmed) {
@@ -963,11 +1002,12 @@ function comment_admin_overview($status = 0) {
     array("data" => t("operations"), "colspan" => 2)
   );
 
-  $sql = "SELECT c.*, u.name, u.uid FROM {comments} c INNER JOIN {users} u ON u.uid = c.uid WHERE c.status = ". check_query($status);
+  $sql = 'SELECT c.subject, c.nid, c.cid, c.comment, c.timestamp, c.status, c.name, c.homepage, u.name AS registered_name, u.uid FROM {comments} c INNER JOIN {users} u ON u.uid = c.uid WHERE c.status = '. check_query($status);
   $sql .= tablesort_sql($header);
   $result = pager_query($sql,  50);
 
   while ($comment = db_fetch_object($result)) {
+    $comment->name = $comment->registered_name ? $comment->registered_name : $comment->name;
     $rows[] = array(l($comment->subject, "node/view/$comment->nid/$comment->cid", array("title" => htmlspecialchars(truncate_utf8($comment->comment, 128))), NULL, "comment-$comment->cid") ." ". (node_is_new($comment->nid, $comment->timestamp) ? theme("mark") : ""), format_name($comment), ($comment->status == 0 ? t("published") : t("not published")) ."</td><td>". format_date($comment->timestamp, "small") ."</td><td>". l(t("edit comment"), "admin/comment/edit/$comment->cid"), l(t("delete comment"), "admin/comment/delete/$comment->cid"));
   }
 
@@ -1227,10 +1267,29 @@ function theme_comment_form($edit, $title) {
   $form .= "<a id=\"comment\"></a>\n";
 
   // name field:
-  $form .= form_item(t("Your name"), format_name($user));
+  if ($user->uid) {
+    $form .= form_item(t('Your name'), format_name($user));
+  }
+  else if (variable_get('comment_name_field', 0)) {
+    $form .= form_textfield(t('Your name'), 'name', $edit['name'] ? $edit['name'] : variable_get('anonymous', 'Anonymous') , 20, 40);
+  }
+
+
+  // e-mail field
+  if (! $user->uid && variable_get('comment_mail_field', 0)) {
+    $form .= form_textfield(t('E-Mail'), 'mail', $edit['mail'], 20, 40);
+  }
+
+  // homepage field
+  if (! $user->uid && variable_get('comment_homepage_field', 0)) {
+    $form .= form_textfield(t('Homepage'), 'homepage', $edit['homepage'], 20, 40);
+  }
+
 
   // subject field:
-  $form .= form_textfield(t("Subject"), "subject", $edit["subject"], 50, 64);
+  if (variable_get('comment_subject_field', 0)) {
+    $form .= form_textfield(t('Subject'), 'subject', $edit['subject'], 50, 64);
+  }
 
   // comment field:
   $form .= form_textarea(t("Comment"), "comment", $edit["comment"] ? $edit["comment"] : $user->signature, 70, 10, filter_tips_short());
@@ -1600,6 +1659,9 @@ function comment_search($keys) {
   **
   ** The select statement may optionally provide "nid", which is a secondary
   ** identifier which is currently used byt the comment module.
+  **
+  ** Notice this will not search through comments table 'name' field, but will
+  ** do through users table one.
   */
 
   $find = do_search(array("keys" => $keys, "type" => "comment", "select" => "select s.lno as lno, c.nid as nid, c.subject as title, c.timestamp as created, u.uid as uid, u.name as name, s.count as count FROM {search_index} s, {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE s.lno = c.cid AND s.type = 'comment' AND c.status = 0 AND s.word like '%'"));
