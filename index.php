@@ -2,7 +2,7 @@
 
 # Natrak was here!
 # Dries was here!
-# Natra was here again!
+# Natrak was here again!
 
 include "functions.inc";
 
