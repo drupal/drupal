@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.92 2001/12/20 22:00:00 unconed Exp $
+// $Id: common.inc,v 1.93 2001/12/23 21:47:02 dries Exp $
 
 function conf_init() {
   global $HTTP_HOST, $REQUEST_URI;
@@ -422,7 +422,14 @@ function timer_print() {
   global $timer;
   $stop = explode(" ", microtime());
   $diff = $stop[0] - $timer[0];
-  print "<PRE>execution time: $diff ms</PRE>";
+  print "<pre>execution time: $diff ms</pre>";
+}
+
+function query_print() {
+  global $queries;
+  print "<pre>";
+  print_r($queries);
+  print "</pre>";
 }
 
 function page_header() {
@@ -441,6 +448,10 @@ function page_header() {
 function page_footer() {
   if (variable_get("dev_timer", 0)) {
     timer_print();
+  }
+
+  if (variable_get("dev_query", 0)) {
+    query_print();
   }
 
   if (variable_get("cache", 0)) {

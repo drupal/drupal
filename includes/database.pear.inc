@@ -1,5 +1,5 @@
 <?php
-// $Id: database.pear.inc,v 1.2 2001/11/13 10:46:36 kjartan Exp $
+// $Id: database.pear.inc,v 1.3 2001/12/23 21:47:02 dries Exp $
 
 require_once 'DB.php';
 
@@ -16,7 +16,11 @@ function db_connect($url) {
 }
 
 function db_query($query, $debug = 0) {
-  global $db_handle;
+  global $db_handle, $queries;
+
+  if (variable_get("dev_query", 0)) {
+    $queries[] = $query;
+  }
 
   $result = $db_handle->query($query);
 
