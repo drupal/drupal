@@ -1,0 +1,162 @@
+<?php
+// $Id: filter.module,v 1.1 2004/01/05 19:19:05 unconed Exp $
+
+function filter_help($section = "admin/help#filter") {
+  switch ($section) {
+    case 'admin/system/modules#description':
+      return t("Framework for handling filtering of content.");
+    case 'admin/system/filters':
+      return t("Filters fit between the raw text in a node and the HTML output. They allow you to replace text selectively. Uses include automatic conversion of emoticons into graphics and filtering HTML content from users' submissions.");
+  }
+}
+
+function filter_link($type) {
+  if ($type == "system" && user_access("administer site configuration")) {
+    menu("admin/system/filters", t("filters"), "filter_admin", 5);
+  }
+}
+
+function filter_admin() {
+  if (user_access("administer site configuration")) {
+    system_settings_save();
+
+    $form = implode("\n", module_invoke_all("conf_filters"));
+    $output = system_settings_form($form);
+    print theme("page", $output);
+  }
+  else {
+    print theme("page", message_access());
+  }
+}
+
+function filter_conf_filters() {
+  $group1 .= form_radios(t("Filter HTML tags"), "filter_html", variable_get("filter_html", 0), array(0 => t("Do not filter"), 1 => t("Strip tags"), 2 => t("Escape tags")), t("How to deal with HTML and PHP tags in user-contributed content. If set to \"Strip tags\", dangerous tags are removed (see below).  If set to \"Escape tags\", all HTML is escaped and presented as it was typed."));
+  $group1 .= form_textfield(t("Allowed HTML tags"), "allowed_html", variable_get("allowed_html", "<a> <b> <dd> <dl> <dt> <i> <li> <ol> <u> <ul>"), 64, 255, t("If \"Strip tags\" is selected, optionally specify tags which should not be stripped.  'ON*' attributes and unclosed tags are always stripped."));
+  $group1 .= form_radios(t("HTML style attributes"), "filter_style", variable_get("filter_style", 1), array(t("Allowed"), t("Removed")), t("If \"Strip tags\" is selected, you can choose whether 'STYLE' attributes are allowed or removed from input."));
+  $output .= form_group(t("HTML filtering"), $group1);
+
+  $group2 .= form_radios(t("Rewrite old URLs"), "rewrite_old_urls", variable_get("rewrite_old_urls", 0), array(t("Disabled"), t("Enabled")), t("The introduction of 'clean URLs' in Drupal 4.2.0 breaks internal URLs that date back from Drupal 4.1.0 and before.  If enabled, this filter will attempt to rewrite the old style URLs to avoid broken links.  If <code>mod_rewrite</code> is available on your system, use the rewrite rules in Drupal's <code>.htaccess</code> file instead as these will also correct external referrers."));
+  $output .= form_group(t("Legacy filtering"), $group2);
+
+  return $output;
+}
+
+function check_output($text) {
+  if (isset($text)) {
+    // filter content on output:
+    $modules = module_list();
+
+    // Default filters are run first: they determine how to handle HTML
+    $text = filter_default($text);
+
+    foreach ($modules as $name) {
+      if (module_hook($name, "filter") && $name != "node") {
+        $text = module_invoke($name, "filter", $text);
+      }
+    }
+
+    /*
+    ** If only inline elements are used and no block level elements, we
+    ** replace all newlines with HTML line breaks.
+    */
+    if (strip_tags($text, '<a><br><span><bdo><map><object><img><tt><i><b><big><small><em><strong><dfn><code><q><samp><kbd><var><cite><abbr><acronym><sub><sup><input><select><textarea><label><button><ins><del><script>') == $text) {
+      $text = nl2br($text);
+    }
+  }
+  else {
+    $text = message_na();
+  }
+
+  return $text;
+}
+
+function filter_default($text) {
+  if (variable_get("filter_html", 0) == 1) {
+    // Allow users to enter HTML, but filter it
+    $text = strip_tags($text, variable_get("allowed_html", ""));
+    if (variable_get("filter_style", 1)) {
+      $text = preg_replace("/\Wstyle\s*=[^>]+?>/i", ">", $text);
+    }
+    $text = preg_replace("/\Won[a-z]+\s*=[^>]+?>/i", ">", $text);
+  }
+
+  if (variable_get("rewrite_old_urls", 0)) {
+    $text = filter_old_urls($text);
+  }
+
+  if (variable_get("filter_html", 0) == 2) {
+    // Escape HTML    
+    $text = htmlspecialchars($text);
+  }
+
+  return trim($text);
+}
+
+function filter_old_urls($text) {
+  global $base_url;
+
+  $end = substr($base_url, 12);
+
+  /*
+  ** This is a *temporary* filter to rewrite old-style URLs to new-style
+  ** URLs (clean URLs).  Currently, URLs are being rewritten dynamically
+  ** (ie. "on output"), however when these rewrite rules have been tested
+  ** enough, we will use them to permanently rewrite the links in node
+  ** and comment bodies.
+  */
+
+  if (variable_get("clean_url", "0") == "0") {
+    /*
+    ** Relative URLs:
+    */
+
+    // rewrite 'node.php?id=<number>[&cid=<number>]' style URLs:
+    $text = eregi_replace("\"(node)\.php\?id=([[:digit:]]+)(&cid=)?([[:digit:]]*)", "\"?q=\\1/view/\\2/\\4", $text);
+
+    // rewrite 'module.php?mod=<name>{&<op>=<value>}' style URLs:
+    $text = ereg_replace("\"module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "\"?q=\\2/\\4/\\6" , $text);
+    $text = ereg_replace("\"module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "\"?q=\\2/\\4", $text);
+    $text = ereg_replace("\"module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))", "\"?q=\\2", $text);
+
+    /*
+    ** Absolute URLs:
+    */
+
+    // rewrite 'node.php?id=<number>[&cid=<number>]' style URLs:
+    $text = eregi_replace("$end/(node)\.php\?id=([[:digit:]]+)(&cid=)?([[:digit:]]*)", "$end/?q=\\1/view/\\2/\\4", $text);
+
+    // rewrite 'module.php?mod=<name>{&<op>=<value>}' style URLs:
+    $text = ereg_replace("$end/module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "$end/?q=\\2/\\4/\\6" , $text);
+    $text = ereg_replace("$end/module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "$end/?q=\\2/\\4", $text);
+    $text = ereg_replace("$end/module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))", "\"$end/?q=\\2", $text);
+  }
+  else {
+    /*
+    ** Relative URLs:
+    */
+
+    // rewrite 'node.php?id=<number>[&cid=<number>]' style URLs:
+    $text = eregi_replace("\"(node)\.php\?id=([[:digit:]]+)(&cid=)?([[:digit:]]*)", "\"\\1/view/\\2/\\4", $text);
+
+    // rewrite 'module.php?mod=<name>{&<op>=<value>}' style URLs:
+    $text = ereg_replace("\"module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "\"\\2/\\4/\\6", $text);
+    $text = ereg_replace("\"module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "\"\\2/\\4", $text);
+    $text = ereg_replace("\"module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))", "\"\\2", $text);
+
+    /*
+    ** Absolute URLs:
+    */
+
+    // rewrite 'node.php?id=<number>[&cid=<number>]' style URLs:
+    $text = eregi_replace("$end/(node)\.php\?id=([[:digit:]]+)(&cid=)?([[:digit:]]*)", "$end/\\1/view/\\2/\\4", $text);
+
+    // rewrite 'module.php?mod=<name>{&<op>=<value>}' style URLs:
+    $text = ereg_replace("$end/module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "$end/\\2/\\4/\\6", $text);
+    $text = ereg_replace("$end/module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "$end/\\2/\\4", $text);
+    $text = ereg_replace("$end/module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))", "$end/\\2", $text);
+  }
+
+  return $text;
+}
+
+?>

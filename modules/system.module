@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.120 2003/12/29 19:49:11 dries Exp $
+// $Id: system.module,v 1.121 2004/01/05 19:19:05 unconed Exp $
 
 function system_help($section = "admin/help#system") {
   global $base_url;
@@ -14,9 +14,6 @@ function system_help($section = "admin/help#system") {
       break;
     case 'admin/system/modules':
       $output = t("Modules are plugins for Drupal that extend its core functionality.  Here you can select which modules are enabled.  Click on the name of the module in the navigation menu for their individual configuration pages.  Once a module is enabled, new %permissions might be made available.  Modules can automatically be temporarily disabled to reduce server load when your site becomes extremely busy by checking throttle.  The auto-throttle functionality must be enabled on the %throttle after having enabled the throttle module.", array("%permissions" => l(t("permissions"), "admin/user/permission"), "%throttle" => l(t("throttle configuration page"), "admin/system/modules/throttle")));
-      break;
-    case 'admin/system/filters':
-      $output = t("Filters fit between the raw text in a node and the HTML output. They allow you to replace text selectively. Uses include automatic conversion of emoticons into graphics and filtering HTML content from users' submissions.");
       break;
     case 'admin/help#system':
     case 'admin/system/help':
@@ -79,7 +76,6 @@ function system_link($type) {
           menu("admin/system/modules/$name", t($name), "system_admin");
         }
       }
-      menu("admin/system/filters", t("filters"), "system_admin", 4);
       menu("admin/system/help", t("help"), "system_help_page", 9);
     }
   }
@@ -196,78 +192,45 @@ function system_view_theme($name) {
   return $output;
 }
 
-function system_view_filters() {
-  return implode("\n", module_invoke_all("conf_filters"));
-}
-
-function system_save_settings($edit = array()) {
-
-  if ($edit["type"]) {
-    db_query("UPDATE {system} SET status = '0' WHERE type = '%s'", $edit["type"]);
-    foreach ($edit["status"] as $filename => $status) {
-      db_query("UPDATE {system} SET status = %d, throttle = %d WHERE filename = '$filename'", $status, $edit["throttle"]["$filename"]);
-    }
-    if ($edit["type"] == "theme") {
-      variable_set("theme_default", $edit["theme_default"]);
-    }
-  }
-  else {
-    foreach ($edit as $name => $value) {
-      variable_set($name, $value);
-    }
-  }
-  cache_clear_all();
-
-  drupal_set_message(t("the configuration options have been saved."));
-}
-
-function system_reset_default($edit = array()) {
-  foreach ($edit as $name => $value) {
-    variable_del($name);
-  }
-
-  cache_clear_all();
-
-  drupal_set_message(t("the configuration options have been reset to their default values."));
-}
-
 function system_view($type, $arg = "") {
-  $required = array("modules/admin.module", "modules/user.module", "modules/system.module", "modules/watchdog.module");
-  $links = array();
+  // The module/theme lists don't use the generic settings handler
+  if (($type == "modules" || $type == "themes") && $arg == "") {
+    system_listing_save();
+    $form = system_listing($type);
+    $form .= form_submit(t("Save configuration"));
+    return form($form);
+  }
+
+  system_settings_save();
+
   switch ($type) {
-    case "filters":
-      $form = system_view_filters();
-      break;
     case "modules":
-      if ($arg) {
-        $form = module_invoke($arg, "settings");
-      }
-      else {
-        $form = system_listing("module", "modules", $required);
-      }
+      $form = module_invoke($arg, "settings");
       break;
     case "themes":
-      if ($arg) {
-        $form = system_view_theme($arg);
-      }
-      else {
-        $form = system_listing("theme", "themes", $required);
-      }
+      $form = system_view_theme($arg);
       break;
     default:
       $form = system_view_general();
       break;
   }
 
-  $form .= form_submit(t("Save configuration"));
-  $form .= form_submit(t("Reset to defaults"));
-
-  return form($form);
+  return system_settings_form($form);
 }
 
-function system_listing($type, $directory, $required = array()) {
-  // Make sure we set $type correctly
-  $type = $type != 'theme' ? "module" : "theme";
+function system_listing($type) {
+  // Pick appropriate directory and filetype
+  switch ($type) {
+    case "modules":
+      $directory = "modules";
+      $type = "module";
+      break;
+    case "themes":
+    default:
+      $directory = "themes";
+      $type = "theme";
+      break;
+  }
 
   // Find files in the directory.
   $files = file_scan_directory($directory, "\.$type$");
@@ -285,11 +248,14 @@ function system_listing($type, $directory, $required = array()) {
   ksort($files);
 
   if ($type == "module") {
-    $header = array(t("name"), t("description"), t("status"), t("throttle"));
+    $required = array("modules/admin.module", "modules/filter.module", "modules/system.module", "modules/user.module", "modules/watchdog.module");
     // the throttle mechanism requires additional modules always be enabled
     $throttle_required = array_merge($required, array("modules/statistics.module", "modules/throttle.module"));
+
+    $header = array(t("name"), t("description"), t("status"), t("throttle"));
   }
   else {
+    $required = array();
     $header = array(t("name"), t("description"), t("enable"), t("default"));
   }
 
@@ -338,20 +304,57 @@ function system_listing($type, $directory, $required = array()) {
   return $output;
 }
 
-function system_admin() {
-
+function system_listing_save($edit = array()) {
   $op = $_POST["op"];
   $edit = $_POST["edit"];
 
+  if ($op == t("Save configuration")) {
+    db_query("UPDATE {system} SET status = '0' WHERE type = '%s'", $edit["type"]);
+    foreach ($edit["status"] as $filename => $status) {
+      db_query("UPDATE {system} SET status = %d, throttle = %d WHERE filename = '$filename'", $status, $edit["throttle"]["$filename"]);
+    }
+    if ($edit["type"] == "theme") {
+      variable_set("theme_default", $edit["theme_default"]);
+    }
+
+    cache_clear_all();
+
+    drupal_set_message(t("the configuration options have been saved."));
+  }
+}
+
+function system_settings_form($form) {
+  $form .= form_submit(t("Save configuration"));
+  $form .= form_submit(t("Reset to defaults"));
+
+  return form($form);
+}
+
+function system_settings_save() {
+  $op = $_POST["op"];
+  $edit = $_POST["edit"];
+
+  if ($op == t("Reset to defaults")) {
+    foreach ($edit as $name => $value) {
+      variable_del($name);
+    }
+    drupal_set_message(t("the configuration options have been reset to their default values."));
+  }
+  if ($op == t("Save configuration")) {
+    foreach ($edit as $name => $value) {
+      variable_set($name, $value);
+    }
+    drupal_set_message(t("the configuration options have been saved."));
+  }
+  else {
+    return;
+  }
+
+  cache_clear_all();
+}
+
+function system_admin() {
   if (user_access("administer site configuration")) {
-    if ($op == t("Reset to defaults")) {
-      system_reset_default($edit);
-    }
-
-    if ($op == t("Save configuration")) {
-      system_save_settings($edit);
-    }
-
     $output = system_view(arg(2), arg(3));
     print theme("page", $output);
   }

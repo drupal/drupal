@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.300 2004/01/05 18:23:21 dries Exp $ */
+/* $Id: common.inc,v 1.301 2004/01/05 19:19:04 unconed Exp $ */
 
 /**
  * @name drupal_title
@@ -453,115 +453,6 @@ function valid_input_data($data) {
 function check_form($text) {
   return drupal_specialchars($text, ENT_QUOTES);
 }
-
-function filter($text) {
-  $modules = module_list();
-
-  /*
-  ** Make sure the HTML filters that are part of the node module
-  ** are run first.
-  */
-
-  if (in_array("node", $modules)) {
-    $text = module_invoke("node", "filter", $text);
-  }
-
-  foreach ($modules as $name) {
-    if (module_hook($name, "filter") && $name != "node") {
-      $text = module_invoke($name, "filter", $text);
-    }
-  }
-
-  return $text;
-}
-
-function rewrite_old_urls($text) {
-  global $base_url;
-
-  $end = substr($base_url, 12);
-
-  /*
-  ** This is a *temporary* filter to rewrite old-style URLs to new-style
-  ** URLs (clean URLs).  Currently, URLs are being rewritten dynamically
-  ** (ie. "on output"), however when these rewrite rules have been tested
-  ** enough, we will use them to permanently rewrite the links in node
-  ** and comment bodies.
-  */
-
-  if (variable_get("clean_url", "0") == "0") {
-    /*
-    ** Relative URLs:
-    */
-
-    // rewrite 'node.php?id=<number>[&cid=<number>]' style URLs:
-    $text = eregi_replace("\"(node)\.php\?id=([[:digit:]]+)(&cid=)?([[:digit:]]*)", "\"?q=\\1/view/\\2/\\4", $text);
-
-    // rewrite 'module.php?mod=<name>{&<op>=<value>}' style URLs:
-    $text = ereg_replace("\"module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "\"?q=\\2/\\4/\\6" , $text);
-    $text = ereg_replace("\"module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "\"?q=\\2/\\4", $text);
-    $text = ereg_replace("\"module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))", "\"?q=\\2", $text);
-
-    /*
-    ** Absolute URLs:
-    */
-
-    // rewrite 'node.php?id=<number>[&cid=<number>]' style URLs:
-    $text = eregi_replace("$end/(node)\.php\?id=([[:digit:]]+)(&cid=)?([[:digit:]]*)", "$end/?q=\\1/view/\\2/\\4", $text);
-
-    // rewrite 'module.php?mod=<name>{&<op>=<value>}' style URLs:
-    $text = ereg_replace("$end/module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "$end/?q=\\2/\\4/\\6" , $text);
-    $text = ereg_replace("$end/module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "$end/?q=\\2/\\4", $text);
-    $text = ereg_replace("$end/module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))", "\"$end/?q=\\2", $text);
-  }
-  else {
-    /*
-    ** Relative URLs:
-    */
-
-    // rewrite 'node.php?id=<number>[&cid=<number>]' style URLs:
-    $text = eregi_replace("\"(node)\.php\?id=([[:digit:]]+)(&cid=)?([[:digit:]]*)", "\"\\1/view/\\2/\\4", $text);
-
-    // rewrite 'module.php?mod=<name>{&<op>=<value>}' style URLs:
-    $text = ereg_replace("\"module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "\"\\2/\\4/\\6", $text);
-    $text = ereg_replace("\"module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "\"\\2/\\4", $text);
-    $text = ereg_replace("\"module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))", "\"\\2", $text);
-
-    /*
-    ** Absolute URLs:
-    */
-
-    // rewrite 'node.php?id=<number>[&cid=<number>]' style URLs:
-    $text = eregi_replace("$end/(node)\.php\?id=([[:digit:]]+)(&cid=)?([[:digit:]]*)", "$end/\\1/view/\\2/\\4", $text);
-
-    // rewrite 'module.php?mod=<name>{&<op>=<value>}' style URLs:
-    $text = ereg_replace("$end/module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "$end/\\2/\\4/\\6", $text);
-    $text = ereg_replace("$end/module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "$end/\\2/\\4", $text);
-    $text = ereg_replace("$end/module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))", "$end/\\2", $text);
-}
-
-  return $text;
-}
-
-function check_output($text) {
-  if (isset($text)) {
-    // filter content on output:
-    $text = filter($text);
-
-    /*
-    ** If only inline elements are used and no block level elements, we
-    ** replace all newlines with HTML line breaks.
-    */
-    if (strip_tags($text, '<a><br><span><bdo><map><object><img><tt><i><b><big><small><em><strong><dfn><code><q><samp><kbd><var><cite><abbr><acronym><sub><sup><input><select><textarea><label><button><ins><del><script>') == $text) {
-      $text = nl2br($text);
-    }
-  }
-  else {
-    $text = message_na();
-  }
-
-  return $text;
-}
-
 
 function check_file($filename) {
   return is_uploaded_file($filename);
