@@ -985,35 +985,20 @@ function node_feed($nodes = 0, $channel = array()) {
     */
 
     $item = node_load(array("nid" => $node->nid));
-
-    /*
-    ** Transform the node information into an RSS item:
-    */
-
-    $items .= format_rss_item($item->title, url(node_url($node)), ($item->teaser ? $item->teaser : $item->body));
-
-    /*
-    ** Determine the publication date:
-    */
-
-    if ($item->updated > $pubdate) {
-      $pubdate = $item->updated;
-    }
-    if ($item->created > $pubdate) {
-      $pubdate = $item->created;
-    }
+    $link = url(node_url($node));
+    $items .= format_rss_item($item->title, $link, ($item->teaser ? $item->teaser : $item->body), array("pubDate" => date("r", $item->changed)));
   }
 
   $output .= "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
   $output .= "<!DOCTYPE rss [<!ENTITY % HTMLlat1 PUBLIC \"-//W3C//ENTITIES Latin 1 for XHTML//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml-lat1.ent\">]>\n";
-  if (!$channel["version"]) $channel["version"] = "0.91";
+  if (!$channel["version"]) $channel["version"] = "0.92";
   if (!$channel["title"]) $channel["title"] = variable_get("site_name", "drupal") ." - ". variable_get("site_slogan", "");
   if (!$channel["link"]) $channel["link"] = $base_url;
   if (!$channel["description"]) $channel["description"] = variable_get("site_mission", "");
   foreach ($languages as $key => $value) break;
   if (!$channel["language"]) $channel["language"] = $key ? $key : "en";
   $output .= "<rss version=\"". $channel["version"] . "\">\n";
-  $output .= format_rss_channel($channel["title"], $channel["link"], $channel["description"], $items, $channel["language"], array("pubDate" => date("r", $pubdate)));
+  $output .= format_rss_channel($channel["title"], $channel["link"], $channel["description"], $items, $channel["language"]);
   $output .= "</rss>\n";
 
   header("Content-Type: text/xml");
