@@ -306,10 +306,10 @@ CREATE TABLE page (
 --
 
 CREATE TABLE path (
-  alid int(10) unsigned NOT NULL auto_increment,
+  pid int(10) unsigned NOT NULL auto_increment,
   old varchar(128) NOT NULL default '',
   new varchar(128) NOT NULL default '',
-  PRIMARY KEY  (alid),
+  PRIMARY KEY  (pid),
   UNIQUE KEY new (new),
   UNIQUE KEY old (old)
 ) TYPE=MyISAM;

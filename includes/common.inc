@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.249 2003/09/30 17:01:16 dries Exp $
+// $Id: common.inc,v 1.250 2003/09/30 20:59:24 dries Exp $
 
 function conf_init() {
 
@@ -1076,7 +1076,9 @@ function form_allowed_tags_text() {
 function get_url_alias($path) {
   $map = get_url_map();
 
-  return array_search($path, $map);
+  if ($map) {
+    return array_search($path, $map);
+  }
 }
 
 /**
