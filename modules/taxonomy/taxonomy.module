@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.87 2003/12/17 22:27:23 dries Exp $
+// $Id: taxonomy.module,v 1.88 2003/12/24 15:09:43 dries Exp $
 
 function taxonomy_feed($taxonomy) {
   global $id, $type;
@@ -435,6 +435,20 @@ function taxonomy_get_parents($tid, $key = "tid") {
   else {
     return array();
   }
+}
+
+// Gets all parents, parents of parents, etc.
+function taxonomy_get_parents_all($tid, $key = "tid") {
+  $parents = array();
+  if ($tid) {
+    $parents[] = taxonomy_get_term($tid);
+    $n = 0;
+    while ($parent = taxonomy_get_parents($parents[$n]->tid)) {
+      $parents = array_merge($parents, $parent);
+      $n++;
+    }
+  }
+  return $parents;
 }
 
 // hierarchy: get children

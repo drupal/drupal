@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.147 2003/12/17 22:27:23 dries Exp $
+// $Id: forum.module,v 1.148 2003/12/24 15:09:43 dries Exp $
 
 function forum_node($field) {
   $info["name"] = t("forum topic");
@@ -154,22 +154,19 @@ function forum_view($node, $main = 0, $page = 0) {
       // we are previewing
       $term_data = taxonomy_get_term($node->taxonomy[0]);
     }
-    $voc = taxonomy_get_vocabulary($term_data->vid);
+
     // Breadcrumb navigation
-    $breadcrumb[] = l(t("Home"), NULL);
-    $breadcrumb[] = l(t("forums"), "forum");
-    $breadcrumb[] = l($term_data->name, "forum/$term_data->tid");
-    // print the breadcrumb
+    $breadcrumb = array(l(t("Home"), NULL), l(t("forum"), "forum"));
+    if ($parents = taxonomy_get_parents_all($term_data->tid)) {
+      $parents = array_reverse($parents);
+      foreach ($parents as $p) {
+        $breadcrumb[] = l($p->name, "forum/$p->tid");
+      }
+    }
     drupal_set_breadcrumb($breadcrumb);
   }
 
-  // prepare the node content
-  $node = forum_content($node);
-
-  // print the node
-  $output .= theme("node", $node, $main, $page);
-
-  return $output;
+  return theme("node", forum_content($node), $main, $page);
 }
 
 function forum_validate(&$node) {
@@ -285,19 +282,6 @@ function forum_get_forums($tid = 0) {
     }
   }
   return $forums;
-}
-
-function forum_get_parents($tid) {
-  if ($tid) {
-    $parents[] = taxonomy_get_term($tid);
-  }
-  $n = 0;
-  while ($parent = taxonomy_get_parents($parents[$n]->tid)) {
-    $parents = array_merge($parents, $parent);
-    $n++;
-  }
-
-  return $parents;
 }
 
 function _forum_num_topics($term) {
@@ -444,7 +428,7 @@ function forum_page() {
       $offset = ($from / $forum_per_page) + 1;
 
       $forums = forum_get_forums($tid);
-      $parents = forum_get_parents($tid);
+      $parents = taxonomy_get_parents_all($tid);
       if ($tid && !in_array($tid, variable_get("forum_containers", array()))) {
         $topics = forum_get_topics($tid, $sortby, $forum_per_page);
       }
