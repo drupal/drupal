@@ -59,7 +59,8 @@ $mysql_updates = array(
   "2002-11-08" => "update_44",
   "2002-11-20" => "update_45",
   "2002-12-10" => "update_46",
-  "2002-12-22" => "update_47"
+  "2002-12-22" => "update_47",
+  "2002-12-29" => "update_48"
 );
 
 // Update functions
@@ -653,6 +654,12 @@ function update_47() {
     weight tinyint(4) DEFAULT '0' NOT NULL,
     overview tinyint(1) DEFAULT '0' NOT NULL
   );");
+}
+
+function update_48() {
+  if ($max = db_result(db_query("SELECT MAX(tid) FROM vocabulary"))) {
+    update_sql("REPLACE INTO sequences VALUES ('vocabulary', $max)");
+  }
 }
 
 function update_upgrade3() {

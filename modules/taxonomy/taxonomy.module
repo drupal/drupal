@@ -88,17 +88,22 @@ function taxonomy_save_vocabulary($edit) {
 
   if ($edit["vid"] && $edit["name"]) {
     db_query("UPDATE vocabulary SET ". _prepare_update($data) ." WHERE vid = '". check_query($edit["vid"]) ."'");
-    return t("update vocabulary '%name'.", array("%name" => $edit["name"]));
+    module_invoke_all("taxonomy", "update", "vocabulary", $edit);
+    $message = t("updated vocabulary '%name'.", array("%name" => $edit["name"]));
   }
   else if ($edit["vid"]) {
-    return taxonomy_del_vocabulary($edit["vid"]);
+    $message = taxonomy_del_vocabulary($edit["vid"]);
   }
   else {
+    $data["vid"] = db_next_id("vocabulary");
     db_query("INSERT INTO vocabulary ". _prepare_insert($data, 1) ." VALUES ". _prepare_insert($data, 2));
-    return t("created new vocabulary '%name'.", array("%name" => $edit["name"]));
+    module_invoke_all("taxonomy", "insert", "vocabulary", $edit);
+    $message = t("created new vocabulary '%name'.", array("%name" => $edit["name"]));
   }
 
   cache_clear_all();
+
+  return $message;
 }
 
 function taxonomy_del_vocabulary($vid) {
@@ -109,6 +114,8 @@ function taxonomy_del_vocabulary($vid) {
   while ($term = db_fetch_object($result)) {
     taxonomy_del_term($term->tid);
   }
+
+  module_invoke_all("taxonomy", "delete", "vocabulary", $vocabulary);
 
   cache_clear_all();
 
@@ -173,6 +180,7 @@ function taxonomy_save_term($edit) {
     $data = array("name" => $edit["name"], "description" => $edit["description"], "weight" => $edit["weight"]);
 
     db_query("UPDATE term_data SET ". _prepare_update($data) ." WHERE tid = '%d'", $edit["tid"]);
+    module_invoke_all("taxonomy", "update", "term", $edit);
     $message = t("the term '%a' has been updated.", array("%a" => $edit["name"]));
   }
   else if ($edit["tid"]) {
@@ -182,6 +190,7 @@ function taxonomy_save_term($edit) {
     $edit["tid"] = db_next_id("term_data");
     $data = array("tid" => $edit["tid"], "name" => $edit["name"], "description" => $edit["description"], "vid" => $edit["vid"], "weight" => $edit["weight"]);
     db_query("INSERT INTO term_data ". _prepare_insert($data, 1) ." VALUES ". _prepare_insert($data, 2));
+    module_invoke_all("taxonomy", "insert", "term", $edit);
     $message = t("created new term '%name'.", array("%name" => $edit["name"]));
   }
 
@@ -232,6 +241,7 @@ function taxonomy_del_term($tid) {
   db_query("DELETE FROM term_synonym WHERE tid = '%d'", $tid);
   db_query("DELETE FROM term_node WHERE tid = '%d'", $tid);
 
+  module_invoke_all("taxonomy", "delete", "term", $term);
   cache_clear_all();
 
   return t("deleted term '%name'.", array("%name" => $term->name));
@@ -431,37 +441,34 @@ function taxonomy_get_children($tid, $vid = 0, $key = "tid") {
 
 // hierarchy: get whole family, with tid, parent and depth; useful to show
 function taxonomy_get_tree($vocabulary_id, $parent = 0, $depth = -1, $key = "tid") {
-  static $children, $parents, $terms, $tree;
-  if ($depth == -1) {
-    $children = array();
-    $parents = array();
-    $terms = array();
-    $tree = array();
-  }
+  static $children, $parents, $terms;
 
   $depth++;
 
-  if (!count($children)) {
+  // we cache trees, so it's not cpu-intensive to call get_tree on a term and its children too
+  if (!isset($children[$vocabulary_id])) {
+    $children[$vocabulary_id] = array();
+
     $result = db_query("SELECT t.*, parent FROM term_data t, term_hierarchy h WHERE t.tid = h.tid AND t.vid = '%d' ORDER BY weight, name", $vocabulary_id);
     while ($term = db_fetch_object($result)) {
-      $children[$term->parent][] = $term->tid;
-      $parents[$term->tid][] = $term->parent;
-      $terms[$term->tid] = $term;
+      $children[$vocabulary_id][$term->parent][] = $term->tid;
+      $parents[$vocabulary_id][$term->tid][] = $term->parent;
+      $terms[$vocabulary_id][$term->tid] = $term;
     }
   }
 
-  if ($children[$parent]) {
-    foreach ($children[$parent] as $child) {
-      $terms[$child]->depth = $depth;
-      unset($terms[$child]->parent); // this would show just one parent
-      $terms[$child]->parents = $parents[$child];
-      $tree[] = $terms[$child];
+  if ($children[$vocabulary_id][$parent]) {
+    foreach ($children[$vocabulary_id][$parent] as $child) {
+      $terms[$vocabulary_id][$child]->depth = $depth;
+      unset($terms[$vocabulary_id][$child]->parent); // this is not useful as it would show one parent only
+      $terms[$vocabulary_id][$child]->parents = $parents[$vocabulary_id][$child];
+      $tree[] = $terms[$vocabulary_id][$child];
 
-      taxonomy_get_tree($vocabulary_id, $child, $depth, $key);
+      $tree = array_merge($tree, taxonomy_get_tree($vocabulary_id, $child, $depth));
     }
   }
 
-  return $tree;
+  return $tree ? $tree : array();
 }
 
 // synonyms: return array of synonyms
@@ -575,13 +582,13 @@ function _taxonomy_term_select($title, $name, $value, $vocabulary_id, $descripti
   $tree = taxonomy_get_tree($vocabulary_id);
 
   if ($blank) {
-    $options[0] = $blank;
+    $options[] = array("tid" => 0, "name" => $blank);
   }
 
   if ($tree) {
     foreach ($tree as $term) {
       if (!in_array($term->tid, $exclude)) {
-        $options[$term->tid] = _taxonomy_depth($term->depth, '-').$term->name;
+        $options[] = array("tid" => $term->tid, "name" => _taxonomy_depth($term->depth, '-').$term->name);
       }
     }
     if (!$blank && !$value) {
@@ -591,8 +598,8 @@ function _taxonomy_term_select($title, $name, $value, $vocabulary_id, $descripti
   }
 
   if (count($options) > 0) {
-    foreach ($options as $key=>$choice) {
-      $select .= "<option value=\"$key\"". (is_array($value) ? (in_array($key, $value) ? " selected=\"selected\"" : "") : ($key == $value ? " selected=\"selected\"" : "")) .">". check_form($choice) ."</option>";
+    foreach ($options as $option) {
+      $select .= "<option value=\"".$option["tid"]."\"". (is_array($value) ? (in_array($option["tid"], $value) ? " selected=\"selected\"" : "") : ($option["tid"] == $value ? " selected=\"selected\"" : "")) .">". check_form($option["name"]) ."</option>";
     }
 
     $size = min(12, count($options));
