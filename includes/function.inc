@@ -1,8 +1,5 @@
 <?
 
-include "includes/database.inc";
-include "includes/watchdog.inc";
-
 function id2story($id) {
   ### Perform query:
   $result = db_query("SELECT s.*, u.userid FROM stories s LEFT JOIN users u ON s.author = u.id WHERE s.id = $id");
@@ -69,7 +66,7 @@ function format_username($username, $admin = 0) {
   else { global $anonymous; return $anonymous; }
 }
 
-function format_email_address($address) {
+function format_email($address) {
   return ($address) ? "<A HREF=\"mailto:$address\">$address</A>" : format_data($address);
 }
 

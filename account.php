@@ -176,7 +176,7 @@ function account_user($uname) {
     $output .= "<TABLE BORDER=\"0\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>User ID:</B></TD><TD>$user->userid</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>Name:</B></TD><TD>". format_data($user->name) ."</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>E-mail:</B></TD><TD>". format_email_address($user->fake_email) ."</A></TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>E-mail:</B></TD><TD>". format_email($user->fake_email) ."</A></TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>URL:</B></TD><TD>". format_url($user->url) ."</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Bio:</B></TD><TD>". format_data($user->bio) ."</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Signature:</B></TD><TD>". format_data($user->signature) ."</TD></TR>\n";
@@ -190,7 +190,7 @@ function account_user($uname) {
   elseif ($uname && $account = account_get_user($uname)) {
     $box1 .= "<TABLE BORDER=\"0\" CELLPADDING=\"1\" CELLSPACING=\"1\">\n";
     $box1 .= " <TR><TD ALIGN=\"right\"><B>Username:</B></TD><TD>$account->userid</TD></TR>\n";
-    $box1 .= " <TR><TD ALIGN=\"right\"><B>E-mail:</B></TD><TD>". format_email_address($account->fake_email) ."</TD></TR>\n";
+    $box1 .= " <TR><TD ALIGN=\"right\"><B>E-mail:</B></TD><TD>". format_email($account->fake_email) ."</TD></TR>\n";
     $box1 .= " <TR><TD ALIGN=\"right\"><B>URL:</B></TD><TD>". format_url($account->url) ."</TD></TR>\n";
     $box1 .= " <TR><TD ALIGN=\"right\"><B>Bio:</B></TD><TD>". format_data($account->bio) ."</TD></TR>\n";
     $box1 .= "</TABLE>\n";
@@ -288,9 +288,9 @@ function account_register_submit($new) {
     user_save($new);
 
     $link = "http://". getenv("HOSTNAME") ."/account.php?op=confirm&name=$new[userid]&hash=$new[hash]";
-    $message = "$new[userid],\n\n\nsomeone signed up for a user account on $sitename and supplied this email address as their contact.  If it wasn't you, don't get your panties in a knot and simply ignore this mail.\n\nIf this was you, you have to activate your account first before you can login.  You can activate your account by visiting the URL below:\n\n    $link\n\nVisiting this URL will automatically activate your account.  Once activated you can login using the following information:\n\n    username: $new[userid]\n    password: $new[passwd]\n\n\n-- $sitename crew\n";
-    // mail($new[real_email], "Account details for $sitename", $message, "From: noreply@$sitename");
-    print "<PRE>$message</PRE>\n";
+    $message = "$new[userid],\n\n\nsomeone signed up for a user account on $sitename and supplied this email address as their contact.  If it wasn't you, don't get your panties in a knot and simply ignore this mail.\n\nIf this was you, you have to activate your account first before you can login.  You can do so simply by visiting the URL below:\n\n    $link\n\nVisiting this URL will automatically activate your account.  Once activated you can login using the following information:\n\n    username: $new[userid]\n    password: $new[passwd]\n\n\n-- $sitename crew\n";
+
+    mail($new[real_email], "Account details for $sitename", $message, "From: noreply@$sitename");
 
     watchdog(1, "new user `$new[userid]' &lt;$new[real_email]&gt;");
 
