@@ -1,5 +1,5 @@
 <?php
-// $Id: throttle.module,v 1.16 2003/11/27 17:37:06 dries Exp $
+// $Id: throttle.module,v 1.17 2003/11/29 06:53:03 dries Exp $
 
 function throttle_perm() {
   /*
@@ -37,13 +37,9 @@ function throttle_help($section = "admin/help#throttle") {
       $output .= "<ul><li><i>access throttle block</i> - enable for user roles that get to view the throttle block.</li></ul>";
       $output .= "<h3>For programmers: throttle_status()</h3><p>The function <code>throttle_status()</code> will return a number from 0 to 5.  0 means that there is no throttle enabled at this time.  Each number above that is a progressively more throttled system...  To disable a feature when a site first begins to get busy, disable it at a throttle of 2 or 3.  To hold on to the bitter end, wait until 4 or 5.</p>";
       $output .= "<p>To implement the throttle, you should do something like this:";
-      $output .= "<pre>       \$throttle = 0;
-        /* verify that the statistics module is installed */
-        if (function_exists(throttle_status) {
-         \$throttle = throttle_status()
-        }
-       if (\$throttle >= \$my_throttle_value) {
-          // throttle limit reached, disable stuff
+      $output .= "<pre>
+       if (module_invoke(\"throttle\", \"status\") >= \$my_throttle_value) {
+          // my throttle limit was reached, disable stuff
         }
         else {
           // throttle limit not reached, execute normally
@@ -59,16 +55,16 @@ function throttle_help($section = "admin/help#throttle") {
 /* Adds configure option to the main configure site admin page */
 function throttle_settings() {
   // enable/disable auto-throttle
-  $group = form_radios(t("Enable auto-throttle"), "statistics_enable_auto_throttle", variable_get("statistics_enable_auto_throttle", 0), array("1" => t("enabled"), "0" => t("disabled")), "Enable auto-throttling congestion control mechanism.  Allows your site to adapt under extreme user loads, such as being linked by Slashdot.  To use the auto-throttle you must also enable the 'access log' from the statistics module.");
-  $output = form_group(t("Enable/Disable"), $group);
+  $group = form_radios(t("Enable auto-throttle"), "throttle_enable", variable_get("throttle_enable", 0), array("1" => t("enabled"), "0" => t("disabled")), "Enable auto-throttling congestion control mechanism.  Allows your site to adapt under extreme user loads, such as being linked by Slashdot.  To use the auto-throttle you must also enable the 'access log' from the statistics module.");
+  $output = form_group(t("Auto-throttle status"), $group);
 
   // tune auto-throttle
   $throttles = array(1 => "1 (0,1,2,3,4,5)", 5 => "5 (0,5,10,15,20,25)", 10 => "10 (0,10,20,30,40,50)", 12 => "12 (0,12,24,36,48,60)", 15 => "15 (0,15,30,45,60,75)", 20 => "20 (0,20,40,60,80,100)", 30 => "30 (0,30,60,90,120,150)", 50 => "50 (0,50,100,150,200,250)", 60 => "60 (0,60,120,180,240,300)", 100 => "100 (0,100,200,300,400,500", 500 => "500 (0,500,1000,1500,2000,2500", 1000 => "1000 (0,1000,2000,3000,4000,5000)");
-  $group = form_select(t("Auto-throttle multiplier"), "statistics_throttle_multiplier", variable_get("statistics_throttle_multiplier", 60), $throttles, "The 'auto-throttle multiplier' is the number of hits in the past 60 seconds required to trigger a higher throttle level.  For example, if you set the multiplier to 60, and your site is getting less than 60 hits a minute, then the throttle will be at a level of 0.  Only once you start getting more than 60 hits a minute will the throttle level go to 1.  If you start getting more than 120 hits a minute, the throttle becomes 2.  This continues until your site is sustaining more than 300 hits per minute, at which time the throttle reaches a maximum level of 5.  In the pop down menu, the first number is the multiplier, and the numbers in parenthesis are how many hits are required to switch to each throttle level.  The more powerful your server, the higher you should set the multiplier value.");
+  $group = form_select(t("Auto-throttle multiplier"), "throttle_multiplier", variable_get("throttle_multiplier", 60), $throttles, "The 'auto-throttle multiplier' is the number of hits in the past 60 seconds required to trigger a higher throttle level.  For example, if you set the multiplier to 60, and your site is getting less than 60 hits a minute, then the throttle will be at a level of 0.  Only once you start getting more than 60 hits a minute will the throttle level go to 1.  If you start getting more than 120 hits a minute, the throttle becomes 2.  This continues until your site is sustaining more than 300 hits per minute, at which time the throttle reaches a maximum level of 5.  In the pop down menu, the first number is the multiplier, and the numbers in parenthesis are how many hits are required to switch to each throttle level.  The more powerful your server, the higher you should set the multiplier value.");
   $probabilities = array(0 => "100%", 1 => "50%", 2 => "33.3%", 3 => "25%", 4 => "20%", 5 => "16.6%", 7 => "12.5%", 9 => "10%", 19 => "5%", 99 => "1%", 199 => ".5%", 399 => ".25%", 989 => ".1%");
-  $group .= form_select(t("Auto-throttle probability limiter"), "statistics_probability_limiter", variable_get("statistics_probability_limiter", 9), $probabilities, "The auto-throttle probability limiter is an efficiency mechanism to statistically reduce the overhead of the auto-throttle.  The limiter is expressed as a percentage of page views, so for example if set to the default of 10% we only perform the extra database query to update the current level 1 out of every 10 page views.  The busier your site, the lower you should set the limiter value.");
+  $group .= form_select(t("Auto-throttle probability limiter"), "throttle_probability_limiter", variable_get("throttle_probability_limiter", 9), $probabilities, "The auto-throttle probability limiter is an efficiency mechanism to statistically reduce the overhead of the auto-throttle.  The limiter is expressed as a percentage of page views, so for example if set to the default of 10% we only perform the extra database query to update the current level 1 out of every 10 page views.  The busier your site, the lower you should set the limiter value.");
   $period = array(1800 => format_interval(1800), 3600 => format_interval(3600), 7200 => format_interval(7200), 10800 => format_interval(10800), 14400 => format_interval(14400), 18000 => format_interval(18000), 21600 => format_interval(21600), 43200 => format_interval(43200), 64800 => format_interval(64800), 86400 => format_interval(86400), 172800 => format_interval(172800), 259200 => format_interval(259200), 604800 => format_interval(604800));
-  $group .= form_select(t("Auto-throttle cron test"), "statistics_throttle_cron_timer", variable_get("statistics_throttle_cron_timer", 10800), $period, "The auto-throttle cron test value specifies how frequently the throttle level will be automatically lowered, testing server load.  After this amount of time, if your throttle level is greater than 0, it will be reduced by 1.  If your site is no longer sustaining as heavy a load as it was when it increased the throttle, it will stay at this reduced level.  If your site is still sustaining a heavy load, the throttle level will soon be increased again.  Requires cron.");
+  $group .= form_select(t("Auto-throttle cron test"), "throttle_cron_timer", variable_get("throttle_cron_timer", 10800), $period, "The auto-throttle cron test value specifies how frequently the throttle level will be automatically lowered, testing server load.  After this amount of time, if your throttle level is greater than 0, it will be reduced by 1.  If your site is no longer sustaining as heavy a load as it was when it increased the throttle, it will stay at this reduced level.  If your site is still sustaining a heavy load, the throttle level will soon be increased again.  Requires cron.");
   $output .= form_group(t("Auto-throttle tuning"), $group);
 
   return $output;
@@ -80,27 +76,22 @@ function throttle_display_throttle_block() {
   global $recent_activity;
 
   if (user_access("access throttle block")) {
-    if (variable_get("statistics_enable_auto_throttle", 0)) {
+    if (variable_get("throttle_enable", 0)) {
       /* the throttle is enabled:  display the status of all throttle config */
-      if (function_exists("throttle_status")) {
-        $throttle = throttle_status();
-      }
-      else {
-        $throttle = 0;
-      }
-      $multiplier = variable_get("statistics_throttle_multiplier", 60);
+      $throttle = module_invoke("throttle", "status");
+      $multiplier = variable_get("throttle_multiplier", 60);
       $minimum = $throttle * $multiplier;
-      $limiter = variable_get("statistics_probability_limiter", 9);
+      $limiter = variable_get("throttle_probability_limiter", 9);
       /* calculate probability limiter's odds of updating throttle */
       $probability = substr((($limiter / ($limiter + 1) * 100) - 100) * -1, 0, 4);
 
-      $output .= "Throttle: ". l("Enabled", "admin/system/modules/throttle") ."<br />\n";
+      $output .= "Throttle: ". l(t("enabled"), "admin/system/modules/throttle") ."<br />\n";
       if ($throttle < 5) {
         $maximum = (($throttle + 1) * $multiplier) - 1;
-        $output .= "Current Level: $throttle ($minimum - $maximum)<br />\n";
+        $output .= "Current level: $throttle ($minimum - $maximum)<br />\n";
       }
       else {
-        $output .= "Current Level: $throttle ($minimum+)<br />\n";
+        $output .= "Current level: $throttle ($minimum+)<br />\n";
       }
       $output .= "Probability: $probability%<br />\n";
       if ($recent_activity["hits"]) {
@@ -110,7 +101,7 @@ function throttle_display_throttle_block() {
       }
     }
     else {
-      $output .= "Throttle: ". l("Disabled", "admin/system/modules/throttle") ."<br />\n";
+      $output .= "Throttle: ". l(t("disabled"), "admin/system/modules/throttle") ."<br />\n";
     }
   }
   return $output;
