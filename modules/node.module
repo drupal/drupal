@@ -471,7 +471,7 @@ function node_link($type, $node = 0, $main = 0) {
     menu("admin/node", "node management", "node_admin");
     menu("admin/node/nodes", "post overview");
     menu("admin/node/nodes/0", "new or updated posts", "node_admin", NULL, 0);
-    menu("admin/node/nodes/1", "posts that await approval", "node_admin", NULL, 1);
+    menu("admin/node/nodes/1", "approval queue", "node_admin", NULL, 1);
     menu("admin/node/search", "search post", "node_admin", $help["search"], 8);
     menu("admin/node/help", "help", "node_help", NULL, 9);
     menu("admin/node/edit", "edit node", "node_admin", NULL, 0, 1);
@@ -1304,19 +1304,14 @@ function node_update_index() {
   // last run date for the nodes update.
   return array("last_update" => "node_cron_last",
          "node_type" => "node",
-         "select" => "SELECT n.nid as lno, n.title as text1, n.body as text2 FROM node n WHERE n.status = 1 AND moderate = 0 and (created > " . variable_get("node_cron_las node_access("view", $node)) {
-    $links[] = l(t("view"), "node/view/$nid");
-  }
-
-  if ($nid && node_access("update", $node)) {
-    $links[] = l(t("edit"), "node/edit/$nid");
-  }
-
-  $output .= "<p>". theme("links", $links) ."</p>";
-
-  return $output;
+         "select" => "SELECT n.nid as lno, n.title as text1, n.body as text2 FROM node n WHERE n.status = 1 AND moderate = 0 and (created > " . variable_get("node_cron_last", 1) . " or changed > " . variable_get("node_cron_last", 1) . ")");
 }
 
-function node_delete($edit) {
+function node_nodeapi(&$node, $op, $arg = 0) {
+  switch ($op) {
+    case "fields":
+      return array("nid", "uid", "type", "title", "teaser", "body", "revisions", "score", "status", "promote", "static", "created", "changed", "users", "votes");
+  }
+}
 
-  $node = node_load(array("nid" => $edit["
+?>
