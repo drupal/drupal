@@ -269,7 +269,7 @@ function import_refresh($feed) {
     */
 
     foreach ($channel as $key => $value) {
-      $channel[$key] = filter(strtr(trim($value), $tt));
+      $channel[$key] = node_filter(strtr(trim($value), $tt));
     }
 
     db_query("UPDATE feed SET timestamp = %d, link = '%s', description = '%s' WHERE fid = %d", time(), $channel["LINK"], $channel["DESCRIPTION"], $feed["fid"]);
@@ -287,7 +287,7 @@ function import_refresh($feed) {
 
       // Prepare the item:
       foreach ($item as $key => $value) {
-        $item[$key] = filter(strtr(trim($value), $tt));
+        $item[$key] = node_filter(strtr(trim($value), $tt));
       }
 
       if ($item["TITLE"]) {
