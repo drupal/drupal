@@ -1640,7 +1640,6 @@ function drupal_xml_parser_create(&$data) {
   }
 
   // Unsupported encodings are converted here into UTF-8.
-  // Requires the iconv, GNU recode or mbstring PHP extension.
   $php_supported = array('utf-8', 'iso-8859-1', 'us-ascii');
   if (!in_array(strtolower($encoding), $php_supported)) {
     $out = drupal_convert_to_utf8($data, $encoding);
@@ -1661,6 +1660,8 @@ function drupal_xml_parser_create(&$data) {
 
 /**
  * Convert data to UTF-8
+ *
+ * Requires the iconv, GNU recode or mbstring PHP extension.
  *
  * @param $data
  *   The data to be converted.
