@@ -2306,8 +2306,9 @@ function update_125() {
 }
 
 function update_126() {
-  $ret[] = update_sql("DELETE FROM {variable} WHERE name LIKE 'forum_block_%'");
-  return $ret;
+  variable_set('forum_block_num_0', variable_get('forum_block_num', 5));
+  variable_set('forum_block_num_1', variable_get('forum_block_num', 5));
+  variable_delete('forum_block_num');
 }
 
 function update_sql($sql) {
