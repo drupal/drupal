@@ -4,10 +4,8 @@ body {
   color: #000000;
   background-color: #fff;
   font-family: verdana, arial, helvetica, sans-serif;
-  width: 100%;
-}
-body {
   font-size: 82%;
+  width: 100%;
 }
 tr.dark {
   background-color: #ddd;
@@ -168,4 +166,16 @@ table .comment {
 }
 .block .content, .box .content {
   font-size: 0.9em/1.1em;
+}
+#tracker th {
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+#tracker tr.light, #tracker tr.dark {
+  background-color: #fff;
+}
+#tracker td {
+  vertical-align: top;
+  padding: 10px 10px 10px 0;
+  border-bottom: 1px solid #ddd;
 }
