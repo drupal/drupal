@@ -117,6 +117,8 @@ function system_menu($may_cache) {
  * Menu callback: dummy clean URL tester.
  */
 function system_test() {
+  variable_set('clean_url_ok', 1);
+  exit;
 }
 
 /**
@@ -194,7 +196,7 @@ function _system_zonelist() {
 function system_view_general() {
   global $conf;
 
-  // general settings:
+  // General settings:
   $group  = form_textfield(t('Name'), 'site_name', variable_get('site_name', 'drupal'), 70, 70, t('The name of this web site.'));
   $group .= form_textfield(t('E-mail address'), 'site_mail', variable_get('site_mail', ini_get('sendmail_from')), 70, 128, t('A valid e-mail address for this website, used by the auto-mailer during registration, new password requests, notifications, etc.'));
   $group .= form_textfield(t('Slogan'), 'site_slogan', variable_get('site_slogan', ''), 70, 128, t('The slogan of this website. Some themes display a slogan when available.'));
@@ -203,14 +205,16 @@ function system_view_general() {
   $group .= form_textfield(t('Anonymous user'), 'anonymous', variable_get('anonymous', 'Anonymous'), 70, 70, t('The name used to indicate anonymous users.'));
   $group .= form_textfield(t('Default front page'), 'site_frontpage', variable_get('site_frontpage', 'node'), 70, 70, t('The home page displays content from this relative URL.  If you are not using clean URLs, specify the part after "?q=".  If unsure, specify "node".'));
 
-  // check if clean URLs are supported (HTTP 200 = Ok)
-  $request = drupal_http_request($GLOBALS['base_url'] . '/system/test');
-  $supported = $request->code == 200;
-  $group .= form_radios(t('Clean URLs'), 'clean_url', variable_get('clean_url', 0), array(t('Disabled'), t('Enabled')), t('This option makes Drupal emit clean URLs (i.e. without <code>?q=</code> in the URL). You\'ll need <code>ModRewrite</code> support for this to work. See the <code>.htaccess</code> file in Drupal\'s top-level directory for more information.'), false, $supported ? NULL : array('disabled' => 'disabled'));
+  // We check for clean URL support using an image on the client side.
+  $group .= form_radios(t('Clean URLs'), 'clean_url', variable_get('clean_url', 0), array(t('Disabled'), t('Enabled')), t('This option makes Drupal emit clean URLs (i.e. without <code>?q=</code> in the URL). You\'ll need <code>ModRewrite</code> support for this to work. See the <code>.htaccess</code> file in Drupal\'s top-level directory for more information.'));
+  variable_set('clean_url_ok', 0);
+  global $base_url;
+  // We will use a random URL so there is no way a proxy or a browser could cache the "no such image" answer.
+  $group .= '<img style="position: relative; left: -1000em;" src="'. $base_url. '/system/test/'. user_password(20) .'.png" alt="" />';
 
   $output = form_group(t('General settings'), $group);
 
-  // error handling:
+  // Error handling:
   $period = drupal_map_assoc(array(3600, 10800, 21600, 32400, 43200, 86400, 172800, 259200, 604800, 1209600, 2419200), 'format_interval');
   $period['1000000000'] = t('Never');
   $group = form_textfield(t('Default 403 (access denied) page'), 'site_403', variable_get('site_403', ''), 70, 70, t('This page is displayed when the requested document is denied to the current user.  If you are not using clean URLs, specify the part after "?q=". If unsure, specify nothing.'));
@@ -220,12 +224,12 @@ function system_view_general() {
 
   $output .= form_group(t('Error handling'), $group);
 
-  // caching:
+  // Caching:
   $group  = form_radios(t('Cache support'), 'cache', variable_get('cache', 0), array(t('Disabled'), t('Enabled')), t('Enable or disable the caching of rendered pages.  When caching is enabled, Drupal will flush the cache when required to make sure updates take effect immediately.  Check the <a href="%documentation">cache documentation</a> for information on Drupal\'s cache system.', array('%documentation' => url('admin/help', NULL, NULL, 'cache'))));
 
   $output .= form_group(t('Cache settings'), $group);
 
-  // file system:
+  // File system:
   $directory_path = variable_get('file_directory_path', 'files');
   file_check_directory($directory_path, FILE_CREATE_DIRECTORY, 'file_directory_path');
 
@@ -237,7 +241,7 @@ function system_view_general() {
   $group .= form_radios(t('Download method'), 'file_downloads', variable_get('file_downloads', FILE_DOWNLOADS_PUBLIC), array(FILE_DOWNLOADS_PUBLIC => t('Public - files are available using http directly.'), FILE_DOWNLOADS_PRIVATE => t('Private - files are transferred by Drupal.')), t('If you want any sort of access control on the downloading of files, this needs to be set to <em>private</em>. You can change this at any time, however all download URLs will change and there may be unexpected problems so it is not recommended.'));
   $output .= form_group(t('File system settings'), $group);
 
-  // image handling:
+  // Image handling:
   $group = '';
   $toolkits_available = image_get_available_toolkits();
   if (count($toolkits_available) > 1) {
@@ -248,10 +252,10 @@ function system_view_general() {
     $output .= form_group(t('Image handling'), $group);
   }
 
-  // date settings:
+  // Date settings:
   $zones = _system_zonelist();
 
-  // date settings: possible date formats
+  // Date settings: possible date formats
   $dateshort = array('Y-m-d H:i','m/d/Y - H:i', 'd/m/Y - H:i', 'Y/m/d - H:i',
            'm/d/Y - g:ia', 'd/m/Y - g:ia', 'Y/m/d - g:ia',
            'M j Y - H:i', 'j M Y - H:i', 'Y M j - H:i',
@@ -263,7 +267,7 @@ function system_view_general() {
   $datelong = array('l, F j, Y - H:i', 'l, j F, Y - H:i', 'l, Y,  F j - H:i',
         'l, F j, Y - g:ia', 'l, j F, Y - g:ia', 'l, Y,  F j - g:ia');
 
-  // date settings: construct choices for user
+  // Date settings: construct choices for user
   foreach ($dateshort as $f) {
     $dateshortchoices[$f] = format_date(time(), 'custom', $f);
   }
@@ -547,6 +551,10 @@ function system_settings_save() {
   }
   else if ($op == t('Save configuration')) {
     if (is_array($edit)) {
+      if ($edit['clean_url'] && !variable_get('clean_url_ok', 0)) {
+        drupal_set_message(t('It appears your host is not configured correctly for Clean URLs. Please check for <code>ModRewrite</code> support with your administrator.'), 'error');
+        $edit['clean_url'] = 0;
+      }
       foreach ($edit as $name => $value) {
         variable_set($name, $value);
       }
