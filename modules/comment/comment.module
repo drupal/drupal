@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.285 2004/09/28 19:13:03 unconed Exp $
+// $Id: comment.module,v 1.286 2004/09/30 18:13:25 dries Exp $
 
 /**
  * @file
@@ -1277,7 +1277,7 @@ function comment_moderate() {
   $moderation = $_POST['moderation'];
 
   if ($moderation) {
-    $result = db_query('SELECT mid, MAX(value) AS value FROM {moderation_roles} WHERE rid IN (%s) GROUP BY mid', implode(', ', array_keys($user->roles)));
+    $result = db_query('SELECT DISTINCT mid, value, ABS(value) FROM {moderation_roles} WHERE rid IN (%s) ORDER BY mid, ABS(value), value', implode(', ', array_keys($user->roles)));
     while ($mod = db_fetch_object($result)) {
       $votes[$mod->mid] = $mod->value;
     }
