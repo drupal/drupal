@@ -75,15 +75,9 @@ function menu_get_menu() {
   global $user;
 
   if (!isset($_menu['items'])) {
-    $cache = cache_get('menu:'. $user->uid);
-    if ($cache) {
-      $_menu = unserialize($cache->data);
-    }
-    else {
-      menu_build();
-      cache_set('menu:'. $user->uid, serialize($_menu), 1);
-    }
+    menu_build();
   }
+
   return $_menu;
 }
 
