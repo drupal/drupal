@@ -1,0 +1,22 @@
+<?php
+
+// This module is holds functions useful for Drupal development.
+// Please contribute!
+
+function development_exit() {
+  if (variable_get("dev_query", 0)) {
+    query_print();
+  }
+}
+
+function development_system($field) {
+  $system["description"] = t("Enables features and functions to help Drupal development.");
+  return $system[$field];
+}
+
+function development_conf_options() {
+  $output = form_select(t("Display query log"), "dev_query", variable_get("dev_query", 0), array(t("Disabled"), t("Enabled")), t("Display a log of the database queries needed to generate the current page, and the execution time for each."));
+  return $output;
+}
+
+?>
