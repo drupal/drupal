@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.19 2004/07/08 13:35:15 dries Exp $
+// $Id: filter.module,v 1.20 2004/07/10 15:51:48 dries Exp $
 
 define('FILTER_HTML_DONOTHING', 0);
 define('FILTER_HTML_STRIP', 1);
@@ -52,7 +52,9 @@ function filter_menu() {
   $items[] = array('path' => 'admin/filters', 'title' => t('filters'),
     'callback' => 'filter_admin_settings',
     'access' => user_access('administer site configuration'));
-  $items[] = array('path' => 'admin/filters/order', 'title' => t('rearrange filters'),
+  $items[] = array('path' => 'admin/filters/configure', 'title' => t('configure'),
+    'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
+  $items[] = array('path' => 'admin/filters/order', 'title' => t('rearrange'),
     'callback' => 'filter_admin_order',
     'access' => user_access('administer site configuration'),
     'type' => MENU_LOCAL_TASK);

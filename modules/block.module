@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.121 2004/07/07 05:42:24 dries Exp $
+// $Id: block.module,v 1.122 2004/07/10 15:51:48 dries Exp $
 
 /**
  * Implementation of hook_help().
@@ -67,6 +67,8 @@ function block_menu() {
   $items[] = array('path' => 'admin/block', 'title' => t('blocks'),
     'access' => user_access('administer blocks'),
     'callback' => 'block_admin');
+  $items[] = array('path' => 'admin/block/list', 'title' => t('list'),
+    'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
   $items[] = array('path' => 'admin/block/edit', 'title' => t('edit block'),
     'access' => user_access('administer blocks'),
     'callback' => 'block_box_edit',

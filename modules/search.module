@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.79 2004/06/18 15:04:35 dries Exp $
+// $Id: search.module,v 1.80 2004/07/10 15:51:48 dries Exp $
 
 /**
  * Implementation of hook_help().
@@ -52,6 +52,8 @@ function search_menu() {
     'callback' => 'search_help_page',
     'access' => user_access('search content'),
     'type' => MENU_SUGGESTED_ITEM);
+  $items[] = array('path' => 'search/search', 'title' => t('search'),
+    'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
   $items[] = array('path' => 'search/configure', 'title' => t('configure'),
     'callback' => 'search_configure',
     'access' => user_access('administer site configuration'),
