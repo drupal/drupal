@@ -688,9 +688,10 @@ function taxonomy_select_nodes($taxonomy, $pager = 1) {
 function taxonomy_render_nodes($result) {
 
   while ($node = db_fetch_object($result)) {
-    print node_view(node_load(array("nid" => $node->nid, "type" => $node->type)), 1);
+    $output .= node_view(node_load(array("nid" => $node->nid, "type" => $node->type)), 1);
   }
-  print pager_display(NULL, variable_get("default_nodes_main", 10), 0);
+  $output .= pager_display(NULL, variable_get("default_nodes_main", 10), 0);
+  return $output;
 }
 
 function taxonomy_nodeapi($node, $op, $arg = 0) {
@@ -722,9 +723,13 @@ function taxonomy_page() {
       taxonomy_feed($taxonomy);
       break;
     default:
-      print theme("header");
-      taxonomy_render_nodes(taxonomy_select_nodes($taxonomy));
-      print theme("footer");
+      $sql = 'SELECT name FROM term_data WHERE tid IN (%s)';
+      $result = db_query($sql, $taxonomy->str_tids);
+      while ($term = db_fetch_object($result)) {
+        $names[] = $term->name;
+      }
+      $output = taxonomy_render_nodes(taxonomy_select_nodes($taxonomy));
+      print theme("page", $output, implode(', ', $names));
       break;
   }
 }
