@@ -91,6 +91,34 @@ function book_link($type, $node = 0, $main = 0) {
   return $links;
 }
 
+function book_block($op = 'list', $delta = 0) {
+
+  // Only display this block when the user is browsing a book:
+  if (arg(0) == 'book' && arg(1) == 'view' && $nid = arg(2)) {
+    $page = db_fetch_object(db_query("SELECT n.nid, n.title, b.parent FROM {node} n INNER JOIN {book} b ON n.nid = b.nid"));
+
+    $path = book_location($page);
+    $path[] = $page;
+
+    foreach ($path as $key => $node) {
+      $expand[] = $node->nid;
+    }
+
+    $title = $path[0]->title;
+    $table = book_tree($expand[0], 5, $expand);
+  }
+
+  if ($op == 'list') {
+    $block[0]['info'] = t('Book navigation');
+  }
+  else {
+    $block['subject'] = $title;
+    $block['content'] = $table;
+  }
+
+   return $block;
+}
+
 function book_load($node) {
   global $user;
 
@@ -286,6 +314,8 @@ function book_revision_load($page, $conditions = array()) {
 ** Return the path (call stack) to a certain book page.
 */
 function book_location($node, $nodes = array()) {
+  // TODO: eliminate the recursion
+
   $parent = db_fetch_object(db_query("SELECT n.nid, n.title, b.parent FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE n.nid = %d", $node->parent));
   if ($parent->title) {
     $nodes = book_location($parent, $nodes);
@@ -295,6 +325,8 @@ function book_location($node, $nodes = array()) {
 }
 
 function book_location_down($node, $nodes = array()) {
+  // TODO: eliminate the recursion
+
   $last_direct_child = db_fetch_object(db_query("SELECT n.nid, n.title, b.parent FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE b.parent = %d ORDER BY b.weight DESC, n.title DESC", $node->nid));
   if ($last_direct_child) {
     array_push($nodes, $last_direct_child);
@@ -484,32 +516,29 @@ function book_navigation($node) {
 
     $node->breadcrumb = ""; // Overwrite the trail with a book trail.
     $node->breadcrumb[] = l(t("Home"), "");
-    $node->breadcrumb[] = l(t("books"), "book");
     foreach ($path as $level) {
       $node->breadcrumb[] = l($level->title, "book/view/$level->nid");
     }
 
-    /*
-    ** Construct the "next" and "previous" links:
-    */
-
-    if ($node->nid) {
-      $prev = book_prev($node);
-      $next = book_next($node);
-    }
-
     if ($node->nid) {
       $output .= "<div class=\"book\">";
-      $output .= "<div class=\"tree\">". book_tree($node->nid) ."</div>";
-      if ($prev) {
+
+      if ($tree = book_tree($node->nid)) {
+        $output .= "<div class=\"tree\">". book_tree($node->nid) ."</div>";
+      }
+
+      if ($prev = book_prev($node)) {
         $links .= "<div class=\"prev\">";
-        $links .= l(t("previous"), "book/view/$prev->nid", array("title" => t("View the previous page in this book.")));
+        $links .= l(t("previous"), "book/view/$prev->nid", array("title" => t("View the previous page.")));
         $links .= "</div>";
         $titles .= "<div class=\"prev\">$prev->title</div>";
       }
-      if ($next) {
+      else {
+        $links .= "<div class=\"prev\">&nbsp;</div>"; // make an empty div to fill the space
+      }
+      if ($next = book_next($node)) {
         $links .= "<div class=\"next\">";
-        $links .= l(t("next"), "book/view/$next->nid", array("title" => t("View the next page in this book.")));
+        $links .= l(t("next"), "book/view/$next->nid", array("title" => t("View the next page.")));
         $links .= "</div>";
         $titles .= "<div class=\"next\">$next->title</div>";
       }
@@ -519,15 +548,12 @@ function book_navigation($node) {
       if ($node->parent) {
         $links .= "<div class=\"up\">";
         $links .= l(t("up"), "book/view/$node->parent", array("title" => t("View this page's parent section.")));
-        //if ($node->parent != $path[0]->nid) {
-        //  $links .= " | ";
-        //  $links .= l(t("index"), "node/view/".$path[0]->nid."", array("title" => t("View this book's table of contents.")));
-        //}
         $links .= "</div>";
       }
+
       $output .= "<div class=\"nav\">";
-      $output .= "<div class=\"links\">$links</div>";
-      $output .= "<div class=\"titles\">$titles</div>";
+      $output .= " <div class=\"links\">$links</div>";
+      $output .= " <div class=\"titles\">$titles</div>";
       $output .= "</div>";
       $output .= "</div>";
     }
@@ -577,17 +603,29 @@ function book_toc($parent = 0, $indent = "", $toc = array()) {
 }
 
 
-function book_tree_recurse($nid, $depth, $children) {
-
+function book_tree_recurse($nid, $depth, $children, $unfold = array()) {
   if ($depth > 0) {
     if ($children[$nid]) {
       foreach ($children[$nid] as $foo => $node) {
-        $output .= "<li>";
-        $output .= l($node->title, "book/view/$node->nid");
-        if ($tree = book_tree_recurse($node->nid, $depth - 1, $children)) {
-          $output .= "<ul>$tree</ul>";
+        if (in_array($node->nid, $unfold)) {
+          if ($tree = book_tree_recurse($node->nid, $depth - 1, $children, $unfold)) {
+            $output .= '<li class="expanded">';
+            $output .= l($node->title, "book/view/$node->nid");
+            $output .= "<ul>$tree</ul>";
+            $output .= '</li>';
+          }
+          else {
+            $output .= '<li class="leaf">'. l($node->title, "book/view/$node->nid") .'</li>';
+          }
         }
-        $output .= "</li>";
+        else {
+          if ($tree = book_tree_recurse($node->nid, 1, $children)) {
+            $output .= '<li class="collapsed">'. l($node->title, "book/view/$node->nid") .'</li>';
+          }
+          else {
+            $output .= '<li class="leaf">'. l($node->title, "book/view/$node->nid") .'</li>';
+          }
+        }
       }
     }
   }
@@ -596,7 +634,7 @@ function book_tree_recurse($nid, $depth, $children) {
 }
 
 
-function book_tree($parent = 0, $depth = 3) {
+function book_tree($parent = 0, $depth = 3, $unfold = array()) {
 
   $result = db_query("SELECT n.nid, n.title, b.parent FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE n.status = '1' AND n.moderate = '0' ORDER BY b.weight, n.title");
 
@@ -606,10 +644,9 @@ function book_tree($parent = 0, $depth = 3) {
     $children[$node->parent] = $list;
   }
 
-  $output = book_tree_recurse($parent, $depth, $children);
-  $output = "<ul>$output</ul>";
-
-  return $output;
+  if ($tree = book_tree_recurse($parent, $depth, $children, $unfold)) {
+    return "<ul>$tree</ul>";
+  }
 }
 
 
@@ -789,7 +826,7 @@ function book_admin_save($nid, $edit = array()) {
 
 function book_admin_orphan() {
 
-  $result = db_query("SELECT n.nid, n.title, n.status, b.parent FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE n.type = 'book'");
+  $result = db_query("SELECT n.nid, n.title, n.status, b.parent FROM {node} n INNER JOIN {book} b ON n.nid = b.nid");
 
   while ($page = db_fetch_object($result)) {
     $pages[$page->nid] = $page;
@@ -881,4 +918,5 @@ function book_help($section = "admin/help#book") {
 function book_help_page() {
   print theme("page", book_help());
 }
+
 ?>

@@ -78,10 +78,9 @@ li a.active {
 }
 .book .nav {
   border-top: 1px solid #888;
-  padding-top:0.5em;
   padding-bottom: 2em;
   border-bottom: 1px solid #888;
-  clear:both;
+  clear: both;
 }
 .book .nav .links {
   clear: both;
@@ -90,7 +89,7 @@ li a.active {
   clear: both;
 }
 .book .nav .prev {
-  float: left; 
+  float: left;
   text-align: left;
   width: 45%;
   padding-bottom: 0.5em;
@@ -104,7 +103,7 @@ li a.active {
 .book .nav .up {
   text-align: center;
 }
-.block-book ul {
+.block ul {
   margin: 0;
   padding: 0 0 0.25em 1em;
 }
@@ -296,8 +295,6 @@ pre, code {
 }
 .menu ul {
   list-style: none;
-  margin: 0;
-  padding: 0 0 0.25em 1em;
   border: none;
   text-align:left;
 }
