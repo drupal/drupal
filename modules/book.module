@@ -498,56 +498,58 @@ function book_show($node, $cid) {
 
 function book_navigation($node) {
 
-    $path = book_location($node);
+  $path = book_location($node);
 
-    /*
-    ** Construct the breadcrumb:
-    */
+  /*
+  ** Construct the breadcrumb:
+  */
 
-    $node->breadcrumb = ""; // Overwrite the trail with a book trail.
-    $node->breadcrumb[] = l(t("Home"), "");
-    foreach ($path as $level) {
-      $node->breadcrumb[] = l($level->title, "book/view/$level->nid");
+  $node->breadcrumb = ""; // Overwrite the trail with a book trail.
+  $node->breadcrumb[] = l(t("Home"), "");
+  foreach ($path as $level) {
+    $node->breadcrumb[] = l($level->title, "book/view/$level->nid");
+  }
+
+  if ($node->nid) {
+    $output .= "<div class=\"book\">";
+
+    if ($tree = book_tree($node->nid)) {
+      $output .= "<div class=\"tree\">". book_tree($node->nid) ."</div>";
     }
 
-    if ($node->nid) {
-      $output .= "<div class=\"book\">";
-
-      if ($tree = book_tree($node->nid)) {
-        $output .= "<div class=\"tree\">". book_tree($node->nid) ."</div>";
-      }
-
-      if ($prev = book_prev($node)) {
-        $links .= "<div class=\"prev\">";
-        $links .= l(t("previous"), "book/view/$prev->nid", array("title" => t("View the previous page.")));
-        $links .= "</div>";
-        $titles .= "<div class=\"prev\">$prev->title</div>";
-      }
-      else {
-        $links .= "<div class=\"prev\">&nbsp;</div>"; // make an empty div to fill the space
-      }
-      if ($next = book_next($node)) {
-        $links .= "<div class=\"next\">";
-        $links .= l(t("next"), "book/view/$next->nid", array("title" => t("View the next page.")));
-        $links .= "</div>";
-        $titles .= "<div class=\"next\">$next->title</div>";
-      }
-      else {
-        $links .= "<div class=\"next\">&nbsp;</div>"; // make an empty div to fill the space
-      }
-      if ($node->parent) {
-        $links .= "<div class=\"up\">";
-        $links .= l(t("up"), "book/view/$node->parent", array("title" => t("View this page's parent section.")));
-        $links .= "</div>";
-      }
-
-      $output .= "<div class=\"nav\">";
-      $output .= " <div class=\"links\">$links</div>";
-      $output .= " <div class=\"titles\">$titles</div>";
-      $output .= "</div>";
-      $output .= "</div>";
+    if ($prev = book_prev($node)) {
+      $links .= "<div class=\"prev\">";
+      $links .= l(t("previous"), "book/view/$prev->nid", array("title" => t("View the previous page.")));
+      $links .= "</div>";
+      $titles .= "<div class=\"prev\">$prev->title</div>";
     }
-    $node->body = $node->body.$output;
+    else {
+      $links .= "<div class=\"prev\">&nbsp;</div>"; // make an empty div to fill the space
+    }
+    if ($next = book_next($node)) {
+      $links .= "<div class=\"next\">";
+      $links .= l(t("next"), "book/view/$next->nid", array("title" => t("View the next page.")));
+      $links .= "</div>";
+      $titles .= "<div class=\"next\">$next->title</div>";
+    }
+    else {
+      $links .= "<div class=\"next\">&nbsp;</div>"; // make an empty div to fill the space
+    }
+    if ($node->parent) {
+      $links .= "<div class=\"up\">";
+      $links .= l(t("up"), "book/view/$node->parent", array("title" => t("View this page's parent section.")));
+      $links .= "</div>";
+    }
+
+    $output .= "<div class=\"nav\">";
+    $output .= " <div class=\"links\">$links</div>";
+    $output .= " <div class=\"titles\">$titles</div>";
+    $output .= "</div>";
+    $output .= "</div>";
+  }
+
+  $node->body = $node->body.$output;
+
   return $node;
 }
 
