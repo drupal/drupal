@@ -1,5 +1,5 @@
 <?php
-// $Id: goofy.theme,v 1.48 2002/05/20 18:52:21 unconed Exp $
+// $Id: goofy.theme,v 1.49 2002/09/08 18:32:28 kjartan Exp $
 
   /*********************************************************************
 
@@ -176,7 +176,7 @@ function c(subject,mod,author,date,body) {document.writeln("<table border=\"0\" 
    </table>
   </body>
  </html>
-<?
+<?php
     } // close footer function
   } // close theme-class
 
