@@ -303,7 +303,7 @@ function pager_link($from_new, $attributes = array()) {
   }
 
   if (count($attributes)) {
-    $url = url($q, "from=". $from_new[0] ."&". implode("&", $query));
+    $url = url($q, "from=". $from_new[0] ."&amp;". implode("&amp;", $query));
   }
   else {
     $url = url($q, "from=". $from_new[0]);
