@@ -11,7 +11,7 @@ drupal x.xx, xx/xx/xxxx
     * access control is based on much more powerful regular expressions (regex) now rather than on MySQL pattern matching.
 - rewrote watchdog and submission throttle
 - rewrote section code and renamed it to structure.module:
-    * supports both "categories" and "topics" (cfr. Scoop, SlashCode)
+    * supports both "categories" and "topics" (cfr. Scoop, SlashCode).  Topics can be nested to create a multi-level hierarchy.
     * added "auto-post new submissions" feature versus "moderate new submissions".
 - added settings.module:
     * moved most configuration options to the administration section
@@ -38,7 +38,7 @@ drupal x.xx, xx/xx/xxxx
         + W3C validation on a best effort basis
         + removed $theme->control() from themes
         + added theme "goofy"
-- collaboratively revised and expanded documentation
+- collaboratively revised and expanded the drupal documentation
 
 drupal 2.00, 15/03/2001
 -----------------------
