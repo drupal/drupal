@@ -13,7 +13,6 @@ CREATE TABLE access (
   type varchar(255) NOT NULL default '',
   status tinyint(2) NOT NULL default '0',
   PRIMARY KEY  (aid),
-  UNIQUE KEY mask (mask)
 ) TYPE=MyISAM;
 
 --
