@@ -8,7 +8,7 @@ function ab_block() {
   $i = 0;
   while ($block = db_fetch_object($result)) {
     $blocks[$i]["subject"] = check_output($block->subject);
-    $blocks[$i]["content"] = check_output(eval($block->content)); 
+    $blocks[$i]["content"] = eval($block->content); 
     $blocks[$i]["info"] = check_output($block->info);
     $blocks[$i]["link"] = check_output($block->link);
     $i++;
