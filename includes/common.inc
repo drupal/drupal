@@ -211,7 +211,7 @@ function table_cell($cell, $header = 0) {
     $data = $cell;
   }
 
-  if (isset($header)) {
+  if ($header) {
     $output = "<th$attributes>$data</th>";
   }
   else {
@@ -483,12 +483,12 @@ function rewrite_old_urls($text) {
 
   // rewrite 'node.php?id=<number>[&cid=<number>]' style URLs:
   $text = eregi_replace("(node)\.php\?id=([[:digit:]]+)(&cid=)?([[:digit:]]*)", "?q=\\1/view/\\2/\\4", $text);
-  
-  // rewrite 'module.php?mod=<name>{&<op>=<value>}' style URLs: 
+
+  // rewrite 'module.php?mod=<name>{&<op>=<value>}' style URLs:
   $text = ereg_replace("module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "?q=\\2/\\4/\\6" , $text);
   $text = ereg_replace("module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "?q=\\2/\\4" , $text);
   $text = ereg_replace("module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))", "?q=\\2" , $text);
-  
+
   return $text;
 }
 
@@ -882,7 +882,7 @@ $config = conf_init();
 
 include_once "includes/$config.php";
 include_once "includes/database.inc";
-include_once "includes/xmlrpc.inc";
+//include_once "includes/xmlrpc.inc";
 include_once "includes/module.inc";
 include_once "includes/theme.inc";
 include_once "includes/pager.inc";
