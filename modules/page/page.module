@@ -1,5 +1,5 @@
 <?php
-// $Id: page.module,v 1.126 2004/09/28 19:13:03 unconed Exp $
+// $Id: page.module,v 1.127 2004/09/29 18:05:11 dries Exp $
 
 /**
  * @file
@@ -124,9 +124,6 @@ function page_form(&$node) {
 
   $output .= form_textarea(t('Body'), 'body', $node->body, 60, 20, '', NULL, TRUE);
   $output .= filter_form('format', $node->format);
-
-  $output .= form_textfield(t('Link name'), 'link', $node->link, 60, 64, t('To make the page show up in the navigation links, enter the name of the link. Otherwise, leave this blank.'));
-  $output .= form_textfield(t('Link description'), 'description', $node->description, 60, 64, t("The description displayed when hovering over the page's link.  Leave blank when you don't want a description."));
 
   return $output;
 }
