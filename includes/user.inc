@@ -125,7 +125,7 @@ function user_gravity($id) {
 
   $bonus += $weight / 5;
 
-  return ($votes ? ($score + $weight) / $votes + $bonus : 0);
+  return ($votes ? ($score + $weight) / $votes + $bonus : $bonus);
 }
 
 ?>
