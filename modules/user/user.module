@@ -691,15 +691,12 @@ function user_menu($may_cache) {
     if ($user->uid) {
       $items[] = array('path' => 'user/'. $user->uid, 'title' => t('my account'),
         'callback' => 'user_page', 'access' => TRUE);
-      $items[] = array('path' => 'logout', 'title' => t('log out'),
-        'access' => TRUE,
-        'callback' => 'user_logout',
-        'weight' => 10);
     }
-    else {
-      $items[] = array('path' => 'logout', 'title' => t('log out'),
-        'callback' => 'user_logout', 'access' => FALSE);
-    }
+
+    $items[] = array('path' => 'logout', 'title' => t('log out'),
+      'access' => $user->uid != 0,
+      'callback' => 'user_logout',
+      'weight' => 10);
   }
   else {
     if (arg(0) == 'user' && is_numeric(arg(1))) {
@@ -897,14 +894,12 @@ function _user_authenticated_id() {
 function user_logout() {
   global $user;
 
-  if ($user->uid) {
-    watchdog('user', t('Session closed for %name.', array('%name' => "<em>$user->name</em>")));
+  watchdog('user', t('Session closed for %name.', array('%name' => '<em>'. $user->name .'</em>')));
 
-    // Destroy the current session:
-    session_destroy();
-    module_invoke_all('user', 'logout', NULL, $user);
-    unset($user);
-  }
+  // Destroy the current session:
+  session_destroy();
+  module_invoke_all('user', 'logout', NULL, $user);
+  unset($user);
 
   drupal_goto();
 }
@@ -1214,9 +1209,6 @@ function user_page() {
     case t('Log in'):
     case 'login':
       print theme('page', user_login($edit));
-      break;
-    case 'logout':
-      print user_logout();
       break;
     default:
       if (!arg(1)) {
