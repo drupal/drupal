@@ -18,7 +18,12 @@ function drupal_page() {
    <H2>Documentation</H2>
    <LI><A HREF=\"module.php?mod=documentation\">documentation</A></LI>
    <LI><A HREF=\"module.php?mod=wishlist\">wishlist</A></LI>
+   <H2>Screenshots</H2>
   ";
+
+  $handle = opendir("drupal");
+  while ($file = readdir($handle)) if (ereg(".jpg", $file)) $output .= " <LI><SMALL><A HREF=\"drupal/$file\">$file</A></SMALL></LI>\n";
+  closedir($handle);
 
   $theme->header();
   $theme->box("Drupal", $output);
