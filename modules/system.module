@@ -101,7 +101,7 @@ function system_user($type, &$edit, $user) {
 }
 
 function system_view_general() {
-  global $conf, $cmodes, $corder;
+  global $conf;
 
   // general settings:
   $output .= "<h3>". t("General settings") ."</h3>\n";
