@@ -454,9 +454,9 @@ function node_link($type, $node = 0, $main = 0) {
     $search = "On this page you can search for a post.  For example, one may search for 'br' and Drupal might return 'bread brakers', 'our daily bread' and 'brenda'.";
 
     menu_add("content management", url("admin/node"), "Content management.", NULL, NULL);
-     menu_add("submit new content", url("node/add"), "Submit new content.", NULL, "content management", -1, 1);
-     menu_add("new or updated posts", url("admin/node/nodes/0"), "Display all new or updated posts.", NULL, "content management", 0, 1);
-     menu_add("posts that await approval", url("admin/node/nodes/1"), "Display posts that await approval.", NULL, "content management", 0, 1);
+     menu_add("submit new content", url("node/add"), "Submit new content.", NULL, "content management", -1);
+     menu_add("new or updated posts", url("admin/node/nodes/0"), "Display all new or updated posts.", NULL, "content management", 0);
+     menu_add("posts that await approval", url("admin/node/nodes/1"), "Display posts that await approval.", NULL, "content management", 0);
      menu_add("search content", url("admin/node/search"), "Search a post.", $search, "content management", 5);
      menu_add("help", url("admin/node/help"), "More information about content management.", NULL, "content management", 7);
   }

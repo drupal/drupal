@@ -226,8 +226,7 @@ CREATE TABLE menu (
  help TEXT default '',
  title varchar(255) NOT NULL default '',
  parent varchar(255) NOT NULL default '',
- weight tinyint(4) DEFAULT '0' NOT NULL,
- overview tinyint(1) DEFAULT '0' NOT NULL
+ weight tinyint(4) DEFAULT '0' NOT NULL
 );
 
 --

@@ -404,7 +404,7 @@ function user_link($type) {
 
     menu_add("user management", url("admin/user"), "User management", $help["user"]);
      menu_add("create new account", url("admin/user/create"), "Create a new user account.", $help["create"], "user management", 1);
-     menu_add("view user accounts", url("admin/user/account"), "Display user account listings.", $help["view"], "user management", 2, 1);
+     menu_add("view user accounts", url("admin/user/account"), "Display user account listings.", $help["view"], "user management", 2);
      menu_add("access rules", url("admin/user/access"), "Configure access rules.", $help["access"], "user management", 3);
       menu_add("e-mail rules", url("admin/user/access/mail"), "Allow or deny certain e-mail addresses.", $help["access"], "access rules");
       menu_add("username rules", url("admin/user/access/user"), "Allow or deny certain usernames.", $help["access"], "access rules");

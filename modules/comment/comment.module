@@ -660,7 +660,7 @@ function comment_link($type, $node = 0, $main = 0) {
   if ($type == "admin" && user_access("administer comments")) {
     $settings = "If you really have a lot of comments, you can enable moderation. You assign moderation permissions to role(s), then setup some 'moderation votes'; these votes will appear to moderators in a dropdown menu near the comment. You also have to assign, for every role and every vote, a value, which can be either positive or negative; use the moderation matrix to do this. This allows for some roles having greater 'weight' in their moderation, if you wish. If you set a value to 0, that vote won't be available to that role. When a user moderates, the value of their vote is added or subtracted to the score of that comment. Finally, you may want to setup the comment thresholds: these are floor/ceiling values which users see in the comment control panel. Threshholds are useful for hiding poorly rated comments while reading your site.";
 
-    menu_add("comment management", url("admin/comment"), "Administer comments.", $help["comment"], "content management", 1, 1);
+    menu_add("comment management", url("admin/comment"), "Administer comments.", $help["comment"], "content management", 1);
      menu_add("new or updated comments", url("admin/comment&status=0"),  "Display new or updated comments.", NULL, "comment management");
      menu_add("comments that await approval", url("admin/comment&status=1"), "Display comments that await approval.", NULL, "comment management");
      menu_add("search comment", url("admin/comment/search"), "Search a comment.", NULL, "comment management", 8);

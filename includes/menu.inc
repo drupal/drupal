@@ -36,6 +36,17 @@ function menu_trail() {
   return $trail;
 }
 
+function menu_in_trail($item) {
+  $trail = menu_trail();
+
+  foreach ($trail as $menu) {
+    if ($menu->link == $item->link) {
+      return 1;
+    }
+  }
+  return 0;
+}
+
 function menu_item($item) {
 
   /*
@@ -99,15 +110,18 @@ function menu_help() {
   return $output;
 }
 
-function menu_tree($parent = "", $overview = 0) {
+function menu_tree($parent = "", $all = 1) {
 
-  $result = db_query("SELECT * FROM menu WHERE parent = '%s' AND overview = '%d' ORDER BY weight, name", $parent, $overview);
+  if ($all) {
+    $result = db_query("SELECT * FROM menu WHERE parent = '%s' ORDER BY weight, name", $parent);
+  }
 
   if (db_num_rows($result)) {
     $output = "<ul>";
     while ($item = db_fetch_object($result)) {
+      $all = (stristr(request_uri(), $item->link) == $item->link) ? 1 : 0;
       $output .= "<li>". menu_item($item) ."</li>";
-      $output .= menu_tree($item->name, 1);
+      $output .= menu_tree($item->name, menu_in_trail($item));
     }
     $output .= "</ul>";
   }
@@ -115,9 +129,9 @@ function menu_tree($parent = "", $overview = 0) {
   return $output;
 }
 
-function menu_add($name, $link, $title = NULL, $help = NULL, $parent = NULL, $weight = 1, $overview = 0) {
+function menu_add($name, $link, $title = NULL, $help = NULL, $parent = NULL, $weight = 1) {
   if (!db_result(db_query("SELECT name FROM menu WHERE link = '%s'", $link))) {
-    db_query("INSERT INTO menu (name, link, title, help, parent, weight, overview) VALUES ('%s', '%s', '%s', '%s', '%s', '%d', '%d')", $name, $link, $title, $help, $parent, $weight, $overview);
+    db_query("INSERT INTO menu (name, link, title, help, parent, weight) VALUES ('%s', '%s', '%s', '%s', '%s', '%d')", $name, $link, $title, $help, $parent, $weight);
   }
 }
 
