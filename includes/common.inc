@@ -147,7 +147,7 @@ function _fix_gpc_magic(&$item, $key) {
     array_walk($item, '_fix_gpc_magic');
   }
   else {
-    $item = stripslashes($i);
+    $item = stripslashes($item);
   }
 }
 
