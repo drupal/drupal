@@ -211,7 +211,7 @@ function theme_pager_next($text, $limit, $element = 0, $interval = 1, $attribute
   else {
     $output .= ' ';
   }
-  $output .= '<div>';
+  $output .= '</div>';
   return $output;
 }
 
