@@ -15,6 +15,7 @@ CREATE TABLE blocks (
   status tinyint(2) DEFAULT '0' NOT NULL,
   weight tinyint(1) DEFAULT '0' NOT NULL,
   region tinyint(1) DEFAULT '0' NOT NULL,
+  remove tinyint(1) DEFAULT '0' NOT NULL,
   PRIMARY KEY (name)
 );
 

@@ -8,7 +8,7 @@ if (strstr($id, " ") || strstr($pid, " ") || strstr($lid, " ") || strstr($mode, 
 
 $cmodes = array(1 => "List - min", 2 => "List - max", 3 => "Threaded - min", 4 => "Threaded - max");
 $corder = array(1 => "Date - new", 2 => "Date - old", 3 => "Rate - high", 4 => "Rate - low");
-$link = ($mod) ? $mod : substr($PHP_SELF, 1, strlen($PHP_SELF) - 5);
+$link = ($mod) ? $mod : substr(strrchr($PHP_SELF, "/"), 1, strrchr($PHP_SELF, "/") - 4);
 
 class Comment {
   function Comment($userid, $subject, $comment, $timestamp, $url, $fake_email, $score, $votes, $cid, $lid) {
@@ -32,12 +32,12 @@ function comment_moderate($moderate) {
     $none = $comment_votes[key($comment_votes)];
 
     foreach ($moderate as $id=>$vote) {
-      if ($vote != $comment_votes[$none] && !user_getHistory($user->history, "c$id")) {
+      if ($vote != $comment_votes[$none] && !user_get_history($user->history, "c$id")) {
         // Update the comment's score:
         $result = db_query("UPDATE comments SET score = score $vote, votes = votes + 1 WHERE cid = $id");
 
         // Update the user's history:
-        user_setHistory($user, "c$id", $vote);
+        user_set_history("c$id", $vote);
       }
     }
   }
@@ -54,7 +54,7 @@ function comment_settings($mode, $order, $threshold) {
 }
 
 function comment_reply($pid, $id) {
-  global $allowed_html, $link, $theme, $user;
+  global $allowed_html, $link, $REQUEST_URI, $theme, $user;
 
   // Extract parent-information/data:
   if ($pid) {
@@ -70,7 +70,7 @@ function comment_reply($pid, $id) {
   }
 
   // Build reply form:
-  $output .= "<FORM ACTION=\"". comment_uri() ."\" METHOD=\"post\">\n";
+  $output .= "<FORM ACTION=\"$REQUEST_URI\" METHOD=\"post\">\n";
 
   // Name field:
   $output .= "<P>\n";
@@ -105,13 +105,13 @@ function comment_reply($pid, $id) {
 }
 
 function comment_preview($pid, $id, $subject, $comment) {
-  global $allowed_html, $link, $theme, $user;
+  global $allowed_html, $link, $REQUEST_URI, $theme, $user;
 
   // Preview comment:
   $theme->comment(new Comment($user->userid, $subject, $comment, time(), $user->url, $user->fake_email, 0, 0, 0, 0), "reply to this comment");
 
   // Build reply form:
-  $output .= "<FORM ACTION=\"". comment_uri() ."\" METHOD=\"post\">\n";
+  $output .= "<FORM ACTION=\"$REQUEST_URI\" METHOD=\"post\">\n";
 
   // Name field:
   $output .= "<P>\n";
@@ -160,7 +160,6 @@ function comment_post($pid, $id, $subject, $comment) {
 
   if ($duplicate != 0) {
     watchdog("error", "comment: attempt to insert duplicate comment");
-    $theme->box("duplicate comment", "duplicate comment: $duplicate");
   }
   else {
     // Validate subject:
@@ -171,9 +170,6 @@ function comment_post($pid, $id, $subject, $comment) {
 
     // Add comment to database:
     db_query("INSERT INTO comments (link, lid, pid, author, subject, comment, hostname, timestamp, score) VALUES ('". check_input($link) ."', $id, $pid, '$user->id', '". check_input($subject) ."', '". check_input($comment) ."', '". getenv("REMOTE_ADDR") ."', '". time() ."', '". ($user->userid ? 1 : 0) ."')");
-
-    // Compose header:
-    header("Location: ". comment_uri("id=$id"));
   }
 }
 
@@ -203,7 +199,7 @@ function comment_moderation($comment) {
   if ($op == "reply") {
     $output .= "&nbsp;";
   }
-  else if ($user->id && $user->userid != $comment->userid && !user_getHistory($user->history, "c$comment->cid")) {
+  else if ($user->id && $user->userid != $comment->userid && !user_get_history($user->history, "c$comment->cid")) {
     $output .= "<SELECT NAME=\"moderate[$comment->cid]\">\n";
     foreach ($comment_votes as $key=>$value) $output .= " <OPTION VALUE=\"$value\">$key</OPTION>\n";
     $output .= "</SELECT>\n";
@@ -282,8 +278,8 @@ function comment_uri($args = 0) {
 
 function comment_link($comment, $return = 1) {
   global $link, $theme;
-  if ($return) return "<A HREF=\"". comment_uri("id=$comment->lid#$comment->cid") ."\"><FONT COLOR=\"$theme->hlcolor2\">return</FONT></A> | <A HREF=\"". comment_uri("op=reply&id=$comment->lid&pid=$comment->cid") ."\"><FONT COLOR=\"$theme->hlcolor2\">reply to this comment</FONT></A>";
-  else return "<A HREF=\"". comment_uri("op=reply&id=$comment->lid&pid=$comment->cid") ."\"><FONT COLOR=\"$theme->hlcolor2\">reply to this comment</FONT></A>";
+  if ($return) return "<A HREF=\"". comment_uri("id=$comment->lid#$comment->cid") ."\"><FONT COLOR=\"$theme->link\">return</FONT></A> | <A HREF=\"". comment_uri("op=reply&id=$comment->lid&pid=$comment->cid") ."\"><FONT COLOR=\"$theme->link\">reply to this comment</FONT></A>";
+  else return "<A HREF=\"". comment_uri("op=reply&id=$comment->lid&pid=$comment->cid") ."\"><FONT COLOR=\"$theme->link\">reply to this comment</FONT></A>";
 }
 
 function comment_comment($comment, $folded = 0) {

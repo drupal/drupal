@@ -1,13 +1,25 @@
 <?
 
 class User {
-  function User($userid, $passwd = "") {
+  function User($userid) {
+    $result = db_query("SELECT * FROM users WHERE userid = '$userid' && STATUS = 2");
+    if (db_num_rows($result) == 1) {
+      foreach (db_fetch_row($result) as $key=>$value) { $field = mysql_field_name($result, $key); $this->$field = stripslashes($value); $this->field[] = $field; }
+    }
+  }
+  function User($userid, $passwd) {
     $result = db_query("SELECT * FROM users WHERE LOWER(userid) = LOWER('$userid') && passwd = PASSWORD('$passwd') && STATUS = 2");
     if (db_num_rows($result) == 1) {
       foreach (db_fetch_row($result) as $key=>$value) { $field = mysql_field_name($result, $key); $this->$field = stripslashes($value); $this->field[] = $field; }
       db_query("UPDATE users SET last_access = '". time() ."', last_host = '$GLOBALS[REMOTE_HOST]' WHERE id = $this->id");
     }
   }
+}
+
+function user_load() {
+  global $db_name;
+  session_name($db_name);
+  session_start();
 }
 
 function user_save($data, $id = 0) {
@@ -29,7 +41,7 @@ function user_save($data, $id = 0) {
   }
 }
 
-function user_getHistory($history, $field) {
+function user_get_history($history, $field) {
   $data = explode(";", $history);
   for (reset($data); current($data); next($data)) {
     $entry = explode(":", current($data));
@@ -38,8 +50,8 @@ function user_getHistory($history, $field) {
   return $rval;
 }
 
-function user_setHistory(&$user, $field, $value) {
-
+function user_set_history($field, $value) {
+  global $user;
   $history = $user->history;
   if (!$value) {
     // remove entry:
@@ -69,6 +81,15 @@ function user_setHistory(&$user, $field, $value) {
   foreach ($user->field as $key=>$field) { $value = $user->$field; $query .= "$field = '". addslashes($value) ."', "; }
   $query .= " id = $user->id WHERE id = $user->id";
   db_query($query);
+}
+
+function user_rehash() {
+  global $user;
+  if ($user->id) $user = new User($user->userid);
+}
+
+function user_permission($account) {
+  return ($account->permissions == 1 || $account->id == 1);
 }
 
 ?>

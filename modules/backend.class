@@ -37,7 +37,6 @@ class backend {
       while ($headline = db_fetch_object($result)) {
         array_push($this->headlines, "<A HREF=\"$headline->link\">$headline->title</A>");
       }
-
     }
     else {
       $this->site = $site;
@@ -94,9 +93,6 @@ class backend {
             $title = ereg_replace(".*<title>", "", $item);
             $title = ereg_replace("</title>.*", "", $title);
 
-            // Clean headlines:
-            $title = stripslashes($title);
-
             // Count the number of stories:
             $number += 1;
 
@@ -145,7 +141,6 @@ class backend {
       }
       // Add timestamp:
       $update = round((time() - $this->timestamp) / 60);
-      $content .= "<P ALIGN=\"right\">[ <A HREF=\"backend.php?op=reset&site=$this->site\"><FONT COLOR=\"$theme->hlcolor2\">reset</FONT></A> | updated $update min. ago ]</P>";
 
       // Display box:
       $theme->box("$this->site", $content);

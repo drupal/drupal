@@ -1,6 +1,13 @@
 <?
 
-$module = array("admin" => "module_admin");
+$module = array("help" => "module_help",
+                "admin" => "module_admin");
+
+function module_help() {
+ ?>
+  The module administration page provide you a list of all available modules.  Moreover, it allows you to "rehash" modules.  Whenever you install a new module or when an existing module has been changed or updated, it requires "rehasing": when you rehash a module, the module is registered to the engine and properly initialized.
+ <?
+}
 
 function module_admin_rehash() {
   global $repository;
@@ -41,16 +48,23 @@ function module_admin_display() {
 function module_admin() {
   global $op, $name;
 
+  print "<SMALL><A HREF=\"admin.php?mod=module\">overview</A> | <A HREF=\"admin.php?mod=module&op=help\">help</A></SMALL><HR>\n";
+
   switch ($op) {
-    case "Rehash modules":
-      module_admin_rehash();
+    case "help":
+      module_help();
       break;
     case "rehash":
       module_rehash($name);
+      module_admin_display();
       break;
+    case "Rehash modules":
+      module_admin_rehash();
+      module_admin_display();
+      break;
+    default:
+      module_admin_display();
   }
-
-  module_admin_display();
 }
 
 ?>

@@ -1,7 +1,7 @@
 <?
 
-include "includes/submission.inc";
-include "includes/common.inc";
+include_once "includes/submission.inc";
+include_once "includes/common.inc";
 
 function submission_display_main() {
   global $theme, $user;
@@ -13,8 +13,8 @@ function submission_display_main() {
   $content .= "<TABLE BORDER=\"0\" CELLSPACING=\"4\" CELLPADDING=\"4\">\n";
   $content .= " <TR BGCOLOR=\"$bgcolor1\"><TH>Subject</TH><TH>Section</TH><TH>Date</TH><TH>Author</TH><TH>Score</TH></TR>\n";
   while ($submission = db_fetch_object($result)) {
-    if ($user->id == $submission->author || user_getHistory($user->history, "s$submission->id")) $content .= " <TR><TD WIDTH=\"100%\"><A HREF=\"submission.php?op=view&id=$submission->id\">". stripslashes($submission->subject) ."</A></TD><TD>$submission->section</TD><TD ALIGN=\"center\">". date("Y-m-d", $submission->timestamp) ."<BR>". date("H:m:s", $submission->timestamp) ."</TD><TD ALIGN=\"center\">". format_username($submission->userid) ."</TD><TD ALIGN=\"center\">". submission_score($submission->id) ."</TD></TR>\n";
-    else $content .= " <TR><TD WIDTH=\"100%\"><A HREF=\"submission.php?op=view&id=$submission->id\">". stripslashes($submission->subject) ."</A></TD><TD>$submission->section</TD><TD ALIGN=\"center\">". date("Y-m-d", $submission->timestamp) ."<BR>". date("H:m:s", $submission->timestamp) ."</TD><TD ALIGN=\"center\">". format_username($submission->userid) ."</TD><TD ALIGN=\"center\"><A HREF=\"submission.php?op=view&id=$submission->id\">vote</A></TD></TR>\n";
+    if ($user->id == $submission->author || user_get_history($user->history, "s$submission->id")) $content .= " <TR><TD WIDTH=\"100%\"><A HREF=\"submission.php?op=view&id=$submission->id\">". check_output($submission->subject) ."</A></TD><TD>$submission->section</TD><TD ALIGN=\"center\">". date("Y-m-d", $submission->timestamp) ."<BR>". date("H:m:s", $submission->timestamp) ."</TD><TD ALIGN=\"center\">". format_username($submission->userid) ."</TD><TD ALIGN=\"center\">". submission_score($submission->id) ."</TD></TR>\n";
+    else $content .= " <TR><TD WIDTH=\"100%\"><A HREF=\"submission.php?op=view&id=$submission->id\">". check_output($submission->subject) ."</A></TD><TD>$submission->section</TD><TD ALIGN=\"center\">". date("Y-m-d", $submission->timestamp) ."<BR>". date("H:m:s", $submission->timestamp) ."</TD><TD ALIGN=\"center\">". format_username($submission->userid) ."</TD><TD ALIGN=\"center\"><A HREF=\"submission.php?op=view&id=$submission->id\">vote</A></TD></TR>\n";
   }
   $content .= "</TABLE>\n";
 
@@ -29,19 +29,19 @@ function submission_display_item($id) {
   $result = db_query("SELECT s.*, u.userid FROM stories s LEFT JOIN users u ON s.author = u.id WHERE s.id = $id");
   $submission = db_fetch_object($result);
 
-  if ($user->id == $submission->author || user_getHistory($user->history, "s$id")) {
+  if ($user->id == $submission->author || user_get_history($user->history, "s$id")) {
     header("Location: story.php?id=$id");
   }
   else {
     $theme->header();
-    $theme->article($submission, "[ <A HREF=\"submission.php\"><FONT COLOR=\"$theme->hlcolor2\">back</FONT></A> ]");
+    $theme->article($submission, "[ <A HREF=\"submission.php\"><FONT COLOR=\"$theme->link\">back</FONT></A> ]");
 
     print "<FORM ACTION=\"submission.php\" METHOD=\"post\">\n";
 
     print "<P>\n";
     print " <B>Vote:</B><BR>\n";
     print " <SELECT NAME=\"vote\">\n";
-    foreach ($submission_votes as $key=>$value) print "  <OPTION VALUE=\"$value\">". $key ."</OPTION>\n";
+    foreach ($submission_votes as $key=>$value) print "  <OPTION VALUE=\"$value\">$key</OPTION>\n";
     print " </SELECT>\n";
     print "</P>\n";
     print "<P>\n";
@@ -63,6 +63,9 @@ if (strstr($id, " ")) {
 }
 
 if ($user->id) {
+
+  user_rehash();
+
   switch($op) {
     case "view":
       submission_display_item($id);

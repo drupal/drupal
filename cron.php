@@ -1,6 +1,6 @@
 <?
 
-include "includes/common.inc";
+include_once "includes/common.inc";
 
 function cron_run() {
   global $repository;

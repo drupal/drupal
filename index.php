@@ -1,6 +1,6 @@
 <?
 
-include "includes/common.inc";
+include_once "includes/common.inc";
 
 // Initialize/pre-process variables:
 $number = ($user->stories) ? $user->stories : 10;
