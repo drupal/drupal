@@ -1,4 +1,5 @@
 <?php
+// $Id: session.inc,v 1.3 2003/12/13 13:00:47 dries Exp $
 
 session_set_save_handler("sess_open", "sess_close", "sess_read", "sess_write", "sess_destroy", "sess_gc");
 session_start();
@@ -16,12 +17,11 @@ function sess_close() {
 function sess_read($key) {
   global $user;
 
-  if ($key) {
-    $result = db_query_range("SELECT u.*, s.*, r.name AS role FROM {users} u INNER JOIN {role} r ON u.rid = r.rid INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.sid = '%s' AND u.status < 3", $key, 0, 1);
-  }
+  $result = db_query_range("SELECT u.*, s.*, r.name AS role FROM {users} u INNER JOIN {role} r ON u.rid = r.rid INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.sid = '%s' AND u.status < 3", $key, 0, 1);
 
   if (!db_num_rows($result)) {
     $result = db_query("SELECT u.*, r.name AS role FROM {users} u INNER JOIN {role} r ON u.rid = r.rid WHERE u.uid = 0");
+    db_query("INSERT INTO {sessions} (uid, sid, hostname, session, timestamp) values(%d, '%s', '%s', '%s', %d)", $user->uid, $key, $_SERVER["REMOTE_ADDR"], $value, time());
   }
 
   $user = db_fetch_object($result);
@@ -41,17 +41,11 @@ function sess_write($key, $value) {
 
   db_query("UPDATE {sessions} SET uid = %d, hostname = '%s', session = '%s', timestamp = %d WHERE sid = '%s'", $user->uid, $_SERVER["REMOTE_ADDR"], $value, time(), $key);
 
-  if (!db_affected_rows()) {
-    db_query("INSERT INTO {sessions} (uid, sid, hostname, session, timestamp) values(%d, '%s', '%s', '%s', %d)", $user->uid, $key, $_SERVER["REMOTE_ADDR"], $value, time());
-  }
-
   return '';
 }
 
 function sess_destroy($key) {
-
   db_query("DELETE FROM {sessions} WHERE sid = '$key'");
-
 }
 
 function sess_gc($lifetime) {
