@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.313 2004/01/23 15:31:29 dries Exp $ */
+/* $Id: common.inc,v 1.314 2004/01/25 09:09:00 dries Exp $ */
 
 /**
  * @defgroup common Core functions
@@ -131,6 +131,7 @@ function drupal_get_path_map($action = "") {
   }
 
   if (is_null($map)) {
+    $map = array();  // make $map non-null in case no aliases are defined
     $result = db_query("SELECT * FROM {url_alias}");
     while ($data = db_fetch_object($result)) {
       $map[$data->dst] = $data->src;
