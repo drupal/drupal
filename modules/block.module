@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.135 2004/09/16 07:17:55 dries Exp $
+// $Id: block.module,v 1.136 2004/09/17 22:07:17 unconed Exp $
 
 /**
  * @file
@@ -282,6 +282,7 @@ function block_admin() {
   if ($op == t('Save blocks')) {
     drupal_set_message(block_admin_save($edit));
     cache_clear_all();
+    drupal_goto($_GET['q']);
   }
   print theme('page', block_admin_display());
 }

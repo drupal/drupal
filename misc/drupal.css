@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.82 2004/09/14 20:00:58 unconed Exp $ */
+/* $Id: drupal.css,v 1.83 2004/09/17 22:07:17 unconed Exp $ */
 
 /*
 ** HTML elements
@@ -332,6 +332,12 @@ tr.light .form-item, tr.dark .form-item {
 }
 #forum td.posts, #forum td.topics, #forum td.replies, #forum td.pager {
   text-align: center;
+}
+#permissions td.module {
+  font-weight: bold;
+}
+#permissions td.permission {
+  padding-left: 2em;
 }
 .poll .bar {
   height: 1em;
