@@ -63,30 +63,26 @@ function node_get_comments($nid) {
 }
 
 function node_save($node, $filter) {
-  global $user, $status;
-
   $rows = array(nid, pid, lid, cid, tid, log, type, title, score, votes, author, status, comment, promote, moderate, attribute, timestamp, timestamp_posted, timestamp_queued, timestamp_hidden);
 
   if ($node[nid] > 0) {
     $n = node_get_object(array("nid" => $node[nid]));
 
-    $u1 = array();
-    $u2 = array();
+    foreach ($filter as $field=>$value) {
+      $f = check_input(is_numeric($field) ? $value : $field);
+      $v = check_input(is_numeric($field) ? $node[$value] : $filter[$field]);
 
-    foreach ($node as $field=>$value) {
-      if (in_array("$field", $filter)) {
-        if (in_array("$field", $rows)) {
-          array_push($u1, check_input($field) ." = '". check_input($value) ."'");
-        }
-        else {
-          array_push($u2, check_input($field) ." = '". check_input($value) ."'");
-        }
+      if (in_array($f, $rows)) {
+        $u1[] = check_input($f) ." = '". check_input($v) ."'";
+      }
+      else {
+        $u2[] = check_input($f) ." = '". check_input($v) ."'";
       }
     }
 
-    if ($u1 = implode(", ", $u1)) db_query("UPDATE node SET $u1 WHERE nid = '$node[nid]'");
-    if ($u2 = implode(", ", $u2)) db_query("UPDATE $n->type SET $u2 WHERE nid = '$node[nid]'");
-    if ($n->pid && ($node[status] == $status[posted])) db_query("UPDATE node SET status = '$status[expired]' WHERE nid = '$n->pid'");
+    if ($u1) db_query("UPDATE node SET ". implode(", ", $u1) ." WHERE nid = '$node[nid]'");
+    if ($u2) db_query("UPDATE $n->type SET ". implode(", ", $u2) ." WHERE nid = '$node[nid]'");
+    if ($n->pid && ($node[status] == node_status("posted"))) db_query("UPDATE node SET status = '". node_status("expired") ."' WHERE nid = '$n->pid'");
 
     return $node[nid];
   }
@@ -98,19 +94,19 @@ function node_save($node, $filter) {
     }
     else {
       // verify submission rate:
-      throttle("post node", variable_get(max_node_rate, 900));
+      throttle("post node", variable_get("max_node_rate", 900));
 
       // prepare queries:
       foreach ($filter as $field=>$value) {
-        $k = check_input(is_numeric($field) ? $value : $field);
+        $f = check_input(is_numeric($field) ? $value : $field);
         $v = check_input(is_numeric($field) ? $node[$value] : $filter[$field]);
 
-        if (in_array($k, $rows)) {
-          $f1[] = $k;
+        if (in_array($f, $rows)) {
+          $f1[] = $f;
           $v1[] = "'$v'";
         }
         else {
-          $f2[] = $k;
+          $f2[] = $f;
           $v2[] = "'$v'";
         }
       }
@@ -127,8 +123,8 @@ function node_save($node, $filter) {
         if ($result && $lid = db_insert_id()) {
           $result = db_query("UPDATE node SET lid = '$lid' WHERE nid = '$nid'");
           if ($result) {
-            if (($node[pid]) && ($node[status] == $status[posted])) {
-              db_query("UPDATE node SET status = '$status[expired]' WHERE nid = '$node[pid]'");
+            if (($node[pid]) && ($node[status] == node_status("posted"))) {
+              db_query("UPDATE node SET status = '". node_status(expired) ."' WHERE nid = '$node[pid]'");
             }
           }
           else {
@@ -213,6 +209,19 @@ function node_preview($node) {
     if ($value) $node[$key] = is_array($value) ? node_preview($value) : check_preview($value);
   }
   return $node;
+}
+
+function node_attributes_edit($edit) {
+  return index_collection_form("section", ($edit[section] ? $edit[section] : "section:". field_get($edit[attribute], "section")));
+}
+
+function node_attributes_save($edit) {
+  if ($edit[nid] && $node = node_get_array(array("nid" => $edit[nid]))) {
+    return field_merge($node[attribute], $edit[section]);
+  }
+  else {
+    return $edit[section];
+  }
 }
 
 function node_visible($node) {
