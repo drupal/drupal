@@ -120,7 +120,7 @@ function poll_insert($node) {
 
 function poll_link($type) {
   if ($type == "menu.create" && user_access("post content")) {
-    $links[] = lm(t("create poll"), array("mod" => "node", "op" => "add", "type" => "poll"), "", array("title", t("Add a new poll.")));
+    $links[] = lm(t("create poll"), array("mod" => "node", "op" => "add", "type" => "poll"), "", array("title" => t("Add a new poll.")));
   }
 
   return $links ? $links : array();
