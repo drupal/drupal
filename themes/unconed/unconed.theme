@@ -284,8 +284,7 @@
    ######
    # Syntax.......: box($title, $body);
    # Description..: a function to draw a box/block.
-   function box($subject, $content) { 
-
+   function box($subject, $content, $options = "") { 
      ?>
       <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" BGCOLOR="<? echo $this->brcolor1; ?>" WIDTH="100%">
       <TR><TD>
@@ -293,7 +292,7 @@
 
      print "<TABLE BORDER=\"0\" CELLPADDING=\"3\" CELLSPACING=\"1\" WIDTH=\"100%\">";
      print " <TR><TD ALIGN=\"center\" BGCOLOR=\"$this->bgcolor1\"><FONT COLOR=\"$this->fgcolor1\"><B>$subject</B></FONT></TD></TR>";
-     print " <TR><TD BGCOLOR=\"$this->bgcolor2\">$content</TD></TR>";
+     print " <TR><TD BGCOLOR=\"$this->bgcolor2\" $options>$content</TD></TR>";
      print "</TABLE>";
 
      ?>

@@ -1,10 +1,5 @@
 <?
 
-function discussion_score($comment) {
-  $value = ($comment->votes) ? ($comment->score / $comment->votes) : (($comment->score) ? $comment->score : 0);
-  return (strpos($value, ".")) ? substr($value ."00", 0, 4) : $value .".00";
-}
-
 function discussion_moderate($moderate) {
   global $user, $comment_votes;
 
@@ -249,10 +244,10 @@ function comment_post($pid, $sid, $subject, $comment) {
   global $user, $theme;
 
   ### Check for fake threads:
-  $fake = db_result(db_query("SELECT COUNT(*) FROM stories WHERE id = $sid"), 0);
+  $fake = db_result(db_query("SELECT COUNT(id) FROM stories WHERE id = $sid"), 0);
 
   ### Check for duplicate comments:
-  $duplicate = db_result(db_query("SELECT COUNT(*) FROM comments WHERE pid = '$pid' AND sid = '$sid' AND subject = '". check_input($subject) ."' AND comment = '". check_input($comment) ."'"), 0);
+  $duplicate = db_result(db_query("SELECT COUNT(cid) FROM comments WHERE pid = '$pid' AND sid = '$sid' AND subject = '". check_input($subject) ."' AND comment = '". check_input($comment) ."'"), 0);
 
   if ($fake != 1) {
     watchdog("error", "discussion: attempt to insert fake comment");

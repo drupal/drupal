@@ -103,7 +103,7 @@ function account_user_edit() {
     $output .= "<B>Bio:</B> (255 char. limit)<BR>\n";
     $output .= "<TEXTAREA NAME=\"edit[bio]\" COLS=\"35\" ROWS=\"5\" WRAP=\"virtual\">$user->bio</TEXTAREA><BR>\n";
     $output .= "<I>Optional. This biographical information is publicly displayed on your user page.</I><P>\n";
-    $output .= "<B>Singature:</B> (255 char. limit)<BR>\n";
+    $output .= "<B>Signature:</B> (255 char. limit)<BR>\n";
     $output .= "<TEXTAREA NAME=\"edit[signature]\" COLS=\"35\" ROWS=\"5\" WRAP=\"virtual\">$user->signature</TEXTAREA><BR>\n";
     $output .= "<I>Optional. This information will be publicly displayed at the end of your comments. </I><P>\n";
     $output .= "<B>Password:</B><BR>\n";
@@ -190,7 +190,7 @@ function account_page_edit() {
     $output .= "</FORM>\n";
 
     $theme->header();
-    $theme->box("Customize your page", $output);
+    $theme->box("Edit your settings", $output);
     $theme->footer();
   }
   else {
@@ -219,7 +219,6 @@ function account_user($uname) {
   global $user, $theme;
 
   if ($user->id && $user->userid == $uname) {
-    $output .= "<P>Welcome $user->userid! This is <B>your</B> user info page. There are many more, but this one is yours. You are probably most interested in editing something, but if you need to kill some time, this place is as good as any other place.</P>\n";
     $output .= "<TABLE BORDER=\"0\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>User ID:</B></TD><TD>$user->userid</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>Name:</B></TD><TD>". format_data($user->name) ."</TD></TR>\n";
@@ -231,7 +230,7 @@ function account_user($uname) {
 
     ### Display account information:
     $theme->header();
-    $theme->box("Your user information", $output);
+    $theme->box("View your information", $output);
     $theme->footer();
   }
   elseif ($uname && $account = account_get_user($uname)) {
@@ -249,7 +248,7 @@ function account_user($uname) {
       $box2 .= " <TR><TD ALIGN=\"right\"><B>Date:</B></TD><TD>". format_date($comment->timestamp) ."</TD></TR>\n";
       $box2 .= " <TR><TD ALIGN=\"right\"><B>Story:</B></TD><TD><A HREF=\"discussion.php?id=$comment->sid\">". check_output($comment->story) ."</A></TD></TR>\n";
       $box2 .= "</TABLE>\n";
-      $box2 .= "<BR><BR>\n";
+      $box2 .= "<P>\n";
       $comments++;
     }
 
@@ -301,19 +300,18 @@ function account_email_submit($userid, $email) {
   $result = db_query("SELECT id FROM users WHERE userid = '". check_output($userid) ."' AND real_email = '". check_output($email) ."'");
   
   if ($account = db_fetch_object($result)) {
-    $new[userid] = $userid;
-    $new[passwd] = account_password();
-    $new[status] = 1;
-    $new[hash] = substr(md5("$new[userid]. ". time() .""), 0, 12);
+    $passwd = account_password();
+    $status = 1;
+    $hash = substr(md5("$userid. ". time() .""), 0, 12);
 
-    user_save($new, 1);
+    db_query("UPDATE users SET passwd = PASSWORD('$passwd'), hash = '$hash', status = '$status' WHERE userid = '$userid'");
 
-    $link = $site_url ."account.php?op=confirm&name=$new[userid]&hash=$new[hash]";
-    $message = "$new[userid],\n\n\nyou requested us to e-mail you a new password for your $site_name account.  Note that you will need to re-activate your account before you can login.  You can do so simply by visiting the URL below:\n\n    $link\n\nVisiting this URL will automatically re-activate your account.  Once activated you can login using the following information:\n\n    username: $new[userid]\n    password: $new[passwd]\n\n\n-- $site_name crew\n";
+    $link = $site_url ."account.php?op=confirm&name=$userid&hash=$hash";
+    $message = "$userid,\n\n\nyou requested us to e-mail you a new password for your $site_name account.  Note that you will need to re-activate your account before you can login.  You can do so simply by visiting the URL below:\n\n    $link\n\nVisiting this URL will automatically re-activate your account.  Once activated you can login using the following information:\n\n    username: $userid\n    password: $passwd\n\n\n-- $site_name crew\n";
 
     watchdog("message", "new password: `$userid' &lt;$email&gt;");
 
-    mail($email, "Account details for $site_name", $message, "From: noreply@$site_url");
+    mail($email, "Account details for $site_name", $message, "From: noreply");
 
     $output = "Your password and further instructions have been sent to your e-mail address.";
   }
@@ -350,7 +348,7 @@ function account_create_submit($userid, $email) {
 
     watchdog("message", "new account: `$new[userid]' &lt;$new[real_email]&gt;");
 
-    mail($new[real_email], "Account details for $site_name", $message, "From: noreply@$site_url");
+    mail($new[real_email], "Account details for $site_name", $message, "From: noreply");
 
     $theme->header();
     $theme->box("Create new account", "Congratulations!  Your member account has been sucessfully created and further instructions on how to activate your account have been sent to your e-mail address.");
@@ -397,28 +395,98 @@ function account_password($min_length=6) {
   return $password;
 }
 
-function account_comments() {
+function account_track_comments() {
   global $theme, $user;
 
-  $info = "<P>This page might be helpful in case you want to keep track of your recent comments in any of the current discussions.  You are presented an overview of your comments in each of the stories you participated in along with the number of replies each comment got.\n<P>\n"; 
+  $msg = "<P>This page might be helpful in case you want to keep track of your recent comments in any of the current discussions.  You are presented an overview of your comments in each of the stories you participated in along with the number of replies each comment got.\n<P>\n"; 
 
   $sresult = db_query("SELECT s.id, s.subject, COUNT(s.id) as count FROM comments c LEFT JOIN stories s ON c.sid = s.id WHERE c.author = $user->id GROUP BY s.id DESC LIMIT 5");
   
   while ($story = db_fetch_object($sresult)) {
-    $output .= "<LI>". format_plural($story->count, comment, comments) ." in story `<A HREF=\"discussion.php?id=$story->id\">". check_output($story->subject) ."</A>`:</LI>\n";
+    $output .= "<LI>". format_plural($story->count, comment, comments) ." attached to story `<A HREF=\"discussion.php?id=$story->id\">". check_output($story->subject) ."</A>`:</LI>\n";
     $output .= " <UL>\n";
    
     $cresult = db_query("SELECT * FROM comments WHERE author = $user->id AND sid = $story->id");
     while ($comment = db_fetch_object($cresult)) {
-      $output .= "  <LI><A HREF=\"discussion.php?id=$story->id&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A> (<B>". format_plural(discussion_num_replies($comment->cid), "reply", "replies") ."</B>)</LI>\n";
+      $output .= "  <LI><A HREF=\"discussion.php?id=$story->id&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A> - replies: ". discussion_num_replies($comment->cid) ." - score: ". discussion_score($comment) ."</LI>\n";
     }
     $output .= " </UL>\n";
   }
 
-  $output = ($output) ? "$info $output" : "$info <CENTER><B>You have not posted any comments recently.</B></CENTER>\n";
+  $output = ($output) ? "$msg $output" : "$info <CENTER><B>You have not posted any comments recently.</B></CENTER>\n";
 
   $theme->header();
   $theme->box("Track your comments", $output);
+  $theme->footer();
+}
+
+function account_track_stories() {
+  global $theme, $user;
+
+  $msg = "<P>This page might be helpful in case you want to keep track of the stories you contributed.  You are presented an overview of your stories along with the number of replies each story got.\n<P>\n"; 
+
+  $result = db_query("SELECT s.id, s.subject, s.timestamp, s.category, COUNT(s.id) as count FROM comments c LEFT JOIN stories s ON c.sid = s.id WHERE s.status = 2 AND s.author = $user->id GROUP BY s.id DESC");
+  
+  while ($story = db_fetch_object($result)) {
+    $output .= "<TABLE BORDER=\"0\" CELLPADDING=\"1\" CELLSPACING=\"1\">\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>Subject:</B></TD><TD><A HREF=\"discussion.php?id=$story->id\">". check_output($story->subject) ."</A> (". format_plural($story->count, "comment", "comments") .")</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>Category:</B></TD><TD><A HREF=\"search.php?category=". urlencode($story->category) ."\">". check_output($story->category) ."</A></TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>Date:</B></TD><TD>". format_date($story->timestamp) ."</TD></TR>\n";
+    $output .= "</TABLE>\n";
+    $output .= "<P>\n";
+  }
+
+  $output = ($output) ? "$msg $output" : "$info <CENTER><B>You have not posted any stories.</B></CENTER>\n";
+
+  $theme->header();
+  $theme->box("Track your stories", $output);
+  $theme->footer();
+}
+
+function account_track_site() {
+  global $theme, $user, $site_name;
+
+  $result1 = db_query("SELECT c.cid, c.pid, c.sid, c.subject, u.userid, s.subject AS story FROM comments c LEFT JOIN users u ON u.id = c.author LEFT JOIN stories s ON s.id = c.sid WHERE s.status = 2 ORDER BY cid DESC LIMIT 10");
+
+  while ($comment = db_fetch_object($result1)) {
+    $box1 .= "<TABLE BORDER=\"0\" CELLPADDING=\"1\" CELLSPACING=\"1\">\n";
+    $box1 .= " <TR><TD ALIGN=\"right\"><B>Comment:</B></TD><TD><A HREF=\"discussion.php?id=$comment->sid&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A></TD></TR>\n";
+    $box1 .= " <TR><TD ALIGN=\"right\"><B>Author:</B></TD><TD>". format_username($comment->userid) ."</TD></TR>\n";
+    $box1 .= " <TR><TD ALIGN=\"right\"><B>Story:</B></TD><TD><A HREF=\"discussion.php?id=$comment->sid\">". check_output($comment->story) ."</A></TD></TR>\n";
+    $box1 .= "</TABLE>\n";
+    $box1 .= "<P>\n";
+  }
+
+  $users_total = db_result(db_query("SELECT COUNT(id) FROM users"));
+  
+  $stories_posted  = db_result(db_query("SELECT COUNT(id) FROM stories WHERE status = 2"));
+  $stories_queued  = db_result(db_query("SELECT COUNT(id) FROM stories WHERE status = 1"));
+  $stories_dumped = db_result(db_query("SELECT COUNT(id) FROM stories WHERE status = 0"));
+
+  $result = db_query("SELECT u.userid, COUNT(s.author) AS count FROM stories s LEFT JOIN users u ON s.author = u.id GROUP BY s.author ORDER BY count DESC LIMIT 10");
+  while ($poster = db_fetch_object($result)) $stories_posters .= format_username($poster->userid) .", ";
+
+  $comments_total = db_result(db_query("SELECT COUNT(cid) FROM comments")); 
+  $comments_score = db_result(db_query("SELECT TRUNCATE(AVG(score / votes), 2) FROM comments WHERE votes > 0"));
+
+  $result = db_query("SELECT u.userid, COUNT(c.author) AS count FROM comments c LEFT JOIN users u ON c.author = u.id GROUP BY c.author ORDER BY count DESC LIMIT 10");
+  while ($poster = db_fetch_object($result)) $comments_posters .= format_username($poster->userid) .", ";
+
+  $diaries_total = db_result(db_query("SELECT COUNT(id) FROM diaries"));
+
+  $result = db_query("SELECT u.userid, COUNT(d.author) AS count FROM diaries d LEFT JOIN users u ON d.author = u.id GROUP BY d.author ORDER BY count DESC LIMIT 10");
+  while ($poster = db_fetch_object($result)) $diaries_posters .= format_username($poster->userid) .", ";
+  
+  $box2 .= "<TABLE BORDER=\"0\" CELLPADDING=\"2\" CELLSPACING=\"1\">\n";
+  $box2 .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Users:</B></TD><TD>$users_total users</TD></TR>\n";
+  $box2 .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Stories:</B></TD><TD>$stories_posted posted, $stories_queued queued, $stories_dumped dumped<BR><I>[most frequent posters: $stories_posters ...]</I></TD></TR>\n";
+  $box2 .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Comments:</B></TD><TD>$comments_total comments with an average score of $comments_score<BR><I>[most frequent posters: $comments_posters ...]</I></TD></TR>\n";
+  $box2 .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Diaries:</B></TD><TD>$diaries_total diary entries<BR><I>[most frequent posters: $diaries_posters ...]</I></TD></TR>\n";
+  $box2 .= "</TABLE>\n";
+
+  $theme->header();
+  $theme->box("Recent comments", $box1);
+  $theme->box("Site statistics", $box2);
   $theme->footer();
 }
 
@@ -433,30 +501,14 @@ switch ($op) {
     account_session_start($userid, $passwd);
     header("Location: account.php?op=info");
     break;
-  case "confirm":
-    account_create_confirm($name, $hash);
-    break;
-  case "view":
-    account_user($name);
-    break;
-  case "discussion":
-    account_comments();
-    break;
-  case "logout":
-    account_session_close();
-    header("Location: account.php");
-    break;
   case "E-mail password":
     account_email_submit($userid, $email);
     break;
   case "Create account":
     account_create_submit($userid, $email);
     break;
-  case "user":
-    account_user_edit();
-    break;
-  case "page":
-    account_page_edit();
+  case "confirm":
+    account_create_confirm($name, $hash);
     break;
   case "Save user information":
     account_user_save($edit);
@@ -465,6 +517,46 @@ switch ($op) {
   case "Save page settings":
     account_page_save($edit);
     header("Location: account.php?op=info");
+    break;
+  case "logout":
+    account_session_close();
+    header("Location: account.php?op=info");
+    break;
+  case "view":
+    switch ($topic) {
+      case "info":
+        account_user($user->userid);
+        break;
+      case "diary":
+        header("Location: diary.php?op=view&name=$user->userid");
+        break;        
+      default:
+        account_user($name);
+    }
+    break;
+  case "track":
+    switch ($topic) {
+      case "site":
+        account_track_site();
+        break;
+      case "stories":
+        account_track_stories();
+        break;
+      default:
+        account_track_comments();
+    }
+    break;
+  case "edit":
+    switch ($topic) {
+      case "user":
+        account_user_edit();
+        break;
+      case "page":
+        account_page_edit();
+        break;
+      default:
+        header("Location: diary.php?op=edit&name=$user->userid");
+    }
     break;
   default: 
     account_user($user->userid);

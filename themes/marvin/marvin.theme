@@ -39,17 +39,17 @@
       <TABLE BORDER="0" CELLPADDING="8" CELLSPACING="0">
        <TR>
         <TD WIDTH="30" ROWSPAN="3">&nbsp;</TD>
-        <TD WIDTH="440"><A HREF=""><IMG SRC="themes/marvin/images/logo.gif" ALT="drop.org" BORDER="0"></A></TD>
-        <TD WIDTH="180">
+        <TD><A HREF=""><IMG SRC="themes/marvin/images/logo.gif" ALT="drop.org" BORDER="0"></A></TD>
+        <TD>
          <LI>Create an <A HREF="account.php?op=register">account</A> and <A HREF="submit.php">submit</A> new stories.</LI>
          <LI>Send your questions, feedback and bug reports to <A HREF="mailto:info@drop.org">info@drop.org</A>.</LI>
         </TD>
        </TR>
        <TR>
-        <TD ALIGN="right" COLSPAN="2"><SMALL><A HREF="">home</A> | <A HREF="faq.php">faq</A> | <A HREF="diary.php">diary</A> | <A HREF="search.php">search</A> | <A HREF="submit.php">submit news</A> | <A HREF="account.php">user account</A></SMALL></TD>
+        <TD ALIGN="right" COLSPAN="2"><SMALL><A HREF="/">home</A> | <A HREF="faq.php">faq</A> | <A HREF="diary.php">diary</A> | <A HREF="search.php">search</A> | <A HREF="submit.php">submit news</A> | <A HREF="account.php">user account</A></SMALL></TD>
        </TR>
        <TR>
-        <TD VALIGN="top" WIDTH="440">
+        <TD VALIGN="top" WIDTH="100%">
     <?
    }
 
@@ -223,16 +223,16 @@
    }
 
    ######
-   # Syntax.......: box($subject, $body);
+   # Syntax.......: box($subject, $body, $options = "");
    # Description..: a function to draw a box/block.
-   function box($subject, $content) { 
+   function box($subject, $content, $options = "") { 
      print "\n<!-- box: \"$subject\" -->\n";
      print "<TABLE BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"0\" BGCOLOR=\"#000000\" WIDTH=\"100%\">\n";
      print " <TR>\n";
-     print "  <TD>\n";
+     print "  <TD $wrap>\n";
      print "   <TABLE BORDER=\"0\" CELLPADDING=\"5\" CELLSPACING=\"1\" WIDTH=\"100%\">\n";
      print "    <TR><TD ALIGN=\"center\" BGCOLOR=\"$this->bgcolor1\" WIDTH=\"100%\"><FONT COLOR=\"$this->fgcolor1\"><B>$subject</B></FONT></TD></TR>\n";
-     print "    <TR><TD BGCOLOR=\"#FFFFFF\">$content</TD></TR>\n";
+     print "    <TR><TD BGCOLOR=\"#FFFFFF\" $options>$content</TD></TR>\n";
      print "   </TABLE>\n";
      print "  </TD>\n";
      print " </TR>\n";
@@ -246,7 +246,7 @@
    function footer() {
      ?>
        </TD>
-       <TD VALIGN="top" WIDTH="180">
+       <TD VALIGN="top">
          <?
          global $PHP_SELF;  
 
@@ -306,6 +306,9 @@
            }
          }
          else {
+           ### Display account:
+           display_account($this);
+
            ### Display new headlines:
            display_new_headlines($this);
          }
@@ -314,7 +317,7 @@
       </TR>
       <TR>
        <TD ALIGN="center" COLSPAN="3">
-        <SMALL>[ <A HREF="">home</A> | <A HREF="faq.php">faq</A> | <A HREF="diary.php">diary</A> | <A HREF="search.php">search</A> | <A HREF="submit.php">submit news</A> | <A HREF="account.php">user account</A> ]</SMALL>
+        <SMALL>[ <A HREF="/">home</A> | <A HREF="faq.php">faq</A> | <A HREF="diary.php">diary</A> | <A HREF="search.php">search</A> | <A HREF="submit.php">submit news</A> | <A HREF="account.php">user account</A> ]</SMALL>
        </TD>
       </TR>
      </TABLE>
