@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.101 2003/02/01 20:01:43 dries Exp $
+// $Id: comment.module,v 1.102 2003/02/09 18:01:32 dries Exp $
 
 $GLOBALS["cmodes"] = array(1 => t("Flat list - collapsed"), 2 => t("Flat list - expanded"), 3 => t("Threaded list - collapsed"), 4 => t("Threaded list - expanded"));
 $GLOBALS["corder"] = array(1 => t("Date - newest first"), 2 => t("Date - oldest first"));
@@ -270,7 +270,7 @@ function comment_post($edit) {
 
         $edit["cid"] = db_next_id("comments");
 
-        db_query("INSERT INTO comments (cid, nid, pid, uid, subject, comment, hostname, timestamp, status, score, users) VALUES ('%d', '%d', '%d', '$user->uid', '%s', '%s', '%s', '%s', '%s', '%s', '%s')", $edit["cid"], $edit["nid"], $edit["pid"], $edit["subject"], $edit["comment"], getenv("REMOTE_ADDR"), time(), $status, $score, $users);
+        db_query("INSERT INTO comments (cid, nid, pid, uid, subject, comment, hostname, timestamp, status, score, users) VALUES ('%d', '%d', '%d', '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s')", $edit["cid"], $edit["nid"], $edit["pid"], $user->uid, $edit["subject"], $edit["comment"], getenv("REMOTE_ADDR"), time(), $status, $score, $users);
 
         /*
         ** Tell the other modules a new comment has been submitted:
@@ -1385,7 +1385,7 @@ function comment_tag_new($nid) {
       db_query("UPDATE history SET timestamp = '%d' WHERE uid = '$user->uid' AND nid = '%d'", time(), $nid);
     }
     else {
-      db_query("INSERT INTO history (uid, nid, timestamp) VALUES ('$user->uid', '%d', '%d')", $nid, time());
+      db_query("INSERT INTO history (uid, nid, timestamp) VALUES ('%d', '%d', '%d')", $user->uid, $nid, time());
     }
   }
 }
