@@ -10,7 +10,7 @@ function admin_page($mod) {
 
   function module($name, $module) {
     global $menu, $modules, $user;
-    if ($module["admin"]) $output .= (user_access($user, $name) ? "<A HREF=\"admin.php?mod=$name\">$name</A> | " : " $name | ");
+    if ($module["admin"] && user_access($user, $name)) $output .= "<A HREF=\"admin.php?mod=$name\">$name</A> | ";
     $menu .= $output;
   }
 
