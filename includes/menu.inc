@@ -111,9 +111,11 @@ function menu_tree($parent = "") {
     usort($_gmenu[$parent]["children"], "_menu_sort");
     foreach ($_gmenu[$parent]["children"] as $item) {
       if ($_gmenu[$item]["hidden"] == 0) {
-        $output .= "<li>";
+        $trail = menu_trail($item);
+        $style = ($_gmenu[$item]["children"] ? (in_array($item, $trail)  ? "expanded" : "collapsed") : "leaf");
+        $output .= "<li class=\"$style\">";
         $output .= menu_item($item);
-        if (in_array($item, menu_trail($item))) {
+        if (in_array($item, $trail)) {
           $output .= menu_tree($item);
         }
         $output .= "</li>\n";
@@ -149,7 +151,13 @@ function menu_execute_action() {
   $selected_menu = array_pop($trail);
 
   if ($_gmenu[$selected_menu]["callback"]) {
-    return call_user_func_array($_gmenu[$selected_menu]["callback"], explode("/", substr(query_string(), strlen($selected_menu) + 1)));
+    $arg = substr(query_string(), strlen($selected_menu) + 1);
+    if (empty($arg)) {
+      return call_user_func($_gmenu[$selected_menu]["callback"]);
+    }
+    else {
+      return call_user_func_array($_gmenu[$selected_menu]["callback"], explode("/", $arg));
+    }
   }
 }
 
