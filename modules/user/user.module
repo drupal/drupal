@@ -503,7 +503,7 @@ function user_block() {
   if (db_num_rows($result)) {
     $output = "";
     while ($account = db_fetch_object($result)) {
-      $output .= lm((strlen($account->name) > 15 ? substr($account->name, 0, 15) . '...' : $account->name), array("mod" => "user", "op" => "view", "id" => $account->uid));
+      $output .= lm((strlen($account->name) > 15 ? substr($account->name, 0, 15) . '...' : $account->name), array("mod" => "user", "op" => "view", "id" => $account->uid)) ."<br />";
     }
     $block[2]["content"] = $output;
   }
