@@ -11,7 +11,7 @@
   @{
 **/
 
-/* $Id: theme.inc,v 1.158 2003/11/17 19:16:55 dries Exp $ */
+/* $Id: theme.inc,v 1.159 2003/11/17 19:24:39 dries Exp $ */
 
 /**
   Returns the theme header.
@@ -156,7 +156,7 @@ function _theme_table_cell($cell, $header = 0) {
 **/
 
 function theme_form_element($title, $value, $description = 0) {
-  return "<div class=\"form-item\">". ($title ? "<label>$title:</label>" : "") . $value . ($description ? "<div class=\"description\">$description</div>" : "") ."</div>\n";
+  return "<div class=\"form-item\">". ($title ? "<label>$title:</label><br />" : "") . $value . ($description ? "<div class=\"description\">$description</div>" : "") ."</div>\n";
 }
 
 /**

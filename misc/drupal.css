@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.37 2003/11/17 19:16:55 dries Exp $ */
+/* $Id: drupal.css,v 1.38 2003/11/17 19:24:39 dries Exp $ */
 
 form {
   margin: 0;
@@ -110,13 +110,14 @@ fieldset {
 .container-inline .form-submit {
   margin: 0;
 }
+.form-item {
+  margin-bottom: 1em;
+}
 .form-item .description {
   font-size: 0.85em;
 }
 .form-item label {
   font-weight: bold;
-  margin-top: 1.1em;
-  margin-bottom: 1px;
 }
 .form-submit {
   margin: 0.5em 0;
