@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.301 2004/01/05 19:19:04 unconed Exp $ */
+/* $Id: common.inc,v 1.302 2004/01/06 12:09:41 unconed Exp $ */
 
 /**
  * @name drupal_title
@@ -833,6 +833,34 @@ function drupal_page_footer() {
   */
 
   module_invoke_all("exit");
+}
+
+/**
+ * Wrapper around xml_parser_create() which extracts the encoding from the XML
+ * data first and sets the output encoding to UTF-8. This function should be
+ * used instead of xml_parser_create(), because PHP's XML parser doesn't check
+ * the input encoding itself.
+ *
+ * This is also where unsupported encodings should be converted.
+ * Callers should take this into account: $data might have been changed after
+ * the call.
+ *
+ * @param $data The XML data which will be parsed later.
+ */
+function drupal_xml_parser_create(&$data) {
+  $encoding = 'utf-8';
+  if (ereg('^<\?xml[^>]+encoding="([^"]+)"', $data, $match)) {
+    $encoding = $match[1];
+  }
+
+  /*
+   * Note: unsupported encodings will need to be converted here into UTF-8,
+   * and $encoding set to 'utf-8'.
+   */
+
+  $xml_parser = xml_parser_create($encoding);
+  xml_parser_set_option($xml_parser, XML_OPTION_TARGET_ENCODING, 'utf-8');
+  return $xml_parser;
 }
 
 include_once "includes/theme.inc";

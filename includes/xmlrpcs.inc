@@ -1,7 +1,7 @@
 <?php
 // by Edd Dumbill (C) 1999-2001
 // <edd@usefulinc.com>
-// $Id: xmlrpcs.inc,v 1.8 2003/11/28 20:03:00 dries Exp $
+// $Id: xmlrpcs.inc,v 1.9 2004/01/06 12:09:41 unconed Exp $
 
 // Copyright (c) 1999,2000,2001 Edd Dumbill.
 // All rights reserved.
@@ -208,15 +208,14 @@ class xmlrpc_server {
 
   function parseRequest($data="") {
   global $_xh;
-  global $xmlrpcerr, $xmlrpcstr, $xmlrpcerrxml, $xmlrpc_defencoding,
-    $_xmlrpcs_dmap;
+  global $xmlrpcerr, $xmlrpcstr, $xmlrpcerrxml, $_xmlrpcs_dmap;
 
 
 
   if ($data=="") {
     $data=$GLOBALS["HTTP_RAW_POST_DATA"];
   }
-  $parser = xml_parser_create($xmlrpc_defencoding);
+  $parser = drupal_xml_parser_create($data);
 
   $_xh[$parser]=array();
   $_xh[$parser]['st']="";

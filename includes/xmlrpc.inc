@@ -1,7 +1,7 @@
 <?php
 // by Edd Dumbill (C) 1999-2001
 // <edd@usefulinc.com>
-// $Id: xmlrpc.inc,v 1.11 2003/12/29 17:47:12 dries Exp $
+// $Id: xmlrpc.inc,v 1.12 2004/01/06 12:09:41 unconed Exp $
 
 
 // Copyright (c) 1999,2000,2001 Edd Dumbill.
@@ -88,8 +88,6 @@ $xmlrpcerr["no_ssl"]=7;
 $xmlrpcstr["no_ssl"]="No SSL support compiled in.";
 $xmlrpcerr["curl_fail"]=8;
 $xmlrpcstr["curl_fail"]="CURL error";
-
-$xmlrpc_defencoding="UTF-8";
 
 $xmlrpcName="XML-RPC for PHP";
 $xmlrpcVersion="1.02";
@@ -622,10 +620,9 @@ class xmlrpcmsg {
 
   function parseResponse($data="") {
     global $_xh,$xmlrpcerr,$xmlrpcstr;
-    global $xmlrpc_defencoding;
 
 
-    $parser = xml_parser_create($xmlrpc_defencoding);
+    $parser = drupal_xml_parser_create($data);
 
     $_xh[$parser]=array();
 

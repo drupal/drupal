@@ -1,5 +1,5 @@
 <?php
-// $Id: import.module,v 1.147 2004/01/05 19:50:43 unconed Exp $
+// $Id: import.module,v 1.148 2004/01/06 12:09:42 unconed Exp $
 
 
 function import_help($section = "admin/help#import") {
@@ -325,17 +325,10 @@ function import_refresh($feed) {
       return t("failed to parse RSS feed '%site': suspicious input data.", array("%site" => $feed["title"]));
     }
 
-    // extract the XML file's encoding (the XML parser in PHP4 doesn't do this by itself):
-    $encoding = 'utf-8';
-    if (ereg('^<\?xml[^>]+encoding="([^"]+)"', $data, $match)) {
-      $encoding = $match[1];
-    }
-
     // parse the data:
-    $xml_parser = xml_parser_create($encoding);
+    $xml_parser = drupal_xml_parser_create($data);
     xml_set_element_handler($xml_parser, "import_element_start", "import_element_end");
     xml_set_character_data_handler($xml_parser, "import_element_data");
-    xml_parser_set_option($xml_parser, XML_OPTION_TARGET_ENCODING, "utf-8");
 
     if (!xml_parse($xml_parser, $data, 1)) {
       return t("failed to parse RSS feed '%site': %error at line %line.", array("%site" => $feed["title"], "%error" => xml_error_string(xml_get_error_code($xml_parser)), "%line" => xml_get_current_line_number($xml_parser)));
