@@ -131,7 +131,13 @@ function format_date($timestamp, $type = "medium", $format = "") {
       $date = t(date("l", $timestamp)) .", ". t(date("F", $timestamp)) ." ". date("d, Y - H:i", $timestamp);
       break;
     case "custom":
-      $date = date($format, $timestamp);
+      for ($i=strlen($format);$i>=0;$c=$format[--$i]) {
+        if (strstr("DFlMSw",$c))
+          $date=t(date($c,$timestamp)).$date;
+        else if (strstr("AaBdgGhHiIjLmnrstTUYyZz",$c))
+          $date=date($c,$timestamp).$date;
+        else $date=$c.$date;
+      }
       break;
     default:
       $date = t(date("l", $timestamp)) .", ". date("m/d/Y - H:i", $timestamp);
