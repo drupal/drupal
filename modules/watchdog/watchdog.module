@@ -27,7 +27,7 @@ function watchdog_overview($type) {
   $output .= " <TR><TH>date</TH><TH>message</TH><TH>user</TH><TH>operations</TH></TR>\n";
   while ($watchdog = db_fetch_object($result)) {
     if ($background = $color[$watchdog->type]) {
-      $output .= " <TR BGCOLOR=\"$background\"><TD>". format_date($watchdog->timestamp, "small") ."</TD><TD>". substr(check_output($watchdog->message), 0, 50) ."</TD><TD ALIGN=\"center\">". format_username($watchdog->userid) ."</A></TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=watchdog&op=view&id=$watchdog->id\">details</A></TD></TR>\n";
+      $output .= " <TR BGCOLOR=\"$background\"><TD>". format_date($watchdog->timestamp, "small") ."</TD><TD>". substr(check_output($watchdog->message), 0, 64) ."</TD><TD ALIGN=\"center\">". format_username($watchdog->userid) ."</A></TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=watchdog&op=view&id=$watchdog->id\">details</A></TD></TR>\n";
     }
   }
   $output .= "</TABLE>\n";
