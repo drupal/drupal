@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.175 2003/03/07 06:37:29 dries Exp $
+// $Id: common.inc,v 1.176 2003/03/07 17:32:01 dries Exp $
 
 function conf_init() {
   global $HTTP_HOST, $PHP_SELF;
@@ -660,7 +660,7 @@ function format_date($timestamp, $type = "medium", $format = "") {
 
   switch ($type) {
     case "small":
-      $date = date(variable_get("date_format", "m/d/Y - H:i"), $timestamp);
+      $date = date(variable_get("date_format_short", "m/d/Y - H:i"), $timestamp);
       break;
     case "medium":
       $date = date(variable_get("date_format_medium", "D, m/d/Y - H:i"), $timestamp);
