@@ -17,7 +17,7 @@ function submission_displayMain() {
   $content .= " <TR BGCOLOR=\"$bgcolor1\"><TH>Subject</TH><TH>Category</TH><TH>Date</TH><TH>Author</TH><TH>Score</TH></TR>\n";
   while ($submission = db_fetch_object($result)) {
     $submission->userid = ($submission->userid) ? $submission->userid : $anonymous;
-    if ($user->getHistory("s$submission->id")) $content .= " <TR><TD WIDTH=\"100%\"><A HREF=\"$PHP_SELF?op=view&id=$submission->id\">$submission->subject</A></TD><TD>$submission->category</TD><TD ALIGN=\"center\">". date("Y-m-d", $submission->timestamp) ."<BR>". date("H:m:s", $submission->timestamp) ."</TD><TD ALIGN=\"center\">$submission->userid</TD><TD ALIGN=\"center\">". submission_score($submission->id) ."</TD></TR>\n";
+    if (getHistory($user->history, "s$submission->id")) $content .= " <TR><TD WIDTH=\"100%\"><A HREF=\"$PHP_SELF?op=view&id=$submission->id\">$submission->subject</A></TD><TD>$submission->category</TD><TD ALIGN=\"center\">". date("Y-m-d", $submission->timestamp) ."<BR>". date("H:m:s", $submission->timestamp) ."</TD><TD ALIGN=\"center\">$submission->userid</TD><TD ALIGN=\"center\">". submission_score($submission->id) ."</TD></TR>\n";
     else $content .= " <TR><TD WIDTH=\"100%\"><A HREF=\"$PHP_SELF?op=view&id=$submission->id\">$submission->subject</A></TD><TD>$submission->category</TD><TD ALIGN=\"center\">". date("Y-m-d", $submission->timestamp) ."<BR>". date("H:m:s", $submission->timestamp) ."</TD><TD ALIGN=\"center\">$submission->userid</TD><TD ALIGN=\"center\"><A HREF=\"$PHP_SELF?op=view&id=$submission->id\">vote</A></TD></TR>\n";
   }
   $content .= "</TABLE>\n";
@@ -38,7 +38,7 @@ function submission_displayItem($id) {
   $theme->header();
   $theme->article($submission, "[ <A HREF=\"$PHP_SELF\"><FONT COLOR=\"$theme->hlcolor2\">back</FONT></A> ]");
 
-  if ($vote = $user->getHistory("s$submission->id")) {
+  if ($vote = getHistory($user->history, "s$submission->id")) {
     print "<P><B>You voted `$vote' for this story!</B><BR><B>Score:</B> $submission->score<BR><B>Votes:</B> $submission->votes</P>\n";
     print "<P>\n";
     print "<B>Other people voted:</B><BR>\n";
