@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.92 2003/08/25 20:07:02 dries Exp $
+// $Id: statistics.module,v 1.93 2003/08/31 22:15:49 kjartan Exp $
 
 function statistics_init() {
   global $recent_activity;
@@ -363,7 +363,7 @@ function statistics_admin_accesslog_table($type, $id) {
   }
   else if ($type == 3) {
     /* retrieve recent access logs for hostname $id */
-    $sql = "SELECT nid, url, hostname, uid, timestamp FROM {accesslog} WHERE hostname = ". check_query($id);
+    $sql = "SELECT nid, url, hostname, uid, timestamp FROM {accesslog} WHERE hostname = '". check_query($id) ."'";
   }
   else {
     /* retrieve all recent access logs */
