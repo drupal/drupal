@@ -1550,14 +1550,14 @@ function node_page() {
       break;
     case t('Preview'):
       $edit = node_validate($edit, $error);
-      print theme('page', node_preview($edit, $error), t('Preview %name', array('%name' => $name)));
+      print theme('page', node_preview($edit, $error), t('Preview %name', array('%name' => node_invoke($edit, "node_name"))));
       break;
     case t('Submit'):
-      drupal_set_title(t('Submit %name', array('%name' => $name)));
+      drupal_set_title(t('Submit %name', array('%name' => node_invoke($edit, "node_name"))));
       print theme('page', node_submit($edit));
       break;
     case t('Delete'):
-      print theme('page', node_delete($edit), t('Delete %name', array('%name' => $name)));
+      print theme('page', node_delete($edit), t('Delete %name', array('%name' => node_invoke($edit, "node_name"))));
       break;
     default:
       print theme('page', node_page_default(), '');
