@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.31 2004/09/20 19:37:18 dries Exp $
+// $Id: locale.inc,v 1.32 2004/10/05 20:09:47 dries Exp $
 
 /**
  * @file
@@ -255,6 +255,7 @@ function _locale_import_po($file, $lang, $mode) {
 
   // Successfull import
   cache_clear_all("locale:$lang");
+  menu_rebuild();
   drupal_set_message(t('Translation successfully imported. %number translated strings added to language, %update strings updated.', array('%number' => $additions, '%update' => $updates)));
   watchdog('locale', t('Translation imported into %locale, %number translated strings added to language, %update strings updated.', array('%locale' => "<em>$lang</em>", '%number' => $additions, '%update' => $updates)));
   return TRUE;
