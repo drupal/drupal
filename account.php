@@ -106,17 +106,24 @@ function account_page_edit() {
   global $theme, $themes, $user;
 
   if ($user->id) {
-    ### Generate output/content:
     $output .= "<FORM ACTION=\"account.php\" METHOD=\"post\">\n";
     $output .= "<B>Theme:</B><BR>\n";
 
-    ### Loop (dynamically) through all available themes:
     foreach ($themes as $key=>$value) { 
-      $options .= "<OPTION VALUE=\"$key\"". (($user->theme == $key) ? " SELECTED" : "") .">$key - $value[1]</OPTION>";
+      $options1 .= " <OPTION VALUE=\"$key\"". (($user->theme == $key) ? " SELECTED" : "") .">$key - $value[1]</OPTION>\n";
     }
 
-    $output .= "<SELECT NAME=\"edit[theme]\">$options</SELECT><BR>\n";
+    $output .= "<SELECT NAME=\"edit[theme]\">\n$options1</SELECT><BR>\n";
     $output .= "<I>Selecting a different theme will change the look and feel of the site.</I><P>\n";
+    $output .= "<B>Timezone:</B><BR>\n";
+
+    $date = time() - date("Z");
+    for ($zone = -43200; $zone <= 43200; $zone += 3600) {
+      $options2 .= " <OPTION VALUE=\"$zone\"". (($user->timezone == $zone) ? " SELECTED" : "") .">". date("l, F dS, Y - h:i A", $date + $zone) ." (GMT ". $zone / 3600 .")</OPTION>\n";
+    }
+
+    $output .= "<SELECT NAME=\"edit[timezone]\">\n$options2</SELECT><BR>\n";
+    $output .= "<I>Select what time you currently have and your timezone settings will be set appropriate.</I><P>\n";
     $output .= "<B>Maximum number of stories:</B><BR>\n";
     $output .= "<INPUT NAME=\"edit[stories]\" MAXLENGTH=\"3\" SIZE=\"3\" VALUE=\"$user->stories\"><P>\n";
     $output .= "<I>The maximum number of stories that will be displayed on the main page.</I><P>\n";
@@ -143,7 +150,6 @@ function account_page_edit() {
     $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Save page settings\"><BR>\n";
     $output .= "</FORM>\n";
 
-    ### Display output/content:
     $theme->header();
     $theme->box("Customize your page", $output);
     $theme->footer();
@@ -159,6 +165,7 @@ function account_page_save($edit) {
   global $user;
   if ($user->id) {
     $data[theme] = $edit[theme];
+    $data[timezone] = $edit[timezone];
     $data[stories] = $edit[stories];
     $data[mode] = $edit[mode];
     $data[sort] = $edit[sort];
@@ -276,8 +283,6 @@ function account_register_enter($user = "", $error = "") {
 function account_register_submit($new) {
   global $theme, $mail, $sitename, $siteurl;
   
-  $siteurl = "www.drop.org"; // temporary solution
-
   if ($rval = account_validate($new)) { 
     account_register_enter($new, "$rval");
   }
@@ -288,7 +293,7 @@ function account_register_submit($new) {
 
     user_save($new);
 
-    $link = "http://$siteurl/account.php?op=confirm&name=$new[userid]&hash=$new[hash]";
+    $link = $siteurl ."account.php?op=confirm&name=$new[userid]&hash=$new[hash]";
     $message = "$new[userid],\n\n\nsomeone signed up for a user account on $sitename and supplied this email address as their contact.  If it wasn't you, don't get your panties in a knot and simply ignore this mail.\n\nIf this was you, you have to activate your account first before you can login.  You can do so simply by visiting the URL below:\n\n    $link\n\nVisiting this URL will automatically activate your account.  Once activated you can login using the following information:\n\n    username: $new[userid]\n    password: $new[passwd]\n\n\n-- $sitename crew\n";
 
     mail($new[real_email], "Account details for $sitename", $message, "From: noreply@$sitename");

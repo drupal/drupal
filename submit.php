@@ -118,7 +118,7 @@ function submit_preview($subject, $abstract, $article, $category) {
   $output .= "</FORM>\n";
   
   $theme->header();
-  $theme->preview($user->userid, check_output($subject), check_output($abstract), "", check_output($article), date("l, F d, Y - H:i A", time()), check_output($category), "we-hate-typoes");
+  $theme->preview($user->userid, check_output($subject), check_output($abstract), "", check_output($article), format_date(time(), "extra large"), check_output($category), "we-hate-typoes");
   $theme->box("Submit a story", $output);
   $theme->footer();
 }
