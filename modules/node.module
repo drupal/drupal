@@ -49,7 +49,8 @@ function node_teaser($body) {
   }
 
   /*
-  ** If we have a long body, try not to split paragraphs:
+  ** If we have a long body, try not to split paragraphs.
+  ** Search for the first \n after $size characters:
   */
 
   if ($length = strpos($body, "\n", $size)) {
@@ -57,10 +58,25 @@ function node_teaser($body) {
   }
 
   /*
-  ** If we have a long body, try not to split sentences:
+  ** Can't find a \n, try not to split sentences (search ". "):
   */
 
-  return substr($body, 0, strpos($body, ". ", $size) + 1);
+  if ($length = strpos($body, ". ", $size)) {
+    return substr($body, 0, $length + 1);
+  }
+
+  /*
+  ** Not even a ". ", try a single full stop:
+  */
+
+  if ($length = strpos($body, ".", $size)) {
+    return substr($body, 0, $length + 1);
+  }
+
+  /*
+  ** Ok I had enough, you'll get a substr():
+  */
+  return substr($body, 0, $size);
 
 }
 
