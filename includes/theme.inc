@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.105 2002/06/12 12:33:27 kjartan Exp $
+// $Id: theme.inc,v 1.106 2002/06/20 18:52:32 dries Exp $
 
 /**
 * Basic theme
@@ -134,7 +134,7 @@ function theme_blocks($region, &$theme) {
     if (($block->status && (!$user->uid || !$block->custom)) || ($block->custom && $user->block[$block->name])) {
       $blocks = module_invoke($block->module, "block");
       if ($blocks[$block->delta]["content"]) {
-        $theme->box(t($blocks[$block->delta]["subject"]), $blocks[$block->delta]["content"], $region);
+        $theme->box($blocks[$block->delta]["subject"], $blocks[$block->delta]["content"], $region);
       }
     }
   }
