@@ -328,8 +328,8 @@ function blog_link($type, $node = 0, $main) {
 function blog_block($op = "list", $delta = 0) {
   global $user;
   if ($op == "list") {
-    $blocks[0]["info"] = t("User blogs");
-    return $blocks;
+    $block[0]["info"] = t("User blogs");
+    return $block;
   }
   else {
     if (user_access("access content")) {
