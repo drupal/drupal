@@ -504,7 +504,7 @@ function taxonomy_node_save($nid, $terms) {
           }
         }
       }
-      if ($term) {
+      else if ($term) {
         db_query('INSERT INTO {term_node} (nid, tid) VALUES (%d, %d)', $nid, $term);
       }
     }
