@@ -36,7 +36,7 @@
           <TR>
             <TD COLSPAN="2">
               <? if (rand(0,150) == 75) $img = "logo2.gif"; else $img = "logo.gif"; ?>
-	      <IMG SRC="themes/jeroen/images/<? echo $img; ?>" ALT="drop.org logo"><BR><BR>
+        <IMG SRC="themes/jeroen/images/<? echo $img; ?>" ALT="drop.org logo"><BR><BR>
             </TD>
           </TR>
           <TR>
@@ -77,13 +77,13 @@
                     <FONT COLOR="<? echo $this->fgc2; ?>">
 <?
                     switch (rand(0,12)) {
-		      case 0: $how = "Yelled at us"; break;   case 1: $how = "Whispered"; break;
-		      case 2: $how = "Reported"; break;       case 3: $how = "Posted"; break;
-		      case 4: $how = "Beamed through"; break; case 5: $how = "Faxed"; break;
-		      case 6: $how = "Tossed at us"; break;   case 7: $how = "Morsed"; break;
-		      case 8: $how = "Flagged"; break;        case 9: $how = "Written to us"; break;
-		      case 10: $how = "Made up"; break;       case 11: $how = "Uploaded"; break;
-		      default: $how = "Sneaked through";
+          case 0: $how = "Yelled at us"; break;   case 1: $how = "Whispered"; break;
+          case 2: $how = "Reported"; break;       case 3: $how = "Posted"; break;
+          case 4: $how = "Beamed through"; break; case 5: $how = "Faxed"; break;
+          case 6: $how = "Tossed at us"; break;   case 7: $how = "Morsed"; break;
+          case 8: $how = "Flagged"; break;        case 9: $how = "Written to us"; break;
+          case 10: $how = "Made up"; break;       case 11: $how = "Uploaded"; break;
+          default: $how = "Sneaked through";
                     }
 
                     if ($story->userid) {
@@ -172,13 +172,13 @@
                     <FONT COLOR="<? echo $this->fgc2; ?>">
 <?
                     switch (rand(0,12)) {
-	              case 0: $how = "Yelled at us"; break;   case 1: $how = "Whispered"; break;
-	              case 2: $how = "Reported"; break;       case 3: $how = "Posted"; break;
-	              case 4: $how = "Beamed through"; break; case 5: $how = "Faxed"; break;
-	              case 6: $how = "Tossed at us"; break;   case 7: $how = "Morsed"; break;
-	              case 8: $how = "Flagged"; break;        case 9: $how = "Written to us"; break;
-	              case 10: $how = "Made up"; break;       case 11: $how = "Uploaded"; break;
-	              default: $how = "Sneaked through";
+                case 0: $how = "Yelled at us"; break;   case 1: $how = "Whispered"; break;
+                case 2: $how = "Reported"; break;       case 3: $how = "Posted"; break;
+                case 4: $how = "Beamed through"; break; case 5: $how = "Faxed"; break;
+                case 6: $how = "Tossed at us"; break;   case 7: $how = "Morsed"; break;
+                case 8: $how = "Flagged"; break;        case 9: $how = "Written to us"; break;
+                case 10: $how = "Made up"; break;       case 11: $how = "Uploaded"; break;
+                default: $how = "Sneaked through";
                     }
 
                     if ($story->userid) {
@@ -215,7 +215,7 @@
                           else {
                             echo $story->abstract;
                           }
-	                  if ($story->article)
+                    if ($story->article)
                             echo "<P>". check_output($story->article) ."</P>";
 ?>
                         </TD>
@@ -355,7 +355,7 @@
 <?
          global $PHP_SELF;
 
-	 $this->box("Drop where?", "<TD ALIGN=\"left\" VALIGN=\"top\"><A HREF=\"index.php\">home</A><BR><A HREF=\"faq.php\">faq</A><BR><A HREF=\"search.php\">search</A></TD><TD ALIGN=\"right\" VALIGN=\"top\"><A HREF=\"submit.php\">submit news</A><BR><A HREF=\"account.php\">your account</A></TD>");
+   $this->box("Drop where?", "<TD ALIGN=\"left\" VALIGN=\"top\"><A HREF=\"index.php\">home</A><BR><A HREF=\"faq.php\">faq</A><BR><A HREF=\"search.php\">search</A></TD><TD ALIGN=\"right\" VALIGN=\"top\"><A HREF=\"submit.php\">submit news</A><BR><A HREF=\"account.php\">your account</A></TD>");
 
            theme_account($this);
 ?>
