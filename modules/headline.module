@@ -67,12 +67,11 @@ function headline_cron() {
 }
 
 function headline_help() {
-  global $site_url;
  ?>
   <P>Drupal's headline module both imports and exports RDF/RSS headlines.</P>
   <P>A lot of news-oriented websites are now publishing news (headlines) and make their content available through XML, RSS and RDF backend files.  They syndicate content for free and allow retrieval and further transmission, aggregation, or online publication. At the current state, drupal's headline module supports RDF and RSS backends.</P>
   <P>RSS was originally developed by Netscape to be able to add news channels to "My Netscape" sites, but has since become adopted as the defacto standard for distributing headlines and brief descriptions of things that change around the net.</P>
-  <P>The headline module goes out to a list of configured news sites once an hour or so (driven from cron), downloads new RSS/RDF data and makes it available to your visitors.  In addition, your headlines are exported as well and can be retrieved at <A HREF="<? echo $site_url; ?>export/headlines.rdf"><? echo $site_url; ?>export/headlines.rdf</A>.</P>
+  <P>The headline module goes out to a list of configured news sites once an hour or so (driven from cron), downloads new RSS/RDF data and makes it available to your visitors.  In addition, your headlines are exported as well and can be retrieved at http://yourdomain.com/export/headlines.rdf.</P>
  <?
 }
 
