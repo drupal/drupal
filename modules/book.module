@@ -80,7 +80,7 @@ function book_save($op, $node) {
 
 }
 
-function book_link($type, $node = 0) {
+function book_link($type, $node = 0, $main = 0) {
   if ($type == "page" && user_access("access content")) {
     $links[] = "<a href=\"module.php?mod=book\">". t("collaborative book") ."</a>";
   }
@@ -89,7 +89,7 @@ function book_link($type, $node = 0) {
     $links[] = "<a href=\"admin.php?mod=book\">". t("collaborative book") ."</a>";
   }
 
-  if ($type == "node" && $node->type == "book") {
+  if ($main == 0 && $type == "node" && $node->type == "book") {
     $links[] = "<a href=\"module.php?mod=node&op=edit&id=$node->nid\">". t("update this book page") ."</a>";
   }
 
