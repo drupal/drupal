@@ -97,20 +97,13 @@ function format_plural($count, $singular, $plural) {
 }
 
 function format_interval($timestamp) {
-  if ($timestamp >= 86400) {
-    $output .= format_plural(floor($timestamp / 86400), "day", "days");
-    $timestamp = $timestamp % 86400;
-  }
-  if ($timestamp >= 3600) {
-    $output .= " ". format_plural(floor($timestamp / 3600), "hour", "hours");
-    $timestamp = $timestamp % 3600;
-  }
-  if ($timestamp >= 60) {
-    $output .= " ". floor($timestamp / 60) ." min";
-    $timestamp = $timestamp % 60;
-  }
-  if ($timestamp > 0) {
-    $output .= " $timestamp sec";
+  $units = array("year|years"=>31536000, "week|weeks"=>604800, "day|days"=>86400, "hour|hours"=>3600, "min|min"=>60, "sec|sec"=>1);
+  foreach ($units as $key=>$value) {
+    $key=explode("|", $key);
+    if ($timestamp >= $value) {
+      $output .= ($output ? " " : "") . format_plural(floor($timestamp / $value), $key[0], $key[1]);
+      $timestamp %= $value;
+    }
   }
   return ($output) ? $output : "0 sec";
 }
