@@ -6,22 +6,35 @@
  */
 function help_menu() {
   $items = array();
-  $items[] = array('path' => 'admin/help/glossary', 'title' => t('glossary'),
-    'callback' => 'help_glossary',
-    'access' => user_access('access administration pages'));
   $items[] = array('path' => 'admin/help', 'title' => t('help'),
-    'callback' => 'help_page',
+    'callback' => 'help_main',
     'access' => user_access('access administration pages'),
     'weight' => 9);
+  
+  foreach (module_list() as $name) {
+    if (module_hook($name, 'help')) {
+      if (module_invoke($name, 'help', "admin/help#$name")) {
+        $items[] = array('path' => 'admin/help/' . $name,
+          'title' => t($name),
+          'callback' => 'help_page',
+          'access' => user_access('access administration pages'));
+      }
+    }
+  }
   return $items;
 }
 
 /**
  * Menu callback; prints a page listing a glossary of Drupal terminology.
  */
-function help_glossary() {
+function help_main() {
   $output = t("
-  <h3>Glossary</h3><dl>
+  <p>This guide explains what the various modules in <a href=\"%Drupal\">Drupal</a> do and how to configure them.</p>
+  <p>It is not a substitute for the <a href=\"%handbook\">Drupal handbook</a> available online and should be used in conjunction with it. The online reference handbook might be more up-to-date and has helpful user-contributed comments. It is your definitive reference point for all Drupal documentation.</p>
+  <h2>Help topics</h2>
+  <p>Help is available on the following items:</p>
+  %help_pages
+  <h2>Glossary of Drupal Terminology</h2><dl>
   <dt>Block</dt><dd>A small box containing information or content placed in the left-hand or right-hand sidebar of a web page.</dd>
   <dt>Comment</dt><dd>A note attached to a node. Usually intended to clarify, explain, criticize, or express an opinion on the original material.</dd>
   <dt>Moderation</dt><dd>The activity of making sure a post to a Drupal site fits in with what is expected for that Drupal site.<dl>
@@ -36,9 +49,22 @@ function help_glossary() {
   <dt>Unpublished</dt><dd>A node that is only viewable by administrators and moderators.</dd>
   <dt>User</dt><dd>A person who has an account at your Drupal site, and is logged in with that account.</dd>
   <dt>Visitor</dt><dd>A person who does not have an account at your Drupal site or a person who has an account at your Drupal site but is <u>not</u> logged in with that account. Also termed \"anonymous user\".</dd>
-  </dl>", array('%taxonomy' => url('admin/taxonomy/help')));
+  </dl>", array('%Drupal' => 'http://drupal.org', '%handbook' => 'http://drupal.org/handbook', '%help_pages' => help_links_as_list(), '%taxonomy' => url('admin/taxonomy/help')));
 
   print theme('page', $output);
+}
+
+function help_links_as_list() {
+  $output = '<ul>';
+  foreach (module_list() as $name) {
+    if (module_hook($name, 'help')) {
+      if (module_invoke($name, 'help', "admin/help#$name")) {
+        $output .= '<li>' . t("<a href=\"%url\">$name</a>", array('%url' => url("admin/help/$name"))) . '</li>';
+      }
+    }
+  }
+  $output .= '</ul>';
+  return $output;
 }
 
 /**
@@ -55,17 +81,13 @@ function help_help($section) {
  * Menu callback; prints a page listing general help for all modules.
  */
 function help_page() {
-  foreach (module_list() as $name) {
-    if (module_hook($name, 'help')) {
-      $temp = module_invoke($name, 'help', "admin/help#$name");
-      if (!empty($temp)) {
-        $links[] = l($name, "admin/help#$name");
-        $output .= "<h2><a id=\"$name\">". ucfirst($name) .' module</a></h2>';
-        $output .= $temp;
-      }
+  $name = arg(2);
+  if (module_hook($name, 'help')) {
+    $temp = module_invoke($name, 'help', "admin/help#$name");
+    if (!empty($temp)) {
+      $output .= $temp;
     }
   }
-  $output = '<small>'. implode(' &middot; ', $links) .'</small><hr />'. $output;
   print theme('page', $output);
 }
 

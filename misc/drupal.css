@@ -377,6 +377,10 @@ tr.light .form-item, tr.dark .form-item {
 .user-login-block {
   text-align: center;
 }
+.more-help-link {
+  font-size: 0.85em;
+  text-align: right;
+}
 tr td.watchdog-user {
   background: #ffd;
 }

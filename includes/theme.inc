@@ -516,6 +516,10 @@ function theme_error($message) {
   return '<div class="error">'. $message .'</div>';
 }
 
+function theme_more_help_link($url) {
+  return '<div class="more-help-link">' . t('[<a href="%link">more help...</a>]', array('%link' => $url)) . '</div><hr />';
+}
+
 /**
  * Return code that emits an XML icon.
  */
