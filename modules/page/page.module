@@ -1,13 +1,8 @@
 <?php
 
-$module = array("type" => "page_type",
-                "admin" => "page_admin");
+$module = array("admin" => "page_admin");
 
 $format = array(0 => HTML, 1 => PHP, 2 => text);
-
-function page_type() {
-  return array("page", "static page");
-}
 
 function page_view($node, $main = 0) {
   global $format, $theme;
@@ -38,7 +33,7 @@ function page_form($edit = array()) {
   $form .= form_textarea(t("Body"), "body", $edit[body], 50, 10);
   $form .= form_select(t("Type"), "format", $edit[format], $format);
   $form .= form_hidden("nid", $edit[nid]);
-  $form .= form_submit("Submit");
+  $form .= form_submit(t("Submit"));
 
   return form($REQUEST_URI, $form);
 }
@@ -75,7 +70,7 @@ function page_admin() {
     case "listing":
       print node_listing(page_query());
       break;
-   case "Submit":
+   case t("Submit"):
       print status(page_save($edit));
       // fall through:
     default:
