@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.169 2005/01/19 16:22:52 dries Exp $
+// $Id: taxonomy.module,v 1.170 2005/01/27 22:47:08 dries Exp $
 
 /**
  * @file
@@ -326,7 +326,7 @@ function taxonomy_del_term($tid) {
       db_query('DELETE FROM {term_node} WHERE tid = %d', $tid);
 
       module_invoke_all('taxonomy', 'delete', 'term', $term);
-      drupal_set_message(t('deleted term "%name".', array('%name' => $term->name)));
+      drupal_set_message(t('Deleted term "%name".', array('%name' => $term->name)));
     }
 
     $tids = $orphans;
