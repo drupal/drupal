@@ -719,12 +719,15 @@ function node_menu($may_cache) {
  * Generate the content administration overview.
  */
 function node_admin_nodes() {
-  // Add Javascript for js-multiselect.
-  drupal_add_js();
+  $filters = array(
+    array(t('View posts that are new or updated'), 'ORDER BY n.changed DESC'),
+    array(t('View posts that need approval'), 'WHERE n.status = 0 OR n.moderate = 1 ORDER BY n.changed DESC'),
+    array(t('View posts that are promoted'), 'WHERE n.status = 1 AND n.promote = 1 ORDER BY n.changed DESC'),
+    array(t('View posts that are not promoted'), 'WHERE n.status = 1 AND n.promote = 0 ORDER BY n.changed DESC'),
+    array(t('View posts that are sticky'), 'WHERE n.status = 1 AND n.sticky = 1 ORDER BY n.changed DESC'),
+    array(t('View posts that are unpublished'), 'WHERE n.status = 0 AND n.moderate = 0 ORDER BY n.changed DESC')
+   );
 
-  /*
-  ** Operations
-  */
   $operations = array(
     array(t('Approve the selected posts'), 'UPDATE {node} SET status = 1, moderate = 0 WHERE nid = %d'),
     array(t('Promote the selected posts'), 'UPDATE {node} SET status = 1, promote = 1 WHERE nid = %d'),
@@ -734,6 +737,16 @@ function node_admin_nodes() {
   );
 
   // Handle operations:
+  if (empty($_SESSION['node_overview_filter'])) {
+    $_SESSION['node_overview_filter'] = 0;
+  }
+
+  $op = $_POST['op'];
+
+  if ($op == t('Filter') && isset($_POST['edit']['filter'])) {
+    $_SESSION['node_overview_filter'] = $_POST['edit']['filter'];
+  }
+
   if ($op == t('Update') && isset($_POST['edit']['operation']) && isset($_POST['edit']['status'])) {
     $operation = $operations[$_POST['edit']['operation']][1];
     foreach ($_POST['edit']['status'] as $nid => $value) {
@@ -745,125 +758,42 @@ function node_admin_nodes() {
     drupal_set_message(t('The update has been performed.'));
   }
 
-  /*
-  ** Filters
-  */
-  $node_types = drupal_map_assoc(node_list());
-  foreach ($node_types as $k => $v) {
-    $node_types[$k] = node_invoke($v, 'node_name');
-  }
-  // Merge all vocabularies into one for retrieving $value below
-  $taxonomy = taxonomy_form_all();
-  $terms = array();
-  foreach ($taxonomy as $key => $value) {
-    $terms = $terms + $value;
-  }
-  $filters = array(
-    'type'     => array('title' => t('type'),              'where' => "n.type = '%s'",
-                        'options' => $node_types),
-    'publish'  => array('title' => t('published status'),  'where' => 'n.status = %d',
-                        'options' => array(1 => t('published'), 0 => t('not published'))),
-    'moderate' => array('title' => t('moderation status'), 'where' => 'n.moderate = %d',
-                        'options' => array(1 => t('in moderation'), 0 => t('not in moderation'))),
-    'promote'  => array('title' => t('promotion status'),  'where' => 'n.promote = %d',
-                        'options' => array(1 => t('promoted'), 0 => t('not promoted'))),
-    'sticky'   => array('title' => t('sticky status'),     'where' => 'n.sticky = %d',
-                        'options' => array(1 => t('sticky'), 0 => t('not sticky'))),
-    'category' => array('title' => t('category'),          'where' => 'tn.tid = %d',
-                        'options' => $terms, 'join' => 'INNER JOIN {term_node} tn ON n.nid = tn.nid'));
+  $filter = $_SESSION['node_overview_filter'];
 
-  // Initialize/reset filters
-  $op = $_POST['op'];
-  if (empty($_SESSION['node_overview_filter']) || $op == t('Reset')) {
-    $_SESSION['node_overview_filter'] = array();
-  }
-  $session = &$_SESSION['node_overview_filter'];
-  $filter = $_POST['edit']['filter'];
-  // Add filter to list
-  if (($op == t('Filter') || $op == t('Refine')) && isset($filter) && isset($filters[$filter])) {
-    $session[$filter] = $_POST['edit'][$filter];
-  }
-  // Remove filter from list
-  if ($op == t('Undo')) {
-    array_pop($session);
-  }
-
-  // Existing filters
-  $output = '<ul id="node-admin-filter">';
-  $i = 0;
-  foreach ($session as $type => $value) {
-    $params = array('%a' => '<strong>'. $filters[$type]['title'] .'</strong>', '%b' => '<strong>'. $filters[$type]['options'][$value] .'</strong>');
-    $output .= '<li>'. ($i++ ? t('<em>and</em> items where %a is %b', $params) : t('Show only items where %a is %b', $params)) .'</li>';
-  }
-
-  // New filter
-  $filters['category']['options'] = $taxonomy;
-  $values = '';
+  // Render filter form:
   $options = array();
   foreach ($filters as $key => $value) {
-    if (!isset($session[$key])) {
-      $options[$key] = $value['title'];
-      $b .= form_select('', $key, 1, $filters[$key]['options']);
-    }
+    $options[] = $value[0];
   }
-  $buttons = '';
-  if (count($options)) {
-    $output .= '<li><dl class="js-multiselect">';
-    $a = '';
-    foreach ($options as $key => $value) {
-      $a .= form_radio($value, 'filter', $key);
-    }
-    if (!$i) {
-      $output .= t('<dt>Show only items where</dt> <dd>%a</dd> <dt>is</dt> <dd>%b</dd>', array('%a' => $a, '%b' => $b));
-    }
-    else {
-      $output .= t('<dt>and items where</dt> <dd>%a</dd> <dt>is</dt> <dd>%b</dd>', array('%a' => $a, '%b' => $b));
-    }
-    $output .= '</dl>';
-    $buttons = form_submit(count($session) ? t('Refine') : t('Filter'));
-  }
-  if (count($session)) {
-    $buttons .= form_submit(t('Undo')) . form_submit(t('Reset'));
-  }
-  $output .= '<div class="container-inline node-admin-filter">'. $buttons .'</div>';
-  $output .= '</li></ul>';
 
-  // Build query
-  $where = $args = array();
-  $join = '';
-  foreach ($session as $key => $value) {
-    $where[] = $filters[$key]['where'];
-    $join .= $filters[$key]['join'];
-    $args[] = $value;
-  }
-  $where = count($where) ? 'WHERE '. implode(' AND ', $where) : '';
-  $result = pager_query('SELECT n.*, u.name, u.uid FROM {node} n '. $join .' INNER JOIN {users} u ON n.uid = u.uid '. $where, 50, 0, NULL, $args);
+  $form  = form_select(NULL, 'filter', $filter, $options);
+  $form .= form_submit(t('Filter'));
+
+  $output .= '<h3>'. t('Filter options') .'</h3>';
+  $output .= "<div class=\"container-inline\">$form</div>";
+
+  // Render operations form:
+  $result = pager_query('SELECT n.*, u.name, u.uid FROM {node} n INNER JOIN {users} u ON n.uid = u.uid '. $filters[$filter][1], 50);
 
   // Make sure the update controls are disabled if we don't have any rows to select from.
   $disabled = !db_num_rows($result);
 
-  // Output operations form
   $options = array();
   foreach ($operations as $key => $value) {
     $options[] = $value[0];
   }
+
   $form = form_select(NULL, 'operation', 0, $options, NULL, ($disabled ? 'disabled="disabled"' : ''));
   $form .= form_submit(t('Update'), 'op', ($disabled ? array('disabled' => 'disabled') : array()));
 
-  $output .= '<h3 id="node-admin-update">'. t('Update options') .'</h3>';
+  $output .= '<h3>'. t('Update options') .'</h3>';
   $output .= "<div class=\"container-inline\">$form</div>";
 
   // Overview table:
   $header = array(NULL, t('Title'), t('Type'), t('Author'), t('Status'), array('data' => t('Operations'), 'colspan' => '2'));
 
   while ($node = db_fetch_object($result)) {
-    $rows[] = array(form_checkbox(NULL, 'status]['. $node->nid, 1, 0),
-                    l($node->title, 'node/'. $node->nid) .' '. (node_is_new($node->nid, $node->changed) ? theme_mark() : ''),
-                    node_invoke($node, 'node_name'),
-                    format_name($node),
-                    ($node->status ? t('published') : t('not published')),
-                    l(t('edit'), 'node/'. $node->nid .'/edit'),
-                    l(t('delete'), 'admin/node/delete/'. $node->nid));
+    $rows[] = array(form_checkbox(NULL, 'status]['. $node->nid, 1, 0), l($node->title, 'node/'. $node->nid) .' '. (node_is_new($node->nid, $node->changed) ? theme_mark() : ''), node_invoke($node, 'node_name'), format_name($node), ($node->status ? t('published') : t('not published')), l(t('edit'), 'node/'. $node->nid .'/edit'), l(t('delete'), 'admin/node/delete/'. $node->nid));
   }
 
   if ($pager = theme('pager', NULL, 50, 0)) {
