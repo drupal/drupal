@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.12 2004/04/15 20:49:41 dries Exp $
+// $Id: filter.module,v 1.13 2004/04/21 13:56:37 dries Exp $
 
 define('FILTER_HTML_DONOTHING', 0);
 define('FILTER_HTML_STRIP', 1);
@@ -41,13 +41,14 @@ function filter_help($section = "admin/help#filter") {
   }
 }
 
+/**
+ * Implementation of hook_link().
+ */
 function filter_link($type) {
-  if ($type == "system") {
-    if (user_access("administer site configuration")) {
-      menu("admin/system/filters", t("filters"), "filter_admin", 5);
-      menu("admin/system/filters/order", t("ordering"), "filter_admin", 5);
-    }
-    menu("filter/tips", t("compose tips"), "filter_tips_long", 0, MENU_HIDE);
+  if ($type == 'system') {
+    menu('admin/system/filters', t('filters'), user_access('administer site configuration') ? 'filter_admin' : MENU_DENIED, 5);
+    menu('admin/system/filters/order', t('ordering'), user_access('administer site configuration') ? 'filter_admin' : MENU_DENIED, 5);
+    menu('filter/tips', t('compose tips'), 'filter_tips_long', 0, MENU_HIDE);
   }
 }
 

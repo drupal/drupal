@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal.module,v 1.75 2004/03/11 20:33:58 dries Exp $
+// $Id: drupal.module,v 1.76 2004/04/21 13:56:37 dries Exp $
 
 function drupal_help($section = "admin/help#drupal") {
 
@@ -160,9 +160,12 @@ function drupal_auth($username, $password, $server) {
   return $login;
 }
 
+/**
+ * Implementation of hook_link().
+ */
 function drupal_link($type) {
-  if ($type == "system") {
-    menu("drupal", t("Drupal"), "drupal_page", 0, MENU_HIDE);
+  if ($type == 'system') {
+    menu('drupal', t('Drupal'), 'drupal_page', 0, MENU_HIDE);
   }
 }
 

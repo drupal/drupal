@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.module,v 1.82 2004/04/01 18:57:41 dries Exp $
+// $Id: tracker.module,v 1.83 2004/04/21 13:56:38 dries Exp $
 
 function tracker_help($section = 'admin/help#tracker') {
   switch ($section) {
@@ -10,9 +10,12 @@ function tracker_help($section = 'admin/help#tracker') {
   }
 }
 
+/**
+ * Implementation of hook_link().
+ */
 function tracker_link($type) {
-  if ($type == 'system' && user_access('access content')) {
-    menu('tracker', t('recent posts'), 'tracker_page', 1);
+  if ($type == 'system') {
+    menu('tracker', t('recent posts'), user_access('access content') ? 'tracker_page' : MENU_DENIED, 1);
   }
 }
 
