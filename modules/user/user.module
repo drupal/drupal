@@ -495,13 +495,8 @@ function user_block($op = 'list', $delta = 0, $edit = array()) {
 
     switch ($delta) {
       case 0:
-
-        if (!$user->uid) {
-          // For usability's sake, avoid showing two login forms on one page.
-          if (arg(0) == 'user' && arg(1) != 'view') {
-            return;
-          }
-
+        // For usability's sake, avoid showing two login forms on one page.
+        if (!$user->uid && !(arg(0) == 'user' && !is_numeric(arg(1)))) {
           $edit = $_POST['edit'];
 
           $output = "<div class=\"user-login-block\">\n";
@@ -535,12 +530,14 @@ function user_block($op = 'list', $delta = 0, $edit = array()) {
           $block['content'] = $output;
         }
         return $block;
+
       case 1:
         if ($menu = theme('menu_tree')) {
            $block['subject'] = $user->uid ? $user->name : t('Navigation');
            $block['content'] = '<div class="menu">'. $menu .'</div>';
         }
         return $block;
+
       case 2:
         if (user_access('access content')) {
           $result = db_query_range('SELECT uid, name FROM {users} WHERE status != 0 ORDER BY uid DESC', 0, 5);
@@ -552,8 +549,9 @@ function user_block($op = 'list', $delta = 0, $edit = array()) {
 
           $block['subject'] = t('Who\'s new');
           $block['content'] = $output;
-          return $block;
         }
+        return $block;
+
       case 3:
         if (user_access('access content')) {
           // Count users with activity in the past defined period.
