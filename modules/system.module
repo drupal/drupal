@@ -34,6 +34,7 @@ function system_view_options() {
   $output .= form_textfield("Slogan", "site_slogan", variable_get("site_slogan", ""), 55, 128, "The slogan of this website");
   $output .= form_textarea("Footer message", "site_footer", variable_get("site_footer", ""), 55, 3, "This text will be displayed at the bottom of each page.  Useful for adding a copyright notice to your pages.");
   $output .= form_textfield("Anonymous user", "anonymous", variable_get("anonymous", "Anonymous"), 30, 55, "The name used to indicate anonymous users.");
+  $output .= form_textfield("Password words", "account_words", variable_get("account_words", "foo,bar,guy,neo,tux,moo,sun,asm,dot,god,axe,geek,nerd,fish,hack,star,mice,warp,moon,hero,cola,girl,fish,java,perl,boss,dark,sith,jedi,drop,mojo"), 55, 256, "Words used in the creation of passwords. Comma seperated list.");
   $output .= "<hr />\n";
 
   // caching:
