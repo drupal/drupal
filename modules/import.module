@@ -12,12 +12,12 @@ function import_help() {
 }
 
 function import_perm() {
-  return array("administer news feeds");
+  return array("administer syndication");
 }
 
 function import_link($type) {
   if ($type == "admin") {
-    $links[] = "<a href=\"admin.php?mod=import\">news feeds</a>";
+    $links[] = "<a href=\"admin.php?mod=import\">syndication</a>";
   }
 
   return $links ? $links : array();
@@ -58,6 +58,14 @@ function import_view_bundle() {
   return $output;
 }
 
+function import_view_feed() {
+  $result = db_query("SELECT * FROM feed ORDER BY title");
+  while ($feed = db_fetch_object($result)) {
+    $output .= "<b>$feed->title</b>". ($feed->link ? " (". format_url($feed->link) .")" : "") ."<ul>". check_output($feed->description) ."</ul>";
+  }
+  return $output;
+}
+
 function import_block() {
   $result = db_query("SELECT * FROM bundle ORDER BY title");
   while ($bundle = db_fetch_object($result)) {
@@ -77,19 +85,38 @@ function import_remove($feed) {
 function import_update($feed) {
 
   // open socket:
-  $url = parse_url($feed[link]);
+  $url = parse_url($feed[url]);
   $fp = fsockopen($url[host], ($url[port] ? $url[port] : 80), $errno, $errstr, 15);
 
   if ($fp) {
     // fetch data:
     fputs($fp, "GET $url[path]?$url[query] HTTP/1.0\nUser-Agent: ". variable_get(site_name, "drupal") ."\nHost: $url[host]\nAccept: */*\n\n");
+
+    // initialize the translation table:
+    $tt = array_flip(get_html_translation_table(HTML_ENTITIES));
+    $tt["&apos;"] = "'";
+
     while(!feof($fp)) $data .= fgets($fp, 128);
 
     if (strstr($data, "200 OK")) {
+ 
+      /*
+      ** Extract and process channel information:
+      */
+
+      $channel = ereg_replace("<item([^s].*)</item>", "", $data);
+      $channel = ereg_replace("<image([^s].*)</image>", "", $channel);
+      eregi("<title>(.*)</title>", $channel, $title);
+      eregi("<link>(.*)</link>", $channel, $link);
+      eregi("<description>(.*)</description>", $channel, $description);
+
+      db_query("UPDATE feed SET timestamp = '". time() ."', link = '". check_input($link[1]) ."', description = '". check_input($description[1]) ."' WHERE fid = '". $feed[fid] ."'");
+
+      /*
+      ** Extract and process individual items:
+      */
 
       eregi("<item([^s].*)</item>", $data, $data);
-
-      // print "<PRE>". htmlentities($data[0]) ."</PRE>";
 
       $items = array_reverse(explode("</item>", $data[0]));
 
@@ -100,11 +127,11 @@ function import_update($feed) {
         $d = eregi("<description>(.*)</description>", $item, $description);
 
         if ($l || $t || $a || $d) {
-          import_save_item(array(fid => $feed[fid], title => $title[1], link => $link[1], author => $author[1], description => $description[1], attributes => $feed[attributes]));
+          $title = strtr(strip_tags($title[1]), $tt);
+          $description = strtr($description[1], $tt);
+          import_save_item(array(fid => $feed[fid], title => $title, link => $link[1], author => $author[1], description => $description, attributes => $feed[attributes]));
         }
       }
-
-      db_query("UPDATE feed SET timestamp = '". time() ."' WHERE fid = '". $feed[fid] ."'");
     }
     else {
       watchdog("error", "import: failed to syndicate from '$feed[title]'");
@@ -164,7 +191,7 @@ function import_form_feed($edit = array()) {
   $period = array(900 => format_interval(900), 1800 => format_interval(1800), 3600 => format_interval(3600), 7200 => format_interval(7200), 10800 => format_interval(10800), 21600 => format_interval(21600), 32400 => format_interval(32400), 43200 => format_interval(43200), 64800 => format_interval(64800), 86400 => format_interval(86400), 172800 => format_interval(172800), 259200 => format_interval(259200), 604800 => format_interval(604800), 1209600 => format_interval(1209600), 2419200 => format_interval(2419200));
 
   $form .= form_textfield("Title", "title", $edit[title], 50, 64, "The name of the feed; typically the name of the website you syndicate content from.");
-  $form .= form_textfield("Link", "link", $edit[link], 50, 128, "The fully-qualified URL of the feed.");
+  $form .= form_textfield("URL", "url", $edit[url], 50, 128, "The fully-qualified URL of the feed.");
   $form .= form_textfield("Attributes", "attributes", $edit[attributes], 50, 128, "A comma-seperated list of keywords describing the feed.");
   $form .= form_select("Update interval", "refresh", $edit[refresh], $period, "The refresh interval indicating how often you want to update this feed.  Requires crontab.");
   $form .= form_select("Expiration time", "uncache", $edit[uncache], $period, "The time cached items should be kept.  Older items will be automatically discarded.  Requires crontab.");
@@ -181,7 +208,7 @@ function import_form_feed($edit = array()) {
 
 function import_save_feed($edit) {
   if ($edit[fid] && $edit[title]) {
-    db_query("UPDATE feed SET title = '". check_input($edit[title]) ."', link = '". check_input($edit[link]) ."', attributes = '". check_input($edit[attributes]) ."', refresh = '". check_input($edit[refresh]) ."', uncache = '". check_input($edit[uncache]) ."' WHERE fid = '". check_input($edit[fid]) ."'");
+    db_query("UPDATE feed SET title = '". check_input($edit[title]) ."', url = '". check_input($edit[url]) ."', attributes = '". check_input($edit[attributes]) ."', refresh = '". check_input($edit[refresh]) ."', uncache = '". check_input($edit[uncache]) ."' WHERE fid = '". check_input($edit[fid]) ."'");
     db_query("DELETE FROM item WHERE fid = '". check_input($edit[fid]) ."'");
   }
   else if ($edit[fid]) {
@@ -189,7 +216,7 @@ function import_save_feed($edit) {
     db_query("DELETE FROM item WHERE fid = '". check_input($edit[fid]) ."'");
   }
   else {
-    db_query("INSERT INTO feed (title, link, attributes, refresh, uncache) VALUES ('". check_input($edit[title]) ."', '". check_input($edit[link]) ."', '". check_input($edit[attributes]) ."', '". check_input($edit[refresh]) ."', '". check_input($edit[uncache]) ."')");
+    db_query("INSERT INTO feed (title, url, attributes, refresh, uncache) VALUES ('". check_input($edit[title]) ."', '". check_input($edit[url]) ."', '". check_input($edit[attributes]) ."', '". check_input($edit[refresh]) ."', '". check_input($edit[uncache]) ."')");
   }
 }
 
@@ -208,7 +235,7 @@ function import_get_bundle($bid) {
   return db_fetch_array(db_query("SELECT * FROM bundle WHERE bid = '". check_input($bid) ."'"));
 }
 
-function import_view_feed() {
+function import_view() {
   $result = db_query("SELECT f.*, COUNT(i.iid) AS items FROM feed f LEFT JOIN item i ON f.fid = i.fid GROUP BY f.fid ORDER BY f.title");
 
   $output .= "<h3>Feed overview</h3>";
@@ -253,9 +280,9 @@ function import_view_item() {
 function import_admin() {
   global $op, $id, $type, $edit;
 
-  if (user_access("administer news feeds")) {
+  if (user_access("administer syndication")) {
 
-    print "<small><a href=\"admin.php?mod=import&type=bundle&op=add\">add new bundle</a> | <a href=\"admin.php?mod=import&type=feed&op=add\">add new feed</a> | <a href=\"admin.php?mod=import&type=bundle&op=view\">available bundles</a> | <a href=\"admin.php?mod=import&type=item&op=view\">available items</a> | <a href=\"admin.php?mod=import&op=view\">overview</a> | <a href=\"admin.php?mod=import&op=help\">help</a></small><hr />";
+    print "<small><a href=\"admin.php?mod=import&type=feed&op=add\">add new feed</a> | <a href=\"admin.php?mod=import&type=bundle&op=add\">add new bundle</a> | <a href=\"admin.php?mod=import&type=feed&op=view\">available feeds</a> | <a href=\"admin.php?mod=import&type=bundle&op=view\">available bundles</a> | <a href=\"admin.php?mod=import&type=item&op=view\">available items</a> | <a href=\"admin.php?mod=import&op=view\">overview</a> | <a href=\"admin.php?mod=import&op=help\">help</a></small><hr />";
 
     switch($op) {
       case "help":
@@ -297,10 +324,12 @@ function import_admin() {
       default:
         if ($type == "bundle")
           print import_view_bundle();
+        else if ($type == "feed")
+          print import_view_feed();
         else if ($type == "item")
           print import_view_item();
         else
-          print import_view_feed();
+          print import_view();
     }
   }
   else {

@@ -167,6 +167,7 @@ CREATE TABLE bundle (
 CREATE TABLE feed (
   fid int(11) DEFAULT '0' NOT NULL auto_increment,
   title varchar(255) DEFAULT '' NOT NULL,
+  url varchar(255) DEFAULT '' NOT NULL,
   link varchar(255) DEFAULT '' NOT NULL,
   refresh int(11),
   uncache int(11),
@@ -311,3 +312,8 @@ CREATE TABLE site (
   UNIQUE (url),
   PRIMARY KEY (sid)
 );
+
+# 09/06/01
+ALTER TABLE feed CHANGE link url varchar(255) DEFAULT '' NOT NULL;
+ALTER TABLE feed ADD link varchar(255) DEFAULT '' NOT NULL;
+ALTER TABLE feed ADD description TEXT DEFAULT '' NOT NULL;
