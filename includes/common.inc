@@ -130,8 +130,6 @@ function referer_uri() {
 
   if (isset($_SERVER["HTTP_REFERER"])) {
     $uri = $_SERVER["HTTP_REFERER"];
-
-    $map = array();  // make $map non-null in case no aliases are defined
     return check_url($uri);
   }
 }
