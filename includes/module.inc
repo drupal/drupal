@@ -8,6 +8,7 @@ function module_init() {
   require_once "modules/system.module";
   require_once "modules/watchdog.module";
   module_list();
+  module_invoke_all("init");
 }
 
 // apply function $function to every known module:
