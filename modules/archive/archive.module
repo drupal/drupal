@@ -57,7 +57,7 @@ function archive_display($original = 0) {
   while ($nday <= $last) {
     // Set up blank days for first week of the month:
     if ($first) {
-      $output .= " <tr><td colspan=\"$first\">&nbsp</td>\n";
+      $output .= " <tr><td colspan=\"$first\">&nbsp;</td>\n";
       $first = 0;
     }
 
