@@ -1032,7 +1032,7 @@ function user_edit($edit = array()) {
     }
 
     $output .= form_item(t("Theme"), "<select name=\"edit[theme]\">$options</select>", t("Selecting a different theme will change the look and feel of the site."));
-    for ($zone = -43200; $zone <= 46800; $zone += 3600) $zones[$zone] = date("l, F dS, Y - h:i A", time() - date("Z") + $zone) ." (GMT ". $zone / 3600 .")";
+    for ($zone = -43200; $zone <= 46800; $zone += 3600) $zones[$zone] = date(variable_get("date_format_long", "l, F dS, Y - g:ia"), time() - date("Z") + $zone) ." (GMT ". $zone / 3600 .")";
     $output .= form_select(t("Time zone"), "timezone", $edit["timezone"], $zones, t("Select what time you currently have and your time zone settings will be set appropriate."));
     $output .= form_select(t("Language"), "language", $edit["language"], $languages, t("Selecting a different language will change the language of the site."));
     $output .= form_item(t("Password"), "<input type=\"password\" name=\"edit[pass1]\" size=\"12\" maxlength=\"24\" /> <input type=\"password\" name=\"edit[pass2]\" size=\"12\" maxlength=\"24\" />", t("Enter your new password twice if you want to change your current password or leave it blank if you are happy with your current password."));
