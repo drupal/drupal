@@ -158,8 +158,9 @@ function node_form($node) {
   return node_invoke($node, "form");
 }
 
-function node_status($node) {
-  return node_invoke($node, "status");
+function node_status($node, $index = -1) {
+  $status = array_intersect(array(dumped, expired, queued, posted), node_invoke($node, "status"));
+  return $index < 0 ? $status : $status[$index];
 }
 
 function node_control($node) {
