@@ -365,11 +365,25 @@ function node_invoke_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
  *   will simply use array('nid' => 52).
  * @param $revision
  *   Which numbered revision to load. Defaults to the current version.
+ * @param $reset
+ *   Whether to reset the internal node_load cache.
  *
  * @return
  *   A fully-populated node object.
  */
-function node_load($conditions, $revision = -1) {
+function node_load($conditions, $revision = NULL, $reset = NULL) {
+  static $nodes = array();
+
+  if ($reset) {
+    $nodes = array();
+  }
+
+  $cachable = (count($conditions) == 1 && isset($conditions['nid']) && $revision == NULL);
+
+  if ($cachable && isset($nodes[$conditions['nid']])) {
+    return $nodes[$conditions['nid']];
+  }
+
   // Turn the conditions into a query.
   foreach ($conditions as $key => $value) {
     $cond[] = 'n.'. check_query($key) ." = '". check_query($value) ."'";
@@ -399,8 +413,12 @@ function node_load($conditions, $revision = -1) {
   }
 
   // Return the desired revision.
-  if ($revision != -1 && is_array($node->revisions[$revision])) {
+  if (!is_null($revision) && is_array($node->revisions[$revision])) {
    $node = $node->revisions[$revision]['node'];
+  }
+
+  if ($cachable) {
+    $nodes[$conditions['nid']] = $node;
   }
 
   return $node;
