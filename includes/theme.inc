@@ -273,22 +273,30 @@ function theme_node($node, $main = 0, $page = 0) {
  * @return a string representing the form element
  */
 
-function theme_form_element($title, $value, $description = NULL, $id = NULL) {
+function theme_form_element($title, $value, $description = NULL, $id = NULL, $required = FALSE) {
+
+  $output  = "<div class=\"form-item\">\n";
+
+  $required = $required ? theme('mark') : '';
 
   if ($title) {
     if ($id) {
-      $title = "<label for=\"$id\">$title:</label><br />";
+      $output .= " <label for=\"$id\">$title:</label>$required<br />\n";
     }
     else {
-      $title = "<label>$title:</label><br />";
+      $output .= " <label>$title:</label>$required<br />\n";
     }
   }
 
+  $output .= " $value\n";
+
   if ($description) {
-    $description = "<div class=\"description\">$description</div>";
+    $output .= " <div class=\"description\">$description</div>\n";
   }
 
-  return "<div class=\"form-item\">". $title . $value . $description ."</div>\n";
+  $output .= "</div>\n";
+
+  return $output;
 }
 
 /**

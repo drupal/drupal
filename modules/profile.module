@@ -149,16 +149,16 @@ function profile_edit_profile($edit, $user) {
     switch ($field->type) {
       case 'textfield':
       case 'url':
-        $fields[$field->category] .= form_textfield($field->title, $field->name, $edit[$field->name], 70, 255, $field->explanation);
+        $fields[$field->category] .= form_textfield($field->title, $field->name, $edit[$field->name], 70, 255, $field->explanation, NULL, $field->required);
         break;
       case 'textarea':
-        $fields[$field->category] .= form_textarea($field->title, $field->name, $edit[$field->name], 60, 5, $field->explanation);
+        $fields[$field->category] .= form_textarea($field->title, $field->name, $edit[$field->name], 60, 5, $field->explanation, NULL, $field->required);
         break;
       case 'list':
-        $fields[$field->category] .= form_textarea($field->title, $field->name, $edit[$field->name], 60, 5, $field->explanation ." ". t('Put each entry on a separate line.  No HTML allowed.'));
+        $fields[$field->category] .= form_textarea($field->title, $field->name, $edit[$field->name], 60, 5, $field->explanation ." ". t('Put each entry on a separate line.  No HTML allowed.'), NULL, $field->required);
         break;
       case 'checkbox':
-        $fields[$field->category] .= form_checkbox($field->title, $field->name, 1, $edit[$field->name], $field->explanation);
+        $fields[$field->category] .= form_checkbox($field->title, $field->name, 1, $edit[$field->name], $field->explanation, NULL, $field->required);
         break;
       case 'selection':
         $options = array('--');
@@ -169,7 +169,7 @@ function profile_edit_profile($edit, $user) {
           }
         }
 
-        $fields[$field->category] .= form_select($field->title, $field->name, $edit[$field->name], $options, $field->explanation);
+        $fields[$field->category] .= form_select($field->title, $field->name, $edit[$field->name], $options, $field->explanation, 0, 0, $field->required);
         break;
     }
   }
