@@ -208,7 +208,6 @@ switch ($op) {
     $output .= "<I>Changes the look and feel of the site.</I><P>\n";
     $output .= "<B>Maximum number of stories:</B><BR>\n";
     $output .= "<INPUT NAME=\"edit[storynum]\" MAXLENGTH=3 SIZE=3 VALUE=\"$user->storynum\"><P>\n";
-    $options  = "<OPTION VALUE=\"nocomments\"". ($user->umode == 'nocomments' ? " SELECTED" : "") .">No comments</OPTION>";
     $options .= "<OPTION VALUE=\"nested\"". ($user->umode == 'nested' ? " SELECTED" : "") .">Nested</OPTION>";
     $options .= "<OPTION VALUE=\"flat\"". ($user->umode == 'flat' ? " SELECTED" : "") .">Flat</OPTION>";
     $options .= "<OPTION VALUE=\"threaded\"". ($user->umode == 'threaded' ? " SELECTED" : "") .">Threaded</OPTION>";
