@@ -119,7 +119,7 @@ function poll_view($node, $main = 0, $block = 0) {
             $output .= "<table cellspacing=\"1\" cellpadding=\"0\" width=\"100%\"><tr><td width=\"20%\" valign=\"middle\" align=\"left\">" . check_output($value) . "</td><td width=\"70%\">" . poll_graph($node->chvotes[$key] / $node->maxvotes) . "</td><td width=\"10%\" align=\"right\">" . round(($node->chvotes[$key] / $node->totalvotes) * 100) . "%</td></tr></table>";
           }
           else {
-            $output .= (!$block ? "<br>" : "") . check_output($value) . "<br><table width=\"90%\" align=\"center\" cellspacing=\"1\" cellpadding=\"0\"><tr><td width=\"70%\" valign=\"middle\" align=\"left\">" . poll_graph($node->chvotes[$key] / $node->maxvotes) . "</td><td align=\"right\">" . round(($node->chvotes[$key] / $node->totalvotes) * 100) . "%</td></tr></table>\r\n";
+            $output .= (!$block ? "<br>" : "") . check_output($value) . "<br><table width=\"90%\" align=\"center\" cellspacing=\"1\" cellpadding=\"0\"><tr><td width=\"70%\" valign=\"middle\" align=\"left\">" . poll_graph($node->chvotes[$key] / $node->maxvotes) . "</td><td align=\"right\">" . round(($node->chvotes[$key] / $node->totalvotes) * 100) . "%</td></tr></table>";
           }
         }
       }
@@ -137,7 +137,7 @@ function poll_view($node, $main = 0, $block = 0) {
       $output .= "<table align=\"center\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\"><tr><td align=\"left\">";
       foreach ($node->choice as $key => $value) {
         if ($value) {
-          $output .= "<input type=\"radio\" name=\"chid\" value=\"" . $node->chid[$key] . "\">&nbsp;" . check_output($value) . "<br>\r\n";
+          $output .= "<input type=\"radio\" name=\"chid\" value=\"" . $node->chid[$key] . "\">&nbsp;" . check_output($value) . "<br>";
         }
       }
       $output .= "</td></tr></table>";
