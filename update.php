@@ -5,26 +5,7 @@
 ** - Point your browser to "http://www.site.com/update.php" and follow
 **   the instructions.
 **
-** NOTES:
-**
-** - If you have any troubles running the updates you might have to run
-**   these queries manually:
-**
-     ALTER TABLE watchdog CHANGE user uid int(10) DEFAULT '0' NOT NULL;
-     ALTER TABLE watchdog CHANGE id wid int(5) DEFAULT '0' NOT NULL auto_increment;
-     ALTER TABLE users ADD sid varchar(32) DEFAULT '' NOT NULL;
-     ALTER TABLE users CHANGE last_host hostname varchar(128) DEFAULT '' NOT NULL;
-     ALTER TABLE users CHANGE last_access timestamp int(11) DEFAULT '0' NOT NULL;
-     CREATE TABLE system (filename varchar(255) NOT NULL default '', name varchar(255) NOT NULL default '', type varchar(255) NOT NULL default '', description varchar(255) NOT NULL default '', status int(2) NOT NULL default '0', PRIMARY KEY (filename));
-     CREATE TABLE permission (rid INT UNSIGNED NOT NULL, perm TEXT, tid INT UNSIGNED NOT NULL, KEY (rid));
-     INSERT INTO permission (rid, perm) SELECT rid, perm FROM role;
-     ALTER TABLE users ADD rid INT UNSIGNED NOT NULL;
-**
-**   You'll also have to by-pass the access check near the bottom such
-**   that you can gain access to the form: search for "user_access()".
 */
-
-include_once "includes/common.inc";
 
 if (!get_cfg_var("safe_mode")) {
   set_time_limit(180);
@@ -471,12 +452,14 @@ function update_page() {
   switch ($op) {
     case "Update":
       // make sure we have updates to run.
+      print "<html><h1>Drupal update</h1>";
       if ($edit["start"] == -1) {
         print "No updates to perform.";
       }
       else {
         update_data($edit["start"]);
       }
+      print "</html>";
       break;
     default:
       $start = variable_get("update_start", 0);
@@ -494,18 +477,47 @@ function update_page() {
       $form .= form_select("Perform updates since", "start", (isset($selected) ? $selected : -1), $dates);
       $form .= form_select("Stop on errors", "bail", 0, array("Disabled", "Enabled"), "Don't forget to backup your database before performing an update.");
       $form .= form_submit("Update");
+      print "<html><h1>Drupal update</h1>";
       print form($form);
+      print "</html>";
       break;
   }
 }
 
-print "<html><h1>Drupal update</h1>";
+function update_info() {
+  print "<html><h1>Drupal update</h1>";
+  print "<h2>NOTES</h2>\n";
+  print "These queries have to be run manually:<br />\n";
+  print "<pre>\n";
+  print "ALTER TABLE watchdog CHANGE user uid int(10) DEFAULT '0' NOT NULL;\n";
+  print "ALTER TABLE watchdog CHANGE id wid int(5) DEFAULT '0' NOT NULL auto_increment;\n";
+  print "ALTER TABLE users ADD sid varchar(32) DEFAULT '' NOT NULL;\n";
+  print "ALTER TABLE users CHANGE last_host hostname varchar(128) DEFAULT '' NOT NULL;\n";
+  print "ALTER TABLE users CHANGE last_access timestamp int(11) DEFAULT '0' NOT NULL;\n";
+  print "CREATE TABLE system (filename varchar(255) NOT NULL default '', name varchar(255) NOT NULL default '', type varchar(255) NOT NULL default '', description varchar(255) NOT NULL default '', status int(2) NOT NULL default '0', PRIMARY KEY (filename));\n";
+  print "CREATE TABLE permission (rid INT UNSIGNED NOT NULL, perm TEXT, tid INT UNSIGNED NOT NULL, KEY (rid));\n";
+  print "INSERT INTO permission (rid, perm) SELECT rid, perm FROM role;\n";
+  print "ALTER TABLE users ADD rid INT UNSIGNED NOT NULL;\n";
+  print "</pre>\n";
+  print "<p>You might also have to by-pass the access check near the bottom such that you can gain access to the form: search for <i>user_access()</i>.</p>";
+  print "<b><a href=\"update.php?op=page\">Go on to the updates...</a></b>\n";
+  print "</html>";
+}
+
 // Security check:
-if (user_access(NULL)) {
-  update_page();
+
+switch ($op) {
+  case "page":
+  case "Update":
+    include_once "includes/common.inc";
+		if (user_access(NULL)) {
+		  update_page();
+		}
+		else {
+		  print message_access();
+		}
+		break;
+  default:
+    update_info();
 }
-else {
-  print message_access();
-}
-print "</html>";
 ?>
