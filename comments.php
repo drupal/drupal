@@ -37,7 +37,7 @@ function displayKids ($tid, $mode, $order = 0, $thold = 0, $level = 0, $dummy = 
         }
         $comments++;
 
-        $link = "<A HREF=\"comments.php?op=reply&pid=$r_tid&sid=$r_sid&mode=$mode&order=$order&thold=$thold\">reply to this comment</A>";
+        $link = "<A HREF=\"comments.php?op=reply&pid=$r_tid&sid=$r_sid&mode=$mode&order=$order&thold=$thold\"><FONT COLOR=\"$theme->hlcolor2\">reply to this comment</FONT></A>";
 
         $theme->comment($r_name, $r_subject, $r_tid, $r_date, $r_url, $r_email, $r_score, $r_reason, $r_comment, $link);
         
@@ -50,7 +50,7 @@ function displayKids ($tid, $mode, $order = 0, $thold = 0, $level = 0, $dummy = 
         if (!eregi("[a-z0-9]",$r_name)) $r_name = $anonymous;
         if (!eregi("[a-z0-9]",$r_subject)) $r_subject = "[no subject]";
 
-        $link = "<A HREF=\"comments.php?op=reply&pid=$r_tid&sid=$r_sid&mode=$mode&order=$order&thold=$thold\">reply to this comment</A>";
+        $link = "<A HREF=\"comments.php?op=reply&pid=$r_tid&sid=$r_sid&mode=$mode&order=$order&thold=$thold\"><FONT COLOR=\"$theme->hlcolor2\">reply to this comment</FONT></A>";
 
         $theme->comment($r_name, $r_subject, $r_tid, $r_date, $r_url, $r_email, $r_score, $r_reason, $r_comment, $link);
       } 
