@@ -54,9 +54,9 @@ function profile_conf_options() {
   $output .= form_select(t("Publicly accessible fields"), "profile_public_fields", variable_get("profile_public_fields", array()), $fields, t("The fields users will be able to set and that will be publicly visible."), "size=\"6\"", 1);
   $output .= form_select(t("Private fields"), "profile_private_fields", variable_get("profile_private_fields", array()), $fields, t("The fields users will be able to set, but which are kept private."), "size=\"6\"", 1);
 
-  $output .= form_textfield(t("Avatar image path"), "profile_avatar_path", variable_get("profile_avatar_path", "misc/avatars/"), 30, 255, t("Path for avatar directory; it must be writeable and visible from the web.")); 
-  $output .= form_textfield(t("Avatar max size"), "profile_avatar_size", variable_get("profile_avatar_size", "85x85"), 10, 10, t("Maximum size for avatars."));    
-  $output .= form_textfield(t("Avatar max filesize"), "profile_avatar_filesize", variable_get("profile_avatar_filesize", "30"), 10, 10, t("Maximum filesize for avatars, in kb."));    
+  $output .= form_textfield(t("Avatar image path"), "profile_avatar_path", variable_get("profile_avatar_path", "misc/avatars/"), 30, 255, t("Path for avatar directory; it must be writeable and visible from the web."));
+  $output .= form_textfield(t("Avatar max size"), "profile_avatar_size", variable_get("profile_avatar_size", "85x85"), 10, 10, t("Maximum size for avatars."));
+  $output .= form_textfield(t("Avatar max filesize"), "profile_avatar_filesize", variable_get("profile_avatar_filesize", "30"), 10, 10, t("Maximum filesize for avatars, in kb."));
 
   return $output;
 }
@@ -86,12 +86,12 @@ function profile_user($type, $edit, &$user) {
     case "view_private":
       // when user looks at his own data
       return _profile_user_view($user, "private");
-  }  
+  }
 }
 
 function profile_required($title) {
   // this pleads "theme_invoke, theme_invoke" ;)
-  return $title ." <span style=\"color: red;\">*</span>";
+  return $title ." ". theme_invoke("theme_mark");
 }
 
 function _profile_form($edit, $mode) {

@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.module,v 1.28 2002/10/09 20:20:49 dries Exp $
+// $Id: tracker.module,v 1.29 2002/10/22 18:46:43 dries Exp $
 
 function tracker_help() {
   $output .= "The tracker module is a handy module for displaying the most recent comments happenning all over your web site.  By following the <i>view new comments</i> link in the user block, a user may quickly review all recent comments.  When a user first arrives at the main tracker page, she sees all recent comments in reverse chronological order, grouped by post.  In addition, a self-centered user may choose to display only his own comments.</p>";
@@ -48,7 +48,7 @@ function tracker_comments($id = 0) {
 
     $output .= "<ul>";
     while ($comment = db_fetch_object($cresult)) {
-      $output .= " <li>". l(check_output($comment->subject), array("id" => $node->nid, "cid" => $comment->cid, "pid" => $comment->pid), "node", $comment->cid) ." ". t("by") ." ". format_name($comment) ." (". t("replies") .": ". comment_num_replies($comment->cid) .") ". (comment_is_new($comment) ? "<span style=\"color: red;\">*</span>" : "") ."</li>\n";
+      $output .= " <li>". l(check_output($comment->subject), array("id" => $node->nid, "cid" => $comment->cid, "pid" => $comment->pid), "node", $comment->cid) ." ". t("by") ." ". format_name($comment) ." (". t("replies") .": ". comment_num_replies($comment->cid) .") ". (comment_is_new($comment) ? theme_invoke("theme_mark") : "") ."</li>\n";
     }
     $output .= " </ul>\n";
   }
