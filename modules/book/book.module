@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.104 2002/01/31 20:23:44 dries Exp $
+// $Id: book.module,v 1.105 2002/02/28 10:52:23 kjartan Exp $
 
 function book_node($field) {
   global $user;
@@ -95,7 +95,7 @@ function book_link($type, $node = 0, $main = 0) {
     $links[] = "<a href=\"module.php?mod=book\" title=\"". t("Read and contribute to the collaborative books.") ."\">". t("collaborative book") ."</a>";
   }
 
-  if ($type == "menu.create" && user_access("administer nodes")) {
+  if ($type == "menu.create" && user_access("post content")) {
     $links[] = "<a href=\"module.php?mod=node&op=add&type=book\" title=\"". t("Add a new book page.") ."\">". t("create book page") ."</a>";
   }
 
