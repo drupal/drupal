@@ -64,7 +64,8 @@ $mysql_updates = array(
   "2003-01-05" => "update_49",
   "2003-01-15" => "update_50",
   "2003-04-19" => "update_51",
-  "2003-04-20" => "update_52"
+  "2003-04-20" => "update_52",
+  "2003-05-18" => "update_53"
 );
 
 // Update functions
@@ -702,6 +703,10 @@ function update_52() {
   update_sql("UPDATE sequences SET name = 'vocabulary_vid' WHERE name = 'vocabulary';");
 
   update_sql("UPDATE sequences SET name = 'term_data_tid' WHERE name = 'term_data'");
+}
+
+function update_53() {
+  update_sql("CREATE INDEX book_parent ON book(parent);");
 }
 
 function update_upgrade3() {
