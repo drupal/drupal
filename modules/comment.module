@@ -423,7 +423,7 @@ function comment_view($comment, $folded = 0) {
     $theme->comment($comment, $folded);
   }
   else {
-    print l(check_output($comment->subject), array("id" => $comment->nid, "cid" => $comment->cid), "node", $comment->cid) ." ". t("by") ." ". format_name($comment) ."</small><p />";
+    print "<li>". l(check_output($comment->subject), array("id" => $comment->nid, "cid" => $comment->cid), "node", $comment->cid, array("title" => t("Read comment."))) ." ". t("by") ." ". format_name($comment) ."</li>\n";
   }
 }
 
