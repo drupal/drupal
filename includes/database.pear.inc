@@ -15,7 +15,40 @@ function db_connect($url) {
   $db_handle->setFetchMode(DB_FETCHMODE_ASSOC);
 }
 
-function db_query($query, $debug = 0) {
+/**
+ * Runs a query in the database.
+ *
+ * @param $query sql query
+ * @param $type  module type of this item
+ * @return sql result resource 
+ */
+function db_query($query) {
+  $args = func_get_args();
+  if (count($args) > 1) {
+    $args = array_map("check_query", $args);
+    $args[0] = $query;
+    return _db_query(call_user_func_array("sprintf", $args));
+  }
+  else {
+    return _db_query($query);
+  }
+}
+
+// debug version
+function db_queryd($query) {
+  $args = func_get_args();
+  if (count($args) > 1) {
+    $args = array_map("check_query", $args);
+    $args[0] = $query;
+    return _db_query(call_user_func_array("sprintf", $args), 1);
+  }
+  else {
+    return _db_query($query, 1);
+  }
+}
+
+// private
+function _db_query($query, $debug = 0) {
   global $db_handle, $queries;
 
   if (variable_get("dev_query", 0)) {
@@ -25,7 +58,7 @@ function db_query($query, $debug = 0) {
   $result = $db_handle->query($query);
 
   if ($debug) {
-    print "<p>query: $query<br />"; // error:". $result->getMessage() ."</p>";
+    print "<p>query: $query<br />";
   }
 
   if (DB::isError($result)) {
