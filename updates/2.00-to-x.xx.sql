@@ -209,3 +209,9 @@ CREATE TABLE poll_choices (
   PRIMARY KEY (chid)
 );
 
+# 04/06/01
+
+ALTER TABLE node ADD timestamp_posted int(11) NOT NULL;
+ALTER TABLE node ADD timestamp_queued int(11) NOT NULL;
+ALTER TABLE node ADD timestamp_hidden int(11) NOT NULL;
+ALTER TABLE node ADD attribute varchar(255) DEFAULT '' NOT NULL;

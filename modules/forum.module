@@ -13,11 +13,11 @@ function forum_view($node) {
 function forum_form($edit = array()) {
   global $REQUEST_URI;
 
-  $form .= form_textfield(t("Subject"), "title", $edit[title], 50, 64);
+  $form .= form_textfield("Subject", "title", $edit[title], 50, 64);
   $form .= structure_form("forum", $edit);
-  $form .= form_textarea(t("Body"), "body", $edit[body], 50, 10);
+  $form .= form_textarea("Body", "body", $edit[body], 50, 10);
   $form .= form_hidden("nid", $edit[nid]);
-  $form .= form_submit(t("Submit"));
+  $form .= form_submit("Submit");
 
   return form($REQUEST_URI, $form);
 }
@@ -56,30 +56,6 @@ function forum_page() {
   $theme->header();
   $theme->box(t("Discussion forum"), $output);
   $theme->footer();
-}
-
-function forum_overview() {
-  return node_overview(array(0, "WHERE n.type = 'forum' ORDER BY n.title"));
-}
-
-function forum_admin() {
-  global $id, $op, $edit;
-
-  print "<SMALL><A HREF=\"admin.php?mod=forum&op=add\">add new forum</A> | <A HREF=\"admin.php?mod=forum\">overview</A></SMALL><HR>\n";
-
-  switch ($op) {
-    case "add":
-      print forum_form();
-      break;
-    case "edit":
-      print forum_form(node_get_array(array(nid => $id)));
-      break;
-    case t("Submit"):
-      print status(forum_save($edit));
-      // fall through:
-    default:
-      print forum_overview();
-  }
 }
 
 ?>

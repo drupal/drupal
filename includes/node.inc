@@ -65,7 +65,7 @@ function node_get_comments($nid) {
 function node_save($node, $filter) {
   global $user, $status;
 
-  $rows = array(nid, pid, lid, cid, tid, log, type, title, score, votes, author, status, comment, promote, moderate, timestamp);
+  $rows = array(nid, pid, lid, cid, tid, log, type, title, score, votes, author, status, comment, promote, moderate, attribute, timestamp, timestamp_posted, timestamp_queued, timestamp_hidden);
 
   if ($node[nid] > 0) {
     $n = node_get_object(array("nid" => $node[nid]));
