@@ -696,7 +696,10 @@ function _menu_build() {
       // Next, add any custom items added by the administrator.
       else if ($item->type & MENU_CREATED_BY_ADMIN) {
         $_menu['items'][$item->mid] = array('pid' => $item->pid, 'path' => $item->path, 'title' => $item->title, 'access' => TRUE, 'weight' => $item->weight, 'type' => $item->type, 'callback' => '', 'callback arguments' => array());
-        $_menu['path index'][$item->path] = $item->mid;
+
+        if (!empty($item->path)) {
+          $_menu['path index'][$item->path] = $item->mid;
+        }
       }
     }
   }
