@@ -31,7 +31,7 @@ function submission_vote($id, $vote) {
         db_query("UPDATE submissions SET status = 0 WHERE id = $id");
 
         ### Copy sumbission to news table:
-        db_query("INSERT INTO stories (aid, subject, time, abstract, article, category, informant) VALUES ('$submission->uid', '". addslashes($submission->subject) ."', '$submission->timestamp', '". addslashes($submission->abstract) ."', '". addslashes($submission->article) ."', '". addslashes($submission->category) ."', '". addslashes($submission->uname) ."')");
+        db_query("INSERT INTO stories (aid, subject, time, abstract, article, category, informant, status) VALUES ('$submission->uid', '". addslashes($submission->subject) ."', '$submission->timestamp', '". addslashes($submission->abstract) ."', '". addslashes($submission->article) ."', '". addslashes($submission->category) ."', '". addslashes($submission->uname) ."', '1')");
       }
       if ($submission->score <= $submission_dump_threshold) {
         ### Hide submission from submission table:
