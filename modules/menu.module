@@ -267,7 +267,7 @@ function menu_edit_item_form($edit) {
     $form .= form_textfield(t('Description'), 'description', $edit['description'], 60, 128, t('The description displayed when hovering over a menu item.'));
 
     $path_description = t('The Drupal path this menu item links to.');
-    if (array_key_exists($edit['path'], $menu['path index']) && $menu['path index'][$edit['path']] != $edit['mid']) {
+    if (isset($edit['path']) && array_key_exists($edit['path'], $menu['path index']) && $menu['path index'][$edit['path']] != $edit['mid']) {
       $old_mid = $menu['path index'][$edit['path']];
       $old_item = $menu['items'][$old_mid];
       $path_description .= "\n". t('Since a menu item "%old" already exists for "%path", this menu item is shortcut to that location.', array('%old' => l($old_item['title'], 'admin/menu/item/edit/'. $old_mid), '%path' => $edit['path']));
