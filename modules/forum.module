@@ -12,11 +12,11 @@
 function forum_help($section) {
   switch ($section) {
     case 'admin/forum':
-      return t('<p>Forums and containers are used to organize the threaded discussions. Forums may be nested in each other. A container is used to group like forums together with out allowing topics to be created in the container. Containers can be nested just like forums. To delete a forum or container choose the appropriate "edit" operation.</p>');
+      return t('<p>This is a list of existing containers and forums that you can edit. Containers hold forums and, in turn, forums hold threaded discussions. Both containers and forums can be placed inside other containers and forums. By planning the structure of your containers and forums well, you make it easier for users to find a topic area of interest to them.</p>');
     case 'admin/forum/add/container':
-      return t('<p>Containers help you organize your forum. The job of a container is to hold, or contain, other forums that have something in common. Containers are usually placed at the top level (root) of your forum but you can also place a container within another container or forum.</p>');
+      return t('<p>Containers help you organize your forums. The job of a container is to hold, or contain, other forums that are related. For example, a container named "Food" might hold two forums named "Fruit" and "Vegetables". Containers are usually placed at the top (root) level of your forum but you can also place a container within another container or forum.</p>');
     case 'admin/forum/add/forum':
-      return t('<p>When creating a forum you are creating an area for user to create similar topics for discussion. Forums may be nested underneath other forums or in containers.</p>');
+      return t('<p>A forum holds threaded topic discussions that are related. For example, a forum named "Fruit" might contain topic discussions titled "Apples" and "Bananas". You can place a forum into a container, another forum, or at the top (root) level of your forum.</p>');
     case 'admin/modules#description':
       return t('Enable threaded discussions about general topics.');
     case 'node/add#forum':
