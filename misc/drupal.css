@@ -126,6 +126,16 @@ img {
 .form-submit {
   margin: 0.5em 0;
 }
+.news-item .date {
+  float: left;
+}
+.news-item .body {
+  margin-top: 1em;
+  margin-left: 4em;
+}
+.news-item .body .feed {
+  font-size: 0.9em;
+}
 #forum .description {
   font-size: 0.9em;
   margin: 0.5em;

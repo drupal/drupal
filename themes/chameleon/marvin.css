@@ -33,6 +33,10 @@ table {
 #main {
   width: 80%;
 }
+#aggregator .info {
+  border: 1px dashed #888;
+  padding: 1em;
+}
 .block {
   margin-bottom: 10px;
   font-size: 0.9em;
