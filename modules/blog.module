@@ -302,7 +302,7 @@ function blog_link($type, $node = 0, $main) {
       $links[] = "<a href=\"module.php?mod=node&op=edit&id=$node->nid\" title=\"". t("Edit this blog entry.") ."\">". t("edit this blog") ."</a>";
     }
     elseif ($op != "view") {
-      $links[] = "<a href=\"module.php?mod=blog&op=view&id=$node->uid\" title=\"". sprintf(t("Read %s's latest blog entries."), $node->name) ."\">". sprintf("%s's blog", $node->name) ."</a>";
+      $links[] = "<a href=\"module.php?mod=blog&op=view&id=$node->uid\" title=\"". sprintf(t("Read %s's latest blog entries."), $node->name) ."\">". sprintf(t("%s's blog"), $node->name) ."</a>";
     }
   }
 
