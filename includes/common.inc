@@ -1,4 +1,4 @@
-<?php
+<?
 
 $na = "<I>na</I>";
 
@@ -64,14 +64,6 @@ function check_export($text) {
 
 function check_code($text) {
   return $text;
-}
-
-function check_mail($mail) {
-  return eregi("^[_+\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,3}$", $mail) ? 1 : 0;
-}
-
-function check_name($name) {
-  return ereg("[^a-zA-Z0-9_-]", $name) ? 0 : 1;
 }
 
 function check_preview($text) {
@@ -144,7 +136,7 @@ function format_date($timestamp, $type = "medium", $format = "") {
 
 function format_username($username) {
   global $user;
-  if ($username) return (user_access($user, "account") ? "<A HREF=\"admin.php?mod=account&op=view&name=$username\">$username</A>" : "<A HREF=\"account.php?op=view&name=$username\">$username</A>");
+  if ($username) return (user_access($user, "account") ? "<A HREF=\"admin.php?mod=account&op=view&name=". urlencode($username) ."\">$username</A>" : "<A HREF=\"account.php?op=view&name=". urlencode($username) ."\">$username</A>");
   else return variable_get(anonymous, "Anonymous");
 }
 

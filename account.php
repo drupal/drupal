@@ -26,8 +26,8 @@ function account_create($error = "") {
   global $theme;
 
   if ($error) {
-    $output .= "<P><FONT COLOR=\"red\">". t("Failed to create account") .": ". check_output($error) .".</FONT></P>\n";
-    watchdog("account", "failed to create account: $error.");
+    $output .= "<P><FONT COLOR=\"red\">". t("Failed to create account") .": ". check_output($error) ."</FONT></P>\n";
+    watchdog("account", "failed to create account: $error");
   }
   else {
     $output .= "<P>". t("Registering allows you to comment, to moderate comments and pending submissions, to customize the look and feel of the site and generally helps you interact with the site more efficiently.") ."</P><P>". t("To create an account, simply fill out this form an click the 'Create account' button below.  An e-mail will then be sent to you with instructions on how to validate your account.") ."</P>\n";
@@ -228,7 +228,7 @@ function account_email_submit($userid, $email) {
   $result = db_query("SELECT id FROM users WHERE userid = '$userid' AND real_email = '$email'");
 
   if ($account = db_fetch_object($result)) {
-    $passwd = account_password();
+    $passwd = user_password();
     $hash = substr(md5("$userid. ". time() .""), 0, 12);
     $status = 1;
 
@@ -257,16 +257,16 @@ function account_email_submit($userid, $email) {
 function account_create_submit($userid, $email) {
   global $theme, $HTTP_HOST, $REQUEST_URI;
 
-  $new[userid] = trim($userid);
-  $new[real_email] = trim($email);
+  $new[userid] = $userid;
+  $new[real_email] = $email;
 
-  if ($error = account_validate($new)) {
+  if ($error = user_validate($new)) {
     $theme->header();
     $theme->box(t("Create user account"), account_create($error));
     $theme->footer();
   }
   else {
-    $new[passwd] = account_password();
+    $new[passwd] = user_password();
     $new[hash] = substr(md5("$new[userid]. ". time()), 0, 12);
 
     $user = user_save("", array("userid" => $new[userid], "real_email" => $new[real_email], "passwd" => $new[passwd], "status" => 1, "hash" => $new[hash]));

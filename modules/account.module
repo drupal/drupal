@@ -41,7 +41,7 @@ function account_search($keys) {
   global $user;
   $result = db_query("SELECT * FROM users WHERE userid LIKE '%$keys%' LIMIT 20");
   while ($account = db_fetch_object($result)) {
-    $find[$i++] = array("title" => $account->userid, "link" => (user_access($user, "account") ? "admin.php?mod=account&op=view&name=$account->userid" : "account.php?op=view&name=$account->userid"), "user" => $account->userid);
+    $find[$i++] = array("title" => $account->userid, "link" => (user_access($user, "account") ? "admin.php?mod=account&op=view&name=". urlencode($account->userid) : "account.php?op=view&name=". urlencode($account->userid)), "user" => $account->userid);
   }
   return $find;
 }
@@ -92,7 +92,7 @@ function account_overview($query = array()) {
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
   $output .= " <TR><TH>username</TH><TH>last access</TH><TH COLSPAN=\"2\">operations</TH></TR>\n";
   while ($account = db_fetch_object($result)) {
-    $output .= " <TR><TD>". format_username($account->userid) ."</TD><TD>". format_date($account->last_access) ."</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=account&op=view&name=$account->userid\">view account</A></TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=account&op=edit&name=$account->userid\">edit account</A></TD></TR>\n";
+    $output .= " <TR><TD>". format_username($account->userid) ."</TD><TD>". format_date($account->last_access) ."</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=account&op=view&name=". urlencode($account->userid) ."\">view account</A></TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=account&op=edit&name=". urlencode($account->userid) ."\">edit account</A></TD></TR>\n";
   }
   $output .= "</TABLE>\n";
 
@@ -150,12 +150,12 @@ function account_form($account = 0) {
     if (module_hook($name, "admin")) $access[$name] = $name;
   }
   module_iterate("access");
-  
+
   $account->access = explode(",", $account->access);
   foreach ($account->access as $key=>$value) {
     $account->access[$key] = substr($value, 0, -2);
   }
-  
+
   $form .= $account->id ? form_item("ID", $account->id) . form_hidden("id", $account->id) : "";
   $form .= $account->userid ? form_item(t("Username"), check_output($account->userid)) . form_hidden("userid", $account->userid) : form_textfield(t("Username"), "userid", $account->userid, 15, 15);
   $form .= form_select(t("Status"), "status", ($account->status ? $account->status : 1), array("blocked", "not confirmed", "open"));
@@ -190,22 +190,22 @@ function account_save($edit) {
       }
     }
     $query .= "access = '$access'";
-    
+
     db_query("UPDATE users SET $query WHERE id = $edit[id]");
     watchdog("account", "account: modified user '$edit[userid]'");
     return $edit[userid];
   }
   else {
     // Adding new account
-    $edit[userid] = trim($edit[userid]);
-    $edit[real_email] = trim($edit[real_email]);
+    $edit[userid] = $edit[userid];
+    $edit[real_email] = $edit[real_email];
 
-    if ($error = account_validate($edit)) {
+    if ($error = user_validate($edit)) {
       print status($error);
       return 0;
     }
     else {
-      $edit[passwd] = account_password();
+      $edit[passwd] = user_password();
       $edit[hash] = substr(md5("$edit[userid]. ". time()), 0, 12);
 
       if ($edit[access]) {
@@ -217,7 +217,7 @@ function account_save($edit) {
 
       $user = user_save("", array("userid" => $edit[userid], "access" => $edit[access], "real_email" => $edit[real_email], "passwd" => $edit[passwd], "status" => $edit[status], "hash" => $edit[hash]));
 
-      $link = path_uri() ."account.php?op=confirm&name=$edit[userid]&hash=$edit[hash]";
+      $link = path_uri() ."account.php?op=confirm&name=". urlencode($edit[userid]) ."&hash=$edit[hash]";
       $subject = strtr(t("Account details for %a"), array("%a" => variable_get(site_name, "drupal")));
       $message = strtr(t("%a,\n\n\nsomeone signed up for a user account on %b and supplied this e-mail address as their contact.  If it wasn't you, don't get your panties in a knot and simply ignore this mail.  If this was you, you will have to confirm your account first or you will not be able to login.  To confirm your account visit the URL below:\n\n   %c\n\nOnce confirmed you can login using the following username and password:\n\n   username: %a\n   password: %d\n\n\n-- %b team\n"), array("%a" => $edit[userid], "%b" => variable_get(site_name, "drupal"), "%c" => $link, "%d" => $edit[passwd]));
 
@@ -331,13 +331,13 @@ function account_admin() {
       break;
     case "Save account":
       $name = account_save($edit);
-      if ($name) 
+      if ($name)
         print account_view($name);
       else {
         foreach ($edit as $key=>$value) {
           $account->$key = $value;
         }
-        print account_form($account);      
+        print account_form($account);
       }
       break;
     case "View account":
