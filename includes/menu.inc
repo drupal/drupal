@@ -105,14 +105,16 @@ function menu_tree($parent = "", $overview = 0) {
 
   $result = db_query("SELECT * FROM menu WHERE parent = '%s' AND overview = '%d' ORDER BY weight, name", $parent, $overview);
 
-  print "<ul>";
-  while ($item = db_fetch_object($result)) {
-    print "<li>". menu_item($item) ."</li>";
-    menu_tree($item->name, 1);
+  if (db_num_rows($result)) {
+    $output = "<ul>";
+    while ($item = db_fetch_object($result)) {
+      $output .= "<li>". menu_item($item) ."</li>";
+      $output .= menu_tree($item->name, 1);
+    }
+    $output .= "</ul>";
   }
-  print "</ul>";
 
-  return $links;
+  return $output;
 }
 
 function menu_add($name, $link, $title = NULL, $help = NULL, $parent = NULL, $weight = 1, $overview = 0) {
