@@ -1,5 +1,5 @@
 <?php
-// $Id: story.module,v 1.158 2004/09/27 20:15:54 dries Exp $
+// $Id: story.module,v 1.159 2004/09/28 19:13:03 unconed Exp $
 
 /**
  * @file
@@ -123,6 +123,7 @@ function story_form(&$node) {
   }
 
   $output .= form_textarea(t('Body'), 'body', $node->body, 60, 20, '', NULL, TRUE);
+  $output .= filter_form('format', $node->format);
 
   return $output;
 }

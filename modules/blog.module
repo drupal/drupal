@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.199 2004/09/27 20:15:53 dries Exp $
+// $Id: blog.module,v 1.200 2004/09/28 19:13:03 unconed Exp $
 
 /**
  * @file
@@ -211,6 +211,7 @@ function blog_form(&$node) {
   }
 
   $output .= form_textarea(t('Body'), 'body', $node->body, 60, 20, '', NULL, TRUE);
+  $output .= filter_form('format', $node->format);
 
   return $output;
 }
