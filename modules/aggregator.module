@@ -583,9 +583,11 @@ function aggregator_save_feed($edit) {
   }
   if ($edit['title']) {
     // the feed is being saved, save the categories as well
-    foreach ($edit['category'] as $cid => $checked) {
-      if ($checked) {
-        db_query('INSERT INTO {aggregator_category_feed} (fid, cid) VALUES (%d, %d)', $edit['fid'], $cid);
+    if ($edit['category']) {
+      foreach ($edit['category'] as $cid => $checked) {
+        if ($checked) {
+          db_query('INSERT INTO {aggregator_category_feed} (fid, cid) VALUES (%d, %d)', $edit['fid'], $cid);
+        }
       }
     }
   }
