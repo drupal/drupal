@@ -7,7 +7,7 @@ body {
   width: 100%;
 }
 body {
-  font-size: 85%;
+  font-size: 82%;
 }
 tr.dark {
   background-color: #ddd;
@@ -103,7 +103,6 @@ img {
 }
 #sidebar {
   background-color: #ddd;
-  font-size: .9em;
 }
 #footer {
   background-color: #eee;
