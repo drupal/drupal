@@ -77,7 +77,7 @@ function story_form(&$node, &$help, &$error) {
     $output .= form_textarea(t("Teaser"), "teaser", $node->teaser, 60, 5, $error["teaser"]);
   }
 
-  $output = form_textarea(t("Body"), "body", $node->body, 60, 15, $error["body"] ? $error["body"] : t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")));
+  $output .= form_textarea(t("Body"), "body", $node->body, 60, 15, $error["body"] ? $error["body"] : t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")));
 
   return $output;
 }
