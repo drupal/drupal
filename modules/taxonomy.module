@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.111 2004/04/21 13:56:38 dries Exp $
+// $Id: taxonomy.module,v 1.112 2004/04/23 07:40:26 dries Exp $
 
 function taxonomy_feed($taxonomy) {
   global $id, $type;
@@ -602,6 +602,14 @@ function taxonomy_get_term($tid) {
 
 function _taxonomy_term_select($title, $name, $value, $vocabulary_id, $description, $multiple, $blank, $exclude = array()) {
   $tree = taxonomy_get_tree($vocabulary_id);
+
+  // We store the last selected ID in a session variable:
+  if (!$value) {
+    $value = $_SESSION['vocabulary']["$vocabulary_id"];
+  }
+  else {
+    $_SESSION['vocabulary']["$vocabulary_id"] = $value;
+  }
 
   if ($blank) {
     $options[] = array("tid" => 0, "name" => $blank);
