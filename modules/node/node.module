@@ -1035,9 +1035,8 @@ function node_feed($nodes = 0, $channel = array()) {
 /**
  * Preform validation checks on the given node.
  */
-function node_validate($node, &$error) {
+function node_validate($node) {
   global $user;
-  $error = array();
 
   // Convert the node to an object, if necessary.
   $node = array2object($node);
@@ -1046,7 +1045,7 @@ function node_validate($node, &$error) {
   if (isset($node->title)) {
     $node->title = strip_tags($node->title);
     if (!$node->title) {
-      $error['title'] = theme('error', t('You have to specify a valid title.'));
+      form_set_error('title', t('You have to specify a valid title.'));
     }
   }
 
@@ -1081,7 +1080,7 @@ function node_validate($node, &$error) {
       $node->uid = $account->uid;
     }
     else {
-      $error['name'] = theme('error', t("The name '%u' does not exist.", array ('%u' => $node->name)));
+      form_set_error('name', t("The name '%u' does not exist.", array ('%u' => $node->name)));
     }
 
     // Validate the "authored on" field.
@@ -1089,7 +1088,7 @@ function node_validate($node, &$error) {
       $node->created = strtotime($node->date);
     }
     else {
-      $error['date'] = theme('error', t('You have to specifiy a valid date.'));
+      form_set_error('date', t('You have to specifiy a valid date.'));
     }
   }
   else {
@@ -1105,8 +1104,10 @@ function node_validate($node, &$error) {
   }
 
   // Do node-type-specific validation checks.
-  $result = node_invoke($node, 'validate');
-  $error = $error + (is_array($result) ? $result : array()) + node_invoke_nodeapi($node, 'validate');
+  node_invoke($node, 'validate');
+  node_invoke_nodeapi($node, 'validate');
+
+  $node->validated = true;
 
   return $node;
 }
@@ -1114,24 +1115,24 @@ function node_validate($node, &$error) {
 /**
  * Generate the node editing form.
  */
-function node_form($edit, $error = NULL) {
+function node_form($edit) {
   // Validate the node if we don't already know the errors.
-  if ($error === NULL) {
-    $edit = node_validate($edit, $error);
+  if (!$edit->validated) {
+    $edit = node_validate($edit);
   }
 
   // Prepend extra node form elements.
-  $form = implode('', node_invoke_nodeapi($edit, 'form pre', $error));
+  $form = implode('', node_invoke_nodeapi($edit, 'form pre'));
 
   // Get the node-specific bits.
-  // We can't use node_invoke() because $error and $param must be passed by reference.
+  // We can't use node_invoke() because $param must be passed by reference.
   $function = node_get_module_name($edit) .'_form';
   if (function_exists($function)) {
-    $form .= $function($edit, $error, $param);
+    $form .= $function($edit, $param);
   }
 
   // Append extra node form elements.
-  $form .= implode('', node_invoke_nodeapi($edit, 'form post', $error));
+  $form .= implode('', node_invoke_nodeapi($edit, 'form post'));
 
   $output .= '<div class="node-form">';
 
@@ -1140,8 +1141,8 @@ function node_form($edit, $error = NULL) {
   if (user_access('administer nodes')) {
     $output .= '<div class="admin">';
 
-    $author = form_textfield(t('Authored by'), 'name', $edit->name, 20, 60, $error['name']);
-    $author .= form_textfield(t('Authored on'), 'date', $edit->date, 20, 25, $error['date']);
+    $author = form_textfield(t('Authored by'), 'name', $edit->name, 20, 60);
+    $author .= form_textfield(t('Authored on'), 'date', $edit->date, 20, 25);
 
     $output .= '<div class="authored">';
     $output .= form_group(t('Authoring information'), $author);
@@ -1157,14 +1158,14 @@ function node_form($edit, $error = NULL) {
     $output .= form_group(t('Options'), $options);
     $output .= "</div>\n";
 
-    $extras .= implode('</div><div class="extra">', node_invoke_nodeapi($edit, 'form admin', $error));
+    $extras .= implode('</div><div class="extra">', node_invoke_nodeapi($edit, 'form admin'));
     $output .= $extras ? '<div class="extra">'. $extras .'</div></div>' : '</div>';
   }
 
   // Add the default fields.
 
   $output .= '<div class="standard">';
-  $output .= form_textfield(t('Title'), 'title', $edit->title, 60, 128, $error['title']);
+  $output .= form_textfield(t('Title'), 'title', $edit->title, 60, 128);
 
   // Add the node-type-specific fields.
 
@@ -1192,7 +1193,7 @@ function node_form($edit, $error = NULL) {
 
   $output .= form_submit(t('Preview'));
 
-  if (!$error) {
+  if (!form_get_errors()) {
     if ($edit->title && $edit->type) {
       $output .= form_submit(t('Submit'));
     }
@@ -1283,7 +1284,7 @@ function node_edit($id) {
 /**
  * Generate a node preview, including a form for further edits.
  */
-function node_preview($node, $error = NULL) {
+function node_preview($node) {
   // Convert the array to an object:
   $node = array2object($node);
 
@@ -1325,7 +1326,7 @@ function node_preview($node, $error = NULL) {
       $output .= node_view($node, 0);
     }
 
-    $output .= node_form($node, $error);
+    $output .= node_form($node);
 
     $name = node_invoke($node, 'node_name');
     drupal_set_breadcrumb(array(l(t('Home'), NULL), l(t('create content'), 'node/add'), l(t('Submit %name', array('%name' => $name)), 'node/add/'. $node->type)));
@@ -1341,11 +1342,11 @@ function node_submit($node) {
   global $user;
 
   // Fix up the node when required:
-  $node = node_validate($node, $error);
+  $node = node_validate($node);
 
   // If something went wrong, go back to the preview form.
-  if ($error) {
-    return node_preview($node, $error);
+  if (form_get_errors()) {
+    return node_preview($node);
   }
 
   // Prepare the node's body:
@@ -1484,8 +1485,8 @@ function node_page() {
       }
       break;
     case t('Preview'):
-      $edit = node_validate($edit, $error);
-      print theme('page', node_preview($edit, $error), t('Preview %name', array('%name' => $name)));
+      $edit = node_validate($edit);
+      print theme('page', node_preview($edit), t('Preview %name', array('%name' => $name)));
       break;
     case t('Submit'):
       drupal_set_title(t('Submit %name', array('%name' => $name)));

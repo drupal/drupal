@@ -961,9 +961,9 @@ function form_set_error($name, $message) {
 }
 
 /**
- * Return true when errors have been set.
+ * Return an associative array of all errors.
  */
-function form_has_errors() {
+function form_get_errors() {
   if (array_key_exists('form', $GLOBALS)) {
     return $GLOBALS['form'];
   }

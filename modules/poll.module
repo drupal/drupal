@@ -98,24 +98,22 @@ function poll_validate(&$node) {
       }
 
       if ($choice['chvotes'] < 0) {
-        $error["choice][$i][chvotes"] = theme('error', t("Negative values are not allowed."));
+        form_set_error("choice][$i][chvotes", t("Negative values are not allowed."));
       }
     }
 
     if ($realchoices < 2) {
-      $error["choice][0][chtext"] = theme('error', t("You must fill in at least two choices."));
+      form_set_error("choice][$realchoices][chtext", t("You must fill in at least two choices."));
     }
   }
 
   $node->teaser = poll_teaser($node);
-
-  return $error;
 }
 
 /**
  * Implementation of hook_form().
  */
-function poll_form(&$node, &$error) {
+function poll_form(&$node) {
   $admin = user_access('administer nodes');
 
   if (function_exists('taxonomy_node_form')) {
@@ -136,9 +134,9 @@ function poll_form(&$node, &$error) {
   // Poll choices
   $opts = drupal_map_assoc(range(2, $node->choices * 2 + 5));
   for ($a = 0; $a < $node->choices; $a++) {
-    $group1 .= form_textfield(t('Choice %n', array('%n' => ($a + 1))), "choice][$a][chtext", $node->choice[$a]['chtext'], 50, 127, $error["choice][$a][chtext"]);
+    $group1 .= form_textfield(t('Choice %n', array('%n' => ($a + 1))), "choice][$a][chtext", $node->choice[$a]['chtext'], 50, 127);
     if ($admin) {
-      $group1 .= form_textfield(t('Votes for choice %n', array('%n' => ($a + 1))), "choice][$a][chvotes", (int)$node->choice[$a]['chvotes'], 7, 7, $error["choice][$a][chvotes"]);
+      $group1 .= form_textfield(t('Votes for choice %n', array('%n' => ($a + 1))), "choice][$a][chvotes", (int)$node->choice[$a]['chvotes'], 7, 7);
     }
   }
   $group1 .= form_hidden('choices', $node->choices);

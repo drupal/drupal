@@ -315,7 +315,7 @@ function profile_admin_add($type) {
       form_set_error('name', t('the specified name is already in use.'));
     }
 
-    if (!form_has_errors()) {
+    if (!form_get_errors()) {
       db_query("INSERT INTO {profile_fields} (title, name, explanation, category, type, weight, required, visibility, options, page) VALUES ('%s', '%s', '%s', '%s', '%s', %d, %d, %d, '%s', '%s')", $data['title'], $data['name'], $data['explanation'], $data['category'], $type, $data['weight'], $data['required'], $data['visibility'], $data['options'], $data['page']);
 
       drupal_set_message(t('the field has been created.'));
@@ -340,7 +340,7 @@ function profile_admin_edit($fid) {
     // Validate form:
     profile_validate_form($data);
 
-    if (!form_has_errors()) {
+    if (!form_get_errors()) {
       db_query("UPDATE {profile_fields} SET title = '%s', name = '%s', explanation = '%s', category = '%s', weight = %d, required = %d, visibility = %d, options = '%s', page = '%s' WHERE fid = %d", $data['title'], $data['name'], $data['explanation'], $data['category'], $data['weight'], $data['required'], $data['visibility'], $data['options'], $data['page'], $fid);
 
       drupal_set_message(t('the field has been updated.'));

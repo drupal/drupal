@@ -181,16 +181,14 @@ function blog_page_last() {
  */
 function blog_validate(&$node) {
   if (isset($node->body) && count(explode(' ', $node->body)) < variable_get('minimum_blog_size', 0)) {
-    $error['body'] = theme('error', t('The body of your blog is too short.'));
+    form_set_error('body', t('The body of your blog is too short.'));
   }
-
-  return $error;
 }
 
 /**
  * Implementation of hook_form().
  */
-function blog_form(&$node, &$error) {
+function blog_form(&$node) {
   global $nid;
   $iid = $_GET['iid'];
 
@@ -214,7 +212,7 @@ function blog_form(&$node, &$error) {
     $output .= implode('', taxonomy_node_form('blog', $node));
   }
 
-  $output .= form_textarea(t('Body'), 'body', $node->body, 60, 15, $error['body'] ? $error['body'] : filter_tips_short());
+  $output .= form_textarea(t('Body'), 'body', $node->body, 60, 15, filter_tips_short());
 
   return $output;
 }

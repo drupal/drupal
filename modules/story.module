@@ -105,23 +105,21 @@ function story_menu() {
  */
 function story_validate(&$node) {
   if (isset($node->body) && count(explode(' ', $node->body)) < variable_get('minimum_story_size', 0)) {
-    $error['body'] = t('The body of your story is too short. You need at least %word_count words to submit your story.', array('%word_count' => variable_get('minimum_story_size', 0)));
+    form_set_error('body', t('The body of your story is too short. You need at least %word_count words to submit your story.', array('%word_count' => variable_get('minimum_story_size', 0))));
   }
-
-  return $error;
 }
 
 /**
  * Implementation of hook_form().
  */
-function story_form(&$node, &$error) {
+function story_form(&$node) {
   $output = '';
 
   if (function_exists('taxonomy_node_form')) {
     $output .= implode('', taxonomy_node_form('story', $node));
   }
 
-  $output .= form_textarea(t('Body'), 'body', $node->body, 60, 15, ($error['body'] ? theme('error', $error['body']) : ''). filter_tips_short());
+  $output .= form_textarea(t('Body'), 'body', $node->body, 60, 15, filter_tips_short());
 
   return $output;
 }

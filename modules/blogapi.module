@@ -131,10 +131,10 @@ function blogapi_new_post($req_params) {
                               'comment' => $comment,
                               'moderate' => $moderate,
                               'revision' => $revision
-                              ), $error);
+                              ));
 
-  if (count($error) > 0) {
-    return blogapi_error($error);
+  if (form_get_errors()) {
+    return blogapi_error();
   }
 
   if (!node_access('create', $node)) {
@@ -191,10 +191,10 @@ function blogapi_edit_post($req_params) {
   $node->title = $title;
   $node->body = $body;
   $node->status = $params[4];
-  $node = node_validate($node, $error);
+  $node = node_validate($node);
 
-  if (count($error) > 0) {
-    return blogapi_error($error);
+  if (form_get_errors()) {
+    return blogapi_error();
   }
 
   $terms = module_invoke('taxonomy', 'node_get_terms', $node->nid, 'tid');
@@ -402,9 +402,15 @@ function blogapi_convert($params) {
 function blogapi_error($message) {
   global $xmlrpcusererr;
 
-  if (is_array($message)) {
-    $message = implode('', $message);
+  if (!is_array($message)) {
+    $message = array($message);
   }
+
+  if ($errors = form_get_errors()) {
+    $message = $message + $errors;
+  }
+
+  $message = implode(' ', $message);
 
   return new xmlrpcresp(0, $xmlrpcusererr + 1, strip_tags($message));
 }

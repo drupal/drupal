@@ -228,7 +228,7 @@ function book_validate(&$node) {
 /**
  * Implementation of hook_form().
  */
-function book_form(&$node, &$error) {
+function book_form(&$node) {
   global $user;
 
   $op = $_POST['op'];

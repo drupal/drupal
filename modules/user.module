@@ -940,7 +940,7 @@ function user_register($edit = array()) {
   if ($edit) {
     user_module_invoke('validate', $edit, $edit, 'account');
 
-    if (!form_has_errors()) {
+    if (!form_get_errors()) {
       $from = variable_get('site_mail', ini_get('sendmail_from'));
       $pass = user_password();
 
@@ -1078,7 +1078,7 @@ function user_edit($category = 'account') {
   if ($_POST['op'] == t('Save account')) {
     user_module_invoke('validate', $edit, $account, $category);
 
-    if (!form_has_errors()) {
+    if (!form_get_errors()) {
       // Validate input to ensure that non-privileged users can't alter protected data.
       if (!user_access('administer users') && array_intersect(array_keys($edit), array('uid', 'roles', 'init', 'session'))) {
         watchdog('warning', 'detected malicious attempt to alter a protected database field');
@@ -1242,11 +1242,11 @@ function user_configure_settings() {
 
   // Picture settings.
   if (!file_check_directory(file_create_path(variable_get('user_picture_path', 'pictures')))) {
-    $error = theme('error', t('The picture directory does not exist, or is not writable.'));
+    form_set_error('user_picture_path', t('The picture directory does not exist, or is not writable.'));
   }
 
   $group  = form_radios(t('Picture support'), 'user_pictures', variable_get('user_pictures', 0), array(t('Disabled'), t('Enabled')), t('Enable picture support.'));
-  $group .= form_textfield(t('Picture image path'), 'user_picture_path', variable_get('user_picture_path', 'pictures'), 45, 255, t('Subdirectory in the directory "%dir" where pictures will be stored.', array('%dir' => variable_get('file_directory_path', 'files') . FILE_SEPARATOR)) . $error);
+  $group .= form_textfield(t('Picture image path'), 'user_picture_path', variable_get('user_picture_path', 'pictures'), 45, 255, t('Subdirectory in the directory "%dir" where pictures will be stored.', array('%dir' => variable_get('file_directory_path', 'files') . FILE_SEPARATOR)));
   $group .= form_textfield(t('Default picture'), 'user_picture_default', variable_get('user_picture_default', ''), 45, 255, t('URL of picture to display for users with no custom picture selected. Leave blank for none.'));
   $group .= form_textfield(t('Picture maximum dimensions'), 'user_picture_dimensions', variable_get('user_picture_dimensions', '85x85'), 10, 10, t('Maximum dimensions for pictures.'));
   $group .= form_textfield(t('Picture maximum file size'), 'user_picture_file_size', variable_get('user_picture_file_size', '30'), 10, 10, t('Maximum file size for pictures, in kB.'));
@@ -1268,7 +1268,7 @@ function user_admin_create($edit = array()) {
   if ($edit) {
     user_module_invoke('validate', $edit, $edit, 'account');
 
-    if (!form_has_errors()) {
+    if (!form_get_errors()) {
       watchdog('user', 'new user: "'. $edit['name'] .'" &lt;'. $edit['mail'] .'&gt;');
 
       user_save('', array('name' => $edit['name'], 'pass' => $edit['pass'], 'init' => $edit['mail'], 'mail' => $edit['mail'], 'roles' => array(_user_authenticated_id()), 'status' => 1));

@@ -129,7 +129,7 @@ function page_view($node, $teaser = FALSE, $page = FALSE) {
 /**
  * Implementation of hook_form().
  */
-function page_form(&$node, &$error) {
+function page_form(&$node) {
   if (function_exists('taxonomy_node_form')) {
     $output .= implode('', taxonomy_node_form('page', $node));
   }
