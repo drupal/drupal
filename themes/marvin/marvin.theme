@@ -11,7 +11,7 @@
 
   *********************************************************************/
 
- class Theme extends BaseTheme {
+ class Theme_marvin extends BaseTheme {
    var $link = "#666699";
 
    // General colorset that can be used for this theme
@@ -174,7 +174,6 @@
        </td>
        <td valign="top" width="200">
          <?php
-          $this->user("all");
           theme_blocks("all", $this);
          ?>
        </td>

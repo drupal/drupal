@@ -11,7 +11,7 @@
 
   *********************************************************************/
 
- class Theme extends BaseTheme {
+ class Theme_unconed extends BaseTheme {
    var $foreground = "#000000";
    var $background = "#FFFFFF";
 
@@ -191,7 +191,6 @@
        </TD>
        <TD VALIGN="top" WIDTH="20%">
         <?php
-          $this->user("all");
           theme_blocks("all", $this);
         ?>
        </TD>

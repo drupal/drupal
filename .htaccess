@@ -29,6 +29,7 @@ ErrorDocument 500 /error.php
    php_value session.cookie_lifetime 2000000
    php_value session.auto_start      0
    php_value session.save_handler    user 
+   php_value allow_call_time_pass_reference  Off
 </IfModule>
 
 # Various rewrite rules

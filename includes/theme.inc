@@ -8,7 +8,7 @@ class BaseTheme {
     $output .= "<table border=\"0\" cellspacing=\"4\" cellpadding=\"4\"><tr><td valign=\"top\" width=\"170\">";
 
     print $output;
-    $this->box(t("Navigation"), implode("<br />", link_page())); $this->user("all", $this); theme_blocks("all", $this);
+    $this->box(t("Navigation"), implode("<br />", link_page())); theme_blocks("all", $this);
     print "</td><td valign=\"top\">";
 
   }
@@ -19,9 +19,6 @@ class BaseTheme {
 
   function image($name) {
     return "misc/$name";
-  }
-
-  function user($region) {
   }
 
   function node($node, $main) {
@@ -74,13 +71,15 @@ class BaseTheme {
 function theme_init() {
   global $user, $themes;
 
-  if ($user->theme && file_exists($themes[$user->theme][0])) {
-    include_once $themes[$user->theme][0];
+  if ($user->theme && file_exists($themes[$theme_name = $user->theme][0])) {
+    include_once $themes[$theme_name][0];
   }
   else {
-    include_once $themes[variable_get("theme_default", key($themes))][0];
+    include_once $themes[$theme_name = variable_get("theme_default", key($themes))][0];
   }
-  return new Theme();
+
+  $theme_class = 'Theme_'. $theme_name;
+  return new $theme_class();
 }
 
 function theme_blocks($region, &$theme) {

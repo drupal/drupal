@@ -12,7 +12,7 @@
 
   *********************************************************************/
 
-  class Theme extends BaseTheme {
+  class Theme_goofy extends BaseTheme {
     // General colorset that can be used for this theme
     var $foreground = "#000000";
     var $background = "#FFFFFF";
@@ -150,7 +150,6 @@ function c(subject,mod,author,date,body) {document.writeln("<table border=\"0\" 
               </td>
               <td valign="top">
 <?php
-          $this->user("all");
           theme_blocks("all", $this);
 ?>
      </td>
