@@ -122,6 +122,9 @@ function poll_link($type) {
   if ($type == "menu.create" && user_access("post content")) {
     $links[] = lm(t("create poll"), array("mod" => "node", "op" => "add", "type" => "poll"), "", array("title" => t("Add a new poll.")));
   }
+  else if ($type == "page" && user_access("access content")) {
+    $links[] = lm(t("polls"), array("mod" => "poll"), "", array("title" => t("View the list of polls on this site.")));
+  }
 
   return $links ? $links : array();
 }
@@ -143,6 +146,18 @@ function poll_node($field) {
   $info["description"] = t("A poll is a multiple-choice question which visitors can vote on.");
 
   return $info[$field];
+}
+
+function poll_page() {
+  global $theme;
+  
+  $theme->header();
+  $result = db_query("SELECT n.nid, n.title, p.active, SUM(c.chvotes) AS votes FROM node n LEFT JOIN poll p ON n.nid=p.nid LEFT JOIN poll_choices c ON n.nid=c.nid WHERE type='poll' AND status='1' AND moderate='0' GROUP BY n.nid");
+  while ($node = db_fetch_object($result)) {
+    $output .= "<li>". l($node->title, array("id" => $node->nid)) ." - ". format_plural($node->votes, "vote", "votes") ." - ". ($node->active ? t("open") : t("closed")) ."</li>";
+  }
+  $theme->box(t("Polls"), $output);
+  $theme->footer();
 }
 
 function poll_perm() {
@@ -233,7 +248,9 @@ function poll_view(&$node, $main = 0, $block = 0) {
     else {
       $output .= "</td><td valign=\"middle\"><div align=\"right\">&nbsp;&nbsp;&nbsp;". form_submit(t("Vote")) ."</div></td></tr></table>";
     }
-    $output .= $block ? "<div align=\"center\">". $theme->links(link_node($node, $main)) ."</div>" : "";
+    $links = link_node($node, $main);
+    $links[] = lm(t("older polls"), array("mod" => "poll"), "", array("title" => t("View the list of polls on this site.")));
+    $output .= $block ? "<div align=\"center\">". $theme->links($links) ."</div>" : "";
     $output .= "</form>";
   }
   else {
@@ -273,7 +290,9 @@ function poll_view(&$node, $main = 0, $block = 0) {
       // Prevent a 'read more' link in the side-block.
       $node->body = $node->teaser = "";
     }
-    $output .= "<br /><div align=\"center\">Total votes: ". $votestotal . ($block ? "<br />". $theme->links(link_node($node, $main)) : "") ."</div>";
+    $links = link_node($node, $main);
+    $links[] = lm(t("older polls"), array("mod" => "poll"), "", array("title" => t("View the list of polls on this site.")));
+    $output .= "<br /><div align=\"center\">Total votes: ". $votestotal . ($block ? "<br />". $theme->links($links) : "") ."</div>";
   }
   // Force the output on both the mainpage and elsewhere
   $node->body = $output;
