@@ -159,10 +159,6 @@ function forum_link($type, $node = 0, $main = 0) {
 
   $links = array();
 
-  if ($type == 'page' && user_access('access content')) {
-    $links[] = l(t('forums'), 'forum');
-  }
-
   if (!$main && $type == 'node' && $node->type == 'forum') {
     // get previous and next topic
 

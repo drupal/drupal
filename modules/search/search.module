@@ -68,19 +68,6 @@ function search_perm() {
 }
 
 /**
- * Implementation of hook_link().
- */
-function search_link($type) {
-  $links = array();
-
-  if ($type == 'page' && user_access('search content')) {
-    $links[] = l(t('search'), 'search', array('title' => t('Search for older content.')));
-  }
-
-  return $links;
-}
-
-/**
  * Implementation of hook_menu().
  */
 function search_menu($may_cache) {

@@ -137,14 +137,6 @@ function statistics_link($type, $node = 0, $main = 0) {
       }
     }
   }
-
-  if ($type == 'page' && user_access('access content')) {
-    $userlink = variable_get('statistics_userpage_link', '');
-    if ($userlink) {
-      $links[] = l(t($userlink), 'statistics', array('title' => t("View this site's most popular content.")));
-    }
-  }
-
   return $links;
 }
 

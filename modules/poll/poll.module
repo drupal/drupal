@@ -180,19 +180,6 @@ function poll_insert($node) {
 }
 
 /**
- * Implementation of hook_link().
- */
-function poll_link($type, $node = 0, $main) {
-  $links = array();
-
-  if ($type == 'page' && user_access('access content')) {
-    $links[] = l(t('polls'), 'poll', array('title' => t('View the list of polls on this site.')));
-  }
-
-  return $links;
-}
-
-/**
  * Implementation of hook_menu().
  */
 function poll_menu($may_cache) {

@@ -108,15 +108,6 @@ function aggregator_perm() {
 }
 
 /**
- * Implementation of hook_link().
- */
-function aggregator_link($type) {
-  if ($type == 'page' && user_access('access news feeds')) {
-    return array(l(t('news feeds'), 'aggregator', array('title' => t('Read the latest news from syndicated web sites.'))));
-  }
-}
-
-/**
  * Implementation of hook_menu().
  */
 function aggregator_menu($may_cache) {

@@ -59,10 +59,6 @@ function book_link($type, $node = 0, $main = 0) {
 
   $links = array();
 
-  if ($type == 'page' && user_access('access content')) {
-    $links[] = l(t('books'), 'book', array('title' => t('Read and contribute to the collaborative books.')));
-  }
-
   if ($type == 'node' && $node->type == 'book') {
     if (!$main) {
       if (book_access('create', $node)) {
@@ -82,6 +78,8 @@ function book_menu($may_cache) {
   $items = array();
 
   if ($may_cache) {
+    $items[] = array('path' => 'book', 'title' => t('books'),
+      'access' => user_access('access content'), 'type' => MENU_NORMAL_ITEM, 'weight' => 5);
     $items[] = array('path' => 'node/add/book', 'title' => t('book page'),
       'access' => user_access('create book pages'));
     $items[] = array('path' => 'admin/node/book', 'title' => t('books'),
