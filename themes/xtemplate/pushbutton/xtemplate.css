@@ -366,27 +366,27 @@ table#footer-menu {
   display: none
 }
 .nav .links .next a:link {
-  padding: 15px 20px 16px 0;
+  padding: 15px 15px 17px 0;
   background: transparent url(arrow-next.png) right center no-repeat;
 }
 .nav .links .next a:hover {
-  padding: 15px 20px 16px 0;
+  padding: 15px 15px 17px 0;
   background: transparent url(arrow-next-hover.png) right center no-repeat;
 }
 .nav .links .prev a:link {
-  padding: 15px 0 16px 20px;
+  padding: 15px 0 17px 15px;
   background: transparent url(arrow-prev.png) left center no-repeat;
 }
 .nav .links .prev a:hover {
-  padding: 15px 0 16px 20px;
+  padding: 15px 0 17px 15px;
   background: transparent url(arrow-prev-hover.png) left center no-repeat;
 }
 .nav .links .up a:link {
-  padding: 12px 0 20px 0;
+  padding: 11px 0 15px 0;
   background: transparent url(arrow-up.png) center top no-repeat;
 }
 .nav .links .up a:hover {
-  padding: 12px 0 20px 0;
+  padding: 11px 0 15px 0;
   background: transparent url(arrow-up-hover.png) center top no-repeat;
 }
 
