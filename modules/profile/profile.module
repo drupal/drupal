@@ -64,8 +64,8 @@ function profile_conf_options() {
   $output .= "</table>\n";
 
   $output .= form_textfield(t("Avatar image path"), "profile_avatar_path", variable_get("profile_avatar_path", "misc/avatars/"), 30, 255, t("Path for avatar directory; it must be writeable and visible from the web."));
-  $output .= form_textfield(t("Avatar max size"), "profile_avatar_size", variable_get("profile_avatar_size", "85x85"), 10, 10, t("Maximum size for avatars."));
-  $output .= form_textfield(t("Avatar max filesize"), "profile_avatar_filesize", variable_get("profile_avatar_filesize", "30"), 10, 10, t("Maximum filesize for avatars, in kb."));
+  $output .= form_textfield(t("Avatar maximum dimensions"), "profile_avatar_dimensions", variable_get("profile_avatar_dimensions", "85x85"), 10, 10, t("Maximum dimensions for avatars."));
+  $output .= form_textfield(t("Avatar maxumum file size"), "profile_avatar_file_size", variable_get("profile_avatar_file_size", "30"), 10, 10, t("Maximum file size for avatars, in kb."));
 
   return $output;
 }
@@ -219,15 +219,15 @@ function _profile_validate_avatar(&$edit) {
   if (is_uploaded_file($image_file)) {
     $extension = strtolower(strrchr($HTTP_POST_FILES["edit"]["name"]["profile_avatar"], "."));
     $size = getimagesize($image_file);
-    list($maxwidth, $maxheight) = explode("x", variable_get("profile_avatar_size", "85x85"));
+    list($maxwidth, $maxheight) = explode("x", variable_get("profile_avatar_dimensions", "85x85"));
     if ((!in_array($size[2], array(1,2,3))) || (!in_array($extension, array(".gif", ".jpg", ".png", ".jpeg")))) {
       $error = t("uploaded file was not an image.");
     }
-    else if (filesize($image_file) > (variable_get("profile_avatar_filesize", "30")*1000)) {
-      $error = t("uploaded image is too large, max %a kb.", array("%a" => variable_get("profile_avatar_filesize", "30")));
+    else if (filesize($image_file) > (variable_get("profile_avatar_file_size", "30")*1000)) {
+      $error = t("uploaded image is too large, max %a kb.", array("%a" => variable_get("profile_avatar_file_size", "30")));
     }
     else if ($size[0] > $maxwidth || $size[1] > $maxheight) {
-      $error = t("uploaded image is too large, max %a.", array("%a" => variable_get("profile_avatar_size", "85x85")));
+      $error = t("uploaded image is too large, max %a.", array("%a" => variable_get("profile_avatar_dimensions", "85x85")));
     }
     else if (!copy($image_file, variable_get("profile_avatar_path", "misc/avatars/").md5($user->uid).$extension)) {
       $error = t("error in file upload");
