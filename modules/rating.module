@@ -31,7 +31,7 @@ function rating_cron() {
 
     $r1 = db_query("SELECT uid FROM user ORDER BY rating DESC");
     while ($account = db_fetch_object($r1)) {
-      db_query("UPDATE user SET rating = '". rating_gravity($account->uid) ."' WHERE id = '$account->uid'");
+      db_query("UPDATE user SET rating = '". rating_gravity($account->uid) ."' WHERE uid = '$account->uid'");
       $rating[$account->uid] = ++$i;
     }
 
