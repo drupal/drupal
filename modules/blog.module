@@ -48,12 +48,14 @@ function blog_access($op, $node) {
 }
 
 function blog_head($main = 0) {
-  global $id, $mod;
+  $mod = arg(0);
+  $id = arg(1);
 
   if ($mod == "blog" && $id) {
     $account = user_load(array("uid" => $id));
-    $output[] = "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"RSS - ". $account->name. "'s blog\" href=\"". path_uri() . url("blog/view/$id") ." />";
+    $output[] = "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"RSS - ". $account->name. "'s blog\" href=\"". path_uri() . url("blog/view/$id") ."\" />";
   }
+
   return $output ? $output : array();
 }
 
