@@ -51,7 +51,7 @@ if ($number > 1) {
   $theme->footer();
 }
 elseif ($number) {
-  $node = ($title ? node_load(array("title" => $title, "status" => 1)) : node_load(array("nid" => ($edit["id"] ? $edit["id"] : $id))));
+  $node = ($title ? node_load(array("title" => $title, "status" => 1)) : node_load(array("status" => 1, "nid" => ($edit["id"] ? $edit["id"] : $id))));
 
   if (node_access("view", $node)) {
     if (isset($revision)) {
