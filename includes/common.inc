@@ -115,7 +115,7 @@ function request_uri() {
 
   global $REQUEST_URI, $PATH_INFO, $QUERY_STRING;
 
-  if ($REQUEST_URI) {
+  if (isset($REQUEST_URI)) {
     return $REQUEST_URI;
   }
   else {
@@ -211,7 +211,7 @@ function table_cell($cell, $header = 0) {
     $data = $cell;
   }
 
-  if ($header) {
+  if (isset($header)) {
     $output = "<th$attributes>$data</th>";
   }
   else {
@@ -341,7 +341,7 @@ function search_data() {
 
   $keys = check_input($keys);
 
-  if ($keys) {
+  if (isset($keys)) {
     foreach (module_list() as $name) {
       if (module_hook($name, "search") && (!$edit["type"] || $edit["type"][$name]) && ($result = module_invoke($name, "search", check_query($keys)))) {
         if ($name == "node" || $name == "comment") {
@@ -376,7 +376,7 @@ function search_data() {
 function search_type($type = 0, $action = 0, $query = 0, $options = 0) {
   global $edit;
 
-  if ($type) {
+  if (isset($type)) {
     $edit["type"][$type] = "on";
   }
 
@@ -472,7 +472,7 @@ function filter($text) {
 }
 
 function check_output($text) {
-  if ($text) {
+  if (isset($text)) {
     $text = stripslashes($text);
 
     if (strip_tags($text, "<a><i><b><u><tt><code><cite><strong><img>") == $text) {
@@ -721,8 +721,8 @@ function form_weight($title = NULL, $name = "weight", $value = 0, $delta = 10, $
 
 function url($url, $query = NULL) {
 
-  if ($url) {
-    if ($query) {
+  if (isset($url)) {
+    if (isset($query)) {
       return "?q=$url&$query";
     }
     else {
@@ -730,7 +730,7 @@ function url($url, $query = NULL) {
     }
   }
   else {
-    if ($query) {
+    if (isset($query)) {
       return "?$query";
     }
   }
@@ -753,7 +753,7 @@ function field_get($string, $name) {
 
 function field_set($string, $name, $value) {
   $rval = ereg_replace(",$name=[^,]+", "", ",$string");
-  if ($value) {
+  if (isset($value)) {
     $rval .= ($rval == "," ? "" : ",") ."$name=$value";
   }
   return substr($rval, 1);
