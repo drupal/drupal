@@ -52,7 +52,7 @@ function menu_help($section) {
     case 'admin/modules#description':
       return t('Allows administrators to customize the site navigation menu.');
     case 'admin/menu':
-      return t('Select an operation from the list to move, change, or delete a menu item. To add a new menu, add a new menu item, or reset all menu items to default values, choose an option from the main menu.');
+      return t('Select an operation from the list to move, change, or delete a menu item.');
     case 'admin/menu/menu/add':
       return t('Enter the name for your new menu. Remember to enable the newly created block in the %blocks administration page.', array('%blocks' => l(t('blocks'), 'admin/block')));
     case 'admin/menu/item/add':
@@ -130,9 +130,12 @@ function menu_add_menu() {
 
   switch ($op) {
     case t('Submit'):
-      menu_edit_item_save($edit);
-      drupal_goto('admin/menu');
-      break;
+      menu_edit_item_validate($edit);
+      if (!form_get_errors()) {
+        menu_edit_item_save($edit);
+        drupal_goto('admin/menu');
+      }
+      // Fall through.
     default:
       $edit['pid'] = 0;
       $edit['type'] = MENU_CUSTOM_MENU;
@@ -209,13 +212,12 @@ function menu_edit_item($mid = 0) {
 
   switch ($op) {
     case t('Submit'):
-      menu_edit_item_save($edit);
-      drupal_goto('admin/menu');
-      break;
-    case t('Delete'):
-      menu_edit_item_delete($edit);
-      drupal_goto('admin/menu');
-      break;
+      menu_edit_item_validate($edit);
+      if (!form_get_errors()) {
+        menu_edit_item_save($edit);
+        drupal_goto('admin/menu');
+      }
+      // Fall through.
     default:
       if ($mid > 0) {
         $item = db_fetch_object(db_query('SELECT * FROM {menu} WHERE mid = %d', $mid));
@@ -245,7 +247,7 @@ function menu_edit_item($mid = 0) {
 function menu_edit_item_form($edit) {
   $menu = menu_get_menu();
 
-  $form .= form_textfield(t('Title'), 'title', $edit['title'], 60, 128);
+  $form .= form_textfield(t('Title'), 'title', $edit['title'], 60, 128, t('The name to display for this link.'), NULL, TRUE);
 
   if ($edit['pid'] == 0) {
     // Display a limited set of fields for menus (not items).
@@ -256,8 +258,15 @@ function menu_edit_item_form($edit) {
   else {
     $form .= form_textfield(t('Description'), 'description', $edit['description'], 60, 128, t('The description displayed when hovering over a menu item.'));
 
+    $path_description = t('The Drupal path this menu item links to.');
+    if (array_key_exists($edit['path'], $menu['path index']) && $menu['path index'][$edit['path']] != $edit['mid']) {
+      $old_mid = $menu['path index'][$edit['path']];
+      $old_item = $menu['items'][$old_mid];
+      $path_description .= "\n". t('Since a menu item "%old" already exists for "%path", this menu item is shortcut to that location.', array('%old' => l($old_item['title'], 'admin/menu/item/edit/'. $old_mid), '%path' => $edit['path']));
+    }
+
     if ($edit['type'] & MENU_CREATED_BY_ADMIN) {
-      $form .= form_textfield(t('Path'), 'path', $edit['path'], 60, 128);
+      $form .= form_textfield(t('Path'), 'path', $edit['path'], 60, 128, $path_description, NULL, TRUE);
     }
     else {
       $form .= form_item(t('Path'), l($edit['path'], $edit['path']));
@@ -286,17 +295,39 @@ function menu_edit_item_form($edit) {
 }
 
 /**
+ * Confirm that an edited menu item has fields properly filled in.
+ */
+function menu_edit_item_validate($edit) {
+  if (empty($edit['title'])) {
+    form_set_error('title', t('You must specify a title.'));
+  }
+
+  if ($edit['pid'] != 0) {
+    if (empty($edit['path'])) {
+      form_set_error('path', t('You must specify a path.'));
+    }
+  }
+}
+
+/**
  * Save changes to a menu item into the database.
  */
 function menu_edit_item_save($edit) {
+  $menu = menu_get_menu();
+
   if ($edit['mid']) {
     db_query("UPDATE {menu} SET pid = %d, path = '%s', title = '%s', description = '%s', weight = %d, type = %d WHERE mid = %d", $edit['pid'], $edit['path'], $edit['title'], $edit['description'], $edit['weight'], $edit['type'] | MENU_MODIFIED_BY_ADMIN, $edit['mid']);
-    drupal_set_message(t('updated menu item "%title".', array('%title' => $edit['title'])));
+    drupal_set_message(t('Updated menu item "%title".', array('%title' => $edit['title'])));
   }
   else {
     $mid = db_next_id('{menu}_mid');
     db_query("INSERT INTO {menu} (mid, pid, path, title, description, weight, type) VALUES (%d, %d, '%s', '%s', '%s', %d, %d)", $mid, $edit['pid'], $edit['path'], $edit['title'], $edit['description'], $edit['weight'], $edit['type'] | MENU_MODIFIED_BY_ADMIN);
-    drupal_set_message(t('created new menu item "%title".', array('%title' => $edit['title'])));
+    drupal_set_message(t('Created new menu item "%title".', array('%title' => $edit['title'])));
+    if (array_key_exists($edit['path'], $menu['path index'])) {
+      $old_mid = $menu['path index'][$edit['path']];
+      $old_item = $menu['items'][$old_mid];
+      drupal_set_message(t('Since a menu item "%old" already exists for "%path", this new menu item was created as a shortcut to that location.', array('%old' => l($old_item['title'], 'admin/menu/item/edit/'. $old_mid), '%path' => $edit['path'])));
+    }
   }
 
   menu_rebuild();
@@ -424,7 +455,7 @@ function menu_parent_options($mid, $pid = 0, $depth = 0) {
     usort($menu['items'][$pid]['children'], '_menu_sort');
     foreach ($menu['items'][$pid]['children'] as $child) {
       if ($child != $mid) {
-        if ($child == 1 || ($child > 0 && ($menu['items'][$child]['type'] & MENU_MODIFIABLE_BY_ADMIN))) {
+        if ($child > 0 && ($menu['items'][$child]['type'] & (MENU_MODIFIABLE_BY_ADMIN | MENU_IS_ROOT))) {
           $title = ' '. $menu['items'][$child]['title'];
           for ($i = 0; $i < $depth; $i++) {
             $title = '--'. $title;

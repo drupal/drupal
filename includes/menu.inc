@@ -697,10 +697,10 @@ function _menu_build() {
 
   // Now fetch items from the DB, reassigning menu IDs as needed.
   if (module_exist('menu')) {
-    $result = db_query('SELECT * FROM {menu}');
+    $result = db_query('SELECT * FROM {menu} ORDER BY mid ASC');
     while ($item = db_fetch_object($result)) {
       // Don't display non-custom menu items if no module declared them.
-      if (array_key_exists($item->path, $_menu['path index'])) {
+      if (!($item->type & MENU_CREATED_BY_ADMIN) && array_key_exists($item->path, $_menu['path index'])) {
         $old_mid = $_menu['path index'][$item->path];
         $_menu['items'][$item->mid] = $_menu['items'][$old_mid];
         unset($_menu['items'][$old_mid]);
@@ -718,7 +718,7 @@ function _menu_build() {
       else if ($item->type & MENU_CREATED_BY_ADMIN) {
         $_menu['items'][$item->mid] = array('pid' => $item->pid, 'path' => $item->path, 'title' => $item->title, 'description' => $item->description, 'access' => TRUE, 'weight' => $item->weight, 'type' => $item->type, 'callback' => '', 'callback arguments' => array());
 
-        if (!empty($item->path)) {
+        if (!empty($item->path) && !array_key_exists($item->path, $_menu['path index'])) {
           $_menu['path index'][$item->path] = $item->mid;
         }
       }
