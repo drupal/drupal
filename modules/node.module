@@ -60,9 +60,8 @@ function node_search($keys) {
 }
 
 function node_conf_options() {
-
   $output .= form_select(t("Default number of nodes to display"), "default_nodes_main", variable_get("default_nodes_main", 10), array(1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 =>  5, 6 => 6, 7 => 7, 8 => 8, 9 => 9, 10 => 10, 15 => 15, 20 => 20, 25 => 25, 30 => 30), t("The default maximum number of nodes to display on the main page."));
-
+  $output .= form_select(t("Minimum number of words in teaser"), "minimum_teaser_size", variable_get("minimum_node_size", 0), array(0 => "0 words", 10 => "10 words", 25 => "25 words",  50 => "50 words", 75 => "75 words", 100 => "100 words", 125 => "125 words",  150 => "150 words", 175 => "175 words", 200 => "200 words"), t("The minimum number of words a teaser should consist of.  This can be useful to rule out submissions that do not meet the site's standards, such as short test post."));
   return $output;
 }
 
@@ -188,7 +187,7 @@ function node_admin_edit($node) {
     $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";
     $output .= " <tr><th>older revisions</th><th colspan=\"3\">operations</th></tr>";
     foreach ($node->revisions as $key => $revision) {
-      $output .= " <tr><td>". sprintf(t("revision #%d by %s on %s"), $key, format_name(user_load(array("uid" => $revision["uid"]))), format_date($revision["timestamp"])) ."</td><td><a href=\"node.php?id=$node->nid&revision=$key\">". t("view revision") ."</a></td><td><a href=\"admin.php?mod=node&op=rollback+revision&id=$node->nid&revision=$key\">". t("rollback revision") ."</a></td><td><a href=\"admin.php?mod=node&op=delete+revision&id=$node->nid&revision=$key\">". t("delete revision") ."</a></td></tr>";
+      $output .= " <tr><td>". sprintf(t("revision #%d revised by %s on %s"), $key, format_name(user_load(array("uid" => $revision["uid"]))), format_date($revision["timestamp"], "small")) . ($revision["history"] ? "<br /><small>". $revision["history"] ."</small>" : "") ."</td><td><a href=\"node.php?id=$node->nid&revision=$key\">". t("view revision") ."</a></td><td><a href=\"admin.php?mod=node&op=rollback+revision&id=$node->nid&revision=$key\">". t("rollback revision") ."</a></td><td><a href=\"admin.php?mod=node&op=delete+revision&id=$node->nid&revision=$key\">". t("delete revision") ."</a></td></tr>";
     }
     $output .= "</table>";
   }
@@ -239,10 +238,10 @@ function node_revision_create($node) {
   global $user;
 
   if ($node->nid && $node->revision) {
-    $no = node_load(array("nid" => $node->nid));
-    $node->revisions = $no->revisions;
-    unset($no->revisions);
-    $node->revisions[] = array("uid" => $user->uid, "timestamp" => time(), "node" => $no);
+    $prev = node_load(array("nid" => $node->nid));
+    $node->revisions = $prev->revisions;
+    unset($prev->revisions);
+    $node->revisions[] = array("uid" => $user->uid, "timestamp" => time(), "node" => $prev, "history" => $node->history);
   }
 
   return $node;
@@ -454,7 +453,7 @@ function node_validate($node, $error = array()) {
     ** Validate the "teaser"-field:
     */
 
-    if ($node->teaser && count(explode(" ", $node->teaser)) < variable_get("minimum_node_size", 0)) {
+    if ($node->teaser && count(explode(" ", $node->teaser)) < variable_get("minimum_teaser_size", 0)) {
       $error["teaser"] = "<div style=\"color: red;\">". t("Your teaser is too short.") ."</div>";
     }
 
@@ -646,9 +645,7 @@ function node_submit($node) {
   ** Create a new revision when required:
   */
 
-  if ($node->revision) {
-    $node = node_revision_create($node);
-  }
+  $node = node_revision_create($node);
 
   if ($node->nid) {
 

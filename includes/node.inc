@@ -96,13 +96,14 @@ function node_load($conditions) {
   ** Retrieve the node:
   */
 
-  $node = db_fetch_object(db_query("SELECT n.*, u.uid, u.name FROM node n LEFT JOIN users u ON u.uid = n.uid LEFT JOIN comments c ON c.lid = n.nid WHERE ". implode(" AND ", $cond)));
+  $node = db_fetch_object(db_query("SELECT n.*, u.uid, u.name FROM node n LEFT JOIN users u ON u.uid = n.uid WHERE ". implode(" AND ", $cond)));
 
   /*
   ** Unserialize the revisions field:
   */
 
   if ($node->revisions) {
+    unset($node->revisions);
     $node->revisions = unserialize($node->revisions);
   }
 

@@ -95,11 +95,10 @@ elseif ($number) {
 
   if (node_access("view", $node)) {
     if (isset($revision)) {
-      node_render($node->revisions[$revision]["node"]);
+      $node = $node->revisions[$revision]["node"];
     }
-    else {
-      node_render($node);
-    }
+
+    node_render($node);
   }
   else {
     node_failure();
