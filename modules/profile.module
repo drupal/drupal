@@ -190,7 +190,7 @@ function _profile_user_view(&$user, $mode) {
         case "textfield":
         case "textarea":
         case "checkbox":
-          $value = ($t == "profile_homepage") ? "<a href=\"". check_output($user->$t) ."\">". check_output($user->$t) ."</a>" : check_output($user->$t);
+          $value = ($t == "profile_homepage") ? "<a href=\"". drupal_specialchars($user->$t) ."\">". check_output($user->$t) ."</a>" : check_output($user->$t);
           $output .= form_item($field[1], $value);
           break;
         case "select":
