@@ -247,9 +247,9 @@ Customizing each theme depends on the theme. In general, each theme
 contains a PHP file themename.theme which defines a function header()
 that can be changed to reference your own logos.
 
-Most themes also contain stylesheets or PHP configuration files to
-tune the colors and layouts; check the themes/ directory for README
-files describing each alternate theme.
+Most themes also contain stylesheets to tune the colors and layouts;
+check the themes/ directory for README files describing each alternate
+theme.
 
 UPGRADING
 ---------
