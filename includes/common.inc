@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.231 2003/07/16 20:14:25 dries Exp $
+// $Id: common.inc,v 1.232 2003/07/23 17:12:37 dries Exp $
 
 function conf_init() {
 
@@ -736,7 +736,7 @@ function cache_clear_all($cid = NULL) {
     db_query("DELETE FROM {cache} WHERE expire <> 0");
   }
   else {
-    db_query("DELETE FROM {cache} WHERE cid = %d", $cid);
+    db_query("DELETE FROM {cache} WHERE cid = '%s'", $cid);
   }
 }
 
