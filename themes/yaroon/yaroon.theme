@@ -78,7 +78,7 @@
                   <option value="module.php?mod=book" <?php if (strstr($REQUEST_URI, "mod=book")) { echo "selected"; $true = 1; } ?>>Handbook</option>
                   <option value="module.php?mod=cvs" <?php if (strstr($REQUEST_URI, "mod=cvs")) { echo "selected"; $true = 1; } ?>>CVS</option>
                   <option value="submit.php" <?php if (strstr($PHP_SELF, "submit.php")) { echo "selected"; $true = 1; } ?>>Submit</option>
-                  <option value="search.php" <?php if (strstr($PHP_SELF, "search.php")) { echo "selected"; $true = 1; } ?>>Search</option>
+                  <option value="module.php?mod=search" <?php if (strstr($REQUEST_URI, "mod=search")) { echo "selected"; $true = 1; } ?>>Search</option>
                   <option value="module.php?mod=rating" <?php if (strstr($REQUEST_URI, "mod=rating")) { echo "selected"; $true = 1; } ?>>Rating</option>
                   <?php if ($REQUEST_URI == "/module.php?mod=queue") { $true = 1; echo "<option selected>Moderation</option>"; }
                   if (!$true) { echo "<option selected>"; if($cid) echo "Node $cid"; else if($id) echo "Node $id"; else echo "Other"; echo"</option>"; } ?>

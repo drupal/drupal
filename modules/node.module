@@ -27,7 +27,7 @@ function node_help() {
 }
 
 function node_perm() {
-  return array("administer nodes");
+  return array("administer nodes", "access content", "post content");
 }
 
 function node_conf_options() {
