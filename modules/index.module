@@ -1,0 +1,151 @@
+<?php
+
+function index_get_array($id) {
+  return db_fetch_array(db_query("SELECT * FROM entry WHERE eid = '$id'"));
+}
+
+function index_collection_form($name) {
+  $result = db_query("SELECT * FROM entry WHERE collection = '$name'");
+  while ($entry = db_fetch_object($result)) {
+    $options[$entry->keyword] = $entry->name;
+  }
+
+  return form_select($name, $name, "", $options);
+}
+
+function index_collection_link($name) {
+}
+
+// --------------------------------
+
+function index_help() {
+ ?>
+  <P><B>This help suck.  I can't put it in words - mind to help?</B></P>
+  <P>Drupal provides a tool to tackle to manage this complex relationships between different pieces of content.  This module allows you to create a hierarchy of flat and nested containers for organising and navigating through content.  Drupal's indexing system can also be used to provide indexing outside of the underlying repository.  It enables indexing of contents where the underlying repository itself does not (meaningful relationships across your hierarchy) by using sets of keywords and meta-data.</P>
+  <P>Each entry you add can be given a <I>collection</I> which indicates the group or meta-type <I>entries</I> belongs to.  For example, if you have a website about traveling, the index for the collection "Destination" may contain the entries or values "France", "Italy", "England" and so on.  The "entries" page lets you view all entries along with the collection and keywords they associated with.</P>
+ <?php
+}
+
+function index_form($edit = array()) {
+  global $REQUEST_URI;
+
+  $form .= form_textfield(t("Entry name"), "name", $edit[name], 35, 55, t("The name of this entry.  Example: 'Apache'."));
+  $form .= form_textfield(t("Collection"), "collection", $edit[collection], 35, 55, t("The collection or group this entry belgons to.  Example: 'Software'."));
+  $form .= form_textfield(t("Keywords"), "keyword", $edit[keyword], 35, 55, htmlentities("Format: <type>:<value>;<type>:<value>;.  Example: 'software:apache;type:webserver;os:linux;'."));
+  $form .= form_submit(t("Submit"));
+
+  if ($edit[eid]) {
+    $form .= form_submit(t("Delete"));
+    $form .= form_hidden("eid", $edit[eid]);
+  }
+
+  return form($REQUEST_URI, $form);
+}
+
+function index_save($edit) {
+  if ($edit[eid]) {
+    db_query("UPDATE entry SET name = '". check_input($edit[name]) ."', collection = '". check_input($edit[collection]) ."', keyword = '". check_input($edit[keyword]) ."' WHERE eid = '$edit[eid]'");
+  }
+  else {
+    db_query("INSERT INTO entry (name, collection, keyword) VALUES ('". check_input($edit[name]) ."', '". check_input($edit[collection]) ."', '". check_input($edit[keyword]) ."')");
+  }
+}
+
+function index_delete($id) {
+  db_query("DELETE FROM entry WHERE eid = '$id'");
+}
+
+function index_collection() {
+  global $REQUEST_URI;
+
+  $result = db_query("SELECT * FROM entry GROUP BY collection");
+  while ($entry = db_fetch_object($result)) {
+    $form .= index_collection_form($entry->collection);
+  }
+
+  return form($REQUEST_URI, $form);
+}
+
+function index_test_1() {
+  global $REQUEST_URI;
+
+  $result = db_query("SELECT * FROM entry GROUP BY collection");
+  while ($entry = db_fetch_object($result)) {
+    $form .= index_collection_form($entry->collection);
+  }
+  $form .= "Select around and click the buttom below:<BR>";
+  $form .= form_submit("Click to test");
+
+  return form($REQUEST_URI, $form);
+}
+
+function index_test_2($edit) {
+  $result = db_query("SELECT * FROM entry GROUP BY collection");
+  while ($entry = db_fetch_object($result)) {
+    $value1 = field_merge($value1, $edit[$entry->collection]);
+  }
+
+  foreach (explode(";", $value1) as $data) {
+    $entry = explode(":", $data);
+    if ($entry[1]) $foo[] = "<A HREF=\"index.php?$entry[0]=$entry[1]\">$entry[1]</A>";
+  }
+
+  $value2 = implode(" - ", $foo);
+
+  $output .= "1. Merged the seperate keyword lists of the selected entries into one big keyword list:<PRE>     $value1</PRE>";
+  $output .= "2. Tried to visualize or URLify this new big keyword list: <PRE>     $value2</PRE>The URLs don't work but see how they look like and how they are composed.  Is this the kind of URL that could be used for stories?";
+
+  return $output;
+}
+
+function index_entry() {
+  $result = db_query("SELECT * FROM entry ORDER BY name");
+
+  $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\">\n";
+  $output .= " <TR><TH>name</TH><TH>collection</TH><TH>keywords string</TH><TH>oparations</TH></TR>\n";
+  while ($entry = db_fetch_object($result)) {
+    $output .= "<TR><TD>". check_output($entry->name) ."</TD><TD>". check_output($entry->collection) ."</TD><TD>". check_output($entry->keyword) ."</TD><TD><A HREF=\"admin.php?mod=index&op=edit&id=$entry->eid\">edit entry</A></TD></TR>\n";
+  }
+  $output .= "</TABLE>\n";
+
+  return $output;
+}
+
+function index_admin() {
+  global $edit, $op, $id;
+
+  print "<SMALL><A HREF=\"admin.php?mod=index&op=add\">add new entry</A> | <A HREF=\"admin.php?mod=index&op=entry\">entries</A> | <A HREF=\"admin.php?mod=index&op=collection\">collections</A> | <A HREF=\"admin.php?mod=index&op=help\">help</A> - <A HREF=\"admin.php?mod=index&op=test\">test</A></SMALL><HR>\n";
+
+  switch ($op) {
+    case "add":
+      print index_form();
+      break;
+    case "edit":
+      print index_form(index_get_array($id));
+      break;
+    case "help":
+      print index_help();
+      break;
+    case "test":
+      print index_test_1();
+      break;
+    case "Click to test":
+      print index_test_2($edit);
+      break;
+    case "collection":
+      print index_collection();
+      break;
+    case t("Delete"):
+      print status(index_delete($id));
+      print index_entry();
+      break;
+    case t("Submit"):
+      print status(index_save($edit));
+      print index_entry();
+      break;
+    default:
+      print index_entry();
+  }
+}
+
+?>

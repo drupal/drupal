@@ -144,3 +144,13 @@ ALTER TABLE users DROP history;
 
 # 19/05/2001
 DROP TABLE crons;
+
+# 25/05/2001  - TEMPORARY - UNDER HEAVY CHANGE -
+
+CREATE TABLE entry (
+  eid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
+  name varchar(32) DEFAULT '' NOT NULL,
+  keyword varchar(255) DEFAULT '' NOT NULL,
+  collection varchar(32) DEFAULT '' NOT NULL,
+  PRIMARY KEY (eid)
+);

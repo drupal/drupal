@@ -25,7 +25,7 @@ function locale_help() {
 }
 
 function locale_conf_options() {
-  return form_select(t("Locale support"), "locale", variable_get("locale", 1), array("Disabled", "Enabled"), t("Disable locale support if your site does not require translation or internationalization support."));
+  return form_select(t("Locale support"), "locale", variable_get("locale", 0), array("Disabled", "Enabled"), t("Disable locale support if your site does not require translation or internationalization support."));
 }
 
 function locale_delete($id) {
