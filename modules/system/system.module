@@ -273,7 +273,7 @@ function system_admin() {
 
     switch ($op) {
       case "help":
-        system_help();
+        print system_help();
         break;
       case "Save module settings":
         db_query("UPDATE system SET status = '0' WHERE type = 'module'");
