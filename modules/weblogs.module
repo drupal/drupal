@@ -25,13 +25,16 @@ function weblogs_notify($name, $url) {
   $client = new xmlrpc_client("/RPC2", "rpc.weblogs.com", 80);
 
   $message = new xmlrpcmsg("weblogUpdates.ping", array(new xmlrpcval($name), new xmlrpcval($url)));
+
   $result = $client->send($message);
 
   if (!$result || $result->faultCode()) {
-    watchdog("error", "failed to notify 'weblogs.com'");
+    watchdog("error", "failed to notify 'weblogs.com' (site)");
   }
 
-  $message = new xmlrpcmsg("weblogUpdates.ping", array(new xmlrpcval($name), new xmlrpcval($url . drupal_url(array("mod" => "node", "op" => "feed"), "module")), new xmlrpcval($rssurl), new xmlrpcval("rss")));
+  $feed = $url . drupal_url(array("mod" => "node", "op" => "feed"), "module");
+  $message = new xmlrpcmsg("weblogUpdates.ping", array(new xmlrpcval($name), new xmlrpcval($feed), new xmlrpcval($feed), new xmlrpcval("rss")));
+
   $result = $client->send($message);
 
   if (!$result || $result->faultCode()) {
