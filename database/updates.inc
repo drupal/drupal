@@ -1,5 +1,5 @@
 <?php
-/* $Id: updates.inc,v 1.18 2004/06/19 10:39:35 dries Exp $ */
+/* $Id: updates.inc,v 1.19 2004/06/27 19:10:51 dries Exp $ */
 
 // Define the various updates in an array("date : comment" => "function");
 $sql_updates = array(
@@ -60,7 +60,8 @@ $sql_updates = array(
   "2004-05-10" => "update_86",
   "2004-05-18" => "update_87",
   "2004-06-11" => "update_88",
-  "2004-06-18" => "update_89"
+  "2004-06-18" => "update_89",
+  "2004-06-27" => "update_90"
 );
 
 function update_32() {
@@ -1117,6 +1118,13 @@ function update_89() {
   }
   $ret[] = db_query("DELETE FROM {variable} WHERE name LIKE 'node_static_%'");
 
+  return $ret;
+}
+
+function update_90() {
+  $ret[] = update_sql("ALTER TABLE {profile_fields} CHANGE overview visibility INT(1) UNSIGNED DEFAULT '0' NOT NULL");
+  $ret[] = update_sql("UPDATE {profile_fields} SET visibility = 2 WHERE visibility = 1");
+  $ret[] = update_sql("UPDATE {profile_fields} SET visibility = 1 WHERE visibility = 0");
   return $ret;
 }
 
