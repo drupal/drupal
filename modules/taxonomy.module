@@ -385,7 +385,7 @@ function taxonomy_node_form($type, $node = '', $help = NULL, $name = 'taxonomy')
 function taxonomy_node_has_term($nid, $tid) {
   $term_name = db_result(db_query('SELECT name FROM {term_data} WHERE tid = %d', $tid));
 
-  return db_result(db_query("SELECT COUNT(n.nid) FROM {node} n WHERE n.nid = %d AND ((n.body LIKE '%%%s%%') OR (n.body LIKE '%%%s%%'))", $nid, $term_name, $term_name));
+  return db_result(db_query("SELECT COUNT(n.nid) FROM {node} n WHERE n.nid = %d AND ((n.title LIKE '%%%s%%') OR (n.body LIKE '%%%s%%'))", $nid, $term_name, $term_name));
 }
 
 /**
