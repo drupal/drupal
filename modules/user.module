@@ -637,6 +637,18 @@ function user_login($edit = array()) {
       user_save($user, array("sid" => session_id()));
 
       /*
+      ** If the user wants to be remembered, set the proper cookie such
+      ** that the session won't expire.
+      */
+
+      if ($edit["remember_me"]) {
+        setcookie(session_name(), session_id(), time() + 3600 * 24 * 365);
+      } 
+      else {
+        setcookie(session_name(), session_id());
+      }
+
+      /*
       ** Redirect the user to the page he logged on from or to his personal
       ** information page if we can detect the referer page:
       */
