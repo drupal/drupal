@@ -2,6 +2,10 @@
 
 $na = "<I>na</I>";
 
+function check_export($message) {
+  return strip_tags(str_replace("\"", "&quot;", stripslashes($message)));
+}
+
 function check_textfield($message) {
   return strip_tags(str_replace("\"", "&quot;", stripslashes($message)));
 }
@@ -22,11 +26,8 @@ function check_code($message) {
 
 function check_output($message, $nl2br = 0) {
   global $allowed_html, $na;
-  if ($message) {
-    if ($nl2br == 1) return nl2br(strip_tags(stripslashes($message), $allowed_html));
-    else return strip_tags(stripslashes($message), $allowed_html);
-  }
-  else return $na;
+  $var = strip_tags(stripslashes($message), $allowed_html);
+  return ($var) ? (($nl2br) ? nl2br($var) : $var) : $na;
 }
 
 function format_plural($count, $singular, $plural) {

@@ -20,11 +20,16 @@ function account_email() {
   return $output;
 }
 
-function account_create($user = "", $error = "") {
+function account_create($error = "") {
   global $theme;
 
-  if ($error) $output .= "<P><FONT COLOR=\"red\">". t("Failed to create account: $error.") ."</FONT></P>\n";
-  else $output .= "<P>". t("Registering allows you to comment on stories, to moderate comments and pending stories, to customize the look and feel of the site and generally helps you interact with the site more efficiently.") ."</P><P>". t("To create an account, simply fill out this form an click the 'Create account' button below.  An e-mail will then be sent to you with instructions on how to validate your account.") ."</P>\n";
+  if ($error) {
+    $output .= "<P><FONT COLOR=\"red\">". t("Failed to create account: $error.") ."</FONT></P>\n";
+    watchdog("message", "failed to create account: $error.");
+  }
+  else {
+    $output .= "<P>". t("Registering allows you to comment on stories, to moderate comments and pending stories, to customize the look and feel of the site and generally helps you interact with the site more efficiently.") ."</P><P>". t("To create an account, simply fill out this form an click the 'Create account' button below.  An e-mail will then be sent to you with instructions on how to validate your account.") ."</P>\n";
+  }
 
   $output .= "<FORM ACTION=\"account.php\" METHOD=\"post\">\n";
   $output .= "<B>". t("Username") .":</B><BR>\n";
@@ -289,7 +294,7 @@ function account_validate($user) {
 
   // Verify whether username and e-mail address are unique:
   if (db_num_rows(db_query("SELECT userid FROM users WHERE LOWER(userid) = LOWER('$user[userid]')")) > 0) $error = t("the specified username is already taken");
-  if (db_num_rows(db_query("SELECT real_email FROM users WHERE LOWER(real_email)=LOWER('$user[real_email]')")) > 0) $error = t("the specified e-mail address is already used for another account");
+  if (db_num_rows(db_query("SELECT real_email FROM users WHERE LOWER(real_email)=LOWER('$user[real_email]')")) > 0) $error = t("the specified e-mail address is already in use by another account");
 
   return $error;
 }
@@ -336,7 +341,7 @@ function account_create_submit($userid, $email) {
 
   if ($error = account_validate($new)) {
     $theme->header();
-    $theme->box(t("Create user account"), account_create($new, $error));
+    $theme->box(t("Create user account"), account_create($error));
     $theme->footer();
   }
   else {
