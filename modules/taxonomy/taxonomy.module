@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.184 2005/03/13 21:20:51 dries Exp $
+// $Id: taxonomy.module,v 1.185 2005/03/15 21:18:19 dries Exp $
 
 /**
  * @file
@@ -504,7 +504,7 @@ function taxonomy_node_save($nid, $terms) {
           }
         }
       }
-      if ($term) {
+      else if ($term) {
         db_query('INSERT INTO {term_node} (nid, tid) VALUES (%d, %d)', $nid, $term);
       }
     }
