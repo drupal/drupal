@@ -91,7 +91,7 @@ if ($number > 1) {
   $result = db_query("SELECT n.*, u.userid FROM node n LEFT JOIN users u ON n.author = u.id WHERE n.title = '$title'");
 
   while ($node = db_fetch_object($result)) {
-    if (node_visible($node)) {
+    if (node_access($node)) {
       $output .= "<P><B><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></B><BR><SMALL>$node->type - ". format_username($node->userid) ." - ". format_date($node->timestamp, "small") ."</SMALL></P>";
     }
   }
@@ -102,7 +102,7 @@ if ($number > 1) {
 }
 elseif ($number) {
   $node = ($title ? node_get_object(array("title" => $title)) : node_get_object(array("nid" => ($edit[id] ? $edit[id] : $id))));
-  if ($node && node_visible($node)) {
+  if ($node && node_access($node)) {
     switch ($op) {
       case "history":
         $theme->header();

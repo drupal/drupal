@@ -234,13 +234,10 @@ function node_index($node) {
   return $node->attributes ? implode(" / ", node_attributes_view($node->attributes)) : "&nbsp;";
 }
 
-function node_visible($node) {
+function node_access($node) {
   global $user, $status;
   return ($node->status == $status[posted]) || ($node->status == $status[queued] && $user->id) || user_access("administer nodes");
 }
 
-function node_access($account, $node) {
-  return strstr($node->moderate, $account->userid);
-}
 
 ?>
