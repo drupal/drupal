@@ -155,16 +155,6 @@ function comment_num_replies($id, $count = 0) {
   return ($result) ? db_result($result, 0) : 0;
 }
 
-function comment_num_filtered($lid, $pid) {
-  global $user;
-
-  $threshold = ($user->id) ? $user->threshold  : "0";
-  $pid = ($pid) ? $pid : 0;
-
-  $result = db_query("SELECT COUNT(cid) FROM comments WHERE lid = '$lid' AND pid = '$pid' AND ((votes = 0 AND score < $threshold) OR (score / votes < $threshold))");
-  return ($result) ? db_result($result, 0) : 0;
-}
-
 function comment_moderation($comment) {
   global $comment_votes, $op, $user;
 

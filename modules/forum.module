@@ -1,0 +1,97 @@
+<?php
+
+$module = array("type" => "forum_type",
+                "page" => "forum_page",
+                "admin" => "forum_admin");
+
+$format = array(0 => HTML, 1 => PHP, 2 => text);
+
+function forum_type() {
+  return array("forum", "forum");
+}
+
+function forum_status() {
+  return array(dumped, posted);
+}
+
+function forum_form($edit = array()) {
+  global $format;
+
+  $output .= "<FORM ACTION=\"admin.php?mod=forum\" METHOD=\"post\">\n";
+
+  $output .= "<B>Subject:</B><BR>\n";
+  $output .= "<INPUT NAME=\"edit[title]\" SIZE=\"55\" VALUE=\"". check_textfield($edit[title]) ."\"><P>\n";
+
+  $output .= structure_form("forum", $edit);
+
+  $output .= "<B>Body:</B><BR>\n";
+  $output .= "<TEXTAREA NAME=\"edit[body]\" COLS=\"55\" ROWS=\"10\" WRAP=\"virtual\">". check_textarea($edit[body]) ."</TEXTAREA><P>\n";
+
+  $output .= "<INPUT TYPE=\"hidden\" NAME=\"edit[nid]\" VALUE=\"$edit[nid]\">\n";
+
+  $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Save forum\">\n";
+  $output .= "</FORM>\n";
+
+  return $output;
+}
+
+function forum_save($edit) {
+  global $status;
+  node_save(array_merge($edit, array(type => "forum", status => $status[posted])));
+}
+
+function forum_num_comments($nid) {
+  $value = db_fetch_object(db_query("SELECT COUNT(cid) AS count FROM comments WHERE lid = '$nid' AND pid != 0"));
+  return ($value) ? $value->count : 0;
+}
+
+function forum_last_comment($nid) {
+  $value = db_fetch_object(db_query("SELECT timestamp FROM comments WHERE lid = '$nid' ORDER BY timestamp DESC LIMIT 1"));
+  return ($value) ? format_date($value->timestamp, "small") : "&nbsp;";
+}
+
+function forum_page() {
+  global $theme;
+
+  $result = db_query("SELECT nid FROM node WHERE type = 'forum' ORDER BY title");
+
+  $output .= "<TABLE BORDER=\"0\" CELLSPACING=\"4\" CELLPADDING=\"4\">\n";
+  $output .= " <TR><TH>". t("Forum") ."</TH><TH>". t("Comments") ."</TH><TH>". t("Last comment") ."</TH></TR>";
+  while ($node = db_fetch_object($result)) {
+    $node = node_get_object("nid", $node->nid);
+    $output .= " <TR><TD><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A><BR><SMALL>". check_output($node->body, 1) ."</SMALL></TD><TD ALIGN=\"center\">". forum_num_comments($node->nid) ."</TD><TD ALIGN=\"center\">". forum_last_comment($node->nid) ."</TD></TR>";
+  }
+  $output .= "</TABLE>\n";
+
+  $theme->header();
+  $theme->box(t("Discussion forum"), $output);
+  $theme->footer();
+}
+
+function forum_overview() {
+  return node_overview(array(0, "WHERE n.type = 'forum' ORDER BY n.title"));
+}
+
+function forum_admin() {
+  global $id, $op, $edit, $type;
+
+  print "<SMALL><A HREF=\"admin.php?mod=forum&op=add\">add new forum</A> | <A HREF=\"admin.php?mod=forum\">overview</A></SMALL><HR>\n";
+
+  $type = ($type ? $type : 0);
+
+  switch ($op) {
+    case "add":
+      print forum_form();
+      break;
+    case "edit":
+      print forum_form(node_get_array(nid, $id));
+      break;
+   case "Save forum":
+      print status(forum_save($edit));
+      // fall through:
+    default:
+      print forum_overview();
+  }
+}
+
+?>
