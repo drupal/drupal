@@ -15,23 +15,19 @@ function module_iterate($function, $argument = "") {
 }
 
 // invoke hook $hook of module $name with optional arguments:
-function module_invoke(){
-  $args = func_get_args();
-  $function = array_shift($args);
-  $function .= "_". array_shift($args);
-
+function module_invoke($name, $hook, $a1 = NULL, $a2 = NULL, $a3 = NULL, $a4 = NULL) {
+  $function = $name ."_". $hook;
   if (function_exists($function)) {
-    return $function(implode(",", $args));
+    return $function($a1, $a2, $a3, $a4);
   }
 }
 
 // invoke $hook for all appropriate modules:
-function module_invoke_all() {
+function module_invoke_all($hook, $a1 = NULL, $a2 = NULL, $a3 = NULL, $a4 = NULL) {
   $return = array();
-  $args = func_get_args();
   foreach (module_list() as $name) {
-    if (module_hook($name, $args[0])) {
-      if ($result = module_invoke($name, implode(",", $args))) {
+    if (module_hook($name, $hook)) {
+      if ($result = module_invoke($name, $hook, $a1, $a2, $a3, $a4)) {
         $return = array_merge($return, $result);
       }
     }
