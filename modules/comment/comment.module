@@ -1691,7 +1691,7 @@ function _comment_get_orders() {
 }
 
 function _comment_per_page() {
-  return array(10, 30, 50, 70, 90);
+  return array(10 => 10, 30 => 30, 50 => 50, 70 => 70, 90 => 90);
 }
 
 ?>
