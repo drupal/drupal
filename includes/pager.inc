@@ -1,5 +1,5 @@
 <?php
-// $Id: pager.inc,v 1.40 2005/01/27 19:01:01 dries Exp $
+// $Id: pager.inc,v 1.41 2005/01/28 18:44:17 dries Exp $
 
 /**
  * @file
@@ -211,7 +211,7 @@ function theme_pager_next($text, $limit, $element = 0, $interval = 1, $attribute
   else {
     $output .= ' ';
   }
-  $output .= '<div>';
+  $output .= '</div>';
   return $output;
 }
 
