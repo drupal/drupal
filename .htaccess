@@ -35,7 +35,7 @@ ErrorDocument 500 /error.php
 # Various rewrite rules
 <IfModule mod_rewrite.c>
   RewriteEngine on
-  RewriteRule ^blog/(.*) /module.php?mod=blog\&op=view\&name=$1 [R]
+  RewriteRule ^blog/(.*) /module.php?mod=blog\&name=$1 [R]
 </IfModule>
 
-# $Id: .htaccess,v 1.35 2002/02/17 13:04:47 kjartan Exp $
+# $Id: .htaccess,v 1.36 2002/05/02 19:55:21 kjartan Exp $
