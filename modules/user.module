@@ -391,7 +391,7 @@ function user_block($op = "list", $delta = 0) {
           /* perform database queries to gather online user lists */
           $guests = db_fetch_object(db_query("SELECT COUNT(DISTINCT sid) AS count FROM {sessions} WHERE timestamp >= %d AND uid = 0", time() - $time_period));
           $users = db_query("SELECT DISTINCT uid, MAX(timestamp) AS max_timestamp FROM {sessions} WHERE timestamp >= %d AND uid != 0 GROUP BY uid ORDER BY max_timestamp DESC", time() - $time_period );
-          $total_users = db_affected_rows();
+          $total_users = db_num_rows($users);
 
           /* format the output with proper grammar */
           if ($total_users == 1 && $guests->count == 1) {
