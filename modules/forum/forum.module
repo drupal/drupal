@@ -504,7 +504,7 @@ function forum_page($tid = 0) {
       $topics = forum_get_topics($tid, $sortby, $forum_per_page);
     }
 
-    print theme('forum_display', $forums, $topics, $parents, $tid, $sortby, $forum_per_page);
+    print theme('page', theme('forum_display', $forums, $topics, $parents, $tid, $sortby, $forum_per_page));
   }
   else {
     drupal_set_title(t('Warning'));
@@ -579,7 +579,7 @@ function theme_forum_display($forums, $topics, $parents, $tid, $sortby, $forum_p
     $output = '';
   }
 
-  print theme('page', $output);
+  return $output;
 }
 
 /**
