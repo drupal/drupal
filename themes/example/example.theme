@@ -136,7 +136,7 @@
       echo "</TABLE>";
     } // close comment function
 
-    function box($subject, $content) {
+    function box($subject, $content, $region = "main") {
 
 ?>
 
@@ -169,7 +169,7 @@
 
          global $PHP_SELF;
 
-           theme_account($this);
+           theme_account("right", $this);
            theme_blocks("right", $this);
 
 ?>

@@ -18,7 +18,7 @@ function theme_init() {
   return new Theme();
 }
 
-function theme_account($theme) {
+function theme_account($region, $theme) {
   global $user;
 
   if ($user->id) {
@@ -48,7 +48,7 @@ function theme_account($theme) {
     $content .= "<a href=\"account.php?op=logout\">". t("logout") ."</a>\n";
     $content .= "</td></tr></table>\n";
 
-    $theme->box($user->userid, $content);
+    $theme->box($user->userid, $content, $region);
   }
   else {
     $output .= "<div align=\"center\">\n";
@@ -60,7 +60,7 @@ function theme_account($theme) {
     $output .= " </form>\n";
     $output .= "</div>\n";
 
-    $theme->box(t("Login"), $output);
+    $theme->box(t("Login"), $output, $region);
   }
 }
 
@@ -72,7 +72,7 @@ function theme_blocks($region, $theme) {
     case "/node.php":
       if ($region != "left") {
         if ($user->id) $node = db_fetch_object(db_query("SELECT * FROM node WHERE nid = '$id'"));
-        if ($node->status == $status[queued]) theme_moderation_results($theme, $node);
+        if ($node->status == $status[queued]) theme_moderation_results($theme, $node, $region);
       }
       break;
     case "/index.php":
@@ -80,13 +80,13 @@ function theme_blocks($region, $theme) {
       else $result = db_query("SELECT * FROM blocks WHERE status = 2". (($region == "left" || $region == "right") ? ($region == "left" ? " AND region = 0" : " AND region = 1") : "") ." ORDER BY weight");
       while ($block = db_fetch_object($result)) {
         $blocks = module_invoke($block->module, "block");
-        $theme->box(t($blocks[$block->offset]["subject"]), $blocks[$block->offset]["content"]);
+        $theme->box(t($blocks[$block->offset]["subject"]), $blocks[$block->offset]["content"], $region);
       }
       break;
   }
 }
 
-function theme_moderation_results($theme, $node) {
+function theme_moderation_results($theme, $node, $region) {
   foreach (explode(",", $node->users) as $vote) {
     if ($vote) {
       $data = explode("=", $vote);
@@ -94,7 +94,7 @@ function theme_moderation_results($theme, $node) {
     }
   }
 
-  $theme->box(t("Moderation results"), ($output ? $output : t("This node has not been moderated yet.")));
+  $theme->box(t("Moderation results"), ($output ? $output : t("This node has not been moderated yet.")), $region);
 }
 
 ?>

@@ -226,7 +226,7 @@
 
     } // close comment function
 
-    function box($subject, $content) {
+    function box($subject, $content, $region = "main") {
       $img = (rand(0, 50) == 25) ? "boxbottomright2.gif" : "boxbottomright1.gif";
       $width = rand(10, 200);
       $img2 = (rand(0, 100) == 50) ? "boxtopleftside2.gif" : "boxtopleftside1.gif";
@@ -296,7 +296,7 @@
 
          global $PHP_SELF;
 
-           theme_account($this);
+           theme_account("right", $this);
            theme_blocks("right", $this);
 
 ?>

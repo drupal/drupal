@@ -94,7 +94,7 @@
 
 <?php
 
-                  theme_account($this);
+                  theme_account("all", $this);
                   theme_blocks("all", $this);
 
 ?>
@@ -192,7 +192,7 @@
 
     } // close comment function
 
-    function box($subject, $content) {
+    function box($subject, $content, $region = "main") {
 
       switch (rand(0,7)) {
         case 0: $img = "square.gif"; break;
@@ -205,8 +205,7 @@
         default: $img = "square.gif";
       }
 
-?>
-
+?>      
       <table width="90%" border="0" cellpadding="0" cellspacing="1">
         <tr>
     <td class="box"><img src="themes/yaroon/images/square.gif" />&nbsp;<b><?php echo $subject; ?></b></td>
