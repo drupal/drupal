@@ -22,6 +22,7 @@ Drupal x.x.x, xxxx-xx-xx
     * added many new theme functions and refactored existing theme functions.
     * added avatar support to 'Xtemplate'.
     * replaced theme 'UnConeD' by 'Chameleon'.
+    * replaced theme 'Marvin' by 'Pushbutton'.
 - usability:
     * added breadcrumb navigation to all pages.
     * made it possible to add context-sensitive help to all pages.
