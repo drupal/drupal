@@ -129,7 +129,7 @@ function db_next_id($name) {
 
   $result = $db_handle->nextID($name);
   if (DB::isError($result)) {
-    watchdog("error", "database: ". $result->getMessage() ."\nquery: ". htmlspecialchars($query));
+    watchdog("error", "database: ". $result->getMessage() ."\nsequence table: $name");
   }
   else {
     return $result;
