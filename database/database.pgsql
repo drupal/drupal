@@ -578,7 +578,11 @@ INSERT INTO system VALUES ('themes/xtemplate/xtemplate.theme','xtemplate','theme
 INSERT INTO variable(name,value) VALUES('update_start', 's:10:"2003-10-27";');
 INSERT INTO variable(name,value) VALUES('theme_default','s:9:"xtemplate";');
 INSERT INTO users(uid,name,mail,rid) VALUES(0,'','', '1');
+
+INSERT INTO role (rid, name) VALUES (1, 'anonymous user');
 INSERT INTO permission VALUES (1,'access content',0);
+
+INSERT INTO role (rid, name) VALUES (2, 'authenticated user');
 INSERT INTO permission VALUES (2,'access comments, access content, post comments, post comments without approval',0);
 
 INSERT INTO blocks(module,delta,status) VALUES('user', '0', '1');

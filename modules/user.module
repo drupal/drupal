@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.290 2004/01/23 18:42:43 dries Exp $
+// $Id: user.module,v 1.291 2004/01/24 16:54:22 dries Exp $
 
 /*** Common functions ******************************************************/
 
@@ -827,8 +827,6 @@ function user_register($edit = array()) {
     $from = variable_get("site_mail", ini_get("sendmail_from"));
     $pass = user_password();
 
-    // create new user account, noting whether administrator approval is required
-    user_role_init();
     // TODO: is this necessary? Won't session_write replicate this?
     unset($edit["session"]);
     $account = user_save("", array_merge(array("name" => $edit["name"], "pass" => $pass, "init" => $edit["mail"], "mail" => $edit["mail"], "rid" => _user_authenticated_id(), "status" => (variable_get("user_register", 1) == 1 ? 1 : 0)), $data));
@@ -1497,29 +1495,11 @@ function user_admin_account() {
   return theme("table", $header, $rows);
 }
 
-function user_role_init() {
-  $role = db_fetch_object(db_query("SELECT * FROM {role} WHERE name = 'anonymous user'"));
-  if (!$role) {
-    db_query("INSERT INTO {role} (name) VALUES ('anonymous user')");
-  }
-
-  $role = db_fetch_object(db_query("SELECT * FROM {role} WHERE name = 'authenticated user'"));
-  if (!$role) {
-    db_query("INSERT INTO {role} (name) VALUES ('authenticated user')");
-  }
-}
-
 function user_admin() {
   $op = $_POST["op"];
   $edit = $_POST["edit"];
 
   if (user_access("administer users")) {
-    /*
-    ** Initialize all the roles and permissions:
-    */
-
-    user_role_init();
-
     if (empty($op)) {
       $op = arg(2);
     }
@@ -1789,4 +1769,3 @@ function user_help_page() {
 }
 
 ?>
-
