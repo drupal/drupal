@@ -4,7 +4,6 @@ function settings_conf() {
   global $conf, $cmodes, $corder, $themes;
 
   // general settings:
-  $output .= "<H3>General settings</H3>\n";
   $output .= form_textfield(t("Name"), "site_name", variable_get(site_name, "drupal"), 30, 55, t("The name of this website."));
   $output .= form_textfield(t("Slogan"), "site_slogan", variable_get(site_slogan, ""), 30, 55, t("The slogan of this website"));
   $output .= form_textfield(t("URL"), "site_url", variable_get(site_url, "http://drupal/"), 30, 55, t("The fully qualified URL of this website: starts with \"http://\" and ends with a trailing slash!"));
@@ -44,43 +43,45 @@ function settings_conf() {
   // development settings:
   $output .= "<H3>Development settings</H3>\n";
   $output .= form_select(t("Display timings"), "dev_timing", variable_get(dev_timing, 0), array("Disabled", "Enabled"), t("Display the time it took to generate a page: for drupal development only."));
-  $output .= "<HR>\n";
 
+  return $output;
+}
+
+function setting_modules() {
+  foreach (module_list() as $name) {
+    if (module_hook($name, "conf")) {
+      $output .= "<H3>". ucfirst($name) ." module</H3>\n";
+      $output .= module_invoke($name, "conf");
+      $output .= "<HR>\n";
+    }
+  }
   return $output;
 }
 
 function settings_save($edit) {
   global $conf;
+
+  // save all variables:
   if ($edit) {
     db_query("DELETE FROM variable");
     foreach ($edit as $name=>$value) db_query("INSERT INTO variable (name, value) VALUES ('". check_input($name) ."', '". check_input($value) ."')");
   }
+
+  // update context:
   $conf = variable_init();
+
   return "all settings have been saved.";
 }
 
 function settings_default() {
   db_query("DELETE FROM variable");
-  return "all settings have been reset.";
-}
-
-function settings_module($name) {
-  global $settings;
-
-  if (module_hook($name, "conf")) {
-    $settings .= "<H3>". ucfirst($name) ." module</H3>\n";
-    $settings .= module_invoke($name, "conf");
-    $settings .= "<HR>\n";
-  }
+  return "all settings have been reset to their default value.";
 }
 
 function settings_overview() {
   global $settings;
 
-  module_iterate("settings_module");
-
-  $form .= settings_conf();
-  $form .= $settings;
+  $form .= setting_modules();
   $form .= form_submit("Save settings");
   $form .= form_submit("Reset to defaults");
 
