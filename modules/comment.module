@@ -647,7 +647,7 @@ function comment_link($type, $node = 0, $main = 0) {
 
       if ($node->comment == 2) {
         if (user_access("post comments")) {
-          $links[] = l(t("add new comment"), "comment/reply/$node->nid", array("title" => t("Share your thoughts and opinions related to this posting.")));
+          $links[] = l(t("add new comment"), "comment/reply/$node->nid#comment", array("title" => t("Share your thoughts and opinions related to this posting.")));
         }
         else {
           $links[] = theme("comment_post_forbidden");
