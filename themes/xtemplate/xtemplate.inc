@@ -171,7 +171,7 @@ function parse ($bname) {
         }
       } else {
         $var=trim($var);
-        $copy=preg_replace("/\{".$v."\}/","$var",$copy);
+        $copy=str_replace("\{$v}","$var",$copy);
       }
     } else {
       $var=$this->VARS;
