@@ -436,6 +436,7 @@ function node_link($type, $node = 0, $main = 0) {
     $search = "On this page you can search for a post.  For example, one may search for 'br' and Drupal might return 'bread brakers', 'our daily bread' and 'brenda'.";
 
     menu_add("content management", "admin.php?mod=node", "Content management.", NULL, NULL);
+     menu_add("submit new content", "module.php?mod=node&op=add", "Submit new content.", NULL, "content management", -1, 1);
      menu_add("new or updated posts", "admin.php?mod=node&op=nodes&query=0", "Display all new or updated posts.", NULL, "content management", 0, 1);
      menu_add("posts that await approval", "admin.php?mod=node&op=nodes&query=1", "Display posts that await approval.", NULL, "content management", 0, 1);
      menu_add("search content", "admin.php?mod=node&op=search", "Search a post.", $search, "content management", 5);
