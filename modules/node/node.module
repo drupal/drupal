@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.250 2003/08/26 07:12:06 dries Exp $
+// $Id: node.module,v 1.251 2003/08/26 07:13:08 dries Exp $
 
 function node_help($section = "admin/node/help") {
   global $mod;
@@ -654,7 +654,7 @@ function node_admin_nodes() {
     $operation = $operations[$_POST["edit"]["operation"]][1];
     foreach ($_POST["edit"]["status"] as $nid => $value) {
       if ($value) {
-        db_queryd($operation, $nid);
+        db_query($operation, $nid);
       }
     }
 
