@@ -1,6 +1,5 @@
 <?
 
-include "includes/function.inc";
 
 class backend {
 
