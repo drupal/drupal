@@ -167,7 +167,7 @@ function book_form(&$node, &$help, &$error) {
   $output .= form_textarea(t("Log message"), "log", $node->log, 60, 5, t("An explanation of the additions or updates being made to help the group understand your motivations."));
 
   if (user_access("administer nodes")) {
-    $output .= form_select(t("Weight"), "weight", $node->weight, array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30), t("The heavier pages will sink and the lighter pages will be positioned nearer the top."));
+    $output .= form_weight(t("Weight"), "weight", $node->weight, 15, t("The heavier pages will sink and the lighter pages will be positioned nearer the top."));
     if (user_access("create php content")) {
       $output .= form_select("Type", "format", $node->format, array(0 => "HTML / text", 1 => "PHP"));
     }
@@ -221,7 +221,7 @@ function book_node_link($node = 0) {
       $page = db_fetch_object(db_query("SELECT * FROM book WHERE nid = '%d'", $node->nid));
 
       $output .= form_select(t("Parent"), "parent", $page->parent, book_toc(), t("The parent subject or category the page belongs in."));
-      $output .= form_select(t("Weight"), "weight", $page->weight, array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30), t("The heavier pages will sink and the lighter pages will be positioned nearer the top."));
+      $output .= form_weight(t("Weight"), "weight", $node->weight, 15, t("The heavier pages will sink and the lighter pages will be positioned nearer the top."));
 
       if ($page->nid) {
         $output .= form_submit(t("Update book outline"));
@@ -280,7 +280,6 @@ function book_revision_load($page, $conditions = array()) {
 /*
 ** Return the path (call stack) to a certain book page.
 */
-
 function book_location($node, $nodes = array()) {
   $parent = db_fetch_object(db_query("SELECT n.nid, n.title, b.parent FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.nid = '%d'", $node->parent));
   if ($parent->title) {
@@ -288,6 +287,48 @@ function book_location($node, $nodes = array()) {
     array_push($nodes, $parent);
   }
   return $nodes;
+}
+
+function book_location_down($node, $nodes = array()) {
+  $last_direct_child = db_fetch_object(db_query("SELECT n.nid, n.title, b.parent FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE b.parent = %d ORDER BY b.weight DESC, n.title DESC", $node->nid));
+  if ($last_direct_child) {
+    array_push($nodes, $last_direct_child);
+    $nodes = book_location_down($last_direct_child, $nodes);
+  }
+  return $nodes;
+}
+
+function book_prev($node) {
+  // previous on the same level
+  $direct_above = db_fetch_object(db_query("SELECT n.nid, n.title FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE b.parent = %d AND n.status = 1 AND (n.moderate = 0 OR n.revisions != '') AND (b.weight < %d OR (b.weight = %d AND n.title < '%s')) ORDER BY b.weight DESC, n.title DESC", $node->parent, $node->weight, $node->weight, $node->title));
+  if ($direct_above) {
+    // get last leaf of $above
+    $path = book_location_down($direct_above);
+    return $path ? array_pop($path) : $direct_above;
+  }
+  else {
+    // direct parent
+    $prev = db_fetch_object(db_query("SELECT n.nid, n.title FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.nid = %d AND n.status = 1 AND (n.moderate = 0 OR n.revisions != '')", $node->parent));
+    return $prev;
+  }
+}
+
+function book_next($node) {
+  // get first direct child
+  $child = db_fetch_object(db_query("SELECT n.nid, n.title FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE b.parent = %d AND n.status = 1 AND (n.moderate = 0 OR n.revisions != '') ORDER BY b.weight ASC, n.title ASC", $node->nid));
+  if ($child) {
+    return $child;
+  }
+
+  // no direct child: get next for this level or any parent
+  array_push($path = book_location($node), $node); // path to root node including this one
+  // loop through nodes to root, starting with this node
+  while ($leaf = array_pop($path)) {
+    $next = db_fetch_object(db_query("SELECT n.nid, n.title FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE b.parent = %d AND n.status = 1 AND (n.moderate = 0 OR n.revisions != '') AND (b.weight > %d OR (b.weight = %d AND n.title > '%s')) ORDER BY b.weight ASC, n.title ASC", $leaf->parent, $leaf->weight, $leaf->weight, $leaf->title));
+    if ($next) {
+      return $next;
+    }
+  }
 }
 
 function book_body($node) {
@@ -349,9 +390,9 @@ function book_view($node, $main = 0) {
     ** Construct the "next" and "previous" links:
     */
 
-    if ($node->nid && $node->parent) {
-      $next = db_fetch_object(db_query("SELECT n.nid, n.title FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.status = 1 AND b.parent = '%d' AND (b.weight > '%d' OR (b.weight = '%d' AND n.title > '%s')) AND (n.moderate = 0 OR n.revisions != '') ORDER BY b.weight ASC, n.title ASC", $node->parent, $node->weight, $node->weight, $node->title));
-      $prev = db_fetch_object(db_query("SELECT n.nid, n.title FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.status = 1 AND b.parent = '%d' AND (b.weight < '%d' OR (b.weight = '%d' AND n.title < '%s')) AND (n.moderate = 0 OR n.revisions != '') ORDER BY b.weight DESC, n.title DESC", $node->parent, $node->weight, $node->weight, $node->title));
+    if ($node->nid) {
+      $prev = book_prev($node);
+      $next = book_next($node);
     }
 
     $output .= "<table border=\"0\" cellpadding=\"1\" cellspacing=\"1\" width=\"100%\">";
