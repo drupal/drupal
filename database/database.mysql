@@ -202,7 +202,7 @@ CREATE TABLE item (
 # Table structure for table 'layout'
 #
 CREATE TABLE layout (
-  user int(11) DEFAULT '0' NOT NULL,
+  uid int(11) DEFAULT '0' NOT NULL,
   block varchar(64) DEFAULT '' NOT NULL
 ) TYPE=MyISAM;
 
@@ -317,25 +317,6 @@ CREATE TABLE poll_choices (
 ) TYPE=MyISAM;
 
 #
-# Table structure for table 'project'
-#
-
-CREATE TABLE project (
-  nid int(10) unsigned NOT NULL default '0',
-  pid int(10) unsigned NOT NULL default '0',
-  pstatus tinyint(2) NOT NULL default '0',
-  area varchar(255) NOT NULL default '',
-  priority tinyint(2) NOT NULL default '0',
-  version varchar(255) NOT NULL default '',
-  assigned int(10) unsigned NOT NULL default '0',
-  file text,
-  ptype varchar(255) NOT NULL default '',
-  PRIMARY KEY  (nid),
-  KEY pid (pid),
-  KEY assigned (assigned)
-) TYPE=MyISAM;
-
-#
 # Table structure for table 'rating'
 #
 
@@ -421,7 +402,7 @@ CREATE TABLE users (
   sid varchar(32) NOT NULL default '',
   init varchar(64) default '',
   session varchar(32) NOT NULL default '',
-  extrafields text,
+  data text,
   PRIMARY KEY  (uid),
   UNIQUE KEY name (name)
 ) TYPE=MyISAM;

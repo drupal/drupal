@@ -44,6 +44,7 @@ $mysql_updates = array(
   "2001-12-31" => "update_17",
   "2002-01-05" => "update_18",
   "2002-01-17" => "update_19",
+  "2002-01-27" => "update_20"
 );
 
 // Update functions
@@ -317,6 +318,10 @@ function update_19() {
   update_sql("ALTER TABLE users ADD data TEXT;");
 }
 
+function update_20() {
+  update_sql("INSERT INTO blocks SET name='User information', module='user', delta='0', status='2', weight='0', region='1', remove='0', path='';");
+}
+
 /*
 ** System functions
 */
@@ -385,13 +390,12 @@ function update_page() {
 }
 
 print "<html><h1>Drupal update</h1>";
+// Security check:
 if (user_access(NULL)) {
   update_page();
 }
 else {
   print message_access();
 }
-
 print "</html>";
-
 ?>
