@@ -177,29 +177,23 @@ function blog_form(&$node, &$error) {
 
 function blog_page() {
 
-  if (user_access("access content")) {
-    switch (arg(1)) {
-      case "feed":
-        if (arg(2)) {
-          blog_feed_user(arg(2));
-        }
-        else {
-          blog_feed_last();
-        }
-        break;
-      default:
-        if (arg(1)) {
-          blog_page_user(arg(1));
-        }
-        else {
-          blog_page_last();
-        }
-    }
+  switch (arg(1)) {
+    case "feed":
+      if (arg(2)) {
+        blog_feed_user(arg(2));
+      }
+      else {
+        blog_feed_last();
+      }
+      break;
+    default:
+      if (arg(1)) {
+        blog_page_user(arg(1));
+      }
+      else {
+        blog_page_last();
+      }
   }
-  else {
-    print theme("page", message_access());
-  }
-
 }
 
 function blog_content($node, $main = 0) {

@@ -841,33 +841,28 @@ function book_admin() {
   $op = $_POST["op"];
   $edit = $_POST["edit"];
 
-  if (user_access("administer nodes")) {
-    if (empty($op)) {
-      $op = arg(3);
-    }
+  if (empty($op)) {
+    $op = arg(3);
+  }
 
-    switch ($op) {
-      case t("Edit book outline"):
-      case t("Add to book outline"):
-      case t("Remove from book outline"):
-      case t("Update book outline"):
-        $output = book_node_link();
-        break;
-      case "orphan":
-        $output = book_admin_orphan();
-        break;
-      case t("Save book pages"):
-        drupal_set_message(book_admin_save(arg(3), $edit));
-        // fall through:
-      default:
-        $output .= book_admin_view(arg(3));
-        break;
-    }
-    print theme("page", $output);
+  switch ($op) {
+    case t("Edit book outline"):
+    case t("Add to book outline"):
+    case t("Remove from book outline"):
+    case t("Update book outline"):
+      $output = book_node_link();
+      break;
+    case "orphan":
+      $output = book_admin_orphan();
+      break;
+    case t("Save book pages"):
+      drupal_set_message(book_admin_save(arg(3), $edit));
+      // fall through:
+    default:
+      $output .= book_admin_view(arg(3));
+      break;
   }
-  else {
-    print theme("page", message_access());
-  }
+  print theme("page", $output);
 }
 
 function book_help($section = "admin/help#book") {

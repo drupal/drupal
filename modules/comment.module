@@ -1181,65 +1181,60 @@ function comment_admin() {
     $op = arg(3);
   }
 
-  if (user_access("administer comments")) {
-    switch ($op) {
-     case "edit":
-        $output = comment_admin_edit(arg(3));
-        break;
-      case "search":
-        $output = search_type("comment", url("admin/comment/search"), $_POST["keys"]);
-        break;
-      case "votes":
-      case t("Add new vote"):
-      case t("Delete vote"):
-      case t("Save vote"):
-        if (user_access("administer moderation")) {
-          $output = comment_mod_votes($edit);
-        }
-        break;
-      case "roles":
-      case t("Save scores"):
-        if (user_access("administer moderation")) {
-          $output = comment_mod_roles($edit);
-        }
-        break;
-      case "matrix":
-      case t("Submit votes"):
-        if (user_access("administer moderation")) {
-          $output = comment_mod_matrix($edit);
-        }
-        break;
-      case "filters":
-      case t("Add new threshold"):
-      case t("Delete threshold"):
-      case t("Save threshold"):
-        if (user_access("administer moderation")) {
-          $output = comment_mod_filters($edit);
-        }
-        break;
-      case "delete":
-        $output = comment_delete(arg(3), 0);
-        break;
-      case t("Delete comment"):
-        $output = comment_delete(arg(3), 1);
-        break;
-      case t("Submit"):
-        $output  = comment_save(check_query(arg(3)), $edit);
-        $output .= comment_admin_overview(0);
-        break;
-      default:
-        if (arg(3) == 1) {
-          $output = comment_admin_overview(1);
-        }
-        else {
-          $output = comment_admin_overview(0);
-        }
-    }
-    print theme("page", $output);
+  switch ($op) {
+    case "edit":
+      $output = comment_admin_edit(arg(3));
+      break;
+    case "search":
+      $output = search_type("comment", url("admin/comment/search"), $_POST["keys"]);
+      break;
+    case "votes":
+    case t("Add new vote"):
+    case t("Delete vote"):
+    case t("Save vote"):
+      if (user_access("administer moderation")) {
+        $output = comment_mod_votes($edit);
+      }
+      break;
+    case "roles":
+    case t("Save scores"):
+      if (user_access("administer moderation")) {
+        $output = comment_mod_roles($edit);
+      }
+      break;
+    case "matrix":
+    case t("Submit votes"):
+      if (user_access("administer moderation")) {
+        $output = comment_mod_matrix($edit);
+      }
+      break;
+    case "filters":
+    case t("Add new threshold"):
+    case t("Delete threshold"):
+    case t("Save threshold"):
+      if (user_access("administer moderation")) {
+        $output = comment_mod_filters($edit);
+      }
+      break;
+    case "delete":
+      $output = comment_delete(arg(3), 0);
+      break;
+    case t("Delete comment"):
+      $output = comment_delete(arg(3), 1);
+      break;
+    case t("Submit"):
+      $output  = comment_save(check_query(arg(3)), $edit);
+      $output .= comment_admin_overview(0);
+      break;
+    default:
+      if (arg(3) == 1) {
+        $output = comment_admin_overview(1);
+      }
+      else {
+        $output = comment_admin_overview(0);
+      }
   }
-  else {
-    print theme("page", message_access());
-  }
+  print theme("page", $output);
 }
 
 /*

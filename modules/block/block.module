@@ -280,45 +280,39 @@ function block_admin() {
   $op = $_POST["op"];
   $edit = $_POST["edit"];
 
-  if (user_access("administer blocks")) {
-
-    if (empty($op)) {
-      $op = arg(3);
-    }
-
-    switch ($op) {
-      case "preview":
-        $output = block_admin_preview();
-        break;
-      case "add":
-        $output = block_box_form();
-        break;
-      case "edit":
-        $output = block_box_form(block_box_get(arg(4)));
-        break;
-      case "delete":
-        drupal_set_message(block_box_delete(arg(4)));
-        cache_clear_all();
-        $output .= block_admin_display();
-        break;
-      case t("Save block"):
-        drupal_set_message(block_box_save($edit));
-        cache_clear_all();
-        $output .= block_admin_display();
-        break;
-      case t("Save blocks"):
-        drupal_set_message(block_admin_save($edit));
-        cache_clear_all();
-        // fall through
-      default:
-        $output .= block_admin_display();
-    }
-
-    print theme("page", $output);
+  if (empty($op)) {
+    $op = arg(3);
   }
-  else {
-    print theme("page", message_access());
+
+  switch ($op) {
+    case "preview":
+      $output = block_admin_preview();
+      break;
+    case "add":
+      $output = block_box_form();
+      break;
+    case "edit":
+      $output = block_box_form(block_box_get(arg(4)));
+      break;
+    case "delete":
+      drupal_set_message(block_box_delete(arg(4)));
+      cache_clear_all();
+      $output .= block_admin_display();
+      break;
+    case t("Save block"):
+      drupal_set_message(block_box_save($edit));
+      cache_clear_all();
+      $output .= block_admin_display();
+      break;
+    case t("Save blocks"):
+      drupal_set_message(block_admin_save($edit));
+      cache_clear_all();
+      // fall through
+    default:
+      $output .= block_admin_display();
   }
+
+  print theme("page", $output);
 }
 
 function block_user($type, $edit, &$user) {

@@ -256,52 +256,46 @@ function locale_admin() {
   $op = $_POST["op"];
   $edit =& $_POST["edit"];
 
-  if (user_access('administer locales')) {
-
-    if (empty($op)) {
-      $op = arg(2);
-    }
-
-    switch ($op) {
-      case 'delete':
-        $output .= locale_delete(check_query(arg(3)));
-        $output .= locale_seek();
-        break;
-      case 'edit':
-        $output .= locale_edit(check_query(arg(3)));
-        $output .= locale_seek();
-        break;
-      case 'search':
-        if (locale_seek_query()) {
-          $output = locale_seek();
-        }
-        $output .= locale_seek_form();
-        break;
-      case t('Search'):
-        $output = locale_seek();
-        $output .= locale_seek_form();
-        break;
-      case t('Save translations'):
-        $output .= locale_save(check_query(arg(3)));
-        $output .= locale_seek_form();
-        break;
-      default:
-        if (arg(3) == 'translated') {
-          $edit['status'] = 1;
-          $edit['language'] = arg(2);
-        }
-        else {
-          $edit['status'] = 2;
-          $edit['language'] = arg(2);
-        }
-        $output = locale_seek();
-        $output .= locale_seek_form();
-    }
-    print theme('page', $output);
+  if (empty($op)) {
+    $op = arg(2);
   }
-  else {
-    print theme('page', message_access());
+
+  switch ($op) {
+    case 'delete':
+      $output .= locale_delete(check_query(arg(3)));
+      $output .= locale_seek();
+      break;
+    case 'edit':
+      $output .= locale_edit(check_query(arg(3)));
+      $output .= locale_seek();
+      break;
+    case 'search':
+      if (locale_seek_query()) {
+        $output = locale_seek();
+      }
+      $output .= locale_seek_form();
+      break;
+    case t('Search'):
+      $output = locale_seek();
+      $output .= locale_seek_form();
+      break;
+    case t('Save translations'):
+      $output .= locale_save(check_query(arg(3)));
+      $output .= locale_seek_form();
+      break;
+    default:
+      if (arg(3) == 'translated') {
+        $edit['status'] = 1;
+        $edit['language'] = arg(2);
+      }
+      else {
+        $edit['status'] = 2;
+        $edit['language'] = arg(2);
+      }
+      $output = locale_seek();
+      $output .= locale_seek_form();
   }
+  print theme('page', $output);
 }
 
 function locale($string) {

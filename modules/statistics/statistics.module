@@ -192,30 +192,23 @@ function statistics_admin() {
   $op = $_POST["op"];
   $edit = $_POST["edit"];
 
-  /* Only allow people with sufficient access. */
-  if ((user_access("administer statistics module")) || (user_access("administer statistics"))) {
-
-    if (empty($op)) {
-      $op = arg(2);
-    }
-
-    /* non-configuration admin pages */
-    switch ($op) {
-      case "referrers":
-        $output = statistics_top_refer();
-        break;
-      case "log":
-        $output = statistics_admin_displaylog();
-        break;
-      default:
-        $output = statistics_admin_topnodes();
-    }
-
-    print theme("page", $output);
+  if (empty($op)) {
+    $op = arg(2);
   }
-  else {
-    print theme("page", message_access());
+
+  /* non-configuration admin pages */
+  switch ($op) {
+    case "referrers":
+      $output = statistics_top_refer();
+      break;
+    case "log":
+      $output = statistics_admin_displaylog();
+      break;
+    default:
+      $output = statistics_admin_topnodes();
   }
+
+  print theme("page", $output);
 }
 
 
@@ -497,42 +490,36 @@ function statistics_block($op = "list", $delta = 0) {
 
 
 function statistics_page() {
-  if (user_access("access content")) {
-    $output = "";
+  $output = "";
 
-    // build day's most popular content list if enabled
-    if ($displaycount = variable_get("statistics_userpage_day_cnt", 0)) {
-      $table = "<table border=\"0\" cellpadding=\"4\" cellspacing=\"4\" style=\"width: 100%;\">";
-      $table .= statistics_summary("daycount", $displaycount);
-      $table .= "</table>";
+  // build day's most popular content list if enabled
+  if ($displaycount = variable_get("statistics_userpage_day_cnt", 0)) {
+    $table = "<table border=\"0\" cellpadding=\"4\" cellspacing=\"4\" style=\"width: 100%;\">";
+    $table .= statistics_summary("daycount", $displaycount);
+    $table .= "</table>";
 
-      $output .= theme("box", t("Day's most popular content:"), $table, "main");
-    }
-
-    // build all time most popular content list if enabled
-    if ($displaycount = variable_get("statistics_userpage_all_cnt", 0)) {
-      $table = "<table border=\"0\" cellpadding=\"4\" cellspacing=\"4\" style=\"width: 100%;\">";
-      $table .= statistics_summary("totalcount", $displaycount);
-      $table .= "</table>";
-
-      $output .= theme("box", t("All time most popular content:"), $table, "main");
-    }
-
-    // build last viewed content list if enabled
-    if ($displaycount = variable_get("statistics_userpage_last_cnt", 0)) {
-      $table = "<table border=\"0\" cellpadding=\"4\" cellspacing=\"4\" style=\"width: 100%;\">";
-      $table .= statistics_summary("timestamp", $displaycount);
-      $table .= "</table>";
-
-      $output .= theme("box", t("Last viewed content:"), $table, "main");
-    }
-
-    print theme("page", $output);
+    $output .= theme("box", t("Day's most popular content:"), $table, "main");
   }
-  else {
-    // access denied
-    print theme("page", message_access());
+
+  // build all time most popular content list if enabled
+  if ($displaycount = variable_get("statistics_userpage_all_cnt", 0)) {
+    $table = "<table border=\"0\" cellpadding=\"4\" cellspacing=\"4\" style=\"width: 100%;\">";
+    $table .= statistics_summary("totalcount", $displaycount);
+    $table .= "</table>";
+
+    $output .= theme("box", t("All time most popular content:"), $table, "main");
   }
+
+  // build last viewed content list if enabled
+  if ($displaycount = variable_get("statistics_userpage_last_cnt", 0)) {
+    $table = "<table border=\"0\" cellpadding=\"4\" cellspacing=\"4\" style=\"width: 100%;\">";
+    $table .= statistics_summary("timestamp", $displaycount);
+    $table .= "</table>";
+
+    $output .= theme("box", t("Last viewed content:"), $table, "main");
+  }
+
+  print theme("page", $output);
 }
 
 

@@ -5,44 +5,38 @@ function path_admin() {
   $op = $_POST["op"];
   $edit = $_POST["edit"];
 
-  if (user_access("administer url aliases")) {
-
-    if (empty($op)) {
-      $op = arg(2);
-    }
-
-    switch ($op) {
-      case "add":
-        $output = path_form();
-        break;
-
-      case "edit":
-        $output = path_form(path_load(arg(3)));
-        break;
-
-      case "help":
-        $output = path_help();
-        break;
-
-      case "delete":
-        path_delete(arg(3));
-        $output .= path_overview();
-        break;
-
-      case t("Create new alias"):
-      case t("Update alias"):
-        $output = path_save($edit);
-        break;
-
-      default:
-        $output .= path_overview();
-    }
-
-    print theme("page", $output);
+  if (empty($op)) {
+    $op = arg(2);
   }
-  else {
-    print theme("page", message_access());
+
+  switch ($op) {
+    case "add":
+      $output = path_form();
+      break;
+
+    case "edit":
+      $output = path_form(path_load(arg(3)));
+      break;
+
+    case "help":
+      $output = path_help();
+      break;
+
+    case "delete":
+      path_delete(arg(3));
+      $output .= path_overview();
+      break;
+
+    case t("Create new alias"):
+    case t("Update alias"):
+      $output = path_save($edit);
+      break;
+
+    default:
+      $output .= path_overview();
   }
+
+  print theme("page", $output);
 }
 
 function path_set_alias($path = NULL, $alias = NULL) {
@@ -154,7 +148,7 @@ function path_link($type, $node = NULL) {
     menu("admin/path", t("url aliasing"), "path_admin", 4);
     menu("admin/path/add", t("new alias"), "path_admin");
     menu("admin/path/help", t("help"), "path_admin", 9);
-   }
+  }
 }
 
 function path_nodeapi(&$node, $op, $arg) {

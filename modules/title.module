@@ -23,44 +23,38 @@ function title_link($type) {
 
 function title_page() {
 
-  if (user_access("access content")) {
+  $title = urldecode(arg(1));
+  $result = db_query("SELECT n.*, u.name, u.uid FROM {node} n INNER JOIN {users} u ON n.uid = u.uid WHERE n.title = '%s' AND n.status = 1 ORDER BY n.created DESC", $title);
 
-    $title = urldecode(arg(1));
-    $result = db_query("SELECT n.*, u.name, u.uid FROM {node} n INNER JOIN {users} u ON n.uid = u.uid WHERE n.title = '%s' AND n.status = 1 ORDER BY n.created DESC", $title);
+  if (db_num_rows($result) == 0) {
+    // No node with exact title found, try substring.
+    $result = db_query("SELECT n.*, u.name, u.uid FROM {node} n INNER JOIN {users} u ON n.uid = u.uid WHERE n.title LIKE '%%%s%%' AND n.status = 1 ORDER BY n.created DESC", $title);
+  }
 
-    if (db_num_rows($result) == 0) {
-      // No node with exact title found, try substring.
-      $result = db_query("SELECT n.*, u.name, u.uid FROM {node} n INNER JOIN {users} u ON n.uid = u.uid WHERE n.title LIKE '%%%s%%' AND n.status = 1 ORDER BY n.created DESC", $title);
-    }
-
-    if (db_num_rows($result) == 0 && module_exist("search")) {
-      // still no matches ... return a full text search
-      search_view($title);
-    }
-    else if (db_num_rows($result) == 1) {
-      $node = db_fetch_object($result);
-      $node = node_load(array("nid" => $node->nid));
-      print theme("page", node_show($node, NULL), $node->title);
-    }
-    else {
-      $header = array(t("Type"), t("Title"), t("Author"));
-      while ($node = db_fetch_object($result)) {
-        $type = ucfirst(module_invoke($node->type, "node", "name"));
-        $title = l($node->title, "node/view/$node->nid");
-        $author = format_name($node);
-        $rows[] = array(array("data" => $type, "class" => "type"), array("data" => $title, "class" => "content"), array("data" => $author, "class" => "author"));
-      }
-
-      $output  = "<div id=\"title\">";
-      $output .= theme("table", $header, $rows);
-      $output .= "</div>";
-
-      drupal_set_title(t("Matching Posts"));
-      print theme("page", $output);
-    }
+  if (db_num_rows($result) == 0 && module_exist("search")) {
+    // still no matches ... return a full text search
+    search_view($title);
+  }
+  else if (db_num_rows($result) == 1) {
+    $node = db_fetch_object($result);
+    $node = node_load(array("nid" => $node->nid));
+    print theme("page", node_show($node, NULL), $node->title);
   }
   else {
-    print theme("page", message_access());
+    $header = array(t("Type"), t("Title"), t("Author"));
+    while ($node = db_fetch_object($result)) {
+      $type = ucfirst(module_invoke($node->type, "node", "name"));
+      $title = l($node->title, "node/view/$node->nid");
+      $author = format_name($node);
+      $rows[] = array(array("data" => $type, "class" => "type"), array("data" => $title, "class" => "content"), array("data" => $author, "class" => "author"));
+    }
+
+    $output  = "<div id=\"title\">";
+    $output .= theme("table", $header, $rows);
+    $output .= "</div>";
+
+    drupal_set_title(t("Matching Posts"));
+    print theme("page", $output);
   }
 }
 

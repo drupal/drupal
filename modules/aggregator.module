@@ -613,59 +613,53 @@ function aggregator_tag() {
 function aggregator_admin() {
   $edit = $_POST["edit"];
 
-  if (user_access("administer news feeds")) {
-
-    switch ($_POST["op"] ? $_POST["op"] : arg(3)) {
-      case "add":
-        if (arg(4) == "bundle") {
-          $output = aggregator_form_bundle();
-        }
-        else {
-          $output = aggregator_form_feed();
-        }
-        break;
-      case "edit":
-        if (arg(4) == "bundle") {
-          $output = aggregator_form_bundle(aggregator_get_bundle(arg(5)));
-        }
-        else {
-          $output = aggregator_form_feed(aggregator_get_feed(arg(5)));
-        }
-        break;
-      case "remove":
-        aggregator_remove(aggregator_get_feed(arg(4)));
-        $output .= aggregator_view();
-        break;
-      case "update":
-        aggregator_refresh(aggregator_get_feed(arg(4)));
-        $output .= aggregator_view();
-        break;
-      case "tag":
-        $output = aggregator_tag();
-        break;
-      case t("Save attributes"):
-        aggregator_save_attributes($edit);
-        $output .= aggregator_tag();
-        break;
-      case t("Delete"):
-        $edit["title"] = 0;
-        // fall through:
-      case t("Submit"):
-        if (arg(4) == "bundle") {
-          aggregator_save_bundle($edit);
-        }
-        else {
-          aggregator_save_feed($edit);
-        }
-        // fall through:
-      default:
-        $output .=  aggregator_view();
-    }
-    print theme("page", $output);
+  switch ($_POST["op"] ? $_POST["op"] : arg(3)) {
+    case "add":
+      if (arg(4) == "bundle") {
+        $output = aggregator_form_bundle();
+      }
+      else {
+        $output = aggregator_form_feed();
+      }
+      break;
+    case "edit":
+      if (arg(4) == "bundle") {
+        $output = aggregator_form_bundle(aggregator_get_bundle(arg(5)));
+      }
+      else {
+        $output = aggregator_form_feed(aggregator_get_feed(arg(5)));
+      }
+      break;
+    case "remove":
+      aggregator_remove(aggregator_get_feed(arg(4)));
+      $output .= aggregator_view();
+      break;
+    case "update":
+      aggregator_refresh(aggregator_get_feed(arg(4)));
+      $output .= aggregator_view();
+      break;
+    case "tag":
+      $output = aggregator_tag();
+      break;
+    case t("Save attributes"):
+      aggregator_save_attributes($edit);
+      $output .= aggregator_tag();
+      break;
+    case t("Delete"):
+      $edit["title"] = 0;
+      // fall through:
+    case t("Submit"):
+      if (arg(4) == "bundle") {
+        aggregator_save_bundle($edit);
+      }
+      else {
+        aggregator_save_feed($edit);
+      }
+      // fall through:
+    default:
+      $output .=  aggregator_view();
   }
-  else {
-    print theme("page", message_access());
-  }
+  print theme("page", $output);
 }
 
 function aggregator_page_last() {

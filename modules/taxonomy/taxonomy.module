@@ -767,68 +767,63 @@ function taxonomy_admin() {
   $op = $_POST["op"];
   $edit = $_POST["edit"];
 
-  if (user_access("administer taxonomy")) {
-    if (empty($op)) {
-      $op = arg(2);
-    }
+  if (empty($op)) {
+    $op = arg(2);
+  }
 
-    switch ($op) {
-      case "add":
+  switch ($op) {
+    case "add":
+      if (arg(3) == "vocabulary") {
+        $output .= taxonomy_form_vocabulary();
+      }
+      else if (arg(3) == "term") {
+        $output .= taxonomy_form_term();
+      }
+      break;
+    case "edit":
+      if (arg(3) == "vocabulary") {
+        $output .= taxonomy_form_vocabulary(object2array(taxonomy_get_vocabulary(arg(4))));
+      }
+      else if (arg(3) == "term") {
+        $output .= taxonomy_form_term(object2array(taxonomy_get_term(arg(4))));
+      }
+      break;
+    case "preview":
+      $output .= taxonomy_form(arg(4));
+      break;
+    case "help":
+      $output .= taxonomy_help();
+      break;
+    case t("Delete"):
+      if (!$edit["confirm"]) {
         if (arg(3) == "vocabulary") {
-          $output .= taxonomy_form_vocabulary();
+          $output .= _taxonomy_confirm_del_vocabulary($edit["vid"]);
         }
-        else if (arg(3) == "term") {
+        else {
+          $output .= _taxonomy_confirm_del_term($edit["tid"]);
+        }
+        break;
+      }
+      else {
+        $edit["name"] = 0;
+        // fall through:
+      }
+    case t("Submit"):
+      if (arg(3) == "vocabulary") {
+        taxonomy_save_vocabulary($edit);
+      }
+      else {
+        taxonomy_save_term($edit);
+        if (!$edit["tid"]) {
+          // if INSERT show form again
           $output .= taxonomy_form_term();
-        }
-        break;
-      case "edit":
-        if (arg(3) == "vocabulary") {
-          $output .= taxonomy_form_vocabulary(object2array(taxonomy_get_vocabulary(arg(4))));
-        }
-        else if (arg(3) == "term") {
-          $output .= taxonomy_form_term(object2array(taxonomy_get_term(arg(4))));
-        }
-        break;
-      case "preview":
-        $output .= taxonomy_form(arg(4));
-        break;
-      case "help":
-        $output .= taxonomy_help();
-        break;
-      case t("Delete"):
-        if (!$edit["confirm"]) {
-          if (arg(3) == "vocabulary") {
-            $output .= _taxonomy_confirm_del_vocabulary($edit["vid"]);
-          }
-          else {
-            $output .= _taxonomy_confirm_del_term($edit["tid"]);
-          }
           break;
         }
-        else {
-          $edit["name"] = 0;
-          // fall through:
-        }
-      case t("Submit"):
-        if (arg(3) == "vocabulary") {
-          taxonomy_save_vocabulary($edit);
-        }
-        else {
-          taxonomy_save_term($edit);
-          if (!$edit["tid"]) {
-            // if INSERT show form again
-            $output .= taxonomy_form_term();
-            break;
-          }
-          // else (UPDATE or DELETE) fall through
-        }
-        // fall through:
-      default:
-        $output .= taxonomy_overview();
-    }
-  }
-  else {
-    $output .= message_access();
+        // else (UPDATE or DELETE) fall through
+      }
+      // fall through:
+    default:
+      $output .= taxonomy_overview();
   }
 
   print theme("page", $output);

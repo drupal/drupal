@@ -59,27 +59,6 @@ function search_settings() {
 }
 
 /**
- * search engine administration actions
- */
-function search_admin() {
-  $op = $_POST["op"];
-
-  // Only allow people with sufficient access.
-  if (user_access("administer search")) {
-    if ($op == "reindex") {
-      search_invalidate();
-      $output = t("index invalidated") ."<br />\n";
-      search_cron();
-      $output .= t("index recreated") ."<br /><hr />\n";
-      print theme("page", $output);
-    }
-  }
-  else {
-    print theme("page", message_access());
-  }
-}
-
-/**
  * perform a regularly run action across all modules that have the
  * <i>module</i>_update_index function in them.
  */

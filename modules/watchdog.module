@@ -83,7 +83,7 @@ function watchdog_overview($type) {
 
   $header = array(
     array("data" => t("date"), "field" => "w.timestamp", "sort" => "desc"),
-    array("data" => t("event"), "field" => "w.message"),
+    array("data" => t("message"), "field" => "w.message"),
     array("data" => t("user"), "field" => "u.name"),
     array("data" => t("operations"), "colspan" => "2")
   );
@@ -132,22 +132,17 @@ function watchdog_view($id) {
 
 function watchdog_admin() {
 
-  if (user_access("administer watchdog")) {
-    switch (arg(2)) {
-      case "help":
-        $output = watchdog_help();
-        break;
-      case "view":
-        $output = watchdog_view(arg(3));
-        break;
-      default:
-        $output = watchdog_overview(arg(2));
-    }
-    print theme("page", $output);
+  switch (arg(2)) {
+    case "help":
+      $output = watchdog_help();
+      break;
+    case "view":
+      $output = watchdog_view(arg(3));
+      break;
+    default:
+      $output = watchdog_overview(arg(2));
   }
-  else {
-    print theme("page", message_access());
-  }
+  print theme("page", $output);
 }
 
 function _watchdog_get_message_types() {

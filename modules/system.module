@@ -361,13 +361,8 @@ function system_settings_save() {
 }
 
 function system_admin() {
-  if (user_access("administer site configuration")) {
-    $output = system_view(arg(2), arg(3));
-    print theme("page", $output);
-  }
-  else {
-    print theme("page", message_access());
-  }
+  $output = system_view(arg(2), arg(3));
+  print theme("page", $output);
 }
 
 ?>

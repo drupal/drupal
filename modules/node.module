@@ -932,48 +932,42 @@ function node_admin() {
   $op = $_POST['op'];
   $edit = $_POST['edit'];
 
-  if (user_access('administer nodes')) {
-
-    if (empty($op)) {
-      $op = arg(2);
-    }
-
-    /*
-    ** Compile a list of the administrative links:
-    */
-    switch ($op) {
-      case 'search':
-        $output = search_type('node', url('admin/node/search'), $_POST['keys']);
-        break;
-      case 'edit':
-        $output = node_admin_edit(arg(3));
-        break;
-      case 'delete':
-        $output = node_delete(array('nid' => arg(3)));
-        break;
-      case t('Preview'):
-        $edit = node_validate($edit, $error);
-        $output = node_preview($edit, $error);
-        break;
-      case t('Submit'):
-        $output = node_submit($edit);
-        break;
-      case t('Delete'):
-        $output = node_delete($edit);
-        break;
-      case t('Save configuration'):
-      case t('Reset to defaults'):
-      case 'settings':
-        $output = node_admin_settings($edit);
-        break;
-      default:
-        $output = node_admin_nodes();
-    }
-    print theme('page', $output);
+  if (empty($op)) {
+    $op = arg(2);
   }
-  else {
-    print theme('page', message_access());
+
+  /*
+  ** Compile a list of the administrative links:
+  */
+  switch ($op) {
+    case 'search':
+      $output = search_type('node', url('admin/node/search'), $_POST['keys']);
+      break;
+    case 'edit':
+      $output = node_admin_edit(arg(3));
+      break;
+    case 'delete':
+      $output = node_delete(array('nid' => arg(3)));
+      break;
+    case t('Preview'):
+      $edit = node_validate($edit, $error);
+      $output = node_preview($edit, $error);
+      break;
+    case t('Submit'):
+      $output = node_submit($edit);
+      break;
+    case t('Delete'):
+      $output = node_delete($edit);
+      break;
+    case t('Save configuration'):
+    case t('Reset to defaults'):
+    case 'settings':
+      $output = node_admin_settings($edit);
+      break;
+    default:
+      $output = node_admin_nodes();
   }
+  print theme('page', $output);
 }
 
 function node_block($op = 'list', $delta = 0) {
@@ -1519,59 +1513,53 @@ function node_page_default() {
 }
 
 function node_page() {
-  if (user_access('access content')) {
-    $op = $_POST['op'] ? $_POST['op'] : arg(1);
-    $edit = $_POST['edit'];
+  $op = $_POST['op'] ? $_POST['op'] : arg(1);
+  $edit = $_POST['edit'];
 
-    switch ($op) {
-      case 'feed':
-        node_feed();
-        return;
-      case 'add':
-        // When a module defines multiple node types, the URL is of the form 'foo/bar':
-        print theme('page', node_add(arg(3) ? arg(2) ."/". arg(3) : arg(2)));
-        break;
-      case 'edit':
-        print theme('page', node_edit(arg(2)));
-        break;
-      case 'view':
-        if ($node = node_load(array('nid' => arg(2)), $_GET['revision'])) {
-          print theme('page', node_show($node, arg(3)), $node->title);
-        }
-        else {
-          drupal_not_found();
-        }
-        break;
-      case 'revisions':
-        print theme('page', node_revision_overview(arg(2)), t('Revisions'));
-        break;
-      case 'rollback-revision':
-        node_revision_rollback(arg(2), arg(3));
-        print theme('page', node_revision_overview(arg(2)), t('Revisions'));
-        break;
-      case 'delete-revision':
-        node_revision_delete(arg(2), arg(3));
-        print theme('page', node_revision_overview(arg(2)), t('Revisions'));
-        break;
-      case t('Preview'):
-        $edit = node_validate($edit, $error);
-        print theme('page', node_preview($edit, $error), t('Preview %name', array('%name' => $name)));
-        break;
-      case t('Submit'):
-        drupal_set_title(t('Submit %name', array('%name' => $name)));
-        print theme('page', node_submit($edit));
-        break;
-      case t('Delete'):
-        print theme('page', node_delete($edit), t('Delete %name', array('%name' => $name)));
-        break;
-      default:
-       print theme('page', node_page_default(), '');
-    }
+  switch ($op) {
+    case 'feed':
+      node_feed();
+      return;
+    case 'add':
+      // When a module defines multiple node types, the URL is of the form 'foo/bar':
+      print theme('page', node_add(arg(3) ? arg(2) ."/". arg(3) : arg(2)));
+      break;
+    case 'edit':
+      print theme('page', node_edit(arg(2)));
+      break;
+    case 'view':
+      if ($node = node_load(array('nid' => arg(2)), $_GET['revision'])) {
+        print theme('page', node_show($node, arg(3)), $node->title);
+      }
+      else {
+        drupal_not_found();
+      }
+      break;
+    case 'revisions':
+      print theme('page', node_revision_overview(arg(2)), t('Revisions'));
+      break;
+    case 'rollback-revision':
+      node_revision_rollback(arg(2), arg(3));
+      print theme('page', node_revision_overview(arg(2)), t('Revisions'));
+      break;
+    case 'delete-revision':
+      node_revision_delete(arg(2), arg(3));
+      print theme('page', node_revision_overview(arg(2)), t('Revisions'));
+      break;
+    case t('Preview'):
+      $edit = node_validate($edit, $error);
+      print theme('page', node_preview($edit, $error), t('Preview %name', array('%name' => $name)));
+      break;
+    case t('Submit'):
+      drupal_set_title(t('Submit %name', array('%name' => $name)));
+      print theme('page', node_submit($edit));
+      break;
+    case t('Delete'):
+      print theme('page', node_delete($edit), t('Delete %name', array('%name' => $name)));
+      break;
+    default:
+      print theme('page', node_page_default(), '');
   }
-  else {
-    print theme('page', message_access());
-  }
-
 }
 
 function node_update_index() {

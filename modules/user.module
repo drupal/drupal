@@ -1494,49 +1494,44 @@ function user_admin() {
   $op = $_POST["op"];
   $edit = $_POST["edit"];
 
-  if (user_access("administer users")) {
-    if (empty($op)) {
-      $op = arg(2);
-    }
+  if (empty($op)) {
+    $op = arg(2);
+  }
 
-    switch ($op) {
-      case "search":
-        $output = search_type('user', url("admin/user/search"), $_POST["keys"]);
-        break;
-      case t("Add rule"):
-      case t("Check"):
-      case "access":
-        $output .= user_admin_access($edit);
-        break;
-      case t("Save permissions"):
-        drupal_set_message(t("user permissions saved."));
-      case "permission":
-        $output .= user_admin_perm($edit);
-        break;
-      case t("Create account"):
-      case "create":
-        $output = user_admin_create($edit);
-        break;
-      case t("Add role"):
-      case t("Delete role"):
-      case t("Save role"):
-        drupal_set_message(t("your role changes were saved."));
-      case "role":
-        $output .= user_admin_role($edit);
-        break;
-      case t("Delete account"):
-      case t("Save account"):
-      case "edit":
-        $output = user_admin_edit($edit);
-        break;
-      default:
-        $output = user_admin_account();
-    }
-    print theme('page', $output);
+  switch ($op) {
+    case "search":
+      $output = search_type('user', url("admin/user/search"), $_POST["keys"]);
+      break;
+    case t("Add rule"):
+    case t("Check"):
+    case "access":
+      $output .= user_admin_access($edit);
+      break;
+    case t("Save permissions"):
+      drupal_set_message(t("user permissions saved."));
+    case "permission":
+      $output .= user_admin_perm($edit);
+      break;
+    case t("Create account"):
+    case "create":
+      $output = user_admin_create($edit);
+      break;
+    case t("Add role"):
+    case t("Delete role"):
+    case t("Save role"):
+      drupal_set_message(t("your role changes were saved."));
+    case "role":
+      $output .= user_admin_role($edit);
+      break;
+    case t("Delete account"):
+    case t("Save account"):
+    case "edit":
+      $output = user_admin_edit($edit);
+      break;
+    default:
+      $output = user_admin_account();
   }
-  else {
-    print theme('page', message_access());
-  }
+  print theme('page', $output);
 }
 // the following functions comprise help for admins and developers
 function user_help($section = "admin/help#user") {

@@ -95,20 +95,15 @@ function filter_admin_settings() {
 }
 
 function filter_admin() {
-  if (user_access("administer site configuration")) {
-    switch (arg(3)) {
-      case "order":
-        $output = filter_admin_order();
-        break;
-      default:
-        $output = filter_admin_settings();
-        break;
-    }
-    print theme("page", $output);
+  switch (arg(3)) {
+    case "order":
+      $output = filter_admin_order();
+      break;
+    default:
+      $output = filter_admin_settings();
+      break;
   }
-  else {
-    print theme("page", message_access());
-  }
+  print theme("page", $output);
 }
 
 function filter_refresh() {

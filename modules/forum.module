@@ -404,40 +404,35 @@ function forum_page() {
 
   $op = $_POST['op'];
 
-  if (user_access('access content')) {
-    if (module_exist('taxonomy')) {
-      $tid = arg(1);
+  if (module_exist('taxonomy')) {
+    $tid = arg(1);
 
-      if (arg(2) == 'new') {
-        if ($nid = _forum_new($tid)) {
-          drupal_goto("node/view/$nid");
-        }
+    if (arg(2) == 'new') {
+      if ($nid = _forum_new($tid)) {
+        drupal_goto("node/view/$nid");
       }
-
-      if (empty($sortby)) {
-        $sortby = isset($user->sortby) ? $user->sortby : variable_get('forum_order', 1);
-      }
-
-      if (empty($forum_per_page)) {
-        $forum_per_page = isset($user->forum_per_page) ? $user->forum_per_page : variable_get('forum_per_page', 25);
-      }
-
-      $offset = ($from / $forum_per_page) + 1;
-
-      $forums = forum_get_forums($tid);
-      $parents = taxonomy_get_parents_all($tid);
-      if ($tid && !in_array($tid, variable_get('forum_containers', array()))) {
-        $topics = forum_get_topics($tid, $sortby, $forum_per_page);
-      }
-
-      print theme('forum_display', $forums, $topics, $parents, $tid, $sortby, $forum_per_page, $offset);
     }
-    else {
-      print theme('page', forum_help('admin/system/modules/forum'), t('Warning'));
+
+    if (empty($sortby)) {
+      $sortby = isset($user->sortby) ? $user->sortby : variable_get('forum_order', 1);
     }
+
+    if (empty($forum_per_page)) {
+      $forum_per_page = isset($user->forum_per_page) ? $user->forum_per_page : variable_get('forum_per_page', 25);
+    }
+
+    $offset = ($from / $forum_per_page) + 1;
+
+    $forums = forum_get_forums($tid);
+    $parents = taxonomy_get_parents_all($tid);
+    if ($tid && !in_array($tid, variable_get('forum_containers', array()))) {
+      $topics = forum_get_topics($tid, $sortby, $forum_per_page);
+    }
+
+    print theme('forum_display', $forums, $topics, $parents, $tid, $sortby, $forum_per_page, $offset);
   }
   else {
-    print theme('page', message_access());
+    print theme('page', forum_help('admin/system/modules/forum'), t('Warning'));
   }
 }
 

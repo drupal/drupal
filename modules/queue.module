@@ -190,16 +190,11 @@ function queue_view($nid) {
 function queue_page() {
   global $user, $vote;
 
-  if ($user->uid && user_access("access submission queue")) {
-    if (arg(1)) {
-      queue_view(arg(1));
-    }
-    else {
-      queue_overview();
-    }
+  if (arg(1)) {
+    queue_view(arg(1));
   }
   else {
-    print theme("page", message_access());
+    queue_overview();
   }
 }
 

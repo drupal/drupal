@@ -205,51 +205,46 @@ function archive_page() {
   $op = $_POST["op"];
   $edit = $_POST["edit"];
 
-  if (user_access("access content")) {
-    if ($op == t("Show")) {
-      $year = $edit["year"];
-      $month = $edit["month"];
-      $day = $edit["day"];
-    }
-    else {
-      $year = arg(1);
-      $month = arg(2);
-      $day = arg(3);
-    }
-
-    $date = mktime(0, 0, 0, $month, $day, $year) - $user->timezone;
-    $date_end = mktime(0, 0, 0, $month, $day + 1, $year) - $user->timezone;
-
-    /*
-    ** Prepare the values of the form fields:
-    */
-
-    $years = drupal_map_assoc(range(2000, 2005));
-    $months = array(1 => t("January"), 2 => t("February"), 3 => t("March"), 4 => t("April"), 5 => t("May"), 6 => t("June"), 7 => t("July"), 8 => t("August"), 9 => t("September"), 10 => t("October"), 11 => t("November"), 12 => t("December"));
-    $days = drupal_map_assoc(range(0, 31));
-
-    $start = "<div class=\"container-inline\">";
-    $start .= form_select("", "year", ($year ? $year : date("Y")), $years). form_select("", "month", ($month ? $month : date("m")), $months) . form_select("", "day", ($day ? $day : date("d")), $days) . form_submit(t("Show"));
-    $start .= "</div>";
-    $output .= form($start);
-
-    /*
-    ** Fetch nodes for the selected date, or current date if none
-    ** selected.
-    */
-
-    if ($year && $month && $day) {
-      $result = db_query_range("SELECT nid FROM {node} WHERE status = '1' AND created > %d AND created < %d ORDER BY created", $date, $date_end, 0, 20);
-
-      while ($nid = db_fetch_object($result)) {
-        $output .= node_view(node_load(array("nid" => $nid->nid)), 1);
-      }
-    }
-    print theme("page", $output);
+  if ($op == t("Show")) {
+    $year = $edit["year"];
+    $month = $edit["month"];
+    $day = $edit["day"];
   }
   else {
-    print theme("page", message_access());
+    $year = arg(1);
+    $month = arg(2);
+    $day = arg(3);
   }
+
+  $date = mktime(0, 0, 0, $month, $day, $year) - $user->timezone;
+  $date_end = mktime(0, 0, 0, $month, $day + 1, $year) - $user->timezone;
+
+  /*
+  ** Prepare the values of the form fields:
+  */
+
+  $years = drupal_map_assoc(range(2000, 2005));
+  $months = array(1 => t("January"), 2 => t("February"), 3 => t("March"), 4 => t("April"), 5 => t("May"), 6 => t("June"), 7 => t("July"), 8 => t("August"), 9 => t("September"), 10 => t("October"), 11 => t("November"), 12 => t("December"));
+  $days = drupal_map_assoc(range(0, 31));
+
+  $start = "<div class=\"container-inline\">";
+  $start .= form_select("", "year", ($year ? $year : date("Y")), $years). form_select("", "month", ($month ? $month : date("m")), $months) . form_select("", "day", ($day ? $day : date("d")), $days) . form_submit(t("Show"));
+  $start .= "</div>";
+  $output .= form($start);
+
+  /*
+  ** Fetch nodes for the selected date, or current date if none
+  ** selected.
+  */
+
+  if ($year && $month && $day) {
+    $result = db_query_range("SELECT nid FROM {node} WHERE status = '1' AND created > %d AND created < %d ORDER BY created", $date, $date_end, 0, 20);
+
+    while ($nid = db_fetch_object($result)) {
+      $output .= node_view(node_load(array("nid" => $nid->nid)), 1);
+    }
+  }
+  print theme("page", $output);
 }
 
 function archive_settings() {
