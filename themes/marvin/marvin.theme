@@ -10,8 +10,6 @@
      <HTML>
      <HEAD>
       <TITLE><? print $site_name; ?></TITLE>
-      <META NAME="description" CONTENT="drop.org">
-      <META NAME="keywords" CONTENT="drop, weblog, portal, community, news, article, announcements, stories, story, computer, science, space, hype, cult, geek, nerd, foo, bar">
      </HEAD>
      <STYLE type="text/css">
       <!--
@@ -23,7 +21,7 @@
       <TABLE BORDER="0" CELLPADDING="8" CELLSPACING="0">
        <TR>
         <TD WIDTH="30" ROWSPAN="3">&nbsp;</TD>
-        <TD><A HREF=""><IMG SRC="themes/marvin/images/logo.gif" ALT="drop.org" BORDER="0"></A></TD>
+        <TD><A HREF=""><IMG SRC="themes/marvin/images/logo.gif" ALT="" BORDER="0"></A></TD>
         <TD>&nbsp;</TD>
        </TR>
        <TR>
