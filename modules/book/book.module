@@ -695,7 +695,7 @@ function book_render() {
       // output the content:
       $output .= '<div class="book">';
       $output .= '<div class="title">'. l($node->title, "book/view/$node->nid") .'</div>';
-      $output .= '<div class="body">'. $node->body .'</div>';
+      $output .= '<div class="body">'. $node->teaser .'</div>';
       $output .= '</div>';
     }
   }
