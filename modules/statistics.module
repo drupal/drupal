@@ -693,6 +693,8 @@ function statistics_cron() {
 /* Displays the "Top nodes" block */
 function statistics_display_topnodes_block() {
 
+  $content = array();
+
   $daytop = variable_get("statistics_block_top_day_num", "");
   if ($daytop) {
     $content[] = theme_invoke("theme_item_list", statistics_title_list("daycount", $daytop), variable_get("statistics_block_top_day_head", ""));
