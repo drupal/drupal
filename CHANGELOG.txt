@@ -24,6 +24,7 @@ Drupal x.x.x, xxxx-xx-xx
     * improved date parsing.
 - database backend:
     * added support for multiple database connections.
+    * the PostgreSQL backend does no longer require PEAR.
 - theme system:
     * changed all GIFs to PNGs.
     * reorganised the handling of themes, template engines, templates and styles.

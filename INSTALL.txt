@@ -3,8 +3,9 @@
 REQUIREMENTS
 ------------
 
-Drupal requires a web server, PHP4 (http://www.php.net/) and MySQL or a
-database server supported by the PHP PEAR API (http://pear.php.net/)
+Drupal requires a web server, PHP4 (http://www.php.net/) and either
+MySQL, PostgreSQL or a database server supported by the PHP PEAR API
+(http://pear.php.net/).
 
 NOTE: The Apache web server and MySQL database are strongly recommended;
 other web server and database combinations such as IIS and PostgreSQL
