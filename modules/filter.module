@@ -734,13 +734,15 @@ function theme_filter_tips($tips, $long = false, $extra = '') {
         $output .= '<strong>'. $name .'</strong>:<br />';
       }
 
-      $output .= '<ul class="tips">';
-
+      $tips = '';
       foreach ($tiplist as $tip) {
-        $output .= '<li'. ($long ? ' id="'. $tip['id'] .'">' : '>') . $tip['tip'] . '</li>';
+        $tips .= '<li'. ($long ? ' id="'. $tip['id'] .'">' : '>') . $tip['tip'] . '</li>';
       }
 
-      $output .= '</ul>';
+      if ($tips) {
+      $output .= "<ul class=\"tips\">$tips</ul>";
+      }
+      
       if ($multiple) {
         $output .= '</li>';
       }
