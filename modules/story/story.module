@@ -13,8 +13,6 @@ function story_help($section) {
   switch ($section) {
     case 'admin/modules#description':
       return t('Enables users to submit stories, articles or similar content.');
-    case 'admin/help#story':
-      return t("Stories are articles in their simplest form: they have a title, a teaser and a body, but can be extended by other modules. The teaser is part of the body too. Stories may be used as a personal blog or for news articles. By default, no menu item, or navigation element is created for a story. An extra feature of a story is, that an administrator can specify a submission guideline and enforce a minimum word count for user submitted stories");
     case 'node/add#story':
       return t('Stories are articles in their simplest form: they have a title, a teaser and a body, but can be extended by other modules. The teaser is part of the body too. Stories may be used as a personal blog or for news articles.');
   }
