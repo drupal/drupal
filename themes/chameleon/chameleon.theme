@@ -1,6 +1,6 @@
 <?php
 
-// $Id: chameleon.theme,v 1.1 2003/12/15 20:47:18 dries Exp $
+// $Id: chameleon.theme,v 1.2 2003/12/29 11:14:01 dries Exp $
 
 function chameleon_help($section) {
 
@@ -109,13 +109,13 @@ function chameleon_node($node, $main = 0, $page = 0) {
 
 function chameleon_comment($comment, $link = "") {
 
-  $date = array(format_date($comment->timestamp, 'small'));
+  $submitted = array(t('By %author at %date', array('%author' => format_name($comment), '%date' => format_date($comment->timestamp. 'small'))));
   $links = array($link);
 
   $output  = "<div class=\"comment\">\n";
   $output .= " <h3 class=\"title\">". $comment->subject ."</h3>\n";
   $output .= " <div class=\"content\">". $comment->comment ."</div>\n";
-  $output .= " <div class=\"links\">". theme('links', array_merge($date, $links)) ."</div>\n";
+  $output .= " <div class=\"links\">". theme('links', array_merge($submitted, $links)) ."</div>\n";
   $output .= "</div>\n";
 
   return $output;
