@@ -83,10 +83,10 @@ function archive_calendar($original = 0) {
   $output .= "\n<!-- calendar -->\n";
   $output .= "<div class=\"calendar\">";
   $output .= "<table summary=\"". t('A calendar to browse the archives') .".\">\n";
-  $output .= " <tr><td colspan=\"7\" class=\"header-month\">". l("&laquo;", "archive/". date("Y/m/d", $prev)) ." ". format_date($requested, "custom", "F") . date(" Y", $requested) ." ". ($nextmonth <= time() ? l("&raquo;", "archive/". date("Y/m/d", $next)) : "&nbsp;") ."</td></tr>\n";
+  $output .= " <caption>". l("&laquo;", "archive/". date("Y/m/d", $prev), array('title' => t("Previous month"))) ." ". format_date($requested, "custom", "F") . date(" Y", $requested) ." ". ($nextmonth <= time() ? l("&raquo;", "archive/". date("Y/m/d", $next), array('title' => t("Next month"))) : "&nbsp;") ."</caption>\n";
 
   // First day of week (0 => Sunday, 1 => Monday, ...)
-  $cday = $weekstart = variable_get("default_firstday", 0);
+  $weekstart = variable_get("default_firstday", 0);
 
   // Last day of week
   ($weekstart - 1 == -1) ? $lastday = 6 : $lastday = $weekstart - 1;
@@ -94,11 +94,14 @@ function archive_calendar($original = 0) {
   // Generate the days of the week:
   $firstcolumn = mktime(0, 0, 0, 3, 20 + $weekstart, 1994);
 
-  $output .= " <tr class=\"header-week\">";
-  $days = array(t('Su'), t('Mo'), t('Tu'), t('We'), t('Th'), t('Fr'), t('Sa'));
-  for ($i = 0; $i < 7; $i++) {
-    $output .= "<td>". $days[$cday] . "</td>";
-    $cday = ($cday < 6 ? $cday+1 : 0);
+  $output .= " <tr class=\"header-week\">\n";
+  $days = array(t('Su') => t('Sunday'), t('Mo') => t('Monday'), t('Tu') => t('Tuesday'), t('We') => t('Wednesday'), t('Th') => t('Thursday'), t('Fr') => t('Friday'), t('Sa') => t('Saturday'));
+  if ($weekstart) {
+    $days = array_merge(array_slice($days, $weekstart), array_slice($days, 0, $weekstart));
+  }
+  
+  foreach ($days as $name => $fullname) {
+    $output .= " <th abbr=\"". $fullname ."\">". $name . "</th>\n";
   }
   $output .= "</tr>\n";
 
@@ -126,7 +129,7 @@ function archive_calendar($original = 0) {
       $dayclass = "day-link";
     }
     else {
-      $daytext = "<div>$nday</div>";
+      $daytext = $nday;
       $dayclass = "day-normal";
     }
     if ($date == $requested) {

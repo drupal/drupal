@@ -498,12 +498,9 @@ table#footer-menu {
 .calendar a {
   text-decoration: none;
 }
-.calendar td {
-  padding: 0;
-  border-color: #888;
-}
-.calendar td div {
+.calendar td, .calendar th {
   padding: 0.4em 0;
+  border-color: #888;
 }
 .calendar .row-week td a {
   padding: 0.4em 0;
@@ -517,9 +514,6 @@ table#footer-menu {
 .calendar .day-selected {
   background-color: #369;
   color: #fff;
-}
-.calendar .header-month {
-  background-color: #bbb;
 }
 .calendar .header-week {
   background-color: #ccc;
