@@ -570,19 +570,23 @@ function taxonomy_admin() {
 
     switch ($op) {
       case "add":
-        if ($type == "vocabulary")
+        if ($type == "vocabulary") {
           print taxonomy_form_vocabulary();
-        else
+        }
+        else {
           print taxonomy_form_term();
+        }
         break;
       case "edit":
-        if ($type == "vocabulary")
+        if ($type == "vocabulary") {
           print taxonomy_form_vocabulary(object2array(taxonomy_get_vocabulary($id)));
-        else
+        }
+        else {
           print taxonomy_form_term(object2array(taxonomy_get_term($id)));
+        }
         break;
       case "preview":
-          print taxonomy_form($id);
+        print taxonomy_form($id);
         break;
       case "help":
         print taxonomy_help();
@@ -591,10 +595,12 @@ function taxonomy_admin() {
         $edit["name"] = 0;
         // fall through:
       case "Submit":
-        if ($type == "vocabulary")
+        if ($type == "vocabulary") {
           print status(taxonomy_save_vocabulary($edit));
-        else
+        }
+        else {
           print status(taxonomy_save_term($edit));
+        }
         // fall through:
       default:
         print taxonomy_overview();

@@ -47,11 +47,11 @@ function cloud_update($site) {
   ** Check whether the site is properly configured:
   */
 
-  if (!ereg("^http://|https://|ftp://", $site[link])) {
+  if (!ereg("^http://|https://|ftp://", $site["link"])) {
     watchdog("warning", "cloud: invalid or missing URL for '". $site["name"] ."'");
   }
 
-  if (!ereg("^http://|https://|ftp://", $site[feed])) {
+  if (!ereg("^http://|https://|ftp://", $site["feed"])) {
     watchdog("warning", "cloud: invalid or missing URL to monitor for '". $site["name"] ."'");
   }
 

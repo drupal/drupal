@@ -513,7 +513,7 @@ function format_interval($timestamp) {
 function format_date($timestamp, $type = "medium", $format = "") {
   global $user;
 
-  // $timestamp += ($user->timezone) ? $user->timezone - date("Z") : 0;
+  $timestamp += ($user->timezone) ? $user->timezone - date("Z") : 0;
 
   switch ($type) {
     case "small":
