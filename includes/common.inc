@@ -90,11 +90,12 @@ function format_info($body, $block) {
   return "<table><tr><td><table align=\"right\" border=\"1\" width=\"180\"><tr><td>$block</td></tr></table>$body</td></tr></table>\n";
 }
 
-function format_rss_channel($title, $link, $description, $items) {
+function format_rss_channel($title, $link, $description, $items, $language = "en") {
   $output .= "<channel>\n";
   $output .= " <title>". strip_tags($title) ."</title>\n";
   $output .= " <link>". strip_tags($link) ."</link>\n";
   $output .= " <description>". htmlentities($description) ."</description>\n";
+  $output .= " <language>$language</language>\n";
   $output .= $items;
   $output .= "</channel>\n";
 
