@@ -1,0 +1,44 @@
+List of maintainers
+--------------------------------------------------------------------------------
+
+LEGEND
+======
+
+- M: the maintainer
+- S: status:
+      "supported"     : someone is actually paid to look after this.
+      "maintained"    : someone actually looks after it.
+      "fixes/patches" : it has a maintainer but they don't have time to
+                        do much other than throw the odd patch in.
+      "orphan"        : no current maintainer, but maybe you could take
+                        the role as you write new code?
+- W: website with status or information
+
+--------------------------------------------------------------------------------
+
+BLOCK SYSTEM
+M: Kjartan Mannes <kjartan@drop.org>
+S: maintained
+
+CODING STYLE CHECKER
+M: Alexander Schwartz <alexander.schwartz@gmx.net>
+S: maintained
+
+POLL MODULE
+P: Steven Wittens <unconed@drop.org>
+S: maintained
+
+POSTGRES PORT
+M: J C Lawrence <claw@kanga.nu>
+S: fixes/patches
+
+THEME GOOFY, THEME UNCONED
+P: Steven Wittens <unconed@drop.org>
+S: maintained
+
+USER SYSTEM, DISTRIBUTED AUTHENTICATION
+P: Moshe Weitzman <weitzman@prospero.com>
+S: maintained
+
+THE REST:
+P: Dries Buytaert <dries@drop.org>
