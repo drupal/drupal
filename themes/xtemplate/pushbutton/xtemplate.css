@@ -318,7 +318,7 @@ table#footer-menu {
   margin: .5em 0 2.5em 0;
 }
 .node .content, .comment .content {
-  padding: .5em 0 .75em 0;
+  margin: .5em 0 .5em 0;
 }
 .node .taxonomy {
   color: #999;

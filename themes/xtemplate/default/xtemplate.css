@@ -52,9 +52,6 @@ table {
   /* make <td> sizes relative to body size! */
   font-size: 1em;
 }
-.form-item {
-  margin-top: 1em;
-}
 .form-item label {
   font-size: 1em;
   color: #222;
@@ -62,6 +59,9 @@ table {
 .item-list .title {
   font-size: 1em;
   color: #222;
+}
+.links {
+  margin-bottom: 2em;
 }
 
 /*
@@ -209,7 +209,7 @@ table {
   border: solid 1px #ddd;
 }
 .node .content, .comment .content {
-  padding: .5em 0 .75em 0;
+  margin: .5em 0 .5em 0;
 }
 .node .taxonomy {
   color: #999;

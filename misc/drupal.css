@@ -18,6 +18,10 @@ hr {
 img {
   border: 0;
 }
+p {
+  margin-top: 0.5em;
+  margin-bottom: 0.9em;
+}
 pre, code {
   font-size: 11px;
 }
@@ -129,7 +133,13 @@ td.menu-disabled {
   list-style: disc;
 }
 .form-item {
+  margin-top: 1em;
   margin-bottom: 1em;
+}
+tr.light .form-item, tr.dark .form-item {
+  margin-top: 0em;
+  margin-bottom: 0em;
+  white-space: nowrap;
 }
 .form-item input.error {
   border: 2px solid red;
@@ -359,29 +369,35 @@ td.menu-disabled {
 .user-login-block {
   text-align: center;
 }
-td.watchdog-user {
-  background: #fea;
-  border: 1px solid #dc8;
+tr td.watchdog-user {
+  background: #ffd;
 }
-td.watchdog-message {
-  background: #fff;
-  border: 1px solid #ddd;
+tr td.watchdog-user.active {
+  background: #eed;
 }
-td.watchdog-special {
-  background: #ccf;
-  border: 1px solid #99c;
+tr td.watchdog-special {
+  background: #ddf;
 }
-td.watchdog-warning {
-  background: #fa2;
-  border: 1px solid #d80;
+tr td.watchdog-special.active {
+  background: #cce;
 }
-td.watchdog-httpd {
-  background: #9d9;
-  border: 1px solid #7b7;
+tr td.watchdog-warning {
+  background: #fda;
 }
-td.watchdog-error {
-  background: #e44;
-  border: 1px solid #c22;
+tr td.watchdog-warning.active {
+  background: #ec9;
+}
+tr td.watchdog-httpd {
+  background: #dfd;
+}
+tr td.watchdog-httpd.active {
+  background: #cec;
+}
+tr td.watchdog-error {
+  background: #ffc9c9;
+}
+tr td.watchdog-error.active {
+  background: #eeb9b9;
 }
 
 /* Tab navigation */
