@@ -138,11 +138,6 @@ function comment_settings() {
 
 function comment_user($type, $edit, &$user) {
   switch ($type) {
-    case "view":
-      if ($user->signature) {
-        return form_item(t("Signature"), check_output($user->signature));
-      }
-      break;
     case "edit":
       // when user tries to edit his own data
       return array(t('Personal information') => form_textarea(t("Signature"), "signature", $user->signature, 64, 3, t("Your signature will be publicly displayed at the end of your comments.") ."<br />". filter_tips_short()));

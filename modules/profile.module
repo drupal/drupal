@@ -129,15 +129,15 @@ function profile_view_profile($user) {
   while ($field = db_fetch_object($result)) {
     if ($value = profile_view_field($user, $field)) {
       if ($field->type == 'checkbox') {
-        $output .= "<p>$value</p>";
+        $fields[$field->category] .= "<p>$value</p>";
       }
       else {
-        $output .= form_item($field->title, check_output($value));
+        $fields[$field->category] .= form_item($field->title, check_output($value));
       }
     }
   }
 
-  return $output;
+  return $fields;
 }
 
 function profile_edit_profile($edit, $user) {

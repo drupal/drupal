@@ -95,6 +95,9 @@ function system_user($type, $edit, &$user) {
     $data[t('Locale settings')] = form_select(t("Time zone"), "timezone", $edit["timezone"], $zones, t("Select what time you currently have and your time zone settings will be set appropriate."));
     return $data;
   }
+  else if ($type == 'view') {
+    // do nothing
+  }
   else {
     return $edit;
   }
