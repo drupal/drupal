@@ -100,6 +100,12 @@ function book_form($edit = array()) {
   $output .= "<INPUT TYPE=\"hidden\" NAME=\"edit[userid]\" VALUE=\"$edit[userid]\">\n";
   $output .= format_username(($edit[userid] ? $edit[userid] : $user->userid)) ."<P>\n";
 
+  $output .= "<B>". t("Subject") .":</B><BR>\n";
+  $output .= "<INPUT TYPE=\"text\" NAME=\"edit[title]\" SIZE=\"50\" MAXLENGTH=\"128\" VALUE=\"". check_textfield($edit[title]) ."\"><P>\n";
+
+  $output .= "<B>". t("Category") .":</B><BR>\n";
+  $output .= category_form_select("book", $edit) ."<P>";
+
   if ($edit[pid]) {
     $node = node_get_object("nid", $edit[pid]);
     $output .= "<B>". t("Parent") .":</B><BR>\n";
@@ -114,9 +120,6 @@ function book_form($edit = array()) {
     $output .= "<SELECT NAME=\"edit[parent]\">$options2</SELECT><BR>\n";
     $output .= "<SMALL><I>". t("The parent subject or category the page belongs in.") ."</I></SMALL><P>\n";
   }
-
-  $output .= "<B>". t("Subject") .":</B><BR>\n";
-  $output .= "<INPUT TYPE=\"text\" NAME=\"edit[title]\" SIZE=\"50\" MAXLENGTH=\"128\" VALUE=\"". check_textfield($edit[title]) ."\"><P>\n";
 
   $output .= "<B>". t("Content") .":</B><BR>\n";
   $output .= "<TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"edit[body]\" MAXLENGTH=\"20\">". check_textarea($edit[body]) ."</TEXTAREA><BR>\n";
