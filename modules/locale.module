@@ -41,7 +41,7 @@ function locale_perm() {
 
 function locale_link($type) {
   if ($type == "admin" && user_access("administer locales")) {
-    $links[] = "<a href=\"admin.php?mod=locale\">locales</a>";
+    $links[] = la(t("locales"), array("mod" => "locale"));
   }
 
   return $links ? $links : array();
@@ -59,7 +59,7 @@ function locale_delete($lid) {
 function locale_save($lid) {
   global $edit;
   foreach ($edit as $key=>$value) {
-    db_query("UPDATE locales SET $key = '". check_query($value) ."' WHERE lid = '$lid'");
+    db_query("UPDATE locales SET $key = '%s' WHERE lid = '$lid'", $value);
   }
   locale_refresh_cache();
   // delete form data so it will remember where it came from
@@ -70,7 +70,7 @@ function locale_refresh_cache() {
   global $languages;
 
   foreach (array_keys($languages) as $locale) {
-    $result = db_query("SELECT string, ". check_query($locale) ." FROM locales");
+    $result = db_query("SELECT string, %s FROM locales", $locale);
     while ($data = db_fetch_object($result)) {
       $t[$data->string] = $data->$locale;
     }
@@ -106,10 +106,10 @@ function locale_links($translation) {
 
   foreach ($languages as $key=>$value) {
     if ($translation) {
-      $output .= "<a href=\"admin.php?mod=locale&op=translated&language=$key\">translated '$key' strings</a> | ";
+      $output .= la(t("translated '$key' strings"), array("mod" => "locale", "op" => "translated", "language" => $key))." | ";
     }
     else {
-      $output .= "<a href=\"admin.php?mod=locale&op=untranslated&language=$key\">untranslated '$key' strings</a> | ";
+      $output .= la(t("untranslated '$key' strings"), array("mod" => "locale", "op" => "untranslated", "language" => $key))." | ";
     }
   }
 
@@ -191,7 +191,7 @@ function locale_seek() {
         $output .= "<td align=\"center\">". check_output(locale_languages($locale)) ."</td>";
       }
 
-      $output .= "<td nowrap=\"nowrap\"><a href=\"admin.php?mod=locale&op=edit&id=$locale->lid\">edit locale</a></td><td nowrap=\"nowrap\"><a href=\"admin.php?mod=locale&op=delete&id=$locale->lid\">delete locale</a></td></tr>";
+      $output .= "<td nowrap=\"nowrap\">".la(t("edit locale"), array("mod" => "locale", "op" => "edit", "id" => $locale->lid))."</td><td nowrap=\"nowrap\">".la(t("delete locale"), array("mod" => "locale", "op" => "delete", "id" => $locale->lid))."</td></tr>";
     }
     $output .= "</table>\n";
   }
@@ -216,7 +216,7 @@ function locale_admin() {
     print status("locale disabled.");
   }
   else if (user_access("administer locales")) {
-    print "<small>". locale_links(1) . locale_links(0) ."<a href=\"admin.php?mod=locale&op=Search\">search</a> | <a href=\"admin.php?mod=locale&op=overview\">overview</a> | <a href=\"admin.php?mod=locale&op=help\">help</a></small><hr />\n";
+    print "<small>". locale_links(1) . locale_links(0) .la(t("search"), array("mod" => "locale", "op" => "Search"))." | ".la(t("overview"), array("mod" => "locale", "op" => "overview"))." | ".la(t("help"), array("mod" => "locale", "op" => "help"))."</small><hr />\n";
 
     switch ($op) {
       case "delete":
@@ -266,9 +266,9 @@ function locale($string) {
       $string = check_output($locale_t[$string]);
     }
     else {
-      $result = db_query("SELECT lid, $locale FROM locales WHERE STRCMP(string, '". addslashes($string) ."') = 0");
+      $result = db_query("SELECT lid, $locale FROM locales WHERE string = '%s'", $string);
       if (!db_fetch_object($result)) {
-        db_query("INSERT INTO locales (string, location) VALUES ('". check_query($string) ."', '". check_query(getenv("REQUEST_URI")) ."')");
+        db_query("INSERT INTO locales (string, location) VALUES ('%s', '%s')", $string, getenv("PATH_INFO"));
       }
     }
   }

@@ -221,7 +221,7 @@ function bloggerapi_user_blogs() {
   global $user;
 
   if ($user->uid) {
-    $struct = new xmlrpcval(array("url" => new xmlrpcval(path_uri() . "module.php?mod=blog&op=view&id=". urlencode($user->uid)),
+    $struct = new xmlrpcval(array("url" => new xmlrpcval(path_uri() . drupal_url(array("mod" => "blog", "op" => "view", "id" => urlencode($user->uid)), "module")),
                                   "blogid" => new xmlrpcval($user->uid),
                                   "blogName" => new xmlrpcval($user->name . "'s blog at ". variable_get("site_name", "drupal"))
                                   ),"struct");
@@ -237,7 +237,7 @@ function bloggerapi_user_info() {
   if ($user->uid) {
     return new xmlrpcval(array("nickname" => new xmlrpcval($user->name, "string"),
                                "userid" => new xmlrpcval($user->id, "string"),
-                               "url" => new xmlrpcval(path_uri() . "module.php?mod=blog&op=view&id=". urlencode($user->uid), "string"),
+                               "url" => new xmlrpcval(path_uri() . drupal_url(array("mod" => "blog", "op" => "view", "id" => urlencode($user->uid)), "module"), "string"),
                                "email" => new xmlrpcval($user->mail, "string"),
                                "lastname" => new xmlrpcval(substr($user->name, strrpos($user->name," ")+1), "string"),
                                "firstname" => new xmlrpcval(substr($user->name, 0, strrpos($user->name," ")), "string"),
@@ -375,7 +375,7 @@ function bloggerapi_help() {
 <p><a href="http://www.blogger.com">Blogger</a>, the well-known public
 weblog service, provides an application programing interface (API) to
 allow remote procedure calls (RPC) to the Blogger service. Drupal supports this <a href="http://plant.blogger.com/api/index.html">Blogger API</a>, which means that many remote clients (e.g. <a href="radio.userland.com">Radio</a>, <a href="http://simon.kittle.info/textrouter">TextRouter</a>, <a href="http://blogbuddy.sourceforge.net/">Blogbuddy</a>, <a href="http://www.bloggar.cjb.net/">Bloggar</a>,<a href="http://www.tswoam.co.uk/index.php?n_go=16">PerlyBlog</a>), may post to Drupal. These clients provide a bevy of interesting capabilities like offline composing, spellcheck, and WYSIWYG editing; many folks prefer to blog with a client application over typical web forms. By supporting the Blogger API, Drupal grows grander than a  web site engine, it's a <i>content accepting machine</i>&trade;.
-<p>The <a href="http://plant.blogger.com/api/index.html">Blogger RPC API</a> uses the <a href="http://www.xmlrpc.com">XML-RPC</a> protocol  for communicating with the outside world. XML-RPC, originally developed by Dave Winer of <a href="http://www.userland.com">UserLand Software</a>, is a simple XML-based RPC specification ideally suited to the web. Drupal also uses XML-RPC for several other tasks (e.g. notifiying <a href="http://www.weblogs.com">weblogs.com</a> of blog updates and making/accepting <a hr ef="/module.php?mod=user&op=help">Distributed Authentication</a> requests)</p>
+<p>The <a href="http://plant.blogger.com/api/index.html">Blogger RPC API</a> uses the <a href="http://www.xmlrpc.com">XML-RPC</a> protocol  for communicating with the outside world. XML-RPC, originally developed by Dave Winer of <a href="http://www.userland.com">UserLand Software</a>, is a simple XML-based RPC specification ideally suited to the web. Drupal also uses XML-RPC for several other tasks (e.g. notifiying <a href="http://www.weblogs.com">weblogs.com</a> of blog updates and making/accepting <? echo lm("Distributed Authentication", array("mod" => "user", "op" => "help")) ?> requests)</p>
 
 <h3>Drupal Implementation </h3>
 

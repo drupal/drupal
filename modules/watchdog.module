@@ -14,7 +14,7 @@ function watchdog_perm() {
 
 function watchdog_link($type) {
   if ($type == "admin" && user_access("administer watchdog")) {
-    $links[] = "<a href=\"admin.php?mod=watchdog\">watchdog</a>";
+    $links[] = la(t("watchdog"), array("mod" => "watchdog"));
   }
 
   return $links ? $links : array();
@@ -40,7 +40,7 @@ function watchdog_overview($type) {
   $output .= " <tr><th>date</th><th>message</th><th>user</th><th>operations</th></tr>";
   while ($watchdog = db_fetch_object($result)) {
     if ($background = $color[$watchdog->type]) {
-      $output .= " <tr bgcolor=\"$background\"><td>". format_date($watchdog->timestamp, "small") ."</td><td>". substr(check_output($watchdog->message), 0, 64) ."</td><td align=\"center\">". format_name($watchdog) ."</a></td><td align=\"center\"><a href=\"admin.php?mod=watchdog&op=view&id=$watchdog->wid\">details</a></td></tr>";
+      $output .= " <tr bgcolor=\"$background\"><td>". format_date($watchdog->timestamp, "small") ."</td><td>". substr(check_output($watchdog->message), 0, 64) ."</td><td align=\"center\">". format_name($watchdog) ."</a></td><td align=\"center\">".la(t("details"), array("mod" => "watchdog", "op" => "view", "id" => $watchdog->wid))."</td></tr>";
     }
   }
   $output .= "</table>";
@@ -70,7 +70,16 @@ function watchdog_admin() {
 
   if (user_access("administer watchdog")) {
 
-    print "<small><a href=\"admin.php?mod=watchdog&type=user\">user messages</a> | <a href=\"admin.php?mod=watchdog&type=regular\">regular messages</a> | <a href=\"admin.php?mod=watchdog&type=special\">special messages</a> | <a href=\"admin.php?mod=watchdog&type=warning\">warning messages</a> | <a href=\"admin.php?mod=watchdog&type=error\">error messages</a> | <a href=\"admin.php?mod=watchdog&type=httpd\">httpd messages</a> | <a href=\"admin.php?mod=watchdog\">overview</a> | <a href=\"admin.php?mod=watchdog&op=help\">help</a></small><hr />";
+    $links[] = la(t("user messages"), array("mod" => "watchdog", "type" => "user"));
+    $links[] = la(t("regular messages"), array("mod" => "watchdog", "type" => "regular"));
+    $links[] = la(t("special messages"), array("mod" => "watchdog", "type" => "special"));
+    $links[] = la(t("warning messages"), array("mod" => "watchdog", "type" => "warning"));
+    $links[] = la(t("error messages"), array("mod" => "watchdog", "type" => "error"));
+    $links[] = la(t("httpd messages"), array("mod" => "watchdog", "type" => "httpd"));
+    $links[] = la(t("overview"), array("mod" => "watchdog"));
+    $links[] = la(t("help"), array("mod" => "watchdog", "op" => "help"));
+
+    print "<small>".implode(" | ", $links)."</small><hr />";
 
     switch ($op) {
       case "help":

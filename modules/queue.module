@@ -21,7 +21,7 @@ function queue_perm() {
 
 function queue_link($type) {
   if ($type == "menu.view" && user_access("access submission queue")) {
-    $links[] = "<a href=\"module.php?mod=queue\" title=\"". t("Moderate the content in the submission queue.") ."\">". t("view submissions") ."</a> (<span style=\"color: red;\">". queue_count() ."</span>)";
+    $links[] = la(t("view submissions"), array("mod" => "queue"), t("Moderate the content in the submission queue."))." (<span style=\"color: red;\">". queue_count() ."</span>)";
   }
 
   return $links ? $links : array();
@@ -84,10 +84,10 @@ function queue_overview() {
   $output .= " <tr><th>". t("Subject") ."</th><th>". t("Author") ."</th><th>". t("Type") ."</th><th>". t("Score") ."</th></tr>";
   while ($node = db_fetch_object($result)) {
     if ($user->uid == $node->uid || field_get($node->users, $user->uid)) {
-      $output .= " <tr><td><a href=\"module.php?mod=queue&op=view&id=$node->nid\">". check_output($node->title) ."</a></td><td align=\"center\">". format_name($node) ."</td><td align=\"center\">". module_invoke($node->type, "node", "name") ."</td><td align=\"center\">". queue_score($node->nid) ."</td></tr>";
+      $output .= " <tr><td>".la(check_output($node->title), array("mod" => "queue", "op" => "view", "id" => $node->nid))."</td><td align=\"center\">". format_name($node) ."</td><td align=\"center\">". module_invoke($node->type, "node", "name") ."</td><td align=\"center\">". queue_score($node->nid) ."</td></tr>";
     }
     else {
-      $output .= " <tr><td><a href=\"module.php?mod=queue&op=view&id=$node->nid\">". check_output($node->title) ."</a></td><td align=\"center\">". format_name($node) ."</td><td align=\"center\">". module_invoke($node->type, "node", "name") ."</td><td align=\"center\"><a href=\"module.php?mod=queue&op=view&id=$node->nid\">". t("vote") ."</a></td></tr>";
+      $output .= " <tr><td>".lm(check_output($node->title), array("mod" => "queue", "op" => "view", "id" => $node->nid))."</td><td align=\"center\">". format_name($node) ."</td><td align=\"center\">". module_invoke($node->type, "node", "name") ."</td><td align=\"center\">".lm(t("vote"), array("mod" => "queue", "op" => "view", "id" => $node->nid))."</td></tr>";
     }
 
     if ($node->teaser) {

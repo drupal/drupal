@@ -18,7 +18,7 @@ function block_perm() {
 
 function block_link($type) {
   if ($type == "admin" && user_access("administer blocks")) {
-    $links[] = "<a href=\"admin.php?mod=block\">blocks</a>";
+    $links[] = la(t("blocks"), array("mod" => "block"));
   }
 
   return $links ? $links : array();
@@ -26,7 +26,7 @@ function block_link($type) {
 
 function block_admin_save($edit) {
   foreach ($edit as $key=>$value) {
-    db_query("UPDATE blocks SET region = '". check_input($value["region"]) ."', status = '". check_input($value["status"]) ."', path = '". check_input($value["path"]) ."', weight = '". check_input($value["weight"]) ."' WHERE name = '". check_input($key) ."'");
+    db_query("UPDATE blocks SET region = '%s', status = '%s', path = '%s', weight = '%s' WHERE name = '%s'", $value["region"], $value["status"], $value["path"], $value["weight"], $key);
   }
 }
 
@@ -34,12 +34,12 @@ function block_admin_display() {
   $result = db_query("SELECT * FROM blocks ORDER BY module");
 
   // Generate output:
-  $output .= "<form action=\"admin.php?mod=block\" method=\"post\">\n";
+  $output .= "<form action=\"".drupal_url(array("mod" => "block"), "admin")." method=\"post\">\n";
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
   $output .= " <tr><th>block</th><th>module</th><th>status</th><th>weight</th><th>region</th><th>path</th></tr>\n";
 
   while ($block = db_fetch_object($result)) {
-    $module = module_hook($block->module, "admin") ? "<A HREF=\"admin.php?mod=$block->module\">$block->module</A>" : $block->module;
+    $module = module_hook($block->module, "admin") ? la($block->module, array("mod" => $block->module)) : $block->module;
 
     $status = "<select name=\"edit[$block->name][status]\">\n";
     $status .= " <option value=\"2\"". (($block->status == 2) ? " selected" : "") .">enabled: always</option>\n";
@@ -73,40 +73,40 @@ function block_admin_display() {
 function block_admin_preview() {
 
   $result = db_query("SELECT * FROM blocks WHERE status > 0 AND region = 0 ORDER BY weight");
-  $lblocks .= "<TABLE BORDER=\"0\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
-  while ($block = db_fetch_object($result)) $lblocks .= " <TR><TD NOWRAP>". ($block->status == 2 ? "<B>$block->name</B>" : $block->name) ."</TD><TD>$block->weight</TD></TR>\n";
-  $lblocks .= "</TABLE>\n";
+  $lblocks .= "<table border=\"0\" cellpadding=\"2\" cellspacing=\"2\">\n";
+  while ($block = db_fetch_object($result)) $lblocks .= " <tr><td nowrap>". ($block->status == 2 ? "<b>$block->name</b>" : $block->name) ."</td><td>$block->weight</td></tr>\n";
+  $lblocks .= "</table>\n";
 
   $result = db_query("SELECT * FROM blocks WHERE status > 0 AND region = 1 ORDER BY weight");
-  $rblocks .= "<TABLE BORDER=\"0\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
-  while ($block = db_fetch_object($result)) $rblocks .= " <TR><TD NOWRAP>". ($block->status == 2 ? "<B>$block->name</B>" : $block->name) ."</TD><TD>$block->weight</TD></TR>\n";
-  $rblocks .= "</TABLE>\n";
+  $rblocks .= "<table border=\"0\" cellpadding=\"2\" cellspacing=\"2\">\n";
+  while ($block = db_fetch_object($result)) $rblocks .= " <tr><td nowrap>". ($block->status == 2 ? "<b>$block->name</b>" : $block->name) ."</td><td>$block->weight</td></tr>\n";
+  $rblocks .= "</table>\n";
 
-  $output .= "<H3>layout scheme #1:</H3>\n";
-  $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
-  $output .= " <TR><TD ALIGN=\"center\" COLSPAN=\"3\">header</TD></TR>\n";
-  $output .= " <TR><TD>\n". ($lblocks ? $lblocks : "&nbsp;") ."</TD><TD WIDTH=\"300\">&nbsp;</TD><TD>\n". ($rblocks ? $rblocks : "&nbsp;") ."</TD></TR>\n";
-  $output .= " <TR><TD ALIGN=\"center\" COLSPAN=\"3\">footer</TD></TR>\n";
-  $output .= "</TABLE>\n";
+  $output .= "<h3>layout scheme #1:</h3>\n";
+  $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
+  $output .= " <tr><td align=\"center\" colspan=\"3\">header</td></tr>\n";
+  $output .= " <tr><td>\n". ($lblocks ? $lblocks : "&nbsp;") ."</td><td width=\"300\">&nbsp;</td><td>\n". ($rblocks ? $rblocks : "&nbsp;") ."</td></tr>\n";
+  $output .= " <tr><td align=\"center\" colspan=\"3\">footer</td></tr>\n";
+  $output .= "</table>\n";
 
   $result = db_query("SELECT * FROM blocks WHERE status > 0 ORDER BY weight");
-  $blocks .= "<TABLE BORDER=\"0\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
-  while ($block = db_fetch_object($result)) $blocks .= " <TR><TD NOWRAP>". ($block->status == 2 ? "<B>$block->name</B>" : $block->name) ."</TD><TD>$block->weight</TD></TR>\n";
-  $blocks .= "</TABLE>\n";
+  $blocks .= "<table border=\"0\" cellpadding=\"2\" cellspacing=\"2\">\n";
+  while ($block = db_fetch_object($result)) $blocks .= " <tr><td nowrap>". ($block->status == 2 ? "<b>$block->name</b>" : $block->name) ."</td><td>$block->weight</td></tr>\n";
+  $blocks .= "</table>\n";
 
-  $output .= "<H3>layout scheme #2:</H3>\n";
-  $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
-  $output .= " <TR><TD ALIGN=\"center\" COLSPAN=\"2\">header</TD></TR>\n";
-  $output .= " <TR><TD WIDTH=\"400\">&nbsp;</TD><TD>\n". ($blocks ? $blocks : "&nbsp;") ."</TD></TR>\n";
-  $output .= " <TR><TD ALIGN=\"center\" COLSPAN=\"2\">footer</TD></TR>\n";
-  $output .= "</TABLE>\n";
+  $output .= "<h3>layout scheme #2:</h3>\n";
+  $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
+  $output .= " <tr><td align=\"center\" colspan=\"2\">header</td></tr>\n";
+  $output .= " <tr><td width=\"400\">&nbsp;</td><td>\n". ($blocks ? $blocks : "&nbsp;") ."</td></tr>\n";
+  $output .= " <tr><td align=\"center\" colspan=\"2\">footer</td></tr>\n";
+  $output .= "</table>\n";
 
-  $output .= "<H3>layout scheme #3:</H3>\n";
-  $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
-  $output .= " <TR><TD ALIGN=\"center\" COLSPAN=\"2\">header</TD></TR>\n";
-  $output .= " <TR><TD>\n". ($blocks ? $blocks : "&nbsp;") ."</TD><TD WIDTH=\"400\">&nbsp;</TD></TR>\n";
-  $output .= " <TR><TD ALIGN=\"center\" COLSPAN=\"2\">footer</TD></TR>\n";
-  $output .= "</TABLE>\n";
+  $output .= "<h3>layout scheme #3:</h3>\n";
+  $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
+  $output .= " <tr><td align=\"center\" colspan=\"2\">header</td></tr>\n";
+  $output .= " <tr><td>\n". ($blocks ? $blocks : "&nbsp;") ."</td><td width=\"400\">&nbsp;</td></tr>\n";
+  $output .= " <tr><td align=\"center\" colspan=\"2\">footer</td></tr>\n";
+  $output .= "</table>\n";
 
   print $output;
 }
@@ -128,7 +128,7 @@ function block_admin() {
 
   if (user_access("administer blocks")) {
 
-    print "<SMALL><A HREF=\"admin.php?mod=block\">configure</A> | <A HREF=\"admin.php?mod=block&op=preview\">preview</A> | <A HREF=\"admin.php?mod=block&op=help\">help</A></SMALL><HR>\n";
+    print "<small>".la(t("configure"), array("mod" => "block"))." | ".la(t("preview"), array("mod" => "block", "op" => "preview"))." | ".la(t("help"), array("mod" => "block", "op" => "help"))."</small><hr>\n";
 
     block_init();
 

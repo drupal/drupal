@@ -3,7 +3,7 @@
 
 function help_link($type) {
   if ($type == "admin") {
-    $links[] = "<a href=\"admin.php?mod=help\">help</a>";
+    $links[] = la(t("help"), array("mod" => "help"));
   }
 
   return $links ? $links : array();

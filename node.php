@@ -42,7 +42,7 @@ if ($number > 1) {
 
   while ($node = db_fetch_object($result)) {
     if (node_access("view", $node)) {
-      $output .= "<p><b><a href=\"node.php?id=$node->nid\">". check_output($node->title) ."</a></b><br /><small>$node->type - ". format_name($node) ." - ". format_date($node->ccreated, "small") ."</small></p>";
+      $output .= "<p><b>".l(check_output($node->title), array("id" => $node->nid))."</b><br /><small>$node->type - ". format_name($node) ." - ". format_date($node->ccreated, "small") ."</small></p>";
     }
   }
 

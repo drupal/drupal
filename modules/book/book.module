@@ -92,30 +92,30 @@ function book_save($op, $node) {
 
 function book_link($type, $node = 0, $main = 0) {
   if ($type == "page" && user_access("access content")) {
-    $links[] = "<a href=\"module.php?mod=book\" title=\"". t("Read and contribute to the collaborative books.") ."\">". t("collaborative book") ."</a>";
+    $links[] = lm(t("collaborative book"), array("mod" => "book"), t("Read and contribute to the collaborative books."));
   }
 
   if ($type == "menu.create" && user_access("post content")) {
-    $links[] = "<a href=\"module.php?mod=node&op=add&type=book\" title=\"". t("Add a new book page.") ."\">". t("create book page") ."</a>";
+    $links[] = lm(t("create book page"), array("mod" => "node", "op" => "add", "type" => "book"), t("Add a new book page."));
   }
 
   if ($type == "admin" && user_access("administer nodes")) {
-    $links[] = "<a href=\"admin.php?mod=book\">". t("collaborative book") ."</a>";
+    $links[] = la(t("collaborative book"), array("mod" => "book"));
   }
 
   if ($type == "node" && $node->type == "book" && book_access("update", $node)) {
-    $links[] = "<a href=\"module.php?mod=node&op=edit&id=$node->nid\" title=\"". t("Suggest an update for this book page.") ."\">". t("edit this page") ."</a>";
+    $links[] = lm(t("edit this page"), array("mod" => "node", "op" => "edit", "id" => $node->nid), t("Suggest an update for this book page."));
   }
 
   return $links ? $links : array();
 }
 
 function book_load($node) {
-  global $user, $REQUEST_URI;
+  global $user;
 
   $book = db_fetch_object(db_query("SELECT format, parent, weight, log FROM book WHERE nid = '$node->nid'"));
 
-  if (strstr($REQUEST_URI, "module.php?mod=node&op=edit")) {
+  if (strstr(request_uri(), drupal_url(array("mod" => "node", "op" => "edit"), "module"))) {
 
     /*
     ** If a user is about to update a book page, we overload some
@@ -219,12 +219,12 @@ function book_node_link($node = 0) {
     }
 
     if ($op == t("Add to book outline")) {
-      db_query("INSERT INTO book (nid, parent, weight) VALUES ('$node->nid', '". check_query($edit["parent"]) ."', '". check_query($edit["weight"]) ."')");
+      db_query("INSERT INTO book (nid, parent, weight) VALUES ('$node->nid', '%s', '%s')", $edit["parent"], $edit["weight"]);
       $output .= status(t("added the node to the book."));
     }
 
     if ($op == t("Update book outline")) {
-      db_query("UPDATE book SET parent = '". check_query($edit["parent"]) ."', weight = '". check_query($edit["weight"]) ."' WHERE nid = '$node->nid'");
+      db_query("UPDATE book SET parent = '%s', weight = '%s' WHERE nid = '$node->nid'", $edit["parent"], $edit["weight"]);
       $output .= status(t("updated the book outline."));
     }
 
@@ -256,7 +256,7 @@ function book_node_link($node = 0) {
 
     $output .= form_hidden("nid", $node->nid);
 
-    return form($output, "post", "admin.php?mod=book&op=outline");
+    return form($output, "post", drupal_url(array("mod" => "book", "op" => "outline"), "admin"));
   }
 }
 
@@ -384,13 +384,13 @@ function book_view($node, $main = 0) {
 
     if ($node->title) {
       foreach (book_location($node) as $level) {
-        $location .= "$indent <a href=\"node.php?id=$level->nid\">$level->title</a><br />";
+        $location .= "$indent ".l($level->title, array("id" => $level->nid))."<br />";
         $indent .= "-";
       }
 
       $output .= " <tr><td colspan=\"3\">$location</td></tr>";
       $output .= " <tr><td colspan=\"3\"><hr /></td></tr>";
-      $output .= " <tr><td colspan=\"3\"><b><big>". check_output($node->title) ."</big></b>". ($node->body ? "<br /><small><i>". strtr(t("Last updated by %u on %d"), array("%u" => format_name($node), "%d" => format_date($node->created))) ."</i></small> " : "") ."</td></tr>";
+      $output .= " <tr><td colspan=\"3\"><b><big>". check_output($node->title) ."</big></b>". ($node->body ? "<br /><small><i>". t("Last updated by %u on %d", array("%u" => format_name($node), "%d" => format_date($node->created))) ."</i></small> " : "") ."</td></tr>";
     }
 
     if ($node->body) {
@@ -406,8 +406,8 @@ function book_view($node, $main = 0) {
     }
 
     $output .= " <tr><td colspan=\"3\"><hr /></td></tr>";
-    $output .= " <tr><td align=\"left\" width=\"33%\">". ($prev ? "<a href=\"node.php?id=$prev->nid\" title=\"". t("View the previous page in this book.") ."\">". t("previous") ."</a>" : t("previous")) ."</td><td align=\"center\" width=\"34%\"><a href=\"module.php?mod=book\" title=\"". t("View this book's table of contents.") ."\">index</a></td><td align=\"right\" width=\"33%\">". ($next ? "<a href=\"node.php?id=$next->nid\" title=\"". t("View the next page in this book.") ."\">". t("next") ."</a>" : t("next")) ."</td></tr>";
-    $output .= " <tr><td align=\"left\" width=\"33%\">". ($prev ? "<small>". check_output($prev->title) ."</small>" : "&nbsp;") ."</td><td align=\"center\" width=\"34%\">". ($node->parent ? "<a href=\"node.php?id=$node->parent\" title=\"". t("View this page's parent section.") ."\">". t("up") ."</a>" : t("up")) ."</td><td align=\"right\" width=\"33%\">". ($next ? "<small>". check_output($next->title) ."</small>" : "&nbsp;") ."</td></tr>";
+    $output .= " <tr><td align=\"left\" width=\"33%\">". ($prev ? l(t("previous"), array("id" => $prev->nid), t("View the previous page in this book.")) : t("previous")) ."</td><td align=\"center\" width=\"34%\">".lm(t("index"), array("mod" => "book"), t("View this book's table of contents."))."</td><td align=\"right\" width=\"33%\">". ($next ? l(t("next"), array("id" => $next->nid), t("View the next page in this book.")) : t("next")) ."</td></tr>";
+    $output .= " <tr><td align=\"left\" width=\"33%\">". ($prev ? "<small>". check_output($prev->title) ."</small>" : "&nbsp;") ."</td><td align=\"center\" width=\"34%\">". ($node->parent ? l(t("up"), array("id" => $node->parent), t("View this page's parent section.")) : t("up")) ."</td><td align=\"right\" width=\"33%\">". ($next ? "<small>". check_output($next->title) ."</small>" : "&nbsp;") ."</td></tr>";
     $output .= " <tr><td colspan=\"3\"><hr /></td></tr>";
     $output .= " <tr><td colspan=\"3\" align=\"right\"><div style=\"margin: 10 10 10 10;\">". $theme->links(link_node($node, $main)) ."</div></td></tr>";
     $output .= "</table>";
@@ -462,7 +462,7 @@ function book_tree_recurse($nid, $depth, $children) {
   if ($depth > 0) {
     if ($children[$nid]) {
       foreach ($children[$nid] as $foo => $node) {
-        $output .= "<li><a href=\"node.php?id=$node->nid\">". check_output($node->title) ."</a></li>";
+        $output .= "<li>".l(check_output($node->title), array("id" => $node->nid))."</li>";
 
         if ($tree = book_tree_recurse($node->nid, $depth - 1, $children)) {
           $output .= "<ul>$tree</ul>";
@@ -508,7 +508,7 @@ function book_render() {
 
     if ($node) {
       // output the content:
-      $output .= "<dt><a href=\"node.php?id=$node->nid\">". check_output($node->title) ."</a></dt><dd>". book_body($node) ."<br /><br /></dd>";
+      $output .= "<dt>".l(check_output($node->title), array("id" => $node->nid))."</dt><dd>". book_body($node) ."<br /><br /></dd>";
     }
   }
 
@@ -537,7 +537,7 @@ function book_page() {
 }
 
 function book_export_html($id = "", $depth = 1) {
-  $result = db_query("SELECT n.nid FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.status = 1 AND n.nid = '". check_input($id) ." AND (n.moderate = 0 OR n.revisions != '')'");
+  $result = db_query("SELECT n.nid FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.status = 1 AND n.nid = '%s' AND (n.moderate = 0 OR n.revisions != '')", $id);
 
   while ($page = db_fetch_object($result)) {
     // load the node:
@@ -608,12 +608,12 @@ function book_admin_view_line($node, $depth = 0) {
   */
 
   $output .= "<tr>";
-  $output .= " <td><div style=\"padding-left: ". (25 * $depth) ."px;\"><a href=\"node.php?id=$node->nid\">". check_output($node->title) ."</a></div></td>";
+  $output .= " <td><div style=\"padding-left: ". (25 * $depth) ."px;\">".l(check_output($node->title), array("id" => $node->nid))."</div></td>";
   $output .= " <td align=\"center\">$revision</td>";
-  $output .= " <td><a href=\"admin.php?mod=node&op=edit&id=$node->nid\">". t("edit node") ."</td>";
+  $output .= " <td>".la(t("edit node"), array("mod" => "node", "op" => "edit", "id" => $node->nid))."</td>";
   //TODO: get this link to work. Must pass $nid along so it is received by book_node_link()
-  //$output .= " <td><a href=\"admin.php?mod=book&nid=$node->nid&op=Edit+book+outline\">". t("edit book outline") ."</td>";
-  $output .= " <td><a href=\"admin.php?mod=node&op=delete&id=$node->nid\">". t("delete node") ."</td>";
+  //$output .= " <td>".la(t("edit book outline"), array("mod" => "book", "nid" => $node->nid, "op" => "Edit+book+outline"))."</td>";
+  $output .= " <td>".la(t("delete node"), array("mod" => "node", "op" => "delete", "id" => $node->nid))."</td>";
   $output .= "</tr>";
 
   return $output;
@@ -660,7 +660,7 @@ function book_admin_orphan() {
   $output .= " <tr><th>title</th><th colspan=\"2\">operations</th></tr>";
   foreach ($pages as $nid => $node) {
     if ($node->parent && empty($pages[$node->parent])) {
-      $output .= "<tr><td><a href=\"node.php?id=$node->nid\">". check_output($node->title) ."</a></td><td><a href=\"admin.php?mod=node&op=edit&id=$node->nid\">". t("edit page") ."</td><td><a href=\"admin.php?mod=node&op=delete&id=$node->nid\">". t("delete page") ."</td>";
+      $output .= "<tr><td>".l(check_output($node->title), array("id" => $node->nid))."</td><td>".la(t("edit page"), array("mod" => "node", "op" => "edit", "id" => $node->nid))."</td><td>".la(t("delete page"), array("mod" => "node", "op" => "delete", "id" => $node->nid))."</td>";
     }
   }
   $output .= "</table>";
@@ -672,11 +672,11 @@ function book_admin_links() {
   $result = db_query("SELECT n.nid, n.title FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE b.parent = 0 ORDER BY b.weight, n.title");
 
   while ($book = db_fetch_object($result)) {
-    $links[] = "<a href=\"admin.php?mod=book&op=view&id=$book->nid\">". t("book") .": <i>". check_output($book->title) ."</i></a>";
+    $links[] = la(t("book") .": <i>". check_output($book->title) ."</i>", array("mod" => "book", "op" => "view", "id" => $book->nid));
   }
-  $links[] = "<a href=\"admin.php?mod=book&op=orphan\">". t("orphan pages") ."</a>";
-  $links[] = "<a href=\"module.php?mod=book&op=feed\" title=\"" . t("display all books in a single HTML page") . ".\">" . t("export to HTML") . "</a>";
-  $links[] = "<a href=\"admin.php?mod=book&op=help\">" . t("help") . "</a>";
+  $links[] = la(t("orphan pages"), array("mod" => "book", "op" => "orphan"));
+  $links[] = lm(t("export to HTML"), array("mod" => "book", "op" => "feed"), t("display all books in a single HTML page"));
+  $links[] = la(t("help"), array("mod" => "book", "op" => "help"));
   return $links;
 }
 
@@ -719,7 +719,7 @@ function book_help() {
 
 <p>The Collaborative Book is a magnificient mechanism for organizing content authored by many users.
 You may use it to organize a Manual (e.g. <a href="http://www.drupal.org">Drupal Handbook</a>),
-to <a href="#faq">maintain an FAQ</a>, or to manage any outline-like content. Books can have
+to <a href="#faq">maintain a FAQ</a>, or to manage any outline-like content. Books can have
 Chapters, Sections, etc. In fact, books can have an arbitrarily deep nesting strucuture.</p>
 
 <p>Under the covers, a Book is only an organization of nodes. These nodes are often of type <i>book page</i>,
@@ -735,17 +735,15 @@ page is usually stored as a new revision of a node. This capability makes it eas
 should that become desirable.</p>
 
 <p>Like other node types, Book submissions and edits may be subject to moderation, depending on your configuration.
-Similarly, Books use <a href="/admin.php?mod=user&op=permission">permissions</a> to determine who may
+Similarly, Books use <? echo la("permissions", array("mod" => "user", "op" => "permission")) ?> to determine who may
 read and write to them. Only Administrators are allowed to create new books, which are really just nodes whose
 Parent is <i>&lt;root&gt;</i>. To include an existing node in your book, click on the Administer link in that node.
 At the bottom of this Admin page, click on the <i>Edit Book Outline</i> button. This enables you to place the node
 wherever you'd like within the book hierarchy. To add a new node into your book, use the <i>create book page</i> link.</p>
 
-<p>Administrators may review the hierarchy of their books by clicking on the <a href="/admin.php?mod=book">Collaborative Book link</a>
-in the Admin center. There, nodes may be edited, reorganized, removed from book, and deleted. This behavior may change in the future. When a Parent node is deleted, he may leave behind child nodes.
-These nodes are now <i>orphans</i>. Administrators should periodically <a href="/admin.php?mod=book&op=orphan">
-review their books for orphans</a> and reaffiliate those pages as desired. Finally, administrators may also
-<a href="/admin.php?mod=book&op=feed">export their books</a> to a single, flat HTML page which is suitable for printing.</p>
+<p>Administrators may review the hierarchy of their books by clicking on the <? echo la("Collaborative Book link", array("mod" => "book")) ?> in the Admin center. There, nodes may be edited, reorganized, removed from book, and deleted. This behavior may change in the future. When a Parent node is deleted, he may leave behind child nodes.
+These nodes are now <i>orphans</i>. Administrators should periodically <? echo la("review their books for orphans", array("mod" => "book", "op" => "orphan")) ?> and reaffiliate those pages as desired. Finally, administrators may also
+<? echo la("export their books", array("mod" => "book", "op" => "feed")) ?> to a single, flat HTML page which is suitable for printing.</p>
 
 <a name="faq"></a><h3>Maintain an FAQ with <i>Collaborative Book</i></h3>
 
@@ -788,8 +786,7 @@ seek.
 you are creating a post solely for inclusion in your book, then use the
 <i>Create book page</i> link.</li>
 <li>If you don't see the <i>administer</i> link, then you probably have
-insufficient <a
-href="/admin.php?mod=user&op=permission">permissions</a>.</li>
+insufficient <? echo la("permissions", array("mod" => "user", "op" => "permission")) ?>.</li>
 <li>If you want to get really fancy, note that Books are one of the few
 content types which allow raw PHP in their <i>body</i>. So you've got lots of
 geeky possibilities there.</li>

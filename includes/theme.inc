@@ -60,7 +60,7 @@ class BaseTheme {
     $output .= "<div style=\"border: 1px solid; padding: 10px;\">";
     $output .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">";
     $output .= " <tr><td><div style=\"font-size: 110%; font-weight: bold;\">". check_output($comment->subject) ."</div></td><td align=\"right\" rowspan=\"2\" valign=\"top\">". comment_moderation($comment) ."</td></tr>";
-    $output .= " <tr><td><div style=\"margin-left: 10px; padding-bottom: 10px; font-size: 90%;\">". sprintf(t("by %s on %s"), format_name($comment), format_date($comment->timestamp)) ."</div></td></tr>";
+    $output .= " <tr><td><div style=\"margin-left: 10px; padding-bottom: 10px; font-size: 90%;\">". t("by %a on %b", array("%a" => format_name($comment), "%b" => format_date($comment->timestamp))) ."</div></td></tr>";
     $output .= " <tr><td colspan=\"2\">". check_output($comment->comment, 1) ."</td></tr>";
     $output .= " <tr><td align=\"right\" colspan=\"2\">$link</td></tr>";
     $output .= "</table>";
@@ -113,10 +113,10 @@ function theme_init() {
 }
 
 function theme_blocks($region, &$theme) {
-  global $id, $PHP_SELF, $REQUEST_URI, $user;
+  global $id, $PHP_SELF, $user;
 
   if ($user->uid) {
-    $result = db_query("SELECT * FROM blocks b LEFT JOIN layout l ON b.name = l.block WHERE (b.status = 2 OR (b.status = 1 AND l.uid = '$user->uid'))". (($region == "left" OR $region == "right") ? ($region == "left" ? " AND b.region = 0" : " AND b.region = 1") : "") ." AND (b.path = '' OR '". strrchr($REQUEST_URI, "/") ."' RLIKE b.path) ORDER BY weight");
+    $result = db_query("SELECT * FROM blocks b LEFT JOIN layout l ON b.name = l.block WHERE (b.status = 2 OR (b.status = 1 AND l.uid = '$user->uid'))". (($region == "left" OR $region == "right") ? ($region == "left" ? " AND b.region = 0" : " AND b.region = 1") : "") ." AND (b.path = '' OR '". strrchr(request_uri(), "/") ."' RLIKE b.path) ORDER BY weight");
   }
   else {
     $result = db_query("SELECT * FROM blocks WHERE status = 2". (($region == "left" OR $region == "right") ? ($region == "left" ? " AND region = 0" : " AND region = 1") : "") ." ORDER BY weight");

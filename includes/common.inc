@@ -2,7 +2,7 @@
 // $Id$
 
 function conf_init() {
-  global $HTTP_HOST, $REQUEST_URI;
+  global $HTTP_HOST;
 
   /*
   ** Try finding a matching configuration file by stripping the website's
@@ -10,7 +10,7 @@ function conf_init() {
   ** default value 'conf'.
   */
 
-  $file = strtolower(strtr($HTTP_HOST . substr($REQUEST_URI, 0, strrpos($REQUEST_URI, "/")), "/:", ".."));
+  $file = strtolower(strtr($HTTP_HOST . substr(request_uri(), 0, strrpos(request_uri(), "/")), "/:", ".."));
 
   while (strlen($file) > 4) {
     if (file_exists("includes/$file.php")) {
@@ -27,7 +27,7 @@ function conf_init() {
 function error_handler($errno, $message, $filename, $line, $variables) {
   $types = array(1 => "error", 2 => "warning", 4 => "parse error", 8 => "notice", 16 => "core error", 32 => "core warning", 64 => "compile error", 128 => "compile warning", 256 => "user error", 512 => "user warning", 1024 => "user notice");
   $entry = $types[$errno] .": $message in $filename on line $line.";
-  if (($errno == 1 || $errno == 2 || $errno == 4) && error_reporting()) {
+  if (($errno == 1 || $errno == 2 || $errno == 4 || $errno == 256) && error_reporting()) {
     watchdog("error", $types[$errno] .": $message in $filename on line $line.");
     print $entry;
   }
@@ -35,7 +35,7 @@ function error_handler($errno, $message, $filename, $line, $variables) {
 
 function watchdog($type, $message) {
   global $user;
-  db_query("INSERT INTO watchdog (uid, type, message, location, hostname, timestamp) VALUES ('$user->uid', '". check_input($type) ."', '". check_input($message) ."', '". check_input(getenv("REQUEST_URI")) ."', '". check_input(getenv("REMOTE_ADDR")) ."', '". time() ."')");
+  db_query("INSERT INTO watchdog (uid, type, message, location, hostname, timestamp) VALUES ('$user->uid', '%s', '%s', '%s', '%s', '%s')", $type, $message, getenv("PATH_INFO"), getenv("REMOTE_ADDR"), time());
 }
 
 function throttle($type, $rate) {
@@ -79,12 +79,16 @@ function object2array($node) {
 }
 
 function path_uri($brief = 0) {
-  global $HTTP_HOST, $REQUEST_URI;
-  $path = $HTTP_HOST . substr($REQUEST_URI, 0, strrpos($REQUEST_URI, "/")) ."/";
+  global $HTTP_HOST;
+  $path = $HTTP_HOST . substr(request_uri(), 0, strrpos(request_uri(), "/")) ."/";
   if (!$brief) {
     $path = "http://". $path;
   }
   return $path;
+}
+
+function request_uri() {
+  return getenv("REQUEST_URI");
 }
 
 function path_img() {
@@ -109,9 +113,13 @@ function locale_init() {
   return ($languages ? (($user->uid && $user->language) ? $user->language : key($languages)) : 0);
 }
 
-function t($string) {
+function t($string, $args = 0) {
   global $languages;
-  return ($languages && function_exists("locale") ? locale($string) : $string);
+  if (!$args) {
+    return $string;
+  } else {
+    return strtr($string, $args);
+  }
 }
 
 function variable_init($conf = array()) {
@@ -134,8 +142,8 @@ function variable_get($name, $default, $object = 0) {
 function variable_set($name, $value) {
   global $conf;
 
-  db_query("DELETE FROM variable WHERE name = '". check_query($name) ."'");
-  db_query("INSERT INTO variable (name, value) VALUES ('". check_query($name) ."', '". check_query($value) ."')");
+  db_query("DELETE FROM variable WHERE name = '%s'", $name);
+  db_query("INSERT INTO variable (name, value) VALUES ('%s', '%s')", $name, $value);
 
   $conf[$name] = $value;
 }
@@ -143,7 +151,7 @@ function variable_set($name, $value) {
 function variable_del($name) {
   global $conf;
 
-  db_query("DELETE FROM variable WHERE name = '". check_query($name) ."'");
+  db_query("DELETE FROM variable WHERE name = '%s'", $name);
 
   unset($conf[$name]);
 }
@@ -182,7 +190,7 @@ function search_form($action = 0, $query = 0, $options = 0) {
   global $keys;
 
   if (!$action) {
-    $action = "module.php?mod=search";
+    $action = drupal_url(array("mod" => "search"), "module");
   }
 
   if (!$query) {
@@ -308,9 +316,9 @@ function drupal_goto($url) {
 */
 
 function referer_save() {
-  global $referer, $HTTP_REFERER, $REQUEST_URI;
+  global $referer, $HTTP_REFERER;
 
-  if (!strstr($HTTP_REFERER, $REQUEST_URI)) {
+  if (!strstr($HTTP_REFERER, request_uri())) {
     $referer = $HTTP_REFERER;
     session_register("referer");
   }
@@ -422,21 +430,21 @@ function format_size($size) {
 }
 
 function cache_get($key) {
-  $cache = db_fetch_object(db_query("SELECT data FROM cache WHERE cid = '". check_query($key) ."'"));
+  $cache = db_fetch_object(db_query("SELECT data FROM cache WHERE cid = '%s'", $key));
   return $cache->data ? $cache->data : 0;
 }
 
 function cache_set($cid, $data, $expire = 0) {
-  if (db_fetch_object(db_query("SELECT cid FROM cache WHERE cid = '". check_query($cid) ."'"))) {
-    db_query("UPDATE cache SET data = '". check_query($data) ."' WHERE cid = '". check_query($cid) ."'");
+  if (db_fetch_object(db_query("SELECT cid FROM cache WHERE cid = '%s'", $cid))) {
+    db_query("UPDATE cache SET data = '%s' WHERE cid = '%s'", $data, $cid);
   }
   else {
-    db_query("INSERT INTO cache (cid, data, expire) VALUES('". check_query($cid) ."', '". check_query($data) ."', '". check_query($expire) ."')");
+    db_query("INSERT INTO cache (cid, data, expire) VALUES('%s', '%s', '%s')", $cid, $data, $expire);
   }
 }
 
 function cache_del($cid) {
-  db_query("DELETE FROM cache WHERE cid = '". check_query($cid) ."'");
+  db_query("DELETE FROM cache WHERE cid = '%s'", $cid);
 }
 
 function cache_clear() {
@@ -444,20 +452,20 @@ function cache_clear() {
 }
 
 function page_set_cache() {
-  global $user, $REQUEST_URI, $REQUEST_METHOD;
+  global $user, $REQUEST_METHOD;
 
   if (!$user->uid && $REQUEST_METHOD == "GET") {
     if ($data = ob_get_contents()) {
-      cache_set($REQUEST_URI, $data, (time() + variable_get("cache_clear", 30)));
+      cache_set(request_uri(), $data, (time() + variable_get("cache_clear", 30)));
     }
   }
 }
 
 function page_get_cache() {
-  global $user, $REQUEST_URI, $REQUEST_METHOD;
+  global $user, $REQUEST_METHOD;
 
   if (!$user->uid && $REQUEST_METHOD == "GET") {
-    if ($cache = cache_get($REQUEST_URI)) {
+    if ($cache = cache_get(request_uri())) {
       cache_clear();
     }
     else {
@@ -519,10 +527,10 @@ function format_name($object) {
 
   if ($object->uid && $object->name) {
     if (strstr($PHP_SELF, "admin.php")) {
-      $output = "<a href=\"admin.php?mod=user&op=edit&id=$object->uid\">$object->name</a>";
+      $output = la($object->name, array("mod" => "user", "op" => "edit", "id" => $object->uid));
     }
     else {
-      $output = "<a href=\"module.php?mod=user&op=view&id=$object->uid\">$object->name</a>";
+      $output = lm($object->name, array("mod" => "user", "op" => "view", "id" => $object->uid));
     }
   }
   else {
@@ -542,13 +550,11 @@ function format_url($address, $description = 0) {
 }
 
 function format_tag($link, $text) {
-  return "'<a href=\"node.php?title='. urlencode('$link') .'\">'. ('$text' ? '$text' : '$link') .'</a>'";
+  return l(('$text' ? '$text' : '$link'), array("title" => urlencode('$link')));
 }
 
 function form($form, $method = "post", $action = 0, $options = 0) {
-  global $REQUEST_URI;
-
-  return "<form action=\"". ($action ? $action : $REQUEST_URI) ."\" method=\"$method\"". ($options ? " $options" : "") .">\n$form</form>\n";
+  return "<form action=\"". ($action ? $action : request_uri()) ."\" method=\"$method\"". ($options ? " $options" : "") .">\n$form</form>\n";
 }
 
 function form_item($title, $value, $description = 0) {
@@ -590,6 +596,44 @@ function form_hidden($name, $value) {
 
 function form_submit($value) {
   return "<input type=\"submit\" name=\"op\" value=\"". check_form($value) ."\" />\n";
+}
+
+/**
+ * Build an url; use this functions when you must write an url
+ * for example in a form or a redirect
+ *
+ * @param $args    dictionary of arguments to be passed to the script
+ * @param $script  script to be invoked; optional, defaults to node
+ */
+function drupal_url($args = array(), $script = "node") {
+  $t = array();
+  foreach($args as $k => $v) {
+    $t[] = "$k=$v";
+  }
+  return "$script.php?".implode("&amp;", $t);
+}
+
+/**
+ * Build an html link; use this functions when you must write a link
+ * to another drupal page
+ *
+ * @param $args        dictionary of arguments to be passed to the script
+ * @param $linktext    text of the link
+ * @param $title       optional, popup title
+ * @param $script      script to be invoked; optional, defaults to node
+ */
+function l($linktext, $args = array(), $title = "", $script = "node") {
+  return "<a href=\"".drupal_url($args, $script)."\" title=\"$title\">$linktext</a>";
+}
+
+function la($linktext, $args = array(), $title = "") {
+  // we don't call l() to avoid another duplication of the array
+  return "<a href=\"".drupal_url($args, "admin")."\" title=\"$title\">$linktext</a>";
+}
+
+function lm($linktext, $args = array(), $title = "") {
+  // we don't call l() to avoid another duplication of the array
+  return "<a href=\"".drupal_url($args, "module")."\" title=\"$title\">$linktext</a>";
 }
 
 function field_get($string, $name) {

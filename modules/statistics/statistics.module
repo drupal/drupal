@@ -2,7 +2,7 @@
 // $Id$
 
 if (variable_get("referrer", 0) && $referrer = getenv("HTTP_REFERER")) {
-  db_query("INSERT INTO referrer (URL, timestamp) values ('". check_input($referrer) ."', '". time() ."')");
+  db_query("INSERT INTO referrer (URL, timestamp) values ('%s', '%s')", $referrer, time());
 }
 
 function statistics_help() {
@@ -24,7 +24,7 @@ function statistics_perm() {
 
 function statistics_link($type) {
   if ($type == "admin" && user_access("administer statistics")) {
-    $links[] = "<a href=\"admin.php?mod=statistics\">statistics</a>";
+    $links[] = la(t("statistics"), array("mod" => "statistics"));
   }
 
   return $links ? $links : array();
@@ -92,7 +92,7 @@ function statistics_admin() {
 
   if (user_access("administer statistics")) {
 
-    print "<small><a href=\"admin.php?mod=statistics&type=internal+referrer\">internal referrers</a> | <a href=\"admin.php?mod=statistics&type=external+referrer\">external referrers</a> | <a href=\"admin.php?mod=statistics&op=help\">help</a></small><hr />\n";
+    print "<small>".la(t("internal referrers"), array("mod" => "statistics", "type" => "internal+referrer"))." | ".la(t("external referrers"), array("mod" => "statistics", "type" => "external+referrer"))." | ".la(t("help"), array("mod" => "statistics", "op" => "help"))."</small><hr />\n";
 
     switch ($op) {
       case "help":

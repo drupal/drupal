@@ -51,5 +51,4 @@ function admin_page($mod) {
 if (user_access("access administration pages")) {
   admin_page($mod);
 }
-
 ?>

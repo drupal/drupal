@@ -29,11 +29,11 @@ function system_perm() {
 
 function system_link($type) {
   if ($type == "admin" && user_access("administer settings and filters")) {
-    $links[] = "<a href=\"admin.php?mod=system\">settings and filters</a>";
+    $links[] = la(t("settings and filters"), array("mod" => "system"));
   }
 
   /*if ($type == "admin" && user_access("administer modules and themes")) {
-    $links[] = "<a href=\"admin.php?mod=system&op=modules\">modules and themes</a>";
+    $links[] = la(t("modules and themes"), array("mod" => "system", "op" => "modules"));
   }*/
 
   return $links ? $links : array();
@@ -164,7 +164,7 @@ function system_modules() {
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
   $output .= " <tr><th>module</th><th>description</th><th>status</th><th colspan=\"2\">operations</th></tr>\n";
   foreach ($modules as $name => $module) {
-    $output .= " <tr><td>$name</td><td>". check_output(module_invoke($name, "system", "description")) ."</td><td>". (in_array($name, $required) ? "Enabled" : form_select("", "status][$name", $module["status"], array(t("Disabled"), t("Enabled")))) ."</td><td>". (module_hook($name, "page") ? "<a href=\"module.php?mod=$name\">view</a>" : "&nbsp;") ."</td><td>". (module_hook($name, "admin") ? "<a href=\"admin.php?mod=$name\">admin</a>" : "&nbsp;") ."</td></tr>\n";
+    $output .= " <tr><td>$name</td><td>". check_output(module_invoke($name, "system", "description")) ."</td><td>". (in_array($name, $required) ? "Enabled" : form_select("", "status][$name", $module["status"], array(t("Disabled"), t("Enabled")))) ."</td><td>". (module_hook($name, "page") ? lm(t("view"), array("mod" => $name)) : "&nbsp;") ."</td><td>". (module_hook($name, "admin") ? la(t("admin"), array("mod" => $name)) : "&nbsp;") ."</td></tr>\n";
     if (!in_array($name, $required)) {
       db_query("INSERT INTO system SET name = '$name', type = 'module', filename = '$module[filename]', status = '$module[status]'");
     }
@@ -243,7 +243,7 @@ function system_admin() {
   global $edit, $op, $type;
   if (user_access("administer settings and filters")) {
 
-    print "<small><a href=\"admin.php?mod=system&type=options\">site settings</a> | <a href=\"admin.php?mod=system&type=filter\">content filters</a> | <a href=\"admin.php?mod=system&op=modules\">modules</a> | <a href=\"admin.php?mod=system&op=themes\">themes</a> | <a href=\"admin.php?mod=system&op=help\">help</a></small><hr />\n";
+    print "<small>".la(t("site settings"), array("mod" => "system", "type" => "options"))." | ".la(t("content filters"), array("mod" => "system", "type" => "filter"))." | ".la(t("modules"), array("mod" => "system", "op" => "modules"))." | ".la(t("themes"), array("mod" => "system", "op" => "themes"))." | ".la(t("help"), array("mod" => "system", "op" => "help"))."</small><hr />\n";
 
     switch ($op) {
       case "help":
@@ -258,7 +258,7 @@ function system_admin() {
         break;
       case "Save theme settings":
         foreach ($edit as $name => $settings) {
-          db_query("UPDATE system SET status = '". check_query($settings["status"]) ."', description = '". check_query($settings["description"]) ."' WHERE name = '$name'");
+          db_query("UPDATE system SET status = '%s', description = '%s' WHERE name = '$name'", $settings["status"], $settings["description"]);
         }
       case "themes":
         print system_themes();

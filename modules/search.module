@@ -29,11 +29,11 @@ function search_perm() {
  */
 function search_link($type) {
   if ($type == "page" && user_access("search content")) {
-    $links[] = "<a href=\"module.php?mod=search\" title=\"". t("Search for older content.") ."\">". t("search") ."</a>";
+    $links[] = lm(t("search"), array("mod" => "search"), t("Search for older content."));
   }
 
   if ($type == "admin" && user_access("administer search")) {
-    $links[] = "<a href=\"admin.php?mod=search\">". t("search") ."</a>";
+    $links[] = la(t("search"), array("mod" => "search"));
   }
 
   return $links ? $links : array();
@@ -193,10 +193,10 @@ function do_search($search_array) {
       }
       switch ($type) {
       case "node":
-        $find[$i++] = array("count" => $count, "title" => check_output($title), "link" => (strstr($PHP_SELF, "admin.php") ? "admin.php?mod=node&type=node&op=edit&id=$lno" : "node.php?id=$lno"), "user" => $name, "date" => $created, "keywords" => implode("|", $words));
+        $find[$i++] = array("count" => $count, "title" => check_output($title), "link" => (strstr($PHP_SELF, "admin.php") ? drupal_url(array("mod" => "node", "type" => "node", "op" => "edit", "id" => $lno), "admin") : drupal_url(array("id" => $lno))), "user" => $name, "date" => $created, "keywords" => implode("|", $words));
         break;
       case "comment":
-        $find[$i++] = array("count" => $count, "title" => check_output($title), "link" => (strstr($PHP_SELF, "admin.php") ? "admin.php?mod=comment&op=edit&id=$lno" : "node.php?id=$nid&cid=$lno"), "user" => $name, "date" => $created, "keywords" => implode("|", $words));
+        $find[$i++] = array("count" => $count, "title" => check_output($title), "link" => (strstr($PHP_SELF, "admin.php") ? drupal_url(array("mod" => "comment", "op" => "edit", "id" =>$lno), "admin") : drupal_url(array("id" => $nid, "cid" => $lno))), "user" => $name, "date" => $created, "keywords" => implode("|", $words));
         break;
       }
     }
@@ -315,7 +315,7 @@ function search_display($edit) {
   $form .= form_select(t("Help text position"), "help_pos", $edit["help_pos"], array("1" => t("Above search form"), "2" => t("Below search form"), "3" => t("Link from above search form"), "4" => t("Link from below search form")));
   $form .= form_submit("Submit");
 
-  $links[] = "<a href=\"admin.php?mod=search&op=reindex\">reindex all</a>";
+  $links[] = la(t("reindex all"), array("mod" => "search", "op" => "reindex"));
 
   $output = "<small>". implode(" &middot; ", $links) ."</small><hr />";
 
@@ -377,7 +377,7 @@ function search_view() {
     ** Display form and search results:
     */
 
-    $help_link = "<a href=\"module.php?mod=search&amp;op=help\">search help</a>";
+    $help_link = lm(t("search help"), array("mod" => "search", "op" => "help"));
     switch (variable_get("help_pos", 1)) {
       case "1":
         $form = search_help(). $form;

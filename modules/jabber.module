@@ -153,7 +153,7 @@ function jabber_auth_help() {
    <p>You may login to %s using a <b>Jabber ID</b>. The format of a Jabber ID is the same as an email address: <b>name</b><i>@server</i> An example of valid Jabber ID is <b>mwlily</b><i>@jabber.com</i>.</p>
    <p>Jabber is an <a href=\"http://www.opensource.org\">open source</a> instant messaging system designed to give the power of choice and freedom back to the users of instant messaging. By creating an extensible and powerful server and protocol, Jabber has succeeded in this goal. Not only does Jabber allow its users to use (and create) clients for numerous platforms, but it allows people to communicate to whomever they want in the way which is most convenient for them.</p>";
 
-  return strtr(t($output), array("%s" => "<i>$site</i>"));
+  return t($output, array("%s" => "<i>$site</i>"));
 }
 
 function jabber_user($type, $edit, $user) {
@@ -166,7 +166,7 @@ function jabber_user($type, $edit, $user) {
       return $output;
     case "edit_form":
       $result = user_get_authname($user, $module);
-      $output .= form_textfield("$name ID", "authname_" . $module, $result, 30, 55, strtr(t("You may login to %s using a valid %id."), array("%s" => variable_get("site_name", "this web site"), "%id" => "<a href=\"module.php?mod=user&op=help#$module\">$name ID</a>")));
+      $output .= form_textfield("$name ID", "authname_" . $module, $result, 30, 55, t("You may login to %s using a valid %id.", array("%s" => variable_get("site_name", "this web site"), "%id" => lm($name ID, array("mod" => "user", "op" => "help#".$module)))));
        return $output;
     case "edit_validate":
       return user_validate_authmap($user, $edit["authname_$module"], $module);

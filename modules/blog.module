@@ -40,8 +40,6 @@ function blog_access($op, $node) {
 }
 
 function blog_save($op, $node) {
-  global $REQUEST_URI;
-
   if ($op == "approve") {
     return array("promote" => 1);
   }
@@ -102,13 +100,13 @@ function blog_feed_user($uid = 0, $date = 0) {
 
   $result = db_query("SELECT n.nid, n.title, n.teaser, n.created, u.name, u.uid FROM node n LEFT JOIN users u ON n.uid = u.uid WHERE n.type = 'blog' AND u.uid = '$uid' AND n.created > '". ($date - 2592000) ."' ORDER BY n.nid DESC LIMIT 15");
   while ($blog = db_fetch_object($result)) {
-    $items .= format_rss_item($blog->title, path_uri() ."node.php?id=$blog->nid", $blog->teaser);
+    $items .= format_rss_item($blog->title, path_uri() . drupal_url(array("id" => $blog->nid)), $blog->teaser);
   }
 
   $output .= "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n";
   // $output .= "<!DOCTYPE rss [<!ENTITY % HTMLlat1 PUBLIC \"-//W3C//ENTITIES Latin 1 for XHTML//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml-lat1.ent\">\n";
   $output .= "<rss version=\"0.91\">\n";
-  $output .= format_rss_channel("$account->name's blog", path_uri() ."module.php?mod=blog&op=view&id=$account->uid", "$account->name's blog", $items);
+  $output .= format_rss_channel("$account->name's blog", path_uri() . drupal_url(array("mod" => "blog", "op" => "view", "id" => $account->uid), "module"), "$account->name's blog", $items);
   $output .= "</rss>\n";
 
   header("Content-Type: text/xml");
@@ -121,12 +119,12 @@ function blog_feed_last() {
   $result = db_query("SELECT n.nid, n.title, n.teaser, n.created, u.name, u.uid FROM node n LEFT JOIN users u ON n.uid = u.uid WHERE n.type = 'blog' ORDER BY n.nid DESC LIMIT 15");
 
   while ($blog = db_fetch_object($result)) {
-    $items .= format_rss_item($blog->title, path_uri() ."node.php?id=$blog->nid", $blog->teaser);
+    $items .= format_rss_item($blog->title, path_uri() . drupal_url(array("id" => $blog->nid)), $blog->teaser);
   }
 
   $output .= "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n";
   $output .= "<rss version=\"0.91\">\n";
-  $output .= format_rss_channel(variable_get("site_name", "drupal") .": user blogs", path_uri() ."module.php?mod=blog", "Recently updated blogs.", $items);
+  $output .= format_rss_channel(variable_get("site_name", "drupal") .": user blogs", path_uri() . drupal_url(array("mod" => "blog"), "module"), "Recently updated blogs.", $items);
   $output .= "</rss>\n";
 
   header("Content-Type: text/xml");
@@ -159,7 +157,7 @@ function blog_page_user($uid = 0, $date = 0, $all = 0) {
 
     if ($date != date("dny", $blog->created)) {
       $date = date("dny", $blog->created);
-      $output .= "<tr><td colspan=\"2\"><b><a href=\"module.php?mod=blog&id=$blog->uid&date=". mktime(23, 59, 59, date("n", $blog->created), date("d", $blog->created), date("Y", $blog->created)) ."\" title=\"". t("Permanent link to this blog entry.") ."\">". format_date($blog->created, custom, "d M Y") .":</a></b></td></tr>";
+      $output .= "<tr><td colspan=\"2\"><b>".lm(format_date($blog->created, custom, "d M Y"), array("mod" => "blog", "id" => $blog->uid, "date" => mktime(23, 59, 59, date("n", $blog->created), date("d", $blog->created), date("Y", $blog->created))), t("Permanent link to this blog entry."))."</b></td></tr>";
     }
 
     $links = link_node($blog, 1);
@@ -170,15 +168,15 @@ function blog_page_user($uid = 0, $date = 0, $all = 0) {
   }
 
   $output .= "</table>";
-  $output .= "<a href=\"module.php?mod=blog&op=feed&id=$account->uid\" title=\"". t("Read the XML version of this page.") ."\"><img src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" align=\"right\" border=\"0\" /></a>\n";
+  $output .= lm("<img src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" align=\"right\" border=\"0\" />", array("mod" => "blog", "op" => "feed", "id" => $account->uid), t("Read the XML version of this page."))."\n";
   if (!$all) {
-    $output .= "<a href=\"module.php?mod=blog&op=view&id=$account->uid&all=1\" title=\"". t("Show all blogs by this user") ."\">". t("show all blogs") ."</a>";
+    $output .= lm(t("show all blogs"), array("mod" => "blog", "op" => "view", "id" => $account->uid, "all" => 1), t("Show all blogs by this user"));
   }
   else {
-    $output .= "<a href=\"module.php?mod=blog&op=view&id=$account->uid\" title=\"". t("Show recent blogs by this user") ."\">". t("show recent blogs") ."</a>";
+    $output .= lm(t("show recent blogs"), array("mod" => "blog", "op" => "view", "id" => $account->uid), t("Show recent blogs by this user"));
   }
 
-  $theme->box(strtr(t("%u's blog"), array("%u" => $account->name)), $output);
+  $theme->box(t("%u's blog", array("%u" => $account->name)), $output);
 }
 
 function blog_page_last() {
@@ -199,7 +197,7 @@ function blog_page_last() {
   }
 
   $output .= "</table>";
-  $output .= "<a href=\"module.php?mod=blog&op=feed\" title=\"". t("Read the XML version of this page.") ."\"><img src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" align=\"right\" border=\"0\" /></a>\n";
+  $output .= lm("<img src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" align=\"right\" border=\"0\" />", array("mod" => "blog", "op" => "feed"), t("Read the XML version of this page."))."\n";
 
   $theme->box(t("User blogs"), $output, "main");
 }
@@ -231,10 +229,10 @@ function blog_form(&$node, &$help, &$error) {
     */
 
     if ($nid && $blog = node_load(array("nid" => $nid))) {
-      $node->body = "<i>". $blog->body ."</i> [<a href=\"module.php?mod=blog&id=$blog->uid&date=$blog->created\">$blog->name</a>]";
+      $node->body = "<i>". $blog->body ."</i> [".lm($blog->name, array("mod" => "blog", "id" => $blog->uid, "date" => $blog->created))."]";
     }
 
-    if ($iid && $item = db_fetch_object(db_query("SELECT i.*, f.title as ftitle, f.link as flink FROM item i, feed f WHERE i.iid = '". check_input($iid) ."' AND i.fid = f.fid"))) {
+    if ($iid && $item = db_fetch_object(db_query("SELECT i.*, f.title as ftitle, f.link as flink FROM item i, feed f WHERE i.iid = '%s' AND i.fid = f.fid", $iid))) {
       $node->body = "<a href=\"$item->link\">$item->title</a> - <i>". check_output($item->description) ."</i> [<a href=\"$item->flink\">$item->ftitle</a>]\n";
     }
   }
@@ -287,24 +285,24 @@ function blog_link($type, $node = 0, $main) {
   global $user;
 
   if ($type == "page" && user_access("access content")) {
-    $links[] = "<a href=\"module.php?mod=blog\" title=\"". t("Read the latest blog entries.") ."\">". t("user blogs") ."</a>";
+    $links[] = lm(t("user blogs"), array("mod" => "blog"), t("Read the latest blog entries."));
   }
 
   if ($type == "menu.create" && user_access("post content")) {
-    $links[] = "<a href=\"module.php?mod=node&op=add&type=blog\" title=\"". t("Add a new personal blog entry.") ."\">". t("create blog entry") ."</a>";
+    $links[] = lm(t("create blog entry"), array("mod" => "node", "op" => "add", "type" => "blog"), t("Add a new personal blog entry."));
   }
 
   if ($type == "menu.view" && user_access("access content")) {
-    $links[] = "<a href=\"module.php?mod=blog&op=view&id=$user->uid\" title=\"". t("Read your latest blog entries.") ."\">". t("view personal blog") ."</a>";
+    $links[] = lm(t("view personal blog"), array("mod" => "blog", "op" => "view", "id" => $user->uid), t("Read your latest blog entries."));
   }
 
   if ($type == "node" && $node->type == "blog") {
     global $op;
     if (blog_access("update", $node)) {
-      $links[] = "<a href=\"module.php?mod=node&op=edit&id=$node->nid\" title=\"". t("Edit this blog entry.") ."\">". t("edit this blog") ."</a>";
+      $links[] = lm(t("edit this blog"), array("mod" => "node", "op" => "edit", "id" => $node->nid), t("Edit this blog entry."));
     }
     else {
-      $links[] = "<a href=\"module.php?mod=blog&op=view&id=$node->uid\" title=\"". strtr(t("Read %u's latest blog entries."), array("%u" => $node->name)) ."\">". strtr(t("%u's blog"), array("%u" => $node->name)) ."</a>";
+      $links[] = lm(t("%u's blog", array("%u" => $node->name)), array("mod" => "blog", "op" => "view", "id" => $node->uid), t("Read %u's latest blog entries.", array("%u" => $node->name)));
     }
   }
 
@@ -317,15 +315,15 @@ function blog_block() {
   $result = db_query("SELECT u.uid, u.name, n.created, n.title, n.nid FROM node n LEFT JOIN users u ON n.uid = u.uid WHERE n.type = 'blog' ORDER BY n.nid DESC LIMIT 10");
 
   while ($node = db_fetch_object($result)) {
-    $output .= "<a href=\"node.php?id=$node->nid\">". check_output($node->title) ."</a><br />\n";
+    $output .= l(check_output($node->title), array("id" => $node->nid))."<br />\n";
   }
 
-  $output .= "<br /><div align=\"right\"><a href=\"module.php?mod=blog\" title=\"". t("Read the latest blog entries.") ."\">". t("more") ."</a></div>";
+  $output .= "<br /><div align=\"right\">".lm(t("more"), array("mod" => "blog"), t("Read the latest blog entries."))."</div>";
 
   $block[0]["subject"] = t("User blogs");
   $block[0]["content"] = $output;
   $block[0]["info"] = t("User blogs");
-  $block[0]["link"] = "module.php?mod=blog";
+  $block[0]["link"] = drupal_url(array("mod" => "blog"), "module");
 
   return $block;
 }

@@ -7,8 +7,8 @@ $GLOBALS["corder"] = array(1 => "Date - newest first", 2 => "Date - oldest first
 function comment_help() {
   $output .= "<p>The comment module enables users to submit posts that are directly associated with a piece of content.  These associated posts are called <i>comments</i>.  Comments may be <i>threaded</i>, which means that Drupal keeps track of multiple subconversations around a piece of content.  Threading helps to keep the comment conversation more organized.  Users are presented with several ways to view the comment conversation, and if desired, users may easily choose a <i>flat</i> presentation of comments instead of threaded.  Further, users may choose to order their comments view by <i>newest first</i> or by <i>oldest first</i>.  Finally, users may view a folded list or an expanded list of comments.  Folded limits the comment display to <i>subject</i> only.  Drupal remembers the comment view preference of each user whenever he changes a view setting.</p>";
   $output .= "<p>Since a busy site generates lots of comments, Drupal takes care to present a personalized view of comments for each user.  The home page lists displays the number of read and unread comments for a given post for the current user.  Also, the tracker module (when installed) displays all recent comments on the site.  Finally, comments which the user has not yet read are highlighted with a red star (this graphic may depend on the current theme).</p>";
-  $output .= "<p>Comments behave like other user submissions in Drupal.  Specifically, <a href=\"admin.php?mod=system&type=filter\">filters</a> like smileys and HTML work fine if the administrator has enabled them.  Also, throttles are usually enabled to prevent a single user from spamming the web site with too many comments in a short period of time.</p>";
-  $output .= "<p>Administrators may control which persons are allowed to submit and administer comments.  These controls appear in the <a href=\"admin.php?mod=user&op=permission\"></a>user permissions</a> administration page.  Additionally, administrators may edit or search through comments on the <a href=\"admin.php?mod=comment\">comments admininistration page<a>, as well as set the default display view for new users.</p>";
+  $output .= "<p>Comments behave like other user submissions in Drupal.  Specifically, ".la("filters", array("mod" => "system", "type" => "filter"))." like smileys and HTML work fine if the administrator has enabled them.  Also, throttles are usually enabled to prevent a single user from spamming the web site with too many comments in a short period of time.</p>";
+  $output .= "<p>Administrators may control which persons are allowed to submit and administer comments.  These controls appear in the ".la("user permissions", array("mod" => "user", "op" => "permission"))." administration page.  Additionally, administrators may edit or search through comments on the ".la("comments admininistration page", array("mod" => "comment")).", as well as set the default display view for new users.</p>";
 
   return $output;
 }
@@ -37,8 +37,8 @@ function comment_num_new($nid) {
     ** of new comments.
     */
 
-    $history = db_fetch_object(db_query("SELECT timestamp FROM history WHERE uid = '$user->uid' AND nid = '$nid'"));
-    $comment = db_fetch_object(db_query("SELECT COUNT(c.nid) AS number FROM node n LEFT JOIN comments c ON n.nid = c.nid WHERE n.nid = '$nid' AND timestamp > '". ($history->timestamp ? $history->timestamp : 0) ."' GROUP BY n.nid"));
+    $history = db_fetch_object(db_query("SELECT timestamp FROM history WHERE uid = '$user->uid' AND nid = '%s'", $nid));
+    $comment = db_fetch_object(db_query("SELECT COUNT(c.nid) AS number FROM node n LEFT JOIN comments c ON n.nid = c.nid WHERE n.nid = '%s' AND timestamp > '". ($history->timestamp ? $history->timestamp : 0) ."' GROUP BY n.nid", $nid));
 
     return $comment->number ? $comment->number : 0;
   }
@@ -151,7 +151,7 @@ function comment_reply($pid, $nid) {
   $context->nid = $nid;
   if (user_access("access comments", $context)) {
     if ($pid) {
-      $comment = db_fetch_object(db_query("SELECT c.*, u.uid, u.name FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.cid = '$pid'"));
+      $comment = db_fetch_object(db_query("SELECT c.*, u.uid, u.name FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.cid = '%s'", $pid));
       comment_view($comment, t("reply to this comment"));
     }
     else {
@@ -201,7 +201,7 @@ function comment_preview($edit) {
   $theme->box(t("Reply"), comment_form($edit));
 
   if ($edit["pid"]) {
-    $comment = db_fetch_object(db_query("SELECT c.*, u.uid, u.name FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.cid = '$edit[pid]'"));
+    $comment = db_fetch_object(db_query("SELECT c.*, u.uid, u.name FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.cid = '%s'", $edit[pid]));
     comment_view($comment, t("reply to this comment"));
   }
   else {
@@ -234,7 +234,7 @@ function comment_post($edit) {
     ** validated/filtered data to perform such check.
     */
 
-    $duplicate = db_result(db_query("SELECT COUNT(cid) FROM comments WHERE pid = '". check_query($edit["pid"]) ."' AND nid = '". check_query($edit["nid"]) ."' AND subject = '". check_query($edit["subject"]) ."' AND comment = '". check_query($edit["comment"]) ."'"), 0);
+    $duplicate = db_result(db_query("SELECT COUNT(cid) FROM comments WHERE pid = '%s' AND nid = '%s' AND subject = '%s' AND comment = '%s'", $edit["pid"], $edit["nid"], $edit["subject"], $edit["comment"]), 0);
 
     if ($duplicate != 0) {
       watchdog("warning", "comment: duplicate '". $edit["subject"] ."'");
@@ -249,7 +249,7 @@ function comment_post($edit) {
         ** user.
         */
 
-        db_query("UPDATE comments SET subject = '". check_query($edit["subject"]) ."', comment = '". check_query($edit["comment"]) ."' WHERE cid = '". check_query($edit["cid"]) ."' AND uid = '$user->uid'");
+        db_query("UPDATE comments SET subject = '%s', comment = '%s' WHERE cid = '%s' AND uid = '$user->uid'", $edit["subject"], $edit["comment"], $edit["cid"]);
 
         /*
         ** Add entry to the watchdog log:
@@ -269,7 +269,7 @@ function comment_post($edit) {
         ** Add the comment to database:
         */
 
-        db_query("INSERT INTO comments (nid, pid, uid, subject, comment, hostname, timestamp) VALUES ('". check_query($edit["nid"]) ."', '". check_query($edit["pid"]) ."', '$user->uid', '". check_query($edit["subject"]) ."', '". check_query($edit["comment"]) ."', '". getenv("REMOTE_ADDR") ."', '". time() ."')");
+        db_query("INSERT INTO comments (nid, pid, uid, subject, comment, hostname, timestamp) VALUES ('%s', '%s', '$user->uid', '%s', '%s', '%s', '%s')", $edit["nid"], $edit["pid"], $edit["subject"], $edit["comment"], getenv("REMOTE_ADDR"), time());
 
         /*
         ** Add entry to the watchdog log:
@@ -291,8 +291,7 @@ function comment_post($edit) {
   ** Redirect the user the node he commented on:
   */
 
-  $url = "node.php?id=". $edit["nid"];
-  drupal_goto($url);
+  drupal_goto(drupal_url(array("id" => $edit["nid"], "node")));
 
 }
 
@@ -380,11 +379,11 @@ function comment_links($comment, $return = 1) {
   $links = array();
 
   if ($return) {
-    $links[] = "<a href=\"node.php?id=$comment->nid#$comment->cid\"><span style=\"color: $theme->type;\">". t("return") ."</span></a>";
+    $links[] = l("<span style=\"color: $theme->type;\">". t("return") ."</span>", array("id" => $comment->nid."#".$comment->cid));;
   }
 
   if (user_access("administer comments")) {
-    $links[] = "<a href=\"admin.php?mod=comment&op=edit&id=$comment->cid\" title=\"". t("Administer this comment.") ."\"><span style=\"color: $theme->type;\">". t("administer") ."</span></a>";
+    $links[] = la("<span style=\"color: $theme->type;\">". t("administer") ."</span>", array("mod" => "comment", "op" => "edit", "id" => $comment->cid));
   }
 
   // here we should check if this node has read-only comments, but we already check on submit
@@ -394,10 +393,10 @@ function comment_links($comment, $return = 1) {
   //if (node_comment_mode($comment->nid)) {
   if (user_access("post comments")) {
     if (comment_access("edit", $comment)) {
-      $links[] = "<a href=\"module.php?mod=comment&op=edit&id=$comment->cid\" title=\"". t("Make changes to your comment.") ."\"><span style=\"color: $theme->type\">". t("edit your comment") ."</span></a>";
+      $links[] = lm("<span style=\"color: $theme->type\">". t("edit your comment") ."</span>", array("mod" => "comment", "op" => "edit", "id" => $comment->cid), t("Make changes to your comment."));
     }
     else {
-      $links[] = "<a href=\"module.php?mod=comment&op=reply&id=$comment->nid&pid=$comment->cid\" title=\"". t("Reply to this comment.") ."\"><span style=\"color: $theme->type;\">". t("reply to this comment") ."</span></a>";
+      $links[] = lm("<span style=\"color: $theme->type;\">". t("reply to this comment") ."</span>", array("mod" => "comment", "op" => "reply", "id" => $comment->nid, "pid" => $comment->cid), t("Reply to this comment."));
     }
   }
   //}
@@ -417,7 +416,7 @@ function comment_view($comment, $folded = 0) {
     $theme->comment($comment, $folded);
   }
   else {
-    print "<a href=\"node.php?id=$comment->nid&cid=$comment->cid#$comment->cid\">". check_output($comment->subject) ."</a> by ". format_name($comment) ."</small><p />";
+    print l(check_output($comment->subject), array("id" => $comment->nid, "cid" => $comment->cid."#".$comment->cid)). " by ". format_name($comment) ."</small><p />";
   }
 }
 
@@ -459,7 +458,7 @@ function comment_thread_max($comments, $threshold, $pid = 0, $level = 0) {
 }
 
 function comment_render($nid, $cid) {
-  global $user, $theme, $mode, $order, $threshold, $REQUEST_URI;
+  global $user, $theme, $mode, $order, $threshold;
 
   if (user_access("access comments")) {
 
@@ -489,7 +488,7 @@ function comment_render($nid, $cid) {
     }
 
     print "<a name=\"comment\"></a>\n";
-    print "<form method=\"post\" action=\"$REQUEST_URI\">\n";
+    print "<form method=\"post\" action=\"".request_uri()."\">\n";
 
     /*
     ** Render control panel:
@@ -510,7 +509,7 @@ function comment_render($nid, $cid) {
         print " <tr><th>Subject</th><th>Author</th><th>Date</th><th>Score</th></tr>\n";
         while ($comment = db_fetch_object($result)) {
           if (comment_visible($comment, $threshold)) {
-            print " <tr><td><a href=\"node.php?id=$comment->nid&cid=$comment->cid#$comment->cid\">". check_output($comment->subject) ."</a></td><td>". format_name($comment) ."</td><td>". format_date($comment->timestamp, "small") ."</td><td>$comment->score</td></tr>\n";
+            print " <tr><td>".l(check_output($comment->subject), array("id" => $comment->nid, "cid" => $comment->cid."#".$comment->cid))."</td><td>". format_name($comment) ."</td><td>". format_date($comment->timestamp, "small") ."</td><td>$comment->score</td></tr>\n";
           }
         }
         print "</table>\n";
@@ -591,7 +590,7 @@ function comment_perm() {
 function comment_link($type, $node = 0, $main = 0) {
 
   if ($type == "admin" && user_access("administer comments")) {
-    $links[] = "<a href=\"admin.php?mod=comment\">comments</a>";
+    $links[] = la(t("comments"), array("mod" => "comment"));
   }
 
   if ($type == "node" && $node->comment) {
@@ -606,7 +605,7 @@ function comment_link($type, $node = 0, $main = 0) {
         $all = comment_num_all($node->nid);
         $new = comment_num_new($node->nid);
 
-        $links[] = "<a href=\"node.php?id=$node->nid#comment\" title=\"". t("View this posting and all of its comments.") ."\">". format_plural($all, "comment", "comments") . ($new ? ", $new ". t("new") : "") ."</a>";
+        $links[] = l(format_plural($all, "comment", "comments") . ($new ? ", $new ". t("new") : ""), array("id" => $node->nid."#comment"), t("View this posting and all of its comments."));
       }
     }
     else {
@@ -617,7 +616,7 @@ function comment_link($type, $node = 0, $main = 0) {
 
       if (user_access("post comments")) {
         if ($node->comment == 2) {
-          $links[] = "<a href=\"module.php?mod=comment&op=reply&id=$node->nid#comment\" title=\"". t("Share your thoughts and opinions related to this posting.") ."\">". t("add new comment") ."</a>";
+          $links[] = lm(t("add new comment"), array("mod" => "comment", "op" => "reply", "id" => $node->nid."#comment"), t("Share your thoughts and opinions related to this posting."));
         } else {
           $links[] = t("This discussion is closed: you can't post new comments.");
         }
@@ -643,7 +642,7 @@ function comment_node_link($node) {
     $output .= " <tr><th>title</th><th>author</th><th colspan=\"3\">operations</th></tr>";
 
     while ($comment = db_fetch_object($result)) {
-      $output .= "<tr><td><a href=\"node.php?id=$node->nid&cid=$comment->cid#$comment->cid\">$comment->subject</a></td><td>". format_name($comment) ."</td><td><a href=\"node.php?id=$node->nid&cid=$comment->cid#$comment->cid\">". t("view comment") ."</a></td><td><a href=\"admin.php?mod=comment&op=edit&id=$comment->cid\">". t("edit comment") ."</a></td><td><a href=\"admin.php?mod=comment&op=delete&id=$comment->cid\">". t("delete comment") ."</a></td></tr>";
+      $output .= "<tr><td>".l($comment->subject, array("id" => $node->nid, "cid" => $comment->cid."#".$comment->cid))."</td><td>". format_name($comment) ."</td><td>".l(t("view comment"), array("id" => $node->nid, "cid" => $comment->cid."#".$comment->cid))."</td><td>".la(t("edit comment"), array("mod" => "comment", "op" => "edit", "id" => $comment->cid))."</td><td>".la(t("delete comment"), array("mod" => "comment", "op" => "delete", "id" => $comment->cid))."</td></tr>";
     }
 
     $output .= "</table>";
@@ -654,7 +653,7 @@ function comment_node_link($node) {
 
 
 function comment_save($id, $edit) {
-  db_query("UPDATE comments SET subject = '". check_query(filter($edit["subject"])) ."', comment = '". check_query(filter($edit["comment"])) ."' WHERE cid = '$id'");
+  db_query("UPDATE comments SET subject = '%s', comment = '%s' WHERE cid = '$id'", filter($edit["subject"]), filter($edit["comment"]));
   watchdog("special", "comment: modified '". $edit["subject"] ."'");
 }
 
@@ -708,7 +707,7 @@ function comment_admin_overview() {
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
   $output .= " <tr><th>subject</th><th>author</th><th>date</th><th colspan=\"2\">operations</th></tr>\n";
   while ($comment = db_fetch_object($result)) {
-    $output .= " <tr><td><a href=\"node.php?id=$comment->nid&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</a></td><td>". format_name($comment) ."</td><td>". format_date($comment->timestamp, "small") ."</td><td><a href=\"admin.php?mod=comment&op=edit&id=$comment->cid\">edit comment</a></td><td><a href=\"admin.php?mod=comment&op=delete&id=$comment->cid\">delete comment</a></td></tr>\n";
+    $output .= " <tr><td>".l(check_output($comment->subject), array("id" => $comment->nid, "cid" => $comment->cid, "pid" => $comment->pid."#".$comment->cid))."</td><td>". format_name($comment) ."</td><td>". format_date($comment->timestamp, "small") ."</td><td>".la(t("edit comment"), array("mod" => comment, "op" => edit, "id" => $comment->cid))."</td><td>".la(t("delete comment"), array("mod" => "comment", "op" => "delete", "id" => $comment->cid))."</td></tr>\n";
   }
   $output .= "</table>\n";
 
@@ -718,7 +717,7 @@ function comment_admin_overview() {
 function comment_delete($edit) {
 
   if ($edit["confirm"]) {
-    db_query("DELETE FROM comments WHERE cid = '". check_query($edit["cid"]) ."'");
+    db_query("DELETE FROM comments WHERE cid = '%s'", $edit["cid"]);
     watchdog("special", "comment: deleted comment #". $edit["cid"]);
   }
   else {
@@ -737,14 +736,14 @@ function comment_admin() {
 
   if (user_access("administer comments")) {
 
-    print "<small><a href=\"admin.php?mod=comment\">overview</a> | <a href=\"admin.php?mod=comment&op=search\">search comment</a></small><hr />\n";
+    print "<small>".la(t("overview"), array("mod" => "comment"))." | ".la(t("search comment"), array("mod" => "comment", "op" => "search"))."</small><hr />\n";
 
     switch ($op) {
       case "edit":
         print comment_admin_edit($id);
         break;
       case "search":
-        print search_type("comment", "admin.php?mod=comment&op=search");
+        print search_type("comment", drupal_url(array("mod" => "comment", "op" => "search"), "admin"));
         break;
       case "delete":
         print comment_delete(array("cid" => $id));

@@ -33,7 +33,7 @@ function archive_display($original = 0) {
   // Generate calendar header:
   $output .= "\n<!-- calendar -->\n";
   $output .= "<table width=\"100%\" border=\"1\" cellspacing=\"0\" cellpadding=\"1\">\n";
-  $output .= " <tr><td align=\"center\" colspan=\"7\"><small><a href=\"module.php?mod=archive&date=$prev\">&lt;</a> &nbsp; ". date("F Y", $original) ." &nbsp; " . ($next <= $thislast ? "<a href=\"module.php?mod=archive&date=$next\">&gt;</a>" : "&gt;") . "</small></td></tr>\n";
+  $output .= " <tr><td align=\"center\" colspan=\"7\"><small>".lm("&lt;", array("mod" => "archive", "date" => $prev))." &nbsp; ". date("F Y", $original) ." &nbsp; " . ($next <= $thislast ? lm("&gt;", array("mod" => "archive", "date" => $next)) : "&gt;") . "</small></td></tr>\n";
 
   // Generate the days of the week:
   $somesunday = mktime(0, 0, 0, 3, 20, 1994);
@@ -71,7 +71,8 @@ function archive_display($original = 0) {
       $output .= "  <td align=\"center\"><small>$nday</small></td>\n";
     }
     else {
-      $output .= "  <td align=\"center\"><small><a href=\"module.php?mod=archive&date=$date\" style=\"text-decoration: none;\">$nday</a></small></td>\n";
+      // due to text-decoration we use drupal_url() instead of lm()
+      $output .= "  <td align=\"center\"><small><a href=\"".drupal_url(array("mod" => "archive", "date" => $date), "module")." \" style=\"text-decoration: none;\">$nday</a></small></td>\n";
     }
 
     // Start every week on a new line:
@@ -108,7 +109,7 @@ function archive_block() {
 
 function archive_link($type) {
   if ($type == "page" && user_access("access content")) {
-    $links[] = "<a href=\"module.php?mod=archive\" title=\"". t("Read the older content in our archive.") ."\">archives</a>";
+    $links[] = lm(t("archives"), array("mod" => "archive"), t("Read the older content in our archive."));
   }
 
   return $links ? $links : array();
@@ -156,7 +157,7 @@ function archive_page() {
         ** selected.
         */
 
-        $result = db_query("SELECT nid FROM node WHERE status = '1' AND created > ". ($date > 0 ? check_input($date) : time()) ." ORDER BY created LIMIT 20");
+        $result = db_query("SELECT nid FROM node WHERE status = '1' AND created > ". ($date > 0 ? check_query($date) : time()) ." ORDER BY created LIMIT 20");
 
         while ($nid = db_fetch_object($result)) {
           node_view(node_load(array("nid" => $nid->nid)), 1);

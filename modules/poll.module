@@ -20,7 +20,7 @@ function poll_block() {
       poll_view($poll, 0, 1);
     }
   }
-  $blocks[0][subject] = strtr(t("Latest poll: %t"), array("%t" => $poll->title));
+  $blocks[0][subject] = t("Latest poll: %t", array("%t" => $poll->title));
   $blocks[0][content] = $poll->body;
   $blocks[0][info] = t("Most recent poll");
   return $blocks;
@@ -76,7 +76,7 @@ function poll_form(&$node, &$help, &$error) {
   for ($a = 0; $a < $node->choices; $a++) {
     $output .= form_textfield(t("Choice"). " " . ($a + 1), "choice][$a", $node->choice[$a], 50, 127, $error["choice][$a"]);
     if ($admin) {
-      $output .= form_textfield(strtr(t("Votes for choice %n"), array("%n" => ($a + 1))), "chvotes][$a", $node->chvotes[$a] ? $node->chvotes[$a] : 0, 7, 7, $error["chvotes][$a"]);
+      $output .= form_textfield(t("Votes for choice %n", array("%n" => ($a + 1))), "chvotes][$a", $node->chvotes[$a] ? $node->chvotes[$a] : 0, 7, 7, $error["chvotes][$a"]);
     }
   }
 
@@ -117,7 +117,7 @@ function poll_insert($node) {
 
 function poll_link($type) {
   if ($type == "menu.create" && user_access("post content")) {
-    $links[] = "<a href=\"module.php?mod=node&op=add&type=poll\" title=\"". t("Add a new poll.") ."\">". t("create poll") ."</a>";
+    $links[] = lm(t("create poll"), array("mod" => "node", "op" => "add", "type" => "poll"), t("Add a new poll."));
   }
 
   return $links ? $links : array();
@@ -184,7 +184,7 @@ function poll_view(&$node, $main = 0, $block = 0) {
 
   /* When a poll is displayed twice on the same page (e.g. on the front page and in the side bar)
      we only want to vote on one of them. We keep count using $pollid */
-  global $pollidcount, $pollvote, $pollid, $REMOTE_ADDR, $REQUEST_URI;
+  global $pollidcount, $pollvote, $pollid, $REMOTE_ADDR;
   $pollidcount++;
 
   // Only accept votes on specific cases to prevent double voting
@@ -215,7 +215,7 @@ function poll_view(&$node, $main = 0, $block = 0) {
 
   if ($allowvotes) {
     // Display the vote form
-    $url = $REQUEST_URI . (strstr($REQUEST_URI, "?") ? "&" : "?") . "pollid=" . $pollidcount;
+    $url = request_uri() . (strstr(request_uri(), "?") ? "&" : "?") . "pollid=" . $pollidcount;
     $output .= "<form action=\"$url\" method=\"post\">";
     $output .= "<table border=\"0\" align=\"center\"><tr><td>";
 

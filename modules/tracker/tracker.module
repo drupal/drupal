@@ -9,7 +9,7 @@ function tracker_help() {
 function tracker_link($type) {
 
   if ($type == "menu.view") {
-    $links[] = "<a href=\"module.php?mod=tracker\" title=\"". t("Display an overview of the recent comments.") ."\">". t("view new comments") ."</a>";
+    $links[] = lm(t("view new comments"), array("mod" => "tracker"), t("Display an overview of the recent comments."));
   }
 
   return $links ? $links : array();
@@ -21,17 +21,17 @@ function tracker_comments($id = 0) {
   $period = time() - 259200;  // all comments of the past 3 days
 
   if ($id) {
-    $sresult = db_query("SELECT n.nid, n.title, COUNT(n.nid) AS comments, MAX(c.timestamp) AS last_comment FROM comments c LEFT JOIN node n ON c.nid = n.nid WHERE c.timestamp > $period AND c.uid = '". check_input($id) ."' GROUP BY n.nid, n.title DESC ORDER BY last_comment DESC LIMIT 10");
+    $sresult = db_query("SELECT n.nid, n.title, COUNT(n.nid) AS comments, MAX(c.timestamp) AS last_comment FROM comments c LEFT JOIN node n ON c.nid = n.nid WHERE c.timestamp > $period AND c.uid = '%s' GROUP BY n.nid, n.title DESC ORDER BY last_comment DESC LIMIT 10", $id);
   }
   else {
     $sresult = db_query("SELECT n.nid, n.title, COUNT(n.nid) AS comments, MAX(c.timestamp) AS last_comment FROM comments c LEFT JOIN node n ON c.nid = n.nid WHERE c.timestamp > $period GROUP BY n.nid, n.title DESC ORDER BY last_comment DESC LIMIT 10");
   }
 
   while ($node = db_fetch_object($sresult)) {
-    $output .= format_plural($node->comments, "comment", "comments") ." ". t("attached to node") ." <a href=\"node.php?id=$node->nid\">". check_output($node->title) ."</a>:\n";
+    $output .= format_plural($node->comments, "comment", "comments") ." ". t("attached to node") ." ".l(check_output($node->title), array("id" => $node->nid)).":\n";
 
     if ($id) {
-      $cresult = db_query("SELECT * FROM comments WHERE timestamp > $period AND uid = '". check_input($id) ."' AND nid = '$node->nid' ORDER BY cid DESC");
+      $cresult = db_query("SELECT * FROM comments WHERE timestamp > $period AND uid = '%s' AND nid = '$node->nid' ORDER BY cid DESC", $id);
     }
     else {
       $cresult = db_query("SELECT c.*, u.name FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.timestamp > $period AND c.nid = '$node->nid' ORDER BY c.cid DESC");
@@ -39,7 +39,7 @@ function tracker_comments($id = 0) {
 
     $output .= "<ul>";
     while ($comment = db_fetch_object($cresult)) {
-      $output .= " <li><a href=\"node.php?id=$node->nid&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</a> by <a href=\"module.php?mod=user&op=view&id=$comment->uid\">". check_output($comment->name) ."</a> (". t("replies") .": ". comment_num_replies($comment->cid) .") ". (comment_is_new($comment) ? "<span style=\"color: red;\">*</span>" : "") ."</li>\n";
+      $output .= " <li>".l(check_output($comment->subject), array("id" => $node->nid, "cid" => $comment->cid, "pid" => $comment->pid."#".$comment->cid))." by ".lm(check_output($comment->name), array("mod" => "user", "op" => "view", "id" => $comment->uid))." (". t("replies") .": ". comment_num_replies($comment->cid) .") ". (comment_is_new($comment) ? "<span style=\"color: red;\">*</span>" : "") ."</li>\n";
     }
     $output .= " </ul>\n";
   }
@@ -50,8 +50,8 @@ function tracker_comments($id = 0) {
 function tracker_menu() {
   global $user;
 
-  $links[] = "<a href=\"module.php?mod=tracker&id=$user->uid\" title=\"". t("Display an overview of your recent comments.") ."\">your recent comments</a>";
-  $links[] = "<a href=\"module.php?mod=tracker\" title=\"". t("Display an overview of all the recent comments.") ."\">all recent comments</a>";
+  $links[] = lm(t("your recent comments"), array("mod" => "tracker", "id" => $user->uid), t("Display an overview of your recent comments."));
+  $links[] = lm(t("all recent comments"), array("mod" => "tracker"), t("Display an overview of all the recent comments."));
 
   return "<div align=\"center\">". implode(" &middot; ", $links) ."</div>";
 }

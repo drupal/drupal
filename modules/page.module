@@ -2,7 +2,7 @@
 // $Id$
 
 function page_help() {
-  $output .= "<p>The page module is used to create a <i>site page</i>.  Unlike a story, a site page is a persistent web page on your site which usually shortcuts the typical lifecycle of user generated content (i.e. submit -&gt; moderate -&gt; post -&gt; comment).  A site page is usually linked from the main navigation bar, using whatever text the author wishes.  To create a site page without this navigation link, simply skip the form field which requests link text.  Administrators are the exclusive authors of site pages (i.e. requires the <i>adinister nodes</i> in <a href=\"/admin.php?mod=user&op=permission\">permission</a>).</p>";
+  $output .= "<p>The page module is used to create a <i>site page</i>.  Unlike a story, a site page is a persistent web page on your site which usually shortcuts the typical lifecycle of user generated content (i.e. submit -&gt; moderate -&gt; post -&gt; comment).  A site page is usually linked from the main navigation bar, using whatever text the author wishes.  To create a site page without this navigation link, simply skip the form field which requests link text.  Administrators are the exclusive authors of site pages (i.e. requires the <i>adinister nodes</i> in ".la("permission", array("mod" => "user", "op" => "permission")).").</p>";
   $output .= "<p>Site pages, unlike many other forms of Drupal content, may be made of PHP code in addition to HTML and text. All Drupal objects and functions are available to the Site Page author.</p>";
   return $output;
 }
@@ -61,12 +61,12 @@ function page_link($type) {
   if ($type == "page") {
     $result = db_query("SELECT n.nid, p.link FROM page p LEFT JOIN node n ON p.nid = n.nid WHERE n.status = '1' AND p.link != '' ORDER BY p.link");
     while ($page = db_fetch_object($result)) {
-      $links[] = "<a href=\"node.php?id=$page->nid\">$page->link</a>";
+      $links[] = l($page->link, array("id" => $page->nid));
     }
   }
 
   if ($type == "menu.create" && user_access("administer nodes")) {
-    $links[] = "<a href=\"module.php?mod=node&op=add&type=page\" title=\"". t("Add a new site page.") ."\">". t("create site page") ."</a>";
+    $links[] = lm(t("create site page"), array("mod" => "node", "op" => "add", "type" => "page"), t("Add a new site page."));
   }
 
   return $links ? $links : array();
