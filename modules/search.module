@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.93 2004/11/18 21:28:34 unconed Exp $
+// $Id: search.module,v 1.94 2004/11/24 22:56:21 dries Exp $
 
 /**
  * @file
@@ -65,19 +65,6 @@ function search_help($section = 'admin/help#search') {
  */
 function search_perm() {
   return array('search content', 'administer search');
-}
-
-/**
- * Implementation of hook_link().
- */
-function search_link($type) {
-  $links = array();
-
-  if ($type == 'page' && user_access('search content')) {
-    $links[] = l(t('search'), 'search', array('title' => t('Search for older content.')));
-  }
-
-  return $links;
 }
 
 /**

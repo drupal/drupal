@@ -1,5 +1,5 @@
 <?php
-// $Id: archive.module,v 1.69 2004/10/31 07:34:47 dries Exp $
+// $Id: archive.module,v 1.70 2004/11/24 22:56:20 dries Exp $
 
 /**
  * @file
@@ -187,18 +187,6 @@ function archive_block($op = 'list', $delta = 0) {
     $block['content'] = archive_calendar();
     return $block;
   }
-}
-
-/**
- * Implementation of hook_link().
- */
-function archive_link($type) {
-  $links = array();
-
-  if ($type == 'page' && user_access('access content')) {
-    $links[] = l(t('archives'), 'archive', array('title' => t('Read the older content in our archive.')));
-  }
-  return $links;
 }
 
 /**

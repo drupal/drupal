@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.205 2004/11/24 20:06:10 dries Exp $
+// $Id: blog.module,v 1.206 2004/11/24 22:56:21 dries Exp $
 
 /**
  * @file
@@ -255,10 +255,6 @@ function blog_view(&$node, $teaser = FALSE, $page = FALSE) {
  */
 function blog_link($type, $node = 0, $main) {
   $links = array();
-
-  if ($type == 'page' && user_access('access content')) {
-    $links[] = l(t('blogs'), 'blog', array('title' => t('Read the latest blog entries.')));
-  }
 
   if ($type == 'node' && $node->type == 'blog') {
     if (arg(0) != 'blog' && arg(1) != $node->uid) {

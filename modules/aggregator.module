@@ -1,5 +1,5 @@
 <?php
-/* $Id: aggregator.module,v 1.218 2004/11/23 22:20:41 dries Exp $ */
+/* $Id: aggregator.module,v 1.219 2004/11/24 22:56:20 dries Exp $ */
 
 /**
  * @file
@@ -105,15 +105,6 @@ function _aggregator_items($count) {
  */
 function aggregator_perm() {
   return array('administer news feeds', 'access news feeds');
-}
-
-/**
- * Implementation of hook_link().
- */
-function aggregator_link($type) {
-  if ($type == 'page' && user_access('access news feeds')) {
-    return array(l(t('news feeds'), 'aggregator', array('title' => t('Read the latest news from syndicated web sites.'))));
-  }
 }
 
 /**

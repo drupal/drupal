@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.150 2004/11/23 23:11:58 dries Exp $
+// $Id: poll.module,v 1.151 2004/11/24 22:56:21 dries Exp $
 
 /**
  * @file
@@ -177,19 +177,6 @@ function poll_insert($node) {
       db_query("INSERT INTO {poll_choices} (nid, chtext, chvotes, chorder) VALUES (%d, '%s', %d, %d)", $node->nid, $choice['chtext'], $choice['chvotes'], $i++);
     }
   }
-}
-
-/**
- * Implementation of hook_link().
- */
-function poll_link($type, $node = 0, $main) {
-  $links = array();
-
-  if ($type == 'page' && user_access('access content')) {
-    $links[] = l(t('polls'), 'poll', array('title' => t('View the list of polls on this site.')));
-  }
-
-  return $links;
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.216 2004/11/23 22:20:41 dries Exp $
+// $Id: forum.module,v 1.217 2004/11/24 22:56:21 dries Exp $
 
 /**
  * @file
@@ -158,10 +158,6 @@ function forum_link($type, $node = 0, $main = 0) {
   global $user;
 
   $links = array();
-
-  if ($type == 'page' && user_access('access content')) {
-    $links[] = l(t('forums'), 'forum');
-  }
 
   if (!$main && $type == 'node' && $node->type == 'forum') {
     // get previous and next topic
