@@ -1,5 +1,5 @@
 <?php
-// $Id: marvin.theme,v 1.105 2003/06/16 17:09:22 dries Exp $
+// $Id: marvin.theme,v 1.106 2003/08/12 20:37:16 kjartan Exp $
 
  class Theme_marvin extends BaseTheme {
    var $link = "#666699";
@@ -59,7 +59,7 @@
    function node($node, $main = 0) {
 
      if (module_exist("taxonomy")) {
-      $terms = taxonomy_link("taxonomy terms", $node);
+       $terms = taxonomy_link("taxonomy terms", $node);
      }
 
      print "\n<!-- node: \"$node->title\" -->\n";

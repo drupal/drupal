@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.243 2003/08/12 19:09:44 dries Exp $
+// $Id: node.module,v 1.244 2003/08/12 20:37:16 kjartan Exp $
 
 function node_help() {
   global $mod;
@@ -359,7 +359,6 @@ function node_save($node) {
 }
 
 function node_view($node, $main = 0) {
-
 
   $node = array2object($node);
 
@@ -1259,7 +1258,7 @@ function node_form($edit, $error = NULL) {
 
   $output .= "</div></div>";
 
-  return form($output, ($param["method"] ? $param["method"] : "post"), $param["action"], $param["options"]);
+  return form($output, ($param["method"] ? $param["method"] : "post"), $param["action"], array_merge($param["options"], array("id" => "node-form")));
 }
 
 function node_add($type) {
