@@ -1,5 +1,5 @@
 <?php
-// $Id: page.module,v 1.94 2003/09/28 17:53:01 dries Exp $
+// $Id: page.module,v 1.95 2003/09/30 17:01:17 dries Exp $
 
 function page_help($section = "admin/page/help") {
   $output = "";
@@ -89,9 +89,9 @@ function page_link($type) {
   $links = array();
 
   if ($type == "page" && user_access("access content")) {
-    $result = db_query("SELECT n.nid, n.title, n.path, p.link, p.description FROM {page} p INNER JOIN {node} n ON p.nid = n.nid WHERE n.status = '1' AND p.link != '' ORDER BY p.link");
+    $result = db_query("SELECT n.nid, n.title, p.link, p.description FROM {page} p INNER JOIN {node} n ON p.nid = n.nid WHERE n.status = '1' AND p.link != '' ORDER BY p.link");
     while ($page = db_fetch_object($result)) {
-      $links[] = l($page->link, node_url($page), array("title" => $page->description));
+      $links[] = l($page->link, "node/view/$page->nid", array("title" => $page->description));
     }
   }
 

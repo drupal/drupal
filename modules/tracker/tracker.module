@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.module,v 1.59 2003/09/28 17:53:03 dries Exp $
+// $Id: tracker.module,v 1.60 2003/09/30 17:01:26 dries Exp $
 
 function tracker_help($section = "admin/tracker/help") {
 
@@ -59,7 +59,7 @@ function tracker_posts($id = 0) {
     }
 
     $type = ucfirst(module_invoke($node->type, "node", "name"));
-    $title = l($node->title, node_url($node)) ." ". (node_is_new($node->nid, $node->changed) ? theme("theme_mark") : "");
+    $title = l($node->title, "node/view/$node->nid") ." ". (node_is_new($node->nid, $node->changed) ? theme("theme_mark") : "");
     $author = format_name($node);
 
     $comments = array();

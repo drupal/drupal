@@ -1,5 +1,5 @@
 <?php
-// $Id: title.module,v 1.12 2003/09/25 07:27:21 dries Exp $
+// $Id: title.module,v 1.13 2003/09/30 17:01:26 dries Exp $
 
 function title_system($field){
   $system["description"] = t("Enables users to link to stories, articles or similar content by title.");
@@ -33,7 +33,7 @@ function title_page() {
       $header = array(t("Type"), t("Title"), t("Author"));
       while ($node = db_fetch_object($result)) {
         $type = ucfirst(module_invoke($node->type, "node", "name"));
-        $title = l($node->title, node_url($node));
+        $title = l($node->title, "node/view/$node->nid");
         $author = format_name($node);
         $rows[] = array(array("data" => $type, "class" => "type"), array("data" => $title, "class" => "content"), array("data" => $author, "class" => "author"));
       }

@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.271 2003/09/28 17:52:58 dries Exp $
+// $Id: node.module,v 1.272 2003/09/30 17:01:17 dries Exp $
 
 function node_help($section = "admin/node/help") {
   global $mod;
@@ -77,7 +77,7 @@ function node_system($field){
 function node_title_list($result, $title = NULL) {
   while ($node = db_fetch_object($result)) {
     $number = module_invoke("comment", "num_all", $node->nid);
-    $items[] = l($node->title, node_url($node), array("title" => format_plural($number, "%count comment", "%count comments")));
+    $items[] = l($node->title, "node/view/$node->nid", array("title" => format_plural($number, "%count comment", "%count comments")));
   }
 
   return theme("theme_node_list", $items, $title);
@@ -465,7 +465,7 @@ function node_access($op, $node = 0) {
 }
 
 function node_perm() {
-  return array("administer nodes", "access content", "create custom URLs");
+  return array("administer nodes", "access content");
 }
 
 function node_search($keys) {
@@ -603,7 +603,7 @@ function node_admin_edit($node) {
     $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";
     $output .= " <tr><th>". t("older revisions") ."</th><th colspan=\"3\">". t("operations") ."</th></tr>";
     foreach ($node->revisions as $key => $revision) {
-      $output .= " <tr><td>". t("revision #%r revised by %u on %d", array("%r" => $key, "%u" => format_name(user_load(array("uid" => $revision["uid"]))), "%d" => format_date($revision["timestamp"], "small"))) . ($revision["history"] ? "<br /><small>". $revision["history"] ."</small>" : "") ."</td><td>". l(t("view revision"), node_url($node), array(), "revision=$key") ."</td><td>". l(t("rollback revision"), "admin/node/rollback+revision/$node->nid/$key") ."</td><td>". l(t("delete revision"), "admin/node/delete+revision/$node->nid/$key") ."</td></tr>";
+      $output .= " <tr><td>". t("revision #%r revised by %u on %d", array("%r" => $key, "%u" => format_name(user_load(array("uid" => $revision["uid"]))), "%d" => format_date($revision["timestamp"], "small"))) . ($revision["history"] ? "<br /><small>". $revision["history"] ."</small>" : "") ."</td><td>". l(t("view revision"), "node/view/$node->nid", array(), "revision=$key") ."</td><td>". l(t("rollback revision"), "admin/node/rollback+revision/$node->nid/$key") ."</td><td>". l(t("delete revision"), "admin/node/delete+revision/$node->nid/$key") ."</td></tr>";
     }
     $output .= "</table>";
   }
@@ -698,7 +698,7 @@ function node_admin_nodes() {
   $header = array(NULL, t("title"), t("type"), t("author"), t("status"), array ("data" => t("operations"), "colspan" => 2));
 
   while ($node = db_fetch_object($result)) {
-    $rows[] = array(form_checkbox(NULL, "status][$node->nid", 1, 0), l($node->title, node_url($node)) ." ". (node_is_new($node->nid, $node->changed) ? theme_mark() : ""), module_invoke($node->type, "node", "name"), format_name($node), ($node->status ? t("published") : t("not published")), l(t("edit node"), "admin/node/edit/$node->nid"), l(t("delete node"), "admin/node/delete/$node->nid"));
+    $rows[] = array(form_checkbox(NULL, "status][$node->nid", 1, 0), l($node->title, "node/view/$node->nid") ." ". (node_is_new($node->nid, $node->changed) ? theme_mark() : ""), module_invoke($node->type, "node", "name"), format_name($node), ($node->status ? t("published") : t("not published")), l(t("edit node"), "admin/node/edit/$node->nid"), l(t("delete node"), "admin/node/delete/$node->nid"));
   }
 
   if ($pager = pager_display(NULL, 50, 0, "admin")) {
@@ -945,23 +945,6 @@ function node_block($op = "list", $delta = 0) {
   }
 }
 
-function node_get_alias($path) {
-
-  $result = db_query("SELECT nid FROM {node} WHERE path = '%s'", trim($path, "/"));
-  if ($node = db_fetch_object($result)) {
-    return "node/view/$node->nid";
-  }
-}
-
-function node_url($node) {
-  if ($node->path != NULL) {
-    return $node->path;
-  }
-  else {
-    return "node/view/$node->nid";
-  }
-}
-
 function node_feed($nodes = 0, $channel = array()) {
   global $base_url, $languages;
 
@@ -974,7 +957,7 @@ function node_feed($nodes = 0, $channel = array()) {
   */
 
   if (!$nodes) {
-    $nodes = db_query_range("SELECT nid, path FROM {node} WHERE promote = '1' AND status = '1' ORDER BY created DESC", 0, 15);
+    $nodes = db_query_range("SELECT nid, FROM {node} WHERE promote = '1' AND status = '1' ORDER BY created DESC", 0, 15);
   }
 
   while ($node = db_fetch_object($nodes)) {
@@ -983,7 +966,7 @@ function node_feed($nodes = 0, $channel = array()) {
     */
 
     $item = node_load(array("nid" => $node->nid));
-    $link = url(node_url($node));
+    $link = url("node/view/$node->nid");
     $items .= format_rss_item($item->title, $link, ($item->teaser ? $item->teaser : $item->body), array("pubDate" => date("r", $item->changed)));
   }
 
@@ -1021,19 +1004,6 @@ function node_validate($node, &$error) {
     $node->title = strip_tags($node->title);
     if (!$node->title) {
       $error["title"] = theme("theme_error", t("You have to specify a valid title."));
-    }
-  }
-
-  /*
-  ** Clean the path field:
-  */
-
-  if ($node->path) {
-    if (!valid_url($node->path)) {
-      $error["path"] = theme("theme_error", t("The specified path is not valid."));
-    }
-    else if (db_result(db_query("SELECT COUNT(nid) FROM {node} WHERE nid != %d AND path = '%s'", $node->nid, $node->path))) {
-      $error["path"] = theme("theme_error", t("The specified path is already in use."));
     }
   }
 
@@ -1120,41 +1090,6 @@ function node_validate($node, &$error) {
 }
 
 
-function node_clean_path($path) {
-/*
-** Clean the node path
-*/
-  global $base_url;
-
-  /*
-  ** Replace absolute URL for this site with relative URL.
-  */
-  $path = str_replace($base_url, "", $path);
-
-  /*
-  ** Only allow alpha numeric characters and slashes.
-  */
-  $path = preg_replace("'[^a-zA-Z0-9/.]'", " ", $path);
-
-  /*
-  ** Remove all whitespace.
-  */
-  $path = str_replace(" ", "", $path);
-
-  /*
-  ** Replace two or more sequential slashes with only one slashes.
-  */
-  $path = preg_replace("'//*'","/",$path);
-
-  /*
-  ** Remove beginning and trailing slashes.
-  */
-  $path = trim($path, "/");
-
-  return $path;
-}
-
-
 function node_form($edit, $error = NULL) {
 
   /*
@@ -1228,10 +1163,6 @@ function node_form($edit, $error = NULL) {
   */
   $output .= "<div class=\"standard\">";
   $output .= form_textfield(t("Title"), "title", $edit->title, 60, 128, $error["title"]);
-
-  if (user_access("create custom URLs")) {
-    $output .= form_textfield(t("Path alias"), "path", ($edit->path == "node/view/$edit->nid") ? "" : $edit->path, 60, 250, $error["path"] ? $error["path"] : t("Optionally specify an alternative URL by which this node can be accessed.  For example, type 'about' when writing an about page.  Don't add a trailing slash or the URL won't work."));
-  }
 
   /*
   ** Add the node specific fields:
@@ -1454,7 +1385,7 @@ function node_submit($node) {
 
     if (node_access("update", $node)) {
       $node->nid = node_save($node);
-      watchdog("special", "$node->type: updated '$node->title'", l(t("view post"), node_url($node)));
+      watchdog("special", "$node->type: updated '$node->title'", l(t("view post"), "node/view/$node->nid"));
       $output = t("The %name has been updated.", array ("%name" => module_invoke($node->type, "node", "name")));
     }
   }
@@ -1475,7 +1406,7 @@ function node_submit($node) {
       throttle("node", variable_get("max_node_rate", 900));
 
       $node->nid = node_save($node);
-      watchdog("special", "$node->type: added '$node->title'", l(t("view post"), node_url($node)));
+      watchdog("special", "$node->type: added '$node->title'", l(t("view post"), "node/view/$node->nid"));
       $output = t("Thanks for your submission.");
     }
   }
@@ -1496,7 +1427,7 @@ function node_submit($node) {
   }
 
   if ($node->nid && node_access("view", $node)) {
-    $links[] = l(t("view"), node_url($node));
+    $links[] = l(t("view"), "node/view/$node->nid");
   }
 
   if ($node->nid && node_access("update", $node)) {
@@ -1643,7 +1574,7 @@ function node_nodeapi(&$node, $op, $arg = 0) {
       $output[t("revision")] = form_checkbox("", "node_revision_$node->type", 1, variable_get("node_revision_$node->type", 0));
       return $output;
     case "fields":
-      return array("nid", "uid", "type", "title", "path", "teaser", "body", "revisions", "status", "promote", "moderate", "static", "created", "changed");
+      return array("nid", "uid", "type", "title", "teaser", "body", "revisions", "status", "promote", "moderate", "static", "created", "changed");
   }
 }
 
