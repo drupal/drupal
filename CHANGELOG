@@ -1,5 +1,5 @@
-drupal x.xx, xx/xx/xxxx
------------------------
+drupal x.x.x, xx/xx/xxxx
+------------------------
 - added tracker.module:
     * replaces the previous "your [site]" links.
 - added weblogs.module.
@@ -11,8 +11,7 @@ drupal x.xx, xx/xx/xxxx
     * changed to PEAR database abstraction layer.
     * using ANSI SQL queries to be more portable.
 - rewrote the user system:
-    * added support for Drupal authentication through XML-RPC and through
-      a Jabber server.
+    * added support for Drupal authentication through XML-RPC and through a Jabber server.
 - various updates:
     * improved the search system by making it context sensitive.
     * fixed node retrieval based on titles.
@@ -20,8 +19,14 @@ drupal x.xx, xx/xx/xxxx
     * added support for session ids in URLs instead of cookies.
     * made front page a configuration setting.
 
-drupal 3.00, 15/09/2001
------------------------
+drupal 3.0.1, 15/10/2001
+------------------------
+- various updates:
+    * added missing translations
+    * updated the themes: tidied up some HTML code and added new Drupal logos.
+
+drupal 3.0.0, 15/09/2001
+------------------------
 - major overhaul of the entire underlying design:
     * everything is based on nodes: nodes are a conceptual "black box" to couple and manage different types of content and that promotes reusing existing code, thus reducing the complexity and size of drupal as well as improving long-term stability.
 - rewrote submission/moderation queue and renamed it to queue.module.
@@ -83,8 +88,8 @@ drupal 3.00, 15/09/2001
         + added theme "goofy".
 - collaboratively revised and expanded the drupal documentation.
 
-drupal 2.00, 15/03/2001
------------------------
+drupal 2.0.0, 15/03/2001
+------------------------
 - rewrote the comment/discussion code:
     * comment navigation should be less confusing now.
     * additional/alternative display and order methods have been added.
@@ -124,6 +129,6 @@ drupal 2.00, 15/03/2001
     * added CREDITS file
 - revised documentation
 
-drupal 1.00, 15/01/2001
------------------------
+drupal 1.0.0, 15/01/2001
+------------------------
 - initial release
