@@ -388,10 +388,8 @@ function search_data() {
  */
 function search_type($type = 0, $action = 0, $query = 0, $options = 0) {
 
-  $edit = $_POST["edit"];
-
   if (isset($type)) {
-    $edit["type"][$type] = "on";
+    $_POST["edit"]["type"][$type] = "on";
   }
 
   return search_form($action, $query, $options) . search_data();
