@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.325 2004/02/02 02:05:20 unconed Exp $
+// $Id: node.module,v 1.326 2004/02/06 19:11:59 dries Exp $
 
 define('NODE_NEW_LIMIT', time() - 30 * 24 * 60 * 60);
 
@@ -1498,7 +1498,8 @@ function node_page() {
         node_feed();
         return;
       case 'add':
-        print theme('page', node_add(arg(2)));
+        // When a module defines multiple node types, the URL is of the form 'foo/bar':
+        print theme('page', node_add(arg(3) ? arg(2) ."/". arg(3) : arg(2)));
         break;
       case 'edit':
         print theme('page', node_edit(arg(2)));
