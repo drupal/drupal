@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.97 2004/12/11 14:13:24 dries Exp $
+// $Id: search.module,v 1.98 2004/12/15 21:19:42 dries Exp $
 
 /**
  * @file
@@ -496,7 +496,7 @@ function search_view() {
 
     $output .= $results;
 
-    print theme('page', $output, t('Search'));
+    print theme('page', $output);
   }
   else {
     drupal_access_denied();

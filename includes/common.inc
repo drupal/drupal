@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.411 2004/12/07 16:55:38 dries Exp $ */
+/* $Id: common.inc,v 1.412 2004/12/15 21:16:53 dries Exp $ */
 
 /**
  * @file
@@ -176,7 +176,8 @@ function drupal_not_found() {
   }
 
   if ($status != MENU_FOUND) {
-    print theme('page', '', t('Page not found'));
+    drupal_set_title(t('Page not found'));
+    print theme('page', '');
   }
 }
 
@@ -195,7 +196,8 @@ function drupal_access_denied() {
   }
 
   if ($status != MENU_FOUND) {
-    print theme('page', message_access(), t('Access denied'));
+    drupal_set_title(t('Access denied'));
+    print theme('page', message_access());
   }
 }
 

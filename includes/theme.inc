@@ -1,5 +1,5 @@
 <?php
-/* $Id: theme.inc,v 1.220 2004/12/01 22:41:19 dries Exp $ */
+/* $Id: theme.inc,v 1.221 2004/12/15 21:16:53 dries Exp $ */
 
 /**
  * @file
@@ -337,23 +337,10 @@ function theme_get_styles() {
  *
  * @param $content
  *   A string to display in the main content area of the page.
- * @param $title
- *   The title of the page, if different from that provided by the menu system.
- * @param $breadcrumb
- *   The breadcrumb trail for the page, if different from that provided by the
- *   menu system. Use menu_set_location() instead, if possible.
  * @return
  *   A string containing the entire HTML page.
  */
-function theme_page($content, $title = NULL, $breadcrumb = NULL) {
-  if (isset($title)) {
-    drupal_set_title($title);
-  }
-
-  if (isset($breadcrumb)) {
-    drupal_set_breadcrumb($breadcrumb);
-  }
-
+function theme_page($content) {
   $output = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
   $output .= '<html xmlns="http://www.w3.org/1999/xhtml">';
   $output .= '<head>';

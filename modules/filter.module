@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.47 2004/11/29 13:13:29 dries Exp $
+// $Id: filter.module,v 1.48 2004/12/15 21:19:42 dries Exp $
 
 /**
  * @file
@@ -671,7 +671,7 @@ function filter_tips_long() {
   else {
     $output = theme('filter_tips', _filter_tips(-1, true));
   }
-  print theme('page', $output, t('Compose Tips'));
+  print theme('page', $output);
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.151 2004/11/24 22:56:21 dries Exp $
+// $Id: poll.module,v 1.152 2004/12/15 21:19:42 dries Exp $
 
 /**
  * @file
@@ -357,7 +357,8 @@ function poll_view_results(&$node, $main, $page, $block) {
  */
 function poll_results() {
   if ($node = node_load(array('nid' => arg(1)))) {
-    print theme('page', node_show($node, 0), $node->title);
+    drupal_set_title($node->title);
+    print theme('page', node_show($node, 0));
   }
   else {
     drupal_not_found();

@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.423 2004/12/11 14:13:24 dries Exp $
+// $Id: user.module,v 1.424 2004/12/15 21:19:42 dries Exp $
 
 /**
  * @file
@@ -1169,7 +1169,8 @@ function user_edit($category = 'account') {
   }
   $output = form($output, 'post', 0, array('enctype' => 'multipart/form-data'));
 
-  print theme('page', $output, $account->name);
+  drupal_set_title($account->name);
+  print theme('page', $output);
 }
 
 function user_view($uid = 0) {
@@ -1186,7 +1187,8 @@ function user_view($uid = 0) {
       }
     }
 
-    print theme('page', theme('user_profile', $account, $fields), $account->name);
+    drupal_set_title($account->name);
+    print theme('page', theme('user_profile', $account, $fields));
   }
   else {
     drupal_not_found();
