@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.347 2004/05/15 15:42:47 dries Exp $ */
+/* $Id: common.inc,v 1.348 2004/05/18 18:41:46 dries Exp $ */
 
 /**
  * @defgroup common Core functions
@@ -979,7 +979,14 @@ function format_name($object) {
     ** the true author of the content.
     */
 
-    $output = $object->name;
+    if ($object->homepage) {
+      $output = "<a href=\"$object->homepage\">$object->name</a>";
+    }
+    else {
+      $output = $object->name;
+    }
+
+    $output .= ' ('. t('not verified') .')';
   }
   else {
     $output = t(variable_get("anonymous", "Anonymous"));

@@ -185,6 +185,9 @@ CREATE TABLE comments (
   status smallint  NOT NULL default '0',
   thread varchar(255) default '',
   users text default '',
+  name varchar(60) default NULL,
+  mail varchar(64) default NULL,
+  url varchar(255) default NULL,
   PRIMARY KEY  (cid)
 );
 CREATE INDEX comments_nid_idx ON comments(nid);

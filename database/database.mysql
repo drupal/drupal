@@ -185,6 +185,9 @@ CREATE TABLE comments (
   status tinyint(3) unsigned NOT NULL default '0',
   thread varchar(255) NOT NULL,
   users longtext,
+  name varchar(60) default NULL,
+  mail varchar(64) default NULL,
+  homepage varchar(255) default NULL,
   PRIMARY KEY  (cid),
   KEY lid (nid)
 ) TYPE=MyISAM;
