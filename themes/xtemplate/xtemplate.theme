@@ -78,7 +78,7 @@ function xtemplate_node($node, $main = 0, $page = 0) {
       $avatar = file_create_url($avatar);
     }
     if ($avatar) {
-      $avatar = "<img src=\"$avatar\" alt=\"" . t("%user's avatar", array("%user" => $comment->name ? $comment->name : t(variable_get("anonymous", "Anonymous")))) . "\" />";
+      $avatar = "<img src=\"$avatar\" alt=\"" . t("%user's avatar", array("%user" => $node->name ? $node->name : t(variable_get("anonymous", "Anonymous")))) . "\" />";
       if ($node->uid) {
         $avatar = l($avatar, "user/view/$node->uid", array("title" => t("View user profile.")));
       }
