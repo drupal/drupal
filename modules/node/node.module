@@ -1142,7 +1142,7 @@ function node_form($edit, $error = NULL) {
     $options .= form_checkbox(t("Create new revision"), "revision", 1, isset($edit->revision) ? $edit->revision : variable_get("node_revision_$edit->type", 0));
 
     $output .= "<div class=\"options\">";
-    $output .= form_group("Options", $options);
+    $output .= form_group(t("Options"), $options);
     $output .= "</div>\n";
 
     $extras .= implode("</div><div class=\"extra\">", node_invoke_nodeapi($edit, "form admin"));
