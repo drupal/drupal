@@ -1435,8 +1435,10 @@ function node_delete($edit) {
       // Clear the cache so an anonymous poster can see the node being deleted.
       cache_clear_all();
 
-      // Remove this node from the search index
-      search_wipe($node->nid, 'node');
+      // Remove this node from the search index if needed.
+      if (function_exists('search_wipe')) {
+        search_wipe($node->nid, 'node');
+      }
 
       watchdog('special', t('%type: deleted %title.', array('%type' => '<em>'. t($node->type) .'</em>', '%title' => "<em>$node->title</em>")));
       $output = t('The node has been deleted.');
