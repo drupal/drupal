@@ -1,5 +1,5 @@
 <?php
-// $Id: bloggerapi.module,v 1.31 2003/10/24 09:47:22 dries Exp $
+// $Id: bloggerapi.module,v 1.32 2003/10/27 21:13:40 dries Exp $
 
 /*
 **  The Drupal Blogger API implementation.
@@ -38,7 +38,7 @@ function bloggerapi_newPost($params) {
 
       $nid = node_save($node);
       if ($nid) {
-        watchdog("special", "$node->type: added '$node->title', via Blogger API");
+        watchdog("special", "$node->type: added '$node->title' using the Blogger API", l(t("view post"), "node/view/$nid"));
         return new xmlrpcresp(new xmlrpcval("$nid", "string"));
       }
       else {
@@ -58,7 +58,7 @@ function bloggerapi_editPost($params) {
   if (!$node->error) {
     $nid = node_save($node);
     if ($nid) {
-      watchdog("special", "$node->type: updated '$node->title', via Blogger API");
+      watchdog("special", "$node->type: updated '$node->title' using the Blogger API", l(t("view post"), "node/view/$nid"));
       return new xmlrpcresp(new xmlrpcval($nid, "string"));
     }
     else {
@@ -145,16 +145,22 @@ function bloggerapi_driver($method, $params = 0, $error = 0) {
     }
 
     /*
+    ** Check if we can set promote.
+    */
+
+    $promote = variable_get("node_promote_blog", "0");
+
+    /*
     ** Maps params to node array or call another function
     */
 
     switch ($method) {
       case "newPost":
-        return array("type" => "blog", "uid" => $user->uid, "name" => $user->name, "title" => $title, "body" => $cparams[4], "status" => 1, "moderate" => 0, "comment" => 2, "promote" => 0, "revision" => 0);
+        return array("type" => "blog", "uid" => $user->uid, "name" => $user->name, "title" => $title, "body" => $cparams[4], "status" => 1, "moderate" => 0, "comment" => 2, "promote" => $promote, "revision" => 0);
       case "editPost":
         $node = node_load(array("nid" => $cparams[1]));
         if ($node->uid == $user->uid) {
-          return array("nid" => $cparams[1], "uid" => $user->uid, "type" => "blog", "name" => $user->name, "title" => $title, "body" => $cparams[4], "status" => 1, "moderate" => 0, "comment" => 2, "promote" => 0, "revision" => 0);
+          return array("nid" => $cparams[1], "uid" => $user->uid, "type" => "blog", "name" => $user->name, "title" => $title, "body" => $cparams[4], "status" => 1, "moderate" => 0, "comment" => 2, "promote" => $promote, "revision" => 0);
         }
         else {
           return bloggerapi_error("Error updating node");
