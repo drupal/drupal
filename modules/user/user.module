@@ -281,7 +281,7 @@ function user_fields() {
 /*** Module hooks **********************************************************/
 
 function user_perm() {
-  return array("administer users", "access userlist");
+  return array("administer users", "access user list");
 }
 
 function user_search($keys) {
@@ -406,7 +406,7 @@ function user_block($op = "list", $delta = 0) {
               $output = t("There are currently %members and %visitors online.", array("%members" => format_plural($total_users, "1 user", "%count users"), "%visitors" => format_plural($guests->count, "1 guest", "%count guests")));
             }
 
-            if (user_access("access userlist") && $total_users) {
+            if (user_access("access user list") && $total_users) {
               /* Display a list of currently online users */
               $max_users = variable_get("user_block_max_list_count", 10);
               $items = array();
@@ -1119,7 +1119,7 @@ function user_settings() {
   $period = array(30 => format_interval(30), 60 => format_interval(60), 120 => format_interval(120), 180 => format_interval(180), 300 => format_interval(300), 600 => format_interval(600), 900 => format_interval(900), 1800 => format_interval(1800), 2700 => format_interval(2700), 3600 => format_interval(3600), 5400 => format_interval(5400), 7200 => format_interval(7200), 10800 => format_interval(10800), 21600 => format_interval(21600), 43200 => format_interval(43200), 86400 => format_interval(86400));
   $output .= form_select(t("User activity"), "user_block_seconds_online", $edit["user_block_seconds_online"], $period, t("Affects \"Who's online\" block.  A user is considered online for this long after they have last viewed a page."));
 
-  $form .= form_select(t("User list length"), "online_block_max_list_count", $edit["online_block_max_list_count"], array("0" => "0", "1" => "1", "2" => "2", "3" => "3", "4" => "4", "5" => "5", "6" => "6", "7" => "7", "8" => "8", "9" => "9", "10" => "10", "15" => "15", "20" => "20", "50" => "50", "100" => "100"), t("Affects \"Who's online\" block.  Maximum number of currently online user's to display."));
+  $form .= form_select(t("User list length"), "user_block_max_list_count", $edit["user_block_max_list_count"], array("0" => "0", "1" => "1", "2" => "2", "3" => "3", "4" => "4", "5" => "5", "6" => "6", "7" => "7", "8" => "8", "9" => "9", "10" => "10", "15" => "15", "20" => "20", "50" => "50", "100" => "100"), t("Affects \"Who's online\" block.  Maximum number of currently online user's to display."));
 
   $output .= form_textarea(t("User registration guidelines"), "user_registration_help", variable_get("user_registration_help", ""), 70, 4, t("This text is displayed at the top of the user registration form.  It's useful for helping or instructing your users."));
 
