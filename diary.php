@@ -61,7 +61,7 @@ function diary_display($username) {
   }
 
   $theme->header();
-  $theme->box("Online diary", $output);
+  $theme->box("$username's online diary", $output);
   $theme->footer();
 }
 
