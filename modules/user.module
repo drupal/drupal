@@ -765,7 +765,7 @@ function user_login($edit = array(), $msg = '') {
       if (!$error) {
         $error = t('Sorry.  Unrecognized username or password.') .' '. l(t('Have you forgotten your password?'), 'user/password');
       }
-      watchdog('user', t('Login attempt failed for %user: %error.', array('%user' => '<em>'. $server ? ($name .'@'. $server) : $name .'</em>', '%error' => "<em>$error</em>")));
+      watchdog('user', t('Login attempt failed for %user: %error.', array('%user' => '<em>'. $edit['name'] .'</em>', '%error' => '<em>'. $error .'</em>')));
     }
   }
 
