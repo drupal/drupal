@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.12 2003/03/12 09:51:30 kjartan Exp $
+// $Id: menu.inc,v 1.13 2003/03/12 21:45:09 dries Exp $
 
 function menu_add() {
   trigger_error(t("The 'menu_add()' function is deprecated."), E_USER_ERROR);
@@ -161,6 +161,15 @@ function menu_execute_action() {
       return call_user_func_array($_gmenu[$selected_menu]["callback"], explode("/", $arg));
     }
   }
+}
+
+function menu_build($type) {
+
+  // Empty the existing menu tree (if any):
+  unset($GLOBALS["_gmenu"]);
+
+  // Build the menu tree:
+  module_invoke_all("link", $type);
 }
 
 ?>
