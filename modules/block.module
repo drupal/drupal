@@ -9,26 +9,6 @@ function block_help() {
  <?php
 }
 
-function block_page() {
-  global $theme;
-
-  $result = db_query("SELECT * FROM blocks WHERE status = 1 ORDER BY module");
-
-  $theme->header();
-  print "<TABLE BORDER=\"0\">\n";
-  while ($block = db_fetch_object($result)) {
-    if ($state % 3 == 0) print " <TR>\n";
-    print "  <TD ALIGN=\"center\" VALIGN=\"top\" WIDTH=\"33%\">\n";
-    $blocks = module_invoke($block->module, "block");
-    $theme->box($blocks[$block->offset]["subject"], $blocks[$block->offset]["content"]);
-    print " </TD>\n";
-    if ($state % 3 == 2) print " </TR>\n";
-    $state += 1;
-  }
-  print "</TABLE>\n";
-  $theme->footer();
-}
-
 function block_admin_save($edit) {
   foreach ($edit as $key=>$value) {
     db_query("UPDATE blocks SET region = '". check_input($value[region]) ."', status = '". check_input($value[status]) ."', weight = '". check_input($value[weight]) ."' WHERE name = '". check_input($key) ."'");

@@ -17,9 +17,14 @@ function theme_link($separator = " | ") {
   $links[] = "<A HREF=\"search.php\">". t("search") ."</A>";
   $links[] = "<A HREF=\"submit.php\">". t("submit") ."</A>";
   $links[] = "<A HREF=\"account.php\">". t("account") ."</A>";
-  if (module_exist("forum")) $links[] = "<A HREF=\"module.php?mod=forum\">".t("forum") ."</A>";
-  if (module_exist("diary")) $links[] = "<A HREF=\"module.php?mod=diary\">". t("diary") ."</A>";
-  if (module_exist("book")) $links[] = "<A HREF=\"module.php?mod=book\">". t("handbook") ."</A>";
+
+  foreach (module_list() as $name) {
+    if (module_hook($name, "page")) $links[] = "<A HREF=\"module.php?mod=$name\">".t($name) ."</A>";
+  }
+
+//  if (module_exist("forum")) $links[] = "<A HREF=\"module.php?mod=forum\">".t("forum") ."</A>";
+//  if (module_exist("diary")) $links[] = "<A HREF=\"module.php?mod=diary\">". t("diary") ."</A>";
+//  if (module_exist("book")) $links[] = "<A HREF=\"module.php?mod=book\">". t("handbook") ."</A>";
 
   return implode($separator, $links);
 }
