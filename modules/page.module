@@ -1,5 +1,5 @@
 <?php
-// $Id: page.module,v 1.73 2003/01/20 20:00:45 dries Exp $
+// $Id: page.module,v 1.74 2003/01/23 18:11:18 dries Exp $
 
 function page_help() {
   $output .= "<p>The page module is used to create a <i>static page</i>.  Unlike a story, a static page is a persistent web page on your site which usually shortcuts the typical lifecycle of user generated content (i.e. submit -&gt; moderate -&gt; post -&gt; comment).  A static page is usually linked from the main navigation bar, using whatever text the author wishes.  To create a static page without this navigation link, simply skip the form field which requests link text.</p>";
@@ -49,7 +49,12 @@ function page_save($op, $node) {
   }
 
   if ($op == "create") {
-    return array("teaser" => $node->body, "format", "link", "description");
+    if ($node->format) {  // do not filter PHP code, do not auto-extract a teaser
+      return array("teaser" => $node->body, "format", "link", "description");
+    }
+    else {
+      return array("body" => filter($node->body), "teaser" => filter($node->teaser), "format", "link", "description");
+    }
   }
 
   if ($op == "decline") {
@@ -57,7 +62,12 @@ function page_save($op, $node) {
   }
 
   if ($op == "update") {
-    return array("teaser" => $node->body, "format", "link", "description");
+    if ($node->format) {  // do not filter PHP code, do not auto-extract a teaser
+      return array("teaser" => $node->body, "format", "link", "description");
+    }
+    else {
+      return array("body" => filter($node->body), "teaser" => filter($node->teaser), "format", "link", "description");
+    }
   }
 }
 
