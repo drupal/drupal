@@ -8,7 +8,36 @@ $module = array("page"  => "backend_page",
 include "includes/common.inc";
 include "modules/backend.class";
 
-function backend_page() {
+function backend_rdf() {
+  global $site_name, $site_url;
+  
+  header("Content-Type: text/plain");
+  
+  print "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
+  print "<rdf:RDF\n";
+  print " xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"\n";
+  print " xmlns=\"http://my.netscape.com/rdf/simple/0.9/\">\n";
+
+  print "<channel>\n";
+  print " <title>$site_name</title>\n";
+  print " <link>$site_url</link>\n";
+  print " <description>$site_name</description>\n";
+  print "</channel>\n";
+
+  $result = db_query("SELECT * FROM stories WHERE status = 2 ORDER BY timestamp DESC LIMIT 10");
+
+  while ($story = db_fetch_object($result)) {
+    print "<item>\n";
+    print " <title>$story->subject</title>\n";
+    print " <link>". $site_url ."discussion.php?id=$story->id</link>\n";
+    print "</item>\n";
+  }
+
+  print "</rdf:RDF>\n";
+
+}
+
+function backend_blocks() {
   global $theme;
  
   // Get channel info:
@@ -42,6 +71,18 @@ function backend_page() {
   print "</TABLE>\n";
 
   $theme->footer();
+}
+
+function backend_page() {
+  global $type;
+
+  switch($type) {
+    case "rdf":
+      backend_rdf();
+      break;
+    default:
+      backend_blocks();
+  }
 }
 
 function backend_cron() {
