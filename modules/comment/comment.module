@@ -34,7 +34,7 @@ function comment_edit($id) {
 
 function comment_save($id, $subject, $comment) {
   db_query("UPDATE comments SET subject = '". check_input($subject) ."', comment = '". check_input($comment) ."' WHERE cid = $id");
-  watchdog("message", "modified comment `$subject'.");
+  watchdog("message", "comment: modified `$subject'");
 }
 
 function comment_display($order = "date") {
