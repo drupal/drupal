@@ -740,7 +740,7 @@ function theme_forum_display($forums, $topics, $parents, $tid, $sortby, $forum_p
   // forum list, topics list, topic browser and 'add new topic' link
 
   $vocabulary = taxonomy_get_vocabulary(variable_get('forum_nav_vocabulary', ''));
-  drupal_set_title($title = $vocabulary->name);
+  $title = $vocabulary->name;
 
   // Breadcrumb navigation:
   $breadcrumb = array();
@@ -759,6 +759,9 @@ function theme_forum_display($forums, $topics, $parents, $tid, $sortby, $forum_p
       }
     }
   }
+
+  drupal_set_title($title);
+
   $breadcrumb[] = array('path' => $_GET['q']);
   menu_set_location($breadcrumb);
 
