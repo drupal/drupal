@@ -299,7 +299,7 @@ function poll_teaser($node) {
 /**
  * Generates the voting form for a poll.
  */
-function poll_view_voting(&$node, $main, $page, $block) {
+function poll_view_voting(&$node, $teaser, $page, $block) {
   $output = '<div class="poll">';
 
   $form = '<div class="vote-form">';
@@ -324,7 +324,7 @@ function poll_view_voting(&$node, $main, $page, $block) {
 /**
  * Generates a graphical representation of the results of a poll.
  */
-function poll_view_results(&$node, $main, $page, $block) {
+function poll_view_results(&$node, $teaser, $page, $block) {
   // Display the results
 
   // Count the votes and find the maximum
@@ -415,10 +415,10 @@ function poll_view(&$node, $teaser = FALSE, $page = FALSE, $block = FALSE) {
   $output = '';
 
   if ($node->allowvotes && ($block || arg(2) != 'results')) {
-    $output .= poll_view_voting($node, $main, $page, $block);
+    $output .= poll_view_voting($node, $teaser, $page, $block);
   }
   else {
-    $output .= poll_view_results($node, $main, $page, $block);
+    $output .= poll_view_results($node, $teaser, $page, $block);
   }
 
   // Special display for side-block
@@ -426,7 +426,7 @@ function poll_view(&$node, $teaser = FALSE, $page = FALSE, $block = FALSE) {
     // No 'read more' link
     $node->body = $node->teaser = '';
 
-    $links = module_invoke_all('link', 'node', $node, 0);
+    $links = module_invoke_all('link', 'node', $node, 1);
     $links[] = l(t('older polls'), 'poll', array('title' => t('View the list of polls on this site.')));
     if ($node->allowvotes && $block) {
       $links[] = l(t('results'), 'node/'. $node->nid .'/results', array('title' => t('View the current poll results.')));
