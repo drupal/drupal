@@ -26,9 +26,8 @@ function db_query($query, $debug = false) {
   $qid = mysql_query($query);
 
   ### debug output (if required):
-  if ($debug || empty($qid)) {
-    print "<PRE>query: ". htmlspecialchars($query) ."<BR>error message: ". mysql_error() ."</PRE>";
-  }
+  if ($debug || empty($qid)) print "<PRE>query: ". htmlspecialchars($query) ."<BR>error message: ". mysql_error() ."</PRE>";
+  if (empty($qid)) watchdog(3, "error: ". mysql_error() ."<BR>query: ". htmlspecialchars($query) ."");
  
   ### return result from query: 
   return $qid;

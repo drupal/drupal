@@ -57,7 +57,7 @@ function submission_displayItem($id) {
   $theme->footer(); 
 }
 
-if ($user) {
+if ($user->id) {
   switch($op) {
     case "view":
       submission_displayItem($id);

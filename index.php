@@ -3,7 +3,7 @@
 include "includes/theme.inc";
 
 ### Initialize/pre-process variables:
-$number = ($user->storynum) ? $user->storynum : 10;
+$number = ($user->stories) ? $user->stories : 10;
 $date = ($date) ? $date : time();
 
 ### Perform query:
