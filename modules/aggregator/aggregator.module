@@ -80,13 +80,19 @@ function aggregator_configure() {
   }
 
   $output = '';
-  $number = drupal_map_assoc(array(5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100));
-  $items = array(0 => t('none'), 3 => t('3 items'), 5 => t('5 items'), 10 => t('10 items'), 15 => t('15 items'), 20 => t('20 items'), 25 => t('25 items'));
+  $items = array(0 => t('none')) + drupal_map_assoc(array(3, 5, 10, 15, 20, 25), '_aggregator_items');
 
   $output .= form_select(t('Items shown in sources and categories pages'), 'aggregator_summary_items', variable_get('aggregator_summary_items', 3), $items, t('The number of items which will be shown with each feed or category in the feed and category summary pages.'));
   $output .= form_radios(t('Category selection type'), 'aggregator_category_selector', variable_get('aggregator_category_selector', 'check'), array('check' => t('checkboxes'), 'select' => t('multiple selector')), t('The type of category selection widget which is shown on categorization pages. Checkboxes are easier to use; a multiple selector is good for working with large numbers of categories.'));
 
   print theme('page', system_settings_form($output));
+}
+
+/**
+ * Helper function for drupal_map_assoc.
+ */
+function _aggregator_items($count) {
+  return format_plural($count, '1 item', '%count items');
 }
 
 /**
