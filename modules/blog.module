@@ -177,7 +177,7 @@ function blog_page_user($uid = 0, $date = 0, $all = 0) {
 
   $output .= "</table>";
   $output .= lm("<img src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" align=\"right\" border=\"0\" />", array("mod" => "blog", "op" => "feed", "id" => $account->uid), "", array("title" => t("Read the XML version of this page."))) ."\n";
-  if (!$all && !$date) {
+  if (!$all && $date) {
     $output .= lm(t("show all blogs"), array("mod" => "blog", "op" => "view", "id" => $account->uid, "all" => 1), "", array("title" => t("Show all blogs by this user")));
   }
   else {
@@ -199,9 +199,8 @@ function blog_page_last() {
 
     $links = link_node($blog, 1);
 
-    $output .= "<tr><td><b>". check_output($blog->title) ."</b></td><td align=\"right\">". $theme->links($links) ."</td></tr>";
-    $output .= "<tr><td colspan=\"2\"><div style=\"margin-left: 20px;\">". check_output($blog->teaser, 1) ."</div><br /></td></tr>";
-
+    $output .= "<tr><td><b>". check_output($blog->title) ."</b></td><td align=\"right\">". $theme->links($links) ."</td><td>". l('<img src="misc/blog.gif" width="12" height="16" border="0" align="top">', array("id" => $node->nid), "node", "", array("title" => t("Permanent link to this blog entry"))) ."</td></tr>";
+    $output .= "<tr><td colspan=\"3\"><div style=\"margin-left: 20px;\">". check_output($blog->teaser, 1) ."</div><br /></td></tr>";
   }
 
   $output .= "</table>";
@@ -315,7 +314,7 @@ function blog_link($type, $node = 0, $main) {
     if (blog_access("update", $node)) {
       $links[] = lm(t("edit this blog"), array("mod" => "node", "op" => "edit", "id" => $node->nid), "", array("title" => t("Edit this blog entry.")));
     }
-    elseif ($mod == "blog" && $op != "view" && !$id) {
+    elseif ($op != "view" && !$id) {
       $links[] = lm(t("%u's blog", array("%u" => $node->name)), array("mod" => "blog", "op" => "view", "id" => $node->uid), "", array("title" => t("Read %u's latest blog entries.", array("%u" => $node->name))));
     }
   }
@@ -328,14 +327,16 @@ function blog_block() {
 
   $result = db_query("SELECT u.uid, u.name, n.created, n.title, n.nid FROM node n LEFT JOIN users u ON n.uid = u.uid WHERE n.type = 'blog' ORDER BY n.nid DESC LIMIT 10");
 
-  while ($node = db_fetch_object($result)) {
-    $output .= l(check_output($node->title), array("id" => $node->nid)) ."<br />\n";
+  if (user_access("access content")) {
+    while ($node = db_fetch_object($result)) {
+      $output .= l(check_output($node->title), array("id" => $node->nid)) ."<br />\n";
+    }
+    $output .= "<br /><div align=\"right\">".lm(t("more"), array("mod" => "blog"), t("Read the latest blog entries."))."</div>";
+    $block[0]["content"] = $output;
   }
 
-  $output .= "<br /><div align=\"right\">".lm(t("more"), array("mod" => "blog"), t("Read the latest blog entries."))."</div>";
 
   $block[0]["subject"] = t("User blogs");
-  $block[0]["content"] = $output;
   $block[0]["info"] = t("User blogs");
   $block[0]["link"] = drupal_url(array("mod" => "blog"), "module");
 
