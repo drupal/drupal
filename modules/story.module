@@ -14,7 +14,7 @@ function story_status() {
 
 function story_search($keys) {
   global $PHP_SELF, $status;
-  $result = db_query("SELECT n.*, s.* FROM story s LEFT JOIN node n ON n.nid = s.nid AND n.lid = s.lid WHERE n.status = '$status[posted]' AND (n.title LIKE '%$keys%' OR s.abstract LIKE '%$keys%' OR s.body LIKE '%$keys%') ORDER BY n.timestamp DESC LIMIT 20");
+  $result = db_query("SELECT n.*, s.* FROM story s LEFT JOIN node n ON n.nid = s.nid WHERE n.status = '$status[posted]' AND (n.title LIKE '%$keys%' OR s.abstract LIKE '%$keys%' OR s.body LIKE '%$keys%') ORDER BY n.timestamp DESC LIMIT 20");
   while ($story = db_fetch_object($result)) {
     $find[$i++] = array("title" => check_output($story->title), "link" => (strstr($PHP_SELF, "admin.php") ? "admin.php?mod=node&type=story&op=edit&id=$story->nid" : "node.php?id=$story->nid"), "user" => $story->name, "date" => $story->timestamp);
   }
@@ -80,7 +80,7 @@ function story_save($edit) {
   global $status, $user;
 
   if (!$edit[nid]) {
-    node_save($edit, array(abstract, attributes => node_attributes_save("story", $edit), author => $user->uid, body, comment => variable_get("story_comment", 0), moderate => variable_get("story_moderate", ""), promote => variable_get("story_promote", 0), score => 0, status => variable_get("story_status", $status[queued]), timestamp => time(), title, type => "story", votes => 0));
+    node_save($edit, array(abstract, attributes => node_attributes_save("story", $edit), uid => $user->uid, body, comment => variable_get("story_comment", 0), moderate => variable_get("story_moderate", ""), promote => variable_get("story_promote", 0), score => 0, status => variable_get("story_status", $status[queued]), timestamp => time(), title, type => "story", votes => 0));
   }
   else if (user_access("administer nodes")) {
     node_save($edit, array(abstract, attributes => node_attributes_save("story", $edit), body, title, type => "story"));

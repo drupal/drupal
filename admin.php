@@ -3,7 +3,9 @@
 include_once "includes/common.inc";
 
 function status($message) {
-  if ($message) return "<B>Status:</B> $message<HR>\n";
+  if ($message) {
+    return "<B>Status:</B> $message<HR>\n";
+  }
 }
 
 function admin_page($mod) {
@@ -29,12 +31,16 @@ function admin_page($mod) {
 
       $links[] = "<a href=\"index.php\">home</a>";
       foreach (module_list() as $name) {
-        if (module_hook($name, "link")) $links = array_merge($links, module_invoke($name, "link", "admin"));
+        if (module_hook($name, "link")) {
+          $links = array_merge($links, module_invoke($name, "link", "admin"));
+        }
       }
 
       print implode(" | ", $links) ."<hr />";
 
-      if ($mod) module_invoke($mod, "admin");
+      if ($mod) {
+        module_invoke($mod, "admin");
+      }
     ?>
   </body>
  </html>

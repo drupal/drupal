@@ -2,7 +2,7 @@
 
 function comment_search($keys) {
   global $PHP_SELF;
-  $result = db_query("SELECT c.*, u.name FROM comments c LEFT JOIN users u ON c.author = u.uid WHERE c.subject LIKE '%$keys%' OR c.comment LIKE '%$keys%' ORDER BY c.timestamp DESC LIMIT 20");
+  $result = db_query("SELECT c.*, u.name FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.subject LIKE '%$keys%' OR c.comment LIKE '%$keys%' ORDER BY c.timestamp DESC LIMIT 20");
   while ($comment = db_fetch_object($result)) {
     $find[$i++] = array("title" => check_output($comment->subject), "link" => (strstr($PHP_SELF, "admin.php") ? "admin.php?mod=comment&op=edit&id=$comment->cid" : "node.php?id=$comment->lid&cid=$comment->cid"), "user" => $comment->name, "date" => $comment->timestamp);
   }
@@ -23,7 +23,7 @@ function comment_link($type) {
 
 function comment_edit($id) {
 
-  $result = db_query("SELECT c.*, u.name, u.uid FROM comments c LEFT JOIN users u ON c.author = u.uid WHERE c.cid = '$id'");
+  $result = db_query("SELECT c.*, u.name, u.uid FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.cid = '$id'");
   $comment = db_fetch_object($result);
 
   $form .= form_item(t("Author"), format_name($comment));
@@ -40,7 +40,7 @@ function comment_save($id, $edit) {
 }
 
 function comment_overview() {
-  $result = db_query("SELECT c.*, u.name, u.uid FROM comments c LEFT JOIN users u ON u.uid = c.author ORDER BY timestamp DESC LIMIT 50");
+  $result = db_query("SELECT c.*, u.name, u.uid FROM comments c LEFT JOIN users u ON u.uid = c.uid ORDER BY timestamp DESC LIMIT 50");
 
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
   $output .= " <TR><TH>subject</TH><TH>author</TH><TH>date</TH><TH COLSPAN=\"2\">operations</TH></TR>\n";

@@ -251,7 +251,7 @@ function user_link($type) {
   }
 
   if ($type == "admin") {
-    $links[] = "<a href=\"admin.php?mod=user\">user system</a>";
+    $links[] = "<a href=\"admin.php?mod=user\">user management</a>";
   }
 
   return $links ? $links : array();
