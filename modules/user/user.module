@@ -184,10 +184,10 @@ function user_validate_mail($mail) {
 
   /*
   ** Verify the syntax of the given e-mail address.  Empty e-mail addresses
-  ** allowed.
+  ** allowed.  See RFC 2822 for details.
   */
 
-  $user = '[a-zA-Z0-9_\-\.\+]+';
+  $user = '[a-zA-Z0-9_\-\.\+\^!#\$%&*+\/\=\?\`\|\{\}~\']+';
   $domain = '(?:[a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9]\.?)+';
   $ipv4 = '[0-9]{1,3}(\.[0-9]{1,3}){3}';
   $ipv6 = '[0-9a-fA-F]{1,4}(\:[0-9a-fA-F]{1,4}){7}';
