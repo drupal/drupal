@@ -152,7 +152,7 @@ function bloggerapi_driver($method, $params = 0, $error = 0) {
     $user = bloggerapi_validate_user($cparams[2], $cparams[3]);
   }
 
-  if ($user->uid && variable_get("bloggerapi", 0) && user_access("access bloggerapi")) {
+  if ($user->uid && user_access("access bloggerapi")) {
     if (user_access("post content")) {
 
       /*
@@ -360,10 +360,6 @@ function bloggerapi_watchdog() {
   return array("bloggerapi" => "#B600FF");
 }
 
-function bloggerapi_conf_options() {
-  return form_select("Blogger API", "bloggerapi", variable_get("bloggerapi", 0), array("Disabled", "Enabled"), "Allow or disallow remote posting to your site via the <a href=\"http://plant.blogger.com/api/index.html\">Blogger API</a>.");
-}
-
 function bloggerapi_perm() {
   return array("access bloggerapi");
 }
@@ -382,11 +378,9 @@ weblog service, provides an application programing interface (API) to
 allow remote procedure calls (RPC) to the Blogger service. Drupal supports this <a href="http://plant.blogger.com/api/index.html">Blogger API</a>, which means that many remote clients (e.g. <a href="radio.userland.com">Radio</a>, <a href="http://simon.kittle.info/textrouter">TextRouter</a>, <a href="http://blogbuddy.sourceforge.net/">Blogbuddy</a>, <a href="http://www.bloggar.cjb.net/">Bloggar</a>,<a href="http://www.tswoam.co.uk/index.php?n_go=16">PerlyBlog</a>), may post to Drupal. These clients provide a bevy of interesting capabilities like offline composing, spellcheck, and WYSIWYG editing; many folks prefer to blog with a client application over typical web forms. By supporting the Blogger API, Drupal grows grander than a  web site engine, it's a <i>content accepting machine</i>&trade;.
 <p>The <a href="http://plant.blogger.com/api/index.html">Blogger RPC API</a> uses the <a href="http://www.xmlrpc.com">XML-RPC</a> protocol  for communicating with the outside world. XML-RPC, originally developed by Dave Winer of <a href="http://www.userland.com">UserLand Software</a>, is a simple XML-based RPC specification ideally suited to the web. Drupal also uses XML-RPC for several other tasks (e.g. notifiying <a href="http://www.weblogs.com">weblogs.com</a> of blog updates and making/accepting <? echo lm("Distributed Authentication", array("mod" => "user", "op" => "help")) ?> requests)</p>
 
-<h3>Drupal Implementation </h3>
+<h3>Blogger API implementation</h3>
 
-<p><small>A word of warning on the Blogger API: It is unofficial. It exists because Blogger is one of the
-most popular services and also they were first to implement an XML-RPC interface to their service.
-It is certainly not the best implementation of a distributed weblog API. For a promising candidate, see <a href="http://www.wasabii.org"> Wasabii</a>.</small></p>
+<p><small>A word of warning on the Blogger API: it is unofficial. It exists because Blogger is one of the most popular services and also they were first to implement an XML-RPC interface to their service.  It is certainly not the best implementation of a distributed weblog API. For a promising candidate, see <a href="http://www.wasabii.org"> Wasabii</a>.</small></p>
 
 <p>Drupal's support for the Blogger API is quite complete. Each method with an asterisk below has been implemented in Drupal.</p>
 
@@ -397,34 +391,30 @@ It is certainly not the best implementation of a distributed weblog API. For a p
 <a href="http://plant.blogger.com/api/xmlrpc_getTemplate.html">blogger.getTemplate()</a><br />
 <a href="http://plant.blogger.com/api/xmlrpc_setTemplate.html">blogger.setTemplate()</a><br/>
 
-<p>Drupal also supports the following methods. These methods were added after the those listed above and are not documented on the Blogger API website. Each method is linked to its corrosponding blogger-dev mailing list posts:</p>
+<p>Drupal also supports the following methods. These methods were added after the those listed above and are not documented on the Blogger API website. Each method is linked to its corresponding blogger-dev mailing list posts:</p>
 
 <a href="http://groups.yahoo.com/group/bloggerDev/message/296">blogger.getPost()*</a><br />
 <a href="http://groups.yahoo.com/group/bloggerDev/message/225">blogger.getRecentPosts()*</a><br />
 <a href="http://groups.yahoo.com/group/bloggerDev/message/147">blogger.deletePost()*</a><br />
 
-<h3>Installation and Usage</h3>
+<h3>Installation and usage</h3>
 
-<p>The Blogger API exists as a Drupal module (bloggerapi.module) which can be downloaded from cvs-contrib. For instructions on how to access the CVS repositories please see this <a href="http://www.drop.org/node.php?id=292">document.</a>
-Once downloaded the module simple needs to be copied to you Drupal modules directory. Under the "Settings and Filters" tab in the administration menue look for the Blogger API entry. There are two settings for the module either enabled or disabled. Also make sure you have you permission set correctly for accessing the Blogger API, the relevent setings can be found under the "User Management" tab in the administration menu.</p>
+<p>To install the Blogger API module, enable the module in the "site configuration - modules" tab in the administration pages.  Also make sure you have your permissions set correctly for accessing the Blogger API, the relevant settings can be found under the "User Management" tab in the administration menu.</p>
+<p>Once the API is enabled you can download one of the above mentioned Blogger API clients and get blogging ...</p>
 
-<p>Once the API is enabled you can download one of the above mentioned Blogger API clients and get blogging...</p>
-
-<h3>Notes and Limitations</h3>
+<h3>Notes and limitations</h3>
 <ul>
-<li>The Blogger API contains an AppKey that is discarded in the
-Drupal Implementation.</li>
+<li>The Blogger API contains an AppKey that is discarded in the Drupal Implementation.</li>
 <li>The Blogger API does not allow for a title element. Our work around for this is either to use &lt;title&gt;&lt;/title&gt; tags in the body of your post or let the module create a title by inspecting the first few lines of the post body.</li>
 <li>The publish parameter is always set to <i>1</i>.</li>
-<li>When using the <i>getUserInfo</i> call, Drupal attempts to generate a first and last name from
-the Drupal username; no distinction is made internally</li>
-<li><i>GetUsersBlogs</i> only returns one blog because unlike Blogger, Drupal only allows one blog per
-user.</li>
+<li>When using the <i>getUserInfo</i> call, Drupal attempts to generate a first and last name from the Drupal username; no distinction is made internally</li>
+<li><i>GetUsersBlogs</i> only returns one blog because unlike Blogger, Drupal only allows one blog per user.</li>
 </ul>
 
 <h3>Credits</h3>
 
-<p>The original Drupal Blogger API implementation was authored by <a href="http://www.voidstar.com">Julian Bond</a>, and updated by the Drupal Development Team.</a>
+<p>The original Drupal Blogger API implementation was authored by <a href="http://www.voidstar.com/">Julian Bond</a>, and updated by the Drupal team.</a>
+
 <?php
 }
 ?>
