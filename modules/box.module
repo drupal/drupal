@@ -18,7 +18,7 @@ function box_help() {
   </PRE>
   <P>If we are however dealing with a registered user, we can customize the message by using:</P>
   <PRE>
-   if ($user->id) {
+   if ($user->uid) {
      return "Welcome $user->name, ... welcome message goes here ...";
    }
    else {
@@ -44,7 +44,6 @@ function box_block() {
     $blocks[$i]["subject"] = check_output($block->title);
     $blocks[$i]["content"] = ($block->type == 2) ? eval($block->body) : $block->body;
     $blocks[$i]["info"] = check_output($block->info);
-    $blocks[$i]["link"] = check_output($block->link);
     $i++;
   }
   return $blocks;
@@ -65,7 +64,6 @@ function box_display() {
     $output .= " <TR><TH>Body:</TH><TD>". nl2br(htmlentities($block->body)) ."</TD></TR>\n";
     $output .= " <TR><TH>Type:</TH><TD>". $type[$block->type] ."</TD></TR>\n";
     $output .= " <TR><TH>Description:</TH><TD>". check_output($block->info) ."</TD></TR>\n";
-    $output .= " <TR><TH>Link:</TH><TD>". format_url($block->link) ."</TD></TR>\n";
     $output .= " <TR><TH>Operations:</TH><TD><A HREF=\"admin.php?mod=box&op=edit&id=$block->bid\">edit</A></TD></TR>\n";
     $output .= "</TABLE>\n";
     $output .= "<BR><BR>\n";
@@ -76,13 +74,13 @@ function box_display() {
 
 function box_save($edit) {
   if ($edit[bid] && $edit[title]) {
-    db_query("UPDATE boxes SET title = '". check_input($edit[title]) ."', body = '". check_input($edit[body]) ."', info = '". check_input($edit[info]) ."', link = '". check_input($edit[link]) ."', type = '". check_input($edit[type]) ."' WHERE bid = '". check_input($edit[bid]) ."'");
+    db_query("UPDATE boxes SET title = '". check_input($edit[title]) ."', body = '". check_input($edit[body]) ."', info = '". check_input($edit[info]) ."', type = '". check_input($edit[type]) ."' WHERE bid = '". check_input($edit[bid]) ."'");
   }
   else if ($edit[bid]) {
     db_query("DELETE FROM boxes WHERE bid = '". check_input($edit[bid]) ."'");
   }
   else {
-    db_query("INSERT INTO boxes (title, body, info, link, type) VALUES  ('". check_input($edit[title]) ."', '". check_input($edit[body]) ."', '". check_input($edit[info]) ."', '". check_input($link) ."', '". check_input($edit[type]) ."')");
+    db_query("INSERT INTO boxes (title, body, info, type) VALUES  ('". check_input($edit[title]) ."', '". check_input($edit[body]) ."', '". check_input($edit[info]) ."', '". check_input($edit[type]) ."')");
   }
 }
 
@@ -95,7 +93,6 @@ function box_form($edit = array()) {
   $form .= form_textfield("Description", "info", $edit[info], 50, 64);
   $form .= form_textarea("Body", "body", $edit[body], 70, 10);
   $form .= form_select("Type", "type", $edit[type], $type);
-  $form .= form_textfield("Link", "link", $edit[link], 50, 64);
 
   if ($edit[bid]) {
     $form .= form_submit("Delete");

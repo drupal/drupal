@@ -1,8 +1,7 @@
 <?php
 
 function comment_search($keys) {
-  global $user;
-  $result = db_query("SELECT c.*, u.name FROM comments c LEFT JOIN users u ON c.author = u.id WHERE c.subject LIKE '%$keys%' OR c.comment LIKE '%$keys%' ORDER BY c.timestamp DESC LIMIT 20");
+  $result = db_query("SELECT c.*, u.name FROM comments c LEFT JOIN user u ON c.author = u.uid WHERE c.subject LIKE '%$keys%' OR c.comment LIKE '%$keys%' ORDER BY c.timestamp DESC LIMIT 20");
   while ($comment = db_fetch_object($result)) {
     $find[$i++] = array("title" => check_output($comment->subject), "link" => (user_access("administer comments") ? "admin.php?mod=comment&op=edit&id=$comment->cid" : "node.php?id=$comment->lid&cid=$comment->cid"), "user" => $comment->name, "date" => $comment->timestamp);
   }
@@ -24,10 +23,10 @@ function comment_link($type) {
 function comment_edit($id) {
   global $REQUEST_URI;
 
-  $result = db_query("SELECT c.*, u.name FROM comments c LEFT JOIN users u ON c.author = u.id WHERE c.cid = '$id'");
+  $result = db_query("SELECT c.*, u.name, u.uid FROM comments c LEFT JOIN user u ON c.author = u.uid WHERE c.cid = '$id'");
   $comment = db_fetch_object($result);
 
-  $form .= form_item(t("Author"), format_name($comment->name));
+  $form .= form_item(t("Author"), format_name($comment));
   $form .= form_textfield(t("Subject"), "subject", $comment->subject, 50, 128);
   $form .= form_textarea(t("Comment"), "comment", $comment->comment, 50, 10);
   $form .= form_submit(t("Submit"));
@@ -41,12 +40,12 @@ function comment_save($id, $edit) {
 }
 
 function comment_overview() {
-  $result = db_query("SELECT c.*, u.name FROM comments c LEFT JOIN users u ON u.id = c.author ORDER BY timestamp DESC LIMIT 50");
+  $result = db_query("SELECT c.*, u.name, u.uid FROM comments c LEFT JOIN user u ON u.uid = c.author ORDER BY timestamp DESC LIMIT 50");
 
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
   $output .= " <TR><TH>subject</TH><TH>author</TH><TH>date</TH><TH COLSPAN=\"2\">operations</TH></TR>\n";
   while ($comment = db_fetch_object($result)) {
-    $output .= " <TR><TD><A HREF=\"node.php?id=$comment->lid&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A></TD><TD>". format_name($comment->name) ."</TD><TD>". format_date($comment->timestamp, "small") ."</TD><TD><A HREF=\"admin.php?mod=comment&op=edit&id=$comment->cid\">edit comment</A></TD><TD><A HREF=\"admin.php?mod=comment&op=delete&id=$comment->cid\">delete comment</A></TD></TR>\n";
+    $output .= " <TR><TD><A HREF=\"node.php?id=$comment->lid&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A></TD><TD>". format_name($comment) ."</TD><TD>". format_date($comment->timestamp, "small") ."</TD><TD><A HREF=\"admin.php?mod=comment&op=edit&id=$comment->cid\">edit comment</A></TD><TD><A HREF=\"admin.php?mod=comment&op=delete&id=$comment->cid\">delete comment</A></TD></TR>\n";
   }
   $output .= "</TABLE>\n";
 

@@ -56,7 +56,7 @@
      print "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\n";
      print " <tr><td colspan=\"2\"><img src=\"themes/marvin/images/drop.gif\" alt=\"\" /> &nbsp; <b>". check_output($node->title) ."</b></td></tr>\n";
      print " <tr valign=\"bottom\"><td colspan=\"2\" bgcolor=\"#000000\" width=\"100%\"><img src=\"themes/marvin/images/pixel.gif\" width=\"1\" height=\"1\" alt=\"\" /></td></tr>\n";
-     print " <tr><td nowrap=\"nowrap\"><font color=\"#7C7C7C\"><small>". strtr(t("Submitted by %a on %b"), array("%a" => format_name($node->name), "%b" => format_date($node->timestamp, "large"))); ?><?php print "</small></font></td><td align=\"right\" valign=\"top\" nowrap><small>". node_index($node) ."</small></td></tr>\n";
+     print " <tr><td nowrap=\"nowrap\"><font color=\"#7C7C7C\"><small>". strtr(t("Submitted by %a on %b"), array("%a" => format_name($node), "%b" => format_date($node->timestamp, "large"))); ?><?php print "</small></font></td><td align=\"right\" valign=\"top\" nowrap><small>". node_index($node) ."</small></td></tr>\n";
      print " <tr><td colspan=\"2\">&nbsp;</td></tr>\n";
      print " <tr><td colspan=\"2\"><p>". check_output($node->body, 1) ."</p></td></tr>\n";
      print " <tr><td colspan=\"2\">&nbsp;</tr></tr>\n";
@@ -90,7 +90,7 @@
 
      // Author:
      print "       <tr>\n";
-     print "        <td align=\"right\" valign=\"top\">". t("Author") .":</td><td>". format_name($comment->name) ."</td>\n";
+     print "        <td align=\"right\" valign=\"top\">". t("Author") .":</td><td>". format_name($comment) ."</td>\n";
      print "       </tr>\n";
 
      // Date

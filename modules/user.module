@@ -864,7 +864,7 @@ function user_admin_create($edit = array()) {
 function user_admin_access($edit = array()) {
   global $op, $id, $type, $REQUEST_URI;
 
-  $output .= "<small><a href=\"admin.php?mod=user&op=access&type=mail\">e-mail rules</a>, <a href=\"admin.php?mod=user&op=access&type=user\">username rules</a></small><hr />";
+  $output .= "<small><a href=\"admin.php?mod=user&op=access&type=mail\">e-mail rules</a> :: <a href=\"admin.php?mod=user&op=access&type=user\">username rules</a></small><hr />";
 
   if ($type != "user") {
     $output .= "<h3>E-mail rules</h3>";

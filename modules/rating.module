@@ -29,17 +29,17 @@ function rating_cron() {
   if (time() - variable_get("rating_cron_last", 0) > variable_get("rating_cron_time", time())) {
     variable_set("rating_cron_last", time());
 
-    $r1 = db_query("SELECT id FROM users ORDER BY rating DESC");
+    $r1 = db_query("SELECT uid FROM user ORDER BY rating DESC");
     while ($account = db_fetch_object($r1)) {
-      db_query("UPDATE users SET rating = '". rating_gravity($account->id) ."' WHERE id = '$account->id'");
-      $rating[$account->id] = ++$i;
+      db_query("UPDATE user SET rating = '". rating_gravity($account->uid) ."' WHERE id = '$account->uid'");
+      $rating[$account->uid] = ++$i;
     }
 
     db_query("DELETE FROM rating");
 
-    $r2 = db_query("SELECT id FROM users ORDER BY rating DESC");
+    $r2 = db_query("SELECT uid FROM user ORDER BY rating DESC");
     while ($account = db_fetch_object($r2)) {
-      db_query("INSERT INTO rating (user, new, old) VALUES ('$account->id', '". ++$j ."', '". $rating[$account->id] ."')");
+      db_query("INSERT INTO rating (user, new, old) VALUES ('$account->uid', '". ++$j ."', '". $rating[$account->uid] ."')");
     }
   }
 }
@@ -79,12 +79,12 @@ function rating_gravity($id) {
 }
 
 function rating_list($limit) {
-  $result = db_query("SELECT u.rating, u.name, r.* FROM users u LEFT JOIN rating r ON u.id = r.user ORDER BY u.rating DESC LIMIT $limit");
+  $result = db_query("SELECT u.rating, u.name, u.uid, r.* FROM user u LEFT JOIN rating r ON u.uid = r.user ORDER BY u.rating DESC LIMIT $limit");
 
   $output .= "<TABLE CELLPADDING=\"1\" CELLSPACING=\"1\">\n";
   while ($account = db_fetch_object($result)) {
     $ranking = $account->old - $account->new;
-    $output .= "<TR><TD ALIGN=\"right\">". ++$i .".</TD><TD>". format_name($account->name) ."</TD><TD ALIGN=\"right\">". check_output($account->rating) ."</TD><TD>(". ($ranking < 0 ? "" : "+") ."$ranking)</TD></TR>";
+    $output .= "<TR><TD ALIGN=\"right\">". ++$i .".</TD><TD>". format_name($account) ."</TD><TD ALIGN=\"right\">". check_output($account->rating) ."</TD><TD>(". ($ranking < 0 ? "" : "+") ."$ranking)</TD></TR>";
   }
   $output .= "</TABLE>\n";
   return $output;

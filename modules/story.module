@@ -13,7 +13,7 @@ function story_status() {
 }
 
 function story_search($keys) {
-  global $status, $user;
+  global $status;
   $result = db_query("SELECT n.*, s.* FROM story s LEFT JOIN node n ON n.nid = s.nid AND n.lid = s.lid WHERE n.status = '$status[posted]' AND (n.title LIKE '%$keys%' OR s.abstract LIKE '%$keys%' OR s.body LIKE '%$keys%') ORDER BY n.timestamp DESC LIMIT 20");
   while ($story = db_fetch_object($result)) {
     $find[$i++] = array("title" => check_output($story->title), "link" => (user_access("administer nodes") ? "admin.php?mod=node&type=story&op=edit&id=$story->nid" : "node.php?id=$story->nid"), "user" => $story->name, "date" => $story->timestamp);
@@ -46,7 +46,7 @@ function story_form($edit = array()) {
     story_view(new Story(node_preview($edit)));
   }
 
-  $form .= form_item(t("Your name"), format_name(($edit[name] ? $edit[name] : $user->name)));
+  $form .= form_item(t("Your name"), ($edit[name] ? $edit[name] : ($user->name ? $user->name : variable_get(anonymous, "Anonymous"))));
   $form .= form_hidden("name", $edit[name]);
   $form .= form_textfield(t("Subject"), "title", $edit[title], 50, 64);
   $form .= node_attributes_edit("story", $edit);
@@ -80,7 +80,7 @@ function story_save($edit) {
   global $status, $user;
 
   if (!$edit[nid]) {
-    node_save($edit, array(abstract, attributes => node_attributes_save("story", $edit), author => $user->id, body, comment => variable_get("story_comment", 0), moderate => variable_get("story_moderate", ""), promote => variable_get("story_promote", 0), score => 0, status => variable_get("story_status", $status[queued]), timestamp => time(), title, type => "story", votes => 0));
+    node_save($edit, array(abstract, attributes => node_attributes_save("story", $edit), author => $user->uid, body, comment => variable_get("story_comment", 0), moderate => variable_get("story_moderate", ""), promote => variable_get("story_promote", 0), score => 0, status => variable_get("story_status", $status[queued]), timestamp => time(), title, type => "story", votes => 0));
   }
   else if (user_access("administer nodes")) {
     node_save($edit, array(abstract, attributes => node_attributes_save("story", $edit), body, title, type => "story"));
@@ -88,7 +88,7 @@ function story_save($edit) {
 }
 
 function story_user() {
-  global $edit, $op, $theme, $user;
+  global $edit, $op, $theme;
 
   switch($op) {
     case t("Preview"):
