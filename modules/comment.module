@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.157 2003/08/23 10:11:08 dries Exp $
+// $Id: comment.module,v 1.158 2003/09/03 20:18:03 dries Exp $
 
 $GLOBALS["cmodes"] = array(1 => t("Flat list - collapsed"), 2 => t("Flat list - expanded"), 3 => t("Threaded list - collapsed"), 4 => t("Threaded list - expanded"));
 $GLOBALS["corder"] = array(1 => t("Date - newest first"), 2 => t("Date - oldest first"));
@@ -769,11 +769,13 @@ function comment_link($type, $node = 0, $main = 0) {
           }
         }
         else {
-          if (user_access("post comments")) {
-            $links[] = l(t("add new comment"), "comment/reply/$node->nid", array("title" => t("Add a new comment to this page.")));
-          }
-          else {
-            $links[] = theme("comment_post_forbidden");
+          if ($node->comment == 2) {
+            if (user_access("post comments")) {
+              $links[] = l(t("add new comment"), "comment/reply/$node->nid", array("title" => t("Add a new comment to this page.")));
+            }
+            else {
+              $links[] = theme("comment_post_forbidden");
+            }
           }
         }
       }
@@ -791,9 +793,6 @@ function comment_link($type, $node = 0, $main = 0) {
         else {
           $links[] = theme("comment_post_forbidden");
         }
-      }
-      else {
-        $links[] = t("Closed discussion: you can't post new comments.");
       }
     }
   }
