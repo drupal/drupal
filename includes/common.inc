@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.236 2003/08/12 20:37:15 kjartan Exp $
+// $Id: common.inc,v 1.237 2003/08/13 20:44:11 dries Exp $
 
 function conf_init() {
 
@@ -1045,7 +1045,16 @@ function drupal_page_header() {
           exit();
         }
       }
+
       print $cache->data;
+
+      /*
+      ** A hook for modules where modules may take action at the end of a
+      ** request good uses include setting a cache, page logging, etc.
+      */
+
+      module_invoke_all("exit");
+
       exit();
     }
   }
@@ -1068,8 +1077,11 @@ function drupal_page_footer() {
     page_set_cache();
   }
 
-  // a hook for modules where modules may take action at the end of a request
-  // good uses include setting a cache, page logging, etc.
+  /*
+  ** A hook for modules where modules may take action at the end of a
+  ** request good uses include setting a cache, page logging, etc.
+  */
+
   module_invoke_all("exit");
 }
 
