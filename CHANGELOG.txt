@@ -9,6 +9,8 @@ Drupal x.x.x, xxxx-xx-xx
     * improved search output.
 - syndication:
     * added support for RSS ping-notifications of http://technorati.com/.
+- usability:
+    * refactored the throttle module configuration.
 - performance:
     * improved performance of the tracker module.
 
