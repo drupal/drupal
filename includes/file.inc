@@ -1,5 +1,5 @@
 <?php
-/* $Id: file.inc,v 1.18 2004/08/18 19:57:26 dries Exp $ */
+/* $Id: file.inc,v 1.19 2004/08/20 07:51:24 dries Exp $ */
 
 /**
  * @defgroup file File interface
@@ -437,7 +437,7 @@ function file_scan_directory($dir, $mask, $nomask = array('.', '..', 'CVS'), $ca
         }
         elseif (ereg($mask, $file)) {
           $name = basename($file);
-          $files["$dir/$file"]->path = "$dir/$file";
+          $files["$dir/$file"]->filename = "$dir/$file";
           $files["$dir/$file"]->name = substr($name, 0, strrpos($name, '.'));
           if ($callback) {
             $callback("$dir/$file");

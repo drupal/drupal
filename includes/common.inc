@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.381 2004/08/18 19:57:25 dries Exp $ */
+/* $Id: common.inc,v 1.382 2004/08/20 07:51:24 dries Exp $ */
 
 /**
  * @file
@@ -87,9 +87,7 @@ function drupal_get_html_head() {
 
   $output = "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n";
   $output .= "<base href=\"$base_url/\" />\n";
-  $output .= "<style type=\"text/css\" media=\"all\">\n";
-  $output .= "@import url(misc/drupal.css);\n";
-  $output .= "</style>\n";
+  $output .= theme('stylesheet_import', 'misc/drupal.css');
 
   return $output . drupal_set_html_head();
 }

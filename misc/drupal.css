@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.78 2004/08/17 21:35:25 dries Exp $ */
+/* $Id: drupal.css,v 1.79 2004/08/20 07:51:25 dries Exp $ */
 
 /*
 ** HTML elements
@@ -378,6 +378,11 @@ tr.light .form-item, tr.dark .form-item {
 }
 .node-form .poll-form fieldset {
   display: block;
+}
+img.screenshot {
+  border: 1px solid #808080;
+  display: block;
+  margin: 2px;
 }
 #tracker td.replies {
   text-align: center;
