@@ -9,16 +9,7 @@ function defaultDisplay() {
     <FONT FACE="courier">
 <H3>General</H3>
 
-1
-22
-333
-4444
-55555
-666666
-Dries was here.
-Fingers crossed.
-pomididom
-grrrrrrrr
+Jeroen was here.
 
 * Mission statement:
 --------------------
