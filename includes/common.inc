@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.137 2002/12/15 23:05:25 dries Exp $
+// $Id: common.inc,v 1.138 2002/12/16 16:42:49 dries Exp $
 
 function conf_init() {
   global $HTTP_HOST;
@@ -477,7 +477,7 @@ function cache_set($cid, $data, $expire = 0) {
 
 function cache_clear_all($cid = NULL) {
   if (empty($cid)) {
-    db_query("DELETE FROM cache");
+    db_query("DELETE FROM cache WHERE expire <> 0");
   }
   else {
     db_query("DELETE FROM cache WHERE cid = '%s'", $cid);
