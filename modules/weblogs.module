@@ -1,10 +1,10 @@
 <?php
-// $Id: weblogs.module,v 1.5 2001/10/31 21:31:20 dries Exp $
+// $Id: weblogs.module,v 1.6 2001/11/18 22:07:53 dries Exp $
 
 function weblogs_cron() {
 
   if (db_num_rows(db_query("SELECT nid FROM node WHERE status = 1 AND moderate = 0 AND (created > '". variable_get("weblogs_cron_last", time()) ."' OR changed > '". variable_get("weblogs_cron_last", time()) ."')"), 1)) {
-//    weblogs_notify(variable_get("site_name", "drupal") ." - ". variable_get("site_slogan", ""), path_uri());
+    weblogs_notify(variable_get("site_name", "drupal") ." - ". variable_get("site_slogan", ""), path_uri());
   }
   variable_set("weblogs_cron_last", time());
 }
