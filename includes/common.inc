@@ -392,8 +392,8 @@ function search_form($action = NULL, $keys = NULL, $options = NULL) {
     $action = url("search");
   }
 
-  $output .= " <br /><input type=\"text\" size=\"50\" value=\"". check_form($keys) ."\" name=\"keys\" />";
-  $output .= " <input type=\"submit\" value=\"". t("Search") ."\" />\n";
+  $output .= " <br /><input type=\"text\" class=\"form-text\" size=\"50\" value=\"". check_form($keys) ."\" name=\"keys\" />";
+  $output .= " <input type=\"submit\" class=\"form-submit\" value=\"". t("Search") ."\" />\n";
 
   if ($options != 0) {
     $output .= "<br />";
