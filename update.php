@@ -39,7 +39,8 @@ $mysql_updates = array(
   "2003-05-31" => "update_55",
   "2003-06-04" => "update_56",
   "2003-06-08" => "update_57",
-  "2003-06-08: first update since Drupal 4.2.0 release" => "update_58"
+  "2003-06-08: first update since Drupal 4.2.0 release" => "update_58",
+  "2003-08-05" => "update_59"
 );
 
 function update_32() {
@@ -268,6 +269,76 @@ function update_57() {
 
 function update_58() {
   update_sql("ALTER TABLE node ADD path varchar(250) NULL default ''");
+}
+
+function update_59() {
+
+  update_sql("ALTER TABLE comments ADD thread VARCHAR(255) NOT NULL");
+
+  $result = db_query("SELECT DISTINCT(nid) FROM comments WHERE thread = ''");
+
+  while ($node = db_fetch_object($result)) {
+    $result2 = db_query("SELECT cid, pid FROM comments where nid = '%d' ORDER BY timestamp", $node->nid);
+    $comments = array();
+    while ($comment = db_fetch_object($result2)) {
+      $comments[$comment->cid] = $comment;
+    }
+
+    $structure = array();
+    $structure = _update_thread_structure($comments, 0, -1, $structure);
+
+    foreach ($structure as $cid => $thread) {
+      $new_parts = array();
+      foreach(explode(".", $thread) as $part) {
+        if ($part > 9) {
+          $start = substr($part, 0, strlen($part) - 1);
+          $end = substr($part, -1, 1);
+
+          $new_parts[] = str_repeat("9", $start).$end;
+        }
+        else {
+          $new_parts[] = $part;
+        }
+      }
+      $thread = implode(".", $new_parts);
+
+      db_query("UPDATE comments SET thread = '%s' WHERE cid = '%d'", $thread."/", $comments[$cid]->cid);
+    }
+  }
+}
+
+function _update_thread_structure($comments, $pid, $depth, $structure) {
+  $depth++;
+
+  foreach ($comments as $key => $comment) {
+    if ($comment->pid == $pid) {
+      if ($structure[$comment->pid]) {
+        $structure[$comment->cid] = $structure[$comment->pid]."."._update_next_thread($structure, $structure[$comment->pid]);
+      }
+      else {
+        $structure[$comment->cid] = _update_next_thread($structure, "");
+      }
+
+      $structure = _update_thread_structure($comments, $comment->cid, $depth, $structure);
+    }
+  }
+
+  return $structure;
+}
+
+function _update_next_thread($structure, $parent) {
+  do {
+    $val++;
+    if ($parent) {
+      $thread = "$parent.$val";
+    }
+    else {
+      $thread = $val;
+    }
+
+  } while (array_search($thread, $structure));
+
+  return $val;
 }
 
 /*

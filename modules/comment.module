@@ -328,9 +328,96 @@ function comment_post($edit) {
         $score = $roles[$user->rid] ? $roles[$user->rid] : 0;
         $users = serialize(array(0 => $score));
 
+        /*
+        ** Here we are building the thread field.  See the comment
+        ** in comment_render().
+        */
+
+        if ($edit["pid"] == 0) {
+          /*
+          ** This is a comment with no parent comment (depth 0): we start
+          ** by retrieving the maximum thread level.
+          */
+
+          $max = db_result(db_query("SELECT MAX(thread) FROM {comments} WHERE nid = %d", $edit["nid"]));
+
+          // Strip the "/" from the end of the thread
+          $max = rtrim($max, "/");
+
+          /*
+          ** Next, we increase this value by one.  Note that we can't
+          ** use 1, 2, 3, ... 9, 10, 11 because we order by string and
+          ** 10 would be right after 1.  We use 1, 2, 3, ..., 9, 91,
+          ** 92, 93, ... instead.  Ugly but fast.
+          */
+
+          $decimals = (string)substr($max, 0, strlen($max) - 1);
+          $units = substr($max, -1, 1);
+          if ($units) {
+            $units++;
+          }
+          else {
+            $units = 1;
+          }
+
+          if ($units == 10) {
+            $units = "90";
+          }
+
+          // Finally build the thread field for this new comment
+          $thread = "$decimals$units/";
+        }
+        else {
+          /*
+          ** This is comment with a parent comment: we increase
+          ** the part of the thread value at the proper depth.
+          */
+
+          // Get the parent comment:
+          $parent = db_fetch_object(db_query("SELECT * FROM {comments} WHERE cid = '%d'", $edit["pid"]));
+
+          // Strip the "/" from the end of the parent thread:
+          $parent->thread = (string)rtrim((string)$parent->thread, "/");
+
+          // Get the max value in _this_ thread:
+          $max = db_result(db_query("SELECT MAX(thread) FROM {comments} WHERE thread LIKE '%s.%%' AND nid = '%d'", $parent->thread, $edit["nid"]));
+
+          if ($max == "") {
+            // First child of this parent
+            $thread = "$parent->thread.1/";
+          }
+          else {
+            // Strip the "/" at the end of the thread:
+            $max = rtrim($max, "/");
+
+            // We need to get the value at the correct depth:
+            $parts = explode(".", $max);
+            $parent_depth = count(explode(".",$parent->thread));
+            $last = $parts[$parent_depth];
+
+            /*
+            ** Next, we increase this value by one.  Note that we can't
+            ** use 1, 2, 3, ... 9, 10, 11 because we order by string and
+            ** 10 would be right after 1.  We use 1, 2, 3, ..., 9, 91,
+            ** 92, 93, ... instead.  Ugly but fast.
+            */
+
+            $decimals = (string)substr($last, 0, strlen($last) - 1);
+            $units = substr($last, -1, 1);
+            $units++;
+            if ($units == 10) {
+              $units = "90";
+            }
+
+            // Finally build the thread field for this new comment:
+            $thread = "$parent->thread.".$decimals.$units."/";
+          }
+        }
+
+
         $edit["cid"] = db_next_id("comments_cid");
 
-        db_query("INSERT INTO {comments} (cid, nid, pid, uid, subject, comment, hostname, timestamp, status, score, users) VALUES (%d, %d, %d, %d, '%s', '%s', '%s', %d, %d, %d, '%s')", $edit["cid"], $edit["nid"], $edit["pid"], $user->uid, $edit["subject"], $edit["comment"], getenv("REMOTE_ADDR"), time(), $status, $score, $users);
+        db_query("INSERT INTO {comments} (cid, nid, pid, uid, subject, comment, hostname, timestamp, status, score, users, thread) VALUES (%d, %d, %d, %d, '%s', '%s', '%s', %d, %d, %d, '%s', '%s')", $edit["cid"], $edit["nid"], $edit["pid"], $user->uid, $edit["subject"], $edit["comment"], getenv("REMOTE_ADDR"), time(), $status, $score, $users, $thread);
 
         /*
         ** Tell the other modules a new comment has been submitted:
@@ -466,10 +553,6 @@ function comment_render($node, $cid = 0) {
     }
     $threshold_min = db_result(db_query("SELECT minimum FROM {moderation_filters} WHERE fid = %d", $threshold));
 
-    if (empty($comment_page)) {
-      $comment_page = 1;
-    }
-
     if (empty($comments_per_page)) {
       $comments_per_page = $user->comments_per_page ? $user->comments_per_page : variable_get("comment_default_per_page", "50");
     }
@@ -503,27 +586,106 @@ function comment_render($node, $cid = 0) {
       ** Multiple comments view
       */
 
-      $query .= "SELECT c.cid as cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name, u.data, c.score, c.users FROM {comments} c LEFT JOIN {users} u ON c.uid = u.uid WHERE c.nid = '". check_query($nid) ."' AND c.status = 0";
+      $query .= "SELECT c.cid as cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name, u.data, c.score, c.users, c.thread FROM {comments} c LEFT JOIN {users} u ON c.uid = u.uid WHERE c.nid = '". check_query($nid) ."' AND c.status = 0";
 
-      $query .= " GROUP BY c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name, u.data, c.score, c.users";
+      $query .= " GROUP BY c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name, u.data, c.score, c.users, c.thread";
+
+      /*
+      ** We want to use the standard pager, but threads would need every
+      ** comment to build the thread structure, so we need to store some
+      ** extra info.
+      **
+      ** We use a "thread" field to store this extra info. The basic idea
+      ** is to store a value and to order by that value. The "thread" field
+      ** keeps this data in a way which is easy to update and convenient
+      ** to use.
+      **
+      ** A "thread" value starts at "1". If we add a child (A) to this
+      ** comment, we assign it a "thread" = "1.1". A child of (A) will have
+      ** "1.1.1". Next brother of (A) will get "1.2". Next brother of the
+      ** parent of (A) will get "2" and so on.
+      **
+      ** First of all note that the thread field stores the depth of the
+      ** comment: depth 0 will be "X", depth 1 "X.X", depth 2 "X.X.X", etc.
+      **
+      ** Now to get the ordering right, consider this example:
+      **
+      ** 1
+      ** 1.1
+      ** 1.1.1
+      ** 1.2
+      ** 2
+      **
+      ** If we "ORDER BY thread ASC" we get the above result, and this is
+      ** the natural order sorted by time.  However, if we "ORDER BY thread
+      ** DESC" we get:
+      **
+      ** 2
+      ** 1.2
+      ** 1.1.1
+      ** 1.1
+      ** 1
+      **
+      ** Clearly, this is not a natural way to see a thread, and users
+      ** will get confused. The natural order to show a thread by time
+      ** desc would be:
+      **
+      ** 2
+      ** 1
+      ** 1.2
+      ** 1.1
+      ** 1.1.1
+      **
+      ** which is what we already did before the standard pager patch. To
+      ** achieve this we simply add a "/" at the end of each "thread" value.
+      ** This way out thread fields will look like depicted below:
+      **
+      ** 1/
+      ** 1.1/
+      ** 1.1.1/
+      ** 1.2/
+      ** 2/
+      **
+      ** we add "/" since this char is, in ASCII, higher than every number,
+      ** so if now we "ORDER BY thread DESC" we get the correct order.  Try
+      ** it, it works ;).  However this would spoil the "ORDER BY thread ASC"
+      ** Here, we do not need to consider the trailing "/" so we use a
+      ** substring only.
+      */
 
       if ($order == 1) {
-        $query .= " ORDER BY c.timestamp DESC";
+        if ($mode == 1 || $mode == 2) {
+          $query .= " ORDER BY c.timestamp DESC";
+        }
+        else {
+          $query .= " ORDER BY c.thread DESC";
+        }
       }
       else if ($order == 2) {
-        $query .= " ORDER BY c.timestamp";
+        if ($mode == 1 || $mode == 2) {
+          $query .= " ORDER BY c.timestamp";
+        }
+        else {
+
+          /*
+          ** See comment above.  Analysis learns that this doesn't cost
+          ** too much.  It scales much much better than having the whole
+          ** comment structure.
+          */
+
+          $query .= " ORDER BY SUBSTRING(c.thread, 1, (LENGTH(c.thread) - 1))";
+        }
       }
 
       /*
-      ** Start a form, to use with comment control and moderation
+      ** Start a form, to use with comment control and moderation.
       */
 
-      $result = db_query($query);
-      $comment_num = db_num_rows($result);
+      $result = pager_query($query, $comments_per_page, 0, "SELECT COUNT(*) FROM {comments} WHERE nid = '".check_query($nid)."'");
 
-      if ($comment_num && ((variable_get("comment_controls", 0) == 0) || (variable_get("comment_controls", 0) == 2))) {
+      if ((variable_get("comment_controls", 0) == 0) || (variable_get("comment_controls", 0) == 2)) {
         print "<form method=\"post\" action=\"". url("comment") ."\"><div>\n";
-        theme("box", "", theme("comment_controls", $threshold, $mode, $order, $nid, $comment_page, $comment_num, $comments_per_page));
+        theme("box", "", theme("comment_controls", $threshold, $mode, $order, $comments_per_page));
         print form_hidden("nid", $nid);
         print "</div></form>";
       }
@@ -531,121 +693,40 @@ function comment_render($node, $cid = 0) {
       print "<form method=\"post\" action=\"". url("comment") ."\"><div>\n";
       print form_hidden("nid", $nid);
 
-      if ($comment_num) {
-        if ($mode == 1) {
-          /*
-          ** Flat collapsed
-          */
+      while ($comment = db_fetch_object($result)) {
+        $comment->depth = count(explode(".", $comment->thread)) - 1;
 
-          while ($comment = db_fetch_object($result)) {
-            $comments[$comment->cid] = $comment;
-          }
-          theme("comment_flat_collapsed", $comments, $threshold_min);
+        if ($mode == 1) {
+          theme("comment_flat_collapsed", $comment, $threshold_min);
         }
         else if ($mode == 2) {
-          /*
-          ** Flat expanded
-          **
-          ** We page using PHP, not using SQL because otherwise we'd
-          ** have to use two queries; one for each comment and one for
-          ** the paged comments.  In method 1-3 we take all results
-          ** anyway, wheras in method 4 we need every result to create
-          ** proper pages.  It is here where we lose more, in fact for
-          ** higher pages we transfer unneeded data from the db and
-          ** the web server.
-          **
-          ** TODO: the comment above is a bit cryptic.  Mind to make it
-          **       a bit more verbose/explanatory?
-          */
-
-          $comment_num = 0;
-          $page = 1;
-          while ($comment = db_fetch_object($result)) {
-            if ($page == $comment_page) {
-              $comments[$comment->cid] = $comment;
-            }
-            $comment_num++;
-            if ($comment_num == $comments_per_page) {
-              if ($page == $comment_page) {
-                break;
-              }
-              else {
-                $comment_num = 0;
-                $page++;
-              }
-            }
-
-            if ($user->uid != $comment->uid && !(comment_already_moderated($user->uid, $comment->users))) {
-              $show_moderate_button = 1;
-            }
-          }
-
-          theme("comment_flat_expanded", $comments, $threshold_min);
-
-          if (comment_user_can_moderate($node) && $show_moderate_button) {
-            print "<div style=\"text-align: center;\">". form_submit(t("Moderate comments")) ."</div><br />";
-          }
+          theme("comment_flat_expanded", $comment, $threshold_min);
         }
         else if ($mode == 3) {
-          /*
-          ** Threaded collapsed
-          */
-
-          while ($comment = db_fetch_object($result)) {
-            $comments[$comment->cid] = $comment;
-          }
-          if ($comments) {
-            theme("comment_thread_min", $comments, $threshold_min);
-          }
+          theme("comment_thread_min", $comment, $threshold_min);
         }
-        else {
-          /*
-          ** Threaded expanded
-          */
-
-          while ($comment = db_fetch_object($result)) {
-            $comments[$comment->cid] = $comment;
-
-            if ($user->uid != $comment->uid && !(comment_already_moderated($user->uid, $comment->users))) {
-              $show_moderate_button = 1;
-            }
-          }
-
-          /*
-          ** Build the comment structure
-          */
-
-          $structure = comment_thread_structure($comments, 0, 0, array());
-
-          $comment_num = 0;
-          $page = 1;
-          foreach ($structure as $cid => $depth) {
-            if ($page == $comment_page) {
-              theme("comment_thread_max", $comments[$cid], $threshold_min, $depth - 1);
-            }
-            $comment_num++;
-            if ($comment_num == $comments_per_page) {
-              if ($page == $comment_page) {
-                break;
-              }
-              else {
-                $comment_num = 0;
-                $page++;
-              }
-            }
-          }
-
-          if (comment_user_can_moderate($node) && $show_moderate_button) {
-            print "<div style=\"text-align: center;\">". form_submit(t("Moderate comments")) ."</div><br />";
-          }
+        else if ($mode == 4) {
+          theme("comment_thread_max", $comment, $threshold_min);
         }
+      }
+
+      /*
+      ** Use the standard pager, $pager_total is the number of returned rows,
+      ** is global and defined in pager.inc
+      */
+      if ($pager = pager_display(NULL, $comments_per_page, 0, "default", array("comments_per_page" => $comments_per_page))) {
+        print $pager;
+      }
+
+      if (comment_user_can_moderate($node)) {
+        print "<div align=\"center\">". form_submit(t("Moderate comments")) ."</div><br />";
       }
 
       print "</div></form>";
 
-      if ($comment_num && ((variable_get("comment_controls", 0) == 1) || (variable_get("comment_controls", 0) == 2))) {
+      if ((variable_get("comment_controls", 0) == 1) || (variable_get("comment_controls", 0) == 2)) {
         print "<form method=\"post\" action=\"". url("comment") ."\"><div>\n";
-        theme("box", t("Control panel"), theme("comment_controls", $threshold, $mode, $order, $nid, $comment_page, $comment_num, $comments_per_page));
+        theme("box", "", theme("comment_controls", $threshold, $mode, $order, $comments_per_page));
         print form_hidden("nid", $nid);
         print "</div></form>";
       }
@@ -1159,7 +1240,7 @@ function comment_threshold($threshold) {
   }
 }
 
-function comment_controls($threshold = 1, $mode = 3, $order = 1, $nid, $page = 0, $comment_num = 0, $comments_per_page = 50) {
+function comment_controls($threshold = 1, $mode = 3, $order = 1, $comments_per_page = 50) {
   static $output;
 
   if (!$output) {
@@ -1170,22 +1251,7 @@ function comment_controls($threshold = 1, $mode = 3, $order = 1, $nid, $page = 0
 
     $output .= " ". form_submit(t("Save settings"));
 
-    $output = form_item(t("Comment viewing options"), $output, t("Select your preferred way to display the comments and click 'Save settings' to submit your changes."));
-
-    if (($mode == 2 || $mode == 4) && $comment_num > $comments_per_page) {
-      $query = "mode=$mode&order=$order&threshold=$threshold&comments_per_page=$comments_per_page";
-
-      if ($page > 1) {
-        $p[] = l(t("previous"), "node/view/$nid&amp;comment_page=". ($page - 1), array(), $query);
-      }
-      for ($n = 1; $n <= ceil($comment_num / $comments_per_page); $n++) {
-        $p[] = ($n == $page) ? "<b>&raquo;$n&laquo;</b>" : l($n, "node/view/$nid&amp;comment_page=$n", array(), $query);
-      }
-      if ($page < ceil($comment_num / $comments_per_page)) {
-        $p[] = l(t("next"), "node/view/$nid&amp;comment_page=". ($page + 1), array(), $query);
-      }
-      $output .= form_item(t("Browse %a comments", array("%a" => $comment_num)), implode("&nbsp;&#149;&nbsp;", $p), t("There are more than %a comments in this node. Use these links to navigate through them.", array("%a" => $comments_per_page)));
-    }
+    $output = form_item(t("Comment viewing options"), $output, t("Select your preferred way to display the comments and click 'Save settings' to activate your changes."));
   }
 
   return $output;
@@ -1247,34 +1313,22 @@ function comment_folded($comment) {
   print "<div class=\"comment-folded\"><span class=\"subject\">". l($comment->subject, "node/view/$comment->nid/$comment->cid#$comment->cid") ."</span> <span class=\"credit\">". t("by") . " " . format_name($comment) ."</span></div>";
 }
 
-function comment_flat_collapsed($comments, $threshold) {
-  foreach ($comments as $comment) {
-    if (comment_visible($comment, $threshold)) {
-      comment_view($comment, "", 0);
-    }
+function comment_flat_collapsed($comment, $threshold) {
+  if (comment_visible($comment, $threshold)) {
+    print comment_view($comment, "", 0);
   }
 }
 
-function comment_flat_expanded($comments, $threshold) {
-  foreach ($comments as $comment) {
-    comment_view($comment, comment_links($comment, 0), comment_visible($comment, $threshold));
-  }
+function comment_flat_expanded($comment, $threshold) {
+  comment_view($comment, comment_links($comment, 0), comment_visible($comment, $threshold));
 }
 
-function comment_thread_min($comments, $threshold, $pid = 0) {
-  // this is an inner loop, so it's worth some optimization
-  // from slower to faster
+function comment_thread_min($comment, $threshold, $pid = 0) {
+  if (comment_visible($comment, $threshold)) {
+    print "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr><td width=\"". ($comment->depth * 25) ."\"><br /></td><td>\n";
+    print comment_view($comment, "", 0);
 
-  foreach ($comments as $comment) {
-  #for ($n=0; $n<count($comments); $n++) {
-  #for ($n=0, $max = count($comments); $n<$max; $n++) {
-    #$comment = $comments[$n];
-    if (($comment->pid == $pid) && (comment_visible($comment, $threshold))) {
-      print "<ul>";
-      comment_view($comment, "", 0);
-      comment_thread_min($comments, $threshold, $comment->cid);
-      print "</ul>";
-    }
+    print "</td></tr></table>\n";
   }
 }
 
@@ -1288,16 +1342,15 @@ function comment_thread_max($comment, $threshold, $level = 0) {
   ** in terms of speed and size.
   */
 
-  if ($level) {
-    print "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%;\"><tr><td style=\"width: ". ($level * 25) ."px;\">&nbsp;</td><td>\n";
+  if ($comment->depth) {
+    print "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr><td width=\"". ($comment->depth * 25) ."\">&nbsp;</td><td>\n";
   }
 
   comment_view($comment, comment_links($comment, 0), comment_visible($comment, $threshold));
 
-  if ($level) {
+  if ($comment->depth) {
     print "</td></tr></table>\n";
   }
-
 }
 
 function comment_post_forbidden() {
@@ -1390,12 +1443,12 @@ function comment_num_all($nid) {
 function comment_num_replies($id) {
   static $cache;
 
-  if (!isset($cache[$nid])) {
+  if (!isset($cache[$id])) {
     $result = db_query("SELECT COUNT(cid) FROM {comments} WHERE pid = %d AND status = 0", $id);
-    $cache[$nid] = $result ? db_result($result, 0) : 0;
+    $cache[$id] = $result ? db_result($result, 0) : 0;
   }
 
-  return $cache[$nid];
+  return $cache[$id];
 }
 
 /**
@@ -1429,19 +1482,6 @@ function comment_num_new($nid, $timestamp = 0) {
     return 0;
   }
 
-}
-
-function comment_thread_structure($comments, $pid, $depth, $structure) {
-  $depth++;
-
-  foreach ($comments as $key => $comment) {
-    if ($comment->pid == $pid) {
-      $structure[$comment->cid] = $depth;
-      $structure = comment_thread_structure($comments, $comment->cid, $depth, $structure);
-    }
-  }
-
-  return $structure;
 }
 
 function comment_user_can_moderate($node) {
