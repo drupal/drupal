@@ -1,5 +1,5 @@
 <?php
-/* $Id: upload.module,v 1.21 2005/01/29 08:31:17 dries Exp $ */
+/* $Id: upload.module,v 1.22 2005/01/29 22:02:37 dries Exp $ */
 
 /**
  * @file
@@ -90,7 +90,7 @@ function upload_download() {
 function upload_file_download($file) {
   if (user_access('view uploaded files')) {
     $file = file_create_path($file);
-    $result = db_query(node_rewrite_sql("SELECT f.nid, * from {files} f WHERE filepath = '%s", 'f'), $file);
+    $result = db_query(db_rewrite_sql("SELECT f.nid, * from {files} f WHERE filepath = '%s", 'f'), $file);
     if ($file = db_fetch_object($result)) {
       $name = mime_header_encode($file->filename);
       // Serve images and text inline for the browser to display rather than download.
