@@ -1,132 +1,127 @@
 <?PHP
 
-function defaultDisplay() {
+function submit_enter() {
   include "functions.inc";
   include "theme.inc";
-  $theme->header();
-
+  
   global $user;
 
-  print "<FORM ACTION=\"submit.php\" METHOD=\"post\">";
+  $output .= "<FORM ACTION=\"submit.php\" METHOD=\"post\">\n";
 
-  print "<P>\n <B>Your name:</B><BR>";
-  if ($user) {
-    echo " <A HREF=\"account.php\">$user->userid</A> &nbsp; &nbsp; <FONT SIZE=\"2\">[ <A HREF=\"account.php?op=logout\">logout</A> ]</FONT>";
-  } else {
-    echo "$anonymous &nbsp; &nbsp; <FONT SIZE=\"2\">[ <A HREF=\"account.php\">login</A> | <A HREF=\"account.php\">create an account</A> ]</FONT>";
-  } 
-  ?>
-
-  <P>
-   <B>Subject:</B><BR>
-   <INPUT TYPE="text" NAME="subject" SIZE="50"><BR>
-   <FONT SIZE="2"><I>Bad subjects are 'Check this out!' or 'An article'.  Be descriptive, clear and simple!</I></FONT>
-  </P>
-
-  <P><B>Category:</B><BR>
-   <SELECT NAME="category">
-   <?PHP
-    for ($i = 0; $i < sizeof($categories); $i++) {
-      echo "<OPTION VALUE=\"$categories[$i]\">$categories[$i]\n";
-    }
-   ?>
-   </SELECT>
-  </P>
-
-  <P> 
-   <B>Abstract:</B></I><BR>
-   <TEXTAREA WRAP="virtual" COLS="50" ROWS="8" NAME="abstract"></TEXTAREA><BR>
-   <FONT SIZE="2"><I>HTML is nice and dandy, but double check those URLs and HTML tags!</FONT>
-  </P>
-
-  <P> 
-   <B>Extended story:</B></I><BR>
-   <TEXTAREA WRAP="virtual" COLS="50" ROWS="15" NAME="story"></TEXTAREA><BR>
-   <FONT SIZE="2"><I>HTML is nice and dandy, but double check those URLs and HTML tags!</FONT>
-  </P>
+  $output .= "<P>\n <B>Your name:</B><BR>\n";
+  if ($user) $output .= " <A HREF=\"account.php\">$user->userid</A> &nbsp; &nbsp; <SMALL>[ <A HREF=\"account.php?op=logout\">logout</A> ]</SMALL>\n";
+  else $output .= " $anonymous &nbsp; &nbsp; <SMALL>[ <A HREF=\"account.php\">login</A> | <A HREF=\"account.php\">create an account</A> ]</SMALL>\n"; 
+  $output .= "</P>\n";
  
-  <P>
-   <INPUT TYPE="submit" NAME="op" VALUE="Preview story"> (You must preview at least once before you can submit.)
-  </P>
+  $output .= "<P>\n";
+  $output .= " <B>Subject:</B><BR>\n";
+  $output .= " <INPUT TYPE=\"text\" NAME=\"subject\" SIZE=\"50\"><BR>\n";
+  $output .= " <SMALL><I>Bad subjects are 'Check this out!' or 'An article'.  Be descriptive, clear and simple!</I></SMALL>\n";
+  $output .= "</P>\n";
 
-  <P>
-   <FONT SIZE="2"><B>Important:</B> remember to include the exact URL of your <U>source</U> in case you refer to a story found on another website or your submission might be rejected!</FONT>
-  </P>
+  $output .= "<P><B>Category:</B><BR>\n";
+  $output .= " <SELECT NAME=\"category\">\n";
+    
+  for ($i = 0; $i < sizeof($categories); $i++) {
+    $output .= "  <OPTION VALUE=\"$categories[$i]\">$categories[$i]</OPTION>\n";
+  }
+  
+  $output .= " </SELECT>\n";
+  $output .= "</P>\n";
+
+  $output .= "<P>\n"; 
+  $output .= " <B>Abstract:</B><BR>\n";
+  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"abstract\"></TEXTAREA><BR>\n";
+  $output .= " <SMALL><I>HTML is nice and dandy, but double check those URLs and HTML tags!</I></SMALL>\n";
+  $output .= "</P>\n";
+
+  $output .= "<P>\n"; 
+  $output .= " <B>Extended story:</B><BR>\n";
+  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"15\" NAME=\"story\"></TEXTAREA><BR>\n";
+  $output .= " <SMALL><I>HTML is nice and dandy, but double check those URLs and HTML tags!</I></SMALL>\n";
+  $output .= "</P>\n";
  
-  </FORM>
-  <?PHP
-   $theme->footer();
+  $output .= "<P>\n";
+  $output .= " <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Preview submission\"> (You must preview at least once before you can submit.)\n";
+  $output .= "</P>\n";
+
+  $output .= "<P>\n";
+  $output .= " <SMALL><B>Important:</B> remember to include the exact URL of your <U>source</U> in case you refer to a story found on another website or your submission might be rejected!</SMALL>\n";
+  $output .= "</P>\n";
+ 
+  $output .= "</FORM>\n";
+  
+  $theme->header();
+  $theme->box("Submit a story", $output);
+  $theme->footer();
 }
 
-function PreviewStory($name, $address, $subject, $abstract, $story, $category) {
+function submit_preview($name, $address, $subject, $abstract, $story, $category) {
   global $user;
+
   include "functions.inc";
   include "theme.inc";
+
+  $output .= "<FORM ACTION=\"submit.php\" METHOD=\"post\">\n";
+
+  $output .= "<P>\n";
+  $output .= " <B>Your name:</B><BR>\n";
+  if ($user) $output .= " <A HREF=\"account.php\">$user->userid</A> &nbsp; &nbsp; <SMALL> [ <A HREF=\"account.php?op=logout\">logout</A> ]</SMALL>\n";
+  else $output .= " $anonymous &nbsp; &nbsp; <SMALL>[ <A HREF=\"$account.php\">login</A> | <A HREF=\"account.php\">create an account</A> ]</SMALL>\n";
+  $output .= "</P>\n";
+
+  $output .= "<P>\n";
+  $output .= " <B>Subject:</B><BR>\n";
+  $output .= " <INPUT TYPE=\"text\" NAME=\"subject\" SIZE=\"50\" VALUE=\"". stripslashes($subject) ."\"><BR>\n";
+  $output .= " <SMALL><I>Bad subjects are 'Check this out!' or 'An article'.  Be descriptive, clear and simple!</I></SMALL>\n";
+  $output .= "</P>\n";
+
+  $output .= "<P><B>Category:</B><BR>\n";
+  $output .= " <SELECT NAME=\"category\">\n";
+  for ($i = 0; $i < sizeof($categories); $i++) {
+    $output .= "  <OPTION VALUE=\"$categories[$i]\" ";
+    if ($category == $categories[$i]) $output .= "SELECTED";
+    $output .= ">$categories[$i]</OPTION>\n";
+  }
+  $output .= "</SELECT>\n";
+  $output .= "</P>\n";
+
+  $output .= "<P>\n";
+  $output .= "<B>Abstract:</B><BR>\n";
+  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"abstract\">". stripslashes($abstract) ."</TEXTAREA><BR>\n";
+  $output .= " <SMALL><I>HTML is nice and dandy, but double check those URLs and HTML tags!</I></SMALL>\n";
+  $output .= "</P>\n";
+
+  $output .= "<P>\n";
+  $output .= " <B>Extended story:</B><BR>\n";
+  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"15\" NAME=\"story\">". stripslashes($story) ."</TEXTAREA><BR>\n";
+  $output .= " <SMALL><I>HTML is nice and dandy, but double check those URLs and HTML tags!</I></SMALL>\n";
+  $output .= "</P>\n";
+ 
+  $output .= "<P>\n";
+  $output .= " <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Preview submission\"> <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Submit submission\">\n";
+  $output .= "</P>\n";
+
+  $output .= "<P>\n";
+  $output .= " <SMALL><B>Important:</B> remember to include the exact URL of your <U>source</U> in case you refer to a story found on another website or your submission might be rejected!</SMALL>\n";
+  $output .= "</P>\n";
+
+  $output .= "</FORM>\n";
+  
   $theme->header();
-
-
-  print "<B>Preview:</B><BR>";
   $theme->preview("", $user->userid, date("l, F d, Y - H:i A", time()), stripslashes($subject), "we-hate-typoes", stripslashes($abstract), "", stripslashes($story));
-
-  print "<FORM ACTION=\"submit.php\" METHOD=\"post\">";
-
-  print "<P>\n <B>Your name:</B><BR>";
-  if ($user) {
-    echo " <A HREF=\"account.php\">$user->userid</A> &nbsp; &nbsp; <FONT SIZE=\"2\"> [ <A HREF=\"account.php?op=logout\">logout</A> ]</FONT>";
-  } else {
-    echo "$anonymous &nbsp; &nbsp; <FONT SIZE=\"2\">[ <A HREF=\"$account.php\">login</A> | <A HREF=\"account.php\">create an account</A> ]</FONT>";
-  } 
-  ?>
-
-  <P>
-   <B>Subject:</B><BR>
-   <INPUT TYPE="text" NAME="subject" SIZE="50" VALUE="<? print stripslashes($subject); ?>"><BR>
-   <FONT SIZE="2"><I>Bad subjects are 'Check this out!' or 'An article'.  Be descriptive, clear and simple!</I></FONT>
-  </P>
-
-  <P><B>Category:</B><BR>
-   <SELECT NAME="category">
-   <?PHP
-    for ($i = 0; $i < sizeof($categories); $i++) {
-      print "<OPTION VALUE=\"$categories[$i]\" ";
-      if ($category == $categories[$i]) print "SELECTED";
-      print ">$categories[$i]\n";
-    }
-   ?>
-   </SELECT>
-  </P>
-
-  <P> 
-   <B>Abstract:</B></I><BR>
-   <TEXTAREA WRAP="virtual" COLS="50" ROWS="8" NAME="abstract"><? print stripslashes($abstract); ?></TEXTAREA><BR>
-   <FONT SIZE="2"><I>HTML is nice and dandy, but double check those URLs and HTML tags!</FONT>
-  </P>
-
-  <P> 
-   <B>Extended story:</B></I><BR>
-   <TEXTAREA WRAP="virtual" COLS="50" ROWS="15" NAME="story"><? print stripslashes($story); ?></TEXTAREA><BR>
-   <FONT SIZE="2"><I>HTML is nice and dandy, but double check those URLs and HTML tags!</FONT>
-  </P>
- 
-  <P>
-   <INPUT TYPE="submit" NAME="op" VALUE="Preview again"> <INPUT TYPE="submit" NAME="op" VALUE="Submit story">
-  </P>
-
-  <P>
-   <FONT SIZE="2"><B>Important:</B> remember to include the exact URL of your <U>source</U> in case you refer to a story found on another website or your submission might be rejected!</FONT>
-  </P>
-
-  </FORM>
-  <?PHP
-   $theme->footer();
+  $theme->box("Submit a story", $output);
+  $theme->footer();
 }
 
-function submitStory($name, $address, $subject, $abstract, $article, $category) {
+function submit_submit($name, $address, $subject, $abstract, $article, $category) {
   global $user;
+
   include "functions.inc";
+  include "theme.inc";
 
   ### Display confirmation message:
-  include "theme.inc";
+
   $theme->header(); 
   $theme->box("Thanks for your submission.", "Thanks for your submission.  The submission moderators in our basement will frown at it, poke at it, and vote for it!");
   $theme->footer();
@@ -151,17 +146,14 @@ function submitStory($name, $address, $subject, $abstract, $article, $category) 
 }
 
 switch($op) {
-  case "Preview story":
-    PreviewStory($name, $address, $subject, $abstract, $story, $category);
+  case "Preview submission":
+    submit_preview($name, $address, $subject, $abstract, $story, $category);
     break;
-  case "Preview again":
-    PreviewStory($name, $address, $subject, $abstract, $story, $category);
-    break;
-  case "Submit story":
-    SubmitStory($name, $address, $subject, $abstract, $story, $category);
+  case "Submit submission":
+    submit_submit($name, $address, $subject, $abstract, $story, $category);
     break;
   default:
-    defaultDisplay();
+    submit_enter();
     break;
 }
 
