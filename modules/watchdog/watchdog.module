@@ -46,7 +46,7 @@ function watchdog_overview($type) {
   $color = array("user" => "#FFEEAA", "message" => "#FFFFFF", "special" => "#A49FFF", "warning" => "#FFAA22", "httpd" => "#99DD99", "error" => "#EE4C4C");
   $query = array("user" => "WHERE type = 'user'", "regular" => "WHERE type = 'message'", "special" => "WHERE type = 'special'", "warning" => "WHERE type = 'warning'", "error" => "WHERE type = 'error'", "httpd" => "WHERE type = 'httpd'", "actions" => "WHERE link != ''");
 
-  $result = pager_query("SELECT w.*, u.name, u.uid FROM watchdog w LEFT JOIN users u ON w.uid = u.uid ". ($type ? $query[$type] : "") ." ORDER BY w.timestamp DESC", 75);
+  $result = pager_query("SELECT w.*, u.name, u.uid FROM watchdog w LEFT JOIN users u ON w.uid = u.uid ". ($type ? $query[$type] : "") ." ORDER BY w.timestamp DESC", 50);
 
   while ($watchdog = db_fetch_object($result)) {
     if ($background = $color[$watchdog->type]) {
@@ -57,7 +57,7 @@ function watchdog_overview($type) {
   $output .= "<table>";
   $output .= " <tr><th>" . t("date") . "</th><th>" . t("event") . "</th><th>" . t("user") . "</th><th colspan=\"2\">" . t("operations") . "</th></tr>";
   $output .= ($data ? $data : "<tr><td align=\"center\" colspan=\"4\" nowrap=\"nowrap\">". t("No system messages currently available.") ."</td></tr>");
-  $output .= (($pager = pager_display(NULL, 100, 0, "admin")) ? "<tr><td align=\"center\" colspan=\"4\">$pager</td></tr>" : "");
+  $output .= (($pager = pager_display(NULL, 50, 0, "admin")) ? "<tr><td align=\"center\" colspan=\"4\">$pager</td></tr>" : "");
   $output .= "</table>";
 
   return $output;
