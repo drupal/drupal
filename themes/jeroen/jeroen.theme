@@ -15,13 +15,13 @@
     function header() {
       global $site_name;
 
-PHP?>
+?>
 
       <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
       <HTML>
    
         <HEAD>
-          <TITLE><? echo $site_name; ?> - Tears of technology</TITLE>
+          <TITLE><?PHP echo $site_name; ?> - Tears of technology</TITLE>
           <META NAME="description" CONTENT="drop.org">
           <META NAME="keywords" CONTENT="drop, weblog, portal, community, news, article, announcements, stories, story, computer, science, space, hype, cult, geek, nerd, foo, bar">
           <STYLE type="text/css">
@@ -37,27 +37,27 @@ PHP?>
           <TABLE WIDTH="100%" ALIGN="left" CELLPADDING="0" CELLSPACING="6" BORDER="0">
             <TR>
               <TD COLSPAN="2" WIDTH="80%">
-                <?PHP $img = (rand(0,150) == 75) ? "logo2.gif" : "logo.gif";PHP ?>
-                <IMG SRC="themes/jeroen/images/<? echo $img; ?>" ALT="drop.org logo"><BR><BR>
+                <?PHP $img = (rand(0,150) == 75) ? "logo2.gif" : "logo.gif"; ?>
+                <IMG SRC="themes/jeroen/images/<?PHP echo $img; ?>" ALT="drop.org logo"><BR><BR>
               </TD>
               <TD WIDTH="20%">
   
 <?PHP
 
-              $this->box("Drop where?", "<TR>
-                                           <TD ALIGN=\"left\" VALIGN=\"top\">
-                                             <A HREF=\"index.php\">home</A><BR>
-                                             <A HREF=\"module.php?mod=faq\">faq</A><BR>
-                                             <A HREF=\"search.php\">search</A>
-                                           </TD>
-                                           <TD ALIGN=\"right\" VALIGN=\"top\">
-                                             <A HREF=\"module.php?mod=diary\">diary</A><BR>
-                                             <A HREF=\"submit.php\">submit news</A><BR>
-                                             <A HREF=\"account.php\">account</A>
-                                          </TD>
-                                       </TR>");
+                $this->box("Drop where?", "<TR>
+                                             <TD ALIGN=\"left\" VALIGN=\"top\">
+                                               <A HREF=\"index.php\">home</A><BR>
+                                               <A HREF=\"module.php?mod=faq\">faq</A><BR>
+                                               <A HREF=\"search.php\">search</A>
+                                             </TD>
+                                             <TD ALIGN=\"right\" VALIGN=\"top\">
+                                               <A HREF=\"module.php?mod=diary\">diary</A><BR>
+                                               <A HREF=\"submit.php\">submit news</A><BR>
+                                               <A HREF=\"account.php\">account</A>
+                                            </TD>
+                                         </TR>");
 
-PHP?>
+?>
 
               </TD>
             </TR>
@@ -67,7 +67,7 @@ PHP?>
 <?PHP
                 theme_blocks("left", $this);
 
-PHP?>
+?>
 
               </TD>
               <TD WIDTH="80%" VALIGN="top" ALIGN="left">
@@ -79,15 +79,15 @@ PHP?>
     function abstract($story) {
       $timestamp = format_date($story->timestamp);
 
-PHP?>
+?>
 
               <TABLE WIDTH="100%" CELLPADDING="0" CELLSPACING="0" BORDER="0">
                 <TR>
-                  <TD ALIGN="left" VALIGN="bottom" WIDTH="20" HEIGHT="20" BACKGROUND="themes/jeroen/images/<?PHP echo (rand(0, 1) ? "news1.gif" : "news3.gif"); PHP?>" NOWRAP>&nbsp;</TD>
+                  <TD ALIGN="left" VALIGN="bottom" WIDTH="20" HEIGHT="20" BACKGROUND="themes/jeroen/images/<?PHP echo (rand(0, 1) ? "news1.gif" : "news3.gif"); ?>" NOWRAP>&nbsp;</TD>
                   <TD ALIGN="center" VALIGN="top" WIDTH="100%" BACKGROUND="themes/jeroen/images/newsmiddle.gif" NOWRAP>
-                    <B><?PHP echo "". check_output($story->subject) .""; PHP?></B>
+                    <B><?PHP echo "". check_output($story->subject) .""; ?></B>
                   </TD>
-                  <TD ALIGN="right" VALIGN="bottom" WIDTH="20" BACKGROUND="themes/jeroen/images/<?PHP echo (rand(0,1) == 0) ? "news2.gif" : "news4.gif"; if (rand(0,100) == 50) "news5.gif"; PHP?>" NOWRAP>&nbsp;</TD>
+                  <TD ALIGN="right" VALIGN="bottom" WIDTH="20" BACKGROUND="themes/jeroen/images/<?PHP echo (rand(0,1) == 0) ? "news2.gif" : "news4.gif"; if (rand(0,100) == 50) "news5.gif"; ?>" NOWRAP>&nbsp;</TD>
                 </TR>
                 <TR>
                   <TD></TD>
@@ -95,7 +95,7 @@ PHP?>
                     <TABLE BORDER="0" CELLPADDING="1" CELLSPACING="0" BGCOLOR="#000000" WIDTH="100%">
                       <TR>
                         <TD>
-                          <TABLE BORDER="0" CELLPADDING="2" CELLSPACING="0" WIDTH="100%" BACKGROUND="themes/jeroen/images/sketch.gif">
+                          <TABLE BORDER="0" CELLPADDING="2" CELLSPACING="0" WIDTH="100%" BGCOLOR="#E7E7E7" BACKGROUND="themes/jeroen/images/sketch.gif">
                             <TR>
                               <TD ALIGN="left" BACKGROUND="themes/jeroen/images/menutitle.gif" NOWRAP>
                                 <FONT COLOR="#FEFEFE">
@@ -116,9 +116,9 @@ PHP?>
                                 </FONT>
                               </TD>
                               <TD ALIGN=\"right\" BACKGROUND=\"themes/jeroen/images/menutitle.gif\" NOWRAP>
-                                <B><A HREF=\"search.php?category=". urlencode($story->section) ."\"><FONT COLOR=\"<? $this->fgc3; ?>\">$story->section</FONT></A></B>";
+                                <B><A HREF=\"search.php?category=". urlencode($story->section) ."\"><FONT COLOR=\"#000000\">$story->section</FONT></A></B>";
 
-PHP?>
+?>
 
                               </TD>
                             </TR>
@@ -132,12 +132,12 @@ PHP?>
                                 if ($story->abstract)
                                   echo "<P>". check_output($story->abstract, 1) ."</P>";
 
-PHP?>
+?>
                               </TD>
                             </TR>
                             <TR>
-                              <TD ALIGN="right">
-                                <FONT COLOR="#E09226"><? echo theme_morelink($this, $story); ?></FONT>
+                              <TD COLSPAN="2" ALIGN="right">
+                                <FONT COLOR="#E09226"><?PHP echo theme_morelink($this, $story); ?></FONT>
                               </TD>
                             </TR>
                           </TABLE>
@@ -156,15 +156,15 @@ PHP?>
     function article($story, $reply) {
       $timestamp = format_date($story->timestamp);
 
-PHP?>
+?>
 
               <TABLE WIDTH="100%" CELLPADDING="0" CELLSPACING="0" BORDER="0">
                 <TR>
-                  <TD ALIGN="left" VALIGN="bottom" WIDTH="20" HEIGHT="20" BACKGROUND="themes/jeroen/images/<?PHP echo (rand(0, 1) ? "news1.gif" : "news3.gif");PHP ?>" NOWRAP>&nbsp;</TD>
+                  <TD ALIGN="left" VALIGN="bottom" WIDTH="20" HEIGHT="20" BACKGROUND="themes/jeroen/images/<?PHP echo (rand(0, 1) ? "news1.gif" : "news3.gif"); ?>" NOWRAP>&nbsp;</TD>
                   <TD ALIGN="center" VALIGN="top"  WIDTH="100%" BACKGROUND="themes/jeroen/images/newsmiddle.gif" NOWRAP>
-                    <B><?PHP echo "". check_output($story->subject) .""; PHP?></B>
+                    <B><?PHP echo "". check_output($story->subject) .""; ?></B>
                   </TD>
-                  <TD ALIGN="right" VALIGN="bottom" WIDTH="20" BACKGROUND="themes/jeroen/images/<?PHP echo (rand(0, 1) == 0) ? "news2.gif" : "news4.gif"; if (rand(0, 100) == 50) $img = "news5.gif"; PHP?>" NOWRAP>&nbsp;</TD>
+                  <TD ALIGN="right" VALIGN="bottom" WIDTH="20" BACKGROUND="themes/jeroen/images/<?PHP echo (rand(0, 1) == 0) ? "news2.gif" : "news4.gif"; if (rand(0, 100) == 50) $img = "news5.gif"; ?>" NOWRAP>&nbsp;</TD>
                 </TR>
                 <TR>
                   <TD></TD>
@@ -172,7 +172,7 @@ PHP?>
                     <TABLE BORDER="0" CELLPADDING="1" CELLSPACING="0" BGCOLOR="#000000" WIDTH="100%">
                       <TR>
                         <TD>
-                          <TABLE BORDER="0" CELLPADDING="2" CELLSPACING="0" WIDTH="100%" BACKGROUND="themes/jeroen/images/sketch.gif">
+                          <TABLE BORDER="0" CELLPADDING="2" CELLSPACING="0" WIDTH="100%" BGCOLOR="#E7E7E7" BACKGROUND="themes/jeroen/images/sketch.gif">
                             <TR>
                               <TD ALIGN="left" BACKGROUND="themes/jeroen/images/menutitle.gif" NOWRAP>
                                 <FONT COLOR="#FEFEFE">
@@ -195,16 +195,16 @@ PHP?>
                                     </FONT>
                               </TD>
                               <TD ALIGN=\"right\" BACKGROUND=\"themes/jeroen/images/menutitle.gif\" NOWRAP>
-                                <B><A HREF=\"search.php?category=". urlencode($story->section) ."\"><FONT COLOR=\"<? $this->fgc3; ?>\">$story->section</FONT></A></B>";
+                                <B><A HREF=\"search.php?category=". urlencode($story->section) ."\"><FONT COLOR=\"#000000\">$story->section</FONT></A></B>";
                                   }
                                   else {
-                                    echo "<FONT SIZE=\"-1\">Reported to us by $anonymous on $story->timestamp"; ?><? print "</FONT>
+                                    echo "<FONT SIZE=\"-1\">Reported to us by $anonymous on $story->timestamp"; ?><?PHP print "</FONT>
                               </TD>
                               <TD ALIGN=\"right\" BACKGROUND=\"themes/jeroen/images/menutitle.gif\" NOWRAP>
-                                <A HREF=\"search.php?category=". urlencode($story->section) ."\"><FONT COLOR=\"<? $this->fgc3; ?>\">$story->section</FONT></A>";
+                                <A HREF=\"search.php?category=". urlencode($story->section) ."\"><FONT COLOR=\"#000000\">$story->section</FONT></A>";
                                   }
 
-PHP?>
+?>
 
                                 </FONT>
                               </TD>
@@ -221,13 +221,13 @@ PHP?>
                                 if ($story->article)
                                   echo "<P>". check_output($story->article, 1) ."</P>";
 
-PHP?>
+?>
 
                               </TD>
                             </TR>
                             <TR>
-                              <TD ALIGN="right">
-                                <FONT COLOR="#E09226"><? echo $reply; ?></FONT>
+                              <TD COLSPAN="2" ALIGN="right">
+                                <FONT COLOR="#E09226"><?PHP echo $reply; ?></FONT>
                               </TD>
                             </TR>
                           </TABLE>
@@ -318,20 +318,20 @@ PHP?>
       $width = rand(10, 200);
       $img2 = (rand(0, 100) == 50) ? "boxtopleftside2.gif" : "boxtopleftside1.gif";
 
-PHP?>
+?>
 
               <TABLE WIDTH="100%" ALIGN="center" CELLPADDING="0" CELLSPACING="0" BORDER="0">
                 <TR>
                   <TD WIDTH="20" HEIGHT="20" BACKGROUND="themes/jeroen/images/boxtopleft.gif" NOWRAP>&nbsp;</TD>
-                  <TD WIDTH="<? echo $width; ?>" BACKGROUND="themes/jeroen/images/boxtop.gif">&nbsp;</TD>
+                  <TD WIDTH="<?PHP echo $width; ?>" BACKGROUND="themes/jeroen/images/boxtop.gif">&nbsp;</TD>
                   <TD BACKGROUND="themes/jeroen/images/boxtopmiddle.gif">&nbsp;</TD>
                   <TD BACKGROUND="themes/jeroen/images/boxtop.gif">&nbsp;</TD>
                   <TD WIDTH="20" BACKGROUND="themes/jeroen/images/boxtopright.gif" NOWRAP>&nbsp;</TD>
                 </TR>
                 <TR>
-                  <TD BACKGROUND="themes/jeroen/images/<? echo $img2; ?>" HEIGHT="20">&nbsp;</TD>
+                  <TD BACKGROUND="themes/jeroen/images/<?PHP echo $img2; ?>" HEIGHT="20">&nbsp;</TD>
                   <TD ALIGN="center" WIDTH="100%" COLSPAN="3" BACKGROUND="themes/jeroen/images/menutitle.gif" NOWRAP>
-                    <FONT COLOR="#FEFEFE"><? echo $subject; ?></FONT>
+                    <FONT COLOR="#FEFEFE"><?PHP echo $subject; ?></FONT>
                   </TD>
                   <TD BACKGROUND="themes/jeroen/images/boxtoprightside.gif">&nbsp;</TD>
                 </TR>
@@ -341,7 +341,7 @@ PHP?>
                     <TABLE>
                       <TR>
                         <TD>
-                          <?PHP echo $content; PHP?>
+                          <?PHP echo $content; ?>
                         </TD>
                       </TR>
                     </TABLE>
@@ -351,7 +351,7 @@ PHP?>
                 <TR>
                   <TD BACKGROUND="themes/jeroen/images/boxbottomleft.gif" HEIGHT="20" NOWRAP>&nbsp;</TD>
                   <TD COLSPAN="3" BACKGROUND="themes/jeroen/images/boxbottom.gif">&nbsp;</TD>
-                  <TD BACKGROUND="themes/jeroen/images/<? echo $img; ?>" NOWRAP>&nbsp;</TD>
+                  <TD BACKGROUND="themes/jeroen/images/<?PHP echo $img; ?>" NOWRAP>&nbsp;</TD>
                 </TR>
               </TABLE>
               <BR>
@@ -362,7 +362,7 @@ PHP?>
 
     function footer() {
 
-PHP?>
+?>
 
             </TD>
             <TD WIDTH="20%" VALIGN="top" ALIGN="right">
@@ -374,7 +374,7 @@ PHP?>
            theme_account($this);
            theme_blocks("right", $this);
 
-PHP?>
+?>
 
             </TD>
           </TR>
@@ -396,7 +396,9 @@ PHP?>
         </TABLE>
       </BODY>
    </HTML>
-<?
+
+<?PHP
+
     }
   }
 
