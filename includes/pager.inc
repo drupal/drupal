@@ -1,5 +1,5 @@
 <?php
-// $Id: pager.inc,v 1.20 2003/12/08 18:30:20 dries Exp $
+// $Id: pager.inc,v 1.21 2003/12/22 17:30:43 dries Exp $
 
 /**
  * @defgroup pager_api Pager API
@@ -265,7 +265,7 @@ function pager_list($limit, $element = 0, $quantity = 5, $text = "", $attributes
         $output .= pager_previous($i, $limit, $element, ($pager_current - $i), $attributes) ." ";
       }
       if ($i == $pager_current) {
-        $output .= "<b>$i</b> ";
+        $output .= "<strong>$i</strong> ";
       }
       if ($i > $pager_current) {
         $output .= pager_next($i, $limit, $element, ($i - $pager_current), $attributes) ." ";
