@@ -87,6 +87,34 @@ function format_plural($count, $singular, $plural) {
   return ($count == 1) ? "$count ". t($singular) : "$count ". t($plural);
 }
 
+function cache_clear($interval = 0) {
+  db_query("DELETE FROM cache WHERE ". time() ." - timestamp > $interval");
+}
+
+function cache_get() {
+  global $user, $REQUEST_URI, $REQUEST_METHOD;
+
+  if ($user->id || $REQUEST_METHOD != "GET") {
+    return 0;
+  }
+
+  if ($cache = db_fetch_object(db_query("SELECT * FROM cache WHERE url = '". check_input($REQUEST_URI) ."'"))) {
+    cache_clear(variable_get("cache_clear", 30));
+
+    return $cache->data;
+  }
+
+  ob_start();
+
+  return 0;
+}
+
+function cache_set() {
+  global $REQUEST_URI;
+
+  db_query("INSERT INTO cache (url, data, timestamp) VALUES('". check_input($REQUEST_URI) ."', '". check_code(ob_get_contents()) ."', '". time() ."')");
+}
+
 function format_interval($timestamp) {
   $units = array("year|years" => 31536000, "week|weeks" => 604800, "day|days" => 86400, "hour|hours" => 3600, "min|min" => 60, "sec|sec" => 1);
   foreach ($units as $key=>$value) {
@@ -245,11 +273,22 @@ function page_header() {
   if (variable_get("dev_timer", 0)) {
     timer_start();
   }
+
+  if (variable_get("cache", 0)) {
+    if ($data = cache_get()) {
+      print $data;
+      exit();
+    }
+  }
 }
 
 function page_footer() {
   if (variable_get("dev_timer", 0)) {
     timer_print();
+  }
+ 
+  if (variable_get("cache", 0)) {
+    cache_set();
   }
 }
 

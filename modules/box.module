@@ -79,7 +79,7 @@ function box_save($edit) {
     db_query("UPDATE boxes SET title = '". check_input($edit[title]) ."', body = '". check_input($edit[body]) ."', info = '". check_input($edit[info]) ."', link = '". check_input($edit[link]) ."', type = '". check_input($edit[type]) ."' WHERE bid = '". check_input($edit[bid]) ."'");
   }
   else if ($edit[bid]) {
-    db_query("DELETE FROM boxes WHERE bid = '". check_input($edit[bid]) ."'"); 
+    db_query("DELETE FROM boxes WHERE bid = '". check_input($edit[bid]) ."'");
   }
   else {
     db_query("INSERT INTO boxes (title, body, info, link, type) VALUES  ('". check_input($edit[title]) ."', '". check_input($edit[body]) ."', '". check_input($edit[info]) ."', '". check_input($link) ."', '". check_input($edit[type]) ."')");
@@ -132,7 +132,7 @@ function box_admin() {
         // fall through:
       case "Submit":
         print status(box_save($edit));
-        // fall through:              
+        // fall through:
       default:
         print box_display();
     }
