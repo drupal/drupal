@@ -1,5 +1,5 @@
 <?php
-/* $Id: path.module,v 1.5 2003/10/05 17:36:23 dries Exp $ */
+/* $Id: path.module,v 1.6 2003/10/07 12:17:43 dries Exp $ */
 
 function path_system($field) {
   $system["description"] = path_help("admin/system/modules");
@@ -143,9 +143,6 @@ function path_link($type, $node = NULL) {
 }
 
 function path_nodeapi($node, $op, $arg) {
-  global $error;
-  $edit = $_POST["edit"];
-
   if (user_access("create url aliases") || user_access("administer url aliases")) {
 
     switch ($op) {
@@ -153,30 +150,28 @@ function path_nodeapi($node, $op, $arg) {
         // is_null provides a mechanism for us to determine if this is the first
         // viewing of the form.  If it is the first time, load the alias, if it isn't
         // (i.e., user has clicked preview) let them work with their current form alias.
-        if (is_null($edit["path"])) {
-          $_POST["edit"]["path"] = drupal_get_path_alias("node/view/$node->nid");
+        if (is_null($node->path)) {
+          $node->path = drupal_get_path_alias("node/view/$node->nid");
         }
         else {
-          if ($_POST["edit"]["path"] && !valid_url($_POST["edit"]["path"])) {
-            $error["path"] = theme("theme_error", t("The path is invalid."));
+          $node->path = trim($node->path);
+          if ($node->path && !valid_url($node->path)) {
+            $error["path"] = t("The path is invalid.");
             return $error;
           }
-          else if (db_result(db_query("SELECT COUNT(dst) FROM {path} WHERE dst = '%s' AND src != '%s'", $_POST["edit"]["path"], "node/view/$node->nid"))) {
-            $error["path"] = theme("theme_error", t("The path is already in use."));
+          else if (db_result(db_query("SELECT COUNT(dst) FROM {path} WHERE dst = '%s' AND src != '%s'", $node->path, "node/view/$node->nid"))) {
+            $error["path"] = t("The path is already in use.");
             return $error;
           }
-
-          $edit["path"] = $_POST["edit"]["path"];
         }
         break;
 
       case "form pre":
-        return form_textfield(t("Path alias"), "path", $edit["path"], 60, 250, $error["path"] ? $error["path"] : t("Optionally specify an alternative URL by which this node can be accessed.  For example, type 'about' when writing an about page.  Use a relative path and don't add a trailing slash or the URL alias won't work."));
-        break;
+        return form_textfield(t("Path alias"), "path", $node->path, 60, 250, t("Optionally specify an alternative URL by which this node can be accessed.  For example, type 'about' when writing an about page.  Use a relative path and don't add a trailing slash or the URL alias won't work.") . theme_error($arg["path"]));
 
       case "insert":
       case "update":
-        path_set_alias("node/view/$node->nid", $edit["path"]);
+        path_set_alias("node/view/$node->nid", $node->path);
         break;
 
       case "delete":
