@@ -39,6 +39,10 @@ Drupal x.x.x, xxxx-xx-xx
 - refactored 403 (forbidden) handling and added support for custom 403 pages.
 - documentation:
     * added PHPDoc/Doxygen comments.
+- filter system:
+    * added support for using multiple input formats on the site
+    * expanded the embedded PHP-code feature so it can be used everywhere
+    * added support for role-dependant filtering, through input formats
 
 Drupal 4.4.2, 2004-07-04
 ------------------------
