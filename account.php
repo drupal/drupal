@@ -326,7 +326,7 @@ switch ($op) {
       $data[signature] = $edit[signature];
       dbsave("users", $data, $user->id);
       user_rehash();
-      header("account.php");
+      header("Location: account.php");
     }
     break;
   default: 
