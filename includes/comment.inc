@@ -78,7 +78,7 @@ function comment_reply($pid, $id) {
   global $theme;
 
   if ($pid) {
-    $item = db_fetch_object(db_query("SELECT c.*, u.name FROM comments c LEFT JOIN user u ON c.author = u.uid WHERE c.cid = '$pid'"));
+    $item = db_fetch_object(db_query("SELECT c.*, u.uid, u.name FROM comments c LEFT JOIN user u ON c.author = u.uid WHERE c.cid = '$pid'"));
     comment_view(new Comment($item->uid, $item->name, $item->subject, $item->comment, $item->timestamp, $item->url, $item->cid, $item->lid), t("reply to this comment"));
   }
   else {
