@@ -434,7 +434,7 @@ function system_module_listing() {
   // the throttle mechanism requires additional modules always be enabled
   $throttle_required = array_merge($required, array('modules/statistics.module', 'modules/throttle.module'));
 
-  $header = array(t('Name'), t('Description'), t('Status'), t('Throttle'));
+  $header = array(t('Name'), t('Description'), t('Enabled'), t('Throttle'));
 
   foreach ($files as $filename => $file) {
     module_set_filename($file->name, $filename);
