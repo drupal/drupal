@@ -1,5 +1,5 @@
 <?php
-// $Id: tablesort.inc,v 1.21 2004/06/02 13:53:44 kjartan Exp $
+// $Id: tablesort.inc,v 1.22 2004/06/20 20:04:26 dries Exp $
 
 function tablesort_init($header) {
   $ts = tablesort_get_order($header);
@@ -29,7 +29,7 @@ function tablesort_header($cell, $header, $ts) {
     if ($cell['data'] == $ts['name']) {
       $ts['sort'] = (($ts['sort'] == 'asc') ? 'desc' : 'asc');
       $cell['class'] = 'active';
-      $image = '&nbsp;<img src="' . theme('image', 'arrow-' . $ts['sort'] . '.gif') . '" alt="'. t('sort icon') .'" />';
+      $image = '&nbsp;<img src="' . theme('image', 'arrow-' . $ts['sort'] . '.png') . '" alt="'. t('sort icon') .'" />';
       $title = ($ts['sort'] == 'asc' ? t('sort ascending') : t('sort descending'));
     }
     else {

@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.137 2004/05/10 20:34:24 dries Exp $
+// $Id: update.php,v 1.138 2004/06/20 20:04:25 dries Exp $
 /*
 ** USAGE:
 **
@@ -45,7 +45,7 @@ function update_page_header($title) {
       </style>
 EOF;
   $output .= "</head><body>";
-  $output .= "<div id=\"logo\"><a href=\"http://drupal.org/\"><img src=\"misc/druplicon-small.gif\" alt=\"Druplicon - Drupal logo\" title=\"Druplicon - Drupal logo\" /></a></div>";
+  $output .= "<div id=\"logo\"><a href=\"http://drupal.org/\"><img src=\"misc/druplicon-small.png\" alt=\"Druplicon - Drupal logo\" title=\"Druplicon - Drupal logo\" /></a></div>";
   $output .= "<div id=\"update\"><h1>$title</h1>";
   return $output;
 }

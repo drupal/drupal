@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.178 2004/06/20 19:49:14 dries Exp $
+// $Id: forum.module,v 1.179 2004/06/20 20:04:27 dries Exp $
 
 /**
  * Implementation of hook_help().
@@ -703,7 +703,7 @@ function _forum_icon($new_posts, $num_posts = 0, $comment_mode = 0) {
     }
 
     // default
-    $file = $base_path ."/forum-$icon.gif";
+    $file = $base_path ."/forum-$icon.png";
 
     $output = "<img src=\"$file\" alt=\"\" title=\"\" />";
   }

@@ -1,5 +1,5 @@
 <?php
-/* $Id: theme.inc,v 1.197 2004/06/18 15:04:33 dries Exp $ */
+/* $Id: theme.inc,v 1.198 2004/06/20 20:04:26 dries Exp $ */
 
 /**
  * @file
@@ -461,7 +461,7 @@ function theme_error($message) {
  * @return a string containing the @a output.
  */
 function theme_xml_icon($url) {
-  return "<div class=\"xml-icon\"><a href=\"$url\"><img src=\"misc/xml.gif\" width=\"36\" height=\"14\" alt=\"". t('XML feed') ."\" /></a></div>";
+  return "<div class=\"xml-icon\"><a href=\"$url\"><img src=\"misc/xml.png\" width=\"36\" height=\"14\" alt=\"". t('XML feed') ."\" /></a></div>";
 }
 
 /**
