@@ -83,7 +83,7 @@ function makePassword($min_length=6) {
   return $password;
 }
 
-switch ($act) {
+switch ($op) {
   case "Login":
     session_start();
     $user = new User($userid,$passwd);
