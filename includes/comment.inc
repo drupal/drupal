@@ -93,6 +93,9 @@ function comment_reply($pid, $id) {
 function comment_preview($pid, $id, $subject, $comment) {
   global $allowed_html, $link, $REQUEST_URI, $theme, $user;
 
+  $subject = check_output($subject);
+  $comment = check_output($comment);
+
   // Preview comment:
   comment_view(new Comment($user->userid, $subject, $comment, time(), $user->url, $user->fake_email, 0, 0, 0, 0), t("reply to this comment"));
 

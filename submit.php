@@ -46,6 +46,10 @@ function submit_preview($subject, $abstract, $article, $section) {
 
   include "includes/story.inc";
 
+  $subject = check_output($subject);
+  $article = check_output($article);
+  $abstract = check_output($abstract);
+
   $output .= "<FORM ACTION=\"submit.php\" METHOD=\"post\">\n";
 
   $output .= "<B>". t("Your name") .":</B><BR>\n";
