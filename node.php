@@ -2,6 +2,8 @@
 
 include "includes/common.inc";
 
+if (variable_get(dev_timing, 0)) timer_start();
+
 function node_failure() {
   global $theme;
   $theme->header();
@@ -56,5 +58,7 @@ elseif ($number) {
 else {
   node_failure();
 }
+
+if (variable_get(dev_timing, 0)) timer_print();
 
 ?>

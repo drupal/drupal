@@ -2,6 +2,8 @@
 
 include_once "includes/common.inc";
 
+if (variable_get(dev_timing, 0)) timer_start();
+
 function account_get_user($uname) {
   $result = db_query("SELECT * FROM users WHERE userid = '$uname'");
   return db_fetch_object($result);
@@ -561,5 +563,7 @@ switch ($op) {
   default:
     account_user($user->userid);
 }
+
+if (variable_get(dev_timing, 0)) timer_print();
 
 ?>

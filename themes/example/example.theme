@@ -61,7 +61,7 @@
 
 <?php
 
-                     echo strtr(t("$how by %a on %b"), array("%a" => format_username($story->userid), "%b" => format_date($story->timestamp, "large")));
+                     echo strtr(t("by %a on %b"), array("%a" => format_username($story->userid), "%b" => format_date($story->timestamp, "small")));
 ?>
 
                    </TD>
@@ -192,7 +192,7 @@
           <TR>
             <TD ALIGN="center" COLSPAN="3">
               <P><?php print theme_link(" | "); ?></P>
-              <P><SMALL><?php print variable_get(theme_footer, ""); ?></SMALL></P>
+              <P><SMALL><?php print variable_get(site_footer, ""); ?></SMALL></P>
             </TD>
           </TR>
         </TABLE>

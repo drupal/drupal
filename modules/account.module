@@ -31,7 +31,7 @@ function account_help() {
    <TR><TD>apple</TD><TD>Matches any string that has the text "apple" in it.<TD></TR>
    <TR><TD>^apple$</TD><TD>Matches the exact string "apple".<TD></TR>
    <TR><TD>^apple</TD><TD>Matches any string that starts with "apple".<TD></TR>
-   <TR><TD>domain\.com$</TD><TD>Matches any string that ends with "@domain.com".  Note that you have to escape the dot in domain.com.</TD></TR>
+   <TR><TD>domain\.com$</TD><TD>Matches any string that ends with "domain.com".  Note that you have to escape the dot in domain.com.</TD></TR>
   </TABLE>
  <?php
 }

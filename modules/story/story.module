@@ -11,12 +11,14 @@ $module = array("help" => "story_help",
 include_once "includes/section.inc";
 
 class Story {
-  function Story($userid, $title, $abstract, $body, $section, $timestamp) {    $this->userid = $userid;
-    $this->title = $title;
-    $this->abstract = $abstract;
-    $this->body = $body;
-    $this->section = $section;
-    $this->timestamp = $timestamp;
+  function Story($story, $category = 0, $topic = 0) {
+    $this->userid = $story[userid] ? $story[userid] : $user->userid;
+    $this->title = $story[title];
+    $this->abstract = $story[abstract];
+    $this->body = $story[body];
+    $this->timestamp = $story[timestamp] ? $story[timestamp] : time();
+    $this->category = ($category ? $category : node_get_category($story[nid]));
+    $this->topic = ($topic ? $topic : node_get_topic($story[nid]));
   }
 }
 
@@ -111,53 +113,51 @@ function story_view($node, $page = 1) {
   }
 }
 
-function story_form($edit = array()) {
+function story_form($story = array()) {
   global $allowed_html, $REQUEST_URI, $user;
 
   $output .= "<FORM ACTION=\"$REQUEST_URI\" METHOD=\"post\">\n";
 
   $output .= "<B>". t("Your name") .":</B><BR>\n";
-  $output .= "<INPUT TYPE=\"hidden\" NAME=\"edit[userid]\" VALUE=\"$edit[userid]\">\n";
-  $output .= format_username(($edit[userid] ? $edit[userid] : $user->userid)) ."<P>";
+  $output .= "<INPUT TYPE=\"hidden\" NAME=\"story[userid]\" VALUE=\"$story[userid]\">\n";
+  $output .= format_username(($story[userid] ? $story[userid] : $user->userid)) ."<P>";
 
   $output .= "<B>". t("Subject") .":</B><BR>\n";
-  $output .= "<INPUT TYPE=\"text\" NAME=\"edit[title]\" SIZE=\"50\" MAXLENGTH=\"60\" VALUE=\"". check_textfield($edit[title]) ."\"><P>\n";
+  $output .= "<INPUT TYPE=\"text\" NAME=\"story[title]\" SIZE=\"50\" MAXLENGTH=\"60\" VALUE=\"". check_textfield($story[title]) ."\"><P>\n";
 
-  $output .= "<B>". t("Section") .":</B><BR>\n";
-  foreach ($sections = section_get() as $value) $options .= "  <OPTION VALUE=\"". check_select($value) ."\"". ($edit[section] == $value ? " SELECTED" : "") .">". check_output($value) ."</OPTION>\n";
-  $output .= "<SELECT NAME=\"edit[section]\">$options</SELECT><P>\n";
+  $output .= structure_form("story");
 
   $output .= "<B>". t("Abstract") .":</B><BR>\n";
-  $output .= "<TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"edit[abstract]\">". check_textarea($edit[abstract]) ."</TEXTAREA><BR>\n";
+  $output .= "<TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"story[abstract]\">". check_textarea($story[abstract]) ."</TEXTAREA><BR>\n";
   $output .= "<SMALL><I>". t("Allowed HTML tags") .": ". htmlspecialchars($allowed_html) .".</I></SMALL><P>\n";
 
   $output .= "<B>". t("Body") .":</B><BR>\n";
-  $output .= "<TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"15\" NAME=\"edit[body]\">". check_textarea($edit[body]) ."</TEXTAREA><BR>\n";
+  $output .= "<TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"15\" NAME=\"story[body]\">". check_textarea($story[body]) ."</TEXTAREA><BR>\n";
   $output .= "<SMALL><I>". t("Allowed HTML tags") .": ". htmlspecialchars($allowed_html) .".</I></SMALL><P>\n";
 
   if (user_access($user, "story")) {
-    $output .= "<INPUT TYPE=\"hidden\" NAME=\"edit[timestamp]\" VALUE=\"$edit[timestamp]\">\n";
-    $output .= "<INPUT TYPE=\"hidden\" NAME=\"edit[nid]\" VALUE=\"$edit[nid]\">\n";
+    $output .= "<INPUT TYPE=\"hidden\" NAME=\"story[timestamp]\" VALUE=\"$story[timestamp]\">\n";
+    $output .= "<INPUT TYPE=\"hidden\" NAME=\"story[nid]\" VALUE=\"$story[nid]\">\n";
   }
 
   $duplicate = db_result(db_query("SELECT COUNT(nid) FROM node WHERE title = '$title'"));
 
-  if (!$edit) {
+  if (!$story) {
     $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Preview") ."\">\n";
   }
-  else if (!$edit[title]) {
+  else if (!$story[title]) {
     $output .= "<FONT COLOR=\"red\">". t("Warning: you did not supply a subject.") ."</FONT><P>\n";
     $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Preview") ."\">\n";
   }
-  else if (!$edit[section]) {
+  else if (!$story[section]) {
     $output .= "<FONT COLOR=\"red\">". t("Warning: you did not supply a section.") ."</FONT><P>\n";
     $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Preview") ."\">\n";
   }
-  else if (!$edit[abstract]) {
+  else if (!$story[abstract]) {
     $output .= "<FONT COLOR=\"red\">". t("Warning: you did not supply an abstract.") ."</FONT><P>\n";
     $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Preview") ."\">\n";
   }
-  else if (!$edit[nid] && $duplicate) {
+  else if (!$story[nid] && $duplicate) {
     $output .= "<FONT COLOR=\"red\">". t("Warning: there is already a story with that subject.") ."</FONT><P>\n";
     $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Preview") ."\">\n";
   }
@@ -170,8 +170,9 @@ function story_form($edit = array()) {
   return $output;
 }
 
-function story_save($edit) {
-  node_save(array_diff(array_merge($edit, array(nid => $edit[nid], type => "story")), array(userid => $edit[userid])));
+function story_save($story, $category, $topic) {
+  node_save(array_diff(array_merge($story, array(nid => $story[nid], type => "story")), array(userid => $story[userid])));
+  structure_save($category, $topic);
 }
 
 function story_block() {
@@ -215,7 +216,7 @@ function story_overview($query = array()) {
 }
 
 function story_admin() {
-  global $id, $edit, $mod, $keys, $op, $theme, $type, $user;
+  global $id, $story, $category, $topic, $mod, $keys, $op, $theme, $type, $user;
 
   print "<SMALL><A HREF=\"admin.php?mod=story&op=add\">add new story</A> | <A HREF=\"admin.php?mod=story&op=listing\">story listing</A> | <A HREF=\"admin.php?mod=story&op=search\">search story</A> | <A HREF=\"admin.php?mod=story\">overview</A> | <A HREF=\"admin.php?mod=story&op=help\">help</A></SMALL><HR>\n";
 
@@ -243,11 +244,11 @@ function story_admin() {
       print search_data($keys, $mod);
       break;
     case t("Preview"):
-      story_view(new Story(($edit[userid] ? $edit[userid] : $user->userid), $edit[title], $edit[abstract], $edit[body], $edit[section], ($edit[timestamp] ? $edit[timestamp] : time())), 0);
-      print story_form($edit);
+      story_view(new Story($story, $category, $topic),0);
+      print story_form($story);
       break;
     case t("Submit"):
-      story_save($edit);
+      story_save($story, $category, $topic);
       // fall through:
     default:
       print story_overview(story_query($type));
@@ -256,19 +257,19 @@ function story_admin() {
 
 
 function story_user() {
-  global $edit, $op, $theme, $user;
+  global $story, $category, $topic, $op, $theme, $user;
 
   switch($op) {
     case t("Preview"):
-      story_view(new Story($user->userid, $edit[title], $edit[abstract], $edit[body], $edit[section], ($edit[timestamp] ? $edit[timestamp] : time())), 0);
-      $theme->box("Submit a story", story_form($edit));
+      story_view(new Story($story, $category, $topic), 0);
+      $theme->box("Submit", story_form($story));
       break;
     case t("Submit"):
-      story_save($edit);
-      $theme->box(t("Submit a story"), t("Thank you for your submission."));
+      story_save($story, $category, $topic);
+      $theme->box(t("Submit"), t("Thank you for your submission."));
       break;
     default:
-      $theme->box("Submit a story", story_form());
+      $theme->box("Submit", story_form());
   }
 }
 
