@@ -30,7 +30,7 @@ function statistics_help($section) {
       <h3>Configuring the statistics module</h3>
       <p>There are some configuration options added to the main <a href=\"%configuration\">administer &raquo; configuration</a> section:</p>
       <ul>
-      <li><em>enable access log</em> -- allows you to turn the access log on and off.  This log is used to store data about every page accessed, such as the remote host's IP address, where they came from (referrer), what node theyve viewed, and their user name.  Enabling the log adds one database call per page displayed by Drupal.</li>
+      <li><em>enable access log</em> -- allows you to turn the access log on and off.  This log is used to store data about every page accessed, such as the remote host's IP address, where they came from (referrer), what node they've viewed, and their user name.  Enabling the log adds one database call per page displayed by Drupal.</li>
       <li><em>discard access logs older than</em> -- allows you to configure how long an access log entry is saved, after which time it is deleted from the database table. To use this you need to run \"cron.php\"</li>
       <li><em>enable node view counter</em> -- allows you to turn on and off the node-counting functionality of this module.  If it is turned on, an extra database query is added for each node displayed, which increments a counter.</li>
       <li><em>display node view counters</em> -- allows you to globally disable the displaying of node view counters.  Additionally, a user group must have 'access statistics' permissions to view the counters.</li>

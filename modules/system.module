@@ -24,7 +24,7 @@ function system_help($section) {
       <p>If your hosting company does not allow you to set up crontab entries, you can always ask someone else to set up an entry for you. After all, virtually any Unix/Linux machine with access to the internet can set up a crontab entry to frequently visit %cron-link.</p>
       <p>For the Unix/Linux crontab itself, use a browser like <a href=\"%lynx\">lynx</a> or <a href=\"%wget\">wget</a> but make sure the process terminates: either use <code>/usr/bin/lynx -source %base_url/cron.php</code> or <code>/usr/bin/wget -o /dev/null -O /dev/null %cron-link</code>.  Take a look at the example scripts in the <code>scripts</code>-directory. Make sure to adjust them to fit your needs.  A good crontab line to run the cron script once every hour would be:
       <pre>     00 * * * * /home/www/drupal/scripts/cron-lynx.sh</pre>
-      Note that it is essential to access <code>cron.php</code> using a browser on the web site's domain; do not run it using command line PHP and avoid using <code>localhost</code> or <code>127.0.0.1</code> or some of the environment varibles will not be set correctly and features may not work as expected.</p>
+      Note that it is essential to access <code>cron.php</code> using a browser on the web site's domain; do not run it using command line PHP and avoid using <code>localhost</code> or <code>127.0.0.1</code> or some of the environment variables will not be set correctly and features may not work as expected.</p>
       <h3><a id=\"cache\">Cache</a></h3>
       <p>Drupal has a caching mechanism which stores dynamically generated web pages in a database.  By caching a web page, Drupal does not have to create the page each time someone wants to view it, instead it takes only one SQL query to display it, reducing response time and the server's load.  Only pages requested by \"anonymous\" users are cached.</p>", array('%base_url' => $base_url, '%cron-link' => "<a href=\"$base_url/cron.php\">$base_url/cron.php</a>", '%lynx' => 'http://lynx.browser.org', '%wget' => 'http://www.gnu.org/software/wget/wget.html' ));
     case 'admin/modules#description':
@@ -188,7 +188,7 @@ function system_view_general() {
   }
 
   $group  = form_select(t('Time zone'), 'date_default_timezone', variable_get('date_default_timezone', 0), $zones, t('Select the default site timezone.'));
-  $group .= form_radios(t('Use sitewide timezone'), 'sitewide_timezone', variable_get('sitewide_timezone', 0), array(t('Disabled'), t('Enabled')), t('Enable or disable the sidewide timezone feature. Disabled means that users could choose their own timezone.'));
+  $group .= form_radios(t('Use sitewide timezone'), 'sitewide_timezone', variable_get('sitewide_timezone', 0), array(t('Disabled'), t('Enabled')), t('Enable or disable the sitewide timezone feature. Disabled means that users could choose their own timezone.'));
   $group .= form_select(t('Date format (short)'), 'date_format_short', variable_get('date_format_short', $dateshort[0]), $dateshortchoices, t('The short format of date display.'));
   $group .= form_select(t('Date format (medium)'), 'date_format_medium', variable_get('date_format_medium', $datemedium[0]), $datemediumchoices, t('The medium sized date display.'));
   $group .= form_select(t('Date format (long)'), 'date_format_long', variable_get('date_format_long', $datelong[0]), $datelongchoices, t('Longer date format used for detailed display.'));

@@ -72,13 +72,13 @@ function comment_help($section) {
     case 'admin/modules#description':
       return t('Enables user to comment on content (nodes).');
     case 'admin/settings/comment':
-      return t("Comments can be attached to any node. Below are the settings for comments. The display comes in two types, a \"flat list\" where everything is flush to the left side, and comments come in cronological order, and a \"threaded list\" where comments to other comments are placed immediately below and slightly indented forming an outline. They also come in two styles: \"expanded\", where you see both the title and the contents, and \"collapsed\" where you only see the title. To set the default threshold you first have to set up thresholds in the <a href=\"%threshold\">administer &raquo; comments &raquo; moderation &raquo; thresholds</a> area. Preview comment forces a user to look at their comment by clicking on a \"Preview\" button before they can actually add the comment. If \"New comment form\" is enabled then at the bottom of every comment page there will be a form too add a new comment.", array('%threshold' => url('admin/settings/comment/thresholds')));
+      return t("Comments can be attached to any node. Below are the settings for comments. The display comes in two types, a \"flat list\" where everything is flush to the left side, and comments come in chronological order, and a \"threaded list\" where comments to other comments are placed immediately below and slightly indented forming an outline. They also come in two styles: \"expanded\", where you see both the title and the contents, and \"collapsed\" where you only see the title. To set the default threshold you first have to set up thresholds in the <a href=\"%threshold\">administer &raquo; comments &raquo; moderation &raquo; thresholds</a> area. Preview comment forces a user to look at their comment by clicking on a \"Preview\" button before they can actually add the comment. If \"New comment form\" is enabled then at the bottom of every comment page there will be a form too add a new comment.", array('%threshold' => url('admin/settings/comment/thresholds')));
     case 'admin/comment':
       return t("Below is a list of the latest comments posted your site. Click on a subject to see the comment, the author's name to edit the author's user information , \"edit comment\" to edit the comment, and \"delete comment\" to remove the comment.");
     case 'admin/comment/approval':
       return t("Below is a list of the comments posted to your site that need approval. To approve a comment click on <strong>\"edit comment\"</strong> and then change its <strong>moderation status</strong> to Approved.<br />Click on a subject to see the comment, the author's name to edit the author's user information, \"edit comment\" to edit the comment, and \"delete comment\" to remove the comment.");
     case 'admin/settings/comment':  // TODO: THIS IS NEVER USED
-      return t("If you get a lot of comments, you can enable comment moderation. Once moderation is enabled, users can vote on a comment based on dropdown menus. <a href=\"%votes\">Votes</a> sets up the names in the dropdown menu, and the order in which they appear, using weights. <a href=\"%matrix\">Matrix</a> sets up the value of each user's vote, and <a href=\"%threshhold\">threshhold</a> sets up the levels at which a comment will be displayed.", array('%votes' => url('admin/settings/comment/votes'), '%matrix' => url('admin/settings/comment/matrix'), '%threshhold' => url('admin/settings/comment/thresholds')));
+      return t("If you get a lot of comments, you can enable comment moderation. Once moderation is enabled, users can vote on a comment based on dropdown menus. <a href=\"%votes\">Votes</a> sets up the names in the dropdown menu, and the order in which they appear, using weights. <a href=\"%matrix\">Matrix</a> sets up the value of each user's vote, and <a href=\"%threshold\">threshold</a> sets up the levels at which a comment will be displayed.", array('%votes' => url('admin/settings/comment/votes'), '%matrix' => url('admin/settings/comment/matrix'), '%threshold' => url('admin/settings/comment/thresholds')));
     case 'admin/settings/comment/votes':
       return t('Here is where you set up the name of each type of vote. "Weight" lets you set the order of the drop down menu. Click <strong>edit</strong> to edit a current vote weight.<br />Notes: <ul><li>you can have more than one type with the same name. The system does not protect you from this.</li><li>To <strong>delete</strong> a name/weight combination go to the <strong>edit</strong> area.</li></ul>');
     case 'admin/settings/comment/matrix':
@@ -253,7 +253,7 @@ function comment_validate_form($edit) {
 
       if ($edit['mail']) {
         if (!valid_email_address($edit['mail'])) {
-          form_set_error('mail', t('The e-mail address you specifed is not valid.'));
+          form_set_error('mail', t('The e-mail address you specified is not valid.'));
         }
       }
       else if (variable_get('comment_anonymous', 0) == 2) {
@@ -1172,7 +1172,7 @@ function comment_threshold_settings() {
   }
 
   $output .= '<br /><h3>'. (isset($fid) ? 'Edit' : 'Add new') .' threshold</h3>';
-  $form .= form_textfield(t('Threshhold name'), 'filter', $filter->filter, 32, 64, t('The name of this threshold.  Example: "good comments", "+1 comments", "everything".'));
+  $form .= form_textfield(t('Threshold name'), 'filter', $filter->filter, 32, 64, t('The name of this threshold.  Example: "good comments", "+1 comments", "everything".'));
   $form .= form_textfield(t('Minimum score'), 'minimum', $filter->minimum, 32, 64, t('Show all comments whose score is larger or equal to the provided minimal score. Range: -127 +128'));
   if ($fid) {
     $form .= form_submit(t('Save threshold'));
