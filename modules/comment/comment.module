@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.186 2003/11/09 23:27:16 dries Exp $
+// $Id: comment.module,v 1.187 2003/11/12 12:24:01 dries Exp $
 
 function comment_help($section = "admin/help#comment") {
   $output = "";
@@ -569,6 +569,12 @@ function comment_render($node, $cid = 0) {
   if (user_access("access comments")) {
 
     /*
+    ** Save were we come from so we can go back after a reply
+    */
+
+    comment_referer_save();
+
+    /*
     ** Pre-process variables:
     */
 
@@ -776,12 +782,6 @@ function comment_render($node, $cid = 0) {
     if (user_access("post comments") && node_comment_mode($nid) == 2 && variable_get("comment_form_location", 0)) {
       print theme("box", t("Post new comment"), comment_form(array("nid" => $nid)));
     }
-
-    /*
-    ** Save were we come from so we can go back after a reply
-    */
-
-    comment_referer_save();
   }
 }
 
@@ -911,7 +911,6 @@ function comment_page() {
       $comments_per_page = $_POST["comments_per_page"];
 
       comment_save_settings(check_query($mode), check_query($order), check_query($threshold), check_query($comments_per_page));
-      //drupal_goto(url(comment_referer_load(), "mode=$mode&order=$order&threshold=$threshold&comments_per_page=$comments_per_page"));
       drupal_goto(url(comment_referer_load()));
       break;
   }
