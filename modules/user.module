@@ -1460,7 +1460,7 @@ function user_admin_edit($edit = array()) {
     $output .= implode("\n", module_invoke_all("user", "edit_form", $edit, $account));
 
     $output .= form_item(t("Password"), "<input type=\"password\" name=\"edit[pass1]\" size=\"12\" maxlength=\"24\" /> <input type=\"password\" name=\"edit[pass2]\" size=\"12\" maxlength=\"24\" />", t("Enter a new password twice if you want to change the current password for this user or leave it blank if you are happy with the current password."));
-    $output .= form_radios(t("Status"), "status", $account->status, array(t("Blocked"), t("Active")));
+    $output .= form_radios(t("Status"), "status", $account->status, array(t("blocked"), t("active")));
     $output .= form_radios(t("Role"), "rid", $account->rid, user_roles(1));
 
     $output .= form_submit(t("Save account"));
