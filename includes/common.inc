@@ -1596,15 +1596,6 @@ function link_page() {
 }
 
 /**
- * Fetch a set of links to display after a given node.
- *
- * The links are gathered by calls to hook_link('node') in each module.
- */
-function link_node($node, $main = 0) {
-  return module_invoke_all('link', 'node', $node, $main);
-}
-
-/**
  * Perform end-of-request tasks.
  *
  * This function sets the page cache if appropriate, and allows modules to

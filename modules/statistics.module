@@ -629,7 +629,6 @@ function statistics_summary($dbfield, $dbrows) {
   $result = db_query_range('SELECT n.nid, n.title FROM {node_counter} s INNER JOIN {node} n ON s.nid = n.nid ORDER BY %s DESC', $dbfield, 0, $dbrows);
   while ($nid = db_fetch_array($result)) {
     $content = node_load(array('nid' => $nid['nid']));
-    $links = link_node($content, 1);
 
     // Filter and prepare node teaser
     if (node_hook($content, 'view')) {
@@ -641,7 +640,7 @@ function statistics_summary($dbfield, $dbrows) {
 
     $output .= '<tr><td><strong>'. l($nid['title'], 'node/'. $nid['nid'], array('title' => t('View this posting.'))) .'</strong></td><td style="text-align: right;"><small>'. t('Submitted by %a on %b', array('%a' => format_name($content), '%b' => format_date($content->created, 'large'))) .'</small></td></tr>';
     $output .= '<tr><td colspan="2"><div style="margin-left: 20px;">'. $content->teaser .'</div></td></tr>';
-    $output .= '<tr><td style="text-align: right;" colspan="2">[ '. theme('links', $links) .' ]<br /><br /></td></tr>';
+    $output .= '<tr><td style="text-align: right;" colspan="2">[ '. theme('links', $content->links) .' ]<br /><br /></td></tr>';
   }
 
   return $output;

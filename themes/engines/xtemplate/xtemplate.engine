@@ -63,8 +63,8 @@ function xtemplate_node($node, $main = 0, $page = 0) {
     $xtemplate->template->parse("node.taxonomy");
   }
 
-  if ($links = link_node($node, $main)) {
-    $xtemplate->template->assign("links", theme_links($links));
+  if ($node->links) {
+    $xtemplate->template->assign("links", theme_links($node->links));
     $xtemplate->template->parse("node.links");
   }
 

@@ -507,11 +507,13 @@ function node_save($node) {
  *   Whether to display only the teaser for the node.
  * @param $page
  *   Whether the node is being displayed by itself as a page.
+ * @param $links
+ *   Whether or not to display node links. Links are omitted for node previews.
  *
  * @return
  *   An HTML representation of the themed node.
  */
-function node_view($node, $teaser = FALSE, $page = FALSE) {
+function node_view($node, $teaser = FALSE, $page = FALSE, $links = TRUE) {
   $node = array2object($node);
 
   // Remove the delimiter (if any) that separates the teaser from the body.
@@ -528,6 +530,9 @@ function node_view($node, $teaser = FALSE, $page = FALSE) {
   }
   // Allow modules to change $node->body before viewing.
   node_invoke_nodeapi($node, 'view', $teaser, $page);
+  if ($links) {
+    $node->links = module_invoke_all('link', 'node', $node, !$page);
+  }
 
   return theme('node', $node, $teaser, $page);
 }
@@ -1354,13 +1359,13 @@ function node_preview($node) {
     // Display a preview of the node:
     if ($node->teaser && $node->teaser != $node->body) {
       $output = '<h3>'. t('Preview trimmed version') .'</h3>';
-      $output .= node_view($node, 1);
+      $output .= node_view($node, 1, FALSE, 0);
       $output .= '<p><em>'. t('The trimmed version of your post shows what your post looks like when promoted to the main page or when exported for syndication. You can insert the delimiter "&lt;!--break--&gt;" (without the quotes) to fine-tune where your post gets split.') .'</em></p>';
       $output .= '<h3>'. t('Preview full version') .'</h3>';
-      $output .= node_view($node, 0);
+      $output .= node_view($node, 0, FALSE, 0);
     }
     else {
-      $output .= node_view($node, 0);
+      $output .= node_view($node, 0, FALSE, 0);
     }
 
     $output .= node_form($node);

@@ -519,8 +519,8 @@ function theme_node($node, $teaser = FALSE, $page = FALSE) {
     $output .= $node->body;
   }
 
-  if ($links = link_node($node, $teaser)) {
-    $output .= '<div class="links">'. theme('links', $links) .'</div>';
+  if ($node->links) {
+    $output .= '<div class="links">'. theme('links', $node->links) .'</div>';
   }
 
   return $output;

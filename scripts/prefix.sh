@@ -1,7 +1,7 @@
 #!/bin/sh
 
 if [ $# != 2 ]; then
-	cat >&2 << EOH
+  cat >&2 << EOH
 This is Drupal database prefixer.
 
 Usage:
