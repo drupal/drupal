@@ -139,10 +139,12 @@ function account_site_edit() {
     $output .= "<SELECT NAME=\"edit[timezone]\">\n$options2</SELECT><BR>\n";
     $output .= "<I>". t("Select what time you currently have and your timezone settings will be set appropriate.") ."</I><P>\n";
 
-    $output .= "<B>". t("Language" ) .":</B><BR>\n";
-    foreach ($languages as $key=>$value) $options3 .= " <OPTION VALUE=\"$key\"". (($user->language == $key) ? " SELECTED" : "") .">$value - $key</OPTION>\n";
-    $output .= "<SELECT NAME=\"edit[language]\">\n$options3</SELECT><BR>\n";
-    $output .= "<I>". t("Selecting a different language will change the language the site.") ."</I><P>\n";
+    if ($languages) {
+      $output .= "<B>". t("Language" ) .":</B><BR>\n";
+      foreach ($languages as $key=>$value) $options3 .= " <OPTION VALUE=\"$key\"". (($user->language == $key) ? " SELECTED" : "") .">$value - $key</OPTION>\n";
+      $output .= "<SELECT NAME=\"edit[language]\">\n$options3</SELECT><BR>\n";
+      $output .= "<I>". t("Selecting a different language will change the language the site.") ."</I><P>\n";
+    }
 
     $output .= "<B>". t("Maximum number of stories to display") .":</B><BR>\n";
     for ($stories = 10; $stories <= 30; $stories += 5) $options4 .= "<OPTION VALUE=\"$stories\"". (($user->stories == $stories) ? " SELECTED" : "") .">$stories</OPTION>\n";
