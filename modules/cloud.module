@@ -55,10 +55,8 @@ function cloud_update($site) {
       $data .= fgets($fp, 128);
     }
 
-    if (strstr($data, "200 OK")) {
-      if (abs($site[size] - strlen($data)) > 50) {
-        db_query("UPDATE site SET size = '". strlen($data) ."', timestamp = '". time() ."' WHERE link = '". check_input($site[link]) ."'");
-      }
+    if (abs($site[size] - strlen($data)) > 50) {
+      db_query("UPDATE site SET size = '". strlen($data) ."', timestamp = '". time() ."' WHERE link = '". check_input($site[link]) ."'");
     }
   }
   else {
