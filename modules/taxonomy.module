@@ -213,6 +213,7 @@
 
     $vocabularies = taxonomy_get_vocabularies();
     foreach ($vocabularies as $vocabulary) {
+      $links = array();
       $links[] = la(t("edit vocabulary"), array("mod" => "taxonomy", "type" => "vocabulary", "op" => "edit", "id" => $vocabulary->vid));
       $links[] = la(t("add term"), array("mod" => "taxonomy", "op" => "add", "type" => "leaf", "vocabulary_id" => $vocabulary->vid));
       $links[] = la(t("preview form"), array("mod" => "taxonomy", "type" => "vocabulary", "op" => "preview", "id" => $vocabulary->vid));
@@ -352,6 +353,9 @@
         $related[$term->$key] = $term;
       }
       return $related;
+    }
+    else {
+      return array();
     }
   }
 
