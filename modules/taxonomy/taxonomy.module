@@ -45,13 +45,13 @@ function taxonomy_link($type, $node = NULL) {
     if ($node->taxonomy) {
       foreach ($node->taxonomy as $tid) {
         $term = taxonomy_get_term($tid);
-        $links[] = l($term->name, "taxonomy/page/or/$term->tid");
+        $links[] = l($term->name, "taxonomy/page/or/$term->tid", $term->description ? array ('title' => $term->description) : array());
       }
     }
     else {
       $links = array();
       foreach (taxonomy_node_get_terms($node->nid) as $term) {
-        $links[] = l($term->name, "taxonomy/page/or/$term->tid");
+        $links[] = l($term->name, "taxonomy/page/or/$term->tid", $term->description ? array ('title' => $term->description) : array());
       }
 
     }
