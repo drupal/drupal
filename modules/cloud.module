@@ -103,9 +103,9 @@ function cloud_list() {
   $result = db_query("SELECT * FROM site ORDER BY timestamp DESC LIMIT 100");
 
   while ($site = db_fetch_object($result)) {
-    if ($date != date("g A", $site->timestamp)) {
-      $date = date("g A", $site->timestamp);
-      $output .= "<p /><b>$date:</b>";
+    if ($hour != floor((time() - $site->timestamp) / 3600)) {
+      $hour = floor((time() - $site->timestamp) / 3600);
+      $output .= "<p />Updated ". format_plural($hour, "hour", "hours") ." ago :";
     }
     $output .= "<br />". format_url($site->url, $site->title);
   }
