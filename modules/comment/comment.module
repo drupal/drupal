@@ -141,6 +141,17 @@ function comment_access($op, $comment) {
   }
 
 }
+function comment_referer_save() {
+  $_SESSION["comment_referer"] = arg(0)."/".arg(1)."/".arg(2);
+}
+
+/*
+** Restores the referer from a persistent variable:
+*/
+
+function comment_referer_load() {
+  return $_SESSION["comment_referer"];
+}
 
 function comment_form($edit) {
   global $user;
@@ -196,7 +207,8 @@ function comment_reply($pid, $nid) {
       comment_view($comment);
     }
     else if (user_access("access content")) {
-      node_view(node_load(array("nid" => $nid)));
+      $node = node_view(node_load(array("nid" => $nid)),0,1);
+      theme("box", $node->title, $node->body);
       $pid = 0;
     }
 
@@ -247,7 +259,8 @@ function comment_preview($edit) {
     comment_view($comment);
   }
   else {
-    node_view(node_load(array("nid" => $edit["nid"])));
+    $node = node_view(node_load(array("nid" => $edit["nid"])), 0, 1);
+    theme("box", $node->title, $node->body);
     $edit["pid"] = 0;
   }
 }
@@ -464,7 +477,7 @@ function comment_links($comment, $return = 1) {
   */
 
   if ($return) {
-    $links[] = l(t("parent"), "node/view/$comment->nid#$comment->cid");
+    $links[] = l(t("parent"), comment_referer_load()."#$comment->cid");
   }
 
   /*
@@ -740,6 +753,11 @@ function comment_render($node, $cid = 0) {
       theme("box", t("Post new comment"), comment_form(array("nid" => $nid)));
     }
 
+    /*
+    ** Save were we come from so we can go back after a reply
+    */
+
+    comment_referer_save();
   }
 }
 
@@ -837,7 +855,7 @@ function comment_page() {
     case t("Moderate comments"):
     case t("Moderate comment"):
       comment_moderate($edit);
-      drupal_goto(url("node/view/". $edit["nid"]));
+      drupal_goto(url(comment_referer_load()));
       break;
     case "reply":
       theme("header");
@@ -857,7 +875,7 @@ function comment_page() {
         theme("footer");
       }
       else {
-        drupal_goto(url("node/view/". $edit["nid"]));
+        drupal_goto(url(comment_referer_load()));
       }
       break;
     case t("Save settings"):
@@ -867,7 +885,8 @@ function comment_page() {
       $comments_per_page = $_POST["comments_per_page"];
 
       comment_save_settings(check_query($mode), check_query($order), check_query($threshold), check_query($comments_per_page));
-      drupal_goto(url("node/view/". $edit["nid"], "mode=$mode&order=$order&threshold=$threshold&comments_per_page=$comments_per_page"));
+      //drupal_goto(url(comment_referer_load(), "mode=$mode&order=$order&threshold=$threshold&comments_per_page=$comments_per_page"));
+      drupal_goto(url(comment_referer_load()));
       break;
   }
 }
@@ -1326,7 +1345,7 @@ function comment($comment, $links = 0) {
 }
 
 function comment_folded($comment) {
-  print "<div class=\"comment-folded\"><span class=\"subject\">". l($comment->subject, "node/view/$comment->nid/$comment->cid#$comment->cid") ."</span> <span class=\"credit\">". t("by") . " " . format_name($comment) ."</span></div>";
+  print "<div class=\"comment-folded\"><span class=\"subject\">". l($comment->subject, comment_referer_load()."/$comment->cid#$comment->cid") ."</span> <span class=\"credit\">". t("by") . " " . format_name($comment) ."</span></div>";
 }
 
 function comment_flat_collapsed($comment, $threshold) {

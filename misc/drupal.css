@@ -34,34 +34,30 @@ th {
 .book {
   margin-bottom: 2em;
 }
-.book hr {
-  clear: both;
-  border: 0;
-  height: 1px;
-  background-color: #888;
-  color: #888;
-}
 .book .title {
   font-weight: bold;
   font-size: 1.3em;
+  margin-bottom:1em;
 }
-.book .last-updated {
-  font-size: 0.8em;
-  margin-top: 0.25em;
+.book .tree {
+  margin-bottom: 2em;
 }
-.book .body {
-  margin: 1em 0 1em 0;
-}
-.book .links {
-  clear: both;
-  border-top: 1px solid #888;
-  padding-top: 0.5em;
-}
-.book .nav .links {
-  margin-top: 2em;
+.book .name {
+  padding-top:1em;
+  font-weight: bold;
+  font-size: 1em;
 }
 .book .nav {
-  margin: 1em 0;
+  border-top: 1px solid #888;
+  padding-top:0.5em;
+  padding-bottom: 2em;
+  border-bottom: 1px solid #888;
+  clear:both;
+}
+.book .nav .links {
+  clear: both;
+}
+.book .nav .titles {
   clear: both;
 }
 .book .nav .prev {
@@ -76,9 +72,6 @@ th {
 }
 .book .nav .up {
   text-align: center;
-}
-.book .nav .titles {
-  clear: both;
 }
 .calendar .row-week td a {
   display: block;

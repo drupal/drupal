@@ -120,7 +120,7 @@ function page_view($node, $main = 0) {
     $node->teaser = $node->body = ob_get_contents();
     ob_end_clean();
   }
-  theme("node", $node, $main);
+  return $node;
 }
 
 function page_form(&$node, &$help, &$error) {

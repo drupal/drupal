@@ -153,17 +153,15 @@ function forum_view($node, $main = 0) {
     }
     $voc = taxonomy_get_vocabulary($term_data->vid);
 
-    $trail[] = l(t("Home"), NULL);
-    $trail[] = l(t("Forums"), "forum");
-    $trail[] = l($term_data->name, "forum/$term_data->tid");
-
-    theme("path", $trail);
+    $node->trail[] = l(t("Home"), NULL);
+    $node->trail[] = l(t("Forums"), "forum");
+    $node->trail[] = l($term_data->name, "forum/$term_data->tid");
   }
 
   $node->teaser = check_output($node->teaser);
   $node->body = check_output($node->body);
 
-  theme("node", $node, $main);
+  return $node;
 }
 
 function forum_validate(&$node) {
@@ -490,7 +488,7 @@ function forum_theme_display($forums, $topics, $parents, $tid, $sortby, $forum_p
   $output .= "</div>";
 
   theme("header");
-  theme("path", $trail);
+  theme("breadcrumb", $trail);
   theme("box", $title, $output);
   theme("footer");
 }

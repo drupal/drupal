@@ -367,7 +367,7 @@ function book_body($node) {
   return $output;
 }
 
-function book_view($node, $main = 0) {
+function book_view($node, $main = 0, $return = 0) {
 
   /*
   ** Always display the most recently approved revision of a node
@@ -397,9 +397,80 @@ function book_view($node, $main = 0) {
   */
 
   if ($main) {
-    theme("node", $node, $main);
+    return $node;
   }
   else {
+    // build the tree from bottom to top to have the book index in $level for navigation later
+    $path = book_location($node);
+    $node->trail[] = l(t("Home"), "");
+    $node->trail[] = l(t("Books"), "book");
+    foreach ($path as $level) {
+      $node->trail[] = l($level->title, "book/view/$level->nid");
+    }
+    if ($node->moderate) {
+      $node->body = $node->body . "<div class=\"log\"><div class=\"title\">". t("Log") .":</div>$node->log</div>";
+    }
+    if (!$return) { // Add the navigation when we have a node/view and the output is for theme("node")
+      $node = book_navigation($node);
+    }
+    return $node;
+  }
+}
+
+function book_show($node, $cid) {
+
+  $node = node_view($node,0,1);
+
+  /*
+  ** Add the book navigation
+  */
+
+  $book = db_fetch_object(db_query("SELECT * FROM {book} WHERE nid = %d", $node->nid));
+
+  if ($book) {
+    foreach ($book as $key => $value) {
+      $node->$key = $value;
+    }
+    $node = book_navigation($node);
+  }
+
+  /*
+  ** make $node->type a book. This is for the links.
+  */
+
+  $node->type = "book";
+
+  /*
+  ** View the node
+  */
+
+  if (node_access("view", $node)) {
+    theme("breadcrumb", $node->trail);
+    theme("node",$node, 0);
+
+    if (function_exists("comment_render") && $node->comment) {
+      comment_render($node, $cid);
+    }
+
+    /*
+    ** Update the history table, stating that this user viewed this node.
+    */
+    node_tag_new($node->nid);
+  }
+}
+
+function book_navigation($node) {
+
+    $path = book_location($node);
+
+    if ($node->type != "book") {
+      $node->trail = ""; // Overwrite the trail with a book trail.
+      $node->trail[] = l(t("Home"), "");
+      $node->trail[] = l(t("Books"), "book");
+      foreach ($path as $level) {
+        $node->trail[] = l($level->title, "book/view/$level->nid");
+      }
+    }
     /*
     ** Construct the "next" and "previous" links:
     */
@@ -409,55 +480,38 @@ function book_view($node, $main = 0) {
       $next = book_next($node);
     }
 
-    // build the tree from bottom to top to have the book index in $level for navigation later
-    $path = book_location($node);
-    $trail[] = l(t("Home"), "");
-    $trail[] = l(t("Books"), "book");
-    foreach ($path as $level) {
-      $trail[] = l($level->title, "node/view/$level->nid");
-    }
-    theme("path", $trail);
-
-    $output .= "<div class=\"book\">";
-    $output .= "<div class=\"body\">$node->body</div>";
-
-    if ($node->moderate) {
-      $output .= "<div class=\"log\"><div class=\"title\">". t("Log") .":</div>$node->log</div>";
-    }
-
     if ($node->nid) {
+      $output .= "<div class=\"book\">";
       $output .= "<div class=\"tree\">". book_tree($node->nid) ."</div>";
       if ($prev) {
         $links .= "<div class=\"prev\">";
-        $links .= l(t("previous"), "node/view/$prev->nid", array("title" => t("View the previous page in this book.")));
+        $links .= l(t("previous"), "book/view/$prev->nid", array("title" => t("View the previous page in this book.")));
         $links .= "</div>";
         $titles .= "<div class=\"prev\">$prev->title</div>";
       }
       if ($next) {
         $links .= "<div class=\"next\">";
-        $links .= l(t("next"), "node/view/$next->nid", array("title" => t("View the next page in this book.")));
+        $links .= l(t("next"), "book/view/$next->nid", array("title" => t("View the next page in this book.")));
         $links .= "</div>";
         $titles .= "<div class=\"next\">$next->title</div>";
       }
+      else {
+        $links .= "<div class=\"next\">&nbsp;</div>"; // make an empty div to fill the space
+      }
       if ($node->parent) {
         $links .= "<div class=\"up\">";
-        $links .= l(t("up"), "node/view/$node->parent", array("title" => t("View this page's parent section.")));
-        if ($node->parent != $level->nid) {
-          $links .= " | ";
-          $links .= l(t("index"), "node/view/$level->nid", array("title" => t("View this book's table of contents.")));
-        }
+        $links .= l(t("up"), "book/view/$node->parent", array("title" => t("View this page's parent section.")));
         $links .= "</div>";
       }
       $output .= "<div class=\"nav\">";
       $output .= "<div class=\"links\">$links</div>";
       $output .= "<div class=\"titles\">$titles</div>";
       $output .= "</div>";
+      $output .= "</div>";
     }
-    $output .= "</div>";
-    $node->body = $output;
-    theme("node", $node, 0);
+    $node->body = $node->body.$output;
+  return $node;
   }
-}
 
 function book_toc_recurse($nid, $indent, $toc, $children) {
 
@@ -506,7 +560,7 @@ function book_tree_recurse($nid, $depth, $children) {
     if ($children[$nid]) {
       foreach ($children[$nid] as $foo => $node) {
         $output .= "<li>";
-        $output .= l($node->title, "node/view/$node->nid");
+        $output .= l($node->title, "book/view/$node->nid");
         if ($tree = book_tree_recurse($node->nid, $depth - 1, $children)) {
           $output .= "<ul>$tree</ul>";
         }
@@ -552,7 +606,7 @@ function book_render() {
     if ($node) {
       // output the content:
       $output .= "<div class=\"book\">";
-      $output .= "<div class=\"title\">". l($node->title, "node/view/$node->nid") ."</div>";
+      $output .= "<div class=\"title\">". l($node->title, "book/view/$node->nid") ."</div>";
       $output .= "<div class=\"body\">". book_body($node) ."</div>";
       $output .= "</div>";
     }
@@ -565,9 +619,14 @@ function book_render() {
 
 function book_page() {
 
-
   if (user_access("access content")) {
     switch (arg(1)) {
+      case "view":
+        $node = node_load(array("nid" => arg(2)), 1);
+        theme("header");
+        book_show($node, arg(3));
+        theme("footer");
+        break;
       case "print":
         print book_print(arg(2), $depth = 1);
         break;
@@ -596,11 +655,11 @@ function book_print($id = "", $depth = 1) {
     }
 
     if ($node) {
+      $node = node_view($node, 0, 1);
       // output the content:
       $output .= "<h1 id=\"$node->nid\" name=\"$node->nid\" class=\"book-h$depth\">$node->title</h1>";
-
       if ($node->body) {
-        $output .= book_body($node);
+        $output .= $node->body;
       }
     }
   }
@@ -630,9 +689,9 @@ function book_print_recurse($parent = "", $depth = 1) {
     if ($node) {
       // output the content:
       $output .= "<h1 id=\"$node->nid\" name=\"$node->nid\" class=\"book-h$depth\">$node->title</h1>";
-
+      $node = node_view($node, 0, 1);
       if ($node->body) {
-        $output .= "<ul>". book_body($node) ."</ul>";
+        $output .= "<ul>". $node->body ."</ul>";
       }
 
       $output .= book_print_recurse($node->nid, $depth + 1);
