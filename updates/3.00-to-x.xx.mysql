@@ -118,10 +118,6 @@ ALTER TABLE blog CHANGE body body_old TEXT DEFAULT '' NOT NULL;
 ALTER TABLE forum CHANGE body body_old TEXT DEFAULT '' NOT NULL;
 ALTER TABLE book CHANGE body body_old TEXT DEFAULT '' NOT NULL;
 
-#
-# Run the last part of updates/3.00-to-x.xx.php
-#
-
 # update the node table:
 ALTER TABLE node DROP lid;
 ALTER TABLE node ADD teaser TEXT DEFAULT '' NOT NULL;
@@ -134,13 +130,25 @@ ALTER TABLE node CHANGE moderate moderate int(2) DEFAULT '0' NOT NULL;
 ALTER TABLE node DROP timestamp_posted;
 ALTER TABLE node DROP timestamp_queued;
 ALTER TABLE node DROP timestamp_hidden;
+UPDATE node SET status = 0 WHERE status = 1;
+UPDATE node SET status = 0 WHERE status = 2;
 UPDATE node SET status = 1 WHERE status = 3;
+
+#
+# Run the second part of updates/3.00-to-x.xx.php:
+#   visit http://www.yoursite.com/3.00-to-x.xx.php?part=2
+#
 
 ALTER TABLE book DROP section;
 ALTER TABLE users CHANGE session sid varchar(32) DEFAULT '' NOT NULL;
 
 # 02/11/01:
 ALTER TABLE node ADD revisions TEXT DEFAULT '' NOT NULL;
+
+#
+# Run the third part of updates/3.00-to-x.xx.php:
+#   visit http://www.yoursite.com/3.00-to-x.xx.php?part=3
+#
 
 ## work in progress
 
