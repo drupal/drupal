@@ -103,7 +103,6 @@ function node_load($conditions) {
   */
 
   if ($node->revisions) {
-    unset($node->revisions);
     $node->revisions = unserialize($node->revisions);
   }
 
