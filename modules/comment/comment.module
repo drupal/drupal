@@ -107,7 +107,7 @@ function comment_form($edit) {
     $form .= form_submit(t("Post comment"));
   }
 
-  return form($form, "post", url("comment/reply". $edit["nid"]));
+  return form($form, "post", url("comment/reply/". $edit["nid"]));
 }
 
 function comment_edit($cid) {
