@@ -1,4 +1,5 @@
 #!/usr/bin/perl -w
+# $Id: code-style.pl,v 1.5 2002/11/06 13:54:08 kjartan Exp $
 
 # Author: Alexander Schwartz (alexander.schwartz@gmx.net)
 # Licence: GPL
@@ -8,7 +9,7 @@
 # code.  This program tries to show as many improvements as possible with
 # no false positives.
 
-# $Id: code-style.pl,v 1.4 2001/11/17 15:44:21 kjartan Exp $
+# $Id: code-style.pl,v 1.5 2002/11/06 13:54:08 kjartan Exp $
 
 $comment = 0;
 $program = 0;
