@@ -607,7 +607,7 @@ function theme_user_picture($account) {
     }
 
     if ($picture) {
-      $alt = t('%user\'s picture', array('%user' => $account->name ? $account->name : t(variable_get('anonymous', 'Anonymous'))));
+      $alt = t('%user\'s picture', array('%user' => $account->name ? $account->name : variable_get('anonymous', 'Anonymous')));
       $picture = theme('image', $picture, $alt, $alt, '', false);
       if ($account->uid) {
         $picture = l($picture, "user/$account->uid", array('title' => t('View user profile.')));

@@ -887,7 +887,7 @@ function format_name($object) {
     $output .= ' ('. t('not verified') .')';
   }
   else {
-    $output = t(variable_get('anonymous', 'Anonymous'));
+    $output = variable_get('anonymous', 'Anonymous');
   }
 
   return $output;
@@ -1600,7 +1600,7 @@ function drupal_xml_parser_create(&$data) {
       $out = @recode_string($encoding . '..utf-8', $data);
     }
     else {
-      watchdog(t("Unsupported XML encoding '%s'. Please install iconv, GNU recode or mbstring for PHP.", $encoding));
+      watchdog('warning', t("Unsupported XML encoding '%s'. Please install iconv, GNU recode or mbstring for PHP.", $encoding));
       return 0;
     }
 
@@ -1609,7 +1609,7 @@ function drupal_xml_parser_create(&$data) {
       $encoding = 'utf-8';
     }
     else {
-      watchdog(t("Could not convert XML encoding '%s' to UTF-8.", $encoding));
+      watchdog('warning', t("Could not convert XML encoding '%s' to UTF-8.", $encoding));
       return 0;
     }
   }

@@ -1468,7 +1468,7 @@ function theme_comment_threshold($threshold) {
   $result = db_query('SELECT fid, filter FROM {moderation_filters} ');
   $options .= ' <option value="0">'. t('-- threshold --') .'</option>';
   while ($filter = db_fetch_object($result)) {
-    $filters .= " <option value=\"$filter->fid\"". ($threshold == $filter->fid ? ' selected="selected"' : '') .'>'. t($filter->filter) .'</option>';
+    $filters .= " <option value=\"$filter->fid\"". ($threshold == $filter->fid ? ' selected="selected"' : '') .'>'. $filter->filter .'</option>';
   }
 
   if ($filters) {
