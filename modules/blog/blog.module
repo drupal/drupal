@@ -71,7 +71,7 @@ function blog_page_user($name = 0, $date = 0) {
   $name = check_input($name ? $name : $user->name);
   $date = check_input($date ? $date : time());
 
-  $result = db_query("SELECT n.nid, n.title, n.comment, COUNT(c.cid) AS comments, n.timestamp, b.body FROM blog b LEFT JOIN node n ON b.nid = n.nid LEFT JOIN users u ON n.author = u.id LEFT JOIN comments c ON n.nid = c.lid WHERE u.name = '$name' AND n.timestamp < '$date' AND n.timestamp > '". ($date - 2592000) ."' GROUP BY n.nid ORDER BY n.nid DESC LIMIT 20");
+  $result = db_query("SELECT n.nid, n.title, n.comment, COUNT(c.cid) AS comments, n.timestamp, b.body FROM blog b LEFT JOIN node n ON b.nid = n.nid LEFT JOIN users u ON n.author = u.id LEFT JOIN comments c ON n.nid = c.lid WHERE u.name = '$name' AND n.timestamp <= '$date' AND n.timestamp >= '". ($date - 2592000) ."' GROUP BY n.nid ORDER BY n.nid DESC LIMIT 20");
 
   $output .= "<table border=\"0\" cellpadding=\"4\" cellspacing=\"4\">";
 
