@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.145 2003/09/11 17:53:45 dries Exp $
+// $Id: theme.inc,v 1.146 2003/09/15 15:58:13 dries Exp $
 
 /**
 * Basic theme
@@ -41,8 +41,8 @@ class BaseTheme {
     return "misc/$name";
   }
 
-  function path($path) {
-    print "<div class=\"path\">". implode($path, " &raquo; ") ."</div>";
+  function breadcrumb($trail) {
+    print "<div class=\"breadcrumb\">". implode($trail, " &raquo; ") ."</div>";
   }
 
   function node($node, $main) {
