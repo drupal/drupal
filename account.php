@@ -285,7 +285,7 @@ function account_email_submit($edit) {
     */
 
     $passwd = user_password();
-    $hash = substr(md5("$userid. ". time() .""), 0, 12);
+    $hash = substr(md5("$edit[login]. ". time() .""), 0, 12);
     $status = 1;
 
     /*
@@ -302,7 +302,7 @@ function account_email_submit($edit) {
     $subject = strtr(t("Account details for %a"), array("%a" => variable_get(site_name, "drupal")));
     $message = strtr(t("%a,\n\n\nyou requested us to e-mail you a new password for your account at %b.  You will need to re-confirm your account or you will not be able to login.  To confirm your account updates visit the URL below:\n\n   %c\n\nOnce confirmed you can login using the following username and password:\n\n   username: %a\n   password: %d\n\n\n-- %b team"), array("%a" => $edit[login], "%b" => variable_get(site_name, "drupal"), "%c" => $link, "%d" => $passwd));
 
-    mail($email, $subject, $message, "From: noreply");
+    mail($edit[email], $subject, $message, "From: noreply");
 
     watchdog("account", "new password: `$edit[login]' &lt;$edit[email]&gt;");
 
@@ -351,7 +351,7 @@ function account_create_submit($edit) {
       */
 
       $edit[passwd] = user_password();
-      $edit[hash] = substr(md5("$new[userid]. ". time()), 0, 12);
+      $edit[hash] = substr(md5("$edit[login]. ". time()), 0, 12);
 
       /*
       ** Create the new user account in the database:
