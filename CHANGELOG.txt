@@ -17,7 +17,8 @@ Drupal x.x.x, xxxx-xx-xx
 - database backend:
     * added support for mutiple database connections.
 - usability:
-    * slightly reorganized navigation menus.
+    * introduced tabs and subtabs for local tasks.
+    * reorganized the navigation menus.
 - accessibility:
     * improved the accessibility of the archive module's calendar.
     * improved form handling.
