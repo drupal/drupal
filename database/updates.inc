@@ -1,5 +1,5 @@
 <?php
-/* $Id: updates.inc,v 1.38 2004/08/11 11:26:14 dries Exp $ */
+/* $Id: updates.inc,v 1.39 2004/08/12 15:12:25 unconed Exp $ */
 
 // Define the various updates in an array("date : comment" => "function");
 $sql_updates = array(
@@ -72,7 +72,8 @@ $sql_updates = array(
   "2004-08-07" => "update_98",
   "2004-08-09" => "update_99",
   "2004-08-10" => "update_100",
-  "2004-08-11" => "update_101"
+  "2004-08-11" => "update_101",
+  "2004-08-12" => "update_102"
 );
 
 function update_32() {
@@ -1543,6 +1544,10 @@ function update_101() {
   $ret = array();
   $ret[] = update_sql("DROP TABLE {locales}");
   return $ret;
+}
+
+function update_102() {
+  INSERT INTO {system} (filename, name, type, description, status, throttle, bootstrap) VALUES ('modules/legacy.module', 'legacy', 'module', '', 1, 0, 0);
 }
 
 function update_sql($sql) {
