@@ -18,8 +18,8 @@
   <tr>
     <td colspan="2" class="menu">
       <span id="links">
-        <div id="secondary">{secondary}</div>
-        <div id="primary">{primary}</div>
+        <div id="secondary">secondary links</div>
+        <div id="primary">primary links<br />{links}</div>
       </span>
       <span id="logo"><a href="index.php"><img src="themes/xtemplate/images/druplicon.gif" alt="" /></a></span>
     </td>
@@ -28,7 +28,7 @@
   <tr>
     <td valign="top" width="100%">
       <!-- BEGIN: message -->
-        <div id="message">{message}</div>
+        <div id="message">Site description or mission statement - edit this text along with the primary and secondary links in the file 'themes/xtemplate/xtemplate.xtmpl'.</div>
       <!-- END: message -->
       <div id="main">
 <!-- END: header -->
