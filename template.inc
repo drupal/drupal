@@ -59,20 +59,12 @@ function displayOldHeadlines($theme, $num = 10) {
 }
 
 function displayCommentModeration($id) {
-  global $user;
+  global $user, $comment_votes;
   
-  print "VOTE: ";
-  if (($user) && !($vote = user_getHistory($user->history, "c$id"))) {
-
-     $output .= "         <SELECT NAME=\"meta:$cid\">";
-     $output .= "            <OPTION VALUE=\"-1\">Moderate</OPTION>\n";
-     foreach ($comments_meta_reasons as $key=>$value) {
-       $output .= "          <OPTION VALUE=\"$value\">$key</OPTION>\n";
-     }
-     $output .= "         </SELECT>";
-  }
-  else {
-    $output .= "voted";
+  if ($user && !user_getHistory($user->history, "c$id")) {
+    $output .= "<SELECT NAME=\"moderate[$id]\">\n";
+    foreach ($comment_votes as $key=>$value) $output .= " <OPTION VALUE=\"$value\">$key</OPTION>\n";
+    $output .= "</SELECT>\n";
   }
 
   print $output;

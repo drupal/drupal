@@ -129,7 +129,7 @@ function submit_submit($subject, $abstract, $article, $category) {
   global $user, $theme;
 
   ### Add submission to SQL table:
-  db_query("INSERT INTO stories (author, subject, abstract, article, category, timestamp) VALUES ('$user->id', '". check(addslashes($subject)) ."', '". check(addslashes($abstract)) ."', '". check(addslashes($article)) ."', '". check(addslashes($category)) ."', '". time() ."')");
+  db_insert("INSERT INTO stories (author, subject, abstract, article, category, timestamp) VALUES ('$user->id', '". check(addslashes($subject)) ."', '". check(addslashes($abstract)) ."', '". check(addslashes($article)) ."', '". check(addslashes($category)) ."', '". time() ."')");
   
   ### Display confirmation message:
   $theme->header(); 

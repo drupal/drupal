@@ -37,7 +37,7 @@ function showUser($uname) {
     $output .= " <TR><TD><B>User ID:</B></TD><TD>$user->userid</TD></TR>\n";
     $output .= " <TR><TD><B>Name:</B></TD><TD>$user->name</TD></TR>\n";
     $output .= " <TR><TD><B>E-mail:</B></TD><TD><A HREF=\"mailto:$user->femail\">$user->femail</A></TD></TR>\n";
-    $output .= " <TR><TD><B>URL:</B></TD><TD><A HREF=\"$user->url\">$user->url</A></TD></TR>\n";
+    $output .= " <TR><TD><B>URL:</B></TD><TD><A HREF=\"$user->url\" TARGET=\"_new\">$user->url</A></TD></TR>\n";
     if ($user->access > 0) $output .= "<TR><TD VALIGN=top><B>Access:</B></TD><TD>". showAccess() ."</TD></TR>\n";
     $output .= " <TR><TD><B>Bio:</B></TD><TD>$user->bio</TD></TR>\n";
     $output .= " <TR><TD><B>Signature:</B></TD><TD>$user->signature</TD></TR>\n";
@@ -240,11 +240,10 @@ switch ($op) {
       $output .= "<B>Theme:</B><BR>\n";
 
       ### Loop (dynamically) through all available themes:
-      $handle = opendir("themes");
-      while ($file = readdir($handle)) if(!ereg("^\.",$file) && file_exists("themes/$file/theme.class.php")) $options .= "<OPTION VALUE=\"$file\"". (((!empty($userinfo[theme])) && ($file == $cfg_theme)) || ($user->theme == $file) ? " SELECTED" : "") .">$file</OPTION>";
-      closedir($handle);
+      foreach ($themes as $key=>$value) { 
+        $options .= "<OPTION VALUE=\"$key\"". (($user->theme == $key) ? " SELECTED" : "") .">$key - $value[1]</OPTION>";
+      }
 
-      if ($userinfo[theme]=="") $userinfo[theme] = $cfg_theme;
       $output .= "<SELECT NAME=\"edit[theme]\">$options</SELECT><BR>\n";
       $output .= "<I>Selecting a different theme will change the look and feel of the site.</I><P>\n";
       $output .= "<B>Maximum number of stories:</B><BR>\n";

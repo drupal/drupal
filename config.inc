@@ -1,18 +1,18 @@
-<?PHP
+<?
 
 #
 # MySQL settings:
 #
 
-$dbhost = "zind.net";
-$dbuname = "dries";
-$dbpass = "Abc123";
-$dbname = "dries";
-
-#$dbhost = "";
+#$dbhost = "zind.net";
 #$dbuname = "dries";
-#$dbpass = "oakley";
+#$dbpass = "Abc123";
 #$dbname = "dries";
+
+$dbhost = "";
+$dbuname = "dries";
+$dbpass = "oakley";
+$dbname = "dries";
 
 #
 # Name of the site
@@ -24,7 +24,7 @@ $sitename = "drop.org";
 #  The contact information will be used to send out automated mails
 #  to users, account holders or visitors.
 $contact_email = "droppies@zind.net";
-$contact_signature = "Kind regards,\n\n-- the drop.org crew\nhttp://www.drop.org/";
+$contact_signature = "Kind regards,\n\n-- the drop.org crew\nhttp://beta.drop.org/";
 
 #
 # Notify:
@@ -46,36 +46,52 @@ $notify_from    = "droppies@zind.net";
 #
 # Comment meta reasons:
 #
-$comments_votes = array("-1" => "-1", "0" => "0", "+1" => "+ 1", "+2" => "+ 2", "+3" => "+ 3", "+4" => "+ 4", "+5" => "+ 5");
+$comment_votes = array("none" => "none", "-1" => "-1", "0" => "0", "+1" => "+ 1", "+2" => "+ 2", "+3" => "+ 3", "+4" => "+ 4", "+5" => "+ 5");
 
 #
 # Categories:
 #
-$categories = array('Announcements', 'Arts & Humanities', 'Business & Economy', 'Coding & Webdesign', 'Computers & Internet', 'Drop.org', 'Entertainment', 'Freedom', 'Government', 'News & Media', 'Science', 'Society & Culture');
+$categories = array("Announcements",
+                    "Arts & Humanities",
+                    "Business & Economy",
+                    "Coding & Webdesign",
+                    "Computers & Internet",
+                    "Drop.org",
+                    "Entertainment",
+                    "Freedom",
+                    "Government",
+                    "News & Media",
+                    "Science", 
+                    "Society & Culture");
 
 # 
 # Allowed HTML tags:
 #
-$allowed_html = "<A> <B> <BR> <DD> <DL> <DT> <EM> <I> <IL> <OL> <U> <UL>";
+$allowed_html = "<A><B><BR><DD><DL><DT><EM><HR><I><IL><SMALL><OL><U><UL>";
 
 #
 # Name of the 'anonymous' user account:
 #
 $anonymous = "Anonymous Chicken";
 
+
 #
-# Default theme:
+# Themes:
 #
-$cfg_theme = "Dries";
+$themes = array("Marvin" => array(
+                   "themes/marvin/marvin.theme", 
+                   "white, simple"),
+                "Zaphod" => array(
+                   "themes/zaphod/zaphod.theme", 
+                   "yellow, simple"));
 
 #
 # Submission moderation votes:
-#
-// NOTE: changing $submission_votes will affect the integrity of your 
-//       database.  In short, the database field user.history will 
-//       become invalid, and will need to be reset! Please, do not 
-//       just change this setting unless you have an empty database 
-//       or unless you know what you are doing.
+#   changing $submission_votes will affect the integrity of your 
+#   database.  In short, the database field user.history will 
+#   become invalid, and will need to be reset! Please, do not 
+#   change this setting unless you have an empty database or 
+#   unless you know what you are doing.
 $submission_votes = array("neutral (+0)" => "+ 0",
                           "post it (+1)" => "+ 1",
                           "dump it (-1)" => "- 1");

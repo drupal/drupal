@@ -11,7 +11,14 @@ function db_connect() {
   include "config.inc";
   mysql_pconnect($dbhost, $dbuname, $dbpass) or die(mysql_Error());
   mysql_select_db("$dbname") or die ("Unable to select database");
-   // Note: we are using a persistent connection!
+   // NOTE: we are using a persistent connection!
+}
+
+function db_insert($query, $debug = false) {
+  // NOTE:
+  //   add spam- and/or flood-checks
+
+  db_query($query, $debug);
 }
 
 function db_query($query, $debug = false) {

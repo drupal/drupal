@@ -1,16 +1,17 @@
 <?
 
+include "config.inc";
 include "template.inc";
 
 global $user;
-### Verify theme:
-if (isset($user->theme) && file_exists("themes/$user->theme/theme.class.php")) {
-  include "themes/$user->theme/theme.class.php";	
+
+if ($user->theme && file_exists($themes[$user->theme][0])) {
+  include $themes[$user->theme][0];	
 }
 else {
-  include "config.inc";
-  include "themes/$cfg_theme/theme.class.php";
+  include $themes[key($themes)][0];
 }
 
 $theme = new Theme();
+
 ?>

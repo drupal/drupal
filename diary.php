@@ -19,7 +19,7 @@ function diary_overview($num = 20) {
     $output .= "<DL>\n";
     $output .= " <DD><P><B>$diary->userid wrote:</B></P></DD>\n";
     $output .= " <DL>\n";
-    $output .= "  <DD><P>$diary->text</P><P>[ <A HREF=\"diary.php?op=view&name=$diary->userid\">more</A> ]</P></DD>\n";
+    $output .= "  <DD><P>". check($diary->text) ."</P><P>[ <A HREF=\"diary.php?op=view&name=$diary->userid\">more</A> ]</P></DD>\n";
     $output .= " </DL>\n";
     $output .= "</DL>\n";
   }
@@ -34,13 +34,13 @@ function diary_entry($timestamp, $text, $id = 0) {
   if ($id) {
     $output .= "<DL>\n";
     $output .= " <DT><B>". date("l, F jS", $timestamp) .":</B> </DT>\n";
-    $output .= " <DD><P>[ <A HREF=\"diary.php?op=edit&id=$id\">edit</A> ]</P><P>$text</P></DD>\n";
+    $output .= " <DD><P>[ <A HREF=\"diary.php?op=edit&id=$id\">edit</A> ]</P><P>". check($text) ."</P></DD>\n";
     $output .= "</DL>\n";
   }
   else {
     $output .= "<DL>\n";
     $output .= " <DT><B>". date("l, F jS", $timestamp) .":</B></DT>\n";
-    $output .= " <DD><P>$text</P></DD>\n";
+    $output .= " <DD><P>". check($text) ."</P></DD>\n";
     $output .= "</DL>\n";
   }
   return $output;
@@ -65,7 +65,7 @@ function diary_display($username) {
   $theme->footer();
 }
 
-function diary_add_enter() {
+function diary_add() {
   global $theme, $user, $allowed_html;
   
   ### Submission form:
@@ -88,13 +88,13 @@ function diary_add_enter() {
   $theme->footer();
 }
 
-function diary_edit_enter($id) {
+function diary_edit($id) {
   global $theme, $user, $allowed_html;
 
   $result = db_query("SELECT * FROM diaries WHERE id = $id");
   $diary = db_fetch_object($result);
 
-  $output .= diary_entry($diary->timestamp, check($diary->text));
+  $output .= diary_entry($diary->timestamp, $diary->text);
 
   $output .= "<FORM ACTION=\"diary.php\" METHOD=\"post\">\n";
 
@@ -106,7 +106,7 @@ function diary_edit_enter($id) {
 
   $output .= "<P>\n";
   $output .= " <INPUT TYPE=\"hidden\" NAME=\"id\" VALUE=\"$diary->id\">\n";
-  $output .= " <INPUT TYPE=\"hidden\" NAME=\"timestamp\" VALUE=\"$diary->timestamp\">\n";
+  $output .= " <INPUT TYPE=\"hidden\" NAME=\"timesamp\" VALUE=\"$diary->timestamp\">\n";
   $output .= " <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Preview diary entry\"> <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Submit diary entry\">\n";
   $output .= "</P>\n";
 
@@ -120,7 +120,7 @@ function diary_edit_enter($id) {
 function diary_preview($text, $timestamp, $id = 0) {
   global $theme, $user, $allowed_html;
 
-  $output .= diary_entry($timestamp, check($text));
+  $output .= diary_entry($timestamp, $text);
 
   $output .= "<FORM ACTION=\"diary.php\" METHOD=\"post\">\n";
 
@@ -146,11 +146,11 @@ function diary_submit($text, $id = 0) {
   global $user, $theme;
 
   if ($id) {
-    db_query("UPDATE diaries SET text =  '". check(addslashes($text)) ."' WHERE id = $id");
+    db_query("UPDATE diaries SET text =  '". addslashes($text) ."' WHERE id = $id");
     watchdog(1, "old diary entry updated");
   }
   else {
-    db_query("INSERT INTO diaries (author, text, timestamp) VALUES ('$user->id', '". check(addslashes($text)) ."', '". time() ."')");
+    db_query("INSERT INTO diaries (author, text, timestamp) VALUES ('$user->id', '". addslashes($text) ."', '". time() ."')");
     watchdog(1, "new diary entry added");
   }
   header("Location: diary.php?op=view&name=$user->userid");
@@ -159,10 +159,10 @@ function diary_submit($text, $id = 0) {
 
 switch($op) {
   case "add":
-    diary_add_enter();
+    diary_add();
     break;
   case "edit":
-    diary_edit_enter($id);
+    diary_edit($id);
     break;
   case "view":
     diary_display($name);
