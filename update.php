@@ -58,35 +58,35 @@ $mysql_updates = array(
 
 // Update functions
 function update_1() {
-  update_sql("ALTER TABLE users DROP INDEX real_email;");
-  update_sql("ALTER TABLE users DROP fake_email;");
-  update_sql("ALTER TABLE users DROP nodes;");
-  update_sql("ALTER TABLE users DROP bio;");
-  update_sql("ALTER TABLE users DROP hash;");
-  update_sql("ALTER TABLE users ADD jabber varchar(128) DEFAULT '' NULL;");
-  update_sql("ALTER TABLE users ADD drupal varchar(128) DEFAULT '' NULL;");
-  update_sql("ALTER TABLE users ADD init varchar(64) DEFAULT '' NULL;");
-  update_sql("ALTER TABLE users CHANGE passwd pass varchar(32) DEFAULT '' NOT NULL;");
-  update_sql("ALTER TABLE users CHANGE real_email mail varchar(64) DEFAULT '' NULL;");
-  update_sql("ALTER TABLE users CHANGE id uid int(10) unsigned DEFAULT '0' NOT NULL auto_increment;");
-  update_sql("ALTER TABLE users CHANGE url homepage varchar(128) DEFAULT '' NOT NULL;");
-  update_sql("UPDATE users SET status = 1 WHERE status = 2;");
-  update_sql("UPDATE users SET name = userid;");
-  update_sql("ALTER TABLE users DROP userid;");
-  update_sql("UPDATE users SET init = mail;");
-  update_sql("DROP TABLE access;");
-  update_sql("CREATE TABLE access (aid tinyint(10) DEFAULT '0' NOT NULL auto_increment, mask varchar(255) DEFAULT '' NOT NULL, type varchar(255) DEFAULT '' NOT NULL, status tinyint(2) DEFAULT '0' NOT NULL, UNIQUE mask (mask), PRIMARY KEY (aid));");
-  update_sql("CREATE TABLE moderate (cid int(10) DEFAULT '0' NOT NULL, nid int(10) DEFAULT '0' NOT NULL, uid int(10) DEFAULT '0' NOT NULL, score int(2) DEFAULT '0' NOT NULL, timestamp int(11) DEFAULT '0' NOT NULL, INDEX (cid), INDEX (nid) );");
-  update_sql("ALTER TABLE comments DROP score;");
-  update_sql("ALTER TABLE comments DROP votes;");
-  update_sql("ALTER TABLE comments DROP users;");
+  update_sql("ALTER TABLE users DROP INDEX real_email");
+  update_sql("ALTER TABLE users DROP fake_email");
+  update_sql("ALTER TABLE users DROP nodes");
+  update_sql("ALTER TABLE users DROP bio");
+  update_sql("ALTER TABLE users DROP hash");
+  update_sql("ALTER TABLE users ADD jabber varchar(128) DEFAULT '' NULL");
+  update_sql("ALTER TABLE users ADD drupal varchar(128) DEFAULT '' NULL");
+  update_sql("ALTER TABLE users ADD init varchar(64) DEFAULT '' NULL");
+  update_sql("ALTER TABLE users CHANGE passwd pass varchar(32) DEFAULT '' NOT NULL");
+  update_sql("ALTER TABLE users CHANGE real_email mail varchar(64) DEFAULT '' NULL");
+  update_sql("ALTER TABLE users CHANGE id uid int(10) unsigned DEFAULT '0' NOT NULL auto_increment");
+  update_sql("ALTER TABLE users CHANGE url homepage varchar(128) DEFAULT '' NOT NULL");
+  update_sql("UPDATE users SET status = 1 WHERE status = 2");
+  update_sql("UPDATE users SET name = userid");
+  update_sql("ALTER TABLE users DROP userid");
+  update_sql("UPDATE users SET init = mail");
+  update_sql("DROP TABLE access");
+  update_sql("CREATE TABLE access (aid tinyint(10) DEFAULT '0' NOT NULL auto_increment, mask varchar(255) DEFAULT '' NOT NULL, type varchar(255) DEFAULT '' NOT NULL, status tinyint(2) DEFAULT '0' NOT NULL, UNIQUE mask (mask), PRIMARY KEY (aid))");
+  update_sql("CREATE TABLE moderate (cid int(10) DEFAULT '0' NOT NULL, nid int(10) DEFAULT '0' NOT NULL, uid int(10) DEFAULT '0' NOT NULL, score int(2) DEFAULT '0' NOT NULL, timestamp int(11) DEFAULT '0' NOT NULL, INDEX (cid), INDEX (nid) )");
+  update_sql("ALTER TABLE comments DROP score");
+  update_sql("ALTER TABLE comments DROP votes");
+  update_sql("ALTER TABLE comments DROP users");
 }
 
 function update_2() {
-  update_sql("ALTER TABLE users CHANGE pass pass varchar(32) DEFAULT '' NOT NULL;");
-  update_sql("ALTER TABLE rating CHANGE user userid int(10) DEFAULT '0' NOT NULL;");
-  update_sql("ALTER TABLE layout CHANGE user userid int(10) DEFAULT '0' NOT NULL;");
-  update_sql("ALTER TABLE blocks CHANGE offset delta tinyint(2) DEFAULT '0' NOT NULL;");
+  update_sql("ALTER TABLE users CHANGE pass pass varchar(32) DEFAULT '' NOT NULL");
+  update_sql("ALTER TABLE rating CHANGE user userid int(10) DEFAULT '0' NOT NULL");
+  update_sql("ALTER TABLE layout CHANGE user userid int(10) DEFAULT '0' NOT NULL");
+  update_sql("ALTER TABLE blocks CHANGE offset delta tinyint(2) DEFAULT '0' NOT NULL");
   foreach (module_list() as $name) {
     if (module_hook($name, "node", "name")) {
       $output .= "$name ...";
@@ -102,56 +102,56 @@ function update_2() {
 }
 
 function update_3() {
-  update_sql("ALTER TABLE user RENAME users;");
-  update_sql("ALTER TABLE locales CHANGE id lid int(10) DEFAULT '0' NOT NULL auto_increment;");
-  update_sql("ALTER TABLE layout CHANGE userid uid int(10) DEFAULT '0' NOT NULL;");
-  update_sql("ALTER TABLE rating CHANGE userid uid int(10) DEFAULT '0' NOT NULL;");
+  update_sql("ALTER TABLE user RENAME users");
+  update_sql("ALTER TABLE locales CHANGE id lid int(10) DEFAULT '0' NOT NULL auto_increment");
+  update_sql("ALTER TABLE layout CHANGE userid uid int(10) DEFAULT '0' NOT NULL");
+  update_sql("ALTER TABLE rating CHANGE userid uid int(10) DEFAULT '0' NOT NULL");
 }
 
 function update_4() {
   print "remove the \"auto_increment\"s:<br />";
-  update_sql("ALTER TABLE story CHANGE nid nid int(10) unsigned DEFAULT '0' NOT NULL;");
-  update_sql("ALTER TABLE blog CHANGE nid nid int(10) unsigned DEFAULT '0' NOT NULL;");
-  update_sql("ALTER TABLE page CHANGE nid nid int(10) unsigned DEFAULT '0' NOT NULL;");
-  update_sql("ALTER TABLE forum CHANGE nid nid int(10) unsigned DEFAULT '0' NOT NULL;");
-  update_sql("ALTER TABLE book CHANGE nid nid int(10) unsigned DEFAULT '0' NOT NULL;");
+  update_sql("ALTER TABLE story CHANGE nid nid int(10) unsigned DEFAULT '0' NOT NULL");
+  update_sql("ALTER TABLE blog CHANGE nid nid int(10) unsigned DEFAULT '0' NOT NULL");
+  update_sql("ALTER TABLE page CHANGE nid nid int(10) unsigned DEFAULT '0' NOT NULL");
+  update_sql("ALTER TABLE forum CHANGE nid nid int(10) unsigned DEFAULT '0' NOT NULL");
+  update_sql("ALTER TABLE book CHANGE nid nid int(10) unsigned DEFAULT '0' NOT NULL");
 
   print "drop the \"lid\"s:<br />";
-  update_sql("ALTER TABLE story DROP lid;");
-  update_sql("ALTER TABLE blog DROP lid;");
-  update_sql("ALTER TABLE page DROP lid;");
-  update_sql("ALTER TABLE forum DROP lid;");
-  update_sql("ALTER TABLE book DROP lid;");
+  update_sql("ALTER TABLE story DROP lid");
+  update_sql("ALTER TABLE blog DROP lid");
+  update_sql("ALTER TABLE page DROP lid");
+  update_sql("ALTER TABLE forum DROP lid");
+  update_sql("ALTER TABLE book DROP lid");
 
   print "rename \"author\" to \"uid\":<br />";
-  update_sql("ALTER TABLE comments CHANGE author uid int(10) DEFAULT '0' NOT NULL;");
-  update_sql("ALTER TABLE node CHANGE author uid int(10) DEFAULT '0' NOT NULL;");
-  update_sql("ALTER TABLE node DROP KEY author;");
-  update_sql("ALTER TABLE node ADD KEY uid (uid);");
+  update_sql("ALTER TABLE comments CHANGE author uid int(10) DEFAULT '0' NOT NULL");
+  update_sql("ALTER TABLE node CHANGE author uid int(10) DEFAULT '0' NOT NULL");
+  update_sql("ALTER TABLE node DROP KEY author");
+  update_sql("ALTER TABLE node ADD KEY uid (uid)");
 
   print "resize some \"id\"s:<br />";
-  update_sql("ALTER TABLE feed CHANGE fid fid int(10) NOT NULL auto_increment;");
-  update_sql("ALTER TABLE bundle CHANGE bid bid int(10) NOT NULL auto_increment;");
-  update_sql("ALTER TABLE item CHANGE iid iid int(10) NOT NULL auto_increment;");
-  update_sql("ALTER TABLE item CHANGE fid fid int(10) NOT NULL;");
-  update_sql("ALTER TABLE comments CHANGE cid cid int(10) NOT NULL auto_increment;");
-  update_sql("ALTER TABLE comments CHANGE pid pid int(10) NOT NULL;");
-  update_sql("ALTER TABLE comments CHANGE lid lid int(10) NOT NULL;");
+  update_sql("ALTER TABLE feed CHANGE fid fid int(10) NOT NULL auto_increment");
+  update_sql("ALTER TABLE bundle CHANGE bid bid int(10) NOT NULL auto_increment");
+  update_sql("ALTER TABLE item CHANGE iid iid int(10) NOT NULL auto_increment");
+  update_sql("ALTER TABLE item CHANGE fid fid int(10) NOT NULL");
+  update_sql("ALTER TABLE comments CHANGE cid cid int(10) NOT NULL auto_increment");
+  update_sql("ALTER TABLE comments CHANGE pid pid int(10) NOT NULL");
+  update_sql("ALTER TABLE comments CHANGE lid lid int(10) NOT NULL");
 }
 
 function update_5() {
   print "add primary keys:<br />";
-  update_sql("ALTER TABLE story ADD PRIMARY KEY nid (nid);");
-  update_sql("ALTER TABLE blog ADD PRIMARY KEY nid (nid);");
-  update_sql("ALTER TABLE page ADD PRIMARY KEY nid (nid);");
-  update_sql("ALTER TABLE forum ADD PRIMARY KEY nid (nid);");
-  update_sql("ALTER TABLE book ADD PRIMARY KEY nid (nid);");
+  update_sql("ALTER TABLE story ADD PRIMARY KEY nid (nid)");
+  update_sql("ALTER TABLE blog ADD PRIMARY KEY nid (nid)");
+  update_sql("ALTER TABLE page ADD PRIMARY KEY nid (nid)");
+  update_sql("ALTER TABLE forum ADD PRIMARY KEY nid (nid)");
+  update_sql("ALTER TABLE book ADD PRIMARY KEY nid (nid)");
 
 }
 
 function update_6() {
   print "add new field to blocks:<br />";
-  update_sql("ALTER TABLE blocks ADD path varchar(255) NOT NULL DEFAULT '';");
+  update_sql("ALTER TABLE blocks ADD path varchar(255) NOT NULL DEFAULT ''");
 }
 
 function update_7() {
@@ -159,27 +159,27 @@ function update_7() {
   update_sql("UPDATE story SET body = CONCAT(abstract, '\n\n', body)");
 
   print "rename the body fields:<br />";
-  update_sql("ALTER TABLE story CHANGE body body_old TEXT DEFAULT '' NOT NULL;");
-  update_sql("ALTER TABLE page CHANGE body body_old TEXT DEFAULT '' NOT NULL;");
-  update_sql("ALTER TABLE blog CHANGE body body_old TEXT DEFAULT '' NOT NULL;");
-  update_sql("ALTER TABLE forum CHANGE body body_old TEXT DEFAULT '' NOT NULL;");
-  update_sql("ALTER TABLE book CHANGE body body_old TEXT DEFAULT '' NOT NULL;");
+  update_sql("ALTER TABLE story CHANGE body body_old TEXT DEFAULT '' NOT NULL");
+  update_sql("ALTER TABLE page CHANGE body body_old TEXT DEFAULT '' NOT NULL");
+  update_sql("ALTER TABLE blog CHANGE body body_old TEXT DEFAULT '' NOT NULL");
+  update_sql("ALTER TABLE forum CHANGE body body_old TEXT DEFAULT '' NOT NULL");
+  update_sql("ALTER TABLE book CHANGE body body_old TEXT DEFAULT '' NOT NULL");
 
   print "update the node table:<br />";
-  update_sql("ALTER TABLE node DROP lid;");
-  update_sql("ALTER TABLE node ADD teaser TEXT DEFAULT '' NOT NULL;");
-  update_sql("ALTER TABLE node ADD body TEXT DEFAULT '' NOT NULL;");
-  update_sql("ALTER TABLE node ADD changed int(11) DEFAULT '0' NOT NULL;");
-  update_sql("ALTER TABLE node CHANGE timestamp created int(11) DEFAULT '0' NOT NULL;");
-  update_sql("ALTER TABLE node CHANGE comment comment int(2) DEFAULT '0' NOT NULL;");
-  update_sql("ALTER TABLE node CHANGE promote promote int(2) DEFAULT '0' NOT NULL;");
-  update_sql("ALTER TABLE node CHANGE moderate moderate int(2) DEFAULT '0' NOT NULL;");
-  update_sql("ALTER TABLE node DROP timestamp_posted;");
-  update_sql("ALTER TABLE node DROP timestamp_queued;");
-  update_sql("ALTER TABLE node DROP timestamp_hidden;");
-  update_sql("UPDATE node SET status = 0 WHERE status = 1;");
-  update_sql("UPDATE node SET status = 0 WHERE status = 2;");
-  update_sql("UPDATE node SET status = 1 WHERE status = 3;");
+  update_sql("ALTER TABLE node DROP lid");
+  update_sql("ALTER TABLE node ADD teaser TEXT DEFAULT '' NOT NULL");
+  update_sql("ALTER TABLE node ADD body TEXT DEFAULT '' NOT NULL");
+  update_sql("ALTER TABLE node ADD changed int(11) DEFAULT '0' NOT NULL");
+  update_sql("ALTER TABLE node CHANGE timestamp created int(11) DEFAULT '0' NOT NULL");
+  update_sql("ALTER TABLE node CHANGE comment comment int(2) DEFAULT '0' NOT NULL");
+  update_sql("ALTER TABLE node CHANGE promote promote int(2) DEFAULT '0' NOT NULL");
+  update_sql("ALTER TABLE node CHANGE moderate moderate int(2) DEFAULT '0' NOT NULL");
+  update_sql("ALTER TABLE node DROP timestamp_posted");
+  update_sql("ALTER TABLE node DROP timestamp_queued");
+  update_sql("ALTER TABLE node DROP timestamp_hidden");
+  update_sql("UPDATE node SET status = 0 WHERE status = 1");
+  update_sql("UPDATE node SET status = 0 WHERE status = 2");
+  update_sql("UPDATE node SET status = 1 WHERE status = 3");
 
   $result = db_query("SELECT nid,type FROM node WHERE type = 'story' OR type = 'page' OR type = 'blog' OR type = 'forum' OR type = 'book'");
   include_once("modules/node.module");
@@ -208,19 +208,19 @@ function update_7() {
     unset($body);
   }
 
-  update_sql("UPDATE node SET changed = created;");
-  update_sql("ALTER TABLE story DROP abstract;");
-  update_sql("ALTER TABLE book DROP section;");
+  update_sql("UPDATE node SET changed = created");
+  update_sql("ALTER TABLE story DROP abstract");
+  update_sql("ALTER TABLE book DROP section");
 }
 
 function update_8() {
-  update_sql("ALTER TABLE node ADD revisions TEXT DEFAULT '' NOT NULL;");
+  update_sql("ALTER TABLE node ADD revisions TEXT DEFAULT '' NOT NULL");
 }
 
 function update_9() {
-  update_sql("ALTER TABLE book ADD revision int(2) DEFAULT '1' NOT NULL;");
-  update_sql("ALTER TABLE book DROP log;");
-  update_sql("ALTER TABLE book DROP pid;");
+  update_sql("ALTER TABLE book ADD revision int(2) DEFAULT '1' NOT NULL");
+  update_sql("ALTER TABLE book DROP log");
+  update_sql("ALTER TABLE book DROP pid");
 
   // remove book pages that used to be 'expired':
   $result = db_query("SELECT n.nid, n.title FROM node n WHERE n.type = 'book' AND n.status = 0");
@@ -241,7 +241,7 @@ function update_10() {
       module varchar(128) DEFAULT '' NOT NULL,
       UNIQUE authname (authname),
       PRIMARY KEY (aid)
-    );");
+    )");
 
   // populate the new table:
   $result = db_query("SELECT uid, name, jabber, drupal FROM users WHERE jabber != '' || drupal != ''");
@@ -261,28 +261,28 @@ function update_10() {
   update_sql("ALTER TABLE users DROP jabber");
 
   // remove the old node-table leftovers:
-  update_sql("ALTER TABLE forum DROP body_old;");
-  update_sql("ALTER TABLE story DROP body_old;");
-  update_sql("ALTER TABLE book DROP body_old;");
-  update_sql("ALTER TABLE page DROP body_old;");
-  update_sql("ALTER TABLE blog DROP body_old;");
+  update_sql("ALTER TABLE forum DROP body_old");
+  update_sql("ALTER TABLE story DROP body_old");
+  update_sql("ALTER TABLE book DROP body_old");
+  update_sql("ALTER TABLE page DROP body_old");
+  update_sql("ALTER TABLE blog DROP body_old");
 }
 
 function update_11() {
-  update_sql("ALTER TABLE users ADD session TEXT;");
-  update_sql("ALTER TABLE users ADD sid varchar(32) DEFAULT '' NOT NULL;");
+  update_sql("ALTER TABLE users ADD session TEXT");
+  update_sql("ALTER TABLE users ADD sid varchar(32) DEFAULT '' NOT NULL");
 }
 
 function update_12() {
-  update_sql("ALTER TABLE book DROP revision;");
-  update_sql("ALTER TABLE book ADD format tinyint(2) DEFAULT '0';");
+  update_sql("ALTER TABLE book DROP revision");
+  update_sql("ALTER TABLE book ADD format tinyint(2) DEFAULT '0'");
 }
 
 function update_13() {
-  update_sql("ALTER TABLE referer RENAME AS referrer;");
-  update_sql("DROP TABLE blog;");
-  update_sql("DROP TABLE story;");
-  update_sql("DROP TABLE forum;");
+  update_sql("ALTER TABLE referer RENAME AS referrer");
+  update_sql("DROP TABLE blog");
+  update_sql("DROP TABLE story");
+  update_sql("DROP TABLE forum");
 }
 
 function update_14() {
@@ -294,15 +294,15 @@ function update_14() {
     mission text NOT NULL,
     timestamp int(11) DEFAULT '0' NOT NULL,
     PRIMARY KEY (link)
-  );");
+  )");
 }
 
 function update_15() {
-  update_sql("ALTER TABLE feed DROP uncache;");
+  update_sql("ALTER TABLE feed DROP uncache");
 }
 
 function update_16() {
-  update_sql("ALTER TABLE comments CHANGE lid nid int(10) NOT NULL;");
+  update_sql("ALTER TABLE comments CHANGE lid nid int(10) NOT NULL");
 }
 
 function update_17() {
@@ -311,43 +311,43 @@ function update_17() {
     nid int(10) DEFAULT '0' NOT NULL,
     timestamp int(11) DEFAULT '0' NOT NULL,
     PRIMARY KEY (uid, nid)
-  );");
+  )");
 }
 
 function update_18() {
-  update_sql("ALTER TABLE cache CHANGE timestamp expire int(11) DEFAULT '0' NOT NULL;");
-  update_sql("ALTER TABLE cache CHANGE url cid varchar(255) DEFAULT '' NOT NULL;");
+  update_sql("ALTER TABLE cache CHANGE timestamp expire int(11) DEFAULT '0' NOT NULL");
+  update_sql("ALTER TABLE cache CHANGE url cid varchar(255) DEFAULT '' NOT NULL");
 }
 
 function update_19() {
-  update_sql("ALTER TABLE users ADD data TEXT;");
+  update_sql("ALTER TABLE users ADD data TEXT");
 }
 
 function update_20() {
-  update_sql("INSERT INTO blocks SET name='User information', module='user', delta='0', status='2', weight='0', region='1', remove='0', path='';");
+  update_sql("INSERT INTO blocks SET name='User information', module='user', delta='0', status='2', weight='0', region='1', remove='0', path=''");
 }
 
 function update_21() {
-  update_sql("ALTER TABLE node ADD static int(2) DEFAULT '0' NOT NULL;");
+  update_sql("ALTER TABLE node ADD static int(2) DEFAULT '0' NOT NULL");
 }
 
 function update_22() {
-  update_sql("ALTER TABLE cache MODIFY data MEDIUMTEXT;");
+  update_sql("ALTER TABLE cache MODIFY data MEDIUMTEXT");
 }
 
 function update_23() {
-  update_sql("CREATE TABLE search_index (word varchar(50) default NOT NULL, lno int(10) unsigned default NOT NULL, type varchar(16) default NOT NULL, count int(10) unsigned default NOT NULL, KEY lno (lno), KEY word (word));");
+  update_sql("CREATE TABLE search_index (word varchar(50) default NOT NULL, lno int(10) unsigned default NOT NULL, type varchar(16) default NOT NULL, count int(10) unsigned default NOT NULL, KEY lno (lno), KEY word (word))");
 }
 
 function update_24() {
-  update_sql("ALTER TABLE site ADD refresh int(11) NOT NULL;");
-  update_sql("ALTER TABLE site ADD threshold int(11) NOT NULL;");
-  update_sql("UPDATE site SET refresh = '7200';");
-  update_sql("UPDATE site SET threshold = '60';");
+  update_sql("ALTER TABLE site ADD refresh int(11) NOT NULL");
+  update_sql("ALTER TABLE site ADD threshold int(11) NOT NULL");
+  update_sql("UPDATE site SET refresh = '7200'");
+  update_sql("UPDATE site SET threshold = '60'");
 }
 
 function update_25() {
-  update_sql("UPDATE users SET theme = LOWER(theme);");
+  update_sql("UPDATE users SET theme = LOWER(theme)");
 }
 
 function update_26() {
@@ -360,53 +360,53 @@ function update_26() {
     multiple TINYINT UNSIGNED NOT NULL,
     required TINYINT UNSIGNED NOT NULL,
     types TEXT,
-    weight TINYINT NOT NULL);");
+    weight TINYINT NOT NULL)");
 
   update_sql("CREATE TABLE term_data (
     tid int UNSIGNED NOT NULL PRIMARY KEY auto_increment,
     vid int UNSIGNED NOT NULL,
     name varchar(255) NOT NULL,
     description TEXT,
-    weight TINYINT NOT NULL);");
+    weight TINYINT NOT NULL)");
 
   update_sql("CREATE TABLE term_hierarchy (
     tid int UNSIGNED NOT NULL,
     parent int UNSIGNED NOT NULL
-  );");
+  )");
 
   update_sql("CREATE TABLE term_relation (
     tid1 int UNSIGNED NOT NULL,
     tid2 int UNSIGNED NOT NULL
-  );");
+  )");
 
   update_sql("CREATE TABLE term_synonym (
     tid int UNSIGNED NOT NULL,
     name varchar(255) NOT NULL
-  );");
+  )");
 
   update_sql("CREATE TABLE term_node (
     nid int UNSIGNED NOT NULL,
     tid int UNSIGNED NOT NULL
-  );");
+  )");
 
-  update_sql("ALTER TABLE term_data ADD INDEX (vid);");
-  update_sql("ALTER TABLE term_hierarchy ADD INDEX (tid);");
-  update_sql("ALTER TABLE term_hierarchy ADD INDEX (parent);");
-  update_sql("ALTER TABLE term_relation ADD INDEX (tid1);");
-  update_sql("ALTER TABLE term_relation ADD INDEX (tid2);");
-  update_sql("ALTER TABLE term_synonym ADD INDEX (tid);");
-  update_sql("ALTER TABLE term_synonym ADD INDEX (name(3));");
-  update_sql("ALTER TABLE term_node ADD INDEX (nid);");
-  update_sql("ALTER TABLE term_node ADD INDEX (tid);");
+  update_sql("ALTER TABLE term_data ADD INDEX (vid)");
+  update_sql("ALTER TABLE term_hierarchy ADD INDEX (tid)");
+  update_sql("ALTER TABLE term_hierarchy ADD INDEX (parent)");
+  update_sql("ALTER TABLE term_relation ADD INDEX (tid1)");
+  update_sql("ALTER TABLE term_relation ADD INDEX (tid2)");
+  update_sql("ALTER TABLE term_synonym ADD INDEX (tid)");
+  update_sql("ALTER TABLE term_synonym ADD INDEX (name(3))");
+  update_sql("ALTER TABLE term_node ADD INDEX (nid)");
+  update_sql("ALTER TABLE term_node ADD INDEX (tid)");
   update_sql("UPDATE node SET comment = 2 WHERE comment = 1");
 }
 
 function update_27() {
-  update_sql("ALTER TABLE book ADD log TEXT;");
+  update_sql("ALTER TABLE book ADD log TEXT");
 }
 
 function update_28() {
-  update_sql("ALTER TABLE poll DROP lid;");
+  update_sql("ALTER TABLE poll DROP lid");
 }
 
 function update_29() {
@@ -422,10 +422,10 @@ function update_29() {
 }
 
 function update_30() {
-  update_sql("ALTER TABLE blocks ADD custom tinyint(2) not null;");
-  update_sql("UPDATE blocks SET module = 'block' WHERE module = 'boxes';");
-  update_sql("UPDATE blocks SET status = 1, custom = 1 WHERE status = 1;");
-  update_sql("UPDATE blocks SET status = 1, custom = 0 WHERE status = 2;");
+  update_sql("ALTER TABLE blocks ADD custom tinyint(2) not null");
+  update_sql("UPDATE blocks SET module = 'block' WHERE module = 'boxes'");
+  update_sql("UPDATE blocks SET status = 1, custom = 1 WHERE status = 1");
+  update_sql("UPDATE blocks SET status = 1, custom = 0 WHERE status = 2");
 }
 
 function update_31() {
@@ -487,12 +487,12 @@ function update_31() {
 }
 
 function update_32() {
-  update_sql("ALTER TABLE users ADD index (sid(4));");
-  update_sql("ALTER TABLE users ADD index (timestamp);");
+  update_sql("ALTER TABLE users ADD index (sid(4))");
+  update_sql("ALTER TABLE users ADD index (timestamp)");
 }
 
 function update_33() {
-  $result = db_query("SELECT * FROM variable WHERE value NOT LIKE 's:%;';");
+  $result = db_query("SELECT * FROM variable WHERE value NOT LIKE 's:%;'");
   // NOTE: the "WHERE"-part of the query above avoids variables to get serialized twice.
   while ($variable = db_fetch_object($result)) {
     variable_set($variable->name, $variable->value);
@@ -500,150 +500,144 @@ function update_33() {
 }
 
 function update_34() {
-  update_sql("ALTER TABLE feed MODIFY refresh int(10) NOT NULL default '0';");
-  update_sql("ALTER TABLE feed MODIFY timestamp int (10) NOT NULL default '0';");
+  update_sql("ALTER TABLE feed MODIFY refresh int(10) NOT NULL default '0'");
+  update_sql("ALTER TABLE feed MODIFY timestamp int (10) NOT NULL default '0'");
 }
 
 function update_35() {
-  update_sql("ALTER TABLE poll_choices ADD INDEX (nid);");
+  update_sql("ALTER TABLE poll_choices ADD INDEX (nid)");
 }
 
 function update_36() {
-  update_sql("ALTER TABLE rating CHANGE old previous int(6) NOT NULL default '0';");
-  update_sql("ALTER TABLE rating CHANGE new current int(6) NOT NULL default '0';");
+  update_sql("ALTER TABLE rating CHANGE old previous int(6) NOT NULL default '0'");
+  update_sql("ALTER TABLE rating CHANGE new current int(6) NOT NULL default '0'");
 }
 
 function update_37() {
 
-  update_sql("DROP TABLE IF EXISTS sequences;");
+  update_sql("DROP TABLE IF EXISTS sequences");
 
   update_sql("CREATE TABLE sequences (
     name VARCHAR(255) NOT NULL PRIMARY KEY,
     id INT UNSIGNED NOT NULL
-  ) TYPE=MyISAM;");
+  ) TYPE=MyISAM");
 
-  if ($max = db_result(db_query("SELECT MAX(nid) FROM node;"))) {
-    update_sql("REPLACE INTO sequences VALUES ('node', $max);");
+  if ($max = db_result(db_query("SELECT MAX(nid) FROM node"))) {
+    update_sql("REPLACE INTO sequences VALUES ('node', $max)");
   }
 
-  if ($max = db_result(db_query("SELECT MAX(cid) FROM comments;"))) {
-    update_sql("REPLACE INTO sequences VALUES ('comments', $max);");
+  if ($max = db_result(db_query("SELECT MAX(cid) FROM comments"))) {
+    update_sql("REPLACE INTO sequences VALUES ('comments', $max)");
   }
   // NOTE: move the comments bit down as soon as we switched to use the new comment module!
 
-  if ($max = db_result(db_query("SELECT MAX(tid) FROM term_data;"))) {
-    update_sql("REPLACE INTO sequences VALUES ('term_data', $max);");
+  if ($max = db_result(db_query("SELECT MAX(tid) FROM term_data"))) {
+    update_sql("REPLACE INTO sequences VALUES ('term_data', $max)");
   }
 }
 
 function update_38() {
-  update_sql("ALTER TABLE watchdog CHANGE message message text NOT NULL default '';");
+  update_sql("ALTER TABLE watchdog CHANGE message message text NOT NULL default ''");
 }
 
 function update_39() {
   update_sql("DROP TABLE moderate");
 
-  update_sql("ALTER TABLE comments ADD score MEDIUMINT NOT NULL;");
-  update_sql("ALTER TABLE comments ADD status TINYINT UNSIGNED NOT NULL;");
-  update_sql("ALTER TABLE comments ADD users MEDIUMTEXT;");
+  update_sql("ALTER TABLE comments ADD score MEDIUMINT NOT NULL");
+  update_sql("ALTER TABLE comments ADD status TINYINT UNSIGNED NOT NULL");
+  update_sql("ALTER TABLE comments ADD users MEDIUMTEXT");
 
   update_sql("CREATE TABLE moderation_votes (
     mid INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     vote VARCHAR(255),
     weight TINYINT NOT NULL
-  );");
+  )");
 
   update_sql("CREATE TABLE moderation_roles (
     rid INT UNSIGNED NOT NULL,
     mid INT UNSIGNED NOT NULL,
     value TINYINT NOT NULL
-  );");
+  )");
 
-  update_sql("ALTER TABLE moderation_roles ADD INDEX (rid);");
-  update_sql("ALTER TABLE moderation_roles ADD INDEX (mid);");
+  update_sql("ALTER TABLE moderation_roles ADD INDEX (rid)");
+  update_sql("ALTER TABLE moderation_roles ADD INDEX (mid)");
 
   update_sql("CREATE TABLE moderation_filters (
     fid INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     filter VARCHAR(255) NOT NULL,
     minimum SMALLINT NOT NULL
-  );");
+  )");
 
-  update_sql("DELETE FROM moderation_votes;");
-  update_sql("INSERT INTO moderation_votes VALUES (1, '+1', 0);");
-  update_sql("INSERT INTO moderation_votes VALUES (2, '-1', 1);");
+  update_sql("DELETE FROM moderation_votes");
+  update_sql("INSERT INTO moderation_votes VALUES (1, '+1', 0)");
+  update_sql("INSERT INTO moderation_votes VALUES (2, '-1', 1)");
 
-  update_sql("DELETE FROM moderation_roles;");
-  update_sql("INSERT INTO moderation_roles VALUES (2, 1, 1);");
-  update_sql("INSERT INTO moderation_roles VALUES (2, 2, -1);");
+  update_sql("DELETE FROM moderation_roles");
+  update_sql("INSERT INTO moderation_roles VALUES (2, 1, 1)");
+  update_sql("INSERT INTO moderation_roles VALUES (2, 2, -1)");
 
   update_sql("CREATE TABLE forum (
     nid int unsigned not null primary key,
     icon varchar(255) not null,
     shadow int unsigned not null
-  );");
+  )");
 }
 
 function update_40() {
-  if ($max = db_result(db_query("SELECT MAX(cid) FROM comments;"))) {
-    update_sql("REPLACE INTO sequences VALUES ('comments', $max);");
+  if ($max = db_result(db_query("SELECT MAX(cid) FROM comments"))) {
+    update_sql("REPLACE INTO sequences VALUES ('comments', $max)");
   }
 }
 
 function update_41() {
-  if (db_result(db_query("SELECT COUNT(daycount) FROM statistics;")) > 0) {
-    // NOTE: "daycount" is a newly introduced field so we use that to determine whether we need to wipe the tables.
+  update_sql("CREATE TABLE statistics (
+    nid int(11) NOT NULL,
+    totalcount bigint UNSIGNED DEFAULT '0' NOT NULL,
+    daycount mediumint UNSIGNED DEFAULT '0' NOT NULL,
+    timestamp int(11) UNSIGNED DEFAULT '0' NOT NULL,
+    PRIMARY KEY (nid),
+    INDEX (totalcount),
+    INDEX (daycount),
+    INDEX (timestamp)
+  )");
 
-    update_sql("DROP TABLE IF EXISTS statistics;");
-    update_sql("CREATE TABLE statistics (
-      nid int(11) NOT NULL,
-      totalcount bigint UNSIGNED DEFAULT '0' NOT NULL,
-      daycount mediumint UNSIGNED DEFAULT '0' NOT NULL,
-      timestamp int(11) UNSIGNED DEFAULT '0' NOT NULL,
-      PRIMARY KEY (nid),
-      INDEX (totalcount),
-      INDEX (daycount),
-      INDEX (timestamp)
-    );");
-
-    update_sql("DROP TABLE IF EXISTS accesslog;");
-    update_sql("CREATE TABLE accesslog (
-      nid int(11) UNSIGNED DEFAULT '0',
-      url varchar(255),
-      hostname varchar(128),
-      uid int(10) UNSIGNED DEFAULT '0',
-      timestamp int(11) UNSIGNED NOT NULL
-    );");
-  }
+  update_sql("CREATE TABLE accesslog (
+    nid int(11) UNSIGNED DEFAULT '0',
+    url varchar(255),
+    hostname varchar(128),
+    uid int(10) UNSIGNED DEFAULT '0',
+    timestamp int(11) UNSIGNED NOT NULL
+  )");
 }
 
 function update_upgrade3() {
-  update_sql("INSERT INTO system VALUES ('archive.module','archive','module','',1);");
-  update_sql("INSERT INTO system VALUES ('block.module','block','module','',1);");
-  update_sql("INSERT INTO system VALUES ('blog.module','blog','module','',1);");
-  update_sql("INSERT INTO system VALUES ('book.module','book','module','',1);");
-  update_sql("INSERT INTO system VALUES ('cloud.module','cloud','module','',1);");
-  update_sql("INSERT INTO system VALUES ('comment.module','comment','module','',1);");
-  update_sql("INSERT INTO system VALUES ('forum.module','forum','module','',1);");
-  update_sql("INSERT INTO system VALUES ('help.module','help','module','',1);");
-  update_sql("INSERT INTO system VALUES ('import.module','import','module','',1);");
-  update_sql("INSERT INTO system VALUES ('locale.module','locale','module','',1);");
-  update_sql("INSERT INTO system VALUES ('node.module','node','module','',1);");
-  update_sql("INSERT INTO system VALUES ('page.module','page','module','',1);");
-  update_sql("INSERT INTO system VALUES ('poll.module','poll','module','',1);");
-  update_sql("INSERT INTO system VALUES ('queue.module','queue','module','',1);");
-  update_sql("INSERT INTO system VALUES ('rating.module','rating','module','',1);");
-  update_sql("INSERT INTO system VALUES ('search.module','search','module','',1);");
-  update_sql("INSERT INTO system VALUES ('statistics.module','statistics','module','',1);");
-  update_sql("INSERT INTO system VALUES ('story.module','story','module','',1);");
-  update_sql("INSERT INTO system VALUES ('taxonomy.module','taxonomy','module','',1);");
-  update_sql("INSERT INTO system VALUES ('themes/example/example.theme','example','theme','Internet explorer, Netscape, Opera, Lynx',1);");
-  update_sql("INSERT INTO system VALUES ('themes/goofy/goofy.theme','goofy','theme','Internetexplorer, Netscape, Opera',1);");
-  update_sql("INSERT INTO system VALUES ('themes/marvin/marvin.theme','marvin','theme','Internet explorer, Netscape, Opera',1);");
-  update_sql("INSERT INTO system VALUES ('themes/unconed/unconed.theme','unconed','theme','Internet explorer, Netscape, Opera',1);");
-  update_sql("INSERT INTO system VALUES ('tracker.module','tracker','module','',1);");
-  update_sql("REPLACE variable SET value = 'marvin', name = 'theme_default';");
-  update_sql("REPLACE blocks SET name = 'User information', module = 'user', delta = '0', status = '1';");
-  update_sql("REPLACE blocks SET name = 'Log in', module = 'user', delta = '1', status = '1';");
+  update_sql("INSERT INTO system VALUES ('archive.module','archive','module','',1)");
+  update_sql("INSERT INTO system VALUES ('block.module','block','module','',1)");
+  update_sql("INSERT INTO system VALUES ('blog.module','blog','module','',1)");
+  update_sql("INSERT INTO system VALUES ('book.module','book','module','',1)");
+  update_sql("INSERT INTO system VALUES ('cloud.module','cloud','module','',1)");
+  update_sql("INSERT INTO system VALUES ('comment.module','comment','module','',1)");
+  update_sql("INSERT INTO system VALUES ('forum.module','forum','module','',1)");
+  update_sql("INSERT INTO system VALUES ('help.module','help','module','',1)");
+  update_sql("INSERT INTO system VALUES ('import.module','import','module','',1)");
+  update_sql("INSERT INTO system VALUES ('locale.module','locale','module','',1)");
+  update_sql("INSERT INTO system VALUES ('node.module','node','module','',1)");
+  update_sql("INSERT INTO system VALUES ('page.module','page','module','',1)");
+  update_sql("INSERT INTO system VALUES ('poll.module','poll','module','',1)");
+  update_sql("INSERT INTO system VALUES ('queue.module','queue','module','',1)");
+  update_sql("INSERT INTO system VALUES ('rating.module','rating','module','',1)");
+  update_sql("INSERT INTO system VALUES ('search.module','search','module','',1)");
+  update_sql("INSERT INTO system VALUES ('statistics.module','statistics','module','',1)");
+  update_sql("INSERT INTO system VALUES ('story.module','story','module','',1)");
+  update_sql("INSERT INTO system VALUES ('taxonomy.module','taxonomy','module','',1)");
+  update_sql("INSERT INTO system VALUES ('themes/example/example.theme','example','theme','Internet explorer, Netscape, Opera, Lynx',1)");
+  update_sql("INSERT INTO system VALUES ('themes/goofy/goofy.theme','goofy','theme','Internetexplorer, Netscape, Opera',1)");
+  update_sql("INSERT INTO system VALUES ('themes/marvin/marvin.theme','marvin','theme','Internet explorer, Netscape, Opera',1)");
+  update_sql("INSERT INTO system VALUES ('themes/unconed/unconed.theme','unconed','theme','Internet explorer, Netscape, Opera',1)");
+  update_sql("INSERT INTO system VALUES ('tracker.module','tracker','module','',1)");
+  update_sql("REPLACE variable SET value = 'marvin', name = 'theme_default'");
+  update_sql("REPLACE blocks SET name = 'User information', module = 'user', delta = '0', status = '1'");
+  update_sql("REPLACE blocks SET name = 'Log in', module = 'user', delta = '1', status = '1'");
 }
 
 /*
