@@ -24,8 +24,10 @@ function chameleon_page($content, $title = NULL, $breadcrumb = NULL) {
     drupal_set_breadcrumb($breadcrumb);
   }
 
+  $language = $GLOBALS['locale'];
+
   $output  = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n";
-  $output .= "<html xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"en\" xml:lang=\"en\">\n";
+  $output .= "<html xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"$language\" xml:lang=\"$language\">\n";
   $output .= "<head>\n";
   $output .= " <title>". ($title ? $title ." | ". variable_get("site_name", "drupal") : variable_get("site_name", "drupal") ." | ". variable_get("site_slogan", "")) ."</title>\n";
   $output .= drupal_get_html_head();

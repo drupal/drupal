@@ -120,6 +120,7 @@ function xtemplate_page($content, $title = NULL, $breadcrumb = NULL) {
   global $xtemplate;
 
   $xtemplate->template->assign(array(
+    "language" => $GLOBALS['locale'],
     "head_title" => (drupal_get_title() ? drupal_get_title() ." | ". variable_get("site_name", "drupal") : variable_get("site_name", "drupal") ." | ". variable_get("site_slogan", "")),
     "head" => drupal_get_html_head(),
     "styles" => theme_get_styles(),

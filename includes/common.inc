@@ -508,7 +508,9 @@ function locale_initialize() {
     $languages = $languages['name'];
   }
   else {
-    $languages = array();
+    // Ensure the locale/language is correctly returned, even without locale.module.
+    // Useful for e.g. XML/HTML 'lang' attributes.
+    $languages = array('en' => 'English');
   }
   if ($user->uid && $languages[$user->language]) {
     return $user->language;
