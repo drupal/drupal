@@ -180,7 +180,7 @@ function system_modules() {
 //  $output .= "<td>". (module_hook($name, "help") ? $module["status"]   || in_array($name, $required) ? la(t("help"), array("mod" => $name, "op" => "help")) : t("help")  : "&nbsp;") ."</td>";
     $output .= "</tr>\n";
     if (!in_array($name, $required)) {
-      db_query("INSERT INTO system SET name = '$name', type = 'module', filename = '$module[filename]', status = '$module[status]'");
+      db_query("INSERT INTO system (name, type, filename, status) VALUES ('%s', 'module', '%s', '%s')", $name, $module["filename"], $module["status"]);
     }
   }
   $output .= "</table><br />\n";
@@ -251,7 +251,7 @@ function system_themes() {
     $output .= "<td>$theme->author</td>";
     $output .= "<td align=\"center\">". form_checkbox("", "$name][status", 1, $theme->status) ."</td>";
     $output .= "</tr>\n";
-    db_query("INSERT INTO system SET name = '$name', type = 'theme', filename = '$theme->filename', status = '$theme->status', description = '$theme->description'");
+    db_query("INSERT INTO system (name, type, filename, status, description) VALUES ('%s', 'theme', '%s', '%s', '%s')", $name, $theme->filename, $theme->status, $theme->description);
   }
   $output .= "</table><br />\n";
   $output .= form_submit("Save theme settings");
