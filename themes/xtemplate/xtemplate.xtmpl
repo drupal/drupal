@@ -98,9 +98,11 @@
   </tr>
 </table>
 
+<!-- BEGIN: message -->
 <div id="footer">
   {footer_message}
 </div>
+<!-- END: message -->
 {footer}
 </body>
 </html>
