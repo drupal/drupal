@@ -40,12 +40,6 @@ function poll_delete($node) {
 }
 
 function poll_form(&$node, &$help, &$error) {
-  if (!$node->status) {
-    $node->status = 1;
-    $node->moderate = 1;
-    $node->comment = 2;
-  }
-
   $admin = user_access("administer nodes");
 
   $_duration = array(0 => t("Unlimited"), 86400 => format_interval(86400), 172800 => format_interval(172800), 345600 => format_interval(345600), 604800 => format_interval(604800), 1209600 => format_interval(1209600), 2419200 => format_interval(2419200), 4838400 => format_interval(4838400), 9676800 => format_interval(9676800), 31536000 => format_interval(31536000));

@@ -170,13 +170,7 @@ function book_delete(&$node) {
 function book_form(&$node, &$help, &$error) {
   global $user, $op;
 
-  if (!$node->status) {
-    $node->status = 1;
-    $node->moderate = 1;
-    $node->comment = 2;
-  }
-
-  $output .= form_select(t("Parent"), "parent", $node->parent, book_toc(), t("The parent subject or category the page belongs in."));
+  $output = form_select(t("Parent"), "parent", $node->parent, book_toc(), t("The parent subject or category the page belongs in."));
 
   if ($node->format) {
     if ($op != t("Preview")) {

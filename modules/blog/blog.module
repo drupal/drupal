@@ -39,6 +39,14 @@ function blog_access($op, $node) {
 
 }
 
+function blog_user($type, &$edit, &$user) {
+  switch ($type) {
+    case "view_public":
+    case "view_private":
+      return form_item("Blog", lm(t("View recent entries."), array("mod" => "blog", "id" => $user->uid)) ."<br />". lm(t("View all entries."), array("mod" => "blog", "id" => $user->uid, "all" => 1)));
+  }
+}
+
 function blog_save($op, $node) {
   if ($op == "approve") {
     return array("promote" => 1);
@@ -204,12 +212,6 @@ function blog_page_last() {
 
 function blog_form(&$node, &$help, &$error) {
   global $nid, $iid;
-
-  if (!$node->status) {
-    $node->status = 1;
-    $node->moderate = 1;
-    $node->comment = 2;
-  }
 
   if (isset($node->body)) {
 

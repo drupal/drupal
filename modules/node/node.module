@@ -892,7 +892,8 @@ function node_add($type) {
   */
 
   if ($type && node_access("create", $type)) {
-    $output = node_form(array("uid" => $user->uid, "name" => $user->name, "type" => $type));
+    // Initialize settings
+    $output = node_form(array("uid" => $user->uid, "name" => $user->name, "type" => $type, "status" => 1, "moderate" => 1, "comment" => 2));
   }
   else {
 

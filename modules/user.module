@@ -481,9 +481,9 @@ function user_block() {
     $output .= "<input name=\"edit[op]\" type=\"submit\" value=\"". t("Log in") ."\" /><br />\n";
     $output .= "</form></div>\n";
     if (variable_get("user_register", 1)) {
-      $output .= "&#187; ". lm(t("Register"), array("mod" => "user", "op" => "register"), "", array("title" => t("Create a new user account."))) ."\n";
+      $output .= "&raquo; ". lm(t("Register"), array("mod" => "user", "op" => "register"), "", array("title" => t("Create a new user account."))) ."<br />\n";
     }
-    $output .= "<br />&#187; ". lm(t("New password"), array("mod" => "user", "op" => "password"), "", array("title" => t("Request new password via e-mail"))) ."<br />";
+    $output .= "&raquo; ". lm(t("New password"), array("mod" => "user", "op" => "password"), "", array("title" => t("Request new password via e-mail")));
 
     $block[1]["content"] = $output;
   }
@@ -807,8 +807,11 @@ function user_login($edit = array(), $msg = "") {
   $output .= form_password(t("Password"), "pass", $pass, 20, 64, t("Enter the password that accompanies your username."));
   $output .= form_checkbox(t("Remember me"), "remember_me", 1, 0, 0);
   $output .= form_submit(t("Log in"));
-  $output .= "<p>&#187; ". lm(t("E-mail new password"), array("mod" => "user", "op" => "password")). "<br />";
-  $output .= "&#187; " . lm(t("Create new account"), array("mod" => "user", "op" => "register")). "</p>";
+  $output .= "<p>&raquo; ". lm(t("E-mail new password"), array("mod" => "user", "op" => "password")). "<br />";
+  if (variable_get("user_register", 1)) {
+    $output .= "&raquo; ". lm(t("Create new account"), array("mod" => "user", "op" => "register"));
+  }
+  $output .= "</p>";
 
   return form($output, "post", drupal_url(array ("mod" => "user"), "module"));
 }
@@ -889,8 +892,11 @@ function user_pass($edit = array()) {
     $output .= form_textfield(t("Username"), "name", $edit["name"], 30, 64);
     $output .= form_textfield(t("E-mail address"), "mail", $edit["mail"], 30, 64);
     $output .= form_submit(t("E-mail new password"));
-    $output .= "<p>&#187; ". lm(t("Log in"), array("mod" =>user, "op" => "login")) ."<br />";
-    $output .= "&#187; ". lm(t("Create new account"), array("mod" => "user", "op" => "register")) ."</p>";
+    $output .= "<p>&raquo; ". lm(t("Log in"), array("mod" =>user, "op" => "login")) ."<br />";
+    if (variable_get("user_register", 1)) {
+      $output .= "&raquo; ". lm(t("Create new account"), array("mod" => "user", "op" => "register"));
+    }
+    $output .= "</p>";
 
     return form($output, "post", drupal_url(array ("mod" => "user"), "module"));
   }
@@ -956,31 +962,41 @@ function user_register($edit = array()) {
     $pass = user_password();
 
     // create new user account, noting whether administrator approval is required
-    if (variable_get("user_register", 1) == 1) {
-      $user = user_save("", array_merge(array("name" => $edit["name"], "pass" => $pass, "init" => $edit["mail"], "mail" => $edit["mail"], "rid" => _user_authenticated_id(), "status" => 1), $data));
-    }
-    else {
-      $user = user_save("", array_merge(array("name" => $edit["name"], "pass" => $pass, "init" => $edit["mail"], "mail" => $edit["mail"], "rid" => _user_authenticated_id(), "status" => 0), $data));
-    }
+    $account = user_save("", array_merge(array("name" => $edit["name"], "pass" => $pass, "init" => $edit["mail"], "mail" => $edit["mail"], "rid" => _user_authenticated_id(), "status" => (variable_get("user_register", 1) == 1 ? 1 : 0)), $data));
 
     $variables = array("%username" => $edit["name"], "%site" => variable_get("site_name", "drupal"), "%password" => $pass, "%uri" => path_uri(), "%uri_brief" => path_uri(1), "%mailto" => $edit["mail"], "%date" => format_date(time()));
 
     //the first user may login immediately, and receives a customized welcome email.
-    if ($user->uid == 1) {
+    if ($account->uid == 1) {
       user_mail($edit["mail"], t("drupal user account details for %s", array("%s" => $edit["name"])), strtr(t("%username,\n\nYou may now login to %uri using the following username and password:\n\n  username: %username\n  password: %password\n\nAfter logging in, you may wish to visit the following pages:\n\nAdministration: %uriadmin.php\nEdit user account: %uri". drupal_url(array("mod" => "user", "op" => "edit"), "module") ."\n\n--drupal"), $variables), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
       // This should not be t()'ed. No point as its only shown once in the sites lifetime, and it would be bad to store the password
       $output .= "<p>Welcome to Drupal. You are user #1, which gives you full and immediate access. All future registrants will receive their passwords via email, so please configure your email settings using the Administration pages.</p><p> Your password is <b>$pass</b>. You may change your password on the next page.</p><p>Please login below.</p>";
-      $output .= form_hidden("name", $user->name);
+      $output .= form_hidden("name", $account->name);
       $output .= form_hidden("pass", $pass);
       $output .= form_submit(t("Log in"));
       return form($output);
     }
     else {
-      global $HTTP_HOST;
-      $subject = strtr(variable_get("user_mail_welcome_subject", t("User account details for %username at %site")), $variables);
-      $body = strtr(variable_get("user_mail_welcome_body", t("%username,\n\nThank you for registering at %site. You may now login to %uri". drupal_url(array("mod" => "user", "op" => "login"), "module") ." using the following username and password:\n\nusername: %username\npassword: %password\n\nAfter logging in, you may wish to change your password at %urimodule.php?mod=user&op=edit\n\nYour new %site membership also enables to you to login to other Drupal powered web sites (e.g. http://www.drop.org) without registering. Just use the following Drupal ID and password:\n\nDrupal ID: %username@%uri_brief\npassword: %password\n\n\n--  %site team")), $variables);
-      user_mail($edit["mail"], $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
-      return t("Your password and further instructions have been sent to your e-mail address.");
+      if ($account->status) {
+        /*
+        ** Create new user account, no administrator approval required:
+        */
+
+        $subject = strtr(variable_get("user_mail_welcome_subject", t("User account details for %username at %site")), $variables);
+        $body = strtr(variable_get("user_mail_welcome_body", t("%username,\n\nThank you for registering at %site. You may now login to %uri". drupal_url(array("mod" => "user", "op" => "login"), "module") ." using the following username and password:\n\nusername: %username\npassword: %password\n\nAfter logging in, you may wish to change your password at %urimodule.php?mod=user&op=edit\n\nYour new %site membership also enables to you to login to other Drupal powered web sites (e.g. http://www.drop.org) without registering. Just use the following Drupal ID and password:\n\nDrupal ID: %username@%uri_brief\npassword: %password\n\n\n--  %site team")), $variables);
+        user_mail($edit["mail"], $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
+        return t("Your password and further instructions have been sent to your e-mail address.");
+      }
+      else {
+        /*
+        ** Create new user account, administrator approval required:
+        */
+        $subject = strtr(variable_get("user_mail_welcome_subject", t("User account details for %username at %site")), $variables);
+        $body = strtr(variable_get("user_mail_welcome_body", t("%username,\n\nThank you for registering at %site. Your account will have to be approved by the site administrator. You may now login to %uri". drupal_url(array("mod" => "user", "op" => "login"), "module") ." using the following username and password:\n\nusername: %username\npassword: %password\n\nAfter logging in, you may wish to change your password at %urimodule.php?mod=user&op=edit\n\nYour new %site membership also enables to you to login to other Drupal powered web sites (e.g. http://www.drop.org) without registering. Just use the following Drupal ID and password:\n\nDrupal ID: %username@%uri_brief\npassword: %password\n\n\n--  %site team")), $variables);
+        user_mail($edit["mail"], $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
+        user_mail(variable_get("site_mail", ini_get("sendmail_from")), $subject, t("%u has applied for an account.\n\n%uri", array("%u" => $account->name, "%uri" => path_uri() . drupal_url(array("mod" => "user", "op" => "edit", "id" => $account->uid), "admin"))), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
+        return t("Your password and further instructions have been sent to your e-mail address.");
+      }
     }
   }
   else {
@@ -1003,10 +1019,8 @@ function user_register($edit = array()) {
     }
   }
   $output .= form_submit(t("Create new account"));
-  $output .= "<p>&#187; ". lm(t("E-mail new password"), array("mod" => "user", "op" => "password")). "<br />";
-  $output .= "&#187; " .lm(t("Log in"), array("mod" => "user", "op" => "login")). "</p>";
-
-  unset($user);
+  $output .= "<p>&raquo; ". lm(t("E-mail new password"), array("mod" => "user", "op" => "password")). "<br />";
+  $output .= "&raquo; " .lm(t("Log in"), array("mod" => "user", "op" => "login")). "</p>";
 
   return form($output);
 }
@@ -1176,7 +1190,9 @@ function user_view($uid = 0) {
   else {
     $theme->header();
     $theme->box(t("Log in"), user_login());
-    $theme->box(t("Create new user account"), user_register());
+    if (variable_get("user_register", 1)) {
+      $theme->box(t("Create new user account"), user_register());
+    }
     $theme->box(t("E-mail new password"), user_pass());
     $theme->footer();
   }
@@ -1196,7 +1212,12 @@ function user_page() {
     case "register":
       $output = user_register($edit);
       $theme->header();
-      $theme->box(t("Create new account"), $output);
+      if (variable_get("user_register", 1)) {
+        $theme->box(t("Create new account"), $output);
+      }
+      else {
+        print message_access();
+      }
       $theme->footer();
       break;
     case t("Log in"):

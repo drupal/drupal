@@ -55,12 +55,6 @@ function forum_view($node) {
 
 function forum_form(&$node, &$help, &$error) {
 
-  if (!$node->status) {
-    $node->status = 1;
-    $node->moderate = 1;
-    $node->comment = 2;
-  }
-
   if (function_exists("taxonomy_node_form")) {
     $output = implode("", taxonomy_node_form("forum", $node));
   }
