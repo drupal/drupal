@@ -643,15 +643,6 @@ function cache_clear_all($cid = NULL) {
   }
 }
 
-function cache_clear_old($cid = NULL) {
-  if (empty($cid)) {
-    db_query("DELETE FROM cache WHERE expire < ". time() ." AND expire > 0");
-  }
-  else {
-    db_query("DELETE FROM cache WHERE cid = '%s' AND expire < %s AND expire > 0", $cid, time());
-  }
-}
-
 function page_set_cache() {
   global $user, $REQUEST_METHOD;
 
@@ -666,10 +657,9 @@ function page_get_cache() {
   global $user, $REQUEST_METHOD;
 
   if (!$user->uid && $REQUEST_METHOD == "GET") {
-    if ($cache = cache_get(request_uri())) {
-      cache_clear_old();
-    }
-    else {
+    $cache = cache_get(request_uri());
+
+    if (empty($cache)) {
       ob_start();
     }
   }

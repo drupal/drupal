@@ -83,9 +83,7 @@ function system_view_general() {
 
   // caching:
   $output .= "<h3>". t("Cache settings") ."</h3>\n";
-  $period = array(10 => format_interval(10), 20 => format_interval(20), 30 => format_interval(30), 40 => format_interval(40), 50 => format_interval(50), 50 => format_interval(50), 60 => format_interval(60), 90 => format_interval(90), 120 => format_interval(120), 150 => format_interval(150), 180 => format_interval(180), 210 => format_interval(210), 240 => format_interval(240), 270 => format_interval(270), 300 => format_interval(300), 360 => format_interval(360), 420 => format_interval(420), 480 => format_interval(480), 540 => format_interval(540), 600 => format_interval(600), 1800 => format_interval(1800), 3600 => format_interval(3600), 7200 => format_interval(7200));
-  $output .= form_select(t("Cache support"), "cache", variable_get("cache", 0), array(t("Disabled"), t("Enabled")), t("Enable or disable the caching of pages."));
-  $output .= form_select(t("Discard cached pages older than"), "cache_clear", variable_get("cache_clear", 120), $period, t("The time cached pages should be kept.  Older pages are automatically refreshed."));
+  $output .= form_select(t("Cache support"), "cache", variable_get("cache", 0), array(t("Disabled"), t("Enabled")), t("Enable or disable the caching of rendered pages.  When caching is enabled, Drupal will flush the cache when required to make sure updates take effect immediately."));
   $output .= "<hr />\n";
 
   // submission settings:
