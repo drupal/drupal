@@ -372,10 +372,11 @@ function node_filter_line($text) {
   ** Replace '<br>', '<br />', '<p>' and '<p />' by '\n':
   */
 
-  $text = eregi_replace("<br />", "\n", $text);
+  $text = eregi_replace("<br>", "\n", $text);    // this one is now <br>
   $text = eregi_replace("<br />", "\n", $text);
   $text = eregi_replace("<p>", "\n", $text);
   $text = eregi_replace("<p />", "\n", $text);
+  $text = eregi_replace("</p>", "\n", $text);    // remove orphaned tags
 
   /*
   ** Replace '\r\n' by '\n':
