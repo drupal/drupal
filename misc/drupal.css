@@ -306,3 +306,22 @@ pre, code {
   list-style-type: square;
   list-style-image: url(menu-leaf.gif);
 }
+td.watchdog-user {
+  background: #ffeeaa;
+}
+td.watchdog-message {
+  background: #ffffff;
+}
+td.watchdog-special {
+  background: #a49fff;
+}
+td.watchdog-warning {
+  background: #ffaa22;
+}
+td.watchdog-httpd {
+  background: #99dd99;
+}
+td.watchdog-error {
+  background: #ee4c4c;
+}
+
