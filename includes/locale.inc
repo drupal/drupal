@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.29 2004/09/16 14:18:00 dries Exp $
+// $Id: locale.inc,v 1.30 2004/09/19 00:08:50 unconed Exp $
 
 /**
  * @file
@@ -204,7 +204,7 @@ function _locale_import_po($file, $lang, $mode) {
           db_query("INSERT INTO {locales_source} (location, source) VALUES ('%s', '%s')", $comments, $english);
           $loc = db_fetch_object(db_query("SELECT lid FROM {locales_source} WHERE source = '%s'", $english));
           $lid = $loc->lid;
-          db_query("INSERT INTO {locales_target} (lid, locale, translation, plid, plural) VALUES (%d, '%s', '%s')", $lid, $lang, $trans, $plid, $key);
+          db_query("INSERT INTO {locales_target} (lid, locale, translation, plid, plural) VALUES (%d, '%s', '%s', %d, %d)", $lid, $lang, $trans, $plid, $key);
           if ($trans != '') {
             $additions++;
           }
