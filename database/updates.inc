@@ -1549,8 +1549,8 @@ function update_104() {
   }
   elseif (variable_get('theme_default', 'xtemplate') == 'xtemplate') {
     $ret[] = update_sql("DELETE FROM {system} WHERE name = 'xtemplate'");
-    $ret[] = update_sql("INSERT INTO {system} VALUES ('themes/bluemarine/bluemarine.theme','bluemarine','theme','themes/engines/xtemplate/xtemplate.engine',1,0,0)");
-    $ret[] = update_sql("INSERT INTO {system} VALUES ('themes/pushbutton/pushbutton.theme','pushbutton','theme','themes/engines/xtemplate/xtemplate.engine',1,0,0)");
+    $ret[] = update_sql("INSERT INTO {system} VALUES ('themes/bluemarine/xtemplate.xtmpl','bluemarine','theme','themes/engines/xtemplate/xtemplate.engine',1,0,0)");
+    $ret[] = update_sql("INSERT INTO {system} VALUES ('themes/pushbutton/xtemplate.xtmpl','pushbutton','theme','themes/engines/xtemplate/xtemplate.engine',1,0,0)");
     $ret[] = update_sql("INSERT INTO {system} VALUES ('themes/engines/xtemplate/xtemplate.engine','xtemplate','theme_engine','',1,0,0)");
     if (variable_get('xtemplate_template', 'default') == 'pushbutton') {
       variable_set('theme_default', 'pushbutton');
