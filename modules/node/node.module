@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.117 2002/03/26 21:33:23 dries Exp $
+// $Id: node.module,v 1.118 2002/04/04 18:22:56 unconed Exp $
 
 function node_help() {
   global $mod;
@@ -149,6 +149,7 @@ function node_save($node, $filter) {
     $node->created = time();
     $node->changed = time();
     $node->nid = db_result(db_query("SELECT MAX(nid) + 1 FROM node"));
+    $node->nid = empty($node->nid) ? 1 : $node->nid; 
 
     // Prepare the query:
     foreach ($node as $key => $value) {
