@@ -1470,11 +1470,12 @@ function user_admin_account() {
   global $query;
 
   $queries = array(array("ORDER BY timestamp DESC", t("active users")), array("ORDER BY u.uid DESC", t("new users")), array("WHERE status = 0 ORDER BY u.uid DESC", t("blocked users")));
-  foreach (user_roles(1) as $key => $value) {
+  $user_roles = user_roles(1);
+  foreach ($user_roles as $key => $value) {
     $queries[] = array("WHERE r.name = '$value' ORDER BY u.uid DESC", $value . "s");
   }
 
-  $result = db_query("SELECT u.uid, u.name, u.timestamp FROM users u LEFT JOIN role r ON u.rid = r.rid ". $queries[$query ? $query : 0][0] ." LIMIT 50");
+  $result = db_query("SELECT u.uid, u.name, u.timestamp, u.rid FROM users u LEFT JOIN role r ON u.rid = r.rid ". $queries[$query ? $query : 0][0] ." LIMIT 50");
 
   foreach ($queries as $key => $value) {
     $links[] = la($value[1], array("mod" => "user", "op" => "account", "query" => $key));
@@ -1483,9 +1484,9 @@ function user_admin_account() {
   $output .= "<small>". implode(" :: ", $links) ."</small><hr />";
 
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";
-  $output .= " <tr><th>" . t("username") . "</th><th>" . t("last access") . "</th><th>" . t("operations") . "</th></tr>";
+  $output .= " <tr><th>" . t("username") . "</th><th>" . t("user role") . "</th><th>" . t("last access") . "</th><th>" . t("operations") . "</th></tr>";
   while ($account = db_fetch_object($result)) {
-    $output .= " <tr><td>". format_name($account) ."</td><td>". format_date($account->timestamp, "small") ."</td><td align=\"center\">". la(t("edit account"), array("mod" => "user", "op" => "edit", "id" => $account->uid)) ."</td></tr>";
+    $output .= " <tr><td>". format_name($account) ."</td><td>". t($user_roles[$account->rid]) ."</td><td>". format_date($account->timestamp, "small") ."</td><td align=\"center\">". la(t("edit account"), array("mod" => "user", "op" => "edit", "id" => $account->uid)) ."</td></tr>";
   }
   $output .= "</table>";
 
