@@ -82,23 +82,12 @@ function forum_block($op = "list", $delta = 0) {
   }
   else {
     if (user_access("access content")) {
-      $cache = cache_get("forum:block");
+      $content = node_title_list(db_query_range("SELECT n.nid, n.title, u.uid, u.name, GREATEST(n.created, MAX(c.timestamp)) AS sort FROM {node} n INNER JOIN {forum} f ON n.nid = f.nid INNER JOIN {comments} c ON n.nid = c.nid LEFT JOIN {users} u ON n.uid = u.uid WHERE n.type = 'forum' AND n.nid = f.nid AND n.status = 1 GROUP BY n.nid, n.title, n.created, u.uid, u.name ORDER BY sort DESC", 0, variable_get("forum_block_num", "5")), t("Active forum topics:"));
 
-      if (empty($cache)) {
-        unset($items);
-        $content = node_title_list(db_query_range("SELECT n.nid, n.title, u.uid, u.name, GREATEST(n.created, MAX(c.timestamp)) AS sort FROM {node} n INNER JOIN {forum} f ON n.nid = f.nid INNER JOIN {comments} c ON n.nid = c.nid LEFT JOIN {users} u ON n.uid = u.uid WHERE n.type = 'forum' AND n.nid = f.nid AND n.status = 1 GROUP BY n.nid, n.title, n.created, u.uid, u.name ORDER BY sort DESC", 0, variable_get("forum_block_num", "5")), t("Active forum topics:"));
+      $content .= node_title_list(db_query_range("SELECT n.nid, n.title, u.uid, u.name FROM {node} n INNER JOIN {forum} f ON n.nid = f.nid LEFT JOIN {users} u ON n.uid = u.uid WHERE n.type = 'forum' ORDER BY n.nid DESC", 0, variable_get("forum_block_num", "5")), t("New forum topics:"));
 
-        unset ($items);
-        $content .= node_title_list(db_query_range("SELECT n.nid, n.title, u.uid, u.name FROM {node} n INNER JOIN {forum} f ON n.nid = f.nid LEFT JOIN {users} u ON n.uid = u.uid WHERE n.type = 'forum' ORDER BY n.nid DESC", 0, variable_get("forum_block_num", "5")), t("New forum topics:"));
-
-        if ($content) {
-          $content .= "<div id=\"forum_more\" style=\"text-align: right;\">". l(t("more"), "forum", array("title" => t("Read the latest forum topics."))) ."</div>";
-        }
-
-        cache_set("forum:block", $content, 1);
-      }
-      else {
-        $content = $cache->data;
+      if ($content) {
+        $content .= "<div id=\"forum_more\" style=\"text-align: right;\">". l(t("more"), "forum", array("title" => t("Read the latest forum topics."))) ."</div>";
       }
 
       $blocks["subject"] = t("Forum topics");
