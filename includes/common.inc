@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.280 2003/12/16 21:06:33 dries Exp $ */
+/* $Id: common.inc,v 1.281 2003/12/18 08:18:06 dries Exp $ */
 
 /**
  * @name drupal_title
@@ -105,7 +105,7 @@ function drupal_rebuild_path_map() {
 
 function drupal_not_found() {
   header("HTTP/1.0 404 Not Found");
-  watchdog("httpd", "404 error: ". $_GET['q'] ." not found");
+  watchdog("httpd", "404 error: '". check_query($_GET["q"]) ."' not found");
 
   $path = drupal_get_normal_path(variable_get('site_404', ''));
 
