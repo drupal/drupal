@@ -101,6 +101,8 @@ function user_save($account, $array = array()) {
       }
       else if (substr($key, 0, 4) !== "auth") {
         if (in_array($key, $user_fields)) {
+          // escape '%'s:
+          $value = str_replace("%", "%%", $value);
           $query .= "$key = '". check_query($value) ."', ";
         }
         else {
@@ -264,6 +266,18 @@ function user_mail($mail, $subject, $message, $header) {
     **  - \r\n will work under dos and windows.
     **  - \n will work for linux, unix and BSDs.
     **  - \r will work for macs.
+    **
+    ** According to RFC 2646, it's quite rude to not wrap your e-mails:
+    **
+    ** "The Text/Plain media type is the lowest common denominator of
+    ** Internet email, with lines of no more than 997 characters (by
+    ** convention usually no more than 80), and where the CRLF sequence
+    ** represents a line break [MIME-IMT]."
+    **
+    ** CRLF === \r\n
+    **
+    ** http://www.rfc-editor.org/rfc/rfc2646.txt
+    **
     */
     return mail($mail, $subject, str_replace("\r", "", $message), $header);
   }
