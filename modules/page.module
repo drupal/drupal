@@ -47,16 +47,6 @@ function page_access($op, $node) {
   }
 }
 
-function page_save($op, $node) {
-  if ($op == "approve") {
-    return array("status" => 1);
-  }
-
-  if ($op == "decline") {
-    return array("status" => 0);
-  }
-}
-
 function page_insert($node) {
   db_query("INSERT INTO {page} (nid, format, link, description) VALUES (%d, %d, '%s', '%s')", $node->nid, $node->format, $node->link, $node->description);
 }
