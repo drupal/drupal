@@ -17,7 +17,7 @@ function poll_block() {
     $poll = node_load(array("type" => "poll", "created" => $timestamp, "status" => "1"));
     if ($poll->nid) {
       // Poll_view dumps the output into $poll->body
-      poll_view($poll, 0, 1);
+      poll_view($poll, 1, 1);
     }
   }
   $blocks[0][subject] = t("Latest poll: %t", array("%t" => $poll->title));
@@ -263,7 +263,11 @@ function poll_view(&$node, $main = 0, $block = 0) {
         }
       }
     }
-    $output .= "<br /><div align=\"center\">Total votes: ". $votestotal . ($block ? "<br />" . $theme->links(link_node($node, 1)) : "") ."</div>";
+    if ($block) {
+      // Prevent a 'read more' link in the side-block.
+      $node->body = $node->teaser = "";
+    }
+    $output .= "<br /><div align=\"center\">Total votes: ". $votestotal . ($block ? "<br />" . $theme->links(link_node($node, $main)) : "") ."</div>";
   }
   // Force the output on both the mainpage and elsewhere
   $node->body = $output;
