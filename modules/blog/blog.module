@@ -130,7 +130,7 @@ function blog_feed_user($uid = 0) {
     $account = $user;
   }
 
-  $result = db_query("SELECT n.nid, n.title, n.teaser, n.created, u.name, u.uid FROM node n LEFT JOIN users u ON n.uid = u.uid WHERE n.type = 'blog' AND u.uid = '$uid' AND n.status = 1 ORDER BY n.nid DESC LIMIT 15");
+  $result = db_query("SELECT n.nid, n.title, n.teaser, n.created, u.name, u.uid FROM node n LEFT JOIN users u ON n.uid = u.uid WHERE n.type = 'blog' AND u.uid = '%d' AND n.status = 1 ORDER BY n.nid DESC LIMIT 15", $uid);
   $channel["title"] = $account->name. "'s blog";
   $channel["link"] = path_uri() . url("blog/view/$uid");
   $channel["description"] = $term->description;
