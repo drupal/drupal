@@ -368,7 +368,7 @@ function comment_edit($cid) {
 
   $comment = db_fetch_object(db_query('SELECT c.*, u.uid, u.name AS registered_name, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status != 2', $cid));
   $comment = drupal_unpack($comment);
-  $comment->name = $comment->registered_name ? $comment->registered_name : $comment->name;
+  $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
   if (comment_access('edit', $comment)) {
     print theme('page', comment_preview(object2array($comment)), t('Edit comment'));
   }
@@ -400,7 +400,7 @@ function comment_reply($nid, $pid = NULL) {
     if ($pid) {
       $comment = db_fetch_object(db_query('SELECT c.*, u.uid, u.name AS registered_name, u.picture, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = 0', $pid));
       $comment = drupal_unpack($comment);
-      $comment->name = $comment->registered_name ? $comment->registered_name : $comment->name;
+      $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
       $output .= theme('comment_view', $comment);
     }
     else if (user_access('access content')) {
@@ -502,7 +502,7 @@ function comment_preview($edit) {
   if ($edit['pid']) {
     $comment = db_fetch_object(db_query('SELECT c.*, u.uid, u.name AS registered_name, u.picture, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = 0', $edit['pid']));
     $comment = drupal_unpack($comment);
-    $comment->name = $comment->registered_name ? $comment->registered_name : $comment->name;
+    $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
     $output .= theme('comment_view', $comment);
   }
   else {
@@ -768,7 +768,7 @@ function comment_render($node, $cid = 0) {
       $result = db_query('SELECT c.cid, c.pid, c.nid, c.subject, c.comment, c.format, c.timestamp, c.name, c.mail, c.homepage, u.uid, u.name AS registered_name, u.picture, u.data, c.score, c.users FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = 0 GROUP BY c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, c.name, c.mail, u.picture, c.homepage, u.uid, u.name, u.picture, u.data, c.score, c.users', $cid);
 
       if ($comment = db_fetch_object($result)) {
-        $comment->name = $comment->registered_name ? $comment->registered_name : $comment->name;
+        $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
         $output .= theme('comment_view', $comment, theme('links', module_invoke_all('link', 'comment', $comment, 1)));
       }
 
@@ -885,7 +885,7 @@ function comment_render($node, $cid = 0) {
 
       while ($comment = db_fetch_object($result)) {
         $comment = drupal_unpack($comment);
-        $comment->name = $comment->registered_name ? $comment->registered_name : $comment->name;
+        $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
         $comment->depth = count(explode('.', $comment->thread)) - 1;
 
         if ($mode == 1) {
@@ -947,7 +947,7 @@ function comment_admin_edit($cid) {
   // if we're not saving our changes above, we're editing it.
   $result = db_query('SELECT c.*, u.name AS registered_name, u.uid FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status != 2', $cid);
   $comment = db_fetch_object($result);
-  $comment->name = $comment->registered_name ? $comment->registered_name : $comment->name;
+  $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
   $comment = drupal_unpack($comment);
 
   if ($comment) {
@@ -967,7 +967,7 @@ function comment_admin_edit($cid) {
  */
 function comment_delete($cid) {
   $comment = db_fetch_object(db_query('SELECT c.*, u.name AS registered_name, u.uid FROM {comments} c INNER JOIN {users} u ON u.uid = c.uid WHERE c.cid = %d', $cid));
-  $comment->name = $comment->registered_name ? $comment->registered_name : $comment->name;
+  $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
 
   $output = '';
 
@@ -1026,7 +1026,7 @@ function comment_admin_overview($type = 'new') {
   $result = pager_query($sql,  50);
 
   while ($comment = db_fetch_object($result)) {
-    $comment->name = $comment->registered_name ? $comment->registered_name : $comment->name;
+    $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
     $rows[] = array(
         l($comment->subject, "node/$comment->nid", array('title' => htmlspecialchars(truncate_utf8($comment->comment, 128))), NULL, "comment-$comment->cid") ." ". (node_is_new($comment->nid, $comment->timestamp) ? theme('mark') : ''),
         format_name($comment),
@@ -1633,7 +1633,7 @@ function _comment_delete_thread($comment) {
   // Delete the comment's replies:
   $result = db_query('SELECT c.*, u.name AS registered_name, u.uid FROM {comments} c INNER JOIN {users} u ON u.uid = c.uid WHERE pid = %d', $comment->cid);
   while ($comment = db_fetch_object($result)) {
-    $comment->name = $comment->registered_name ? $comment->registered_name : $comment->name;
+    $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
     _comment_delete_thread($comment);
   }
 }
