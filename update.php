@@ -60,7 +60,8 @@ $mysql_updates = array(
   "2002-04-14 : new taxonomy system" => "update_26",
   "2002-04-16" => "update_27",
   "2002-04-20" => "update_28",
-  "2002-04-23 : roles cleanup" => "update_29"
+  "2002-04-23 : roles cleanup" => "update_29",
+  "2002-05-02" => "update_30"
 );
 
 // Update functions
@@ -422,6 +423,13 @@ function update_29() {
 
   update_sql("ALTER TABLE users DROP role");
   update_sql("ALTER TABLE role DROP perm");
+}
+
+function update_30() {
+  update_sql("ALTER TABLE blocks ADD custom tinyint(2) not null;");
+  update_sql("UPDATE blocks SET module = 'block' WHERE module = 'boxes';");
+  update_sql("UPDATE blocks SET status = 1, custom = 1 WHERE status = 1;");
+  update_sql("UPDATE blocks SET status = 1, custom = 0 WHERE status = 2;");
 }
 
 /*
