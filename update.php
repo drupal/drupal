@@ -727,6 +727,7 @@ function update_56() {
 
 function update_57() {
   update_sql("DELETE FROM variable WHERE name = 'site_charset'");
+  update_sql("UPDATE users SET rid = 2 WHERE uid = 1");
 }
 
 function update_upgrade3() {
@@ -813,7 +814,7 @@ function update_page() {
   global $user, $mysql_updates;
 
   $edit = $_POST["edit"];
-  
+
   if ($_POST["op"] == "Update") {
       // make sure we have updates to run.
       print update_page_header("Drupal database update");
