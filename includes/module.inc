@@ -41,8 +41,12 @@ function module_invoke_all($hook, $a1 = NULL, $a2 = NULL, $a3 = NULL, $a4 = NULL
 }
 
 // return array of module names (includes lazy module loading):
-function module_list() {
+function module_list($refresh = 0) {
   static $list;
+
+  if ($refresh) {
+    unset($list);
+  }
 
   if (!$list) {
     $list = array("system" => "system", "user" => "user", "watchdog" => "watchdog");

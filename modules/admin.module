@@ -44,7 +44,7 @@ function admin_page() {
       <?php
         // NOTE: we include a dummy "print.css" to remove the "flash of unstyled content" (FUOC) problems in IE.
 
-        module_invoke_all("link", "admin");
+        menu_build("admin");
 
         /*
         ** Body:
@@ -79,7 +79,11 @@ function admin_page() {
 
         /*
         ** Menu:
+        **   We rebuild the admin menu once more because one might have
+        **   enabled/disabled themes or modules, changed permissions, etc.
         */
+
+        menu_build("admin");
 
         print "<div id=\"menu\">";
         echo "<h1><a href=\"index.php\">". variable_get("site_name", "drupal") ."</a></h1>";

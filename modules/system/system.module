@@ -44,7 +44,8 @@ function system_link($type) {
     menu("admin/system", "site configuration", "system_admin", $help["general"], 3);
     menu("admin/system/themes", "themes", "system_admin", $help["themes"], 2);
 
-    foreach (theme_list() as $theme) {
+    foreach (theme_list(1) as $theme) {
+      // NOTE: refresh the list because some themes might have been enabled/disabled.
       include_once "$theme->filename";
       $function = $theme->name ."_settings";
       if (function_exists($function)) {
@@ -53,7 +54,8 @@ function system_link($type) {
     }
 
     menu("admin/system/modules", "modules", "system_admin", $help["modules"], 3);
-    foreach (module_list() as $name) {
+    foreach (module_list(1) as $name) {
+      // NOTE: refresh the list because some modules might have been enabled/disabled.
       if (module_hook($name, "settings")) {
         menu("admin/system/modules/$name", $name, "system_admin", module_invoke($name, "system", "description"));
       }
@@ -299,31 +301,18 @@ function system_listing($type, $directory, $required = array()) {
   return $output;
 }
 
-function system_init() {
-  global $HTTP_POST_VARS, $REQUEST_URI, $system_init_status;
-
-  session_register("system_init_status");
-  if (user_access("administer site configuration")) {
-    if (isset($HTTP_POST_VARS["op"]) && $HTTP_POST_VARS["op"] == t("Reset to defaults")) {
-      $system_init_status = status(system_reset_default($HTTP_POST_VARS["edit"]));
-    }
-    else if (isset($HTTP_POST_VARS["op"]) && $HTTP_POST_VARS["op"] == t("Save configuration")) {
-      $system_init_status = status(system_save_settings($HTTP_POST_VARS["edit"]));
-    }
-    else {
-      return;
-    }
-    drupal_goto("$REQUEST_URI");
-  }
-}
-
 function system_admin() {
-  global $system_init_status;
+  global $op, $edit;
 
   if (user_access("administer site configuration")) {
-    session_register("system_init_status");
-    print $system_init_status;
-    session_unregister("system_init_status");
+    if ($op == t("Reset to defaults")) {
+      print status(system_reset_default($edit));
+    }
+
+    if ($op == t("Save configuration")) {
+      print status(system_save_settings($edit));
+    }
+
     print system_view(arg(2), arg(3));
   }
   else {

@@ -163,4 +163,13 @@ function menu_execute_action() {
   }
 }
 
+function menu_build($type) {
+
+  // Empty the existing menu tree (if any):
+  unset($GLOBALS["_gmenu"]);
+
+  // Build the menu tree:
+  module_invoke_all("link", $type);
+}
+
 ?>
