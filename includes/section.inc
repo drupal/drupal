@@ -1,5 +1,37 @@
 <?php
 
+function _section_get($field, $value) {
+  return db_query("SELECT * FROM section WHERE $field = '$value'");
+}
+
+function section_get_object($field, $value) {
+  return db_fetch_object(_section_get($field, $value));
+}
+
+function section_get_array($field, $value) {
+  return db_fetch_array(_section_get($field, $value));
+}
+
+function section_save($edit) {
+  if ($edit["sid"]) { // ?
+    db_query("UPDATE section SET name = '". check_input($edit[name]) ."', pid = '". check_input($edit[pid]) ."' WHERE sid = $edit[sid]", 1);
+  }
+  else {
+    db_query("INSERT INTO section (name, pid) VALUES ('". check_input($edit[name])."', '". check_input($edit[pid]) ."')", 1);
+  }
+}
+
+function section_tree($parent = 0, $name = "", $tree = array()) {
+  $result = db_query("SELECT * FROM section WHERE pid = '$parent'");
+  while ($section = db_fetch_object($result)) {
+    $tree[$section->sid] = ($name ? "$name - $section->name" : $section->name);
+    $tree = section_tree($section->sid, $tree[$section->sid], $tree);
+  }
+  return $tree;
+}
+
+///// old /////
+
 function section_get() {
   $array = array();
   $result = db_query("SELECT name FROM sections");
