@@ -21,7 +21,7 @@
  * @return a string containing the help output.
  */
 function theme_help($section) {
-  $ouptout = "";
+  $output = "";
 
   switch ($section) {
     case 'admin/system/themes#description':
