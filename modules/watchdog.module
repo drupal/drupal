@@ -18,15 +18,15 @@ function watchdog_cron() {
 }
 
 function watchdog_overview() {
-  $colors = array(message => "#FFFFFF", special => "#836FFF", warning => "#FFAA22", error => "#EE2C2C");
+  $colors = array(message => "#FFFFFF", special => "#836FFF", warning => "#FFAA22", httpd => "#77BB77", error => "#EE2C2C");
 
   $result = db_query("SELECT w.*, u.userid FROM watchdog w LEFT JOIN users u ON w.user = u.id ORDER BY timestamp DESC LIMIT 1000");
 
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
-  $output .= " <TR><TH>date</TH><TH>type</TH><TH>message</TH><TH>user</TH><TH>operations</TH></TR>\n";
+  $output .= " <TR><TH>date</TH><TH>message</TH><TH>user</TH><TH>operations</TH></TR>\n";
   while ($watchdog = db_fetch_object($result)) {
     if ($color = $colors[$watchdog->type]) {
-      $output .= " <TR BGCOLOR=\"$color\"><TD>". format_date($watchdog->timestamp) ."</TD><TD ALIGN=\"center\">$watchdog->link</TD><TD>". substr(check_output($watchdog->message), 0, 50) ."</TD><TD ALIGN=\"center\">". format_username($watchdog->userid) ."</A></TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=watchdog&op=view&id=$watchdog->id\">details</A></TD></TR>\n";
+      $output .= " <TR BGCOLOR=\"$color\"><TD>". format_date($watchdog->timestamp) ."</TD><TD>". substr(check_output($watchdog->message), 0, 50) ."</TD><TD ALIGN=\"center\">". format_username($watchdog->userid) ."</A></TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=watchdog&op=view&id=$watchdog->id\">details</A></TD></TR>\n";
     }
   }
   $output .= "</TABLE>\n";

@@ -125,7 +125,7 @@ function queue_page() {
   }
   else {
     $theme->header();
-    $theme->box(t("Moderation queue"), notice_account());
+    $theme->box(t("Moderation queue"), message_account());
     $theme->footer();
   }
 }

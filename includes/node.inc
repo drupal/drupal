@@ -94,7 +94,7 @@ function node_save($node, $filter) {
     }
     else {
       // verify submission rate:
-      throttle("post node", variable_get("max_node_rate", 900));
+      throttle("node", variable_get("max_node_rate", 900));
 
       // prepare queries:
       foreach ($filter as $field=>$value) {
@@ -126,18 +126,19 @@ function node_save($node, $filter) {
             if (($node[pid]) && ($node[status] == node_status("posted"))) {
               db_query("UPDATE node SET status = '". node_status(expired) ."' WHERE nid = '$node[pid]'");
             }
+            watchdog("special", "node: added $filter[type] '$node[title]'");
           }
           else {
-            watchdog("warning", "node: added '$node[title]' - failed");
+            watchdog("warning", "node: added $filter[type] '$node[title]' - failed");
           }
         }
         else {
           db_query("DELETE FROM node WHERE nid = '$nid'");
-          watchdog("warning", "node: added '$node[title]' - failed");
+          watchdog("warning", "node: added $filter[type] '$node[title]' - failed");
         }
       }
       else {
-        watchdog("warning", "node: added '$node[title]' - failed");
+        watchdog("warning", "node: added $filter[type] '$node[title]' - failed");
       }
     }
 

@@ -23,7 +23,7 @@ if ($user->id) {
   }
 }
 else {
-  $theme->box("Submit", notice_account());
+  $theme->box("Submit", message_account());
 }
 
 $theme->footer();
