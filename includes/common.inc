@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.424 2005/02/04 20:14:05 unconed Exp $ */
+/* $Id: common.inc,v 1.425 2005/02/09 17:33:53 unconed Exp $ */
 
 /**
  * @file
@@ -1746,7 +1746,7 @@ function decode_entities($text, $exclude = array()) {
   // We store named entities in a table for quick processing.
   if (!isset($table)) {
     // Get all named HTML entities.
-    $table = array_flip(get_html_translation_table(HTML_ENTITIES, $special));
+    $table = array_flip(get_html_translation_table(HTML_ENTITIES));
     // PHP gives us ISO-8859-1 data, we need UTF-8.
     $table = array_map('utf8_encode', $table);
   }
