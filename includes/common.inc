@@ -934,10 +934,10 @@ function format_date($timestamp, $type = 'medium', $format = '', $timezone = NUL
   $date = '';
   for ($i = 0; $i < $max; $i++) {
     $c = $format{$i};
-    if (strpos('AaDFlM', $c)) {
+    if (strpos('AaDFlM', $c) !== false) {
       $date .= t(gmdate($c, $timestamp));
     }
-    else if (strpos('BdgGhHiIjLmnsStTUwWYyz', $c)) {
+    else if (strpos('BdgGhHiIjLmnsStTUwWYyz', $c) !== false) {
       $date .= gmdate($c, $timestamp);
     }
     else if ($c == 'r') {
