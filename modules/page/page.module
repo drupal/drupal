@@ -1,6 +1,12 @@
 <?php
 // $Id$
 
+function page_help() {
+  $output .= "<p>The page module is used to create a <i>site page</i>.  Unlike a story, a site page is a persistent web page on your site which usually shortcuts the typical lifecycle of user generated content (i.e. submit -&gt; moderate -&gt; post -&gt; comment).  A site page is usually linked from the main navigation bar, using whatever text the author wishes.  To create a site page without this navigation link, simply skip the form field which requests link text.  Administrators are the exclusive authors of site pages (i.e. requires the <i>adinister nodes</i> in <a href=\"/admin.php?mod=user&op=permission\">permission</a>).</p>";
+  $output .= "<p>Site pages, unlike many other forms of Drupal content, may be made of PHP code in addition to HTML and text. All Drupal objects and functions are available to the Site Page author.</p>";
+  return $output;
+}
+
 function page_node($field) {
   $info["name"] = t("site page");
   $info["description"] = t("If you just want to add a page with a link in the menu to your site, this would be the best choice.  Unlike a story, a site page by-passes the submission queue.");
