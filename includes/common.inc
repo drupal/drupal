@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.206 2003/05/31 13:05:06 dries Exp $
+// $Id: common.inc,v 1.207 2003/06/01 19:51:40 dries Exp $
 
 function conf_init() {
 
@@ -388,10 +388,8 @@ function search_data() {
  */
 function search_type($type = 0, $action = 0, $query = 0, $options = 0) {
 
-  $edit = $_POST["edit"];
-
   if (isset($type)) {
-    $edit["type"][$type] = "on";
+    $_POST["edit"]["type"][$type] = "on";
   }
 
   return search_form($action, $query, $options) . search_data();
