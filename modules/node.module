@@ -575,7 +575,7 @@ function node_link($type, $node = 0, $main = 0) {
   }
 
   if ($type == "system") {
-    menu("node/add", t("create content"), NULL, 1);
+    menu("node/add", t("create content"), 'node_page', 1, MENU_HIDE_NOCHILD);
 
     if (user_access("administer nodes")) {
       menu("admin/node", t("content"), "node_admin");
