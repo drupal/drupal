@@ -1,5 +1,6 @@
 <?php
-die("For now you will have to do the updates from the command line.")
+print ("For now you will have to do the updates from the command line.");
+exit;
 
 include "includes/common.inc";
 
