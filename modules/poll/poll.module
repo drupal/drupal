@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.55 2002/05/21 11:50:00 unconed Exp $
+// $Id: poll.module,v 1.56 2002/05/21 23:46:07 unconed Exp $
 
 function poll_access($op, $node) {
   if ($op == "view") {
@@ -233,6 +233,7 @@ function poll_view(&$node, $main = 0, $block = 0) {
     else {
       $output .= "</td><td valign=\"middle\"><div align=\"right\">&nbsp;&nbsp;&nbsp;". form_submit(t("Vote")) ."</div></td></tr></table>";
     }
+    $output .= $block ? "<div align=\"center\">". $theme->links(link_node($node, $main)) ."</div>" : "";
     $output .= "</form>";
   }
   else {
