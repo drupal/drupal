@@ -8,7 +8,7 @@ function story_render($id, $cid) {
   $result = db_query("SELECT s.*, u.userid FROM stories s LEFT JOIN users u ON s.author = u.id WHERE s.status != 0 AND s.id = $id");
 
   if ($story = db_fetch_object($result)) {
-    $theme->article($story, "[ <A HREF=\"story.php?id=$id\">reply to this story</A> ]");
+    $theme->article($story, "[ <A HREF=\"story.php?op=reply&id=$id&pid=0\">reply to this story</A> ]");
     comment_render($id, $cid);
   }
   else {
