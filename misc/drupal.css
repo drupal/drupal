@@ -1,0 +1,15 @@
+.item-list .title  { font-weight: bold; }
+.item-list ul      { margin: 0 0 0.75em 0; padding: 0; }
+.item-list ul li   { margin: 0 0 0.25em 1.5em; padding: 0; list-style: disc; }
+
+.blog-it           { color: #555; float: right; padding-left: 0.25em; }
+.blog-it a         { color: #000; text-decoration: none; }
+.blog-it a:hover   { color: #000; text-decoration: none; }
+
+.poll-foreground   { background-color: #000; }
+.poll-background   { background-color: #ddd; }
+
+.form-item .title  { font-weight: bold; margin-top: 1.1em; margin-bottom: 1px; }
+.form-item .description { font-size: 0.85em; }
+
+.inline-container div { display: inline; }

@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.134 2003/05/26 19:50:39 dries Exp $
+// $Id: theme.inc,v 1.135 2003/05/29 10:18:33 dries Exp $
 
 /**
 * Basic theme
@@ -99,17 +99,19 @@ function theme_item_list($items = array(), $title = NULL) {
   /*
   ** Return a formatted array of items.
   */
-
+  $output .= "<div class=\"item-list\">";
   if (isset($title)) {
-    $output .= "<b>$title</b><br />";
+    $output .= "<div class=\"title\">$title</div>";
   }
 
   if (isset($items)) {
+    $output .= "<ul>";
     foreach ($items as $item) {
-      $output .= "- $item<br />";
+      $output .= "<li>$item</li>";
     }
+    $output .= "</ul>";
   }
-
+  $output .= "</div>";
   return $output;
 }
 
@@ -141,8 +143,14 @@ function theme_list($refresh = 0) {
 }
 
 function theme_head($main = 0) {
+  global $base_url;
   $head = module_invoke_all("head", $main);
-  return implode($head, "\n");
+  $output .= "<base href=\"$base_url/\" />\n";
+  $output .= "<style type=\"text/css\">\n";
+  $output .= "@import url(misc/drupal.css);\n";
+  $output .= "</style>\n";
+  $output .= implode($head, "\n");
+  return $output;
 }
 
 /*
