@@ -71,6 +71,8 @@ function showUser($uname) {
 }
 
 function newUser($user = "", $error="") {
+  global $theme;
+
   $output .= "<FORM ACTION=\"account.php\" METHOD=post>\n";
   $output .= "<TABLE BORDER=0 CELLPADDING=2 CELLSPACING=2>\n";
   if (!empty($error)) $output .= "<TR><TD COLSPAN=2>$error</TD></TR>\n";
