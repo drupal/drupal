@@ -59,11 +59,10 @@ $mysql_updates = array(
   "2002-11-08" => "update_44",
   "2002-11-20" => "update_45",
   "2002-12-10: first update since Drupal 4.1.0 release" => "update_46",
-  "2002-12-22" => "update_47",
-  "2002-12-29" => "update_48",
-  "2003-01-03" => "update_49",
-  "2003-01-05" => "update_50",
-  "2003-01-15" => "update_51"
+  "2002-12-29" => "update_47",
+  "2003-01-03" => "update_48",
+  "2003-01-05" => "update_49",
+  "2003-01-15" => "update_50"
 );
 
 // Update functions
@@ -648,33 +647,30 @@ function update_46() {
 }
 
 function update_47() {
-  update_sql("CREATE TABLE menu (
-    name varchar(255) NOT NULL default '',
-    link varchar(255) NOT NULL default '',
-    help TEXT default '',
-    title varchar(255) NOT NULL default '',
-    parent varchar(255) NOT NULL default '',
-    weight tinyint(4) DEFAULT '0' NOT NULL
-  );");
-}
-
-function update_48() {
   if ($max = db_result(db_query("SELECT MAX(vid) FROM vocabulary"))) {
     update_sql("REPLACE INTO sequences VALUES ('vocabulary', $max)");
   }
 }
 
-function update_49() {
+function update_48() {
   update_sql("ALTER TABLE watchdog ADD link varchar(255) DEFAULT '' NULL");
 }
 
-function update_50() {
+function update_49() {
   update_content("%admin.php%");
   update_content("%module.php%");
   update_content("%node.php%");
+
+  /*
+  ** Make sure the admin module is added to the system table or the
+  ** admin menus won't show up.
+  */
+
+  update_sql("DELETE FROM system WHERE name = 'admin';");
+  update_sql("INSERT INTO system VALUES ('modules/admin.module','admin','module','',1)");
 }
 
-function update_51() {
+function update_50() {
   update_sql("ALTER TABLE forum ADD tid INT UNSIGNED NOT NULL");
   $result = db_queryd("SELECT n.nid, t.tid FROM node n, term_node t WHERE n.nid = t.nid AND type = 'forum'");
   while ($node = db_fetch_object($result)) {
