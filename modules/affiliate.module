@@ -18,6 +18,7 @@ function affiliate_block() {
   $content .= "  //-->\n";
   $content .= "</SCRIPT>\n";
 
+  $content .= "<CENTER>\n";
   $content .= "<FORM ACTION=\"\" METHOD=\"post\">\n";
   $content .= " <SELECT NAME=\"affiliate\" ONCHANGE=\"gotosite(this.options[this.selectedIndex].value)\">\n";
   $content .= "  <OPTION VALUE=\"$site_url\">select a site</OPTION>\n";
@@ -27,6 +28,7 @@ function affiliate_block() {
 
   $content .= " </SELECT>\n";
   $content .= "</FORM>\n";
+  $content .= "</CENTER>\n";
  
   $blocks[0]["subject"] = "Affiliates";
   $blocks[0]["content"] = $content;
