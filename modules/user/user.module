@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.328 2004/05/24 18:37:50 dries Exp $
+// $Id: user.module,v 1.329 2004/05/24 19:17:19 dries Exp $
 
 /**
  * Invokes hook_user() in every module.
@@ -47,7 +47,7 @@ function user_load($array = array()) {
       $query .= "LOWER(u.$key) = '". strtolower(check_query($value)) ."' AND ";
     }
   }
-  $result = db_query_range('SELECT u.* FROM {users} u WHERE $query u.status < 3', 0, 1);
+  $result = db_query_range("SELECT u.* FROM {users} u WHERE $query u.status < 3", 0, 1);
 
   $user = db_fetch_object($result);
   $user = drupal_unpack($user);
