@@ -60,12 +60,11 @@ function book_view($node, $main = 0) {
   $theme->box(t("Handbook"), $output);
 }
 
-function book_find($keys) {
+function book_search($keys) {
   global $status, $user;
-  $find = array();
   $result = db_query("SELECT n.*, u.userid FROM node n LEFT JOIN book b ON n.nid = b.nid AND n.lid = b.lid LEFT JOIN users u ON n.author = u.id WHERE n.type = 'book' AND n.status = '$status[posted]' AND (n.title LIKE '%". check_input($keys) ."%' OR b.body LIKE '%". check_input($keys) ."%') ORDER BY n.timestamp DESC LIMIT 20");
   while ($node = db_fetch_object($result)) {
-    array_push($find, array("title" => check_output($node->title), "link" => (user_access($user, "book") ? "admin.php?mod=book&op=edit&id=$node->nid" : "node.php?id=$node->nid"), "user" => $node->userid, "date" => $node->timestamp));
+    $find[$i++] = array("title" => check_output($node->title), "link" => (user_access($user, "book") ? "admin.php?mod=book&op=edit&id=$node->nid" : "node.php?id=$node->nid"), "user" => $node->userid, "date" => $node->timestamp);
   }
   return $find;
 }
