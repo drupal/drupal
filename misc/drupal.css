@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.99 2005/03/27 15:54:44 unconed Exp $ */
+/* $Id: drupal.css,v 1.100 2005/03/27 21:28:25 unconed Exp $ */
 
 /*
 ** HTML elements
@@ -481,7 +481,7 @@ tr.watchdog-content .active {
 tr.watchdog-page-not-found, tr.watchdog-access-denied {
   background: #dfd;
 }
-tr.watchdog-pagenot-found .active, tr.watchdog-access-denied .active {
+tr.watchdog-page-not-found .active, tr.watchdog-access-denied .active {
   background: #cec;
 }
 tr.watchdog-error {
