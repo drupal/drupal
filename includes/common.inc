@@ -660,7 +660,7 @@ function format_date($timestamp, $type = "medium", $format = "") {
 
   switch ($type) {
     case "small":
-      $date = date(variable_get("date_format", "m/d/Y - H:i"), $timestamp);
+      $date = date(variable_get("date_format_short", "m/d/Y - H:i"), $timestamp);
       break;
     case "medium":
       $date = date(variable_get("date_format_medium", "D, m/d/Y - H:i"), $timestamp);
