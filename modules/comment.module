@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.309 2004/11/21 20:17:44 dries Exp $
+// $Id: comment.module,v 1.310 2004/11/29 12:59:21 dries Exp $
 
 /**
  * @file
@@ -1405,11 +1405,9 @@ function theme_comment_form($edit, $title) {
   $form .= form_hidden('pid', $edit['pid']);
   $form .= form_hidden('nid', $edit['nid']);
 
-  if (variable_get('comment_preview', 1)) {
-    $form .= form_submit(t('Preview comment'));
-  }
+  $form .= form_submit(t('Preview comment'));
 
-  if (!form_get_errors()) {
+  if (!variable_get('comment_preview', 1) || ($_POST['op'] == t('Preview comment') && !form_get_errors())) {
     $form .= form_submit(t('Post comment'));
   }
 
