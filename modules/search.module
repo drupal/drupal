@@ -249,7 +249,7 @@ function search_keywords_split($text) {
  * Helper function for array_walk in search_keywords_split.
  */
 function _search_keywords_truncate(&$text) {
-  $text = truncate_utf8($text, 3);
+  $text = truncate_utf8($text, 50);
 }
 
 /**
