@@ -2,30 +2,30 @@
 
 include_once "modules/backend.class";
 
-function syndication_help() {
+function import_help() {
  ?>
   <P>TODO - anyone?</P>
  <?php
 }
 
-function syndication_cron() {
+function import_cron() {
   $result = db_query("SELECT * FROM feed");
   while ($feed = db_fetch_array($result)) {
     // remove expired items:
     db_query("DELETE FROM item WHERE fid = '$feed[fid]' AND timestamp - ". time() ." > $feed[uncache]");
 
     // update feeds:
-    if ($feed[timestamp] + $feed[refresh] < time()) syndication_update($feed);
+    if ($feed[timestamp] + $feed[refresh] < time()) import_update($feed);
   }
 }
 
-function syndication_bundle($attribute) {
+function import_bundle($attribute, $limit = 100) {
   if ($attribute) {
     // compose query:
     $keys = explode(",", $attribute);
     foreach ($keys as $key) $where[] = "attribute LIKE '%". trim($key) ."%'";
 
-    $result = db_query("SELECT * FROM item WHERE ". implode(" OR ", $where) ." ORDER BY timestamp DESC");
+    $result = db_query("SELECT * FROM item WHERE ". implode(" OR ", $where) ." ORDER BY timestamp DESC LIMIT $limit");
 
     while ($item = db_fetch_object($result)) {
       $output .= "<LI><A HREF=\"". check_output($item->link) ."\">". check_output($item->title) ."</A></LI>";
@@ -35,15 +35,26 @@ function syndication_bundle($attribute) {
   }
 }
 
-function syndication_view_bundle() {
+function import_view_bundle() {
   $result = db_query("SELECT * FROM bundle ORDER BY title");
   while ($bundle = db_fetch_object($result)) {
-    $output .= "<B>$bundle->title</B><UL>". syndication_bundle($bundle->attribute) ."</UL>";
+    $output .= "<B>$bundle->title</B><UL>". import_bundle($bundle->attribute) ."</UL>";
   }
   return $output;
 }
 
-function syndication_update($feed) {
+function import_block() {
+  $result = db_query("SELECT * FROM bundle ORDER BY title");
+  while ($bundle = db_fetch_object($result)) {
+    $i++;
+    $blocks[$i][subject] = $bundle->title;
+    $blocks[$i][content] = import_bundle($bundle->attribute, 10);
+    $blocks[$i][info] = "$bundle->title bundle";
+  }
+  return $blocks;
+}
+
+function import_update($feed) {
 
   // open socket:
   $url = parse_url($feed[link]);
@@ -65,7 +76,7 @@ function syndication_update($feed) {
         $d = eregi("<description>(.*)</description>", $item, $description);
 
         if ($l || $t || $a || $d) {
-          syndication_save_item(array(fid => $feed[fid], title => $title[0], link => $link[0], author => $author[0], description => $description[0], attribute => $feed[attribute]));
+          import_save_item(array(fid => $feed[fid], title => $title[0], link => $link[0], author => $author[0], description => $description[0], attribute => $feed[attribute]));
         }
       }
 
@@ -77,7 +88,7 @@ function syndication_update($feed) {
   }
 }
 
-function syndication_save_item($edit) {
+function import_save_item($edit) {
   if ($edit[iid] && $edit[title]) {
     db_query("UPDATE item SET title = '". check_input($edit[title]) ."', link = '". check_input($edit[link]) ."', author = '". check_input($edit[author]) ."', description = '". check_input($edit[description]) ."', attribute = '". check_input($edit[attribute]) ."' WHERE iid = '$edit[iid]'");
   }
@@ -91,7 +102,7 @@ function syndication_save_item($edit) {
   }
 }
 
-function syndication_form_bundle($edit = array()) {
+function import_form_bundle($edit = array()) {
   global $REQUEST_URI;
 
   $form .= form_textfield("Title", "title", $edit[title], 50, 64, "The name of the bundle.");
@@ -107,7 +118,7 @@ function syndication_form_bundle($edit = array()) {
   return form($REQUEST_URI, $form);
 }
 
-function syndication_save_bundle($edit) {
+function import_save_bundle($edit) {
   if ($edit[bid] && $edit[title]) {
     db_query("UPDATE bundle SET title = '". check_input($edit[title]) ."', attribute = '". check_input($edit[attribute]) ."' WHERE bid = '". check_input($edit[bid]) ."'");
   }
@@ -117,9 +128,11 @@ function syndication_save_bundle($edit) {
   else {
     db_query("INSERT INTO bundle (title, attribute) VALUES ('". check_input($edit[title]) ."', '". check_input($edit[attribute]) ."')");
   }
+
+  module_rehash_blocks("import");
 }
 
-function syndication_form_feed($edit = array()) {
+function import_form_feed($edit = array()) {
   global $REQUEST_URI;
 
   $period = array(900 => format_interval(900), 1800 => format_interval(1800), 3600 => format_interval(3600), 7200 => format_interval(7200), 10800 => format_interval(10800), 21600 => format_interval(21600), 32400 => format_interval(32400), 43200 => format_interval(43200), 64800 => format_interval(64800), 86400 => format_interval(86400), 172800 => format_interval(172800), 259200 => format_interval(259200), 604800 => format_interval(604800), 1209600 => format_interval(1209600), 2419200 => format_interval(2419200));
@@ -140,7 +153,7 @@ function syndication_form_feed($edit = array()) {
   return form($REQUEST_URI, $form);
 }
 
-function syndication_save_feed($edit) {
+function import_save_feed($edit) {
   if ($edit[fid] && $edit[title]) {
     db_query("UPDATE feed SET title = '". check_input($edit[title]) ."', link = '". check_input($edit[link]) ."', attribute = '". check_input($edit[attribute]) ."', refresh = '". check_input($edit[refresh]) ."', uncache = '". check_input($edit[uncache]) ."' WHERE fid = '". check_input($edit[fid]) ."'");
     db_query("DELETE FROM item WHERE fid = '". check_input($edit[fid]) ."'");
@@ -154,29 +167,29 @@ function syndication_save_feed($edit) {
   }
 }
 
-function syndication_save_attributes($edit) {
+function import_save_attributes($edit) {
   foreach($edit as $iid => $value) {
     db_query("UPDATE item SET attribute = '". check_input($value) ."' WHERE iid = '". check_input($iid) ."'");
   }
   return "attributes has been saved";
 }
 
-function syndication_get_feed($fid) {
+function import_get_feed($fid) {
   return db_fetch_array(db_query("SELECT * FROM feed WHERE fid = '". check_input($fid) ."'"));
 }
 
-function syndication_get_bundle($bid) {
+function import_get_bundle($bid) {
   return db_fetch_array(db_query("SELECT * FROM bundle WHERE bid = '". check_input($bid) ."'"));
 }
 
-function syndication_view_feed() {
+function import_view_feed() {
   $result = db_query("SELECT f.*, COUNT(i.iid) AS items FROM feed f LEFT JOIN item i ON f.fid = i.fid GROUP BY f.fid ORDER BY f.title");
 
   $output .= "<H3>Feed overview</H3>";
   $output .= "<TABLE BORDER=\"1\" CELLSPADDING=\"2\" CELLSPACING=\"2\">\n";
   $output .= " <TR><TH>title</TH><TH>attributes</TH><TH>items</TH><TH>last update</TH><TH>next update</TH><TH COLSPAN=\"2\">operations</TH></TR>\n";
   while ($feed = db_fetch_object($result)) {
-    $output .= " <TR><TD>". check_output($feed->title) ."</TD><TD>". check_output($feed->attribute) ."</TD><TD>". format_plural($feed->items, "item", "items") ."</TD><TD>". ($feed->timestamp ? format_interval(time() - $feed->timestamp) ." ago" : "never") ."</TD><TD>". ($feed->timestamp ? format_interval($feed->timestamp + $feed->refresh - time()) ." left" : "never") ."</TD><TD><A HREF=\"admin.php?mod=syndication&type=feed&op=edit&id=$feed->fid\">edit feed</A></TD><TD><A HREF=\"admin.php?mod=syndication&type=feed&op=update&id=$feed->fid\">update items</A></TD></TR>\n";
+    $output .= " <TR><TD>". check_output($feed->title) ."</TD><TD>". check_output($feed->attribute) ."</TD><TD>". format_plural($feed->items, "item", "items") ."</TD><TD>". ($feed->timestamp ? format_interval(time() - $feed->timestamp) ." ago" : "never") ."</TD><TD>". ($feed->timestamp ? format_interval($feed->timestamp + $feed->refresh - time()) ." left" : "never") ."</TD><TD><A HREF=\"admin.php?mod=import&type=feed&op=edit&id=$feed->fid\">edit feed</A></TD><TD><A HREF=\"admin.php?mod=import&type=feed&op=update&id=$feed->fid\">update items</A></TD></TR>\n";
   }
   $output .= "</TABLE>\n";
 
@@ -186,14 +199,14 @@ function syndication_view_feed() {
   $output .= "<TABLE BORDER=\"1\" CELLSPADDING=\"2\" CELLSPACING=\"2\">\n";
   $output .= " <TR><TH>title</TH><TH>attributes</TH><TH>operations</TH></TR>\n";
   while ($bundle = db_fetch_object($result)) {
-    $output .= " <TR><TD>". check_output($bundle->title) ."</TD><TD>". check_output($bundle->attribute) ."</TD><TD><A HREF=\"admin.php?mod=syndication&type=bundle&op=edit&id=$bundle->bid\">edit bundle</A></TD></TR>\n";
+    $output .= " <TR><TD>". check_output($bundle->title) ."</TD><TD>". check_output($bundle->attribute) ."</TD><TD><A HREF=\"admin.php?mod=import&type=bundle&op=edit&id=$bundle->bid\">edit bundle</A></TD></TR>\n";
   }
   $output .= "</TABLE>\n";
 
   return $output;
 }
 
-function syndication_view_item() {
+function import_view_item() {
   global $REQUEST_URI;
 
   $result = db_query("SELECT i.*, f.title AS feed FROM item i LEFT JOIN feed f ON i.fid = f.fid ORDER BY i.timestamp DESC LIMIT 50");
@@ -202,7 +215,7 @@ function syndication_view_item() {
   $output .= "<TABLE BORDER=\"1\" CELLSPADDING=\"2\" CELLSPACING=\"2\">\n";
   $output .= " <TR><TH>time</TH><TH>feed</TH><TH>item</TH></TR>\n";
   while ($item = db_fetch_object($result)) {
-    $output .= " <TR><TD VALIGN=\"top\" NOWRAP>". format_date($item->timestamp, "custom", "m/d/y") ."<BR>".format_date($item->timestamp, "custom", "H:i") ."</TD><TD ALIGN=\"center\" VALIGN=\"top\" NOWRAP><A HREF=\"admin.php?mod=syndication&type=feed&op=edit&id=$item->fid\">". check_output($item->feed) ."</A></TD><TD><A HREF=\"". check_output($item->link) ."\">". check_output($item->title) ."</A>". ($item->description ? "<BR><SMALL><I>". check_output($item->description) ."</I></SMALL>" : "") ."<BR><INPUT TYPE=\"text\" NAME=\"edit[$item->iid]\" VALUE=\"". check_form($item->attribute) ."\" SIZE=\"50\"></TD></TR>\n";
+    $output .= " <TR><TD VALIGN=\"top\" NOWRAP>". format_date($item->timestamp, "custom", "m/d/y") ."<BR>".format_date($item->timestamp, "custom", "H:i") ."</TD><TD ALIGN=\"center\" VALIGN=\"top\" NOWRAP><A HREF=\"admin.php?mod=import&type=feed&op=edit&id=$item->fid\">". check_output($item->feed) ."</A></TD><TD><A HREF=\"". check_output($item->link) ."\">". check_output($item->title) ."</A>". ($item->description ? "<BR><SMALL><I>". check_output($item->description) ."</I></SMALL>" : "") ."<BR><INPUT TYPE=\"text\" NAME=\"edit[$item->iid]\" VALUE=\"". check_form($item->attribute) ."\" SIZE=\"50\"></TD></TR>\n";
   }
   $output .= "</TABLE>\n";
   $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Save attributes\">\n";
@@ -211,51 +224,51 @@ function syndication_view_item() {
   return $output;
 }
 
-function syndication_admin() {
+function import_admin() {
   global $op, $id, $type, $edit;
 
-  print "<SMALL><A HREF=\"admin.php?mod=syndication&type=bundle&op=add\">add new bundle</A> | <A HREF=\"admin.php?mod=syndication&type=feed&op=add\">add new feed</A> | <A HREF=\"admin.php?mod=syndication&type=bundle&op=view\">available bundles</A> | <A HREF=\"admin.php?mod=syndication&type=item&op=view\">available items</A> | <A HREF=\"admin.php?mod=syndication&op=view\">overview</A> | <A HREF=\"admin.php?mod=syndication&op=help\">help</A></SMALL><HR>";
+  print "<SMALL><A HREF=\"admin.php?mod=import&type=bundle&op=add\">add new bundle</A> | <A HREF=\"admin.php?mod=import&type=feed&op=add\">add new feed</A> | <A HREF=\"admin.php?mod=import&type=bundle&op=view\">available bundles</A> | <A HREF=\"admin.php?mod=import&type=item&op=view\">available items</A> | <A HREF=\"admin.php?mod=import&op=view\">overview</A> | <A HREF=\"admin.php?mod=import&op=help\">help</A></SMALL><HR>";
 
   switch($op) {
     case "help":
-      print syndication_help();
+      print import_help();
       break;
     case "add":
       if ($type == "bundle")
-        print syndication_form_bundle();
+        print import_form_bundle();
       else
-        print syndication_form_feed();
+        print import_form_feed();
       break;
     case "edit":
       if ($type == "bundle")
-        print syndication_form_bundle(syndication_get_bundle($id));
+        print import_form_bundle(import_get_bundle($id));
       else
-        print syndication_form_feed(syndication_get_feed($id));
+        print import_form_feed(import_get_feed($id));
       break;
     case "update":
-      print syndication_update(syndication_get_feed($id));
-      print syndication_view_feed();
+      print import_update(import_get_feed($id));
+      print import_view_feed();
       break;
     case "Save attributes":
-      print status(syndication_save_attributes($edit));
-      print syndication_view_item();
+      print status(import_save_attributes($edit));
+      print import_view_item();
       break;
     case "Delete":
       $edit[title] = 0;
       // fall through:
     case "Submit":
       if ($type == "bundle")
-        print status(syndication_save_bundle($edit));
+        print status(import_save_bundle($edit));
       else
-        print status(syndication_save_feed($edit));
+        print status(import_save_feed($edit));
       // fall through:
     default:
       if ($type == "bundle")
-        print syndication_view_bundle();
+        print import_view_bundle();
       else if ($type == "item")
-        print syndication_view_item();
+        print import_view_item();
       else
-        print syndication_view_feed();
+        print import_view_feed();
   }
 }
 

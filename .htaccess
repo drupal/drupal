@@ -8,11 +8,6 @@
   deny from all
 </Files>
 
-# Syndicate content:
-<Files export>
-  ForceType application/x-httpd-php
-</Files>
-
 # Customized server error messages:
 ErrorDocument 400 /error.php
 ErrorDocument 402 /error.php
