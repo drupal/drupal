@@ -86,9 +86,9 @@ function forum_block($op = "list", $delta = 0) {
   }
   else {
     if (user_access("access content")) {
-      $content = cache_get("forum:block");
+      $cache = cache_get("forum:block");
 
-      if (!$content) {
+      if (empty($cache)) {
         unset($items);
         $content = node_title_list(db_query("SELECT n.nid, n.title, u.uid, u.name, GREATEST(n.created, MAX(c.timestamp)) AS sort FROM node n, forum f LEFT JOIN comments c ON c.nid = n.nid LEFT JOIN users u ON n.uid = u.uid WHERE n.type = 'forum' AND n.nid = f.nid AND f.shadow = 0 AND n.status = 1 GROUP BY n.nid ORDER BY sort DESC LIMIT ". variable_get("forum_block_num", "5")), t("Active forum topics:"));
         $content .= "<br />";
@@ -102,9 +102,12 @@ function forum_block($op = "list", $delta = 0) {
 
         cache_set("forum:block", $content, time() + variable_get("cache_clear", 120));
       }
+      else {
+        $content = $cache->data;
+      }
 
       $blocks["subject"] = t("Forum topics");
-      $blocks["content"] = $content->data;
+      $blocks["content"] = $content;
     }
   }
 
@@ -310,9 +313,9 @@ function forum_get_forums($tid = 0) {
     $tid = 0;
   }
 
-  $forums = cache_get("forum:$tid");
+  $cache = cache_get("forum:$tid");
 
-  if (!$forums) {
+  if (empty($cache)) {
     $forums = array();
     $_forums = taxonomy_get_tree(variable_get("forum_nav_vocabulary", ""), $tid);
     $n = 0;
@@ -331,9 +334,11 @@ function forum_get_forums($tid = 0) {
 
     cache_set("forum:$tid", serialize($forums), time() + variable_get("cache_clear", 120));
   }
+  else {
+    $forums = unserialize($cache->data);
+  }
 
   if ($user->uid && $forums) {
-    $forums = unserialize($forums);
     foreach (_forum_topics_read($user->uid) as $tid => $old) {
       if ($forums[$tid]) {
         $forums[$tid]->old_topics = $old;
@@ -353,6 +358,7 @@ function forum_get_parents($tid) {
     $parents = array_merge($parents, $parent);
     $n++;
   }
+
   return $parents;
 }
 
