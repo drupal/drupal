@@ -812,7 +812,7 @@ function comment_admin_overview($status = 0) {
 }
 
 function comment_mod_matrix($edit) {
-  global $tid, $rid;
+  global $rid;
 
   $output .= "<h3>Moderators/vote values matrix</h3>";
   $output .= "<p><small><b>Note:</b> you must assign the <b>moderate comments</b> permission to at least one role in order to use this page.</small></p>";
@@ -884,7 +884,9 @@ function comment_mod_roles($edit) {
 }
 
 function comment_mod_votes($edit) {
-  global $op, $mid, $tid;
+  global $op;
+
+  $mid = arg(3);
 
   if ($op == t("Save vote")) {
     db_query("UPDATE moderation_votes SET vote = '%s', weight = '%d' WHERE mid = '%d'", $edit["vote"], $edit["weight"], $mid);
@@ -931,7 +933,9 @@ function comment_mod_votes($edit) {
 }
 
 function comment_mod_filters($edit) {
-  global $op, $fid, $tid;
+  global $op;
+
+  $fid = arg(3);
 
   if ($op == t("Save threshold")) {
     db_query("UPDATE moderation_filters SET filter = '%s', minimum = '%d' WHERE fid = '%d'", $edit["filter"], $edit["minimum"], $fid);
