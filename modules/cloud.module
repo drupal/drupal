@@ -42,11 +42,11 @@ function cloud_link($type) {
   }
 
   if ($type == "admin" && user_access("administer site cloud")) {
-    $help["general"] = t("The cloud monitor tracks or crawls other interesting web sites and displays their last modification dates. Visitors to the host site learn about relevant sites and can easily see if there is new content. To get the blogroll to work you <b>must</b> setup cron support. To get the blogroll block to display you must turn on the <a href=\"%block\">Site cloud block</a>. To go to a monitored site, click on the site name, to load and/or update the blogroll for that site immediately click on \"update site\", to delete the site go to \"edit site\". ", array("%block" => url("admin/block")));
-    $help["add"] = t("Add a site too the blogroll. Don't forget the \"http://\" for your URLs.");
+    $help["general"] = t("The cloud monitor tracks or crawls other interesting web sites and displays their last modification dates. Visitors to the host site learn about relevant sites and can easily see if there is new content. To get the blogroll to work you <b>must</b> setup cron support. To get the site cloud block to display you must turn on the <a href=\"%block\">Site cloud block</a>. To go to a monitored site, click on the site name, to load and/or update the record for that site immediately click on \"update site\", to delete the site go to \"edit site\". ", array("%block" => url("admin/block")));
+    $help["add"] = t("Add a site to the site cloud. Don't forget the \"http://\" for your URLs.");
 
     menu("admin/syndication", "content syndication", NULL, NULL, 5);
-    menu("admin/syndication/cloud", "blogrolling", "cloud_admin", $help["general"]);
+    menu("admin/syndication/cloud", "site cloud", "cloud_admin", $help["general"]);
     menu("admin/syndication/cloud/add", "add new site", "cloud_admin", $help["add"]);
     menu("admin/syndication/cloud/help", "help", "cloud_help", NULL, 9);
   }

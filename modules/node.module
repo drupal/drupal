@@ -17,7 +17,7 @@ function node_help() {
   $output .= "<dt>Allow user comments</dt><dd>A node can have comments, which are other nodes. These comments can be written by other users (Read-write), or only by admins (Read-only).</dd>";
   $output .= "<dt>Attributes</dt><dd>A way to sort nodes.</dd><dt>Revisions</dt><dd>Drupal has a revision system so that you can \"roll back\" to an older version of a node if the new version is not what you want.</dd>";
   $output .= "<dt>Promote to front page</dt><dd>To get people to look at the new stuff on your site you can choose to move it to the front page.</dd>";
-  $output .= "<dt>Approved</dt><dd>Drupal has a moderation system. If it is active, a node is in one of three states: approved and published, approved and unpublished, and awaiting approval. If you are <b>not</b> moderating a node it should be approved.</dd>";
+  $output .= "<dt>In moderation queue</dt><dd>Drupal has a moderation system. If it is active, a node is in one of three states: approved and published, approved and unpublished, and awaiting approval. If you are moderating a node it should be in the moderation queue.</dd>";
   $output .= "<dt>Votes</dt><dd>If you are moderating a node this counts how many votes the node has gotten. Once a node gets a certain number of vote if will either be Approved, or Dropped (To setup the number of votes needed and the promote and dump scores ". l("click here","admin/system/modules/queue") .".)</a>.</dd>";
   $output .= "<dt>Score</dt><dd>The score of the node is gotten by the votes it is given.</dd>";
   $output .= "<dt>Users</dt><dd>The list of users who have voted on a moderated node.</dd>";
@@ -864,7 +864,7 @@ function node_block($op = "list", $delta = 0) {
 }
 
 function node_feed($nodes = 0, $channel = array()) {
-  global $base_url;
+  global $base_url, $languages;
 
   /*
   ** A generic function for generating RSS feeds from a set of nodes.
@@ -884,14 +884,15 @@ function node_feed($nodes = 0, $channel = array()) {
     $items .= format_rss_item($item->title, $link, $item->teaser);
   }
 
-  $output .= "<?xml version=\"1.0\" ". t("encoding=\"ISO-8859-1\""). "?>\n";
+  $output .= "<?xml version=\"1.0\" encoding=\"". variable_get("site_charset", "iso-8859-1") ."\"?>\n";
   $output .= "<!DOCTYPE rss [<!ENTITY % HTMLlat1 PUBLIC \"-//W3C//ENTITIES Latin 1 for XHTML//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml-lat1.ent\">]>\n";
     // NOTE: &eacute; - for example - is the correct ISO-8859-1 translation of  (e acute) but apparently XML parsers don't (have to) understand it.  To solve this problem, we use a DTD that defines commonly used entity such as &eacute;.
   if (!$channel["version"]) $channel["version"] = "0.91";
   if (!$channel["title"]) $channel["title"] = variable_get("site_name", "drupal") ." - ". variable_get("site_slogan", "");
   if (!$channel["link"]) $channel["link"] = $base_url;
   if (!$channel["description"]) $channel["description"] = variable_get("site_mission", "");
-  if (!$channel["language"]) $channel["language"] = "en";
+  foreach ($languages as $key => $value) break;
+  if (!$channel["language"]) $channel["language"] = $key ? $key : "en";
   $output .= "<rss version=\"". $channel["version"] . "\">\n";
   $output .= format_rss_channel($channel["title"], $channel["link"], $channel["description"], $items, $channel["language"]);
   $output .= "</rss>\n";
@@ -1050,14 +1051,37 @@ function node_form($edit, $error = NULL) {
     $output .= "<p>$help</p>";
   }
 
-  $output .= "<table border=\"0\" cellpadding=\"2\" cellspacing=\"2\">";
-  $output .= " <tr>";
-  $output .= "  <td valign=\"top\">";
+  $output .= "<div class=\"node-form\">";
+
+  /*
+  ** Add the admin specific parts:
+  */
+
+  if (user_access("administer nodes")) {
+    $output .= "<div class=\"admin\">";
+    $output .= "<div class=\"authored\">";
+    $output .= form_textfield(t("Authored by"), "name", $edit->name, 20, 60, $error["name"]);
+    $output .= form_textfield(t("Authored on"), "date", $edit->date, 20, 25, $error["date"]);
+    $output .= "</div>";
+
+    $options .= form_checkbox(t("Published"), "status", 1, isset($edit->status) ? $edit->status : variable_get("node_status_$edit->type", 1));
+    $options .= form_checkbox(t("In moderation queue"), "moderate", 1, isset($edit->moderate) ? $edit->moderate : variable_get("node_moderate_$edit->type", 0));
+    $options .= form_checkbox(t("Promoted to front page"), "promote", 1, isset($edit->promote) ? $edit->promote : variable_get("node_promote_$edit->type", 1));
+    $options .= form_checkbox(t("Static on front page"), "static", 1, isset($edit->static) ? $edit->static : variable_get("node_static_$edit->type", 0));
+    $options .= form_checkbox(t("Create new revision"), "revision", 1, isset($edit->revision) ? $edit->revision : variable_get("node_revision_$edit->type", 0));
+
+    $output .= "<div class=\"options\">";
+    $output .= form_item(t("Options"), $options);
+    $output .= "</div>";
+
+    $extras .= implode("</div><div class=\"extra\">", node_invoke_all($edit, "nodeapi", "form admin"));
+    $output .= $extras ? "<div class=\"extra\">$extras</div></div>" : "</div>";
+  }
 
   /*
   ** Add the default fields:
   */
-
+  $output .= "<div class=\"standard\">";
   $output .= form_textfield(t("Title"), "title", $edit->title, 60, 64, $error["title"]);
 
   /*
@@ -1105,26 +1129,7 @@ function node_form($edit, $error = NULL) {
     $output .= form_submit(t("Delete"));
   }
 
-  /*
-  ** Add the admin specific parts:
-  */
-
-  if (user_access("administer nodes")) {
-    $output .= "</td><td align=\"left\" valign=\"top\">";
-    $output .= form_textfield(t("Authored by"), "name", $edit->name, 20, 60, $error["name"]);
-    $output .= form_textfield(t("Authored on"), "date", $edit->date, 20, 25, $error["date"]);
-    $output .= "<br />";
-    $output .= form_checkbox(t("Published"), "status", 1, isset($edit->status) ? $edit->status : variable_get("node_status_$edit->type", 1));
-    $output .= form_checkbox(t("Approved"), "moderate", 1, isset($edit->moderate) ? $edit->moderate : variable_get("node_moderate_$edit->type", 0));
-    $output .= form_checkbox(t("Promoted to front page"), "promote", 1, isset($edit->promote) ? $edit->promote : variable_get("node_promote_$edit->type", 1));
-    $output .= form_checkbox(t("Static on front page"), "static", 1, isset($edit->static) ? $edit->static : variable_get("node_static_$edit->type", 0));
-    $output .= form_checkbox(t("Create new revision"), "revision", 1, isset($edit->revision) ? $edit->revision : variable_get("node_revision_$edit->type", 0));
-    $output .= implode("", node_invoke_all($edit, "nodeapi", "form admin"));
-  }
-
-  $output .= "  </td>";
-  $output .= " </tr>";
-  $output .= "</table>";
+  $output .= "</div></div>";
 
   return form($output, ($param["method"] ? $param["method"] : "post"), $param["action"], $param["options"]);
 }

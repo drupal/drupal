@@ -207,6 +207,10 @@ function variable_del($name) {
   unset($conf[$name]);
 }
 
+function drupal_specialchars($input) {
+  return htmlspecialchars($input, ENT_NOQUOTES, variable_get("site_charset", "iso-8859-1"));
+}
+
 function table_cell($cell, $header = 0) {
   if (is_array($cell)) {
     $data = $cell["data"];
@@ -472,7 +476,7 @@ function referer_load() {
 }
 
 function check_form($text) {
-  return htmlspecialchars($text);
+  return drupal_specialchars($text);
 }
 
 function check_query($text) {
@@ -603,12 +607,12 @@ function format_rss_channel($title, $link, $description, $items, $language = "en
   // arbitrary elements may be added using the $args associative array
 
   $output .= "<channel>\n";
-  $output .= " <title>". htmlspecialchars(strip_tags($title)) ."</title>\n";
-  $output .= " <link>". htmlspecialchars(strip_tags($link)) ."</link>\n";
-  $output .= " <description>". htmlspecialchars($description) ."</description>\n";
-  $output .= " <language>". htmlspecialchars(strip_tags($language)) ."</language>\n";
+  $output .= " <title>". drupal_specialchars(strip_tags($title)) ."</title>\n";
+  $output .= " <link>". drupal_specialchars(strip_tags($link)) ."</link>\n";
+  $output .= " <description>". drupal_specialchars($description) ."</description>\n";
+  $output .= " <language>". drupal_specialchars(strip_tags($language)) ."</language>\n";
   foreach ($args as $key => $value) {
-    $output .= "<$key>". htmlspecialchars(strip_tags($value)) ."</$key>";
+    $output .= "<$key>". drupal_specialchars(strip_tags($value)) ."</$key>";
   }
   $output .= $items;
   $output .= "</channel>\n";
@@ -620,11 +624,11 @@ function format_rss_item($title, $link, $description, $args = array()) {
   // arbitrary elements may be added using the $args associative array
 
   $output .= "<item>\n";
-  $output .= " <title>". htmlspecialchars(strip_tags($title)) ."</title>\n";
-  $output .= " <link>". htmlspecialchars(strip_tags($link)) ."</link>\n";
-  $output .= " <description>". htmlspecialchars(check_output($description)) ."</description>\n";
+  $output .= " <title>". drupal_specialchars(strip_tags($title)) ."</title>\n";
+  $output .= " <link>". drupal_specialchars(strip_tags($link)) ."</link>\n";
+  $output .= " <description>". drupal_specialchars(check_output($description)) ."</description>\n";
   foreach ($args as $key => $value) {
-    $output .= "<$key>". htmlspecialchars(strip_tags($value)) ."</$key>";
+    $output .= "<$key>". drupal_specialchars(strip_tags($value)) ."</$key>";
   }
   $output .= "</item>\n";
 
@@ -805,16 +809,19 @@ function form_checkbox($title, $name, $value = 1, $checked = 0, $description = 0
 }
 
 function form_textfield($title, $name, $value, $size, $maxlength, $description = 0) {
-  return form_item($title, "<input maxlength=\"$maxlength\" class=\"form-text\" name=\"edit[$name]\" size=\"$size\" value=\"". check_form($value) ."\" />", $description);
+  $size = $size ? " size=\"$size\"" : "";
+  return form_item($title, "<input maxlength=\"$maxlength\" class=\"form-text\" name=\"edit[$name]\"$size value=\"". check_form($value) ."\" />", $description);
 }
 
 function form_password($title, $name, $value, $size, $maxlength, $description = 0) {
-  return form_item($title, "<input type=\"password\" class=\"form-password\" maxlength=\"$maxlength\" name=\"edit[$name]\" size=\"$size\" value=\"". check_form($value) ."\" />", $description);
+  $size = $size ? " size=\"$size\"" : "";
+  return form_item($title, "<input type=\"password\" class=\"form-password\" maxlength=\"$maxlength\" name=\"edit[$name]\"$size value=\"". check_form($value) ."\" />", $description);
 }
 
 function form_textarea($title, $name, $value, $cols, $rows, $description = 0) {
+  $cols = $cols ? " cols=\"$cols\"" : "";
   module_invoke_all("textarea", $name);  // eg. optionally plug in a WYSIWYG editor
-  return form_item($title, "<textarea wrap=\"virtual\" cols=\"$cols\" rows=\"$rows\" name=\"edit[$name]\" id=\"edit[$name]\">". check_form($value) ."</textarea>", $description);
+  return form_item($title, "<textarea wrap=\"virtual\"$cols rows=\"$rows\" name=\"edit[$name]\" id=\"edit[$name]\">". check_form($value) ."</textarea>", $description);
 }
 
 function form_select($title, $name, $value, $options, $description = 0, $extra = 0, $multiple = 0) {
@@ -823,6 +830,15 @@ function form_select($title, $name, $value, $options, $description = 0, $extra =
       $select .= "<option value=\"$key\"". (is_array($value) ? (in_array($key, $value) ? " selected=\"selected\"" : "") : ($value == $key ? " selected=\"selected\"" : "")) .">". check_form($choice) ."</option>";
     }
     return form_item($title, "<select name=\"edit[$name]". ($multiple ? "[]" : "") ."\"". ($multiple ? " multiple " : "") . ($extra ? " $extra" : "") .">$select</select>", $description);
+  }
+}
+
+function form_radios($title, $name, $value, $options, $description = 0) {
+  if (count($options) > 0) {
+    foreach ($options as $key=>$choice) {
+      $output .= form_radio($choice, $name, $key, ($key == $value));
+    }
+    return form_item($title, $output, $description);
   }
 }
 
@@ -1000,7 +1016,7 @@ $conf = variable_init(isset($conf) ? $conf : array());
 set_error_handler("error_handler");
 
 // spit out the correct charset http header
-header("Content-Type: text/html; charset=". variable_get("charset", "iso-8859-1"));
+header("Content-Type: text/html; charset=". variable_get("site_charset", "iso-8859-1"));
 
 // initialize installed modules:
 module_init();

@@ -2,27 +2,27 @@
 // $Id$
 
 function story_help() {
-  $output .= "<p>The story module enables to users to submit thoughful, cohesive posts for consideration by the rest of the community.  Stories usually follow a specific content flow: <i>submit -&gt; moderate -&gt; post to home page -&gt; comment</i>.  Administrators are able to shortcut this flow as desired.</p>";
-  $output .= "In ". l("site configuration &gt;&gt; modules &gt;&gt; story", "admin/system/modules/story") ." you can setup an introductory text for story authors, and a floor on the number of words which may be included in a story. This is designed to help discourage the submission of trvially short stories.";
+  $output .= "<p>The story module lets your users submit articles for consideration by the rest of the community, who can vote on them if moderation is enabled.  Stories usually follow a publishing flow of <b>submit -&gt; moderate -&gt; post to the main page -&gt; comments</b>.  Administrators are able to shortcut this flow as desired.</p>";
+  $output .= "In ". l("site configuration &gt;&gt; modules &gt;&gt; story", "admin/system/modules/story") ." you can set up an introductory text for story authors, and a floor on the number of words which may be included in a story. This is designed to help discourage the submission of trivially short stories.";
   return $output;
 }
 
 function story_system($field){
   $system["description"] = t("Enables users to submit stories, articles or similar content.");
-  $system["admin_help"] = t("**REWRITE** Stories are nodes with a complete thought. Think of newspaper stories. Stories follow the flow \"submit -&gt; moderate -&gt; post to the main page -&gt; comment on story\". Below enter the minimum word count for a story, and the small block which will be displayed to users wanting to enter a story.");
+  $system["admin_help"] = t("Stories are like newspaper articles. They tend to follow a publishing flow of <b>submit -&gt; moderate -&gt; post to the main page -&gt; comments</b>. Below you may fix a minimum word count for stories and also write some submission or content guidelines for users wanting to post a story.");
   return $system[$field];
 }
 
 function story_settings() {
- $output .= form_textarea("Explanation or submission guidelines", "story_help", variable_get("story_help", ""), 70, 5, "This text will be displayed at the top of the story submission form.  Useful for helping or instructing your users.");
- $output .= form_select(t("Minimum number of words"), "minimum_story_size", variable_get("minimum_story_size", 0), array(0 => "0 words", 10 => "10 words", 25 => "25 words",  50 => "50 words", 75 => "75 words", 100 => "100 words", 125 => "125 words",  150 => "150 words", 175 => "175 words", 200 => "200 words"), t("The minimum number of words a personal story entry should consist of.  This can be useful to rule out submissions that do not meet the site's standards, such as short test posts."));
+ $output .= form_textarea("Explanation or submission guidelines", "story_help", variable_get("story_help", ""), 70, 5, "This text will be displayed at the top of the story submission form.  It is useful for helping or instructing your users.");
+ $output .= form_select(t("Minimum number of words"), "minimum_story_size", variable_get("minimum_story_size", 0), array(0 => "0 words", 10 => "10 words", 25 => "25 words",  50 => "50 words", 75 => "75 words", 100 => "100 words", 125 => "125 words",  150 => "150 words", 175 => "175 words", 200 => "200 words"), t("The minimum number of words a story must be to be considered valid.  This can be useful to rule out submissions that do not meet the site's standards, such as short test posts."));
 
  return $output;
 }
 
 function story_node($field) {
   $info["name"] = t("story");
-  $info["description"] = t("A story is a post that is submitted to the attention of other users and is queued in the submission queue.  Users and moderators vote on the posts they like or dislike, promoting or demoting them.  When a post gets above a certain threshold it gets automatically published to front page.");
+  $info["description"] = t("A story is a post that is submitted to the attention of other users and is queued in the submission queue.  Users and moderators vote on the posts they like or dislike, promoting or demoting them.  When a post gets above a certain threshold it automatically gets promoted to the front page.");
   return $info[$field];
 }
 

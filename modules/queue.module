@@ -3,7 +3,7 @@
 
 function queue_system($field){
   $system["description"] = t("Enables content to be moderated by the community.");
-  $system["admin_help"] = t("** REWRITE **These are the settings for the moderation system. When the moderation value of a node is the same as or greater than the <b>Post threshold</b> then the node will be promoted to the front page. If the moderation value of a node falls below the <b>Dump threshold</b> then the node will be changed to an \"unpublished/private\" node. If the number of votes a node has recieved is the same as or higher than the <b>Expiration threshold</b>, and the node has not been promoted to the front page or dumped, then the node will be changed to an \"unpublished/private\" node. In all of three cases the moderation of the node will be marked as \"Approved\".<br /> If \"Show comments\" is enabled then the comments on this node will be shown in the moderation form.");
+  $system["admin_help"] = t("The queue provides a way for your users to vote on submitted content. This is called <b>moderation</b>. Users can moderate a post up (give it a point), or down (subtract a point). The settings below give you control over how many points are required for the status of a post to be automatically changed. See individual items for details.");
   return $system[$field];
 }
 
@@ -12,10 +12,10 @@ function queue_settings() {
   $threshold_dump = array(-1 => -1, -2 => -2, -3 => -3, -4 => -4, -5 => -5, -6 => -6, -7 => -7, -8 => -8, -9 => -9, -10 => -10, -11 => -11, -12 => -12, -13 => -13, -14 => -14, -15 => -15, -20 => -20, -25 => -25, -30 => -30);
   $threshold_expire = array(1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6, 7 => 7, 8 => 8, 9 => 9, 10 => 10, 11 => 11, 12 => 12, 13 => 13, 14 => 14, 15 => 15, 20 => 20, 25 => 25, 30 => 30, 35 => 35, 40 => 40, 45 => 45, 50 => 50, 60 => 60, 70 => 70, 80 => 80, 90 => 90, 100 => 100);
 
-  $output .= form_select(t("Post threshold"), "queue_threshold_post", variable_get("queue_threshold_post", 4), $threshold_post, t("If new submissions are subject to moderation, select a post threshold."));
-  $output .= form_select(t("Dump threshold"), "queue_threshold_dump", variable_get("queue_threshold_dump", -2), $threshold_dump, t("If new submissions are subject to moderation, select a dump threshold."));
-  $output .= form_select(t("Expiration threshold"), "queue_threshold_expire", variable_get("queue_threshold_expire", 8), $threshold_expire, t("If new submissions are subject to moderation, select an expiration threshold."));
-  $output .= form_select(t("Show comments"), "queue_show_comments", variable_get("queue_show_comments", 1), array(0 => "Disabled", 1 => "Enabled"), t("If enabled comments will be shown below the moderation form."));
+  $output .= form_select(t("Post threshold"), "queue_threshold_post", variable_get("queue_threshold_post", 4), $threshold_post, t("When a post gets this number of moderation points, it is <b>promoted to the front page</b> automatically."));
+  $output .= form_select(t("Dump threshold"), "queue_threshold_dump", variable_get("queue_threshold_dump", -2), $threshold_dump, t("When a post drops below this number of points, its status is changed to <b>unpublished</b>."));
+  $output .= form_select(t("Expiration threshold"), "queue_threshold_expire", variable_get("queue_threshold_expire", 8), $threshold_expire, t("When a post gets this number of points, its status is changed to <b>unpublished</b>."));
+  $output .= form_item(t("Show comments"), form_checkbox(t("Enabled"), "queue_show_comments", 1, variable_get("queue_show_comments", 1)), t("Tick the box to show comments below the moderation form."));
 
   return $output;
 }
@@ -144,7 +144,7 @@ function queue_view($nid) {
       ** Display some explanation or voting guidelines:
       */
 
-      $output .= "<p>". t("When new content get submitted it goes to the submission queue.  Most, if not all, registered users can access this queue and can vote whether they think the content should be approved or not.  When enough people vote to approve the content, it is pushed over the threshold and up it goes.  On the other hand, when too many people voted to drop some content, the content will get trashed.") ."</p>";
+      $output .= "<p>". t("When new content is submitted it goes into the submission queue.  Registered users with the appropriate permission can access this queue and vote whether they think the content should be approved or not.  When enough people vote to approve the content it is displayed on the front page.  On the other hand, if enough people vote to drop it, the content will disappear.") ."</p>";
 
       /*
       ** Display a voting form:
@@ -208,7 +208,7 @@ function queue_block($op = "list", $delta = 0) {
         }
 
         $block["subject"] = t("Moderation results");
-        $block["content"] = $output ? $output : t("This node has not been moderated yet.");
+        $block["content"] = $output ? $output : t("This node has not yet been moderated.");
       }
     }
     elseif ((user_access("access submission queue") || user_access("administer blocks")) && (substr_count(request_uri(), url("user")) || substr_count(request_uri(), url("admin")))) {
