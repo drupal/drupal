@@ -1028,6 +1028,9 @@ function node_feed($nodes = 0, $channel = array()) {
       $item = node_prepare($item, TRUE);
     }
 
+    // Allow modules to change $node->body before viewing.
+    node_invoke_nodeapi($item, 'view', false, false);
+
     $items .= format_rss_item($item->title, $link, $item->teaser, array('pubDate' => date('r', $item->changed)));
   }
 
