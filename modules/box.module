@@ -3,7 +3,7 @@
 function box_help() {
  ?>
   <P>The content of the site can be almost entirely altered through <I>boxes</I>.  Simply put, boxes are small bits of text, HTML or PHP code which will get plugged into the site just like any other block.  Boxes are typically used to add custom blocks to the site.</P>
-  <P>Each box consists of a subject and an associated block of text, HTML or PHP code that can be as long as you wish and that will 'render' the content of the box.</P>
+  <P>Each box consists of a title and an associated block of text, HTML or PHP code that can be as long as you wish and that will 'render' the content of the box.</P>
   <H3>PHP boxes</H3>
   <P>If you know how to script in PHP, PHP boxes are easy to create.  Don't worry if you're no PHP-wizard: simply use ASCII or HTML boxes instead.</P>
   <P>You can use any piece of PHP code to make up the content of a PHP box: this implies that you can declare and use functions, consult the SQL database, access configuration settings and much more.  A PHP box's code is stored in the database and the engine will dynamically embed the PHP code just-in-time for execution.</P>
@@ -12,7 +12,7 @@ function box_help() {
   <P>Note that you can use global variables such as configuration parameters within the scope of a PHP box. Also keep in mind that variables which have been given values in a PHP box will retain these values in the engine or module afterwards.</P>
   <P>You can use the <CODE>return</CODE> statement to return the actual content for your block as well.</P>
   <P><U>A basic example:</U></P>
-  <P>Given the box with subject "Welcome", used to create a "<I>Welcome</I>" box.  The content for this box could be created by using:</P>
+  <P>Given the box with title "Welcome", used to create a "<I>Welcome</I>" box.  The content for this box could be created by using:</P>
   <PRE>
    return "Welcome visitor, ... welcome message goes here ...";
   </PRE>
@@ -29,12 +29,8 @@ function box_help() {
  <?php
 }
 
-function box_perm() {
-  return array("administer boxes");
-}
-
 function box_link($type) {
-  if ($type == "admin" && user_access("administer boxes")) {
+  if ($type == "admin" && user_access("administer blocks")) {
     $links[] = "<a href=\"admin.php?mod=box\">boxes</a>";
   }
 
@@ -42,11 +38,11 @@ function box_link($type) {
 }
 
 function box_block() {
-  $result = db_query("SELECT * FROM boxes ORDER BY subject");
+  $result = db_query("SELECT * FROM boxes ORDER BY title");
   $i = 0;
   while ($block = db_fetch_object($result)) {
-    $blocks[$i]["subject"] = check_output($block->subject);
-    $blocks[$i]["content"] = ($block->type == 2) ? eval($block->content) : $block->content;
+    $blocks[$i]["subject"] = check_output($block->title);
+    $blocks[$i]["content"] = ($block->type == 2) ? eval($block->body) : $block->body;
     $blocks[$i]["info"] = check_output($block->info);
     $blocks[$i]["link"] = check_output($block->link);
     $i++;
@@ -54,133 +50,91 @@ function box_block() {
   return $blocks;
 }
 
-function box_admin_display() {
+function box_get_array($bid) {
+  return db_fetch_array(db_query("SELECT * FROM boxes WHERE bid = '". check_input($bid) ."'"));
+}
+
+function box_display() {
   $type = array(0 => "ASCII", 1 => "HTML", 2 => "PHP");
 
   $result = db_query("SELECT * FROM boxes");
 
   while ($block = db_fetch_object($result)) {
     $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\">\n";
-    $output .= " <TR><TH>Subject:</TH><TD>". check_output($block->subject) ."</TD></TR>\n";
-    $output .= " <TR><TH>Content:</TH><TD>". nl2br(htmlentities($block->content)) ."</TD></TR>\n";
+    $output .= " <TR><TH>Title:</TH><TD>". check_output($block->title) ."</TD></TR>\n";
+    $output .= " <TR><TH>Body:</TH><TD>". nl2br(htmlentities($block->body)) ."</TD></TR>\n";
     $output .= " <TR><TH>Type:</TH><TD>". $type[$block->type] ."</TD></TR>\n";
     $output .= " <TR><TH>Description:</TH><TD>". check_output($block->info) ."</TD></TR>\n";
     $output .= " <TR><TH>Link:</TH><TD>". format_url($block->link) ."</TD></TR>\n";
-    $output .= " <TR><TH>Operations:</TH><TD><A HREF=\"admin.php?mod=box&op=edit&id=$block->id\">edit</A>, <A HREF=\"admin.php?mod=box&op=delete&id=$block->id\">delete</A></TD></TR>\n";
+    $output .= " <TR><TH>Operations:</TH><TD><A HREF=\"admin.php?mod=box&op=edit&id=$block->bid\">edit</A></TD></TR>\n";
     $output .= "</TABLE>\n";
     $output .= "<BR><BR>\n";
   }
 
-  print $output;
+  return $output;
 }
 
-function box_admin_new() {
+function box_save($edit) {
+  if ($edit[bid] && $edit[title]) {
+    db_query("UPDATE boxes SET title = '". check_input($edit[title]) ."', body = '". check_input($edit[body]) ."', info = '". check_input($edit[info]) ."', link = '". check_input($edit[link]) ."', type = '". check_input($edit[type]) ."' WHERE bid = '". check_input($edit[bid]) ."'");
+  }
+  else if ($edit[bid]) {
+    db_query("DELETE FROM boxes WHERE bid = '". check_input($edit[bid]) ."'"); 
+  }
+  else {
+    db_query("INSERT INTO boxes (title, body, info, link, type) VALUES  ('". check_input($edit[title]) ."', '". check_input($edit[body]) ."', '". check_input($edit[info]) ."', '". check_input($link) ."', '". check_input($edit[type]) ."')");
+  }
+}
+
+function box_form($edit = array()) {
+  global $REQUEST_URI;
+
   $type = array(0 => "ASCII", 1 => "HTML", 2 => "PHP");
 
-  foreach ($type as $key=>$value) {
-    $selection .= "  <OPTION VALUE=\"$key\">$value</OPTION>\n";
+  $form .= form_textfield("Title", "title", $edit[title], 50, 64);
+  $form .= form_textfield("Description", "info", $edit[info], 50, 64);
+  $form .= form_textarea("Body", "body", $edit[body], 70, 10);
+  $form .= form_select("Type", "type", $edit[type], $type);
+  $form .= form_textfield("Link", "link", $edit[link], 50, 64);
+
+  if ($edit[bid]) {
+    $form .= form_submit("Delete");
+    $form .= form_hidden("bid", $edit[bid]);
   }
 
-  $output .= "<FORM ACTION=\"admin.php?mod=box\" METHOD=\"post\">\n";
-  $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\">\n";
-  $output .= " <TR><TH>Subject:</TH><TD><INPUT TYPE=\"text\" NAME=\"subject\" SIZE=\"35\"></TD></TR>\n";
-  $output .= " <TR><TH>Content:</TH><TD><TEXTAREA NAME=\"content\" COLS=\"50\" ROWS=\"5\"></TEXTAREA></TD></TR>\n";
-  $output .= " <TR><TH>Type:</TH><TD><SELECT NAME=\"type\">\n$selection</SELECT></TD></TR>\n";
-  $output .= " <TR><TH>Description:</TH><TD><INPUT TYPE=\"text\" NAME=\"info\" SIZE=\"35\"></TD></TR>\n";
-  $output .= " <TR><TH>Link:</TH><TD><INPUT TYPE=\"text\" NAME=\"link\" SIZE=\"35\"></TD></TR>\n";
-  $output .= " <TR><TH>Operations:</TH><TD><INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Add box\"></TD></TR>\n";
-  $output .= "</TABLE>\n";
-  $output .= "</FORM>\n";
-  print $output;
+  $form .= form_submit("Submit");
+
+  return form($REQUEST_URI, $form);
 }
 
-function box_admin_add($subject, $content, $info, $link, $type) {
-  db_query("INSERT INTO boxes (subject, content, info, link, type) VALUES ('$subject', '$content', '$info', '$link', '$type')");
-}
-
-function box_admin_delete($id) {
-  db_query("DELETE FROM boxes WHERE id = $id");
-}
-
-function box_admin_edit($id) {
-  $type = array(0 => "ASCII", 1 => "HTML", 2 => "PHP");
-
-  $result = db_query("SELECT * FROM boxes WHERE id = $id");
-
-  if ($block = db_fetch_object($result)) {
-    $output .= "<FORM ACTION=\"admin.php?mod=box\" METHOD=\"post\">\n";
-
-    $output .= "<P>\n";
-    $output .= " <B>Subject:</B><BR>\n";
-    $output .= " <INPUT TYPE=\"text\" NAME=\"subject\" VALUE=\"". check_form($block->subject) ."\">\n";
-    $output .= "</P>\n";
-    $output .= "<P>\n";
-    $output .= " <B>Content:</B><BR>\n";
-    $output .= " <TEXTAREA NAME=\"content\" COLS=\"50\" ROWS=\"5\">$block->content</TEXTAREA>\n";
-    $output .= "</P>\n";
-    $output .= "<P>\n";
-    $output .= " <B>Type:</B><BR>\n";
-    $output .= " <SELECT NAME=\"type\">\n";
-    foreach ($type as $key=>$value) {
-      $output .= "  <OPTION VALUE=\"$key\"". (($block->type == $key) ? " SELECTED" : "") .">$value</OPTION>\n";
-    }
-    $output .= " </SELECT>\n";
-    $output .= "</P>\n";
-    $output .= "<P>\n";
-    $output .= " <B>Description:</B><BR>\n";
-    $output .= " <INPUT TYPE=\"text\" NAME=\"info\" VALUE=\"". check_form($block->info) ."\">\n";
-    $output .= "</P>\n";
-    $output .= "<P>\n";
-    $output .= " <B>Link:</B><BR>\n";
-    $output .= " <INPUT TYPE=\"text\" NAME=\"link\" VALUE=\"". check_form($block->link) ."\">\n";
-    $output .= "</P>\n";
-    $output .= "<P>\n";
-    $output .= " <INPUT TYPE=\"hidden\" NAME=\"id\" VALUE=\"$id\">\n";
-    $output .= " <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Save box\"><BR>\n";
-    $output .= "</P>\n";
-    $output .= "</FORM>\n";
-  }
-
-  print $output;
-}
-
-function box_admin_save($id, $subject, $content, $info, $link, $type) {
-  db_query("UPDATE boxes SET subject = '$subject', content = '$content', info = '$info', link = '$link', type = '$type' WHERE id = '$id'");
-  watchdog("message", "modified box `$subject'");
-}
 
 function box_admin() {
-  global $op, $id, $subject, $content, $info, $link, $type;
+  global $op, $id, $edit;
 
-  if (user_access("administer boxes")) {
+  if (user_access("administer blocks")) {
 
     print "<SMALL><A HREF=\"admin.php?mod=box&op=add\">add new box</A> | <A HREF=\"admin.php?mod=box\">overview</A> | <A HREF=\"admin.php?mod=box&op=help\">help</A></SMALL><HR>\n";
 
     block_init();
 
     switch ($op) {
-      case "Add box":
-        box_admin_add(check_input($subject), check_code($content), check_input($info), check_input($link), check_input($type));
-        box_admin_display();
+      case "add":
+        print box_form();
         break;
-      case "Save box":
-        box_admin_save(check_input($id), check_input($subject), check_code($content), check_input($info), check_input($link), check_input($type));
-        box_admin_display();
+      case "edit":
+        print box_form(box_get_array($id));
         break;
       case "help":
         box_help();
         break;
-      case "add":
-        box_admin_new();
-        break;
-      case "edit":
-        box_admin_edit(check_input($id));
-        break;
-      case "delete":
-        box_admin_delete(check_input($id));
-         // fall through
+      case "Delete":
+        $edit[title] = 0;
+        // fall through:
+      case "Submit":
+        print status(box_save($edit));
+        // fall through:              
       default:
-        box_admin_display();
+        print box_display();
     }
   }
   else {
