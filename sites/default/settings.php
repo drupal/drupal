@@ -78,13 +78,13 @@ $base_url = 'http://localhost';
  *   used there. Settings defined here should not be duplicated there
  *   to avoid conflict issues.
  */
-ini_set('session.cache_expire', 200000);
-ini_set('session.cache_limiter', 'none');
-ini_set('session.gc_maxlifetime', 200000);
-ini_set('session.cookie_lifetime', 2000000);
-ini_set('session.save_handler', 'user');
+ini_set('session.cache_expire',     200000);
+ini_set('session.cache_limiter',    'none');
+ini_set('session.gc_maxlifetime',   200000);
+ini_set('session.cookie_lifetime',  2000000);
+ini_set('session.save_handler',     'user');
 ini_set('session.use_only_cookies', 1);
-ini_set('session.use_trans_sid', 1);
+ini_set('session.use_trans_sid',    0);
 
 /**
  * Variable overrides:
