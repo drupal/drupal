@@ -254,8 +254,12 @@ function _locale_import_po($file, $lang, $mode) {
   }
 
   // Successfull import
+  // rebuild locale cache
   cache_clear_all("locale:$lang");
+
+  // rebuild the menu, strings may have changed
   menu_rebuild();
+
   drupal_set_message(t('Translation successfully imported. %number translated strings added to language, %update strings updated.', array('%number' => $additions, '%update' => $updates)));
   watchdog('locale', t('Translation imported into %locale, %number translated strings added to language, %update strings updated.', array('%locale' => "<em>$lang</em>", '%number' => $additions, '%update' => $updates)));
   return TRUE;
@@ -464,7 +468,7 @@ function _locale_import_parse_plural_forms($pluralforms) {
     return array($nplurals, $plural);
   }
   else {
-    drupal_set_message(t("Translation file broken: plural formula couldn't get parsed."), 'error');
+    drupal_set_message(t("Warning: plural formula couldn't get parsed."), 'error');
     return FALSE;
   }
 }
@@ -898,10 +902,10 @@ function _locale_export_remove_plural($entry) {
 }
 
 function _locale_string_delete($lid) {
-  db_query("DELETE FROM {locales_source} WHERE lid = %d", $lid);
-  db_query("DELETE FROM {locales_target} WHERE lid = %d", $lid);
+  db_query('DELETE FROM {locales_source} WHERE lid = %d', $lid);
+  db_query('DELETE FROM {locales_target} WHERE lid = %d', $lid);
   locale_refresh_cache();
-  drupal_set_message(t("Deleted string"));
+  drupal_set_message(t('Deleted string'));
 }
 
 /**
@@ -911,7 +915,7 @@ function _locale_string_delete($lid) {
  */
 function _locale_string_save($lid) {
 
-  $edit =& $_POST["edit"];
+  $edit =& $_POST['edit'];
   foreach ($edit as $key => $value) {
     $trans = db_fetch_object(db_query("SELECT translation FROM {locales_target} WHERE lid = %d AND locale = '%s'", $lid, $key));
     if (isset($trans->translation)) {
@@ -921,11 +925,14 @@ function _locale_string_save($lid) {
       db_query("INSERT INTO {locales_target}  (lid, translation, locale) VALUES (%d, '%s', '%s')", $lid, $value, $key);
     }
   }
+  // refresh the locale cache
   locale_refresh_cache();
+  // rebuild the menu, strings may have changed
+  menu_rebuild();
   // delete form data so it will remember where it came from
   $edit = '';
 
-  drupal_set_message(t("Saved string"));
+  drupal_set_message(t('Saved string'));
 }
 
 /**
@@ -935,7 +942,7 @@ function _locale_string_edit($lid) {
   $languages = locale_supported_languages(FALSE, TRUE);
   unset($languages['name']['en']);
 
-  $result = db_query("SELECT DISTINCT s.source, t.translation, t.locale FROM {locales_source} s INNER JOIN {locales_target} t ON s.lid = t.lid WHERE s.lid = %d", $lid);
+  $result = db_query('SELECT DISTINCT s.source, t.translation, t.locale FROM {locales_source} s INNER JOIN {locales_target} t ON s.lid = t.lid WHERE s.lid = %d', $lid);
   $form = '';
   while ($translation = db_fetch_object($result)) {
     $orig = $translation->source;
