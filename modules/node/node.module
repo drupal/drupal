@@ -317,7 +317,7 @@ function node_save($node) {
       $node->created = time();
     }
     $node->changed = time();
-    $node->nid = db_next_id("node_nid");
+    $node->nid = db_next_id("{node}_nid");
 
     // Prepare the query:
     foreach ($node as $key => $value) {

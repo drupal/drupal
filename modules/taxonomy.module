@@ -101,7 +101,7 @@ function taxonomy_save_vocabulary($edit) {
     $message = taxonomy_del_vocabulary($edit["vid"]);
   }
   else {
-    $data["vid"] = $edit["vid"] = db_next_id("vocabulary_vid");
+    $data["vid"] = $edit["vid"] = db_next_id("{vocabulary}_vid");
     db_query("INSERT INTO {vocabulary} ". _prepare_insert($data, 1) ." VALUES ". _prepare_insert($data, 2));
     module_invoke_all("taxonomy", "insert", "vocabulary", $edit);
     $message = t("created new vocabulary '%name'.", array("%name" => $edit["name"]));
@@ -194,7 +194,7 @@ function taxonomy_save_term($edit) {
     return taxonomy_del_term($edit["tid"]);
   }
   else {
-    $edit["tid"] = db_next_id("term_data_tid");
+    $edit["tid"] = db_next_id("{term_data}_tid");
     $data = array("tid" => $edit["tid"], "name" => $edit["name"], "description" => $edit["description"], "vid" => $edit["vid"], "weight" => $edit["weight"]);
     db_query("INSERT INTO {term_data} ". _prepare_insert($data, 1) ." VALUES ". _prepare_insert($data, 2));
     module_invoke_all("taxonomy", "insert", "term", $edit);

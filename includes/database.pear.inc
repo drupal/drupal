@@ -127,6 +127,7 @@ function db_error() {
 function db_next_id($name) {
   global $db_handle;
 
+  $name = db_prefix_tables($name);
   $result = $db_handle->nextID($name);
   if (DB::isError($result)) {
     watchdog("error", "database: ". $result->getMessage() ."\nsequence table: $name");
