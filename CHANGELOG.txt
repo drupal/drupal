@@ -12,6 +12,8 @@ Drupal x.x.x, xxxx-xx-xx
     * added support for node-level permissions.
 - comment module:
     * made it possible to leave contact information without having to register.
+- upload module:
+    * added support for uploading documents (includes images).
 - forum module:
     * added support for sticky forum topics.
     * made it possible to track forum topics.
