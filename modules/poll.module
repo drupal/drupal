@@ -136,7 +136,7 @@ function poll_insert($node) {
     $node->active = 1;
   }
 
-  db_query("INSERT INTO poll (nid, runtime, voters, active) VALUES ('". check_input($node->nid) ."', '". check_input($node->runtime) ."', '', '". check_input($node->active) ."')");
+  db_query("INSERT INTO poll (nid, runtime, voters, active) VALUES ('". check_query($node->nid) ."', '". check_query($node->runtime) ."', '', '". check_query($node->active) ."')");
 
   for ($i = 0; $i < $node->choices; $i++) {
     $choice->chtext = filter($node->choice[$i]);
@@ -144,7 +144,7 @@ function poll_insert($node) {
     $choice->chorder = $i;
 
     if ($choice->chtext != "") {
-      db_query("INSERT INTO poll_choices (nid, chtext, chvotes, chorder) VALUES ('". check_input($node->nid) ."', '". check_input($choice->chtext) ."', '". check_input($choice->chvotes) ."', '". check_input($choice->chorder) ."')");
+      db_query("INSERT INTO poll_choices (nid, chtext, chvotes, chorder) VALUES ('". check_query($node->nid) ."', '". check_query($choice->chtext) ."', '". check_query($choice->chvotes) ."', '". check_query($choice->chorder) ."')");
     }
   }
 }
@@ -404,7 +404,7 @@ function poll_update($node) {
     $choice->chorder = $i;
 
     if ($choice->chtext != "") {
-      db_query("INSERT INTO poll_choices (nid, chtext, chvotes, chorder) VALUES ('". check_input($node->nid) ."', '". check_input($choice->chtext) ."', '". check_input($choice->chvotes) ."', '". check_input($choice->chorder) ."')");
+      db_query("INSERT INTO poll_choices (nid, chtext, chvotes, chorder) VALUES ('". check_query($node->nid) ."', '". check_query($choice->chtext) ."', '". check_query($choice->chvotes) ."', '". check_query($choice->chorder) ."')");
     }
   }
 }
