@@ -30,11 +30,13 @@ function profile_link($type) {
 
 function profile_browse() {
 
+  $name = strip_tags(arg(1));
+  $value = strip_tags(arg(2));
 
-  $field = db_fetch_object(db_query("SELECT DISTINCT(fid), type, title, page FROM {profile_fields} WHERE name = '%s'", arg(1)));
+  $field = db_fetch_object(db_query("SELECT DISTINCT(fid), type, title, page FROM {profile_fields} WHERE name = '%s'", $name));
 
   if ($field->fid) {
-    // Compile a list of fields to show:
+    // Compile a list of fields to show
     $fields = array();
     $result = db_query("SELECT name, title, type FROM {profile_fields} WHERE fid != %d AND overview = 1", $field->fid);
     while ($record = db_fetch_object($result)) {
@@ -47,10 +49,10 @@ function profile_browse() {
         $query = 'v.value = 1';
         break;
       case 'selection':
-        $query = "v.value = '". check_query(arg(2)) ."'";
+        $query = "v.value = '". check_query($value) ."'";
         break;
       case 'list':
-        $query = "v.value LIKE '%". check_query(arg(2)) ."%'";
+        $query = "v.value LIKE '%". check_query($value) ."%'";
         break;
     }
 
@@ -64,7 +66,7 @@ function profile_browse() {
     $output .= theme('pager', NULL, 20);
 
     if ($field->type == 'selection' || $field->type == 'list') {
-      $title = strtr($field->page, array('%value' => arg(2)));
+      $title = strtr($field->page, array('%value' => $value));
     }
     else {
       $title = $field->page;

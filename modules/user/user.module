@@ -903,18 +903,18 @@ function user_register($edit = array()) {
         }
       }
     }
-      
+
     if (!form_has_errors()) {
       $from = variable_get('site_mail', ini_get('sendmail_from'));
       $pass = user_password();
-  
+
       // TODO: Is this necessary? Won't session_write() replicate this?
       unset($edit['session']);
       $account = user_save('', array_merge(array('name' => $edit['name'], 'pass' => $pass, 'init' => $edit['mail'], 'mail' => $edit['mail'], 'rid' => array(_user_authenticated_id()), 'status' => (variable_get('user_register', 1) == 1 ? 1 : 0)), $data));
       watchdog('user', 'new user: "'. $edit['name'] .'" &lt;'. $edit['mail'] .'&gt;', l(t('edit user'), "admin/user/edit/$account->uid"));
-  
+
       $variables = array('%username' => $edit['name'], '%site' => variable_get('site_name', 'drupal'), '%password' => $pass, '%uri' => $base_url, '%uri_brief' => substr($base_url, strlen('http://')), '%mailto' => $edit['mail'], '%date' => format_date(time()), '%login_uri' => url('user/login', NULL, NULL, TRUE), '%edit_uri' => url('user/edit', NULL, NULL, TRUE));
-  
+
       // The first user may login immediately, and receives a customized welcome e-mail.
       if ($account->uid == 1) {
         user_mail($edit['mail'], t('drupal user account details for %s', array('%s' => $edit['name'])), strtr(t("%username,\n\nYou may now login to %uri using the following username and password:\n\n  username: %username\n  password: %password\n\n%edit_uri\n\n--drupal"), $variables), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");

@@ -175,7 +175,11 @@ function path_nodeapi(&$node, $op, $arg) {
         // viewing of the form.  If it is the first time, load the alias, if it isn't
         // (i.e., user has clicked preview) let them work with their current form alias.
         if (is_null($node->path)) {
-          $node->path = drupal_get_path_alias("node/view/$node->nid");
+          $path = "node/view/$node->nid";
+          $alias = drupal_get_path_alias($path);
+          if ($alias != $path) {
+            $node->path = $alias;
+          }
         }
         else {
           $node->path = trim($node->path);
@@ -205,8 +209,9 @@ function path_nodeapi(&$node, $op, $arg) {
         break;
 
       case 'delete':
-        if ($alias = drupal_get_path_alias("node/view/$node->nid")) {
-          path_set_alias("node/view/$node->nid");
+        $path = "node/view/$node->nid";
+        if (drupal_get_path_alias($path) != $path) {
+          path_set_alias($path);
         }
         break;
     }

@@ -185,6 +185,10 @@ function drupal_get_path_alias($path) {
   elseif (function_exists("conf_url_rewrite")) {
     return conf_url_rewrite($path, 'outgoing');
   }
+  else {
+    // No alias found. Return the normal path.
+    return $path;
+  }
 }
 
 /**
@@ -1171,9 +1175,7 @@ function url($url = NULL, $query = NULL, $fragment = NULL, $absolute = NULL) {
     $script = (strpos($_SERVER["SERVER_SOFTWARE"], "Apache") === false) ? "index.php" : "";
   }
 
-  if ($alias = drupal_get_path_alias($url)) {
-    $url = $alias;
-  }
+  $url = drupal_get_path_alias($url);
 
   if (isset($fragment)) {
     $fragment = "#$fragment";
