@@ -43,7 +43,8 @@ $mysql_updates = array(
   "2002-04-20" => "update_28",
   "2002-04-23 : roles cleanup" => "update_29",
   "2002-05-02" => "update_30",
-  "2002-05-15" => "update_31"
+  "2002-05-15" => "update_31",
+  "2002-06-22" => "update_32"
 );
 
 // Update functions
@@ -474,6 +475,11 @@ function update_31() {
   update_sql("DROP TABLE collection");
   update_sql("DROP TABLE tag");
   update_sql("ALTER TABLE node DROP attributes");
+}
+
+function update_32() {
+  update_sql(" ALTER TABLE users ADD index (sid(4));");
+  update_sql("ALTER TABLE users ADD index (timestamp);");
 }
 
 function update_upgrade3() {
