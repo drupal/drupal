@@ -1,7 +1,7 @@
 <?php
 // by Edd Dumbill (C) 1999-2001
 // <edd@usefulinc.com>
-// $Id: xmlrpcs.inc,v 1.3 2001/09/27 20:51:25 dries Exp $
+// $Id: xmlrpcs.inc,v 1.4 2001/12/05 18:37:44 dries Exp $
 
 // Copyright (c) 1999,2000,2001 Edd Dumbill.
 // All rights reserved.
@@ -244,6 +244,7 @@ class xmlrpc_server {
     xml_parser_free($parser);
     $m=new xmlrpcmsg($_xh[$parser]['method']);
     // now add parameters in
+    $plist="";
     for($i=0; $i<sizeof($_xh[$parser]['params']); $i++) {
       //print "<!-- " . $_xh[$parser]['params'][$i]. "-->\n";
       $plist.="$i - " .  $_xh[$parser]['params'][$i]. " \n";
