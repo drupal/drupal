@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.30 2002/04/28 09:53:55 dries Exp $
+// $Id: system.module,v 1.31 2002/05/02 20:28:11 dries Exp $
 
 function system_help() {
   $output .= "<p>Drupal comes with system-wide defaults but the setting-module provides control over many Drupal preferences, behaviors including visual and operational settings.</p>";
@@ -31,10 +31,6 @@ function system_link($type) {
   if ($type == "admin" && user_access("administer site configuration")) {
     $links[] = la(t("site configuration"), array("mod" => "system"));
   }
-
-  /*if ($type == "admin" && user_access("administer modules and themes")) {
-    $links[] = la(t("modules and themes"), array("mod" => "system", "op" => "modules"));
-  }*/
 
   return $links ? $links : array();
 }
@@ -82,8 +78,8 @@ function system_view_options() {
 
   // layout settings:
   $output .= "<h3>Layout settings</h3>\n";
-  foreach (theme_list() as $key=>$value) $options .= "<OPTION VALUE=\"$key\"". (variable_get("theme_default", 0) == $key ? " SELECTED" : "") .">$key</OPTION>\n";
-  $output .= form_item("Default theme", "<SELECT NAME=\"edit[theme_default]\">$options</SELECT>", "The default theme as seen by visitors or anonymous users.");
+  foreach (theme_list() as $key=>$value) $options .= "<option value=\"$key\"". (variable_get("theme_default", 0) == $key ? " selected=\"selected\"" : "") .">$key</option>\n";
+  $output .= form_item("Default theme", "<select name=\"edit[theme_default]\">$options</select>", "The default theme as seen by visitors or anonymous users.");
   $output .= "<hr />\n";
 
   // development settings:

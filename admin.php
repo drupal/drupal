@@ -1,11 +1,11 @@
 <?php
-// $Id: admin.php,v 1.51 2002/04/25 18:44:22 dries Exp $
+// $Id: admin.php,v 1.52 2002/05/02 20:28:10 dries Exp $
 
 include_once "includes/common.inc";
 
 function status($message) {
   if ($message) {
-    return "<B>Status:</B> $message<HR>\n";
+    return "<b>Status:</b> $message<hr />\n";
   }
 }
 
@@ -49,12 +49,12 @@ function admin_page($mod) {
 }
 
 if (user_access("access administration pages")) {
-  page_header();  
+  page_header();
   admin_page($mod);
   page_footer();
 }
 else {
   print message_access();
-}  
+}
 
 ?>
