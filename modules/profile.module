@@ -244,6 +244,12 @@ function profile_admin_add($type) {
     if ($error = profile_validate_form($data)) {
       drupal_set_message($error, 'error');
     }
+    else if (db_result(db_query("SELECT fid FROM {profile_fields} WHERE title = '%s'", $data['title']))) {
+      drupal_set_message(t('the specified title is already in use'), 'error');
+    }
+    else if (db_result(db_query("SELECT fid FROM {profile_fields} WHERE name = '%s'", $data['name']))) {
+      drupal_set_message(t('the specified name is already in use'), 'error');
+    }
     else {
       db_query("INSERT INTO {profile_fields} (title, name, explanation, category, type, weight, required, overview, options, page) VALUES ('%s', '%s', '%s', '%s', '%s', %d, %d, %d, '%s', '%s')", $data['title'], $data['name'], $data['explanation'], $data['category'], $type, $data['weight'], $data['required'], $data['overview'], $data['options'], $data['page']);
 
