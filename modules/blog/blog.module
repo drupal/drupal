@@ -208,7 +208,6 @@ function blog_edit_history($nid) {
 function blog_page() {
   global $theme, $op, $name, $date;
 
-  $theme->header();
 
   if (user_access("access blogs")) {
     switch ($op) {
@@ -221,19 +220,22 @@ function blog_page() {
         }
         break;
       default:
+        $theme->header();
         if ($name) {
           blog_page_user($name, $date);
         }
         else {
           blog_page_last();
         }
+        $theme->footer();
     }
   }
   else {
+    $theme->header();
     $theme->box(t("Access denied"), message_access());
+    $theme->footer();
   }
 
-  $theme->footer();
 }
 
 function blog_user() {
