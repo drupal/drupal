@@ -122,7 +122,7 @@ function contact_mail_user() {
 
       $output  = form_item(t('From'), $user->name .' &lt;'. $user->mail .'&gt;');
       $output .= form_item(t('To'), $account->name);
-      $output .= form_textfield(t('Subject'), 'subject', $edit['subject'], 50, 8, NULL, NULL, TRUE);
+      $output .= form_textfield(t('Subject'), 'subject', $edit['subject'], 50, 50, NULL, NULL, TRUE);
       $output .= form_textarea(t('Message'), 'message', $edit['message'], 70, 8, NULL, NULL, TRUE);
       $output .= form_submit(t('Send e-mail'));
       $output  = form($output);
