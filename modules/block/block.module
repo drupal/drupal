@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.124 2004/08/01 19:26:07 dries Exp $
+// $Id: block.module,v 1.125 2004/08/05 05:40:53 dries Exp $
 
 /**
  * Implementation of hook_help().
@@ -183,8 +183,8 @@ function block_admin_display() {
 
   foreach ($blocks as $block) {
     if ($block['module'] == 'block') {
-      $edit = l(t('edit block'), 'admin/block/edit/'. $block['delta']);
-      $delete = l(t('delete block'), 'admin/block/delete/'. $block['delta']);
+      $edit = l(t('edit'), 'admin/block/edit/'. $block['delta']);
+      $delete = l(t('delete'), 'admin/block/delete/'. $block['delta']);
     }
     else {
       $edit = '';
