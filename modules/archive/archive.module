@@ -1,5 +1,5 @@
 <?php
-// $Id: archive.module,v 1.8 2002/06/08 16:17:28 kjartan Exp $
+// $Id: archive.module,v 1.9 2002/10/02 19:30:05 dries Exp $
 
 function archive_system($field){
   $system["description"] = t("Displays a calendar to navigation old content.");
@@ -57,7 +57,7 @@ function archive_display($original = 0) {
   while ($nday <= $last) {
     // Set up blank days for first week of the month:
     if ($first) {
-      $output .= " <tr><td colspan=\"$first\">&nbsp</td>\n";
+      $output .= " <tr><td colspan=\"$first\">&nbsp;</td>\n";
       $first = 0;
     }
 
