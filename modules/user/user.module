@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.274 2003/12/13 15:22:29 dries Exp $
+// $Id: user.module,v 1.275 2003/12/13 17:59:49 dries Exp $
 
 /*** Common functions ******************************************************/
 
@@ -449,10 +449,6 @@ function theme_user_list($items, $title = NULL) {
 function user_link($type) {
 
   $links = array();
-
-  if ($type == "page") {
-    $links[] = l(t("my account"), "user", array("title" => t("Create a user account, request a new password or edit your account settings.")));
-  }
 
   if ($type == "system") {
     global $user;
