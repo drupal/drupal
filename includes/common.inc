@@ -147,7 +147,7 @@ function format_date($timestamp, $type = "medium", $format = "") {
     case "custom":
       for ($i = strlen($format); $i >= 0; $c = $format[--$i]) {
         if (strstr("DFlMSw", $c)) {
-          $date=t(date($c, $timestamp)).$date;
+          $date = t(date($c, $timestamp)).$date;
         }
         else if (strstr("AaBdgGhHiIjLmnrstTUYyZz", $c)) {
           $date = date($c, $timestamp).$date;
@@ -164,7 +164,7 @@ function format_date($timestamp, $type = "medium", $format = "") {
 }
 
 function format_username($username) {
-  if ($username) return (user_access("administer accounts") ? "<A HREF=\"admin.php?mod=account&op=view&name=". urlencode($username) ."\">$username</A>" : "<A HREF=\"account.php?op=view&name=". urlencode($username) ."\">$username</A>");
+  if ($username) return (user_access("administer users") ? "<A HREF=\"admin.php?mod=account&op=view&name=". urlencode($username) ."\">$username</A>" : "<A HREF=\"account.php?op=view&name=". urlencode($username) ."\">$username</A>");
   else return variable_get(anonymous, "Anonymous");
 }
 
