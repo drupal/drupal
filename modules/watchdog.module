@@ -1,10 +1,12 @@
 <?php
-// $Id: watchdog.module,v 1.72 2003/09/28 15:18:55 dries Exp $
+// $Id: watchdog.module,v 1.73 2003/09/30 15:10:48 dries Exp $
 
 function watchdog_help($section = "admin/help") {
+  $output = "";
 
   switch ($section) {
     case "admin/help":
+    case "admin/watchdog/help":
       $output .= "<p>Watchdog module monitors your web site, capturing system events in a log to be reviewed by an authorized individual at a later time.  The Watchdog log is simply a list of recorded events containing usage data, performance data, errors, warnings and operational information.  It is vital to ". l("check the Watchdog report", "admin/watchdog") ." on a regular basis as it is often the only way to tell what is going on.</p>";
       $output .= "<p>To ease administration, the watchdog will automatically discard old log entries, ". l("as configured", "admin/system/modules/watchdog") .". Needs \"cron.php\" to discard the entries.</p>";
       break;
