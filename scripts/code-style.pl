@@ -1,5 +1,5 @@
 #!/usr/bin/perl -w
-# $Id: code-style.pl,v 1.6 2003/06/06 21:37:11 dries Exp $
+# $Id: code-style.pl,v 1.7 2003/10/30 20:56:17 dries Exp $
 
 # Author: Alexander Schwartz (alexander.schwartz@gmx.net)
 # Licence: GPL
@@ -9,7 +9,7 @@
 # code.  This program tries to show as many improvements as possible with
 # no false positives.
 
-# $Id: code-style.pl,v 1.6 2003/06/06 21:37:11 dries Exp $
+# $Id: code-style.pl,v 1.7 2003/10/30 20:56:17 dries Exp $
 
 $comment = 0;
 $program = 0;
@@ -88,12 +88,13 @@ while (<>) {
   elsif (/^\s*{/ && $program) {
     $msg = "take '{' to previous line";
   }
-  elsif (/function ([a-zA-Z_][a-zA-Z_0-9]*[A-Z][a-zA-Z_0-9]*)\(/) {
-    $msg = "no mixedcase, use lowercase and _";
+  elsif (/([a-z])([A-Z])/) {
+    $msg = "no mixed case function or variable names, use lower case and _";
   }
-#  elsif (/<[\/]*[A-Z]+[^>]*>/) {
-#    $msg = "XHTML demands tags to be lowercase";
-#  }
+  elsif (/<[\/]*[A-Z]+[^>]*>/) {
+    $msg = "XHTML demands tags to be lowercase";
+  }
+
   # trying to recognize splitted lines
   # there are only a few valid last characters in programming mode,
   # only sometimes it is ( if you use if/else with a single statement
