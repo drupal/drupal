@@ -1,19 +1,9 @@
 <?php
 // $Id$
 
-  /*********************************************************************
-
-   Theme: UnConeD
-   Author: Steven Wittens (UnConeD)
-   Email: unconed@drop.org
-   Description: Modern theme, gray and blue, high coolness factor.
-   Notes: Only supports blocks on the right.
-
-  *********************************************************************/
-
  class Theme_unconed extends BaseTheme {
    var $foreground = "#000000";
-   var $background = "#FFFFFF";
+   var $background = "#ffffff";
 
    var $link = "#000000";
 
@@ -23,23 +13,23 @@
 
    // color set #1:
    var $brcolor1 = "#000000";   // border color
-   var $bgcolor1 = "#B5BECE";
+   var $bgcolor1 = "#b5bece";
    var $fgcolor1 = "#000000";   // table body color
    var $hlcolor1 = "#000000";   // high-light color
    var $sectioncolor = "#202020";
 
    // color set #2:
-   var $bgcolor2 = "#EEEEEE";
+   var $bgcolor2 = "#eeeeee";
    var $fgcolor2 = "#000000";
 
    // color set #3:
-   var $bgcolor3 = "#D7D7D7";
+   var $bgcolor3 = "#d7d7d7";
    var $fgcolor3 = "#000000";
 
    function system($field) {
      $system["name"] = "UnConeD";
      $system["author"] = "Steven Wittens";
-     $system["description"] = "Internet explorer, Netscape, Opera";
+     $system["description"] = "Internet Explorer, Mozilla, Opera";
 
      return $system[$field];
    }
@@ -48,40 +38,40 @@
      global $base_url;
      srand((double)microtime()*1000000);
     ?>
-     <HTML>
-     <HEAD>
+      <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+      <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+      <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
       <?php print theme_head($main); ?>
-      <TITLE><?php echo ($title ? ($title . " - ") : "") . variable_get(site_name, "drupal"); ?></TITLE>
-      <BASE HREF="<?php echo "$base_url/"; ?>" />
-      <STYLE type="text/css">
-        @import "themes/unconed/unconed.css";
-      </STYLE>
-     </HEAD>
-     <BODY TEXT="#000000" BGCOLOR="<?php print $this->clc0; ?>" ALINK="#000000" LINK="#404040" VLINK="#404040" MARGINHEIGHT="10" MARGINWIDTH="10"<?php print theme_onload_attribute(); ?>>
-     <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" ALIGN="CENTER" WIDTH="100%">
-     <TR><TD BGCOLOR="<?php print $this->cl00; ?>"><IMG SRC="<?php print $this->path; ?>/images/null.gif" WIDTH="10"></TD><TD BGCOLOR="<?php print $this->clc0; ?>"><IMG SRC="<?php print $this->path; ?>/images/null.gif" WIDTH="4"></TD>
-     <TD BGCOLOR="<?php print $this->cl80; ?>">
-      <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="9" BGCOLOR="<?php print $this->cl80; ?>">
-       <TR>
-        <TD COLSPAN="2">
-         <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0" BGCOLOR="<?php echo $this->brcolor1; ?>"><TR><TD ALIGN="CENTER"><TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="4"><TR><TD ALIGN="CENTER" BGCOLOR="<?php echo $this->bgcolor2; ?>"><IMG SRC="<?php print $this->path; ?>/images/logo.png" ALT="logo"></TD></TR></TABLE></TD></TR></TABLE>
-        </TD>
-       </TR>
-       <TR>
-        <TD COLSPAN="2" ALIGN="CENTER">
-         <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0" BGCOLOR="<?php echo $this->brcolor1; ?>"><TR><TD ALIGN="CENTER"><TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="4"><TR><TD ALIGN="CENTER" BGCOLOR="<?php echo $this->bgcolor2; ?>"><?php print $this->links(link_page()); ?></TD></TR></TABLE></TD></TR></TABLE>
-        </TD>
-       </TR>
-       <TR><TD COLSPAN="2"><?php
-            print "<TABLE BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"0\" BGCOLOR=\"$this->brcolor1;\" WIDTH=\"100%\">";
-            print "<TR><TD>";
-            print "<TABLE BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"1\" WIDTH=\"100%\">";
-            print "<TR><TD ALIGN=\"center\" BGCOLOR=\"$this->bgcolor2\"><FONT COLOR=\"$this->fgcolor1\"><IMG SRC=\"" . $this->path . "/images/null.gif\" WIDTH=\"2\" HEIGHT=\"2\"></FONT></TD></TR>";
-            print "</TABLE>";
-            print "</TD></TR></TABLE>";
-       ?></TD></TR>
-       <TR>
-       <TD VALIGN="top" WIDTH="80%">
+      <title><?php echo ($title ? ($title . " - ") : "") . variable_get(site_name, "drupal"); ?></title>
+      <base href="<?php echo "$base_url/"; ?>" />
+      <link rel="stylesheet" type="text/css" media="screen, projection" href="themes/unconed/unconed.css" />
+     </head>
+     <body text="#000000" bgcolor="<?php print $this->clc0; ?>" alink="#000000" link="#404040" vlink="#404040">
+     <table border="0" cellpadding="0" cellspacing="0" align="center" width="100%">
+     <tr><td bgcolor="<?php print $this->cl00; ?>"><img src="<?php print $this->path; ?>/images/null.gif" width="10" alt="" /></td><td bgcolor="<?php print $this->clc0; ?>"><img src="<?php print $this->path; ?>/images/null.gif" width="4" alt="" /></td>
+     <td bgcolor="<?php print $this->cl80; ?>">
+      <table border="0" cellpadding="0" cellspacing="9" bgcolor="<?php print $this->cl80; ?>">
+       <tr>
+        <td colspan="2">
+         <table border="0" width="100%" cellspacing="0" cellpadding="0" bgcolor="<?php echo $this->brcolor1; ?>"><tr><td align="center"><table border="0" width="100%" cellspacing="1" cellpadding="4"><tr><td align="center" bgcolor="<?php echo $this->bgcolor2; ?>"><a href="<?php print $base_url; ?>/"><img src="<?php print $this->path; ?>/images/logo.png" alt="logo" /></a></td></tr></table></td></tr></table>
+        </td>
+       </tr>
+       <tr>
+        <td colspan="2" align="center">
+         <table border="0" width="100%" cellspacing="0" cellpadding="0" bgcolor="<?php echo $this->brcolor1; ?>"><tr><td align="center"><table border="0" width="100%" cellspacing="1" cellpadding="4"><tr><td align="center" bgcolor="<?php echo $this->bgcolor2; ?>"><?php print $this->links(link_page()); ?></td></tr></table></td></tr></table>
+        </td>
+       </tr>
+       <tr><td colspan="2"><?php
+            print "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" bgcolor=\"$this->brcolor1;\" width=\"100%\">";
+            print "<tr><td>";
+            print "<table border=\"0\" cellpadding=\"0\" cellspacing=\"1\" width=\"100%\">";
+            print "<tr><td align=\"center\" bgcolor=\"$this->bgcolor2\"><font color=\"$this->fgcolor1\"><img src=\"" . $this->path . "/images/null.gif\" width=\"2\" height=\"2\" alt=\"\" /></font></td></tr>";
+            print "</table>";
+            print "</td></tr></table>";
+       ?></td></tr>
+       <tr>
+       <td valign="top" width="80%">
     <?php
    }
 
@@ -89,130 +79,129 @@
 
         print "\n<!-- node: \"$node->title\" -->\n";
         ?>
-        <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" BGCOLOR="<?php echo $this->brcolor1; ?>" WIDTH="100%">
-        <TR><TD>
-         <TABLE BORDER="0" CELLPADDING="4" CELLSPACING="1" WIDTH="100%">
-          <TR><TD COLSPAN="2" BGCOLOR="<?php echo $this->bgcolor1; ?>" WIDTH="100%"><table width="100%" cellpadding="0" cellspacing="0"><tr><td width="100%"><FONT COLOR="<?php echo $this->fgcolor1; ?>"><B><?php echo "$node->title"; ?></B></FONT></td><td valign="middle" align="center"><IMG SRC="<?php print $this->path; ?>/images/icon.gif" valign="middle"></td></tr></table></TD></TR>
-          <TR BGCOLOR="<?php echo $this->bgcolor2; ?>">
+        <table border="0" cellpadding="0" cellspacing="0" bgcolor="<?php echo $this->brcolor1; ?>" width="100%">
+        <tr><td>
+         <table border="0" cellpadding="4" cellspacing="1" width="100%">
+          <tr><td colspan="2" bgcolor="<?php echo $this->bgcolor1; ?>" width="100%"><table width="100%" cellpadding="0" cellspacing="0"><tr><td width="100%"><font color="<?php echo $this->fgcolor1; ?>"><b><?php echo "$node->title"; ?></b></font></td><td valign="middle" align="center"><img src="<?php print $this->path; ?>/images/icon.gif" alt="" /></td></tr></table></td></tr>
+          <tr bgcolor="<?php echo $this->bgcolor2; ?>">
            <?php
             if (module_exist("taxonomy")) {
               $terms = taxonomy_link("taxonomy terms", $node);
             }
             $taxo = $this->links($terms);
-            print "<TD WIDTH=\"70%\" BGCOLOR=\"$this->bgcolor2\"><SMALL>" . t("Submitted by %a on %b", array("%a" => format_name($node), "%b" => format_date($node->created, "large"))) . "</TD><TD WIDTH=\"30%\" BGCOLOR=\"$this->bgcolor2\" ALIGN=\"center\" NOWRAP><B>". $taxo ."</B>";
+            print "<td width=\"70%\" bgcolor=\"$this->bgcolor2\"><small>" . t("Submitted by %a on %b", array("%a" => format_name($node), "%b" => format_date($node->created, "large"))) . "</small></td><td width=\"30%\" bgcolor=\"$this->bgcolor2\" align=\"center\"><b>". $taxo ."</b>";
            ?>
-          </TD>
-         </TR>
-         <TR BGCOLOR="<?php echo $this->bgcolor2; ?>">
-          <TD BGCOLOR="<?php echo $this->bgcolor2 ?>" COLSPAN="2">
+          </td>
+         </tr>
+         <tr bgcolor="<?php echo $this->bgcolor2; ?>">
+          <td bgcolor="<?php echo $this->bgcolor2 ?>" colspan="2">
           <?php
            if ($main && $node->teaser) {
-             echo "<P>$node->teaser</P>";
+             echo "<p>". check_output($node->teaser) ."</p>";
            }
            else {
-             echo "<P>$node->body</P>";
+             echo "<p>". check_output($node->body) ."</p>";
            }
           ?>
-          </TD>
-         </TR>
+          </td>
+         </tr>
          <?php
            if ($links = link_node($node, $main)) {
-             echo "<TR BGCOLOR=\"". $this->bgcolor3 ."\"><TD BGCOLOR=\"". $this->bgcolor3 ."\" ALIGN=\"right\" COLSPAN=\"2\">[ ". $this->links($links) ." ]</TD></TR>";
+             echo "<tr bgcolor=\"". $this->bgcolor3 ."\"><td bgcolor=\"". $this->bgcolor3 ."\" align=\"right\" colspan=\"2\">[ ". $this->links($links) ." ]</td></tr>";
            }
          ?>
-       </TABLE></TD></TR></TABLE><BR>
+       </table></td></tr></table><br />
       <?php
    }
 
    function comment($comment, $link) {
-     print "\n<!-- Comment: \"$comment->subject\" by $comment->name -->\n";
+     print "\n<!-- comment: \"$comment->subject\" by $comment->name -->\n";
 
      ?>
-      <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" BGCOLOR="<?php echo $this->brcolor1; ?>" WIDTH="100%">
-      <TR><TD>
+      <table border="0" cellpadding="0" cellspacing="0" bgcolor="<?php echo $this->brcolor1; ?>" width="100%">
+      <tr><td>
      <?php
 
-     // Create comment header:
-     echo "<TABLE BORDER=\"0\" CELLPADDING=\"4\" CELLSPACING=\"1\" WIDTH=\"100%\">";
-     echo " <TR BGCOLOR=\"$this->bgcolor1\">";
-     echo "  <TD BGCOLOR=\"$this->bgcolor1\">";
-     echo "   <TABLE BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"1\" WIDTH=\"100%\">";
+     // create comment header:
+     echo "<table border=\"0\" cellpadding=\"4\" cellspacing=\"1\" width=\"100%\">";
+     echo " <tr bgcolor=\"$this->bgcolor1\">";
+     echo "  <td bgcolor=\"$this->bgcolor1\">";
+     echo "   <table border=\"0\" cellpadding=\"0\" cellspacing=\"1\" width=\"100%\">";
 
-     // Subject:
-     echo "    <TR>";
-     echo "     <TD ALIGN=\"right\" VALIGN=\"top\" WIDTH=\"5%\"><FONT COLOR=\"$this->hlcolor1\"><B>" . t("Subject") . ":</B></FONT></TD><TD WIDTH=\"80%\">";
-     echo "      <B><FONT COLOR=\"$this->fgcolor1\">$comment->subject</FONT></B>";
-     echo "     </TD>";
-     echo "    </TR>";
+     // subject:
+     echo "    <tr>";
+     echo "     <td align=\"right\" valign=\"top\" width=\"5%\"><font color=\"$this->hlcolor1\"><b>" . t("subject") . ":</b></font></td><td width=\"80%\">";
+     echo "      <b><font color=\"$this->fgcolor1\">$comment->subject</font></b>";
+     echo "     </td>";
+     echo "    </tr>";
 
-     // Author:
-     echo "    <TR>";
-     echo "     <TD ALIGN=\"right\" VALIGN=\"top\">" . t("Author") . ":</TD><TD><B>" . format_name($comment) . "</B> ";
-     echo "     </TD>";
-     echo "    </TR>";
+     // author:
+     echo "    <tr>";
+     echo "     <td align=\"right\" valign=\"top\">" . t("author") . ":</td><td><b>" . format_name($comment) . "</b> ";
+     echo "     </td>";
+     echo "    </tr>";
 
-     // Date
-     echo "    <TR><TD ALIGN=\"right\">" . t("Date") . ":</TD><TD>". format_date($comment->timestamp) ."</TD></TR>";
+     // date
+     echo "    <tr><td align=\"right\">" . t("date") . ":</td><td>". format_date($comment->timestamp) ."</td></tr>";
 
-     echo "   </TABLE>";
-     echo "  </TD>";
-     echo " </TR>";
+     echo "   </table>";
+     echo "  </td>";
+     echo " </tr>";
 
-     // Print body of comment:
-     if ($comment) echo " <TR><TD BGCOLOR=\"$this->bgcolor2\">$comment->comment</TD></TR>";
+     // print body of comment:
+     if ($comment) echo " <tr><td bgcolor=\"$this->bgcolor2\">". check_output($comment->comment) ."</td></tr>";
 
-     // Print bottom link(s):
-     echo " <TR><TD ALIGN=\"right\" BGCOLOR=\"$this->bgcolor3\">[ $link ]</TD></TR>";
-     echo " </TABLE>";
-     ?></TD></TR></TABLE><BR><?php
+     // print bottom link(s):
+     echo " <tr><td align=\"right\" bgcolor=\"$this->bgcolor3\">[ $link ]</td></tr>";
+     echo " </table>";
+     ?></td></tr></table><br /><?php
    }
 
    function box($subject, $content, $region = "main") {
      ?>
-      <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" BGCOLOR="<?php echo $this->brcolor1; ?>" WIDTH="100%">
-      <TR><TD>
+      <table border="0" cellpadding="0" cellspacing="0" bgcolor="<?php echo $this->brcolor1; ?>" width="100%">
+      <tr><td>
      <?php
 
-     print "<TABLE BORDER=\"0\" CELLPADDING=\"3\" CELLSPACING=\"1\" WIDTH=\"100%\">";
-     print " <TR><TD ALIGN=\"center\" BGCOLOR=\"$this->bgcolor1\"><FONT COLOR=\"$this->fgcolor1\"><B>$subject</B></FONT></TD></TR>";
-     print " <TR><TD BGCOLOR=\"$this->bgcolor2\">$content</TD></TR>";
-     print "</TABLE>";
+     print "<table border=\"0\" cellpadding=\"3\" cellspacing=\"1\" width=\"100%\">";
+     print " <tr><td align=\"center\" bgcolor=\"$this->bgcolor1\"><font color=\"$this->fgcolor1\"><b>$subject</b></font></td></tr>";
+     print " <tr><td bgcolor=\"$this->bgcolor2\">$content</td></tr>";
+     print "</table>";
 
      ?>
-      </TD></TR>
-      </TABLE><BR>
+      </td></tr>
+      </table><br />
      <?php
 
    }
 
    function footer() {
     ?>
-       </TD>
-       <TD VALIGN="top" WIDTH="20%">
+       </td>
+       <td valign="top" width="20%">
         <?php
           theme_blocks("all", $this);
         ?>
-       </TD>
-      </TR>
-       <TR><TD COLSPAN="2"><?php
-            print "<TABLE BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"0\" BGCOLOR=\"$this->brcolor1;\" WIDTH=\"100%\">";
-            print "<TR><TD>";
-            print "<TABLE BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"1\" WIDTH=\"100%\">";
-            print "<TR><TD ALIGN=\"center\" BGCOLOR=\"$this->bgcolor2\"><FONT COLOR=\"$this->fgcolor1\"><IMG SRC=\"" . $this->path . "/images/null.gif\" WIDTH=\"2\" HEIGHT=\"2\"></FONT></TD></TR>";
-            print "</TABLE>";
-            print "</TD></TR></TABLE>";
-       ?></TD></TR>
-      <TR>
-       <TD COLSPAN="2">
-        <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0" BGCOLOR="<?php echo $this->brcolor1; ?>"><TR><TD ALIGN="CENTER"><TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="4"><TR><TD ALIGN="CENTER" BGCOLOR="<?php echo $this->bgcolor2; ?>"><?php print $this->links(link_page()); ?></TD></TR></TABLE></TD></TR></TABLE>
-       </TD>
-      </TR>
-     </TABLE>
-    </TD><TD BGCOLOR="<?php print $this->clc0; ?>"><IMG SRC="<?php print $this->path; ?>/images/null.gif" WIDTH="4"></TD><TD BGCOLOR="<?php print $this->cl00; ?>"><IMG SRC="<?php print $this->path; ?>/images/null.gif" WIDTH="10"></TD></TR>
-    </TABLE>
-    <?php print theme_footer(); ?>
-    </BODY>
-    </HTML>
+       </td>
+      </tr>
+       <tr><td colspan="2"><?php
+            print "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" bgcolor=\"$this->brcolor1;\" width=\"100%\">";
+            print "<tr><td>";
+            print "<table border=\"0\" cellpadding=\"0\" cellspacing=\"1\" width=\"100%\">";
+            print "<tr><td align=\"center\" bgcolor=\"$this->bgcolor2\"><font color=\"$this->fgcolor1\"><img src=\"" . $this->path . "/images/null.gif\" width=\"2\" height=\"2\" alt=\"\" /></font></td></tr>";
+            print "</table>";
+            print "</td></tr></table>";
+       ?></td></tr>
+      <tr>
+       <td colspan="2">
+        <table border="0" width="100%" cellspacing="0" cellpadding="0" bgcolor="<?php echo $this->brcolor1; ?>"><tr><td align="center"><table border="0" width="100%" cellspacing="1" cellpadding="4"><tr><td align="center" bgcolor="<?php echo $this->bgcolor2; ?>"><?php print $this->links(link_page()); ?></td></tr></table></td></tr></table>
+       </td>
+      </tr>
+     </table>
+    </td><td bgcolor="<?php print $this->clc0; ?>"><img src="<?php print $this->path; ?>/images/null.gif" width="4" alt="" /></td><td bgcolor="<?php print $this->cl00; ?>"><img src="<?php print $this->path; ?>/images/null.gif" width="10" alt="" /></td></tr>
+    </table>
+    </body>
+    </html>
     <?php
    }
  }
