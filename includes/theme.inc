@@ -53,16 +53,16 @@ function init_theme() {
   // Also load the stylesheet using drupal_set_html_head().
   // Otherwise, load the theme.
   if (strpos($themes[$theme]->filename, '.css')) {
-    // File is a style; put it in the html_head buffer
+    // File is a style; loads its CSS.
     // Set theme to its template/theme
-    drupal_set_html_head(theme('stylesheet_import', $themes[$theme]->filename));
+    theme_add_style($themes[$theme]->filename);
     $theme = $themes[$theme]->description;
   }
   else {
     // File is a template/theme
-    // Put the css with the same name in html_head, if it exists
+    // Load its CSS, if it exists
     if (file_exists($stylesheet = dirname($themes[$theme]->filename) .'/style.css')) {
-      drupal_set_html_head(theme('stylesheet_import', $stylesheet));
+      theme_add_style($stylesheet);
     }
   }
 
@@ -206,7 +206,7 @@ function path_to_theme() {
  * @return
  *   An associative array containing theme settings.
  */
-function drupal_get_theme_settings($key = NULL) {
+function theme_get_settings($key = NULL) {
   $defaults = array(
     'primary_links'                 =>  '',
     'secondary_links'               =>  l('edit secondary links', 'admin/themes/settings'),
@@ -252,12 +252,12 @@ function drupal_get_theme_settings($key = NULL) {
  * @return
  *   The value of the requested setting, NULL if the setting does not exist.
  */
-function drupal_get_theme_setting($setting_name, $refresh = FALSE) {
+function theme_get_setting($setting_name, $refresh = FALSE) {
   global $theme_key;
   static $settings;
 
   if (empty($settings) || $refresh) {
-    $settings = drupal_get_theme_settings($theme_key);
+    $settings = theme_get_settings($theme_key);
 
     $themes = list_themes();
     $theme_object = $themes[$theme_key];
@@ -294,6 +294,29 @@ function drupal_get_theme_setting($setting_name, $refresh = FALSE) {
   }
 
   return isset($settings[$setting_name]) ? $settings[$setting_name] : NULL;
+}
+
+/**
+ * Add a theme stylesheet to be included later. This is handled separately from
+ * drupal_set_html_head() to enforce the correct CSS cascading order.
+ */
+function theme_add_style($style = '') {
+  static $styles = array();
+  if ($style) {
+    $styles[] = $style;
+  }
+  return $styles;
+}
+
+/**
+ * Return the HTML for a theme's stylesheets.
+ */
+function theme_get_styles() {
+  $output = '';
+  foreach (theme_add_style() as $style) {
+    $output .= theme('stylesheet_import', $style);
+  }
+  return $output;
 }
 
 /**
@@ -335,6 +358,7 @@ function theme_page($content, $title = NULL, $breadcrumb = NULL) {
   $output .= '<head>';
   $output .= ' <title>'. (drupal_get_title() ? drupal_get_title() : variable_get('site_name', 'drupal')) .'</title>';
   $output .= drupal_get_html_head();
+  $output .= theme_get_styles();
 
   $output .= ' </head>';
   $output .= ' <body style="background-color: #fff; color: #000;"'. theme('onload_attribute'). '">';

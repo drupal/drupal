@@ -32,7 +32,7 @@ function xtemplate_node($node, $main = 0, $page = 0) {
   global $xtemplate;
 
   $xtemplate->template->assign(array(
-        "submitted" => drupal_get_theme_setting("toggle_node_info_$node->type") ?
+        "submitted" => theme_get_setting("toggle_node_info_$node->type") ?
                          t("Submitted by %a on %b.",
                            array("%a" => format_name($node),
                             "%b" => format_date($node->created))) : '',
@@ -47,7 +47,7 @@ function xtemplate_node($node, $main = 0, $page = 0) {
     $xtemplate->template->parse("node.title");
   }
 
-  if (drupal_get_theme_setting('toggle_node_user_picture') && $picture = theme('user_picture', $node)) {
+  if (theme_get_setting('toggle_node_user_picture') && $picture = theme('user_picture', $node)) {
     $xtemplate->template->assign("picture", $picture);
     $xtemplate->template->parse("node.picture");
   }
@@ -86,7 +86,7 @@ function xtemplate_comment($comment, $links = 0) {
     $xtemplate->template->parse("comment.new");
   }
 
-  if (drupal_get_theme_setting('toggle_comment_user_picture') && $picture = theme('user_picture', $comment)) {
+  if (theme_get_setting('toggle_comment_user_picture') && $picture = theme('user_picture', $comment)) {
     $xtemplate->template->assign("picture", $picture);
     $xtemplate->template->parse("comment.picture");
   }
@@ -116,22 +116,23 @@ function xtemplate_page($content, $title = NULL, $breadcrumb = NULL) {
   $xtemplate->template->assign(array(
     "head_title" => (drupal_get_title() ? drupal_get_title() ." | ". variable_get("site_name", "drupal") : variable_get("site_name", "drupal") ." | ". variable_get("site_slogan", "")),
     "head" => drupal_get_html_head(),
+    "styles" => theme_get_styles(),
     "onload_attributes" => theme_onload_attribute(),
-    "primary_links" => drupal_get_theme_setting('primary_links'),
-    "secondary_links" => drupal_get_theme_setting('secondary_links')
+    "primary_links" => theme_get_setting('primary_links'),
+    "secondary_links" => theme_get_setting('secondary_links')
    ));
 
-  if ($logo = drupal_get_theme_setting('logo')) {
+  if ($logo = theme_get_setting('logo')) {
     $xtemplate->template->assign('logo', $logo);
     $xtemplate->template->parse('header.logo');
   }
 
-  if (drupal_get_theme_setting('toggle_name')) {
+  if (theme_get_setting('toggle_name')) {
     $xtemplate->template->assign('site_name', variable_get('site_name', ''));
     $xtemplate->template->parse('header.site_name');
   }
 
-  if (drupal_get_theme_setting('toggle_slogan')) {
+  if (theme_get_setting('toggle_slogan')) {
     $xtemplate->template->assign('site_slogan', variable_get('site_slogan', ''));
     $xtemplate->template->parse('header.site_slogan');
   }
@@ -157,7 +158,7 @@ function xtemplate_page($content, $title = NULL, $breadcrumb = NULL) {
     $xtemplate->template->parse("header.message");
   }
 
-  if (drupal_get_theme_setting('toggle_search')) {
+  if (theme_get_setting('toggle_search')) {
     $xtemplate->template->assign(array(
           //"search" => search_form(),
           "search_url" => url("search"),
@@ -168,7 +169,7 @@ function xtemplate_page($content, $title = NULL, $breadcrumb = NULL) {
   }
 
   // only parse the mission block if we are on the frontpage ...
-  if ($_GET["q"] == variable_get("site_frontpage", "node") && drupal_get_theme_setting('toggle_mission') && ($mission = drupal_get_theme_setting('mission'))) {
+  if ($_GET["q"] == variable_get("site_frontpage", "node") && theme_get_setting('toggle_mission') && ($mission = theme_get_setting('mission'))) {
     $xtemplate->template->assign("mission", $mission);
     $xtemplate->template->parse("header.mission");
   }

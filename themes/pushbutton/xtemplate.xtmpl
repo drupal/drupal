@@ -3,6 +3,8 @@
 <head>
   <title>{head_title}</title>
   {head}
+  {styles}
+  <script type="text/javascript"> </script>
 </head>
 
 <body bgcolor="#ffffff" {onload_attributes}>

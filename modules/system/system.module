@@ -115,7 +115,7 @@ function system_user($type, $edit, &$user, $category = NULL) {
 
         // Screenshot column.
         $screenshot = dirname($value->filename) .'/screenshot.png';
-        $row[] = file_exists($screenshot) ? theme('image', $screenshot, t('Screenshot for %theme theme', array('%theme' => $value->name)), '', 'class="screenshot"') : t('no screenshot');
+        $row[] = file_exists($screenshot) ? theme('image', $screenshot, t('Screenshot for %theme theme', array('%theme' => $value->name)), '', 'class="screenshot"', false) : t('no screenshot');
 
         // Information field.
         $field = '<strong>'. basename($value->name) .'</strong>';
@@ -391,7 +391,7 @@ function system_theme_listing() {
     $row = array();
 
     // Screenshot column.
-    $row[] = file_exists($info->screenshot) ? theme('image', $info->screenshot, t('Screenshot for %theme theme', array('%theme' => $info->shortname)), '', 'class="screenshot"') : t('no screenshot');
+    $row[] = file_exists($info->screenshot) ? theme('image', $info->screenshot, t('Screenshot for %theme theme', array('%theme' => $info->shortname)), '', 'class="screenshot"', false) : t('no screenshot');
 
     // Information field.
     $field = '<strong>'. $info->shortname .'</strong>';
@@ -568,13 +568,13 @@ function system_theme_settings() {
   // Default settings are defined in _theme_settings() in includes/theme.inc
   $key = str_replace('.', '/', arg(3));
   if ($key) {
-    $settings = drupal_get_theme_settings($key);
+    $settings = theme_get_settings($key);
     $var = str_replace('/', '_', 'theme_'. $key .'_settings');
     $themes = system_theme_data('themes');
     $features = function_exists($themes[$key]->prefix .'_features') ? call_user_func($themes[$key]->prefix .'_features') : array();
   }
   else {
-    $settings = drupal_get_theme_settings('');
+    $settings = theme_get_settings('');
     $var = 'theme_settings';
   }
 
