@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.125 2003/11/27 06:32:42 dries Exp $
+// $Id: statistics.module,v 1.126 2003/11/27 22:01:56 dries Exp $
 
 // Exit hook, runs at the end of every page request
 function statistics_exit() {
@@ -242,10 +242,13 @@ function statistics_admin() {
     switch ($op) {
       case "statistics":
         $output = statistics_admin_topnodes();
+        break;
       case "referrers":
         $output = statistics_top_refer();
+        break;
       case "log":
         $output = statistics_admin_displaylog();
+        break;
     }
 
     print theme("page", $output);
