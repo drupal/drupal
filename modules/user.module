@@ -1098,7 +1098,7 @@ function user_edit($edit = array()) {
       $output .= form_group(t('Picture'), $group);
     }
 
-    $output .= _user_profile($edit, $user);
+    $output .= _user_profile($edit, $user, 'form');
     $output .= form_submit(t("Save user information"));
 
     $output = form($output, "post", 0, array("enctype" => "multipart/form-data"));
@@ -1111,15 +1111,16 @@ function user_edit($edit = array()) {
   return $output;
 }
 
-function _user_profile($edit, $account) {
+function _user_profile($edit, $account, $mode = 'form') {
 
   foreach (module_list() as $module) {
-    if ($data = module_invoke($module, 'user', 'form', $edit, $account)) {
+    if ($data = module_invoke($module, 'user', $mode, $edit, $account)) {
       foreach ($data as $title => $form) {
         $groups[$title] .= $form;
       }
     }
   }
+
   $output = '';
   foreach ($groups as $title => $form) {
     $output .= form_group($title, $form);
@@ -1330,7 +1331,7 @@ function user_admin_create($edit = array()) {
 
     $output  = form_textfield(t("Username"), 'name', $edit['name'], 30, 55, t("Provide the username of the new account."));
     $output .= form_textfield(t("E-mail address"), "mail", $edit['mail'], 30, 55, t("Provide the e-mail address associated with the new account."));
-    $output .= _user_profile($edit, $edit);
+    $output .= _user_profile($edit, $edit, 'form');
     $output .= form_textfield(t("Password"), 'pass', $edit['pass'], 30, 55, t("Provide a password for the new account."));
     $output .= form_submit(t("Create account"));
 
@@ -1640,7 +1641,7 @@ function user_admin_edit($edit = array()) {
       $output .= form_group(t('Picture'), $group);
     }
 
-    $output .= _user_profile($edit, $account);
+    $output .= _user_profile($edit, $account, 'edit');
 
     $output .= form_submit(t("Save account"));
     $output .= form_submit(t("Delete account"));
