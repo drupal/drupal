@@ -63,7 +63,7 @@ function format_date($timestamp, $type = "medium") {
   return $date;
 }
 
-function format_availability($field, $replacement = "<I>n/a</I>") {
+function format_data($field, $replacement = "<I>n/a</I>") {
   return ($field) ? $field : $replacement;
 }
 
@@ -73,7 +73,7 @@ function format_username($username, $admin = 0) {
 }
 
 function format_email_address($address) {
-  return ($address) ? "<A HREF=\"mailto:$address\">$address</A>" : format_availability($address);
+  return ($address) ? "<A HREF=\"mailto:$address\">$address</A>" : format_data($address);
 }
 
 function format_url($address, $description = "") {
@@ -82,7 +82,7 @@ function format_url($address, $description = "") {
    //   2. add a trailing `/' in case it's missing.
    //   3. remove any parameters in the URI.
   $description = ($description) ? $description : $address;
-  return ($address) ? "<A HREF=\"$address\">$description</A>" : format_availability($address);
+  return ($address) ? "<A HREF=\"$address\">$description</A>" : format_data($address);
 }
 
 function format_story_link($story, $subject = "") {
