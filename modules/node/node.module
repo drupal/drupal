@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.199 2003/03/16 07:02:19 dries Exp $
+// $Id: node.module,v 1.200 2003/03/16 21:47:15 dries Exp $
 
 function node_help() {
   global $mod;
@@ -311,8 +311,8 @@ function node_save($node) {
   }
 
   /*
-  ** Clear the cache so an anonymous poster can see the node being added
-  ** or updated.
+  ** Clear the cache so an anonymous poster can see the node being
+  ** added or updated.
   */
 
   cache_clear_all();
@@ -1350,6 +1350,13 @@ function node_delete($edit) {
 
       node_invoke($node, "delete");
       node_invoke_all($node, "nodeapi", "delete");
+
+      /*
+      ** Clear the cache so an anonymous poster can see the node being
+      ** deleted.
+      */
+
+      cache_clear_all();
 
       watchdog("special", "$node->type: deleted '$node->title'");
       $output = t("The node has been deleted.");
