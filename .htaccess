@@ -36,6 +36,12 @@ DirectoryIndex index.php
    # in /sites/default/settings.php
 </IfModule>
 
+# Overload mod_expires variables.
+<IfModule mod_expires.c>
+  # Reduce the time dynamically generated HTML pages are cache-able.
+  ExpiresByType text/html A1
+</IfModule>
+
 # Various rewrite rules
 <IfModule mod_rewrite.c>
   RewriteEngine on
