@@ -295,7 +295,6 @@ CREATE TABLE page (
 #
 
 CREATE TABLE poll (
-  lid int(10) unsigned NOT NULL auto_increment,
   nid int(10) unsigned NOT NULL default '0',
   runtime int(10) NOT NULL default '0',
   voters text NOT NULL,
