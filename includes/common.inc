@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.372 2004/08/04 20:36:23 dries Exp $ */
+/* $Id: common.inc,v 1.373 2004/08/06 20:15:31 dries Exp $ */
 
 /**
  * @file
@@ -19,7 +19,7 @@ function drupal_set_title($title = NULL) {
   static $stored_title;
 
   if (isset($title)) {
-    $stored_title = ucfirst($title);
+    $stored_title = $title;
   }
   return $stored_title;
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.364 2004/08/05 20:41:57 dries Exp $
+// $Id: user.module,v 1.365 2004/08/06 20:15:32 dries Exp $
 
 /**
  * Invokes hook_user() in every module.
@@ -207,7 +207,7 @@ function user_validate_authmap($account, $authname, $module) {
   $result = db_query("SELECT COUNT(*) from {authmap} WHERE uid != %d AND authname = '%s'", $account->uid, $authname);
   if (db_result($result) > 0) {
     $name = module_invoke($module, 'info', 'name');
-    return t('The %u ID %s is already taken.', array('%u' => ucfirst($name), '%s' => "<i>$authname</i>"));
+    return t('The %u ID %s is already taken.', array('%u' => $name, '%s' => "<i>$authname</i>"));
   }
 }
 

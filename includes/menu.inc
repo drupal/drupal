@@ -1,5 +1,5 @@
 <?php
-/* $Id: menu.inc,v 1.59 2004/08/03 18:01:48 dries Exp $ */
+/* $Id: menu.inc,v 1.60 2004/08/06 20:15:31 dries Exp $ */
 
 /**
  * @file
@@ -404,7 +404,7 @@ function menu_get_active_title() {
   $menu = menu_get_menu();
 
   if ($mid = menu_get_active_nontask_item()) {
-    return ucfirst($menu['items'][$mid]['title']);
+    return $menu['items'][$mid]['title'];
   }
 }
 

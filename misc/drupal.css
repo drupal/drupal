@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.74 2004/07/25 22:18:31 unconed Exp $ */
+/* $Id: drupal.css,v 1.75 2004/08/06 20:15:31 dries Exp $ */
 
 /*
 ** HTML elements
@@ -87,6 +87,14 @@ li a.active {
 td.menu-disabled {
   background: #ccc;
 }
+
+/*
+** CSS capitalization
+*/
+.title:first-letter,
+.messages:first-letter,
+.messages li:first-letter { text-transform: uppercase; }
+
 /*
 ** Other common styles
 */

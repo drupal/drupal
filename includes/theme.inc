@@ -1,5 +1,5 @@
 <?php
-/* $Id: theme.inc,v 1.204 2004/08/04 20:39:59 dries Exp $ */
+/* $Id: theme.inc,v 1.205 2004/08/06 20:15:31 dries Exp $ */
 
 /**
  * @file
@@ -204,12 +204,12 @@ function theme_status_messages() {
       if (count($messages) > 1) {
         $output .= " <ul>\n";
         foreach($messages as $message) {
-          $output .= '  <li>'. ucfirst($message) ."</li>\n";
+          $output .= '  <li>'. $message ."</li>\n";
         }
         $output .= " </ul>\n";
       }
       else {
-        $output .= ucfirst($messages[0]);
+        $output .= $messages[0];
       }
       $output .= "</div>\n";
     }

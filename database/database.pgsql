@@ -354,7 +354,7 @@ CREATE TABLE node_access (
   grant_update smallint NOT NULL default '0',
   grant_delete smallint NOT NULL default '0',
   PRIMARY KEY  (nid,gid,realm)
-); 
+);
 
 
 --
