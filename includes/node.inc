@@ -182,8 +182,9 @@ function node_control($node) {
   else
     $choices = array("node.php?id=$node->nid" => t("view node"), "node.php?op=history&id=$node->nid" => t("view history"));
 
+  $output .= $REQUEST_URI;
   $output .= "<FORM METHOD=\"get\" ACTION=\"\">\n";
-  foreach ($choices as $key => $value) $options .= "<OPTION VALUE=\"$key\"". ("/$key" == $REQUEST_URI ? " SELECTED" : "") .">". check_select($value) ."</OPTION>\n";
+  foreach ($choices as $key => $value) $options .= "<OPTION VALUE=\"$key\"". (strstr($REQUEST_URI,"/$key") ? " SELECTED" : "") .">". check_select($value) ."</OPTION>\n";
   $output .= " <SELECT NAME=\"op\" ONCHANGE=\"visit(this.options[this.selectedIndex].value)\">$options</SELECT>\n";
   $output .= "</FORM>\n";
 
