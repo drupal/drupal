@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.328 2004/02/08 20:38:53 kjartan Exp $
+// $Id: node.module,v 1.329 2004/02/08 21:16:03 dries Exp $
 
 define('NODE_NEW_LIMIT', time() - 30 * 24 * 60 * 60);
 
@@ -1491,6 +1491,30 @@ function node_delete($edit) {
   return $output;
 }
 
+function node_page_default() {
+  $result = pager_query('SELECT nid, type FROM {node} WHERE promote = 1 AND status = 1 ORDER BY static DESC, created DESC', variable_get('default_nodes_main', 10));
+
+  if (db_affected_rows($result)) {
+    drupal_set_html_head('<link rel="alternate" type="application/rss+xml" title="RSS" href="'. url('node/feed') .'" />');
+
+    $output = '';
+    while ($node = db_fetch_object($result)) {
+      $output .= node_view(node_load(array('nid' => $node->nid, 'type' => $node->type)), 1);
+    }
+    $output .= theme('pager', NULL, variable_get('default_nodes_main', 10));
+  }
+  else {
+    $output = t("
+      <p>Welcome to your new <a href=\"%drupal\">Drupal</a>-powered website. This welcome message will guide you through your first steps with Drupal, and will disappear once you've posted your first piece of content.</p>
+      <p>The first thing you'll need to do is <a href=\"%register\">create the first account</a>. This account will have full administration rights and will allow you to further configure your website. Once you are logged in, you can go to the <a href=\"%admin\">administration section</a> and <a href=\"%config\">set up your site's configuration</a>.</p>
+      <p>Drupal's functionality is contained in 'modules', each with a specific function. You should visit the <a href=\%modules\">module list</a> and enable those modules necessary for your particular website.</p>
+      <p>The presentation of your website is handled by '<a href=\"%themes\">themes</a>'. You can use one of the existing themes, modify them, or create your own from scratch.</p>
+      <p>We suggest you look around the administration section and explore the various options Drupal offers you. For more information, you can refer to the <a href=\"%handbook\">Drupal handbook online</a>.</p>", array('%drupal' => 'http://www.drupal.org/', '%register' => url('user/register'), '%admin' => url('admin'), '%config' => url('admin/system'), '%modules' => url('admin/system/modules'), '%themes' => url('admin/system/themes'), '%handbook' => 'http://www.drupal.org/handbook'));
+  }
+
+  return $output;
+}
+
 function node_page() {
   if (user_access('access content')) {
     $op = $_POST['op'] ? $_POST['op'] : arg(1);
@@ -1538,15 +1562,7 @@ function node_page() {
         print theme('page', node_delete($edit), t('Delete %name', array('%name' => $name)));
         break;
       default:
-        $output = '';
-        $result = pager_query('SELECT nid, type FROM {node} WHERE promote = 1 AND status = 1 ORDER BY static DESC, created DESC', variable_get('default_nodes_main', 10));
-
-        while ($node = db_fetch_object($result)) {
-          $output .= node_view(node_load(array('nid' => $node->nid, 'type' => $node->type)), 1);
-        }
-        $output .= theme('pager', NULL, variable_get('default_nodes_main', 10));
-        drupal_set_html_head('<link rel="alternate" type="application/rss+xml" title="RSS" href="'. url('node/feed') .'" />');
-        print theme('page', $output, '');
+       print theme('page', node_page_default(), '');
     }
   }
   else {
