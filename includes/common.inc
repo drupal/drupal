@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.319 2004/02/05 22:58:59 dries Exp $ */
+/* $Id: common.inc,v 1.320 2004/02/08 17:12:44 dries Exp $ */
 
 /**
  * @defgroup common Core functions
@@ -118,10 +118,10 @@ function drupal_get_html_head() {
 /* @} */
 
 /**
- * @name URL path
+ * @name URL path alias
  * @ingroup common
  *
- * Function to handle path aliases.
+ * Functions to handle path aliases.
  */
 function drupal_get_path_map($action = "") {
   static $map = NULL;
@@ -144,15 +144,34 @@ function drupal_get_path_map($action = "") {
 function drupal_rebuild_path_map() {
   drupal_get_path_map("rebuild");
 }
-/* @} */
 
 /**
- * @name HTTP handling
- * @ingroup common
- *
- * Functions to properly handle HTTP responses.
- * @{
+ * Given an old url, return the alias.
  */
+function drupal_get_path_alias($path) {
+  if (($map = drupal_get_path_map()) && ($newpath = array_search($path, $map))) {
+    return $newpath;
+  }
+  elseif (function_exists("conf_url_rewrite")) {
+    return conf_url_rewrite($path, 'outgoing');
+  }
+}
+
+/**
+ * Given an alias, return the default url.
+ */
+function drupal_get_normal_path($path) {
+  if (($map = drupal_get_path_map()) && isset($map[$path])) {
+    return $map[$path];
+  }
+  elseif (function_exists("conf_url_rewrite")) {
+    return conf_url_rewrite($path, 'incoming');
+  }
+  else {
+    return $path;
+  }
+}
+/* @} */
 
 /**
  * @name HTTP headers
@@ -175,6 +194,14 @@ function drupal_get_headers() {
   return drupal_set_header();
 }
 /* @} */
+
+/**
+ * @name HTTP handling
+ * @ingroup common
+ *
+ * Functions to properly handle HTTP responses.
+ * @{
+ */
 
 /**
  * HTTP redirects. Makes sure the redirected url is formatted correctly and
@@ -520,6 +547,7 @@ function drupal_specialchars($input, $quotes = ENT_NOQUOTES) {
  * @ingroup common
  *
  * Functions to validate user input.
+ * @{
  */
 
 /**
@@ -703,6 +731,14 @@ function check_file($filename) {
   return is_uploaded_file($filename);
 }
 
+/**
+ * @name Formatting
+ * @ingroup common
+ *
+ * Functions to format numbers, strings, dates, etc.
+ * @{
+ */
+
 function format_rss_channel($title, $link, $description, $items, $language = "en", $args = array()) {
   // arbitrary elements may be added using the $args associative array
 
@@ -747,11 +783,18 @@ function format_rss_item($title, $link, $description, $args = array()) {
  * @param $plural The string for the plural case. Please make sure it's clear
  *   this is plural, to ease translation. Use %count in places of the item
  *   count, as in "%count new comments".
+ * @return Translated string
  */
 function format_plural($count, $singular, $plural) {
   return t($count == 1 ? $singular : $plural, array("%count" => $count));
 }
 
+/**
+ * Generates a string representation for the given byte count.
+ *
+ * @param $size The size in bytes
+ * @return Translated string representation of the size
+ */
 function format_size($size) {
   $suffix = t("bytes");
   if ($size > 1024) {
@@ -765,6 +808,13 @@ function format_size($size) {
   return t("%size %suffix", array("%size" => $size, "%suffix" => $suffix));
 }
 
+/**
+ * Formats a time interval with the requested granularity.
+ *
+ * @param $timestamp The length of the interval in seconds
+ * @param $granularity How much units to consider when generating the string
+ * @return Translated string representation of the interval
+ */
 function format_interval($timestamp, $granularity = 2) {
   $units = array("1 year|%count years" => 31536000, "1 week|%count weeks" => 604800, "1 day|%count days" => 86400, "1 hour|%count hours" => 3600, "1 min|%count min" => 60, "1 sec|%count sec" => 1);
   foreach ($units as $key => $value) {
@@ -782,6 +832,20 @@ function format_interval($timestamp, $granularity = 2) {
   return ($output) ? $output : t("0 sec");
 }
 
+/**
+ * Formats a date with the given configured format or a custom format string.
+ * Drupal allows administrators to select formatting strings for 'small',
+ * 'medium' and 'large' date formats. This function can handle these formats,
+ * as well as any custom format.
+ *
+ * @param $timestamp The exact date to format
+ * @param $type Could be 'small', 'medium' or 'large' for the preconfigured
+ *              date formats. If 'custom' is specified, the next parameter
+ *              should contain the format string
+ * @param $format Format string (as required by the PHP date() function).
+ *                Only required if 'custom' date format is requested.
+ * @return Translated date string in the requested format
+ */
 function format_date($timestamp, $type = "medium", $format = "") {
   global $user;
 
@@ -816,6 +880,14 @@ function format_date($timestamp, $type = "medium", $format = "") {
   return $date;
 }
 
+/**
+ * Formats a username.
+ *
+ * @param $object User object
+ * @return String containing a HTML link to the user's page if the
+ *         passed object suggests that this is a site user. Otherwise
+ *         only the user name is returned.
+ */
 function format_name($object) {
 
   if ($object->uid && $object->name) {
@@ -854,6 +926,7 @@ function format_name($object) {
 
   return $output;
 }
+/* @} */
 
 /**
  * @defgroup from Form generation
@@ -938,33 +1011,6 @@ function form_weight($title = NULL, $name = "weight", $value = 0, $delta = 10, $
   return form_select($title, $name, $value, $weights, $description, $extra);
 }
 /* @} */
-
-/**
- * Given an old url, return the alias.
- */
-function drupal_get_path_alias($path) {
-  if (($map = drupal_get_path_map()) && ($newpath = array_search($path, $map))) {
-    return $newpath;
-  }
-  elseif (function_exists("conf_url_rewrite")) {
-    return conf_url_rewrite($path, 'outgoing');
-  }
-}
-
-/**
- * Given an alias, return the default url.
- */
-function drupal_get_normal_path($path) {
-  if (($map = drupal_get_path_map()) && isset($map[$path])) {
-    return $map[$path];
-  }
-  elseif (function_exists("conf_url_rewrite")) {
-    return conf_url_rewrite($path, 'incoming');
-  }
-  else {
-    return $path;
-  }
-}
 
 function url($url = NULL, $query = NULL, $fragment = NULL) {
   global $base_url;
