@@ -159,7 +159,7 @@ switch ($op) {
     ### Loop (dynamically) through all available themes:
     $handle = opendir('themes');
     while ($file = readdir($handle)) {
-      if(!ereg("^\.",$file) && file_exists("themes/$file/theme.class")) {
+      if(!ereg("^\.",$file) && file_exists("themes/$file/theme.class.php")) {
         $options .= "<OPTION VALUE=\"$file\"". (((!empty($userinfo[theme])) && ($file == $cfg_theme)) || ($user->theme == $file) ? " SELECTED" : "") .">$file</OPTION>";
       }
     }
