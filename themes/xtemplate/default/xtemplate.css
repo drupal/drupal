@@ -1,4 +1,4 @@
-/* $Id: xtemplate.css,v 1.7 2004/05/05 18:19:23 dries Exp $ */
+/* $Id: xtemplate.css,v 1.8 2004/05/20 10:23:52 dries Exp $ */
 
 /*
 ** HTML elements
@@ -251,8 +251,9 @@ table {
   padding: .5em;
   margin-bottom: 1em;
 }
-.comment .title {
+.comment .title a {
   font-size: 1.1em;
+  font-weight: normal;
 }
 .comment .new {
   text-align: right;

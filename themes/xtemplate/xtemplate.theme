@@ -1,5 +1,5 @@
 <?php
-// $Id: xtemplate.theme,v 1.58 2004/03/12 21:27:54 dries Exp $
+// $Id: xtemplate.theme,v 1.59 2004/05/20 10:23:52 dries Exp $
 
 if (!class_exists("XTemplate")) {
   include_once("themes/xtemplate/xtemplate.inc");
@@ -99,7 +99,7 @@ function xtemplate_comment($comment, $links = 0) {
     "submitted" => t("Submitted by %a on %b.",
                       array("%a" => format_name($comment),
                             "%b" => format_date($comment->timestamp))),
-    "title"     => $comment->subject,
+    "title"     => l($comment->subject, $_GET['q'], NULL, NULL, "comment-$comment->cid"),
     "author"    => format_name($comment),
     "date"      => format_date($comment->timestamp),
     "content"   => $comment->comment

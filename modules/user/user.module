@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.325 2004/05/19 14:55:19 dries Exp $
+// $Id: user.module,v 1.326 2004/05/20 10:23:52 dries Exp $
 
 /*** Common functions ******************************************************/
 
@@ -41,15 +41,13 @@ function user_load($array = array()) {
 
   $user = db_fetch_object($result);
   $user = drupal_unpack($user);
+  user_module_invoke("load", $array, $user);
+
   $user->roles = array();
-
   $result = db_query("SELECT r.rid, r.name FROM {role} r INNER JOIN {users_roles} ur ON ur.rid = r.rid WHERE ur.uid = %d", $user->uid);
-
   while ($role = db_fetch_object($result)) {
     $user->roles[$role->rid] = $role->name;
   }
-
-  user_module_invoke("load", $array, $user);
 
   return $user;
 }
