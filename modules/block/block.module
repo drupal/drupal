@@ -230,7 +230,7 @@ function block_admin_display() {
     $rows = array_merge($rows, $left);
   }
   if (count($right)) {
-    $rows[] = array(array('data' => t('Right sidabar'), 'class' => 'region', 'colspan' => (module_exist('throttle') ? 7 : 6)));
+    $rows[] = array(array('data' => t('Right sidebar'), 'class' => 'region', 'colspan' => (module_exist('throttle') ? 7 : 6)));
     $rows = array_merge($rows, $right);
   }
   if (count($disabled)) {
