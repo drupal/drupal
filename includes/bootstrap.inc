@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.38 2005/01/09 09:22:38 dries Exp $
+// $Id: bootstrap.inc,v 1.39 2005/03/16 19:41:12 dries Exp $
 
 /**
  * @file
@@ -99,7 +99,7 @@ function drupal_get_filename($type, $name, $filename = NULL) {
   else {
     $config = conf_init();
     $dir = (($type == 'theme_engine') ? 'themes/engines' : "${type}s");
-    $file = "$name.$type";
+    $file = (($type == 'theme_engine') ? "$name.engine" : "$name.$type");
 
     foreach (array("$config/$dir/$file", "$config/$dir/$name/$file", "$dir/$file", "$dir/$name/$file") as $file) {
       if (file_exists($file)) {
