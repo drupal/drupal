@@ -1204,7 +1204,7 @@ function drupal_attributes($attributes = array()) {
 }
 
 function l($text, $url, $attributes = array(), $query = NULL, $fragment = NULL, $absolute = NULL) {
-  if ($url == $_GET['q']) {
+  if (drupal_get_normal_path($url) == $_GET['q']) {
     if (isset($attributes['class'])) {
       $attributes['class'] .= ' active';
     }
