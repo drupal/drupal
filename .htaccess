@@ -38,10 +38,16 @@ ErrorDocument 500 /error.php
 # Various rewrite rules
 <IfModule mod_rewrite.c>
   RewriteEngine on
+  # Rewrite old-style URLS of the form 'node.php?id=x':
+  RewriteCond %{QUERY_STRING} ^id=([^&]+)$
+  RewriteRule node.php index.php?q=node/view/%1
+  # Rewrite old-style URLs of the form 'module.php?mod=x':
+  RewriteCond %{QUERY_STRING} ^mod=([^&]+)$
+  RewriteRule module.php index.php?q=%1
+  # Rewrite URLs of the form 'index.php?q=x':
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule ^(.*)$ index.php?q=$1 [L,QSA] 
-  RewriteRule ^blog/(.*) /index.php?q=blog/$1 [R]
 </IfModule>
 
 # $Id$
