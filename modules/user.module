@@ -1186,7 +1186,7 @@ function user_page() {
       break;
     case t('Log in'):
     case 'login':
-      $outpute= user_login($edit);
+      $output = user_login($edit);
       print theme('page', $output, t('Log in'));
       break;
     case 'logout':
