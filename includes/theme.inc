@@ -1,5 +1,5 @@
 <?php
-/* $Id: theme.inc,v 1.221 2004/12/15 21:16:53 dries Exp $ */
+/* $Id: theme.inc,v 1.222 2005/01/27 12:57:08 dries Exp $ */
 
 /**
  * @file
@@ -522,7 +522,7 @@ function theme_node($node, $teaser = FALSE, $page = FALSE) {
 function theme_form_element($title, $value, $description = NULL, $id = NULL, $required = FALSE, $error = FALSE) {
 
   $output  = "<div class=\"form-item\">\n";
-  $required = $required ? theme('mark') : '';
+  $required = $required ? theme('mark', 'required') : '';
 
   if ($title) {
     if ($id) {
@@ -698,10 +698,12 @@ function theme_block($block) {
  * Return a themed marker, useful for marking new comments or required form
  * elements.
  *
+ * @param $type
+ *   Type of marker to return: 'new' or 'required'
  * @return
  *   A string containing the marker.
  */
-function theme_mark() {
+function theme_mark($type = 'new') {
   return '<span class="marker">*</span>';
 }
 
