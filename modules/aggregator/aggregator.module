@@ -1,5 +1,5 @@
 <?php
-/* $Id: aggregator.module,v 1.156 2004/01/14 22:30:09 dries Exp $ */
+/* $Id: aggregator.module,v 1.157 2004/01/17 17:18:36 dries Exp $ */
 
 function aggregator_help($section) {
   switch ($section) {
@@ -215,7 +215,7 @@ function aggregator_get_feeds($attributes = 0) {
 
 function aggregator_remove($feed) {
   db_query("DELETE FROM {item} WHERE fid = %d", $feed["fid"]);
-  return t("removed news items from '%site'.", array("%site" => $feed["title"]));
+  drupal_set_message(t("removed news items from '%site'.", array("%site" => $feed["title"])));
 }
 
 // Call-back function used by XML parser:
@@ -288,7 +288,8 @@ function aggregator_refresh($feed) {
   switch ($result->code) {
     case 304:
       db_query("UPDATE {feed} SET checked = %d WHERE fid = %d", time(), $feed['fid']);
-      return t("no new syndicated content from '%site'.", array('%site' => $feed['title']));
+      drupal_set_message(t("no new syndicated content from '%site'.", array('%site' => $feed['title'])));
+      break;
     case 301:
       $feed['url'] = $result->redirect_url;
       watchdog('special', "aggregator: updated URL for feed '$feed[title]' to $feed[url]");
@@ -297,42 +298,47 @@ function aggregator_refresh($feed) {
     case 307:
       // Filter the input data:
       if (!valid_input_data($result->data)) {
-        return t("failed to parse RSS feed '%site': suspicious input data.", array("%site" => $feed["title"]));
+        drupal_set_message(t("failed to parse RSS feed '%site': suspicious input data.", array("%site" => $feed["title"])), 'error');
       }
+      else if (aggregator_parse_feed($result->data, $feed)) {
 
-      aggregator_parse_feed($result->data, $feed);
+        if ($result->headers['Last-Modified']) {
+          $modified = strtotime($result->headers['Last-Modified']);
+        }
 
-      if ($result->headers['Last-Modified']) {
-        $modified = strtotime($result->headers['Last-Modified']);
+        /*
+        ** Prepare the image data (if any):
+        */
+
+        foreach ($image as $key => $value) {
+          $image[$key] = trim($value);
+        }
+
+        if ($image['LINK'] && $image['URL'] && $image['TITLE']) {
+          $image = "<a href=\"". $image['LINK'] ."\"><img src=\"". $image['URL'] ."\" alt=\"". $image['TITLE'] ."\" /></a>";
+        }
+
+        /*
+        ** Update the feed data:
+        */
+
+        db_query("UPDATE {feed} SET url = '%s', checked = %d, link = '%s', description = '%s', image = '%s', etag = '%s', modified = %d WHERE fid = %d", $feed['url'], time(), $channel['LINK'], $channel['DESCRIPTION'], $image, $result->headers['ETag'], $modified, $feed['fid']);
+
+        /*
+        ** Clear the cache:
+        */
+
+        cache_clear_all();
+
+        $message = t("syndicated content from '%site'.", array("%site" => $feed["title"]));
+        watchdog('regular', "aggregator: $message");
+        drupal_set_message($message);
       }
-
-      /*
-      ** Prepare the image data (if any):
-      */
-
-      foreach ($image as $key => $value) {
-        $image[$key] = trim($value);
-      }
-
-      if ($image['LINK'] && $image['URL'] && $image['TITLE']) {
-        $image = "<a href=\"". $image['LINK'] ."\"><img src=\"". $image['URL'] ."\" alt=\"". $image['TITLE'] ."\" /></a>";
-      }
-
-      /*
-      ** Update the feed data:
-      */
-
-      db_query("UPDATE {feed} SET url = '%s', checked = %d, link = '%s', description = '%s', image = '%s', etag = '%s', modified = %d WHERE fid = %d", $feed['url'], time(), $channel['LINK'], $channel['DESCRIPTION'], $image, $result->headers['ETag'], $modified, $feed['fid']);
-
-      /*
-      ** Clear the cache:
-      */
-
-      cache_clear_all();
-
-      return t("syndicated content from '%site'.", array("%site" => $feed["title"]));
+      break;
     default:
-      return t("failed to parse RSS feed '%site': %error.", array('%site' => $feed['title'], '%error' => $result->code .' '. $result->error));
+      $message = t("failed to parse RSS feed '%site': %error.", array('%site' => $feed['title'], '%error' => $result->code .' '. $result->error));
+      watchdog('error', "aggregator: $message");
+      drupal_set_message($message);
   }
 }
 
@@ -351,7 +357,10 @@ function aggregator_parse_feed(&$data, $feed) {
   xml_set_character_data_handler($xml_parser, "aggregator_element_data");
 
   if (!xml_parse($xml_parser, $data, 1)) {
-    return t("failed to parse RSS feed '%site': %error at line %line.", array("%site" => $feed["title"], "%error" => xml_error_string(xml_get_error_code($xml_parser)), "%line" => xml_get_current_line_number($xml_parser)));
+    $message = t("failed to parse RSS feed '%site': %error at line %line.", array("%site" => $feed["title"], "%error" => xml_error_string(xml_get_error_code($xml_parser)), "%line" => xml_get_current_line_number($xml_parser)));
+    watchdog('error', "aggregator: $message");
+    drupal_set_message($message, 'error');
+    return 0;
   }
   xml_parser_free($xml_parser);
 
@@ -460,6 +469,8 @@ function aggregator_parse_feed(&$data, $feed) {
   if (sizeof($items) > 50) {
     db_query("DELETE FROM {item} WHERE ". implode(" OR ", array_slice($items, 0, - 50)));
   }
+
+  return 1;
 }
 
 function aggregator_save_item($edit) {
@@ -544,7 +555,7 @@ function aggregator_save_attributes($edit) {
   foreach ($edit as $iid => $value) {
     db_query("UPDATE {item} SET attributes = '%s' WHERE iid = %d", $value, $iid);
   }
-  return t("attributes has been saved");
+  drupal_set_message(t('the attributes has been saved'));
 }
 
 function aggregator_get_feed($fid) {
@@ -618,18 +629,18 @@ function aggregator_admin() {
         }
         break;
       case "remove":
-        drupal_set_message(aggregator_remove(aggregator_get_feed(arg(4))));
+        aggregator_remove(aggregator_get_feed(arg(4)));
         $output .= aggregator_view();
         break;
       case "update":
-        drupal_set_message(aggregator_refresh(aggregator_get_feed(arg(4))));
+        aggregator_refresh(aggregator_get_feed(arg(4)));
         $output .= aggregator_view();
         break;
       case "tag":
         $output = aggregator_tag();
         break;
       case t("Save attributes"):
-        drupal_set_message(aggregator_save_attributes($edit));
+        aggregator_save_attributes($edit);
         $output .= aggregator_tag();
         break;
       case t("Delete"):
@@ -637,10 +648,10 @@ function aggregator_admin() {
         // fall through:
       case t("Submit"):
         if (arg(4) == "bundle") {
-          drupal_set_message(aggregator_save_bundle($edit));
+          aggregator_save_bundle($edit);
         }
         else {
-          drupal_set_message(aggregator_save_feed($edit));
+          aggregator_save_feed($edit);
         }
         // fall through:
       default:
