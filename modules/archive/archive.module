@@ -1,5 +1,5 @@
 <?php
-// $Id: archive.module,v 1.66 2004/09/16 07:17:55 dries Exp $
+// $Id: archive.module,v 1.67 2004/10/08 11:29:31 dries Exp $
 
 /**
  * @file
@@ -26,9 +26,8 @@ function archive_calendar($original = 0) {
   $edit = $_POST['edit'];
 
   // Extract today's date:
-  $offset = time() + $user->timezone;
-  $start_of_today = mktime(0, 0, 0, date('n', $offset), date('d', $offset), date('Y', $offset)) + $user->timezone;
-  $end_of_today = mktime(23, 59, 59, date('n', $offset), date('d', $offset), date('Y', $offset)) + $user->timezone;
+  $start_of_today = mktime(0, 0, 0, date('n', time()), date('d', time()), date('Y', time())) + $user->timezone;
+  $end_of_today = mktime(23, 59, 59, date('n', time()), date('d', time()), date('Y', time())) + $user->timezone;
 
   // Extract the requested date:
   if ($edit['year'] && $edit['month'] && $edit['day']) {
