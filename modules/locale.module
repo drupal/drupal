@@ -87,6 +87,14 @@ function locale_link($type) {
   }
 }
 
+function locale_user($type, &$edit, &$user) {
+  global $languages;
+  if ($type == "edit_form" && count($languages) > 1) {
+    $output = form_select(t("Language"), "language", $user->language, $languages, t("Selecting a different language will change the language of the site."));
+  }
+  return $output;
+}
+
 function locale_delete($lid) {
   db_query("DELETE FROM {locales} WHERE lid = %d", $lid);
   locale_refresh_cache();
