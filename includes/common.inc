@@ -504,7 +504,7 @@ function format_rss_item($title, $link, $description, $args = array()) {
   $output .= "<item>\n";
   $output .= " <title>". htmlentities(strip_tags($title)) ."</title>\n";
   $output .= " <link>". htmlentities(strip_tags($link)) ."</link>\n";
-  $output .= " <description>". htmlentities($description) ."</description>\n";
+  $output .= " <description>". htmlentities(check_output($description)) ."</description>\n";
   foreach ($args as $key => $value) {
     $output .= "<$key>". htmlentities(strip_tags($value)) ."</$key>";
   }
