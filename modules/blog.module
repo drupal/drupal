@@ -100,8 +100,8 @@ function blog_page_last() {
     $links[] = "<a href=\"submit.php?mod=blog&type=blog&id=$blog->nid\">". t("blog") ."</a>";
     $links[] = "<a href=\"node.php?id=$blog->nid\">". t("discuss") ."</a>";
 
-    $output .= "<tr><td><b>$blog->title</b></td><td align=\"right\">". $theme->links($links) ."</td></tr>";
-    $output .= "<tr><td colspan=\"2\"><div style=\"margin-left: 20px; margin-bottom: 2px;\">$blog->body</div></td></tr>";
+    $output .= "<tr><td><b>". check_output($blog->title) ."</b></td><td align=\"right\">". $theme->links($links) ."</td></tr>";
+    $output .= "<tr><td colspan=\"2\"><div style=\"margin-left: 20px;\">". check_output($blog->body) ."</div><br /></td></tr>";
     unset($links);
   }
   $output .= "</table>";
