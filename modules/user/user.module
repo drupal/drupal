@@ -328,6 +328,15 @@ function user_block($op = "list", $delta = 0) {
     switch ($delta) {
       case 0:
         if (!$user->uid) {
+          /*
+          ** For usability's sake, avoid showing two login forms on one
+          ** page.
+          */
+
+          if (arg(0) == "user" && arg(1) != "view") {
+            return;
+          }
+
           $output = "<div class=\"user-login-block\">\n";
 
           /*
