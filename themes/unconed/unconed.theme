@@ -89,7 +89,7 @@
           <TR><TD COLSPAN="2" BGCOLOR="<?php echo $this->bgcolor1; ?>" WIDTH="100%"><table width="100%" cellpadding="0" cellspacing="0"><tr><td width="100%"><FONT COLOR="<?php echo $this->fgcolor1; ?>"><B><?php echo "". check_output($node->title) .""; ?></B></FONT></td><td valign="middle" align="center"><IMG SRC="themes/<?php print $this->themename; ?>/images/icon.gif" valign="middle"></td></tr></table></TD></TR>
           <TR BGCOLOR="<?php echo $this->bgcolor2; ?>">
            <?php
-            print "<TD WIDTH=\"70%\" BGCOLOR=\"$this->bgcolor2\"><SMALL>" . strtr(t("Submitted by %a on %b"), array("%a" => format_username($node->userid), "%b" => format_date($node->timestamp, "large"))) . "</TD><TD WIDTH=\"30%\" BGCOLOR=\"$this->bgcolor2\" ALIGN=\"center\" NOWRAP><B>". node_index($node->attribute) ."</B>";
+            print "<TD WIDTH=\"70%\" BGCOLOR=\"$this->bgcolor2\"><SMALL>" . strtr(t("Submitted by %a on %b"), array("%a" => format_username($node->userid), "%b" => format_date($node->timestamp, "large"))) . "</TD><TD WIDTH=\"30%\" BGCOLOR=\"$this->bgcolor2\" ALIGN=\"center\" NOWRAP><B>". node_index($node) ."</B>";
            ?>
           </TD>
          </TR>

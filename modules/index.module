@@ -1,7 +1,7 @@
 <?php
 
 
-// entries => attributes
+// entries => attributess
 
 function index_get_array($id) {
   return db_fetch_array(db_query("SELECT * FROM entry WHERE eid = '". check_input($id) ."'"));
@@ -88,8 +88,8 @@ function index_test_2($edit) {
     $value1 = field_merge($value1, $edit[$entry->collection]);
   }
 
-  foreach (explode(";", $value1) as $data) {
-    $entry = explode(":", $data);
+  foreach (explode(",", $value1) as $data) {
+    $entry = explode("=", $data);
     if ($entry[1]) $foo[] = "<A HREF=\"index.php?$entry[0]=". urlencode($entry[1]) ."\">$entry[1]</A>";
   }
 
