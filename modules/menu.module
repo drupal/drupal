@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.2 2004/04/21 13:56:37 dries Exp $
+// $Id: menu.module,v 1.3 2004/04/21 17:42:07 dries Exp $
 
 /**
  * Implementation of hook_link().
@@ -310,10 +310,10 @@ function menu_overview_tree_rows($pid = 0, $depth = 0) {
       $title = '';
       if ($pid == 0) {
         // Top-level items are menu names, and don't have an associated path.
-        $title .= t($menu['items'][$mid]['title']);
+        $title .= $menu['items'][$mid]['title'];
       }
       else {
-        $title .= l(t($menu['items'][$mid]['title']), $menu['items'][$mid]['path']);
+        $title .= l($menu['items'][$mid]['title'], $menu['items'][$mid]['path']);
       }
       if ($depth > 0) {
         $title = '-&nbsp;'. $title;
