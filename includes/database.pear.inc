@@ -125,7 +125,9 @@ function db_affected_rows() {
  */
 
 function db_query_range($query, $from, $count) {
-  return DB::limitQuery($query, $from, $count);
+  global $db_handle;
+
+  return $db_handle->limitQuery($query, $from, $count);
 }
 
 ?>
