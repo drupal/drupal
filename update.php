@@ -16,6 +16,7 @@ $mysql_updates = array(
   "2001-11-01" => "update_7",
   "2001-11-02" => "update_8",
   "2001-11-04" => "update_9",
+  "2001-11-17: distributed authentication" => "update_10",
 );
 
 // Update functions
@@ -195,6 +196,42 @@ function update_9() {
   }
 }
 
+function update_10() {
+  // create a new table:
+  update_sql("CREATE TABLE authmap (
+      aid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
+      uid int(10) DEFAULT '' NOT NULL,
+      authname varchar(128) DEFAULT '' NOT NULL,
+      module varchar(128) DEFAULT '' NOT NULL,
+      UNIQUE authname (authname),
+      PRIMARY KEY (aid)
+    );");
+
+  // populate the new table:
+  $result = db_query("SELECT uid, name, jabber, drupal FROM users WHERE jabber != '' || drupal != ''");
+  while ($user = db_fetch_object($result)) {
+    if ($user->jabber) {
+      update_sql("INSERT INTO authmap (uid, authname, module) VALUES ('$user->uid', '$user->jabber', 'jabber')");
+    }
+    if ($user->drupal) {
+      update_sql("INSERT INTO authmap (uid, authname, module) VALUES ('$user->uid', '$user->drupal', 'drupal')");
+    }
+  }
+
+  // remove the old user-table leftovers:
+  update_sql("DELETE FROM variable WHERE name = 'user_jabber'");
+  update_sql("DELETE FROM variable WHERE name = 'user_drupal'");
+  update_sql("ALTER TABLE users DROP drupal");
+  update_sql("ALTER TABLE users DROP jabber");
+
+  // remove the old node-table leftovers:
+  update_sql("ALTER TABLE forum DROP body_old;");
+  update_sql("ALTER TABLE story DROP body_old;");
+  update_sql("ALTER TABLE book DROP body_old;");
+  update_sql("ALTER TABLE page DROP body_old;");
+  update_sql("ALTER TABLE blog DROP body_old;");
+}
+
 // System functions
 function update_sql($sql) {
   global $edit;
@@ -256,7 +293,7 @@ function update_page() {
       print form($form);
       break;
   }
-  
+
 }
 
 print "<html><h1>Drupal update</h1>";
