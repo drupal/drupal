@@ -136,6 +136,11 @@ function comment_menu($may_cache) {
     $items[] = array('path' => 'comment', 'title' => t('reply to comment'),
       'callback' => 'comment_save_settings', 'access' => 1, 'type' => MENU_CALLBACK);
   }
+  else if ((arg(0) == 'node') && is_numeric(arg(1)) && is_numeric(arg(2))) {
+    $items[] = array('path' => ('node/'. arg(1) .'/'. arg(2)), 'title' => t('view'),
+      'callback' => 'node_page',
+      'type' => MENU_CALLBACK);
+  }
 
   return $items;
 }
@@ -1577,7 +1582,7 @@ function theme_comment($comment, $links = 0) {
 
 function theme_comment_folded($comment) {
   $output  = "<div class=\"comment-folded\">\n";
-  $output .= ' <span class="subject">'. l($comment->subject, comment_node_url() .'/view/'. $comment->cid, NULL, NULL, "comment-$comment->cid") . ($comment->new ? ' '. theme('mark') : '') .'</span> ';
+  $output .= ' <span class="subject">'. l($comment->subject, comment_node_url() .'/'. $comment->cid, NULL, NULL, "comment-$comment->cid") . ($comment->new ? ' '. theme('mark') : '') .'</span> ';
   $output .= '<span class="credit">'. t('by') .' '. format_name($comment) ."</span>\n";
   $output .= "</div>\n";
   return $output;
