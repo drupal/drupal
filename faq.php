@@ -1,84 +1,53 @@
-<?PHP
+<?
 
-function defaultDisplay() {
-  include "functions.inc";
-  include "theme.inc";
-  $theme->header();
-  ?>
-   <PRE>
-    <FONT FACE="courier">
-<H3>General</H3>
+include "functions.inc";
+include "theme.inc";
 
-* Mission statement:
---------------------
+$output = "
+  <DL>
+   <DT><B>What is a FAQ?</B></DT>
+   <DD>
+    The <I>Online Jargon Files</I> written by Eric Raymond define a FAQ as:
+    <P><B>FAQ</B> /F-A-Q/ or /fak/ n.<BR>[Usenet] 1. A Frequently Asked Question. 2. A compendium of accumulated lore, posted periodically to high-volume newsgroups in an attempt to forestall such questions.  Some people prefer the term FAQ list or FAQL /fa'kl/, reserving FAQ' for sense 1.</P>
+    <P><B>RTFAQ</B> /R-T-F-A-Q/ imp.<BR>[Usenet: primarily written, by analogy with <A HREF=\"#RTFM\">RTFM</A>] Abbreviation for \"Read The FAQ!\", an exhortation that the person addressed ought to read the newsgroup's FAQ list before posting questions.</P>
+    <P><B><A NAME=\"RTFM\">RTFM</A></B> /R-T-F-M/ imp.<BR>[Unix] Abbreviation for \"Read The Fucking Manual\". 1. Used by gurus to brush off questions they consider trivial or annoying.  2. Used when reporting a problem to indicate that you aren't just asking out of randomness. \"No, I can't figure out how to interface Unix to my toaster, and yes, I have RTFM.\"  Unlike sense 1, this use is considered polite.</P>
+    <P><B>user</B> n.<BR>1. Someone doing `real work' with the computer, using it as a means rather than an end. Someone who pays to use a computer.  2. A programmer who will believe anything you tell him.  One who asks silly questions. [GLS observes: This is slightly unfair.  It is true that users ask questions (of necessity). Sometimes they are thoughtful or deep.  Very often they are annoying or downright stupid, apparently because the user failed to think for two seconds or look in the documentation before bothering the maintainer.]  3. Someone who uses a program from the outside, however skillfully, without getting into the internals of the program.  One who reports bugs instead of just going ahead and fixing them.</P>
+   </DD>
 
-   - New generation of weblog systems: mixture of slashdot.org,
-     squishdot.org, kuro5hin.org, etc.
-   - History
+   <DT><B>What is this site all about?</B></DT>
+   <DD>under construction<P></DD>
 
+   <DT><B><A NAME=\"moderation\">How does submission moderation work?</A></B></DT>
+   <DD>under construction<P></DD>
 
-* Frequently asked questions:
------------------------------
+   <DT><B>How does comment moderation work?</B></DT>
+   <DD>under construction<P></DD>
 
-   1. What is this site about, alas what is our 'mission statement'?
-        See above.
+   <DT><B>Why would I want to create a user account?</B></DT>
+   <DD>under construction<P></DD>
 
+   <DT><B>I forgot my password, what do I do?</B></DT>
+   <DD>under construction<P></DD>
 
-   2. What kind of news should I submit?
-        Anything you find interesting.  Read the site for a bit.
-        If the stories that appear on this site interest you, and 
-        you come across a story that also interests you, chances 
-        are, it will interest us too.
-        In general we prefer stories that some meat to them.  We
-        encourage submitters to extend their posts, and perhaps
-        to offer some insight or explanation as to why they 
-        thought their item was interesting, and what it means to 
-        us.
-        todo: automatically generate a list of the available
-              news categories.
-   
-   3. How to create an account?
-        - todo: explanation to write.
+   <DT><B>I have a cool story that you should post, what do I do?</B></DT>
+   <DD>Check out the <A HREF=\"submit.php\">submission form</A>.  If you fill out that form, your contribution gets shipped off to the submission queue for evaluation, <A HREF=\"#moderation\">moderation</A>, and possibly even posting.<P></DD>
 
-   4. What can I do with an account?
-        - todo: check completed features (see below) as for now.
+   <DT><B>Why did my comment get deleted?</B></DT>
+   <DD>It probably didn't.  It probably just got moderated down by our army of moderators. Try browsing at a lower threshold and see if your comment becomes visible.<P></DD>
 
-   5. What is comment moderation and how does it work?
-        After a weblog gains some popularity, an inevitable question
-        shows up: "how do we sort the wheat from the chaff?".
-        The purpose of comment moderation is two-fold:
-          * To bring the really good comments to everyone's attention.
-          * To hide or get get rid of spam, flamebait and trolls.
-        In the latter, comment moderation provides a technical solution
-        to a social problem.
+   <DT><B>Can I syndicate content from this site?</B></DT>
+   <DD>under construction<P></DD>
 
-   6. What is story moderation and how does it work?
-        Under construction.
+   <DT><B>Is the source code of this site available?</B></DT>
+   <DD>Not yet, but it will be released as soon we have a first, well-rounded source tree that has proven to be stable.<BR>This site is powered by <A HREF=\"http://www.fsf.org/\">Free Software</A>; including <A HREF=\"http://www.apache.org/\">Apache</A>, <A HREF=\"http://www.php.net/\">PHP</A>, <A HREF=\"http://www.mysql.com/\">MySQL</A> and <A HREF=\"http://www.linux.com/\">Linux</A>, and is inspired by several <A HREF=\"http://www.fsf.org/\">Free Software</A> projects.  Therefor we have decided to make the software engine of this site available under terms of GPL.<P></DD>
 
-   7. Is the source code of this weblog engine available?
-        This site is powered by <A HREF="http://www.fsf.org/">Free Software</A>; including <A HREF="http://www.apache.org/">Apache</A>, 
-        <A HREF="http://www.php.net/">PHP</A>, <A HREF="http://www.mysql.com/">MySQL</A> and <A HREF="http://www.linux.com/">Linux</A>.  Therefor we have decided to make 
-        the software engine of this site available under terms of
-        GPL.
+   <DT><B>What is your privacy policy?</B></DT>
+   <DD>under construction<P></DD>
+  </DL>
+  ";
 
-
-* Disclaimer:
--------------
-
-   - todo: general disclaimer
-   - Short version: comments are owned by the poster and this site is
-                    not responsible for what tey say.
-
-    </FONT>
-   </PRE>
-  <?php
-  $theme->footer();
-}
-
-switch($op) {
-  default:
-    defaultDisplay();
-    break;
-}
+$theme->header();
+$theme->box("Frequently Asked Questions", $output);
+$theme->footer();
 
 ?>
