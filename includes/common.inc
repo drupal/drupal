@@ -1018,7 +1018,7 @@ function field_set($string, $name, $value) {
 function link_page() {
   global $custom_links;
 
-  if (0 && is_array($custom_links)) {
+  if (is_array($custom_links)) {
     return $custom_links;
   }
   else {
