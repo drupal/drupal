@@ -42,7 +42,7 @@ function forum_conf_options() {
   $output .= form_select("Topics per page", "forum_per_page", variable_get("forum_per_page", 25), $number, "The default number of topics displayed per page; links to browse older messages are automatically being displayed.");
   $forder = array(1 => "Date - newest first", 2 => "Date - oldest first", 3 => "Posts - most active first", 4=> "Posts - least active first");
   $output .= form_select("Default order", "forum_order", variable_get("forum_order", 1), $forder, "The default display order for topics.");
-  $output .= form_textfield("Number of topics in block", "forum_block_num", variable_get("forum_block_num", "5"), 5, 5, "The number of topics in the <b>active topics</b> block. Enable the block ". la("here", array ("mod" => "block")));
+  $output .= form_textfield("Number of topics in block", "forum_block_num", variable_get("forum_block_num", "5"), 5, 5, "The number of topics in the <b>Forum topics</b>-block.  To enable the block, click ". la("here", array("mod" => "block")) .".");
   $output .= form_select("Internal caching", "forum_cache", variable_get("forum_cache", 0), array("disabled", "enabled"), "Cache internal datastructures for both anonymous and autheticated users.  When enabled, the forum data won't be 100% up to date with regards regard to the number of posts, the number of replies and the last topic being posted.  Enable when you have busy forum.");
 
   return $output;
@@ -87,18 +87,27 @@ function forum_load($node) {
 
 function forum_block() {
   if (user_access("access content")) {
+    $content .= "<b>". t("Active forum topics:") ."</b><br />";
     $result = db_query("SELECT n.nid, n.title, n.body, GREATEST(n.created, MAX(c.timestamp)) AS sort FROM node n, forum f LEFT JOIN comments c ON c.nid = n.nid WHERE n.type = 'forum' AND n.nid = f.nid AND f.shadow = 0 AND n.status = 1 GROUP BY n.nid ORDER BY sort DESC LIMIT ". variable_get("forum_block_num", "5"));
     while ($node = db_fetch_object($result)) {
-      $content .= "<li>".l(check_output($node->title), array("id" => $node->nid), "node", "", array("title" => substr(strip_tags($node->body), 0, 100)."..."))."</li>\n";
+      $content .= "- ".l(check_output($node->title), array("id" => $node->nid), "node", "", array("title" => substr(strip_tags($node->body), 0, 100)."...")) ."<br />";
+    }
+
+    $content .= "<br />";
+    $content .= "<b>". t("New forum topics:") ."</b><br />";
+    $result = db_query("SELECT n.nid, n.title, n.body FROM node n LEFT JOIN forum f ON n.nid = f.nid ORDER BY n.nid DESC LIMIT ". variable_get("forum_block_num", "5"));
+    while ($node = db_fetch_object($result)) {
+      $content .= "- ".l(check_output($node->title), array("id" => $node->nid), "node", "", array("title" => substr(strip_tags($node->body), 0, 100)."...")) ."<br />";
     }
 
     if ($content) {
-      $content .= "<p><div align=\"center\">".lm(t("browse forums"), array("mod" => "forum"))."</div></p>";
+      $content .= "<div align=\"right\">". lm(t("more"), array("mod" => "forum"))."</div>";
     }
   }
-  $blocks[0][subject] = t("Most active forum topics");
+
+  $blocks[0][subject] = t("Forum topics");
   $blocks[0][content] = $content;
-  $blocks[0][info] = t("Most active forum topics");
+  $blocks[0][info] = t("Forum topics");
 
   return $blocks;
 }
