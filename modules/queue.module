@@ -220,7 +220,6 @@ function queue_nodeapi(&$node, $op, $arg = 0) {
     case "fields":
       return array("score", "users", "votes");
     case "validate":
-      $node->promote = $node->moderate ? 0 : 1;
       if ($node->nid && $node->moderate) {
         // Reset votes when node is updated:
         $node->score = 0;

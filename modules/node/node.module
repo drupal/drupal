@@ -878,9 +878,18 @@ function node_validate($node, &$error) {
   else {
     // Validate for normal users:
     $node->uid = $user->uid ? $user->uid : 0;
+    // Force defaults in case people modify the form:
+    $node->status = variable_get("node_status_$edit->type", 1);
+    $node->promote = variable_get("node_promote_$edit->type", 1);
+    $node->moderate = variable_get("node_moderate_$edit->type", 0);
+    $node->static = variable_get("node_static_$edit->type", 0);
+    $node->revision = variable_get("node_revision_$edit->type", 0);
+    unset($node->created);
+  }
+
+  // Workflow:
+  if ($node->moderate == 1) {
     $node->promote = 0;
-    $node->status = 1;
-    unset($node->static, $node->created);
   }
 
   /*
@@ -998,7 +1007,7 @@ function node_form($edit, $error = NULL) {
     $output .= "<br />";
     $output .= form_select(t("Set public/published"), "status", isset($edit->status) ? $edit->status : variable_get("node_status_$edit->type", 1), array(t("Disabled"), t("Enabled")));
     $output .= form_select(t("Promote to front page"), "promote", isset($edit->promote) ? $edit->promote : variable_get("node_promote_$edit->type", 1), array(t("Disabled"), t("Enabled")));
-    $output .= form_select(t("Moderation status"), "moderate", isset($node->moderate) ? $node->moderate : variable_get("node_moderate_$edit->type", 0), array(t("Approved"), t("Awaiting approval")));
+    $output .= form_select(t("Moderation status"), "moderate", isset($edit->moderate) ? $edit->moderate : variable_get("node_moderate_$edit->type", 0), array(t("Approved"), t("Awaiting approval")));
     $output .= form_select(t("Static on front page"), "static", isset($edit->static) ? $edit->static : variable_get("node_static_$edit->type", 0), array(t("Disabled"), t("Enabled")));
     $output .= implode("", node_invoke_all($edit, "nodeapi", "form admin"));
     $output .= form_select(t("Create new revision"), "revision", isset($edit->revision) ? $edit->revision : variable_get("node_revision_$edit->type", 0), array(t("Disabled"), t("Enabled")));
