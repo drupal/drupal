@@ -131,7 +131,7 @@ function system_view_module($name) {
 }
 
 function system_view_theme($name) {
-  $themes = $theme_list();
+  $themes = theme_list();
   $theme = $themes[$name];
   if ($theme) {
     include_once "$theme->filename";
