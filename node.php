@@ -72,7 +72,7 @@ function node_history($node) {
     $output .= "<DT><B>". format_date($node->timestamp) ." by ". format_username($node->userid) .":</B></DT><DD>". check_output($node->log, 1) ."<P></DD>";
   }
   if ($node->pid) {
-    $output .= node_history(node_get_object("nid", $node->pid));
+    $output .= node_history(node_get_object(array("nid" => $node->pid)));
   }
   return $output;
 }
@@ -93,7 +93,7 @@ if ($number > 1) {
   $theme->footer();
 }
 elseif ($number) {
-  $node = ($title ? node_get_object(title, check_input($title)) : node_get_object(nid, check_input($id)));
+  $node = ($title ? node_get_object(array("title" => check_input($title))) : node_get_object(nid, check_input($id)));
   if ($node && node_visible($node)) {
     switch ($op) {
       case "history":

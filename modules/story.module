@@ -135,7 +135,7 @@ function story_admin() {
       print story_overview(story_query($type));
       break;
     case "edit":
-      print story_form(node_get_array("nid", check_input($id)));
+      print story_form(node_get_array(array("nid" => check_input($id))));
       break;
     case "help":
       story_help();

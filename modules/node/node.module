@@ -56,7 +56,7 @@ function node_overview($query = array()) {
 }
 
 function node_admin_view($id) {
-  $node = node_get_object("nid", $id);
+  $node = node_get_object(array("nid" => $id));
 
   $form .= form_item("Title", check_output($node->title));
   $form .= form_item("Author", format_username($node->userid));
@@ -74,7 +74,7 @@ function node_admin_view($id) {
 function node_admin_edit($id) {
   global $user;
 
-  $node = node_get_object("nid", $id);
+  $node = node_get_object(array("nid" => $id));
 
   $form .= form_item("Title", check_output($node->title));
   $form .= form_select("Author", "author", $node->author, array($node->author => $node->userid, $user->id => $user->userid));
