@@ -120,7 +120,7 @@ function do_search($search_array) {
     }
 
     // Put the next search word into the query and do the query
-    $query = preg_replace("'\%'", check_query($word), $select);
+    $query = str_replace("'%'", "'". check_query($word) ."'", $select);
     $result = db_query($query);
 
     // If we got any results
