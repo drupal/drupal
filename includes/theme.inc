@@ -1,5 +1,5 @@
 <?php
-/* $Id: theme.inc,v 1.219 2004/11/24 22:50:25 dries Exp $ */
+/* $Id: theme.inc,v 1.220 2004/12/01 22:41:19 dries Exp $ */
 
 /**
  * @file
@@ -56,7 +56,7 @@ function init_theme() {
     // File is a style; loads its CSS.
     // Set theme to its template/theme
     theme_add_style($themes[$theme]->filename);
-    $theme = $themes[$theme]->description;
+    $theme = basename(dirname($themes[$theme]->description));
   }
   else {
     // File is a template/theme
