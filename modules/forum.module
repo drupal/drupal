@@ -27,23 +27,34 @@ function forum_perm() {
 }
 
 function forum_conf_options() {
-  foreach (taxonomy_get_vocabularies("forum") as $vid => $voc) {
-    $vocs[$vid] = $voc->name;
+
+  if (module_exist("taxonomy")) {
+    foreach (taxonomy_get_vocabularies("forum") as $vid => $voc) {
+      $vocs[$vid] = $voc->name;
+    }
+
+    if ($vocs) {
+      $output .= form_select("Forum vocabulary", "forum_nav_vocabulary", variable_get("forum_nav_vocabulary", ""), $vocs, t("The taxonomy vocabulary that will be used as the navigation tree."));
+      $output .= _taxonomy_term_select("Containers", "forum_containers", variable_get("forum_containers", array()), variable_get("forum_nav_vocabulary", ""), t("You can choose forums which will not have topics, but will be just containers for other forums."), 1, t("<none>"));
+
+      $output .= form_textfield("Topic icons path", "forum_topic_icon_path", variable_get("forum_topic_icon_path", ""), 30, 255, "The path to the topic icons.  Leave blank to disable icons.");
+      $output .= form_textfield("Folder icons path", "forum_folder_icon_path", variable_get("forum_folder_icon_path", ""), 30, 255, "The path to the <b>default</b>, <b>hot</b>, <b>new</b>, <b>hot & new</b>, and <b>closed</b> folder icons.  Leave blank to disable icons.");
+      $number = array(5 => 5, 10 => 10, 15 => 15, 20 => 20, 25 => 25, 30 => 30, 35 => 35, 40 => 40, 50 => 50, 60 => 60, 80 => 80, 100 => 100, 10000=>10000);
+      $output .= form_select("Hot topic threshold", "forum_hot_topic", variable_get("forum_hot_topic", 15), $number, "The number of posts a topic must have to be considered <b>hot</b>.");
+      $number = array(10 => 10, 25 => 25, 50 => 50, 75 => 75, 100 => 100);
+      $output .= form_select("Topics per page", "forum_per_page", variable_get("forum_per_page", 25), $number, "The default number of topics displayed per page; links to browse older messages are automatically being displayed.");
+      $forder = array(1 => "Date - newest first", 2 => "Date - oldest first", 3 => "Posts - most active first", 4=> "Posts - least active first");
+      $output .= form_select("Default order", "forum_order", variable_get("forum_order", 1), $forder, "The default display order for topics.");
+      $output .= form_textfield("Number of topics in block", "forum_block_num", variable_get("forum_block_num", "5"), 5, 5, "The number of topics in the <b>Forum topics</b>-block.  To enable the block, click ". la("here", array("mod" => "block")) .".");
+    }
+    else {
+      $output .= _forum_message_taxonomy();
+    }
   }
-  $output = "<a name=\"image_nav_vocabulary\"></a>";
-  $output .= form_select("Forum vocabulary", "forum_nav_vocabulary", variable_get("forum_nav_vocabulary", ""), $vocs, t("The taxonomy vocabulary that will be used as the navigation tree."));
-  $output .= _taxonomy_term_select("Containers", "forum_containers", variable_get("forum_containers", array()), variable_get("forum_nav_vocabulary", ""), t("You can choose forums which will not have topics, but will be just containers for other forums."), 1, t("<none>"));
-
-  $output .= form_textfield("Topic icons path", "forum_topic_icon_path", variable_get("forum_topic_icon_path", ""), 30, 255, "The path to the topic icons.  Leave blank to disable icons.");
-  $output .= form_textfield("Folder icons path", "forum_folder_icon_path", variable_get("forum_folder_icon_path", ""), 30, 255, "The path to the <b>default</b>, <b>hot</b>, <b>new</b>, <b>hot & new</b>, and <b>closed</b> folder icons.  Leave blank to disable icons.");
-  $number = array(5 => 5, 10 => 10, 15 => 15, 20 => 20, 25 => 25, 30 => 30, 35 => 35, 40 => 40, 50 => 50, 60 => 60, 80 => 80, 100 => 100, 10000=>10000);
-  $output .= form_select("Hot topic threshold", "forum_hot_topic", variable_get("forum_hot_topic", 15), $number, "The number of posts a topic must have to be considered <b>hot</b>.");
-  $number = array(10 => 10, 25 => 25, 50 => 50, 75 => 75, 100 => 100);
-  $output .= form_select("Topics per page", "forum_per_page", variable_get("forum_per_page", 25), $number, "The default number of topics displayed per page; links to browse older messages are automatically being displayed.");
-  $forder = array(1 => "Date - newest first", 2 => "Date - oldest first", 3 => "Posts - most active first", 4=> "Posts - least active first");
-  $output .= form_select("Default order", "forum_order", variable_get("forum_order", 1), $forder, "The default display order for topics.");
-  $output .= form_textfield("Number of topics in block", "forum_block_num", variable_get("forum_block_num", "5"), 5, 5, "The number of topics in the <b>Forum topics</b>-block.  To enable the block, click ". la("here", array("mod" => "block")) .".");
-
+  else {
+    $output .= _forum_message_taxonomy();
+  }
+ 
   return $output;
 }
 
@@ -115,6 +126,7 @@ function forum_block($op = "list", $delta = 0) {
 }
 
 function forum_link($type, $node = 0, $main = 0) {
+
   if ($type == "page" && user_access("access content")) {
     $links[] = lm(t("forum"), array("mod" => "forum"));
   }
@@ -461,37 +473,50 @@ function _forum_first_new($tid) {
   return $nid ? $nid : 0;
 }
 
+function _forum_message_taxonomy() {
+  return t("For the forums to work, the taxonomy module has to be installed and enabled.  When activated, a taxonomy vocubulary needs to be created, bound to the forum module.  The vocabulary's terms define the forums.");
+}
+
 function forum_page() {
   global $theme, $tid, $sortby, $forum_per_page, $offset, $op, $user;
 
   if (user_access("access content")) {
-    if ($op == "Update settings") {
-      $user = user_save($user, array("sortby" => $sortby, "forum_per_page" => $forum_per_page));
-    }
-
-    if ($op == "first_new") {
-      if ($nid = _forum_first_new($tid)) {
-        drupal_goto(drupal_url(array("id" => $nid), "node"));
+    if (module_exist("taxonomy")) {
+      if ($op == "Update settings") {
+        $user = user_save($user, array("sortby" => $sortby, "forum_per_page" => $forum_per_page));
       }
-    }
 
-    if (empty($sortby)) {
-      $sortby = isset($user->sortby) ? $user->sortby : variable_get("forum_order",1);
-    }
-    if (empty($forum_per_page)) {
-      $forum_per_page = isset($user->forum_per_page) ? $user->forum_per_page : variable_get("forum_per_page", 25);
-    }
-    if (empty($offset)) {
-      $offset = 0;
-    }
+      if ($op == "first_new") {
+        if ($nid = _forum_first_new($tid)) {
+          drupal_goto(drupal_url(array("id" => $nid), "node"));
+        }
+      }
 
-    $forums = forum_get_forums($tid);
-    $parents = forum_get_parents($tid);
-    if ($tid && !in_array($tid, variable_get("forum_containers", array()))) {
-      list($topics, $topic_num) = forum_get_topics($tid, $sortby, $forum_per_page, $offset);
-    }
+      if (empty($sortby)) {
+        $sortby = isset($user->sortby) ? $user->sortby : variable_get("forum_order",1);
+      }
+      
+      if (empty($forum_per_page)) {
+        $forum_per_page = isset($user->forum_per_page) ? $user->forum_per_page : variable_get("forum_per_page", 25);
+      }
+      
+      if (empty($offset)) {
+        $offset = 0;
+      }
 
-    theme_invoke("forum_render", $forums, $topics, $topic_num, $parents, $tid, $sortby, $forum_per_page, $offset);
+      $forums = forum_get_forums($tid);
+      $parents = forum_get_parents($tid);
+      if ($tid && !in_array($tid, variable_get("forum_containers", array()))) {
+        list($topics, $topic_num) = forum_get_topics($tid, $sortby, $forum_per_page, $offset);
+      }
+
+      theme_invoke("forum_render", $forums, $topics, $topic_num, $parents, $tid, $sortby, $forum_per_page, $offset);
+    }
+    else {
+      $theme->header();
+      $theme->box(t("Warning"), _forum_message_taxonomy());
+      $theme->footer();
+    }
   }
   else {
     $theme->header();
@@ -736,26 +761,23 @@ function _forum_get_topic_order($sortby) {
 
 function forum_help() {
   ?>
-  <h4>Containers</h4>
-  By designating a forum as a Container, users are not allowed to post into that forum. The forum will be visible on the forum listing page, so it acts as a section delimiter if you will. This is useful if you have a lots of forums which are nested. For example,
-<br /><br />
-Marketing<br />
--- Market research<br />
--- Brand management<br />
-<br />
-Sales<br />
--- Closing the deal<br />
--- Avoiding ear and throat pain<br />
-<br />
-If you don't want people posting into the Marketing or Sales folders, you designate them as Containers.<br />
-<br />
-<h4>Icons</h4>
-To disable icons, set the icon paths as blank in Admin -> Site Configuration -> Forum<br />
-<br />
-All files in the icon directory are assumed to be images. Usually it is best to use GIF or JPG files as icons.
-You may use images of whatever size you wish, but it is customary to use 15x15 or 16x16.
-
-  <?php
+  <h3>Creating a forum</h3>
+  <p>Drupal lets you setup a countless number of forums by using the powerful taxonomy module. Therefore to create a forum you first have to create a taxonomy vocuabulary and add some terms to it, each term will be a forum. Creating a vocabulary is done by going the <b>taxonomy</b> page of the administration pages, then selecting the <b>add new vocabulary</b> link. Choose a name for the vocabulary (example: forum, message boards, or debates), and make sure under Types that forum is selected. Nothing else needs to be configured, so unless you have more advanced needs save the vocabulary. Now add a term to the vocabulary just added to create a forum. In the <b>add term</b> window enter the name of the forum (example: general, off topic, support), a description to make it clear to the users what the forum is about, and then save the term. You can now add a new forum by entering another term, repeat until all the forums are entered.</p>
+  <p>Once a vocabulary is entered go to <b>site configuration</b> in the administration pages and set the <b>Forum vocabulary</b>, don't forget to save! There will now be forums active on the site. For users to access them the proper user permissions must be given in the <b>user management</b> pages.</p>
+  <h3>Containers</h3>
+  <p>By designating a forum as a Container, users are not allowed to post into that forum. The forum will be visible on the forum listing page, so it acts as a section delimiter if you will. This is useful if you have a lots of forums which are nested. For example,<p>
+  Marketing<br />
+  -- Market research<br />
+  -- Brand management<br />
+  <br />
+  Sales<br />
+  -- Closing the deal<br />
+  -- Avoiding ear and throat pain<br />
+  <p>If you don't want people posting into the Marketing or Sales folders, you designate them as Containers.<br /></p>
+  <h4>Icons</h4>
+  <p>To disable icons, set the icon paths as blank in Admin -> Site Configuration -> Forum</p>
+  <p>All files in the icon directory are assumed to be images. Usually it is best to use GIF or JPG files as icons. You may use images of whatever size you wish, but it is customary to use 15x15 or 16x16.</p>
+    <?php
 }
 
 ?>
