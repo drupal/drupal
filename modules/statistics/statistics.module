@@ -413,7 +413,7 @@ function statistics_recent_refer($nid = 0) {
       $describe = "external ";
     }
 
-    $result = db_query_range($query, 0, 15);
+    $result = db_query_range($query, 0, 25);
     $output = "<h3>". t("Most recent %describe referrers for node", array("%describe" => $describe)) ."\"". l($node->title, "node/view/$nid", array("title" => t("View this posting."))) ."\"</h3>";
   }
   else {
@@ -429,7 +429,7 @@ function statistics_recent_refer($nid = 0) {
       $describe = "external ";
     }
 
-    $result = db_query($query);
+    $result = db_query_range($query, 0, 25);
     $output = "<h3>". t("Most recent %describe referrers", array("%describe" => $describe)) ."</h3>";
   }
 
