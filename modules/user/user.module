@@ -67,7 +67,7 @@ function user_load($array = array()) {
   foreach ($array as $key => $value) {
     if ($key == "pass") {
       $query .= "u.$key = '". md5($value) ."' AND ";
-     }
+    }
     else {
       $query .= "u.$key = '". check_query($value) ."' AND ";
     }
@@ -1384,7 +1384,7 @@ function user_admin_role($edit = array()) {
 
 function user_admin_edit($edit = array()) {
 
-  $op = $_SERVER["op"];
+  $op = $_POST["op"];
   $id = arg(3);
 
   if ($account = user_load(array("uid" => $id))) {
