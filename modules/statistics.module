@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.105 2003/10/09 18:53:22 dries Exp $
+// $Id: statistics.module,v 1.106 2003/10/09 21:41:04 dries Exp $
 
 function statistics_init() {
   global $recent_activity;
@@ -133,7 +133,7 @@ function statistics_help($section = "admin/help#statistics") {
   switch ($section) {
     case 'admin/help#statistics':
       $output .= "<h3>Introduction</h3>";
-      $output .= "<p>The statistics.module keeps track of numerous statistics for your site but be warned, statistical collection does cause a little overhead, thus everything comes <b>disabled</b> by default.<p>";
+      $output .= "<p>The statistics module keeps track of numerous statistics for your site but be warned, statistical collection does cause a little overhead, thus everything comes <b>disabled</b> by default.<p>";
       $output .= "<p>The module counts how many times, and from where -- using HTTP referrer -- each of your nodes is viewed. Once we have that count the module can do the following with it:";
       $output .= "<ul>";
       $output .= "<li>The count can be displayed in the node's link section next to \"# comments\".</li>";
@@ -147,8 +147,8 @@ function statistics_help($section = "admin/help#statistics") {
       $output .= "<li>If you enable the node view counters, this adds 1 database query for each node that is viewed (2 queries if it's the first time the node has ever been viewed).</li>";
       $output .= "<li>If you enable the access log, this adds 1 database query for each page that Drupal displays.  Logged information includes:  HTTP referrer (if any), node being accessed (if any), user ID (if any), the IP address of the user, and the time the page was viewed.</li>";
       $output .= "</ul>";
-      $output .= "<p>As with any new module, the <i>statistics.module</i> needs to be %modules before you can use it.  Also refer to the %permissions, as this module supports four separate permissions.</p>";
-      $output .= "<h3>%referers</h3><p>This admin page shows you site-wide referrer statistics.  You can see '<i>all</i>' statistics, '<i>external</i>' statistics or '<i>internal</i>' statistics.  Default is 'external'.</p>";
+      $output .= "<p>As with any new module, the statistics module needs to be %modules before you can use it.  Also refer to the %permissions, as this module supports four separate permissions.</p>";
+      $output .= "<h3>%referers</h3><p>This admin page shows you site-wide referrer statistics.  You can see '<i>all</i>' statistics, '<i>external</i>' statistics or '<i>internal</i>' statistics.  Default is 'all'.</p>";
       $output .= "<h3>%access</h3><p>This admin page gives you an at-a-glance look at your top nodes.  It is useful for understanding what content on your Drupal site is the most popular.  Also on this page are links to the referrer statistics for each listed node.</p>";
       $output .= "<h3>Configuring the statistics module</h3><p>There are some configuration options added to the main %configuration section:</p>";
       $output .= "<ul>";
@@ -181,7 +181,7 @@ function statistics_help($section = "admin/help#statistics") {
       $output .= "<li>The <i>timestamp</i> is a timestamp of when that node was last viewed.</li>";
       $output .= "</ul>";
       $output .= "<p>The module automatically adds '# reads' to each node's link section (if enabled).</p>";
-      $output .= "<h3>Top stories</h3><p>The statistics.module provides a function '<i>statistics_title_list(\$dbfield, \$dbrows)</i>' to return an array of links to any of the following: the top viewed nodes of all time, the top viewed nodes of today, the last viewed nodes.  You can pass in:</p>";
+      $output .= "<h3>Top stories</h3><p>The statistics module provides a function '<i>statistics_title_list(\$dbfield, \$dbrows)</i>' to return an array of links to any of the following: the top viewed nodes of all time, the top viewed nodes of today, the last viewed nodes.  You can pass in:</p>";
       $output .= "<ul>";
       $output .= "<li><i>totalcount</i> - This will return an array with links to the top viewed nodes of all time.<br />Example:  <code>statistics_title_list(\"totalcount\", \"5\");</code><br /><br /></li>";
       $output .= "<li><i>daycount</i> - This will return an array with links to the top viewed nodes for today.<br />Example:  <code>statistics_title_list(\"daycount\",\"5\");</code><br /><br /></li>";
@@ -200,8 +200,8 @@ function statistics_help($section = "admin/help#statistics") {
        else {
          // throttle limit not reached, execute normally
        }</pre></p>";
-      $output .= "<p>Note: Even though the configuration for the throttle is handled by the 'throttle.module', the throttle logic itself is part of the 'statistics.module'.  The configuration has been separated in order to make things easier for the average site that will not be utilizing the throttling mechanism.  More information about how the throttle works can be found on the throttle.module help page.  (Find the throttle help page %here-help if you have enabled the throttle.module).</p>";
-      $output = t($output, array("%throttle" => l(t("throttle.module"), "admin/system/modules"), "%modules" => l(t("enabled"), "admin/system/modules"), "%permissions" => l(t("permissions section"), "admin/user/permission"), "%referers" => l(t("referrers log"), "admin.statistics/referrers"), "%access" => l(t("access log"), "admin.statistics/log"), "%configuration" => l(t("site configuration"), "admin/system/modules/statistics"), "%here-block" => l(t("here"), "admin/system/block"), "%here-help" => l(t("here"), "admin/help#throttle")));
+      $output .= "<p>Note: Even though the configuration for the throttle is handled by the throttle module, the throttle logic itself is part of the statistics module.  The configuration has been separated in order to make things easier for the average site that will not be utilizing the throttling mechanism.  More information about how the throttle works can be found on the throttle module help page.  (Find the throttle help page %here-help if you have enabled the throttle module).</p>";
+      $output = t($output, array("%throttle" => l(t("throttle module"), "admin/system/modules"), "%modules" => l(t("enabled"), "admin/system/modules"), "%permissions" => l(t("permissions section"), "admin/user/permission"), "%referers" => l(t("referrers log"), "admin/statistics/referrers"), "%access" => l(t("access log"), "admin/statistics/log"), "%configuration" => l(t("administer") ." &raquo; ". t("configuration"), "admin/system/modules/statistics"), "%here-block" => l(t("here"), "admin/system/block"), "%here-help" => l(t("here"), "admin/help#throttle")));
       break;
     case 'admin/system/modules#description':
       $output = t("Logs access statistics for your site.");
