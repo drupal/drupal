@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.176 2003/06/16 21:03:12 unconed Exp $
+// $Id: user.module,v 1.177 2003/06/18 17:44:09 dries Exp $
 
 session_set_save_handler("sess_open", "sess_close", "sess_read", "sess_write", "sess_destroy", "sess_gc");
 session_start();
@@ -680,11 +680,11 @@ function user_login($edit = array(), $msg = "") {
   $output .= form_password(t("Password"), "pass", $pass, 30, 64, t("Enter the password that accompanies your username."));
   $output .= form_checkbox(t("Remember me"), "remember_me", 1, 0, 0);
   $output .= form_submit(t("Log in"));
-  $output .= "<p>&raquo; ". l(t("Request new password"), "user/password"). "<br />";
+  $items[] = l(t("Request new password"), "user/password");
   if (variable_get("user_register", 1)) {
-    $output .= "&raquo; ". l(t("Create new account"), "user/register");
+    $items[] = l(t("Create new account"), "user/register");
   }
-  $output .= "</p>";
+  $output .= theme("theme_item_list", $items);
 
   return form($output, "post", url("user"));
 }
@@ -772,11 +772,11 @@ function user_pass($edit = array()) {
     $output .= form_textfield(t("Username"), "name", $edit["name"], 30, 64);
     $output .= form_textfield(t("E-mail address"), "mail", $edit["mail"], 30, 64);
     $output .= form_submit(t("E-mail new password"));
-    $output .= "<p>&raquo; ". l(t("Log in"), "user/login") ."<br />";
+    $items[] = l(t("Log in"), "user/login");
     if (variable_get("user_register", 1)) {
-      $output .= "&raquo; ". l(t("Create new account"), "user/register");
+      $items[] = l(t("Create new account"), "user/register");
     }
-    $output .= "</p>";
+    $output .= theme("theme_item_list", $items);
 
     return form($output, "post", url("user"));
   }
@@ -904,8 +904,9 @@ function user_register($edit = array()) {
     }
   }
   $output .= form_submit(t("Create new account"));
-  $output .= "<p>&raquo; ". l(t("E-mail new password"), "user/password"). "<br />";
-  $output .= "&raquo; ". l(t("Log in"), "user/login") ."</p>";
+  $items[] = l(t("E-mail new password"), "user/password");
+  $items[] = l(t("Log in"), "user/login");
+  $output .= theme("theme_item_list", $items);
 
   return form($output);
 }
