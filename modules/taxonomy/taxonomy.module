@@ -56,7 +56,7 @@ function taxonomy_form_vocabulary($edit = array()) {
       $nodetypes[$name] = $name;
     }
   }
-  
+
   $form .= form_textfield("Vocabulary name", "name", $edit["name"], 50, 64, "Required.  The name for this vocabulary.  Example: 'Topic'.");
   $form .= form_textarea("Description", "description", $edit["description"], 60, 5, "Optional.  Description of the vocabulary, can be used by modules.");
   $form .= form_select("Types", "types", explode(",", $edit["types"]), $nodetypes, "Required.  A list of node types you want to associate this vocabulary with.", "", 1);

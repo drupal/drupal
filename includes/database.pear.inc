@@ -20,7 +20,7 @@ function db_connect($url) {
  *
  * @param $query sql query
  * @param $type  module type of this item
- * @return sql result resource 
+ * @return sql result resource
  */
 function db_query($query) {
   $args = func_get_args();
