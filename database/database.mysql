@@ -500,7 +500,7 @@ CREATE TABLE term_synonym (
 --
 
 CREATE TABLE users (
-  uid int(10) unsigned NOT NULL auto_increment,
+  uid int(10) unsigned NOT NULL default '0',
   name varchar(60) NOT NULL default '',
   pass varchar(32) NOT NULL default '',
   mail varchar(64) default '',
@@ -578,6 +578,7 @@ INSERT INTO system VALUES ('modules/page.module','page','module','',1);
 INSERT INTO system VALUES ('modules/story.module','story','module','',1);
 INSERT INTO system VALUES ('modules/taxonomy.module','taxonomy','module','',1);
 INSERT INTO system VALUES ('themes/marvin/marvin.theme','marvin','theme','Internet explorer, Netscape, Opera',1);
+INSERT INTO users (uid, name, mail) VALUES ('0', 'Anonymous', 'root@localhost');
 
 REPLACE variable SET name='update_start', value='s:10:"2003-04-19;"';
 REPLACE variable SET name='theme_default', value='s:6:"marvin";';

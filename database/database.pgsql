@@ -499,7 +499,7 @@ CREATE INDEX term_synonym_name_idx ON term_synonym(name);
 --
 
 CREATE TABLE users (
-  uid SERIAL,
+  uid integer NOT NULL default '0',
   name varchar(60) NOT NULL default '',
   pass varchar(32) NOT NULL default '',
   mail varchar(64) default '',
@@ -580,6 +580,7 @@ INSERT INTO system VALUES ('themes/marvin/marvin.theme','marvin','theme','Intern
 
 INSERT INTO variable(name,value) VALUES('update_start', 's:10:"2003-04-19";');
 INSERT INTO variable(name,value) VALUES('theme_default','s:6:"marvin";');
+INSERT INTO users(uid,name,mail) VALUES(0,'Anonymous','root@localhost');
 
 INSERT INTO blocks(module,delta,status) VALUES('user', '0', '1');
 INSERT INTO blocks(module,delta,status) VALUES('user', '1', '1');

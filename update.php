@@ -43,7 +43,8 @@ $mysql_updates = array(
   "2003-08-05" => "update_59",
   "2003-08-15" => "update_60",
   "2003-08-20" => "update_61",
-  "2003-08-27" => "update_62"
+  "2003-08-27" => "update_62",
+  "2003-09-09" => "update_63"
 );
 
 function update_32() {
@@ -378,6 +379,13 @@ function _update_next_thread($structure, $parent) {
   } while (array_search($thread, $structure));
 
   return $val;
+}
+
+function update_63() {
+  update_sql("ALTER TABLE users CHANGE uid uid int(10) unsigned NOT NULL default '0'");
+  update_sql("INSERT INTO users (uid, name, mail, timestamp) VALUES ('0', 'Anonymous', 'root@localhost', '". time() ."')");
+  $users = db_result(db_query("SELECT MAX(uid) FROM users;"));
+  update_sql("INSERT INTO sequences (name, id) VALUES ('users_uid', '$users')");
 }
 
 /*
