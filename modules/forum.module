@@ -402,7 +402,7 @@ function forum_page() {
 
       if (arg(2) == 'new') {
         if ($nid = _forum_new($tid)) {
-          drupal_goto(url("node/view/$nid"));
+          drupal_goto("node/view/$nid");
         }
       }
 
