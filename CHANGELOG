@@ -1,4 +1,13 @@
-Drupal x.x.x, 2002-xx-xx
+Drupal x.x.x, xxxx-xx-xx (to be released)
+------------------------
+
+- node system improvements:
+    * replaced the "post content" permission by more fine-grained permissions.
+    * improved content submission:
+        + improved teasers: teasers are now optional, teaser length can be configured, teaser and body are edited in a single textarea, users will no longer be bother with teasers when the post is too short for a teaser.
+        + added the ability to preview both the short and the full version of your posts.
+
+Drupal 4.1.0, xxxx-xx-xx (to be released)
 ------------------------
 
 - collaboratively revised and expanded the Drupal documentation.
@@ -21,6 +30,7 @@ Drupal x.x.x, 2002-xx-xx
 - replaced weblogs.module by ping.module:
     * added support for normal and RSS notifications of http://blo.gs/.
     * added support for RSS ping-notifications of http://weblogs.com/.
+- removed the rating module
 - themes:
     * removed a significant portion of hard-coded mark-up.
 
@@ -53,7 +63,7 @@ Drupal 4.0.0, 2002-06-15
     * blocks can now be enabled and/or be set by the user.
     * blocks can be set to only show up on some pages.
     * merged box module with block module.
-- rewrote large parts of the node system:
+- node system improvements:
     * fixed node retrieval based on titles.
     * blogs can be updated.
     * teasers (abstracts) on all node types.

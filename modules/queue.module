@@ -1,5 +1,5 @@
 <?php
-// $Id: queue.module,v 1.59 2002/11/27 18:43:49 dries Exp $
+// $Id: queue.module,v 1.60 2002/12/10 20:35:20 dries Exp $
 
 function queue_system($field){
   $system["description"] = t("Enables content to be moderated by the community.");
@@ -155,7 +155,7 @@ function queue_view($nid) {
     $theme->box(t("Moderate"), $output);
   }
   if ($node->comment && variable_get("queue_show_comments", 1)) {
-    comment_render($node);
+    module_invoke("comment", "render", $node);
   }
   $theme->footer();
 }
