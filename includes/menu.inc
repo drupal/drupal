@@ -1,14 +1,14 @@
 <?php
-// $Id: menu.inc,v 1.25 2003/10/07 18:46:15 dries Exp $
+// $Id: menu.inc,v 1.26 2003/10/09 19:24:09 dries Exp $
 
 /**
  * Register a menu item with the menu system.
  */
-function menu($path, $title, $callback = NULL, $help = NULL, $weight = 0, $hidden = 0) {
+function menu($path, $title, $callback = NULL, $weight = 0, $hidden = 0) {
   global $_list;
 
   // add the menu to the flat list of menu items:
-  $_list[$path] = array("title" => $title, "callback" => $callback, "help" => $help, "weight" => $weight, "hidden" => $hidden);
+  $_list[$path] = array("title" => $title, "callback" => $callback, "weight" => $weight, "hidden" => $hidden);
 }
 
 /**
@@ -63,11 +63,16 @@ function menu_get_active_title() {
 * Returns the help associated with the active menu item.
 */
 function menu_get_active_help() {
-  global $_list;
+  $path = $_GET["q"];
+  $output = "";
 
-  if ($path = menu_get_active_item()) {
-    return $_list[$path]["help"];
+  $return = module_invoke_all("help", $path);
+  foreach ($return as $item) {
+    if (!empty($item)) {
+      $output .= $item ."\n";
+    }
   }
+  return $output;
 }
 
 /**
