@@ -1,0 +1,396 @@
+# MySQL dump 7.1
+#
+# Host: zind.net    Database: dries
+#--------------------------------------------------------
+# Server version	3.22.32
+
+#
+# Table structure for table 'authors'
+#
+CREATE TABLE authors (
+  aid varchar(30) DEFAULT '' NOT NULL,
+  name varchar(50),
+  url varchar(60),
+  email varchar(60),
+  pwd varchar(12),
+  PRIMARY KEY (aid)
+);
+
+#
+# Dumping data for table 'authors'
+#
+
+INSERT INTO authors VALUES ('Dries','Dries','http://www.buytaert.net/','dries@drop.org','iamgod');
+INSERT INTO authors VALUES ('Natrak','Natrak','','natrak@drop.org','db=god');
+INSERT INTO authors VALUES ('Jeroen','Jeroen','http://www.drop.org','jeroen@drop.org','W1ne gums!');
+INSERT INTO authors VALUES ('UnConeD','UnConeD','','unconed@drop.org','db=god');
+
+#
+# Table structure for table 'blocks'
+#
+CREATE TABLE blocks (
+  id tinyint(4) DEFAULT '0' NOT NULL auto_increment,
+  author varchar(30),
+  title varchar(60),
+  content text,
+  PRIMARY KEY (id)
+);
+
+#
+# Dumping data for table 'blocks'
+#
+
+INSERT INTO blocks VALUES (1,'','Development','<P>These links point to pages or sections that are not properly integrated yet.  They are here for development or debuging purpose.</P>\r\n<LI><A HREF=\"queue.php\">submission queue</A></LI>\r\n');
+
+#
+# Table structure for table 'channel'
+#
+CREATE TABLE channel (
+  id int(11) DEFAULT '0' NOT NULL auto_increment,
+  site varchar(255) DEFAULT '' NOT NULL,
+  url varchar(255) DEFAULT '' NOT NULL,
+  rdf varchar(255) DEFAULT '' NOT NULL,
+  timestamp int(11),
+  UNIQUE site (site),
+  UNIQUE url (url),
+  UNIQUE rdf (rdf),
+  PRIMARY KEY (id)
+);
+
+#
+# Dumping data for table 'channel'
+#
+
+INSERT INTO channel VALUES (1,'Slashdot','http://www.slashdot.org/','http://www.slashdot.org/slashdot.rdf',958655281);
+INSERT INTO channel VALUES (2,'Kuro5hin','http://www.kuro5hin.org/','http://www.kuro5hin.org/backend.rdf',958655282);
+INSERT INTO channel VALUES (3,'Mozilla','http://www.mozilla.org/','http://www.mozilla.org/news.rdf',958655283);
+INSERT INTO channel VALUES (4,'Geeknews','http://www.geeknews.net/','http://www.geeknews.net/geeknews.rdf',958655332);
+INSERT INTO channel VALUES (5,'FreakTech','http://sunsite.auc.dk/FreakTech/','http://sunsite.auc.dk/FreakTech/FreakTech.rdf',958655343);
+INSERT INTO channel VALUES (6,'Freshmeat','http://www.freshmeat.net/','http://www.freshmeat.net/backend/fm.rdf',958655343);
+INSERT INTO channel VALUES (7,'Slashcode','http://www.slashcode.com/','http://www.slashcode.com/slashcode.rdf',958655344);
+INSERT INTO channel VALUES (8,'Linux Today','http://linuxtoday.com/','http://linuxtoday.com/backend/my-netscape.rdf',958655345);
+INSERT INTO channel VALUES (9,'BetaZine','http://www.betazine.com/','http://www.betazine.com/xml/betazine.txt',958655345);
+INSERT INTO channel VALUES (10,'Dr. Dobb TechNetCast','http://www.technetcast.com/','http://www.technetcast.com/tnc_headlines.rdf',958655346);
+
+#
+# Table structure for table 'comments'
+#
+CREATE TABLE comments (
+  tid int(11) DEFAULT '0' NOT NULL auto_increment,
+  pid int(11) DEFAULT '0',
+  sid int(11) DEFAULT '0',
+  date datetime,
+  name varchar(60) DEFAULT '' NOT NULL,
+  email varchar(60),
+  url varchar(60),
+  host_name varchar(60),
+  subject varchar(60) DEFAULT '' NOT NULL,
+  comment text NOT NULL,
+  score tinyint(4) DEFAULT '0' NOT NULL,
+  reason tinyint(4) DEFAULT '0' NOT NULL,
+  PRIMARY KEY (tid)
+);
+
+#
+# Dumping data for table 'comments'
+#
+
+INSERT INTO comments VALUES (1,0,9,'2000-05-03 20:47:54','','','','127.0.0.1','Re: my subject','my reply',0,2);
+INSERT INTO comments VALUES (2,0,9,'2000-05-04 14:04:55','Dries','grmbl_at_buytaert.net','http://www.buytaert.net/','212.100.176.145','Re: my subject','a test post\r<br>\n\r<br>\nhi mom!',2,4);
+INSERT INTO comments VALUES (3,0,2,'2000-05-04 15:17:59','Dries','grmbl_at_buytaert.net','http://www.buytaert.net/','212.100.176.145','Test comment','Let this be a test comment\r<br>\n--\r<br>\nHi dad!',2,4);
+INSERT INTO comments VALUES (4,0,3,'2000-05-04 20:30:23','Dries','grmbl_at_buytaert.net','http://www.buytaert.net/','212.100.176.145','Re: Science: Controlling Your Computer with Your Brain','First I was a bit confused about the 2 slashed in the \'/not/\' but it looks like that was on purpose, right?\r<br>\n\r<br>\n-- Dries',2,5);
+INSERT INTO comments VALUES (5,4,3,'2000-05-05 12:37:58','Jeroen','jeroen@drop.org','http://www.drop.org','212.100.176.145','Re: Science: Controlling Your Computer with Your Brain','I don\'t know Dries, I just copied it from Slashdot, don\'t ask me what it \r<br>\nmeans, those slashes.\r<br>\n\r<br>\nJeroen.',2,5);
+INSERT INTO comments VALUES (6,0,5,'2000-05-06 01:44:22','Dries','grmbl_at_buytaert.net','http://www.buytaert.net/','195.95.26.59','Re: Getting involved in the PHP','As you can see there is a problem with quotes.  In addition I forgot to close a TAG which fuxered up the rest of the page: a good reason to have the check-for-allowed-HTML-tags functions and the like.\r<br>\n\r<br>\nNight,\r<br>\n\r<br>\n-- Dries',1,3);
+INSERT INTO comments VALUES (7,0,8,'2000-05-07 12:12:36','Dries','grmbl_at_buytaert_dot_net','http://www.buytaert.net/','195.95.26.206','Re: Oops.  Forgot the URL','Oops.  Looks like I forgot the URL to the MP3 player page.  I tried to edit my story that didn\'t work: looks like we found yet another bug.  I\'ll look into that later today.\r\n\r\nAnyway, the URL is: <A HREF=\"http://www.thinkgeek.com/brain/bazaar/mart/cart.cgi?action=view&type=item&itemid=325e\">http://www.thinkgeek.com/brain/bazaar/mart/cart.cgi?action=view&type=item&itemid=325e</A>.\r\n\r\n-- Dries',1,3);
+INSERT INTO comments VALUES (8,0,8,'2000-05-07 12:19:21','Dries','grmbl_at_buytaert_dot_net','http://www.buytaert.net/','195.95.26.206','Re: Geez - alignment problem','Geez.  The alignment of this page looks f*cked up as well. Gotta fix that too I\'m afraid.  I sorta lost track about all \'open\' bugs.\r<br>\n\r<br>\n-- Dries',1,3);
+INSERT INTO comments VALUES (9,8,8,'2000-05-08 08:39:20','Dries','grmbl_at_buytaert_dot_net','http://www.buytaert.net/','212.100.176.145','Re: Geez - alignment problem','Odd. When using Netscape(Linux) the alignment looks perfectly normal.  I won\'t be able to fix it untill next weekend.  Maybe one of the Microsofties could look into it? :-)\r<br>\n\r<br>\n-- Dries',1,3);
+INSERT INTO comments VALUES (10,0,7,'2000-05-08 15:14:17','Jeroen','jeroen@drop.org','http://www.drop.org','212.100.176.145','Re: NASA snake-bots','Why do you always say ./ instead of /.?\r<br>\nIs it because you want to revolt? Or because you\r<br>\nthink it types easier?\r<br>\n\r<br>\n.  . .Jeroen',1,3);
+INSERT INTO comments VALUES (11,10,7,'2000-05-08 15:28:00','Jeroen','jeroen@drop.org','http://www.drop.org','212.100.176.145','Re: NASA snake-bots','Ahh man we really got to do something about this HTML \r<br>\nin our signatures. Are we gonna allow it or not, I had some\r<br>\ntrouble with it though. You see, i want, and don\'t ask me why,\r<br>\na signature that looks like this:\r<br>\n.<space><space>.<space>..<space>Jeroen\r<br>\nbut however, it seems that when you edit you signature in the\r<br>\n\"user account\"-section and save it, your signature allready\r<br>\ngets HTML-parsed. *still with me?* OK, now when you post\r<br>\na message it displays your signature correctly without the\r<br>\nHTML tags.  Now when you post your message its parses it\r<br>\nand doesn\'t see no  \'s between the dots so it displays\r<br>\nthe signature as if there were no HTML in it.\r<br>\nAnd that is not what I had in mind... :/\r<br>\n\r<br>\n.&nbsp;&nbsp;.&nbsp;..&nbsp;Jeroen (now I specifically typed the HTML in my signature and didn\'t take the preview)',1,3);
+INSERT INTO comments VALUES (12,2,9,'2000-05-08 18:04:23','','','','212.100.176.145','Re: my subject','UHM - how could the previous message show up?  I did not reply to it nor does the date make sense.\r<br>\n\r<br>\n-- Dries',0,3);
+INSERT INTO comments VALUES (13,0,10,'2000-05-10 10:24:41','natrak','natrak@zind-dot-net','http://natrak.net/','212.242.56.160','Re: Updates','Updates\r<br>\nby Dries on Tuesday, November 30, 1999 - 12:00 AM\r<br>\n\r<br>\nIsnt that the wrong date? Whats going on?:)\r<br>\nThe system time on zind is set to CET in case you wonder...\r<br>\n\r<br>\nAnd on the subject of bumber stickers get the 3rd one :PpP\r<br>\nCare are just that *smile*\r<br>\n\r<br>\nN.',1,3);
+INSERT INTO comments VALUES (14,13,10,'2000-05-10 12:14:12','Dries','grmbl_at_buytaert_dot_net','http://www.buytaert.net/','212.100.176.145','Re: Updates','Umh, where (url?) do you see the wrong date?  I can\'t find it here ...\r<br>\n\r<br>\nNo comment on your comment on the bumper stickers. :P\r<br>\n\r<br>\n-- Dries',1,3);
+INSERT INTO comments VALUES (15,0,11,'2000-05-10 13:12:44','','','','213.224.83.6','Re: New Lara Croft model unveiled','One word.... <B>HUBBA HUBBA HUBBA</B>!\r<br>\n\r<br>\nOh wait, that\'s three :P\r<br>\n\r<br>\nWho needs Jeri Ryan (Seven of Nine) when you can have Lucy Clarkson? Drop the borg implants, gimme those combat boots!\r<br>\n',1,6);
+INSERT INTO comments VALUES (16,15,11,'2000-05-10 16:16:05','Dries','grmbl_at_buytaert_dot_net','http://www.buytaert.net/','212.100.176.145','Re: New Lara Croft model unveiled','Just wondering: could this Anonymous Chicken stand up, raise his finger and tell us his name? :-)\r<br>\n\r<br>\n-- Dries',1,3);
+INSERT INTO comments VALUES (17,0,11,'2000-05-14 12:32:26','Dries','grmbl_at_buytaert_dot_net','http://www.buytaert.net/','212.100.176.145','UnConeD','Your \"editors note\" thingy isn\'t themed very well.   Apart from that, your theme looks very, very nice. :-)\r<br>\n\r<br>\n-- Dries',1,3);
+
+#
+# Table structure for table 'headlines'
+#
+CREATE TABLE headlines (
+  id int(11) DEFAULT '0' NOT NULL,
+  title varchar(255) DEFAULT '' NOT NULL,
+  link varchar(255) DEFAULT '' NOT NULL,
+  number int(3) DEFAULT '0' NOT NULL,
+  UNIQUE title (title),
+  UNIQUE link (link)
+);
+
+#
+# Dumping data for table 'headlines'
+#
+
+INSERT INTO headlines VALUES (2,'WWW9 Conference - Amsterdam','http://www.kuro5hin.org/?op=displaystory;sid=2000/5/16/12753/2799',5);
+INSERT INTO headlines VALUES (2,'Lost in the shuffle: Microsoft\'s proposed remedies','http://www.kuro5hin.org/?op=displaystory;sid=2000/5/15/12406/2367',7);
+INSERT INTO headlines VALUES (2,'Sniff Your PC','http://www.kuro5hin.org/?op=displaystory;sid=2000/5/16/01250/2618',6);
+INSERT INTO headlines VALUES (2,'The US Gov\'t and Unix','http://www.kuro5hin.org/?op=displaystory;sid=2000/5/17/53433/1439',4);
+INSERT INTO headlines VALUES (3,'Scalable Vector Graphics','http://www.mozilla.org/projects/svg/',2);
+INSERT INTO headlines VALUES (4,'Pizza! Pizza! - Linux Style\n','http://geeknews.net/index.shtml#954012496\n',13);
+INSERT INTO headlines VALUES (3,'XPInstall Newsgroup','http://www.mozilla.org/news.html',15);
+INSERT INTO headlines VALUES (3,'mozilla.party.jp','http://www.gimlay.org/~andoh/mozilla/flyer.html',11);
+INSERT INTO headlines VALUES (3,'Mozilla World Tour','http://ftp.mozilla.org/pub/mozilla/l10n/lang/m14/',9);
+INSERT INTO headlines VALUES (3,'Milestone 15 Released','http://www.mozilla.org/projects/seamonkey/release-notes/',4);
+INSERT INTO headlines VALUES (3,'Mozilla Does SSL','http://docs.iplanet.com/docs/manuals/psm/psm-mozilla/index.html',12);
+INSERT INTO headlines VALUES (3,'Beta Plans','http://www.mozilla.org/beta.html',10);
+INSERT INTO headlines VALUES (3,'Mozilla Developer Meeting','http://www.alphanumerica.com/events/mozilla-conference-1.0/',8);
+INSERT INTO headlines VALUES (3,'mozilla.party, 3.0','http://www.mozilla.org/party/2000/flyer.html',13);
+INSERT INTO headlines VALUES (3,'Help Wanted','http://www.mozilla.org/help-wanted.html',5);
+INSERT INTO headlines VALUES (4,'PowerPC Television Set-Top Boxes from IBM \n','http://geeknews.net/index.shtml#954013035\n',12);
+INSERT INTO headlines VALUES (4,'KURT - a Real-Time modification to Linux\n','http://geeknews.net/index.shtml#954013187\n',11);
+INSERT INTO headlines VALUES (4,'Hacking the CCM-202 Hybrid Cable Modem\n','http://geeknews.net/index.shtml#954024844\n',7);
+INSERT INTO headlines VALUES (4,'AMD News &amp; Info for the Masses\n','http://geeknews.net/index.shtml#954014581\n',9);
+INSERT INTO headlines VALUES (4,'EPoX EP-7KXA Review\n','http://geeknews.net/index.shtml#954015133\n',8);
+INSERT INTO headlines VALUES (4,'MS offers terms for DoJ settlement\n','http://geeknews.net/index.shtml#954013627\n',10);
+INSERT INTO headlines VALUES (4,'Cool Cases?\n','http://geeknews.net/index.shtml#954040599\n',6);
+INSERT INTO headlines VALUES (4,'Rack that iMac \n','http://geeknews.net/index.shtml#954057516\n',5);
+INSERT INTO headlines VALUES (5,'140 gigabytes CDROM','http://sunsite.auc.dk/FreakTech/',1);
+INSERT INTO headlines VALUES (6,'quick finder','http://core.freshmeat.net/search.php3',11);
+INSERT INTO headlines VALUES (6,'Bahamut 1.4.3-RELEASE','http://freshmeat.net/news/2000/05/18/958623620.html',10);
+INSERT INTO headlines VALUES (6,'TkDNS 0.2','http://freshmeat.net/news/2000/05/18/958632369.html',9);
+INSERT INTO headlines VALUES (6,'mod_perl 1.24','http://freshmeat.net/news/2000/05/18/958632380.html',8);
+INSERT INTO headlines VALUES (6,'xsu 0.1','http://freshmeat.net/news/2000/05/18/958632460.html',7);
+INSERT INTO headlines VALUES (6,'Sportal 1.3','http://freshmeat.net/news/2000/05/18/958640264.html',4);
+INSERT INTO headlines VALUES (6,'Pan 0.8.0','http://freshmeat.net/news/2000/05/18/958632486.html',6);
+INSERT INTO headlines VALUES (6,'Arping 0.4','http://freshmeat.net/news/2000/05/18/958640941.html',2);
+INSERT INTO headlines VALUES (7,'New Slashcode site for I18N/L10N/G11N','http://slashcode.com/article.pl?sid=00/05/01/1656221',8);
+INSERT INTO headlines VALUES (7,'New Slashdot Servers','http://slashcode.com/article.pl?sid=00/04/28/1336253',10);
+INSERT INTO headlines VALUES (7,'Missing \"From the Dept\"','http://slashcode.com/article.pl?sid=00/05/01/1659239',7);
+INSERT INTO headlines VALUES (8,'Search','http://linuxtoday.com/search.php3',6);
+INSERT INTO headlines VALUES (7,'Support for RSS 0.91','http://slashcode.com/article.pl?sid=00/05/01/1733225',4);
+INSERT INTO headlines VALUES (7,'portald: Through a Firewall','http://slashcode.com/article.pl?sid=00/05/01/1723207',6);
+INSERT INTO headlines VALUES (7,'Move to SourceForge','http://slashcode.com/article.pl?sid=00/04/28/1345220',9);
+INSERT INTO headlines VALUES (1,'E3: Linux Still Waiting In The Wings','http://slashdot.org/article.pl?sid=00/05/17/189220',9);
+INSERT INTO headlines VALUES (1,'Government Gives Microsoft Offer Thumbs Down','http://slashdot.org/article.pl?sid=00/05/18/0222239',6);
+INSERT INTO headlines VALUES (1,'H.R. 3113: Spam Bounty Hunters Wanted','http://slashdot.org/article.pl?sid=00/05/17/2136258',7);
+INSERT INTO headlines VALUES (1,'Dialectizer Shut Down','http://slashdot.org/article.pl?sid=00/05/17/1240227',10);
+INSERT INTO headlines VALUES (1,'OpenBSD, Reductionist Design','http://slashdot.org/article.pl?sid=00/05/17/2117221',3);
+INSERT INTO headlines VALUES (1,'Online Book About Nano/AI','http://slashdot.org/article.pl?sid=00/05/17/200231',5);
+INSERT INTO headlines VALUES (1,'Main Linux distibutions port their Linux to IBM\'s S/390','http://slashdot.org/article.pl?sid=00/05/18/1218234',2);
+INSERT INTO headlines VALUES (2,'U.S. House caves in to email hoax','http://www.kuro5hin.org/?op=displaystory;sid=2000/5/17/162615/239',1);
+INSERT INTO headlines VALUES (3,'Mozilla Turns 2','http://www.mozillazine.org/screenshots/alookback.html',7);
+INSERT INTO headlines VALUES (3,'O\'Reilly OSS Convention','http://conferences.oreilly.com/oscon2000/sessions/mozilla.html',1);
+INSERT INTO headlines VALUES (4,'Phezcount 1.7h \n','http://geeknews.net/index.shtml#954123999\n',2);
+INSERT INTO headlines VALUES (4,'Old BetaNews?\n','http://geeknews.net/index.shtml#954057866\n',4);
+INSERT INTO headlines VALUES (4,'Pyra looking to Hire\'a Few Good Geeks\n','http://geeknews.net/index.shtml#954061597\n',3);
+INSERT INTO headlines VALUES (8,'Canada Computes: Get to the root of Linux&#38;#37;s file system','http://linuxtoday.com/news_story.php3?ltsn=2000-05-18-005-20-PS-HL',3);
+INSERT INTO headlines VALUES (8,'32BitsOnline: Rebel With a Clue: The Rebel.com OfficeServer (Netwinder) revisited.','http://linuxtoday.com/news_story.php3?ltsn=2000-05-18-007-20-PS-HW-SV',1);
+INSERT INTO headlines VALUES (8,'Advogato: Open Source and Business: where do you draw the line?','http://linuxtoday.com/news_story.php3?ltsn=2000-05-18-003-20-OP-BZ-CY',5);
+INSERT INTO headlines VALUES (9,'Wow! The new screenshots look great. The style suits polygons better than any ga','http://www.betazine.com/bz-news-reel.php3?inid=1281',7);
+INSERT INTO headlines VALUES (9,'Neuron Entertainment, Inc. Starts Building Filbert Fledgling(TM)','http://www.betazine.com/bz-news-reel.php3?inid=1284',4);
+INSERT INTO headlines VALUES (9,'Crossroads in open beta','http://www.betazine.com/bz-news-reel.php3?inid=1285',3);
+INSERT INTO headlines VALUES (9,'Spheres 2000 - one from the little guy - seeking some testers','http://www.betazine.com/bz-news-reel.php3?inid=1280',8);
+INSERT INTO headlines VALUES (9,'Microsoft today announced that the official Web site for Dungeon Siege','http://www.betazine.com/bz-news-reel.php3?inid=1282',6);
+INSERT INTO headlines VALUES (9,'The World Called Hollow - now in open beta','http://www.betazine.com/bz-news-reel.php3?inid=1283',5);
+INSERT INTO headlines VALUES (6,'the Anomy mail sanitizer 1.10','http://freshmeat.net/news/2000/05/18/958632554.html',5);
+INSERT INTO headlines VALUES (6,'buffer 0.81','http://freshmeat.net/news/2000/05/18/958641773.html',1);
+INSERT INTO headlines VALUES (10,'God and Computers: Donald Knuth','http://www.technetcast.com/tnc_program.html?program_id=50',7);
+INSERT INTO headlines VALUES (10,'XML Standards Update','http://www.technetcast.com/tnc_program.html?program_id=70',5);
+INSERT INTO headlines VALUES (10,'Tim O\'Reilly on Open Source and InfoWare','http://www.technetcast.com/tnc_program.html?program_id=48',8);
+INSERT INTO headlines VALUES (10,'Perl Creator Larry Wall','http://www.technetcast.com/tnc_program.html?program_id=52',6);
+INSERT INTO headlines VALUES (10,'Linus Torvalds At LinuxWorld','http://www.technetcast.com/tnc_program.html?program_id=72',4);
+INSERT INTO headlines VALUES (7,'Undefined subroutine Error','http://slashcode.com/article.pl?sid=00/05/01/1727253',5);
+INSERT INTO headlines VALUES (7,'Rewriting Slash from Scratch','http://slashcode.com/article.pl?sid=00/05/01/1735211',3);
+INSERT INTO headlines VALUES (7,'Possible Bug in imagesize.pm','http://slashcode.com/article.pl?sid=00/05/01/1749224',2);
+INSERT INTO headlines VALUES (1,'Court Rules For Connectix, Against Sony','http://slashdot.org/article.pl?sid=00/05/17/216207',8);
+INSERT INTO headlines VALUES (1,'Alpha Release Of Red Hat\'s Itanium Distro','http://slashdot.org/article.pl?sid=00/05/18/0325253',4);
+INSERT INTO headlines VALUES (1,'Boo No More','http://slashdot.org/article.pl?sid=00/05/18/1132240',1);
+INSERT INTO headlines VALUES (3,'MathML Status Update','http://www.mozilla.org/projects/mathml/update.html',3);
+INSERT INTO headlines VALUES (8,'Canada Computes: Open source made easy [Book Review]','http://linuxtoday.com/news_story.php3?ltsn=2000-05-18-006-20-PS-BR-RH',2);
+INSERT INTO headlines VALUES (8,'Ottawa Citizen: Corel faces revenue crunch waiting for Linux sales: experts','http://linuxtoday.com/news_story.php3?ltsn=2000-05-18-004-20-PS-BZ-CL',4);
+INSERT INTO headlines VALUES (7,'Hiatus Coming To A Close','http://slashcode.com/article.pl?sid=00/05/10/1516237',1);
+INSERT INTO headlines VALUES (9,'Jubal Announces Third Millenium!','http://www.betazine.com/bz-news-reel.php3?inid=1286',2);
+INSERT INTO headlines VALUES (9,'Wrath: Zerosen - is accepting alpha testers. Sign up today!','http://www.betazine.com/bz-news-reel.php3?inid=1287',1);
+INSERT INTO headlines VALUES (10,'Playstation2 and Sega','http://www.technetcast.com/tnc_program.html?program_id=76',3);
+INSERT INTO headlines VALUES (10,'Computer Crime','http://www.technetcast.com/tnc_program.html?program_id=79',1);
+INSERT INTO headlines VALUES (2,'MLP: Dog Shoots Cat Dead, and Other Tales','http://www.kuro5hin.org/?op=displaystory;sid=2000/5/17/164024/536',2);
+INSERT INTO headlines VALUES (4,'Linksys Etherfast Cable/DSL Router Review\n','http://geeknews.net/index.shtml#954124498\n',1);
+INSERT INTO headlines VALUES (10,'Danny Hillis on Game Software Development','http://www.technetcast.com/tnc_program.html?program_id=77',2);
+INSERT INTO headlines VALUES (2,'More thoughts on filtering software','http://www.kuro5hin.org/?op=displaystory;sid=2000/5/17/1448/34580',3);
+INSERT INTO headlines VALUES (6,'XMPS 0.1.0','http://freshmeat.net/news/2000/05/18/958640663.html',3);
+INSERT INTO headlines VALUES (3,'Netscape 6 Preview Release 1','http://www.netscape.com/download/previewrelease.html',6);
+
+#
+# Table structure for table 'poll'
+#
+CREATE TABLE poll (
+  id int(11) DEFAULT '0' NOT NULL auto_increment,
+  question varchar(150),
+  answer1 varchar(100),
+  answer2 varchar(100),
+  answer3 varchar(100),
+  answer4 varchar(100),
+  answer5 varchar(100),
+  answer6 varchar(100),
+  votes1 tinyint(4),
+  votes2 tinyint(4),
+  votes3 tinyint(4),
+  votes4 tinyint(4),
+  votes5 tinyint(4),
+  votes6 tinyint(4),
+  status tinyint(4) DEFAULT '0',
+  PRIMARY KEY (id)
+);
+
+#
+# Dumping data for table 'poll'
+#
+
+INSERT INTO poll VALUES (8,'What chips do you prefer?','Mama Mia\'s','Doritos','Chipsletten','Hula Hoops','Pepper n\' Salt','Regular salt',NULL,0,0,0,0,NULL,0);
+INSERT INTO poll VALUES (3,'My favorite puppet is?','Kermit','Miss Piggy','Gonzo','Dr. Teeth','UnConeD','',0,0,1,NULL,5,NULL,0);
+INSERT INTO poll VALUES (4,'I eat my waffles ...','in fork sized pieces','one square at the time','one huge bite','on a train','I hate waffles','huh?',1,3,9,1,NULL,NULL,0);
+INSERT INTO poll VALUES (9,'Fear leads to anger, anger leads to hate, and hate leads to ...','war','revolution','suffering','migraine','alcohol abuse','',NULL,1,1,2,2,NULL,0);
+INSERT INTO poll VALUES (10,'Fear leads to anger, anger leads to hate, and hate leads to ...','war','revolution','suffering','migraine','alcohol abuse','',1,2,4,3,5,NULL,0);
+INSERT INTO poll VALUES (11,'What do you think Jeroen should learn, or get better in?','HTML','PHP','The Gimp (GFX)','English','All *sigh*','',NULL,NULL,NULL,NULL,NULL,NULL,0);
+INSERT INTO poll VALUES (12,'What have your friends done for you lately?','Provided an alibi.','\n                                       Shared a drink, some laughs, and some code.','Sent me an email saying ILOVEYOU.','Asked me to fix their computer.','Well, if I had some friends, I\'m quite sure they would do wonderful things for me.','',1,3,NULL,1,1,NULL,1);
+
+#
+# Table structure for table 'queue'
+#
+CREATE TABLE queue (
+  qid smallint(5) unsigned DEFAULT '0' NOT NULL auto_increment,
+  uid mediumint(9) DEFAULT '0' NOT NULL,
+  uname varchar(40) DEFAULT '' NOT NULL,
+  subject varchar(100) DEFAULT '' NOT NULL,
+  article text,
+  timestamp int(11),
+  category varchar(64),
+  abstract text,
+  value int(11),
+  votes int(11),
+  PRIMARY KEY (qid)
+);
+
+#
+# Dumping data for table 'queue'
+#
+
+INSERT INTO queue VALUES (1,1,'Dries','Delete this submission','Ingore me!',957626169,'Drop.org','Delete this submission, will ya!  I was just checking whether the \'notify-on-new-submissions-through-submit.php\' feature was working.',0,0);
+INSERT INTO queue VALUES (2,1,'Dries','Free porn!','Better luck next time.',957903654,'Girls','Forget about it ... this is yet another dummy submission! :)',0,0);
+
+#
+# Table structure for table 'refer'
+#
+CREATE TABLE refer (
+  url varchar(255) DEFAULT '' NOT NULL,
+  name varchar(255),
+  status int(1) DEFAULT '1',
+  refers int(7) DEFAULT '0',
+  create_dt int(11),
+  access_dt int(11),
+  PRIMARY KEY (url)
+);
+
+#
+# Dumping data for table 'refer'
+#
+
+INSERT INTO refer VALUES ('http://www.buytaert.net/','buytaert.net',1,42,NULL,NULL);
+INSERT INTO refer VALUES ('http://www.atlantis.lan/','',1,7,955955129,955957398);
+
+#
+# Table structure for table 'stories'
+#
+CREATE TABLE stories (
+  sid int(11) DEFAULT '0' NOT NULL auto_increment,
+  aid varchar(30) DEFAULT '' NOT NULL,
+  subject varchar(255),
+  time int(11),
+  abstract text,
+  comments text,
+  article text,
+  category varchar(128),
+  informant varchar(20) DEFAULT '' NOT NULL,
+  department varchar(128),
+  PRIMARY KEY (sid)
+);
+
+#
+# Dumping data for table 'stories'
+#
+
+INSERT INTO stories VALUES (1,'Dries','My first news message!',957443997,'This is the very first internal beta of the drop.org engine. It\'s still beta-ware and bugs need to be tracked down during the next weeks.','','','Drop.org','Dries','track-those-bugs-down');
+INSERT INTO stories VALUES (2,'Dries','Test message',957445708,'Let this be a test message.','','Don\\\'t forget to mail your comments and bugreports to the mailinglist. ','Drop.org','Dries','test-like-you-have-never-tested-before');
+INSERT INTO stories VALUES (3,'Jeroen','Science: Controlling Your Computer with Your Brain',957464588,'Jeroen sent this article in - I\'m not sure how to title it. It\'s /not/ about your\r\n          computer controlling your brain or anything. What it is about is <A HREF=\"http://www.rochester.edu/pr/releases/cs/bayliss.html\">some interesting research</A>\r\n          that has gone on into detection of brain activity, and interpretation of that. So, that could\r\n          mean sitting in front of your machine and thinking what you wanted to type, or open, or\r\n          whatever - it could also mean that people stricken with certain types of paralysis could\r\n          use computers more easily. ','','','Sience','Jeroen','');
+INSERT INTO stories VALUES (4,'Dries','Layout enhancements',957568850,'Evening.  I just made a couple of enhancements to the PHP in order to make things look better on IE 4.0 @ 800x600.  Hopefully, I didn\\\'t broke the look of other browsers: it is not easy to make things look perty on all browsers.  If it doesn\\\'t display correct on your browser, then let us know. :)','','','Drop.org','Dries','we-make-things-look-better');
+INSERT INTO stories VALUES (5,'Dries','Getting involved in the PHP',957570149,'If you want to get involved in the PHP-part of this website you\'ll have to go through a learning phase.  Sometimes it\'s a pain but once you get the design picture it is as easy as eating cake, or winegums for that matter.\r\n\r\nCheck the \'read more\' link for pointers to stuff one could easily start with.','','<LI>A check-all-posts-for-allowed-HTML-tags function should be written and incorporated in comments.php, submit.php, webboard.php</LI>\r\n<LI>A check-all-posts-for-flamebaits function should be written and incorporated in comments.php, submit.php and webboard.php</LI>\r\n<LI>The colors on the webboard are whacked up in some places.  Instead of fixing them, we should come up with better names for these color variables and we should add some extra colors for highlighting purpose and such. Also, it would be nice if we could use a class for it rather then having to \'global\' a list of 5 or more colors: <CODE>global $bgcolor1, $bgcolor2, ..., $bgcolor3;</CODE>  Just \'global\' an object <CODE>$colors</CODE> and use it like <CODE>$color->bgcolor, $color->tdcolor, $color->hlcolor</CODE>, etc.  In other words ... an overhaul of the color stuff in *all* pages: it\'s not difficult and it\'s a good way to explore the code.</LI>\r\n<LI>Make a theme: plain easy.  Just make a new directory in the /themes-directory and your theme will be automatically integrated.</LI>\r\n<LI>Replace the cookie stuff by PHP4-sessions.</LI>\r\n\r\nDon\'t be afraid to move things around or to change the naming of some parts.  Just try to make/keep it consistent though.\r\n\r\nIn addition, you could also check the lengthy mail for things that are left to be done.\r\n\r\nOff to bed, I am.  I won\'t even bother to spell-check this mail. ;)\r\n','Webdesign','Dries','don\'t-be-afraid-to-learn');
+INSERT INTO stories VALUES (6,'Dries','Quickies',957625993,'Want some <A HREF=\"http://www.vir2l.com/\">eye candy</A>?  <A HREF=\"http://www.phpbuilder.com/\">PHPbuilder.com</A> features 2 new articles which is exactly what we have been waiting for: <A HREF=\"http://phpbuilder.com/columns/tim20000505.php3\">A Complete, Secure User Login System</A> (we need to partially rewrite our user system) and <A HREF=\"http://phpbuilder.com/columns/justin20000428.php3\">PHP and XML: using expat functions</A> (we might want to follow the new trends).  PHP monkeys we are.  I was pleased to find this <A HREF=\"http://rootprompt.org/article.php3?article=359\">Emacs Beginner\'s Tutorial</A>: I\'m printing it now so I have something to read in my bed tonight.  I also ran accross a <A HREF=\"http://tortie.me.uiuc.edu/~dorneich/lego/misc/legoGeekCode2.txt\">legoGeekCode</A>.  Oh, and it looks like they revamped the main page of <A HREF=\"http://www.linux.com/\">linux.com</A>.','','','Quickies','Dries','we-love-quickies');
+INSERT INTO stories VALUES (7,'Dries','NASA snake-bots',957685364,'<A HREF=\"http://www.nasa.gov/\">NASA</A>\'s been working on some pretty cool <A HREF=\"http://www.space.com/news/snakebots_000504.html\">snake-bots</A> for exploring outer space. All kinds of neat features and capabilities ... take a look at the pictures: they look practical and intriguing! (from ./)  <I>Mammy, can I have one too?</I>','','','Space','Dries','please-don\'t-gain-consciousness');
+INSERT INTO stories VALUES (8,'Dries','From bumper stickers to mp3 players.',957693553,'When looking for <A HREF=\"http://www.thinkgeek.com/stuff/stickers.html\">cool bumper stickers</A> to decorate my new car (you know what to buy me know), I ran accross this <A HREF=\"http://www.thinkgeek.com/brain/bazaar/mart/cart.cgi?action=view&type=item&itemid=325e\">Portable MP3 Juke Box</A>.\r\nThis momma is portable and has over 80 hours (4.86 GB) of playback time!  That\'s about 1200 songs or 120 CDs!  $719 is a little expensive though.  I gotta be carefull because I suffer from those impulsive just-buy-it-think-afterwards moods.  I really need an MP3 player: when I listen to music - and I listen music quite much - I listen to my mp3 collection 80% of the time.  I hardly use CDs or cassettes anymore, so from that point of view: an MP3 player would be the way to go.\r\nPS: I\'m just rambling a bit because I\'m sick of writing uni papers and because it\'s better to test drop.org with semi-useful stuff then with complete junk.  Right?  *g*\r\nAnyway, I guess I could use some <A HREF=\"http://www.thinkgeek.com/brain/bazaar/mart/cart.cgi?action=view&type=item&itemid=287d\">Penguin Mints</A>: three penguin mints are equivalent to about 1 coke in terms of caffeine.','','','Geeking','Dries','It\'s-gotta-be-mine-mine-mine');
+INSERT INTO stories VALUES (9,'Jeroen','Windows Source Code Proposal Confirmed',957790469,'ChipX86 writes: \\\"We\\\'ve all heard the rumors about Microsoft proposing to open source\r\n          Windows. Now it appears to be confirmed. This article on MSNBC says that Microsoft\r\n          would \\\'... provide open, timely and complete access to the parts of the Windows\r\n          operating system code used by independent software companies to design their\r\n          software applications to run on Windows.\\\'\\\" From the sound of it, this seems like more of a delay tactic than a\r\n          straight proposal, but interesting nonetheless. (How open is \\\"open,\\\" by the way? What about \\\"Timely\\\"?) ','','','Announcements','Jeroen','from the please-don\\\'t-gain-consciousness');
+INSERT INTO stories VALUES (10,'Dries','Updates',957877356,'drop.org has been activated, Natrak smoothly switched things, the mailing list is now up and running and all droppies have receeived there personal drop.org e-mail address.  Oh behave, baby!  I fixed a few problems which actually allowed me to fix my typoes in my previous post: now, you can actually check what particular <A HREF=\"http://www.thinkgeek.com/stuff/stickers.html\">bumper stickers</A> I\'m interested in! *hint*hint*<BR>Oh, I installed a new poll and whilst doing so I discovered a few poll problems I\'ll have to fix.<BR>\r\nAnyway, I\'ll keep rambling as well as adding (semi-useless) posts to test our beast.  My mom tends to talk to the walls ... at least I made some genetical progress, don\'t you think?','','','Drop.org','Dries','what-service-pack-you-say?');
+INSERT INTO stories VALUES (11,'Dries','New Lara Croft model unveiled',957955426,'16 year old Lucy Clarkson, <A HREF=\"http://www.core-design.com/newlara/newlara.htm\">seen here</A>, is the new Lara Croft model.  Her vital statistics, you ask? 32 <B><BLINK>DD</BLINK></B> - 25 - 36. Lucy will make her debut appearance as Lara Croft at America\'s E3 show, Los Angeles this week, May 11-13.<BR>Well, what can I say ... she has what it needs: the breasts. *g*\r\n','UPDATE: <A HREF=\"http://www.core-design.com/\">core-design.com</A> has updated their website with more pictures of the new Lara Croft model.  Check them <A HREF=\"http://www.core-design.com/lara.htm\">here</A>!','','Gaming','Dries','fieuw-pff-wow-dang-boink');
+INSERT INTO stories VALUES (12,'Dries','Theme system update',958130349,'Our theme system has been overhauled, revamped and recoded from scratch.  Nuff said, just post your comments! :-)\r\n','','','Drop.org','Dries','we-had-to-go-through-all-the-files');
+INSERT INTO stories VALUES (13,'Dries','Pyramid Mistery',958131056,'If you are - just like me - interested in the pyramid  mysteries then you should check out <A HREF=\"http://ourworld.compuserve.com/homepages/FDoernenburg/mainpyr.htm\">this page</A>.  It is a somewhat skeptical page about the Great Pyramids and because of all those truly whacked mysteries they claim that they could not have been built by the ancient Egyptians.  What do you think?','','','Science','Dries','living-farao\'s');
+INSERT INTO stories VALUES (14,'Dries','Make your own mech.',958313828,'Some guys over at <A HREF=\"http://www.mechaps.com/\">http://www.mechaps.com/</A> are building their own mech.  Why you ask? <I>\"Why Not.\"</I>, they say.  <I>\"To be cool. To be worshipped by nerds across the globe.  They can be used for construction.  Mechs may also be useful as a war machine, as they can be manufactured cheaply, are very modular, easy to repair, and inexpensive to operate.\"</I><BR>\r\n\'Some are born nuts, some achieve nutness, and some have nutness thrust upon them ...\' (DriesSpeare)','','','Geeking','Dries','you-gotta-be-kidding-me');
+INSERT INTO stories VALUES (15,'Dries','NASA Proposes Launch Solar Sail Vehicle For 2010',958395687,'Apparently, NASA plans to launch a <A HREF=\"http://www1.msfc.nasa.gov/NEWSROOM/news/releases/2000/00-150.html\"> solar sail spacecraft</A> in the year 2010 according to this press release. The the first trip\r\nwill take about 15 years, traveling about 58 miles per second. The sail will be 440 yards in width, and will be constructed of a reflective carbon-fiber material. \'This will be humankind\'s first  planned venture outside our solar system,\' said Les Johnson, manager of Interstellar Propulsion Research at the Marshall Center. \'This is a\r\nstretch goal that is among the most audacious things we\'ve ever undertaken.\'  Check the <A HREF=\"http://www1.msfc.nasa.gov/NEWSROOM/news/photos/2000/photos00-150.htm\">pictures</A>!<BR>If you want to do cool stuff, you want to work for/with NASA!','','','Space','Dries','we-have-an-overheated-cool-o-matic');
+
+#
+# Table structure for table 'users'
+#
+CREATE TABLE users (
+  uid int(11) DEFAULT '0' NOT NULL auto_increment,
+  name varchar(60) DEFAULT '' NOT NULL,
+  uname varchar(15) DEFAULT '' NOT NULL,
+  email varchar(60) DEFAULT '' NOT NULL,
+  femail varchar(60) DEFAULT '' NOT NULL,
+  url varchar(100) DEFAULT '' NOT NULL,
+  pass varchar(20) DEFAULT '' NOT NULL,
+  storynum tinyint(4) DEFAULT '10' NOT NULL,
+  umode varchar(10) DEFAULT '' NOT NULL,
+  uorder tinyint(1) DEFAULT '0' NOT NULL,
+  thold tinyint(1) DEFAULT '0' NOT NULL,
+  noscore tinyint(1) DEFAULT '0' NOT NULL,
+  bio tinytext NOT NULL,
+  ublockon tinyint(1) DEFAULT '0' NOT NULL,
+  ublock text,
+  theme varchar(255) DEFAULT '' NOT NULL,
+  signature varchar(255) DEFAULT '' NOT NULL,
+  PRIMARY KEY (uid)
+);
+
+#
+# Dumping data for table 'users'
+#
+
+INSERT INTO users VALUES (1,'D. Buytaert','Dries','grmbl@buytaert.net','dries_at_drop_dot_org','http://www.buytaert.net/','javastar',10,'flat',1,0,0,'Hi mom!',0,'','UnConeD','Hi dad!');
+INSERT INTO users VALUES (2,'Kjartan Mannes','natrak','natrak@zind.net','natrak@zind-dot-net','http://natrak.net/','lovesilse',10,'nested',0,0,0,'Hmmmm.... coming soon? :P\r\n',0,'','UnConeD','N.');
+INSERT INTO users VALUES (3,'Jeroen Bensch','Jeroen','jbensch@advalvas.be','jeroen@drop.org','http://www.drop.org','Pass th1s!',15,'threaded',1,0,0,'I am a student computer science at the university of Antwerp in Belgium (Europe).<BR>\r\nI am 1.86m tall, have brown hair and blue/green eyes... anything else?',0,'','UnConeD','.  . .. Jeroen');
+INSERT INTO users VALUES (4,'Steven Wittens','UnConeD','unconed@projectx.mx.dk','','','A3h26gv4m9r',10,'',0,0,0,'',0,'','UnConeD','4096');
+
+#
+# Table structure for table 'webboard'
+#
+CREATE TABLE webboard (
+  topic_id int(11) DEFAULT '0' NOT NULL auto_increment,
+  parent_id int(11) DEFAULT '0',
+  root_id int(11) DEFAULT '0',
+  subject varchar(255),
+  message text,
+  create_dt int(11) DEFAULT '0',
+  author varchar(255),
+  hostname varchar(255),
+  PRIMARY KEY (topic_id)
+);
+
+#
+# Dumping data for table 'webboard'
+#
+
+INSERT INTO webboard VALUES (1,0,1,'First message','Euh ... hi mom!',957442705,'Dries','212.100.176.145');
+INSERT INTO webboard VALUES (2,0,2,'just testing of course what else?','I have allready found some bugs, how about you?\r\n\r\nJeroen.',957454049,'Jeroen','212.100.176.145');
+INSERT INTO webboard VALUES (3,0,3,'just testing of course what else?','I have allready found some bugs, how about you?\r\n\r\nJeroen.',957454098,'Jeroen','212.100.176.145');
+INSERT INTO webboard VALUES (4,3,3,'Re: just testing of course what else?&nbsp; [NT]','',957454259,'Jeroen','212.100.176.145');
+INSERT INTO webboard VALUES (5,0,5,'happy testing','The webboard should be sorta stable as it is clearly the good ol\' atlantis.lan webboard.  I made a few changes though to fix (?) the login problem and to allow anonymous posters (alas: Anonymous Chickens) to post.\r\n\r\n-- Dries',957457010,'Dries','212.100.176.145');
+INSERT INTO webboard VALUES (6,5,5,'Re: happy testing','Well it is very stable but the colors aren\'t right.\r\nIt is all bordeaux and grey when displaying the webboard\r\nthreaded, but if you select a message to read it the bordeax\r\ndissapears. This can\'t be right can it?\r\n\r\n.  . .Jeroen',957523760,'Jeroen','212.100.176.145');
+INSERT INTO webboard VALUES (7,6,5,'Re: Re: happy testing','Your right: it\'s a bug.  We should make a list of all bugs - I\'ll try to fix it tonight.\r\n\r\n-- Dries',957529636,'Dries','195.162.202.97');
+INSERT INTO webboard VALUES (8,0,8,'*pompidom*&nbsp; [NT]','',958579616,'Anonymous Chicken','212.100.176.145');
+
