@@ -964,7 +964,9 @@ function form_set_error($name, $message) {
  * Return true when errors have been set.
  */
 function form_has_errors() {
-  return array_key_exists('form', $GLOBALS);
+  if (array_key_exists('form', $GLOBALS)) {
+    return $GLOBALS['form'];
+  }
 }
 
 /**
@@ -1040,7 +1042,7 @@ function form_password($title, $name, $value, $size, $maxlength, $description = 
 function form_textarea($title, $name, $value, $cols, $rows, $description = NULL, $attributes = NULL, $required = FALSE) {
   $cols = $cols ? " cols=\"$cols\"" : "";
   module_invoke_all("textarea", $name);  // eg. optionally plug in a WYSIWYG editor
-  return theme("form_element", $title, "<textarea wrap=\"virtual\"$cols rows=\"$rows\" name=\"edit[$name]\" id=\"$name\"". drupal_attributes($attributes) .">". check_form($value) ."</textarea>", $description, $name, $required, _form_get_error($name));
+  return theme("form_element", $title, "<textarea wrap=\"virtual\"$cols rows=\"$rows\" name=\"edit[$name]\" id=\"$name\" class=\"". _form_get_class('textarea', $required, _form_get_error($name)) ."\"". drupal_attributes($attributes) .">". check_form($value) ."</textarea>", $description, $name, $required, _form_get_error($name));
 }
 
 /**
