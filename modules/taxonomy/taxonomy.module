@@ -745,11 +745,11 @@ function _prepare_insert($data, $stage) {
 function taxonomy_select_nodes($taxonomy, $pager = TRUE) {
   if ($taxonomy->str_tids) {
     if ($taxonomy->operator == 'or') {
-      $sql = "SELECT DISTINCT(n.nid), n.title, n.type, n.created, n.changed, n.uid, n.static, n.created, u.name FROM {node} n INNER JOIN {term_node} r ON n.nid = r.nid INNER JOIN {users} u ON n.uid = u.uid WHERE r.tid IN ($taxonomy->str_tids) AND n.status = 1 ORDER BY static DESC, created DESC";
+      $sql = "SELECT DISTINCT(n.nid), n.title, n.type, n.created, n.changed, n.uid, n.sticky, n.created, u.name FROM {node} n INNER JOIN {term_node} r ON n.nid = r.nid INNER JOIN {users} u ON n.uid = u.uid WHERE r.tid IN ($taxonomy->str_tids) AND n.status = 1 ORDER BY sticky DESC, created DESC";
       $sql_count = "SELECT COUNT(DISTINCT(n.nid)) FROM {node} n INNER JOIN {term_node} r ON n.nid = r.nid INNER JOIN {users} u ON n.uid = u.uid WHERE r.tid IN ($taxonomy->str_tids) AND n.status = 1";
     }
     else {
-      $sql = "SELECT n.nid, n.title, n.type, n.created, n.changed, n.uid, u.name FROM {node} n INNER JOIN {term_node} r ON n.nid = r.nid INNER JOIN {users} u ON n.uid = u.uid WHERE r.tid IN ($taxonomy->str_tids) AND n.status = 1 GROUP BY n.nid, n.title, n.type, n.created, n.changed, n.uid, u.name HAVING COUNT(n.nid) = ". count($taxonomy->tids) ." ORDER BY static DESC, created DESC";
+      $sql = "SELECT n.nid, n.title, n.type, n.created, n.changed, n.uid, u.name FROM {node} n INNER JOIN {term_node} r ON n.nid = r.nid INNER JOIN {users} u ON n.uid = u.uid WHERE r.tid IN ($taxonomy->str_tids) AND n.status = 1 GROUP BY n.nid, n.title, n.type, n.created, n.changed, n.uid, u.name HAVING COUNT(n.nid) = ". count($taxonomy->tids) ." ORDER BY sticky DESC, created DESC";
 
       // Special trick as we could not find anything better:
       $count = db_num_rows(db_query("SELECT n.nid FROM {node} n INNER JOIN {term_node} r ON n.nid = r.nid WHERE r.tid IN ($taxonomy->str_tids) AND n.status = 1 GROUP BY n.nid HAVING COUNT(n.nid) = ". count($taxonomy->tids)));

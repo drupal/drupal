@@ -327,7 +327,7 @@ CREATE TABLE node (
   body text NOT NULL default '',
   changed integer NOT NULL default '0',
   revisions text NOT NULL default '',
-  static integer NOT NULL default '0',
+  sticky integer NOT NULL default '0',
   PRIMARY KEY  (nid)
 );
 CREATE INDEX node_type_idx ON node(type);

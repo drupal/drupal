@@ -63,7 +63,7 @@ function xtemplate_node($node, $main = 0, $page = 0) {
         "title"     => $node->title,
         "author"    => format_name($node),
         "date"      => format_date($node->created),
-        "static"    => ($main && $node->static) ? 'static' : '',
+        "sticky"    => ($main && $node->sticky) ? 'sticky' : '',
         "content"   => ($main && $node->teaser) ? $node->teaser : $node->body));
 
   if ($page == 0) {

@@ -59,7 +59,8 @@ $sql_updates = array(
   "2004-04-27" => "update_85",
   "2004-05-10" => "update_86",
   "2004-05-18" => "update_87",
-  "2004-06-11" => "update_88"
+  "2004-06-11" => "update_88",
+  "2004-06-18" => "update_89"
 );
 
 function update_32() {
@@ -1100,6 +1101,22 @@ function update_88() {
   $ret[] = update_sql("ALTER TABLE {menu} DROP visibility");
   $ret[] = update_sql("ALTER TABLE {menu} ADD type INT(2) UNSIGNED DEFAULT '0' NOT NULL");
   $ret[] = update_sql("DELETE FROM {menu}");
+  return $ret;
+}
+
+function update_89() {
+  $ret = array();
+  $ret[] = update_sql("ALTER TABLE {node} CHANGE static sticky INT(2) DEFAULT '0' NOT NULL");
+
+  // Change the node settings, so that it uses node_sticky_$type instead of node_static_$type
+  $result = db_query("SELECT * FROM {variable} WHERE name LIKE 'node_static_%'");
+  while ($variable = db_fetch_object($result)) {
+    //get the node type name, place it into $name_arr. The name can be found with $name_arr[2]
+    $name_arr = explode("_",$variable->name);
+    $ret[] = update_sql("INSERT INTO {variable} (name,value) VALUES ('node_sticky_".$name_arr[2]."','".$variable->value."')");
+  }
+  $ret[] = db_query("DELETE FROM {variable} WHERE name LIKE 'node_static_%'");
+
   return $ret;
 }
 

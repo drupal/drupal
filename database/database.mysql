@@ -327,7 +327,7 @@ CREATE TABLE node (
   teaser longtext NOT NULL,
   body longtext NOT NULL,
   revisions longtext NOT NULL,
-  static int(2) NOT NULL default '0',
+  sticky int(2) NOT NULL default '0',
   PRIMARY KEY  (nid),
   KEY node_type (type(4)),
   KEY node_title_type (title,type(4)),

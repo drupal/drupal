@@ -21,10 +21,10 @@ function node_help($section = 'admin/help#node') {
       <dt>An Author</dt><dd>The author's name. It will either be \"anonymous\" or a valid user. You <em>cannot</em> set it to an arbitrary value.</dd>
       <dt>Authored on</dt><dd>The date the node was written.</dd>
       <dt>Changed</dt><dd>The last time this node was changed.</dd>
-      <dt>Static on front page</dt><dd>The front page is configured to show the teasers from only a few of the total nodes you have on your site (To configure how many teasers <a href=\"%teaser\">click here</a>), but if you think a node is important enough that you want it to stay on the front page enable this.</dd>
+      <dt>Sticky at top of lists</dt><dd>In listings such as the frontpage or a taxonomy overview the teasers of a slected amount of nodes is displayed. If you want to force a node to appear on the top of such a listing, you must set it to 'sticky'. This way it will float to the top of a listing, and it will not be pushed down by newer content.
       <dt>Allow user comments</dt><dd>A node can have comments. These comments can be written by other users (Read-write), or only by admins (Read-only).</dd>
       <dt>Revisions</dt><dd>Drupal has a revision system so that you can \"roll back\" to an older version of a post if the new version is not what you want.</dd>
-      <dt>Promote to front page</dt><dd>To get people to look at the new stuff on your site you can choose to move it to the front page.</dd>
+      <dt>Promote to front page</dt><dd>To get people to look at the new stuff on your site you can choose to move it to the front page. The front page is configured to show the teasers from only a few of the total nodes you have on your site (To configure how many teasers <a href=\"%teaser\">click here</a>).</dd>
       <dt>In moderation queue</dt><dd>Drupal has a moderation system. If it is active, a node is in one of three states: approved and published, approved and unpublished, and awaiting approval. If you are moderating a node it should be in the moderation queue.</dd>
       <dt>Votes</dt><dd>If you are moderating a node this counts how many votes the node has gotten. Once a node gets a certain number of vote it will either be approved or dropped.
       <dt>Score</dt><dd>The score of the node is gotten by the votes it is given.</dd>
@@ -53,7 +53,7 @@ function node_help($section = 'admin/help#node') {
       $output = t("Enter a simple pattern to search for a post. This can include the wildcard character *.<br />For example, a search for \"br*\" might return \"bread bakers\", \"our daily bread\" and \"brenda\".");
       break;
     case 'admin/settings/node/defaults':
-      $output = t('This page lets you set the defaults used during creation of nodes for all the different node types.<br /><strong>comment:</strong> Read/write setting for comments.<br /><strong>publish:</strong> Is this node publicly viewable, has it been published?<br /><strong>promote:</strong> Is this node to be promoted to the front page?<br /><strong>moderate:</strong> Does this node need approval before it can be viewed?<br /><strong>static:</strong> Is this node always visible on the front page?<br /><strong>revision:</strong> Will this node go into the revision system allowing multiple versions to be saved?');
+      $output = t('This page lets you set the defaults used during creation of nodes for all the different node types.<br /><strong>comment:</strong> Read/write setting for comments.<br /><strong>publish:</strong> Is this node publicly viewable, has it been published?<br /><strong>promote:</strong> Is this node to be promoted to the front page?<br /><strong>moderate:</strong> Does this node need approval before it can be viewed?<br /><strong>sticky:</strong> Is this node always visible at the top of lists?<br /><strong>revision:</strong> Will this node go into the revision system allowing multiple versions to be saved?');
       break;
 
   }
@@ -728,14 +728,14 @@ function node_admin_nodes() {
     array(t('View posts that need approval'), 'WHERE n.status = 0 OR n.moderate = 1 ORDER BY n.changed DESC'),
     array(t('View posts that are promoted'), 'WHERE n.status = 1 AND n.promote = 1 ORDER BY n.changed DESC'),
     array(t('View posts that are not promoted'), 'WHERE n.status = 1 AND n.promote = 0 ORDER BY n.changed DESC'),
-    array(t('View posts that are static'), 'WHERE n.status = 1 AND n.static = 1 ORDER BY n.changed DESC'),
+    array(t('View posts that are sticky'), 'WHERE n.status = 1 AND n.sticky = 1 ORDER BY n.changed DESC'),
     array(t('View posts that are unpublished'), 'WHERE n.status = 0 AND n.moderate = 0 ORDER BY n.changed DESC')
    );
 
   $operations = array(
     array(t('Approve the selected posts'), 'UPDATE {node} SET status = 1, moderate = 0 WHERE nid = %d'),
     array(t('Promote the selected posts'), 'UPDATE {node} SET status = 1, promote = 1 WHERE nid = %d'),
-    array(t('Make the selected posts static'), 'UPDATE {node} SET status = 1, static = 1 WHERE nid = %d'),
+    array(t('Make the selected posts sticky'), 'UPDATE {node} SET status = 1, sticky = 1 WHERE nid = %d'),
     array(t('Demote the selected posts'), 'UPDATE {node} SET promote = 0 WHERE nid = %d'),
     array(t('Unpublish the selected posts'), 'UPDATE {node} SET status = 0 WHERE nid = %d')
   );
@@ -1162,7 +1162,7 @@ function node_validate($node, &$error) {
     $node->status = variable_get("node_status_$node->type", 1);
     $node->promote = variable_get("node_promote_$node->type", 1);
     $node->moderate = variable_get("node_moderate_$node->type", 0);
-    $node->static = variable_get("node_static_$node->type", 0);
+    $node->sticky = variable_get("node_sticky_$node->type", 0);
     $node->revision = variable_get("node_revision_$node->type", 0);
     unset($node->created);
   }
@@ -1222,7 +1222,7 @@ function node_form($edit, $error = NULL) {
     $options .= form_checkbox(t('Published'), 'status', 1, isset($edit->status) ? $edit->status : variable_get('node_status_$edit->type', 1));
     $options .= form_checkbox(t('In moderation queue'), 'moderate', 1, isset($edit->moderate) ? $edit->moderate : variable_get("node_moderate_$edit->type", 0));
     $options .= form_checkbox(t('Promoted to front page'), 'promote', 1, isset($edit->promote) ? $edit->promote : variable_get("node_promote_$edit->type", 1));
-    $options .= form_checkbox(t('Static on front page'), 'static', 1, isset($edit->static) ? $edit->static : variable_get("node_static_$edit->type", 0));
+    $options .= form_checkbox(t('Sticky at top of lists'), 'sticky', 1, isset($edit->sticky) ? $edit->sticky : variable_get("node_sticky_$edit->type", 0));
     $options .= form_checkbox(t('Create new revision'), 'revision', 1, isset($edit->revision) ? $edit->revision : variable_get("node_revision_$edit->type", 0));
 
     $output .= "<div class=\"options\">";
@@ -1534,7 +1534,7 @@ function node_delete($edit) {
 }
 
 function node_page_default() {
-  $result = pager_query('SELECT nid, type FROM {node} WHERE promote = 1 AND status = 1 ORDER BY static DESC, created DESC', variable_get('default_nodes_main', 10));
+  $result = pager_query('SELECT nid, type FROM {node} WHERE promote = 1 AND status = 1 ORDER BY sticky DESC, created DESC', variable_get('default_nodes_main', 10));
 
   if (db_num_rows($result)) {
     drupal_set_html_head('<link rel="alternate" type="application/rss+xml" title="RSS" href="'. url('node/feed', NULL, NULL, TRUE) .'" />');
@@ -1642,11 +1642,11 @@ function node_nodeapi(&$node, $op, $arg = 0) {
       $output[t('publish')] = form_checkbox('', "node_status_$node->type", 1, variable_get("node_status_$node->type", 1));
       $output[t('promote')] = form_checkbox('', "node_promote_$node->type", 1, variable_get("node_promote_$node->type", 1));
       $output[t('moderate')] = form_checkbox('', "node_moderate_$node->type", 1, variable_get("node_moderate_$node->type", 0));
-      $output[t('static')] = form_checkbox('', "node_static_$node->type", 1, variable_get("node_static_$node->type", 0));
+      $output[t('sticky')] = form_checkbox('', "node_sticky_$node->type", 1, variable_get("node_sticky_$node->type", 0));
       $output[t('revision')] = form_checkbox('', "node_revision_$node->type", 1, variable_get("node_revision_$node->type", 0));
       return $output;
     case 'fields':
-      return array('nid', 'uid', 'type', 'title', 'teaser', 'body', 'revisions', 'status', 'promote', 'moderate', 'static', 'created', 'changed');
+      return array('nid', 'uid', 'type', 'title', 'teaser', 'body', 'revisions', 'status', 'promote', 'moderate', 'sticky', 'created', 'changed');
   }
 }
 

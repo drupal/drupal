@@ -15,8 +15,8 @@
  * by the query to (among others) compute the number of pages (= number of all
  * records / number of records per page). This is done by inserting "COUNT(*)"
  * in the original query, ie. by rewriting the original query, say "SELECT nid,
- * type FROM node WHERE status = '1' ORDER BY static DESC, created DESC" to read
- * "SELECT COUNT(*) FROM node WHERE status = '1' ORDER BY static DESC, created
+ * type FROM node WHERE status = '1' ORDER BY sticky DESC, created DESC" to read
+ * "SELECT COUNT(*) FROM node WHERE status = '1' ORDER BY sticky DESC, created
  * DESC". Rewriting the query is accomplished using a regular expression.
  *
  * Unfortunately, the rewrite rule does not always work as intended for queries
