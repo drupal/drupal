@@ -6,7 +6,7 @@ $module = array("page" => "wishlist_page",
 function wishlist_page() {
  ?>
   <H1>Whislist</H1>
-  <SMALL><I>$Id: wishlist.module,v 1.8 2000/12/30 11:58:14 dries Exp $</I></SMALL>
+  <SMALL><I>$Id: wishlist.module,v 1.9 2000/12/30 16:35:41 dries Exp $</I></SMALL>
 
    <H3>Users</H3>
     <UL>
@@ -75,7 +75,7 @@ function wishlist_page() {
 }
 
 function wishlist_help() {
-  print "Check the <A HREF=\"module.php?mod=wishlist\">feature wishlist</A>.";
+  print "See <A HREF=\"module.php?mod=wishlist\">feature wishlist</A>.";
 }
 
 ?>

@@ -74,7 +74,7 @@ function account_session_close() {
 }
 
 function account_user_edit() {
-  global $theme, $user;
+  global $allowed_html, $theme, $user;
 
   if ($user->id) {
     // Generate output/content:
@@ -96,10 +96,10 @@ function account_user_edit() {
     $output .= "<I>Optional, but make sure you enter fully qualified URLs only. That is, remember to include \"http://\".</I><P>\n";
     $output .= "<B>Bio:</B> (255 char. limit)<BR>\n";
     $output .= "<TEXTAREA NAME=\"edit[bio]\" COLS=\"35\" ROWS=\"5\" WRAP=\"virtual\">$user->bio</TEXTAREA><BR>\n";
-    $output .= "<I>Optional. This biographical information is publicly displayed on your user page.</I><P>\n";
+    $output .= "<I>Optional. This biographical information is publicly displayed on your user page.<BR>Allowed HTML tags: ". htmlspecialchars($allowed_html) .".</I><P>\n";
     $output .= "<B>Signature:</B> (255 char. limit)<BR>\n";
     $output .= "<TEXTAREA NAME=\"edit[signature]\" COLS=\"35\" ROWS=\"5\" WRAP=\"virtual\">$user->signature</TEXTAREA><BR>\n";
-    $output .= "<I>Optional. This information will be publicly displayed at the end of your comments. </I><P>\n";
+    $output .= "<I>Optional. This information will be publicly displayed at the end of your comments.<BR>Allowed HTML tags: ". htmlspecialchars($allowed_html) .".</I><P>\n";
     $output .= "<B>Password:</B><BR>\n";
     $output .= "<INPUT TYPE=\"password\" NAME=\"edit[pass1]\" SIZE=\"10\" MAXLENGTH=\"20\"> <INPUT TYPE=\"password\" NAME=\"edit[pass2]\" SIZE=\"10\" MAXLENGTH=\"20\"><BR>\n";
     $output .= "<I>Enter your new password twice if you want to change your current password or leave it blank if you are happy with your current password.</I><P>\n";
@@ -396,7 +396,7 @@ function account_create_submit($userid, $email) {
     mail($new[real_email], "Account details for $site_name", $message, "From: noreply");
 
     $theme->header();
-    $theme->box("Create user account", "Congratulations!  Your member account has been sucessfully created and further instructions on how to activate your account have been sent to your e-mail address.");
+    $theme->box("Create user account", "Congratulations!  Your member account has been successfully created and further instructions on how to activate your account have been sent to your e-mail address.");
     $theme->footer();
   }
 }
@@ -410,8 +410,8 @@ function account_create_confirm($name, $hash) {
     if ($account->status == 1) {
       if ($account->hash == $hash) {
         db_query("UPDATE users SET status = 2, hash = '' WHERE userid = '$name'");
-        $output .= "Your account has been sucessfully confirmed.  You can click <A HREF=\"account.php?op=login\">here</A> to login.\n";
-        watchdog("message", "$name: account confirmation sucessful");
+        $output .= "Your account has been successfully confirmed.  You can click <A HREF=\"account.php?op=login\">here</A> to login.\n";
+        watchdog("message", "$name: account confirmation successful");
       }
       else {
         $output .= "Confirmation failed: invalid confirmation hash.\n";
