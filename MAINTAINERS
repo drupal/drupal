@@ -32,12 +32,8 @@ FORUM MODULE
 M: Marco Molinari <marco@porciletto.org>
 S: maintained
 
-POLL MODULE
-M: Alastair Maw <me@almaw.com>
-S: maintained
-
-LANGUAGE
-M: Alastair Maw <me@almaw.com>
+LOCALE MODULE
+M: Gabor Hojtsy <goba@php.net>
 S: maintained
 
 MSSQL PORT
