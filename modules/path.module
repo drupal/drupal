@@ -7,9 +7,9 @@
 function path_help($section) {
   switch ($section) {
     case 'admin/modules#description':
-      return t('Enables users to create custom URLs.');
+      return t('Enables users to rename URLs.');
     case 'admin/path':
-      return t('Drupal provides users complete control over URLs through aliasing. While the original Drupal URLs are always created and accessible, advanced users have the option to override these normal paths.');
+      return t("Drupal provides users complete control over URLs through aliasing.  This feature is typically used to make URLs human-readable or easy to remember.  For example, one could map the relative URL 'node/1' onto 'about'.");
     case 'admin/path/add':
       return t('Enter the path you wish to create the alias for, followed by the name of the new alias. Each path can be associated with only one alias.');
     case 'admin/help#path':
@@ -205,7 +205,7 @@ function path_nodeapi(&$node, $op, $arg) {
         break;
 
       case 'form pre':
-        return form_textfield(t('Path alias'), 'path', $node->path, 60, 250, t('Optionally specify an alternative URL by which this node can be accessed.  For example, type "about" when writing an about page.  Use a relative path and don\'t add a trailing slash or the URL alias won\'t work.') . theme_error($arg['path']));
+        return form_textfield(t('Path alias'), 'path', $node->path, 60, 250, t('Optionally specify an alternative URL by which this node can be accessed.  For example, type "about" when writing an about page.  Use a relative path and don\'t add a trailing slash or the URL alias won\'t work.'));
 
       case 'insert':
         // Don't try to insert if path is NULL.  We may have already set
