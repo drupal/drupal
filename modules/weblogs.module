@@ -2,7 +2,7 @@
 // $Id$
 
 function weblogs_conf_options() {
-  $output .= form_select("Weblogs ping", "weblogs_ping", variable_get("weblogs_ping", 0), array("Disabled", "Enabled"), "Enabling Weblogs ping will inform <a href=\"http://www.weblogs.com/\">Weblogs.com</a> when your site updates.");
+  $output .= form_select("Weblogs ping", "weblogs_ping", variable_get("weblogs_ping", 0), array("Disabled", "Enabled"), "Enabling Weblogs ping will inform <a href=\"http://www.weblogs.com/\">Weblogs.com</a> when your site updates.  Requires crontab.");
 
   return $output;
 }

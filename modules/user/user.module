@@ -295,7 +295,7 @@ function user_help() {
 <p>Registered users need to authenticate by supplying a username and password.
   Users may authenticate locally or via an external authentication source like
   <a href="http://www.jabber.org/">Jabber</a>, <a href="http://www.delphiforums.com/">Delphi</a>,
-  and other <a href="http://www.drupal.org/">Drupal</a> web sites. See <a href="#da">Distributed
+  and other <a href="http://www.drupal.org/">Drupal</a> websites. See <a href="#da">Distributed
   Authentication</a> for more information on this innovative feature. The username
   and password are kept in your database, where the password is hashed so that
   no one can read nor use it. When a username and password needs to be checked
@@ -305,7 +305,7 @@ function user_help() {
   Once a user authenticated session is started, and until that session is over,
   the user won't have to re-authenticate. To keep track of the individual sessions,
   Drupal relies on <a href="http://www.php.net/manual/en/ref.session.php">PHP's
-  session support</a>. A visitor accessing your web site is assigned an unique
+  session support</a>. A visitor accessing your website is assigned an unique
   ID, the so-called session ID, which is stored in a cookie. For security's sake,
   the cookie does not contain personal information but acts as a key to retrieve
   the information stored on your server's side. When a visitor accesses your site,
@@ -369,12 +369,7 @@ roles:
 <p>Each role has certain things that its users are allowed to do, and some that
   are disallowed. For example, authenticated users may usually post a story but
   Anonymous users may not. </p>
-<p>Each permission describes a fine-grained logical operation such as <br />
-  <i>access administration pages</i> or <i>add and modify user
-  accounts</i>. You <br /b>
-  could say a permission represents access granted to a user to perform a set
-  of <br />
-  operations.</p>
+<p>Each permission describes a fine-grained logical operation such as <i>access administration pages</i> or <i>add and modify user accounts</i>. You could say a permission represents access granted to a user to perform a set of operations.</p>
 <h4>search account</h4>
 <p>Search Account enables an admin to query for any username in the user table
   and return users which match that query. For example, one may search for 'br'
@@ -394,13 +389,13 @@ roles:
 <h4> special users - report</h4>
 <p>All users with a <a href="#roles">role</a> other than Authenticated User</p>
 <h3>Distributed authentication<a name="da"> </a></h3>
-<p>One of the more tedious moments in visiting a new web site is filling out the
-  registration form. The reg form provides helpful information to the web site
+<p>One of the more tedious moments in visiting a new website is filling out the
+  registration form. The reg form provides helpful information to the website
   owner, but not much value for the user. The value for the end user is usually
   a the ability to post a messages or receive personalized news, etc. Distributed
   authentication (DA) gives the user what he wants without having to fill out
   the reg form. Removing this obstacle yields more registered and active users
-  for the web site.</p>
+  for the website.</p>
 <p>DA enables a new user to input a username and password into the login box and
   immediately be recognized, even if that user never registered on your site.
   This works because Drupal knows how to communicate with external registration
@@ -436,7 +431,7 @@ roles:
   User preferences and profiles</h3>
 <p>Drupal comes with a set of user preferences and profile which a user may edit by
   clicking on the user account link. Of course, a user must be logged into reach those pages.
-  There, users will find a page for changing their preferred timezone, language, username, email address, password, theme, signature, homepage, and <a href="#da">distributed authentication</a> names.
+  There, users will find a page for changing their preferred timezone, language, username, e-mail address, password, theme, signature, homepage, and <a href="#da">distributed authentication</a> names.
   Changes made here take effect immediately. Also, administrators may make profile and preferences changes in the Admin Center on behalf of their users.</p>
   <p>Module developers are provided several hooks for adding custom fields to the user view/edit pages. These hooks are described in the Developer section of the <A href="http://www.drupal.org">Drupal Handbook</a>. For an example, see the <code>jabber_user()</code> function in <i>/modules/jabber.module</i>.
   </p>
@@ -625,11 +620,11 @@ function user_set_authmaps($account, $authmaps) {
 }
 
 function user_help_da() {
-  $site = variable_get("site_name", "this web site");
+  $site = variable_get("site_name", "this website");
 
   $output = "
    <h3>Distributed authentication<a name=\"da\"></a></h3>
-   <p>One of the more tedious moments in visiting a new web site is filling out the
+   <p>One of the more tedious moments in visiting a new website is filling out the
     registration form. Here at %s, you do not have to fill out a registration form
     if you are already a member of ";
     $output .= implode(", ", user_auth_help_links());
@@ -873,7 +868,7 @@ function user_pass($edit = array()) {
 
       $variables = array("%username" => $account->name, "%site" => variable_get("site_name", "drupal"), "%password" => $pass, "%uri" => path_uri(), "%uri_brief" => path_uri(1), "%mailto" => $account->mail, "%date" => format_date(time()));
       $subject = strtr(variable_get("user_mail_pass_subject", t("Replacement login information for %username at %site")), $variables);
-      $body = strtr(variable_get("user_mail_pass_body", t("%username,\n\nHere is your new password for %site.  You may now login to %uri". drupal_url(array("mod" => "user", "op" => "login"), "module") ." using the following username and password:\n\nusername: %username\npassword: %password\n\nAfter logging in, you may wish to change your password at %uri". drupal_url(array("mod" => "user", "op" => "edit"), "module") .".\n\nYour new %site membership also enables you to login to other Drupal powered web sites (e.g. http://www.drop.org/) without registering.  Just use the following Drupal ID and password:\n\nDrupal ID: %username@%uri_brief\npassword: %password\n\n\n-- %site team")), $variables);
+      $body = strtr(variable_get("user_mail_pass_body", t("%username,\n\nHere is your new password for %site.  You may now login to %uri". drupal_url(array("mod" => "user", "op" => "login"), "module") ." using the following username and password:\n\nusername: %username\npassword: %password\n\nAfter logging in, you may wish to change your password at %uri". drupal_url(array("mod" => "user", "op" => "edit"), "module") .".\n\nYour new %site membership also enables you to login to other Drupal powered websites (e.g. http://www.drop.org/) without registering.  Just use the following Drupal ID and password:\n\nDrupal ID: %username@%uri_brief\npassword: %password\n\n\n-- %site team")), $variables);
       $headers = "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from";
       user_mail($account->mail, $subject, $body, $headers);
 
@@ -892,7 +887,7 @@ function user_pass($edit = array()) {
     ** Display form:
     */
 
-    $output .= "<p>". sprintf(t("Enter your username %sor%s your email address."), "<b><i>", "</i></b>") ."</p>";
+    $output .= "<p>". sprintf(t("Enter your username %sor%s your e-mail address."), "<b><i>", "</i></b>") ."</p>";
     $output .= form_textfield(t("Username"), "name", $edit["name"], 30, 64);
     $output .= form_textfield(t("E-mail address"), "mail", $edit["mail"], 30, 64);
     $output .= form_submit(t("E-mail new password"));
@@ -970,11 +965,11 @@ function user_register($edit = array()) {
 
     $variables = array("%username" => $edit["name"], "%site" => variable_get("site_name", "drupal"), "%password" => $pass, "%uri" => path_uri(), "%uri_brief" => path_uri(1), "%mailto" => $edit["mail"], "%date" => format_date(time()));
 
-    //the first user may login immediately, and receives a customized welcome email.
+    //the first user may login immediately, and receives a customized welcome e-mail.
     if ($account->uid == 1) {
       user_mail($edit["mail"], t("drupal user account details for %s", array("%s" => $edit["name"])), strtr(t("%username,\n\nYou may now login to %uri using the following username and password:\n\n  username: %username\n  password: %password\n\nAfter logging in, you may wish to visit the following pages:\n\nAdministration: %uriadmin.php\nEdit user account: %uri". drupal_url(array("mod" => "user", "op" => "edit"), "module") ."\n\n--drupal"), $variables), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
       // This should not be t()'ed. No point as its only shown once in the sites lifetime, and it would be bad to store the password
-      $output .= "<p>Welcome to Drupal. You are user #1, which gives you full and immediate access. All future registrants will receive their passwords via email, so please configure your email settings using the Administration pages.</p><p> Your password is <b>$pass</b>. You may change your password on the next page.</p><p>Please login below.</p>";
+      $output .= "<p>Welcome to Drupal. You are user #1, which gives you full and immediate access.  All future registrants will receive their passwords via e-mail, so please configure your e-mail settings using the Administration pages.</p><p> Your password is <b>$pass</b>. You may change your password on the next page.</p><p>Please login below.</p>";
       $output .= form_hidden("name", $account->name);
       $output .= form_hidden("pass", $pass);
       $output .= form_submit(t("Log in"));
@@ -987,7 +982,7 @@ function user_register($edit = array()) {
         */
 
         $subject = strtr(variable_get("user_mail_welcome_subject", t("User account details for %username at %site")), $variables);
-        $body = strtr(variable_get("user_mail_welcome_body", t("%username,\n\nThank you for registering at %site. You may now login to %uri". drupal_url(array("mod" => "user", "op" => "login"), "module") ." using the following username and password:\n\nusername: %username\npassword: %password\n\nAfter logging in, you may wish to change your password at %urimodule.php?mod=user&op=edit\n\nYour new %site membership also enables to you to login to other Drupal powered web sites (e.g. http://www.drop.org) without registering. Just use the following Drupal ID and password:\n\nDrupal ID: %username@%uri_brief\npassword: %password\n\n\n--  %site team")), $variables);
+        $body = strtr(variable_get("user_mail_welcome_body", t("%username,\n\nThank you for registering at %site. You may now login to %uri". drupal_url(array("mod" => "user", "op" => "login"), "module") ." using the following username and password:\n\nusername: %username\npassword: %password\n\nAfter logging in, you may wish to change your password at %urimodule.php?mod=user&op=edit\n\nYour new %site membership also enables to you to login to other Drupal powered websites (e.g. http://www.drop.org/) without registering. Just use the following Drupal ID and password:\n\nDrupal ID: %username@%uri_brief\npassword: %password\n\n\n--  %site team")), $variables);
         user_mail($edit["mail"], $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
         return t("Your password and further instructions have been sent to your e-mail address.");
       }
@@ -996,7 +991,7 @@ function user_register($edit = array()) {
         ** Create new user account, administrator approval required:
         */
         $subject = strtr(variable_get("user_mail_welcome_subject", t("User account details for %username at %site")), $variables);
-        $body = strtr(variable_get("user_mail_welcome_body", t("%username,\n\nThank you for registering at %site. Your account will have to be approved by the site administrator. You may now login to %uri". drupal_url(array("mod" => "user", "op" => "login"), "module") ." using the following username and password:\n\nusername: %username\npassword: %password\n\nAfter logging in, you may wish to change your password at %urimodule.php?mod=user&op=edit\n\nYour new %site membership also enables to you to login to other Drupal powered web sites (e.g. http://www.drop.org) without registering. Just use the following Drupal ID and password:\n\nDrupal ID: %username@%uri_brief\npassword: %password\n\n\n--  %site team")), $variables);
+        $body = strtr(variable_get("user_mail_welcome_body", t("%username,\n\nThank you for registering at %site. Your account will have to be approved by the site administrator. You may now login to %uri". drupal_url(array("mod" => "user", "op" => "login"), "module") ." using the following username and password:\n\nusername: %username\npassword: %password\n\nAfter logging in, you may wish to change your password at %urimodule.php?mod=user&op=edit\n\nYour new %site membership also enables to you to login to other Drupal powered websites (e.g. http://www.drop.org/) without registering. Just use the following Drupal ID and password:\n\nDrupal ID: %username@%uri_brief\npassword: %password\n\n\n--  %site team")), $variables);
         user_mail($edit["mail"], $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
         user_mail(variable_get("site_mail", ini_get("sendmail_from")), $subject, t("%u has applied for an account.\n\n%uri", array("%u" => $account->name, "%uri" => path_uri() . drupal_url(array("mod" => "user", "op" => "edit", "id" => $account->uid), "admin"))), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
         return t("Your password and further instructions have been sent to your e-mail address.");
@@ -1039,7 +1034,7 @@ function user_delete() {
     $output .= t("Your account has been deactivated.");
   }
   else {
-    $output .= form_item(t("Confirm Deletion"), t("You are about to deactivate your own user account. In addition, your email address will be removed from the database."));
+    $output .= form_item(t("Confirm Deletion"), t("You are about to deactivate your own user account. In addition, your e-mail address will be removed from the database."));
     $output .= form_hidden("confirm", 1);
     $output .= form_submit(t("Delete account"));
     $output = form($output);
@@ -1271,10 +1266,10 @@ function user_page() {
 function user_conf_options() {
   $output .= form_select("Public registrations", "user_register", variable_get("user_register", 1), array("Only site administrators can create new user accounts.", "Visitors can create accounts and no administrator approval is required.", "Visitors can create accounts but administrator approval is required."));
   $output .= form_textfield("Password words", "user_password", variable_get("user_password", "foo,bar,guy,neo,tux,moo,sun,asm,dot,god,axe,geek,nerd,fish,hack,star,mice,warp,moon,hero,cola,girl,fish,java,perl,boss,dark,sith,jedi,drop,mojo"), 55, 256, "A comma separated list of short words that can be concatenated to generate human-readable passwords.");
-  $output .= form_textfield("Welcome e-mail subject", "user_mail_welcome_subject", variable_get("user_mail_welcome_subject", t("User account details for %username at %site")), 80, 180, "Customize the Subject of your welcome email, which is sent to new members upon registering. Available variables are: %username, %site, %password, %uri, %uri_brief, %mailto, %date");
-  $output .= form_textarea("Welcome e-mail body", "user_mail_welcome_body", variable_get("user_mail_welcome_body", t("%username,\n\nThank you for registering at %site. You may now login to %uri". drupal_url(array("mod" => "user", "op" => "login"), "module") ." using the following username and password:\n\nusername: %username\npassword: %password\n\nAfter logging in, you may wish to change your password at %uri". drupal_url(array("mod" => "user", "op" => "edit"), "module") ."\n\nYour new %site membership also enables to you to login to other Drupal powered web sites (e.g. http://www.drop.org) without registering. Just use the following Drupal ID and password:\n\nDrupal ID: %username@%uri_brief\npassword: %password\n\n\n--  %site team")), 70, 10, "Customize the Body of the welcome email, which is sent to new members upon registering. Available variables are: %username, %site, %password, %uri, %uri_brief, %mailto");
-  $output .= form_textfield("Forgotten password e-mail subject", "user_mail_pass_subject", variable_get("user_mail_pass_subject", t("Replacement login information for %username at %site")), 80, 180, "Customize the Subject of your Forgotten Password email. Available variables are: %username, %site, %password, %uri, %uri_brief, %mailto, %date");
-  $output .= form_textarea("Forgotten password e-mail body", "user_mail_pass_body", variable_get("user_mail_pass_body", t("%username,\n\nHere is your new password for %site. You may now login to %uri". drupal_url(array("mod" => "user", "op" => "login"), "module") ." using the following username and password:\n\nusername: %username\npassword: %password\n\nAfter logging in, you may wish to change your password at %uri". drupal_url(array("mod" => "user", "op" => "edit"), "module") ."\n\nYour new %site membership also enables to you to login to other Drupal powered web sites (e.g. http://www.drop.org) without registering. Just use the following Drupal ID and password:\n\nDrupal ID: %username@%uri_brief\npassword: %password\n\n\n--  %site team")), 70, 10, "Customize the Body of the Forgotten Password email. Available variables are: %username, %site, %password, %uri, %uri_brief, %mailto");
+  $output .= form_textfield("Welcome e-mail subject", "user_mail_welcome_subject", variable_get("user_mail_welcome_subject", t("User account details for %username at %site")), 80, 180, "Customize the subject of your welcome e-mail, which is sent to new members upon registering.  Available variables are: %username, %site, %password, %uri, %uri_brief, %mailto, %date");
+  $output .= form_textarea("Welcome e-mail body", "user_mail_welcome_body", variable_get("user_mail_welcome_body", t("%username,\n\nThank you for registering at %site. You may now login to %uri". drupal_url(array("mod" => "user", "op" => "login"), "module") ." using the following username and password:\n\nusername: %username\npassword: %password\n\nAfter logging in, you may wish to change your password at %uri". drupal_url(array("mod" => "user", "op" => "edit"), "module") ."\n\nYour new %site membership also enables to you to login to other Drupal powered websites (e.g. http://www.drop.org/) without registering. Just use the following Drupal ID and password:\n\nDrupal ID: %username@%uri_brief\npassword: %password\n\n\n--  %site team")), 70, 10, "Customize the body of the welcome e-mail, which is sent to new members upon registering.  Available variables are: %username, %site, %password, %uri, %uri_brief, %mailto");
+  $output .= form_textfield("Forgotten password e-mail subject", "user_mail_pass_subject", variable_get("user_mail_pass_subject", t("Replacement login information for %username at %site")), 80, 180, "Customize the Subject of your forgotten password e-mail.  Available variables are: %username, %site, %password, %uri, %uri_brief, %mailto, %date");
+  $output .= form_textarea("Forgotten password e-mail body", "user_mail_pass_body", variable_get("user_mail_pass_body", t("%username,\n\nHere is your new password for %site. You may now login to %uri". drupal_url(array("mod" => "user", "op" => "login"), "module") ." using the following username and password:\n\nusername: %username\npassword: %password\n\nAfter logging in, you may wish to change your password at %uri". drupal_url(array("mod" => "user", "op" => "edit"), "module") ."\n\nYour new %site membership also enables to you to login to other Drupal powered websites (e.g. http://www.drop.org/) without registering. Just use the following Drupal ID and password:\n\nDrupal ID: %username@%uri_brief\npassword: %password\n\n\n--  %site team")), 70, 10, "Customize the body of the forgotten password e-mail.  Available variables are: %username, %site, %password, %uri, %uri_brief, %mailto");
   return $output;
 }
 
