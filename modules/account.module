@@ -116,7 +116,7 @@ function account_edit($name) {
     $output .= "<B>Username:</B><BR>". check_output($account->userid) ."<P>\n";
     $output .= "<B>Status:</B><BR><SELECT NAME=\"edit[status]\">\n$stat</SELECT><P>\n";
     $output .= "<B>Administrator access:</B><BR><SELECT NAME=\"edit[access][]\" MULTIPLE=\"true\" SIZE=\"10\">$access</SELECT><P>\n";
-    $output .= "<B>Real name:</B><BR><INPUT NAME=\"edit[name]\" SIZE=\"55\" VALUE=\"$account->real_name\"><P>\n";
+    $output .= "<B>Real name:</B><BR><INPUT NAME=\"edit[name]\" SIZE=\"55\" VALUE=\"$account->name\"><P>\n";
     $output .= "<B>Real e-mail address:</B><BR><INPUT NAME=\"edit[real_email]\" SIZE=\"55\" VALUE=\"$account->real_email\"><P>\n";
     $output .= "<B>Fake e-mail address:</B><BR><INPUT NAME=\"edit[fake_email]\" SIZE=\"55\" VALUE=\"$account->fake_email\"><P>\n";
     $output .= "<B>URL of homepage:</B><BR><INPUT NAME=\"edit[url]\" SIZE=\"55\" VALUE=\"$account->url\"><P>\n";
