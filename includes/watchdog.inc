@@ -14,7 +14,8 @@ function watchdog($id, $message) {
     if ($log = db_fetch_object(db_query("SELECT * FROM watchdog WHERE hostname = '". getenv("REMOTE_ADDR") ."' AND level = '". $watchdog[$id][0] ."'"))) {
       if (time() - $log->timestamp < $watchdog[$id][1]) { 
         watchdog("warning", "'". getenv("REMOTE_ADDR") ."' exceeded '$id' submission rate"); 
-        // header("Location: error.php");
+        header("Location: error.php?op=flood");
+        exit();
       }
     }
   }

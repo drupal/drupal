@@ -270,7 +270,7 @@ function comment_edit($id) {
 
   $output .= "<P>\n";
   $output .= " <B>Subject:</B><BR>\n";
-  $output .= " <INPUT TYPE=\"text\" NAME=\"subject\" SIZE=\"50\" VALUE=\"". check_output($comment->subject) ."\"><BR>\n";
+  $output .= " <INPUT TYPE=\"text\" NAME=\"subject\" SIZE=\"50\" VALUE=\"". check_output(check_field($comment->subject)) ."\"><BR>\n";
   $output .= "</P>\n";
 
   $output .= "<P>\n";
@@ -298,7 +298,7 @@ function comment_display($order = "date") {
   ### Perform SQL query:
   $result = db_query("SELECT c.*, u.userid FROM comments c LEFT JOIN users u ON u.id = c.author ORDER BY c.$fields[$order] LIMIT 50");
    
-  ### Display stories:
+  ### Display comments:
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\">\n";
   $output .= " <TR>\n";
   $output .= "  <TH ALIGN=\"right\" COLSPAN=\"5\">\n";
@@ -470,7 +470,7 @@ function story_edit($id) {
 
   $output .= "<P>\n";
   $output .= " <B>Subject:</B><BR>\n";
-  $output .= " <INPUT TYPE=\"text\" NAME=\"subject\" SIZE=\"50\" VALUE=\"". check_output($story->subject) ."\"><BR>\n";
+  $output .= " <INPUT TYPE=\"text\" NAME=\"subject\" SIZE=\"50\" VALUE=\"". check_output(check_field($story->subject)) ."\"><BR>\n";
   $output .= "</P>\n";
 
   $output .= "<P><B>Category:</B><BR>\n";
