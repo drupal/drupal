@@ -207,7 +207,7 @@ function user_validate_authmap($account, $authname, $module) {
   $result = db_query("SELECT COUNT(*) from {authmap} WHERE uid != %d AND authname = '%s'", $account->uid, $authname);
   if (db_result($result) > 0) {
     $name = module_invoke($module, 'info', 'name');
-    return t('The %u ID %s is already taken.', array('%u' => ucfirst($name), '%s' => "<i>$authname</i>"));
+    return t('The %u ID %s is already taken.', array('%u' => $name, '%s' => "<i>$authname</i>"));
   }
 }
 

@@ -1113,7 +1113,7 @@ function update_88() {
     $ret[] = update_sql("ALTER TABLE {menu} DROP status");
     $ret[] = update_sql("ALTER TABLE {menu} DROP visibility");
     $ret[] = update_sql("ALTER TABLE {menu} ADD type INT(2) UNSIGNED DEFAULT '0' NOT NULL");
-  } 
+  }
   else {
     $ret[] = update_sql("ALTER TABLE {menu} ADD type smallint");
     $ret[] = update_sql("ALTER TABLE {menu} ALTER COLUMN type SET DEFAULT '0'");
@@ -1126,7 +1126,7 @@ function update_88() {
 
 function update_89() {
   $ret = array();
-  
+
   if ($GLOBALS['db_type'] == 'mysql') {
     $ret[] = update_sql("ALTER TABLE {node} CHANGE static sticky INT(2) DEFAULT '0' NOT NULL");
   }

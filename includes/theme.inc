@@ -204,12 +204,12 @@ function theme_status_messages() {
       if (count($messages) > 1) {
         $output .= " <ul>\n";
         foreach($messages as $message) {
-          $output .= '  <li>'. ucfirst($message) ."</li>\n";
+          $output .= '  <li>'. $message ."</li>\n";
         }
         $output .= " </ul>\n";
       }
       else {
-        $output .= ucfirst($messages[0]);
+        $output .= $messages[0];
       }
       $output .= "</div>\n";
     }

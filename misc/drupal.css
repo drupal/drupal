@@ -87,6 +87,14 @@ li a.active {
 td.menu-disabled {
   background: #ccc;
 }
+
+/*
+** CSS capitalization
+*/
+.title:first-letter,
+.messages:first-letter,
+.messages li:first-letter { text-transform: uppercase; }
+
 /*
 ** Other common styles
 */

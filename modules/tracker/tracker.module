@@ -63,7 +63,7 @@ function tracker_page($uid = 0) {
     }
 
     $rows[] = array(
-      ucfirst(node_invoke($node->type, 'node_name')),
+      node_invoke($node->type, 'node_name'),
       l($node->title, "node/$node->nid") .' '. (node_is_new($node->nid, $node->changed) ? theme('mark') : ''),
       format_name($node),
       array('class' => 'replies', 'data' => $comments),

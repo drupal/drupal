@@ -404,7 +404,7 @@ function menu_get_active_title() {
   $menu = menu_get_menu();
 
   if ($mid = menu_get_active_nontask_item()) {
-    return ucfirst($menu['items'][$mid]['title']);
+    return $menu['items'][$mid]['title'];
   }
 }
 
