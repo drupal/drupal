@@ -242,7 +242,7 @@ function comment_thread_min($cid, $threshold) {
   }
 }
 
-function comment_thread_max($cid, $mode, $threshold, $level = 0, $dummy = 0) {
+function comment_thread_max($cid, $mode, $threshold, $level = 0) {
   global $user;
 
   /*
@@ -261,7 +261,7 @@ function comment_thread_max($cid, $mode, $threshold, $level = 0, $dummy = 0) {
     comment_view($comment, (comment_visible($comment, $threshold) ? comment_links($comment, 0) : 0));
     print "</td></tr></table>\n";
 
-    comment_thread_max($comment->cid, $mode, $threshold, $level + 1, $dummy + 1);
+    comment_thread_max($comment->cid, $mode, $threshold, $level + 1);
   }
 
 }
