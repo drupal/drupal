@@ -1707,6 +1707,45 @@ function update_104() {
     else {
       variable_set('theme_default', 'bluemarine');
     }
+
+    // Convert old xtemplate settings to new theme system
+    $settings = array();
+    $convert = array('xtemplate_primary_links'   => 'primary_links',
+                     'xtemplate_secondary_links' => 'secondary_links',
+                     'xtemplate_search_box'      => 'toggle_search',
+                     'xtemplate_avatar_node'     => 'toggle_node_user_picture',
+                     'xtemplate_avatar_comment'  => 'toggle_comment_user_picture');
+    foreach ($convert as $from => $to) {
+      if (($value = variable_get($from, NULL)) != NULL) {
+        $settings[$to] = $value;
+        variable_del($from);
+      }
+    }
+
+    // Logo requires special treatment. Used to be an HTML tag, now it's a path to an image.
+    if (($logo = variable_get('xtemplate_logo', NULL)) != NULL) {
+      $match = array();
+      // If logo was of the form <img src="..">, convert it.
+      if (preg_match('@src=(?:["\']?)(.+?)(?:["\']?(?:>| ?/>))@i', $logo, $match)) {
+        $settings['default_logo'] = 0;
+        $settings['logo_path'] = $match[1];
+      }
+      variable_del('xtemplate_logo');
+    }
+
+    if (count($settings) > 0) {
+      variable_set('theme_settings', $settings);
+    }
+
+    // These are not part of 'theme_settings'
+    $convert = array('xtemplate_avatar_default' => 'user_picture_default',
+                     'xtemplate_mission'        => 'site_mission');
+    foreach ($convert as $from => $to) {
+      if (($value = variable_get($from, NULL)) != NULL) {
+        variable_set($to, $value);
+        variable_del($from);
+      }
+    }
   }
   return $ret;
 }
