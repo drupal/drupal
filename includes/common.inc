@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.262 2003/11/06 18:27:58 dries Exp $
+// $Id: common.inc,v 1.263 2003/11/09 17:25:10 dries Exp $
 
 function conf_init() {
 
@@ -502,29 +502,6 @@ function drupal_goto($url) {
   */
 
   exit();
-}
-
-/*
-** Stores the referer in a persistent variable:
-*/
-
-function referer_save() {
-  if (!strstr(referer_uri(), request_uri())) {
-    $_SESSION["referer"] = referer_uri();
-  }
-}
-
-/*
-** Restores the referer from a persistent variable:
-*/
-
-function referer_load() {
-  if (isset($_SESSION["referer"])) {
-    return $_SESSION["referer"];
-  }
-  else {
-    return 0;
-  }
 }
 
 function valid_input_data($data) {
