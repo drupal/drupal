@@ -394,12 +394,6 @@ function account_track_site() {
   $theme->footer();
 }
 
-// Security check:
-if (strstr($name, " ") || strstr($hash, " ")) {
-  watchdog("error", "account: attempt to provide malicious input through URI");
-  exit();
-}
-
 switch ($op) {
   case t("E-mail new password"):
     account_email_submit(check_input($userid), check_input($email));
