@@ -10,7 +10,6 @@ function blog_conf_options() {
   $output = form_textarea(t("Explanation or submission guidelines"), "blog_help", variable_get("blog_help", ""), 55, 4, t("This text is displayed at the top of the blog submission form.  It's useful for helping or instructing your users."));
   $words = t("words");
   $output .= form_select(t("Minimum number of words in a blog entry"), "minimum_blog_size", variable_get("minimum_blog_size", 0), array(0 => "0 $words", 10 => "10 $words", 25 => "25 $words",  50 => "50 $words", 75 => "75 $words", 100 => "100 $words", 125 => "125 $words",  150 => "150 $words", 175 => "175 $words", 200 => "200 $words"), t("The minimum number of words a personal blog entry should contain.  This is useful to rule out submissions that do not meet the site's standards, such as short test posts."));
-
   return $output;
 }
 
@@ -47,7 +46,7 @@ function blog_access($op, $node) {
 function blog_head($main = 0) {
   global $id, $mod;
 
-  if ($mod && $id) {
+  if ($mod == "blog" && $id) {
     $account = user_load(array("uid" => $id));
     $output[] = "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"RSS - ". $account->name. "'s blog\" href=\"". path_uri(). "module.php?mod=blog&op=view&id=$id\" />";
   }
@@ -58,7 +57,7 @@ function blog_user($type, &$edit, &$user) {
   switch ($type) {
     case "view_public":
     case "view_private":
-      return form_item(t("Blog"), lm(t("view recent entries"), array("mod" => "blog", "id" => $user->uid), "", array("title" => t("View recent blog entries."))) ."<br />". lm(t("view all entries"), array("mod" => "blog", "id" => $user->uid, "all" => 1), "", array("title" => t("View all blog entries."))));
+      return form_item(t("Blog"), lm(t("view recent entries"), array("mod" => "blog", "id" => $user->uid), "") ."<br />". lm(t("view all entries"), array("mod" => "blog", "id" => $user->uid, "all" => 1), ""));
   }
 }
 
@@ -110,7 +109,7 @@ function blog_help() {
  <?php
 }
 
-function blog_feed_user($uid = 0, $date = 0) {
+function blog_feed_user($uid = 0) {
   global $user;
 
   if ($uid) {
@@ -120,12 +119,7 @@ function blog_feed_user($uid = 0, $date = 0) {
     $account = $user;
   }
 
-  if (!$date) {
-    $date = time();
-  }
-
-  $result = db_query("SELECT n.nid, n.title, n.teaser, n.created, u.name, u.uid FROM node n LEFT JOIN users u ON n.uid = u.uid WHERE n.type = 'blog' AND u.uid = '$uid' AND n.created > '". ($date - 2592000) ."' ORDER BY n.nid DESC LIMIT 15");
-
+  $result = db_query("SELECT n.nid, n.title, n.teaser, n.created, u.name, u.uid FROM node n LEFT JOIN users u ON n.uid = u.uid WHERE n.type = 'blog' AND u.uid = '$uid' AND n.status = 1 ORDER BY n.nid DESC LIMIT 15");
   $channel["title"] = $account->name. "'s blog";
   $channel["link"] = path_uri(). drupal_url(array ("mod" => "blog", "op" => "view", "id" => $uid), "module");
   $channel["description"] = $term->description;
@@ -134,17 +128,15 @@ function blog_feed_user($uid = 0, $date = 0) {
 }
 
 function blog_feed_last() {
-  $result = db_query("SELECT n.nid, n.title, n.teaser, n.created, u.name, u.uid FROM node n LEFT JOIN users u ON n.uid = u.uid WHERE n.type = 'blog' ORDER BY n.nid DESC LIMIT 15");
-
+  $result = db_query("SELECT n.nid, n.title, n.teaser, n.created, u.name, u.uid FROM node n LEFT JOIN users u ON n.uid = u.uid WHERE n.type = 'blog' AND n.status = 1 ORDER BY n.nid DESC LIMIT 15");
   $channel["title"] = variable_get("site_name", "drupal"). "blogs";
   $channel["link"] = path_uri(). drupal_url(array ("mod" => "blog", "op" => "view"), "module");
   $channel["description"] = $term->description;
   node_feed($result, $channel);
-
 }
 
-function blog_page_user($uid = 0, $date = 0, $all = 0) {
-  global $theme, $user;
+function blog_page_user($uid = 0) {
+  global $user, $theme;
 
   if ($uid) {
     $account = user_load(array("uid" => $uid, "status" => 1));
@@ -152,63 +144,29 @@ function blog_page_user($uid = 0, $date = 0, $all = 0) {
   else {
     $account = $user;
   }
+  $links[] = lm(t("view %username's profile", array("%username" => $account->name)), array("mod" => "user", "id" => $account->uid), "", array("title" => t("View %username's profile information.", array("%username" => $account->name))));
+  $links[] = lm(t("view recent blog entries"), array("mod" => "blog", "op" => "view"), "", array("title" => t("View all recent blog entries.")));
+  $theme->box(t("%username's blog", array ("%username" => $account->name)), "<center>". $theme->links($links). "</center>");
 
-  if (!$date) {
-    $date = time();
-  }
-
-  $result = db_query("SELECT nid FROM node WHERE type = 'blog' AND uid = '$account->uid' AND created <= '$date' ORDER BY nid DESC". ($all ? "" : " LIMIT 20"));
-
-  $output .= "<table border=\"0\" cellpadding=\"4\" cellspacing=\"4\">";
-
+  $result = db_query_pager("SELECT nid FROM node WHERE type = 'blog' AND uid = '$account->uid' AND status = 1 ORDER BY nid DESC", $user->nodes ? $user->nodes : variable_get("default_nodes_main", 10));
   while ($node = db_fetch_object($result)) {
-
-    $blog = node_load(array("nid" => $node->nid));
-
-    if ($date != date("dny", $blog->created)) {
-      $date = date("dny", $blog->created);
-      $output .= "<tr><td colspan=\"3\"><b>". lm(format_date($blog->created, "small", "d M Y"), array("mod" => "blog", "id" => $blog->uid, "date" => mktime(23, 59, 59, date("n", $blog->created), date("d", $blog->created), date("Y", $blog->created))), "", array("title" => t("Permanent link to this date."))) ."</b></td></tr>";
-    }
-
-    $links = link_node($blog, 1);
-
-    $output .= "<tr><td><div style=\"margin-left: 20px;\"><b>". check_output($blog->title) ."</b></div></td><td align=\"right\">". $theme->links($links) ."</td><td>". l('<img src="misc/blog.gif" width="12" height="16" border="0" align="top">', array("id" => $node->nid), "node", "", array("title" => t("Permanent link to this blog entry."))) ."</td></tr>";
-    $output .= "<tr><td colspan=\"3\"><div style=\"margin-left: 40px;\">". check_output($blog->teaser, 1) ."</div><br /></td></tr>";
-
+    node_view(node_load(array("nid" => $node->nid)), 1);
   }
-
-  $output .= "</table>";
-  $output .= lm("<img src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" align=\"right\" border=\"0\" />", array("mod" => "blog", "op" => "feed", "id" => $account->uid), "", array("title" => t("Read the XML version of this page."))) ."\n";
-  if (!$all && $date) {
-    $output .= lm(t("show all blogs"), array("mod" => "blog", "op" => "view", "id" => $account->uid, "all" => 1), "", array("title" => t("Show all blogs by this user.")));
-  }
-  else {
-    $output .= lm(t("show recent blogs"), array("mod" => "blog", "op" => "view", "id" => $account->uid), "", array("title" => t("Show recent blogs by this user.")));
-  }
-
-  $theme->box(t("%username's blog", array("%username" => $account->name)), $output);
+  print pager_display(NULL, ($user->nodes ? $user->nodes : variable_get("default_nodes_main", 10)));
+  print lm("<img align=\"right\" src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" border=\"0\" />", array("mod" => "blog", "op" => "feed", "id" => $account->uid), "", array("title" => t("View the XML version of %username's blog", array ("%username" => $account->name))));
 }
 
 function blog_page_last() {
-  global $theme, $user;
+  global $user, $theme;
 
-  $result = db_query("SELECT nid FROM node WHERE type = 'blog' ORDER BY nid DESC LIMIT 20");
-
-  $output .= "<table border=\"0\" cellpadding=\"4\" cellspacing=\"4\">";
+  $result = db_query_pager("SELECT nid FROM node WHERE type = 'blog' AND status = 1 ORDER BY nid DESC", $user->nodes ? $user->nodes : variable_get("default_nodes_main", 10));
 
   while ($node = db_fetch_object($result)) {
-    $blog = node_load(array("nid" => $node->nid));
-
-    $links = link_node($blog, 1);
-
-    $output .= "<tr><td><b>". check_output($blog->title) ."</b></td><td align=\"right\">". $theme->links($links) ."</td><td>". l('<img src="misc/blog.gif" width="12" height="16" border="0" align="top">', array("id" => $node->nid), "node", "", array("title" => t("Permanent link to this blog entry"))) ."</td></tr>";
-    $output .= "<tr><td colspan=\"3\"><div style=\"margin-left: 20px;\">". check_output($blog->teaser, 1) ."</div><br /></td></tr>";
+    $output = node_view(node_load(array("nid" => $node->nid)), 1);
   }
-
-  $output .= "</table>";
-  $output .= lm("<img src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" align=\"right\" border=\"0\" />", array("mod" => "blog", "op" => "feed"), "", array("title" => t("Read the XML version of this page."))) ."\n";
-
-  $theme->box(t("User blogs"), $output, "main");
+  $output .= pager_display(NULL, ($user->nodes ? $user->nodes : variable_get("default_nodes_main", 10)));
+  $output .= lm("<img align=\"right\" src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" border=\"0\" />", array("mod" => "blog", "op" => "feed"), "", array("title" => t("Read the XML version of all blogs.")));
+  return $output;
 }
 
 function blog_form(&$node, &$help, &$error) {
@@ -254,21 +212,19 @@ function blog_form(&$node, &$help, &$error) {
   if (function_exists("taxonomy_node_form")) {
     $output .= implode("", taxonomy_node_form("blog", $node));
   }
-
   $output .= form_textarea(t("Body"), "body", $node->body, 60, 15, $error["body"] ? $error["body"] : t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")));
 
   return $output;
 }
 
-
 function blog_page() {
-  global $theme, $id, $op, $date, $all, $name;
+  global $theme, $id, $op, $name;
 
   if (user_access("access content")) {
     switch ($op) {
       case "feed":
         if ($id) {
-          blog_feed_user($id, $date);
+          blog_feed_user($id);
         }
         else {
           blog_feed_last();
@@ -281,10 +237,10 @@ function blog_page() {
           $id = $user->uid;
         }
         if ($id) {
-          blog_page_user($id, $date, $all);
+          blog_page_user($id);
         }
         else {
-          blog_page_last();
+          print blog_page_last();
         }
         $theme->footer();
     }
@@ -314,10 +270,11 @@ function blog_link($type, $node = 0, $main) {
 
   if ($type == "node" && $node->type == "blog") {
     global $mod, $op, $id;
+
     if (blog_access("update", $node)) {
       $links[] = lm(t("edit this blog"), array("mod" => "node", "op" => "edit", "id" => $node->nid), "", array("title" => t("Edit this blog entry.")));
     }
-    elseif ($op != "view" && !$id) {
+    elseif (empty($id)) {
       $links[] = lm(t("%username's blog", array("%username" => $node->name)), array("mod" => "blog", "op" => "view", "id" => $node->uid), "", array("title" => t("Read %username's latest blog entries.", array("%username" => $node->name))));
     }
   }
@@ -333,12 +290,8 @@ function blog_block($op = "list", $delta = 0) {
   }
   else {
     if (user_access("access content")) {
-      $result = db_query("SELECT u.uid, u.name, n.created, n.title, n.nid FROM node n LEFT JOIN users u ON n.uid = u.uid WHERE n.type = 'blog' ORDER BY n.nid DESC LIMIT 10");
-      while ($node = db_fetch_object($result)) {
-        $items[] = l(check_output($node->title), array("id" => $node->nid));
-      }
-
-      $block["content"] = theme_invoke("theme_item_list", $items) ."<br /><div align=\"right\">". lm(t("more"), array("mod" => "blog"), "", array("title" => t("Read the latest blog entries."))) ."</div>";
+      $block["content"] = node_title_list(db_query("SELECT u.uid, u.name, n.created, n.title, n.nid FROM node n LEFT JOIN users u ON n.uid = u.uid WHERE n.type = 'blog' AND n.status = 1 ORDER BY n.nid DESC LIMIT 10"));
+      $block["content"] .= "<div align=\"right\" id=\"blog_more\">". lm(t("more"), array("mod" => "blog"), "", array("title" => t("Read the latest blog entries."))) ."</div>";
       $block["subject"] = t("User blogs");
     }
     return $block;

@@ -97,23 +97,14 @@ function forum_block($op = "list", $delta = 0) {
 
       if (!$content) {
         unset($items);
-        $result = db_query("SELECT n.nid, n.title, n.body, GREATEST(n.created, MAX(c.timestamp)) AS sort FROM node n, forum f LEFT JOIN comments c ON c.nid = n.nid WHERE n.type = 'forum' AND n.nid = f.nid AND f.shadow = 0 AND n.status = 1 GROUP BY n.nid ORDER BY sort DESC LIMIT ". variable_get("forum_block_num", "5"));
-        while ($node = db_fetch_object($result)) {
-          $items[] = l(check_output($node->title), array("id" => $node->nid), "node", "", array("title" => substr(strip_tags($node->body), 0, 100)."..."));
-        }
-        $content .= theme_invoke("theme_item_list", $items, t("Active forum topics:"));
-
+        $content = node_title_list(db_query("SELECT n.nid, n.title, u.name, GREATEST(n.created, MAX(c.timestamp)) AS sort FROM node n, forum f LEFT JOIN comments c ON c.nid = n.nid LEFT JOIN users u ON n.uid = u.uid WHERE n.type = 'forum' AND n.nid = f.nid AND f.shadow = 0 AND n.status = 1 GROUP BY n.nid ORDER BY sort DESC LIMIT ". variable_get("forum_block_num", "5")), t("Active forum topics:"));
         $content .= "<br />";
 
         unset ($items);
-        $result = db_query("SELECT n.nid, n.title, n.body FROM node n LEFT JOIN forum f ON n.nid = f.nid WHERE n.type = 'forum' ORDER BY n.nid DESC LIMIT ". variable_get("forum_block_num", "5"));
-        while ($node = db_fetch_object($result)) {
-          $items[] = l(check_output($node->title), array("id" => $node->nid), "node", "", array("title" => substr(strip_tags($node->body), 0, 100)."..."));
-        }
-        $content .= theme_invoke("theme_item_list", $items, t("New forum topics:"));
+        $content .= node_title_list(db_query("SELECT n.nid, n.title, u.name FROM node n LEFT JOIN forum f ON n.nid = f.nid LEFT JOIN users u ON n.uid = u.uid WHERE n.type = 'forum' ORDER BY n.nid DESC LIMIT ". variable_get("forum_block_num", "5")), t("New forum topics:"));
 
         if ($content) {
-          $content .= "<div align=\"right\">". lm(t("more"), array("mod" => "forum")) ."</div>";
+          $content .= "<div id=\"forum_more\" align=\"right\">". lm(t("more"), array("mod" => "forum")) ."</div>";
         }
 
         cache_set("forum:block", $content, time() + 60 * 3);

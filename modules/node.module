@@ -19,6 +19,23 @@ function node_system($field){
   return $system[$field];
 }
 
+// accepts a db result object which includes nid and title from node table, and name from the user table
+// returns an HTML list suitable as content for a block, and eventually other uses.
+function node_title_list($result, $title = NULL) {
+  // no queries if site is in distress
+  if (module_exist("statistics") && throttle_status() > 4) {
+    return;
+  }
+
+  while ($node = db_fetch_object($result)) {
+    $number = comment_num_all($node->nid);
+    $name = strip_tags(format_name($node)); // required for anonymous users to work
+    $items[] = l(check_output($node->title), array("id" => $node->nid), "node", "", array("title" => t("Author: %name, comments: %number", array("%name" => $name, "%number" => $number))));
+  }
+  return theme_invoke("theme_item_list", $items, $title);
+
+}
+
 function node_teaser($body) {
 
   $size = 400;
