@@ -276,17 +276,11 @@ function comment_post($edit) {
       }
 
       /*
-      ** Clear the cache:
+      ** Clear the cache so an anonymous user can see his comment being
+      ** added.
       */
 
-      cache_clear();
-
-      /*
-      ** TODO: we'd prefer to invalidate the page or pages with the newly
-      ** inserted comment.
-      **
-      ** db_query("DELETE FROM cache WHERE cid LIKE '%s'", "%id=".$edit["nid"]."%");
-      */
+      cache_clear_all();
     }
   }
   else {

@@ -77,6 +77,12 @@ function block_admin_save($edit) {
       db_query("UPDATE blocks SET region = '%s', status = '%d', custom = '%d', path = '%s', weight = '%d' WHERE module = '%s' AND delta = '%d'", $block["region"], $block["status"], $block["custom"], $block["path"], $block["weight"], $module, $delta);
     }
   }
+
+  /*
+  ** Clear the cache so the changes take effect for anonymous users.
+  */
+
+  cache_clear_all();
 }
 
 /**

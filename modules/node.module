@@ -209,6 +209,13 @@ function node_save($node, $filter) {
   }
 
   /*
+  ** Clear the cache so an anonymous poster can see the node being added
+  ** or updated.
+  */
+
+  cache_clear_all();
+
+  /*
   ** Return the node ID:
   */
 

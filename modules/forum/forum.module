@@ -43,7 +43,6 @@ function forum_conf_options() {
   $forder = array(1 => "Date - newest first", 2 => "Date - oldest first", 3 => "Posts - most active first", 4=> "Posts - least active first");
   $output .= form_select("Default order", "forum_order", variable_get("forum_order", 1), $forder, "The default display order for topics.");
   $output .= form_textfield("Number of topics in block", "forum_block_num", variable_get("forum_block_num", "5"), 5, 5, "The number of topics in the <b>Forum topics</b>-block.  To enable the block, click ". la("here", array("mod" => "block")) .".");
-  $output .= form_select("Internal caching", "forum_cache", variable_get("forum_cache", 0), array("disabled", "enabled"), "Cache internal datastructures for both anonymous and autheticated users.  When enabled, the forum data won't be 100% up to date with regards regard to the number of posts, the number of replies and the last topic being posted.  Enable when you have busy forum.");
 
   return $output;
 }
@@ -91,9 +90,7 @@ function forum_block($op = "list", $delta = 0) {
   }
   else {
     if (user_access("access content")) {
-      if (variable_get("forum_cache", 0)) {
-        $content = cache_get("forum:block");
-      }
+      $content = cache_get("forum:block");
 
       if (!$content) {
         unset($items);
@@ -107,7 +104,7 @@ function forum_block($op = "list", $delta = 0) {
           $content .= "<div id=\"forum_more\" align=\"right\">". lm(t("more"), array("mod" => "forum")) ."</div>";
         }
 
-        cache_set("forum:block", $content, time() + 60 * 3);
+        cache_set("forum:block", $content, time() + variable_get("cache_clear", 120));
       }
 
       $blocks["subject"] = t("Forum topics");
@@ -256,10 +253,6 @@ function forum_insert($node) {
     // we created a shadow, a link to a moved topic in a new forum
     db_query("INSERT INTO forum (nid, icon, shadow) VALUES ('%d', '%s', '%d')", $node->nid, $node->icon, $node->shadow);
   }
-
-  if (variable_get("forum_cache", 0)) {
-    cache_clear();
-  }
 }
 
 function forum_update($node) {
@@ -326,9 +319,7 @@ function forum_get_forums($tid = 0) {
     $tid = 0;
   }
 
-  if (variable_get("forum_cache", 0)) {
-    $forums = unserialize(cache_get("forum:$tid"));
-  }
+  $forums = unserialize(cache_get("forum:$tid"));
 
   if (!$forums) {
     $forums = array();
@@ -347,9 +338,7 @@ function forum_get_forums($tid = 0) {
       $n++;
     }
 
-    if (variable_get("forum_cache", 0)) {
-      cache_set("forum:$tid", serialize($forums), time()+60*10);
-    }
+    cache_set("forum:$tid", serialize($forums), time() + variable_get("cache_clear", 120));
   }
 
   if ($user->uid && $forums) {

@@ -15,7 +15,7 @@ function system_system($field){
 
 function system_help_cache() {
   $output .= "<p>Drupal has a caching mechanism that stores dynamically generated pages in a database.  By caching a page, Drupal does not have to generate the page each time it is requested.  Only pages requested by anonymous users are being cached.  When a cached page is accessed, Drupal will retrieve that page with minimal overhead using one SQL query only, thus reducing both the server load and the response time.</p>";
-  $output .= "<p>Drupal's caching mechanism can be enabled and disabled by the site administrators from the 'settings' page.  He can also define how long cached pages should be kept.</p>";
+  $output .= "<p>Drupal's caching mechanism can be enabled and disabled by the site administrators from the 'settings' page.  Site administrators can also define how long cached pages should be kept.</p>";
   return $output;
 }
 
@@ -59,7 +59,7 @@ function system_view_options() {
   $output .= "<h3>" . t("Cache settings") . "</h3>\n";
   $period = array(10 => format_interval(10), 20 => format_interval(20), 30 => format_interval(30), 40 => format_interval(40), 50 => format_interval(50), 50 => format_interval(50), 60 => format_interval(60), 90 => format_interval(90), 120 => format_interval(120), 150 => format_interval(150), 180 => format_interval(180), 210 => format_interval(210), 240 => format_interval(240), 270 => format_interval(270), 300 => format_interval(300), 360 => format_interval(360), 420 => format_interval(420), 480 => format_interval(480), 540 => format_interval(540), 600 => format_interval(600), 1800 => format_interval(1800), 3600 => format_interval(3600), 7200 => format_interval(7200));
   $output .= form_select(t("Cache support"), "cache", variable_get("cache", 0), array(t("Disabled"), t("Enabled")), t("Enable or disable the caching of pages."));
-  $output .= form_select(t("Discard cached pages older than"), "cache_clear", variable_get("cache_clear", 30), $period, t("The time cached pages should be kept.  Older pages are automatically refreshed."));
+  $output .= form_select(t("Discard cached pages older than"), "cache_clear", variable_get("cache_clear", 120), $period, t("The time cached pages should be kept.  Older pages are automatically refreshed."));
   $output .= "<hr />\n";
 
   // submission settings:
@@ -105,12 +105,24 @@ function system_view_filters() {
 }
 
 function system_save($edit = array()) {
-  foreach ($edit as $name => $value) variable_set($name, $value);
+  foreach ($edit as $name => $value) {
+    variable_set($name, $value);
+  }
+
+  /*
+  ** Clear the cache so the changes take effect for anonymous users.
+  */
+
+  cache_clear_all();
+
   return t("The configuration options have been saved.");
 }
 
 function system_default($edit = array()) {
-  foreach ($edit as $name => $value) variable_del($name);
+  foreach ($edit as $name => $value) {
+    variable_del($name);
+  }
+
   return t("The configuration options have been reset to their default values.");
 }
 
@@ -197,7 +209,7 @@ function system_listing($type, $directory, $required = array()) {
       }
     }
 
-    // Clean up database.
+    // Update the contents of the system table:
     db_query("DELETE FROM system WHERE filename = '%s' AND type = '%s'", $filename, $type);
     db_query("INSERT INTO system (name, description, type, filename, status) VALUES ('%s', '%s', '%s', '%s', %d)", $info->name, $info->description, $type, $filename, $file->status);
 
