@@ -73,8 +73,8 @@ function user_ban($mask, $type) {
 
 function user_password($min_length=6) {
   mt_srand((double)microtime() * 1000000);
-  $words = array("foo","bar","guy","neo","tux","moo","sun","asm","dot","god","axe","geek","nerd","fish","hack","star","mice","warp","moon","hero","cola","girl","fish","java","perl","boss","dark","sith","jedi","drop","mojo");
-  while (strlen($password) < $min_length) $password .= $words[mt_rand(0, count($words))];
+  $words = explode(",", variable_get("account_words", "foo,bar,guy,neo,tux,moo,sun,asm,dot,god,axe,geek,nerd,fish,hack,star,mice,warp,moon,hero,cola,girl,fish,java,perl,boss,dark,sith,jedi,drop,mojo"));
+  while (strlen($password) < $min_length) $password .= trim($words[mt_rand(0, count($words))]);
   return $password;
 }
 
