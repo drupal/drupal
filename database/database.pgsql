@@ -55,7 +55,9 @@ CREATE TABLE blocks (
   region smallint NOT NULL default '0',
   path varchar(255) NOT NULL default '',
   custom smallint NOT NULL default '0',
-  throttle smallint NOT NULL default '0'
+  throttle smallint NOT NULL default '0',
+  pages text default '',
+  types text default ''
 );
 
 --
