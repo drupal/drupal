@@ -143,6 +143,9 @@ function diary_page_edit($id) {
 function diary_page_preview($text, $timestamp, $id = 0) {
   global $theme, $user, $allowed_html;
 
+  $text = ($text) ? check_output($text) : "";
+  $timestamp = ($timestamp) ? check_output($timestamp) : "";
+
   $output .= diary_page_entry($timestamp, $text);
 
   $output .= "<FORM ACTION=\"module.php?mod=diary\" METHOD=\"post\">\n";
