@@ -1,12 +1,12 @@
 <?
 
-include "includes/config.inc";
-include "includes/database.inc";
-include "includes/watchdog.inc";
-include "includes/function.inc";
-include "includes/blob.inc";
-include "includes/widget.inc";
-include "includes/user.inc";
+include_once "includes/". getenv("HTTP_HOST") .".conf";
+include_once "includes/database.inc";
+include_once "includes/watchdog.inc";
+include_once "includes/function.inc";
+include_once "includes/droplet.inc";
+include_once "includes/widget.inc";
+include_once "includes/user.inc";
 
 global $user;
 

@@ -1,15 +1,6 @@
 <?
 
-
-function admin_icon($name) {
-  global $section;
-  if ($name == $section) print "    <TD ALIGN=\"center\" BGCOLOR=\"#CCCCCC\"><A HREF=\"admin.php?section=$name\"><IMG SRC=\"images/admin-$name.png\" BORDER=\"0\"></A><BR>$name</TD>\n";
-  else print "    <TD ALIGN=\"center\" VALIGN=\"middle\"><A HREF=\"admin.php?section=$name\"><IMG SRC=\"images/admin-$name.png\" BORDER=\"0\"></A><BR>$name</TD>\n";
-}
-
 function admin_header() {
-  global $site_name, $section;
-
  ?>
   <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
   <HTML>
@@ -23,46 +14,12 @@ function admin_header() {
     td	    { font-family: helvetica, arial; }
    </STYLE>
    <BODY BGCOLOR="#FFFFFF" LINK="#006699" VLINK="#004499" ALINK="#FF0000">
-   <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="2">
-    <TR><TD COLSPAN="10"><H1><? echo "$site_name"; ?> administration center</H1></TD></TR>
-    <TR><TD BGCOLOR="#000000" COLSPAN="11" WIDTH="100%"><IMG SRC="images/pixel.gif" WIDTH="1" HEIGHT="1" ALT=""></TD></TR>
-    <TR>
-     <?
-       admin_icon("stories");
-       admin_icon("comments");
-       admin_icon("diaries");
-       admin_icon("accounts");
-       admin_icon("watchdog");
-       admin_icon("blobs");
-       admin_icon("cron");
-       admin_icon("bans");
-       admin_icon("stats");
-       admin_icon("info");
-       admin_icon("home");
-     ?>
-    </TR>
-    <TR><TD BGCOLOR="#000000" COLSPAN="11" WIDTH="100%"><IMG SRC="images/pixel.gif" WIDTH="1" HEIGHT="0" ALT=""></TD></TR>
-    <TR><TD COLSPAN="10">&nbsp;</TD></TR>
-    <TR>
-     <TD COLSPAN="11">
-     <?
-}
-
-function admin_box($title, $body) {
-  print "<TABLE BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"2\" WIDTH=\"100%\">\n";
-  print " <TR><TD><FONT COLOR=\"#83997A\"><B>$title</B></A></TD></TR>\n";
-  print " <TR><TD BGCOLOR=\"#000000\" WIDTH=\"100%\"><IMG SRC=\"images/pixel.gif\" WIDTH=\"1\" HEIGHT=\"0\" ALT=\"\"></TD></TR>\n";
-  print " <TR><TD>&nbsp;</TD></TR>\n";
-  print " <TR><TD>$body</TD></TR>\n";
-  print "</TABLE>\n";
-  print "<BR><BR>\n";
+    <H1>Administration center</H1>
+ <?
 }
 
 function admin_footer() {
  ?>
-     </TD>
-    </TR>
-   </TABLE>
    </BODY>
   </HTML>
  <?

@@ -7,10 +7,9 @@
  * just adjust the handlers to your needs.
  */
 
-function db_connect() {
-  global $db_host, $db_name, $db_pass, $db_name;
-  mysql_pconnect($db_host, $db_name, $db_pass) or die(mysql_Error());
-  mysql_select_db($db_name) or die ("Unable to select database");
+function db_connect($host, $name, $pass, $base) {
+  mysql_pconnect($host, $name, $pass) or die(mysql_Error());
+  mysql_select_db($base) or die ("unable to select database");
    // NOTE: we are using a persistent connection!
 }
 
@@ -49,6 +48,6 @@ function db_result($qid, $field) {
 #
 # Automatically connect to database:
 #
-db_connect();
+db_connect($db_host, $db_name, $db_pass, $db_name);
 
 ?>
