@@ -354,6 +354,10 @@ function user_file_download($file) {
 
 function user_search($keys) {
   $find = array();
+
+  // Replace wildcards with mysql wildcards
+  $keys = str_replace("*", "%", $keys);
+
   $result = db_query_range("SELECT * FROM {users} WHERE name LIKE '%%%s%%'", $keys, 0, 20);
   while ($account = db_fetch_object($result)) {
     $find[] = array("title" => $account->name, "link" => (strstr(request_uri(), "admin") ? url("admin/user/edit/$account->uid") : url("user/view/$account->uid")), 'user' => $account->name);
