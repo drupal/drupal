@@ -1,7 +1,6 @@
 <?php
-/** @file
- * $Id$
- */
+/* $Id$ */
+
 /**
  * @defgroup menu Menu system
  * @{
