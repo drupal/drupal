@@ -3,9 +3,17 @@
 #
 
 # Archive feature:
-#<Files archive>
-#  ForceType application/x-httpd-php
-#</Files>
+<Files archive>
+  ForceType application/x-httpd-php
+</Files>
+
+# Protect .inc files:
+#  .inc files can be read from the web so make sure we keep it 
+#  away from the casual prying eyes.  Especially `config.inc'.
+<Files *.inc>
+  order deny, allow
+  deny from all
+</Files>
 
 # Customized server error messages:
 ErrorDocument 400 /error.php
