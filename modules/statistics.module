@@ -845,24 +845,24 @@ function statistics_block($op = "list", $delta = 0) {
 
 
 function statistics_page() {
-  global $theme;
+
 
   if (user_access("access content")) {
-    $theme->header();
+    theme("header");
     statistics_page_user();
-    $theme->footer();
+    theme("footer");
   }
   else {
-    $theme->header();
-    $theme->box(t("Access denied"), message_access());
-    $theme->footer();
+    theme("header");
+    theme("box", t("Access denied"), message_access());
+    theme("footer");
   }
 }
 
 
 /* Generates the statistics user page */
 function statistics_page_user($uid = 0, $date = 0, $all = 0) {
-  global $theme;
+
 
   if (!$date) {
     $date = time();
@@ -873,7 +873,7 @@ function statistics_page_user($uid = 0, $date = 0, $all = 0) {
     $output .= statistics_summary("daycount", $displaycount);
     $output .= "</table>";
 
-    $theme->box(t(variable_get("statistics_userpage_day_head", "")), $output, "main");
+    theme("box", t(variable_get("statistics_userpage_day_head", "")), $output, "main");
   }
 
 
@@ -882,7 +882,7 @@ function statistics_page_user($uid = 0, $date = 0, $all = 0) {
     $output .= statistics_summary("totalcount", $displaycount);
     $output .= "</table>";
 
-    $theme->box(t(variable_get("statistics_userpage_all_head", "")), $output, "main");
+    theme("box", t(variable_get("statistics_userpage_all_head", "")), $output, "main");
   }
 
   if ($displaycount = variable_get("statistics_userpage_last_cnt", "10")) {
@@ -890,14 +890,14 @@ function statistics_page_user($uid = 0, $date = 0, $all = 0) {
     $output .= statistics_summary("timestamp", $displaycount);
     $output .= "</table>";
 
-    $theme->box(t(variable_get("statistics_userpage_last_head", "")), $output, "main");
+    theme("box", t(variable_get("statistics_userpage_last_head", "")), $output, "main");
   }
 }
 
 
 function statistics_summary($dbfield, $dbrows) {
   /* valid dbfields: totalcount, daycount, timestamp */
-  global $theme;
+
 
   $output = "";
   $result = db_query("SELECT statistics.nid,node.title FROM statistics LEFT JOIN node ON statistics.nid = node.nid ORDER BY %s DESC LIMIT %s", $dbfield, $dbrows);
@@ -907,7 +907,7 @@ function statistics_summary($dbfield, $dbrows) {
 
     $output .= "<tr><td><b>". l($nid["title"], "node/view/". $nid["nid"], array("title" => t("View this posting."))) ."</b></td><td align=\"right\"><small>". t("Submitted by %a on %b", array("%a" => format_name($content), "%b" => format_date($content->created, "large"))) ."</small></td></tr>";
     $output .= "<tr><td colspan=\"2\"><div style=\"margin-left: 20px;\">". check_output($content->teaser) ."</div></td></tr>";
-    $output .= "<tr><td align=\"right\" colspan=\"2\">[ ". $theme->links($links) ." ]<br /><br /></td></tr>";
+    $output .= "<tr><td align=\"right\" colspan=\"2\">[ ". theme("links", $links) ." ]<br /><br /></td></tr>";
   }
 
   return $output;

@@ -258,7 +258,7 @@ function block_box_delete($bid) {
 }
 
 function block_admin() {
-  global $edit, $op, $theme;
+  global $edit, $op;
 
   if (user_access("administer blocks")) {
 

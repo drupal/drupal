@@ -146,7 +146,7 @@ function blog_feed_last() {
 }
 
 function blog_page_user($uid = 0) {
-  global $user, $theme;
+  global $user;
 
   if ($uid) {
     $account = user_load(array((is_numeric($uid) ? "uid" : "name") => $uid, "status" => 1));
@@ -160,11 +160,11 @@ function blog_page_user($uid = 0) {
     node_view(node_load(array("nid" => $node->nid)), 1);
   }
   print pager_display(NULL, variable_get("default_nodes_main", 10));
-  print l("<img align=\"right\" src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" border=\"0\" alt=\"\" />", "blog/feed/$account->uid", array("title" => t("View the XML version of %username's blog", array ("%username" => $account->name))));
+  print l("<img align=\"right\" src=\"". theme("image", "xml.gif") ."\" width=\"36\" height=\"14\" border=\"0\" alt=\"\" />", "blog/feed/$account->uid", array("title" => t("View the XML version of %username's blog", array ("%username" => $account->name))));
 }
 
 function blog_page_last() {
-  global $user, $theme;
+  global $user;
 
   $result = pager_query("SELECT nid FROM node WHERE type = 'blog' AND status = 1 ORDER BY nid DESC", variable_get("default_nodes_main", 10));
 
@@ -172,7 +172,7 @@ function blog_page_last() {
     $output = node_view(node_load(array("nid" => $node->nid)), 1);
   }
   $output .= pager_display(NULL, variable_get("default_nodes_main", 10));
-  $output .= l("<img align=\"right\" src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" border=\"0\" alt=\"\" />", "blog/feed", array("title" => t("Read the XML version of all blogs.")));
+  $output .= l("<img align=\"right\" src=\"". theme("image", "xml.gif") ."\" width=\"36\" height=\"14\" border=\"0\" alt=\"\" />", "blog/feed", array("title" => t("Read the XML version of all blogs.")));
   return $output;
 }
 
@@ -220,7 +220,7 @@ function blog_form(&$node, &$help, &$error) {
 }
 
 function blog_page() {
-  global $theme;
+
 
   if (user_access("access content")) {
     switch (arg(1)) {
@@ -233,20 +233,20 @@ function blog_page() {
         }
         break;
       default:
-        $theme->header();
+        theme("header");
         if (arg(1)) {
           blog_page_user(arg(1));
         }
         else {
           print blog_page_last();
         }
-        $theme->footer();
+        theme("footer");
     }
   }
   else {
-    $theme->header();
-    $theme->box(t("Access denied"), message_access());
-    $theme->footer();
+    theme("header");
+    theme("box", t("Access denied"), message_access());
+    theme("footer");
   }
 
 }

@@ -683,7 +683,7 @@ function taxonomy_render_nodes($result) {
 }
 
 function taxonomy_page() {
-  global $theme;
+
 
   // taxonomy querystring always parsed here
   // TODO: support term *names* in URL (e.g. taxonomy/view/or/milk,beer,red+wine)
@@ -696,9 +696,9 @@ function taxonomy_page() {
       taxonomy_feed($taxonomy);
       break;
     default:
-      $theme->header();
+      theme("header");
       taxonomy_render_nodes(taxonomy_select_nodes($taxonomy));
-      $theme->footer();
+      theme("footer");
       break;
   }
 }
@@ -708,7 +708,7 @@ function taxonomy_page() {
 */
 
 function taxonomy_admin() {
-  global $op, $edit, $theme;
+  global $op, $edit;
 
   if (user_access("administer taxonomy")) {
     if (empty($op)) {

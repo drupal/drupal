@@ -143,10 +143,10 @@ function drupal_auth($username, $password, $server) {
 }
 
 function drupal_page() {
-  global $theme;
-  $theme->header();
-  $theme->box("Drupal", drupal_auth_help());
-  $theme->footer();
+
+  theme("header");
+  theme("box", "Drupal", drupal_auth_help());
+  theme("footer");
 }
 
 function drupal_login($arguments) {

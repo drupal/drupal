@@ -26,8 +26,8 @@ else {
     module_invoke(variable_get("site_frontpage", "node"), "page");
   }
   else {
-    $theme->header();
-    $theme->footer();
+    theme("header");
+    theme("footer");
   }
 
   page_footer();

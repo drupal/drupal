@@ -121,7 +121,7 @@ function comment_edit($cid) {
 }
 
 function comment_reply($pid, $nid) {
-  global $theme;
+
 
   if (user_access("access comments")) {
 
@@ -143,22 +143,22 @@ function comment_reply($pid, $nid) {
     */
 
     if (node_comment_mode($nid) == 1) {
-      $theme->box(t("Reply"), t("This discussion is closed: you can't post new comments."));
+      theme("box", t("Reply"), t("This discussion is closed: you can't post new comments."));
     }
     else if (user_access("post comments", $context)) {
-      $theme->box(t("Reply"), comment_form(array("pid" => $pid, "nid" => $nid)));
+      theme("box", t("Reply"), comment_form(array("pid" => $pid, "nid" => $nid)));
     }
     else {
-      $theme->box(t("Reply"), t("You are not authorized to post comments."));
+      theme("box", t("Reply"), t("You are not authorized to post comments."));
     }
   }
   else {
-    $theme->box(t("Reply"), t("You are not authorized to view comments."));
+    theme("box", t("Reply"), t("You are not authorized to view comments."));
   }
 }
 
 function comment_preview($edit) {
-  global $theme, $user;
+  global $user;
 
   foreach ($edit as $key => $value) {
     $comment->$key = filter($value);
@@ -178,7 +178,7 @@ function comment_preview($edit) {
 
   comment_view($comment);
 
-  $theme->box(t("Reply"), comment_form($edit));
+  theme("box", t("Reply"), comment_form($edit));
 
   if ($edit["pid"]) {
     $comment = db_fetch_object(db_query("SELECT c.*, u.uid, u.name, u.data FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.cid = '%d' AND c.status = 0", $edit["pid"]));
@@ -308,7 +308,7 @@ function comment_post($edit) {
 }
 
 function comment_links($comment, $return = 1) {
-  global $user, $theme;
+  global $user;
 
   $links = array();
 
@@ -348,7 +348,7 @@ function comment_links($comment, $return = 1) {
     $links[] = $moderation;
   }
 
-  return $theme->links($links);
+  return theme("links", $links);
 }
 
 function comment_view($comment, $links = "", $visible = 1) {
@@ -373,7 +373,7 @@ function comment_view($comment, $links = "", $visible = 1) {
 }
 
 function comment_render($node, $cid = 0) {
-  global $user, $theme, $mode, $order, $threshold, $comment_page;
+  global $user, $mode, $order, $threshold, $comment_page;
 
   if (user_access("access comments")) {
 
@@ -458,7 +458,7 @@ function comment_render($node, $cid = 0) {
 
       if ($comment_num && ((variable_get("comment_controls", 0) == 0) || (variable_get("comment_controls", 0) == 2))) {
         print "<form method=\"post\" action=\"". url("comment") ."\">\n";
-        $theme->box(t("Control panel"), theme("comment_controls", $threshold, $mode, $order, $nid, $comment_page, $comment_num, $comments_per_page));
+        theme("box", t("Control panel"), theme("comment_controls", $threshold, $mode, $order, $nid, $comment_page, $comment_num, $comments_per_page));
         print form_hidden("nid", $nid);
         print "</form>";
       }
@@ -580,7 +580,7 @@ function comment_render($node, $cid = 0) {
 
       if ($comment_num && ((variable_get("comment_controls", 0) == 1) || (variable_get("comment_controls", 0) == 2))) {
         print "<form method=\"post\" action=\"". url("comment") ."\">\n";
-        $theme->box(t("Control panel"), theme("comment_controls", $threshold, $mode, $order, $nid, $comment_page, $comment_num, $comments_per_page));
+        theme("box", t("Control panel"), theme("comment_controls", $threshold, $mode, $order, $nid, $comment_page, $comment_num, $comments_per_page));
         print form_hidden("nid", $nid);
         print "</form>";
       }
@@ -591,7 +591,7 @@ function comment_render($node, $cid = 0) {
     */
 
     if (user_access("post comments") && node_comment_mode($nid) == 2 && variable_get("comment_new_form", 0)) {
-      $theme->box(t("Post new comment"), comment_form(array("nid" => $nid)));
+      theme("box", t("Post new comment"), comment_form(array("nid" => $nid)));
     }
 
     /*
@@ -679,7 +679,7 @@ function comment_link($type, $node = 0, $main = 0) {
 }
 
 function comment_page() {
-  global $theme, $op, $edit;
+  global $op, $edit;
 
   if (empty($op)) {
     $op = arg(1);
@@ -687,9 +687,9 @@ function comment_page() {
 
   switch ($op) {
     case "edit":
-      $theme->header();
+      theme("header");
       comment_edit(check_query(arg(2)));
-      $theme->footer();
+      theme("footer");
       break;
     case t("Moderate comments"):
     case t("Moderate comment"):
@@ -697,21 +697,21 @@ function comment_page() {
       drupal_goto(url("node/view/". $edit["nid"]));
       break;
     case "reply":
-      $theme->header();
+      theme("header");
       comment_reply(check_query(arg(3)), check_query(arg(2)));
-      $theme->footer();
+      theme("footer");
       break;
     case t("Preview comment"):
-      $theme->header();
+      theme("header");
       comment_preview($edit);
-      $theme->footer();
+      theme("footer");
       break;
     case t("Post comment"):
       list($error_title, $error_body) = comment_post($edit);
       if ($error_body) {
-        $theme->header();
-        $theme->box($error_title, $error_body);
-        $theme->footer();
+        theme("header");
+        theme("box", $error_title, $error_body);
+        theme("footer");
       }
       else {
         drupal_goto(url("node/view/". $edit["nid"]));

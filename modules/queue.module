@@ -80,7 +80,7 @@ function queue_vote($node, $vote) {
 }
 
 function queue_overview() {
-  global $theme, $user;
+  global $user;
 
   $result = db_query("SELECT n.*, u.name, u.uid FROM node n LEFT JOIN users u ON n.uid = u.uid WHERE n.moderate = 1");
 
@@ -100,13 +100,13 @@ function queue_overview() {
   }
   $output .= "</table>";
 
-  $theme->header();
-  $theme->box(t("Moderation queue"), $output);
-  $theme->footer();
+  theme("header");
+  theme("box", t("Moderation queue"), $output);
+  theme("footer");
 }
 
 function queue_view($nid) {
-  global $op, $edit, $theme, $user;
+  global $op, $edit, $user;
 
   /*
   ** An associative array with the possible voting options:
@@ -149,19 +149,19 @@ function queue_view($nid) {
     }
   }
 
-  $theme->header();
+  theme("header");
   node_view($node);
   if ($output) {
-    $theme->box(t("Moderate"), $output);
+    theme("box", t("Moderate"), $output);
   }
   if ($node->comment && variable_get("queue_show_comments", 1)) {
     module_invoke("comment", "render", $node);
   }
-  $theme->footer();
+  theme("footer");
 }
 
 function queue_page() {
-  global $user, $theme, $vote;
+  global $user, $vote;
 
   if ($user->uid && user_access("access submission queue")) {
     if (arg(1)) {
@@ -172,9 +172,9 @@ function queue_page() {
     }
   }
   else {
-    $theme->header();
-    $theme->box(t("Moderation queue"), message_access());
-    $theme->footer();
+    theme("header");
+    theme("box", t("Moderation queue"), message_access());
+    theme("footer");
   }
 }
 

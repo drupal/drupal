@@ -275,7 +275,7 @@ function node_save($node, $filter) {
 }
 
 function node_view($node, $main = 0) {
-  global $theme;
+
 
   $node = array2object($node);
 
@@ -300,12 +300,12 @@ function node_view($node, $main = 0) {
     ** Default behavior:
     */
 
-    $theme->node($node, $main);
+    theme("node", $node, $main);
   }
 }
 
 function node_show($nid, $cid) {
-  global $theme, $revision;
+  global $revision;
 
   $node = node_load(array("status" => 1, "nid" => $nid));
 
@@ -679,14 +679,14 @@ function node_admin() {
 }
 
 function node_block($op = "list", $delta = 0) {
-  global $theme;
+
   if ($op == "list") {
     $blocks[0]["info"] = t("Syndicate");
     return $blocks;
   }
   else {
     $block["subject"] = t("Syndicate");
-    $block["content"] = "<div align=\"center\">". l("<img src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" border=\"0\" alt=\"XML\" />", "node/feed", array("title" => t("Read the XML version of this page."))) ."</div>";
+    $block["content"] = "<div align=\"center\">". l("<img src=\"". theme("image", "xml.gif") ."\" width=\"36\" height=\"14\" border=\"0\" alt=\"XML\" />", "node/feed", array("title" => t("Read the XML version of this page."))) ."</div>";
 
     return $block;
   }
@@ -1049,7 +1049,7 @@ function node_preview($node, $error = NULL) {
 }
 
 function node_submit($node) {
-  global $user, $theme;
+  global $user;
 
   /*
   ** Fixup the node when required:
@@ -1176,7 +1176,7 @@ function node_submit($node) {
     $links[] = l(t("edit"), "node/edit/$nid");
   }
 
-  $output .= "<p>". $theme->links($links) ."</p>";
+  $output .= "<p>". theme("links", $links) ."</p>";
 
   return $output;
 }
@@ -1230,7 +1230,7 @@ function node_delete($edit) {
 }
 
 function node_page() {
-  global $op, $id, $user, $edit, $theme, $or, $and;
+  global $op, $id, $user, $edit, $or, $and;
 
   if (user_access("access content")) {
     if (empty($op)) {
@@ -1242,27 +1242,27 @@ function node_page() {
       return;
     }
 
-    $theme->header();
+    theme("header");
 
     switch ($op) {
       case "add":
-        $theme->box(t("Create new post"), node_add(arg(2)));
+        theme("box", t("Create new post"), node_add(arg(2)));
         break;
       case "edit":
-        $theme->box(t("Edit post"), node_edit(arg(2)));
+        theme("box", t("Edit post"), node_edit(arg(2)));
         break;
       case "view":
         print node_show(arg(2), arg(3));
         break;
       case t("Preview"):
         $edit = node_validate($edit, $error);
-        $theme->box(t("Preview post"), node_preview($edit, $error));
+        theme("box", t("Preview post"), node_preview($edit, $error));
         break;
       case t("Submit"):
-        $theme->box(t("Submit post"), node_submit($edit));
+        theme("box", t("Submit post"), node_submit($edit));
         break;
       case t("Delete"):
-        $theme->box(t("Delete post"), node_delete($edit));
+        theme("box", t("Delete post"), node_delete($edit));
         break;
       default:
         $result = pager_query("SELECT nid, type FROM node WHERE promote = '1' AND status = '1' ORDER BY static DESC, created DESC", variable_get("default_nodes_main", 10));
@@ -1274,10 +1274,10 @@ function node_page() {
     }
   }
   else {
-    $theme->box(t("Access denied"), message_access());
+    theme("box", t("Access denied"), message_access());
   }
 
-  $theme->footer();
+  theme("footer");
 }
 
 function node_update_index() {

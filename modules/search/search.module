@@ -304,7 +304,7 @@ function search_save($edit) {
 }
 
 function search_view() {
-  global $theme, $edit, $type, $keys;
+  global $edit, $type, $keys;
 
   if (user_access("search content")) {
 
@@ -335,39 +335,39 @@ function search_view() {
         $form .= $help_link;
     }
 
-    $theme->header();
+    theme("header");
 
     if ($form) {
-      $theme->box(t("Search"), $form);
+      theme("box", t("Search"), $form);
     }
 
     if ($keys) {
       if ($output) {
-        $theme->box(t("Result"), $output);
+        theme("box", t("Result"), $output);
       }
       else {
-        $theme->box(t("Result"), t("Your search yielded no results."));
+        theme("box", t("Result"), t("Your search yielded no results."));
       }
     }
 
-    $theme->footer();
+    theme("footer");
   }
   else {
-    $theme->header();
-    $theme->box(t("Access denied"), message_access());
-    $theme->footer();
+    theme("header");
+    theme("box", t("Access denied"), message_access());
+    theme("footer");
   }
 
 }
 
 function search_page() {
-  global $theme;
+
 
   switch (arg(1)) {
     case "help":
-      $theme->header();
-      $theme->box(t("Search Help"), search_help());
-      $theme->footer();
+      theme("header");
+      theme("box", t("Search Help"), search_help());
+      theme("footer");
       break;
     default:
       search_view();

@@ -160,12 +160,12 @@ function cloud_list($limit = 10) {
 }
 
 function cloud_page() {
-  global $theme;
+
 
   if (user_access("access site cloud")) {
-    $theme->header();
-    $theme->box(t("Site cloud"), cloud_help("user") . cloud_list(100));
-    $theme->footer();
+    theme("header");
+    theme("box", t("Site cloud"), cloud_help("user") . cloud_list(100));
+    theme("footer");
   }
 }
 

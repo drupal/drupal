@@ -67,27 +67,27 @@ function tracker_menu() {
 
 
 function tracker_page() {
-  global $theme, $user;
+  global $user;
 
   if (user_access("access comments")) {
     if (arg(1) == $user->uid) {
-      $theme->header(t("Your recent comments"));
-      $theme->box(t("Tracker"), tracker_menu());
-      $theme->box(t("Your recent comments"), tracker_comments(arg(1)));
-      $theme->footer();
+      theme("header", t("Your recent comments"));
+      theme("box", t("Tracker"), tracker_menu());
+      theme("box", t("Your recent comments"), tracker_comments(arg(1)));
+      theme("footer");
     }
     else if (arg(1)) {
       $account = user_load(array("uid" => arg(1)));
-      $theme->header(t("%u's recent comments", array("%u" => $account->name)));
-      $theme->box(t("Tracker"), tracker_menu());
-      $theme->box(t("%u's recent comments", array("%u" => $account->name)), tracker_comments(arg(1)));
-      $theme->footer();
+      theme("header", t("%u's recent comments", array("%u" => $account->name)));
+      theme("box", t("Tracker"), tracker_menu());
+      theme("box", t("%u's recent comments", array("%u" => $account->name)), tracker_comments(arg(1)));
+      theme("footer");
     }
     else {
-      $theme->header(t("All recent comments"));
-      $theme->box(t("Tracker"), tracker_menu());
-      $theme->box(t("All recent comments"), tracker_comments());
-      $theme->footer();
+      theme("header", t("All recent comments"));
+      theme("box", t("Tracker"), tracker_menu());
+      theme("box", t("All recent comments"), tracker_comments());
+      theme("footer");
     }
   }
 }

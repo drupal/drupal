@@ -999,7 +999,7 @@ function user_menu() {
 }
 
 function user_view($uid = 0) {
-  global $theme, $user;
+  global $user;
 
   if (!$uid) {
     $uid = $user->uid;
@@ -1015,10 +1015,10 @@ function user_view($uid = 0) {
       }
     }
 
-    $theme->header();
-    $theme->box(t("User account"), user_menu());
-    $theme->box(t("View user information"), $output);
-    $theme->footer();
+    theme("header");
+    theme("box", t("User account"), user_menu());
+    theme("box", t("View user information"), $output);
+    theme("footer");
   }
   else if ($uid && $account = user_load(array("uid" => $uid, "status" => 1))) {
     $output = form_item(t("Name"), $account->name);
@@ -1029,23 +1029,23 @@ function user_view($uid = 0) {
       }
     }
 
-    $theme->header();
-    $theme->box(t("View user information"), $output);
-    $theme->footer();
+    theme("header");
+    theme("box", t("View user information"), $output);
+    theme("footer");
   }
   else {
-    $theme->header();
-    $theme->box(t("Log in"), user_login());
+    theme("header");
+    theme("box", t("Log in"), user_login());
     if (variable_get("user_register", 1)) {
-      $theme->box(t("Create new user account"), user_register());
+      theme("box", t("Create new user account"), user_register());
     }
-    $theme->box(t("E-mail new password"), user_pass());
-    $theme->footer();
+    theme("box", t("E-mail new password"), user_pass());
+    theme("footer");
   }
 }
 
 function user_page() {
-  global $edit, $op, $theme;
+  global $edit, $op;
 
   if (empty($op)) {
     $op = arg(1);
@@ -1054,45 +1054,45 @@ function user_page() {
   switch ($op) {
     case t("E-mail new password");
     case "password":
-      $theme->header();
-      $theme->box(t("E-mail new password"), user_pass($edit));
-      $theme->footer();
+      theme("header");
+      theme("box", t("E-mail new password"), user_pass($edit));
+      theme("footer");
       break;
     case t("Create new account"):
     case "register":
       $output = user_register($edit);
-      $theme->header();
+      theme("header");
       if (variable_get("user_register", 1)) {
-        $theme->box(t("Create new account"), $output);
+        theme("box", t("Create new account"), $output);
       }
       else {
         print message_access();
       }
-      $theme->footer();
+      theme("footer");
       break;
     case t("Log in"):
     case "login":
       $output = user_login($edit);
-      $theme->header();
-      $theme->box(t("Log in"), $output);
-      $theme->footer();
+      theme("header");
+      theme("box", t("Log in"), $output);
+      theme("footer");
       break;
     case t("Delete account"):
     case t("delete");
       $output = user_delete();
-      $theme->header();
-      $theme->box(t("User account"), user_menu());
-      $theme->box(t("Delete account"), $output);
-      $theme->footer();
+      theme("header");
+      theme("box", t("User account"), user_menu());
+      theme("box", t("Delete account"), $output);
+      theme("footer");
       break;
     case t("Save user information"):
     case "edit":
       $output = user_edit($edit);
       $theme = theme_init();
-      $theme->header();
-      $theme->box(t("User account"), user_menu());
-      $theme->box(t("Edit user information"), $output);
-      $theme->footer();
+      theme("header");
+      theme("box", t("User account"), user_menu());
+      theme("box", t("Edit user information"), $output);
+      theme("footer");
       break;
     case "view":
       user_view(arg(2));
@@ -1102,9 +1102,9 @@ function user_page() {
       print user_logout();
       break;
     case "help":
-      $theme->header();
-      $theme->box(t("Distributed authentication"), user_help_users_da());
-      $theme->footer();
+      theme("header");
+      theme("box", t("Distributed authentication"), user_help_users_da());
+      theme("footer");
       break;
     default:
       print user_view();
@@ -1817,10 +1817,10 @@ function user_help_devel_da() {
   and we return TRUE.
 </p>
 <pre>function blogger_page() {
-  global $theme;
-  $theme-&gt;header();
-  $theme-&gt;box(&quot;Blogger&quot;, blogger_auth_help());
-  $theme-&gt;footer();
+
+  $theme(&quot;header&quot;);
+  $theme(&quot;box&quot;, &quot;Blogger&quot;, blogger_auth_help());
+  $theme(&quot;footer&quot;);
 }</pre>
 <p>The _page function is not currently used, but it might be in the future. For
   now, just copy what you see here, substituting your module name for <i>blogger</i>.</p>

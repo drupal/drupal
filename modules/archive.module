@@ -137,9 +137,9 @@ function archive_link($type) {
 }
 
 function archive_page() {
-  global $date, $edit, $theme, $op, $month, $year, $meta;
+  global $date, $edit, $op, $month, $year, $meta;
 
-  $theme->header();
+  theme("header");
 
   if (user_access("access content")) {
     if ($op == t("Show")) {
@@ -166,7 +166,7 @@ function archive_page() {
     $start = form_select("", "year", ($year ? $year : date("Y")), $years). form_select("", "month", ($month ? $month : date("m")), $months) . form_select("", "day", ($day ? $day : date("d")), $days) . form_submit(t("Show"));
     $start = ereg_replace("<[/]?p>", "", $start);
 
-    $theme->box(t("Archives"), form($start));
+    theme("box", t("Archives"), form($start));
 
     /*
     ** Fetch nodes for the selected date, or current date if none
@@ -185,7 +185,7 @@ function archive_page() {
     message_access();
   }
 
-  $theme->footer();
+  theme("footer");
 }
 
 function archive_settings() {

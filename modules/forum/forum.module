@@ -169,7 +169,7 @@ function forum_link($type, $node = 0, $main = 0) {
 }
 
 function forum_view($node, $main = 0) {
-  global $theme;
+
 
   $term_data = array_shift(taxonomy_node_get_terms($node->nid));
   if (!$term_data) {
@@ -182,7 +182,7 @@ function forum_view($node, $main = 0) {
     $node->title = _forum_get_icon($node) ." ". l($voc->name, "forum") ." : ". l($term_data->name, "forum/$term_data->tid") ." / <b>$node->title</b>";
   }
 
-  $theme->node($node, $main);
+  theme("node", $node, $main);
 }
 
 function forum_validate($node) {
@@ -458,7 +458,7 @@ function _forum_message_taxonomy() {
 }
 
 function forum_page() {
-  global $theme, $sortby, $forum_per_page, $from, $op, $user;
+  global $sortby, $forum_per_page, $from, $op, $user;
 
   if (user_access("access content")) {
     if (module_exist("taxonomy")) {
@@ -493,15 +493,15 @@ function forum_page() {
       theme("forum_render", $forums, $topics, $parents, $tid, $sortby, $forum_per_page, $offset);
     }
     else {
-      $theme->header();
-      $theme->box(t("Warning"), _forum_message_taxonomy());
-      $theme->footer();
+      theme("header");
+      theme("box", t("Warning"), _forum_message_taxonomy());
+      theme("footer");
     }
   }
   else {
-    $theme->header();
-    $theme->box(t("Access denied"), message_access());
-    $theme->footer();
+    theme("header");
+    theme("box", t("Access denied"), message_access());
+    theme("footer");
   }
 }
 
@@ -511,19 +511,19 @@ function forum_page() {
 
 function forum_render($forums, $topics, $parents, $tid, $sortby, $forum_per_page, $offset) {
   // forum list, topics list, topic browser and "add new topic" link
-  global $theme;
+
 
   $output .= theme("forum_forum_list", $forums, $parents, $tid);
   if ($tid && !in_array($tid, variable_get("forum_containers", array()))) {
     $output .= theme("forum_topic_list", $tid, $topics, $sortby, $forum_per_page, $offset);
   }
 
-  $theme->header();
-  $theme->box(t("Discussion forum"), $output);
+  theme("header");
+  theme("box", t("Discussion forum"), $output);
   if ($tid && !in_array($tid, variable_get("forum_containers", array()))) {
-    $theme->box(t("Control panel"), theme("forum_topic_browser", $sortby, $forum_per_page, $offset));
+    theme("box", t("Control panel"), theme("forum_topic_browser", $sortby, $forum_per_page, $offset));
   }
-  $theme->footer();
+  theme("footer");
 }
 
 function forum_forum_list($forums, $parents, $tid) {
@@ -608,7 +608,7 @@ function forum_topic_browser() {
 }
 
 function forum_topic_list($tid, $topics, $sortby, $forum_per_page, $offset) {
-  global $theme, $id, $status, $user, $pager_total;
+  global $id, $status, $user, $pager_total;
 
   if ($topics) {
     $output .= "<table border=\"0\" cellpadding=\"5\" cellspacing=\"5\" width=\"100%\">\n";
@@ -665,7 +665,7 @@ function _forum_get_icon($node) {
 
 function _forum_get_folder_icon($new_posts, $num_posts = 0, $comment_mode = 0) {
   // "folder" icon because it's generally rendered as a folder
-  global $theme;
+
 
   $base_path = variable_get("forum_folder_icon_path", "");
   if ($base_path) {
@@ -680,13 +680,8 @@ function _forum_get_folder_icon($new_posts, $num_posts = 0, $comment_mode = 0) {
       $icon = "closed";
     }
 
-    if ($theme->bbs_icons) {
-      $file = $theme->bbs_icons[$icon];
-    }
-    else {
-      // default
-      $file = $base_path."/".$icon.".gif";
-    }
+    // default
+    $file = $base_path."/".$icon.".gif";
 
     return "<img src=\"$file\" alt=\"\" />";
   }

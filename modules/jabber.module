@@ -145,11 +145,11 @@ function jabber_auth($username, $password, $server) {
 }
 
 function jabber_page() {
-  global $theme;
 
-  $theme->header();
-  $theme->box("Jabber", jabber_auth_help());
-  $theme->footer();
+
+  theme("header");
+  theme("box", "Jabber", jabber_auth_help());
+  theme("footer");
 }
 
 function jabber_auth_help() {

@@ -338,7 +338,7 @@ function book_location($node, $nodes = array()) {
 }
 
 function book_body($node) {
-  global $theme, $op;
+  global $op;
 
   if ($node->format == 1) {
     /*
@@ -367,7 +367,7 @@ function book_body($node) {
 }
 
 function book_view($node, $main = 0) {
-  global $theme, $mod;
+  global $mod;
 
   /*
   ** Always display the most recently approved revision of a node
@@ -397,7 +397,7 @@ function book_view($node, $main = 0) {
   */
 
   if ($main) {
-    $theme->node($node, $main);
+    theme("node", $node, $main);
   }
   else {
     /*
@@ -438,10 +438,10 @@ function book_view($node, $main = 0) {
     $output .= " <tr><td align=\"left\" width=\"33%\">". ($prev ? l(t("previous"), "node/view/$prev->nid", array("title" => t("View the previous page in this book."))) : t("previous")) ."</td><td align=\"center\" width=\"34%\">". l(t("index"), "book", array("title" => t("View this book's table of contents."))) ."</td><td align=\"right\" width=\"33%\">". ($next ? l(t("next"), "node/view/$next->nid", array("title" => t("View the next page in this book."))) : t("next")) ."</td></tr>";
     $output .= " <tr><td align=\"left\" width=\"33%\">". ($prev ? "<small>$prev->title</small>" : "&nbsp;") ."</td><td align=\"center\" width=\"34%\">". ($node->parent ? l(t("up"), "node/view/$node->parent", array("title" => t("View this page's parent section."))) : t("up")) ."</td><td align=\"right\" width=\"33%\">". ($next ? "<small>$next->title</small>" : "&nbsp;") ."</td></tr>";
     $output .= " <tr><td colspan=\"3\"><hr /></td></tr>";
-    $output .= " <tr><td colspan=\"3\" align=\"right\"><div style=\"margin: 10 10 10 10;\">". $theme->links(link_node($node, $main)) ."</div></td></tr>";
+    $output .= " <tr><td colspan=\"3\" align=\"right\"><div style=\"margin: 10 10 10 10;\">". theme("links", link_node($node, $main)) ."</div></td></tr>";
     $output .= "</table>";
 
-    $theme->box(t("Handbook"), $output);
+    theme("box", t("Handbook"), $output);
   }
 }
 
@@ -522,7 +522,7 @@ function book_tree($parent = 0, $depth = 3) {
 
 
 function book_render() {
-  global $theme;
+
 
   $result = db_query("SELECT n.nid FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE b.parent = 0 AND n.status = 1 AND (n.moderate = 0 OR n.revisions != '') ORDER BY b.weight, n.title");
 
@@ -541,13 +541,13 @@ function book_render() {
     }
   }
 
-  $theme->header();
-  $theme->box(t("Handbook"), "<dl>$output</dl>");
-  $theme->footer();
+  theme("header");
+  theme("box", t("Handbook"), "<dl>$output</dl>");
+  theme("footer");
 }
 
 function book_page() {
-  global $theme;
+
 
   if (user_access("access content")) {
     switch (arg(1)) {
@@ -559,9 +559,9 @@ function book_page() {
     }
   }
   else {
-    $theme->header();
-    $theme->box(t("Access denied"), message_access());
-    $theme->footer();
+    theme("header");
+    theme("box", t("Access denied"), message_access());
+    theme("footer");
   }
 }
 
