@@ -169,7 +169,7 @@ function poll_link($type, $node = 0, $main) {
     poll_allowvotes($node);
 
     if ($node->allowvotes == 1) {
-      global $pollresults;
+      $pollresults = $_GET["pollresults"];
 
       // Change the current URL: add/edit the value of pollresults[nid]
       if ($pollresults[$node->nid]) {
@@ -333,7 +333,7 @@ function poll_view(&$node, $main = 0, $block = 0) {
   ** $pollvote[nid]    - A user's vote
   ** $pollresults[nid] - When a user hasn't voted, he can choose to see the voting form or the results
   */
-  global $pollresults;
+  $pollresults = $_GET["pollresults"];
 
   // Make sure we have determined the 'allowvotes' flag
   poll_allowvotes($node);
