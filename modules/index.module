@@ -87,7 +87,7 @@ function index_test_2($edit) {
 
   foreach (explode(";", $value1) as $data) {
     $entry = explode(":", $data);
-    if ($entry[1]) $foo[] = "<A HREF=\"index.php?$entry[0]=$entry[1]\">$entry[1]</A>";
+    if ($entry[1]) $foo[] = "<A HREF=\"index.php?$entry[0]=". urlencode($entry[1]) ."\">$entry[1]</A>";
   }
 
   $value2 = implode(" - ", $foo);
