@@ -558,7 +558,7 @@ function aggregator_parse_feed(&$data, $feed) {
   ** Remove all items that are older than 3 months:
   */
 
-  $age = time() - 1209600; // 3 month
+  $age = time() - 8035200; // 60 * 60 * 24 * 31 * 3
   $result = db_query('SELECT iid FROM {aggregator_item} WHERE fid = %d AND timestamp < %d', $feed['fid'], $age);
 
   if (db_num_rows($result)) {
