@@ -225,16 +225,6 @@ function system_listing($type, $directory, $required = array()) {
   return form($output);
 }
 
-/**
-* Module configuration
-*
-* @group system.module
-* @return string module list
-*/
-function system_modules() {
-  // Config variables.
-}
-
 function system_admin() {
   global $edit, $op, $type;
   if (user_access("administer site configuration")) {
