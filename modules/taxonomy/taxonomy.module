@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.10 2002/05/20 07:34:38 dries Exp $
+// $Id: taxonomy.module,v 1.11 2002/05/31 20:29:29 dries Exp $
 
 function taxonomy_feed() {
   global $id, $or, $and, $type;
@@ -244,14 +244,15 @@ function taxonomy_form($vocabulary_id, $value = 0) {
   }
   else {
     $verb = "can";
-    $blank = "<none>";
+    $blank = t("<none>");
   }
+
   if ($vocabulary->multiple) {
-    $description = "You $verb choose one or more terms for this node";
+    $description = t("You $verb choose one or more terms for this node.");
     $multiple = 1;
   }
   else {
-    $description = "You $verb choose one term for this node";
+    $description = t("You $verb choose one term for this node.");
     $multiple = 0;
   }
   return _taxonomy_term_select($vocabulary->name, "taxonomy", $value, $vocabulary_id, $description, $multiple, $blank);

@@ -1,5 +1,5 @@
 <?php
-// $Id: page.module,v 1.63 2002/05/29 17:17:09 kjartan Exp $
+// $Id: page.module,v 1.64 2002/05/31 20:29:29 dries Exp $
 
 function page_help() {
   $output .= "<p>The page module is used to create a <i>site page</i>.  Unlike a story, a site page is a persistent web page on your site which usually shortcuts the typical lifecycle of user generated content (i.e. submit -&gt; moderate -&gt; post -&gt; comment).  A site page is usually linked from the main navigation bar, using whatever text the author wishes.  To create a site page without this navigation link, simply skip the form field which requests link text.  Administrators are the exclusive authors of site pages (i.e. requires the <i>administer nodes</i> in ". la("permission", array("mod" => "user", "op" => "permission")) .").</p>";
@@ -144,9 +144,9 @@ function page_form(&$node, &$help, &$error) {
     $output .= implode("", taxonomy_node_form("page", $node));
   }
 
-  $output .= form_textarea("Body", "body", $node->body, 60, 20);
-  $output .= form_textfield("Navigation link header", "link", $node->link, 60, 64, "To make the page show up on the navigation links enter the name of the link, otherwise leave blank.");
-  $output .= form_select("Type", "format", $node->format, array(0 => "HTML / text", 1 => "PHP"));
+  $output .= form_textarea(t("Body"), "body", $node->body, 60, 20);
+  $output .= form_textfield(t("Navigation link header"), "link", $node->link, 60, 64, t("To make the page show up on the navigation links enter the name of the link, otherwise leave blank."));
+  $output .= form_select(t("Type"), "format", $node->format, array(0 => "HTML / text", 1 => "PHP"));
 
   return $output;
 }
