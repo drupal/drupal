@@ -130,10 +130,10 @@ function queue_overview() {
 
   while ($node = db_fetch_object($result)) {
     if ($user->uid == $node->uid || $node->voted) {
-      $rows[] = array(array('data' => l($node->title, 'queue/'. $node->nid), 'class' => 'title'), array('data' => format_name($node), 'class' => 'name'), array('data' => module_invoke($node->type, 'node_name', $node), 'class' => 'type'), array('data' => $node->score, 'class' => 'score'));
+      $rows[] = array(array('data' => l($node->title, 'queue/'. $node->nid), 'class' => 'title'), array('data' => format_name($node), 'class' => 'name'), array('data' => node_invoke($node, 'node_name'), 'class' => 'type'), array('data' => $node->score, 'class' => 'score'));
     }
     else {
-      $rows[] = array(array('data' => l($node->title, 'queue/'. $node->nid), 'class' => 'title'), array('data' => format_name($node), 'class' => 'name'), array('data' => module_invoke($node->type, 'node_name', $node), 'class' => 'type'), array('data' => l(t('vote'), 'queue/'. $node->nid), 'class' => 'score'));
+      $rows[] = array(array('data' => l($node->title, 'queue/'. $node->nid), 'class' => 'title'), array('data' => format_name($node), 'class' => 'name'), array('data' => node_invoke($node, 'node_name'), 'class' => 'type'), array('data' => l(t('vote'), 'queue/'. $node->nid), 'class' => 'score'));
     }
   }
 
