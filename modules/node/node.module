@@ -1430,8 +1430,8 @@ function node_submit($node) {
     */
 
     if (node_access("update", $node)) {
-      $nid = node_save($node);
-      watchdog("special", "$node->type: updated '$node->title'", l("view post", node_url($node)));
+      $node->nid = node_save($node);
+      watchdog("special", "$node->type: updated '$node->title'", l(t("view post"), node_url($node)));
       $output = t("The %name has been updated.", array ("%name" => module_invoke($node->type, "node", "name")));
     }
   }
@@ -1451,8 +1451,8 @@ function node_submit($node) {
 
       throttle("node", variable_get("max_node_rate", 900));
 
-      $nid = node_save($node);
-      watchdog("special", "$node->type: added '$node->title'", l("view post", node_url($node)));
+      $node->nid = node_save($node);
+      watchdog("special", "$node->type: added '$node->title'", l(t("view post"), node_url($node)));
       $output = t("Thanks for your submission.");
     }
   }
@@ -1461,7 +1461,7 @@ function node_submit($node) {
   ** Reload the node from the database:
   */
 
-  $node = node_load(array("nid" => $nid));
+  $node = node_load(array("nid" => $node->nid));
 
   /*
   ** For usability's sake, make sure to present the user with some
@@ -1472,12 +1472,12 @@ function node_submit($node) {
     $links[] = "<a href=\"$referer\">". t("return") ."</a>";
   }
 
-  if ($nid && node_access("view", $node)) {
+  if ($node->nid && node_access("view", $node)) {
     $links[] = l(t("view"), node_url($node));
   }
 
-  if ($nid && node_access("update", $node)) {
-    $links[] = l(t("edit"), "node/edit/$nid");
+  if ($node->nid && node_access("update", $node)) {
+    $links[] = l(t("edit"), "node/edit/$node->nid");
   }
 
   $output .= "<p>". theme("links", $links) ."</p>";
