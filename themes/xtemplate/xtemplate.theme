@@ -166,7 +166,7 @@ function xtemplate_page($content, $title = NULL, $breadcrumb = NULL) {
     "head_title" => (drupal_get_title() ? drupal_get_title() ." | ". variable_get("site_name", "drupal") : variable_get("site_name", "drupal") ." | ". variable_get("site_slogan", "")),
     "site" => variable_get("site_name", "drupal"),
     "head" => drupal_get_html_head(),
-    "path" => "themes/xtemplate/$template_directory",
+    "directory" => "themes/xtemplate/$template_directory",
     "onload_attributes" => theme_onload_attribute(),
     "logo" => variable_get('xtemplate_logo', "<img src=\"themes/xtemplate/$template_directory/logo.gif\" alt=\"Logo\" />"),
     "primary_links" => variable_get("xtemplate_primary_links", l("edit primary links", "admin/system/themes/xtemplate")),
