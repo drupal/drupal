@@ -71,7 +71,7 @@ function _db_query($query, $debug = 0) {
   }
 
   if (DB::isError($result)) {
-    watchdog("error", "database: ". $result->getMessage() ."\nquery: ". htmlspecialchars($query));
+    trigger_error($result->getMessage() ."\nquery: ". htmlspecialchars($query), E_USER_ERROR);
   }
   else {
     return $result;
