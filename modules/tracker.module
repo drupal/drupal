@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.module,v 1.54 2003/08/25 16:12:09 dries Exp $
+// $Id: tracker.module,v 1.55 2003/09/06 15:18:12 dries Exp $
 
 function tracker_help($section = "admin/tracker/help") {
 
@@ -30,7 +30,7 @@ function tracker_posts($id = 0) {
   $header = array(
     array("data" => t("Type"), "field" => "type"),
     array("data" => t("Title"), "field" => "title"),
-    array("data" => t("Author"), "field" => "uid"),
+    array("data" => t("Author"), "field" => "u.name"),
     array("data" => t("Last Post"), "field" => "last_activity", "sort" => "desc")
   );
   if ($id) {
