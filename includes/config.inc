@@ -83,7 +83,7 @@ $themes = array("Marvin"  => array(
                    "classic theme, white, basic design with a fresh look"),
                 "Zaphod"  => array(
                    "themes/zaphod/zaphod.theme", 
-                   "classis theme, yellow, structured, advanced navigation"),
+                   "classic theme, yellow, structured, advanced navigation"),
 		"UnConeD" => array(
 		   "themes/unconed/unconed.theme",
 		   "modern theme, gray and blue, high coolness factor"));
@@ -129,7 +129,7 @@ $submission_rate = array("comment" => "60",     //  60 seconds = 1 minute
 #  the maximum length (i.e. the maximum number of characters) a 
 #  story, a diary entry, or a comment is allowed to be.
 #
-$submission_size = 6000;     // 6.000 characters is more or less 150 lines
+$submission_size = 12000;     // 12.000 characters is more or less 300 lines
 
 #
 # Watchdog history:

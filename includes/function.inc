@@ -18,6 +18,11 @@ function load_theme() {
   return new Theme();
 }
 
+function discussion_score($comment) {
+  $value = ($comment->votes) ? ($comment->score / $comment->votes) : (($comment->score) ? $comment->score : 0);
+  return (strpos($value, ".")) ? substr($value ."00", 0, 4) : $value .".00";
+}
+
 function check_field($message) {
   return str_replace("\"", "&quot;", stripslashes($message));
 }

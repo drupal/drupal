@@ -103,7 +103,7 @@ function display_calendar($theme, $date) {
 }
 
 function display_account($theme) {
-  global $user;
+  global $user, $site_name;
   
   if ($user->id) { 
 
@@ -113,15 +113,22 @@ function display_account($theme) {
     }
 
     ### Display account settings:
-    $content  = "<LI><A HREF=\"account.php\">view your information</A></LI>";
-    $content .= "<LI><A HREF=\"account.php?op=user\">edit your information</A></LI>";
-    $content .= "<LI><A HREF=\"account.php?op=page\">customize your page</A></LI>";
-    $content .= "<LI><A HREF=\"account.php?op=discussion\">track your comments</A></LI>";
-    $content .= "<LI><A HREF=\"submission.php\">moderate submissions</A> (<FONT COLOR=\"red\">". submission_number() ."</FONT>)</LI>";
-    $content .= "<LI><A HREF=\"diary.php?op=view&name=$user->userid\">update your diary</A></LI>";
-    $content .= "<LI><A HREF=\"account.php?op=logout\">logout</A></LI>";
+    $content .= "<LI><A HREF=\"account.php?op=track&topic=comments\">track your comments</A></LI>\n";
+    $content .= "<LI><A HREF=\"account.php?op=track&topic=stories\">track your stories</A></LI>\n";
+    $content .= "<LI><A HREF=\"account.php?op=track&topic=site\">track $site_name</A></LI>\n";
+    $content .= "<P>\n";
+    $content .= "<LI><A HREF=\"submission.php\">submission queue</A> (<FONT COLOR=\"red\">". submission_number() ."</FONT>)</LI>\n";
+    $content .= "<P>\n";
+    $content .= "<LI><A HREF=\"account.php?op=edit&topic=diary\">edit your diary</A></LI>\n";
+    $content .= "<LI><A HREF=\"account.php?op=edit&topic=user\">edit your information</A></LI>\n";
+    $content .= "<LI><A HREF=\"account.php?op=edit&topic=page\">edit your settings</A></LI>\n";
+    $content .= "<P>\n";
+    $content .= "<LI><A HREF=\"account.php?op=view&topic=diary\">view your diary</A></LI>\n";
+    $content .= "<LI><A HREF=\"account.php?op=view&topic=info\">view your information</A></LI>\n";
+    $content .= "<P>\n";
+    $content .= "<LI><A HREF=\"account.php?op=logout\">logout</A></LI>\n";
 
-    $theme->box("$user->userid's account", "$content");
+    $theme->box("$user->userid's account", "$content", "NOWRAP");
   }
 }
 
