@@ -1,5 +1,5 @@
 <?php
-// $Id: pager.inc,v 1.7 2003/01/15 23:01:41 dries Exp $
+// $Id: pager.inc,v 1.8 2003/01/20 19:54:11 dries Exp $
 
 /* ***************************************************
  *            external functions (API)
@@ -303,7 +303,7 @@ function pager_link($from_new, $attributes = array()) {
   }
 
   if (count($attributes)) {
-    $url = url($q, "from=". $from_new[0] ."&". implode("&", $query));
+    $url = url($q, "from=". $from_new[0] ."&amp;". implode("&amp;", $query));
   }
   else {
     $url = url($q, "from=". $from_new[0]);
