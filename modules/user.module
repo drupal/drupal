@@ -1131,6 +1131,10 @@ function user_view($uid = 0) {
       }
     }
 
+    if (user_access("administer users")) {
+      $output .= form_item(t("Administration"), l(t("edit account"), "admin/user/edit/$account->uid"));
+    }
+
     theme("header");
     theme("box", $account->name, $output);
     theme("footer");
