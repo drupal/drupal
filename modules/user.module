@@ -73,7 +73,7 @@ function user_load($array = array()) {
       $query .= "u.$key = '". check_query($value) ."' AND ";
     }
   }
-  $result = db_query_range("SELECT u.*, r.name AS role FROM users u LEFT JOIN role r ON u.rid = r.rid WHERE $query u.status < 3", 0, 1);
+  $result = db_query_range("SELECT u.*, r.name AS role FROM role r INNER JOIN users u ON r.rid = u.rid WHERE $query u.status < 3", 0, 1);
 
   $user = db_fetch_object($result);
   if ($user->data && $data = unserialize($user->data)) {
@@ -1585,12 +1585,12 @@ function user_admin_edit($edit = array()) {
 function user_admin_account() {
   $query = arg(3);
 
-  $queries = array("ORDER BY timestamp DESC", "ORDER BY u.uid DESC", "WHERE status = 0 ORDER BY u.uid DESC");
+  $queries = array("ORDER BY u.timestamp DESC", "ORDER BY u.uid DESC", "WHERE u.status = 0 ORDER BY u.uid DESC");
   foreach (user_roles(1) as $key => $value) {
     $queries[] = "WHERE r.name = '$value' ORDER BY u.uid DESC";
   }
 
-  $result = pager_query("SELECT u.uid, u.name, u.timestamp FROM users u LEFT JOIN role r ON u.rid = r.rid ". $queries[$query ? $query : 0], 50);
+  $result = pager_query("SELECT u.uid, u.name, u.timestamp FROM role r INNER JOIN users u ON r.rid = u.rid ". $queries[$query ? $query : 0], 50);
 
   $header = array(t("username"), t("last access"), t("operations"));
   while ($account = db_fetch_object($result)) {
