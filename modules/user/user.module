@@ -1297,7 +1297,7 @@ function user_admin_access($edit = array()) {
     drupal_set_message(t('The access rule has been deleted.'));
   }
 
-  $header = array(t('type'), t('mask'), t('operations'));
+  $header = array(t('Type'), t('Mask'), t('Operations'));
   $result = db_query("SELECT * FROM {access} WHERE type = '%s' AND status = 1 ORDER BY mask", $type);
   while ($rule = db_fetch_object($result)) {
     $rows[] = array(t('Allow'), $rule->mask, array('data' => l(t('delete'), "admin/user/configure/access/$type/$rule->aid"), 'align' => 'center'));
@@ -1440,7 +1440,7 @@ function user_admin_role($edit = array()) {
     // Render the role overview.
     $result = db_query('SELECT * FROM {role} ORDER BY name');
 
-    $header = array(t('name'), t('operations'));
+    $header = array(t('Name'), t('Operations'));
     while ($role = db_fetch_object($result)) {
       if ($role->name != 'anonymous user' && $role->name != 'authenticated user') {
         $rows[] = array($role->name, array('data' => l(t('edit'), "admin/user/configure/role/$role->rid"), 'align' => 'center'));
@@ -1461,10 +1461,10 @@ function user_admin_role($edit = array()) {
 function user_admin_account() {
   $header = array(
     array('data' => t('ID'), 'field' => 'u.uid'),
-    array('data' => t('username'), 'field' => 'u.name'),
-    array('data' => t('status'), 'field' => 'u.status'),
-    array('data' => t('roles')),
-    array('data' => t('last access'), 'field'  => 'u.changed', 'sort' => 'desc'),
+    array('data' => t('Username'), 'field' => 'u.name'),
+    array('data' => t('Status'), 'field' => 'u.status'),
+    array('data' => t('Roles')),
+    array('data' => t('Last access'), 'field'  => 'u.changed', 'sort' => 'desc'),
     t('operations')
   );
   $sql = 'SELECT u.uid, u.name, u.status, u.changed FROM {users} u WHERE uid != 0';

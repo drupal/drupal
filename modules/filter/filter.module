@@ -174,11 +174,11 @@ function filter_admin_overview() {
   $roles = user_roles();
   $error = false;
 
-  $header = array(t('name'), t('default'));
+  $header = array(t('Name'), t('Default'));
   foreach ($roles as $name) {
     $header[] = $name;
   }
-  $header[] = array('data' => t('operations'), 'colspan' => 2);
+  $header[] = array('data' => t('Operations'), 'colspan' => 2);
 
   $rows = array();
   foreach ($formats as $id => $format) {
@@ -332,7 +332,7 @@ function filter_admin_filters() {
   $enabled = filter_list_format($format);
 
   // Table with filters
-  $header = array('enabled', 'name', 'description');
+  $header = array(t('Enabled'), t('Name'), t('Description'));
   $rows = array();
   foreach ($all as $id => $filter) {
     $row = array();
@@ -405,7 +405,7 @@ function filter_admin_order() {
   // Get list (with forced refresh)
   $filters = filter_list_format($format);
 
-  $header = array(t('name'), t('weight'));
+  $header = array(t('Name'), t('Weight'));
   $rows = array();
 
   foreach ($filters as $id => $filter) {

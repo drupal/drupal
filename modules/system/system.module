@@ -233,11 +233,11 @@ function system_listing($type) {
     // the throttle mechanism requires additional modules always be enabled
     $throttle_required = array_merge($required, array('modules/statistics.module', 'modules/throttle.module'));
 
-    $header = array(t('name'), t('description'), t('status'), t('throttle'));
+    $header = array(t('Name'), t('Description'), t('Status'), t('Throttle'));
   }
   else {
     $required = array();
-    $header = array(t('name'), t('description'), t('enable'), t('default'));
+    $header = array(t('Name'), t('Description'), t('Enable'), t('Default'));
   }
 
   foreach ($files as $filename => $file) {

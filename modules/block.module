@@ -167,7 +167,7 @@ function block_admin_display() {
     $formats[$box->bid] = $box->format;
   }
 
-  $header = array(t('block'), t('enabled'), t('custom'), t('throttle'), t('weight'), t('region'), t('path'), array('data' => t('operations'), 'colspan' => 2));
+  $header = array(t('Block'), t('Enabled'), t('Custom'), t('Throttle'), t('Weight'), t('Region'), t('Path'), array('data' => t('Operations'), 'colspan' => 2));
 
   foreach ($blocks as $block) {
     if ($block['module'] == 'block') {

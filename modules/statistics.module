@@ -226,12 +226,12 @@ function statistics_admin_displaylog($type = 'all', $id = 0) {
   }
 
   $header = array(
-    array('data' => t('timestamp'), 'field' => 'timestamp', 'sort' => 'desc'),
-    array('data' => t('post'), 'field' => 'title'),
-    array('data' => t('user'), 'field' => 'uid'),
-    array('data' => t('hostname'), 'field' => 'hostname'),
-    array('data' => t('referrer'), 'field' => 'url'),
-    array('data' => t('operations'), 'colspan' => '3')
+    array('data' => t('Timestamp'), 'field' => 'timestamp', 'sort' => 'desc'),
+    array('data' => t('Post'), 'field' => 'title'),
+    array('data' => t('User'), 'field' => 'uid'),
+    array('data' => t('Hostname'), 'field' => 'hostname'),
+    array('data' => t('Referrer'), 'field' => 'url'),
+    array('data' => t('Operations'), 'colspan' => '3')
   );
 
   $sql .= tablesort_sql($header);
@@ -274,11 +274,11 @@ function statistics_top_titles() {
   $page_title = strtr($describe, array('%interval' => format_interval(variable_get('statistics_flush_accesslog_timer', 259200))));
 
   $header = array(
-    array('data' => t('post'), 'field' => 'title'),
-    array('data' => t('last path'), 'field' => 'path'),
-    array('data' => t('hits'), 'field' => 'hits', 'sort' => 'desc'),
-    array('data' => t('last hit'), 'field' => 'last_hit'),
-    array('data' => t('operations'))
+    array('data' => t('Post'), 'field' => 'title'),
+    array('data' => t('Last path'), 'field' => 'path'),
+    array('data' => t('Hits'), 'field' => 'hits', 'sort' => 'desc'),
+    array('data' => t('Last hit'), 'field' => 'last_hit'),
+    array('data' => t('Operations'))
   );
   $sql .= tablesort_sql($header);
   $result = pager_query($sql, 50, 0, $sql_cnt);
@@ -305,11 +305,11 @@ function statistics_top_users() {
   $page_title = strtr($describe, array('%interval' => format_interval(variable_get('statistics_flush_accesslog_timer', 259200))));
 
   $header = array(
-    array('data' => t('user'), 'field' => 'user'),
-    array('data' => t('last hostname'), 'field' => 'hostname'),
-    array('data' => t('hits'), 'field' => 'hits', 'sort' => 'desc'),
-    array('data' => t('last hit'), 'field' => 'last_hit'),
-    array('data' => t('operations'), 'colspan' => 2)
+    array('data' => t('User'), 'field' => 'user'),
+    array('data' => t('Last hostname'), 'field' => 'hostname'),
+    array('data' => t('Hits'), 'field' => 'hits', 'sort' => 'desc'),
+    array('data' => t('Last hit'), 'field' => 'last_hit'),
+    array('data' => t('Operations'), 'colspan' => 2)
   );
   $sql .= tablesort_sql($header);
   $result = pager_query($sql, 50, 0, $sql_cnt);
@@ -337,11 +337,11 @@ function statistics_top_hostnames() {
   $page_title = strtr($describe, array('%interval' => format_interval(variable_get('statistics_flush_accesslog_timer', 259200))));
 
   $header = array(
-    array('data' => t('hostname'), 'field' => 'hostname'),
-    array('data' => t('last user'), 'field' => 'user'),
-    array('data' => t('hits'), 'field' => 'hits', 'sort' => 'desc'),
-    array('data' => t('last hit'), 'field' => 'last_hit'),
-    array('data' => t('operations'), 'colspan' => 2)
+    array('data' => t('Hostname'), 'field' => 'hostname'),
+    array('data' => t('Last user'), 'field' => 'user'),
+    array('data' => t('Hits'), 'field' => 'hits', 'sort' => 'desc'),
+    array('data' => t('Last hit'), 'field' => 'last_hit'),
+    array('data' => t('Operations'), 'colspan' => 2)
   );
   $sql .= tablesort_sql($header);
   $result = pager_query($sql, 50, 0, $sql_cnt);
@@ -387,9 +387,9 @@ function statistics_top_referrers($view = 'all') {
   $title = strtr($describe, array('%interval' => format_interval(variable_get('statistics_flush_accesslog_timer', 259200))));
 
   $header = array(
-    array('data' => t('URL'), 'field' => 'url'),
-    array('data' => t('hits'), 'field' => 'hits', 'sort' => 'desc'),
-    array('data' => t('last hit'), 'field' => 'last_hit')
+    array('data' => t('Url'), 'field' => 'url'),
+    array('data' => t('Hits'), 'field' => 'hits', 'sort' => 'desc'),
+    array('data' => t('Last hit'), 'field' => 'last_hit')
   );
   $query .= tablesort_sql($header);
 
@@ -412,11 +412,11 @@ function statistics_top_referrers($view = 'all') {
  */
 function statistics_admin_content() {
   $header = array(
-    array('data' => t('post'), 'field' => 'n.title'),
-    array('data' => t('today'), 'field' => 's.daycount', 'sort' => 'desc'),
-    array('data' => t('all time'), 'field' => 's.totalcount'),
-    array('data' => t('last hit'), 'field' => 's.timestamp'),
-    array('data' => t('operations'))
+    array('data' => t('Post'), 'field' => 'n.title'),
+    array('data' => t('Today'), 'field' => 's.daycount', 'sort' => 'desc'),
+    array('data' => t('All time'), 'field' => 's.totalcount'),
+    array('data' => t('Last hit'), 'field' => 's.timestamp'),
+    array('data' => t('Operations'))
   );
   $sql = 'SELECT s.nid, s.daycount, s.totalcount, s.timestamp, n.title FROM {node_counter} s INNER JOIN {node} n ON s.nid = n.nid';
   $sql .= tablesort_sql($header);

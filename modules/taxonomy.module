@@ -294,7 +294,7 @@ function _taxonomy_confirm_del_term($tid) {
  * Generate a tabular listing of administrative functions for vocabularies.
  */
 function taxonomy_overview() {
-  $header = array(t('name'), t('node types'), array('data' => t('operations'), 'colspan' => 3));
+  $header = array(t('Name'), t('Node types'), array('data' => t('Operations'), 'colspan' => 3));
 
   $vocabularies = taxonomy_get_vocabularies();
 

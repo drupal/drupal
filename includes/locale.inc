@@ -41,7 +41,7 @@ function _locale_admin_manage_screen() {
   $edit = &$_POST['edit'];
   $languages = locale_supported_languages(TRUE, TRUE);
 
-  $header = array(array('data' => t('code')), array('data' => t('English name')), array('data' => t('enabled')), array('data' => t('default')), array('data' => t('translated')), array('data' => t('operations')));
+  $header = array(array('data' => t('Code')), array('data' => t('English name')), array('data' => t('Enabled')), array('data' => t('default')), array('data' => t('translated')), array('data' => t('Operations')));
 
   foreach ($languages['name'] as $key => $lang) {
 
@@ -1001,7 +1001,7 @@ function _locale_string_seek() {
 
     $result = pager_query($sql, 50);
 
-    $header = array(t('string'), t('locales'), array('data' => t('operations'), 'colspan' => '2'));
+    $header = array(t('String'), t('Locales'), array('data' => t('Operations'), 'colspan' => '2'));
     $arr = array();
     while ($locale = db_fetch_object($result)) {
       $arr[$locale->lid]['locales'][$locale->locale] = $locale->translation;

@@ -264,7 +264,7 @@ function comment_node_link($node) {
   if (user_access('administer comments')) {
     $result = db_query('SELECT c.cid, c.subject, c.name, c.homepage, u.uid, u.name AS registered_name, c.name FROM {comments} c INNER JOIN {users} u ON u.uid = c.uid WHERE nid = %d AND c.status = 0 ORDER BY c.timestamp', $node->nid);
 
-    $header = array(t('title'), t('author'), array('data' => t('operations'), 'colspan' => 3));
+    $header = array(t('Title'), t('Author'), array('data' => t('Operations'), 'colspan' => 3));
 
     while ($comment = db_fetch_object($result)) {
       $comment->name = $comment->registered_name ? $comment->registered_name : $comment->name;
@@ -1016,11 +1016,11 @@ function comment_save($id, $edit) {
 function comment_admin_overview($type = 'new') {
 
   $header = array(
-    array('data' => t('subject'), 'field' => 'subject'),
-    array('data' => t('author'), 'field' => 'u.name'),
-    array('data' => t('status'), 'field' => 'status'),
-    array('data' => t('time'), 'field' => 'c.timestamp', 'sort' => 'desc'),
-    array('data' => t('operations'), 'colspan' => 2)
+    array('data' => t('Subject'), 'field' => 'subject'),
+    array('data' => t('Author'), 'field' => 'u.name'),
+    array('data' => t('Status'), 'field' => 'status'),
+    array('data' => t('Time'), 'field' => 'c.timestamp', 'sort' => 'desc'),
+    array('data' => t('Operations'), 'colspan' => 2)
   );
 
   $status = ($type == 'approval') ? 1 : 0;
@@ -1063,7 +1063,7 @@ function comment_matrix_settings() {
     drupal_set_message(t('The vote values have been saved.'));
   }
 
-  $output .= '<h3>Moderation vote/value matrix</h3>';
+  $output .= '<h3>'. t('Moderation vote/value matrix') .'</h3>';
 
   $result = db_query("SELECT r.rid, r.name FROM {role} r, {permission} p WHERE r.rid = p.rid AND p.perm LIKE '%moderate comments%'");
   $role_names = array();
@@ -1076,7 +1076,7 @@ function comment_matrix_settings() {
     $mod_roles[$role->rid][$role->mid] = $role->value;
   }
 
-  $header = array_merge(array(t('votes')), array_values($role_names));
+  $header = array_merge(array(t('Votes')), array_values($role_names));
 
   $result = db_query('SELECT mid, vote FROM {moderation_votes} ORDER BY weight');
   while ($vote = db_fetch_object($result)) {
@@ -1114,7 +1114,7 @@ function comment_role_settings() {
 
   $result = db_query("SELECT r.rid, r.name FROM {role} r, {permission} p WHERE r.rid = p.rid AND p.perm LIKE '%post comments%'");
 
-  $header = array(t('user role'), t('initial score'));
+  $header = array(t('User role'), t('Initial score'));
 
   while ($role = db_fetch_object($result)) {
     $rows[] = array($role->name, array('data' => form_textfield(NULL, $role->rid, $start_values[$role->rid], 4, 3), 'align' => 'center'));
@@ -1153,7 +1153,7 @@ function comment_vote_settings($mid = 0) {
   $output .= '<h3>'. t('Moderation votes overview') .'</h3>';
 
   // load up and show any vote types previously defined.
-  $header = array(t('votes'), t('weight'), t('operations'));
+  $header = array(t('Votes'), t('Weight'), t('Operations'));
   $result = db_query('SELECT mid, vote, weight FROM {moderation_votes} ORDER BY weight');
   while ($vote = db_fetch_object($result)) {
     $rows[] = array($vote->vote, array('data' => $vote->weight), array('data' => l(t('edit'), "admin/comment/configure/votes/$vote->mid")));
@@ -1207,7 +1207,7 @@ function comment_threshold_settings($fid = 0) {
   $output .= '<h3>Comment threshold overview</h3>';
 
   // load up and show any thresholds previously defined.
-  $header = array(t('name'), t('minimum score'), t('operations'));
+  $header = array(t('Name'), t('Minimum score'), t('Operations'));
   $result = db_query('SELECT fid, filter, minimum FROM {moderation_filters} ORDER BY minimum');
   while ($filter = db_fetch_object($result)) {
     $rows[] = array($filter->filter, array('data' => $filter->minimum), array('data' => l(t('edit'), "admin/comment/configure/thresholds/$filter->fid")));

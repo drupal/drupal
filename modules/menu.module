@@ -338,7 +338,7 @@ function menu_edit_item_save($edit) {
  */
 function menu_overview_tree() {
   $menu = menu_get_menu();
-  $header = array(t('menu item'), array('data' => t('operations'), 'colspan' => 3));
+  $header = array(t('Menu item'), array('data' => t('Operations'), 'colspan' => 3));
   $output = '';
 
   foreach ($menu['items'][0]['children'] as $mid) {

@@ -696,7 +696,7 @@ function aggregator_view() {
 
   $output .= '<h3>'. t('Feed overview') .'</h3>';
 
-  $header = array(t('title'), t('items'), t('last update'), t('next update'), array('data' => t('operations'), 'colspan' => 3));
+  $header = array(t('Title'), t('Items'), t('Last update'), t('Next update'), array('data' => t('Operations'), 'colspan' => 3));
   $rows = array();
   while ($feed = db_fetch_object($result)) {
     $rows[] = array(l($feed->title, "aggregator/sources/$feed->fid"), format_plural($feed->items, '1 item', '%count items'), ($feed->checked ? t('%time ago', array('%time' => format_interval(time() - $feed->checked))) : t('never')), ($feed->checked ? t('%time left', array('%time' => format_interval($feed->checked + $feed->refresh - time()))) : t('never')), l(t('edit'), "admin/aggregator/edit/feed/$feed->fid"), l(t('remove items'), "admin/aggregator/remove/$feed->fid"), l(t('update items'), "admin/aggregator/update/$feed->fid"));
@@ -707,7 +707,7 @@ function aggregator_view() {
 
   $output .= '<h3>'. t('Category overview') .'</h3>';
 
-  $header = array(t('title'), t('items'), t('operations'));
+  $header = array(t('Title'), t('Items'), t('Operations'));
   $rows = array();
   while ($category = db_fetch_object($result)) {
     $rows[] = array(l($category->title, "aggregator/categories/$category->cid"), format_plural($category->items, '1 item', '%count items'), l(t('edit'), "admin/aggregator/edit/category/$category->cid"));
@@ -928,7 +928,7 @@ function _aggregator_page_list($sql, $op, $header = '') {
     }
   }
   if ($categorize) {
-    $output .= form(theme('table', array('', t('categorize')), $rows) . form_submit(t('Save categories')));
+    $output .= form(theme('table', array('', t('Categorize')), $rows) . form_submit(t('Save categories')));
   }
   $output .= '</div>';
 

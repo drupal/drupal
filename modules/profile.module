@@ -498,7 +498,7 @@ function profile_admin_overview() {
     $rows[] = array(array('data' => t('No fields defined.'), 'colspan' => '6'));
   }
 
-  $header = array(t('title'), t('name'), t('type'), t('category'), array('data' => t('operations'), 'colspan' => '2'));
+  $header = array(t('Title'), t('Name'), t('Type'), t('Category'), array('data' => t('Operations'), 'colspan' => '2'));
 
   $output  = theme('table', $header, $rows);
   $output .= '<h2>'. t('Add new field') .'</h2>';

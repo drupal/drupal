@@ -75,7 +75,7 @@ function tracker_page($uid = 0) {
    $rows[] = array(array('data' => $pager, 'colspan' => 5));
   }
 
-  $header = array(t('type'), t('post'), t('author'), t('replies'), t('last post'));
+  $header = array(t('Type'), t('Post'), t('Author'), t('Replies'), t('Last post'));
 
   $output .= '<div id="tracker">';
   $output .= theme('table', $header, $rows);

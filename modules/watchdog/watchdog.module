@@ -87,10 +87,10 @@ function watchdog_overview($type = '') {
   }
 
   $header = array(
-    array('data' => t('date'), 'field' => 'w.timestamp', 'sort' => 'desc'),
-    array('data' => t('message'), 'field' => 'w.message'),
-    array('data' => t('user'), 'field' => 'u.name'),
-    array('data' => t('operations'), 'colspan' => '2')
+    array('data' => t('Date'), 'field' => 'w.timestamp', 'sort' => 'desc'),
+    array('data' => t('Message'), 'field' => 'w.message'),
+    array('data' => t('User'), 'field' => 'u.name'),
+    array('data' => t('Operations'), 'colspan' => '2')
   );
   $sql = 'SELECT w.*, u.name, u.uid FROM {watchdog} w INNER JOIN {users} u ON w.uid = u.uid '. ($type ? $query[$type] : '') . tablesort_sql($header);
   $result = pager_query($sql, 50);

@@ -113,7 +113,7 @@ function queue_vote($node, $vote) {
 function queue_overview() {
   global $user;
 
-  $header = array(array('data' => t('subject')), array('data' => t('author')), array('data' => t('type')), array('data' => t('score')));
+  $header = array(array('data' => t('Subject')), array('data' => t('Author')), array('data' => t('Type')), array('data' => t('Score')));
 
   $sresult = pager_query('SELECT n.*, u.name, u.uid FROM {node} n INNER JOIN {users} u ON n.uid = u.uid WHERE n.moderate = 1', 10, 0);
 

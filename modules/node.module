@@ -769,7 +769,7 @@ function node_admin_nodes() {
   $output .= "<div class=\"container-inline\">$form</div>";
 
   // Overview table:
-  $header = array(NULL, t('title'), t('type'), t('author'), t('status'), array('data' => t('operations'), 'colspan' => 2));
+  $header = array(NULL, t('Title'), t('Type'), t('Author'), t('Status'), array('data' => t('Operations'), 'colspan' => 2));
 
   while ($node = db_fetch_object($result)) {
     $rows[] = array(form_checkbox(NULL, 'status]['. $node->nid, 1, 0), l($node->title, 'node/'. $node->nid) .' '. (node_is_new($node->nid, $node->changed) ? theme_mark() : ''), node_invoke($node, 'node_name'), format_name($node), ($node->status ? t('published') : t('not published')), l(t('edit'), 'node/'. $node->nid .'/edit'), l(t('delete'), 'admin/node/delete/'. $node->nid));
@@ -835,7 +835,7 @@ function node_revision_overview($nid) {
     drupal_set_title($node->title);
 
     if ($node->revisions) {
-      $header = array(t('older revisions'), array('colspan' => '3', 'data' => t('operations')));
+      $header = array(t('Older revisions'), array('colspan' => '3', 'data' => t('Operations')));
 
       foreach ($node->revisions as $key => $revision) {
         $rows[] = array(t('revision #%r revised by %u on %d', array('%r' => $key, '%u' => format_name(user_load(array('uid' => $revision['uid']))), '%d' => format_date($revision['timestamp'], 'small'))) . ($revision['history'] ? '<br /><small>'. $revision['history'] .'</small>' : ''), l(t('view'), "node/$node->nid", array(), "revision=$key"), l(t('rollback'), "node/$node->nid/rollback-revision/$key"), l(t('delete'), "node/$node->nid/delete-revision/$key"));

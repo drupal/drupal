@@ -111,7 +111,7 @@ function upload_nodeapi(&$node, $op, $arg) {
           $node->list[$key] = $file->list;
         }
       }
-      
+
       if (($file = file_check_upload('upload')) && user_access('upload files')) {
         global $user;
 
@@ -146,7 +146,7 @@ function upload_nodeapi(&$node, $op, $arg) {
             $error['usersize']++;
           }
         }
-        
+
         if ($error['extension'] == count($user->roles) && $user->uid != 1) {
           form_set_error('upload', t('Error attaching file %name: invalid extension', array('%name' => "<em>$file->filename</em>")));
         }
@@ -177,7 +177,7 @@ function upload_nodeapi(&$node, $op, $arg) {
       break;
     case 'view':
       if ($node->files) {
-        $header = array(t('attachment'), t('size'));
+        $header = array(t('Attachment'), t('Size'));
         $rows = array();
         $previews = array();
 
@@ -278,7 +278,7 @@ function upload_delete($node) {
 }
 
 function upload_form($node) {
-  $header = array(t('Delete'), t('List'), t('URL'), t('Size'));
+  $header = array(t('Delete'), t('List'), t('Url'), t('Size'));
   $rows = array();
 
   if (is_array($node->files)) {
