@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.78 2003/06/11 18:16:32 dries Exp $
+// $Id: statistics.module,v 1.79 2003/06/14 16:11:29 dries Exp $
 
 function statistics_init() {
   global $recent_activity;
@@ -266,7 +266,7 @@ function statistics_admin_count_table($dbfield, $dbrows) {
   $header = array(t("title"), t("today"), t("all time"), t("last hit"), t("operations"));
 
   while ($nid = db_fetch_array($result)) {
-    $rows[] = array(l($nid["title"], "node/view/". $nid["nid"], array("title" => t("View this posting."))), $nid["daycount"], $nid["totalcount"], format_date($nid["timestamp"], "small"), l("view referrers", "admin/statistics/log/host/". $nid["nid"]));
+    $rows[] = array(l($nid["title"], "node/view/". $nid["nid"], array("title" => t("View this posting."))), $nid["daycount"], $nid["totalcount"], format_date($nid["timestamp"], "small"), l("track node", "admin/statistics/log/node/$nid[nid]"));
   }
 
   return table($header, $rows);
