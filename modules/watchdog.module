@@ -1,5 +1,5 @@
 <?php
-// $Id: watchdog.module,v 1.55 2003/03/16 12:34:10 dries Exp $
+// $Id: watchdog.module,v 1.56 2003/05/07 21:00:36 dries Exp $
 
 function watchdog_help() {
  ?>
@@ -65,7 +65,7 @@ function watchdog_overview($type) {
 
 function watchdog_view($id) {
 
-  $result = db_query("SELECT w.*, u.name, u.uid FROM watchdog w LEFT JOIN users u ON w.uid = u.uid WHERE w.wid = '%d'", $id);
+  $result = db_query("SELECT w.*, u.name, u.uid FROM watchdog w LEFT JOIN users u ON w.uid = u.uid WHERE w.wid = %d", $id);
 
   if ($watchdog = db_fetch_object($result)) {
     $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";

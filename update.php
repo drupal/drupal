@@ -676,7 +676,7 @@ function update_50() {
   update_sql("ALTER TABLE forum ADD tid INT UNSIGNED NOT NULL");
   $result = db_queryd("SELECT n.nid, t.tid FROM node n, term_node t WHERE n.nid = t.nid AND type = 'forum'");
   while ($node = db_fetch_object($result)) {
-    db_queryd("UPDATE forum SET tid = '%d' WHERE nid = '%d'", $node->tid, $node->nid);
+    db_queryd("UPDATE forum SET tid = %d WHERE nid = %d", $node->tid, $node->nid);
   }
   update_sql("ALTER TABLE forum ADD INDEX (tid)");
 }

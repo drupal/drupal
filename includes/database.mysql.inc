@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysql.inc,v 1.15 2003/04/04 06:17:02 dries Exp $
+// $Id: database.mysql.inc,v 1.16 2003/05/07 21:00:36 dries Exp $
 
 function db_connect($url) {
   $url = parse_url($url);
@@ -113,7 +113,7 @@ function db_next_id($name) {
 
   db_query("LOCK TABLES sequences WRITE");
   $id = db_result(db_query("SELECT id FROM sequences WHERE name = '%s'", $name)) + 1;
-  db_query("REPLACE INTO sequences VALUES ('%s', '%d')", $name, $id);
+  db_query("REPLACE INTO sequences VALUES ('%s', %d)", $name, $id);
   db_query("UNLOCK TABLES");
 
   return $id;

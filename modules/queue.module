@@ -1,5 +1,5 @@
 <?php
-// $Id: queue.module,v 1.71 2003/03/10 12:01:26 kjartan Exp $
+// $Id: queue.module,v 1.72 2003/05/07 21:00:36 dries Exp $
 
 function queue_system($field){
   $system["description"] = t("Enables content to be moderated by the community.");
@@ -37,7 +37,7 @@ function queue_count() {
 }
 
 function queue_score($id) {
-  $result = db_query("SELECT score FROM node WHERE nid = '%d'", $id);
+  $result = db_query("SELECT score FROM node WHERE nid = %d", $id);
   return ($result) ? db_result($result, 0) : 0;
 }
 

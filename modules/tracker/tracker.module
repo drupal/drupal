@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.module,v 1.42 2003/05/02 22:44:11 dries Exp $
+// $Id: tracker.module,v 1.43 2003/05/07 21:00:36 dries Exp $
 
 function tracker_help() {
   $output .= "<p>The tracker module is a handy module for displaying the most recent posts.  By following the <i>view recent posts</i> link in the user block, a user may quickly review all recent postings.</p>";
@@ -35,10 +35,10 @@ function tracker_posts($id = 0) {
 
   while ($node = db_fetch_object($sresult)) {
     if ($id) {
-      $cresult = db_query("SELECT c.*, u.name FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.uid = '%d' AND c.nid = '%d' AND c.status = 0 ORDER BY cid DESC", $id, $node->nid);
+      $cresult = db_query("SELECT c.*, u.name FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.uid = %d AND c.nid = %d AND c.status = 0 ORDER BY cid DESC", $id, $node->nid);
     }
     else {
-      $cresult = db_query("SELECT c.*, u.name FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.nid = '%d' AND c.status = 0 ORDER BY cid DESC", $node->nid);
+      $cresult = db_query("SELECT c.*, u.name FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.nid = %d AND c.status = 0 ORDER BY cid DESC", $node->nid);
     }
 
     $type = ucfirst(module_invoke($node->type, "node", "name"));

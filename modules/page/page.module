@@ -1,5 +1,5 @@
 <?php
-// $Id: page.module,v 1.79 2003/04/21 14:55:03 dries Exp $
+// $Id: page.module,v 1.80 2003/05/07 21:00:36 dries Exp $
 
 function page_help() {
   $output .= "<p>The page module is used to create a <i>static page</i>.  Unlike a story, a static page is a persistent web page on your site which usually shortcuts the typical lifecycle of user generated content (i.e. submit -&gt; moderate -&gt; post -&gt; comment).  A static page is usually linked from the main navigation bar, using whatever text the author wishes.  To create a static page without this navigation link, simply skip the form field which requests link text.</p>";
@@ -53,19 +53,19 @@ function page_save($op, $node) {
 }
 
 function page_insert($node) {
-  db_query("INSERT INTO page (nid, format, link, description) VALUES ('%d', '%d', '%s', '%s')", $node->nid, $node->format, $node->link, $node->description);
+  db_query("INSERT INTO page (nid, format, link, description) VALUES (%d, %d, '%s', '%s')", $node->nid, $node->format, $node->link, $node->description);
 }
 
 function page_update($node) {
-db_query("UPDATE page SET format = '%d', link = '%s', description = '%s' WHERE nid = '%d'", $node->format, $node->link, $node->description, $node->nid);
+db_query("UPDATE page SET format = %d, link = '%s', description = '%s' WHERE nid = %d", $node->format, $node->link, $node->description, $node->nid);
   }
 
 function page_delete(&$node) {
-  db_query("DELETE FROM page WHERE nid = '%d'", $node->nid);
+  db_query("DELETE FROM page WHERE nid = %d", $node->nid);
 }
 
 function page_load($node) {
-  $page = db_fetch_object(db_query("SELECT format, link, description FROM page WHERE nid = '%d'", $node->nid));
+  $page = db_fetch_object(db_query("SELECT format, link, description FROM page WHERE nid = %d", $node->nid));
 
   return $page;
 }

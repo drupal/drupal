@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.75 2003/04/15 19:10:02 dries Exp $
+// $Id: system.module,v 1.76 2003/05/07 21:00:36 dries Exp $
 
 function system_help() {
   $output .= "<p>Drupal comes with system-wide defaults but the setting-module provides control over many Drupal preferences, behaviors including visual and operational settings.</p>";
@@ -168,7 +168,7 @@ function system_save_settings($edit = array()) {
   if ($edit["type"]) {
     db_query("UPDATE system SET status = '0' WHERE type = '%s'", $edit["type"]);
     foreach ($edit["status"] as $filename => $status) {
-      db_query("UPDATE system SET status = '%d' WHERE filename = '$filename'", $status);
+      db_query("UPDATE system SET status = %d WHERE filename = '$filename'", $status);
     }
     if ($edit["type"] == "theme") {
       variable_set("theme_default", $edit["theme_default"]);
