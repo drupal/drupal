@@ -2264,12 +2264,13 @@ function update_124() {
   }
 
   // initialize table
-  $ret[] = update_sql("INSERT INTO {node_comment_statistics} (nid, last_comment_timestamp, last_comment_name, last_comment_uid, comment_count) SELECT n.nid, 0, NULL, 0, 0 FROM {node} n");
+  $ret[] = update_sql("INSERT INTO {node_comment_statistics} (nid, last_comment_timestamp, last_comment_name, last_comment_uid, comment_count) SELECT n.nid, n.changed, NULL, 0, 0 FROM {node} n");
 
   // fill table
-  $comment_updates = db_query("SELECT c.nid, c.timestamp, c.name, c.uid, COUNT(c.nid) as comment_count FROM {comments} c INNER JOIN {node} n ON c.nid = n.nid WHERE c.status = 0 GROUP BY c.nid, c.timestamp, c.name, c.uid");
-  while ($comment_record = db_fetch_object($comment_updates)) {
-    $ret[] = update_sql("UPDATE {node_comment_statistics} SET comment_count = $comment_record->comment_count, last_comment_timestamp = $comment_record->timestamp, last_comment_name = '$comment_record->name', last_comment_uid = $comment_record->uid WHERE nid = $comment_record->nid");
+  $result = db_query("SELECT c.nid, c.timestamp, c.name, c.uid, COUNT(c.nid) as comment_count FROM {node} n LEFT JOIN {comments} c ON c.nid = n.nid WHERE c.status = 0 GROUP BY c.nid, c.timestamp, c.name, c.uid");
+  while ($comment_record = db_fetch_object($result)) {
+    $count = db_result(db_query('SELECT COUNT(cid) FROM {comments} WHERE nid = %d AND status = 0', $comment_record->nid));
+    $ret[] = update_sql("UPDATE {node_comment_statistics} SET comment_count = $count, last_comment_timestamp = $comment_record->timestamp, last_comment_name = '$comment_record->name', last_comment_uid = $comment_record->uid WHERE nid = $comment_record->nid");
   }
 
   return $ret;
