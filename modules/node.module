@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.394 2004/09/06 13:26:00 unconed Exp $
+// $Id: node.module,v 1.395 2004/09/08 20:51:45 dries Exp $
 
 /**
  * @file
@@ -1494,14 +1494,14 @@ function node_page() {
       break;
     case t('Preview'):
       $edit = node_validate($edit);
-      print theme('page', node_preview($edit), t('Preview %name', array('%name' => $name)));
+      print theme('page', node_preview($edit), t('Preview'));
       break;
     case t('Submit'):
-      drupal_set_title(t('Submit %name', array('%name' => $name)));
+      drupal_set_title(t('Submit'));
       print theme('page', node_submit($edit));
       break;
     case t('Delete'):
-      print theme('page', node_delete($edit), t('Delete %name', array('%name' => $name)));
+      print theme('page', node_delete($edit), t('Delete'));
       break;
     default:
       print theme('page', node_page_default(), '');
