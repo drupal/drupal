@@ -58,7 +58,8 @@ $mysql_updates = array(
   "2002-10-26" => "update_43",
   "2002-11-08" => "update_44",
   "2002-11-20" => "update_45",
-  "2002-12-10" => "update_46"
+  "2002-12-10" => "update_46",
+  "2002-12-22" => "update_47"
 );
 
 // Update functions
@@ -640,6 +641,18 @@ function update_45() {
 
 function update_46() {
   update_sql("ALTER TABLE cache ADD created int(11) NOT NULL default '0'");
+}
+
+function update_47() {
+  update_sql("CREATE TABLE menu (
+    name varchar(255) NOT NULL default '',
+    link varchar(255) NOT NULL default '',
+    help TEXT default '',
+    title varchar(255) NOT NULL default '',
+    parent varchar(255) NOT NULL default '',
+    weight tinyint(4) DEFAULT '0' NOT NULL,
+    overview tinyint(1) DEFAULT '0' NOT NULL
+  );");
 }
 
 function update_upgrade3() {
