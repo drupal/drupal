@@ -1,9 +1,5 @@
 <?PHP
 
-# Natrak was here!
-# Dries was here!
-# Natrak was here again!
-
 include "functions.inc";
 
 ### Log valid referers:
@@ -17,7 +13,7 @@ $theme->header();
 
 dbconnect();
 
-if (isset($cookie[3])) $number = $cookie[3]; else $number = 10;
+if (isset($user->storynum)) $number = $user->storynum; else $number = 10;
 
 $result = mysql_query("SELECT * FROM stories ORDER BY sid DESC LIMIT $number");
 
@@ -27,8 +23,8 @@ while ($story = mysql_fetch_object($result)) {
   $morelink = "[ ";
   if ($story->article) {
     $morelink .= "<A HREF=\"article.php?sid=$story->sid";
-    if (isset($cookie[4])) { $morelink .= "&mode=$cookie[4]"; } else { $morelink .= "&mode=threaded"; }
-    if (isset($cookie[5])) { $morelink .= "&order=$cookie[5]"; } else { $morelink .= "&order=0"; }
+    if (isset($user->umode)) { $morelink .= "&mode=$user->umode"; } else { $morelink .= "&mode=threaded"; }
+    if (isset($user->uorder)) { $morelink .= "&order=$user->uorder"; } else { $morelink .= "&order=0"; }
     $bytes = strlen($story->article);
     $morelink .= "\"><FONT COLOR=\"$theme->hlcolor2\"><B>read more</B></FONT></A> | $bytes bytes in body | "; 
   }
@@ -37,9 +33,9 @@ while ($story = mysql_fetch_object($result)) {
   if (!$query) { $count = 0; } else { $count = mysql_num_rows($query); }
 
   $morelink .= "<A HREF=\"article.php?sid=$story->sid";
-  if (isset($cookie[4])) { $morelink .= "&mode=$cookie[4]"; } else { $morelink .= "&mode=threaded"; }
-  if (isset($cookie[5])) { $morelink .= "&order=$cookie[5]"; } else { $morelink .= "&order=0"; }
-  if (isset($cookie[6])) { $morelink .= "&thold=$cookie[6]"; } else { $morelink .= "&thold=0"; }
+  if (isset($user->umode)) { $morelink .= "&mode=$user->umode"; } else { $morelink .= "&mode=threaded"; }
+  if (isset($user->uorder)) { $morelink .= "&order=$user->uorder"; } else { $morelink .= "&order=0"; }
+  if (isset($user->thold)) { $morelink .= "&thold=$user->thold"; } else { $morelink .= "&thold=0"; }
   $morelink .= "\"><FONT COLOR=\"$theme->hlcolor2\">$count comments</FONT></A> ]";
 
   $theme->abstract($story->aid, $story->informant, $story->time, stripslashes($story->subject), stripslashes($story->abstract), stripslashes($story->comments), $story->category, $story->department, $morelink);
