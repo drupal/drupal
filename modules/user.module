@@ -1147,7 +1147,7 @@ function user_admin_create($edit = array()) {
 
     user_save("", array('name' => $edit['name'], 'pass' => $edit['pass'], "init" => $edit['mail'], "mail" => $edit['mail'], "rid" => _user_authenticated_id(), "status" => 1));
 
-    drupal_set_message("Created a new user '". $edit['name'] ."'.  No e-mail has been sent.");
+    drupal_set_message(t('Created a new user account.  No e-mail has been sent.'));
   }
   else {
 
