@@ -49,13 +49,13 @@ function node_help($section = "admin/help#node") {
       $output = t("Settings for the core of Drupal. Almost everything is a node so these settings will affect most of the site.");
       break;
     case 'admin/node':
-      $output = t("Below is a list of all of the nodes in your site. Other forms of content are listed elsewhere (e.g. %comment).<br />Clicking a title views that node, while clicking an author's name edits their user information.<br />Other node-related tasks are available from the menu on the left.", array("%comments" => l(t("comments"), "admin/comment")));
+      $output = t("Below is a list of all of the nodes in your site. Other forms of content are listed elsewhere (e.g. %comments).<br />Clicking a title views that node, while clicking an author's name edits their user information.<br />Other node-related tasks are available from the menu on the left.", array("%comments" => l(t("comments"), "admin/comment")));
       break;
     case 'admin/node/search':
       $output = t("Enter a simple pattern to search for a post. This can include the wildcard character *.<br />For example, a search for \"br*\" might return \"bread bakers\", \"our daily bread\" and \"brenda\".");
       break;
     case 'admin/node/settings':
-      $output = t("This pages lets you set the defaults used during creation of nodes for all the different node types.<br /><b>comment:</b> Read/write setting for comments.<br /><b>publish:</b> Is this node publicly viewable, has it been published?<br /><b>promote:</b> Is this node to be promoted to the front page?<br /><b>moderate:</b> Does this node need approval before it can be viewed?<br /><b>static:</b> Is this node always visible on the front page?<br /><b>revision:</b> Will this node go into the revision system allowing multiple versions to be saved?");
+      $output = t("This page lets you set the defaults used during creation of nodes for all the different node types.<br /><b>comment:</b> Read/write setting for comments.<br /><b>publish:</b> Is this node publicly viewable, has it been published?<br /><b>promote:</b> Is this node to be promoted to the front page?<br /><b>moderate:</b> Does this node need approval before it can be viewed?<br /><b>static:</b> Is this node always visible on the front page?<br /><b>revision:</b> Will this node go into the revision system allowing multiple versions to be saved?");
       break;
 
   }
