@@ -125,6 +125,10 @@ function update_6() {
 }
 
 function update_7() {
+  print "updating the story table:\n";
+  update_sql("UPDATE story SET body = CONCAT(abstract, '\n\n', body)");
+  update_sql("ALTER TABLE story DROP abstract");
+
   print 'rename the body fields:\n';
   update_sql("ALTER TABLE story CHANGE body body_old TEXT DEFAULT '' NOT NULL;");
   update_sql("ALTER TABLE page CHANGE body body_old TEXT DEFAULT '' NOT NULL;");
