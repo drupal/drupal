@@ -25,9 +25,10 @@ $db_url = "mysql://drupal:drupal@localhost/drupal";
 #     magic_quotes_runtime            0
 #     magic_quotes_sybase             0
 #     track_vars                      1
+#     short_open_tag                  1
 #     register_globals                1
 
-# Avoid "page has expired" problems when browsing from your cache or 
+# Avoid "page has expired" problems when browsing from your cache or
 # history after having filled out a form:
 // ini_set("session.cache_limiter", "");
 
