@@ -52,6 +52,11 @@ function import_block() {
   return $blocks;
 }
 
+function import_remove($feed) {
+  db_query("DELETE FROM item WHERE fid = '$feed[fid]'");
+  return "feed '$feed[title]' reset.";
+}
+
 function import_update($feed) {
 
   // open socket:
@@ -65,11 +70,13 @@ function import_update($feed) {
 
     if (strstr($data, "200 OK")) {
 
-      eregi("<item(.*)</item>", $data, $data);
+      eregi("<item([^s].*)</item>", $data, $data);
+
+      // print "<PRE>". htmlentities($data[0]) ."</PRE>";
 
       foreach (explode("</item>", $data[0]) as $item) {
-        $l = eregi("<link>(.*)</link>", $item, $link);
         $t = eregi("<title>(.*)</title>", $item, $title);
+        $l = eregi("<link>(.*)</link>", $item, $link);
         $a = eregi("<author>(.*)</author>", $item, $author);
         $d = eregi("<description>(.*)</description>", $item, $description);
 
@@ -84,6 +91,8 @@ function import_update($feed) {
       watchdog("error", "failed to syndicate from '$feed[title]'");
     }
   }
+
+  return "feed '$feed[title]' updated.";
 }
 
 function import_save_item($edit) {
@@ -185,9 +194,9 @@ function import_view_feed() {
 
   $output .= "<H3>Feed overview</H3>";
   $output .= "<TABLE BORDER=\"1\" CELLSPADDING=\"2\" CELLSPACING=\"2\">\n";
-  $output .= " <TR><TH>title</TH><TH>attributes</TH><TH>items</TH><TH>last update</TH><TH>next update</TH><TH COLSPAN=\"2\">operations</TH></TR>\n";
+  $output .= " <TR><TH>title</TH><TH>attributes</TH><TH>items</TH><TH>last update</TH><TH>next update</TH><TH COLSPAN=\"3\">operations</TH></TR>\n";
   while ($feed = db_fetch_object($result)) {
-    $output .= " <TR><TD>". check_output($feed->title) ."</TD><TD>". check_output($feed->attribute) ."</TD><TD>". format_plural($feed->items, "item", "items") ."</TD><TD>". ($feed->timestamp ? format_interval(time() - $feed->timestamp) ." ago" : "never") ."</TD><TD>". ($feed->timestamp ? format_interval($feed->timestamp + $feed->refresh - time()) ." left" : "never") ."</TD><TD><A HREF=\"admin.php?mod=import&type=feed&op=edit&id=$feed->fid\">edit feed</A></TD><TD><A HREF=\"admin.php?mod=import&type=feed&op=update&id=$feed->fid\">update items</A></TD></TR>\n";
+    $output .= " <TR><TD>". check_output($feed->title) ."</TD><TD>". check_output($feed->attribute) ."</TD><TD>". format_plural($feed->items, "item", "items") ."</TD><TD>". ($feed->timestamp ? format_interval(time() - $feed->timestamp) ." ago" : "never") ."</TD><TD>". ($feed->timestamp ? format_interval($feed->timestamp + $feed->refresh - time()) ." left" : "never") ."</TD><TD><A HREF=\"admin.php?mod=import&type=feed&op=edit&id=$feed->fid\">edit feed</A></TD><TD><A HREF=\"admin.php?mod=import&type=feed&op=remove&id=$feed->fid\">remove items</A></TD><TD><A HREF=\"admin.php?mod=import&type=feed&op=update&id=$feed->fid\">update items</A></TD></TR>\n";
   }
   $output .= "</TABLE>\n";
 
@@ -243,8 +252,12 @@ function import_admin() {
       else
         print import_form_feed(import_get_feed($id));
       break;
+    case "remove":
+      print status(import_remove(import_get_feed($id)));
+      print import_view_feed();
+      break;
     case "update":
-      print import_update(import_get_feed($id));
+      print status(import_update(import_get_feed($id)));
       print import_view_feed();
       break;
     case "Save attributes":
