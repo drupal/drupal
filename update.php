@@ -704,7 +704,7 @@ function update_page() {
   switch ($op) {
     case "Update":
       // make sure we have updates to run.
-      print "<html><h1>Drupal update</h1>";
+      print "<html><h1>Drupal database update</h1>";
       print "<b>&raquo; <a href=\"index.php\">home</a></b><br />\n";
       print "<b>&raquo; <a href=\"admin.php\">administer</a></b><br />\n";
       if ($edit["start"] == -1) {
@@ -731,6 +731,9 @@ function update_page() {
       print "</pre>\n";
       print "</html>";
       break;
+    case "upgrade4":
+      variable_set("update_start", "2002-05-15");
+      // fall through:
     default:
       $start = variable_get("update_start", 0);
       $dates[] = "All";
@@ -747,7 +750,7 @@ function update_page() {
       $form .= form_select("Perform updates since", "start", (isset($selected) ? $selected : -1), $dates);
       $form .= form_select("Stop on errors", "bail", 0, array("Disabled", "Enabled"), "Don't forget to backup your database before performing an update.");
       $form .= form_submit("Update");
-      print "<html><h1>Drupal update</h1>";
+      print "<html><h1>Drupal database update</h1>";
       print form($form);
       print "</html>";
       break;
@@ -755,47 +758,44 @@ function update_page() {
 }
 
 function update_info() {
-  print "<html><h1>Drupal update</h1>";
-  print "<h2>Instructions</h2>\n";
+
+  print "<html><h1>Drupal database update</h1>";
   print "<ol>\n";
-  print "<li><p>Before doing anything backup your database. This process will change your database and its values, and some things might get lost.</p></li>\n";
-  print "<li><p>Don't run this script twice as it will cause some serious problems!</p></li>\n";
-  print "<li>Before doing anything else these queries have to be run manually:<br />\n";
+  print "<li>Use this script to <b>upgrade an existing Drupal installation</b>.  You don't need this script when installing Drupal from scratch.</li>";
+  print "<li>Before doing anything backup your database. This process will change your database and its values, and some things might get lost.</li>\n";
+  print "<li>Don't run this script twice as it will cause problems.</p></li>\n";
+  print "<li>";
+  print "Click the proper link below:<br />";
+  print "<p><b>&raquo; <a href=\"update.php?op=upgrade4\">Upgrade 4.0.x to 4.1.x</a></b></p>\n";
+  print "<p><b>&raquo; <a href=\"update.php?op=update\">Upgrade to CVS</a></b></p>\n";
+  print "<p><b>&raquo; <a href=\"update.php?op=upgrade3\">Upgrade 3.0.x to 4.0.0</a></b> (Warning: clicking this link will update your database without confirmation.)</p>\n";
+  print "<p>If you are upgrading from <b>Drupal 3.0.x</b>, you'll want to run these queries manually <b>before doing anything else</b>:</p>\n";
   print "<pre>\n";
-  print "ALTER TABLE watchdog CHANGE user uid int(10) DEFAULT '0' NOT NULL;\n";
-  print "ALTER TABLE watchdog CHANGE id wid int(5) DEFAULT '0' NOT NULL auto_increment;\n";
-  print "ALTER TABLE users ADD sid varchar(32) DEFAULT '' NOT NULL;\n";
-  print "ALTER TABLE users ADD session TEXT;\n";
-  print "ALTER TABLE users CHANGE last_host hostname varchar(128) DEFAULT '' NOT NULL;\n";
-  print "ALTER TABLE users CHANGE last_access timestamp int(11) DEFAULT '0' NOT NULL;\n";
-  print "CREATE TABLE system (filename varchar(255) NOT NULL default '', name varchar(255) NOT NULL default '', type varchar(255) NOT NULL default '', description varchar(255) NOT NULL default '', status int(2) NOT NULL default '0', PRIMARY KEY (filename));\n";
-  print "CREATE TABLE permission (rid INT UNSIGNED NOT NULL, perm TEXT, tid INT UNSIGNED NOT NULL, KEY (rid));\n";
-  print "INSERT INTO permission (rid, perm) SELECT rid, perm FROM role;\n";
-  print "ALTER TABLE users ADD rid INT UNSIGNED NOT NULL;\n";
-  print "</pre></li>\n";
-  print "<li><p>You might have to by-pass the access check near the bottom of the file called update.php such that you can gain access to the updates: search for <i>user_access()</i>.</p></li>";
-  print "<li><p>";
-  print "Choose one of the links below to either upgrade from Drupal 3.x or update from a CVS checkout.<br />";
-  print "&raquo; upgrading will by default enable the standard Drupal themes and modules as well as setting some default values.<br />";
-  print "&raquo; updating will require modules and themes enabled manually under <i>Administer | Site configuration | modules</i>.<br />";
-  print "<p><b>&raquo; <a href=\"update.php?op=upgrade3\">Upgrade 3.x to 4.0.0</a></b></p>\n";
-  print "<p><b>&raquo; <a href=\"update.php?op=update\">Update CVS database</a></b></p>\n";
-  print "<p>Once you are done remove or disable access to update.php so nobody else can tamper with the database.</p>\n";
-  print "</p></li>";
-  print "<li><p>Go through the various administration pages to change the existing and new settings to your liking.</p></li>\n";
-  print "<li><p>Thanks for using Drupal!</p></li>\n";
+  print "  ALTER TABLE watchdog CHANGE user uid int(10) DEFAULT '0' NOT NULL;\n";
+  print "  ALTER TABLE watchdog CHANGE id wid int(5) DEFAULT '0' NOT NULL auto_increment;\n";
+  print "  ALTER TABLE users ADD sid varchar(32) DEFAULT '' NOT NULL;\n";
+  print "  ALTER TABLE users ADD session TEXT;\n";
+  print "  ALTER TABLE users CHANGE last_host hostname varchar(128) DEFAULT '' NOT NULL;\n";
+  print "  ALTER TABLE users CHANGE last_access timestamp int(11) DEFAULT '0' NOT NULL;\n";
+  print "  CREATE TABLE system (filename varchar(255) NOT NULL default '', name varchar(255) NOT NULL default '', type varchar(255) NOT NULL default '', description varchar(255) NOT NULL default '', status int(2) NOT NULL default '0', PRIMARY KEY (filename));\n";
+  print "  CREATE TABLE permission (rid INT UNSIGNED NOT NULL, perm TEXT, tid INT UNSIGNED NOT NULL, KEY (rid));\n";
+  print "  INSERT INTO permission (rid, perm) SELECT rid, perm FROM role;\n";
+  print "  ALTER TABLE users ADD rid INT UNSIGNED NOT NULL;\n";
+  print "</pre>\n";
+  print "</li>";
+  print "<li>Go through the various administration pages to change the existing and new settings to your liking.</li>\n";
   print "</ol>";
   print "</html>";
 }
 
 if ($op) {
   include_once "includes/common.inc";
-  // Security check:
-  if (user_access(NULL) || variable_get("update_start", 0) == 0) {
+  // Access check:
+  if ($user->uid == 1) {
     update_page();
   }
   else {
-    print message_access();
+    print "Access denied.  You are not authorized to access to this page.  Please log in as the user with user ID #1 or edit <code>update.php</code> to by-pass this access check; search for <code>\$user->uid == 1</code> near the bottom of the file.";
   }
 }
 else {
