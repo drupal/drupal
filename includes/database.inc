@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.26 2003/08/26 06:44:37 dries Exp $
+// $Id: database.inc,v 1.27 2003/10/01 05:18:02 dries Exp $
 
 function db_prefix_tables($sql) {
   global $db_prefix;
@@ -28,5 +28,6 @@ else {
 }
 
 db_connect($db_url);
+
 
 ?>

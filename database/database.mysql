@@ -307,11 +307,11 @@ CREATE TABLE page (
 
 CREATE TABLE path (
   pid int(10) unsigned NOT NULL auto_increment,
-  old varchar(128) NOT NULL default '',
-  new varchar(128) NOT NULL default '',
+  src varchar(128) NOT NULL default '',
+  dst varchar(128) NOT NULL default '',
   PRIMARY KEY  (pid),
-  UNIQUE KEY new (new),
-  UNIQUE KEY old (old)
+  UNIQUE KEY dst (dst),
+  UNIQUE KEY src (src)
 ) TYPE=MyISAM;
 
 --

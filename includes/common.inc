@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.250 2003/09/30 20:59:24 dries Exp $
+// $Id: common.inc,v 1.251 2003/10/01 05:18:02 dries Exp $
 
 function conf_init() {
 
@@ -34,7 +34,7 @@ function get_url_map() {
   if (empty($map)) {
     $result = db_query("SELECT * FROM {path}");
     while ($data = db_fetch_object($result)) {
-      $map[$data->new] = $data->old;
+      $map[$data->dst] = $data->src;
     }
   }
 
