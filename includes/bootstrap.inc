@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.39 2005/03/16 19:41:12 dries Exp $
+// $Id: bootstrap.inc,v 1.40 2005/03/18 09:13:55 unconed Exp $
 
 /**
  * @file
@@ -467,6 +467,13 @@ function drupal_page_header() {
       print $cache->data;
       bootstrap_invoke_all('exit');
       exit();
+    }
+    else {
+      header("Expires: Sun, 19 Nov 1978 05:00:00 GMT");
+      header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+      header("Cache-Control: no-store, no-cache, must-revalidate");
+      header("Cache-Control: post-check=0, pre-check=0", false);
+      header("Pragma: no-cache");
     }
   }
 }
