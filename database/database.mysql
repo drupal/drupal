@@ -373,6 +373,7 @@ CREATE TABLE system (
   description varchar(255) NOT NULL default '',
   status int(2) NOT NULL default '0',
   PRIMARY KEY  (filename)
+) TYPE=MyISAM;
 
 #
 # Table structure for table 'sequences'
