@@ -9,6 +9,8 @@ function defaultDisplay() {
     <FONT FACE="courier">
 <H3>General</H3>
 
+Dries was here.
+
 * Mission statement:
 --------------------
 
