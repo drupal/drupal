@@ -505,8 +505,15 @@ function message_na() {
 /**
  * Initialize the localization system.
  */
-function locale_init() {
-  global $languages, $user;
+function locale_initialize() {
+  global $user;
+  if (function_exists('locale')) {
+    $languages = locale_supported_languages();
+    $languages = $languages['name'];
+  }
+  else {
+    $languages = array();
+  }
   if ($user->uid && $languages[$user->language]) {
     return $user->language;
   }
@@ -540,9 +547,10 @@ function locale_init() {
  *   The translated string.
  */
 function t($string, $args = 0) {
-  global $languages;
-
-  $string = ($languages && module_exist('locale') ? locale($string) : $string);
+  global $locale;
+  if (function_exists('locale') && $locale != 'en') {
+    $string = locale($string);
+  }
 
   if (!$args) {
     return $string;
@@ -841,7 +849,23 @@ function format_rss_item($title, $link, $description, $args = array()) {
  *   A translated string.
  */
 function format_plural($count, $singular, $plural) {
-  return t($count == 1 ? $singular : $plural, array('%count' => $count));
+  if ($count == 1) return t($singular);
+
+  // get the plural index through the gettext formula
+  $index = (function_exists('locale')) ? locale_get_plural($count) : -1;
+  if ($index < 0) { // backward compatibility
+    return t($plural, array("%count" => $count));
+  }
+  else {
+    switch ($index) {
+      case "0":
+        return t($singular);
+      case "1":
+        return t($plural, array("%count" => $count));
+      default:
+        return t(strtr($plural, array("%count" => '%count['. $index .']')), array('%count['. $index .']' => $count));
+    }
+  }
 }
 
 /**
@@ -1814,7 +1838,7 @@ if ($_REQUEST && !user_access('bypass input data check')) {
 }
 
 // initialize localization system:
-$locale = locale_init();
+$locale = locale_initialize();
 
 // initialize theme:
 $theme = init_theme();

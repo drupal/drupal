@@ -46,15 +46,6 @@ $base_url = "http://localhost";
 // ini_set("include_path", ".:/path/to/pear");
 
 #
-# Languages / translation / internationalization:
-#
-#   The first language listed in this associative array will
-#   automatically become the default language.  You can add a language
-#   but make sure your SQL table, called locales is updated
-#   appropriately.
-$languages = array("en" => "english");
-
-#
 # Custom navigation links:
 #
 # Custom navigation links override the standard page links offered

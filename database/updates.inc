@@ -70,7 +70,9 @@ $sql_updates = array(
   "2004-08-04" => "update_96",
   "2004-08-06" => "update_97",
   "2004-08-07" => "update_98",
-  "2004-08-09" => "update_99"
+  "2004-08-09" => "update_99",
+  "2004-08-10" => "update_100",
+  "2004-08-11" => "update_101"
 );
 
 function update_32() {
@@ -1461,6 +1463,87 @@ function update_99() {
   return $ret;
 }
 
+function update_100() {
+
+  $ret = array();
+  if ($GLOBALS["db_type"] == "mysql") {
+    $ret[] = update_sql("CREATE TABLE {locales_source} (
+      lid int(11) NOT NULL auto_increment,
+      location varchar(128) NOT NULL default '',
+      source blob NOT NULL,
+      PRIMARY KEY  (lid)
+    )");
+    $ret[] = update_sql("CREATE TABLE {locales_target} (
+      lid int(11) NOT NULL default '0',
+      translation blob NOT NULL,
+      locale varchar(12) NOT NULL default '',
+      plid int(11) NOT NULL default '0',
+      plural int(1) NOT NULL default '0',
+      KEY lid (lid),
+      KEY lang (locale),
+      KEY plid (plid),
+      KEY plural (plural)
+    )");
+    $ret[] = update_sql("INSERT INTO {locales_meta} (locale, name, enabled, isdefault) VALUES ('en', 'English', '1', '1')");
+    $ret[] = update_sql("ALTER TABLE {users} CHANGE language language varchar(12) NOT NULL default ''");
+  }
+  else { // TODO: pgsql support (see database.pgsql for suggestions)
+  }
+
+  return $ret;
+}
+
+function update_101() {
+  include_once 'includes/locale.inc';
+  // get the language columns
+  $result = db_query('SELECT * FROM {locales} LIMIT 1');
+  $fields = array();
+  if (db_num_rows($result)) {
+    $columns = array_keys(db_fetch_array($result));
+    foreach ($columns as $field) {
+      $fields[$field] = 1;
+    }
+
+    // but not the fixed fields
+    unset($fields['lid'], $fields['location'], $fields['string']);
+  
+    // insert locales
+    $list = _locale_get_iso639_list();
+    foreach ($fields as $key => $value) {
+      if (db_result(db_query("SELECT COUNT(lid) FROM {locales} WHERE $key != ''"))) {
+        if (isset($list[$key])) {
+          $name = $list[$key][0];
+          if ($key == 'en') {
+            $key = 'en-local';
+          }
+          db_query("INSERT INTO {locales_meta} (locale, name) VALUES ('%s', '%s')", $key, $name);
+        }
+        else {
+          db_query("INSERT INTO {locales_meta} (locale, name) VALUES ('%s', '%s')", $key, $key);
+        }
+      }
+    }
+  
+    // get all strings
+    $result = db_query('SELECT * FROM {locales}');
+    while($entry = db_fetch_object($result)) {
+      // insert string if at least one translation exists
+      $test = 'return $entry->'. implode(' == "" && $entry->', array_keys($fields)) .' == "";';
+      if (!eval($test)) {
+        db_query("INSERT INTO {locales_source} (location, source) VALUES ('%s', '%s')", $entry->location, $entry->string);
+        $lid = db_fetch_object(db_query("SELECT lid FROM {locales_source} WHERE location = '%s' AND source = '%s'", $entry->location, $entry->string));
+        foreach ($fields as $key => $value) {
+          // insert translation if non-empty
+          db_query("INSERT INTO {locales_target} (lid, translation, locale) VALUES (%d, '%s', '%s')", $lid->lid, $entry->$key, $key);
+        }
+      }
+    }
+  }
+
+  $ret = array();
+  $ret[] = update_sql("DROP TABLE {locales}");
+  return $ret;
+}
 
 function update_sql($sql) {
   $edit = $_POST["edit"];

@@ -109,7 +109,7 @@ function update_info() {
   print "</ol>";
   print "Notes:";
   print "<ol>";
-  print " <li>If you <strong>upgrade from Drupal 4.4.x</strong>, you will need to create the <code>users_roles</code> table manually before upgrading. To create the <code>users_roles</code> table, issue the following SQL commands:
+  print " <li>If you <strong>upgrade from Drupal 4.4.x</strong>, you will need to create the <code>users_roles</code> and <code>locales_meta</code> tables manually before upgrading. To create these tables, issue the following SQL commands:
 
   <p>MySQL specific example:
   <pre>
@@ -117,6 +117,15 @@ function update_info() {
     uid int(10) unsigned NOT NULL default '0',
     rid int(10) unsigned NOT NULL default '0',
     PRIMARY KEY (uid, rid)
+  );
+  CREATE TABLE locales_meta (
+    locale varchar(12) NOT NULL default '',
+    name varchar(64) NOT NULL default '',
+    enabled int(2) NOT NULL default '0',
+    isdefault int(2) NOT NULL default '0',
+    plurals int(1) NOT NULL default '0',
+    formula varchar(128) NOT NULL default '',
+    PRIMARY KEY  (locale)
   );
   </pre>
   </p>
@@ -127,6 +136,15 @@ function update_info() {
     uid integer NOT NULL default '0',
     rid integer NOT NULL default '0',
     PRIMARY KEY (uid, rid)
+  );
+  CREATE TABLE locales_meta (
+    locale varchar(12) NOT NULL default '',
+    name varchar(64) NOT NULL default '',
+    enabled int4 NOT NULL default '0',
+    isdefault int4 NOT NULL default '0',
+    plurals int4 NOT NULL default '0',
+    formula varchar(128) NOT NULL default '',
+    PRIMARY KEY  (locale)
   );
   </pre>
   </p>

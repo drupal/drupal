@@ -994,7 +994,8 @@ function node_block($op = 'list', $delta = 0) {
  *   The link should be an absolute URL.
  */
 function node_feed($nodes = 0, $channel = array()) {
-  global $base_url, $languages;
+  global $base_url;
+  $languages = (function_exists('locale')) ? locale_supported_languages() : array();
 
   if (!$nodes) {
     $nodes = db_query_range('SELECT nid FROM {node} WHERE promote = 1 AND status = 1 ORDER BY created DESC', 0, 15);
@@ -1012,7 +1013,7 @@ function node_feed($nodes = 0, $channel = array()) {
     'title'       => variable_get('site_name', 'drupal') .' - '. variable_get('site_slogan', ''),
     'link'        => $base_url,
     'description' => variable_get('site_mission', ''),
-    'language'    => (($key = reset(array_keys($languages))) ? $key : 'en')
+    'language'    => (($key = reset(array_keys($languages['name']))) ? $key : 'en')
   );
   $channel = array_merge($channel_defaults, $channel);
 
