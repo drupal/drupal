@@ -23,10 +23,10 @@ function tracker_link($type) {
 function tracker_posts($id = 0) {
 
   if ($id) {
-    $sresult = db_query_range("SELECT n.nid, n.title, n.type, n.changed, n.uid, u.name, MAX(GREATEST(n.changed, c.timestamp)) AS last_activity FROM node n LEFT JOIN comments c ON n.nid = c.nid LEFT JOIN users u ON n.uid = u.uid WHERE n.uid = '". check_query($id) ."' AND n.status = 1 GROUP BY n.nid, n.title, n.type, n.changed, n.uid, u.name ORDER BY last_activity DESC", 0, 15);
+    $sresult = pager_query("SELECT n.nid, n.title, n.type, n.changed, n.uid, u.name, MAX(GREATEST(n.changed, c.timestamp)) AS last_activity FROM node n LEFT JOIN comments c ON n.nid = c.nid LEFT JOIN users u ON n.uid = u.uid WHERE n.uid = '". check_query($id) ."' AND n.status = 1 GROUP BY n.nid, n.title, n.type, n.changed, n.uid, u.name ORDER BY last_activity DESC", 10, 0, "SELECT COUNT(nid) FROM node");
   }
   else {
-    $sresult = db_query_range("SELECT n.nid, n.title, n.type, n.changed, n.uid, u.name, MAX(GREATEST(n.changed, c.timestamp)) AS last_activity FROM node n LEFT JOIN comments c ON n.nid = c.nid LEFT JOIN users u ON n.uid = u.uid WHERE n.status = 1 GROUP BY n.nid, n.title, n.type, n.changed, n.uid, u.name ORDER BY last_activity DESC", 0, 15);
+    $sresult = pager_query("SELECT n.nid, n.title, n.type, n.changed, n.uid, u.name, MAX(GREATEST(n.changed, c.timestamp)) AS last_activity FROM node n LEFT JOIN comments c ON n.nid = c.nid LEFT JOIN users u ON n.uid = u.uid WHERE n.status = 1 GROUP BY n.nid, n.title, n.type, n.changed, n.uid, u.name ORDER BY last_activity DESC", 10, 0, "SELECT COUNT(nid) FROM node");
   }
 
   $header = array(t("Type"), t("Title"), t("Author"));
@@ -56,6 +56,10 @@ function tracker_posts($id = 0) {
     }
 
     $rows[] = array(array("data" => $type, "class" => "type"), array("data" => $title . $comments, "class" => "content"), array("data" => $author, "class" => "author"));
+  }
+
+  if ($pager = pager_display(NULL, 10)) {
+   $rows[] = array(array("data" => $pager, "colspan" => 3));
   }
 
   $output  = "<div id=\"tracker\">";
