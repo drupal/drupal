@@ -132,7 +132,7 @@ function taxonomy_save_vocabulary($edit) {
   cache_clear_all();
 
   drupal_set_message($message);
-  
+
   return $edit;
 }
 
@@ -897,33 +897,33 @@ function taxonomy_admin() {
   switch ($op) {
     case 'add':
       if (arg(3) == 'vocabulary') {
-        $output .= taxonomy_form_vocabulary();
+        $output = taxonomy_form_vocabulary();
       }
       else if (arg(3) == 'term') {
-        $output .= taxonomy_form_term();
+        $output = taxonomy_form_term();
       }
       break;
     case 'edit':
       if (arg(3) == 'vocabulary') {
-        $output .= taxonomy_form_vocabulary(object2array(taxonomy_get_vocabulary(arg(4))));
+        $output = taxonomy_form_vocabulary(object2array(taxonomy_get_vocabulary(arg(4))));
       }
       else if (arg(3) == 'term') {
-        $output .= taxonomy_form_term(object2array(taxonomy_get_term(arg(4))));
+        $output = taxonomy_form_term(object2array(taxonomy_get_term(arg(4))));
       }
       break;
     case 'preview':
-      $output .= taxonomy_form(arg(4));
+      $output = taxonomy_form(arg(4));
       break;
     case 'help':
-      $output .= taxonomy_help();
+      $output = taxonomy_help();
       break;
     case t('Delete'):
       if (!$edit['confirm']) {
         if (arg(3) == 'vocabulary') {
-          $output .= _taxonomy_confirm_del_vocabulary($edit['vid']);
+          $output = _taxonomy_confirm_del_vocabulary($edit['vid']);
         }
         else {
-          $output .= _taxonomy_confirm_del_term($edit['tid']);
+          $output = _taxonomy_confirm_del_term($edit['tid']);
         }
         break;
       }
@@ -939,8 +939,8 @@ function taxonomy_admin() {
         taxonomy_save_term($edit);
       }
       drupal_goto('admin/taxonomy');
-      // fall through:
     default:
+      $output = taxonomy_overview();
   }
 
   print theme('page', $output);
