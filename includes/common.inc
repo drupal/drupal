@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.296 2003/12/29 19:10:26 dries Exp $ */
+/* $Id: common.inc,v 1.297 2003/12/29 19:49:11 dries Exp $ */
 
 /**
  * @name drupal_title
@@ -837,9 +837,6 @@ function url($url = NULL, $query = NULL, $fragment = NULL) {
 
   if (isset($fragment)) {
     $fragment = "#$fragment";
-  }
-  else {
-    $fragment = '';
   }
 
   if (variable_get("clean_url", "0") == "0") {

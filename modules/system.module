@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.119 2003/12/29 18:08:33 kjartan Exp $
+// $Id: system.module,v 1.120 2003/12/29 19:49:11 dries Exp $
 
 function system_help($section = "admin/help#system") {
   global $base_url;
@@ -122,7 +122,7 @@ function system_view_general() {
   $output = form_group(t("General settings"), $group);
 
   // caching:
-  $group  = form_radios(t("Cache support"), "cache", variable_get("cache", 0), array(t("Disabled"), t("Enabled")), t("Enable or disable the caching of rendered pages.  When caching is enabled, Drupal will flush the cache when required to make sure updates take effect immediately.  Check the %documentation for information on Drupal's cache system.", array("%documentation" => l(t("cache documentation"), "admin/system/help#cache"))));
+  $group  = form_radios(t("Cache support"), "cache", variable_get("cache", 0), array(t("Disabled"), t("Enabled")), t("Enable or disable the caching of rendered pages.  When caching is enabled, Drupal will flush the cache when required to make sure updates take effect immediately.  Check the %documentation for information on Drupal's cache system.", array("%documentation" => l(t("cache documentation"), "admin/system/help", NULL, NULL, "cache"))));
 
   $output .= form_group(t("Cache settings"), $group);
 

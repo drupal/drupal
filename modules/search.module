@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.70 2003/12/29 17:14:26 dries Exp $
+// $Id: search.module,v 1.71 2003/12/29 19:49:11 dries Exp $
 
 function search_help($section = "admin/help#search") {
   $output = "";
@@ -204,7 +204,7 @@ function do_search($search_array) {
         $find[$i++] = array("count" => $count, "title" => $title, "link" => (strstr(request_uri(), "admin") ? url("admin/node/edit/$lno") : url("node/view/$lno")), "user" => $name, "date" => $created, "keywords" => implode("|", $words));
         break;
       case "comment":
-        $find[$i++] = array("count" => $count, "title" => $title, "link" => (strstr(request_uri(), "admin") ? url("admin/comment/edit/$lno") : url("node/view/$nid#$lno")), "user" => $name, "date" => $created, "keywords" => implode("|", $words));
+        $find[$i++] = array("count" => $count, "title" => $title, "link" => (strstr(request_uri(), "admin") ? url("admin/comment/edit/$lno") : url("node/view/$nid", NULL, $lno)), "user" => $name, "date" => $created, "keywords" => implode("|", $words));
         break;
       }
     }
