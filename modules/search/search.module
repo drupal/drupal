@@ -126,8 +126,8 @@ function search_menu($may_cache) {
  */
 function search_admin() {
   if ($_POST) {
-    if (variable_get('minimum_word_size', 3) != $_POST['edit']['minimum_word_size'] ||
-        variable_get('remove_short', 3) != $_POST['edit']['remove_short']) {
+    // If the word length settings change, the index needs to be rebuilt.
+    if (variable_get('minimum_word_size', 3) != $_POST['edit']['minimum_word_size']) {
       // Note: ensure logical order of messages
       system_settings_save();
       drupal_set_message(t('The index will be rebuilt.'));
@@ -148,8 +148,9 @@ function search_admin() {
       $total += $status['total'];
     }
   }
+  $count = format_plural($remaining, 'There is 1 item left to index.', 'There are %count items left to index.');
   $percentage = ((int)min(100, 100 * ($total - $remaining) / max(1, $total))) . '%';
-  $status = '<p><strong>'. t('%percentage of the site has been indexed. There are %count items left to index.', array('%percentage' => $percentage, '%count' => $remaining)) .'</strong></p>';
+  $status = '<p><strong>'. t('%percentage of the site has been indexed.', array('%percentage' => $percentage)) .' '. $count .'</strong></p>';
   $output = form_group('Indexing status', $status);
 
   // Indexing throttle:
@@ -157,7 +158,7 @@ function search_admin() {
   $group = form_select(t('Items to index per cron run'), 'search_cron_limit', variable_get('search_cron_limit', 100), $items, t('The maximum amount of items that will be indexed in one cron run. Set this number lower if your cron is timing out or if PHP is running out of memory.'));
   $output .= form_group(t('Indexing throttle'), $group);
   // Indexing settings:
-  $group = '<em>'. t('<p>Changing the settings below will cause the site index to be rebuilt. The search index is not cleared but systematically updated to reflect the new settings. Searching will continue to work but new content won\'t be indexed until all existing content has been re-indexed.</p><p>The default settings should be appropriate for the majority of sites.</p>') .'</em>';
+  $group = '<em>'. t('<p>Changing the setting below will cause the site index to be rebuilt. The search index is not cleared but systematically updated to reflect the new settings. Searching will continue to work but new content won\'t be indexed until all existing content has been re-indexed.</p><p>The default settings should be appropriate for the majority of sites.</p>') .'</em>';
   $group .= form_textfield(t('Minimum word length to index'), 'minimum_word_size', variable_get('minimum_word_size', 3), 3, 3, t('The number of characters a word has to be to be indexed. Words shorter than this will not be searchable.'));
   $group .= form_textfield(t('Minimum word length to search for'), 'remove_short', variable_get('remove_short', 3), 3, 3, t('The number of characters a word has to be to be searched for, including wildcard characters.'));
   $output .= form_group(t('Indexing settings'), $group);
