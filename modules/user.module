@@ -1746,17 +1746,6 @@ function user_help($section = "admin/help#user") {
       // start of user_help_devel_da
       $output .= "<h3>Writing distributed authentication modules</h3><p>Drupal is specifically architected to enable easy authoring of new authentication modules. I'll deconstruct the %blogger authentication module, and hopefully provide all the details you'll need to write your own auth module. If you want to download the full text of this module, visit the %blogger-source in the %contrib-cvs.</p>";
       $output .= "<h4>Code review</h4>";
-      $output .= "<pre>&lt;?php</pre><p>The first line of every Drupal module, including the authentication modules, is the same. It is the standard processing instruction for any PHP file. Authentication modules are always written in PHP, although they typically interact with systems written in many different programming languages and operating systems languages.</p>";
-      $output .= "<pre>function blogger_info(\$field = NULL) {
-  \$info[\"name\"] = \"Blogger\";
-  \$info[\"protocol\"] = \"XML-RPC\";
-//  \$info[\"link\"] = \"&lt;a href=\\\"module.php\?mod=user\&op=sa_help\#blogger\\\"&gt;Blogger&lt;/a&gt;\";
-  \$info[\"maintainer\"] = \"Moshe Weitzman\";
-  \$info[\"maintaineremail\"] = \"weitzman at tejasa.com\";
-  if (\$field) return \$info[\$field];
-  else return \$info;
-}</pre>";
-      $output .= "<p>The <i>_info</i> function is always the first function defined in your module. This function populates an array called <i>\$info</i> with various pieces of data. Some of this data is used by Drupal (&quot;name&quot;, &quot;link&quot;), and some of it just informs the users of your module. Simply copy the <i>blogger_info</i> function in your module - but wherever it says <i>blogger</i> here, substitute your own module name.</p>";
       $output .= "<pre>function blogger_auth(\$name, \$pass, \$server) {
   // user did not present a Blogger ID so don't bother trying.
   if (\$server !== &quot;blogger.com&quot;) {
