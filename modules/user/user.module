@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.235 2003/10/13 19:18:39 dries Exp $
+// $Id: user.module,v 1.236 2003/10/15 17:15:17 dries Exp $
 
 session_set_save_handler("sess_open", "sess_close", "sess_read", "sess_write", "sess_destroy", "sess_gc");
 session_start();
@@ -1704,6 +1704,7 @@ function user_help($section = "admin/help#user") {
       $output .= "<li>Authenticated user: this role is assigned automatically to authenticated users.  Most registered users will belong to this user role unless specified otherwise.</li>";
       $output .= "</ul>";
       $output = t($output, array("%permission" => l(t("user permissions"), "admin/user/permission")));
+      break;
     case 'admin/user/search':
       $output .= t("Enter a simple pattern ( '*' may be user as a wildcard match) to search for a username.  For example, one may search for 'br' and Drupal might return 'brian', 'brad', and 'brenda'.");
       break;
