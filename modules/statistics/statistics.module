@@ -637,12 +637,11 @@ function statistics_display_online_block() {
       if (user_access("access userlist") && $users) {
         /* Display a list of currently online users */
         $max_users = variable_get("statistics_block_online_max_cnt", 10);
-        $max_name_len = variable_get("statistics_block_online_max_len", 15);
         $uid = reset($user_list);
         while (($uid) && ($max_users)) {
           $user = user_load(array("uid" => $uid));
           /* When displaying name, be sure it's not more than defined max length */
-          $items[] = l((strlen($user->name) > $max_name_len ? substr($user->name, 0, $max_name_len) ."..." : $user->name), "user/view/$user->uid");
+          $items[] = format_name($user);
           $uid = next($user_list);
           /*
           ** When $max_users reaches zero, we break out even if there are

@@ -31,7 +31,7 @@ function tablesort($cell, $header) {
     $cell["class"] = "cell-highlight";
     $image = "&nbsp;<img src=\"". $theme->image("arrow-". $ts["sort"]. ".gif"). "\"></img>";
   }
-  $cell["data"] = l($cell["data"], $_GET["q"], array(), "sort=". $ts["sort"]. "&order=". urlencode($cell["data"]). $ts["query_string"]). $image;
+  $cell["data"] = l($cell["data"] . $image, $_GET["q"], array(), "sort=". $ts["sort"]. "&order=". urlencode($cell["data"]). $ts["query_string"]);
   return $cell;
 }
 

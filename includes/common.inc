@@ -822,11 +822,23 @@ function format_date($timestamp, $type = "medium", $format = "") {
 function format_name($object) {
 
   if ($object->uid && $object->name) {
-    if (arg(0) == "admin") {
-      $output = l($object->name, "admin/user/edit/$object->uid", array("title" => t("Administer user profile.")));
+    /*
+    ** Shorten the name when it is too long or it will break many
+    ** tables.
+    */
+
+    if (strlen($object->name) > 20) {
+      $name = substr($object->name, 0, 15) ."...";
     }
     else {
-      $output = l($object->name, "user/view/$object->uid", array("title" => t("View user profile.")));
+      $name = $object->name;
+    }
+
+    if (arg(0) == "admin") {
+      $output = l($name, "admin/user/edit/$object->uid", array("title" => t("Administer user profile.")));
+    }
+    else {
+      $output = l($name, "user/view/$object->uid", array("title" => t("View user profile.")));
     }
   }
   else if ($object->name) {
