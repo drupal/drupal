@@ -1,5 +1,10 @@
 <?php
-// $Id: node.module,v 1.388 2004/08/19 15:41:56 dries Exp $
+// $Id: node.module,v 1.389 2004/08/21 06:42:36 dries Exp $
+
+/**
+ * @file
+ * The core that allows content to be submitted to the site.
+ */
 
 define('NODE_NEW_LIMIT', time() - 30 * 24 * 60 * 60);
 

@@ -1,5 +1,10 @@
 <?php
-/* $Id: aggregator.module,v 1.205 2004/08/19 15:41:55 dries Exp $ */
+/* $Id: aggregator.module,v 1.206 2004/08/21 06:42:35 dries Exp $ */
+
+/**
+ * @file
+ * Used to aggregate syndicated content (RSS and RDF).
+ */
 
 /**
  * Implementation of hook_help().

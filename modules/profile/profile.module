@@ -1,5 +1,10 @@
 <?php
-// $Id: profile.module,v 1.74 2004/08/19 15:41:56 dries Exp $
+// $Id: profile.module,v 1.75 2004/08/21 06:42:37 dries Exp $
+
+/**
+ * @file
+ * Support for configurable user profiles.
+ */
 
 /**
  * Flags to define the visibility of a profile field.

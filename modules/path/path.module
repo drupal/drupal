@@ -1,5 +1,10 @@
 <?php
-/* $Id: path.module,v 1.45 2004/08/19 15:41:56 dries Exp $ */
+/* $Id: path.module,v 1.46 2004/08/21 06:42:36 dries Exp $ */
+
+/**
+ * @file
+ * Enables users to rename URLs.
+ */
 
 /**
  * Implementation of hook_help().

@@ -1,5 +1,13 @@
 <?php
-// $Id: index.php,v 1.81 2004/08/12 18:00:06 dries Exp $
+// $Id: index.php,v 1.82 2004/08/21 06:42:34 dries Exp $
+
+/**
+ * @file
+ * The PHP page that serves all page requests on a Drupal installation.
+ *
+ * The routines here dispatch control to the appropriate handler, which then
+ * prints the appropriate page.
+ */
 
 include_once 'includes/bootstrap.inc';
 drupal_page_header();

@@ -1,5 +1,10 @@
 <?php
-/* $Id: upload.module,v 1.6 2004/08/19 15:41:56 dries Exp $ */
+/* $Id: upload.module,v 1.7 2004/08/21 06:42:37 dries Exp $ */
+
+/**
+ * @file
+ * File-handling and attaching files to nodes.
+ */
 
 function upload_help($section) {
   switch ($section) {

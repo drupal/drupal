@@ -1,5 +1,10 @@
 <?php
-// $Id: xmlrpc.php,v 1.8 2004/08/12 18:00:06 dries Exp $
+// $Id: xmlrpc.php,v 1.9 2004/08/21 06:42:34 dries Exp $
+
+/**
+ * @file
+ * PHP page for handling incoming XML-RPC requests from clients.
+ */
 
 include_once 'includes/bootstrap.inc';
 include_once 'includes/common.inc';

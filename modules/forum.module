@@ -1,5 +1,10 @@
 <?php
-// $Id: forum.module,v 1.194 2004/08/18 19:57:26 dries Exp $
+// $Id: forum.module,v 1.195 2004/08/21 06:42:36 dries Exp $
+
+/**
+ * @file
+ * Enable threaded discussions about general topics.
+ */
 
 /**
  * Implementation of hook_help().

@@ -1,5 +1,10 @@
 <?php
-// $Id: user.module,v 1.378 2004/08/20 04:35:33 unconed Exp $
+// $Id: user.module,v 1.379 2004/08/21 06:42:37 dries Exp $
+
+/**
+ * @file
+ * Enables the user registration and login system.
+ */
 
 /**
  * Invokes hook_user() in every module.

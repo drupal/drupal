@@ -1,5 +1,11 @@
 <?php
-// $Id: poll.module,v 1.144 2004/08/18 19:57:27 dries Exp $
+// $Id: poll.module,v 1.145 2004/08/21 06:42:36 dries Exp $
+
+/**
+ * @file
+ * Enables your site to capture votes on different topics in the form of multiple
+ * choice questions.
+ */
 
 /**
  * Implementation of hook_help().

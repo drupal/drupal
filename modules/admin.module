@@ -1,5 +1,10 @@
 <?php
-// $Id: admin.module,v 1.48 2004/06/18 15:04:35 dries Exp $
+// $Id: admin.module,v 1.49 2004/08/21 06:42:35 dries Exp $
+
+/**
+ * @file
+ * Handles the administration pages.
+ */
 
 /**
  * Implementation of hook_help().

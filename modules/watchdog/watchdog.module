@@ -1,9 +1,8 @@
 <?php
-// $Id: watchdog.module,v 1.108 2004/08/19 15:41:57 dries Exp $
+// $Id: watchdog.module,v 1.109 2004/08/21 06:42:37 dries Exp $
 
 /**
  * @file
- *
  * System monitoring and logging for administrators.
  *
  * The watchdog module monitors your site and keeps a list of

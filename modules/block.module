@@ -1,5 +1,10 @@
 <?php
-// $Id: block.module,v 1.131 2004/08/19 15:41:55 dries Exp $
+// $Id: block.module,v 1.132 2004/08/21 06:42:35 dries Exp $
+
+/**
+ * @file
+ * Controls the boxes that are displayed around the main content.
+ */
 
 /**
  * Implementation of hook_help().

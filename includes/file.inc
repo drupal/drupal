@@ -1,5 +1,10 @@
 <?php
-/* $Id: file.inc,v 1.19 2004/08/20 07:51:24 dries Exp $ */
+/* $Id: file.inc,v 1.20 2004/08/21 06:42:35 dries Exp $ */
+
+/**
+ * @file
+ * API for handling file uploads and server file management.
+ */
 
 /**
  * @defgroup file File interface

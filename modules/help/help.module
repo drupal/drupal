@@ -1,5 +1,10 @@
 <?php
-// $Id: help.module,v 1.37 2004/08/14 07:22:39 dries Exp $
+// $Id: help.module,v 1.38 2004/08/21 06:42:36 dries Exp $
+
+/**
+ * @file
+ * Manages displaying online help.
+ */
 
 /**
  * Implementation of hook_menu().

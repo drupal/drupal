@@ -1,5 +1,10 @@
 <?php
-// $Id: story.module,v 1.155 2004/08/18 19:57:27 dries Exp $
+// $Id: story.module,v 1.156 2004/08/21 06:42:37 dries Exp $
+
+/**
+ * @file
+ * Enables users to submit stories, articles or similar content.
+ */
 
 /**
  * Implementation of hook_help().

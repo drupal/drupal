@@ -1,5 +1,10 @@
 <?php
-// $Id: chameleon.theme,v 1.18 2004/08/20 17:21:36 unconed Exp $
+// $Id: chameleon.theme,v 1.19 2004/08/21 06:42:37 dries Exp $
+
+/**
+ * @file
+ * A slim, CSS-driven theme.
+ */
 
 function chameleon_features() {
   return array(

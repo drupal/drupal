@@ -1,5 +1,10 @@
 <?php
-// $Id: statistics.module,v 1.158 2004/08/19 15:41:56 dries Exp $
+// $Id: statistics.module,v 1.159 2004/08/21 06:42:37 dries Exp $
+
+/**
+ * @file
+ * Logs access statistics for your site.
+ */
 
 /**
  * Implementation of hook_help().

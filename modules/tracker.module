@@ -1,5 +1,10 @@
 <?php
-// $Id: tracker.module,v 1.94 2004/08/19 15:41:56 dries Exp $
+// $Id: tracker.module,v 1.95 2004/08/21 06:42:37 dries Exp $
+
+/**
+ * @file
+ * Enables tracking of recent posts for users.
+ */
 
 /**
  * Implementation of hook_help().

@@ -1,5 +1,10 @@
 <?php
-// $Id: archive.module,v 1.60 2004/07/31 09:30:09 dries Exp $
+// $Id: archive.module,v 1.61 2004/08/21 06:42:35 dries Exp $
+
+/**
+ * @file
+ * Displays a calendar to navigate old content.
+ */
 
 /**
  * Implementation of hook_help().

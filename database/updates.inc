@@ -1,5 +1,10 @@
 <?php
-/* $Id: updates.inc,v 1.45 2004/08/20 07:51:24 dries Exp $ */
+/* $Id: updates.inc,v 1.46 2004/08/21 06:42:34 dries Exp $ */
+
+/**
+ * @file
+ * All incremental database updates performed between Drupal releases.
+ */
 
 // Define the various updates in an array("date : comment" => "function");
 $sql_updates = array(

@@ -1,9 +1,8 @@
 <?php
-// $Id: locale.module,v 1.107 2004/08/18 19:57:26 dries Exp $
+// $Id: locale.module,v 1.108 2004/08/21 06:42:36 dries Exp $
 
 /**
  * @file
- *
  * Enables administrators to manage the site interface languages.
  *
  * When enabled, the site interface can be displayed in different

@@ -1,5 +1,10 @@
 <?php
-// $Id: menu.module,v 1.17 2004/08/19 15:41:56 dries Exp $
+// $Id: menu.module,v 1.18 2004/08/21 06:42:36 dries Exp $
+
+/**
+ * @file
+ * Allows administrators to customize the site navigation menu.
+ */
 
 /**
  * Implementation of hook_menu().

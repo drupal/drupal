@@ -1,5 +1,10 @@
 <?php
-// $Id: ping.module,v 1.21 2004/08/18 19:57:27 dries Exp $
+// $Id: ping.module,v 1.22 2004/08/21 06:42:36 dries Exp $
+
+/**
+ * @file
+ * Alerts other sites that your site has been updated.
+ */
 
 /**
  * Implementation of hook_help().

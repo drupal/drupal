@@ -1,5 +1,10 @@
 <?php
-// $Id: conf.php,v 1.30 2004/08/11 11:26:14 dries Exp $
+// $Id: conf.php,v 1.31 2004/08/21 06:42:35 dries Exp $
+
+/**
+ * @file
+ * Drupal site-specific configuration file.
+ */
 
 #
 # Database settings:

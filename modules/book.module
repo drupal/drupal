@@ -1,5 +1,10 @@
 <?php
-// $Id: book.module,v 1.245 2004/08/19 15:41:55 dries Exp $
+// $Id: book.module,v 1.246 2004/08/21 06:42:35 dries Exp $
+
+/**
+ * @file
+ * Allows users to collaboratively author a book.
+ */
 
 /**
  * Implementation of hook_node_name().

@@ -1,10 +1,9 @@
 <?php
-// $Id: comment.module,v 1.275 2004/08/19 15:41:56 dries Exp $
+// $Id: comment.module,v 1.276 2004/08/21 06:42:35 dries Exp $
 
 /**
  * @file
- *
- * Enables user to comment on published content.
+ * Enables users to comment on published content.
  *
  * When enabled, the Drupal comment module creates a discussion
  * board for each Drupal node. Users can post comments to discuss

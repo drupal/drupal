@@ -1,5 +1,10 @@
 <?php
-// $Id: xtemplate.engine,v 1.3 2004/08/20 17:21:24 unconed Exp $
+// $Id: xtemplate.engine,v 1.4 2004/08/21 06:42:38 dries Exp $
+
+/**
+ * @file
+ * Handles the interface between XTemplate files and the Drupal theme system.
+ */
 
 // Initialize the xtemplate engine.
 function xtemplate_init($template) {

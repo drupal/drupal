@@ -1,10 +1,9 @@
 <?php
-// $Id: locale.inc,v 1.21 2004/08/20 14:36:07 dries Exp $
+// $Id: locale.inc,v 1.22 2004/08/21 06:42:35 dries Exp $
+
 /**
  * @file
- *
- * Admin related functions for locale.module
- *
+ * Admin-related functions for locale.module.
  */
 
 // ---------------------------------------------------------------------------------

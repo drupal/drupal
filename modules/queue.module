@@ -1,5 +1,10 @@
 <?php
-// $Id: queue.module,v 1.114 2004/08/19 15:41:56 dries Exp $
+// $Id: queue.module,v 1.115 2004/08/21 06:42:37 dries Exp $
+
+/**
+ * @file
+ * Enables content to be moderated by the community.
+ */
 
 /**
  * Implementation of hook_help().

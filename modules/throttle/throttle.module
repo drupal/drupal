@@ -1,5 +1,10 @@
 <?php
-// $Id: throttle.module,v 1.38 2004/08/18 19:57:27 dries Exp $
+// $Id: throttle.module,v 1.39 2004/08/21 06:42:37 dries Exp $
+
+/**
+ * @file
+ * Allows configuration of congestion control auto-throttle mechanism.
+ */
 
 /**
  * Determine the current load on the site.
