@@ -65,7 +65,7 @@ function c(subject,mod,author,date,body) {document.writeln("<table border=\"0\" 
    <body>
     <table border="0" cellspacing="3" cellpadding="0" width="100%">
      <tr>
-      <td colspan="2" width="100%"><img src="themes/goofy/images/logo.png" alt=""><br>
+      <td colspan="2" width="100%"><table border="0" cellspacing="0" cellpadding="0" width="100%"><tr><td align="left"><img src="themes/goofy/images/logo.png" alt=""></td><td align="right"><img src="themes/goofy/images/drupal.png" alt="Powered by Drupal"></td></tr></table>
 <?php $this->linksbar(); ?>
       </td>
      </tr>
