@@ -46,14 +46,6 @@ function search_link($type) {
     menu("search", t("search"), "search_page", 0, 1);
   }
 
-  if ($type == "system" && user_access("search content")) {
-    menu("search", t("search"), "search_page", 0, 1);
-  }
-
-  if ($type == "system" && user_access("search content")) {
-    menu("search", t("search"), "search_page", 0, 1);
-  }
-
   return $links;
 }
 
