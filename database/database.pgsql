@@ -587,7 +587,6 @@ CREATE TABLE users (
   picture varchar(255) NOT NULL DEFAULT '',
   init varchar(64) default '',
   data text default '',
-  rid integer NOT NULL default '0',
   PRIMARY KEY  (uid),
   UNIQUE (name)
 );
@@ -665,7 +664,8 @@ INSERT INTO system VALUES ('themes/xtemplate/xtemplate.theme','xtemplate','theme
 
 INSERT INTO variable(name,value) VALUES('update_start', 's:10:"2004-02-21";');
 INSERT INTO variable(name,value) VALUES('theme_default','s:9:"xtemplate";');
-INSERT INTO users(uid,name,mail,rid) VALUES(0,'','', '1');
+INSERT INTO users(uid,name,mail) VALUES(0,'','');
+INSERT INTO users_roles(uid,rid) VALUES(0, 1);
 
 INSERT INTO role (rid, name) VALUES (1, 'anonymous user');
 INSERT INTO permission VALUES (1,'access content',0);
