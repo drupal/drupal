@@ -129,6 +129,12 @@ function page_view($node, $main = 0) {
 function page_form(&$node, &$help, &$error) {
   global $op;
 
+  if (!$node->status) {
+    $node->status = 1;
+    $node->moderate = 1;
+    $node->comment = 2;
+  }
+
   if ($node->format) {
     if ($op != t("Preview")) {
       $node->body = addslashes($node->body);

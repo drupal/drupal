@@ -205,6 +205,12 @@ function blog_page_last() {
 function blog_form(&$node, &$help, &$error) {
   global $nid, $iid;
 
+  if (!$node->status) {
+    $node->status = 1;
+    $node->moderate = 1;
+    $node->comment = 2;
+  }
+
   if (isset($node->body)) {
 
     /*

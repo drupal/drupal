@@ -861,7 +861,6 @@ function node_form($edit) {
 
   if (user_access("administer nodes")) {
     $output .= "</td><td align=\"left\" valign=\"top\">";
-
     $output .= form_textfield(t("Authored by"), "name", $edit->name, 20, 25, $error["name"]);
     $output .= form_textfield(t("Authored on"), "date", $edit->date, 20, 25, $error["date"]);
     $output .= "<br />";
@@ -882,6 +881,10 @@ function node_form($edit) {
 
 function node_add($type) {
   global $user;
+
+  if (!user_access("post content")) {
+    return message_access();
+  }
 
   /*
   ** If a node type has been specified, validate it existence.  If no
@@ -916,6 +919,10 @@ function node_add($type) {
 function node_edit($id) {
   global $user;
 
+  if (!user_access("post content")) {
+    return message_access();
+  }
+
   $node = node_load(array("nid" => $id));
 
   if (node_access("update", $node)) {
@@ -929,6 +936,10 @@ function node_edit($id) {
 }
 
 function node_preview($node) {
+
+  if (!user_access("post content")) {
+    return message_access();
+  }
 
   /*
   ** Convert the array to an object:
@@ -988,6 +999,10 @@ function node_preview($node) {
 
 function node_submit($node) {
   global $theme, $user, $tid;
+
+  if (!user_access("post content")) {
+    return message_access();
+  }
 
   $context->tid = $tid;
   if (user_access("post content", $context)) {
@@ -1125,6 +1140,10 @@ function node_submit($node) {
 
 function node_delete($edit) {
 
+  if (!user_access("post content")) {
+    return message_access();
+  }
+
   $node = node_load(array("nid" => $edit["nid"]));
 
   if (node_access("delete", $node)) {
@@ -1212,32 +1231,34 @@ function node_page() {
       $theme->box($title, node_delete($edit));
       break;
     default:
-      // prepare query
-      if ($or) {
-        foreach ((explode(",", $or)) as $t) {
-          $terms[] = "'".check_query($t)."'";
+      if (user_access("access content")) {
+        // prepare query
+        if ($or) {
+          foreach ((explode(",", $or)) as $t) {
+            $terms[] = "'".check_query($t)."'";
+          }
         }
-      }
-      else if ($and) {
-        foreach ((explode(",", $and)) as $t) {
-          $terms[] = "'".check_query($t)."'";
+        else if ($and) {
+          foreach ((explode(",", $and)) as $t) {
+            $terms[] = "'".check_query($t)."'";
+          }
         }
-      }
 
-      if ($or) {
-        // this is an OR of terms
-        $result = db_query("SELECT DISTINCT(n.nid), type FROM node n LEFT JOIN term_node r ON n.nid = r.nid WHERE tid IN (".implode(",", $terms).") AND ". ($id ? "nid = '$id'" : "promote = '1'") ." AND status = '1' ORDER BY static DESC, created DESC LIMIT ". ($user->nodes ? $user->nodes : variable_get("default_nodes_main", 10)));
-      }
-      else if ($and) {
-        // this is an AND
-        $result = db_query("SELECT n.nid, type, count(*) AS c FROM node n LEFT JOIN term_node r ON n.nid = r.nid WHERE tid IN (".implode(",", $terms).")  AND ". ($id ? "nid = '$id'" : "promote = '1'") ." AND status = '1' GROUP BY n.nid HAVING c = ".count($terms)." ORDER BY static DESC, created DESC LIMIT ". ($user->nodes ? $user->nodes : variable_get("default_nodes_main", 10)));
-      }
-      else {
-        $result = db_query("SELECT nid, type FROM node WHERE ". ($id ? "nid = '$id'" : "promote = '1'") ." AND status = '1' ORDER BY static DESC, created DESC LIMIT ". ($user->nodes ? $user->nodes : variable_get("default_nodes_main", 10)));
-      }
+        if ($or) {
+          // this is an OR of terms
+          $result = db_query("SELECT DISTINCT(n.nid), type FROM node n LEFT JOIN term_node r ON n.nid = r.nid WHERE tid IN (".implode(",", $terms).") AND ". ($id ? "nid = '$id'" : "promote = '1'") ." AND status = '1' ORDER BY static DESC, created DESC LIMIT ". ($user->nodes ? $user->nodes : variable_get("default_nodes_main", 10)));
+        }
+        else if ($and) {
+          // this is an AND
+          $result = db_query("SELECT n.nid, type, count(*) AS c FROM node n LEFT JOIN term_node r ON n.nid = r.nid WHERE tid IN (".implode(",", $terms).")  AND ". ($id ? "nid = '$id'" : "promote = '1'") ." AND status = '1' GROUP BY n.nid HAVING c = ".count($terms)." ORDER BY static DESC, created DESC LIMIT ". ($user->nodes ? $user->nodes : variable_get("default_nodes_main", 10)));
+        }
+        else {
+          $result = db_query("SELECT nid, type FROM node WHERE ". ($id ? "nid = '$id'" : "promote = '1'") ." AND status = '1' ORDER BY static DESC, created DESC LIMIT ". ($user->nodes ? $user->nodes : variable_get("default_nodes_main", 10)));
+        }
 
-      while ($node = db_fetch_object($result)) {
-        node_view(node_load(array("nid" => $node->nid, "type" => $node->type)), 1);
+        while ($node = db_fetch_object($result)) {
+          node_view(node_load(array("nid" => $node->nid, "type" => $node->type)), 1);
+        }
       }
     }
 

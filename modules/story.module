@@ -65,6 +65,12 @@ function story_link($type) {
 
 function story_form(&$node, &$help, &$error) {
 
+  if (!$node->status) {
+    $node->status = 1;
+    $node->moderate = 1;
+    $node->comment = 2;
+  }
+
   if (isset($node->body)) {
 
     /*
