@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.245 2003/09/29 13:41:22 kjartan Exp $
+// $Id: common.inc,v 1.246 2003/09/29 13:44:39 kjartan Exp $
 
 function conf_init() {
 
@@ -1173,7 +1173,7 @@ function drupal_page_header() {
       $etag = '"'. md5($date) .'"';
 
       // Check http headers:
-      $modified_since = isset($_SERVER["HTTP_IF_MODIFIED_SINCE"]) ? $_SERVER["HTTP_IF_MODIFIED_SINCE"] == $date : NULL
+      $modified_since = isset($_SERVER["HTTP_IF_MODIFIED_SINCE"]) ? $_SERVER["HTTP_IF_MODIFIED_SINCE"] == $date : NULL;
       $none_match = isset($_SERVER["HTTP_IF_NONE_MATCH"]) ? $_SERVER["HTTP_IF_NONE_MATCH"] == $etag : NULL;
 
       // The type checking here is very important, be careful when changing entries.
