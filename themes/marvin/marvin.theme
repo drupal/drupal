@@ -18,7 +18,7 @@
    var $foreground = "#000000";
    var $background = "#EAEAEA";
 
-   function header() {
+   function header($title = 0) {
      global $HTTP_USER_AGENT;
     ?>
      <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -27,7 +27,12 @@
       <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
       <title>
        <?php
-        print variable_get("site_name", "drupal") ." - ". variable_get("site_slogan", "");
+         if ($title) {
+           print variable_get("site_name", "drupal") ." - $title";
+         }
+         else {
+           print variable_get("site_name", "drupal") ." - ". variable_get("site_slogan", "");
+         }
        ?>
       </title>
       <style type="text/css">
