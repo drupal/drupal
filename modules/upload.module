@@ -90,7 +90,7 @@ function upload_download() {
 function upload_file_download($file) {
   if (user_access('view uploaded files')) {
     $file = file_create_path($file);
-    $result = db_query("SELECT * from {files} WHERE filepath = '%s'", $file);
+    $result = db_query("SELECT * from {files} n " . node_access_join_sql() . "WHERE filepath = '%s' AND ". node_access_where_sql(), $file);
     if ($file = db_fetch_object($result)) {
       $name = mime_header_encode($file->filename);
       // Serve images and text inline for the browser to display rather than download.
