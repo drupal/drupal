@@ -1435,11 +1435,11 @@ function theme_comment_form($edit, $title) {
     $form .= form_textfield(t('Subject'), 'subject', $edit['subject'], 50, 64);
   }
 
-  // format selector
-  $form .= filter_form('format', $edit['format']);
-
   // comment field:
   $form .= form_textarea(t('Comment'), 'comment', $edit['comment'] ? $edit['comment'] : $user->signature, 70, 10, '', NULL, TRUE);
+
+  // format selector
+  $form .= filter_form('format', $edit['format']);
 
   // preview button:
   $form .= form_hidden('cid', $edit['cid']);

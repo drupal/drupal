@@ -1009,7 +1009,16 @@ function node_feed($nodes = 0, $channel = array()) {
     // Load the specified node:
     $item = node_load(array('nid' => $node->nid));
     $link = url("node/$node->nid", NULL, NULL, 1);
-    $items .= format_rss_item($item->title, $link, check_output($item->teaser ? $item->teaser : $item->body, $item->format), array('pubDate' => date('r', $item->changed)));
+
+    // Filter and prepare node teaser
+    if (node_hook($item, 'view')) {
+      node_invoke($item, 'view', TRUE, FALSE);
+    }
+    else {
+      $item = node_prepare($item, TRUE);
+    }
+
+    $items .= format_rss_item($item->title, $link, $item->teaser, array('pubDate' => date('r', $item->changed)));
   }
 
   $channel_defaults = array(
@@ -1148,7 +1157,6 @@ function node_form($edit) {
   $output .= '<input type="hidden" name="op" value="'. check_form(t('Preview')) ."\" />\n";
 
   // Add the admin-specific parts.
-
   if (user_access('administer nodes')) {
     $output .= '<div class="admin">';
 
@@ -1174,20 +1182,13 @@ function node_form($edit) {
   }
 
   // Add the default fields.
-
   $output .= '<div class="standard">';
   $output .= form_textfield(t('Title'), 'title', $edit->title, 60, 128, NULL, NULL, TRUE);
 
-  // Add filter format selector / filter tips
-
-  $output .= filter_form('format', $edit->format);
-
   // Add the node-type-specific fields.
-
   $output .= $form;
 
   // Add the hidden fields.
-
   if ($edit->nid) {
     $output .= form_hidden('nid', $edit->nid);
   }
@@ -1205,7 +1206,6 @@ function node_form($edit) {
   $output .= form_hidden('type', $edit->type);
 
   // Add the buttons.
-
   $output .= form_submit(t('Preview'));
 
   if (!form_get_errors()) {

@@ -6,6 +6,9 @@
  * Framework for handling filtering of content.
  */
 
+// This is a special format ID which means "use the default format". This value
+// can be passed to the filter APIs as a format ID: this is equivalent to not
+// passing an explicit format at all.
 define('FILTER_FORMAT_DEFAULT', 0);
 
 define('FILTER_HTML_STRIP', 1);
@@ -619,7 +622,7 @@ function check_output($text, $format = FILTER_FORMAT_DEFAULT) {
  * @return
  *   HTML for the form element.
  */
-function filter_form($name, $value = FILTER_FORMAT_DEFAULT) {
+function filter_form($name = 'format', $value = FILTER_FORMAT_DEFAULT) {
   if ($value == FILTER_FORMAT_DEFAULT) {
     $value = variable_get('filter_default_format', 1);
   }
@@ -655,7 +658,7 @@ function filter_form($name, $value = FILTER_FORMAT_DEFAULT) {
  * Returns true if the user is allowed to access this format.
  */
 function filter_access($format) {
-  if (user_access('administer filters') || ($format == variable_get('filter_default_format', 1))) {
+  if (user_access('administer filters') || ($format == FILTER_FORMAT_DEFAULT) || ($format == variable_get('filter_default_format', 1))) {
     return true;
   }
   else {

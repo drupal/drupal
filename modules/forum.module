@@ -293,6 +293,7 @@ function forum_form(&$node) {
   }
 
   $output .= form_textarea(t('Body'), 'body', $node->body, 60, 20, '');
+  $output .= filter_form('format', $node->format);
 
   return $output;
 }

@@ -626,8 +626,16 @@ function statistics_summary($dbfield, $dbrows) {
     $content = node_load(array('nid' => $nid['nid']));
     $links = link_node($content, 1);
 
+    // Filter and prepare node teaser
+    if (node_hook($content, 'view')) {
+      node_invoke($content, 'view', TRUE, FALSE);
+    }
+    else {
+      $content = node_prepare($content, TRUE);
+    }
+
     $output .= '<tr><td><strong>'. l($nid['title'], 'node/'. $nid['nid'], array('title' => t('View this posting.'))) .'</strong></td><td style="text-align: right;"><small>'. t('Submitted by %a on %b', array('%a' => format_name($content), '%b' => format_date($content->created, 'large'))) .'</small></td></tr>';
-    $output .= '<tr><td colspan="2"><div style="margin-left: 20px;">'. check_output($content->teaser, $content->format) .'</div></td></tr>';
+    $output .= '<tr><td colspan="2"><div style="margin-left: 20px;">'. $content->teaser .'</div></td></tr>';
     $output .= '<tr><td style="text-align: right;" colspan="2">[ '. theme('links', $links) .' ]<br /><br /></td></tr>';
   }
 
