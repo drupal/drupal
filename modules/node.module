@@ -47,14 +47,9 @@ function node_system($field){
 ** Returns an HTML list suitable as content for a block.
 */
 function node_title_list($result, $title = NULL) {
-  // no queries if site is in distress
-  if (module_exist("statistics") && throttle_status() > 3) {
-    return;
-  }
-
   while ($node = db_fetch_object($result)) {
     $number = module_invoke("comment", "num_all", $node->nid);
-    $items[] = l($node->title, "node/view/$node->nid", array("title" => t("Comments: %number", array("%number" => $number))));
+    $items[] = l($node->title, "node/view/$node->nid", array("title" => format_plural($number, "%count comment", "%count comments")));
   }
 
   return theme("theme_node_list", $items, $title);

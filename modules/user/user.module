@@ -6,7 +6,7 @@ session_start();
 
 function user_system($field){
   $system["description"] = t("Enables the user registration and login system.");
-  $system["admin_help"] = t("In order to use the full power of Drupal a visitor must sign up for an account. This page lets you setup how a user signs up, logs out, what password \"words\" the system uses, the guidelines from the system about user subscriptions, and the e-mail's the system will send to the user.");
+  $system["admin_help"] = t("In order to use the full power of Drupal a visitor must sign up for an account. This page lets you setup how a user signs up, logs out, the guidelines from the system about user subscriptions, and the e-mails the system will send to the user.");
   return $system[$field];
 }
 
@@ -194,16 +194,35 @@ function user_validate_authmap($account, $authname, $module) {
   }
 }
 
-function user_password($min_length = 6) {
+function user_password($length = 10) {
 
   /*
-  ** Generate a human-readable password:
+  ** Generate a random alphanumeric password.
   */
 
+  // This variable contains the list of allowable characters for the
+  // password.  Note that the number 0 and the letter 'O' have been
+  // removed to avoid confusion between the two.  The same is true
+  // of 'I' and 1.
+  $allowable_characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  // We see how many characters are in the allowable list:
+  $len = strlen($allowable_characters);
+
+  // Seed the random number generator with the microtime stamp:
   mt_srand((double)microtime() * 1000000);
-  $words = explode(",", variable_get("user_password", "foo,bar,guy,neo,tux,moo,sun,asm,dot,god,axe,geek,nerd,fish,hack,star,mice,warp,moon,hero,cola,girl,fish,java,perl,boss,dark,sith,jedi,drop,mojo"));
-  while (strlen($password) < $min_length) $password .= trim($words[mt_rand(0, count($words))]);
-  return $password;
+
+  // Declare the password as a blank string:
+  $pass = "";
+
+  // Loop the number of times specified by $length:
+  for ($i = 0; $i < $length; $i++) {
+
+    // Each iteration, pick a random character from the
+    // allowable string and append it to the password:
+    $pass .= $allowable_characters[mt_rand(0, $len - 1)];
+  }
+
+  return $pass;
 }
 
 function user_access($string) {
@@ -1171,8 +1190,6 @@ function _user_mail_text($message) {
 
 function user_settings() {
   $output .= form_select(t("Public registrations"), "user_register", variable_get("user_register", 1), array(t("Only site administrators can create new user accounts."), t("Visitors can create accounts and no administrator approval is required."), t("Visitors can create accounts but administrator approval is required.")));
-
-  $output .= form_textfield(t("Password words"), "user_password", variable_get("user_password", "foo,bar,guy,neo,tux,moo,sun,asm,dot,god,axe,geek,nerd,fish,hack,star,mice,warp,moon,hero,cola,girl,fish,java,perl,boss,dark,sith,jedi,drop,mojo"), 55, 256, t("A comma separated list of short words that can be concatenated to generate human-readable passwords."));
 
   $output .= form_select(t("Remember authenticated users"), "user_remember", variable_get("user_remember", 0), array(t("Let the user decide whether he should be logged out when leaving the site."), t("Authenticated users are not logged out upon leaving the site."), t("Authenticated users are logged out upon leaving the site.")));
 

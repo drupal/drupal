@@ -249,7 +249,7 @@ function blog_block($op = "list", $delta = 0) {
   }
   else {
     if (user_access("access content")) {
-      $block["content"] = node_title_list(db_query_range("SELECT u.uid, u.name, n.created, n.title, n.nid FROM node n LEFT JOIN users u ON n.uid = u.uid WHERE n.type = 'blog' AND n.status = 1 ORDER BY n.nid DESC", 0, 10));
+      $block["content"] = node_title_list(db_query_range("SELECT n.title, n.nid FROM node n WHERE n.type = 'blog' AND n.status = 1 ORDER BY n.nid DESC", 0, 10));
       $block["content"] .= "<div align=\"right\" id=\"blog_more\">". l(t("more"), "blog", array("title" => t("Read the latest blog entries."))) ."</div>";
       $block["subject"] = t("Blogs");
     }
