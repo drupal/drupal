@@ -1,16 +1,16 @@
 <?php
-// $Id: cloud.module,v 1.59 2003/10/02 18:41:12 dries Exp $
+// $Id: cloud.module,v 1.60 2003/10/04 07:45:47 dries Exp $
 
-function cloud_help($section = "admin/syndication/cloud/help") {
+function cloud_help($section = "admin/node/syndication/cloud/help") {
   $output = "";
 
   switch ($section) {
     case 'admin/help':
     case 'admin/cloud/help':
-    case 'admin/syndication/cloud/help':
+    case 'admin/node/syndication/cloud/help':
       $output .= "The cloud monitor tracks or crawls other interesting web sites and displays their last modification dates.  Visitors to the host site learn about relevant sites and can easily see if there is new content.  Here is how it works:";
       $output .= "<ul>";
-      $output .= strtr("<li>The site administrator enters names and URLs of the relevant pages on the %cloud-add page.</li>", array("%cloud-add" => l(t("content syndication &raquo; site cloud &raquo; add new site"), "admin/syndication/cloud/add") ));
+      $output .= strtr("<li>The site administrator enters names and URLs of the relevant pages on the %cloud-add page.</li>", array("%cloud-add" => l(t("content") ." &raquo; ". t("syndication") ." &raquo; ". t("site cloud") ." &raquo; ". t("add new site"), "admin/node/syndication/cloud/add") ));
       $output .= "<li>Drupal's cron function, triggers the cloud module to check all the registered web sites for recent changes or updates.  (A page is updated when there is an <i>x</i>-byte difference since the last time it checked, where <i>x</i> is a configuration option.)</li>";
       $output .= " <li>The module exports both a page and a block that display the registered sites ordered by their last modification date.</li>";
       $output .= "</ul>";
@@ -21,10 +21,10 @@ function cloud_help($section = "admin/syndication/cloud/help") {
     case 'admin/system/modules':
       $output = "Tracks other sites and displays last date changed.";
       break;
-    case 'admin/syndication/cloud':
-      $output = strtr("The cloud monitor tracks or crawls other interesting web sites and displays their last modification dates. Visitors to this site learn about other relevant sites and can easily see if there is new content. To get this working you <b>must</b> setup cron support. To get the site cloud block to display you must turn on the <i>site cloud</i> block in %block. To go to a monitored site, click on the site name, to immediately load and/or update the record for a site, click on \"update site\", to delete a site go to \"edit site\". ", array("%block" => l(t("block management"), "admin/block") ));
+    case 'admin/node/syndication/cloud':
+      $output = strtr("The cloud monitor tracks or crawls other interesting web sites and displays their last modification dates. Visitors to this site learn about other relevant sites and can easily see if there is new content. To get this working you <b>must</b> setup cron support. To get the site cloud block to display you must turn on the <i>site cloud</i> block in %block. To go to a monitored site, click on the site name, to immediately load and/or update the record for a site, click on \"update site\", to delete a site go to \"edit site\". ", array("%block" => l(t("administer") ." &raquo; ". t("configuration") ." &raquo; ". t("blocks"), "admin/block") ));
       break;
-    case 'admin/syndication/cloud/add':
+    case 'admin/node/syndication/cloud/add':
       $output = "Add a site to the site cloud. Don't forget the \"http://\" for your URLs.";
       break;
   }
@@ -60,8 +60,8 @@ function cloud_link($type) {
 
   if ($type == "system") {
     if (user_access("administer site cloud")) {
-      menu("admin/node/syndication/cloud", t("site cloud"), "cloud_admin", cloud_help("admin/syndication/cloud"));
-      menu("admin/node/syndication/cloud/add", t("add new site"), "cloud_admin", cloud_help("admin/syndication/cloud/add"));
+      menu("admin/node/syndication/cloud", t("site cloud"), "cloud_admin", cloud_help("admin/node/syndication/cloud"));
+      menu("admin/node/syndication/cloud/add", t("add new site"), "cloud_admin", cloud_help("admin/node/syndication/cloud/add"));
       menu("admin/node/syndication/cloud/help", t("help"), "cloud_help", NULL, 9);
     }
   }
@@ -76,11 +76,11 @@ function cloud_update($site) {
   */
 
   if (!ereg("^http://|https://|ftp://", $site["link"])) {
-    watchdog("warning", "cloud: invalid or missing URL for '". $site["name"] ."'", l(t("edit site"), "admin/syndication/cloud/edit/". $site["sid"]));
+    watchdog("warning", "cloud: invalid or missing URL for '". $site["name"] ."'", l(t("edit site"), "admin/node/syndication/cloud/edit/". $site["sid"]));
   }
 
   if (!ereg("^http://|https://|ftp://", $site["feed"])) {
-    watchdog("warning", "cloud: invalid or missing URL to monitor for '". $site["name"] ."'", l(t("edit site"), "admin/syndication/cloud/edit/". $site["sid"]));
+    watchdog("warning", "cloud: invalid or missing URL to monitor for '". $site["name"] ."'", l(t("edit site"), "admin/node/syndication/cloud/edit/". $site["sid"]));
   }
 
   /*
@@ -148,7 +148,7 @@ function cloud_display() {
 
   $header = array(t("site"), t("last update"), array("data" => t("operations"), "colspan" => 2));
   while ($site = db_fetch_object($result)) {
-    $rows[] = array("<a href=\"$site->link\">$site->name</a>", ($site->changed ? format_interval(time() - $site->changed) ." ago" : "never"), l(t("edit site"), "admin/syndication/cloud/edit/$site->sid"), l(t("update site"), "admin/syndication/cloud/update/$site->sid"));
+    $rows[] = array("<a href=\"$site->link\">$site->name</a>", ($site->changed ? format_interval(time() - $site->changed) ." ago" : "never"), l(t("edit site"), "admin/node/syndication/cloud/edit/$site->sid"), l(t("update site"), "admim/node/syndication/cloud/update/$site->sid"));
   }
 
   return table($header, $rows);
