@@ -1,5 +1,21 @@
 <?
 
+function display_module_blocks() {
+  global $repository, $theme;
+
+  function display_block($name, $module) {
+    global $theme;
+        
+    if ($blocks = module_execute($name, "block")) {
+      foreach ($blocks as $id=>$block) {
+        $theme->box($block["subject"], $block["content"]);
+      }
+    }
+  }
+
+  module_iterate("display_block");
+}
+
 function display_morelink($theme, $story) {
   return ($story->article) ? "[ <A HREF=\"discussion.php?id=$story->id\"><FONT COLOR=\"$theme->hlcolor2\"><B>read more</B></FONT></A> | ". strlen($story->article) ." bytes | <A HREF=\"discussion.php?id=$story->id\"><FONT COLOR=\"$theme->hlcolor2\">". format_plural($story->comments, "comment", "comments") ."</FONT></A> ]" : "[ <A HREF=\"discussion.php?id=$story->id\"><FONT COLOR=\"$theme->hlcolor2\">". format_plural($story->comments, "comment", "comments") ."</FONT></A> ]";
 }
@@ -72,20 +88,6 @@ function display_comment_moderation($id, $author, $score, $votes) {
   return $output;
 }
 
-function display_new_diaries($theme, $num = 20) {
-  $result = db_query("SELECT u.userid, d.timestamp FROM diaries d LEFT JOIN users u ON d.author = u.id ORDER BY timestamp DESC LIMIT $num");
-
-  while ($diary = db_fetch_object($result)) {
-    if ($time != date("F jS", $diary->timestamp)) {
-      $content .= "<P><B>". date("l, M jS", $diary->timestamp) ."</B></P>\n";
-      $time = date("F jS", $diary->timestamp);
-    }
-    $content .= "<LI><A HREF=\"module.php?mod=diary&op=view&name=$diary->userid\">$diary->userid</A></LI>\n";
-  }
-  $content .= "<P ALIGN=\"right\">[ <A HREF=\"module.php?mod=diary\"><FONT COLOR=\"$theme->hlcolor2\">more</FONT></A> ]</P>";
-  $theme->box("Recent diary entries", $content);
-}
-
 function display_new_headlines($theme, $num = 10) {
   global $user;
 
@@ -115,7 +117,7 @@ function display_account($theme) {
     $content .= "<P>\n";
     $content .= "<LI><A HREF=\"account.php?op=edit&topic=diary\">edit your diary</A></LI>\n";
     $content .= "<LI><A HREF=\"account.php?op=edit&topic=user\">edit your information</A></LI>\n";
-    $content .= "<LI><A HREF=\"account.php?op=edit&topic=page\">edit your settings</A></LI>\n";
+    $content .= "<LI><A HREF=\"account.php?op=edit&topic=site\">edit your settings</A></LI>\n";
     $content .= "<P>\n";
     $content .= "<LI><A HREF=\"account.php?op=view&topic=diary\">view your diary</A></LI>\n";
     $content .= "<LI><A HREF=\"account.php?op=view&topic=info\">view your information</A></LI>\n";
