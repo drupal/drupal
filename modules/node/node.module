@@ -213,7 +213,7 @@ function node_teaser($body) {
   ** Nevermind, we split it the hard way ...
   */
 
-  return substr($body, 0, $size);
+  return truncate_utf8($body, $size);
 }
 
 

@@ -277,7 +277,7 @@ function comment_post($edit) {
     $edit["subject"] = strip_tags($edit["subject"]);
 
     if ($edit["subject"] == "") {
-      $edit["subject"] = substr(strip_tags($edit["comment"]), 0, 29);
+      $edit["subject"] = truncate_utf8(strip_tags($edit["comment"]), 29);
     }
 
     /*
@@ -978,7 +978,7 @@ function comment_admin_overview($status = 0) {
   $result = pager_query($sql,  50);
 
   while ($comment = db_fetch_object($result)) {
-    $rows[] = array(l($comment->subject, "node/view/$comment->nid/$comment->cid", array("title" => htmlspecialchars(substr($comment->comment, 0, 128))), NULL, "comment-$comment->cid") ." ". (node_is_new($comment->nid, $comment->timestamp) ? theme("mark") : ""), format_name($comment), ($comment->status == 0 ? t("published") : t("not published")) ."</td><td>". format_date($comment->timestamp, "small") ."</td><td>". l(t("edit comment"), "admin/comment/edit/$comment->cid"), l(t("delete comment"), "admin/comment/delete/$comment->cid"));
+    $rows[] = array(l($comment->subject, "node/view/$comment->nid/$comment->cid", array("title" => htmlspecialchars(truncate_utf8($comment->comment, 128))), NULL, "comment-$comment->cid") ." ". (node_is_new($comment->nid, $comment->timestamp) ? theme("mark") : ""), format_name($comment), ($comment->status == 0 ? t("published") : t("not published")) ."</td><td>". format_date($comment->timestamp, "small") ."</td><td>". l(t("edit comment"), "admin/comment/edit/$comment->cid"), l(t("delete comment"), "admin/comment/delete/$comment->cid"));
   }
 
   if ($pager = theme("pager", NULL, 50, 0, tablesort_pager())) {
