@@ -69,7 +69,6 @@ function system_view_options() {
   $output .= form_select("Default display mode", "default_comment_mode", $conf[default_comment_mode], $cmodes, "The default mode in which comments are displayed.");
   $output .= form_select("Default display order", "default_comment_order", $conf[default_comment_order], $corder, "The default order in which comments are displayed.");
   for ($count = -1; $count < 6; $count++) $threshold[$count] = "Filter - $count";
-  $output .= form_select("Default filter threshold", "default_comment_threshold", $conf[default_comment_threshold], $threshold, "The default threshold used to filter comments.");
   $output .= "<hr />\n";
 
   // layout settings:
