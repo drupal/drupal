@@ -590,7 +590,7 @@ function node_search($op = 'search', $keys = null) {
       return array('remaining' => $remaining, 'total' => $total);
     case 'search':
       list($join, $where) = _db_rewrite_sql();
-      $find = do_search($keys, 'node', 'INNER JOIN {node} n ON n.nid = i.sid '. $join .' INNER JOIN {users} u ON n.uid = u.uid', 'n.status = 1 AND '. $where);
+      $find = do_search($keys, 'node', 'INNER JOIN {node} n ON n.nid = i.sid '. $join .' INNER JOIN {users} u ON n.uid = u.uid', 'n.status = 1'. (empty($where) ? '' : ' AND '. $where));
       $results = array();
       foreach ($find as $item) {
         $node = node_load(array('nid' => $item));

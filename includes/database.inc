@@ -207,10 +207,10 @@ function _db_rewrite_sql($query = '', $primary_table = 'n', $primary_field = 'ni
     }
   }
 
-  $where = empty($where) ? '' : '('. implode(') AND (',$where).')';
-  $join = empty($join) ? '' : implode(' ',$join);
+  $where = empty($where) ? '' : '('. implode(') AND (', $where) .')';
+  $join = empty($join) ? '' : implode(' ', $join);
 
-  return array($join, $where, $distinct );
+  return array($join, $where, $distinct);
 }
 
 /**
