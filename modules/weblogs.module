@@ -1,25 +1,18 @@
 <?php
 // $Id$
 
-function weblogs_conf_options() {
-  $output .= form_select("Weblogs ping", "weblogs_ping", variable_get("weblogs_ping", 0), array("Disabled", "Enabled"), "Enabling Weblogs ping will inform <a href=\"http://www.weblogs.com/\">Weblogs.com</a> when your site updates.  Requires crontab.");
-
-  return $output;
-}
-
 function weblogs_help() {
-  $output .= "<p><a href=\"http://www.weblogs.com/\">Weblogs.com</a> is a website that tracks and displays updates to weblogs and news-oriented websites.  To get your Drupal site listed, weblogs.com must be informed about your site's updates.  This is the job of the weblog module and when installed, the administrator doesn't have to do anything to participate in the <a href=\"http://www.weblogs.com/\">weblogs.com system</a>. The weblog module automatically notifies weblogs.com when your site is updated.  To do so, Drupal implements the <a href=\"http://www.xmlrpc.com/weblogsCom/\">XML-RPC interface of weblogs.com</a>.</p>";
+  $output = "<p><a href=\"http://www.weblogs.com/\">Weblogs.com</a> is a website that tracks and displays links to changed weblogs and news-oriented websites.  To get your Drupal site listed, weblogs.com must be informed about your site's updates.  This is the job of the weblog module and when installed, the administrator doesn't have to do anything to participate in the <a href=\"http://www.weblogs.com/\">weblogs.com system</a>. The weblog module automatically notifies weblogs.com when your site is updated.  To do so, Drupal implements the <a href=\"http://www.xmlrpc.com/weblogsCom/\">XML-RPC interface of weblogs.com</a>. Requires crontab.</p>";
   return $output;
 }
 
 function weblogs_system($field){
-  $system["description"] = t("Alerts weblogs.com whenever your site is updated.");
+  $system["description"] = t("Alerts weblogs.com that your site has been updated.");
   return $system[$field];
 }
 
 function weblogs_cron() {
-
-  if (variable_get("weblogs_ping", 0) && variable_get("site_name", 0) && variable_get("site_slogan", 0)) {
+  if (variable_get("site_name", 0) && variable_get("site_slogan", 0)) {
     if (db_num_rows(db_query("SELECT nid FROM node WHERE status = 1 AND moderate = 0 AND (created > '". variable_get("weblogs_cron_last", time()) ."' OR changed > '". variable_get("weblogs_cron_last", time()) ."')"), 1)) {
       weblogs_notify(variable_get("site_name", "") ." - ". variable_get("site_slogan", ""), path_uri());
     }
@@ -29,7 +22,6 @@ function weblogs_cron() {
 }
 
 function weblogs_notify($name, $url) {
-
   $client = new xmlrpc_client("/RPC2", "rpc.weblogs.com", 80);
 
   $message = new xmlrpcmsg("weblogUpdates.ping", array(new xmlrpcval($name), new xmlrpcval($url)));
