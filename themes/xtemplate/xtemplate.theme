@@ -1,5 +1,5 @@
 <?php
-// $Id: xtemplate.theme,v 1.43 2003/12/13 18:50:09 dries Exp $
+// $Id: xtemplate.theme,v 1.44 2003/12/22 14:58:19 dries Exp $
 
 if (!class_exists("XTemplate")) {
   include_once("themes/xtemplate/xtemplate.inc");
@@ -121,7 +121,8 @@ function xtemplate_header() {
     $xtemplate->template->assign(array(
           //"search" => search_form(),
           "search_url" => url("search"),
-          "search_button_text" => t("Search")
+          "search_button_text" => t("Search"),
+          "search_description" => t("Enter the terms you wish to search for.")
           ));
     $xtemplate->template->parse("header.search_box");
   }
