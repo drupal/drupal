@@ -427,7 +427,6 @@ function user_block($op = "list", $delta = 0) {
           $block["content"] = "<div class=\"user-login-link\">$output</div>";
         }
 
-        menu_build("system");
         $block["content"] .= "<div id=\"menu\">". menu_tree()."</div>";
         return $block;
         break;
@@ -467,22 +466,22 @@ function user_link($type) {
   if ($type == "system") {
     global $user;
     if ($user->uid) {
-      menu("user/edit", t("edit account"), NULL, NULL, 8);
-      menu("user/logout", t("logout"), NULL, NULL, 10);
+      menu("user/edit", t("edit my account"), NULL, NULL, 8);
+      menu("user/logout", t("log out"), NULL, NULL, 10);
     }
     if (user_access("administer users")) {
-      menu("admin/user", "user management", "user_admin", user_help("admin/user"), 2);
-      menu("admin/user/create", "create new account", "user_admin", user_help("admin/user/create"), 1);
-      menu("admin/user/account", "view user accounts", "user_admin", user_help("admin/user/account"), 2);
-      menu("admin/user/access", "access rules", NULL, user_help("admin/user/access"), 3);
-      menu("admin/user/access/mail", "e-mail rules", "user_admin", user_help("admin/user/access/mail"));
-      menu("admin/user/access/user", "username rules", "user_admin", user_help("admin/user/access/user"));
-      menu("admin/user/role", "user roles", "user_admin", user_help("admin/user/role"), 4);
-      menu("admin/user/permission", "user permissions", "user_admin", user_help("admin/user/permission"), 5);
-      menu("admin/user/search", "search accounts", "user_admin", user_help("admin/user/search"), 8);
-      menu("admin/user/help", "help", "user_help", NULL, 9);
-      menu("admin/user/edit", "edit user account", "user_admin", NULL, 0, 1); // hidden menu
-      menu("admin/user/account/1", "blocked users", "user_admin", user_help("admin/user/account/1"), 3);
+      menu("admin/user", "accounts", "user_admin", user_help("admin/user"), 2);
+      menu("admin/user/create", t("new user"), "user_admin", user_help("admin/user/create"), 1);
+      menu("admin/user/account", t("users"), "user_admin", user_help("admin/user/account"), 2);
+      menu("admin/user/access", t("access rules"), NULL, user_help("admin/user/access"), 3);
+      menu("admin/user/access/mail", t("by e-mail"), "user_admin", user_help("admin/user/access/mail"));
+      menu("admin/user/access/user", t("by name"), "user_admin", user_help("admin/user/access/user"));
+      menu("admin/user/role", t("roles"), "user_admin", user_help("admin/user/role"), 4);
+      menu("admin/user/permission", t("permissions"), "user_admin", user_help("admin/user/permission"), 5);
+      menu("admin/user/search", t("search"), "user_admin", user_help("admin/user/search"), 8);
+      menu("admin/user/help", t("help"), "user_help", NULL, 9);
+      menu("admin/user/edit", t("edit user account"), "user_admin", NULL, 0, 1); // hidden menu
+      menu("admin/user/account/1", t("blocked users"), "user_admin", user_help("admin/user/account/1"), 3);
 
       $i = 2;
       foreach (user_roles(1) as $key => $value) {

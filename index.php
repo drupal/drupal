@@ -16,12 +16,14 @@ $mod = arg(0);
 
 drupal_page_header();
 
+check_php_setting("magic_quotes_gpc", 0);
+
+menu_build("system");
+
 if (isset($mod) && module_hook($mod, "page")) {
   module_invoke($mod, "page");
 }
 else {
-  check_php_setting("magic_quotes_gpc", 0);
-
   if (module_hook(variable_get("site_frontpage", "node"), "page")) {
     module_invoke(variable_get("site_frontpage", "node"), "page");
   }

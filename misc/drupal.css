@@ -278,7 +278,7 @@ pre, code {
   width: 100%;
   text-decoration: none;
 }
-#menu li a.current {
+#menu li a.active {
   color: #000;
 }
 #menu li a:hover {
