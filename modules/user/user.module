@@ -171,7 +171,8 @@ function user_validate_name($name) {
   if (ereg(" \$", $name)) return t("The Username cannot end with a space.");
   if (ereg("  ", $name)) return t("The Username cannot contain multiple spaces in a row.");
   // if (ereg("[^a-zA-Z0-9@-@]", $name)) return t("The Username contains an illegal character.");
-  if (!eregi('^[a-z0-9]+(@[a-z0-9]+)?$', $name)) return t("The name contains an illegal character.");
+  if (ereg('@', $name) && !eregi('@([0-9a-z](-?[0-9a-z])*\.)+[a-z]{2}([zmuvtg]|fo|me)?$', $name)) return t("The Username is not a valid authentication ID.");
+  if (!eregi('^[[:print:]]+', $name)) return t("The name contains an illegal character.");
   if (strlen($name) > 56) return t("The Username '$name' is too long: it must be less than 56 characters.");
 }
 
