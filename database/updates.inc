@@ -1,5 +1,5 @@
 <?php
-/* $Id: updates.inc,v 1.1 2004/02/25 22:20:08 dries Exp $ */
+/* $Id: updates.inc,v 1.2 2004/03/06 19:12:44 dries Exp $ */
 
 // Define the various updates in an array("date : comment" => "function");
 $sql_updates = array(
@@ -747,7 +747,7 @@ function update_78() {
     )");
   }
   else {
-    /* Needs PGSQL/MSSQL equivalent */
+    /* Needs PostgreSQL equivalent */
   }
   return $ret;
 }
