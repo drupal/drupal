@@ -1,11 +1,3 @@
-CREATE TABLE admin_blocks (
-  id tinyint(4) DEFAULT '0' NOT NULL auto_increment,
-  subject varchar(64) DEFAULT '' NOT NULL,
-  content text,
-  info varchar(128) DEFAULT '' NOT NULL,
-  link varchar(128) DEFAULT '' NOT NULL,
-  PRIMARY KEY (id)
-);
 
 CREATE TABLE affiliates (
   id int(11) DEFAULT '0' NOT NULL auto_increment,
@@ -13,6 +5,18 @@ CREATE TABLE affiliates (
   name varchar(255) DEFAULT '' NOT NULL,
   contact varchar(255) DEFAULT '' NOT NULL,
   UNIQUE link (link),
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE boxes (
+  id tinyint(4) DEFAULT '0' NOT NULL auto_increment,
+  subject varchar(64) DEFAULT '' NOT NULL,
+  content text,
+  info varchar(128) DEFAULT '' NOT NULL,
+  link varchar(128) DEFAULT '' NOT NULL,
+  type tinyint(2) DEFAULT '0' NOT NULL,
+  UNIQUE subject (subject),
+  UNIQUE info (info),
   PRIMARY KEY (id)
 );
 
@@ -73,6 +77,15 @@ CREATE TABLE diaries (
   author int(6) DEFAULT '0' NOT NULL,
   text text,
   timestamp int(11) DEFAULT '0' NOT NULL,
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE drupals (
+  id int(11) DEFAULT '0' NOT NULL auto_increment,
+  link varchar(255) DEFAULT '' NOT NULL,
+  name varchar(255) DEFAULT '' NOT NULL,
+  contact varchar(255) DEFAULT '' NOT NULL,
+  UNIQUE link (link),
   PRIMARY KEY (id)
 );
 

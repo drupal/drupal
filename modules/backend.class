@@ -16,7 +16,7 @@ class backend {
   // Contains the parsed rdf/rss/xml file:
   var $headlines = array();   // latest headlines
 
-  function backend($id, $site, $url, $file, $contact, $timout = 3600) {
+  function backend($id, $site = "", $url = "", $file = "", $contact = "", $timout = 3600) {
     // Get channel info:
     $result = db_query("SELECT * FROM channel WHERE id = '$id' OR site = '$site'");
 

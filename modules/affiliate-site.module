@@ -30,9 +30,9 @@ function affiliate_block() {
   $content .= "</FORM>\n";
   $content .= "</CENTER>\n";
  
-  $blocks[0]["subject"] = "Affiliates";
+  $blocks[0]["subject"] = "Affiliate sites";
   $blocks[0]["content"] = $content;
-  $blocks[0]["info"] = "Affiliates (selection)";
+  $blocks[0]["info"] = "Affiliate sites (selection)";
 
   unset($content);
 
@@ -41,9 +41,9 @@ function affiliate_block() {
     $content .= "<LI><A HREF=\"$affiliate->link\">$affiliate->name</A></LI>\n";
   }
 
-  $blocks[1]["subject"] = "Affiliates";
+  $blocks[1]["subject"] = "Affiliate sites";
   $blocks[1]["content"] = $content;
-  $blocks[1]["info"] = "Affiliates (sequential)";
+  $blocks[1]["info"] = "Affiliate sites (sequential)";
  
   return $blocks;
 }

@@ -3,6 +3,7 @@
 $module = array("page"  => "diary_page",
                 "block" => "diary_block",
                 "help" => "diary_help",
+                "user" => "diary_user",
                 "admin" => "diary_admin",
                 "export" => "diary_export");
 
@@ -197,6 +198,21 @@ function diary_help() {
  ?>
   <P>Drupal's diary module allows registered users to maintain an online diary.</P>
  <?
+}
+
+function diary_user($username, $section, $operation) {
+  if ($section == "user" && $operation == "view") {
+    $result = db_query("SELECT d.* FROM diaries d LEFT JOIN users u ON u.id = d.author WHERE u.userid = '$username' AND d.timestamp > ". (time() - 1209600) ." ORDER BY id DESC LIMIT 2");
+    while ($diary = db_fetch_object($result)) {
+      $content .= "<DL><DT><B>". date("l, F jS", $diary->timestamp) .":</B></DT><DD><P>". check_output($diary->text) ."</P><P>[ <A HREF=\"module.php?mod=diary&op=view&name=$username\">more</A> ]</P></DD></DL>\n";
+      $diaries++;
+    }
+
+    $block["subject"] = "$username has posted ". format_plural($diaries, "diary entry", "diary entries") ." recently";
+    $block["content"] = $content;
+
+    return $block;
+  }
 }
 
 function diary_block() {

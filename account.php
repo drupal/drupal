@@ -266,6 +266,13 @@ function account_content_save($edit) {
 function account_user($uname) {
   global $user, $theme;
 
+  function module($name, $module, $username) {
+    global $theme;
+    if ($module["user"] && $block = $module["user"]($username, "user", "view")) {
+      if ($block["content"]) $theme->box($block["subject"], $block["content"]);
+    }
+  }
+
   if ($user->id && $user->userid == $uname) {
     $output .= "<TABLE BORDER=\"0\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>User ID:</B></TD><TD>$user->userid</TD></TR>\n";
@@ -300,17 +307,11 @@ function account_user($uname) {
       $comments++;
     }
 
-    $result = db_query("SELECT d.* FROM diaries d LEFT JOIN users u ON u.id = d.author WHERE u.userid = '$uname' AND d.timestamp > ". (time() - 1209600) ."  ORDER BY id DESC LIMIT 2");
-    while ($diary = db_fetch_object($result)) {
-      $block3 .= "<DL><DT><B>". date("l, F jS", $diary->timestamp) .":</B></DT><DD><P>". check_output($diary->text) ."</P><P>[ <A HREF=\"module.php?mod=diary&op=view&name=$uname\">more</A> ]</P></DD></DL>\n";
-      $diaries++;
-    }
-    
     // Display account information:
     $theme->header();
     if ($block1) $theme->box("User information for $uname", $block1);
     if ($block2) $theme->box("$uname has posted ". format_plural($comments, "comment", "comments") ." recently", $block2);
-    if ($block3) $theme->box("$uname has posted ". format_plural($diaries, "diary entry", "diary entries") ." recently", $block3);
+    module_iterate("module", $uname);
     $theme->footer();
   }
   else { 
