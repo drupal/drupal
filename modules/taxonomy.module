@@ -747,7 +747,7 @@ function taxonomy_page() {
       $breadcrumbs[] = l(t('Home'), '');
       $breadcrumbs = array_reverse($breadcrumbs);
 
-      drupal_set_html_head('<link rel="alternate" type="application/rss+xml" title="RSS - '. implode(' : ', $names) .'" href="'. url("taxonomy/feed/or/$taxonomy->str_tids") .'">');
+      drupal_set_html_head('<link rel="alternate" type="application/rss+xml" title="RSS - '. implode(' : ', $names) .'" href="'. url("taxonomy/feed/or/$taxonomy->str_tids") .'" />');
 
       $output = taxonomy_render_nodes(taxonomy_select_nodes($taxonomy));
       print theme("page", $output, implode(', ', $names), $breadcrumbs);
