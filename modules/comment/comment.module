@@ -922,9 +922,9 @@ function comment_admin_edit($cid) {
   if ($comment) {
     if (!$comment->uid) {
       // If comment from non-registered user, allow admin to modify anonymous fields.
-      $form .= form_textfield(t('Name'), 'name', $comment->name ? $comment->name : variable_get('anonymous', 'Anonymous') , 20, 40);
-      $form .= form_textfield(t('E-mail'), 'mail', $comment->mail, 20, 40);
-      $form .= form_textfield(t('Homepage'), 'homepage', $comment->homepage, 20, 40);
+      $form .= form_textfield(t('Name'), 'name', $comment->name ? $comment->name : variable_get('anonymous', 'Anonymous') , 20, 60);
+      $form .= form_textfield(t('E-mail'), 'mail', $comment->mail, 20, 64);
+      $form .= form_textfield(t('Homepage'), 'homepage', $comment->homepage, 20, 255);
     }
     else {
       // Otherwise, just display the author's name.
@@ -1386,14 +1386,14 @@ function theme_comment_form($edit, $title) {
     $form .= form_item(t('Your name'), format_name($user));
   }
   else if (variable_get('comment_anonymous', 0) == 1) {
-    $form .= form_textfield(t('Your name'), 'name', $edit['name'] ? $edit['name'] : variable_get('anonymous', 'Anonymous') , 20, 40);
-    $form .= form_textfield(t('E-mail'), 'mail', $edit['mail'], 20, 40, t('The content of this field is kept private and will not be shown publicly.'));
-    $form .= form_textfield(t('Homepage'), 'homepage', $edit['homepage'], 20, 40);
+    $form .= form_textfield(t('Your name'), 'name', $edit['name'] ? $edit['name'] : variable_get('anonymous', 'Anonymous') , 20, 60);
+    $form .= form_textfield(t('E-mail'), 'mail', $edit['mail'], 20, 64, t('The content of this field is kept private and will not be shown publicly.'));
+    $form .= form_textfield(t('Homepage'), 'homepage', $edit['homepage'], 20, 255);
   }
   else if (variable_get('comment_anonymous', 0) == 2) {
-    $form .= form_textfield(t('Your name'), 'name', $edit['name'] ? $edit['name'] : variable_get('anonymous', 'Anonymous') , 20, 40, NULL, NULL, TRUE);
-    $form .= form_textfield(t('E-mail'), 'mail', $edit['mail'], 20, 40, t('The content of this field is kept private and will not be shown publicly.'), NULL, TRUE);
-    $form .= form_textfield(t('Homepage'), 'homepage', $edit['homepage'], 20, 40);
+    $form .= form_textfield(t('Your name'), 'name', $edit['name'] ? $edit['name'] : variable_get('anonymous', 'Anonymous') , 20, 60, NULL, NULL, TRUE);
+    $form .= form_textfield(t('E-mail'), 'mail', $edit['mail'], 20, 64, t('The content of this field is kept private and will not be shown publicly.'), NULL, TRUE);
+    $form .= form_textfield(t('Homepage'), 'homepage', $edit['homepage'], 20, 255);
   }
 
   // subject field:
