@@ -1,5 +1,5 @@
 <?php
-/* $Id: theme.inc,v 1.205 2004/08/06 20:15:31 dries Exp $ */
+/* $Id: theme.inc,v 1.206 2004/08/10 05:44:16 dries Exp $ */
 
 /**
  * @file
@@ -514,6 +514,10 @@ function theme_item_list($items = array(), $title = NULL) {
  */
 function theme_error($message) {
   return '<div class="error">'. $message .'</div>';
+}
+
+function theme_more_help_link($url) {
+  return '<div class="more-help-link">' . t('[<a href="%link">more help...</a>]', array('%link' => $url)) . '</div><hr />';
 }
 
 /**

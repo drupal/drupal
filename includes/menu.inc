@@ -1,5 +1,5 @@
 <?php
-/* $Id: menu.inc,v 1.60 2004/08/06 20:15:31 dries Exp $ */
+/* $Id: menu.inc,v 1.61 2004/08/10 05:44:16 dries Exp $ */
 
 /**
  * @file
@@ -420,10 +420,16 @@ function menu_get_active_help() {
     return;
   }
 
-  $return = module_invoke_all('help', $path);
-  foreach ($return as $item) {
-    if (!empty($item)) {
-      $output .= $item ."\n";
+  foreach (module_list() as $name) {
+    if (module_hook($name, 'help')) {
+      if ($temp = module_invoke($name, 'help', $path)) {
+        $output .= $temp . "\n";
+      }
+      if (substr($path, 0, 6) == "admin/") { 
+        if (module_invoke($name, 'help', 'admin/help#' . substr($path, 6))) {
+          $output .= theme("more_help_link", url('admin/help/' . substr($path, 6)));
+        }
+      }
     }
   }
   return $output;

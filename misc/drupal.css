@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.75 2004/08/06 20:15:31 dries Exp $ */
+/* $Id: drupal.css,v 1.76 2004/08/10 05:44:17 dries Exp $ */
 
 /*
 ** HTML elements
@@ -376,6 +376,10 @@ tr.light .form-item, tr.dark .form-item {
 }
 .user-login-block {
   text-align: center;
+}
+.more-help-link {
+  font-size: 0.85em;
+  text-align: right;
 }
 tr td.watchdog-user {
   background: #ffd;
