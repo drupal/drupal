@@ -12,7 +12,7 @@ function page_node($field) {
 
 function page_access($op, $node) {
   if ($op == "view") {
-    return ($node->nid && $node->status && !$node->moderate);
+    return $node->status;
   }
 }
 

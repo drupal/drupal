@@ -10,7 +10,7 @@ function forum_node($field) {
 
 function forum_access($op, $node) {
   if ($op == "view") {
-    return ($node->nid && $node->status && !$node->moderate);
+    return $node->status;
   }
 }
 
