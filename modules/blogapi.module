@@ -1,6 +1,6 @@
 <?php
 
-// $Id: blogapi.module,v 1.4 2003/12/20 11:57:40 kjartan Exp $
+// $Id: blogapi.module,v 1.5 2003/12/22 11:28:07 dries Exp $
 
 function blogapi_help($section) {
   switch ($section) {
@@ -36,6 +36,11 @@ function blogapi_xmlrpc() {
 
 function blogapi_get_users_blogs($req_params) {
   $params = blogapi_convert($req_params);
+  // Remove unused appkey from bloggerAPI.
+  if (count($params) == 6) {
+    $params = array_slice($params, 1);
+  }
+
   $user = blogapi_validate_user($params[1], $params[2]);
   if ($user->uid) {
     $struct = new xmlrpcval(array('url' => new xmlrpcval(url('blog/' . $user->uid)),
