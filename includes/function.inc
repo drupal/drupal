@@ -65,7 +65,7 @@ function format_interval($timestamp) {
   return ($output) ? $output : "0 sec";
 }
 
-function format_date($timestamp, $type = "medium") {
+function format_date($timestamp, $type = "medium", $format = "") {
   global $user;
 
   $timestamp += ($user->timezone) ? $user->timezone - date("Z") : 0;
@@ -79,6 +79,9 @@ function format_date($timestamp, $type = "medium") {
       break;
     case "large":
       $date = t(date("l", $timestamp)) .", ". t(date("F", $timestamp)) ." ". date("d, Y - H:i", $timestamp);
+      break;
+    case "custom":
+      $date = date($format, $timestamp);
       break;
     default:
       $date = t(date("l", $timestamp)) .", ". date("m/d/Y - H:i", $timestamp);
