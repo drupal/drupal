@@ -51,7 +51,7 @@ class BaseTheme {
       $terms = taxonomy_link("taxonomy terms", $node);
     }
 
-    $output = "<b>$node->title</b> by ". format_name($node) ."<br />";
+    $output = "<h2>$node->title</h2> by ". format_name($node);
 
     if (count($terms)) {
       $output .= "<small>(". $this->links($terms) .")</small><br />";
@@ -72,7 +72,7 @@ class BaseTheme {
   }
 
   function box($subject, $content, $region = "main") {
-    $output = "<p><b>$subject</b><br />$content</p>";
+    $output = "<h2>$subject</h2><p>$content</p>";
     print $output;
   }
 
@@ -92,7 +92,7 @@ class BaseTheme {
    */
   function block($block) {
     $output  = "<div class=\"block block-$block->module\" id=\"block-$block->module-$block->delta\">";
-    $output .= " <div class=\"subject\">$block->subject</div>";
+    $output .= " <h3>$block->subject</h3>";
     $output .= " <div class=\"content\">$block->content</div>";
     $output .= "</div>";
     print $output;
@@ -121,7 +121,7 @@ function theme_mark() {
 function theme_item_list($items = array(), $title = NULL) {
   $output .= "<div class=\"item-list\">";
   if (isset($title)) {
-    $output .= "<div class=\"title\">$title</div>";
+    $output .= "<h3>$title</h3>";
   }
 
   if (isset($items)) {
