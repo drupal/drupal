@@ -413,26 +413,6 @@ CREATE TABLE sessions (
 -- );
 
 --
--- Table structure for site
---
-
-CREATE TABLE site (
-  sid SERIAL,
-  name varchar(128) NOT NULL default '',
-  link varchar(255) NOT NULL default '',
-  size text NOT NULL default '',
-  changed integer NOT NULL default '0',
-  checked integer NOT NULL default '0',
-  feed varchar(255) NOT NULL default '',
-  refresh integer NOT NULL default '0',
-  threshold integer NOT NULL default '0',
-  PRIMARY KEY  (sid),
-  UNIQUE (name),
-  UNIQUE (link)
-);
-
-
---
 -- Table structure for system
 --
 
@@ -444,8 +424,6 @@ CREATE TABLE system (
   status integer NOT NULL default '0',
   PRIMARY KEY  (filename)
 );
-
-
 
 --
 -- Table structure for term_data
