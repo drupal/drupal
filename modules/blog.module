@@ -162,7 +162,10 @@ function blog_form($edit = array()) {
       $form .= form_hidden("nid", $edit["nid"]);
     }
 
-    if ($edit && !$edit["title"]) {
+    if (!$edit) {
+      $form .= form_submit(t("Preview"));
+    }
+    else if ($edit && !$edit["title"]) {
       $form .= "<font color=\"red\">". t("Warning: you did not supply a subject.") ."</font><p>\n";
       $form .= form_submit(t("Preview"));
     }

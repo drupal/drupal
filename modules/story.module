@@ -57,7 +57,10 @@ function story_form($edit = array()) {
     $form .= form_hidden("nid", $edit[nid]);
   }
 
-  if ($edit && !$edit[title]) {
+  if (!$edit) {
+    $form .= form_submit(t("Preview"));
+  }
+  else if ($edit && !$edit[title]) {
     $form .= "<FONT COLOR=\"red\">". t("Warning: you did not supply a subject.") ."</FONT><P>\n";
     $form .= form_submit(t("Preview"));
   }
