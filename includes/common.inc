@@ -1158,6 +1158,33 @@ function drupal_page_footer() {
 }
 
 /**
+ * Walks through the provided array and constructs an associative
+ * array out of it. The keys of the resulting array will be the
+ * values of the passed array. The values will either be the same
+ * (if no function was specified), or the results of the function
+ * given the value.
+ *
+ * @param $array An array
+ * @param $function A name of a function to apply to all values
+ */
+function drupal_map_assoc($array, $function = NULL) {
+  if (!isset($function)) {
+    $result = array();
+    foreach ($array as $value) {
+      $result[$value] = $value;
+    }
+    return $result;
+  }
+  elseif (function_exists($function)) {
+    $result = array();
+    foreach($array as $value) {
+      $result[$value] = $function($value);
+    }
+    return $result;
+  }
+}
+
+/**
  * Wrapper around xml_parser_create() which extracts the encoding from the XML
  * data first and sets the output encoding to UTF-8. This function should be
  * used instead of xml_parser_create(), because PHP's XML parser doesn't check
