@@ -208,7 +208,7 @@ function user_validate_name($name) {
 }
 
 function user_validate_mail($mail) {
-
+  if (!$mail) return t("You must enter an e-mail address.");
   if ($mail && !valid_email_address($mail)) {
     return t("The e-mail address '%mail' is not valid.", array("%mail" => $mail));
   }
@@ -834,7 +834,7 @@ function user_register($edit = array()) {
     drupal_goto(url("user/edit"));
   }
 
-  if ($edit["name"] && $edit["mail"]) {
+  if (!(is_null($edit["name"]) && is_null($edit["mail"]))) {
     if ($error = user_validate_name($edit["name"])) {
       // do nothing
     }
@@ -975,7 +975,7 @@ function user_edit($edit = array()) {
   global $user;
 
   if ($user->uid) {
-    if ($edit["name"]) {
+    if (!(is_null($edit["name"]) && is_null($edit["mail"]))) {
       if ($error = user_validate_name($edit["name"])) {
         // do nothing
       }
