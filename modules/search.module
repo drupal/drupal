@@ -481,6 +481,7 @@ function search_view() {
       // Log the search keys:
       watchdog('search',
         t('Search: %keys (%type).', array('%keys' => "<em>$keys</em>", '%type' => module_invoke($type, 'search', 'name'))),
+        WATCHDOG_NOTICE,
         l(t('results'), 'search', NULL, 'keys='. urlencode($keys) . '&type='. urlencode($type))
         );
 
