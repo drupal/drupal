@@ -28,7 +28,7 @@ function pager_display($tags = "", $limit = 10, $element = 0, $type = "default",
  *
  * @see pager_display
  */
-function pager_display_default($tags = "", $limit = 10, $element = 0, $attributes = array()) {
+function theme_pager_display_default($tags = "", $limit = 10, $element = 0, $attributes = array()) {
   global $pager_total;
   if ($pager_total[$element] > $limit) {
     $output .= "<div id=\"pager\" class=\"container-inline\">";
@@ -51,13 +51,13 @@ function pager_display_default($tags = "", $limit = 10, $element = 0, $attribute
  *
  * @see pager_display
  */
-function pager_display_simple($tags = "", $limit = 10, $element = 0, $attributes = array()) {
+function theme_pager_display_simple($tags = "", $limit = 10, $element = 0, $attributes = array()) {
   /*
   ** It's left as an exercise to theme writers to create an alternative
   ** pager for pager_display_simple().  if your theme does not offer a
   ** replacement, the theme.inc pager_display_default() is used.
   */
-  return pager_display_default($tags, $limit, $element, $attributes);
+  return theme_pager_display_default($tags, $limit, $element, $attributes);
 }
 
 /**
@@ -68,13 +68,13 @@ function pager_display_simple($tags = "", $limit = 10, $element = 0, $attributes
  *
  * @see pager_display
  */
-function pager_display_admin($tags = "", $limit = 10, $element = 0, $attributes = array()) {
+function theme_pager_display_admin($tags = "", $limit = 10, $element = 0, $attributes = array()) {
   /*
   ** It's left as an exercise to theme writers to create an alternative
   ** pager for pager_display_admin().  if your theme does not offer a
   ** replacement, the pager.inc pager_display_default() is used.
   */
-  return pager_display_default($tags, $limit, $element, $attributes);
+  return theme_pager_display_default($tags, $limit, $element, $attributes);
 }
 
 /* *******************************************************************

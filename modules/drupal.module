@@ -157,9 +157,9 @@ function drupal_auth($username, $password, $server) {
 
 function drupal_page() {
 
-  theme("header");
-  theme("box", "Drupal", drupal_help("user/help#drupal"));
-  theme("footer");
+  print theme("header");
+  print theme("box", "Drupal", drupal_help("user/help#drupal"));
+  print theme("footer");
 }
 
 function drupal_login($arguments) {

@@ -32,9 +32,9 @@ function title_page() {
     else if (db_num_rows($result) == 1) {
       $node = db_fetch_object($result);
       $node = node_load(array("nid" => $node->nid));
-      theme("header");
+      print theme("header");
       print node_show($node, NULL);
-      theme("footer");
+      print theme("footer");
     }
     else {
       $header = array(t("Type"), t("Title"), t("Author"));
@@ -49,15 +49,15 @@ function title_page() {
       $output .= table($header, $rows);
       $output .= "</div>";
 
-      theme("header");
-      theme("box", t("Matching Posts"), $output);
-      theme("footer");
+      print theme("header");
+      print theme("box", t("Matching Posts"), $output);
+      print theme("footer");
     }
   }
   else {
-    theme("header");
-    theme("box", t("Access denied"), message_access());
-    theme("footer");
+    print theme("header");
+    print theme("box", t("Access denied"), message_access());
+    print theme("footer");
   }
 }
 

@@ -192,9 +192,9 @@ function cloud_page() {
 
 
   if (user_access("access site cloud")) {
-    theme("header");
-    theme("box", t("Site cloud"), cloud_help("cloud") . cloud_list(100));
-    theme("footer");
+    print theme("header");
+    print theme("box", t("Site cloud"), cloud_help("cloud") . cloud_list(100));
+    print theme("footer");
   }
 }
 

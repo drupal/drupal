@@ -61,12 +61,12 @@ function tracker_posts($id = 0) {
     }
 
     $type = ucfirst(module_invoke($node->type, "node", "name"));
-    $title = l($node->title, "node/view/$node->nid") ." ". (node_is_new($node->nid, $node->changed) ? theme("theme_mark") : "");
+    $title = l($node->title, "node/view/$node->nid") ." ". (node_is_new($node->nid, $node->changed) ? theme("mark") : "");
     $author = format_name($node);
 
     $comments = array();
     while ($comment = db_fetch_object($cresult)) {
-      $comments[] = "<li>". t("%subject by %author", array("%subject" => l($comment->subject, "node/view/$node->nid#$comment->cid"), "%author" => format_name($comment))) ." ". (node_is_new($comment->nid, $comment->timestamp) ? theme("theme_mark") : "") ."</li>\n";
+      $comments[] = "<li>". t("%subject by %author", array("%subject" => l($comment->subject, "node/view/$node->nid#$comment->cid"), "%author" => format_name($comment))) ." ". (node_is_new($comment->nid, $comment->timestamp) ? theme("mark") : "") ."</li>\n";
     }
 
     if ($comments) {
@@ -104,9 +104,9 @@ function tracker_page() {
   global $user;
 
   if (user_access("access content")) {
-    theme("header", t("Recent posts"));
-    theme("box", t("Recent posts"), tracker_posts(arg(1)));
-    theme("footer");
+    print theme("header", t("Recent posts"));
+    print theme("box", t("Recent posts"), tracker_posts(arg(1)));
+    print theme("footer");
   }
 }
 

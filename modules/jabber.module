@@ -162,9 +162,9 @@ function jabber_auth($username, $password, $server) {
 
 function jabber_page() {
 
-  theme("header");
-  theme("box", "Jabber", jabber_help("user/help#jabber"));
-  theme("footer");
+  print theme("header");
+  print theme("box", "Jabber", jabber_help("user/help#jabber"));
+  print theme("footer");
 }
 
 function jabber_user($type, $edit, $user) {

@@ -87,12 +87,12 @@ function poll_validate(&$node) {
       }
 
       if ($node->chvotes[$i] < 0) {
-        $error["chvotes][$i"] = theme("theme_error", t("Negative values are not allowed."));
+        $error["chvotes][$i"] = theme("error", t("Negative values are not allowed."));
       }
     }
 
     if ($actualchoices < 2) {
-      $error["choice][0"] = theme("theme_error", t("You must fill in at least two choices."));
+      $error["choice][0"] = theme("error", t("You must fill in at least two choices."));
     }
   }
 
@@ -247,15 +247,15 @@ function poll_node($field) {
 
 function poll_page() {
 
-  theme("header");
+  print theme("header");
   $result = db_query("SELECT n.nid, n.title, p.active, SUM(c.chvotes) AS votes FROM {node} n INNER JOIN {poll} p ON n.nid=p.nid INNER JOIN {poll_choices} c ON n.nid=c.nid WHERE type = 'poll' AND status = '1' AND moderate = '0' GROUP BY n.nid, n.title, p.active, n.created ORDER BY n.created DESC");
   $output = "<ul>";
   while ($node = db_fetch_object($result)) {
     $output .= "<li>".l($node->title, "node/view/$node->nid") ." - ". format_plural($node->votes, "1 vote", "%count votes") ." - ". ($node->active ? t("open") : t("closed")) ."</li>";
   }
   $output .= "</ul>";
-  theme("box", t("Polls"), $output);
-  theme("footer");
+  print theme("box", t("Polls"), $output);
+  print theme("footer");
 }
 
 function poll_perm() {
@@ -383,7 +383,7 @@ function poll_view(&$node, $main = 0, $block = 0) {
 
   // We also use poll_view() for the side-block
   if (!$block) {
-    theme("node", $node, $main);
+    print theme("node", $node, $main);
   }
 }
 

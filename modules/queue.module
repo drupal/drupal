@@ -116,9 +116,9 @@ function queue_overview() {
   }
   $output .= "</table>";
 
-  theme("header");
-  theme("box", t("Moderation queue"), $output);
-  theme("footer");
+  print theme("header");
+  print theme("box", t("Moderation queue"), $output);
+  print theme("footer");
 }
 
 function queue_view($nid) {
@@ -168,15 +168,15 @@ function queue_view($nid) {
     }
   }
 
-  theme("header");
+  print theme("header");
   node_view($node);
   if ($output) {
-    theme("box", t("Moderate"), $output);
+    print theme("box", t("Moderate"), $output);
   }
   if ($node->comment && variable_get("queue_show_comments", 1)) {
     module_invoke("comment", "render", $node);
   }
-  theme("footer");
+  print theme("footer");
 }
 
 function queue_page() {
@@ -191,9 +191,9 @@ function queue_page() {
     }
   }
   else {
-    theme("header");
-    theme("box", t("Moderation queue"), message_access());
-    theme("footer");
+    print theme("header");
+    print theme("box", t("Moderation queue"), message_access());
+    print theme("footer");
   }
 }
 

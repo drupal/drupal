@@ -1,15 +1,18 @@
 <?php
 // $Id$
 
-class Theme_example extends BaseTheme {
+function example_help($section) {
 
-  function system($field) {
-    $system["name"] = "example";
-    $system["author"] = "Dries";
-    $system["description"] = "Internet explorer, Netscape, Opera, Lynx";
+  $output = "";
 
-    return $system[$field];
+  switch ($section) {
+    case 'admin/system/themes#description':
+      $output = t("Internet explorer, Netscape, Opera, Lynx");
+      break;
   }
+
+  return $output;
 }
+
 
 ?>

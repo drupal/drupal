@@ -447,7 +447,7 @@ function user_block($op = "list", $delta = 0) {
           }
           $items[] = l(t("Request new password"), "user/password", array("title" => t("Request new password via e-mail.")));
 
-          $output .= theme("theme_item_list", $items);
+          $output .= theme("item_list", $items);
 
           $block["subject"] = t("User login");
           $block["content"] = "<div class=\"user-login-link\">$output</div>";
@@ -467,7 +467,7 @@ function user_block($op = "list", $delta = 0) {
             $items[] = l((strlen($account->name) > 15 ? substr($account->name, 0, 15) . '...' : $account->name), "user/view/$account->uid");
           }
 
-          $output = theme("theme_user_list", $items);
+          $output = theme("user_list", $items);
 
           $block["subject"] = t("Who's new");
           $block["content"] = $output;
@@ -478,11 +478,11 @@ function user_block($op = "list", $delta = 0) {
 }
 
 function theme_user_list($items, $title = NULL) {
-  return theme("theme_item_list", $items, $title);
+  return theme("item_list", $items, $title);
 }
 
 function theme_menu_list($items, $title = NULL) {
-  return theme("theme_item_list", $items, $title);
+  return theme("item_list", $items, $title);
 }
 
 function user_link($type) {
@@ -693,7 +693,7 @@ function user_login($edit = array(), $msg = "") {
   */
 
   if ($error) {
-    $output .= theme("theme_error", $error);
+    $output .= theme("error", $error);
   }
 
   /*
@@ -726,7 +726,7 @@ function user_login($edit = array(), $msg = "") {
   if (variable_get("user_register", 1)) {
     $items[] = l(t("Create new account"), "user/register");
   }
-  $output .= theme("theme_item_list", $items);
+  $output .= theme("item_list", $items);
 
   return form($output, "post", url("user"));
 }
@@ -803,7 +803,7 @@ function user_pass($edit = array()) {
 
     // Display error message if necessary.
     if ($error) {
-      $output .= theme("theme_error", $error);
+      $output .= theme("error", $error);
     }
 
     /*
@@ -818,7 +818,7 @@ function user_pass($edit = array()) {
     if (variable_get("user_register", 1)) {
       $items[] = l(t("Create new account"), "user/register");
     }
-    $output .= theme("theme_item_list", $items);
+    $output .= theme("item_list", $items);
 
     return form($output, "post", url("user"));
   }
@@ -927,7 +927,7 @@ function user_register($edit = array()) {
   }
   else {
     if ($error) {
-      $output .= theme("theme_error", $error);
+      $output .= theme("error", $error);
     }
   }
 
@@ -948,7 +948,7 @@ function user_register($edit = array()) {
   $output .= form_submit(t("Create new account"));
   $items[] = l(t("Request new password"), "user/password");
   $items[] = l(t("Log in"), "user/login");
-  $output .= theme("theme_item_list", $items);
+  $output .= theme("item_list", $items);
 
   return form($output);
 }
@@ -1032,7 +1032,7 @@ function user_edit($edit = array()) {
     }
 
     if ($error) {
-      $output .= theme("theme_error", $error);
+      $output .= theme("error", $error);
     }
 
     if (!$edit) {
@@ -1070,9 +1070,9 @@ function user_view($uid = 0) {
 
     $output .= implode("\n", module_invoke_all("user", "view_private", "", $user));
 
-    theme("header", $user->name);
-    theme("box", $user->name, $output);
-    theme("footer");
+    print theme("header", $user->name);
+    print theme("box", $user->name, $output);
+    print theme("footer");
   }
   else if ($uid && $account = user_load(array("uid" => $uid, "status" => 1))) {
     $output = form_item(t("Name"), $account->name);
@@ -1083,19 +1083,19 @@ function user_view($uid = 0) {
       $output .= form_item(t("Administration"), l(t("edit account"), "admin/user/edit/$account->uid"));
     }
 
-    theme("header", $account->name);
-    theme("box", $account->name, $output);
-    theme("footer");
+    print theme("header", $account->name);
+    print theme("box", $account->name, $output);
+    print theme("footer");
   }
   else {
     $output = user_login();
-    theme("header", t("User login"));
-    theme("box", t("User login"), $output);
+    print theme("header", t("User login"));
+    print theme("box", t("User login"), $output);
     if (variable_get("user_register", 1)) {
-      theme("box", t("Create new user account"), user_register());
+      print theme("box", t("Create new user account"), user_register());
     }
-    theme("box", t("Request new password"), user_pass());
-    theme("footer");
+    print theme("box", t("Request new password"), user_pass());
+    print theme("footer");
   }
 }
 
@@ -1111,36 +1111,36 @@ function user_page() {
   switch ($op) {
     case t("E-mail new password"):
     case "password":
-      theme("header", t("E-mail new password"));
-      theme("box", t("E-mail new password"), user_pass($edit));
-      theme("footer");
+      print theme("header", t("E-mail new password"));
+      print theme("box", t("E-mail new password"), user_pass($edit));
+      print theme("footer");
       break;
     case t("Create new account"):
     case "register":
       $output = user_register($edit);
-      theme("header", t("Create new account"));
+      print theme("header", t("Create new account"));
       if (variable_get("user_register", 1)) {
-        theme("box", t("Create new account"), $output);
+        print theme("box", t("Create new account"), $output);
       }
       else {
         print message_access();
       }
-      theme("footer");
+      print theme("footer");
       break;
     case t("Log in"):
     case "login":
       $output = user_login($edit);
-      theme("header", t("Log in"));
-      theme("box", t("Log in"), $output);
-      theme("footer");
+      print theme("header", t("Log in"));
+      print theme("box", t("Log in"), $output);
+      print theme("footer");
       break;
     case t("Save user information"):
     case "edit":
       $output = user_edit($edit);
       $GLOBALS["theme"] = theme_init();
-      theme("header", t("Edit user information"));
-      theme("box", t("Edit user information"), $output);
-      theme("footer");
+      print theme("header", t("Edit user information"));
+      print theme("box", t("Edit user information"), $output);
+      print theme("footer");
       break;
     case "view":
       user_view(arg(2));
@@ -1150,9 +1150,9 @@ function user_page() {
       print user_logout();
       break;
     case "help":
-      theme("header");
-      theme("box", t("Distributed authentication"), user_help("user/help#user"));
-      theme("footer");
+      print theme("header");
+      print theme("box", t("Distributed authentication"), user_help("user/help#user"));
+      print theme("footer");
       break;
     default:
       print user_view();
@@ -1236,7 +1236,7 @@ function user_admin_create($edit = array()) {
   else {
 
     if ($error) {
-      $output .= theme("theme_error", $error);
+      $output .= theme("error", $error);
     }
 
     $output .= form_textfield(t("Username"), "name", $edit["name"], 30, 55, t("Provide the username of the new account."));
@@ -1488,7 +1488,7 @@ function user_admin_edit($edit = array()) {
         $output .= status(t("user information changes have been saved."));
       }
       else {
-        $output .= theme("theme_error", $error);
+        $output .= theme("error", $error);
       }
     }
     else if ($op == t("Delete account")) {
@@ -1499,7 +1499,7 @@ function user_admin_edit($edit = array()) {
       }
       else {
         $error = t("Failed to delete account: the account has to be blocked first.");
-        $output .= theme("theme_error", $error);
+        $output .= theme("error", $error);
       }
     }
 
@@ -1761,9 +1761,9 @@ function user_help($section = "admin/help#user") {
       $output .= "<p>This second half of the <i>_auth</i> function examines the <i>\$response</i> from plant.blogger.com and returns a TRUE (1) or FALSE (0) as appropriate. This is a critical decision, so be sure that you have good logic here, and perform sufficient testing for all cases. In the case of Blogger, we search for the string 'fault' in the response. If that string is present, or there is no repsonse, our function returns FALSE. Otherwise, Blogger has returned valid data to our method request and we return TRUE. Note: Everything starting with \"//\" is a comment and is not executed.</p>";
       $output .= "<pre>function blogger_page() {
 
-  theme(&quot;header&quot;);
-  theme(&quot;box&quot;, &quot;Blogger&quot;, blogger_help(\"user/help\"));
-  theme(&quot;footer&quot;);
+  print theme(&quot;header&quot;);
+  print theme(&quot;box&quot;, &quot;Blogger&quot;, blogger_help(\"user/help\"));
+  print theme(&quot;footer&quot;);
 }</pre>";
       $output .= "<p>The _page function is not currently used, but it might be in the future. For now, just copy what you see here, substituting your module name for <i>blogger</i>.</p>";
       $output .= "<pre><code>function blogger_help(\$section) {

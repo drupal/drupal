@@ -692,7 +692,7 @@ function statistics_display_online_block() {
 
   if ($items) {
           $output .= "<br /><br />";
-          $output .= theme("theme_item_list", $items, variable_get("statistics_block_online_subtitle", "Online users:"));
+          $output .= theme("item_list", $items, variable_get("statistics_block_online_subtitle", "Online users:"));
         }
       }
     }
@@ -758,14 +758,14 @@ function statistics_page() {
 
 
   if (user_access("access content")) {
-    theme("header");
+    print theme("header");
     statistics_page_user();
-    theme("footer");
+    print theme("footer");
   }
   else {
-    theme("header");
-    theme("box", t("Access denied"), message_access());
-    theme("footer");
+    print theme("header");
+    print theme("box", t("Access denied"), message_access());
+    print theme("footer");
   }
 }
 
@@ -782,7 +782,7 @@ function statistics_page_user($uid = 0, $date = 0, $all = 0) {
     $output .= statistics_summary("daycount", $displaycount);
     $output .= "</table>";
 
-    theme("box", t(variable_get("statistics_userpage_day_head", "")), $output, "main");
+    print theme("box", t(variable_get("statistics_userpage_day_head", "")), $output, "main");
   }
 
 
@@ -791,7 +791,7 @@ function statistics_page_user($uid = 0, $date = 0, $all = 0) {
     $output .= statistics_summary("totalcount", $displaycount);
     $output .= "</table>";
 
-    theme("box", t(variable_get("statistics_userpage_all_head", "")), $output, "main");
+    print theme("box", t(variable_get("statistics_userpage_all_head", "")), $output, "main");
   }
 
   if ($displaycount = variable_get("statistics_userpage_last_cnt", "10")) {
@@ -799,7 +799,7 @@ function statistics_page_user($uid = 0, $date = 0, $all = 0) {
     $output .= statistics_summary("timestamp", $displaycount);
     $output .= "</table>";
 
-    theme("box", t(variable_get("statistics_userpage_last_head", "")), $output, "main");
+    print theme("box", t(variable_get("statistics_userpage_last_head", "")), $output, "main");
   }
 }
 

@@ -111,7 +111,7 @@ function profile_user($type, $edit, &$user) {
 
 function profile_required($title) {
   // this pleads "theme, theme" ;)
-  return $title ." ". theme("theme_mark");
+  return $title ." ". theme("mark");
 }
 
 function _profile_form($edit, $mode) {

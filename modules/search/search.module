@@ -362,27 +362,27 @@ function search_view($keys) {
         $form .= "<br />". $help_link;
     }
 
-    theme("header", t("Search"));
+    print theme("header", t("Search"));
 
     if ($form) {
-      theme("box", t("Search"), $form);
+      print theme("box", t("Search"), $form);
     }
 
     if ($keys) {
       if ($output) {
-        theme("box", t("Search Results"), $output);
+        print theme("box", t("Search Results"), $output);
       }
       else {
-        theme("box", t("Search Results"), t("Your search yielded no results."));
+        print theme("box", t("Search Results"), t("Your search yielded no results."));
       }
     }
 
-    theme("footer");
+    print theme("footer");
   }
   else {
-    theme("header", t("Access denied"));
-    theme("box", t("Access denied"), message_access());
-    theme("footer");
+    print theme("header", t("Access denied"));
+    print theme("box", t("Access denied"), message_access());
+    print theme("footer");
   }
 
 }
@@ -392,9 +392,9 @@ function search_page() {
 
   switch (arg(1)) {
     case "help":
-      theme("header");
-      theme("box", t("Search Help"), search_help());
-      theme("footer");
+      print theme("header");
+      print theme("box", t("Search Help"), search_help());
+      print theme("footer");
       break;
     default:
       search_view($keys);

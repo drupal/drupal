@@ -84,7 +84,7 @@ function path_form($edit = "", $error = "") {
 
   if ($error) {
     foreach ($error as $message) {
-      $form .= theme("theme_error", $message);
+      $form .= theme("error", $message);
     }
   }
 

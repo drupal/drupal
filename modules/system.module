@@ -57,7 +57,7 @@ function system_link($type) {
       menu("admin/system", t("configuration"), "system_admin", 3);
       menu("admin/system/themes", t("themes"), "system_admin", 2);
 
-      foreach (theme_list(1) as $theme) {
+      foreach (list_themes(1) as $theme) {
         // NOTE: refresh the list because some themes might have been enabled/disabled.
         include_once "$theme->filename";
         $function = $theme->name ."_settings";
@@ -81,7 +81,7 @@ function system_link($type) {
 
 function system_user($type, &$edit, $user) {
   $options = "<option value=\"\"". (("" == $key) ? " selected=\"selected\"" : "") .">". t("Default theme") ."</option>\n";
-  if ($type == "edit_form" && count($themes = theme_list()) > 1) {
+  if ($type == "edit_form" && count($themes = list_themes()) > 1) {
     foreach ($themes as $key => $value) {
       $options .= "<option value=\"$key\"". (($edit["theme"] == $key) ? " selected=\"selected\"" : "") .">$key - $value->description</option>\n";
     }
@@ -168,7 +168,7 @@ function system_view_module($name) {
 }
 
 function system_view_theme($name) {
-  $themes = theme_list();
+  $themes = list_themes();
   $theme = $themes[$name];
   if ($theme) {
     include_once "$theme->filename";
@@ -301,16 +301,9 @@ function system_listing($type, $directory, $required = array()) {
       $info->description = module_invoke($file->name, "help", "admin/system/modules#description") ? module_invoke($file->name, "help", "admin/system/modules#description") : module_invoke($file->name, "system", "description");
     }
     elseif ($type == "theme") {
-      $class = "Theme_$file->name";
-      if (class_exists($class)) {
-        $theme =& new $class;
-        $info->name = $theme->system("name") ? $theme->system("name") : $file->name;
-        $info->description = $theme->system("description");
+        $info->name = $file->name;
+        $info->description = module_invoke($file->name, "help", "admin/system/themes#description");
         $themes[] = $info->name;
-      }
-      else {
-        unset($files[$filename]);
-      }
     }
 
     // Update the contents of the system table:

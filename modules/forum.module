@@ -149,12 +149,12 @@ function forum_view($node, $main = 0) {
     $breadcrumb[] = l(t("Forums"), "forum");
     $breadcrumb[] = l($term_data->name, "forum/$term_data->tid");
     // print the breadcrumb
-    theme("breadcrumb", $breadcrumb);
+    print theme("breadcrumb", $breadcrumb);
   }
   // prepair the node content
   $node = forum_content($node);
   // print the node
-  theme("node", $node, $main);
+  print theme("node", $node, $main);
 }
 
 function forum_validate(&$node) {
@@ -434,28 +434,44 @@ function forum_page() {
         $topics = forum_get_topics($tid, $sortby, $forum_per_page);
       }
 
-      theme("forum_theme_display", $forums, $topics, $parents, $tid, $sortby, $forum_per_page, $offset);
+      print theme("forum_display", $forums, $topics, $parents, $tid, $sortby, $forum_per_page, $offset);
     }
     else {
       $message = t("Warning");
-      theme("header", $message);
-      theme("box", $message, _forum_message_taxonomy());
-      theme("footer");
+      print theme("header", $message);
+      print theme("box", $message, _forum_message_taxonomy());
+      print theme("footer");
     }
   }
   else {
     $message = t("Access denied");
-    theme("header", $message);
-    theme("box", $message, message_access());
-    theme("footer");
+    print theme("header", $message);
+    print theme("box", $message, message_access());
+    print theme("footer");
   }
 }
 
-/*
-** Theme functions
-*/
+/**
+  @addtogroup theme_system
 
-function forum_theme_display($forums, $topics, $parents, $tid, $sortby, $forum_per_page, $offset) {
+  Forum module specific theme functions.
+  @{
+**/
+
+/**
+ Controls the output of the forum body.
+
+ @param forums
+ @param topics
+ @param parents
+ @param tid
+ @param sortby
+ @param forum_per_page
+ @param offset
+
+ @return string the output for the forum body.
+**/
+function theme_forum_display($forums, $topics, $parents, $tid, $sortby, $forum_per_page, $offset) {
   // forum list, topics list, topic browser and "add new topic" link
 
   $title = t("Forums");
@@ -480,10 +496,10 @@ function forum_theme_display($forums, $topics, $parents, $tid, $sortby, $forum_p
 
   if (count($forums) || count($parents)) {
     $output  = "<div id=\"forum\">";
-    $output .= theme("forum_theme_list", $forums, $parents, $tid);
+    $output .= theme("forum_list", $forums, $parents, $tid);
 
     if ($tid && !in_array($tid, variable_get("forum_containers", array()))) {
-      $output .= theme("forum_theme_topic_list", $tid, $topics, $sortby, $forum_per_page, $offset);
+      $output .= theme("forum_topic_list", $tid, $topics, $sortby, $forum_per_page, $offset);
     }
     $output .= "</div>";
   }
@@ -492,13 +508,22 @@ function forum_theme_display($forums, $topics, $parents, $tid, $sortby, $forum_p
     $output = '';
   }
 
-  theme("header", $title);
-  theme("breadcrumb", $breadcrumb);
-  theme("box", $title, $output);
-  theme("footer");
+  print theme("header", $title);
+  print theme("breadcrumb", $breadcrumb);
+  print theme("box", $title, $output);
+  print theme("footer");
 }
 
-function forum_theme_list($forums, $parents, $tid) {
+/**
+ Outputs the forum listing.
+
+ @param forums
+ @param parents
+ @param tid
+
+ @return string the output for the forum listing.
+**/
+function theme_forum_list($forums, $parents, $tid) {
   global $user;
 
   if ($forums) {
@@ -552,8 +577,18 @@ function forum_theme_list($forums, $parents, $tid) {
   return table($header, $rows);
 }
 
+/**
+ Outputs the topic listing.
 
-function forum_theme_topic_list($tid, $topics, $sortby, $forum_per_page, $offset) {
+ @param tid
+ @param topics
+ @param sortby
+ @param forum_per_page
+ @param offset
+
+ @return string the output for the topic list.
+**/
+function theme_forum_topic_list($tid, $topics, $sortby, $forum_per_page, $offset) {
   global $id, $status, $user, $pager_total, $forum_topic_list_header;
 
   if ($topics) {
@@ -592,6 +627,8 @@ function forum_theme_topic_list($tid, $topics, $sortby, $forum_per_page, $offset
 
   return $output;
 }
+
+/**  @} End of addtogroup theme_system **/
 
 function _forum_icon($new_posts, $num_posts = 0, $comment_mode = 0) {
 

@@ -197,7 +197,7 @@ function archive_page() {
   $op = $_POST["op"];
   $edit = $_POST["edit"];
 
-  theme("header");
+  print theme("header");
 
   if (user_access("access content")) {
     if ($op == t("Show")) {
@@ -224,7 +224,7 @@ function archive_page() {
     $start = "<div class=\"container-inline\">";
     $start .= form_select("", "year", ($year ? $year : date("Y")), $years). form_select("", "month", ($month ? $month : date("m")), $months) . form_select("", "day", ($day ? $day : date("d")), $days) . form_submit(t("Show"));
     $start .= "</div>";
-    theme("box", t("Archives"), form($start));
+    print theme("box", t("Archives"), form($start));
 
     /*
     ** Fetch nodes for the selected date, or current date if none
@@ -243,7 +243,7 @@ function archive_page() {
     message_access();
   }
 
-  theme("footer");
+  print theme("footer");
 }
 
 function archive_settings() {

@@ -14,169 +14,166 @@ function marvin_help($section) {
   return $output;
 }
 
-class Theme_marvin extends BaseTheme {
-
-   function header($title = "") {
+function marvin_header($title = "") {
+  ?>
+  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html>
+  <head>
+    <?php print theme_head($main); ?>
+    <title>
+    <?php
+      if ($title) {
+        print $title ." - ". variable_get("site_name", "drupal");
+      }
+      else {
+        print variable_get("site_name", "drupal") . ($slogan = variable_get("site_slogan", "")) ? " - $slogan" : "";
+      }
     ?>
-     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-     <html>
-     <head>
-      <?php print theme_head($main); ?>
-      <title>
-       <?php
-         if ($title) {
-           print $title ." - ". variable_get("site_name", "drupal");
-         }
-         else {
-           print variable_get("site_name", "drupal") . ($slogan = variable_get("site_slogan", "")) ? " - $slogan" : "";
-         }
-       ?>
-      </title>
-      <style type="text/css">
-        @import "themes/marvin/marvin.css";
-      </style>
-     </head>
-     <body<?php print theme_onload_attribute(); ?>>
-      <table border="0" cellpadding="8" cellspacing="0">
-       <tr>
-        <td><a href="<?php print url(); ?>"><img src="<?php print $this->path; ?>/images/logo.png" style="border: 0px;" alt="" title="" /></a></td>
-        <td>&nbsp;</td>
-       </tr>
-       <tr>
-        <td colspan="2" style="text-align: right;">
-         <?php
-           print $this->links(link_page());
-         ?>
-        </td>
-       </tr>
-       <tr>
-        <td style="vertical-align: top; width: 85%;">
-    <?php
-   }
+    </title>
+    <style type="text/css">
+      @import "themes/marvin/marvin.css";
+    </style>
+  </head>
+  <body<?php print theme_onload_attribute(); ?>>
+    <table border="0" cellpadding="8" cellspacing="0">
+    <tr>
+      <td><a href="<?php print url(); ?>"><img src="<?php print path_to_theme(); ?>/images/logo.png" style="border: 0px;" alt="" title="" /></a></td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td colspan="2" style="text-align: right;">
+      <?php
+        print theme("links", link_page());
+      ?>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; width: 85%;">
+  <?php
+}
 
-   function node($node, $main = 0) {
+function marvin_node($node, $main = 0) {
 
-     if (module_exist("taxonomy")) {
-       $terms = taxonomy_link("taxonomy terms", $node);
-     }
-     if (count($terms)) {
-      $colspan = " colspan=\"2\"";
-     }
+  if (module_exist("taxonomy")) {
+    $terms = taxonomy_link("taxonomy terms", $node);
+  }
+  if (count($terms)) {
+    $colspan = " colspan=\"2\"";
+  }
 
-     print "\n<!-- node: \"$node->title\" -->\n";
-     print "<table cellpadding=\"0\" cellspacing=\"0\" style=\"border 0px; width: 100%;\">\n";
-     print " <tr><td$colspan><img src=\"$this->path/images/drop.gif\" alt=\"\" title=\"\" /> &nbsp; <b>$node->title</b></td></tr>\n";
-     print " <tr style=\"vertical-align: bottom;\"><td colspan=\"2\" style=\"background-color: #000000; width: 100%;\"><img src=\"$this->path/images/pixel.gif\" width=\"1\" height=\"1\" alt=\"\" title=\"\" /></td></tr>\n";
-     print " <tr><td><div style=\"color: #7c7c7c;\"><small>". t("Submitted by %a on %b", array("%a" => format_name($node), "%b" => format_date($node->created, "large"))) ."</small></div></td>";
-     if ($colspan) {
-       print "<td style=\"text-align: right; vertical-align: top;\"><small>". $this->links($terms) ."</small></td>";
-     }
-     print " </tr>\n";
-     print " <tr><td$colspan>&nbsp;</td></tr>\n";
+  $path = path_to_theme();
+  print "\n<!-- node: \"$node->title\" -->\n";
+  print "<table cellpadding=\"0\" cellspacing=\"0\" style=\"border 0px; width: 100%;\">\n";
+  print " <tr><td$colspan><img src=\"$path/images/drop.gif\" alt=\"\" title=\"\" /> &nbsp; <b>$node->title</b></td></tr>\n";
+  print " <tr style=\"vertical-align: bottom;\"><td colspan=\"2\" style=\"background-color: #000000; width: 100%;\"><img src=\"$path/images/pixel.gif\" width=\"1\" height=\"1\" alt=\"\" title=\"\" /></td></tr>\n";
+  print " <tr><td><div style=\"color: #7c7c7c;\"><small>". t("Submitted by %a on %b", array("%a" => format_name($node), "%b" => format_date($node->created, "large"))) ."</small></div></td>";
+  if ($colspan) {
+    print "<td style=\"text-align: right; vertical-align: top;\"><small>". theme("links", $terms) ."</small></td>";
+  }
+  print " </tr>\n";
+  print " <tr><td$colspan>&nbsp;</td></tr>\n";
 
-     if ($main && $node->teaser) {
-       print " <tr><td$colspan><p>$node->teaser</p></td></tr>\n";
-     }
-     else {
-       print " <tr><td$colspan><p>$node->body</p></td></tr>\n";
-     }
+  if ($main && $node->teaser) {
+    print " <tr><td$colspan><p>$node->teaser</p></td></tr>\n";
+  }
+  else {
+    print " <tr><td$colspan><p>$node->body</p></td></tr>\n";
+  }
 
-     print " <tr><td$colspan>&nbsp;</td></tr>\n";
+  print " <tr><td$colspan>&nbsp;</td></tr>\n";
 
-     if ($links = link_node($node, $main)) {
-       print " <tr><td$colspan>". $this->links($links) ."</td></tr>\n";
-     }
+  if ($links = link_node($node, $main)) {
+    print " <tr><td$colspan>". theme("links", $links) ."</td></tr>\n";
+  }
 
-     print "</table>\n";
-     print "<br /><br />\n\n";
-   }
+  print "</table>\n";
+  print "<br /><br />\n\n";
+}
 
-   function comment($comment, $link = "") {
-     // Create comment header:
-     print "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-color: #000000; width: 100%;\">\n";
-     print " <tr style=\"background-color: #000000;\">\n";
-     print "  <td>\n";
-     print "   <table border=\"0\" cellpadding=\"3\" cellspacing=\"1\" style=\"width: 100%;\">\n";
-     print "    <tr>\n";
-     print "     <td style=\"background-color: #eaeaea;\">\n";
-     print "      <table border=\"0\" cellpadding=\"2\" cellspacing=\"1\" style=\"width: 100%;\">\n";
-     print "       <tr>\n";
+function marvin_comment($comment, $link = "") {
+  // Create comment header:
+  print "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-color: #000000; width: 100%;\">\n";
+  print " <tr style=\"background-color: #000000;\">\n";
+  print "  <td>\n";
+  print "   <table border=\"0\" cellpadding=\"3\" cellspacing=\"1\" style=\"width: 100%;\">\n";
+  print "    <tr>\n";
+  print "     <td style=\"background-color: #eaeaea;\">\n";
+  print "      <table border=\"0\" cellpadding=\"2\" cellspacing=\"1\" style=\"width: 100%;\">\n";
+  print "       <tr>\n";
 
-     // Subject:
-     print "        <td style=\"text-align: right; width: 5%;\"><b>". t("Subject") .":</b></td>\n";
-     print "        <td style=\"width: 80%;\"><b><div style=\"color: #666699;\">$comment->subject</div></b></td>\n";
+  // Subject:
+  print "        <td style=\"text-align: right; width: 5%;\"><b>". t("Subject") .":</b></td>\n";
+  print "        <td style=\"width: 80%;\"><b><div style=\"color: #666699;\">$comment->subject</div></b></td>\n";
 
-     print "       </tr>\n";
+  print "       </tr>\n";
 
-     // Author:
-     print "       <tr>\n";
-     print "        <td style=\"text-align: right; vertical-align: top;\">". t("Author") .":</td><td>". format_name($comment) ."</td>\n";
-     print "       </tr>\n";
+  // Author:
+  print "       <tr>\n";
+  print "        <td style=\"text-align: right; vertical-align: top;\">". t("Author") .":</td><td>". format_name($comment) ."</td>\n";
+  print "       </tr>\n";
 
-     // Date
-     print "       <tr>\n";
-     print "        <td style=\"text-align: right;\">". t("Date") .":</td><td>". format_date($comment->timestamp) ."</td>\n";
-     print "       </tr>\n";
+  // Date
+  print "       <tr>\n";
+  print "        <td style=\"text-align: right;\">". t("Date") .":</td><td>". format_date($comment->timestamp) ."</td>\n";
+  print "       </tr>\n";
 
-     print "      </table>\n";
-     print "     </td>\n";
-     print "    </tr>\n";
+  print "      </table>\n";
+  print "     </td>\n";
+  print "    </tr>\n";
 
-     // Print body of comment:
-     if ($comment->comment) {
-       print "    <tr><td style=\"background-color: #ffffff;\">$comment->comment</td></tr>\n";
-     }
+  // Print body of comment:
+  if ($comment->comment) {
+    print "    <tr><td style=\"background-color: #ffffff;\">$comment->comment</td></tr>\n";
+  }
 
-     // Print bottom link(s):
-     print "    <tr><td style=\"background-color: #eaeaea; text-align: right;\">[ $link ]</td></tr>\n";
-     print "   </table>\n";
-     print "  </td>\n";
-     print " </tr>\n";
-     print "</table>\n";
-     print "<br />\n\n";
-   }
+  // Print bottom link(s):
+  print "    <tr><td style=\"background-color: #eaeaea; text-align: right;\">[ $link ]</td></tr>\n";
+  print "   </table>\n";
+  print "  </td>\n";
+  print " </tr>\n";
+  print "</table>\n";
+  print "<br />\n\n";
+}
 
-   function box($subject, $content, $region = "main") {
-     print "\n<!-- box: \"$subject\" -->\n";
-     print "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-color: #000000; width: 100%;\">\n";
-     print " <tr>\n";
-     print "  <td>\n";
-     print "   <table border=\"0\" cellpadding=\"5\" cellspacing=\"1\" style=\"width: 100%;\">\n";
-     print "    <tr><td style=\"background-color: #eaeaea; text-align: center;\"><div style=\"color: #404040;\"><b>$subject</b></div></td></tr>\n";
-     print "    <tr><td style=\"background-color: #ffffff; vertical-align: top;\">$content</td></tr>\n";
-     print "   </table>\n";
-     print "  </td>\n";
-     print " </tr>\n";
-     print "</table>\n";
-     print "<br />\n\n";
-   }
+function marvin_box($subject, $content, $region = "main") {
+  print "\n<!-- box: \"$subject\" -->\n";
+  print "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-color: #000000; width: 100%;\">\n";
+  print " <tr>\n";
+  print "  <td>\n";
+  print "   <table border=\"0\" cellpadding=\"5\" cellspacing=\"1\" style=\"width: 100%;\">\n";
+  print "    <tr><td style=\"background-color: #eaeaea; text-align: center;\"><div style=\"color: #404040;\"><b>$subject</b></div></td></tr>\n";
+  print "    <tr><td style=\"background-color: #ffffff; vertical-align: top;\">$content</td></tr>\n";
+  print "   </table>\n";
+  print "  </td>\n";
+  print " </tr>\n";
+  print "</table>\n";
+  print "<br />\n\n";
+}
 
-   function links($links, $delimiter = " &middot; ") {
-     return implode($delimiter, $links);
-   }
+function marvin_links($links, $delimiter = " &middot; ") {
+  return implode($delimiter, $links);
+}
 
-   function footer() {
-     ?>
-       </td>
-       <td style="width: 200px; vertical-align: top;">
-         <?php
-          theme_blocks("all", $this);
-         ?>
-       </td>
-      </tr>
-      <tr>
-       <td colspan="2" style="text-align: center;">
-        <?php
-          print "<p>". $this->links(link_page()) ."</p><p>". variable_get("site_footer", "") ."</p>\n";
-        ?>
-       </td>
-      </tr>
-     </table>
-     <?php print theme_closure(); ?>
-    </body>
-    </html>
-    <?php
-   }
- }
-
+function marvin_footer() {
+  ?>
+    </td>
+    <td style="width: 200px; vertical-align: top;">
+      <?php
+        print render_blocks("all");
+      ?>
+    </td>
+    </tr>
+    <tr>
+    <td colspan="2" style="text-align: center;">
+      <?php
+        print "<p>". theme("links", link_page()) ."</p><p>". variable_get("site_footer", "") ."</p>\n";
+      ?>
+    </td>
+    </tr>
+  </table>
+  <?php print theme_closure(); ?>
+  </body>
+  </html>
+  <?php
+}
 ?>

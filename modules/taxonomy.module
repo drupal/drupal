@@ -717,9 +717,9 @@ function taxonomy_page() {
       taxonomy_feed($taxonomy);
       break;
     default:
-      theme("header");
+      print theme("header");
       taxonomy_render_nodes(taxonomy_select_nodes($taxonomy));
-      theme("footer");
+      print theme("footer");
       break;
   }
 }

@@ -73,11 +73,11 @@ function node_title_list($result, $title = NULL) {
     $items[] = l($node->title, "node/view/$node->nid", array("title" => format_plural($number, "%count comment", "%count comments")));
   }
 
-  return theme("theme_node_list", $items, $title);
+  return theme("node_list", $items, $title);
 }
 
 function theme_node_list($items, $title = NULL) {
-  return theme("theme_item_list", $items, $title);
+  return theme("item_list", $items, $title);
 }
 
 // Update the 'last viewed' timestamp of the specified node for current user.
@@ -407,7 +407,7 @@ function node_view($node, $main = 0) {
     $node->teaser = check_output($node->teaser);
     $node->body = check_output($node->body);
 
-    theme("node", $node, $main);
+    print theme("node", $node, $main);
   }
 }
 
@@ -991,7 +991,7 @@ function node_validate($node, &$error) {
   if (isset($node->title)) {
     $node->title = strip_tags($node->title);
     if (!$node->title) {
-      $error["title"] = theme("theme_error", t("You have to specify a valid title."));
+      $error["title"] = theme("error", t("You have to specify a valid title."));
     }
   }
 
@@ -1041,7 +1041,7 @@ function node_validate($node, &$error) {
       $node->uid = $account->uid;
     }
     else {
-      $error["name"] = theme("theme_error", t("The name '%u' does not exist.", array ("%u" => $node->name)));
+      $error["name"] = theme("error", t("The name '%u' does not exist.", array ("%u" => $node->name)));
     }
 
     /*
@@ -1052,7 +1052,7 @@ function node_validate($node, &$error) {
       $node->created = strtotime($node->date);
     }
     else {
-      $error["date"] = theme("theme_error", t("You have to specifiy a valid date."));
+      $error["date"] = theme("error", t("You have to specifiy a valid date."));
     }
   }
   else {
@@ -1482,29 +1482,29 @@ function node_page() {
       $node = node_load(array("nid" => arg(2), "status" => 1), $_GET["revision"]);
     }
 
-    theme("header", $node->title);
+    print theme("header", $node->title);
 
     $name = module_invoke(arg(2), "node", "name");
 
     switch ($op) {
       case "add":
-        theme("box", t("Submit %name", array("%name" => $name)), node_add(arg(2)));
+        print theme("box", t("Submit %name", array("%name" => $name)), node_add(arg(2)));
         break;
       case "edit":
-        theme("box", t("Edit %name", array("%name" => $name)), node_edit(arg(2)));
+        print theme("box", t("Edit %name", array("%name" => $name)), node_edit(arg(2)));
         break;
       case "view":
         print node_show($node, arg(3));
         break;
       case t("Preview"):
         $edit = node_validate($edit, $error);
-        theme("box", t("Preview %name", array("%name" => $name)), node_preview($edit, $error));
+        print theme("box", t("Preview %name", array("%name" => $name)), node_preview($edit, $error));
         break;
       case t("Submit"):
-        theme("box", t("Submit %name", array("%name" => $name)), node_submit($edit));
+        print theme("box", t("Submit %name", array("%name" => $name)), node_submit($edit));
         break;
       case t("Delete"):
-        theme("box", t("Delete %name", array("%name" => $name)), node_delete($edit));
+        print theme("box", t("Delete %name", array("%name" => $name)), node_delete($edit));
         break;
       default:
         $result = pager_query("SELECT nid, type FROM {node} WHERE promote = '1' AND status = '1' ORDER BY static DESC, created DESC", variable_get("default_nodes_main", 10));
@@ -1515,12 +1515,12 @@ function node_page() {
         print pager_display(NULL, variable_get("default_nodes_main", 10));
     }
 
-    theme("footer");
+    print theme("footer");
   }
   else {
-    theme("header");
-    theme("box", t("Access denied"), message_access());
-    theme("footer");
+    print theme("header");
+    print theme("box", t("Access denied"), message_access());
+    print theme("footer");
   }
 
 }

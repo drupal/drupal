@@ -1186,6 +1186,5 @@ module_init();
 $locale = locale_init();
 
 // initialize theme:
-$theme = theme_init();
-
+$theme = init_theme();
 ?>

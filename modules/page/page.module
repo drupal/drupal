@@ -121,7 +121,7 @@ function page_view($node, $main) {
   // prepair the node content
   $node = page_content($node);
   // print the node
-  theme("node", $node, $main);
+  print theme("node", $node, $main);
 }
 
 function page_form(&$node, &$help, &$error) {
