@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.87 2005/01/03 01:09:02 unconed Exp $ */
+/* $Id: drupal.css,v 1.88 2005/01/09 09:22:39 dries Exp $ */
 
 /*
 ** HTML elements
@@ -428,22 +428,16 @@ tr.watchdog-user {
 tr.watchdog-user .active {
   background: #eed;
 }
-tr.watchdog-special {
+tr.watchdog-content {
   background: #ddf;
 }
-tr.watchdog-special .active {
+tr.watchdog-content .active {
   background: #cce;
 }
-tr.watchdog-warning {
-  background: #fda;
-}
-tr.watchdog-warning .active {
-  background: #ec9;
-}
-tr.watchdog-httpd {
+tr.watchdog-page-not-found, tr.watchdog-access-denied {
   background: #dfd;
 }
-tr.watchdog-httpd .active {
+tr.watchdog-pagenot-found .active, tr.watchdog-access-denied .active {
   background: #cec;
 }
 tr.watchdog-error {

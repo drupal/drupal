@@ -1,5 +1,5 @@
 <?php
-// $Id: ping.module,v 1.27 2004/12/27 12:29:33 dries Exp $
+// $Id: ping.module,v 1.28 2005/01/09 09:22:40 dries Exp $
 
 /**
  * @file
@@ -63,7 +63,7 @@ function ping_ping($name = '', $url = '') {
   $result = $client->send($message);
 
   if (!$result || $result->faultCode()) {
-    watchdog('error', t('Failed to notify pingomatic.com (site).'));
+    watchdog('directory ping', t('Failed to notify pingomatic.com (site).'), WATCHDOG_WARNING);
   }
 }
 

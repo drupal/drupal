@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.38 2004/11/21 08:25:17 dries Exp $
+// $Id: locale.inc,v 1.39 2005/01/09 09:22:39 dries Exp $
 
 /**
  * @file
@@ -30,7 +30,7 @@ function _locale_add_language($code, $name, $onlylanguage = TRUE) {
   }
 
   drupal_set_message($message);
-  watchdog('special', t('%language language (%locale) added.', array('%language' => "<em>$name</em>", '%locale' => "<em>$code</em>")));
+  watchdog('locale', t('%language language (%locale) added.', array('%language' => "<em>$name</em>", '%locale' => "<em>$code</em>")));
 }
 
 /**
@@ -257,7 +257,7 @@ function _locale_import_po($file, $lang, $mode) {
   menu_rebuild();
 
   drupal_set_message(t('Translation successfully imported. %number translated strings added to language, %update strings updated.', array('%number' => $additions, '%update' => $updates)));
-  watchdog('special', t('Imported %file into %locale: %number new strings added and %update updated.', array('%file' => "<em>$file->filename</em>", '%locale' => "<em>$lang</em>", '%number' => $additions, '%update' => $updates)));
+  watchdog('locale', t('Imported %file into %locale: %number new strings added and %update updated.', array('%file' => "<em>$file->filename</em>", '%locale' => "<em>$lang</em>", '%number' => $additions, '%update' => $updates)));
   return TRUE;
 }
 
@@ -768,7 +768,7 @@ function _locale_export_po($language) {
       $header .= "\"Plural-Forms: nplurals=". $meta->plurals ."; plural=". strtr($meta->formula, '$', '') .";\\n\"\n";
     }
     $header .= "\n";
-    watchdog('special', t('Exported %locale translation file: %filename.', array('%locale' => "<em>$meta->name</em>", '%filename' => "<em>$filename</em>")));
+    watchdog('locale', t('Exported %locale translation file: %filename.', array('%locale' => "<em>$meta->name</em>", '%filename' => "<em>$filename</em>")));
   }
 
   // Generating Portable Object Template
@@ -789,7 +789,7 @@ function _locale_export_po($language) {
     $header .= "\"Content-Transfer-Encoding: 8bit\\n\"\n";
     $header .= "\"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\\n\"\n";
     $header .= "\n";
-    watchdog('special', t('Exported translation file: %filename.', array('%filename' => "<em>$filename</em>")));
+    watchdog('locale', t('Exported translation file: %filename.', array('%filename' => "<em>$filename</em>")));
   }
 
   // Start download process

@@ -1,5 +1,5 @@
 <?php
-// $Id: cron.php,v 1.27 2004/11/28 12:28:35 dries Exp $
+// $Id: cron.php,v 1.28 2005/01/09 09:22:38 dries Exp $
 
 /**
  * @file
@@ -16,7 +16,7 @@ if (!ini_get('safe_mode')) {
 
 // Check if the last cron run completed
 if (variable_get('cron_busy', false)) {
-  watchdog('cron', t('Last cron run did not complete.'));
+  watchdog('cron', t('Last cron run did not complete.'), WATCHDOG_WARNING);
 }
 else {
   variable_set('cron_busy', true);
