@@ -131,6 +131,20 @@ function node_invoke($node, $name, $arg = 0) {
   }
 }
 
+function node_invoke_all($hook, &$node, $op, $arg = 0) {
+  $return = array();
+  foreach (module_list() as $name) {
+    if (module_hook($name, $hook)) {
+      $function = $name ."_". $hook;
+      $result = $function($node, $op, $arg);
+      if (isset($result)) {
+        $return = array_merge($return, $result);
+      }
+    }
+  }
+  return $return;
+}
+
 function node_load($conditions) {
 
   /*
@@ -171,7 +185,7 @@ function node_load($conditions) {
 
 function node_save($node, $filter) {
 
-  $fields = array("nid", "uid", "type", "title", "teaser", "body", "revisions", "score", "status", "comment", "promote", "static", "moderate", "created", "changed", "users", "votes");
+  $fields = node_invoke_all("nodeapi", $node, "fields");
 
   foreach ($filter as $key => $value) {
     /*
@@ -900,13 +914,9 @@ function node_form($edit, $error = NULL) {
     $output .= form_textfield(t("Authored on"), "date", $edit->date, 20, 25, $error["date"]);
     $output .= "<br />";
     $output .= form_select(t("Set public/published"), "status", $edit->status, array(t("Disabled"), t("Enabled")));
-    $output .= form_select(t("Moderation status"), "moderate", $edit->moderate, array(t("Approved"), t("Awaiting approval")));
     $output .= form_select(t("Promote to front page"), "promote", $edit->promote, array(t("Disabled"), t("Enabled")));
     $output .= form_select(t("Static on front page"), "static", $edit->static, array(t("Disabled"), t("Enabled")));
-    // TODO: move this to the comment.module
-    if (module_exist("comment")) {
-      $output .= form_select(t("Allow user comments"), "comment", $edit->comment, array(t("Disabled"), t("Read only"), t("Read-write")));
-    }
+    $output .= implode("", node_invoke_all("nodeapi", $edit, "form", "admin"));
     $output .= form_select(t("Create new revision"), "revision", $edit->revision, array(t("Disabled"), t("Enabled")));
   }
 
@@ -1297,6 +1307,13 @@ function node_update_index() {
   return array("last_update" => "node_cron_last",
          "node_type" => "node",
          "select" => "SELECT n.nid as lno, n.title as text1, n.body as text2 FROM node n WHERE n.status = 1 AND moderate = 0 and (created > " . variable_get("node_cron_last", 1) . " or changed > " . variable_get("node_cron_last", 1) . ")");
+}
+
+function node_nodeapi(&$node, $op, $arg = 0) {
+  switch ($op) {
+    case "fields":
+      return array("nid", "uid", "type", "title", "teaser", "body", "revisions", "score", "status", "promote", "static", "created", "changed", "users", "votes");
+  }
 }
 
 ?>

@@ -1490,4 +1490,16 @@ function comment_update_index() {
   return array("last_update" => "comment_cron_last", "node_type" => "comment", "select" => "SELECT c.cid as lno, c.subject as text1, c.comment as text2 FROM comments c WHERE c.status = 0 AND timestamp > ". variable_get("comment_cron_last", 1));
 }
 
+function comment_nodeapi(&$node, $op, $arg = 0) {
+  switch ($op) {
+    case "form":
+      if ($arg == "admin" && user_access("administer comments")) {
+        return form_select(t("Allow user comments"), "comment", $node->comment, array(t("Disabled"), t("Read only"), t("Read-write")));
+      }
+      break;
+    case "fields":
+      return array("comment");
+  }
+}
+
 ?>

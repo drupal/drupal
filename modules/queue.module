@@ -210,4 +210,15 @@ function queue_block($op = "list", $delta = 0) {
   }
 }
 
+function queue_nodeapi(&$node, $op, $arg = 0) {
+  switch ($op) {
+    case "form":
+      if ($arg == "admin" && user_access("administer moderation")) {
+        return form_select(t("Moderation status"), "moderate", $node->moderate, array(t("Approved"), t("Awaiting approval")));
+      }
+      break;
+    case "fields":
+      return array("moderate");
+  }
+}
 ?>
