@@ -5,7 +5,7 @@ include_once "includes/common.inc";
 page_header();
 
 foreach(explode("&", $QUERY_STRING) as $attribute) {
-  if ($attribute) $query .= "attribute LIKE '%". check_input(strtr($attribute, "=", ":")) ."%' AND ";
+  if ($attribute) $query .= "attributes LIKE '%". check_input($attribute) ."%' AND ";
 }
 
 $query = !$date ? $query : "";
