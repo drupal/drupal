@@ -1,5 +1,5 @@
 <?php
-/* $Id: aggregator.module,v 1.161 2004/01/24 15:47:44 dries Exp $ */
+/* $Id: aggregator.module,v 1.162 2004/02/04 21:23:07 dries Exp $ */
 
 function aggregator_help($section) {
   switch ($section) {
@@ -424,6 +424,7 @@ function aggregator_parse_feed(&$data, $feed) {
     else if ($item['DCTERMS:ISSUED']) $date = $item['DCTERMS:ISSUED'];     // Dublin core
     else if ($item['DCTERMS:CREATED']) $date = $item['DCTERMS:CREATED'];   // Dublin core
     else if ($item['DCTERMS:MODIFIED']) $date = $item['DCTERMS:MODIFIED']; // Dublin core
+    else $date = 'now';
 
     $timestamp = strtotime($date);  // strtotime() returns -1 on failure
 
