@@ -62,7 +62,7 @@ function blog_page_user($userid = 0, $date = 0) {
     ** Display the last blogs for this user:
     */
 
-    $result = db_query("SELECT n.nid, n.timestamp FROM node n LEFT JOIN users u ON u.id = n.author WHERE u.userid = '". check_input($userid) ."' AND n.timestamp > ". (time() - 2592000) ." ORDER BY n.timestamp DESC LIMIT 15");
+    $result = db_query("SELECT n.nid, n.timestamp FROM node n LEFT JOIN users u ON u.id = n.author WHERE n.type = 'blog' AND u.userid = '". check_input($userid) ."' AND n.timestamp > ". (time() - 2592000) ." ORDER BY n.timestamp DESC LIMIT 15");
     while ($blog = db_fetch_object($result)) {
       if ($date != date("ndy", $blog->timestamp)) {
         $date = date("ndy", $blog->timestamp);
@@ -264,7 +264,8 @@ function blog_link($type) {
   }
 
   if ($type == "menu" && user_access("post blogs")) {
-    $links[] = "<a href=\"module.php?mod=blog&op=view&name=". urlencode($user->userid) ."\">". t("your blog") ."</a>";
+    $links[] = "<a href=\"submit.php?mod=blog\">". t("edit your blog") ."</a>";
+    $links[] = "<a href=\"module.php?mod=blog&op=view&name=". urlencode($user->userid) ."\">". t("view your blog") ."</a>";
   }
 
   return $links ? $links : array();
