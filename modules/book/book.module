@@ -87,7 +87,7 @@ function book_toc($parent = 0, $offset = "", $toc = array()) {
 }
 
 function book_form($edit = array()) {
-  global $allowed_html, $PHP_SELF, $REQUEST_URI, $status, $theme, $user;
+  global $allowed_html, $PHP_SELF, $REQUEST_URI, $user;
 
   $output .= "<FORM ACTION=\"$REQUEST_URI\" METHOD=\"post\">\n";
 
@@ -124,16 +124,10 @@ function book_form($edit = array()) {
   }
 
   if (user_access($user, "book")) {
-    $status = array_intersect($status, array(0, 2, 3));
-
     $output .= "<B>". t("Weight") .":</B><BR>\n";
     for ($count = 0; $count < 25; $count++) $options3 .= "<OPTION VALUE=\"$count\"". ($edit[weight] == $count ? " SELECTED" : "") .">$count</OPTION>";
     $output .= "<SELECT NAME=\"edit[weight]\">$options3</SELECT><BR>\n";
     $output .= "<SMALL><I>". t("The heavier nodes will sink and the lighter nodes will be positioned nearer the top.") ."</I></SMALL><P>\n";
-
-    $output .= "<B>". t("Status") .":</B><BR>\n";
-    foreach ($status as $value=>$key) $options4 .= "<OPTION VALUE=\"$key\"". ($edit[status] == $key ? " SELECTED" : "") .">$value</OPTION>";
-    $output .= "<SELECT NAME=\"edit[status]\">$options4</SELECT><P>\n";
   }
 
   if (!$edit) {

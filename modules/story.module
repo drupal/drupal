@@ -1,7 +1,6 @@
 <?php
 
-$module = array("cron" => "story_cron",
-                "help" => "story_help",
+$module = array("help" => "story_help",
                 "find" => "story_find",
                 "user" => "story_user",
                 "queue" => "story_queue",
@@ -17,14 +16,6 @@ class Story {
     $this->body = $body;
     $this->section = $section;
     $this->timestamp = $timestamp;
-  }
-}
-
-function story_cron() {
-  global $status;
-  $result = db_query("SELECT * FROM node WHERE status = '$status[scheduled]' AND timestamp <= ". time() ."");
-  while ($story = db_fetch_object($result)) {
-    db_query("UPDATE node SET status = '$status[queued]', timestamp = '". time() ."' WHERE nid = '$story->nid' AND type = 'story'");
   }
 }
 
@@ -46,7 +37,6 @@ function story_search() {
 
 function story_help() {
  ?>
-  <P>Scheduled stories: stories that are scheduled to be automatically published at a given date and time.  Useful when you have to leave the site alone for a while or when you want to regulate the flow of new content.</P>
   <P>Queued stories: user-contributed stories are automatically whisked away to a submission queue for moderators (i.e. registered user) to frown at.  Moderators vote whether or not a story should be posted to the front page for discussion.</P>
   <P>Posted stories: published stories accessible to all visitors.</P>
   <P>Dumped stories: rejected stories that are no longer available to visitors.</P>
@@ -111,37 +101,39 @@ function story_form($edit = array()) {
 
   $output .= "<FORM ACTION=\"$REQUEST_URI\" METHOD=\"post\">\n";
 
-  $output .= "<B>". t("Your name") .":</B><BR>\n";
-  $output .= "<INPUT TYPE=\"hidden\" NAME=\"edit[userid]\" VALUE=\"$edit[userid]\">\n";
-  $output .= format_username(($edit[userid] ? $edit[userid] : $user->userid)) ."<P>";
+  // nid:
+  $node = node_get_object("nid", $edit[nid]);
+  if ($node) $output .= "<INPUT TYPE=\"hidden\" NAME=\"edit[nid]\" VALUE=\"$edit[nid]\">\n";
 
-  $output .= "<B>". t("Subject") .":</B><BR>\n";
-  $output .= "<INPUT TYPE=\"text\" NAME=\"edit[title]\" SIZE=\"50\" MAXLENGTH=\"60\" VALUE=\"". check_textfield($edit[title]) ."\"><P>\n";
+  // author:
+  $output .= node_form_author($edit);
 
+  // date:
+  if ($node) $output .= node_form_date($edit, array($node->timestamp, time()));
+
+  // subject:
+  $output .= node_form_title($edit);
+
+  // section:
   $output .= "<B>". t("Section") .":</B><BR>\n";
   foreach ($sections = section_get() as $value) $options .= "  <OPTION VALUE=\"". check_select($value) ."\"". ($edit[section] == $value ? " SELECTED" : "") .">". check_output($value) ."</OPTION>\n";
   $output .= "<SELECT NAME=\"edit[section]\">$options</SELECT><P>\n";
 
+  // abstract:
   $output .= "<B>". t("Abstract") .":</B><BR>\n";
   $output .= "<TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"edit[abstract]\">". check_textarea($edit[abstract]) ."</TEXTAREA><BR>\n";
   $output .= "<SMALL><I>". t("Allowed HTML tags") .": ". htmlspecialchars($allowed_html) .".</I></SMALL><P>\n";
 
+  // body:
   $output .= "<B>". t("Body") .":</B><BR>\n";
   $output .= "<TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"15\" NAME=\"edit[body]\">". check_textarea($edit[body]) ."</TEXTAREA><BR>\n";
   $output .= "<SMALL><I>". t("Allowed HTML tags") .": ". htmlspecialchars($allowed_html) .".</I></SMALL><P>\n";
 
-  if (user_access($user, "story")) {
-    $output .= "<B>". t("Status") .":</B><BR>\n";
-    $output .= "<INPUT TYPE=\"radio\" NAME=\"edit[status]\" VALUE=\"$status[scheduled]\"". ($edit[status] == $status[scheduled] ? " CHECKED" : "") ."> scheduled for <INPUT TYPE=\"text\" NAME=\"edit[timestamp]\" SIZE=\"30\" VALUE=\"". date("j F Y G:i", ($edit[timetsamp] ? $edit[timestamp] : time())) ."\"><BR>\n";
-    $output .= "<INPUT TYPE=\"radio\" NAME=\"edit[status]\" VALUE=\"$status[dumped]\"". ($edit[status] == $status[dumped] ? " CHECKED" : "") ."> dumped<BR>\n";
-    $output .= "<INPUT TYPE=\"radio\" NAME=\"edit[status]\" VALUE=\"$status[queued]\"". ($edit[status] == $status[queued] ? " CHECKED" : "") ."> queued<BR>\n";
-    $output .= "<INPUT TYPE=\"radio\" NAME=\"edit[status]\" VALUE=\"$status[posted]\"". ($edit[status] == $status[posted] ? " CHECKED" : "") ."> posted<BR>\n";
-    $output .= "<SMALL><I>The textfield for scheduled stories expects a string containing an English date format of when you want to have your story automatically published.  Example input: '". date("j F Y G:i") ."', '". date("m/d/y H:i") ."', '". date("F j, Y H:i") ."', ...</I></SMALL><P>\n";
+  // status:
+  if (user_access($user, "story")) $output .= node_form_status($edit, array(dumped, queued, posted));
 
-    $output .= "<INPUT TYPE=\"hidden\" NAME=\"edit[timestamp]\" VALUE=\"$edit[timestamp]\">\n";
-    $output .= "<INPUT TYPE=\"hidden\" NAME=\"edit[nid]\" VALUE=\"$edit[nid]\">\n";
-  }
 
+  // error checking:
   $duplicate = db_result(db_query("SELECT COUNT(nid) FROM node WHERE title = '$title'"));
 
   if (!$edit) {
@@ -174,7 +166,6 @@ function story_form($edit = array()) {
 
 function story_save($edit) {
   global $status;
-  $edit[timestamp] = ($edit[status] == $status[scheduled] && strtotime($edit[timestamp]) > time()) ? strtotime($edit[timestamp]) : ($node[timestamp] ? $node[timestamp] : time());
   node_save(array_diff(array_merge($edit, array(nid => $edit[nid], type => "story")), array(userid => $edit[userid])));
 }
 
