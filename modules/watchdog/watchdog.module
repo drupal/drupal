@@ -49,12 +49,12 @@ function watchdog_view($id) {
 
   if ($watchdog = db_fetch_object($result)) {
     $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\">\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Level:</B></TD><TD>$watchdog->level</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Date:</B></TD><TD>". format_date($watchdog->timestamp, "large") ."</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>User:</B></TD><TD>". format_username($watchdog->userid) ."</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Location:</B></TD><TD>$watchdog->location</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Message:</B></TD><TD>$watchdog->message</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Hostname:</B></TD><TD>$watchdog->hostname</TD></TR>\n";
+    $output .= " <TR><TH>Level:</TH><TD>$watchdog->level</TD></TR>\n";
+    $output .= " <TR><TH>Date:</TH><TD>". format_date($watchdog->timestamp, "large") ."</TD></TR>\n";
+    $output .= " <TR><TH>User:</TH><TD>". format_username($watchdog->userid) ."</TD></TR>\n";
+    $output .= " <TR><TH>Location:</TH><TD>$watchdog->location</TD></TR>\n";
+    $output .= " <TR><TH>Message:</TH><TD>$watchdog->message</TD></TR>\n";
+    $output .= " <TR><TH>Hostname:</TH><TD>$watchdog->hostname</TD></TR>\n";
     $output .= "</TABLE>\n";
     print $output;
   }
