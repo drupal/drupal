@@ -747,7 +747,7 @@ function taxonomy_admin() {
           $output .= status(taxonomy_save_vocabulary($edit));
         }
         else {
-          return status(taxonomy_save_term($edit));
+          $output .= status(taxonomy_save_term($edit));
           if (!$edit["tid"]) {
             // if INSERT show form again
             $output .= taxonomy_form_term();
@@ -763,6 +763,7 @@ function taxonomy_admin() {
   else {
     $output .= message_access();
   }
+
   return $output;
 }
 
