@@ -115,10 +115,10 @@
           <TD BGCOLOR="<?php echo $this->bgcolor2 ?>" COLSPAN="2">
           <?php
            if ($main && $node->teaser) {
-             echo "<P>". check_output($node->teaser) ."</P>";
+             echo "<P>$node->teaser</P>";
            }
            else {
-             echo "<P>". check_output($node->body) ."</P>";
+             echo "<P>$node->body</P>";
            }
           ?>
           </TD>
@@ -167,7 +167,7 @@
      echo " </TR>";
 
      // Print body of comment:
-     if ($comment) echo " <TR><TD BGCOLOR=\"$this->bgcolor2\">". check_output($comment->comment) ."</TD></TR>";
+     if ($comment) echo " <TR><TD BGCOLOR=\"$this->bgcolor2\">$comment->comment</TD></TR>";
 
      // Print bottom link(s):
      echo " <TR><TD ALIGN=\"right\" BGCOLOR=\"$this->bgcolor3\">[ $link ]</TD></TR>";

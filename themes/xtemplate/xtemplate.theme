@@ -35,9 +35,7 @@ class Theme_xtemplate extends BaseTheme {
        "title"     => ucfirst($node->title),
        "author"    => format_name($node),
        "date"      => format_date($node->created),
-       "content"   => ($main && $node->teaser) ?
-                      check_output($node->teaser) :
-                      check_output($node->body)));
+       "content"   => ($main && $node->teaser) ? $node->teaser : $node->body));
 
     if ($taxonomy = taxonomy_link("taxonomy terms", $node)) {
       $this->template->assign("taxonomy", $this->links($taxonomy));
@@ -57,7 +55,7 @@ class Theme_xtemplate extends BaseTheme {
         "title"     => ucfirst($comment->subject),
         "author"    => format_name($comment),
         "date"      => format_date($comment->timestamp),
-        "content"   => check_output($comment->comment),
+        "content"   => $comment->comment,
         "links"     => $link));
 
     if ($comment->new) {

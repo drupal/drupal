@@ -98,10 +98,10 @@
      print " <tr><td colspan=\"2\">&nbsp;</td></tr>\n";
 
      if ($main && $node->teaser) {
-       print " <tr><td colspan=\"2\"><p>". check_output($node->teaser) ."</p></td></tr>\n";
+       print " <tr><td colspan=\"2\"><p>$node->teaser</p></td></tr>\n";
      }
      else {
-       print " <tr><td colspan=\"2\"><p>". check_output($node->body) ."</p></td></tr>\n";
+       print " <tr><td colspan=\"2\"><p>$node->body</p></td></tr>\n";
      }
 
      print " <tr><td colspan=\"2\">&nbsp;</td></tr>\n";
@@ -147,7 +147,7 @@
 
      // Print body of comment:
      if ($comment->comment) {
-       print "    <tr><td bgcolor=\"#FFFFFF\">". check_output($comment->comment) ."</td></tr>\n";
+       print "    <tr><td bgcolor=\"#FFFFFF\">$comment->comment</td></tr>\n";
      }
 
      // Print bottom link(s):

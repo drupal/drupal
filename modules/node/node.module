@@ -355,6 +355,9 @@ function node_view($node, $main = 0) {
     ** Default behavior:
     */
 
+    $node->teaser = filter($node->teaser);
+    $node->body = filter($node->body);
+
     theme("node", $node, $main);
   }
 }

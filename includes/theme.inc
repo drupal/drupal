@@ -54,10 +54,10 @@ class BaseTheme {
     }
 
     if ($main && $node->teaser) {
-      $output .= check_output($node->teaser);
+      $output .= $node->teaser;
     }
     else {
-      $output .= check_output($node->body);
+      $output .= $node->body;
     }
     if ($links = link_node($node, $main)) {
       $output .= "<br />[ ". $this->links($links) ." ]";
