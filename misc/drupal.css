@@ -420,8 +420,9 @@ ul.primary li a:hover {
   border-bottom-color: #eee;
 }
 ul.secondary {
-  padding: 0;
-  margin: 0.5em 2em 1em;
+  border-bottom: 1px solid #bbb;
+  padding: 0.5em 1em 0.5em 1em;
+  margin: 5px;
 }
 ul.secondary li {
   display: inline;

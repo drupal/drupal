@@ -304,9 +304,9 @@ function poll_teaser($node) {
  */
 function poll_view_voting(&$node, $main, $page, $block) {
   $url = request_uri();
-  $output .= '<div class="poll">';
+  $output = '<div class="poll">';
 
-  $form .= '<div class="vote-form">';
+  $form = '<div class="vote-form">';
   $form .= '<div class="choices">';
   if ($node->choice) {
     $list = array();
@@ -415,6 +415,7 @@ function poll_vote(&$node) {
  */
 function poll_view(&$node, $main = 0, $page = 0, $block = 0) {
   global $user;
+  $output = '';
 
   if ($node->allowvotes && ($block || arg(2) != 'results')) {
     $output .= poll_view_voting($node, $main, $page, $block);

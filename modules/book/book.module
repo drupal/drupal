@@ -573,7 +573,7 @@ function book_navigation($node) {
   foreach ($path as $level) {
     $node->breadcrumb[] = array('path' => 'book/view/'. $level->nid, 'title' =>  $level->title);
   }
-  $node->breadcrumb[] = array('path' => 'book/view/'. $node->nid);
+  $node->breadcrumb[] = array('path' => 'node/'. $node->nid);
 
   if ($node->nid) {
     $output .= '<div class="book">';

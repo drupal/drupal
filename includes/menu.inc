@@ -100,13 +100,26 @@ define('MENU_ACCESS_DENIED', 3);
  */
 function menu_get_menu() {
   global $_menu;
-  global $user;
 
   if (!isset($_menu['items'])) {
     // _menu_build() may indirectly call this function, so prevent infinite loops.
     $_menu['items'] = array();
     _menu_build();
   }
+
+  return $_menu;
+}
+
+/**
+ * Return the local task tree.
+ *
+ * Unlike the rest of the menu structure, the local task tree cannot be cached
+ * nor determined too early in the page request, because the user's current
+ * location may be changed by a menu_set_location() call, and the tasks shown
+ * (just as the breadcrumb trail) need to reflect the changed location.
+ */
+function menu_get_local_tasks() {
+  global $_menu;
 
   // Don't cache the local task tree, as it varies by location and tasks are
   // allowed to be dynamically determined.
@@ -117,7 +130,7 @@ function menu_get_menu() {
     _menu_build_local_tasks();
   }
 
-  return $_menu;
+  return $_menu['local tasks'];
 }
 
 /**
@@ -267,6 +280,24 @@ function menu_get_active_nontask_item() {
 
   // Find the first non-task item:
   while ($mid && (($menu['items'][$mid]['type'] & MENU_LOCAL_TASK) || ($menu['items'][$mid]['type'] & MENU_LOCAL_SUBTASK))) {
+    $mid = $menu['items'][$mid]['pid'];
+  }
+
+  if ($mid) {
+    return $mid;
+  }
+}
+
+/**
+ * Returns the ID of the current menu item or, if the current item is a
+ * local task or subtask, the ID of the current local task (not subtask).
+ */
+function menu_get_active_local_task() {
+  $menu = menu_get_menu();
+  $mid = menu_get_active_item();
+
+  // Find the first non-task item:
+  while ($mid && ($menu['items'][$mid]['type'] & MENU_LOCAL_SUBTASK)) {
     $mid = $menu['items'][$mid]['pid'];
   }
 
@@ -434,20 +465,20 @@ function theme_menu_item($mid) {
  * them as tabs.
  */
 function theme_menu_local_tasks() {
-  $menu = menu_get_menu();
+  $local_tasks = menu_get_local_tasks();
   $output = '';
 
-  if (count($menu['local tasks'][0]['children'])) {
+  if (count($local_tasks[0]['children'])) {
     $output .= "<ul class=\"tabs primary\">\n";
-    foreach ($menu['local tasks'][0]['children'] as $mid) {
-      $output .= theme('menu_local_task', $mid, menu_in_active_trail($mid));
+    foreach ($local_tasks[0]['children'] as $mid) {
+      $output .= theme('menu_local_task', $mid, $mid == menu_get_active_local_task());
     }
     $output .= "</ul>\n";
 
-    foreach ($menu['local tasks'][0]['children'] as $mid) {
-      if (menu_in_active_trail($mid) && count($menu['local tasks'][$mid]['children'])) {
+    foreach ($local_tasks[0]['children'] as $mid) {
+      if ($mid == menu_get_active_local_task() && count($local_tasks[$mid]['children'])) {
         $output .= "<ul class=\"tabs secondary\">\n";
-        foreach ($menu['local tasks'][$mid]['children'] as $cid) {
+        foreach ($local_tasks[$mid]['children'] as $cid) {
           $output .= theme('menu_local_task', $cid, menu_in_active_trail($cid));
         }
         $output .= "</ul>\n";
@@ -699,9 +730,6 @@ function _menu_build_local_tasks() {
 
   $mid = menu_get_active_nontask_item();
   if ($mid) {
-    $tasks[$mid] = array('title' => $_menu['items'][$mid]['title'], 'path' => $_menu['items'][$mid]['path'], 'children' => array());
-    $tasks[0]['children'][] = $mid;
-
     // Find top-level tasks
     if ($children = $_menu['items'][$mid]['children']) {
       foreach ($children as $cid) {
@@ -712,6 +740,9 @@ function _menu_build_local_tasks() {
       }
     }
     usort($tasks[0]['children'], '_menu_sort');
+
+    $tasks[$mid] = array('title' => $_menu['items'][$mid]['title'], 'path' => $_menu['items'][$mid]['path'], 'children' => array());
+    array_unshift($tasks[0]['children'], $mid);
 
     // Find subtasks
     foreach ($tasks[0]['children'] as $mid) {
