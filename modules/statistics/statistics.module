@@ -108,19 +108,18 @@ function statistics_link($type, $node = 0, $main = 0) {
     $help["top nodes block"] = "The statistics module exports a block that can display the day's top viewed nodes, the all time top viewed nodes and the last nodes viewed.  Each of these links can be enabled or disabled individually, and the number of nodes displayed for each can be configured with a drop down menu. If you disable all sections of this block, it will not appear.";
     $help["who is online block"] = "This statistics module exports a block that can display how many user's and guests are currently online.  You can configure the name of the block, the name of a sub-block for displaying names of user's currently online, how recently a user must have been active to be considered online, the maximum characters to display from a user's name and the maximum number of user names to display.";
 
-    menu_add("site monitoring", "admin.php?mod=statistics", "Monitor your site.", NULL, NULL, 2);
-     menu_add("popular posts", "admin.php?mod=statistics&op=statistics", "Display the top nodes.", $help["statistics"], "site monitoring", 2, 1);
-     menu_add("referrer log", "admin.php?mod=statistics&op=referrers", "Display the referrers.", $help["referrers"], "site monitoring", 3, 1);
-      menu_add("view all referrers", "admin.php?mod=statistics&op=referrers&view=all", "Display all referrers.", $help["referrers"], "referre logs", 1);
-      menu_add("view internal referrers", "admin.php?mod=statistics&op=referrers&view=internal", "Display internal referrers.", $help["referrers"], "referrer log", 1);
-      menu_add("view external referrers", "admin.php?mod=statistics&op=referrers&view=external", "Display external referrers.", $help["referrers"], "referrer log", 1);
-     menu_add("access log", "admin.php?mod=statistics&op=log", "Display the access log.", $help["access"], "site monitoring", 4);
-     menu_add("configure 'top nodes' page", "admin.php?mod=statistics&op=top+nodes+page", "Configure the top node page.", $help["top nodes page"], "site monitoring", 5);
-     menu_add("help", "admin.php?mod=statistics&op=help", "More information about the statistics.", NULL, "site monitoring", 6);
+    menu_add("popular posts", "admin.php?mod=statistics&op=statistics", "Display the top nodes.", $help["statistics"], "site monitoring", 2, 1);
+    menu_add("referrer log", "admin.php?mod=statistics&op=referrers", "Display the referrers.", $help["referrers"], "site monitoring", 3, 1);
+     menu_add("view all referrers", "admin.php?mod=statistics&op=referrers&view=all", "Display all referrers.", $help["referrers"], "referre logs", 1);
+     menu_add("view internal referrers", "admin.php?mod=statistics&op=referrers&view=internal", "Display internal referrers.", $help["referrers"], "referrer log", 1);
+     menu_add("view external referrers", "admin.php?mod=statistics&op=referrers&view=external", "Display external referrers.", $help["referrers"], "referrer log", 1);
+    menu_add("access log", "admin.php?mod=statistics&op=log", "Display the access log.", $help["access"], "site monitoring", 4);
+    menu_add("configure 'top nodes' page", "admin.php?mod=statistics&op=top+nodes+page", "Configure the top node page.", $help["top nodes page"], "site monitoring", 5);
+    menu_add("help", "admin.php?mod=statistics&op=help", "More information about the statistics.", NULL, "site monitoring", 6);
 
-     // block configuration:
-     menu_add("configure 'top nodes' block", "admin.php?mod=statistics&op=top+nodes+block", "Configure the 'top nodes block'", $help["top nodes block"], "block management", 2);
-     menu_add("configure 'who is online' block", "admin.php?mod=statistics&op=whos+online+block", "Configure the 'top nodes block'", $help["who is online block"], "block management", 2);
+    // block configuration:
+    menu_add("configure 'top nodes' block", "admin.php?mod=statistics&op=top+nodes+block", "Configure the 'top nodes block'", $help["top nodes block"], "block management", 2);
+    menu_add("configure 'who is online' block", "admin.php?mod=statistics&op=whos+online+block", "Configure the 'top nodes block'", $help["who is online block"], "block management", 2);
   }
 
   return $links ? $links : array();
