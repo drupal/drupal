@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.28 2004/04/30 05:12:36 dries Exp $
+// $Id: database.inc,v 1.29 2004/05/06 20:25:48 dries Exp $
 
 function db_prefix_tables($sql) {
   global $db_prefix;
@@ -29,8 +29,7 @@ function db_prefix_tables($sql) {
 * @param $name The named connection specified in the $db_url variable.
 */
 function db_set_active($name = 'default') {
-  global $db_url;
-  global $active_db;
+  global $db_url, $db_type, $active_db;
   static $db_conns;
 
   if (!isset($db_conns[$name])) {
