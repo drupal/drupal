@@ -1,5 +1,5 @@
 <?php
-/* $Id: theme.inc,v 1.175 2003/12/22 14:44:59 dries Exp $ */
+/* $Id: theme.inc,v 1.176 2003/12/22 15:38:07 dries Exp $ */
 
 /**
  * @file
@@ -274,6 +274,7 @@ function theme_node($node, $main = 0, $page = 0) {
  * @param $title the form element's title
  * @param $value the form element's data
  * @param $description the form element's description or explanation
+ * @param $id the form element's ID used by the &lt;label&gt; tag
  *
  * @return a string containing the @a node output.
  */
@@ -288,12 +289,18 @@ function theme_form_element($title, $value, $description = NULL, $id = NULL) {
       $title = "<label>$title:</label><br />";
     }
   }
+  else {
+    if ($id) {
+      $title = "<label for=\"$id\"></label>";
+      // TODO: does this make sense to do?
+    }
+  }
 
   if ($description) {
     $description = "<div class=\"description\">$description</div>";
   }
 
-  return "<div class=\"form-item\">$title $value $description</div>\n";
+  return "<div class=\"form-item\">". $title . $value . $description ."</div>\n";
 }
 
 /**
