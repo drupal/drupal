@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.215 2003/06/12 17:24:00 dries Exp $
+// $Id: common.inc,v 1.216 2003/06/14 07:02:32 dries Exp $
 
 function conf_init() {
 
@@ -412,6 +412,12 @@ function search_type($type = 0, $action = 0, $query = 0, $options = 0) {
 
 
 function drupal_goto($url) {
+
+  /*
+  ** Check the URL to prevent XSS attacks:
+  */
+
+  $url = check_url($url);
 
   /*
   ** Translate &amp; to simply &
