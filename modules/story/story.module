@@ -1,6 +1,9 @@
 <?php
 // $Id$
 
+/**
+ * Provide online user help
+ */
 function story_help($section = "admin/help#story") {
   $output = "";
 
@@ -14,19 +17,26 @@ function story_help($section = "admin/help#story") {
     case 'admin/help#story':
       $output = t("
       <p>The story module lets your users submit articles for consideration by the rest of the community, who can vote on them if moderation is enabled.  Stories usually follow a publishing flow of <strong>submit -&gt; moderate -&gt; post to the main page -&gt; comments</strong>.  Administrators are able to shortcut this flow as desired.</p>
-      In <a href=\"%story-config\">administer &raquo; configuration &raquo; modules &raquo; story</a> you can set up an introductory text for story authors, and a floor on the number of words which may be included in a story. This is designed to help discourage the submission of trivially short stories.", array("%story-config" => url("admin/system/modules/story")));
+      In <a href=\"%story-config\">administer &raquo; configuration &raquo; modules &raquo; story</a> you can set up an introductory text for story authors, and a floor on the number of words which may be included in a story. This is designed to help discourage the submission of trivially short stories.</p>
+      <h3>User access permissions for stories</h3>
+      <p><strong>create stories:</strong> Allows a role to create stories. They cannot edit or delete stories, even if they are the authors. You must enable this permission to in order for a role to create a story.</p>
+      <p><strong>maintain personal stories:</strong> Allows a role to add/edit stories if they own the story. Use this permission if you want users to be able to edit and maintain their own stories.</p>
+      ", array("%story-config" => url("admin/system/modules/story")));
       break;
     case 'node/add/story':
       $output = variable_get('story_help', '');
       break;
     case 'node/add#story':
-      $output = t("A story is a post that is submitted to the attention of other users and is queued in the submission queue.  Users and moderators vote on the posts they like or dislike, promoting or demoting them.  When a post gets above a certain threshold it automatically gets promoted to the front page.");
+      $output = t("A story is similar to a newspaper article. If stories are moderated, the post will be submitted to the attention of other users and be queued in the submission queue.  Users and moderators vote on the posts they like or dislike, promoting or demoting them.  When a post gets above a certain threshold it automatically gets promoted to the front page.");
       break;
   }
 
   return $output;
 }
 
+/**
+ * Declare administrative settings for a module.
+ */
 function story_settings() {
  $output .= form_textarea("Explanation or submission guidelines", "story_help", variable_get("story_help", ""), 70, 5, "This text will be displayed at the top of the story submission form.  It is useful for helping or instructing your users.");
  $output .= form_select(t("Minimum number of words"), "minimum_story_size", variable_get("minimum_story_size", 0), array(0 => "0 words", 10 => "10 words", 25 => "25 words",  50 => "50 words", 75 => "75 words", 100 => "100 words", 125 => "125 words",  150 => "150 words", 175 => "175 words", 200 => "200 words"), t("The minimum number of words a story must be to be considered valid.  This can be useful to rule out submissions that do not meet the site's standards, such as short test posts."));
@@ -34,36 +44,68 @@ function story_settings() {
  return $output;
 }
 
+/**
+ * Define the human-readable name of a node type.
+ */
 function story_node_name($node) {
   return t("story");
 }
 
+/**
+ * Define user permissions.
+ */
 function story_perm() {
-  return array("create stories");
+  return array('create stories', 'maintain personal stories');
 }
 
+/**
+ * Define access restrictions
+ */
 function story_access($op, $node) {
+  global $user;
+
   if ($op == "view") {
     return $node->status;
   }
 
   if ($op == "create") {
-    return user_access("create stories");
+    return user_access('create stories');
+  }
+
+  if ($op == "update") {
+    return user_access('maintain personal stories') && ($user->uid == $node->uid);
+  }
+
+  if ($op == "delete") {
+    return user_access('maintain personal stories') && ($user->uid == $node->uid);
   }
 }
 
-function story_link($type) {
+/**
+ * Define internal Drupal links.
+ */
+function story_link($type, $node = 0, $main) {
   $links = array();
 
   if ($type == "system") {
-    if (user_access("create stories")) {
+    if (story_access('create', $node)) {
       menu("node/add/story", t("story"), "node_page", 0);
+    }
+  }
+
+  if ($type == 'node' && $node->type == 'story') {
+    /* Don't display a redundant edit link if they are node administrators */
+    if (story_access("update", $node) && !user_access('administer nodes')) {
+      $links[] = l(t('edit this story'), "node/edit/$node->nid");
     }
   }
 
   return $links;
 }
 
+/**
+ * Verify a node editing form.
+ */
 function story_validate(&$node) {
 
   /*
@@ -71,23 +113,29 @@ function story_validate(&$node) {
   */
 
   if (isset($node->body) && count(explode(" ", $node->body)) < variable_get("minimum_story_size", 0)) {
-    $error["body"] = "<div class=\"error\">". t("The body of your story is too short.") ."</div>";
+    $error["body"] = t("The body of your story is too short. You need at least %word_count words to submit your story.", array('%word_count' => variable_get("minimum_story_size", 0)));
   }
 
   return $error;
 }
 
+/**
+ * Display a node editing form
+ */
 function story_form(&$node, &$error) {
 
   if (function_exists("taxonomy_node_form")) {
     $output .= implode("", taxonomy_node_form("story", $node));
   }
 
-  $output .= form_textarea(t("Body"), "body", $node->body, 60, 15, $error["body"] ? $error["body"] : filter_tips_short());
+  $output .= form_textarea(t("Body"), "body", $node->body, 60, 15, ($error["body"] ? theme('error', $error["body"]) : ''). filter_tips_short());
 
   return $output;
 }
 
+/**
+ * Prepare a node's body content for viewing
+ */
 function story_content($node, $main = 0) {
   return node_prepare($node, $main);
 }

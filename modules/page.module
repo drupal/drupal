@@ -1,17 +1,24 @@
 <?php
 // $Id$
 
-function page_help($section = "admin/help#page") {
+/**
+ * Provide online user help
+ */
+function page_help($section = 'admin/help#page') {
   $output = "";
 
   switch ($section) {
     case 'admin/help#page':
       $output .= t("
-      <p>The page module is used to create a <i>static page</i>.  Unlike a story, a static page is a persistent web page on your site which usually shortcuts the typical lifecycle of user generated content (i.e. submit -&gt; moderate -&gt; post -&gt; comment).  A static page is usually linked from the main navigation bar, using whatever text the author wishes.  To create a static page without this navigation link, simply skip the link text field.</p>
-      <p>Site pages, unlike many other forms of Drupal content, may be made of PHP code in addition to HTML and text. All Drupal objects and functions are available to a site administrator.</p>");
+      <p>The page module is used when you want to create content that optionally inserts a link into your navigation system. You can also, however, create pages that that don't have this link by skipping the link text field in the page form. At this time, not all themes support the link insertion behavior. Some themes, like xtemplate, provide alternative mechanisms for link creation. Pages are also unique in that they shortcut the typical lifecycle of user generated content (i.e. submit -&gt; moderate -&gt; post -&gt; comment). </p>
+      <p>If you enable the <strong>create PHP content</strong> permission for a role, pages may consist of PHP code in addition to HTML and text.</p>
+      <h3>User access permissions for pages</h3>
+      <p><strong>create pages:</strong> Allows a role to create pages. They cannot edit or delete pages, even if they are the authors. You must enable this permission to in order for a role to create a page.</p>
+      <p><strong>maintain personal pages:</strong> Allows a role to add/edit pages if they own the page. Use this permission if you want users to be able to edit and maintain their own pages.</p>
+      ");
       break;
     case 'admin/system/modules#description':
-      $output = t("Enables the creation of a static pages that can be added to the navigation system.");
+      $output = t("Enables the creation of pages that can be added to the navigation system.");
       break;
     case 'node/add#page':
       $output = t("If you just want to add a page with a link in the menu to your site, this would be the best choice.  Unlike a story, a static page by-passes the submission queue.");
@@ -21,90 +28,118 @@ function page_help($section = "admin/help#page") {
   return $output;
 }
 
+/**
+ * Define user permissions.
+ */
 function page_perm() {
-  return array("maintain static pages");
+  return array('create pages', 'maintain personal pages');
 }
 
+/**
+ * Define the human-readable name of a node type.
+ */
 function page_node_name($node) {
-  return t("static page");
+  return t('page');
 }
 
+/**
+ * Define access restrictions
+ */
 function page_access($op, $node) {
+  global $user;
+
   if ($op == "view") {
     return $node->status;
   }
 
   if ($op == "create") {
-    return user_access("maintain static pages");
+    return user_access('create pages');
   }
 
   if ($op == "update") {
-    return user_access("maintain static pages");
+    return user_access('maintain personal pages') && ($user->uid == $node->uid);
   }
 
   if ($op == "delete") {
-    return user_access("maintain static pages");
+    return user_access('maintain personal pages') && ($user->uid == $node->uid);
   }
 }
 
+/**
+ * Respond to node insertion.
+ */
 function page_insert($node) {
   db_query("INSERT INTO {page} (nid, format, link, description) VALUES (%d, %d, '%s', '%s')", $node->nid, $node->format, $node->link, $node->description);
 }
 
+/**
+ * Respond to node updating.
+ */
 function page_update($node) {
-db_query("UPDATE {page} SET format = %d, link = '%s', description = '%s' WHERE nid = %d", $node->format, $node->link, $node->description, $node->nid);
-  }
+  db_query("UPDATE {page} SET format = %d, link = '%s', description = '%s' WHERE nid = %d", $node->format, $node->link, $node->description, $node->nid);
+}
 
+/**
+ * Respond to node deletion
+ */
 function page_delete(&$node) {
   db_query("DELETE FROM {page} WHERE nid = %d", $node->nid);
 }
 
+/**
+ * Load node-type-specific information.
+ */
 function page_load($node) {
-  $page = db_fetch_object(db_query("SELECT format, link, description FROM {page} WHERE nid = %d", $node->nid));
-
-  return $page;
+  return db_fetch_object(db_query("SELECT format, link, description FROM {page} WHERE nid = %d", $node->nid));
 }
 
-function page_link($type) {
+/**
+ * Define internal Drupal links.
+ */
+function page_link($type, $node = 0, $main) {
 
   $links = array();
 
-  if ($type == "page" && user_access("access content")) {
-    $result = db_query("SELECT n.nid, n.title, p.link, p.description FROM {page} p INNER JOIN {node} n ON p.nid = n.nid WHERE n.status = '1' AND p.link != '' ORDER BY p.link");
-    while ($page = db_fetch_object($result)) {
-      $links[] = l($page->link, "node/view/$page->nid", array("title" => $page->description));
+  if ($type == 'system') {
+    if (page_access('create', $node)) {
+      menu("node/add/page", t("page"), "node_page", 0);
     }
   }
 
-  if ($type == "system") {
-    if (user_access("maintain static pages")) {
-      menu("node/add/page", t("static page"), "node_page", 0);
+  if ($type == 'node' && $node->type == 'page') {
+    /* Don't display a redundant edit link if they are node administrators */
+    if (page_access("update", $node) && !user_access('administer nodes')) {
+      $links[] = l(t('edit this page'), "node/edit/$node->nid");
     }
   }
 
   return $links;
 }
 
+/**
+ * Prepare a node's body content for viewing
+ */
 function page_content($node, $main = 0) {
-  /*
-  ** Extract the page body.  If body is dynamic (using PHP code), the body
-  ** will be generated.
-  */
+  /* Extract the page body.  If body is dynamic (using PHP code), the body will
+     be generated. */
 
-  if ($node->format == 0) {
-    // HTML type
-    $node = node_prepare($node, $main);
-  }
-  else {
+  if ($node->format == 1) {
     // PHP type
     ob_start();
     eval($node->body);
     $node->teaser = $node->body = ob_get_contents();
     ob_end_clean();
   }
+  else {
+    // Assume HTML type by default
+    $node = node_prepare($node, $main);
+  }
   return $node;
 }
 
+/**
+ * View a node.
+ */
 function page_view($node, $main = 0, $page = 0) {
   // prepare the node content
   $node = page_content($node, $main);
@@ -112,26 +147,45 @@ function page_view($node, $main = 0, $page = 0) {
   return theme("node", $node, $main, $page);
 }
 
+/**
+ * Display a node editing form
+ */
 function page_form(&$node, &$error) {
   if (function_exists("taxonomy_node_form")) {
     $output .= implode("", taxonomy_node_form("page", $node));
   }
 
-  $output .= form_textarea(t("Body"), "body", $node->body, 60, 20, filter_tips_short());
-  $output .= form_textfield(t("Link name"), "link", $node->link, 60, 64, t("To make the page show up in the navigation links, enter the name of the link, otherwise leave blank."));
-  $output .= form_textfield(t("Link description"), "description", $node->description, 60, 64, t("The description displayed when hovering over the page's link.  Leave blank when you don't want a description."));
-  $output .= form_radios(t("Type"), "format", $node->format, array(0 => "HTML", 1 => "PHP"));
+  if (($node->format == 1) && (!user_access('create php content'))) {
+    drupal_set_message(t('Note: The body contents of this page are written in PHP and you do not have sufficient permissions to make changes to the body. You can edit the other elements of the page.'));
+    $output .= form_hidden('format', $node->format);
+    $hide_types = true;
+  }
+  else {
+    $output .= form_textarea(t('Body'), 'body', $node->body, 60, 20, filter_tips_short());
+  }
+
+  $output .= form_textfield(t('Link name'), 'link', $node->link, 60, 64, t("To make the page show up in the navigation links, enter the name of the link, otherwise leave blank."));
+  $output .= form_textfield(t('Link description'), 'description', $node->description, 60, 64, t("The description displayed when hovering over the page's link.  Leave blank when you don't want a description."));
+  $content_type = (user_access('create php content')) ? array(0 => "HTML", 1 => "PHP") : false;
+  if (!$hide_types && $content_type) {
+    $output .= form_radios(t("Type"), "format", $node->format, $content_type);
+  }
 
   return $output;
 }
 
+/**
+ * Verify a node editing form.
+ */
 function page_validate(&$node) {
   if ($node->format && user_access("create php content")) {
     // Do not filter PHP code, do not auto-extract a teaser
     $node->teaser = $node->body;
   }
-  else {
-    $node->format = 0;
+
+  if (($node->format == 1) && (!user_access('create php content'))) {
+    /* Overwrite the submitted node body since they don't have sufficient privileges. */
+    $node->body = db_result(db_query("SELECT body FROM {node} WHERE nid = '%d'", $node->nid));
   }
 }
 
