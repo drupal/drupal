@@ -670,7 +670,7 @@ function format_rss_channel($title, $link, $description, $items, $language = "en
   $output .= " <description>". drupal_specialchars($description) ."</description>\n";
   $output .= " <language>". drupal_specialchars(strip_tags($language)) ."</language>\n";
   foreach ($args as $key => $value) {
-    $output .= "<$key>". drupal_specialchars(strip_tags($value)) ."</$key>";
+    $output .= " <$key>". drupal_specialchars(strip_tags($value)) ."</$key>\n";
   }
   $output .= $items;
   $output .= "</channel>\n";

@@ -983,19 +983,19 @@ function node_feed($nodes = 0, $channel = array()) {
     /*
     ** Load the specified node:
     */
-    
+
     $item = node_load(array("nid" => $node->nid));
-    
+
     /*
     ** Transform the node information into an RSS item:
     */
-    
+
     $items .= format_rss_item($item->title, url(node_url($node)), ($item->teaser ? $item->teaser : $item->body));
 
     /*
     ** Determine the publication date:
     */
-    
+
     if ($item->updated > $pubdate) {
       $pubdate = $item->updated;
     }
