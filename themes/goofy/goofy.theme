@@ -116,7 +116,15 @@ function c(subject,mod,author,date,body) {document.writeln("<table border=\"0\" 
       echo "\n<!-- node: \"$node->title\" -->\n";
       $title = check_output($node->title);
       $subleft = strtr(t("Submitted by %a on %b"), array("%a" => format_name($node), "%b" => format_date($node->created, "large")));
-      $subright = node_index($node);
+      if (function_exists("taxonomy_node_get_terms")) {
+        if ($terms = taxonomy_node_get_terms($node->nid)) {
+          $taxlinks = array();
+          foreach ($terms as $term) {
+            $taxlinks[] = "<a href=\"index.php?or=$term->tid\">". check_output($term->name) ."</a>";
+          }
+          $subright = $this->links($taxlinks);
+        }
+      }
 
       if ($main && $node->teaser) {
         $body = check_output($node->teaser, 1);
