@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.87 2004/09/21 18:35:30 dries Exp $
+// $Id: search.module,v 1.88 2004/10/15 22:01:41 unconed Exp $
 
 /**
  * @file
@@ -127,6 +127,9 @@ function do_search($search_array) {
   $keys = strtolower($search_array['keys']);
   $type = $search_array['type'];
   $select = $search_array['select'];
+
+  // Remove punctuation/special characters (same rule as update_index()).
+  $keys = preg_replace("'(!|%|,|:|;|\(|\)|\&|\"|\'|\.|-|\/|\?|\\\)'", '', $keys);
 
   // Replace wildcards with MySQL wildcards.
   $keys = str_replace('*', '%', $keys);
@@ -259,8 +262,8 @@ function update_index($search_array) {
       // Strip heaps of stuff out of it.
       $wordlist = preg_replace("'<[\/\!]*?[^<>]*?>'si", '', $wordlist);
 
-      // Remove punctuation/special characters.
-      $wordlist = preg_replace("'(\xBB|\xAB|!|\xA1|%|,|:|;|\(|\)|\&|\"|\'|\.|-|\/|\?|\\\)'", '', $wordlist);
+      // Remove punctuation/special characters (same rule as do_search()).
+      $keys = preg_replace("'(!|%|,|:|;|\(|\)|\&|\"|\'|\.|-|\/|\?|\\\)'", '', $keys);
 
       // Strip out (now mangled) http and tags.
       $wordlist = preg_replace("'http\w+'", '', $wordlist);
