@@ -1,5 +1,5 @@
 <?php
-// $Id: database.pear.inc,v 1.16 2003/06/08 12:10:25 dries Exp $
+// $Id: database.pear.inc,v 1.17 2003/07/10 17:46:41 dries Exp $
 
 require_once 'DB.php';
 
@@ -25,6 +25,7 @@ function db_connect($url) {
 function db_query($query) {
 
   $args = func_get_args();
+  $query = db_prefix_tables($query);
   if (count($args) > 1) {
     $args = array_map("check_query", $args);
     $args[0] = $query;
@@ -38,6 +39,7 @@ function db_query($query) {
 // debug version
 function db_queryd($query) {
   $args = func_get_args();
+  $query = db_prefix_tables($query);
   if (count($args) > 1) {
     $args = array_map("check_query", $args);
     $args[0] = $query;
@@ -147,11 +149,14 @@ function db_query_range($query) {
   $from = array_pop($args);
   if (count(func_get_args()) > 3) {
     $args = array_map("check_query", $args);
+    $query = db_prefix_tables($query);
     $args[0] = $query;
     $result = $db_handle->limitQuery(call_user_func_array("sprintf", $args), $from, $count);
   }
   else {
-    $result = $db_handle->limitQuery(func_get_arg(0), $from, $count);
+    $query = func_get_arg(0);
+    $query = db_prefix_tables($query);
+    $result = $db_handle->limitQuery( $query, $from, $count);
   }
 
   if (variable_get("dev_query", 0)) {

@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.45 2003/06/06 14:07:45 kjartan Exp $
+// $Id: module.inc,v 1.46 2003/07/10 17:46:41 dries Exp $
 
 // initialize modules:
 function module_init() {
@@ -50,7 +50,7 @@ function module_list($refresh = 0) {
 
   if (!$list) {
     $list = array("admin" => "admin", "system" => "system", "user" => "user", "watchdog" => "watchdog");
-    $result = db_query("SELECT name, filename FROM system WHERE type = 'module' AND status = '1' ORDER BY name");
+    $result = db_query("SELECT name, filename FROM {system} WHERE type = 'module' AND status = '1' ORDER BY name");
     while ($module = db_fetch_object($result)) {
       if (file_exists($module->filename)) {
         $list[$module->name] = $module->name;

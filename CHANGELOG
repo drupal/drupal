@@ -1,3 +1,9 @@
+Drupal x.x.x, xxxx-xx-xx (to be released)
+------------------------
+
+- database backend:
+    * added support for database table prefxing.
+
 Drupal 4.2.0, xxxx-xx-xx (to be released)
 ------------------------
 
@@ -69,7 +75,7 @@ Drupal 4.0.0, 2002-06-15
 - themes:
     * cleaned up the theme system.
     * moved themes that are not maintained to contributions CVS repository.
-- database abstraction:
+- database backend:
     * changed to PEAR database abstraction layer.
     * using ANSI SQL queries to be more portable.
 - rewrote the user system:

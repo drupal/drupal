@@ -1,7 +1,7 @@
 <?php          // -*-c++-*-
 // by Edd Dumbill (C) 1999-2001
 // <edd@usefulinc.com>
-// $Id: xmlrpc.inc,v 1.8 2003/04/29 22:02:02 dries Exp $
+// $Id: xmlrpc.inc,v 1.9 2003/07/10 17:46:41 dries Exp $
 
 
 // Copyright (c) 1999,2000,2001 Edd Dumbill.
@@ -644,8 +644,9 @@ class xmlrpcmsg {
   $xmlrpc_value=new xmlrpcval;
 
   if ($this->debug)
-    print "<pre>---GOT---\n" . htmlspecialchars($data) .
-    "\n---END---\n</pre>";
+    ##print "<pre>---GOT---\n" . htmlspecialchars($data) .  "\n---END---\n</pre>";
+    ##print "<p>---GOT---\n" . nl2br(htmlspecialchars($data)) .  "\n---END---\n</p>";
+    print "<p>---GOT---\n" . nl2br($data) .  "\n---END---\n</p>";
   if ($data=="") {
     error_log("No response received from server.");
     $r=new xmlrpcresp(0, $xmlrpcerr["no_data"],
