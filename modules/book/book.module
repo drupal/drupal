@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.285 2005/02/12 07:51:14 dries Exp $
+// $Id: book.module,v 1.286 2005/03/22 18:34:20 dries Exp $
 
 /**
  * @file
@@ -439,7 +439,7 @@ function book_nodeapi(&$node, $op, $teaser, $page) {
           foreach ($book as $key => $value) {
             $node->$key = $value;
           }
-          $node = book_navigation($node);
+          $node = theme('book_navigation', $node);
           if ($page) {
             menu_set_location($node->breadcrumb);
           }
@@ -452,8 +452,10 @@ function book_nodeapi(&$node, $op, $teaser, $page) {
 /**
  * Prepares both the custom breadcrumb trail and the forward/backward
  * navigation for a node presented as a book page.
+ *
+ * @ingroup themeable
  */
-function book_navigation($node) {
+function theme_book_navigation($node) {
   $path = book_location($node);
 
   // Construct the breadcrumb:
