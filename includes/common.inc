@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.371 2004/07/29 01:41:33 unconed Exp $ */
+/* $Id: common.inc,v 1.372 2004/08/04 20:36:23 dries Exp $ */
 
 /**
  * @file
@@ -1768,7 +1768,6 @@ function truncate_utf8($string, $len) {
 include_once 'includes/theme.inc';
 include_once 'includes/pager.inc';
 include_once 'includes/menu.inc';
-include_once 'includes/xmlrpc.inc';
 include_once 'includes/tablesort.inc';
 include_once 'includes/file.inc';
 

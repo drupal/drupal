@@ -1,8 +1,9 @@
 <?php
-// $Id: xmlrpc.php,v 1.6 2004/01/26 18:51:37 dries Exp $
+// $Id: xmlrpc.php,v 1.7 2004/08/04 20:36:22 dries Exp $
 
 include_once "includes/bootstrap.inc";
 include_once "includes/common.inc";
+include_once 'includes/xmlrpc.inc';
 include_once "includes/xmlrpcs.inc";
 
 $functions = module_invoke_all("xmlrpc");

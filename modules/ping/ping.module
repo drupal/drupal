@@ -1,5 +1,5 @@
 <?php
-// $Id: ping.module,v 1.18 2004/06/18 15:04:35 dries Exp $
+// $Id: ping.module,v 1.19 2004/08/04 20:36:24 dries Exp $
 
 /**
  * Implementation of hook_help().
@@ -54,6 +54,8 @@ function _ping_notify($name, $url) {
  * Notifies weblogs.com, blo.gs, and technorati.com of changes at this site.
  */
 function ping_ping($name = '', $url = '') {
+  include_once 'includes/xmlrpc.inc';
+
   $feed = url('node/feed');
 
   $client = new xmlrpc_client('/RPC2', 'rpc.weblogs.com', 80);
