@@ -103,7 +103,18 @@ function menu_get_menu() {
   global $user;
 
   if (!isset($_menu['items'])) {
+    // _menu_build() may indirectly call this function, so prevent infinite loops.
+    $_menu['items'] = array();
     _menu_build();
+  }
+
+  // Don't cache the local task tree, as it varies by location and tasks are
+  // allowed to be dynamically determined.
+  if (!isset($_menu['local tasks'])) {
+    // _menu_build_local_tasks() may indirectly call this function, so prevent
+    // infinite loops.
+    $_menu['local tasks'] = array();
+    _menu_build_local_tasks();
   }
 
   return $_menu;
@@ -420,32 +431,23 @@ function theme_menu_item($mid) {
  * them as tabs.
  */
 function theme_menu_local_tasks() {
+  $menu = menu_get_menu();
+  $output = '';
 
+  if (count($menu['local tasks'][0]['children'])) {
+    $output .= "<ul class=\"tabs primary\">\n";
+    foreach ($menu['local tasks'][0]['children'] as $mid) {
+      $output .= theme('menu_local_task', $mid, menu_in_active_trail($mid));
+    }
+    $output .= "</ul>\n";
 
-  if ($mid = menu_get_active_nontask_item()) {
-    $menu = menu_get_menu();
-    $active_mid = $mid;
-
-    if ($children = $menu['items'][$mid]['children']) {
-      foreach ($menu['items'][$mid]['children'] as $cid) {
-        if (($menu['items'][$cid]['type'] & MENU_IS_LOCAL_TASK) && _menu_item_is_accessible($cid)) {
-          if (menu_in_active_trail($cid)) {
-            $tabs[] = theme('menu_local_task', $cid, TRUE);
-            $active_mid = $cid;
-          }
-          else {
-            $tabs[] = theme('menu_local_task', $cid, FALSE);
-          }
+    foreach ($menu['local tasks'][0]['children'] as $mid) {
+      if (menu_in_active_trail($mid) && count($menu['local tasks'][$mid]['children'])) {
+        $output .= "<ul class=\"tabs secondary\">\n";
+        foreach ($menu['local tasks'][$mid]['children'] as $cid) {
+          $output .= theme('menu_local_task', $cid, menu_in_active_trail($cid));
         }
-      }
-
-      if ($tabs) {
-        // We add a default view-tab for the parent:
-        $output  = "<ul class=\"tabs primary\">\n";
-        $output .= theme('menu_local_task', $mid, $active_mid == $mid);
-        $output .= implode('', $tabs);
         $output .= "</ul>\n";
-        $output .= theme('menu_local_subtasks', $active_mid);
       }
     }
   }
@@ -454,7 +456,7 @@ function theme_menu_local_tasks() {
 }
 
 /**
- * Generate the HTML representing a given menu item ID as a set of tabs.
+ * Generate the HTML representing a given menu item ID as a tab.
  *
  * @param $mid
  *   The menu ID to render.
@@ -467,30 +469,6 @@ function theme_menu_local_task($mid, $active) {
   }
   else {
     return '<li>'. theme('menu_item', $mid) ."</li>\n";
-  }
-}
-
-/**
- * Generate the HTML representing the children of a given menu item ID
- * as a set of tabs.
- *
- * @param $pid
- *   The menu ID of the parent item.
- */
-function theme_menu_local_subtasks($pid) {
-  $menu = menu_get_menu();
-
-  $tabs = '';
-  if ($children = $menu['items'][$pid]['children']) {
-    foreach ($children as $cid) {
-      if (_menu_item_is_accessible($cid) && ($menu['items'][$cid]['type'] & MENU_IS_LOCAL_SUBTASK)) {
-        $tabs .= theme('menu_local_task', $cid, menu_in_active_trail($cid));
-      }
-    }
-
-    if ($tabs) {
-      return "<ul class=\"tabs secondary\">$tabs</ul>\n";
-    }
   }
 }
 
@@ -686,6 +664,55 @@ function _menu_build_visible_tree($pid = 0) {
   }
 
   return array();
+}
+
+/**
+ * Find all the items in the current local task tree.
+ *
+ * Since this is only for display, we only need title, path, and children
+ * for each item.
+ */
+function _menu_build_local_tasks() {
+  global $_menu;
+
+  $tasks = array();
+  $tasks[0] = array('children' => array());
+
+  $mid = menu_get_active_nontask_item();
+  $tasks[$mid] = array('title' => $_menu['items'][$mid]['title'], 'path' => $_menu['items'][$mid]['path'], 'children' => array());
+  $tasks[0]['children'][] = $mid;
+
+  // Find top-level tasks
+  if ($children = $_menu['items'][$mid]['children']) {
+    foreach ($children as $cid) {
+      if (($_menu['items'][$cid]['type'] & MENU_IS_LOCAL_TASK) && _menu_item_is_accessible($cid)) {
+        $tasks[$cid] = array('title' => $_menu['items'][$cid]['title'], 'path' => $_menu['items'][$cid]['path'], 'children' => array());
+        $tasks[0]['children'][] = $cid;
+      }
+    }
+  }
+  usort($tasks[0]['children'], '_menu_sort');
+
+  // Find subtasks
+  foreach ($tasks[0]['children'] as $mid) {
+    if ($children = $_menu['items'][$mid]['children']) {
+      foreach ($children as $cid) {
+        if (($_menu['items'][$cid]['type'] & MENU_IS_LOCAL_SUBTASK) && _menu_item_is_accessible($cid)) {
+          $tasks[$cid] = array('title' => $_menu['items'][$cid]['title'], 'path' => $_menu['items'][$cid]['path'], 'children' => array());
+          $tasks[$mid]['children'][] = $cid;
+        }
+      }
+    }
+    usort($tasks[$mid]['children'], '_menu_sort');
+  }
+
+  if (count($tasks) > 2) {
+    $_menu['local tasks'] = $tasks;
+  }
+  else {
+    $_menu['local tasks'] = array();
+    $_menu['local tasks'][0] = array('children' => array());
+  }
 }
 
 ?>
