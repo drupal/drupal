@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.25 2004/09/08 15:38:25 dries Exp $
+// $Id: locale.inc,v 1.26 2004/09/08 18:46:41 dries Exp $
 
 /**
  * @file
@@ -106,7 +106,6 @@ function _locale_admin_import_screen() {
   $form = form_file(t('Language file'), 'file', 50, t('A gettext Portable Object (.po) file.'));
   $form .= form_select(t('Import into'), 'langcode', '', $languages, t('Choose the language you want to add strings into. If you choose a language which is not yet set up, then it will be added.'));
   $form .= form_radios(t('Mode'), 'mode', 'overwrite', array("overwrite" => t('Strings in the uploaded file replace existing ones, new ones are added'), "keep" => t('Existing strings are kept, only new strings are added')));
-  $form .= '<p><strong>Note</strong>: Importing a translation file might take a while.</p>';
   $form .= form_submit(t('Import'));
   $output = form($form, 'POST', url('admin/locale/language/import'), array('enctype' => 'multipart/form-data'));
   return $output;
