@@ -28,7 +28,7 @@ function theme_menu($name, $module) {
 }
 
 function theme_account($theme) {
-  global $user, $site_name, $links, $menu;
+  global $user, $links, $menu;
 
   if ($user->id) {
 
@@ -38,7 +38,7 @@ function theme_account($theme) {
     // Display account settings:
     $content .= "<LI><A HREF=\"account.php?op=track&topic=comments\">". t("track your comments") ."</A></LI>\n";
     $content .= "<LI><A HREF=\"account.php?op=track&topic=nodes\">". t("track your nodes") ."</A></LI>\n";
-    $content .= "<LI><A HREF=\"account.php?op=track&topic=site\">". strtr(t("track %a"), array("%a" => $site_name)) ."</A></LI>\n";
+    $content .= "<LI><A HREF=\"account.php?op=track&topic=site\">". strtr(t("track %a"), array("%a" => variable_get(site_name, "drupal"))) ."</A></LI>\n";
     $content .= "<P>\n";
     $content .= "<LI><A HREF=\"account.php?op=edit&topic=user\">". t("edit your information") ."</A></LI>\n";
     $content .= "<LI><A HREF=\"account.php?op=edit&topic=site\">". t("edit your preferences") ."</A></LI>\n";
@@ -46,7 +46,7 @@ function theme_account($theme) {
     $content .= "<P>\n";
 
     if (user_access($user)) {
-      $content .= "<LI><A HREF=\"admin.php\">administer ". $site_name ."</A></LI>\n";
+      $content .= "<LI><A HREF=\"admin.php\">administer ". variable_get(site_name, "drupal") ."</A></LI>\n";
       $content .= "<P>\n";
     }
 

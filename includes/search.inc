@@ -15,7 +15,7 @@ function search_data($keys, $type) {
     foreach ($result as $entry) {
       $output .= "<P>\n";
       $output .= " <B><U><A HREF=\"$entry[link]\">$entry[title]</A></U></B><BR>";
-      $output .= " <SMALL>$site_url$entry[link]". ($entry[user] ? " - ". format_username($entry[user]) : "") ."". ($entry[date] ? " - ". format_date($entry[date], "small") : "") ."</SMALL>";
+      $output .= " <SMALL>$entry[link]". ($entry[user] ? " - ". format_username($entry[user]) : "") ."". ($entry[date] ? " - ". format_date($entry[date], "small") : "") ."</SMALL>";
       $output .= "</P>\n";
     }
   }

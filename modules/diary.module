@@ -164,7 +164,7 @@ function diary_page_submit($text, $id = 0) {
     db_query("UPDATE diaries SET text = '$text' WHERE id = '$id'");
   }
   else {
-    watchdog("diary", "diary: new diary entry added");
+    watchdog("special", "diary: new diary entry added");
     db_query("INSERT INTO diaries (author, text, timestamp) VALUES ('$user->id', '$text', '". time() ."')");
   }
 

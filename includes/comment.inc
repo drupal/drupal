@@ -124,6 +124,8 @@ function comment_preview($pid, $id, $subject, $comment) {
 function comment_post($pid, $id, $subject, $comment) {
   global $theme, $user;
 
+  throttle("post comment", variable_get(max_comment_rate, 60));
+
   // Check for duplicate comments:
   $duplicate = db_result(db_query("SELECT COUNT(cid) FROM comments WHERE pid = '$pid' AND lid = '$id' AND subject = '$subject' AND comment = '$comment'"), 0);
 
@@ -135,7 +137,7 @@ function comment_post($pid, $id, $subject, $comment) {
     $subject = ($subject) ? $subject : substr($comment, 0, 29);
 
     // Add watchdog entry:
-    watchdog("comment", "comment: added '$subject'");
+    watchdog("special", "comment: added '$subject'");
 
     // Add comment to database:
     db_query("INSERT INTO comments (lid, pid, author, subject, comment, hostname, timestamp, score) VALUES ('$id', '$pid', '$user->id', '$subject', '$comment', '". getenv("REMOTE_ADDR") ."', '". time() ."', '". ($user->userid ? 1 : 0) ."')");
@@ -281,9 +283,9 @@ function comment_render($lid, $cid) {
   // Pre-process variables:
   $lid = empty($lid) ? 0 : $lid;
   $cid = empty($cid) ? 0 : $cid;
-  $mode  = ($user->id) ? $user->mode : variable_get("default_comment_mode", 4);
-  $order = ($user->id) ? $user->sort : variable_get("default_comment_order", 1);
-  $threshold = ($user->id) ? $user->threshold : variable_get("default_comment_threshold", 3);
+  $mode  = ($user->id) ? $user->mode : variable_get(default_comment_mode, 4);
+  $order = ($user->id) ? $user->sort : variable_get(default_comment_order, 1);
+  $threshold = ($user->id) ? $user->threshold : variable_get(default_comment_threshold, 3);
 
   if ($user->id) {
     // Comment control:

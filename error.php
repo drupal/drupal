@@ -1,9 +1,7 @@
 <?php
 
-function error_flood() {
-  global $site_email;
-
-  print "WARNING: submission rate exceeded.  We detected too much data or events from your IP.  Please wait a few minutes and try again.  If you think this is not justified, please contact us at <A HREF=\"mailto:$site_email\">$site_email</A>.";
+function error_throttle() {
+  print "WARNING: submission rate exceeded.  We detected too much data or events from your IP.  Please wait a few minutes and try again.  If you believe this is not justified, please contact us at <A HREF=\"mailto:". variable_get(site_mail, "root@localhost") ."\">". variable_get(site_mail, "root@localhost") ."</A>.";
 }
 
 function error_httpd() {
@@ -42,8 +40,8 @@ function error_httpd() {
 include_once "includes/common.inc";
 
 switch ($op) {
-  case "flood":
-    error_flood();
+  case "throttle":
+    error_throttle();
     break;
   default:
     error_httpd();

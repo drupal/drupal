@@ -84,7 +84,6 @@ function block_admin_display() {
 }
 
 function block_admin_overview() {
-  global $site_name;
 
   $result = db_query("SELECT * FROM blocks WHERE status > 0 AND region = 0 ORDER BY weight");
   $lblocks .= "<TABLE BORDER=\"0\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
@@ -98,9 +97,9 @@ function block_admin_overview() {
 
   $output .= "<P><B>layout 1:</B></P>\n";
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
-  $output .= " <TR><TD ALIGN=\"center\" COLSPAN=\"3\">$site_name header</TD></TR>\n";
+  $output .= " <TR><TD ALIGN=\"center\" COLSPAN=\"3\">header</TD></TR>\n";
   $output .= " <TR><TD>\n". ($lblocks ? $lblocks : "&nbsp;") ."</TD><TD WIDTH=\"300\">&nbsp;</TD><TD>\n". ($rblocks ? $rblocks : "&nbsp;") ."</TD></TR>\n";
-  $output .= " <TR><TD ALIGN=\"center\" COLSPAN=\"3\">$site_name footer</TD></TR>\n";
+  $output .= " <TR><TD ALIGN=\"center\" COLSPAN=\"3\">footer</TD></TR>\n";
   $output .= "</TABLE>\n";
 
   $result = db_query("SELECT * FROM blocks WHERE status > 0 ORDER BY weight");
@@ -110,16 +109,16 @@ function block_admin_overview() {
 
   $output .= "<P><B>layout 2:</B></P>\n";
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
-  $output .= " <TR><TD ALIGN=\"center\" COLSPAN=\"2\">$site_name header</TD></TR>\n";
+  $output .= " <TR><TD ALIGN=\"center\" COLSPAN=\"2\">header</TD></TR>\n";
   $output .= " <TR><TD WIDTH=\"400\">&nbsp;</TD><TD>\n". ($blocks ? $blocks : "&nbsp;") ."</TD></TR>\n";
-  $output .= " <TR><TD ALIGN=\"center\" COLSPAN=\"2\">$site_name footer</TD></TR>\n";
+  $output .= " <TR><TD ALIGN=\"center\" COLSPAN=\"2\">footer</TD></TR>\n";
   $output .= "</TABLE>\n";
 
   $output .= "<P><B>layout 3:</B></P>\n";
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
-  $output .= " <TR><TD ALIGN=\"center\" COLSPAN=\"2\">$site_name header</TD></TR>\n";
+  $output .= " <TR><TD ALIGN=\"center\" COLSPAN=\"2\">header</TD></TR>\n";
   $output .= " <TR><TD>\n". ($blocks ? $blocks : "&nbsp;") ."</TD><TD WIDTH=\"400\">&nbsp;</TD></TR>\n";
-  $output .= " <TR><TD ALIGN=\"center\" COLSPAN=\"2\">$site_name footer</TD></TR>\n";
+  $output .= " <TR><TD ALIGN=\"center\" COLSPAN=\"2\">footer</TD></TR>\n";
   $output .= "</TABLE>\n";
 
   print $output;

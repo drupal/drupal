@@ -34,12 +34,11 @@
    var $fgcolor3 = "#000000";
 
    function header() {
-     global $site_name;
      srand((double)microtime()*1000000);
     ?>
      <HTML>
      <HEAD>
-      <TITLE><?php echo $site_name; ?></TITLE>
+      <TITLE><?php echo variable_get(site_name, "drupal"); ?></TITLE>
       <META NAME="description" CONTENT="drop.org">
       <META NAME="keywords" CONTENT="drop, weblog, portal, community, news, article, announcements, stories, story, computer, science, space, hype, cult, geek, nerd, foo, bar">
      </HEAD>
@@ -92,9 +91,7 @@
            <?php
             if ($story->section) { print "<TD WIDTH=\"70%\" BGCOLOR=\"$this->bgcolor2\">"; }
             else { print "<TD COLSPAN=\"2\" BGCOLOR=\"$this->bgcolor2\">"; }
-            if ($story->userid) { print "<SMALL>Posted by " . format_username($story->userid) . " on $timestamp"; }
-            else { print "<SMALL>Posted by $anonymous on $timestamp"; }
-
+            print "<SMALL>Posted by " . format_username($story->userid) . " on $timestamp";
             if ($story->section) { print "</TD><TD WIDTH=\"30%\" BGCOLOR=\"$this->bgcolor2\" ALIGN=\"center\"><B><A HREF=\"index.php?section=" . urlencode($story->section) . "\"><FONT COLOR=\"$this->sectioncolor\">". check_output($story->section) ."</FONT></A></B>"; }
            ?>
           </TD>
@@ -149,7 +146,7 @@
      // Author:
      echo "    <TR>";
      echo "     <TD ALIGN=\"right\" VALIGN=\"top\">Author:</TD><TD><B>" . format_username($comment->userid) . "</B> ";
-     if ($comment->userid != $anonymous) {
+     if ($comment->userid) {
        // Display extra information line:
        if ($comment->fake_email) $info .= format_email($comment->fake_email);
        if (eregi("http://",$comment->url)) $info .= ($info?" | ":"") . format_url($comment->url);

@@ -20,15 +20,15 @@ class Story {
 }
 
 function story_post_threshold($node, $default) {
-  return $default;
+  return section_post_threshold($node->section, $default);
 }
 
 function story_dump_threshold($node, $default) {
-  return $default;
+  return section_dump_threshold($node->section, $default);
 }
 
 function story_timout_threshold($node, $default) {
-  return $default;
+  return section_timout_threshold($node->section, $default);
 }
 
 function story_find($keys) {
