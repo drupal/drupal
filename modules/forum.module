@@ -641,7 +641,7 @@ function forum_help($section = "admin/help#forum") {
       $output .= "<h4>Icons</h4>";
       $output .= "<p>To disable icons, set the icon path as blank in %forums.</p>";
       $output .= "<p>All files in the icon directory are assumed to be images. You may use images of whatever size you wish, but it is recommended to use 15x15 or 16x16.</p>";
-      $output = t($output, array("%taxonomy" => l(t("taxonomy vocabulary"), "admin/taxonomy/add/vocabulary"), "%taxo-terms" => l(t("add some terms"), "admin/taxonomy"), "%forums" => l(t("site configutation &raquo; modules &raquo; forum"), "admin/system/modules/forum"), "%permission" => l(t("permission"), "admin/user/permission")));
+      $output = t($output, array("%taxonomy" => l(t("taxonomy vocabulary"), "admin/taxonomy/add/vocabulary"), "%taxo-terms" => l(t("add some terms"), "admin/taxonomy"), "%forums" => l(t("administer") ." &raquo; ". t("configutation") ." &raquo; ". t("modules") ." &raquo; ". t("forum"), "admin/system/modules/forum"), "%permission" => l(t("permission"), "admin/user/permission")));
       break;
     case 'admin/system/modules#description':
       $output = t("Enable threaded discussions about general topics.");
