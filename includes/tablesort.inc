@@ -55,20 +55,24 @@ function tablesort_get_querystring() {
 }
 
 function tablesort_get_order($headers) {
-  if ($_GET['order'] != NULL) {
-    return $_GET['order'];
+  $order = $_GET['order'];
+  foreach ($headers as $header) {
+    if ($order == $header['data']) {
+      return $header['data'];
+    }
+
+    if ($header['sort'] == 'asc' || $header['sort'] == 'desc') {
+      $default = $header['data'];
+    }
+  }
+
+  if ($default) {
+    return $default;
   }
   else {
-    foreach ($headers as $header) {
-      if ($header["sort"] == 'asc' || $header["sort"] == 'desc') {
-        return $header["data"];
-      }
-      elseif (!$first) {
-        // the first column specified is initial 'order by' field unless otherwise specified
-        $first = $header["data"];
-      }
-    }
-    return $first;
+    // The first column specified is initial 'order by' field unless otherwise specified
+    $first = reset($header);
+    return $first['data'];
   }
 }
 
