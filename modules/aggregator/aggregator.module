@@ -686,6 +686,8 @@ function aggregator_edit() {
       aggregator_save_feed($_POST['edit']);
       drupal_set_message(t('The feed has been updated.'));
     }
+
+    drupal_goto($_GET['q']);
   }
   else if ($_POST['op'] == t('Delete')) {
     // Unset the title:
@@ -700,7 +702,7 @@ function aggregator_edit() {
       drupal_set_message(t('The feed has been deleted.'));
     }
 
-    drupal_goto('aggregator');
+    drupal_goto('aggregator/'. arg(1));
   }
 
   if (arg(1) == 'categories') {
@@ -716,7 +718,7 @@ function aggregator_edit() {
 
 /**
  * Menu callback; displays the category edit form, or saves changes and
- * displays the overview page.
+ * redirects to the overview page.
  */
 function aggregator_admin_edit_category($category = 0) {
   $edit = $_POST['edit'];
@@ -728,7 +730,9 @@ function aggregator_admin_edit_category($category = 0) {
       // Fall through:
     case t('Submit'):
       aggregator_save_category($edit);
-      $output = aggregator_view();
+      drupal_set_message($edit['title'] ? t('The category has been updated.') : t('The category has been deleted.'));
+      drupal_goto('admin/aggregator');
+      break;
     default:
       if ($category) {
         $output = aggregator_form_category(aggregator_get_category($category));
@@ -743,7 +747,7 @@ function aggregator_admin_edit_category($category = 0) {
 /**
  * Menu callback; displays the feed edit form.
  *
- * After editing, saves changes and displays the overview page.
+ * After editing, saves changes and redirects to the overview page.
  */
 function aggregator_admin_edit_feed($feed = 0) {
   $edit = $_POST['edit'];
@@ -755,7 +759,9 @@ function aggregator_admin_edit_feed($feed = 0) {
       // Fall through:
     case t('Submit'):
       aggregator_save_feed($edit);
-      $output = aggregator_view();
+      drupal_set_message($edit['title'] ? t('The feed has been updated.') : t('The feed has been deleted.'));
+      drupal_goto('admin/aggregator');
+      break;
     default:
       if ($feed) {
         $output = aggregator_form_feed(aggregator_get_feed($feed));
@@ -768,19 +774,19 @@ function aggregator_admin_edit_feed($feed = 0) {
 }
 
 /**
- * Menu callback; removes all items from a feed, then displays the overview page.
+ * Menu callback; removes all items from a feed, then redirects to the overview page.
  */
 function aggregator_admin_remove_feed($feed) {
   aggregator_remove(aggregator_get_feed($feed));
-  print theme('page', aggregator_view());
+  drupal_goto('admin/aggregator');
 }
 
 /**
- * Menu callback; refreshes a feed, then displays the overview page.
+ * Menu callback; refreshes a feed, then redirects to the overview page.
  */
 function aggregator_admin_refresh_feed($feed) {
   aggregator_refresh(aggregator_get_feed($feed));
-  print theme('page', aggregator_view());
+  drupal_goto('admin/aggregator');
 }
 
 /**
@@ -831,6 +837,8 @@ function _aggregator_page_list($sql, $op, $header = '') {
           }
         }
       }
+      drupal_set_message(t('The categories have been saved.'));
+      drupal_goto($_GET['q']);
     }
     else {
       $categorize = true;
