@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.133 2003/05/13 18:36:33 dries Exp $
+// $Id: theme.inc,v 1.134 2003/05/26 19:50:39 dries Exp $
 
 /**
 * Basic theme
@@ -54,10 +54,10 @@ class BaseTheme {
     }
 
     if ($main && $node->teaser) {
-      $output .= check_output($node->teaser);
+      $output .= $node->teaser;
     }
     else {
-      $output .= check_output($node->body);
+      $output .= $node->body;
     }
     if ($links = link_node($node, $main)) {
       $output .= "<br />[ ". $this->links($links) ." ]";

@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.214 2003/05/25 07:08:21 dries Exp $
+// $Id: node.module,v 1.215 2003/05/26 19:49:01 dries Exp $
 
 function node_help() {
   global $mod;
@@ -354,6 +354,9 @@ function node_view($node, $main = 0) {
     /*
     ** Default behavior:
     */
+
+    $node->teaser = filter($node->teaser);
+    $node->body = filter($node->body);
 
     theme("node", $node, $main);
   }
