@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.32 2004/09/09 05:51:08 dries Exp $
+// $Id: database.inc,v 1.33 2004/11/29 13:10:43 dries Exp $
 
 /**
  * @file
@@ -117,6 +117,55 @@ function db_set_active($name = 'default') {
   }
   // Set the active connection.
   $active_db = $db_conns[$name];
+}
+
+/**
+ * Runs a basic query in the active database.
+ *
+ * User-supplied arguments to the query should be passed in as separate parameters
+ * so that they can be properly escaped to avoid SQL injection attacks.
+ *
+ * @param $query
+ *   A string containing an SQL query.
+ * @param ...
+ *   A variable number of arguments which are substituted into the query using
+ *   printf() syntax. Instead of a variable number of query arguments, you may
+ *   also pass a single array containing the query arguments.
+ * @return
+ *   A database query result resource, or FALSE if the query was not executed
+ *   correctly.
+ */
+function db_query($query) {
+  $args = func_get_args();
+  $query = db_prefix_tables($query);
+  if (count($args) > 1) {
+    if (is_array($args[1])) {
+      $args = array_merge(array($query), $args[1]);
+    }
+    $args = array_map('db_escape_string', $args);
+    $args[0] = $query;
+    $query = call_user_func_array('sprintf', $args);
+  }
+  return _db_query($query);
+}
+
+/**
+ * Debugging version of db_query().
+ *
+ * Echoes the query to the browser.
+ */
+function db_queryd($query) {
+  $args = func_get_args();
+  $query = db_prefix_tables($query);
+  if (count($args) > 1) {
+    if (is_array($args[1])) {
+      $args = array_merge(array($query), $args[1]);
+    }
+    $args = array_map('db_escape_string', $args);
+    $args[0] = $query;
+    $query = call_user_func_array('sprintf', $args);
+  }
+  return _db_query($query, 1);
 }
 
 /**

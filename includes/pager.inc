@@ -1,5 +1,5 @@
 <?php
-// $Id: pager.inc,v 1.33 2004/10/31 07:59:18 dries Exp $
+// $Id: pager.inc,v 1.34 2004/11/29 13:10:43 dries Exp $
 
 /**
  * @file
@@ -39,7 +39,9 @@
  *   An SQL query used to count matching records.
  * @param ...
  *   A variable number of arguments which are substituted into the query (and
- *   also the count query) using printf() syntax.
+ *   the count query) using printf() syntax. Instead of a variable number of
+ *   query arguments, you may also pass a single array containing the query
+ *   arguments.
  * @return
  *   A database query result resource, or FALSE if the query was not executed
  *   correctly.
@@ -58,12 +60,12 @@ function pager_query($query, $limit = 10, $element = 0, $count_query = NULL) {
   if (!isset($count_query)) {
     $count_query = preg_replace(array('/SELECT.*?FROM/As', '/ORDER BY .*/'), array('SELECT COUNT(*) FROM', ''), $query);
   }
-  $pager_total[$element] = db_result(call_user_func_array('db_query', array_merge(array($count_query), $args)));
+  $pager_total[$element] = db_result(db_query($count_query, $args));
 
   // Convert comma-separated $from to an array, used by other functions.
   $pager_from_array = explode(',', $from);
 
-  return call_user_func_array('db_query_range', array_merge(array($query), $args, array((int)$pager_from_array[$element], (int)$limit)));
+  return db_query_range($query, $args, (int)$pager_from_array[$element], (int)$limit);
 }
 
 /**
