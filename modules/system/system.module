@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.46 2002/11/08 13:19:12 dries Exp $
+// $Id: system.module,v 1.47 2002/11/08 15:12:41 kjartan Exp $
 
 function system_help() {
   $output .= "<p>Drupal comes with system-wide defaults but the setting-module provides control over many Drupal preferences, behaviors including visual and operational settings.</p>";
@@ -176,9 +176,6 @@ function system_listing($type, $directory, $required = array()) {
 
   ksort($files);
 
-  // Clean up database.
-  db_query("DELETE FROM system WHERE type = '%s'", $type);
-
   $output = "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
   $output .= "<tr><th>name</th><th>description</th><th>enabled</th></tr>\n";
 
@@ -200,6 +197,8 @@ function system_listing($type, $directory, $required = array()) {
       }
     }
 
+    // Clean up database.
+    db_query("DELETE FROM system WHERE filename = '%s' AND type = '%s'", $filename, $type);
     db_query("INSERT INTO system (name, description, type, filename, status) VALUES ('%s', '%s', '%s', '%s', %d)", $info->name, $info->description, $type, $filename, $file->status);
 
     $output .= "<tr>";
