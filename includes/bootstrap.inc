@@ -43,10 +43,56 @@ function conf_init() {
       }
     }
   }
-
-print "$confdir/default/settings.php<br />";
   $conf = "$confdir/default";
   return $conf;
+}
+
+/**
+ * Returns and optionally sets the filename for a system item (module,
+ * theme, etc.).  The filename, whether provided, cached, or retrieved
+ * from the database, is only returned if the file exists.
+ *
+ * @param $type
+ *   The type of the item (i.e. theme, theme_engine, module).
+ * @param $name
+ *   The name of the item for which the filename is requested.
+ * @param $filename
+ *   The filename of the item if it is to be set explicitly rather
+ *   than by consulting the database.
+ *
+ * @return
+ *   The filename of the requested item.
+ */
+function drupal_get_filename($type, $name, $filename = NULL) {
+  static $files = array();
+
+  if (!$files[$type]) {
+    $files[$type] = array();
+  }
+
+  if ($filename && file_exists($filename)) {
+    $files[$type][$name] = $filename;
+  }
+  elseif ($files[$type][$name]) {
+    // nothing
+  }
+  elseif (($file = db_result(db_query("SELECT filename FROM {system} WHERE name = '%s' AND type = '%s'", $name, $type))) && file_exists($file)) {
+    $files[$type][$name] = $file;
+  }
+  else {
+    $config = conf_init();
+    $dir = (($type == 'theme_engine') ? 'themes/engines' : "${type}s");
+    $file = "$name.$type";
+
+    foreach (array("$config/$dir/$file", "$config/$dir/$name/$file", "$dir/$file", "$dir/$name/$file") as $file) {
+      if (file_exists($file)) {
+        $files[$type][$name] = $file;
+        break;
+      }
+    }
+  }
+
+  return $files[$type][$name];
 }
 
 /**
@@ -240,12 +286,123 @@ function page_get_cache() {
 }
 
 /**
+ * Call all init or exit hooks without including all modules.
+ *
+ * @param $op
+ *   The name of the bootstrap hook we wish to invoke.
+ */
+function bootstrap_invoke_all($op) {
+  foreach (module_list(FALSE, TRUE) as $module) {
+    drupal_load('module', $module);
+    module_invoke($module, $op);
+ }
+}
+
+/**
+ * Includes a file with the provided type and name.  This prevents
+ * including a theme, engine, module, etc., more than once.
+ *
+ * @param $type
+ *   The type of item to load (i.e. theme, theme_engine, module).
+ * @param $name
+ *   The name of the item to load.
+ *
+ * @return
+ *   TRUE if the item is loaded or has already been loaded.
+ */
+function drupal_load($type, $name) {
+  // print $name. '<br />';
+  static $files = array();
+
+  if ($files[$type][$name]) {
+    return TRUE;
+  }
+
+  $filename = drupal_get_filename($type, $name);
+
+  if ($filename) {
+    include_once($filename);
+    $files[$type][$name] = TRUE;
+
+    return TRUE;
+  }
+
+  return FALSE;
+}
+
+/**
+ * Return an array mapping path aliases to their internal Drupal paths.
+ */
+function drupal_get_path_map($action = '') {
+  static $map = NULL;
+
+  if ($action == 'rebuild') {
+    $map = NULL;
+  }
+
+  if (is_null($map)) {
+    $map = array();  // Make $map non-null in case no aliases are defined.
+    $result = db_query('SELECT * FROM {url_alias}');
+    while ($data = db_fetch_object($result)) {
+      $map[$data->dst] = $data->src;
+    }
+  }
+
+  return $map;
+}
+
+/**
+ * Given an internal Drupal path, return the alias set by the administrator.
+ */
+function drupal_get_path_alias($path) {
+  if (($map = drupal_get_path_map()) && ($newpath = array_search($path, $map))) {
+    return $newpath;
+  }
+  elseif (function_exists('conf_url_rewrite')) {
+    return conf_url_rewrite($path, 'outgoing');
+  }
+  else {
+    // No alias found. Return the normal path.
+    return $path;
+  }
+}
+
+/**
+ * Get the title of the current page, for display on the page and in the title bar.
+ */
+function drupal_get_title() {
+  $title = drupal_set_title();
+
+  if (!isset($title)) {
+    // during a bootstrap, menu.inc is not included and thus we cannot provide a title
+    if (function_exists('menu_get_active_title')) {
+      $title = menu_get_active_title();
+    }
+  }
+
+  return $title;
+}
+
+/**
+ * Set the title of the current page, for display on the page and in the title bar.
+ */
+function drupal_set_title($title = NULL) {
+  static $stored_title;
+
+  if (isset($title)) {
+    $stored_title = $title;
+  }
+  return $stored_title;
+}
+
+/**
  * Set HTTP headers in preparation for a page response.
  */
 function drupal_page_header() {
   if (variable_get('dev_timer', 0)) {
     timer_start();
   }
+  bootstrap_invoke_all('init');
 
   if (variable_get('cache', 0)) {
     if ($cache = page_get_cache()) {
@@ -292,12 +449,7 @@ function drupal_page_header() {
       }
 
       print $cache->data;
-
-      // Call all init() and exit() hooks without including all modules.
-      // Only use those hooks for critical operations.
-      foreach (bootstrap_hooks() as $hook) {
-        module_invoke_all($hook);
-      }
+      bootstrap_invoke_all('exit');
       exit();
     }
   }

@@ -7,17 +7,6 @@
  */
 
 /**
- * Initialize all modules.
- *
- * To change the required set of modules, change this function as well as
- * system_listing() and module_list().
- */
-function module_init() {
-  module_load_all();
-  module_invoke_all('init');
-}
-
-/**
  * Call a function repeatedly with each module in turn as an argument.
  */
 function module_iterate($function, $argument = '') {
@@ -43,7 +32,7 @@ function module_list($refresh = FALSE, $bootstrap = FALSE) {
   static $list;
 
   if ($refresh) {
-    unset($list);
+    $list = array();
   }
 
   if (!$list) {
@@ -78,7 +67,7 @@ function module_list($refresh = FALSE, $bootstrap = FALSE) {
  *   TRUE if all modules were loaded successfully.
  */
 function module_load_all() {
-  $list = module_list();
+  $list = module_list(TRUE, FALSE);
   $status = TRUE;
 
   foreach ($list as $module) {
