@@ -333,6 +333,7 @@ function theme_table($header, $rows, $attributes = NULL) {
   */
 
   if (is_array($rows)) {
+    $i = 0;
     foreach ($rows as $number => $row) {
       if ($number % 2 == 1) {
         $output .= " <tr class=\"light\">";
@@ -342,9 +343,23 @@ function theme_table($header, $rows, $attributes = NULL) {
       }
 
       foreach ($row as $cell) {
+        // highlight the currently sorted column. only applies to tables with headers.
+        if (is_array($header)) {
+          $ts = tablesort_init($header);
+          if ($i === $ts['index']) {
+            if (is_array($cell)) {
+              $cell['class'] = 'active';
+            }
+            else {
+              $cell = array('data' => $cell, 'class' => 'active');
+            }
+          }
+        }
         $output .= _theme_table_cell($cell, 0);
+        $i++;
       }
       $output .= " </tr>\n";
+      $i = 0;
     }
   }
 
@@ -363,7 +378,7 @@ function theme_table($header, $rows, $attributes = NULL) {
  * @return a string containing the @a box output.
  */
 function theme_box($title, $content, $region = 'main') {
-  $output = "<h2 class=\"title\">$title</h2><p>$content</p>";
+  $output = "<h2 class=\"title\">$title</h2><div>$content</div>";
   return $output;
 }
 
