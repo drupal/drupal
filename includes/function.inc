@@ -3,8 +3,7 @@
 $na = "<I>na</I>";
 
 function check_textfield($message) {
-  global $allowed_html;
-  return strip_tags(str_replace("\"", "&quot;", stripslashes($message)), $allowed_html);
+  return strip_tags(str_replace("\"", "&quot;", stripslashes($message)));
 }
 
 function check_textarea($message) {
@@ -60,19 +59,16 @@ function format_date($timestamp, $type = "medium") {
 
   switch ($type) {
     case "small":
-      $date = date("D, m/d/y - H:i", $timestamp);
+      $date = date("m/d/y - H:i", $timestamp);
       break;
     case "medium":
-      $date = date("l, m/d/Y - H:i", $timestamp);
+      $date = t(date("l", $timestamp)) .", ". date("m/d/Y - H:i", $timestamp);
       break;
     case "large":
-      $date = date("D, M d, Y - H:i", $timestamp);
-      break;
-    case "extra large":
-      $date = date("l, F dS, Y - H:i", $timestamp);
+      $date = t(date("l", $timestamp)) .", ". t(date("F", $timestamp)) ." ". date("d, Y - H:i", $timestamp);
       break;
     default:
-      $date = date("D, M d, Y - H:i", $timestamp);
+      $date = t(date("l", $timestamp)) .", ". date("m/d/Y - H:i", $timestamp);
   }
   return $date;
 }

@@ -45,7 +45,7 @@
         <TD ALIGN="right" COLSPAN="2"><SMALL><A HREF="index.php">home</A> | <A HREF="module.php?mod=faq">faq</A> | <A HREF="module.php?mod=diary">diary</A> | <A HREF="search.php">search</A> | <A HREF="submit.php">submit news</A> | <A HREF="account.php">user account</A></SMALL></TD>
        </TR>
        <TR>
-        <TD VALIGN="top" WIDTH="100%">
+        <TD VALIGN="top" WIDTH="85%">
     <?
    }
 
@@ -56,7 +56,7 @@
      print " <TR VALIGN=\"bottom\"><TD COLSPAN=\"2\" BGCOLOR=\"#000000\" WIDTH=\"100%\"><IMG SRC=\"themes/marvin/images/pixel.gif\" WIDTH=\"1\" HEIGHT=\"0\" ALT=\"\"></TD></TR>\n";
      print " <TR>\n";
      print "  <TD>\n";
-     print "   <FONT COLOR=\"#7C7C7C\"><SMALL>Submitted by ". format_username($story->userid) ." on ". format_date($story->timestamp, "extra large"). ""; ?><? if ($story->department) print "<BR>from the $story->department dept."; ?><? print "</SMALL></FONT></TD><TD ALIGN=\"right\" VALIGN=\"top\" NOWRAP><SMALL><A HREF=\"?section=". urlencode($story->section) ."\"><FONT COLOR=\"#83997A\">$story->section</FONT></A></SMALL>\n";
+     print "   <FONT COLOR=\"#7C7C7C\"><SMALL>". strtr(t("Submitted by %a on %b"), array("%a" => format_username($story->userid), "%b" => format_date($story->timestamp, "large"))); ?><? if ($story->department) print "<BR>from the $story->department dept."; ?><? print "</SMALL></FONT></TD><TD ALIGN=\"right\" VALIGN=\"top\" NOWRAP><SMALL><A HREF=\"?section=". urlencode($story->section) ."\"><FONT COLOR=\"#83997A\">$story->section</FONT></A></SMALL>\n";
      print "  </TD>\n";
      print " </TR>\n";
      print " <TR><TD COLSPAN=\"2\">&nbsp;</TD></TR>\n";
@@ -79,7 +79,7 @@
      print " <TR VALIGN=\"bottom\"><TD COLSPAN=\"2\" BGCOLOR=\"#000000\" WIDTH=\"100%\"><IMG SRC=\"themes/marvin/images/pixel.gif\" WIDTH=\"1\" HEIGHT=\"0\" ALT=\"\"></TD></TR>\n";
      print " <TR>\n";
      print "  <TD>\n";
-     print "   <FONT COLOR=\"#7C7C7C\"><SMALL>Submitted by ". format_username($story->userid) ." on ". format_date($story->timestamp, "extra large") .""; ?><? if ($story->department) print "<BR>from the $story->department dept."; ?><? print "</SMALL></FONT></TD><TD ALIGN=\"right\" VALIGN=\"top\" NOWRAP><SMALL><A HREF=\"index.php?section=". urlencode($story->section) ."\"><FONT COLOR=\"#83997A\">$story->section</FONT></A></SMALL>\n";
+     print "   <FONT COLOR=\"#7C7C7C\"><SMALL>". strtr(t("Submitted by %a on %b"), array("%a" => format_username($story->userid), "%b" => format_date($story->timestamp, "large"))); ?><? if ($story->department) print "<BR>from the $story->department dept."; ?><? print "</SMALL></FONT></TD><TD ALIGN=\"right\" VALIGN=\"top\" NOWRAP><SMALL><A HREF=\"index.php?section=". urlencode($story->section) ."\"><FONT COLOR=\"#83997A\">$story->section</FONT></A></SMALL>\n";
      print "  </TD>\n";
      print " </TR>\n";
      print " <TR><TD COLSPAN=\"2\">&nbsp;</TD></TR>\n";
@@ -119,7 +119,7 @@
      print "       <TR>\n";
 
      // Subject:
-     print "        <TD ALIGN=\"right\" WIDTH=\"5%\"><B>Subject:</FONT></TD>\n";
+     print "        <TD ALIGN=\"right\" WIDTH=\"5%\"><B>". t("Subject") .":</FONT></TD>\n";
      print "        <TD WIDTH=\"80%\"><B><FONT COLOR=\"$this->hlcolor1\">". check_output($comment->subject) ."</FONT></B></TD>\n";
 
      // Moderation:
@@ -130,12 +130,12 @@
 
      // Author:
      print "       <TR>\n";
-     print "        <TD ALIGN=\"right\" VALIGN=\"top\">Author:</TD><TD>". format_username($comment->userid) ."</TD>\n";
+     print "        <TD ALIGN=\"right\" VALIGN=\"top\">". t("Author") .":</TD><TD>". format_username($comment->userid) ."</TD>\n";
      print "       </TR>\n";
 
      // Date
      print "       <TR>\n";
-     print "        <TD ALIGN=\"right\">Date:</TD><TD>". format_date($comment->timestamp) ."</TD>\n";
+     print "        <TD ALIGN=\"right\">". t("Date") .":</TD><TD>". format_date($comment->timestamp) ."</TD>\n";
      print "       </TR>\n";
 
      print "      </TABLE>\n";
@@ -175,7 +175,7 @@
    function footer() {
      ?>
        </TD>
-       <TD VALIGN="top">
+       <TD VALIGN="top" WIDTH=\"200\">
          <?
           theme_account($this);
           theme_blocks("all", $this);

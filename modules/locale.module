@@ -1,17 +1,92 @@
 <?
 
-$module = array("page" => "locale",
-                "admin" => "locale");
+$module = array("help" => "locale_help",
+                "admin" => "locale_admin",
+                "locale" => "locale_locale");
 
-function locale() {
-  $result = db_query("SELECT * FROM locales ORDER BY english");
+function locale_help() {
+  print "under construction";
+}
+
+function locale_delete($id) {
+  db_query("DELETE FROM locales WHERE id = '$id'");
+}
+
+function locale_save($id, $edit) {
+  foreach ($edit as $key=>$value) {
+    db_query("UPDATE locales SET $key = '". check_input($value) ."' WHERE id = '$id'");
+  }
+}
+
+function locale_edit($id) {
+  global $languages;
+  $result = db_query("SELECT * FROM locales WHERE id = '$id'");
+  if ($translation = db_fetch_object($result)) {
+    $output .= "<FORM ACTION=\"admin.php?mod=locale\" METHOD=\"post\">\n";
+    $output .= "<B>Original string:</B><BR>\n";
+    $output .= check_output($translation->string) ."<P>";
+    foreach ($languages as $code=>$language) {
+      $output .= "<B>$language:</B><BR>";
+      $output .= "<INPUT TYPE=\"text\" NAME=\"edit[$code]\" VALUE=\"". check_textfield($translation->$code) ."\"><P>";
+    }
+    $output .= "<INPUT NAME=\"id\" TYPE=\"hidden\" VALUE=\"$id\">\n";
+    $output .= "<INPUT NAME=\"op\" TYPE=\"submit\" VALUE=\"Save translations\">\n";
+    $output .= "</FORM>\n";
+
+    print $output;
+  }
+}
+
+function locale_languages($translation) {
+  global $languages;
+  foreach ($languages as $key=>$value) {
+    $output .= ($translation->$key) ? "$key " : "<STRIKE>$key</STRIKE> ";
+  }
+  return $output;
+}
+
+function locale_display() {
+  $result = db_query("SELECT * FROM locales ORDER BY string");
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
-  $output .= " <TR><TH>string</TH><TH COLSPAN=\"2\">operations</TH><TR>\n";
+  $output .= " <TR><TH>string</TH><TH>languages</TH><TH COLSPAN=\"2\">operations</TH><TR>\n";
   while ($locale = db_fetch_object($result)) {
-    $output .= " <TR><TD>". check_output($locale->english) ."<BR><SMALL><I>$locale->location</I></SMALL></TD><TD><A HREF=\"admin.php?mod=locale&op=edit&id=$locale->id\">edit</A></TD><TD><A HREF=\"admin.php?mod=locale&op=edit&id=$locale->id\">delete</A></TD></TR>";
+    $languages = locale_languages($locale);
+    $output .= " <TR><TD>". check_output($locale->string) ."<BR><SMALL><I>$locale->location</I></SMALL></TD><TD ALIGN=\"center\">$languages</TD><TD><A HREF=\"admin.php?mod=locale&op=edit&id=$locale->id\">edit</A></TD><TD><A HREF=\"admin.php?mod=locale&op=delete&id=$locale->id\">delete</A></TD></TR>";
   }
   $output .= "</TABLE>\n";
   print $output;
+}
+
+function locale_admin() {
+  global $id, $edit, $op;
+
+  print "<SMALL><A HREF=\"admin.php?mod=locale\">overview</A> | <A HREF=\"admin.php?mod=locale&op=help\">help</A></SMALL><HR>\n";
+
+  switch ($op) {
+    case "delete":
+      locale_delete($id);
+      locale_display();
+      break;
+    case "help":
+      locale_help();
+      break;
+    case "edit":
+      locale_edit($id);
+      break;
+    case "Save translations":
+      locale_save($id, $edit);
+      // fall through
+    default:
+      locale_display();
+  }
+}
+
+function locale($string) {
+  global $locale;
+  $result = db_query("SELECT id, $locale FROM locales WHERE STRCMP(string, '". addslashes($string) ."') = 0");
+  if ($translation = db_fetch_object($result)) $string = ($translation->$locale) ? check_output($translation->$locale) : $string;
+  else db_query("INSERT INTO locales (string, location) VALUES ('". addslashes($string) ."', '". check_input(getenv("REQUEST_URI")) ."')");
+  return $string;
 }
 
 ?>

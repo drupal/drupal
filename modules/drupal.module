@@ -43,12 +43,12 @@ function drupal_page() {
   global $cid, $comment, $id, $op, $pid, $lid, $link, $mode, $order, $subject, $theme, $threshold;
 
   switch($op) {
-    case "Preview comment":
+    case t("Preview comment"):
       $theme->header();
       comment_preview($pid, $id, $subject, $comment);
       $theme->footer();
       break;
-    case "Post comment":
+    case t("Post comment"):
       comment_post($pid, $id, $subject, $comment);
       $theme->header();
       drupal_render($id, $cid);
@@ -59,13 +59,13 @@ function drupal_page() {
       comment_reply($pid, $id);
       $theme->footer();
       break;
-    case "Update settings":
+    case t("Update settings"):
       comment_settings($mode, $order, $threshold);
       $theme->header();
       drupal_render($id, $cid);
       $theme->footer();
       break;
-    case "Moderate comments":
+    case t("Moderate comments"):
       comment_moderate($moderate);
       $theme->header();
       drupal_render($id, $cid);

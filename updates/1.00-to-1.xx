@@ -21,3 +21,6 @@ create table locales (
   location varchar(128) DEFAULT '' NOT NULL,
   PRIMARY KEY (id)
 );
+
+# 14/02/2001: locale / internationalisation
+alter table users add language varchar(2) DEFAULT '' NOT NULL;

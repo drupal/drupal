@@ -32,7 +32,7 @@ function theme_account($theme) {
     // Display account settings:
     $content .= "<LI><A HREF=\"account.php?op=track&topic=comments\">". t("track your comments") ."</A></LI>\n";
     $content .= "<LI><A HREF=\"account.php?op=track&topic=stories\">". t("track your stories") ."</A></LI>\n";
-    $content .= "<LI><A HREF=\"account.php?op=track&topic=site\">". t("track") ." $site_name</A></LI>\n";
+    $content .= "<LI><A HREF=\"account.php?op=track&topic=site\">". strtr(t("track %a"), array("%a" => $site_name)) ."</A></LI>\n";
     $content .= "<P>\n";
     $content .= "<LI><A HREF=\"account.php?op=edit&topic=user\">". t("edit your information") ."</A></LI>\n";
     $content .= "<LI><A HREF=\"account.php?op=edit&topic=site\">". t("edit your preferences") ."</A></LI>\n";
@@ -54,15 +54,15 @@ function theme_account($theme) {
 
     $content .= "<LI><A HREF=\"account.php?op=logout\">". t("logout") ."</A></LI>\n";
 
-    $theme->box(strtr(t("%s's configuration"), array("%s" => $user->userid)), "$content");
+    $theme->box(strtr(t("%a's configuration"), array("%a" => $user->userid)), "$content");
   }
   else {
     $output .= "<CENTER>\n";
-    $output .= " <FORM ACTION=\"account.php?op=Login\" METHOD=\"post\">\n";
-    $output .= "  <P><B>". t("Username") .":</B><BR><INPUT NAME=\"userid\" SIZE=\"15\"></P>\n";
-    $output .= "  <P><B>". t("Password") .":</B><BR><INPUT NAME=\"passwd\" SIZE=\"15\" TYPE=\"password\"></P>\n";
-    $output .= "  <P><INPUT NAME=\"op\" TYPE=\"submit\" VALUE=\"Login\"></P>\n";
-    $output .= "  <P><A HREF=\"account.php\">". t("REGISTER") ."</A></P>\n";
+    $output .= " <FORM ACTION=\"account.php?op=login\" METHOD=\"post\">\n";
+    $output .= "  <B>". t("Username") .":</B><BR><INPUT NAME=\"userid\" SIZE=\"15\"><P>\n";
+    $output .= "  <B>". t("Password") .":</B><BR><INPUT NAME=\"passwd\" SIZE=\"15\" TYPE=\"password\"><BR>\n";
+    $output .= "  <INPUT TYPE=\"submit\" VALUE=\"". t("Login") ."\"><BR>\n";
+    $output .= "  <A HREF=\"account.php\">". t("REGISTER") ."</A>\n";
     $output .= " </FORM>\n";
     $output .= "</CENTER>\n";
 
@@ -92,7 +92,7 @@ function theme_blocks($region, $theme) {
 }
 
 function theme_morelink($theme, $story) {
-  return ($story->article) ? "[ <A HREF=\"story.php?id=$story->id\"><FONT COLOR=\"$theme->link\"><B>read more</B></FONT></A> | ". strlen($story->article) ." bytes | <A HREF=\"story.php?id=$story->id\"><FONT COLOR=\"$theme->link\">". format_plural($story->comments, "comment", "comments") ."</FONT></A> ]" : "[ <A HREF=\"story.php?id=$story->id\"><FONT COLOR=\"$theme->link\">". format_plural($story->comments, "comment", "comments") ."</FONT></A> ]";
+  return ($story->article) ? "[ <A HREF=\"story.php?id=$story->id\"><FONT COLOR=\"$theme->link\"><B>". t("read more") ."</B></FONT></A> | ". sizeof(explode(" ", $story->article)) ." ". t("words") ." | <A HREF=\"story.php?id=$story->id\"><FONT COLOR=\"$theme->link\">". format_plural($story->comments, "comment", "comments") ."</FONT></A> ]" : "[ <A HREF=\"story.php?id=$story->id\"><FONT COLOR=\"$theme->link\">". format_plural($story->comments, "comment", "comments") ."</FONT></A> ]";
 }
 
 function theme_moderation_results($theme, $story) {
