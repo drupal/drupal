@@ -78,7 +78,6 @@
     } // close header function
 
     function story($story, $reply = 0) {
-      $timestamp = format_date($story->timestamp);
 
 ?>
 
@@ -113,7 +112,7 @@
                                       case 12: $how = "Forged"; break;
                                       default: $how = "Sneaked through";
                                     }
-                                    echo "<FONT SIZE=\"-1\">". strtr(t("$how by %a on %b"), array("%a" => format_username($story->userid), "%b" => $timestamp, "large")) ."</FONT>
+                                    echo "<FONT SIZE=\"-1\">". strtr(t("$how by %a on %b"), array("%a" => format_username($story->userid), "%b" => format_date($story->timestamp), "large")) ."</FONT>
                                   </FONT>
                                 </TD>
                                 <TD ALIGN=\"right\" BACKGROUND=\"themes/jeroen/images/menutitle.gif\" NOWRAP>
@@ -310,7 +309,7 @@
                   <TR>
                     <TD ALIGN="left" WIDTH="20" HEIGHT="20" BACKGROUND="themes/jeroen/images/footerleft.gif" NOWRAP>&nbsp;</TD>
                     <TD WIDTH="100%" BACKGROUND="themes/jeroen/images/footer.gif" ALIGN="center" VALIGN="middle">
-                      <FONT COLOR="#E09226" SIZE="2">[ <A HREF="">Home</A> | <A HREF="module.php?mod=faq">Faq</A> | <A HREF="search.php">Search</A> | <A HREF="module.php?mod=diary">Diary</A>| <A HREF="submit.php">Submit news</A> | <A HREF="account.php">Account</A> ] </FONT>
+                      <FONT COLOR="#E09226" SIZE="2">[ <A HREF="index.php">Home</A> | <A HREF="module.php?mod=faq">Faq</A> | <A HREF="search.php">Search</A> | <A HREF="module.php?mod=diary">Diary</A>| <A HREF="submit.php">Submit news</A> | <A HREF="account.php">Account</A> ] </FONT>
                     </TD>
                     <TD ALIGN="right" WIDTH="20" BACKGROUND="themes/jeroen/images/footerright.gif" NOWRAP>&nbsp;</TD>
                   </TR>
