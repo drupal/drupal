@@ -206,7 +206,6 @@ CREATE INDEX comments_nid_idx ON comments(nid);
 
 CREATE TABLE node_comment_statistics (
   nid integer NOT NULL,
-  cid integer NOT NULL default '0',
   last_comment_timestamp integer NOT NULL default '0',
   last_comment_name varchar(60)  default NULL,
   last_comment_uid integer NOT NULL default '0',
