@@ -1,0 +1,127 @@
+<?
+
+$module = array("admin" => "story_admin");
+
+function story_edit($id) {
+  global $categories;
+
+  $result = db_query("SELECT s.*, u.userid FROM stories s LEFT JOIN users u ON s.author = u.id WHERE s.id = $id");
+  $story = db_fetch_object($result);
+
+  $output .= "<FORM ACTION=\"admin.php?mod=story&op=save&id=$id\" METHOD=\"post\">\n";
+
+  $output .= "<P>\n";
+  $output .= " <B>Author:</B><BR>\n";
+  $output .= " ". format_username($story->userid) ."\n";
+  $output .= "</P>\n";
+
+  $output .= "<P>\n";
+  $output .= " <B>Subject:</B><BR>\n";
+  $output .= " <INPUT TYPE=\"text\" NAME=\"subject\" SIZE=\"50\" VALUE=\"". check_output(check_field($story->subject)) ."\"><BR>\n";
+  $output .= "</P>\n";
+
+  $output .= "<P><B>Category:</B><BR>\n";
+  $output .= " <SELECT NAME=\"category\">\n";
+  for ($i = 0; $i < sizeof($categories); $i++) {
+    $output .= "  <OPTION VALUE=\"$categories[$i]\" ";
+    if ($story->category == $categories[$i]) $output .= "SELECTED";
+    $output .= ">$categories[$i]</OPTION>\n";
+  }
+  $output .= "</SELECT>\n";
+  $output .= "</P>\n";
+
+  $output .= "<P>\n";
+  $output .= "<B>Abstract:</B><BR>\n";
+  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"abstract\">". check_output($story->abstract) ."</TEXTAREA><BR>\n";
+  $output .= "</P>\n";
+
+  $output .= "<P>\n";
+  $output .= "<B>Editor's note/updates:</B><BR>\n";
+  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"updates\">". check_output($story->updates) ."</TEXTAREA><BR>\n";
+  $output .= "</P>\n";
+
+  $output .= "<P>\n";
+  $output .= " <B>Extended story:</B><BR>\n";
+  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"15\" NAME=\"article\">". check_output($story->article) ."</TEXTAREA><BR>\n";
+  $output .= "</P>\n";
+
+  $output .= "<P><B>Status:</B><BR>\n";
+  $output .= " <SELECT NAME=\"status\">\n";
+  $output .= ($story->status == 0) ? "  <OPTION VALUE=\"0\" SELECTED>Deleted story</OPTION>\n" : "  <OPTION VALUE=\"0\">Deleted story </OPTION>\n";
+  $output .= ($story->status == 1) ? "  <OPTION VALUE=\"1\" SELECTED>Pending story</OPTION>\n" : "  <OPTION VALUE=\"1\">Pending story</OPTION>\n";
+  $output .= ($story->status == 2) ? "  <OPTION VALUE=\"2\" SELECTED>Public story</OPTION>\n" : "  <OPTION VALUE=\"2\">Public story</OPTION>\n";
+  $output .= "</SELECT>\n";
+  $output .= "</P>\n";
+
+  $output .= "<P>\n";
+  $output .= " <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Save story\">\n";
+  $output .= "</P>\n";
+  $output .= "</FORM>\n";
+  
+  print $output;
+}
+
+function story_save($id, $subject, $abstract, $updates, $article, $category, $status) {
+  db_query("UPDATE stories SET subject = '". check_input($subject) ."', abstract = '". check_input($abstract) ."', updates = '". check_input($updates) ."', article = '". check_input($article) ."', category = '". check_input($category) ."', status = '$status' WHERE id = $id");
+  watchdog("message", "modified story `$subject'.");
+}
+
+function story_display($order = "date") {
+  ### Initialize variables:
+  $status = array("deleted", "pending", "public");
+  $fields = array("author" => "author", "category" => "category", "date" => "timestamp DESC", "status" => "status DESC");
+
+  ### Perform SQL query:
+  $result = db_query("SELECT s.*, u.userid FROM stories s LEFT JOIN users u ON u.id = s.author ORDER BY s.$fields[$order]");
+  
+  ### Display stories:
+  $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\">\n";
+  $output .= " <TR>\n";
+  $output .= "  <TH ALIGN=\"right\" COLSPAN=\"5\">\n";
+  $output .= "   <FORM ACTION=\"admin.php?mod=story\" METHOD=\"post\">\n";
+  $output .= "    <SELECT NAME=\"order\">\n";
+  foreach ($fields as $key=>$value) {
+    $output .= "     <OPTION VALUE=\"$key\"". ($key == $order ? " SELECTED" : "") .">Sort by $key</OPTION>\n";
+  }
+  $output .= "    </SELECT>\n";
+  $output .= "    <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Update\">\n";
+  $output .= "   </FORM>\n";
+  $output .= "  </TH>\n";
+  $output .= " </TR>\n";
+
+  $output .= " <TR>\n";
+  $output .= "  <TH>subject</TH>\n";
+  $output .= "  <TH>author</TH>\n";
+  $output .= "  <TH>category</TH>\n";
+  $output .= "  <TH>status</TH>\n";
+  $output .= "  <TH>operations</TH>\n";
+  $output .= " </TR>\n";
+
+  while ($story = db_fetch_object($result)) {
+    $output .= " <TR><TD><A HREF=\"discussion.php?id=$story->id\">". check_output($story->subject) ."</A></TD><TD>". format_username($story->userid, 1) ."</TD><TD>$story->category</TD><TD ALIGN=\"center\">". $status[$story->status] ."</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=story&op=edit&id=$story->id\">edit</A></TD></TR>\n";
+  }
+
+  $output .= "</TABLE>\n";
+ 
+  print $output;
+}
+
+function story_admin() {
+  global $op, $id, $subject, $abstract, $updates, $article, $category, $status, $order;
+  switch ($op) {
+    case "edit":
+      story_edit($id);
+      break;
+    case "Save story":
+      story_save($id, $subject, $abstract, $updates, $article, $category, $status);
+      story_edit($id);
+      break;
+    case "Update":
+      story_display($order);
+      break;
+    default:
+      story_display();
+  }
+}
+
+?>

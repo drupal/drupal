@@ -1,8 +1,13 @@
 <?
 
+$module = array("page" => "faq_page");
+
 include "includes/theme.inc";
 
-$output = "
+function faq_page() {
+  global $theme;
+
+  $output = "
   <DL>
    <DT><B>What is a FAQ?</B></DT>
    <DD>
@@ -77,8 +82,9 @@ $output = "
    </DD>
   </DL>";
 
-$theme->header();
-$theme->box("Frequently Asked Questions", $output);
-$theme->footer();
+  $theme->header();
+  $theme->box("Frequently Asked Questions", $output);
+  $theme->footer();
+}
 
 ?>

@@ -1,0 +1,84 @@
+<?
+
+$module = array("admin" => "droplet_admin");
+
+include_once "includes/droplet.inc";
+
+function droplet_display() {
+  $result = db_query("SELECT * FROM droplets");
+
+  ### Generate output:
+  while ($block = db_fetch_object($result)) {
+    $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\">\n";
+    $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\">Name:</TD><TD>". check_output($block->name) ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\">Help:</TD><TD>". check_output($block->help) ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\">Code:</TD><TD><CODE>". nl2br(htmlentities($block->code)) ."</CODE></TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\">Operations:</TD><TD><A HREF=\"admin.php?mod=droplet&op=edit&id=$block->id\">edit</A>, <A HREF=\"admin.php?mod=droplet&op=delete&id=$block->id\">delete</A></TD></TR>\n";
+    $output .= "</TABLE>\n";
+    $output .= "<BR><BR>\n";
+  }
+
+  $output .= "<H3>Add new block:</H3>\n";
+  $output .= "<FORM ACTION=\"admin.php?mod=droplet\" METHOD=\"post\">\n";
+  $output .= "<B>Name:</B><BR>\n";
+  $output .= "<INPUT TYPE=\"text\" NAME=\"name\" SIZE=\"35\"><P>\n";
+  $output .= "<B>Help:</B><BR>\n";
+  $output .= "<TEXTAREA NAME=\"help\" COLS=\"50\" ROWS=\"5\"></TEXTAREA><P>\n";
+  $output .= "<B>Code:</B><BR>\n";
+  $output .= "<TEXTAREA NAME=\"code\" COLS=\"50\" ROWS=\"5\"></TEXTAREA><P>\n";
+  $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Add block\"><BR>\n";
+  $output .= "</FORM>\n";
+  $output .= "<BR><HR>\n";
+
+  print $output;
+}
+
+function droplet_edit($id) {
+  $result = db_query("SELECT * FROM droplets WHERE id = $id");
+
+  if ($block = db_fetch_object($result)) {
+    $output .= "<FORM ACTION=\"admin.php?mod=droplet\" METHOD=\"post\">\n";
+    $output .= "<B>Name:</B><BR>\n";
+    $output .= "<INPUT TYPE=\"text\" NAME=\"name\" VALUE=\"". check_field($block->name) ."\" SIZE=\"35\"><P>\n";
+    $output .= "<B>Help:</B><BR>\n";
+    $output .= "<TEXTAREA NAME=\"help\" COLS=\"50\" ROWS=\"5\">$block->help</TEXTAREA><P>\n";
+    $output .= "<B>Code:</B><BR>\n";
+    $output .= "<TEXTAREA NAME=\"code\" COLS=\"50\" ROWS=\"5\">$block->code</TEXTAREA><P>\n";
+    $output .= "<INPUT TYPE=\"hidden\" NAME=\"id\" VALUE=\"$id\">\n";
+    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Save block\"><BR>\n";
+    $output .= "</FORM>\n";
+    $output .= "<BR><HR>\n";
+  }
+
+  print $output;
+}
+
+function droplet_save($id, $name, $help, $code) {
+  db_query("UPDATE droplets SET name = '". check_input($name) ."', help = '". check_input($help) ."', code = '". check_code($code) ."' WHERE id = $id");
+  watchdog("message", "modified block `$name'.");
+}
+
+function droplet_admin() {
+  global $op, $id, $name, $help, $code;
+
+  switch ($op) {
+    case "Add block":
+      droplet_add($name, $help, $code);
+      droplet_display();
+      break;
+    case "Save block":
+      droplet_save($id, $name, $help, $code);
+      droplet_display();
+      break;
+    case "edit":
+      droplet_edit($id);
+      break;
+    case "delete":
+      droplet_delete($id);
+       // fall through
+    default:
+      droplet_display();
+  }
+}
+
+?>

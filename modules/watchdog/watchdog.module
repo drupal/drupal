@@ -1,0 +1,73 @@
+<?
+
+$module = array("admin" => "watchdog_admin");
+
+function watchdog_display($order = "date") {
+  $colors = array("#D8BFD8", "#6495ED", "#6A5ADF", "#FFFFFF", "#FFA500", "#FF3C3C");
+  $fields = array("date" => "id DESC", "username" => "user", "location" => "location", "message" => "message DESC", "level" => "level DESC");
+
+  ### Perform query:
+  $result = db_query("SELECT l.*, u.userid FROM watchdog l LEFT JOIN users u ON l.user = u.id ORDER BY l.$fields[$order]");
+ 
+  ### Generate output:
+  $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\">\n";
+  $output .= " <TR>\n";
+  $output .= "  <TH ALIGN=\"right\" COLSPAN=\"4\">\n";
+  $output .= "   <FORM ACTION=\"admin.php?mod=watchdog\" METHOD=\"post\">\n";
+  $output .= "    <SELECT NAME=\"order\">\n";
+  foreach ($fields as $key=>$value) {
+    $output .= "     <OPTION VALUE=\"$key\"". ($key == $order ? " SELECTED" : "") .">Sort by $key</OPTION>\n";
+  }
+  $output .= "    </SELECT>\n";
+  $output .= "    <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Update\">\n";
+  $output .= "   </FORM>\n";
+  $output .= "  </TH>\n";
+  $output .= " </TR>\n";
+  $output .= " <TR>\n";
+  $output .= "  <TH>date</TH>\n";
+  $output .= "  <TH>message</TH>\n";
+  $output .= "  <TH>user</TH>\n";
+  $output .= "  <TH>operations</TH>\n";
+  $output .= " </TR>\n";
+
+  while ($watchdog = db_fetch_object($result)) {
+    $output .= " <TR BGCOLOR=\"". $colors[$watchdog->level] ."\"><TD>". format_date($watchdog->timestamp) ."</TD><TD>". substr(check_output($watchdog->message), 0, 44) ."</TD><TD ALIGN=\"center\">". format_username($watchdog->userid, 1) ."</A></TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=watchdog&op=view&id=$watchdog->id\">more</A></TD></TR>\n";
+  }
+
+  $output .= "</TABLE>\n";
+
+  print $output;
+}
+
+function watchdog_view($id) {
+  $result = db_query("SELECT l.*, u.userid FROM watchdog l LEFT JOIN users u ON l.user = u.id WHERE l.id = $id");
+
+  if ($watchdog = db_fetch_object($result)) {
+    $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\">\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>Level:</B></TD><TD>$watchdog->level</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>Date:</B></TD><TD>". format_date($watchdog->timestamp, "extra large") ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>User:</B></TD><TD>". format_username($watchdog->userid, 1) ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>Location:</B></TD><TD>$watchdog->location</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>Message:</B></TD><TD>$watchdog->message</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>Hostname:</B></TD><TD>$watchdog->hostname</TD></TR>\n";
+    $output .= "</TABLE>\n";
+    print $output;
+  }
+}
+
+function watchdog_admin() {
+  global $op, $id, $order;
+
+  switch ($op) {
+    case "view":
+      watchdog_view($id);
+      break;
+    case "Update":
+      watchdog_display($order);
+      break;
+    default:
+      watchdog_display();
+  }
+}
+
+?>

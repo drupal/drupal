@@ -1,73 +1,83 @@
-<H1>Whislist</H1>
-<SMALL><I>$Id$</I></SMALL>
+<?
 
- <H3>Users</H3>
-  <UL>
-   <LI>auto. set default theme according to popularity or date</LI>
-   <LI>enhance "track drop.org" functionality: should be made more complete and more comprehensive</LI>
-   <LI>translation/localization support: let's not add this too soon as it will turn out to be a pain to maintain</LI>
-   <LI>allow users to change their e-mail address: this will require validation through our confirmation procedure</LI>
-   <LI>advanced search so people can search stories, comments, diaries, users, and so on by date</LI>
-   <LI><I>see section "Modules" for more user oriented features</I></LI>
-  </UL>
- 
- <H3>Adminstration</H3>
-  <UL>
-   <LI>enhance user administration</LI>
-   <LI>auto. backup functionality</LI>
-   <LI>auto. clean-up functionality (e.g. user's history field)</LI>
-  </UL>
+$module = array("page" => "wishlist_page");
 
- <H3>Engine</H3>
-  <UL>
-   <LI>blocks and flexible block placement strategies by means of "layout managers" (cfr. Java) and tightly integrated with the module support</LI>
-   <LI>post/edit hash - magic cookie: to prevent malicious external access and to prevent duplicate posts because of hitting the "reload" button</LI>
-   <LI>cron job emulation:</LI>
+function wishlist_page() {
+ ?>
+
+  <H1>Whislist</H1>
+  <SMALL><I>$Id$</I></SMALL>
+
+   <H3>Users</H3>
     <UL>
-     <LI>auto. set default theme according to popularity</LI>
-     <LI>auto. database clean-up (e.g. history field)</LI>
-     <LI>auto. recalculate adaptive/dynamic settings like thresholds</LI>
-     <LI>auto. mail digests</LI>
+     <LI>auto. set default theme according to popularity or date</LI>
+     <LI>enhance "track drop.org" functionality: should be made more complete and more comprehensive</LI>
+     <LI>translation/localization support: let's not add this too soon as it will turn out to be a pain to maintain</LI>
+     <LI>allow users to change their e-mail address: this will require validation through our confirmation procedure</LI>
+     <LI>advanced search so people can search stories, comments, diaries, users, and so on by date</LI>
+     <LI><I>see section "Modules" for more user oriented features</I></LI>
     </UL>
-   <LI>URL validator</LI>
-   <LI>more adaptive submission queue</LI>
-   <LI>archive function</LI>
-   <LI>caching</LI>
-   <LI>more configuration options:</LI>
-    <UL>
-     <LI>enable/disable open submission queue</LI>
-     <LI>enable/disable anonymous users</LI>
-     <LI>enable/disable comments - pending comments</LI>
-    </UL>
-  </UL>
-
- <H3>Modules</H3>
-  <UL>
-   <LI>convert diary system to a module (?)</LI>
-   <LI>RDF/XML/RSS syndication import/export</LI>
-   <LI>messaging between administrators/users</LI>
-   <LI>links/bookmarks manager</LI>
-   <LI>public userlist</LI>
-   <LI>visitor/referals statistics</LI>
-   <LI>banner ad/rotation/tracking or affiliate program</LI>
-   <LI>messaging system between users</LI>
-   <LI>voting polls</LI>
-   <LI>daily/weekly e-mail digest - mailing list</LI>
-   <LI>e-commerce/shop</LI> 
-</UL>
-
- <H3>Public release</H3>
-  <UL>
-   <LI>write minimum amount of documentation like installation guidelines, administrator guide, and so on</LI>
-   <LI>make (or find and install) a "task manager / todo list / progress meter / bug report"-tool so we can get ourselves and the project somewhat organized</LI>
-   <LI>integration and testing with latest version of PHP (just to avoid bug reports that could have been easily avoided)</LI>
-   <LI>security revision</LI>
-  </UL>
  
- <H3>Themes</H3>
-  <UL>
-   <LI>create a theme with topic icons - graphical theme</LI>
-   <LI>create a theme with black background - darker theme</LI>
-   <LI>try to get existing themes HTML validated</LI>
-  </UL>
+   <H3>Adminstration</H3>
+    <UL>
+     <LI>enhance user administration</LI>
+     <LI>auto. backup functionality</LI>
+     <LI>auto. clean-up functionality (e.g. user's history field)</LI>
+    </UL>
 
+   <H3>Engine</H3>
+    <UL>
+     <LI>blocks and flexible block placement strategies by means of "layout managers" (cfr. Java) and tightly integrated with the module support</LI>
+     <LI>post/edit hash - magic cookie: to prevent malicious external access and to prevent duplicate posts because of hitting the "reload" button</LI>
+     <LI>cron job emulation:</LI>
+      <UL>
+       <LI>auto. set default theme according to popularity</LI>
+       <LI>auto. database clean-up (e.g. history field)</LI>
+       <LI>auto. recalculate adaptive/dynamic settings like thresholds</LI>
+       <LI>auto. mail digests</LI>
+      </UL>
+     <LI>URL validator</LI>
+     <LI>more adaptive submission queue</LI>
+     <LI>archive function</LI>
+     <LI>caching</LI>
+     <LI>more configuration options:</LI>
+      <UL>
+       <LI>enable/disable open submission queue</LI>
+       <LI>enable/disable anonymous users</LI>
+       <LI>enable/disable comments - pending comments</LI>
+      </UL>
+    </UL>
+  
+   <H3>Modules</H3>
+    <UL>
+     <LI>convert diary system to a module (?)</LI>
+     <LI>RDF/XML/RSS syndication import/export</LI>
+     <LI>messaging between administrators/users</LI>
+     <LI>links/bookmarks manager</LI>
+     <LI>public userlist</LI>
+     <LI>visitor/referals statistics</LI>
+     <LI>banner ad/rotation/tracking or affiliate program</LI>
+     <LI>messaging system between users</LI>
+     <LI>voting polls</LI>
+     <LI>daily/weekly e-mail digest - mailing list</LI>
+     <LI>e-commerce/shop</LI> 
+    </UL>
+ 
+   <H3>Public release</H3>
+    <UL>
+     <LI>write minimum amount of documentation like installation guidelines, administrator guide, and so on</LI>
+     <LI>make (or find and install) a "task manager / todo list / progress meter / bug report"-tool so we can get ourselves and the project somewhat organized</LI>
+     <LI>integration and testing with latest version of PHP (just to avoid bug reports that could have been easily avoided)</LI>
+     <LI>security revision</LI>
+    </UL>
+ 
+   <H3>Themes</H3>
+    <UL>
+     <LI>create a theme with topic icons - graphical theme</LI>
+     <LI>create a theme with black background - darker theme</LI>
+     <LI>try to get existing themes HTML validated</LI>
+    </UL>
+ <?
+}
+
+?> 

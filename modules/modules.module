@@ -1,0 +1,20 @@
+<?
+
+$module = array("admin" => "modules_admin");
+
+function modules_admin() {
+  $output .= "<P>Installed or available modules:</P>\n";
+  $output .= " <UL>\n";
+ 
+  $handle = opendir("modules");
+  while ($file = readdir($handle)) {
+    if ($name = substr($file, 0, strpos($file, ".module"))) $output .= "<LI><A HREF=\"module.php?mod=$name\">$name</A></LI>";
+  }
+  closedir($handle);
+ 
+  $output .= "</UL>\n";
+  
+  print $output;
+}
+
+?>

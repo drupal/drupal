@@ -1,28 +1,128 @@
-<H1>Documentation:<BR>user guide, administrator guide, technical manual</H1>
-<SMALL><I>$Id$</I></SMALL>
+<?
 
- <H3>Blobs</H3>
+$module = array("page" => "documentation_page");
 
-<P>The site can be almost entirely configured through a web interface by using <I>blobs</I>.  Simply put, blobs are small bit of PHP code which will get plugged into the engine or modules powering the site.  Blobs are typically used to link modules with the mainstream engine or to customize various aspects of the engine itself.</P>
-<P>If you know how to script in PHP, blobs are pretty simple to create.  Don't get your panties in a knot if you are not confident with PHP: simply use the standard blobs (i.e. those available by default) as they are just fine or ask an expert blobber to help you creating custom blobs that fit your need.</P>
-<P>Each blob consist of a key of maximum 255 characters and an associated block of PHP code which can be as long as you want it to be.  You can use any piece of PHP code to make up a blob.  A blob's code is stored in the database and the engine or a particular module will use the key to find the associated piece of PHP code which will then be dynamically embedded in the engine or the module just-in-time for execution.</P>
-<P>There are however some factors to keep in mind when using and creating blobs: blobs can be extremly useful and flexible, yet be dangerous and insecure if not properly used.  If you are not confident with PHP, SQL or even with the site engine for that matter, avoid experimenting with blobs because you can - and you probably will - corrupt your database or even break your site!</P>
-<P>Remember that the code within each blob must be valid PHP code, including things like terminating statements with a semicolon so the parser won't die.  Therefore, it is highly recommended to test your blobs seperatly using a simple test script on top of a test database before migrating to your production environment running your real database.</P>
-<P>Note that you can use any global variables, such as configuration parameters within the scope of a blob and keep in mind that variables that have been given values in a blob will retain these values in the engine or module afterwards.</P>
-<P>You may as well use the <CODE>return</CODE> statement to return a value back to the engine.</P>
-<P><U>A basic example:</U></P>
-<P>Given the blob with key <CODE>sumbit_information</CODE>, used in <CODE>submit.php</CODE> to retrieve and display submission guidelines at the top of the story submission page.  A simple code block for this blob could look like this:</P>
-<PRE>
-  return "Welcome visitor, ... sumbission guidelines go here ...";
-</PRE>
-<P>If we are however dealing with a registered user, we can customize the message by using:
-<PRE>
-  if ($user) {
-    return "Welcome $user->userid, ... submission guidelines go here ...";
-  }
-  else {
-    return "Welcome visitor, ... sumbission guidelines go here ...";
-  }
-</PRE>
-<P>For more in depth example, we recommand you to check any of the available modules and to go from there.</P>
-<P>As said above, you can virtually use any piece of PHP code in a blob: you can declare and use functions, consult the SQL database, access configuration settings and so on.</P>
+function documentation_page() {
+  ?>
+  <H1>Documentation</H1>
+  <SMALL><I>$Id$</I></SMALL>
+ 
+  <H2>Chapter 1: installation guide</H2>
+
+  <H3>System requirements</H3>
+  <P>We assume that you have some working experience with Apache, MySQL and PHP.  The installation of these required packages is beyond the scope of this document.</P>
+  <PRE>
+   MySQL  -  http://mysql.com/
+             (development with version 3.22.32)
+
+   PHP4   -  http://php.net/
+             (development with version 4.0.0)
+         
+   Apache -  http://apache.org/
+             (development with version 1.3.14)
+  </PRE>
+
+  <H3>Installation process</H3>
+
+  <H3>More than one engines on one machine</H3>
+
+  <P>Apache supports both IP- and name-based virtual hosts (vhosts).  While running more than one engine (by using vhosts) can be very useful for development and testing purpose, it might even be more interesting for hosting companies.  Therefore, we tried to support vhosts in the best possible way in order to make life of any administrator easier.  We do so by making it possible to run an unlimited amount of vhosts on the same physical source tree, though by using different configuration files.  Moreover, you can setup multiple configuration files in your <CODE>includes</CODE>-directory.</P>
+  <PRE>
+   [drop@localhost drop]$ ls -l includes/*.conf
+   -rw-rw-r--    1 drop    drop        includes/www.yourdomain1.com.conf
+   -rw-rw-r--    1 drop    drop        includes/www.yourdomain2.com.conf
+  </PRE>
+  <P>The only thing left to be done is to setup the corresponding vhosts in your Apache configuration file.  Note that the <CODE>DocumentRoot</CODE> points to the same source tree:</P>
+  <PRE>
+   NameVirtualHost 127.0.0.1
+
+   &lt;VirtualHost 127.0.0.1&gt;
+     DocumentRoot /home/www/drop
+     ServerName www.yourdomain1.com
+   &lt;/VirtualHost&gt;
+
+   &lt;VirtualHost 127.0.0.1&gt;
+     DocumentRoot /home/www/drop
+     ServerName www.yourdomain2.com
+   &lt;/VirtualHost&gt;
+  </PRE>
+
+  <H2>Chapter 2: technical guide</H2>
+
+  <H3>Modules</H3>
+    
+  <P>When developing drop.org it became clear that we wanted to have a system which is as modular as possible. A modular design will provide flexibility, adaptability, and continuity which in turn allows people to customize the site to their needs and likings.</P>
+  <P>A drop module is simply a file containing a set of routines written in PHP.  When used, the module code executes entirely within the context of the site.  Hence it can use all the functions and access all variables and structures of the main egine.  In fact, a module is not any different from any other PHP file: it is more of a notion that automatically leads to good design principles and a good development model. Modularity better suits the open-source development model, because otherwise you can't easily have people working in parallel without risk of interference.</P>
+
+  <P>The idea is to be able to run random code at given places in the engine.  This random code should then be able to do whatever needed to enhance the functionality.  The places where code can be executed are called "hooks" and are defined by a fixed interface.</P>
+  <P>Even though we aim towards modularity, a basic rule is to avoid defined interfaces.  We are exceptionally careful when it comes down to adding interfaces because once you give an interface to developers they will start coding to it and once somebody starts coding to it you are stuck with it.</P>
+  <P>In places where hooks are made available, the engine calls each module's exported functions.  This is done by iterating through the <CODE>./modules</CODE> directory where all modules must reside.  If your module is named <CODE>foo</CODE> (i.e. <CODE>./modules/foo.module</CODE>) and if there was a hook called <CODE>bar</CODE>, the engine will call <CODE>foo_bar()</CODE> if this was exported by your module.</P>
+  <P>Each module has to declare a associative array named <CODE>$module</CODE> that serves as the list of hooks that a module wants to export or carry out.  Each entry in the array contains the name of a hook and an export function.</P>
+  <P>In our above example, <CODE>$module</CODE> would look like:</P>
+  <PRE>
+    $module = array("bar" => "foo_bar");
+  </PRE>
+  
+  <TABLE BORDER="1">
+   <TR>
+    <TH>Hook name</TH>
+    <TH>Hook description</TH>
+   </TR>
+   <TR>
+    <TD VALIGN="top"><CODE>page</CODE></TD>
+    <TD VALIGN="top">If a module requires it's own page, typically exported as <CODE>http://www.yourdomain.com/module.php?mod=module</CODE>, the engine will invoke <CODE>module_page</CODE> to generate a modules page.</TD>
+   </TR>
+   <TR>
+    <TD VALIGN="top"></TD>
+    <TD VALIGN="top"></TD>
+   </TR>
+   <TR>
+    <TD VALIGN="top"></TD>
+    <TD VALIGN="top"></TD>
+   </TR>
+   <TR>
+    <TD VALIGN="top"></TD>
+    <TD VALIGN="top"></TD>
+   </TR>
+   <TR>
+    <TD VALIGN="top"></TD>
+    <TD VALIGN="top"></TD>
+   </TR>
+   <TR>
+    <TD VALIGN="top"></TD>
+    <TD VALIGN="top"></TD>
+   </TR>
+   <TR>
+    <TD VALIGN="top"></TD>
+    <TD VALIGN="top"></TD>
+   </TR>
+  </TABLE>
+  <H3>Droplets</H3>
+
+  <P>The site can be almost entirely configured through a web interface by using <I>droplets</I>.  Simply put, droplets are small bit of PHP code which will get plugged into the engine or modules powering the site.  Droplets are typically used to link modules with the mainstream engine or to customize various aspects of the engine itself.</P>
+  <P>If you know how to script in PHP, droplets are pretty simple to create.  Don't get your panties in a knot if you are not confident with PHP: simply use the standard droplets (i.e. those available by default) as they are just fine or ask an expert dropletber to help you creating custom droplets that fit your need.</P>
+  <P>Each droplet consist of a key of maximum 255 characters and an associated block of PHP code which can be as long as you want it to be.  You can use any piece of PHP code to make up a droplet.  A droplet's code is stored in the database and the engine or a particular module will use the key to find the associated piece of PHP code which will then be dynamically embedded in the engine or the module just-in-time for execution.</P>
+  <P>There are however some factors to keep in mind when using and creating droplets: droplets can be extremly useful and flexible, yet be dangerous and insecure if not properly used.  If you are not confident with PHP, SQL or even with the site engine for that matter, avoid experimenting with droplets because you can - and you probably will - corrupt your database or even break your site!</P>
+  <P>Remember that the code within each droplet must be valid PHP code, including things like terminating statements with a semicolon so the parser won't die.  Therefore, it is highly recommended to test your droplets seperatly using a simple test script on top of a test database before migrating to your production environment running your real database.</P>
+  <P>Note that you can use any global variables, such as configuration parameters within the scope of a droplet and keep in mind that variables that have been given values in a droplet will retain these values in the engine or module afterwards.</P>
+  <P>You may as well use the <CODE>return</CODE> statement to return a value back to the engine.</P>
+  <P><U>A basic example:</U></P>
+  <P>Given the droplet with key <CODE>sumbit_information</CODE>, used in <CODE>submit.php</CODE> to retrieve and display submission guidelines at the top of the story submission page.  A simple code block for this droplet could look like this:</P>
+  <PRE>
+   return "Welcome visitor, ... sumbission guidelines go here ...";
+  </PRE>
+  <P>If we are however dealing with a registered user, we can customize the message by using:
+  <PRE>
+   if ($user) {
+     return "Welcome $user->userid, ... submission guidelines go here ...";
+   }
+   else {
+     return "Welcome visitor, ... sumbission guidelines go here ...";
+   }
+  </PRE>
+  <P>For more in depth example, we recommand you to check any of the available modules and to go from there.</P>
+  <P>As said above, you can virtually use any piece of PHP code in a droplet: you can declare and use functions, consult the SQL database, access configuration settings and so on.</P>
+  <?
+}
+
+?>
