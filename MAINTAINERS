@@ -44,6 +44,10 @@ SEARCH MODULE
 M: Simon Lindsay <simon@iseek.ws>
 S: maintained
 
+STATISTICS MODULE
+M: Jeremy Andrews <jeremy@kerneltrap.com>
+S: maintained
+
 TAXONOMY SYSTEM
 M: Marco Molinari <marco@porciletto.org>
 S: maintained
