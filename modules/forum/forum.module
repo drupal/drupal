@@ -334,7 +334,7 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
 
   $term = taxonomy_get_term($tid);
   $voc = taxonomy_get_vocabulary($term->vid);
-  $check_tid = $tid ? "'". check_query($tid). "'" : "NULL";
+  $check_tid = $tid ? "'". check_query($tid) ."'" : "NULL";
 
   // show topics with the correct tid, or in the forum but with shadow = 1
   // @TODO: this is not ANSI SQL! ("user error: 'n.created' isn't in GROUP BY")
@@ -557,7 +557,7 @@ function theme_forum_list($forums, $parents, $tid) {
 
       $rows[] = array(
         array("data" => $description, "class" => "description"),
-        array("data" => $forum->num_topics . ($new_topics ? "<br />(".t("%a new", array("%a" => $new_topics)).")" : ""), "class" => "topics"),
+        array("data" => $forum->num_topics . ($new_topics ? "<br />(". t("%a new", array("%a" => $new_topics)) .")" : ""), "class" => "topics"),
         array("data" => $forum->num_posts, "class" => "posts"),
         array("data" => ($forum->container ? "" : _forum_format($forum->last_post)), "class" => "last-reply")
 
@@ -598,7 +598,7 @@ function theme_forum_topic_list($tid, $topics, $sortby, $forum_per_page, $offset
         $rows[] = array(
           array("data" => _forum_icon($topic->new, $topic->num_comments, $topic->comment_mode), "class" => "icon"),
           array("data" => l($topic->title, "node/view/$topic->nid"), "class" => "topic"),
-          array("data" => $topic->num_comments . ($topic->new_replies ? "<br />(".t("%a new", array("%a" => $topic->new_replies)).")" : ""), "class" => "replies"),
+          array("data" => $topic->num_comments . ($topic->new_replies ? "<br />(". t("%a new", array("%a" => $topic->new_replies)) .")" : ""), "class" => "replies"),
           array("data" => _forum_format($topic), "class" => "created"),
           array("data" => _forum_format($topic->last_reply), "class" => "last-reply")
         );

@@ -168,7 +168,7 @@ function block_admin_display() {
       $delete = "";
     }
 
-    $rows[] = array($block["info"], array("data" => form_checkbox(NULL, $block["module"]."][".$block["delta"]."][status", 1, $block["status"]), "align" => "center"), array("data" => form_checkbox(NULL, $block["module"]."][".$block["delta"]."][custom", 1, $block["custom"]), "align" => "center"), array("data" => form_checkbox(NULL, $block["module"]."][".$block["delta"]."][throttle", 1, $block["throttle"], NULL, variable_get("throttle_enable", 0) ? NULL : array("disabled" => "disabled")), "align" => "center"), form_weight(NULL, $block["module"]."][".$block["delta"]."][weight", $block["weight"]), form_radios(NULL, $block["module"]."][".$block["delta"]."][region", $block["region"], array(t("left"), t("right"))), form_textfield(NULL, $block["module"]."][".$block["delta"]."][path", $block["path"], 10, 255),
+    $rows[] = array($block["info"], array("data" => form_checkbox(NULL, $block["module"] ."][". $block["delta"] ."][status", 1, $block["status"]), "align" => "center"), array("data" => form_checkbox(NULL, $block["module"] ."][". $block["delta"] ."][custom", 1, $block["custom"]), "align" => "center"), array("data" => form_checkbox(NULL, $block["module"] ."][". $block["delta"] ."][throttle", 1, $block["throttle"], NULL, variable_get("throttle_enable", 0) ? NULL : array("disabled" => "disabled")), "align" => "center"), form_weight(NULL, $block["module"] ."][". $block["delta"] ."][weight", $block["weight"]), form_radios(NULL, $block["module"] ."][". $block["delta"] ."][region", $block["region"], array(t("left"), t("right"))), form_textfield(NULL, $block["module"] ."][". $block["delta"] ."][path", $block["path"], 10, 255),
     $edit, $delete);
   }
 
@@ -376,8 +376,7 @@ function block_list($region) {
     $result = db_query("SELECT * FROM {blocks} WHERE (status = '1' OR custom = '1') ". ($region != "all" ? "AND region = %d " : "") ."ORDER BY weight, module", $region == "left" ? 0 : 1);
 
     while ($result && ($block = db_fetch_array($result))) {
-      if ((($block['status'] && (!$user->uid || !$block['custom'])) || ($block['custom'] && $user->block[$block['module']][$block['delta']])) &&
-          (!$block['path'] || preg_match($block['path'], str_replace("?q=", "", request_uri())))) {
+      if ((($block['status'] && (!$user->uid || !$block['custom'])) || ($block['custom'] && $user->block[$block['module']][$block['delta']])) && (!$block['path'] || preg_match($block['path'], str_replace("?q=", "", request_uri())))) {
 
         /*
         ** Check the current throttle status and see if block should be displayed

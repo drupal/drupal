@@ -190,9 +190,9 @@ function path_perm() {
 function path_overview() {
   $sql = "SELECT * FROM {url_alias}";
   $header = array(
-    array ("data" => t("alias"), "field" => "dst", "sort" => "asc"),
-    array ("data" => t("normal"), "field" => "src"),
-    array ("data" => t("operations"), "colspan" => 2)
+    array("data" => t("alias"), "field" => "dst", "sort" => "asc"),
+    array("data" => t("normal"), "field" => "src"),
+    array("data" => t("operations"), "colspan" => 2)
   );
   $sql .= tablesort_sql($header);
   $result = pager_query($sql, 50);
