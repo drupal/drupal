@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.114 2002/11/09 16:24:43 dries Exp $
+// $Id: theme.inc,v 1.115 2002/11/09 20:12:03 dries Exp $
 
 /**
 * Basic theme
@@ -90,12 +90,14 @@ function theme_item_list($items = array(), $title = 0) {
   ** Return a formatted array of items.
   */
 
-  if ($title) {
+  if (isset($title)) {
     $output .= "<b>$title</b><br />";
   }
 
-  foreach ($items as $item) {
-    $output .= "- $item<br />";
+  if (isset($items)) {
+    foreach ($items as $item) {
+      $output .= "- $item<br />";
+    }
   }
 
   return $output;
