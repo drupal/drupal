@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.89 2001/12/05 18:54:14 dries Exp $
+// $Id: common.inc,v 1.90 2001/12/08 11:37:07 dries Exp $
 
 function conf_init() {
   global $HTTP_HOST, $REQUEST_URI;
@@ -454,13 +454,11 @@ unset($conf);
 include_once "includes/$config.php";
 include_once "includes/database.inc";
 include_once "includes/variable.inc";
-include_once "includes/comment.inc";
 include_once "includes/xmlrpc.inc";
 include_once "includes/module.inc";
 include_once "includes/locale.inc";
 include_once "includes/search.inc";
 include_once "includes/theme.inc";
-include_once "includes/node.inc";
 
 // initialize configuration variables:
 $conf = variable_init($conf);
