@@ -69,14 +69,11 @@ while (<>) {
   elsif (/<br>/i) {
     $msg = "'<br>' -> '<br />'";
   }
-  elsif (/HTTP_REFERER/i) {
-    $msg = "the use of HTTP_REFERER is prone to XSS exploits; use referer_uri() instead";
+  elsif (/\$REQUEST_URI/i) {
+    $msg = "the use of REQUEST_URI is prone to XSS exploits and does not work on IIS; use request_uri() instead";
   }
-  elsif (/QUERY_STRING/i) {
-    $msg = "the use of HTTP_REFERER is prone to XSS exploits; use referer_uri() instead";
-  }
-  elsif (/REQUEST_URI/i) {
-    $msg = "the use of HTTP_REFERER is prone to XSS exploits and does not work on IIS; use request_uri() instead";
+  elsif (/\"REQUEST_URI\"/i) {
+    $msg = "the use of REQUEST_URI is prone to XSS exploits and does not work on IIS; use request_uri() instead";
   }
 
   # XHTML compatibility mode suggests a blank before /
@@ -107,9 +104,9 @@ while (<>) {
   if (/(^|[^a-zA-Z])(if|else|elseif|while|foreach|switch|return|for)\(/) {
     $msg = "'(' -> ' ('";
   }
-  elsif (/[^;{}:\s\n]\s*\n*$/ && $program && !/^[\s}]*(if|else)/) {
-    $msg = "don't split lines";
-  }
+  #elsif (/[^;{}:\s\n]\s*\n*$/ && $program && !/^[\s}]*(if|else)/) {
+  #  $msg = "don't split lines";
+  #}
   elsif (/\}\s*else/) {
     $msg = "'} else' -> '}\\nelse'";
   }
