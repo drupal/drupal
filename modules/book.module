@@ -110,6 +110,7 @@ function book_link($type, $node = 0, $main = 0) {
 
   if ($type == "node" && $node->type == "book" && book_access("update", $node)) {
     $links[] = lm(t("edit this page"), array("mod" => "node", "op" => "edit", "id" => $node->nid), "", array("title" => t("Suggest an update for this book page.")));
+    $links[] = lm(t("printer-friendly version"), array("mod" => "book", "op" => "print", "id" => $node->nid), "", array("title" => t("Show a printer-friendly version of this book page and its sub-pages.")));
   }
 
   return $links ? $links : array();
@@ -531,7 +532,7 @@ function book_page() {
 
   if (user_access("access content")) {
     switch ($op) {
-      case "feed":
+      case "print":
         print book_export_html($id, $depth = 1);
         break;
       default:
@@ -686,7 +687,6 @@ function book_admin_links() {
     $links[] = la(t("book") .": <i>". check_output($book->title) ."</i>", array("mod" => "book", "op" => "view", "id" => $book->nid));
   }
   $links[] = la(t("orphan pages"), array("mod" => "book", "op" => "orphan"));
-  $links[] = lm(t("export to HTML"), array("mod" => "book", "op" => "feed"), "", array("title" => t("display all books in a single HTML page")));
   $links[] = la(t("help"), array("mod" => "book", "op" => "help"));
   return $links;
 }
@@ -737,7 +737,7 @@ function book_help() {
 
 <p>Administrators may review the hierarchy of their books by clicking on the <? echo la("collaborative book link", array("mod" => "book")) ?> in the adminstration pages. There, nodes may be edited, reorganized, removed from book, and deleted. This behavior may change in the future. When a parent node is deleted, he may leave behind child nodes.
 These nodes are now <i>orphans</i>. Administrators should periodically <? echo la("review their books for orphans", array("mod" => "book", "op" => "orphan")) ?> and reaffiliate those pages as desired. Finally, administrators may also
-<? echo la("export their books", array("mod" => "book", "op" => "feed")) ?> to a single, flat HTML page which is suitable for printing.</p>
+<? echo la("export their books", array("mod" => "book", "op" => "print")) ?> to a single, flat HTML page which is suitable for printing.</p>
 
 <a name="faq"></a><h3>Maintain a FAQ using a collaborative book</i></h3>
 
