@@ -1277,7 +1277,7 @@ function comment_moderate() {
   $moderation = $_POST['moderation'];
 
   if ($moderation) {
-    $result = db_query('SELECT mid, MAX(value) AS value FROM {moderation_roles} WHERE rid IN (%s) GROUP BY mid', implode(', ', array_keys($user->roles)));
+    $result = db_query('SELECT DISTINCT mid, value, ABS(value) FROM {moderation_roles} WHERE rid IN (%s) ORDER BY mid, ABS(value), value', implode(', ', array_keys($user->roles)));
     while ($mod = db_fetch_object($result)) {
       $votes[$mod->mid] = $mod->value;
     }
