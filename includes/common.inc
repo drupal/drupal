@@ -1,5 +1,5 @@
 <?php
-// $Id$
+/* $Id$ */
 
 /**
  * @name drupal_title
@@ -83,22 +83,17 @@ function drupal_get_breadcrumb() {
  * Build the alias/path array
  */
 function drupal_get_path_map($action = "") {
-
-  static $cache;
-  static $map;
+  static $map = NULL;
 
   if ($action == "rebuild") {
     $map = NULL;
-    $cache = 0;
   }
 
-  if (!$cache) {
+  if (is_null($map)) {
     $result = db_query("SELECT * FROM {url_alias}");
     while ($data = db_fetch_object($result)) {
       $map[$data->dst] = $data->src;
     }
-
-    $cache = 1;
   }
 
   return $map;
@@ -114,61 +109,60 @@ function error_handler($errno, $message, $filename, $line, $variables) {
 
   if ($errno & E_ALL ^ E_NOTICE) {
     watchdog("error", $types[$errno] .": $message in $filename on line $line.");
-    print "<pre>$entry</pre>";
+    if (error_reporting()) {
+      print "<pre>$entry</pre>";
+    }
   }
 }
 
 function throttle($type, $rate) {
   if (!user_access("access administration pages")) {
-    if ($throttle = db_fetch_object(db_query("SELECT * FROM {watchdog} WHERE type = '$type' AND hostname = '". getenv("REMOTE_ADDR") ."' AND ". time() ." - timestamp < $rate"))) {
-      watchdog("warning", "throttle: '". getenv("REMOTE_ADDR") ."' exceeded submission rate - $throttle->type");
+    if ($throttle = db_fetch_object(db_query("SELECT * FROM {watchdog} WHERE type = '%s' AND hostname = '%s' AND %d - timestamp < %d", $type, $_ENV['REMOTE_ADDR'], time(), $rate))) {
+      watchdog("warning", "throttle: '". $_ENV['REMOTE_ADDR'] ."' exceeded submission rate - $throttle->type");
       die(message_throttle());
     }
   }
 }
 
-function _fix_gpc_magic_array(&$items) {
-  foreach ($items as $k => $i) {
-    if (is_array($i)) _fix_gpc_magic_array($items[$k]);
-    else $items[$k] = stripslashes($i);
+function _fix_gpc_magic(&$item, $key) {
+  if (is_array($item)) {
+    array_walk($item, '_fix_gpc_magic_array');
   }
+  $item = stripslashes($i);
 }
 
 function fix_gpc_magic() {
   static $fixed = false;
-  if ($fixed) return;
-  if (ini_get("magic_quotes_gpc") == 0) return;
-
-  _fix_gpc_magic_array($_GET);
-  _fix_gpc_magic_array($_POST);
-  _fix_gpc_magic_array($_COOKIE);
-
-  $fixed = true;
+  if ($fixed && ini_get("magic_quotes_gpc")) {
+    array_walk($_GET, '_fix_gpc_magic');
+    array_walk($_POST, '_fix_gpc_magic');
+    array_walk($_COOKIE, '_fix_gpc_magic');
+    array_walk($_REQUEST, '_fix_gpc_magic');
+    $fixed = true;
+  }
 }
 
-function array2object($node) {
-
-  if (is_array($node)) {
-    foreach ($node as $key => $value) {
+function array2object($array) {
+  if (is_array($array)) {
+    foreach ($array as $key => $value) {
       $object->$key = $value;
     }
   }
   else {
-    $object = $node;
+    $object = $array;
   }
 
   return $object;
 }
 
-function object2array($node) {
-
-  if (is_object($node)) {
-    foreach ($node as $key => $value) {
+function object2array($object) {
+  if (is_object($object)) {
+    foreach ($object as $key => $value) {
       $array[$key] = $value;
     }
   }
   else {
-    $array = $node;
+    $array = $object;
   }
 
   return $array;
@@ -244,12 +238,7 @@ function valid_email_address($mail) {
   $ipv4 = '[0-9]{1,3}(\.[0-9]{1,3}){3}';
   $ipv6 = '[0-9a-fA-F]{1,4}(\:[0-9a-fA-F]{1,4}){7}';
 
-  if (preg_match("/^$user@($domain|(\[($ipv4|$ipv6)\]))$/", $mail)) {
-    return 1;
-  }
-  else {
-    return 0;
-  }
+  return preg_match("/^$user@($domain|(\[($ipv4|$ipv6)\]))$/", $mail);
 }
 
 /**
@@ -258,13 +247,7 @@ function valid_email_address($mail) {
  * @param $url an URL
  */
 function valid_url($url) {
-
-  if (preg_match("/^[a-zA-z0-9\/:_\-_\.,]+$/", $url)) {
-    return 1;
-  }
-  else {
-    return 0;
-  }
+  return preg_match("/^[a-zA-z0-9\/:_\-_\.,]+$/", $url);
 }
 
 /**
@@ -286,7 +269,7 @@ function search_item($item, $type) {
     $output = module_invoke($type, "search_item", $item);
   }
   else {
-    $output .= " <b><u><a href=\"". $item["link"] ."\">". $item["title"] ."</a></u></b><br />";
+    $output = " <b><u><a href=\"". $item["link"] ."\">". $item["title"] ."</a></u></b><br />";
     $output .= " <small>" . t($type) . ($item["user"] ? " - ". $item["user"] : "") ."". ($item["date"] ? " - ". format_date($item["date"], "small") : "") ."</small>";
     $output .= "<br /><br />";
   }
@@ -308,15 +291,14 @@ function search_item($item, $type) {
  *   to", help text, etc).
  */
 function search_form($action = NULL, $keys = NULL, $options = NULL) {
-
   if (!$action) {
     $action = url("search");
   }
 
-  $output .= " <br /><input type=\"text\" class=\"form-text\" size=\"50\" value=\"". check_form($keys) ."\" name=\"keys\" />";
+  $output = " <br /><input type=\"text\" class=\"form-text\" size=\"50\" value=\"". check_form($keys) ."\" name=\"keys\" />";
   $output .= " <input type=\"submit\" class=\"form-submit\" value=\"". t("Search") ."\" />\n";
 
-  if ($options != 0) {
+  if ($options) {
     $output .= "<br />";
     $output .= t("Restrict search to") .": ";
 
@@ -336,7 +318,6 @@ function search_form($action = NULL, $keys = NULL, $options = NULL) {
  * Collect the search results:
  */
 function search_data($keys = NULL) {
-
   $edit = $_POST["edit"];
 
   if (isset($keys)) {
@@ -369,7 +350,6 @@ function search_data($keys = NULL) {
  *   to", help text, etc).
  */
 function search_type($type, $action = NULL, $keys = NULL, $options = NULL) {
-
   $_POST["edit"]["type"][$type] = "on";
 
   return search_form($action, $keys, $options) . "<br />". search_data($keys);
@@ -413,7 +393,6 @@ function drupal_goto($url) {
 }
 
 function valid_input_data($data) {
-
   if (is_array($data) || is_object($data)) {
     /*
     ** Form data can contain a number of nested arrays.
@@ -456,7 +435,6 @@ function check_form($text) {
 }
 
 function filter($text) {
-
   $modules = module_list();
 
   /*
@@ -478,7 +456,6 @@ function filter($text) {
 }
 
 function rewrite_old_urls($text) {
-
   global $base_url;
 
   $end = substr($base_url, 12);
@@ -573,7 +550,7 @@ function check_file($filename) {
 function format_rss_channel($title, $link, $description, $items, $language = "en", $args = array()) {
   // arbitrary elements may be added using the $args associative array
 
-  $output .= "<channel>\n";
+  $output = "<channel>\n";
   $output .= " <title>". drupal_specialchars(strip_tags($title)) ."</title>\n";
   $output .= " <link>". drupal_specialchars(strip_tags($link)) ."</link>\n";
   $output .= " <description>". drupal_specialchars($description) ."</description>\n";
@@ -590,7 +567,7 @@ function format_rss_channel($title, $link, $description, $items, $language = "en
 function format_rss_item($title, $link, $description, $args = array()) {
   // arbitrary elements may be added using the $args associative array
 
-  $output .= "<item>\n";
+  $output = "<item>\n";
   $output .= " <title>". drupal_specialchars(strip_tags($title)) ."</title>\n";
   $output .= " <link>". drupal_specialchars(strip_tags($link)) ."</link>\n";
   $output .= " <description>". drupal_specialchars(check_output($description)) ."</description>\n";
@@ -718,7 +695,6 @@ function format_name($object) {
 }
 
 function form($form, $method = "post", $action = 0, $options = 0) {
-
   if (!$action) {
     $action = request_uri();
   }
@@ -816,12 +792,7 @@ function drupal_get_path_alias($path) {
 function drupal_get_normal_path($path) {
   $map = drupal_get_path_map();
 
-  if ($map[$path]) {
-    return $map[$path];
-  }
-  else {
-    return $path;
-  }
+  return $map[$path] ? $map[$path] : $path;
 }
 
 function url($url = NULL, $query = NULL) {
