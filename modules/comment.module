@@ -97,6 +97,8 @@ function comment_menu() {
     'callback' => 'comment_delete', 'access' => $access, 'type' => MENU_CALLBACK);
 
   // Tabs:
+  $items[] = array('path' => 'admin/comment/list', 'title' => t('list'),
+    'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
   $items[] = array('path' => 'admin/comment/configure', 'title' => t('configure'),
     'callback' => 'comment_configure', 'access' => $access, 'type' => MENU_LOCAL_TASK);
   if (module_exist('search')) {
@@ -105,24 +107,25 @@ function comment_menu() {
   }
 
   // Subtabs:
-  $items[] = array('path' => 'admin/comment/new', 'title' => t('new comments'),
-    'callback' => 'comment_admin_overview', 'access' => $access, 'type' => MENU_LOCAL_SUBTASK);
-  $items[] = array('path' => 'admin/comment/approval', 'title' => t('approval queue'),
-    'callback' => 'comment_admin_overview', 'access' => $access, 'type' => MENU_LOCAL_SUBTASK);
+  $items[] = array('path' => 'admin/comment/list/new', 'title' => t('new comments'),
+    'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
+  $items[] = array('path' => 'admin/comment/list/approval', 'title' => t('approval queue'),
+    'callback' => 'comment_admin_overview', 'access' => $access,
+    'callback arguments' => 'approval',
+    'type' => MENU_LOCAL_TASK);
 
   $items[] = array('path' => 'admin/comment/configure/settings', 'title' => t('settings'),
-    'callback' => 'comment_configure', 'access' => $access,
-    'type' => MENU_LOCAL_SUBTASK, 'weight' => -1);
+    'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
 
   $access = user_access('administer comments') && user_access('administer moderation');
   $items[] = array('path' => 'admin/comment/configure/matrix', 'title' => t('moderation matrix'),
-    'callback' => 'comment_matrix_settings', 'access' => $access, 'type' => MENU_LOCAL_SUBTASK);
+    'callback' => 'comment_matrix_settings', 'access' => $access, 'type' => MENU_LOCAL_TASK);
   $items[] = array('path' => 'admin/comment/configure/thresholds', 'title' => t('moderation thresholds'),
-    'callback' => 'comment_threshold_settings', 'access' => $access, 'type' => MENU_LOCAL_SUBTASK);
+    'callback' => 'comment_threshold_settings', 'access' => $access, 'type' => MENU_LOCAL_TASK);
   $items[] = array('path' => 'admin/comment/configure/roles', 'title' => t('moderation roles'),
-    'callback' => 'comment_role_settings', 'access' => $access, 'type' => MENU_LOCAL_SUBTASK);
+    'callback' => 'comment_role_settings', 'access' => $access, 'type' => MENU_LOCAL_TASK);
   $items[] = array('path' => 'admin/comment/configure/votes', 'title' => t('moderation votes'),
-    'callback' => 'comment_vote_settings', 'access' => $access,'type' => MENU_LOCAL_SUBTASK);
+    'callback' => 'comment_vote_settings', 'access' => $access,'type' => MENU_LOCAL_TASK);
 
   $access = user_access('post comments');
   $items[] = array('path' => 'comment/reply', 'title' => t('reply to comment'),
@@ -283,6 +286,8 @@ function comment_node_link($node) {
  * This search function uses search.module's built-in content index by
  * calling do_search(). The "nid" identifier in the select is used to
  * present search results in the context of their associated node.
+ *
+ * This function doubles as a menu callback for the administrative comment search.
  */
 function comment_search($keys = NULL) {
   if (!$keys) {
@@ -929,6 +934,9 @@ function comment_render($node, $cid = 0) {
   return $output;
 }
 
+/**
+ * Menu callback; edit a comment from the administrative interface.
+ */
 function comment_admin_edit($cid) {
 
   // comment edits need to be saved.
@@ -957,13 +965,16 @@ function comment_admin_edit($cid) {
   }
 }
 
+/**
+ * Menu callback; delete a comment.
+ */
 function comment_delete($cid) {
   $comment = db_fetch_object(db_query('SELECT c.*, u.name AS registered_name, u.uid FROM {comments} c INNER JOIN {users} u ON u.uid = c.uid WHERE c.cid = %d', $cid));
   $comment->name = $comment->registered_name ? $comment->registered_name : $comment->name;
 
   $output = '';
 
-  // we'll only delete if the user has confirmed the
+  // We'll only delete if the user has confirmed the
   // deletion using the form in our else clause below.
   if ($comment->cid && $_POST['op'] == t('Delete comment')) {
     drupal_set_message(t('the comment and all its replies have been deleted.'));
@@ -995,7 +1006,10 @@ function comment_save($id, $edit) {
   drupal_set_message(t('the comment has been saved.'));
 }
 
-function comment_admin_overview() {
+/**
+ * Menu callback; present an administrative comment listing.
+ */
+function comment_admin_overview($type = 'new') {
 
   $header = array(
     array('data' => t('subject'), 'field' => 'subject'),
@@ -1005,7 +1019,7 @@ function comment_admin_overview() {
     array('data' => t('operations'), 'colspan' => 2)
   );
 
-  $status = (arg(2) == 'approval') ? 1 : 0;
+  $status = ($type == 'approval') ? 1 : 0;
   $sql = 'SELECT c.subject, c.nid, c.cid, c.comment, c.timestamp, c.status, c.name, c.homepage, u.name AS registered_name, u.uid FROM {comments} c INNER JOIN {users} u ON u.uid = c.uid WHERE c.status = '. check_query($status);
   $sql .= tablesort_sql($header);
   $result = pager_query($sql,  50);
