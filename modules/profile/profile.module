@@ -1,4 +1,5 @@
 <?php
+// $Id$
 
 function _profile_init() {
   /*
@@ -8,26 +9,26 @@ function _profile_init() {
   */
 
   $GLOBALS["profile_fields"] = array(
-      "address"       => array("textfield", t("Address"), "", 64, 64, t("Your address: street and number.")),
-      "city"          => array("textfield", t("City"), "", 64, 64, t("Your city.")),
-      "state"         => array("textfield", t("State"), "", 4, 2, t("Your state as a two letter code.")),
-      "zip"           => array("textfield", t("Zip"), "", 7, 5, t("Your ZIP code.")),
-      "birthday"      => array("", t("Birthday"), ""),
-      "gender"        => array("select", t("Gender"), "", array(0 => "-", "m" => t("male"), "f" => t("female")), "", 0, 0),
-      "job"           => array("textfield", t("Job title"), "", 64, 64, t("Your job title or position.")),
-      "icq"           => array("textfield", t("ICQ messenger ID"), "", 12, 12, ""),
-      "msn"           => array("textfield", t("MSN messenger ID"), "", 64, 64, ""),
-      "yahoo"         => array("textfield", t("Yahoo messenger ID"), "", 64, 64, ""),
-      "aim"           => array("textfield", t("AIM messenger ID"), "", 64, 64, ""),
-      "homepage"      => array("textfield", t("URL of homepage"), "", 64, 64, t("Make sure you enter a fully qualified URL: remember to include \"http://\".")),
-      "biography"     => array("textarea", t("Biography"), "", 64, 4, ""),
-      "interests"     => array("textarea", t("Interests"), "", 64, 4, t("What you like.")),
-      "publickey"     => array("textarea", t("Public key"), "", 64, 4, ""),
-      "avatar"        => array("", t("Avatar or picture"), t("Your virtual face or picture."))
-      );
+    "address"       => array("textfield", t("Address"), "", 64, 64, t("Your address: street and number.")),
+    "city"          => array("textfield", t("City"), "", 64, 64, t("Your city.")),
+    "state"         => array("textfield", t("State"), "", 4, 2, t("Your state as a two letter code.")),
+    "zip"           => array("textfield", t("Zip"), "", 7, 5, t("Your ZIP code.")),
+    "birthday"      => array("", t("Birthday"), ""),
+    "gender"        => array("select", t("Gender"), "", array(0 => "-", "m" => t("male"), "f" => t("female")), "", 0, 0),
+    "job"           => array("textfield", t("Job title"), "", 64, 64, t("Your job title or position.")),
+    "icq"           => array("textfield", t("ICQ messenger ID"), "", 12, 12, ""),
+    "msn"           => array("textfield", t("MSN messenger ID"), "", 64, 64, ""),
+    "yahoo"         => array("textfield", t("Yahoo messenger ID"), "", 64, 64, ""),
+    "aim"           => array("textfield", t("AIM messenger ID"), "", 64, 64, ""),
+    "homepage"      => array("textfield", t("URL of homepage"), "", 64, 64, t("Make sure you enter a fully qualified URL: remember to include \"http://\".")),
+    "biography"     => array("textarea", t("Biography"), "", 64, 4, ""),
+    "interests"     => array("textarea", t("Interests"), "", 64, 4, t("What you like.")),
+    "publickey"     => array("textarea", t("Public key"), "", 64, 4, ""),
+    "avatar"        => array("", t("Avatar or picture"), t("Your virtual face or picture."))
+  );
 
   $GLOBALS["profile_days"][0] = t("day");
-  for ($n=1; $n<=31; $n++) {
+  for ($n = 1; $n <= 31; $n++) {
     $GLOBALS["profile_days"][$n] = $n;
   }
 
@@ -49,7 +50,7 @@ function profile_conf_options() {
     $fields[$key] = $field[1];
   }
 
-  $output .= form_select(t("Registration time fields"), "profile_register_fields", variable_get("profile_register_fields", array()), $fields, t("The fields users will be able to set at registration time.  Any required fields (see below) must appear here too."), "size=\"6\"", 1);
+  $output = form_select(t("Registration time fields"), "profile_register_fields", variable_get("profile_register_fields", array()), $fields, t("The fields users will be able to set at registration time.  Any required fields (see below) must appear here too."), "size=\"6\"", 1);
   $output .= form_select(t("Required fields"), "profile_required_fields", variable_get("profile_required_fields", array()), $fields, t("The fields users that are required to be set."), "size=\"6\"", 1);
   $output .= form_select(t("Publicly accessible fields"), "profile_public_fields", variable_get("profile_public_fields", array()), $fields, t("The fields users will be able to set and that will be publicly visible."), "size=\"6\"", 1);
   $output .= form_select(t("Private fields"), "profile_private_fields", variable_get("profile_private_fields", array()), $fields, t("The fields users will be able to set, but which are kept private."), "size=\"6\"", 1);
@@ -154,12 +155,7 @@ function _profile_validate($edit, $mode) {
     }
   }
 
-  if ($error) {
-    return $error;
-  }
-  else {
-    return $edit;
-  }
+  return $error ? $error : $edit;
 }
 
 function _profile_user_view(&$user, $mode) {
@@ -168,35 +164,32 @@ function _profile_user_view(&$user, $mode) {
   foreach (_profile_active_fields($mode) as $name) {
     $field = $profile_fields[$name];
     $t = "profile_".$name;
-    switch ($field[0]) {
-      case "textfield":
+    if (isset($user->$t)) {
+      switch ($field[0]) {
+        case "textfield":
         case "textarea":
         case "checkbox":
-        if (isset($user->$t)) {
           $output .= form_item($field[1], check_output($user->$t));
-        }
-      break;
-      case "select":
-        if (isset($user->$t)) {
+          break;
+        case "select":
           $output .= form_item($field[1], check_output($profile_fields[$name][3][$user->$t]));
-        }
-      break;
-      case "":
-        // special
-        if ($t == "profile_avatar") {
-          if (isset($user->$t)) {
+          break;
+        case "":
+          // special
+          if ($t == "profile_avatar") {
             $file = profile_avatar_path($user->uid, $user->profile_avatar);
             if (file_exists($file)) {
               $output .= form_item(t("Avatar"), "<img src=\"$file\" />");
             }
           }
-        }
 
-      if ($t == "profile_birthday") {
-        if (isset($user->profile_birthday) && isset($user->profile_birthmonth) && isset($user->profile_birthyear)) {
-          // this is very european-centric, can we use format_date?
-          $output .= form_item(t("Birthday"), $user->profile_birthday."/".$user->profile_birthmonth."/".$user->profile_birthyear);
-        }
+          if ($t == "profile_birthday") {
+            if (isset($user->profile_birthday) && isset($user->profile_birthmonth) && isset($user->profile_birthyear)) {
+              // this is very european-centric, can we use format_date?
+              $time = mktime(0, 0, 0, $user->profile_birthmonth, $user->profile_birthday, $user->profile_birthyear);
+              $output .= form_item(t("Birthday"), format_date($time));
+            }
+          }
       }
     }
   }
@@ -221,9 +214,11 @@ function _profile_validate_avatar(&$edit) {
     list($maxwidth, $maxheight) = explode("x", variable_get("profile_avatar_size", "85x85"));
     if ((!in_array($size[2], array(1,2,3))) || (!in_array($extension, array(".gif", ".jpg", ".png", ".jpeg")))) {
       $error = t("uploaded file was not an image.");
-    } else if (filesize($image_file) > (variable_get("profile_avatar_filesize", "30")*1000)) {
+    }
+    else if (filesize($image_file) > (variable_get("profile_avatar_filesize", "30")*1000)) {
       $error = t("uploaded image is too large, max %a kb.", array("%a" => variable_get("profile_avatar_filesize", "30")));
-    } else if ($size[0] > $maxwidth || $size[1] > $maxheight) {
+    }
+    else if ($size[0] > $maxwidth || $size[1] > $maxheight) {
       $error = t("uploaded image is too large, max %a.", array("%a" => variable_get("profile_avatar_size", "85x85")));
     }
     else if (!copy($image_file, variable_get("profile_avatar_path", "misc/avatars/").md5($user->uid).$extension)) {
@@ -234,20 +229,20 @@ function _profile_validate_avatar(&$edit) {
     }
   }
 
-  return $error ? $error."<br />" : "";
+  return $error ? "$error<br />" : "";
 }
 
 function profile_avatar_path($uid, $extension) {
-  return $extension ? variable_get("profile_avatar_path", "misc/avatars/").md5($uid).$extension : "";
+  return $extension ? variable_get("profile_avatar_path", "misc/avatars/") . md5($uid) . $extension : "";
 }
 
 function _profile_active_fields($mode) {
-  return variable_get("profile_".$mode."_fields", array());
+  return variable_get("profile_". $mode ."_fields", array());
 }
 
 function _profile_edit_birth($edit = "") {
   global $profile_months, $profile_days;
-  $output .= _profile_select("profile_birthday", $edit->profile_birthday, $profile_days);
+  $output = _profile_select("profile_birthday", $edit->profile_birthday, $profile_days);
   $output .= "&nbsp;";
   $output .= _profile_select("profile_birthmonth", $edit->profile_birthmonth, $profile_months);
   $output .= "&nbsp;";
