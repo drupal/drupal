@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.152 2003/12/28 10:47:33 dries Exp $
+// $Id: blog.module,v 1.153 2003/12/29 10:58:01 dries Exp $
 
 function blog_settings() {
   $output = form_textarea(t("Explanation or submission guidelines"), "blog_help", variable_get("blog_help", ""), 70, 4, t("This text is displayed at the top of the blog submission form.  It's useful for helping or instructing your users."));
@@ -248,8 +248,6 @@ function blog_link($type, $node = 0, $main) {
   if ($type == "system") {
     if (user_access("maintain personal blog")) {
       menu("node/add/blog", t("blog entry"), "node_page", 0);
-    }
-    if (user_access("maintain personal blog")) {
       menu("blog/". $user->uid, t("my blog"), "blog_page", 1);
     }
     if (user_access("access content")) {
@@ -262,12 +260,10 @@ function blog_link($type, $node = 0, $main) {
   }
 
   if ($type == "node" && $node->type == "blog") {
-    global $mod, $op, $id;
-
     if (blog_access("update", $node)) {
       $links[] = l(t("edit this blog entry"), "node/edit/$node->nid", array("title" => t("Edit this blog entry.")));
     }
-    elseif (empty($id)) {
+    elseif (arg(0) != 'blog' && arg(1) != $node->uid) {
       $links[] = l(t("%username's blog", array("%username" => $node->name)), "blog/$node->uid", array("title" => t("Read %username's latest blog entries.", array("%username" => $node->name))));
     }
   }
