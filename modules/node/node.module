@@ -349,10 +349,10 @@ function node_admin() {
       case "view":
         print node_module_view(node_get_array(array("nid" => $id)), $type);
         break;
-      case "Preview":
+      case t("Preview"):
         print node_edit_content($edit, $type);
         break;
-      case "Submit":
+      case t("Submit"):
          print status(node_save_content($edit, $type));
         // fall through:
       default:
