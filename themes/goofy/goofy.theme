@@ -1,5 +1,5 @@
 <?php
-// $Id: goofy.theme,v 1.40 2001/11/11 04:11:04 unconed Exp $
+// $Id: goofy.theme,v 1.41 2001/11/12 20:15:51 dries Exp $
 
   /*********************************************************************
 
@@ -55,7 +55,7 @@
      a:link { color: #804000; }
      a:visited { color: #804000; }
      a:active { color: #804000; }
-     
+
      b { font-weight: bold; }
 
    -->
