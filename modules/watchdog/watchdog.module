@@ -20,13 +20,13 @@ function watchdog_perm() {
 
 function watchdog_link($type) {
   if ($type == "admin" && user_access("administer watchdog")) {
--    $help["general"] = t("The watchdog module monitors your web site, captures system events in a log and records them to be reviewed by an authorized individual at a later time.  The watchdog log is simply a list of events recorded during operation and contains usage data, performance data, errors, warnings and operational information. It is vital to check the watchdog report on a regular basis as it is often the only way to tell what is going on.");
--    $help["user"] = t("Watchdog events that have to do with users. Most of these come from the user.module.");
--    $help["regular"] = t("Watchdog events that are \"normal\" and have no other classification.");
--    $help["httpd"] = t("Watchdog events that are from the web server.<br />Note: At this time this logging level is <b>not</b> used.");
--    $help["special"] = t("Watchdog events about adding, changing, and moderating nodes and comments.");
--    $help["error"] = t("Watchdog general error events, such as invalid login, permission denied, and database errors.");
--    $help["warning"] = t("Watchdog warning events. These events don't stop Drupal from running, but are things you should no to correct.");
+    $help["general"] = t("The watchdog module monitors your web site, captures system events in a log and records them to be reviewed by an authorized individual at a later time.  The watchdog log is simply a list of events recorded during operation and contains usage data, performance data, errors, warnings and operational information. It is vital to check the watchdog report on a regular basis as it is often the only way to tell what is going on.");
+    $help["user"] = t("Watchdog events that have to do with users. Most of these come from the user.module.");
+    $help["regular"] = t("Watchdog events that are \"normal\" and have no other classification.");
+    $help["httpd"] = t("Watchdog events that are from the web server.<br />Note: At this time this logging level is <b>not</b> used.");
+    $help["special"] = t("Watchdog events about adding, changing, and moderating nodes and comments.");
+    $help["error"] = t("Watchdog general error events, such as invalid login, permission denied, and database errors.");
+    $help["warning"] = t("Watchdog warning events. These events don't stop Drupal from running, but are things you should no to correct.");
 
     menu("admin/watchdog", "site monitoring", "watchdog_admin", $help["general"], 6);
     menu("admin/watchdog/user", "user messages", "watchdog_admin", $help["user"]);
