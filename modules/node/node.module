@@ -691,19 +691,6 @@ function node_menu($may_cache) {
   return $items;
 }
 
-function node_admin_edit($node) {
-  if (is_numeric($node)) {
-    $node = node_load(array('nid' => $node));
-  }
-
-  $output .= node_form($node);
-
-  // Display the node form extensions:
-  $output .= implode("\n", module_invoke_all('node_link', $node));
-
-  return $output;
-}
-
 /**
  * Generate the content administration overview.
  */
