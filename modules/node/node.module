@@ -147,7 +147,9 @@ function node_save($node, $filter) {
     */
 
     // Set some required fields:
-    $node->created = time();
+    if (!$node->created) {
+      $node->created = time();
+    }
     $node->changed = time();
     $node->nid = db_next_id("node");
 
@@ -650,6 +652,7 @@ function node_admin() {
         print node_admin_edit($id);
         break;
       case t("Preview"):
+        $edit = node_validate($edit, $error);
         print node_preview($edit);
         break;
       case t("Submit"):
@@ -1006,7 +1009,7 @@ function node_preview($node, $error = NULL) {
   ** Set the created time when needed:
   */
 
-  if (empty($node->nid)) {
+  if (empty($node->created)) {
     $node->created = time();
   }
 
@@ -1117,7 +1120,7 @@ function node_submit($node) {
         */
 
         if (user_access("administer nodes")) {
-          $fields = array("uid", "body", "comment" => 2, "promote", "moderate", "status" => 1, "teaser", "title", "type" => $node->type);
+          $fields = array("uid", "body", "comment" => 2, "created", "promote", "moderate", "status" => 1, "teaser", "title", "type" => $node->type);
         }
         else {
           $fields = array("uid" => ($user->uid ? $user->uid : 0), "body", "comment" => 2, "teaser", "title", "type" => $node->type);
@@ -1258,7 +1261,8 @@ function node_page() {
       $theme->box($title, node_edit($id));
       break;
     case t("Preview"):
-      $theme->box($title, node_preview($edit));
+      $edit = node_validate($edit, $error);
+      $theme->box($title, node_preview($edit, $error));
       break;
     case t("Submit"):
       $theme->box($title, node_submit($edit));
