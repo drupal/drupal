@@ -334,9 +334,18 @@ function user_mail_encode($string, $charset = "UTF-8") {
   ** Used to encodes mail headers that contain non US- ASCII
   ** characters.
   ** http://www.rfc-editor.org/rfc/rfc2047.txt
+  **
+  ** Notes:
+  **   - The chunks come in groupings of 4 bytes when using base64
+  **     encoded.
+  **   - trim() is used to ensure that no extra spacing is added by
+  **     chunk_split() or preg_replace().
+  **   - Using \n as the chunk separator may cause problems on some
+  **     systems and may have to be changed to \r\n or \r.
   */
-  $maxlen = 75 - 7 - strlen($charset);
-  $string = trim(chunk_split(base64_encode($string), $maxlen, "\n"));
+  $chunk_size = 75 - 7 - strlen($charset);
+  $chunk_size -= $chunk_size % 4;
+  $string = trim(chunk_split(base64_encode($string), $chunk_size, "\n"));
   $string = trim(preg_replace('/^(.*)$/m', " =?$charset?B?\\1?=", $string));
   return $string;
 }
