@@ -47,7 +47,8 @@ $mysql_updates = array(
   "2002-06-22" => "update_32",
   "2002-07-07" => "update_33",
   "2002-07-31" => "update_34",
-  "2002-08-10" => "update_35"
+  "2002-08-10" => "update_35",
+  "2002-08-16" => "update_36"
 );
 
 // Update functions
@@ -500,6 +501,11 @@ function update_34() {
 
 function update_35() {
   update_sql("ALTER TABLE poll_choices ADD INDEX (nid);");
+}
+
+function update_36() {
+  update_sql("ALTER TABLE rating CHANGE old previous int(6) NOT NULL default '0';");
+  update_sql("ALTER TABLE rating CHANGE new current int(6) NOT NULL default '0';");
 }
 
 function update_upgrade3() {

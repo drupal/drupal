@@ -318,8 +318,8 @@ CREATE TABLE poll_choices (
 
 CREATE TABLE rating (
   uid int(10) NOT NULL default '0',
-  new int(6) NOT NULL default '0',
-  old int(6) NOT NULL default '0',
+  current int(6) NOT NULL default '0',
+  previous int(6) NOT NULL default '0',
   PRIMARY KEY  (uid)
 ) TYPE=MyISAM;
 
