@@ -1,5 +1,5 @@
 <?php
-/* $Id: updates.inc,v 1.76 2004/11/28 12:28:35 dries Exp $ */
+/* $Id: updates.inc,v 1.77 2004/11/28 13:35:11 dries Exp $ */
 
 /**
  * @file
@@ -1998,7 +1998,7 @@ function update_113() {
   if ($GLOBALS['db_type'] == 'mysql') {
     $ret[] = update_sql('DROP TABLE {accesslog}');
     $ret[] = update_sql("CREATE TABLE {accesslog} (
-        aid tinyint(10) NOT NULL auto_increment,
+        aid int(10) NOT NULL auto_increment,
         title varchar(255) default NULL,
         path varchar(255) default NULL,
         url varchar(255) default NULL,

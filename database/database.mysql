@@ -20,7 +20,7 @@ CREATE TABLE access (
 --
 
 CREATE TABLE accesslog (
-  aid tinyint(10) NOT NULL auto_increment,
+  aid int(10) NOT NULL auto_increment,
   title varchar(255) default NULL,
   path varchar(255) default NULL,
   url varchar(255) default NULL,
