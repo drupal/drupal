@@ -747,7 +747,7 @@ function update_78() {
     )");
   }
   else {
-    /* Needs PGSQL/MSSQL equivalent */
+    /* Needs PostgreSQL equivalent */
   }
   return $ret;
 }

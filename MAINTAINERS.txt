@@ -32,10 +32,6 @@ LOCALE MODULE
 M: Gabor Hojtsy <goba@php.net>
 S: maintained
 
-MSSQL PORT
-M: Moshe Weitzman <weitzman@tejasa.com>
-S: maintained
-
 POSTGRES PORT
 M: Adrian Rossouw <adrian@obsidian.co.za>
 S: maintained
