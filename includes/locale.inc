@@ -41,7 +41,7 @@ function _locale_admin_manage_screen() {
   $edit = &$_POST['edit'];
   $languages = locale_supported_languages(TRUE, TRUE);
 
-  $header = array(array('data' => t('Code')), array('data' => t('English name')), array('data' => t('Enabled')), array('data' => t('default')), array('data' => t('translated')), array('data' => t('Operations')));
+  $header = array(array('data' => t('Code')), array('data' => t('English name')), array('data' => t('Enabled')), array('data' => t('Default')), array('data' => t('Translated')), array('data' => t('Operations')));
 
   foreach ($languages['name'] as $key => $lang) {
 
