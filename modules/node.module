@@ -48,7 +48,7 @@ function node_overview($query = array()) {
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
   $output .= " <TR><TH>title</TH><TH>category</TH><TH>status</TH><TH>author</TH><TH>date</TH><TH COLSPAN=\"2\">operations</TH></TR>\n";
   while ($node = db_fetch_object($result)) {
-    $output .= " <TR><TD><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></TD><TD ALIGN=\"center\">". check_output($node->category ? $node->category : $node->type) ."</TD><TD>". node_status($node, $node->status) ."</TD><TD>". format_username($node->userid) ."</TD><TD>". format_date($node->timestamp, "small") ."</TD><TD>". (user_access($user, "node") ? "<A HREF=\"admin.php?mod=node&op=edit&id=$node->nid\">edit node</A>" : "edit node") ."</TD><TD>". (user_access($user, $node->type) ? "<A HREF=\"admin.php?mod=$node->type&op=edit&id=$node->nid\">edit $node->type</A>" : "edit $node->type") ."</TD></TR>\n";
+    $output .= " <TR><TD><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></TD><TD ALIGN=\"center\">". check_output($node->category ? $node->category : $node->type) ."</TD><TD>". node_status($node->status) ."</TD><TD>". format_username($node->userid) ."</TD><TD>". format_date($node->timestamp, "small") ."</TD><TD>". (user_access($user, "node") ? "<A HREF=\"admin.php?mod=node&op=edit&id=$node->nid\">edit node</A>" : "edit node") ."</TD><TD>". (user_access($user, $node->type) ? "<A HREF=\"admin.php?mod=$node->type&op=edit&id=$node->nid\">edit $node->type</A>" : "edit $node->type") ."</TD></TR>\n";
   }
   $output .= "</TABLE>\n";
 
@@ -60,7 +60,7 @@ function node_admin_view($id) {
 
   $form .= form_item("Title", check_output($node->title));
   $form .= form_item("Author", format_username($node->userid));
-  $form .= form_item("Status", node_status($node, $node->status));
+  $form .= form_item("Status", node_status($node->status));
   $form .= form_item("Comment", node_comment_status($node->comment));
   $form .= form_item("Promote", node_promote_status($node->promote));
   $form .= form_item("Moderate", check_output($node->moderate));
@@ -78,14 +78,14 @@ function node_admin_edit($id) {
 
   $form .= form_item("Title", check_output($node->title));
   $form .= form_select("Author", "author", $node->author, array($node->author => $node->userid, $user->id => $user->userid));
-  $form .= form_select("Status", "status", $node->status, node_status($node));
+  $form .= form_select("Status", "status", $node->status, node_status($node->type));
   $form .= form_select("Comment", "comment", $node->comment, node_comment_status());
   $form .= form_select("Promote", "promote", $node->promote, node_promote_status());
   $form .= form_textfield("Moderate", "moderate", $node->moderate, 35, 255, t("Provide a comma-seperated list of the moderators their usernames."));
   $form .= form_select("Date", "timestamp", $node->timestamp, array($node->timestamp => format_date($node->timestamp) ." (original)", time() => format_date(time()) ." (current)"));
   $form .= form_hidden("nid", $node->nid);
-  $form .= form_submit("View node");
   $form .= form_submit("Save node");
+  $form .= form_submit("View node");
 
   return form("admin.php?mod=node&id=$node->nid", $form);
 }
@@ -108,10 +108,36 @@ function node_listing($queries) {
   return "<OL>$output</OL>\n";
 }
 
+function node_setting() {
+  global $REQUEST_URI;
+
+  $threshold_post = array(1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6, 7 => 7, 8 => 8, 9 => 9, 10 => 10, 11 => 11, 12 => 12, 13 => 13, 14 => 14, 15 => 15, 20 => 20, 25 => 25, 30 => 30, 35 => 35, 40 => 40, 45 => 45, 50 => 50, 60 => 60, 70 => 70, 80 => 80, 90 => 90, 100 => 100);
+  $threshold_dump = array(-1 => -1, -2 => -2, -3 => -3, -4 => -4, -5 => -5, -6 => -6, -7 => -7, -8 => -8, -9 => -9, -10 => -10, -11 => -11, -12 => -12, -13 => -13, -14 => -14, -15 => -15, -20 => -20, -25 => -25, -30 => -30);
+  $threshold_expire = array(1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6, 7 => 7, 8 => 8, 9 => 9, 10 => 10, 11 => 11, 12 => 12, 13 => 13, 14 => 14, 15 => 15, 20 => 20, 25 => 25, 30 => 30, 35 => 35, 40 => 40, 45 => 45, 50 => 50, 60 => 60, 70 => 70, 80 => 80, 90 => 90, 100 => 100);
+
+  foreach (module_list() as $name) {
+    if (module_hook($name, "user")) {
+      $form .= "<H3>Default settings for $name nodes</H3>";
+      $form .= form_select(t("Comment"), $name ."_comment", variable_get($name ."_comment", 0), node_comment_status(), t("By default, allow or dissallow users to post comments in this category."));
+      $form .= form_select(t("Promote"), $name ."_promote", variable_get($name ."_promote", 0), node_promote_status(), t("By default, promote new submissions in this category to the front page."));
+      $form .= form_select(t("Status"), $name ."_status", variable_get($name ."_status", node_status("queued")), node_status($name), t("What to do with new submissions in this category?"));
+      $form .= form_select(t("Post threshold"), $name ."_post", variable_get($name ."_post", 4), $threshold_post, t("If new submissions are subject to moderation, select a post threshold."));
+      $form .= form_select(t("Dump threshold"), $name ."_dump", variable_get($name ."_dump", -2), $threshold_dump, t("If new submissions are subject to moderation, select a dump threshold."));
+      $form .= form_select(t("Expiration threshold"), $name ."_expire", variable_get($name ."_expire", 8), $threshold_expire, t("If new submissions are subject to moderation, select a expiration threshold."));
+      $form .= form_textfield("Moderate", $name ."_moderate", variable_get($name ."_moderate", ""), 35, 255, t("Provide a comma-seperated list of the moderators' usernames."));
+    }
+  }
+
+  $form .= form_submit("Save settings");
+  $form .= form_submit("Reset to defaults");
+
+  return form($REQUEST_URI, $form);
+}
+
 function node_admin() {
   global $op, $id, $edit, $type;
 
-  print "<SMALL><A HREF=\"admin.php?mod=node&op=listing\">node listings</A> | <A HREF=\"admin.php?mod=node\">overview</A></SMALL><HR>\n";
+  print "<SMALL><A HREF=\"admin.php?mod=node&op=default\">node settings</A> | <A HREF=\"admin.php?mod=node&op=listing\">node listings</A> | <A HREF=\"admin.php?mod=node\">overview</A></SMALL><HR>\n";
 
   $id = check_input($edit[nid] ? $edit[nid] : $id);
   $type = ($type ? $type : 0);
@@ -121,6 +147,9 @@ function node_admin() {
     case "edit":
       print node_admin_edit($id);
       break;
+    case "default":
+      print node_setting();
+      break;
     case "Delete node":
       print status(node_delete($id));
       print node_overview();
@@ -128,8 +157,16 @@ function node_admin() {
     case "listing":
       print node_listing(node_query());
       break;
+    case "Save defaults":
+      print status(conf_save($edit));
+      print node_default();
+      break;
+    case "Reset to defaults":
+      print status(conf_default($edit));
+      print node_default();
+      break;
     case "Save node":
-      node_save($edit, array(uthor, comment, moderate, promote, status, timestamp));
+      node_save($edit, array(author, comment, moderate, promote, status, timestamp));
       print node_admin_view($id);
       break;
     case "View node":

@@ -189,7 +189,7 @@ CREATE TABLE item (
   PRIMARY KEY (iid)
 );
 
-# 31/05/01 
+# 31/05/01
 
 CREATE TABLE poll (
   lid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,

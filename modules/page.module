@@ -40,7 +40,7 @@ function page_save($edit) {
   global $status, $user;
 
   if (user_access($user)) {
-    node_save($edit, array(author => $user->id, body, cid, comment => category_comment($edit[cid]), format, moderate => topic_moderate($edit[tid]), promote => category_promote($edit[cid]), score => 0, status => $status[posted], tid, timestamp => time(), title, type => "page", votes => 0));
+    node_save($edit, array(author => $user->id, body, cid, comment => variable_get("page_comment", 0), format, moderate => variable_get("page_moderate", ""), promote => variable_get("page_promote", 0), score => 0, status => $status[posted], tid, timestamp => time(), title, type => "page", votes => 0));
   }
 }
 

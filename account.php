@@ -184,7 +184,7 @@ function account_content_save($edit) {
 }
 
 function account_user($uname) {
-  global $user, $status, $theme;
+  global $user, $theme;
 
   if ($user->id && $user->userid == $uname) {
     $output .= "<TABLE BORDER=\"0\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
@@ -363,9 +363,9 @@ function account_track_comments() {
 }
 
 function account_track_nodes() {
-  global $status, $theme, $user;
+  global $theme, $user;
 
-  $result = db_query("SELECT n.nid, n.type, n.title, n.timestamp, COUNT(c.cid) AS count FROM node n LEFT JOIN comments c ON c.lid = n.nid WHERE n.status = '$status[posted]' AND n.author = '$user->id' GROUP BY n.nid DESC LIMIT 25");
+  $result = db_query("SELECT n.nid, n.type, n.title, n.timestamp, COUNT(c.cid) AS count FROM node n LEFT JOIN comments c ON c.lid = n.nid WHERE n.status = '". node_status("posted") ."' AND n.author = '$user->id' GROUP BY n.nid DESC LIMIT 25");
 
   while ($node = db_fetch_object($result)) {
     $output .= "<TABLE BORDER=\"0\" CELLPADDING=\"1\" CELLSPACING=\"1\">\n";
@@ -382,13 +382,13 @@ function account_track_nodes() {
 }
 
 function account_track_site() {
-  global $rstatus, $status, $theme, $user;
+  global $theme, $user;
 
   $period = 259200; // 3 days
 
   $theme->header();
 
-  $sresult = db_query("SELECT n.title, n.nid, COUNT(c.lid) AS count FROM comments c LEFT JOIN node n ON c.lid = n.nid WHERE n.status = '$status[posted]' AND ". time() ." - n.timestamp < $period GROUP BY c.lid ORDER BY n.timestamp DESC LIMIT 10");
+  $sresult = db_query("SELECT n.title, n.nid, COUNT(c.lid) AS count FROM comments c LEFT JOIN node n ON c.lid = n.nid WHERE n.status = '". node_status("posted") ."' AND ". time() ." - n.timestamp < $period GROUP BY c.lid ORDER BY n.timestamp DESC LIMIT 10");
   while ($node = db_fetch_object($sresult)) {
     $output .= "<LI>". format_plural($node->count, "comment", "comments") ." ". t("attached to node") ." '<A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A>':</LI>";
 
@@ -409,7 +409,7 @@ function account_track_site() {
   $output .= "<TABLE BORDER=\"0\" CELLSPACING=\"4\" CELLPADDING=\"4\">\n";
   $output .= " <TR><TH>". t("Subject") ."</TH><TH>". t("Author") ."</TH><TH>". t("Type") ."</TH><TH>". t("Status") ."</TH></TR>\n";
   while ($node = db_fetch_object($result)) {
-    $output .= " <TR><TD><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></TD><TD ALIGN=\"center\">". format_username($node->userid) ."</TD><TD ALIGN=\"center\">$node->type</TD><TD>". $rstatus[$node->status] ."</TD></TR>";
+    $output .= " <TR><TD><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></TD><TD ALIGN=\"center\">". format_username($node->userid) ."</TD><TD ALIGN=\"center\">$node->type</TD><TD>". node_status($node->status) ."</TD></TR>";
   }
   $output .= "</TABLE>";
 

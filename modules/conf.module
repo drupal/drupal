@@ -111,7 +111,7 @@ function conf_view($type) {
 function conf_admin() {
   global $edit, $op, $type;
 
-  print "<SMALL><A HREF=\"admin.php?mod=conf&type=system\">system settings</A> | <A HREF=\"admin.php?mod=conf&type=module\">module settings</A> | <A HREF=\"admin.php?mod=conf&type=filter\">filters</A> | <A HREF=\"admin.php?mod=conf&op=help\">help</A></SMALL><HR>\n";
+  print "<SMALL><A HREF=\"admin.php?mod=conf&type=system\">system settings</A> | <A HREF=\"admin.php?mod=conf&type=module\">module settings</A> | <A HREF=\"admin.php?mod=conf&type=filter\">content filters</A> | <A HREF=\"admin.php?mod=conf&op=help\">help</A></SMALL><HR>\n";
 
   switch ($op) {
     case "help":

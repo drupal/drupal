@@ -6,7 +6,7 @@ function rating_conf_options() {
 
   $weight = array(t("Disabled"), 1, 2, 3, 4, 5, 6, 7, 9, 10);
   foreach (module_list() as $name) {
-    if (module_hook($name, "status")) {
+    if (module_hook($name, "user")) {
       $output .= form_select(t("Weight of a $name"), "rating_weight_$name", variable_get("rating_weight_$name", 0), $weight, t("The weight of a $name."));
     }
   }
@@ -19,7 +19,7 @@ function rating_cron() {
 
     $r1 = db_query("SELECT id FROM users ORDER BY rating DESC");
     while ($account = db_fetch_object($r1)) {
-      db_query("UPDATE users SET rating = '". rating_user($account->id) ."' WHERE id = '$account->id'");
+      db_query("UPDATE users SET rating = '". rating_gravity($account->id) ."' WHERE id = '$account->id'");
       $rating[$account->id] = ++$i;
     }
 
@@ -38,7 +38,7 @@ function rating_help() {
  <?
 }
 
-function rating_user($id) {
+function rating_gravity($id) {
   global $status;
 
   $period = 5184000;    // maximum 60 days
