@@ -286,7 +286,7 @@ function poll_view_voting(&$node, $main, $block, $links) {
   if ($node->choice) {
     foreach ($node->choice as $key => $value) {
       if ($value != "") {
-        $output .= "<div><input type=\"radio\" name=\"pollvote[$node->nid]\" value=\"$key\" />". filter($value) ."</div>";
+        $output .= "<div><input type=\"radio\" name=\"pollvote[$node->nid]\" value=\"$key\" />". check_output($value) ."</div>";
       }
     }
   }
@@ -317,7 +317,7 @@ function poll_view_results(&$node, $main, $block, $links) {
       if ($value != "") {
         $width = round($node->chvotes[$key] * 100 / max($votestotal, 1));
         $percentage = round($node->chvotes[$key] * 100 / max($votestotal, 1));
-        $output .= "<div class=\"text\">". filter($value) ."</div>";
+        $output .= "<div class=\"text\">". check_output($value) ."</div>";
         $output .= "<div class=\"bar\">";
         $output .= "<div style=\"width: ". $width ."%;\" class=\"foreground\"></div>";
         $output .= "<div style=\"width: ". (100 - $width) ."%;\" class=\"background\"></div>";
