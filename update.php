@@ -59,10 +59,15 @@ function update_page_footer() {
 function update_page() {
   global $user, $sql_updates;
 
-  $edit = $_POST["edit"];
+  if (isset($_POST['edit'])) {
+    $edit = $_POST['edit'];
+  }
+  if (isset($_POST['op'])) {
+    $op = $_POST['op'];
+  }
 
-  switch ($_POST["op"]) {
-    case "Update":
+  switch ($op) {
+      case "Update":
       // make sure we have updates to run.
       print update_page_header("Drupal database update");
       $links[] = "<a href=\"index.php\">main page</a>";
