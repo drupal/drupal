@@ -38,7 +38,7 @@ function statistics_help($section) {
       <h3>Popular content block</h3>
       <p>This module creates a block that can display the day's top viewed content, the all time top viewed content, and the last content viewed.  Each of these links can be enabled or disabled individually, and the number of posts displayed for each can be configured with a drop down menu.  If you disable all sections of this block, it will not appear.</p>
       <p>Don't forget to <a href=\"%block\">enable the block</a>.</p>",
-      array('%modules' => url('admin/modules'), '%permissions' => url('admin/user/configure/permission'), '%referer' => url('admin/logs/referrers'), '%configuration' => url('admin/settings/statistics'), '%block' => url('admin/block')));
+      array('%modules' => url('admin/modules'), '%permissions' => url('admin/access/permissions'), '%referer' => url('admin/logs/referrers'), '%configuration' => url('admin/settings/statistics'), '%block' => url('admin/block')));
     case 'admin/modules#description':
       return t('Logs access statistics for your site.');
     case 'admin/settings/statistics':

@@ -641,7 +641,7 @@ function user_menu($may_cache) {
 
     $items[] = array('path' => 'admin/access', 'title' => t('access control'),
       'callback' => 'user_admin_perm', 'access' => $access);
-    $items[] = array('path' => 'admin/access/perms', 'title' => t('permissions'),
+    $items[] = array('path' => 'admin/access/permissions', 'title' => t('permissions'),
       'callback' => 'user_admin_perm', 'access' => $access,
       'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
     $items[] = array('path' => 'admin/access/roles', 'title' => t('roles'),
@@ -1466,7 +1466,7 @@ function user_admin_perm() {
   $result = db_query('SELECT r.rid, p.perm FROM {role} r LEFT JOIN {permission} p ON r.rid = p.rid ORDER BY name');
   $roles = array();
   while ($role = db_fetch_object($result)) {
-    $role_perms[$role->rid] = $role->perm;
+    $role_permissions[$role->rid] = $role->perm;
   }
 
   $result = db_query('SELECT rid, name FROM {role} ORDER BY name');
@@ -1479,13 +1479,13 @@ function user_admin_perm() {
   $header = array_merge(array(t('Permission')), $role_names);
 
   foreach (module_list() as $module) {
-    if ($perms = module_invoke($module, 'perm')) {
+    if ($permissions = module_invoke($module, 'perm')) {
       $rows[] = array(array('data' => t('%module module', array('%module' => $module)), 'class' => 'module', 'colspan' => count($role_names) + 1));
-      asort($perms);
-      foreach ($perms as $perm) {
+      asort($permissions);
+      foreach ($permissions as $perm) {
         $row[] = array('data' => t($perm), 'class' => 'permission');
         foreach ($role_names as $rid => $name) {
-          $row[] = form_checkbox('', "$rid][$perm", 1, strstr($role_perms[$rid], $perm));
+          $row[] = form_checkbox('', "$rid][$perm", 1, strstr($role_permissions[$rid], $perm));
         }
         $rows[] = $row;
         unset($row);
@@ -1657,6 +1657,7 @@ function user_admin() {
  * Implementation of hook_help().
  */
 function user_help($section) {
+  global $user;
 
   switch ($section) {
     case 'admin/user':
@@ -1670,11 +1671,11 @@ function user_help($section) {
       return t('<p>In this area you will define the permissions for each user role (role names are defined on the <a href="%role">user roles page</a>). Each permission describes a fine-grained logical operation, such as being able to access the administration pages, or adding/modifying a user account. You could say a permission represents access granted to a user to perform a set of operations.</p>', array('%role' => url('admin/access/roles')));
     case 'admin/access/roles':
       return t('
-      Roles allow you to fine tune the security and administration of drupal.  A role defines a group of users that have certain privileges as defined in <a href="%permission">user permissions</a>.  Examples of roles include: anonymous user, authenticated user, moderator, administrator and so on. In this area you will define the <em>role names</em> of the various roles. To delete a role choose "edit".<br />By default, Drupal comes with two user roles:
+      Roles allow you to fine tune the security and administration of drupal.  A role defines a group of users that have certain privileges as defined in <a href="%permissions">user permissions</a>.  Examples of roles include: anonymous user, authenticated user, moderator, administrator and so on. In this area you will define the <em>role names</em> of the various roles. To delete a role choose "edit".<br />By default, Drupal comes with two user roles:
       <ul>
       <li>Anonymous user: this role is used for users that don\'t have a user account or that are not authenticated.</li>
       <li>Authenticated user: this role is assigned automatically to authenticated users.  Most registered users will belong to this user role unless specified otherwise.</li>
-      </ul>', array('%permission' => url('admin/access')));
+      </ul>', array('%permissions' => url('admin/access/permissions')));
     case 'admin/user/search':
       return t('<p>Enter a simple pattern ("*" may be user as a wildcard match) to search for a username.  For example, one may search for "br" and Drupal might return "brian", "brad", and "brenda".</p>');
     case 'admin/modules#description':
@@ -1705,14 +1706,14 @@ function user_help($section) {
       <p>In contrast, those with a user account can use their own name or handle and are granted various privileges: the most important is probably the ability to moderate new submissions, to rate comments, and to fine-tune the site to their personal liking, with saved personal settings.  Drupal themes make fine tuning quite a pleasure.</p>
       <p>Registered users need to authenticate by supplying either a local username and password, or a remote username and password such as a <a href=\"%jabber\">Jabber ID</a>, <a href=\"%delphi-forums\">DelphiForums ID</a>, or one from a <a href=\"%drupal\">Drupal powered</a> website. See the <a href=\"%da-auth\">distributed authentication help</a> for more information on this innovative feature.
       The local username and password, hashed with Message Digest 5 (MD5), are stored in your database. When you enter a password it is also hashed with MD5 and compared with what is in the database. If the hashes match, the username and password are correct. Once a user authenticated session is started, and until that session is over, the user won't have to re-authenticate. To keep track of the individual sessions, Drupal relies on <a href=\"%php-sess\">PHP sessions</a>. A visitor accessing your website is assigned an unique ID, the so-called session ID, which is stored in a cookie. For security's sake, the cookie does not contain personal information but acts as a key to retrieve the information stored on your server. When a visitor accesses your site, Drupal will check whether a specific session ID has been sent with the request. If this is the case, the prior saved environment is recreated.</p>
-      <h3>User preferences and profiles</h3><p>Each Drupal user has a profile, and a set of preferences which may be edited by clicking on the \"<a href=\"%user-prefs\">my account</a>\" link. Of course, a user must be logged into reach those pages. There, users will find a page for changing their preferred time zone, language, username, e-mail address, password, theme, signature, and <a href\"%da-auth\">distributed authentication names</a>. Changes made here take effect immediately. Also, administrators may make profile and preferences changes in <a href=\"%admin-user\">account administration</a> on behalf of their users.</p>
+      <h3>User preferences and profiles</h3><p>Each Drupal user has a profile, and a set of preferences which may be edited by clicking on the \"<a href=\"%user-prefs\">my account</a>\" link. Of course, a user must be logged into reach those pages. There, users will find a page for changing their preferred time zone, language, username, e-mail address, password, theme, signature, and <a href=\"%da-auth\">distributed authentication names</a>. Changes made here take effect immediately. Also, administrators may make profile and preferences changes in <a href=\"%admin-user\">account administration</a> on behalf of their users.</p>
 
       <h3>Distributed authentication<a id=\"da\"></a></h3>
       <p>One of the more tedious moments in visiting a new website is filling out the registration form. The reg form provides helpful information to the website owner, but not much value for the user. The value for the end user is usually the ability to post a messages or receive personalized news, etc. Distributed authentication (DA) gives the user what they want without having to fill out the reg form. Removing this obstacle yields more registered and active users for the website.</p>
       <p>DA enables a new user to input a username and password into the login box and immediately be recognized, even if that user never registered on your site. This works because Drupal knows how to communicate with external registration databases. For example, lets say that your new user 'Joe' is already a registered member of Delphi Forums. If your Drupal has the delphi module installed, then Drupal will inform Joe on the registration and login screens that he may login with his Delphi ID instead of registering with your Drupal instance. Joe likes that idea, and logs in with a username of joe@remote.delphiforums.com and his usual Delphi password. Drupal then communicates with remote.delphiforums.com (usually using <a href=\"%xml\">XML</a>, <a href=\"%http-post\">HTTP-POST</a>, or <a href=\"%soap\">SOAP</a>) behind the scenes and asks &quot;is this password for username=joe?&quot; If Delphi replies yes, then Drupal will create a new local account for joe and log joe into it. Joe may keep on logging into your Drupal instance in the same manner, and he will be logged into the same joe@remote.delphiforums.com account.</p>
       <p>One key element of DA is the 'authmap' table, which maps a user's authname (e.g. joe@remote.delphiforums.com) to his local UID (i.e. user identification number). This map is checked whenever a user successfully logs into an external authentication source. Once Drupal knows that the current user is definitely joe@remote.delphiforums.com (because Delphi says so), he looks up Joe's UID and logs Joe into that account.</p>
       <p>To disable distributed authentication, simply <a href=\"%dis-module\">disable</a> or remove all DA modules. For a virgin install, that means removing/disabling the jabber module and the drupal module.</p>
-      <p>Drupal is setup so that it is very easy to add support for any external authentication source. You currently have the following authentication modules installed ...</p>", array('%user-role' => url('admin/access/roles'), '%user-permission' => url('admin/access/permission'), '%jabber' => 'http://www.jabber.org/', '%delphi-forums' => 'http://www.delphiforums.com/', '%drupal' => 'http://www.drupal.org/', '%da-auth' => url('help#da'), '%php-sess' => 'http://www.php.net/manual/en/ref.session.php', '%admin-user' => url('admin/user'), '%xml' => 'http://www.xmlrpc.org/', '%http-post' => 'http://www.w3.org/Protocols/', '%soap' => 'http://www.soapware.org/', '%dis-module' => url('admin/modules')));
+      <p>Drupal is setup so that it is very easy to add support for any external authentication source. You currently have the following authentication modules installed ...</p>", array('%user-role' => url('admin/access/roles'), '%user-permission' => url('admin/access/permissions'), '%jabber' => 'http://www.jabber.org/', '%delphi-forums' => 'http://www.delphiforums.com/', '%drupal' => 'http://www.drupal.org/', '%da-auth' => url('admin/help/user#da'), '%php-sess' => 'http://www.php.net/manual/en/ref.session.php', '%admin-user' => url('admin/user'), '%xml' => 'http://www.xmlrpc.org/', '%http-post' => 'http://www.w3.org/Protocols/', '%soap' => 'http://www.soapware.org/', '%dis-module' => url('admin/modules'),  '%user-prefs' => url('user/' . $user->uid)));
 
       foreach (module_list() as $module) {
         if (module_hook($module, 'auth')) {
