@@ -453,14 +453,12 @@ function forum_page() {
 }
 
 /**
-  @addtogroup theme_system
-
-  Forum module specific theme functions.
-  @{
+ @addtogroup themeable
+ @{
 **/
 
 /**
- Controls the output of the forum body.
+ Format the forum body.
 
  @param forums
  @param topics
@@ -470,7 +468,7 @@ function forum_page() {
  @param forum_per_page
  @param offset
 
- @return string the output for the forum body.
+ @return  the output for the forum body.
 **/
 function theme_forum_display($forums, $topics, $parents, $tid, $sortby, $forum_per_page, $offset) {
   // forum list, topics list, topic browser and "add new topic" link
@@ -515,13 +513,13 @@ function theme_forum_display($forums, $topics, $parents, $tid, $sortby, $forum_p
 }
 
 /**
- Outputs the forum listing.
+ Format the forum listing.
 
  @param forums
  @param parents
  @param tid
 
- @return string the output for the forum listing.
+ @return  output for the forum listing.
 **/
 function theme_forum_list($forums, $parents, $tid) {
   global $user;
@@ -578,7 +576,7 @@ function theme_forum_list($forums, $parents, $tid) {
 }
 
 /**
- Outputs the topic listing.
+ Format the topic listing.
 
  @param tid
  @param topics
@@ -586,7 +584,7 @@ function theme_forum_list($forums, $parents, $tid) {
  @param forum_per_page
  @param offset
 
- @return string the output for the topic list.
+ @return  output for the topic list.
 **/
 function theme_forum_topic_list($tid, $topics, $sortby, $forum_per_page, $offset) {
   global $id, $status, $user, $pager_total, $forum_topic_list_header;
@@ -628,7 +626,7 @@ function theme_forum_topic_list($tid, $topics, $sortby, $forum_per_page, $offset
   return $output;
 }
 
-/**  @} End of addtogroup theme_system **/
+/**  @} End of addtogroup themeable **/
 
 function _forum_icon($new_posts, $num_posts = 0, $comment_mode = 0) {
 
