@@ -24,6 +24,7 @@ function admin_header() {
        <LI><A HREF="admin.php?section=bans">bans</A></LI>
        <LI><A HREF="admin.php?section=logs">logs</A></LI>
        <LI><A HREF="admin.php?section=stories">stories</A></LI>
+       <LI><A HREF="admin.php?section=info">info</A></LI>
       <P>
        <LI><A HREF="">home</A></LI>
      </TD>

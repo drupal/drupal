@@ -1,6 +1,5 @@
 <?
 include "submission.inc";
-include "function.inc";
 include "theme.inc";
 
 function submission_displayMain() {

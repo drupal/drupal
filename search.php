@@ -1,6 +1,5 @@
 <?
 
- include "function.inc";
  include "theme.inc";
 
  $theme->header();

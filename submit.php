@@ -146,7 +146,6 @@ function submit_submit($subject, $abstract, $article, $category) {
   watchdog(1, "added new submission with subject `$subject'.");
 }
 
-include "function.inc";
 include "theme.inc";
 
 switch($op) {
