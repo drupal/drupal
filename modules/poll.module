@@ -13,15 +13,15 @@ class Poll {
 }
 
 function poll_cron() {
-/*  $result = _node_get(array("type" => "poll"));
+  $result = _node_get(array("type" => "poll"));
   while ($poll = db_fetch_array($result)) {
-    if ($poll[active]) {
+    if (($poll[active]) && ($poll[runtime])) {
       if (($poll[timestamp] + $poll[runtime]) < time()) {
         $poll[active] = 0;
         node_save($poll, array(active));
       }
     }
-  }*/
+  }
 }
 
 function poll_get_choices_array($poll) {
