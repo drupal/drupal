@@ -110,9 +110,11 @@ function archive_calendar($original = 0) {
     $date = mktime(0, 0, 0, $month, $nday, $year);
     if (in_array($nday, $days_with_posts)) {
       $daytext = l($nday, "archive/$year/$month/$nday");
+      $dayclass = "day-link";
     }
     else {
       $daytext = "<div>$nday</div>";
+      $dayclass = "day-normal";
     }
     if ($date == $requested) {
       $output .= "  <td class=\"day-selected\">$daytext</td>\n";
@@ -124,7 +126,7 @@ function archive_calendar($original = 0) {
       $output .= "  <td class=\"day-future\">$daytext</td>\n";
     }
     else {
-      $output .= "  <td class=\"day-link\">$daytext</td>\n";
+      $output .= "  <td class=\"$dayclass\">$daytext</td>\n";
     }
 
     // Start every week on a new line:
