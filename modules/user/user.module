@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.64 2002/05/02 19:56:51 dries Exp $
+// $Id: user.module,v 1.65 2002/05/02 20:32:36 kjartan Exp $
 
 session_set_save_handler("sess_open", "sess_close", "sess_read", "sess_write", "sess_destroy", "sess_gc");
 session_start();
@@ -480,7 +480,7 @@ function user_block() {
     $output .= "<input name=\"edit[remember_me]\" type=\"checkbox\" />". t("Remember me") ."<br />\n";
     $output .= "<input name=\"edit[op]\" type=\"submit\" value=\"". t("Log in") ."\" /><br />\n";
     $output .= "</form></div>\n";
-    if (variable_get("account_register", 1)) {
+    if (variable_get("user_register", 1)) {
       $output .= "&#187; ". lm(t("Register"), array("mod" => "user", "op" => "register"), t("Create a new user account.")) ."\n";
     }
     $output .= "<br />&#187; ". lm(t("New password"), array("mod" => "user", "op" => "password"), t("Request new password via e-mail")) ."<br />";
