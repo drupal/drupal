@@ -13,7 +13,7 @@ function system_help($section = "admin/help#system") {
       $output = t("Select which themes are available to your users and specify the default theme.");
       break;
     case 'admin/system/modules':
-      $output = t("Modules are plugins for Drupal that extend its core functionality.  Here you can select which modules are enabled. On the left hand side click on the name of the module for their individual configurations.  Once a module is enabled, you will need to grant permissions to users in user management.");
+      $output = t("Modules are plugins for Drupal that extend its core functionality.  Here you can select which modules are enabled. On the left hand side click on the name of the module for their individual configurations.  Once a module is enabled, you will need to grant %permissions to users.", array("%permissions" => l("permissions", "admin/user/permission")));
       break;
     case 'admin/system/filters':
       $output = t("Filters fit between the raw text in a node and the HTML output. They allow you to replace text selectively. Uses include automatic conversion of emoticons into graphics and filtering HTML content from users' submissions.");
