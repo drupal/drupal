@@ -21,6 +21,7 @@ Drupal x.x.x, 2002-xx-xx
 - replaced weblogs.module by ping.module:
     * added support for normal and RSS notifications of http://blo.gs/.
     * added support for RSS ping-notifications of http://weblogs.com/.
+- removed the rating module
 - themes:
     * removed a significant portion of hard-coded mark-up.
 
