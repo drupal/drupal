@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal.module,v 1.65 2003/11/25 19:26:21 dries Exp $
+// $Id: drupal.module,v 1.66 2003/11/27 18:23:10 dries Exp $
 
 function drupal_help($section = "admin/help#drupal") {
   $output = "";
@@ -17,7 +17,7 @@ function drupal_help($section = "admin/help#drupal") {
       $output = t("Lets users log in using a Drupal ID and can notify drupal.org about your site.");
       break;
     case 'admin/system/modules/drupal':
-      $output = t("Using this your Drupal site can \"call home\" and add itself to the Drupal directory. If you want it to add itself to a different directory server you can change the %Drupal-setting setting -- but the directory server has to be able to handle Drupal XML. To get a full site listing go to the %general and set:<ul><li>The site name,</li><li>The site E-Mail address,</li><li>The site slogan, and</li><li>The site mission statement.</li></ul>", array("%Drupal-setting" => l(t("Drupal XML-RPC server"), "admin/system/modules/drupal"), "%general" => l(t("site configuration"), "admin/system")));
+      $output = t("Using this your Drupal site can \"call home\" and add itself to the Drupal directory. If you want it to add itself to a different directory server you can change the %Drupal-setting setting -- but the directory server has to be able to handle Drupal XML. To get a full site listing go to the %general and set the site name, the e-mail address, the slogan, and the mission statement.", array("%Drupal-setting" => l(t("Drupal XML-RPC server"), "admin/system/modules/drupal"), "%general" => l(t("site configuration"), "admin/system")));
       break;
     case 'user/help#drupal':
       $site = variable_get("site_name", "this web site");
@@ -34,7 +34,7 @@ function drupal_help($section = "admin/help#drupal") {
 
 function drupal_settings() {
   $output .= form_textfield("Drupal XML-RPC server", "drupal_server", variable_get("drupal_server", "http://www.drupal.org/xmlrpc.php"), 55, 128, "The URL of your root Drupal XML-RPC server.");
-  $output .= form_radios("Drupal directory", "drupal_directory", variable_get("drupal_directory", 0), array("Disabled", "Enabled"), "If enabled, your Drupal site will make itself known to the Drupal directory at the specified Drupal XML-RPC server.  For this to work properly, you have to set your site's name, e-mail address, slogan and mission statement.  When the \"Drupal XML-RPC server\" field is set to \"http://www.drupal.org/xmlrpc.php\", your web site will get listed on <a href=\"http://www.drupal.org/\">http://www.drupal.org/</a>.  Requires crontab.");
+  $output .= form_radios("Drupal directory", "drupal_directory", variable_get("drupal_directory", 0), array("Disabled", "Enabled"), "If enabled, your Drupal site will make itself known to the Drupal directory at the specified Drupal XML-RPC server.  For this to work properly, you must set your site's name, e-mail address, slogan and mission statement.  When the \"Drupal XML-RPC server\" field is set to \"http://www.drupal.org/xmlrpc.php\", your web site will get listed on <a href=\"http://www.drupal.org/\">http://www.drupal.org/</a>.  Requires crontab.");
 
   return $output;
 }
