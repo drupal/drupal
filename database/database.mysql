@@ -170,7 +170,7 @@ CREATE TABLE users (
   signature varchar(255) DEFAULT '' NOT NULL,
   last_access int(10) unsigned,
   last_host varchar(255),
-  permissions int(10) unsigned DEFAULT '0' NOT NULL,
+  access varchar(255) DEFAULT '' NOT NULL,
   status tinyint(4) DEFAULT '0' NOT NULL,
   history text NOT NULL,
   hash varchar(12) DEFAULT '' NOT NULL,

@@ -1,6 +1,6 @@
 <?
 
-function conf_load() {
+function conf_init() {
   global $HTTP_HOST, $REQUEST_URI;
   $file = strtr($HTTP_HOST ."". substr($REQUEST_URI, 0, strrpos($REQUEST_URI, "/")), "/:", "..");
   while ($file && !file_exists("includes/$file.conf")) {
@@ -9,7 +9,7 @@ function conf_load() {
   return $file;
 }
 
-$conf = conf_load();
+$conf = conf_init();
 
 include_once "includes/$conf.conf";
 include_once "includes/database.inc";
@@ -21,8 +21,8 @@ include_once "includes/search.inc";
 include_once "includes/theme.inc";
 include_once "includes/user.inc";
 
-user_load();
-$locale = locale_load();
-$theme = theme_load();
+user_init();
+$locale = locale_init();
+$theme = theme_init();
 
 ?>

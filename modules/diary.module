@@ -16,7 +16,7 @@ function diary_find($keys) {
   $find = array();
   $result = db_query("SELECT d.*, u.userid FROM diaries d LEFT JOIN users u ON d.author = u.id WHERE d.text LIKE '%". check_input($keys) ."%' ORDER BY d.timestamp DESC LIMIT 20");
   while ($diary = db_fetch_object($result)) {
-    array_push($find, array("subject" => "$diary->userid's diary", "link" => (user_permission($user) ? "admin.php?mod=diary&op=edit&id=$diary->id" : "module.php?mod=diary&op=view&name=$diary->userid"), "user" => $diary->userid, "date" => $diary->timestamp));
+    array_push($find, array("subject" => "$diary->userid's diary", "link" => (user_access($user, "diary") ? "admin.php?mod=diary&op=edit&id=$diary->id" : "module.php?mod=diary&op=view&name=$diary->userid"), "user" => $diary->userid, "date" => $diary->timestamp));
   }
   return $find;
 

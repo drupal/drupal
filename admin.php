@@ -2,15 +2,15 @@
 
 include_once "includes/common.inc";
 
-// validate user permission:
-if (!user_permission($user)) exit();
+// validate user access:
+if (!user_access($user)) exit();
 
 function admin_page($mod) {
-  global $repository, $site_name, $menu, $modules;
+  global $repository, $site_name, $menu, $modules, $user;
 
   function module($name, $module) {
-    global $menu, $modules;
-    if ($module["admin"]) $output .= "<A HREF=\"admin.php?mod=$name\">$name</A> | ";
+    global $menu, $modules, $user;
+    if ($module["admin"]) $output .= (user_access($user, $name) ? "<A HREF=\"admin.php?mod=$name\">$name</A> | " : " $name | ");
     $menu .= $output;
   }
 
@@ -37,7 +37,7 @@ function admin_page($mod) {
     <HR><? echo $menu; ?><A HREF="">home</A><HR>
  <?
 
-  module_execute($mod, "admin");
+  if (user_access($user, $mod)) module_execute($mod, "admin");
 
  ?>
   </BODY>

@@ -22,7 +22,7 @@ function submission_score($id) {
 function submission_vote($id, $vote, $comment) {
   global $user;
 
-  if (!user_get_history($user->history, "s$id")) {
+  if (!user_get($user, "history", "s$id")) {
     // Update submission's score- and votes-field:
     db_query("UPDATE stories SET score = score $vote, votes = votes + 1 WHERE id = $id");
 
@@ -33,7 +33,7 @@ function submission_vote($id, $vote, $comment) {
     }
 
     // Update user's history record:
-    user_set_history("s$id", $vote);
+    $user = user_set($user, "history", "s$id", $vote);
 
     // Update story table (if required):
     $result = db_query("SELECT * FROM stories WHERE id = $id");
@@ -65,7 +65,7 @@ function submission_page_main() {
   $content .= "<TABLE BORDER=\"0\" CELLSPACING=\"4\" CELLPADDING=\"4\">\n";
   $content .= " <TR BGCOLOR=\"$bgcolor1\"><TH>". t("Subject") ."</TH><TH>". t("Section") ."</TH><TH>". t("Date") ."</TH><TH>". t("Author") ."</TH><TH>". t("Score") ."</TH></TR>\n";
   while ($submission = db_fetch_object($result)) {
-    if ($user->id == $submission->author || user_get_history($user->history, "s$submission->id")) $content .= " <TR><TD WIDTH=\"100%\"><A HREF=\"module.php?mod=submission&op=view&id=$submission->id\">". check_output($submission->subject) ."</A></TD><TD>$submission->section</TD><TD ALIGN=\"center\">". date("Y-m-d", $submission->timestamp) ."<BR>". date("H:m:s", $submission->timestamp) ."</TD><TD ALIGN=\"center\">". format_username($submission->userid) ."</TD><TD ALIGN=\"center\">". submission_score($submission->id) ."</TD></TR>\n";
+    if ($user->id == $submission->author || user_get($user, "history", "s$submission->id")) $content .= " <TR><TD WIDTH=\"100%\"><A HREF=\"module.php?mod=submission&op=view&id=$submission->id\">". check_output($submission->subject) ."</A></TD><TD>$submission->section</TD><TD ALIGN=\"center\">". date("Y-m-d", $submission->timestamp) ."<BR>". date("H:m:s", $submission->timestamp) ."</TD><TD ALIGN=\"center\">". format_username($submission->userid) ."</TD><TD ALIGN=\"center\">". submission_score($submission->id) ."</TD></TR>\n";
     else $content .= " <TR><TD WIDTH=\"100%\"><A HREF=\"module.php?mod=submission&op=view&id=$submission->id\">". check_output($submission->subject) ."</A></TD><TD>$submission->section</TD><TD ALIGN=\"center\">". date("Y-m-d", $submission->timestamp) ."<BR>". date("H:m:s", $submission->timestamp) ."</TD><TD ALIGN=\"center\">". format_username($submission->userid) ."</TD><TD ALIGN=\"center\"><A HREF=\"module.php?mod=submission&op=view&id=$submission->id\">". t("vote") ."</A></TD></TR>\n";
   }
   $content .= "</TABLE>\n";
@@ -81,7 +81,7 @@ function submission_display_item($id) {
   $result = db_query("SELECT s.*, u.userid FROM stories s LEFT JOIN users u ON s.author = u.id WHERE s.id = $id");
   $submission = db_fetch_object($result);
 
-  if ($user->id == $submission->author || user_get_history($user->history, "s$submission->id")) {
+  if ($user->id == $submission->author || user_get($user, "history", "s$submission->id")) {
     header("Location: story.php?id=$submission->id");
   }
   else {
@@ -111,7 +111,7 @@ function submission_page() {
   global $comment, $id, $op, $user, $vote;
 
   if ($user->id) {
-    user_rehash();
+    $user = user_load($user->userid);
 
     switch($op) {
       case "view":
