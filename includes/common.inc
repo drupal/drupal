@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.344 2004/04/27 18:17:17 dries Exp $ */
+/* $Id: common.inc,v 1.345 2004/05/03 11:53:59 unconed Exp $ */
 
 /**
  * @defgroup common Core functions
@@ -1312,7 +1312,7 @@ include_once "includes/file.inc";
 set_error_handler("error_handler");
 
 // spit out the correct charset http header
-header("Content-Type: text/html; charset=utf-8");
+drupal_set_header("Content-Type: text/html; charset=utf-8");
 
 // initialize the _GET["q"] prior to loading the modules and invoking their 'init' hook:
 if (!empty($_GET["q"])) {
