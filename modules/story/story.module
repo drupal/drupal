@@ -1,5 +1,11 @@
 <?php
-// $Id: story.module,v 1.96 2002/01/31 20:23:44 dries Exp $
+// $Id: story.module,v 1.97 2002/02/25 20:26:38 dries Exp $
+
+function story_help() {
+  $output .= "<p>The story module enables to users to submit thoughful, cohesive posts for consideration by the rest of the community.  Stories usually follow a specific content flow: <i>submit -&gt; moderate -&gt; post to home page -&gt; comment</i>.  Administrators are able to shortcut this flow as desired.</p>";
+  $output .= "<p>Administrators may \"pin\" an important story or announcement to the front page using the <i>static on front page</i> setting while creating or editing a story (this is true for other nodes as well). In addition, administrators may provide helpful introductory text for story authors in the <i>settings</i> page.  There, administrators might also choose to set a floor on the number of words which may be included in a story.  This is designed to help discourage the submission of trvially short stories.</p>";
+  return $output;
+}
 
 function story_conf_options() {
  $output .= form_textarea("Explanation or submission guidelines", "story_help", variable_get("story_help", ""), 55, 4, "This text will be displayed at the top of the story submission form.  Useful for helping or instructing your users.");
@@ -55,16 +61,6 @@ function story_link($type) {
   }
 
   return $links ? $links : array();
-}
-
-function story_help() {
- ?>
-  // TODO: update documentation, outdated
-
-  //<p>Queued stories: user-contributed stories are automatically whisked away to a submission queue for moderators (i.e. registered user) to frown at.  Moderators vote whether or not a story should be posted to the front page for discussion.</p>
-  //<p>Posted stories: published stories accessible to all visitors.</p>
-  //<p>Dumped stories: rejected stories that are no longer available to visitors.</p>
- <?php
 }
 
 function story_form(&$node, &$help, &$error) {
