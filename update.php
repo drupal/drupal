@@ -44,7 +44,8 @@ $mysql_updates = array(
   "2003-08-15" => "update_60",
   "2003-08-20" => "update_61",
   "2003-08-27" => "update_62",
-  "2003-09-09" => "update_63"
+  "2003-09-09" => "update_63",
+  "2003-09-10" => "update_64"
 );
 
 function update_32() {
@@ -386,6 +387,10 @@ function update_63() {
   update_sql("INSERT INTO users (uid, name, mail, timestamp) VALUES ('0', 'Anonymous', 'root@localhost', '". time() ."')");
   $users = db_result(db_query("SELECT MAX(uid) FROM users;"));
   update_sql("INSERT INTO sequences (name, id) VALUES ('users_uid', '$users')");
+}
+
+function update_64() {
+  update_sql("UPDATE users SET rid = 1 WHERE uid = 0");
 }
 
 /*

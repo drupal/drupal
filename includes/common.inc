@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.240 2003/09/05 13:19:00 kjartan Exp $
+// $Id: common.inc,v 1.241 2003/09/10 19:30:33 dries Exp $
 
 function conf_init() {
 
@@ -670,7 +670,7 @@ function format_rss_channel($title, $link, $description, $items, $language = "en
   $output .= " <description>". drupal_specialchars($description) ."</description>\n";
   $output .= " <language>". drupal_specialchars(strip_tags($language)) ."</language>\n";
   foreach ($args as $key => $value) {
-    $output .= "<$key>". drupal_specialchars(strip_tags($value)) ."</$key>";
+    $output .= " <$key>". drupal_specialchars(strip_tags($value)) ."</$key>\n";
   }
   $output .= $items;
   $output .= "</channel>\n";
