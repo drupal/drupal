@@ -117,7 +117,7 @@ function meta_overview() {
   $result = db_query("SELECT * FROM collection ORDER BY name");
 
   $output .= "<H3>Collection overview</H3>";
-  $output .= "<TABLE BORDER=\"1\" CELLSPADDING=\"2\" CELLSPACING=\"2\">\n";
+  $output .= "<TABLE BORDER=\"1\" cellpadding=\"2\" CELLSPACING=\"2\">\n";
   $output .= " <TR><TH>name</TH><TH>node types</TH><TH>operations</TH></TR>\n";
   while ($collection = db_fetch_object($result)) {
     $output .= " <TR><TD>". check_output($collection->name) ."</TD><TD>". check_output($collection->types) ."</TD><TD><A HREF=\"admin.php?mod=meta&type=collection&op=edit&id=$collection->cid\">edit collection</A></TD></TR>\n";
@@ -127,7 +127,7 @@ function meta_overview() {
   $result = db_query("SELECT * FROM tag ORDER BY name");
 
   $output .= "<H3>Meta-tag overview</H3>";
-  $output .= "<TABLE BORDER=\"1\" CELLSPADDING=\"2\" CELLSPACING=\"2\">\n";
+  $output .= "<TABLE BORDER=\"1\" cellpadding=\"2\" CELLSPACING=\"2\">\n";
   $output .= " <TR><TH>name</TH><TH>collections</TH><TH>meta attributes</TH><TH>operations</TH></TR>\n";
   while ($tag = db_fetch_object($result)) {
     $output .= " <TR><TD>". check_output($tag->name) ."</TD><TD>". check_output($tag->collections) ."</TD><TD>". check_output($tag->attributes) ."</TD><TD><A HREF=\"admin.php?mod=meta&type=tag&op=edit&id=$tag->tid\">edit tag</A></TD></TR>\n";

@@ -14,7 +14,7 @@ function block_perm() {
 }
 
 function block_link($type) {
-  if ($type == "admin" && user_access("adminsiter blocks")) {
+  if ($type == "admin" && user_access("administer blocks")) {
     $links[] = "<a href=\"admin.php?mod=block\">blocks</a>";
   }
 
