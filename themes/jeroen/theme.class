@@ -286,7 +286,7 @@ SRC="themes/Jeroen/images/<? echo $img; ?>" WIDTH="20" HEIGHT="20" ALT=""></TD>
    # Description..: a function to draw a box/block.
    function box($subject, $content) { 
      include "config.inc";
-     if (rand(0,40) == 20) $img = "boxbottomright4.gif";
+     if (rand(0,40) == 20) $img = "boxbottomright6.gif";
      else $img = "boxbottomright5.gif";
      $width = rand(10,200);
     ?>
