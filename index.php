@@ -11,7 +11,7 @@ $result = db_query("SELECT stories.*, users.userid, COUNT(comments.lid) AS comme
 
 // Display stories:
 $theme->header();
-while ($story = db_fetch_object($result)) $theme->abstract($story);
+while ($story = db_fetch_object($result)) $theme->story($story);
 $theme->footer();
 
 ?>

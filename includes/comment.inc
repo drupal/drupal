@@ -59,7 +59,7 @@ function comment_reply($pid, $id) {
     $pid = 0;
     if ($link == "story") {
       $item = db_fetch_object(db_query("SELECT stories.*, users.userid FROM stories LEFT JOIN users ON stories.author = users.id WHERE stories.status != 0 AND stories.id = '$id'"));
-      $theme->article($item, "");
+      $theme->story($item, "");
     }
   }
 
