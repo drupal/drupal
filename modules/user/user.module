@@ -399,26 +399,6 @@ function user_link($type) {
   return $links ? $links : array();
 }
 
-function drupal_login($arguments) {
-   // an XML-RPC method called by external clients (usually other Drupal instances)
-  $argument = $arguments->getparam(0);
-  $username = $argument->scalarval();
-  $argument = $arguments->getparam(1);
-  $password = $argument->scalarval();
-
-  if ($user = user_load(array(name => "$username", "pass" => $password, "status" => 1))) {
-    return new xmlrpcresp(new xmlrpcval($user->uid, "int"));
-  }
-  else {
-    return new xmlrpcresp(new xmlrpcval(0, "int"));
-  }
-}
-
-
-function user_xmlrpc() {
-  return array("drupal.login" => array("function" => "drupal_login"));
-}
-
 /*** Authentication methods ************************************************/
 
 function user_get_authname($account, $module) {
@@ -542,7 +522,7 @@ function user_login($edit = array(), $msg = "") {
           if (module_invoke($module, "auth", $name, $pass, $server)) {
             if (variable_get("user_register", 1) == 1 && !user_load(array("name" => "$name@$server"))) { //register this new user
               watchdog("user", "new user: $name@$server ($module ID)");
-              $user = user_save("", array("name" => "$name@$server", "pass" => user_password(), "init" => "$name@$server", "status" => 1, "authname_$module" => "$name@$server"));
+              $user = user_save("", array("name" => "$name@$server", "pass" => user_password(), "init" => "$name@$server", "status" => 1, "authname_$module" => "$name@$server", "rid" => _user_authenticated_id()));
               break;
             }
           }
