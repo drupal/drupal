@@ -94,6 +94,7 @@ function user_save($account, $array = array()) {
   ** Dynamically compose a SQL query:
   */
 
+  $user_fields = user_fields();
   if ($account->uid) {
     $data = unserialize(db_result(db_query("SELECT data FROM users WHERE uid = '$account->uid'")));
     foreach ($array as $key => $value) {
@@ -101,7 +102,7 @@ function user_save($account, $array = array()) {
         $query .= "$key = '". md5($value) ."', ";
       }
       else if (substr($key, 0, 4) !== "auth") {
-        if (in_array($key, user_fields())) {
+        if (in_array($key, $user_fields)) {
           $query .= "$key = '". check_query($value) ."', ";
         }
         else {
@@ -124,7 +125,7 @@ function user_save($account, $array = array()) {
         $values[] = "'". md5($value) ."'";
       }
       else if (substr($key, 0, 4) !== "auth") {
-        if (in_array($key, user_fields())) {
+        if (in_array($key, user_fields)) {
           $fields[] = check_query($key);
           $values[] = "'". check_query($value) ."'";
         }
@@ -277,10 +278,13 @@ function user_fields() {
 
   if (!$fields) {
     $result = db_query("SELECT * FROM users WHERE uid = 1");
-    $fields = array_keys(db_fetch_array($result));
+    if (db_num_rows($result)) {
+      $fields = array_keys(db_fetch_array($result));
+    }
   }
 
-  return $fields;
+  // Make sure we return the default fields at least
+  return is_array($fields) ? $fields: array("uid", "name", "pass", "mail", "homepage", "mode", "sort", "threshold", "theme", "signature", "timestamp", "hostname", "status", "timezone", "rating", "language", "sid", "init", "session", "data", "rid");
 }
 
 /*** Module hooks **********************************************************/
@@ -610,6 +614,7 @@ function user_login($edit = array(), $msg = "") {
   if ($msg) {
     $output .= "<p>$msg</p>";
   }
+  //TODO: alter text if there are not affiliates
   $output .= form_textfield(t("Username"), "name", $edit["name"], 20, 64, t("Enter your %s username, or an ID from one of our affiliates: %a.", array("%s" => variable_get("site_name", "local"), "%a" => implode(", ", user_auth_help_links()))));
   $output .= form_password(t("Password"), "pass", $pass, 20, 64, t("Enter the password that accompanies your username."));
   $output .= form_checkbox(t("Remember me"), "remember_me", 1, 0, 0);
@@ -763,13 +768,13 @@ function user_register($edit = array()) {
 
   if ($success) {
 
-    watchdog("user", "new user: '". $edit["name"] ."' &lt;". $edit["mail"] ."&gt;");
-
     $from = variable_get("site_mail", ini_get("sendmail_from"));
     $pass = user_password();
 
     // create new user account, noting whether administrator approval is required
+    admin_access_init();
     $account = user_save("", array_merge(array("name" => $edit["name"], "pass" => $pass, "init" => $edit["mail"], "mail" => $edit["mail"], "rid" => _user_authenticated_id(), "status" => (variable_get("user_register", 1) == 1 ? 1 : 0)), $data));
+    watchdog("user", "new user: '". $edit["name"] ."' &lt;". $edit["mail"] ."&gt;");
 
     $variables = array("%username" => $edit["name"], "%site" => variable_get("site_name", "drupal"), "%password" => $pass, "%uri" => path_uri(), "%uri_brief" => path_uri(1), "%mailto" => $edit["mail"], "%date" => format_date(time()));
 
@@ -1470,10 +1475,14 @@ function user_admin_account() {
 
 function admin_access_init() {
   $role = db_fetch_object(db_query("SELECT * FROM role WHERE name = 'anonymous user'"));
-  if (!$role) db_query("INSERT INTO role (name) VALUES ('anonymous user')");
+  if (!$role) {
+    db_query("INSERT INTO role (name) VALUES ('anonymous user')");
+  }
 
   $role = db_fetch_object(db_query("SELECT * FROM role WHERE name = 'authenticated user'"));
-  if (!$role) db_query("INSERT INTO role (name) VALUES ('authenticated user')");
+  if (!$role) {
+    db_query("INSERT INTO role (name) VALUES ('authenticated user')");
+  }
 }
 
 function user_admin() {
