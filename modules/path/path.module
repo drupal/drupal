@@ -2,7 +2,7 @@
 /* $Id$ */
 
 function path_admin() {
-  $op = strtolower($_POST["op"]);
+  $op = $_POST["op"];
   $edit = $_POST["edit"];
 
   if (user_access("administer url aliases")) {
@@ -46,7 +46,6 @@ function path_admin() {
 }
 
 function path_set_alias($path = NULL, $alias = NULL) {
-
   if ($path && !$alias) {
     db_query("DELETE FROM {path} WHERE src = '%s'", $path);
     drupal_rebuild_path_map();
