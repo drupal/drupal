@@ -32,7 +32,10 @@ function image_get_toolkit() {
   if (!$toolkit) {
     $toolkit = variable_get('image_toolkit', 'gd');
     if ($toolkit != 'gd') {
-      include_once 'includes/image.'.$toolkit.'.inc';
+      include_once 'includes/image.'. $toolkit .'.inc';
+    }
+    elseif (!image_gd_settings()) {
+      $toolkit = false;
     }
   }
 
@@ -48,14 +51,14 @@ function image_get_toolkit() {
  * @return Mixed values (typically Boolean for successful operation)
  */
 function image_toolkit_invoke($method, $params = array()) {
-  $toolkit = image_get_toolkit();
-
-  $function = 'image_' . $toolkit . '_'. $method;
-  if (function_exists($function)) {
-    return call_user_func_array($function, $params);
-  }
-  else {
-    drupal_set_message(t('%method is not supported by %toolkit.', array('%method' => "<em>$method</em>", '%toolkit' => "<em>$toolkit</em>")));
+  if ($toolkit = image_get_toolkit()) {
+    $function = 'image_'. $toolkit .'_'. $method;
+    if (function_exists($function)) {
+      return call_user_func_array($function, $params);
+    }
+    else {
+      drupal_set_message(t('%method is not supported by %toolkit.', array('%method' => "<em>$method</em>", '%toolkit' => "<em>$toolkit</em>")));
+    }
   }
 }
 
@@ -167,7 +170,9 @@ function image_crop($source, $destination, $x, $y, $width, $height) {
 function image_gd_settings() {
   if (!extension_loaded('gd')) {
     drupal_set_message(t('Unable to load the GD toolkit'), 'error');
+    return false;
   }
+  return true;
 }
 
 /**
