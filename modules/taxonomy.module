@@ -392,7 +392,7 @@ function taxonomy_form($vid, $value = 0, $help = NULL, $name = 'taxonomy') {
  */
 function taxonomy_get_vocabularies($type = '', $key = 'vid') {
   if ($type) {
-    $result = db_query("SELECT * FROM {vocabulary} WHERE nodes LIKE '%%%s%%' ORDER BY weight, name", $type);
+    $result = db_query("SELECT * FROM {vocabulary} WHERE nodes = '%s' or nodes LIKE '%s,%%' or nodes LIKE '%%,%s,%%' or nodes LIKE '%%,%s' ORDER BY weight, name", $type, $type, $type, $type);
   }
   else {
     $result = db_query('SELECT * FROM {vocabulary} ORDER BY weight, name');
@@ -421,7 +421,7 @@ function taxonomy_node_form($type, $node = '', $help = NULL, $name = 'taxonomy')
     $terms = $node->taxonomy;
   }
 
-  $c = db_query("SELECT * FROM {vocabulary} WHERE nodes LIKE '%%%s%%' ORDER BY weight, name", $type);
+  $c = db_query("SELECT * FROM {vocabulary} WHERE nodes = '%s' or nodes LIKE '%s,%%' or nodes LIKE '%%,%s,%%' or nodes LIKE '%%,%s' ORDER BY weight, name", $type, $type, $type, $type);
   while ($vocabulary = db_fetch_object($c)) {
     $result[] = taxonomy_form($vocabulary->vid, $terms, $help, $name);
   }
