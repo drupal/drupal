@@ -630,8 +630,8 @@ function form_submit($value) {
 }
 
 /**
- * Build an url; use this functions when you must write an url
- * for example in a form or a redirect
+ * Build an URL; use this functions when you must write an URL
+ * for example in a form or a redirect.
  *
  * @param $args    dictionary of arguments to be passed to the script
  * @param $script  script to be invoked; optional, defaults to node
@@ -641,11 +641,11 @@ function drupal_url($args = array(), $script = "node") {
   foreach ($args as $key => $value) {
     $t[] = "$key=". urlencode($value);
   }
-  return "$script.php?". implode("&amp;", $t);
+  return "$script.php?". implode("&", $t);
 }
 
 /**
- * Build an html link; use this functions when you must write a link
+ * Build a HTML link; use this functions when you must write a link
  * to another drupal page
  *
  * @param $args        dictionary of arguments to be passed to the script
