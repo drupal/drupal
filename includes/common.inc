@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.258 2003/10/16 17:29:25 dries Exp $
+// $Id: common.inc,v 1.259 2003/10/20 07:47:18 dries Exp $
 
 function conf_init() {
 
@@ -1178,7 +1178,12 @@ if (!empty($_GET["q"])) {
   }
 }
 else {
-  $_GET["q"] = variable_get("site_frontpage", "node");
+  if ($path = drupal_get_normal_path(variable_get("site_frontpage", "node"))) {
+    $_GET["q"] = $path;
+  }
+  else {
+    $_GET["q"] = variable_get("site_frontpage", "node");
+  }
 }
 
 // initialize installed modules:
