@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.112 2003/03/08 14:35:42 kjartan Exp $
+// $Id: comment.module,v 1.113 2003/03/09 17:19:50 kjartan Exp $
 
 $GLOBALS["cmodes"] = array(1 => t("Flat list - collapsed"), 2 => t("Flat list - expanded"), 3 => t("Threaded list - collapsed"), 4 => t("Threaded list - expanded"));
 $GLOBALS["corder"] = array(1 => t("Date - newest first"), 2 => t("Date - oldest first"));
@@ -1492,7 +1492,7 @@ function comment_update_index() {
 function comment_nodeapi(&$node, $op, $arg = 0) {
   switch ($op) {
     case "settings":
-      $output[t("Comment")] = form_select("", "comment_$node->type", variable_get("comment_$node->type", 2), array("Disabled", "Read only", "Read/Write"));
+      $output[t("comment")] = form_select("", "comment_$node->type", variable_get("comment_$node->type", 2), array("Disabled", "Read only", "Read/Write"));
       return $output;
     case "fields":
       return array("comment");
