@@ -162,7 +162,7 @@ CREATE TABLE aggregator_item (
 
 CREATE TABLE cache (
   cid varchar(255) NOT NULL default '',
-  data bytea default '',
+  data text default '',
   expire integer NOT NULL default '0',
   created integer NOT NULL default '0',
   headers text default '',
@@ -195,6 +195,20 @@ CREATE TABLE comments (
   PRIMARY KEY  (cid)
 );
 CREATE INDEX comments_nid_idx ON comments(nid);
+
+--
+-- Table structre for table 'node_last_comment'
+--
+
+CREATE TABLE node_comment_statistics (
+  nid integer NOT NULL,
+  cid integer NOT NULL default '0',
+  last_comment_timestamp integer NOT NULL default '0',
+  last_comment_name varchar(60)  default NULL,
+  last_comment_uid integer NOT NULL default '0',
+  comment_count integer NOT NULL default '0',
+  PRIMARY KEY (nid)
+);
 
 --
 -- Table structure for directory
@@ -799,3 +813,15 @@ BEGIN
   RETURN $1 || $2;
 END;
 ' LANGUAGE 'plpgsql';
+
+CREATE FUNCTION "if"(integer, text, text) RETURNS text AS '
+BEGIN
+  IF $1 THEN
+    RETURN $2;
+  END IF;
+  IF NOT $1 THEN
+    RETURN $3;
+  END IF;
+END;
+' LANGUAGE 'plpgsql';
+
