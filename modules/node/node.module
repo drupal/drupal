@@ -1369,6 +1369,7 @@ function node_page() {
   $op = $_POST["op"];
   $edit = $_POST["edit"];
 
+  theme("header");
   if (user_access("access content")) {
     if (empty($op)) {
       $op = arg(1);
@@ -1379,7 +1380,6 @@ function node_page() {
       return;
     }
 
-    theme("header");
     $name = module_invoke(arg(2), "node", "name");
     switch ($op) {
       case "add":
