@@ -301,7 +301,8 @@ function forum_load($node) {
 function forum_block($op = 'list', $delta = 0, $edit = array()) {
   switch ($op) {
     case 'list':
-      $blocks[0]['info'] = t('Forum topics');
+      $blocks[0]['info'] = t('Active forum topics');
+      $blocks[1]['info'] = t('New forum topics');
       return $blocks;
 
     case 'configure':
@@ -314,19 +315,27 @@ function forum_block($op = 'list', $delta = 0, $edit = array()) {
 
     case 'view':
       if (user_access('access content')) {
-        $sql = "SELECT n.nid, n.title, l.last_comment_timestamp, l.comment_count FROM {node} n INNER JOIN {node_comment_statistics} l ON n.nid = l.nid WHERE n.status = 1 AND n.type='forum' ORDER BY l.last_comment_timestamp DESC";
-        $sql = db_rewrite_sql($sql);
-        $content  = node_title_list(db_query_range($sql, 0, variable_get('forum_block_num', '5')), t('Active forum topics:'));
+        switch ($delta) {
+          case 0:
+           $title = t('Active forum topics');
+           $sql = "SELECT n.nid, n.title, l.last_comment_timestamp, l.comment_count FROM {node} n INNER JOIN {node_comment_statistics} l ON n.nid = l.nid WHERE n.status = 1 AND n.type='forum' ORDER BY l.last_comment_timestamp DESC";
+           $sql = db_rewrite_sql($sql);
+           $content  = node_title_list(db_query_range($sql, 0, variable_get('forum_block_num', '5')));
+           break;
 
-        $sql = "SELECT n.nid, n.title, l.comment_count FROM {node} n INNER JOIN {node_comment_statistics} l ON n.nid = l.nid WHERE n.type = 'forum' AND n.status = 1 ORDER BY n.nid DESC";
-        $sql = db_rewrite_sql($sql);
-        $content .= node_title_list(db_query_range($sql, 0, variable_get('forum_block_num', '5')), t('New forum topics:'));
+          case 1:
+           $title = t('New forum topics');
+           $sql = "SELECT n.nid, n.title, l.comment_count FROM {node} n INNER JOIN {node_comment_statistics} l ON n.nid = l.nid WHERE n.type = 'forum' AND n.status = 1 ORDER BY n.nid DESC";
+           $sql = db_rewrite_sql($sql);
+           $content .= node_title_list(db_query_range($sql, 0, variable_get('forum_block_num', '5')));
+           break;
+        }
 
         if ($content) {
           $content .= '<div class="more-link">'. l(t('more'), 'forum', array('title' => t('Read the latest forum topics.'))) .'</div>';
         }
 
-        $block['subject'] = t('Forum topics');
+        $block['subject'] = $title;
         $block['content'] = $content;
 
         return $block;
