@@ -1,12 +1,38 @@
-drupal 4.0.0, 2002-06-15
+Drupal x.x.x, 2002-xx-xx
+------------------------
+
+- collaboratively revised and expanded the Drupal documentation.
+- rewrote comment.module:
+    * reintroduced comment rating/moderation.
+    * added support for comment paging.
+    * performance improvements: improved comment caching, faster SQL queries, etc.
+- rewrote block.module:
+    * performance improvements: blocks are no longer rendered when not displayed.
+- rewrote forum.module:
+    * added a lot of features one can find in stand-alone forum software including but not limited to support for topic paging, added support for icons, rewrote the statistics module, etc.
+- rewrote statistics.module:
+    * collects access counts for each node, referrer logs, number of users/guests.
+    * export blocks displaying top viewed nodes over last 24 hour period, top viewed nodes over all time, last nodes viewed, how many users/guest online.
+- added throttle.module:
+    * auto-throttle congestion control mechanism: Drupal can adapt itself based on the server load.
+- added profile.module:
+    * enables to extend the user and registration page.
+- added pager support to the main page.
+- replaced weblogs.module by ping.module:
+    * added support for normal and RSS notifications of http://blo.gs/.
+    * added support for RSS ping-notifications of http://weblogs.com/.
+- themes:
+    * removed a significant portion of hard-coded mark-up.
+
+Drupal 4.0.0, 2002-06-15
 ------------------------
 - added tracker.module:
     * replaces the previous "your [site]" links (recent comments and nodes).
-- added weblogs.module.
+- added weblogs.module:
     * this will ping weblogs.com when new content is promoted.
 - added taxonomy module which replaces the meta module.
     * supports relations, hierarchies and synonyms.
-- added a caching system.
+- added a caching system:
     * speeds up pages for anonymous users and reduces system load.
 - added support for external SMTP libraries.
 - added an archive extension to the calendar.
@@ -33,7 +59,7 @@ drupal 4.0.0, 2002-06-15
     * teasers (abstracts) on all node types.
     * improved error checking and usability changes.
     * content versioning support.
-- improved book module to support text, html and php pages.
+- improved book module to support text, HTML and PHP pages.
 - improved comment module to mark new comments.
 - added a general outliner which will let any node type be linked to a book.
 - added an update script that lets you upgrade from previous releases or on a day to day basis when using the development tree.
@@ -44,23 +70,23 @@ drupal 4.0.0, 2002-06-15
     * changed output to valid XHTML.
     * improved multiple sites using the same Drupal database support.
     * added support for session IDs in URLs instead of cookies.
-    * made the type of content on the front page configurable
+    * made the type of content on the front page configurable.
     * made each cloud site have its own settings.
     * modules and themes can now be enabled/disabled using the administrative pages.
     * added URL abstraction for links.
-    * usability changes (renamed links, better UI, etc)
-- collaboratively revised and expanded the drupal documentation.
+    * usability changes (renamed links, better UI, etc).
+- collaboratively revised and expanded the Drupal documentation.
 
-drupal 3.0.1, 2001-10-15
+Drupal 3.0.1, 2001-10-15
 ------------------------
 - various updates:
     * added missing translations
     * updated the themes: tidied up some HTML code and added new Drupal logos.
 
-drupal 3.0.0, 2001-09-15
+Drupal 3.0.0, 2001-09-15
 ------------------------
 - major overhaul of the entire underlying design:
-    * everything is based on nodes: nodes are a conceptual "black box" to couple and manage different types of content and that promotes reusing existing code, thus reducing the complexity and size of drupal as well as improving long-term stability.
+    * everything is based on nodes: nodes are a conceptual "black box" to couple and manage different types of content and that promotes reusing existing code, thus reducing the complexity and size of Drupal as well as improving long-term stability.
 - rewrote submission/moderation queue and renamed it to queue.module.
 - removed FAQ and documentation module and merged them into a "book module".
 - removed ban module and integrated it into account.module as "access control":
@@ -93,12 +119,12 @@ drupal 3.0.0, 2001-09-15
 - added cvs.module and cvs-to-sql.pl:
     * allows to display and mail CVS log messages as daily digests.
 - added book.module:
-    * allows collaborative handbook writing: primary used for drupal documentation.
+    * allows collaborative handbook writing: primary used for Drupal documentation.
 - removed cron.module and integrated it into conf.module.
 - removed module.module as it was no longer needed.
 - various updates:
     * added "auto-post new submissions" feature versus "moderate new submissions".
-    * introduced links/drupal tags: [[link]]
+    * introduced links/Drupal tags: [[link]]
     * added preview functionality when submitting new content (such as a story) from the administration pages.
     * made the administration section only show those links a user has access to.
     * made all modules use specific form_* functions to guarantee a rock-solid forms and more consistent layout.
@@ -118,9 +144,9 @@ drupal 3.0.0, 2001-09-15
         + W3C validation on a best effort basis.
         + removed $theme->control() from themes.
         + added theme "goofy".
-- collaboratively revised and expanded the drupal documentation.
+- collaboratively revised and expanded the Drupal documentation.
 
-drupal 2.0.0, 2001-03-15
+Drupal 2.0.0, 2001-03-15
 ------------------------
 - rewrote the comment/discussion code:
     * comment navigation should be less confusing now.
@@ -130,13 +156,13 @@ drupal 2.0.0, 2001-03-15
     * story sections can be maintained from the administration pages.
     * story sections make the open submission more adaptive in that you can set individual post, dump and expiration thresholds for each section according to the story type and urgency level: stories in certain sections do not "expire" and might stay interesting and active as time passes by, whereas news-related stories are only considered "hot" over a short period of time.
 - multiple vhosts + multiple directories:
-    * you can setup multiple drupal sites on top of the same physical source tree either by using vhosts or sub-directories.
+    * you can setup multiple Drupal sites on top of the same physical source tree either by using vhosts or sub-directories.
 - added "user ratings" similar to SlashCode's Karma or Scoop's Mojo:
     * all rating logic is packed into a module to ease experimenting with different rating heuristics/algorithms.
 - added "search infrastructure":
     * improved search page and integrated search functionality in the administration pages.
 - added translation / localization / internationalization support:
-    * because many people would love to see their website showing a lot less of English, and far more of their own language, drupal provides a framework to setup a multi-lingual website or to overwrite the default English text in English.
+    * because many people would love to see their website showing a lot less of English, and far more of their own language, Drupal provides a framework to setup a multi-lingual website or to overwrite the default English text in English.
 - added fine-grained user permission (or group) system:
     * users can be granted access to specific administration sections.  Example: a FAQ maintainer can be given access to maintain the FAQ and translators can be given access to the translation pages.
 - added FAQ module
@@ -161,6 +187,6 @@ drupal 2.0.0, 2001-03-15
     * added CREDITS file
 - revised documentation
 
-drupal 1.0.0, 2001-01-15
+Drupal 1.0.0, 2001-01-15
 ------------------------
 - initial release
