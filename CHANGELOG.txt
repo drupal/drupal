@@ -14,6 +14,8 @@ Drupal x.x.x, xxxx-xx-xx
 - usability:
     * refactored the throttle module configuration.
     * added a 'add child page' link to book pages.
+- multi-site configuration:
+    * made it possible to run multiple sites from a single code base.
 - performance:
     * improved performance of the forum topics block.
     * improved performance of the tracker module.

@@ -1,5 +1,5 @@
 <?php
-// $Id: conf.php,v 1.34 2004/11/15 11:32:13 dries Exp $
+// $Id: settings.php,v 1.1 2004/11/24 22:44:01 dries Exp $
 
 /**
  * @file
