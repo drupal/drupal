@@ -291,7 +291,7 @@ function upload_form($node) {
   }
 
   if (count($node->files)) {
-    $output = form_item('', theme('table', $header, $rows), t('Note: Changes made to the attachments list are not permanent until you save this node.'));
+    $output = form_item('', theme('table', $header, $rows), t('Note: changes made to the attachments are not permanent until you save this post.'));
   }
   $output .= form_file(t('Attach new file'), "upload", 40);
   $output .= form_button(t('Attach'), 'fileop');
