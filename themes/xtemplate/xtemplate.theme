@@ -1,5 +1,5 @@
 <?php
-// $Id: xtemplate.theme,v 1.60 2004/06/18 15:04:37 dries Exp $
+// $Id: xtemplate.theme,v 1.61 2004/06/19 10:39:35 dries Exp $
 
 if (!class_exists("XTemplate")) {
   include_once("themes/xtemplate/xtemplate.inc");
@@ -63,7 +63,7 @@ function xtemplate_node($node, $main = 0, $page = 0) {
         "title"     => $node->title,
         "author"    => format_name($node),
         "date"      => format_date($node->created),
-        "static"    => ($main && $node->static) ? 'static' : '',
+        "sticky"    => ($main && $node->sticky) ? 'sticky' : '',
         "content"   => ($main && $node->teaser) ? $node->teaser : $node->body));
 
   if ($page == 0) {
