@@ -246,20 +246,12 @@ function comment_thread_max($cid, $mode, $threshold, $level = 0, $dummy = 0) {
 
   $result = db_query("SELECT c.*, u.* FROM comments c LEFT JOIN users u ON c.author = u.id WHERE c.pid = '$cid' ORDER BY c.timestamp, c.cid");
 
-  if ($level > 1) {
-    print "</td></tr></table>\n";
-  }
-
-  print "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr><td width=\"". ($level * 25) ."\">&nbsp;</td><td>\n";
-
   while ($comment = db_fetch_object($result)) {
+    print "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr><td width=\"". ($level * 25) ."\">&nbsp;</td><td>\n";
     comment_view($comment, (comment_visible($comment, $threshold) ? comment_links($comment, 0) : 0));
-    // print "comment at level $level\n";
-    comment_thread_max($comment->cid, $mode, $threshold, $level + 1, $dummy + 1);
-  }
-
-  if ($level < 2) {
     print "</td></tr></table>\n";
+
+    comment_thread_max($comment->cid, $mode, $threshold, $level + 1, $dummy + 1);
   }
 
 }
