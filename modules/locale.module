@@ -257,7 +257,6 @@ function locale_admin() {
   $edit =& $_POST["edit"];
 
   if (user_access('administer locales')) {
-    locale_admin_initialize();
 
     if (empty($op)) {
       $op = arg(2);
@@ -302,31 +301,6 @@ function locale_admin() {
   }
   else {
     print theme('page', message_access());
-  }
-}
-
-function locale_admin_initialize() {
-  /*
-  ** This function inserts common strings into the locale table (eg.
-  ** names of months and days).  We use $revision and a stored variable
-  ** to track if the locale table is up-to-date.
-  */
-
-  $revision = 1;
-
-  if (variable_get("locale_initialize_revision", 0) < $revision) {
-    variable_set("locale_initialize_revision", $revision);
-    for ($i = 1; $i <= 12; $i++) {
-      $stamp = mktime(0, 0, 0, $i, 1, 1971);
-      t(date("F", $stamp));
-      t(date("M", $stamp));
-    }
-
-    for ($i = 0; $i <= 7; $i++) {
-      $stamp = $i * 86400;
-      t(date("D", $stamp));
-      t(date("l", $stamp));
-    }
   }
 }
 
