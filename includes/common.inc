@@ -905,6 +905,9 @@ function form($form, $method = "post", $action = 0, $options = 0) {
 function form_item($title, $value, $description = 0) {
   return "<div class=\"form-item\">". ($title ? "<div class=\"title\">$title:</div>" : "") . $value . ($description ? "<div class=\"description\">$description</div>" : "") ."</div>\n";
 }
+function form_group($legend, $group, $description = 0) {
+  return "<fieldset>" . ($legend ? "<legend>$legend</legend>" : "") . $group . ($description ? "<div class=\"description\">$description</div>" : "") . "</fieldset>\n";
+}
 
 function form_radio($title, $name, $value = 1, $checked = 0, $description = 0, $attributes = 0) {
   return form_item(0, "<input type=\"radio\" class=\"form-radio\" name=\"edit[$name]\" value=\"". $value ."\"". ($checked ? " checked=\"checked\"" : "") . drupal_attributes($attributes) ." /> $title", $description);
