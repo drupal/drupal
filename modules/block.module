@@ -422,7 +422,7 @@ function block_list($region) {
       if ($enabled && $matched) {
         // Check the current throttle status and see if block should be displayed
         // based on server load.
-        if (!($block['throttle'] && (module_invoke('throttle', 'status') > 4))) {
+        if (!($block['throttle'] && (module_invoke('throttle', 'status') > 0))) {
           $array = module_invoke($block['module'], 'block', 'view', $block['delta']);
           if (is_array($array)) {
             $block = array_merge($block, $array);

@@ -59,7 +59,7 @@ function module_list($refresh = FALSE, $bootstrap = FALSE) {
         // Determine the current throttle status and see if the module should be
         // loaded based on server load. We have to directly access the throttle
         // variables, since throttle.module may not be loaded yet.
-        $throttle = ($module->throttle && variable_get('throttle_level', 0) > 4);
+        $throttle = ($module->throttle && variable_get('throttle_level', 0) > 0);
         if (!$throttle) {
           $list[$module->name] = $module->name;
           module_set_filename($module->name, $module->filename);
