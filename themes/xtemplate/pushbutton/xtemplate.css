@@ -165,7 +165,7 @@ td#home a:hover img {
 #main {
   /* padding in px not ex because IE messes up 100% width tables otherwise */
   padding: 30px 35px 50px 35px;
-  background: transparent url(background.gif) center center no-repeat;
+  background: transparent url(background.png) center center no-repeat;
 }
 #mission, .node .content, .comment .content {
   line-height: 1.4;
@@ -303,7 +303,7 @@ table#footer-menu {
   font-weight: bold;
   padding: 10px 5px 10px 30px;
   margin-bottom: .25em;
-  background: transparent url(icon-block.gif) left center no-repeat;
+  background: transparent url(icon-block.png) left center no-repeat;
 }
 .block .content {
   padding: 5px 5px 5px 5px;
@@ -338,7 +338,7 @@ table#footer-menu {
 .comment .title {
   font-size: 1em;
   padding: 10px 0px 12px 19px;
-  background: transparent url(icon-comment.gif) left center no-repeat;
+  background: transparent url(icon-comment.png) left center no-repeat;
 }
 .comment .new {
   font-weight: bold;
@@ -367,27 +367,27 @@ table#footer-menu {
 }
 .nav .links .next a:link {
   padding: 15px 20px 16px 0;
-  background: transparent url(arrow-next.gif) right center no-repeat;
+  background: transparent url(arrow-next.png) right center no-repeat;
 }
 .nav .links .next a:hover {
   padding: 15px 20px 16px 0;
-  background: transparent url(arrow-next-hover.gif) right center no-repeat;
+  background: transparent url(arrow-next-hover.png) right center no-repeat;
 }
 .nav .links .prev a:link {
   padding: 15px 0 16px 20px;
-  background: transparent url(arrow-prev.gif) left center no-repeat;
+  background: transparent url(arrow-prev.png) left center no-repeat;
 }
 .nav .links .prev a:hover {
   padding: 15px 0 16px 20px;
-  background: transparent url(arrow-prev-hover.gif) left center no-repeat;
+  background: transparent url(arrow-prev-hover.png) left center no-repeat;
 }
 .nav .links .up a:link {
   padding: 12px 0 20px 0;
-  background: transparent url(arrow-up.gif) center top no-repeat;
+  background: transparent url(arrow-up.png) center top no-repeat;
 }
 .nav .links .up a:hover {
   padding: 12px 0 20px 0;
-  background: transparent url(arrow-up-hover.gif) center top no-repeat;
+  background: transparent url(arrow-up-hover.png) center top no-repeat;
 }
 
 /*
@@ -470,7 +470,7 @@ table#footer-menu {
 #forum td.container a {
   color: #e4e9eb;
   padding: 20px 0 20px 35px;
-  background: transparent url(forum-link.gif) left center no-repeat;
+  background: transparent url(forum-link.png) left center no-repeat;
 }
 #forum td.container a:visited {
   color: #e4e9eb;

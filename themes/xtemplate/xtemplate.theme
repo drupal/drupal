@@ -25,7 +25,7 @@ function xtemplate_settings() {
   $group = form_select(t('Template'), 'xtemplate_template', variable_get('xtemplate_template', 'default'), $files, t('Selecting a different template will change the look and feel of your site.  To create a new template, create a new directory under <code>themes/xtemplate</code> and copy the contents of an existing template (e.g. <code>themes/xtemplate/default</code>) into it.  The new template will automatically become available in the selection menu and will be identified by its directory name.'));
   $output = form_group(t('Template selection'), $group);
 
-  $group = form_textarea(t('Logo'), 'xtemplate_logo', variable_get('xtemplate_logo', "<img src=\"themes/xtemplate/$template_directory/logo.gif\" alt=\"Logo\" />"), 70, 4, t('The HTML code for displaying the logo.'));
+  $group = form_textarea(t('Logo'), 'xtemplate_logo', variable_get('xtemplate_logo', "<img src=\"themes/xtemplate/$template_directory/logo.png\" alt=\"Logo\" />"), 70, 4, t('The HTML code for displaying the logo.'));
   $group .= form_textarea(t('Primary links'), 'xtemplate_primary_links', variable_get('xtemplate_primary_links', l('edit primary links', 'admin/themes/xtemplate')), 70, 8, t('The HTML code for the primary links.'));
   $group .= form_textarea(t('Secondary links'), 'xtemplate_secondary_links', variable_get('xtemplate_secondary_links', l('edit secondary links', 'admin/themes/xtemplate')), 70, 8, t('The HTML code for the secondary links.'));
   $group .= form_textarea(t('Message on front page'), 'xtemplate_mission', variable_get('xtemplate_mission', 'edit mission'), 70, 6, t('This text will be displayed on the front page.  It can be used to display a mission statement, announcement or site description..'));
@@ -143,7 +143,7 @@ function xtemplate_page($content, $title = NULL, $breadcrumb = NULL) {
     "head" => drupal_get_html_head(),
     "directory" => "themes/xtemplate/$template_directory",
     "onload_attributes" => theme_onload_attribute(),
-    "logo" => variable_get('xtemplate_logo', "<img src=\"themes/xtemplate/$template_directory/logo.gif\" alt=\"Logo\" />"),
+    "logo" => variable_get('xtemplate_logo', "<img src=\"themes/xtemplate/$template_directory/logo.png\" alt=\"Logo\" />"),
     "primary_links" => variable_get("xtemplate_primary_links", l("edit primary links", "admin/themes/xtemplate")),
     "secondary_links" => variable_get("xtemplate_secondary_links", l("edit secondary links", "admin/themes/xtemplate"))
    ));

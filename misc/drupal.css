@@ -61,19 +61,19 @@ tr td.active {
 }
 li.expanded {
   list-style-type: circle;
-  list-style-image: url(menu-expanded.gif);
+  list-style-image: url(menu-expanded.png);
   padding: 0.2em 0.5em 0 0;
   margin: 0;
 }
 li.collapsed {
   list-style-type: disc;
-  list-style-image: url(menu-collapsed.gif);
+  list-style-image: url(menu-collapsed.png);
   padding: 0.2em 0.5em 0 0;
   margin: 0;
 }
 li.leaf {
   list-style-type: square;
-  list-style-image: url(menu-leaf.gif);
+  list-style-image: url(menu-leaf.png);
   padding: 0.2em 0.5em 0 0;
   margin: 0;
 }

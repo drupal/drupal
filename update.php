@@ -45,7 +45,7 @@ function update_page_header($title) {
       </style>
 EOF;
   $output .= "</head><body>";
-  $output .= "<div id=\"logo\"><a href=\"http://drupal.org/\"><img src=\"misc/druplicon-small.gif\" alt=\"Druplicon - Drupal logo\" title=\"Druplicon - Drupal logo\" /></a></div>";
+  $output .= "<div id=\"logo\"><a href=\"http://drupal.org/\"><img src=\"misc/druplicon-small.png\" alt=\"Druplicon - Drupal logo\" title=\"Druplicon - Drupal logo\" /></a></div>";
   $output .= "<div id=\"update\"><h1>$title</h1>";
   return $output;
 }

@@ -29,7 +29,7 @@ function tablesort_header($cell, $header, $ts) {
     if ($cell['data'] == $ts['name']) {
       $ts['sort'] = (($ts['sort'] == 'asc') ? 'desc' : 'asc');
       $cell['class'] = 'active';
-      $image = '&nbsp;<img src="' . theme('image', 'arrow-' . $ts['sort'] . '.gif') . '" alt="'. t('sort icon') .'" />';
+      $image = '&nbsp;<img src="' . theme('image', 'arrow-' . $ts['sort'] . '.png') . '" alt="'. t('sort icon') .'" />';
       $title = ($ts['sort'] == 'asc' ? t('sort ascending') : t('sort descending'));
     }
     else {

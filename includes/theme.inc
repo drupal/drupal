@@ -461,7 +461,7 @@ function theme_error($message) {
  * @return a string containing the @a output.
  */
 function theme_xml_icon($url) {
-  return "<div class=\"xml-icon\"><a href=\"$url\"><img src=\"misc/xml.gif\" width=\"36\" height=\"14\" alt=\"". t('XML feed') ."\" /></a></div>";
+  return "<div class=\"xml-icon\"><a href=\"$url\"><img src=\"misc/xml.png\" width=\"36\" height=\"14\" alt=\"". t('XML feed') ."\" /></a></div>";
 }
 
 /**
