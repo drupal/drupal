@@ -3,28 +3,24 @@
 
 function system_help() {
   $output .= "<p>Drupal comes with system-wide defaults but the setting-module provides control over many Drupal preferences, behaviors including visual and operational settings.</p>";
-  $output .= system_help_cache();
-  $output .= system_help_cron();
+  $output .= "<h3>Cache</h3>". system_help_cache();
+  $output .= "<h3>Cron</h3>". system_help_cron();
   return $output;
 }
 
 function system_help_cache() {
- ?>
-  <h3>Cache</h3>
-  <p>Drupal has a caching mechanism that stores dynamically generated pages in a database.  By caching a page, Drupal does not have to generate the page each time it is requested.  Only pages requested by anonymous users are being cached.  When a cached page is accessed, Drupal will retrieve that page with minimal overhead using one SQL query only, thus reducing both the server load and the response time.</p>
-  <p>Drupal's caching mechanism can be enabled and disabled by the site administrators from the 'settings' page.  He can also define how long cached pages should be kept.</p>
- <?php
+  $output .= "<p>Drupal has a caching mechanism that stores dynamically generated pages in a database.  By caching a page, Drupal does not have to generate the page each time it is requested.  Only pages requested by anonymous users are being cached.  When a cached page is accessed, Drupal will retrieve that page with minimal overhead using one SQL query only, thus reducing both the server load and the response time.</p>";
+  $output .= "<p>Drupal's caching mechanism can be enabled and disabled by the site administrators from the 'settings' page.  He can also define how long cached pages should be kept.</p>";
+  return $output;
 }
 
 function system_help_cron() {
- ?>
-  <h3>Cron</h3>
-  <p>Some settings require a <i>cron</i> or <i>crontab</i>.  Cron (which stands for chronograph) is a periodic command scheduler: it executes commands at intervals specified in seconds.  It can be used to control the execution of daily, weekly and monthly jobs (or anything with a period of <i>n</i> seconds).   Automating tasks is one of the best ways to keep a system running smoothly, and if most of your administration does not require your direct involvement, cron is an ideal solution.</p>
-  <p>Whenever <a href="<?php echo path_uri(); ?>cron.php"><?php echo path_uri(); ?>cron.php</a> is accessed, cron will run: it checks for the jobs cron controls, and their periods in seconds.  If a certain task wasn't executed in the last n seconds, where n is the period of that job, it will be executed.  When all the executed commands terminate, cron is done.</p>
-  <p>The recommended way to setup your cron system is to setup a Unix/Linux crontab that frequently visits <a href="<?php echo path_uri(); ?>cron.php"><?php echo path_uri(); ?>cron.php</a>. Note that cron does not guarantee the commands will be executed at the specified interval.  However, Drupal will try his best and run the crons as close to the specified intervals as possible.  The more you visit cron.php, the more accurate cron will be.</p>
-  <p>If your hosting company does not allow you to setup crontabs, you can always ask someone else to setup a crontab for you. After all, virtually any Unix/Linux machine with access to the internet can setup a crontab to frequently visit <a href="<?php echo path_uri(); ?>cron.php"><?php echo path_uri(); ?>cron.php</a>.</p>
-  <p>For the Unix/Linux crontab itself, use a browser like <i>lynx</i> or <i>wget</i> but make sure the process terminates: either use <code>/usr/bin/lynx -source <?php echo path_uri(); ?>cron.php</code> or <code>/usr/bin/wget -O /dev/null <?php echo path_uri(); ?>cron.php</code>.  Take a look at the example scripts in the <code>scripts</code>-directory and make sure to adjust them to your needs.  A good crontab-line to run the cron-script once every hour would be: <code>00 * * * * /home/www/drupal/scripts/cron-lynx</code>.</p>
- <?php
+  $output .= "<p>Some settings require a <i>cron</i> or <i>crontab</i>.  Cron, which stands for chronograph, is a periodic command scheduler: it executes commands at intervals specified in seconds.  It can be used to control the execution of daily, weekly and monthly jobs (or anything with a period of <i>n</i> seconds).   Automating tasks is one of the best ways to keep a system running smoothly, and if most of your administration does not require your direct involvement, cron is an ideal solution.</p>";
+  $output .= "<p>Whenever <a href=\"". path_uri() ."cron.php\">". path_uri() ."cron.php</a> is accessed, cron will run: it checks for the jobs cron controls, and their periods in seconds.  If a certain task wasn't executed in the last n seconds, where n is the period of that job, it will be executed.  When all the executed commands terminate, cron is done.</p>";
+  $output .= "<p>The recommended way to setup your cron system is to setup a Unix/Linux crontab that frequently visits <a href=\"". path_uri() ."cron.php\">". path_uri() ."cron.php</a>.  Note that cron does not guarantee the commands will be executed at the specified interval.  However, Drupal will try his best and run the crons as close to the specified intervals as possible.  The more you visit cron.php, the more accurate cron will be.</p>";
+  $output .= "<p>If your hosting company does not allow you to setup crontabs, you can always ask someone else to setup a crontab for you. After all, virtually any Unix/Linux machine with access to the internet can setup a crontab to frequently visit <a href=\"". path_uri() ."cron.php\">". path_uri() ."cron.php</a>.</p>";
+  $output .= "<p>For the Unix/Linux crontab itself, use a browser like <i>lynx</i> or <i>wget</i> but make sure the process terminates: either use <code>/usr/bin/lynx -source <?php echo path_uri(); ?>cron.php</code> or <code>/usr/bin/wget -O /dev/null <?php echo path_uri(); ?>cron.php</code>.  Take a look at the example scripts in the <code>scripts</code>-directory and make sure to adjust them to your needs.  A good crontab-line to run the cron-script once every hour would be: <pre>     00 * * * * /home/www/drupal/scripts/cron-lynx</pre></p>";
+  return $output;
 }
 
 function system_perm() {
