@@ -45,8 +45,8 @@ M: Moshe Weitzman <weitzman@tejasa.com>
 S: maintained
 
 DEBIAN PACKAGE
-M: Hugo Espuny <hec@debian.org>
-S: orphan
+M: Hilko Bengen <bengen@debian.org>
+S: maintained
 
 THE REST:
 M: Dries <dries@drupal.org>
