@@ -1,5 +1,5 @@
 <?php
-/* $Id: theme.inc,v 1.184 2004/01/28 22:24:48 dries Exp $ */
+/* $Id: theme.inc,v 1.185 2004/01/29 06:42:03 dries Exp $ */
 
 /**
  * @file
@@ -502,7 +502,7 @@ function _theme_table_cell($cell, $header = 0) {
   if (is_array($cell)) {
     $data = $cell["data"];
     foreach ($cell as $key => $value) {
-      if ($key != "data" && $key != "field")  {
+      if ($key != "data")  {
         $attributes .= " $key=\"$value\"";
       }
     }
