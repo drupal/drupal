@@ -310,7 +310,6 @@ function poll_teaser($node) {
  * Generates the voting form for a poll.
  */
 function poll_view_voting(&$node, $main, $page, $block) {
-  $url = request_uri();
   $output = '<div class="poll">';
 
   $form = '<div class="vote-form">';
