@@ -96,7 +96,7 @@ function _menu_sort($a, $b) {
   global $_gmenu;
   $a = &$_gmenu[$a];
   $b = &$_gmenu[$b];
-  return $a["weight"] < $b["weight"] ? -11 : ($a["weight"] > $b["weight"] ? 1 : ($a["name"] < $b["name"] ? -1 : 1));
+  return $a["weight"] < $b["weight"] ? -1 : ($a["weight"] > $b["weight"] ? 1 : ($a["title"] < $b["title"] ? -1 : 1));
 }
 
 function menu_tree($parent = "") {
