@@ -516,7 +516,6 @@ function comment_render($node, $cid = 0) {
     if (empty($order)) {
       $order = $user->sort ? $user->sort : ($_SESSION["comment_sort"] ? $_SESSION["comment_sort"] : variable_get("comment_default_order", 1));
     }
-
     if (empty($threshold)) {
       $threshold = $user->threshold ? $user->threshold : ($_SESSION["comment_threshold"] ? $_SESSION["comment_threshold"] : variable_get("comment_default_threshold", 0));
     }
@@ -1303,8 +1302,12 @@ function theme_comment_threshold($threshold) {
   while ($filter = db_fetch_object($result)) {
     $filters .= " <option value=\"$filter->fid\"". ($threshold == $filter->fid ? " selected=\"selected\"" : "") .">". t($filter->filter) ."</option>";
   }
+
   if ($filters) {
     return "<select name=\"threshold\">$filters</select>\n";
+  }
+  else {
+    return "<input type=\"hidden\" name=\"threshold\" value=\"$threshold\" />\n";
   }
 }
 
