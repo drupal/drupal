@@ -145,7 +145,7 @@
      print "<HR>";
    }
 
-   function comment($comment, $link, $thread = "") {
+   function comment($comment, $link) {
      print "<A NAME=\"$comment->cid\"></A>\n";
 
      print "\n<!-- Comment: \"$comment->subject\" by $comment->userid -->\n";
@@ -194,9 +194,6 @@
 
      // Print body of comment:
      if ($comment) echo " <TR><TD BGCOLOR=\"$this->bgcolor2\">". check_output($comment->comment, 1) ."</TD></TR>";
-
-     // Print thread (if any):
-     if ($thread) echo " <TR><TD BGCOLOR=\"$this->bgcolor3\">$thread</TD></TR>";
 
      // Print bottom link(s):
      echo " <TR><TD ALIGN=\"right\" BGCOLOR=\"$this->bgcolor3\">[ $link ]</TD></TR>";
