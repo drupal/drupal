@@ -8,7 +8,7 @@
  dbconnect();
 
  if ($save) {
-   mysql_query("UPDATE testusers SET umode='$mode', uorder='$order', thold='$thold' where id='$user->id'");
+   mysql_query("UPDATE users SET umode='$mode', uorder='$order', thold='$thold' where id='$user->id'");
    $user->update();
  }
 
