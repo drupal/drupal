@@ -44,7 +44,8 @@ $mysql_updates = array(
   "2001-12-31" => "update_17",
   "2002-01-05" => "update_18",
   "2002-01-17" => "update_19",
-  "2002-01-27" => "update_20"
+  "2002-01-27" => "update_20",
+  "2002-01-30" => "update_21"
 );
 
 // Update functions
@@ -320,6 +321,10 @@ function update_19() {
 
 function update_20() {
   update_sql("INSERT INTO blocks SET name='User information', module='user', delta='0', status='2', weight='0', region='1', remove='0', path='';");
+}
+
+function update_21() {
+  update_sql("ALTER TABLE node ADD static int(2) DEFAULT '0' NOT NULL;");
 }
 
 /*

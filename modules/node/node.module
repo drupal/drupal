@@ -102,7 +102,7 @@ function node_load($conditions) {
 
 function node_save($node, $filter) {
 
-  $fields = array("nid", "uid", "type", "title", "teaser", "body", "revisions", "score", "status", "comment", "promote", "moderate", "created", "changed", "users", "votes");
+  $fields = array("nid", "uid", "type", "title", "teaser", "body", "revisions", "score", "status", "comment", "promote", "static", "moderate", "created", "changed", "users", "votes");
 
   foreach ($filter as $key => $value) {
     /*
@@ -848,6 +848,7 @@ function node_form($edit) {
     $output .= form_select(t("Set public/published"), "status", $edit->status, array("Disabled", "Enabled"));
     $output .= form_select(t("Queue for moderation"), "moderate", $edit->moderate, array("Disabled", "Enabled"));
     $output .= form_select(t("Promote to front page"), "promote", $edit->promote, array("Disabled", "Enabled"));
+    $output .= form_select(t("Static on front page"), "static", $edit->static, array("Disabled", "Enabled"));
     $output .= form_select(t("Allow users comments"), "comment", $edit->comment, array("Disabled", "Enabled"));
     $output .= form_select(t("Create new revision"), "revision", $edit->revision, array("Disabled", "Enabled"));
   }
@@ -997,7 +998,7 @@ function node_submit($node) {
         */
 
         if (user_access("administer nodes")) {
-          $fields = array("nid", "uid", "body", "comment", "created", "promote", "moderate", "revisions", "status", "teaser", "title", "type" => $node->type);
+          $fields = array("nid", "uid", "body", "comment", "created", "promote", "static", "moderate", "revisions", "status", "teaser", "title", "type" => $node->type);
         }
         else {
           $fields = array("nid", "uid" => ($user->uid ? $user->uid : 0), "body", "teaser", "title", "type" => $node->type);
@@ -1166,7 +1167,7 @@ function node_page() {
       $theme->box($title, node_delete($edit));
       break;
     default:
-      $result = db_query("SELECT nid, type FROM node WHERE ". ($meta ? "attributes LIKE '%". check_input($meta) ."%' AND " : "") ." promote = '1' AND status = '1' AND created <= '". ($date > 0 ? check_input($date) : time()) ."' ORDER BY created DESC LIMIT ". ($user->nodes ? $user->nodes : variable_get("default_nodes_main", 10)));
+      $result = db_query("SELECT nid, type FROM node WHERE ". ($meta ? "attributes LIKE '%". check_input($meta) ."%' AND " : "") ." promote = '1' AND status = '1' AND (static = '1' OR created <= '". ($date > 0 ? check_input($date) : time()) ."') ORDER BY static DESC,created DESC LIMIT ". ($user->nodes ? $user->nodes : variable_get("default_nodes_main", 10)));
       while ($node = db_fetch_object($result)) {
         node_view(node_load(array("nid" => $node->nid, "type" => $node->type)), 1);
       }
