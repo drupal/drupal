@@ -456,9 +456,8 @@ function node_settings() {
 function node_conf_filters() {
   $output .= form_select(t("Filter HTML tags"), "filter_html", variable_get("filter_html", 0), array(t("Disabled"), t("Enabled")), t("Filter HTML and PHP tags in user-contributed content."));
   $output .= form_textfield(t("Allowed HTML tags"), "allowed_html", variable_get("allowed_html", "<a> <b> <dd> <dl> <dt> <i> <li> <ol> <u> <ul>"), 64, 255, t("If enabled, optionally specify tags which should not be stripped.  'STYLE' attributes, 'ON' attributes and unclosed tags are always stripped."));
+  $output .= form_select(t("Rewrite old URLs"), "rewrite_old_urls", variable_get("rewrite_old_urls", 0), array(t("Disabled"), t("Enabled")), t("The introduction of 'clean URLs' in Drupal 4.2.0 breaks internal URLs that date back from Drupal 4.1.0 and before.  If enabled, this filter will attempt to rewrite the old style URLs to avoid broken links.  If <code>mod_rewrite</code> is available on your system, use the rewrite rules in Drupal's <code>.htaccess</code> file instead as these will also correct external referrers."));
   $output .= "<hr />";
-  // $output .= form_select(t("Enable link tags"), "filter_link", variable_get("filter_link", 0), array(t("Disabled"), t("Enabled")), t("Substitute special [[nodesubject|text]] tags. Your browser will display 'text', and when you click on it your browser will open the node with the subject 'nodesubject'. Please be aware that you'll need to copy the subject of the target node exactly in order to use this feature."));
-  // $output .= "<hr />";
   return $output;
 }
 
@@ -469,7 +468,6 @@ function node_filter_html($text) {
 
 function node_filter_link($text) {
   $pat = '\[{2}([^\|]+)(\|([^\|]+)?)?\]{2}';                   // [link|description]
-//  $dst = str_replace('%5C1', '\\1', format_tag('\\1', '\\3')); // [link|description]
   return ereg_replace($pat, $dst, $text);
 }
 
@@ -487,8 +485,13 @@ function node_filter($text) {
   $text = preg_replace("/\Wsrc\s*=[\s'\"]*javascript[^>]+?>/i", ">", $text);
   $text = preg_replace("/\Whref\s*=[\s'\"]*javascript:[^>]+?>/i", ">", $text);
 
-  if (variable_get("filter_html", 0)) $text = node_filter_html($text);
-  // if (variable_get("filter_link", 0)) $text = node_filter_link($text);
+  if (variable_get("filter_html", 0)) {
+    $text = node_filter_html($text);
+  }
+
+  if (variable_get("rewrite_old_urls", 0)) {
+    $text = rewrite_old_urls($text);
+  }
 
   return trim($text);
 }
