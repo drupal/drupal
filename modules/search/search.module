@@ -358,7 +358,7 @@ function search_view($keys = NULL) {
 }
 
 function search_page() {
-  global $keys;
+  $keys = $_POST["keys"];
 
   switch (arg(1)) {
     case "help":

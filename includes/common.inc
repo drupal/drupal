@@ -317,7 +317,7 @@ function search_item($item, $type) {
  *                 ("Restrict search to", help text, etc).
  */
 function search_form($action = 0, $query = 0, $options = 0) {
-  global $keys;
+  $keys = $_POST["keys"];
 
   if (!$action) {
     $action = url("search");
@@ -350,8 +350,8 @@ function search_form($action = 0, $query = 0, $options = 0) {
  * Collect the search results:
  */
 function search_data() {
-  global $keys;
 
+  $keys = $_POST["keys"];
   $edit = $_POST["edit"];
 
   if (isset($keys)) {
