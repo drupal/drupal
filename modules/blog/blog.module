@@ -332,25 +332,24 @@ function blog_link($type, $node = 0, $main) {
   return $links ? $links : array();
 }
 
-function blog_block() {
+function blog_block($op = "list", $delta = 0) {
   global $user;
-
-  $result = db_query("SELECT u.uid, u.name, n.created, n.title, n.nid FROM node n LEFT JOIN users u ON n.uid = u.uid WHERE n.type = 'blog' ORDER BY n.nid DESC LIMIT 10");
-
-  if (user_access("access content")) {
-    while ($node = db_fetch_object($result)) {
-      $output .= l(check_output($node->title), array("id" => $node->nid)) ."<br />\n";
-    }
-    $output .= "<br /><div align=\"right\">".lm(t("more"), array("mod" => "blog"), "", array("title" => t("Read the latest blog entries."))) ."</div>";
-    $block[0]["content"] = $output;
+  if ($op == "list") {
+    $blocks[0]["info"] = t("User blogs");
+    return $blocks;
   }
-
-
-  $block[0]["subject"] = t("User blogs");
-  $block[0]["info"] = t("User blogs");
-  $block[0]["link"] = drupal_url(array("mod" => "blog"), "module");
-
-  return $block;
+  else {
+    if (user_access("access content")) {
+      $result = db_query("SELECT u.uid, u.name, n.created, n.title, n.nid FROM node n LEFT JOIN users u ON n.uid = u.uid WHERE n.type = 'blog' ORDER BY n.nid DESC LIMIT 10");
+      while ($node = db_fetch_object($result)) {
+        $output .= l(check_output($node->title), array("id" => $node->nid)) ."<br />\n";
+      }
+      $output .= "<br /><div align=\"right\">". lm(t("more"), array("mod" => "blog"), "", array("title" => t("Read the latest blog entries."))) ."</div>";
+      $block["content"] = $output;
+      $block["subject"] = t("User blogs");
+    }
+    return $block;
+  }
 }
 
 ?>

@@ -103,11 +103,16 @@ function rating_page() {
   $theme->footer();
 }
 
-function rating_block() {
-  $block[0]["subject"] = "Top 10:<br />users";
-  $block[0]["content"] = rating_list(10);
-  $block[0]["info"] = "Top 10: users";
-  return $block;
+function rating_block($op = "list", $delta = 0) {
+  if ($op == "list") {
+    $blocks[0]["info"] = t("Top 10: users");
+    return $blocks;
+  }
+  else {
+    $block["subject"] = t("Top 10: users");
+    $block["content"] = rating_list(10);
+    return $block;
+  }
 }
 
 ?>

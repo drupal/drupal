@@ -301,54 +301,69 @@ function user_search($keys) {
   return $find;
 }
 
-function user_block() {
+function user_block($op = "list", $delta = 0) {
   global $user, $edit;
+  if ($op == "list") {
+      $blocks[0]["info"] = t("Log in");
+      $blocks[1]["info"] = t("User information");
+      $blocks[2]["info"] = t("Who's new");
 
-  if ($user->uid) {
-    // Display account settings:
-    $block[0]["subject"] = $user->name;
-
-    $output = "<div style=\"{ width: 155; }\">\n";
-
-    $links = array_merge(module_invoke_all("link", "menu.create"), array(""), module_invoke_all("link", "menu.view"), array(""), module_invoke_all("link", "menu.settings"), array(""), module_invoke_all("link", "menu.misc"));
-    $output .= @implode("<br />\n", $links);
-
-    $output .= "</div>";
-    $block[0]["content"] = $output;
+      return $blocks;
   }
   else {
-    $block[1]["subject"] = t("Log in");
+    switch ($delta) {
+      case 0:
+        if (!$user->uid) {
+          $block["subject"] = t("Log in");
 
-    $output = "<div align=\"center\">\n";
-    $output .= "<form action=\"". drupal_url(array("mod" => "user", "op" => "login"), "module") ."\" method=\"post\">\n";
-    // Save the referer.  We record where the user came from such that we
-    // can redirect him after having completed the login form.
-    if (!$edit["destination"]) $edit["destination"] = request_uri();
-    $output .= "<input name=\"edit[destination]\" type=\"hidden\" value=\"" . $edit["destination"] . "\" />";
-    $output .= "<b>". t("Username") .":</b><br /><input name=\"edit[name]\" size=\"15\" /><br />\n";
-    $output .= "<b>". t("Password") .":</b><br /><input name=\"edit[pass]\" size=\"15\" type=\"password\" /><br />\n";
-    $output .= "<input name=\"edit[remember_me]\" type=\"checkbox\" />". t("Remember me") ."<br />\n";
-    $output .= "<input name=\"edit[op]\" type=\"submit\" value=\"". t("Log in") ."\" /><br />\n";
-    $output .= "</form></div>\n";
-    if (variable_get("user_register", 1)) {
-      $output .= "&raquo; ". lm(t("Create account?"), array("mod" => "user", "op" => "register"), "", array("title" => t("Create a new user account."))) ."<br />\n";
+          $output = "<div align=\"center\">\n";
+          $output .= "<form action=\"". drupal_url(array("mod" => "user", "op" => "login"), "module") ."\" method=\"post\">\n";
+          // Save the referer.  We record where the user came from such that we
+          // can redirect him after having completed the login form.
+          if (!$edit["destination"]) $edit["destination"] = request_uri();
+          $output .= "<input name=\"edit[destination]\" type=\"hidden\" value=\"" . $edit["destination"] . "\" />";
+          $output .= "<b>". t("Username") .":</b><br /><input name=\"edit[name]\" size=\"15\" /><br />\n";
+          $output .= "<b>". t("Password") .":</b><br /><input name=\"edit[pass]\" size=\"15\" type=\"password\" /><br />\n";
+
+          if (variable_get("user_remember", 0) == 0) {
+            $output .= "<input name=\"edit[remember_me]\" type=\"checkbox\" />". t("Remember me");
+          }
+          elseif (variable_get("user_remember", 1) == 1) {
+            $output .= form_hidden("remember_me", 1);
+          }
+
+          $output .= "<br />\n<input name=\"edit[op]\" type=\"submit\" value=\"". t("Log in") ."\" /><br />\n";
+          $output .= "</form></div>\n";
+          if (variable_get("user_register", 1)) {
+            $output .= "&raquo; ". lm(t("Register"), array("mod" => "user", "op" => "register"), "", array("title" => t("Create a new user account."))) ."<br />\n";
+          }
+          $output .= "&raquo; ". lm(t("New password"), array("mod" => "user", "op" => "password"), "", array("title" => t("Request new password via e-mail.")));
+
+          $block["content"] = $output;
+          return $block;
+        }
+        break;
+      case 1:
+        if ($user->uid) {
+          // Display account settings:
+          $block["subject"] = $user->name;
+
+          $output = "<div style=\"{ width: 155; }\">\n";
+
+          $links = array_merge(module_invoke_all("link", "menu.create"), array(""), module_invoke_all("link", "menu.view"), array(""), module_invoke_all("link", "menu.settings"), array(""), module_invoke_all("link", "menu.misc"));
+          $output .= @implode("<br />\n", $links);
+
+          $output .= "</div>";
+          $block["content"] = $output;
+          return $block;
+        }
+        break;
+      case 2:
+        $block["subject"] = t("Who's new");
+        $block["content"] = user_new_users();
+        return $block;
     }
-    $output .= "&raquo; ". lm(t("Forgot password?"), array("mod" => "user", "op" => "password"), "", array("title" => t("Request new password via e-mail.")));
-
-    $block[1]["content"] = $output;
   }
-
-  $block[0]["info"] = t("User information");
-  $block[0]["link"] = drupal_url(array("mod" => "user"), "module");
-
-  $block[1]["info"] = t("Log in");
-  $block[1]["link"] = drupal_url(array("mod" => "user"), "module");
-
-  $block[2]["subject"] = t("Who's new");
-  $block[2]["info"] = t("Who's new");
-  $block[2]["content"] = user_new_users();
-
-  return $block;
 }
 
 function user_new_users() {
@@ -1076,6 +1091,7 @@ function user_page() {
 function user_conf_options() {
   $output .= form_select("Public registrations", "user_register", variable_get("user_register", 1), array("Only site administrators can create new user accounts.", "Visitors can create accounts and no administrator approval is required.", "Visitors can create accounts but administrator approval is required."));
   $output .= form_textfield("Password words", "user_password", variable_get("user_password", "foo,bar,guy,neo,tux,moo,sun,asm,dot,god,axe,geek,nerd,fish,hack,star,mice,warp,moon,hero,cola,girl,fish,java,perl,boss,dark,sith,jedi,drop,mojo"), 55, 256, "A comma separated list of short words that can be concatenated to generate human-readable passwords.");
+  $output .= form_select("Remember logged user", "user_remember", variable_get("user_remember", 0), array(t("User option (checkbox)"), t("Next time user visits he'll already be logged in"), t("Log user out as soon as he quits the browser")));
   $output .= form_textfield("Welcome e-mail subject", "user_mail_welcome_subject", variable_get("user_mail_welcome_subject", t("User account details for %username at %site")), 80, 180, "Customize the subject of your welcome e-mail, which is sent to new members upon registering.  Available variables are: %username, %site, %password, %uri, %uri_brief, %mailto, %date");
   $output .= form_textarea("Welcome e-mail body", "user_mail_welcome_body", variable_get("user_mail_welcome_body", t("%username,\n\nThank you for registering at %site. You may now login to %uri". drupal_url(array("mod" => "user", "op" => "login"), "module") ." using the following username and password:\n\nusername: %username\npassword: %password\n\nAfter logging in, you may wish to change your password at %uri". drupal_url(array("mod" => "user", "op" => "edit"), "module") ."\n\nYour new %site membership also enables to you to login to other Drupal powered websites (e.g. http://www.drop.org/) without registering. Just use the following Drupal ID and password:\n\nDrupal ID: %username@%uri_brief\npassword: %password\n\n\n--  %site team")), 70, 10, "Customize the body of the welcome e-mail, which is sent to new members upon registering.  Available variables are: %username, %site, %password, %uri, %uri_brief, %mailto");
   $output .= form_textfield("Forgotten password e-mail subject", "user_mail_pass_subject", variable_get("user_mail_pass_subject", t("Replacement login information for %username at %site")), 80, 180, "Customize the Subject of your forgotten password e-mail.  Available variables are: %username, %site, %password, %uri, %uri_brief, %mailto, %date");
@@ -1976,4 +1992,5 @@ function julia_user($type, $edit, &$user) {
 </pre>
   <?php
 }
+
 ?>

@@ -102,14 +102,20 @@ function archive_display($original = 0) {
   return $output;
 }
 
-function archive_block() {
+function archive_block($op = "list", $delta = 0) {
   global $date;
-
-  $block[0]["subject"] = "Browse archives";
-  $block[0]["content"] = archive_display($date);
-  $block[0]["info"] = "Calendar to browse archives";
-
-  return $block;
+  if ($op == "list") {
+    $blocks[0]["info"] = t("Calendar to browse archives");
+    return $blocks;
+  }
+  else {
+    switch ($delta) {
+      case 0:
+        $block["subject"] = t("Browse archives");
+        $block["content"] = archive_display($date);
+        return $block;
+    }
+  }
 }
 
 function archive_link($type) {
@@ -169,7 +175,8 @@ function archive_page() {
       }
   }
   else {
-    $theme->box(t("Access denied"), message_access());
+    #$theme->box(t("Access denied"), message_access());
+    message_access();
   }
 
   $theme->footer();

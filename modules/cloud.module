@@ -167,11 +167,16 @@ function cloud_page() {
   }
 }
 
-function cloud_block() {
-  $block[0]["subject"] = t("Site cloud");
-  $block[0]["content"] = cloud_list(20) ."<br /><div align=\"right\">". lm(t("more"), array("mod" => "cloud"), "", array("title" => t("Monitor other sites in the cloud."))) ."</div>";
-  $block[0]["info"] = t("Site cloud");
-  return $block;
+function cloud_block($op = "list", $delta = 0) {
+  if ($op == "list") {
+    $blocks[0]["info"] = t("Site cloud");
+    return $blocks;
+  }
+  else {
+    $block["subject"] = t("Site cloud");
+    $block["content"] = cloud_list(20) ."<br /><div align=\"right\">". lm(t("more"), array("mod" => "cloud"), "", array("title" => t("Monitor other sites in the cloud."))) ."</div>";
+    return $block;
+  }
 }
 
 function cloud_admin() {

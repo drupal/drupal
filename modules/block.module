@@ -13,9 +13,9 @@ function block_help() {
   <p>The content of the site can be almost entirely altered through <I>boxes</I>.  Simply put, boxes are small bits of text, HTML or PHP code which will get plugged into the site just like any other block.  Boxes are typically used to add custom blocks to the site.</p>
   <p>Each box consists of a title and an associated block of text, HTML or PHP code that can be as long as you wish and that will 'render' the content of the box.</p>
   <h3>PHP boxes</h3>
-  <p>If you know how to script in PHP, PHP boxes are easy to create.  Don't worry if you're no PHP-wizard: simply use ASCII or HTML boxes instead.</p>
+  <p>If you know how to script in PHP, PHP boxes are easy to create.  Don't worry if you're no PHP-wizard: simply use HTML boxes instead.</p>
   <p>You can use any piece of PHP code to make up the content of a PHP box: this implies that you can declare and use functions, consult the SQL database, access configuration settings and much more.  A PHP box's code is stored in the database and the engine will dynamically embed the PHP code just-in-time for execution.</p>
-  <p>There are however some factors to keep in mind when using and creating PHP boxes: PHP boxes can be extremely useful and flexible, yet they can be dangerous and insecure if not properly used.  If you are not familiar with PHP, SQL or with the site engine, avoid experimenting with PHP boxes because you can - and probably will - corrupt your database or render your site unusable!  If you don't plan to do fancy stuff with boxes then you're probably better off with ASCII or HTML boxes.</p>
+  <p>There are however some factors to keep in mind when using and creating PHP boxes: PHP boxes can be extremely useful and flexible, yet they can be dangerous and insecure if not properly used.  If you are not familiar with PHP, SQL or with the site engine, avoid experimenting with PHP boxes because you can - and probably will - corrupt your database or render your site unusable!  If you don't plan to do fancy stuff with boxes then you're probably better off with HTML boxes.</p>
   <p>Remember that the code within each PHP box must be valid PHP code -- including things like correctly terminating statements with a semicolon so that the parser won't die.  It is highly recommended that you develop your boxes separately using a simple test script on top of a test database before migrating to your production environment.</p>
   <p>Note that you can use global variables such as configuration parameters within the scope of a PHP box. Also keep in mind that variables which have been given values in a PHP box will retain these values in the engine or module afterwards.</p>
   <p>You can use the <code>return</code> statement to return the actual content for your block as well.</p>
@@ -55,44 +55,86 @@ function block_link($type) {
   return $links ? $links : array();
 }
 
-function block_block() {
-  $result = db_query("SELECT * FROM boxes ORDER BY title");
-  while ($block = db_fetch_object($result)) {
-    $blocks[$block->bid]["subject"] = check_output($block->title);
-    $blocks[$block->bid]["content"] = ($block->type == 2) ? eval($block->body) : $block->body;
-    $blocks[$block->bid]["info"] = check_output($block->info);
+function block_block($op = "list", $delta = 0) {
+  if ($op == "list") {
+    $result = db_query("SELECT bid, title, info FROM boxes ORDER BY title");
+    while ($block = db_fetch_object($result)) {
+      $blocks[$block->bid]["info"] = check_output($block->info);
+    }
+    return $blocks;
   }
-  return $blocks;
+  else {
+    $block = db_fetch_object(db_query("SELECT * FROM boxes WHERE bid = '%d'", $delta));
+    $data["subject"] = check_output($block->title);
+    $data["content"] = ($block->type == 1) ? eval($block->body) : $block->body;
+    return $data;
+  }
 }
 
 function block_admin_save($edit) {
-  foreach ($edit as $key => $value) {
-    db_query("UPDATE blocks SET region = '%s', status = '%d', custom = '%d', path = '%s', weight = '%d' WHERE name = '%s'", $value["region"], $value["status"], $value["custom"], $value["path"], $value["weight"], $key);
+  foreach ($edit as $module => $blocks) {
+    foreach ($blocks as $delta => $block) {
+      db_query("UPDATE blocks SET region = '%s', status = '%d', custom = '%d', path = '%s', weight = '%d' WHERE module = '%s' AND delta = '%d'", $block["region"], $block["status"], $block["custom"], $block["path"], $block["weight"], $module, $delta);
+    }
   }
 }
 
-function block_admin_display() {
+function block_rehash() {
   $result = db_query("SELECT * FROM blocks ORDER BY weight");
+  while ($old_block = db_fetch_object($result)) {
+    $old_blocks[$old_block->module][$old_block->delta] = $old_block;
+  }
 
+  db_query("DELETE FROM blocks");
+
+  foreach (module_list() as $module) {
+    $module_blocks = module_invoke($module, "block", "list");
+    if ($module_blocks) {
+      foreach ($module_blocks as $delta => $block) {
+        $block["module"] = $module;
+        $block["delta"]  = $delta;
+        if ($old_blocks[$module][$delta]) {
+          $block["status"] = $old_blocks[$module][$delta]->status;
+          $block["weight"] = $old_blocks[$module][$delta]->weight;
+          $block["region"] = $old_blocks[$module][$delta]->region;
+          $block["path"]   = $old_blocks[$module][$delta]->path;
+          $block["custom"] = $old_blocks[$module][$delta]->custom;
+        }
+        else {
+          $block["status"] = $block["weight"] = $block["region"] = $block["custom"] = 0;
+          $block["path"]   = "";
+        }
+
+        // reinsert blocks into table
+        db_query("INSERT INTO blocks (module, delta, status, weight, region, path, custom) VALUES ('%s', '%d', '%d', '%d', '%d', '%s', '%d')", $block["module"], $block["delta"], $block["status"], $block["weight"], $block["region"], $block["path"], $block["custom"]);
+
+        $blocks[] = $block;
+      }
+    }
+  }
+
+  return $blocks;
+}
+
+function block_admin_display() {
   // Generate output:
   $output = "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
   $output .= "<tr><th>block</th><th>module</th><th>enabled</th><th>custom</th><th>weight</th><th>region</th><th>path</th><th colspan=\"2\">operations</th></tr>\n";
 
-  while ($block = db_fetch_object($result)) {
-    $weights = array(0 => 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+  $blocks = block_rehash();
 
-    $output .= '<tr>';
-    //$output .= '<td>'. la($block->name, array("mod" => "block", "op" => "view", "id" => $block->delta), "", array("title" => t("View the block details"))) .'</td>';
-    $output .= "<td>$block->name</td>";
-    $output .= '<td>'. (module_hook($block->module, "admin") ? la($block->module, array("mod" => $block->module), "", array("title" => t("Administer module"))) : $block->module) .'</td>';
-    $output .= '<td align="center">'. form_checkbox(NULL, "$block->name][status", 1, $block->status) .'</td>';
-    $output .= '<td align="center">'. form_checkbox(NULL, "$block->name][custom", 1, $block->custom) .'</td>';
-    $output .= '<td>'. form_select(NULL, "$block->name][weight", $block->weight, $weights) .'</td>';
-    $output .= '<td>'. form_select(NULL, "$block->name][region", $block->region, array("left", "right")) .'</td>';
-    $output .= '<td>'. form_textfield(NULL, "$block->name][path", $block->path, 10, 255) .'</td>';
-    if ($block->module == 'block') {
-      $output .= '<td>'. la(t("edit"), array("mod" => "block", "op" => "edit", "id" => $block->delta)) .'</td>';
-      $output .= '<td>'. la(t("delete"), array("mod" => "block", "op" => "delete", "id" => $block->delta)) .'</td>';
+  foreach ($blocks as $block) {
+    $output .= "<tr>";
+    $output .= "<td>".$block["info"]."</td>";
+    $output .= "<td>". (module_hook($block["module"], "admin") ? la($block["module"], array("mod" => $module), "", array("title" => t("Administer module"))) : $block["module"]) ."</td>";
+    $output .= "<td align=\"center\">". form_checkbox(NULL, $block["module"]."][".$block["delta"]."][status", 1, $block["status"]) ."</td>";
+    $output .= "<td align=\"center\">". form_checkbox(NULL, $block["module"]."][".$block["delta"]."][custom", 1, $block["custom"]) ."</td>";
+    $output .= "<td>". form_weight(NULL, $block["module"]."][".$block["delta"]."][weight", $block["weight"]) ."</td>";
+    $output .= "<td>". form_select(NULL, $block["module"]."][".$block["delta"]."][region", $block["region"], array("left", "right")) ."</td>";
+    $output .= "<td>". form_textfield(NULL, $block["module"]."][".$block["delta"]."][path", $block["path"], 10, 255) ."</td>";
+    if ($block["module"] == 'block') {
+      $output .= "<td>". la(t("edit"), array("mod" => "block", "op" => "edit", "id" => $block["delta"])) ."</td>";
+      $output .= "<td>". la(t("delete"), array("mod" => "block", "op" => "delete", "id" => $block["delta"])) ."</td>";
     }
     $output .= "</tr>\n";
   }
@@ -107,12 +149,20 @@ function block_admin_preview() {
 
   $result = db_query("SELECT * FROM blocks WHERE status > 0 AND region = 0 ORDER BY weight");
   $lblocks .= "<table border=\"0\" cellpadding=\"2\" cellspacing=\"2\">\n";
-  while ($block = db_fetch_object($result)) $lblocks .= " <tr><td nowrap>". ($block->status == 2 ? "<b>$block->name</b>" : $block->name) ."</td><td>$block->weight</td></tr>\n";
+  while ($block = db_fetch_object($result)) {
+    $block_data = module_invoke($block->module, "block", "list");
+    $name = $block_data[$block->delta]["info"];
+    $lblocks .= " <tr><td nowrap=\"nowrap\">". ($block->status == 2 ? "<b>$name</b>" : $name) ."</td><td>$block->weight</td></tr>\n";
+  }
   $lblocks .= "</table>\n";
 
   $result = db_query("SELECT * FROM blocks WHERE status > 0 AND region = 1 ORDER BY weight");
   $rblocks .= "<table border=\"0\" cellpadding=\"2\" cellspacing=\"2\">\n";
-  while ($block = db_fetch_object($result)) $rblocks .= " <tr><td nowrap>". ($block->status == 2 ? "<b>$block->name</b>" : $block->name) ."</td><td>$block->weight</td></tr>\n";
+  while ($block = db_fetch_object($result)) {
+    $block_data = module_invoke($block->module, "block", "list");
+    $name = $block_data[$block->delta]["info"];
+    $rblocks .= " <tr><td nowrap=\"nowrap\">". ($block->status == 2 ? "<b>$name</b>" : $name) ."</td><td>$block->weight</td></tr>\n";
+  }
   $rblocks .= "</table>\n";
 
   $output .= "<h3>layout scheme #1:</h3>\n";
@@ -124,7 +174,11 @@ function block_admin_preview() {
 
   $result = db_query("SELECT * FROM blocks WHERE status > 0 ORDER BY weight");
   $blocks .= "<table border=\"0\" cellpadding=\"2\" cellspacing=\"2\">\n";
-  while ($block = db_fetch_object($result)) $blocks .= " <tr><td nowrap>". ($block->status == 2 ? "<b>$block->name</b>" : $block->name) ."</td><td>$block->weight</td></tr>\n";
+  while ($block = db_fetch_object($result)) {
+    $block_data = module_invoke($block->module, "block", "list");
+    $name = $block_data[$block->delta]["info"];
+    $blocks .= " <tr><td nowrap=\"nowrap\">". ($block->status == 2 ? "<b>$name</b>" : $name) ."</td><td>$block->weight</td></tr>\n";
+  }
   $blocks .= "</table>\n";
 
   $output .= "<h3>layout scheme #2:</h3>\n";
@@ -144,23 +198,19 @@ function block_admin_preview() {
   print $output;
 }
 
-function block_init() {
-  foreach (module_list() as $name) {
-    module_rehash_blocks($name);
-  }
-}
-
 function block_box_get($bid) {
   return db_fetch_array(db_query("SELECT * FROM boxes WHERE bid = '%s'", $bid));
 }
 
 function block_box_form($edit = array()) {
-  $type = array(0 => "ASCII", 1 => "HTML", 2 => "PHP");
+  $type = array(0 => "HTML", 1 => "PHP");
 
-  $form .= form_textfield("Title", "title", $edit["title"], 50, 64);
+  $form = form_textfield("Title", "title", $edit["title"], 50, 64);
   $form .= form_textfield("Description", "info", $edit["info"], 50, 64);
   $form .= form_textarea("Body", "body", $edit["body"], 70, 10);
-  $form .= form_select("Type", "type", $edit["type"], $type);
+  if (user_access("create PHP content")) {
+    $form .= form_select("Type", "type", $edit["type"], $type);
+  }
 
   if ($edit["bid"]) {
     $form .= form_hidden("bid", $edit["bid"]);
@@ -172,18 +222,17 @@ function block_box_form($edit = array()) {
 }
 
 function block_box_save($edit) {
+  if (!user_access("create PHP content")) {
+    $edit["type"] = 0;
+  }
+
   if ($edit["bid"]) {
     db_query("UPDATE boxes SET title = '%s', body = '%s', info = '%s', type = '%s' WHERE bid = '%s'", $edit["title"], $edit["body"], $edit["info"], $edit["type"], $edit["bid"]);
     return "block updated.";
   }
   else {
     db_query("INSERT INTO boxes (title, body, info, type) VALUES  ('%s', '%s', '%s', '%s')", $edit["title"], $edit["body"], $edit["info"], $edit["type"]);
-    if (db_error()) {
-      return "block added.";
-    }
-    else {
-      return "failed to add block.";
-    }
+    return "block added.";
   }
 }
 
@@ -195,7 +244,7 @@ function block_box_delete($bid) {
 }
 
 function block_admin() {
-  global $op, $edit;
+  global $op, $edit, $theme;
 
   if (user_access("administer blocks")) {
 
@@ -204,9 +253,7 @@ function block_admin() {
     $links[] = la(t("preview"), array("mod" => "block", "op" => "preview"));
     $links[] = la(t("help"), array("mod" => "block", "op" => "help"));
 
-    print "<small>". implode(" &middot; ", $links) ."</small><hr />";
-
-    block_init();
+    print "<small>". $theme->links($links) ."</small><hr />";
 
     switch ($op) {
       case "help":
@@ -225,12 +272,10 @@ function block_admin() {
       case "delete":
         global $id;
         print status(block_box_delete($id));
-        block_init();
         block_admin_display();
         break;
       case "Save block":
         print status(block_box_save($edit));
-        block_init();
         block_admin_display();
         break;
       case "Save blocks":
@@ -248,27 +293,26 @@ function block_admin() {
 function block_user($type, &$edit, &$user) {
   switch ($type) {
     case "register_form":
-      $result = db_query("SELECT * FROM blocks WHERE custom = '%d' ORDER BY name", 1);
+      $result = db_query("SELECT * FROM blocks WHERE custom = '%d' ORDER BY module, delta", 1);
 
       while ($block = db_fetch_object($result)) {
-        $form .= form_hidden("block][$block->name", $block->status);
+        $form .= form_hidden("block][$block->module][$block->delta", $block->status);
       }
 
       return $form;
     case "edit_form":
-      $result = db_query("SELECT * FROM blocks WHERE custom = '%d' ORDER BY name", 1);
+      $result = db_query("SELECT * FROM blocks WHERE custom = '%d' ORDER BY module, delta", 1);
 
       while ($block = db_fetch_object($result)) {
-        $data = module_invoke($block->module, "block");
-        if ($data[$block->delta]["subject"]) {
-          $form .= "<tr><td>$block->name</td><td>". form_checkbox(NULL, "block][$block->name", 1, $user->block[$block->name]) ."</td></tr>\n";
+        $data = module_invoke($block->module, "block", "list");
+        if ($data[$block->delta]["info"]) {
+          $form .= "<tr><td>".$data[$block->delta]["info"]."</td><td>". form_checkbox(NULL, "block][$block->module][$block->delta", 1, $user->block[$block->module][$block->delta]) ."</td></tr>\n";
         }
       }
 
       if (isset($form)) {
-        return form_item(t("Block configuration"), '<table border="0" cellpadding="2" cellspacing="2">'. $form .'</table>', t("Enable the blocks you would like to see displayed in the side bars."));
+        return form_item(t("Block configuration"), "<table border=\"0\" cellpadding=\"2\" cellspacing=\"2\">". $form ."</table>", t("Enable the blocks you would like to see displayed in the side bars."));
       }
-      break;
     case "edit_validate":
       if (!$edit["block"]) {
         $edit["block"] = array();

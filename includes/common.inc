@@ -619,6 +619,14 @@ function form_submit($value) {
   return "<input type=\"submit\" name=\"op\" value=\"". check_form($value) ."\" />\n";
 }
 
+function form_weight($title = NULL, $name = "weight", $value = 0, $delta = 10, $description = 0, $extra = 0) {
+  for ($n = (-1*$delta); $n <= $delta; $n++) {
+    $weights[$n] = $n;
+  }
+
+  return form_select($title, $name, $value, $weights, $description, $extra);
+}
+
 /**
  * Build an URL; use this functions when you must write an URL
  * for example in a form or a redirect.

@@ -123,15 +123,15 @@ function theme_init() {
 }
 
 function theme_blocks($region, &$theme) {
-  global $id, $PHP_SELF, $user;
+  global $user, $PHP_SELF;
 
-  $result = db_query("SELECT * FROM blocks WHERE (status = '1' OR custom = '1') ". ($region != "all" ? "AND region = '%s' " : "") ."ORDER BY weight, name", $region == "left" ? 0 : 1);
+  $result = db_query("SELECT * FROM blocks WHERE (status = '1' OR custom = '1') ". ($region != "all" ? "AND region = '%s' " : "") ."ORDER BY weight, module", $region == "left" ? 0 : 1);
 
   while ($result && ($block = db_fetch_object($result))) {
-    if (($block->status && (!$user->uid || !$block->custom)) || ($block->custom && $user->block[$block->name])) {
-      $blocks = module_invoke($block->module, "block");
-      if ($blocks[$block->delta]["content"]) {
-        $theme->box($blocks[$block->delta]["subject"], $blocks[$block->delta]["content"], $region);
+    if ((($block->status && (!$user->uid || !$block->custom)) || ($block->custom && $user->block[$block->module][$block->delta])) && (!$block->path || preg_match("|$block->path|", $PHP_SELF))) {
+      $block_data = module_invoke($block->module, "block", "view", $block->delta);
+      if ($block_data["content"]) {
+        $theme->box($block_data["subject"], $block_data["content"], $region);
       }
     }
   }

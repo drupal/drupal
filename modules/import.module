@@ -93,20 +93,44 @@ function import_feed_block($feed) {
   return $output;
 }
 
-function import_block() {
-  return array_merge(import_get_bundles(), import_get_feeds());
+function import_block($op, $delta) {
+  if ($op == "list") {
+    $result = db_query("SELECT * FROM bundle ORDER BY title");
+    while ($bundle = db_fetch_object($result)) {
+      $block[$bundle->bid]["info"] = "$bundle->title bundle";
+    }
+
+    $result = db_query("SELECT * FROM feed ORDER BY fid");
+    while ($feed = db_fetch_object($result)) {
+      $block[$feed->fid]["info"] = "$feed->title feed";
+    }
+
+    return $block;
+  }
+  else {
+    $feed = db_fetch_object(db_query("SELECT * FROM feed WHERE fid = '%d'", $delta));
+    if ($feed) {
+      $block["subject"] = $feed->title;
+      $block["content"] = import_feed_block($feed) ."<p><div align=\"right\">". lm(t("more"), array("mod" => "import", "op" => "feed", "id" => $feed->fid), "", array("title" => t("View this feed's recent news."))) ."</div></p>";
+    }
+    else {
+      // it was a bundle. this is NOT elegant
+      $bundle = db_fetch_object(db_query("SELECT * FROM bundle WHERE bid = '%d'", $delta));
+      $block["subject"] = $bundle->title;
+      $block["content"] = import_bundle_block($bundle->attributes) ."<p><div align=\"right\">". lm(t("more"), array("mod" => "import", "op" => "bundle", "id" => $bundle->bid), "", array("title" => t("View this bundle's recent news."))) ."</div></p>";
+    }
+
+    return $block;
+  }
 }
 
 function import_get_bundles($attributes = 0) {
   $result = db_query("SELECT * FROM bundle ORDER BY title");
 
-  $i = 0;
   while ($bundle = db_fetch_object($result)) {
-    $block[$i]["subject"] = $bundle->title;
-    $block[$i]["content"] = import_bundle_block($bundle->attributes) ."<p><div align=\"right\">". lm(t("more"), array("mod" => "import", "op" => "bundle", "id" => $bundle->bid), "", array("title" => t("View this bundle's recent news."))) ."</div></p>";
-    $block[$i]["info"] = "$bundle->title bundle";
-
-    $i++;
+    $block[$bundle->bid]["subject"] = $bundle->title;
+    $block[$bundle->bid]["content"] = import_bundle_block($bundle->attributes) ."<p><div align=\"right\">". lm(t("more"), array("mod" => "import", "op" => "bundle", "id" => $bundle->bid), "", array("title" => t("View this bundle's recent news."))) ."</div></p>";
+    $block[$bundle->bid]["info"] = "$bundle->title bundle";
   }
 
   return $block;
@@ -115,13 +139,10 @@ function import_get_bundles($attributes = 0) {
 function import_get_feeds($attributes = 0) {
   $result = db_query("SELECT * FROM feed ORDER BY fid");
 
-  $i = 0;
   while ($feed = db_fetch_object($result)) {
-    $block[$i]["subject"] = $feed->title;
-    $block[$i]["content"] = import_feed_block($feed) ."<p><div align=\"right\">". lm(t("more"), array("mod" => "import", "op" => "feed", "id" => $feed->fid), "", array("title" => t("View this feed's recent news."))) ."</div></p>";
-    $block[$i]["info"] = "$feed->title feed";
-
-    $i++;
+    $block[$feed->fid]["subject"] = $feed->title;
+    $block[$feed->fid]["content"] = import_feed_block($feed) ."<p><div align=\"right\">". lm(t("more"), array("mod" => "import", "op" => "feed", "id" => $feed->fid), "", array("title" => t("View this feed's recent news."))) ."</div></p>";
+    $block[$feed->fid]["info"] = "$feed->title feed";
   }
 
   return $block;
@@ -289,10 +310,10 @@ function import_save_bundle($edit) {
     db_query("DELETE FROM bundle WHERE bid = '%s'", $edit["bid"]);
   }
   else if ($edit["title"]) {
-    db_query("INSERT INTO bundle (title, attributes) VALUES ('%s', '%s')", $edit["title"], $edit["attributes"]);
+    // a single unique id for bundles and feeds, to use in blocks
+    $next_id = db_next_id("import");
+    db_query("INSERT INTO bundle (bid, title, attributes) VALUES ('%d', '%s', '%s')", $next_id, $edit["title"], $edit["attributes"]);
   }
-
-  module_rehash_blocks("import");
 }
 
 function import_form_feed($edit = array()) {
@@ -328,7 +349,9 @@ function import_save_feed($edit) {
     db_query("DELETE FROM item WHERE fid = '%s'", $edit["fid"]);
   }
   else if ($edit["title"]) {
-    db_query("INSERT INTO feed (title, url, attributes, refresh) VALUES ('%s', '%s', '%s', '%s')", $edit["title"], $edit["url"], $edit["attributes"], $edit["refresh"]);
+    // a single unique id for bundles and feeds, to use in blocks
+    $next_id = db_next_id("import");
+    db_query("INSERT INTO feed (fid, title, url, attributes, refresh) VALUES ('%d', '%s', '%s', '%s', '%s')", $next_id, $edit["title"], $edit["url"], $edit["attributes"], $edit["refresh"]);
   }
 }
 
@@ -694,26 +717,24 @@ function import_page_feeds() {
 function import_page_blocks($blocks) {
   global $theme;
 
-  $count = count($blocks);
-  $items = ceil($count / 3);
-  $c1 = min($items, $count);
-  $c2 = min(2 * $items, $count);
-  $c3 = $count;
-  $i = 0;
-
   $theme->header();
   $theme->box(t("News feeds"), import_page_info());
   print "<table cellpadding=\"0\" cellspacing=\"5\" border=\"0\" width=\"100%\">\n";
   print " <tr>\n";
-  print "  <td width=\"33%\" valign=\"top\">\n";
-  for ($i; $i < $c1; $i++) $theme->box($blocks[$i]["subject"], $blocks[$i]["content"]);
-  print "  </td>\n";
-  print "  <td width=\"33%\" valign=\"top\">\n";
-  for ($i; $i < $c2; $i++) $theme->box($blocks[$i]["subject"], $blocks[$i]["content"]);
-  print "  </td>\n";
-  print "  <td width=\"33%\" valign=\"top\">\n";
-  for ($i; $i < $c3; $i++) $theme->box($blocks[$i]["subject"], $blocks[$i]["content"]);
-  print "  </td>\n";
+
+  for ($t = 0; $t < 3; $t++) {
+    $i = 1;
+    print "  <td width=\"33%\" valign=\"top\">\n";
+    while ($block = each($blocks)) {
+      $theme->box($block["value"]["subject"], $block["value"]["content"]);
+      if ($i == ceil(count($blocks) / 3)) {
+        break;
+      }
+      $i++;
+    }
+    print "  </td>\n";
+  }
+
   print " </tr>\n";
   print "</table>\n";
   $theme->footer();
