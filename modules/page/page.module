@@ -106,8 +106,10 @@ function page_content($node, $teaser = FALSE) {
     // PHP type
     ob_start();
     eval($node->body);
-    $node->teaser = $node->body = ob_get_contents();
+    $node->body = ob_get_contents();
     ob_end_clean();
+    $node->teaser = node_teaser($node->body);
+    $node->readmore = (strlen($node->teaser) < strlen($node->body));
   }
   else {
     // Assume HTML type by default
