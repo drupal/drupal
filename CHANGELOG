@@ -6,6 +6,7 @@ Drupal x.x.x, xxxx-xx-xx
     * made it possible to disable the "comment viewing controls".
 - performance:
     * improved module loading when serving cached pages.
+    * made it possible to automatically disable modules when under heavy load.
     * made it possible to automatically disable blocks when under heavy load.
 - theme system:
     * made all theme functions start with 'theme_'.

@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.272 2003/12/01 13:45:31 dries Exp $
+// $Id: common.inc,v 1.273 2003/12/07 18:25:09 dries Exp $
 
 /**
   @name drupal_title
@@ -128,9 +128,6 @@ function throttle($type, $rate) {
     if ($throttle = db_fetch_object(db_query("SELECT * FROM {watchdog} WHERE type = '$type' AND hostname = '". getenv("REMOTE_ADDR") ."' AND ". time() ." - timestamp < $rate"))) {
       watchdog("warning", "throttle: '". getenv("REMOTE_ADDR") ."' exceeded submission rate - $throttle->type");
       die(message_throttle());
-    }
-    else {
-      watchdog($type, "throttle");
     }
   }
 }
