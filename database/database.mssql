@@ -186,6 +186,7 @@ CREATE TABLE [dbo].[node] (
   [nid] [numeric](10, 0) NULL ,
   [type] [varchar] (16) NOT NULL ,
   [title] [varchar] (128) NOT NULL ,
+  [path] [varchar] (250) NULL ,
   [score] [int] NOT NULL ,
   [votes] [int] NOT NULL ,
   [uid] [int] NOT NULL ,

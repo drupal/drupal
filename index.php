@@ -4,7 +4,10 @@
 include_once "includes/common.inc";
 
 if (isset($_GET["q"])) {
-  $mod = arg(0);
+  if (module_exist("node") && $path = node_get_alias($_GET["q"])) {
+    $_GET["q"] = $path;
+  }
+   $mod = arg(0);
 }
 else {
   $_GET["q"] = variable_get("site_frontpage", "node");

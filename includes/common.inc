@@ -299,6 +299,21 @@ function valid_email_address($mail) {
 }
 
 /**
+ * Verify the syntax of the given URL.
+ *
+ * @param $url  an URL
+ */
+function valid_url($url) {
+
+  if (preg_match("/^[a-zA-z0-9\/:_\-_\.]+$/", $url)) {
+    return 1;
+  }
+  else {
+    return 0;
+  }
+}
+
+/**
  * Format a single result entry of a search query:
  *
  * @param $item  a single search result as returned by <module>_search of type

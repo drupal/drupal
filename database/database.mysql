@@ -262,6 +262,7 @@ CREATE TABLE node (
   nid int(10) unsigned NOT NULL auto_increment,
   type varchar(16) NOT NULL default '',
   title varchar(128) NOT NULL default '',
+  path varchar(250) NULL default '',
   score int(11) NOT NULL default '0',
   votes int(11) NOT NULL default '0',
   uid int(10) NOT NULL default '0',

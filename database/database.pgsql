@@ -261,6 +261,7 @@ CREATE TABLE node (
   nid SERIAL,
   type varchar(16) NOT NULL default '',
   title varchar(128) NOT NULL default '',
+  path varchar(250) NULL default '',
   score integer NOT NULL default '0',
   votes integer NOT NULL default '0',
   uid integer NOT NULL default '0',

@@ -38,7 +38,8 @@ $mysql_updates = array(
   "2003-05-24" => "update_54",
   "2003-05-31" => "update_55",
   "2003-06-04" => "update_56",
-  "2003-06-08" => "update_57"
+  "2003-06-08" => "update_57",
+  "2003-06-08: first update since Drupal 4.2.0 release" => "update_58"
 );
 
 function update_32() {
@@ -263,6 +264,10 @@ function update_56() {
 
 function update_57() {
   update_sql("DELETE FROM variable WHERE name = 'site_charset'");
+}
+
+function update_58() {
+  update_sql("ALTER TABLE node ADD path varchar(250) NULL default ''");
 }
 
 /*

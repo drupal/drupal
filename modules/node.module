@@ -49,7 +49,7 @@ function node_system($field){
 function node_title_list($result, $title = NULL) {
   while ($node = db_fetch_object($result)) {
     $number = module_invoke("comment", "num_all", $node->nid);
-    $items[] = l($node->title, "node/view/$node->nid", array("title" => format_plural($number, "%count comment", "%count comments")));
+    $items[] = l($node->title, node_url($node), array("title" => format_plural($number, "%count comment", "%count comments")));
   }
 
   return theme("theme_node_list", $items, $title);
@@ -437,7 +437,7 @@ function node_access($op, $node = 0) {
 }
 
 function node_perm() {
-  return array("administer nodes", "access content");
+  return array("administer nodes", "access content", "create custom URLs");
 }
 
 function node_search($keys) {
@@ -469,6 +469,7 @@ function node_settings() {
   $output .= form_select(t("Number of posts on main page"), "default_nodes_main", variable_get("default_nodes_main", 10), array(1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 =>  5, 6 => 6, 7 => 7, 8 => 8, 9 => 9, 10 => 10, 15 => 15, 20 => 20, 25 => 25, 30 => 30), t("The default maximum number of posts to display per page on overview pages such as the main page."));
   $output .= form_select(t("Length of trimmed posts"), "teaser_length", variable_get("teaser_length", 600), array(0 => t("Unlimited"), 200 => t("200 characters"), 400 => t("400 characters"), 600 => t("600 characters"), 800 => t("800 characters"), 1000 => t("1000 characters"), 1200 => t("1200 characters"), 1400 => t("1400 characters"), 1600 => t("1600 characters"), 1800 => t("1800 characters"), 2000 => t("2000 characters")), t("The maximum number of characters used in the trimmed version of a post.  Drupal will use this setting to determine at which offset long posts should be trimmed.  The trimmed version of a post is typically used as a teaser when displaying the post on the main page, in XML feeds, etc.  To disable teasers, set to 'Unlimited'."));
   $output .= form_select(t("Preview post"), "node_preview", variable_get("node_preview", 0), array(t("Optional"), t("Required")), t("Must users preview posts before submitting?"));
+
   return $output;
 }
 
@@ -524,7 +525,7 @@ function node_link($type, $node = 0, $main = 0) {
     }
 
     if ($main == 1 && $node->teaser && $node->teaser != $node->body) {
-      $links[] = l(t("read more"), "node/view/$node->nid", array("title" => t("Read the rest of this posting.")));
+      $links[] = l(t("read more"), node_url($node), array("title" => t("Read the rest of this posting.")));
     }
 
     if (user_access("administer nodes")) {
@@ -576,7 +577,7 @@ function node_admin_edit($node) {
     $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";
     $output .= " <tr><th>". t("older revisions") ."</th><th colspan=\"3\">". t("operations") ."</th></tr>";
     foreach ($node->revisions as $key => $revision) {
-      $output .= " <tr><td>". t("revision #%r revised by %u on %d", array("%r" => $key, "%u" => format_name(user_load(array("uid" => $revision["uid"]))), "%d" => format_date($revision["timestamp"], "small"))) . ($revision["history"] ? "<br /><small>". $revision["history"] ."</small>" : "") ."</td><td>". l(t("view revision"), "node/view/$node->nid", array(), "revision=$key") ."</td><td>". l(t("rollback revision"), "admin/node/rollback+revision/$node->nid/$key") ."</td><td>". l(t("delete revision"), "admin/node/delete+revision/$node->nid/$key") ."</td></tr>";
+      $output .= " <tr><td>". t("revision #%r revised by %u on %d", array("%r" => $key, "%u" => format_name(user_load(array("uid" => $revision["uid"]))), "%d" => format_date($revision["timestamp"], "small"))) . ($revision["history"] ? "<br /><small>". $revision["history"] ."</small>" : "") ."</td><td>". l(t("view revision"), node_url($node->nid), array(), "revision=$key") ."</td><td>". l(t("rollback revision"), "admin/node/rollback+revision/$node->nid/$key") ."</td><td>". l(t("delete revision"), "admin/node/delete+revision/$node->nid/$key") ."</td></tr>";
     }
     $output .= "</table>";
   }
@@ -603,7 +604,7 @@ function node_admin_nodes() {
   $header = array(t("title"), t("type"), t("author"), t("status"), array("data" => t("operations"), "colspan" => 2));
 
   while ($node = db_fetch_object($result)) {
-    $rows[] = array(l($node->title, "node/view/$node->nid") ." ". (node_is_new($node->nid, $node->changed) ? theme_mark() : ""), module_invoke($node->type, "node", "name"), format_name($node), ($node->status ? t("published") : t("not published")), l(t("edit node"), "admin/node/edit/$node->nid"), l(t("delete node"), "admin/node/delete/$node->nid"));
+    $rows[] = array(l($node->title, node_url($node)) ." ". (node_is_new($node->nid, $node->changed) ? theme_mark() : ""), module_invoke($node->type, "node", "name"), format_name($node), ($node->status ? t("published") : t("not published")), l(t("edit node"), "admin/node/edit/$node->nid"), l(t("delete node"), "admin/node/delete/$node->nid"));
   }
 
   if ($pager = pager_display(NULL, 50, 0, "admin")) {
@@ -851,6 +852,23 @@ function node_block($op = "list", $delta = 0) {
   }
 }
 
+function node_get_alias($path) {
+
+  $result = db_query("SELECT nid FROM {node} WHERE path = '%s'", trim($path, "/"));
+  if ($node = db_fetch_object($result)) {
+    return "node/view/$node->nid";
+  }
+}
+
+function node_url($node) {
+  if ($node->path) {
+    return $node->path;
+  }
+  else {
+    return "node/view/$node->nid";
+  }
+}
+
 function node_feed($nodes = 0, $channel = array()) {
   global $base_url, $languages;
 
@@ -863,12 +881,12 @@ function node_feed($nodes = 0, $channel = array()) {
   */
 
   if (!$nodes) {
-    $nodes = db_query_range("SELECT nid FROM {node} WHERE promote = '1' AND status = '1' ORDER BY created DESC", 0, 15);
+    $nodes = db_query_range("SELECT nid, path FROM {node} WHERE promote = '1' AND status = '1' ORDER BY created DESC", 0, 15);
   }
 
   while ($node = db_fetch_object($nodes)) {
     $item = node_load(array("nid" => $node->nid));
-    $link = url("node/view/$item->nid");
+    $link = url(node_url($node));
     $items .= format_rss_item($item->title, $link, ($item->teaser ? $item->teaser : $item->body));
   }
 
@@ -906,6 +924,19 @@ function node_validate($node, &$error) {
     $node->title = strip_tags($node->title);
     if (!$node->title) {
       $error["title"] = theme("theme_error", t("You have to specify a valid title."));
+    }
+  }
+
+  /*
+  ** Clean the path field:
+  */
+
+  if ($node->path) {
+    if (!valid_url($node->path)) {
+      $error["path"] = theme("theme_error", t("The specified path is not valid."));
+    }
+    else if (db_result(db_query("SELECT COUNT(nid) FROM {node} WHERE nid != %d AND path = '%s'", $node->nid, $node->path))) {
+      $error["path"] = theme("theme_error", t("The specified path is already in use."));
     }
   }
 
@@ -992,6 +1023,41 @@ function node_validate($node, &$error) {
 }
 
 
+function node_clean_path($path) {
+/*
+** Clean the node path
+*/
+  global $base_url;
+
+  /*
+  ** Replace absolute URL for this site with relative URL.
+  */
+  $path = str_replace($base_url, "", $path);
+
+  /*
+  ** Only allow alpha numeric characters and slashes.
+  */
+  $path = preg_replace("'[^a-zA-Z0-9/.]'", " ", $path);
+
+  /*
+  ** Remove all whitespace.
+  */
+  $path = str_replace(" ", "", $path);
+
+  /*
+  ** Replace two or more sequential slashes with only one slashes.
+  */
+  $path = preg_replace("'//*'","/",$path);
+
+  /*
+  ** Remove beginning and trailing slashes.
+  */
+  $path = trim($path, "/");
+
+  return $path;
+}
+
+
 function node_form($edit, $error = NULL) {
 
   /*
@@ -1066,6 +1132,10 @@ function node_form($edit, $error = NULL) {
   $output .= "<div class=\"standard\">";
   $output .= form_textfield(t("Title"), "title", $edit->title, 60, 128, $error["title"]);
 
+  if (user_access("create custom URLs")) {
+    $output .= form_textfield(t("Path alias"), "path", ($edit->path == "node/view/$edit->nid") ? "" : $edit->path, 60, 250, $error["path"] ? $error["path"] : t("Optionally specify an alternative URL by which this node can be accessed.  For example, type 'about/' when writing an about page."));
+  }
+
   /*
   ** Add the node specific fields:
   */
@@ -1100,11 +1170,13 @@ function node_form($edit, $error = NULL) {
 
   $output .= form_submit(t("Preview"));
 
-  if ($edit->title && $edit->type && !$error) {
-    $output .= form_submit(t("Submit"));
-  }
-  elseif (!variable_get("node_preview", 0)) {
-    $output .= form_submit(t("Submit"));
+  if (!$error) {
+    if ($edit->title && $edit->type) {
+      $output .= form_submit(t("Submit"));
+    }
+    elseif (!variable_get("node_preview", 0)) {
+      $output .= form_submit(t("Submit"));
+    }
   }
 
   if ($edit->nid && node_access("delete", $edit)) {
@@ -1285,7 +1357,7 @@ function node_submit($node) {
 
     if (node_access("update", $node)) {
       $nid = node_save($node);
-      watchdog("special", "$node->type: updated '$node->title'", l("view post", "node/view/$node->nid"));
+      watchdog("special", "$node->type: updated '$node->title'", l("view post", node_url($node)));
       $output = t("The %name has been updated.", array ("%name" => module_invoke($node->type, "node", "name")));
     }
   }
@@ -1306,7 +1378,7 @@ function node_submit($node) {
       throttle("node", variable_get("max_node_rate", 900));
 
       $nid = node_save($node);
-      watchdog("special", "$node->type: added '$node->title'", l("view post", "node/view/$nid"));
+      watchdog("special", "$node->type: added '$node->title'", l("view post", node_url($node)));
       $output = t("Thanks for your submission.");
     }
   }
@@ -1327,7 +1399,7 @@ function node_submit($node) {
   }
 
   if ($nid && node_access("view", $node)) {
-    $links[] = l(t("view"), "node/view/$nid");
+    $links[] = l(t("view"), node_url($node));
   }
 
   if ($nid && node_access("update", $node)) {
@@ -1474,7 +1546,7 @@ function node_nodeapi(&$node, $op, $arg = 0) {
       $output[t("revision")] = form_checkbox("", "node_revision_$node->type", 1, variable_get("node_revision_$node->type", 0));
       return $output;
     case "fields":
-      return array("nid", "uid", "type", "title", "teaser", "body", "revisions", "status", "promote", "moderate", "static", "created", "changed");
+      return array("nid", "uid", "type", "title", "path", "teaser", "body", "revisions", "status", "promote", "moderate", "static", "created", "changed");
   }
 }
 
