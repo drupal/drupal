@@ -1,5 +1,5 @@
 <?php
-/* $Id: aggregator.module,v 1.160 2004/01/23 18:42:43 dries Exp $ */
+/* $Id: aggregator.module,v 1.161 2004/01/24 15:47:44 dries Exp $ */
 
 function aggregator_help($section) {
   switch ($section) {
@@ -316,6 +316,9 @@ function aggregator_refresh($feed) {
 
         if ($image['LINK'] && $image['URL'] && $image['TITLE']) {
           $image = "<a href=\"". $image['LINK'] ."\"><img src=\"". $image['URL'] ."\" alt=\"". $image['TITLE'] ."\" /></a>";
+        }
+        else {
+          $image = NULL;
         }
 
         /*
