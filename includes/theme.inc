@@ -235,13 +235,22 @@ function theme_links($links, $delimiter = ' | ') {
 /**
  * Return a themed image.
  *
- * @param $name
- *   The name of the image file.
+ * @param $path
+ *   The path of the image file.
+ * @param $alt
+ *   The alternative text for text-based browsers.
+ * @param $title
+ *   The title text is displayed when the image is hovered in some popular browsers.
+ * @param $attr
+ *   Attributes placed in the img tag.
+ *   This parameter overrides the default auto-detection of width and height.
  * @return
- *   The pathname of the themed image.
+ *   A string containing the image tag.
  */
-function theme_image($name) {
-  return 'misc/'. $name;
+function theme_image($path, $alt = NULL, $title = NULL, $attr = NULL) {
+  if (isset($attr) || (file_exists($path) && (list($width, $height, $type, $attr) = getimagesize($path)))) {
+    return "<img src=\"$path\" $attr alt=\"$alt\" title=\"$title\" />";
+  }
 }
 
 /**
@@ -511,7 +520,9 @@ function theme_error($message) {
  * Return code that emits an XML icon.
  */
 function theme_xml_icon($url) {
-  return '<div class="xml-icon"><a href="'. $url .'"><img src="misc/xml.png" width="36" height="14" alt="'. t('XML feed') .'" /></a></div>';
+  if ($image = theme('image', 'misc/xml.png', t('XML feed'), t('XML feed'))) {
+    return '<div class="xml-icon"><a href="'. $url .'">'. $image. '</a></div>';
+  }
 }
 
 /**

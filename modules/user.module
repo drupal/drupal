@@ -567,7 +567,8 @@ function theme_user_picture($account) {
     }
 
     if ($picture) {
-      $picture = "<img src=\"$picture\" alt=\"" . t('%user\'s picture', array('%user' => $account->name ? $account->name : t(variable_get('anonymous', 'Anonymous')))) . '" />';
+      $alt = t('%user\'s picture', array('%user' => $account->name ? $account->name : t(variable_get('anonymous', 'Anonymous'))));
+      $picture = theme('image', $picture, $alt, $alt);
       if ($account->uid) {
         $picture = l($picture, "user/$account->uid", array('title' => t('View user profile.')));
       }
@@ -1019,7 +1020,7 @@ function user_edit_form($uid, $edit) {
   if (variable_get('user_pictures', 0)) {
     $group = '';
     if (file_exists($edit['picture'])) {
-      $group .= '<img src="'. file_create_url($edit['picture']) .'" alt="" title="" />';
+      $group .= theme('image', file_create_url($edit['picture']));
     }
     $group .= form_file(t('Upload picture'), 'picture', 48, t('Your virtual face or picture.  Maximum dimensions are %dimensions and the maximum size is %size kB.', array('%dimensions' => variable_get('user_picture_dimensions', '85x85'), '%size' => variable_get('user_picture_file_size', '30'))) .' '. variable_get('user_picture_guidelines', ''));
     $data[] = array('title' => t('Picture'), 'data' => $group, 'weight' => 1);

@@ -233,7 +233,7 @@ function system_listing($type) {
   ksort($files);
 
   if ($type == 'module') {
-    $required = array('modules/admin.module', 'modules/filter.module', 'modules/system.module', 'modules/user.module', 'modules/watchdog.module');
+    $required = array('modules/admin.module', 'modules/block.module', 'modules/filter.module', 'modules/system.module', 'modules/user.module', 'modules/watchdog.module');
     // the throttle mechanism requires additional modules always be enabled
     $throttle_required = array_merge($required, array('modules/statistics.module', 'modules/throttle.module'));
 
