@@ -48,7 +48,7 @@ function search_help($section = 'admin/help#search') {
     case 'admin/modules#description':
       return t('Enables site-wide keyword searching.');
     case 'admin/search':
-      return t('The search engine works by maintaining an index of words in your content. You can adjust the settings below to tweak the indexing behaviour. Note that indexing requires cron to be set up correctly.');
+      return t('<p>The search engine works by maintaining an index of words in your site\'s content. You can adjust the settings below to tweak the indexing behaviour. Note that indexing requires cron to be set up correctly.</p><p>Changes to these settings will only apply to content that is indexed after the change. If you want them to apply to everything, you need to wipe the index with the button below.</p>');
     case 'search#noresults':
       return t('<p><ul>
 <li>Check if your spelling is correct.</li>
@@ -95,7 +95,7 @@ function search_menu($may_cache) {
       'type' => MENU_SUGGESTED_ITEM);
     $items[] = array('path' => 'search/search', 'title' => t('search'),
       'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
-    $items[] = array('path' => 'admin/search', 'title' => t('search'),
+    $items[] = array('path' => 'admin/settings/search', 'title' => t('search'),
       'callback' => 'search_admin',
       'access' => user_access('administer site configuration'));
   }
@@ -110,6 +110,9 @@ function search_admin() {
   if ($_POST) {
     system_settings_save();
   }
+  if ($_POST['op'] == t('Wipe index')) {
+    search_wipe();
+  }
 
   // Indexing settings:
   $group = form_textfield(t('Minimum word length to index'), 'minimum_word_size', variable_get('minimum_word_size', 3), 3, 3, t('The number of characters a word has to be to be indexed.  Words shorter than this will not be searchable.'));
@@ -120,12 +123,25 @@ function search_admin() {
 
   // Collect some stats
   $estimate = db_result(db_query('SELECT COUNT(DISTINCT sid) FROM {search_index}'));
-  $nodes = db_result(db_query('SELECT COUNT(*) FROM {node}'));
+  $nodes = max(1, db_result(db_query('SELECT COUNT(*) FROM {node}')));
   $percentage = ((int)min(100, 100 * $estimate / $nodes)) . '%';
-  $status = '<p>'. t('Approximately %percentage of the site has been indexed.', array('%percentage' => $percentage));
+  $status = '<p>'. t('Approximately %percentage of the site has been indexed.', array('%percentage' => $percentage)) .'</p>';
+  $status .= '<p>'. form_button(t('Wipe index')) . '</p>';
   $output .= form_group('Indexing status', $status);
 
   print theme('page', system_settings_form($output));
+}
+
+/**
+ * Wipe the search index.
+ */
+function search_wipe() {
+  db_query('DELETE FROM {search_index}');
+  db_query('DELETE FROM {search_total}');
+  module_invoke_all('search', 'reset');
+
+  drupal_set_message(t('The search index has been wiped.'));
+  drupal_goto('admin/settings/search');
 }
 
 /**
@@ -150,15 +166,24 @@ function search_dirty($word = null) {
  * search_dirty).
  */
 function search_cron() {
-  /* Update word index */
+  // Update word index
   foreach (module_list() as $module) {
     module_invoke($module, 'update_index');
   }
-  /* Update word counts for new/changed words */
+  // Update word counts for new/changed words
   foreach (search_dirty() as $word => $dummy) {
-    db_query("DELETE FROM {search_total} WHERE word = '%s'", $word);
     $total = db_result(db_query("SELECT SUM(score) FROM {search_index} WHERE word = '%s'", $word));
-    db_query("INSERT INTO {search_total} (word, count) VALUES ('%s', %d)", $word, $total);
+    db_query("UPDATE {search_total} SET count = %d WHERE word = '%s'", $total, $word);
+    if (!db_affected_rows()) {
+      db_query("INSERT INTO {search_total} (word, count) VALUES ('%s', %d)", $word, $total);
+    }
+  }
+  // Find words that were deleted from search_index, but are still in
+  // search_total. We use a LEFT JOIN between the two tables and keep only the
+  // rows which fail to join.
+  $result = db_query("SELECT t.word AS realword, i.word FROM {search_total} t LEFT JOIN {search_index} i ON t.word = i.word WHERE i.word IS NULL");
+  while ($word = db_fetch_object($result)) {
+    db_query("DELETE FROM {search_total} WHERE word = '%s'", $word->realword);
   }
 }
 
@@ -445,7 +470,10 @@ function search_view() {
     // Only perform search if there is non-whitespace search term:
     if (trim($keys)) {
       // Log the search keys:
-      watchdog('search', t('Search: %keys (%type).', array('%keys' => "<em>$keys</em>", '%type' => $type)), l(t('results'), 'search', NULL, 'keys='. urlencode($keys) . '&type='. urlencode($type)));
+      watchdog('search',
+        t('Search: %keys (%type).', array('%keys' => "<em>$keys</em>", '%type' => module_invoke($type, 'search', 'name'))),
+        l(t('results'), 'search', NULL, 'keys='. urlencode($keys) . '&type='. urlencode($type))
+        );
 
       // Collect the search results:
       $results = search_data($keys, $type);

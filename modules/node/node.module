@@ -558,6 +558,9 @@ function node_search($op = 'search', $keys = null) {
   switch ($op) {
     case 'name':
       return t('content');
+    case 'reset':
+      variable_del('node_cron_last');
+      return;
     case 'search':
       $find = do_search($keys, 'node', 'INNER JOIN {node} n ON n.nid = i.sid '. node_access_join_sql() .' INNER JOIN {users} u ON n.uid = u.uid', 'n.status = 1 AND '. node_access_where_sql());
       $results = array();
@@ -1524,7 +1527,7 @@ function node_update_index() {
     variable_set('node_cron_last', max($node->changed, $node->created));
 
     if (node_hook($node, 'view')) {
-      node_invoke($node, 'view', false, true);
+      node_invoke($node, 'view', false, false);
     }
     else {
       $node = node_prepare($node, false);

@@ -1946,7 +1946,7 @@ function update_110() {
     $ret[] = update_sql("CREATE TABLE {search_total} (
       word varchar(50) NOT NULL default '',
       count int(10) unsigned default NULL,
-      KEY word (word)
+      PRIMARY KEY word (word)
       ) TYPE=MyISAM");
 
     $ret[] = update_sql("DELETE FROM {variable} WHERE name = 'node_cron_last'");
