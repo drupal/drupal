@@ -183,7 +183,7 @@ function form_select($title, $name, $value, $options, $description = 0) {
 }
 
 function form_file($title, $name, $size, $description = 0) {
-  return form_item($title, "<INPUT TYPE=\"file\" NAME=\"edit[$name]\" SIZE=\"$size\"><P>\n", $description);
+  return form_item($title, "<INPUT TYPE=\"file\" NAME=\"edit[$name]\" SIZE=\"$size\">\n", $description);
 }
 
 function form_hidden($name, $value) {
