@@ -161,6 +161,22 @@ function bootstrap_hooks() {
   return array('init', 'exit');
 }
 
+/*
+** Unserializes and appends elements from a serialized string
+** $obj is the object to which we shall append
+** $field is the element whose value is a serialized string
+*/
+function drupal_unpack($obj, $field = 'data') {
+  if ($obj->$field && $data = unserialize($obj->$field)) {
+    foreach ($data as $key => $value) {
+      if (!isset($obj->$key)) {
+        $obj->$key = $value;
+      }
+    }
+  }
+  return $obj;
+}
+
 function referer_uri() {
   if (isset($_SERVER["HTTP_REFERER"])) {
     return check_url($_SERVER["HTTP_REFERER"]);

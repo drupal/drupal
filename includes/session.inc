@@ -25,13 +25,7 @@ function sess_read($key) {
   }
 
   $user = db_fetch_object($result);
-  if ($user->data && $data = unserialize($user->data)) {
-    foreach ($data as $key => $value) {
-      if (!isset($user->$key)) {
-        $user->$key = $value;
-      }
-    }
-  }
+  $user = drupal_unpack($user);
 
   return !empty($user->session) ? $user->session : '';
 }

@@ -187,7 +187,7 @@ function comment_edit($cid) {
   global $user;
 
   $comment = db_fetch_object(db_query("SELECT c.*, u.uid, u.name, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status != 2", $cid));
-
+  $comment = drupal_unpack($comment);
   if (comment_access("edit", $comment)) {
     return comment_preview(object2array($comment));
   }
@@ -205,6 +205,7 @@ function comment_reply($pid, $nid) {
 
     if ($pid) {
       $comment = db_fetch_object(db_query("SELECT c.*, u.uid, u.name, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = 0", $pid));
+      $comment = drupal_unpack($comment);
       $output .= theme("comment_view", $comment);
     }
     else if (user_access("access content")) {
@@ -259,6 +260,7 @@ function comment_preview($edit) {
 
   if ($edit["pid"]) {
     $comment = db_fetch_object(db_query("SELECT c.*, u.uid, u.name, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = 0", $edit["pid"]));
+    $comment = drupal_unpack($comment);
     $output .= theme("comment_view", $comment);
   }
   else {
@@ -678,7 +680,6 @@ function comment_render($node, $cid = 0) {
       */
 
       $result = pager_query($query, $comments_per_page, 0, "SELECT COUNT(*) FROM {comments} WHERE nid = '". check_query($nid) ."'");
-
       if (db_num_rows($result) && (variable_get("comment_controls", 0) == 0 || variable_get("comment_controls", 0) == 2)) {
         $output .= "<form method=\"post\" action=\"". url("comment") ."\"><div>\n";
         $output .= theme("comment_controls", $threshold, $mode, $order, $comments_per_page);
@@ -690,6 +691,7 @@ function comment_render($node, $cid = 0) {
       $output .= form_hidden("nid", $nid);
 
       while ($comment = db_fetch_object($result)) {
+        $comment = drupal_unpack($comment);
         $comment->depth = count(explode(".", $comment->thread)) - 1;
 
         if ($mode == 1) {
@@ -899,6 +901,7 @@ function comment_admin_edit($id) {
 
   $result = db_query("SELECT c.*, u.name, u.uid FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status != 2", $id);
   $comment = db_fetch_object($result);
+  $comment = drupal_unpack($comment);
 
   if ($comment) {
     $form .= form_item(t("Author"), format_name($comment));

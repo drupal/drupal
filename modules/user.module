@@ -40,13 +40,8 @@ function user_load($array = array()) {
   $result = db_query_range("SELECT u.*, r.name AS role FROM {role} r INNER JOIN {users} u ON r.rid = u.rid WHERE $query u.status < 3", 0, 1);
 
   $user = db_fetch_object($result);
-  if ($user->data && $data = unserialize($user->data)) {
-    foreach ($data as $key => $value) {
-      if (!isset($user->$key)) {
-        $user->$key = $value;
-      }
-    }
-  }
+  $user = drupal_unpack($user);
+
 
   user_module_invoke("load", $array, $user);
 
