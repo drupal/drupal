@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.272 2004/11/24 22:56:21 dries Exp $
+// $Id: book.module,v 1.273 2004/12/11 14:13:24 dries Exp $
 
 /**
  * @file
@@ -810,10 +810,6 @@ function book_help($section) {
   if (arg(0) == 'node' && is_numeric(arg(1)) && arg(2) == 'outline') {
     return t('The outline feature allows you to include posts in the <a href="%book">book hierarchy</a>.', array('%book' => url('book')));
   }
-}
-
-function book_help_page() {
-  print theme('page', book_help('admin/help#book'));
 }
 
 ?>

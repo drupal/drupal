@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.96 2004/12/02 06:45:18 unconed Exp $
+// $Id: search.module,v 1.97 2004/12/11 14:13:24 dries Exp $
 
 /**
  * @file
@@ -76,10 +76,6 @@ function search_menu($may_cache) {
   if ($may_cache) {
     $items[] = array('path' => 'search', 'title' => t('search'),
       'callback' => 'search_view',
-      'access' => user_access('search content'),
-      'type' => MENU_SUGGESTED_ITEM);
-    $items[] = array('path' => 'search/help', 'title' => t('search help'),
-      'callback' => 'search_help_page',
       'access' => user_access('search content'),
       'type' => MENU_SUGGESTED_ITEM);
     $items[] = array('path' => 'search/search', 'title' => t('search'),
@@ -506,13 +502,6 @@ function search_view() {
     drupal_access_denied();
   }
 
-}
-
-/**
- * Menu callback; prints the search engine help page.
- */
-function search_help_page() {
-  print theme('page', search_help());
 }
 
 /**

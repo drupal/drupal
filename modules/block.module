@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.145 2004/12/11 12:32:01 dries Exp $
+// $Id: block.module,v 1.146 2004/12/11 14:13:24 dries Exp $
 
 /**
  * @file
@@ -38,13 +38,6 @@ function block_help($section) {
     case 'admin/block/add':
       return t("Here you can create a new block. Once you have created this block you must make it active and give it a place on the page using <a href=\"%overview\">blocks</a>. The title is used when displaying the block. The description is used in the \"block\" column on the <a href=\"%overview\">blocks</a> page.", array('%overview' => url('admin/block')));
   }
-}
-
-/**
- * Menu callback; presents the block-specific information from admin/help.
- */
-function block_help_page() {
-  print theme('page', block_help('admin/help#block'));
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.429 2004/12/07 16:55:38 dries Exp $
+// $Id: node.module,v 1.430 2004/12/11 14:13:24 dries Exp $
 
 /**
  * @file
@@ -62,13 +62,6 @@ function node_help($section) {
  */
 function node_cron() {
   db_query('DELETE FROM {history} WHERE timestamp < %d', NODE_NEW_LIMIT);
-}
-
-/**
- * Menu callback; presents node-specific information from "admin/help".
- */
-function node_help_page() {
-  print theme('page', node_help('admin/help#node'));
 }
 
 /**

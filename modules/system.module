@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.189 2004/11/30 18:40:24 dries Exp $
+// $Id: system.module,v 1.190 2004/12/11 14:13:24 dries Exp $
 
 /**
  * @file
@@ -40,13 +40,6 @@ function system_help($section) {
     case 'admin/modules#description':
       return t('Configuration system that lets administrators modify the workings of the site.');
   }
-}
-
-/**
- * Menu callback; presents system-specific help text from admin/help.
- */
-function system_help_page() {
-  print theme('page', system_help('admin/help#system'));
 }
 
 /**

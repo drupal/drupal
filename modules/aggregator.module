@@ -1,5 +1,5 @@
 <?php
-/* $Id: aggregator.module,v 1.223 2004/12/07 16:55:38 dries Exp $ */
+/* $Id: aggregator.module,v 1.224 2004/12/11 14:13:24 dries Exp $ */
 
 /**
  * @file
@@ -68,13 +68,6 @@ function aggregator_help($section) {
     case 'admin/aggregator/configure':
       return t('<p>These settings control the display of aggregated content.</p>');
   }
-}
-
-/**
- * Menu callback; displays the aggregator-specific information from admin/help.
- */
-function aggregator_help_page() {
-  print theme('page', aggregator_help('admin/help#aggregator'));
 }
 
 function aggregator_configure() {
