@@ -165,6 +165,45 @@ function book_form($node, $help, $error) {
   return $output;
 }
 
+/*
+** Return the the most recent revision that matches the specified
+** conditions.
+*/
+
+function book_revision_load($page, $conditions = array()) {
+
+  $revisions = array_reverse(node_revision_list($page));
+
+  foreach ($revisions as $revision) {
+
+    /*
+    ** Extract the specified revision:
+    */
+
+    $node = node_revision_load($page, $revision);
+
+    /*
+    ** Check to see if the conditions are met:
+    */
+
+    $status = 1;
+
+    foreach ($conditions as $key => $value) {
+      if ($node->$key != $value) {
+        $status = 0;
+      }
+    }
+
+    if ($status) {
+      return $node;
+    }
+  }
+}
+
+/*
+** Return the path (call stack) to a certain book page.
+*/
+
 function book_location($node, $nodes = array()) {
   $parent = db_fetch_object(db_query("SELECT n.nid, n.title, b.parent FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.nid = '$node->parent'"));
   if ($parent->title) {
@@ -184,7 +223,7 @@ function book_view($node, $main = 0) {
   */
 
   if ($node->moderate && $mod != "queue") {
-    $node = node_revision_load($node, end(node_revision_list($node)));
+    $node = book_revision_load($node, array("moderate" => 0, "status" => 1));
   }
 
   /*
@@ -241,7 +280,8 @@ function book_toc($parent = "", $indent = "", $toc = array()) {
   $result = db_query("SELECT n.nid, n.title FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.type = 'book' AND n.status = 1 AND b.parent = '$parent' AND (n.moderate = 0 OR n.revisions != '') ORDER BY b.weight");
 
   /*
-  ** Add the root node:
+  ** If the user is an administrator, add the root node; only
+  ** administrators can start new books.
   */
 
   if (user_access("administer nodes")) {
@@ -263,6 +303,7 @@ function book_toc($parent = "", $indent = "", $toc = array()) {
 function book_tree($parent = "", $depth = 0) {
 
   if ($depth < 3) {
+
     /*
     ** Select all child nodes and render them into a table of contents:
     */
@@ -275,14 +316,16 @@ function book_tree($parent = "", $depth = 0) {
 
        // take the most recent approved revision:
        if ($node->moderate) {
-         $node = node_revision_load($node, end(node_revision_list($node)));
+         $node = book_revision_load($node, array("moderate" => 0, "status" => 1));
        }
 
-       // output the content:
-       $output .= "<li><a href=\"node.php?id=$node->nid\">". check_output($node->title) ."</a></li>";
+       if ($node) {
+         // output the content:
+         $output .= "<li><a href=\"node.php?id=$node->nid\">". check_output($node->title) ."</a></li>";
 
-       // build the sub-tree of each child:
-       $output .= book_tree($node->nid, $depth + 1);
+         // build the sub-tree of each child:
+         $output .= book_tree($node->nid, $depth + 1);
+       }
      }
 
      $output = "<ul>$output</ul>";
@@ -303,11 +346,13 @@ function book_render() {
 
     // take the most recent approved revision:
     if ($node->moderate) {
-      $node = node_revision_load($node, end(node_revision_list($node)));
+      $node = book_revision_load($node, array("moderate" => 0, "status" => 1));
     }
 
-    // output the content:
-    $output .= "<dt><a href=\"node.php?id=$node->nid\">". check_output($node->title) ."</a></dt><dd>". check_output($node->body, 1) ."<br /><br /></dd>";
+    if ($node) {
+      // output the content:
+      $output .= "<dt><a href=\"node.php?id=$node->nid\">". check_output($node->title) ."</a></dt><dd>". check_output($node->body, 1) ."<br /><br /></dd>";
+    }
   }
 
   $theme->header();
@@ -343,14 +388,16 @@ function book_export_html($id = "", $depth = 1) {
 
     // take the most recent approved revision:
     if ($node->moderate) {
-      $node = node_revision_load($node, end(node_revision_list($node)));
+      $node = book_revision_load($node, array("moderate" => 0, "status" => 1));
     }
 
-    // output the content:
-    $output .= "<h$depth>". check_output($node->title) ."</h$depth>";
+    if ($node) {
+      // output the content:
+      $output .= "<h$depth>". check_output($node->title) ."</h$depth>";
 
-    if ($node->body) {
-      $output .= "<blockquote>". check_output($node->body, 1) ."</blockquote>";
+      if ($node->body) {
+        $output .= "<ul>". check_output($node->body, 1) ."</ul>";
+      }
     }
   }
 
@@ -368,17 +415,19 @@ function book_export_html_recursive($parent = "", $depth = 1) {
 
     // take the most recent approved revision:
     if ($node->moderate) {
-      $node = node_revision_load($node, end(node_revision_list($node)));
+      $node = book_revision_load($node, array("moderate" => 0, "status" => 1));
     }
 
-    // output the content:
-    $output .= "<h$depth>". check_output($node->title) ."</h$depth>";
+    if ($node) {
+      // output the content:
+      $output .= "<h$depth>". check_output($node->title) ."</h$depth>";
 
-    if ($node->body) {
-      $output .= "<blockquote>". check_output($node->body, 1) ."</blockquote>";
+      if ($node->body) {
+        $output .= "<blockquote>". check_output($node->body, 1) ."</blockquote>";
+      }
+
+      $output .= book_export_html_recursive($node->nid, $depth + 1);
     }
-
-    $output .= book_export_html_recursive($node->nid, $depth + 1);
   }
 
   return $output;
