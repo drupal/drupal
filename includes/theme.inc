@@ -1,5 +1,5 @@
 <?php
-/* $Id: theme.inc,v 1.212 2004/08/21 10:16:12 dries Exp $ */
+/* $Id: theme.inc,v 1.213 2004/08/21 16:21:56 dries Exp $ */
 
 /**
  * @file
@@ -127,7 +127,7 @@ function list_theme_engines($refresh = FALSE) {
 
   if (!$list) {
     $list = array();
-    $result = db_query("SELECT * FROM {system} where type = 'theme_engine' AND status = '1' ORDER BY name");
+    $result = db_query("SELECT * FROM {system} WHERE type = 'theme_engine' AND status = '1' ORDER BY name");
     while ($engine = db_fetch_object($result)) {
       if (file_exists($engine->filename)) {
         $list[$engine->name] = $engine;
@@ -591,7 +591,7 @@ function theme_submenu($links) {
  */
 function theme_table($header, $rows, $attributes = NULL) {
 
-  $output = '<table '. drupal_attributes($attributes) .">\n";
+  $output = '<table'. drupal_attributes($attributes) .">\n";
 
   // Format the table header:
   if (is_array($header)) {
