@@ -1325,7 +1325,9 @@ function comment_visible($comment, $threshold = 0) {
 }
 
 function comment_moderate() {
-  global $moderation, $user;
+  global $user;
+
+  $moderation = $_POST["moderation"];
 
   if ($moderation) {
     $result = db_query("SELECT mid, value FROM moderation_roles WHERE rid = %d", $user->rid);
