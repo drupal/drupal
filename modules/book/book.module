@@ -209,7 +209,7 @@ function book_tree($parent = "", $depth = 0) {
 
   if ($depth < 3 || strstr($PHP_SELF,"admin.php")) {
     // select all child nodes:
-    $result = db_query("SELECT n.*, b.* FROM node n LEFT JOIN book b ON n.nid = b.nid AND n.lid = b.lid WHERE n.type = 'book' AND n.status = '$status[posted]' AND ". book_parent_query($parent) ." ORDER BY b.weight");
+    $result = db_query("SELECT n.*, b.* FROM node n LEFT JOIN book b ON n.nid = b.nid AND n.lid = b.lid WHERE n.type = 'book' AND n.status = '$status[posted]' AND ". book_parent_query($parent) ." ORDER BY b.weight, n.title");
 
     // render output:
     while ($node = db_fetch_object($result)) {
