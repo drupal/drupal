@@ -91,7 +91,8 @@ $sql_updates = array(
   "2004-11-15" => "update_112",
   "2004-11-28" => "update_113",
   "2004-12-05" => "update_114",
-  "2005-01-07" => "update_115"
+  "2005-01-07" => "update_115",
+  "2005-01-14" => "update_116"
 );
 
 function update_32() {
@@ -2076,6 +2077,10 @@ function update_115() {
     $ret[] = update_sql("ALTER TABLE {watchdog} ADD severity smallint NOT NULL default '0'");
   }
   return $ret;
+}
+
+function update_116() {
+  return array(update_sql("DELETE FROM {system} WHERE name = 'admin'"));
 }
 
 function update_sql($sql) {

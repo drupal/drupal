@@ -762,7 +762,6 @@ CREATE TABLE watchdog (
 -- Insert some default values
 --
 
-INSERT INTO system VALUES ('modules/admin.module','admin','module','',1,0,0);
 INSERT INTO system VALUES ('modules/block.module','block','module','',1,0,0);
 INSERT INTO system VALUES ('modules/comment.module','comment','module','',1,0,0);
 INSERT INTO system VALUES ('modules/filter.module','filter','module','',1,0,0);

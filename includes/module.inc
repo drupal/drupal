@@ -45,7 +45,7 @@ function module_list($refresh = FALSE, $bootstrap = FALSE) {
   }
 
   if (!$list) {
-    $list = array('admin' => 'admin', 'filter' => 'filter', 'system' => 'system', 'user' => 'user', 'watchdog' => 'watchdog');
+    $list = array('filter' => 'filter', 'system' => 'system', 'user' => 'user', 'watchdog' => 'watchdog');
     if ($bootstrap) {
       $result = db_query("SELECT name, filename, throttle, bootstrap FROM {system} WHERE type = 'module' AND status = 1 AND bootstrap = 1");
     }
