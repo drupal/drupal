@@ -1,4 +1,4 @@
-/* $Id: xtemplate.css,v 1.16 2004/08/10 22:55:50 unconed Exp $ */
+/* $Id: xtemplate.css,v 1.17 2004/08/20 04:43:46 unconed Exp $ */
 
 /*
 ** HTML elements
@@ -61,7 +61,7 @@ table {
   color: #222;
 }
 .links {
-  margin-bottom: 2em;
+  margin-bottom: 0em;
 }
 .comment .links {
   margin-bottom: 0em;
@@ -204,7 +204,7 @@ table {
   font-size: 1.1em;
 }
 .node {
-  margin: .5em 0 1em 0;
+  margin: .5em 0 2em 0;
 }
 .sticky {
   padding: .5em;
