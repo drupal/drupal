@@ -32,12 +32,11 @@ function account_help() {
  <?php
 }
 
-function account_find($keys) {
+function account_search($keys) {
   global $user;
-  $find = array();
   $result = db_query("SELECT * FROM users WHERE userid LIKE '%$keys%' LIMIT 20");
   while ($account = db_fetch_object($result)) {
-    array_push($find, array("subject" => $account->userid, "link" => (user_access($user, "account") ? "admin.php?mod=account&op=view&name=$account->userid" : "account.php?op=view&name=$account->userid"), "user" => $account->userid));
+    $find[$i++] = array("title" => $account->userid, "link" => (user_access($user, "account") ? "admin.php?mod=account&op=view&name=$account->userid" : "account.php?op=view&name=$account->userid"), "user" => $account->userid);
   }
   return $find;
 }
