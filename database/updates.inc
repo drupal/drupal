@@ -1,5 +1,5 @@
 <?php
-/* $Id: updates.inc,v 1.67 2004/10/19 18:02:21 dries Exp $ */
+/* $Id: updates.inc,v 1.68 2004/10/31 03:03:23 dries Exp $ */
 
 /**
  * @file
@@ -85,7 +85,8 @@ $sql_updates = array(
   "2004-09-15" => "update_106",
   "2004-09-17" => "update_107",
   "2004-10-16" => "update_108",
-  "2004-10-18" => "update_109"
+  "2004-10-18" => "update_109",
+  "2004-10-28: first update since Drupal 4.5.0 release" => "update_110"
 );
 
 function update_32() {
@@ -1921,6 +1922,34 @@ function update_109() {
   return $ret;
 }
 
+function update_110() {
+  $ret = array();
+
+  // TODO: needs PGSQL version
+  if ($GLOBALS['db_type'] == 'mysql') {
+    $ret[] = update_sql('DROP TABLE {search_index}');
+    $ret[] = update_sql("CREATE TABLE {search_index} (
+      word varchar(50) NOT NULL default '',
+      sid int(10) unsigned NOT NULL default '0',
+      type varchar(16) default NULL,
+      fromsid int(10) unsigned NOT NULL default '0',
+      fromtype varchar(16) default NULL,
+      score int(10) unsigned default NULL,
+      KEY sid (sid),
+      KEY word (word)
+      ) TYPE=MyISAM");
+
+    $ret[] = update_sql("CREATE TABLE {search_total} (
+      word varchar(50) NOT NULL default '',
+      count int(10) unsigned default NULL,
+      KEY word (word)
+      ) TYPE=MyISAM");
+
+    $ret[] = update_sql("DELETE FROM {variable} WHERE name = 'node_cron_last'");
+  }
+
+  return $ret;
+}
 
 function update_sql($sql) {
   $edit = $_POST["edit"];

@@ -1,6 +1,11 @@
 Drupal x.x.x, xxxx-xx-xx
 ------------------------
 
+- search:
+    * added UTF-8 support to make it work with all languages.
+    * improved search indexing.
+    * imrpoved search output.
+
 Drupal 4.5.0, 2004-10-18
 ------------------------
 - navigation:
