@@ -890,7 +890,7 @@ function node_admin_nodes() {
     $buttons .= form_submit(t('Undo')) . form_submit(t('Reset'));
   }
   $form .= '<div class="container-inline" id="node-admin-buttons">'. $buttons .'</div>';
-  $form .= '</li></ul>';
+  $form .= '</li></ul><br class="clear" />';
   $output .= form_group(t('Show only items where'), $form);
 
   // Build query
