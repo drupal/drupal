@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.25 2004/08/24 19:21:30 unconed Exp $
+// $Id: blogapi.module,v 1.26 2004/09/09 05:15:38 dries Exp $
 
 /**
  * @file
@@ -651,7 +651,7 @@ function _blogapi_get_post($node, $bodies = true) {
     $xmlrpcval['content'] = new xmlrpcval("<title>$blog->title</title>$node->body", 'string');
     $xmlrpcval['description'] = new xmlrpcval($node->body, 'string');
     // Add MT specific fields
-    $xmlrpcval['mt_allow_comments'] = new xmlrpcval($comment, 'string');
+    $xmlrpcval['mt_allow_comments'] = new xmlrpcval($comment, 'int');
     $xmlrpcval['mt_convert_breaks'] = new xmlrpcval($node->format, 'string');
   }
 
