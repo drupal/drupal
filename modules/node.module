@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.340 2004/03/01 19:45:33 dries Exp $
+// $Id: node.module,v 1.341 2004/03/06 10:57:53 dries Exp $
 
 define('NODE_NEW_LIMIT', time() - 30 * 24 * 60 * 60);
 
@@ -494,6 +494,7 @@ function node_view($node, $main = 0, $page = 0) {
 }
 
 function node_prepare($node, $main = 0) {
+  $node->readmore = (strlen($node->teaser) < strlen($node->body));
   if ($main == 0) {
     $node->body = check_output($node->body);
   }
@@ -597,7 +598,7 @@ function node_link($type, $node = 0, $main = 0) {
       $links = $node->links;
     }
 
-    if ($main == 1 && $node->teaser && strlen($node->teaser) != strlen($node->body)) {
+    if ($main == 1 && $node->teaser && $node->readmore) {
       $links[] = l(t('read more'), "node/view/$node->nid", array('title' => t('Read the rest of this posting.'), 'class' => 'read-more'));
     }
 
