@@ -10,6 +10,7 @@ function defaultDisplay() {
 <H3>General</H3>
 
 1
+2
 Dries was here.
 Fingers crossed.
 pomididom
