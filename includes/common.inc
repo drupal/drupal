@@ -468,8 +468,6 @@ function rewrite_old_urls($text) {
 
   $end = substr($base_url, 12);
 
-  print "$end";
-
   /*
   ** This is a *temporary* filter to rewrite old-style URLs to new-style
   ** URLs (clean URLs).  Currently, URLs are being rewritten dynamically
