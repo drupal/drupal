@@ -49,16 +49,16 @@ function queue_vote($node, $vote) {
 
     if (variable_get("queue_threshold_post", 3) <= $node->score) {
       node_save($node, array_merge(array("nid", "moderate" => 0), module_invoke($node->type, "save", "approve", $node)));
-      watchdog("special", "moderation: posted '$node->title'");
+      watchdog("special", "moderation: approved '$node->title'");
     }
     else if (variable_get("queue_threshold_dump", -2) >= $node->score) {
       if ($node->revisions) {
         node_revision_rollback($node, end(node_revision_list($node)));
-        watchdog("special", "moderation: dumped '$node->title' (rollback)");
+        watchdog("special", "moderation: declined '$node->title' (rollback)");
       }
       else {
         node_save($node, array_merge(array("nid", "moderate" => 0), module_invoke($node->type, "save", "decline", $node)));
-        watchdog("special", "moderation: dumped '$node->title'");
+        watchdog("special", "moderation: declined '$node->title'");
       }
     }
     else if (variable_get("queue_threshold_expire", 6) <= $node->votes) {
