@@ -1,6 +1,6 @@
 <?php
 
-// $Id: blogapi.module,v 1.1 2003/11/15 20:11:04 dries Exp $
+// $Id: blogapi.module,v 1.2 2003/11/17 19:16:55 dries Exp $
 
 function blogapi_help($section) {
   $output = '';
@@ -17,10 +17,10 @@ function blogapi_help($section) {
 
 function blogapi_xmlrpc() {
   $methods = array('blogger.getUsersBlogs' => array('function' => 'blogapi_get_users_blogs'),
-		   'blogger.newPost' => array('function' => 'blogapi_new_post'),
-		   'blogger.editPost' => array('function' => 'blogapi_edit_post'),
+       'blogger.newPost' => array('function' => 'blogapi_new_post'),
+       'blogger.editPost' => array('function' => 'blogapi_edit_post'),
                    'blogger.deletePost' => array('function' => 'blogapi_delete_post'),
-		   'blogger.getRecentPosts' => array('function' => 'blogapi_get_recent_posts'),
+                   'blogger.getRecentPosts' => array('function' => 'blogapi_get_recent_posts'),
                    'metaWeblog.newPost' => array('function' => 'blogapi_new_post'),
                    'metaWeblog.editPost' => array('function' => 'blogapi_edit_post'),
                    'metaWeblog.getPost' => array('function' => 'blogapi_get_post'),
@@ -31,7 +31,7 @@ function blogapi_xmlrpc() {
                    'mt.getPostCategories' => array('function' => 'blogapi_get_post_categories'),
                    'mt.setPostCategories' => array('function' => 'blogapi_set_post_categories')
                    );
-  
+
   return $methods;
 }
 
@@ -62,7 +62,7 @@ function blogapi_get_user_info($req_params) {
                                   'firstname' => new xmlrpcval(substr($user->name, 0, strrpos($user->name, " ")), 'string'),
                                   'nickname' => new xmlrpcval($user->name, 'string'),
                                   'email' => new xmlrpcval($user->mail, 'string'),
-                                  'url' => new xmlrpcval(url('blog/view/' . $user->uid), 'string')), 
+                                  'url' => new xmlrpcval(url('blog/view/' . $user->uid), 'string')),
                             'struct');
     return new xmlrpcresp($struct);
   }
@@ -73,11 +73,11 @@ function blogapi_get_user_info($req_params) {
 
 function blogapi_new_post($req_params) {
   global $user;
-  
+
   $params = blogapi_convert($req_params);
   $user = blogapi_validate_user($params[1], $params[2]);
   if (!$user->uid) {
-    return blogapi_error(t('error validating user'));    
+    return blogapi_error(t('error validating user'));
   }
 
   $promote = variable_get("node_promote_blog", 0);
@@ -94,7 +94,7 @@ function blogapi_new_post($req_params) {
     $title = blogapi_blogger_title($params[3]);
     $body = $params[3];
   }
-  
+
   $node = node_validate(array('type' => 'blog',
                               'uid' => $user->uid,
                               'name' => $user->name,
@@ -106,7 +106,7 @@ function blogapi_new_post($req_params) {
                               'moderate' => $moderate,
                               'revision' => $revision
                               ), $error);
-  
+
   if (count($error) > 0) {
     return blogapi_error($error);
   }
@@ -130,7 +130,7 @@ function blogapi_edit_post($req_params) {
   $params = blogapi_convert($req_params);
   $user = blogapi_validate_user($params[1], $params[2]);
   if (!$user->uid) {
-    return blogapi_error(t('error validating user'));    
+    return blogapi_error(t('error validating user'));
   }
 
   $node = node_load(array('nid' => $params[0]));
@@ -151,12 +151,12 @@ function blogapi_edit_post($req_params) {
     $title = blogapi_blogger_title($params[3]);
     $body = $params[3];
   }
-    
+
   $node->title = $title;
   $node->body = $body;
   $node->status = $params[4];
   $node = node_validate($node, $error);
-  
+
   if (count($error) > 0) {
     return blogapi_error($error);
   }
@@ -176,10 +176,10 @@ function blogapi_get_post($req_params) {
   $params = blogapi_convert($req_params);
   $user = blogapi_validate_user($params[1], $params[2]);
   if (!$user->uid) {
-    return blogapi_error(t('error validating user'));    
+    return blogapi_error(t('error validating user'));
   }
 
-  $node = node_load(array('nid' => $params[0]));  
+  $node = node_load(array('nid' => $params[0]));
   $blog = new xmlrpcval(array('userid' => new xmlrpcval($node->name, 'string'),
                               'dateCreated' => new xmlrpcval(iso8601_encode($node->created), "dateTime.iso8601"),
                               'title' => new xmlrpcval($node->title, 'string'),
@@ -194,10 +194,10 @@ function blogapi_delete_post($req_params) {
   global $user;
 
   $params = blogapi_convert($req_params);
-  
+
   $user = blogapi_validate_user($params[2], $params[3]);
   if (!$user->uid) {
-    return blogapi_error(t('error validating user'));    
+    return blogapi_error(t('error validating user'));
   }
 
   $ret = node_delete(array('nid' => $params[1], 'confirm' => 1));
@@ -234,7 +234,7 @@ function blogapi_get_post_categories($req_params) {
   $params = blogapi_convert($req_params);
   $user = blogapi_validate_user($params[1], $params[2]);
   if (!$user->uid) {
-    return blogapi_error(t('error validating user'));    
+    return blogapi_error(t('error validating user'));
   }
 
   $terms = taxonomy_node_get_terms($params[0]);
@@ -256,7 +256,7 @@ function blogapi_set_post_categories($req_params) {
   $params = blogapi_convert($req_params);
   $user = blogapi_validate_user($params[1], $params[2]);
   if (!$user->uid) {
-    return blogapi_error(t('error validating user'));    
+    return blogapi_error(t('error validating user'));
   }
 
   $nid = $params[0];
@@ -272,7 +272,7 @@ function blogapi_get_recent_posts($req_params) {
   $params = blogapi_convert($req_params);
   $user = blogapi_validate_user($params[1], $params[2]);
   if (!$user->uid) {
-    return blogapi_error(t('error validating user'));    
+    return blogapi_error(t('error validating user'));
   }
 
   $res = db_query_range("SELECT n.nid, n.title, n.body, n.created, u.name FROM {node} n, {users} u WHERE n.uid=u.uid AND n.type = 'blog' AND n.uid = %d ORDER BY n.created DESC",  $user->uid, 0, $params[3]);
@@ -303,13 +303,13 @@ function blogapi_convert($params) {
 
 function blogapi_error($message) {
   global $xmlrpcusererr;
-  
+
   return new xmlrpcresp(0, $xmlrpcusererr + 1, $message);
 }
 
 function blogapi_validate_user($username, $password) {
   global $user;
-  
+
   $user = user_load(array('name' => $username, 'pass' => $password, 'status' => 1));
 
   if (!user_access('access blog API')) {
