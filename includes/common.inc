@@ -1643,20 +1643,7 @@ function drupal_xml_parser_create(&$data) {
   // Requires the iconv, GNU recode or mbstring PHP extension.
   $php_supported = array('utf-8', 'iso-8859-1', 'us-ascii');
   if (!in_array(strtolower($encoding), $php_supported)) {
-    if (function_exists('iconv')) {
-      $out = @iconv($encoding, 'utf-8', $data);
-    }
-    else if (function_exists('mb_convert_encoding')) {
-      $out = @mb_convert_encoding($data, 'utf-8', $encoding);
-    }
-    else if (function_exists('recode_string')) {
-      $out = @recode_string($encoding . '..utf-8', $data);
-    }
-    else {
-      watchdog('php', t("Unsupported XML encoding '%s'. Please install iconv, GNU recode or mbstring for PHP.", $encoding), WATCHDOG_ERROR);
-      return 0;
-    }
-
+    $out = drupal_convert_to_utf8($data, $encoding);
     if ($out !== false) {
       $data = $out;
       $encoding = 'utf-8';
@@ -1670,6 +1657,34 @@ function drupal_xml_parser_create(&$data) {
   $xml_parser = xml_parser_create($encoding);
   xml_parser_set_option($xml_parser, XML_OPTION_TARGET_ENCODING, 'utf-8');
   return $xml_parser;
+}
+
+/**
+ * Convert data to UTF-8
+ *
+ * @param $data
+ *   The data to be converted.
+ * @param $encoding
+ *   The encoding that the data is in
+ * @return
+ *   Converted data or FALSE.
+ */
+function drupal_convert_to_utf8($data, $encoding) {
+  if (function_exists('iconv')) {
+    $out = @iconv($encoding, 'utf-8', $data);
+  }
+  else if (function_exists('mb_convert_encoding')) {
+    $out = @mb_convert_encoding($data, 'utf-8', $encoding);
+  }
+  else if (function_exists('recode_string')) {
+    $out = @recode_string($encoding . '..utf-8', $data);
+  }
+  else {
+    watchdog('php', t("Unsupported encoding '%s'. Please install iconv, GNU recode or mbstring for PHP.", $encoding), WATCHDOG_ERROR);
+    return FALSE;
+  }
+
+  return $out;
 }
 
 /**
