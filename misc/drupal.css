@@ -1,5 +1,9 @@
 /* $Id$ */
 
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
 form {
   margin: 0;
   padding: 0;
@@ -7,7 +11,8 @@ form {
 th {
   text-align: left;
   padding-right: 1em;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 3px solid #ccc;
+  white-space: nowrap;
 }
 fieldset {
   margin-bottom: 1em;
@@ -284,8 +289,7 @@ tr.light {
   background-color: #eee;
 }
 tr.dark td, tr.light td {
-  padding-left: .4em;
-  padding-right: .4em;
+  padding: 0.1em 0.6em;
 }
 pre, code {
   font-size: 11px;
