@@ -46,12 +46,12 @@
                                              <tr>
                                                <td align=\"left\" valign=\"top\">
                                                  <a href=\"index.php\">home</A><br />
-                                                 <a href=\"module.php?mod=faq\">faq</A><br />
+                                                 <a href=\"module.php?mod=book\">help</A><br />
                                                  <a href=\"search.php\">search</A>
                                                </td>
                                                <td align=\"right\" valign=\"top\">
                                                  <a href=\"module.php?mod=diary\">diary</A><br />
-                                                 <a href=\"submit.php\">submit news</A><br />
+                                                 <a href=\"submit.php\">submit</A><br />
                                                  <a href=\"account.php\">account</A>
                                                </td>
                                              </tr>
@@ -307,7 +307,7 @@
                   <tr>
                     <td align="left" width="20" height="20" background="themes/jeroen/images/footerleft.gif" nowrap>&nbsp;</td>
                     <td width="100%" background="themes/jeroen/images/footer.gif" align="center" valign="middle">
-                      <FONT COLOR="#E09226" SIZE="2">[ <a href="index.php">Home</A> | <a href="module.php?mod=faq">Faq</A> | <a href="search.php">Search</A> | <a href="module.php?mod=diary">Diary</A>| <a href="submit.php">Submit news</A> | <a href="account.php">Account</A> ] </FONT>
+                      <FONT COLOR="#E09226" SIZE="2">[ <?php print theme_link(" | "); ?> ] </FONT>
                     </td>
                     <td align="right" width="20" background="themes/jeroen/images/footerright.gif" nowrap>&nbsp;</td>
                   </tr>
