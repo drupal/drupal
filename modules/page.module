@@ -1,5 +1,5 @@
 <?php
-// $Id: page.module,v 1.109 2004/01/31 21:16:42 dries Exp $
+// $Id: page.module,v 1.110 2004/02/10 21:36:37 dries Exp $
 
 function page_help($section = "admin/help#page") {
   $output = "";
@@ -44,16 +44,6 @@ function page_access($op, $node) {
 
   if ($op == "delete") {
     return user_access("maintain static pages");
-  }
-}
-
-function page_save($op, $node) {
-  if ($op == "approve") {
-    return array("status" => 1);
-  }
-
-  if ($op == "decline") {
-    return array("status" => 0);
   }
 }
 
