@@ -63,7 +63,8 @@ $mysql_updates = array(
   "2003-01-03" => "update_48",
   "2003-01-05" => "update_49",
   "2003-01-15" => "update_50",
-  "2003-04-19" => "update_51"
+  "2003-04-19" => "update_51",
+  "2003-04-20" => "update_52"
 );
 
 // Update functions
@@ -682,6 +683,25 @@ function update_50() {
 
 function update_51() {
   update_sql("ALTER TABLE blocks CHANGE delta delta varchar(32) NOT NULL default '0'");
+}
+
+function update_52() {
+  update_sql("UPDATE sequences SET name = 'comments_cid' WHERE name = 'comments';");
+  update_sql("UPDATE sequences SET name = 'node_nid' WHERE name = 'node';");
+
+  update_sql("DELETE FROM sequences WHERE name = 'import'");
+  update_sql("DELETE FROM sequences WHERE name = 'bundle_bid'");  // in case we would run this entry twice
+  update_sql("DELETE FROM sequences WHERE name = 'feed_fid'");    // in case we would run this entry twice
+
+  $bundles = db_result(db_query("SELECT MAX(bid) FROM bundle;"));
+  update_sql("INSERT INTO sequences (name, id) VALUES ('bundle_bid', '$bundles')");
+
+  $feeds = db_result(db_query("SELECT MAX(fid) FROM feed;"));
+  update_sql("INSERT INTO sequences (name, id) VALUES ('feed_fid', '$feeds')");
+
+  update_sql("UPDATE sequences SET name = 'vocabulary_vid' WHERE name = 'vocabulary';");
+
+  update_sql("UPDATE sequences SET name = 'term_data_tid' WHERE name = 'term_data'");
 }
 
 function update_upgrade3() {

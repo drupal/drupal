@@ -95,7 +95,7 @@ function taxonomy_form_vocabulary($edit = array()) {
 function taxonomy_save_vocabulary($edit) {
   $data = array("name" => $edit["name"], "types" => @implode(",", $edit["types"]), "description" => $edit["description"], "multiple" => $edit["multiple"], "required" => $edit["required"], "hierarchy" => $edit["hierarchy"], "relations" => $edit["relations"], "weight" => $edit["weight"]);
   if ($edit["vid"] && $edit["name"]) {
-    db_query("UPDATE vocabulary SET ". _prepare_update($data) ." WHERE vid = '%d'", $edit["vid"]);
+    db_query("UPDATE vocabulary SET ". _prepare_update($data) ." WHERE vid = %d", $edit["vid"]);
     module_invoke_all("taxonomy", "update", "vocabulary", $edit);
     $message = t("updated vocabulary '%name'.", array("%name" => $edit["name"]));
   }
@@ -103,7 +103,7 @@ function taxonomy_save_vocabulary($edit) {
     $message = taxonomy_del_vocabulary($edit["vid"]);
   }
   else {
-    $data["vid"] = $edit["vid"] = db_next_id("vocabulary");
+    $data["vid"] = $edit["vid"] = db_next_id("vocabulary_vid");
     db_query("INSERT INTO vocabulary ". _prepare_insert($data, 1) ." VALUES ". _prepare_insert($data, 2));
     module_invoke_all("taxonomy", "insert", "vocabulary", $edit);
     $message = t("created new vocabulary '%name'.", array("%name" => $edit["name"]));
@@ -117,8 +117,8 @@ function taxonomy_save_vocabulary($edit) {
 function taxonomy_del_vocabulary($vid) {
   $vocabulary = taxonomy_get_vocabulary($vid);
 
-  db_query("DELETE FROM vocabulary WHERE vid = '%d'", $vid);
-  $result = db_query("SELECT tid FROM term_data WHERE vid = '%d'", $vid);
+  db_query("DELETE FROM vocabulary WHERE vid = %d", $vid);
+  $result = db_query("SELECT tid FROM term_data WHERE vid = %d", $vid);
   while ($term = db_fetch_object($result)) {
     taxonomy_del_term($term->tid);
   }
@@ -188,7 +188,7 @@ function taxonomy_save_term($edit) {
   if ($edit["tid"] && $edit["name"]) {
     $data = array("name" => $edit["name"], "description" => $edit["description"], "weight" => $edit["weight"]);
 
-    db_query("UPDATE term_data SET ". _prepare_update($data) ." WHERE tid = '%d'", $edit["tid"]);
+    db_query("UPDATE term_data SET ". _prepare_update($data) ." WHERE tid = %d", $edit["tid"]);
     module_invoke_all("taxonomy", "update", "term", $edit);
     $message = t("the term '%a' has been updated.", array("%a" => $edit["name"]));
   }
@@ -196,7 +196,7 @@ function taxonomy_save_term($edit) {
     return taxonomy_del_term($edit["tid"]);
   }
   else {
-    $edit["tid"] = db_next_id("term_data");
+    $edit["tid"] = db_next_id("term_data_tid");
     $data = array("tid" => $edit["tid"], "name" => $edit["name"], "description" => $edit["description"], "vid" => $edit["vid"], "weight" => $edit["weight"]);
     db_query("INSERT INTO term_data ". _prepare_insert($data, 1) ." VALUES ". _prepare_insert($data, 2));
     module_invoke_all("taxonomy", "insert", "term", $edit);
@@ -204,34 +204,34 @@ function taxonomy_save_term($edit) {
   }
 
   // relations (seem very powerful, but I have to understand it completely)
-  db_query("DELETE FROM term_relation WHERE tid1 = '%d' OR tid2 = '%d'", $edit["tid"], $edit["tid"]);
+  db_query("DELETE FROM term_relation WHERE tid1 = %d OR tid2 = %d", $edit["tid"], $edit["tid"]);
   if ($edit["relations"]) {
     foreach ($edit["relations"] as $related_id) {
       if ($related_id != 0) {
-        db_query("INSERT INTO term_relation (tid1, tid2) VALUES ('%d', '%d')", $edit["tid"], $related_id);
+        db_query("INSERT INTO term_relation (tid1, tid2) VALUES (%d, %d)", $edit["tid"], $related_id);
       }
     }
   }
 
   // hierarchy
-  db_query("DELETE FROM term_hierarchy WHERE tid = '%d'", $edit["tid"]);
+  db_query("DELETE FROM term_hierarchy WHERE tid = %d", $edit["tid"]);
   if (!isset($edit["parent"])) {
     $edit["parent"] = 0;
   }
   if (is_array($edit["parent"])) {
     foreach ($edit["parent"] as $parent) {
-      db_query("INSERT INTO term_hierarchy (tid, parent) VALUES ('%d', '%d')", $edit["tid"], $parent);
+      db_query("INSERT INTO term_hierarchy (tid, parent) VALUES (%d, %d)", $edit["tid"], $parent);
     }
   }
   else {
-    db_query("INSERT INTO term_hierarchy (tid, parent) VALUES ('%d', '%d')", $edit["tid"], $edit["parent"][0]);
+    db_query("INSERT INTO term_hierarchy (tid, parent) VALUES (%d, %d)", $edit["tid"], $edit["parent"][0]);
   }
 
-  db_query("DELETE FROM term_synonym WHERE tid = '%d'", $edit["tid"]);
+  db_query("DELETE FROM term_synonym WHERE tid = %d", $edit["tid"]);
   if ($edit["synonyms"]) {
     foreach (explode ("\n", str_replace("\r", "", $edit["synonyms"])) as $synonym) {
       if ($synonym) {
-        db_query("INSERT INTO term_synonym (tid, name) VALUES ('%d', '%s')", $edit["tid"], chop($synonym));
+        db_query("INSERT INTO term_synonym (tid, name) VALUES (%d, '%s')", $edit["tid"], chop($synonym));
       }
     }
   }
@@ -244,11 +244,11 @@ function taxonomy_save_term($edit) {
 function taxonomy_del_term($tid) {
   $term = taxonomy_get_term($tid);
 
-  db_query("DELETE FROM term_data WHERE tid = '%d'", $tid);
-  db_query("DELETE FROM term_hierarchy WHERE tid = '%d'", $tid);
-  db_query("DELETE FROM term_relation WHERE tid1 = '%d' OR tid2 = '%d'", $tid, $tid);
-  db_query("DELETE FROM term_synonym WHERE tid = '%d'", $tid);
-  db_query("DELETE FROM term_node WHERE tid = '%d'", $tid);
+  db_query("DELETE FROM term_data WHERE tid = %d", $tid);
+  db_query("DELETE FROM term_hierarchy WHERE tid = %d", $tid);
+  db_query("DELETE FROM term_relation WHERE tid1 = %d OR tid2 = %d", $tid, $tid);
+  db_query("DELETE FROM term_synonym WHERE tid = %d", $tid);
+  db_query("DELETE FROM term_node WHERE tid = %d", $tid);
 
   module_invoke_all("taxonomy", "delete", "term", $term);
   cache_clear_all();
@@ -356,14 +356,14 @@ function taxonomy_node_form($type, $node = '') {
 
 // return 1 if node identified by $nid contains a taxonomy term identified by $tid in his body or title
 function taxonomy_node_has_term($nid, $tid) {
-  $term_name = db_result(db_query("SELECT name FROM term_data WHERE tid = '%d'", $tid));
+  $term_name = db_result(db_query("SELECT name FROM term_data WHERE tid = %d", $tid));
 
-  return db_result(db_query("SELECT COUNT(n.nid) FROM node n WHERE n.nid = '%d' AND ((n.body LIKE '%%%s%%') OR (n.body LIKE '%%%s%%'))", $nid, $term_name, $term_name));
+  return db_result(db_query("SELECT COUNT(n.nid) FROM node n WHERE n.nid = %d AND ((n.body LIKE '%%%s%%') OR (n.body LIKE '%%%s%%'))", $nid, $term_name, $term_name));
 }
 
 // return array of terms of a node beloging to a particular vocabulary identified by $vid
 function taxonomy_node_get_terms_by_vocabulary($nid, $vid, $key = "tid") {
-  $result = db_query("SELECT t.* FROM term_data t, term_node r WHERE t.tid = r.tid AND t.vid = '%d' AND r.nid = '%d' ORDER BY weight", $vid, $nid);
+  $result = db_query("SELECT t.* FROM term_data t, term_node r WHERE t.tid = r.tid AND t.vid = %d AND r.nid = %d ORDER BY weight", $vid, $nid);
   $terms = array();
   while ($term = db_fetch_object($result)) {
     $terms[$term->$key] = $term;
@@ -376,7 +376,7 @@ function taxonomy_node_get_terms($nid, $key = "tid") {
   static $terms;
 
   if (!isset($terms[$nid])) {
-    $result = db_query("SELECT t.* FROM term_data t, term_node r WHERE r.tid = t.tid AND r.nid = '%d' ORDER BY weight, name", $nid);
+    $result = db_query("SELECT t.* FROM term_data t, term_node r WHERE r.tid = t.tid AND r.nid = %d ORDER BY weight, name", $nid);
     $terms[$nid] = array();
     while ($term = db_fetch_object($result)) {
       $terms[$nid][$term->$key] = $term;
@@ -391,20 +391,20 @@ function taxonomy_node_save($nid, $terms) {
 
   if ($terms) {
     foreach ($terms as $term) {
-      db_query("INSERT INTO term_node (nid, tid) VALUES ('%d', '%d')", $nid, $term);
+      db_query("INSERT INTO term_node (nid, tid) VALUES (%d, %d)", $nid, $term);
     }
   }
 }
 
 // clean up terms
 function taxonomy_node_delete($nid) {
-  db_query("DELETE FROM term_node WHERE nid = '%d'", $nid);
+  db_query("DELETE FROM term_node WHERE nid = %d", $nid);
 }
 
 // relations: return array of related terms
 function taxonomy_get_related($tid, $key = "tid") {
   if ($tid) {
-    $result = db_query("SELECT t.*, tid1, tid2 FROM term_relation, term_data t WHERE (t.tid = tid1 OR t.tid = tid2) AND (tid1 = '%d' OR tid2 = '%d') AND t.tid != '%d' ORDER BY weight, name", $tid, $tid, $tid);
+    $result = db_query("SELECT t.*, tid1, tid2 FROM term_relation, term_data t WHERE (t.tid = tid1 OR t.tid = tid2) AND (tid1 = %d OR tid2 = %d) AND t.tid != %d ORDER BY weight, name", $tid, $tid, $tid);
     $related = array();
     while ($term = db_fetch_object($result)) {
       $related[$term->$key] = $term;
@@ -419,7 +419,7 @@ function taxonomy_get_related($tid, $key = "tid") {
 // hierarchy: get parent terms
 function taxonomy_get_parents($tid, $key = "tid") {
   if ($tid) {
-    $result = db_query("SELECT t.* FROM term_hierarchy h, term_data t WHERE h.parent = t.tid AND h.tid = '%d' ORDER BY weight, name", $tid);
+    $result = db_query("SELECT t.* FROM term_hierarchy h, term_data t WHERE h.parent = t.tid AND h.tid = %d ORDER BY weight, name", $tid);
     $parents = array();
     while ($parent = db_fetch_object($result)) {
       $parents[$parent->$key] = $parent;
@@ -434,10 +434,10 @@ function taxonomy_get_parents($tid, $key = "tid") {
 // hierarchy: get children
 function taxonomy_get_children($tid, $vid = 0, $key = "tid") {
   if ($vid) {
-    $result = db_query("SELECT t.* FROM term_hierarchy h, term_data t WHERE t.vid = '%d' AND h.tid = t.tid AND h.parent = '%d' ORDER BY weight, name", $vid, $tid);
+    $result = db_query("SELECT t.* FROM term_hierarchy h, term_data t WHERE t.vid = %d AND h.tid = t.tid AND h.parent = %d ORDER BY weight, name", $vid, $tid);
   }
   else {
-    $result = db_query("SELECT t.* FROM term_hierarchy h, term_data t WHERE h.tid = t.tid AND parent = '%d' ORDER BY weight", $tid);
+    $result = db_query("SELECT t.* FROM term_hierarchy h, term_data t WHERE h.tid = t.tid AND parent = %d ORDER BY weight", $tid);
   }
   $children = array();
   while ($term = db_fetch_object($result)) {
@@ -456,7 +456,7 @@ function taxonomy_get_tree($vocabulary_id, $parent = 0, $depth = -1, $key = "tid
   if (!isset($children[$vocabulary_id])) {
     $children[$vocabulary_id] = array();
 
-    $result = db_query("SELECT t.*, parent FROM term_data t, term_hierarchy h WHERE t.tid = h.tid AND t.vid = '%d' ORDER BY weight, name", $vocabulary_id);
+    $result = db_query("SELECT t.*, parent FROM term_data t, term_hierarchy h WHERE t.tid = h.tid AND t.vid = %d ORDER BY weight, name", $vocabulary_id);
     while ($term = db_fetch_object($result)) {
       $children[$vocabulary_id][$term->parent][] = $term->tid;
       $parents[$vocabulary_id][$term->tid][] = $term->parent;
@@ -481,7 +481,7 @@ function taxonomy_get_tree($vocabulary_id, $parent = 0, $depth = -1, $key = "tid
 // synonyms: return array of synonyms
 function taxonomy_get_synonyms($tid) {
   if ($tid) {
-    $result = db_query("SELECT name FROM term_synonym WHERE tid = '%d'", $tid);
+    $result = db_query("SELECT name FROM term_synonym WHERE tid = %d", $tid);
     while ($synonym = db_fetch_array($result)) {
       $synonyms[] = $synonym["name"];
     }
@@ -573,12 +573,12 @@ function taxonomy_get_term_by_name($name) {
 
 function taxonomy_get_vocabulary($vid) {
   // simple cache using a static var?
-  return db_fetch_object(db_query("SELECT * FROM vocabulary WHERE vid = '%d'", $vid));
+  return db_fetch_object(db_query("SELECT * FROM vocabulary WHERE vid = %d", $vid));
 }
 
 function taxonomy_get_term($tid) {
   // simple cache using a static var?
-  return db_fetch_object(db_query("SELECT * FROM term_data WHERE tid = '%d'", $tid));
+  return db_fetch_object(db_query("SELECT * FROM term_data WHERE tid = %d", $tid));
 }
 
 /*

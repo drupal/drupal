@@ -44,12 +44,12 @@ function node_tag_new($nid) {
   if ($user->uid) {
     $nid = check_query($nid);
 
-    $result = db_query("SELECT timestamp FROM history WHERE uid = '%d' AND nid = '%d'", $user->uid, $nid);
+    $result = db_query("SELECT timestamp FROM history WHERE uid = %d AND nid = %d", $user->uid, $nid);
     if (db_fetch_object($result)) {
-      db_query("UPDATE history SET timestamp = '%d' WHERE uid = '%d' AND nid = '%d'", time(), $user->uid, $nid);
+      db_query("UPDATE history SET timestamp = %d WHERE uid = %d AND nid = %d", time(), $user->uid, $nid);
     }
     else {
-      db_query("INSERT INTO history (uid, nid, timestamp) VALUES ('%d', '%d', '%d')", $user->uid, $nid, time());
+      db_query("INSERT INTO history (uid, nid, timestamp) VALUES (%d, %d, %d)", $user->uid, $nid, time());
     }
   }
 }
@@ -61,7 +61,7 @@ function node_tag_new($nid) {
 function node_last_viewed($nid) {
   global $user;
 
-  $history = db_fetch_object(db_query("SELECT timestamp FROM history WHERE uid = '$user->uid' AND nid = '%d'", $nid));
+  $history = db_fetch_object(db_query("SELECT timestamp FROM history WHERE uid = '$user->uid' AND nid = %d", $nid));
   return ($history->timestamp ? $history->timestamp : 0);
 }
 
@@ -77,7 +77,7 @@ function node_is_new($nid, $timestamp) {
 
   if (!isset($cache[$nid])) {
     if ($user->uid) {
-      $history = db_fetch_object(db_query("SELECT timestamp FROM history WHERE uid = '%d' AND nid = '%d'", $user->uid, $nid));
+      $history = db_fetch_object(db_query("SELECT timestamp FROM history WHERE uid = %d AND nid = %d", $user->uid, $nid));
       $cache[$nid] = $history->timestamp ? $history->timestamp : 0;
     }
     else {
@@ -269,7 +269,7 @@ function node_save($node) {
       $node->created = time();
     }
     $node->changed = time();
-    $node->nid = db_next_id("node");
+    $node->nid = db_next_id("node_nid");
 
     // Prepare the query:
     foreach ($node as $key => $value) {
@@ -472,7 +472,7 @@ function node_filter_link($text) {
 function node_comment_mode($nid) {
   static $comment_mode;
   if (!isset($comment_mode[$nid])) {
-    $comment_mode[$nid] = db_result(db_query("SELECT comment FROM node WHERE nid = '%d'", $nid));
+    $comment_mode[$nid] = db_result(db_query("SELECT comment FROM node WHERE nid = %d", $nid));
   }
   return $comment_mode[$nid];
 }
