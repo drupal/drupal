@@ -1328,6 +1328,10 @@ function user_admin_role($edit = array()) {
   else if ($op == t("Delete role")) {
     db_query("DELETE FROM {role} WHERE rid = %d", $id);
     db_query("DELETE FROM {permission} WHERE rid = %d", $id);
+
+    // Users with the deleted role are put back in the authenticated users pool
+    $aid = db_result(db_query("SELECT rid FROM {role} WHERE name = 'Authenticated user'"));
+    db_query("UPDATE {users} SET rid = %d WHERE rid = %d", $aid, $id);
   }
   else if ($op == t("Add role")) {
     db_query("INSERT INTO {role} (name) VALUES ('%s')", $edit["name"]);
