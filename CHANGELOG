@@ -13,6 +13,7 @@ Drupal x.x.x, xxxx-xx-xx
     * made all theme functions return their output.
     * migrated away from using the BaseTheme class.
     * added many new theme functions and refactored existing theme functions.
+    * replaced theme "UnConeD" by "Chameleon".
 - usability:
     * added breadcrumb navigation to all pages.
     * made it possible to add context-sensitive help to all pages.
