@@ -73,7 +73,7 @@ function system_view_options() {
 
   foreach (module_list() as $name) {
     if (module_hook($name, "conf_options")) {
-      $output .= "<h3>". ucfirst($name) ." settings</h3>". module_invoke($name, "conf_options") ."<hr />\n";
+      $output .= "<h3><a name=\"$name\">". ucfirst($name) ." settings</a></h3>". module_invoke($name, "conf_options") ."<hr />\n";
     }
   }
   return $output;
