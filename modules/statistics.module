@@ -7,7 +7,7 @@ function statistics_init() {
 
   if (variable_get("statistics_enable_node_counter", 0)) {
     // node view counters are enabled
-    if (arg(0) == "node" && arg(1) == "view") {
+    if ((arg(0) == "node") && (arg(1) == "view") && arg(2)) {
       // a node has been viewed, so updated the node's counters
       db_query("UPDATE statistics SET daycount = daycount + 1, totalcount = totalcount + 1, timestamp = '%s' WHERE nid = '%s'", time(), arg(2));
       // if we affected 0 rows, this is the first time viewing the node
@@ -23,7 +23,7 @@ function statistics_init() {
     $referrer = getenv("HTTP_REFERER");
     $hostname = getenv("REMOTE_ADDR");
     // log this page access
-    if (arg(0) == "node" && arg(1) == "view") {
+    if ((arg(0) == "node") && (arg(1) == "view") && arg(2)) {
       db_query("INSERT INTO accesslog (nid, url, hostname, uid, timestamp) values('%s', '%s', '%s', '%s', '%s')", arg(2), $referrer, $hostname, $user->uid, time());
     }
     else {
