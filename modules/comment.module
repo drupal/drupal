@@ -304,7 +304,7 @@ function comment_search($keys = NULL) {
     print theme('page', search_type('comment', url('admin/comment/search'), $_POST['keys']));
   }
   else if ($keys) {
-    $find = do_search(array("keys" => $keys, "type" => 'comment', "select" => "select s.lno as lno, c.nid as nid, c.subject as title, c.timestamp as created, u.uid as uid, u.name as name, s.count as count FROM {search_index} s, {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE s.lno = c.cid AND s.type = 'comment' AND c.status = 0 AND s.word like '%'"));
+    $find = do_search(array('keys' => $keys, 'type' => 'comment', 'select' => 'SELECT s.lno AS lno, c.nid AS nid, c.subject AS title, c.timestamp AS created, u.uid AS uid, u.name AS name, s.count AS count FROM {search_index} s, {comments} c INNER JOIN {users} u ON c.uid = u.uid '. node_access_join_sql('c') .' WHERE '. node_access_where_sql() ." AND s.lno = c.cid AND s.type = 'comment' AND c.status = 0 AND s.word like '%'"));
     return array(t('Matching comments ranked in order of relevance'), $find);
   }
 }
