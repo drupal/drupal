@@ -482,7 +482,7 @@ function user_login($edit = array()) {
 
       $url = $HTTP_REFERER ? $HTTP_REFERER : "module.php?mod=user&op=view";
 
-      header("Location: $url");
+      drupal_goto($url);
 
     }
     else {
@@ -529,7 +529,7 @@ function user_logout() {
     ** Redirect the user to his personal information page:
     */
 
-    header("Location: index.php");
+    drupal_goto("index.php");
   }
 }
 
@@ -688,7 +688,7 @@ function user_edit($edit = array()) {
         ** Redirect the user to his personal information page:
         */
 
-        header("Location: module.php?mod=user&op=view");
+        drupal_goto("module.php?mod=user&op=view");
       }
     }
 
