@@ -109,7 +109,7 @@ function node_tag_new($nid) {
       db_query('UPDATE {history} SET timestamp = %d WHERE uid = %d AND nid = %d', time(), $user->uid, $nid);
     }
     else {
-      db_query('INSERT INTO {history} (uid, nid, timestamp) VALUES (%d, %d, %d)', $user->uid, $nid, time());
+      @db_query('INSERT INTO {history} (uid, nid, timestamp) VALUES (%d, %d, %d)', $user->uid, $nid, time());
     }
   }
 }
