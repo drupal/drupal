@@ -87,12 +87,12 @@ function cloud_save($edit) {
 }
 
 function cloud_display() {
-  $result = db_query("SELECT * FROM site ORDER BY timestamp DESC");
+  $result = db_query("SELECT * FROM site ORDER BY title");
 
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
-  $output .= " <tr><th>site</th><th>last update</th><th>operations</th></tr>\n";
+  $output .= " <tr><th>site</th><th>last update</th><th colspan=\"2\">operations</th></tr>\n";
   while ($site = db_fetch_object($result)) {
-    $output .= " <tr><td><a href=\"". check_output($site->url) ."\">". check_output($site->title) ."</a></td><td>". ($site->timestamp ? format_interval(time() - $site->timestamp) ." ago" : "never") ."</td><td><a href=\"admin.php?mod=cloud&op=edit&id=$site->sid\">edit site</a></td></tr>\n";
+    $output .= " <tr><td><a href=\"". check_output($site->url) ."\">". check_output($site->title) ."</a></td><td>". ($site->timestamp ? format_interval(time() - $site->timestamp) ." ago" : "never") ."</td><td><a href=\"admin.php?mod=cloud&op=edit&id=$site->sid\">edit site</a></td><td><a href=\"admin.php?mod=cloud&op=update&id=$site->sid\">update site</a></td></tr>\n";
   }
   $output .= "</table>\n";
 
@@ -141,6 +141,10 @@ function cloud_admin() {
         break;
       case "edit":
         print cloud_form(cloud_get_site($id));
+        break;
+      case "update":
+        print status(cloud_update(cloud_get_site($id)));
+        print cloud_display();
         break;
       case "help":
         cloud_help();
