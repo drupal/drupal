@@ -55,7 +55,7 @@ $terms = stripslashes($terms);
     ### Compose query:
     $query = "SELECT DISTINCT s.sid, s.aid, s.subject, s.time FROM stories s, authors a WHERE s.sid != 0 ";
       // Note: s.sid is a dummy clause used to enforce the WHERE-tag.
-    if ($terms != "") $query .= "AND (s.subject LIKE '%$terms%' OR s.introtext LIKE '%$terms%') ";
+    if ($terms != "") $query .= "AND (s.subject LIKE '%$terms%' OR s.abstract LIKE '%$terms%' OR s.comments LIKE '%$terms%') ";
     if ($author != "") $query .= "AND s.aid = '$author' ";
     if ($category != "") $query .= "AND s.category = '$category' ";
     if ($order == "Oldest first") $query .= " ORDER BY s.time ASC";
