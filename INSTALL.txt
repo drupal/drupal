@@ -45,7 +45,7 @@ INSTALLATION
    You can obtain the latest Drupal release from http://drupal.org/.
    Download the current tar.gz format and extract the files:
 
-     $ wget http://drupal.org/drupal/drupal-x.x.x.tgz
+     $ wget http://drupal.org/files/project/drupal-x.x.x.tgz
      $ tar -zxvf drupal-x.x.x.tgz
 
    This will create a new directory drupal-x.x.x/ containing all
