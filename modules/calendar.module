@@ -5,13 +5,13 @@ $module = array("block" => "calendar_block");
 function calendar_block() {
   global $date;
 
-  include "modules/calendar.class";
+  include_once "modules/calendar.class";
 
   $calendar = new Calendar($date);
 
   $block[0]["subject"] = "Browse archives";
   $block[0]["content"] = $calendar->display();
-  $block[0]["info"] = "calendar";
+  $block[0]["info"] = "Calendar to browse archives";
  
   return $block;
 }

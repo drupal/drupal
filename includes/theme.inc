@@ -18,12 +18,12 @@ function theme_account($theme) {
     $content .= "<LI><A HREF=\"submission.php\">submission queue</A> (<FONT COLOR=\"red\">". submission_number() ."</FONT>)</LI>\n";
     $content .= "<P>\n";
     $content .= "<LI><A HREF=\"account.php?op=edit&topic=diary\">edit your diary</A></LI>\n";
-    $content .= "<LI><A HREF=\"account.php?op=edit&topic=user\">edit your information</A></LI>\n";
-    $content .= "<LI><A HREF=\"account.php?op=edit&topic=site\">edit your settings</A></LI>\n";
-    $content .= "<LI><A HREF=\"account.php?op=edit&topic=block\">edit your blocks</A></LI>\n";
+    $content .= "<LI><A HREF=\"account.php?op=edit&topic=user\">edit user settings</A></LI>\n";
+    $content .= "<LI><A HREF=\"account.php?op=edit&topic=site\">edit site settings</A></LI>\n";
+    $content .= "<LI><A HREF=\"account.php?op=edit&topic=content\">edit content settings</A></LI>\n";
     $content .= "<P>\n";
     $content .= "<LI><A HREF=\"account.php?op=view&topic=diary\">view your diary</A></LI>\n";
-    $content .= "<LI><A HREF=\"account.php?op=view&topic=info\">view your information</A></LI>\n";
+    $content .= "<LI><A HREF=\"account.php?op=view&topic=info\">view user settings</A></LI>\n";
     $content .= "<P>\n";
     $content .= "<LI><A HREF=\"account.php?op=logout\">logout</A></LI>\n";
 

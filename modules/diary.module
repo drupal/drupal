@@ -85,7 +85,7 @@ function diary_page_add() {
   $output .= "</FORM>\n";
   
   $theme->header();
-  $theme->box("Online diary", $output);
+  $theme->box("Edit you diary", $output);
   $theme->footer();
 }
 
@@ -114,7 +114,7 @@ function diary_page_edit($id) {
   $output .= "</FORM>\n";
   
   $theme->header();
-  $theme->box("Online diary", $output);
+  $theme->box("Edit your diary", $output);
   $theme->footer();
 }
 
@@ -140,7 +140,7 @@ function diary_page_preview($text, $timestamp, $id = 0) {
   $output .= "</FORM>\n";
 
   $theme->header();
-  $theme->box("Online diary", $output);
+  $theme->box("Edit your diary", $output);
   $theme->footer();
 }
 
@@ -204,7 +204,7 @@ function diary_block() {
 
   $block[0]["subject"] = "Recent diary entries";
   $block[0]["content"] = $content;
-  $block[0]["info"] = "recent diary entries";
+  $block[0]["info"] = "Recent diary entries";
   $block[0]["link"] = "module.php?mod=diary";
 
   return $block;

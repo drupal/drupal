@@ -10,11 +10,17 @@ function account_get_user($uname) {
 function account_email() {
   $output .= "<P>Lost your password?  Fill out your username and e-mail address, and your password will be mailed to you.</P>\n";
   $output .= "<FORM ACTION=\"account.php\" METHOD=\"post\">\n";
-  $output .= " <TABLE BORDER=\"0\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
-  $output .= "  <TR><TH ALIGN=\"right\">Username:</TH><TD><INPUT NAME=\"userid\"></TD></TR>\n";
-  $output .= "  <TR><TH ALIGN=\"right\">E-mail addres:</TH><TD><INPUT NAME=\"email\"></TD></TR>\n";
-  $output .= "  <TR><TD ALIGN=\"right\" COLSPAN=\"2\"><INPUT NAME=\"op\" TYPE=\"submit\" VALUE=\"E-mail password\"></TD></TR>\n";
-  $output .= " </TABLE>\n";
+  $output .= "<P>\n";
+  $output .= " <B>Username:</B><BR>\n";
+  $output .= " <INPUT NAME=\"userid\"><BR>\n";
+  $output .= "</P>\n";
+  $output .= "<P>\n";
+  $output .= " <B>E-mail address:</B><BR>\n";
+  $output .= " <INPUT NAME=\"email\"><BR>\n";
+  $output .= "</P>\n";
+  $output .= "<P>\n";
+  $output .= " <INPUT NAME=\"op\" TYPE=\"submit\" VALUE=\"E-mail password\">\n";
+  $output .= "</P>\n";
   $output .= "</FORM>\n";
 
   return $output;
@@ -29,12 +35,12 @@ function account_create($user = "", $error = "") {
   $output .= "<FORM ACTION=\"account.php\" METHOD=\"post\">\n";
   $output .= "<P>\n";
   $output .= " <B>Username:</B><BR>\n";
-  $output .= " <INPUT NAME=\"userid\" VALUE=\"$userid\"><BR>\n";
+  $output .= " <INPUT NAME=\"userid\"><BR>\n";
   $output .= " <SMALL><I>Enter your desired username: only letters, numbers and common special characters are allowed.</I></SMALL><BR>\n";
   $output .= "</P>\n";
   $output .= "<P>\n";
   $output .= " <B>E-mail address:</B><BR>\n";
-  $output .= " <INPUT NAME=\"email\" VALUE=\"$email\"><BR>\n";
+  $output .= " <INPUT NAME=\"email\"><BR>\n";
   $output .= " <SMALL><I>You will be sent instructions on how to validate your account via this e-mail address - please make sure it is accurate.</I></SMALL><BR>\n";
   $output .= "</P>\n";
   $output .= "<P>\n";
@@ -102,7 +108,7 @@ function account_user_edit() {
 
     ### Display output/content:
     $theme->header();
-    $theme->box("Edit your information", $output);
+    $theme->box("Edit user settings", $output);
     $theme->footer();
   }
   else {
@@ -185,7 +191,7 @@ function account_site_edit() {
     $output .= "</FORM>\n";
 
     $theme->header();
-    $theme->box("Edit your settings", $output);
+    $theme->box("Edit site settings", $output);
     $theme->footer();
   }
   else {
@@ -210,7 +216,7 @@ function account_site_save($edit) {
   }
 }
 
-function account_block_edit() {
+function account_content_edit() {
   global $theme, $user;
 
   if ($user->id) {
@@ -218,7 +224,7 @@ function account_block_edit() {
   
     $output .= "<B>Blocks:</B><BR>\n";
 
-    $result = db_query("SELECT * FROM blocks WHERE status = 1");
+    $result = db_query("SELECT * FROM blocks WHERE status = 1 ORDER BY module");
     while ($block = db_fetch_object($result)) {
       $entry = db_fetch_object(db_query("SELECT * FROM layout WHERE block = '$block->name' AND user = '$user->id'"));
 
@@ -232,11 +238,11 @@ function account_block_edit() {
     } 
  
     $output .= "<I>You can more or less position your blocks by assigning them weights.  The heavy blocks will sink down whereas the light blocks will be positioned at the top of the page.</I><P>\n";
-    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Save block settings\"><BR>\n";
+    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Save content settings\"><BR>\n";
     $output .= "</FORM>\n";
 
     $theme->header();
-    $theme->box("Edit your blocks", $output);
+    $theme->box("Edit content settings", $output);
     $theme->footer();
   }
   else {
@@ -247,7 +253,7 @@ function account_block_edit() {
   }
 }
 
-function account_block_save($edit) {
+function account_content_save($edit) {
   global $user;
   if ($user->id) {
     db_query("DELETE FROM layout WHERE user = $user->id");
@@ -272,7 +278,7 @@ function account_user($uname) {
 
     ### Display account information:
     $theme->header();
-    $theme->box("View your information", $output);
+    $theme->box("View user settings", $output);
     $theme->footer();
   }
   elseif ($uname && $account = account_get_user($uname)) {
@@ -559,8 +565,8 @@ switch ($op) {
     account_site_save($edit);
     header("Location: account.php?op=info");
     break;
-  case "Save block settings":
-    account_block_save($edit);
+  case "Save content settings":
+    account_content_save($edit);
     account_user($user->userid);
     break;
   case "logout":
@@ -599,8 +605,8 @@ switch ($op) {
       case "site":
         account_site_edit();
         break;
-      case "block":
-        account_block_edit();
+      case "content":
+        account_content_edit();
         break;
       default:
         header("Location: module.php?mod=diary&op=add&name=$user->userid");
