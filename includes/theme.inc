@@ -116,8 +116,12 @@ function theme_error($message) {
   return "<div style=\"color: red;\">$message</div>";
 }
 
-function theme_list() {
+function theme_list($refresh = 0) {
   static $list;
+
+  if ($refresh) {
+    unset($list);
+  }
 
   if (!$list) {
     $list = array();
@@ -142,16 +146,18 @@ function theme_init() {
 
   $themes = theme_list();
   $name = $user->theme ? $user->theme : variable_get("theme_default", 0);
+
   if (is_object($themes[$name])) {
     include_once($themes[$name]->filename);
-    $theme_class = "Theme_$name";
-    @$obj =& new $theme_class();
-    $obj->path = dirname($themes[$name]->filename);
-    return $obj;
+    $class = "Theme_$name";
+    $instance =& new $class();
+    $instance->path = dirname($themes[$name]->filename);
+  }
+  else {
+    $instance =& new BaseTheme;
   }
 
-  @$obj =& new BaseTheme;
-  return $obj;
+  return $instance;
 }
 
 /**
