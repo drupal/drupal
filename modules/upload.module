@@ -276,15 +276,15 @@ function upload_count_size($uid = 0) {
 function upload_save($node) {
   foreach ((array)$node->files as $key => $file) {
     if ($file->source && !$file->remove) {
-      // Insert new files:
-      $fid = db_next_id('{files}_fid');
-      $file = file_save_upload($file, $file->filename);
-
       // Clean up the session:
       unset($_SESSION['file_uploads'][$file->source]);
 
-      db_query("INSERT INTO {files} (fid, nid, filename, filepath, filemime, filesize, list) VALUES (%d, %d, '%s', '%s', '%s', %d, %d)",
-               $fid, $node->nid, $file->filename, $file->filepath, $file->filemime, $file->filesize, $node->list[$key]);
+      // Insert new files:
+      if ($file = file_save_upload($file, $file->filename)) {
+        $fid = db_next_id('{files}_fid');
+        db_query("INSERT INTO {files} (fid, nid, filename, filepath, filemime, filesize, list) VALUES (%d, %d, '%s', '%s', '%s', %d, %d)",
+                 $fid, $node->nid, $file->filename, $file->filepath, $file->filemime, $file->filesize, $node->list[$key]);
+      }
     }
     else {
       // Remove or update existing files:
