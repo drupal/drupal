@@ -34,7 +34,7 @@ function admin_page($mod) {
   module_iterate("module");
 
  ?>
-    <HR><?php echo $menu; ?><A HREF="">home</A><HR>
+    <HR><?php echo $menu; ?><A HREF="index.php">home</A><HR>
  <?php
 
   if (user_access($user, $mod)) module_execute($mod, "admin");
