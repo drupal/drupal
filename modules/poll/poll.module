@@ -267,7 +267,7 @@ function poll_view(&$node, $main = 0, $block = 0) {
       // Prevent a 'read more' link in the side-block.
       $node->body = $node->teaser = "";
     }
-    $output .= "<br /><div align=\"center\">Total votes: ". $votestotal . ($block ? "<br />" . $theme->links(link_node($node, $main)) : "") ."</div>";
+    $output .= "<br /><div align=\"center\">Total votes: ". $votestotal . ($block ? "<br />". $theme->links(link_node($node, $main)) : "") ."</div>";
   }
   // Force the output on both the mainpage and elsewhere
   $node->body = $output;
