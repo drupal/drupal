@@ -54,7 +54,7 @@
       -->
      </STYLE>
      <BODY TEXT="#000000" BGCOLOR="<?php print $this->clc0; ?>" ALINK="#000000" LINK="#404040" VLINK="#404040" MARGINHEIGHT="10" MARGINWIDTH="10">
-     <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" ALIGN=CENTER>
+     <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" ALIGN="CENTER" WIDTH="100%">
      <TR><TD BGCOLOR="<?php print $this->cl00; ?>"><IMG SRC="themes/<?php print $this->themename; ?>/images/null.gif" WIDTH="10"></TD><TD BGCOLOR="<?php print $this->clc0; ?>"><IMG SRC="themes/<?php print $this->themename; ?>/images/null.gif" WIDTH="4"></TD>
      <TD BGCOLOR="<?php print $this->cl80; ?>">
       <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="9" BGCOLOR="<?php print $this->cl80; ?>">
@@ -75,7 +75,7 @@
             print "</TR></TD></TABLE>";
        ?></TD></TR>
        <TR>
-       <TD VALIGN="top" WIDTH="640">
+       <TD VALIGN="top" WIDTH="80%">
     <?php
    }
 
@@ -185,10 +185,10 @@
    function footer() {
     ?>
        </TD>
-       <TD VALIGN="top" WIDTH="185">
+       <TD VALIGN="top" WIDTH="20%">
         <?php
           theme_account($this);
-    theme_blocks("all", $this);
+          theme_blocks("all", $this);
         ?>
        </TD>
       </TR>
