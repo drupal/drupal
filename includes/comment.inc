@@ -163,20 +163,6 @@ function comment_moderation($comment) {
   return $output;
 }
 
-function comment_controls($threshold = 1, $mode = 3, $order = 1) {
-  global $REQUEST_URI, $user;
-  $output .= "<DIV ALIGN=\"CENTER\">\n";
-  $output .= "<FORM METHOD=\"post\" ACTION=\"$REQUEST_URI\">\n";
-  $output .= comment_mode(($user->id ? $user->mode : $mode));
-  $output .= comment_order(($user->id ? $user->sort : $order));
-  $output .= comment_threshold(($user->id ? $user->threshold : $threshold));
-  $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Update settings") ."\">\n";
-  $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Add comment") ."\">\n";
-  $output .= "</FORM>\n";
-  $output .= "</DIV>\n";
-  return $output;
-}
-
 function comment_threshold($threshold) {
   for ($i = -1; $i < 6; $i++) $options .= " <OPTION VALUE=\"$i\"". ($threshold == $i ? " SELECTED" : "") .">". t("Filter") ." - $i</OPTION>";
   return "<SELECT NAME=\"threshold\">$options</SELECT>\n";
@@ -273,7 +259,7 @@ function comment_render($lid, $cid) {
 
     if ($user->id) {
       // Comment control:
-      $theme->box(t("Comment control"), comment_controls($threshold, $mode, $order));
+      $theme->box(t("Comment control"), $theme->comment_controls($threshold, $mode, $order));
 
       // Print moderation form:
       print "<FORM METHOD=\"post\" ACTION=\"$REQUEST_URI\">\n";
