@@ -627,7 +627,7 @@ function _taxonomy_term_select($title, $name, $value, $vocabulary_id, $descripti
 
     $size = min(12, count($options));
 
-    return form_item($title, "<select name=\"edit[$name][]\"". ($multiple ? " multiple size=\"$size\"" : "") . ($extra ? " $extra" : "") .">$select</select>", $description);
+    return form_item($title, "<select name=\"edit[$name][]\"". ($multiple ? " multiple=\"multiple\" size=\"$size\"" : "") . ($extra ? " $extra" : "") .">$select</select>", $description);
   }
 }
 
