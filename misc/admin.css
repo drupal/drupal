@@ -112,3 +112,6 @@ hr {
   padding: 1em 1em 1em 0;
   z-index: 2;
 }
+#update {
+  padding: 1em 1em 1em 1em;
+}
