@@ -10,7 +10,7 @@ CREATE TABLE access (
   mask varchar(255) NOT NULL default '',
   type varchar(255) NOT NULL default '',
   status smallint NOT NULL default '0',
-  PRIMARY KEY (aid),
+  PRIMARY KEY (aid)
 );
 
 --
