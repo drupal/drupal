@@ -56,7 +56,8 @@ $mysql_updates = array(
   "2002-10-13" => "update_41",
   "2002-10-17" => "update_42",
   "2002-10-26" => "update_43",
-  "2002-11-08" => "update_44"
+  "2002-11-08" => "update_44",
+  "2002-11-20" => "update_45"
 );
 
 // Update functions
@@ -628,6 +629,10 @@ function update_43() {
 
 function update_44() {
   update_sql("UPDATE system SET filename = CONCAT('modules/', filename) WHERE type = 'module'");
+}
+
+function update_45() {
+  update_sql("ALTER TABLE page ADD description varchar(128) NOT NULL default ''");
 }
 
 function update_upgrade3() {
