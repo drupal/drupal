@@ -55,15 +55,17 @@ function admin_page($mod) {
           print "<h2>". t("Administration") ."</h2>";
         }
 
+        /*
         if ($menu = menu_menu()) {
           print "$menu<br />";
         }
-
-        print "<br /><hr /><br />";
+        */
 
         if ($help = menu_help()) {
-          print "<small>$help</small><br /><br />";
+          print "<small>$help</small>";
         }
+
+        print "<hr /><br />";
 
         if (arg(1)) {
           print module_invoke(arg(1), "admin");
