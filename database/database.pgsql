@@ -509,7 +509,7 @@ CREATE INDEX permission_rid_idx ON permission(rid);
 CREATE TABLE poll (
   nid integer NOT NULL default '0',
   runtime integer NOT NULL default '0',
-  voters text NOT NULL default '',
+  polled text NOT NULL default '',
   active integer NOT NULL default '0',
   PRIMARY KEY  (nid)
 );
