@@ -59,15 +59,15 @@ function drupal_admin_del($id) {
 function drupal_admin_display() {
   $result = db_query("SELECT * FROM drupals ORDER BY name");
 
-  $output .= "<FORM ACTION=\"admin.php?mod=drupal\" METHOD=\"post\">\n";
+  $output .= "<FORM ACTION=\"admin.php?mod=drupal-site\" METHOD=\"post\">\n";
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
   $output .= " <TR><TH>name</TH><TH>link</TH><TH>contact</TH><TH>operations</TH></TR>\n";
 
   while ($drupal = db_fetch_object($result)) {
-    $output .= " <TR><TD>$drupal->name</TD><TD>". format_url($drupal->link) ."</TD><TD>". format_email($drupal->contact) ."</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=drupal&op=delete&id=$drupal->id\">delete</A></TD></TR>\n";
+    $output .= " <TR><TD>$drupal->name</TD><TD>". format_url($drupal->link) ."</TD><TD>". format_email($drupal->contact) ."</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=drupal-site&op=delete&id=$drupal->id\">delete</A></TD></TR>\n";
   }
 
-  $output .= " <TR><TD><INPUT TYPE=\"text\" NAME=\"name\"></TD><TD><INPUT TYPE=\"text\" NAME=\"link\"></TD><TD><INPUT TYPE=\"text\" NAME=\"contact\"></TD><TD><INPUT NAME=\"op\" TYPE=\"submit\" VALUE=\"Add drupal\"></TD></TR>\n";
+  $output .= " <TR><TD><INPUT TYPE=\"text\" NAME=\"name\"></TD><TD><INPUT TYPE=\"text\" NAME=\"link\"></TD><TD><INPUT TYPE=\"text\" NAME=\"contact\"></TD><TD><INPUT NAME=\"op\" TYPE=\"submit\" VALUE=\"Add drupal site\"></TD></TR>\n";
   $output .= "</TABLE>\n";
   $output .= "</FORM>\n";
 
@@ -78,7 +78,7 @@ function drupal_admin() {
   global $op, $id, $name, $link, $contact;
 
   switch($op) {
-    case "Add drupal":
+    case "Add drupal site":
       drupal_admin_add($name, $link, $contact);
       drupal_admin_display();
       break;
