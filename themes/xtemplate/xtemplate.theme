@@ -3,11 +3,12 @@
 class Theme_xtemplate extends BaseTheme {
 
   var $primary_links = "edit me";
-  var $secundary_links = "edit me";
+  var $secondary_links = "edit me";
   var $message = "edit me";
 
   function system($field) {
     $system["name"] = "xtemplate";
+    $system["description"] = "a template driven theme";
 
     return $system[$field];
   }
@@ -36,13 +37,13 @@ class Theme_xtemplate extends BaseTheme {
                       check_output($node->teaser) :
                       check_output($node->body)));
 
-     if ($links = link_node($node, $main)) {
-       $this->template->assign("links", $this->links($links));
-     }
+    if ($links = link_node($node, $main)) {
+      $this->template->assign("links", $this->links($links));
+    }
 
-     $this->template->parse("node");
-     print $this->template->text("node");
-     $this->template->reset("node");
+    $this->template->parse("node");
+    print $this->template->text("node");
+    $this->template->reset("node");
   }
 
   function comment($comment, $link = 0) {
@@ -65,73 +66,53 @@ class Theme_xtemplate extends BaseTheme {
     }
   }
 
-  function header() {
+  function header($title = "") {
     $this->template->assign(array(
-       "name" => variable_get("site_name", ""),
-       "slogan" => variable_get("site_slogan", "")));
+      "title" => ($title ? $title." | ". variable_get("site_name", "drupal") : variable_get("site_name", "drupal") ." | ". variable_get("site_slogan", "")),
+      "head" => theme_head(),
+      "primary" => $this->primary_links,
+      "secondary" => $this->secondary_links
+    ));
+
+    if (!arg(0)) {
+      $this->template->assign("message", $this->message);
+      $this->template->parse("header.message");
+    }
 
     $this->template->parse("header");
     print $this->template->text("header");
+  }
 
-    ?>
-    <table border="0" cellpadding="0" cellspacing="0">
-      <tr>
-        <td colspan="2" id="menu">
-    <?php
-
+  function block($title, $content, $region = "main") {
     $this->template->assign(array(
-       "primary" => $this->primary_links,
-       "secundary" => $this->secundary_links));
+      "subject" => $title,
+      "content" => $content
+    ));
 
-    $this->template->parse("menu");
-    print $this->template->text("menu");
-
-    ?>
-        </td>
-      </tr>
-      <tr>
-        <td valign="top" width="100%">
-    <?php
-
-    // the description block is only shown on the main page
-    if (!arg(0)) {
-      $this->template->assign(array(
-         "message" => $this->message));
-
-      $this->template->parse("message");
-      print $this->template->text("message");
-    }
-
-    ?>
-      <div id="main">
-    <?php
+    $this->template->parse("block");
+    print $this->template->text("block");
+    $this->template->reset("block");
   }
 
   function box($title, $content, $region = "main") {
     if ($title && $content) {
       $this->template->assign(array(
-        "title" => $title,
+        "subject" => $title,
         "content" => $content));
 
-       $this->template->parse("block");
-       print $this->template->text("block");
-       $this->template->reset("block");
+      $this->template->parse("box");
+      print $this->template->text("box");
+      $this->template->reset("box");
     }
   }
 
   function footer() {
-    global $user;
-
-    ?>
-        <td valign="top" rowspan="2" id="sidebar">
-    <?php
-      theme_blocks("all", $this);
-    ?>
-          </div>
-        </td>
-      </tr>
-    </table>
-    <?php
+    // unfortunately, theme_blocks PRINTS the blocks instead of RETURNING them.
+    // so we need some output buffering
+    ob_start();
+    theme_blocks("all");
+    $this->template->assign("blocks", ob_get_contents());
+    ob_end_clean();
 
     $this->template->parse("footer");
     print $this->template->text("footer");

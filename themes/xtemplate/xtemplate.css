@@ -28,30 +28,30 @@ p {
 img {
   border-width: 0;
 }
-table #menu {
+.header .menu {
   background-color: #69c;
   padding: 5px 5px 0px 5px;
 }
-#menu logo {
+.menu logo {
   vertical-align: bottom;
   float: left;
 }
-#menu #links {
+.menu #links {
   text-align: right;
   float: right;
   color: #9cf;
 }
-#menu #links #primary {
+.menu #links #primary {
   font-size: 1.1em;
 }
-#menu #links #primary a {
+.menu #links #primary a {
   color: #fff;
   font-weight: bold;
 }
-#menu #links #secundary {
+.menu #links #secondary {
   font-size: 0.7em;
 }
-#menu #links #secundary a {
+.menu #links #secondary a {
   color: #9cf;
   font-weight: bold;
 }
@@ -67,61 +67,61 @@ table #menu {
 #sidebar {
   background-color: #ddd;
 }
-table #node {
+table .node {
   padding-bottom: 25px;
 }
-table #block {
+table .block, table .box {
   padding: 15px 15px 15px 15px;
   margin: 5px 0px 5px 0px;
 }
-table #comment {
+table .comment {
   border: 1px solid #bbb;
   padding: 15px 15px 15px 15px;
   margin: 5px 0px 5px 0px;
 }
-#node #title, #block #title, #node #title a {
+.node .title, .block .title, .box .title, .node .title a, .box .title a {
   padding-bottom: 5px;
   font-weight: bold;
   font-size: 1.2em;
   color: #888;
 }
-#node #author, #comment #author {
+.node .author, .comment .author {
   color: #999;
   font-size: 0.8em;
   padding-bottom: 10px;
 }
-#node #taxonomy {
+.node .taxonomy {
   color: #999;
   font-size: 0.8em;
   padding: 15px;
 }
-#node #taxonomy a {
+.node .taxonomy a {
   color: #369;
 }
-#node #content, #comment #content {
+.node .content, .comment .content {
   padding-top: 5px;
 }
-#node #links, #comment #links {
+.node .links, .comment .links {
   padding-top: 10px;
   color: #999;
 }
-#node #links a, #comment #links a {
+.node .links a, .comment .links a {
   font-weight: bold;
   color: #369;
 }
-#comment #title {
+.comment .title {
   font-weight: bold;
   font-size: 1.1em;
   color: #888;
 }
-#comment #new {
+.comment .new {
   text-align: right;
   font-weight: bold;
   font-size: 0.7em;
   float: right;
   color: red;
 }
-#block #content {
+.block .content, .box .content {
   font-size: 0.9em/1.1em;
 }
 

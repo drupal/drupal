@@ -1,4 +1,4 @@
-<?
+<?php
 
 class XTemplate {
 
@@ -33,7 +33,7 @@ class XTemplate {
   along with this program; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-  $Id: xtemplate.inc,v 1.1 2003/01/20 21:00:31 dries Exp $
+  $Id: xtemplate.inc,v 1.2 2003/02/01 19:54:19 dries Exp $
 
 */
 
@@ -477,6 +477,23 @@ function r_getfile($file) {
 
 /*
     $Log: xtemplate.inc,v $
+    Revision 1.2  2003/02/01 19:54:19  dries
+
+    Patch by Ax:
+
+    - Bad usage of css ID's: they may be used for a single element only,
+    but were used as #node, #block, which can occur multiple times in a
+    single page.
+
+    - Moved HTML from theme to template - thats what templates are all
+    about!
+
+    - Added support for head() hook
+
+    - Added support for diffentiating between boxes and blocks.
+
+    - Typo: secundary -> secondary
+
     Revision 1.1  2003/01/20 21:00:31  dries
 
     - Added a template driven theme.
