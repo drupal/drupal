@@ -87,8 +87,8 @@ function adminMain() {
   print "<BR><BR>";
 }
 
-include "includes/backend.inc";
 include "includes/theme.inc";
+include "includes/backend.inc";
 
 $theme->header();
 
