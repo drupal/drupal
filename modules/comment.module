@@ -332,14 +332,14 @@ function comment_threshold($threshold) {
 function comment_mode($mode) {
   global $cmodes;
 
-  foreach ($cmodes as $key => $value) $options .= " <option value=\"$key\"". ($mode == $key ? " selected=\"selected\"" : "") .">$value</option>\n";
+  foreach ($cmodes as $key => $value) $options .= " <option value=\"$key\"". ($mode == $key ? " selected=\"selected\"" : "") .">". t($value) ."</option>\n";
   return "<select name=\"mode\">$options</select>\n";
 }
 
 function comment_order($order) {
   global $corder;
 
-  foreach ($corder as $key=>$value) $options .= " <option value=\"$key\"". ($order == $key ? " selected=\"selected\"" : "") .">$value</option>\n";
+  foreach ($corder as $key=>$value) $options .= " <option value=\"$key\"". ($order == $key ? " selected=\"selected\"" : "") .">". t($value) ."</option>\n";
   return "<select name=\"order\">$options</select>\n";
 }
 
@@ -418,7 +418,7 @@ function comment_view($comment, $folded = 0) {
     $theme->comment($comment, $folded);
   }
   else {
-    print l(check_output($comment->subject), array("id" => $comment->nid, "cid" => $comment->cid), "node", $comment->cid) ." by ". format_name($comment) ."</small><p />";
+    print l(check_output($comment->subject), array("id" => $comment->nid, "cid" => $comment->cid), "node", $comment->cid) ." ". t("by") ." ". format_name($comment) ."</small><p />";
   }
 }
 
@@ -518,10 +518,10 @@ function comment_render($nid, $cid = 0) {
     if ($mode == 1) {
       if (db_result($result)) {
         print "<table border=\"0\" cellpadding=\"2\" cellspacing=\"2\">\n";
-        print " <tr><th>Subject</th><th>Author</th><th>Date</th><th>Score</th></tr>\n";
+        print " <tr><th>". t("Subject") ."</th><th>". t("Author") ."</th><th>". t("Date") ."</th></tr>\n";
         while ($comment = db_fetch_object($result)) {
           if (comment_visible($comment, $threshold)) {
-            print " <tr><td>". l(check_output($comment->subject), array("id" => $comment->nid, "cid" => $comment->cid), "node", $comment->cid) ."</td><td>". format_name($comment) ."</td><td>". format_date($comment->timestamp, "small") ."</td><td>$comment->score</td></tr>\n";
+            print " <tr><td>". l(check_output($comment->subject), array("id" => $comment->nid, "cid" => $comment->cid), "node", $comment->cid) ."</td><td>". format_name($comment) ."</td><td>". format_date($comment->timestamp, "small") ."</td></tr>\n";
           }
         }
         print "</table>\n";
@@ -702,7 +702,7 @@ function comment_page() {
     case t("Update settings"):
       global $mode, $order, $threshold;
       comment_settings(check_query($mode), check_query($order), check_query($threshold));
-      drupal_goto(drupal_url(array("id" => $edit["nid"]), "node"));
+      drupal_goto(drupal_url(array("id" => $edit["nid"], "mode" => $mode, "order" => $order), "node"));
       break;
     default:
   }

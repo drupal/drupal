@@ -43,7 +43,7 @@ function blog_user($type, &$edit, &$user) {
   switch ($type) {
     case "view_public":
     case "view_private":
-      return form_item("Blog", lm(t("View recent entries."), array("mod" => "blog", "id" => $user->uid)) ."<br />". lm(t("View all entries."), array("mod" => "blog", "id" => $user->uid, "all" => 1)));
+      return form_item(t("Blog"), lm(t("view recent entries"), array("mod" => "blog", "id" => $user->uid), "", array("title" => t("View recent blog entries."))) ."<br />". lm(t("view all entries"), array("mod" => "blog", "id" => $user->uid, "all" => 1), "", array("title" => t("View all blog entries."))));
   }
 }
 
@@ -170,7 +170,7 @@ function blog_page_user($uid = 0, $date = 0, $all = 0) {
 
     $links = link_node($blog, 1);
 
-    $output .= "<tr><td><div style=\"margin-left: 20px;\"><b>". check_output($blog->title) ."</b></div></td><td align=\"right\">". $theme->links($links) ."</td><td>". l('<img src="misc/blog.gif" width="12" height="16" border="0" align="top">', array("id" => $node->nid), "node", "", array("title" => t("Permanent link to this blog entry"))) ."</td></tr>";
+    $output .= "<tr><td><div style=\"margin-left: 20px;\"><b>". check_output($blog->title) ."</b></div></td><td align=\"right\">". $theme->links($links) ."</td><td>". l('<img src="misc/blog.gif" width="12" height="16" border="0" align="top">', array("id" => $node->nid), "node", "", array("title" => t("Permanent link to this blog entry."))) ."</td></tr>";
     $output .= "<tr><td colspan=\"3\"><div style=\"margin-left: 40px;\">". check_output($blog->teaser, 1) ."</div><br /></td></tr>";
 
   }
@@ -178,10 +178,10 @@ function blog_page_user($uid = 0, $date = 0, $all = 0) {
   $output .= "</table>";
   $output .= lm("<img src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" align=\"right\" border=\"0\" />", array("mod" => "blog", "op" => "feed", "id" => $account->uid), "", array("title" => t("Read the XML version of this page."))) ."\n";
   if (!$all && $date) {
-    $output .= lm(t("show all blogs"), array("mod" => "blog", "op" => "view", "id" => $account->uid, "all" => 1), "", array("title" => t("Show all blogs by this user")));
+    $output .= lm(t("show all blogs"), array("mod" => "blog", "op" => "view", "id" => $account->uid, "all" => 1), "", array("title" => t("Show all blogs by this user.")));
   }
   else {
-    $output .= lm(t("show recent blogs"), array("mod" => "blog", "op" => "view", "id" => $account->uid), "", array("title" => t("Show recent blogs by this user")));
+    $output .= lm(t("show recent blogs"), array("mod" => "blog", "op" => "view", "id" => $account->uid), "", array("title" => t("Show recent blogs by this user.")));
   }
 
   $theme->box(t("%u's blog", array("%u" => $account->name)), $output);

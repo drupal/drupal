@@ -59,7 +59,7 @@ function forum_form(&$node, &$help, &$error) {
     $output = implode("", taxonomy_node_form("forum", $node));
   }
 
-  $output .= form_textarea("Body", "body", $node->body, 60, 10);
+  $output .= form_textarea(t("Body"), "body", $node->body, 60, 10);
 
   return $output;
 }

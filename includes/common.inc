@@ -261,10 +261,10 @@ function search_data() {
     foreach (module_list() as $name) {
       if (module_hook($name, "search") && (!$edit["type"] || $edit["type"][$name]) && ($result = module_invoke($name, "search", check_query($keys)))) {
         if ($name == "node" || $name == "comment") {
-          $output .= "<b>Matching ". $name ."s ranked in order of relevance</b><br />";
+          $output .= "<p><b>". t("Matching ". $name ."s ranked in order of relevance") .":</b></p>";
         }
         else {
-          $output .= "<b>Matching ". $name ."s</b><br />";
+          $output .= "<p><b>". t("Matching ". $name ."s") .":</b></p>";
         }
         foreach ($result as $entry) {
           $output .= search_item($entry, $name);
@@ -301,6 +301,11 @@ function search_type($type = 0, $action = 0, $query = 0, $options = 0) {
 
 
 function drupal_goto($url) {
+
+  /*
+  ** Translate &amp; to simply &
+  */
+  $url = str_replace ("&amp;", "&", $url);
 
   /*
   ** It is advised to use "drupal_goto()" instead of PHP's "header()" as
@@ -624,7 +629,12 @@ function drupal_url($args = array(), $script = "node", $anchor = 0) {
   foreach ($args as $key => $value) {
     $t[] = "$key=". urlencode($value);
   }
-  return "$script.php?". implode("&amp;", $t) . ($anchor ? "#$anchor" : "");
+  if (count($t)) {
+    return "$script.php?". implode("&amp;", $t) . ($anchor ? "#$anchor" : "");
+  }
+  else {
+    return "$script.php". ($anchor ? "#$anchor" : "");
+  }
 }
 
 /**
@@ -683,7 +693,7 @@ function link_page() {
     return $custom_links;
   }
   else {
-    $links[] = "<a href=\"index.php\">". t("home") ."</a>";
+    $links[] = l(t("home"), array(), "index", "", array("title" => t("Return to the main page.")));
     foreach (module_list() as $name) {
       if (module_hook($name, "link")) {
         $links = array_merge($links, module_invoke($name, "link", "page"));

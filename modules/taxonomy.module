@@ -244,14 +244,15 @@ function taxonomy_form($vocabulary_id, $value = 0) {
   }
   else {
     $verb = "can";
-    $blank = "<none>";
+    $blank = t("<none>");
   }
+
   if ($vocabulary->multiple) {
-    $description = "You $verb choose one or more terms for this node";
+    $description = t("You $verb choose one or more terms for this node.");
     $multiple = 1;
   }
   else {
-    $description = "You $verb choose one term for this node";
+    $description = t("You $verb choose one term for this node.");
     $multiple = 0;
   }
   return _taxonomy_term_select($vocabulary->name, "taxonomy", $value, $vocabulary_id, $description, $multiple, $blank);

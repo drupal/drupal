@@ -109,7 +109,7 @@
                 }
                 $taxo = $this->links($taxlinks);
               }
-            }            
+            }
             print "<TD WIDTH=\"70%\" BGCOLOR=\"$this->bgcolor2\"><SMALL>" . t("Submitted by %a on %b", array("%a" => format_name($node), "%b" => format_date($node->created, "large"))) . "</TD><TD WIDTH=\"30%\" BGCOLOR=\"$this->bgcolor2\" ALIGN=\"center\" NOWRAP><B>". $taxo ."</B>";
            ?>
           </TD>
