@@ -27,3 +27,8 @@ ErrorDocument 402 /error.php
 ErrorDocument 403 /error.php
 ErrorDocument 404 /error.php
 ErrorDocument 500 /error.php
+
+# PHP settings
+php_value session.cookie_lifetime 1728000
+php_value session.gc_maxlifetime  1728000
+php_value session.name            DROPID
