@@ -20,7 +20,7 @@ tr.dark td, tr.light td {
   padding: 0.3em;
 }
 h1, h2, h3, h4, h5, h6 {
-  margin: 0;
+  margin: 0.5;
 }
 h1 {
   font-size: 1.3em;
@@ -192,6 +192,25 @@ table {
 .links a {
   font-weight: bold;
 }
+
+.tabs {
+  color: #999;
+  margin: 0.5em 0;
+  padding: 0.5em 1em;
+  border-bottom: 1px solid black;
+}
+.tabs a {
+  border: 1px solid black;
+  background: #f0f0f0;
+  font-weight: bold;
+  margin-right: 1em;
+  padding: 0.5em 1em;
+}
+.tabs a.active {
+  border-bottom: 1px solid white;
+  background: #fff;
+}
+
 .block, .box {
   padding: 0 0 1.5em 0;
 }
@@ -257,12 +276,13 @@ table {
   padding: 1em;
   margin: 1em 0 1em 0;
 }
-#aggregator .news-item .source {
+#aggregator .news-item .source, #aggregator .news-item .categories, #aggregator .source, #aggregator .age {
   color: #999;
   font-style: italic;
   font-size: 0.9em;
 }
 #aggregator .title {
+  margin-bottom: 0.5em;
   font-size: 1em;
 }
 #aggregator h3 {

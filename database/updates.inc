@@ -55,7 +55,8 @@ $sql_updates = array(
   "2004-02-20" => "update_81",
   "2004-02-27" => "update_82",
   "2004-04-15" => "update_83",
-  "2004-04-21" => "update_84"
+  "2004-04-21" => "update_84",
+  "2004-04-27" => "update_85"
 );
 
 function update_32() {
@@ -927,6 +928,42 @@ function update_84() {
   $ret = array();
   if ($GLOBALS["db_type"] == "mysql") {
     $ret[] = update_sql("ALTER TABLE vocabulary ADD help VARCHAR(255) NOT NULL DEFAULT '' AFTER description;");
+  }
+  else {
+    /* Needs PostgreSQL equivalent */
+  }
+  return $ret;
+}
+
+function update_85() {
+  $ret = array();
+  if ($GLOBALS['db_type'] == 'mysql') {
+    $ret[] = update_sql("ALTER TABLE {bundle} RENAME TO {aggregator_category}");
+    $ret[] = update_sql("ALTER TABLE {aggregator_category} DROP attributes");
+    $ret[] = update_sql("ALTER TABLE {aggregator_category} CHANGE bid cid int(10) NOT NULL auto_increment");
+    $ret[] = update_sql("ALTER TABLE {aggregator_category} ADD description longtext NOT NULL");
+    $ret[] = update_sql("UPDATE {sequences} SET name = '{aggregator_category}_cid' WHERE name = '{bundle}_bid'");
+    $ret[] = update_sql("ALTER TABLE {feed} RENAME TO {aggregator_feed}");
+    $ret[] = update_sql("ALTER TABLE {aggregator_feed} DROP attributes");
+    $ret[] = update_sql("ALTER TABLE {aggregator_feed} ADD block tinyint(2) NOT NULL");
+    $ret[] = update_sql("ALTER TABLE {aggregator_category} ADD block tinyint(2) NOT NULL");
+    $ret[] = update_sql("UPDATE {sequences} SET name = '{aggregator_feed}_fid' WHERE name = '{feed}_fid'");
+    $ret[] = update_sql("ALTER TABLE {item} RENAME TO {aggregator_item}");
+    $ret[] = update_sql("ALTER TABLE {aggregator_item} DROP attributes");
+    $max = db_result(db_query_range("SELECT iid FROM {aggregator_item} ORDER BY iid DESC", 1, 1));
+    if ($max) {
+      $ret[] = update_sql("INSERT INTO {sequences} (name, id) VALUES ('{aggregator_item}_iid', $max)");
+    }
+    $ret[] = update_sql("CREATE TABLE {aggregator_category_feed} (
+      fid int(10) NOT NULL,
+      cid int(10) NOT NULL,
+      PRIMARY KEY (fid, cid)
+     )");
+    $ret[] = update_sql("CREATE TABLE {aggregator_category_item} (
+      iid int(10) NOT NULL,
+      cid int(10) NOT NULL,
+      PRIMARY KEY (iid, cid)
+     )");
   }
   else {
     /* Needs PostgreSQL equivalent */
