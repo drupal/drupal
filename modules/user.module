@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.239 2003/10/20 20:14:46 dries Exp $
+// $Id: user.module,v 1.240 2003/10/21 17:58:05 dries Exp $
 
 session_set_save_handler("sess_open", "sess_close", "sess_read", "sess_write", "sess_destroy", "sess_gc");
 session_start();
@@ -1578,7 +1578,7 @@ function user_admin_account() {
     array ("data" => t("last access"), "field"  => "u.timestamp", "sort" => "desc"),
     t("operations")
   );
-  $sql = "SELECT u.uid, u.name, u.status, u.timestamp, r.name AS rolename FROM {role} r INNER JOIN {users} u ON r.rid = u.rid ";
+  $sql = "SELECT u.uid, u.name, u.status, u.timestamp, r.name AS rolename FROM {role} r INNER JOIN {users} u ON r.rid = u.rid WHERE uid != 0";
   $sql .= tablesort_sql($header);
   $result = pager_query($sql, 50);
 
