@@ -32,7 +32,7 @@ function page_save($op, $node) {
   }
 
   if ($op == "create") {
-    return array("body" => filter($node->body), "teaser" => filter($node->teaser), "format", "link");
+    return array("body" => filter($node->body), "teaser" => filter($node->teaser), "format", "link", "description");
   }
 
   if ($op == "decline") {
@@ -40,16 +40,16 @@ function page_save($op, $node) {
   }
 
   if ($op == "update") {
-    return array("body" => filter($node->body), "teaser" => filter($node->teaser), "format", "link");
+    return array("body" => filter($node->body), "teaser" => filter($node->teaser), "format", "link", "description");
   }
 }
 
 function page_insert($node) {
-  db_query("INSERT INTO page (nid, format, link) VALUES ('$node->nid', '$node->format', '$node->link')");
+  db_query("INSERT INTO page (nid, format, link, description) VALUES ('$node->nid', '$node->format', '$node->link', '$node->description')");
 }
 
 function page_update($node) {
-  db_query("UPDATE page SET format = '$node->format', link = '$node->link' WHERE nid = '$node->nid'");
+  db_query("UPDATE page SET format = '$node->format', link = '$node->link', description = '$node->description' WHERE nid = '$node->nid'");
 }
 
 function page_delete(&$node) {
@@ -57,16 +57,16 @@ function page_delete(&$node) {
 }
 
 function page_load($node) {
-  $page = db_fetch_object(db_query("SELECT format, link FROM page WHERE nid = '$node->nid'"));
+  $page = db_fetch_object(db_query("SELECT format, link, description FROM page WHERE nid = '$node->nid'"));
 
   return $page;
 }
 
 function page_link($type) {
   if ($type == "page" && user_access("access content")) {
-    $result = db_query("SELECT n.nid, n.title, p.link FROM page p LEFT JOIN node n ON p.nid = n.nid WHERE n.status = '1' AND p.link != '' ORDER BY p.link");
+    $result = db_query("SELECT n.nid, n.title, p.link, p.description FROM page p LEFT JOIN node n ON p.nid = n.nid WHERE n.status = '1' AND p.link != '' AND p.description != '' ORDER BY p.link");
     while ($page = db_fetch_object($result)) {
-      $links[] = l($page->link, array("id" => $page->nid), "node", "", array("title" => $page->title));
+      $links[] = l($page->link, array("id" => $page->nid), "node", "", array("title" => $page->description));
     }
   }
 
@@ -150,7 +150,8 @@ function page_form(&$node, &$help, &$error) {
   }
 
   $output .= form_textarea(t("Body"), "body", $node->body, 60, 20);
-  $output .= form_textfield(t("Navigation link header"), "link", $node->link, 60, 64, t("To make the page show up on the navigation links enter the name of the link, otherwise leave blank."));
+  $output .= form_textfield(t("Link name"), "link", $node->link, 60, 64, t("To make the page show up in the navigation links, enter the name of the link, otherwise leave blank."));
+  $output .= form_textfield(t("Link description"), "description", $node->description, 60, 64, t("The description displayed when hovering over the page's link."));
   $output .= form_select(t("Type"), "format", $node->format, array(0 => "HTML / text", 1 => "PHP"));
 
   return $output;

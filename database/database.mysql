@@ -300,6 +300,7 @@ CREATE TABLE page (
   nid int(10) unsigned NOT NULL default '0',
   link varchar(128) NOT NULL default '',
   format tinyint(2) NOT NULL default '0',
+  description varchar(128) NOT NULL default '',
   PRIMARY KEY  (nid),
   KEY nid (nid)
 ) TYPE=MyISAM;
