@@ -11,7 +11,7 @@ function discussion_moderate($moderate) {
   $na = $comment_votes[key($comment_votes)];
 
   foreach ($moderate as $id=>$vote) {
-    if ($user && $vote != $comment_votes[$na] && !user_getHistory($user->history, "c$id")) {
+    if ($user->id && $vote != $comment_votes[$na] && !user_getHistory($user->history, "c$id")) {
       ### Update the comment's score:
       $result = db_query("UPDATE comments SET score = score $vote, votes = votes + 1 WHERE cid = $id");
 
@@ -92,7 +92,7 @@ function discussion_childs($cid, $level = 0, $thread) {
 function discussion_settings($mode, $order, $thold) {
   global $user;
 
-  if ($user) {
+  if ($user->id) {
     db_query("UPDATE users SET umode = '$mode', uorder = '$order', thold = '$thold' WHERE id = '$user->id'");
     user_rehash();
   }
@@ -121,7 +121,7 @@ function discussion_display($sid, $pid, $cid, $level = 0) {
   }
 
   ### Display `comment control'-box:
-  if ($user) {
+  if ($user->id) {
     $theme->commentControl($sid, $title, $thold, $mode, $order);
   }
 
@@ -181,7 +181,7 @@ function discussion_reply($pid, $sid) {
   $output .= "<FORM ACTION=\"discussion.php\" METHOD=\"post\">\n";
 
   ### Name field:
-  if ($user) {
+  if ($user->id) {
     $output .= "<P>\n";
     $output .= " <B>Your name:</B><BR>\n";
     $output .= " <A HREF=\"account.php\">$user->userid</A> &nbsp; &nbsp; <FONT SIZE=\"2\">[ <A HREF=\"account.php?op=logout\">logout</A> ]</FONT>\n";
@@ -221,14 +221,14 @@ function comment_preview($pid, $sid, $subject, $comment) {
   global $anonymous, $user, $theme;
 
   ### Preview comment:
-  if ($user) $theme->comment("", check_output(stripslashes($subject)), check_output(stripslashes($comment)), time(), "", "", "na", "", "", "reply to this comment");
-  else $theme->comment($user->userid,  check_output(stripslashes($subject)), check_output(stripslashes($comment)), time(), stripslashes($user->url), stripslashes($user->femail), "na", "", "", "reply to this comment");
+  if ($user->id) $theme->comment("", check_output(stripslashes($subject)), check_output(stripslashes($comment)), time(), "", "", "", "", "", "reply to this comment");
+  else $theme->comment($user->userid,  check_output(stripslashes($subject)), check_output(stripslashes($comment)), time(), stripslashes($user->url), stripslashes($user->femail), "", "", "", "reply to this comment");
 
   ### Build reply form:
   $output .= "<FORM ACTION=\"discussion.php\" METHOD=\"post\">\n";
 
   ### Name field:
-  if ($user) {
+  if ($user->id) {
     $output .= "<P>\n";
     $output .= " <B>Your name:</B><BR>\n";
     $output .= " <A HREF=\"account.php\">$user->userid</A> &nbsp; &nbsp; <FONT SIZE=\"2\">[ <A HREF=\"account.php?op=logout\">logout</A> ]</FONT>\n";

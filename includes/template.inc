@@ -61,13 +61,13 @@ function display_old_headlines($theme, $num = 10) {
 function display_comment_moderation($id, $author, $score, $votes) {
   global $user, $comment_votes;
   
-  if ($user && $user->userid != $author && !user_getHistory($user->history, "c$id")) {
+  if ($user->userid && $user->userid != $author && !user_getHistory($user->history, "c$id")) {
     $output .= "<SELECT NAME=\"moderate[$id]\">\n";
     foreach ($comment_votes as $key=>$value) $output .= " <OPTION VALUE=\"$value\">$key</OPTION>\n";
     $output .= "</SELECT>\n";
   }
   else {
-    $output .= "<TABLE BORDER=\"0\" CELLSPACING=\"1\" CELLPADDING=\"0\"><TR><TD>score:</TD><TD>$score</TD></TR><TR><TD>votes:</TD><TD>$votes</TR></TABLE>";
+    $output .= "<TABLE BORDER=\"0\" CELLSPACING=\"1\" CELLPADDING=\"0\"><TR><TD>score:</TD><TD>". format_data($score) ."</TD></TR><TR><TD>votes:</TD><TD>". format_data($votes) ."</TR></TABLE>";
   }
 
   print $output;
