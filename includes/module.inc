@@ -16,7 +16,7 @@ function module_invoke($name, $hook, $argument = 0) {
   return function_exists($function) ? $function($argument) : $argument;
 }
 
-// return an array of module names (includes lazy module loading):
+// return array of module names (includes lazy module loading):
 function module_list() {
   static $list;
 

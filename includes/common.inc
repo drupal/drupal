@@ -1,7 +1,5 @@
 <?
 
-$na = "<I>na</I>";
-
 function conf_init() {
   global $HTTP_HOST, $REQUEST_URI;
   $file = strtolower(strtr($HTTP_HOST ."". substr($REQUEST_URI, 0, strrpos($REQUEST_URI, "/")), "/:", ".."));
@@ -49,6 +47,10 @@ function message_access() {
   return t("You are not authorized to access to this page.");
 }
 
+function message_na() {
+  return t("n/a");
+}
+
 function message_throttle() {
   return t("You exceeded the submission rate exceeded.  Please wait a few minutes and try again.");
 }
@@ -79,8 +81,7 @@ function check_input($text) {
 }
 
 function check_output($text, $nl2br = 0) {
-  global $na;
-  return ($text) ? ($nl2br ? nl2br(stripslashes($text)) : stripslashes($text)) : $na;
+  return ($text) ? ($nl2br ? nl2br(stripslashes($text)) : stripslashes($text)) : message_na();
 }
 
 function format_plural($count, $singular, $plural) {
@@ -168,14 +169,12 @@ function format_username($username) {
 }
 
 function format_email($address) {
-  global $na;
-  return ($address) ? "<a href=\"mailto:$address\">$address</A>" : $na;
+  return ($address) ? "<a href=\"mailto:$address\">$address</A>" : message_na();
 }
 
 function format_url($address, $description = "") {
-  global $na;
   $description = ($description) ? $description : $address;
-  return ($address) ? "<a href=\"$address\">". check_output($description) ."</a>" : $na;
+  return ($address) ? "<a href=\"$address\">". check_output($description) ."</a>" : message_na();
 }
 
 function format_tag($link, $text) {
