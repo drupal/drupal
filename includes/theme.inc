@@ -60,14 +60,14 @@ function theme_account($theme) {
     $theme->box(strtr(t("%a's configuration"), array("%a" => $user->userid)), "$content");
   }
   else {
-    $output .= "<CENTER>\n";
+    $output .= "<DIV ALIGN=\"center\">\n";
     $output .= " <FORM ACTION=\"account.php?op=login\" METHOD=\"post\">\n";
     $output .= "  <B>". t("Username") .":</B><BR><INPUT NAME=\"userid\" SIZE=\"15\"><P>\n";
     $output .= "  <B>". t("Password") .":</B><BR><INPUT NAME=\"passwd\" SIZE=\"15\" TYPE=\"password\"><BR>\n";
     $output .= "  <INPUT TYPE=\"submit\" VALUE=\"". t("Login") ."\"><BR>\n";
     $output .= "  <A HREF=\"account.php\">". t("REGISTER") ."</A>\n";
     $output .= " </FORM>\n";
-    $output .= "</CENTER>\n";
+    $output .= "</DIV>\n";
 
     $theme->box(t("Login"), $output);
   }
