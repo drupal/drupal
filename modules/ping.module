@@ -107,5 +107,18 @@ function ping_ping($name = '', $url = '') {
   if (!$result || $result->faultCode()) {
     watchdog('error', t('Failed to notify technorati.com.'));
   }
+
+  unset($client);
+
+  $client = new xmlrpc_client('/RPC2', 'api.my.yahoo.com', 80);
+
+  $message = new xmlrpcmsg('weblogUpdates.ping', array(new xmlrpcval($name), new xmlrpcval($feed)));
+
+  $result = $client->send($message);
+
+  if (!$result || $result->faultCode()) {
+    watchdog('error', t('Failed to notify yahoo.com.'));
+  }
 }
+
 ?>
