@@ -21,7 +21,8 @@ function statistics_exit() {
   if ((variable_get("statistics_enable_access_log", 0)) && (module_invoke("throttle", "status") < 5)) {
     // statistical logs are enabled
     $referrer = referer_uri();
-    $hostname = getenv("REMOTE_ADDR");
+    $hostname = $_SERVER['REMOTE_ADDR'];
+
     // log this page access
     if ((arg(0) == "node") && (arg(1) == "view") && arg(2)) {
       db_query("INSERT INTO {accesslog} (nid, url, hostname, uid, timestamp) values(%d, '%s', '%s', %d, %d)", arg(2), $referrer, $hostname, $user->uid, time());
