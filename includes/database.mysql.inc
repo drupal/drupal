@@ -9,7 +9,31 @@ function db_connect($url) {
   // NOTE: we are using a persistent connection!
 }
 
-function db_query($query, $debug = 0) {
+function db_query($query) {
+  $args = func_get_args();
+  if (count($args) > 1) {
+    $args = array_map("check_query", $args);
+    $args[0] = $query;
+    return _db_query(call_user_func_array("sprintf", $args));
+  } else {
+    return _db_query($query);
+  }
+}
+
+// debug version
+function db_queryd($query) {
+  $args = func_get_args();
+  if (count($args) > 1) {
+    $args = array_map("check_query", $args);
+    $args[0] = $query;
+    return _db_query(call_user_func_array("sprintf", $args), 1);
+  } else {
+    return _db_query($query, 1);
+  }
+}
+
+// private
+function _db_query($query, $debug = 0) {
   global $queries;
 
   if (variable_get("dev_query", 0)) {
@@ -22,11 +46,10 @@ function db_query($query, $debug = 0) {
     print "<p>query: $query<br />error:". mysql_error() ."</p>";
   }
 
-  if ($result) {
+  if (!mysql_errno()) {
     return $result;
-  }
-  else {
-    watchdog("error", "database: ". mysql_error() ."\nquery: ". htmlspecialchars($query));
+  } else {
+    trigger_error(mysql_error() ."\nquery: ". htmlspecialchars($query), E_USER_ERROR);
   }
 }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: node.php,v 1.39 2001/12/30 16:16:38 dries Exp $
+// $Id: node.php,v 1.40 2002/04/20 11:52:47 dries Exp $
 
 include_once "includes/common.inc";
 
@@ -42,7 +42,7 @@ if ($number > 1) {
 
   while ($node = db_fetch_object($result)) {
     if (node_access("view", $node)) {
-      $output .= "<p><b><a href=\"node.php?id=$node->nid\">". check_output($node->title) ."</a></b><br /><small>$node->type - ". format_name($node) ." - ". format_date($node->ccreated, "small") ."</small></p>";
+      $output .= "<p><b>".l(check_output($node->title), array("id" => $node->nid))."</b><br /><small>$node->type - ". format_name($node) ." - ". format_date($node->ccreated, "small") ."</small></p>";
     }
   }
 

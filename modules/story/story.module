@@ -1,5 +1,5 @@
 <?php
-// $Id: story.module,v 1.99 2002/04/14 20:46:41 dries Exp $
+// $Id: story.module,v 1.100 2002/04/20 11:52:50 dries Exp $
 
 function story_help() {
   $output .= "<p>The story module enables to users to submit thoughful, cohesive posts for consideration by the rest of the community.  Stories usually follow a specific content flow: <i>submit -&gt; moderate -&gt; post to home page -&gt; comment</i>.  Administrators are able to shortcut this flow as desired.</p>";
@@ -57,7 +57,7 @@ function story_save($op, $node) {
 
 function story_link($type) {
   if ($type == "menu.create" && user_access("post content")) {
-    $links[] = "<a href=\"module.php?mod=node&op=add&type=story\" title=\"". t("Add a new story.") ."\">". t("create story") ."</a>";
+    $links[] = lm(t("create story"), array("mod" => "node", "op" => "add", "type" => "story"), t("Add a new story."));
   }
 
   return $links ? $links : array();

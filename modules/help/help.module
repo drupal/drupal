@@ -1,9 +1,9 @@
 <?php
-// $Id: help.module,v 1.7 2001/11/01 11:00:48 dries Exp $
+// $Id: help.module,v 1.8 2002/04/20 11:52:49 dries Exp $
 
 function help_link($type) {
   if ($type == "admin") {
-    $links[] = "<a href=\"admin.php?mod=help\">help</a>";
+    $links[] = la(t("help"), array("mod" => "help"));
   }
 
   return $links ? $links : array();

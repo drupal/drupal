@@ -1,50 +1,48 @@
 <?php
+
+  function taxonomy_feed() {
+    global $id, $or, $and, $type;
+
+    if ($type == "voc") {
+      //TODO - vocabulary feed. How to represent an outline in XML?
+    }
+    else {
+      if ($or) {
+        foreach ((explode(",", $or)) as $t) {
+          $terms[] = "'".check_query($t)."'";
+        }
+        $result = db_query("SELECT DISTINCT(n.nid), type FROM node n LEFT JOIN term_node r ON n.nid = r.nid WHERE tid IN (".implode(",", $terms).") AND status = '1' ORDER BY static DESC, created DESC LIMIT 15");
+        $term = taxonomy_get_term($or);
+      }
+      else if ($and) {
+        foreach ((explode(",", $and)) as $t) {
+          $terms[] = "'".check_query($t)."'";
+        }
+        $result = db_query("SELECT n.nid, type, count(*) AS c FROM node n LEFT JOIN term_node r ON n.nid = r.nid WHERE tid IN (".implode(",", $terms).")  AND status = '1' GROUP BY n.nid HAVING c = ".count($terms)." ORDER BY static DESC, created DESC LIMIT 15");
+        $term = taxonomy_get_term($and);
+      }
+      else {
+        return node_feed();
+      }
+
+      $channel["title"] = variable_get("site_name", "drupal") . " - " . $term->name;
+      $channel["link"] = path_uri() . "index.php?or=$or";
+      $channel["description"] = $term->description;
+
+      node_feed($result, $channel);
+    }
+  }
+
   function taxonomy_perm() {
     return array("administer taxonomy");
   }
 
   function taxonomy_link($type) {
     if ($type == "admin" && user_access("administer taxonomy")) {
-      $links[] = "<a href=\"admin.php?mod=taxonomy\">taxonomy</a>";
+      $links[] = la(t("taxonomy"), array("mod" => "taxonomy"));
     }
 
     return $links ? $links : array();
-  }
-
-  function taxonomy_help() {
-    ?>
-<b>Background</b><br /><br />
-
-Classifying nodes allows for the organization of content into categories and subcategories of description. These categories can be used to organize and retrieve similarly described content. Drupal's classifier module is an extremely flexible classification system that allows for multiple lists of categories for classification (controlled vocabularies) and offers the possibility of creating thesauri (controlled vocabularies that indicate the relationship of terms) and taxonomies (controlled vocabularies where relationships are indicated hierarchically). <br /><br />
-
-<b>Vocabularies</b><br />When you create a controlled vocabulary you are creating a set of terms to use for describing content (known as descriptors in indexing lingo). Drupal allows you to describe each node of content (blog, story, etc.) that you submit to Drupal using one or many of these terms. For simple implementations, you might create a set of categories without subcategories, similar to Slash's "Sections". For more complex implementations, you might create a hierarchical list of categories for describing content.<br /><br />
-
-<b>Setting up a vocabulary</b><br />When you set up a controlled vocabulary, you will be asked to enter some descriptive data and define the attributes of this vocabulary. For example, if you select the "Hierarchy" option, you will be defining a taxonomy or thesaurus. If you select "Relationships" you are allowing the definition of related terms as in a thesaurus. Selecting "Multiple Select" will allow you to describe a node using more than one term.<br /><br />
-
-<i>Vocabulary name</i><br />Required. The name for this vocabulary. Example: 'Topic'.<br /><br />
-
-<i>Description</i><br />Optional. Description of the vocabulary, can be used by modules.<br /><br />
-
-<i>Types</i><br />Required. A comma-seperated list of node types you want to associate this vocabulary with. Available types: blog, book, forum, page, story.<br /><br />
-
-<i>Relationships</i><br />Allows relationships between terms within this vocabulary. This is synonymous with "See also" type references.<br /><br />
-
-<i>Hierarchy</i><br />Allows a tree-like hierarchy <br /><br />
-
-<i>Multiple Select</i><br />Allows nodes to be described using more than one term.<br /><br />
-
-<b>Adding terms to a vocabulary</b><br />The options you see when adding a term to a vocabulary will depend on what you selected for "Relationships", "Hierarchy" and "Multiple Select" when you created the vocabulary.<br /><br />
-
-Term name<br />Required. The name for this term. Example: 'Linux'.<br /><br />
-
-Description<br />Optional. Description of the term, can be used by modules. This is synonymous with a "Scope note".<br /><br />
-
-Relationships<br />Optional. Select one or many related terms.<br /><br />
-
-Parent<br />Select the term under which this term is a subset -- the branch of the hierarchy this term belongs under. This is also known as the "Broader term" indicator used in thesauri.<br /><br />
-
-Synonyms<br />Enter synonyms for this term, one synonym per line. Synonyms can be used for variant spellings, acronyms, and other terms that have the same meaning as the added term, but which are not explicitly listed in this thesaurus (unauthorized terms).
-    <?php
   }
 
 /*
@@ -61,10 +59,10 @@ Synonyms<br />Enter synonyms for this term, one synonym per line. Synonyms can b
     $form .= form_textfield("Vocabulary name", "name", $edit[name], 50, 64, "Required.  The name for this vocabulary.  Example: 'Topic'.");
     $form .= form_textarea("Description", "description", $edit[description], 60, 5, "Optional.  Description of the vocabulary, can be used by modules.");
     $form .= form_select("Types", "types", explode(",", $edit[types]), $nodetypes, "Required.  A list of node types you want to associate this vocabulary with.", "", 1);
-    $form .= form_checkbox("Related terms", "relations", 1, $edit[relations], "Optional. Allows <a href=\"admin.php?mod=taxonomy&op=help#relatedterms\">related terms</a> in this vocabulary.");
-    $form .= form_select("Hierarchy", "hierarchy", $edit[hierarchy], array("Disabled", "Single", "Multiple"), "Optional. Allows <a href=\"admin.php?mod=taxonomy&op=help#hierarchy\">a tree-like hierarchy</a> between terms of this vocabulary.", "", 0);
+    $form .= form_checkbox("Related terms", "relations", 1, $edit[relations], "Optional. Allows ".la("related terms", array("mod" => "taxonomy", "op" => "help#relatedterms"))." in this vocabulary.");
+    $form .= form_select("Hierarchy", "hierarchy", $edit[hierarchy], array("Disabled", "Single", "Multiple"), "Optional. Allows ".la("a tree-like hierarchy", array("mod" => "taxonomy", "op" => "help#hierarchy"))." between terms of this vocabulary.", "", 0);
     $form .= form_checkbox("Multiple select", "multiple", 1, $edit[multiple], "Optional. Allows nodes to have more than one term in this vocabulary.");
-    $form .= form_checkbox("Required", "required", 1, $edit[required], "If enabled every node MUST have at least one meta in this collection");
+    $form .= form_checkbox("Required", "required", 1, $edit[required], "If enabled every node <b>must</b> have at least one term in this vocabulary");
     $form .= form_textfield("Weight", "weight", $edit["weight"], 3, 3, "Optional. In listings, the heavier vocabularies will sink and the lighter vocabularies will be positioned nearer the top.");
     $form .= form_submit("Submit");
 
@@ -99,8 +97,8 @@ Synonyms<br />Enter synonyms for this term, one synonym per line. Synonyms can b
   }
 
   function taxonomy_del_vocabulary($vid) {
-    db_query("DELETE FROM vocabulary WHERE vid = '". check_input($vid) ."'");
-    $result = db_query("SELECT tid FROM term_data WHERE vid = '". check_input($vid) ."'");
+    db_query("DELETE FROM vocabulary WHERE vid = '%s'", $vid);
+    $result = db_query("SELECT tid FROM term_data WHERE vid = '%s'", $vid);
     while ($term = db_fetch_object($result)) {
       taxonomy_del_term($term->tid);
     }
@@ -112,29 +110,28 @@ Synonyms<br />Enter synonyms for this term, one synonym per line. Synonyms can b
       $vocabulary_id = $edit["vid"];
     }
     $vocabulary = taxonomy_get_vocabulary($vocabulary_id);
-    #print_r($vocabulary);
     $form .= form_textfield("Term name", "name", $edit["name"], 50, 64, "Required.  The name for this term.  Example: 'Linux'.");
     $form .= form_textarea("Description", "description", $edit["description"], 60, 5, "Optional.  Description of the term, can be used by modules.");
 
     if ($vocabulary->relations) {
-      $form .= _taxonomy_term_select("Related terms", "relations", @array_keys(taxonomy_get_related($edit["tid"])), $vocabulary_id, "Optional.", 1, "<none>", array($edit["tid"]));
+      $form .= _taxonomy_term_select("Related terms", "relations", array_keys(taxonomy_get_related($edit["tid"])), $vocabulary_id, "Optional.", 1, "<none>", array($edit["tid"]));
     }
 
 
     if ($vocabulary->hierarchy) {
       $parent = array_keys(taxonomy_get_parents($edit["tid"]));
       taxonomy_get_tree($vocabulary_id, $children, $edit["tid"]);
-      // you can be son of yourself or your children
+      // you can't be son of yourself or your children
       $exclude = array_keys($children);
       $exclude[] = $edit["tid"];
       if ($vocabulary->hierarchy == 1) {
-        $form .= _taxonomy_term_select("Parent", "parent", $parent, $vocabulary_id, "Required. Parent term.", 0, "<root>", $exclude);
+        $form .= _taxonomy_term_select("Parent", "parent", $parent, $vocabulary_id, "Required. ".la("Parent term", array("mod" => "taxonomy", "op" => "help#parent")).".", 0, "<root>", $exclude);
       } elseif ($vocabulary->hierarchy == 2) {
-        $form .= _taxonomy_term_select("Parents", "parent", $parent, $vocabulary_id, "Required. Parent terms.", 1, "<root>", $exclude);
+        $form .= _taxonomy_term_select("Parents", "parent", $parent, $vocabulary_id, "Required. ".la("Parent terms", array("mod" => "taxonomy", "op" => "help#parent")).".", 1, "<root>", $exclude);
       }
     }
 
-    $form .= form_textarea("Synonyms", "synonyms", @implode("\n", taxonomy_get_synonyms($edit["tid"])), 30, 5, "Optional. Synonyms of this term, one synonym per line.");
+    $form .= form_textarea("Synonyms", "synonyms", implode("\n", taxonomy_get_synonyms($edit["tid"])), 30, 5, "Optional. ".la("Synonyms", array("mod" => "taxonomy", "op" => "help#synonyms"))." of this term, one synonym per line.");
     $form .= form_textfield("Weight", "weight", $edit["weight"], 3, 3, "Optional. In listings, the heavier terms will sink and the lighter terms will be positioned nearer the top.");
     $form .= form_hidden("vid", $vocabulary->vid);
     $form .= form_submit("Submit");
@@ -155,7 +152,7 @@ Synonyms<br />Enter synonyms for this term, one synonym per line. Synonyms can b
         "weight" => $edit["weight"]
       );
 
-      db_query("UPDATE term_data SET "._prepare_update($data)." WHERE tid = '". check_input($edit["tid"]) ."'");
+      db_query("UPDATE term_data SET "._prepare_update($data)." WHERE tid = '%s'", $edit["tid"]);
     }
     else if ($edit["tid"]) {
       taxonomy_del_term($edit["tid"]);
@@ -177,11 +174,11 @@ Synonyms<br />Enter synonyms for this term, one synonym per line. Synonyms can b
     }
 
     // relations (seem very powerful, but I have to understand it completely)
-    db_query("DELETE FROM term_relation WHERE tid1 = '". check_input($edit["tid"]) ."' OR tid2 = '". check_input($edit["tid"]) ."'");
+    db_query("DELETE FROM term_relation WHERE tid1 = '%s' OR tid2 = '%s'", $edit["tid"], $edit["tid"]);
     if ($edit["relations"]) {
       foreach ($edit["relations"] as $related_id) {
         if ($related_id != 0) {
-          $rel_q[] = "('". check_input($edit["tid"]) ."', '". check_input($related_id) ."')";
+          $rel_q[] = "('". check_query($edit["tid"]) ."', '". check_query($related_id) ."')";
         }
       }
       if ($rel_q) {
@@ -191,24 +188,24 @@ Synonyms<br />Enter synonyms for this term, one synonym per line. Synonyms can b
     }
 
     // hierarchy
-    db_query("DELETE FROM term_hierarchy WHERE tid = '". check_input($edit["tid"]) ."'");
+    db_query("DELETE FROM term_hierarchy WHERE tid = '%s'", $edit["tid"]);
     if (!isset($edit["parent"])) {
       $edit["parent"] = 0;
     }
     if (is_array($edit["parent"])) {
       foreach ($edit["parent"] as $parent) {
-        $sql[] = "('". check_input($edit["tid"]) ."', '". check_input($parent) ."')";
+        $sql[] = "('". check_query($edit["tid"]) ."', '". check_query($parent) ."')";
       }
       db_query("INSERT INTO term_hierarchy (tid, parent) VALUES ".implode(", ", $sql));
     } else {
-      db_query("INSERT INTO term_hierarchy (tid, parent) VALUES ('". check_input($edit["tid"]) ."', '". check_input($edit["parent"][0]) ."')");
+      db_query("INSERT INTO term_hierarchy (tid, parent) VALUES ('%s', '%s')", $edit["tid"], $edit["parent"][0]);
     }
 
     // synonyms (very cool idea indeed)
-    db_query("DELETE FROM term_synonym WHERE tid = '". check_input($edit["tid"]) ."'");
+    db_query("DELETE FROM term_synonym WHERE tid = '%s'", $edit["tid"]);
     if ($edit["synonyms"]) {
       foreach (explode ("\n", $edit["synonyms"]) as $synonym) {
-        $syn_q[] = "('". check_input($edit["tid"]) ."', '". check_input(chop($synonym)) ."')";
+        $syn_q[] = "('". check_query($edit["tid"]) ."', '". check_query(chop($synonym)) ."')";
       }
       $synonyms_query = implode(", ", $syn_q);
       db_query("INSERT INTO term_synonym (tid, name) VALUES $synonyms_query");
@@ -216,11 +213,11 @@ Synonyms<br />Enter synonyms for this term, one synonym per line. Synonyms can b
   }
 
   function taxonomy_del_term($tid) {
-    db_query("DELETE FROM term_data WHERE tid = '". check_input($tid) ."'");
-    db_query("DELETE FROM term_hierarchy WHERE tid = '". check_input($tid) ."'");
-    db_query("DELETE FROM term_relation WHERE tid1 = '". check_input($tid) ."' OR tid2 = '". check_input($tid) ."'");
-    db_query("DELETE FROM term_synonym WHERE tid = '". check_input($tid) ."'");
-    db_query("DELETE FROM term_node WHERE tid = '". check_input($tid) ."'");
+    db_query("DELETE FROM term_data WHERE tid = '%s'", $tid);
+    db_query("DELETE FROM term_hierarchy WHERE tid = '%s'", $tid);
+    db_query("DELETE FROM term_relation WHERE tid1 = '%s' OR tid2 = '%s'", $tid, $tid);
+    db_query("DELETE FROM term_synonym WHERE tid = '%s'", $tid);
+    db_query("DELETE FROM term_node WHERE tid = '%s'", $tid);
   }
 
   function taxonomy_overview() {
@@ -232,15 +229,18 @@ Synonyms<br />Enter synonyms for this term, one synonym per line. Synonyms can b
 
     $vocabularies = taxonomy_get_vocabularies();
     foreach ($vocabularies as $vocabulary) {
-      $output .= " <tr><td>". check_output($vocabulary->name) ."</td><td>". check_output($vocabulary->types) ."</td><td><a href=\"admin.php?mod=taxonomy&type=vocabulary&op=edit&id=".$vocabulary->vid."\">edit vocabulary</a> | <a href=\"admin.php?mod=taxonomy&op=add&type=leaf&vocabulary_id=".$vocabulary->vid."\">add term</a> | <a href=\"admin.php?mod=taxonomy&type=vocabulary&op=preview&id=".$vocabulary->vid."\">preview form</a></td></tr>\n";
+      $links[] = la(t("edit vocabulary"), array("mod" => "taxonomy", "type" => "vocabulary", "op" => "edit", "id" => $vocabulary->vid));
+      $links[] = la(t("add term"), array("mod" => "taxonomy", "op" => "add", "type" => "leaf", "vocabulary_id" => $vocabulary->vid));
+      $links[] = la(t("preview form"), array("mod" => "taxonomy", "type" => "vocabulary", "op" => "preview", "id" => $vocabulary->vid));
+
+      $output .= " <tr><td>". check_output($vocabulary->name) ."</td><td>". check_output($vocabulary->types) ."</td><td>".implode(" | ", $links)."</td></tr>\n";
 
       unset($tree);
       taxonomy_get_tree($vocabulary->vid, $tree);
       if ($tree) {
         $output .= "<tr><td colspan=\"3\"><table><tr><td>";
-        #print_r($tree);
         foreach ($tree as $term) {
-          $output .= "<tr><td><a href=\"admin.php?mod=taxonomy&op=edit&type=term&id=".check_output($term->tid)."\">"._taxonomy_depth($term->depth).check_output($term->name)."</a></td></tr>";
+          $output .= "<tr><td>".la(_taxonomy_depth($term->depth).check_output($term->name), array("mod" => "taxonomy", "op" => "edit", "type" => "term", "id" => check_output($term->tid)))."</td></tr>";
         }
         $output .= "</td></tr></table></td></tr>\n";
       }
@@ -276,7 +276,7 @@ Synonyms<br />Enter synonyms for this term, one synonym per line. Synonyms can b
   // return array of vocabularies, as objects
   function taxonomy_get_vocabularies($type = '', $key = "vid") {
     if ($type) {
-      $result = db_query("SELECT * FROM vocabulary WHERE types LIKE '%".check_query($type)."%' ORDER BY weight, name");
+      $result = db_query("SELECT * FROM vocabulary WHERE types LIKE '%%%s%%' ORDER BY weight, name", $type);
     } else {
       $result = db_query("SELECT * FROM vocabulary ORDER BY weight, name");
     }
@@ -299,7 +299,7 @@ Synonyms<br />Enter synonyms for this term, one synonym per line. Synonyms can b
       $terms = $node->taxonomy;
     }
 
-    $c = db_query("SELECT * FROM vocabulary WHERE types LIKE '%". check_query($type) ."%' ORDER BY weight, name");
+    $c = db_query("SELECT * FROM vocabulary WHERE types LIKE '%%%s%%' ORDER BY weight, name", $type);
     while ($vocabulary = db_fetch_object($c)) {
       $result[] .= taxonomy_form($vocabulary->vid, $terms);
     }
@@ -308,14 +308,14 @@ Synonyms<br />Enter synonyms for this term, one synonym per line. Synonyms can b
 
   // return 1 if node identified by $nid contains a taxonomy term identified by $tid in his body or title
   function taxonomy_node_has_term($nid, $tid) {
-    $term_name = db_result(db_query("SELECT name FROM term_data WHERE tid = ". check_query($tid)));
+    $term_name = db_result(db_query("SELECT name FROM term_data WHERE tid = '%s'", $tid));
 
-    return db_result(db_query("SELECT COUNT(n.nid) FROM node n WHERE n.nid = '" . check_query($nid). "' AND ((n.body LIKE '%$term_name%') OR (n.body LIKE '%$term_name%'))"));
+    return db_result(db_query("SELECT COUNT(n.nid) FROM node n WHERE n.nid = '%s' AND ((n.body LIKE '%%%s%%') OR (n.body LIKE '%%%s%%'))", $nid, $term_name, $term_name));
   }
 
   // return array of terms of a node beloging to a particular vocabulary identified by $vid
   function taxonomy_node_get_terms_by_vocabulary($nid, $vid, $key = "tid") {
-    $result = db_query("SELECT t.* FROM term_data t, term_node r WHERE t.tid = r.tid AND t.vid = '".check_query($vid)."' AND r.nid = '" . check_query($nid) . "' ORDER BY weight");
+    $result = db_query("SELECT t.* FROM term_data t, term_node r WHERE t.tid = r.tid AND t.vid = '%s' AND r.nid = '%s' ORDER BY weight", $vid, $nid);
     $terms = array();
     while ($term = db_fetch_object($result)) {
       $terms[$term->$key] = $term;
@@ -328,7 +328,7 @@ Synonyms<br />Enter synonyms for this term, one synonym per line. Synonyms can b
     static $terms;
 
     if (!$terms[$nid]) {
-      $result = db_query("SELECT t.* FROM term_data t, term_node r WHERE r.tid = t.tid AND r.nid = '".check_query($nid)."' ORDER BY weight");
+      $result = db_query("SELECT t.* FROM term_data t, term_node r WHERE r.tid = t.tid AND r.nid = '%s' ORDER BY weight", $nid);
       $terms[$nid] = array();
       while ($term = db_fetch_object($result)) {
         $terms[$nid][$term->$key] = $term;
@@ -340,7 +340,6 @@ Synonyms<br />Enter synonyms for this term, one synonym per line. Synonyms can b
   // save terms of a node
   function taxonomy_node_save($nid, $terms) {
     taxonomy_node_delete($nid);
-    #print_r($terms);
 
     if ($terms) {
       foreach ($terms as $t) {
@@ -352,13 +351,13 @@ Synonyms<br />Enter synonyms for this term, one synonym per line. Synonyms can b
 
   // clean up terms
   function taxonomy_node_delete($nid) {
-    db_query("DELETE FROM term_node WHERE nid = '".check_query($nid)."'");
+    db_query("DELETE FROM term_node WHERE nid = '%s'", $nid);
   }
 
   // relations: return array of related terms
   function taxonomy_get_related($tid, $key = "tid") {
     if ($tid) {
-      $result = db_query("SELECT t.*, tid1, tid2 FROM term_relation, term_data t WHERE (t.tid = tid1 OR t.tid = tid2) AND (tid1 = '".check_query($tid)."' OR tid2 = '".check_query($tid)."') ORDER BY weight");
+      $result = db_query("SELECT t.*, tid1, tid2 FROM term_relation, term_data t WHERE (t.tid = tid1 OR t.tid = tid2) AND (tid1 = '%s' OR tid2 = '%s') ORDER BY weight", $tid, $tid);
       $related = array();
       while ($term = db_fetch_object($result)) {
         $related[$term->$key] = $term;
@@ -367,15 +366,14 @@ Synonyms<br />Enter synonyms for this term, one synonym per line. Synonyms can b
     }
   }
 
-  // hierarchy: get parent term
+  // hierarchy: get parent terms
   function taxonomy_get_parents($tid, $key = "tid") {
     if ($tid) {
-      $result = db_query("SELECT t.* FROM term_hierarchy h, term_data t WHERE h.parent = t.tid AND h.tid = '".check_query($tid)."' ORDER BY weight, name");
+      $result = db_query("SELECT t.* FROM term_hierarchy h, term_data t WHERE h.parent = t.tid AND h.tid = '%s' ORDER BY weight, name", $tid);
       $parents = array();
       while ($parent = db_fetch_object($result)) {
         $parents[$parent->$key] = $parent;
       }
-      #print_r($parents);
       return $parents;
     } else {
       return array();
@@ -385,9 +383,9 @@ Synonyms<br />Enter synonyms for this term, one synonym per line. Synonyms can b
   // hierarchy: get children
   function taxonomy_get_children($tid, $vid = 0, $key = "tid") {
     if ($vid) {
-      $result = db_query("SELECT t.* FROM term_hierarchy h, term_data t WHERE t.vid = '".check_query($vid)."' AND h.tid = t.tid AND h.parent = '".check_query($tid)."' ORDER BY weight, name");
+      $result = db_query("SELECT t.* FROM term_hierarchy h, term_data t WHERE t.vid = '%s' AND h.tid = t.tid AND h.parent = '%s' ORDER BY weight, name", $vid, $tid);
     } else {
-      $result = db_query("SELECT t.* FROM term_hierarchy h, term_data t WHERE h.tid = t.tid AND parent = '".check_query($tid)."' ORDER BY weight");
+      $result = db_query("SELECT t.* FROM term_hierarchy h, term_data t WHERE h.tid = t.tid AND parent = '%s' ORDER BY weight", $tid);
     }
     $children = array();
     while ($term = db_fetch_object($result)) {
@@ -407,22 +405,19 @@ Synonyms<br />Enter synonyms for this term, one synonym per line. Synonyms can b
     $depth++;
     if ($vocabulary_id) {
       if (!$children) {
-        $result = db_query("SELECT t.*, parent FROM term_data t, term_hierarchy h WHERE t.tid = h.tid AND t.vid = '".check_query($vocabulary_id)."' ORDER BY weight, name");
+        $result = db_query("SELECT t.*, parent FROM term_data t, term_hierarchy h WHERE t.tid = h.tid AND t.vid = '%s' ORDER BY weight, name", $vocabulary_id);
         while ($term = db_fetch_object($result)) {
           $children[$term->parent][] = $term->tid;
           $terms[$term->tid] = $term;
         }
-        #print_r($children);
       }
       if ($children[$parent]) {
         foreach ($children[$parent] as $child) {
-          #print_r($terms[$child]);
           $terms[$child]->depth = $depth;
-          $tree[$terms[$child]->$key] = $terms[$child];
+          $tree[] = $terms[$child];
           taxonomy_get_tree($vocabulary_id, $tree, $child, $depth, $key);
         }
       }
-      #print_r($tree);
     } else {
       return 0;
     }
@@ -431,29 +426,59 @@ Synonyms<br />Enter synonyms for this term, one synonym per line. Synonyms can b
   // synonyms: return array of synonyms
   function taxonomy_get_synonyms($tid) {
     if ($tid) {
-      $result = db_query("SELECT name FROM term_synonym WHERE tid = '".check_query($tid)."'");
+      $result = db_query("SELECT name FROM term_synonym WHERE tid = '%s'", $tid);
       while ($synonym = db_fetch_array($result)) {
         $synonyms[] = $synonym["name"];
       }
-      return $synonyms;
+      return $synonyms ? $synonyms : array();
     } else {
-      return "";
+      return array();
     }
   }
 
   // synonyms: return original term
   function taxonomy_get_synonym_root($term) {
-    return db_fetch_object(db_query("SELECT * FROM term_synonym s, term_data t WHERE t.tid = s.tid AND s.name = '".check_query($term)."'"));
+    return db_fetch_object(db_query("SELECT * FROM term_synonym s, term_data t WHERE t.tid = s.tid AND s.name = '%s'", $term));
+  }
+
+  // given a term id, count number of nodes in it
+  function taxonomy_term_count_nodes($tid) {
+    static $count;
+
+    if (!$count) {
+      $result = db_query("SELECT tid, COUNT(*) AS c FROM term_node GROUP BY tid");
+      while ($term = db_fetch_object($result)) {
+        $count[$term->tid] = $term->c;
+      }
+    }
+
+    foreach (_taxonomy_term_children($tid) as $c) {
+      $children_count += taxonomy_term_count_nodes($c);
+    }
+    return $count[$tid] + $children_count;
+  }
+
+  // helper for above function
+  function _taxonomy_term_children($tid) {
+    static $children;
+
+    if (!$children) {
+      $result = db_query("SELECT tid, parent FROM term_hierarchy");
+      while ($term = db_fetch_object($result)) {
+        $children[$term->parent][] = $term->tid;
+      }
+    }
+    return $children[$tid] ? $children[$tid] : array();
   }
 
   function taxonomy_get_vocabulary($vid) {
     // simple cache using a static var?
-    return db_fetch_object(db_query("SELECT * FROM vocabulary WHERE vid = '".check_query($vid)."'"));
+    return db_fetch_object(db_query("SELECT * FROM vocabulary WHERE vid = '%s'", $vid));
   }
 
   function taxonomy_get_term($tid) {
     // simple cache using a static var?
-    return db_fetch_object(db_query("SELECT * FROM term_data WHERE tid = '".check_query($tid)."'"));
+    return db_fetch_object(db_query("SELECT * FROM term_data WHERE tid = '%s'", $tid));
   }
 
 /*
@@ -500,7 +525,7 @@ Synonyms<br />Enter synonyms for this term, one synonym per line. Synonyms can b
 
   function _prepare_update($data) {
     foreach ($data as $key => $value) {
-      $q[] = "$key = '". check_input($value) ."'";
+      $q[] = "$key = '". check_query($value) ."'";
     }
     $result = implode(", ", $q);
     return $result;
@@ -511,13 +536,26 @@ Synonyms<br />Enter synonyms for this term, one synonym per line. Synonyms can b
       $result = implode(", ", array_keys($data));
     } else {
       foreach (array_values($data) as $value) {
-        $q[] = "'". check_input($value) ."'";
+        $q[] = "'". check_query($value) ."'";
       }
       $result = implode(", ", $q);
     }
     return "($result)";
   }
-/*
+
+  function taxonomy_page() {
+    global $op;
+
+    switch ($op) {
+      case "feed":
+        taxonomy_feed();
+        break;
+      default:
+         // TODO: pretty display of all vocabularies
+    }
+  }
+
+ /*
 ** admin
 */
 
@@ -525,8 +563,11 @@ Synonyms<br />Enter synonyms for this term, one synonym per line. Synonyms can b
     global $edit, $type, $op, $id, $tree;
 
     if (user_access("administer taxonomy")) {
+      $links[] = la(t("add new vocabulary"), array("mod" => "taxonomy", "op" => "add", "type" => "vocabulary"));
+      $links[] = la(t("overview"), array("mod" => "taxonomy"));
+      $links[] = la(t("help"), array("mod" => "taxonomy", "op" => "help"));
 
-      print "<SMALL><A HREF=\"admin.php?mod=taxonomy&op=add&type=vocabulary\">add new vocabulary</A> | <A HREF=\"admin.php?mod=taxonomy\">overview</A> | <A HREF=\"admin.php?mod=taxonomy&op=help\">help</A></SMALL><HR>\n";
+      print "<small>".implode(" | ", $links)."</small><hr>\n";
 
       switch ($op) {
         case "add":
@@ -563,7 +604,118 @@ Synonyms<br />Enter synonyms for this term, one synonym per line. Synonyms can b
     else {
       print message_access();
     }
-    #print_r(taxonomy_get_children(2));
   }
 
+  function taxonomy_help() {
+    ?>
+  <h3>Background</h3>
+    Classifying nodes allows for the organization of content into categories and
+    subcategories of description. These categories can be used to organize and retrieve
+    similarly described content. Drupal's <i>taxonomy.module</i> is an extremely flexible
+    classification system that allows for multiple lists of categories for classification
+    (controlled vocabularies) and offers the possibility of creating thesauri (controlled
+    vocabularies that indicate the relationship of terms) and taxonomies (controlled
+    vocabularies where relationships are indicated hierarchically). For details about
+  <a href="http://www.eleganthack.com/archives/002165.html#002165">classification
+  types</a> and insight into the development of <i>taxonomy.module</i>, see this
+  <a href="http://www.drupal.org/node.php?id=55">drupal.org discussion</a>.<br />
+  <h3>An Example Taxonomy - Foods</h3>
+  <p>Dairy <br>
+    --Milk <br>
+    Drink <br>
+    --Alchohol <br>
+    --Pop <br>
+    --Milk<br>
+    Meat <br>
+    --Beef <br>
+    --Chicken <br>
+    --Lamb <br>
+    Spices <br>
+    --Sugar</p>
+  <p><b>Notes</b></p>
+  <ul>
+    <li>The term <i>Milk</i> appears within both <i>Dairy</i> and <i>Drink</i>.
+      This is an example of <i>Multiple Parents</i> for a term.</li>
+    <li>The order of siblings (e.g. <i>Beef</i>, <i>Chicken</i>, <i>Lamb</i>) in
+      the taxonomy may be controlled with the <i>Weight</i> parameter. </li>
+  </ul>
+  <h4></h4>
+    <h3>Vocabularies</h3>
+    When you create a controlled vocabulary you are creating a set of terms to use
+    for describing content (known as descriptors in indexing lingo). Drupal allows
+    you to describe each node of content (blog, story, etc.)
+    using one or many of these terms. For simple implementations, you might
+    create a set of categories without subcategories, similar to <a href="http://www.slashdot.com">Slashdot's</a> "Sections".
+    For more complex implementations, you might create a hierarchical list of categories
+    such as the example <i>Food</i> taxonomy above.
+
+    <h4>Setting up a vocabulary</h4>
+    <p>When you set up a controlled vocabulary, you will be asked to enter some descriptive
+  data and define the attributes of this vocabulary. For example, if you select
+  the <i>Hierarchy </i>option, you will be defining a taxonomy or a thesaurus. If
+  you select <i>Related Terms</i> option, you are allowing the definition of related
+  terms as in a thesaurus. Selecting <i>Multiple Select</i> will allow you to describe
+  a node using more than one term. That node will then appear in each term's page,
+  thus increasing the chance that a user will find it.</p>
+    <i>Vocabulary name</i><br />
+    Required. The name for this vocabulary. Example: <i>Dairy</i>.<br />
+    <br />
+    <i>Description</i><br />
+    Optional. Description of the vocabulary, can be used by modules and feeds.<br />
+    <br />
+    <i>Types</i><br />
+    Required. The list of node types you want to associate this vocabulary
+    with. Some available types are: blog, book, forum, page, story.<br />
+    <br />
+    <i><a name="relatedterms"></a>Related Terms</i><br />
+    Allows relationships between terms within this vocabulary. Think of these as
+    <i>See also</i> references.<br />
+    <br />
+    <i><a name="hierarchy"></a>Hierarchy</i><br />
+    Allows a tree-like taxonomy, as in our <i>Foods</i> example above<br />
+    <br />
+    <i>Multiple Select</i><br />
+  Allows nodes to be described using more than one term. Nodes may then appear on
+  multiple taxonomy pages.<br />
+    <h4>Adding terms to a vocabulary</h4>
+  The options you see when adding a term to a vocabulary will depend on what you
+  selected for <i>Related Terms</i>, <i>Hierarchy </i>and <i>Multiple Select</i>
+  when you created the corrosponding vocabulary.<br />
+    <br />
+  <i>Term name</i><br />
+    Required. The name for this term. Example: <i>Milk</i><br />
+    <br />
+  <i>Description</i><br />
+  Optional. Description of the term that may be used by modules and RSS feeds.
+  This is synonymous with a 'Scope note'.<br />
+    <br />
+  <i><a name="parent"></a>Parent</i><br />
+    Required. Select the term under which this term is a subset -- the branch of the hierarchy
+    that this term belongs under. This is also known as the "Broader term" indicator
+    used in thesauri.<br />
+    <br />
+  <i><a name="synonyms"></a>Synonyms</i><br />
+    Optional. Enter synonyms for this term, one synonym per line. Synonyms can be used for
+    variant spellings, acronyms, and other terms that have the same meaning as the
+    added term, but which are not explicitly listed in this thesaurus (i.e. <i>unauthorized
+    terms</i>).<br />
+
+  <h3>Displaying Nodes Organized by Term(s)</h3>
+  <p>In order to view the nodes associated with a term or a collection of terms, you
+    should browse to a properly formed URL. For example, see
+    <a href="<?php print path_uri().drupal_url(array("mod" => "node", "or" => "1,2"), "module"); ?>"><?php print path_uri().drupal_url(array("mod" => "node", "or" => "1,2"), "module"); ?></a>.
+    Taxonomy URLs always contain  a termID or list of termIDs at the end of the URL (aka <i>querystring</i>).
+     You may learn the termID for a given term by hovering over that term in the <? echo la("Taxonomy Overview", array("mod" => "taxonomy")) ?> page in the Admin and noting the number after the querystring parameter called <i>tid</i>.
+     If you wish to see nodes from a collection of termIDs, separate each termID with a comma.
+     Also, the name of the querystring parameter may be <i>or</i> or <i>and</i>.
+     <i>or</i> shows nodes which appear in <b>any</b> of the termIDs while <i>and</i> shows nodes in <b>all</b> the specified termIDs.
+      Thus, <i>or</i> is less specific than <i>and</i>.
+  </p>
+
+  <h3>RSS Feeds</h3>
+  <p>Every term, or collection of terms, provides an <a href="http://backend.userland.com/stories/rss091">RSS</a> feed to which interested
+    users may subscribe. The URL format for an sample RSS feed is
+      <a href="<?php print path_uri().drupal_url(array("mod" => "node", "op" => "feed", "or" => "1,2"), "module"); ?>"><?php print path_uri().drupal_url(array("mod" => "node", "op" => "feed", "or" => "1,2"), "module"); ?></a>.</p>
+      <?php
+  }
 ?>

@@ -1,5 +1,5 @@
 <?php
-// $Id: admin.php,v 1.49 2001/11/01 11:00:45 dries Exp $
+// $Id: admin.php,v 1.50 2002/04/20 11:52:47 dries Exp $
 
 include_once "includes/common.inc";
 
@@ -51,5 +51,4 @@ function admin_page($mod) {
 if (user_access("access administration pages")) {
   admin_page($mod);
 }
-
 ?>

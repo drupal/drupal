@@ -51,8 +51,8 @@ function drupal_directory_ping($arguments) {
   */
 
   if ($link && $name && $mail && $slogan && $mission) {
-    db_query("DELETE FROM directory WHERE link = '". check_query($link) ."' OR mail = '". check_query($mail) ."'");
-    db_query("INSERT INTO directory (link, name, mail, slogan, mission, timestamp) VALUES ('". check_query($link) ."', '". check_query($name) ."', '". check_query($mail) ."', '". check_query($slogan) ."', '". check_query($mission) ."', '". time() ."')");
+    db_query("DELETE FROM directory WHERE link = '%s' OR mail = '%s'", $link, $mail);
+    db_query("INSERT INTO directory (link, name, mail, slogan, mission, timestamp) VALUES ('%s', '%s', '%s', '%s', '%s', '%s')", $link, $name, $mail, $slogan, $mission, time());
 
     watchdog("message", "directory: ping from '$name' ($link)");
 
@@ -135,7 +135,7 @@ function drupal_auth_help() {
   $output = "<p><a href=\"http://www.drupal.org\">Drupal</a> is the name of the software which powers %s. There are Drupal websites all over the world, and many of them share their registration databases so that users may freely login to any Drupal site using a single <b>Drupal ID</b>.</p>\n";
   $output .= "<p>So please feel free to login to your account here at %s with a username from another Drupal site. The format of a Drupal ID is similar to an  email address: <b>username</b>@<i>server</i>. An example of valid Drupal ID is <b>mwlily</b><i>@www.drupal.org</i>.</p>";
 
-  return strtr(t($output), array("%s" => "<i>$site</i>"));
+  return t($output, array("%s" => "<i>$site</i>"));
 }
 
 function drupal_user($type, $edit, $user) {
