@@ -56,6 +56,8 @@ function node_save($node) {
     if ($n->pid && ($node[status] == $status[posted])) db_query("UPDATE node SET status = '$status[expired]' WHERE nid = '$n->pid'");
 
     watchdog("special", "node: modified '$n->title'");
+
+    return $node[nid];
   }
   else {
     $duplicate = node_get_object("title", $node[title]);
@@ -116,8 +118,9 @@ function node_save($node) {
         watchdog("warning", "node: added '$node[title]' - failed");
       }
     }
-  }
 
+    return $nid;
+  }
 }
 
 
