@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.383 2004/08/21 16:44:05 dries Exp $ */
+/* $Id: common.inc,v 1.384 2004/08/21 17:02:48 dries Exp $ */
 
 /**
  * @file
@@ -608,7 +608,7 @@ function valid_email_address($mail) {
  */
 function valid_url($url, $absolute = FALSE) {
   if ($absolute) {
-    return preg_match("/^(http|https|ftp):\/\/[a-z0-9\/:_\-_\.\?,~=#&]+$/i", $url);
+    return preg_match("/^(http|https|ftp):\/\/[a-z0-9\/:_\-_\.\?,~=#&%]+$/i", $url);
   }
   else {
     return preg_match("/^[a-z0-9\/:_\-_\.,]+$/i", $url);
