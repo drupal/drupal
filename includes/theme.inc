@@ -21,7 +21,7 @@
  * @return a string containing the help output.
  */
 function theme_help($section) {
-  $output = "";
+  $output = '';
 
   switch ($section) {
     case 'admin/system/themes#description':
@@ -96,7 +96,7 @@ function theme() {
   $args = func_get_args();
   $function = array_shift($args);
 
-  if (($theme != "") && (function_exists($theme ."_". $function))) {
+  if (($theme != '') && (function_exists($theme ."_". $function))) {
     return call_user_func_array($theme ."_". $function, $args);
   }
   elseif (function_exists("theme_". $function)){
@@ -208,7 +208,7 @@ function theme_image($name) {
  * @return a string containing the @a breadcrumb output.
  */
 function theme_breadcrumb($breadcrumb) {
-  return "<div class=\"breadcrumb\">". implode($breadcrumb, " &raquo; ") ."</div>";
+  return "<div class=\"breadcrumb\">". implode($breadcrumb, ' &raquo; ') ."</div>";
 }
 
 /**
@@ -245,7 +245,7 @@ function theme_node($node, $main = 0, $page = 0) {
   }
 
   if (count($terms)) {
-    $output .= " <small>(". theme("links", $terms) .")</small><br />";
+    $output .= " <small>(". theme('links', $terms) .")</small><br />";
   }
 
   if ($main && $node->teaser) {
@@ -256,7 +256,7 @@ function theme_node($node, $main = 0, $page = 0) {
   }
 
   if ($links = link_node($node, $main)) {
-    $output .= "<div class=\"links\">". theme("links", $links) ."</div>";
+    $output .= "<div class=\"links\">". theme('links', $links) ."</div>";
   }
 
   return $output;
@@ -317,7 +317,7 @@ function theme_table($header, $rows, $attributes = NULL) {
   if (is_array($header)) {
     $output .= " <tr>";
     foreach ($header as $cell) {
-      if (is_array($cell) && $cell["field"]) {
+      if (is_array($cell) && $cell['field']) {
         $cell = tablesort($cell, $header);
       }
       $output .= _theme_table_cell($cell, 1);
@@ -359,7 +359,7 @@ function theme_table($header, $rows, $attributes = NULL) {
  *
  * @return a string containing the @a box output.
  */
-function theme_box($title, $content, $region = "main") {
+function theme_box($title, $content, $region = 'main') {
   $output = "<h2 class=\"title\">$title</h2><p>$content</p>";
   return $output;
 }
@@ -393,7 +393,7 @@ function theme_block($block) {
  * @return a string containing the @a mark output.
  */
 function theme_mark() {
-  return "<span class=\"marker\">*</span>";
+  return '<span class="marker">*</span>';
 }
 
 /**
@@ -450,7 +450,7 @@ function theme_xml_icon($url) {
  * @return a string containing the @a closure output.
  */
 function theme_closure($main = 0) {
-  $footer = module_invoke_all("footer", $main);
+  $footer = module_invoke_all('footer', $main);
   return implode($footer, "\n");
 }
 
@@ -472,7 +472,7 @@ function theme_onload_attribute($theme_onloads = array()) {
   if (count($onloads)) {
     return " onload=\"" . implode("; ", $onloads) . "\"";
   }
-  return "";
+  return '';
 }
 
 /**
@@ -483,7 +483,7 @@ function theme_onload_attribute($theme_onloads = array()) {
  * @return a string containing the @a blocks output.
  */
 function theme_blocks($region) {
-  $output = "";
+  $output = '';
 
   if ($list = module_invoke('block', 'list', $region)) {
     foreach ($list as $key => $block) {
@@ -497,9 +497,9 @@ function theme_blocks($region) {
 
 function _theme_table_cell($cell, $header = 0) {
   if (is_array($cell)) {
-    $data = $cell["data"];
+    $data = $cell['data'];
     foreach ($cell as $key => $value) {
-      if ($key != "data")  {
+      if ($key != 'data')  {
         $attributes .= " $key=\"$value\"";
       }
     }
