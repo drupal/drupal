@@ -6,12 +6,10 @@
  */
 function admin_help($section) {
   switch ($section) {
-    case "admin/system/modules#description":
-      return t("Handles the administration pages.");
-    case "admin":
-      return t("Welcome to the administration section. Below are the most recent system events.");
-    case "admin/overview":
-      return t("This is a complete overview of the site administration page.");
+    case 'admin/system/modules#description':
+      return t('Handles the administration pages.');
+    case 'admin':
+      return t('Welcome to the administration section. Below are the most recent system events.');
   }
 }
 
@@ -28,7 +26,7 @@ function admin_link($type) {
  * Menu callback; provides the main page of the administration section.
  */
 function admin_main_page() {
-  print theme("page", watchdog_overview("actions"));
+  watchdog_overview('actions');
 }
 
 ?>
