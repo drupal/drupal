@@ -946,7 +946,7 @@ function user_register($edit = array()) {
 
       // TODO: Is this necessary? Won't session_write() replicate this?
       unset($edit['session']);
-      $account = user_save('', array_merge(array('name' => $edit['name'], 'pass' => $pass, 'init' => $edit['mail'], 'mail' => $edit['mail'], 'roles' => array(_user_authenticated_id()), 'status' => (variable_get('user_register', 1) == 1 ? 1 : 0)), $data));
+      $account = user_save('', array('name' => $edit['name'], 'pass' => $pass, 'init' => $edit['mail'], 'mail' => $edit['mail'], 'roles' => array(_user_authenticated_id()), 'status' => (variable_get('user_register', 1) == 1 ? 1 : 0)));
       watchdog('user', 'new user: "'. $edit['name'] .'" &lt;'. $edit['mail'] .'&gt;', l(t('edit user'), "admin/user/edit/$account->uid"));
 
       $variables = array('%username' => $edit['name'], '%site' => variable_get('site_name', 'drupal'), '%password' => $pass, '%uri' => $base_url, '%uri_brief' => substr($base_url, strlen('http://')), '%mailto' => $edit['mail'], '%date' => format_date(time()), '%login_uri' => url('user/login', NULL, NULL, TRUE), '%edit_uri' => url('user/edit', NULL, NULL, TRUE));
