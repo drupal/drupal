@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.40 2005/03/18 09:13:55 unconed Exp $
+// $Id: bootstrap.inc,v 1.41 2005/03/19 01:24:18 unconed Exp $
 
 /**
  * @file
@@ -50,7 +50,7 @@ function conf_init() {
 
   $confdir = 'sites';
   $uri = explode('/', $_SERVER['PHP_SELF']);
-  $server = explode('.', $_SERVER['HTTP_HOST']);
+  $server = explode('.', rtrim($_SERVER['HTTP_HOST'], '.'));
   for ($i = count($uri) - 1; $i > 0; $i--) {
     for ($j = count($server); $j > 0; $j--) {
       $dir = implode('.', array_slice($server, -$j)) . implode('.', array_slice($uri, 0, $i));
