@@ -48,7 +48,7 @@ function profile_settings() {
 
   $profile_public_fields = variable_get("profile_public_fields", array());
   $profile_private_fields = variable_get("profile_private_fields", array());
-  $profile_required_fields = variable_get("profile_require_fields", array());
+  $profile_required_fields = variable_get("profile_required_fields", array());
   $profile_register_fields = variable_get("profile_register_fields", array());
 
   $output = "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
