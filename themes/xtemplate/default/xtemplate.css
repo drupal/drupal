@@ -251,8 +251,9 @@ table {
   padding: .5em;
   margin-bottom: 1em;
 }
-.comment .title {
+.comment .title a {
   font-size: 1.1em;
+  font-weight: normal;
 }
 .comment .new {
   text-align: right;

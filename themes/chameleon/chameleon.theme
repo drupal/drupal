@@ -141,12 +141,11 @@ function chameleon_comment($comment, $link = "") {
   $links = array($link);
 
   $output  = "<div class=\"comment\">\n";
-  $output .= " <h3 class=\"title\">". $comment->subject ."</h3>\n";
+  $output .= " <h3 class=\"title\">". l($comment->subject, $_GET['q'], NULL, NULL, "comment-$comment->cid") ."</h3>\n";
   $output .= " <div class=\"content\">". $comment->comment ."</div>\n";
   $output .= " <div class=\"links\">". theme('links', array_merge($submitted, $links)) ."</div>\n";
   $output .= "</div>\n";
 
   return $output;
 }
-
 ?>

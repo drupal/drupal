@@ -120,10 +120,8 @@ function comment_settings() {
   $group .= form_radios(t("Comment controls"), "comment_controls", variable_get("comment_controls", 0), array(t("Display above the comments"), t("Display below the comments"), t("Display above and below the comments"), t("Do not display")), t("Position of the comment controls box.  The comment controls let the user change the default display mode and display order of comments."));
   $output = form_group(t('Comment viewing options'), $group);
 
-  $group  = form_checkbox(t('Show subject field'), 'comment_subject_field', 1, variable_get('comment_subject_field', 1));
-  $group .= form_checkbox(t('Show name field for anonymous users'), 'comment_name_field', 1, variable_get('comment_name_field', 0));
-  $group .= form_checkbox(t('Show e-mail address field for anonymous users'), 'comment_mail_field', 1, variable_get('comment_mail_field', 0));
-  $group .= form_checkbox(t('Show homepage field for anonymous users'), 'comment_homepage_field', 1, variable_get('comment_homepage_field', 0));
+  $group  = form_radios(t('Anonymous poster settings'), 'comment_anonymous', variable_get('comment_anonymous', 0), array(t('Anonymous posters may not enter their contact information'), t('Anonymous posters may leave their contact information'), t('Anonymous posters must leave their contact information')), t('This feature is only useful if you allow anonymous users to post comments.  See the <a href="%url">permissions page</a>.'), array('%url' => url('user/admin/permission')));
+  $group .= form_radios(t("Comment subject field"), "comment_subject_field", variable_get('comment_subject_field', 1), array(t("Disabled"), t("Enabled")), t('Must users provide a subject for their comments?'));
   $group .= form_radios(t("Preview comment"), "comment_preview", variable_get("comment_preview", 1), array(t("Optional"), t("Required")), t("Must users preview comments before submitting?"));
   $group .= form_radios(t("Location of comment submission form"), "comment_form_location", variable_get("comment_form_location", 0), array(t("Display on separate page"), t("Display below post or comments")), t("The location of the comment submission form."));
   $output .= form_group(t('Comment posting settings'), $group);
@@ -239,7 +237,6 @@ function comment_preview($edit) {
   */
 
   $comment->uid = $user->uid;
-  $comment->name = $user->name ? $user->name : $comment->name;
   $comment->timestamp = time();
 
   /*
@@ -291,28 +288,35 @@ function comment_post($edit) {
     ** Check validity of name, mail and homepage (if given)
     */
 
-    // if '' then ''
-    // else if variable_get('anonymous', 'Anonymous') then ''
-    // else let it be
-    $edit['name'] = $edit['name'] == variable_get('anonymous', 'Anonymous') ? '' : strip_tags($edit['name']);
 
-    if (!$user->uid && $edit['name']) {
-      $nametaken = db_result(db_query("SELECT COUNT(uid) FROM {users} WHERE name = '%s'", $edit['name']), 0);
+    if (!$user->uid) {
+      if (variable_get('comment_anonymous', 0) > 0) {
+        if ($edit['name']) {
+          $taken = db_result(db_query("SELECT COUNT(uid) FROM {users} WHERE LOWER(name) = '%s'", strip_tags($edit['name'])), 0);
 
-      if ($nametaken != 0) {
-        return array(t('Name already taken'), t('The name you used as your signature belongs to a registered user.'));
-      }
-    }
+          if ($taken != 0) {
+            return array(t('Name already taken'), t('The name you used as your signature belongs to a registered user.'));
+          }
 
-    if ($edit['mail']) {
-      if (!valid_email_address($edit['mail'])) {
-        return array(t('Invalid e-mail address'), t('The e-mail address you specifed is not valid.'));
-      }
-    }
+        }
+        else if (variable_get('comment_anonymous', 0) == 2) {
+          return array(t('No name given'), t('You have to leave your name.'));
+        }
 
-    if ($edit['homepage']) {
-      if (!valid_url($edit['homepage'], TRUE)) {
-        return array(t('Invalid URL for homepage'), t('The URL (web address) you specifed is not valid. Remember that it must be fully qualified, i.e. of the form <code>http://yourhomepage.com/directory</code>.'));
+        if ($edit['mail']) {
+          if (!valid_email_address($edit['mail'])) {
+            return array(t('Invalid e-mail address'), t('The e-mail address you specifed is not valid.'));
+          }
+        }
+        else if (variable_get('comment_anonymous', 0) == 2) {
+          return array(t('No e-mail address given'), t('You have to leave an e-mail address.'));
+        }
+
+        if ($edit['homepage']) {
+          if (!valid_url($edit['homepage'], TRUE)) {
+            return array(t('Invalid URL for homepage'), t('The URL of your homepage is not valid.  Remember that it must be fully qualified, i.e. of the form <code>http://example.com/directory</code>.'));
+          }
+        }
       }
     }
 
@@ -1266,25 +1270,15 @@ function theme_comment_form($edit, $title) {
 
   $form .= "<a id=\"comment\"></a>\n";
 
-  // name field:
+  // contact information:
   if ($user->uid) {
     $form .= form_item(t('Your name'), format_name($user));
   }
-  else if (variable_get('comment_name_field', 0)) {
+  else if (variable_get('comment_anonymous', 0) > 0) {
     $form .= form_textfield(t('Your name'), 'name', $edit['name'] ? $edit['name'] : variable_get('anonymous', 'Anonymous') , 20, 40);
-  }
-
-
-  // e-mail field
-  if (! $user->uid && variable_get('comment_mail_field', 0)) {
-    $form .= form_textfield(t('E-Mail'), 'mail', $edit['mail'], 20, 40);
-  }
-
-  // homepage field
-  if (! $user->uid && variable_get('comment_homepage_field', 0)) {
+    $form .= form_textfield(t('E-mail'), 'mail', $edit['mail'], 20, 40);
     $form .= form_textfield(t('Homepage'), 'homepage', $edit['homepage'], 20, 40);
   }
-
 
   // subject field:
   if (variable_get('comment_subject_field', 0)) {
@@ -1313,8 +1307,9 @@ function theme_comment_form($edit, $title) {
 function theme_comment_view($comment, $links = "", $visible = 1) {
 
   /*
-  ** Switch to folded/unfolded view of the comment
+  ** Emit selectors:
   */
+
   $output = "";
   if (node_is_new($comment->nid, $comment->timestamp)) {
     $comment->new = 1;
@@ -1323,6 +1318,10 @@ function theme_comment_view($comment, $links = "", $visible = 1) {
 
   $output .= "<a id=\"comment-$comment->cid\"></a>\n";
 
+  /*
+  ** Switch to folded/unfolded view of the comment
+  */
+
   if ($visible) {
     $comment->comment = check_output($comment->comment);
     $output .= theme("comment", $comment, $links);
@@ -1330,6 +1329,7 @@ function theme_comment_view($comment, $links = "", $visible = 1) {
   else {
     $output .= theme("comment_folded", $comment);
   }
+
   return $output;
 }
 
@@ -1405,7 +1405,7 @@ function theme_comment_moderation_form($comment) {
   else if ((comment_user_can_moderate($node)) && $user->uid != $comment->uid && !(comment_already_moderated($user->uid, $comment->users))) {
     // comment hasn't been moderated yet:
 
-    if (!isset($votes)) {
+    if (!isset($votes) && $user->roles) {
       $result = db_query("SELECT v.mid, v.vote, MAX(r.value) AS value FROM {moderation_votes} v INNER JOIN {moderation_roles} r ON r.mid = v.mid WHERE r.rid IN (%s) GROUP BY v.mid, v.vote ORDER BY weight", implode(", ", array_keys($user->roles)));
       $votes = array();
       while ($vote = db_fetch_object($result)) {
@@ -1435,10 +1435,10 @@ function theme_comment_moderation_form($comment) {
 
 function theme_comment($comment, $links = 0) {
   $output  = "<div class=\"comment\">\n";
-  $output .= "<div class=\"subject\">$comment->subject". ($comment->new ? ' '. theme('mark') : '') ."</div>\n";
+  $output .= "<div class=\"subject\">". l($comment->subject, $_GET['q'], NULL, NULL, "comment-$comment->cid") . ($comment->new ? ' '. theme('mark') : '') ."</div>\n";
   $output .= "<div class=\"moderation\">". $comment->moderation ."</div>\n";
   $output .= "<div class=\"credit\">". t("by %a on %b", array("%a" => format_name($comment), "%b" => format_date($comment->timestamp))) ."</div>\n";
-  $output .= "<div class=\"body\">". check_output($comment->comment) ."</div>\n";
+  $output .= "<div class=\"body\">$comment->comment</div>\n";
   $output .= "<div class=\"links\">$links</div>\n";
   $output .= "</div>\n";
   return $output;
