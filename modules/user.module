@@ -388,7 +388,7 @@ function user_block($op = "list", $delta = 0) {
 
           $output .= theme("theme_item_list", $items);
 
-          $block["subject"] = t("Log in");
+          $block["subject"] = t("User login");
           $block["content"] = "<div style=\"white-space: nowrap;\">$output</div>";
           return $block;
         }
