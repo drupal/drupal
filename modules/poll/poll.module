@@ -122,7 +122,7 @@ function poll_form(&$node, &$help, &$error) {
   $output .= form_submit(t("Preview")) ."<br /><br /><br />";
 
   for ($a = 0; $a < $node->choices; $a++) {
-    $output .= form_textfield(t("Choice") ." ". ($a + 1), "choice][$a", $node->choice[$a], 50, 127, $error["choice][$a"]);
+    $output .= form_textfield(t("Choice %n", array("%n" => ($a + 1))), "choice][$a", $node->choice[$a], 50, 127, $error["choice][$a"]);
     if ($admin) {
       $output .= form_textfield(t("Votes for choice %n", array("%n" => ($a + 1))), "chvotes][$a", $node->chvotes[$a] ? $node->chvotes[$a] : 0, 7, 7, $error["chvotes][$a"]);
     }

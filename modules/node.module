@@ -1581,23 +1581,23 @@ function node_page() {
 
     switch ($op) {
       case "add":
-        theme("box", t("Submit $name"), node_add(arg(2)));
+        theme("box", t("Submit %name", array("%name" => $name)), node_add(arg(2)));
         break;
       case "edit":
-        theme("box", t("Edit $name"), node_edit(arg(2)));
+        theme("box", t("Edit %name", array("%name" => $name)), node_edit(arg(2)));
         break;
       case "view":
         print node_show($node, arg(3));
         break;
       case t("Preview"):
         $edit = node_validate($edit, $error);
-        theme("box", t("Preview $name"), node_preview($edit, $error));
+        theme("box", t("Preview %name", array("%name" => $name)), node_preview($edit, $error));
         break;
       case t("Submit"):
-        theme("box", t("Submit $name"), node_submit($edit));
+        theme("box", t("Submit %name", array("%name" => $name)), node_submit($edit));
         break;
       case t("Delete"):
-        theme("box", t("Delete $name"), node_delete($edit));
+        theme("box", t("Delete %name", array("%name" => $name)), node_delete($edit));
         break;
       default:
         $result = pager_query("SELECT nid, type FROM {node} WHERE promote = '1' AND status = '1' ORDER BY static DESC, created DESC", variable_get("default_nodes_main", 10));
