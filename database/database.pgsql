@@ -517,7 +517,6 @@ CREATE TABLE users (
   PRIMARY KEY  (uid),
   UNIQUE (name)
 );
-CREATE INDEX users_sid_idx ON users(sid);
 CREATE INDEX users_timestamp_idx ON users(timestamp);
 
 --
