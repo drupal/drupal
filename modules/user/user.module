@@ -500,6 +500,7 @@ function user_login($edit = array()) {
       $url = $HTTP_REFERER ? $HTTP_REFERER : "module.php?mod=user&op=view";
 
       drupal_goto($url);
+      return;
 
     }
     else {
