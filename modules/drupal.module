@@ -133,7 +133,7 @@ function drupal_auth_help() {
 
   $output = "
    <p><a href=\"http://www.drupal.org\">Drupal</a> is the name of the software which powers %s. There are Drupal websites all over the world, and many of them share their registration databases so that users may freely login to any Drupal site using a single <b>Drupal ID</b>.</p>
-   <p>So please feel free to login to your account here at %s with a username from another Drupal site. The format of a Drupal ID is similar to an  email address: <b>username</b>@<i>server</i>. An example of valid Drupal ID is <b>mwlily</b><i>@www.drop.org</i>.</p>";
+   <p>So please feel free to login to your account here at %s with a username from another Drupal site. The format of a Drupal ID is similar to an  email address: <b>username</b>@<i>server</i>. An example of valid Drupal ID is <b>mwlily</b><i>@www.drupal.org</i>.</p>";
 
   return sprintf(t($output), $site, $site);
 }
