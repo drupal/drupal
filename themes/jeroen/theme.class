@@ -31,7 +31,7 @@
        -->
       </STYLE>
       <BODY TEXT="#202020" BGCOLOR="#FEFEFE" BACKGROUND="themes/Jeroen/images/background.gif" ALINK="#000000" LINK="#000000" VLINK="#000000">
-       <TABLE WIDTH="750" ALIGN="left" BORDER="0" CELLPADDING="0" CELLSPACING="0">
+       <TABLE WIDTH="750" ALIGN="left" BORDER="0" CELLPADDING="0" CELLSPACING="6">
         <TR>
          <TD COLSPAN="2">
 	  <IMG SRC="themes/Jeroen/images/logo.gif" ALT="drop.org logo"><BR><BR>
@@ -507,6 +507,9 @@
 
            ### Display login box:
            displayAccount($this);
+
+ 	   ### Display calendar:
+           displayCalendar($this, $date);
 
            ### Display voting poll:
            displayPoll($this);
