@@ -56,9 +56,9 @@ function throttle_exit() {
 function throttle_perm() {
   /*
   ** throttle module defines the following permissions:
-  **   access throttle box          - see throttle statistics
+  **   access throttle block - see throttle statistics
   */
-  return array("access throttle box");
+  return array("access throttle block");
 }
 
 function throttle_help($section = "admin/help#throttle") {
