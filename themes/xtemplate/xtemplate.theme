@@ -78,7 +78,11 @@ function xtemplate_node($node, $main = 0, $page = 0) {
       $avatar = file_create_url($avatar);
     }
     if ($avatar) {
-      $xtemplate->template->assign("avatar", "<img src=\"$avatar\" alt=\"" . t("%user's avatar", array("%user" => $comment->name ? $comment->name : t(variable_get("anonymous", "Anonymous")))) . "\" />");
+      $avatar = "<img src=\"$avatar\" alt=\"" . t("%user's avatar", array("%user" => $comment->name ? $comment->name : t(variable_get("anonymous", "Anonymous")))) . "\" />";
+      if ($node->uid) {
+        $avatar = l($avatar, "user/view/$node->uid", array("title" => t("View user profile.")));
+      }
+      $xtemplate->template->assign("avatar", $avatar);
       $xtemplate->template->parse("node.avatar");
     }
   }
@@ -126,7 +130,11 @@ function xtemplate_comment($comment, $links = 0) {
       $avatar = file_create_url($avatar);
     }
     if ($avatar) {
-      $xtemplate->template->assign("avatar", "<img src=\"$avatar\" alt=\"" . t("%user's avatar", array("%user" => $comment->name ? $comment->name : t(variable_get("anonymous", "Anonymous")))) . "\" />");
+      $avatar = "<img src=\"$avatar\" alt=\"" . t("%user's avatar", array("%user" => $comment->name ? $comment->name : t(variable_get("anonymous", "Anonymous")))) . "\" />";
+      if ($comment->uid) {
+        $avatar = l($avatar, "user/view/$comment->uid", array("title" => t("View user profile.")));
+      }
+      $xtemplate->template->assign("avatar", $avatar);
       $xtemplate->template->parse("comment.avatar");
     }
   }
