@@ -1,5 +1,5 @@
 <?php
-// $Id: marvin.theme,v 1.76 2001/11/25 14:40:40 dries Exp $
+// $Id: marvin.theme,v 1.77 2001/12/02 21:46:12 dries Exp $
 
   /*********************************************************************
 
@@ -18,7 +18,7 @@
    var $foreground = "#000000";
    var $background = "#EAEAEA";
 
-   function header() {
+   function header($title = 0) {
      global $HTTP_USER_AGENT;
     ?>
      <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -27,7 +27,12 @@
       <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
       <title>
        <?php
-        print variable_get("site_name", "drupal") ." - ". variable_get("site_slogan", "");
+         if ($title) {
+           print variable_get("site_name", "drupal") ." - $title";
+         }
+         else {
+           print variable_get("site_name", "drupal") ." - ". variable_get("site_slogan", "");
+         }
        ?>
       </title>
       <style type="text/css">

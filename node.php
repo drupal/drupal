@@ -1,5 +1,5 @@
 <?php
-// $Id: node.php,v 1.37 2001/11/24 12:14:31 dries Exp $
+// $Id: node.php,v 1.38 2001/12/02 21:46:12 dries Exp $
 
 include_once "includes/common.inc";
 
@@ -19,7 +19,7 @@ function node_render($node) {
           break;
         case t("Post comment"):
           comment_post($edit);
-          $theme->header();
+          $theme->header(check_output($node->title));
           node_view($node);
           comment_render($edit[id], $cid);
           $theme->footer();
@@ -36,20 +36,20 @@ function node_render($node) {
           break;
         case t("Update settings"):
           comment_settings(check_query($mode), check_query($order), check_query($threshold));
-          $theme->header();
+          $theme->header(check_output($node->title));
           node_view($node);
           comment_render($id, $cid);
           $theme->footer();
           break;
         case t("Update ratings"):
           comment_moderate($moderate["comment"]);
-          $theme->header();
+          $theme->header(check_output($node->title));
           node_view($node);
           comment_render($id, $cid);
           $theme->footer();
           break;
         default:
-          $theme->header();
+          $theme->header(check_output($node->title));
           node_view($node);
           comment_render($id, $cid);
           $theme->footer();
