@@ -240,7 +240,7 @@ function update_index($search_array) {
 
   if (db_num_rows($result)) {
     // Results were found. Look through the nodes we just selected.
-    while ($node = db_fetch_array ($result)) {
+    while ($node = db_fetch_array($result)) {
 
       // Trash any existing entries in the search index for this node,
       // in case it is a modified node.
@@ -254,7 +254,7 @@ function update_index($search_array) {
       $wordlist = preg_replace("'<[\/\!]*?[^<>]*?>'si", '', $wordlist);
 
       // Remove punctuation/special characters (same rule as do_search()).
-      $keys = preg_replace("'(!|%|,|:|;|\(|\)|\&|\"|\'|\.|-|\/|\?|\\\)'", '', $keys);
+      $wordlist = preg_replace("'(!|%|,|:|;|\(|\)|\&|\"|\'|\.|-|\/|\?|\\\)'", '', $wordlist);
 
       // Strip out (now mangled) http and tags.
       $wordlist = preg_replace("'http\w+'", '', $wordlist);
