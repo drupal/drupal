@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.49 2002/03/05 20:15:17 kjartan Exp $
+// $Id: user.module,v 1.50 2002/03/05 22:10:21 kjartan Exp $
 
 session_set_save_handler("sess_open", "sess_close", "sess_read", "sess_write", "sess_destroy", "sess_gc");
 session_start();
@@ -484,7 +484,7 @@ function user_block() {
 
   // Who's online block
   $time = 60 * 60; // minutes * seconds
-  $limit = 0; // List the X most recent people
+  $limit = 5; // List the X most recent people
 
   $result = db_query("SELECT uid, name FROM users WHERE timestamp > unix_timestamp() - ($time) ORDER BY timestamp DESC LIMIT $limit");
 
