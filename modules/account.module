@@ -32,6 +32,30 @@ function account_help() {
  <?php
 }
 
+function account_password($min_length=6) {
+  mt_srand((double)microtime() * 1000000);
+  $words = array("foo","bar","guy","neo","tux","moo","sun","asm","dot","god","axe","geek","nerd","fish","hack","star","mice","warp","moon","hero","cola","girl","fish","java","perl","boss","dark","sith","jedi","drop","mojo");
+  while(strlen($password) < $min_length) $password .= $words[mt_rand(0, count($words))];
+  return $password;
+}
+
+function account_validate($user) {
+  // Verify username and e-mail address:
+  if (empty($user[real_email]) || (!check_mail($user[real_email]))) $error = t("the e-mail address '$user[real_email]' is not valid");
+  if (empty($user[userid]) || (!check_name($user[userid]))) $error = t("the username '$user[userid]' is not valid");
+  if (strlen($user[userid]) > 15) $error = t("the username '$user[userid]' is too long: it must be less than 15 characters");
+
+  // Check to see whether the username or e-mail address are banned:
+  if ($ban = user_ban($user[userid], "username")) $error = t("the username '$user[userid]' is banned") .": <I>$ban->reason</I>";
+  if ($ban = user_ban($user[real_email], "e-mail address")) $error = t("the e-mail address '$user[real_email]' is banned") .": <I>$ban->reason</I>";
+
+  // Verify whether username and e-mail address are unique:
+  if (db_num_rows(db_query("SELECT userid FROM users WHERE LOWER(userid) = LOWER('$user[userid]')")) > 0) $error = t("the username '$user[userid]' is already taken");
+  if (db_num_rows(db_query("SELECT real_email FROM users WHERE LOWER(real_email) = LOWER('$user[real_email]')")) > 0) $error = t("the e-mail address '$user[real_email]' is already in use by another account");
+
+  return $error;
+}
+
 function account_search($keys) {
   global $user;
   $result = db_query("SELECT * FROM users WHERE userid LIKE '%$keys%' LIMIT 20");
@@ -137,25 +161,51 @@ function account_delete($name) {
   }
 }
 
-function account_edit_save($name, $edit) {
-  foreach ($edit as $key=>$value) {
-    if ($key != "access") {
-      $query .= "$key = '". addslashes($value) ."', ";
+function account_save($edit, &$name) {
+  if (!empty($name)) {
+    foreach ($edit as $key=>$value) {
+      if ($key != "access") {
+        $query .= "$key = '". addslashes($value) ."', ";
+      }
+    }
+    db_query("UPDATE users SET $query access = '' WHERE userid = '$name'");
+  
+    if ($edit[access]) {
+      foreach ($edit[access] as $key=>$value) {
+        $account = user_load($name);
+        db_query("UPDATE users SET access = '". field_set($account->access, $value, 1) ."' WHERE id = $account->id");
+      }
+    }
+  
+    watchdog("account", "account: modified user '$name'");
+  }
+  else {
+    $edit[userid] = trim($edit[userid]);
+    $edit[real_email] = trim($edit[real_email]);
+    $edit[name] = $edit[realname];
+  
+    if ($error = account_validate($edit)) {
+      return $error;
+    }
+    else {
+      $edit[passwd] = account_password();
+      $edit[hash] = substr(md5("$edit[userid]. ". time()), 0, 12);
+  
+      $user = user_save("", array("userid" => $edit[userid], "real_email" => $edit[real_email], "passwd" => $edit[passwd], "status" => 1, "hash" => $edit[hash]));
+  
+      $link = path_uri() ."account.php?op=confirm&name=$edit[userid]&hash=$edit[hash]";
+      $subject = strtr(t("Account details for %a"), array("%a" => variable_get(site_name, "drupal")));
+      $message = strtr(t("%a,\n\n\nsomeone signed up for a user account on %b and supplied this e-mail address as their contact.  If it wasn't you, don't get your panties in a knot and simply ignore this mail.  If this was you, you will have to confirm your account first or you will not be able to login.  To confirm your account visit the URL below:\n\n   %c\n\nOnce confirmed you can login using the following username and password:\n\n   username: %a\n   password: %d\n\n\n-- %b team\n"), array("%a" => $edit[userid], "%b" => variable_get(site_name, "drupal"), "%c" => $link, "%d" => $edit[passwd]));
+  
+      watchdog("account", "new account: `$edit[userid]' &lt;$edit[real_email]&gt;");
+  
+      mail($edit[real_email], $subject, $message, "From: noreply");
+      $name = $edit[userid];
     }
   }
-  db_query("UPDATE users SET $query access = '' WHERE userid = '$name'");
-
-  if ($edit[access]) {
-    foreach ($edit[access] as $key=>$value) {
-      $account = user_load($name);
-      db_query("UPDATE users SET access = '". field_set($account->access, $value, 1) ."' WHERE id = $account->id");
-    }
-  }
-
-  watchdog("account", "account: modified user '$name'");
 }
 
-function account_edit($name) {
+function account_form($account = 0) {
   global $access, $account;
 
   function access($name) {
@@ -163,29 +213,39 @@ function account_edit($name) {
     if (module_hook($name, "admin")) $access .= "<OPTION VALUE=\"$name\"". (user_access($account, $name) ? " SELECTED" : "") .">$name</OPTION>";
   }
 
+  module_iterate("access");
+
+  $form .= $account->id ? form_item("ID", $account->id) : "";
+  $form .= $account->userid ? form_item(t("Username"), check_output($account->userid)) : form_textfield(t("Username"), "userid", "", 15, 15);
+  $form .= form_select(t("Status"), "status", ($account->status ? $account->status : 1), array("blocked", "not confirmed", "open"));
+  $form .= form_item(t("Administrator access"), "<SELECT NAME=\"edit[access][]\" MULTIPLE=\"true\" SIZE=\"10\">$access</SELECT>");
+  $form .= form_textfield(t("Real name"), "realname", $account->name, 30, 55);
+  $form .= form_textfield(t("Real e-mail address"), "real_email", $account->real_email, 30, 55);
+  $form .= form_textfield(t("Fake e-mail address"), "fake_email", $account->fake_email, 30, 55);
+  $form .= form_textfield(t("Homepage"), "url", $account->url, 30, 55);
+  $form .= form_textarea(t("Bio"), "bio", $account->bio, 35, 5);
+  $form .= form_textarea(t("Signature"), "signature", $account->signature, 35, 5);
+  if ($account) {
+    $form .= form_hidden("name", $account->userid);
+    $form .= form_submit("View account");
+  }
+  $form .= form_submit("Save account");
+
+  return form("admin.php?mod=account", $form);
+}
+
+function account_edit($name) {
   $status = array("blocked", "not confirmed", "open");
 
   $result = db_query("SELECT * FROM users WHERE userid = '$name'");
 
   if ($account = db_fetch_object($result)) {
-    module_iterate("access");
-
-    $form .= form_item("ID", $account->id);
-    $form .= form_item(t("Username"), check_output($account->userid));
-    $form .= form_select(t("Status"), "status", $account->status, array("blocked", "not confirmed", "open"));
-    $form .= form_item(t("Administrator access"), "<SELECT NAME=\"edit[access][]\" MULTIPLE=\"true\" SIZE=\"10\">$access</SELECT>");
-    $form .= form_textfield(t("Real name"), "name", $account->name, 30, 55);
-    $form .= form_textfield(t("Real e-mail address"), "real_email", $account->real_email, 30, 55);
-    $form .= form_textfield(t("Fake e-mail address"), "fake_email", $account->fake_email, 30, 55);
-    $form .= form_textfield(t("Homepage"), "url", $account->url, 30, 55);
-    $form .= form_textarea(t("Bio"), "bio", $account->bio, 35, 5);
-    $form .= form_textarea(t("Signature"), "signature", $account->signature, 35, 5);
-    $form .= form_hidden("name", $account->userid);
-    $form .= form_submit("View account");
-    $form .= form_submit("Save account");
-
-    return form("admin.php?mod=account", $form);
+    return account_form($account);
   }
+}
+
+function account_add() {
+  return account_form();
 }
 
 function account_view($name) {
@@ -231,7 +291,7 @@ function account_query($type = "") {
 function account_admin() {
   global $op, $edit, $id, $mod, $keys, $order, $name, $query;
 
-  print "<SMALL><A HREF=\"admin.php?mod=account&op=access\">access control</A> | <A HREF=\"admin.php?mod=account&op=listing\">account listings</A> | <A HREF=\"admin.php?mod=account&op=search\">search account</A> | <A HREF=\"admin.php?mod=account\">overview</A> | <A HREF=\"admin.php?mod=account&op=help\">help</A></SMALL><HR>";
+  print "<SMALL><A HREF=\"admin.php?mod=account&op=access\">access control</A> | <A HREF=\"admin.php?mod=account&op=listing\">account listings</A> | <A HREF=\"admin.php?mod=account&op=search\">search account</A> | <A HREF=\"admin.php?mod=account&op=add\">add account</A> | <A HREF=\"admin.php?mod=account\">overview</A> | <A HREF=\"admin.php?mod=account&op=help\">help</A></SMALL><HR>";
 
   $query = $query ? $query : 0;
   $name = $name ? $name : $edit[name];
@@ -256,6 +316,9 @@ function account_admin() {
       print status(account_delete($name));
       print account_overview(account_query($query));
       break;
+    case "add":
+      print account_add();
+      break;
     case "Edit account":
     case "edit":
       print account_edit($name);
@@ -271,7 +334,7 @@ function account_admin() {
       print search_data($keys, $mod);
       break;
     case "Save account":
-      print status(account_edit_save($name, $edit));
+      print status(account_save($edit, $name));
       print account_view($name);
       break;
     case "View account":
