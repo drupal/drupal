@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.87 2002/06/10 19:49:16 kjartan Exp $
+// $Id: blog.module,v 1.88 2002/06/15 13:48:08 kjartan Exp $
 
 function blog_system($field){
   $system["description"] = t("Enables keeping a blog or easily and regularly updated web page.");
@@ -341,7 +341,7 @@ function blog_block() {
     while ($node = db_fetch_object($result)) {
       $output .= l(check_output($node->title), array("id" => $node->nid)) ."<br />\n";
     }
-    $output .= "<br /><div align=\"right\">".lm(t("more"), array("mod" => "blog"), t("Read the latest blog entries."))."</div>";
+    $output .= "<br /><div align=\"right\">".lm(t("more"), array("mod" => "blog"), "", array("title" => t("Read the latest blog entries."))) ."</div>";
     $block[0]["content"] = $output;
   }
 
