@@ -187,7 +187,7 @@ function adminPolls() {
 }
 
 if (!$box) {
-  include "functions.inc";
+  include "function.inc";
   include "theme.inc";
   $theme->header();
 }

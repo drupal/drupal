@@ -6,49 +6,39 @@ $access = array("Administrator"	=> 0x00000001,
 
 class User {
   function User($userid, $passwd="") {
-    $result = db_query("SELECT * FROM users WHERE LOWER(userid)=LOWER('$userid') && passwd=PASSWORD('$passwd') && STATUS=0");
+    $result = db_query("SELECT * FROM users WHERE LOWER(userid) = LOWER('$userid') && passwd = PASSWORD('$passwd') && STATUS = 0");
     if (db_num_rows($result) == 1) {
       foreach (db_fetch_row($result) as $key=>$value) { $field = mysql_field_name($result, $key); $this->$field = stripslashes($value); $this->field[] = $field; }
     }
   }
+}
 
-  function save() {
-    ### Compose query to update user record:
-    $query .= "UPDATE users SET ";
-    foreach ($this->field as $key=>$field) { $value = $this->$field; $query .= "$field = '". addslashes($value) ."', "; }
-    $query .= " id = $this->id WHERE id = $this->id";
-    ### Perform query:
-    db_query($query);
-  }
+function user_save() {
+  global $user;
+  ### Compose query to update user record:
+}
 
-  function rehash() {
-    $result = db_query("SELECT * FROM users WHERE id=$this->id");
-    if (db_num_rows($result) == 1) {
-      foreach (db_fetch_array($result) as $key=>$value) { $this->$key = stripslashes($value); }
-    }
-  }
-
-  function valid($access = 0) {
-    if ($this->userid) {
-      $this->rehash();  // synchronisation purpose
-      $this->last_access = time();
-      $this->last_host = (!empty($GLOBALS[REMOTE_HOST]) ? $GLOBALS[REMOTE_HOST] : $GLOBALS[REMOTE_ADDR]);
-      db_query("UPDATE users SET last_access = '$this->last_access', last_host = '$this->last_host' WHERE id = $this->id");
-      if ($this->access & $access || $access == 0) return 1;
-    }
-    return 0;
-  }
-
-  function getHistory($field) {
-    return getHistory($this->history, $field);
-  }
-
-  function setHistory($field, $value) {
-    $this->history = setHistory($this->history, $field, $value);
+function user_rehash() {
+  global $user;
+  $result = db_query("SELECT * FROM users WHERE id=$user->id");
+  if (db_num_rows($result) == 1) {
+    foreach (db_fetch_array($result) as $key=>$value) { $user->$key = stripslashes($value); }
   }
 }
 
-function getHistory($history, $field) {
+function user_valid($access = 0) {
+  global $user;
+  if ($user->userid) {
+    user_rehash();  // synchronisation purpose
+    $user->last_access = time();
+    $user->last_host = ($GLOBALS[REMOTE_HOST]) ? $GLOBALS[REMOTE_HOST] : $GLOBALS[REMOTE_ADDR];
+    db_query("UPDATE users SET last_access = '$user->last_access', last_host = '$user->last_host' WHERE id = $user->id");
+    if ($user->access & $access || $access == 0) return 1;
+  }
+  return 0;
+}
+
+function user_getHistory($history, $field) {
   $data = explode(";", $history);
   for (reset($data); current($data); next($data)) {
     $entry = explode(":", current($data));
@@ -57,7 +47,9 @@ function getHistory($history, $field) {
   return $rval;
 } 
 
-function setHistory($history, $field, $value) {
+function user_setHistory(&$user, $field, $value) {
+
+  $history = $user->history;
   if (!$value) {
     ### remove entry:
     $data = explode(";", $history);
@@ -79,7 +71,13 @@ function setHistory($history, $field, $value) {
     ### not found: add new entry:
     $rval = "$history$field:$value;";
   }
-  return $rval;
+  $user->history = $rval;
+
+  ### save new history:
+  $query .= "UPDATE users SET ";
+  foreach ($user->field as $key=>$field) { $value = $user->$field; $query .= "$field = '". addslashes($value) ."', "; }
+  $query .= " id = $user->id WHERE id = $user->id";
+  db_query($query);
 }
 
 ?>

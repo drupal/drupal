@@ -1,8 +1,7 @@
 <?
-
-include "functions.inc";
-include "theme.inc";
 include "submission.inc";
+include "function.inc";
+include "theme.inc";
 
 function submission_displayMain() {
   global $PHP_SELF, $theme, $user;
@@ -16,9 +15,8 @@ function submission_displayMain() {
   $content .= "<TABLE BORDER=\"0\" CELLSPACING=\"4\" CELLPADDING=\"4\">\n";
   $content .= " <TR BGCOLOR=\"$bgcolor1\"><TH>Subject</TH><TH>Category</TH><TH>Date</TH><TH>Author</TH><TH>Score</TH></TR>\n";
   while ($submission = db_fetch_object($result)) {
-    $submission->userid = ($submission->userid) ? $submission->userid : $anonymous;
-    if (getHistory($user->history, "s$submission->id")) $content .= " <TR><TD WIDTH=\"100%\"><A HREF=\"$PHP_SELF?op=view&id=$submission->id\">$submission->subject</A></TD><TD>$submission->category</TD><TD ALIGN=\"center\">". date("Y-m-d", $submission->timestamp) ."<BR>". date("H:m:s", $submission->timestamp) ."</TD><TD ALIGN=\"center\">$submission->userid</TD><TD ALIGN=\"center\">". submission_score($submission->id) ."</TD></TR>\n";
-    else $content .= " <TR><TD WIDTH=\"100%\"><A HREF=\"$PHP_SELF?op=view&id=$submission->id\">$submission->subject</A></TD><TD>$submission->category</TD><TD ALIGN=\"center\">". date("Y-m-d", $submission->timestamp) ."<BR>". date("H:m:s", $submission->timestamp) ."</TD><TD ALIGN=\"center\">$submission->userid</TD><TD ALIGN=\"center\"><A HREF=\"$PHP_SELF?op=view&id=$submission->id\">vote</A></TD></TR>\n";
+    if (user_getHistory($user->history, "s$submission->id")) $content .= " <TR><TD WIDTH=\"100%\"><A HREF=\"$PHP_SELF?op=view&id=$submission->id\">$submission->subject</A></TD><TD>$submission->category</TD><TD ALIGN=\"center\">". date("Y-m-d", $submission->timestamp) ."<BR>". date("H:m:s", $submission->timestamp) ."</TD><TD ALIGN=\"center\">". format_username($submission->userid) ."</TD><TD ALIGN=\"center\">". submission_score($submission->id) ."</TD></TR>\n";
+    else $content .= " <TR><TD WIDTH=\"100%\"><A HREF=\"$PHP_SELF?op=view&id=$submission->id\">$submission->subject</A></TD><TD>$submission->category</TD><TD ALIGN=\"center\">". date("Y-m-d", $submission->timestamp) ."<BR>". date("H:m:s", $submission->timestamp) ."</TD><TD ALIGN=\"center\">". format_username($submission->userid) ."</TD><TD ALIGN=\"center\"><A HREF=\"$PHP_SELF?op=view&id=$submission->id\">vote</A></TD></TR>\n";
   }
   $content .= "</TABLE>\n";
 
@@ -30,7 +28,7 @@ function submission_displayMain() {
 function submission_displayItem($id) {
   global $PHP_SELF, $theme, $user;
 
-  if ($vote = getHistory($user->history, "s$id")) {
+  if ($vote = user_getHistory($user->history, "s$id")) {
     header("Location: discussion.php?id=$id");
   }
   else {
@@ -74,7 +72,7 @@ if ($user) {
       submission_displayItem($id);
       break;
     default:
-     submission_displayMain();
+      submission_displayMain();
       break;
   }
 }

@@ -1,5 +1,7 @@
 <?
 
+include "template.inc";
+
 global $user;
 ### Verify theme:
 if (isset($user->theme) && file_exists("themes/$user->theme/theme.class.php")) {
