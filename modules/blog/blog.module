@@ -48,7 +48,7 @@ function blog_save($op, $node) {
   }
 
   if ($op == "create") {
-    return array("body" => filter($node->body), "promote" => 0, "moderate" => 1, "status" => 1);
+    return array("body" => filter($node->body), "promote" => 0, "moderate" => 1, "status" => 1, "teaser" => filter($node->teaser));
   }
 
   if ($op == "decline") {
@@ -68,7 +68,7 @@ function blog_save($op, $node) {
       ** entries through the admin pages.
       */
 
-      return array("body" => filter($node->body), "promote" => 0, "moderate" => 1, "score" => 0, "votes" => 0, "users" => 0);
+      return array("body" => filter($node->body), "promote" => 0, "moderate" => 1, "score" => 0, "teaser" => filter($node->teaser), "votes" => 0, "users" => 0);
     }
     else if (user_access("adminster nodes")) {
       /*

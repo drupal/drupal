@@ -32,7 +32,7 @@ function story_save($op, $node) {
   }
 
   if ($op == "create") {
-    return array("body" => filter($node->body), "moderate" => 1);
+    return array("body" => filter($node->body), "moderate" => 1, "teaser" => filter($node->teaser));
   }
 
   if ($op == "decline") {
