@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.42 2002/08/08 18:16:03 dries Exp $
+// $Id: system.module,v 1.43 2002/08/14 17:53:44 dries Exp $
 
 function system_help() {
   $output .= "<p>Drupal comes with system-wide defaults but the setting-module provides control over many Drupal preferences, behaviors including visual and operational settings.</p>";
@@ -150,7 +150,6 @@ function system_modules() {
   while ($module = db_fetch_object($result)) {
     $status[$module->name] = $module->status;
   }
-  db_query("DELETE FROM system WHERE type = 'module'");
 
   if ($handle = @opendir("modules")) {
     $modules = array();
@@ -164,6 +163,8 @@ function system_modules() {
     closedir($handle);
     asort($modules);
   }
+
+  db_query("DELETE FROM system WHERE type = 'module'");
 
   $required = array("user", "system", "watchdog");
 
