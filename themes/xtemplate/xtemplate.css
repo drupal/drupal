@@ -1,4 +1,4 @@
-/* $Id: xtemplate.css,v 1.36 2003/11/24 22:39:48 dries Exp $ */
+/* $Id: xtemplate.css,v 1.37 2003/11/30 15:19:23 dries Exp $ */
 
 body {
   margin: 0;
@@ -151,6 +151,11 @@ table {
   font-weight: bold;
   font-size: 1.3em;
   color: #777;
+}
+.static-node {
+  background: #eee;
+  border: solid 1px #ddd;
+  padding: 1em;
 }
 .form-item label {
   font-size: 1em;
