@@ -13,12 +13,11 @@ function help_menu() {
 
   foreach (module_list() as $name) {
     if (module_hook($name, 'help')) {
-      if (module_invoke($name, 'help', "admin/help#$name")) {
-        $items[] = array('path' => 'admin/help/' . $name,
-          'title' => t($name),
-          'callback' => 'help_page',
-          'access' => user_access('access administration pages'));
-      }
+      $items[] = array('path' => 'admin/help/' . $name,
+        'title' => t($name),
+        'callback' => 'help_page',
+  'type' => MENU_CALLBACK,
+        'access' => user_access('access administration pages'));
     }
   }
   return $items;
@@ -84,7 +83,10 @@ function help_page() {
   $name = arg(2);
   if (module_hook($name, 'help')) {
     $temp = module_invoke($name, 'help', "admin/help#$name");
-    if (!empty($temp)) {
+    if (empty($temp)) {
+      $output .= t("No help is available for module %module.", array('%module' => $name));
+    }
+    else {
       $output .= $temp;
     }
   }
