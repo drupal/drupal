@@ -262,6 +262,7 @@ CREATE TABLE node (
 CREATE TABLE page (
   lid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
   nid int(10) unsigned DEFAULT '0' NOT NULL,
+  link varchar(128) DEFAULT '' NOT NULL,
   body text NOT NULL,
   format tinyint(2) DEFAULT '0' NOT NULL,
   PRIMARY KEY (lid)
