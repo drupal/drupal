@@ -144,6 +144,13 @@ function statistics_menu($may_cache) {
   return $items;
 }
 
+function _statistics_format_item($title, $link) {
+  $link = ($link ? $link : '/');
+  $output  = ($title ? "$title<br />" : '');
+  $output .= l($link, $link);
+  return $output;
+}
+
 function statistics_access_log($aid) {
   $result = db_query('SELECT a.*, u.name FROM {accesslog} a LEFT JOIN {users} u ON a.uid = u.uid WHERE aid = %d', $aid);
   if ($access = db_fetch_object($result)) {
@@ -203,7 +210,7 @@ function statistics_user_tracker() {
     while ($log = db_fetch_object($result)) {
       $rows[] = array(
         array('data' => format_date($log->timestamp, 'small'), 'nowrap' => 'nowrap'),
-        $log->title ."<br />". l($log->path, $log->path),
+        _statistics_format_item($log->title, $log->path),
         l(t('details'), "admin/logs/access/$log->aid"));
     }
 
@@ -236,7 +243,7 @@ function statistics_recent_hits($type = 'all', $id = 0) {
   while ($log = db_fetch_object($result)) {
     $rows[] = array(
       array('data' => format_date($log->timestamp, 'small'), 'nowrap' => 'nowrap'),
-      $log->title .'<br />'. l($log->path, $log->path),
+      _statistics_format_item($log->title, $log->path),
       format_name($log),
       l(t('details'), "admin/logs/access/$log->aid"));
   }
@@ -263,7 +270,7 @@ function statistics_top_pages() {
   $result = pager_query($sql, 30, 0, $sql_cnt);
 
   while ($page = db_fetch_object($result)) {
-    $rows[] = array($page->hits, $page->title .'<br />'. l($page->path, $page->path));
+    $rows[] = array($page->hits, _statistics_format_item($page->title, $page->path));
   }
   if ($pager = theme('pager', NULL, 30, 0, tablesort_pager())) {
     $rows[] = array(array('data' => $pager, 'colspan' => '2'));
@@ -460,30 +467,6 @@ function statistics_block($op = 'list', $delta = 0, $edit = array()) {
         return $block;
       }
   }
-}
-
-function statistics_summary($dbfield, $dbrows) {
-  /* valid dbfields: totalcount, daycount, timestamp */
-
-  $output = '';
-  $result = db_query_range('SELECT n.nid, n.title FROM {node_counter} s INNER JOIN {node} n ON s.nid = n.nid ORDER BY %s DESC', $dbfield, 0, $dbrows);
-  while ($nid = db_fetch_array($result)) {
-    $content = node_load(array('nid' => $nid['nid']));
-
-    // Filter and prepare node teaser
-    if (node_hook($content, 'view')) {
-      node_invoke($content, 'view', TRUE, FALSE);
-    }
-    else {
-      $content = node_prepare($content, TRUE);
-    }
-
-    $output .= '<tr><td><strong>'. l($nid['title'], 'node/'. $nid['nid'], array('title' => t('View this posting.'))) .'</strong></td><td style="text-align: right;"><small>'. t('Submitted by %a on %b', array('%a' => format_name($content), '%b' => format_date($content->created, 'large'))) .'</small></td></tr>';
-    $output .= '<tr><td colspan="2"><div style="margin-left: 20px;">'. $content->teaser .'</div></td></tr>';
-    $output .= '<tr><td style="text-align: right;" colspan="2">[ '. theme('links', $content->links) .' ]<br /><br /></td></tr>';
-  }
-
-  return $output;
 }
 
 /**
