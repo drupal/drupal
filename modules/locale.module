@@ -339,8 +339,6 @@ function locale($string) {
   global $locale;
   static $locale_t;
 
-  return ($string); // Need to patch this for a while.
-
   if (!isset($locale_t)) {
     $cache = cache_get("locale:$locale");
 
