@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.95 2005/02/02 00:55:59 unconed Exp $ */
+/* $Id: drupal.css,v 1.96 2005/02/24 13:07:47 unconed Exp $ */
 
 /*
 ** HTML elements
@@ -333,6 +333,9 @@ tr.light .form-item, tr.dark .form-item {
 }
 #forum td.posts, #forum td.topics, #forum td.replies, #forum td.pager {
   text-align: center;
+}
+#node-admin-filter fieldset {
+  clear: both;
 }
 #node-admin-filter ul {
   list-style-type: none;
