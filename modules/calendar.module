@@ -1,5 +1,7 @@
 <?
 
+$module = array();
+
 class Calendar {
   var $date;
 
