@@ -169,6 +169,11 @@ function displayAccount($theme) {
   }
 }
 
+function displayCalendar($theme, $date) {
+  include "calendar.class.php";
+  $calendar = new calendar($date);
+  $theme->box("Browse archives", $calendar->display());
+}
 
 function displayAccountSettings($theme) {
   global $user;
