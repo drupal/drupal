@@ -400,7 +400,7 @@ function node_feed() {
 }
 
 function node_page() {
-  global $op, $theme;
+  global $op, $theme, $meta, $date;
 
   if ($op == "feed") {
     node_feed();
