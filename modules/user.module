@@ -307,13 +307,13 @@ function user_access($string, $account = NULL) {
   global $user;
   static $perm = array();
 
+  if (is_null($account)) {
+    $account = $user;
+  }
+
   // User #1 has all privileges:
   if ($user->uid == 1) {
     return 1;
-  }
-
-  if (is_null($account)) {
-    $account = $user;
   }
 
   // To reduce the number of SQL queries, we cache the user's permissions
