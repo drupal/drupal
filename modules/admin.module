@@ -16,7 +16,7 @@ function admin_link($type) {
 }
 
 function sitemap_callback() {
-  return menu_map('admin');
+  return menu_map("admin");
 }
 
 function admin_admin() {
@@ -47,17 +47,6 @@ function admin_page() {
         module_invoke_all("link", "admin");
 
         /*
-        ** Menu:
-        */
-
-        print "<div id=\"menu\">";
-        echo "<h1><a href=\"index.php\">". variable_get("site_name", "drupal") ."</a></h1>";
-        //print menu_tree('admin') ;
-        print menu_tree('admin') ;
-
-        print "</div>";
-
-        /*
         ** Body:
         */
 
@@ -70,12 +59,6 @@ function admin_page() {
         else {
           print "<h2>". t("Administration") ."</h2>";
         }
-
-        /*
-        if ($menu = menu_menu()) {
-          print "$menu<br />";
-        }
-        */
 
         if ($help = menu_help()) {
           print "<small>$help</small>";
@@ -94,6 +77,14 @@ function admin_page() {
 
         print "</div>";
 
+        /*
+        ** Menu:
+        */
+
+        print "<div id=\"menu\">";
+        echo "<h1><a href=\"index.php\">". variable_get("site_name", "drupal") ."</a></h1>";
+        print menu_tree("admin") ;
+        print "</div>";
       ?>
     </body>
    </html>
