@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.366 2004/07/12 21:35:31 unconed Exp $ */
+/* $Id: common.inc,v 1.367 2004/07/12 21:38:41 unconed Exp $ */
 
 /**
  * @name Page title
@@ -1279,27 +1279,24 @@ function drupal_xml_parser_create(&$data) {
   if (!in_array(strtolower($encoding), $php_supported)) {
     if (function_exists('iconv')) {
       $out = @iconv($encoding, 'utf-8', $data);
-      if ($out !== false) {
-        $data = $out;
-        $encoding = 'utf-8';
-      }
     }
     else if (function_exists('mb_convert_encoding')) {
       $out = @mb_convert_encoding($data, 'utf-8', $encoding);
-      if ($out !== false) {
-        $data = $out;
-        $encoding = 'utf-8';
-      }
     }
     else if (function_exists('recode_string')) {
       $out = @recode_string($encoding . '..utf-8', $data);
-      if ($out !== false) {
-        $data = $out;
-        $encoding = 'utf-8';
-      }
     }
     else {
       watchdog(t("Unsupported XML encoding '%s'. Please install iconv, GNU recode or mbstring for PHP.", $encoding)); 
+      return 0;
+    }
+
+    if ($out !== false) {
+      $data = $out;
+      $encoding = 'utf-8';
+    }
+    else {
+      watchdog(t("Could not convert XML encoding '%s' to UTF-8.", $encoding)); 
       return 0;
     }
   }
