@@ -156,10 +156,10 @@ function displayTopic ($sid, $pid = 0, $tid = 0, $mode = "threaded", $order = 0,
     ### Dynamically generate the link:
     if ($pid != 0) {
       list($erin) = mysql_fetch_row(mysql_query("SELECT pid FROM comments WHERE tid=$pid"));
-      $link = "<A HREF=\"comments.php?sid=$sid&pid=$erin&mode=$mode&order=$order&thold=$thold\">return to parent</A> | <A HREF=\"comments.php?op=reply&pid=$tid&sid=$sid&mode=$mode&order=$order&thold=$thold\">reply to this comment</A>";
+      $link = "<A HREF=\"comments.php?sid=$sid&pid=$erin&mode=$mode&order=$order&thold=$thold\"><FONT COLOR=\"$theme->hlcolor2\">return to parent</FONT></A> | <A HREF=\"comments.php?op=reply&pid=$tid&sid=$sid&mode=$mode&order=$order&thold=$thold\"><FONT COLOR=\"$theme->hlcolor2\">reply to this comment</FONT></A>";
     }
     else {
-      $link = "<A HREF=\"comments.php?op=reply&pid=$tid&sid=$sid&mode=$mode&order=$order&thold=$thold\">reply to this comment</A> ";
+      $link = "<A HREF=\"comments.php?op=reply&pid=$tid&sid=$sid&mode=$mode&order=$order&thold=$thold\"><FONT COLOR=\"$theme->hlcolor2\">reply to this comment</FONT></A> ";
     }
 
     if ($mode == "threaded") {
