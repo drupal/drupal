@@ -92,7 +92,7 @@ function update_page() {
       $dates[$i] = "No updates available";
 
       // make update form and output it.
-      $form .= form_select("Perform updates from", "start", (isset($selected) ? $selected : -1), $dates, "This defaults to the first available update since the last update you performed.");
+      $form = form_select("Perform updates from", "start", (isset($selected) ? $selected : -1), $dates, "This defaults to the first available update since the last update you performed.");
       $form .= form_submit("Update");
       print update_page_header("Drupal database update");
       print form($form);
