@@ -54,15 +54,7 @@
       <TITLE><?php echo ($title ? ($title . " - ") : "") . variable_get(site_name, "drupal"); ?></TITLE>
       <BASE HREF="<?php echo "$base_url/"; ?>" />
       <STYLE type="text/css">
-       <!--
-        TABLE { border-width: 0; }
-        TD { border-width: 0; font-size: 10pt; font-family: verdana,helvetica,arial; }
-        P,UL,LI,DIV,FORM,EM,BLOCKQUOTE { font-size: 10pt; font-family: verdana,helvetica,arial; }
-        BODY { margin: 10px; font-size: 10pt; font-family: verdana,helvetica,arial; }
-        SMALL { font-size: 8pt; }
-        BIG { font-size: 12pt; }
-        HR { height: 1px; color: #000000; }
-       -->
+        @import "themes/unconed/unconed.css";
       </STYLE>
      </HEAD>
      <BODY TEXT="#000000" BGCOLOR="<?php print $this->clc0; ?>" ALINK="#000000" LINK="#404040" VLINK="#404040" MARGINHEIGHT="10" MARGINWIDTH="10"<?php print theme_onload_attribute(); ?>>

@@ -1,0 +1,26 @@
+body {
+  margin: 10px;
+  color: #000000;
+  background-color: #c8c8d0;
+  font-family: verdana, arial, helvetica, sans-serif;
+  font-size: 82%;
+}
+h1 {
+  font-size: 1.2em;
+}
+h2 {
+  font-size: 1.1em;
+}
+h3, h4, h5, h6 {
+  font-size: 1em;
+}
+p {
+  margin: 0 0 1em 0;
+  padding: 0;
+}
+img {
+  border-width: 0;
+}
+table {
+  font-size: 1em;
+}
