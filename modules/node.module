@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.413 2004/10/31 03:03:25 dries Exp $
+// $Id: node.module,v 1.414 2004/10/31 07:34:47 dries Exp $
 
 /**
  * @file
@@ -968,7 +968,7 @@ function node_block($op = 'list', $delta = 0) {
     $blocks[0]['info'] = t('Syndicate');
     return $blocks;
   }
-  else {
+  else if ($op == 'view') {
     $block['subject'] = t('Syndicate');
     $block['content'] = theme('xml_icon', url('node/feed'));
 

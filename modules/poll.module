@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.148 2004/09/18 00:15:54 unconed Exp $
+// $Id: poll.module,v 1.149 2004/10/31 07:34:47 dries Exp $
 
 /**
  * @file
@@ -49,7 +49,7 @@ function poll_block($op = 'list', $delta = 0) {
       $blocks[0]['info'] = t('Most recent poll');
       return $blocks;
     }
-    else {
+    else if ($op == 'view') {
       // Retrieve the latest poll.
       $timestamp = db_result(db_query('SELECT MAX(n.created) FROM {node} n '. node_access_join_sql() ." WHERE n.type = 'poll' AND n.status = 1 AND ". node_access_where_sql() .' AND n.moderate = 0'));
       if ($timestamp) {

@@ -1,5 +1,5 @@
 <?php
-/* $Id: aggregator.module,v 1.215 2004/10/29 19:43:51 unconed Exp $ */
+/* $Id: aggregator.module,v 1.216 2004/10/31 07:34:47 dries Exp $ */
 
 /**
  * @file
@@ -231,7 +231,7 @@ function aggregator_block($op, $delta) {
         $block['feed:'. $feed->fid]['info'] = t('%title feed latest items', array('%title' => $feed->title));
       }
     }
-    else {
+    else if ($op == 'view') {
       list($type, $id) = split(':', $delta);
       switch ($type) {
         case 'feed':

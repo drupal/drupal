@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.305 2004/10/31 03:03:24 dries Exp $
+// $Id: comment.module,v 1.306 2004/10/31 07:34:47 dries Exp $
 
 /**
  * @file
@@ -156,7 +156,7 @@ function comment_block($op = 'list', $delta = 0) {
     $blocks[0]['info'] = t('Recent comments');
     return $blocks;
   }
-  else if (user_access('access comments')) {
+  else if ($op == 'view' && user_access('access comments')) {
     $result = db_query_range('SELECT * FROM {comments} WHERE status = 0 ORDER BY timestamp DESC', 0, 10);
     $items = array();
     while ($comment = db_fetch_object($result)) {

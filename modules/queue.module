@@ -1,5 +1,5 @@
 <?php
-// $Id: queue.module,v 1.116 2004/09/16 07:17:55 dries Exp $
+// $Id: queue.module,v 1.117 2004/10/31 07:34:47 dries Exp $
 
 /**
  * @file
@@ -220,7 +220,7 @@ function queue_block($op = 'list', $delta = 0) {
     $blocks[0]['info'] = t('Moderation results');
     return $blocks;
   }
-  else {
+  else if ($op == 'view') {
     if (user_access('access submission queue') && (arg(0) == 'queue') || arg(0) == 'node') {
       if ($user->uid) {
         if (arg(0) == 'queue') {

@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.22 2004/10/23 17:24:49 dries Exp $
+// $Id: menu.module,v 1.23 2004/10/31 07:34:47 dries Exp $
 
 /**
  * @file
@@ -84,7 +84,7 @@ function menu_block($op = 'list', $delta = 0) {
     }
     return $blocks;
   }
-  else {
+  else if ($op == 'view') {
     $data['subject'] = $menu['items'][$delta]['title'];
     $data['content'] = '<div class="menu">'. theme('menu_tree', $delta) .'</div>' ;
     return $data;
