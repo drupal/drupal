@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.36 2003/02/16 17:47:53 dries Exp $
+// $Id: search.module,v 1.37 2003/03/06 22:03:36 dries Exp $
 
 function search_help() {
   $output = "<b>". t("Search guidelines") ."</b>";
@@ -307,12 +307,6 @@ function search_view() {
   global $edit, $type, $keys;
 
   if (user_access("search content")) {
-
-    // Verify the user input:
-    // TODO: is this necessary or is it / should it be done in search_{form|data}?
-    $type = check_input($type);
-    $keys = check_input($keys);
-
     // Construct the search form:
     $form = search_form(NULL, NULL, TRUE);
 
