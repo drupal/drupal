@@ -41,20 +41,14 @@ function page_node_name($node) {
 function page_access($op, $node) {
   global $user;
 
-  if ($op == 'view') {
-    return $node->status;
-  }
-
   if ($op == 'create') {
     return user_access('create pages');
   }
 
-  if ($op == 'update') {
-    return user_access('edit own pages') && ($user->uid == $node->uid);
-  }
-
-  if ($op == 'delete') {
-    return user_access('edit own pages') && ($user->uid == $node->uid);
+  if ($op == 'update' || $op == 'delete') {
+    if (user_access('edit own pages') && ($user->uid == $node->uid)) {
+      return TRUE;
+    }
   }
 }
 

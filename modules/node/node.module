@@ -522,38 +522,16 @@ function node_prepare($node, $teaser = FALSE) {
  * Generate a page displaying a single node, along with its comments.
  */
 function node_show($node, $cid) {
-  if (node_access('view', $node)) {
-    $output = node_view($node, FALSE, TRUE);
+  $output = node_view($node, FALSE, TRUE);
 
-    if (function_exists('comment_render') && $node->comment) {
-      $output .= comment_render($node, $cid);
-    }
-
-    // Update the history table, stating that this user viewed this node.
-    node_tag_new($node->nid);
-
-    return $output;
-  }
-  else {
-    drupal_set_message(message_access());
-  }
-}
-
-/**
- * Determine whether the current user may perform the given operation on the
- * specified node.
- */
-function node_access($op, $node = NULL) {
-  if (user_access('administer nodes')) {
-    return TRUE;
+  if (function_exists('comment_render') && $node->comment) {
+    $output .= comment_render($node, $cid);
   }
 
-  // Convert the node to an object if necessary:
-  $node = array2object($node);
+  // Update the history table, stating that this user viewed this node.
+  node_tag_new($node->nid);
 
-  // Can't use node_invoke(), because the access hook takes the $op parameter
-  // before the $node parameter.
-  return module_invoke(node_get_module_name($node), 'access', $op, $node);
+  return $output;
 }
 
 /**
@@ -585,7 +563,7 @@ function node_perm() {
  * created, uid, name, and count.
  */
 function node_search($keys) {
-  $find = do_search(array('keys' => $keys, 'type' => 'node', 'select' => "select s.lno as lno, n.title as title, n.created as created, u.uid as uid, u.name as name, s.count as count FROM {search_index} s, {node} n INNER JOIN {users} u ON n.uid = u.uid WHERE s.lno = n.nid AND s.type = 'node' AND s.word like '%' AND n.status = 1"));
+  $find = do_search(array('keys' => $keys, 'type' => 'node', 'select' => "SELECT DISTINCT s.lno as lno, n.title as title, n.created as created, u.uid as uid, u.name as name, s.count as count FROM {search_index} s, {node} n ". node_access_join_sql() ." INNER JOIN {users} u ON n.uid = u.uid WHERE s.lno = n.nid AND s.type = 'node' AND s.word like '%' AND n.status = 1 AND ". node_access_where_sql()));
 
   return array(t('Matching nodes ranked in order of relevance'), $find);
 }
@@ -678,7 +656,7 @@ function node_menu() {
 
     $items[] = array('path' => 'node/'. arg(1), 'title' => t('view'),
       'callback' => 'node_page',
-      'access' => user_access('access content'),
+      'access' => node_access('view', $node),
       'type' => MENU_CALLBACK);
     $items[] = array('path' => 'node/'. arg(1) .'/view', 'title' => t('view'),
         'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
@@ -1281,12 +1259,7 @@ function node_edit($id) {
 
   drupal_set_title($node->title);
 
-  if (node_access('update', $node)) {
-    $output = node_form($node);
-  }
-  else {
-    $output = message_access();
-  }
+  $output = node_form($node);
 
   return $output;
 }
@@ -1423,7 +1396,7 @@ function node_delete($edit) {
  * Generate a listing of promoted nodes.
  */
 function node_page_default() {
-  $result = pager_query('SELECT nid, type FROM {node} WHERE promote = 1 AND status = 1 ORDER BY sticky DESC, created DESC', variable_get('default_nodes_main', 10));
+  $result = pager_query('SELECT DISTINCT(n.nid), n.type FROM {node} n '. node_access_join_sql() .' WHERE n.promote = 1 AND n.status = 1 AND '. node_access_where_sql() .' ORDER BY n.sticky DESC, n.created DESC', variable_get('default_nodes_main', 10));
 
   if (db_num_rows($result)) {
     drupal_set_html_head('<link rel="alternate" type="application/rss+xml" title="RSS" href="'. url('node/feed', NULL, NULL, TRUE) .'" />');
@@ -1545,5 +1518,165 @@ function node_nodeapi(&$node, $op, $arg = 0) {
       return array('nid', 'uid', 'type', 'title', 'teaser', 'body', 'revisions', 'status', 'promote', 'moderate', 'sticky', 'created', 'changed');
   }
 }
+
+/**
+ * @defgroup node_access Node access rights
+ * @{
+ * The node access system determines who can do what to which nodes.
+ *
+ * In determining access rights for a node, node_access() first checks
+ * whether the user has the "administer nodes" permission. Such users have
+ * unrestricted access to all nodes. Then the node module's hook_access()
+ * is called, and a TRUE or FALSE return value will grant or deny access.
+ * This allows, for example, the blog module to always grant access to the
+ * blog author, and for the book module to always deny editing access to
+ * PHP pages.
+ *
+ * If node module does not intervene (returns NULL), then the
+ * node_access table is used to determine access. All node access
+ * modules are queried using hook_node_grants() to assemble a list of
+ * "grant IDs" for the user. This list is compared against the table.
+ * If any row contains the node ID in question (or 0, which stands for "all
+ * nodes"), one of the grant IDs returned, and a value of TRUE for the
+ * operation in question, then access is granted. Note that this table is a
+ * list of grants; any matching row is sufficient to grant access to the
+ * node.
+ *
+ * In node listings, the process above is followed except that
+ * hook_access() is not called on each node for performance reasons and for
+ * proper functioning of the pager system. When adding a node listing to your
+ * module, be sure to use node_access_join_sql() and node_access_where_sql() to add
+ * the appropriate clauses to your query for access checks.
+ *
+ * To see how to write a node access module of your own, see
+ * node_access_example.module.
+ */
+
+/**
+ * Determine whether the current user may perform the given operation on the
+ * specified node.
+ *
+ * @param $op
+ *   The operation to be performed on the node. Possible values are:
+ *   - "view"
+ *   - "update"
+ *   - "delete"
+ * @param $node
+ *   The node object (or node array) on which the operation is to be performed.
+ * @return
+ *   TRUE if the operation may be performed.
+ */
+function node_access($op, $node = NULL) {
+  if (user_access('administer nodes')) {
+    return TRUE;
+  }
+
+  // Convert the node to an object if necessary:
+  $node = array2object($node);
+
+  // Can't use node_invoke(), because the access hook takes the $op parameter
+  // before the $node parameter.
+  $access = module_invoke(node_get_module_name($node), 'access', $op, $node);
+  if (!is_null($access)) {
+    return $access;
+  }
+
+  // If the module did not override the access rights, use those set in the
+  // node_access table.
+  if ($node->nid && $node->status) {
+    $sql = 'SELECT COUNT(*) FROM {node_access} WHERE (nid = 0 OR nid = %d) AND CONCAT(realm, gid) IN (';
+    $grants = array();
+    foreach (node_access_grants($op, $uid) as $realm => $gids) {
+      foreach ($gids as $gid) {
+        $grants[] = "'". $realm . $gid ."'";
+      }
+    }
+    $sql .= implode(',', $grants) .') AND grant_'. $op .' = 1';
+    $result = db_query($sql, $nid);
+    return (db_result($result));
+  }
+  return FALSE;
+}
+
+/**
+ * Generate an SQL join clause for use in fetching a node listing.
+ *
+ * @param $node_alias
+ *   If the node table has been given an SQL alias other than the default
+ *   "n", that must be passed here.
+ * @param $node_access_alias
+ *   If the node_access table has been given an SQL alias other than the default
+ *   "na", that must be passed here.
+ * @return
+ *   An SQL join clause.
+ */
+function node_access_join_sql($node_alias = 'n', $node_access_alias = 'na') {
+  if (user_access('administer nodes')) {
+    return '';
+  }
+
+  $sql = 'INNER JOIN {node_access} '. $node_access_alias;
+  $sql .= ' ON ('. $node_access_alias .'.nid = 0 OR '. $node_access_alias .'.nid = '. $node_alias .'.nid)';
+  return $sql;
+}
+
+/**
+ * Generate an SQL where clause for use in fetching a node listing.
+ *
+ * @param $op
+ *   The operation that must be allowed to return a node.
+ * @param $node_access_alias
+ *   If the node_access table has been given an SQL alias other than the default
+ *   "na", that must be passed here.
+ * @return
+ *   An SQL where clause.
+ */
+function node_access_where_sql($op = 'view', $node_access_alias = 'na') {
+  if (user_access('administer nodes')) {
+    return '1';
+  }
+
+  $sql = $node_access_alias .'.grant_'. $op .' = 1 AND CONCAT('. $node_access_alias .'.realm, '. $node_access_alias .'.gid) IN (';
+  $grants = array();
+  foreach (node_access_grants($op) as $realm => $gids) {
+    foreach ($gids as $gid) {
+      $grants[] = "'". $realm . $gid ."'";
+    }
+  }
+  $sql .= implode(',', $grants) .')';
+  return $sql;
+}
+
+/**
+ * Fetch an array of permission IDs granted to the given user ID.
+ *
+ * The implementation here provides only the universal "all" grant. A node
+ * access module should implement hook_node_grants() to provide a grant
+ * list for the user.
+ *
+ * @param $op
+ *   The operation that the user is trying to perform.
+ * @param $uid
+ *   The user ID performing the operation. If omitted, the current user is used.
+ * @return
+ *   An associative array in which the keys are realms, and the values are
+ *   arrays of grants for those realms.
+ */
+function node_access_grants($op, $uid = NULL) {
+  global $user;
+
+  if (isset($uid)) {
+    $user_object = user_load(array('uid' => $uid));
+  }
+  else {
+    $user_object = $user;
+  }
+
+  return array_merge(array('all' => array(0)), module_invoke_all('node_grants', $user_object, $op));
+}
+
+/**
+ * @} end of defgroup node_access
+ */
 
 ?>

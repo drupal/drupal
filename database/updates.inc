@@ -65,7 +65,8 @@ $sql_updates = array(
   "2004-06-30" => "update_91",
   "2004-07-07" => "update_92",
   "2004-07-11" => "update_93",
-  "2004-07-22" => "update_94"
+  "2004-07-22" => "update_94",
+  "2004-07-30" => "update_95"
 );
 
 function update_32() {
@@ -1184,6 +1185,22 @@ function update_94() {
       ' LANGUAGE 'plpgsql';
     ");
   }
+  return $ret;
+}
+
+function update_95() {
+ $ret = array();
+
+ $ret[] = update_sql("CREATE TABLE node_access (
+   nid int(10) unsigned NOT NULL default '0',
+   gid int(10) unsigned NOT NULL default '0',
+   realm varchar(255) NOT NULL default '',
+   grant_view tinyint(1) unsigned NOT NULL default '0',
+   grant_update tinyint(1) unsigned NOT NULL default '0',
+   grant_delete tinyint(1) unsigned NOT NULL default '0',
+   PRIMARY KEY  (nid,gid,realm)
+   )");
+  $ret[] = update_sql("INSERT INTO node_access VALUES (0, 0, 'all', 1, 0, 0);");
   return $ret;
 }
 

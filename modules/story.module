@@ -55,20 +55,14 @@ function story_perm() {
 function story_access($op, $node) {
   global $user;
 
-  if ($op == 'view') {
-    return $node->status;
-  }
-
   if ($op == 'create') {
     return user_access('create stories');
   }
 
-  if ($op == 'update') {
-    return user_access('edit own stories') && ($user->uid == $node->uid);
-  }
-
-  if ($op == 'delete') {
-    return user_access('edit own stories') && ($user->uid == $node->uid);
+  if ($op == 'update' || $op == 'delete') {
+    if (user_access('edit own stories') && ($user->uid == $node->uid)) {
+      return TRUE;
+    }
   }
 }
 

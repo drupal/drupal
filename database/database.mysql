@@ -339,7 +339,21 @@ CREATE TABLE node (
   KEY node_changed (changed)
 ) TYPE=MyISAM;
 
---
+#
+# Table structure for table `node_access`
+#
+
+CREATE TABLE node_access (
+  nid int(10) unsigned NOT NULL default '0',
+  gid int(10) unsigned NOT NULL default '0',
+  realm varchar(255) NOT NULL default '',
+  grant_view tinyint(1) unsigned NOT NULL default '0',
+  grant_update tinyint(1) unsigned NOT NULL default '0',
+  grant_delete tinyint(1) unsigned NOT NULL default '0',
+  PRIMARY KEY  (nid,gid,realm)
+) TYPE=MyISAM;
+
+-
 -- Table structure for table 'page'
 --
 
@@ -682,3 +696,5 @@ REPLACE blocks SET module = 'user', delta = '0', status = '1';
 REPLACE blocks SET module = 'user', delta = '1', status = '1';
 
 INSERT INTO sequences (name, id) VALUES ('menu_mid', 1);
+
+INSERT INTO node_access VALUES (0, 0, 'all', 1, 0, 0);

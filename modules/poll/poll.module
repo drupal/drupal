@@ -27,10 +27,6 @@ function poll_help($section) {
  * Implementation of hook_access().
  */
 function poll_access($op, $node) {
-  if ($op == 'view') {
-    return $node->status;
-  }
-
   if ($op == 'create') {
     return user_access('create polls');
   }
@@ -49,7 +45,7 @@ function poll_block($op = 'list', $delta = 0) {
     }
     else {
       // Retrieve the latest poll.
-      $timestamp = db_result(db_query("SELECT MAX(created) FROM {node} WHERE type = 'poll' AND status = '1' AND moderate = '0'"));
+      $timestamp = db_result(db_query('SELECT MAX(n.created) FROM {node} n '. node_access_join_sql() ." WHERE n.type = 'poll' AND n.status = 1 AND ". node_access_where_sql() .' AND n.moderate = 0'));
       if ($timestamp) {
         $poll = node_load(array('type' => 'poll', 'created' => $timestamp, 'moderate' => 0, 'status' => 1));
 
@@ -270,7 +266,7 @@ function poll_node_name($node) {
 
 function poll_page() {
   // List all polls
-  $result = pager_query("SELECT n.nid, n.title, p.active, SUM(c.chvotes) AS votes FROM {node} n INNER JOIN {poll} p ON n.nid=p.nid INNER JOIN {poll_choices} c ON n.nid=c.nid WHERE type = 'poll' AND status = '1' AND moderate = '0' GROUP BY n.nid, n.title, p.active, n.created ORDER BY n.created DESC", 15);
+  $result = pager_query("SELECT DISTINCT(n.nid), n.title, p.active, SUM(c.chvotes) AS votes FROM {node} n ". node_access_join_sql() ." INNER JOIN {poll} p ON n.nid=p.nid INNER JOIN {poll_choices} c ON n.nid=c.nid WHERE type = 'poll' AND status = 1 AND ". node_access_where_sql() ." AND moderate = 0 GROUP BY n.nid, n.title, p.active, n.created ORDER BY n.created DESC", 15);
   $output = '<ul>';
   while ($node = db_fetch_object($result)) {
     $output .= '<li>'. l($node->title, "node/$node->nid") .' - '. format_plural($node->votes, '1 vote', '%count votes') .' - '. ($node->active ? t('open') : t('closed')) .'</li>';

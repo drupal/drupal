@@ -44,11 +44,10 @@ function tracker_page($uid = 0) {
   $output .= '';
 
   if ($uid) {
-    $result = pager_query('SELECT n.nid, n.title, n.type, n.changed, n.uid, u.name, MAX(GREATEST(n.changed, c.timestamp)) AS last_post FROM {node} n LEFT JOIN {comments} c ON n.nid = c.nid INNER JOIN {users} u ON n.uid = u.uid WHERE n.status = 1 AND (n.uid = %d OR c.uid = %d) GROUP BY n.nid, n.title, n.type, n.changed, n.uid, u.name ORDER BY last_post DESC', 25, 0, 'SELECT COUNT(DISTINCT(n.nid)) FROM {node} n LEFT JOIN {comments} c ON n.nid = c.nid WHERE n.status = 1 AND (n.uid = %d OR c.uid = %d)', $uid, $uid);
-
+    $result = pager_query('SELECT DISTINCT(n.nid), n.title, n.type, n.changed, n.uid, u.name, MAX(GREATEST(n.changed, c.timestamp)) AS last_post FROM {node} n '. node_access_join_sql() .' LEFT JOIN {comments} c ON n.nid = c.nid INNER JOIN {users} u ON n.uid = u.uid WHERE n.status = 1 AND '. node_access_where_sql() .' AND (n.uid = %d OR c.uid = %d) GROUP BY n.nid, n.title, n.type, n.changed, n.uid, u.name ORDER BY last_post DESC', 25, 0, 'SELECT COUNT(DISTINCT(n.nid)) FROM {node} n '. node_access_join_sql() .' LEFT JOIN {comments} c ON n.nid = c.nid WHERE n.status = 1 AND '. node_access_where_sql() .' AND (n.uid = %d OR c.uid = %d)', $uid, $uid);
   }
   else {
-    $result = pager_query('SELECT n.nid, n.title, n.type, n.changed, n.uid, u.name, MAX(GREATEST(n.changed, c.timestamp)) AS last_post FROM {node} n LEFT JOIN {comments} c ON n.nid = c.nid INNER JOIN {users} u ON n.uid = u.uid WHERE n.status = 1 GROUP BY n.nid, n.title, n.type, n.changed, n.uid, u.name ORDER BY last_post DESC', 25, 0, 'SELECT COUNT(nid) FROM {node} WHERE status = 1');
+    $result = pager_query('SELECT DISTINCT(n.nid), n.title, n.type, n.changed, n.uid, u.name, MAX(GREATEST(n.changed, c.timestamp)) AS last_post FROM {node} n '. node_access_join_sql() .' LEFT JOIN {comments} c ON n.nid = c.nid INNER JOIN {users} u ON n.uid = u.uid WHERE n.status = 1 AND '. node_access_where_sql() .' GROUP BY n.nid, n.title, n.type, n.changed, n.uid, u.name ORDER BY last_post DESC', 25, 0, 'SELECT COUNT(DISTINCT(n.nid)) FROM {node} n '. node_access_join_sql() .' WHERE n.status = 1 AND '. node_access_where_sql());
   }
 
   while ($node = db_fetch_object($result)) {

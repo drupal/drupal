@@ -266,7 +266,7 @@ function user_access($string) {
   // To reduce the number of SQL queries, we cache the user's permissions
   // in a static variable.
   if ($perm === 0) {
-    $result = db_query('SELECT DISTINCT p.perm FROM {role} r INNER JOIN {permission} p ON p.rid = r.rid INNER JOIN {users_roles} ur ON ur.rid = r.rid WHERE ur.uid = %d', $user->uid);
+    $result = db_query('SELECT DISTINCT(p.perm) FROM {role} r INNER JOIN {permission} p ON p.rid = r.rid INNER JOIN {users_roles} ur ON ur.rid = r.rid WHERE ur.uid = %d', $user->uid);
 
     while ($row = db_fetch_object($result)) {
       $perm .= "$row->perm, ";
@@ -520,8 +520,8 @@ function user_block($op = 'list', $delta = 0) {
           $time_period = variable_get('user_block_seconds_online', 2700);
 
           // Perform database queries to gather online user lists.
-          $guests = db_fetch_object(db_query('SELECT COUNT(DISTINCT sid) AS count FROM {sessions} WHERE timestamp >= %d AND uid = 0', time() - $time_period));
-          $users = db_query('SELECT DISTINCT uid, MAX(timestamp) AS max_timestamp FROM {sessions} WHERE timestamp >= %d AND uid != 0 GROUP BY uid ORDER BY max_timestamp DESC', time() - $time_period );
+          $guests = db_fetch_object(db_query('SELECT COUNT(DISTINCT(sid)) AS count FROM {sessions} WHERE timestamp >= %d AND uid = 0', time() - $time_period));
+          $users = db_query('SELECT DISTINCT(uid), MAX(timestamp) AS max_timestamp FROM {sessions} WHERE timestamp >= %d AND uid != 0 GROUP BY uid ORDER BY max_timestamp DESC', time() - $time_period );
           $total_users = db_num_rows($users);
 
           // Format the output with proper grammar.
@@ -1423,7 +1423,7 @@ function user_admin_role($edit = array()) {
     db_query('DELETE FROM {permission} WHERE rid = %d', $id);
 
     // Update the users who have this role set:
-    $result = db_query('SELECT DISTINCT ur1.uid FROM {users_roles} ur1 LEFT JOIN {users_roles} ur2 ON ur2.uid = ur1.uid WHERE ur1.rid = %d AND ur2.rid != ur1.rid', $id);
+    $result = db_query('SELECT DISTINCT(ur1.uid) FROM {users_roles} ur1 LEFT JOIN {users_roles} ur2 ON ur2.uid = ur1.uid WHERE ur1.rid = %d AND ur2.rid != ur1.rid', $id);
     $uid = array();
 
     while ($u = db_fetch_object($result)) {

@@ -248,7 +248,7 @@ function archive_page($year = 0, $month = 0, $day = 0) {
 
   if ($year && $month && $day) {
     // Fetch nodes for the selected date, if one was specified.
-    $result = db_query_range('SELECT nid FROM {node} WHERE status = 1 AND created > %d AND created < %d ORDER BY created', $date, $date_end, 0, 20);
+    $result = db_query_range('SELECT DISTINCT(n.nid) FROM {node} n '. node_access_join_sql() .' WHERE n.status = 1 AND n.created > %d AND n.created < %d AND '. node_access_where_sql() .' ORDER BY n.created', $date, $date_end, 0, 20);
 
     while ($nid = db_fetch_object($result)) {
       $output .= node_view(node_load(array('nid' => $nid->nid)), 1);
