@@ -138,14 +138,14 @@ function comment_configure() {
  *
  * Provides signature customization for the user's comments.
  */
-function comment_user($type, $edit, &$user) {
-  switch ($type) {
-    case 'edit':
-      // when user tries to edit his own data
-      return array(t('Personal information') => form_textarea(t('Signature'), 'signature', $user->signature, 64, 3, t('Your signature will be publicly displayed at the end of your comments.') .'<br />'. filter_tips_short()));
-    case 'validate':
-      // validate user data editing
-      return array('signature' => $edit['signature']);
+function comment_user($type, $edit, &$user, $category = NULL) {
+  if ($type == 'form' && $category == 'account') {
+    // when user tries to edit his own data
+    return array(array('title' => t('Comment settings'), 'data' => form_textarea(t('Signature'), 'signature', $user->signature, 64, 3, t('Your signature will be publicly displayed at the end of your comments.') .'<br />'. filter_tips_short()), 'weight' => 2));
+  }
+  if ($type == 'validate') {
+    // validate user data editing
+    return array('signature' => $edit['signature']);
   }
 }
 
