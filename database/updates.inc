@@ -1752,26 +1752,27 @@ function update_104() {
 }
 
 function update_105() {
+  // TODO: needs PGSQL equivalent
   $ret = array();
 
   $shadowupdates = db_query("SELECT nid,tid FROM {forum} WHERE shadow=0");
   while ($shadowrecord = db_fetch_object($shadowupdates)) {
-    db_query("DELETE FROM term_node WHERE nid = %d AND tid <> %d", $shadowrecord->nid, $shadowrecord->tid);
+    db_query("DELETE FROM {term_node} WHERE nid = %d AND tid <> %d", $shadowrecord->nid, $shadowrecord->tid);
   }
 
   $ret[] = update_sql("ALTER TABLE {forum} DROP shadow");
-  $ret[] = update_sql('ALTER TABLE node ADD INDEX node_status_type (status, type, nid)');
+  $ret[] = update_sql('ALTER TABLE {node} ADD INDEX node_status_type (status, type, nid)');
 
-  $ret[] = update_sql("CREATE TABLE node_comment_statistics (
-  nid int(10) unsigned NOT NULL auto_increment,
-  cid int(10) unsigned NOT NULL default '0',
-  last_comment_timestamp int(11) NOT NULL default '0',
-  last_comment_name varchar(60) default NULL,
-  last_comment_uid int(10) NOT NULL default '0',
-  comment_count int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY (nid),
-  KEY node_comment_timestamp (last_comment_timestamp)
-) TYPE=MyISAM");
+  $ret[] = update_sql("CREATE TABLE {node_comment_statistics} (
+    nid int(10) unsigned NOT NULL auto_increment,
+    cid int(10) unsigned NOT NULL default '0',
+    last_comment_timestamp int(11) NOT NULL default '0',
+    last_comment_name varchar(60) default NULL,
+    last_comment_uid int(10) NOT NULL default '0',
+    comment_count int(10) unsigned NOT NULL default '0',
+    PRIMARY KEY (nid),
+    KEY node_comment_timestamp (last_comment_timestamp)
+    ) TYPE=MyISAM");
   $ret[] = update_sql("INSERT INTO {node_comment_statistics} (nid, cid, last_comment_timestamp, last_comment_name, last_comment_uid, comment_count) SELECT n.nid, 0, n.created, NULL, n.uid, 0 FROM {node} n");
 
   $ret[] = update_sql("CREATE TABLE {forum_conv_temp} (
