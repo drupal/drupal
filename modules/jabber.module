@@ -168,7 +168,9 @@ function jabber_user($type, $edit, $user) {
   switch ($type) {
     case "view_private":
       $result = user_get_authname($user, $module);
-      $output .= form_item(t("$name ID"), $result);
+      if ($result) {
+        $output .= form_item(t("$name ID"), $result);
+      }
       return $output;
     case "edit_form":
       $result = user_get_authname($user, $module);
