@@ -287,9 +287,9 @@ p {  padding-left: 24px}
   you'll need to add new users manually. This web page allows any administrator
   to register a new user.</p>
 <h4>access rules<a name="access"></a></h4>
-<p>Access rules enable administrators to filter out usernames and email addresses
+<p>Access rules enable administrators to filter out usernames and e-mail addresses
   which are not allowed in Drupal. An administrator creates a 'mask' against which
-  each new registration is checked. Disallowed names and email addresses are denied
+  each new registration is checked. Disallowed names and e-mail addresses are denied
   access to the site. Another handy use for this page is to disallow registration
   to your site from an untrusted external authentication server. Just add their
   server address to the username mask section and you've effectively blocked all
@@ -301,7 +301,7 @@ p {  padding-left: 24px}
   </ul>
 <p><u>Examples:</u></p>
   <ul>
-   <li>E-mail address bans <code>%@hotmail.com</code>, <code>%@altavista.%</code>, <code>%@usa.net</code>, etc.  Used to prevent users from using free email accounts, which might be used to cause trouble.</li>
+   <li>E-mail address bans <code>%@hotmail.com</code>, <code>%@altavista.%</code>, <code>%@usa.net</code>, etc.  Used to prevent users from using free e-mail accounts, which might be used to cause trouble.</li>
    <li>Username bans <code>root</code>, <code>webmaster</code>, <code>admin%</code>, etc.  Used to prevent administrator impersonators.</li>
   </ul>
 <p>If no access rules are provided, access control is turned off and everybody will be able to access your website.  The 'allow' rules are processed prior to the 'deny' rules and are thus considered to be stronger.</p>
@@ -418,7 +418,7 @@ function user_link($type) {
   }
 
   if ($type == "menu") {
-    $links[] = "<a href=\"module.php?mod=user&op=view\">". t("account settings") ."</a>";
+    $links[] = "<a href=\"module.php?mod=user&op=edit\">". t("account settings") ."</a>";
     $links[] = "<br /><a href=\"module.php?mod=user&op=logout\">". t("logout") ."</a>";
   }
 
@@ -861,7 +861,7 @@ function user_edit($edit = array()) {
     }
 
     $output .= form_textfield(t("Username"), "name", $user->name, 30, 55, t("Your full name or your prefered username: only letters, numbers and spaces are allowed."));
-    $output .= form_textfield(t("E-mail address"), "mail", $user->mail, 30, 55, t("Insert a valid e-mail address.  All emails from the system will be sent to this address. The email address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by email."));
+    $output .= form_textfield(t("E-mail address"), "mail", $user->mail, 30, 55, t("Insert a valid e-mail address.  All e-mails from the system will be sent to this address. The e-mail address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by e-mail."));
 
     $result = user_get_authmaps($user);
     foreach (module_list() as $module) {
@@ -889,7 +889,6 @@ function user_edit($edit = array()) {
 function user_menu() {
   $links[] = "<a href=\"module.php?mod=user&op=view\">". t("view user information") ."</a>";
   $links[] = "<a href=\"module.php?mod=user&op=edit\">". t("edit user information") ."</a>";
-  $links[] = "<a href=\"module.php?mod=user&op=logout\">". t("logout") ."</a>";
 
   return "<div align=\"center\">". implode(" &middot; ", $links) ."</div>";
 }
