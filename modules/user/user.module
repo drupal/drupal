@@ -458,19 +458,8 @@ function user_block() {
 
     $output .= "<div style=\"width: 125;\">\n";
 
-    foreach (module_list() as $name) {
-      if (module_hook($name, "link")) {
-        $links = module_invoke($name, "link", "menu");
-        foreach ($links as $link) {
-          $output .= "$link<br />\n";
-        }
-      }
-    }
-
-    if (user_access("access administration pages")) {
-      $output .= "<br />\n";
-      $output .= "<a href=\"admin.php\">". strtr(t("administer %a"), array("%a" => variable_get("site_name", "drupal"))) ."</a><BR>\n";
-    }
+    $links = array_merge(module_invoke_all("link", "menu.create"), array(""), module_invoke_all("link", "menu.view"), array(""), module_invoke_all("link", "menu.settings"), array(""), module_invoke_all("link", "menu.misc"));
+    $output .= @implode("<br />\n", $links);
 
     $output .= "</div>";
   }
@@ -499,9 +488,16 @@ function user_link($type) {
     $links[] = "<a href=\"module.php?mod=user\" title=\"". t("Create a user account, request a new password or edit your account settings.") ."\">". t("user account") ."</a>";
   }
 
-  if ($type == "menu") {
+  if ($type == "menu.settings") {
     $links[] = "<a href=\"module.php?mod=user&op=edit\" title=\"". t("View and edit your account information.") ."\">". t("account settings") ."</a>";
-    $links[] = "<br /><a href=\"module.php?mod=user&op=logout\" title=\"". t("Logout.") ."\">". t("logout") ."</a>";
+  }
+
+  if ($type == "menu.misc") {
+    if (user_access("access administration pages")) {
+      $links[] = "<a href=\"admin.php\">". strtr(t("administer %a"), array("%a" => variable_get("site_name", "drupal"))) ."</a>";
+    }
+
+    $links[] = "<a href=\"module.php?mod=user&op=logout\" title=\"". t("Logout.") ."\">". t("logout") ."</a>";
   }
 
   if ($type == "admin" && user_access("administer users")) {

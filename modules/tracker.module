@@ -3,7 +3,7 @@
 
 function tracker_link($type) {
 
-  if ($type == "menu") {
+  if ($type == "menu.view") {
     $links[] = "<a href=\"module.php?mod=tracker\" title=\"". t("Display an overview of the recent comments.") ."\">". t("recent comments") ."</a>";
   }
 

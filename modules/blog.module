@@ -314,9 +314,12 @@ function blog_link($type, $node = 0) {
     $links[] = "<a href=\"module.php?mod=blog\" title=\"". t("Read the latest blog entries.") ."\">". t("user blogs") ."</a>";
   }
 
-  if ($type == "menu") {
-    $links[] = "<a href=\"module.php?mod=node&op=add&type=blog\" title=\"". t("Post a new entry to your personal blog.") ."\">". t("add blog entry") ."</a>";
-    $links[] = "<a href=\"module.php?mod=blog&op=view&id=$user->uid\" title=\"". t("Read your latest blog entries.") ."\">". t("view your blog") ."</a>";
+  if ($type == "menu.create" && user_access("post content")) {
+    $links[] = "<a href=\"module.php?mod=node&op=add&type=blog\" title=\"". t("Post a new entry to your personal blog.") ."\">". t("create blog entry") ."</a>";
+  }
+
+  if ($type == "menu.view" && user_access("access content")) {
+    $links[] = "<a href=\"module.php?mod=blog&op=view&id=$user->uid\" title=\"". t("Read your latest blog entries.") ."\">". t("view personal blog") ."</a>";
   }
 
   if ($type == "node" && $node->type == "blog") {

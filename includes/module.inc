@@ -19,6 +19,20 @@ function module_invoke($name, $hook, $a1 = NULL, $a2 = NULL, $a3 = NULL, $a4 = N
   }
 }
 
+// invoke $hook for all appropriate modules:
+function module_invoke_all($hook, $a1 = NULL, $a2 = NULL, $a3 = NULL, $a4 = NULL) {
+  $return = array();
+  foreach (module_list() as $name) {
+    if (module_hook($name, $hook)) {
+      if ($result = module_invoke($name, $hook, $a1, $a2, $a3, $a4)) {
+        $return = array_merge($return, $result);
+      }
+    }
+  }
+
+  return $return;
+}
+
 // return array of module names (includes lazy module loading):
 function module_list() {
   static $list;
