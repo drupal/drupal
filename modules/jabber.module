@@ -1,5 +1,5 @@
 <?php
-// $Id: jabber.module,v 1.12 2002/06/08 16:17:28 kjartan Exp $
+// $Id: jabber.module,v 1.13 2002/12/08 08:04:58 dries Exp $
 
 function jabber_system($field){
   $system["description"] = t("Enables login with Jabber ID and password.");
@@ -168,7 +168,9 @@ function jabber_user($type, $edit, $user) {
   switch ($type) {
     case "view_private":
       $result = user_get_authname($user, $module);
-      $output .= form_item(t("$name ID"), $result);
+      if ($result) {
+        $output .= form_item(t("$name ID"), $result);
+      }
       return $output;
     case "edit_form":
       $result = user_get_authname($user, $module);

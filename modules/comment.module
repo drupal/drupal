@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.84 2002/12/02 19:14:41 dries Exp $
+// $Id: comment.module,v 1.85 2002/12/08 08:04:58 dries Exp $
 
 $GLOBALS["cmodes"] = array(1 => t("Flat list - collapsed"), 2 => t("Flat list - expanded"), 3 => t("Threaded list - collapsed"), 4 => t("Threaded list - expanded"));
 $GLOBALS["corder"] = array(1 => t("Date - newest first"), 2 => t("Date - oldest first"));
@@ -44,9 +44,15 @@ function comment_conf_options() {
 function comment_user($type, $edit, &$user) {
   switch ($type) {
     case "view_public":
-      return form_item(t("Signature"), check_output($user->signature, 1));
+      if ($user->signature) {
+        return form_item(t("Signature"), check_output($user->signature, 1));
+      }
+      break;
     case "view_private":
-      return form_item(t("Signature"), check_output($user->signature, 1));
+      if ($user->signature) {
+        return form_item(t("Signature"), check_output($user->signature, 1));
+      }
+      break;
     case "edit_form":
       // when user tries to edit his own data
       return form_textarea(t("Signature"), "signature", $edit["signature"], 70, 3, t("Your signature will be publicly displayed at the end of your comments.") ."<br />". t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "<a> <b> <dd> <dl> <dt> <i> <li> <ol> <u> <ul>")));
