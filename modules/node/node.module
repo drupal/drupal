@@ -461,7 +461,7 @@ function node_link($type, $node = 0, $main = 0) {
     }
 
     if (user_access("administer nodes")) {
-       $links[] = l(t("administer"), "node/edit/$node->nid", array("title" => t("Administer this node.")));
+       $links[] = l(t("administer"), "admin/node/edit/$node->nid", array("title" => t("Administer this node.")));
     }
   }
 
