@@ -59,7 +59,7 @@ function node_save($node) {
   else {
     $duplicate = node_get_object("title", $node[title]);
 
-    if ($duplicate && (time() - $duplicate->timestamp < 300)) {
+    if ($duplicate && (time() - $duplicate->timestamp < 60)) {
       watchdog("warning", "node: duplicate '$node[title]'");
     }
     else {
@@ -96,6 +96,7 @@ function node_save($node) {
           $result = db_query("UPDATE node SET lid = '$lid' WHERE nid = '$nid'");
           if ($result) {
             watchdog("message", "node: added '$node[title]'");
+            return db_insert_id();
           }
           else {
             watchdog("warning", "node: added '$node[title]' - failed");
