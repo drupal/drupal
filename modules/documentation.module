@@ -90,9 +90,6 @@ function documentation() {
 
   <P>While we in no way consider the design and implementation of the drupal engine to be finished, we feel that our own accompanying intensive experience has given us a fairly stable and well-proven design. The following provides a brief over-view of the different aspects of drupal's core engine and features.</P> 
 
-  <H2>Blocks</H2>
-  <P>Blocks are the side-boxes of the site that provide the main interface to the engine. They can be fully customized by an administrator to suit his or her needs. (Full documentation still under construction)</P>
-
   <H2>Cron</H2>
  
   <P>Cron (which stands for chronograph) is a periodic command scheduler: it executes commands at intervals specified in seconds.  It can be used to control the execution of daily, weekly and monthly jobs (or anything with a period of n seconds).   Automating tasks is one of the best ways to keep a system running smoothly, and if most of your administration does not require your direct involvement, cron is an ideal solution.</P>

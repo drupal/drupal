@@ -1,7 +1,14 @@
 <?
 
-$module = array("block" => "affiliate_block",
+$module = array("help" => "affiliate_help",
+                "block" => "affiliate_block",
                 "admin" => "affiliate_admin");
+
+function affiliate_help() {
+ ?>
+  <P>This is a small module to manage related and/or affiliate sites.  The module exports 2 different blocks with links to the affiliate sites.</P>
+ <?
+}
 
 function affiliate_block() {
   global $site_url;
@@ -77,6 +84,8 @@ function affiliate_admin_display() {
 function affiliate_admin() {
   global $op, $id, $name, $link, $contact;
 
+  print "<SMALL><A HREF=\"admin.php?mod=affiliate-site\">overview</A> | <A HREF=\"admin.php?mod=affiliate-site&op=help\">help</A></SMALL><HR>\n";
+
   switch($op) {
     case "Add affiliate":
       affiliate_admin_add($name, $link, $contact);
@@ -85,6 +94,9 @@ function affiliate_admin() {
     case "delete":
       affiliate_admin_del($id);
       affiliate_admin_display();
+      break;
+    case "help":
+      affiliate_help();
       break;
     default:
       affiliate_admin_display();

@@ -222,23 +222,16 @@ function account_content_edit() {
   if ($user->id) {
     $output .= "<FORM ACTION=\"account.php\" METHOD=\"post\">\n";
   
-    $output .= "<B>Blocks:</B><BR>\n";
+    $output .= "<B>Blocks in side bars:</B><BR>\n";
 
     $result = db_query("SELECT * FROM blocks WHERE status = 1 ORDER BY module");
     while ($block = db_fetch_object($result)) {
       $entry = db_fetch_object(db_query("SELECT * FROM layout WHERE block = '$block->name' AND user = '$user->id'"));
-
-      $options = "";
-      for ($weight = 0; $weight < 10; $weight++) {
-        $options .= "<OPTION VALUE=\"$weight\"". (($entry->weight == $weight) ? " SELECTED" : "") .">". (($weight == 0) ? "off" : $weight) ."</OPTION>\n";
-      }
-
-      $output .= "<SELECT NAME=\"edit[$block->name]\">\n$options</SELECT>";
-      $output .= "$block->name<BR>";
+      $output .= "<INPUT TYPE=\"checkbox\" NAME=\"edit[$block->name]\"". ($entry->user ? " CHECKED" : "") ."> $block->name<BR>\n";
     } 
  
-    $output .= "<I>You can more or less position your blocks by assigning them weights.  The heavy blocks will sink down whereas the light blocks will be positioned at the top of the page.</I><P>\n";
-    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Save content settings\"><BR>\n";
+    $output .= "<P><I>Enable the blocks you would like to see displayed in the side bars.</I></P>\n";
+    $output .= "<P><INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Save content settings\"></P>\n";
     $output .= "</FORM>\n";
 
     $theme->header();
@@ -257,8 +250,8 @@ function account_content_save($edit) {
   global $user;
   if ($user->id) {
     db_query("DELETE FROM layout WHERE user = $user->id");
-    foreach ($edit as $block=>$weight) {
-      db_query("INSERT INTO layout (user, block, weight) VALUES ('". check_input($user->id) ."', '". check_input($block) ."', '". check_input($weight) ."')");
+    foreach (($edit ? $edit : array()) as $block=>$weight) {
+      db_query("INSERT INTO layout (user, block) VALUES ('". check_input($user->id) ."', '". check_input($block) ."')");
     }
   }
 }

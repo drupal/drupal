@@ -1,7 +1,16 @@
 <?
 
-$module = array("cron"  => "account_cron",
+$module = array("help" => "account_help",
+                "cron"  => "account_cron",
                 "admin" => "account_admin");
+
+function account_help() {
+ ?>
+  <P>The account-module is responsible for maintaining the user database. It automatically handles tasks like registration, authentication, access rights, password retrieval, user settings and much more.</P>
+  <P>The required administration can be accomplished through the "account" interface of the administration section.  From here administrators can get a quick overview of all registered users and view/edit specific accounts using the links provided.  Some useful operations include blocking specific accounts (e.g. a troublesome user) and giving/taking administration permissions.  Note that you should only give these permissions to people you trust!</P>
+  <P>Check the documentation page for detailed information about user management.</P>
+ <?
+}
 
 function account_cron() {
   // clean-up user database
@@ -173,9 +182,14 @@ function account_view($name) {
 function account_admin() {
   global $op, $edit, $order, $name;
 
+  print "<SMALL><A HREF=\"admin.php?mod=account\">overview</A> | <A HREF=\"admin.php?mod=account&op=help\">help</A></SMALL><HR>\n";
+
   switch ($op) {
     case "edit":
       account_edit($name);
+      break;
+    case "help":
+      account_help();
       break;
     case "view":
       account_view($name);

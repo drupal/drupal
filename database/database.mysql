@@ -8,6 +8,16 @@ CREATE TABLE affiliates (
   PRIMARY KEY (id)
 );
 
+CREATE TABLE blocks (
+  name varchar(64) DEFAULT '' NOT NULL,
+  module varchar(64) DEFAULT '' NOT NULL,
+  offset tinyint(2) DEFAULT '0' NOT NULL,
+  status tinyint(2) DEFAULT '0' NOT NULL,
+  weight tinyint(1) DEFAULT '0' NOT NULL,
+  region tinyint(1) DEFAULT '0' NOT NULL,
+  PRIMARY KEY (name)
+);
+
 CREATE TABLE boxes (
   id tinyint(4) DEFAULT '0' NOT NULL auto_increment,
   subject varchar(64) DEFAULT '' NOT NULL,
@@ -30,13 +40,6 @@ CREATE TABLE bans (
   PRIMARY KEY (id)
 );
 
-CREATE TABLE blocks (
-  name varchar(64) DEFAULT '' NOT NULL,
-  module varchar(64) DEFAULT '' NOT NULL,
-  offset tinyint(2) DEFAULT '0' NOT NULL,
-  status tinyint(2) DEFAULT '0' NOT NULL,
-  PRIMARY KEY (name)
-);
 
 CREATE TABLE channel (
   id int(11) DEFAULT '0' NOT NULL auto_increment,
@@ -100,8 +103,7 @@ CREATE TABLE headlines (
 
 CREATE TABLE layout (
   user int(11) DEFAULT '0' NOT NULL,
-  block varchar(64) DEFAULT '' NOT NULL,
-  weight int(11) DEFAULT '0' NOT NULL
+  block varchar(64) DEFAULT '' NOT NULL
 );
 
 CREATE TABLE modules (

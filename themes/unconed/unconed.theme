@@ -282,11 +282,8 @@
        </TD>
        <TD VALIGN="top" WIDTH="185">
         <?
-	  // Display main blocks:
-	  theme_main_blocks($this);
-	  
-          // Display user-defined blocks:
-          theme_user_blocks($this);
+          theme_account($this);
+	  theme_blocks("all", $this);
         ?>
        </TD>
       </TR>
