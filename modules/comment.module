@@ -997,7 +997,7 @@ function comment_admin_overview($type = 'new') {
     array('data' => t('Author'), 'field' => 'u.name'),
     array('data' => t('Status'), 'field' => 'status'),
     array('data' => t('Time'), 'field' => 'c.timestamp', 'sort' => 'desc'),
-    array('data' => t('Operations'), 'colspan' => 2)
+    array('data' => t('Operations'), 'colspan' => '2')
   );
 
   $status = ($type == 'approval') ? 1 : 0;
@@ -1018,7 +1018,11 @@ function comment_admin_overview($type = 'new') {
   }
 
   if ($pager = theme('pager', NULL, 50, 0, tablesort_pager())) {
-    $rows[] = array(array('data' => $pager, 'colspan' => 6));
+    $rows[] = array(array('data' => $pager, 'colspan' => '6'));
+  }
+
+  if (!$rows) {
+    $rows[] = array(array('data' => t('No comments available.'), 'colspan' => '6'));
   }
 
   print theme('page', theme('table', $header, $rows));

@@ -354,7 +354,7 @@ function menu_edit_item_save($edit) {
  */
 function menu_overview_tree() {
   $menu = menu_get_menu();
-  $header = array(t('Menu item'), t('Expanded'), array('data' => t('Operations'), 'colspan' => 3));
+  $header = array(t('Menu item'), t('Expanded'), array('data' => t('Operations'), 'colspan' => '3'));
   $output = '';
 
   foreach ($menu['items'][0]['children'] as $mid) {
@@ -400,7 +400,7 @@ function menu_overview_tree_rows($pid = 0, $depth = 0) {
       // Populate the operations field.
       $operations = array();
       if (!($menu['items'][$mid]['type'] & MENU_MODIFIABLE_BY_ADMIN)) {
-        $operations[] = array('data' => t('locked'), 'colspan' => 3, 'align' => 'center');
+        $operations[] = array('data' => t('locked'), 'colspan' => '3', 'align' => 'center');
       }
       else {
         if ($menu['items'][$mid]['type'] & MENU_VISIBLE_IN_TREE) {

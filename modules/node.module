@@ -768,14 +768,18 @@ function node_admin_nodes() {
   $output .= "<div class=\"container-inline\">$form</div>";
 
   // Overview table:
-  $header = array(NULL, t('Title'), t('Type'), t('Author'), t('Status'), array('data' => t('Operations'), 'colspan' => 2));
+  $header = array(NULL, t('Title'), t('Type'), t('Author'), t('Status'), array('data' => t('Operations'), 'colspan' => '2'));
 
   while ($node = db_fetch_object($result)) {
     $rows[] = array(form_checkbox(NULL, 'status]['. $node->nid, 1, 0), l($node->title, 'node/'. $node->nid) .' '. (node_is_new($node->nid, $node->changed) ? theme_mark() : ''), node_invoke($node, 'node_name'), format_name($node), ($node->status ? t('published') : t('not published')), l(t('edit'), 'node/'. $node->nid .'/edit'), l(t('delete'), 'admin/node/delete/'. $node->nid));
   }
 
   if ($pager = theme('pager', NULL, 50, 0)) {
-    $rows[] = array(array('data' => $pager, 'colspan' => 7));
+    $rows[] = array(array('data' => $pager, 'colspan' => '7'));
+  }
+
+  if (!$rows) {
+    $rows[] = array(array('data' => t('No posts available.'), 'colspan' => '7'));
   }
 
   $output .= '<h3>'. $filters[$filter][0] .'</h3>';

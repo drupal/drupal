@@ -74,7 +74,7 @@ function block_menu($may_cache) {
       'access' => user_access('administer blocks'),
       'callback' => 'block_box_delete',
       'type' => MENU_CALLBACK);
-    $items[] = array('path' => 'admin/block/add', 'title' => t('add'),
+    $items[] = array('path' => 'admin/block/add', 'title' => t('add block'),
       'access' => user_access('administer blocks'),
       'callback' => 'block_box_add',
       'type' => MENU_LOCAL_TASK);

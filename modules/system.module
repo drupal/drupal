@@ -80,7 +80,7 @@ function system_menu($may_cache) {
     $items[] = array('path' => 'admin/themes', 'title' => t('themes'),
       'callback' => 'system_themes', 'access' => $access);
 
-    $items[] = array('path' => 'admin/themes/select', 'title' => t('select'),
+    $items[] = array('path' => 'admin/themes/select', 'title' => t('list'),
       'callback' => 'system_themes', 'access' => $access,
       'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -1);
 

@@ -662,7 +662,7 @@ function user_menu($may_cache) {
       'callback' => 'user_admin', 'access' => $access);
     $items[] = array('path' => 'admin/user/list', 'title' => t('list'),
       'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
-    $items[] = array('path' => 'admin/user/create', 'title' => t('add'),
+    $items[] = array('path' => 'admin/user/create', 'title' => t('add user'),
       'callback' => 'user_admin', 'access' => $access,
       'type' => MENU_LOCAL_TASK);
     $items[] = array('path' => 'admin/user/configure', 'title' => t('configure'),
@@ -1549,7 +1549,7 @@ function user_admin_account() {
 
   $pager = theme('pager', NULL, 50, 0, tablesort_pager());
   if (!empty($pager)) {
-    $rows[] = array(array('data' => $pager, 'colspan' => 6));
+    $rows[] = array(array('data' => $pager, 'colspan' => '6'));
   }
   return theme('table', $header, $rows);
 }

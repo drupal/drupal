@@ -343,7 +343,7 @@ function _taxonomy_confirm_del_term($tid) {
  * Generate a tabular listing of administrative functions for vocabularies.
  */
 function taxonomy_overview() {
-  $header = array(t('Name'), t('Node types'), array('data' => t('Operations'), 'colspan' => 3));
+  $header = array(t('Name'), t('Type'), array('data' => t('Operations'), 'colspan' => '3'));
 
   $vocabularies = taxonomy_get_vocabularies();
 
@@ -361,8 +361,12 @@ function taxonomy_overview() {
       foreach ($tree as $term) {
         $data .= _taxonomy_depth($term->depth) .' '. $term->name .' ('. l(t('edit term'), "admin/taxonomy/edit/term/$term->tid") .')<br />';
       }
-      $rows[] = array(array('data' => $data, 'colspan' => 5));
+      $rows[] = array(array('data' => $data, 'colspan' => '5'));
     }
+  }
+
+  if (!$rows) {
+    $rows[] = array(array('data' => t('No categories available.'), 'colspan' => '5'));
   }
 
   return theme('table', $header, $rows);

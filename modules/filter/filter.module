@@ -136,19 +136,19 @@ function filter_menu($may_cache) {
         'type' => MENU_CALLBACK,
         'access' => user_access('administer filters'));
 
-        $items[] = array('path' => 'admin/filters/'. arg(2) .'/list', 'title' => t('list filters'),
+        $items[] = array('path' => 'admin/filters/'. arg(2) .'/list', 'title' => t('list'),
         'callback' => 'filter_admin_filters',
         'type' => MENU_DEFAULT_LOCAL_TASK,
         'weight' => 0,
         'access' => user_access('administer filters'));
 
-        $items[] = array('path' => 'admin/filters/'. arg(2) .'/configure', 'title' => t('configure filters'),
+        $items[] = array('path' => 'admin/filters/'. arg(2) .'/configure', 'title' => t('configure'),
         'callback' => 'filter_admin_configure',
         'type' => MENU_LOCAL_TASK,
         'weight' => 1,
         'access' => user_access('administer filters'));
 
-        $items[] = array('path' => 'admin/filters/'. arg(2) .'/order', 'title' => t('rearrange filters'),
+        $items[] = array('path' => 'admin/filters/'. arg(2) .'/order', 'title' => t('rearrange'),
         'callback' => 'filter_admin_order',
         'type' => MENU_LOCAL_TASK,
         'weight' => 2,

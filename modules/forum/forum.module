@@ -587,7 +587,7 @@ function theme_forum_list($forums, $parents, $tid) {
         }
         $description .= "</div>\n";
 
-        $rows[] = array(array('data' => $description, 'class' => 'container', 'colspan' => 4));
+        $rows[] = array(array('data' => $description, 'class' => 'container', 'colspan' => '4'));
       }
       else {
         $forum->old_topics = _forum_topics_read($forum->tid, $user->uid);

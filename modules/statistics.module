@@ -263,7 +263,7 @@ function statistics_admin_displaylog($type = 'all', $id = 0) {
   }
 
   if ($pager = theme('pager', NULL, 50, 0, tablesort_pager())) {
-    $rows[] = array(array('data' => $pager, 'colspan' => 8));
+    $rows[] = array(array('data' => $pager, 'colspan' => '8'));
   }
 
   $output = theme('table', $header, $rows);
@@ -294,7 +294,7 @@ function statistics_top_titles() {
     $rows[] = array(l(_statistics_column_width($title->title, '_title', 56), $title->path), _statistics_column_width($title->path, '_title', 56), $title->hits, format_date($title->last_hit, 'small'), ($title->title ? l(t('track title'), 'admin/logs/hits/page/'. urlencode($title->title)) : ''));
   }
   if ($pager = theme('pager', NULL, 50, 0, tablesort_pager())) {
-    $rows[] = array(array('data' => $pager, 'colspan' => 5));
+    $rows[] = array(array('data' => $pager, 'colspan' => '5'));
   }
 
   $output = theme('table', $header, $rows);
@@ -316,7 +316,7 @@ function statistics_top_users() {
     array('data' => t('Hostname'), 'field' => 'hostname'),
     array('data' => t('Hits'), 'field' => 'hits', 'sort' => 'desc'),
     array('data' => t('Last hit'), 'field' => 'last_hit'),
-    array('data' => t('Operations'), 'colspan' => 2)
+    array('data' => t('Operations'), 'colspan' => '2')
   );
   $sql .= tablesort_sql($header);
   $result = pager_query($sql, 50, 0, $sql_cnt);
@@ -326,7 +326,7 @@ function statistics_top_users() {
     $rows[] = array(format_name($user), $u->hostname, $u->hits, format_date($u->last_hit, 'small'), ($u->uid ? l(t('track user'), "admin/logs/hits/user/$user->uid") : ''), ($u->hostname ? l(t('track host'), "admin/logs/hits/host/$u->hostname") : ''));
   }
   if ($pager = theme('pager', NULL, 50, 0, tablesort_pager())) {
-    $rows[] = array(array('data' => $pager, 'colspan' => 6));
+    $rows[] = array(array('data' => $pager, 'colspan' => '6'));
   }
 
   $output = theme('table', $header, $rows);
@@ -348,7 +348,7 @@ function statistics_top_hostnames() {
     array('data' => t('User'), 'field' => 'user'),
     array('data' => t('Hits'), 'field' => 'hits', 'sort' => 'desc'),
     array('data' => t('Last hit'), 'field' => 'last_hit'),
-    array('data' => t('Operations'), 'colspan' => 2)
+    array('data' => t('Operations'), 'colspan' => '2')
   );
   $sql .= tablesort_sql($header);
   $result = pager_query($sql, 50, 0, $sql_cnt);
@@ -358,7 +358,7 @@ function statistics_top_hostnames() {
     $rows[] = array($hostname->hostname, format_name($user), $hostname->hits, format_date($hostname->last_hit, 'small'), ($hostname->hostname ? l(t('track host'), "admin/logs/hits/host/$hostname->hostname") : ''), ($hostname->uid ? l(t('track user'), "admin/logs/hits/user/$hostname->uid") :''));
   }
   if ($pager = theme('pager', NULL, 50, 0, tablesort_pager())) {
-    $rows[] = array(array('data' => $pager, 'colspan' => 3));
+    $rows[] = array(array('data' => $pager, 'colspan' => '3'));
   }
 
   $output = theme('table', $header, $rows);
@@ -406,7 +406,7 @@ function statistics_top_referrers($view = 'all') {
     $rows[] = array('<a href="'. $referrer->url .'">'. _statistics_column_width($referrer->url, '_refer', 75) .'</a>', $referrer->hits, format_date($referrer->last_hit, 'small'));
   }
   if ($pager = theme('pager', NULL, 50, 0, tablesort_pager())) {
-    $rows[] = array(array('data' => $pager, 'colspan' => 3));
+    $rows[] = array(array('data' => $pager, 'colspan' => '3'));
   }
 
   $output .= theme('table', $header, $rows);
@@ -433,7 +433,7 @@ function statistics_admin_content() {
     $rows[] = array(l($nid->title, 'node/'. $nid->nid, array('title' => t('View this posting.'))), $nid->daycount, $nid->totalcount, format_date($nid->timestamp, 'small'), l(t('track title'), 'admin/logs/hits/page/'. urlencode($nid->title)));
   }
   if ($pager = theme('pager', NULL, 20, 0, tablesort_pager())) {
-    $rows[] = array(array('data' => $pager, 'colspan' => 5));
+    $rows[] = array(array('data' => $pager, 'colspan' => '5'));
   }
 
   $output = theme('table', $header, $rows);

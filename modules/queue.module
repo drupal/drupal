@@ -136,7 +136,11 @@ function queue_overview() {
   }
 
   if ($pager = theme('pager', NULL, 10, 0, tablesort_pager())) {
-   $rows[] = array(array('data' => $pager, 'colspan' => 4));
+   $rows[] = array(array('data' => $pager, 'colspan' => '4'));
+  }
+
+  if (!$rows) {
+    $rows[] = array(array('data' => t('No posts available in queue.'), 'colspan' => '4'));
   }
 
   $output  = '<div id="queue">';

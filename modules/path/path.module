@@ -82,7 +82,7 @@ function path_menu($may_cache) {
       'type' => MENU_CALLBACK);
     $items[] = array('path' => 'admin/path/list', 'title' => t('list'),
       'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
-    $items[] = array('path' => 'admin/path/add', 'title' => t('add'),
+    $items[] = array('path' => 'admin/path/add', 'title' => t('add alias'),
       'callback' => 'path_admin_edit',
       'access' => user_access('administer url aliases'),
       'type' => MENU_LOCAL_TASK);
@@ -259,7 +259,7 @@ function path_overview() {
   $header = array(
     array('data' => t('Alias'), 'field' => 'dst', 'sort' => 'asc'),
     array('data' => t('System'), 'field' => 'src'),
-    array('data' => t('Operations'), 'colspan' => 2)
+    array('data' => t('Operations'), 'colspan' => '2')
   );
   $sql .= tablesort_sql($header);
   $result = pager_query($sql, 50);
