@@ -305,7 +305,7 @@ function blog_block() {
   $block[0]["info"] = t("User blogs");
   $block[0]["link"] = "module.php?mod=blog";
 
-  $date = $data ? $data : time();
+  $date = $date ? $date : time();
   $userid = $name ? $name : $user->userid;
 
   if (($mod == "blog") || ($mod == "block")) {
