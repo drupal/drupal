@@ -1,5 +1,5 @@
 <?php
-// $Id: help.module,v 1.17 2003/08/05 18:33:39 dries Exp $
+// $Id: help.module,v 1.18 2003/09/18 20:31:58 dries Exp $
 
 function help_system($field){
   $system["description"] = t("Manages displaying online help.");
@@ -43,7 +43,7 @@ function help_admin() {
       $temp = module_invoke($name, "help", "admin/".$name."/help");
       if (!empty($temp)) {
         $links[] = l($name, "admin/help#$name");
-  $output .= "<h2><a id=\"$name\">". ucfirst($name) ." module</a></h2>";
+        $output .= "<h2><a id=\"$name\">". ucfirst($name) ." module</a></h2>";
         $output .= $temp;
       }
     }
