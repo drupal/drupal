@@ -94,7 +94,7 @@ function db_result($result, $row = 0) {
   }
 }
 
-function db_error($result) {
+function db_error() {
   global $db_handle;
 
   return DB::isError($db_handle);
