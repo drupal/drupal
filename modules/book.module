@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.267 2004/11/04 22:31:46 dries Exp $
+// $Id: book.module,v 1.268 2004/11/15 11:16:39 dries Exp $
 
 /**
  * @file
@@ -699,7 +699,7 @@ function book_admin_view($nid, $depth = 0) {
 
     $output .= '<h3>'. $node->title .'</h3>';
 
-    $header = array(t('Title'), t('Weight'), array('data' => t('Operations'), 'colspan' => 3));
+    $header = array(t('Title'), t('Weight'), array('data' => t('Operations'), 'colspan' => '3'));
     $rows[] = book_admin_view_line($node);
     $rows = array_merge($rows, book_admin_view_book($nid));
 
@@ -747,7 +747,7 @@ function book_admin_orphan() {
 
   if ($pages) {
     $output .= '<h3>'. t('Orphan pages') .'</h3>';
-    $header = array(t('Title'), t('Weight'), array('data' => t('Operations'), 'colspan' => 3));
+    $header = array(t('Title'), t('Weight'), array('data' => t('Operations'), 'colspan' => '3'));
     foreach ($pages as $nid => $node) {
       if ($node->parent && empty($pages[$node->parent])) {
         $rows[] = book_admin_view_line($node, $depth);

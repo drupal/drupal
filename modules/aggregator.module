@@ -1,5 +1,5 @@
 <?php
-/* $Id: aggregator.module,v 1.216 2004/10/31 07:34:47 dries Exp $ */
+/* $Id: aggregator.module,v 1.217 2004/11/15 11:16:39 dries Exp $ */
 
 /**
  * @file
@@ -705,7 +705,7 @@ function aggregator_view() {
 
   $output .= '<h3>'. t('Feed overview') .'</h3>';
 
-  $header = array(t('Title'), t('Items'), t('Last update'), t('Next update'), array('data' => t('Operations'), 'colspan' => 3));
+  $header = array(t('Title'), t('Items'), t('Last update'), t('Next update'), array('data' => t('Operations'), 'colspan' => '3'));
   $rows = array();
   while ($feed = db_fetch_object($result)) {
     $rows[] = array(l($feed->title, "aggregator/sources/$feed->fid"), format_plural($feed->items, '1 item', '%count items'), ($feed->checked ? t('%time ago', array('%time' => format_interval(time() - $feed->checked))) : t('never')), ($feed->checked ? t('%time left', array('%time' => format_interval($feed->checked + $feed->refresh - time()))) : t('never')), l(t('edit'), "admin/aggregator/edit/feed/$feed->fid"), l(t('remove items'), "admin/aggregator/remove/$feed->fid"), l(t('update items'), "admin/aggregator/update/$feed->fid"));

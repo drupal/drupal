@@ -1,5 +1,5 @@
 <?php
-// $Id: queue.module,v 1.117 2004/10/31 07:34:47 dries Exp $
+// $Id: queue.module,v 1.118 2004/11/15 11:16:39 dries Exp $
 
 /**
  * @file
@@ -136,7 +136,11 @@ function queue_overview() {
   }
 
   if ($pager = theme('pager', NULL, 10, 0, tablesort_pager())) {
-   $rows[] = array(array('data' => $pager, 'colspan' => 4));
+   $rows[] = array(array('data' => $pager, 'colspan' => '4'));
+  }
+
+  if (!$rows) {
+    $rows[] = array(array('data' => t('No posts available in queue.'), 'colspan' => '4'));
   }
 
   $output  = '<div id="queue">';
