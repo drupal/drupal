@@ -115,11 +115,10 @@ function poll_view($node, $main = 0, $block = 0) {
 
       foreach ($node->choice as $key => $value) {
         if ($value) {
-          if ($main) {
-            $output .= "<table cellspacing=\"1\" cellpadding=\"0\" width=\"100%\"><tr><td width=\"20%\" valign=\"middle\" align=\"left\">" . check_output($value) . "</td><td width=\"70%\">" . poll_graph($node->chvotes[$key] / $node->maxvotes) . "</td><td width=\"10%\" align=\"right\">" . round(($node->chvotes[$key] / $node->totalvotes) * 100) . "%</td></tr></table>";
-          }
-          else {
+          if ($block) {
             $output .= (!$block ? "<br>" : "") . check_output($value) . "<br><table width=\"90%\" align=\"center\" cellspacing=\"1\" cellpadding=\"0\"><tr><td width=\"70%\" valign=\"middle\" align=\"left\">" . poll_graph($node->chvotes[$key] / $node->maxvotes) . "</td><td align=\"right\">" . round(($node->chvotes[$key] / $node->totalvotes) * 100) . "%</td></tr></table>";
+          } else {
+            $output .= "<table cellspacing=\"1\" cellpadding=\"0\" width=\"100%\"><tr><td width=\"20%\" valign=\"middle\" align=\"left\">" . check_output($value) . "</td><td width=\"70%\">" . poll_graph($node->chvotes[$key] / $node->maxvotes) . "</td><td width=\"10%\" align=\"right\">" . round(($node->chvotes[$key] / $node->totalvotes) * 100) . "%</td></tr></table>";
           }
         }
       }
@@ -140,8 +139,11 @@ function poll_view($node, $main = 0, $block = 0) {
           $output .= "<input type=\"radio\" name=\"chid\" value=\"" . $node->chid[$key] . "\">&nbsp;" . check_output($value) . "<br>";
         }
       }
-      $output .= "</td></tr></table>";
-      $output .= "<br><div align=\"center\">" . form_submit("Vote") . "<br>" . $footer  . "</div>";
+      if ($block) {
+        $output .= "</td></tr></table><br><div align=\"center\">" . form_submit("Vote") . "<br>" . $footer  . "</div>";
+      } else {
+        $output .= "</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=\"center\"><br><div align=\"center\">" . form_submit("Vote") . "<br>" . $footer  . "</div></td></tr></table>";        
+      }
       $output = form($REQUEST_URI, $output);
    }
 
