@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.230 2005/02/27 15:40:35 dries Exp $
+// $Id: forum.module,v 1.231 2005/03/03 05:10:28 unconed Exp $
 
 /**
  * @file
@@ -422,6 +422,13 @@ function forum_menu($may_cache) {
       'callback' => 'forum_admin_configure',
       'access' => user_access('administer forums'),
       'type' => MENU_LOCAL_TASK);
+
+    $items[] = array('path' => 'admin/forum/edit/container', 'title' => t('edit container'),
+      'access' => user_access('administer forums'),
+      'type' => MENU_CALLBACK);
+    $items[] = array('path' => 'admin/forum/edit/forum', 'title' => t('edit forum'),
+      'access' => user_access('administer forums'),
+      'type' => MENU_CALLBACK);
   }
 
   return $items;
