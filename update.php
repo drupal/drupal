@@ -52,7 +52,8 @@ $mysql_updates = array(
   "2002-08-19" => "update_37",
   "2002-08-26" => "update_38",
   "2002-09-15" => "update_39",
-  "2002-09-17" => "update_40"
+  "2002-09-17" => "update_40",
+  "2002-10-13" => "update_41"
 );
 
 // Update functions
@@ -585,6 +586,33 @@ function update_39() {
 function update_40() {
   if ($max = db_result(db_query("SELECT MAX(cid) FROM comments;"))) {
     update_sql("REPLACE INTO sequences VALUES ('comments', $max);");
+  }
+}
+
+function update_41() {
+  if (db_result(db_query("SELECT COUNT(daycount) FROM statistics;")) > 0) {
+    // NOTE: "daycount" is a newly introduced field so we use that to determine whether we need to wipe the tables.
+
+    update_sql("DROP TABLE IF EXISTS statistics;");
+    update_sql("CREATE TABLE statistics (
+      nid int(11) NOT NULL,
+      totalcount bigint UNSIGNED DEFAULT '0' NOT NULL,
+      daycount mediumint UNSIGNED DEFAULT '0' NOT NULL,
+      timestamp int(11) UNSIGNED DEFAULT '0' NOT NULL,
+      PRIMARY KEY (nid),
+      INDEX (totalcount),
+      INDEX (daycount),
+      INDEX (timestamp)
+    );");
+
+    update_sql("DROP TABLE IF EXISTS accesslog;");
+    update_sql("CREATE TABLE accesslog (
+      nid int(11) UNSIGNED DEFAULT '0',
+      url varchar(255),
+      hostname varchar(128),
+      uid int(10) UNSIGNED DEFAULT '0',
+      timestamp int(11) UNSIGNED NOT NULL
+    );");
   }
 }
 

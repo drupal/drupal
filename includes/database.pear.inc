@@ -1,5 +1,5 @@
 <?php
-// $Id: database.pear.inc,v 1.8 2002/08/26 18:23:29 dries Exp $
+// $Id: database.pear.inc,v 1.9 2002/10/13 12:00:50 dries Exp $
 
 require_once 'DB.php';
 
@@ -104,6 +104,12 @@ function db_next_id($name) {
   global $db_handle;
 
   return $db_handle->nextID($name);
+}
+
+function db_affected_rows() {
+  global $db_handle;
+
+  return $db_handle->affectedRows();
 }
 
 ?>

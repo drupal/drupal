@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysql.inc,v 1.6 2002/08/20 19:29:15 dries Exp $
+// $Id: database.mysql.inc,v 1.7 2002/10/13 12:00:49 dries Exp $
 
 function db_connect($url) {
   $url = parse_url($url);
@@ -106,6 +106,10 @@ function db_next_id($name) {
   db_query("UNLOCK TABLES");
 
   return $id;
+}
+
+function db_affected_rows() {
+  return mysql_affected_rows();
 }
 
 ?>
