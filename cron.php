@@ -8,7 +8,7 @@ include_once "includes/common.inc";
 */
 
 if (!get_cfg_var("safe_mode")) {
-  set_time_limit(180);
+  set_time_limit(240);
 }
 
 /*
@@ -19,4 +19,5 @@ foreach (module_list() as $module) {
   module_invoke($module, "cron");
 }
 
+watchdog("message", "cron run completed");
 ?>
