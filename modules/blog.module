@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.47 2001/11/18 20:24:11 dries Exp $
+// $Id: blog.module,v 1.48 2001/11/18 22:47:23 dries Exp $
 
 function blog_conf_options() {
  $output .= form_textarea("Explanation or submission guidelines", "blog_help", variable_get("blog_help", ""), 55, 4, "This text will be displayed at the top of the blog submission form.  Useful for helping or instructing your users.");
@@ -144,7 +144,7 @@ function blog_page_user($uid = 0, $date = 0) {
     $date = time();
   }
 
-  $result = db_query("SELECT nid FROM node WHERE type = 'blog' AND uid = '$account->uid' AND created <= '$date' AND created >= '". ($date - 2592000) ."' ORDER BY nid DESC");
+  $result = db_query("SELECT nid FROM node WHERE type = 'blog' AND uid = '$account->uid' AND created <= '$date' ORDER BY nid DESC");
 
   $output .= "<table border=\"0\" cellpadding=\"4\" cellspacing=\"4\">";
 
