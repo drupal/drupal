@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.126 2004/08/06 11:10:15 unconed Exp $
+// $Id: block.module,v 1.127 2004/08/06 11:11:30 unconed Exp $
 
 /**
  * Implementation of hook_help().
@@ -360,8 +360,9 @@ function block_list($region) {
       if ($block['path']) {
         $base = parse_url($base_url);
         $session = session_name() .'='. session_id();
-        $url = str_replace(array($base['path'], '?'. $session), '', request_uri());      
-        $matched = preg_match($block['path'], ereg_replace('^/(\?q=)?', '', $path);
+        $url = str_replace(array($base['path'], '?'. $session), '', request_uri());
+        $url = ereg_replace('^/(\?q=)?', '', $url);      
+        $matched = preg_match($block['path'], $url);
       }
       else {
         $matched = true;
