@@ -51,7 +51,7 @@ function node_del($conditions) {
       db_query("DELETE FROM node WHERE nid = '$node->nid'");
       db_query("DELETE FROM $node->type WHERE lid = '$node->lid' AND nid = '$node->nid'");
       db_query("DELETE FROM comments WHERE lid = '$node->nid'");
-      watchdog("message", "node: deleted '$node->title'");
+      watchdog("special", "node: deleted '$node->title'");
       return $node;
     }
   }

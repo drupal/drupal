@@ -1,9 +1,7 @@
 <?php
 
-if (variable_get("referer", 0)) {
-  if ($referer = getenv("HTTP_REFERER")) {
-    db_query("INSERT INTO referer (URL, timestamp) values ('". check_input($referer) ."', '". time() ."')");
-  }
+if (variable_get("referer", 0) && $referer = getenv("HTTP_REFERER")) {
+  db_query("INSERT INTO referer (URL, timestamp) values ('". check_input($referer) ."', '". time() ."')");
 }
 
 function statistics_cron() {
@@ -23,7 +21,7 @@ function statistics_link($type) {
 }
 
 function statistics_conf_options() {
-  $period = array(3600 => format_interval(3600), 10800 => format_interval(10800), 21600 => format_interval(21600), 32400 => format_interval(32400), 43200 => format_interval(43200), 86400 => format_interval(86400), 172800 => format_interval(172800), 259200 => format_interval(259200), 604800 => format_interval(604800), 1209600 => format_interval(1209600), 2419200 => format_interval(2419200), 1000000000 => "Never");
+  $period = array(3600 => format_interval(3600), 10800 => format_interval(10800), 21600 => format_interval(21600), 32400 => format_interval(32400), 43200 => format_interval(43200), 86400 => format_interval(86400), 172800 => format_interval(172800), 259200 => format_interval(259200), 604800 => format_interval(604800), 1209600 => format_interval(1209600), 2419200 => format_interval(2419200), 4838400 => format_interval(4838400), 9676800 => format_interval(9676800));
   $output .= form_select("Track referers", "referer", variable_get("referer", 0), array("Disabled", "Enabled"), "If enabled, Drupal will count how many times your website is referred to by other websites.");
   $output .= form_select("Discard referers older than", "referer_clear", variable_get("referer_clear", 604800), $period, "The time referer entries should be kept.  Older entries will be automatically discarded.  Requires crontab.");
   return $output;
@@ -32,12 +30,12 @@ function statistics_conf_options() {
 function statistics_table_1($query) {
   $result = db_query($query);
 
-  $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\">\n";
-  $output .= " <TR><TH>URL</TH><TH>date</TH></TR>\n";
+  $output .= "<table border=\"1\" cellpadding=\"3\" cellspacing=\"0\">\n";
+  $output .= " <tr><th>URL</th><th>date</th></tr>\n";
   while ($referer = db_fetch_object($result)) {
-    $output .= "<TR><TD><A HREF=\"". check_output($referer->url) ."\">". substr(check_output($referer->url), 0, 100) ."</A></TD><TD>". format_date($referer->timestamp, "small") ."</TD></TR>";
+    $output .= "<tr><td><a href=\"". check_output($referer->url) ."\">". substr(check_output($referer->url), 0, 100) ."</a></td><td>". format_date($referer->timestamp, "small") ."</td></tr>";
   }
-  $output .= "</TABLE>\n";
+  $output .= "</table>\n";
 
   return $output;
 }
@@ -45,34 +43,36 @@ function statistics_table_1($query) {
 function statistics_table_2($query) {
   $result = db_query($query);
 
-  $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\">\n";
-  $output .= " <TR><TH>URL</TH><TH>number</TH></TR>\n";
+  $output .= "<table border=\"1\" cellpadding=\"3\" cellspacing=\"0\">\n";
+  $output .= " <tr><th>URL</th><th>number</th></tr>\n";
   while ($referer = db_fetch_object($result)) {
-    $output .= "<TR><TD><A HREF=\"". check_output($referer->url) ."\">". substr(check_output($referer->url), 0, 100) ."</A></TD><TD>". check_output($referer->count) ."</TD></TR>";
+    $output .= "<tr><td><a href=\"". check_output($referer->url) ."\">". substr(check_output($referer->url), 0, 100) ."</a></td><td>". check_output($referer->count) ."</td></tr>";
   }
-  $output .= "</TABLE>\n";
+  $output .= "</table>\n";
 
   return $output;
 }
 
 function statistics_referer_internal() {
-  $output .= "<H3>Most recent referers</H3>\n";
-  $output .= statistics_table_1("SELECT url, timestamp FROM referer WHERE url LIKE '". path_uri() ."%' ORDER BY timestamp DESC LIMIT 15");
+  global $HTTP_HOST;
 
-  $output .= "<H3>Referers of the last ". format_interval(variable_get("referer_clear", 604800)) ."</H3>\n";
-  $output .= statistics_table_2("SELECT url, COUNT(url) AS count FROM referer WHERE url LIKE '". path_uri() ."%' GROUP BY url ORDER BY count DESC");
+  $output .= "<h3>Most recent internal referers</h3>\n";
+  $output .= statistics_table_1("SELECT url, timestamp FROM referer WHERE url LIKE '%". check_input($HTTP_HOST) ."%' ORDER BY timestamp DESC LIMIT 15");
+
+  $output .= "<h3>Internal referers of the last ". format_interval(variable_get("referer_clear", 604800)) ."</h3>\n";
+  $output .= statistics_table_2("SELECT url, COUNT(url) AS count FROM referer WHERE url LIKE '%". check_input($HTTP_HOST) ."%' GROUP BY url ORDER BY count DESC");
 
   return $output;
 }
 
 function statistics_referer_external() {
-  $result = db_query("SELECT url, COUNT(url) AS count FROM referer WHERE url NOT LIKE '". path_uri() ."%' GROUP BY url ORDER BY count DESC");
+  global $HTTP_HOST;
 
-  $output .= "<H3>Most recent referers</H3>\n";
-  $output .= statistics_table_1("SELECT url, timestamp FROM referer WHERE url NOT LIKE '". path_uri() ."%' ORDER BY timestamp DESC LIMIT 15");
+  $output .= "<h3>Most recent external referers</h3>\n";
+  $output .= statistics_table_1("SELECT url, timestamp FROM referer WHERE url NOT LIKE '%". check_input($HTTP_HOST) ."%' ORDER BY timestamp DESC LIMIT 15");
 
-  $output .= "<H3>Referers of the last ". format_interval(variable_get("referer_clear", 604800)) ."</H3>\n";
-  $output .= statistics_table_2("SELECT url, COUNT(url) AS count FROM referer WHERE url NOT LIKE '". path_uri() ."%' GROUP BY url ORDER BY count DESC");
+  $output .= "<h3>External referers of the last ". format_interval(variable_get("referer_clear", 604800)) ."</h3>\n";
+  $output .= statistics_table_2("SELECT url, COUNT(url) AS count FROM referer WHERE url NOT LIKE '%". check_input($HTTP_HOST) ."%' GROUP BY url ORDER BY count DESC");
 
   return $output;
 }
@@ -82,7 +82,7 @@ function statistics_admin() {
 
   if (user_access("administer statistics")) {
 
-    print "<SMALL><A HREF=\"admin.php?mod=statistics&type=internal+referer\">internal referers</A> | <A HREF=\"admin.php?mod=statistics&type=external+referer\">external referers</A></SMALL><HR>\n";
+    print "<small><a href=\"admin.php?mod=statistics&type=internal+referer\">internal referers</a> | <a href=\"admin.php?mod=statistics&type=external+referer\">external referers</a></small><hr />\n";
 
     switch ($type) {
       case "internal referer":
