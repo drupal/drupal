@@ -1,6 +1,6 @@
 <?
 
-include "theme.inc";
+include "includes/theme.inc";
 
 ### Initialize/pre-process variables:
 $number = ($user->storynum) ? $user->storynum : 10;

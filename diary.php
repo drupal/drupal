@@ -1,6 +1,6 @@
 <?
 
-include "theme.inc";
+include "includes/theme.inc";
 
 function diary_overview($num = 20) {
   global $theme, $user;
