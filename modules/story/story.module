@@ -73,7 +73,7 @@ function story_add() {
   $output .= "<INPUT TYPE=\"text\" NAME=\"edit[subject]\" SIZE=\"50\" MAXLENGTH=\"60\"><BR>\n";
 
   $output .= "<B>Section:</B><BR>\n";
-  foreach ($sections = section_get() as $value) $options .= "  <OPTION VALUE=\"$value\">$value</OPTION>\n";
+  foreach ($sections = section_get() as $value) $options .= "  <OPTION VALUE=\"". check_textfield($value) ."\">". check_output($value) ."</OPTION>\n";
   $output .= "<SELECT NAME=\"edit[section]\">$options</SELECT><P>\n";
 
   $output .= "<B>Abstract:</B><BR>\n";
