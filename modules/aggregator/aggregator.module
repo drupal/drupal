@@ -1,5 +1,5 @@
 <?php
-/* $Id: aggregator.module,v 1.231 2005/03/31 09:25:33 unconed Exp $ */
+/* $Id: aggregator.module,v 1.232 2005/03/31 21:18:08 dries Exp $ */
 
 /**
  * @file
@@ -413,7 +413,7 @@ function aggregator_refresh($feed) {
  * Parse the W3C date/time format, a subset of ISO 8601. PHP date parsing
  * functions do not handle this format.
  * See http://www.w3.org/TR/NOTE-datetime for more information.
- * Origionally from MagpieRSS (http://magpierss.sourceforge.net/).
+ * Originally from MagpieRSS (http://magpierss.sourceforge.net/).
  *
  * @param $date_str A string with a potentially W3C DTF date.
  * @return A timestamp if parsed successfully or -1 if not.

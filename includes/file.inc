@@ -1,5 +1,5 @@
 <?php
-/* $Id: file.inc,v 1.38 2005/03/31 09:25:33 unconed Exp $ */
+/* $Id: file.inc,v 1.39 2005/03/31 21:18:08 dries Exp $ */
 
 /**
  * @file
@@ -491,7 +491,7 @@ function file_download() {
  * @param $min_depth
  *   Minimum depth of directories to return files from.
  * @param $depth
- *   Current depth of recursion. This parameter is only used interally and should not be passed.
+ *   Current depth of recursion. This parameter is only used internally and should not be passed.
  *
  * @return
  *   An associative array (keyed on the provided key) of objects with

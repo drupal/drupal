@@ -1,7 +1,7 @@
 <?php
 // by Edd Dumbill (C) 1999-2001
 // <edd@usefulinc.com>
-// $Id: xmlrpc.inc,v 1.15 2005/01/09 09:58:33 unconed Exp $
+// $Id: xmlrpc.inc,v 1.16 2005/03/31 21:18:08 dries Exp $
 
 
 // Copyright (c) 1999,2000,2001 Edd Dumbill.
@@ -911,7 +911,7 @@ class xmlrpcval {
     list($a,$b)=each($this->me);
     // contributed by I Sofer, 2001-03-24
     // add support for nested arrays to scalarval
-    // i've created a new method here, so as to
+    // I've created a new method here, so as to
     // preserve back compatibility
 
     if (is_array($b))    {
