@@ -293,6 +293,8 @@ function user_password($length = 10) {
  *
  * @param $string
  *   The permission, such as "administer nodes", being checked for.
+ * @param $account
+ *   (optional) The account to check, if not given use currently logged in user.
  *
  * @return
  *   TRUE iff the current user has the requested permission.
@@ -301,26 +303,30 @@ function user_password($length = 10) {
  * way, we guarantee consistent behavior, and ensure that the superuser
  * can perform all actions.
  */
-function user_access($string) {
+function user_access($string, $account = NULL) {
   global $user;
-  static $perm = 0;
+  static $perm = array();
 
   // User #1 has all priveleges:
   if ($user->uid == 1) {
     return 1;
   }
 
+  if (is_null($account)) {
+    $account = $user;
+  }
+
   // To reduce the number of SQL queries, we cache the user's permissions
   // in a static variable.
-  if ($perm === 0) {
-    $result = db_query('SELECT DISTINCT(p.perm) FROM {role} r INNER JOIN {permission} p ON p.rid = r.rid INNER JOIN {users_roles} ur ON ur.rid = r.rid WHERE ur.uid = %d', $user->uid);
+  if (!isset($perm[$account->uid])) {
+    $result = db_query('SELECT DISTINCT(p.perm) FROM {role} r INNER JOIN {permission} p ON p.rid = r.rid INNER JOIN {users_roles} ur ON ur.rid = r.rid WHERE ur.uid = %d', $account->uid);
 
     while ($row = db_fetch_object($result)) {
-      $perm .= "$row->perm, ";
+      $perm[$account->uid] .= "$row->perm, ";
     }
   }
 
-  return strstr($perm, "$string, ");
+  return strstr($perm[$account->uid], "$string, ");
 }
 
 /**
