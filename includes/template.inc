@@ -1,5 +1,4 @@
 <?
-include "includes/user.inc";
 
 function display_morelink($theme, $story) {
   return ($story->article) ? "[ <A HREF=\"discussion.php?id=$story->id\"><FONT COLOR=\"$theme->hlcolor2\"><B>read more</B></FONT></A> | ". strlen($story->article) ." bytes | <A HREF=\"discussion.php?id=$story->id\"><FONT COLOR=\"$theme->hlcolor2\">". format_plural($story->comments, "comment", "comments") ."</FONT></A> ]" : "[ <A HREF=\"discussion.php?id=$story->id\"><FONT COLOR=\"$theme->hlcolor2\">". format_plural($story->comments, "comment", "comments") ."</FONT></A> ]";
@@ -61,7 +60,7 @@ function display_old_headlines($theme, $num = 10) {
 function display_comment_moderation($id, $author, $score, $votes) {
   global $user, $comment_votes;
   
-  if ($user->userid && $user->userid != $author && !user_getHistory($user->history, "c$id")) {
+  if ($user->id && $user->userid != $author && !user_getHistory($user->history, "c$id")) {
     $output .= "<SELECT NAME=\"moderate[$id]\">\n";
     foreach ($comment_votes as $key=>$value) $output .= " <OPTION VALUE=\"$value\">$key</OPTION>\n";
     $output .= "</SELECT>\n";
@@ -106,7 +105,8 @@ function display_calendar($theme, $date) {
 function display_account($theme) {
   global $user;
   
-  if ($user && $user->userid) { 
+  if ($user->id) { 
+
     function submission_number() {
       $result = db_query("SELECT COUNT(id) FROM stories WHERE status = 1");
       return ($result) ? db_result($result, 0) : 0;

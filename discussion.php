@@ -287,7 +287,7 @@ function comment_post($pid, $sid, $subject, $comment) {
     $subject = ($subject) ? $subject : substr($comment, 0, 29);
 
     ### Add comment to database:
-    db_insert("INSERT INTO comments (pid, sid, author, subject, comment, hostname, timestamp) VALUES ($pid, $sid, $user->id, '". addslashes($subject) ."', '". addslashes($comment) ."', '". getenv("REMOTE_ADDR") ."', '". time() ."')");
+    db_insert("INSERT INTO comments (pid, sid, author, subject, comment, hostname, timestamp) VALUES ($pid, $sid, '$user->id', '". addslashes($subject) ."', '". addslashes($comment) ."', '". getenv("REMOTE_ADDR") ."', '". time() ."')");
 
     ### Compose header:
     header("Location: discussion.php?id=$sid");

@@ -40,7 +40,7 @@ function account_display($order = "username") {
     foreach ($show as $key=>$value) {
       switch($value) {
 	case "real_email":
-          $output .= "  <TD>". format_email_address($account[$value]) ."</TD>\n";
+          $output .= "  <TD>". format_email($account[$value]) ."</TD>\n";
           break;
         case "last_access":
           $output .= "  <TD>". format_date($account[$value]) ."</TD>\n";
@@ -91,7 +91,7 @@ function account_view($name) {
     $output .= " <TR><TD ALIGN=\"right\"><B>ID:</B></TD><TD>$account->id</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>Username:</B></TD><TD>$account->userid</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>Real name:</B></TD><TD>". format_data($account->name) ."</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Real e-mail address:</B></TD><TD>". format_email_address($account->real_email) ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>Real e-mail address:</B></TD><TD>". format_email($account->real_email) ."</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>Fake e-mail address:</B></TD><TD>". format_data($account->fake_email) ."</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>URL of homepage:</B></TD><TD>". format_url($account->url) ."</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>Last access:</B></TD><TD>". format_date($account->last_access) ." from $account->last_host</TD></TR>\n";
