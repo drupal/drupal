@@ -60,7 +60,7 @@ pre {
 }
 table {
   /* make <td> sizes relative to body size! */
-  font-size: 1em;
+  /* font-size: 1em; */
 }
 .form-item {
   margin-top: 1em;
@@ -269,14 +269,30 @@ table {
 #tracker td {
   vertical-align: top;
   padding: 1em 1em 1em 0;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #bbb;
 }
 #forum td {
   padding: 0.5em 0.5em 0.5em 0.5em;
 }
+#forum td.container {
+  background-color: #ccc;
+}
+#forum td.container a {
+  color: #555;
+}
 #forum td.statistics, #forum td.settings, #forum td.pager {
   height: 1.5em;
   border: 1px solid #bbb;
+}
+#forum td .name {
+  color: #96c;
+}
+#forum td .links {
+  padding-top: 0.7em;
+  font-size: 0.9em;
+}
+#forum td .links a {
+  color: #77a;
 }
 .block-forum h3 {
   margin-bottom: .5em;

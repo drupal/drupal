@@ -232,7 +232,7 @@ function _forum_last_reply($nid) {
 
 function _forum_format($topic) {
   if ($topic) {
-    return t("%date<br />by %author", array("%date" => format_date($topic->timestamp, "small"), "%author" => format_name($topic)));
+    return t("%time ago<br />by %author", array("%time" => format_interval(time() - $topic->timestamp), "%author" => format_name($topic)));
   }
   else {
     return message_na();
@@ -517,47 +517,51 @@ function theme_forum_list($forums, $parents, $tid) {
 
     foreach ($forums as $forum) {
       if ($forum->container) {
-        $forum->num_topics = "";
-        $forum->num_posts = "";
-        $forum->last_post = "";
-        $new_topics = 0;
-        $links = array();
+        $description  = "<div style=\"margin-left: ". ($forum->depth * 30) ."px;\">\n";
+        $description .= " <div class=\"name\">". l($forum->name, "forum/$forum->tid") ."</div>\n";
+
+        if ($forum->description) {
+          $description .= " <div class=\"description\">$forum->description</div>\n";
+        }
+        $description .= "</div>\n";
+
+        $rows[] = array(array("data" => $description, "class" => "container", "colspan" => 4));
       }
       else {
         if ($user->uid) {
           $new_topics = $forum->num_topics - $forum->old_topics;
         }
+        else {
+          $new_topics = 0;
+        }
 
         $links = array();
 
-        if ($forum->last_post) {
-          $links[] = l(t("the most recent topic"), "node/view/". $forum->last_post->nid);
-        }
-
         if ($new_topics) {
-          $links[] = l(t("the first new topic"), "forum/$forum->tid/new");
+          $links[] = l(t("newest topic"), "forum/$forum->tid/new");
         }
+
+        if ($forum->last_post) {
+          $links[] = l(t("active topic"), "node/view/". $forum->last_post->nid);
+        }
+
+        $description  = "<div style=\"margin-left: ". ($forum->depth * 30) ."px;\">\n";
+        $description .= " <div class=\"name\">". l($forum->name, "forum/$forum->tid") ."</div>\n";
+
+        if ($forum->description) {
+          $description .= " <div class=\"description\">$forum->description</div>\n";
+        }
+        if ($links) {
+          $description .= " <div class=\"links\">". t("Jump to: %links", array("%links" => implode(", ", $links))) .".</div>\n";
+        }
+        $description .= "</div>\n";
+
+        $rows[] = array(
+          array("data" => $description, "class" => "forum"),
+          array("data" => $forum->num_topics . ($new_topics ? "<br />(". t("%a new", array("%a" => $new_topics)) .")" : ""), "class" => "topics"),
+          array("data" => $forum->num_posts, "class" => "posts"),
+          array("data" => _forum_format($forum->last_post), "class" => "last-reply"));
       }
-
-      $description  = "<div class=\"forum\" style=\"margin-left: ". ($forum->depth * 30) ."px;\">\n";
-      $description .= " <div class=\"name\">". l($forum->name, "forum/$forum->tid") ."</div>\n";
-
-      if ($forum->description) {
-        $description .= " <div class=\"description\">$forum->description</div>\n";
-      }
-      if ($links) {
-        $description .= " <div class=\"navigation\">". t("Jump to: %links", array("%links" => implode(", ", $links))) .".</div>\n";
-      }
-      $description .= "</div>\n";
-
-      $rows[] = array(
-        array("data" => $description, "class" => "description"),
-        array("data" => $forum->num_topics . ($new_topics ? "<br />(". t("%a new", array("%a" => $new_topics)) .")" : ""), "class" => "topics"),
-        array("data" => $forum->num_posts, "class" => "posts"),
-        array("data" => ($forum->container ? "" : _forum_format($forum->last_post)), "class" => "last-reply")
-
-       );
-
     }
   }
 
