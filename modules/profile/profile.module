@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.68 2004/07/25 14:25:42 dries Exp $
+// $Id: profile.module,v 1.69 2004/08/08 16:19:32 dries Exp $
 
 // TODO: add a 'date' field so we can migrate the birthday information.
 
@@ -131,7 +131,7 @@ function profile_view_field($user, $field) {
       case 'textarea':
         return check_output($value);
       case 'selection':
-        return l($value, "profile/$field->name/". drupal_specialchars($value));
+        return l($value, "profile/$field->name/". drupal_specialchars($value, ENT_QUOTES));
       case 'checkbox':
         return l($field->title, "profile/$field->name");
       case 'url':
@@ -141,7 +141,7 @@ function profile_view_field($user, $field) {
         $fields = array();
         foreach ($values as $value) {
           if ($value = trim(strip_tags($value))) {
-            $fields[] = l($value, "profile/$field->name/". drupal_specialchars($value));
+            $fields[] = l($value, "profile/$field->name/". drupal_specialchars($value, ENT_QUOTES));
           }
         }
         return implode(', ', $fields);
