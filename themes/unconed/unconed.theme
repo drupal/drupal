@@ -175,8 +175,9 @@
      print " <TR><TD BGCOLOR=\"$this->bgcolor2\">";
 
      ?> 
-            <FORM METHOD="get" ACTION="discussion.php">
+            <FORM METHOD="post" ACTION="discussion.php">
             <FONT SIZE="2"> 
+            <INPUT TYPE="hidden" NAME="id" VALUE="<? echo "$sid"; ?>">
             <SELECT NAME="threshold">
              <OPTION VALUE="-1" <? if ($threshold == -1) { echo "SELECTED"; } ?>>Threshold: -1
              <OPTION VALUE="0" <? if ($threshold == 0) { echo "SELECTED"; } ?>>Threshold: 0
@@ -187,7 +188,6 @@
              <OPTION VALUE="5" <? if ($threshold == 5) { echo "SELECTED"; } ?>>Threshold: 5
             </SELECT> 
             <SELECT NAME="mode">
-             <OPTION VALUE="nocomments" <? if ($mode == 'nocomments') { echo "SELECTED"; } ?>>No comments
              <OPTION VALUE="nested" <? if ($mode == 'nested') { echo "SELECTED"; } ?>>Nested
              <OPTION VALUE="flat" <? if ($mode == 'flat') { echo "SELECTED"; } ?>>Flat
              <OPTION VALUE="threaded" <? if (!isset($mode) || $mode=='threaded' || $mode=="") { echo "SELECTED"; } ?>>Threaded
