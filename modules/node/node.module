@@ -626,62 +626,65 @@ function node_link($type, $node = 0, $main = 0) {
 /**
  * Implementation of hook_menu().
  */
-function node_menu() {
+function node_menu($may_cache) {
   $items = array();
 
-  $items[] = array('path' => 'admin/node', 'title' => t('content'),
-    'callback' => 'node_admin',
-    'access' => user_access('administer nodes'));
-  $items[] = array('path' => 'admin/node/overview', 'title' => t('list'),
-    'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
-  $items[] = array('path' => 'admin/node/configure', 'title' => t('configure'),
-    'callback' => 'node_configure',
-    'access' => user_access('administer nodes'),
-    'type' => MENU_LOCAL_TASK);
-  $items[] = array('path' => 'admin/node/configure/settings', 'title' => t('settings'),
-    'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
-  $items[] = array('path' => 'admin/node/configure/defaults', 'title' => t('default workflow'),
-    'callback' => 'node_default_settings',
-    'access' => user_access('administer nodes'),
-    'type' => MENU_LOCAL_TASK);
-  if (module_exist('search')) {
-    $items[] = array('path' => 'admin/node/search', 'title' => t('search'),
+  if ($may_cache) {
+    $items[] = array('path' => 'admin/node', 'title' => t('content'),
       'callback' => 'node_admin',
+      'access' => user_access('administer nodes'));
+    $items[] = array('path' => 'admin/node/overview', 'title' => t('list'),
+      'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
+    $items[] = array('path' => 'admin/node/configure', 'title' => t('configure'),
+      'callback' => 'node_configure',
       'access' => user_access('administer nodes'),
       'type' => MENU_LOCAL_TASK);
-  }
-
-  $items[] = array('path' => 'node', 'title' => t('content'),
-    'callback' => 'node_page',
-    'access' => user_access('access content'),
-    'type' => MENU_SUGGESTED_ITEM);
-  $items[] = array('path' => 'node/add', 'title' => t('create content'),
-    'callback' => 'node_page',
-    'access' => user_access('access content'),
-    'type' => MENU_ITEM_GROUPING,
-    'weight' => 1);
-
-  if (arg(0) == 'node' && is_numeric(arg(1))) {
-    $node = node_load(array('nid' => arg(1)));
-
-    $items[] = array('path' => 'node/'. arg(1), 'title' => t('view'),
-      'callback' => 'node_page',
-      'access' => node_access('view', $node),
-      'type' => MENU_CALLBACK);
-    $items[] = array('path' => 'node/'. arg(1) .'/view', 'title' => t('view'),
-        'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
-    $items[] = array('path' => 'node/'. arg(1) .'/edit', 'title' => t('edit'),
-      'callback' => 'node_page',
-      'access' => node_access('update', $node),
-      'weight' => 1,
+    $items[] = array('path' => 'admin/node/configure/settings', 'title' => t('settings'),
+      'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
+    $items[] = array('path' => 'admin/node/configure/defaults', 'title' => t('default workflow'),
+      'callback' => 'node_default_settings',
+      'access' => user_access('administer nodes'),
       'type' => MENU_LOCAL_TASK);
-
-    if ($node->revisions) {
-      $items[] = array('path' => 'node/'. arg(1) .'/revisions', 'title' => t('revisions'),
-        'callback' => 'node_page',
+    if (module_exist('search')) {
+      $items[] = array('path' => 'admin/node/search', 'title' => t('search'),
+        'callback' => 'node_admin',
         'access' => user_access('administer nodes'),
-        'weight' => 2,
         'type' => MENU_LOCAL_TASK);
+    }
+
+    $items[] = array('path' => 'node', 'title' => t('content'),
+      'callback' => 'node_page',
+      'access' => user_access('access content'),
+      'type' => MENU_SUGGESTED_ITEM);
+    $items[] = array('path' => 'node/add', 'title' => t('create content'),
+      'callback' => 'node_page',
+      'access' => user_access('access content'),
+      'type' => MENU_ITEM_GROUPING,
+      'weight' => 1);
+  }
+  else {
+    if (arg(0) == 'node' && is_numeric(arg(1))) {
+      $node = node_load(array('nid' => arg(1)));
+
+      $items[] = array('path' => 'node/'. arg(1), 'title' => t('view'),
+        'callback' => 'node_page',
+        'access' => node_access('view', $node),
+        'type' => MENU_CALLBACK);
+      $items[] = array('path' => 'node/'. arg(1) .'/view', 'title' => t('view'),
+          'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
+      $items[] = array('path' => 'node/'. arg(1) .'/edit', 'title' => t('edit'),
+        'callback' => 'node_page',
+        'access' => node_access('update', $node),
+        'weight' => 1,
+        'type' => MENU_LOCAL_TASK);
+
+      if ($node->revisions) {
+        $items[] = array('path' => 'node/'. arg(1) .'/revisions', 'title' => t('revisions'),
+          'callback' => 'node_page',
+          'access' => user_access('administer nodes'),
+          'weight' => 2,
+          'type' => MENU_LOCAL_TASK);
+      }
     }
   }
 

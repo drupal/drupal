@@ -62,46 +62,49 @@ function locale_help($section = "admin/help#locale") {
 /**
  * Implementation of hook_menu().
  */
-function locale_menu() {
-
+function locale_menu($may_cache) {
   $items = array();
-  $access = user_access('administer locales');
 
-  // Main admin menu item
-  $items[] = array('path' => 'admin/locale', 'title' => t('localization'),
-    'callback' => 'locale_admin_manage', 'access' => $access);
+  if ($may_cache) {
+    $access = user_access('administer locales');
 
-  // Top level tabs
-  $items[] = array('path' => 'admin/locale/language', 'title' => t('manage languages'),
-    'access' => $access, 'weight' => -10, 'type' => MENU_DEFAULT_LOCAL_TASK);
-  $items[] = array('path' => 'admin/locale/string/search', 'title' => t('manage strings'),
-    'callback' => 'locale_admin_string', 'access' => $access, 'weight' => 10,
-    'type' => MENU_LOCAL_TASK);
+    // Main admin menu item
+    $items[] = array('path' => 'admin/locale', 'title' => t('localization'),
+      'callback' => 'locale_admin_manage', 'access' => $access);
 
-  // Manage languages subtabs
-  $items[] = array('path' => 'admin/locale/language/overview', 'title' => t('list'),
-    'callback' => 'locale_admin_manage', 'access' => $access, "weight" => 0,
-    'type' => MENU_DEFAULT_LOCAL_TASK);
-  $items[] = array('path' => 'admin/locale/language/add', 'title' => t('add language'),
-    'callback' => 'locale_admin_manage_add', 'access' => $access, "weight" => 5,
-    'type' => MENU_LOCAL_TASK);
-  $items[] = array('path' => 'admin/locale/language/import', 'title' => t('import'),
-    'callback' => 'locale_admin_import', 'access' => $access, 'weight' => 10,
-    'type' => MENU_LOCAL_TASK);
-  $items[] = array('path' => 'admin/locale/language/export', 'title' => t('export'),
-    'callback' => 'locale_admin_export', 'access' => $access, 'weight' => 20,
-    'type' => MENU_LOCAL_TASK);
+    // Top level tabs
+    $items[] = array('path' => 'admin/locale/language', 'title' => t('manage languages'),
+      'access' => $access, 'weight' => -10, 'type' => MENU_DEFAULT_LOCAL_TASK);
+    $items[] = array('path' => 'admin/locale/string/search', 'title' => t('manage strings'),
+      'callback' => 'locale_admin_string', 'access' => $access, 'weight' => 10,
+      'type' => MENU_LOCAL_TASK);
 
-  // Language related callbacks
-  $items[] = array('path' => 'admin/locale/language/delete', 'title' => t('confirm'),
-    'callback' => 'locale_admin_manage_delete_screen', 'access' => $access,
-    'type' => MENU_CALLBACK);
+    // Manage languages subtabs
+    $items[] = array('path' => 'admin/locale/language/overview', 'title' => t('list'),
+      'callback' => 'locale_admin_manage', 'access' => $access, "weight" => 0,
+      'type' => MENU_DEFAULT_LOCAL_TASK);
+    $items[] = array('path' => 'admin/locale/language/add', 'title' => t('add language'),
+      'callback' => 'locale_admin_manage_add', 'access' => $access, "weight" => 5,
+      'type' => MENU_LOCAL_TASK);
+    $items[] = array('path' => 'admin/locale/language/import', 'title' => t('import'),
+      'callback' => 'locale_admin_import', 'access' => $access, 'weight' => 10,
+      'type' => MENU_LOCAL_TASK);
+    $items[] = array('path' => 'admin/locale/language/export', 'title' => t('export'),
+      'callback' => 'locale_admin_export', 'access' => $access, 'weight' => 20,
+      'type' => MENU_LOCAL_TASK);
 
-  // String related callbacks
-  $items[] = array('path' => 'admin/locale/string/edit', 'title' => t('edit'),
-    'callback' => 'locale_admin_string', 'access' => $access, 'type' => MENU_CALLBACK);
-  $items[] = array('path' => 'admin/locale/string/delete', 'title' => t('delete'),
-    'callback' => 'locale_admin_string', 'access' => $access, 'type' => MENU_CALLBACK);
+    // Language related callbacks
+    $items[] = array('path' => 'admin/locale/language/delete', 'title' => t('confirm'),
+      'callback' => 'locale_admin_manage_delete_screen', 'access' => $access,
+      'type' => MENU_CALLBACK);
+
+    // String related callbacks
+    $items[] = array('path' => 'admin/locale/string/edit', 'title' => t('edit'),
+      'callback' => 'locale_admin_string', 'access' => $access, 'type' => MENU_CALLBACK);
+    $items[] = array('path' => 'admin/locale/string/delete', 'title' => t('delete'),
+      'callback' => 'locale_admin_string', 'access' => $access, 'type' => MENU_CALLBACK);
+  }
+
   return $items;
 }
 

@@ -512,15 +512,16 @@ function blogapi_settings() {
   return $output;
 }
 
-function blogapi_menu() {
-  global $user;
+function blogapi_menu($may_cache) {
   $items = array();
 
   if ($_GET['q'] == variable_get('site_frontpage', 'node')) {
     drupal_set_html_head('<link rel="EditURI" type="application/rsd+xml" title="RSD" href="' . url('blogapi/rsd', NULL, NULL, TRUE) . '" />');
   }
 
-  $items[] = array('path' => 'blogapi', 'title' => t('RSD'), 'callback' => 'blogapi_blogapi', 'access' => user_access('access_content'), 'type' => MENU_CALLBACK);
+  if ($may_cache) {
+    $items[] = array('path' => 'blogapi', 'title' => t('RSD'), 'callback' => 'blogapi_blogapi', 'access' => user_access('access_content'), 'type' => MENU_CALLBACK);
+  }
 
   return $items;
 }

@@ -195,33 +195,38 @@ function poll_link($type, $node = 0, $main) {
 /**
  * Implementation of hook_menu().
  */
-function poll_menu() {
+function poll_menu($may_cache) {
   $items = array();
-  $items[] = array('path' => 'node/add/poll', 'title' => t('poll'),
-    'access' => user_access('create polls'));
-  $items[] = array('path' => 'poll', 'title' => t('polls'),
-    'callback' => 'poll_page',
-    'access' => user_access('access content'),
-    'type' => MENU_SUGGESTED_ITEM);
 
-  $items[] = array('path' => 'poll/vote',
-    'title' => t('vote'),
-    'callback' => 'poll_vote',
-    'access' => user_access('vote on polls'),
-    'type' => MENU_CALLBACK);
+  if ($may_cache) {
+    $items[] = array('path' => 'node/add/poll', 'title' => t('poll'),
+      'access' => user_access('create polls'));
+    $items[] = array('path' => 'poll', 'title' => t('polls'),
+      'callback' => 'poll_page',
+      'access' => user_access('access content'),
+      'type' => MENU_SUGGESTED_ITEM);
 
-  if (arg(0) == 'node' && is_numeric(arg(1))) {
-    $node = node_load(array('nid' => arg(1)));
+    $items[] = array('path' => 'poll/vote',
+      'title' => t('vote'),
+      'callback' => 'poll_vote',
+      'access' => user_access('vote on polls'),
+      'type' => MENU_CALLBACK);
+  }
+  else {
+    if (arg(0) == 'node' && is_numeric(arg(1))) {
+      $node = node_load(array('nid' => arg(1)));
 
-    if ($node->type == 'poll' && $node->allowvotes) {
-      $items[] = array('path' => 'node/'. arg(1) .'/results',
-        'title' => t('results'),
-        'callback' => 'poll_results',
-        'access' => user_access('access content'),
-        'weight' => 3,
-        'type' => MENU_LOCAL_TASK);
+      if ($node->type == 'poll' && $node->allowvotes) {
+        $items[] = array('path' => 'node/'. arg(1) .'/results',
+          'title' => t('results'),
+          'callback' => 'poll_results',
+          'access' => user_access('access content'),
+          'weight' => 3,
+          'type' => MENU_LOCAL_TASK);
+      }
     }
   }
+
   return $items;
 }
 

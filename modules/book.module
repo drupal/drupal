@@ -76,31 +76,33 @@ function book_link($type, $node = 0, $main = 0) {
 /**
  * Implementation of hook_menu().
  */
-function book_menu() {
+function book_menu($may_cache) {
   $items = array();
 
-  $items[] = array('path' => 'node/add/book', 'title' => t('book page'),
-    'access' => user_access('maintain books'));
-  $items[] = array('path' => 'admin/node/book', 'title' => t('books'),
-    'callback' => 'book_admin',
-    'access' => user_access('administer nodes'),
-    'weight' => 4);
-  $items[] = array('path' => 'admin/node/book/orphan', 'title' => t('orphan pages'),
-    'callback' => 'book_admin_orphan',
-    'access' => user_access('administer nodes'),
-    'weight' => 8);
-  $result = db_query('SELECT n.nid, n.title FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE b.parent = 0 ORDER BY b.weight, n.title');
-  while ($book = db_fetch_object($result)) {
-    $items[] = array('path' => 'admin/node/book/'. $book->nid, 'title' => t('"%title" book', array('%title' => $book->title)));
+  if ($may_cache) {
+    $items[] = array('path' => 'node/add/book', 'title' => t('book page'),
+      'access' => user_access('maintain books'));
+    $items[] = array('path' => 'admin/node/book', 'title' => t('books'),
+      'callback' => 'book_admin',
+      'access' => user_access('administer nodes'),
+      'weight' => 4);
+    $items[] = array('path' => 'admin/node/book/orphan', 'title' => t('orphan pages'),
+      'callback' => 'book_admin_orphan',
+      'access' => user_access('administer nodes'),
+      'weight' => 8);
+    $result = db_query('SELECT n.nid, n.title FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE b.parent = 0 ORDER BY b.weight, n.title');
+    while ($book = db_fetch_object($result)) {
+      $items[] = array('path' => 'admin/node/book/'. $book->nid, 'title' => t('"%title" book', array('%title' => $book->title)));
+    }
+    $items[] = array('path' => 'book', 'title' => t('books'),
+      'callback' => 'book_render',
+      'access' => user_access('access content'),
+      'type' => MENU_SUGGESTED_ITEM);
+    $items[] = array('path' => 'book/print', 'title' => t('printer-friendly version'),
+      'callback' => 'book_print',
+      'access' => user_access('access content'),
+      'type' => MENU_CALLBACK);
   }
-  $items[] = array('path' => 'book', 'title' => t('books'),
-    'callback' => 'book_render',
-    'access' => user_access('access content'),
-    'type' => MENU_SUGGESTED_ITEM);
-  $items[] = array('path' => 'book/print', 'title' => t('printer-friendly version'),
-    'callback' => 'book_print',
-    'access' => user_access('access content'),
-    'type' => MENU_CALLBACK);
 
   return $items;
 }

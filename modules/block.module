@@ -48,26 +48,29 @@ function block_perm() {
 /**
  * Implementation of hook_menu().
  */
-function block_menu() {
+function block_menu($may_cache) {
   $items = array();
-  $items[] = array('path' => 'admin/block', 'title' => t('blocks'),
-    'access' => user_access('administer blocks'),
-    'callback' => 'block_admin');
-  $items[] = array('path' => 'admin/block/list', 'title' => t('list'),
-    'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
-  $items[] = array('path' => 'admin/block/edit', 'title' => t('edit block'),
-    'access' => user_access('administer blocks'),
-    'callback' => 'block_box_edit',
-    'type' => MENU_CALLBACK);
-  $items[] = array('path' => 'admin/block/delete', 'title' => t('delete block'),
-    'access' => user_access('administer blocks'),
-    'callback' => 'block_box_delete',
-    'type' => MENU_CALLBACK);
-  // Tabs:
-  $items[] = array('path' => 'admin/block/add', 'title' => t('add'),
-    'access' => user_access('administer blocks'),
-    'callback' => 'block_box_edit',
-    'type' => MENU_LOCAL_TASK);
+
+  if ($may_cache) {
+    $items[] = array('path' => 'admin/block', 'title' => t('blocks'),
+      'access' => user_access('administer blocks'),
+      'callback' => 'block_admin');
+    $items[] = array('path' => 'admin/block/list', 'title' => t('list'),
+      'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
+    $items[] = array('path' => 'admin/block/edit', 'title' => t('edit block'),
+      'access' => user_access('administer blocks'),
+      'callback' => 'block_box_edit',
+      'type' => MENU_CALLBACK);
+    $items[] = array('path' => 'admin/block/delete', 'title' => t('delete block'),
+      'access' => user_access('administer blocks'),
+      'callback' => 'block_box_delete',
+      'type' => MENU_CALLBACK);
+    $items[] = array('path' => 'admin/block/add', 'title' => t('add'),
+      'access' => user_access('administer blocks'),
+      'callback' => 'block_box_edit',
+      'type' => MENU_LOCAL_TASK);
+  }
+
   return $items;
 }
 

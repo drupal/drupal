@@ -106,50 +106,54 @@ function filter_filter_tips($delta, $format, $long = false) {
 /**
  * Implementation of hook_menu().
  */
-function filter_menu() {
+function filter_menu($may_cache) {
   $items = array();
 
-  $items[] = array('path' => 'admin/filters', 'title' => t('input formats'),
-    'callback' => 'filter_admin_overview',
-    'access' => user_access('administer filters'));
+  if ($may_cache) {
+    $items[] = array('path' => 'admin/filters', 'title' => t('input formats'),
+      'callback' => 'filter_admin_overview',
+      'access' => user_access('administer filters'));
 
-  $items[] = array('path' => 'admin/filters/delete', 'title' => t('delete input format'),
-    'callback' => 'filter_admin_delete',
-    'type' => MENU_CALLBACK,
-    'access' => user_access('administer filters'));
-
-  if (arg(0) == 'admin' && arg(1) == 'filters' && is_numeric(arg(2))) {
-    $formats = filter_formats();
-
-    if (isset($formats[arg(2)])) {
-      $items[] = array('path' => 'admin/filters/'. arg(2), 'title' => t("'%format' input format", array('%format' => $formats[arg(2)]->name)),
-      'callback' => 'filter_admin_filters',
+    $items[] = array('path' => 'admin/filters/delete', 'title' => t('delete input format'),
+      'callback' => 'filter_admin_delete',
       'type' => MENU_CALLBACK,
       'access' => user_access('administer filters'));
 
-      $items[] = array('path' => 'admin/filters/'. arg(2) .'/list', 'title' => t('list filters'),
-      'callback' => 'filter_admin_filters',
-      'type' => MENU_DEFAULT_LOCAL_TASK,
-      'weight' => 0,
-      'access' => user_access('administer filters'));
+    $items[] = array('path' => 'filter/tips', 'title' => t('compose tips'),
+      'callback' => 'filter_tips_long', 'access' => TRUE,
+      'type' => MENU_SUGGESTED_ITEM);
+  }
+  else {
+    if (arg(0) == 'admin' && arg(1) == 'filters' && is_numeric(arg(2))) {
+      $formats = filter_formats();
 
-      $items[] = array('path' => 'admin/filters/'. arg(2) .'/configure', 'title' => t('configure filters'),
-      'callback' => 'filter_admin_configure',
-      'type' => MENU_LOCAL_TASK,
-      'weight' => 1,
-      'access' => user_access('administer filters'));
+      if (isset($formats[arg(2)])) {
+        $items[] = array('path' => 'admin/filters/'. arg(2), 'title' => t("'%format' input format", array('%format' => $formats[arg(2)]->name)),
+        'callback' => 'filter_admin_filters',
+        'type' => MENU_CALLBACK,
+        'access' => user_access('administer filters'));
 
-      $items[] = array('path' => 'admin/filters/'. arg(2) .'/order', 'title' => t('rearrange filters'),
-      'callback' => 'filter_admin_order',
-      'type' => MENU_LOCAL_TASK,
-      'weight' => 2,
-      'access' => user_access('administer filters'));
+        $items[] = array('path' => 'admin/filters/'. arg(2) .'/list', 'title' => t('list filters'),
+        'callback' => 'filter_admin_filters',
+        'type' => MENU_DEFAULT_LOCAL_TASK,
+        'weight' => 0,
+        'access' => user_access('administer filters'));
+
+        $items[] = array('path' => 'admin/filters/'. arg(2) .'/configure', 'title' => t('configure filters'),
+        'callback' => 'filter_admin_configure',
+        'type' => MENU_LOCAL_TASK,
+        'weight' => 1,
+        'access' => user_access('administer filters'));
+
+        $items[] = array('path' => 'admin/filters/'. arg(2) .'/order', 'title' => t('rearrange filters'),
+        'callback' => 'filter_admin_order',
+        'type' => MENU_LOCAL_TASK,
+        'weight' => 2,
+        'access' => user_access('administer filters'));
+      }
     }
   }
 
-  $items[] = array('path' => 'filter/tips', 'title' => t('compose tips'),
-    'callback' => 'filter_tips_long', 'access' => TRUE,
-    'type' => MENU_SUGGESTED_ITEM);
   return $items;
 }
 

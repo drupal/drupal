@@ -59,49 +59,52 @@ function system_perm() {
 /**
  * Implementation of hook_menu().
  */
-function system_menu() {
+function system_menu($may_cache) {
   $items = array();
-  $items[] = array('path' => 'system/files', 'title' => t('file download'),
-    'callback' => 'file_download',
-    'access' => TRUE,
-    'type' => MENU_CALLBACK);
 
-  $access = user_access('administer site configuration');
+  if ($may_cache) {
+    $items[] = array('path' => 'system/files', 'title' => t('file download'),
+      'callback' => 'file_download',
+      'access' => TRUE,
+      'type' => MENU_CALLBACK);
 
-  // Themes:
-  $items[] = array('path' => 'admin/themes', 'title' => t('themes'),
-    'callback' => 'system_themes', 'access' => $access);
+    $access = user_access('administer site configuration');
 
-  $items[] = array('path' => 'admin/themes/select', 'title' => t('select'),
-    'callback' => 'system_themes', 'access' => $access,
-    'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -1);
+    // Themes:
+    $items[] = array('path' => 'admin/themes', 'title' => t('themes'),
+      'callback' => 'system_themes', 'access' => $access);
 
-  $items[] = array('path' => 'admin/themes/settings', 'title' => t('configure'),
-    'callback' => 'system_theme_settings', 'access' => $access,
-    'type' => MENU_LOCAL_TASK);
+    $items[] = array('path' => 'admin/themes/select', 'title' => t('select'),
+      'callback' => 'system_themes', 'access' => $access,
+      'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -1);
 
-  // Theme configuration subtabs
-  $items[] = array('path' => 'admin/themes/settings/global', 'title' => t('global settings'),
-    'callback' => 'system_theme_settings', 'access' => $access,
-    'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -1);
+    $items[] = array('path' => 'admin/themes/settings', 'title' => t('configure'),
+      'callback' => 'system_theme_settings', 'access' => $access,
+      'type' => MENU_LOCAL_TASK);
 
-  foreach (list_themes() as $theme) {
-     $path = str_replace('/', '.', $theme->name);
-     $items[] = array('path' => 'admin/themes/settings/'. $path, 'title' => basename($theme->name),
-     'callback' => 'system_theme_settings', 'access' => $access,
-     'type' => MENU_LOCAL_TASK);
-  }
+    // Theme configuration subtabs
+    $items[] = array('path' => 'admin/themes/settings/global', 'title' => t('global settings'),
+      'callback' => 'system_theme_settings', 'access' => $access,
+      'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -1);
 
-  // Modules:
-  $items[] = array('path' => 'admin/settings', 'title' => t('settings'),
-    'callback' => 'system_site_settings', 'access' => $access);
-  foreach (module_list() as $name) {
-    if (module_hook($name, 'settings')) {
-      $items[] = array('path' => 'admin/settings/'. $name, 'title' => t($name));
+    foreach (list_themes() as $theme) {
+       $theme_path = str_replace('/', '.', $theme->name);
+       $items[] = array('path' => 'admin/themes/settings/'. $theme_path, 'title' => basename($theme->name),
+       'callback' => 'system_theme_settings', 'access' => $access,
+       'type' => MENU_LOCAL_TASK);
     }
+
+    // Modules:
+    $items[] = array('path' => 'admin/settings', 'title' => t('settings'),
+      'callback' => 'system_site_settings', 'access' => $access);
+    foreach (module_list() as $name) {
+      if (module_hook($name, 'settings')) {
+        $items[] = array('path' => 'admin/settings/'. $name, 'title' => t($name));
+      }
+    }
+    $items[] = array('path' => 'admin/modules', 'title' => t('modules'),
+      'callback' => 'system_modules', 'access' => $access);
   }
-  $items[] = array('path' => 'admin/modules', 'title' => t('modules'),
-    'callback' => 'system_modules', 'access' => $access);
 
   return $items;
 }
@@ -502,6 +505,7 @@ function system_listing_save($edit = array()) {
     }
 
     cache_clear_all();
+    menu_rebuild();
 
     drupal_set_message(t('The configuration options have been saved.'));
     drupal_goto($_GET['q']);
@@ -536,6 +540,7 @@ function system_settings_save() {
   }
 
   cache_clear_all();
+  menu_rebuild();
   drupal_goto($_GET['q']);
 }
 

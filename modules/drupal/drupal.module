@@ -185,11 +185,13 @@ function drupal_auth($username, $password, $server) {
 /**
  * Implementation of hook_menu().
  */
-function drupal_menu() {
+function drupal_menu($may_cache) {
   $items = array();
-  $items[] = array('path' => 'drupal', 'title' => t('Drupal'),
-    'callback' => 'drupal_page_help', 'access' => TRUE,
-    'type' => MENU_SUGGESTED_ITEM);
+  if ($may_cache) {
+    $items[] = array('path' => 'drupal', 'title' => t('Drupal'),
+      'callback' => 'drupal_page_help', 'access' => TRUE,
+      'type' => MENU_SUGGESTED_ITEM);
+  }
   return $items;
 }
 

@@ -196,11 +196,24 @@ define('MENU_ACCESS_DENIED', 3);
  */
 function menu_get_menu() {
   global $_menu;
+  global $user;
 
   if (!isset($_menu['items'])) {
     // _menu_build() may indirectly call this function, so prevent infinite loops.
     $_menu['items'] = array();
-    _menu_build();
+
+    $cid = 'menu:'. $user->uid;
+    if ($cached = cache_get($cid)) {
+      $_menu = unserialize($cached->data);
+    }
+    else {
+      _menu_build();
+      // Cache the menu structure for this user, to expire after one day.
+      cache_set($cid, serialize($_menu), time() + (60 * 60 * 24));
+    }
+
+    // Make sure items that cannot be cached are added.
+    _menu_append_contextual_items();
   }
 
   return $_menu;
@@ -330,7 +343,7 @@ function menu_execute_active_handler() {
   }
 
   // We found one, and are allowed to execute it.
-  $arguments = $menu['items'][$mid]['callback arguments'];
+  $arguments = array_key_exists('callback arguments', $menu['items'][$mid]) ? $menu['items'][$mid]['callback arguments'] : array();
   $arg = substr($_GET['q'], strlen($menu['items'][$mid]['path']) + 1);
   if (strlen($arg)) {
     $arguments = array_merge($arguments, explode('/', $arg));
@@ -478,36 +491,41 @@ function menu_in_active_trail($mid) {
  * This need only be called at the start of pages that modify the menu.
  */
 function menu_rebuild() {
+  // Clear the page cache, so that changed menus are reflected for anonymous users.
   cache_clear_all();
-  _menu_build();
-  $menu = menu_get_menu();
+  // Also clear the menu cache.
+  cache_clear_all('menu:', TRUE);
 
-  $new_items = array();
-  foreach ($menu['items'] as $mid => $item) {
-    if ($mid < 0 && ($item['type'] & MENU_MODIFIABLE_BY_ADMIN)) {
-      $new_mid = db_next_id('{menu}_mid');
-      if (isset($new_items[$item['pid']])) {
-        $new_pid = $new_items[$item['pid']]['mid'];
-      }
-      else {
-        $new_pid = $item['pid'];
-      }
+  if (module_exist('menu')) {
+    $menu = menu_get_menu();
 
-      // Fix parent IDs for menu items already added.
-      if ($item['children']) {
-        foreach ($item['children'] as $child) {
-          if (isset($new_items[$child])) {
-            $new_items[$child]['pid'] = $new_mid;
+    $new_items = array();
+    foreach ($menu['items'] as $mid => $item) {
+      if ($mid < 0 && ($item['type'] & MENU_MODIFIABLE_BY_ADMIN)) {
+        $new_mid = db_next_id('{menu}_mid');
+        if (isset($new_items[$item['pid']])) {
+          $new_pid = $new_items[$item['pid']]['mid'];
+        }
+        else {
+          $new_pid = $item['pid'];
+        }
+
+        // Fix parent IDs for menu items already added.
+        if ($item['children']) {
+          foreach ($item['children'] as $child) {
+            if (isset($new_items[$child])) {
+              $new_items[$child]['pid'] = $new_mid;
+            }
           }
         }
+
+        $new_items[$mid] = array('mid' => $new_mid, 'pid' => $new_pid, 'path' => $item['path'], 'title' => $item['title'], 'description' => array_key_exists('description', $item) ? $item['description'] : '', 'weight' => $item['weight'], 'type' => $item['type']);
       }
-
-      $new_items[$mid] = array('mid' => $new_mid, 'pid' => $new_pid, 'path' => $item['path'], 'title' => $item['title'], 'description' => $item['description'], 'weight' => $item['weight'], 'type' => $item['type']);
     }
-  }
 
-  foreach ($new_items as $item) {
-    db_query('INSERT INTO {menu} (mid, pid, path, title, description, weight, type) VALUES (%d, %d, \'%s\', \'%s\', \'%s\', %d, %d)', $item['mid'], $item['pid'], $item['path'], $item['title'], $item['description'], $item['weight'], $item['type']);
+    foreach ($new_items as $item) {
+      db_query('INSERT INTO {menu} (mid, pid, path, title, description, weight, type) VALUES (%d, %d, \'%s\', \'%s\', \'%s\', %d, %d)', $item['mid'], $item['pid'], $item['path'], $item['title'], $item['description'], $item['weight'], $item['type']);
+    }
   }
 
   // Rebuild the menu to account for any changes.
@@ -559,7 +577,7 @@ function theme_menu_item($mid) {
     $link_mid = $menu['items'][$link_mid]['pid'];
   }
 
-  return l($menu['items'][$mid]['title'], $menu['items'][$link_mid]['path'], $menu['items'][$mid]['description'] ? array("title" => $menu['items'][$mid]['description']) : array());
+  return l($menu['items'][$mid]['title'], $menu['items'][$link_mid]['path'], array_key_exists('description', $menu['items'][$mid]) ? array("title" => $menu['items'][$mid]['description']) : array());
 }
 
 /**
@@ -669,7 +687,7 @@ function _menu_build() {
     );
 
   // Build a sequential list of all menu items.
-  $menu_item_list = module_invoke_all('menu');
+  $menu_item_list = module_invoke_all('menu', TRUE);
 
   // Menu items not in the DB get temporary negative IDs.
   $temp_mid = -1;
@@ -681,14 +699,8 @@ function _menu_build() {
     if (!array_key_exists('type', $item)) {
       $item['type'] = MENU_NORMAL_ITEM;
     }
-    if (!array_key_exists('description', $item)) {
-      $item['description'] = '';
-    }
     if (!array_key_exists('weight', $item)) {
       $item['weight'] = 0;
-    }
-    if (!array_key_exists('callback arguments', $item)) {
-      $item['callback arguments'] = array();
     }
     $mid = $temp_mid;
     if (array_key_exists($item['path'], $_menu['path index'])) {
@@ -717,7 +729,7 @@ function _menu_build() {
         else {
           // It has a permanent ID. Only replace with non-custom menu items.
           if ($item->type & MENU_CREATED_BY_ADMIN) {
-            $_menu['items'][$item->mid] = array('path' => $item->path, 'access' => TRUE, 'callback' => '', 'callback arguments' => array());
+            $_menu['items'][$item->mid] = array('path' => $item->path, 'access' => TRUE, 'callback' => '');
           }
           else {
             // Leave the old item around as a shortcut to this one.
@@ -729,7 +741,7 @@ function _menu_build() {
       else {
         // The path was not declared, so this is a custom item or an orphaned one.
         if ($item->type & MENU_CREATED_BY_ADMIN) {
-          $_menu['items'][$item->mid] = array('path' => $item->path, 'access' => TRUE, 'callback' => '', 'callback arguments' => array());
+          $_menu['items'][$item->mid] = array('path' => $item->path, 'access' => TRUE, 'callback' => '');
           if (!empty($item->path)) {
             $_menu['path index'][$item->path] = $item->mid;
           }
@@ -747,35 +759,8 @@ function _menu_build() {
     }
   }
 
-  // Establish parent-child relationships.
-  foreach ($_menu['items'] as $mid => $item) {
-    if (!isset($item['pid'])) {
-      // Parent's location has not been customized, so figure it out using the path.
-      $parent = $item['path'];
-      do {
-        $parent = substr($parent, 0, strrpos($parent, '/'));
-      }
-      while ($parent && !array_key_exists($parent, $_menu['path index']));
-
-      $pid = $parent ? $_menu['path index'][$parent] : 1;
-      $_menu['items'][$mid]['pid'] = $pid;
-    }
-    else {
-      $pid = $item['pid'];
-    }
-
-    // Don't make root a child of itself.
-    if ($mid) {
-      if (isset ($_menu['items'][$pid])) {
-        $_menu['items'][$pid]['children'][] = $mid;
-      }
-      else {
-        // If parent is missing, it is a menu item that used to be defined
-        // but is no longer. Default to a root-level "Navigation" menu item.
-        $_menu['items'][1]['children'][] = $mid;
-      }
-    }
-  }
+  // Associate parent and child menu items.
+  _menu_find_parents($_menu['items']);
 
   // Prepare to display trees to the user as required.
   _menu_build_visible_tree();
@@ -837,6 +822,104 @@ function _menu_build_visible_tree($pid = 0) {
   }
 
   return array();
+}
+
+/**
+ * Account for menu items that are only defined at certain paths, so will not
+ * be cached.
+ *
+ * We don't support the full range of menu item options for these menu items. We
+ * don't support MENU_VISIBLE_IF_HAS_CHILDREN, and we require parent items to be
+ * declared before their children.
+ */
+function _menu_append_contextual_items() {
+  global $_menu;
+
+  // Build a sequential list of all menu items.
+  $menu_item_list = module_invoke_all('menu', FALSE);
+
+  // Menu items not in the DB get temporary negative IDs.
+  $temp_mid = min(array_keys($_menu['items'])) - 1;
+  $new_items = array();
+
+  foreach ($menu_item_list as $item) {
+    if (array_key_exists($item['path'], $_menu['path index'])) {
+      // The menu item already exists, so just add appropriate callback information.
+      $mid = $_menu['path index'][$item['path']];
+
+      $_menu['items'][$mid]['access'] = $item['access'];
+      $_menu['items'][$mid]['callback'] = $item['callback'];
+      $_menu['items'][$mid]['callback arguments'] = $item['callback arguments'];
+    }
+    else {
+      if (!array_key_exists('path', $item)) {
+        $item['path'] = '';
+      }
+      if (!array_key_exists('type', $item)) {
+        $item['type'] = MENU_NORMAL_ITEM;
+      }
+      if (!array_key_exists('weight', $item)) {
+        $item['weight'] = 0;
+      }
+      $_menu['items'][$temp_mid] = $item;
+      $_menu['path index'][$item['path']] = $temp_mid;
+      $new_items[$temp_mid] = $item;
+      $temp_mid--;
+    }
+  }
+
+  // Establish parent-child relationships.
+  _menu_find_parents($new_items);
+
+  // Add new items to the visible tree if necessary.
+  foreach ($new_items as $mid => $item) {
+    $item = $_menu['items'][$mid];
+    if (($item['type'] & MENU_VISIBLE_IN_TREE) && _menu_item_is_accessible($mid)) {
+      $pid = $item['pid'];
+      while ($pid && !array_key_exists($pid, $_menu['visible'])) {
+        $pid = $_menu['items'][$pid]['pid'];
+      }
+      $_menu['visible'][$mid] = array('title' => $item['title'], 'path' => $item['path'], 'pid' => $pid);
+      $_menu['visible'][$pid]['children'][] = $mid;
+      usort($_menu['visible'][$pid]['children'], '_menu_sort');
+    }
+  }
+}
+
+/**
+ * Establish parent-child relationships.
+ */
+function _menu_find_parents(&$items) {
+  global $_menu;
+
+  foreach ($items as $mid => $item) {
+    if (!isset($item['pid'])) {
+      // Parent's location has not been customized, so figure it out using the path.
+      $parent = $item['path'];
+      do {
+        $parent = substr($parent, 0, strrpos($parent, '/'));
+      }
+      while ($parent && !array_key_exists($parent, $_menu['path index']));
+
+      $pid = $parent ? $_menu['path index'][$parent] : 1;
+      $_menu['items'][$mid]['pid'] = $pid;
+    }
+    else {
+      $pid = $item['pid'];
+    }
+
+    // Don't make root a child of itself.
+    if ($mid) {
+      if (isset ($_menu['items'][$pid])) {
+        $_menu['items'][$pid]['children'][] = $mid;
+      }
+      else {
+        // If parent is missing, it is a menu item that used to be defined
+        // but is no longer. Default to a root-level "Navigation" menu item.
+        $_menu['items'][1]['children'][] = $mid;
+      }
+    }
+  }
 }
 
 /**

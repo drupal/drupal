@@ -119,53 +119,49 @@ function aggregator_link($type) {
 /**
  * Implementation of hook_menu().
  */
-function aggregator_menu() {
+function aggregator_menu($may_cache) {
   $items = array();
 
-  $edit = user_access('administer news feeds');
-  $view = user_access('access news feeds');
+  if ($may_cache) {
+    $edit = user_access('administer news feeds');
+    $view = user_access('access news feeds');
 
-  $items[] = array('path' => 'admin/aggregator', 'title' => t('aggregator'),
-    'callback' => 'aggregator_admin_overview', 'access' => $edit);
-  $items[] = array('path' => 'admin/aggregator/edit/feed', 'title' => t('edit feed'),
-    'callback' => 'aggregator_admin_edit_feed', 'access' => $edit,
-    'type' => MENU_CALLBACK);
-  $items[] = array('path' => 'admin/aggregator/edit/category', 'title' => t('edit category'),
-    'callback' => 'aggregator_admin_edit_category', 'access' => $edit,
-    'type' => MENU_CALLBACK);
-  $items[] = array('path' => 'admin/aggregator/remove', 'title' => t('remove items'),
-    'callback' => 'aggregator_admin_remove_feed', 'access' => $edit,
-    'type' => MENU_CALLBACK);
-  $items[] = array('path' => 'admin/aggregator/update', 'title' => t('update items'),
-    'callback' => 'aggregator_admin_refresh_feed', 'access' => $edit,
-    'type' => MENU_CALLBACK);
+    $items[] = array('path' => 'admin/aggregator', 'title' => t('aggregator'),
+      'callback' => 'aggregator_admin_overview', 'access' => $edit);
+    $items[] = array('path' => 'admin/aggregator/edit/feed', 'title' => t('edit feed'),
+      'callback' => 'aggregator_admin_edit_feed', 'access' => $edit,
+      'type' => MENU_CALLBACK);
+    $items[] = array('path' => 'admin/aggregator/edit/category', 'title' => t('edit category'),
+      'callback' => 'aggregator_admin_edit_category', 'access' => $edit,
+      'type' => MENU_CALLBACK);
+    $items[] = array('path' => 'admin/aggregator/remove', 'title' => t('remove items'),
+      'callback' => 'aggregator_admin_remove_feed', 'access' => $edit,
+      'type' => MENU_CALLBACK);
+    $items[] = array('path' => 'admin/aggregator/update', 'title' => t('update items'),
+      'callback' => 'aggregator_admin_refresh_feed', 'access' => $edit,
+      'type' => MENU_CALLBACK);
 
-  $items[] = array('path' => 'admin/aggregator/list', 'title' => t('list'),
-    'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
-  $items[] = array('path' => 'admin/aggregator/add/feed', 'title' => t('add feed'),
-    'callback' => 'aggregator_admin_edit_feed', 'access' => $edit,
-    'type' => MENU_LOCAL_TASK);
-  $items[] = array('path' => 'admin/aggregator/add/category', 'title' => t('add category'),
-    'callback' => 'aggregator_admin_edit_category', 'access' => $edit,
-    'type' => MENU_LOCAL_TASK);
-  $items[] = array('path' => 'admin/aggregator/configure', 'title' => t('configure'),
-    'callback' => 'aggregator_configure', 'access' => $edit,
-    'type' => MENU_LOCAL_TASK);
+    $items[] = array('path' => 'admin/aggregator/list', 'title' => t('list'),
+      'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
+    $items[] = array('path' => 'admin/aggregator/add/feed', 'title' => t('add feed'),
+      'callback' => 'aggregator_admin_edit_feed', 'access' => $edit,
+      'type' => MENU_LOCAL_TASK);
+    $items[] = array('path' => 'admin/aggregator/add/category', 'title' => t('add category'),
+      'callback' => 'aggregator_admin_edit_category', 'access' => $edit,
+      'type' => MENU_LOCAL_TASK);
+    $items[] = array('path' => 'admin/aggregator/configure', 'title' => t('configure'),
+      'callback' => 'aggregator_configure', 'access' => $edit,
+      'type' => MENU_LOCAL_TASK);
 
-  $items[] = array('path' => 'aggregator', 'title' => t('news aggregator'),
-    'callback' => 'aggregator_page_last', 'access' => $view,
-    'weight' => 5);
-  $items[] = array('path' => 'aggregator/sources', 'title' => t('sources'),
-    'callback' => 'aggregator_page_sources', 'access' => $view);
-  $items[] = array('path' => 'aggregator/categories', 'title' => t('categories'),
-    'callback' => 'aggregator_page_categories', 'access' => $view,
-    'type' => MENU_ITEM_GROUPING);
+    $items[] = array('path' => 'aggregator', 'title' => t('news aggregator'),
+      'callback' => 'aggregator_page_last', 'access' => $view,
+      'weight' => 5);
+    $items[] = array('path' => 'aggregator/sources', 'title' => t('sources'),
+      'callback' => 'aggregator_page_sources', 'access' => $view);
+    $items[] = array('path' => 'aggregator/categories', 'title' => t('categories'),
+      'callback' => 'aggregator_page_categories', 'access' => $view,
+      'type' => MENU_ITEM_GROUPING);
 
-  // To reduce the number of SQL queries, we don't query the database when
-  // not on an aggregator page.
-  // If caching of the menu is implemented, this check should be removed
-  // so that DHTML menu presentation can be used correctly.
-  if (arg(0) == 'aggregator') {
     // Sources:
     $result = db_query('SELECT title, fid FROM {aggregator_feed} ORDER BY title');
     while ($feed = db_fetch_object($result)) {
@@ -197,11 +193,11 @@ function aggregator_menu() {
         'type' => MENU_LOCAL_TASK,
         'weight' => 1);
     }
-  }
 
-  $items[] = array('path' => 'aggregator/opml', 'title' => t('opml'),
-    'callback' => 'aggregator_page_opml', 'access' => $view,
-    'type' => MENU_CALLBACK);
+    $items[] = array('path' => 'aggregator/opml', 'title' => t('opml'),
+      'callback' => 'aggregator_page_opml', 'access' => $view,
+      'type' => MENU_CALLBACK);
+  }
 
   return $items;
 }

@@ -43,17 +43,17 @@ function watchdog_help($section = 'admin/help#watchdog') {
 /**
  * Implementation of hook_menu().
  */
-function watchdog_menu() {
+function watchdog_menu($may_cache) {
   $items = array();
 
-  $items[] = array('path' => 'admin/logs', 'title' => t('logs'),
-    'callback' => 'watchdog_overview', 'access' => user_access('administer watchdog'));
+  if ($may_cache) {
+    $items[] = array('path' => 'admin/logs', 'title' => t('logs'),
+      'callback' => 'watchdog_overview', 'access' => user_access('administer watchdog'));
 
-  $items[] = array('path' => 'admin/logs/view', 'title' => t('view details'),
-    'callback' => 'watchdog_view', 'access' => user_access('administer watchdog'),
-    'type' => MENU_CALLBACK);
+    $items[] = array('path' => 'admin/logs/view', 'title' => t('view details'),
+      'callback' => 'watchdog_view', 'access' => user_access('administer watchdog'),
+      'type' => MENU_CALLBACK);
 
-  if (arg(1) == 'logs') {
     foreach (_watchdog_get_message_types() as $type) {
       $items[] = array('path' => 'admin/logs/'. $type, 'title' => t($type), 'type' => MENU_DYNAMIC_ITEM);
     }
@@ -105,7 +105,7 @@ function watchdog_overview($type = '') {
         l(t('details'), "admin/logs/view/$watchdog->wid")
       ),
       // Attributes for tr
-      'class' => "watchdog-$watchdog->type"      
+      'class' => "watchdog-$watchdog->type"
     );
   }
 

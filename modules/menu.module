@@ -9,42 +9,45 @@
 /**
  * Implementation of hook_menu().
  */
-function menu_menu() {
+function menu_menu($may_cache) {
   $items = array();
-  $items[] = array('path' => 'admin/menu', 'title' => t('menus'),
-    'callback' => 'menu_overview',
-    'access' => user_access('administer menu'));
-  $items[] = array('path' => 'admin/menu/item/edit', 'title' => t('edit menu item'),
-    'callback' => 'menu_edit_item',
-    'access' => user_access('administer menu'),
-    'type' => MENU_CALLBACK);
-  $items[] = array('path' => 'admin/menu/item/reset', 'title' => t('reset menu item'),
-    'callback' => 'menu_reset_item',
-    'access' => user_access('administer menu'),
-    'type' => MENU_CALLBACK);
-  $items[] = array('path' => 'admin/menu/item/disable', 'title' => t('disable menu item'),
-    'callback' => 'menu_disable_item',
-    'access' => user_access('administer menu'),
-    'type' => MENU_CALLBACK);
-  $items[] = array('path' => 'admin/menu/item/delete', 'title' => t('delete menu item'),
-    'callback' => 'menu_delete_item',
-    'access' => user_access('administer menu'),
-    'type' => MENU_CALLBACK);
 
-  $items[] = array('path' => 'admin/menu/list', 'title' => t('list'),
-    'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
-  $items[] = array('path' => 'admin/menu/menu/add', 'title' => t('add menu'),
-    'callback' => 'menu_add_menu',
-    'access' => user_access('administer menu'),
-    'type' => MENU_LOCAL_TASK);
-  $items[] = array('path' => 'admin/menu/item/add', 'title' => t('add menu item'),
-    'callback' => 'menu_edit_item',
-    'access' => user_access('administer menu'),
-    'type' => MENU_LOCAL_TASK);
-  $items[] = array('path' => 'admin/menu/reset', 'title' => t('reset menus'),
-    'callback' => 'menu_reset',
-    'access' => user_access('administer menu'),
-    'type' => MENU_LOCAL_TASK);
+  if ($may_cache) {
+    $items[] = array('path' => 'admin/menu', 'title' => t('menus'),
+      'callback' => 'menu_overview',
+      'access' => user_access('administer menu'));
+    $items[] = array('path' => 'admin/menu/item/edit', 'title' => t('edit menu item'),
+      'callback' => 'menu_edit_item',
+      'access' => user_access('administer menu'),
+      'type' => MENU_CALLBACK);
+    $items[] = array('path' => 'admin/menu/item/reset', 'title' => t('reset menu item'),
+      'callback' => 'menu_reset_item',
+      'access' => user_access('administer menu'),
+      'type' => MENU_CALLBACK);
+    $items[] = array('path' => 'admin/menu/item/disable', 'title' => t('disable menu item'),
+      'callback' => 'menu_disable_item',
+      'access' => user_access('administer menu'),
+      'type' => MENU_CALLBACK);
+    $items[] = array('path' => 'admin/menu/item/delete', 'title' => t('delete menu item'),
+      'callback' => 'menu_delete_item',
+      'access' => user_access('administer menu'),
+      'type' => MENU_CALLBACK);
+
+    $items[] = array('path' => 'admin/menu/list', 'title' => t('list'),
+      'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
+    $items[] = array('path' => 'admin/menu/menu/add', 'title' => t('add menu'),
+      'callback' => 'menu_add_menu',
+      'access' => user_access('administer menu'),
+      'type' => MENU_LOCAL_TASK);
+    $items[] = array('path' => 'admin/menu/item/add', 'title' => t('add menu item'),
+      'callback' => 'menu_edit_item',
+      'access' => user_access('administer menu'),
+      'type' => MENU_LOCAL_TASK);
+    $items[] = array('path' => 'admin/menu/reset', 'title' => t('reset menus'),
+      'callback' => 'menu_reset',
+      'access' => user_access('administer menu'),
+      'type' => MENU_LOCAL_TASK);
+  }
 
   return $items;
 }
@@ -334,8 +337,6 @@ function menu_edit_item_save($edit) {
       drupal_set_message(t('Since a menu item %old already exists for %path, this new menu item was created as a shortcut to that location.', array('%old' => l('<em>'. $old_item['title'] .'</em>', 'admin/menu/item/edit/'. $old_mid), '%path' => '<em>'. $edit['path'] .'</em>')));
     }
   }
-
-  menu_rebuild();
 }
 
 /**

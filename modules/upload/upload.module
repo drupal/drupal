@@ -21,27 +21,31 @@ function upload_perm() {
   return array('upload files');
 }
 
-function upload_menu() {
-  // Add handlers for previewing new uploads.
-  if ($_SESSION['file_uploads']) {
-    $items = array();
-    foreach ($_SESSION['file_uploads'] as $key => $file) {
-      $filename = file_create_filename($file->filename, file_create_path());
-      $items[] = array(
-        'path' => $filename, 'title' => t('file download'),
-        'callback' => 'upload_download',
-        'access' => true,
-        'type' => MENU_DYNAMIC_ITEM & MENU_HIDDEN
-      );
-      $_SESSION['file_uploads'][$key]->_filename = $filename;
+function upload_menu($may_cache) {
+  $items = array();
+
+  if ($may_cache) {
+    // Add handlers for previewing new uploads.
+    if ($_SESSION['file_uploads']) {
+      foreach ($_SESSION['file_uploads'] as $key => $file) {
+        $filename = file_create_filename($file->filename, file_create_path());
+        $items[] = array(
+          'path' => $filename, 'title' => t('file download'),
+          'callback' => 'upload_download',
+          'access' => true,
+          'type' => MENU_DYNAMIC_ITEM & MENU_HIDDEN
+        );
+        $_SESSION['file_uploads'][$key]->_filename = $filename;
+      }
     }
+    $items[] = array(
+      'path' => 'admin/upload', 'title' => t('uploads'),
+      'callback' => 'upload_admin',
+      'access' => user_access('access administration pages'),
+      'type' => MENU_NORMAL_ITEM
+    );
   }
-  $items[] = array(
-    'path' => 'admin/upload', 'title' => t('uploads'),
-    'callback' => 'upload_admin',
-    'access' => user_access('access administration pages'),
-    'type' => MENU_NORMAL_ITEM
-  );
+
   return $items;
 }
 

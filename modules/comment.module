@@ -84,56 +84,58 @@ function comment_help($section = "admin/help#comment") {
 /**
  * Implementation of hook_menu().
  */
-function comment_menu() {
+function comment_menu($may_cache) {
   $items = array();
 
-  $access = user_access('administer comments');
-  $items[] = array('path' => 'admin/comment', 'title' => t('comments'),
-    'callback' => 'comment_admin_overview', 'access' => $access);
-  $items[] = array('path' => 'admin/comment/edit', 'title' => t('edit comment'),
-    'callback' => 'comment_admin_edit', 'access' => $access, 'type' => MENU_CALLBACK);
-  $items[] = array('path' => 'admin/comment/delete', 'title' => t('delete comment'),
-    'callback' => 'comment_delete', 'access' => $access, 'type' => MENU_CALLBACK);
+  if ($may_cache) {
+    $access = user_access('administer comments');
+    $items[] = array('path' => 'admin/comment', 'title' => t('comments'),
+      'callback' => 'comment_admin_overview', 'access' => $access);
+    $items[] = array('path' => 'admin/comment/edit', 'title' => t('edit comment'),
+      'callback' => 'comment_admin_edit', 'access' => $access, 'type' => MENU_CALLBACK);
+    $items[] = array('path' => 'admin/comment/delete', 'title' => t('delete comment'),
+      'callback' => 'comment_delete', 'access' => $access, 'type' => MENU_CALLBACK);
 
-  // Tabs:
-  $items[] = array('path' => 'admin/comment/list', 'title' => t('list'),
-    'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
-  $items[] = array('path' => 'admin/comment/configure', 'title' => t('configure'),
-    'callback' => 'comment_configure', 'access' => $access, 'type' => MENU_LOCAL_TASK);
-  if (module_exist('search')) {
-    $items[] = array('path' => 'admin/comment/search', 'title' => t('search'),
-      'callback' => 'comment_search', 'access' => $access, 'type' => MENU_LOCAL_TASK);
+    // Tabs:
+    $items[] = array('path' => 'admin/comment/list', 'title' => t('list'),
+      'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
+    $items[] = array('path' => 'admin/comment/configure', 'title' => t('configure'),
+      'callback' => 'comment_configure', 'access' => $access, 'type' => MENU_LOCAL_TASK);
+    if (module_exist('search')) {
+      $items[] = array('path' => 'admin/comment/search', 'title' => t('search'),
+        'callback' => 'comment_search', 'access' => $access, 'type' => MENU_LOCAL_TASK);
+    }
+
+    // Subtabs:
+    $items[] = array('path' => 'admin/comment/list/new', 'title' => t('new comments'),
+      'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
+    $items[] = array('path' => 'admin/comment/list/approval', 'title' => t('approval queue'),
+      'callback' => 'comment_admin_overview', 'access' => $access,
+      'callback arguments' => 'approval',
+      'type' => MENU_LOCAL_TASK);
+
+    $items[] = array('path' => 'admin/comment/configure/settings', 'title' => t('settings'),
+      'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
+
+    $access = user_access('administer comments') && user_access('administer moderation');
+    $items[] = array('path' => 'admin/comment/configure/matrix', 'title' => t('moderation matrix'),
+      'callback' => 'comment_matrix_settings', 'access' => $access, 'type' => MENU_LOCAL_TASK);
+    $items[] = array('path' => 'admin/comment/configure/thresholds', 'title' => t('moderation thresholds'),
+      'callback' => 'comment_threshold_settings', 'access' => $access, 'type' => MENU_LOCAL_TASK);
+    $items[] = array('path' => 'admin/comment/configure/roles', 'title' => t('moderation roles'),
+      'callback' => 'comment_role_settings', 'access' => $access, 'type' => MENU_LOCAL_TASK);
+    $items[] = array('path' => 'admin/comment/configure/votes', 'title' => t('moderation votes'),
+      'callback' => 'comment_vote_settings', 'access' => $access,'type' => MENU_LOCAL_TASK);
+
+    $access = user_access('post comments');
+    $items[] = array('path' => 'comment/reply', 'title' => t('reply to comment'),
+      'callback' => 'comment_reply', 'access' => $access, 'type' => MENU_CALLBACK);
+    $items[] = array('path' => 'comment/edit', 'title' => t('edit your comment'),
+      'callback' => 'comment_edit', 'access' => $access, 'type' => MENU_CALLBACK);
+
+    $items[] = array('path' => 'comment', 'title' => t('reply to comment'),
+      'callback' => 'comment_save_settings', 'access' => 1, 'type' => MENU_CALLBACK);
   }
-
-  // Subtabs:
-  $items[] = array('path' => 'admin/comment/list/new', 'title' => t('new comments'),
-    'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
-  $items[] = array('path' => 'admin/comment/list/approval', 'title' => t('approval queue'),
-    'callback' => 'comment_admin_overview', 'access' => $access,
-    'callback arguments' => 'approval',
-    'type' => MENU_LOCAL_TASK);
-
-  $items[] = array('path' => 'admin/comment/configure/settings', 'title' => t('settings'),
-    'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
-
-  $access = user_access('administer comments') && user_access('administer moderation');
-  $items[] = array('path' => 'admin/comment/configure/matrix', 'title' => t('moderation matrix'),
-    'callback' => 'comment_matrix_settings', 'access' => $access, 'type' => MENU_LOCAL_TASK);
-  $items[] = array('path' => 'admin/comment/configure/thresholds', 'title' => t('moderation thresholds'),
-    'callback' => 'comment_threshold_settings', 'access' => $access, 'type' => MENU_LOCAL_TASK);
-  $items[] = array('path' => 'admin/comment/configure/roles', 'title' => t('moderation roles'),
-    'callback' => 'comment_role_settings', 'access' => $access, 'type' => MENU_LOCAL_TASK);
-  $items[] = array('path' => 'admin/comment/configure/votes', 'title' => t('moderation votes'),
-    'callback' => 'comment_vote_settings', 'access' => $access,'type' => MENU_LOCAL_TASK);
-
-  $access = user_access('post comments');
-  $items[] = array('path' => 'comment/reply', 'title' => t('reply to comment'),
-    'callback' => 'comment_reply', 'access' => $access, 'type' => MENU_CALLBACK);
-  $items[] = array('path' => 'comment/edit', 'title' => t('edit your comment'),
-    'callback' => 'comment_edit', 'access' => $access, 'type' => MENU_CALLBACK);
-
-  $items[] = array('path' => 'comment', 'title' => t('reply to comment'),
-    'callback' => 'comment_save_settings', 'access' => 1, 'type' => MENU_CALLBACK);
 
   return $items;
 }

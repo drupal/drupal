@@ -21,12 +21,14 @@ function admin_help($section) {
 /**
  * Implementation of hook_menu().
  */
-function admin_menu() {
+function admin_menu($may_cache) {
   $items = array();
-  $items[] = array('path' => 'admin', 'title' => t('administer'),
-    'access' => user_access('access administration pages'),
-    'callback' => 'admin_main_page',
-    'weight' => 9);
+  if ($may_cache) {
+    $items[] = array('path' => 'admin', 'title' => t('administer'),
+      'access' => user_access('access administration pages'),
+      'callback' => 'admin_main_page',
+      'weight' => 9);
+  }
   return $items;
 }
 

@@ -26,30 +26,32 @@ function profile_help($section) {
 /**
  * Implementation of hook_menu().
  */
-function profile_menu() {
+function profile_menu($may_cache) {
   global $user;
-
   $items = array();
-  $items[] = array('path' => 'profile', 'title' => t('user list'),
-    'callback' => 'profile_browse',
-    'access' => TRUE,
-    'type' => MENU_SUGGESTED_ITEM);
-  $items[] = array('path' => 'admin/user/configure/profile', 'title' => t('profiles'),
-    'callback' => 'profile_admin_overview',
-    'access' => user_access('administer users'),
-    'type' => MENU_LOCAL_TASK);
-  $items[] = array('path' => 'admin/user/configure/profile/add', 'title' => t('add field'),
-    'callback' => 'profile_admin_add',
-    'access' => user_access('administer users'),
-    'type' => MENU_CALLBACK);
-  $items[] = array('path' => 'admin/user/configure/profile/edit', 'title' => t('edit field'),
-    'callback' => 'profile_admin_edit',
-    'access' => user_access('administer users'),
-    'type' => MENU_CALLBACK);
-  $items[] = array('path' => 'admin/user/configure/profile/delete', 'title' => t('delete field'),
-    'callback' => 'profile_admin_delete',
-    'access' => user_access('administer users'),
-    'type' => MENU_CALLBACK);
+
+  if ($may_cache) {
+    $items[] = array('path' => 'profile', 'title' => t('user list'),
+      'callback' => 'profile_browse',
+      'access' => TRUE,
+      'type' => MENU_SUGGESTED_ITEM);
+    $items[] = array('path' => 'admin/user/configure/profile', 'title' => t('profiles'),
+      'callback' => 'profile_admin_overview',
+      'access' => user_access('administer users'),
+      'type' => MENU_LOCAL_TASK);
+    $items[] = array('path' => 'admin/user/configure/profile/add', 'title' => t('add field'),
+      'callback' => 'profile_admin_add',
+      'access' => user_access('administer users'),
+      'type' => MENU_CALLBACK);
+    $items[] = array('path' => 'admin/user/configure/profile/edit', 'title' => t('edit field'),
+      'callback' => 'profile_admin_edit',
+      'access' => user_access('administer users'),
+      'type' => MENU_CALLBACK);
+    $items[] = array('path' => 'admin/user/configure/profile/delete', 'title' => t('delete field'),
+      'callback' => 'profile_admin_delete',
+      'access' => user_access('administer users'),
+      'type' => MENU_CALLBACK);
+  }
 
   return $items;
 }

@@ -9,22 +9,26 @@
 /**
  * Implementation of hook_menu().
  */
-function help_menu() {
+function help_menu($may_cache) {
   $items = array();
-  $items[] = array('path' => 'admin/help', 'title' => t('help'),
-    'callback' => 'help_main',
-    'access' => user_access('access administration pages'),
-    'weight' => 9);
 
-  foreach (module_list() as $name) {
-    if (module_hook($name, 'help')) {
-      $items[] = array('path' => 'admin/help/' . $name,
-        'title' => t($name),
-        'callback' => 'help_page',
-  'type' => MENU_CALLBACK,
-        'access' => user_access('access administration pages'));
+  if ($may_cache) {
+    $items[] = array('path' => 'admin/help', 'title' => t('help'),
+      'callback' => 'help_main',
+      'access' => user_access('access administration pages'),
+      'weight' => 9);
+
+    foreach (module_list() as $name) {
+      if (module_hook($name, 'help')) {
+        $items[] = array('path' => 'admin/help/' . $name,
+          'title' => t($name),
+          'callback' => 'help_page',
+    'type' => MENU_CALLBACK,
+          'access' => user_access('access administration pages'));
+      }
     }
   }
+
   return $items;
 }
 

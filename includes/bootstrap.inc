@@ -5,7 +5,7 @@
  * @file
  * Functions that need to be loaded on every Drupal request.
  */
- 
+
 define('CACHE_PERMANENT', 0);
 define('CACHE_TEMPORARY', -1);
 

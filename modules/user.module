@@ -585,88 +585,91 @@ function theme_user_list($items, $title = NULL) {
 /**
  * Implementation of hook_menu().
  */
-function user_menu() {
+function user_menu($may_cache) {
   global $user;
 
   $items = array();
 
   $access = user_access('administer users');
 
-  if (arg(0) == 'user' && is_numeric(arg(1))) {
-    $items[] = array('path' => 'user/'. arg(1), 'title' => t('user'),
-      'type' => MENU_CALLBACK, 'callback' => 'user_page', 'access' => TRUE);
-    $items[] = array('path' => 'user/'. arg(1) .'/view', 'title' => t('view'),
+  if ($may_cache) {
+    $items[] = array('path' => 'user', 'title' => t('user'),
+      'callback' => 'user_page', 'access' => TRUE,
+      'type' => MENU_CALLBACK);
+    $items[] = array('path' => 'user/login', 'title' => t('log in'),
+      'callback' => 'user_page', 'access' => TRUE, 'type' => MENU_CALLBACK);
+    $items[] = array('path' => 'user/register', 'title' => t('register'),
+      'callback' => 'user_page', 'access' => TRUE, 'type' => MENU_CALLBACK);
+    $items[] = array('path' => 'user/password', 'title' => t('request new password'),
+      'callback' => 'user_page', 'access' => TRUE, 'type' => MENU_CALLBACK);
+
+    $items[] = array('path' => 'admin/user', 'title' => t('users'),
+      'callback' => 'user_admin', 'access' => $access);
+    $items[] = array('path' => 'admin/user/list', 'title' => t('list'),
       'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
-    $items[] = array('path' => 'user/'. arg(1) .'/edit', 'title' => t('edit'),
-      'callback' => 'user_edit', 'access' => $access || $user->uid == arg(1),
+    $items[] = array('path' => 'admin/user/create', 'title' => t('add'),
+      'callback' => 'user_admin', 'access' => $access,
+      'type' => MENU_LOCAL_TASK);
+    $items[] = array('path' => 'admin/user/configure', 'title' => t('configure'),
+      'callback' => 'user_configure', 'access' => $access,
+      'type' => MENU_LOCAL_TASK);
+    $items[] = array('path' => 'admin/user/configure/settings', 'title' => t('settings'),
+      'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
+    $items[] = array('path' => 'admin/user/configure/access', 'title' => t('access rules'),
+      'callback' => 'user_configure', 'access' => $access,
+      'type' => MENU_LOCAL_TASK);
+    $items[] = array('path' => 'admin/user/configure/access/mail', 'title' => t('e-mail rules'),
+      'callback' => 'user_configure', 'access' => $access,
+      'type' => MENU_LOCAL_TASK);
+    $items[] = array('path' => 'admin/user/configure/access/user', 'title' => t('name rules'),
+      'callback' => 'user_configure', 'access' => $access,
+      'type' => MENU_LOCAL_TASK);
+    $items[] = array('path' => 'admin/user/configure/role', 'title' => t('roles'),
+      'callback' => 'user_configure', 'access' => $access,
+      'type' => MENU_LOCAL_TASK);
+    $items[] = array('path' => 'admin/user/configure/permission', 'title' => t('permissions'),
+      'callback' => 'user_configure', 'access' => $access,
       'type' => MENU_LOCAL_TASK);
 
-    if (arg(2) == 'edit') {
-      if (($categories = _user_categories()) && (count($categories) > 1)) {
-        foreach ($categories as $key => $category) {
-          $items[] = array('path' => 'user/'. arg(1) .'/edit/'. $category['name'], 'title' => $category['title'],
-            'type' => $category['name'] == 'account' ? MENU_DEFAULT_LOCAL_TASK : MENU_LOCAL_TASK,
-            'weight' => $category['weight']);
+    if (module_exist('search')) {
+      $items[] = array('path' => 'admin/user/search', 'title' => t('search'),
+        'callback' => 'user_admin', 'access' => $access,
+        'type' => MENU_LOCAL_TASK);
+    }
+
+    if ($user->uid) {
+      $items[] = array('path' => 'user/'. $user->uid, 'title' => t('my account'),
+        'callback' => 'user_page', 'access' => TRUE);
+      $items[] = array('path' => 'logout', 'title' => t('log out'),
+        'access' => TRUE,
+        'callback' => 'user_logout',
+        'weight' => 10);
+    }
+    else {
+      $items[] = array('path' => 'logout', 'title' => t('log out'),
+        'callback' => 'user_logout', 'access' => FALSE);
+    }
+  }
+  else {
+    if (arg(0) == 'user' && is_numeric(arg(1))) {
+      $items[] = array('path' => 'user/'. arg(1), 'title' => t('user'),
+        'type' => MENU_CALLBACK, 'callback' => 'user_page', 'access' => TRUE);
+      $items[] = array('path' => 'user/'. arg(1) .'/view', 'title' => t('view'),
+        'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
+      $items[] = array('path' => 'user/'. arg(1) .'/edit', 'title' => t('edit'),
+        'callback' => 'user_edit', 'access' => $access || $user->uid == arg(1),
+        'type' => MENU_LOCAL_TASK);
+
+      if (arg(2) == 'edit') {
+        if (($categories = _user_categories()) && (count($categories) > 1)) {
+          foreach ($categories as $key => $category) {
+            $items[] = array('path' => 'user/'. arg(1) .'/edit/'. $category['name'], 'title' => $category['title'],
+              'type' => $category['name'] == 'account' ? MENU_DEFAULT_LOCAL_TASK : MENU_LOCAL_TASK,
+              'weight' => $category['weight']);
+          }
         }
       }
     }
-  }
-
-  if ($user->uid) {
-    $items[] = array('path' => "user/$user->uid", 'title' => t('my account'),
-      'callback' => 'user_page', 'access' => TRUE);
-    $items[] = array('path' => 'logout', 'title' => t('log out'),
-      'access' => TRUE,
-      'callback' => 'user_logout',
-      'weight' => 10);
-  }
-  else {
-    $items[] = array('path' => 'logout', 'title' => t('log out'),
-      'callback' => 'user_logout', 'access' => FALSE);
-  }
-
-  $items[] = array('path' => 'user', 'title' => t('user'),
-    'callback' => 'user_page', 'access' => TRUE,
-    'type' => MENU_CALLBACK);
-  $items[] = array('path' => 'user/login', 'title' => t('log in'),
-    'callback' => 'user_page', 'access' => TRUE, 'type' => MENU_CALLBACK);
-  $items[] = array('path' => 'user/register', 'title' => t('register'),
-    'callback' => 'user_page', 'access' => TRUE, 'type' => MENU_CALLBACK);
-  $items[] = array('path' => 'user/password', 'title' => t('request new password'),
-    'callback' => 'user_page', 'access' => TRUE, 'type' => MENU_CALLBACK);
-
-  $items[] = array('path' => 'admin/user', 'title' => t('users'),
-    'callback' => 'user_admin', 'access' => $access);
-  $items[] = array('path' => 'admin/user/list', 'title' => t('list'),
-    'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
-  $items[] = array('path' => 'admin/user/create', 'title' => t('add'),
-    'callback' => 'user_admin', 'access' => $access,
-    'type' => MENU_LOCAL_TASK);
-  $items[] = array('path' => 'admin/user/configure', 'title' => t('configure'),
-    'callback' => 'user_configure', 'access' => $access,
-    'type' => MENU_LOCAL_TASK);
-  $items[] = array('path' => 'admin/user/configure/settings', 'title' => t('settings'),
-    'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
-  $items[] = array('path' => 'admin/user/configure/access', 'title' => t('access rules'),
-    'callback' => 'user_configure', 'access' => $access,
-    'type' => MENU_LOCAL_TASK);
-  $items[] = array('path' => 'admin/user/configure/access/mail', 'title' => t('e-mail rules'),
-    'callback' => 'user_configure', 'access' => $access,
-    'type' => MENU_LOCAL_TASK);
-  $items[] = array('path' => 'admin/user/configure/access/user', 'title' => t('name rules'),
-    'callback' => 'user_configure', 'access' => $access,
-    'type' => MENU_LOCAL_TASK);
-  $items[] = array('path' => 'admin/user/configure/role', 'title' => t('roles'),
-    'callback' => 'user_configure', 'access' => $access,
-    'type' => MENU_LOCAL_TASK);
-  $items[] = array('path' => 'admin/user/configure/permission', 'title' => t('permissions'),
-    'callback' => 'user_configure', 'access' => $access,
-    'type' => MENU_LOCAL_TASK);
-
-  if (module_exist('search')) {
-    $items[] = array('path' => 'admin/user/search', 'title' => t('search'),
-      'callback' => 'user_admin', 'access' => $access,
-      'type' => MENU_LOCAL_TASK);
   }
 
   return $items;
@@ -1385,6 +1388,7 @@ function user_admin_perm($edit = array()) {
     // Clear the cache, as we might have changed the anonymous user's
     // permissions.
     cache_clear_all();
+    menu_rebuild();
   }
 
   // Compile permission array:
