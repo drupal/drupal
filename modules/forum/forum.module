@@ -38,7 +38,7 @@ function forum_save($edit) {
 }
 
 function forum_num_comments($nid) {
-  $value = db_fetch_object(db_query("SELECT COUNT(cid) AS count FROM comments WHERE lid = '$nid' AND pid != 0"));
+  $value = db_fetch_object(db_query("SELECT COUNT(cid) AS count FROM comments WHERE lid = '$nid'"));
   return ($value) ? $value->count : 0;
 }
 
