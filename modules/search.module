@@ -583,7 +583,7 @@ function search_form($action = '', $keys = '', $type = null) {
   $edit = $_POST['edit'];
 
   if (!$action) {
-    $action = url('search');
+    $action = url('search/'. $type);
   }
   if (!$type) {
     $type = 'node';
