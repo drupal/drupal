@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.203 2003/05/29 10:18:33 dries Exp $
+// $Id: common.inc,v 1.204 2003/05/30 05:45:35 dries Exp $
 
 function conf_init() {
 
@@ -476,8 +476,19 @@ function check_input($text) {
 
 function filter($text) {
 
-  foreach (module_list() as $name) {
-    if (module_hook($name, "filter")) {
+  $modules = module_list();
+
+  /*
+  ** Make sure the HTML filters that are part of the node module
+  ** are run first.
+  */
+
+  if (in_array("node", $modules)) {
+    $text = module_invoke("node", "filter", $text);
+  }
+
+  foreach ($modules as $name) {
+    if (module_hook($name, "filter") && $name != "node") {
       $text = module_invoke($name, "filter", $text);
     }
   }
