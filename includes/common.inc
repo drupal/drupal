@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.232 2003/07/23 17:12:37 dries Exp $
+// $Id: common.inc,v 1.233 2003/07/23 18:33:10 dries Exp $
 
 function conf_init() {
 
@@ -745,7 +745,7 @@ function page_set_cache() {
 
   if (!$user->uid && $_SERVER["REQUEST_METHOD"] == "GET") {
     if ($data = ob_get_contents()) {
-      cache_set(request_uri(), $data, (time() + variable_get("cache_clear", 120)));
+      cache_set(request_uri(), $data, 1);
     }
   }
 }
