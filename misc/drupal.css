@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.45 2003/12/22 15:27:13 dries Exp $ */
+/* $Id: drupal.css,v 1.46 2003/12/29 13:46:00 dries Exp $ */
 
 form {
   margin: 0;
@@ -245,12 +245,6 @@ img {
 .user-login-block {
   text-align: center;
 }
-.user-page-menu {
-  text-align: center;
-}
-.user-login-block, .user-information-block {
-  white-space: nowrap;
-}
 tr.dark {
   background-color: #ddd;
 }
@@ -270,10 +264,6 @@ pre {
 pre, code {
   font-size: 11px;
 }
-.queue-user-numeral {
-  color: red;
-}
-
 .menu {
   padding: 0 0 0 0.5em;
 }
