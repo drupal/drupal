@@ -104,7 +104,7 @@ function forum_block($op = "list", $delta = 0) {
       }
 
       $blocks["subject"] = t("Forum topics");
-      $blocks["content"] = $content;
+      $blocks["content"] = $content->data;
     }
   }
 
@@ -310,7 +310,7 @@ function forum_get_forums($tid = 0) {
     $tid = 0;
   }
 
-  $forums = unserialize(cache_get("forum:$tid"));
+  $forums = cache_get("forum:$tid");
 
   if (!$forums) {
     $forums = array();
@@ -333,6 +333,7 @@ function forum_get_forums($tid = 0) {
   }
 
   if ($user->uid && $forums) {
+    $forums = unserialize($forums);
     foreach (_forum_topics_read($user->uid) as $tid => $old) {
       if ($forums[$tid]) {
         $forums[$tid]->old_topics = $old;

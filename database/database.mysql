@@ -105,6 +105,7 @@ CREATE TABLE cache (
   cid varchar(255) NOT NULL default '',
   data mediumtext,
   expire int(11) NOT NULL default '0',
+  created int(11) NOT NULL default '0',
   PRIMARY KEY  (cid)
 ) TYPE=MyISAM;
 

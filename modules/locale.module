@@ -282,7 +282,10 @@ function locale($string) {
   static $locale_t;
 
   if (!isset($locale_t)) {
-    $locale_t = unserialize(cache_get("locale:$locale"));
+    $cache = cache_get("locale:$locale");
+    if ($cache) {
+      $locale_t = unserialize($cache->data);
+    }
   }
 
   if ($locale_t[$string] != "") {

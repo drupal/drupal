@@ -462,16 +462,17 @@ function format_size($size) {
 }
 
 function cache_get($key) {
-  $cache = db_fetch_object(db_query("SELECT data FROM cache WHERE cid = '%s'", $key));
-  return $cache->data ? $cache->data : 0;
+  $cache = db_fetch_object(db_query("SELECT data, created FROM cache WHERE cid = '%s'", $key));
+  $created = $cache->created;
+  return $cache->data ? $cache : 0;
 }
 
 function cache_set($cid, $data, $expire = 0) {
   if (db_fetch_object(db_query("SELECT cid FROM cache WHERE cid = '%s'", $cid))) {
-    db_query("UPDATE cache SET data = '%s' WHERE cid = '%s'", $data, $cid);
+    db_query("UPDATE cache SET data = '%s', created = %d, expire = %d WHERE cid = '%s'", $data, time(), $expire, $cid);
   }
   else {
-    db_query("INSERT INTO cache (cid, data, expire) VALUES('%s', '%s', '%s')", $cid, $data, $expire);
+    db_query("INSERT INTO cache (cid, data, created, expire) VALUES('%s', '%s', %d, %d)", $cid, $data, time(), $expire);
   }
 }
 
@@ -515,7 +516,7 @@ function page_get_cache() {
     }
   }
 
-  return $cache ? $cache : 0;
+  return $cache;
 }
 
 function format_interval($timestamp) {
@@ -764,8 +765,18 @@ function page_header() {
   }
 
   if (variable_get("cache", 0)) {
-    if ($data = page_get_cache()) {
-      print $data;
+    if ($cache = page_get_cache()) {
+      $date = gmdate("D, d M Y H:i:s", $cache->created) ." GMT";
+      header("Last-Modified: $date");
+      header("ETag: \"$date\"");
+      if ($headers = getallheaders()) {
+        // NOTE: the above is an Apache-ism so for the time being we don't send 304 headers to IIS servers.
+        if ($headers["If-Modified-Since"] == $date && $headers["If-None-Match"] == "\"$date\"") {
+          header("HTTP/1.0 304 Not Modified");
+          exit();
+        }
+      }
+      print $cache->data;
       exit();
     }
   }
