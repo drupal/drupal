@@ -873,7 +873,7 @@ function user_authenticate($name, $pass) {
             $account = user_load(array('name' => "$name@$server"));
             if (!$account->uid) { // Register this new user.
               $user = user_save('', array('name' => "$name@$server", 'pass' => user_password(), 'init' => "$name@$server", 'status' => 1, "authname_$module" => "$name@$server", 'roles' => array(_user_authenticated_id())));
-              watchdog('user', t('New external user: %user using module %module.', array('%user' => "<em>$name@$server</em>", '%module' => "<em>$module</em>")), l(t('edit'), 'user/'. $user->uid .'/edit'));
+              watchdog('user', t('New external user: %user using module %module.', array('%user' => "<em>$name@$server</em>", '%module' => "<em>$module</em>")), WATCHDOG_NOTICE, l(t('edit'), 'user/'. $user->uid .'/edit'));
               break;
             }
           }
@@ -969,7 +969,7 @@ function user_register($edit = array()) {
       // TODO: Is this necessary? Won't session_write() replicate this?
       unset($edit['session']);
       $account = user_save('', array_merge(array('name' => $edit['name'], 'pass' => $pass, 'init' => $edit['mail'], 'mail' => $edit['mail'], 'roles' => array(_user_authenticated_id()), 'status' => (variable_get('user_register', 1) == 1 ? 1 : 0)), $edit));
-      watchdog('user', t('New user: %name %email.', array('%name' => '<em>'. $edit['name'] .'</em>', '%email' => '<em>&lt;'. $edit['mail'] .'&gt;</em>')), l(t('edit'), 'user/'. $account->uid .'/edit'));
+      watchdog('user', t('New user: %name %email.', array('%name' => '<em>'. $edit['name'] .'</em>', '%email' => '<em>&lt;'. $edit['mail'] .'&gt;</em>')), WATCHDOG_NOTICE, l(t('edit'), 'user/'. $account->uid .'/edit'));
 
       $variables = array('%username' => $edit['name'], '%site' => variable_get('site_name', 'drupal'), '%password' => $pass, '%uri' => $base_url, '%uri_brief' => substr($base_url, strlen('http://')), '%mailto' => $edit['mail'], '%date' => format_date(time()), '%login_uri' => url('user', NULL, NULL, TRUE), '%edit_uri' => url('user/'. $account->uid .'/edit', NULL, NULL, TRUE));
 
