@@ -326,7 +326,7 @@ function update_22() {
 }
 
 function update_23() {
-  update_sql("CREATE TABLE search_index (word varchar(50) default NULL, lno int(10) unsigned default NULL, type varchar(16) default NULL, count int(10) unsigned default NULL, KEY lno (lno), KEY word (word));");
+  update_sql("CREATE TABLE search_index (word varchar(50) default NOT NULL, lno int(10) unsigned default NOT NULL, type varchar(16) default NOT NULL, count int(10) unsigned default NOT NULL, KEY lno (lno), KEY word (word));");
 }
 
 function update_24() {
