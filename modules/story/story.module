@@ -14,7 +14,7 @@ function story_status() {
 
 function story_search($keys) {
   global $status, $user;
-  $result = db_query("SELECT n.*, s.* FROM story s LEFT JOIN node n ON n.nid = s.nid AND n.lid = s.lid WHERE n.status = '$status[posted]' AND (n.title LIKE '%$keys%' OR s.abstract LIKE '%$keys%' OR s.body LIKE '%$keys%') LIMIT 20");
+  $result = db_query("SELECT n.*, s.* FROM story s LEFT JOIN node n ON n.nid = s.nid AND n.lid = s.lid WHERE n.status = '$status[posted]' AND (n.title LIKE '%$keys%' OR s.abstract LIKE '%$keys%' OR s.body LIKE '%$keys%') ORDER BY n.timestamp DESC LIMIT 20");
   while ($story = db_fetch_object($result)) {
     $find[$i++] = array("title" => check_output($story->title), "link" => (user_access($user, "add and edit nodes") ? "admin.php?mod=node&type=story&op=edit&id=$story->nid" : "node.php?id=$story->nid"), "user" => $story->userid, "date" => $story->timestamp);
   }
