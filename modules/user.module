@@ -385,7 +385,7 @@ roles:
 <h4>settings<a name="settings"></a></h4>
 <p>Administrators may choose to restrict registration to their site. That restriction
   may be accomplished on this page. Also, the list of words which may be included
-  in a system geenrated password is also listed on this page. Drupal generates
+  in a system generated password is also listed on this page. Drupal generates
   passwords by joining small words from the password list until the new password
   is greater than 6 characters.</p>
 <h4>active users - report</h4>
