@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.117 2003/05/24 07:09:49 dries Exp $
+// $Id: blog.module,v 1.118 2003/05/24 16:26:13 dries Exp $
 
 function blog_system($field){
   $system["description"] = t("Enables keeping a blog or easily and regularly updated web page.");
@@ -252,12 +252,6 @@ function blog_block($op = "list", $delta = 0) {
     }
     return $block;
   }
-}
-
-function blog_validate(&$node) {
-  // Make sure all fields are set properly:
-  $node->body = filter($node->body);
-  $node->teaser = filter($node->teaser);
 }
 
 ?>

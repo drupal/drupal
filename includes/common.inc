@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.201 2003/05/23 21:59:43 dries Exp $
+// $Id: common.inc,v 1.202 2003/05/24 16:26:13 dries Exp $
 
 function conf_init() {
 
@@ -555,6 +555,10 @@ function rewrite_old_urls($text) {
 
 function check_output($text) {
   if (isset($text)) {
+    // filter content on output:
+    $text = filter($text);
+
+    // get the line breaks right:
     if (strip_tags($text, "<a><i><b><u><tt><code><cite><strong><img>") == $text) {
       $text = nl2br($text);
     }

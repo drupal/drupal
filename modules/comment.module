@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.127 2003/05/18 07:01:37 dries Exp $
+// $Id: comment.module,v 1.128 2003/05/24 16:26:13 dries Exp $
 
 $GLOBALS["cmodes"] = array(1 => t("Flat list - collapsed"), 2 => t("Flat list - expanded"), 3 => t("Threaded list - collapsed"), 4 => t("Threaded list - expanded"));
 $GLOBALS["corder"] = array(1 => t("Date - newest first"), 2 => t("Date - oldest first"));
@@ -58,7 +58,7 @@ function comment_user($type, $edit, &$user) {
       return form_textarea(t("Signature"), "signature", $edit["signature"], 70, 3, t("Your signature will be publicly displayed at the end of your comments.") ."<br />". t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "<a> <b> <dd> <dl> <dt> <i> <li> <ol> <u> <ul>")));
     case "edit_validate":
       // validate user data editing
-      return array("signature" => filter($edit["signature"]));
+      return array("signature" => $edit["signature"]);
   }
 }
 
@@ -160,10 +160,6 @@ function comment_reply($pid, $nid) {
 function comment_preview($edit) {
   global $user;
 
-  foreach ($edit as $key => $value) {
-    $comment->$key = filter($value);
-  }
-
   /*
   ** Attach the user and time information:
   */
@@ -209,8 +205,6 @@ function comment_post($edit) {
     /*
     ** Validate the comment's body.
     */
-
-    $edit["comment"] = filter($edit["comment"]);
 
     if ($edit["comment"] == "") {
       return array(t("Empty comment"), t("The comment you submitted is empty."));
@@ -791,7 +785,7 @@ function comment_delete($edit) {
 }
 
 function comment_save($id, $edit) {
-  db_query("UPDATE comments SET subject = '%s', comment = '%s', status = %d WHERE cid = %d", filter($edit["subject"]), filter($edit["comment"]), $edit["status"], $id);
+  db_query("UPDATE comments SET subject = '%s', comment = '%s', status = %d WHERE cid = %d", $edit["subject"], $edit["comment"], $edit["status"], $id);
   watchdog("special", "comment: modified '". $edit["subject"] ."'");
   return "updated comment.";
 }
