@@ -88,7 +88,7 @@ function profile_load_profile(&$user) {
 
 function profile_save_profile($edit, $user) {
   db_query('DELETE FROM {profile_values} WHERE uid = %d', $user->uid);
-  $result = db_query('SELECT fid, name FROM profile_fields');
+  $result = db_query('SELECT fid, name FROM {profile_fields}');
   while ($field = db_fetch_object($result)) {
     if ($edit[$field->name]) {
       db_query("INSERT INTO {profile_values} (fid, uid, value) VALUES (%d, %d, '%s')", $field->fid, $user->uid, $edit[$field->name]);
@@ -180,8 +180,8 @@ function profile_validate_profile($edit) {
   $result = db_query('SELECT * FROM {profile_fields} ORDER BY category, weight');
 
   while ($field = db_fetch_object($result)) {
-    if ($field->type == 'url') {
-      if ($edit[$field->name] && !valid_url($edit[$field->name], true)) {
+    if ($edit[$field->name]) {
+      if ($field->type == 'url' && !valid_url($edit[$field->name], true)) {
         return t("The value provided for '%field' is not a valid URL.", array('%field' => $field->title));
       }
     }
