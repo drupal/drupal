@@ -172,7 +172,7 @@ function comment_moderation($comment) {
   }
   else {
     // comment has already been moderated:
-    $output .= "<TABLE BORDER=\"0\" CELLSPACING=\"1\" CELLPADDING=\"1\"><TR><TD ALIGN=\"right\">". t("score") .":</TD><TD>". check_output($comment->score) ."</TD></TR><TR><TD ALIGN=\"right\">". t("votes") .":</TD><TD>". check_output($comment->votes) ."</TR></TABLE>\n";
+    $output .= "<TABLE BORDER=\"0\" CELLSPACING=\"1\" CELLPADDING=\"1\"><TR><TD ALIGN=\"right\">". t("score") .":</TD><TD>". check_output($comment->score) ."</TD></TR><TR><TD ALIGN=\"right\">". t("votes") .":</TD><TD>". check_output($comment->votes) ."</TD></TR></TABLE>\n";
   }
 
   return $output;
