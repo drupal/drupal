@@ -153,7 +153,7 @@ function account_site_edit() {
     $output .= "<B>". t("Language" ) .":</B><BR>\n";
     foreach ($languages as $key=>$value) $options3 .= " <OPTION VALUE=\"$key\"". (($user->language == $key) ? " SELECTED" : "") .">$value - $key</OPTION>\n";
     $output .= "<SELECT NAME=\"edit[language]\">\n$options3</SELECT><BR>\n";
-    $output .= "<I><SMALL>". t("Selecting a different language will change the language the site.") ."</SMALL></I><P>\n";
+    $output .= "<I><SMALL>". t("Selecting a different language will change the language of the site.") ."</SMALL></I><P>\n";
 
     $output .= "<B>". t("Maximum number of items to display") .":</B><BR>\n";
     for ($nodes = 10; $nodes <= 30; $nodes += 5) $options4 .= "<OPTION VALUE=\"$nodes\"". (($user->nodes == $nodes) ? " SELECTED" : "") .">$nodes</OPTION>\n";
