@@ -67,21 +67,21 @@ function throttle_exit() {
       if (!$throttle) {
         variable_set('throttle_level', 1);
         cache_clear_all();
-        watchdog('special', t('Throttle: %users %user accessing site; throttle enabled.', array('%users' => "<em>$users</em>", '%user' => format_plural($users, 'user', 'users'))));
+        watchdog('throttle', t('Throttle: %users %user accessing site; throttle enabled.', array('%users' => "<em>$users</em>", '%user' => format_plural($users, 'user', 'users'))));
       }
     }
     elseif ($max_guests && $guests > $max_guests) {
       if (!$throttle) {
         variable_set('throttle_level', 1);
         cache_clear_all();
-        watchdog('special', t('Throttle: %guests %guest accessing site; throttle enabled.', array('%guests' => "<em>$guests</em>", '%guest' => format_plural($guests, 'guest', 'guests'))));
+        watchdog('throttle', t('Throttle: %guests %guest accessing site; throttle enabled.', array('%guests' => "<em>$guests</em>", '%guest' => format_plural($guests, 'guest', 'guests'))));
       }
     }
     else {
       if ($throttle) {
         variable_set('throttle_level', 0);
         cache_clear_all();
-        watchdog('special', t('Throttle: %users %user, %guests %guest accessing site; throttle disabled.', array('%users' => "<em>$users</em>", '%user' => format_plural($users, 'user', 'users'), '%guests' => "<em>$guests</em>", '%guest' => format_plural($guests, 'guest', 'guests'))));
+        watchdog('throttle', t('Throttle: %users %user, %guests %guest accessing site; throttle disabled.', array('%users' => "<em>$users</em>", '%user' => format_plural($users, 'user', 'users'), '%guests' => "<em>$guests</em>", '%guest' => format_plural($guests, 'guest', 'guests'))));
       }
     }
   }
