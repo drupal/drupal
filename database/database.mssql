@@ -82,7 +82,6 @@ CREATE TABLE [dbo].[comments] (
   [comment] [varchar] (8000) NOT NULL ,
   [hostname] [varchar] (128) NOT NULL ,
   [timestamp] [int] NOT NULL ,
-  [link] [varchar] (16) NULL ,
   [score] [int] NOT NULL ,
   [status] [tinyint] NOT NULL ,
   [thread] [varchar] (255) NOT NULL ,
@@ -118,7 +117,6 @@ GO
 CREATE TABLE [dbo].[forum] (
   [nid] [numeric](10, 0) NOT NULL ,
   [tid] [numeric](10, 0) NOT NULL ,
-  [icon] [varchar] (255) NULL ,
   [shadow] [numeric](10, 0) NOT NULL
 ) ON [PRIMARY]
 GO

@@ -68,7 +68,6 @@ CREATE TABLE book (
   format tinyint(2) default '0',
   log longtext,
   PRIMARY KEY  (nid),
-  KEY nid (nid),
   KEY parent (parent)
 ) TYPE=MyISAM;
 
@@ -125,7 +124,6 @@ CREATE TABLE comments (
   comment longtext NOT NULL,
   hostname varchar(128) NOT NULL default '',
   timestamp int(11) NOT NULL default '0',
-  link varchar(16) NOT NULL default '',
   score mediumint(9) NOT NULL default '0',
   status tinyint(3) unsigned NOT NULL default '0',
   thread varchar(255) NOT NULL,
@@ -186,9 +184,9 @@ CREATE TABLE filters (
 CREATE TABLE forum (
   nid int(10) unsigned NOT NULL default '0',
   tid int(10) unsigned NOT NULL default '0',
-  icon varchar(255) NOT NULL default '',
   shadow int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (nid)
+  PRIMARY KEY  (nid),
+  KEY tid (tid)
 ) TYPE=MyISAM;
 
 --
@@ -311,8 +309,7 @@ CREATE TABLE page (
   link varchar(128) NOT NULL default '',
   format tinyint(2) NOT NULL default '0',
   description varchar(128) NOT NULL default '',
-  PRIMARY KEY  (nid),
-  KEY nid (nid)
+  PRIMARY KEY  (nid)
 ) TYPE=MyISAM;
 
 --
