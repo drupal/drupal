@@ -42,18 +42,18 @@
      <HTML>
      <HEAD>
       <TITLE><?php echo variable_get(site_name, "drupal"); ?></TITLE>
+      <STYLE type="text/css">
+       <!--
+        TABLE { border-width: 0; }
+        TD { border-width: 0; font-size: 10pt; font-family: verdana,helvetica,arial; }
+        P,UL,LI,DIV,FORM,EM,BLOCKQUOTE { font-size: 10pt; font-family: verdana,helvetica,arial; }
+        BODY { margin: 10px; font-size: 10pt; font-family: verdana,helvetica,arial; }
+        SMALL { font-size: 8pt; }
+        BIG { font-size: 12pt; }
+        HR { height: 1px; color: #000000; }
+       -->
+      </STYLE>
      </HEAD>
-     <STYLE type="text/css">
-      <!--
-       TABLE { border-width: 0; }
-       TD { border-width: 0; font-size: 10pt; font-family: verdana,helvetica,arial; }
-       P,UL,LI,DIV,FORM,EM,BLOCKQUOTE { font-size: 10pt; font-family: verdana,helvetica,arial; }
-       BODY { margin: 10px; font-size: 10pt; font-family: verdana,helvetica,arial; }
-       SMALL { font-size: 8pt; }
-       BIG { font-size: 12pt; }
-       HR { height: 1px; color: #000000; }
-      -->
-     </STYLE>
      <BODY TEXT="#000000" BGCOLOR="<?php print $this->clc0; ?>" ALINK="#000000" LINK="#404040" VLINK="#404040" MARGINHEIGHT="10" MARGINWIDTH="10">
      <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" ALIGN="CENTER" WIDTH="100%">
      <TR><TD BGCOLOR="<?php print $this->cl00; ?>"><IMG SRC="themes/<?php print $this->themename; ?>/images/null.gif" WIDTH="10"></TD><TD BGCOLOR="<?php print $this->clc0; ?>"><IMG SRC="themes/<?php print $this->themename; ?>/images/null.gif" WIDTH="4"></TD>
@@ -75,7 +75,7 @@
             print "<TABLE BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"1\" WIDTH=\"100%\">";
             print "<TR><TD ALIGN=\"center\" BGCOLOR=\"$this->bgcolor2\"><FONT COLOR=\"$this->fgcolor1\"><IMG SRC=\"themes/" . $this->themename . "/images/null.gif\" WIDTH=\"2\" HEIGHT=\"2\"></FONT></TD></TR>";
             print "</TABLE>";
-            print "</TR></TD></TABLE>";
+            print "</TD></TR></TABLE>";
        ?></TD></TR>
        <TR>
        <TD VALIGN="top" WIDTH="80%">
