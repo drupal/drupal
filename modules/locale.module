@@ -1,13 +1,11 @@
 <?php
-// $Id: locale.module,v 1.92 2004/01/26 19:47:58 dries Exp $
+// $Id: locale.module,v 1.93 2004/02/01 21:04:41 dries Exp $
 
 function locale_help($section = "admin/help#locale") {
-  global $languages;
-  $output = "";
 
   switch ($section) {
     case 'admin/help#locale':
-      $output .= t("
+      return t("
       <p>Most programs are written and documented in English, and use English to interact with users.  This is also true for a great deal of web sites.  However, most people are less comfortable with English than with their native language, and would prefer to use their mother tongue as much as possible.  Many people love see their web site showing a lot less English, and far more of their own language.</p>
       <p>Therefore Drupal provides a framework to setup a multi-lingual web site, or to overwrite the default English texts.  We explored the various alternatives to support internationalization (I18N) and decided to design the framework in such a way that the impact of internationalization on drupal's sources is minimized, modular and doesn't require a HTML or PHP wizard to maintain translations.  Maintaining translations had to be simple so it became as easy as filling out forms on the administration page.</p>
       <h3>How to translate texts</h3>
@@ -36,32 +34,28 @@ function locale_help($section = "admin/help#locale") {
   </pre>", array("%overview" => url("admin/locale")));
       break;
     case 'admin/system/modules#description':
-      $output = t("Enables the translation of the user interface to languages other than English.");
-      break;
+      return t('Enables the translation of the user interface to languages other than English.');
     case 'admin/locale':
-      $output = t("The locale module handles translations into new languages.  It also enables you to add jargon, slang or other special language as fits the web site.  For each language you want to support, a line needs to be added to your configuration file.");
-      break;
+      return t('The locale module handles translations into new languages.  It also enables you to add jargon, slang or other special language as fits the web site.  For each language you want to support, a line needs to be added to your configuration file.');
     case 'admin/locale/search':
-      $output = t("Search the localization database. ('*' can be used as a wildcard)");
-      break;
+      return t("Search the localization database. ('*' can be used as a wildcard)");
   }
 
-  return $output;
 }
 
 function locale_help_page() {
-  print theme("page", locale_help());
+  print theme('page', locale_help());
 }
 
 function locale_perm() {
-  return array("administer locales");
+  return array('administer locales');
 }
 
 function locale_link($type) {
   global $languages;
 
   if ($type == "system") {
-    if (user_access("administer locales")) {
+    if (user_access('administer locales')) {
 
       menu("admin/locale", t("localization"), "locale_admin", 5);
       menu("admin/locale/search", t("search string"), "locale_admin", 8);
@@ -81,7 +75,7 @@ function locale_link($type) {
 function locale_user($type, &$edit, &$user) {
   global $languages;
   if ($type == "edit_form" && count($languages) > 1) {
-    $output = form_radios(t("Language"), "language", $user->language, $languages, t("Selecting a different language will change the language of the site."));
+    $output = form_radios(t("Language"), 'language', $user->language, $languages, t("Selecting a different language will change the language of the site."));
   }
   return $output;
 }
@@ -138,7 +132,7 @@ function locale_edit($lid) {
       $form .= (strlen($translation->string) > 30) ? form_textarea($language, $code, $translation->$code, 50, 10) : form_textfield($language, $code, $translation->$code, 50, 128);
     }
 
-    $form .= form_submit(t("Save translations"));
+    $form .= form_submit(t('Save translations'));
 
     return form($form);
   }
@@ -155,7 +149,7 @@ function locale_languages($translation) {
 }
 
 function locale_seek_query() {
-  $fields = array("string", "language", "status");
+  $fields = array("string", 'language', 'status');
   if (is_array($_REQUEST["edit"])) {
     foreach ($_REQUEST["edit"] as $key => $value) {
       if (!empty($value) && in_array($key, $fields)) {
@@ -244,15 +238,15 @@ function locale_seek_form() {
   $edit =& $_POST["edit"];
   $form .= form_textfield(t("Strings to search for"), "string", $edit["string"], 30, 30, t("Leave blank to show all strings."));
   if (count($languages) > 1) {
-    $form .= form_radios(t("Language"), "language", ($edit["language"] ? $edit["language"] : "all"), array_merge(array("any" => t("Any language"), "all" => t("All languages")), $languages), t("In which language must the string be translated/untranslated (see status)?"));
+    $form .= form_radios(t("Language"), 'language', ($edit['language'] ? $edit['language'] : "all"), array_merge(array("any" => t("Any language"), "all" => t("All languages")), $languages), t("In which language must the string be translated/untranslated (see status)?"));
   }
   else {
     foreach ($languages as $key => $value) {
-      $form .= form_hidden("language", $key);
+      $form .= form_hidden('language', $key);
     }
   }
-  $form .= form_radios(t("Status"), "status", $edit["status"], array(2 => t("Untranslated"), 1 => t("Translated"), 0 => t("All")));
-  $form .= form_submit(t("Search"));
+  $form .= form_radios(t('Status'), 'status', $edit['status'], array(2 => t('Untranslated'), 1 => t('Translated'), 0 => t('All')));
+  $form .= form_submit(t('Search'));
 
   $output .= form($form);
 
@@ -263,7 +257,7 @@ function locale_admin() {
   $op = $_POST["op"];
   $edit =& $_POST["edit"];
 
-  if (user_access("administer locales")) {
+  if (user_access('administer locales')) {
     locale_admin_initialize();
 
     if (empty($op)) {
@@ -271,44 +265,44 @@ function locale_admin() {
     }
 
     switch ($op) {
-      case "delete":
+      case 'delete':
         $output .= locale_delete(check_query(arg(3)));
         $output .= locale_seek();
         break;
-      case "edit":
+      case 'edit':
         $output .= locale_edit(check_query(arg(3)));
         $output .= locale_seek();
         break;
-      case "search":
+      case 'search':
         if (locale_seek_query()) {
           $output = locale_seek();
         }
         $output .= locale_seek_form();
         break;
-      case t("Search"):
+      case t('Search'):
         $output = locale_seek();
         $output .= locale_seek_form();
         break;
-      case t("Save translations"):
+      case t('Save translations'):
         $output .= locale_save(check_query(arg(3)));
         $output .= locale_seek_form();
         break;
       default:
-        if (arg(3) == "translated") {
-          $edit["status"] = 1;
-          $edit["language"] = arg(2);
+        if (arg(3) == 'translated') {
+          $edit['status'] = 1;
+          $edit['language'] = arg(2);
         }
         else {
-          $edit["status"] = 2;
-          $edit["language"] = arg(2);
+          $edit['status'] = 2;
+          $edit['language'] = arg(2);
         }
         $output = locale_seek();
         $output .= locale_seek_form();
     }
-    print theme("page", $output);
+    print theme('page', $output);
   }
   else {
-    print theme("page", message_access());
+    print theme('page', message_access());
   }
 }
 

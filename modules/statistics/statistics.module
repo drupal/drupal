@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.135 2004/01/23 18:42:43 dries Exp $
+// $Id: statistics.module,v 1.136 2004/02/01 21:04:41 dries Exp $
 
 // Exit hook, runs at the end of every page request
 function statistics_exit() {
@@ -311,16 +311,16 @@ function statistics_top_refer() {
   elseif ($view == "internal") {
     $query = "SELECT url, MAX(timestamp) AS last_view, COUNT(url) AS count FROM {accesslog} WHERE url LIKE '%". check_query($_SERVER["HTTP_HOST"]) ."%' GROUP BY url";
     $query_cnt = "SELECT COUNT(DISTINCT(url)) FROM {accesslog} WHERE url <> '' AND url LIKE '%". check_query($_SERVER["HTTP_HOST"]) ."%'";
-    $describe = "internal ";
+    $describe = t("Top internal referrers of the past %interval");
   }
   else {
     /* default to external */
     $query = "SELECT url, MAX(timestamp) AS last_view, COUNT(url) AS count FROM {accesslog} WHERE url NOT LIKE '%". check_query($_SERVER["HTTP_HOST"]) ."%' AND url <> '' GROUP BY url";
     $query_cnt = "SELECT COUNT(DISTINCT(url)) FROM {accesslog} WHERE url <> '' AND url NOT LIKE '%". check_query($_SERVER["HTTP_HOST"]) ."%'";
-    $describe = "external ";
+    $describe = t("Top external referrers of the past %interval");
   }
 
-  $output = "<h3>". t("Top $describe referrers of the past %interval", array("%interval" => format_interval(variable_get("statistics_flush_accesslog_timer", 259200)))) ."</h3>";
+  $output = "<h3>". strtr($describe, array("%interval" => format_interval(variable_get("statistics_flush_accesslog_timer", 259200)))) ."</h3>";
 
   $header = array(
     array("data" => t("URL"), "field" => "url"),
