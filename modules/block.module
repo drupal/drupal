@@ -102,11 +102,25 @@ function block_admin_preview() {
   print $output;
 }
 
+function block_init() {
+  $result = db_query("SELECT * FROM modules");
+  while ($module = db_fetch_object($result)) {
+    module_rehash($module->name);
+  }
+
+  foreach (module_list() as $name) {
+    module_rehash($name);
+  }
+}
+
 function block_admin() {
   global $user, $op, $edit;
 
   if (user_access($user, "add and edit blocks")) {
+
     print "<SMALL><A HREF=\"admin.php?mod=block\">configure</A> | <A HREF=\"admin.php?mod=block&op=preview\">preview</A> | <A HREF=\"admin.php?mod=block&op=help\">help</A></SMALL><HR>\n";
+
+    block_init();
 
     switch ($op) {
       case "help":

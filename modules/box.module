@@ -94,10 +94,6 @@ function box_admin_delete($id) {
   db_query("DELETE FROM boxes WHERE id = $id");
 }
 
-function box_admin_rehash() {
-  module_rehash_blocks("box");
-}
-
 function box_admin_edit($id) {
   $type = array(0 => "ASCII", 1 => "HTML", 2 => "PHP");
 
@@ -152,16 +148,16 @@ function box_admin() {
 
     print "<SMALL><A HREF=\"admin.php?mod=box&op=add\">add new box</A> | <A HREF=\"admin.php?mod=box\">overview</A> | <A HREF=\"admin.php?mod=box&op=help\">help</A></SMALL><HR>\n";
 
+    block_init();
+
     switch ($op) {
       case "Add box":
         box_admin_add(check_input($subject), check_code($content), check_input($info), check_input($link), check_input($type));
         box_admin_display();
-        box_admin_rehash();
         break;
       case "Save box":
         box_admin_save(check_input($id), check_input($subject), check_code($content), check_input($info), check_input($link), check_input($type));
         box_admin_display();
-        box_admin_rehash();
         break;
       case "help":
         box_help();
@@ -174,7 +170,6 @@ function box_admin() {
         break;
       case "delete":
         box_admin_delete(check_input($id));
-        box_admin_rehash();
          // fall through
       default:
         box_admin_display();
