@@ -1101,7 +1101,7 @@ function user_view($uid = 0) {
 
     theme("header");
     theme("box", t("User account"), user_menu());
-    theme("box", t("View user information"), $output);
+    theme("box", $user->name, $output);
     theme("footer");
   }
   else if ($uid && $account = user_load(array("uid" => $uid, "status" => 1))) {
@@ -1114,7 +1114,7 @@ function user_view($uid = 0) {
     }
 
     theme("header");
-    theme("box", t("View user information"), $output);
+    theme("box", $account->name, $output);
     theme("footer");
   }
   else {
