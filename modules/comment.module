@@ -6,11 +6,11 @@ $GLOBALS["corder"] = array(1 => t("Date - newest first"), 2 => t("Date - oldest 
 
 function comment_help() {
   $output .= "<p>The comment module enables users to submit posts that are directly associated with a piece of content.  These associated posts are called <i>comments</i>.  Comments may be <i>threaded</i>, which means that Drupal keeps track of multiple subconversations around a piece of content.  Threading helps to keep the comment conversation more organized.  Users are presented with several ways to view the comment conversation, and if desired, users may easily choose a <i>flat</i> presentation of comments instead of threaded.  Further, users may choose to order their comments view by <i>newest first</i> or by <i>oldest first</i>.  Finally, users may view a folded list or an expanded list of comments.  Folded limits the comment display to <i>subject</i> only.  Drupal remembers the comment view preference of each user whenever he changes a view setting.</p>";
-  $output .= "<p>Users may also choose to view a maximum number of comments; if there are more comments, there will be a navigator to browse through pages.</p>";
+  $output .= "<p>Users may also choose to view a maximum number of comments; if there are more comments, navigation links are dispayed.</p>";
   $output .= "<p>Since a busy site generates lots of comments, Drupal takes care to present a personalized view of comments for each user.  The home page lists displays the number of read and unread comments for a given post for the current user.  Also, the tracker module (when installed) displays all recent comments on the site.  Finally, comments which the user has not yet read are highlighted with a red star (this graphic may depend on the current theme).</p>";
   $output .= "<p>Comments behave like other user submissions in Drupal.  Specifically, ". la("filters", array("mod" => "system", "type" => "filter")) ." like smileys and HTML work fine if the administrator has enabled them.  Also, throttles are usually enabled to prevent a single user from spamming the web site with too many comments in a short period of time.</p>";
-  $output .= "<p>Administrators may control which persons are allowed to submit and administer comments.  These controls appear in the ". la("user permissions", array("mod" => "user", "op" => "permission")) ." administration page.  Additionally, administrators may edit or search through comments on the ". la("comments admininistration page", array("mod" => "comment")) .", as well as set the default display view for new users. Administrators can also state whether a certain role will have their comments published immediatly, or just put in a queue to be reviewed.</p>";
-  $output .= "<p>If you really have a lot of comments, you can enable moderation. You have to give some roles permission to moderate, then setup some \"moderation votes\"; these votes will appear to moderators on a select box near the comment. You also have to assign, for every role and every vote, a value, which can be either positive or negative; use the moderation matrix to do this. This way some roles will have more \"weight\" in their moderation, if any, if you want. If you set a value to 0, that vote won't be available to that role. When a user moderates, that value will be added or subtracted to the score of that comment. Finally, you have to setup the comment filters: these will be the threshold values users will see on the comment control panel.</p>";
+  $output .= "<p>Administrators may control which persons are allowed to submit and administer comments.  These controls appear in the ". la("user permissions", array("mod" => "user", "op" => "permission")) ." administration page.  Additionally, administrators may edit or search through comments on the ". la("comments admininistration page", array("mod" => "comment")) .", as well as set the default display view for new users. Administrators can also state whether a certain role will have their comments published immediately, or just put in a queue to be reviewed.</p>";
+  $output .= "<p>If you really have a lot of comments, you can enable moderation. You assign moderation permissions to role(s), then setup some \"moderation votes\"; these votes will appear to moderators in a dropdown menu near the comment. You also have to assign, for every role and every vote, a value, which can be either positive or negative; use the moderation matrix to do this. This allows for some roles having greater \"weight\" in their moderation, if you wish. If you set a value to 0, that vote won't be available to that role. When a user moderates, the value of their vote is added or subtracted to the score of that comment. Finally, you may want to setup the comment threshholds: these will be the floor/ceiling values which users see in the comment control panel.</p>";
 
   return $output;
 }
@@ -23,8 +23,8 @@ function comment_system($field) {
 function comment_conf_options() {
   global $cmodes, $corder;
 
-  $output .= form_select("Default display mode", "comment_default_mode", variable_get("comment_default_mode", 4), $cmodes, "The default mode in which comments are displayed.");
-  $output .= form_select("Default display order", "comment_default_order", variable_get("comment_default_order", 1), $corder, "The default order in which comments are displayed.");
+  $output .= form_select("Default display mode", "comment_default_mode", variable_get("comment_default_mode", 4), $cmodes, "The default view for comments. Expanded views display the body of the comment. Threaded views keep replies together.");
+  $output .= form_select("Default display order", "comment_default_order", variable_get("comment_default_order", 1), $corder, "The default sorting for new users and anonymous users while viewing comments. These users may change their view using the comment control panel. For registered users, this change is remembered as a persistent user preference.");
   $output .= form_textfield("Default comments per page", "comment_default_per_page", variable_get("comment_default_per_page", "50"), 5, 5, "Default number of comments for each page; more comments are distributed in several pages.");
 
   $result = db_query("SELECT fid, filter FROM moderation_filters");
@@ -32,7 +32,7 @@ function comment_conf_options() {
     $thresholds[$filter->fid] = ($filter->filter);
   }
 
-  $output .= form_select("Default threshold", "comment_default_threshold", variable_get("comment_default_threshold", 0), $thresholds, "The default threshold in which comments are displayed.");
+  $output .= form_select("Default threshold", "comment_default_threshold", variable_get("comment_default_threshold", 0), $thresholds, "Thresholds are values below which comments are hidden. These threshholds are useful for busy sites which wan tto hide poor comments from most users.");
 
   $output .= form_select("Preview comment", "comment_preview", variable_get("comment_preview", 1), array("optional", "required"), "Must users preview comments before submitting?");
   $output .= form_select("New comment form", "comment_new_form", variable_get("comment_new_form", 0), array("disabled", "enabled"), "New comment form in the node page?");
@@ -336,7 +336,7 @@ function comment_links($comment, $return = 1) {
       $links[] = lm("<span style=\"color: $theme->type;\">". t("reply to this comment") ."</span>", array("mod" => "comment", "op" => "reply", "id" => $comment->nid, "pid" => $comment->cid), "", array("title" => t("Reply to this comment.")));
     }
     else {
-      $links[] = comment_theme_invoke("comment_post_forbidden");
+      $links[] = theme_invoke("comment_post_forbidden");
     }
   }
 
@@ -360,10 +360,10 @@ function comment_view($comment, $links = "", $visible = 1) {
   print "<a name=\"$comment->cid\">\n";
 
   if ($visible) {
-    comment_theme_invoke("comment", $comment, $links);
+    theme_invoke("comment", $comment, $links);
   }
   else {
-    comment_theme_invoke("comment_folded", $comment);
+    theme_invoke("comment_folded", $comment);
   }
 }
 
@@ -454,7 +454,7 @@ function comment_render($node, $cid = 0) {
 
       if ($comment_num && ((variable_get("comment_controls", 0) == 0) || (variable_get("comment_controls", 0) == 2))) {
         print "<form method=\"post\" action=\"". drupal_url(array("mod" => "comment"), "module") ."\">\n";
-        $theme->box(t("Control panel"), comment_theme_invoke("comment_controls", $threshold, $mode, $order, $nid, $comment_page, $comment_num, $comments_per_page));
+        $theme->box(t("Control panel"), theme_invoke("comment_controls", $threshold, $mode, $order, $nid, $comment_page, $comment_num, $comments_per_page));
         print form_hidden("nid", $nid);
         print "</form>";
       }
@@ -471,7 +471,7 @@ function comment_render($node, $cid = 0) {
           while ($comment = db_fetch_object($result)) {
             $comments[$comment->cid] = $comment;
           }
-          comment_theme_invoke("comment_flat_collapsed", $comments, $threshold_min);
+          theme_invoke("comment_flat_collapsed", $comments, $threshold_min);
         }
         else if ($mode == 2) {
           /*
@@ -511,7 +511,7 @@ function comment_render($node, $cid = 0) {
             }
           }
 
-          comment_theme_invoke("comment_flat_expanded", $comments, $threshold_min);
+          theme_invoke("comment_flat_expanded", $comments, $threshold_min);
 
           if (comment_user_can_moderate($node) && $show_moderate_button) {
             print "<div align=\"center\">". form_submit(t("Moderate comments")) ."</div><br />";
@@ -526,7 +526,7 @@ function comment_render($node, $cid = 0) {
             $comments[$comment->cid] = $comment;
           }
           if ($comments) {
-            comment_theme_invoke("comment_thread_min", $comments, $threshold_min);
+            theme_invoke("comment_thread_min", $comments, $threshold_min);
           }
         }
         else {
@@ -552,7 +552,7 @@ function comment_render($node, $cid = 0) {
           $page = 1;
           foreach ($structure as $cid => $depth) {
             if ($page == $comment_page) {
-              comment_theme_invoke("comment_thread_max", $comments[$cid], $threshold_min, $depth - 1);
+              theme_invoke("comment_thread_max", $comments[$cid], $threshold_min, $depth - 1);
             }
             $comment_num++;
             if ($comment_num == $comments_per_page) {
@@ -576,7 +576,7 @@ function comment_render($node, $cid = 0) {
 
       if ($comment_num && ((variable_get("comment_controls", 0) == 1) || (variable_get("comment_controls", 0) == 2))) {
         print "<form method=\"post\" action=\"". drupal_url(array("mod" => "comment"), "module") ."\">\n";
-        $theme->box(t("Control panel"), comment_theme_invoke("comment_controls", $threshold, $mode, $order, $nid, $comment_page, $comment_num, $comments_per_page));
+        $theme->box(t("Control panel"), theme_invoke("comment_controls", $threshold, $mode, $order, $nid, $comment_page, $comment_num, $comments_per_page));
         print form_hidden("nid", $nid);
         print "</form>";
       }
@@ -632,7 +632,7 @@ function comment_link($type, $node = 0, $main = 0) {
             $links[] = lm(t("add new comment"), array("mod" => "comment", "op" => "reply", "id" => $node->nid), "", array("title" => t("Add a new comment to this page.")));
           }
           else {
-            $links[] = comment_theme_invoke("comment_post_forbidden");
+            $links[] = theme_invoke("comment_post_forbidden");
           }
         }
       }
@@ -648,7 +648,7 @@ function comment_link($type, $node = 0, $main = 0) {
           $links[] = lm(t("add new comment"), array("mod" => "comment", "op" => "reply", "id" => $node->nid), "comment", array("title" => t("Share your thoughts and opinions related to this posting.")));
         }
         else {
-          $links[] = comment_theme_invoke("comment_post_forbidden");
+          $links[] = theme_invoke("comment_post_forbidden");
         }
       }
       else {
@@ -794,7 +794,7 @@ function comment_admin_overview($status = 0, $comment_page = 0) {
 
   $start = $comment_page * $comments_per_page;
 
-  $output .= $status ? "<h3>Offline comments</h3>\n" : "<h3>Online comments</h3>";
+  $output .= $status ? "<h3>Non-published comments</h3>\n" : "<h3>Published comments</h3>";
   $result = db_query("SELECT c.*, u.name, u.uid FROM comments c LEFT JOIN users u ON u.uid = c.uid WHERE c.status = '%d' ORDER BY timestamp DESC LIMIT $start, $comments_per_page", $status);
 
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
@@ -823,6 +823,7 @@ function comment_mod_matrix($edit) {
   global $tid, $rid;
 
   $output .= "<h3>Moderators/vote values matrix</h3>";
+  $output .= "<p>Here is your opportunity to value the votes from some users more than others. For example, administrator votes might count twice as much as authenticated users. You must assign the <b>moderate comments</b> permission to at least one role in order to use this page.</p>";
 
   if ($rid) {
     db_query("DELETE FROM moderation_roles");
@@ -865,6 +866,7 @@ function comment_mod_matrix($edit) {
 function comment_mod_roles($edit) {
 
   $output .= "<h3>Initial comment scores</h3>";
+  $output .= "<p>Here is your opportunity to value comments from some users more than others. For example, administrator comments might count twice as much as authenticated users. Enter an integr into the <b>initial score</b> column.</p>";
 
   if ($edit) {
     variable_set("comment_roles", $edit);
@@ -921,7 +923,7 @@ function comment_mod_votes($edit) {
 
   $output .= "<h3>Add new moderation option</h3>";
   $form .= form_textfield(t("Vote"), "vote", $vote->vote, 32, 64, t("The name of this vote.  Example: 'offtopic', 'excellent', 'sucky'."));
-  $form .= form_textfield(t("Weight"), "weight", $vote->weight, 32, 64, t("Used to order votes; heavier sink."));
+  $form .= form_textfield(t("Weight"), "weight", $vote->weight, 32, 64, t("Used to order votes in the comment control box; heavier sink."));
   if ($mid) {
     $form .= form_submit(t("Save vote"));
     $form .= form_submit(t("Delete vote"));
@@ -938,20 +940,20 @@ function comment_mod_votes($edit) {
 function comment_mod_filters($edit) {
   global $op, $fid, $tid;
 
-  if ($op == t("Save filter")) {
+  if ($op == t("Save threshhold")) {
     db_query("UPDATE moderation_filters SET filter = '%s', minimum = '%d' WHERE fid = '%d'", $edit["filter"], $edit["minimum"], $fid);
     $fid = 0;
   }
-  else if ($op == t("Delete filter")) {
+  else if ($op == t("Delete threshhold")) {
     db_query("DELETE FROM moderation_filters WHERE fid = '%d'", $fid);
     $fid = 0;
   }
-  else if ($op == t("Add new filter")) {
+  else if ($op == t("Add new threshhold")) {
     db_query("INSERT INTO moderation_filters (fid, filter, minimum) VALUES (NULL, '%s', '%d')", $edit["filter"], $edit["minimum"]);
     $fid = 0;
   }
 
-  $output .= "<h3>Comment filters overview</h3>";
+  $output .= "<h3>Comment threshhold overview</h3>";
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";
   $output .= " <tr><th>name</th><th>minimum score</th><th>operations</th></tr>";
 
@@ -965,15 +967,15 @@ function comment_mod_filters($edit) {
     $filter = db_fetch_object(db_query("SELECT filter, fid, minimum FROM moderation_filters WHERE fid = '%d'", $fid));
   }
 
-  $output .= "<h3>Add new filter</h3>";
-  $form .= form_textfield(t("Filter name"), "filter", $filter->filter, 32, 64, t("The name of this filter.  Example: 'good comments', '+1 comments', 'everything'."));
+  $output .= "<h3>Add new threshhold</h3>";
+  $form .= form_textfield(t("Threshhold name"), "filter", $filter->filter, 32, 64, t("The name of this threshhold.  Example: 'good comments', '+1 comments', 'everything'."));
   $form .= form_textfield(t("Minimum score"), "minimum", $filter->minimum, 32, 64, t("Show all comments whose score is larger or equal to the provided minimal score. Range: -127 + 128"));
   if ($fid) {
-    $form .= form_submit(t("Save filter"));
-    $form .= form_submit(t("Delete filter"));
+    $form .= form_submit(t("Save threshhold"));
+    $form .= form_submit(t("Delete threshhold"));
   }
   else {
-    $form .= form_submit(t("Add new filter"));
+    $form .= form_submit(t("Add new threshhold"));
   }
 
   $output .= form($form);
@@ -987,15 +989,21 @@ function comment_admin() {
 
   if (user_access("administer comments")) {
 
-    $links[] = la(t("online comments"), array("mod" => "comment", "status" => 0));
-    $links[] = la(t("offline comments"), array("mod" => "comment", "status" => 1));
+    $links[] = la(t("published comments"), array("mod" => "comment", "status" => 0));
+    $links[] = la(t("non-published comments"), array("mod" => "comment", "status" => 1));
     $links[] = la(t("search comments"), array("mod" => "comment", "op" => "search"));
+
+    if (user_access("administer site configuration")) {
+      $links[] = la(t("settings"), array("mod" => "system", "op" => "settings"), "comment");
+    }
+
     if (user_access("administer moderation")) {
       $links[] = la(t("moderation votes"), array("mod" => "comment", "op" => "votes"));
       $links[] = la(t("moderation matrix"), array("mod" => "comment", "op" => "matrix"));
-      $links[] = la(t("comment filters"), array("mod" => "comment", "op" => "filters"));
+      $links[] = la(t("comment threshholds"), array("mod" => "comment", "op" => "filters"));
       $links[] = la(t("initial comment scores"), array("mod" => "comment", "op" => "roles"));
     }
+
     $links[] = la(t("help"), array("mod" => "comment", "op" => "help"));
 
     print "<small>".  implode(" | ", $links) ."</small><hr />\n";
@@ -1031,9 +1039,9 @@ function comment_admin() {
         }
         break;
       case "filters":
-      case t("Add new filter"):
-      case t("Delete filter"):
-      case t("Save filter"):
+      case t("Add new threshhold"):
+      case t("Delete threshhold"):
+      case t("Save threshhold"):
         if (user_access("administer moderation")) {
           print comment_mod_filters($edit);
         }
@@ -1500,18 +1508,4 @@ function comment_update_index() {
 function comment_moderation() {
 }
 
-// this will go away as soon as theme_invoke is committed
-function comment_theme_invoke() {
-  global $theme;
-
-  $args = func_get_args();
-  $function = array_shift($args);
-
-  if (method_exists($theme, $function)) {
-    return call_user_method_array($function, $theme, $args);
-  }
-  else {
-    return call_user_func_array($function, $args);
-  }
-}
 ?>
