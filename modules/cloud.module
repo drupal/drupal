@@ -1,5 +1,5 @@
 <?php
-// $Id: cloud.module,v 1.58 2003/09/30 05:31:52 dries Exp $
+// $Id: cloud.module,v 1.59 2003/10/02 18:41:12 dries Exp $
 
 function cloud_help($section = "admin/syndication/cloud/help") {
   $output = "";
@@ -60,10 +60,9 @@ function cloud_link($type) {
 
   if ($type == "system") {
     if (user_access("administer site cloud")) {
-      menu("admin/syndication", t("content syndication"), NULL, NULL, 5);
-      menu("admin/syndication/cloud", t("site cloud"), "cloud_admin", cloud_help("admin/syndication/cloud"));
-      menu("admin/syndication/cloud/add", t("add new site"), "cloud_admin", cloud_help("admin/syndication/cloud/add"));
-      menu("admin/syndication/cloud/help", t("help"), "cloud_help", NULL, 9);
+      menu("admin/node/syndication/cloud", t("site cloud"), "cloud_admin", cloud_help("admin/syndication/cloud"));
+      menu("admin/node/syndication/cloud/add", t("add new site"), "cloud_admin", cloud_help("admin/syndication/cloud/add"));
+      menu("admin/node/syndication/cloud/help", t("help"), "cloud_help", NULL, 9);
     }
   }
 
@@ -224,7 +223,7 @@ function cloud_admin() {
   $edit = $_POST["edit"];
 
   if (empty($op)) {
-    $op = arg(3);
+    $op = arg(4);
   }
 
   if (user_access("administer site cloud")) {
@@ -233,10 +232,10 @@ function cloud_admin() {
         $output = cloud_form();
         break;
       case "edit":
-        $output = cloud_form(cloud_get_site(arg(4)));
+        $output = cloud_form(cloud_get_site(arg(5)));
         break;
       case "update":
-        $output = status(cloud_update(cloud_get_site(arg(4))));
+        $output = status(cloud_update(cloud_get_site(arg(5))));
         $output .= cloud_display();
         break;
      case "Delete":

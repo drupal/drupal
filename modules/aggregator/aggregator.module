@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.121 2003/09/29 19:11:39 dries Exp $
+// $Id: aggregator.module,v 1.122 2003/10/02 18:41:12 dries Exp $
 
 
 function import_help($section = "admin/import/help") {
@@ -109,7 +109,7 @@ function import_link($type) {
     if (user_access("administer news feeds")) {
 
       menu("admin/node/syndication", t("syndication"), NULL, NULL, 5);
-      menu("admin/node/syndication/news", t("feeds"), "import_admin", import_help("admin/node/syndication/news") );
+      menu("admin/node/syndication/news", t("RSS/RDF"), "import_admin", import_help("admin/node/syndication/news") );
       menu("admin/node/syndication/news/add/feed", t("new feed"), "import_admin", import_help("admin/node/syndication/news/add/feed"), 2);
       menu("admin/node/syndication/news/add/bundle", t("new bundle"), "import_admin", import_help("admin/node/syndication/news/add/bundle"), 3);
       menu("admin/node/syndication/news/tag", t("tag items"), "import_admin", import_help("admin/node/syndication/news/tag"), 4);
