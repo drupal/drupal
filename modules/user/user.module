@@ -65,7 +65,7 @@ function user_load($array = array()) {
       $query .= "u.$key = '". addslashes($value) ."' AND ";
     }
   }
-  $result = db_query("SELECT u.*, r.perm FROM users u LEFT JOIN role r ON u.role = r.name WHERE $query u.status < 3");
+  $result = db_query("SELECT u.*, r.perm FROM users u LEFT JOIN role r ON u.role = r.name WHERE $query u.status < 3 LIMIT 1");
 
   $user = db_fetch_object($result);
 

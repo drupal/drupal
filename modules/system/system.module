@@ -72,6 +72,8 @@ function system_view_options() {
   // development settings:
   $output .= "<h3>Development settings</h3>\n";
   $output .= form_select("Display timer information", "dev_timer", variable_get("dev_timer", 0), array("Disabled", "Enabled"), "Display the time it took to generate a page.  For Drupal development only.");
+  $output .= form_select("Display query log", "dev_query", variable_get("dev_query", 0), array("Disabled", "Enabled"), "Display a log of the database queries needed to generate the current page.");
+
   $output .= "<hr />\n";
 
   foreach (module_list() as $name) {

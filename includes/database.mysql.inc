@@ -10,6 +10,11 @@ function db_connect($url) {
 }
 
 function db_query($query, $debug = 0) {
+  global $queries;
+
+  if (variable_get("dev_query", 0)) {
+    $queries[] = $query;
+  }
 
   $result = mysql_query($query);
 
