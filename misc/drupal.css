@@ -333,6 +333,12 @@ tr.light .form-item, tr.dark .form-item {
 #forum td.posts, #forum td.topics, #forum td.replies, #forum td.pager {
   text-align: center;
 }
+#permissions td.module {
+  font-weight: bold;
+}
+#permissions td.permission {
+  padding-left: 2em;
+}
 .poll .bar {
   height: 1em;
   margin: 1px 0;

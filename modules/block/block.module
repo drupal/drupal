@@ -282,6 +282,7 @@ function block_admin() {
   if ($op == t('Save blocks')) {
     drupal_set_message(block_admin_save($edit));
     cache_clear_all();
+    drupal_goto($_GET['q']);
   }
   print theme('page', block_admin_display());
 }

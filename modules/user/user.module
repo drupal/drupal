@@ -1379,9 +1379,13 @@ function user_admin_perm($edit = array()) {
       // Delete, so if we clear every checkbox we reset that role;
       // otherwise permissions are active and denied everywhere.
       db_query('DELETE FROM {permission} WHERE rid = %d', $role->rid);
-      $perm = $edit[$role->rid] ? implode(', ', array_keys($edit[$role->rid])) : '';
-      if ($perm) {
-        db_query("INSERT INTO {permission} (rid, perm) VALUES (%d, '%s')", $role->rid, $perm);
+      foreach ($edit[$role->rid] as $key => $value) {
+        if (!$value) {
+          unset($edit[$role->rid][$key]);
+        }
+      }
+      if (count($edit[$role->rid])) {
+        db_query("INSERT INTO {permission} (rid, perm) VALUES (%d, '%s')", $role->rid, implode(', ', array_keys($edit[$role->rid])));
       }
     }
 
@@ -1389,11 +1393,9 @@ function user_admin_perm($edit = array()) {
     // permissions.
     cache_clear_all();
     menu_rebuild();
-  }
 
-  // Compile permission array:
-  $perms = module_invoke_all('perm');
-  asort($perms);
+    drupal_goto($_GET['q']);
+  }
 
   // Compile role array:
   $result = db_query('SELECT r.rid, p.perm FROM {role} r LEFT JOIN {permission} p ON r.rid = p.rid ORDER BY name');
@@ -1409,18 +1411,24 @@ function user_admin_perm($edit = array()) {
   }
 
   // Render role/permission overview:
-  $header = array_merge(array('&nbsp;'), $role_names);
+  $header = array_merge(array('permission'), $role_names);
 
-  foreach ($perms as $perm) {
-    $row[] = t($perm);
-    foreach ($role_names as $rid => $name) {
-      $row[] = "<input type=\"checkbox\" name=\"edit[$rid][$perm]\"". (strstr($role_perms[$rid], $perm) ? ' checked="checked"' : '') .' />';
+  foreach (module_list() as $module) {
+    if ($perms = module_invoke($module, 'perm')) {
+      $rows[] = array(array('data' => t('%module module', array('%module' => $module)), 'class' => 'module', 'colspan' => count($role_names) + 1));
+      asort($perms);
+      foreach ($perms as $perm) {
+        $row[] = array('data' => t($perm), 'class' => 'permission');
+        foreach ($role_names as $rid => $name) {
+          $row[] = form_checkbox('', "$rid][$perm", 1, strstr($role_perms[$rid], $perm));
+        }
+        $rows[] = $row;
+        unset($row);
+      }
     }
-    $rows[] = $row;
-    unset($row);
   }
 
-  $output = theme('table', $header, $rows);
+  $output = theme('table', $header, $rows, array('id' => 'permissions'));
   $output .= form_submit(t('Save permissions'));
 
   return form($output);
