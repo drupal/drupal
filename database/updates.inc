@@ -1547,7 +1547,7 @@ function update_101() {
 }
 
 function update_102() {
-  INSERT INTO {system} (filename, name, type, description, status, throttle, bootstrap) VALUES ('modules/legacy.module', 'legacy', 'module', '', 1, 0, 0);
+  return array(update_sql("INSERT INTO {system} (filename, name, type, description, status, throttle, bootstrap) VALUES ('modules/legacy.module', 'legacy', 'module', '', 1, 0, 0)"));
 }
 
 function update_sql($sql) {
