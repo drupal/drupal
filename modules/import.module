@@ -1,5 +1,5 @@
 <?php
-// $Id: import.module,v 1.139 2003/12/17 22:27:23 dries Exp $
+// $Id: import.module,v 1.140 2003/12/22 21:55:40 dries Exp $
 
 
 function import_help($section = "admin/help#import") {
@@ -519,7 +519,7 @@ function import_view() {
   $header = array(t("title"), t("attributes"), t("items"), t("last update"), t("next update"), array("data" => t("operations"), "colspan" => 3));
   unset($rows);
   while ($feed = db_fetch_object($result)) {
-    $rows[] = array($feed->title, $feed->attributes, format_plural($feed->items, "1 item", "%count items"), ($feed->timestamp ? format_interval(time() - $feed->timestamp) ." ago" : "never"), ($feed->timestamp ? format_interval($feed->timestamp + $feed->refresh - time()) ." left" : "never"), l(t("edit feed"), "admin/node/syndication/news/edit/feed/$feed->fid"), l(t("remove items"), "admin/node/syndication/news/remove/$feed->fid"), l(t("update items"), "admin/node/syndication/news/update/$feed->fid"));
+    $rows[] = array($feed->title, $feed->attributes, format_plural($feed->items, "1 item", "%count items"), ($feed->timestamp ? t("%time ago", array("%time" => format_interval(time() - $feed->timestamp))) : t("never")), ($feed->timestamp ? t("%time left", array("%time" => format_interval($feed->timestamp + $feed->refresh - time()))) : t("never")), l(t("edit feed"), "admin/node/syndication/news/edit/feed/$feed->fid"), l(t("remove items"), "admin/node/syndication/news/remove/$feed->fid"), l(t("update items"), "admin/node/syndication/news/update/$feed->fid"));
   }
   $output .= theme("table", $header, $rows);
 
@@ -667,7 +667,7 @@ function import_page_feed($fid) {
 
   $header .= "<p><b>". t("Website") .":</b><div style=\"margin-left: 20px;\"><a href=\"$feed->link\">$feed->link</a></div></p>";
   $header .= "<p><b>". t("Description") .":</b><div style=\"margin-left: 20px;\">$feed->description</div></p>";
-  $header .= "<p><b>". t("Last update") .":</b><div style=\"margin-left: 20px; text-align: right;\">". format_interval(time() - $feed->timestamp) ." ". t("ago") ." <a href=\"$feed->url\"><img src=\"". theme("image", "xml.gif") ."\" width=\"36\" height=\"14\" style=\"border: 0px;\" alt=\"\" title=\"\" /></a><br /><br /></div></p>\n";
+  $header .= "<p><b>". t("Last update") .":</b><div style=\"margin-left: 20px; text-align: right;\">". t("%time ago", array("%time" => format_interval(time() - $feed->timestamp))) ." <a href=\"$feed->url\"><img src=\"". theme("image", "xml.gif") ."\" width=\"36\" height=\"14\" style=\"border: 0px;\" alt=\"\" title=\"\" /></a><br /><br /></div></p>\n";
 
   $result = db_query_range("SELECT * FROM {item} WHERE fid = %d ORDER BY iid DESC", $fid, 0, variable_get("import_page_limit", 75));
 
