@@ -657,7 +657,7 @@ function aggregator_form_feed($edit = array()) {
   if ($options) {
     $form .= form_checkboxes(t('Categorize news items'), 'category', $values, $options, t('New items in this feed will be automatically filed in the the checked categories as they are received.'));
   }
- 
+
   // Form buttons:
   $form .= form_submit(t('Submit'));
   if ($edit['fid']) {

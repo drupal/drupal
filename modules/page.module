@@ -21,7 +21,7 @@ function page_help($section) {
     case 'admin/modules#description':
       return t('Enables the creation of pages that can be added to the navigation system.');
     case 'node/add#page':
-      return t('If you just want to add a page with a link in the menu to your site, this is the best choice.  Unlike a story, a static page bypasses the submission queue.');
+      return t('If you want to add a static page, like an a contact page or an about page, use a page.');
   }
 }
 

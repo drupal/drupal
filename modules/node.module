@@ -29,10 +29,6 @@ function node_help($section) {
       <dt>Allow user comments</dt><dd>A node can have comments. These comments can be written by other users (Read-write), or only by admins (Read-only).</dd>
       <dt>Revisions</dt><dd>Drupal has a revision system so that you can \"roll back\" to an older version of a post if the new version is not what you want.</dd>
       <dt>Promote to front page</dt><dd>To get people to look at the new stuff on your site you can choose to move it to the front page. The front page is configured to show the teasers from only a few of the total nodes you have on your site (To configure how many teasers <a href=\"%teaser\">click here</a>).</dd>
-      <dt>In moderation queue</dt><dd>Drupal has a moderation system. If it is active, a node is in one of three states: approved and published, approved and unpublished, and awaiting approval. If you are moderating a node it should be in the moderation queue.</dd>
-      <dt>Votes</dt><dd>If you are moderating a node this counts how many votes the node has gotten. Once a node gets a certain number of vote it will either be approved or dropped.
-      <dt>Score</dt><dd>The score of the node is gotten by the votes it is given.</dd>
-      <dt>Users</dt><dd>The list of users who have voted on a moderated node.</dd>
       <dt>Published</dt><dd>When using Drupal's moderation system a node remains unpublished -- unavailable to non-moderators -- until it is marked Published.</dd></dl>
       <p>Now that you know what is in a node, here are some of the types of nodes available.</p>", array("%teaser" => url("admin/node/configure/settings")));
 

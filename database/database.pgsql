@@ -395,15 +395,12 @@ CREATE TABLE node (
   nid SERIAL,
   type varchar(16) NOT NULL default '',
   title varchar(128) NOT NULL default '',
-  score integer NOT NULL default '0',
-  votes integer NOT NULL default '0',
   uid integer NOT NULL default '0',
   status integer NOT NULL default '1',
   created integer NOT NULL default '0',
   comment integer NOT NULL default '0',
   promote integer NOT NULL default '0',
   moderate integer NOT NULL default '0',
-  users text NOT NULL default '',
   teaser text NOT NULL default '',
   body text NOT NULL default '',
   changed integer NOT NULL default '0',
@@ -542,6 +539,19 @@ CREATE TABLE poll_choices (
   PRIMARY KEY  (chid)
 );
 CREATE INDEX poll_choices_nid_idx ON poll_choices(nid);
+
+--
+-- Table structure for queue
+--
+
+CREATE TABLE queue (
+  nid integer NOT NULL default '0',
+  uid integer NOT NULL default '0',
+  vote integer NOT NULL default '0',
+  PRIMARY KEY (nid, uid)
+)
+CREATE INDEX queue_nid_idx ON queue(nid);
+CREATE INDEX queue_uid_idx ON queue(uid);
 
 --
 -- Table structure for role

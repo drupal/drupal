@@ -73,7 +73,7 @@ function blog_help($section) {
     case 'node/add/blog':
       return variable_get('blog_help', '');
     case 'node/add#blog':
-      return t("A blog is a regularly updated journal made up of individual entries, often called posts, that are time stamped and typically arranged by the day, with the newest on top (a diary is the reverse).  They tend to be quite personal, often containing links to things you've seen, or to editorials that you find interesting.   Some blogs also contain original material written solely for the blog.  Since a Blog is personal, you and only you have full control over what you publish.  The most interesting blog entries or those blog entries that fit the site's topic well might get promoted to the front page by the community or by users with the access do this.");
+      return t("A blog is a regularly updated journal or diary made up of individual posts shown in reversed chronological order.  A blog is tightly coupled to the author so each user will have his 'own' blog.");
   }
 }
 

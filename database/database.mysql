@@ -394,8 +394,6 @@ CREATE TABLE node (
   nid int(10) unsigned NOT NULL auto_increment,
   type varchar(16) NOT NULL default '',
   title varchar(128) NOT NULL default '',
-  score int(11) NOT NULL default '0',
-  votes int(11) NOT NULL default '0',
   uid int(10) NOT NULL default '0',
   status int(4) NOT NULL default '1',
   created int(11) NOT NULL default '0',
@@ -403,7 +401,6 @@ CREATE TABLE node (
   comment int(2) NOT NULL default '0',
   promote int(2) NOT NULL default '0',
   moderate int(2) NOT NULL default '0',
-  users longtext NOT NULL,
   teaser longtext NOT NULL,
   body longtext NOT NULL,
   revisions longtext NOT NULL,
@@ -528,6 +525,17 @@ CREATE TABLE poll_choices (
   chorder int(2) NOT NULL default '0',
   PRIMARY KEY  (chid),
   KEY nid (nid)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table 'queue'
+--
+
+CREATE TABLE queue (
+  nid int(10) unsigned NOT NULL,
+  uid int(10) unsigned NOT NULL,
+  vote int(3) NOT NULL default '0',
+  PRIMARY KEY (nid, uid)
 ) TYPE=MyISAM;
 
 --

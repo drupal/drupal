@@ -58,20 +58,16 @@ function queue_count() {
   return ($result) ? db_result($result, 0) : 0;
 }
 
-function queue_score($id) {
-  $result = db_query('SELECT score FROM {node} WHERE nid = %d', $id);
+function queue_score($nid) {
+  $result = db_query('SELECT SUM(vote) FROM {queue} WHERE nid = %d', $nid);
   return ($result) ? db_result($result, 0) : 0;
 }
 
 function queue_vote($node, $vote) {
   global $user;
 
-  if (!field_get($node->users, $user->uid)) {
-    // Update submission's score- and votes-field:
-    db_query("UPDATE {node} SET score = score $vote, votes = votes + 1, users = '". field_set($node->users, $user->uid, $vote) ."' WHERE nid = %d", $node->nid);
-
-    // Reload the updated node from the database:
-    $node = node_load(array('nid' => $node->nid));
+  if (!isset($node->voters[$user->uid])) {
+    db_query("INSERT INTO {queue} (nid, uid, vote) VALUES (%d, %d, %d)", $node->nid, $user->uid, $vote);
 
     $terms = module_invoke('taxonomy', 'node_get_terms', $node->nid, 'tid');
     foreach ($terms as $term) {
@@ -113,6 +109,9 @@ function queue_vote($node, $vote) {
         drupal_set_message(t('The post has expired.'));
       }
     }
+
+    // Reload the updated node from the database:
+    $node = node_load(array('nid' => $node->nid), NULL, TRUE);
   }
 }
 
@@ -124,11 +123,12 @@ function queue_overview() {
 
   $header = array(array('data' => t('Subject')), array('data' => t('Author')), array('data' => t('Type')), array('data' => t('Score')));
 
-  $sresult = pager_query('SELECT n.*, u.name, u.uid FROM {node} n INNER JOIN {users} u ON n.uid = u.uid WHERE n.moderate = 1', 10, 0);
+  $sresult = pager_query('SELECT DISTINCT(n.nid), n.title, n.type, u.name, u.uid, SUM(IF(q.uid=%d,1,0)) AS voted, SUM(q.vote) AS score FROM {node} n '. node_access_join_sql() .' INNER JOIN {users} u ON n.uid = u.uid INNER JOIN {queue} q ON n.nid = q.nid WHERE n.moderate = 1 AND '. node_access_where_sql(), 10, 0,
+                                                                                                               'SELECT DISTINCT(n.nid) FROM {node} n '. node_access_join_sql() .' WHERE n.moderate = 1 AND '. node_access_where_sql(), $user->uid);
 
   while ($node = db_fetch_object($sresult)) {
-    if ($user->uid == $node->uid || field_get($node->users, $user->uid)) {
-      $rows[] = array(array('data' => l($node->title, 'queue/'. $node->nid), 'class' => 'title'), array('data' => format_name($node), 'class' => 'name'), array('data' => module_invoke($node->type, 'node_name', $node), 'class' => 'type'), array('data' => queue_score($node->nid), 'class' => 'score'));
+    if ($user->uid == $node->uid || $node->voted) {
+      $rows[] = array(array('data' => l($node->title, 'queue/'. $node->nid), 'class' => 'title'), array('data' => format_name($node), 'class' => 'name'), array('data' => module_invoke($node->type, 'node_name', $node), 'class' => 'type'), array('data' => $node->score, 'class' => 'score'));
     }
     else {
       $rows[] = array(array('data' => l($node->title, 'queue/'. $node->nid), 'class' => 'title'), array('data' => format_name($node), 'class' => 'name'), array('data' => module_invoke($node->type, 'node_name', $node), 'class' => 'type'), array('data' => l(t('vote'), 'queue/'. $node->nid), 'class' => 'score'));
@@ -168,7 +168,7 @@ function queue_view($nid) {
   $node = node_load(array('nid' => $nid, 'moderate' => 1));
 
   if ($node) {
-    if ($user->uid != $node->uid && !field_get($node->users, $user->uid)) {
+    if ($user->uid != $node->uid && !isset($node->voters[$user->uid])) {
       if ($op == t('Vote') && $votes[$edit['vote']]) {
         // If it is a valid vote, record it.
 
@@ -234,13 +234,10 @@ function queue_block($op = 'list', $delta = 0) {
           $id = arg(2);
         }
         $node = node_load(array('nid' => $id));
-        if (($user->uid == $node->uid || field_get($node->users, $user->uid)) && $node->moderate == 1) {
-          foreach (explode(',', $node->users) as $vote) {
-            if ($vote) {
-              $data = explode('=', $vote);
-              $account = user_load(array('uid' => $data[0]));
-              $output .= format_name($account) ." voted \"$data[1]\".<br />";
-            }
+        if (($user->uid == $node->uid || isset($node->voters[$user->uid])) && $node->moderate == 1) {
+          foreach ($node->voters as $uid => $vote) {
+            $account = user_load(array('uid' => $uid));
+            $output .= t('%user voted %vote', array('%user' => format_name($account), '%vote' => $vote)) .'<br />';
           }
 
           $block['subject'] = t('Moderation results');
@@ -258,17 +255,27 @@ function queue_block($op = 'list', $delta = 0) {
  */
 function queue_nodeapi(&$node, $op) {
   switch ($op) {
-    case 'fields':
-      return array('score', 'users', 'votes');
+    case 'load':
+      $result = db_query("SELECT uid, vote FROM {queue} WHERE nid = %d", $node->nid);
+      $node->voters = array();
+      $node->score = 0;
+      while ($voter = db_fetch_object($result)) {
+        $node->voters[$voter->uid] = $voter->vote;
+        $node->score += $voter->vote;
+      }
+      break;
     case 'validate':
       if ($node->nid && $node->moderate) {
         // Reset votes when node is updated:
         $node->score = 0;
-        $node->users = '';
+        $node->voters = array();
         $node->votes = 0;
       }
       break;
     case 'insert':
+      if ($node->moderate) {
+        db_query("INSERT INTO {queue} (nid, uid) VALUES (%d, %d)", $node->nid, $node->uid);
+      }
     case 'update':
       if ($node->moderate && user_access('access submission queue')) {
         drupal_set_message(t('The post is queued for approval. You can check the votes in the <a href="%queue">submission queue</a>.', array('%queue' => url('queue'))));

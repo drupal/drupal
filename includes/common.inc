@@ -1508,19 +1508,6 @@ function l($text, $path, $attributes = array(), $query = NULL, $fragment = NULL,
   return '<a href="'. url($path, $query, $fragment, $absolute) .'"'. drupal_attributes($attributes) .'>'. $text .'</a>';
 }
 
-function field_get($string, $name) {
-  ereg(",$name=([^,]+)", ",$string", $regs);
-  return $regs[1];
-}
-
-function field_set($string, $name, $value) {
-  $rval = ereg_replace(",$name=[^,]+", "", ",$string");
-  if (isset($value)) {
-    $rval .= ($rval == ',' ? '' : ',') . $name .'='. $value;
-  }
-  return substr($rval, 1);
-}
-
 /**
  * Perform end-of-request tasks.
  *

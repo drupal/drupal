@@ -89,7 +89,8 @@ $sql_updates = array(
   "2004-10-31: first update since Drupal 4.5.0 release" => "update_110",
   "2004-11-07" => "update_111",
   "2004-11-15" => "update_112",
-  "2004-11-28" => "update_113"
+  "2004-11-28" => "update_113",
+  "2004-12-05" => "update_114"
 );
 
 function update_32() {
@@ -1983,7 +1984,7 @@ function update_111() {
 function update_112() {
   $ret = array();
 
-  $ret[] = update_sql("CREATE TABLE flood (
+  $ret[] = update_sql("CREATE TABLE {flood} (
     event varchar(64) NOT NULL default '',
     hostname varchar(128) NOT NULL default '',
     timestamp int(11) NOT NULL default '0'
@@ -2011,6 +2012,56 @@ function update_113() {
 
   // Flush the menu cache:
   cache_clear_all('menu:', TRUE);
+
+  return $ret;
+}
+
+function update_114() {
+  $ret = array();
+  if ($GLOBALS['db_type'] == 'mysql') {
+    $ret[] = update_sql("CREATE TABLE {queue} (
+      nid int(10) unsigned NOT NULL,
+      uid int(10) unsigned NOT NULL,
+      vote int(3) NOT NULL default '0',
+      PRIMARY KEY (nid, uid)
+     )");
+  }
+  else if ($GLOBALS['db_type'] == 'pgsql') {
+    $ret[] = update_sql("CREATE TABLE {queue} (
+      nid integer NOT NULL default '0',
+      uid integer NOT NULL default '0',
+      vote integer NOT NULL default '0'
+    )");
+    $ret[] = update_sql("CREATE INDEX queue_nid_idx ON queue(nid)");
+    $ret[] = update_sql("CREATE INDEX queue_uid_idx ON queue(uid)");
+  }
+
+  $result = db_query("SELECT nid, votes, score, users FROM {node}");
+  while ($node = db_fetch_object($result)) {
+    if (isset($node->users)) {
+      $arr = explode(',', $node->users);
+      unset($node->users);
+      foreach ($arr as $value) {
+        $arr2 = explode('=', trim($value));
+        if (isset($arr2[0]) && isset($arr2[1])) {
+          switch ($arr2[1]) {
+            case '+ 1':
+              db_query("INSERT INTO {queue} (nid, uid, vote) VALUES (%d, %d, %d)", $node->nid, (int)$arr2[0], 1);
+              break;
+            case '- 1':
+              db_query("INSERT INTO {queue} (nid, uid, vote) VALUES (%d, %d, %d)", $node->nid, (int)$arr2[0], -1);
+              break;
+            default:
+              db_query("INSERT INTO {queue} (nid, uid, vote) VALUES (%d, %d, %d)", $node->nid, (int)$arr2[0], 0);
+          }
+        }
+      }
+    }
+  }
+
+  $ret[] = update_sql("ALTER TABLE {node} DROP votes");
+  $ret[] = update_sql("ALTER TABLE {node} DROP score");
+  $ret[] = update_sql("ALTER TABLE {node} DROP users");
 
   return $ret;
 }
