@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal.module,v 1.73 2004/01/23 18:42:43 dries Exp $
+// $Id: drupal.module,v 1.74 2004/02/28 17:55:50 dries Exp $
 
 function drupal_help($section = "admin/help#drupal") {
 
@@ -75,7 +75,7 @@ function drupal_directory_ping($arguments) {
   $argument = $arguments->getparam(0);
   $link = strip_tags($argument->scalarval());
   $argument = $arguments->getparam(1);
-  $name = strip_tags($argument->scalarval());
+  $name = trim(strip_tags($argument->scalarval()));
   $argument = $arguments->getparam(2);
   $mail = strip_tags($argument->scalarval());
   $argument = $arguments->getparam(3);
