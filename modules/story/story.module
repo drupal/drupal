@@ -38,8 +38,8 @@ function story_help($section = "admin/help#story") {
  * Declare administrative settings for a module.
  */
 function story_settings() {
- $output .= form_textarea("Explanation or submission guidelines", "story_help", variable_get("story_help", ""), 70, 5, "This text will be displayed at the top of the story submission form.  It is useful for helping or instructing your users.");
- $output .= form_select(t("Minimum number of words"), "minimum_story_size", variable_get("minimum_story_size", 0), array(0 => "0 words", 10 => "10 words", 25 => "25 words",  50 => "50 words", 75 => "75 words", 100 => "100 words", 125 => "125 words",  150 => "150 words", 175 => "175 words", 200 => "200 words"), t("The minimum number of words a story must be to be considered valid.  This can be useful to rule out submissions that do not meet the site's standards, such as short test posts."));
+ $output .= form_textarea(t("Explanation or submission guidelines"), "story_help", variable_get("story_help", ""), 70, 5, t("This text will be displayed at the top of the story submission form.  It is useful for helping or instructing your users."));
+ $output .= form_select(t("Minimum number of words"), "minimum_story_size", variable_get("minimum_story_size", 0), drupal_map_assoc(array(0, 10, 25, 50, 75, 100, 125, 150, 175, 200)), t("The minimum number of words a story must be to be considered valid.  This can be useful to rule out submissions that do not meet the site's standards, such as short test posts."));
 
  return $output;
 }
