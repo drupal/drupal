@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.171 2003/02/27 22:52:08 dries Exp $
+// $Id: common.inc,v 1.172 2003/03/04 06:19:01 dries Exp $
 
 function conf_init() {
   global $HTTP_HOST, $PHP_SELF;
@@ -928,13 +928,13 @@ $conf = variable_init(isset($conf) ? $conf : array());
 // initialize installed modules:
 module_init();
 
+// set error handler:
+set_error_handler("error_handler");
+
 // initialize localization system:
 $locale = locale_init();
 
 // initialize theme:
 $theme = theme_init();
-
-// set error handler:
-set_error_handler("error_handler");
 
 ?>
