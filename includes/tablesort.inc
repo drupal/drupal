@@ -16,7 +16,7 @@ function tablesort_pager() {
 
 function tablesort_sql($header) {
   $ts = tablesort_init($header);
-  if ($ts['field']) {
+  if ($ts['sql']) {
     $sql = check_query($ts['sql']);
     $sort = strtoupper(check_query($ts['sort']));
     return " ORDER BY $sql $sort";
