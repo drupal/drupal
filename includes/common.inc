@@ -90,6 +90,27 @@ function format_info($body, $block) {
   return "<table><tr><td><table align=\"right\" border=\"1\" width=\"180\"><tr><td>$block</td></tr></table>$body</td></tr></table>\n";
 }
 
+function format_rss_channel($title, $link, $description, $items) {
+  $output .= "<channel>\n";
+  $output .= " <title>". strip_tags($title) ."</title>\n";
+  $output .= " <link>". strip_tags($link) ."</link>\n";
+  $output .= " <description>". htmlentities($description) ."</description>\n";
+  $output .= $items;
+  $output .= "</channel>\n";
+
+  return $output;
+}
+
+function format_rss_item($title, $link, $description) {
+  $output .= "<item>\n";
+  $output .= " <title>". strip_tags($title) ."</title>\n";
+  $output .= " <link>". strip_tags($link) ."</link>\n";
+  $output .= " <description>". htmlentities($description) ."</description>\n";
+  $output .= "</item>\n";
+
+  return $output;
+}
+
 function format_plural($count, $singular, $plural) {
   return ($count == 1) ? "$count ". t($singular) : "$count ". t($plural);
 }
