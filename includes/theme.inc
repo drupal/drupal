@@ -233,6 +233,11 @@ function theme_get_settings($key = NULL) {
     $settings = array_merge($settings, variable_get(str_replace('/', '_', 'theme_'. $key .'_settings'), array()));
   }
 
+  // Only offer search box if search.module is enabled.
+  if (!module_exist('search')) {
+    $settings['toggle_search'] = 0;
+  }
+
   return $settings;
 }
 

@@ -659,13 +659,16 @@ function system_theme_settings() {
 
   // Toggle settings
   $toggles = array('toggle_name' => t('Site name'),
-        'toggle_search' => t('Search box'),
         'toggle_slogan' => t('Site slogan'),
         'toggle_mission' => t('Mission statement'),
         'toggle_primary_links' => t('Primary links'),
         'toggle_secondary_links' => t('Secondary links'),
         'toggle_node_user_picture' => t('User pictures in posts'),
         'toggle_comment_user_picture' => t('User pictures in comments'));
+  // Only offer search box if search;module is enabled.
+  if (module_exist('search')) {
+    $toggles['toggle_search'] = t('Search box');
+  }
 
   foreach ($toggles as $name => $title) {
     if ((!$key) || in_array($name, $features)) {
