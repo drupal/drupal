@@ -1127,6 +1127,9 @@ function node_form($edit) {
 
   $output .= '<div class="node-form">';
 
+  // Add hidden 'op' variable, which specifies the default operation (Preview).
+  $output .= '<input type="hidden" name="op" value="'. check_form(t('Preview')) ."\" />\n";
+
   // Add the admin-specific parts/
 
   if (user_access('administer nodes')) {

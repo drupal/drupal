@@ -9,7 +9,10 @@
 
 define('FILE_DOWNLOADS_PUBLIC', 1);
 define('FILE_DOWNLOADS_PRIVATE', 2);
-define('FILE_SEPARATOR', PHP_OS == 'WINNT' ? '\\' : '/');
+#define('FILE_SEPARATOR', PHP_OS == 'WINNT' ? '\\' : '/');
+define('FILE_SEPARATOR', '/');
+define('FILE_CREATE_DIRECTORY', 1);
+define('FILE_MODIFY_PERMISSIONS', 2);
 
 /**
  * Create the download path to a file.
@@ -20,8 +23,7 @@ function file_create_url($path) {
   }
   switch (variable_get('file_downloads', FILE_DOWNLOADS_PUBLIC)) {
     case FILE_DOWNLOADS_PUBLIC:
-      global $base_url;
-      return $base_url .'/'. variable_get('file_directory_path', 'files') .'/'. str_replace('\\', '/', $path);
+      return $GLOBALS['base_url'] .'/'. variable_get('file_directory_path', 'files') .'/'. str_replace('\\', '/', $path);
     case FILE_DOWNLOADS_PRIVATE:
       return url('system/files', 'file='. $path);
   }
@@ -49,11 +51,38 @@ function file_create_path($dest = 0) {
  * Check that directory exists and is writable.
  *
  * @param $directory Path to extract and verify directory for.
+ * @param $mode Try to create the directory if it does not exist.
+ * @param $form_item Optional name for a field item to attach potential errors to.
  * @return False when directory not found, or true when directory exists.
  */
-function file_check_directory(&$directory) {
+function file_check_directory(&$directory, $mode = 0, $form_item = NULL) {
   $directory = rtrim($directory, '/\\');
-  return is_dir($directory) && is_writable($directory);
+
+  // Check if directory exists.
+  if (!is_dir($directory)) {
+    if (($mode & FILE_CREATE_DIRECTORY) && mkdir($directory, 0760)) {
+      drupal_set_message(t("Created directory '%name'.", array('%name' => $directory)));
+    }
+    else {
+      if ($form_item) {
+        form_set_error($form_item, t("The directory '%name' does not exist.", array('%name' => $directory)));
+      }
+      return false;
+    }
+  }
+
+  // Check to see if the directory is writable.
+  if (!is_writable($directory)) {
+    if (($mode & FILE_MODIFY_PERMISSIONS) && chmod($directory, 0760)) {
+      drupal_set_message(t("Modified permissions on directory '%name'.", array('%name' => $directory)));
+    }
+    else {
+      form_set_error($form_item, t("The directory '%name' is not writable.", array('%name' => $directory)));
+      return false;
+    }
+  }
+
+  return true;
 }
 
 /**
@@ -84,18 +113,24 @@ function file_check_path(&$path) {
  */
 function file_check_upload($source) {
   if (is_object($source)) {
-    if (is_file($source->path)) {
+    if (is_file($source->filepath)) {
       return $source;
     }
   }
   elseif ($_FILES["edit"]["name"][$source] && is_uploaded_file($_FILES["edit"]["tmp_name"][$source])) {
-    $file->name = trim(basename($_FILES["edit"]["name"][$source]), '.');
-    $file->type = $_FILES["edit"]["type"][$source];
-    $file->path = $_FILES["edit"]["tmp_name"][$source];
+    $file->filename = trim(basename($_FILES["edit"]["name"][$source]), '.');
+    $file->filemime = $_FILES["edit"]["type"][$source];
+    $file->filepath = $_FILES["edit"]["tmp_name"][$source];
     $file->error = $_FILES["edit"]["error"][$source];
-    $file->size = $_FILES["edit"]["size"][$source];
-    $file->source = $_FILES["edit"]["source"][$source];
+    $file->filesize = $_FILES["edit"]["size"][$source];
+    $file->source = $source;
     return $file;
+  }
+  else {
+    // In case of previews return previous file object.
+    if (file_exists($_SESSION['file_uploads'][$source]->filepath)) {
+      return $_SESSION['file_uploads'][$source];
+    }
   }
 }
 
@@ -154,9 +189,9 @@ function file_copy(&$source, $dest = 0, $replace = 0) {
   // Process a file upload object.
   if (is_object($source)) {
     $file = $source;
-    $source = $file->path;
+    $source = $file->filepath;
     if (!$basename) {
-      $basename = $file->name;
+      $basename = $file->filename;
     }
   }
 
@@ -170,11 +205,65 @@ function file_copy(&$source, $dest = 0, $replace = 0) {
   $basename = $basename ? $basename : basename($source);
   $dest = $directory . FILE_SEPARATOR . $basename;
 
-  if (file_exists($dest) && !$replace) {
-    // Destination file already exists and we can't replace is so we try and
-    // and find a new filename.
-    $pos = strrpos($basename, '.');
-    $name = substr($basename, 0, $pos);
+  // Make sure source and destination filenames are not the same, makes no sense
+  // to copy it if they are. In fact copying the file will most likely result in
+  // a 0 byte file. Which is bad. Real bad.
+  if ($source != realpath($dest)) {
+    if (file_exists($dest) && !$replace) {
+      // Destination file already exists and we can't replace is so we try and
+      // and find a new filename.
+      if ($pos = strrpos($basename, '.')) {
+        $name = substr($basename, 0, $pos);
+        $ext = substr($basename, $pos);
+      }
+      else {
+        $name = $basename;
+      }
+
+      $counter = 0;
+      do {
+        $dest = $directory . FILE_SEPARATOR . $name .'_'. $counter++ . $ext;
+      } while (file_exists($dest));
+    }
+
+    if (!copy($source, $dest)) {
+      drupal_set_message(t('File copy failed.'), 'error');
+      return 0;
+    }
+  }
+
+  if (is_object($file)) {
+    $file->filename = $basename;
+    $file->filepath = $dest;
+    $source = $file;
+  }
+  else {
+    $source = $dest;
+  }
+
+  return 1; // Everything went ok.
+}
+
+function file_move(&$source, $dest = 0, $replace = 0) {
+
+  $path_original = is_object($source) ? $source->filepath : $source;
+
+  if (file_copy($source, $dest, $replace)) {
+    $path_current = is_object($source) ? $source->filepath : $source;
+
+    if ($path_original == $path_current || file_delete($path_original)) {
+      return 1;
+    }
+    drupal_set_message(t('Removing original file failed.'), 'error');
+  }
+  return 0;
+}
+
+function file_create_filename($basename, $directory) {
+  $dest = $directory . FILE_SEPARATOR . $basename;
+
+  if (file_exists($dest)) {
+    // Destination file already exists, generate an alternative.
     if ($pos = strrpos($basename, '.')) {
       $name = substr($basename, 0, $pos);
       $ext = substr($basename, $pos);
@@ -189,36 +278,12 @@ function file_copy(&$source, $dest = 0, $replace = 0) {
     } while (file_exists($dest));
   }
 
-  if (!copy($source, $dest)) {
-    drupal_set_message(t('File copy failed.'), 'error');
-    return 0;
-  }
-
-  if (is_object($file)) {
-    $file->name = $basename;
-    $file->path = $dest;
-    $source = $file;
-  }
-  else {
-    $source = $dest;
-  }
-  return 1; // Everything went ok.
-}
-
-function file_move(&$source, $dest = 0, $replace = 0) {
-  $path = is_object($source) ? $source->path : $source;
-  if (file_copy($source, $dest, $replace)) {
-    if (unlink($path)) {
-      return 1;
-    }
-    drupal_set_message(t('Removing original file failed.'), 'error');
-  }
-  return 0;
+  return $dest;
 }
 
 function file_delete($path) {
   if (is_file($path)) {
-    unlink($path);
+    return unlink($path);
   }
 }
 
@@ -241,7 +306,7 @@ function file_save_upload($source, $dest = 0, $replace = 0) {
     if (!$dest) {
       $dest = variable_get('file_directory_temp', (PHP_OS == 'WINNT' ? 'c:\\windows\\temp' : '/tmp'));
       $temporary = 1;
-      if (is_file($_SESSION['file_uploads'][$source]->path)) {
+      if (is_file($file->filepath)) {
         // If this file was uploaded by this user before replace the temporary copy.
         $replace = 1;
       }
@@ -273,17 +338,11 @@ function file_save_upload($source, $dest = 0, $replace = 0) {
     unset($_SESSION['file_uploads'][is_object($source) ? $source->source : $source]);
     if (file_move($file, $dest, $replace)) {
       if ($temporary) {
-        $_SESSION['file_uploads'][$source] = $file;
+        $_SESSION['file_uploads'][is_object($source) ? $source->source : $source] = $file;
       }
       return $file;
     }
     return 0;
-  }
-  else {
-    // In case of previews return previous file object.
-    if (file_exists($_SESSION['file_uploads'][$source]->path)) {
-      return $_SESSION['file_uploads'][$source];
-    }
   }
   return 0;
 }
@@ -305,7 +364,7 @@ function file_save_data($data, $dest, $replace = 0) {
 
   $temp = variable_get('file_directory_temp', (PHP_OS == 'WINNT' ? 'c:\\windows\\temp' : '/tmp'));
   $file = tempnam($temp, 'file');
-  if (!$fp = fopen($file, 'w')) {
+  if (!$fp = fopen($file, 'wb')) {
     drupal_set_message(t('Unable to create file.'), 'error');
     return 0;
   }
@@ -378,7 +437,7 @@ function file_scan_directory($dir, $mask, $nomask = array('.', '..', 'CVS'), $ca
         }
         elseif (ereg($mask, $file)) {
           $name = basename($file);
-          $files["$dir/$file"]->filename = "$dir/$file";
+          $files["$dir/$file"]->path = "$dir/$file";
           $files["$dir/$file"]->name = substr($name, 0, strrpos($name, '.'));
           if ($callback) {
             $callback("$dir/$file");

@@ -73,7 +73,8 @@ $sql_updates = array(
   "2004-08-09" => "update_99",
   "2004-08-10" => "update_100",
   "2004-08-11" => "update_101",
-  "2004-08-12" => "update_102"
+  "2004-08-12" => "update_102",
+  "2004-08-17" => "update_103"
 );
 
 function update_32() {
@@ -1504,6 +1505,21 @@ function update_101() {
 
 function update_102() {
   return array(update_sql("INSERT INTO {system} (filename, name, type, description, status, throttle, bootstrap) VALUES ('modules/legacy.module', 'legacy', 'module', '', 1, 0, 0)"));
+}
+
+function update_103() {
+  $ret = array();
+  $ret[] = update_sql("CREATE TABLE files (
+    fid int(10) unsigned NOT NULL default '0',
+    nid int(10) unsigned NOT NULL default '0',
+    filename varchar(255) NOT NULL default '',
+    filepath varchar(255) NOT NULL default '',
+    filemime varchar(255) NOT NULL default '',
+    filesize int(10) unsigned NOT NULL default '0',
+    list tinyint(1) unsigned NOT NULL default '0',
+    PRIMARY KEY  (fid)
+  )");
+  return $ret;
 }
 
 function update_sql($sql) {

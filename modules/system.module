@@ -152,17 +152,13 @@ function system_view_general() {
 
   // file system:
   $directory_path = variable_get('file_directory_path', 'files');
-  if (!file_check_directory($directory_path)) {
-    form_set_error('file_directory_path', t("The directory '%name' does not exist, or is not writable.", array('%name' => $directory_path)));
-  }
+  file_check_directory($directory_path, FILE_CREATE_DIRECTORY, 'file_directory_path');
 
-  $directory_temp = variable_get('file_directory_temp', (PHP_OS == 'WINNT' ? 'c:\\windows\\temp' : '/tmp'));
-  if (!file_check_directory($directory_temp)) {
-    form_set_error('file_directory_temp', t("The directory '%name' does not exist, or is not writable.", array('%name' => $directory_temp)));
-  }
+  $directory_temp = variable_get('file_directory_temp', 'temp');
+  file_check_directory(file_create_path($directory_temp), FILE_CREATE_DIRECTORY, 'file_directory_temp');
 
   $group = form_textfield(t('File system path'), 'file_directory_path', $directory_path, 70, 255, t('A file system path where the files will be stored. This directory has to exist and be writable by Drupal. If the download method is set to public this directory has to be relative to Drupal installation directory, and be accessible over the web. When download method is set to private this directory should not be accessible over the web. Changing this location after the site has been in use will cause problems so only change this setting on an existing site if you know what you are doing.'));
-  $group .= form_textfield(t('Temporary directory'), 'file_directory_temp', $directory_temp, 70, 255, t('Location where files can be saved temporarily. This directory should not be accessible from the web.'));
+  $group .= form_textfield(t('Temporary directory'), 'file_directory_temp', $directory_temp, 70, 255, t('Location where uploaded files will be placed for preview purposes. This directory should be relative to the file system path.'));
   $group .= form_radios(t('Download method'), 'file_downloads', variable_get('file_downloads', FILE_DOWNLOADS_PUBLIC), array(FILE_DOWNLOADS_PUBLIC => t('Public - files are available using http directly.'), FILE_DOWNLOADS_PRIVATE => t('Private - files are be transferred by Drupal.')), t('This setting can be changed at any time, however, all download URLs will change and there may be unexpected problems so it is not recommended.'));
   $output .= form_group(t('File system settings'), $group);
 

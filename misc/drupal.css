@@ -198,6 +198,10 @@ tr.light .form-item, tr.dark .form-item {
   margin-right: 2em;
   margin-bottom: 1em;
 }
+.node-form .attachments fieldset {
+  float: none;
+  display: block;
+}
 .ok {
   color: #080;
 }
