@@ -5,20 +5,20 @@ include_once "includes/common.inc";
 page_header();
 
 function node_render($node) {
-  global $id, $cid, $op, $moderate, $pid, $subject, $comment, $theme, $mode, $order, $threshold, $PHP_SELF;
+  global $id, $cid, $op, $moderate, $pid, $edit, $theme, $mode, $order, $threshold, $PHP_SELF;
 
   if ($node->comment) {
     switch($op) {
       case t("Preview comment"):
         $theme->header();
-        comment_preview(check_input($pid), check_input($id), $subject, $comment);
+        comment_preview($edit);
         $theme->footer();
         break;
       case t("Post comment"):
-        comment_post(check_input($pid), check_input($id), check_input($subject), check_input($comment));
+        comment_post($edit);
         $theme->header();
         node_view($node);
-        comment_render($id, $cid);
+        comment_render($edit[id], $cid);
         $theme->footer();
         break;
       case t("Add comment"):
@@ -93,7 +93,7 @@ if ($number > 1) {
   $theme->footer();
 }
 elseif ($number) {
-  $node = ($title ? node_get_object(array("title" => $title)) : node_get_object(array("nid" => $id)));
+  $node = ($title ? node_get_object(array("title" => $title)) : node_get_object(array("nid" => ($edit[id] ? $edit[id] : $id))));
   if ($node && node_visible($node)) {
     switch ($op) {
       case "history":
