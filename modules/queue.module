@@ -1,5 +1,5 @@
 <?php
-// $Id: queue.module,v 1.98 2003/12/04 20:53:19 dries Exp $
+// $Id: queue.module,v 1.99 2003/12/18 21:05:02 dries Exp $
 
 function queue_help($section) {
   $output = "";
@@ -63,6 +63,11 @@ function queue_vote($node, $vote) {
 
     // Reload the updated node from the database:
     $node = node_load(array("nid" => $node->nid));
+
+    $terms = module_invoke('taxonomy', 'node_get_terms', $node->nid, 'tid');
+    foreach ($terms as $term) {
+      $node->taxonomy[] = $term->tid;
+    }
 
     if (variable_get("queue_threshold_post", 3) <= $node->score) {
       $node->moderate = 0;
