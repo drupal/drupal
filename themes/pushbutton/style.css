@@ -252,6 +252,8 @@ td#home a:hover img {
   /* padding in px not ex because IE messes up 100% width tables otherwise */
   padding: 30px 35px 50px 35px;
   background: transparent url(background.png) center center no-repeat;
+  /* fix background overlapping text in IE (aka Peekaboo Bug) */
+  position: relative;
 }
 #mission, .node .content, .comment .content {
   line-height: 1.4;
