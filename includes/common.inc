@@ -184,12 +184,12 @@ function form_select($title, $name, $value, $options, $description = 0) {
   return form_item($title, "<SELECT NAME=\"edit[$name]\">$select</SELECT>", $description);
 }
 
-function form_hidden($name, $value) {
-  return "<INPUT TYPE=\"hidden\" NAME=\"edit[$name]\" VALUE=\"". check_textfield($value) ."\">\n";
+function form_file($title, $name, $size, $description = 0) {
+  return form_item($title, "<INPUT TYPE=\"file\" NAME=\"edit[$name]\" SIZE=\"$size\"><P>\n", $description);
 }
 
-function form_file($name) {
-  return "<INPUT TYPE=\"file\" NAME=\"edit[$name]\">\n";
+function form_hidden($name, $value) {
+  return "<INPUT TYPE=\"hidden\" NAME=\"edit[$name]\" VALUE=\"". check_textfield($value) ."\">\n";
 }
 
 function form_submit($value) {
