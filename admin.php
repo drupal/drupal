@@ -42,7 +42,6 @@ function admin_page($mod) {
 }
 
 if (user_access("access administration pages")) {
-  user_rehash();
   admin_page($mod);
 }
 

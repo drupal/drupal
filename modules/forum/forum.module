@@ -4,7 +4,6 @@ function forum_status() {
   return array(dumped, posted);
 }
 
-
 function forum_link($type) {
   if ($type == "page" && user_access("access content")) {
     $links[] = "<a href=\"module.php?mod=forum\">". t("forum") ."</a>";
@@ -33,7 +32,7 @@ function forum_form($edit = array()) {
 function forum_save($edit) {
   global $user, $status;
 
-  node_save($edit, array(author => $user->id, body, comment => 1, moderate => 0, promote => 0, score => 0, status => $status[posted], timestamp => time(), title, type => "forum", votes => 0));
+  node_save($edit, array(author => $user->uid, body, comment => 1, moderate => 0, promote => 0, score => 0, status => $status[posted], timestamp => time(), title, type => "forum", votes => 0));
 }
 
 function forum_num_comments($nid) {

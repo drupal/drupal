@@ -134,7 +134,7 @@
                   <tr>
                     <td>
                       <img src="themes/yaroon/images/<?php echo $img; ?>" border="0" />&nbsp;<b style="font-size: 12pt"><?php echo check_output($node->title); ?></b>
-                      <?php echo strtr(t("by %a on %b"), array("%a" => format_name($node->name), "%b" => format_date($node->timestamp), "small")); ?>
+                      <?php echo strtr(t("by %a on %b"), array("%a" => format_name($node), "%b" => format_date($node->timestamp), "small")); ?>
                     </td>
                   </tr>
                   <tr><td bgcolor="<?php echo $color; ?>"><img src="themes/yaroon/images/pixel.gif" width="1" height="1" alt="" border="0" /></td></tr>
@@ -172,7 +172,7 @@
         <tr>
           <td valign="bottom" class="box">
             <img src="themes/yaroon/images/square.gif" />&nbsp;<b><?php echo check_output($comment->subject); ?></b>
-      <font size="-1"><?php echo strtr(t(" by %a on %b"), array("%a" => format_name($comment->name), "%b" => format_date($comment->timestamp), "small")); ?></font>
+      <font size="-1"><?php echo strtr(t(" by %a on %b"), array("%a" => format_name($comment), "%b" => format_date($comment->timestamp), "small")); ?></font>
           </td>
           <td align="right"><?php echo comment_moderation($comment); ?></td>
         </tr>

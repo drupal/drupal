@@ -20,7 +20,7 @@ if (user_access("post content")) {
 
     $output .= form("submit.php", $form, "get");
 
-    $theme->box("Submit", $output);
+    $theme->box(t("Submit"), $output);
   }
 }
 else {

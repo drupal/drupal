@@ -108,7 +108,7 @@ function node_overview($query) {
   $color = array("#ffffff", "#e5e5e5");
   $query = node_query($query ? $query : 0);
 
-  $result = db_query("SELECT n.*, u.name FROM node n LEFT JOIN users u ON n.author = u.id  $query[1] LIMIT 50");
+  $result = db_query("SELECT n.*, u.name, u.uid FROM node n LEFT JOIN user u ON n.author = u.uid  $query[1] LIMIT 50");
 
   $output .= status($query[0]);
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
@@ -117,7 +117,7 @@ function node_overview($query) {
   while ($node = db_fetch_object($result)) {
     $bg = $color[$i++ % sizeof($color)];
 
-    $output .= " <tr bgcolor=\"$bg\"><td><a href=\"node.php?id=$node->nid\">". check_output($node->title) ."</a></td><td align=\"center\">$node->type</td><td>". node_status($node->status) ."</td><td>". check_output($node->attributes) ."</td><td>". format_name($node->name) ."</td><td>". format_date($node->timestamp, "small") ."</td></tr>\n";
+    $output .= " <tr bgcolor=\"$bg\"><td><a href=\"node.php?id=$node->nid\">". check_output($node->title) ."</a></td><td align=\"center\">$node->type</td><td>". node_status($node->status) ."</td><td>". check_output($node->attributes) ."</td><td>". format_name($node) ."</td><td>". format_date($node->timestamp, "small") ."</td></tr>\n";
     $output .= " <tr bgcolor=\"$bg\"><td align=\"right\" colspan=\"6\"><small>". implode(", ", node_links($node->nid, $node->type)) ."</small></td>\n";
   }
   $output .= "</table>\n";
@@ -126,7 +126,6 @@ function node_overview($query) {
 }
 
 function node_edit_option($id) {
-  global $user;
 
   $node = node_get_object(array("nid" => $id));
 
@@ -141,7 +140,6 @@ function node_edit_option($id) {
 }
 
 function node_edit_attribute($id) {
-  global $user;
 
   $node = node_get_object(array("nid" => $id));
 

@@ -38,10 +38,10 @@ function queue_vote($id, $vote) {
 
   if ($node = node_get_object(array(nid => $id))) {
 
-    if (!field_get($node->users, $user->id)) {
+    if (!field_get($node->users, $user->uid)) {
 
       // Update submission's score- and votes-field:
-      db_query("UPDATE node SET score = score $vote, votes = votes + 1, users = '". field_set($node->users, $user->id, $vote) ."' WHERE nid = $id");
+      db_query("UPDATE node SET score = score $vote, votes = votes + 1, users = '". field_set($node->users, $user->uid, $vote) ."' WHERE nid = $id");
 
       $node = node_get_object(array(nid => $id, type => $node->type));
 
@@ -64,13 +64,13 @@ function queue_vote($id, $vote) {
 function queue_overview() {
   global $status, $theme, $user;
 
-  $result = db_query("SELECT n.*, u.name, u.name FROM node n LEFT JOIN users u ON n.author = u.id WHERE n.status = '$status[queued]'");
+  $result = db_query("SELECT n.*, u.name, u.uid FROM node n LEFT JOIN user u ON n.author = u.uid WHERE n.status = '$status[queued]'");
 
   $content .= "<TABLE BORDER=\"0\" CELLSPACING=\"4\" CELLPADDING=\"4\">\n";
   $content .= " <TR><TH>". t("Subject") ."</TH><TH>". t("Author") ."</TH><TH>". t("Type") ."</TH><TH>". t("Score") ."</TH></TR>\n";
   while ($node = db_fetch_object($result)) {
-    if ($user->id == $node->author || field_get($node->users, $user->id)) $content .= " <TR><TD><A HREF=\"module.php?mod=queue&op=view&id=$node->nid\">". check_output($node->title) ."</A></TD><TD ALIGN=\"center\">". format_name($node->name) ."</TD><TD ALIGN=\"center\">". check_output($node->type) ."</TD><TD ALIGN=\"center\">". queue_score($node->nid) ."</TD></TR>\n";
-    else $content .= " <TR><TD><A HREF=\"module.php?mod=queue&op=view&id=$node->nid\">". check_output($node->title) ."</A></TD><TD ALIGN=\"center\">". format_name($node->name) ."</TD><TD ALIGN=\"center\">". check_output($node->type) ."</TD><TD ALIGN=\"center\"><A HREF=\"module.php?mod=queue&op=view&id=$node->nid\">". t("vote") ."</A></TD></TR>\n";
+    if ($user->uid == $node->author || field_get($node->users, $user->uid)) $content .= " <TR><TD><A HREF=\"module.php?mod=queue&op=view&id=$node->nid\">". check_output($node->title) ."</A></TD><TD ALIGN=\"center\">". format_name($node) ."</TD><TD ALIGN=\"center\">". check_output($node->type) ."</TD><TD ALIGN=\"center\">". queue_score($node->nid) ."</TD></TR>\n";
+    else $content .= " <TR><TD><A HREF=\"module.php?mod=queue&op=view&id=$node->nid\">". check_output($node->title) ."</A></TD><TD ALIGN=\"center\">". format_name($node) ."</TD><TD ALIGN=\"center\">". check_output($node->type) ."</TD><TD ALIGN=\"center\"><A HREF=\"module.php?mod=queue&op=view&id=$node->nid\">". t("vote") ."</A></TD></TR>\n";
   }
   $content .= "</TABLE>\n";
 
@@ -85,7 +85,7 @@ function queue_node($id) {
 
   $node = node_get_object(array(nid => $id));
 
-  if ($user->id == $node->author || field_get($node->users, $user->id)) {
+  if ($user->uid == $node->author || field_get($node->users, $user->uid)) {
     header("Location: node.php?id=$node->nid");
   }
   else {
@@ -118,7 +118,7 @@ function queue_node($id) {
 function queue_page() {
   global $user, $id, $op, $theme, $vote;
 
-  if ($user->id && user_access("access submission queue")) {
+  if ($user->uid && user_access("access submission queue")) {
     switch($op) {
       case "Vote";
         queue_vote(check_input($id), check_input($vote));

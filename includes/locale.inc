@@ -2,7 +2,7 @@
 
 function locale_init() {
   global $languages, $user;
-  return ($languages ? (($user->id && $user->language) ? $user->language : key($languages)) : 0);
+  return ($languages ? (($user->uid && $user->language) ? $user->language : key($languages)) : 0);
 }
 
 function t($string) {

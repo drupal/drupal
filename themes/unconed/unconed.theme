@@ -60,7 +60,9 @@
      <TD BGCOLOR="<?php print $this->cl80; ?>">
       <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="9" BGCOLOR="<?php print $this->cl80; ?>">
        <TR>
-        <TD COLSPAN="2"><IMG SRC="themes/<?php print $this->themename; ?>/images/logo.gif" ALT="logo"></TD>
+        <TD COLSPAN="2">
+         <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0" BGCOLOR="<?php echo $this->brcolor1; ?>"><TR><TD ALIGN="CENTER"><TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="4"><TR><TD ALIGN="CENTER" BGCOLOR="<?php echo $this->bgcolor2; ?>"><IMG SRC="themes/<?php print $this->themename; ?>/images/logo.gif" ALT="logo"></TD></TR></TABLE></TD></TR></TABLE>
+        </TD>
        </TR>
        <TR>
         <TD COLSPAN="2" ALIGN="CENTER">
@@ -90,7 +92,7 @@
           <TR><TD COLSPAN="2" BGCOLOR="<?php echo $this->bgcolor1; ?>" WIDTH="100%"><table width="100%" cellpadding="0" cellspacing="0"><tr><td width="100%"><FONT COLOR="<?php echo $this->fgcolor1; ?>"><B><?php echo "". check_output($node->title) .""; ?></B></FONT></td><td valign="middle" align="center"><IMG SRC="themes/<?php print $this->themename; ?>/images/icon.gif" valign="middle"></td></tr></table></TD></TR>
           <TR BGCOLOR="<?php echo $this->bgcolor2; ?>">
            <?php
-            print "<TD WIDTH=\"70%\" BGCOLOR=\"$this->bgcolor2\"><SMALL>" . strtr(t("Submitted by %a on %b"), array("%a" => format_name($node->name), "%b" => format_date($node->timestamp, "large"))) . "</TD><TD WIDTH=\"30%\" BGCOLOR=\"$this->bgcolor2\" ALIGN=\"center\" NOWRAP><B>". node_index($node) ."</B>";
+            print "<TD WIDTH=\"70%\" BGCOLOR=\"$this->bgcolor2\"><SMALL>" . strtr(t("Submitted by %a on %b"), array("%a" => format_name($node), "%b" => format_date($node->timestamp, "large"))) . "</TD><TD WIDTH=\"30%\" BGCOLOR=\"$this->bgcolor2\" ALIGN=\"center\" NOWRAP><B>". node_index($node) ."</B>";
            ?>
           </TD>
          </TR>
@@ -139,7 +141,7 @@
 
      // Author:
      echo "    <TR>";
-     echo "     <TD ALIGN=\"right\" VALIGN=\"top\">" . t("Author") . ":</TD><TD><B>" . format_name($comment->name) . "</B> ";
+     echo "     <TD ALIGN=\"right\" VALIGN=\"top\">" . t("Author") . ":</TD><TD><B>" . format_name($node) . "</B> ";
      if ($comment->name) {
        // Display extra information line:
        if ($comment->fake_email) $info .= format_email($comment->fake_email);

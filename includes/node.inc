@@ -16,7 +16,7 @@ function _node_get($conditions) {
   }
 
   if ($type) {
-    return db_query("SELECT n.*, l.*, u.name FROM node n LEFT JOIN $type l ON n.lid = l.lid AND n.nid = l.nid LEFT JOIN users u ON n.author = u.id WHERE $where ORDER BY n.timestamp DESC");
+    return db_query("SELECT n.*, l.*, u.uid, u.name FROM node n LEFT JOIN $type l ON n.lid = l.lid AND n.nid = l.nid LEFT JOIN user u ON n.author = u.uid WHERE $where ORDER BY n.timestamp DESC");
   }
 }
 
@@ -190,7 +190,7 @@ function node_control($node) {
   </SCRIPT>
  <?php
 
-  if ($user->id) {
+  if ($user->uid) {
     $choices = array("node.php?id=$node->nid" => t("view node"), "submit.php?mod=$node->type" => t("add node"), "submit.php?mod=$node->type&op=update&id=$node->nid" => t("update node"),  "node.php?op=history&id=$node->nid" => t("view history"));
   }
   else {
@@ -236,7 +236,7 @@ function node_index($node) {
 
 function node_access($node) {
   global $user, $status;
-  return ($node->status == $status[posted]) || ($node->status == $status[queued] && $user->id) || user_access("administer nodes");
+  return ($node->status == $status[posted]) || ($node->status == $status[queued] && $user->uid) || user_access("administer nodes");
 }
 
 

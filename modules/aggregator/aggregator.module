@@ -50,7 +50,7 @@ function import_update() {
 function import_format_item($item, $feed = 0) {
   global $theme, $user;
 
-  if ($user->id && user_access("post blogs")) {
+  if ($user->uid && user_access("post blogs")) {
     $output .= "<a href=\"submit.php?mod=blog&type=import&id=$item->iid\"><img src=\"". $theme->image("blog.gif") ."\" border=\"0\" width=\"12\" height=\"16\" alt=\"" . t("Blog this item") . "\" /></a> ";
   }
 
@@ -602,7 +602,7 @@ function import_page_sources() {
 
   while ($feed = db_fetch_object($result)) {
     $output .= format_url("module.php?mod=import&op=feed&id=$feed->fid", $feed->title);
-    $output .= "<p><div style=\"margin-left: 20px;\">". check_output($feed->description, 1) ."</div></p>";
+    $output .= "<div style=\"margin-left: 20px;\">". check_output($feed->description, 1) ."</div><br />";
   }
 
   $output .= "<a href=\"module.php?mod=import&op=fd\"><img src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" align=\"right\" border=\"0\" /></a><br />\n";

@@ -21,3 +21,14 @@ UPDATE user SET status = 1 WHERE status = 2;
 UPDATE user SET name = userid;
 ALTER TABLE user DROP userid;
 UPDATE user SET init = mail;
+
+DROP TABLE access;
+
+CREATE TABLE access (
+  aid tinyint(10) DEFAULT '0' NOT NULL auto_increment,
+  mask varchar(255) DEFAULT '' NOT NULL,
+  type varchar(255) DEFAULT '' NOT NULL,
+  status tinyint(2) DEFAULT '0' NOT NULL,
+  UNIQUE mask (mask),
+  PRIMARY KEY (aid)
+);

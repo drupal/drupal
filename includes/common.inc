@@ -34,7 +34,7 @@ function error_handler($errno, $message, $filename, $line, $variables) {
 
 function watchdog($type, $message) {
   global $user;
-  db_query("INSERT INTO watchdog (user, type, message, location, hostname, timestamp) VALUES ('$user->id', '". check_input($type) ."', '". check_input($message) ."', '". check_input(getenv("REQUEST_URI")) ."', '". check_input(getenv("REMOTE_ADDR")) ."', '". time() ."')");
+  db_query("INSERT INTO watchdog (user, type, message, location, hostname, timestamp) VALUES ('$user->uid', '". check_input($type) ."', '". check_input($message) ."', '". check_input(getenv("REQUEST_URI")) ."', '". check_input(getenv("REMOTE_ADDR")) ."', '". time() ."')");
 }
 
 function throttle($type, $rate) {
@@ -152,7 +152,7 @@ function cache_clear($interval = 0) {
 function cache_get() {
   global $user, $REQUEST_URI, $REQUEST_METHOD;
 
-  if (!$user->id && $REQUEST_METHOD == "GET") {
+  if (!$user->uid && $REQUEST_METHOD == "GET") {
     if ($cache = db_fetch_object(db_query("SELECT * FROM cache WHERE url = '". check_input($REQUEST_URI) ."'"))) {
       cache_clear(variable_get("cache_clear", 30));
     }
@@ -167,7 +167,7 @@ function cache_get() {
 function cache_set() {
   global $user, $REQUEST_URI, $REQUEST_METHOD;
 
-  if (!$user->id && $REQUEST_METHOD == "GET") {
+  if (!$user->uid && $REQUEST_METHOD == "GET") {
     if ($data = ob_get_contents()) {
       db_query("INSERT INTO cache (url, data, timestamp) VALUES('". addslashes($REQUEST_URI) ."', '". addslashes($data) ."', '". time() ."')");
     }
@@ -220,13 +220,14 @@ function format_date($timestamp, $type = "medium", $format = "") {
   return $date;
 }
 
-function format_name($username, $realname = "") {
-  if ($realname) {
-    watchdog("special", "format_name - FIX ME");
-    return "<font color=\"red\">FIX ME</font>\n";
+function format_name($object) {
+
+  if ($object->uid && $object->name) {
+    return "<a href=\"module.php?mod=user&op=view&id=$object->uid\">$object->name</a>";
   }
-  else if ($username) {
-    return (user_access("administer users") ? "<a href=\"admin.php?mod=account&op=view&name=". urlencode($username) ."\">". $username ."</a>" : "<a href=\"account.php?op=view&name=". urlencode($username) ."\">$username</a>");
+  else if (!is_object($object)) {
+    watchdog("error", "format_name(): missing name ($object->name) or uid ($object->uid)");
+    return "<font color=\"red\">FIX ME</font>";
   }
   else {
     return variable_get(anonymous, "Anonymous");
@@ -308,7 +309,6 @@ function link_page() {
 
   $links[] = "<a href=\"index.php\">". t("home") ."</a>";
   $links[] = "<a href=\"submit.php\">". t("submit") ."</a>";
-  $links[] = "<a href=\"account.php\">". t("account") ."</a>";
 
   foreach (module_list() as $name) {
     if (module_hook($name, "link")) {
@@ -343,8 +343,6 @@ function timer_print() {
 }
 
 function page_header() {
-  global $user;
-
   if (variable_get("dev_timer", 0)) {
     timer_start();
   }
@@ -373,18 +371,15 @@ include_once "includes/$conf.php";
 include_once "includes/database.inc";
 include_once "includes/variable.inc";
 include_once "includes/comment.inc";
+include_once "includes/xmlrpc.inc";
 include_once "includes/module.inc";
 include_once "includes/locale.inc";
 include_once "includes/search.inc";
 include_once "includes/theme.inc";
-include_once "includes/user.inc";
 include_once "includes/node.inc";
 
 // initialize configuration variables:
 $conf = variable_init();
-
-// initialize user session:
-user_init();
 
 // initialize installed modules:
 module_init();
