@@ -1,6 +1,9 @@
 <?php
 // $Id$
 
+/**
+ * Implementation of hook_help().
+ */
 function admin_help($section) {
   switch ($section) {
     case "admin/system/modules#description":
@@ -21,6 +24,10 @@ function admin_link($type) {
   }
 }
 
+/**
+ * Menu callback. Provides an overview to serve as the main page of the
+ * administration section.
+ */
 function admin_admin() {
   print theme("page", watchdog_overview("actions"));
 }

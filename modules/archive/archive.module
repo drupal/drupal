@@ -1,39 +1,39 @@
 <?php
 // $Id$
 
+/**
+ * Implementation of hook_help().
+ */
 function archive_help($section) {
-  $output = "";
-
   switch ($section) {
     case 'admin/system/modules#description':
-      $output = t("Displays a calendar to navigate old content.");
-      break;
+      return t('Displays a calendar to navigate old content.');
     case 'admin/system/modules/archive':
-      $output = t("Choose the starting \"day of the week\" for the displayed calendar block.");
-      break;
+      return t('Choose the starting "day of the week" for the displayed calendar block.');
   }
-
-  return $output;
 }
 
+/**
+ * Generates a monthly claendar, for display in the archive block.
+ */
 function archive_calendar($original = 0) {
   global $user;
-  $edit = $_POST["edit"];
+  $edit = $_POST['edit'];
 
   // Extract today's date:
   $offset = time() + $user->timezone;
-  $start_of_today = mktime(0, 0, 0, date("n", $offset), date("d", $offset), date("Y", $offset)) + $user->timezone;
-  $end_of_today = mktime(23, 59, 59, date("n", $offset), date("d", $offset), date("Y", $offset)) + $user->timezone;
+  $start_of_today = mktime(0, 0, 0, date('n', $offset), date('d', $offset), date('Y', $offset)) + $user->timezone;
+  $end_of_today = mktime(23, 59, 59, date('n', $offset), date('d', $offset), date('Y', $offset)) + $user->timezone;
 
   // Extract the requested date:
-  if ($edit["year"] && $edit["month"] && $edit["day"]) {
-    $year = $edit["year"];
-    $month = $edit["month"];
-    $day = $edit["day"];
+  if ($edit['year'] && $edit['month'] && $edit['day']) {
+    $year = $edit['year'];
+    $month = $edit['month'];
+    $day = $edit['day'];
 
     $requested = mktime(0, 0, 0, $month, $day, $year) + $user->timezone;
   }
-  else if (arg(0) == "archive" && arg(3)) {
+  else if (arg(0) == 'archive' && arg(3)) {
     $year = arg(1);
     $month = arg(2);
     $day = arg(3);
@@ -41,9 +41,9 @@ function archive_calendar($original = 0) {
     $requested = mktime(0, 0, 0, $month, $day, $year) + $user->timezone;
   }
   else {
-    $year = date("Y", time());
-    $month  = date("n", time());
-    $day = date("d", time());
+    $year = date('Y', time());
+    $month  = date('n', time());
+    $day = date('d', time());
 
     $requested = $end_of_today + $user->timezone;
   }
@@ -51,10 +51,10 @@ function archive_calendar($original = 0) {
   $start_of_month = mktime(0, 0, 0, $month, 1, $year);
 
   // Extract first day of the month:
-  $first = date("w", $start_of_month);
+  $first = date('w', $start_of_month);
 
   // Extract last day of the month:
-  $last = date("t", $start_of_month);
+  $last = date('t', $start_of_month);
 
   $end_of_month = mktime(23, 59, 59, $month, $last, $year);
 
@@ -66,27 +66,27 @@ function archive_calendar($original = 0) {
 
   // Calculate previous and next months dates and check for shorter months (28/30 days)
   $prevmonth = mktime(23, 59, 59, $month - 1, 1, $year);
-  $prev = mktime(23, 59, 59, $month - 1, min(date("t", $prevmonth), $day), $year);
+  $prev = mktime(23, 59, 59, $month - 1, min(date('t', $prevmonth), $day), $year);
   $nextmonth = mktime(23, 59, 59, $month + 1, 1, $year);
-  $next = mktime(23, 59, 59, $month + 1, min(date("t", $nextmonth), $day), $year);
+  $next = mktime(23, 59, 59, $month + 1, min(date('t', $nextmonth), $day), $year);
 
 
   $result = db_query("SELECT created FROM {node} WHERE status = 1 AND created > $start_of_month AND created < $end_of_month");
 
   $days_with_posts = array();
   while ($day_with_post = db_fetch_object($result)) {
-    $days_with_posts[] = date("j", $day_with_post->created + $user->timezone);
+    $days_with_posts[] = date('j', $day_with_post->created + $user->timezone);
   }
   $days_with_posts = array_unique($days_with_posts);
 
   // Generate calendar header:
   $output .= "\n<!-- calendar -->\n";
-  $output .= "<div class=\"calendar\">";
-  $output .= "<table summary=\"". t('A calendar to browse the archives') .".\">\n";
-  $output .= " <caption>". l("&laquo;", "archive/". date("Y/m/d", $prev), array('title' => t("Previous month"))) ." ". format_date($requested, "custom", "F") . date(" Y", $requested) ." ". ($nextmonth <= time() ? l("&raquo;", "archive/". date("Y/m/d", $next), array('title' => t("Next month"))) : "&nbsp;") ."</caption>\n";
+  $output .= '<div class="calendar">';
+  $output .= '<table summary="'. t('A calendar to browse the archives') .".\">\n";
+  $output .= ' <caption>'. l('&laquo;', 'archive/'. date('Y/m/d', $prev), array('title' => t('Previous month'))) .' '. format_date($requested, 'custom', 'F') . date(' Y', $requested) .' '. ($nextmonth <= time() ? l('&raquo;', 'archive/'. date('Y/m/d', $next), array('title' => t('Next month'))) : '&nbsp;') ."</caption>\n";
 
   // First day of week (0 => Sunday, 1 => Monday, ...)
-  $weekstart = variable_get("default_firstday", 0);
+  $weekstart = variable_get('default_firstday', 0);
 
   // Last day of week
   ($weekstart - 1 == -1) ? $lastday = 6 : $lastday = $weekstart - 1;
@@ -101,7 +101,7 @@ function archive_calendar($original = 0) {
   }
 
   foreach ($days as $name => $fullname) {
-    $output .= " <th abbr=\"". $fullname ."\">". $name . "</th>\n";
+    $output .= ' <th abbr="'. $fullname .'">'. $name . "</th>\n";
   }
   $output .= "</tr>\n";
 
@@ -126,11 +126,11 @@ function archive_calendar($original = 0) {
     $date = mktime(0, 0, 0, $month, $nday, $year) + $user->timezone;
     if (in_array($nday, $days_with_posts)) {
       $daytext = l($nday, "archive/$year/$month/$nday");
-      $dayclass = "day-link";
+      $dayclass = 'day-link';
     }
     else {
       $daytext = $nday;
-      $dayclass = "day-normal";
+      $dayclass = 'day-normal';
     }
     if ($date == $requested) {
       $output .= "  <td class=\"day-selected\">$daytext</td>\n";
@@ -169,17 +169,22 @@ function archive_calendar($original = 0) {
   return $output;
 }
 
-function archive_block($op = "list", $delta = 0) {
-  global $date;
-  if ($op == "list") {
-    $blocks[0]["info"] = t("Calendar to browse archives");
+/**
+ * Implementation of hook_block().
+ *
+ * Generates a calendar for the current month, with links to the archives
+ * for each day.
+ */
+function archive_block($op = 'list', $delta = 0) {
+  if ($op == 'list') {
+    $blocks[0]['info'] = t('Calendar to browse archives');
     return $blocks;
   }
-  else if (user_access("access content")) {
+  else if (user_access('access content')) {
     switch ($delta) {
       case 0:
-        $block["subject"] = t("Browse archives");
-        $block["content"] = archive_calendar();
+        $block['subject'] = t('Browse archives');
+        $block['content'] = archive_calendar();
         return $block;
     }
   }
@@ -202,57 +207,51 @@ function archive_link($type) {
   return $links;
 }
 
-function archive_page() {
-  global $date, $month, $year, $meta, $user;
+/**
+ * Menu callback. Lists all nodes posted on a given date.
+ */
+function archive_page($year = 0, $month = 0, $day = 0) {
+  global $user;
 
-  $op = $_POST["op"];
-  $edit = $_POST["edit"];
+  $output = '';
+  $op = $_POST['op'];
+  $edit = $_POST['edit'];
 
-  if ($op == t("Show")) {
-    $year = $edit["year"];
-    $month = $edit["month"];
-    $day = $edit["day"];
-  }
-  else {
-    $year = arg(1);
-    $month = arg(2);
-    $day = arg(3);
+  if ($op == t('Show')) {
+    $year = $edit['year'];
+    $month = $edit['month'];
+    $day = $edit['day'];
   }
 
   $date = mktime(0, 0, 0, $month, $day, $year) - $user->timezone;
   $date_end = mktime(0, 0, 0, $month, $day + 1, $year) - $user->timezone;
 
-  /*
-  ** Prepare the values of the form fields:
-  */
-
+  // Prepare the values of the form fields.
   $years = drupal_map_assoc(range(2000, 2005));
-  $months = array(1 => t("January"), 2 => t("February"), 3 => t("March"), 4 => t("April"), 5 => t("May"), 6 => t("June"), 7 => t("July"), 8 => t("August"), 9 => t("September"), 10 => t("October"), 11 => t("November"), 12 => t("December"));
+  $months = array(1 => t('January'), 2 => t('February'), 3 => t('March'), 4 => t('April'), 5 => t('May'), 6 => t('June'), 7 => t('July'), 8 => t('August'), 9 => t('September'), 10 => t('October'), 11 => t('November'), 12 => t('December'));
   $days = drupal_map_assoc(range(0, 31));
 
-  $start = "<div class=\"container-inline\">";
-  $start .= form_select("", "year", ($year ? $year : date("Y")), $years). form_select("", "month", ($month ? $month : date("m")), $months) . form_select("", "day", ($day ? $day : date("d")), $days) . form_submit(t("Show"));
-  $start .= "</div>";
+  $start = '<div class="container-inline">';
+  $start .= form_select('', 'year', ($year ? $year : date('Y')), $years). form_select('', 'month', ($month ? $month : date('m')), $months) . form_select('', 'day', ($day ? $day : date('d')), $days) . form_submit(t('Show'));
+  $start .= '</div>';
   $output .= form($start);
 
-  /*
-  ** Fetch nodes for the selected date, or current date if none
-  ** selected.
-  */
-
   if ($year && $month && $day) {
-    $result = db_query_range("SELECT nid FROM {node} WHERE status = '1' AND created > %d AND created < %d ORDER BY created", $date, $date_end, 0, 20);
+    // Fetch nodes for the selected date, if one was specified.
+    $result = db_query_range('SELECT nid FROM {node} WHERE status = 1 AND created > %d AND created < %d ORDER BY created', $date, $date_end, 0, 20);
 
     while ($nid = db_fetch_object($result)) {
-      $output .= node_view(node_load(array("nid" => $nid->nid)), 1);
+      $output .= node_view(node_load(array('nid' => $nid->nid)), 1);
     }
   }
-  print theme("page", $output);
+  print theme('page', $output);
 }
 
+/**
+ * Implementation of hook_settings().
+ */
 function archive_settings() {
-
-  $output .= form_select(t("First day of week"), "default_firstday", variable_get("default_firstday", 0), array(0 => t("Sunday"), 1 => t("Monday"), 2 => t("Tuesday"), 3 => t("Wednesday"), 4 => t("Thursday"), 5 => t("Friday"), 6 => t("Saturday")), t("The first day of the week.  By changing this value you choose how the calendar block is rendered."));
+  $output = form_select(t('First day of week'), 'default_firstday', variable_get('default_firstday', 0), array(0 => t('Sunday'), 1 => t('Monday'), 2 => t('Tuesday'), 3 => t('Wednesday'), 4 => t('Thursday'), 5 => t('Friday'), 6 => t('Saturday')), t('The first day of the week.  By changing this value you choose how the calendar block is rendered.'));
 
   return $output;
 }

@@ -1,6 +1,9 @@
 <?php
 /* $Id$ */
 
+/**
+ * Implementation of hook_help().
+ */
 function aggregator_help($section) {
   switch ($section) {
     case 'admin/help#aggregator':
@@ -64,11 +67,18 @@ function aggregator_help($section) {
   }
 }
 
+/**
+ * Menu callback. Displays the aggregator-specific information from admin/help.
+ */
 function aggregator_help_page() {
   print theme('page', aggregator_help('admin/help#aggregator'));
 }
 
+/**
+ * Implementation of hook_settings().
+ */
 function aggregator_settings() {
+  $output = '';
   $number = drupal_map_assoc(array(5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100));
   $items = array(0 => t('none'), 3 => t('3 items'), 5 => t('5 items'), 10 => t('10 items'), 15 => t('15 items'), 20 => t('20 items'), 25 => t('25 items'));
 
@@ -79,6 +89,9 @@ function aggregator_settings() {
   return $output;
 }
 
+/**
+ * Implementation of hook_perm().
+ */
 function aggregator_perm() {
   return array('administer news feeds', 'access news feeds');
 }
@@ -94,9 +107,11 @@ function aggregator_link($type) {
   if ($type == 'system') {
     $access = user_access('administer news feeds');
     menu('admin/syndication', t('syndication'), $access ? 'aggregator_help_page' : MENU_DENIED, 5);
-    menu('admin/syndication/news', t('RSS/RDF'), $access ? 'aggregator_admin' : MENU_DENIED);
-    menu('admin/syndication/news/add/feed', t('new feed'), $access ? 'aggregator_admin' : MENU_DENIED, 2);
-    menu('admin/syndication/news/add/category', t('new category'), $access ? 'aggregator_admin' : MENU_DENIED, 3);
+    menu('admin/syndication/news', t('RSS/RDF'), $access ? 'aggregator_admin_overview' : MENU_DENIED);
+    menu('admin/syndication/news/add/feed', t('new feed'), $access ? 'aggregator_admin_edit_feed' : MENU_DENIED, 2);
+    menu('admin/syndication/news/add/category', t('new category'), $access ? 'aggregator_admin_edit_category' : MENU_DENIED, 3);
+    menu('admin/syndication/news/remove', t('remove items'), $access ? 'aggregator_admin_remove_feed' : MENU_DENIED, 0, MENU_HIDE, MENU_LOCKED);
+    menu('admin/syndication/news/update', t('update items'), $access ? 'aggregator_admin_refresh_feed' : MENU_DENIED, 0, MENU_HIDE, MENU_LOCKED);
     menu('admin/syndication/news/help', t('help'), $access ? 'aggregator_help_page' : MENU_DENIED, 9);
 
     $access = user_access('access news feeds');
@@ -106,6 +121,8 @@ function aggregator_link($type) {
 
     // To reduce the number of SQL queries, we don't query the database when
     // not on an aggregator page.
+    // If caching of the menu is implemented, this check should be removed
+    // so that DHTML menu presentation can be used correctly.
     if (arg(0) == 'aggregator') {
       // Sources:
       $result = db_query('SELECT title, fid FROM {aggregator_feed} ORDER BY title');
@@ -124,13 +141,23 @@ function aggregator_link($type) {
   }
 }
 
+/**
+ * Implementation of hook_cron().
+ *
+ * Checks news feeds for updates once their refresh interval has elapsed.
+ */
 function aggregator_cron() {
-  $result = db_query("SELECT * FROM {aggregator_feed} WHERE checked + refresh < %d", time());
+  $result = db_query('SELECT * FROM {aggregator_feed} WHERE checked + refresh < %d', time());
   while ($feed = db_fetch_array($result)) {
     aggregator_refresh($feed);
   }
 }
 
+/**
+ * Implementation of hook_block().
+ *
+ * Generates blocks for the latest news items in each category and feed.
+ */
 function aggregator_block($op, $delta) {
   if (user_access('access news feeds')) {
     if ($op == 'list') {
@@ -161,9 +188,9 @@ function aggregator_block($op, $delta) {
       }
       $items = array();
       while ($item = db_fetch_object($result)) {
-        $items[] = theme("aggregator_block_item", $item);
+        $items[] = theme('aggregator_block_item', $item);
       }
-      $block['content'] = theme("item_list", $items) . $block['content'];
+      $block['content'] = theme('item_list', $items) . $block['content'];
     }
     return $block;
   }
@@ -182,16 +209,18 @@ function aggregator_remove($feed) {
   drupal_set_message(t('removed news items from \'%site\'.', array('%site' => $feed['title'])));
 }
 
-// Call-back function used by XML parser:
+/**
+ * Call-back function used by the XML parser.
+ */
 function aggregator_element_start($parser, $name, $attributes) {
   global $item, $element, $tag;
 
   switch ($name) {
-    case "IMAGE":
-    case "TEXTINPUT":
+    case 'IMAGE':
+    case 'TEXTINPUT':
       $element = $name;
       break;
-    case "ITEM":
+    case 'ITEM':
       $element = $name;
       $item += 1;
   }
@@ -199,40 +228,45 @@ function aggregator_element_start($parser, $name, $attributes) {
   $tag = $name;
 }
 
-// Call-back function used by XML parser:
+/**
+ * Call-back function used by the XML parser.
+ */
 function aggregator_element_end($parser, $name) {
   global $element;
 
   switch ($name) {
-    case "IMAGE":
-    case "TEXTINPUT":
-    case "ITEM":
-      $element = "";
+    case 'IMAGE':
+    case 'TEXTINPUT':
+    case 'ITEM':
+      $element = '';
   }
 }
 
-// Call-back function used by XML parser:
+/**
+ * Call-back function used by the XML parser.
+ */
 function aggregator_element_data($parser, $data) {
   global $channel, $element, $items, $item, $image, $tag;
 
   switch ($element) {
-    case "ITEM":
+    case 'ITEM':
       $items[$item][$tag] .= $data;
       break;
-    case "IMAGE":
+    case 'IMAGE':
       $image[$tag] .= $data;
       break;
-    case "TEXTINPUT":
-      /*
-      ** The sub-element is not supported but we have recognize
-      ** it or its content will end up in the items-array.
-      */
+    case 'TEXTINPUT':
+      // The sub-element is not supported. However, we must recognize
+      // it or its contents will end up in the item array.
       break;
     default:
       $channel[$tag] .= $data;
   }
 }
 
+/**
+ * Checks a news feed for new items.
+ */
 function aggregator_refresh($feed) {
   global $channel, $image;
 
@@ -242,7 +276,7 @@ function aggregator_refresh($feed) {
     $headers['If-None-Match'] = $feed['etag'];
   }
   if ($feed['modified']) {
-    $headers['If-Modified-Since'] = gmdate("D, d M Y H:i:s", $feed['modified']) ." GMT";
+    $headers['If-Modified-Since'] = gmdate('D, d M Y H:i:s', $feed['modified']) .' GMT';
   }
 
   // Request feed.
@@ -251,18 +285,18 @@ function aggregator_refresh($feed) {
   // Process HTTP reponse code.
   switch ($result->code) {
     case 304:
-      db_query("UPDATE {aggregator_feed} SET checked = %d WHERE fid = %d", time(), $feed['fid']);
-      drupal_set_message(t("no new syndicated content from '%site'.", array('%site' => $feed['title'])));
+      db_query('UPDATE {aggregator_feed} SET checked = %d WHERE fid = %d', time(), $feed['fid']);
+      drupal_set_message(t('no new syndicated content from "%site".', array('%site' => $feed['title'])));
       break;
     case 301:
       $feed['url'] = $result->redirect_url;
-      watchdog('special', "aggregator: updated URL for feed '$feed[title]' to $feed[url]");
+      watchdog('special', "aggregator: updated URL for feed \"$feed[title]\" to $feed[url]");
     case 200:
     case 302:
     case 307:
       // Filter the input data:
       if (!valid_input_data($result->data)) {
-        drupal_set_message(t("failed to parse RSS feed '%site': suspicious input data.", array("%site" => $feed["title"])), 'error');
+        drupal_set_message(t('failed to parse RSS feed "%site": suspicious input data.', array('%site' => $feed['title'])), 'error');
       }
       else if (aggregator_parse_feed($result->data, $feed)) {
 
@@ -279,7 +313,7 @@ function aggregator_refresh($feed) {
         }
 
         if ($image['LINK'] && $image['URL'] && $image['TITLE']) {
-          $image = "<a href=\"". $image['LINK'] ."\"><img src=\"". $image['URL'] ."\" alt=\"". $image['TITLE'] ."\" /></a>";
+          $image = '<a href="'. $image['LINK'] .'"><img src="'. $image['URL'] .'" alt="'. $image['TITLE'] .'" /></a>';
         }
         else {
           $image = NULL;
@@ -297,13 +331,13 @@ function aggregator_refresh($feed) {
 
         cache_clear_all();
 
-        $message = t("syndicated content from '%site'.", array("%site" => $feed["title"]));
+        $message = t('syndicated content from "%site".', array('%site' => $feed['title']));
         watchdog('regular', "aggregator: $message");
         drupal_set_message($message);
       }
       break;
     default:
-      $message = t("failed to parse RSS feed '%site': %error.", array('%site' => $feed['title'], '%error' => $result->code .' '. $result->error));
+      $message = t('failed to parse RSS feed "%site": %error.', array('%site' => $feed['title'], '%error' => $result->code .' '. $result->error));
       watchdog('error', "aggregator: $message");
       drupal_set_message($message);
   }
@@ -313,18 +347,18 @@ function aggregator_parse_feed(&$data, $feed) {
   global $items, $image, $channel;
 
   // Unset the global variables before we use them:
-  unset($GLOBALS["element"], $GLOBALS["item"], $GLOBALS["tag"]);
+  unset($GLOBALS['element'], $GLOBALS['item'], $GLOBALS['tag']);
   $items = array();
   $image = array();
   $channel = array();
 
   // parse the data:
   $xml_parser = drupal_xml_parser_create($data);
-  xml_set_element_handler($xml_parser, "aggregator_element_start", "aggregator_element_end");
-  xml_set_character_data_handler($xml_parser, "aggregator_element_data");
+  xml_set_element_handler($xml_parser, 'aggregator_element_start', 'aggregator_element_end');
+  xml_set_character_data_handler($xml_parser, 'aggregator_element_data');
 
   if (!xml_parse($xml_parser, $data, 1)) {
-    $message = t("failed to parse RSS feed '%site': %error at line %line.", array("%site" => $feed["title"], "%error" => xml_error_string(xml_get_error_code($xml_parser)), "%line" => xml_get_current_line_number($xml_parser)));
+    $message = t('failed to parse RSS feed "%site": %error at line %line.', array('%site' => $feed['title'], '%error' => xml_error_string(xml_get_error_code($xml_parser)), '%line' => xml_get_current_line_number($xml_parser)));
     watchdog('error', "aggregator: $message");
     drupal_set_message($message, 'error');
     return 0;
@@ -333,7 +367,7 @@ function aggregator_parse_feed(&$data, $feed) {
 
   // initialize the translation table:
   $tt = array_flip(get_html_translation_table(HTML_SPECIALCHARS));
-  $tt["&apos;"] = "'";
+  $tt['&apos;'] = "'";
 
   /*
   ** We reverse the array such that we store the first item last,
@@ -357,25 +391,25 @@ function aggregator_parse_feed(&$data, $feed) {
     ** boundary but not splitting potential entities.
     */
 
-    if ($item["TITLE"]) {
-      $title = $item["TITLE"];
+    if ($item['TITLE']) {
+      $title = $item['TITLE'];
     }
     else {
-      $title = preg_replace('/^(.*)[^\w;&].*?$/', "\\1", truncate_utf8($item["DESCRIPTION"], 40));
+      $title = preg_replace('/^(.*)[^\w;&].*?$/', "\\1", truncate_utf8($item['DESCRIPTION'], 40));
     }
 
     /*
     ** Resolve the items link.
     */
 
-    if ($item["LINK"]) {
-      $link = $item["LINK"];
+    if ($item['LINK']) {
+      $link = $item['LINK'];
     }
-    elseif ($item["GUID"] && (strncmp($item["GUID"], "http://", 7) == 0)) {
-      $link = $item["GUID"];
+    elseif ($item['GUID'] && (strncmp($item['GUID'], 'http://', 7) == 0)) {
+      $link = $item['GUID'];
     }
     else {
-      $link = $feed["link"];
+      $link = $feed['link'];
     }
 
     /*
@@ -398,7 +432,7 @@ function aggregator_parse_feed(&$data, $feed) {
       ** be parsed directly using PHP's strtotime().  It is not the only
       ** valid format so this might fail nonetheless ...
       */
-      list($year, $month, $day, $hour, $minute, $second) = sscanf($date, "%4d-%2d-%2dT%2d:%2d:%2d");
+      list($year, $month, $day, $hour, $minute, $second) = sscanf($date, '%4d-%2d-%2dT%2d:%2d:%2d');
       $timestamp = strtotime("$year-$month-$day $hour:$minute:$second");
     }
 
@@ -412,14 +446,14 @@ function aggregator_parse_feed(&$data, $feed) {
     ** pass along it's ID such that we can update it if needed.
     */
 
-    if ($link && $link != $feed["link"] && $link != $feed["url"]) {
-      $entry = db_fetch_object(db_query("SELECT iid FROM {aggregator_item} WHERE fid = %d AND link = '%s'", $feed["fid"], $link));
+    if ($link && $link != $feed['link'] && $link != $feed['url']) {
+      $entry = db_fetch_object(db_query("SELECT iid FROM {aggregator_item} WHERE fid = %d AND link = '%s'", $feed['fid'], $link));
     }
     else {
-      $entry = db_fetch_object(db_query("SELECT iid FROM {aggregator_item} WHERE fid = %d AND title = '%s'", $feed["fid"], $title));
+      $entry = db_fetch_object(db_query("SELECT iid FROM {aggregator_item} WHERE fid = %d AND title = '%s'", $feed['fid'], $title));
     }
 
-    aggregator_save_item(array('iid' => $entry->iid, 'fid' => $feed["fid"], 'timestamp' => $timestamp, 'title' => $title, 'link' => $link, 'author' => $item["AUTHOR"], 'description' => $item["DESCRIPTION"]));
+    aggregator_save_item(array('iid' => $entry->iid, 'fid' => $feed['fid'], 'timestamp' => $timestamp, 'title' => $title, 'link' => $link, 'author' => $item['AUTHOR'], 'description' => $item['DESCRIPTION']));
   }
 
   /*
@@ -428,14 +462,14 @@ function aggregator_parse_feed(&$data, $feed) {
 
   unset($items);
 
-  $result = db_query("SELECT iid FROM {aggregator_item} WHERE fid = %d ORDER BY timestamp", $feed["fid"]);
+  $result = db_query('SELECT iid FROM {aggregator_item} WHERE fid = %d ORDER BY timestamp', $feed['fid']);
 
   while ($item = db_fetch_object($result)) {
     $items[] = "iid = '$item->iid'";
   }
 
   if (sizeof($items) > 50) {
-    db_query("DELETE FROM {aggregator_item} WHERE ". implode(" OR ", array_slice($items, 0, - 50)));
+    db_query('DELETE FROM {aggregator_item} WHERE '. implode(' OR ', array_slice($items, 0, - 50)));
     db_query('DELETE FROM {aggregator_category_item} WHERE '. implode(' OR ', array_slice($items, 0, -50)));
   }
 
@@ -443,16 +477,16 @@ function aggregator_parse_feed(&$data, $feed) {
 }
 
 function aggregator_save_item($edit) {
-  if ($edit["iid"] && $edit["title"]) {
-    db_query("UPDATE {aggregator_item} SET title = '%s', link = '%s', author = '%s', description = '%s' WHERE iid = %d", $edit["title"], $edit["link"], $edit["author"], $edit["description"], $edit["iid"]);
+  if ($edit['iid'] && $edit['title']) {
+    db_query("UPDATE {aggregator_item} SET title = '%s', link = '%s', author = '%s', description = '%s' WHERE iid = %d", $edit['title'], $edit['link'], $edit['author'], $edit['description'], $edit['iid']);
   }
-  else if ($edit["iid"]) {
-    db_query("DELETE FROM {aggregator_item} WHERE iid = %d", $edit["iid"]);
-    db_query("DELETE FROM {aggregator_category_item} WHERE iid = %d", $edit["iid"]);
+  else if ($edit['iid']) {
+    db_query('DELETE FROM {aggregator_item} WHERE iid = %d', $edit['iid']);
+    db_query('DELETE FROM {aggregator_category_item} WHERE iid = %d', $edit['iid']);
   }
-  else if ($edit["title"] && $edit["link"]) {
-    $next_id = db_next_id("{aggregator_item}_iid");
-    db_query("INSERT INTO {aggregator_item} (iid, fid, title, link, author, description, timestamp) VALUES (%d, %d, '%s', '%s', '%s', '%s', %d)", $next_id, $edit["fid"], $edit["title"], $edit["link"], $edit["author"], $edit["description"], $edit["timestamp"]);
+  else if ($edit['title'] && $edit['link']) {
+    $next_id = db_next_id('{aggregator_item}_iid');
+    db_query("INSERT INTO {aggregator_item} (iid, fid, title, link, author, description, timestamp) VALUES (%d, %d, '%s', '%s', '%s', '%s', %d)", $next_id, $edit['fid'], $edit['title'], $edit['link'], $edit['author'], $edit['description'], $edit['timestamp']);
     // file the items in the categories indicated by the feed
     $categories = db_query('SELECT cid FROM {aggregator_category_feed} WHERE fid = %d', $edit['fid']);
     while ($category = db_fetch_object($categories)) {
@@ -492,18 +526,18 @@ function aggregator_save_category($edit) {
 }
 
 function aggregator_form_feed($edit = array()) {
-  $period = drupal_map_assoc(array(900, 1800, 3600, 7200, 10800, 21600, 32400, 43200, 64800, 86400, 172800, 259200, 604800, 1209600, 2419200), "format_interval");
+  $period = drupal_map_assoc(array(900, 1800, 3600, 7200, 10800, 21600, 32400, 43200, 64800, 86400, 172800, 259200, 604800, 1209600, 2419200), 'format_interval');
   $block_items = array(0 => t('no block'), 3 => t('3 items'), 5 => t('5 items'), 10 => t('10 items'), 15 => t('15 items'), 20 => t('20 items'), 25 => t('25 items'));
 
-  if ($edit["refresh"] == "") {
-    $edit["refresh"] = 3600;
+  if ($edit['refresh'] == '') {
+    $edit['refresh'] = 3600;
   }
 
-  $form .= form_textfield(t("Title"), "title", $edit["title"], 50, 64, t("The name of the feed; typically the name of the web site you syndicate content from."));
-  $form .= form_textfield(t("URL"), "url", $edit["url"], 50, 128, t("The fully-qualified URL of the feed."));
-  $form .= form_select(t("Update interval"), "refresh", $edit["refresh"], $period, t("The refresh interval indicating how often you want to update this feed.  Requires crontab."));
+  $form .= form_textfield(t('Title'), 'title', $edit['title'], 50, 64, t('The name of the feed; typically the name of the web site you syndicate content from.'));
+  $form .= form_textfield(t('URL'), 'url', $edit['url'], 50, 128, t('The fully-qualified URL of the feed.'));
+  $form .= form_select(t('Update interval'), 'refresh', $edit['refresh'], $period, t('The refresh interval indicating how often you want to update this feed.  Requires crontab.'));
   $form .= form_select(t('Latest items block'), 'block', $edit['block'], $block_items, t('If enabled, a block containing the latest items from this feed will be availiable for placement on the <a href="%url">block configuration</a> page.', array('%url' => url('admin/system/block'))));
-  $categories = db_query("SELECT c.cid, c.title, f.fid FROM {aggregator_category} c LEFT JOIN {aggregator_category_feed} f ON c.cid = f.cid AND f.fid = %d ORDER BY title", $edit['fid']);
+  $categories = db_query('SELECT c.cid, c.title, f.fid FROM {aggregator_category} c LEFT JOIN {aggregator_category_feed} f ON c.cid = f.cid AND f.fid = %d ORDER BY title', $edit['fid']);
   while ($category = db_fetch_object($categories)) {
     $checkboxes .= form_checkbox($category->title, "category][$category->cid", 1, $category->fid ? 1 : 0);
   }
@@ -511,11 +545,11 @@ function aggregator_form_feed($edit = array()) {
     $form .= form_group(t('Automatically file items'), $checkboxes, t('New items in this feed will be automatically filed in the the checked categories as they are recieved.'));
   }
 
-  $form .= form_submit(t("Submit"));
+  $form .= form_submit(t('Submit'));
 
-  if ($edit["fid"]) {
-    $form .= form_submit(t("Delete"));
-    $form .= form_hidden("fid", $edit["fid"]);
+  if ($edit['fid']) {
+    $form .= form_submit(t('Delete'));
+    $form .= form_hidden('fid', $edit['fid']);
   }
 
   return form($form);
@@ -556,101 +590,144 @@ function aggregator_save_feed($edit) {
 }
 
 function aggregator_get_feed($fid) {
-  return db_fetch_array(db_query("SELECT * FROM {aggregator_feed} WHERE fid = %d", $fid));
+  return db_fetch_array(db_query('SELECT * FROM {aggregator_feed} WHERE fid = %d', $fid));
 }
 
 function aggregator_get_category($cid) {
-  return db_fetch_array(db_query("SELECT * FROM {aggregator_category} WHERE cid = %d", $cid));
+  return db_fetch_array(db_query('SELECT * FROM {aggregator_category} WHERE cid = %d', $cid));
 }
 
 function aggregator_view() {
-  $result = db_query("SELECT f.*, COUNT(i.iid) AS items FROM {aggregator_feed} f LEFT JOIN {aggregator_item} i ON f.fid = i.fid GROUP BY f.fid, f.title, f.url, f.refresh, f.checked, f.link, f.description, f.etag, f.modified, f.image ORDER BY f.title");
+  $result = db_query('SELECT f.*, COUNT(i.iid) AS items FROM {aggregator_feed} f LEFT JOIN {aggregator_item} i ON f.fid = i.fid GROUP BY f.fid, f.title, f.url, f.refresh, f.checked, f.link, f.description, f.etag, f.modified, f.image ORDER BY f.title');
 
-  $output .= "<h3>". t("Feed overview") ."</h3>";
+  $output .= '<h3>'. t('Feed overview') .'</h3>';
 
-  $header = array(t("title"), t("items"), t("last update"), t("next update"), array("data" => t("operations"), "colspan" => 3));
+  $header = array(t('title'), t('items'), t('last update'), t('next update'), array('data' => t('operations'), 'colspan' => 3));
   $rows = array();
   while ($feed = db_fetch_object($result)) {
-    $rows[] = array(l($feed->title, "aggregator/sources/$feed->fid"), format_plural($feed->items, "1 item", "%count items"), ($feed->checked ? t("%time ago", array("%time" => format_interval(time() - $feed->checked))) : t("never")), ($feed->checked ? t("%time left", array("%time" => format_interval($feed->checked + $feed->refresh - time()))) : t("never")), l(t("edit feed"), "admin/syndication/news/edit/feed/$feed->fid"), l(t("remove items"), "admin/syndication/news/remove/$feed->fid"), l(t("update items"), "admin/syndication/news/update/$feed->fid"));
+    $rows[] = array(l($feed->title, "aggregator/sources/$feed->fid"), format_plural($feed->items, '1 item', '%count items'), ($feed->checked ? t('%time ago', array('%time' => format_interval(time() - $feed->checked))) : t('never')), ($feed->checked ? t('%time left', array('%time' => format_interval($feed->checked + $feed->refresh - time()))) : t('never')), l(t('edit feed'), "admin/syndication/news/edit/feed/$feed->fid"), l(t('remove items'), "admin/syndication/news/remove/$feed->fid"), l(t('update items'), "admin/syndication/news/update/$feed->fid"));
   }
-  $output .= theme("table", $header, $rows);
+  $output .= theme('table', $header, $rows);
 
-  $result = db_query("SELECT * FROM {aggregator_category} ORDER BY title");
+  $result = db_query('SELECT * FROM {aggregator_category} ORDER BY title');
 
-  $output .= "<h3>". t("Category overview") ."</h3>";
+  $output .= '<h3>'. t('Category overview') .'</h3>';
 
-  $header = array(t("title"), t("operations"));
+  $header = array(t('title'), t('operations'));
   $rows = array();
   while ($category = db_fetch_object($result)) {
-    $rows[] = array(l($category->title, "aggregator/categories/$category->cid"), l(t("edit category"), "admin/syndication/news/edit/category/$category->cid"));
+    $rows[] = array(l($category->title, "aggregator/categories/$category->cid"), l(t('edit category'), "admin/syndication/news/edit/category/$category->cid"));
   }
-  $output .= theme("table", $header, $rows);
+  $output .= theme('table', $header, $rows);
 
   return $output;
 }
 
-function aggregator_admin() {
-  $edit = $_POST["edit"];
+/**
+ * Menu callback. Displays the category edit form, or saves changes and
+ * displays the overview page.
+ */
+function aggregator_admin_edit_category($category = 0) {
+  $edit = $_POST['edit'];
+  $op = $_POST['op'];
 
-  switch ($_POST["op"] ? $_POST["op"] : arg(3)) {
-    case "add":
-      if (arg(4) == "category") {
+  switch ($op) {
+    case t('Delete'):
+      $edit['title'] = 0;
+      // Fall through:
+    case t('Submit'):
+      aggregator_save_category($edit);
+      $output = aggregator_view();
+    default:
+      if ($category) {
+        $output = aggregator_form_category(aggregator_get_category($category));
+      }
+      else {
         $output = aggregator_form_category();
+      }
+  }
+  print theme('page', $output);
+}
+
+/**
+ * Menu callback. Displays the feed edit form, or saves changes and
+ * displays the overview page.
+ */
+function aggregator_admin_edit_feed($feed = 0) {
+  $edit = $_POST['edit'];
+  $op = $_POST['op'];
+
+  switch ($op) {
+    case t('Delete'):
+      $edit['title'] = 0;
+      // Fall through:
+    case t('Submit'):
+      aggregator_save_feed($edit);
+      $output = aggregator_view();
+    default:
+      if ($feed) {
+        $output = aggregator_form_feed(aggregator_get_feed($feed));
       }
       else {
         $output = aggregator_form_feed();
       }
-      break;
-    case "edit":
-      if (arg(4) == "category") {
-        $output = aggregator_form_category(aggregator_get_category(arg(5)));
-      }
-      else {
-        $output = aggregator_form_feed(aggregator_get_feed(arg(5)));
-      }
-      break;
-    case "remove":
-      aggregator_remove(aggregator_get_feed(arg(4)));
-      $output .= aggregator_view();
-      break;
-    case "update":
-      aggregator_refresh(aggregator_get_feed(arg(4)));
-      $output .= aggregator_view();
-      break;
-    case t("Delete"):
-      $edit["title"] = 0;
-      // fall through:
-    case t("Submit"):
-      if (arg(4) == "category") {
-        aggregator_save_category($edit);
-      }
-      else {
-        aggregator_save_feed($edit);
-      }
-      // fall through:
-    default:
-      $output .= aggregator_view();
   }
-  print theme("page", $output);
+  print theme('page', $output);
 }
 
+/**
+ * Menu callback. Removes all items from a feed, then displays the overview page.
+ */
+function aggregator_admin_remove_feed($feed) {
+  aggregator_remove(aggregator_get_feed($feed));
+  print theme('page', aggregator_view());
+}
+
+/**
+ * Menu callback. Refreshes a feed, then displays the overview page.
+ */
+function aggregator_admin_refresh_feed($feed) {
+  aggregator_refresh(aggregator_get_feed($feed));
+  print theme('page', aggregator_view());
+}
+
+/**
+ * Menu callback. Displays the aggregator administration page.
+ */
+function aggregator_admin_overview() {
+  print theme('page', aggregator_view());
+}
+
+/**
+ * Menu callback. Displays the most recent items gathered from any feed.
+ */
 function aggregator_page_last() {
-  _aggregator_page_list(db_query_range("SELECT i.*, f.title AS ftitle, f.link AS flink FROM {aggregator_item} i INNER JOIN {aggregator_feed} f ON i.fid = f.fid ORDER BY i.timestamp DESC, i.iid DESC", 0, variable_get("aggregator_page_limit", 75)), arg(1));
+  _aggregator_page_list(db_query_range('SELECT i.*, f.title AS ftitle, f.link AS flink FROM {aggregator_item} i INNER JOIN {aggregator_feed} f ON i.fid = f.fid ORDER BY i.timestamp DESC, i.iid DESC', 0, variable_get('aggregator_page_limit', 75)), arg(1));
 }
 
+/**
+ * Menu callback. Displays all the items captured from a particular feed.
+ */
 function aggregator_page_source() {
-  $feed = db_fetch_object(db_query("SELECT * FROM {aggregator_feed} WHERE fid = %d", arg(2)));
+  $feed = db_fetch_object(db_query('SELECT * FROM {aggregator_feed} WHERE fid = %d', arg(2)));
   $info = theme('aggregator_feed', $feed);
 
-  _aggregator_page_list(db_query_range("SELECT * FROM {aggregator_item} WHERE fid = %d ORDER BY timestamp DESC, iid DESC", $feed->fid, 0, variable_get("aggregator_page_limit", 75)), arg(1), "<div class=\"feed\">$info</div>");
+  _aggregator_page_list(db_query_range('SELECT * FROM {aggregator_item} WHERE fid = %d ORDER BY timestamp DESC, iid DESC', $feed->fid, 0, variable_get('aggregator_page_limit', 75)), arg(1), "<div class=\"feed\">$info</div>");
 }
 
+/**
+ * Menu callback. Displays all the items aggregated in a particular category.
+ */
 function aggregator_page_category() {
-  $category = db_fetch_object(db_query("SELECT cid, title FROM {aggregator_category} WHERE cid = %d", arg(2)));
+  $category = db_fetch_object(db_query('SELECT cid, title FROM {aggregator_category} WHERE cid = %d', arg(2)));
 
   _aggregator_page_list(db_query_range('SELECT i.*, f.title AS ftitle, f.link AS flink FROM {aggregator_category_item} c LEFT JOIN {aggregator_item} i ON c.iid = i.iid LEFT JOIN {aggregator_feed} f ON i.fid = f.fid WHERE cid = %d ORDER BY timestamp DESC, iid DESC', $category->cid, 0, variable_get('aggregator_page_limit', 75)), arg(1));
 }
 
+/**
+ * Prints an aggregator page listing a number of feed items. Various
+ * menu callbacks use this function to print their feeds.
+ */
 function _aggregator_page_list($result, $op, $header = '') {
   if (user_access('administer news feeds') && $op == 'categorize') {
     if ($edit = $_POST['edit']) {
@@ -716,6 +793,9 @@ function _aggregator_page_list($result, $op, $header = '') {
   print theme('page', $output);
 }
 
+/**
+ * Menu callback. Displays all the feeds used by the aggregator.
+ */
 function aggregator_page_sources() {
   $result = db_query('SELECT f.fid, f.title, f.description, f.image, MAX(i.timestamp) AS last FROM {aggregator_feed} f LEFT JOIN {aggregator_item} i ON f.fid = i.fid GROUP BY fid');
   $output = '<div id="aggregator">';
@@ -738,14 +818,17 @@ function aggregator_page_sources() {
   print theme('page', $output);
 }
 
+/**
+ * Menu callback. Generates an OPML representation of all feeds.
+ */
 function aggregator_page_opml() {
-  $result = db_query("SELECT * FROM {aggregator_feed} ORDER BY title");
+  $result = db_query('SELECT * FROM {aggregator_feed} ORDER BY title');
 
   $output = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
   $output .= "<opml version=\"1.1\">\n";
   $output .= "<head>\n";
-  $output .= "<title>". drupal_specialchars(variable_get('site_name', 'Drupal')) ."</title>\n";
-  $output .= "<dateModified>". gmdate('r') ."</dateModified>\n";
+  $output .= '<title>'. drupal_specialchars(variable_get('site_name', 'Drupal')) ."</title>\n";
+  $output .= '<dateModified>'. gmdate('r') ."</dateModified>\n";
   $output .= "</head>\n";
   $output .= "<body>\n";
 
@@ -756,10 +839,13 @@ function aggregator_page_opml() {
   $output .= "</body>\n";
   $output .= "</opml>\n";
 
-  drupal_set_header("Content-Type: text/xml; charset=utf-8");
+  drupal_set_header('Content-Type: text/xml; charset=utf-8');
   print $output;
 }
 
+/**
+ * Menu callback. Displays all the categories used by the aggregator.
+ */
 function aggregator_page_categories() {
   $result = db_query('SELECT c.cid, c.title, c.description FROM {aggregator_category} c LEFT JOIN {aggregator_category_item} ci ON c.cid = ci.cid LEFT JOIN {aggregator_item} i ON ci.iid = i.iid GROUP BY cid');
   $output = "<div id=\"aggregator\">\n";
@@ -770,13 +856,13 @@ function aggregator_page_categories() {
       $list = array();
       $items = db_query_range('SELECT i.title, i.timestamp, i.link, f.title as feed_title, f.link as feed_link FROM {aggregator_category_item} ci LEFT JOIN {aggregator_item} i ON i.iid = ci.iid LEFT JOIN {aggregator_feed} f ON i.fid = f.fid WHERE ci.cid = %d ORDER BY i.timestamp DESC', $category->cid, 0, variable_get('aggregator_summary_items', 3));
       while ($item = db_fetch_object($items)) {
-        $list[] = "<a href=\"". check_url($item->link) ."\">$item->title</a> <span class=\"age\">". t('%age ago', array('%age' => format_interval(time() - $item->timestamp))) ."</span>, <span class=\"source\"><a href=\"$item->feed_link\">$item->feed_title</a></span>\n";
+        $list[] = '<a href="'. check_url($item->link) ."\">$item->title</a> <span class=\"age\">". t('%age ago', array('%age' => format_interval(time() - $item->timestamp))) ."</span>, <span class=\"source\"><a href=\"$item->feed_link\">$item->feed_title</a></span>\n";
       }
       $output .= theme('item_list', $list);
     }
     $output .= '<div class="more-link">'. l(t('more'), 'aggregator/categories/'. $category->cid) .'</div>';
   }
-  $output .= "</div>";
+  $output .= '</div>';
 
   print theme('page', $output);
 }
@@ -788,18 +874,18 @@ function aggregator_page_categories() {
 
 function theme_aggregator_feed($feed) {
 
-  $output  = "";
+  $output  = '';
 
   if ($feed->image) {
     $output .= $feed->image;
   }
 
   $output .= $feed->description;
-  $output .= "<h3>". t("URL") ."</h3>\n";
+  $output .= '<h3>'. t('URL') ."</h3>\n";
   $output .= theme('xml_icon', $feed->url);
   $output .= "<a href=\"$feed->link\">$feed->link</a>\n";
-  $output .= "<h3>". t('Last update') ."</h3>\n";
-  $updated = t("%time ago", array("%time" => format_interval(time() - $feed->checked)));
+  $output .= '<h3>'. t('Last update') ."</h3>\n";
+  $updated = t('%time ago', array('%time' => format_interval(time() - $feed->checked)));
 
   if (user_access('administer news feeds')) {
     $output .= l($updated, 'admin/syndication/news');
@@ -814,8 +900,8 @@ function theme_aggregator_feed($feed) {
 function theme_aggregator_block_item($item, $feed = 0) {
   global $user;
 
-  if ($user->uid && module_exist("blog") && user_access("maintain personal blog")) {
-    $output .= "<div class=\"icon\">". l("<img src=\"". theme("image", "blog.gif") ."\" alt=\"". t("blog it") ."\" title=\"". t("blog it") ."\" />", "node/add/blog", array("title" => t("Comment on this news item in your personal blog."), "class" => "blog-it"), "iid=$item->iid") ."</div>";
+  if ($user->uid && module_exist('blog') && user_access('maintain personal blog')) {
+    $output .= '<div class="icon">'. l('<img src="'. theme('image', 'blog.gif') .'" alt="'. t('blog it') .'" title="'. t('blog it') .'" />', 'node/add/blog', array('title' => t('Comment on this news item in your personal blog.'), 'class' => 'blog-it'), "iid=$item->iid") .'</div>';
   }
 
   // external link
@@ -825,24 +911,23 @@ function theme_aggregator_block_item($item, $feed = 0) {
 }
 
 function theme_aggregator_page_item($item) {
-
   static $last;
 
-  $date = date("Ymd", $item->timestamp);
+  $date = date('Ymd', $item->timestamp);
   if ($date != $last) {
     $last = $date;
-    $output .= "<h3>". date("F j, Y", $item->timestamp) ."</h3>\n";
+    $output .= '<h3>'. date('F j, Y', $item->timestamp) ."</h3>\n";
   }
 
   $output .= "<div class=\"news-item\">\n";
-  $output .= " <div class=\"date\">". date("H:i", $item->timestamp) ."</div>\n";
+  $output .= ' <div class="date">'. date('H:i', $item->timestamp) ."</div>\n";
   $output .= " <div class=\"body\">\n";
   $output .= "  <div class=\"title\"><a href=\"$item->link\">$item->title</a></div>\n";
   if ($item->description) {
     $output .= "  <div class=\"description\">$item->description</div>\n";
   }
   if ($item->ftitle && $item->fid) {
-    $output .= "  <div class=\"source\">". t('Source') .": ". l($item->ftitle, "aggregator/sources/$item->fid") ."</div>\n";
+    $output .= '  <div class="source">'. t('Source') .': '. l($item->ftitle, "aggregator/sources/$item->fid") ."</div>\n";
   }
 
   $result = db_query('SELECT c.title, c.cid FROM {aggregator_category_item} ci LEFT JOIN {aggregator_category} c ON ci.cid = c.cid WHERE ci.iid = %d ORDER BY c.title', $item->iid);
@@ -851,7 +936,7 @@ function theme_aggregator_page_item($item) {
     $categories[] = l($category->title, 'aggregator/categories/'. $category->cid);
   }
   if ($categories) {
-    $output .= "  <div class=\"categories\">". t('Categories') .": ". implode(', ', $categories) ."</div>\n";
+    $output .= '  <div class="categories">'. t('Categories') .': '. implode(', ', $categories) ."</div>\n";
   }
 
   $output .= " </div>\n";
