@@ -1,5 +1,5 @@
 <?php
-// $Id: archive.module,v 1.14 2003/02/15 11:39:56 dries Exp $
+// $Id: archive.module,v 1.15 2003/03/16 07:02:18 dries Exp $
 
 function archive_system($field){
   $system["description"] = t("Displays a calendar to navigation old content.");
@@ -174,7 +174,7 @@ function archive_page() {
     */
 
     if ($year && $month && $day) {
-      $result = db_query("SELECT nid FROM node WHERE status = '1' AND created > %d ORDER BY created LIMIT 20", $date);
+      $result = db_query_range("SELECT nid FROM node WHERE status = '1' AND created > %d ORDER BY created", $date, 0, 20);
 
       while ($nid = db_fetch_object($result)) {
         node_view(node_load(array("nid" => $nid->nid)), 1);

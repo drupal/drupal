@@ -1,25 +1,19 @@
 Drupal x.x.x, xxxx-xx-xx (to be released)
 ------------------------
 
-- clean urls.
+- clean URLs.
 - reorganized the administration pages.
+- database backend:
+    * fixed numereous SQL queries to make Drupal work on PostgreSQL and MSSQL.
 - search module:
-    * changed the search module to use implicit AND'ing instead of
-      implicit OR'ing.
+    * changed the search module to use implicit AND'ing instead of implicit OR'ing.
 - node system improvements:
-    * replaced the "post content" permission by more fine-grained
-      permissions.
+    * replaced the "post content" permission by more fine-grained permissions.
     * improved content submission:
-        + improved teasers: teasers are now optional, teaser length can
-          be configured, teaser and body are edited in a single
-          textarea, users will no longer be bother with teasers when
-          the post is too short for a teaser.
-        + added the ability to preview both the short and the full
-          version of your posts.
-    * extended the node api, allows for more advanced uses and cleans
-      up the interaction between modules.
-    * added default node settings to control the behaviour for
-      promotion, moderation and other options.
+        + improved teasers: teasers are now optional, teaser length can be configured, teaser and body are edited in a single textarea, users will no longer be bother with teasers when the post is too short for a teaser.
+        + added the ability to preview both the short and the full version of your posts.
+    * extended the node api, allows for more advanced uses and cleans up the interaction between modules.
+    * added default node settings to control the behaviour for promotion, moderation and other options.
 - themes:
     * replaced theme "Goofy" by "Xtemplate", a template driven theme.
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: conf.php,v 1.25 2003/02/20 22:44:50 dries Exp $
+// $Id: conf.php,v 1.26 2003/03/16 07:02:16 dries Exp $
 
 #
 # Database settings:
@@ -12,8 +12,9 @@
 #   and so on is likely to confuse the parser; use alpha-numerical
 #   characters instead.
 
-# $db_url = "pgsql://user:password@hostname/database";
 # $db_url = "mysql://user:password@hostname/database";
+# $db_url = "pgsql://user:password@hostname/database";
+# $db_url = "mssql://user:password@hostname/database";
 
 $db_url = "mysql://drupal:drupal@localhost/drupal";
 

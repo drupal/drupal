@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.115 2003/03/14 20:41:27 dries Exp $
+// $Id: comment.module,v 1.116 2003/03/16 07:02:19 dries Exp $
 
 $GLOBALS["cmodes"] = array(1 => t("Flat list - collapsed"), 2 => t("Flat list - expanded"), 3 => t("Threaded list - collapsed"), 4 => t("Threaded list - expanded"));
 $GLOBALS["corder"] = array(1 => t("Date - newest first"), 2 => t("Date - oldest first"));
@@ -797,7 +797,7 @@ function comment_save($id, $edit) {
 
 function comment_admin_overview($status = 0) {
 
-  $result = pager_query("SELECT c.*, u.name, u.uid FROM comments c LEFT JOIN users u ON u.uid = c.uid WHERE c.status = '". check_query($status) ."' ORDER BY c.timestamp DESC", 50);
+  $result = pager_query("SELECT c.*, u.name, u.uid FROM comments c LEFT JOIN users u ON u.uid = c.uid WHERE c.status = '". check_query($status). "' ORDER BY c.timestamp DESC",  50);
 
   $header = array(t("subject"), t("author"), t("status"), array("data" => t("operations"), "colspan" => 2));
   while ($comment = db_fetch_object($result)) {
