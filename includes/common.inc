@@ -1861,6 +1861,9 @@ function mime_header_encode($string, $charset = 'UTF-8') {
  * <?php ?> tags; in other words, we evaluate the code as if it were a stand-alone
  * PHP file.
  *
+ * Using this wrapper also ensures that the PHP code which is evaluated can not
+ * overwrite any variables in the calling code, unlike a regular eval() call.
+ *
  * @param $code
  *   The code to evaluate.
  * @return
