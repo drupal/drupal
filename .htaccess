@@ -40,7 +40,7 @@ ErrorDocument 500 /error.php
   RewriteEngine on
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule ^(.*)$ index.php?q=$1 [L] 
+  RewriteRule ^(.*)$ index.php?q=$1 [L,QSA] 
   RewriteRule ^blog/(.*) /index.php?q=blog/$1 [R]
 </IfModule>
 
