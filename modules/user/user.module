@@ -25,6 +25,13 @@ function sess_read($key) {
 
   $result = db_query_range("SELECT u.*, s.*, r.name AS role FROM {users} u INNER JOIN {role} r ON u.rid = r.rid INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.sid = '". check_query($key) ."' AND u.status < 3", 0, 1);
   $user = db_fetch_object($result);
+  if ($user->data && $data = unserialize($user->data)) {
+    foreach ($data as $key => $value) {
+      if (!isset($user->$key)) {
+        $user->$key = $value;
+      }
+    }
+  }
 
   return !empty($user->session) ? $user->session : '';
 }
