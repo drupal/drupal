@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.76 2003/10/03 14:55:27 dries Exp $
+// $Id: locale.module,v 1.77 2003/10/03 17:17:18 dries Exp $
 
 function locale_help($section = "admin/locale/help") {
   $output = "";
@@ -338,8 +338,6 @@ function locale_admin_initialize() {
 function locale($string) {
   global $locale;
   static $locale_t;
-
-  return ($string); // Need to patch this for a while.
 
   if (!isset($locale_t)) {
     $cache = cache_get("locale:$locale");
