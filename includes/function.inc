@@ -2,12 +2,17 @@
 
 $na = "<I>na</I>";
 
-function check_export($message) {
-  return strip_tags(str_replace("\"", "&quot;", stripslashes($message)));
-}
 
 function check_textfield($message) {
   return strip_tags(str_replace("\"", "&quot;", stripslashes($message)));
+}
+
+function check_select($message) {
+  return check_textfield($message);
+}
+
+function check_export($message) {
+  return check_textfield($message);
 }
 
 function check_textarea($message) {
@@ -17,7 +22,7 @@ function check_textarea($message) {
 
 function check_input($message) {
   global $allowed_html, $submission_size;
-  return strip_tags(addslashes(substr($message, 0, $submission_size)), $allowed_html);
+  return strip_tags(addslashes(stripslashes(substr($message, 0, $submission_size))), $allowed_html);
 }
 
 function check_code($message) {
@@ -26,7 +31,7 @@ function check_code($message) {
 
 function check_output($message, $nl2br = 0) {
   global $allowed_html, $na;
-  $var = strip_tags(stripslashes($message), $allowed_html);
+  $var = strip_tags(stripslashes(format_text($message)), $allowed_html);
   return ($var) ? (($nl2br) ? nl2br($var) : $var) : $na;
 }
 
@@ -89,6 +94,20 @@ function format_url($address, $description = "") {
   global $na;
   $description = ($description) ? $description : $address;
   return ($address) ? "<A HREF=\"$address\">". check_output($description) ."</A>" : $na;
+}
+
+function format_tag($link, $text) {
+  return "'<a href=\"node.php?title='. urlencode('$link') .'\">'. ('$text' ? '$text' : '$link') .'</a>'";
+}
+
+function format_text($text) {
+
+  $src = array("/(<\/?)(\w+)([^>]*>)/e",             // convert HTML to lower case
+               "/\[(([^\|]*?)(\|([^\|]*?))?)\]/e");  // [link|description]
+  $dst = array("'\\1'. strtolower('\\2') .'\\3'",    // convert HTML to lower case
+               format_tag('\\2', '\\4'));            // [link|description]
+
+  return preg_replace($src, $dst, $text);
 }
 
 ?>
