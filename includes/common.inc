@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.315 2004/01/26 19:22:21 dries Exp $ */
+/* $Id: common.inc,v 1.316 2004/01/27 22:10:47 dries Exp $ */
 
 /**
  * @defgroup common Core functions
@@ -933,10 +933,6 @@ function form_weight($title = NULL, $name = "weight", $value = 0, $delta = 10, $
   }
 
   return form_select($title, $name, $value, $weights, $description, $extra);
-}
-
-function form_allowed_tags_text() {
-  return variable_get("allowed_html", "") ? (t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", ""))) : "";
 }
 /* @} */
 

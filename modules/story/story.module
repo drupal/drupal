@@ -1,5 +1,5 @@
 <?php
-// $Id: story.module,v 1.142 2004/01/27 18:47:07 dries Exp $
+// $Id: story.module,v 1.143 2004/01/27 22:10:47 dries Exp $
 
 function story_help($section = "admin/help#story") {
   $output = "";
@@ -83,7 +83,7 @@ function story_form(&$node, &$error) {
     $output .= implode("", taxonomy_node_form("story", $node));
   }
 
-  $output .= form_textarea(t("Body"), "body", $node->body, 60, 15, $error["body"] ? $error["body"] : form_allowed_tags_text());
+  $output .= form_textarea(t("Body"), "body", $node->body, 60, 15, $error["body"] ? $error["body"] : filter_tips_short());
 
   return $output;
 }

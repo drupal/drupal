@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.214 2004/01/27 18:47:07 dries Exp $
+// $Id: book.module,v 1.215 2004/01/27 22:10:47 dries Exp $
 
 function book_node_name($node) {
   return t("book page");
@@ -185,7 +185,7 @@ function book_form(&$node, &$error) {
     $output .= implode("", taxonomy_node_form("book", $node));
   }
 
-  $output .= form_textarea(t("Body"), "body", $node->body, 60, 20, form_allowed_tags_text());
+  $output .= form_textarea(t("Body"), "body", $node->body, 60, 20, filter_tips_short());
   $output .= form_textarea(t("Log message"), "log", $node->log, 60, 5, t("An explanation of the additions or updates being made to help the group understand your motivations."));
 
   if (user_access("administer nodes")) {
