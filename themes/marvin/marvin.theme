@@ -28,7 +28,7 @@
       <title>
        <?php
          if ($title) {
-           print $title . " - " variable_get("site_name", "drupal");
+           print $title ." - ". variable_get("site_name", "drupal");
          }
          else {
            print variable_get("site_name", "drupal") ." - ". variable_get("site_slogan", "");
