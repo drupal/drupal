@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.125 2004/02/07 16:18:46 dries Exp $
+// $Id: system.module,v 1.126 2004/02/07 16:59:34 dries Exp $
 
 function system_help($section = "admin/help#system") {
   global $base_url;
@@ -76,9 +76,9 @@ function system_link($type) {
   }
 }
 
-function system_user($type, &$edit, $user) {
+function system_user($type, $edit, &$user) {
   if ($type == "edit_form") {
-    $options = "<option value=\"\"". (("" == $key) ? " selected=\"selected\"" : "") .">". t("Default theme") ."</option>\n";
+    $options = "<option value=\"\">". t("Default theme") ."</option>\n";
     if (count($themes = list_themes()) > 1) {
       foreach ($themes as $key => $value) {
         $options .= "<option value=\"$key\"". (($edit["theme"] == $key) ? " selected=\"selected\"" : "") .">$key - $value->description</option>\n";
@@ -92,9 +92,11 @@ function system_user($type, &$edit, $user) {
       $zones["$zone"] = date(variable_get("date_format_long", "l, F dS, Y - g:ia"), time() - date("Z") + $zone) . sprintf(" (GMT %s%02d:%02d)\n", ($offset >= 0) ? "+" : "-", floor(abs($offset)), (abs($offset) * 60) % 60);
     }
     $data[t('Locale settings')] = form_select(t("Time zone"), "timezone", $edit["timezone"], $zones, t("Select what time you currently have and your time zone settings will be set appropriate."));
+    return $data;
   }
-
-  return $data;
+  else {
+    return $edit;
+  }
 }
 
 function system_view_general() {

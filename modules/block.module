@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.103 2004/02/07 16:18:46 dries Exp $
+// $Id: block.module,v 1.104 2004/02/07 16:59:34 dries Exp $
 
 function block_help($section = "admin/help#block") {
   $output = "";
@@ -321,7 +321,7 @@ function block_admin() {
   }
 }
 
-function block_user($type, &$edit, &$user) {
+function block_user($type, $edit, &$user) {
   switch ($type) {
     case "edit_form":
       $result = db_query("SELECT * FROM {blocks} WHERE custom = %d ORDER BY module, delta", 1);

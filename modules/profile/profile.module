@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.38 2004/02/07 16:18:46 dries Exp $
+// $Id: profile.module,v 1.39 2004/02/07 16:59:34 dries Exp $
 
 function _profile_init() {
   /*
@@ -75,7 +75,7 @@ function profile_settings() {
     $row[$i][] = form_checkbox("", "profile_required_fields][", $key, in_array($key, $profile_required_fields));
     $i++;
   }
-  
+
   $avatar  = form_textfield(t("Avatar image path"), "profile_avatar_path", variable_get("profile_avatar_path", "avatars"), 30, 255, t("Subdirectory in the directory '%dir' where avatars will be stored.", array('%dir' => variable_get('file_directory_path', 'files') . FILE_SEPARATOR)) . $error['profile_avatar_path']);
   $avatar .= form_textfield(t("Avatar maximum dimensions"), "profile_avatar_dimensions", variable_get("profile_avatar_dimensions", "85x85"), 10, 10, t("Maximum dimensions for avatars."));
   $avatar .= form_textfield(t("Avatar maximum file size"), "profile_avatar_file_size", variable_get("profile_avatar_file_size", "30"), 10, 10, t("Maximum file size for avatars, in kB."));
