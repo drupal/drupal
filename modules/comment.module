@@ -79,7 +79,7 @@ function comment_help($section = "admin/help#comment") {
       $output = t("Comments let users give feedback to content authors.  Here you may review/approve/deny recent comments, and configure moderation if desired.");
       break;
     case 'admin/comment/comments':
-      $output = t("Click on <a href=\"%nup\">new or updated comments</a> to see your latest comments, or <a href=\"%queue\">comment approval queue</a> to approve new comments.", array("%nup" => url("admin/comment/comments/0"), "%queue" => url("admin/comment/moderation")));
+      $output = t("Click on <a href=\"%nup\">new or updated comments</a> to see your latest comments, or <a href=\"%queue\">comment approval queue</a> to approve new comments.", array("%nup" => url("admin/comment/comments/0"), "%queue" => url("admin/comment/comments/1")));
       break;
     case 'admin/comment/comments/0':
       $output = t("Below is a list of the latest comments posted your site. Click on a subject to see the comment, the author's name to edit the author's user information , \"edit comment\" to edit the comment, and \"delete comment\" to remove the comment.");
