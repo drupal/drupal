@@ -1,5 +1,6 @@
 #!/bin/sh
 find . -name "*~" -type f | xargs rm -f
+find . -name ".#*" -type f | xargs rm -f
 find . -name "*.rej" -type f | xargs rm -f
 find . -name "*.orig" -type f | xargs rm -f
 find . -name "DEADJOE" -type f | xargs rm -f
