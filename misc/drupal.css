@@ -139,7 +139,7 @@ tr.light .form-item, tr.dark .form-item {
   margin-bottom: 0em;
   white-space: nowrap;
 }
-.form-item input.error {
+.form-item input.error, .form-item textarea.error {
   border: 2px solid red;
 }
 .form-item .description {
