@@ -1,5 +1,5 @@
 <?php
-// $Id: cloud.module,v 1.18 2001/11/01 22:54:16 dries Exp $
+// $Id: cloud.module,v 1.19 2001/11/30 16:39:36 dries Exp $
 
 function cloud_cron() {
   if (time() % 250 == 0) {
@@ -115,18 +115,19 @@ function cloud_list($limit = 10) {
 
   $hour = -1;
   $list = -1;
+
   while ($site = db_fetch_object($result)) {
     if ($hour != floor((time() - $site->timestamp) / 3600)) {
       $hour = floor((time() - $site->timestamp) / 3600);
       if ($hour < 12) {
-        $output .= "<p />". strtr(t("Updated %a ago:"), array("%a" => format_plural($hour, "hour", "hours")));
+        $output .= "<br />". strtr(t("Updated %a ago:"), array("%a" => format_plural($hour, "hour", "hours")));
       }
       else if ($list) {
-        $output .= "<p />". strtr(t("Updated more than %a ago:"), array("%a" => format_plural($hour, "hour", "hours")));
+        $output .= "<br />". strtr(t("Updated more than %a ago:"), array("%a" => format_plural($hour, "hour", "hours")));
         $list = 0;
       }
     }
-    $output .= "<br /> &nbsp; ". format_url($site->link, $site->name);
+    $output .= "<div style=\"padding-left: 10px;\">". format_url($site->link, $site->name) ."</div>";
   }
   return $output;
 }
