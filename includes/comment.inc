@@ -205,7 +205,7 @@ function comment_moderation($comment) {
     $output .= "</SELECT>\n";
   }
   else {
-    $output .= "<TABLE BORDER=\"0\" CELLSPACING=\"1\" CELLPADDING=\"1\"><TR><TD>score:</TD><TD>". format_data($comment->score) ."</TD></TR><TR><TD>votes:</TD><TD>". format_data($comment->votes) ."</TR></TABLE>\n";
+    $output .= "<TABLE BORDER=\"0\" CELLSPACING=\"1\" CELLPADDING=\"1\"><TR><TD>score:</TD><TD>". check_output($comment->score) ."</TD></TR><TR><TD>votes:</TD><TD>". check_output($comment->votes) ."</TR></TABLE>\n";
   }
 
   return $output;

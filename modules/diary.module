@@ -33,23 +33,21 @@ function diary_page_overview($num = 20) {
 
   $result = db_query("SELECT d.*, u.userid FROM diaries d LEFT JOIN users u ON d.author = u.id ORDER BY d.timestamp DESC LIMIT $num");
 
-  $output .= "<P>This part of the website is dedicated to provide easy-to-write and easy-to-read online diaries or journals filled with daily thoughts, poetry, boneless blabber, spiritual theories, intimate details, valuable experiences, cynical rants, semi-coherent comments, writing experiments, artistic babblings, critics on current facts, fresh insights, diverse dreams, chronicles and mumbling madness available for public consumption.</P>";
-
   while ($diary = db_fetch_object($result)) {
     if ($time != date("F jS", $diary->timestamp)) {
       $output .= "<B>". date("l, F jS", $diary->timestamp) ."</B>\n";
       $time = date("F jS", $diary->timestamp);
     }
     $output .= "<DL>\n";
-    $output .= " <DD><P><B>$diary->userid wrote:</B></P></DD>\n";
+    $output .= " <DD><P><B>$diary->userid ". t("wrote") .":</B></P></DD>\n";
     $output .= " <DL>\n";
-    $output .= "  <DD><P>". check_output($diary->text, 1) ."</P><P>[ <A HREF=\"module.php?mod=diary&op=view&name=$diary->userid\">more</A> ]</P></DD>\n";
+    $output .= "  <DD><P>". check_output($diary->text, 1) ."</P><P>[ <A HREF=\"module.php?mod=diary&op=view&name=$diary->userid\">". t("more") ."</A> ]</P></DD>\n";
     $output .= " </DL>\n";
     $output .= "</DL>\n";
   }
 
   $theme->header();
-  $theme->box("Online diary", $output);
+  $theme->box(t("Online diary"), $output);
   $theme->footer();
 
 }
@@ -58,7 +56,7 @@ function diary_page_entry($timestamp, $text, $id = 0) {
   if ($id) {
     $output .= "<DL>\n";
     $output .= " <DT><B>". date("l, F jS", $timestamp) .":</B> </DT>\n";
-    $output .= " <DD><P>[ <A HREF=\"module.php?mod=diary&op=edit&id=$id\">edit</A> ]</P><P>". check_output($text, 1) ."</P></DD>\n";
+    $output .= " <DD><P>[ <A HREF=\"module.php?mod=diary&op=edit&id=$id\">". t("edit") ."</A> ]</P><P>". check_output($text, 1) ."</P></DD>\n";
     $output .= "</DL>\n";
   }
   else {
@@ -82,12 +80,12 @@ function diary_page_display($username) {
     while ($diary = db_fetch_object($result)) $output .= diary_page_entry($diary->timestamp, $diary->text, $diary->id);
   }
   else {
-    $output .= "<P>". format_username($username) ."'s diary:</P>\n";
+    $output .= "<B>". t("Username") .":</B> ". format_username($username);
     while ($diary = db_fetch_object($result)) $output .= diary_page_entry($diary->timestamp, $diary->text);
   }
 
   $theme->header();
-  $theme->box("$username's online diary", $output);
+  $theme->box(t("Online diary"), $output);
   $theme->footer();
 }
 
@@ -97,9 +95,8 @@ function diary_page_add() {
   $output .= "<FORM ACTION=\"module.php?mod=diary\" METHOD=\"post\">\n";
 
   $output .= "<P>\n";
-  $output .= " <B>Enter new diary entry:</B><BR>\n";
-  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"15\" NAME=\"text\" MAXLENGTH=\"20\"></TEXTAREA><BR>\n";
-  $output .= " <SMALL><I>Allowed HTML tags: ". htmlspecialchars($allowed_html) .".</I></SMALL>\n";
+  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"15\" NAME=\"text\"></TEXTAREA><BR>\n";
+  $output .= " <SMALL><I>". t("Allowed HTML tags") .": ". htmlspecialchars($allowed_html) .".</I></SMALL>\n";
   $output .= "</P>\n";
 
   $output .= "<P>\n";
@@ -109,7 +106,7 @@ function diary_page_add() {
   $output .= "</FORM>\n";
 
   $theme->header();
-  $theme->box("Edit your diary", $output);
+  $theme->box(t("Edit your diary"), $output);
   $theme->footer();
 }
 
@@ -122,23 +119,19 @@ function diary_page_edit($id) {
   $output .= diary_page_entry($diary->timestamp, $diary->text);
 
   $output .= "<FORM ACTION=\"module.php?mod=diary\" METHOD=\"post\">\n";
-
   $output .= "<P>\n";
-  $output .= " <B>Edit diary entry:</B><BR>\n";
   $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"15\" NAME=\"text\">". check_textarea($diary->text) ."</TEXTAREA><BR>\n";
-  $output .= " <SMALL><I>Allowed HTML tags: ". htmlspecialchars($allowed_html) .".</I></SMALL>\n";
+  $output .= " <SMALL><I>". t("Allowed HTML tags") .": ". htmlspecialchars($allowed_html) .".</I></SMALL>\n";
   $output .= "</P>\n";
-
   $output .= "<P>\n";
   $output .= " <INPUT TYPE=\"hidden\" NAME=\"id\" VALUE=\"$diary->id\">\n";
   $output .= " <INPUT TYPE=\"hidden\" NAME=\"timestamp\" VALUE=\"$diary->timestamp\">\n";
   $output .= " <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Preview diary entry\"> <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Submit diary entry\">\n";
   $output .= "</P>\n";
-
   $output .= "</FORM>\n";
 
   $theme->header();
-  $theme->box("Edit your diary", $output);
+  $theme->box(t("Edit your diary"), $output);
   $theme->footer();
 }
 
@@ -148,13 +141,10 @@ function diary_page_preview($text, $timestamp, $id = 0) {
   $output .= diary_page_entry($timestamp, $text);
 
   $output .= "<FORM ACTION=\"module.php?mod=diary\" METHOD=\"post\">\n";
-
   $output .= "<P>\n";
-  $output .= " <B>Preview diary entry:</B><BR>\n";
   $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"15\" NAME=\"text\">". check_textarea($text) ."</TEXTAREA><BR>\n";
-  $output .= " <SMALL><I>Allowed HTML tags: ". htmlspecialchars($allowed_html) .".</I></SMALL>\n";
+  $output .= " <SMALL><I>". t("Allowed HTML tags") .": ". htmlspecialchars($allowed_html) .".</I></SMALL>\n";
   $output .= "</P>\n";
-
   $output .= "<P>\n";
   $output .= " <INPUT TYPE=\"hidden\" NAME=\"id\" VALUE=\"$id\">\n";
   $output .= " <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Preview diary entry\">\n";
@@ -164,7 +154,7 @@ function diary_page_preview($text, $timestamp, $id = 0) {
   $output .= "</FORM>\n";
 
   $theme->header();
-  $theme->box("Edit your diary", $output);
+  $theme->box(t("Edit your diary"), $output);
   $theme->footer();
 }
 
@@ -229,7 +219,7 @@ function diary_user($username, $section, $operation) {
       $diaries++;
     }
 
-    $block["subject"] = "$username has posted ". format_plural($diaries, "diary entry", "diary entries") ." recently";
+    $block["subject"] = strtr(t("%a has posted %b recently"), array("%a" => $username, "%b" => format_plural($diaries, "diary entry", "diary entries")));
     $block["content"] = $content;
 
     return $block;

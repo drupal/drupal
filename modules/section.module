@@ -20,7 +20,7 @@ function section_help() {
 function section_block() {
   $result = db_query("SELECT se.name, COUNT(st.id) AS stories FROM sections se LEFT JOIN stories st ON se.name = st.section GROUP BY se.name");
   while ($_section = db_fetch_object($result)) {
-    $content .= "<LI><A HREF=\"?section=". urlencode($_section->name) ."\">$_section->name</A> (". format_data($_section->stories, 0) .")</LI>\n";
+    $content .= "<LI><A HREF=\"?section=". urlencode($_section->name) ."\">$_section->name</A> (". check_output($_section->stories, 0) .")</LI>\n";
   }
 
   $block[0]["subject"] = "Sections";

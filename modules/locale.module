@@ -1,0 +1,13 @@
+<?
+
+$module = array("page" => "locale",
+                "admin" => "locale");
+
+function locale() {
+  $result = db_query("SELECT * FROM locales ORDER BY english");
+  while ($locale = db_fetch_object($result)) {
+    print "<LI>". check_output($locale->english) ."</LI>";
+  }
+}
+
+?>

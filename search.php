@@ -18,8 +18,8 @@ $search .= "</FORM>\n";
 $output = search_data($keys, $type);
 
 $theme->header();
-$theme->box("Search", $search);
-$theme->box("Result", $output);
+$theme->box(t("Search"), $search);
+$theme->box(t("Result"), $output);
 $theme->footer();
 
 ?>

@@ -1,5 +1,7 @@
 <?
 
+$na = "<I>na</I>";
+
 function check_textfield($message) {
   global $allowed_html;
   return strip_tags(str_replace("\"", "&quot;", stripslashes($message)), $allowed_html);
@@ -20,13 +22,16 @@ function check_code($message) {
 }
 
 function check_output($message, $nl2br = 0) {
-  global $allowed_html;
-  if ($nl2br == 1) return nl2br(strip_tags(stripslashes($message), $allowed_html));
-  else return strip_tags(stripslashes($message), $allowed_html);
+  global $allowed_html, $na;
+  if ($message) {
+    if ($nl2br == 1) return nl2br(strip_tags(stripslashes($message), $allowed_html));
+    else return strip_tags(stripslashes($message), $allowed_html);
+  }
+  else return $na;
 }
 
 function format_plural($count, $singular, $plural) {
-  return ($count == 1) ? "$count $singular" : "$count $plural";
+  return ($count == 1) ? "$count ". t($singular) : "$count ". t($plural);
 }
 
 function format_interval($timestamp) {
@@ -72,9 +77,6 @@ function format_date($timestamp, $type = "medium") {
   return $date;
 }
 
-function format_data($field, $replacement = "<I>na</I>") {
-  return ($field) ? $field : $replacement;
-}
 
 function format_username($username) {
   global $user;
@@ -83,16 +85,14 @@ function format_username($username) {
 }
 
 function format_email($address) {
-  return ($address) ? "<A HREF=\"mailto:$address\">$address</A>" : format_data($address);
+  global $na;
+  return ($address) ? "<A HREF=\"mailto:$address\">$address</A>" : $na;
 }
 
 function format_url($address, $description = "") {
-   // POSSIBLE EXTENSIONS:
-   //   1. add `http://' in case it's missing.
-   //   2. add a trailing `/' in case it's missing.
-   //   3. remove any parameters in the URI.
+  global $na;
   $description = ($description) ? $description : $address;
-  return ($address) ? "<A HREF=\"$address\">$description</A>" : format_data($address);
+  return ($address) ? "<A HREF=\"$address\">$description</A>" : $na;
 }
 
 ?>

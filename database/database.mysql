@@ -108,6 +108,12 @@ CREATE TABLE layout (
   block varchar(64) DEFAULT '' NOT NULL
 );
 
+CREATE TABLE locales (
+  id int(11) DEFAULT '0' NOT NULL auto_increment,
+  english TEXT DEFAULT '' NOT NULL,
+  PRIMARY KEY (id)
+);
+
 CREATE TABLE modules (
   name varchar(64) DEFAULT '' NOT NULL,
   PRIMARY KEY (name)

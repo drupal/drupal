@@ -1,5 +1,5 @@
 #!/bin/sh
 find . -name "*~" -type f | xargs rm -f
 find . -name "DEADJOE" -type f | xargs rm -f
-find . -name "*" -type f | grep -v ".gif" | grep -v ".jpg" | xargs perl -wi -pe 's/\s+$/\n/'
-find . -name "*" -type f | grep -v ".gif" | grep -v ".jpg" | xargs perl -wi -pe 's/\t/  /g'
+find . -name "*" -type f | grep -v ".gif" | grep -v ".jpg" | grep -v ".tgz" | xargs perl -wi -pe 's/\s+$/\n/'
+find . -name "*" -type f | grep -v ".gif" | grep -v ".jpg" | grep -v ".tgz" | xargs perl -wi -pe 's/\t/  /g'

@@ -10,6 +10,7 @@ $module = array("cron" => "account_cron",
 function account_cron_ratings() {
   $period = 5184000;  // 60 days
   $number = 30;       // 30 comments
+  $offset = 5;        // 5 comments
 
   $r1 = db_query("SELECT id, userid FROM users");
   while ($account = db_fetch_object($r1)) {
@@ -27,7 +28,7 @@ function account_cron_ratings() {
       $votes += $weight * $comment->votes;
     }
 
-    if ($weight > 5 && $votes > 0) {
+    if ($weight >= $offset && $votes > 0) {
       $value = ($score + $weight) / $votes + $bonus;
       db_query("UPDATE users SET rating = '$value' WHERE id = $account->id");
     }
@@ -121,7 +122,7 @@ function account_display($order = "username") {
           $output .= "  <TD ALIGN=\"center\">". $perm[$account[$value]] ."</TD>\n";
           break;
         case "timezone":
-          $output .= "  <TD ALIGN=\"center\">". format_data($account[$value] / 3600) ."</TD>\n";
+          $output .= "  <TD ALIGN=\"center\">". check_output($account[$value] / 3600) ."</TD>\n";
           break;
         case "url":
           $output .= "  <TD>". format_url($account[$value]) ."</TD>\n";
@@ -130,7 +131,7 @@ function account_display($order = "username") {
           $output .= "  <TD>". format_username($account[$value]) ."</TD>\n";
           break;
         default:
-          $output .= "  <TD>". format_data($account[$value]) ."</TD>\n";
+          $output .= "  <TD>". check_output($account[$value]) ."</TD>\n";
       }
     }
     $output .= "  <TD ALIGN=\"center\"><A HREF=\"admin.php?mod=account&op=view&name=$account[userid]\">view</A></TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=account&op=edit&name=$account[userid]\">edit</A></TD>\n";
@@ -144,7 +145,7 @@ function account_display($order = "username") {
 function account_blocks($id) {
   $result = db_query("SELECT * FROM layout WHERE user = $id");
   while ($layout = db_fetch_object($result)) {
-    $output .= "<LI>". check_output($layout->block) ."</LI>\n";
+    $output .= "<LI>$layout->block</LI>\n";
   }
   return $output;
 }
@@ -152,7 +153,7 @@ function account_blocks($id) {
 function account_stories($id) {
   $result = db_query("SELECT * FROM stories WHERE author = $id ORDER BY timestamp DESC");
   while ($story = db_fetch_object($result)) {
-    $output .= "<LI><A HREF=\"story.php?id=$story->id\">". check_output($story->subject) ."</A></LI>\n";
+    $output .= "<LI><A HREF=\"story.php?id=$story->id\">$story->subject</A></LI>\n";
   }
   return $output;
 }
@@ -160,7 +161,7 @@ function account_stories($id) {
 function account_comments($id) {
   $result = db_query("SELECT * FROM comments WHERE link = 'story' AND author = $id ORDER BY timestamp DESC");
   while ($comment = db_fetch_object($result)) {
-    $output .= "<LI><A HREF=\"story.php?id=$comment->lid&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A></LI>\n";
+    $output .= "<LI><A HREF=\"story.php?id=$comment->lid&cid=$comment->cid&pid=$comment->pid#$comment->cid\">$comment->subject</A></LI>\n";
   }
   return $output;
 }
@@ -196,20 +197,20 @@ function account_edit($name) {
     $output .= " <TR><TD ALIGN=\"right\"><B>ID:</B></TD><TD>$account->id</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>Status:</B></TD><TD>$stat</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>Username:</B></TD><TD>$account->userid</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Real name:</B></TD><TD>". format_data($account->name) ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>Real name:</B></TD><TD>". check_output($account->name) ."</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>Real e-mail address:</B></TD><TD>". format_email($account->real_email) ."</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>Fake e-mail address:</B></TD><TD><INPUT NAME=\"edit[fake_email]\" SIZE=\"55\" VALUE=\"$account->fake_email\"></TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>URL of homepage:</B></TD><TD><INPUT NAME=\"edit[url]\" SIZE=\"55\" VALUE=\"$account->url\"></TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>Permissions:</B></TD><TD>$perm</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Last access:</B></TD><TD>". format_date($account->last_access) ." from ". format_data($account->last_host) ."</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>User rating:</B></TD><TD>". format_data($account->rating) ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>Last access:</B></TD><TD>". format_date($account->last_access) ." from ". check_output($account->last_host) ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>User rating:</B></TD><TD>". check_output($account->rating) ."</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>Bio information:</B></TD><TD><TEXTAREA NAME=\"edit[bio]\" COLS=\"35\" ROWS=\"5\" WRAP=\"virtual\">$account->bio</TEXTAREA></TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>Signature:</B></TD><TD><TEXTAREA NAME=\"edit[signature]\" COLS=\"35\" ROWS=\"5\" WRAP=\"virtual\">$account->signature</TEXTAREA></TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Theme:</B></TD><TD>". format_data($account->theme) ."</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Timezone:</B></TD><TD>". format_data($account->timezone / 3600) ."</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Selected blocks:</B></TD><TD>". format_data(account_blocks($account->id)) ."</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Submitted stories:</B></TD><TD>". format_data(account_stories($account->id)) ."</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Submitted comments:</B></TD><TD>". format_data(account_comments($account->id)) ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>Theme:</B></TD><TD>". check_output($account->theme) ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>Timezone:</B></TD><TD>". check_output($account->timezone / 3600) ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Selected blocks:</B></TD><TD>". check_output(account_blocks($account->id)) ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Submitted stories:</B></TD><TD>". check_output(account_stories($account->id)) ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Submitted comments:</B></TD><TD>". check_output(account_comments($account->id)) ."</TD></TR>\n";
     $output .= "</TABLE>\n";
     $output .= "<INPUT NAME=\"name\" TYPE=\"hidden\" VALUE=\"$account->userid\">\n";
     $output .= "<INPUT NAME=\"op\" TYPE=\"submit\" VALUE=\"Save account\">\n";
@@ -229,20 +230,20 @@ function account_view($name) {
     $output .= " <TR><TD ALIGN=\"right\"><B>ID:</B></TD><TD><A HREF=\"admin.php?mod=account&op=edit&name=$account->userid\">$account->id</A></TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>Status:</B></TD><TD>". $status[$account->status] ."</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>Username:</B></TD><TD>$account->userid</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Real name:</B></TD><TD>". format_data($account->name) ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>Real name:</B></TD><TD>". check_output($account->name) ."</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>Real e-mail address:</B></TD><TD>". format_email($account->real_email) ."</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Fake e-mail address:</B></TD><TD>". format_data($account->fake_email) ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>Fake e-mail address:</B></TD><TD>". check_output($account->fake_email) ."</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>URL of homepage:</B></TD><TD>". format_url($account->url) ."</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>Permissions:</B></TD><TD>". $permissions[$account->permissions] ."</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Last access:</B></TD><TD>". format_date($account->last_access) ." from ". format_data($account->last_host) ."</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>User rating:</B></TD><TD>". format_data($account->rating) ."</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Bio information:</B></TD><TD>". format_data($account->bio) ."</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Signature:</B></TD><TD>". format_data($account->signature) ."</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Theme:</B></TD><TD>". format_data($account->theme) ."</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Timezone:</B></TD><TD>". format_data($account->timezone / 3600) ."</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Selected blocks:</B></TD><TD>". format_data(account_blocks($account->id)) ."</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Submitted stories:</B></TD><TD>". format_data(account_stories($account->id)) ."</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Submitted comments:</B></TD><TD>". format_data(account_comments($account->id)) ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>Last access:</B></TD><TD>". format_date($account->last_access) ." from ". check_output($account->last_host) ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>User rating:</B></TD><TD>". check_output($account->rating) ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>Bio information:</B></TD><TD>". check_output($account->bio) ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>Signature:</B></TD><TD>". check_output($account->signature) ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>Theme:</B></TD><TD>". check_output($account->theme) ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>Timezone:</B></TD><TD>". check_output($account->timezone / 3600) ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Selected blocks:</B></TD><TD>". check_output(account_blocks($account->id)) ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Submitted stories:</B></TD><TD>". check_output(account_stories($account->id)) ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Submitted comments:</B></TD><TD>". check_output(account_comments($account->id)) ."</TD></TR>\n";
     $output .= "</TABLE>\n";
     print "$output";
   }
@@ -254,7 +255,7 @@ function account_block() {
   $content .= "<TABLE CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
   $content .= "<TR><TH>Username</TH><TH>Rating</TH></TR>\n";
   while ($account = db_fetch_object($result)) {
-    $content .= "<TR><TD>". format_username($account->userid) ."</TD><TD>". format_data($account->rating) ."</TD></TR>";
+    $content .= "<TR><TD>". format_username($account->userid) ."</TD><TD>". check_output($account->rating) ."</TD></TR>";
   }
   $content .= "</TABLE>\n";
 

@@ -55,10 +55,10 @@ function box_admin_display() {
 
   while ($block = db_fetch_object($result)) {
     $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\">\n";
-    $output .= " <TR><TH>Subject:</TH><TD>". format_data($block->subject) ."</TD></TR>\n";
+    $output .= " <TR><TH>Subject:</TH><TD>". check_output($block->subject) ."</TD></TR>\n";
     $output .= " <TR><TH>Content:</TH><TD>". nl2br(htmlentities($block->content)) ."</TD></TR>\n";
     $output .= " <TR><TH>Type:</TH><TD>". $type[$block->type] ."</TD></TR>\n";
-    $output .= " <TR><TH>Description:</TH><TD>". format_data($block->info) ."</TD></TR>\n";
+    $output .= " <TR><TH>Description:</TH><TD>". check_output($block->info) ."</TD></TR>\n";
     $output .= " <TR><TH>Link:</TH><TD>". format_url($block->link) ."</TD></TR>\n";
     $output .= " <TR><TH>Operations:</TH><TD><A HREF=\"admin.php?mod=box&op=edit&id=$block->id\">edit</A>, <A HREF=\"admin.php?mod=box&op=delete&id=$block->id\">delete</A></TD></TR>\n";
     $output .= "</TABLE>\n";

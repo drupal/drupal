@@ -30,15 +30,13 @@ function theme_account($theme) {
     module_iterate("menu");
 
     // Display account settings:
-    $content .= "<LI><A HREF=\"account.php?op=track&topic=comments\">track your comments</A></LI>\n";
-    $content .= "<LI><A HREF=\"account.php?op=track&topic=stories\">track your stories</A></LI>\n";
-    $content .= "<LI><A HREF=\"account.php?op=track&topic=site\">track $site_name</A></LI>\n";
+    $content .= "<LI><A HREF=\"account.php?op=track&topic=comments\">". t("track your comments") ."</A></LI>\n";
+    $content .= "<LI><A HREF=\"account.php?op=track&topic=stories\">". t("track your stories") ."</A></LI>\n";
+    $content .= "<LI><A HREF=\"account.php?op=track&topic=site\">". t("track") ." $site_name</A></LI>\n";
     $content .= "<P>\n";
-    $content .= "<LI><A HREF=\"submission.php\">submission queue</A> (<FONT COLOR=\"red\">". submission_number() ."</FONT>)</LI>\n";
-    $content .= "<P>\n";
-    $content .= "<LI><A HREF=\"account.php?op=edit&topic=user\">edit your information</A></LI>\n";
-    $content .= "<LI><A HREF=\"account.php?op=edit&topic=site\">edit your preferences</A></LI>\n";
-    $content .= "<LI><A HREF=\"account.php?op=edit&topic=content\">edit your content</A></LI>\n";
+    $content .= "<LI><A HREF=\"account.php?op=edit&topic=user\">". t("edit your information") ."</A></LI>\n";
+    $content .= "<LI><A HREF=\"account.php?op=edit&topic=site\">". t("edit your preferences") ."</A></LI>\n";
+    $content .= "<LI><A HREF=\"account.php?op=edit&topic=content\">". t("edit your content") ."</A></LI>\n";
     $content .= "<P>\n";
 
     if (user_permission($user)) {
@@ -46,26 +44,29 @@ function theme_account($theme) {
       $content .= "<P>\n";
     }
 
+    $content .= "<LI><A HREF=\"submission.php\">". t("submission queue") ."</A> (<FONT COLOR=\"red\">". submission_number() ."</FONT>)</LI>\n";
+    $content .= "<P>\n";
+
     if ($menu && ksort($menu)) {
-      foreach ($menu as $link=>$url) $content .= "<LI><A HREF=\"$url\">$link</A></LI>\n";
+      foreach ($menu as $link=>$url) $content .= "<LI><A HREF=\"$url\">". t($link) ."</A></LI>\n";
       $content .= "<P>\n";
     }
 
-    $content .= "<LI><A HREF=\"account.php?op=logout\">logout</A></LI>\n";
+    $content .= "<LI><A HREF=\"account.php?op=logout\">". t("logout") ."</A></LI>\n";
 
-    $theme->box("$user->userid's configuration", "$content");
+    $theme->box(strtr(t("%s's configuration"), array("%s" => $user->userid)), "$content");
   }
   else {
     $output .= "<CENTER>\n";
     $output .= " <FORM ACTION=\"account.php?op=Login\" METHOD=\"post\">\n";
-    $output .= "  <P><B>Username:</B><BR><INPUT NAME=\"userid\" SIZE=\"15\"></P>\n";
-    $output .= "  <P><B>Password:</B><BR><INPUT NAME=\"passwd\" SIZE=\"15\" TYPE=\"password\"></P>\n";
+    $output .= "  <P><B>". t("Username") .":</B><BR><INPUT NAME=\"userid\" SIZE=\"15\"></P>\n";
+    $output .= "  <P><B>". t("Password") .":</B><BR><INPUT NAME=\"passwd\" SIZE=\"15\" TYPE=\"password\"></P>\n";
     $output .= "  <P><INPUT NAME=\"op\" TYPE=\"submit\" VALUE=\"Login\"></P>\n";
-    $output .= "  <P><A HREF=\"account.php\">REGISTER</A></P>\n";
+    $output .= "  <P><A HREF=\"account.php\">". t("REGISTER") ."</A></P>\n";
     $output .= " </FORM>\n";
     $output .= "</CENTER>\n";
 
-    $theme->box("Login", $output);
+    $theme->box(t("Login"), $output);
   }
 }
 
@@ -84,7 +85,7 @@ function theme_blocks($region, $theme) {
       else $result = db_query("SELECT * FROM blocks WHERE status = 2 ORDER BY weight");
       while ($block = db_fetch_object($result)) {
         $blocks = module_execute($block->module, "block");
-        $theme->box($blocks[$block->offset]["subject"], $blocks[$block->offset]["content"]);
+        $theme->box(t($blocks[$block->offset]["subject"]), $blocks[$block->offset]["content"]);
       }
       break;
   }
