@@ -1701,10 +1701,10 @@ function _comment_per_page() {
  * - comment_count: the total number of comments on this node.
  */
 function _comment_update_node_statistics($nid) {
-  $count = db_result(db_query('SELECT COUNT(c.cid) FROM {comments} c WHERE c.nid = %d AND c.status = 0', $nid));
+  $count = db_result(db_query('SELECT COUNT(cid) FROM {comments} WHERE nid = %d AND status = 0', $nid));
   $node = node_load(array('nid' => $nid));
-  $last_reply = db_fetch_object(db_query_range('SELECT c.cid, c.name, c.timestamp, c.uid FROM {comments} c WHERE c.nid = %d AND c.status = 0 ORDER BY c.cid DESC', $nid, 0, 1));
-  db_query("UPDATE {node_comment_statistics} n SET n.comment_count = %d, last_comment_timestamp = '%s', n.last_comment_name = '%s', n.last_comment_uid = %d WHERE n.nid = %d", $count, $last_reply ? $last_reply->timestamp : $node->created, $last_reply->name, $last_reply ? $last_reply->uid : $node->uid, $comment->nid);
+  $last_reply = db_fetch_object(db_query_range('SELECT cid, name, timestamp, uid FROM {comments} WHERE nid = %d AND status = 0 ORDER BY cid DESC', $nid, 0, 1));
+  db_query("UPDATE {node_comment_statistics} SET comment_count = %d, last_comment_timestamp = '%s', last_comment_name = '%s', last_comment_uid = %d WHERE nid = %d", $count, $last_reply ? $last_reply->timestamp : $node->created, $last_reply->name, $last_reply ? $last_reply->uid : $node->uid, $nid);
 }
 
 ?>
