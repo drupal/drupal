@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.285 2003/12/22 14:45:00 dries Exp $ */
+/* $Id: common.inc,v 1.286 2003/12/22 15:06:46 dries Exp $ */
 
 /**
  * @name drupal_title
@@ -734,7 +734,7 @@ function form_radio($title, $name, $value = 1, $checked = 0, $description = NULL
 }
 
 function form_checkbox($title, $name, $value = 1, $checked = 0, $description = NULL, $attributes = NULL) {
-  return form_hidden($name, 0) . theme("form_element", 0, "<input type=\"checkbox\" class=\"form-checkbox\" name=\"edit[$name]\" id=\"$name\" value=\"". $value ."\"". ($checked ? " checked=\"checked\"" : "") . drupal_attributes($attributes) ." /> $title", $description, $name);
+  return form_hidden($name, 0) . theme("form_element", NULL, "<input type=\"checkbox\" class=\"form-checkbox\" name=\"edit[$name]\" id=\"$name\" value=\"". $value ."\"". ($checked ? " checked=\"checked\"" : "") . drupal_attributes($attributes) ." /> $title", $description, $name);
 }
 
 function form_textfield($title, $name, $value, $size, $maxlength, $description = NULL, $attributes = NULL) {
