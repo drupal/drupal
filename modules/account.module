@@ -10,8 +10,8 @@ function account_help() {
   <P>Regular expressions are very powerful but often get complicated and nothing in this write-up can change that.
   <P>A complete explanation of regular expressions is beyond the scope of this help system.  A regular expression may use any of the following special characters/constructs:</P>
   <TABLE BORDER="1">
-   <TR><TD>^</TD><TD>Matches the beginning of a string.<TD></TR>
-   <TR><TD>$</TD><TD>Matches the end of a string.<TD></TR>
+   <TR><TD>^</TD><TD>Matches the beginning of a string.</TD></TR>
+   <TR><TD>$</TD><TD>Matches the end of a string.</TD></TR>
    <TR><TD>.</TD><TD>Matches any character (including newline). For example the regular expression a.c would match the strings abc, adb, axb, but not axxc.<TD></TR>
    <TR><TD>a*</TD><TD>Matches any sequence of zero or more a characters.</TD></TR>
    <TR><TD>a+</TD><TD>Matches any sequence of one or more a characters.</TD></TR>
@@ -24,9 +24,9 @@ function account_help() {
   </TABLE>
   <P><B>Examples:</B></P>
   <TABLE BORDER="1">
-   <TR><TD>apple</TD><TD>Matches any string that has the text "apple" in it.<TD></TR>
-   <TR><TD>^apple$</TD><TD>Matches the exact string "apple".<TD></TR>
-   <TR><TD>^apple</TD><TD>Matches any string that starts with "apple".<TD></TR>
+   <TR><TD>apple</TD><TD>Matches any string that has the text "apple" in it.</TD></TR>
+   <TR><TD>^apple$</TD><TD>Matches the exact string "apple".</TD></TR>
+   <TR><TD>^apple</TD><TD>Matches any string that starts with "apple".</TD></TR>
    <TR><TD>domain\.com$</TD><TD>Matches any string that ends with "domain.com".  Note that you have to escape the dot in domain.com.</TD></TR>
   </TABLE>
  <?php
