@@ -1,5 +1,5 @@
 <?php
-// $Id: cvs.module,v 1.14 2001/12/16 11:44:41 dries Exp $
+// $Id: cvs.module,v 1.15 2002/01/12 12:51:21 dries Exp $
 
 function cvs_perm() {
   return array("access cvs messages");
@@ -7,7 +7,7 @@ function cvs_perm() {
 
 function cvs_link($type) {
   if ($type == "page" && user_access("access cvs messages")) {
-    $links[] = "<a href=\"module.php?mod=cvs\">" . t("cvs messages") . "</a>";
+    $links[] = "<a href=\"module.php?mod=cvs\" title=\"". t("Read the recent CVS log messages.") ."\">" . t("cvs messages") . "</a>";
   }
 
   return $links ? $links : array();

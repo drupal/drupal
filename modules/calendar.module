@@ -1,5 +1,5 @@
 <?php
-// $Id: calendar.module,v 1.15 2002/01/11 22:09:11 dries Exp $
+// $Id: calendar.module,v 1.16 2002/01/12 12:51:21 dries Exp $
 
 class Calendar {
   var $date;
@@ -103,7 +103,7 @@ function calendar_block() {
 
 function calendar_link($type) {
   if ($type == "page" && user_access("access content")) {
-    $links[] = "<a href=\"module.php?mod=calendar\" title=\"". t("Check the archives for older content.") ."\">archives</a>";
+    $links[] = "<a href=\"module.php?mod=calendar\" title=\"". t("Read the older content in our archive.") ."\">archives</a>";
   }
 
   return $links ? $links : array();

@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.35 2001/12/30 16:16:38 dries Exp $
+// $Id: forum.module,v 1.36 2002/01/12 12:51:21 dries Exp $
 
 function forum_node($field) {
   $info["name"] = t("discussion forum");
@@ -35,7 +35,7 @@ function forum_save($op, $node) {
 
 function forum_link($type) {
   if ($type == "page" && user_access("access content")) {
-    $links[] = "<a href=\"module.php?mod=forum\">". t("forum") ."</a>";
+    $links[] = "<a href=\"module.php?mod=forum\" title=\"". t("Read and participate in the discussion forums.") ."\">". t("forum") ."</a>";
   }
 
   return $links ? $links : array();
