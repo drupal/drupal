@@ -1,10 +1,24 @@
 drupal x.xx, xx/xx/xxxx
 -----------------------
+- added tracker.module:
+    * replaces the previous "your [site]" links.
+- added weblogs.module.
+- themes:
+    * cleaned up the theme system.
+    * moved themes that are not maintained to contributions CVS repository.
+    * added theme Trillian.
+- database abstraction:
+    * changed to PEAR database abstraction layer.
+    * using ANSI SQL queries to be more portable.
 - rewrote the user system:
     * added support for Drupal authentication through XML-RPC and through
       a Jabber server.
 - various updates:
     * improved the search system by making it context sensitive.
+    * fixed node retrieval based on titles.
+    * improved multiple sites using the same Drupal database support.
+    * added support for session ids in URLs instead of cookies.
+    * made front page a configuration setting.
 
 drupal 3.00, 15/09/2001
 -----------------------
