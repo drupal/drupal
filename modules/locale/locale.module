@@ -142,7 +142,7 @@ function locale_admin() {
   global $id, $edit, $op, $lang;
 
   if (!variable_get("locale", 0)) {
-    return status("locale disabled.");
+    print status("locale disabled.");
   }
   else if (user_access("administer locales")) {
     print "<SMALL>". locale_links(1) . locale_links(0) ."<A HREF=\"admin.php?mod=locale\">overview</A> | <A HREF=\"admin.php?mod=locale&op=help\">help</A></SMALL><HR>\n";
