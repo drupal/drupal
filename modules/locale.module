@@ -325,7 +325,6 @@ function locale_admin_manage_delete_screen() {
   // For other locales, warn user that data loss is ahead
   $form = form_hidden('langcode', $langcode);
   $form .= form_submit(t('Delete'));
-  $form .= form_submit(t('Cancel'));
   $languages = locale_supported_languages(FALSE, TRUE);
   print theme('page', form(form_item(t("Delete language '%name'", array('%name' => t($languages['name'][$langcode]))), $form, t('Are you sure you want to delete the language and all data associated with it?')), 'POST', url('admin/locale/language/overview')));
 }

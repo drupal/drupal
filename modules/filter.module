@@ -286,7 +286,7 @@ function filter_admin_add() {
  */
 function filter_admin_delete() {
   $edit = $_POST['edit'];
-  if ($_POST['op'] == t('Confirm deletion')) {
+  if ($_POST['op'] == t('Delete')) {
     if ($edit['format'] != variable_get('filter_default_format', 1)) {
       db_query("DELETE FROM {filter_formats} WHERE format = %d", $edit['format']);
       db_query("DELETE FROM {filters} WHERE format = %d", $edit['format']);
@@ -309,18 +309,8 @@ function filter_admin_delete() {
   $form .= form_hidden('format', $format->format);
   $form .= form_hidden('name', $format->name);
   $form .= '<p>'. t('Are you sure you want to delete the input format %format? If you have any content left in this input format, it will be switched to the default input format.', array('%format' => '<em>'. $format->name .'</em>')) ."</p>\n";
-  $form .= form_submit(t('Confirm deletion'));
+  $form .= form_submit(t('Delete'));
   print theme('page', form($form));
-}
-
-/**
- * Ask for confirmation before deleting a format.
- */
-function filter_admin_confirm() {
-  $edit = $_POST['edit']['format'];
-
-
-  return form($form);
 }
 
 /**

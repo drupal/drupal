@@ -61,10 +61,6 @@ function block_menu($may_cache) {
       'access' => user_access('administer blocks'),
       'callback' => 'block_box_edit',
       'type' => MENU_CALLBACK);
-    $items[] = array('path' => 'admin/block/delete', 'title' => t('delete block'),
-      'access' => user_access('administer blocks'),
-      'callback' => 'block_box_delete',
-      'type' => MENU_CALLBACK);
     $items[] = array('path' => 'admin/block/add', 'title' => t('add'),
       'access' => user_access('administer blocks'),
       'callback' => 'block_box_edit',
@@ -175,22 +171,17 @@ function block_admin_display() {
     $formats[$box->bid] = $box->format;
   }
 
-  $header = array(t('Block'), t('Enabled'), t('Custom'), t('Throttle'), t('Weight'), t('Region'), t('Path'), array('data' => t('Operations'), 'colspan' => 2));
+  $header = array(t('Block'), t('Enabled'), t('Custom'), t('Throttle'), t('Weight'), t('Region'), t('Path'), array('data' => t('Operations')));
 
   foreach ($blocks as $block) {
-    if ($block['module'] == 'block') {
-      if (filter_access($formats[$block['delta']])) {
-        $edit = l(t('edit'), 'admin/block/edit/'. $block['delta']);
-      }
-      $delete = l(t('delete'), 'admin/block/delete/'. $block['delta']);
+    if ($block['module'] == 'block' && filter_access($formats[$block['delta']])) {
+      $edit = l(t('edit block'), 'admin/block/edit/'. $block['delta']);
     }
     else {
       $edit = '';
-      $delete = '';
     }
 
-    $rows[] = array($block['info'], array('data' => form_checkbox(NULL, $block['module'] .']['. $block['delta'] .'][status', 1, $block['status']), 'align' => 'center'), array('data' => form_checkbox(NULL, $block['module'] .']['. $block['delta'] .'][custom', 1, $block['custom']), 'align' => 'center'), array('data' => form_checkbox(NULL, $block['module'] .']['. $block['delta'] .'][throttle', 1, $block['throttle'], NULL, module_exist('throttle') ? NULL : array('disabled' => 'disabled')), 'align' => 'center'), form_weight(NULL, $block['module'] .']['. $block['delta'] .'][weight', $block['weight']), form_radios(NULL, $block['module'] .']['. $block['delta'] .'][region', $block['region'], array(t('left'), t('right'))), form_textfield(NULL, $block['module'] .']['. $block['delta'] .'][path', $block['path'], 10, 255),
-    $edit, $delete);
+    $rows[] = array($block['info'], array('data' => form_checkbox(NULL, $block['module'] .']['. $block['delta'] .'][status', 1, $block['status']), 'align' => 'center'), array('data' => form_checkbox(NULL, $block['module'] .']['. $block['delta'] .'][custom', 1, $block['custom']), 'align' => 'center'), array('data' => form_checkbox(NULL, $block['module'] .']['. $block['delta'] .'][throttle', 1, $block['throttle'], NULL, module_exist('throttle') ? NULL : array('disabled' => 'disabled')), 'align' => 'center'), form_weight(NULL, $block['module'] .']['. $block['delta'] .'][weight', $block['weight']), form_radios(NULL, $block['module'] .']['. $block['delta'] .'][region', $block['region'], array(t('left'), t('right'))), form_textfield(NULL, $block['module'] .']['. $block['delta'] .'][path', $block['path'], 10, 255), $edit);
   }
 
   $output = theme('table', $header, $rows);
@@ -212,36 +203,52 @@ function block_box_edit($bid = 0) {
   $edit = $_POST['edit'];
   $op = $_POST['op'];
 
-  if ($op == t('Save block')) {
-    drupal_set_message(block_box_save($edit));
-    cache_clear_all();
-    $output = block_admin_display();
-  }
-  else {
-    if ($bid) {
-      $output = block_box_form(block_box_get($bid));
-    }
-    else {
-      $output = block_box_form();
-    }
+  switch ($op) {
+    case t('Save block'):
+      drupal_set_message(block_box_save($edit));
+      cache_clear_all();
+      drupal_goto('admin/block');
+
+    case t('Delete block'):
+      $form = '<p>'. t('Are you sure you want to delete the block %name?', array('%name' => '<em>'. $edit['info'] .'</em>')) ."</p>\n";
+      $form .= form_submit(t('Delete'));
+      $output = form($form);
+      break;
+
+    case t('Delete'):
+      db_query('DELETE FROM {boxes} WHERE bid = %d', $bid);
+      drupal_set_message(t('The block has been deleted.'));
+      cache_clear_all();
+      drupal_goto('admin/block');
+
+    case t('Cancel'):
+    default:
+      if ($bid) {
+        $output = block_box_form(block_box_get($bid));
+      }
+      else {
+        $output = block_box_form();
+      }
   }
 
   print theme('page', $output);
 }
 
 function block_box_form($edit = array()) {
-  $group = form_textfield(t('Block title'), 'title', $edit['title'], 50, 64, t('The title of the block as shown to the user.'));
-  $group .= filter_form('format', $edit['format']);
-  $group .= form_textarea(t('Block body'), 'body', $edit['body'], 70, 10, t('The content of the block as shown to the user.'));
-  $group .= form_textfield(t('Block description'), 'info', $edit['info'], 50, 64, t('A brief description of your block.  Used on the <a href="%overview">block overview page</a>.', array('%overview' => url('admin/block'))));
+  $output = form_textfield(t('Block title'), 'title', $edit['title'], 50, 64, t('The title of the block as shown to the user.'));
+  $output .= filter_form('format', $edit['format']);
+  $output .= form_textarea(t('Block body'), 'body', $edit['body'], 70, 10, t('The content of the block as shown to the user.'));
+  $output .= form_textfield(t('Block description'), 'info', $edit['info'], 50, 64, t('A brief description of your block.  Used on the <a href="%overview">block overview page</a>.', array('%overview' => url('admin/block'))));
 
   if ($edit['bid']) {
-    $group .= form_hidden('bid', $edit['bid']);
+    $output .= form_hidden('bid', $edit['bid']);
   }
 
-  $group .= form_submit(t('Save block'));
+  $output .= form_submit(t('Save block'));
+  if ($edit['bid']) {
+    $output .= form_submit(t('Delete block'));
+  }
 
-  $output = form_group(t('Add a new block'), $group);
   return form($output);
 }
 
@@ -258,18 +265,6 @@ function block_box_save($edit) {
     db_query("INSERT INTO {boxes} (title, body, info, format) VALUES  ('%s', '%s', '%s', %d)", $edit['title'], $edit['body'], $edit['info'], $edit['format']);
     return t('The new block has been added.');
   }
-}
-
-/**
- * Menu callback; deletes a custom box, then displays the overview page.
- */
-function block_box_delete($bid = 0) {
-  if ($bid) {
-    db_query('DELETE FROM {boxes} WHERE bid = %d', $bid);
-    drupal_set_message(t('The block has been deleted.'));
-    cache_clear_all();
-  }
-  print theme('page', block_admin_display());
 }
 
 /**
