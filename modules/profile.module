@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.55 2004/04/29 22:39:55 kjartan Exp $
+// $Id: profile.module,v 1.56 2004/04/29 23:27:15 kjartan Exp $
 
 // TODO: add a 'date' field so we can migrate the birthday information.
 
@@ -199,6 +199,7 @@ function profile_user($type, $edit, &$user) {
     case 'load':
       return profile_load_profile($user);
     case 'update':
+    case 'insert':
       return profile_save_profile($edit, $user);
     case 'view':
       return profile_view_profile($user);

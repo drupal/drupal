@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.319 2004/04/29 22:39:55 kjartan Exp $
+// $Id: user.module,v 1.320 2004/04/29 23:27:15 kjartan Exp $
 
 /*** Common functions ******************************************************/
 
@@ -1120,7 +1120,6 @@ function _user_profile($edit, $account) {
       }
     }
   }
-
   $output = '';
   foreach ($groups as $title => $form) {
     $output .= form_group($title, $form);
