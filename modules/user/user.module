@@ -44,18 +44,25 @@ function user_load($array = array()) {
   // Dynamically compose a SQL query:
   $query = '';
 
+  $params = array();
   foreach ($array as $key => $value) {
     if ($key == 'pass') {
-      $query .= "u.$key = '". md5($value) ."' AND ";
+      $query .= "u.$key = '%s' AND ";
+      $params[] = md5($value);
     }
     else if ($key == 'uid') {
-      $query .= "u.uid = ". check_query($value) ." AND ";
+      $query .= "u.uid = %d AND ";
+      $params[] = $value;
     }
     else {
-      $query .= "LOWER(u.$key) = '". strtolower(check_query($value)) ."' AND ";
+      $query .= "LOWER(u.$key) = '%s' AND ";
+      $params[] = strtolower($value);
     }
   }
-  $result = db_query_range("SELECT u.* FROM {users} u WHERE $query u.status < 3", 0, 1);
+  array_unshift($params, "SELECT u.* FROM {users} u WHERE $query u.status < 3");
+  $params[] = 0;
+  $params[] = 1;
+  $result = call_user_func_array('db_query_range', $params);
 
   if (db_num_rows($result)) {
     $user = db_fetch_object($result);
