@@ -50,14 +50,10 @@ function cloud_update($site) {
   ** Grab the page and update the database if required:
   */
 
-  $link = parse_url($site[feed]);
-  $fp = fsockopen($link[host], ($link[port] ? $link[port] : 80), &$errno, &$errstr, 15);
-
-  if ($fp) {
-    // fetch data:
-    fputs($fp, "GET $link[path]?$link[query] HTTP/1.0\r\nUser-Agent: ". variable_get(site_name, "drupal") ."\r\nHost: $link[host]\r\nAccept: */*\r\n\r\n");
-
-    while(!feof($fp)) $data .= fgets($fp, 128);
+  if ($fp = fopen($site[feed], "r")) {
+    while(!feof($fp)) {
+      $data .= fgets($fp, 128);
+    }
 
     if (strstr($data, "200 OK")) {
       if (abs($site[size] - strlen($data)) > 50) {
