@@ -85,10 +85,10 @@ function statistics_link($type, $node = 0, $main = 0) {
     $statistics = statistics_get($node->nid);
     if ($statistics) {
       if (user_access("administer statistics")) {
-        $links[] = la(format_plural($statistics[totalcount], "read", "reads"), array("mod" => "statistics", "op" => "referrers", "nid" => $node->nid));
+        $links[] = la(format_plural($statistics[totalcount], t("read"), t("reads")), array("mod" => "statistics", "op" => "referrers", "nid" => $node->nid));
       }
       else {
-        $links[] = format_plural($statistics[totalcount], "read", "reads");
+        $links[] = format_plural($statistics[totalcount], t("read"), t("reads"));
       }
     }
   }
@@ -96,7 +96,7 @@ function statistics_link($type, $node = 0, $main = 0) {
   if ($type == "page" && user_access("access content")) {
     $userlink = variable_get("statistics_userpage_link", "");
     if ($userlink) {
-      $links[] = lm(t($userlink), array("mod" => "statistics"), "", array("title" => "View the top nodes for this site"));
+      $links[] = lm(t($userlink), array("mod" => "statistics"), "", array("title" => t("View the top nodes for this site.")));
     }
   }
 
@@ -314,7 +314,7 @@ function statistics_admin() {
 function statistics_admin_count_table($dbfield, $dbrows) {
   $result = db_query("SELECT statistics.nid, statistics.daycount, statistics.totalcount, statistics.timestamp, node.title FROM statistics LEFT JOIN node USING (nid) WHERE statistics.%s <> '0' ORDER BY statistics.%s DESC LIMIT %s", $dbfield, $dbfield, $dbrows);
 
-  $output = "<table border=\"1\" cellpadding=\"3\" cellspacing =\"0\"><tr><th>title</th><th>today</th><th>all time</th><th>last hit</th><th>referrers</th></tr>\n";
+  $output = "<table border=\"1\" cellpadding=\"3\" cellspacing =\"0\"><tr><th>". t("title") ."</th><th>". t("today") ."</th><th>". t("all time") ."</th><th>". t("last hit") ."</th><th>". t("referrers") ."</th></tr>\n";
 
   while ($nid = db_fetch_array($result)) {
     $output .= "<tr><td>". l($nid["title"], array("id" => $nid["nid"]), "node", "", array("title" => t("View this posting."))) ."</td><td>". $nid["daycount"] ."</td><td>". $nid["totalcount"] ."</td><td>". format_date($nid["timestamp"], "small") ."</td><td><center>";
@@ -359,7 +359,7 @@ function statistics_admin_accesslog_table($type, $id) {
     $result = db_query("SELECT nid, url, hostname, uid, timestamp FROM accesslog ORDER BY timestamp DESC LIMIT %s", $limit0);
   }
 
-  $output = "<table border=\"1\" cellpadding=\"3\" cellspacing =\"0\"><tr><th>timestamp</th><th>title</th><th>user</th><th>hostname</th><th>referrer</th></tr>\n";
+  $output = "<table border=\"1\" cellpadding=\"3\" cellspacing =\"0\"><tr><th>". t("timestamp") ."</th><th>". t("title") ."</th><th>". t("user") ."</th><th>". t("hostname") ."</th><th>". t("referrer") ."</th></tr>\n";
 
   while ($log = db_fetch_array($result)) {
     if (!$node = node_load(array("nid" => $log["nid"]))) {
@@ -408,7 +408,7 @@ function statistics_recent_refer($nid = 0) {
     }
 
     $result = db_query($query);
-    $output = "<h3>Most recent ". $describe ."referrers for node \"". l($node->title, array("id" => "$nid"), "node", "", array("title" => t("View this posting."))) ."\"</h3>";
+    $output = "<h3>". t("Most recent %describe referrers for node", array("%describe" => $describe)) ."\"". l($node->title, array("id" => "$nid"), "node", "", array("title" => t("View this posting."))) ."\"</h3>";
   }
   else {
     if ($view == "all") {
@@ -424,7 +424,7 @@ function statistics_recent_refer($nid = 0) {
     }
 
     $result = db_query($query);
-    $output = "<h3>Most recent ". $describe ."referrers</h3>";
+    $output = "<h3>". t("Most recent %describe referrers", array("%describe" => $describe)) ."</h3>";
   }
 
   $output .= "<table border=\"1\" cellpadding=\"3\" cellspacing=\"0\">\n";
@@ -474,13 +474,14 @@ function statistics_top_refer($nid = 0) {
       $describe = "external ";
     }
 
-    $output = "<h3>Top ". $describe ."referrers of the past ". format_interval(variable_get("statistics_flush_accesslog_timer", 259200)) ."</h3>";
+    $output = "<h3>". t("Top %describe referrers of the past ", array("%describe" => $describe));
+    $output .= format_interval(variable_get("statistics_flush_accesslog_timer", 259200)) ."</h3>";
   }
 
   $result = db_query($query);
 
   $output .= "<table border=\"1\" cellpadding=\"3\" cellspacing=\"0\">\n";
-  $output .= " <tr><th>URL</th><th>count</th></tr>\n";
+  $output .= " <tr><th>". t("URL") ."</th><th>". t("count") ."</th></tr>\n";
   while ($referrer = db_fetch_array($result)) {
     $output .= "<tr><td><a href=\"". check_output($referrer["url"]) ."\">". substr(check_output($referrer["url"]), 0, 100) ."</a></td><td>". $referrer["count"] ."</td></tr>";
   }
@@ -493,17 +494,17 @@ function statistics_top_refer($nid = 0) {
 
 function statistics_admin_displaycounts() {
 
-  $output = "<h3>Today's top nodes</h3>\n";
+  $output = "<h3>". t("Today's top nodes") ."</h3>\n";
   $output .= statistics_admin_count_table("daycount", 15);
 
   $output .= "<br />";
 
-  $output .= "<h3>All time top nodes</h3>\n";
+  $output .= "<h3>". t("All time top nodes") ."</h3>\n";
   $output .= statistics_admin_count_table("totalcount", 15);
 
   $output .= "<br />";
 
-  $output .= "<h3>Last nodes viewed</h3>\n";
+  $output .= "<h3>". t("Last nodes viewed") ."</h3>\n";
   $output .= statistics_admin_count_table("timestamp", 15);
 
   return $output;
@@ -515,25 +516,25 @@ function statistics_admin_displaylog() {
 
   if ($uid) {
     $user = user_load(array("uid" => $uid));
-    $output = "<h3>Recent access logs for '$user->name'</h3>\n";
+    $output = "<h3>". t("Recent access logs for '%name'", array("%name" => $user->name)) ."</h3>\n";
     $output .= statistics_admin_accesslog_table(1, $user->uid);
   }
   else if ($nid) {
     $node = node_load(array("nid" => $nid));
-    $output = "<h3>Recent access logs for '$node->title'</h3>\n";
+    $output = "<h3>". t("Recent access logs for '%title'", array("%title" => $node->title)) ."</h3>\n";
     $output .= statistics_admin_accesslog_table(2, $node->nid);
   }
   else if ($hostname) {
-    $output = "<h3>Recent access logs for '$hostname'</h3>\n";
+    $output = "<h3>". t("Recent access logs for '%hostname'", array("%hostname" => $hostname)) ."</h3>\n";
     $output .= statistics_admin_accesslog_table(3, $hostname);
   }
   else {
-    $output = "<h3>Recent access logs</h3>\n";
+    $output = "<h3>". t("Recent access logs") ."</h3>\n";
     $output .= statistics_admin_accesslog_table(0, 0);
 
     $output .= "<br />";
 
-    $output .= "<h3>Recent user logs</h3>\n";
+    $output .= "<h3>". t("Recent user logs") ."</h3>\n";
     $output .= statistics_admin_accesslog_table(1, 0);
 
     $output .= "<br />";
@@ -546,22 +547,22 @@ function statistics_admin_displaylog() {
 /* Displays the block configuration administration form */
 function statistics_config_topnodes_block($edit) {
 
-  $form = form_textfield(t("Block name"), "statistics_block_top_title", $edit["statistics_block_top_title"], 20, 40, "This module generates a block with top nodes. You may assign a name for this block.");
+  $form = form_textfield(t("Block name"), "statistics_block_top_title", $edit["statistics_block_top_title"], 20, 40, t("This module generates a block with top nodes.  You may assign a name for this block."));
 
   $form .= "<hr />";
 
-  $form .= form_textfield(t("Today's top nodes title"), "statistics_block_top_day_head", $edit["statistics_block_top_day_head"], 20, 40, "Specify a name for the \"day's top\" section of the block generated by this module. (HTML tags permitted)");
-  $form .= form_select(t("Number of day's top views to display"), "statistics_block_top_day_num", $edit["statistics_block_top_day_num"], array("0" => t("Disabled"), "1" => "1", "2" => "2", "3" => "3", "4" => "4", "5" => "5", "6" => "6", "7" => "7", "8" => "8", "9" => "9", "10" => "10", "15" => "15", "20" => "20", "25" => "25", "30" => "30", "40" => "40"), "Set how many \"today's top\" nodes to display on the block generated by this module.");
+  $form .= form_textfield(t("Today's top nodes title"), "statistics_block_top_day_head", $edit["statistics_block_top_day_head"], 20, 40, t("Specify a name for the \"day's top\" section of the block generated by this module.  HTML tags permitted."));
+  $form .= form_select(t("Number of day's top views to display"), "statistics_block_top_day_num", $edit["statistics_block_top_day_num"], array("0" => t("Disabled"), "1" => "1", "2" => "2", "3" => "3", "4" => "4", "5" => "5", "6" => "6", "7" => "7", "8" => "8", "9" => "9", "10" => "10", "15" => "15", "20" => "20", "25" => "25", "30" => "30", "40" => "40"), t("Set how many \"today's top\" nodes to display on the block generated by this module."));
 
   $form .= "<hr />";
 
-  $form .= form_textfield(t("All time top nodes title"), "statistics_block_top_all_head", $edit["statistics_block_top_all_head"], 20, 40, "Specify a name for the \"all time top\" section of the block generated by this module. (HTML tags permitted)");
-  $form .= form_select(t("Number of all time views to display"), "statistics_block_top_all_num", $edit["statistics_block_top_all_num"], array("0" => t("Disabled"), "1" => "1", "2" => "2", "3" => "3", "4" => "4", "5" => "5", "6" => "6", "7" => "7", "8" => "8", "9" => "9", "10" => "10", "15" => "15", "20" => "20", "25" => "25", "30" => "30", "40" => "40"), "Set how many \"all time top\" nodes to display on the block generated by this module.");
+  $form .= form_textfield(t("All time top nodes title"), "statistics_block_top_all_head", $edit["statistics_block_top_all_head"], 20, 40, t("Specify a name for the \"all time top\" section of the block generated by this module.  HTML tags permitted."));
+  $form .= form_select(t("Number of all time views to display"), "statistics_block_top_all_num", $edit["statistics_block_top_all_num"], array("0" => t("Disabled"), "1" => "1", "2" => "2", "3" => "3", "4" => "4", "5" => "5", "6" => "6", "7" => "7", "8" => "8", "9" => "9", "10" => "10", "15" => "15", "20" => "20", "25" => "25", "30" => "30", "40" => "40"), t("Set how many \"all time top\" nodes to display on the block generated by this module."));
 
   $form .= "<hr>";
 
-  $form .= form_textfield(t("Most recent views heading"), "statistics_block_top_last_head", $edit["statistics_block_top_last_head"], 20, 40, "Specify a name for the \"last views\" section of the block generated by this module. (HTML tags permitted)");
-  $form .= form_select(t("Number of most recent views to display"), "statistics_block_top_last_num", $edit["statistics_block_top_last_num"], array("0" => t("Disabled"), "1" => "1", "2" => "2", "3" => "3", "4" => "4", "5" => "5", "6" => "6", "7" => "7", "8" => "8", "9" => "9", "10" => "10", "15" => "15", "20" => "20", "25" => "25", "30" => "30", "40" => "40"), "Set how many \"last viewed\" nodes to display on the block generated by this module.");
+  $form .= form_textfield(t("Most recent views heading"), "statistics_block_top_last_head", $edit["statistics_block_top_last_head"], 20, 40, t("Specify a name for the \"last views\" section of the block generated by this module.  HTML tags permitted."));
+  $form .= form_select(t("Number of most recent views to display"), "statistics_block_top_last_num", $edit["statistics_block_top_last_num"], array("0" => t("Disabled"), "1" => "1", "2" => "2", "3" => "3", "4" => "4", "5" => "5", "6" => "6", "7" => "7", "8" => "8", "9" => "9", "10" => "10", "15" => "15", "20" => "20", "25" => "25", "30" => "30", "40" => "40"), t("Set how many \"last viewed\" nodes to display on the block generated by this module."));
 
   $form .= "<hr>";
 
@@ -574,13 +575,13 @@ function statistics_config_topnodes_block($edit) {
 /* Displays the block configuration administration form */
 function statistics_config_online_block($edit) {
 
-  $form = form_textfield(t("Block name"), "statistics_block_online_title", $edit["statistics_block_online_title"], 20, 40, "This module generates a block displaying how many users/guests are online.  You may assign a name for this block.");
-  $form .= form_textfield(t("Sub-block name"), "statistics_block_online_subtitle", $edit["statistics_block_online_subtitle"], 20, 40, "This module generates a sub-block listing the names of currently online users.  You may assign a name for this block.");
+  $form = form_textfield(t("Block name"), "statistics_block_online_title", $edit["statistics_block_online_title"], 20, 40, t("This module generates a block displaying how many users/guests are online.  You may assign a name for this block."));
+  $form .= form_textfield(t("Sub-block name"), "statistics_block_online_subtitle", $edit["statistics_block_online_subtitle"], 20, 40, t("This module generates a sub-block listing the names of currently online users.  You may assign a name for this block."));
 
   $period = array(30 => format_interval(30), 60 => format_interval(60), 120 => format_interval(120), 180 => format_interval(180), 300 => format_interval(300), 600 => format_interval(600), 900 => format_interval(900), 1800 => format_interval(1800), 2700 => format_interval(2700), 3600 => format_interval(3600), 5400 => format_interval(5400), 7200 => format_interval(7200), 10800 => format_interval(10800), 21600 => format_interval(21600), 43200 => format_interval(43200), 86400 => format_interval(86400));
   $form .= form_select(t("Activity threshold"), "statistics_block_online_time", $edit["statistics_block_online_time"], $period, "How long ago a user (or guest) must have been active to be considered online.");
-  $form .= form_select(t("Maximum characters of user's name to display"), "statistics_block_online_max_len", $edit["statistics_block_online_max_len"], array("1" => "1", "5" => "5", "10" => "10", "15" => "15", "20" => "20", "25" => "25", "30" => "30", "35" => "35", "40" => "40", "45" => "45", "50" => "50", "55" => "55", "60" => "60"), "What is the maximum characters of a user's name to to display in the sub-block.");
-  $form .= form_select(t("How many online users to list"), "statistics_block_online_max_cnt", $edit["statistics_block_online_max_cnt"], array("0" => "0", "1" => "1", "2" => "2", "3" => "3", "4" => "4", "5" => "5", "6" => "6", "7" => "7", "8" => "8", "9" => "9", "10" => "10", "15" => "15", "20" => "20", "50" => "50", "100" => "100"), "How many online user's names to display in the sub-block.");
+  $form .= form_select(t("Maximum characters of user's name to display"), "statistics_block_online_max_len", $edit["statistics_block_online_max_len"], array("1" => "1", "5" => "5", "10" => "10", "15" => "15", "20" => "20", "25" => "25", "30" => "30", "35" => "35", "40" => "40", "45" => "45", "50" => "50", "55" => "55", "60" => "60"), t("What is the maximum characters of a user's name to to display in the sub-block."));
+  $form .= form_select(t("How many online users to list"), "statistics_block_online_max_cnt", $edit["statistics_block_online_max_cnt"], array("0" => "0", "1" => "1", "2" => "2", "3" => "3", "4" => "4", "5" => "5", "6" => "6", "7" => "7", "8" => "8", "9" => "9", "10" => "10", "15" => "15", "20" => "20", "50" => "50", "100" => "100"), t("How many online user's names to display in the sub-block."));
 
   $form .= form_submit("Submit \"who's online\" block changes");
 
@@ -591,19 +592,19 @@ function statistics_config_online_block($edit) {
 /* Displays the user page configuration administration form */
 function statistics_admin_userpage_config($edit) {
 
-  $form = form_textfield(t("Name for link to user page"), "statistics_userpage_link", $edit["statistics_userpage_link"], 20, 40, "This node generates a user page with top nodes.  If you wish a link added automatically, specify a name.");
+  $form = form_textfield(t("Name for link to user page"), "statistics_userpage_link", $edit["statistics_userpage_link"], 20, 40, t("This node generates a user page with top nodes.  If you wish a link added automatically, specify a name."));
   $form .= "<hr />";
 
-  $form .= form_textfield(t("Today's top nodes title"), "statistics_userpage_day_head", $edit["statistics_userpage_day_head"], 20, 40, "Specify a name for the \"day's top\" section of the user page generated by this module.");
-  $form .= form_select(t("Number of nodes to display for \"day's top\""), "statistics_userpage_day_cnt", $edit["statistics_userpage_day_cnt"], array("0" => t("Disabled"), "1" => "1", "2" => "2", "3" => "3", "4" => "4", "5" => "5", "6" => "6", "7" => "7", "8" => "8", "9" => "9", "10" => "10", "15" => "15", "20" => "20", "25" => "25"), "Set how many \"day's top\" nodes to display on the user page generated by this module.");
+  $form .= form_textfield(t("Today's top nodes title"), "statistics_userpage_day_head", $edit["statistics_userpage_day_head"], 20, 40, t("Specify a name for the \"day's top\" section of the user page generated by this module."));
+  $form .= form_select(t("Number of nodes to display for \"day's top\""), "statistics_userpage_day_cnt", $edit["statistics_userpage_day_cnt"], array("0" => t("Disabled"), "1" => "1", "2" => "2", "3" => "3", "4" => "4", "5" => "5", "6" => "6", "7" => "7", "8" => "8", "9" => "9", "10" => "10", "15" => "15", "20" => "20", "25" => "25"), t("Set how many \"day's top\" nodes to display on the user page generated by this module."));
   $form .= "<hr />";
 
   $form .= form_textfield(t("All time top nodes title"), "statistics_userpage_all_head", $edit["statistics_userpage_all_head"], 20, 40, "Specify a name for the \"all time top\" section of the user page generated by this module.");
-  $form .= form_select(t("Number of nodes to display for \"all time\""), "statistics_userpage_all_cnt", $edit["statistics_userpage_all_cnt"], array("0" => t("Disabled"), "1" => "1", "2" => "2", "3" => "3", "4" => "4", "5" => "5", "6" => "6", "7" => "7", "8" => "8", "9" => "9", "10" => "10", "15" => "15", "20" => "20", "25" => "25"), "Set how many \"all time top\" nodes to display on the user page generated by this module.");
+  $form .= form_select(t("Number of nodes to display for \"all time\""), "statistics_userpage_all_cnt", $edit["statistics_userpage_all_cnt"], array("0" => t("Disabled"), "1" => "1", "2" => "2", "3" => "3", "4" => "4", "5" => "5", "6" => "6", "7" => "7", "8" => "8", "9" => "9", "10" => "10", "15" => "15", "20" => "20", "25" => "25"), t("Set how many \"all time top\" nodes to display on the user page generated by this module."));
   $form .= "<hr />";
 
   $form .= form_textfield(t("Last viewed nodes title"), "statistics_userpage_last_head", $edit["statistics_userpage_last_head"], 20, 40, "Specify a name for the \"last viewed\" section of the user page generated by this module.");
-  $form .= form_select(t("Number of nodes to display for \"last views\""), "statistics_userpage_last_cnt", $edit["statistics_userpage_last_cnt"], array("0" => t("Disabled"), "1" => "1", "2" => "2", "3" => "3", "4" => "4", "5" => "5", "6" => "6", "7" => "7", "8" => "8", "9" => "9", "10" => "10", "15" => "15", "20" => "20", "25" => "25"), "Set how many \"last viewed\" nodes to display on the user page generated by this module.");
+  $form .= form_select(t("Number of nodes to display for \"last views\""), "statistics_userpage_last_cnt", $edit["statistics_userpage_last_cnt"], array("0" => t("Disabled"), "1" => "1", "2" => "2", "3" => "3", "4" => "4", "5" => "5", "6" => "6", "7" => "7", "8" => "8", "9" => "9", "10" => "10", "15" => "15", "20" => "20", "25" => "25"), t("Set how many \"last viewed\" nodes to display on the user page generated by this module."));
   $form .= "<hr />";
 
   $form .= form_submit("Submit \"top nodes\" page changes");
@@ -615,12 +616,12 @@ function statistics_admin_userpage_config($edit) {
 /* Adds configure option to the main configure site admin page */
 function statistics_conf_options() {
   /* access log options */
-  $output = form_select(t("Enable access log"), "statistics_enable_access_log", variable_get("statistics_enable_access_log", 0), array("1" => t("Enabled"), "0" => t("Disabled")), "Log each page access.  Required for referrer statistics.");
+  $output = form_select(t("Enable access log"), "statistics_enable_access_log", variable_get("statistics_enable_access_log", 0), array("1" => t("Enabled"), "0" => t("Disabled")), t("Log each page access.  Required for referrer statistics."));
   $period = array(3600 => format_interval(3600), 10800 => format_interval(10800), 21600 => format_interval(21600), 32400 => format_interval(32400), 43200 => format_interval(43200), 86400 => format_interval(86400), 172800 => format_interval(172800), 259200 => format_interval(259200), 604800 => format_interval(604800), 1209600 => format_interval(1209600), 2419200 => format_interval(2419200), 4838400 => format_interval(4838400), 9676800 => format_interval(9676800));
-  $output .= form_select(t("Discard access logs older than"), "statistics_flush_accesslog_timer", variable_get("statistics_flush_accesslog_timer", 259200), $period, "Older access log entries (including referrer statistics) will be automatically discarded.  Requires crontab.");
+  $output .= form_select(t("Discard access logs older than"), "statistics_flush_accesslog_timer", variable_get("statistics_flush_accesslog_timer", 259200), $period, t("Older access log entries (including referrer statistics) will be automatically discarded.  Requires crontab."));
 
-  $output .= form_select(t("Enable node view counters"), "statistics_enable_node_counter", variable_get("statistics_enable_node_counter", 0), array("1" => t("Enabled"), "0" => t("Disabled")), "Increment node view counter each time a node is viewed.");
-  $output .= form_select(t("Display node view counters"), "statistics_display_counter", variable_get("statistics_display_counter", ""), array("1" => t("Enabled"), "0" => t("Disabled")), "Display how many times each node has been viewed.  User must have the 'access statistics' permissions.");
+  $output .= form_select(t("Enable node view counters"), "statistics_enable_node_counter", variable_get("statistics_enable_node_counter", 0), array("1" => t("Enabled"), "0" => t("Disabled")), t("Increment node view counter each time a node is viewed."));
+  $output .= form_select(t("Display node view counters"), "statistics_display_counter", variable_get("statistics_display_counter", ""), array("1" => t("Enabled"), "0" => t("Disabled")), t("Display how many times each node has been viewed.  User must have the 'access statistics' permissions."));
 
   return $output;
 }
@@ -685,7 +686,7 @@ function statistics_cron() {
     /* If throttle is on, back off one notch to test server load */
     variable_set("statistics_throttle_level", $throttle - 1);
     variable_set("statistics_throttle_cron_timestamp", time());
-    watchdog("warning", "cron: decreasing throttle to level '". ($throttle - 1) ."' to test server load.");
+    watchdog("warning", t("cron: decreasing throttle to level '%level' to test server load.", array("%level" => ($throttle - 1))));
   }
 }
 
@@ -753,16 +754,7 @@ function statistics_display_online_block() {
     }
 
     /* format the output with proper grammar */
-    if ($users == 1) {
-      $output = "There is currently ";
-    }
-    else {
-      $output = "There are currently ";
-    }
-    $output .= format_plural($users, " user", " users");
-    $output .= " and ";
-    $output .= format_plural($guests, " guest", " guests");
-    $output .= " online.";
+    $output .= t("There %verb currently %members and %visitors online.", array("%verb" => ($users == 1 ? "is" : "are"), "%members" => format_plural($users, "user", "users"), "%visitors" => format_plural($guests, "guest", "guests")));
 
     if (user_access("access userlist") && $users) {
       /* Display a list of currently online users */
@@ -787,7 +779,7 @@ function statistics_display_online_block() {
   }
   else {
     /* default message when fully throttled */
-    $output = "This site is currently sustaining more than ". ($throttle * $multiplier) ." page views a minute.";
+    $output = t("This site is currently sustaining more than %total page views a minute.", array("%total" => ($throttle * $multiplier)));
   }
   return $output;
 }
@@ -823,12 +815,12 @@ function statistics_block($op = "list", $delta = 0) {
   else {
     switch($delta) {
       case 0:
-        $block["subject"] = variable_get("statistics_block_top_title", "Popular content");
+        $block["subject"] = variable_get("statistics_block_top_title", t("Popular content"));
         $block["content"] = statistics_display_topnodes_block();
         break;
 
       case 1:
-        $block["subject"] = variable_get("statistics_block_online_title", "Who's online");
+        $block["subject"] = variable_get("statistics_block_online_title", t("Who's online"));
         $block["content"] = statistics_display_online_block();
         break;
     }
