@@ -1368,13 +1368,8 @@ function node_form($edit) {
   // Add the buttons.
   $output .= form_submit(t('Preview'));
 
-  if (!form_get_errors()) {
-    if ($edit->title && $edit->type) {
-      $output .= form_submit(t('Submit'));
-    }
-    elseif (!variable_get('node_preview', 0)) {
-      $output .= form_submit(t('Submit'));
-    }
+  if ($edit->type && (($_POST['op'] == t('Preview') && !form_get_errors()) || !variable_get('node_preview', 0))) {
+    $output .= form_submit(t('Submit'));
   }
 
   if ($edit->nid && node_access('delete', $edit)) {
