@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.244 2003/09/29 09:32:45 kjartan Exp $
+// $Id: common.inc,v 1.245 2003/09/29 13:41:22 kjartan Exp $
 
 function conf_init() {
 
@@ -1173,17 +1173,18 @@ function drupal_page_header() {
       $etag = '"'. md5($date) .'"';
 
       // Check http headers:
-      $modified_since = isset($_SERVER["HTTP_IF_MODIFIED_SINCE"]) ? $_SERVER["HTTP_IF_MODIFIED_SINCE"] == $date : false;
-      $none_match = isset($_SERVER["HTTP_IF_NONE_MATCH"]) ? $_SERVER["HTTP_IF_NONE_MATCH"] == $etag : false;
+      $modified_since = isset($_SERVER["HTTP_IF_MODIFIED_SINCE"]) ? $_SERVER["HTTP_IF_MODIFIED_SINCE"] == $date : NULL
+      $none_match = isset($_SERVER["HTTP_IF_NONE_MATCH"]) ? $_SERVER["HTTP_IF_NONE_MATCH"] == $etag : NULL;
 
-      // Send appropriate response:
-      //header("Last-Modified: $date");
-      header("ETag: $etag");
-      if ($modified_since && $none_match) {
+      // The type checking here is very important, be careful when changing entries.
+      if (($modified_since !== NULL || $none_match !== NULL) && $modified_since !== false && $none_match !== false) {
         header("HTTP/1.0 304 Not Modified");
         exit();
       }
 
+      // Send appropriate response:
+      header("Last-Modified: $date");
+      header("ETag: $etag");
       print $cache->data;
 
       /*
