@@ -1,6 +1,5 @@
 <?php
-
-// $Id: chameleon.theme,v 1.3 2003/12/29 17:14:27 dries Exp $
+// $Id: chameleon.theme,v 1.4 2003/12/30 12:10:51 dries Exp $
 
 function chameleon_help($section) {
 
@@ -66,8 +65,9 @@ function chameleon_header($title = "") {
     $output .= "<small>$help</small><hr />";
   }
 
-  if ($message = drupal_get_message()) {
-    $output .= "<strong>". t("Status") ."</strong>: ". $message->message ."<hr />";
+  foreach (drupal_get_messages() as $message) {
+    list($message, $type) = $message;
+    $output .= "<strong>". t("Status") ."</strong>: $message<hr />";
   }
 
   return $output;
