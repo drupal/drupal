@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.84 2002/06/10 19:49:16 kjartan Exp $
+// $Id: user.module,v 1.85 2002/06/13 09:19:17 kjartan Exp $
 
 session_set_save_handler("sess_open", "sess_close", "sess_read", "sess_write", "sess_destroy", "sess_gc");
 session_start();
@@ -469,6 +469,7 @@ function user_set_authmaps($account, $authmaps) {
 }
 
 function user_auth_help_links() {
+  $links = array();
   foreach (module_list() as $module) {
     if (module_hook($module, "auth_help")) {
       $links[] = lm(module_invoke($module, "info", "name"), array("mod" => "user", "op" => "help"), $module);
