@@ -353,18 +353,17 @@ function update_61() {
 }
 
 function update_62() {
-  update_sql("ALTER TABLE accesslog ADD INDEX accesslog_timestamp (timestamp)");
+  update_sql("ALTER TABLE {accesslog} ADD INDEX accesslog_timestamp (timestamp)");
 
-  update_sql("ALTER TABLE node DROP INDEX type");
-  update_sql("ALTER TABLE node DROP INDEX title");
-  update_sql("ALTER TABLE node DROP INDEX promote");
-  update_sql("ALTER TABLE node DROP INDEX type");
+  update_sql("ALTER TABLE {node} DROP INDEX type");
+  update_sql("ALTER TABLE {node} DROP INDEX title");
+  update_sql("ALTER TABLE {node} DROP INDEX promote");
 
-  update_sql("ALTER TABLE node ADD INDEX node_type (type(4))");
-  update_sql("ALTER TABLE node ADD INDEX node_title_type (title,type(4))");
-  update_sql("ALTER TABLE node ADD INDEX node_moderate (moderate)");
-  update_sql("ALTER TABLE node ADD INDEX node_path (path(5))");
-  update_sql("ALTER TABLE node ADD INDEX node_promote_status (promote, status)");
+  update_sql("ALTER TABLE {node} ADD INDEX node_type (type(4))");
+  update_sql("ALTER TABLE {node} ADD INDEX node_title_type (title,type(4))");
+  update_sql("ALTER TABLE {node} ADD INDEX node_moderate (moderate)");
+  update_sql("ALTER TABLE {node} ADD INDEX node_path (path(5))");
+  update_sql("ALTER TABLE {node} ADD INDEX node_promote_status (promote, status)");
 }
 
 function _update_next_thread($structure, $parent) {
@@ -383,14 +382,14 @@ function _update_next_thread($structure, $parent) {
 }
 
 function update_63() {
-  update_sql("ALTER TABLE users CHANGE uid uid int(10) unsigned NOT NULL default '0'");
-  update_sql("INSERT INTO users (uid, name, mail, timestamp) VALUES ('0', 'Anonymous', 'root@localhost', '". time() ."')");
-  $users = db_result(db_query("SELECT MAX(uid) FROM users;"));
-  update_sql("INSERT INTO sequences (name, id) VALUES ('users_uid', '$users')");
+  update_sql("ALTER TABLE {users} CHANGE uid uid int(10) unsigned NOT NULL default '0'");
+  update_sql("INSERT INTO {users} (uid, name, mail, timestamp) VALUES ('0', 'Anonymous', 'root@localhost', '". time() ."')");
+  $users = db_result(db_query("SELECT MAX(uid) FROM {users};"));
+  update_sql("INSERT INTO {sequences} (name, id) VALUES ('users_uid', '$users')");
 }
 
 function update_64() {
-  update_sql("UPDATE users SET rid = 1 WHERE uid = 0");
+  update_sql("UPDATE {users} SET rid = 1 WHERE uid = 0");
 }
 
 /*
