@@ -62,7 +62,7 @@ function theme_blocks($region, $theme) {
   global $id, $PHP_SELF, $user;
  
   switch (strtok($PHP_SELF, ".")) {
-    case "/discussion":
+    case "/story":
       if ($user->id) $story = db_fetch_object(db_query("SELECT * FROM stories WHERE id = '$id'"));
       if ($story->status == 1) theme_moderation_results($theme, $story);
       else theme_new_headlines($theme);
