@@ -20,7 +20,7 @@ function node_history($node) {
   return $output;
 }
 
-$number = ($title ? db_result(db_query("SELECT COUNT(nid) FROM node WHERE title = '$title' AND status = $status[posted]", 1)) : 1);
+$number = ($title ? db_result(db_query("SELECT COUNT(nid) FROM node WHERE title = '$title' AND status = $status[posted]")) : 1);
 
 if ($number > 1) {
   $result = db_query("SELECT n.*, u.userid FROM node n LEFT JOIN users u ON n.author = u.id WHERE n.title = '$title'");
