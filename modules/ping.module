@@ -60,7 +60,7 @@ function _ping_notify($name, $url) {
  */
 function ping_ping($name = '', $url = '') {
 
-  $feed = url('node/feed');
+  $feed = url('node/feed', NULL, NULL, TRUE);
 
   $client = new xmlrpc_client('/RPC2', 'rpc.weblogs.com', 80);
 
