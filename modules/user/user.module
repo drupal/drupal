@@ -1044,7 +1044,7 @@ function user_edit($edit = array()) {
 
           $user = user_save($user, array_merge($edit, $data));
 
-          $output .= status(t("Your user information changes have been saved."));
+          $output .= status(t("your user information changes have been saved."));
         }
       }
     }
@@ -1634,7 +1634,7 @@ function user_admin() {
         $output .= user_admin_access($edit);
         break;
       case t("Save permissions"):
-        $output = status(t("User permissions saved."));
+        $output = status(t("user permissions saved."));
       case "permission":
         $output .= user_admin_perm($edit);
         break;
@@ -1645,7 +1645,7 @@ function user_admin() {
       case t("Add role"):
       case t("Delete role"):
       case t("Save role"):
-        $output = status(t("Your role changes were saved."));
+        $output = status(t("your role changes were saved."));
       case "role":
         $output .= user_admin_role($edit);
         break;
@@ -1673,7 +1673,7 @@ function user_help($section = "admin/help#user") {
     case 'admin/user':
       $output .= t("<p>Drupal allows users to register, login, logout, maintain user profiles, etc.  No participant can use his own name to post content until he signs up for a user account.</p>");
       $output .= t("<p>Click on either the <i>username</i> or <i>edit account</i> to edit a user's information.</p>");
-      $output .= t("<p>Sort accounts by registration time by clicking on the <i>ID</i> header</p>");
+      $output .= t("<p>Sort accounts by registration time by clicking on the <i>ID</i> header.</p>");
       break;
     case 'admin/user/create':
     case 'admin/user/account/create':
