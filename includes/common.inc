@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.218 2003/06/19 17:26:27 dries Exp $
+// $Id: common.inc,v 1.219 2003/06/20 17:43:02 dries Exp $
 
 function conf_init() {
 
@@ -873,8 +873,8 @@ function form_hidden($name, $value) {
   return "<input type=\"hidden\" name=\"edit[$name]\" value=\"". check_form($value) ."\" />\n";
 }
 
-function form_submit($value) {
-  return "<input type=\"submit\" class=\"form-submit\" name=\"op\" value=\"". check_form($value) ."\" />\n";
+function form_submit($value, $name = "op") {
+  return "<input type=\"submit\" class=\"form-submit\" name=\"$name\" value=\"". check_form($value) ."\" />\n";
 }
 
 function form_weight($title = NULL, $name = "weight", $value = 0, $delta = 10, $description = 0, $extra = 0) {

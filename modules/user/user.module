@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.180 2003/06/20 05:05:53 dries Exp $
+// $Id: user.module,v 1.181 2003/06/20 17:43:03 dries Exp $
 
 session_set_save_handler("sess_open", "sess_close", "sess_read", "sess_write", "sess_destroy", "sess_gc");
 session_start();
@@ -1164,7 +1164,7 @@ function user_page() {
     case t("Save user information"):
     case "edit":
       $output = user_edit($edit);
-      $theme = theme_init();
+      $GLOBALS["theme"] = theme_init();
       theme("header");
       theme("box", t("User account"), user_menu());
       theme("box", t("Edit user information"), $output);

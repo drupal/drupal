@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.55 2003/06/15 19:06:23 dries Exp $
+// $Id: taxonomy.module,v 1.56 2003/06/20 17:43:03 dries Exp $
 
 function taxonomy_system($field){
   $system["description"] = t("Enables the organization of content into categories.");
@@ -255,6 +255,7 @@ function taxonomy_del_term($tid) {
   db_query("DELETE FROM term_node WHERE tid = %d", $tid);
 
   module_invoke_all("taxonomy", "delete", "term", $term);
+
   cache_clear_all();
 
   return t("deleted term '%name'.", array("%name" => $term->name));
@@ -334,6 +335,7 @@ function taxonomy_get_vocabularies($type = '', $key = "vid") {
   while ($voc = db_fetch_object($result)) {
     $vocabularies[$voc->$key] = $voc;
   }
+
   return $vocabularies;
 }
 
