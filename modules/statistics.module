@@ -197,15 +197,14 @@ function statistics_admin() {
 
     /* non-configuration admin pages */
     switch ($op) {
-      case "statistics":
-        $output = statistics_admin_topnodes();
-        break;
       case "referrers":
         $output = statistics_top_refer();
         break;
       case "log":
         $output = statistics_admin_displaylog();
         break;
+      default:
+        $output = statistics_admin_topnodes();
     }
 
     print theme("page", $output);
