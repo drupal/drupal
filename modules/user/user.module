@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.58 2002/04/22 09:05:36 kjartan Exp $
+// $Id: user.module,v 1.59 2002/04/22 09:30:13 kjartan Exp $
 
 session_set_save_handler("sess_open", "sess_close", "sess_read", "sess_write", "sess_destroy", "sess_gc");
 session_start();
@@ -480,7 +480,7 @@ function user_block() {
     if (variable_get("account_register", 1)) {
       $output .= "&#187; ".lm(t("Register"), array("mod" => "user", "op" => "register"), t("Create a new user account."))."\n";
     }
-    $output .= "<br \>&#187; ".lm(t("New password"), array("mod" => "user", "op" => "password"), t("Request new password via e-mail"))."<br />";
+    $output .= "<br />&#187; ".lm(t("New password"), array("mod" => "user", "op" => "password"), t("Request new password via e-mail"))."<br />";
 
     $block[1]["content"] = $output;
   }
