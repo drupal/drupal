@@ -374,33 +374,51 @@ function format_size($size) {
   return "$size $suffix";
 }
 
-function cache_clear($interval = 0) {
-  db_query("DELETE FROM cache WHERE ". time() ." - timestamp > $interval");
+function cache_get($key) {
+  $cache = db_fetch_object(db_query("SELECT data FROM cache WHERE cid = '". check_query($key) ."'"));
+  return $cache->data ? $cache->data : 0;
 }
 
-function cache_get() {
+function cache_set($cid, $data, $expire = 0) {
+  if (db_fetch_object(db_query("SELECT cid FROM cache WHERE cid = '". check_query($cid) ."'"))) {
+    db_query("UPDATE cache SET data = '". check_query($data) ."' WHERE cic = '". check_query($cid) ."'");
+  }
+  else {
+    db_query("INSERT INTO cache (cid, data, expire) VALUES('". check_query($cid) ."', '". check_query($data) ."', '". check_query($expire) ."')");
+  }
+}
+
+function cache_del($cid) {
+  db_query("DELETE FROM cache WHERE cid = '". check_query($cid) ."'");
+}
+
+function cache_clear() {
+  db_query("DELETE FROM cache WHERE expire < ". time() ." AND expire > 0");
+}
+
+function page_set_cache() {
   global $user, $REQUEST_URI, $REQUEST_METHOD;
 
   if (!$user->uid && $REQUEST_METHOD == "GET") {
-    if ($cache = db_fetch_object(db_query("SELECT * FROM cache WHERE url = '". check_input($REQUEST_URI) ."'"))) {
-      cache_clear(variable_get("cache_clear", 30));
+    if ($data = ob_get_contents()) {
+      cache_set($REQUEST_URI, $data, (time() + variable_get("cache_clear", 30)));
+    }
+  }
+}
+
+function page_get_cache() {
+  global $user, $REQUEST_URI, $REQUEST_METHOD;
+
+  if (!$user->uid && $REQUEST_METHOD == "GET") {
+    if ($cache = cache_get($REQUEST_URI)) {
+      cache_clear();
     }
     else {
       ob_start();
     }
   }
 
-  return $cache->data ? $cache->data : 0;
-}
-
-function cache_set() {
-  global $user, $REQUEST_URI, $REQUEST_METHOD;
-
-  if (!$user->uid && $REQUEST_METHOD == "GET") {
-    if ($data = ob_get_contents()) {
-      db_query("INSERT INTO cache (url, data, timestamp) VALUES('". addslashes($REQUEST_URI) ."', '". addslashes($data) ."', '". time() ."')");
-    }
-  }
+  return $cache ? $cache : 0;
 }
 
 function format_interval($timestamp) {
@@ -595,7 +613,7 @@ function page_header() {
   }
 
   if (variable_get("cache", 0)) {
-    if ($data = cache_get()) {
+    if ($data = page_get_cache()) {
       print $data;
       exit();
     }
@@ -612,7 +630,7 @@ function page_footer() {
   }
 
   if (variable_get("cache", 0)) {
-    cache_set();
+    page_set_cache();
   }
 }
 
