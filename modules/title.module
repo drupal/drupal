@@ -79,9 +79,9 @@ function title_filter($op, $text = "") {
 
 // filter [node title|description] links. '|description' is optional.
 function _title_filter_process($text) {
-  $pattern = '\[([^\|\]]+)(?>\|?)(.*?)\]';  // $1 == title: matches at least 1 char up to the first '|' or ']'
+  $pattern = '\[([^\|\]\n]+)(?>\|?)([^\]\n]*)\]';  // $1 == title: matches at least 1 char up to the first '|' or ']'
                                            // $2 == text: matches all after a following '|' (if there is) up to the next ']'. may include '|'s.
-  $replacement = 'l("$2" ? "$2" : "$1", "title/". urlencode("$1"))';
+  $replacement = 'l(\'$2\' ? \'$2\' : \'$1\', \'title/\'. urlencode(\'$1\'))';
   return preg_replace("/$pattern/e", $replacement, $text);
 }
 
