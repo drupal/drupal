@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.271 2004/08/10 18:34:29 unconed Exp $
+// $Id: comment.module,v 1.272 2004/08/13 18:17:10 unconed Exp $
 
 /**
  * @file
@@ -458,7 +458,7 @@ function comment_validate_form($edit) {
   /*
   ** Validate filter format
   */
-  if (!filter_access($edit['format'])) {
+  if (array_key_exists('format', $edit) && !filter_access($edit['format'])) {
     form_set_error('format', t('The supplied input format is invalid.'));
   }
 

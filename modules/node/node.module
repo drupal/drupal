@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.380 2004/08/12 15:12:26 unconed Exp $
+// $Id: node.module,v 1.381 2004/08/13 18:17:10 unconed Exp $
 
 define('NODE_NEW_LIMIT', time() - 30 * 24 * 60 * 60);
 
@@ -1097,7 +1097,7 @@ function node_validate($node) {
   node_invoke_nodeapi($node, 'validate');
 
   // Check input format access
-  if (!filter_access($node->format)) {
+  if (array_key_exists('format', $node) && !filter_access($node->format)) {
     form_set_error('format', t('The supplied input format is invalid.'));
   }
 
