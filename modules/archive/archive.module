@@ -72,7 +72,7 @@ function archive_display($original = 0) {
     }
     else {
       // due to text-decoration we use drupal_url() instead of lm()
-      $output .= "  <td align=\"center\"><small><a href=\"". drupal_url(array("mod" => "archive", "date" => $date), "module") ." \" style=\"text-decoration: none;\">$nday</a></small></td>\n";
+      $output .= "  <td align=\"center\"><small>". lm($nday, array("mod" => "archive", "date" => $date), "", array("style" => "text-decoration: none;")) ."</small></td>\n";
     }
 
     // Start every week on a new line:
