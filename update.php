@@ -744,20 +744,22 @@ function update_page() {
       // make sure we have updates to run.
       print "<html><h1>Drupal database update</h1>";
       print "<b>&raquo; <a href=\"index.php\">home</a></b><br />\n";
-      print "<b>&raquo; <a href=\"admin.php\">administer</a></b><br />\n";
+      print "<b>&raquo; ". l("administer", "admin"). "</b><br />\n";
       if ($edit["start"] == -1) {
         print "No updates to perform.";
       }
       else {
         update_data($edit["start"]);
       }
+      print "<br />Updates were attempted. If you see no failures above, you may proceed happily to the ". l("admin pages", "admin"). ".";
+      print " Otherwise, you may need to update your database manually.";
       print "</html>";
       break;
     case "upgrade3":
       // make sure we have updates to run.
       print "<html><h1>Drupal upgrade</h1>";
       print "<b>&raquo; <a href=\"index.php\">home</a></b><br />\n";
-      print "<b>&raquo; <a href=\"admin.php\">administer</a></b><br />\n";
+      print "<b>&raquo; ". l("admin pages", "admin"). "</b><br /><br />\n";
       if ($edit["start"] == -1) {
         print "No updates to perform.";
       }
@@ -813,14 +815,14 @@ function update_info() {
   print "<html><h1>Drupal database update</h1>";
   print "<ol>\n";
   print "<li>Use this script to <b>upgrade an existing Drupal installation</b>.  You don't need this script when installing Drupal from scratch.</li>";
-  print "<li>Before doing anything backup your database. This process will change your database and its values, and some things might get lost.</li>\n";
-  print "<li>Don't run this script twice as it will cause problems.</p></li>\n";
+  print "<li>Before doing anything, backup your database. This process will change your database and its values, and some things might get lost.</li>\n";
+  print "<li>Don't run this script twice as it may cause problems.</p></li>\n";
   print "<li>";
   print "Click the proper link below:<br />";
   print "<p><b>&raquo; <a href=\"update.php?op=upgrade4\">Upgrade 4.0.x to 4.1.x</a></b></p>\n";
   print "<p><b>&raquo; <a href=\"update.php?op=update\">Upgrade to CVS</a></b></p>\n";
   print "<p><b>&raquo; <a href=\"update.php?op=upgrade3\">Upgrade 3.0.x to 4.0.0</a></b> (Warning: clicking this link will update your database without confirmation.)</p>\n";
-  print "<p>If you are upgrading from <b>Drupal 3.0.x</b>, you'll want to run these queries manually <b>before doing anything else</b>:</p>\n";
+  print "<p>If you are upgrading from <b>Drupal 3.0.x</b>, you'll want to run these queries manually <b>before proceeding to step 5</b>:</p>\n";
   print "<pre>\n";
   print "  ALTER TABLE watchdog CHANGE user uid int(10) DEFAULT '0' NOT NULL;\n";
   print "  ALTER TABLE watchdog CHANGE id wid int(5) DEFAULT '0' NOT NULL auto_increment;\n";
@@ -841,8 +843,10 @@ function update_info() {
 
 if ($op) {
   include_once "includes/common.inc";
+
   // Access check:
   if ($user->uid == 1) {
+
     update_page();
   }
   else {
