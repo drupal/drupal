@@ -69,44 +69,29 @@ function story_add() {
 
   $output .= "<FORM ACTION=\"admin.php?mod=story\" METHOD=\"post\">\n";
 
-  $output .= "<P>\n";
-  $output .= " <B>Subject:</B><BR>\n";
-  $output .= " <INPUT TYPE=\"text\" NAME=\"edit[subject]\" SIZE=\"50\" MAXLENGTH=\"60\"><BR>\n";
-  $output .= "</P>\n";
+  $output .= "<B>Subject:</B><BR>\n";
+  $output .= "<INPUT TYPE=\"text\" NAME=\"edit[subject]\" SIZE=\"50\" MAXLENGTH=\"60\"><BR>\n";
 
-  $output .= "<P><B>Section:</B><BR>\n";
-  $output .= " <SELECT NAME=\"edit[section]\">\n";
-  foreach ($sections = section_get() as $value) {
-    $output .= "  <OPTION VALUE=\"$value\">$value</OPTION>\n";
-  }
-  $output .= " </SELECT>\n";
-  $output .= "</P>\n";
+  $output .= "<B>Section:</B><BR>\n";
+  foreach ($sections = section_get() as $value) $options .= "  <OPTION VALUE=\"$value\">$value</OPTION>\n";
+  $output .= "<SELECT NAME=\"edit[section]\">$options</SELECT><P>\n";
 
-  $output .= "<P>\n";
-  $output .= " <B>Abstract:</B><BR>\n";
-  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"edit[abstract]\" MAXLENGTH=\"20\"></TEXTAREA><BR>\n";
-  $output .= " <SMALL><I>Allowed HTML tags: ". htmlspecialchars($allowed_html) .".</I></SMALL>\n";
-  $output .= "</P>\n";
+  $output .= "<B>Abstract:</B><BR>\n";
+  $output .= "<TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"edit[abstract]\" MAXLENGTH=\"20\"></TEXTAREA><BR>\n";
+  $output .= "<SMALL><I>Allowed HTML tags: ". htmlspecialchars($allowed_html) .".</I></SMALL><P>\n";
 
-  $output .= "<P>\n";
-  $output .= " <B>Extended story:</B><BR>\n";
-  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"15\" NAME=\"edit[article]\"></TEXTAREA><BR>\n";
-  $output .= " <SMALL><I>Allowed HTML tags: ". htmlspecialchars($allowed_html) .".</I></SMALL>\n";
-  $output .= "</P>\n";
+  $output .= "<B>Extended story:</B><BR>\n";
+  $output .= "<TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"15\" NAME=\"edit[article]\"></TEXTAREA><BR>\n";
+  $output .= "<SMALL><I>Allowed HTML tags: ". htmlspecialchars($allowed_html) .".</I></SMALL><P>\n";
 
-  $output .= "<P>\n";
-  $output .= " <B>Status:</B><BR>\n";
-  $output .= " <INPUT TYPE=\"radio\" NAME=\"edit[status]\" VALUE=\"3\">scheduled story for <INPUT TYPE=\"text\" NAME=\"edit[date]\" SIZE=\"30\" VALUE=\"". date("j F Y G:i") ."\"><BR>\n";
-  $output .= " <INPUT TYPE=\"radio\" NAME=\"edit[status]\" VALUE=\"2\">posted story<BR>\n";
-  $output .= " <INPUT TYPE=\"radio\" NAME=\"edit[status]\" VALUE=\"1\" CHECKED>queued story<BR>\n";
-  $output .= " <INPUT TYPE=\"radio\" NAME=\"edit[status]\" VALUE=\"0\">dumped story<BR>\n";
-  $output .= " <SMALL><I>The textfield for scheduled stories expects a string containing an English date format of when you want to have your story automatically published.<BR>Example input: '". date("j F Y G:i") ."', '". date("m/d/y H:i") ."', '". date("F j, Y H:i") ."', ...</I></SMALL>\n";
-  $output .= "</P>\n";
+  $output .= "<B>Status:</B><BR>\n";
+  $output .= "<INPUT TYPE=\"radio\" NAME=\"edit[status]\" VALUE=\"3\">scheduled story for <INPUT TYPE=\"text\" NAME=\"edit[date]\" SIZE=\"30\" VALUE=\"". date("j F Y G:i") ."\"><BR>\n";
+  $output .= "<INPUT TYPE=\"radio\" NAME=\"edit[status]\" VALUE=\"2\">posted story<BR>\n";
+  $output .= "<INPUT TYPE=\"radio\" NAME=\"edit[status]\" VALUE=\"1\" CHECKED>queued story<BR>\n";
+  $output .= "<INPUT TYPE=\"radio\" NAME=\"edit[status]\" VALUE=\"0\">dumped story<BR>\n";
+  $output .= "<SMALL><I>The textfield for scheduled stories expects a string containing an English date format of when you want to have your story automatically published.<BR>Example input: '". date("j F Y G:i") ."', '". date("m/d/y H:i") ."', '". date("F j, Y H:i") ."', ...</I></SMALL><P>\n";
 
-  $output .= "<P>\n";
-  $output .= " <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Add story\">\n";
-  $output .= "</P>\n";
-
+  $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Add story\">\n";
   $output .= "</FORM>\n";
 
   print $output;
