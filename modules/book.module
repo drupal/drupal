@@ -18,7 +18,7 @@ class Book {
 }
 
 function book_navigation($node) {
-  if ($node->nid) {
+  if ($node->nid && $node->parent && $node->weight) {
     $next = db_fetch_object(db_query("SELECT n.nid, n.title FROM node n LEFT JOIN book b ON n.nid = b.nid AND n.lid = b.lid WHERE b.parent = '$node->parent' AND b.weight > $node->weight ORDER BY b.weight ASC"));
     $prev = db_fetch_object(db_query("SELECT n.nid, n.title FROM node n LEFT JOIN book b ON n.nid = b.nid AND n.lid = b.lid WHERE b.parent = '$node->parent' AND b.weight < $node->weight ORDER BY b.weight DESC"));
   }
