@@ -2,13 +2,13 @@
 // $Id$
 
 
-function import_help($section = "admin/help#import") {
+function aggregator_help($section = "admin/help#aggregator") {
   $output = "";
 
   switch ($section) {
-    case 'admin/help#import':
+    case 'admin/help#aggregator':
       $output .= "<p>Thousands of web sites, especially news sites and weblogs, syndicate their most recent site content for others to display. The syndicated content always includes titles, also known as headlines, for the newest published stories.  Each headline acts as a direct link to the stories on the remote site. Along with the headline, most sites typically provide either the first few paragraphs of the story or a short summary. Many individuals use client-based news aggregators on their personal computer to aggregate content, such as %amphetadesk</p>";
-      $output .= "<p>Drupal also has a news aggregator built in as a standard feature. With it, you can subscribe to feeds from other sites and display their content for your site users. Simply enable the import module in site administration and enter the feeds that you choose.</p>";
+      $output .= "<p>Drupal also has a news aggregator built in as a standard feature. With it, you can subscribe to feeds from other sites and display their content for your site users. Simply enable the aggregator module in site administration and enter the feeds that you choose.</p>";
       $output .= "<h3>What do I need to subscribe to a feed?</h3>";
       $output .= "<p>The standard method of syndication is using the XML-based %rss (RSS). To syndicate a site's content, obtain the full URL of the RSS page providing syndication. Common file tags for RSS pages are .rss, .xml and .rdf. Example: %slashdot-rss.</p>";
       $output .= "<p>Most weblog sites that offer syndication will have an obvious link on the main page. Often you need only look for an XML syndication button, such as the one Drupal uses for site syndication.</p>";
@@ -55,7 +55,7 @@ function import_help($section = "admin/help#import") {
     case 'admin/system/modules#description':
       $output = t("Used to aggregate syndicated content (RSS and RDF).");
       break;
-    case 'admin/system/modules/import':
+    case 'admin/system/modules/aggregator':
       $output = t("Drupal's news aggregator controls how many RSS/RDF items from a single source are displayed in a \"Block\", and on the page that goes with that block.");
       break;
     case 'admin/node/syndication/news':
@@ -75,67 +75,65 @@ function import_help($section = "admin/help#import") {
   return $output;
 }
 
-function import_help_page() {
-  print theme("page", import_help());
+function aggregator_help_page() {
+  print theme("page", aggregator_help());
 }
 
-function import_settings() {
+function aggregator_settings() {
   $number = array(5 => 5, 10 => 10, 15 => 15, 20 => 20, 25 => 25, 30 => 30, 35 => 35, 40 => 40, 45 => 45, 50 => 50, 55 => 55, 60 => 60, 65 => 65, 70 => 70, 75 => 75, 80 => 80, 85 => 85, 90 => 90, 95 => 95, 100 => 100);
-  $output .= form_select(t("Items per block"), "import_block_limit", variable_get("import_block_limit", 15), $number, t("The maximum number of news items displayed in one block."));
-  $output .= form_select(t("Items per page"), "import_page_limit", variable_get("import_page_limit", 75), $number, t("The maximum number of news items displayed on one page."));
+  $output .= form_select(t("Items per block"), "aggregator_block_limit", variable_get("aggregator_block_limit", 15), $number, t("The maximum number of news items displayed in one block."));
+  $output .= form_select(t("Items per page"), "aggregator_page_limit", variable_get("aggregator_page_limit", 75), $number, t("The maximum number of news items displayed on one page."));
 
   return $output;
 }
 
-function import_perm() {
+function aggregator_perm() {
   return array("administer news feeds", "access news feeds");
 }
 
-function import_link($type) {
+function aggregator_link($type) {
 
   $links = array();
 
   if ($type == "page" && user_access("access news feeds")) {
-    $links[] = l(t("news feeds"), "import", array("title" => t("Read the latest news from syndicated web sites.")));
+    $links[] = l(t("news feeds"), "aggregator", array("title" => t("Read the latest news from syndicated web sites.")));
   }
 
   if ($type == "system") {
-    menu("aggregator", t('news aggregator'), 'import_page', 5);
-    menu("aggregator/feeds", t('news by source'), 'import_page');
-    menu("aggregator/bundles", t('news by topic'), 'import_page');
-    menu("aggregator/sources", t('news sources'), 'import_page');
-
     if (user_access("administer news feeds")) {
       menu("admin/node/syndication", t("syndication"), NULL, 5);
-      menu("admin/node/syndication/news", t("RSS/RDF"), "import_admin");
-      menu("admin/node/syndication/news/add/feed", t("new feed"), "import_admin", 2);
-      menu("admin/node/syndication/news/add/bundle", t("new bundle"), "import_admin", 3);
-      menu("admin/node/syndication/news/tag", t("tag items"), "import_admin", 4);
-      menu("admin/node/syndication/news/help", t("help"), "import_help_page", 9);
+      menu("admin/node/syndication/news", t("RSS/RDF"), "aggregator_admin");
+      menu("admin/node/syndication/news/add/feed", t("new feed"), "aggregator_admin", 2);
+      menu("admin/node/syndication/news/add/bundle", t("new bundle"), "aggregator_admin", 3);
+      menu("admin/node/syndication/news/tag", t("tag items"), "aggregator_admin", 4);
+      menu("admin/node/syndication/news/help", t("help"), "aggregator_help_page", 9);
     }
     if (user_access("access news feeds")) {
-      menu("import", t("news feeds"), "import_page", 0, MENU_HIDE);
+      menu("aggregator", t('news aggregator'), 'aggregator_page', 5);
+      menu("aggregator/feeds", t('news by source'), 'aggregator_page');
+      menu("aggregator/bundles", t('news by topic'), 'aggregator_page');
+      menu("aggregator/sources", t('news sources'), 'aggregator_page');
     }
   }
 
   return $links;
 }
 
-function import_cron() {
+function aggregator_cron() {
   $result = db_query("SELECT * FROM {feed} WHERE timestamp + refresh < ". time());
   while ($feed = db_fetch_array($result)) {
-    import_refresh($feed);
+    aggregator_refresh($feed);
   }
 }
 
-function import_update() {
+function aggregator_update() {
   $result = db_query("SELECT * FROM {feed} ");
   while ($feed = db_fetch_array($result)) {
-    import_refresh($feed);
+    aggregator_refresh($feed);
   }
 }
 
-function theme_import_format_item($item, $feed = 0) {
+function theme_aggregator_format_item($item, $feed = 0) {
   global $user;
 
   if ($user->uid && module_exist("blog") && user_access("maintain personal blog")) {
@@ -148,103 +146,105 @@ function theme_import_format_item($item, $feed = 0) {
   return $output;
 }
 
-function import_bundle_block($attributes) {
+function aggregator_bundle_block($attributes) {
 
   if ($attributes) {
     $keys = explode(",", $attributes);
     foreach ($keys as $key) $where[] = "attributes LIKE '%". trim($key) ."%'";
 
-    $result = db_query_range("SELECT * FROM {item} WHERE ". implode(" OR ", $where) ." ORDER BY iid DESC", 0, variable_get("import_block_limit", 15));
+    $result = db_query_range("SELECT * FROM {item} WHERE ". implode(" OR ", $where) ." ORDER BY iid DESC", 0, variable_get("aggregator_block_limit", 15));
   }
 
   $items = array();
   while ($item = db_fetch_object($result)) {
-    $items[] = theme("import_format_item", $item);
+    $items[] = theme("aggregator_format_item", $item);
   }
 
   return theme("item_list", $items);
 }
 
-function import_feed_block($feed) {
-  $result = db_query_range("SELECT * FROM {item} WHERE fid = %d ORDER BY iid DESC ", $feed->fid, 0, variable_get("import_block_limit", 15));
+function aggregator_feed_block($feed) {
+  $result = db_query_range("SELECT * FROM {item} WHERE fid = %d ORDER BY iid DESC ", $feed->fid, 0, variable_get("aggregator_block_limit", 15));
 
   $items = array();
   while ($item = db_fetch_object($result)) {
-    $items[] = theme("import_format_item", $item);
+    $items[] = theme("aggregator_format_item", $item);
   }
 
   return theme("item_list", $items);
 }
 
-function import_block($op, $delta) {
-  if ($op == "list") {
-    $result = db_query("SELECT * FROM {bundle} ORDER BY title");
-    while ($bundle = db_fetch_object($result)) {
-      $block["bundle:$bundle->bid"]["info"] = "$bundle->title bundle";
+function aggregator_block($op, $delta) {
+  if (user_access("access news feeds")) {
+    if ($op == "list") {
+      $result = db_query("SELECT * FROM {bundle} ORDER BY title");
+      while ($bundle = db_fetch_object($result)) {
+        $block["bundle:$bundle->bid"]["info"] = "$bundle->title bundle";
+      }
+  
+      $result = db_query("SELECT * FROM {feed} ORDER BY fid");
+      while ($feed = db_fetch_object($result)) {
+        $block["feed:$feed->fid"]["info"] = "$feed->title feed";
+      }
+  
+      return $block;
     }
-
-    $result = db_query("SELECT * FROM {feed} ORDER BY fid");
-    while ($feed = db_fetch_object($result)) {
-      $block["feed:$feed->fid"]["info"] = "$feed->title feed";
+    else {
+      list($type, $id) = split(":", $delta);
+      switch ($type) {
+        case "feed":
+          $feed = db_fetch_object(db_query("SELECT * FROM {feed} WHERE fid = %d", $id));
+          $block["subject"] = $feed->title;
+          $block["content"] .= aggregator_feed_block($feed) ."<div class=\"more-link\">".  l(t("more"), "aggregator/feed/$feed->fid", array("title" => t("View this feed's recent news."))) ."</div>";
+          break;
+  
+        case "bundle":
+          $bundle = db_fetch_object(db_query("SELECT * FROM {bundle} WHERE bid = %d", $id));
+          $block["subject"] = $bundle->title;
+          $block["content"] .= aggregator_bundle_block($bundle->attributes) ."<div class=\"more-link\">". l(t("more"), "aggregator/bundle/$bundle->bid", array("title" => t("View this bundle's recent news."))) ."</div>";
+          break;
+      }
+  
+      return $block;
     }
-
-    return $block;
-  }
-  else {
-    list($type, $id) = split(":", $delta);
-    switch ($type) {
-      case "feed":
-        $feed = db_fetch_object(db_query("SELECT * FROM {feed} WHERE fid = %d", $id));
-        $block["subject"] = $feed->title;
-        $block["content"] .= import_feed_block($feed) ."<div class=\"more-link\">".  l(t("more"), "import/feed/$feed->fid", array("title" => t("View this feed's recent news."))) ."</div>";
-        break;
-
-      case "bundle":
-        $bundle = db_fetch_object(db_query("SELECT * FROM {bundle} WHERE bid = %d", $id));
-        $block["subject"] = $bundle->title;
-        $block["content"] .= import_bundle_block($bundle->attributes) ."<div class=\"more-link\">". l(t("more"), "import/bundle/$bundle->bid", array("title" => t("View this bundle's recent news."))) ."</div>";
-        break;
-    }
-
-    return $block;
   }
 }
 
-function import_get_bundles($attributes = 0) {
+function aggregator_get_bundles($attributes = 0) {
 
   $block = array();
 
   $result = db_query("SELECT * FROM {bundle} ORDER BY title");
   while ($bundle = db_fetch_object($result)) {
     $block["bundle:$bundle->bid"]["subject"] = $bundle->title;
-    $block["bundle:$bundle->bid"]["content"] = import_bundle_block($bundle->attributes) ."<div class=\"more-link\">". l(t("more"), "import/bundle/$bundle->bid", array("title" => t("View this bundle's recent news."))) ."</div>";
+    $block["bundle:$bundle->bid"]["content"] = aggregator_bundle_block($bundle->attributes) ."<div class=\"more-link\">". l(t("more"), "aggregator/bundle/$bundle->bid", array("title" => t("View this bundle's recent news."))) ."</div>";
     $block["bundle:$bundle->bid"]["info"] = "$bundle->title bundle";
   }
 
   return $block;
 }
 
-function import_get_feeds($attributes = 0) {
+function aggregator_get_feeds($attributes = 0) {
 
   $block = array();
 
   $result = db_query("SELECT * FROM {feed} ORDER BY fid");
   while ($feed = db_fetch_object($result)) {
     $block["feed:$feed->fid"]["subject"] = $feed->title;
-    $block["feed:$feed->fid"]["content"] = import_feed_block($feed) ."<div class=\"more-link\">". l(t("more"), "import/feed/$feed->fid", array("title" => t("View this feed's recent news."))) ."</div>";
+    $block["feed:$feed->fid"]["content"] = aggregator_feed_block($feed) ."<div class=\"more-link\">". l(t("more"), "aggregator/feed/$feed->fid", array("title" => t("View this feed's recent news."))) ."</div>";
     $block["feed:$feed->fid"]["info"] = "$feed->title feed";
   }
 
   return $block;
 }
 
-function import_remove($feed) {
+function aggregator_remove($feed) {
   db_query("DELETE FROM {item} WHERE fid = %d", $feed["fid"]);
   return t("removed news items from '%site'.", array("%site" => $feed["title"]));
 }
 
 // Call-back function used by XML parser:
-function import_element_start($parser, $name, $attributes) {
+function aggregator_element_start($parser, $name, $attributes) {
   global $item, $element, $tag;
 
   switch ($name) {
@@ -261,7 +261,7 @@ function import_element_start($parser, $name, $attributes) {
 }
 
 // Call-back function used by XML parser:
-function import_element_end($parser, $name) {
+function aggregator_element_end($parser, $name) {
   global $element;
 
    switch ($name) {
@@ -273,7 +273,7 @@ function import_element_end($parser, $name) {
 }
 
 // Call-back function used by XML parser:
-function import_element_data($parser, $data) {
+function aggregator_element_data($parser, $data) {
   global $channel, $element, $items, $item, $tag;
 
   switch ($element) {
@@ -293,7 +293,7 @@ function import_element_data($parser, $data) {
   }
 }
 
-function import_refresh($feed) {
+function aggregator_refresh($feed) {
 
   // unset the global variables before we use them:
   unset($GLOBALS["channel"], $GLOBALS["element"], $GLOBALS["item"], $GLOBALS["items"], $GLOBALS["tag"]);
@@ -327,8 +327,8 @@ function import_refresh($feed) {
 
     // parse the data:
     $xml_parser = drupal_xml_parser_create($data);
-    xml_set_element_handler($xml_parser, "import_element_start", "import_element_end");
-    xml_set_character_data_handler($xml_parser, "import_element_data");
+    xml_set_element_handler($xml_parser, "aggregator_element_start", "aggregator_element_end");
+    xml_set_character_data_handler($xml_parser, "aggregator_element_data");
 
     if (!xml_parse($xml_parser, $data, 1)) {
       return t("failed to parse RSS feed '%site': %error at line %line.", array("%site" => $feed["title"], "%error" => xml_error_string(xml_get_error_code($xml_parser)), "%line" => xml_get_current_line_number($xml_parser)));
@@ -391,7 +391,7 @@ function import_refresh($feed) {
         $entry = db_fetch_object(db_query("SELECT iid FROM {item} WHERE fid = %d AND title = '%s'", $feed["fid"], $title));
       }
 
-      import_save_item(array(iid => $entry->iid, fid => $feed["fid"], title => $title, link => $link, author => $item["AUTHOR"], description => $item["DESCRIPTION"], attributes => $feed["attributes"]));
+      aggregator_save_item(array(iid => $entry->iid, fid => $feed["fid"], title => $title, link => $link, author => $item["AUTHOR"], description => $item["DESCRIPTION"], attributes => $feed["attributes"]));
     }
 
     /*
@@ -419,7 +419,7 @@ function import_refresh($feed) {
   return t("syndicated content from '%site'.", array("%site" => $feed["title"]));
 }
 
-function import_save_item($edit) {
+function aggregator_save_item($edit) {
   if ($edit["iid"] && $edit["title"]) {
     db_query("UPDATE {item} SET title = '%s', link = '%s', author = '%s', description = '%s', attributes = '%s' WHERE iid = %d", $edit["title"], $edit["link"], $edit["author"], $edit["description"], $edit["attributes"], $edit["iid"]);
   }
@@ -431,7 +431,7 @@ function import_save_item($edit) {
   }
 }
 
-function import_form_bundle($edit = array()) {
+function aggregator_form_bundle($edit = array()) {
 
   $form .= form_textfield(t("Title"), "title", $edit["title"], 50, 64, t("The name of the bundle."));
   $form .= form_textfield(t("Attributes"), "attributes", $edit["attributes"], 50, 128, t("A comma-separated list of keywords describing the bundle."));
@@ -446,7 +446,7 @@ function import_form_bundle($edit = array()) {
   return form($form);
 }
 
-function import_save_bundle($edit) {
+function aggregator_save_bundle($edit) {
   if ($edit["bid"] && $edit["title"]) {
     db_query("UPDATE {bundle} SET title = '%s', attributes = '%s' WHERE bid = %d", $edit["title"], $edit["attributes"], $edit["bid"]);
   }
@@ -460,7 +460,7 @@ function import_save_bundle($edit) {
   }
 }
 
-function import_form_feed($edit = array()) {
+function aggregator_form_feed($edit = array()) {
 
   $period = array(900 => format_interval(900), 1800 => format_interval(1800), 3600 => format_interval(3600), 7200 => format_interval(7200), 10800 => format_interval(10800), 21600 => format_interval(21600), 32400 => format_interval(32400), 43200 => format_interval(43200), 64800 => format_interval(64800), 86400 => format_interval(86400), 172800 => format_interval(172800), 259200 => format_interval(259200), 604800 => format_interval(604800), 1209600 => format_interval(1209600), 2419200 => format_interval(2419200));
 
@@ -483,7 +483,7 @@ function import_form_feed($edit = array()) {
   return form($form);
 }
 
-function import_save_feed($edit) {
+function aggregator_save_feed($edit) {
   if ($edit["fid"] && $edit["title"]) {
     db_query("UPDATE {feed} SET title = '%s', url = '%s', attributes = '%s', refresh = %d WHERE fid = %d", $edit["title"], $edit["url"], $edit["attributes"], $edit["refresh"], $edit["fid"]);
     db_query("DELETE FROM {item} WHERE fid = %d", $edit["fid"]);
@@ -499,22 +499,22 @@ function import_save_feed($edit) {
   }
 }
 
-function import_save_attributes($edit) {
+function aggregator_save_attributes($edit) {
   foreach ($edit as $iid => $value) {
     db_query("UPDATE {item} SET attributes = '%s' WHERE iid = %d", $value, $iid);
   }
   return t("attributes has been saved");
 }
 
-function import_get_feed($fid) {
+function aggregator_get_feed($fid) {
   return db_fetch_array(db_query("SELECT * FROM {feed} WHERE fid = %d", $fid));
 }
 
-function import_get_bundle($bid) {
+function aggregator_get_bundle($bid) {
   return db_fetch_array(db_query("SELECT * FROM {bundle} WHERE bid = %d", $bid));
 }
 
-function import_view() {
+function aggregator_view() {
   $result = db_query("SELECT f.*, COUNT(i.iid) AS items FROM {feed} f LEFT JOIN {item} i ON f.fid = i.fid GROUP BY f.fid, f.title, f.url, f.refresh, f.timestamp, f.attributes, f.link, f.description ORDER BY f.title");
 
   $output .= "<h3>". t("Feed overview") ."</h3>";
@@ -540,7 +540,7 @@ function import_view() {
   return $output;
 }
 
-function import_tag() {
+function aggregator_tag() {
 
   $result = db_query_range("SELECT i.*, f.title AS feed FROM {item} i INNER JOIN {feed} f ON i.fid = f.fid ORDER BY i.iid DESC", 0, 50);
 
@@ -555,7 +555,7 @@ function import_tag() {
   return form($output);
 }
 
-function import_admin() {
+function aggregator_admin() {
   $op = $_POST["op"];
   $edit = $_POST["edit"];
 
@@ -568,48 +568,48 @@ function import_admin() {
     switch ($op) {
       case "add":
         if (arg(5) == "bundle") {
-          $output = import_form_bundle();
+          $output = aggregator_form_bundle();
         }
         else {
-          $output = import_form_feed();
+          $output = aggregator_form_feed();
         }
         break;
       case "edit":
         if (arg(5) == "bundle") {
-          $output = import_form_bundle(import_get_bundle(arg(6)));
+          $output = aggregator_form_bundle(aggregator_get_bundle(arg(6)));
         }
         else {
-          $output = import_form_feed(import_get_feed(arg(6)));
+          $output = aggregator_form_feed(aggregator_get_feed(arg(6)));
         }
         break;
       case "remove":
-        drupal_set_message(import_remove(import_get_feed(arg(5))));
-        $output .= import_view();
+        drupal_set_message(aggregator_remove(aggregator_get_feed(arg(5))));
+        $output .= aggregator_view();
         break;
       case "update":
-        drupal_set_message(import_refresh(import_get_feed(arg(5))));
-        $output .= import_view();
+        drupal_set_message(aggregator_refresh(aggregator_get_feed(arg(5))));
+        $output .= aggregator_view();
         break;
       case "tag":
-        $output = import_tag();
+        $output = aggregator_tag();
         break;
       case t("Save attributes"):
-        drupal_set_message(import_save_attributes($edit));
-        $output .= import_tag();
+        drupal_set_message(aggregator_save_attributes($edit));
+        $output .= aggregator_tag();
         break;
       case t("Delete"):
         $edit["title"] = 0;
         // fall through:
       case t("Submit"):
         if (arg(5) == "bundle") {
-          drupal_set_message(import_save_bundle($edit));
+          drupal_set_message(aggregator_save_bundle($edit));
         }
         else {
-          drupal_set_message(import_save_feed($edit));
+          drupal_set_message(aggregator_save_feed($edit));
         }
         // fall through:
       default:
-        $output .=  import_view();
+        $output .=  aggregator_view();
     }
     print theme("page", $output);
   }
@@ -618,20 +618,20 @@ function import_admin() {
   }
 }
 
-function import_page_last() {
+function aggregator_page_last() {
 
 
-  $result = db_query_range("SELECT i.*, f.title AS ftitle, f.link AS flink FROM {item} i INNER JOIN {feed} f ON i.fid = f.fid ORDER BY i.iid DESC", 0, variable_get("import_page_limit", 75));
+  $result = db_query_range("SELECT i.*, f.title AS ftitle, f.link AS flink FROM {item} i INNER JOIN {feed} f ON i.fid = f.fid ORDER BY i.iid DESC", 0, variable_get("aggregator_page_limit", 75));
 
   $output .= "<table border=\"0\" cellpadding=\"4\" cellspacing=\"2\">";
   while ($item = db_fetch_object($result)) {
     if (module_exist("blog") && user_access("maintain personal blog")) {
       $links[] = l(t("blog it"), "node/add/blog", array("title" => t("Comment on this news item in your personal blog.")), "iid=$item->iid");
     }
-    $links[] = l(t("feed"), "import/feed/$item->fid", array("title" => t("Read more syndicated news from this feed.")));
+    $links[] = l(t("feed"), "aggregator/feed/$item->fid", array("title" => t("Read more syndicated news from this feed.")));
 
     if ($item->link) {
-      $output .= "<tr><td><a href=\"$item->link\">$item->title</a> &middot; ". l($item->ftitle, "import/feed/$item->fid", array("title" => t("View more information about this feed."))) ."</td><td style=\"text-align: right; vertical-align: top;\">". theme("links", $links) ."</td></tr>\n";
+      $output .= "<tr><td><a href=\"$item->link\">$item->title</a> &middot; ". l($item->ftitle, "aggregator/feed/$item->fid", array("title" => t("View more information about this feed."))) ."</td><td style=\"text-align: right; vertical-align: top;\">". theme("links", $links) ."</td></tr>\n";
     }
 
     if ($item->description) {
@@ -645,7 +645,7 @@ function import_page_last() {
   print theme("page", $output);
 }
 
-function import_page_feed($fid) {
+function aggregator_page_feed($fid) {
 
 
   $feed = db_fetch_object(db_query("SELECT * FROM {feed} WHERE fid = %d", $fid));
@@ -654,7 +654,7 @@ function import_page_feed($fid) {
   $header .= "<p><strong>". t("Description") .":</strong><div style=\"margin-left: 20px;\">$feed->description</div></p>";
   $header .= "<p><strong>". t("Last update") .":</strong><div style=\"margin-left: 20px; text-align: right;\">". t("%time ago", array("%time" => format_interval(time() - $feed->timestamp))) ." <a href=\"$feed->url\"><img src=\"". theme("image", "xml.gif") ."\" width=\"36\" height=\"14\" style=\"border: 0px;\" alt=\"\" title=\"\" /></a><br /><br /></div></p>\n";
 
-  $result = db_query_range("SELECT * FROM {item} WHERE fid = %d ORDER BY iid DESC", $fid, 0, variable_get("import_page_limit", 75));
+  $result = db_query_range("SELECT * FROM {item} WHERE fid = %d ORDER BY iid DESC", $fid, 0, variable_get("aggregator_page_limit", 75));
 
   $output .= "<table border=\"0\" cellpadding=\"4\" cellspacing=\"2\">";
   while ($item = db_fetch_object($result)) {
@@ -680,28 +680,28 @@ function import_page_feed($fid) {
   print theme("footer");
 }
 
-function import_page_bundle($bid) {
+function aggregator_page_bundle($bid) {
 
 
   $bundle = db_fetch_object(db_query("SELECT * FROM {bundle} WHERE bid = %d", $bid));
 
-  $header .= "<p><strong>". t("Website") .":</strong><div style=\"margin-left: 20px;\">". l($bundle->title, "import/bundle/$bundle->bid") ."</div></p>";
+  $header .= "<p><strong>". t("Website") .":</strong><div style=\"margin-left: 20px;\">". l($bundle->title, "aggregator/bundle/$bundle->bid") ."</div></p>";
   $header .= "<p><strong>". t("Description") .":</strong><div style=\"margin-left: 20px;\">". t("A composite news feed about") ." $bundle->attributes.</div></p>";
 
   $keys = explode(",", $bundle->attributes);
   foreach ($keys as $key) $where[] = "i.attributes LIKE '%". trim($key) ."%'";
-  $result = db_query_range("SELECT i.*, f.title AS ftitle, f.link AS flink FROM {item} i, {feed} f WHERE (". implode(" OR ", $where) .") AND i.fid = f.fid ORDER BY iid DESC", 0, variable_get("import_page_limit", 75));
+  $result = db_query_range("SELECT i.*, f.title AS ftitle, f.link AS flink FROM {item} i, {feed} f WHERE (". implode(" OR ", $where) .") AND i.fid = f.fid ORDER BY iid DESC", 0, variable_get("aggregator_page_limit", 75));
 
   $output .= "<table border=\"0\" cellpadding=\"4\" cellspacing=\"2\">";
   while ($item = db_fetch_object($result)) {
     if (module_exist("blog") && user_access("maintain personal blog")) {
       $links[] = l(t("blog it"), "node/add/blog", array("title" => t("Comment on this news item in your personal blog.")), "iid=$item->iid");
     }
-    $links[] = l(t("feed"), "import/feed/$item->fid", array("title" => t("Read more syndicated news from this feed.")));
+    $links[] = l(t("feed"), "aggregator/feed/$item->fid", array("title" => t("Read more syndicated news from this feed.")));
     $links[] = "<a href=\"$item->link\">". t("visit") ."</a>";
 
     if ($item->link) {
-      $output .= "<tr><td><a href=\"$item->link\">$item->title</a> &middot; ". l($item->ftitle, "import/feed/$item->fid", array("title" => t("View more information about this feed."))) ."</td><td style=\"text-align: right; vertical-align: top;\">". theme("links", $links) ."</td></tr>\n";
+      $output .= "<tr><td><a href=\"$item->link\">$item->title</a> &middot; ". l($item->ftitle, "aggregator/feed/$item->fid", array("title" => t("View more information about this feed."))) ."</td><td style=\"text-align: right; vertical-align: top;\">". theme("links", $links) ."</td></tr>\n";
     }
 
     if ($item->description) {
@@ -719,22 +719,22 @@ function import_page_bundle($bid) {
 
 }
 
-function import_page_sources() {
+function aggregator_page_sources() {
 
 
   $result = db_query("SELECT * FROM {feed} ORDER BY title");
 
   while ($feed = db_fetch_object($result)) {
-    $output .= l($feed->title, "import/feed/$feed->fid");
+    $output .= l($feed->title, "aggregator/feed/$feed->fid");
     $output .= "<div style=\"margin-left: 20px;\">$feed->description</div><br />";
   }
 
-  $output .= "<div style=\"xml-icon\">". l("<img src=\"". theme("image", "xml.gif") ."\" width=\"36\" height=\"14\" style=\"border: 0px;\" />", "import/fd", array("title" => t("View the list of syndicated web sites in XML format."))) ."</div><br />";
+  $output .= "<div style=\"xml-icon\">". l("<img src=\"". theme("image", "xml.gif") ."\" width=\"36\" height=\"14\" style=\"border: 0px;\" />", "aggregator/fd", array("title" => t("View the list of syndicated web sites in XML format."))) ."</div><br />";
 
   print theme("page", $output);
 }
 
-function import_page_fd() {
+function aggregator_page_fd() {
 
   $result = db_query("SELECT * FROM {feed} ORDER BY title");
 
@@ -755,15 +755,15 @@ function import_page_fd() {
   print $output;
 }
 
-function import_page_bundles() {
-  import_page_blocks(import_get_bundles());
+function aggregator_page_bundles() {
+  aggregator_page_blocks(aggregator_get_bundles());
 }
 
-function import_page_feeds() {
-  import_page_blocks(import_get_feeds());
+function aggregator_page_feeds() {
+  aggregator_page_blocks(aggregator_get_feeds());
 }
 
-function import_page_blocks($blocks) {
+function aggregator_page_blocks($blocks) {
 
 
   print theme("header");
@@ -788,29 +788,29 @@ function import_page_blocks($blocks) {
   print theme("footer");
 }
 
-function import_page() {
+function aggregator_page() {
   if (user_access("access news feeds")) {
     switch (arg(1)) {
       case "feed":
-        import_page_feed(arg(2));
+        aggregator_page_feed(arg(2));
         break;
       case "bundle":
-        import_page_bundle(arg(2));
+        aggregator_page_bundle(arg(2));
         break;
       case "feeds":
-        import_page_feeds();
+        aggregator_page_feeds();
         break;
       case "bundles":
-        import_page_bundles();
+        aggregator_page_bundles();
         break;
       case "sources":
-        import_page_sources();
+        aggregator_page_sources();
         break;
       case "fd":
-        import_page_fd();
+        aggregator_page_fd();
         break;
       default:
-        import_page_last();
+        aggregator_page_last();
     }
   }
 }
