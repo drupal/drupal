@@ -299,7 +299,7 @@ CREATE TABLE poll (
   runtime int(10) NOT NULL default '0',
   voters text NOT NULL,
   active int(2) unsigned NOT NULL default '0',
-  PRIMARY KEY  (lid)
+  PRIMARY KEY  (nid)
 ) TYPE=MyISAM;
 
 #
