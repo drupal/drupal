@@ -297,7 +297,7 @@ CREATE TABLE page (
   nid integer NOT NULL default '0',
   link varchar(128) NOT NULL default '',
   format smallint NOT NULL default '0',
-  description varchar(128) NOT NULL default '',  
+  description varchar(128) NOT NULL default '',
   PRIMARY KEY  (nid)
 );
 CREATE INDEX page_nid_idx ON page(nid);
@@ -594,17 +594,11 @@ INSERT INTO system VALUES ('themes/marvin/marvin.theme','marvin','theme','Intern
 INSERT INTO system VALUES ('themes/unconed/unconed.theme','unconed','theme','Internet explorer, Netscape, Opera',1);
 INSERT INTO system VALUES ('tracker.module','tracker','module','',1);
 
-DELETE FROM variable WHERE name='update_start';
 INSERT INTO variable(name,value) VALUES('update_start', '2002-05-15');
-
-DELETE FROM variable WHERE name='theme_default';
 INSERT INTO variable(name,value) VALUES('theme_default','s:6:"marvin";');
 
-DELETE FROM blocks WHERE name='User information';
-INSERT INTO blocks(name,module,delta,status) VALUES('User information', 'user', '0', '1');
-
-DELETE FROM blocks WHERE name='Log in';
-INSERT INTO blocks(name,module,delta,status) VALUES('Log in', 'user', '1', '1');
+INSERT INTO blocks(module,delta,status) VALUES('user', '0', '1');
+INSERT INTO blocks(module,delta,status) VALUES('user', '1', '1');
 
 ---
 --- Functions
