@@ -1,5 +1,5 @@
 <?php
-// $Id: chameleon.theme,v 1.8 2004/02/15 14:21:35 dries Exp $
+// $Id: chameleon.theme,v 1.9 2004/02/25 22:38:43 dries Exp $
 
 function chameleon_help($section) {
 
@@ -81,6 +81,10 @@ function chameleon_page($content, $title = NULL, $breadcrumb = NULL) {
   $output .= $content;
   $output .= "\n<!-- end content -->\n";
 
+  if ($footer = variable_get('site_footer', '')) {
+    $output .= " <div id=\"footer\">$footer</div>\n";
+  }
+
   $output  .= "   </td>\n";
 
   if ($blocks = theme_blocks("right")) {
@@ -89,6 +93,7 @@ function chameleon_page($content, $title = NULL, $breadcrumb = NULL) {
 
   $output .= "  </tr>\n";
   $output .= " </table>\n";
+
   $output .=  theme_closure();
   $output .= " </body>\n";
   $output .= "</html>\n";

@@ -1,4 +1,4 @@
-/* $Id: common.css,v 1.1 2004/02/15 14:21:35 dries Exp $ */
+/* $Id: common.css,v 1.2 2004/02/25 22:38:43 dries Exp $ */
 
 /* HTML tags */
 a, a:link, a:active {
@@ -70,7 +70,11 @@ br {
   vertical-align: top;
   width: 60%;
 }
-
+#footer {
+ font-size: 0.8em;
+ padding-top: 2em;
+ text-align: center;
+}
 /* region-specific tags */
 .title {
   margin: 0 0 .25em 0;
