@@ -141,7 +141,7 @@
 
      // Author:
      echo "    <TR>";
-     echo "     <TD ALIGN=\"right\" VALIGN=\"top\">" . t("Author") . ":</TD><TD><B>" . format_name($node) . "</B> ";
+     echo "     <TD ALIGN=\"right\" VALIGN=\"top\">" . t("Author") . ":</TD><TD><B>" . format_name($comment) . "</B> ";
      if ($comment->name) {
        // Display extra information line:
        if ($comment->fake_email) $info .= format_email($comment->fake_email);
