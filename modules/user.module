@@ -473,7 +473,7 @@ function user_set_authmaps($account, $authmaps) {
     if ($value) {
       $result = db_query("SELECT COUNT(*) from authmap WHERE uid = '%d' && module = '%s'", $account->uid, $module["1"]);
       if (db_result($result) == 0) {
-        $result = db_query("INSERT INTO authmap (authname, uid, module) VALUES ('%s', '%s', '%s')", $value, $account->uid, $module[1]);
+        $result = db_query("INSERT INTO authmap (authname, uid, module) VALUES ('%s', '%d', '%s')", $value, $account->uid, $module[1]);
       }
       else {
         $result = db_query("UPDATE authmap SET authname = '%s' WHERE uid = '%d' AND module = '%s'", $value, $account->uid, $module["1"]);
