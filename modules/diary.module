@@ -1,14 +1,25 @@
 <?
 
-$module = array("page"  => "diary_page",
-                "block" => "diary_block",
+$module = array("find" => "diary_find",
                 "help" => "diary_help",
-                "user" => "diary_user",
                 "menu" => "diary_menu",
+                "page"  => "diary_page",
+                "user" => "diary_user",
                 "admin" => "diary_admin",
+                "block" => "diary_block",
                 "export" => "diary_export");
 
 include_once "includes/common.inc";
+
+function diary_find($keys) {
+  $find = array();
+  $result = db_query("SELECT d.*, u.userid FROM diaries d LEFT JOIN users u ON d.author = u.id WHERE d.text LIKE '%". check_input($keys) ."%' ORDER BY d.timestamp DESC LIMIT 20");
+  while ($diary = db_fetch_object($result)) {
+    array_push($find, array("subject" => "$diary->userid's diary", "link" => "module.php?mod=diary&op=view&name=$diary->userid", "user" => $diary->userid, "date" => $diary->timestamp));
+  }
+  return $find;
+
+}
 
 function diary_page_overview($num = 20) {
   global $theme, $user;
@@ -91,7 +102,7 @@ function diary_page_add() {
   $output .= "</FORM>\n";
 
   $theme->header();
-  $theme->box("Edit you diary", $output);
+  $theme->box("Edit your diary", $output);
   $theme->footer();
 }
 
