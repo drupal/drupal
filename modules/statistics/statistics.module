@@ -95,7 +95,6 @@ function statistics_exit() {
       }
     }
   }
-
   if ((variable_get('statistics_enable_access_log', 0)) && (module_invoke('throttle', 'status') < 5)) {
     // Statistical logs are enabled.
     $referrer = referer_uri();
@@ -276,7 +275,7 @@ function statistics_admin_displaylog($type = 'all', $id = 0) {
  * Menu callback; presents the "Top pages" page.
  */
 function statistics_top_titles() {
-  $sql = "SELECT title, path, MAX(timestamp) AS last_hit, COUNT(title) AS hits FROM {accesslog} WHERE title <> '' GROUP BY title";
+  $sql = "SELECT title, path, MAX(timestamp) AS last_hit, COUNT(title) AS hits FROM {accesslog} WHERE title <> '' GROUP BY title, path";
   $sql_cnt = "SELECT COUNT(DISTINCT(title)) FROM {accesslog} WHERE title <> ''";
   $describe = t('Top pages in the past %interval');
 
@@ -284,7 +283,7 @@ function statistics_top_titles() {
 
   $header = array(
     array('data' => t('Page'), 'field' => 'title'),
-    array('data' => t('Last path'), 'field' => 'path'),
+    array('data' => t('Path'), 'field' => 'path'),
     array('data' => t('Hits'), 'field' => 'hits', 'sort' => 'desc'),
     array('data' => t('Last hit'), 'field' => 'last_hit'),
     array('data' => t('Operations'))
@@ -307,7 +306,7 @@ function statistics_top_titles() {
  * Menu callback; presents the "Top users" page.
  */
 function statistics_top_users() {
-  $sql = "SELECT uid, hostname, MAX(timestamp) AS last_hit, COUNT(uid) AS hits FROM {accesslog} GROUP BY uid";
+  $sql = "SELECT uid, hostname, MAX(timestamp) AS last_hit, COUNT(uid) AS hits FROM {accesslog} GROUP BY uid, hostname";
   $sql_cnt = "SELECT COUNT(DISTINCT(uid)) FROM {accesslog}";
   $describe = t('Top users in the past %interval');
 
@@ -315,7 +314,7 @@ function statistics_top_users() {
 
   $header = array(
     array('data' => t('User'), 'field' => 'user'),
-    array('data' => t('Last hostname'), 'field' => 'hostname'),
+    array('data' => t('Hostname'), 'field' => 'hostname'),
     array('data' => t('Hits'), 'field' => 'hits', 'sort' => 'desc'),
     array('data' => t('Last hit'), 'field' => 'last_hit'),
     array('data' => t('Operations'), 'colspan' => 2)
@@ -339,7 +338,7 @@ function statistics_top_users() {
  * Menu callback; presents the "Top hostnames" page.
  */
 function statistics_top_hostnames() {
-  $sql = "SELECT hostname, uid, MAX(timestamp) AS last_hit, COUNT(hostname) AS hits FROM {accesslog} GROUP BY hostname";
+  $sql = "SELECT hostname, uid, MAX(timestamp) AS last_hit, COUNT(hostname) AS hits FROM {accesslog} GROUP BY hostname, uid";
   $sql_cnt = "SELECT COUNT(DISTINCT(hostname)) FROM {accesslog}";
   $describe = t('Top hostnames in the past %interval');
 
@@ -347,7 +346,7 @@ function statistics_top_hostnames() {
 
   $header = array(
     array('data' => t('Hostname'), 'field' => 'hostname'),
-    array('data' => t('Last user'), 'field' => 'user'),
+    array('data' => t('User'), 'field' => 'user'),
     array('data' => t('Hits'), 'field' => 'hits', 'sort' => 'desc'),
     array('data' => t('Last hit'), 'field' => 'last_hit'),
     array('data' => t('Operations'), 'colspan' => 2)
