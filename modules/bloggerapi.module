@@ -1,0 +1,425 @@
+<?php
+
+/*
+**  The Drupal Blogger API implementation.
+*/
+
+function bloggerapi_xmlrpc() {
+  return array("blogger.newPost" => array("function" => "bloggerapi_newPost"),
+               "blogger.editPost" => array("function" => "bloggerapi_editPost"),
+               "blogger.getUsersBlogs" => array("function" => "bloggerapi_getUsersBlogs"),
+               "blogger.getUserInfo" => array("function" => "bloggerapi_getUserInfo"),
+               "blogger.getTemplate" => array("function" => "bloggerapi_getTemplate"),
+               "blogger.setTemplate" => array("function" => "bloggerapi_setTemplate"),
+               "blogger.getPost" => array("function" => "bloggerapi_getPost"),
+               "blogger.getRecentPosts" => array("function" => "bloggerapi_getRecentPosts"),
+               "blogger.deletePost" => array("function" => "bloggerapi_deletePost")
+               );
+}
+
+/*
+**  The following functions map to the various Blogger method calls.
+**  All these functions subsequently use the blogger_driver function
+*/
+
+function bloggerapi_newPost($params) {
+  global $user, $xmlrpcerruser;
+
+  /*
+  ** Call the driver function with appropriate method to return a node
+  */
+
+  $node = node_validate(bloggerapi_driver("newPost", $params, $error), $error);
+
+  if (!$node->error) {
+    if (node_access("create", $node)) {
+      throttle("node", variable_get("max_node_rate", 900));
+
+      $fields = array("uid" => $user->uid, "comment" => 1, "promote", "moderate", "status" => 1, "teaser", "title", "type" => $node->type, "body");
+      $nid = node_save($node, array_merge($fields, module_invoke($node->type, "save", "create", $node)));
+      if ($nid) {
+        watchdog("special", "$node->type: added '$node->title', via Blogger API");
+        return new xmlrpcresp(new xmlrpcval("$nid", "string"));
+      } else {
+        $error = bloggerapi_error("Error posting node");
+        return $error->error_resp;
+      }
+    }
+  }
+  return $node->error_resp;
+}
+
+function bloggerapi_editPost($params) {
+  global $user, $xmlrpcerruser;
+
+  $node = node_validate(bloggerapi_driver("editPost", $params, $error), $error);
+
+  if (!$node->error) {
+    $filter = array("nid" => $node->nid, "uid" => $user->uid, "comment" => 1, "promote", "moderate", "status" => 1, "teaser", "title", "type" => $node->type, "body");
+    $nid = node_save($node, array_merge($filter, module_invoke($node->type, "save", "update", $node)));
+    if ($nid) {
+      watchdog("special", "$node->type: updated '$node->title', via Blogger API");
+      return new xmlrpcresp(new xmlrpcval($nid, "string"));
+    } else {
+#      $error = bloggerapi_error("Error updating node: $node->nid");
+      return $node->error_resp;
+    }
+  }
+  return $node->error_resp;
+}
+
+function bloggerapi_getUsersBlogs($params) {
+
+  $resp = bloggerapi_driver("getUsersBlogs", $params);
+
+  if (!$resp->error) {
+    return new xmlrpcresp($resp);
+  } else {
+    return $resp->error_resp;
+  }
+}
+
+function bloggerapi_getUserInfo($params) {
+
+  $resp = bloggerapi_driver("getUserInfo", $params);
+
+  if (!$resp->error) {
+    return new xmlrpcresp($resp);
+  } else {
+    return $resp->error_resp;
+  }
+}
+
+function bloggerapi_getTemplate($params) {
+  $error = bloggerapi_error(t("Get Template is not relevant for Drupal"));
+  return $error->error_resp;
+}
+
+function bloggerapi_setTemplate($params) {
+  $error = bloggerapi_error(t("Set Template is not relevant for Drupal"));
+  return $error->error_resp;
+}
+
+function bloggerapi_getPost($params) {
+
+  $resp = bloggerapi_driver("getPost", $params);
+
+  if (!$resp->error) {
+    return new xmlrpcresp($resp);
+  } else {
+    return $resp->error_resp;
+  }
+}
+
+function bloggerapi_getRecentPosts($params) {
+
+  $resp = bloggerapi_driver("getRecentPosts", $params);
+
+  if (!$resp->error) {
+    return new xmlrpcresp($resp);
+  } else {
+    return $resp->error_resp;
+  }
+}
+
+function bloggerapi_deletePost($params) {
+  $resp = bloggerapi_driver("deletePost", $params);
+
+  if (!$resp->error) {
+    return new xmlrpcresp($resp);
+  } else {
+    return $resp->error_resp;
+  }
+}
+
+function bloggerapi_driver($method, $params = 0, $error = 0) {
+  global $user, $xmlrpcusererr;
+
+  /*
+  ** Convert parameters to an array
+  */
+
+  $cparams = bloggerapi_convert($params);
+
+  /*
+  ** Validate the user, the postion in the array for username and password
+  ** are not always the same.
+  */
+
+  if ($method == "getUsersBlogs" || $method == "getUserInfo") {
+    $user = bloggerapi_validate_user($cparams[1], $cparams[2]);
+  } else {
+    $user = bloggerapi_validate_user($cparams[2], $cparams[3]);
+  }
+
+  if ($user->uid && variable_get("bloggerapi", 0) && user_access("access bloggerapi")) {
+    if (user_access("post content")) {
+
+      /*
+      ** Check for title tags, if not generate one.
+      */
+
+      if (eregi("<title>(.*)</title>", $cparams[4], $title)) {
+        $title = strip_tags($title[0]);
+        $cparams[4] = ereg_replace("<title>.*</title>", "", $cparams[4]);
+      } else {
+        $title = bloggerapi_title($cparams[4]);
+      }
+
+      $teaser = node_teaser($cparams[4]);
+
+      /*
+      ** Maps params to node array or call another function
+      */
+
+      switch ($method) {
+        case "newPost":
+          return array("type" => "blog", "title" => $title, "teaser" => $teaser, "body" => $cparams[4], "status" => 1, "moderate" => 0, "comment" => 1, "promote" => 0, "revision" => 0);
+          break;
+        case "editPost":
+          $node = node_load(array("nid" => $cparams[1]));
+          if ($node->uid == $user->uid) {
+            return array("nid" => $cparams[1], "type" => "blog", "title" => $title, "teaser" => $teaser, "body" => $cparams[4], "status" => 1, "moderate" => 0, "comment" => 1, "promote" => 0, "revision" => 0);
+          } else {
+            return bloggerapi_error("Error updating node");
+          }
+          break;
+        case "getUsersBlogs":
+          return bloggerapi_user_blogs();
+          break;
+        case "getUserInfo":
+          return bloggerapi_user_info();
+          break;
+        case "getPost":
+          return bloggerapi_node_load($cparams[1]);
+          break;
+        case "getRecentPosts":
+          return bloggerapi_node_recent($cparams[4]);
+          break;
+        case "deletePost":
+          return bloggerapi_node_delete($cparams[1]);
+          break;
+        case "distribute":
+          break;
+        default:
+          return bloggerapi_error("Error in the authentication process");
+          break;
+      }
+    }
+  } else {
+    return bloggerapi_error("Error in the authentication process");
+  }
+}
+
+ /*
+ ** The following functions do the *actual* work of deleting posts
+ ** and returning posts etc,
+ */
+
+
+function bloggerapi_user_blogs() {
+  global $user;
+
+  if ($user->uid) {
+    $struct = new xmlrpcval(array("url" => new xmlrpcval(path_uri() . "module.php?mod=blog&op=view&id=". urlencode($user->uid)),
+                                  "blogid" => new xmlrpcval($user->uid),
+                                  "blogName" => new xmlrpcval($user->name . "'s blog at ". variable_get("site_name", "drupal"))
+                                  ),"struct");
+    return new xmlrpcval(array($struct), "array");
+  } else {
+    return bloggerapi_error("Error retrieving user blogs");
+  }
+}
+
+function bloggerapi_user_info() {
+  global $user;
+
+  if ($user->uid) {
+    return new xmlrpcval(array("nickname" => new xmlrpcval($user->name, "string"),
+                               "userid" => new xmlrpcval($user->id, "string"),
+                               "url" => new xmlrpcval(path_uri() . "module.php?mod=blog&op=view&id=". urlencode($user->uid), "string"),
+                               "email" => new xmlrpcval($user->mail, "string"),
+                               "lastname" => new xmlrpcval(substr($user->name, strrpos($user->name," ")+1), "string"),
+                               "firstname" => new xmlrpcval(substr($user->name, 0, strrpos($user->name," ")), "string"),
+                              ), "struct");
+  } else {
+    return bloggerapi_error("Error retrieving user information");
+  }
+}
+
+function bloggerapi_node_load($nid) {
+  global $user;
+
+  $blog = node_load(array("nid" => $nid));
+  if ($blog->uid == $user->uid) {
+    $body = "<title>$blog->title</title>\n". $blog->body;
+    return new xmlrpcval(array("userid" => new xmlrpcval($user->name, "string"),
+                               "dateCreated" => new xmlrpcval(iso8601_encode($blog->timestamp),"dateTime.iso8601"),
+                               "content" => new xmlrpcval($body,"string"),
+                               "postid" => new xmlrpcval($blog->nid,"string")
+                              ), "struct");
+  } else {
+    return bloggerapi_error("Error retrieving blogid: $nid");
+  }
+}
+
+function bloggerapi_node_recent($num) {
+  global $user;
+
+  if (($num == 0) or ($num > 100)) $num = 50;
+  $result = db_query("SELECT n.*, u.name FROM node n LEFT JOIN users u ON n.uid = u.uid WHERE n.uid = '$user->uid' ORDER BY n.nid DESC LIMIT ". $num);
+  if ($result) {
+    while ($blog = db_fetch_object($result)) {
+      $body = "<title>$blog->title</title>\n". $blog->body;
+      $blogs[] = new xmlrpcval(array("userid" => new xmlrpcval($blog->name,"string"),
+                                     "dateCreated" => new xmlrpcval(iso8601_encode($blog->created),"dateTime.iso8601"),
+                                     "content" => new xmlrpcval($body,"string"),
+                                     "postid" => new xmlrpcval($blog->nid,"string")
+                                    ), "struct");
+    }
+    return new xmlrpcval($blogs, "array");
+  } else {
+    return bloggerapi_error("Error retrieving recent blogs");
+  }
+}
+
+function bloggerapi_node_delete($nid) {
+  global $user;
+
+  $node = node_load(array("nid" => $nid));
+  if ($node->uid == $user->uid) {
+    if (node_access("delete", $node)) {
+
+      /*
+      ** Delete the specified node and its comments:
+      */
+
+      db_query("DELETE FROM node WHERE nid = '$node->nid'");
+      db_query("DELETE FROM comments WHERE nid = '$node->nid'");
+
+      watchdog("special", "$node->type: deleted '$node->title', via Blogger API");
+      $message = "Node: $node->nid, was deleted";
+      return new xmlrpcval($message, "string");
+    }
+  } else {
+    return bloggerapi_error("Error deleting node: $nid");
+  }
+}
+
+/*
+** Helper functions
+*/
+
+function tt(){
+  $tt = array_flip(get_html_translation_table(HTML_ENTITIES));
+  $tt["&apos;"] = "'";
+  return $tt;
+}
+
+function bloggerapi_error($message) {
+  global $xmlrpcusererr;
+
+  $error->error = 1;
+  $error->error_msg = $message;
+  $error->error_resp = new xmlrpcresp(0, $xmlrpcerruser+1, $message);
+  return $error;
+}
+
+function bloggerapi_validate_user($username, $password) {
+  global $user;
+
+  if ($username && $password) {
+    $user = user_load(array("name" => $username, "pass" => $password, "status" => 1));
+    return $user;
+  } else {
+    return 0;
+  }
+}
+
+function bloggerapi_convert($params) {
+  $cparams= array();
+  $num_params = $params->getNumParams();
+
+  for ($i = 0; $i < $num_params; $i++) {
+    $sn = $params->getParam($i);
+    $cparams[] = $sn->scalarval();
+  }
+  return $cparams;
+}
+
+function bloggerapi_title($body) {
+  $title = strip_tags(strtr($title ? $title : substr(strip_tags(strtr($body, tt() )), 0, 30), tt() ));
+  return $title;
+}
+
+/*
+** Admin functions and module hooks
+*/
+
+function bloggerapi_watchdog() {
+  return array("bloggerapi" => "#B600FF");
+}
+
+function bloggerapi_conf_options() {
+  return form_select("Blogger API", "bloggerapi", variable_get("bloggerapi", 0), array("Disabled", "Enabled"), "Allow or disallow remote posting to your site via the <a href=\"http://plant.blogger.com/api/index.html\">Blogger API</a>.");
+}
+
+function bloggerapi_perm() {
+  return array("access bloggerapi");
+}
+
+function bloggerapi_help() {
+  ?>
+<h3>Introduction</h3>
+
+<p><a href="http://www.blogger.com">Blogger</a>, the well-known public
+weblog service, provides an application programing interface (API) to
+allow remote procedure calls (RPC) to the Blogger service. Drupal supports this <a href="http://plant.blogger.com/api/index.html">Blogger API</a>, which means that many remote clients (e.g. <a href="radio.userland.com">Radio</a>, <a href="http://simon.kittle.info/textrouter">TextRouter</a>, <a href="http://blogbuddy.sourceforge.net/">Blogbuddy</a>, <a href="http://www.bloggar.cjb.net/">Bloggar</a>,<a href="http://www.tswoam.co.uk/index.php?n_go=16">PerlyBlog</a>), may post to Drupal. These clients provide a bevy of interesting capabilities like offline composing, spellcheck, and WYSIWYG editing; many folks prefer to blog with a client application over typical web forms. By supporting the Blogger API, Drupal grows grander than a  web site engine, it's a <i>content accepting machine</i>&trade;.
+<p>The <a href="http://plant.blogger.com/api/index.html">Blogger RPC API</a> uses the <a href="http://www.xmlrpc.com">XML-RPC</a> protocol  for communicating with the outside world. XML-RPC, originally developed by Dave Winer of <a href="http://www.userland.com">UserLand Software</a>, is a simple XML-based RPC specification ideally suited to the web. Drupal also uses XML-RPC for several other tasks (e.g. notifiying <a href="http://www.weblogs.com">weblogs.com</a> of blog updates and making/accepting <a hr ef="/module.php?mod=user&op=help">Distributed Authentication</a> requests)</p>
+
+<h3>Drupal Implementation </h3>
+
+<p><small>A word of warning on the Blogger API: It is unofficial. It exists because Blogger is one of the
+most popular services and also they were first to implement an XML-RPC interface to their service.
+It is certainly not the best implementation of a distributed weblog API. For a promising candidate, see <a href="http://www.wasabii.org"> Wasabii</a>.</small></p>
+
+<p>Drupal's support for the Blogger API is quite complete. Each method with an asterisk below has been implemented in Drupal.</p>
+
+<a href="http://plant.blogger.com/api/xmlrpc_newPost.html">blogger.newPost()*</a><br />
+<a href="http://plant.blogger.com/api/xmlrpc_editPost.html">blogger.editPost()*</a><br />
+<a href="http://plant.blogger.com/api/xmlrpc_getUsersBlogs.html">blogger.getUsersBlogs()*</a><br />
+<a href="http://plant.blogger.com/api/xmlrpc_getUserInfo.html">blogger.getUserInfo()*</a><br />
+<a href="http://plant.blogger.com/api/xmlrpc_getTemplate.html">blogger.getTemplate()</a><br />
+<a href="http://plant.blogger.com/api/xmlrpc_setTemplate.html">blogger.setTemplate()</a><br/>
+
+<p>Drupal also supports the following methods. These methods were added after the those listed above and are not documented on the Blogger API website. Each method is linked to its corrosponding blogger-dev mailing list posts:</p>
+
+<a href="http://groups.yahoo.com/group/bloggerDev/message/296">blogger.getPost()*</a><br />
+<a href="http://groups.yahoo.com/group/bloggerDev/message/225">blogger.getRecentPosts()*</a><br />
+<a href="http://groups.yahoo.com/group/bloggerDev/message/147">blogger.deletePost()*</a><br />
+
+<h3>Installation and Usage</h3>
+
+<p>The Blogger API exists as a Drupal module (bloggerapi.module) which can be downloaded from cvs-contrib. For instructions on how to access the CVS repositories please see this <a href="http://www.drop.org/node.php?id=292">document.</a>
+Once downloaded the module simple needs to be copied to you Drupal modules directory. Under the "Settings and Filters" tab in the administration menue look for the Blogger API entry. There are two settings for the module either enabled or disabled. Also make sure you have you permission set correctly for accessing the Blogger API, the relevent setings can be found under the "User Management" tab in the administration menu.</p>
+
+<p>Once the API is enabled you can download one of the above mentioned Blogger API clients and get blogging...</p>
+
+<h3>Notes and Limitations</h3>
+<ul>
+<li>The Blogger API contains an AppKey that is discarded in the
+Drupal Implementation.</li>
+<li>The Blogger API does not allow for a title element. Our work around for this is either to use &lt;title&gt;&lt;/title&gt; tags in the body of your post or let the module create a title by inspecting the first few lines of the post body.</li>
+<li>The publish parameter is always set to <i>1</i>.</li>
+<li>When using the <i>getUserInfo</i> call, Drupal attempts to generate a first and last name from
+the Drupal username; no distinction is made internally</li>
+<li><i>GetUsersBlogs</i> only returns one blog because unlike Blogger, Drupal only allows one blog per
+user.</li>
+</ul>
+
+<h3>Credits</h3>
+
+<p>The original Drupal Blogger API implementation was authored by <a href="http://www.voidstar.com">Julian Bond</a>, and updated by the Drupal Development Team.</a>
+<?php
+}
+?>
