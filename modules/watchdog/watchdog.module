@@ -1,5 +1,5 @@
 <?php
-// $Id: watchdog.module,v 1.90 2004/01/23 18:42:43 dries Exp $
+// $Id: watchdog.module,v 1.91 2004/02/07 10:42:09 dries Exp $
 
 function watchdog_help($section = "admin/help#watchdog") {
   $output = "";
@@ -38,7 +38,7 @@ function watchdog_help($section = "admin/help#watchdog") {
     $output = t("Logs and records system events.");
     break;
   case 'admin/system/modules/watchdog':
-    $output = t("Watchdog logs your system events. To see these logs go to <a href=\"%watchdog\">messages</a>. Since these logs can grow out of control if kept around forever, below set how long an item should be kept in the log.  Note that to discard entries as set below you must run \"cron.php\" regularly.", array("%watchdog" => url("admin/watchdog")));
+    $output = t("Watchdog logs your system events.  To see these events go to the <a href=\"%watchdog\">logs</a>. Since these logs can grow out of control if kept around forever, below set how long an item should be kept in the log.  Note that to discard entries as set below you must run \"cron.php\" regularly.", array("%watchdog" => url("admin/watchdog")));
     break;
   }
 
@@ -52,7 +52,7 @@ function watchdog_perm() {
 function watchdog_link($type) {
   if ($type == "system") {
     if (user_access("administer watchdog")) {
-      menu("admin/watchdog", t("messages"), "watchdog_admin", 6);
+      menu("admin/watchdog", t("logs"), "watchdog_admin", 7);
       menu("admin/watchdog/view", t("view details"), "watchdog_admin", 0, MENU_HIDE);
 
       foreach (_watchdog_get_message_types() as $type) {
