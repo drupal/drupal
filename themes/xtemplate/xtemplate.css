@@ -1,4 +1,4 @@
-/* $Id: xtemplate.css,v 1.35 2003/11/18 19:44:36 dries Exp $ */
+/* $Id: xtemplate.css,v 1.36 2003/11/24 22:39:48 dries Exp $ */
 
 body {
   margin: 0;
@@ -142,21 +142,17 @@ table {
   padding-bottom: 0.75em;
   margin-bottom: 1.5em;
 }
-.node {
-  padding: 0 0 2.5em 0;
-}
 .comment {
   border: 1px solid #abc;
-  padding: 1.5em 1.5em 1.5em 1.5em;
+  padding: 0 1.5em 1.5em 1.5em;
   margin: 0.5em 0 0.5em 0;
 }
-.node .title, .block .title, .box .title, .node .title a, .box .title a {
-  padding-bottom: 0.5em;
+.node h2, .node h2 a, .block h2, .box h2 {
   font-weight: bold;
   font-size: 1.3em;
   color: #777;
 }
-.form-item .title {
+.form-item label {
   font-size: 1em;
   color: #222;
 }
@@ -187,7 +183,7 @@ table {
 .path a, .path a:visited {
   color: #777;
 }
-.comment .title {
+.comment h3 {
   font-weight: bold;
   font-size: 1.1em;
   color: #777;

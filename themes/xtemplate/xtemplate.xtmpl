@@ -52,7 +52,7 @@
 
 <!-- BEGIN: node -->
   <div class="node">
-    <div class="title"><a href="{link}">{title}</a></div>
+    <h2><a href="{link}">{title}</a></h2>
     <span class="author">Submitted by {author} on {date}.</span>
     <span class="taxonomy">{taxonomy}</span>
     <div class="content">{content}</div>
@@ -62,8 +62,8 @@
 
 <!-- BEGIN: comment_new -->
   <div class="comment">
+    <h3>{title}</h3>
     <span class="new">new</span>
-    <div class="title">{title}</div>
     <div class="author">Posted by {author} on {date}.</div>
     <div class="content">{content}</div>
     <div class="links">&raquo; {links}</div>
@@ -72,7 +72,7 @@
 
 <!-- BEGIN: comment_old -->
   <div class="comment">
-    <div class="title">{title}</div>
+    <h3>{title}</h3>
     <div class="author">Posted by {author} on {date}.</div>
     <div class="content">{content}</div>
     <div class="links">&raquo; {links}</div>
@@ -81,14 +81,14 @@
 
 <!-- BEGIN: box -->
   <div class="box">
-    <div class="title">{subject}</div>
+    <h2>{subject}</h2>
     <div class="content">{content}</div>
  </div>
 <!-- END: box -->
 
 <!-- BEGIN: block -->
   <div class="block block-{module}" id="block-{module}-{delta}">
-    <div class="title">{subject}</div>
+    <h2>{subject}</h2>
     <div class="content">{content}</div>
  </div>
 <!-- END: block -->
