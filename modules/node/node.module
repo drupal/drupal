@@ -347,8 +347,11 @@ function node_invoke_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
     $function = $name .'_nodeapi';
     if (function_exists($function)) {
       $result = $function($node, $op, $a3, $a4);
-      if (isset($result)) {
+      if (is_array($result)) {
         $return = array_merge($return, $result);
+      }
+      else {
+        $return[] = $result;
       }
     }
   }
@@ -397,7 +400,7 @@ function node_load($conditions, $revision = -1) {
   }
 
   // Return the desired revision.
-  if ($revision != -1 && isset($node->revisions[$revision])) {
+  if ($revision != -1 && is_array($node->revisions[$revision])) {
    $node = $node->revisions[$revision]['node'];
   }
 
@@ -814,6 +817,7 @@ function node_default_settings() {
 
   $header = array_merge(array(t('type')), array_keys(node_invoke_nodeapi($node, 'settings')));
   foreach (node_list() as $type) {
+    $node = new StdClass();
     $node->type = $type;
     $cols = array();
     foreach (node_invoke_nodeapi($node, 'settings') as $setting) {
@@ -1221,7 +1225,11 @@ function node_form($edit) {
     }
   }
 
-  return form($output, ($param['method'] ? $param['method'] : 'post'), $param['action'], array_merge($param['options'], array('id' => 'node-form')));
+  $attributes = array('id' => 'node-form');
+  if (is_array($param['options'])) {
+    $attributes = array_merge($param['options'], $attributes);
+  }
+  return form($output, ($param['method'] ? $param['method'] : 'post'), $param['action'], $attributes);
 }
 
 /**

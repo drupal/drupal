@@ -399,10 +399,10 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
  * Log errors in the database rather than displaying them to the user.
  */
 function error_handler($errno, $message, $filename, $line, $variables) {
-  $types = array(1 => 'error', 2 => 'warning', 4 => 'parse error', 8 => 'notice', 16 => 'core error', 32 => 'core warning', 64 => 'compile error', 128 => 'compile warning', 256 => 'user error', 512 => 'user warning', 1024 => 'user notice');
+  $types = array(1 => 'error', 2 => 'warning', 4 => 'parse error', 8 => 'notice', 16 => 'core error', 32 => 'core warning', 64 => 'compile error', 128 => 'compile warning', 256 => 'user error', 512 => 'user warning', 1024 => 'user notice', 2048 => 'strict warning');
   $entry = $types[$errno] .': '. $message .' in '. $filename .' on line '. $line .'.';
 
-  if ($errno & E_ALL ^ E_NOTICE) {
+  if ($errno & (E_ALL ^ E_NOTICE)) {
     watchdog('error', t('%error: %message in %file on line %line.', array('%error' => $types[$errno], '%message' => $message, '%file' => $filename, '%line' => $line)));
     if (error_reporting()) {
       print '<pre>'. $entry .'</pre>';
@@ -446,6 +446,7 @@ function fix_gpc_magic() {
  */
 function array2object($array) {
   if (is_array($array)) {
+    $object = new stdClass();
     foreach ($array as $key => $value) {
       $object->$key = $value;
     }

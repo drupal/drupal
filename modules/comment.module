@@ -502,6 +502,7 @@ function comment_preview($edit) {
 
   $output = '';
 
+  $comment = new StdClass();
   foreach ($edit as $key => $value) {
     $comment->$key = $value;
   }

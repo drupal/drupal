@@ -12,6 +12,7 @@ function xtemplate_init($template) {
   if (!class_exists('XTemplate')) {
     include_once('themes/engines/xtemplate/xtemplate.inc');
   }
+  $GLOBALS["xtemplate"] = new StdClass();
   $GLOBALS['xtemplate']->template = new XTemplate(basename($template->filename), dirname($template->filename));
   $GLOBALS['xtemplate']->template->SetNullBlock(' ');  // '' doesnt work!
 }

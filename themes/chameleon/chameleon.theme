@@ -129,6 +129,7 @@ function chameleon_node($node, $main = 0, $page = 0) {
 
   $submitted = theme_get_setting("toggle_node_info_$node->type") ? array(t("By %author at %date", array('%author' => format_name($node), '%date' => format_date($node->created, 'small')))) : array();
 
+  $terms = array();
   if (module_exist('taxonomy')) {
     $terms = taxonomy_link("taxonomy terms", $node);
   }

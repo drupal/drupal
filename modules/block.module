@@ -365,7 +365,10 @@ function block_list($region) {
         ** based on server load.
         */
         if (!($block['throttle'] && (module_invoke('throttle', 'status') > 4))) {
-          $block = array_merge($block, module_invoke($block['module'], 'block', 'view', $block['delta']));
+          $array = module_invoke($block['module'], 'block', 'view', $block['delta']);
+          if (is_array($array)) { 
+            $block = array_merge($block, $array);
+          }
         }
         if (isset($block['content']) && $block['content']) {
           $blocks[$region]["$block[module]_$block[delta]"] = (object) $block;

@@ -157,6 +157,7 @@ function forum_link($type, $node = 0, $main = 0) {
 
     while ($topic = db_fetch_object($result)) {
       if ($stop == 1) {
+        $next = new StdClass();
         $next->nid = $topic->nid;
         $next->title = $topic->title;
         break;
@@ -311,7 +312,12 @@ function _forum_last_comment($nid) {
 
 function _forum_last_reply($nid) {
   $value = db_fetch_object(db_query_range('SELECT c.timestamp, c.name AS anonymous_name, u.name, u.uid FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.nid = %d AND c.status = 0 ORDER BY c.timestamp DESC', $nid, 0, 1));
-  $value->name = $value->uid ? $value->name : $value->anonymous_name;
+  if ($value) {
+    $value->name = $value->uid ? $value->name : $value->anonymous_name;
+  }
+  else {
+    $value = new StdClass();
+  }
   return $value;
 }
 
@@ -373,9 +379,13 @@ function _forum_topics_read($term, $uid) {
 
 function _forum_last_post($term) {
   $topic = db_fetch_object(db_query_range("SELECT DISTINCT(n.nid), n.created AS timestamp, u.name AS name, u.uid AS uid FROM {forum} f INNER JOIN {node} n ON n.nid = f.nid ". node_access_join_sql() ." INNER JOIN {users} u ON n.uid = u.uid WHERE f.tid = %d AND n.nid = f.nid AND n.type = 'forum' AND n.status = 1 AND ". node_access_where_sql() ." ORDER BY timestamp DESC", $term, 0, 1));
-
   $reply = db_fetch_object(db_query_range("SELECT DISTINCT(n.nid), c.timestamp, c.name AS anonymous_name, u.name AS name, u.uid AS uid FROM {forum} f INNER JOIN {node} n ON n.nid = f.nid ". node_access_join_sql() ." INNER JOIN {comments} c ON n.nid = c.nid INNER JOIN {users} u ON c.uid = u.uid WHERE f.tid = %d AND n.nid = f.nid AND n.type = 'forum' AND n.status = 1 AND ". node_access_where_sql() ." AND c.status = 0 ORDER BY c.timestamp DESC", $term, 0, 1));
-  $reply->name = $reply->uid ? $reply->name : $reply->anonymous_name;
+  if ($reply) {
+    $reply->name = $reply->uid ? $reply->name : $reply->anonymous_name;
+  }
+  else {
+    $reply = new StdClass();
+  }
 
   $value = ($topic->timestamp > $reply->timestamp) ? $topic : $reply;
 
