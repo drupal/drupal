@@ -656,14 +656,14 @@ function taxonomy_select_nodes($taxonomy, $pager = 1) {
   global $user;
 
   if ($taxonomy->operator == "or") {
-    $sql = "SELECT DISTINCT(n.nid), n.title, n.type, n.created, n.changed, n.uid, n.static, n.created, u.name FROM node n LEFT JOIN term_node r ON n.nid = r.nid LEFT JOIN users u ON n.uid = u.uid WHERE tid IN ($taxonomy->str_tids) AND n.status = '1' ORDER BY static DESC, created DESC";
-    $sql_count = "SELECT COUNT(DISTINCT(n.nid)) FROM node n LEFT JOIN term_node r ON n.nid = r.nid LEFT JOIN users u ON n.uid = u.uid WHERE tid IN ($taxonomy->str_tids) AND n.status = '1'";
+    $sql = "SELECT DISTINCT(n.nid), n.title, n.type, n.created, n.changed, n.uid, n.static, n.created, u.name FROM node n LEFT JOIN term_node r ON n.nid = r.nid LEFT JOIN users u ON n.uid = u.uid WHERE r.tid IN ($taxonomy->str_tids) AND n.status = '1' ORDER BY static DESC, created DESC";
+    $sql_count = "SELECT COUNT(DISTINCT(n.nid)) FROM node n LEFT JOIN term_node r ON n.nid = r.nid LEFT JOIN users u ON n.uid = u.uid WHERE r.tid IN ($taxonomy->str_tids) AND n.status = '1'";
   }
   else {
-    $sql = "SELECT n.nid, n.title, n.type, n.created, n.changed, n.uid, u.name FROM node n LEFT JOIN term_node r ON n.nid = r.nid LEFT JOIN users u ON n.uid = u.uid WHERE tid IN ($taxonomy->str_tids) AND n.status = '1' GROUP BY n.nid, n.title, n.type, n.created, n.changed, n.uid, u.name HAVING COUNT(n.nid) = ".count($taxonomy->tids)." ORDER BY static DESC, created DESC";
+    $sql = "SELECT n.nid, n.title, n.type, n.created, n.changed, n.uid, u.name FROM node n LEFT JOIN term_node r ON n.nid = r.nid LEFT JOIN users u ON n.uid = u.uid WHERE r.tid IN ($taxonomy->str_tids) AND n.status = '1' GROUP BY n.nid, n.title, n.type, n.created, n.changed, n.uid, u.name HAVING COUNT(n.nid) = ".count($taxonomy->tids)." ORDER BY static DESC, created DESC";
 
     // Special trick as we could not find anything better:
-    $count = db_num_rows(db_query("SELECT n.nid FROM node n LEFT JOIN term_node r ON n.nid = r.nid WHERE tid IN ($taxonomy->str_tids) AND n.status = '1' GROUP BY n.nid HAVING COUNT(n.nid) = ". count($taxonomy->tids)));
+    $count = db_num_rows(db_query("SELECT n.nid FROM node n LEFT JOIN term_node r ON n.nid = r.nid WHERE r.tid IN ($taxonomy->str_tids) AND n.status = '1' GROUP BY n.nid HAVING COUNT(n.nid) = ". count($taxonomy->tids)));
     $sql_count = "SELECT $count";
   }
 
