@@ -1,7 +1,7 @@
 <?php
 // by Edd Dumbill (C) 1999-2001
 // <edd@usefulinc.com>
-// $Id: xmlrpcs.inc,v 1.5 2003/05/13 18:36:33 dries Exp $
+// $Id: xmlrpcs.inc,v 1.6 2003/05/19 18:32:09 dries Exp $
 
 // Copyright (c) 1999,2000,2001 Edd Dumbill.
 // All rights reserved.
@@ -214,7 +214,7 @@ class xmlrpc_server {
 
 
   if ($data=="") {
-    $data=$_SERVER["HTTP_RAW_POST_DATA"];
+    $data=$GLOBALS["HTTP_RAW_POST_DATA"];
   }
   $parser = xml_parser_create($xmlrpc_defencoding);
 
@@ -295,7 +295,7 @@ class xmlrpc_server {
   // packet as a string value
 
   $r=new xmlrpcresp;
-  $r->xv=new xmlrpcval( "'Aha said I: '" . $_SERVER["HTTP_RAW_POST_DATA"], "string");
+  $r->xv=new xmlrpcval( "'Aha said I: '" . $GLOBALS["HTTP_RAW_POST_DATA"], "string");
   print $r->serialize();
   }
 }
