@@ -36,5 +36,4 @@ ErrorDocument 500 /error.php
    php_value session.cookie_lifetime 2000000
    php_value session.gc_maxlifetime  2000000
    php_value session.cache_expire    200000
-   # php_value session.save_path       /tmp/dropsessions
 </IfModule>
