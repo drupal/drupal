@@ -7,7 +7,7 @@
 function user_module_invoke($type, &$array, &$user) {
   foreach (module_list() as $module) {
     $function = $module .'_user';
-    if(function_exists($function)) $function($type, $array, $user);
+    if (function_exists($function)) $function($type, $array, $user);
   }
 }
 
@@ -1123,9 +1123,9 @@ function user_settings() {
   $output .= form_group(t("User email settings"), $group);
 
   // "Who's online" block settings
-  $period = array(30 => format_interval(30), 60 => format_interval(60), 120 => format_interval(120), 180 => format_interval(180), 300 => format_interval(300), 600 => format_interval(600), 900 => format_interval(900), 1800 => format_interval(1800), 2700 => format_interval(2700), 3600 => format_interval(3600), 5400 => format_interval(5400), 7200 => format_interval(7200), 10800 => format_interval(10800), 21600 => format_interval(21600), 43200 => format_interval(43200), 86400 => format_interval(86400));
+  $period = drupal_map_assoc(array(30, 60, 120, 180, 300, 600, 900, 1800, 2700, 3600, 5400, 7200, 10800, 21600, 43200, 86400), "format_interval");
   $group = form_select(t("User activity"), "user_block_seconds_online", variable_get("user_block_seconds_online", 900), $period, t("Affects \"Who's online\" block.  A user is considered online for this long after they have last viewed a page."));
-  $group .= form_select(t("User list length"), "user_block_max_list_count", variable_get("user_block_max_list_count", 10), array("0" => "0", "5" => "5", "10" => "10", "15" => "15", "20" => "20", "25" => "25", "30" => "30", "40" => "40", "50" => "50", "75" => "75", "100" => "100"), t("Affects \"Who's online\" block.  Maximum number of currently online user's to display."));
+  $group .= form_select(t("User list length"), "user_block_max_list_count", variable_get("user_block_max_list_count", 10), drupal_map_assoc(array(0, 5, 10, 15, 20, 25, 30, 40, 50, 75, 100)), t("Affects \"Who's online\" block.  Maximum number of currently online user's to display."));
   $output .= form_group(t("\"Who's online\" block settings"), $group);
 
   return $output;
