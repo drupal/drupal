@@ -46,5 +46,4 @@ ErrorDocument 500 /error.php
    php_value session.cookie_lifetime 864000
    php_value session.gc_maxlifetime  864000
    php_value session.cache_expire    28800
-   php_value session.cookie_domain   drop.org
 </IfModule>
