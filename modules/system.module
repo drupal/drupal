@@ -104,7 +104,7 @@ function system_user($type, $edit, &$user, $category = NULL) {
       $data[] = array('title' => t('Theme settings'), 'data' => form_item(t('Theme'), "<select name=\"edit[theme]\">$options</select>", t('Selecting a different theme will change the look and feel of the site.')), 'weight' => 2);
     }
 
-    if (!variable_get('sitewide_timezone', 0)) {
+    if (!variable_get('configurable_timezones', 0)) {
       $timestamp = time();
       $zonelist = array(-11, -10, -9.5, -9, -8, -7, -6, -5, -4, -3.5, -3, -2, -1, 0, 1, 2, 3, 3.5, 4, 5, 5.5, 5.75, 6, 6.5, 7, 8, 9, 9.5, 10, 10.5, 11, 11.5, 12, 12.75, 13, 14);
       foreach ($zonelist as $offset) {
@@ -158,7 +158,7 @@ function system_view_general() {
   $group = form_textfield(t('File system path'), 'file_directory_path', $directory_path, 70, 255, t('A file system path where the files will be stored. This directory has to exist and be writable by Drupal. If the download method is set to public this directory has to be relative to Drupal installation directory, and be accessible over the web. When download method is set to private this directory should not be accessible over the web. Changing this location after the site has been in use will cause problems so only change this setting on an existing site if you know what you are doing.'));
   $group .= form_textfield(t('Temporary directory'), 'file_directory_temp', $directory_temp, 70, 255, t('Location where files can be saved temporarily. This directory should not be accessible from the web.'));
   $group .= form_radios(t('Download method'), 'file_downloads', variable_get('file_downloads', FILE_DOWNLOADS_PUBLIC), array(FILE_DOWNLOADS_PUBLIC => t('Public - files are available using http directly.'), FILE_DOWNLOADS_PRIVATE => t('Private - files are be transferred by Drupal.')), t('This setting can be changed at any time, however, all download URLs will change and there may be unexpected problems so it is not recommended.'));
-  $output .= form_group(t('File system'), $group);
+  $output .= form_group(t('File system settings'), $group);
 
   // date settings:
   $timestamp = time();
@@ -191,13 +191,13 @@ function system_view_general() {
     $datelongchoices[$f] = format_date(time(), 'custom', $f);
   }
 
-  $group  = form_select(t('Time zone'), 'date_default_timezone', variable_get('date_default_timezone', 0), $zones, t('Select the default site timezone.'));
-  $group .= form_radios(t('Use sitewide timezone'), 'sitewide_timezone', variable_get('sitewide_timezone', 0), array(t('Disabled'), t('Enabled')), t('Enable or disable the sitewide timezone feature. Disabled means that users could choose their own timezone.'));
-  $group .= form_select(t('Date format (short)'), 'date_format_short', variable_get('date_format_short', $dateshort[0]), $dateshortchoices, t('The short format of date display.'));
-  $group .= form_select(t('Date format (medium)'), 'date_format_medium', variable_get('date_format_medium', $datemedium[0]), $datemediumchoices, t('The medium sized date display.'));
-  $group .= form_select(t('Date format (long)'), 'date_format_long', variable_get('date_format_long', $datelong[0]), $datelongchoices, t('Longer date format used for detailed display.'));
+  $group  = form_select(t('Default time zone'), 'date_default_timezone', variable_get('date_default_timezone', 0), $zones, t('Select the default site time zone.'));
+  $group .= form_radios(t('Configurable time zones'), 'configurable_timezones', variable_get('configurable_timezones', 1), array(t('Disabled'), t('Enabled')), t('Enable or disable user-configurable time zones.  When enabled, users can set their own time zone and dates will be updated accordingly.'));
+  $group .= form_select(t('Short date format'), 'date_format_short', variable_get('date_format_short', $dateshort[0]), $dateshortchoices, t('The short format of date display.'));
+  $group .= form_select(t('Medium date format'), 'date_format_medium', variable_get('date_format_medium', $datemedium[0]), $datemediumchoices, t('The medium sized date display.'));
+  $group .= form_select(t('Long date format'), 'date_format_long', variable_get('date_format_long', $datelong[0]), $datelongchoices, t('Longer date format used for detailed display.'));
 
-  $output .= form_group(t('Date format settings'), $group);
+  $output .= form_group(t('Date settings'), $group);
 
   return $output;
 }
