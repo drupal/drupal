@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.306 2003/12/29 17:14:26 dries Exp $
+// $Id: node.module,v 1.307 2003/12/30 14:02:36 unconed Exp $
 
 function node_help($section = "admin/help#node") {
   global $mod;
@@ -507,10 +507,14 @@ function node_settings() {
 }
 
 function node_conf_filters() {
-  $output .= form_radios(t("Filter HTML tags"), "filter_html", variable_get("filter_html", 0), array(0 => t("Do not filter"), 1 => t("Strip tags"), 2 => t("Escape tags")), t("How to deal with HTML and PHP tags in user-contributed content. If set to \"Strip tags\", dangerous tags are removed.  If set to \"Escape tags\", all HTML is escaped and presented as it was typed."));
-  $output .= form_textfield(t("Allowed HTML tags"), "allowed_html", variable_get("allowed_html", "<a> <b> <dd> <dl> <dt> <i> <li> <ol> <u> <ul>"), 64, 255, t("If \"Strip tags\" is selected, optionally specify tags which should not be stripped.  'STYLE' attributes, 'ON*' attributes and unclosed tags are always stripped."));
-  $output .= form_radios(t("Rewrite old URLs"), "rewrite_old_urls", variable_get("rewrite_old_urls", 0), array(t("Disabled"), t("Enabled")), t("The introduction of 'clean URLs' in Drupal 4.2.0 breaks internal URLs that date back from Drupal 4.1.0 and before.  If enabled, this filter will attempt to rewrite the old style URLs to avoid broken links.  If <code>mod_rewrite</code> is available on your system, use the rewrite rules in Drupal's <code>.htaccess</code> file instead as these will also correct external referrers."));
-  $output .= "<hr />";
+  $group1 .= form_radios(t("Filter HTML tags"), "filter_html", variable_get("filter_html", 0), array(0 => t("Do not filter"), 1 => t("Strip tags"), 2 => t("Escape tags")), t("How to deal with HTML and PHP tags in user-contributed content. If set to \"Strip tags\", dangerous tags are removed (see below).  If set to \"Escape tags\", all HTML is escaped and presented as it was typed."));
+  $group1 .= form_textfield(t("Allowed HTML tags"), "allowed_html", variable_get("allowed_html", "<a> <b> <dd> <dl> <dt> <i> <li> <ol> <u> <ul>"), 64, 255, t("If \"Strip tags\" is selected, optionally specify tags which should not be stripped.  'ON*' attributes and unclosed tags are always stripped."));
+  $group1 .= form_radios(t("HTML style attributes"), "filter_style", variable_get("filter_style", 1), array(t("Allowed"), t("Removed")), t("If \"Strip tags\" is selected, you can choose whether 'STYLE' attributes are allowed or removed from input."));
+  $output .= form_group("HTML filtering", $group1);
+
+  $group2 .= form_radios(t("Rewrite old URLs"), "rewrite_old_urls", variable_get("rewrite_old_urls", 0), array(t("Disabled"), t("Enabled")), t("The introduction of 'clean URLs' in Drupal 4.2.0 breaks internal URLs that date back from Drupal 4.1.0 and before.  If enabled, this filter will attempt to rewrite the old style URLs to avoid broken links.  If <code>mod_rewrite</code> is available on your system, use the rewrite rules in Drupal's <code>.htaccess</code> file instead as these will also correct external referrers."));
+  $output .= form_group("Legacy filtering", $group2);
+
   return $output;
 }
 
@@ -520,6 +524,13 @@ function node_escape_html($text) {
 
 function node_filter_html($text) {
   $text = strip_tags($text, variable_get("allowed_html", ""));
+
+  if (variable_get("filter_style", 1)) {
+    $text = preg_replace("/\Wstyle\s*=[^>]+?>/i", ">", $text);
+  }
+
+  $text = preg_replace("/\Won[a-z]+\s*=[^>]+?>/i", ">", $text);
+
   return $text;
 }
 
