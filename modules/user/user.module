@@ -807,11 +807,6 @@ function user_login($edit = array(), $msg = '') {
 
       user_module_invoke('login', $edit, $user);
 
-      // If the user wants to be remembered, set the proper cookie such
-      // that the session won't expire.
-      $path = preg_replace("/.+\/\/[^\/]+(.*)/", "\$1/", $base_url);
-      setcookie(session_name(), session_id(), FALSE, $path);
-
       // Redirect the user to the page he logged on from.
       drupal_goto($edit['destination']);
     }
