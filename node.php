@@ -1,5 +1,5 @@
 <?php
-// $Id: node.php,v 1.43 2002/06/02 15:29:21 kjartan Exp $
+// $Id: node.php,v 1.44 2002/06/22 19:32:08 dries Exp $
 
 include_once "includes/common.inc";
 
@@ -14,7 +14,7 @@ function node_render($node) {
 
     node_view($node);
 
-    if ($node->comment) {
+    if (function_exists("comment_render") && $node->comment) {
       comment_render($id, $cid);
     }
 
