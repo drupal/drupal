@@ -12,10 +12,10 @@ function tracker_comments($id = 0) {
   global $theme, $user;
 
   if ($id) {
-    $sresult = db_query("SELECT n.nid, n.title, COUNT(n.nid) AS count FROM comments c LEFT JOIN node n ON c.lid = n.nid WHERE c.author = '". check_input($id) ."' GROUP BY n.nid DESC ORDER BY n.nid DESC LIMIT 5");
+    $sresult = db_query("SELECT n.nid, n.title, COUNT(n.nid) AS count FROM comments c LEFT JOIN node n ON c.lid = n.nid WHERE c.author = '". check_input($id) ."' GROUP BY n.nid DESC ORDER BY c.timestamp DESC LIMIT 10");
   }
   else {
-    $sresult = db_query("SELECT n.nid, n.title, COUNT(n.nid) AS count FROM comments c LEFT JOIN node n ON c.lid = n.nid GROUP BY n.nid DESC ORDER BY n.nid DESC LIMIT 5");
+    $sresult = db_query("SELECT n.nid, n.title, COUNT(n.nid) AS count FROM comments c LEFT JOIN node n ON c.lid = n.nid GROUP BY n.nid DESC ORDER BY c.timestamp DESC LIMIT 10");
   }
 
   while ($node = db_fetch_object($sresult)) {
