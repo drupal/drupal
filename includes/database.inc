@@ -38,6 +38,12 @@ function db_result($qid, $field = 0) {
   if ($qid) return mysql_result($qid, $field);
 }
 
+
+function db_insert_id() {
+  return mysql_insert_id();
+}
+
+
 // Setup database connection:
 db_connect($db_host, $db_user, $db_pass, $db_name);
 
