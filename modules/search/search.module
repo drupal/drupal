@@ -339,13 +339,14 @@ function search_view($keys) {
         $output .= "<br />". $help_link ."<br />";
     }
 
-    // Log the search keys:
-    watchdog("search", "search: '$keys'", l("view results", "search", NULL, "keys=". urlencode($keys)));
+    // Only perform search if there is non-whitespace search term:
+    if (trim($keys)) {
+      // Log the search keys:
+      watchdog("search", "search: '$keys'", l("view results", "search", NULL, "keys=". urlencode($keys)));
 
-    // Collect the search results:
-    $results = search_data($keys);
+      // Collect the search results:
+      $results = search_data($keys);
 
-    if ($keys) {
       if ($results) {
         $output .= theme("box", t("Search Results"), $results);
       }
