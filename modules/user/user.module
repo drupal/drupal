@@ -66,11 +66,10 @@ function sess_gc($lifetime) {
 /*** Common functions ******************************************************/
 
 function user_external_load($authname) {
-  $arr_uid = db_query("SELECT uid FROM {authmap} WHERE authname = '%s'", $authname);
+  $result = db_query("SELECT uid FROM {authmap} WHERE authname = '%s'", $authname);
 
-  if (db_fetch_object($arr_uid)) {
-    $uid = db_result($arr_uid);
-    return user_load(array("uid" => $uid));
+  if ($user = db_fetch_object($result)) {
+    return user_load($user);
   }
   else {
     return 0;
@@ -177,19 +176,10 @@ function user_save($account, $array = array()) {
   }
 
   if ($authmaps) {
-    $result = user_set_authmaps($user, $authmaps);
+    user_set_authmaps($user, $authmaps);
   }
 
   return $user;
-}
-
-function user_set($account, $key, $value) {
-  $account->data[$key] = $value;
-  return $account;
-}
-
-function user_get($account, $key) {
-  return $account->data[$key];
 }
 
 function user_validate_name($name) {
@@ -199,16 +189,15 @@ function user_validate_name($name) {
   */
 
   if (!$name) return t("You must enter a username.");
-  if (ereg("^ ", $name)) return t("The username cannot begin with a space.");
-  if (ereg(" \$", $name)) return t("The username cannot end with a space.");
+  if (substr($name, 0, 1) == ' ') return t("The username cannot begin with a space.");
+  if (substr($name, -1) == ' ') return t("The username cannot end with a space.");
   if (ereg("  ", $name)) return t("The username cannot contain multiple spaces in a row.");
-  if (ereg("[^ a-zA-Z0-9@_\.\-]", $name)) return t("The username contains an illegal character.");
-  if (ereg('@', $name) && !eregi('@([0-9a-z](-?[0-9a-z])*\.)+[a-z]{2}([zmuvtg]|fo|me)?$', $name)) return t("The username is not a valid authentication ID.");
+  if (ereg('[^ [:alnum:]@_.-]', $name)) return t("The username contains an illegal character.");
+  if (ereg('@', $name) && !eregi('@([0-9a-z](-?[0-9a-z])*.)+[a-z]{2}([zmuvtg]|fo|me)?$', $name)) return t("The username is not a valid authentication ID.");
   if (strlen($name) > 56) return t("The username '%name' is too long: it must be less than 56 characters.", array("%name" => $name));
 }
 
 function user_validate_mail($mail) {
-
   if ($mail && !valid_email_address($mail)) {
     return t("The e-mail address '%mail' is not valid.", array("%mail" => $mail));
   }
@@ -254,10 +243,8 @@ function user_password($length = 10) {
 }
 
 function user_access($string) {
-
   global $user;
-  static $perm;
-  static $cache;
+  static $perm = 0;
 
   // User #1 has all priveleges:
   if ($user->uid == 1) {
@@ -269,20 +256,8 @@ function user_access($string) {
   ** in a static variable.
   */
 
-  if (!$cache) {
-    if ($user->uid) {
-      $perm = db_result(db_query("SELECT p.perm FROM {role} r, {permission} p WHERE r.rid = p.rid AND name = '%s'", $user->role), 0);
-    }
-    else {
-      $perm = db_result(db_query("SELECT p.perm FROM {role} r, {permission} p WHERE r.rid = p.rid AND name = 'anonymous user'"), 0);
-    }
-
-    /*
-    ** We use a separate $cache variable because $perm might be empty when a
-    ** user has no access rights.
-    */
-
-    $cache = 1;
+  if ($perm === 0) {
+    $perm = db_result(db_query("SELECT p.perm FROM {role} r, {permission} p WHERE r.rid = p.rid AND r.rid = %d", $user->rid), 0);
   }
 
   return strstr($perm, $string);
@@ -345,17 +320,10 @@ function user_mail_encode($string, $charset = "UTF-8") {
 }
 
 function user_deny($type, $mask) {
-
   $allow = db_fetch_object(db_query("SELECT * FROM {access} WHERE status = '1' AND type = '%s' AND LOWER('%s') LIKE LOWER(mask)", $type, $mask));
-
   $deny = db_fetch_object(db_query("SELECT * FROM {access} WHERE status = '0' AND type = '%s' AND LOWER('%s') LIKE LOWER(mask)", $type, $mask));
 
-  if ($deny && !$allow) {
-    return 1;
-  }
-  else {
-    return 0;
-  }
+  return $deny && !$allow;
 }
 
 function user_fields() {
@@ -366,10 +334,13 @@ function user_fields() {
     if (db_num_rows($result)) {
       $fields = array_keys(db_fetch_array($result));
     }
+    else {
+      // Make sure we return the default fields at least
+      $fields = array("uid", "name", "pass", "mail", "mode", "sort", "threshold", "theme", "signature", "timestamp", "status", "timezone", "language", "init", "data", "rid");
+    }
   }
 
-  // Make sure we return the default fields at least
-  return is_array($fields) ? $fields: array("uid", "name", "pass", "mail", "mode", "sort", "threshold", "theme", "signature", "timestamp", "status", "timezone", "language", "init", "data", "rid");
+  return $fields;
 }
 
 /*** Module hooks **********************************************************/
@@ -379,18 +350,16 @@ function user_perm() {
 }
 
 function user_search($keys) {
-
-  $result = db_query_range("SELECT * FROM {users} WHERE name LIKE '%". check_query($keys) ."%'", 0, 20);
+  $find = array();
+  $result = db_query_range("SELECT * FROM {users} WHERE name LIKE '%%%s%%'", $keys, 0, 20);
   while ($account = db_fetch_object($result)) {
-    $find[$i++] = array("title" => $account->name, "link" => (strstr(request_uri(), "admin") ? url("admin/user/edit/$account->uid") : url("user/view/$account->uid")), "user" => $account->name);
+    $find[] = array("title" => $account->name, "link" => (strstr(request_uri(), "admin") ? url("admin/user/edit/$account->uid") : url("user/view/$account->uid")), "user" => $account->name);
   }
   return $find;
 }
 
 function user_block($op = "list", $delta = 0) {
   global $user;
-
-  $edit = $_POST["edit"];
 
   if ($op == "list") {
      $blocks[0]["info"] = t("User login");
@@ -411,6 +380,8 @@ function user_block($op = "list", $delta = 0) {
           if (arg(0) == "user" && arg(1) != "view") {
             return;
           }
+
+          $edit = $_POST["edit"];
 
           $output = "<div class=\"user-login-block\">\n";
 
@@ -481,10 +452,6 @@ function theme_user_list($items, $title = NULL) {
   return theme("item_list", $items, $title);
 }
 
-function theme_menu_list($items, $title = NULL) {
-  return theme("item_list", $items, $title);
-}
-
 function user_link($type) {
 
   $links = array();
@@ -551,23 +518,18 @@ function user_get_authmaps($authname = NULL) {
 }
 
 function user_set_authmaps($account, $authmaps) {
-
   foreach ($authmaps as $key => $value) {
     $module = explode("_", $key, 2);
     if ($value) {
-      $result = db_query("SELECT COUNT(*) from {authmap} WHERE uid = %d AND module = '%s'", $account->uid, $module["1"]);
-      if (db_result($result) == 0) {
-        $result = db_query("INSERT INTO {authmap} (authname, uid, module) VALUES ('%s', %d, '%s')", $value, $account->uid, $module[1]);
-      }
-      else {
-        $result = db_query("UPDATE {authmap} SET authname = '%s' WHERE uid = %d AND module = '%s'", $value, $account->uid, $module["1"]);
+      db_query("UPDATE {authmap} SET authname = '%s' WHERE uid = %d AND module = '%s'", $value, $account->uid, $module["1"]);
+      if (!db_affected_rows()) {
+        db_query("INSERT INTO {authmap} (authname, uid, module) VALUES ('%s', %d, '%s')", $value, $account->uid, $module[1]);
       }
     }
     else {
-      $result = db_query("DELETE FROM {authmap} WHERE uid = %d AND module = '%s'", $account->uid, $module["1"]);
+      db_query("DELETE FROM {authmap} WHERE uid = %d AND module = '%s'", $account->uid, $module["1"]);
     }
   }
-  return $result;
 }
 
 function user_auth_help_links() {
@@ -619,7 +581,7 @@ function user_login($edit = array(), $msg = "") {
     }
 
     /*
-    ** When possible, determine corrosponding external auth source. Invoke source, and login user if successful:
+    ** When possible, determine corresponding external auth source. Invoke source, and login user if successful:
     */
 
     if (!$user->uid && $server && $result = user_get_authmaps("$name@$server")) {
@@ -697,7 +659,7 @@ function user_login($edit = array(), $msg = "") {
   }
 
   /*
-  ** Save the referer.  We record where the user came from such that we
+  ** Save the referrer.  We record where the user came from such that we
   ** can redirect him after having completed the login form.
   */
 
@@ -749,16 +711,11 @@ function user_logout() {
     unset($user);
   }
 
-  /*
-  ** Redirect the user to his personal information page:
-  */
-
   drupal_goto(url());
 
 }
 
 function user_pass($edit = array()) {
-
   global $base_url;
 
   if ($edit["name"]) {
@@ -827,7 +784,6 @@ function user_pass($edit = array()) {
 function user_register($edit = array()) {
   global $user, $base_url;
 
-  $edit = $_POST["edit"];
   /*
   ** If we are already logged on, go to the user page instead.
   */
@@ -1137,7 +1093,7 @@ function user_page() {
     case t("Save user information"):
     case "edit":
       $output = user_edit($edit);
-      $GLOBALS["theme"] = theme_init();
+      $GLOBALS["theme"] = init_theme();
       print theme("header", t("Edit user information"));
       print theme("box", t("Edit user information"), $output);
       print theme("footer");
@@ -1185,7 +1141,7 @@ function _user_mail_text($message) {
 }
 
 function user_settings() {
-  $output .= form_radios(t("Public registrations"), "user_register", variable_get("user_register", 1), array(t("Only site administrators can create new user accounts."), t("Visitors can create accounts and no administrator approval is required."), t("Visitors can create accounts but administrator approval is required.")));
+  $output = form_radios(t("Public registrations"), "user_register", variable_get("user_register", 1), array(t("Only site administrators can create new user accounts."), t("Visitors can create accounts and no administrator approval is required."), t("Visitors can create accounts but administrator approval is required.")));
 
   $output .= form_radios(t("Remember authenticated users"), "user_remember", variable_get("user_remember", 0), array(t("Let the user decide whether he should be logged out when leaving the site."), t("Authenticated users are not logged out upon leaving the site."), t("Authenticated users are logged out upon leaving the site.")));
 
@@ -1207,7 +1163,6 @@ function user_settings() {
 }
 
 function user_admin_create($edit = array()) {
-
   if ($edit["name"] || $edit["mail"]) {
     if ($error = user_validate_name($edit["name"])) {
       // do nothing
@@ -1249,14 +1204,14 @@ function user_admin_create($edit = array()) {
 }
 
 function user_admin_access($edit = array()) {
-
-  $op = $_POST["op"];
   $type = arg(3);
-  $id = arg(4);
 
   if (empty($type)) {
     return;
   }
+
+  $op = $_POST["op"];
+  $id = arg(4);
 
   if ($op == t("Add rule")) {
     $aid = db_next_id("{access}_aid");
@@ -1315,7 +1270,6 @@ function user_roles($membersonly = 0) {
 }
 
 function user_admin_perm($edit = array()) {
-
   if ($edit) {
 
     /*
@@ -1331,7 +1285,6 @@ function user_admin_perm($edit = array()) {
       if ($perm) {
         db_query("INSERT INTO {permission} (rid, perm) VALUES (%d, '%s')", $role->rid, $perm);
       }
-
     }
   }
 
@@ -1380,7 +1333,6 @@ function user_admin_perm($edit = array()) {
 }
 
 function user_admin_role($edit = array()) {
-
   $op = $_POST["op"];
   $id = arg(3);
 
@@ -1434,7 +1386,6 @@ function user_admin_role($edit = array()) {
 }
 
 function user_admin_edit($edit = array()) {
-
   $op = $_POST["op"];
   $id = arg(3);
 
@@ -1534,7 +1485,6 @@ function user_admin_edit($edit = array()) {
 }
 
 function user_admin_account() {
-
   $header = array(
     array ("data" => t("ID"), "field" => "u.uid"),
     array ("data" => t("username"), "field" => "u.name"),
@@ -1572,7 +1522,6 @@ function user_role_init() {
 }
 
 function user_admin() {
-
   $op = $_POST["op"];
   $edit = $_POST["edit"];
 
