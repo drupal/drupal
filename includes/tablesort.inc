@@ -1,4 +1,5 @@
 <?php
+// $Id$
 
 function tablesort_init($header) {
   static $ts;
@@ -86,7 +87,5 @@ function tablesort_get_sort($headers) {
   }
   return 'asc';
 }
-
-
 
 ?>
