@@ -78,7 +78,7 @@ function account_info_edit() {
   if ($user->id) {
     // construct form:
     $form .= form_item(t("Username"), $user->userid, t("Required, unique, and can not be changed."));
-    $form .= form_textfield(t("Real name"), "name", $user->name, 30, 55, t("Optional"));
+    // $form .= form_textfield(t("Real name"), "name", $user->name, 30, 55, t("Optional"));
     $form .= form_item(t("Real e-mail address"), $user->real_email, t("Required, unique, can not be changed.") ." ". t("Your real e-mail address is never displayed publicly: only needed in case you lose your password."));
     $form .= form_textfield(t("Fake e-mail address"), "fake_email", $user->fake_email, 30, 55, t("Optional") .". ". t("Displayed publicly so you may spam proof your real e-mail address if you want."));
     $form .= form_textfield(t("Homepage"), "url", $user->url, 30, 55, t("Optional") .". ". t("Make sure you enter fully qualified URLs only.  That is, remember to include \"http://\"."));
@@ -217,7 +217,7 @@ function account_user($uname) {
     // Display contributions:
     if (user_access("access contents")) {
       $result = db_query("SELECT n.nid, n.type, n.title, n.timestamp, COUNT(c.cid) AS count FROM node n LEFT JOIN comments c ON c.lid = n.nid WHERE n.status = '". node_status("posted") ."' AND n.author = '$account->id' GROUP BY n.nid DESC ORDER BY n.nid DESC LIMIT 25");
-   
+
       while ($node = db_fetch_object($result)) {
         $nodes .= "<TABLE BORDER=\"0\" CELLPADDING=\"1\" CELLSPACING=\"1\">\n";
         $nodes .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>". t("Subject") .":</B></TD><TD><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A> (". format_plural($node->count, "comment", "comments") .")</TD></TR>\n";
@@ -226,27 +226,27 @@ function account_user($uname) {
         $nodes .= "</TABLE>\n";
         $nodes .= "<P>\n";
       }
-   
+
       $theme->box(strtr(t("%a's contributions"), array("%a" => $uname)), ($nodes ? $nodes : t("Not posted any nodes.")));
     }
 
     if (user_access("access comments")) {
       $sresult = db_query("SELECT n.nid, n.title, COUNT(n.nid) AS count FROM comments c LEFT JOIN node n ON c.lid = n.nid WHERE c.author = '$account->id' GROUP BY n.nid DESC ORDER BY n.nid DESC LIMIT 5");
-   
+
       while ($node = db_fetch_object($sresult)) {
         $comments .= "<LI>". format_plural($node->count, "comment", "comments") ." ". t("attached to node") ." `<A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A>`:</LI>\n";
         $comments .= " <UL>\n";
-   
+
         $cresult = db_query("SELECT * FROM comments WHERE author = '$account->id' AND lid = '$node->nid'");
         while ($comment = db_fetch_object($cresult)) {
           $comments .= "  <LI><A HREF=\"node.php?id=$node->nid&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A> (". t("replies") .": ". comment_num_replies($comment->cid) .", ". t("votes") .": $comment->votes, ". t("score") .": ". comment_score($comment) .")</LI>\n";
         }
         $comments .= " </UL>\n";
       }
-   
+
       $theme->box(strtr(t("%a's comments"), array("%a" => $uname)), ($comments ? $comments : t("Not posted any comments.")));
     }
-   
+
     $theme->footer();
   }
   else {
