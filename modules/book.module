@@ -416,12 +416,9 @@ function book_view($node, $main = 0) {
     foreach ($path as $level) {
       $trail[] = l($level->title, "node/view/$level->nid");
     }
+    theme("path", $trail);
 
     $output .= "<div class=\"book\">";
-    $output .= "<div class=\"path\">". implode($trail, " &raquo; ") ."</div>";
-    $output .= "<div class=\"title\">$node->title</div>";
-    $output .= "<div class=\"last-updated\">". t("Last updated by %u on %d", array("%u" => format_name($node), "%d" => format_date($node->changed))) ."</div>";
-
     $output .= "<div class=\"body\">$node->body</div>";
 
     if ($node->moderate) {
@@ -456,10 +453,9 @@ function book_view($node, $main = 0) {
       $output .= "<div class=\"titles\">$titles</div>";
       $output .= "</div>";
     }
-    $output .= "<div class=\"links\">". theme("links", link_node($node, $main)) ."</div>";
     $output .= "</div>";
-
-    print $output;
+    $node->body = $output;
+    theme("node", $node, 0);
   }
 }
 

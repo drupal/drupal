@@ -41,6 +41,10 @@ class BaseTheme {
     return "misc/$name";
   }
 
+  function path($path) {
+    print "<div class=\"path\">". implode($path, " &raquo; ") ."</div>";
+  }
+
   function node($node, $main) {
     if (module_exist("taxonomy")) {
       $terms = taxonomy_link("taxonomy terms", $node);
