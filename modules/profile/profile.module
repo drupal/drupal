@@ -46,14 +46,22 @@ function profile_conf_options() {
     _profile_init();
   }
 
-  foreach ($profile_fields as $key => $field) {
-    $fields[$key] = $field[1];
-  }
+  $profile_public_fields = variable_get("profile_public_fields", array());
+  $profile_private_fields = variable_get("profile_private_fields", array());
+  $profile_required_fields = variable_get("profile_require_fields", array());
+  $profile_register_fields = variable_get("profile_register_fields", array());
 
-  $output = form_select(t("Registration time fields"), "profile_register_fields", variable_get("profile_register_fields", array()), $fields, t("The fields users will be able to set at registration time.  Any required fields (see below) must appear here too."), "size=\"6\"", 1);
-  $output .= form_select(t("Required fields"), "profile_required_fields", variable_get("profile_required_fields", array()), $fields, t("The fields users that are required to be set."), "size=\"6\"", 1);
-  $output .= form_select(t("Publicly accessible fields"), "profile_public_fields", variable_get("profile_public_fields", array()), $fields, t("The fields users will be able to set and that will be publicly visible."), "size=\"6\"", 1);
-  $output .= form_select(t("Private fields"), "profile_private_fields", variable_get("profile_private_fields", array()), $fields, t("The fields users will be able to set, but which are kept private."), "size=\"6\"", 1);
+  $output = "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
+  $output .= "<tr><th>field</th><th>public</th><th>private</th><th>required</th><th>show in registration form</th></tr>\n";
+  foreach ($profile_fields as $key => $field) {
+    $output .= "<tr><td>$field[1]</td>";
+    $output .= "<td align=\"center\">". form_checkbox("", "profile_public_fields][", $key, in_array($key, $profile_public_fields)) ."</td>";
+    $output .= "<td align=\"center\">". form_checkbox("", "profile_private_fields][", $key, in_array($key, $profile_private_fields)) ."</td>";
+    $output .= "<td align=\"center\">". form_checkbox("", "profile_required_fields][", $key, in_array($key, $profile_required_fields)) ."</td>";
+    $output .= "<td align=\"center\">". form_checkbox("", "profile_register_fields][", $key, in_array($key, $profile_register_fields)) ."</td>";
+    $output .= "</tr>\n";
+  }
+  $output .= "</table>\n";
 
   $output .= form_textfield(t("Avatar image path"), "profile_avatar_path", variable_get("profile_avatar_path", "misc/avatars/"), 30, 255, t("Path for avatar directory; it must be writeable and visible from the web."));
   $output .= form_textfield(t("Avatar max size"), "profile_avatar_size", variable_get("profile_avatar_size", "85x85"), 10, 10, t("Maximum size for avatars."));
