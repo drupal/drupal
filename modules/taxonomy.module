@@ -721,13 +721,24 @@ function taxonomy_page() {
       taxonomy_feed($taxonomy);
       break;
     default:
+      // Build title:
       $sql = 'SELECT name FROM term_data WHERE tid IN (%s)';
       $result = db_query($sql, $taxonomy->str_tids);
       while ($term = db_fetch_object($result)) {
         $names[] = $term->name;
       }
+
+      // Build breadcrumb based on first hierarchy of first term:
+      $current->tid = $taxonomy->tids[0];
+      while ($parents = taxonomy_get_parents($current->tid)) {
+        $current = array_shift($parents);
+        $breadcrumbs[] = l($current->name, "taxonomy/view/or/$current->tid");
+      }
+      $breadcrumbs[] = l(t('Home'), '');
+      $breadcrumbs = array_reverse($breadcrumbs);
+
       $output = taxonomy_render_nodes(taxonomy_select_nodes($taxonomy));
-      print theme("page", $output, implode(', ', $names));
+      print theme("page", $output, implode(', ', $names), $breadcrumbs);
       break;
   }
 }
