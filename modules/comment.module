@@ -951,7 +951,7 @@ function comment_delete($cid) {
 
   // We'll only delete if the user has confirmed the
   // deletion using the form in our else clause below.
-  if ($comment->cid && $_POST['op'] == t('Delete')) {
+  if ($comment->cid && $_POST['edit']['confirm']) {
     drupal_set_message(t('The comment and all its replies have been deleted.'));
 
     // Delete comment and its replies.
@@ -966,11 +966,15 @@ function comment_delete($cid) {
 
   }
   else if ($comment->cid) {
-    drupal_set_message(t('Do you want to delete this comment and all its replies?'));
+    $output = theme('confirm',
+                    t('Are you sure you want to delete the comment %title?', array('%title' => '<em>'. $comment->subject .'</em>')),
+                    'node/'. $comment->nid,
+                    t('Any replies to this comment will be lost. This action cannot be undone.'),
+                    t('Delete'));
+    // Show comment that is being deleted
     $comment->comment = check_output($comment->comment, $comment->format);
-    $output  = theme('comment', $comment);
-    $output .= form_submit(t('Delete'));
-    $output = form($output);
+    $output .= theme('comment', $comment);
+
   }
   else {
     drupal_set_message(t('The comment no longer exists.'));

@@ -172,12 +172,17 @@ function taxonomy_del_vocabulary($vid) {
 function _taxonomy_confirm_del_vocabulary($vid) {
   $vocabulary = taxonomy_get_vocabulary($vid);
 
-  $form .= form_hidden('confirm', 1);
-  $form .= form_hidden('type', 'vocabulary');
-  $form .= form_hidden('vid', $vid);
-  $form .= form_submit(t('Delete'));
+  $extra  = form_hidden('type', 'vocabulary');
+  $extra .= form_hidden('vid', $vid);
 
-  return form(form_item(t('Delete vocabulary "%name"', array('%name' => $vocabulary->name)), $form, t('Are you sure you want to delete the vocabulary and all its terms?')));
+  $output = theme('confirm',
+                  t('Are you sure you want to delete the vocabulary %title?', array('%title' => $vocabulary->name)),
+                  'admin/taxonomy',
+                  t('Deleting a vocabulary will delete all the terms in it. This action cannot be undone.'),
+                  t('Delete'),
+                  t('Cancel'),
+                  $extra);
+  return $output;
 }
 
 function taxonomy_form_term($edit = array()) {
@@ -322,12 +327,16 @@ function taxonomy_del_term($tid) {
 function _taxonomy_confirm_del_term($tid) {
   $term = taxonomy_get_term($tid);
 
-  $form .= form_hidden('confirm', 1);
-  $form .= form_hidden('type', 'term');
-  $form .= form_hidden('tid', $tid);
-  $form .= form_submit(t('Delete'));
+  $extra  = form_hidden('type', 'term');
+  $extra .= form_hidden('tid', $tid);
 
-  $output = form(form_item(t('Delete term "%name" and all its children', array('%name' => $term->name)), $form, t('Are you sure you want to delete the term and all its children (if any)?')));
+  $output = theme('confirm',
+                  t('Are you sure you want to delete the term %name?', array('%title' => '<em>'. $vocabulary->name .'</em>')),
+                  'admin/taxonomy',
+                  t('Deleting a term will delete all its children if there are any. This action cannot be undone.'),
+                  t('Delete'),
+                  t('Cancel'),
+                  $extra);
 
   return $output;
 }

@@ -706,6 +706,9 @@ function user_menu($may_cache) {
       $items[] = array('path' => 'user/'. arg(1) .'/edit', 'title' => t('edit'),
         'callback' => 'user_edit', 'access' => $access || $user->uid == arg(1),
         'type' => MENU_LOCAL_TASK);
+      $items[] = array('path' => 'user/'. arg(1) .'/delete', 'title' => t('delete'),
+        'callback' => 'user_edit', 'access' => $access,
+        'type' => MENU_CALLBACK);
 
       if (arg(2) == 'edit') {
         if (($categories = _user_categories()) && (count($categories) > 1)) {
@@ -1119,7 +1122,7 @@ function user_edit($category = 'account') {
   $account = user_load(array('uid' => arg(1)));
   $edit = $_POST['op'] ? $_POST['edit'] : object2array($account);
 
-  if ($_POST['op'] == t('Save account')) {
+  if ($_POST['op'] == t('Submit')) {
     user_module_invoke('validate', $edit, $account, $category);
 
     if (!form_get_errors()) {
@@ -1136,8 +1139,8 @@ function user_edit($category = 'account') {
       }
     }
   }
-  else if ($_POST['op'] == t('Delete account')) {
-    if ($account->status == 0) {
+  else if (arg(2) == 'delete') {
+    if ($edit['confirm']) {
       db_query('DELETE FROM {users} WHERE uid = %d', $account->uid);
       db_query('DELETE FROM {users_roles} WHERE uid = %d', $account->uid);
       db_query('DELETE FROM {authmap} WHERE uid = %d', $account->uid);
@@ -1146,14 +1149,24 @@ function user_edit($category = 'account') {
       drupal_goto('admin/user');
     }
     else {
-      drupal_set_message(t('Failed to delete account: the account has to be blocked first.'), 'error');
-    }
+      $output = theme('confirm',
+                      t('Are you sure you want to delete the account %name?', array('%name' => '<em>'. $account->name .'</em>')),
+                      'user/'. $account->uid,
+                      t('Deleting a user will remove all their submissions as well. This action cannot be undone.'),
+                      t('Delete'));
+      print theme('page', $output);
+      return;
+    }    
+  }
+  else if ($_POST['op'] == t('Delete')) {
+    // Note: we redirect from user/uid/edit to user/uid/delete to make the tabs disappear.
+    drupal_goto("user/$account->uid/delete");
   }
 
   $output  = _user_forms($edit, $account, $category);
-  $output .= form_submit(t('Save account'));
+  $output .= form_submit(t('Submit'));
   if (user_access('administer users')) {
-    $output .= form_submit(t('Delete account'));
+    $output .= form_submit(t('Delete'));
   }
   $output = form($output, 'post', 0, array('enctype' => 'multipart/form-data'));
 
@@ -1368,10 +1381,14 @@ function user_admin_access_delete($aid = 0) {
   else {
     $access_types = array('user' => t('username'), 'mail' => t('e-mail'));
     $edit = db_fetch_object(db_query('SELECT aid, type, status, mask FROM {access} WHERE aid = %d', $aid));
-    $output = '<p>'. t('Are you sure you want to delete the %type rule for %rule?', array('%type' => $access_types[$edit->type], '%rule' => '<em>'. $edit->mask .'</em>')) .'</p>';
-    $output .= form_hidden('confirm', 1);
-    $output .= form_submit(t('Delete'));
-    $output = form($output);
+
+    $output = theme('confirm',
+                    t('Are you sure you want to delete the %type rule for %rule?', array('%type' => $access_types[$edit->type], '%rule' => '<em>'. $edit->mask .'</em>')),
+                    'admin/access/rules',
+                    t('This action cannot be undone.'),
+                    t('Delete'),
+                    t('Cancel'),
+                    $extra);
     print theme('page', $output);
   }
 }

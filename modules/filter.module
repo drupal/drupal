@@ -377,7 +377,7 @@ function filter_admin_add() {
  */
 function filter_admin_delete() {
   $edit = $_POST['edit'];
-  if ($_POST['op'] == t('Delete')) {
+  if ($edit['confirm']) {
     if ($edit['format'] != variable_get('filter_default_format', 1)) {
       db_query("DELETE FROM {filter_formats} WHERE format = %d", $edit['format']);
       db_query("DELETE FROM {filters} WHERE format = %d", $edit['format']);
@@ -397,11 +397,16 @@ function filter_admin_delete() {
   $format = arg(3);
   $format = db_fetch_object(db_query('SELECT * FROM {filter_formats} WHERE format = %d', $format));
 
-  $form .= form_hidden('format', $format->format);
-  $form .= form_hidden('name', $format->name);
-  $form .= '<p>'. t('Are you sure you want to delete the input format %format? If you have any content left in this input format, it will be switched to the default input format.', array('%format' => '<em>'. $format->name .'</em>')) ."</p>\n";
-  $form .= form_submit(t('Delete'));
-  print theme('page', form($form));
+  $extra  = form_hidden('format', $format->format);
+  $extra .= form_hidden('name', $format->name);
+  $output = theme('confirm',
+                  t('Are you sure you want to delete the input format %format?', array('%format' => '<em>'. $format->name .'</em>')),
+                  'admin/filters',
+                  t('If you have any content left in this input format, it will be switched to the default input format. This action cannot be undone.'),
+                  t('Delete'),
+                  t('Cancel'),
+                  $extra);
+  print theme('page', $output);
 }
 
 /**

@@ -113,17 +113,17 @@ function menu_overview() {
 function menu_reset() {
   $op = $_POST['op'];
   switch ($op) {
-    case t('Reset'):
+    case t('Reset all'):
       db_query('DELETE FROM {menu}');
       drupal_set_message(t('All menu items reset.'));
       drupal_goto('admin/menu');
       break;
-    case t('Cancel'):
-      drupal_goto('admin/menu');
-      break;
     default:
-      $output = '<p>'. t('Are you sure you want to reset all menu items to their default settings? Any custom menu items will be lost.') .'</p>';
-      $output .= form(form_submit(t('Reset')) . form_submit(t('Cancel')));
+      $output = theme('confirm',
+                      t('Are you sure you want to reset all menu items to their default settings?', array('%item' => '<em>'. $title .'</em>')),
+                      'admin/menu',
+                      t('Any custom additions or changes to the menu will be lost.'),
+                      t('Reset all'));
       print theme('page', $output);
   }
 }
@@ -164,12 +164,13 @@ function menu_reset_item($mid) {
       drupal_set_message(t('Menu item reset.'));
       drupal_goto('admin/menu');
       break;
-    case t('Cancel'):
-      drupal_goto('admin/menu');
-      break;
     default:
-      $output = '<p>'. t('Are you sure you want to reset this item to its default values?') .'</p>';
-      $output .= form(form_submit(t('Reset')) . form_submit(t('Cancel')));
+      $title = db_result(db_query('SELECT title FROM {menu} WHERE mid = %d', $mid));
+      $output = theme('confirm',
+                      t('Are you sure you want to reset the item %item to its default values?', array('%item' => '<em>'. $title .'</em>')),
+                      'admin/menu',
+                      t('Any customizations will be lost. This action cannot be undone.'),
+                      t('Reset'));
       print theme('page', $output);
   }
 }
@@ -179,18 +180,30 @@ function menu_reset_item($mid) {
  */
 function menu_delete_item($mid) {
   $op = $_POST['op'];
+  $result = db_query('SELECT type, title FROM {menu} WHERE mid = %d', $mid);
+  $menu = db_fetch_object($result);
+  if (!$menu) {
+    drupal_goto('admin/menu');
+  }
   switch ($op) {
     case t('Delete'):
       db_query('DELETE FROM {menu} WHERE mid = %d', $mid);
-      drupal_set_message(t('Menu item deleted.'));
-      drupal_goto('admin/menu');
-      break;
-    case t('Cancel'):
+      if ($menu->type & MENU_IS_ROOT) {
+        drupal_set_message(t('Menu deleted.'));
+      }
+      else {
+        drupal_set_message(t('Menu item deleted.'));
+      }
       drupal_goto('admin/menu');
       break;
     default:
-      $output = '<p>'. t('Are you sure you want to delete this custom menu item?') .'</p>';
-      $output .= form(form_submit(t('Delete')) . form_submit(t('Cancel')));
+      if ($menu->type & MENU_IS_ROOT) {
+        $message = t('Are you sure you want to delete the menu %item?', array('%item' => '<em>'. $menu->title .'</em>'));
+      }
+      else {
+        $message = t('Are you sure you want to delete the custom menu item %item?', array('%item' => '<em>'. $menu->title .'</em>'));
+      }     
+      $output = theme('confirm', $message, 'admin/menu', t('This action cannot be undone.'), t('Delete'));
       print theme('page', $output);
   }
 }

@@ -312,18 +312,20 @@ function block_box_add() {
 function block_box_delete($bid = 0) {
   $op = $_POST['op'];
   $box = block_box_get($bid);
+  $info = $box['info'] ? $box['info'] : $box['title'];
 
-  switch ($op) {
-    case t('Delete'):
-      db_query('DELETE FROM {boxes} WHERE bid = %d', $bid);
-      drupal_set_message(t('The block %name has been deleted.', array('%name' => '<em>'. $box['info'] .'</em>')));
-      cache_clear_all();
-      drupal_goto('admin/block');
-
-    default:
-      $form = '<p>'. t('Are you sure you want to delete the block %name?', array('%name' => '<em>'. $box['info'] .'</em>')) ."</p>\n";
-      $form .= form_submit(t('Delete'));
-      $output = form($form);
+  if ($_POST['edit']['confirm']) {
+    db_query('DELETE FROM {boxes} WHERE bid = %d', $bid);
+    drupal_set_message(t('The block %name has been deleted.', array('%name' => '<em>'. $info .'</em>')));
+    cache_clear_all();
+    drupal_goto('admin/block');
+  }
+  else {
+    $output = theme('confirm',
+                    t('Are you sure you want to delete the block %name?', array('%name' => '<em>'. $info .'</em>')),
+                    'admin/block',
+                    NULL,
+                    t('Delete'));
   }
 
   print theme('page', $output);

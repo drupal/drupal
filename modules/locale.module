@@ -260,44 +260,28 @@ function locale_admin_manage() {
   include_once 'includes/locale.inc';
   $edit = &$_POST['edit'];
 
-  switch ($_POST['op']) {
+  if ($_POST['op'] == t('Save configuration')) {
     // Save changes to existing languages
-    case t('Save configuration'):
-      $languages = locale_supported_languages(FALSE, TRUE);
-      foreach($languages['name'] as $key => $value) {
-        if ($edit['sitedefault'] == $key) {
-          $edit['enabled'][$key] = 1; // autoenable the default language
-        }
-        if ($key == 'en') {
-          // Disallow name change for English locale
-          db_query("UPDATE {locales_meta} SET isdefault = %d, enabled = %d WHERE locale = 'en'", ($edit['sitedefault'] == $key), $edit['enabled'][$key]);
-        }
-        else {
-          db_query("UPDATE {locales_meta} SET name = '%s', isdefault = %d, enabled = %d WHERE locale = '%s'", $edit['name'][$key], ($edit['sitedefault'] == $key), $edit['enabled'][$key], $key);
-        }
+    $languages = locale_supported_languages(FALSE, TRUE);
+    foreach($languages['name'] as $key => $value) {
+      if ($edit['sitedefault'] == $key) {
+        $edit['enabled'][$key] = 1; // autoenable the default language
       }
-
-      // Changing the locale settings impacts the interface:
-      cache_clear_all();
-
-      break;
-
-    // Remove existing language
-    case t('Delete'):
-      $languages = locale_supported_languages(FALSE, TRUE);
-      if (isset($languages['name'][$edit['langcode']])) {
-        db_query("DELETE FROM {locales_meta} WHERE locale = '%s'", $edit['langcode']);
-        db_query("DELETE FROM {locales_target} WHERE locale = '%s'", $edit['langcode']);
-        $message = t('%locale language removed.', array('%locale' => '<em>'. t($languages['name'][$edit['langcode']]) .'</em>'));
-        drupal_set_message($message);
-        watchdog('locale', $message);
+      if ($key == 'en') {
+        // Disallow name change for English locale
+        db_query("UPDATE {locales_meta} SET isdefault = %d, enabled = %d WHERE locale = 'en'", ($edit['sitedefault'] == $key), $edit['enabled'][$key]);
       }
+      else {
+        db_query("UPDATE {locales_meta} SET name = '%s', isdefault = %d, enabled = %d WHERE locale = '%s'", $edit['name'][$key], ($edit['sitedefault'] == $key), $edit['enabled'][$key], $key);
+      }
+    }
 
-      // Changing the locale settings impacts the interface:
-      cache_clear_all();
+    // Changing the locale settings impacts the interface:
+    cache_clear_all();
 
-      break;
+    drupal_goto('admin/locale/language/overview');
   }
+
   print theme('page', _locale_admin_manage_screen());
 }
 
@@ -307,6 +291,23 @@ function locale_admin_manage() {
 function locale_admin_manage_delete_screen() {
   include_once 'includes/locale.inc';
   $langcode = arg(4);
+  $edit = $_POST['edit'];
+
+  // Check confirmation and if so, delete language
+  if ($edit['confirm']) {
+    $languages = locale_supported_languages(FALSE, TRUE);
+    if (isset($languages['name'][$edit['langcode']])) {
+      db_query("DELETE FROM {locales_meta} WHERE locale = '%s'", $edit['langcode']);
+      db_query("DELETE FROM {locales_target} WHERE locale = '%s'", $edit['langcode']);
+      $message = t('%locale language removed.', array('%locale' => '<em>'. t($languages['name'][$edit['langcode']]) .'</em>'));
+      drupal_set_message($message);
+      watchdog('locale', $message);
+    }
+
+    // Changing the locale settings impacts the interface:
+    cache_clear_all();
+    drupal_goto('admin/locale/language/overview');
+  }
 
   // Do not allow deletion of English locale
   if ($langcode == 'en') {
@@ -315,10 +316,17 @@ function locale_admin_manage_delete_screen() {
   }
 
   // For other locales, warn user that data loss is ahead
-  $form = form_hidden('langcode', $langcode);
-  $form .= form_submit(t('Delete'));
   $languages = locale_supported_languages(FALSE, TRUE);
-  print theme('page', form(form_item(t("Delete language '%name'", array('%name' => t($languages['name'][$langcode]))), $form, t('Are you sure you want to delete the language and all data associated with it?')), 'POST', url('admin/locale/language/overview')));
+
+  $extra = form_hidden('langcode', $langcode);
+  $output = theme('confirm',
+                  t('Are you sure you want to delete the language %name?', array('%name' => '<em>'. t($languages['name'][$langcode]) .'</em>')),
+                  'admin/locale/language/overview',
+                  t('Deleting a language will remove all data associated with it. This action cannot be undone.'),
+                  t('Delete'),
+                  t('Cancel'),
+                  $extra);
+  print theme('page', $output);
 }
 
 /**

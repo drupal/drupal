@@ -126,14 +126,17 @@ function forum_taxonomy($op, $type, $object) {
  * @param $tid ID of the term to be deleted
  */
 function _forum_confirm_del($tid) {
-   $term = taxonomy_get_term($tid);
+  $term = taxonomy_get_term($tid);
 
-   $form .= form_hidden('confirm', 1);
-   $form .= form_hidden('tid', $tid);
-   $form .= form_submit(t('Delete'));
-   $form .= form_submit(t('Cancel'));
-
-   return form(form_item(t('Delete "%name"', array('%name' => $term->name)), $form, t('Deleteing a forum or container will delete all sub-forums as well.  Are you sure you want to delete?')));
+  $extra = form_hidden('tid', $tid);
+  $output = theme('confirm',
+                  t('Are you sure you want to delete the forum %name?', array('%name' => '<em>'. $term->name .'</em>')),
+                  'admin/forums',
+                  t('Deleting a forum or container will delete all sub-forums as well. This action cannot be undone.'),
+                  t('Delete'),
+                  t('Cancel'),
+                  $extra);
+  print theme('page', $output);
 }
 
 /**

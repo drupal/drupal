@@ -704,6 +704,11 @@ function node_menu($may_cache) {
           'access' => node_access('update', $node),
           'weight' => 1,
           'type' => MENU_LOCAL_TASK);
+        $items[] = array('path' => 'node/'. arg(1) .'/delete', 'title' => t('delete'),
+          'callback' => 'node_page',
+          'access' => node_access('delete', $node),
+          'weight' => 1,
+          'type' => MENU_CALLBACK);
 
         if ($node->revisions) {
           $items[] = array('path' => 'node/'. arg(1) .'/revisions', 'title' => t('revisions'),
@@ -749,7 +754,7 @@ function node_admin_nodes() {
   $op = $_POST['op'];
 
   $edit = $_POST['edit'];
-  if (($op == t('Update') || $op == t('Delete')) && isset($edit['operation']) && isset($edit['nodes'])) {
+  if (($op == t('Update') || $op == t('Delete all')) && isset($edit['operation']) && isset($edit['nodes'])) {
     $edit['nodes'] = array_diff($edit['nodes'], array(0));
     if (count($edit['nodes']) == 0) {
       form_set_error('', t('Please select some items to perform the update on.'));
@@ -774,20 +779,23 @@ function node_admin_nodes() {
           drupal_set_message(t('The items have been deleted.'));
         }
         else {
-          $list = '<ul>';
+          $extra = '<ul>';
           foreach ($edit['nodes'] as $nid => $value) {
             if ($value) {
               $title = db_result(db_query('SELECT title FROM {node} WHERE nid = %d', $nid));
-              $list .= '<li>'. form_hidden('nodes]['. $nid, 1) . $title .'</li>';
+              $extra .= '<li>'. form_hidden('nodes]['. $nid, 1) . $title .'</li>';
             }
           }
-          $list .= '</ul>';
+          $extra .= '</ul>';
+          $extra .= form_hidden('operation', 'delete');
 
-          $output = '<h3>'. t('Are you sure you want to delete these items?') .'</h3>'. $list;
-          $output .= form_hidden('operation', 'delete');
-          $output .= form_hidden('confirm', 1);
-          $output .= form_submit(t('Delete'));
-          $output = form($output);
+          $output = theme('confirm',
+                          t('Are you sure you want to delete these items?'),
+                          'admin/node',
+                          t('This action cannot be undone.'),
+                          t('Delete all'),
+                          t('Cancel'),
+                          $extra);
           return $output;
         }
       }
@@ -1575,7 +1583,6 @@ function node_submit(&$node) {
  * Ask for confirmation, and delete the node.
  */
 function node_delete($edit) {
-
   $node = node_load(array('nid' => $edit['nid']));
 
   if (node_access('delete', $node)) {
@@ -1597,14 +1604,16 @@ function node_delete($edit) {
       }
 
       watchdog('content', t('%type: deleted %title.', array('%type' => '<em>'. t($node->type) .'</em>', '%title' => "<em>$node->title</em>")));
-      $output = t('The node has been deleted.');
     }
     else {
-      $output .= form_item(t('Confirm deletion'), $node->title);
-      $output .= form_hidden('nid', $node->nid);
-      $output .= form_hidden('confirm', 1);
-      $output .= form_submit(t('Delete'));
-      $output = form($output);
+      $extra = form_hidden('nid', $node->nid);
+      $output = theme('confirm',
+                      t('Are you sure you want to delete %title?', array('%title' => '<em>'. $node->title .'</em>')),
+                      $_GET['destination'] ? $_GET['destination'] : 'node/'. $node->nid,
+                      t('This action cannot be undone.'),
+                      t('Delete'),
+                      t('Cancel'),
+                      $extra);
     }
   }
 
@@ -1699,8 +1708,19 @@ function node_page() {
         print theme('page', node_preview($edit));
       }
       break;
+    case 'delete':
     case t('Delete'):
-      drupal_set_title(t('Delete'));
+      // Note: we redirect from node/uid/edit to node/uid/delete to make the tabs disappear.
+      if ($_GET['q'] == 'node/'. arg(1) .'/edit') {
+        unset($_REQUEST['destination']);
+        drupal_goto('node/'. arg(1) .'/delete');
+      }
+      $edit['nid'] = $edit['nid'] ? $edit['nid'] : arg(1);
+      $output = node_delete($edit);
+      if (!$output) {
+        drupal_set_message(t('The node has been deleted.'));
+        drupal_goto('admin/node');
+      }
       print theme('page', node_delete($edit));
       break;
     default:
