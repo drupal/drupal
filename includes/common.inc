@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.130 2002/11/09 13:59:35 dries Exp $
+// $Id: common.inc,v 1.131 2002/11/17 06:42:51 dries Exp $
 
 function conf_init() {
   global $HTTP_HOST;
@@ -473,12 +473,22 @@ function cache_set($cid, $data, $expire = 0) {
   }
 }
 
-function cache_del($cid) {
-  db_query("DELETE FROM cache WHERE cid = '%s'", $cid);
+function cache_clear_all($cid = NULL) {
+  if (empty($cid)) {
+    db_query("DELETE FROM cache");
+  }
+  else {
+    db_query("DELETE FROM cache WHERE cid = '%s'", $cid);
+  }
 }
 
-function cache_clear() {
-  db_query("DELETE FROM cache WHERE expire < ". time() ." AND expire > 0");
+function cache_clear_old($cid = NULL) {
+  if (empty($cid)) {
+    db_query("DELETE FROM cache WHERE expire < ". time() ." AND expire > 0");
+  }
+  else {
+    db_query("DELETE FROM cache WHERE cid = '%s' AND expire < %s AND expire > 0", $cid, time());
+  }
 }
 
 function page_set_cache() {
@@ -486,7 +496,7 @@ function page_set_cache() {
 
   if (!$user->uid && $REQUEST_METHOD == "GET") {
     if ($data = ob_get_contents()) {
-      cache_set(request_uri(), $data, (time() + variable_get("cache_clear", 30)));
+      cache_set(request_uri(), $data, (time() + variable_get("cache_clear", 120)));
     }
   }
 }
@@ -496,7 +506,7 @@ function page_get_cache() {
 
   if (!$user->uid && $REQUEST_METHOD == "GET") {
     if ($cache = cache_get(request_uri())) {
-      cache_clear();
+      cache_clear_old();
     }
     else {
       ob_start();

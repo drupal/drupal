@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.80 2002/11/01 10:47:20 dries Exp $
+// $Id: comment.module,v 1.81 2002/11/17 06:42:52 dries Exp $
 
 $GLOBALS["cmodes"] = array(1 => t("Flat list - collapsed"), 2 => t("Flat list - expanded"), 3 => t("Threaded list - collapsed"), 4 => t("Threaded list - expanded"));
 $GLOBALS["corder"] = array(1 => t("Date - newest first"), 2 => t("Date - oldest first"));
@@ -276,17 +276,11 @@ function comment_post($edit) {
       }
 
       /*
-      ** Clear the cache:
+      ** Clear the cache so an anonymous user can see his comment being
+      ** added.
       */
 
-      cache_clear();
-
-      /*
-      ** TODO: we'd prefer to invalidate the page or pages with the newly
-      ** inserted comment.
-      **
-      ** db_query("DELETE FROM cache WHERE cid LIKE '%s'", "%id=".$edit["nid"]."%");
-      */
+      cache_clear_all();
     }
   }
   else {

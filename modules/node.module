@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.155 2002/11/11 20:59:28 dries Exp $
+// $Id: node.module,v 1.156 2002/11/17 06:42:52 dries Exp $
 
 function node_help() {
   global $mod;
@@ -207,6 +207,13 @@ function node_save($node, $filter) {
     module_invoke($node->type, "update", $node);
 
   }
+
+  /*
+  ** Clear the cache so an anonymous poster can see the node being added
+  ** or updated.
+  */
+
+  cache_clear_all();
 
   /*
   ** Return the node ID:

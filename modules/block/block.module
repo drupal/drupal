@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.41 2002/11/16 14:28:22 dries Exp $
+// $Id: block.module,v 1.42 2002/11/17 06:42:52 dries Exp $
 
 function block_help() {
  ?>
@@ -77,6 +77,12 @@ function block_admin_save($edit) {
       db_query("UPDATE blocks SET region = '%s', status = '%d', custom = '%d', path = '%s', weight = '%d' WHERE module = '%s' AND delta = '%d'", $block["region"], $block["status"], $block["custom"], $block["path"], $block["weight"], $module, $delta);
     }
   }
+
+  /*
+  ** Clear the cache so the changes take effect for anonymous users.
+  */
+
+  cache_clear_all();
 }
 
 /**
