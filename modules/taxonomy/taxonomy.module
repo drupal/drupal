@@ -819,7 +819,7 @@ function taxonomy_select_nodes($tids = array(), $operator = 'or', $depth = 0, $p
 
     if ($operator == 'or') {
       $str_tids = implode(',', call_user_func_array('array_merge', $descendant_tids));
-      $sql = 'SELECT DISTINCT(n.nid) FROM {node} n '. node_access_join_sql() .' INNER JOIN {term_node} tn ON n.nid = tn.nid WHERE tn.tid IN ('. $str_tids .') AND n.status = 1 AND '. node_access_where_sql() .' ORDER BY n.sticky DESC, n.created DESC';
+      $sql = 'SELECT DISTINCT(n.nid), n.sticky, n.created FROM {node} n '. node_access_join_sql() .' INNER JOIN {term_node} tn ON n.nid = tn.nid WHERE tn.tid IN ('. $str_tids .') AND n.status = 1 AND '. node_access_where_sql() .' ORDER BY n.sticky DESC, n.created DESC';
       $sql_count = 'SELECT COUNT(DISTINCT(n.nid)) FROM {node} n '. node_access_join_sql() .' INNER JOIN {term_node} tn ON n.nid = tn.nid WHERE tn.tid IN ('. $str_tids .') AND n.status = 1 AND '. node_access_where_sql();
     }
     else {
@@ -829,7 +829,7 @@ function taxonomy_select_nodes($tids = array(), $operator = 'or', $depth = 0, $p
         $joins .= ' INNER JOIN {term_node} tn'. $index .' ON n.nid = tn'. $index .'.nid';
         $wheres .= ' AND tn'. $index .'.tid IN ('. implode(',', $tids) .')';
       }
-      $sql = 'SELECT DISTINCT(n.nid) FROM {node} n '. node_access_join_sql() . $joins .' WHERE n.status = 1 AND '. node_access_where_sql() . $wheres .' ORDER BY n.sticky DESC, n.created DESC';
+      $sql = 'SELECT DISTINCT(n.nid), n.sticky, n.created FROM {node} n '. node_access_join_sql() . $joins .' WHERE n.status = 1 AND '. node_access_where_sql() . $wheres .' ORDER BY n.sticky DESC, n.created DESC';
       $sql_count = 'SELECT COUNT(DISTINCT(n.nid)) FROM {node} n '. node_access_join_sql() . $joins .' WHERE n.status = 1 AND '. node_access_where_sql() . $wheres;
     }
 
