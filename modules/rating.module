@@ -39,7 +39,7 @@ function rating_cron() {
 
     $r2 = db_query("SELECT uid FROM users ORDER BY rating DESC");
     while ($account = db_fetch_object($r2)) {
-      db_query("INSERT INTO rating (userid, new, old) VALUES ('$account->uid', '". ++$j ."', '". $rating[$account->uid] ."')");
+      db_query("INSERT INTO rating (uid, new, old) VALUES ('$account->uid', '". ++$j ."', '". $rating[$account->uid] ."')");
     }
   }
 }
@@ -81,7 +81,7 @@ function rating_gravity($id) {
 }
 
 function rating_list($limit) {
-  $result = db_query("SELECT u.rating, u.name, u.uid, r.* FROM users u LEFT JOIN rating r ON u.uid = r.userid ORDER BY u.rating DESC LIMIT $limit");
+  $result = db_query("SELECT u.rating, u.name, u.uid, r.* FROM users u LEFT JOIN rating r ON u.uid = r.uid ORDER BY u.rating DESC LIMIT $limit");
 
   $output .= "<TABLE CELLPADDING=\"1\" CELLSPACING=\"1\">\n";
   while ($account = db_fetch_object($result)) {

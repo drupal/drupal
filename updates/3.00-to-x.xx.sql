@@ -55,3 +55,11 @@ ALTER TABLE watchdog CHANGE user userid int(10) DEFAULT '0' NOT NULL;
 ALTER TABLE rating CHANGE user userid int(10) DEFAULT '0' NOT NULL;
 ALTER TABLE layout CHANGE user userid int(10) DEFAULT '0' NOT NULL;
 ALTER TABLE blocks CHANGE offset delta tinyint(2) DEFAULT '0' NOT NULL;
+
+# 14/10/01
+
+ALTER TABLE watchdog CHANGE id wid int(5) DEFAULT '0' NOT NULL auto_increment;
+ALTER TABLE watchdog CHANGE userid uid int(10) DEFAULT '0' NOT NULL;
+ALTER TABLE layout CHANGE userid uid int(10) DEFAULT '0' NOT NULL;
+ALTER TABLE rating CHANGE userid uid int(10) DEFAULT '0' NOT NULL;
+ALTER TABLE locales CHANGE id lid int(10) DEFAULT '0' NOT NULL;
