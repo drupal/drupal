@@ -7,7 +7,7 @@ function forum_system($field){
 }
 
 function forum_node($field) {
-  $info["name"] = t("discussion forum");
+  $info["name"] = t("forum topic");
   $info["description"] = t("A forum is a threaded discussion, enabling users to communicate about a particular topic.");
 
   return $info[$field];
