@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.module,v 1.86 2004/06/20 19:49:14 dries Exp $
+// $Id: tracker.module,v 1.87 2004/07/06 07:38:35 dries Exp $
 
 /**
  * Implementation of hook_help().
@@ -52,12 +52,14 @@ function tracker_page($uid = 0) {
 
   while ($node = db_fetch_object($result)) {
     // Determine the number of comments:
-    if ($all = comment_num_all($node->nid)) {
-      $comments = $all;
+    if (module_exist('comment')) {
+      if ($all = comment_num_all($node->nid)) {
+        $comments = $all;
 
-      if ($new = comment_num_new($node->nid)) {
-        $comments .= '<br />';
-        $comments .= l(t('%num new', array('%num' => $new)), "node/$node->nid", NULL, NULL, 'new');
+        if ($new = comment_num_new($node->nid)) {
+          $comments .= '<br />';
+          $comments .= l(t('%num new', array('%num' => $new)), "node/$node->nid", NULL, NULL, 'new');
+        }
       }
     }
     else {
