@@ -261,10 +261,10 @@ function profile_form_profile($edit, $user, $category) {
         $fields[$category] .= form_textfield($field->title, $field->name, $edit[$field->name], 70, 255, _profile_form_explanation($field), NULL, $field->required);
         break;
       case 'textarea':
-        $fields[$category] .= form_textarea($field->title, $field->name, $edit[$field->name], 60, 5, _profile_form_explanation($field), NULL, $field->required);
+        $fields[$category] .= form_textarea($field->title, $field->name, $edit[$field->name], 70, 5, _profile_form_explanation($field), NULL, $field->required);
         break;
       case 'list':
-        $fields[$category] .= form_textarea($field->title, $field->name, $edit[$field->name], 60, 5, _profile_form_explanation($field), NULL, $field->required);
+        $fields[$category] .= form_textarea($field->title, $field->name, $edit[$field->name], 70, 5, _profile_form_explanation($field), NULL, $field->required);
         break;
       case 'checkbox':
         $fields[$category] .= form_checkbox($field->title, $field->name, 1, $edit[$field->name], _profile_form_explanation($field), NULL, $field->required);
