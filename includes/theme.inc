@@ -6,106 +6,111 @@
  *
  * @package theme system
  */
+
+
+function theme_help($section) {
+
+  $ouptout = "";
+
+  switch ($section) {
+    case 'admin/system/themes#description':
+      $output = t("The base theme");
+      break;
+  }
+
+  return $output;
+}
+
 class BaseTheme {
-  var $background = "#ffffff";
-  var $foreground = "#000000";
+}
 
-  function system($field) {
-    $system["name"] = "Basic theme";
-    $system["author"] = "Drupal";
-    $system["description"] = "Basic theme. Lynx friendly";
+function theme_header($title = "") {
+  global $base_url;
 
-    return $system[$field];
+  $output = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
+  $output .= "<html xmlns=\"http://www.w3.org/1999/xhtml\">";
+  $output .= "<head><title>". $title ? $title : variable_get(site_name, "drupal") ."</title>";
+  $output .= theme_head($main);
+  $output .= "</head><body style=\"background-color: #fff; color: #000;\"". theme_onload_attribute(). "\">";
+  $output .= "<table border=\"0\" cellspacing=\"4\" cellpadding=\"4\"><tr><td style=\"vertical-align: top; width: 170px;\">";
+
+  print $output;
+  theme("box", t("Navigation"), @implode("<br />", link_page()));
+  theme_blocks("all", $this);
+  print "</td><td style=\"vertical-align: top;\">";
+}
+
+function theme_links($links, $delimiter = " | ") {
+  return implode($delimiter, $links);
+}
+
+function theme_image($name) {
+  return "misc/$name";
+}
+
+function theme_breadcrumb($breadcrumb) {
+  print "<div class=\"breadcrumb\">". implode($breadcrumb, " &raquo; ") ."</div>";
+}
+
+function theme_node($node, $main) {
+  if (module_exist("taxonomy")) {
+    $terms = taxonomy_link("taxonomy terms", $node);
   }
 
-  function header($title = "") {
-    global $base_url;
+  $output = "<h2>$node->title</h2> by ". format_name($node);
 
-    $output = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
-    $output .= "<html xmlns=\"http://www.w3.org/1999/xhtml\">";
-    $output .= "<head><title>". $title ? $title : variable_get(site_name, "drupal") ."</title>";
-    $output .= theme_head($main);
-    $output .= "</head><body style=\"background-color: $this->background; color: $this->foreground;\"". theme_onload_attribute(). "\">";
-    $output .= "<table border=\"0\" cellspacing=\"4\" cellpadding=\"4\"><tr><td style=\"vertical-align: top; width: 170px;\">";
-
-    print $output;
-    $this->box(t("Navigation"), @implode("<br />", link_page())); theme_blocks("all", $this);
-    print "</td><td style=\"vertical-align: top;\">";
-
+  if (count($terms)) {
+    $output .= " <small>(". theme("links", $terms) .")</small><br />";
   }
 
-  function links($links, $delimiter = " | ") {
-    return implode($delimiter, $links);
+  if ($main && $node->teaser) {
+    $output .= $node->teaser;
+  }
+  else {
+    $output .= $node->body;
   }
 
-  function image($name) {
-    return "misc/$name";
+  if ($links = link_node($node, $main)) {
+    $output .= "<br />[ ". theme("links", $links) ." ]";
   }
+  $output .= "<hr />";
 
-  function breadcrumb($breadcrumb) {
-    print "<div class=\"breadcrumb\">". implode($breadcrumb, " &raquo; ") ."</div>";
-  }
+  print $output;
+}
 
-  function node($node, $main) {
-    if (module_exist("taxonomy")) {
-      $terms = taxonomy_link("taxonomy terms", $node);
-    }
+function theme_box($subject, $content, $region = "main") {
+  $output = "<h2>$subject</h2><p>$content</p>";
+  print $output;
+}
 
-    $output = "<h2>$node->title</h2> by ". format_name($node);
+/**
+ * Render a block.
+ *
+ * You can style your blocks by defining .block (all blocks),
+ * .block-<i>module</i> (all blocks of module <i>module</i>),
+ * and \#block-<i>module</i>-<i>delta</i> (specific block of
+ * module <i>module</i> with delta <i>delta</i>) in your
+ * theme's CSS.
+ *
+ * @param   $block  object "indexed with" fields from database
+ *   table 'blocks' ($block->module, $block->delta, $block->region,
+ *   ...) and fields returned by <i>module</i>_block("view")
+ *   ($block->subject, $block->content, ...).
+ */
+function theme_block($block) {
+  $output  = "<div class=\"block block-$block->module\" id=\"block-$block->module-$block->delta\">";
+  $output .= " <h3>$block->subject</h3>";
+  $output .= " <div class=\"content\">$block->content</div>";
+  $output .= "</div>";
+  print $output;
+}
 
-    if (count($terms)) {
-      $output .= "<small>(". $this->links($terms) .")</small><br />";
-    }
-
-    if ($main && $node->teaser) {
-      $output .= $node->teaser;
-    }
-    else {
-      $output .= $node->body;
-    }
-    if ($links = link_node($node, $main)) {
-      $output .= "<br />[ ". $this->links($links) ." ]";
-    }
-    $output .= "<hr />";
-
-    print $output;
-  }
-
-  function box($subject, $content, $region = "main") {
-    $output = "<h2>$subject</h2><p>$content</p>";
-    print $output;
-  }
-
-  /**
-   * Render a block.
-   *
-   * You can style your blocks by defining .block (all blocks),
-   * .block-<i>module</i> (all blocks of module <i>module</i>),
-   * and \#block-<i>module</i>-<i>delta</i> (specific block of
-   * module <i>module</i> with delta <i>delta</i>) in your
-   * theme's CSS.
-   *
-   * @param   $block  object "indexed with" fields from database
-   *   table 'blocks' ($block->module, $block->delta, $block->region,
-   *   ...) and fields returned by <i>module</i>_block("view")
-   *   ($block->subject, $block->content, ...).
-   */
-  function block($block) {
-    $output  = "<div class=\"block block-$block->module\" id=\"block-$block->module-$block->delta\">";
-    $output .= " <h3>$block->subject</h3>";
-    $output .= " <div class=\"content\">$block->content</div>";
-    $output .= "</div>";
-    print $output;
-  }
-
-  function footer() {
-    $output = "</td></tr></table>";
-    $output .= theme_footer();
-    $output .= "</body></html>";
-    print $output;
-  }
-
-}  // End of BaseTheme class //
+function theme_footer() {
+  $output = "</td></tr></table>";
+  $output .= theme_footer();
+  $output .= "</body></html>";
+  print $output;
+}
 
 /**
  * Return a marker.  Used to indicate new comments or required form
@@ -178,7 +183,7 @@ function theme_head($main = 0) {
  * Execute hook _footer() which is run at the end of the page right
  * before the </body> tag
  */
-function theme_footer($main = 0) {
+function theme_closure($main = 0) {
   $footer = module_invoke_all("footer", $main);
   return implode($footer, "\n");
 }
@@ -198,6 +203,8 @@ function theme_init() {
   else {
     $instance =& new BaseTheme;
   }
+
+  $instance->theme = $name;
 
   return $instance;
 }
@@ -224,15 +231,26 @@ function theme_blocks($region) {
 
 function theme() {
   global $theme;
+
   $args = func_get_args();
 
   $function = array_shift($args);
 
-  if (method_exists($theme, $function)) {
+  $name = $theme->theme;
+
+  if (function_exists($name ."_". $function)) {
+    return call_user_func_array($name ."_". $function, $args);
+  }
+  else if (method_exists($theme, $function)) {
     return call_user_method_array($function, $theme, $args);
+      // temporary fall-back; can be removed as soon the $theme-object is no more
+  }
+  else if (function_exists("theme_". $function)) {
+    return call_user_func_array("theme_". $function, $args);
   }
   else {
     return call_user_func_array($function, $args);
+      // temporary fall-back; can be removed as soon the $theme-object is no more
   }
 }
 

@@ -1,3 +1,10 @@
+Drupal x.x.x, xxxx-xx-xx
+------------------------
+
+- usability improvements:
+    * grouped form elements using <fieldset> and <legend> tags.
+    * replaced short drop-down menus by radio buttons.
+
 Drupal 4.3.0, 2003-11-01
 ------------------------
 
