@@ -409,7 +409,7 @@ function search_index($sid, $type, $text) {
 function do_search($keys, $type, $join = '', $where = '1') {
   // Note, we replace the wildcards with U+FFFD (Replacement character) to pass
   // through the keyword extractor.
-  $keys = str_replace('*', 'ï¿½', $keys);
+  $keys = str_replace('*', '�', $keys);
 
   // Split into words
   $keys = search_keywords_split($keys);
@@ -425,9 +425,9 @@ function do_search($keys, $type, $join = '', $where = '1') {
     if (string_length($word) < variable_get('remove_short', 3)) {
       continue;
     }
-    if (strpos($word, 'ï¿½') !== false) {
+    if (strpos($word, '�') !== false) {
       $words[] = "i.word LIKE '%s'";
-      $arguments[] = str_replace('ï¿½', '%', $word);
+      $arguments[] = str_replace('�', '%', $word);
     }
     else {
       $words[] = "i.word = '%s'";
