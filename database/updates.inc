@@ -1399,9 +1399,9 @@ function update_99() {
   if ($old_html_filter != 0) {
     $ret[] = update_sql("INSERT INTO {filters} (format, module, delta, weight) VALUES (1,'filter',0,0)"); // HTML tag/style filter
   }
-  $ret[] = update_sql("INSERT INTO {filters} (format, module, delta, weight) VALUES (1,'filter',3,1)"); // Linebreak filter
+  $ret[] = update_sql("INSERT INTO {filters} (format, module, delta, weight) VALUES (1,'filter',2,1)"); // Linebreak filter
   $ret[] = update_sql("INSERT INTO {filters} (format, module, delta, weight) VALUES (2,'filter',1,0)"); // PHP evaluator
-  $ret[] = update_sql("INSERT INTO {filters} (format, module, delta, weight) VALUES (3,'filter',3,0)"); // Linebreak filter
+  $ret[] = update_sql("INSERT INTO {filters} (format, module, delta, weight) VALUES (3,'filter',2,0)"); // Linebreak filter
 
   // Migrate the settings for all core/contrib filtering modules into the legacy
   // format.
