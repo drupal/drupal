@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.116 2003/12/16 21:06:34 dries Exp $
+// $Id: system.module,v 1.117 2003/12/26 23:03:21 dries Exp $
 
 function system_help($section = "admin/help#system") {
   global $base_url;
@@ -35,8 +35,7 @@ function system_help($section = "admin/help#system") {
       // Start of system_help_cache
       $output .= "<p>Drupal has a caching mechanism which stores dynamically generated web pages in a database.  By caching a web page, Drupal does not have to create the page each time someone wants to view it, instead it takes only one SQL query to display it, reducing response time and the server's load.  Only pages requested by \"anonymous\" users are cached.</p>";
       // End of system_help_cache
-      $output = t($output, array("%base_url" => $base_url, "%cron-link" => "<a href=\"$base_url/cron.php\
-\">$base_url/cron.php</a>", "%lynx" => "<a href=\"http://lynx.browser.org\">lynx</a>", "%wget" => "<a href=\"http://www.gnu.org/software/wget/wget.html\">wget</a>" ));
+      $output = t($output, array("%base_url" => $base_url, "%cron-link" => "<a href=\"$base_url/cron.php\">$base_url/cron.php</a>", "%lynx" => "<a href=\"http://lynx.browser.org\">lynx</a>", "%wget" => "<a href=\"http://www.gnu.org/software/wget/wget.html\">wget</a>" ));
       break;
     case 'admin/system/modules#description':
       $output = t("Configuration system that lets administrators modify the workings of the site.");
@@ -56,6 +55,7 @@ function system_perm() {
 
 function system_link($type) {
   if ($type == "system") {
+    menu("system/files", t("file download"), "file_download", 0, MENU_HIDE);
     if (user_access("administer site configuration")) {
 
       menu("admin/system", t("configuration"), "system_admin", 3);
@@ -126,6 +126,17 @@ function system_view_general() {
 
   $output .= form_group(t("Cache settings"), $group);
 
+  // file system:
+  if (!file_check_directory(variable_get('file_directory_path', 'files'))) {
+    $error['file_directory_path'] = theme('error', t('Directory does not exist, or is not writable.'));
+  }
+  if (!file_check_directory(variable_get('file_directory_temp', ini_get('upload_tmp_dir')))) {
+    $error['file_directory_temp'] = theme('error', t('Directory does not exist, or is not writable.'));
+  }
+  $group = form_textfield(t('File system path'), 'file_directory_path', variable_get('file_directory_path', 'files'), 70, 255, t('A file system path where the files will be stored. This directory has to exist and be writable by Drupal. If the download method is set to public this directory has to be relative to Drupal installation directory, and be accessible over the web. When download method is set to private this directory should not be accessible over the web. Changing this location after the site has been in use will cause problems so only change this setting on an existing site if you know what you are doing.') . $error['file_directory_path']);
+  $group .= form_textfield(t('Temporary directory'), 'file_directory_temp', variable_get('file_directory_temp', (PHP_OS == 'WINNT' ? 'c:\\windows\\temp' : '/tmp')), 70, 255, t('Location where files can be saved temporarily. This directory should not be accessible from the web.') . $error['file_directory_temp']);
+  $group .= form_radios(t('Download method'), 'file_downloads', variable_get('file_downloads', FILE_DOWNLOADS_PUBLIC), array(FILE_DOWNLOADS_PUBLIC => t('Public - files are available using http directly.'), FILE_DOWNLOADS_PRIVATE => t('Private - files are be transferred by Drupal.')), t('This setting can be changed at any time, however, all download URLs will change and there may be unexpected problems so it is not recommended.'));
+  $output .= form_group(t('File system'), $group);
 
   // submission settings:
   $rate = array(-10000 => t("Disabled"), 1 => t("Maximum 1 every second"), 5 => t("Maximum 1 every 5 seconds"), 15 => t("Maximum 1 every 15 seconds"), 30 => t("Maximum 1 every 30 seconds"), 60 => t("Maximum 1 every minute"), 300 => t("Maximum 1 every 5 minutes"), 900 => t("Maximum 1 every 15 minutes"), 1800 => t("Maximum 1 every 30 minutes"), 3600 => t("Maximum 1 every hour"), 21600 => t("Maximum 1 every 6 hours"), 43200 => t("Maximum 1 every 12 hours"));
@@ -254,32 +265,12 @@ function system_view($type, $arg = "") {
   return form($form);
 }
 
-function system_dirscan($dir, $mask, $nomask = array(".", "..", "CVS")) {
-  $files = array();
-  if (is_dir($dir) && $handle = opendir($dir)) {
-    while ($file = readdir($handle)) {
-      if (!in_array($file, $nomask)) {
-        if (is_dir("$dir/$file")) {
-          $files = array_merge($files, system_dirscan("$dir/$file", $mask, $nomask));
-        }
-        elseif (ereg($mask, $file)) {
-          $name = basename($file);
-          $files["$dir/$file"]->filename = "$dir/$file";
-          $files["$dir/$file"]->name = substr($name, 0, strrpos($name, '.'));
-        }
-      }
-    }
-    closedir($handle);
-  }
-  return $files;
-}
-
 function system_listing($type, $directory, $required = array()) {
   // Make sure we set $type correctly
   $type = $type != 'theme' ? "module" : "theme";
 
   // Find files in the directory.
-  $files = system_dirscan($directory, "\.$type$");
+  $files = file_scan_directory($directory, "\.$type$");
 
   // Extract current files from database.
   $result = db_query("SELECT filename, type, status, throttle FROM {system} WHERE type = '%s'", $type);

@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.289 2003/12/26 14:52:29 dries Exp $ */
+/* $Id: common.inc,v 1.290 2003/12/26 23:03:20 dries Exp $ */
 
 /**
  * @name drupal_title
@@ -935,6 +935,7 @@ include_once "includes/pager.inc";
 include_once "includes/menu.inc";
 include_once "includes/xmlrpc.inc";
 include_once "includes/tablesort.inc";
+include_once "includes/file.inc";
 
 // set error handler:
 set_error_handler("error_handler");

@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.31 2003/12/01 22:23:02 unconed Exp $
+// $Id: profile.module,v 1.32 2003/12/26 23:03:21 dries Exp $
 
 function _profile_init() {
   /*
@@ -57,6 +57,10 @@ function profile_settings() {
     _profile_init();
   }
 
+  if (!file_check_directory(file_create_path(variable_get('profile_avatar_path', 'avatars')))) {
+    $error['profile_avatar_path'] = theme('error', t('Directory does not exist, or is not writable.'));
+  }
+
   $profile_public_fields = variable_get("profile_public_fields", array());
   $profile_private_fields = variable_get("profile_private_fields", array());
   $profile_required_fields = variable_get("profile_required_fields", array());
@@ -74,7 +78,7 @@ function profile_settings() {
   }
   $output .= theme("table", $header, $row);
 
-  $output .= form_textfield(t("Avatar image path"), "profile_avatar_path", variable_get("profile_avatar_path", "misc/avatars/"), 30, 255, t("Path for avatar directory; it must be writable and visible from the web."));
+  $output .= form_textfield(t("Avatar image path"), "profile_avatar_path", variable_get("profile_avatar_path", "avatars"), 30, 255, t("Subdirectory in the directory '%dir' where avatars will be stored.", array('%dir' => variable_get('file_directory_path', 'files') . FILE_SEPARATOR)) . $error['profile_avatar_path']);
   $output .= form_textfield(t("Avatar maximum dimensions"), "profile_avatar_dimensions", variable_get("profile_avatar_dimensions", "85x85"), 10, 10, t("Maximum dimensions for avatars."));
   $output .= form_textfield(t("Avatar maximum file size"), "profile_avatar_file_size", variable_get("profile_avatar_file_size", "30"), 10, 10, t("Maximum file size for avatars, in kB."));
 
@@ -133,11 +137,8 @@ function _profile_form($edit, $mode) {
   }
 
   if (in_array("avatar", $reg_fields)) {
-    if ($edit["profile_avatar"] && $edit["uid"]) {
-      $file = profile_avatar_path($edit["uid"], $edit["profile_avatar"]);
-      if ($file) {
-        $output .= "<img src=\"$file\" alt=\"\" title=\"\" /><br />";
-      }
+    if ($edit["profile_avatar"] && file_exists($edit["profile_avatar"])) {
+      $output .= form_item(t("Avatar"), '<img src="'. file_create_url($edit["profile_avatar"]) .'" alt="" title="" />');
     }
     $output .= form_file($profile_fields["avatar"][1], "profile_avatar", 64, $profile_fields["avatar"][2]);
   }
@@ -199,9 +200,8 @@ function _profile_user_view(&$user, $mode) {
         case "":
           // special
           if ($t == "profile_avatar") {
-            $file = profile_avatar_path($user->uid, $user->profile_avatar);
-            if (file_exists($file)) {
-              $output .= form_item(t("Avatar"), "<img src=\"$file\" alt=\"\" title=\"\" />");
+            if (file_exists($user->$t)) {
+              $output .= form_item(t("Avatar"), '<img src="'. file_create_url($user->$t) .'" alt="" title="" />');
             }
           }
 
@@ -218,49 +218,42 @@ function _profile_user_view(&$user, $mode) {
   return $output;
 }
 
+function profile_file_download($file) {
+  if (strpos($file, variable_get("profile_avatar_path", "avatars")) === 0) {
+    return array("Content-type: $mime");
+  }
+}
+
 function _profile_validate_avatar(&$edit, $user) {
   // check that uploaded file is an image, with a maximum file size and maximum height/width
 
   unset($edit["profile_avatar"]);
 
-  if ($_FILES["edit"]["name"]["profile_avatar"] == "") {
+  if (!$file = file_check_upload('profile_avatar')) {
     $edit["profile_avatar"] = $user->profile_avatar;
-    return "";
+    return;
   }
 
-  $image_file = $_FILES["edit"]["tmp_name"]["profile_avatar"];
-  if (is_uploaded_file($image_file)) {
-    $extension = strtolower(strrchr($_FILES["edit"]["name"]["profile_avatar"], "."));
-    $size = getimagesize($image_file);
-    list($maxwidth, $maxheight) = explode("x", variable_get("profile_avatar_dimensions", "85x85"));
-    if ((!in_array($size[2], array(1, 2, 3))) || (!in_array($extension, array(".gif", ".jpg", ".png", ".jpeg")))) {
-      $error = t("The uploaded file was not an image.");
-    }
-    else if (filesize($image_file) > (variable_get("profile_avatar_file_size", "30") * 1000)) {
-      $error = t("The uploaded image is too large; the maximum file size is %a kB.", array("%a" => variable_get("profile_avatar_file_size", "30")));
-    }
-    else if ($size[0] > $maxwidth || $size[1] > $maxheight) {
-      $error = t("The uploaded image is too large; the maximum dimensions are %a pixels.", array("%a" => variable_get("profile_avatar_dimensions", "85x85")));
-    }
-    else if (!is_dir(variable_get("profile_avatar_path", "misc/avatars/"))) {
-      $error = t("Failed to upload the avatar image; the '%directory' directory doesn't exist.", array("%directory" => variable_get("profile_avatar_path", "misc/avatars/")));
-    }
-    else if (!is_writeable(variable_get("profile_avatar_path", "misc/avatars/"))) {
-      $error = t("Failed to upload the avatar image; the webserver has no write permission to the '%directory' directory.", array("%directory" => variable_get("profile_avatar_path", "misc/avatars/")));
-    }
-    else if (!copy($image_file, variable_get("profile_avatar_path", "misc/avatars/").md5($user->uid).$extension)) {
-      $error = t("Failed to upload the avatar image; could not copy file '%filename' to directory '%directory'.", array("%filename" => $_FILES["edit"]["name"]["profile_avatar"], "%directory" => variable_get("profile_avatar_path", "misc/avatars/")));
-    }
-    else {
-      $edit["profile_avatar"] = $extension;
-    }
+  $extension = strtolower(strrchr($file->name, "."));
+  $size = getimagesize($file->path);
+  list($maxwidth, $maxheight) = explode("x", variable_get("profile_avatar_dimensions", "85x85"));
+  if ((!in_array($size[2], array(1, 2, 3))) || (!in_array($extension, array(".gif", ".jpg", ".png", ".jpeg")))) {
+    $error = t("The uploaded file was not an image.");
+  }
+  else if ($file->size > (variable_get("profile_avatar_file_size", "30") * 1000)) {
+    $error = t("The uploaded image is too large; the maximum file size is %a kB.", array("%a" => variable_get("profile_avatar_file_size", "30")));
+  }
+  else if ($size[0] > $maxwidth || $size[1] > $maxheight) {
+    $error = t("The uploaded image is too large; the maximum dimensions are %a pixels.", array("%a" => variable_get("profile_avatar_dimensions", "85x85")));
+  }
+  else if ($file = file_save_upload('profile_avatar', variable_get("profile_avatar_path", "avatars") . FILE_SEPARATOR .'avatar-'. $user->uid . $extension, 1)) {
+    $edit["profile_avatar"] = $file->name;
+  }
+  else {
+    $error = t("Failed to upload the avatar image; the '%directory' directory doesn't exist.", array("%directory" => variable_get("profile_avatar_path", "avatars")));
   }
 
   return $error ? "$error<br />" : "";
-}
-
-function profile_avatar_path($uid, $extension) {
-  return $extension ? variable_get("profile_avatar_path", "misc/avatars/") . md5($uid) . $extension : "";
 }
 
 function _profile_active_fields($mode) {
