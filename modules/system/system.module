@@ -113,7 +113,16 @@ function system_menu() {
  */
 function system_user($type, $edit, &$user, $category = NULL) {
   if ($type == 'form' && $category == 'account') {
-    if (count($themes = list_themes()) > 1) {
+    $allthemes = list_themes();
+
+    // list only active themes
+    foreach ($allthemes as $key => $theme) {
+      if ($theme->status) {
+        $themes[$key] = $theme;
+      }
+    }
+
+    if (count($themes) > 1) {
       $rows = array();
       foreach ($themes as $key => $value) {
         $row = array();

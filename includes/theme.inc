@@ -43,7 +43,7 @@ function init_theme() {
 
   // Allow modules to override the present theme... only select custom theme
   // if it is available in the list of enabled themes.
-  $theme = $custom_theme && $themes[$custom_theme]->status ? $custom_theme : $theme;
+  $theme = $custom_theme && $themes[$custom_theme] ? $custom_theme : $theme;
 
   // Store the identifier for retrieving theme settings with.
   $theme_key = $theme;
