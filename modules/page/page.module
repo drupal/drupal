@@ -56,14 +56,22 @@ function page_save($edit) {
   node_save(array_merge($edit, array(type => "page", status => $status[posted])));
 }
 
-function page_overview() {
-  return node_overview("type = 'page'");
+function page_query($type = "") {
+  global $status;
+  $queries =  array(array("recent pages", "WHERE n.type = 'page' ORDER BY n.timestamp DESC"), array("posted pages", "WHERE n.type = 'page' AND n.status = '$status[posted]' ORDER BY n.timestamp DESC"), array("dumped pages", "WHERE n.type = 'page' AND n.status = '$status[dumped]' ORDER BY n.timestamp DESC"));
+  return ($queries[$type] ? $queries[$type] : $queries);
+}
+
+function page_overview($query = array()) {
+  return node_overview($query);
 }
 
 function page_admin() {
-  global $id, $op, $edit;
+  global $id, $op, $edit, $type;
 
-  print "<SMALL><A HREF=\"admin.php?mod=page&op=add\">add new page</A> | <A HREF=\"admin.php?mod=page\">overview</A></SMALL><HR>\n";
+  print "<SMALL><A HREF=\"admin.php?mod=page&op=add\">add new page</A> | <A HREF=\"admin.php?mod=page&op=listing\">page listing</A> | <A HREF=\"admin.php?mod=page\">overview</A></SMALL><HR>\n";
+
+  $type = ($type ? $type : 0);
 
   switch ($op) {
     case "add":
@@ -72,11 +80,14 @@ function page_admin() {
     case "edit":
       print page_form(node_get_array(nid, $id));
       break;
+    case "listing":
+      print node_listing(page_query());
+      break;
    case "Save page":
       print status(page_save($edit));
       // fall through:
     default:
-      print page_overview();
+      print page_overview(page_query($type));
   }
 }
 

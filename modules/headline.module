@@ -191,7 +191,7 @@ function headline_admin() {
 function headline_export($uri) {
   global $status, $HTTP_REFERER, $HTTP_USER_AGENT;
 
-  if ($uri[1] == "headlines.rdf") {
+  if ($uri[2] == "headlines.rdf") {
     watchdog("message", "grabbed 'headlines.rdf' - referring url: $HTTP_REFERER - user agent: $HTTP_USER_AGENT");
 
     header("Content-Type: text/plain");

@@ -65,7 +65,7 @@ function locale_languages($translation) {
   return $output;
 }
 
-function locale_display() {
+function locale_overview() {
   $result = db_query("SELECT * FROM locales ORDER BY string");
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
   $output .= " <TR><TH>string</TH><TH>languages</TH><TH COLSPAN=\"2\">operations</TH><TR>\n";
@@ -85,7 +85,7 @@ function locale_admin() {
   switch ($op) {
     case "delete":
       locale_delete(check_input($id));
-      locale_display();
+      locale_overview();
       break;
     case "help":
       locale_help();
@@ -97,7 +97,7 @@ function locale_admin() {
       locale_save(check_input($id), $edit);
       // fall through
     default:
-      locale_display();
+      locale_overview();
   }
 }
 

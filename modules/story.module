@@ -201,17 +201,9 @@ function story_block() {
 
 function story_query($type = "") {
   global $status;
-  $queries =  array(0 => array("active stories", "WHERE n.type = 'story' ORDER BY n.timestamp DESC"), 1 => array("posted stories", "WHERE n.type = 'story' AND n.status = '$status[posted]' ORDER BY n.timestamp DESC"), 2 => array("queued stories", "WHERE n.type = 'story' AND n.status = '$status[queued]' ORDER BY n.timestamp DESC"), 3 => array("dumped stories", "WHERE n.type = 'story' AND n.status = '$status[dumped]' ORDER BY n.timestamp DESC"));
+  $queries = array(array("recent stories", "WHERE n.type = 'story' ORDER BY n.timestamp DESC"), array("posted stories", "WHERE n.type = 'story' AND n.status = '$status[posted]' ORDER BY n.timestamp DESC"), array("queued stories", "WHERE n.type = 'story' AND n.status = '$status[queued]' ORDER BY n.timestamp DESC"), array("dumped stories", "WHERE n.type = 'story' AND n.status = '$status[dumped]' ORDER BY n.timestamp DESC"));
   return ($queries[$type] ? $queries[$type] : $queries);
 }
-
-function story_listing() {
-  foreach (story_query() as $key=>$array) {
-    $output .= "<LI><A HREF=\"admin.php?mod=story&type=$key\">$array[0]</A></LI>\n";
-  }
-  return "<OL>$output</OL>\n";
-}
-
 
 function story_overview($query = array()) {
   return node_overview($query);
@@ -239,7 +231,7 @@ function story_admin() {
       story_help();
       break;
     case "listing":
-      print story_listing();
+      print node_listing(story_query());
       break;
     case "search":
       print search_form($keys);
