@@ -1,4 +1,5 @@
 <?php
+// $Id$
 
 // Initialization hook, runs each time statistic module is loaded
 function statistics_init() {
@@ -791,7 +792,7 @@ function statistics_display_online_block() {
 /* Display linked title based on field name */
 function statistics_title_list($dbfield, $dbrows) {
   /* valid dbfields: totalcount, daycount, timestamp */
-  return db_query("SELECT statistics.nid, node.title, u.uid, u.name FROM statistics LEFT JOIN node ON statistics.nid = node.nid LEFT JOIN users u ON node.uid = u.uid WHERE %s <> '0' ORDER BY %s DESC LIMIT %s", "statistics.". $dbfield, "statistics.". $dbfield, $dbrows);
+  return db_query("SELECT statistics.nid, node.title, u.uid, u.name FROM statistics LEFT JOIN node ON statistics.nid = node.nid LEFT JOIN users u ON node.uid = u.uid WHERE %s <> '0' AND node.status = 1 ORDER BY %s DESC LIMIT %s", "statistics.". $dbfield, "statistics.". $dbfield, $dbrows);
 }
 
 
