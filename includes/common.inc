@@ -1905,7 +1905,4 @@ if (!user_access('bypass input data check')) {
 // Initialize the localization system.
 $locale = locale_initialize();
 
-// Initialize the enabled theme.
-$theme = init_theme();
-
 ?>
