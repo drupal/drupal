@@ -23,10 +23,6 @@ function settings_conf() {
   $output .= "<INPUT NAME=\"edit[anonymous]\" MAXLENGTH=\"55\" SIZE=\"30\" VALUE=\"". variable_get(anonymous, "Anonymous") ."\"><BR>\n";
   $output .= "<I><SMALL>The name displayed for anonymous users.</SMALL></I><P>\n";
 
-  $output .= "<B>Default theme:</B><BR>\n";
-  foreach ($themes as $key=>$value) $options1 .= "<OPTION VALUE=\"$key\"". (variable_get(default_theme, key($themes)) == $key ? " SELECTED" : "") .">$key</OPTION>\n";
-  $output .= "<SELECT NAME=\"edit[default_theme]\">$options1</SELECT><BR>\n";
-  $output .= "<I><SMALL>The default theme displayed for anonymous users.</SMALL></I><P>\n";
 
   $output .= "<HR>\n";
   $output .= "<H3>Comment settings</H3>\n";
@@ -67,6 +63,18 @@ function settings_conf() {
   foreach ($rate as $key=>$value) $options7 .= " <OPTION VALUE=\"$key\"". ((variable_get(max_comment_rate, 120) == $key) ? " SELECTED" : "") .">$value</OPTION>\n";
   $output .= "<SELECT NAME=\"edit[max_comment_rate]\"$options7</SELECT><BR>\n";
   $output .= "<I><SMALL>The maximum submission rate for comments.  Its purpose is to stop potential abuse or denial of service attacks.</SMALL></I><P>\n";
+
+  $output .= "<HR>\n";
+  $output .= "<H3>Theme settings</H3>\n";
+
+  $output .= "<B>Default theme:</B><BR>\n";
+  foreach ($themes as $key=>$value) $options1 .= "<OPTION VALUE=\"$key\"". (variable_get(theme_default, key($themes)) == $key ? " SELECTED" : "") .">$key</OPTION>\n";
+  $output .= "<SELECT NAME=\"edit[theme_default]\">$options1</SELECT><BR>\n";
+  $output .= "<I><SMALL>The default theme displayed for anonymous users.</SMALL></I><P>\n";
+
+  $output .= "<B>Footer message:</B><BR>\n";
+  $output .= "<TEXTAREA NAME=\"edit[theme_footer]\" COLS=\"35\" ROWS=\"5\" WRAP=\"virtual\">". variable_get(theme_footer, "") ."</TEXTAREA><BR>\n";
+  $output .= "<I><SMALL>This text will be displayed at the bottom of each page.  Useful to add a copyright notice to your pages.</SMALL></I><P>\n";
 
   $output .= "<HR>\n";
 
