@@ -1097,7 +1097,7 @@ function node_validate($node) {
   node_invoke_nodeapi($node, 'validate');
 
   // Check input format access
-  if (!filter_access($node->format)) {
+  if (array_key_exists('format', $node) && !filter_access($node->format)) {
     form_set_error('format', t('The supplied input format is invalid.'));
   }
 

@@ -458,7 +458,7 @@ function comment_validate_form($edit) {
   /*
   ** Validate filter format
   */
-  if (!filter_access($edit['format'])) {
+  if (array_key_exists('format', $edit) && !filter_access($edit['format'])) {
     form_set_error('format', t('The supplied input format is invalid.'));
   }
 
