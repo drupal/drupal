@@ -44,7 +44,7 @@ function theme_book($node) {
     $output .= "<P>". check_output($node->body, 1) ."</P>";
   }
 
-  $theme->box(t("Documentation book"), $output ."". book_overview($node->nid) ."". book_navigation($node));
+  $theme->box(t("Handbook"), $output ."". book_overview($node->nid) ."". book_navigation($node));
 }
 
 function book_view($node, $page = 1) {
@@ -155,8 +155,7 @@ function book_form($edit = array()) {
 }
 
 function book_save($edit) {
-  $node = node_get_object("nid", $edit[nid]);
-  node_save(array_diff(array_merge($edit, array(nid => $node->nid, type => "book")), array(userid => $edit[userid])));
+  node_save(array_diff(array_merge($edit, array(nid => $edit[nid], type => "book")), array(userid => $edit[userid])));
 }
 
 function book_delete($id) {

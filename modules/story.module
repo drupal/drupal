@@ -54,7 +54,7 @@ function story_help() {
 }
 
 function story_view($node, $page = 1) {
-  global $id, $cid, $op, $pid, $subject, $comment, $theme, $mode, $order, $threshold;
+  global $id, $cid, $op, $moderate, $pid, $subject, $comment, $theme, $mode, $order, $threshold;
 
   if ($page == 1) {
     switch($op) {
@@ -132,11 +132,14 @@ function story_form($edit = array()) {
 
   if (user_access($user, "story")) {
     $output .= "<B>". t("Status") .":</B><BR>\n";
-    $output .= "<INPUT TYPE=\"radio\" NAME=\"edit[status]\" VALUE=\"$status[scheduled]\"". ($edit[status] == 3 ? " CHECKED" : "") ."> scheduled for <INPUT TYPE=\"text\" NAME=\"edit[timestamp]\" SIZE=\"30\" VALUE=\"". date("j F Y G:i", ($edit[timetsamp] ? $edit[timestamp] : time())) ."\"><BR>\n";
-    $output .= "<INPUT TYPE=\"radio\" NAME=\"edit[status]\" VALUE=\"$status[posted]\"". ($edit[status] == 2 ? " CHECKED" : "") ."> posted<BR>\n";
-    $output .= "<INPUT TYPE=\"radio\" NAME=\"edit[status]\" VALUE=\"$status[queued]\"". ($edit[status] == 1 ? " CHECKED" : "") ."> queued<BR>\n";
-    $output .= "<INPUT TYPE=\"radio\" NAME=\"edit[status]\" VALUE=\"$status[dumped]\"". ($edit[status] == 0 ? " CHECKED" : "") ."> dumped<BR>\n";
+    $output .= "<INPUT TYPE=\"radio\" NAME=\"edit[status]\" VALUE=\"$status[scheduled]\"". ($edit[status] == $status[scheduled] ? " CHECKED" : "") ."> scheduled for <INPUT TYPE=\"text\" NAME=\"edit[timestamp]\" SIZE=\"30\" VALUE=\"". date("j F Y G:i", ($edit[timetsamp] ? $edit[timestamp] : time())) ."\"><BR>\n";
+    $output .= "<INPUT TYPE=\"radio\" NAME=\"edit[status]\" VALUE=\"$status[posted]\"". ($edit[status] == $status[posted] ? " CHECKED" : "") ."> posted<BR>\n";
+    $output .= "<INPUT TYPE=\"radio\" NAME=\"edit[status]\" VALUE=\"$status[queued]\"". ($edit[status] == $status[queued] ? " CHECKED" : "") ."> queued<BR>\n";
+    $output .= "<INPUT TYPE=\"radio\" NAME=\"edit[status]\" VALUE=\"$status[dumped]\"". ($edit[status] == $status[dumped] ? " CHECKED" : "") ."> dumped<BR>\n";
     $output .= "<SMALL><I>The textfield for scheduled stories expects a string containing an English date format of when you want to have your story automatically published.  Example input: '". date("j F Y G:i") ."', '". date("m/d/y H:i") ."', '". date("F j, Y H:i") ."', ...</I></SMALL><P>\n";
+
+    $output .= "<INPUT TYPE=\"hidden\" NAME=\"edit[timestamp]\" VALUE=\"$edit[timestamp]\">\n";
+    $output .= "<INPUT TYPE=\"hidden\" NAME=\"edit[nid]\" VALUE=\"$edit[nid]\">\n";
   }
 
   $duplicate = db_result(db_query("SELECT COUNT(nid) FROM nodes WHERE title = '$title'"));
@@ -164,8 +167,6 @@ function story_form($edit = array()) {
     $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Preview") ."\">\n";
     $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Submit") ."\">\n";
   }
-
-  $output .= "<INPUT TYPE=\"hidden\" NAME=\"edit[nid]\" VALUE=\"$edit[nid]\">\n";
   $output .= "</FORM>\n";
 
   return $output;
@@ -173,9 +174,8 @@ function story_form($edit = array()) {
 
 function story_save($edit) {
   global $status;
-  $node = ($edit[nid] ? node_get_object("nid", $edit[nid]) : node_get_object("title", $edit[title]));
-  $edit[timestamp] = ($edit[status] == $status[scheduled] && strtotime($edit[timestamp]) > time()) ? strtotime($edit[timestamp]) : ($node->timestamp ? $node->timestamp : time());
-  node_save(array_diff(array_merge($edit, array(nid => $node->nid, type => "story")), array(userid => $edit[userid])));
+  $edit[timestamp] = ($edit[status] == $status[scheduled] && strtotime($edit[timestamp]) > time()) ? strtotime($edit[timestamp]) : ($node[timestamp] ? $node[timestamp] : time());
+  node_save(array_diff(array_merge($edit, array(nid => $edit[nid], type => "story")), array(userid => $edit[userid])));
 }
 
 function story_delete($id) {
