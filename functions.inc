@@ -1,38 +1,20 @@
 <?
+include("user.class.php");
+session_start();
+$user->theme = "Jeroen";
 
 include "config.inc";
 $functions = 1;
 
 function dbconnect() {
   include "config.inc";
-  mysql_pconnect($dbhost, $dbuname, $dbpass);
-  @mysql_select_db("$dbname") or die ("Unable to select database");
+  mysql_pconnect($dbhost, $dbuname, $dbpass) or die(mysql_Error());
+  mysql_select_db("$dbname") or die ("Unable to select database");
 }
 
 function counter() {
   dbconnect();
   mysql_query("UPDATE vars SET value=value+1 where name='totalhits'");
-}
-
-function cookiedecode($user) {
-  global $cookie;
-  $user = base64_decode($user);
-  $cookie = explode(":", $user);
-  return $cookie;
-}
-
-function getusrinfo($user) {
-  global $userinfo;
-  $user2 = base64_decode($user);
-  dbconnect();
-  $user3 = explode(":", $user2);
-  $result = mysql_query("SELECT uid, name, uname, email, femail, url, pass, storynum, umode, uorder, thold, noscore, bio, ublockon, ublock, theme, signature FROM users WHERE uname = '$user3[1]' AND pass = '$user3[2]'");
-  if(mysql_num_rows($result)==1) {
-    $userinfo = mysql_fetch_array($result);
-  } else {
-    echo "<b>A problem occured</b><br>";
-  }
-  return $userinfo;
 }
 
 function FixQuotes ($what = "") {
@@ -103,9 +85,9 @@ function displayRelatedLinks($theme, $sid = 0) {
 }
 
 function displayOldHeadlines($theme) {
-  global $user, $cookie;
+  global $user;
   
-  if ($cookie[3]) $result = mysql_query("SELECT sid, subject, time FROM stories ORDER BY time DESC LIMIT $cookie[3], 10");
+  if ($user->storynum) $result = mysql_query("SELECT sid, subject, time FROM stories ORDER BY time DESC LIMIT $user->storynum, 10");
   else $result = mysql_query("SELECT sid, subject, time FROM stories ORDER BY time DESC LIMIT 10, 10");
 
   while ($story = mysql_fetch_object($result)) {        
@@ -117,9 +99,9 @@ function displayOldHeadlines($theme) {
 
     if ($user) {
       $content .= "<LI><A HREF=\"article.php?sid=$story->sid";
-      if (isset($cookie[4])) { $content .= "&mode=$cookie[4]"; } else { $content .= "&mode=threaded"; }
-      if (isset($cookie[5])) { $content .= "&order=$cookie[5]"; } else { $content .= "&order=0"; }    
-      if (isset($cookie[6])) { $content .= "&thold=$cookie[6]"; } else { $content .= "&thold=0"; }
+      if (isset($user->umode)) { $content .= "&mode=$user->umode"; } else { $content .= "&mode=threaded"; }
+      if (isset($user->uorder)) { $content .= "&order=$user->uorder"; } else { $content .= "&order=0"; }    
+      if (isset($user->thold)) { $content .= "&thold=$user->thold"; } else { $content .= "&thold=0"; }
       $content .= "\">$story->subject</A></LI>";
     }
     else {
@@ -132,7 +114,7 @@ function displayOldHeadlines($theme) {
 }
 
 function displayNewHeadlines($theme, $num = 10) {
-  global $user, $cookie;
+  global $user;
 
   dbconnect();
 
@@ -141,9 +123,9 @@ function displayNewHeadlines($theme, $num = 10) {
   while(list($sid, $subject) = mysql_fetch_row($result)) {
     if ($user) {
       $content .= "<LI><A HREF=\"article.php?sid=$sid";
-      if (isset($cookie[4])) { $content .= "&mode=$cookie[4]"; } else { $content .= "&mode=threaded"; }
-      if (isset($cookie[5])) { $content .= "&order=$cookie[5]"; } else { $content .= "&order=0"; }    
-      if (isset($cookie[6])) { $content .= "&thold=$cookie[6]"; } else { $content .= "&thold=0"; }
+      if (isset($user->umode)) { $content .= "&mode=$user->umode"; } else { $content .= "&mode=threaded"; }
+      if (isset($user->uorder)) { $content .= "&order=$user->uorder"; } else { $content .= "&order=0"; }    
+      if (isset($user->thold)) { $content .= "&thold=$user->thold"; } else { $content .= "&thold=0"; }
       $content .= "\">$subject</A></LI>";
     }
     else {
@@ -162,25 +144,28 @@ function displayAdminblock($theme) {
 }
 
 function displayUserblock($theme) {
-  global $cookie;
+  global $user;
   dbconnect();
-  if ($cookie[8]) {
-    $block = mysql_query("SELECT ublock FROM users WHERE uid = '$cookie[0]'");
-    list($content) = mysql_fetch_row($block);
+  if ($user->ublockon) {
     $content .= "<P ALIGN=\"right\">[ <A HREF=\"account.php?op=edithome\"><FONT COLOR=\"$theme->hlcolor2\">edit</FONT></A> | <A HREF=\"account.php?op=logout\"><FONT COLOR=\"$theme->hlcolor2\">logout</FONT></A> ]</P>";
-    $theme->box("$cookie[1]'s box", $content);
+    $theme->box("$user->userid's box", $user->content);
   }
 }
 
 function displayAccount($theme) {
-  global $user, $cookie;
+  global $user;
   
   if ($user) { 
     ### Display userblock if any:
     displayUserblock();
   }
   else {
-    $content = "<CENTER><FORM METHOD=\"post\" ACTION=\"account.php\">\n <P>Username:<BR><INPUT TYPE=\"text\" NAME=\"uname\" MAXLENGTH=\"50\" SIZE=\"12\"></P>\n<P>Password:<BR> <INPUT TYPE=\"password\" NAME=\"pass\" MAXLENGTH=\"25\" SIZE=\"12\"></P>\n<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Login\">\n</FORM>\n<P><A HREF=\"account.php\">Register</A> as new user.<BR><A HREF=\"account.php\">Forgot</A> your password?</P></CENTER>";
+    $content  = "<CENTER><FORM METHOD=\"post\" ACTION=\"account.php\">\n";
+    $content .= "<P>Username:<BR><INPUT NAME=userid MAXLENGTH=50 SIZE=12></P>\n";
+    $content .= "<P>Password:<BR> <INPUT TYPE=password NAME=passwd MAXLENGTH=25 SIZE=12></P>\n";
+    $content .= "<INPUT TYPE=submit NAME=act VALUE=\"Login\">\n";
+    $content .= "</FORM>\n";
+    $content .= "<P><A HREF=\"account.php?act=new\">Register</A> as new user.<BR><A HREF=\"account.php?act=forgot\">Forgot</A> your password?</P></CENTER>";
     $theme->box("Login", $content);
   }
 }
@@ -191,16 +176,12 @@ function displayAccountSettings($theme) {
   
   if ($user) { 
     ### Display account settings:
-    $content .= "<LI><A HREF=\"account.php\">User info</A></LI>";
-    $content .= "<LI><A HREF=\"account.php?op=edituser\">Edit user info</A></LI>";
-    $content .= "<LI><A HREF=\"account.php?op=edithome\">Customize homepage</A></LI>";
-    $content .= "<LI><A HREF=\"account.php?op=editcomm\">Customize comments</A></LI>";
-    $content .= "<LI><A HREF=\"account.php?op=logout\">Logout</A></LI>";
+    $content  = "<LI><A HREF=\"account.php\">User info</A></LI>";
+    $content .= "<LI><A HREF=\"account.php?act=edituser\">Edit user info</A></LI>";
+    $content .= "<LI><A HREF=\"account.php?act=editpage\">Customize page</A></LI>";
+    $content .= "<LI><A HREF=\"account.php?act=logout\">Logout</A></LI>";
 
-    ### Decode user cookie to extract name:
-    $cookie = cookiedecode($user);
-
-    $theme->box("$cookie[1]'s acount", "$content");
+    $theme->box("$user->userid's account", "$content");
   }
 }
 

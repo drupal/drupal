@@ -481,9 +481,9 @@ function expireThread($expire, $number = 40) {
 
 
 function displayForm($id = "0") {
-  global $anonymous, $login, $support, $subscribe, $bgcolor2, $bgcolor3, $cookie;
+  global $anonymous, $login, $support, $subscribe, $bgcolor2, $bgcolor3, $user;
 
-  if ($cookie[1]) printForm($id, $cookie[1]);
+  if ($user->userid) printForm($id, $user->userid);
   else printForm($id, $anonymous);
 }
 
