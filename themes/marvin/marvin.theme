@@ -137,7 +137,7 @@
    function footer() {
      ?>
        </TD>
-       <TD VALIGN="top" WIDTH=\"200\">
+       <TD VALIGN="top" WIDTH="200">
          <?php
           theme_account($this);
           theme_blocks("all", $this);
