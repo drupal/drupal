@@ -577,6 +577,11 @@ function node_search($op = 'search', $keys = null) {
     case 'reset':
       variable_del('node_cron_last');
       return;
+    case 'status':
+      $last = variable_get('node_cron_last', 0);
+      $total = db_result(db_query('SELECT COUNT(*) FROM {node} WHERE status = 1 AND moderate = 0'));
+      $remaining = db_result(db_query('SELECT COUNT(*) FROM {node} n LEFT JOIN {node_comment_statistics} c ON n.nid = c.nid WHERE n.status = 1 AND n.moderate = 0 AND (n.created > %d OR n.changed > %d OR c.last_comment_timestamp > %d) ORDER BY GREATEST(n.created, n.changed, c.last_comment_timestamp) ASC', $last, $last, $last));
+      return array('remaining' => $remaining, 'total' => $total);
     case 'search':
       $find = do_search($keys, 'node', 'INNER JOIN {node} n ON n.nid = i.sid '. node_access_join_sql() .' INNER JOIN {users} u ON n.uid = u.uid', 'n.status = 1 AND '. node_access_where_sql());
       $results = array();
