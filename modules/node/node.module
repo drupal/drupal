@@ -1013,7 +1013,7 @@ function node_feed($nodes = 0, $channel = array()) {
   foreach ($languages as $key => $value) break;
   if (!$channel["language"]) $channel["language"] = $key ? $key : "en";
   $output .= "<rss version=\"". $channel["version"] . "\">\n";
-  $output .= format_rss_channel($channel["title"], $channel["link"], $channel["description"], $items, $channel["language"], array("pubdate" => date("r", $pubdate)));
+  $output .= format_rss_channel($channel["title"], $channel["link"], $channel["description"], $items, $channel["language"], array("pubDate" => date("r", $pubdate)));
   $output .= "</rss>\n";
 
   header("Content-Type: text/xml");
