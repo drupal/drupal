@@ -1,288 +1,294 @@
 <?php
 // $Id$
 
-// description:
-//   A multiple choice Poll allows you to submit a question to other users to which anyone can answer. To be published on Tipic, the Poll has to be approved by the moderators.
-
-/*
-
-class Poll {
-  function Poll($poll) {
-    $this = new Node($poll);
-    $this->runtime = $poll[runtime];
-    $this->active = $poll[active];
-    $this->voters = $poll[voters];
-    $this->choice = $poll[choice];
-    $this->chvotes = $poll[chvotes];
-    $this->chid = $poll[chid];
-  }
-}
-
-function poll_cron() {
-  $result = _node_get(array("type" => "poll"));
-  while ($poll = db_fetch_array($result)) {
-    if (($poll[active]) && ($poll[runtime])) {
-      if (($poll[timestamp] + $poll[runtime]) < time()) {
-        $poll[active] = 0;
-        node_save($poll, array(active));
-      }
-    }
-  }
-}
-
-function poll_delete($node) {
-  if ($node->nid)
-  {
-    db_query("DELETE FROM poll_choices WHERE nid='" . $node->nid . "'");
-  }
-}
-
-function poll_get_choices_array($poll) {
-  if (!is_array($poll[choice])) {
-    $result = db_query("SELECT * FROM poll_choices WHERE nid='" . $poll[nid] . "'");
-    if ($result) {
-      while ($choices = db_fetch_array($result)) {
-        $m = max($m, $choices[chvotes]);
-        $t += $choices[chvotes];
-        $poll[choice][$choices[chorder]] = $choices[chtext];
-        $poll[chvotes][$choices[chorder]] = $choices[chvotes];
-        $poll[chid][$choices[chorder]] = $choices[chid];
-      }
-      if ($poll[choice]) ksort($poll[choice]);
-    }
-  }
-  $poll[maxvotes] = max(1, $m);
-  $poll[totalvotes] = $t;
-  return $poll;
-}
-
-function poll_get_choices_obj($poll) {
-  if (!is_array($poll->choice)) {
-    $result = db_query("SELECT * FROM poll_choices WHERE nid='" . $poll->nid . "'");
-    if ($result) {
-      while ($choices = db_fetch_array($result)) {
-        $m = max($m,$choices[chvotes]);
-        $t += $choices[chvotes];
-
-        $poll->choice[$choices[chorder]] = $choices[chtext];
-        $poll->chvotes[$choices[chorder]] = $choices[chvotes];
-        $poll->chid[$choices[chorder]] = $choices[chid];
-      }
-      if ($poll->choice) ksort($poll->choice);
-    }
-  }
-  $poll->maxvotes = max(1, $m);
-  $poll->totalvotes = $t;
-  return $poll;
-}
-
-function poll_status() {
-  return array(dumped, queued, posted);
-}
-
-function poll_search($keys) {
-  global $PHP_SELF, $status;
-  $result = db_query("SELECT n.*, p.* FROM poll p LEFT JOIN node n ON n.nid = p.nid AND n.lid = p.lid WHERE n.status = '$status[posted]' AND (n.title LIKE '%$keys%') LIMIT 20");
-  while ($poll = db_fetch_object($result)) {
-    $find[$i++] = array("title" => check_output($poll->title), "link" => (strstr($PHP_SELF, "admin.php") ? "admin.php?mod=poll&op=edit&id=$poll->nid" : "node.php?id=$poll->nid"), "user" => $poll->name, "date" => $poll->timestamp);
-  }
-  return $find;
-}
-
-function poll_help() {
- ?>
-   <p>Poll.module allows you to run simple multiple choice polls on your site. After creating the necessary categories, you can add a poll through this administration interface.</p>
-   <p>The poll.module also has a block to show the latest poll. If you combine it with a poll category that doesn't promote to the mainpage, you'll get a side-block only poll system.</p>
-   <p>If you want to set a limit on the duration of a poll, use the <i>Poll Duration</i> setting. After the specified interval, the poll will automatically be closed, preventing anymore voting.</p>
- <?php
-}
-
-function poll_graph($val) {
-  global $theme;
-  $clrfill = $theme->foreground ? $theme->foreground : "#000000";
-  $clrempty = $theme->background ? $theme->background : "#ffffff";
-  $p = round($val * 100);
-  return "<table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\"><tr>" . ($p ? "<td width=\"" . $p . "%\" style=\"background-color: $clrfill;\"><span style=\"font-size: 4pt;\">&nbsp;</span></td>" : "") . ($p < 100 ? "<td style=\"background-color: $clrempty;\" width=\"" . (100 - $p) . "%\"><span style=\"font-size: 4pt;\">&nbsp;</span></td>":"") . "</tr></table>";
-}
-
-function poll_view($node, $main = 0, $block = 0) {
-  global $theme, $op, $user, $chid;
-
-  $pollop = $op;
-
-  if (($node->active) && (!field_get($node->voters, $user->name))) $voting = 1;
-  if ((!$voting) && ($pollop != "View")) $pollop = "View";
-
-  switch ($pollop) {
-    case "Vote":
-      if (($node->active) && (!field_get($node->voters, $user->name))) {
-        $result = db_query("UPDATE poll_choices SET chvotes=chvotes+1 WHERE nid='" . $node->nid . "' && chid='" . check_input($chid) . "'");
-        if (($result) && ($user)) {
-          $new = node_get_array(array("nid" => $node->nid));
-          $new[voters] = field_set($node->voters, $user->name, 1);
-          node_save($new, array(voters));
-          $node = node_get_object(array("nid" => $node->nid));
-        }
-      }
-
-    case "View":
-      $node = poll_get_choices_obj($node);
-
-      $title = "<b>" . check_output($node->title) . "</b>";
-      $footer = "<small>(" . format_plural($node->totalvotes ? $node->totalvotes : 0, "vote", "votes") . ")</small>";
-
-      $node->totalvotes = max(1, $node->totalvotes);
-
-      foreach ($node->choice as $key => $value) {
-        if ($value) {
-          if ($block) {
-            $output .= (!$block ? "<br>" : "") . check_output($value) . "<br><table width=\"90%\" align=\"center\" cellspacing=\"1\" cellpadding=\"0\"><tr><td width=\"70%\" valign=\"middle\" align=\"left\">" . poll_graph($node->chvotes[$key] / $node->maxvotes, $theme->pollfill, $theme->pollempty) . "</td><td align=\"right\">" . round(($node->chvotes[$key] / $node->totalvotes) * 100) . "%</td></tr></table>";
-          } else {
-            $output .= "<table cellspacing=\"1\" cellpadding=\"0\" width=\"100%\"><tr><td width=\"20%\" valign=\"middle\" align=\"left\">" . check_output($value) . "</td><td width=\"70%\">" . poll_graph($node->chvotes[$key] / $node->maxvotes, $theme->pollfill, $theme->pollempty) . "</td><td width=\"10%\" align=\"right\">" . round(($node->chvotes[$key] / $node->totalvotes) * 100) . "%</td></tr></table>";
-          }
-        }
-      }
-      $output .= "<div align=\"center\">" . $footer . "</div>";
-      break;
-
-    default:
-      $node = poll_get_choices_obj($node);
-
-      $title = "<b>" . check_output($node->title) . "</b>";
-      $footer = "<small>(" . format_plural($node->totalvotes ? $node->totalvotes : 0, "vote", "votes") . ")</small>";
-
-      $node->totalvotes = max(1, $node->totalvotes);
-
-      $output .= "<table align=\"center\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\"><tr><td align=\"left\">";
-      foreach ($node->choice as $key => $value) {
-        if ($value) {
-          $output .= "<input type=\"radio\" name=\"chid\" value=\"" . $node->chid[$key] . "\">&nbsp;" . check_output($value) . "<br>";
-        }
-      }
-      if ($block) {
-        $output .= "</td></tr></table><br><div align=\"center\">" . form_submit("Vote") . "<br>" . $footer  . "</div>";
-      } else {
-        $output .= "</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=\"center\"><br><div align=\"center\">" . form_submit("Vote") . "<br>" . $footer  . "</div></td></tr></table>";
-      }
-      $output = form($output);
-   }
-
-
-   if (!$block) {
-     $node->body = $output;
-     $theme->node($node, $main);
-   }
-   return array("title" => $title, "content" => $output);
-}
-
-function poll_form($edit = array(), $nocheck = 0) {
-  global $user;
-
-  $duration = array(0 => t("Unlimited"), 86400 => format_interval(86400), 172800 => format_interval(172800), 345600 => format_interval(345600), 604800 => format_interval(604800), 1209600 => format_interval(1209600), 2419200 => format_interval(2419200), 4838400 => format_interval(4838400), 9676800 => format_interval(9676800), 31536000 => format_interval(31536000));
-  $active = array(0 => "Closed", 1 => "Active");
-
-  $admin = ($edit[nid] && user_access("administer nodes")) ? 1 : 0;
-
-  if ($admin && !is_array($edit[choices])) $edit = poll_get_choices_array($edit);
-
-  // Mini-form for number of choiceboxes
-  $choices = $edit[choices] ? $edit[choices] : max(2, count($edit[choices]) ? count($edit[choices]) : 5);
-  for ($c = 2; $c <= 20; $c++) $opts[$c]=$c;
-  $form .= form_select(t("Number of choices"), "choices", $choices, $opts, t("This box only specifies the number of boxes in this form, it doesn't have to equal the actual amount of choices in the poll."));
-  $form .= form_submit(t("Preview")) . "<br><br><br>";
-
-  // Main form
-  $form .= form_item(t("Your name"), ($edit[name] ? $edit[name] : ($user->name ? $user->name : variable_get(anonymous, "Anonymous"))));
-  $form .= form_hidden("name", $edit[name]);
-  $form .= form_textfield(t("Question"), "title", $edit[title], 50, 127);
-
-  for ($a = 0; $a < $choices; $a++) {
-    $form .= form_textfield(t("Choice"). " " . ($a + 1), "choice][$a", $edit[choice][$a], 50, 127);
-    if ($admin) $form .= form_textfield(strtr(t("Votes for choice %n"), array("%n" => ($a + 1))), "chvotes][$a", $edit[chvotes][$a] ? $edit[chvotes][$a] : 0, 7, 7);
+function poll_access($op, $node) {
+  if ($op == "view") {
+    return $node->status;
   }
 
-  $form .= form_select(t("Poll duration"), "runtime", $edit[runtime] ? $edit[runtime] : t("1 week"), $duration, t("After this period, the poll will automatically be closed."));
-  if ($admin) $form .= form_select(t("Poll status"), "active", $edit[active], $active);
-  $form .= node_attributes_edit("poll", $edit);
-
-  // hidden fields:
-  if ($edit[nid] > 0) {
-    $form .= form_hidden("nid", $edit[nid]);
-  }
-
-  if ($nocheck) {
-    $form .= form_submit(t("Preview"));
-  }
-  else if (!$edit[title]) {
-    $form .= "<FONT COLOR=\"red\">". t("Warning: you did not supply a question.") ."</FONT><P>\n";
-    $form .= form_submit(t("Preview"));
-  }
-  else if ((!$edit[choice][0]) && (!$edit[choice][1])) {
-    $form .= "<FONT COLOR=\"red\">". t("Warning: you must supply at least 2 choices.") ."</FONT><P>\n";
-    $form .= form_submit(t("Preview"));
-  }
-  else {
-    $form .= form_submit(t("Preview"));
-    $form .= form_submit(t("Submit"));
-  }
-
-  return form($form);
-}
-
-function poll_save($edit) {
-  global $status, $user;
-
-  if (!$edit[nid]) {
-    $nid = node_save($edit, array(active => 1, attributes => node_attributes_save("poll", $edit), author => $user->uid, comment => variable_get("poll_comment", 0), moderate => variable_get("poll_moderate", ""), promote => variable_get("poll_promote", 0), runtime, score => 0, status => variable_get("poll_status", $status[queued]), timestamp => time(), title, type => "poll", votes => 0, voters => ""));
-  }
-  else if (user_access("administer nodes")) {
-    $nid = node_save($edit, array(active, attributes => node_attributes_save("poll", $edit), runtime, title, type => "poll"));
-    db_query("DELETE FROM poll_choices WHERE nid='" . $nid . "'");
-  }
-  if ($nid) {
-    foreach ($edit[choice] as $key => $value) {
-      if ($value) {
-        $v[] = "('" . $nid . "', '" . check_input($value) . "', '". check_input($edit[chvotes][$key]) ."', '". check_input($key) ."')";
-      }
-    }
-    db_query("INSERT INTO poll_choices (nid, chtext, chvotes, chorder) VALUES " . implode(",", $v));
+  if ($op == "create") {
+    return 1;
   }
 }
 
 function poll_block() {
-  global $status;
-  $result = _node_get(array("type" => "poll"));
-  while ($poll = db_fetch_object($result)) {
-    if (($poll->active) && ($poll->status == $status[posted])) {
-      $content = poll_view($poll, 0, 1);
-      $output = "<b>" . $content[title] . "</b><br>" . $content[content] . "<br><div align=\"center\">[ <a href=\"node.php?id=" . $poll->nid . "\">" . t("read more") . "</a> ]</div>";
-      break;
+  $timestamp = db_result(db_query("SELECT MAX(created) FROM node WHERE type='poll' AND status='1'"));
+  if ($timestamp) {
+    $poll = node_load(array("type" => "poll", "created" => $timestamp, "status" => "1"));
+    if ($poll->nid) {
+      // Poll_view dumps the output into $poll->body
+      poll_view($poll, 0, 1);
     }
   }
   $blocks[0][subject] = "Latest poll";
-  $blocks[0][content] = $output ? $output : "No active polls.";
+  $blocks[0][content] = $poll->body;
   $blocks[0][info] = "Most recent poll";
-  $blocks[0][link] = "index.php";
   return $blocks;
 }
 
+function poll_cron() {
+  // Close polls that have exceeded their allowed runtime
+  $result = db_query("SELECT p.lid FROM poll p LEFT JOIN node n ON p.nid=n.nid WHERE (n.created + p.runtime) < '" . time() . "' AND p.active = '1' AND p.runtime != '0'");
+  while ($poll = db_fetch_object($result)) {  
+    db_query("UPDATE poll SET active='0' WHERE lid='$poll->lid'");
+  } 
+}
 
-function poll_user() {
-  global $edit, $op, $theme, $user;
+function poll_delete($node) {
+  db_query("DELETE FROM poll WHERE nid='$node->nid'");
+  db_query("DELETE FROM poll_choices WHERE nid='$node->nid'");
+}
 
-  switch($op) {
-    case t("Refresh"):
-      $refresh = 1;
-    case t("Preview"):
-      $theme->box(t("Submit"), poll_form($edit, $refresh));
-      break;
-    case t("Submit"):
-      poll_save($edit);
-      $theme->box(t("Submit"), t("Thank you for your submission."));
-      break;
-    default:
-      $theme->box(t("Submit"), poll_form());
+function poll_form(&$node, &$help, &$error) {
+  $admin = user_access("administer nodes");
+
+  $_duration = array(0 => t("Unlimited"), 86400 => format_interval(86400), 172800 => format_interval(172800), 345600 => format_interval(345600), 604800 => format_interval(604800), 1209600 => format_interval(1209600), 2419200 => format_interval(2419200), 4838400 => format_interval(4838400), 9676800 => format_interval(9676800), 31536000 => format_interval(31536000));
+  $_active = array(0 => "Closed", 1 => "Active");
+
+  $node->choices = $node->choices ? $node->choices : max(2, count($node->choices) ? count($node->choices) : 5);
+
+  if (isset($node->title)) {
+    // Check for at least two options and validate amount of votes:
+    for ($i = 0; $i < $node->choices; $i++) {
+      if ($node->choice[$i] != "") {
+        $actualchoices++;
+      }
+
+      if ($node->chvotes[$i] < 0) {
+        $error["chvotes][$i"] = "<span style=\"color: red;\">" . t("Negative values are not allowed.") . "</span>";
+      }
+    }
+
+    if ($actualchoices < 2) {
+      $error["choice][0"] = "<span style=\"color: red;\">" . t("You must fill in at least two choices.") . "</span>";
+    }
+  }
+  else {
+    $help = variable_get("poll_help", "");
+  }
+
+  for ($c = 2; $c <= 20; $c++) {
+    $opts[$c] = $c;
+  }
+  $output .= form_select(t("Number of choices"), "choices", $node->choices, $opts, t("This item only specifies the number of boxes in this form, but it doesn't have to equal the actual amount of options: you can leave the extra boxes empty."));
+  $output .= form_submit(t("Preview")) . "<br><br><br>";
+
+  for ($a = 0; $a < $node->choices; $a++) {
+    $output .= form_textfield(t("Choice"). " " . ($a + 1), "choice][$a", $node->choice[$a], 50, 127, $error["choice][$a"]);
+    if ($admin) {
+      $output .= form_textfield(strtr(t("Votes for choice %n"), array("%n" => ($a + 1))), "chvotes][$a", $node->chvotes[$a] ? $node->chvotes[$a] : 0, 7, 7, $error["chvotes][$a"]);
+    }
+  }
+
+  if ($admin) {
+    $output .= form_select(t("Poll status"), "active", isset($node->active) ? $node->active : 1, $_active);
+  }
+
+  $output .= form_select(t("Poll duration"), "runtime", $node->runtime ? $node->runtime : 0, $_duration, t("After this period, the poll will automatically be closed."));
+
+  return $output;
+}
+
+function poll_help() {
+ ?>
+ <?php
+}
+
+function poll_insert($node) {
+  if (!user_access("administer nodes")) {
+    // Make sure all votes are 0 initially
+    for ($i = 0; $i < count($node->chvotes); $i++)
+      $node->chvotes[$i] = 0;
+    $node->active = 1;
+  }
+
+  db_query("INSERT INTO poll (nid, runtime, voters, active) VALUES ('$node->nid', '$node->runtime', '', '$node->active')");
+  
+  for ($i = 0; $i < $node->choices; $i++) {
+    $choice->chtext = filter($node->choice[$i]);
+    $choice->chvotes = (int)$node->chvotes[$i];
+    $choice->chorder = $i;
+
+    if ($choice->chtext != "") {
+      db_query("INSERT INTO poll_choices (nid, chtext, chvotes, chorder) VALUES ('$node->nid', '$choice->chtext', '$choice->chvotes', '$choice->chorder')");
+    }
   }
 }
-*/
+
+function poll_link($type) {
+  if ($type == "menu.create" && user_access("post content")) {
+    $links[] = "<a href=\"module.php?mod=node&op=add&type=poll\" title=\"". t("Add a new poll.") ."\">". t("create poll") ."</a>";
+  }
+
+  return $links ? $links : array();
+}
+
+function poll_load($node) {
+  // Load the appropriate choices into the $node object
+  $poll = db_fetch_object(db_query("SELECT runtime, voters, active FROM poll WHERE nid = '$node->nid'"));
+  
+  $result = db_query("SELECT chtext, chvotes, chorder FROM poll_choices WHERE nid='$node->nid' ORDER BY chorder");
+  while ($choice = db_fetch_object($result)) {
+    $poll->choice[$choice->chorder]  = $choice->chtext;
+    $poll->chvotes[$choice->chorder] = $choice->chvotes;
+  }
+  return $poll;
+}
+
+function poll_node($field) {
+  $info["name"] = t("poll");
+  $info["description"] = t("A poll is a multiple-choice question which visitors can vote on.");
+
+  return $info[$field];
+}
+
+function poll_perm() {
+  return array("vote on polls");
+}
+
+function poll_save($op, $node) {
+  if ($op == "approve") {
+    return array("status" => 1, "promote" => 1);
+  }
+
+  if ($op == "create") {
+    if (user_access("administer nodes")) {
+      return array("runtime", "active", "choice", "choices", "chvotes", "body" => "", "teaser" => poll_teaser($node));
+    }
+    else {
+      return array("runtime", "active", "choice", "choices", "chvotes", "body" => "", "moderate" => 1, "teaser" => poll_teaser($node));
+    }
+  }
+
+  if ($op == "decline") {
+    return array("status" => 0, "promote" => 0);
+  }
+
+  if ($op == "update") {
+    return array("runtime", "active", "choice", "choices", "chvotes");
+  }
+}
+
+function poll_teaser($node) {
+  // Create a simple teaser that lists all the choices
+  foreach ($node->choice as $k => $v) {
+    if ($v != "") {
+      $teaser .= "* $v\n";
+    }
+  }
+  return $teaser;
+}
+
+function poll_view(&$node, $main = 0, $block = 0) {
+  global $theme, $user;
+  
+  /* When a poll is displayed twice on the same page (e.g. on the front page and in the side bar)
+     we only want to vote on one of them. We keep count using $pollid */  
+  global $pollidcount, $pollvote, $pollid, $REMOTE_ADDR, $REQUEST_URI;
+  $pollidcount++;
+  
+  // Only accept votes on specific cases to prevent double voting
+  $allowvotes = false;
+  if (user_access("vote on polls")) {
+    if ($user->uid) {
+      // Pad the UID with underscores to allow a simple strstr() search
+      $id = "_" . $user->uid . "_";
+    }
+    else {
+      $id = $REMOTE_ADDR;
+    }
+    if (!strstr($node->voters, $id)) {
+      $allowvotes = $node->active;
+    }
+  } 
+
+  if (($pollid == $pollidcount) && isset($pollvote) && ($allowvotes)) {
+    // The user has submitted a valid vote
+    if (!empty($node->choice[$pollvote])) {   
+      $node->voters = $node->voters ? ($node->voters . " " . $id) : $id;
+      db_query("UPDATE poll SET voters='$node->voters' WHERE nid='$node->nid'");
+      db_query("UPDATE poll_choices SET chvotes = chvotes + 1 WHERE nid='$node->nid' AND chorder='$pollvote'");
+      $allowvotes = false;
+      $node->chvotes[$pollvote]++;
+    }
+  }
+  
+  if ($allowvotes) {
+    // Display the vote form
+    $url = $REQUEST_URI . (strstr($REQUEST_URI, "?") ? "&" : "?") . "pollid=" . $pollidcount; 
+    $output .= "<form action=\"$url\" method=\"post\">";
+    $output .= "<table border=\"0\" align=\"center\"><tr><td>";
+
+    foreach ($node->choice as $key => $value) {
+      if ($value != "") {
+        $output .= "<input type=\"radio\" name=\"pollvote\" value=\"$key\" /> $value<br />";
+      }
+    }
+    if ($block) {
+      $output .= "</td></tr><tr><td><div align=\"center\">" . form_submit(t("Vote")) . "</div></td></tr></table>";
+    } else {
+      $output .= "</td><td valign=\"middle\"><div align=\"right\">&nbsp;&nbsp;&nbsp;" . form_submit(t("Vote")) . "</div></td></tr></table>";
+    }
+    $output .= "</form>";
+  }
+  else {    
+    // Display the results
+    
+    // Count the votes and find the maximum
+    foreach ($node->choice as $key => $value) {
+      $votestotal += $node->chvotes[$key];
+      $votesmax = max($votesmax, $node->chvotes[$key]);
+    }
+    $votesmax = max($votesmax, 1);
+    
+    // Define CSS classes for the bars
+    $output .= "<style type=\"text/css\">";
+    $output .= "td.pollfg { background-color: " . $theme->foreground . "; font-size: 5pt; }";
+    $output .= "td.pollbg { background-color: " . $theme->background . "; font-size: 5pt; }";
+    $output .= "</style>";
+        
+    foreach ($node->choice as $key => $value) {
+      if ($value != "") {
+        $width = round($node->chvotes[$key] * 100 / $votesmax);
+        $percentage = round($node->chvotes[$key] * 100 / max($votestotal, 1));
+
+        $output .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"95%\" align=\"center\"><tr><td>$value</td><td><div align=\"right\"> $percentage%" . (!$block ? " (" . $node->chvotes[$key] . " votes)" : "") . "</div></td></tr></table>";
+        if ($width == 0) {
+          $output .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"95%\" align=\"center\"><tr><td class=\"pollbg\" width=\"100%\">&nbsp;</td></tr></table>"; 
+        }
+        else if ($width == 100) {
+          $output .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"95%\" align=\"center\"><tr><td class=\"pollfg\" width=\"100%\">&nbsp;</td></tr></table>";
+        }
+        else {
+          $output .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"95%\" align=\"center\"><tr><td class=\"pollfg\" width=\"" . $width . "%\">&nbsp;</td><td class=\"pollbg\" width=\"" . (100 - $width) . "%\">&nbsp;</td></tr></table>";
+        }
+      }
+    }
+    $output .= "<br><div align=\"center\">Total votes: " . $votestotal . "</div>";
+  }
+  // Force the output on both the mainpage and elsewhere
+  $node->body = $output;
+  $node->teaser = $output;
+
+  // We also use poll_view() for the side-block
+  if ($block == 0) {
+    $theme->node($node, $main);
+  }
+}
+
+function poll_update($node) {
+  db_query("UPDATE poll SET runtime='$node->runtime', active='$node->active' WHERE nid='$node->nid'");
+
+  db_query("DELETE FROM poll_choices WHERE nid='$node->nid'");
+  for ($i = 0; $i < $node->choices; $i++) {
+    $choice->chtext = filter($node->choice[$i]);
+    $choice->chvotes = (int)$node->chvotes[$i];
+    $choice->chorder = $i;    
+
+    if ($choice->chtext != "") {
+      db_query("INSERT INTO poll_choices (nid, chtext, chvotes, chorder) VALUES ('$node->nid', '$choice->chtext', '$choice->chvotes', '$choice->chorder')");
+    }
+  }
+}
+
 ?>
