@@ -314,7 +314,7 @@ function locale($string) {
     $locale_t = unserialize($cache->data);
   }
 
-  if ($locale_t[$string] != "") {
+  if (array_key_exists($string, $locale_t)) {
     $string = $locale_t[$string];
   }
   else {
