@@ -36,7 +36,7 @@ function module_list() {
       }
     }
     closedir($handle);
-    sort($list);
+    asort($list);
   }
 
   return $list;
