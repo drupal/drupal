@@ -16,8 +16,8 @@ LEGEND
 
 --------------------------------------------------------------------------------
 
-BLOCK SYSTEM
-M: Kjartan Mannes <kjartan@drupal.org>
+BLOG API
+M:James Walker <walkah@walkah.net>
 S: maintained
 
 CODING STYLE CHECKER
@@ -26,10 +26,6 @@ S: maintained
 
 DISTRIBUTED AUTHENTICATION MODULES
 M: Moshe Weitzman <weitzman@tejasa.com>
-S: maintained
-
-FORUM MODULE
-M: Marco Molinari <marco@porciletto.org>
 S: maintained
 
 LOCALE MODULE
@@ -48,17 +44,13 @@ STATISTICS MODULE
 M: Jeremy Andrews <jeremy@kerneltrap.com>
 S: maintained
 
-TAXONOMY SYSTEM
-M: Marco Molinari <marco@porciletto.org>
-S: maintained
-
 USER SYSTEM
 M: Moshe Weitzman <weitzman@tejasa.com>
 S: maintained
 
 DEBIAN PACKAGE
 M: Hugo Espuny <hec@debian.org>
-S: fixes/patches
+S: orphan
 
 THE REST:
 M: Dries <dries@drupal.org>
