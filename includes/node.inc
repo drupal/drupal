@@ -18,7 +18,19 @@ function _node_get($conditions) {
   }
 
   if ($type) {
-    return db_query("SELECT n.*, l.*, u.uid, u.name, SUM(m.score) / COUNT(m.cid) AS score, COUNT(m.cid) AS votes FROM node n LEFT JOIN $type l ON n.lid = l.lid AND n.nid = l.nid LEFT JOIN user u ON n.author = u.uid LEFT JOIN moderate m ON m.nid = n.nid WHERE $where GROUP BY n.nid ORDER BY n.timestamp DESC");
+    $result = db_query("SELECT n.*, l.*, u.uid, u.name FROM node n LEFT JOIN $type l ON n.lid = l.lid AND n.nid = l.nid LEFT JOIN users u ON n.author = u.uid WHERE $where ORDER BY n.timestamp DESC");
+
+/*
+    db_query ("BEGIN");
+    db_query ("CREATE TEMPORARY TABLE modhole AS SELECT n.nid, SUM(m.score) / COUNT(m.cid) AS score, COUNT(m.cid) AS votes FROM node n LEFT JOIN $type l ON n.lid = l.lid AND n.nid = l.nid LEFT JOIN users u ON n.author = u.uid LEFT JOIN moderate m ON m.nid = n.nid WHERE $where GROUP BY n.nid");
+    $result = db_query ("SELECT n.*, l.*, u.uid, u.name, m.score AS score, m.votes AS votes FROM node n INNER JOIN modhole m ON m.nid = n.nid LEFT JOIN $type l ON n.lid = l.lid AND n.nid = l.nid LEFT JOIN users u ON n.author = u.uid WHERE $where ORDER BY n.timestamp DESC");
+    db_query("DROP TABLE modhole");
+    db_query("COMMIT");
+
+    'score' isn't in GROUP BY
+*/
+
+    return $result;
   }
 }
 
@@ -64,6 +76,8 @@ function node_get_comments($nid) {
 }
 
 function node_save($node, $filter) {
+  global $db_handle;
+
   $rows = array(nid, lid, cid, tid, type, title, score, votes, author, status, comment, promote, moderate, attributes, timestamp, timestamp_posted, timestamp_queued, timestamp_hidden);
 
   if ($node[nid] > 0) {
@@ -118,26 +132,34 @@ function node_save($node, $filter) {
       $f2 = implode(", ", $f2);
       $v2 = implode(", ", $v2);
 
-      // insert data, try to roll-back when something goes wrong:
-      $result = db_query("INSERT INTO node ($f1) VALUES ($v1)");
-      if ($result && $nid = db_insert_id()) {
-        $result = db_query("INSERT INTO $filter[type] ($f2, nid) VALUES ($v2, $nid)");
-        if ($result && $lid = db_insert_id()) {
-          $result = db_query("UPDATE node SET lid = '$lid' WHERE nid = '$nid'");
-          if ($result) {
-            watchdog("special", "node: added $filter[type] '$node[title]'");
-          }
-          else {
-            watchdog("warning", "node: added $filter[type] '$node[title]' - failed");
-          }
-        }
-        else {
-          db_query("DELETE FROM node WHERE nid = '$nid'");
-          watchdog("warning", "node: added $filter[type] '$node[title]' - failed");
-        }
+
+      $result = db_query ("BEGIN");
+      if (db_error ($result)) {
+        watchdog ("error", "database: ". $result->getMessage () ."\nquery: ". htmlspecialchars ("BEGIN"));
       }
       else {
-        watchdog("warning", "node: added $filter[type] '$node[title]' - failed");
+
+        $nid = $db_handle->nextId ("node_nid");
+        $lid = $db_handle->nextId ($filter[type] . "_lid");
+
+        $result = db_query ("INSERT INTO node ($f1, nid, lid) VALUES ($v1, '$nid', '$lid')");
+        if (db_error ($result)) {
+          watchdog("warning", "node: added $filter[type] '$node[title]' - failed");
+        }
+        else {
+          $result = db_query ("INSERT INTO $filter[type] ($f2, nid, lid) VALUES ($v2, '$nid', '$lid')");
+          if (db_error ($result)) {
+            watchdog("warning", "node: added $filter[type] '$node[title]' - failed");
+          }
+          else {
+            $result = db_query ("COMMIT");
+            if (db_error ($result)) {
+              watchdog ("error", "database: ". $result->getMessage () ."\nquery: ". htmlspecialchars ("BEGIN"));
+              $db_handle->rollback ();
+            }
+            watchdog("special", "node: added $filter[type] '$node[title]'");
+          }
+        }
       }
     }
 
@@ -163,9 +185,7 @@ function node_form($node) {
 }
 
 function node_status($value) {
-
   $status = array("dumped", "expired", "queued", "posted");
-
   if (module_exist($value)) {
     return array_intersect($status, node_invoke($value, "status"));
   }

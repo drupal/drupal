@@ -34,7 +34,7 @@ function error_handler($errno, $message, $filename, $line, $variables) {
 
 function watchdog($type, $message) {
   global $user;
-  db_query("INSERT INTO watchdog (user, type, message, location, hostname, timestamp) VALUES ('$user->uid', '". check_input($type) ."', '". check_input($message) ."', '". check_input(getenv("REQUEST_URI")) ."', '". check_input(getenv("REMOTE_ADDR")) ."', '". time() ."')");
+  db_query("INSERT INTO watchdog (userid, type, message, location, hostname, timestamp) VALUES ('$user->uid', '". check_input($type) ."', '". check_input($message) ."', '". check_input(getenv("REQUEST_URI")) ."', '". check_input(getenv("REMOTE_ADDR")) ."', '". time() ."')");
 }
 
 function throttle($type, $rate) {

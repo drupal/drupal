@@ -59,10 +59,10 @@ function module_rehash_blocks($name) {
         $block[$item] = addslashes($data);
       }
       if (!db_fetch_object(db_query("SELECT * FROM blocks WHERE module = '$name' AND name = '$block[info]'"))) {
-        db_query("INSERT INTO blocks (name, module, offset) VALUES ('$block[info]', '$name', '$offset')");
+        db_query("INSERT INTO blocks (name, module, delta) VALUES ('$block[info]', '$name', '$offset')");
       }
       else {
-        db_query("UPDATE blocks SET offset = '$offset', remove = '0' WHERE module = '$name' AND name = '$block[info]'");
+        db_query("UPDATE blocks SET delta = '$offset', remove = '0' WHERE module = '$name' AND name = '$block[info]'");
       }
     }
   }

@@ -64,7 +64,7 @@ function queue_vote($id, $vote) {
 function queue_overview() {
   global $status, $theme, $user;
 
-  $result = db_query("SELECT n.*, u.name, u.uid FROM node n LEFT JOIN user u ON n.author = u.uid WHERE n.status = '$status[queued]'");
+  $result = db_query("SELECT n.*, u.name, u.uid FROM node n LEFT JOIN users u ON n.author = u.uid WHERE n.status = '$status[queued]'");
 
   $content .= "<TABLE BORDER=\"0\" CELLSPACING=\"4\" CELLPADDING=\"4\">\n";
   $content .= " <TR><TH>". t("Subject") ."</TH><TH>". t("Author") ."</TH><TH>". t("Type") ."</TH><TH>". t("Score") ."</TH></TR>\n";
@@ -86,7 +86,7 @@ function queue_node($id) {
   $node = node_get_object(array(nid => $id));
 
   if ($user->uid == $node->author || field_get($node->users, $user->uid)) {
-    drupal_goto("node.php?id=$node->nid");
+    header("Location: node.php?id=$node->nid");
   }
   else {
     $queue_votes = array("neutral (+0)" => "+ 0", "post it (+1)" => "+ 1", "dump it (-1)" => "- 1");

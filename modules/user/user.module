@@ -22,13 +22,13 @@ function sess_read($key) {
 function sess_write($key, $value) {
   global $HTTP_SERVER_VARS;
 
-  db_query("UPDATE user SET hostname = '". check_input($HTTP_SERVER_VARS[REMOTE_ADDR]) ."', timestamp = '". time() ."' WHERE session = '$key'");
+  db_query("UPDATE users SET hostname = '". check_input($HTTP_SERVER_VARS[REMOTE_ADDR]) ."', timestamp = '". time() ."' WHERE session = '$key'");
 }
 
 function sess_destroy($key) {
   global $HTTP_SERVER_VARS;
 
-  db_query("UPDATE user SET hostname = '". check_input($HTTP_SERVER_VARS[REMOTE_ADDR]) ."', timestamp = '". time() ."', session = '' WHERE session = '$key'");
+  db_query("UPDATE users SET hostname = '". check_input($HTTP_SERVER_VARS[REMOTE_ADDR]) ."', timestamp = '". time() ."', session = '' WHERE session = '$key'");
 }
 
 function sess_gc($lifetime) {
@@ -45,16 +45,18 @@ function user_load($array = array()) {
 
   foreach ($array as $key => $value) {
     if ($key == "pass") {
-      $query .= "u.$key = PASSWORD('". addslashes($value) ."') AND ";
+      $query .= "u.$key = '" . md5($value) . "' AND ";
     }
     else {
       $query .= "u.$key = '". addslashes($value) ."' AND ";
     }
   }
+  $result = db_query("SELECT u.*, r.perm FROM users u LEFT JOIN role r ON u.role = r.name WHERE $query u.status < 3");
 
-  $result = db_query("SELECT u.*, r.perm FROM user u LEFT JOIN role r ON u.role = r.name WHERE $query u.status < 3");
+  $user = db_fetch_object($result);
 
-  return db_fetch_object($result);
+  return $user;
+
 
 }
 
@@ -64,25 +66,40 @@ function user_save($account, $array = array()) {
   ** Dynamically compose a SQL query:
   */
 
-  foreach ($array as $key => $value) {
-    if ($key == "pass") {
-      $query .= "$key = PASSWORD('". addslashes($value) ."'), ";
-    }
-    else {
-      $query .= "$key = '". addslashes($value) ."', ";
-    }
-  }
 
   /*
   ** Update existing or insert new user account:
   */
 
   if ($account->uid) {
-    db_query("UPDATE user SET $query timestamp = '". time() ."' WHERE uid = '$account->uid'");
+   foreach ($array as $key => $value) {
+      if ($key == "pass") {
+        $query .= "$key = '". md5($value) ."', ";
+      }
+      else {
+        $query .= "$key = '". addslashes($value) ."', ";
+      }
+    }
+    db_query("UPDATE users SET $query timestamp = '". time() ."' WHERE uid = '$account->uid'");
     return user_load(array("uid" => $account->uid));
   }
   else {
-    db_query("INSERT INTO user SET $query timestamp = '". time() ."'");
+    $fields = "(";
+    $values = "(";
+    $num = 0;
+
+    foreach ($array as $key => $value) {
+      $fields .= ($num ? ", " : "") . $key;
+      $values .= ($num ? ", " : "") . (($key == "pass") ? "'" . md5 ($value) . "'" : "'" . addslashes ($value) . "'");
+      $num = 1;
+    }
+
+    $fields .= ($num ? ", " : "") . "timestamp";
+    $values .= ($num ? ", " : "") . "'" . time() ."'";
+    $fields .= ")";
+    $values .= ")";
+
+    db_query("INSERT INTO users $fields VALUES $values");
     return user_load(array("name" => $array["name"]));
   }
 
@@ -109,7 +126,6 @@ function user_validate_name($name) {
   if (eregi("  ", $name)) return t("The name can not contain multiple spaces in a row.");
   if (eregi("[^a-zA-Z0-9 ]", $name)) return t("The name contains an illegal character.");
   if (strlen($name) > 32) return t("The name '$name' is too long: it must be less than 32 characters.");
-
 }
 
 function user_validate_mail($mail) {
@@ -218,7 +234,7 @@ function user_perm() {
 
 function user_search($keys) {
   global $PHP_SELF;
-  $result = db_query("SELECT * FROM user WHERE name LIKE '%$keys%' LIMIT 20");
+  $result = db_query("SELECT * FROM users WHERE name LIKE '%$keys%' LIMIT 20");
   while ($account = db_fetch_object($result)) {
     $find[$i++] = array("title" => $account->name, "link" => (strstr($PHP_SELF, "admin.php") ? "admin.php?mod=user&op=edit&id=$account->uid" : "module.php?mod=user&op=view&id=$account->uid"), "user" => $account->name);
   }
@@ -441,6 +457,10 @@ function user_login($edit = array()) {
       $user = user_load(array("name" => $name, "pass" => $pass, "status" => 1));
     }
 
+print "user = $user->uid, $user->name<br />";
+
+die("foo");
+
     /*
     ** Try to log on the user through Drupal:
     */
@@ -505,7 +525,7 @@ function user_login($edit = array()) {
   ** Display login form:
   */
 
-  $output .= form_textfield(t("Username"), "name", $edit["name"], 20, 64, t("Enter your local  username, a Drupal ID or a Jabber ID."));
+  $output .= form_textfield(t("Username"), "name", $edit["name"], 20, 64, t("Enter your local username, a Drupal ID or a Jabber ID."));
   $output .= form_password(t("Password"), "pass", $pass, 20, 64, t("Enter the password that accompanies your username."));
   $output .= form_submit(t("Log in"));
 
@@ -537,7 +557,7 @@ function user_logout() {
 function user_pass($edit = array()) {
 
   if ($edit["name"] && $edit["mail"]) {
-    if ($account = db_fetch_object(db_query("SELECT uid FROM user WHERE name = '". check_input($edit["name"]) ."' AND mail = '". check_input($edit["mail"]) ."'"))) {
+    if ($account = db_fetch_object(db_query("SELECT uid FROM users WHERE name = '". check_input($edit["name"]) ."' AND mail = '". check_input($edit["mail"]) ."'"))) {
 
       $from = variable_get("site_mail", "root@localhost");
       $pass = user_password();
@@ -593,10 +613,10 @@ function user_register($edit = array()) {
     else if (user_deny("mail", $edit["mail"])) {
       $error = sprintf(t("The e-mail address '%s' has been denied access."), $edit["mail"]);
     }
-    else if (db_num_rows(db_query("SELECT name FROM user WHERE LOWER(name) = LOWER('". $edit["name"] ."')")) > 0) {
+    else if (db_num_rows(db_query("SELECT name FROM users WHERE LOWER(name) = LOWER('". $edit["name"] ."')")) > 0) {
       $error = sprintf(t("The name '%s' is already taken."), $edit["name"]);
     }
-    else if (db_num_rows(db_query("SELECT mail FROM user WHERE LOWER(mail) = LOWER('". $edit["mail"] ."')")) > 0) {
+    else if (db_num_rows(db_query("SELECT mail FROM users WHERE LOWER(mail) = LOWER('". $edit["mail"] ."')")) > 0) {
       $error = sprintf(t("The e-mail address '%s' is already taken."), $edit["mail"]);
     }
     else if (variable_get("user_register", 1) == 0) {
@@ -660,13 +680,13 @@ function user_edit($edit = array()) {
       else if ($error = user_validate_mail($edit["mail"])) {
         // do nothing
       }
-      else if (db_num_rows(db_query("SELECT uid FROM user WHERE uid != '$user->uid' AND LOWER(name) = LOWER('". $edit["name"] ."')")) > 0) {
+      else if (db_num_rows(db_query("SELECT uid FROM users WHERE uid != '$user->uid' AND LOWER(name) = LOWER('". $edit["name"] ."')")) > 0) {
         $error = sprintf(t("The name '%s' is already taken."), $edit["name"]);
       }
-      else if ($edit["mail"] && db_num_rows(db_query("SELECT uid FROM user WHERE uid != '$user->uid' AND LOWER(mail) = LOWER('". $edit["mail"] ."')")) > 0) {
+      else if ($edit["mail"] && db_num_rows(db_query("SELECT uid FROM users WHERE uid != '$user->uid' AND LOWER(mail) = LOWER('". $edit["mail"] ."')")) > 0) {
         $error = sprintf(t("The e-mail address '%s' is already taken."), $edit["mail"]);
       }
-      else if ($edit["jabber"] && db_num_rows(db_query("SELECT uid FROM user WHERE uid != '$user->uid' AND LOWER(jabber) = LOWER('". $edit["jabber"] ."')")) > 0) {
+      else if ($edit["jabber"] && db_num_rows(db_query("SELECT uid FROM users WHERE uid != '$user->uid' AND LOWER(jabber) = LOWER('". $edit["jabber"] ."')")) > 0) {
         $error = sprintf(t("The Jabber ID '%s' is already taken."), $edit["jabber"]);
       }
       else if ($user->uid) {
@@ -852,10 +872,10 @@ function user_admin_create($edit = array()) {
     else if ($error = user_validate_mail($edit["mail"])) {
       // do nothing
     }
-    else if (db_num_rows(db_query("SELECT name FROM user WHERE LOWER(name) = LOWER('". $edit["name"] ."')")) > 0) {
+    else if (db_num_rows(db_query("SELECT name FROM users WHERE LOWER(name) = LOWER('". $edit["name"] ."')")) > 0) {
       $error = sprintf(t("The name '%s' is already taken."), $edit["name"]);
     }
-    else if (db_num_rows(db_query("SELECT mail FROM user WHERE LOWER(mail) = LOWER('". $edit["mail"] ."')")) > 0) {
+    else if (db_num_rows(db_query("SELECT mail FROM users WHERE LOWER(mail) = LOWER('". $edit["mail"] ."')")) > 0) {
       $error = sprintf(t("The e-mail address '%s' is already taken."), $edit["mail"]);
     }
     else {
@@ -985,6 +1005,7 @@ function user_admin_perm($edit = array()) {
   */
 
   $result = db_query("SELECT * FROM role ORDER BY name");
+  $roles = array ();
   while ($role = db_fetch_object($result)) {
     $roles[$role->name] = $role->perm;
   }
@@ -1067,7 +1088,7 @@ function user_admin_edit($edit = array()) {
     }
     else if ($op == "Delete account") {
       if ($edit["status"] == 0) {
-        db_query("DELETE FROM user WHERE uid = '$account->uid'");
+        db_query("DELETE FROM users WHERE uid = '$account->uid'");
         $output .= "The account has been deleted.";
       }
       else {
@@ -1108,7 +1129,7 @@ function user_admin_account() {
 
   $queries = array(array("ORDER BY timestamp DESC", "active users"), array("ORDER BY uid DESC", "new users"), array("WHERE status = 0 ORDER BY uid DESC", "blocked users"), array("WHERE role != 'authenticated user' ORDER BY uid DESC", "special users"));
 
-  $result = db_query("SELECT uid, name, timestamp FROM user ". $queries[$query ? $query : 0][0] ." LIMIT 50");
+  $result = db_query("SELECT uid, name, timestamp FROM users ". $queries[$query ? $query : 0][0] ." LIMIT 50");
 
   foreach ($queries as $key => $value) {
     $links[] = "<a href=\"admin.php?mod=user&op=account&query=$key\">$value[1]</a>";

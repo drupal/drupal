@@ -46,3 +46,12 @@ CREATE TABLE moderate (
 ALTER TABLE comments DROP score;
 ALTER TABLE comments DROP votes;
 ALTER TABLE comments DROP users;
+
+# PEAR
+
+ALTER TABLE user RENAME AS users;
+ALTER TABLE users CHANGE pass pass varchar(32) DEFAULT '' NOT NULL;
+ALTER TABLE watchdog CHANGE user userid int(10) DEFAULT '0' NOT NULL;
+ALTER TABLE rating CHANGE user userid int(10) DEFAULT '0' NOT NULL;
+ALTER TABLE layout CHANGE user userid int(10) DEFAULT '0' NOT NULL;
+ALTER TABLE blocks CHANGE offset delta tinyint(2) DEFAULT '0' NOT NULL;

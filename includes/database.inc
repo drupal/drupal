@@ -1,44 +1,63 @@
 <?php
 
-function db_connect($host, $user, $pass, $name) {
-  mysql_pconnect($host, $user, $pass) or die(mysql_error());
-  mysql_select_db($name) or die ("unable to select database");
-  // NOTE: we are using a persistent connection!
+require_once 'DB.php';
+
+/*
+** Setup a database connection:
+*/
+
+$db_handle = DB::connect($db_url);
+if (DB::isError($db_handle)) {
+  die ("Database problem: ". $db_handle->getMessage());
+}
+$db_handle->setFetchMode(DB_FETCHMODE_ASSOC);
+
+function db_query($sql, $debug = 0) {
+  global $db_handle;
+
+  $result = $db_handle->query($sql);
+  if (DB::isError($result)) {
+    //if ($debug) {
+      print "<p>query: $sql<br />error:". $result->getMessage() ."</p>";
+    //}
+    watchdog("error", "database: ". $result->getMessage() ."\nquery: ". htmlspecialchars($sql));
+  }
+  return $result;
 }
 
-
-function db_query($query, $debug = 0) {
-  $result = mysql_query($query);
-  if ($debug) print "<P>query: $query<BR>error:". mysql_error() ."</P>";
-  if ($result) return $result;
-  else watchdog("error", "database: ". mysql_error() ."\nquery: ". htmlspecialchars($query));
+function db_fetch_object($result) {
+  if ($result) {
+    return $result->fetchRow(DB_FETCHMODE_OBJECT);
+  }
 }
 
-function db_fetch_object($qid) {
-  if ($qid) return mysql_fetch_object($qid);
+function db_fetch_array($result) {
+  if ($result) {
+    return $result->fetchRow(DB_FETCHMODE_ASSOC);
+  }
 }
 
-function db_num_rows($qid) {
-  if ($qid) return mysql_num_rows($qid);
+function db_num_rows($result) {
+  if ($result) {
+    return $result->numRows($result);
+  }
 }
 
-function db_fetch_row($qid) {
-  if ($qid) return mysql_fetch_row($qid);
+function db_result($result, $field = 0) {
+  if ($result) {
+    $tmp = $result->fetchRow(DB_FETCHMODE_ASSOC);
+    return $tmp[$field];
+  }
 }
 
-function db_fetch_array($qid) {
-  if ($qid) return mysql_fetch_array($qid, MYSQL_ASSOC);
-}
+function db_error($result) {
+  global $db_handle;
 
-function db_result($qid, $field = 0) {
-  if ($qid) return mysql_result($qid, $field);
-}
+  if (DB::isError($db_handle)) {
+    return 1;
+  }
 
-function db_insert_id() {
-  return mysql_insert_id();
+  return 0;
 }
-
-// Setup database connection:
-db_connect($db_host, $db_user, $db_pass, $db_name);
 
 ?>

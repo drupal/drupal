@@ -29,17 +29,17 @@ function rating_cron() {
   if (time() - variable_get("rating_cron_last", 0) > variable_get("rating_cron_time", time())) {
     variable_set("rating_cron_last", time());
 
-    $r1 = db_query("SELECT uid FROM user ORDER BY rating DESC");
+    $r1 = db_query("SELECT uid FROM users ORDER BY rating DESC");
     while ($account = db_fetch_object($r1)) {
-      db_query("UPDATE user SET rating = '". rating_gravity($account->uid) ."' WHERE uid = '$account->uid'");
+      db_query("UPDATE users SET rating = '". rating_gravity($account->uid) ."' WHERE uid = '$account->uid'");
       $rating[$account->uid] = ++$i;
     }
 
     db_query("DELETE FROM rating");
 
-    $r2 = db_query("SELECT uid FROM user ORDER BY rating DESC");
+    $r2 = db_query("SELECT uid FROM users ORDER BY rating DESC");
     while ($account = db_fetch_object($r2)) {
-      db_query("INSERT INTO rating (user, new, old) VALUES ('$account->uid', '". ++$j ."', '". $rating[$account->uid] ."')");
+      db_query("INSERT INTO rating (userid, new, old) VALUES ('$account->uid', '". ++$j ."', '". $rating[$account->uid] ."')");
     }
   }
 }
@@ -81,7 +81,7 @@ function rating_gravity($id) {
 }
 
 function rating_list($limit) {
-  $result = db_query("SELECT u.rating, u.name, u.uid, r.* FROM user u LEFT JOIN rating r ON u.uid = r.user ORDER BY u.rating DESC LIMIT $limit");
+  $result = db_query("SELECT u.rating, u.name, u.uid, r.* FROM users u LEFT JOIN rating r ON u.uid = r.userid ORDER BY u.rating DESC LIMIT $limit");
 
   $output .= "<TABLE CELLPADDING=\"1\" CELLSPACING=\"1\">\n";
   while ($account = db_fetch_object($result)) {
