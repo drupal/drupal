@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.284 2003/12/19 13:44:08 kjartan Exp $ */
+/* $Id: common.inc,v 1.285 2003/12/22 14:45:00 dries Exp $ */
 
 /**
  * @name drupal_title
@@ -721,48 +721,48 @@ function form($form, $method = "post", $action = 0, $options = 0) {
   return "<form action=\"$action\" method=\"$method\"". drupal_attributes($options) .">\n$form\n</form>\n";
 }
 
-function form_item($title, $value, $description = 0) {
-  return theme("form_element", $title, $value, $description);
+function form_item($title, $value, $description = NULL, $id = NULL) {
+  return theme("form_element", $title, $value, $description, $id);
 }
 
-function form_group($legend, $group, $description = 0) {
+function form_group($legend, $group, $description = NULL) {
   return "<fieldset>" . ($legend ? "<legend>$legend</legend>" : "") . $group . ($description ? "<div class=\"description\">$description</div>" : "") . "</fieldset>\n";
 }
 
-function form_radio($title, $name, $value = 1, $checked = 0, $description = 0, $attributes = 0) {
-  return theme("form_element", 0, "<input type=\"radio\" class=\"form-radio\" name=\"edit[$name]\" value=\"". $value ."\"". ($checked ? " checked=\"checked\"" : "") . drupal_attributes($attributes) ." /> $title", $description);
+function form_radio($title, $name, $value = 1, $checked = 0, $description = NULL, $attributes = NULL) {
+  return theme("form_element", 0, "<input type=\"radio\" class=\"form-radio\" name=\"edit[$name]\" id=\"$name\" value=\"". $value ."\"". ($checked ? " checked=\"checked\"" : "") . drupal_attributes($attributes) ." /> $title", $description, $name);
 }
 
-function form_checkbox($title, $name, $value = 1, $checked = 0, $description = 0, $attributes = 0) {
-  return form_hidden($name, 0) . theme("form_element", 0, "<input type=\"checkbox\" class=\"form-checkbox\" name=\"edit[$name]\" value=\"". $value ."\"". ($checked ? " checked=\"checked\"" : "") . drupal_attributes($attributes) ." /> $title", $description);
+function form_checkbox($title, $name, $value = 1, $checked = 0, $description = NULL, $attributes = NULL) {
+  return form_hidden($name, 0) . theme("form_element", 0, "<input type=\"checkbox\" class=\"form-checkbox\" name=\"edit[$name]\" id=\"$name\" value=\"". $value ."\"". ($checked ? " checked=\"checked\"" : "") . drupal_attributes($attributes) ." /> $title", $description, $name);
 }
 
-function form_textfield($title, $name, $value, $size, $maxlength, $description = 0, $attributes = 0) {
+function form_textfield($title, $name, $value, $size, $maxlength, $description = NULL, $attributes = NULL) {
   $size = $size ? " size=\"$size\"" : "";
-  return theme("form_element", $title, "<input type=\"text\" maxlength=\"$maxlength\" class=\"form-text\" name=\"edit[$name]\"$size value=\"". check_form($value) ."\"". drupal_attributes($attributes) ." />", $description);
+  return theme("form_element", $title, "<input type=\"text\" maxlength=\"$maxlength\" class=\"form-text\" name=\"edit[$name]\" id=\"$name\"$size value=\"". check_form($value) ."\"". drupal_attributes($attributes) ." />", $description, $name);
 }
 
-function form_password($title, $name, $value, $size, $maxlength, $description = 0, $attributes = 0) {
+function form_password($title, $name, $value, $size, $maxlength, $description = NULL, $attributes = NULL) {
   $size = $size ? " size=\"$size\"" : "";
-  return theme("form_element", $title, "<input type=\"password\" class=\"form-password\" maxlength=\"$maxlength\" name=\"edit[$name]\"$size value=\"". check_form($value) ."\"". drupal_attributes($attributes) ." />", $description);
+  return theme("form_element", $title, "<input type=\"password\" class=\"form-password\" maxlength=\"$maxlength\" name=\"edit[$name]\" id=\"$name\"$size value=\"". check_form($value) ."\"". drupal_attributes($attributes) ." />", $description, $name);
 }
 
-function form_textarea($title, $name, $value, $cols, $rows, $description = 0, $attributes = 0) {
+function form_textarea($title, $name, $value, $cols, $rows, $description = NULL, $attributes = NULL) {
   $cols = $cols ? " cols=\"$cols\"" : "";
   module_invoke_all("textarea", $name);  // eg. optionally plug in a WYSIWYG editor
-  return theme("form_element", $title, "<textarea wrap=\"virtual\"$cols rows=\"$rows\" name=\"edit[$name]\" id=\"edit[$name]\"". drupal_attributes($attributes) .">". check_form($value) ."</textarea>", $description);
+  return theme("form_element", $title, "<textarea wrap=\"virtual\"$cols rows=\"$rows\" name=\"edit[$name]\" id=\"$name\"". drupal_attributes($attributes) .">". check_form($value) ."</textarea>", $description, $name);
 }
 
-function form_select($title, $name, $value, $options, $description = 0, $extra = 0, $multiple = 0) {
+function form_select($title, $name, $value, $options, $description = NULL, $extra = 0, $multiple = 0) {
   if (count($options) > 0) {
     foreach ($options as $key=>$choice) {
       $select .= "<option value=\"$key\"". (is_array($value) ? (in_array($key, $value) ? " selected=\"selected\"" : "") : ($value == $key ? " selected=\"selected\"" : "")) .">". check_form($choice) ."</option>";
     }
-    return theme("form_element", $title, "<select name=\"edit[$name]". ($multiple ? "[]" : "") ."\"". ($multiple ? " multiple " : "") . ($extra ? " $extra" : "") .">$select</select>", $description);
+    return theme("form_element", $title, "<select name=\"edit[$name]". ($multiple ? "[]" : "") ."\"". ($multiple ? " multiple " : "") . ($extra ? " $extra" : "") ." id=\"$name\">$select</select>", $description, $name);
   }
 }
 
-function form_radios($title, $name, $value, $options, $description = 0) {
+function form_radios($title, $name, $value, $options, $description = NULL) {
   if (count($options) > 0) {
     foreach ($options as $key=>$choice) {
       $output .= form_radio($choice, $name, $key, ($key == $value));
@@ -771,23 +771,23 @@ function form_radios($title, $name, $value, $options, $description = 0) {
   }
 }
 
-function form_file($title, $name, $size, $description = 0) {
-  return theme("form_element", $title, "<input type=\"file\" class=\"form-file\" name=\"edit[$name]\" size=\"$size\" />\n", $description);
+function form_file($title, $name, $size, $description = NULL) {
+  return theme("form_element", $title, "<input type=\"file\" class=\"form-file\" name=\"edit[$name]\" id=\"$name\" size=\"$size\" />\n", $description, $name);
 }
 
 function form_hidden($name, $value) {
   return "<input type=\"hidden\" name=\"edit[$name]\" value=\"". check_form($value) ."\" />\n";
 }
 
-function form_button($value, $name = "op", $type = "submit", $attributes = 0) {
+function form_button($value, $name = "op", $type = "submit", $attributes = NULL) {
   return "<input type=\"$type\" class=\"form-$type\" name=\"$name\" value=\"". check_form($value) ."\" ". drupal_attributes($attributes) ." />\n";
 }
 
-function form_submit($value, $name = "op", $attributes = 0) {
+function form_submit($value, $name = "op", $attributes = NULL) {
   return form_button($value, $name, "submit", $attributes);
 }
 
-function form_weight($title = NULL, $name = "weight", $value = 0, $delta = 10, $description = 0, $extra = 0) {
+function form_weight($title = NULL, $name = "weight", $value = 0, $delta = 10, $description = NULL, $extra = 0) {
   for ($n = (-1 * $delta); $n <= $delta; $n++) {
     $weights[$n] = $n;
   }
@@ -875,7 +875,7 @@ function url($url = NULL, $query = NULL) {
   }
 }
 
-function drupal_attributes($attributes = 0) {
+function drupal_attributes($attributes = NULL) {
   if (is_array($attributes)) {
     $t = array();
     foreach ($attributes as $key => $value) {

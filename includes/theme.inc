@@ -1,5 +1,5 @@
 <?php
-/* $Id: theme.inc,v 1.174 2003/12/18 05:54:59 dries Exp $ */
+/* $Id: theme.inc,v 1.175 2003/12/22 14:44:59 dries Exp $ */
 
 /**
  * @file
@@ -278,8 +278,22 @@ function theme_node($node, $main = 0, $page = 0) {
  * @return a string containing the @a node output.
  */
 
-function theme_form_element($title, $value, $description = 0) {
-  return "<div class=\"form-item\">". ($title ? "<label>$title:</label><br />" : "") . $value . ($description ? "<div class=\"description\">$description</div>" : "") ."</div>\n";
+function theme_form_element($title, $value, $description = NULL, $id = NULL) {
+
+  if ($title) {
+    if ($id) {
+      $title = "<label for=\"$id\">$title:</label><br />";
+    }
+    else {
+      $title = "<label>$title:</label><br />";
+    }
+  }
+
+  if ($description) {
+    $description = "<div class=\"description\">$description</div>";
+  }
+
+  return "<div class=\"form-item\">$title $value $description</div>\n";
 }
 
 /**
