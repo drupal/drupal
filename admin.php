@@ -1,798 +1,317 @@
-<?PHP
+<?
+
+/*
+ * Account administration:
+ */
+
+function account_display($id = "", $order = 1) {
+  ### Perform query:
+  $result = db_query("SELECT * FROM users");
+
+  ### Generate output:
+  print "<H3>Accounts:</H3>\n";
+ 
+  while ($account = db_fetch_object($result)) {
+    $output .= "$account->userid<BR>";
+  }
+
+  print $output;
+}
+
+
+/*
+ * Log administration:
+ */
+function log_display() {
+  global $PHP_SELF, $anonymous, $log_level;
+
+  ### Perform query:
+  $result = db_query("SELECT l.*, u.userid FROM logs l LEFT JOIN users u ON l.user = u.id ORDER BY l.id DESC");
+
+  $color = array("#FFFFFF", "#FFFFFF", "#90EE90", "#CD5C5C");
+ 
+  ### Generate output:
+  print "<H3>Logs:</H3>\n";
+  print "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\">\n";
+  print " <TR>\n";
+  print "  <TH>Date</TH>\n";
+  print "  <TH>User</TH>\n";
+  print "  <TH>Message</TH>\n";
+  print "  <TH>Operations</TH>\n";
+  print " </TR>\n";
+
+  while ($log = db_fetch_object($result)) {
+    if ($log->userid) print " <TR BGCOLOR=\"". $color[$log->level] ."\"><TD>". date("D d/m, H:m:s", $log->timestamp) ."</TD><TD ALIGN=\"center\"><A HREF=\"account.php?op=info&uname=$log->userid\">$log->userid</A></TD><TD>". substr($log->message, 0, 44) ."</TD><TD ALIGN=\"center\"><A HREF=\"$PHP_SELF?section=logs&op=view&id=$log->id\">more</A></TD></TR>\n";
+    else print " <TR BGCOLOR=\"". $color[$log->level] ."\"><TD>". date("D d/m, H:m:s", $log->timestamp) ."</TD><TD ALIGN=\"center\">$anonymous</TD><TD>". substr($log->message, 0, 44) ."</TD><TD ALIGN=\"center\"><A HREF=\"$PHP_SELF?section=logs&op=view&id=$log->id\">more</A></TD></TR>\n";
+  }
+
+  print "</TABLE>\n";
+}
+
+function log_view($id) {
+  ### Perform query:
+  $result = db_query("SELECT l.*, u.userid FROM logs l LEFT JOIN users u ON l.user = u.id WHERE l.id = $id");
+
+  if ($log = db_fetch_object($result)) {
+    print "<H3>Logs:</H3>\n";
+    print "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\">\n";
+    print " <TR><TD ALIGN=\"right\"><B>Level:</B></TD><TD>$log->level</TD></TR>\n";
+    print " <TR><TD ALIGN=\"right\"><B>Date:</B></TD><TD>". date("l, F d, Y - H:i A", $log->timestamp) ."</TD></TR>\n";
+    print " <TR><TD ALIGN=\"right\"><B>User:</B></TD><TD><A HREF=\"account.php?op=info&uname=$log->userid\">". username($log->userid) ."</TD></TR>\n";
+    print " <TR><TD ALIGN=\"right\"><B>Message:</B></TD><TD>$log->message</TD></TR>\n";
+    print " <TR><TD ALIGN=\"right\"><B>Hostname:</B></TD><TD>$log->hostname</TD></TR>\n";
+    print "</TABLE>\n";
+  }
+}
+
+/*
+ * Ban administration:
+ */
+
+function ban_check($mask, $category) {
+  $ban = ban_match($mask, $category);
+
+  print "<H3>Status:</H3>\n";
+  print "". ($ban ? "Matched ban '<B>$ban->mask</B>' with reason: <I>$ban->reason</I>.<P>\n" : "No matching bans for '$mask'.<P>\n") ."";
+}
+
+function ban_new($mask, $category, $reason) {
+  ban_add($mask, $category, $reason, &$message);
+
+  print "<H3>Status:</H3>\n";
+  print "$message\n";  
+}
+
+function ban_display($category = "") {
+  global $PHP_SELF, $type2index;
+
+  ### initialize variable: 
+  $category = $category ? $category : 1;
+
+  ### Perform query:
+  $result = db_query("SELECT * FROM bans WHERE type = $category ORDER BY mask");
+ 
+  ### Generate output:
+  print "<H3>Bans:</H3>\n";
+  print "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\">\n";
+  print " <TR>\n";
+  print "  <TH COLSPAN=\"2\" >Active bans</TH>\n";
+  print "  </TH>\n";
+  print "  <TH>\n";
+  print "   <FORM ACTION=\"$PHP_SELF?section=bans\" METHOD=\"post\">\n";
+  print "    <SELECT NAME=\"category\">\n";
+  for (reset($type2index); $cur = current($type2index); next($type2index)) {
+    print "     <OPTION VALUE=\"$cur\"". ($cur == $category ? " SELECTED" : "") .">". key($type2index) ."</OPTION>\n";
+  }
+  print "    </SELECT>\n";
+  print "    <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Refresh\">\n";
+  print "   </FORM>\n";
+  print "  </TH>\n";
+  print " </TR>\n";
+  print " <TR>\n";
+  print "  <TH>Mask</TH>\n";
+  print "  <TH>Reason</TH>\n";
+  print "  <TH>Operations</TH>\n";
+  print " </TR>\n";
+
+  while ($ban = db_fetch_object($result)) {
+    print "  <TR><TD>$ban->mask</TD><TD>$ban->reason</TD><TD ALIGN=\"center\"><A HREF=\"$PHP_SELF?section=bans&op=delete&category=$category&id=$ban->id\">delete</A></TD></TR>\n";
+  }
+  
+  print " <TR><TD COLSPAN=\"3\"><SMALL>%: matches any number of characters, even zero characters.<BR>_: matches exactly one character.</SMALL></TD></TR>\n";
+  print "</TABLE>\n";
+  print "<BR><HR>\n";
+
+  print "<H3>Add new ban:</H3>\n";
+  print "<FORM ACTION=\"$PHP_SELF?section=bans\" METHOD=\"post\">\n";
+  print "<B>Banmask:</B><BR>\n";
+  print "<INPUT TYPE=\"text\" NAME=\"mask\" SIZE=\"35\"><P>\n";
+  print "<B>Type:</B><BR>\n";
+  print "<SELECT NAME=\"category\"\">\n";
+  for (reset($type2index); $cur = current($type2index); next($type2index)) {
+    print "<OPTION VALUE=\"$cur\"". ($cur == $category ? " SELECTED" : "") .">". key($type2index) ."</OPTION>\n";
+  }
+  print "</SELECT><P>\n";
+  print "<B>Reason:</B><BR>\n";
+  print "<TEXTAREA NAME=\"reason\" COLS=\"35\" ROWS=\"5\"></TEXTAREA><P>\n";
+  print "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Add ban\"><BR>\n";
+  print "</FORM>\n";
+  print "<BR><HR>\n";
+
+  print "<H3>Ban check:</H3>\n";
+  print "<FORM ACTION=\"$PHP_SELF?section=bans\" METHOD=\"post\">\n";
+  print "<B>Banmask:</B><BR>\n";
+  print "<INPUT TYPE=\"text\" NAME=\"mask\" SIZE=\"35\"><P>\n";
+  print "<B>Type:</B><BR>\n";
+  print "<SELECT NAME=\"category\"\">\n";
+  for (reset($type2index); $cur = current($type2index); next($type2index)) {
+    print "<OPTION VALUE=\"$cur\"". ($cur == $category ? " SELECTED" : "") .">". key($type2index) ."</OPTION>\n";
+  }
+  print "</SELECT><P>\n";
+  print "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Check ban\"><BR>\n";
+  print "</FORM>\n";
+}
+
+/*
+ * Story administration:
+ */
+
+function story_edit($id) {
+  global $PHP_SELF, $anonymous, $categories;
+
+  $result = db_query("SELECT stories.*, users.userid FROM stories LEFT JOIN users ON stories.author = users.id WHERE stories.id = $id");
+  $story = db_fetch_object($result);
+
+  $output .= "<FORM ACTION=\"$PHP_SELF?section=stories&op=save&id=$id\" METHOD=\"post\">\n";
+
+  $output .= "<P>\n";
+  $output .= " <B>Author:</B><BR>\n";
+  if ($story->userid) $output .= " <A HREF=\"account.php?op=info&uname=$story->userid\">$story->userid</A>\n";
+  else $output .= " $anonymous\n";
+  $output .= "</P>\n";
+
+  $output .= "<P>\n";
+  $output .= " <B>Subject:</B><BR>\n";
+  $output .= " <INPUT TYPE=\"text\" NAME=\"subject\" SIZE=\"50\" VALUE=\"". stripslashes($story->subject) ."\"><BR>\n";
+  $output .= "</P>\n";
+
+  $output .= "<P><B>Category:</B><BR>\n";
+  $output .= " <SELECT NAME=\"category\">\n";
+  for ($i = 0; $i < sizeof($categories); $i++) {
+    $output .= "  <OPTION VALUE=\"$categories[$i]\" ";
+    if ($story->category == $categories[$i]) $output .= "SELECTED";
+    $output .= ">$categories[$i]</OPTION>\n";
+  }
+  $output .= "</SELECT>\n";
+  $output .= "</P>\n";
+
+  $output .= "<P>\n";
+  $output .= "<B>Abstract:</B><BR>\n";
+  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"abstract\">". stripslashes($story->abstract) ."</TEXTAREA><BR>\n";
+  $output .= "</P>\n";
+
+  $output .= "<P>\n";
+  $output .= "<B>Editor's note/updates:</B><BR>\n";
+  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"updates\">". stripslashes($story->updates) ."</TEXTAREA><BR>\n";
+  $output .= "</P>\n";
+
+  $output .= "<P>\n";
+  $output .= " <B>Extended story:</B><BR>\n";
+  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"15\" NAME=\"article\">". stripslashes($story->article) ."</TEXTAREA><BR>\n";
+  $output .= "</P>\n";
+
+  $output .= "<P><B>Status:</B><BR>\n";
+  $output .= " <SELECT NAME=\"status\">\n";
+  $output .= ($story->status == 0) ? "  <OPTION VALUE=\"0\" SELECTED>Deleted story</OPTION>\n" : "  <OPTION VALUE=\"0\">Deleted story </OPTION>\n";
+  $output .= ($story->status == 1) ? "  <OPTION VALUE=\"1\" SELECTED>Pending story</OPTION>\n" : "  <OPTION VALUE=\"1\">Pending story</OPTION>\n";
+  $output .= ($story->status == 2) ? "  <OPTION VALUE=\"2\" SELECTED>Public story</OPTION>\n" : "  <OPTION VALUE=\"2\">Public story</OPTION>\n";
+  $output .= "</SELECT>\n";
+  $output .= "</P>\n";
+
+  $output .= "<P>\n";
+  $output .= " <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Save story\">\n";
+  $output .= "</P>\n";
+  $output .= "</FORM>\n";
+  
+  print $output;
+}
+
+function story_save($id, $subject, $abstract, $updates, $article, $category, $status) {
+  global $PHP_SELF;
+
+  ### Add submission to SQL table:
+  db_query("UPDATE stories SET subject = '$subject', abstract = '$abstract', updates = '$updates', article = '$article', category = '$category', status = '$status' WHERE id = $id");
+
+  ### Add log entry:
+  watchdog(1, "modified story `$subject'.");
+}
+
+function story_display($category = "") {
+  global $PHP_SELF;
+
+  ### Initialize variables:
+  $status = array("deleted", "pending", "public");
+
+  ### Perform SQL query:
+  $result = db_query("SELECT * FROM stories");
+  
+  ### Display stories:
+  $output .= "<H3>Stories:</H3>\n";
+  $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\">\n";
+  $output .= " <TR>\n";
+  $output .= "  <TH>Subject</TH>\n";
+  $output .= "  <TH>Status</TH>\n";
+  $output .= "  <TH>Operations</TH>\n";
+  $output .= " </TR>\n";
+
+  while ($story = db_fetch_object($result)) {
+    $output .= " <TR><TD><A HREF=\"discussion.php?id=$story->id\">$story->subject</A></TD><TD ALIGN=\"center\">". $status[$story->status] ."</TD><TD ALIGN=\"center\"><A HREF=\"$PHP_SELF?section=stories&op=edit&id=$story->id\">edit</A></TD></TR>\n";
+  }
+
+  $output .= "</TABLE>\n";
+ 
+  print $output;
+}
+
 
 include "functions.inc";
-include "authentication.inc";
+include "function.inc";
+include "admin.inc";
 
-function login() {
-  include "theme.inc";
-  $theme->header();
-  $theme->box("Login", "<FORM ACTION=\"admin.php\" METHOD=\"post\"><P>Name: <INPUT TYPE=\"text\" NAME=\"aid\" SIZE=\"20\" MAXLENGTH=\"20\"><P>Password: <INPUT TYPE=\"password\" NAME=\"pwd\" SIZE=\"20\" MAXLENGTH=\"18\"><P><INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"login\"></FORM>");
-  $theme->footer();
-}
+admin_header();
 
-function logout() {
-  setcookie("admin");
-
-  include "theme.inc";
-  $theme->header();
-  ?>
-   <BR><BR><BR><BR>
-   <P ALIGN="center"><FONT SIZE="+2"><B>You are now logged out!</B></FONT></P>
-   <P>You have been logged out of the system.  Since authentication details are stored by using cookies, logging out is only necessary to prevent those who have access to your computer from abusing your account.</P>
-  <?  
-  $theme->footer();
-}
-
-function backup() {
-  include "config.inc";
-  if ($system == 0) {
-    exec("mysqldump -h $dbhost -u $dbuname -p$dbpass $dbname | mail -s \"[$sitename] MySQL backup\" $notify_email");
-    exec("mysqldump -h $dbhost -u $dbuname -p$dbpass $dbname > ../$sitename-backup-". date("Ymd", time()).".mysql");
-  }
-  else print "<P><B>Warning:</B> the backup feature is only supported on UNIX systems.  Check your configuration file if you are using a UNIX system.</P>";
-}
-
-function main() {
-  include "config.inc";
-  include "theme.inc";
-  $theme->header();
-  dbconnect();
-
-  $result = mysql_query("SELECT qid, subject, timestamp FROM queue order by timestamp");
-
-  echo "<FORM ACTION=\"admin.php\" METHOD=\"post\">";
-  echo "<TABLE WIDTH=\"100%\">";
-
-  if (mysql_num_rows($result) != 0) {
-    while (list($qid, $subject, $timestamp) = mysql_fetch_row($result)) {
-      
-      ### format date:
-      $datetime = date("F d - h:i:s A", $timestamp);
-
-      ### generate overview:
-      echo " <TR>";
-      echo "  <TD BGCOLOR=\"#c0c0c0\" WIDTH=\"11\" ALIGN=\"middle\"><INPUT TYPE=\"radio\" NAME=\"qid\" VALUE=\"$qid\"></TD>";
-      echo "  <TD BGCOLOR=\"#c0c0c0\"><A HREF=\"admin.php?op=submission&qid=$qid\">$subject</A></TD>";
-      echo "  <TD BGCOLOR=\"#c0c0c0\">$datetime</TD>";
-      echo " </TR>";
-      $dummy++;
+switch ($section) {
+  case "accounts":
+    switch ($op) {
+      default:
+        account_display(); 
     }
-  }
-
-  if ($dummy < 1) {
-    echo " <TR><TD ALIGN=\"center\" BGCOLOR=\"#c0c0c0\" COLSPAN=\"3\">There are currently <B>no</B> new submissions available.</TD></TR>";
-  } 
-  else {
-    echo " <TR><TD COLSPAN=\"3\"><INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Delete article\"> <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"View article\"></TD></TR>";
-  }
-  
-  echo " <TR><TD COLSPAN=\"3\">Article ID: <INPUT TYPE=\"text\" NAME=\"sid\" SIZE=\"5\"> <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Edit article\"></TD></TR>";
-  echo " <TR><TD COLSPAN=\"3\"><A HREF=\"admin.php?op=news_admin_write\">Write and post an article as administrator.</A></TD></TR>";
-  echo "</TABLE></FORM>";
- 
-  mysql_free_result($result);
-  ?>
-  <HR>
-  <LI><A HREF="admin.php?op=blocks">Edit global blocks on main page.</A></LI><BR>
-  <I>Allows you to update the content blocks on the main page.</I>
-  <HR>
-  <LI><A HREF="admin.php?op=user_overview">Edit user accounts.</A></LI><BR>
-  <I>Add, delete, block, view and update user accounts.</I>
-  <HR>
-  <LI><A HREF="admin.php?op=mod_authors">Edit adminstrators accounts.</A></LI><BR>
-  <HR>
-  <LI><A HREF="admin.php?op=backup">Backup MySQL tables.</A></LI><BR>
-  <I>Will mail a backup of the MySQL database to '<? echo $notify_email; ?>'.</I>
-  <HR>
-  <LI><A HREF="webboard.php?section=webboard">Webboard manager.</A></LI><BR>
-  <I>Allows you to delete flamebait post or threads from the webboard.</I>
-  <HR>
-  <LI><A HREF="poll.php?section=poll">Poll manager.</A></LI><BR>
-  <I>Install, delete or update polls.</I>
-  <HR>
-  <LI><A HREF="refer.php?section=refer">Referring site manager.</A></LI><BR>
-  <I>Edit, block or delete sites that participate with the referring site program.</I>
-  <HR>
-  <LI><A HREF="">Resource manager.</A> (not implemented yet)</LI><BR>
-  <I>Allows admins to maintain a list of resources, news sites and other interesting start points to start their search for news.</I>
-  <HR>
-  <LI><A HREF="admin.php?op=logout">Logout</A></LI>
-  <?PHP
-  $theme->footer();
-}
-
-/*********************************************************/
-/* block functions                                       */
-/*********************************************************/
-
-function block_overview() {
-  include "theme.inc";
-  $theme->header();
-
-  dbconnect();
-  $result = mysql_query("SELECT id, title, content FROM blocks");
-
-  if (mysql_num_rows($result) > 0) {
-    while(list($id, $title, $content) = mysql_fetch_array($result)) {
-      echo "<FORM ACTION=\"admin.php\" METHOD=\"post\">";
-      echo " <B>Title:</B><BR>";
-      echo " <INPUT TYPE=\"text\" NAME=\"title\" SIZE=\"60\" MAXLENGTH=\"60\" VALUE=\"$title\">";
-      echo " <BR><BR>";
-
-      echo " <B>Content:</B><BR>";
-      echo " <TEXTAREA WRAP=\"virtual\" COLS=\"60\" ROWS=\"8\" NAME=\"content\">$content</TEXTAREA>";
-      echo " <BR><BR>";
-
-      echo " <INPUT TYPE=\"hidden\" NAME=\"id\" VALUE=\"$id\">";
-      echo " <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Update block\"> <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Delete block\">";
-      echo "</FORM>";
+    break;
+  case "bans":
+    include "ban.inc";
+    switch ($op) {
+      case "Add ban":
+        ban_new($mask, $category, $reason);
+        ban_display($category);
+        break;
+      case "Check ban":
+        ban_check($mask, $category);
+        ban_display($category);
+        break;
+      case "delete":
+        ban_delete($id);
+        ban_display($category);
+        break;
+      default:
+        ban_display($category);
     }
-  } 
-  ?>
-  <HR>
-  <FORM ACTION="admin.php" METHOD="post">
-   <B>Title:</B><BR>
-   <INPUT TYPE="text" NAME="title" SIZE="60" MAXLENGTH="60">
-   <BR><BR>
- 
-   <B>Content:</B><BR>
-   <TEXTAREA WRAP="virtual" COLS="60" ROWS="8" NAME="content"></TEXTAREA>
-   <BR><BR>
-   <INPUT TYPE="submit" NAME="op" VALUE="Add new block">
-  </FORM>
-
-  <?php
-  $theme->footer();
+    break;
+  case "logs":
+    switch ($op) {
+      case "view":
+        log_view($id);
+        break;
+      default:
+        log_display($category);
+    }
+    break;
+  case "stories":
+    switch ($op) {
+      case "edit":
+        story_edit($id);
+        break;
+      case "Save story":
+        story_save($id, $subject, $abstract, $updates, $article, $category, $status);
+        story_edit($id);
+        break;
+      default:
+        story_display($category);
+    }
+    break;
+  default:
+    print "Bad visitor!  Bad, bad visitor!  What are you looking for?  Maybe it's <A HREF=\"\">here</A>?";
 }
 
-function block_add($title, $content) {
-  dbconnect();
-  mysql_query("INSERT INTO blocks VALUES (NULL,'$aid','$title','$content')");
-  header("Location: admin.php?op=main");
-}
+admin_footer();
 
-function block_update($id, $title, $content) {
-  dbconnect();
-  mysql_query("update blocks set title='$title', content='$content' where id=$id");
-  header("Location: admin.php?op=main");
-}
-
-function block_delete($id) {
-  dbconnect();
-  mysql_query("DELETE FROM blocks WHERE id = '$id'");
-  header("Location: admin.php?op=main");
-}
-
-
-/*********************************************************/
-/* user account functions                                */
-/*********************************************************/
-
-function user_overview() {
-  include "theme.inc";
-  $theme->header();
-  dbconnect();
-  $result = mysql_query("SELECT * FROM users");
-  while ($account = mysql_fetch_object($result)) {
-    $count++;
-    print "$count. $account->uname [ <A HREF=\"account.php?op=userinfo&uname=$account->uname\">view</A> | edit | block | delete ]<BR>";
-  }
-  $theme->footer();
-}
-
-/*********************************************************/
-/* article functions                                      */
-/*********************************************************/
-function news_queue_delete($qid) {
-  dbconnect();
-  $result = mysql_query("DELETE FROM queue WHERE qid = $qid");
-  header("Location: admin.php?op=main");
-}
-
-
-function news_display($qid) {
-  global $user, $subject, $article;
-  
-  include "config.inc";
-  include "header.inc";
-  
-  dbconnect();
-  
-  if (isset($qid)) $result = mysql_query("SELECT qid, uid, uname, timestamp, subject, abstract, article, category FROM queue WHERE qid = $qid");
-  else $result = mysql_query("SELECT qid, uid, uname, timestamp, subject, abstract, article, category FROM queue LIMIT 1");
-  
-  list($qid, $uid, $uname, $timestamp, $subject, $abstract, $article, $category) = mysql_fetch_row($result);
-  mysql_free_result($result);
-
-  $subject = stripslashes($subject);
-  $abstract = stripslashes($abstract);
-  $article = stripslashes($article);
-
-  $theme->preview("", $uname, $timestamp, $subject, "", $abstract, "", $article);
-  ?>
-
-  <FORM ACTION="admin.php" METHOD="post">
-
-  <P>
-   <B>Author or poster:</B><br>
-   <INPUT TYPE="text" NAME="author" SIZE="50" VALUE="<?PHP echo "$uname"; ?>">
-  </P>
-
-  <P>
-   <B>Subject:</B><BR>
-   <INPUT TYPE="text" NAME="subject" SIZE="50" VALUE="<?PHP echo"$subject"; ?>">
-  </P>
-
-  <P>
-   <B>Department:</B><BR>
-   <INPUT TYPE="text" NAME="department" SIZE="50" VALUE=""> dept.<BR>
-   <I>
-    <FONT SIZE="2"> 
-     Example departments: 
-     <UL>
-      <LI>we-saw-it-coming dept.</LI>
-      <LI>don't-get-your-panties-in-a-knot dept.</LI>
-      <LI>brain-melt dept.</LI>
-      <LI>beats-the-heck-out-of-me dept.</LI>
-     </UL>
-    </FONT>
-   </I>   
-  </P>
-
-  <P>
-   <B>Category:</B><BR>
-   <SELECT NAME="category">
-   <?PHP
-   for ($i = 0; $i < sizeof($categories); $i++) {
-     echo "<OPTION VALUE=\"$categories[$i]\" ";
-     if ($category == $categories[$i]) echo "SELECTED";
-     echo ">$categories[$i]\n";
-   }
-  ?>
-   </SELECT>
-  </P>
-
-  <P>
-   <B>Author's abstract:</B><BR>
-   <TEXTAREA WRAP="virtual" COLS="60" ROWS="8" NAME="abstract"><?PHP echo "$abstract"; ?></TEXTAREA><BR>
-   <FONT SIZE="2"><I>Will be displayed on the main page!</I></FONT>  
-  </P>
-
-  <P>
-   <B>Editor's comments:</B><BR>
-   <TEXTAREA WRAP="virtual" COLS="60" ROWS="5" NAME="comments"></TEXTAREA><BR>
-   <FONT SIZE="2"><I>Will be displayed on the main page after the abstract.</I></FONT>
-  </P>
-
-  <P>
-   <B>Extended article:</B><BR>
-   <TEXTAREA WRAP="virtual" COLS="60" ROWS="12" NAME="article"><?PHP echo "$article"; ?></TEXTAREA><BR>
-   <FONT SIZE="2">Will be displayed on the article's page when following the 'read more'-link.</FONT></I>
-  </P>
-
-  <INPUT TYPE="hidden" NAME="qid" VALUE="<?PHP echo "$qid"; ?>">
-  <INPUT TYPE="hidden" NAME="uid" VALUE="<?PHP echo "$uid"; ?>">
-  <INPUT TYPE="submit" NAME="op" VALUE="Delete article">
-  <INPUT TYPE="submit" NAME="op" VALUE="Preview article"> 
-  <INPUT TYPE="submit" NAME="op" VALUE="Post article">
-  </FORM>
-
-  <?PHP
-  $theme->footer();
-}
-
-function news_preview($qid, $uid, $author, $subject, $department, $category, $abstract, $comments, $article) {
-  global $user, $boxstuff, $aid;
-  include "config.inc";
-  include "theme.inc";
-
-  $theme->header();
-
-  $subject = stripslashes($subject);
-  $agstract = stripslashes($abstract);
-  $comments = stripslashes($comments);
-  $article = stripslashes($article);
-
-  $theme->preview($aid, $author, time(), $subject, $department, $abstract, $comments, $article);
-  $theme->footer();
-  ?>
-  
-
-  <FORM ACTION="admin.php" METHOD="post">
-
-  <P>
-   <B>Author or poster:</B><br>
-   <INPUT TYPE="text" NAME="author" SIZE="50" VALUE="<?PHP echo "$author"; ?>">
-  </P>
-
-  <P>
-   <B>Subject:</B><BR>
-   <INPUT TYPE="text" NAME="subject" SIZE="50" VALUE="<?PHP echo"$subject"; ?>">
-  </P>
-
-  <P>
-   <B>Department:</B><BR>
-   <INPUT TYPE="text" NAME="department" SIZE="50" VALUE="<?PHP echo"$department"; ?>"> dept.<BR>
-   <I><FONT SIZE="2"> 
-    Example departments: 
-    <UL>
-     <LI>we-saw-it-coming dept.</LI>
-     <LI>don't-get-your-panties-in-a-knot dept.</LI>
-     <LI>brain-melt dept.</LI>
-     <LI>beats-the-heck-out-of-me dept.</LI>
-    </UL>
-   </FONT></I>   
-  </P>
-
-  <P>
-   <B>Category:</B><BR>
-   <SELECT NAME="category">
-   <?PHP
-   for ($i = 0; $i < sizeof($categories); $i++) {
-     echo "<OPTION VALUE=\"$categories[$i]\" ";
-     if ($category == $categories[$i]) echo "SELECTED";
-     echo ">$categories[$i]\n";
-   }
-  ?>
-   </SELECT>
-  </P>
-
-  <P>
-   <B>Author's abstract:</B><BR>
-   <TEXTAREA WRAP="virtual" COLS="60" ROWS="8" NAME="abstract"><?PHP echo "$abstract"; ?></TEXTAREA><BR>
-   <FONT SIZE="2"><I>Will be displayed on the main page!</I></FONT>  
-  </P>
-
-  <P>
-   <B>Editor's comments:</B><BR>
-   <TEXTAREA WRAP="virtual" COLS="60" ROWS="5" NAME="comments"><? echo "$comments"; ?></TEXTAREA><BR>
-   <FONT SIZE="2"><I>Will be displayed on the main page after the abstract.</I></FONT>
-  </P>
-
-  <P>
-   <B>Extended article:</B><BR>
-   <TEXTAREA WRAP="virtual" COLS="60" ROWS="12" NAME="article"><? echo "$article"; ?></TEXTAREA><BR>
-   <I><FONT SIZE="2">Will be displayed on the article's page when following the 'read more'-link.</FONT></I>
-  </P>
-
-  <INPUT TYPE="hidden" NAME="qid" VALUE="<?PHP echo "$qid"; ?>">
-  <INPUT TYPE="hidden" NAME="uid" VALUE="<?PHP echo "$uid"; ?>">
-  <INPUT TYPE="submit" NAME="op" VALUE="Delete article">
-  <INPUT TYPE="submit" NAME="op" VALUE="Preview article"> 
-  <INPUT TYPE="submit" NAME="op" VALUE="Post article">
-  </FORM>
- 
-  <?PHP
-   $theme->footer();
-}
-
-function news_post($qid, $uid, $author, $subject, $department, $category, $abstract, $comments, $article) {
-  global $aid;
-  dbconnect();
-  
-  if ($uid == -1) $author = "";
-
-  $subject = stripslashes(FixQuotes($subject));
-  $abstract = stripslashes(FixQuotes($abstract));
-  $comments = stripslashes(FixQuotes($comments));
-  $article = stripslashes(FixQuotes($article));
-
-  $result = mysql_query("INSERT INTO stories (sid, aid, subject, time, abstract, comments, article, category, informant, department) VALUES (NULL, '$aid', '$subject', '". time() ."', '$abstract', '$comments', '$article', '$category', '$author', '$department')");
-
-  ### remove article from queue:
-  news_queue_delete($qid);
-}
-
-function news_edit($sid) {
-  global $user, $subject, $abstract, $comments, $article;
-
-  include "theme.inc";
-  include "config.inc";
-  
-  $theme->header();
-
-  dbconnect();
-
-  $result = mysql_query("SELECT * FROM stories where sid = $sid");
-  $article = mysql_fetch_object($result); 
-  mysql_free_result($result);
-
-  $theme->preview($article->author, $article->informant, $article->time, $article->subject, $article->department, $article->abstract, $article->comments, $article->article);
-
-  ?>
-
-  <FORM ACTION="admin.php" METHOD="post">
-
-  <P>
-   <B>Author or poster:</B><BR>
-   <INPUT TYPE="text" NAME="author" SIZE="50" VALUE="<?PHP echo "$article->aid"; ?>">
-  </P>
-
-  <P>
-   <B>Subject:</B><BR>
-   <INPUT TYPE="text" NAME="subject" SIZE="50" VALUE="<?PHP echo"$article->subject"; ?>">
-  </P>
-
-  <P>
-   <B>Department:</B><BR>
-   <INPUT TYPE="text" NAME="department" SIZE="50" VALUE="<?PHP echo"$article->department"; ?>"> dept.<BR>
-   <I><FONT SIZE="2"> 
-    Example departments: 
-    <UL>
-     <LI>we-saw-it-coming dept.</LI>
-     <LI>don't-get-your-panties-in-a-knot dept.</LI>
-     <LI>brain-melt dept.</LI>
-     <LI>beats-the-heck-out-of-me dept.</LI>
-    </UL>
-   </FONT></I>   
-  </P>
-
-  <P>
-   <B>Category:</B><BR>
-   <SELECT NAME="category">
-   <?PHP
-   for ($i = 0; $i < sizeof($categories); $i++) {
-     echo "<OPTION VALUE=\"$categories[$i]\" ";
-     if ($article->category == $categories[$i]) echo "SELECTED";
-     echo ">$categories[$i]\n";
-   }
-  ?>
-   </SELECT>
-  </P>
-
-  <P>
-   <B>Author's abstract:</B><BR>
-   <TEXTAREA WRAP="virtual" COLS="60" ROWS="8" NAME="abstract"><?PHP echo "$article->abstract"; ?></TEXTAREA><BR>
-   <FONT SIZE="2"><I>Will be displayed on the main page!</I></FONT>  
-  </P>
-
-  <P>
-   <B>Editor's comments:</B><BR>
-   <TEXTAREA WRAP="virtual" COLS="60" ROWS="5" NAME="comments"><? echo "$article->comments"; ?></TEXTAREA><BR>
-   <FONT SIZE="2"><I>Will be displayed on the main page after the abstract.</I></FONT>
-  </P>
-
-  <P>
-   <B>Extended article:</B><BR>
-   <TEXTAREA WRAP="virtual" COLS="60" ROWS="12" NAME="article"><? echo "$article->article"; ?></TEXTAREA><BR>
-   <I><FONT SIZE="2">Will be displayed on the article's page when following the 'read more'-link.</FONT></I>
-  </P>
-
-
-  <INPUT TYPE="hidden" NAME="sid" SIZE=60 VALUE="<?PHP echo"$sid"; ?>">
-  <INPUT TYPE="submit" NAME="op" VALUE="Update article"></FORM>
-
-  <?PHP
-  $theme->footer();
-}
-
-function news_update($sid, $subject, $category, $department, $abstract, $comments, $article) {
-  global $aid;
-  dbconnect();
-  $subject = stripslashes(FixQuotes($subject));
-  $department = stripslashes(FixQuotes($department));
-  $abstract = stripslashes(FixQuotes($abstract));
-  $comments = stripslashes(FixQuotes($comments));
-  $article = stripslashes(FixQuotes($article));
-  mysql_query("UPDATE stories SET subject = '$subject', category = '$category', department = '$department', abstract = '$abstract', comments = '$comments', article = '$article' WHERE sid = $sid");
-  header("Location: admin.php?op=main");
-}
-
-function news_admin_write() {
-  include "theme.inc";
-  include "config.inc";
-  dbconnect();
-
-  $theme->header();
-  ?>
-
-  <FORM ACTION="admin.php" METHOD="post">
-
-  <P>
-   <B>Subject:</B><BR>
-   <INPUT TYPE="text" NAME="subject" SIZE="50" VALUE="">
-  </P>
-
-  <P>
-   <B>Department:</B><BR>
-   <INPUT TYPE="text" NAME="department" SIZE="50" VALUE=""> dept.<BR>
-   <I>
-    <FONT SIZE="2"> 
-     Example departments: 
-     <UL>
-      <LI>we-saw-it-coming dept.</LI>
-      <LI>don't-get-your-panties-in-a-knot dept.</LI>
-      <LI>brain-melt dept.</LI>
-      <LI>beats-the-heck-out-of-me dept.</LI>
-     </UL>
-    </FONT>
-   </I>   
-  </P>
-
-  <P>
-   <B>Category:</B><BR>
-   <SELECT NAME="category">
-   <?PHP
-   for ($i = 0; $i < sizeof($categories); $i++) {
-     echo "<OPTION VALUE=\"$categories[$i]\">$categories[$i]\n";
-   }
-  ?>
-   </SELECT>
-  </P>
-
-  <P>
-   <B>Introduction of article:</B><BR>
-   <TEXTAREA WRAP="virtual" COLS="60" ROWS="7" NAME="abstract"></TEXTAREA><BR>
-   <FONT SIZE="2"><I>Will be displayed on the main page.</I></FONT>  
-  </P>
-
-  <P>
-   <B>Rest of article:</B><BR>
-   <TEXTAREA WRAP="virtual" COLS="60" ROWS="8" NAME="article"></TEXTAREA><BR>
-   <I><FONT SIZE="2">Will be displayed on the article's page when following the 'read more'-link.</FONT></I>
-  </P>
-
-  <INPUT TYPE="submit" NAME="op" VALUE="Preview admin article"> 
-  <INPUT TYPE="submit" NAME="op" VALUE="Post admin article">
-  </FORM>
-  <?
-  $theme->footer();
-}
-
-function news_admin_preview($subject, $category, $department, $abstract, $article) {
-  global $aid;
-  include "theme.inc";
-  include "config.inc";
-  $subject = stripslashes($subject);
-  $intro = stripslashes($intro);
-  $rest = stripslashes($rest);
-
-  $theme->header();
-  $theme->preview("", $aid, $time, $subject, "", $abstract, "", $article);
-  ?>
-
-  <FORM ACTION="admin.php" METHOD="post">
-
-  <P>
-   <B>Subject:</B><BR>
-   <INPUT TYPE="text" NAME="subject" SIZE="50" VALUE="<? echo "$subject"; ?>">
-  </P>
-
-  <P>
-   <B>Department:</B><BR>
-   <INPUT TYPE="text" NAME="department" SIZE="50" VALUE="<? echo "$department"; ?>"> dept.<BR>
-   <I>
-    <FONT SIZE="2"> 
-     Example departments: 
-     <UL>
-      <LI>we-saw-it-coming dept.</LI>
-      <LI>don't-get-your-panties-in-a-knot dept.</LI>
-      <LI>brain-melt dept.</LI>
-      <LI>beats-the-heck-out-of-me dept.</LI>
-     </UL>
-    </FONT>
-   </I>   
-  </P>
-
-  <P>
-   <B>Category:</B><BR>
-   <SELECT NAME="category">
-   <?PHP
-   for ($i = 0; $i < sizeof($categories); $i++) {
-     echo "<OPTION VALUE=\"$categories[$i]\" ";
-     if ($category == $categories[$i]) echo "SELECTED";
-     echo ">$categories[$i]\n";
-   }
-  ?>
-   </SELECT>
-  </P>
-
-  <P>
-   <B>Introduction of article:</B><BR>
-   <TEXTAREA WRAP="virtual" COLS="60" ROWS="7" NAME="abstract"><? echo "$abstract"; ?></TEXTAREA><BR>
-   <FONT SIZE="2"><I>Will be displayed on the main page.</I></FONT>  
-  </P>
-
-  <P>
-   <B>Rest of article:</B><BR>
-   <TEXTAREA WRAP="virtual" COLS="60" ROWS="8" NAME="article"><? echo "$article"; ?></TEXTAREA><BR>
-   <I><FONT SIZE="2">Will be displayed on the article's page when following the 'read more'-link.</FONT></I>
-  </P>
-
-  <INPUT TYPE="submit" NAME="op" VALUE="Preview admin article"> 
-  <INPUT TYPE="submit" NAME="op" VALUE="Post admin article">
-  </FORM>
-
-  <?
-  $theme->footer();
-}
-
-function news_admin_post($subject, $category, $department, $abstract, $article, $category) {
-  global $aid;
-  dbconnect();
-  
-  $subject = stripslashes(FixQuotes($subject));
-  $intro = stripslashes(FixQuotes($intro));
-  $rest = stripslashes(FixQuotes($rest));
-  
-  $result = mysql_query("INSERT INTO stories VALUES (NULL, '$aid', '$subject', '". time() ."', '$abstract', '', '$article', '$category', '$aid', '$department')");
-  if (!$result) {
-    echo mysql_errno(). ": ".mysql_error(). "<BR>";
-    exit();
-  }
-  header("Location: admin.php?op=main");
-}
-
-/*********************************************************/
-/* admin admining                                        */
-/*********************************************************/
-
-function displayadmins() {
-	$titlebar = "<b>current authors</b>";
-	include "header.inc";
-	dbconnect();
-	$result = mysql_query("select aid from authors");
-	echo "<table border=1>";
-	while(list($a_aid) = mysql_fetch_row($result)) {
-		echo "<tr><td>$a_aid</td>";
-		echo "<td><a href=\"$that_url/admin.php?op=modifyadmin&chng_aid=$a_aid\">Modify Info</a></td>";
-		echo "<td><a href=\"$that_url/admin.php?op=deladmin&del_aid=$a_aid\">Delete Author</a></td></tr>";
-	}
-	echo "</table>";
-	echo "<form action=\"$that_url/admin.php\" method=\"post\">";
-	echo "Handle: <INPUT TYPE=\"text\" NAME=\"add_aid\" size=30 maxlength=30><br>";
-	echo "Name: 	<INPUT TYPE=\"text\" NAME=\"add_name\" size=30 maxlength=60><br>";
-	echo "Email: <INPUT TYPE=\"text\" NAME=\"add_email\" size=30 maxlength=60><br>";
-	echo "URL: <INPUT TYPE=\"text\" NAME=\"add_url\" size=30 maxlength=60><br>";
-	echo "Password: <INPUT TYPE=\"text\" NAME=\"add_pwd\" size=12 maxlength=12><br>";
-	echo "	<INPUT TYPE=submit NAME=op VALUE=\"Add author\"></form>";
-	include "footer.inc";
-}
-
-function modifyadmin($chng_aid) {
-	$titlebar = "<b>update $chng_aid</b>";
-	include "header.inc";
-	dbconnect();
-	$result = mysql_query("select aid, name, url, email, pwd from authors where aid='$chng_aid'");
-	list($chng_aid, $chng_name, $chng_url, $chng_email, $chng_pwd) = mysql_fetch_row($result);
-	echo "<form action=\"admin.php\" method=\"post\">";
-	echo "Name: $chng_name<INPUT TYPE=\"hidden\" NAME=\"chng_name\" VALUE=\"$chng_name\"><br>";
-	echo "Handle: <INPUT TYPE=\"text\" NAME=\"chng_aid\" VALUE=\"$chng_aid\"><br>";
-	echo "Email: <INPUT TYPE=\"text\" NAME=\"chng_email\" VALUE=\"$chng_email\" size=30 maxlength=60><br>";
-	echo "URL: <INPUT TYPE=\"text\" NAME=\"chng_url\" VALUE=\"$chng_url\" size=30 maxlength=60><br>";
-	echo "Password: <INPUT TYPE=\"password\" NAME=\"chng_pwd\" VALUE=\"$chng_pwd\" size=12 maxlength=12><br>";
-	echo "Retype Password: <INPUT TYPE=\"password\" NAME=\"chng_pwd2\" size=12 maxlength=12> (for changes only)<br>";
-	echo "	<INPUT TYPE=submit NAME=op VALUE=\"Update Author\"></form>";
-	include "footer.inc";
-}
-
-function updateadmin($chng_aid, $chng_name, $chng_email, $chng_url, $chng_pwd, $chng_pwd2) {
-	if ($chng_pwd2 != "") {
-		if($chng_pwd != $chng_pwd2) {
-			$titlebar = "<b>bad pass</b>";
-			include "header.inc";
-			echo "Sorry, the new passwords do not match. Click back and try again";
-			include "footer.inc";
-			exit;
-		}
-		dbconnect();
-		$result = mysql_query("update authors set aid='$chng_aid', email='$chng_email', url='$chng_url', pwd='$chng_pwd' where NAME='$chng_name'");
-		header("Location: admin.php?op=main");
-	} else {
-		dbconnect();
-		$result = mysql_query("update authors set aid='$chng_aid', email='$chng_email', url='$chng_url' where NAME='$chng_name'");
-		header("Location: admin.php?op=main");
-	}
-}
-
-
-if ($admin) {
-  switch($op) {
-    case "main":
-      main();
-      break;
-    case "blocks":
-      block_overview();
-      break;
-    case "Add new block":
-      block_add($title, $content);
-      break;
-    case "Delete block":
-      block_delete($id);
-      break;
-    case "Update block":
-      block_update($id, $title, $content);
-      break;
-    case "submission":
-      // fall through
-    case "View article":
-      news_display($qid);
-      break;
-    case "Preview article":
-      news_preview($qid, $uid, $author, $subject, $department, $category, $abstract, $comments, $article);
-      break;
-    case "Post article":
-      news_post($qid, $uid, $author, $subject, $department, $category, $abstract, $comments, $article);
-      break;
-    case "Edit article":
-      news_edit($sid);
-      break;
-    case "Update article":
-      news_update($sid, $subject, $category, $department, $abstract, $comments, $article);
-      break;
-    case "Delete article":
-      news_queue_delete($qid);
-      break;
-    case "news_admin_write":
-      news_admin_write($sid);
-      break;
-    case "Preview admin article":
-      news_admin_preview($subject, $category, $department, $abstract, $article);
-      break;
-    case "Post admin article":
-      news_admin_post($subject, $category, $department, $abstract, $article);
-      break;
-    case "mod_authors":
-      displayadmins();
-      break;
-    case "modifyadmin":
-      modifyadmin($chng_aid);
-      break;
-    case "Update author":
-      updateadmin($chng_aid, $chng_name, $chng_email, $chng_url, $chng_pwd, $chng_pwd2);
-      break;
-    case "Add author":
-      dbconnect();
-      $result = mysql_query("INSERT INTO authors VALUES ('$add_aid','$add_name','$add_url','$add_email','$add_pwd')");
-      if (!$result) {
-        echo mysql_errno(). ": ".mysql_error(). "<br>"; return;
-      }
-      header("Location: $that_url/admin.php?op=main");
-      break;
-    case "deladmin":
-      include "header.inc";
-      echo "Are you sure you want to delete $del_aid?<br>";
-      echo "<a href=\"$that_url/admin.php?op=deladminconf&del_aid=$del_aid\">Yes</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"$that_url/admin.php?op=main\">No</a>";
-      include "footer.inc";
-      break;
-    case "deladminconf":
-      dbconnect();
-      mysql_query("delete from authors where aid='$del_aid'");
-      header("Location: $that_url/admin.php?op=main");
-      break;
-    case "create":
-      poll_createPoll();
-      break;
-    case "createPosted":
-      poll_createPosted();
-      break;
-    case "remove":
-      poll_removePoll();
-      break;
-    case "removePosted":
-      poll_removePosted();
-      break;
-    case "user_overview":
-      user_overview();
-      break;
-    case "backup":
-      backup();
-      main();
-      break;    
-    case "view": 
-      poll_viewPoll();
-      break;
-    case "viewPosted":
-      poll_viewPosted();
-      break;
-    case "logout":
-      logout();
-      break;
-    default:
-      main();
-      break;
-  }
-} else {
-  login();
-}
 ?>

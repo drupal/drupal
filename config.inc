@@ -3,9 +3,15 @@
 #
 # MySQL settings:
 #
-$dbhost = "zind.net";
+
+#$dbhost = "zind.net";
+#$dbuname = "dries";
+#$dbpass = "Abc123";
+#$dbname = "dries";
+
+$dbhost = "";
 $dbuname = "dries";
-$dbpass = "Abc123";
+$dbpass = "oakley";
 $dbname = "dries";
 
 #
@@ -64,7 +70,7 @@ $anonymous = "Anonymous Chicken";
 #
 # Default theme:
 #
-$cfg_theme = "Dries";
+$cfg_theme = "UnConeD";
 
 #
 # Submission moderation votes:

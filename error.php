@@ -12,7 +12,7 @@
 <B>Temporary debug output:</B><BR>
   * STATUS...: <? echo $REDIRECT_STATUS; ?><BR>
   * URL......: <? echo $REDIRECT_URL; ?><BR>
-  * METHDOD..: <? echo $REQUEST_METHOD; ?><BR>
+  * METHOD...: <? echo $REQUEST_METHOD; ?><BR>
 
 <?
  switch($REDIRECT_STATUS) {
@@ -34,6 +34,10 @@
    default:
     $message = "unknown error";
  }
+
+ include "database.inc"; 
+ include "log.inc";
+ watchdog(3, "message: `$message' - requested url: $REDIRECT_URL - referring url: $HTTP_REFERER");
 ?>
 
 <B>Processed output:</B><BR>

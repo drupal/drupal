@@ -20,7 +20,7 @@ function submission_vote($id, $vote, $comment) {
     db_query("UPDATE stories SET score = score $vote, votes = votes + 1 WHERE id = $id");
 
     ### Update the comments (if required):
-    if ($comment) db_query("INSERT INTO comments (sid, subject, comment, hostname, timestamp) VALUES($id, '". addslashes(substr($comment, 0, 29)) ." ...', '". addslashes($comment) ."', '". getenv("REMOTE_ADDR") ."', '". time() ."')");
+    if ($comment) db_query("INSERT INTO comments (sid, author, subject, comment, hostname, timestamp) VALUES($id, $user->id, '". addslashes(substr($comment, 0, 29)) ." ...', '". addslashes($comment) ."', '". getenv("REMOTE_ADDR") ."', '". time() ."')");
 
     ### Update user's history record:
     $user->setHistory("s$id", "$vote");  // s = submission

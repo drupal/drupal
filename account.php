@@ -97,8 +97,8 @@ function validateUser($user) {
   if (strlen($user[userid]) > 15) $rval = "the specified username is too long: it must be less than 15 characters.";
 
   ### Check to see whether the username or e-mail address are banned:
-  if ($ban = ban_match($user[userid], $type[usernames])) $rval = "the specified username is banned  for the following reason: <I>$ban->reason</I>.";
-  if ($ban = ban_match($user[email], $type[addresses])) $rval = "the specified e-mail address is banned for the following reason: <I>$ban->reason</I>.";
+  if ($ban = ban_match($user[userid], $type2index[usernames])) $rval = "the specified username is banned  for the following reason: <I>$ban->reason</I>.";
+  if ($ban = ban_match($user[email], $type2index[addresses])) $rval = "the specified e-mail address is banned for the following reason: <I>$ban->reason</I>.";
 
   ### Verify whether username and e-mail address are unique:
   if (db_num_rows(db_query("SELECT userid FROM users WHERE LOWER(userid)=LOWER('$user[userid]')")) > 0) $rval = "the specified username is already taken.";
@@ -114,11 +114,41 @@ function account_makePassword($min_length=6) {
   return $password;
 }
 
+function account_track_comments() {
+  global $user;
+
+  include "function.inc";
+
+  $output .= "<P>This page is helpful in case you want to keep track of your most recent comments in any of the discussions.  It helps you to review the replies your comments got.\n<P>\n"; 
+
+  ### Perform query:
+  $sresult = db_query("SELECT s.id, s.subject, COUNT(s.id) as count FROM comments c LEFT JOIN stories s ON c.sid = s.id WHERE c.author = $user->id GROUP BY s.id DESC LIMIT 5");
+  
+  while ($story = db_fetch_object($sresult)) {
+    $output .= "<LI>". plural($story->count, comment, comments) ." in article `<A HREF=\"discussion.php?id=$story->id\">$story->subject</A>`:</LI>\n";
+    $output .= " <UL>\n";
+   
+    $cresult = db_query("SELECT * FROM comments WHERE author = $user->id AND sid = $story->id");
+    while ($comment = db_fetch_object($cresult)) {
+      $output .= "  <LI><A HREF=\"discussion.php?id=$story->id&cid=$comment->cid&pid=$comment->pid\">$comment->subject</A> (<B>". plural(discussion_num_replies($comment->cid), "reply", "replies") ."</B>)</LI>\n";
+    }
+    $output .= " </UL>\n";
+  }
+   
+  return $output;
+}
+
 switch ($op) {
   case "Login":
     session_start();
     $user = new User($userid, $passwd);
-    if ($user && $user->valid()) session_register("user");
+    if ($user && $user->valid()) {
+      session_register("user");
+      watchdog(1, "session opened for user `$user->userid'.");
+    }
+    else {
+      watchdog(2, "failed login for user `$userid'.");
+    }
     showUser($user->userid);
     break;
   case "new":
@@ -127,8 +157,14 @@ switch ($op) {
   case "info":
     showUser($uname);
     break;
+  case "discussion":
+    include "theme.inc";
+    $theme->header();
+    $theme->box("Track your comments", account_track_comments());
+    $theme->footer();
+    break;
   case "logout":
-    // session_start();
+    watchdog(1, "session closed for user `$user->userid'.");
     session_unset();
     session_destroy();
     unset($user);
@@ -157,6 +193,8 @@ switch ($op) {
         $theme->box("Account details", "Your member account has been created and the details necessary to login have been sent to your e-mail account <B>$new[email]</B>.  Once you received the account confirmation, hit <A HREF=\"account.php\">this link</A> to login.");
         $theme->footer();
       }
+
+      watchdog(1, "new user `$new[userid]' registered with e-mail address `$new[email]'");
     }
     break;
   case "user":
@@ -191,7 +229,7 @@ switch ($op) {
       ### Display output/content:
       include "theme.inc";
       $theme->header();
-      $theme->box("Edit user information", $output);
+      $theme->box("Edit your information", $output);
       $theme->footer();
     }
     else {
@@ -246,7 +284,7 @@ switch ($op) {
       ### Display output/content:
       include "theme.inc";
       $theme->header();
-      $theme->box("Customize page", $output);
+      $theme->box("Customize your page", $output);
       $theme->footer();
     }
     else {

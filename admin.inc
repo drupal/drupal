@@ -15,11 +15,30 @@ function admin_header() {
     th	    { font-family: helvetica, arial; text-align: center; background-color: #C0C0C0; color: #447744; }
     td	    { font-family: helvetica, arial; }
    </STYLE>
-   <BODY BGCOLOR="#ffffff" LINK="#0000ff" VLINK="#000099" ALINK="#ff0000">
+   <BODY BGCOLOR="#FFFFFF" LINK="#0000FF" VLINK="#000099" ALINK="#FF0000">
+   <TABLE BORDER="1">
+    <TR>
+     <TD ALIGN="left" VALIGN="top" WIDTH="100">
+      <P>
+       <LI><A HREF="admin.php?section=accounts">accounts</A></LI>
+       <LI><A HREF="admin.php?section=bans">bans</A></LI>
+       <LI><A HREF="admin.php?section=logs">logs</A></LI>
+       <LI><A HREF="admin.php?section=stories">stories</A></LI>
+      <P>
+       <LI><A HREF="">home</A></LI>
+     </TD>
+     <TD>
  <?
 }
 
 function admin_footer() {
+ ?>
+     </TD>
+    </TR>
+   </TABLE>
+   </BODY>
+  </HTML>
+ <?
 }
 
 ?>
