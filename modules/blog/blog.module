@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.44 2001/11/12 20:15:08 dries Exp $
+// $Id: blog.module,v 1.45 2001/11/12 22:17:52 dries Exp $
 
 function blog_conf_options() {
  $output .= form_textarea("Explanation or submission guidelines", "blog_help", variable_get("blog_help", ""), 55, 4, "This text will be displayed at the top of the blog submission form.  Useful for helping or instructing your users.");
@@ -35,6 +35,26 @@ function blog_access($op, $node) {
 
   if ($op == "delete") {
     return ($user->uid == $node->uid);
+  }
+
+}
+
+function blog_save($op, $node) {
+
+  if ($op == "approve") {
+    return array("promote" => 1);
+  }
+
+  if ($op == "create") {
+    return array("promote" => 0, "moderate" => 0, "status" => 1);
+  }
+
+  if ($op == "decline") {
+    return array("promote" => 0);
+  }
+
+  if ($op == "update") {
+    return array("promote");
   }
 
 }
@@ -224,16 +244,6 @@ function blog_form($node, $help, $error) {
   return $output;
 }
 
-function blog_save($node) {
-
-  if ($node->nid) {
-    return array();
-  }
-  else {
-    return array("promote" => 0, "moderate" => 0, "status" => 1);
-  }
-
-}
 
 function blog_page() {
   global $theme, $id, $op, $date;

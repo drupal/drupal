@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.81 2001/11/12 20:06:02 dries Exp $
+// $Id: node.module,v 1.82 2001/11/12 22:17:52 dries Exp $
 
 function node_help() {
   global $mod;
@@ -723,7 +723,7 @@ function node_submit($node) {
         $fields = array("nid", "uid" => $user->uid, "body", "teaser", "title", "type" => $node->type);
       }
 
-      node_save($node, array_merge($fields, module_invoke($node->type, "save", $node)));
+      node_save($node, array_merge($fields, module_invoke($node->type, "save", "update", $node)));
 
       watchdog("special", "node: updated '$node->title'");
       $output = t("The node has been updated.");
@@ -755,7 +755,7 @@ function node_submit($node) {
         $fields = array("uid" => $user->uid, "body", "comment" => 1, "teaser", "title", "type" => $node->type);
       }
 
-      node_save($node, array_merge($fields, module_invoke($node->type, "save", $node)));
+      node_save($node, array_merge($fields, module_invoke($node->type, "save", "create", $node)));
 
       watchdog("special", "node: added '$node->title'");
       $output = t("Thanks for your submission.");

@@ -1,5 +1,5 @@
 <?php
-// $Id: page.module,v 1.40 2001/11/12 20:15:08 dries Exp $
+// $Id: page.module,v 1.41 2001/11/12 22:17:52 dries Exp $
 
 $GLOBALS["format"] = array(0 => "HTML", 1 => "PHP", 2 => "text");
 
@@ -13,6 +13,24 @@ function page_node($field) {
 function page_access($op, $node) {
   if ($op == "view") {
     return $node->status;
+  }
+}
+
+function page_save($op, $node) {
+  if ($op == "approve") {
+    return array("status" => 1);
+  }
+
+  if ($op == "create") {
+    return array("format", "link", "promote" => 0, "moderate" => 0, "status" => 1);
+  }
+
+  if ($op == "decline") {
+    return array("status" => 0);
+  }
+
+  if ($op == "update") {
+    return array("format", "link");
   }
 }
 
@@ -72,16 +90,5 @@ function page_form($node, $help, $error) {
 
   return $output;
 }
-
-function page_save() {
-  if ($node->nid) {
-    return array("format", "link");
-  }
-  else {
-    return array("format", "link", "promote" => 0, "moderate" => 0, "status" => 1);
-  }
-}
-
-
 
 ?>
