@@ -2,7 +2,7 @@
 
  class Theme {
    ### color set #1:
-   var $bgcolor1 = "blue";   // background color
+   var $bgcolor1 = "#000000";   // background color
    var $fgcolor1 = "red";   // table body color
    var $hlcolor1 = "#AAAAAA";   // high-light color
 
