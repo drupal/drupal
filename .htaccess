@@ -8,8 +8,12 @@
   deny from all
 </Files>
 
-# Deny directory listings:
+# Set some options
 Options -Indexes
+Options FollowSymLinks
+
+# Set the default handler to index.php:
+DirectoryIndex index.php
 
 # Customized server error messages:
 ErrorDocument 400 /error.php
@@ -57,4 +61,4 @@ ErrorDocument 500 /error.php
   RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]
 </IfModule>
 
-# $Id: .htaccess,v 1.49 2003/06/03 18:04:40 dries Exp $
+# $Id: .htaccess,v 1.50 2003/06/26 04:54:01 dries Exp $
