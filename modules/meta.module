@@ -20,18 +20,26 @@ function meta_link($type) {
 
 
 function meta_form($type, $edit = array()) {
+
+  if (!$edit[attributes]) $edit[attributes] = "";
+
   $c = db_query("SELECT * FROM collection WHERE types LIKE '%". check_input($type) ."%'");
+
   while ($collection = db_fetch_object($c)) {
     unset($array);
+
     $t = db_query("SELECT * FROM tag WHERE collections LIKE '%$collection->name%'");
+
     while ($tag = db_fetch_object($t)) {
       if (strstr($edit[attributes], $tag->attributes)) {
         $edit[$collection->name] = $tag->attributes;
       }
       $array[$tag->attributes] = $tag->name;
     }
+
     $form .= form_select($collection->name, $collection->name, $edit[$collection->name], $array);
   }
+
   return $form;
 }
 

@@ -376,7 +376,7 @@ function node_block() {
 }
 
 function node_feed() {
- 
+
   $result = db_query("SELECT nid, type FROM node WHERE promote = '1' AND status = '". node_status("posted") ."' ORDER BY timestamp DESC LIMIT 15");
 
   while ($node = db_fetch_object($result)) {

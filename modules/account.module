@@ -147,15 +147,18 @@ function account_delete($name) {
 function account_form($account = 0) {
 
   $form .= $account->id ? form_item("ID", $account->id) . form_hidden("id", $account->id) : "";
-  $form .= $account->userid ? form_item(t("Username"), check_output($account->userid)) . form_hidden("userid", $account->userid) : form_textfield(t("Username"), "userid", $account->userid, 15, 15);
+  $form .= form_item(t("Name"), check_output($account->name) ." (". check_output($account->userid) .")");
   $form .= form_select(t("Status"), "status", $account->status, array("blocked", "not confirmed", "open"));
   $form .= form_select(t("Role"), "role", $account->role, access_get_roles());
-  $form .= form_textfield(t("Real name"), "name", $account->name, 30, 55);
   $form .= form_textfield(t("Real e-mail address"), "real_email", $account->real_email, 30, 55);
   $form .= form_textfield(t("Fake e-mail address"), "fake_email", $account->fake_email, 30, 55);
   $form .= form_textfield(t("Homepage"), "url", $account->url, 30, 55);
   $form .= form_textarea(t("Bio"), "bio", $account->bio, 35, 5);
   $form .= form_textarea(t("Signature"), "signature", $account->signature, 35, 5);
+
+  $form .= form_hidden("userid", $account->userid);
+  $form .= form_hidden("name", $account->name);
+
   if ($account) {
     $form .= form_submit("View account");
   }
@@ -168,7 +171,7 @@ function account_save($edit) {
   if ($edit[id]) {
     // Updating existing account
     foreach ($edit as $key=>$value) {
-        $query[] = "$key = '". addslashes($value) ."'";
+      $query[] = "$key = '". addslashes($value) ."'";
     }
     db_query("UPDATE users SET ". implode(", ", $query) ." WHERE id = $edit[id]");
     watchdog("account", "account: modified user '$edit[name]'");
@@ -199,7 +202,7 @@ function account_save($edit) {
 }
 
 function account_edit($name) {
-  $result = db_query("SELECT * FROM users WHERE userid = '$name'");
+  $result = db_query("SELECT * FROM users WHERE name = '$name'");
 
   if ($account = db_fetch_object($result)) {
     return account_form($account);
@@ -207,7 +210,39 @@ function account_edit($name) {
 }
 
 function account_add() {
-  return account_form();
+  global $REQUEST_URI;
+
+  $form .= form_textfield("Username", "name", "", 30, 55);
+  $form .= form_textfield("E-mail address", "mail", "", 30, 55);
+  $form .= form_textfield("Password", "pass", "", 30, 55);
+
+  $form .= form_submit("Create account");
+
+  return form($REQUEST_URI, $form);
+
+}
+
+function account_create($edit) {
+
+  if ($error = user_validate_name($edit[name])) {
+    return $error;
+  }
+  else if ($error = user_validate_mail($edit[mail])) {
+    return $error;
+  }
+  else if (empty($edit[pass])) {
+    return "password should be non-empty.";
+  }
+  else if (db_num_rows(db_query("SELECT userid FROM users WHERE (LOWER(userid) = LOWER('$edit[name]') OR LOWER(name) = LOWER('$edit[name]'))")) > 0) {
+    return "the username '$edit[name]' is already taken.";
+  }
+  else if (db_num_rows(db_query("SELECT real_email FROM users WHERE LOWER(real_email) = LOWER('$edit[mail]')")) > 0) {
+    return "the e-mail address '$edit[mail]' is already in use by another account.";
+  }
+  else {
+    $user = user_save("", array("userid" => $edit[name], "name" => $edit[name], "real_email" => $edit[mail], "passwd" => $edit[pass], "role" => "authenticated user", "status" => 2));
+  }
+
 }
 
 function account_view($name) {
@@ -222,10 +257,9 @@ function account_view($name) {
 
     $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\">\n";
     $output .= " <TR><TH>ID:</TH><TD>$account->id</TD></TR>\n";
-    $output .= " <TR><TH>Name:</TH><TD>$account->name</TD></TR>\n";
+    $output .= " <TR><TH>Name:</TH><TD>". check_output($account->name) ." (". check_output($account->userid) .")</TD></TR>\n";
     $output .= " <TR><TH>Status:</TH><TD>". $status[$account->status] ."</TD></TR>\n";
     $output .= " <TR><TH>Role:</TH><TD>". check_output($account->role) ."</TD></TR>\n";
-    $output .= " <TR><TH>Real name:</TH><TD>". check_output($account->name) ."</TD></TR>\n";
     $output .= " <TR><TH>Real e-mail address:</TH><TD>". format_email($account->real_email) ."</TD></TR>\n";
     $output .= " <TR><TH>Fake e-mail address:</TH><TD>". check_output($account->fake_email) ."</TD></TR>\n";
     $output .= " <TR><TH>Homepage:</TH><TD>". format_url($account->url) ."</TD></TR>\n";
@@ -294,6 +328,15 @@ function account_admin() {
       case "Delete account":
         print status(account_delete($name));
         print account_overview(account_query($query));
+        break;
+      case "Create account":
+        if ($error = account_create($edit)) {
+          print status($error);
+          print account_add($edit);
+        }
+        else {
+          print account_edit($edit[name]);
+        }
         break;
       case "add":
         print account_add();
