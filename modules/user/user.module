@@ -1257,26 +1257,27 @@ function user_admin_create($edit = array()) {
     else if (db_num_rows(db_query("SELECT mail FROM {users} WHERE LOWER(mail) = LOWER('%s')", $edit['mail'])) > 0) {
       form_set_error('mail', t('The e-mail address "%s" is already taken.', array('%s' => $edit['mail'])));
     }
+
+    if (!form_has_errors()) {
+      watchdog('user', 'new user: "'. $edit['name'] .'" &lt;'. $edit['mail'] .'&gt;');
+
+      user_save('', array('name' => $edit['name'], 'pass' => $edit['pass'], 'init' => $edit['mail'], 'mail' => $edit['mail'], 'rid' => array(_user_authenticated_id()), 'status' => 1));
+
+      drupal_set_message(t('Created a new user account.  No e-mail has been sent.'));
+
+      return;
+    }
   }
 
-  if (!form_has_errors()) {
-    watchdog('user', 'new user: "'. $edit['name'] .'" &lt;'. $edit['mail'] .'&gt;');
+  $output  = form_textfield(t('Username'), 'name', $edit['name'], 30, 55, t('Provide the username of the new account.'));
+  $output .= form_textfield(t('E-mail address'), 'mail', $edit['mail'], 30, 55, t('Provide the e-mail address associated with the new account.'));
+  $output .= _user_profile($edit, $edit, 'form');
+  $output .= form_textfield(t('Password'), 'pass', $edit['pass'], 30, 55, t('Provide a password for the new account.'));
+  $output .= form_submit(t('Create account'));
 
-    user_save('', array('name' => $edit['name'], 'pass' => $edit['pass'], 'init' => $edit['mail'], 'mail' => $edit['mail'], 'rid' => array(_user_authenticated_id()), 'status' => 1));
+  $output = form_group(t('Create new user account'), $output);
 
-    drupal_set_message(t('Created a new user account.  No e-mail has been sent.'));
-  }
-  else {
-    $output  = form_textfield(t('Username'), 'name', $edit['name'], 30, 55, t('Provide the username of the new account.'));
-    $output .= form_textfield(t('E-mail address'), 'mail', $edit['mail'], 30, 55, t('Provide the e-mail address associated with the new account.'));
-    $output .= _user_profile($edit, $edit, 'form');
-    $output .= form_textfield(t('Password'), 'pass', $edit['pass'], 30, 55, t('Provide a password for the new account.'));
-    $output .= form_submit(t('Create account'));
-
-    $output = form_group(t('Create new user account'), $output);
-
-    return form($output);
-  }
+  return form($output);
 }
 
 function user_admin_access($edit = array()) {
