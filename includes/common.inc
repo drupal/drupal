@@ -29,7 +29,7 @@ function error_handler($errno, $message, $filename, $line, $variables) {
   $entry = $types[$errno] .": $message in $filename on line $line.";
   if (($errno == 1 || $errno == 2 || $errno == 4 || $errno == 256) && error_reporting()) {
     watchdog("error", $types[$errno] .": $message in $filename on line $line.");
-    print $entry;
+    print "<pre>$entry</pre>";
   }
 }
 
