@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.99 2004/12/31 09:30:12 dries Exp $
+// $Id: search.module,v 1.100 2004/12/31 09:31:54 dries Exp $
 
 /**
  * @file
@@ -74,7 +74,7 @@ function search_menu($may_cache) {
   $items = array();
 
   if ($may_cache) {
-    $items[] = array('path' => 'search', 'title' => t('search for'),
+    $items[] = array('path' => 'search', 'title' => t('search'),
       'callback' => 'search_view',
       'access' => user_access('search content'),
       'type' => MENU_SUGGESTED_ITEM);
