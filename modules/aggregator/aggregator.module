@@ -663,7 +663,7 @@ function import_page_last() {
   $output .= "</table>\n";
 
   print theme("header");
-  print theme("box", t("News feeds"), import_page_info());
+  print import_page_info();
   print theme("box", t("Latest news"), $output);
   print theme("footer");
 }
@@ -698,7 +698,7 @@ function import_page_feed($fid) {
   $output .= "</table>\n";
 
   print theme("header");
-  print theme("box", t("News feeds"), import_page_info());
+  print import_page_info();
   print theme("box", $feed->title, $header);
   print theme("box", t("Latest news"), $output);
   print theme("footer");
@@ -737,7 +737,7 @@ function import_page_bundle($bid) {
   $output .= "</table>\n";
 
   print theme("header");
-  print theme("box", t("News feeds"), import_page_info());
+  print import_page_info();
   print theme("box", $bundle->title, $header);
   print theme("box", t("Latest news"), $output);
   print theme("footer");
@@ -757,7 +757,7 @@ function import_page_sources() {
   $output .= "<div style=\"xml-icon\">". l("<img src=\"". theme("image", "xml.gif") ."\" width=\"36\" height=\"14\" style=\"border: 0px;\" />", "import/fd", array("title" => t("View the list of syndicated web sites in XML format."))) ."</div><br />";
 
   print theme("header");
-  print theme("box", t("News feeds"), import_page_info());
+  print import_page_info();
   print theme("box", t("News sources"), $output);
   print theme("footer");
 }
@@ -795,7 +795,7 @@ function import_page_blocks($blocks) {
 
 
   print theme("header");
-  print theme("box", t("News feeds"), import_page_info());
+  print import_page_info();
   print "<table cellpadding=\"0\" cellspacing=\"5\" border=\"0\" style=\"width: 100%;\">\n";
   print " <tr>\n";
 
