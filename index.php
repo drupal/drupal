@@ -13,8 +13,7 @@ if (menu_active_handler_exists()) {
   menu_execute_active_handler();
 }
 else {
-  print theme("header");
-  print theme("footer");
+  print theme("page", "");
 }
 
 drupal_page_footer();

@@ -16,17 +16,15 @@
 /**
   Returns the theme header.
 
-  @param $title (optional) override the page title.
-
   @return a string containing the \a header output.
 **/
-function theme_header($title = "") {
+function theme_header() {
   global $base_url;
 
   $output = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
   $output .= "<html xmlns=\"http://www.w3.org/1999/xhtml\">";
   $output .= "<head>";
-  $output .= " <title>". $title ? $title : variable_get(site_name, "drupal") ."</title>";
+  $output .= " <title>". drupal_get_title() ? drupal_get_title() : variable_get(site_name, "drupal") ."</title>";
   $output .= theme_head($main);
   $output .= " <style type=\"text/css\" media=\"all\">";
   $output .= "  @import url(misc/drupal.css);";
@@ -45,6 +43,27 @@ function theme_header($title = "") {
   if ($help = menu_get_active_help()) {
     $output .= "<small>$help</small><hr />";
   }
+
+  return $output;
+}
+
+/**
+  Returns an entire Drupal page displaying the supplied content.
+  @param $content a string containing the content to display.
+
+  @return a string containing the \a page output.
+**/
+function theme_page($content, $title = NULL, $breadcrumb = NULL) {
+  if (isset($title)) {
+    drupal_set_title($title);
+  }
+  if (isset($breadcrumb)) {
+    drupal_set_breadcrumb($breadcrumb);
+  }
+
+  $output = theme("header");
+  $output .= $content;
+  $output .= theme("footer");
 
   return $output;
 }
@@ -98,16 +117,22 @@ function theme_breadcrumb($breadcrumb) {
   \li \c $node->username the username of the poster.
 
   @param $node the \a node to be themed.
-  @param $main
+  @param $main Display teaser only, as on main page?
+  @param $page Display node as standalone page (no title)?
 
   @return a string containing the \a node output.
 **/
-function theme_node($node, $main) {
+function theme_node($node, $main = 0, $page = 0) {
   if (module_exist("taxonomy")) {
     $terms = taxonomy_link("taxonomy terms", $node);
   }
 
-  $output = "<h2>$node->title</h2> by ". format_name($node);
+  if ($page == 0) {
+    $output = "<h2>$node->title</h2> by ". format_name($node);
+  }
+  else {
+    $output = "by ". format_name($node);
+  }
 
   if (count($terms)) {
     $output .= " <small>(". print theme("links", $terms) .")</small><br />";

@@ -116,34 +116,36 @@ function blog_page_user($uid) {
   $account = user_load(array((is_numeric($uid) ? "uid" : "name") => $uid, "status" => 1));
 
   // Breadcrumb navigation:
-  $breadcrumb[] = l(t("Home"), NULL);
-  $breadcrumb[] = l(t("Blogs"), "blog");
-  $breadcrumb[] = t("%name's blog", array("%name" => $account->name));
-  print theme("breadcrumb", $breadcrumb);
+  $breadcrumb[] = l(t("Home"), "");
+  $breadcrumb[] = t("blogs");
+
+  $title = t("%name's blog", array("%name" => $account->name));
+  $output = "";
 
   $result = pager_query("SELECT nid FROM {node} WHERE type = 'blog' AND uid = '$account->uid' AND status = 1 ORDER BY nid DESC", variable_get("default_nodes_main", 10));
   while ($node = db_fetch_object($result)) {
-    node_view(node_load(array("nid" => $node->nid)), 1);
+    $output .= node_view(node_load(array("nid" => $node->nid)), 1);
   }
-  print pager_display(NULL, variable_get("default_nodes_main", 10));
-  print "<div class=\"xml-icon\">" . l("<img src=\"". theme("image", "xml.gif") ."\" width=\"36\" height=\"14\" style=\"border: 0px;\" alt=\"\" title=\"\" />", "blog/feed/$account->uid", array("title" => t("View the XML version of %username's blog", array("%username" => $account->name)))) . "</div>";
+  $output .= pager_display(NULL, variable_get("default_nodes_main", 10));
+  $output .= "<div class=\"xml-icon\">" . l("<img src=\"". theme("image", "xml.gif") ."\" width=\"36\" height=\"14\" style=\"border: 0px;\" alt=\"\" title=\"\" />", "blog/feed/$account->uid", array("title" => t("View the XML version of %username's blog", array("%username" => $account->name)))) . "</div>";
+
+  print theme("page", $output, $title);
 }
 
 function blog_page_last() {
   global $user;
 
-  // Breadcrumb navigation:
-  $breadcrumb[] = l(t("Home"), NULL);
-  $breadcrumb[] = t("Blogs");
-  print theme("breadcrumb", $breadcrumb);
+  $output = "";
 
   $result = pager_query("SELECT nid FROM {node} WHERE type = 'blog' AND status = 1 ORDER BY nid DESC", variable_get("default_nodes_main", 10));
 
   while ($node = db_fetch_object($result)) {
-    node_view(node_load(array("nid" => $node->nid)), 1);
+    $output .= node_view(node_load(array("nid" => $node->nid)), 1);
   }
-  print pager_display(NULL, variable_get("default_nodes_main", 10));
-  print "<div class=\"xml-icon\">". l("<img src=\"". theme("image", "xml.gif") ."\" width=\"36\" height=\"14\" style=\"border: 0px;\" alt=\"\" title=\"\" />", "blog/feed", array("title" => t("Read the XML version of all blogs."))) ."</div>";
+  $output .= pager_display(NULL, variable_get("default_nodes_main", 10));
+  $output .= "<div class=\"xml-icon\">". l("<img src=\"". theme("image", "xml.gif") ."\" width=\"36\" height=\"14\" style=\"border: 0px;\" alt=\"\" title=\"\" />", "blog/feed", array("title" => t("Read the XML version of all blogs."))) ."</div>";
+
+  print theme("page", $output);
 }
 
 function blog_validate(&$node) {
@@ -207,20 +209,16 @@ function blog_page() {
         }
         break;
       default:
-        print theme("header");
         if (arg(1)) {
           blog_page_user(arg(1));
         }
         else {
           blog_page_last();
         }
-        print theme("footer");
     }
   }
   else {
-    print theme("header");
-    print theme("box", t("Access denied"), message_access());
-    print theme("footer");
+    print theme("page", message_access());
   }
 
 }
@@ -231,18 +229,19 @@ function blog_content($node) {
   return $node;
 }
 
-function blog_view($node, $main = 0) {
-  if ($main == 0) {
+function blog_view($node, $main = 0, $page = 0) {
+  if ($page) {
     // Breadcrumb navigation
-    $breadcrumb[] = l(t("Home"), NULL);
+    $breadcrumb[] = l(t("Home"), "");
+    $breadcrumb[] = l(t("blogs"), "blog");
     $breadcrumb[] = l(t("%name's blog", array("%name" => $node->name)), "blog/$node->uid");
-    // print the breadcrumb
-    print theme("breadcrumb", $breadcrumb);
+    // set the breadcrumb
+    drupal_set_breadcrumb($breadcrumb);
   }
-  // prepair the node content
+  // prepare the node content
   $node = blog_content($node);
   // print the node
-  print theme("node", $node, $main);
+  return theme("node", $node, $main, $page);
 }
 
 function blog_link($type, $node = 0, $main) {
@@ -258,7 +257,7 @@ function blog_link($type, $node = 0, $main) {
       menu("blog/" . $user->uid, t("my blog"), "blog_page", 1);
     }
     if (user_access("access content")) {
-      menu("blog", t("blog"), "blog_page", 0, 1);
+      menu("blog", t("blogs"), "blog_page", 0, 1);
     }
   }
 

@@ -52,7 +52,9 @@
 
 <!-- BEGIN: node -->
   <div class="node">
+    <!-- BEGIN: title -->
     <h2><a href="{link}">{title}</a></h2>
+    <!-- END: title -->
     <span class="author">Submitted by {author} on {date}.</span>
     <span class="taxonomy">{taxonomy}</span>
     <div class="content">{content}</div>

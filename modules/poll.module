@@ -249,16 +249,13 @@ function poll_node($field) {
 }
 
 function poll_page() {
-
-  print theme("header");
   $result = db_query("SELECT n.nid, n.title, p.active, SUM(c.chvotes) AS votes FROM {node} n INNER JOIN {poll} p ON n.nid=p.nid INNER JOIN {poll_choices} c ON n.nid=c.nid WHERE type = 'poll' AND status = '1' AND moderate = '0' GROUP BY n.nid, n.title, p.active, n.created ORDER BY n.created DESC");
   $output = "<ul>";
   while ($node = db_fetch_object($result)) {
     $output .= "<li>".l($node->title, "node/view/$node->nid") ." - ". format_plural($node->votes, "1 vote", "%count votes") ." - ". ($node->active ? t("open") : t("closed")) ."</li>";
   }
   $output .= "</ul>";
-  print $output;
-  print theme("footer");
+  print theme("page", $output);
 }
 
 function poll_perm() {
@@ -386,7 +383,7 @@ function poll_view(&$node, $main = 0, $block = 0) {
 
   // We also use poll_view() for the side-block
   if (!$block) {
-    print theme("node", $node, $main);
+    return theme("node", $node, $main);
   }
 }
 

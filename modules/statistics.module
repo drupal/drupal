@@ -245,9 +245,7 @@ function statistics_help($section = "admin/help#statistics") {
 }
 
 function statistics_help_page() {
-  print theme("header");
-  print statistics_help();
-  print theme("footer");
+  print theme("page", statistics_help());
 }
 
 
@@ -325,14 +323,10 @@ function statistics_admin() {
           $output .= statistics_admin_topnodes();
       }
     }
-    print theme("header");
-    print $output;
-    print theme("footer");
+    print theme("page", $output);
   }
   else {
-    print theme("header");
-    print message_access();
-    print theme("footer");
+    print theme("page", message_access());
   }
 }
 
@@ -778,15 +772,10 @@ function statistics_page() {
 
 
   if (user_access("access content")) {
-    print theme("header");
-    statistics_page_user();
-    print theme("footer");
+    print theme("page", statistics_page_user());
   }
   else {
-    drupal_set_title(t("Access denied"));
-    print theme("header");
-    print message_access();
-    print theme("footer");
+    print theme("page", message_access());
   }
 }
 
@@ -799,29 +788,31 @@ function statistics_page_user($uid = 0, $date = 0, $all = 0) {
   }
 
   if ($displaycount = variable_get("statistics_userpage_day_cnt", 10)) {
-    $output = "<table border=\"0\" cellpadding=\"4\" cellspacing=\"4\" style=\"width: 100%;\">";
-    $output .= statistics_summary("daycount", $displaycount);
-    $output .= "</table>";
+    $table = "<table border=\"0\" cellpadding=\"4\" cellspacing=\"4\" style=\"width: 100%;\">";
+    $table .= statistics_summary("daycount", $displaycount);
+    $table .= "</table>";
 
-    print theme("box", t(variable_get("statistics_userpage_day_head", "")), $output, "main");
+    $output .= theme("box", t(variable_get("statistics_userpage_day_head", "")), $table, "main");
   }
 
 
   if ($displaycount = variable_get("statistics_userpage_all_cnt", "10")) {
-    $output = "<table border=\"0\" cellpadding=\"4\" cellspacing=\"4\" style=\"width: 100%;\">";
-    $output .= statistics_summary("totalcount", $displaycount);
-    $output .= "</table>";
+    $table = "<table border=\"0\" cellpadding=\"4\" cellspacing=\"4\" style=\"width: 100%;\">";
+    $table .= statistics_summary("totalcount", $displaycount);
+    $table .= "</table>";
 
-    print theme("box", t(variable_get("statistics_userpage_all_head", "")), $output, "main");
+    $output .= theme("box", t(variable_get("statistics_userpage_all_head", "")), $table, "main");
   }
 
   if ($displaycount = variable_get("statistics_userpage_last_cnt", "10")) {
-    $output = "<table border=\"0\" cellpadding=\"4\" cellspacing=\"4\" style=\"width: 100%;\">";
-    $output .= statistics_summary("timestamp", $displaycount);
-    $output .= "</table>";
+    $table = "<table border=\"0\" cellpadding=\"4\" cellspacing=\"4\" style=\"width: 100%;\">";
+    $table .= statistics_summary("timestamp", $displaycount);
+    $table .= "</table>";
 
-    print theme("box", t(variable_get("statistics_userpage_last_head", "")), $output, "main");
+    $output .= theme("box", t(variable_get("statistics_userpage_last_head", "")), $table, "main");
   }
+
+  return $output;
 }
 
 

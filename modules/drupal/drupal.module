@@ -162,10 +162,7 @@ function drupal_link($type) {
 }
 
 function drupal_page() {
-  drupal_set_title("Drupal");
-  print theme("header");
-  print drupal_help("user/help#drupal");
-  print theme("footer");
+  print theme("page", drupal_help("user/help#drupal"), "Drupal");
 }
 
 function drupal_login($arguments) {

@@ -54,9 +54,7 @@ function block_help($section = "admin/help#block") {
 }
 
 function block_help_page() {
-  print theme("header");
-  print block_help();
-  print theme("footer");
+  print theme("page", block_help());
 }
 
 function block_perm() {
@@ -312,14 +310,10 @@ function block_admin() {
         $output .= block_admin_display();
     }
 
-    print theme("header");
-    print $output;
-    print theme("footer");
+    print theme("page", $output);
   }
   else {
-    print theme("header");
-    print message_access();
-    print theme("footer");
+    print theme("page", message_access());
   }
 }
 

@@ -10,7 +10,7 @@ function drupal_set_title($title = NULL) {
   static $stored_title;
 
   if (isset($title)) {
-    $stored_title = $title;
+    $stored_title = ucfirst($title);
   }
   return $stored_title;
 }
