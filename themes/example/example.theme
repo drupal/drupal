@@ -136,7 +136,7 @@
       echo "</TABLE>";
     } // close comment function
 
-    function box($subject, $content, $options = "") {
+    function box($subject, $content) {
 
 ?>
 

@@ -23,41 +23,42 @@ function theme_account($theme) {
 
   if ($user->id) {
     // Display account settings:
-    $content .= "<A HREF=\"account.php?op=track&topic=comments\">". t("track your comments") ."</A><BR>\n";
-    $content .= "<A HREF=\"account.php?op=track&topic=nodes\">". t("track your nodes") ."</A><BR>\n";
-    $content .= "<A HREF=\"account.php?op=track&topic=site\">". strtr(t("track %a"), array("%a" => variable_get("site_name", "drupal"))) ."</A><BR>\n";
-    $content .= "<P>\n";
-    $content .= "<A HREF=\"account.php?op=edit&topic=user\">". t("edit your information") ."</A><BR>\n";
-    $content .= "<A HREF=\"account.php?op=edit&topic=site\">". t("edit your preferences") ."</A><BR>\n";
-    $content .= "<A HREF=\"account.php?op=edit&topic=content\">". t("edit your content") ."</A><BR>\n";
-    $content .= "<P>\n";
+    $content .= "<table><tr><td nowrap=\"nowrap\">\n";
+    $content .= "<a href=\"account.php?op=edit&type=information\">". t("your information") ."</a><BR>\n";
+    $content .= "<a href=\"account.php?op=edit&type=settings\">". t("your settings") ."</a><BR>\n";
+    $content .= "<a href=\"account.php?op=edit&type=blocks\">". t("your blocks") ."</a><BR>\n";
+    $content .= "<a href=\"account.php?op=view&type=comments\">". t("your comments") ."</a><BR>\n";
+    $content .= "<a href=\"account.php?op=view&type=contributions\">". t("your contributions") ."</a><BR>\n";
+    $content .= "<a href=\"account.php?op=view&type=site\">". strtr(t("your %a"), array("%a" => variable_get("site_name", "drupal"))) ."</a><BR>\n";
+    $content .= "<p />\n";
 
     if (user_access("access administration pages")) {
-      $content .= "<A HREF=\"admin.php\">". strtr(t("administer %a"), array("%a" => variable_get("site_name", "drupal"))) ."</A><BR>\n";
-      $content .= "<P>\n";
+      $content .= "<a href=\"admin.php\">". strtr(t("administer %a"), array("%a" => variable_get("site_name", "drupal"))) ."</a><BR>\n";
+      $content .= "<p />\n";
     }
 
     foreach (module_list() as $name) {
       if (module_hook($name, "link")) {
         $links = module_invoke($name, "link", "menu");
-        foreach ($links as $link) $content .= "$link<BR>\n";
+        foreach ($links as $link) $content .= "$link<br />\n";
       }
     }
-    if ($link) $content .= "<P>\n";
+    if ($link) $content .= "<p />\n";
 
-    $content .= "<A HREF=\"account.php?op=logout\">". t("logout") ."</A><BR>\n";
+    $content .= "<a href=\"account.php?op=logout\">". t("logout") ."</a>\n";
+    $content .= "</td></tr></table>\n";
 
-    $theme->box(strtr(t("%a's configuration"), array("%a" => $user->userid)), "$content");
+    $theme->box($user->userid, $content);
   }
   else {
-    $output .= "<DIV ALIGN=\"center\">\n";
-    $output .= " <FORM ACTION=\"account.php?op=login\" METHOD=\"post\">\n";
-    $output .= "  <B>". t("Username") .":</B><BR><INPUT NAME=\"userid\" SIZE=\"15\"><P>\n";
-    $output .= "  <B>". t("Password") .":</B><BR><INPUT NAME=\"passwd\" SIZE=\"15\" TYPE=\"password\"><BR>\n";
-    $output .= "  <INPUT TYPE=\"submit\" VALUE=\"". t("Login") ."\"><BR>\n";
-    if (variable_get("account_register", 1)) $output .= "  <A HREF=\"account.php\">". t("REGISTER") ."</A>\n";
-    $output .= " </FORM>\n";
-    $output .= "</DIV>\n";
+    $output .= "<div align=\"center\">\n";
+    $output .= " <form action=\"account.php?op=login\" method=\"post\">\n";
+    $output .= "  <b>". t("Username") .":</b><br /><input name=\"userid\" size=\"15\"><p />\n";
+    $output .= "  <b>". t("Password") .":</b><br /><input name=\"passwd\" size=\"15\" TYPE=\"password\"><br />\n";
+    $output .= "  <input type=\"submit\" value=\"". t("Login") ."\"><br />\n";
+    if (variable_get("account_register", 1)) $output .= "  <a href=\"account.php\">". t("REGISTER") ."</a>\n";
+    $output .= " </form>\n";
+    $output .= "</div>\n";
 
     $theme->box(t("Login"), $output);
   }
@@ -72,7 +73,6 @@ function theme_blocks($region, $theme) {
       if ($region != "left") {
         if ($user->id) $node = db_fetch_object(db_query("SELECT * FROM node WHERE nid = '$id'"));
         if ($node->status == $status[queued]) theme_moderation_results($theme, $node);
-        // else theme_new_headlines($theme);
       }
       break;
     case "/index.php":
@@ -90,7 +90,7 @@ function theme_moderation_results($theme, $node) {
   foreach (explode(",", $node->users) as $vote) {
     if ($vote) {
       $data = explode("=", $vote);
-      $output .= format_username($data[0]) ." voted '$data[1]'.<BR>";
+      $output .= format_username($data[0]) ." voted '$data[1]'.<br />";
     }
   }
 

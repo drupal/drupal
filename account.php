@@ -72,7 +72,7 @@ function account_session_close() {
   unset($user);
 }
 
-function account_user_edit() {
+function account_info_edit() {
   global $theme, $user;
 
   if ($user->id) {
@@ -100,7 +100,7 @@ function account_user_edit() {
   }
 }
 
-function account_user_save($edit) {
+function account_info_save($edit) {
   global $user;
   if ($user->id) {
     $user = user_save($user, array("name" => $edit[name], "fake_email" => $edit[fake_email], "url" => $edit[url], "bio" => $edit[bio], "signature" => $edit[signature]));
@@ -108,7 +108,7 @@ function account_user_save($edit) {
   }
 }
 
-function account_site_edit() {
+function account_settings_edit() {
   global $cmodes, $corder, $theme, $themes, $languages, $user;
 
   if ($user->id) {
@@ -138,14 +138,14 @@ function account_site_edit() {
   }
 }
 
-function account_site_save($edit) {
+function account_settings_save($edit) {
   global $user;
   if ($user->id) {
     $user = user_save($user, array("theme" => $edit[theme], "timezone" => $edit[timezone], "language" => $edit[language], "nodes" => $edit[nodes], "mode" => $edit[mode], "sort" => $edit[sort], "threshold" => $edit[threshold]));
   }
 }
 
-function account_content_edit() {
+function account_blocks_edit() {
   global $theme, $user;
 
   if ($user->id) {
@@ -157,7 +157,7 @@ function account_content_edit() {
     }
 
     $form .= form_item(t("Blocks in side bars"), $options, t("Enable the blocks you would like to see displayed in the side bars."));
-    $form .= form_submit(t("Save content settings"));
+    $form .= form_submit(t("Save block settings"));
 
     // display form:
     $theme->header();
@@ -172,7 +172,7 @@ function account_content_edit() {
   }
 }
 
-function account_content_save($edit) {
+function account_blocks_save($edit) {
   global $user;
   if ($user->id) {
     db_query("DELETE FROM layout WHERE user = '$user->id'");
@@ -337,7 +337,7 @@ function account_track_comments() {
   $theme->footer();
 }
 
-function account_track_nodes() {
+function account_track_contributions() {
   global $theme, $user;
 
   $result = db_query("SELECT n.nid, n.type, n.title, n.timestamp, COUNT(c.cid) AS count FROM node n LEFT JOIN comments c ON c.lid = n.nid WHERE n.status = '". node_status("posted") ."' AND n.author = '$user->id' GROUP BY n.nid DESC ORDER BY n.nid DESC LIMIT 25");
@@ -352,7 +352,7 @@ function account_track_nodes() {
   }
 
   $theme->header();
-  $theme->box(t("Track your nodes"), ($output ? $output : t("You have not posted any nodes.")));
+  $theme->box(t("Track your contributions"), ($output ? $output : t("You have not posted any nodes.")));
   $theme->footer();
 }
 
@@ -401,15 +401,15 @@ switch ($op) {
     if (variable_get("account_register", 1)) account_create_submit(check_input($userid), check_input($email));
     break;
   case t("Save user information"):
-    account_user_save($edit);
+    account_info_save($edit);
     account_user($user->userid);
     break;
   case t("Save site settings"):
-    account_site_save($edit);
+    account_settings_save($edit);
     header("Location: account.php?op=info");
     break;
-  case t("Save content settings"):
-    account_content_save($edit);
+  case t("Save block settings"):
+    account_blocks_save($edit);
     account_user($user->userid);
     break;
   case "confirm":
@@ -424,36 +424,33 @@ switch ($op) {
     header("Location: account.php?op=info");
     break;
   case "view":
-    switch ($topic) {
-      case "info":
+    switch ($type) {
+      case "information":
         account_user($user->userid);
+        break;
+      case "site":
+        account_track_site();
+        break;
+      case "contributions":
+        account_track_contributions();
+        break;
+      case "comments":
+        account_track_comments();
         break;
       default:
         account_user(check_input($name));
     }
     break;
-  case "track":
-    switch ($topic) {
-      case "site":
-        account_track_site();
-        break;
-      case "nodes":
-        account_track_nodes();
-        break;
-      default:
-        account_track_comments();
-    }
-    break;
   case "edit":
-    switch ($topic) {
-      case "content":
-        account_content_edit();
+    switch ($type) {
+      case "blocks":
+        account_blocks_edit();
         break;
-      case "site":
-        account_site_edit();
+      case "settings":
+        account_settings_edit();
         break;
       default:
-        account_user_edit();
+        account_info_edit();
     }
     break;
   default:
