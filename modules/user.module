@@ -1393,7 +1393,7 @@ function user_admin_perm($edit = array()) {
   }
 
   // Render role/permission overview:
-  $header = array_merge(array(t('permission')), $role_names);
+  $header = array_merge(array(t('Permission')), $role_names);
 
   foreach (module_list() as $module) {
     if ($perms = module_invoke($module, 'perm')) {

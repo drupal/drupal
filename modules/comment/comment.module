@@ -955,7 +955,7 @@ function comment_admin_edit($cid) {
     $form .= form_textfield(t('Subject'), 'subject', $comment->subject, 70, 128);
     $form .= form_textarea(t('Comment'), 'comment', $comment->comment, 70, 15, '');
     $form .= filter_form('format', $comment->format);
-    $form .= form_radios(t('Status'), 'status', $comment->status, array(t('published'), t('not published')));
+    $form .= form_radios(t('Status'), 'status', $comment->status, array(t('Published'), t('Not published')));
     $form .= form_hidden('cid', $cid);
     $form .= form_submit(t('Submit'));
     print theme('page', form($form));
@@ -1030,7 +1030,7 @@ function comment_admin_overview($type = 'new') {
     $rows[] = array(
         l($comment->subject, "node/$comment->nid", array('title' => htmlspecialchars(truncate_utf8($comment->comment, 128))), NULL, "comment-$comment->cid") ." ". (node_is_new($comment->nid, $comment->timestamp) ? theme('mark') : ''),
         format_name($comment),
-        ($comment->status == 0 ? t('published') : t('not published')),
+        ($comment->status == 0 ? t('Published') : t('Not published')),
         format_date($comment->timestamp, 'small'),
         l(t('edit'), "admin/comment/edit/$comment->cid"),
         l(t('delete'), "admin/comment/delete/$comment->cid")
