@@ -487,7 +487,7 @@ function statistics_cron() {
   }
 
   /* clean expired access logs */
-  db_query('DELETE FROM {accesslog} WHERE '. time() .' - timestamp > '. variable_get('statistics_flush_accesslog_timer', 259200));
+  db_query('DELETE FROM {accesslog} WHERE timestamp < %d', time() - variable_get('statistics_flush_accesslog_timer', 259200));
 }
 
 /**
