@@ -501,11 +501,10 @@ function user_block() {
   $result = db_query("SELECT uid, name FROM users WHERE timestamp > unix_timestamp() - $time ORDER BY timestamp DESC LIMIT $limit");
 
   if (db_num_rows($result)) {
-    $output = "<ol>";
+    $output = "";
     while ($account = db_fetch_object($result)) {
-      $output .= '<li>'.lm((strlen($account->name) > 10 ? substr($account->name, 0, 10) . '...' : $account->name), array("mod" => "user", "op" => "view", "id" => $account->uid)).'</li>';
+      $output .= lm((strlen($account->name) > 15 ? substr($account->name, 0, 15) . '...' : $account->name), array("mod" => "user", "op" => "view", "id" => $account->uid));
     }
-    $output .= "</ol>";
     $block[2]["content"] = $output;
   }
   $block[2]["subject"] = t("Who's online");
@@ -520,7 +519,7 @@ function user_block() {
 function user_new_users() {
   $result = db_query("SELECT uid, name FROM users WHERE status != '0' ORDER BY uid DESC LIMIT 5");
   while ($account = db_fetch_object($result)) {
-    $output .= lm($account->name, array("mod" =>user, "op" => "view", "id" => $account->uid)) ."<br />";
+    $output .= lm((strlen($account->name) > 15 ? substr($account->name, 0, 15) . '...' : $account->name), array("mod" =>user, "op" => "view", "id" => $account->uid)) ."<br />";
   }
   return $output;
 }
