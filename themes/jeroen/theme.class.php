@@ -508,7 +508,7 @@
           if (strstr($PHP_SELF, "index.php")) {
             global $user, $date;
 
-           ### Display login box:
+            ### Display account:
            displayAccount($this);
 
  	   ### Display calendar:
@@ -526,6 +526,9 @@
           }
           elseif (strstr($PHP_SELF, "article.php")) {
            global $sid; 
+
+            ### Display account:
+           displayAccount($this);
 
            ### Display related links:
            displayRelatedLinks($this, $sid);
