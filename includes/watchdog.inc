@@ -1,15 +1,30 @@
 <?
 
+$watchdog = array("comment" => array("0", $submission_rate["comment"]),
+                  "diary"   => array("1", $submission_rate["diary"]),
+                  "story"   => array("2", $submission_rate["story"]),
+                  "message" => array("3", "0"),
+                  "warning" => array("4", "0"),
+                  "error"   => array("5", "0"));
 
-function watchdog($level, $message) {
-  global $user;
+function watchdog($id, $message) {
+  global $user, $watchdog, $watchdog_history;
 
-  ### Perform query to add new log entry:
-  db_query("INSERT INTO watchdog (level, timestamp, user, message, location, hostname) VALUES ($level, '". time() ."', '". addslashes($user->id) ."', '". addslashes($message) ."', '". getenv("SCRIPT_NAME") ."', '". getenv("REMOTE_ADDR") ."')");
+  if ($watchdog[$id][1]) {
+    if ($log = db_fetch_object(db_query("SELECT * FROM watchdog WHERE hostname = '". getenv("REMOTE_ADDR") ."' AND level = '". $watchdog[$id][0] ."'"))) {
+      if (time() - $log->timestamp < $watchdog[$id][1]) { 
+        watchdog("warning", "'". getenv("REMOTE_ADDR") ."' exceeded '$id' submission rate"); 
+        // header("Location: error.php");
+      }
+    }
+  }
 
-  ### Periodically remove old log entries:
+  // Perform query to add new watchdog entry:
+  db_query("INSERT INTO watchdog (level, timestamp, user, message, location, hostname) VALUES ('". $watchdog[$id][0] ."', '". time() ."', '". check_input($user->id) ."', '". check_input($message) ."', '". check_input(getenv("REQUEST_URI")) ."', '". check_input(getenv("REMOTE_ADDR")) ."')");
+
+  // Periodically remove old watchdog entries:
   if (time() % 20 == 0) {
-    $timestamp = time() - 1209600; // 2 weeks
+    $timestamp = time() - $watchdog_history;
     db_query("DELETE FROM watchdog WHERE timestamp < $timestamp");
   }
 }

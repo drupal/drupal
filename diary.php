@@ -32,7 +32,7 @@ function diary_entry($timestamp, $text, $id = 0) {
   if ($id) {
     $output .= "<DL>\n";
     $output .= " <DT><B>". date("l, F jS", $timestamp) .":</B> </DT>\n";
-    $output .= " <DD><P>[ <A HREF=\"diary.php?op=edit&id=$id\">edit</A> ]</P><P>". check_output($text) ."</P></DD>\n";
+    $output .= " <DD><P>[ <A HREF=\"diary.php?op=edit&id=$id\">edit</A> ]</P><P>". check_output($text, 1) ."</P></DD>\n";
     $output .= "</DL>\n";
   }
   else {
@@ -144,16 +144,21 @@ function diary_submit($text, $id = 0) {
   global $user, $theme;
 
   if ($id) {
+    watchdog("message", "old diary entry updated");
     db_query("UPDATE diaries SET text =  '". check_input($text) ."' WHERE id = $id");
-    watchdog(1, "old diary entry updated");
   }
   else {
+    watchdog("diary", "new diary entry added");
     db_query("INSERT INTO diaries (author, text, timestamp) VALUES ('$user->id', '". check_input($text) ."', '". time() ."')");
-    watchdog(1, "new diary entry added");
   }
   header("Location: diary.php?op=view&name=$user->userid");
 }
 
+### Security check:
+if (strstr($id, " ") || strstr($name, " ")) {
+  watchdog("error", "diary: attempt to provide malicious input through URI");
+  exit();
+}
 
 switch($op) {
   case "add":

@@ -255,20 +255,23 @@ function comment_post($pid, $sid, $subject, $comment) {
   $duplicate = db_result(db_query("SELECT COUNT(*) FROM comments WHERE pid = '$pid' AND sid = '$sid' AND subject = '". check_input($subject) ."' AND comment = '". check_input($comment) ."'"), 0);
 
   if ($fake != 1) {
-    watchdog(3, "attemp to insert fake comment");
+    watchdog("error", "discussion: attempt to insert fake comment");
     $theme->box("fake comment", "fake comment: $fake");
   }
   elseif ($duplicate != 0) {
-    watchdog(3, "attemp to insert duplicate comment");
+    watchdog("error", "discussion: attempt to insert duplicate comment");
     $theme->box("duplicate comment", "duplicate comment: $duplicate");
   }
   else { 
     ### Validate subject:
     $subject = ($subject) ? $subject : substr($comment, 0, 29);
 
-    ### Add comment to database:
-    db_insert("INSERT INTO comments (pid, sid, author, subject, comment, hostname, timestamp) VALUES ($pid, $sid, '$user->id', '". check_input($subject) ."', '". check_input($comment) ."', '". getenv("REMOTE_ADDR") ."', '". time() ."')");
+    ### Add watchdog entry:
+    watchdog("comment", "added new comment with subject '$subject'");
 
+    ### Add comment to database:
+    db_query("INSERT INTO comments (pid, sid, author, subject, comment, hostname, timestamp) VALUES ($pid, $sid, '$user->id', '". check_input($subject) ."', '". check_input($comment) ."', '". getenv("REMOTE_ADDR") ."', '". time() ."')");
+    
     ### Compose header:
     header("Location: discussion.php?id=$sid");
   }
@@ -276,6 +279,12 @@ function comment_post($pid, $sid, $subject, $comment) {
 
 include "includes/theme.inc";
 include "includes/comment.inc";
+
+### Security check:
+if (strstr($id, " ") || strstr($pid, " ") || strstr($sid, " ") || strstr($mode, " ") || strstr($order, " ") || strstr($threshold, " ")) {
+  watchdog("error", "discussion: attempt to provide malicious input through URI");
+  exit();
+}
 
 switch($op) {  
   case "Preview comment":

@@ -1,45 +1,33 @@
 <?
 
 #
-# MySQL settings:
+# Database settings:
 #
 
-### http://www.drop.org/:
-#$dbhost = "zind.net";
-#$dbuname = "droporg";
-#$dbpass = "DropIes";
-#$dbname = "droporg";
+### host: "http://www.drop.org/":
+#$db_host = "zind.net";
+#$db_uname = "droporg";
+#$db_pass = "DropIes";
+#$db_name = "droporg";
 
-### http://beta.drop.org/:
-$dbhost = "zind.net";
-$dbuname = "dries";
-$dbpass = "Abc123";
-$dbname = "dries";
+### host: "http://beta.drop.org/":
+#$db_host = "zind.net";
+#$db_uname = "dries";
+#$db_pass = "Abc123";
+#$db_name = "dries";
 
-### http://dione/:
-#$dbhost = "";
-#$dbuname = "dries";
-#$dbpass = "oakley";
-#$dbname = "dries";
-
-#
-# Name of the site
-#
-$sitename = "drop.org";
-$siteurl  = "http://www.drop.org/";
+### host: "http://localhost/":
+$db_host = "";
+$db_uname = "dries";
+$db_pass = "oakley";
+$db_name = "dries";
 
 #
-# Contact information:
-#  The contact information will be used to send out automated mails
-#  to users, account holders or visitors.
-$contact_email = "droppies@drop.org";
-
+# Administrative information
 #
-# Notify:
-#   Set to '1' to receive an e-mail when news has been submitted
-#   through submit.php
-#
-$notify = 0;
+$site_name = "drop.org";
+$site_url  = "http://www.drop.org/";
+$site_email = "droppies@drop.org";
 
 #
 # Notify information:
@@ -55,13 +43,13 @@ $notify_from    = "droppies@drop.org";
 # Comment meta reasons:
 #
 $comment_votes = array("none" => "none", 
-                       "-1" => "- 1", 
-                       "0" => "+ 0",
-                       "+1" => "+ 1",
-                       "+2" => "+ 2",
-                       "+3" => "+ 3", 
-                       "+4" => "+ 4", 
-                       "+5" => "+ 5");
+                       "-1"   => "- 1", 
+                       "0"    => "+ 0",
+                       "+1"   => "+ 1",
+                       "+2"   => "+ 2",
+                       "+3"   => "+ 3", 
+                       "+4"   => "+ 4", 
+                       "+5"   => "+ 5");
 
 #
 # Categories:
@@ -94,10 +82,10 @@ $anonymous = "Anonymous Chicken";
 #   the first theme listed in the associative array `$themes' will 
 #   automatically become the default theme.
 #
-$themes = array("Marvin" => array(
+$themes = array("Marvin"  => array(
                    "themes/marvin/marvin.theme", 
                    "classic theme, white, basic design with a fresh look"),
-                "Zaphod" => array(
+                "Zaphod"  => array(
                    "themes/zaphod/zaphod.theme", 
                    "classis theme, yellow, structured, advanced navigation"),
 		"UnConeD" => array(
@@ -117,8 +105,30 @@ $submission_votes = array("neutral (+0)" => "+ 0",
 
 #
 # Submission moderation thresholds:
-#
+#   registered users can vote whether they think the story should
+#   be posted or not.  When enough people vote to post a story, the 
+#   story is pushed over the threshold and up it goes on the public 
+#   page.  On the other hand, when too many people voted to drop a 
+#   story, the story will get trashed.
 $submission_post_threshold = "3";
 $submission_dump_threshold = "-2";
+
+#
+# Submission rate:
+#
+$submission_rate = array("comment" => "60",     //  60 seconds = 1 minute
+                         "diary"   => "300",    // 300 seconds = 5 minutes
+                         "story"   => "300");   // 300 seconds = 5 minutes
+#
+# Submission size:
+#  the maximum length in characters a submission (story, diary, 
+#  comment) is allowed to be.
+#
+$submission_size = 6000;
+
+#
+# Watchdog history:
+#
+$watchdog_history = 604800;   // 604800 seconds = 1 week
 
 ?>

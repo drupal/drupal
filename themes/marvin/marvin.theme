@@ -20,12 +20,12 @@
    # Syntax.......: header($title);
    # Description..: a function to draw the page header.
    function header($title) {
-     global $sitename;
+     global $site_name;
     ?>
      <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd"> 
      <HTML>
      <HEAD>
-      <TITLE><? print $sitename; ?></TITLE>
+      <TITLE><? print $site_name; ?></TITLE>
       <META NAME="description" CONTENT="drop.org">
       <META NAME="keywords" CONTENT="drop, weblog, portal, community, news, article, announcements, stories, story, computer, science, space, hype, cult, geek, nerd, foo, bar">
      </HEAD>
@@ -189,7 +189,7 @@
 
      ### Moderation:
      print "        <TD ALIGN=\"right\" ROWSPAN=\"3\" VALIGN=\"middle\" WIDTH=\"15%\">\n";
-     display_comment_moderation($comment->cid, $comment->poster, $comment->score, $comment->votes);
+     display_comment_moderation($comment->cid, $comment->userid, $comment->score, $comment->votes);
      print "        </TD>\n";
      print "       </TR>\n";
 

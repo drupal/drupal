@@ -1,9 +1,5 @@
 <?
 
-$permissions = array("Administrator"	=> 0x00000001,
-		"User manager"	=> 0x00000002,
-		"News manager"	=> 0x00000004);
-
 class User {
   function User($userid, $passwd = "") {
     $result = db_query("SELECT * FROM users WHERE LOWER(userid) = LOWER('$userid') && passwd = PASSWORD('$passwd') && STATUS = 2");

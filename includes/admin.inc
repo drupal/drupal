@@ -8,12 +8,12 @@ function admin_icon($name) {
 }
 
 function admin_header() {
-  global $sitename, $section;
+  global $site_name, $section;
 
  ?>
   <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
   <HTML>
-   <HEAD><TITLE><? echo $sitename; ?> administration center</TITLE></HEAD>
+   <HEAD><TITLE><? echo $site_name; ?> administration center</TITLE></HEAD>
    <STYLE>
     body    { font-family: helvetica, arial; }
     h1      { font-size: 14pt; font-weight: bold; color: #006699; }
@@ -24,7 +24,7 @@ function admin_header() {
    </STYLE>
    <BODY BGCOLOR="#FFFFFF" LINK="#006699" VLINK="#004499" ALINK="#FF0000">
    <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="2" WIDTH="780">
-    <TR><TD COLSPAN="10"><H1><? echo "$sitename"; ?> administration center</H1></TD></TR>
+    <TR><TD COLSPAN="10"><H1><? echo "$site_name"; ?> administration center</H1></TD></TR>
     <TR><TD BGCOLOR="#000000" COLSPAN="10" WIDTH="100%"><IMG SRC="images/pixel.gif" WIDTH="1" HEIGHT="1" ALT=""></TD></TR>
     <TR>
      <?

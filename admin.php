@@ -1,7 +1,7 @@
 <?
 
- // TEMPORARY SOLUTION:
- if ($user->id > 4) exit;
+// TEMPORARY SOLUTION:
+if (!$user->id || $user->id > 4) exit();
 
 /*
  * Account administration:
@@ -115,7 +115,7 @@ function account_view($name) {
  * Watchdog administration:
  */
 function watchdog_display($order = "date") {
-  $colors = array("#FFFFFF", "#FFFFFF", "#90EE90", "#CD5C5C");
+  $colors = array("#D8BFD8", "#6495ED", "#6A5ADF", "#FFFFFF", "#FFA500", "#FF3C3C");
   $fields = array("date" => "id DESC", "username" => "user", "location" => "location", "message" => "message DESC", "level" => "level DESC");
 
   ### Perform query:
@@ -288,7 +288,7 @@ function comment_edit($id) {
 
 function comment_save($id, $subject, $comment) {
   db_query("UPDATE comments SET subject = '". check_input($subject) ."', comment = '". check_input($comment) ."' WHERE cid = $id");
-  watchdog(1, "modified comment `$subject'.");
+  watchdog("message", "modified comment `$subject'.");
 }
 
 function comment_display($order = "date") {
@@ -391,7 +391,7 @@ function diary_edit($id) {
 
 function diary_save($id, $text) {
   db_query("UPDATE diaries SET text = '". check_input($text) ."' WHERE id = $id");
-  watchdog(1, "modified diary entry #$id.");
+  watchdog("message", "modified diary entry #$id.");
 }
 
 function diary_display($order = "date") {
@@ -516,7 +516,7 @@ function story_edit($id) {
 
 function story_save($id, $subject, $abstract, $updates, $article, $category, $status) {
   db_query("UPDATE stories SET subject = '". check_input($subject) ."', abstract = '". check_input($abstract) ."', updates = '". check_input($updates) ."', article = '". check_input($article) ."', category = '". check_input($category) ."', status = '$status' WHERE id = $id");
-  watchdog(1, "modified story `$subject'.");
+  watchdog("message", "modified story `$subject'.");
 }
 
 function story_display($order = "date") {
@@ -562,7 +562,7 @@ function story_display($order = "date") {
 function info_display() {
   include "includes/config.inc";
 
-  $output .= "sitename: $sitename<BR>\n";
+  $output .= "sitename: $site_name<BR>\n";
   $output .= "e-mail address: $contact_email<BR>\n";
   $output .= "send e-mail notifications: $notify<BR>\n";
   $output .= "allowed HTML tags: <I>". htmlspecialchars($allowed_html) ."</I><BR>\n";
@@ -570,7 +570,7 @@ function info_display() {
   $output .= "submission post threshold: $submission_post_threshold<BR>\n";
   $output .= "submission dump threshold: $submission_dump_threshold<BR>\n";
 
-  admin_box("$sitename settings", $output);
+  admin_box("$site_name settings", $output);
 }
 
 include "includes/config.inc";

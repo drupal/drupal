@@ -8,28 +8,21 @@
  */
 
 function db_connect() {
-  global $dbhost, $dbuname, $dbpass, $dbname;
-  mysql_pconnect($dbhost, $dbuname, $dbpass) or die(mysql_Error());
-  mysql_select_db($dbname) or die ("Unable to select database");
+  global $db_host, $db_uname, $db_pass, $db_name;
+  mysql_pconnect($db_host, $db_uname, $db_pass) or die(mysql_Error());
+  mysql_select_db($db_name) or die ("Unable to select database");
    // NOTE: we are using a persistent connection!
 }
 
-function db_insert($query, $debug = false) {
-  // NOTE:
-  //   add spam- and/or flood-checks
-
-  db_query($query, $debug);
-}
-
 function db_query($query, $debug = false) {
-  ### perform query:
+  // perform query:
   $qid = mysql_query($query);
 
-  ### debug output (if required):
-  if ($debug || empty($qid)) print "<PRE>query: ". htmlspecialchars($query) ."<BR>error message: ". mysql_error() ."</PRE>";
-  if (empty($qid)) watchdog(3, "error: ". mysql_error() ."<BR>query: ". htmlspecialchars($query) ."");
+  // debug output (if required):
+  if ($debug) print "<PRE>query: ". htmlspecialchars($query) ."<BR>error message: ". mysql_error() ."</PRE>";
+  if (!$qid) watchdog("error", "database: ". mysql_error() ."<BR>query: ". htmlspecialchars($query) ."");
  
-  ### return result from query: 
+  // return result from query: 
   return $qid;
 }
 

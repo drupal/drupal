@@ -113,7 +113,8 @@ function submit_preview($subject, $abstract, $article, $category) {
   }
   else { 
     $output .= "<P>\n";
-    $output .= " <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Preview submission\"> <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Submit submission\">\n";
+    $output .= " <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Preview submission\">\n";
+    $output .= " <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Submit submission\">\n";
     $output .= "</P>\n";
   }
 
@@ -128,22 +129,16 @@ function submit_preview($subject, $abstract, $article, $category) {
 function submit_submit($subject, $abstract, $article, $category) {
   global $user, $theme;
 
+  ### Add log entry:
+  watchdog("story", "added new story with subject `$subject'");
+  
   ### Add submission to SQL table:
-  db_insert("INSERT INTO stories (author, subject, abstract, article, category, timestamp) VALUES ('$user->id', '". check_input($subject) ."', '". check_input($abstract) ."', '". check_input($article) ."', '". check_input($category) ."', '". time() ."')");
+  db_query("INSERT INTO stories (author, subject, abstract, article, category, timestamp) VALUES ('$user->id', '". check_input($subject) ."', '". check_input($abstract) ."', '". check_input($article) ."', '". check_input($category) ."', '". time() ."')");
   
   ### Display confirmation message:
   $theme->header(); 
-  $theme->box("Thanks for your submission.", "Thanks for your submission.  The submission moderators in our basement will frown at it, poke at it, and vote for it!");
+  $theme->box("Thank you for your submission.", "Thank you for your submission.  The submission moderators in our basement will frown at it, poke at it, and vote for it!");
   $theme->footer();
-
-  ### Send e-mail notification (if enabled):
-  if ($notify) {
-    $message = "New submission:\n\nsubject...: $subject\nauthor....: $user->userid <$user->real_email>\ncategory..: $category\nabstract..:\n$abstract\n\narticle...:\n$article";
-    mail($notify_email, "$notify_subject $subject", $message, "From: $notify_from\nX-Mailer: PHP/" . phpversion());
-  }
-
-  ### Add log entry:
-  watchdog(1, "added new submission with subject `$subject'.");
 }
 
 include "includes/theme.inc";

@@ -27,16 +27,16 @@ function account_session_start($userid, $passwd) {
   if ($user->id) {
     session_start();
     session_register("user");
-    watchdog(1, "session opened for user `$user->userid'");
+    watchdog("message", "session opened for user `$user->userid'");
   }
   else {
-    watchdog(2, "failed login for user `$userid'");
+    watchdog("warning", "failed login for user `$userid'");
   }
 }
 
 function account_session_close() {
   global $user;  
-  watchdog(1, "session closed for user `$user->userid'");
+  watchdog("message", "session closed for user `$user->userid'");
   session_unset();
   session_destroy();
   unset($user);
@@ -281,7 +281,7 @@ function account_register_enter($user = "", $error = "") {
 }
 
 function account_register_submit($new) {
-  global $theme, $mail, $sitename, $siteurl;
+  global $theme, $mail, $site_name, $site_url;
   
   if ($rval = account_validate($new)) { 
     account_register_enter($new, "$rval");
@@ -293,12 +293,12 @@ function account_register_submit($new) {
 
     user_save($new);
 
-    $link = $siteurl ."account.php?op=confirm&name=$new[userid]&hash=$new[hash]";
-    $message = "$new[userid],\n\n\nsomeone signed up for a user account on $sitename and supplied this email address as their contact.  If it wasn't you, don't get your panties in a knot and simply ignore this mail.\n\nIf this was you, you have to activate your account first before you can login.  You can do so simply by visiting the URL below:\n\n    $link\n\nVisiting this URL will automatically activate your account.  Once activated you can login using the following information:\n\n    username: $new[userid]\n    password: $new[passwd]\n\n\n-- $sitename crew\n";
+    $link = $site_url ."account.php?op=confirm&name=$new[userid]&hash=$new[hash]";
+    $message = "$new[userid],\n\n\nsomeone signed up for a user account on $site_name and supplied this email address as their contact.  If it wasn't you, don't get your panties in a knot and simply ignore this mail.\n\nIf this was you, you have to activate your account first before you can login.  You can do so simply by visiting the URL below:\n\n    $link\n\nVisiting this URL will automatically activate your account.  Once activated you can login using the following information:\n\n    username: $new[userid]\n    password: $new[passwd]\n\n\n-- $site_name crew\n";
 
-    mail($new[real_email], "Account details for $sitename", $message, "From: noreply@$sitename");
+    mail($new[real_email], "Account details for $site_name", $message, "From: noreply@$site_url");
 
-    watchdog(1, "new user `$new[userid]' &lt;$new[real_email]&gt;");
+    watchdog("message", "new user `$new[userid]' &lt;$new[real_email]&gt;");
 
     $theme->header();
     $theme->box("Account details", "Congratulations!  Your member account has been sucessfully created and further instructions on how to activate your account have been sent to your e-mail address.");
@@ -316,21 +316,21 @@ function account_register_confirm($name, $hash) {
       if ($account->hash == $hash) {
         db_query("UPDATE users SET status = 2, hash = '' WHERE userid = '$name'");
         $output .= "Your account has been sucessfully confirmed.  You can click <A HREF=\"account.php?op=login\">here</A> to login.\n";
-        watchdog(1, "$name: account confirmation sucessful");
+        watchdog("message", "$name: account confirmation sucessful");
       }
       else {
         $output .= "Confirmation failed: invalid confirmation hash.\n";
-        watchdog(3, "$name: invalid confirmation hash");
+        watchdog("error", "$name: invalid confirmation hash");
       }
     }
     else {
       $output .= "Confirmation failed: your account has already been confirmed.  You can click <A HREF=\"account.php?op=login\">here</A> to login.\n";
-      watchdog(3, "$name: attempt to re-confirm account");
+      watchdog("error", "$name: attempt to re-confirm account");
     }
   }
   else {
     $output .= "Confirmation failed: no such account found.<BR>";
-    watchdog(3, "$name: attempt to confirm non-existing account");
+    watchdog("error", "$name: attempt to confirm non-existing account");
   }
 
   $theme->header();
@@ -368,6 +368,12 @@ function account_comments() {
   $theme->header();
   $theme->box("Track your comments", $output);
   $theme->footer();
+}
+
+### Security check:
+if (strstr($name, " ") || strstr($hash, " ")) {
+  watchdog("error", "account: attempt to provide malicious input through URI");
+  exit();
 }
 
 switch ($op) {

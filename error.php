@@ -31,7 +31,7 @@
  include "includes/database.inc"; 
  include "includes/watchdog.inc";
 
- watchdog(3, "message: `$message' - requested url: $REDIRECT_URL - referring url: $HTTP_REFERER");
+ watchdog("error", "message: `$message' - requested url: $REDIRECT_URL - referring url: $HTTP_REFERER");
 ?>
 
 <B>Processed output:</B><BR>

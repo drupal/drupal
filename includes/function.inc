@@ -23,8 +23,8 @@ function check_field($message) {
 }
 
 function check_input($message) {
-  global $allowed_html;
-  return strip_tags(addslashes($message), $allowed_html);
+  global $allowed_html, $submission_size;
+  return strip_tags(addslashes(substr($message, 0, $submission_size)), $allowed_html);
 }
 
 function check_output($message, $nl2br = 0) {
