@@ -136,7 +136,7 @@ function book_delete(&$node) {
 }
 
 function book_validate(&$node) {
-  if ($node->format && user_access("create php content")) {  
+  if ($node->format && user_access("create php content")) {
     // Do not filter PHP code, do not auto-extract a teaser
     $node->teaser = $node->body;
   }
