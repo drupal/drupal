@@ -90,7 +90,8 @@ $sql_updates = array(
   "2004-11-07" => "update_111",
   "2004-11-15" => "update_112",
   "2004-11-28" => "update_113",
-  "2004-12-05" => "update_114"
+  "2004-12-05" => "update_114",
+  "2005-01-07" => "update_115"
 );
 
 function update_32() {
@@ -2063,6 +2064,17 @@ function update_114() {
   $ret[] = update_sql("ALTER TABLE {node} DROP score");
   $ret[] = update_sql("ALTER TABLE {node} DROP users");
 
+  return $ret;
+}
+
+function update_115() {
+  $ret = array();
+  if ($GLOBALS['db_type'] == 'mysql') {
+    $ret[] = update_sql("ALTER TABLE {watchdog} ADD severity tinyint(3) unsigned NOT NULL default '0'");
+  }
+  else if ($GLOBALS['db_type'] == 'pgsql') {
+    $ret[] = update_sql("ALTER TABLE {watchdog} ADD severity smallint NOT NULL default '0'");
+  }
   return $ret;
 }
 

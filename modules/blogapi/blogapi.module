@@ -149,7 +149,7 @@ function blogapi_new_post($req_params) {
 
   $nid = node_save($node);
   if ($nid) {
-    watchdog('special', t('%type: added %title using blog API.', array('%type' => '<em>'. t($node->type) .'</em>', '%title' => "<em>$node->title</em>")), l(t('view'), "node/$nid"));
+    watchdog('content', t('%type: added %title using blog API.', array('%type' => '<em>'. t($node->type) .'</em>', '%title' => "<em>$node->title</em>")), l(t('view'), "node/$nid"));
     return new xmlrpcresp(new xmlrpcval($nid, 'string'));
   }
 
@@ -209,7 +209,7 @@ function blogapi_edit_post($req_params) {
   }
   $nid = node_save($node);
   if ($nid) {
-    watchdog('special', t('%type: updated %title using blog API.', array('%type' => '<em>'. t($node->type) .'</em>', '%title' => "<em>$node->title</em>")), l(t('view'), "node/$nid"));
+    watchdog('content', t('%type: updated %title using blog API.', array('%type' => '<em>'. t($node->type) .'</em>', '%title' => "<em>$node->title</em>")), l(t('view'), "node/$nid"));
     return new xmlrpcresp(new xmlrpcval(true, 'boolean'));
   }
 

@@ -358,7 +358,7 @@ function file_save_upload($source, $dest = 0, $replace = FILE_EXISTS_RENAME) {
     }
 
     if (!user_access('bypass input data check') && !valid_input_data($file)) {
-      watchdog('error', t('Possible exploit abuse: invalid data.'));
+      watchdog('security', t('Possible exploit abuse: invalid data.'), WATCHDOG_WARNING);
       drupal_set_message(t('File upload failed: invalid data.'), 'error');
       return 0;
     }
@@ -402,7 +402,7 @@ function file_save_upload($source, $dest = 0, $replace = FILE_EXISTS_RENAME) {
  */
 function file_save_data($data, $dest, $replace = FILE_EXISTS_RENAME) {
   if (!user_access('bypass input data check') && !valid_input_data($data)) {
-    watchdog('error', t('Possible exploit abuse: invalid data.'));
+    watchdog('security', t('Possible exploit abuse: invalid data.'), WATCHDOG_WARNING);
     drupal_set_message(t('File upload failed: invalid data.'), 'error');
     return 0;
   }

@@ -750,6 +750,7 @@ CREATE TABLE watchdog (
   uid integer NOT NULL default '0',
   type varchar(16) NOT NULL default '',
   message text NOT NULL default '',
+  severity smallint NOT NULL default '0',
   link varchar(255) NOT NULL default '',
   location varchar(128) NOT NULL default '',
   hostname varchar(128) NOT NULL default '',

@@ -428,22 +428,16 @@ tr.watchdog-user {
 tr.watchdog-user .active {
   background: #eed;
 }
-tr.watchdog-special {
+tr.watchdog-content {
   background: #ddf;
 }
-tr.watchdog-special .active {
+tr.watchdog-content .active {
   background: #cce;
 }
-tr.watchdog-warning {
-  background: #fda;
-}
-tr.watchdog-warning .active {
-  background: #ec9;
-}
-tr.watchdog-httpd {
+tr.watchdog-page-not-found, tr.watchdog-access-denied {
   background: #dfd;
 }
-tr.watchdog-httpd .active {
+tr.watchdog-pagenot-found .active, tr.watchdog-access-denied .active {
   background: #cec;
 }
 tr.watchdog-error {

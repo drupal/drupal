@@ -63,7 +63,7 @@ function ping_ping($name = '', $url = '') {
   $result = $client->send($message);
 
   if (!$result || $result->faultCode()) {
-    watchdog('error', t('Failed to notify pingomatic.com (site).'));
+    watchdog('directory ping', t('Failed to notify pingomatic.com (site).'), WATCHDOG_WARNING);
   }
 }
 

@@ -166,7 +166,7 @@ function drupal_goto($path = '', $query = NULL, $fragment = NULL) {
  */
 function drupal_not_found() {
   header('HTTP/1.0 404 Not Found');
-  watchdog('page not found', t('%page not found.', array('%page' => '<em>'. db_escape_string($_GET['q']) .'</em>')));
+  watchdog('page not found', t('%page not found.', array('%page' => '<em>'. db_escape_string($_GET['q']) .'</em>')), WATCHDOG_WARNING);
 
   $path = drupal_get_normal_path(variable_get('site_404', ''));
   $status = MENU_NOT_FOUND;
@@ -186,7 +186,7 @@ function drupal_not_found() {
  */
 function drupal_access_denied() {
   header('HTTP/1.0 403 Forbidden');
-  watchdog('access denied', t('%page denied access.', array('%page' => '<em>'. db_escape_string($_GET['q']) .'</em>')));
+  watchdog('access denied', t('%page denied access.', array('%page' => '<em>'. db_escape_string($_GET['q']) .'</em>')), WATCHDOG_WARNING);
 
   $path = drupal_get_normal_path(variable_get('site_403', ''));
   $status = MENU_NOT_FOUND;
@@ -342,11 +342,11 @@ function error_handler($errno, $message, $filename, $line, $variables) {
     $types = array(1 => 'error', 2 => 'warning', 4 => 'parse error', 8 => 'notice', 16 => 'core error', 32 => 'core warning', 64 => 'compile error', 128 => 'compile warning', 256 => 'user error', 512 => 'user warning', 1024 => 'user notice', 2048 => 'strict warning');
     $entry = $types[$errno] .': '. $message .' in '. $filename .' on line '. $line .'.';
 
-    watchdog('error', t('%message in %file on line %line.', array('%error' => $types[$errno], '%message' => $message, '%file' => $filename, '%line' => $line)));
-
     if (variable_get('error_level', 1) == 1) {
       print '<pre>'. $entry .'</pre>';
     }
+
+    watchdog('php', t('%message in %file on line %line.', array('%error' => $types[$errno], '%message' => $message, '%file' => $filename, '%line' => $line)), WATCHDOG_ERROR);
   }
 }
 
@@ -602,7 +602,7 @@ function valid_input_data($data) {
     $match += preg_match("/<\s*(applet|script|object|style|embed|form|blink|meta|html|frame|iframe|layer|ilayer|head|frameset|xml)/i", $data);
 
     if ($match) {
-      watchdog('warning', t('Terminated request because of suspicious input data: %data.', array('%data' => '<em>'. drupal_specialchars($data) .'</em>')));
+      watchdog('security', t('Terminated request because of suspicious input data: %data.', array('%data' => '<em>'. drupal_specialchars($data) .'</em>')));
       return FALSE;
     }
   }
@@ -1597,7 +1597,7 @@ function drupal_xml_parser_create(&$data) {
       $out = @recode_string($encoding . '..utf-8', $data);
     }
     else {
-      watchdog('warning', t("Unsupported XML encoding '%s'. Please install iconv, GNU recode or mbstring for PHP.", $encoding));
+      watchdog('php', t("Unsupported XML encoding '%s'. Please install iconv, GNU recode or mbstring for PHP.", $encoding), WATCHDOG_ERROR);
       return 0;
     }
 
@@ -1606,7 +1606,7 @@ function drupal_xml_parser_create(&$data) {
       $encoding = 'utf-8';
     }
     else {
-      watchdog('warning', t("Could not convert XML encoding '%s' to UTF-8.", $encoding));
+      watchdog('php', t("Could not convert XML encoding '%s' to UTF-8.", $encoding), WATCHDOG_WARNING);
       return 0;
     }
   }

@@ -9,6 +9,11 @@
 define('CACHE_PERMANENT', 0);
 define('CACHE_TEMPORARY', -1);
 
+define('WATCHDOG_NOTICE', 0);
+define('WATCHDOG_WARNING', 1);
+define('WATCHDOG_ERROR', 2);
+
+
 /**
  * Locate the appropriate configuration file.
  *
@@ -574,12 +579,17 @@ function timer_start() {
  *   The category to which this message belongs.
  * @param $message
  *   The message to store in the log.
+ * @param $severity
+ *   The severity of the message. One of the following values:
+ *   - WATCHDOG_NOTICE
+ *   - WATCHDOG_WARNING
+ *   - WATCHDOG_ERROR
  * @param $link
  *   A link to associate with the message.
  */
-function watchdog($type, $message, $link = NULL) {
+function watchdog($type, $message, $severity = WATCHDOG_NOTICE, $link = NULL) {
   global $user;
-  db_query("INSERT INTO {watchdog} (uid, type, message, link, location, hostname, timestamp) VALUES (%d, '%s', '%s', '%s', '%s', '%s', %d)", $user->uid, $type, $message, $link, request_uri(), $_SERVER['REMOTE_ADDR'], time());
+  db_query("INSERT INTO {watchdog} (uid, type, message, severity, link, location, hostname, timestamp) VALUES (%d, '%s', '%s', %d, '%s', '%s', '%s', %d)", $user->uid, $type, $message, $severity, $link, request_uri(), $_SERVER['REMOTE_ADDR'], time());
 }
 
 /**

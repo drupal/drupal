@@ -936,7 +936,7 @@ function user_pass() {
       drupal_set_message(t('Your password and further instructions have been sent to your e-mail address.'));
     }
     else {
-      watchdog('error', t('Error mailing password to %name at %email.', array('%name' => '<em>'. $account->name .'</em>', '%email' => '<em>'. $account->mail .'</em>')));
+      watchdog('user', t('Error mailing password to %name at %email.', array('%name' => '<em>'. $account->name .'</em>', '%email' => '<em>'. $account->mail .'</em>')), WATCHDOG_ERROR);
       drupal_set_message(t('Unable to send mail. Please contact the site admin.'));
     }
     drupal_goto('user');
@@ -1133,7 +1133,7 @@ function user_edit($category = 'account') {
     if (!form_get_errors()) {
       // Validate input to ensure that non-privileged users can't alter protected data.
       if (!user_access('administer users') && array_intersect(array_keys($edit), array('uid', 'roles', 'init', 'session'))) {
-        watchdog('warning', t('Detected malicious attempt to alter protected user fields.'));
+        watchdog('security', t('Detected malicious attempt to alter protected user fields.'), WATCHDOG_WARNING);
       }
       else {
         user_save($account, $edit, $category);

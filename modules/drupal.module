@@ -95,7 +95,7 @@ function drupal_directory_ping($arguments) {
     db_query("DELETE FROM {directory} WHERE link = '%s' OR mail = '%s'", $link, $mail);
     db_query("INSERT INTO {directory} (link, name, mail, slogan, mission, timestamp) VALUES ('%s', '%s', '%s', '%s', '%s', %d)", $link, $name, $mail, $slogan, $mission, time());
 
-    watchdog('directory ping', t('ping from %name (%link).', array('%name' => "<em>$name</em>", '%link' => "<em>$link</em>")));
+    watchdog('directory ping', t('Ping from %name (%link).', array('%name' => "<em>$name</em>", '%link' => "<em>$link</em>")));
 
     return new xmlrpcresp(new xmlrpcval(1, 'int'));
   }
@@ -143,7 +143,7 @@ function drupal_notify($server) {
   $result = $client->send($message, 5);
 
   if (!$result || $result->faultCode()) {
-    watchdog('error', t('Failed to notify %url at %path: %error.', array('%url' => '<em>'. $url["host"] .'</em>', '%path' => '<em>'. $url["path"] .'</em>', '%error' => '<em>'. $result->faultString() .'</em>')));
+    watchdog('directory ping', t('Failed to notify %url at %path: %error.', array('%url' => '<em>'. $url["host"] .'</em>', '%path' => '<em>'. $url["path"] .'</em>', '%error' => '<em>'. $result->faultString() .'</em>')), WATCHDOG_WARNING);
   }
 
 }

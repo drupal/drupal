@@ -288,8 +288,9 @@ function locale_admin_manage() {
       if (isset($languages['name'][$edit['langcode']])) {
         db_query("DELETE FROM {locales_meta} WHERE locale = '%s'", $edit['langcode']);
         db_query("DELETE FROM {locales_target} WHERE locale = '%s'", $edit['langcode']);
-        drupal_set_message(t('%locale language removed.', array('%locale' => '<em>'. t($languages['name'][$edit['langcode']]) .'</em>')));
-        watchdog('special', t('%locale language removed.', array('%locale' => '<em>'. $edit['langcode'] .'</em>')));
+        $message = t('%locale language removed.', array('%locale' => '<em>'. t($languages['name'][$edit['langcode']]) .'</em>'));
+        drupal_set_message($message);
+        watchdog('locale', $message);
       }
 
       // Changing the locale settings impacts the interface:
@@ -379,7 +380,9 @@ function locale_admin_import() {
       // Now import strings into the language
       $file = file_check_upload('file');
       if ($ret = _locale_import_po($file, $edit['langcode'], $edit['mode']) == FALSE) {
-        watchdog('error', t('Translation import of %filename failed.', array('%filename' => "<em>$file->filename</em>")));
+        $message = t('Translation import of %filename failed.', array('%filename' => "<em>$file->filename</em>"));
+        drupal_set_message($message, 'error');
+        watchdog('locale', $message, WATCHDOG_ERROR);
       }
 
       drupal_goto('admin/locale');

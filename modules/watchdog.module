@@ -63,6 +63,11 @@ function watchdog_cron() {
  * Menu callback; displays a listing of log messages.
  */
 function watchdog_overview() {
+  $icons = array(WATCHDOG_NOTICE  => '',
+                 WATCHDOG_WARNING => theme('image', 'misc/watchdog-warning.png', t('warning'), t('warning')),
+                 WATCHDOG_ERROR   => theme('image', 'misc/watchdog-error.png', t('error'), t('error')));
+  $classes = array(WATCHDOG_NOTICE => 'watchdog-notice', WATCHDOG_WARNING => 'watchdog-warning', WATCHDOG_ERROR => 'watchdog-error');
+
   $names['all'] = t('all messages');
   $queries['all'] = '';
   foreach (_watchdog_get_message_types() as $type) {
@@ -83,6 +88,7 @@ function watchdog_overview() {
   $form .= form_submit(t('Filter'));
 
   $header = array(
+    ' ',
     array('data' => t('Type'), 'field' => 'w.type'),
     array('data' => t('Date'), 'field' => 'w.timestamp', 'sort' => 'desc'),
     array('data' => t('Message'), 'field' => 'w.message'),
@@ -96,25 +102,26 @@ function watchdog_overview() {
     $rows[] = array('data' =>
       array(
         // Cells
+        $icons[$watchdog->severity],
         $watchdog->type,
         format_date($watchdog->timestamp, 'small'),
-        truncate_utf8(strip_tags($watchdog->message), 64),
+        truncate_utf8($watchdog->message, 64),
         format_name($watchdog),
         $watchdog->link,
         l(t('details'), "admin/logs/event/$watchdog->wid")
       ),
       // Attributes for tr
-      'class' => "watchdog-$watchdog->type"
+      'class' => "watchdog-". preg_replace('/[^a-z]/i', '-', $watchdog->type) .' '. $classes[$watchdog->severity]
     );
   }
 
   if (!$rows) {
-    $rows[] = array(array('data' => t('No log messages available.'), 'colspan' => '6'));
+    $rows[] = array(array('data' => t('No log messages available.'), 'colspan' => '7'));
   }
 
   $pager = theme('pager', NULL, 50, 0, tablesort_pager());
   if (!empty($pager)) {
-    $rows[] = array(array('data' => $pager, 'colspan' => '6'));
+    $rows[] = array(array('data' => $pager, 'colspan' => '7'));
   }
 
   $output  = '<div class="container-inline">'. form($form) .'</div>';
@@ -127,6 +134,7 @@ function watchdog_overview() {
  * Menu callback; displays details about a log message.
  */
 function watchdog_event($id) {
+  $severity = array(WATCHDOG_NOTICE => t('notice'), WATCHDOG_WARNING => t('warning'), WATCHDOG_ERROR => t('error'));
   $output = '';
   $result = db_query('SELECT w.*, u.name, u.uid FROM {watchdog} w INNER JOIN {users} u ON w.uid = u.uid WHERE w.wid = %d', $id);
   if ($watchdog = db_fetch_object($result)) {
@@ -136,6 +144,7 @@ function watchdog_event($id) {
     $output .= ' <tr><th>'. t('User') .'</th><td>'. format_name($watchdog) .'</td></tr>';
     $output .= ' <tr><th>'. t('Location') ."</th><td>". l($watchdog->location, $watchdog->location) ."</td></tr>";
     $output .= ' <tr><th>'. t('Message') ."</th><td>$watchdog->message</td></tr>";
+    $output .= ' <tr><th>'. t('Severity') .'</th><td>'. $severity[$watchdog->severity] .'</td></tr>';
     $output .= ' <tr><th>'. t('Hostname') ."</th><td>$watchdog->hostname</td></tr>";
     $output .= '</table>';
   }
@@ -145,7 +154,7 @@ function watchdog_event($id) {
 function _watchdog_get_message_types() {
   $types = array();
 
-  $result = db_query('SELECT DISTINCT(type) FROM {watchdog}');
+  $result = db_query('SELECT DISTINCT(type) FROM {watchdog} ORDER BY type');
   while ($object = db_fetch_object($result)) {
     $types[] = $object->type;
   }
