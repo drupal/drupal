@@ -2,8 +2,22 @@
 // $Id$
 
 function system_help() {
+  $output .= "<p>Drupal comes with system-wide defaults but the setting-module provides control over many Drupal preferences, behaviors including visual and operational settings.</p>";
+  $output .= system_help_cache();
+  $output .= system_help_cron();
+  return $output;
+}
+
+function system_help_cache() {
  ?>
-  <p>Drupal comes with system-wide defaults but the setting-module provides control over many Drupal preferences, behaviors including visual and operational settings.</p>
+  <h3>Cache</h3>
+  <p>Drupal has a caching mechanism that stores dynamically generated pages in a database.  By caching a page, Drupal does not have to generate the page each time it is requested.  Only pages requested by anonymous users are being cached.  When a cached page is accessed, Drupal will retrieve that page with minimal overhead using one SQL query only, thus reducing both the server load and the response time.</p>
+  <p>Drupal's caching mechanism can be enabled and disabled by the site administrators from the 'settings' page.  He can also define how long cached pages should be kept.</p>
+ <?php
+}
+
+function system_help_cron() {
+ ?>
   <h3>Cron</h3>
   <p>Some settings require a <i>cron</i> or <i>crontab</i>.  Cron (which stands for chronograph) is a periodic command scheduler: it executes commands at intervals specified in seconds.  It can be used to control the execution of daily, weekly and monthly jobs (or anything with a period of <i>n</i> seconds).   Automating tasks is one of the best ways to keep a system running smoothly, and if most of your administration does not require your direct involvement, cron is an ideal solution.</p>
   <p>Whenever <a href="<?php echo path_uri(); ?>cron.php"><?php echo path_uri(); ?>cron.php</a> is accessed, cron will run: it checks for the jobs cron controls, and their periods in seconds.  If a certain task wasn't executed in the last n seconds, where n is the period of that job, it will be executed.  When all the executed commands terminate, cron is done.</p>
