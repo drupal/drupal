@@ -924,6 +924,14 @@ function user_admin_access($edit = array()) {
 
 }
 
+function user_roles() {
+  $result = db_query("SELECT * FROM role ORDER BY name");
+  while ($role = db_fetch_object($result)) {
+    $roles[$role->name] = $role->name;
+  }
+  return $roles;
+}
+
 function user_admin_perm($edit = array()) {
   global $REQUEST_URI;
 
@@ -1058,7 +1066,7 @@ function user_admin_edit($edit = array()) {
       $output .= form_item(t("Drupal ID"), strtolower(urlencode($account->name) ."@$HTTP_HOST"));
       $output .= form_item(t("Jabber ID"), check_output($account->jabber));
       $output .= form_select("Status", "status", $account->status, array("blocked", "active"));
-      $output .= form_select("Role", "role", $account->role, access_get_roles());
+      $output .= form_select("Role", "role", $account->role, user_roles());
 
       $output .= form_submit("Save account");
       $output .= form_submit("Delete account");
