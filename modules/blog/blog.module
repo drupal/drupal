@@ -107,9 +107,9 @@ function blog_feed_user($uid = 0, $date = 0) {
     $date = time();
   }
 
-  $result = db_query("SELECT n.nid, n.title, n.body, n.created, u.name, u.uid FROM blog b LEFT JOIN node n ON b.nid = n.nid LEFT JOIN users u ON n.uid = u.uid WHERE u.uid = '$uid' AND n.created > '". ($date - 2592000) ."' ORDER BY b.nid DESC LIMIT 15");
+  $result = db_query("SELECT n.nid, n.title, n.teaser, n.created, u.name, u.uid FROM node n LEFT JOIN users u ON n.uid = u.uid WHERE n.type = 'blog' AND u.uid = '$uid' AND n.created > '". ($date - 2592000) ."' ORDER BY n.nid DESC LIMIT 15");
   while ($blog = db_fetch_object($result)) {
-    $items .= format_rss_item($blog->title, path_uri() ."node.php?id=$blog->nid", $blog->body);
+    $items .= format_rss_item($blog->title, path_uri() ."node.php?id=$blog->nid", $blog->teaser);
   }
 
   $output .= "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n";
@@ -125,9 +125,10 @@ function blog_feed_user($uid = 0, $date = 0) {
 }
 
 function blog_feed_last() {
-  $result = db_query("SELECT n.nid, n.title, n.body, n.created, u.name, u.uid FROM blog b LEFT JOIN node n ON b.nid = n.nid LEFT JOIN users u ON n.uid = u.uid ORDER BY b.nid DESC LIMIT 15");
+  $result = db_query("SELECT n.nid, n.title, n.teaser, n.created, u.name, u.uid FROM node n LEFT JOIN users u ON n.uid = u.uid WHERE n.type = 'blog' ORDER BY n.nid DESC LIMIT 15");
+
   while ($blog = db_fetch_object($result)) {
-    $items .= format_rss_item($blog->title, path_uri() ."module.php?mod=blog&op=view&id=$blog->nid", $blog->body);
+    $items .= format_rss_item($blog->title, path_uri() ."module.php?mod=blog&op=view&id=$blog->nid", $blog->teaser);
   }
 
   $output .= "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n";

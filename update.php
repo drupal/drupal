@@ -250,6 +250,9 @@ function update_12() {
 
 function update_13() {
   update_sql("ALTER TABLE referer RENAME AS referrer;");
+  update_sql("DROP TABLE blog;");
+  update_sql("DROP TABLE story;");
+  update_sql("DROP TABLE forum;");
 }
 
 // System functions
