@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.23 2001/11/01 11:00:47 dries Exp $
+// $Id: module.inc,v 1.24 2001/11/05 22:59:09 dries Exp $
 
 // initialize modules:
 function module_init() {
@@ -12,10 +12,10 @@ function module_iterate($function, $argument = "") {
 }
 
 // invoke hook $hook of module $name with optional arguments:
-function module_invoke($name, $hook, $a1 = NULL, $a2 = NULL) {
+function module_invoke($name, $hook, $a1 = NULL, $a2 = NULL, $a3 = NULL, $a4 = NULL) {
   $function = $name ."_". $hook;
   if (function_exists($function)) {
-    return $function($a1, $a2);
+    return $function($a1, $a2, $a3, $a4);
   }
 }
 
@@ -35,6 +35,9 @@ function module_list() {
       }
       closedir($handle);
       asort($list);
+    }
+    else {
+      $list = array();
     }
   }
 
