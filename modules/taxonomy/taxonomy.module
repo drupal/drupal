@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.108 2004/03/20 13:29:06 dries Exp $
+// $Id: taxonomy.module,v 1.109 2004/04/15 20:49:41 dries Exp $
 
 function taxonomy_feed($taxonomy) {
   global $id, $type;
@@ -29,7 +29,7 @@ function taxonomy_link($type, $node = NULL) {
       menu("admin/taxonomy/help", t("help"), "taxonomy_admin", 9);
     }
     if (user_access("access content")) {
-      menu("taxonomy", t("taxonomy"), "taxonomy_page", 0, MENU_HIDE);
+      menu("taxonomy", t("taxonomy"), "taxonomy_page", 0, MENU_HIDE, MENU_LOCKED);
     }
   }
   else if ($type == "taxonomy terms" && $node != NULL) {

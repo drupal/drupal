@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.60 2004/04/12 09:17:28 dries Exp $ */
+/* $Id: drupal.css,v 1.61 2004/04/15 20:49:40 dries Exp $ */
 
 table {
   border-collapse: collapse;
@@ -313,4 +313,7 @@ td.watchdog-httpd {
 td.watchdog-error {
   background: #e44;
   border: 1px solid #c22;
+}
+td.menu-disabled {
+  background: #ccc;
 }

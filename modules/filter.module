@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.11 2004/02/23 13:17:17 dries Exp $
+// $Id: filter.module,v 1.12 2004/04/15 20:49:41 dries Exp $
 
 define('FILTER_HTML_DONOTHING', 0);
 define('FILTER_HTML_STRIP', 1);
@@ -47,7 +47,7 @@ function filter_link($type) {
       menu("admin/system/filters", t("filters"), "filter_admin", 5);
       menu("admin/system/filters/order", t("ordering"), "filter_admin", 5);
     }
-    menu("filter/tips", t("Compose tips"), "filter_tips_long", 0, MENU_HIDE);
+    menu("filter/tips", t("compose tips"), "filter_tips_long", 0, MENU_HIDE);
   }
 }
 
