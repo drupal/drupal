@@ -797,7 +797,7 @@ function node_admin() {
     */
     switch ($op) {
       case "search":
-        print search_type("node", url("admin/node/search"));
+        print search_type("node", url("admin/node/search"), $_POST["keys"]);
         break;
       case "edit":
         print node_admin_edit(arg(3));

@@ -1635,7 +1635,7 @@ function user_admin() {
 
     switch ($op) {
       case "search":
-        print search_type("user", url("admin/user/search"));
+        print search_type("user", url("admin/user/search"), $_POST["keys"]);
         break;
       case t("Add rule"):
       case t("Check"):

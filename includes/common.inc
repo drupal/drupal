@@ -339,7 +339,7 @@ function search_item($item, $type) {
  * @param $options != 0: Render additional form fields/text
  *                 ("Restrict search to", help text, etc).
  */
-function search_form($action = 0, $keys = 0, $options = 0) {
+function search_form($action = NULL, $keys = NULL, $options = NULL) {
 
   if (!$action) {
     $action = url("search");
@@ -400,11 +400,9 @@ function search_data($keys = NULL) {
  * @param $options != 0: Render additional form fields/text
  *                 ("Restrict search to", help text, etc).
  */
-function search_type($type = 0, $action = 0, $keys = 0, $options = 0) {
+function search_type($type, $action = NULL, $keys = NULL, $options = NULL) {
 
-  if (isset($type)) {
-    $_POST["edit"]["type"][$type] = "on";
-  }
+  $_POST["edit"]["type"][$type] = "on";
 
   return search_form($action, $keys, $options) . "<br />". search_data($keys);
 }

@@ -1066,7 +1066,7 @@ function comment_admin() {
         print comment_admin_edit(arg(3));
         break;
       case "search":
-        print search_type("comment", url("admin/comment/search"));
+        print search_type("comment", url("admin/comment/search"), $_POST["keys"]);
         break;
       case "votes":
       case t("Add new vote"):
