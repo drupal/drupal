@@ -2,7 +2,6 @@
 // $Id$
 
 function conf_init() {
-  global $HTTP_HOST, $PHP_SELF;
 
   /*
   ** Try finding a matching configuration file by stripping the website's
@@ -10,9 +9,9 @@ function conf_init() {
   ** default value 'conf'.
   */
 
-  $uri = $PHP_SELF;
+  $uri = $_SERVER["PHP_SELF"];
 
-  $file = strtolower(strtr($HTTP_HOST . substr($uri, 0, strrpos($uri, "/")), "/:", ".."));
+  $file = strtolower(strtr($_SERVER["HTTP_HOST"] . substr($uri, 0, strrpos($uri, "/")), "/:", ".."));
 
   while (strlen($file) > 4) {
     if (file_exists("includes/$file.php")) {
@@ -61,11 +60,10 @@ function check_php_setting($name, $value) {
 
 function arg($index) {
 
-  global $q;
   static $arguments;
 
   if (empty($arguments)) {
-    $arguments = explode("/", $q);
+    $arguments = explode("/", $_GET["q"]);
   }
 
   return $arguments[$index];
@@ -102,13 +100,11 @@ function object2array($node) {
 function request_uri() {
   // since request_uri() is only available on apache, we generate equivalent using other environment vars.
 
-  global $REQUEST_URI, $PATH_INFO, $QUERY_STRING;
-
-  if (isset($REQUEST_URI)) {
-    return $REQUEST_URI;
+  if (isset($_SERVER["REQUEST_URI"])) {
+    return $_SERVER["REQUEST_URI"];
   }
   else {
-    return $PATH_INFO ."?". $QUERY_STRING;
+    return $_SERVER["PATH_INFO"] ."?". $_SERVER["QUERY_STRING"];
   }
 }
 
@@ -351,7 +347,9 @@ function search_form($action = 0, $query = 0, $options = 0) {
  * Collect the search results:
  */
 function search_data() {
-  global $keys, $edit;
+  global $keys;
+
+  $edit = $_POST["edit"];
 
   if (isset($keys)) {
     foreach (module_list() as $name) {
@@ -386,7 +384,8 @@ function search_data() {
  *                 ("Restrict search to", help text, etc).
  */
 function search_type($type = 0, $action = 0, $query = 0, $options = 0) {
-  global $edit;
+
+  $edit = $_POST["edit"];
 
   if (isset($type)) {
     $edit["type"][$type] = "on";
@@ -437,10 +436,10 @@ function drupal_goto($url) {
 */
 
 function referer_save() {
-  global $referer, $HTTP_REFERER;
+  global $referer;
 
-  if (!strstr($HTTP_REFERER, request_uri())) {
-    $referer = $HTTP_REFERER;
+  if (!strstr($_SERVER["HTTP_REFERER"], request_uri())) {
+    $referer = $_SERVER["HTTP_REFERER"];
     session_register("referer");
   }
 }
@@ -664,9 +663,9 @@ function cache_clear_all($cid = NULL) {
 }
 
 function page_set_cache() {
-  global $user, $REQUEST_METHOD;
+  global $user;
 
-  if (!$user->uid && $REQUEST_METHOD == "GET") {
+  if (!$user->uid && $_SERVER["REQUEST_METHOD"] == "GET") {
     if ($data = ob_get_contents()) {
       cache_set(request_uri(), $data, (time() + variable_get("cache_clear", 120)));
     }
@@ -674,11 +673,11 @@ function page_set_cache() {
 }
 
 function page_get_cache() {
-  global $user, $REQUEST_METHOD;
+  global $user;
 
   $cache = NULL;
 
-  if (!$user->uid && $REQUEST_METHOD == "GET") {
+  if (!$user->uid && $_SERVER["REQUEST_METHOD"] == "GET") {
     $cache = cache_get(request_uri());
 
     if (empty($cache)) {

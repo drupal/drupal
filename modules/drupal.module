@@ -175,7 +175,6 @@ function drupal_auth_help() {
 }
 
 function drupal_user($type, $edit, $user) {
-  global $HTTP_HOST;
 
   $module = "drupal";
   $name = module_invoke($module, "info", "name");
@@ -187,7 +186,7 @@ function drupal_user($type, $edit, $user) {
       }
       else {
         // TODO: use a variation of $base_url instead of $HTTP_HOST below
-        $output .= form_item(t("$name ID"), "$user->name@$HTTP_HOST");
+        $output .= form_item(t("$name ID"), "$user->name@". $_SERVER["HTTP_HOST"]);
       }
       return $output;
   }

@@ -185,7 +185,8 @@ function cloud_block($op = "list", $delta = 0) {
 }
 
 function cloud_admin() {
-  global $op, $edit;
+  $op = $_POST["op"];
+  $edit = $_POST["edit"];
 
   if (empty($op)) {
     $op = arg(3);

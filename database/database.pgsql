@@ -563,7 +563,7 @@ INSERT INTO system VALUES ('modules/story.module','story','module','',1);
 INSERT INTO system VALUES ('modules/taxonomy.module','taxonomy','module','',1);
 INSERT INTO system VALUES ('themes/marvin/marvin.theme','marvin','theme','Internet explorer, Netscape, Opera',1);
 
-INSERT INTO variable(name,value) VALUES('update_start', '2003-04-19');
+INSERT INTO variable(name,value) VALUES('update_start', 'S:10:"2003-04-19";');
 INSERT INTO variable(name,value) VALUES('theme_default','s:6:"marvin";');
 
 INSERT INTO blocks(module,delta,status) VALUES('user', '0', '1');

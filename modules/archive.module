@@ -140,7 +140,10 @@ function archive_link($type) {
 }
 
 function archive_page() {
-  global $date, $edit, $op, $month, $year, $meta;
+  global $date, $month, $year, $meta;
+
+  $op = $_POST["op"];
+  $edit = $_POST["edit"];
 
   theme("header");
 

@@ -27,7 +27,7 @@
    }
 
    function header($title = "") {
-     global $HTTP_USER_AGENT, $base_url;
+     global $base_url;
     ?>
      <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
      <html>
@@ -48,7 +48,7 @@
       <style type="text/css">
        <!--
        <?php
-        if (eregi("Windows", $HTTP_USER_AGENT)) {
+        if (eregi("Windows", $_SERVER["HTTP_USER_AGENT"])) {
           // Windows / MSIE specific settings:
           print "BODY { margin: 10px; font-size: 10pt; font-family: Verdana, Helvetica; }";
           print "SMALL { font-size: 9pt; }";

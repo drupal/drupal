@@ -136,7 +136,7 @@ function _profile_form($edit, $mode) {
 
 function _profile_validate($edit, $mode) {
 
-  global $profile_fields, $user, $HTTP_POST_VARS;
+  global $profile_fields, $user;
 
   $enabled_fields = _profile_active_fields($mode);
 
@@ -206,19 +206,19 @@ function _profile_user_view(&$user, $mode) {
 }
 
 function _profile_validate_avatar(&$edit) {
-  global $HTTP_POST_FILES, $user;
+  global $user;
   // check that uploaded file is an image, with a max file size and max height/width
 
   unset($edit["profile_avatar"]);
 
-  if ($HTTP_POST_FILES["edit"]["name"]["profile_avatar"] == "") {
+  if ($_FILES["edit"]["name"]["profile_avatar"] == "") {
     $edit["profile_avatar"] = $user->profile_avatar;
     return "";
   }
 
-  $image_file = $HTTP_POST_FILES["edit"]["tmp_name"]["profile_avatar"];
+  $image_file = $_FILES["edit"]["tmp_name"]["profile_avatar"];
   if (is_uploaded_file($image_file)) {
-    $extension = strtolower(strrchr($HTTP_POST_FILES["edit"]["name"]["profile_avatar"], "."));
+    $extension = strtolower(strrchr($_FILES["edit"]["name"]["profile_avatar"], "."));
     $size = getimagesize($image_file);
     list($maxwidth, $maxheight) = explode("x", variable_get("profile_avatar_dimensions", "85x85"));
     if ((!in_array($size[2], array(1,2,3))) || (!in_array($extension, array(".gif", ".jpg", ".png", ".jpeg")))) {

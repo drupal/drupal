@@ -301,7 +301,7 @@ function pager_query($query, $limit = 10, $element = 0, $count_query = "") {
 }
 
 function pager_link($from_new, $attributes = array()) {
-  global $q;
+  $q = $_GET["q"];
 
   foreach($attributes as $key => $value) {
     $query[] = "$key=$value";

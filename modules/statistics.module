@@ -259,7 +259,8 @@ function statistics_help() {
 
 /* Administration hook, defines module's administrative page */
 function statistics_admin() {
-  global $op, $edit;
+  $op = $_POST["op"];
+  $edit = $_POST["edit"];
 
   /* Only allow people with sufficient access. */
   if ((user_access("administer statistics module")) || (user_access("administer statistics"))) {
@@ -393,7 +394,7 @@ function statistics_admin_accesslog_table($type, $id) {
 
 
 function statistics_recent_refer($nid = 0) {
-  global $HTTP_HOST, $view;
+  global $view;
 
   if (empty($view)) {
     $view = arg(3);
@@ -406,12 +407,12 @@ function statistics_recent_refer($nid = 0) {
       $query = "SELECT url,timestamp FROM accesslog WHERE nid='$nid' AND url <> '' ORDER BY timestamp DESC";
     }
     elseif ($view == "internal") {
-      $query = "SELECT url,timestamp FROM accesslog WHERE nid='$nid' AND url LIKE '%". check_input($HTTP_HOST) ."%' ORDER BY timestamp DESC";
+      $query = "SELECT url,timestamp FROM accesslog WHERE nid='$nid' AND url LIKE '%". check_input($_SERVER["HTTP_HOST"]) ."%' ORDER BY timestamp DESC";
       $describe = "internal ";
     }
     else {
       /* default to external referrers */
-      $query = "SELECT url,timestamp FROM accesslog WHERE nid='$nid' AND url NOT LIKE '%". check_input($HTTP_HOST) ."%' AND url <> '' ORDER BY timestamp DESC";
+      $query = "SELECT url,timestamp FROM accesslog WHERE nid='$nid' AND url NOT LIKE '%". check_input($_SERVER["HTTP_HOST"]) ."%' AND url <> '' ORDER BY timestamp DESC";
       $describe = "external ";
     }
 
@@ -423,11 +424,11 @@ function statistics_recent_refer($nid = 0) {
       $query = "SELECT url,timestamp FROM accesslog WHERE url <> '' ORDER BY timestamp DESC";
     }
     elseif ($view == "internal") {
-      $query = "SELECT url,timestamp FROM accesslog WHERE url LIKE '%". check_input($HTTP_HOST) ."%' ORDER BY timestamp DESC";
+      $query = "SELECT url,timestamp FROM accesslog WHERE url LIKE '%". check_input($_SERVER["HTTP_HOST"]) ."%' ORDER BY timestamp DESC";
       $describe = "internal ";
     }
     else {
-      $query = "SELECT url,timestamp FROM accesslog WHERE url NOT LIKE '%". check_input($HTTP_HOST) ."%' AND url <> '' ORDER BY timestamp DESC";
+      $query = "SELECT url,timestamp FROM accesslog WHERE url NOT LIKE '%". check_input($_SERVER["HTTP_HOST"]) ."%' AND url <> '' ORDER BY timestamp DESC";
       $describe = "external ";
     }
 
@@ -447,7 +448,7 @@ function statistics_recent_refer($nid = 0) {
 
 
 function statistics_top_refer($nid = 0) {
-  global $HTTP_HOST, $view;
+  global $view;
 
   $node = node_load(array("nid" => $nid));
 
@@ -456,12 +457,12 @@ function statistics_top_refer($nid = 0) {
       $query = "SELECT url, COUNT(url) AS count FROM accesslog WHERE nid = '$nid' AND url <> '' GROUP BY url ORDER BY count DESC";
     }
     elseif ($view == "internal") {
-      $query = "SELECT url, COUNT(url) AS count FROM accesslog WHERE nid = '$nid' AND url LIKE '%". check_input($HTTP_HOST) ."%' GROUP BY url ORDER BY count DESC";
+      $query = "SELECT url, COUNT(url) AS count FROM accesslog WHERE nid = '$nid' AND url LIKE '%". check_input($_SERVER["HTTP_HOST"]) ."%' GROUP BY url ORDER BY count DESC";
       $describe = "internal ";
     }
     else {
       /* default to external */
-      $query = "SELECT url, COUNT(url) AS count FROM accesslog WHERE nid = '$nid' AND url NOT LIKE '%". check_input($HTTP_HOST) ."%' AND url <> '' GROUP BY url ORDER BY count DESC";
+      $query = "SELECT url, COUNT(url) AS count FROM accesslog WHERE nid = '$nid' AND url NOT LIKE '%". check_input($_SERVER["HTTP_HOST"]) ."%' AND url <> '' GROUP BY url ORDER BY count DESC";
       $describe = "external ";
     }
 
@@ -472,12 +473,12 @@ function statistics_top_refer($nid = 0) {
       $query = "SELECT url, COUNT(url) AS count FROM accesslog WHERE url <> '' GROUP BY url ORDER BY count DESC";
     }
     elseif ($view == "internal") {
-      $query = "SELECT url, COUNT(url) AS count FROM accesslog WHERE url LIKE '%". check_input($HTTP_HOST) ."%' GROUP BY url ORDER BY count DESC";
+      $query = "SELECT url, COUNT(url) AS count FROM accesslog WHERE url LIKE '%". check_input($_SERVER["HTTP_HOST"]) ."%' GROUP BY url ORDER BY count DESC";
       $describe = "internal ";
     }
     else {
       /* default to external */
-      $query = "SELECT url, COUNT(url) AS count FROM accesslog WHERE url NOT LIKE '%". check_input($HTTP_HOST) ."%' AND url <> '' GROUP BY url ORDER BY count DESC";
+      $query = "SELECT url, COUNT(url) AS count FROM accesslog WHERE url NOT LIKE '%". check_input($_SERVER["HTTP_HOST"]) ."%' AND url <> '' GROUP BY url ORDER BY count DESC";
       $describe = "external ";
     }
 

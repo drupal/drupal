@@ -7,7 +7,7 @@ function poll_allowvotes(&$node) {
   ** We only need to determine this once for a poll, but we don't do this in
   ** poll_load() (i.e. for every poll that is loaded) for speed reasons.
   */
-  global $REMOTE_ADDR, $user;
+  global $user;
 
   if ($node->allowvotes != -1) {
     return $node;
@@ -20,7 +20,7 @@ function poll_allowvotes(&$node) {
       $id = "_". $user->uid ."_";
     }
     else {
-      $id = $REMOTE_ADDR;
+      $id = $_SERVER["REMOTE_ADDR"];
     }
     if (!strstr($node->voters, $id)) {
       $node->allowvotes = $node->active;

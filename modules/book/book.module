@@ -160,8 +160,9 @@ function book_validate(&$node) {
 }
 
 function book_form(&$node, &$help, &$error) {
-  global $user, $op;
+  global $user;
 
+  $op = $_POST["op"];
   $output = form_select(t("Parent"), "parent", $node->parent, book_toc(), t("The parent subject or category the page belongs in."));
 
   if (function_exists("taxonomy_node_form")) {
@@ -197,7 +198,10 @@ function book_form(&$node, &$help, &$error) {
 }
 
 function book_node_link($node = 0) {
-  global $user, $op, $edit;
+  global $user;
+
+  $op = $_POST["op"];
+  $edit = $_POST["edit"];
 
   if ($node->type != "book") {
 
@@ -337,7 +341,7 @@ function book_next($node) {
 }
 
 function book_body($node) {
-  global $op;
+  $op = $_POST["op"];
 
   if ($node->format == 1) {
     // Make sure only authorized users can preview PHP pages.
@@ -705,7 +709,8 @@ function book_admin_links() {
 }
 
 function book_admin() {
-  global $op, $edit;
+  $op = $_POST["op"];
+  $edit = $_POST["edit"];
 
   if (user_access("administer nodes")) {
     if (empty($op)) {

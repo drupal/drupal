@@ -739,7 +739,7 @@ function update_upgrade3() {
 */
 
 function update_sql($sql) {
-  global $edit;
+  $edit = $_POST["edit"];
   print nl2br(htmlentities($sql)) ." ";
   $result = db_query($sql);
   if ($result) {
@@ -767,7 +767,10 @@ function update_data($start) {
 }
 
 function update_page() {
-  global $op, $edit, $user, $mysql_updates;
+  global $user, $mysql_updates;
+
+  $op = $_POST["op"];
+  $edit = $_POST["edit"];
 
   switch ($op) {
     case "Update":

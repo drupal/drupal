@@ -89,7 +89,8 @@ function page_link($type) {
 }
 
 function page_body($node) {
-  global $op;
+  $op = $_POST["op"];
+
   if ($node->format == 0) {
     // HTML type
     $output = check_output($node->body);

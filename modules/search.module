@@ -51,7 +51,7 @@ function search_settings() {
  *
  */
 function search_admin() {
-  global $op;
+  $op = $_POST["op"];
 
   // Only allow people with sufficient access.
   if (user_access("administer search")) {
@@ -92,7 +92,6 @@ function search_cron() {
  *                       explanation of array items
  */
 function do_search($search_array) {
-  global $PHP_SELF;
 
   $keys = strtolower($search_array["keys"]);
   $type = $search_array["type"];
@@ -167,10 +166,10 @@ function do_search($search_array) {
       $count     = $value["count"];
       switch ($type) {
       case "node":
-        $find[$i++] = array("count" => $count, "title" => $title, "link" => (strstr($PHP_SELF, "admin") ? url("admin/node/edit/$lno") : url("node/view/$lno")), "user" => $name, "date" => $created, "keywords" => implode("|", $words));
+        $find[$i++] = array("count" => $count, "title" => $title, "link" => (strstr($_SERVER["PHP_SELF"], "admin") ? url("admin/node/edit/$lno") : url("node/view/$lno")), "user" => $name, "date" => $created, "keywords" => implode("|", $words));
         break;
       case "comment":
-        $find[$i++] = array("count" => $count, "title" => $title, "link" => (strstr($PHP_SELF, "admin") ? url("admin/comment/edit/$lno") : url("node/view/$nid#$lno")), "user" => $name, "date" => $created, "keywords" => implode("|", $words));
+        $find[$i++] = array("count" => $count, "title" => $title, "link" => (strstr($_SERVER["PHP_SELF"], "admin") ? url("admin/comment/edit/$lno") : url("node/view/$nid#$lno")), "user" => $name, "date" => $created, "keywords" => implode("|", $words));
         break;
       }
     }
@@ -306,7 +305,9 @@ function search_save($edit) {
 }
 
 function search_view($keys = NULL) {
-  global $edit, $type;
+  global $type;
+
+  $edit = $_POST["edit"];
 
   if (user_access("search content")) {
     // Construct the search form:

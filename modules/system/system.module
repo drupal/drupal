@@ -310,7 +310,9 @@ function system_listing($type, $directory, $required = array()) {
 }
 
 function system_admin() {
-  global $op, $edit;
+
+  $op = $_POST["op"];
+  $edit = $_POST["edit"];
 
   if (user_access("administer site configuration")) {
     if ($op == t("Reset to defaults")) {

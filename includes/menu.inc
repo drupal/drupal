@@ -47,12 +47,12 @@ function menu_item($in_path) {
 }
 
 function menu_trail() {
-  global $_gmenu, $q;
+  global $_gmenu;
   static $trail; // cache
 
   if (empty($trail)) {
     $trail = array();
-    $path = $q;
+    $path = $_GET["q"];
 
     while ($path) {
       if ($_gmenu[$path]) {
@@ -142,12 +142,12 @@ function menu_map($parent = "") {
 }
 
 function menu_execute_action() {
-  global $_gmenu, $q;
+  global $_gmenu;
   $trail = menu_trail();
   $selected_menu = array_pop($trail);
 
   if ($_gmenu[$selected_menu]["callback"]) {
-    $arg = substr($q, strlen($selected_menu) + 1);
+    $arg = substr($_GET["q"], strlen($selected_menu) + 1);
     if (empty($arg)) {
       return call_user_func($_gmenu[$selected_menu]["callback"]);
     }

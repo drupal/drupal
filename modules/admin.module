@@ -25,7 +25,7 @@ function admin_admin() {
 }
 
 function admin_page() {
-  global $user, $base_url;
+  global $base_url;
 
   if (user_access("access administration pages")) {
     page_header();

@@ -111,7 +111,10 @@ function queue_overview() {
 }
 
 function queue_view($nid) {
-  global $op, $edit, $user;
+  global $user;
+
+  $op = $_POST["op"];
+  $edit = $_POST["edit"];
 
   /*
   ** An associative array with the possible voting options:

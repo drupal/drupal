@@ -27,17 +27,15 @@ function sess_read($key) {
 }
 
 function sess_write($key, $value) {
-  global $HTTP_SERVER_VARS;
 
-  db_query("UPDATE users SET hostname = '%s', session = '%s', timestamp = %d WHERE sid = '$key'", $HTTP_SERVER_VARS["REMOTE_ADDR"], $value, time());
+  db_query("UPDATE users SET hostname = '%s', session = '%s', timestamp = %d WHERE sid = '$key'", $_SERVER["REMOTE_ADDR"], $value, time());
 
   return '';
 }
 
 function sess_destroy($key) {
-  global $HTTP_SERVER_VARS;
 
-  db_query("UPDATE users SET hostname = '%s', timestamp = %d, sid = '' WHERE sid = '$key'", $HTTP_SERVER_VARS["REMOTE_ADDR"], time());
+  db_query("UPDATE users SET hostname = '%s', timestamp = %d, sid = '' WHERE sid = '$key'", $_SERVER["REMOTE_ADDR"], time());
 }
 
 function sess_gc($lifetime) {
@@ -288,16 +286,18 @@ function user_perm() {
 }
 
 function user_search($keys) {
-  global $PHP_SELF;
+
   $result = db_query_range("SELECT * FROM users WHERE name LIKE '%$keys%'", 0, 20);
   while ($account = db_fetch_object($result)) {
-    $find[$i++] = array("title" => $account->name, "link" => (strstr($PHP_SELF, "admin") ? url("admin/user/edit/$account->uid") : url("user/view/$account->uid")), "user" => $account->name);
+    $find[$i++] = array("title" => $account->name, "link" => (strstr($_SERVER["PHP_SELF"], "admin") ? url("admin/user/edit/$account->uid") : url("user/view/$account->uid")), "user" => $account->name);
   }
   return $find;
 }
 
 function user_block($op = "list", $delta = 0) {
-  global $user, $edit;
+  global $user;
+
+  $edit = $_POST["edit"];
 
   if ($op == "list") {
      $blocks[0]["info"] = t("Log in");
@@ -505,7 +505,7 @@ function user_auth_help_links() {
 /*** User features *********************************************************/
 
 function user_login($edit = array(), $msg = "") {
-  global $user, $referer;
+  global $user;
 
   /*
   ** If we are already logged on, go to the user page instead.
@@ -746,6 +746,7 @@ function user_pass($edit = array()) {
 function user_register($edit = array()) {
   global $user, $base_url;
 
+  $edit = $_POST["edit"];
   /*
   ** If we are already logged on, go to the user page instead.
   */
@@ -871,7 +872,9 @@ function user_register($edit = array()) {
 
 
 function user_delete() {
-  global $edit, $user;
+  global $user;
+
+  $edit = $_SERVER["edit"];
 
   if ($edit["confirm"]) {
     watchdog("user","$user->name deactivated her own account.");
@@ -1060,7 +1063,9 @@ function user_view($uid = 0) {
 }
 
 function user_page() {
-  global $edit, $op;
+
+  $edit = $_POST["edit"];
+  $op = $_POST["op"];
 
   if (empty($op)) {
     $op = arg(1);
@@ -1185,8 +1190,8 @@ function user_admin_create($edit = array()) {
 }
 
 function user_admin_access($edit = array()) {
-  global $op, $id, $type;
 
+  $op = $_POST["op"];
   $type = arg(3);
   $id = arg(4);
 
@@ -1329,8 +1334,8 @@ function user_admin_perm($edit = array()) {
 }
 
 function user_admin_role($edit = array()) {
-  global $op;
 
+  $op = $_POST["op"];
   $id = arg(3);
 
   if ($op == t("Save role")) {
@@ -1378,8 +1383,8 @@ function user_admin_role($edit = array()) {
 }
 
 function user_admin_edit($edit = array()) {
-  global $op;
 
+  $op = $_SERVER["op"];
   $id = arg(3);
 
   if ($account = user_load(array("uid" => $id))) {
@@ -1520,7 +1525,9 @@ function user_role_init() {
 }
 
 function user_admin() {
-  global $op, $edit;
+
+  $op = $_POST["op"];
+  $edit = $_POST["edit"];
 
   if (user_access("administer users")) {
     /*

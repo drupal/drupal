@@ -422,7 +422,6 @@ function node_perm() {
 }
 
 function node_search($keys) {
-  global $PHP_SELF;
 
   // Return the results of performing a search using the indexed search
   // for this particular type of node.
@@ -597,7 +596,7 @@ function node_admin_nodes() {
 */
 
 function node_admin_settings($edit) {
-  global $op;
+  $op = $_POST["op"];
 
   if ($op == t("Save configuration")) {
     /*
@@ -762,7 +761,8 @@ function node_revision_list($node) {
 }
 
 function node_admin() {
-  global $op, $edit;
+  $op = $_POST["op"];
+  $edit = $_POST["edit"];
 
   if (user_access("administer nodes")) {
 
@@ -1094,7 +1094,9 @@ function node_form($edit, $error = NULL) {
 }
 
 function node_add($type) {
-  global $user, $edit;
+  global $user;
+
+  $edit = $_POST["edit"];
 
   /*
   ** If a node type has been specified, validate it existence.  If no
@@ -1353,7 +1355,10 @@ function node_delete($edit) {
 }
 
 function node_page() {
-  global $op, $id, $user, $edit, $or, $and;
+  global $id, $user, $or, $and;
+
+  $op = $_POST["op"];
+  $edit = $_POST["edit"];
 
   if (user_access("access content")) {
     if (empty($op)) {

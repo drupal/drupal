@@ -449,7 +449,8 @@ function _forum_message_taxonomy() {
 }
 
 function forum_page() {
-  global $sortby, $forum_per_page, $from, $op, $user;
+  global $sortby, $forum_per_page, $from, $user;
+  $op = $_POST["op"];
 
   if (user_access("access content")) {
     if (module_exist("taxonomy")) {

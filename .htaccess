@@ -20,17 +20,16 @@ ErrorDocument 500 /error.php
 
 # Overload PHP variables:
 <IfModule mod_php4.c>
-   php_value register_globals        1
    php_value track_vars              1
    php_value short_open_tag          1
    php_value magic_quotes_gpc        0
    php_value magic_quotes_runtime    0
    php_value magic_quotes_sybase     0
-   php_value arg_separator.output    "&amp;"  
+   php_value arg_separator.output    "&amp;"
    php_value session.cache_expire    200000
    php_value session.cookie_lifetime 2000000
    php_value session.auto_start      0
-   php_value session.save_handler    user 
+   php_value session.save_handler    user
    php_value session.cache_limiter   none
    php_value allow_call_time_pass_reference  Off
 </IfModule>
@@ -44,7 +43,7 @@ ErrorDocument 500 /error.php
   #RewriteCond %{REQUEST_FILENAME} !-d
   #RewriteCond %{QUERY_STRING} ^id=([^&]+)$
   #RewriteRule node.php index.php?q=node/view/%1 [L]
-  
+
   # Rewrite old-style URLs of the form 'module.php?mod=x':
   #RewriteCond %{REQUEST_FILENAME} !-f
   #RewriteCond %{REQUEST_FILENAME} !-d
@@ -54,7 +53,7 @@ ErrorDocument 500 /error.php
   # Rewrite URLs of the form 'index.php?q=x':
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule ^(.*)$ index.php?q=$1 [L,QSA] 
+  RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]
 </IfModule>
 
 # $Id$

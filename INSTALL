@@ -15,7 +15,6 @@ SERVER CONFIGURATION
 
 Your PHP must have the following settings:
 
-  register_globals         1
   magic_quotes_gpc         0
   session.save_handler     user
 

@@ -676,7 +676,8 @@ function comment_link($type, $node = 0, $main = 0) {
 }
 
 function comment_page() {
-  global $op, $edit;
+  $op = $_POST["op"];
+  $edit = $_POST["edit"];
 
   if (empty($op)) {
     $op = arg(1);
@@ -880,7 +881,7 @@ function comment_mod_roles($edit) {
 }
 
 function comment_mod_votes($edit) {
-  global $op;
+  $op = $_POST["op"];
 
   $mid = arg(3);
 
@@ -928,7 +929,7 @@ function comment_mod_votes($edit) {
 }
 
 function comment_mod_filters($edit) {
-  global $op;
+  $op = $_POST["op"];
 
   $fid = arg(3);
 
@@ -978,7 +979,10 @@ function comment_mod_filters($edit) {
 
 
 function comment_admin() {
-  global $op, $id, $edit, $mod, $keys, $order, $status, $comment_page, $comment_settings;
+  global  $id, $mod, $keys, $order, $status, $comment_page, $comment_settings;
+
+  $op = $_POST["op"];
+  $edit = $_POST["edit"];
 
   if (empty($op)) {
     $op = arg(2);
@@ -1122,8 +1126,10 @@ function comment_controls($threshold = 1, $mode = 3, $order = 1, $nid, $page = 0
 }
 
 function comment_moderation_form($comment) {
-  global $comment_votes, $op, $user, $node;
+  global $comment_votes, $user, $node;
   static $votes;
+
+  $op = $_POST["op"];
 
   if ($op == "reply") {
     // preview comment:
@@ -1393,7 +1399,6 @@ function comment_already_moderated($uid, $users) {
 }
 
 function comment_search($keys) {
-  global $PHP_SELF;
 
   /*
   ** Return the results of performing a search using the indexed search
