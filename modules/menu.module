@@ -171,7 +171,7 @@ function menu_disable_item($mid) {
 /**
  * Menu callback; dispatch to the appropriate menu item edit function.
  */
-function menu_edit_item($mid) {
+function menu_edit_item($mid = 0) {
   $op = $_POST['op'];
   $edit = $_POST['edit'];
   $output = '';
