@@ -55,7 +55,7 @@ function node_save($node) {
     if ($u2 = implode(", ", $u2)) db_query("UPDATE $n->type SET $u2 WHERE nid = '$node[nid]'");
     if ($n->pid && ($node[status] == $status[posted])) db_query("UPDATE node SET status = '$status[expired]' WHERE nid = '$n->pid'");
 
-    watchdog("message", "node: modified '$n->title'");
+    watchdog("special", "node: modified '$n->title'");
   }
   else {
     $duplicate = node_get_object("title", $node[title]);
@@ -101,7 +101,7 @@ function node_save($node) {
             if (($node[pid]) && ($node[status] == $status[posted])) {
               db_query("UPDATE node SET status = '$status[expired]' WHERE nid = '$node[pid]'");
             }
-            watchdog("message", "node: added '$node[title]'");
+            watchdog("special", "node: added '$node[title]'");
           }
           else {
             watchdog("warning", "node: added '$node[title]' - failed");
