@@ -73,7 +73,9 @@ function book_link($type, $node = 0, $main = 0) {
     if (book_access("update", $node)) {
       $links[] = l(t("edit this page"), "node/edit/$node->nid", array("title" => t("Suggest an update for this book page.")));
     }
-    $links[] = l(t("printer-friendly version"), "book/print/$node->nid", array("title" => t("Show a printer-friendly version of this book page and its sub-pages.")));
+    if (!$main) {
+      $links[] = l(t("printer-friendly version"), "book/print/$node->nid", array("title" => t("Show a printer-friendly version of this book page and its sub-pages.")));
+    }
   }
 
   if ($type == "admin" && user_access("maintain books")) {
@@ -685,21 +687,22 @@ function book_admin_save($nid, $edit = array()) {
 
 function book_admin_orphan() {
 
-  $result = db_query("SELECT n.nid, n.title, b.parent FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.type = 'book'");
+  $result = db_query("SELECT n.nid, n.title, n.status, b.parent FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.type = 'book'");
 
   while ($page = db_fetch_object($result)) {
     $pages[$page->nid] = $page;
   }
 
   if ($pages) {
-    $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";
-    $output .= " <tr><th>title</th><th colspan=\"2\">operations</th></tr>";
+    $output .= "<h3>Orphan pages</h3>";
+    $header = array(t("title"), t("weight"), array("data" => t("operations"), "colspan" => 3));
     foreach ($pages as $nid => $node) {
       if ($node->parent && empty($pages[$node->parent])) {
-        $output .= "<tr><td>". l($node->title, "node/view/$node->nid") ."</td><td>". l(t("edit page"), "admin/node/edit/$node->nid") ."</td><td>". l(t("delete page"), "admin/node/delete/$node->nid") ."</td>";
+        $rows[] = book_admin_view_line($node, $depth);
+        $rows = array_merge($rows, book_admin_view_book($node->nid, $depth + 1));
       }
     }
-    $output .= "</table>";
+    $output .= table($header, $rows);
   }
 
   return $output;
