@@ -32,10 +32,10 @@ function chameleon_page($content, $title = NULL, $breadcrumb = NULL) {
 
   if ($logo = drupal_get_theme_setting('logo')) {
     $output .= "  <a href=\"./\" title=\"Home\"><img src=\"$logo\" alt=\"Home\" /></a>";
-  } 
+  }
   if (drupal_get_theme_setting('toggle_name')) {
     $output .= "  <h1 class=\"site-name title\">". l(variable_get('site_name', 'drupal'), ""). "</h1>";
-  } 
+  }
   if (drupal_get_theme_setting('toggle_slogan')) {
     $output .= "  <div class=\"site-slogan\">". variable_get('site_slogan', '') ."</div>";
   }
@@ -52,7 +52,7 @@ function chameleon_page($content, $title = NULL, $breadcrumb = NULL) {
     if ($secondary_links) {
       $output .= '<div class="secondary">'. $secondary_links .'</div>';
     }
-    $output .= " </div>\n"; 
+    $output .= " </div>\n";
   }
 
   $output .= " <table>\n";

@@ -15,11 +15,11 @@
       <!-- BEGIN: logo -->
         <a href="./" title="Home"><img src="{logo}" alt="Home" border="0" /></a>
       <!-- END: logo -->
-      
+
       <!-- BEGIN: site_name -->
         <h1 class='site-name'><a href="./" title="Home">{site_name}</a></h1>
       <!-- END: site_name -->
- 
+
       <!-- BEGIN: site_slogan -->
         <div class='site-slogan'>{site_slogan}</div>
       <!-- END: site_slogan -->

@@ -129,11 +129,11 @@ br {
 ** Logo Image Positioning
 */
 #header img {
-	float: left;
-	padding: 0em 2em 0em 0em;
+  float: left;
+  padding: 0em 2em 0em 0em;
 }
 #header {
-	clear: both;
+  clear: both;
 }
 /*
 ** Module specific styles
