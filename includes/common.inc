@@ -736,7 +736,7 @@ function form_radio($title, $name, $value = 1, $checked = 0, $description = NULL
 function form_radios($title, $name, $value, $options, $description = NULL) {
   if (count($options) > 0) {
     foreach ($options as $key => $choice) {
-      $choices .= "<input type=\"radio\" class=\"form-radio\" name=\"edit[$name]\" id=\"$name\" value=\"$key\"". ($key == $value ? " checked=\"checked\"" : "") ." /> $choice<br />";
+      $choices .= "<input type=\"radio\" class=\"form-radio\" name=\"edit[$name]\" value=\"$key\"". ($key == $value ? " checked=\"checked\"" : "") ." /> $choice<br />";
     }
     return theme("form_element", $title, $choices, $description, $name);
   }
