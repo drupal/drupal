@@ -45,7 +45,8 @@ $mysql_updates = array(
   "2002-01-05" => "update_18",
   "2002-01-17" => "update_19",
   "2002-01-27" => "update_20",
-  "2002-01-30" => "update_21"
+  "2002-01-30" => "update_21",
+  "2002-02-19" => "update_22"
 );
 
 // Update functions
@@ -325,6 +326,10 @@ function update_20() {
 
 function update_21() {
   update_sql("ALTER TABLE node ADD static int(2) DEFAULT '0' NOT NULL;");
+}
+
+function update_22() {
+  update_sql("ALTER TABLE cache MODIFY data MEDIUMTEXT;");
 }
 
 /*
