@@ -43,11 +43,11 @@
      <STYLE type="text/css"> 
       <!-- 
        TABLE { border-width: 0; }
-       TD { border-width: 0; font-size: 10pt; font-family: verdana,helvetica,arial; }
-       P,UL,LI,DIV,FORM,EM,BLOCKQUOTE { font-size: 10pt; font-family: verdana,helvetica,arial; }
-       BODY { margin: 10px; font-size: 10pt; font-family: verdana,helvetica,arial; }
-       SMALL { font-size: 9pt; }
-       BIG { font-size: 11pt; }
+       TD { border-width: 0; font-size: 9pt; font-family: verdana,helvetica,arial; }
+       P,UL,LI,DIV,FORM,EM,BLOCKQUOTE { font-size: 9pt; font-family: verdana,helvetica,arial; }
+       BODY { margin: 10px; font-size: 9pt; font-family: verdana,helvetica,arial; }
+       SMALL { font-size: 8pt; }
+       BIG { font-size: 10pt; }
       -->
      </STYLE>
      <BODY TEXT="#000000" BGCOLOR="<? print $this->clc0; ?>" ALINK="#000000" LINK="#404040" VLINK="#404040" MARGINHEIGHT="10" MARGINWIDTH="10">
@@ -72,7 +72,7 @@
             print "</TR></TD></TABLE>";
        ?></TD></TR>
        <TR>
-       <TD VALIGN="top" WIDTH="660">
+       <TD VALIGN="top" WIDTH="640">
     <?
    }
 
@@ -305,7 +305,7 @@
    function footer() {
     ?>
        </TD>
-       <TD VALIGN="top" WIDTH="200">
+       <TD VALIGN="top" WIDTH="185">
          <?
          global $PHP_SELF, $user;  
 
