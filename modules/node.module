@@ -986,11 +986,6 @@ function node_validate($node, &$error) {
     unset($node->created);
   }
 
-  // Workflow:
-  if ($node->moderate == 1) {
-    $node->promote = 0;
-  }
-
   /*
   ** Do node type specific validation checks.
   */
