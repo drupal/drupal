@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.24 2003/09/28 17:52:14 dries Exp $
+// $Id: menu.inc,v 1.25 2003/10/07 18:46:15 dries Exp $
 
 /**
  * Register a menu item with the menu system.
@@ -125,7 +125,7 @@ function menu_tree($parent = "") {
   global $_list;
   static $trail;
 
-  if (empty($tail)) {
+  if (empty($trail)) {
     $trail = menu_get_trail($_GET["q"]);
   }
 
