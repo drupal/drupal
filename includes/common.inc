@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.255 2003/10/09 18:51:15 dries Exp $
+// $Id: common.inc,v 1.256 2003/10/13 21:28:05 dries Exp $
 
 function conf_init() {
 
@@ -365,7 +365,7 @@ function search_item($item, $type) {
   }
   else {
     $output .= " <b><u><a href=\"". $item["link"] ."\">". $item["title"] ."</a></u></b><br />";
-    $output .= " <small>$type ". ($item["user"] ? " - ". $item["user"] : "") ."". ($item["date"] ? " - ". format_date($item["date"], "small") : "") ."</small>";
+    $output .= " <small>" . t($type) . ($item["user"] ? " - ". $item["user"] : "") ."". ($item["date"] ? " - ". format_date($item["date"], "small") : "") ."</small>";
     $output .= "<br /><br />";
   }
 
