@@ -301,7 +301,7 @@ function comment_links($comment, $return = 1) {
   global $user, $theme;
 
   $links = array();
-
+  
   /*
   ** If we are viewing just this comment, we link back to the node
   */
@@ -314,7 +314,7 @@ function comment_links($comment, $return = 1) {
   ** Admin link
   */
 
-  if (user_access("administer comments")) {
+  if (user_access("administer comments") && user_access("access administration pages")) {
     $links[] = la(t("administer"), array("mod" => "comment", "op" => "edit", "id" => $comment->cid));
     // $links[] = lm(t("unpublish"), array ("mod" => "comment", "op" => "Moderate comment", "moderation[$comment->cid]" => "offline", "edit[nid]" => $comment->nid), "", array ("title" => t("hide this comment by marking it non-published")));
   }
@@ -414,7 +414,7 @@ function comment_render($node, $cid = 0) {
         comment_view($comment, comment_links($comment));
       }
 
-      if ((user_access("administer comments") || comment_user_can_moderate($node)) && $user->uid != $comment->uid && !(comment_already_moderated($user->uid, $comment->users))) {
+      if ((comment_user_can_moderate($node)) && $user->uid != $comment->uid && !(comment_already_moderated($user->uid, $comment->users))) {
         print "<div align=\"center\">". form_submit(t("Moderate comment")) ."</div><br />";
       }
       print "</form>";
@@ -1154,7 +1154,7 @@ function comment_moderation_form($comment) {
     // preview comment:
     $output .= "&nbsp;";
   }
-  else if ((user_access("administer comments") || comment_user_can_moderate($node)) && $user->uid != $comment->uid && !(comment_already_moderated($user->uid, $comment->users))) {
+  else if ((comment_user_can_moderate($node)) && $user->uid != $comment->uid && !(comment_already_moderated($user->uid, $comment->users))) {
     // comment hasn't been moderated yet:
 
     if (!isset($votes)) {
