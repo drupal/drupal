@@ -2,10 +2,6 @@
 
 class Theme_xtemplate extends BaseTheme {
 
-  var $primary_links = "edit me";
-  var $secondary_links = "edit me";
-  var $message = "edit me";
-
   function system($field) {
     $system["name"] = "xtemplate";
     $system["description"] = "a template driven theme";
@@ -70,12 +66,10 @@ class Theme_xtemplate extends BaseTheme {
     $this->template->assign(array(
       "title" => ($title ? $title." | ". variable_get("site_name", "drupal") : variable_get("site_name", "drupal") ." | ". variable_get("site_slogan", "")),
       "head" => theme_head(),
-      "primary" => $this->primary_links,
-      "secondary" => $this->secondary_links
+      "links" => $this->links(link_page())
     ));
 
     if (!arg(0)) {
-      $this->template->assign("message", $this->message);
       $this->template->parse("header.message");
     }
 
