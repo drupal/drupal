@@ -28,7 +28,7 @@ function xtemplate_settings() {
   $group = form_textarea(t('Logo'), 'xtemplate_logo', variable_get('xtemplate_logo', "<img src=\"themes/xtemplate/$template_directory/logo.png\" alt=\"Logo\" />"), 70, 4, t('The HTML code for displaying the logo.'));
   $group .= form_textarea(t('Primary links'), 'xtemplate_primary_links', variable_get('xtemplate_primary_links', l('edit primary links', 'admin/themes/xtemplate')), 70, 8, t('The HTML code for the primary links.'));
   $group .= form_textarea(t('Secondary links'), 'xtemplate_secondary_links', variable_get('xtemplate_secondary_links', l('edit secondary links', 'admin/themes/xtemplate')), 70, 8, t('The HTML code for the secondary links.'));
-  $group .= form_textarea(t('Message on front page'), 'xtemplate_mission', variable_get('xtemplate_mission', 'edit mission'), 70, 6, t('This text will be displayed on the front page.  It can be used to display a mission statement, announcement or site description..'));
+  $group .= form_textarea(t('Message on front page'), 'xtemplate_mission', variable_get('xtemplate_mission', 'edit mission'), 70, 6, t('This text will be displayed on the front page.  It can be used to display a mission statement, announcement or site description.'));
   $group .= form_radios(t('Search box'), 'xtemplate_search_box', variable_get('xtemplate_search_box', 0), array(t('Disabled'), t('Enabled')), t('Show a search box in the upper right corner.'));
   $output .= form_group(t('Header settings'), $group);
 
