@@ -314,3 +314,6 @@ td.watchdog-error {
   background: #e44;
   border: 1px solid #c22;
 }
+td.menu-disabled {
+  background: #ccc;
+}

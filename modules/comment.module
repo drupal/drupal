@@ -794,8 +794,8 @@ function comment_link($type, $node = 0, $main = 0) {
       menu("admin/comment/comments/0", t("new/updated"), "comment_admin", 1);
       menu("admin/comment/comments/1", t("approval queue"), "comment_admin", 2);
       menu("admin/comment/help", t("help"), "comment_help_page", 9);
-      menu("admin/comment/edit", t("edit comment"), "comment_admin", 0, MENU_HIDE);
-      menu("admin/comment/delete", t("delete comment"), "comment_admin", 0, MENU_HIDE);
+      menu("admin/comment/edit", t("edit comment"), "comment_admin", 0, MENU_HIDE, MENU_LOCKED);
+      menu("admin/comment/delete", t("delete comment"), "comment_admin", 0, MENU_HIDE, MENU_LOCKED);
       if (module_exist('search')) {
         menu("admin/comment/search", t("search"), "comment_admin", 8);
       }
@@ -809,7 +809,7 @@ function comment_link($type, $node = 0, $main = 0) {
         menu("admin/comment/moderation/roles", t("initial scores"), "comment_admin", 6);
       }
     }
-    menu("comment", t("comments"), "comment_page", 0, MENU_HIDE);
+    menu("comment", t("comments"), "comment_page", 0, MENU_HIDE, MENU_LOCKED);
   }
 
   return $links;

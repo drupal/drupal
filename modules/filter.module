@@ -47,7 +47,7 @@ function filter_link($type) {
       menu("admin/system/filters", t("filters"), "filter_admin", 5);
       menu("admin/system/filters/order", t("ordering"), "filter_admin", 5);
     }
-    menu("filter/tips", t("Compose tips"), "filter_tips_long", 0, MENU_HIDE);
+    menu("filter/tips", t("compose tips"), "filter_tips_long", 0, MENU_HIDE);
   }
 }
 

@@ -20,9 +20,9 @@ function profile_link($type) {
 
     if (user_access('administer users')) {
       menu('admin/system/modules/profile', t('profile'), 'profile_admin_overview');
-      menu('admin/system/modules/profile/add', NULL, 'profile_admin_add', 0, MENU_HIDE);
-      menu('admin/system/modules/profile/edit', NULL, 'profile_admin_edit', 0, MENU_HIDE);
-      menu('admin/system/modules/profile/delete', NULL, 'profile_admin_delete', 0, MENU_HIDE);
+      menu('admin/system/modules/profile/add', NULL, 'profile_admin_add', 0, MENU_HIDE, MENU_LOCKED);
+      menu('admin/system/modules/profile/edit', NULL, 'profile_admin_edit', 0, MENU_HIDE, MENU_LOCKED);
+      menu('admin/system/modules/profile/delete', NULL, 'profile_admin_delete', 0, MENU_HIDE, MENU_LOCKED);
     }
   }
 }

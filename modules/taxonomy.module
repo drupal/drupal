@@ -29,7 +29,7 @@ function taxonomy_link($type, $node = NULL) {
       menu("admin/taxonomy/help", t("help"), "taxonomy_admin", 9);
     }
     if (user_access("access content")) {
-      menu("taxonomy", t("taxonomy"), "taxonomy_page", 0, MENU_HIDE);
+      menu("taxonomy", t("taxonomy"), "taxonomy_page", 0, MENU_HIDE, MENU_LOCKED);
     }
   }
   else if ($type == "taxonomy terms" && $node != NULL) {

@@ -60,8 +60,8 @@ function locale_link($type) {
       menu("admin/locale", t("localization"), "locale_admin", 5);
       menu("admin/locale/search", t("search string"), "locale_admin", 8);
       menu("admin/locale/help", t("help"), "locale_help_page", 9);
-      menu("admin/locale/edit", t("edit string"), "locale_admin", 0, MENU_HIDE);
-      menu("admin/locale/delete", t("delete string"), "locale_admin", 0, MENU_HIDE);
+      menu("admin/locale/edit", t("edit string"), "locale_admin", 0, MENU_HIDE, MENU_LOCKED);
+      menu("admin/locale/delete", t("delete string"), "locale_admin", 0, MENU_HIDE, MENU_LOCKED);
 
       foreach ($languages as $key => $value) {
         menu("admin/locale/$key", "$value", "locale_admin");

@@ -539,8 +539,10 @@ function user_link($type) {
       menu("logout", t("log out"), "user_logout", 10);
     }
     else {
-      menu('user', t("my account"), "user_page", 8, MENU_HIDE);
+      menu("user/login", t("log in"), "user_page", 0, MENU_HIDE);
     }
+    menu("user/password", t("e-mail new password"), "user_page", 0, MENU_HIDE);
+    menu("user/register", t("create new account"), "user_page", 0, MENU_HIDE);
 
     if (user_access("administer users")) {
       menu("admin/user", t("accounts"), "user_admin", 2);
@@ -551,7 +553,7 @@ function user_link($type) {
       menu("admin/user/role", t("roles"), "user_admin", 4);
       menu("admin/user/permission", t("permissions"), "user_admin", 5);
       menu("admin/user/help", t("help"), "user_help_page", 9);
-      menu("admin/user/edit", t("edit user account"), "user_admin", 0, MENU_HIDE);
+      menu("admin/user/edit", t("edit user account"), "user_admin", 0, MENU_HIDE, MENU_LOCKED);
       if (module_exist('search')) {
         menu("admin/user/search", t("search"), "user_admin", 8);
       }
@@ -764,7 +766,7 @@ function user_login($edit = array(), $msg = "") {
 
   $output  = form_group(t('User login'), $output);
 
-  return form($output, "post", url('user'));
+  return form($output, "post", url('user/login'));
 }
 
 function _user_authenticated_id() {
@@ -851,7 +853,7 @@ function user_pass($edit = array()) {
     }
     $output .= theme("item_list", $items);
     $output  = form_group(t('Request new password'), $output);
-    return form($output, "post", url('user'));
+    return form($output, "post", url('user/password'));
   }
 }
 

@@ -53,7 +53,8 @@ $sql_updates = array(
   "2004-02-21" => "update_79",
   "2004-03-11: first update since Drupal 4.4.0 release" => "update_80",
   "2004-02-20" => "update_81",
-  "2004-02-27" => "update_82"
+  "2004-02-27" => "update_82",
+  "2004-04-15" => "update_83"
 );
 
 function update_32() {
@@ -897,6 +898,27 @@ function update_81() {
 
 function update_82() {
   $ret[] = update_sql("ALTER TABLE {profile_fields} ADD required tinyint(1) DEFAULT '0' NOT NULL");
+  return $ret;
+}
+
+function update_83() {
+  $ret = array();
+  if ($GLOBALS["db_type"] == "mysql") {
+    $ret[] = update_sql("CREATE TABLE menu (
+      mid int(10) unsigned NOT NULL default '0',
+      pid int(10) unsigned NOT NULL default '0',
+      path varchar(255) NOT NULL default '',
+      title varchar(255) NOT NULL default '',
+      weight tinyint(4) NOT NULL default '0',
+      visibility int(1) unsigned NOT NULL default '0',
+      status int(1) unsigned NOT NULL default '0',
+      PRIMARY KEY  (mid)
+     );");
+    $ret[] = update_sql("INSERT INTO sequences (name, id) VALUES ('menu_mid', 1)");
+  }
+  else {
+    /* Needs PostgreSQL equivalent */
+  }
   return $ret;
 }
 

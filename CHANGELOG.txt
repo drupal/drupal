@@ -2,7 +2,7 @@ Drupal x.x.x, xxxx-xx-xx
 ------------------------
 
 - profile module:
-    * made it possible to administere profile fields.
+    * made it possible to administer profile fields.
     * made it possible to browse the profiles by field.
 
 Drupal 4.4.0, 2004-04-01 (release candidate)

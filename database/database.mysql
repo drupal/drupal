@@ -236,6 +236,21 @@ CREATE TABLE locales (
 ) TYPE=MyISAM;
 
 --
+-- Table structure for table 'menu'
+--
+
+CREATE TABLE menu (
+  mid int(10) unsigned NOT NULL default '0',
+  pid int(10) unsigned NOT NULL default '0',
+  path varchar(255) NOT NULL default '',
+  title varchar(255) NOT NULL default '',
+  weight tinyint(4) NOT NULL default '0',
+  visibility int(1) unsigned NOT NULL default '0',
+  status int(1) unsigned NOT NULL default '0',
+  PRIMARY KEY  (mid)
+) TYPE=MyISAM;
+
+--
 -- Table structure for table 'moderation_filters'
 --
 
@@ -632,3 +647,4 @@ REPLACE variable SET name='theme_default', value='s:9:"xtemplate";';
 REPLACE blocks SET module = 'user', delta = '0', status = '1';
 REPLACE blocks SET module = 'user', delta = '1', status = '1';
 
+INSERT INTO sequences (name, id) VALUES ('menu_mid', 1);
