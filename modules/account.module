@@ -140,8 +140,7 @@ function account_delete($name) {
 function account_edit_save($name, $edit) {
   foreach ($edit as $key=>$value) if ($key != "access") $query .= "$key = '". addslashes($value) ."', ";
   db_query("UPDATE users SET $query access = '' WHERE userid = '$name'");
-  if ($edit[access]) foreach ($edit[access] as $key=>$value) user_set(user_load($name), "access", $value, 1);
-
+  if ($edit[access]) foreach ($edit[access] as $key=>$value) db_query("UPDATE users SET access = '". field_set(user_load($name), "access", $value, 1) ."'");
   watchdog("message", "account: modified user '$name'");
 }
 

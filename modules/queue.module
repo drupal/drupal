@@ -18,14 +18,13 @@ function queue_score($id) {
 function queue_vote($id, $vote) {
   global $status, $user;
 
-  if (!user_get($user, "history", "n$id")) {
-    // Update submission's score- and votes-field:
-    db_query("UPDATE node SET score = score $vote, votes = votes + 1 WHERE nid = $id");
+  if ($node = node_get_object(nid, $id)) {
 
-    // Update user's history record:
-    $user = user_set($user, "history", "n$id", $vote);
+    if (!field_get($node, "users", $user->userid)) {
 
-    if ($node = node_get_object(nid, $id)) {
+      // Update submission's score- and votes-field:
+      db_query("UPDATE node SET score = score $vote, votes = votes + 1, users = '". field_set($node, "users", $user->userid, $vote) ."' WHERE nid = $id");
+
       if (variable_get("post_threshold", 4, $node) <= $node->score) {
         node_save(array(nid => $id, status => $status[posted]), array(status));
         watchdog("message", "node: posted '$node->title' - moderation");
@@ -50,7 +49,7 @@ function queue_overview() {
   $content .= "<TABLE BORDER=\"0\" CELLSPACING=\"4\" CELLPADDING=\"4\">\n";
   $content .= " <TR><TH>". t("Subject") ."</TH><TH>". t("Author") ."</TH><TH>". t("Type") ."</TH><TH>". t("Score") ."</TH></TR>\n";
   while ($node = db_fetch_object($result)) {
-    if ($user->id == $node->author || user_get($user, "history", "n$node->nid")) $content .= " <TR><TD><A HREF=\"module.php?mod=queue&op=view&id=$node->nid\">". check_output($node->title) ."</A></TD><TD ALIGN=\"center\">". format_username($node->userid) ."</TD><TD ALIGN=\"center\">". check_output($node->type) ."</TD><TD ALIGN=\"center\">". queue_score($node->nid) ."</TD></TR>\n";
+    if ($user->id == $node->author || field_get($node, "users", $user->userid)) $content .= " <TR><TD><A HREF=\"module.php?mod=queue&op=view&id=$node->nid\">". check_output($node->title) ."</A></TD><TD ALIGN=\"center\">". format_username($node->userid) ."</TD><TD ALIGN=\"center\">". check_output($node->type) ."</TD><TD ALIGN=\"center\">". queue_score($node->nid) ."</TD></TR>\n";
     else $content .= " <TR><TD><A HREF=\"module.php?mod=queue&op=view&id=$node->nid\">". check_output($node->title) ."</A></TD><TD ALIGN=\"center\">". format_username($node->userid) ."</TD><TD ALIGN=\"center\">". check_output($node->type) ."</TD><TD ALIGN=\"center\"><A HREF=\"module.php?mod=queue&op=view&id=$node->nid\">". t("vote") ."</A></TD></TR>\n";
   }
   $content .= "</TABLE>\n";
@@ -66,7 +65,7 @@ function queue_node($id) {
 
   $node = node_get_object(nid, $id);
 
-  if ($user->id == $node->author || user_get($user, "history", "n$node->nid")) {
+  if ($user->id == $node->author || field_get($node, "users", $user->userid)) {
     header("Location: node.php?id=$node->nid");
   }
   else {

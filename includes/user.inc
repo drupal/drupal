@@ -52,46 +52,9 @@ function user_save($account, $array) {
   return user_load(($account->userid ? $account->userid : $array[userid]));
 }
 
-function user_get($account, $column, $field) {
-  $data = explode(";", $account->$column);
-  for (reset($data); current($data); next($data)) {
-    $entry = explode(":", current($data));
-    if (reset($entry) == $field) $rval = end($entry);
-  }
-  return $rval;
-}
-
-function user_set($account, $column, $name, $value) {
-  $field = $account->$column;
-
-  if (!$value) {
-    // remove entry:
-    $data = explode(";", $field);
-    for (reset($data); current($data); next($data)) {
-      $entry = explode(":", current($data));
-      if ($entry[0] != $name) $rval .= "$entry[0]:$entry[1];";
-    }
-  }
-  else if (strstr($field, "$name:")) {
-    // found: update exsisting entry:
-    $data = explode(";", $field);
-    for (reset($data); current($data); next($data)) {
-      $entry = explode(":", current($data));
-      if ($entry[0] == $name) $entry[1] = $value;
-      $rval .= "$entry[0]:$entry[1];";
-    }
-  }
-  else {
-    // not found:
-    $rval = "$field$name:$value;";
-  }
-
-  return user_save($account, array($column => $rval));
-}
-
 function user_access($account, $section = 0) {
   global $user;
-  if ($section) return (user_get($account, "access", $section) || $account->id == 1);
+  if ($section) return (field_get($account, "access", $section) || $account->id == 1);
   else return ($account->access || $account->id == 1);
 }
 

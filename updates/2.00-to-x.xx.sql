@@ -136,3 +136,8 @@ ALTER TABLE node ADD moderate TEXT NOT NULL;
 
 # 10/05/2001:
 ALTER TABLE topic ADD moderate TEXT NOT NULL;
+
+# 16/05/2001
+ALTER TABLE node ADD users TEXT NOT NULL;
+ALTER TABLE comments ADD users TEXT NOT NULL;
+ALTER TABLE users DROP history;
