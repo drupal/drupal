@@ -444,7 +444,7 @@ function user_login($edit = array()) {
     ** Try to log on the user through Drupal:
     */
 
-    if (!$user && variable_get("user_drupal", 1) == 1 && $id = drupal_auth($name, $pass, $server)) {
+    if (!$user && $server && variable_get("user_drupal", 1) == 1 && $id = drupal_auth($name, $pass, $server)) {
       $user = user_load(array("drupal" => "$id@$server", "status" => 1));
 
       if (!$user && variable_get("user_register", 1) == 1 && !user_load(array("name" => $name))) {
@@ -457,7 +457,7 @@ function user_login($edit = array()) {
     ** Try to log on the user through Jabber:
     */
 
-    if (!$user && variable_get("user_jabber", 1) == 1 && jabber_auth($name, $pass, $server)) {
+    if (!$user && $server && variable_get("user_jabber", 1) == 1 && jabber_auth($name, $pass, $server)) {
       $user = user_load(array("jabber" => "$name@$server", "status" => 1));
       if (!$user && variable_get("user_register", 1) == 1 && !user_load(array("name" => "$name"))) {
         watchdog("user", "new user: '$name' &lt;$name@$server&gt; (Jabber ID)");
