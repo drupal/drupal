@@ -597,7 +597,7 @@ function user_menu() {
       'callback' => 'user_page', 'access' => TRUE);
     // Add the edit menu:
     if ($access) $function = 'user_admin_edit';
-    else $function = 'user_edit';
+    else $function = 'user_page';
     $items[] = array('path' => 'user/'. arg(1) .'/edit', 'title' => t('edit'),
       'callback' => $function, 'access' => $access || $user->uid == arg(1),
       'type' => MENU_LOCAL_TASK);
