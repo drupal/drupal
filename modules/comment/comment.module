@@ -949,10 +949,10 @@ function comment_save($id, $edit) {
 function comment_admin_overview($status = 0) {
 
   $header = array(
-    array("data" => t("Subject"), "field" => "subject"),
-    array("data" => t("Author"), "field" => "u.name"),
-    array("data" => t("Status"), "field" => "status"),
-    array("data" => t("Time"), "field" => "timestamp", "sort" => "desc"),
+    array("data" => t("subject"), "field" => "subject"),
+    array("data" => t("author"), "field" => "u.name"),
+    array("data" => t("status"), "field" => "status"),
+    array("data" => t("time"), "field" => "timestamp", "sort" => "desc"),
     array("data" => t("operations"), "colspan" => 2)
   );
 
