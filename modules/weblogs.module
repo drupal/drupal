@@ -3,7 +3,7 @@
 function weblogs_cron() {
 
   if (db_num_rows(db_query("SELECT nid FROM node WHERE status = '". node_status("posted") ."' AND timestamp > '". variable_get("weblogs_cron_last", time()) ."'", 1))) {
-    weblogs_notify(variable_get("site_name", "drupal") , path_uri());  
+    weblogs_notify(variable_get("site_name", "drupal") , path_uri());
   }
   variable_set("weblogs_cron_last", time());
 }
@@ -13,7 +13,7 @@ function weblogs_notify($name, $url) {
   $client = new xmlrpc_client("/RPC2", "rpc.weblogs.com", 80);
 
   $message = new xmlrpcmsg("weblogUpdates.ping", array(new xmlrpcval($name), new xmlrpcval($url)));
- 
+
   $result = $client->send($message);
 
   if (!$result || $result->faultCode()) {
