@@ -919,7 +919,7 @@ function user_register($edit = array()) {
     }
   }
   $output .= form_submit(t("Create new account"));
-  $items[] = l(t("E-mail new password"), "user/password");
+  $items[] = l(t("Request new password"), "user/password");
   $items[] = l(t("Log in"), "user/login");
   $output .= theme("theme_item_list", $items);
 
@@ -1110,11 +1110,11 @@ function user_view($uid = 0) {
   else {
     $output = user_login();
     theme("header");
-    theme("box", t("Log in"), $output);
+    theme("box", t("User login"), $output);
     if (variable_get("user_register", 1)) {
       theme("box", t("Create new user account"), user_register());
     }
-    theme("box", t("E-mail new password"), user_pass());
+    theme("box", t("Request new password"), user_pass());
     theme("footer");
   }
 }

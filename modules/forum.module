@@ -36,19 +36,19 @@ function forum_settings() {
     }
 
     if ($voc) {
-      $output .= form_textarea("Explanation or submission guidelines", "forum_help", variable_get("forum_help", ""), 70, 5, t("This text will be displayed at the top of the forum submission form.  Useful for helping or instructing your users."));
-      $output .= form_select("Forum vocabulary", "forum_nav_vocabulary", variable_get("forum_nav_vocabulary", ""), $vocs, t("The taxonomy vocabulary that will be used as the navigation tree."));
-      $output .= _taxonomy_term_select("Containers", "forum_containers", variable_get("forum_containers", array()), variable_get("forum_nav_vocabulary", ""), t("You can choose forums which will not have topics, but will be just containers for other forums."), 1, t("<none>"));
+      $output .= form_textarea(t("Explanation or submission guidelines"), "forum_help", variable_get("forum_help", ""), 70, 5, t("This text will be displayed at the top of the forum submission form.  Useful for helping or instructing your users."));
+      $output .= form_select(t("Forum vocabulary"), "forum_nav_vocabulary", variable_get("forum_nav_vocabulary", ""), $vocs, t("The taxonomy vocabulary that will be used as the navigation tree."));
+      $output .= _taxonomy_term_select(t("Containers"), "forum_containers", variable_get("forum_containers", array()), variable_get("forum_nav_vocabulary", ""), t("You can choose forums which will not have topics, but will be just containers for other forums."), 1, t("<none>"));
 
-      $output .= form_textfield("Topic icons path", "forum_topic_icon_path", variable_get("forum_topic_icon_path", ""), 30, 255, "The path to the topic icons.  Leave blank to disable icons.");
-      $output .= form_textfield("Folder icons path", "forum_folder_icon_path", variable_get("forum_folder_icon_path", ""), 30, 255, "The path to the <b>default</b>, <b>hot</b>, <b>new</b>, <b>hot & new</b>, and <b>closed</b> folder icons.  Leave blank to disable icons.");
+      $output .= form_textfield(t("Topic icons path"), "forum_topic_icon_path", variable_get("forum_topic_icon_path", ""), 30, 255, t("The path to the topic icons.  Leave blank to disable icons."));
+      $output .= form_textfield(t("Folder icons path"), "forum_folder_icon_path", variable_get("forum_folder_icon_path", ""), 30, 255,t( "The path to the <b>default</b>, <b>hot</b>, <b>new</b>, <b>hot & new</b>, and <b>closed</b> folder icons.  Leave blank to disable icons."));
       $number = array(5 => 5, 10 => 10, 15 => 15, 20 => 20, 25 => 25, 30 => 30, 35 => 35, 40 => 40, 50 => 50, 60 => 60, 80 => 80, 100 => 100, 10000=>10000);
-      $output .= form_select("Hot topic threshold", "forum_hot_topic", variable_get("forum_hot_topic", 15), $number, "The number of posts a topic must have to be considered <b>hot</b>.");
+      $output .= form_select(t("Hot topic threshold"), "forum_hot_topic", variable_get("forum_hot_topic", 15), $number, t("The number of posts a topic must have to be considered <b>hot</b>."));
       $number = array(10 => 10, 25 => 25, 50 => 50, 75 => 75, 100 => 100);
-      $output .= form_select("Topics per page", "forum_per_page", variable_get("forum_per_page", 25), $number, "The default number of topics displayed per page; links to browse older messages are automatically being displayed.");
-      $forder = array(1 => "Date - newest first", 2 => "Date - oldest first", 3 => "Posts - most active first", 4=> "Posts - least active first");
-      $output .= form_select("Default order", "forum_order", variable_get("forum_order", 1), $forder, "The default display order for topics.");
-      $output .= form_textfield("Number of topics in block", "forum_block_num", variable_get("forum_block_num", "5"), 5, 5, "The number of topics in the <b>Forum topics</b>-block.  To enable the block, click ". l("here", "admin/block") .".");
+      $output .= form_select(t("Topics per page"), "forum_per_page", variable_get("forum_per_page", 25), $number, t("The default number of topics displayed per page; links to browse older messages are automatically being displayed."));
+      $forder = array(1 => t("Date - newest first"), 2 => t("Date - oldest first"), 3 => t("Posts - most active first"), 4=> t("Posts - least active first"));
+      $output .= form_select(t("Default order"), "forum_order", variable_get("forum_order", 1), $forder, t("The default display order for topics."));
+      $output .= form_textfield(t("Number of topics in block"), "forum_block_num", variable_get("forum_block_num", "5"), 5, 5, t("The number of topics in the <b>Forum topics</b>-block.  To enable the block, click ". l("here", "admin/block") ."."));
     }
     else {
       $output .= _forum_message_taxonomy();
@@ -199,7 +199,7 @@ function forum_form(&$node, &$help, &$error) {
   // outputs the compose guidelines
   $help = variable_get("forum_help", "");
 
-  $output .= _taxonomy_term_select("Forum", "tid", $tid, variable_get("forum_nav_vocabulary", ""), "", 0, "", variable_get("forum_containers", array()));
+  $output .= _taxonomy_term_select(t("Forum"), "tid", $tid, variable_get("forum_nav_vocabulary", ""), "", 0, "", variable_get("forum_containers", array()));
 
   if ($node->nid) {
     // if editing, give option to leave shadows
@@ -286,7 +286,7 @@ function _forum_last_reply($nid) {
 
 function _forum_format($topic) {
   if ($topic) {
-    return "<small>". format_date($topic->timestamp, "small")."<br />".t("by")." ". format_name($topic) ."</small>";
+    return "<small>". t("%date<br />by %author", array("%date" => format_date($topic->timestamp, "small"), "%author" => format_name($topic))) ."</small>";
   }
   else {
     return message_na();
@@ -457,7 +457,7 @@ function forum_page() {
   if (user_access("access content")) {
     if (module_exist("taxonomy")) {
       $tid = arg(1);
-      if ($op == "Update settings" && $user->uid) {
+      if ($op == t("Update settings") && $user->uid) {
         $user = user_save($user, array("sortby" => $sortby, "forum_per_page" => $forum_per_page));
       }
 

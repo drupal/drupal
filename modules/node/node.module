@@ -1064,7 +1064,7 @@ function node_form($edit, $error = NULL) {
   ** Add the default fields:
   */
   $output .= "<div class=\"standard\">";
-  $output .= form_textfield(t("Title"), "title", $edit->title, 60, 64, $error["title"]);
+  $output .= form_textfield(t("Title"), "title", $edit->title, 60, 128, $error["title"]);
 
   /*
   ** Add the node specific fields:
