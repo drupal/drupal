@@ -307,7 +307,9 @@ function field_merge($a, $b) {
 function link_page() {
 
   $links[] = "<a href=\"index.php\">". t("home") ."</a>";
-  $links[] = "<a href=\"submit.php\">". t("submit") ."</a>";
+  if (user_access("post content")) {
+    $links[] = "<a href=\"submit.php\">". t("submit") ."</a>";
+  }
   $links[] = "<a href=\"account.php\">". t("account") ."</a>";
 
   foreach (module_list() as $name) {
