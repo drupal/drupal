@@ -1,0 +1,70 @@
+<!-- BEGIN: header -->
+<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+  <head>
+    <title>{name} - {slogan}</title>
+    <style type="text/css" media="all">
+      @import "themes/xtemplate/xtemplate.css";
+    </style>
+  </head>
+  <body>
+<!-- END: header -->
+
+<!-- BEGIN: menu -->
+    <span id="links">
+      <div id="secundary">{secundary}</div>
+      <div id="primary">{primary}</div>
+    </span>
+    <span id="logo"><a href="index.php"><img src="themes/xtemplate/images/druplicon.gif" alt="" /></a></span>
+<!-- END: menu -->
+
+
+<!-- BEGIN: message -->
+  <div id="message">{message}</div>
+<!-- END: message -->
+
+
+<!-- BEGIN: node -->
+  <div id="node">
+    <div id="title">{title}</div>
+    <span id="author">Submitted by {author} on {date}.</span>
+    <span id="taxonomy">{taxonomy}</span>
+    <div id="content">{content}</div>
+    <div id="links">&raquo; {links}</div>
+  </div>
+<!-- END: node -->
+
+<!-- BEGIN: comment_new -->
+  <div id="comment">
+    <span id="new">new</span>
+    <div id="title">{title}</div>
+    <div id="author">Posted by {author} on {date}.</div>
+    <div id="content">{content}</div>
+    <div id="links">&raquo; {links}</div>
+ </div>
+<!-- END: comment_new -->
+
+<!-- BEGIN: comment_old -->
+  <div id="comment">
+    <div id="title">{title}</div>
+    <div id="author">Posted by {author} on {date}.</div>
+    <div id="content">{content}</div>
+    <div id="links">&raquo; {links}</div>
+ </div>
+<!-- END: comment_old -->
+
+
+<!-- BEGIN: block -->
+  <div id="block">
+    <div id="title">{title}</div>
+    <div id="content">{content}</div>
+ </div>
+<!-- END: block -->
+
+
+<!-- BEGIN: footer -->
+  </body>
+</html>
+<!-- END: footer -->

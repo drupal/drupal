@@ -1,0 +1,127 @@
+body {
+  margin: 0px;
+  padding: 0px;
+  color: #000000;
+  background-color: #fff;
+  font-family: verdana, arial, helvetica, sans-serif;
+}
+body, td, tr {
+  font-size: 90%;
+}
+a {
+  text-decoration: none;
+  font-weight: normal;
+}
+a:link {
+  color: #378CE0;
+}
+a:visited {
+  color: #036;
+}
+a:hover {
+  text-decoration: underline;
+}
+p {
+  margin: 0 0 1em 0;
+  padding: 0;
+}
+img {
+  border-width: 0;
+}
+table #menu {
+  background-color: #69c;
+  padding: 5px 5px 0px 5px;
+}
+#menu logo {
+  vertical-align: bottom;
+  float: left;
+}
+#menu #links {
+  text-align: right;
+  float: right;
+  color: #9cf;
+}
+#menu #links #primary {
+  font-size: 1.1em;
+}
+#menu #links #primary a {
+  color: #fff;
+  font-weight: bold;
+}
+#menu #links #secundary {
+  font-size: 0.7em;
+}
+#menu #links #secundary a {
+  color: #9cf;
+  font-weight: bold;
+}
+#message {
+  background-color: #369;
+  padding: 10px 10px 10px 10px;
+  color: #fff;
+}
+#main {
+  margin: 10px 10px 10px 10px;
+  padding: 15px 15px 0px 15px;
+}
+#sidebar {
+  background-color: #ddd;
+}
+table #node {
+  padding-bottom: 25px;
+}
+table #block {
+  padding: 15px 15px 15px 15px;
+  margin: 5px 0px 5px 0px;
+}
+table #comment {
+  border: 1px solid #bbb;
+  padding: 15px 15px 15px 15px;
+  margin: 5px 0px 5px 0px;
+}
+#node #title, #block #title, #node #title a {
+  padding-bottom: 5px;
+  font-weight: bold;
+  font-size: 1.2em;
+  color: #888;
+}
+#node #author, #comment #author {
+  color: #999;
+  font-size: 0.8em;
+  padding-bottom: 10px;
+}
+#node #taxonomy {
+  color: #999;
+  font-size: 0.8em;
+  padding: 15px;
+}
+#node #taxonomy a {
+  color: #369;
+}
+#node #content, #comment #content {
+  padding-top: 5px;
+}
+#node #links, #comment #links {
+  padding-top: 10px;
+  color: #999;
+}
+#node #links a, #comment #links a {
+  font-weight: bold;
+  color: #369;
+}
+#comment #title {
+  font-weight: bold;
+  font-size: 1.1em;
+  color: #888;
+}
+#comment #new {
+  text-align: right;
+  font-weight: bold;
+  font-size: 0.7em;
+  float: right;
+  color: red;
+}
+#block #content {
+  font-size: 0.9em/1.1em;
+}
+
