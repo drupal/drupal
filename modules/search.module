@@ -181,7 +181,11 @@ function search_cron() {
     $total = db_result(db_query("SELECT SUM(score) FROM {search_index} WHERE word = '%s'", $word));
     db_query("UPDATE {search_total} SET count = %d WHERE word = '%s'", $total, $word);
     if (!db_affected_rows()) {
-      db_query("INSERT INTO {search_total} (word, count) VALUES ('%s', %d)", $word, $total);
+      // Note: affected rows does not count matching rows that already had the right value!
+      $exists = db_result(db_query("SELECT COUNT(*) FROM {search_total} WHERE word = '%s'", $word));
+      if (!$exists) {
+        db_query("INSERT INTO {search_total} (word, count) VALUES ('%s', %d)", $word, $total);
+      }
     }
   }
   // Find words that were deleted from search_index, but are still in
@@ -331,7 +335,7 @@ function search_index($sid, $type, $text) {
           // Check if link points to a node on this site
           if (preg_match($node_regexp, $value, $match)) {
             $path = drupal_get_normal_path($match[1]);
-            if (preg_match('!(node|book)/(?:view/)?([0-9]+)!i', $path, $match)) {
+            if (preg_match('!(?:node|book)/(?:view/)?([0-9]+)!i', $path, $match)) {
               $linknid = $match[1];
               if ($linknid > 0) {
                 $link = true;
