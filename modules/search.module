@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.25 2002/11/21 18:18:19 dries Exp $
+// $Id: search.module,v 1.26 2002/11/25 15:52:04 dries Exp $
 
 function search_help() {
   $output = "<b>". t("Search hints") ."</b>";
@@ -250,7 +250,7 @@ function update_index($search_array) {
       ** false count of the number of hist, and doesn't show up
       ** when clicking on a node from the search interface anyway.
       */
-      $wordlist = $node["text1"] . $node["text2"];
+      $wordlist = $node["text1"] ." ". $node["text2"];
 
       // Strip heaps of stuff out of it
       $wordlist = preg_replace("'<[\/\!]*?[^<>]*?>'si", "", $wordlist);
