@@ -37,24 +37,6 @@ li.leaf {
 li a.active {
   color: #000;
 }
-#tracker table {
-  border-collapse: collapse;
-}
-#tracker td {
-  vertical-align: top;
-  padding: 1em;
-}
-#tracker td ul {
-  margin-top: 0;
-  margin-bottom: 0;
-}
-#tracker td ul a {
-  font-weight: normal;
-}
-#tracker th {
-  text-align: left;
-  padding: 0.25em 1em 0.25em 0em;
-}
 #pager {
   clear: both;
   text-align: center;
@@ -185,8 +167,11 @@ li a.active {
 #forum td.created, #forum td.posts, #forum td.topics, #forum td.last-reply, #forum td.replies, #forum td.pager {
   white-space: nowrap;
 }
-#forum td.posts, #forum td.topics, #forum td.replies, #forum td.pager {
+#forum td.posts, #forum td.topics, #forum td.replies, #forum td.pager, #tracker td.replies {
   text-align: center;
+}
+#tracker table {
+  width: 100%;
 }
 .item-list .icon {
   color: #555;

@@ -3,7 +3,7 @@
 
 function tracker_help($section = 'admin/help#tracker') {
   switch ($section) {
-    case 'admin/help#tracer':
+    case 'admin/help#tracker':
       return t('<p>The tracker module is a handy module for displaying the most recent posts.  By following the <i>recent posts</i> link in the user block, a user may quickly review all recent postings.</p>');
     case 'admin/system/modules#description':
       return t('Enables tracking of recent posts for users.');
@@ -16,78 +16,68 @@ function tracker_link($type) {
   }
 }
 
-function tracker_posts($id = 0) {
+function tracker_page() {
+  global $user;
 
-  $header = array(
-    array("data" => t("type"), "field" => "type"),
-    array("data" => t("title"), "field" => "title"),
-    array("data" => t("author"), "field" => "u.name"),
-    array("data" => t("last post"), "field" => "last_activity", "sort" => "desc")
-  );
+  $output .= '';
 
-  if ($id) {
-    $sql = "SELECT n.nid, n.title, n.type, n.changed, n.uid, u.name, MAX(GREATEST(n.changed, c.timestamp)) AS last_activity FROM {node} n LEFT JOIN {comments} c ON n.nid = c.nid INNER JOIN {users} u ON n.uid = u.uid WHERE n.uid = '". check_query($id) ."' AND n.status = 1 GROUP BY n.nid, n.title, n.type, n.changed, n.uid, u.name";
-    $sql .= tablesort_sql($header);
-    $sresult = pager_query($sql, 10, 0, "SELECT COUNT(nid) FROM {node} WHERE status = 1 AND uid = '". check_query($id) ."'");
+  if ($user->uid) {
+    $output .= "<ul>";
+    $output .= " <li>". l(t('Your active posts and discussions'), "tracker/$user->uid") ."</li>";
+    $output .= " <li>". l(t('All active posts and discussions'), 'tracker') ."</li>";
+    $output .= "</ul>";
+  }
+
+  if (arg(1)) {
+    $uid = check_query(arg(1));
+
+    $result = pager_query("SELECT n.nid, n.title, n.type, n.changed, n.uid, u.name, MAX(GREATEST(n.changed, c.timestamp)) AS last_post FROM {node} n LEFT JOIN {comments} c ON n.nid = c.nid INNER JOIN {users} u ON n.uid = u.uid WHERE n.status = 1 AND (n.uid = '$uid' OR c.uid = '$uid') GROUP BY n.nid, n.title, n.type, n.changed, n.uid, u.name ORDER BY last_post DESC", 25, 0, "SELECT COUNT(DISTINCT(n.nid)) FROM {node} n LEFT JOIN {comments} c ON n.nid = c.nid WHERE n.status = 1 AND (n.uid = '$uid' OR c.uid = '$uid')");
 
   }
   else {
-    $sql = "SELECT n.nid, n.title, n.type, n.changed, n.uid, u.name, MAX(GREATEST(n.changed, c.timestamp)) AS last_activity FROM {node} n LEFT JOIN {comments} c ON n.nid = c.nid INNER JOIN {users} u ON n.uid = u.uid WHERE n.status = 1 GROUP BY n.nid, n.title, n.type, n.changed, n.uid, u.name";
-    $sql .= tablesort_sql($header);
-    $sresult = pager_query($sql, 10, 0, "SELECT COUNT(nid) FROM {node} WHERE status = 1");
+    $result = pager_query("SELECT n.nid, n.title, n.type, n.changed, n.uid, u.name, MAX(GREATEST(n.changed, c.timestamp)) AS last_post FROM {node} n LEFT JOIN {comments} c ON n.nid = c.nid INNER JOIN {users} u ON n.uid = u.uid WHERE n.status = 1 GROUP BY n.nid, n.title, n.type, n.changed, n.uid, u.name ORDER BY last_post DESC", 25, 0, "SELECT COUNT(nid) FROM {node} WHERE status = 1");
   }
 
-  while ($node = db_fetch_object($sresult)) {
-    if (node_hook($node, 'tracker_comments')) {
-      $cresult = node_invoke($node, 'tracker_comments');
-    }
-    elseif ($id) {
-      $cresult = db_query("SELECT c.*, u.name FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.uid = %d AND c.nid = %d AND c.status = 0 ORDER BY c.cid DESC", $id, $node->nid);
+  while ($node = db_fetch_object($result)) {
+    // Determine the number of comments:
+    if ($all = comment_num_all($node->nid)) {
+      $comments = $all;
+
+      if ($new = comment_num_new($node->nid)) {
+        $comments .= '<br />';
+        $comments .= l(t('%a new', array('%a' => $new)), "node/view/$node->nid", NULL, NULL, 'new');
+      }
     }
     else {
-      $cresult = db_query("SELECT c.*, u.name FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.nid = %d AND c.status = 0 ORDER BY c.cid DESC", $node->nid);
+      $comments = 0;
     }
 
-    $type = ucfirst(node_invoke($node->type, "node_name"));
-    $title = l($node->title, "node/view/$node->nid") ." ". (node_is_new($node->nid, $node->changed) ? theme("mark") : "");
-    $author = format_name($node);
-
-    $comments = array();
-    while ($comment = db_fetch_object($cresult)) {
-      $comments[] = "<li>". t("%subject by %author", array("%subject" => l($comment->subject, "node/view/$node->nid#comment-$comment->cid"), "%author" => format_name($comment))) ." ". (node_is_new($comment->nid, $comment->timestamp) ? theme("mark") : "") ."</li>\n";
-    }
-
-    if ($comments) {
-      $comments = "<ul>". implode("\n", $comments) ."</ul>";
-    }
-    else {
-      $comments = "";
-    }
-
-    $rows[] = array(array("data" => $type, "class" => "type"), array("data" => $title . $comments, "class" => "content"), array("data" => $author, "class" => "author"), array("data" => format_date($node->last_activity, "small"), "class" => "last_post"));
+    $rows[] = array(
+      ucfirst(node_invoke($node->type, "node_name")),
+      l($node->title, "node/view/$node->nid") ." ". (node_is_new($node->nid, $node->changed) ? theme("mark") : ''),
+      format_name($node),
+      array('class' => 'replies', 'data' => $comments),
+      format_interval(time() - $node->last_post) ." ". t('ago')
+    );
   }
 
-  if ($pager = theme("pager", NULL, 10, 0, tablesort_pager())) {
-   $rows[] = array(array("data" => $pager, "colspan" => 4));
+  if ($pager = theme('pager', NULL, 25, 0)) {
+   $rows[] = array(array('data' => $pager, 'colspan' => 4));
   }
 
-  $output  = "<div id=\"tracker\">";
+  $header = array(t('Type'),  t('Post'), t('Author'), t('Replies'), t('Last post'));
+
+  $output .= "<div id=\"tracker\">";
   $output .= theme("table", $header, $rows);
   $output .= "</div>";
 
-  return $output;
+  print theme('page', $output);
 }
 
 function tracker_user($type, &$edit, &$user) {
   if ($type == 'view' && user_access("access content")) {
     return form_item(t("Recent posts"), l(t("recent posts"), "tracker/$user->uid"));
   }
-}
-
-function tracker_page() {
-  global $user;
-
-  print theme("page", tracker_posts(arg(1)), t("Recent posts"));
 }
 
 ?>

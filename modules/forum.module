@@ -96,12 +96,14 @@ function forum_load($node) {
 }
 
 function forum_block($op = 'list', $delta = 0) {
+  global $user;
+
   if ($op == 'list') {
     $blocks[0]['info'] = t('Forum topics');
   }
   else {
     if (user_access('access content')) {
-      $content = node_title_list(db_query_range("SELECT n.nid, n.title, GREATEST(n.created, MAX(c.timestamp)) AS sort FROM {node} n LEFT JOIN {comments} c ON n.nid = c.nid WHERE n.type = 'forum' AND n.status = 1 GROUP BY n.nid, n.title, n.created ORDER BY sort DESC", 0, variable_get('forum_block_num', '5')), t('Active forum topics:'));
+      $content  = node_title_list(db_query_range("SELECT n.nid, n.title, GREATEST(n.created, MAX(c.timestamp)) AS sort FROM {node} n LEFT JOIN {comments} c ON n.nid = c.nid WHERE n.type = 'forum' AND n.status = 1 GROUP BY n.nid, n.title, n.created ORDER BY sort DESC", 0, variable_get('forum_block_num', '5')), t('Active forum topics:'));
 
       $content .= node_title_list(db_query_range("SELECT nid, title FROM {node} WHERE type = 'forum' AND status = 1 ORDER BY nid DESC", 0, variable_get('forum_block_num', '5')), t('New forum topics:'));
 
@@ -412,24 +414,25 @@ function forum_page() {
         drupal_goto("node/view/$nid");
       }
     }
+    else {
+      if (empty($sortby)) {
+        $sortby = isset($user->sortby) ? $user->sortby : variable_get('forum_order', 1);
+      }
 
-    if (empty($sortby)) {
-      $sortby = isset($user->sortby) ? $user->sortby : variable_get('forum_order', 1);
+      if (empty($forum_per_page)) {
+        $forum_per_page = isset($user->forum_per_page) ? $user->forum_per_page : variable_get('forum_per_page', 25);
+      }
+
+      $offset = ($from / $forum_per_page) + 1;
+
+      $forums = forum_get_forums($tid);
+      $parents = taxonomy_get_parents_all($tid);
+      if ($tid && !in_array($tid, variable_get('forum_containers', array()))) {
+        $topics = forum_get_topics($tid, $sortby, $forum_per_page);
+      }
+
+      print theme('forum_display', $forums, $topics, $parents, $tid, $sortby, $forum_per_page, $offset);
     }
-
-    if (empty($forum_per_page)) {
-      $forum_per_page = isset($user->forum_per_page) ? $user->forum_per_page : variable_get('forum_per_page', 25);
-    }
-
-    $offset = ($from / $forum_per_page) + 1;
-
-    $forums = forum_get_forums($tid);
-    $parents = taxonomy_get_parents_all($tid);
-    if ($tid && !in_array($tid, variable_get('forum_containers', array()))) {
-      $topics = forum_get_topics($tid, $sortby, $forum_per_page);
-    }
-
-    print theme('forum_display', $forums, $topics, $parents, $tid, $sortby, $forum_per_page, $offset);
   }
   else {
     print theme('page', forum_help('admin/system/modules/forum'), t('Warning'));
@@ -455,6 +458,7 @@ function forum_page() {
  * @return the output for the forum body.
  */
 function theme_forum_display($forums, $topics, $parents, $tid, $sortby, $forum_per_page, $offset) {
+  global $user;
   // forum list, topics list, topic browser and 'add new topic' link
 
   $vocabulary = taxonomy_get_vocabulary(variable_get('forum_nav_vocabulary', ''));
@@ -482,6 +486,27 @@ function theme_forum_display($forums, $topics, $parents, $tid, $sortby, $forum_p
 
   if (count($forums) || count($parents)) {
     $output  = "<div id=\"forum\">";
+    $output .= "<ul>";
+
+    if (module_exist('tracker')) {
+      if ($user->uid) {
+        $output .= " <li>". l(t('Track your forum discussions.'), "tracker/$user->uid") ."</li>";
+      }
+
+      $output .= " <li>". l(t('Track active forum discussions.'), 'tracker') ."</li>";
+    }
+
+    if (user_access('create forum topics')) {
+      $output .= "<li>". l(t('Post new forum topic.'), "node/add/forum/$tid") ."</li>";
+    }
+    else if ($user->uid) {
+      $output .= "<li>". t('You are not allowed to post a new forum topic.') .'</li>';
+    }
+    else {
+      $output .= '<li>'. t('<a href="%login">Login</a> to post a new forum topic.', array('%login' => url('user/login'))) .'</li>';
+    }
+    $output .= "</ul>";
+
     $output .= theme('forum_list', $forums, $parents, $tid);
 
     if ($tid && !in_array($tid, variable_get('forum_containers', array()))) {
@@ -571,7 +596,7 @@ function theme_forum_list($forums, $parents, $tid) {
  * @return output for the topic list.
  */
 function theme_forum_topic_list($tid, $topics, $sortby, $forum_per_page, $offset) {
-  global $user, $id, $status, $user, $pager_total, $forum_topic_list_header;
+  global $id, $status, $pager_total, $forum_topic_list_header;
 
   if ($topics) {
 
@@ -598,16 +623,6 @@ function theme_forum_topic_list($tid, $topics, $sortby, $forum_per_page, $offset
     if ($pager = theme('pager', NULL, $forum_per_page, 0, tablesort_pager())) {
       $rows[] = array(array('data' => $pager, 'colspan' => '5', 'class' => 'pager'));
     }
-  }
-
-  if (user_access('create forum topics')) {
-    $output = '<p>'. t('You can <a href="%post">post</a> new forum topics.', array('%post' => url("node/add/forum/$tid"))) .'</p>';
-  }
-  else if ($user->uid) {
-    $output = '<p>'. t('You are not allowed to post new forum topics.') .'</p>';
-  }
-  else {
-    $output = '<p>'. t('You must <a href="%login">login</a> to post new forum topics.', array('%login' => url('user/login'))) .'</p>';
   }
 
   $output .= theme('table', $forum_topic_list_header, $rows);
