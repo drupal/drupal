@@ -74,6 +74,9 @@ function contact_mail_user() {
         if (!$edit['message']) {
           form_set_error('message',  t('You must enter a message.'));
         }
+  if (!$edit['subject']) {
+    form_set_error('subject', t('You must enter a subject.'));
+  }
 
         if (!form_get_errors()) {
           // Compose the body:
@@ -86,13 +89,18 @@ function contact_mail_user() {
           // Tidy up the body:
           foreach ($message as $key => $value) {
             $message[$key] = wordwrap(strip_tags($value));
+
           }
 
           // Prepare all fields:
           $to = $account->mail;
           $from = $user->mail;
-          $subject = '['. variable_get('site_name', 'drupal') .'] '. t('message from %name', array('%name' => $user->name));
-          $body = implode("\n\n", $message);
+
+    // Format the subject:
+          $subject = '['. variable_get('site_name', 'drupal') .'] '. $edit['subject'];
+
+          // Prepare the body:
+    $body = implode("\n\n", $message);
 
           // Send the e-mail:
           user_mail($to, $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
@@ -114,6 +122,7 @@ function contact_mail_user() {
 
       $output  = form_item(t('From'), $user->name .' &lt;'. $user->mail .'&gt;');
       $output .= form_item(t('To'), $account->name);
+      $output .= form_textfield(t('Subject'), 'subject', $edit['subject'], 50, 8, NULL, NULL, TRUE);
       $output .= form_textarea(t('Message'), 'message', $edit['message'], 70, 8, NULL, NULL, TRUE);
       $output .= form_submit(t('Send e-mail'));
       $output  = form($output);
