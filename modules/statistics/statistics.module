@@ -9,7 +9,7 @@ function statistics_init() {
     // node view counters are enabled
     if (arg(0) == "node" && arg(1) == "view") {
       // a node has been viewed, so updated the node's counters
-      db_query("UPDATE statistics SET daycount = daycount + 1, totalcount = totalcount + 1, timestamp = '%s' WHERE nid = '%s'", time(), arg(3));
+      db_query("UPDATE statistics SET daycount = daycount + 1, totalcount = totalcount + 1, timestamp = '%s' WHERE nid = '%s'", time(), arg(2));
       // if we affected 0 rows, this is the first time viewing the node
       if (!db_affected_rows()) {
         // must create a new row to store counter's for new node
@@ -115,7 +115,7 @@ function statistics_link($type, $node = 0, $main = 0) {
 
     menu_add("popular posts", url("admin/statistics/statistics"), "Display the top nodes.", $help["statistics"], "site monitoring", 2, 1);
     menu_add("referrer log", url("admin/statistics/referrers"), "Display the referrers.", $help["referrers"], "site monitoring", 3, 1);
-     menu_add("view all referrers", url("admin/statistics/referrers/all"), "Display all referrers.", $help["referrers"], "referre logs", 1);
+     menu_add("view all referrers", url("admin/statistics/referrers/all"), "Display all referrers.", $help["referrers"], "referrer log", 1);
      menu_add("view internal referrers", url("admin/statistics/referrers/internal"), "Display internal referrers.", $help["referrers"], "referrer log", 1);
      menu_add("view external referrers", url("admin/statistics/referrers/external"), "Display external referrers.", $help["referrers"], "referrer log", 1);
     menu_add("access log", url("admin/statistics/log"), "Display the access log.", $help["access"], "site monitoring", 4);
