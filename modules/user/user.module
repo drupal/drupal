@@ -833,7 +833,6 @@ function user_authenticate($name, $pass) {
           if (variable_get('user_register', 1) == 1) {
             $account = user_load(array('name' => "$name@$server"));
             if (!$account->uid) { // Register this new user.
-              print "gonna register using $module and $name";
               $user = user_save('', array('name' => "$name@$server", 'pass' => user_password(), 'init' => "$name@$server", 'status' => 1, "authname_$module" => "$name@$server", 'roles' => array(_user_authenticated_id())));
               watchdog('user', t('New external user: %user using module %module.', array('%user' => "<em>$name@$server</em>", '%module' => "<em>$module</em>")), l(t('edit'), 'user/'. $user->uid .'/edit'));
               break;
