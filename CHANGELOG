@@ -1,3 +1,9 @@
+drupal 3.0.2, 26/11/2001
+------------------------
+- fixed a bug in locale that would cause errors for anonymous users.
+- users can no longer update other users blogs.
+- the comment control panel is now available to anonymous users.
+
 drupal 3.00, 15/09/2001
 -----------------------
 - major overhaul of the entire underlying design:
