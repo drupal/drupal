@@ -1,5 +1,5 @@
 <?php
-// $Id: watchdog.module,v 1.75 2003/10/07 18:16:41 dries Exp $
+// $Id: watchdog.module,v 1.76 2003/10/07 19:06:04 dries Exp $
 
 function watchdog_help($section = "admin/help") {
   $output = "";
@@ -30,7 +30,7 @@ function watchdog_help($section = "admin/help") {
     $output = t("Watchdog general error events, such as invalid login, permission denied, and database errors.");
     break;
   case 'admin/watchdog/warning':
-    $output = t("Watchdog warning events. These events don't stop Drupal from running, but are things you should no to correct.");
+    $output = t("Watchdog warning events. These events don't stop Drupal from running, but are things you should know.");
     break;
   case 'admin/system/modules#description':
     $output = t("Logs and records system events.");
