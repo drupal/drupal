@@ -363,7 +363,7 @@ function statistics_admin_accesslog_table($type, $id) {
   }
   else if ($type == 3) {
     /* retrieve recent access logs for hostname $id */
-    $sql = "SELECT nid, url, hostname, uid, timestamp FROM {accesslog} WHERE hostname = ". check_query($id);
+    $sql = "SELECT nid, url, hostname, uid, timestamp FROM {accesslog} WHERE hostname = '". check_query($id) ."'";
   }
   else {
     /* retrieve all recent access logs */
