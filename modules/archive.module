@@ -169,7 +169,7 @@ function archive_calendar($original = 0) {
 
   $output .= "</table></div>\n\n";
 
-  cache_set("archive:calendar:$day-$month-$year", $output, 1);
+  cache_set("archive:calendar:$day-$month-$year", $output, CACHE_TEMPORARY);
 
   return $output;
 }

@@ -593,9 +593,9 @@ function check_output($text, $format = FILTER_FORMAT_DEFAULT) {
       $text = module_invoke($filter->module, 'filter', 'process', $filter->delta, $format, $text);
     }
 
-    // Store in cache.
+    // Store in cache with a minimum expiration time of 1 day.
     if ($cache) {
-      cache_set($id, $text, 1);
+      cache_set($id, $text, time() + (60 * 60 * 24));
     }
   }
   else {

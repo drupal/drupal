@@ -168,6 +168,7 @@ CREATE TABLE cache (
   headers text default '',
   PRIMARY KEY  (cid)
 );
+CREATE INDEX cache_expire_idx ON cache(expire);
 
 --
 -- Table structure for comments

@@ -5,6 +5,9 @@
  * @file
  * Functions that need to be loaded on every Drupal request.
  */
+ 
+define('CACHE_PERMANENT', 0);
+define('CACHE_TEMPORARY', -1);
 
 /**
  * Locate the appropriate configuration file.
@@ -126,18 +129,23 @@ function cache_get($key) {
  * @param $data
  *   The data to store in the cache. Complex data types must be serialized first.
  * @param $expire
- *   Whether the data should be removed from the cache when a cache expiration
- *   is triggered.
+ *   One of the following values:
+ *   - CACHE_PERMANENT: Indicates that the item should never be removed unless
+ *     explicitly told to using cache_clear_all() with a cache ID.
+ *   - CACHE_TEMPORARY: Indicates that the item should be removed at the next
+ *     general cache wipe.
+ *   - A Unix timestamp: Indicates that the item should be kept at least until
+ *     the given time, after which it behaves like CACHE_TEMPORARY.
  * @param $headers
  *   A string containing HTTP header information for cached pages.
  */
-function cache_set($cid, $data, $expire = 0, $headers = NULL) {
+function cache_set($cid, $data, $expire = CACHE_PERMANENT, $headers = NULL) {
   $data = db_encode_blob($data);
 
   db_query("UPDATE {cache} SET data = '%s', created = %d, expire = %d, headers = '%s' WHERE cid = '%s'", $data, time(), $expire, $headers, $cid);
   if (!db_affected_rows()) {
-   db_query("INSERT INTO {cache} (cid, data, created, expire, headers) VALUES('%s', '%s', %d, %d, '%s')", $cid, $data, time(), $expire, $headers);
- }
+    db_query("INSERT INTO {cache} (cid, data, created, expire, headers) VALUES ('%s', '%s', %d, %d, '%s')", $cid, $data, time(), $expire, $headers);
+  }
 }
 
 /**
@@ -153,7 +161,7 @@ function cache_set($cid, $data, $expire = 0, $headers = NULL) {
  */
 function cache_clear_all($cid = NULL, $wildcard = false) {
   if (empty($cid)) {
-    db_query("DELETE FROM {cache} WHERE expire <> 0");
+    db_query("DELETE FROM {cache} WHERE expire != %d AND expire < %d", CACHE_PERMANENT, time());
   }
   else {
     if ($wildcard) {
@@ -182,7 +190,7 @@ function page_set_cache() {
           $data = gzencode($data, FORCE_GZIP);
         }
       }
-      cache_set($base_url . request_uri(), $data, 1, drupal_get_headers());
+      cache_set($base_url . request_uri(), $data, CACHE_TEMPORARY, drupal_get_headers());
     }
   }
 }
