@@ -55,7 +55,8 @@ function cloud_update($site) {
 
   if ($fp) {
     // fetch data:
-    fputs($fp, "GET $link[path]?$link[query] HTTP/1.0\nUser-Agent: ". variable_get(site_name, "drupal") ."\nHost: $link[host]\nAccept: */*\n\n");
+    fputs($fp, "GET $link[path]?$link[query] HTTP/1.0\r\nUser-Agent: ". variable_get(site_name, "drupal") ."\r\nHost: $link[host]\r\nAccept: */*\r\n\r\n");
+
     while(!feof($fp)) $data .= fgets($fp, 128);
 
     if (strstr($data, "200 OK")) {
