@@ -63,28 +63,41 @@ function user_ban($mask, $type) {
   return db_fetch_object($result);
 }
 
-function account_password($min_length=6) {
+function user_password($min_length=6) {
   mt_srand((double)microtime() * 1000000);
   $words = array("foo","bar","guy","neo","tux","moo","sun","asm","dot","god","axe","geek","nerd","fish","hack","star","mice","warp","moon","hero","cola","girl","fish","java","perl","boss","dark","sith","jedi","drop","mojo");
-  while(strlen($password) < $min_length) $password .= $words[mt_rand(0, count($words))];
+  while (strlen($password) < $min_length) $password .= $words[mt_rand(0, count($words))];
   return $password;
 }
 
-function account_validate($user) {
-  // Verify username and e-mail address:
-  if (empty($user[real_email]) || (!check_mail($user[real_email]))) $error = t("the e-mail address '$user[real_email]' is not valid");
-  if (empty($user[userid]) || (!check_name($user[userid]))) $error = t("the username '$user[userid]' is not valid");
-  if (strlen($user[userid]) > 15) $error = t("the username '$user[userid]' is too long: it must be less than 15 characters");
+function user_validate_name($name) {
+  if (!$name) return t("you must enter a username.");
+  if (eregi("^ ", $name)) return t("the username can not begin with a space.");
+  if (eregi(" \$", $name)) return t("the username can not end with a space.");
+  if (eregi("  ", $name)) return t("the username can not contain multiple spaces in a row.");
+  if (eregi("[^a-zA-Z0-9 ]", $name)) return t("the username contains an illegal character.");
+  if (strlen($name) > 15) return t("the username '$name' is too long: it must be less than 15 characters.");
+}
+
+function user_validate_mail($mail) {
+  if (!$mail) return t("your must enter an e-mail address.");
+  if (!eregi("^[_+\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,3}$", $mail)) return t("the e-mail address '$email' is not valid.");
+}
+
+function user_validate($user) {
+  // Verify username:
+  if ($error = user_validate_name($user[userid])) return $error;
+
+  // Verify e-mail address:
+  if ($error = user_validate_mail($user[real_email])) return $error;
 
   // Check to see whether the username or e-mail address are banned:
-  if ($ban = user_ban($user[userid], "username")) $error = t("the username '$user[userid]' is banned") .": <I>$ban->reason</I>";
-  if ($ban = user_ban($user[real_email], "e-mail address")) $error = t("the e-mail address '$user[real_email]' is banned") .": <I>$ban->reason</I>";
+  if ($ban = user_ban($user[userid], "username")) return t("the username '$user[userid]' is banned") .": <I>$ban->reason</I>.";
+  if ($ban = user_ban($user[real_email], "e-mail address")) return t("the e-mail address '$user[real_email]' is banned") .": <I>$ban->reason</I>.";
 
   // Verify whether username and e-mail address are unique:
-  if (db_num_rows(db_query("SELECT userid FROM users WHERE LOWER(userid) = LOWER('$user[userid]')")) > 0) $error = t("the username '$user[userid]' is already taken");
-  if (db_num_rows(db_query("SELECT real_email FROM users WHERE LOWER(real_email) = LOWER('$user[real_email]')")) > 0) $error = t("the e-mail address '$user[real_email]' is already in use by another account");
-
-  return $error;
+  if (db_num_rows(db_query("SELECT userid FROM users WHERE LOWER(userid) = LOWER('$user[userid]')")) > 0) return t("the username '$user[userid]' is already taken.");
+  if (db_num_rows(db_query("SELECT real_email FROM users WHERE LOWER(real_email) = LOWER('$user[real_email]')")) > 0) return t("the e-mail address '$user[real_email]' is already in use by another account.");
 }
 
 ?>
