@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.298 2004/02/07 17:24:38 dries Exp $
+// $Id: user.module,v 1.299 2004/02/08 18:38:15 dries Exp $
 
 /*** Common functions ******************************************************/
 
@@ -716,9 +716,9 @@ function user_pass($edit = array()) {
       ** Mail new password:
       */
 
-      $variables = array("%username" => $account->name, "%site" => variable_get("site_name", "drupal"), "%password" => $pass, "%uri" => $base_url, "%uri_brief" => substr($base_url, strlen("http://")), "%mailto" => $account->mail, "%date" => format_date(time()));
-      $subject = strtr(variable_get("user_mail_pass_subject", _user_mail_text("pass_subject")), $variables);
-      $body = strtr(variable_get("user_mail_pass_body", _user_mail_text("pass_body")), $variables);
+      $variables = array("%username" => $account->name, "%site" => variable_get("site_name", "drupal"), "%password" => $pass, "%uri" => $base_url, "%uri_brief" => substr($base_url, strlen("http://")), "%mailto" => $account->mail, "%date" => format_date(time()), '%login_uri' => url('user/login'), '%edit_uri' => url('user/edit'));
+      $subject = _user_mail_text("pass_subject", $variables);
+      $body = _user_mail_text("pass_body", $variables);
       $headers = "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from";
       $mail_success = user_mail($account->mail, $subject, $body, $headers);
 
@@ -742,7 +742,7 @@ function user_pass($edit = array()) {
     ** Display form:
     */
 
-    $output .= "<p>". sprintf(t("Enter your username %sor%s your e-mail address."), "<strong><i>", "</i></strong>") ."</p>";
+    $output .= "<p>". t("Enter your username <strong><em>or</em></strong> your e-mail address.") ."</p>";
     $output .= form_textfield(t("Username"), 'name', $edit['name'], 30, 64);
     $output .= form_textfield(t("E-mail address"), "mail", $edit['mail'], 30, 64);
     $output .= form_submit(t("E-mail new password"));
@@ -801,11 +801,11 @@ function user_register($edit = array()) {
     $account = user_save("", array_merge(array('name' => $edit['name'], 'pass' => $pass, "init" => $edit['mail'], "mail" => $edit['mail'], "rid" => _user_authenticated_id(), "status" => (variable_get("user_register", 1) == 1 ? 1 : 0)), $data));
     watchdog('user', "new user: '". $edit['name'] ."' &lt;". $edit['mail'] ."&gt;", l(t("edit user"), "admin/user/edit/$account->uid"));
 
-    $variables = array("%username" => $edit['name'], "%site" => variable_get("site_name", "drupal"), "%password" => $pass, "%uri" => $base_url, "%uri_brief" => substr($base_url, strlen("http://")), "%mailto" => $edit['mail'], "%date" => format_date(time()));
+    $variables = array("%username" => $edit['name'], "%site" => variable_get("site_name", "drupal"), "%password" => $pass, "%uri" => $base_url, "%uri_brief" => substr($base_url, strlen("http://")), "%mailto" => $edit['mail'], "%date" => format_date(time()), "%login_uri" => url('user/login'), "%edit_uri" => url("user/edit"));
 
     //the first user may login immediately, and receives a customized welcome e-mail.
     if ($account->uid == 1) {
-      user_mail($edit['mail'], t("drupal user account details for %s", array("%s" => $edit['name'])), strtr(t("%username,\n\nYou may now login to %uri using the following username and password:\n\n  username: %username\n  password: %password\n\n". url("user/edit") ."\n\n--drupal"), $variables), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
+      user_mail($edit['mail'], t("drupal user account details for %s", array("%s" => $edit['name'])), strtr(t("%username,\n\nYou may now login to %uri using the following username and password:\n\n  username: %username\n  password: %password\n\n%edit_uri\n\n--drupal"), $variables), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
       // This should not be t()'ed. No point as its only shown once in the sites lifetime, and it would be bad to store the password
       $output .= "<p>Welcome to Drupal. You are user #1, which gives you full and immediate access.  All future registrants will receive their passwords via e-mail, so please configure your e-mail settings using the Administration pages.</p><p> Your password is <strong>$pass</strong>. You may change your password on the next page.</p><p>Please login below.</p>";
       $output .= form_hidden("destination", url("user/edit"));
@@ -820,8 +820,8 @@ function user_register($edit = array()) {
         ** Create new user account, no administrator approval required:
         */
 
-        $subject = strtr(variable_get("user_mail_welcome_subject", _user_mail_text("welcome_subject")), $variables);
-        $body = strtr(variable_get("user_mail_welcome_body", _user_mail_text("welcome_body")), $variables);
+        $subject = _user_mail_text("welcome_subject", $variables);
+        $body = _user_mail_text("welcome_body", $variables);
         user_mail($edit['mail'], $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
         return t("Your password and further instructions have been sent to your e-mail address.");
       }
@@ -829,8 +829,9 @@ function user_register($edit = array()) {
         /*
         ** Create new user account, administrator approval required:
         */
-        $subject = strtr(variable_get("user_mail_approval_subject", _user_mail_text("welcome_approval_subject")), $variables);
-        $body = strtr(variable_get("user_mail_approval_body", _user_mail_text("welcome_approval_body")), $variables);
+        $subject = _user_mail_text("approval_subject", $variables);
+        $body = _user_mail_text("approval_body", $variables);
+
         user_mail($edit['mail'], $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
         user_mail(variable_get("site_mail", ini_get("sendmail_from")), $subject, t("%u has applied for an account.\n\n%uri", array("%u" => $account->name, "%uri" => url("admin/user/edit/$account->uid"))), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
         return t("Thank you for applying for an account. Your account is currently pending approval by the site administrator.<br />In the meantime, your password and further instructions have been sent to your e-mail address.");
@@ -848,7 +849,7 @@ function user_register($edit = array()) {
   $affiliates = user_auth_help_links();
   if (count($affiliates) > 0) {
     $affiliates = implode(", ", $affiliates);
-    $output .= "<p>". t("Note: if you have an account with one of our affiliates (%s), you may ". l("login now", "user/login") ." instead of registering.", array("%s" => $affiliates)) ."</p>";
+    $output .= "<p>". t("Note: if you have an account with one of our affiliates (%s), you may <a href=\"%login_uri\">login now</a> instead of registering.", array("%s" => $affiliates, "%login_uri" => url("user/login"))) ."</p>";
   }
   $output .= form_textfield(t("Username"), 'name', $edit['name'], 30, 64, t("Your full name or your preferred username: only letters, numbers and spaces are allowed."));
   $output .= form_textfield(t("E-mail address"), "mail", $edit['mail'], 30, 64, t("A password and instructions will be sent to this e-mail address, so make sure it is accurate."));
@@ -1072,25 +1073,34 @@ function user_page() {
 
 /*** Administrative features ***********************************************/
 
-function _user_mail_text($message) {
-  switch ($message) {
-    case "welcome_subject":
-      return "Account details for %username at %site";
+function _user_mail_text($messageid, $variables = array()) {
 
-    case "welcome_body":
-    return t("%username,\n\nThank you for registering at %site. You may now log in to ". url("user/login") ." using the following username and password:\n\nusername: %username\npassword: %password\n\nAfter logging in, you may wish to change your password at ". url("user/edit") ."\n\nYour new %site membership also enables to you to login to other Drupal powered websites (e.g. http://www.drop.org/) without registering. Just use the following Drupal ID and password:\n\nDrupal ID: %username@%uri_brief\npassword: %password\n\n\n--  %site team");
+  // Check if an admin setting overrides the default string
+  if ($admin_setting = variable_get('user_mail_' . $messageid, FALSE)) {
+    return strtr($admin_setting, $variables);
+  }
+  // No override, return with default strings
+  else {
 
-    case "welcome_approval_subject":
-      return "Account details for %username at %site (pending admin approval)";
+    switch ($messageid) {
+      case "welcome_subject":
+        return t("Account details for %username at %site", $variables);
 
-    case "welcome_approval_body":
-      return t("%username,\n\nThank you for registering at %site. Your application for an account is currently pending approval. Once it has been granted, you may log in to ". url("user/login") ." using the following username and password:\n\nusername: %username\npassword: %password\n\nAfter logging in, you may wish to change your password at ". url("user/edit") ."\n\nYour new %site membership also enables to you to login to other Drupal powered websites (e.g. http://www.drop.org/) without registering. Just use the following Drupal ID and password:\n\nDrupal ID: %username@%uri_brief\npassword: %password\n\n\n--  %site team");
+      case "welcome_body":
+      return t("%username,\n\nThank you for registering at %site. You may now log in to %login_uri using the following username and password:\n\nusername: %username\npassword: %password\n\nAfter logging in, you may wish to change your password at %edit_uri\n\nYour new %site membership also enables to you to login to other Drupal powered websites (e.g. http://www.drop.org/) without registering. Just use the following Drupal ID and password:\n\nDrupal ID: %username@%uri_brief\npassword: %password\n\n\n--  %site team", $variables);
 
-    case "pass_subject":
-      return "Replacement login information for %username at %site";
+      case "approval_subject":
+        return t("Account details for %username at %site (pending admin approval)", $variables);
 
-    case "pass_body":
-      return t("%username,\n\nHere is your new password for %site. You may now login to ". url("user/login") ." using the following username and password:\n\nusername: %username\npassword: %password\n\nAfter logging in, you may wish to change your password at "). url("user/edit");
+      case "approval_body":
+        return t("%username,\n\nThank you for registering at %site. Your application for an account is currently pending approval. Once it has been granted, you may log in to %login_uri using the following username and password:\n\nusername: %username\npassword: %password\n\nAfter logging in, you may wish to change your password at %edit_uri\n\nYour new %site membership also enables to you to login to other Drupal powered websites (e.g. http://www.drop.org/) without registering. Just use the following Drupal ID and password:\n\nDrupal ID: %username@%uri_brief\npassword: %password\n\n\n--  %site team", $variables);
+
+      case "pass_subject":
+        return t("Replacement login information for %username at %site", $variables);
+
+      case "pass_body":
+        return t("%username,\n\nHere is your new password for %site. You may now login to %login_uri using the following username and password:\n\nusername: %username\npassword: %password\n\nAfter logging in, you may wish to change your password at %edit_uri", $variables);
+    }
   }
 }
 
@@ -1101,12 +1111,12 @@ function user_settings() {
   $output = form_group(t("User registration settings"), $group);
 
   // user email settings
-  $group = form_textfield(t("Subject of welcome e-mail"), "user_mail_welcome_subject", variable_get("user_mail_welcome_subject", _user_mail_text("welcome_subject")), 70, 180, t("Customize the subject of your welcome e-mail, which is sent to new members upon registering.") ." ". t("Available variables are:") ." ". "%username, %site, %password, %uri, %uri_brief, %mailto, %date");
-  $group .= form_textarea(t("Body of welcome e-mail"), "user_mail_welcome_body", variable_get("user_mail_welcome_body", _user_mail_text("welcome_body")), 70, 10, t("Customize the body of the welcome e-mail, which is sent to new members upon registering.") ." ". t("Available variables are:") ." ". "%username, %site, %password, %uri, %uri_brief, %mailto");
-  $group .= form_textfield(t("Subject of welcome e-mail (awaiting admin approval)"), "user_mail_approval_subject", variable_get("user_mail_approval_subject", _user_mail_text("welcome_approval_subject")), 70, 180, t("Customize the subject of your awaiting approval welcome e-mail, which is sent to new members upon registering.") ." ". t("Available variables are:") ." ". "%username, %site, %password, %uri, %uri_brief, %mailto, %date");
-  $group .= form_textarea(t("Body of welcome e-mail (awaiting admin approval)"), "user_mail_approval_body", variable_get("user_mail_approval_body", _user_mail_text("welcome_approval_body")), 70, 10, t("Customize the body of the awaiting approval welcome e-mail, which is sent to new members upon registering.") ." ". t("Available variables are:") ." ". "%username, %site, %password, %uri, %uri_brief, %mailto");
-  $group .= form_textfield(t("Subject of password recovery e-mail"), "user_mail_pass_subject", variable_get("user_mail_pass_subject", _user_mail_text("pass_subject")), 70, 180, t("Customize the Subject of your forgotten password e-mail.") ." ". t("Available variables are:") ." ". "%username, %site, %password, %uri, %uri_brief, %mailto, %date");
-  $group .= form_textarea(t("Body of password recovery e-mail"), "user_mail_pass_body", variable_get("user_mail_pass_body", _user_mail_text("pass_body")), 70, 10, t("Customize the body of the forgotten password e-mail.") ." ". t("Available variables are:") ." ". "%username, %site, %password, %uri, %uri_brief, %mailto");
+  $group = form_textfield(t("Subject of welcome e-mail"), "user_mail_welcome_subject", _user_mail_text("welcome_subject"), 70, 180, t("Customize the subject of your welcome e-mail, which is sent to new members upon registering.") ." ". t("Available variables are:") ." %username, %site, %password, %uri, %uri_brief, %mailto, %date, %login_uri, %edit_uri.");
+  $group .= form_textarea(t("Body of welcome e-mail"), "user_mail_welcome_body", _user_mail_text("welcome_body"), 70, 10, t("Customize the body of the welcome e-mail, which is sent to new members upon registering.") ." ". t("Available variables are:") ." %username, %site, %password, %uri, %uri_brief, %mailto, , %login_uri, %edit_uri.");
+  $group .= form_textfield(t("Subject of welcome e-mail (awaiting admin approval)"), "user_mail_approval_subject", _user_mail_text("approval_subject"), 70, 180, t("Customize the subject of your awaiting approval welcome e-mail, which is sent to new members upon registering.") ." ". t("Available variables are:") ." %username, %site, %password, %uri, %uri_brief, %mailto, %date, %login_uri, %edit_uri.");
+  $group .= form_textarea(t("Body of welcome e-mail (awaiting admin approval)"), "user_mail_approval_body", _user_mail_text("approval_body"), 70, 10, t("Customize the body of the awaiting approval welcome e-mail, which is sent to new members upon registering.") ." ". t("Available variables are:") ." %username, %site, %password, %uri, %uri_brief, %mailto, %login_uri, %edit_uri.");
+  $group .= form_textfield(t("Subject of password recovery e-mail"), "user_mail_pass_subject", _user_mail_text("pass_subject"), 70, 180, t("Customize the Subject of your forgotten password e-mail.") ." ". t("Available variables are:") ." %username, %site, %password, %uri, %uri_brief, %mailto, %date, %login_uri, %edit_uri.");
+  $group .= form_textarea(t("Body of password recovery e-mail"), "user_mail_pass_body", _user_mail_text("pass_body"), 70, 10, t("Customize the body of the forgotten password e-mail.") ." ". t("Available variables are:") ." %username, %site, %password, %uri, %uri_brief, %mailto, %login_uri, %edit_uri.");
   $output .= form_group(t("User email settings"), $group);
 
   // "Who's online" block settings
@@ -1527,49 +1537,38 @@ function user_admin() {
 }
 // the following functions comprise help for admins and developers
 function user_help($section = "admin/help#user") {
-  $output = "";
 
   switch ($section) {
     case 'admin/user':
-      $output .= t("<p>Drupal allows users to register, login, logout, maintain user profiles, etc.  No participant can use his own name to post content until he signs up for a user account.</p>");
-      break;
+      return t("<p>Drupal allows users to register, login, logout, maintain user profiles, etc.  No participant can use his own name to post content until he signs up for a user account.</p>");
     case 'admin/user/create':
     case 'admin/user/account/create':
-      $output .= t('This web page allows the administrators to register a new users by hand.  Note that you cannot have a user where either the e-mail address or the username match another user in the system.');
-      break;
+      return t('This web page allows the administrators to register a new users by hand.  Note that you cannot have a user where either the e-mail address or the username match another user in the system.');
     case 'admin/user/access':
-      $output .= t("Access rules allow Drupal administrators to choose usernames and e-mail address that are prevented from using drupal. To enter the mask for e-mail addresses click on <a href=\"%e-mail\">e-mail rules</a>, for the username mask click on <a href=\"%username\">name rules</a>.", array("%e-mail" => url("admin/user/access/mail"), "%username" => url("admin/user/access/user")));
-      break;
+      return t("Access rules allow Drupal administrators to choose usernames and e-mail address that are prevented from using drupal. To enter the mask for e-mail addresses click on <a href=\"%e-mail\">e-mail rules</a>, for the username mask click on <a href=\"%username\">name rules</a>.", array("%e-mail" => url("admin/user/access/mail"), "%username" => url("admin/user/access/user")));
     case 'admin/user/access/mail':
-      $output .= t("Setup and test the e-mail access rules. The access function checks if you match a deny and <strong>not</strong> an allow. If you match <strong>only</strong> a deny then it is denied. Any other case, such as both a deny and an allow pattern matching, allows the pattern.<br />Notes: <ul><li>To delete a rule click on \"delete rule\".</li><li>The order of the rules does <strong>not</strong> matter.</li></ul>");
-      break;
+      return t("Setup and test the e-mail access rules. The access function checks if you match a deny and <strong>not</strong> an allow. If you match <strong>only</strong> a deny then it is denied. Any other case, such as both a deny and an allow pattern matching, allows the pattern.<br />Notes: <ul><li>To delete a rule click on \"delete rule\".</li><li>The order of the rules does <strong>not</strong> matter.</li></ul>");
     case 'admin/user/access/user':
-      $output .= t("Setup and test the Username access rules. The access function checks if you match a deny and <strong>not</strong> an allow. If you do then it is denied. Any other case, such as a deny pattern and an allow pattern, allows the pattern.<br />Notes: <ul><li>To delete a rule click on \"delete rule\".</li><li>The order of the rules does <strong>not</strong> matter.</li></ul>");
-      break;
+      return t("Setup and test the Username access rules. The access function checks if you match a deny and <strong>not</strong> an allow. If you do then it is denied. Any other case, such as a deny pattern and an allow pattern, allows the pattern.<br />Notes: <ul><li>To delete a rule click on \"delete rule\".</li><li>The order of the rules does <strong>not</strong> matter.</li></ul>");
     case 'admin/user/permission':
-      $output .= t("In this area you will define the <strong>permissions</strong> for each user role (role names are defined on the <a href=\"%role\">user roles page</a>). Each permission describes a fine-grained logical operation, such as being able to access the administration pages, or adding/modifying a user account. You could say a permission represents access granted to a user to perform a set of operations.", array("%role" => url("admin/user/role")));
-      break;
+      return t("In this area you will define the <strong>permissions</strong> for each user role (role names are defined on the <a href=\"%role\">user roles page</a>). Each permission describes a fine-grained logical operation, such as being able to access the administration pages, or adding/modifying a user account. You could say a permission represents access granted to a user to perform a set of operations.", array("%role" => url("admin/user/role")));
     case 'admin/user/role':
-      $output .= t("
+      return t("
       Roles allow you to fine tune the security and administration of drupal.  A role defines a group of users that have certain privileges as defined in <a href=\"%permission\">user permissions</a>.  Examples of roles include: anonymous user, authenticated user, moderator, administrator and so on. In this area you will define the <strong>names</strong> of the various roles. To delete a role choose \"edit role\".<br />By default, Drupal comes with two user roles:
       <ul>
       <li>Anonymous user: this role is used for users that don't have a user account or that are not authenticated.</li>
       <li>Authenticated user: this role is assigned automatically to authenticated users.  Most registered users will belong to this user role unless specified otherwise.</li>
       </ul>", array("%permission" => url("admin/user/permission")));
-      break;
     case 'admin/user/search':
-      $output .= t("Enter a simple pattern ( '*' may be user as a wildcard match) to search for a username.  For example, one may search for 'br' and Drupal might return 'brian', 'brad', and 'brenda'.");
-      break;
+      return t("Enter a simple pattern ( '*' may be user as a wildcard match) to search for a username.  For example, one may search for 'br' and Drupal might return 'brian', 'brad', and 'brenda'.");
     case 'admin/system/modules#description':
-      $output .= t("Enables the user registration and login system.");
-      break;
+      return t("Enables the user registration and login system.");
     case 'admin/system/modules/user':
-      $output .= t("In order to use the full power of Drupal a visitor must sign up for an account. This page lets you setup how a user signs up, logs out, the guidelines from the system about user subscriptions, and the e-mails the system will send to the user.");
-      break;
+      return t("In order to use the full power of Drupal a visitor must sign up for an account. This page lets you setup how a user signs up, logs out, the guidelines from the system about user subscriptions, and the e-mails the system will send to the user.");
     case 'user/help#user':
       $site = variable_get("site_name", "this website");
 
-      $output .= t("
+      $output = t("
       <h3>Distributed authentication<a id=\"da\"></a></h3>
       <p>One of the more tedious moments in visiting a new website is filling out the registration form. Here at %site, you do not have to fill out a registration form if you are already a member of %help-links. This capability is called <i>distributed authentication</i>, and is unique to <a href=\"%drupal\">Drupal</a>, the software which powers %site.</p>
       <p>Distributed authentication enables a new user to input a username and password into the login box, and immediately be recognized, even if that user never registered at %site. This works because Drupal knows how to communicate with external registration databases. For example, lets say that new user 'Joe' is already a registered member of <a href=\"%delphi-forums\">Delphi Forums</a>. Drupal informs Joe on registration and login screens that he may login with his Delphi ID instead of registering with %site. Joe likes that idea, and logs in with a username of joe@remote.delphiforums.com and his usual Delphi password. Drupal then contacts the <i>remote.delphiforums.com</i> server behind the scenes (usually using <a href=\"%xml\">XML-RPC</a>, <a href=\"%http-post\">HTTP POST</a>, or <a href=\"%soap\">SOAP</a>) and asks: \"Is the password for user Joe correct?\".  If Delphi replies yes, then we create a new %site account for Joe and log him into it.  Joe may keep on logging into %site in the same manner, and he will always be logged into the same account.</p>", array("%help-links" => (implode(", ", user_auth_help_links())), "%site" => "<i>$site</i>", "%drupal" => "http://www.drupal.org", "%delphi-forums" => "http://www.delphiforums.com", "%xml" => "http://www.xmlrpc.com", "%http-post" => "http://www.w3.org/Protocols/", "%soap" => "http://www.soapware.org"));
@@ -1580,11 +1579,12 @@ function user_help($section = "admin/help#user") {
             $output .= module_invoke($module, "help", "user/help#$module");
           }
         }
-      break;
+
+        return $output;
     case 'admin/help#user':
 
       // Start of user_help_admin
-      $output .= t("
+      $output = t("
       <h3>Introduction</h3>
       <p>Drupal offers a powerful access system that allows users to register, login, logout, maintain user profiles, etc. By using <a href=\"%user-role\">roles</a> you can setup fine grained <a href=\"%user-permission\">permissions</a> allowing each role to do only what you want them to. Each user is assigned to a role. By default there are two roles \"anonymous\" - a user who has not logged in, and \"authorized\" a user who has signed up and who has been authorized. As anonymous users, participants suffer numerous disadvantages, for example they cannot sign their names to nodes, and their moderated posts beginning at a lower score.</p>
       <p>In contrast, those with a user account can use their own name or handle and are granted various privileges: the most important is probably the ability to moderate new submissions, to rate comments, and to fine-tune the site to their personal liking, with saved personal settings.  Drupal themes make fine tuning quite a pleasure.</p>
@@ -1715,11 +1715,10 @@ function user_help($section = "admin/help#user") {
           $output = strtr($output, array("%module-list" => module_invoke($module, "help", "user/help") . "\n%module-list"));
         }
       }
-      $output = strtr($output, array("%module-list" => ""));
-      break;
+
+      return strtr($output, array("%module-list" => ""));
   }
 
-  return $output;
 }
 
 function user_help_page() {
