@@ -54,7 +54,7 @@ function meta_form_tag($edit = array()) {
   global $REQUEST_URI;
 
   $form .= form_textfield("Meta-tag name", "name", $edit[name], 50, 64, "Required.  The name for this meta-tag.  Example: 'Apache'.");
-  $form .= form_textfield("Attributes", "attributes", $edit[attributes], 50, 64, htmlentities("Required.  Format: <type>:<value>;<type>:<value>;.  Example: 'software=apache,type=webserver,os=linux,'."));
+  $form .= form_textfield("Attributes", "attributes", $edit[attributes], 50, 64, htmlentities("Required.  Format: <type>=<value>,<type>=<value>;.  Example: 'software=apache,type=webserver,os=linux,'."));
   $form .= form_textfield("Collections", "collections", $edit[collections], 50, 64, "Required.  A comma-seperated list of collections you want to associate this meta-tag with.  Example: 'Software, Internet'");
   $form .= form_submit("Submit");
 
