@@ -103,3 +103,8 @@ ALTER TABLE blog ADD KEY nid (nid);
 ALTER TABLE page ADD KEY nid (nid);
 ALTER TABLE forum ADD KEY nid (nid);
 ALTER TABLE book ADD KEY nid (nid);
+
+## 22/10/01
+
+# add new field to blocks
+ALTER TABLE blocks ADD path varchar(255) NOT NULL DEFAULT '';
