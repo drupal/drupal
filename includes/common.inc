@@ -246,7 +246,7 @@ function table_cell($cell, $header = 0) {
   if (is_array($cell)) {
     $data = $cell["data"];
     foreach ($cell as $key => $value) {
-      if ($key != "data" && $key != "field")  {
+      if ($key != "data") {
         $attributes .= " $key=\"$value\"";
       }
     }
