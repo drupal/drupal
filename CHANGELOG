@@ -1,7 +1,7 @@
 Drupal x.x.x, xxxx-xx-xx
 ------------------------
 
-- added support for the MetaWeblog API and MoveableType extensions.
+- added support for the MetaWeblog API and MovableType extensions.
 - comment module:
     * made it possible to disable the "comment viewing controls".
 - performance:
@@ -23,7 +23,7 @@ Drupal x.x.x, xxxx-xx-xx
     * made themes degrade gracefully in absence of CSS.
     * grouped form elements using '<fieldset>' and '<legend>' tags.
     * added '<label>' tags to form elements.
-- refactored 404 (file not found) handling.
+- refactored 404 (file not found) handling to support custom 404 pages.
 - documentation:
     * added PHPDoc/Doxygen comments.
 
