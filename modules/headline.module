@@ -89,7 +89,7 @@ function headline_block() {
  
     $blocks[$channel->id]["subject"] = $backend->site;
     $blocks[$channel->id]["content"] = $content;
-    $blocks[$channel->id]["info"] = "$backend->site headline";
+    $blocks[$channel->id]["info"] = "$backend->site headlines";
     $blocks[$channel->id]["link"] = $backend->url;
   }
   return $blocks;
