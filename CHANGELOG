@@ -13,6 +13,8 @@ drupal x.xx, xx/xx/xxxx
 - rewrote watchdog and submission throttle
 - added settings.module:
     * moved most configuration options to the administration section
+- added page.module:
+    * allows creation of static (and dynamic) pages
 - various updates:
     * added preview functionality when submitting new content (such as a story) from the administration pages.
     * made the administration section only show those links a user has access to.
@@ -27,7 +29,7 @@ drupal x.xx, xx/xx/xxxx
         + W3C validation on a best effort basis
         + removed $theme->control() from themes
         + added theme "goofy"
-- revised documentation
+- collaborativly revised and expanded documentation
 
 drupal 2.00, 15/03/2001
 -----------------------
