@@ -620,6 +620,9 @@ function book_print($nid = 0, $depth = 1) {
       if (node_hook($node, 'content')) {
         $node = node_invoke($node, 'content');
       }
+      // Allow modules to change $node->body before viewing.
+      node_invoke_nodeapi($node, 'view', $node->body, false);
+
       $output .= '<h1 id="'. $node->nid .'" name="'. $node->nid .'" class="book-h'. $depth .'">'. $node->title .'</h1>';
 
       if ($node->body) {
@@ -655,6 +658,9 @@ function book_print_recurse($parent = '', $depth = 1) {
       if (node_hook($node, 'content')) {
         $node = node_invoke($node, 'content');
       }
+      // Allow modules to change $node->body before viewing.
+      node_invoke_nodeapi($node, 'view', $node->body, false);
+
       $output .= '<h1 id="'. $node->nid .'" name="'. $node->nid .'" class="book-h'. $depth .'">'. $node->title .'</h1>';
 
       if ($node->body) {
