@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.69 2004/08/08 16:19:32 dries Exp $
+// $Id: profile.module,v 1.70 2004/08/09 05:40:16 dries Exp $
 
 // TODO: add a 'date' field so we can migrate the birthday information.
 
@@ -78,7 +78,7 @@ function profile_browse() {
         $query = "v.value = '". check_query($value) ."'";
         break;
       case 'list':
-        $query = "v.value LIKE '%". check_query($value) ."%'";
+        $query = "v.value LIKE '%%". check_query($value) ."%%'";
         break;
     }
 
