@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.208 2004/01/14 22:17:45 dries Exp $
+// $Id: book.module,v 1.209 2004/01/15 09:10:16 dries Exp $
 
 function book_node($field) {
   global $user;
@@ -95,7 +95,7 @@ function book_block($op = 'list', $delta = 0) {
 
   // Only display this block when the user is browsing a book:
   if (arg(0) == 'book' && arg(1) == 'view' && $nid = arg(2)) {
-    $page = db_fetch_object(db_query("SELECT n.nid, n.title, b.parent FROM {node} n INNER JOIN {book} b ON n.nid = b.nid"));
+    $page = db_fetch_object(db_query("SELECT n.nid, n.title, b.parent FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE n.nid = %d", $nid));
 
     $path = book_location($page);
     $path[] = $page;
