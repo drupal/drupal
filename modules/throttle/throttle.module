@@ -1,5 +1,5 @@
 <?php
-// $Id: throttle.module,v 1.18 2003/11/30 10:37:07 dries Exp $
+// $Id: throttle.module,v 1.19 2003/12/04 22:42:19 dries Exp $
 
 /*  Call the throttle_status() function from your own modules, themes, blocks,
  * etc, to determine the current throttle status.  For example, in your theme
@@ -155,9 +155,11 @@ function throttle_display_throttle_block() {
         $output .= t("Current level: %level (%min+)", array("%level" => $throttle, "%min" => $minimum)) ."<br />\n";
       }
       $output .= t("Probability: %probability%", array("%probability" => $probability)) ."<br />\n";
-      $recent_activity = db_fetch_object(db_query("SELECT COUNT(timestamp) AS hits FROM {accesslog} WHERE timestamp >= %d", (time() - 60)));
-      $output .= "<br />". t("This site has served %hits in the past minute.", array("%hits" => format_plural($recent_activity->hits , "1 page", "%count pages")));
-      _throttle_update($recent_activity->hits);
+      if ($throttle < 5) {
+        $recent_activity = db_fetch_object(db_query("SELECT COUNT(timestamp) AS hits FROM {accesslog} WHERE timestamp >= %d", (time() - 60)));
+        $output .= "<br />". t("This site has served %pages in the past minute.", array("%pages" => format_plural($recent_activity->hits , "1 page", "%count pages")));
+        _throttle_update($recent_activity->hits);
+      }
     }
     else {
       $output .= t("Throttle:  %status", array("%status" => l(t("disabled"), "admin/system/modules/throttle"))) ."<br />\n";
