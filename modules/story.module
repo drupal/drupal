@@ -1,5 +1,5 @@
 <?php
-// $Id: story.module,v 1.157 2004/09/16 07:17:55 dries Exp $
+// $Id: story.module,v 1.158 2004/09/27 20:15:54 dries Exp $
 
 /**
  * @file
@@ -122,7 +122,7 @@ function story_form(&$node) {
     $output .= implode('', taxonomy_node_form('story', $node));
   }
 
-  $output .= form_textarea(t('Body'), 'body', $node->body, 60, 15, '', NULL, TRUE);
+  $output .= form_textarea(t('Body'), 'body', $node->body, 60, 20, '', NULL, TRUE);
 
   return $output;
 }
