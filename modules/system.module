@@ -13,6 +13,8 @@ function system_help($section) {
   global $base_url;
 
   switch ($section) {
+    case 'admin':
+      return t('<p>Welcome to the administration section. Below are the most recent system events.</p>');
     case 'admin/settings':
       return t('General configuration options for your site. Set up the name of the site, e-mail address used in mail-outs, clean URL options, caching, etc.');
     case 'admin/themes':
@@ -69,6 +71,11 @@ function system_menu($may_cache) {
 
     $access = user_access('administer site configuration');
 
+    $items[] = array('path' => 'admin', 'title' => t('administer'),
+      'access' => user_access('access administration pages'),
+      'callback' => 'system_admin_page',
+      'weight' => 9);
+
     // Themes:
     $items[] = array('path' => 'admin/themes', 'title' => t('themes'),
       'callback' => 'system_themes', 'access' => $access);
@@ -112,6 +119,13 @@ function system_menu($may_cache) {
  * Menu callback: dummy clean URL tester.
  */
 function system_test() {
+}
+
+/**
+ * Menu callback; provides the main page of the administration section.
+ */
+function system_admin_page() {
+  watchdog_overview('actions');
 }
 
 /**
@@ -439,7 +453,7 @@ function system_module_listing() {
 
   ksort($files);
 
-  $required = array('admin', 'block', 'filter', 'system', 'user', 'watchdog');
+  $required = array('block', 'filter', 'system', 'user', 'watchdog');
   $throttle_required = array_merge($required, array('throttle'));
 
   $header = array(t('Name'), t('Description'), t('Enabled'));
