@@ -30,7 +30,7 @@ function tracker_posts($id = 0) {
   $header = array(
     array("data" => t("Type"), "field" => "type"),
     array("data" => t("Title"), "field" => "title"),
-    array("data" => t("Author"), "field" => "uid"),
+    array("data" => t("Author"), "field" => "u.name"),
     array("data" => t("Last Post"), "field" => "last_activity", "sort" => "desc")
   );
   if ($id) {
