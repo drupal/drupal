@@ -140,13 +140,29 @@ function locale_untranslated($language) {
 
 function locale_search() {
   global $edit, $languages, $REQUEST_URI;
-
   if (is_array($edit)) {
-    if ($edit[language] && $edit[status]) $query[] = check_input($edit[language]) . (check_input($edit[status]) == 1 ? " !=" : " =") ." ''";
-    if ($edit[module]) $query[] = "location LIKE '%mod=". check_input($edit[module]) ."%'";
-    if ($edit[string]) $query[] = "string LIKE '%". check_input($edit[string]) ."%'";
+    if ($edit[status]) {
+      switch ($edit[language]) {
+        case "all":
+          foreach ($languages as $key=>$value) {
+            $tmp[] = $key . (check_input($edit[status]) == 1 ? " !=" : " =") ." ''";
+          }
+          $query[] = implode(" && ", $tmp);
+          break;
+        case "any":
+          foreach ($languages as $key=>$value) {
+            $tmp[] = $key . (check_input($edit[status]) == 1 ? " !=" : " =") ." ''";
+          }
+          $query[] = "(". implode(" || ", $tmp) .")";
+          break;
+        default:
+          $query[] = check_input($edit[language]) . (check_input($edit[status]) == 1 ? " !=" : " =") ." ''";
+      }
+    }
+    if ($edit[module]) $query[] = "location LIKE '%mod=". (check_input($edit[module]) != "all" ? check_input($edit[module]) : "") ."%'";
+    if ($edit[string]) $query[] = "string RLIKE '". check_input($edit[string]) ."'";
     
-    $result = db_query("SELECT * FROM locales". (count($query) ? " WHERE ". @implode(" && ", $query) : ""));
+    $result = db_query("SELECT * FROM locales". (count($query) ? " WHERE ". implode(" && ", $query) : ""));
 
     $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
     $output .= " <TR><TH>string</TH><TH>languages</TH><TH COLSPAN=\"2\">operations</TH></TR>\n";
@@ -154,12 +170,12 @@ function locale_search() {
       $output .= " <TR><TD>". check_output($locale->string) ."<BR><SMALL><I>". check_output($locale->location) ."</I></SMALL></TD><TD ALIGN=\"center\">". check_output(locale_languages($locale)) ."</TD><TD NOWRAP><A HREF=\"admin.php?mod=locale&op=edit&id=$locale->id\">edit locale</A></TD><TD NOWRAP><A HREF=\"admin.php?mod=locale&op=delete&id=$locale->id\">delete locale</A></TD></TR>";
     }
     $output .= "</TABLE>\n";
-    
   }
-  $form .= form_select("Language", "language", $edit[langauge], array_merge(array(0=>"All"), $languages));
-  $form .= form_select("Status", "status", $edit[status], array("All", "Translated", "Untranslated"), "Only used when a language is selected.");
-  $form .= form_select("Module", "module", $edit[module], array_merge(array(0=>"All"), module_list()));
-  $form .= form_textfield("String", "string", $edit[string], 30, 30, "Leave blank to show all strings.");
+
+  $form .= form_select("Language", "language", $edit[language], array_merge(array("all" => "All", "any" => "Any"), $languages));
+  $form .= form_select("Status", "status", $edit[status], array("All", "Translated", "Untranslated"));
+  $form .= form_select("Module", "module", $edit[module], array_merge(array("0" => "All modules + pages", "all" => "All modules"), module_list()));
+  $form .= form_textfield("String", "string", $edit[string], 30, 30, "Leave blank to show all strings. This is treated as a regular expression.");
 
   $form .= form_submit("Search");
   
