@@ -470,8 +470,7 @@ function system_module_listing() {
   ksort($files);
 
   $required = array('modules/admin.module', 'modules/block.module', 'modules/filter.module', 'modules/system.module', 'modules/user.module', 'modules/watchdog.module');
-  // the throttle mechanism requires additional modules always be enabled
-  $throttle_required = array_merge($required, array('modules/statistics.module', 'modules/throttle.module'));
+  $throttle_required = array_merge($required, array('modules/throttle.module'));
 
   $header = array(t('Name'), t('Description'), t('Enabled'), t('Throttle'));
 

@@ -94,7 +94,7 @@ function statistics_exit() {
       }
     }
   }
-  if ((variable_get('statistics_enable_access_log', 0)) && (module_invoke('throttle', 'status') < 5)) {
+  if ((variable_get('statistics_enable_access_log', 0)) && (module_invoke('throttle', 'status') == 0)) {
     // Statistical logs are enabled.
     $referrer = referer_uri();
     $hostname = $_SERVER['REMOTE_ADDR'];

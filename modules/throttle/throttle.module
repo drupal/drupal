@@ -63,23 +63,34 @@ function throttle_exit() {
     }
 
     // update the throttle status
-    if ($users > $max_users) {
+    if ($max_users && $users > $max_users) {
       if (!$throttle) {
         variable_set('throttle_level', 1);
+        cache_clear_all();
         watchdog('special', t('Throttle: %users %user accessing site; throttle enabled.', array('%users' => "<em>$users</em>", '%user' => format_plural($users, 'user', 'users'))));
       }
     }
-    elseif ($guests >= $max_guests) {
+    elseif ($max_guests && $guests > $max_guests) {
       if (!$throttle) {
         variable_set('throttle_level', 1);
+        cache_clear_all();
         watchdog('special', t('Throttle: %guests %guest accessing site; throttle enabled.', array('%guests' => "<em>$guests</em>", '%guest' => format_plural($guests, 'guest', 'guests'))));
       }
     }
     else {
       if ($throttle) {
         variable_set('throttle_level', 0);
+        cache_clear_all();
         watchdog('special', t('Throttle: %users %user, %guests %guest accessing site; throttle disabled.', array('%users' => "<em>$users</em>", '%user' => format_plural($users, 'user', 'users'), '%guests' => "<em>$guests</em>", '%guest' => format_plural($guests, 'guest', 'guests'))));
       }
+    }
+  }
+}
+
+function _throttle_validate($value, $form) {
+  if ($value != NULL) {
+    if (!is_numeric($value) || $value < 0) {
+      form_set_error($form, t("'%value' is not a valid auto-throttle setting.  Please enter a positive numeric value.", array('%value' => $value)));
     }
   }
 }
@@ -99,7 +110,7 @@ function throttle_help($section) {
     case 'admin/modules#description':
       return t('Allows configuration of congestion control auto-throttle mechanism.');
     case 'admin/settings/throttle':
-      return t('If your site gets linked to by a popular website, or otherwise comes under a "Denial of Service" (DoS) attack, your webserver might become overwhelmed.  This module provides a mechanism for automatically detecting a surge in incoming traffic.  This mechanism is utilized by other Drupal models to automatically optimize their performance by temporarily disabling CPU-intensive functionality.  To use the auto-throttle, the statistics module\'s <a href="%access">access log</a> must be enabled.', array('%access' => url('admin/settings/statistics')));
+      return t('If your site gets linked to by a popular website, or otherwise comes under a "Denial of Service" (DoS) attack, your webserver might become overwhelmed.  This module provides a congestion control throttling mechanism for automatically detecting a surge in incoming traffic.  This mechanism is utilized by other Drupal models to automatically optimize their performance by temporarily disabling CPU-intensive functionality.');
   }
 }
 
@@ -108,9 +119,10 @@ function throttle_help($section) {
  */
 function throttle_settings() {
   // Tune auto-throttle.
-  $numbers = array(0 => t('disabled')) + drupal_map_assoc(array(25, 50, 75, 100, 125, 150, 175, 200, 250, 300, 350, 400, 450, 500, 550, 600, 650, 700, 750, 800, 850, 900, 950, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000));
-  $group = form_select(t('Auto-throttle on anonymous users'), 'throttle_anonymous', variable_get('throttle_anonymous', 0), $numbers, t('The congestion control throttle can be automatically enabled when the selected number of anonymous users currently visiting your site exceeds the specified threshold.  You can inspect the number of anonymous users using the "Who\'s online" block.'));
-  $group .= form_select(t('Auto-throttle on authenticated users'), 'throttle_user', variable_get('throttle_user', 0), $numbers, t('The congestion control throttle can be automatically enabled when the selected number of authenticated users currently visiting your site exceeds the specified threshold.  You can inspect the number of authenticated users using the "Who\'s online" block.'));
+  _throttle_validate(variable_get('throttle_anonymous', ''), 'throttle_anonymous');
+  _throttle_validate(variable_get('throttle_user', ''), 'throttle_user');
+  $group = form_textfield(t('Auto-throttle on anonymous users'), 'throttle_anonymous', variable_get('throttle_anonymous', ''), 5, 6, t('The congestion control throttle can be automatically enabled when the number of anonymous users currently visiting your site exceeds the specified threshold.  Leave this value blank or set to "0" if you do not wish to auto-throttle on anonymous users.  You can inspect the current number of anonymous users using the "Who\'s online" block.'));
+  $group .= form_textfield(t('Auto-throttle on authenticated users'), 'throttle_user', variable_get('throttle_user', ''), 5, 6, t('The congestion control throttle can be automatically enabled when the number of authenticated users currently visiting your site exceeds the specified threshold.  Leave this value blank or set to "0" if you do not wish to auto-throttle on authenticated users.  You can inspect the current number of authenticated users using the "Who\'s online" block.'));
   $probabilities = array(0 => '100%', 1 => '50%', 2 => '33.3%', 3 => '25%', 4 => '20%', 5 => '16.6%', 7 => '12.5%', 9 => '10%', 19 => '5%', 99 => '1%', 199 => '.5%', 399 => '.25%', 989 => '.1%');
   $group .= form_select(t('Auto-throttle probability limiter'), 'throttle_probability_limiter', variable_get('throttle_probability_limiter', 9), $probabilities, t('The auto-throttle probability limiter is an efficiency mechanism to statistically reduce the overhead of the auto-throttle.  The limiter is expressed as a percentage of page views, so for example if set to the default of 10% we only perform the extra database queries to update the throttle status 1 out of every 10 page views.  The busier your site, the lower you should set the limiter value.'));
   $period = drupal_map_assoc(array(1800, 3600, 7200, 10800, 14400, 18000, 21600, 43200, 64800, 86400, 172800, 259200, 604800), 'format_interval');
