@@ -10,10 +10,7 @@
  */
 
 /**
- * @name Page title
- *
- * Functions to get and set the title of the current page.
- * @{
+ * Set the title of the current page, for display on the page and in the title bar.
  */
 function drupal_set_title($title = NULL) {
   static $stored_title;
@@ -24,6 +21,9 @@ function drupal_set_title($title = NULL) {
   return $stored_title;
 }
 
+/**
+ * Get the title of the current page, for display on the page and in the title bar.
+ */
 function drupal_get_title() {
   $title = drupal_set_title();
 
@@ -33,18 +33,13 @@ function drupal_get_title() {
 
   return $title;
 }
-/* @} */
 
 /**
- * @name Page breadcrumbs
+ * Set the breadcrumb trail for the current page.
  *
- * Functions to get and set the breadcrumb trail of the current page.
- * @{
- */
-
-/**
- * @param $breadcrumb Array of links, starting with "home" and proceeding up
- *   to but not including the current page.
+ * @param $breadcrumb
+ *   Array of links, starting with "home" and proceeding up to but not including
+ *   the current page.
  */
 function drupal_set_breadcrumb($breadcrumb = NULL) {
   static $stored_breadcrumb;
@@ -55,6 +50,9 @@ function drupal_set_breadcrumb($breadcrumb = NULL) {
   return $stored_breadcrumb;
 }
 
+/**
+ * Get the breadcrumb trail for the current page.
+ */
 function drupal_get_breadcrumb() {
   $breadcrumb = drupal_set_breadcrumb();
 
@@ -64,15 +62,10 @@ function drupal_get_breadcrumb() {
 
   return $breadcrumb;
 }
-/* @} */
 
 /**
- * @name HTML head contents
- *
- * Set and get output that should be in the \<head\> tag.
- * @{
+ * Add output to the head tag of the HTML page.
  */
-
 function drupal_set_html_head($data = NULL) {
   static $stored_head = '';
 
@@ -82,6 +75,9 @@ function drupal_set_html_head($data = NULL) {
   return $stored_head;
 }
 
+/**
+ * Retrieve output to be displayed in the head tag of the HTML page.
+ */
 function drupal_get_html_head() {
   global $base_url;
 
@@ -91,14 +87,10 @@ function drupal_get_html_head() {
 
   return $output . drupal_set_html_head();
 }
-/* @} */
 
 /**
- * @name URL path alias
- *
- * Functions to handle path aliases.
+ * Return an array mapping path aliases to their internal Drupal paths.
  */
-
 function drupal_get_path_map($action = '') {
   static $map = NULL;
 
@@ -107,7 +99,7 @@ function drupal_get_path_map($action = '') {
   }
 
   if (is_null($map)) {
-    $map = array();  // make $map non-null in case no aliases are defined
+    $map = array();  // Make $map non-null in case no aliases are defined.
     $result = db_query('SELECT * FROM {url_alias}');
     while ($data = db_fetch_object($result)) {
       $map[$data->dst] = $data->src;
@@ -117,6 +109,9 @@ function drupal_get_path_map($action = '') {
   return $map;
 }
 
+/**
+ * Regenerate the path map from the information in the database.
+ */
 function drupal_rebuild_path_map() {
   drupal_get_path_map('rebuild');
 }
@@ -151,17 +146,13 @@ function drupal_get_normal_path($path) {
     return $path;
   }
 }
-/* @} */
 
 /**
- * @name HTTP headers
- *
- * Functions to get and set the HTTP headers of the current page.
- * @{
+ * Set an HTTP response header for the current page.
  */
 function drupal_set_header($header = NULL) {
   // We use an array to guarantee there are no leading or trailing delimiters.
-  // This can cause header("") to get called when serving the page later, which
+  // Otherwise, header('') could get called when serving the page later, which
   // ends HTTP headers prematurely on some PHP versions.
   static $stored_headers = array();
 
@@ -172,16 +163,17 @@ function drupal_set_header($header = NULL) {
   return implode("\n", $stored_headers);
 }
 
+/**
+ * Get the HTTP response headers for the current page.
+ */
 function drupal_get_headers() {
   return drupal_set_header();
 }
-/* @} */
 
 /**
  * @name HTTP handling
- *
- * Functions to properly handle HTTP responses.
  * @{
+ * Functions to properly handle HTTP responses.
  */
 
 /**
@@ -316,7 +308,7 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
     $path .= '?'. $uri['query'];
   }
 
-  // Create http request.
+  // Create HTTP request.
   $defaults = array(
     'Host' => 'Host: '. $uri['host'],
     'User-Agent' => 'User-Agent: Drupal (+http://www.drupal.org/)',
@@ -365,7 +357,7 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
     500 => 'Internal Server Error', 501 => 'Not Implemented', 502 => 'Bad Gateway', 503 => 'Service Unavailable', 504 => 'Gateway Time-out', 505 => 'HTTP Version not supported'
   );
   // RFC 2616 states that all unknown HTTP codes must be treated the same as
-  // the base code in their class:
+  // the base code in their class.
   if (!isset($responses[$code])) {
     $code = floor($code / 100) * 100;
   }
@@ -393,7 +385,9 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
   $result->code = $code;
   return $result;
 }
-/* @} */
+/**
+ * @} End of "HTTP handling".
+ */
 
 /**
  * Log errors in the database rather than displaying them to the user.
@@ -436,9 +430,8 @@ function fix_gpc_magic() {
 
 /**
  * @name Conversion
- *
- * Converts data structures to a different type.
  * @{
+ * Converts data structures to different types.
  */
 
 /**
@@ -473,13 +466,15 @@ function object2array($object) {
 
   return $array;
 }
-/* @} */
+
+/**
+ * @} End of "Conversion".
+ */
 
 /**
  * @name Messages
- *
- * Frequently used messages.
  * @{
+ * Frequently used messages.
  */
 
 /**
@@ -499,7 +494,9 @@ function message_na() {
   return t('n/a');
 }
 
-/* @} */
+/**
+ * @} End of "Messages".
+ */
 
 /**
  * Initialize the localization system.
@@ -525,23 +522,23 @@ function locale_initialize() {
  * Translate strings to the current locale.
  *
  * When using t(), try to put entire sentences and strings in one t() call.
- * This makes it easier for translators. We are unafraid of HTML markup within
- * translation strings if necessary. The suggested syntax for a link embedded
- * within a translation string is for example:
- * @verbatim
+ * This makes it easier for translators. HTML markup within translation strings
+ * is acceptable, if necessary. The suggested syntax for a link embedded
+ * within a translation string is:
+ * @code
  *   $msg = t('You must log in below or <a href="%url">create a new
  *             account</a> before viewing the next page.', array('%url'
  *             => url('user/register')));
- * @endverbatim
+ * @endcode
  * We suggest the same syntax for links to other sites. This makes it easy to
  * change link URLs if needed (which happens often) without requiring updates
  * to translations.
  *
  * @param $string
- *   A string containing the english string to translate.
+ *   A string containing the English string to translate.
  * @param $args
  *   An associative array of replacements to make after translation. Incidences
- *   of any key in this array are replaces with the corresponding value.
+ *   of any key in this array are replaced with the corresponding value.
  * @return
  *   The translated string.
  */
@@ -572,10 +569,9 @@ function drupal_specialchars($input, $quotes = ENT_NOQUOTES) {
 }
 
 /**
- * @name Validation
- *
- * Functions to validate user input.
+ * @defgroup validation Input validation
  * @{
+ * Functions to validate user input.
  */
 
 /**
@@ -603,7 +599,7 @@ function valid_email_address($mail) {
  * @param $url
  *   The URL to verify.
  * @param $absolute
- *   Whether the URL is absolute (beginning with a scheme such as http).
+ *   Whether the URL is absolute (beginning with a scheme such as "http:").
  * @return
  *   TRUE if the URL is in a valid format.
  */
@@ -657,28 +653,33 @@ function valid_input_data($data) {
 
   return TRUE;
 }
-/* @} */
+/**
+ * @} End of "defgroup validation".
+ */
 
 /**
  * @defgroup search Search interface
  * @{
+ * The Drupal search interface manages a global search mechanism.
+ *
+ * Modules may plug into this system to provide searches of different types of
+ * data. Most of the system is handled by search.module, so this must be enabled
+ * for all of the search features to work.
  */
 
 /**
- * Format a single result entry of a search query:
+ * Format a single result entry of a search query.
  *
- * @param $item a single search result as returned by <i>module</i>_search of
- *   type array('count' => ..., 'link' => ..., 'title' => ..., 'user' => ...,
- *   'date' => ..., 'keywords' => ...)
- * @param $type module type of this item
+ * Modules may implement hook_search_item() in order to override this default
+ * function to display search results.
+ *
+ * @param $item
+ *   A single search result as returned by hook_search(). The result should be
+ *   an array with keys "count", "link", "title", "user", "date", and "keywords".
+ * @param $type
+ *   The type of item found, such as "user" or "comment".
  */
 function search_item($item, $type) {
-
-  /*
-  ** Modules may implement hook_search_item() hook in order to overwrite
-  ** the default function to display search results.
-  */
-
   if (module_hook($type, 'search_item')) {
     $output = module_invoke($type, 'search_item', $item);
   }
@@ -693,17 +694,22 @@ function search_item($item, $type) {
 /**
  * Render a generic search form.
  *
- * "Generic" means "universal usable" - that is, usable not only from
- * 'site.com/search', but also as a simple search box (without "Restrict search
- * to", help text, etc) from theme's header etc. This means: provide options to
- * only conditionally render certain parts of this form.
+ * This form must be usable not only within "http://example.com/search", but also
+ * as a simple search box (without "Restrict search to", help text, etc.), in the
+ * theme's header, and so forth. This means we must provide options to
+ * conditionally render certain parts of this form.
  *
- * @param $action Form action. Defaults to 'site.com/search'.
- * @param $keys string containing keywords for the search.
- * @param $options != 0: Render additional form fields/text ("Restrict search
- *   to", help text, etc).
+ * @param $action
+ *   Form action. Defaults to "search".
+ * @param $keys
+ *   The search string entered by the user, containing keywords for the search.
+ * @param $options
+ *   Whether to render the optional form fields and text ("Restrict search
+ *   to", help text, etc.).
+ * @return
+ *   An HTML string containing the search form.
  */
-function search_form($action = NULL, $keys = NULL, $options = NULL) {
+function search_form($action = '', $keys = '', $options = FALSE) {
   $edit = $_POST['edit'];
 
   if (!$action) {
@@ -728,8 +734,8 @@ function search_form($action = NULL, $keys = NULL, $options = NULL) {
   return form($output, 'post', $action);
 }
 
-/*
- * Collect the search results:
+/**
+ * Perform a global search on the given keys, and return the formatted results.
  */
 function search_data($keys = NULL) {
   $edit = $_POST['edit'];
@@ -755,23 +761,28 @@ function search_data($keys = NULL) {
 }
 
 /**
- * Display the search form and the resulting data.
+ * Display a search form for a particular type of data.
  *
- * @param $type If set, search only nodes of this type. Otherwise, search all
- *   types.
- * @param $action Form action. Defaults to 'site.com/search'.
- * @param $keys Query string. Defaults to global $keys.
- * @param $options != 0: Render additional form fields/text ("Restrict search
- *   to", help text, etc).
+ * @param $type
+ *   The type of content to search within.
+ * @param $action
+ *   Form action. Defaults to "search".
+ * @param $keys
+ *   The search string entered by the user, containing keywords for the search.
+ * @param $options
+ *   Whether to render the optional form fields and text ("Restrict search
+ *   to", help text, etc.).
+ * @return
+ *   An HTML string containing the search form and results.
  */
-function search_type($type, $action = NULL, $keys = NULL, $options = NULL) {
+function search_type($type, $action = '', $keys = '', $options = FALSE) {
   $_POST['edit']['type'][$type] = 'on';
 
   return search_form($action, $keys, $options) . '<br />'. search_data($keys);
 }
 
 /**
- * @} end of defgroup search
+ * @} End of "defgroup search".
  */
 
 function check_form($text) {
@@ -783,10 +794,9 @@ function check_file($filename) {
 }
 
 /**
- * @name Formatting
- *
- * Functions to format numbers, strings, dates, etc.
+ * @defgroup format Formatting
  * @{
+ * Functions to format numbers, strings, dates, etc.
  */
 
 /**
@@ -1032,13 +1042,18 @@ function format_name($object) {
 
   return $output;
 }
-/* @} */
+/**
+ * @} End of "defgroup format".
+ */
 
 /**
  * @defgroup form Form generation
  * @{
+ * Functions to enable output of HTML forms and form elements.
  *
- *
+ * Drupal uses these functions to achieve consistency in its form presentation,
+ * while at the same time simplifying code and reducing the amount of HTML that
+ * must be explicily generated by modules.
  */
 
 /**
@@ -1500,7 +1515,7 @@ function form_weight($title = NULL, $name = 'weight', $value = 0, $delta = 10, $
 }
 
 /**
- * @} end of defgroup form
+ * @} End of "defgroup form".
  */
 
 /**
@@ -1527,11 +1542,9 @@ function url($path = NULL, $query = NULL, $fragment = NULL, $absolute = FALSE) {
   static $script;
 
   if (empty($script)) {
-    /*
-    ** On some webservers such as IIS we can't omit "index.php".  As such we
-    ** generate "index.php?q=foo" instead of "?q=foo" on anything that is not
-    ** Apache.
-    */
+    // On some web servers, such as IIS, we can't omit "index.php".  So, we
+    // generate "index.php?q=foo" instead of "?q=foo" on anything that is not
+    // Apache.
     $script = (strpos($_SERVER['SERVER_SOFTWARE'], 'Apache') === false) ? 'index.php' : '';
   }
 
@@ -1745,10 +1758,8 @@ function drupal_xml_parser_create(&$data) {
     $encoding = $match[1];
   }
 
-  /*
-   * Unsupported encodings are converted here into UTF-8.
-   * Requires the iconv, GNU recode or mbstring PHP extension.
-   */
+  // Unsupported encodings are converted here into UTF-8.
+  // Requires the iconv, GNU recode or mbstring PHP extension.
   $php_supported = array('utf-8', 'iso-8859-1', 'us-ascii');
   if (!in_array(strtolower($encoding), $php_supported)) {
     if (function_exists('iconv')) {
@@ -1788,7 +1799,7 @@ function drupal_xml_parser_create(&$data) {
  *
  * Use this function whenever you want to chop off a string at an unsure
  * location. On the other hand, if you're sure that you're splitting on a
- * character boundary (e.g. after using strpos or similar), you can safely use
+ * character boundary (e.g. after using strpos() or similar), you can safely use
  * substr() instead.
  *
  * @param $string
@@ -1811,24 +1822,21 @@ function truncate_utf8($string, $len) {
 }
 
 /**
- * Encodes MIME/HTTP header values that contain non US-ASCII
- * characters.
+ * Encodes MIME/HTTP header values that contain non US-ASCII characters.
  *
- * Example: mime_header_encode('tÃ©st.txt') returns '=?UTF-8?B?dMOpc3QudHh0?='
+ * For example, mime_header_encode('tÃ©st.txt') returns "=?UTF-8?B?dMOpc3QudHh0?=".
  *
- * For more info: http://www.rfc-editor.org/rfc/rfc2047.txt
+ * See http://www.rfc-editor.org/rfc/rfc2047.txt for more information.
  *
+ * Notes:
+ * - Only encode strings that contain non-ASCII characters.
+ * - The chunks come in groupings of 4 bytes when using base64 encoding.
+ * - trim() is used to ensure that no extra spacing is added by chunk_split() or
+ *   preg_replace().
+ * - Using \n as the chunk separator may cause problems on some systems and may
+ *   have to be changed to \r\n or \r.
  */
 function mime_header_encode($string, $charset = 'UTF-8') {
-  // Notes:
-  //   - Only encode strings that contain non-ASCII characters.
-  //   - The chunks come in groupings of 4 bytes when using base64
-  //     encoded.
-  //   - trim() is used to ensure that no extra spacing is added by
-  //     chunk_split() or preg_replace().
-  //   - Using \n as the chunk separator may cause problems on some
-  //     systems and may have to be changed to \r\n or \r.
-
   if (!preg_match('/^[\x20-\x7E]*$/', $string)) {
     $chunk_size = 75 - 7 - strlen($charset);
     $chunk_size -= $chunk_size % 4;
@@ -1839,12 +1847,18 @@ function mime_header_encode($string, $charset = 'UTF-8') {
 }
 
 /**
- * Wrapper around PHP's eval(). Uses output buffering to capture both returned
- * and printed text. Unlike eval(), we require code to be surrounded by <?php ?>
- * tags (in other words, we evaluate the code as if it were a stand-alone PHP
- * file).
+ * Evaluate a string of PHP code.
  *
- * @param $code The code to evaluate
+ * This is a wrapper around PHP's eval(). It uses output buffering to capture both
+ * returned and printed text. Unlike eval(), we require code to be surrounded by
+ * <?php ?> tags; in other words, we evaluate the code as if it were a stand-alone
+ * PHP file.
+ *
+ * @param $code
+ *   The code to evaluate.
+ * @return
+ *   A string containing the printed output of the code, followed by the returned
+ *   output of the code.
  */
 function drupal_eval($code) {
   ob_start();
@@ -1861,13 +1875,13 @@ include_once 'includes/tablesort.inc';
 include_once 'includes/file.inc';
 include_once 'includes/xmlrpc.inc';
 
-// set error handler:
+// Set the Drupal custom error handler.
 set_error_handler('error_handler');
 
-// spit out the correct charset http header
+// Emit the correct charset HTTP header.
 drupal_set_header('Content-Type: text/html; charset=utf-8');
 
-// initialize the _GET['q'] prior to loading the modules and invoking their 'init' hook:
+// Initialize $_GET['q'] prior to loading modules and invoking hook_init().
 if (!empty($_GET['q'])) {
   $_GET['q'] = drupal_get_normal_path(trim($_GET['q'], '/'));
 }
@@ -1875,19 +1889,19 @@ else {
   $_GET['q'] = drupal_get_normal_path(variable_get('site_frontpage', 'node'));
 }
 
-// initialize installed modules:
+// Initialize all enabled modules.
 module_init();
 
 if ($_REQUEST && !user_access('bypass input data check')) {
   if (!valid_input_data($_REQUEST)) {
-    die('terminated request because of suspicious input data');
+    die('Terminated request because of suspicious input data.');
   }
 }
 
-// initialize localization system:
+// Initialize the localization system.
 $locale = locale_initialize();
 
-// initialize theme:
+// Initialize the enabled theme.
 $theme = init_theme();
 
 ?>

@@ -558,11 +558,9 @@ function filter_list_format($format) {
 
 /**
  * @name Filtering functions
- *
+ * @{
  * Modules which need to have content filtered can use these functions to
  * interact with the filter system.
- *
- * @{
  */
 
 /**
@@ -666,7 +664,9 @@ function filter_access($format) {
     return isset($formats[$format]);
   }
 }
-/* @} */
+/**
+ * @} End of "Filtering functions".
+ */
 
 /**
  * Menu callback; show a page with long filter tips.
@@ -710,16 +710,9 @@ function _filter_tips($format, $long = false) {
 }
 
 /**
- * @addtogroup themeable
- * @{
- */
-
-/**
- * Format filter tips
+ * Format a set of filter tips.
  *
- * @param $tips
- * @param $long
- * @param $extra
+ * @ingroup themeable
  */
 function theme_filter_tips($tips, $long = false, $extra = '') {
   $output = '';
@@ -758,13 +751,10 @@ function theme_filter_tips($tips, $long = false, $extra = '') {
   return $output;
 }
 
-/** @} End of addtogroup themeable */
-
 /**
  * @name Standard filters
- *
- * Filters implemented by the filter.module.
  * @{
+ * Filters implemented by the filter.module.
  */
 
 /**
@@ -879,6 +869,8 @@ function _filter_autop($text) {
   return $text;
 }
 
-/* @} */
+/**
+ * @} End of "Standard filters".
+ */
 
 ?>

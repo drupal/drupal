@@ -8,8 +8,8 @@
 
 /**
  * @defgroup file File interface
- *   Common file handling functions.
  * @{
+ * Common file handling functions.
  */
 
 define('FILE_DOWNLOADS_PUBLIC', 1);

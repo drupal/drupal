@@ -9,6 +9,7 @@
 /**
  * @defgroup menu Menu system
  * @{
+ * Define the navigation menus, and route page requests to code based on URLs.
  *
  * The Drupal menu system drives both the navigation system from a user
  * perspective and the callback system that Drupal uses to respond to URLs
@@ -66,10 +67,11 @@
  */
 
 /**
- * @name Menu Flags
+ * @name Menu flags
  * @{
  * Flags for use in the "type" attribute of menu items.
  */
+
 define('MENU_IS_ROOT', 0x0001);
 define('MENU_VISIBLE_IN_TREE', 0x0002);
 define('MENU_VISIBLE_IN_BREADCRUMB', 0x0004);
@@ -79,12 +81,13 @@ define('MENU_MODIFIED_BY_ADMIN', 0x0020);
 define('MENU_CREATED_BY_ADMIN', 0x0040);
 define('MENU_IS_LOCAL_TASK', 0x0080);
 define('MENU_LINKS_TO_PARENT', 0x0200);
+
 /**
- * @}
+ * @} End of "Menu flags".
  */
 
 /**
- * @name Menu Item Types
+ * @name Menu item types
  * @{
  * Menu item definitions provide one of these constants, which are shortcuts for
  * combinations of the above flags.
@@ -148,7 +151,7 @@ define('MENU_CUSTOM_ITEM', MENU_VISIBLE_IN_TREE | MENU_VISIBLE_IN_BREADCRUMB | M
 define('MENU_CUSTOM_MENU', MENU_IS_ROOT | MENU_VISIBLE_IN_TREE | MENU_CREATED_BY_ADMIN | MENU_MODIFIABLE_BY_ADMIN);
 
 /**
- * @}
+ * @} End of "Menu item types".
  */
 
 /**
@@ -156,11 +159,13 @@ define('MENU_CUSTOM_MENU', MENU_IS_ROOT | MENU_VISIBLE_IN_TREE | MENU_CREATED_BY
  * @{
  * Status codes for menu callbacks.
  */
+
 define('MENU_FOUND', 1);
 define('MENU_NOT_FOUND', 2);
 define('MENU_ACCESS_DENIED', 3);
+
 /**
- * @}
+ * @} End of "Menu status codes".
  */
 
 /**
@@ -510,16 +515,9 @@ function menu_rebuild() {
 }
 
 /**
- * @} end of defgroup menu
- */
-
-/**
- * @addtogroup themeable
- * @{
- */
-
-/**
  * Returns a rendered menu tree.
+ *
+ * @ingroup themeable
  */
 function theme_menu_tree($pid = 1, $all = FALSE) {
   $menu = menu_get_menu();
@@ -550,6 +548,8 @@ function theme_menu_tree($pid = 1, $all = FALSE) {
  *
  * @param $mid
  *   The menu ID to render.
+ *
+ * @ingroup themeable
  */
 function theme_menu_item($mid) {
   $menu = menu_get_menu();
@@ -565,6 +565,8 @@ function theme_menu_item($mid) {
 /**
  * Returns the rendered local tasks. The default implementation renders
  * them as tabs.
+ *
+ * @ingroup themeable
  */
 function theme_menu_local_tasks() {
   $local_tasks = menu_get_local_tasks();
@@ -599,6 +601,8 @@ function theme_menu_local_tasks() {
  *   The menu ID to render.
  * @param $active
  *   Whether this tab or a subtab is the active menu item.
+ *
+ * @ingroup themeable
  */
 function theme_menu_local_task($mid, $active) {
   if ($active) {
@@ -610,7 +614,7 @@ function theme_menu_local_task($mid, $active) {
 }
 
 /**
- * @} end of addtogroup themeable
+ * @} End of "defgroup menu".
  */
 
 /**

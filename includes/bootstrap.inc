@@ -1,5 +1,5 @@
 <?php
-/* $Id$ */
+// $Id$
 
 /**
  * @file
@@ -394,13 +394,6 @@ function watchdog($type, $message, $link = NULL) {
 }
 
 /**
- * @name Page messages
- *
- * Functions to get and set the message of the current page.
- * @{
- */
-
-/**
  * Set a message for the user to see.
  *
  * The message is stored in the session so that it can persist through a redirect.
@@ -436,8 +429,6 @@ function drupal_get_messages() {
   return $messages;
 }
 
-/* @} */
-
 unset($conf);
 $config = conf_init();
 
@@ -448,4 +439,5 @@ include_once 'includes/module.inc';
 
 // Initialize configuration variables, using values from conf.php if available.
 $conf = variable_init(isset($conf) ? $conf : array());
+
 ?>

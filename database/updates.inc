@@ -1303,7 +1303,7 @@ function update_98() {
   /**
    * Works for both PostgreSQL and MySQL
    */
-  $result = db_query("SELECT pid, src FROM {url_alias} WHERE src LIKE 'taxonomy/%%'", $from);
+  $result = db_query("SELECT pid, src FROM {url_alias} WHERE src LIKE 'taxonomy/%%'");
   while ($alias = db_fetch_object($result)) {
     list(, $page, $op, $terms) = explode('/', $alias->src);
     if ($page == 'feed' || $page == 'page') {

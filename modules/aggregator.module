@@ -1019,12 +1019,11 @@ function aggregator_page_categories() {
 }
 
 /**
- * @addtogroup themeable
- * @{
+ * Format a news feed.
+ *
+ * @ingroup themeable
  */
-
 function theme_aggregator_feed($feed) {
-
   $output  = '';
 
   if ($feed->image) {
@@ -1048,6 +1047,11 @@ function theme_aggregator_feed($feed) {
   return $output;
 }
 
+/**
+ * Format an individual feed item for display in the block.
+ *
+ * @ingroup themeable
+ */
 function theme_aggregator_block_item($item, $feed = 0) {
   global $user;
 
@@ -1057,18 +1061,20 @@ function theme_aggregator_block_item($item, $feed = 0) {
     }
   }
 
-  // external link
+  // Display the external link to the item.
   $output .= "<a href=\"$item->link\">$item->title</a>\n";
 
   return $output;
 }
 
 /**
- * Returns a themed item heading for summary pages located at
- * aggregator/sources and aggregator/categories.
+ * Return a themed item heading for summary pages located at "aggregator/sources"
+ * and "aggregator/categories".
  *
  * @param $item The item object from the aggregator module.
  * @return A string containing the output.
+ *
+ * @ingroup themeable
  */
 function theme_aggregator_summary_item($item) {
   $output = '<a href="'. check_url($item->link) .'">'. $item->title .'</a> <span class="age">'. t('%age old', array('%age' => format_interval(time() - $item->timestamp))) .'</span>';
@@ -1078,6 +1084,11 @@ function theme_aggregator_summary_item($item) {
   return $output ."\n";
 }
 
+/**
+ * Format an individual feed item for display on the aggregator page.
+ *
+ * @ingroup themeable
+ */
 function theme_aggregator_page_item($item) {
   static $last;
 
@@ -1112,7 +1123,5 @@ function theme_aggregator_page_item($item) {
 
   return $output;
 }
-
-/** @} End of addtogroup themeable */
 
 ?>

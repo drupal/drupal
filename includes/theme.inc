@@ -322,13 +322,14 @@ function theme_get_styles() {
 /**
  * @defgroup themeable Themeable functions
  * @{
+ * Functions that display HTML, and which can be customized by themes.
  *
  * All functions that produce HTML for display should be themeable. This means
  * that they should be named with the theme_ prefix, and invoked using theme()
  * rather than being called directly. This allows themes to override the display
  * of any Drupal object.
  *
- * @see theme.inc
+ * The theme system is described and defined in theme.inc.
  */
 
 /**
@@ -805,7 +806,7 @@ function theme_blocks($region) {
   return $output;
 }
 /**
- * @} end of defgroup themeable
+ * @} End of "defgroup themeable".
  */
 
 function _theme_table_cell($cell, $header = 0) {

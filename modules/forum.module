@@ -491,21 +491,9 @@ function forum_page($tid = 0, $display = 'all') {
 }
 
 /**
- * @addtogroup themeable
- * @{
- */
-
-/**
  * Format the forum body.
  *
- * @param forums
- * @param topics
- * @param parents
- * @param tid
- * @param sortby
- * @param forum_per_page
- *
- * @return the output for the forum body.
+ * @ingroup themeable
  */
 function theme_forum_display($forums, $topics, $parents, $tid, $sortby, $forum_per_page) {
   global $user;
@@ -575,11 +563,7 @@ function theme_forum_display($forums, $topics, $parents, $tid, $sortby, $forum_p
 /**
  * Format the forum listing.
  *
- * @param forums
- * @param parents
- * @param tid
- *
- * @return output for the forum listing.
+ * @ingroup themeable
  */
 function theme_forum_list($forums, $parents, $tid) {
   global $user;
@@ -632,12 +616,7 @@ function theme_forum_list($forums, $parents, $tid) {
 /**
  * Format the topic listing.
  *
- * @param tid
- * @param topics
- * @param sortby
- * @param forum_per_page
- *
- * @return output for the topic list.
+ * @ingroup themeable
  */
 function theme_forum_topic_list($tid, $topics, $sortby, $forum_per_page) {
   global $forum_topic_list_header;
@@ -673,8 +652,6 @@ function theme_forum_topic_list($tid, $topics, $sortby, $forum_per_page) {
 
   return $output;
 }
-
-/** @} End of addtogroup themeable */
 
 function _forum_icon($new_posts, $num_posts = 0, $comment_mode = 0, $sticky = 0) {
 

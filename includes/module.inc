@@ -170,6 +170,8 @@ function module_exist($module) {
 
 /**
  * @defgroup hooks Hooks
+ * @{
+ * Allow modules to interact with the Drupal core.
  *
  * Drupal's module system is based on the concept of "hooks". A hook is a PHP
  * function that is named foo_bar(), where "foo" is the name of the module (whose
@@ -185,8 +187,6 @@ function module_exist($module) {
  * the module name is the hook definitions. For example, if the module file is
  * called example.module, then hook_help() as implemented by that module would be
  * defined as example_help().
- *
- * @{
  */
 
 /**
@@ -250,7 +250,7 @@ function module_invoke_all($hook, $a1 = NULL, $a2 = NULL, $a3 = NULL, $a4 = NULL
 }
 
 /**
- * @} end of defgroup hooks
+ * @} End of "defgroup hooks".
  */
 
 ?>

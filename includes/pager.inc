@@ -8,7 +8,6 @@
 
 /**
  * Perform a paged database query.
- * @ingroup database
  *
  * Use this function when doing select queries you wish to be able to page. The
  * pager uses LIMIT-based queries to fetch only the records required to render a
@@ -44,6 +43,8 @@
  * @return
  *   A database query result resource, or FALSE if the query was not executed
  *   correctly.
+ *
+ * @ingroup database
  */
 function pager_query($query, $limit = 10, $element = 0, $count_query = NULL) {
   global $pager_from_array, $pager_total;
@@ -66,11 +67,6 @@ function pager_query($query, $limit = 10, $element = 0, $count_query = NULL) {
 }
 
 /**
- * @addtogroup themeable
- * @{
- */
-
-/**
  * Format a query pager.
  *
  * Menu callbacks that display paged query results should call theme('pager') to
@@ -86,6 +82,8 @@ function pager_query($query, $limit = 10, $element = 0, $count_query = NULL) {
  *   An associative array of query string parameters to append to the pager links.
  * @return
  *   An HTML string that generates the query pager.
+ *
+ * @ingroup themeable
  */
 function theme_pager($tags = array(), $limit = 10, $element = 0, $attributes = array()) {
   global $pager_total;
@@ -105,14 +103,10 @@ function theme_pager($tags = array(), $limit = 10, $element = 0, $attributes = a
 }
 
 /**
- * @} end of addtogroup themeable
- */
-
-/**
  * @name Pager pieces
- *   Use these pieces to construct your own custom pagers in your theme. Note
- *   that you should NOT modify this file to customize your pager.
  * @{
+ * Use these pieces to construct your own custom pagers in your theme. Note that
+ * you should NOT modify this file to customize your pager.
  */
 
 /**
@@ -282,9 +276,9 @@ function pager_list($limit, $element = 0, $quantity = 5, $text = '', $attributes
     $pager_max++;
     $pager_current++;
   }
-// End of marker calculations.
+  // End of marker calculations.
 
-// Prepare for generation loop.
+  // Prepare for generation loop.
   $i = (int)$pager_first;
   if ($pager_last > $pager_max) {
     // Adjust "center" if at end of query.
@@ -296,7 +290,7 @@ function pager_list($limit, $element = 0, $quantity = 5, $text = '', $attributes
     $pager_last = $pager_last + (1 - $i);
     $i = 1;
   }
-// End of generation loop preparation.
+  // End of generation loop preparation.
 
   // When there is more than one page, create the pager list.
   if ($i != $pager_max) {
@@ -325,7 +319,9 @@ function pager_list($limit, $element = 0, $quantity = 5, $text = '', $attributes
 
   return $output;
 }
-/* @} End of member group pager pieces */
+/**
+ * @} End of "Pager pieces".
+ */
 
 /**
  * Format a link to a specific query result page.
@@ -360,14 +356,14 @@ function pager_link($from_new, $element, $attributes = array()) {
 
 function pager_load_array($value, $element, $old_array) {
   $new_array = $old_array;
-  // look for empty elements
+  // Look for empty elements.
   for ($i = 0; $i < $element; $i++) {
     if (!$new_array[$i]) {
-      // load found empty element with 0
+      // Load found empty element with 0.
       $new_array[$i] = 0;
     }
   }
-  // update the changed element
+  // Update the changed element.
   $new_array[$element] = (int)$value;
   return $new_array;
 }

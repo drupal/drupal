@@ -246,7 +246,7 @@ function update_index($search_array) {
 
       // Trash any existing entries in the search index for this node,
       // in case it is a modified node.
-      db_query("DELETE from {search_index} where lno = '". $node['lno'] ."' and type = '". $node_type ."'");
+      db_query("DELETE from {search_index} WHERE lno = '". $node['lno'] ."' AND type = '". $node_type ."'");
 
       // Build the word list (teaser not included, as it would give a
       // false count of the number of hits).

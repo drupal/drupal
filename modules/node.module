@@ -65,12 +65,11 @@ function node_cron() {
 }
 
 /**
- * Menu callback; presents node-specific imformation from admin/help.
+ * Menu callback; presents node-specific imformation from "admin/help".
  */
 function node_help_page() {
   print theme('page', node_help('admin/help#node'));
 }
-
 
 /**
  * Gather a listing of links to nodes.
@@ -131,7 +130,7 @@ function node_last_viewed($nid) {
 }
 
 /**
- * Determines whether the supplied timestamp is newer than the user's last view
+ * Determine whether the supplied timestamp is newer than the user's last view
  * of a given node.
  *
  * @param $nid
@@ -156,7 +155,7 @@ function node_is_new($nid, $timestamp) {
 }
 
 /**
- * Autogenerate a teaser for the given body text.
+ * Automatically generate a teaser for the given body text.
  */
 function node_teaser($body) {
 
@@ -235,7 +234,7 @@ function node_teaser($body) {
 
 
 /**
- * Determines the module that defines the node type of the given node.
+ * Determine the module that defines the node type of the given node.
  *
  * @param &$node
  *   Either a node object, a node array, or a string containing the node type.
@@ -273,7 +272,7 @@ function node_get_module_name($node) {
  * Get a list of all the defined node types.
  *
  * @return
- *   An list of all node types.
+ *   A list of all node types.
  */
 function node_list() {
   $types = array();
@@ -703,7 +702,7 @@ function node_admin_edit($node) {
 }
 
 /**
- * Generate the content administation overview.
+ * Generate the content administration overview.
  */
 function node_admin_nodes() {
   $filters = array(
@@ -835,7 +834,7 @@ function node_default_settings() {
 }
 
 /**
- * Generates an overview table of older revisions of a node.
+ * Generate an overview table of older revisions of a node.
  */
 function node_revision_overview($nid) {
   if (user_access('administer nodes')) {
@@ -1028,7 +1027,7 @@ function node_feed($nodes = 0, $channel = array()) {
 }
 
 /**
- * Preform validation checks on the given node.
+ * Perform validation checks on the given node.
  */
 function node_validate($node) {
   global $user;
@@ -1670,11 +1669,9 @@ function node_access_join_sql($node_alias = 'n', $node_access_alias = 'na') {
  */
 function node_access_where_sql($op = 'view', $node_access_alias = 'na') {
   if (user_access('administer nodes')) {
-    /**
-     * This number is being used in a SQL query in a boolean nature.
-     * It is "'1'" instead of "1" for database compatibility, as both
-     * Postgres and Mysql treat it as boolean in this case.
-     */
+    // This number is being used in a SQL query as a boolean.
+    // It is "'1'" instead of "1" for database compatibility, as both
+    // PostgreSQL and MySQL treat it as boolean in this case.
     return "'1'";
   }
 
@@ -1718,7 +1715,7 @@ function node_access_grants($op, $uid = NULL) {
 }
 
 /**
- * @} end of defgroup node_access
+ * @} End of "defgroup node_access".
  */
 
 ?>

@@ -3,11 +3,11 @@
 
 /**
  * @file
- * Database interface code for postgresql database servers.
+ * Database interface code for PostgreSQL database servers.
  */
 
 /**
- * @addtogroup database
+ * @ingroup database
  * @{
  */
 
@@ -279,7 +279,7 @@ function db_decode_blob($data) {
 }
 
 /**
- * @} end of addtogroup database
+ * @} End of "ingroup database".
  */
 
 ?>

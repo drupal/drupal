@@ -3,7 +3,7 @@
 
 /**
  * @file
- * Handles incoming requests to fire of regularly-scheduled tasks (cron jobs).
+ * Handles incoming requests to fire off regularly-scheduled tasks (cron jobs).
  */
 
 include_once 'includes/bootstrap.inc';
