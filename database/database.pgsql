@@ -123,7 +123,6 @@ CREATE TABLE comments (
   comment text NOT NULL default '',
   hostname varchar(128) NOT NULL default '',
   timestamp integer NOT NULL default '0',
-  link varchar(16) NOT NULL default '',
   score integer NOT NULL default '0',
   status smallint  NOT NULL default '0',
   thread varchar(255) default '',
@@ -174,7 +173,6 @@ CREATE TABLE feed (
 CREATE TABLE forum (
   nid integer NOT NULL default '0',
   tid integer NOT NULL default '0',
-  icon varchar(255) NOT NULL default '',
   shadow integer NOT NULL default '0',
   PRIMARY KEY  (nid)
 );
