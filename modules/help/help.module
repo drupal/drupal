@@ -1,4 +1,5 @@
 <?php
+// $Id$
 
 function help_link($type) {
   if ($type == "admin") {

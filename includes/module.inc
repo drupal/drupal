@@ -1,4 +1,5 @@
 <?php
+// $Id$
 
 // initialize modules:
 function module_init() {

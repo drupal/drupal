@@ -1,4 +1,5 @@
 <?php
+// $Id$
 
 $GLOBALS["format"] = array(0 => "HTML", 1 => "PHP", 2 => "text");
 

@@ -1,4 +1,5 @@
 <?php
+// $Id$
 
 function tracker_link($type) {
 

@@ -1,4 +1,5 @@
-<?
+<?php
+// $Id$
 
 function conf_init() {
   global $HTTP_HOST, $REQUEST_URI;
