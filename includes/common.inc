@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.389 2004/09/15 09:54:32 dries Exp $ */
+/* $Id: common.inc,v 1.390 2004/09/16 16:12:21 unconed Exp $ */
 
 /**
  * @file
@@ -1860,6 +1860,9 @@ function mime_header_encode($string, $charset = 'UTF-8') {
  * returned and printed text. Unlike eval(), we require code to be surrounded by
  * <?php ?> tags; in other words, we evaluate the code as if it were a stand-alone
  * PHP file.
+ *
+ * Using this wrapper also ensures that the PHP code which is evaluated can not
+ * overwrite any variables in the calling code, unlike a regular eval() call.
  *
  * @param $code
  *   The code to evaluate.
