@@ -28,11 +28,11 @@ function taxonomy_perm() {
 
 function taxonomy_link($type, $node = NULL) {
   if ($type == "admin" && user_access("administer taxonomy")) {
-    $help["taxonomy"] = "The taxonomy module allows you to classify post into categories and subcategories; it allows multiple lists of categories for classification (controlled vocabularies) and offers the possibility of creating thesauri (controlled vocabularies that indicate the relationship of terms) and taxonomies (controlled vocabularies where relationships are indicated hierarchically).";
+    $help["taxonomy"] = "The taxonomy module allows you to classify posts into categories and subcategories; it allows multiple lists of categories for classification (controlled vocabularies) and offers the possibility of creating thesauri (controlled vocabularies that indicate the relationship of terms) and taxonomies (controlled vocabularies where relationships are indicated hierarchically).";
     $help["vocabulary"] = "When you create a controlled vocabulary you are creating a set of terms to use for describing content (known as descriptors in indexing lingo).  Drupal allows you to describe each node of content (blog, story, etc.) using one or many of these terms. For simple implementations, you might create a set of categories without subcategories, similar to Slashdot.org's or Kuro5hin.org's sections. For more complex implementations, you might create a hierarchical list of categories.";
 
     menu("admin/taxonomy", "taxonomy", "taxonomy_admin", $help["taxonomy"], 3);
-    menu("admin/taxonomy/create vocabulary", "create new vocabulary", "taxonomy_admin", $help["vocabulary"]);
+    menu("admin/taxonomy/addvocabulary", "create new vocabulary", "taxonomy_admin", $help["vocabulary"]);
     menu("admin/taxonomy/help", "help", "taxonomy_admin", NULL, 9);
   }
   else if ($type == "taxonomy terms" && $node != NULL) {
@@ -85,7 +85,6 @@ function taxonomy_form_vocabulary($edit = array()) {
 
 function taxonomy_save_vocabulary($edit) {
   $data = array("name" => $edit["name"], "types" => @implode(",", $edit["types"]), "description" => $edit["description"], "multiple" => $edit["multiple"], "required" => $edit["required"], "hierarchy" => $edit["hierarchy"], "relations" => $edit["relations"], "weight" => $edit["weight"]);
-
   if ($edit["vid"] && $edit["name"]) {
     db_query("UPDATE vocabulary SET ". _prepare_update($data) ." WHERE vid = '%d'", $edit["vid"]);
     module_invoke_all("taxonomy", "update", "vocabulary", $edit);
@@ -135,7 +134,7 @@ function _taxonomy_confirm_del_vocabulary($vid) {
 }
 
 function taxonomy_form_term($edit = array()) {
-  $vocabulary_id = arg(4);
+  $vocabulary_id = arg(3);
 
   if (!$vocabulary_id) {
     $vocabulary_id = $edit["vid"];
@@ -181,7 +180,7 @@ function taxonomy_form_term($edit = array()) {
 }
 
 function taxonomy_save_term($edit) {
- if ($edit["tid"] && $edit["name"]) {
+  if ($edit["tid"] && $edit["name"]) {
     $data = array("name" => $edit["name"], "description" => $edit["description"], "weight" => $edit["weight"]);
 
     db_query("UPDATE term_data SET ". _prepare_update($data) ." WHERE tid = '%d'", $edit["tid"]);
@@ -274,13 +273,13 @@ function taxonomy_overview() {
   foreach ($vocabularies as $vocabulary) {
     $links = array();
 
-    $rows[] = array($vocabulary->name, array("data" => $vocabulary->types, "align" => "center"), l(t("edit vocabulary"), "admin/taxonomy/edit/vocabulary/$vocabulary->vid"), l(t("add term"), "admin/taxonomy/add term/$vocabulary->vid"), l(t("preview form"), "admin/taxonomy/preview/vocabulary/$vocabulary->vid"));
+    $rows[] = array($vocabulary->name, array("data" => $vocabulary->types, "align" => "center"), l(t("edit vocabulary"), "admin/taxonomy/editvocabulary/$vocabulary->vid"), l(t("add term"), "admin/taxonomy/addterm/$vocabulary->vid"), l(t("preview form"), "admin/taxonomy/preview/vocabulary/$vocabulary->vid"));
 
     $tree = taxonomy_get_tree($vocabulary->vid);
     if ($tree) {
       unset($data);
       foreach ($tree as $term) {
-        $data .= _taxonomy_depth($term->depth) ." ". $term->name ." (". l(t("edit term"), "admin/taxonomy/edit/term/$term->tid") .")<br />";
+        $data .= _taxonomy_depth($term->depth) ." ". $term->name ." (". l(t("edit term"), "admin/taxonomy/editterm/$term->tid") .")<br />";
       }
       $rows[] = array(array("data" => $data, "colspan" => 5));
     }
@@ -716,19 +715,17 @@ function taxonomy_admin() {
     }
 
     switch ($op) {
-      case "create vocabulary":
+      case "addvocabulary":
         print taxonomy_form_vocabulary();
         break;
-      case "add term":
+      case "addterm":
         print taxonomy_form_term();
         break;
-      case "edit":
-        if (arg(3) == "vocabulary") {
-          print taxonomy_form_vocabulary(object2array(taxonomy_get_vocabulary(arg(4))));
-        }
-        else {
-          print taxonomy_form_term(object2array(taxonomy_get_term(arg(4))));
-        }
+      case "editvocabulary":
+        print taxonomy_form_vocabulary(object2array(taxonomy_get_vocabulary(arg(3))));
+        break;
+      case "editterm":
+        print taxonomy_form_term(object2array(taxonomy_get_term(arg(3))));
         break;
       case "preview":
         print taxonomy_form(arg(4));
@@ -751,7 +748,7 @@ function taxonomy_admin() {
           // fall through:
         }
       case t("Submit"):
-        if (arg(3) == "vocabulary") {
+        if (arg(2) == "addvocabulary" || arg(2) == "editvocabulary") {
           print status(taxonomy_save_vocabulary($edit));
         }
         else {
@@ -828,10 +825,10 @@ function taxonomy_help() {
   <i><a name="synonyms"></a>Synonyms</i><br />Optional. Enter synonyms for this term, one synonym per line. Synonyms can be used for variant spellings, acronyms, and other terms that have the same meaning as the added term, but which are not explicitly listed in this thesaurus (i.e. <i>unauthorized terms</i>).</p>
 
   <h3>Displaying nodes organized by term(s)</h3>
-  <p>In order to view the nodes associated with a term or a collection of terms, you should browse to a properly formed URL. For example, see <a href="<?php print path_uri() . url("node", "or=1,2"); ?>"><?php print path_uri() . url("node", "or=1,2"); ?></a>.  Taxonomy URLs always contain  a term ID or list of term IDs at the end of the URL (aka <i>querystring</i>). You may learn the term ID for a given term by hovering over that term in the <?php echo l("taxonomy overview", "admin/taxonomy") ?> page in the Admin and noting the number after the querystring parameter called <i>tid</i>.  If you wish to see nodes from a collection of term IDs, separate each term ID with a comma.  Also, the name of the querystring parameter may be <i>or</i> or <i>and</i>: <i>or</i> shows nodes which appear in <b>any</b> of the term IDs while <i>and</i> shows nodes in <b>all</b> the specified term IDs.  Thus, <i>or</i> is less specific than <i>and</i>.</p>
+  <p>In order to view the nodes associated with a term or a collection of terms, you should browse to a properly formed URL. For example, see <a href="<?php print url("node", "or=1,2"); ?>"><?php print url("node", "or=1,2"); ?></a>.  Taxonomy URLs always contain  a term ID or list of term IDs at the end of the URL (aka <i>querystring</i>). You may learn the term ID for a given term by hovering over that term in the <?php echo l("taxonomy overview", "admin/taxonomy") ?> page in the Admin and noting the number after the querystring parameter called <i>tid</i>.  If you wish to see nodes from a collection of term IDs, separate each term ID with a comma.  Also, the name of the querystring parameter may be <i>or</i> or <i>and</i>: <i>or</i> shows nodes which appear in <b>any</b> of the term IDs while <i>and</i> shows nodes in <b>all</b> the specified term IDs.  Thus, <i>or</i> is less specific than <i>and</i>.</p>
 
   <h3>RSS feeds</h3>
-  <p>Every term, or collection of terms, provides an <a href="http://backend.userland.com/stories/rss091">RSS</a> feed to which interested users may subscribe. The URL format for an sample RSS feed is <a href="<?php print path_uri() . url("node/feed", "or=1,2"); ?>"><?php print path_uri() . url("node/feed", "or=1,2"); ?></a>.</p>
+  <p>Every term, or collection of terms, provides an <a href="http://backend.userland.com/stories/rss091">RSS</a> feed to which interested users may subscribe. The URL format for an sample RSS feed is <a href="<?php print url("node/feed", "or=1,2"); ?>"><?php print url("node/feed", "or=1,2"); ?></a>.</p>
  <?php
 }
 ?>
