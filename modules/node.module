@@ -21,7 +21,7 @@ function node_help($section = "admin/help#node") {
       $output .= "<dt>Static on front page</dt><dd>The front page is configured to show the teasers from only a few of the total nodes you have on your site (To configure how many teasers %teaser), but if you think a node is important enough that you want it to stay on the front page enable this.</dd>";
       $output .= "<dt>Allow user comments</dt><dd>A node can have comments. These comments can be written by other users (Read-write), or only by admins (Read-only).</dd>";
       $output .= "<dt>Attributes</dt><dd>A way to sort nodes.</dd>";
-      $output .= "<dt>Revisions</dt><dd>Drupal has a revision system so that you can \"roll back\" to an older version of a node if the new version is not what you want.</dd>";
+      $output .= "<dt>Revisions</dt><dd>Drupal has a revision system so that you can \"roll back\" to an older version of a post if the new version is not what you want.</dd>";
       $output .= "<dt>Promote to front page</dt><dd>To get people to look at the new stuff on your site you can choose to move it to the front page.</dd>";
       $output .= "<dt>In moderation queue</dt><dd>Drupal has a moderation system. If it is active, a node is in one of three states: approved and published, approved and unpublished, and awaiting approval. If you are moderating a node it should be in the moderation queue.</dd>";
       $output .= "<dt>Votes</dt><dd>If you are moderating a node this counts how many votes the node has gotten. Once a node gets a certain number of vote if will either be approved or dropped.";
@@ -554,7 +554,11 @@ function node_link($type, $node = 0, $main = 0) {
     }
 
     if (user_access("administer nodes")) {
-       $links[] = l(t("administer"), "admin/node/edit/$node->nid", array("title" => t("Administer this node.")));
+      $links[] = l(t("administer"), "admin/node/edit/$node->nid", array("title" => t("Administer this node.")));
+    }
+
+    if (user_access("administer nodes") && $node->revisions) {
+      $links[] = l(t("revisions"), "node/revisions/$node->nid", array("title" => t("Administer revisions.")));
     }
   }
 
@@ -580,21 +584,6 @@ function node_admin_edit($node) {
   }
 
   $output .= node_form($node);
-
-  /*
-  ** Edit revisions:
-  */
-
-  if ($node->revisions) {
-    $output .= "<h3>". t("Edit revisions") ."</h3>";
-
-    $header = array(t("older revisions"), array("colspan" => "3", "data" => t("operations")));
-
-    foreach ($node->revisions as $key => $revision) {
-      $rows[] = array(t("revision #%r revised by %u on %d", array("%r" => $key, "%u" => format_name(user_load(array("uid" => $revision["uid"]))), "%d" => format_date($revision["timestamp"], "small"))) . ($revision["history"] ? "<br /><small>". $revision["history"] ."</small>" : ""), l(t("view revision"), "node/view/$node->nid", array(), "revision=$key"), l(t("rollback revision"), "admin/node/rollback+revision/$node->nid/$key"), l(t("delete revision"), "admin/node/delete+revision/$node->nid/$key"));
-    }
-    $output .= table($header, $rows);
-  }
 
   /*
   ** Display the node form extensions:
@@ -763,6 +752,25 @@ function node_admin_settings($edit) {
 
 }
 
+function node_revision_overview($nid) {
+
+  if (user_access("administer nodes")) {
+    $node = node_load(array("nid" => $nid));
+
+    if ($node->revisions) {
+      $header = array(t("older revisions"), array("colspan" => "3", "data" => t("operations")));
+
+      foreach ($node->revisions as $key => $revision) {
+        $rows[] = array(t("revision #%r revised by %u on %d", array("%r" => $key, "%u" => format_name(user_load(array("uid" => $revision["uid"]))), "%d" => format_date($revision["timestamp"], "small"))) . ($revision["history"] ? "<br /><small>". $revision["history"] ."</small>" : ""), l(t("view"), "node/view/$node->nid", array(), "revision=$key"), l(t("rollback"), "node/rollback-revision/$node->nid/$key"), l(t("delete"), "node/delete-revision/$node->nid/$key"));
+      }
+      $output .= table($header, $rows);
+    }
+  }
+
+  return $output;
+}
+
+
 /*
 ** Return the revision with the specified revision number.
 */
@@ -797,57 +805,65 @@ function node_revision_create($node) {
 ** Roll-back to the revision with the specified revision number.
 */
 
-function node_revision_rollback($node, $revision) {
+function node_revision_rollback($nid, $revision) {
   global $user;
 
-  /*
-  ** Extract the specified revision:
-  */
+  if (user_access("administer nodes")) {
+    $node = node_load(array("nid" => $nid));
 
-  $rev = $node->revisions[$revision]["node"];
+    /*
+    ** Extract the specified revision:
+    */
 
-  /*
-  ** Inherit all the past revisions:
-  */
+    $rev = $node->revisions[$revision]["node"];
 
-  $rev->revisions = $node->revisions;
+    /*
+    ** Inherit all the past revisions:
+    */
 
-  /*
-  ** Save the original/current node:
-  */
+    $rev->revisions = $node->revisions;
 
-  $rev->revisions[] = array("uid" => $user->uid, "timestamp" => time(), "node" => $node);
+    /*
+    ** Save the original/current node:
+    */
 
-  /*
-  ** Remove the specified revision:
-  */
+    $rev->revisions[] = array("uid" => $user->uid, "timestamp" => time(), "node" => $node);
 
-  unset($rev->revisions[$revision]);
+    /*
+    ** Remove the specified revision:
+    */
 
-  /*
-  ** Save the node:
-  */
+    unset($rev->revisions[$revision]);
 
-  foreach ($node as $key => $value) {
-    $filter[] = $key;
+    /*
+    ** Save the node:
+    */
+
+    foreach ($node as $key => $value) {
+      $filter[] = $key;
+    }
+
+    node_save($rev, $filter);
+
+    return status(t("rollbacked to revision #%revision of '%title'", array("%revision" => $revision, "%title" => $node->title)));
   }
-
-  node_save($rev, $filter);
-
-  watchdog("special", "$node->type: rollbacked to revision #$revision of '$node->title'");
 }
 
 /*
 ** Delete the revision with specified revision number.
 */
 
-function node_revision_delete($node, $revision) {
+function node_revision_delete($nid, $revision) {
 
-  unset($node->revisions[$revision]);
+  if (user_access("administer nodes")) {
+    $node = node_load(array("nid" => $nid));
 
-  node_save($node, array("nid", "revisions"));
+    unset($node->revisions[$revision]);
 
-  watchdog("special", "$node->type: removed revision #$revision of '$node->title'");
+    node_save($node, array("nid", "revisions"));
+
+    return status(t("deleted revision #%revision of '%title'", array("%revision" => $revision, "%title" => $node->title)));
+  }
 }
 
 /*
@@ -885,14 +901,6 @@ function node_admin() {
         break;
       case "delete":
         $output = node_delete(array("nid" => arg(3)));
-        break;
-      case "rollback revision":
-        $output = node_revision_rollback(node_load(array("nid" => arg(3))), arg(4));
-        $output .= node_admin_edit(arg(3));
-        break;
-      case "delete revision":
-        $output = node_revision_delete(node_load(array("nid" => arg(3))), arg(4));
-        $output .= node_admin_edit(arg(3));
         break;
       case t("Preview"):
         $edit = node_validate($edit, $error);
@@ -1495,6 +1503,19 @@ function node_page() {
         break;
       case "view":
         print node_show($node, arg(3));
+        break;
+      case "revisions":
+        theme("box", t("Revisions"), node_revision_overview((arg(2))));
+        break;
+      case "rollback-revision":
+        $output  = node_revision_rollback(arg(2), arg(3));
+        $output .= node_revision_overview(arg(2));
+        theme("box", t("Revisions"), $output);
+        break;
+      case "delete-revision":
+        $output  = node_revision_delete(arg(2), arg(3));
+        $output .= node_revision_overview(arg(2));
+        theme("box", t("Revisions"), $output);
         break;
       case t("Preview"):
         $edit = node_validate($edit, $error);
