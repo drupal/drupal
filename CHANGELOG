@@ -9,8 +9,10 @@ Drupal x.x.x, xxxx-xx-xx (to be released)
     * improved content submission:
         + improved teasers: teasers are now optional, teaser length can be configured, teaser and body are edited in a single textarea, users will no longer be bother with teasers when the post is too short for a teaser.
         + added the ability to preview both the short and the full version of your posts.
-
-Drupal 4.1.0, xxxx-xx-xx (to be released)
+- themes:
+    * replaced theme "Goofy" by "Xtemplate", a template driven theme.
+    
+Drupal 4.1.0, 2003-02-01
 ------------------------
 
 - collaboratively revised and expanded the Drupal documentation.
