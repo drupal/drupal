@@ -347,7 +347,7 @@ function search_data($keys = NULL) {
           $output .= "<p><strong>". t("Matching %names ranked in order of relevance:", array("%name" => $name)) ."</strong></p>";
         }
         else {
-          $output .= "<p><strong>". t("Matching ". $name .") .":</strong></p>";
+          $output .= "<p><strong>". t("Matching $names") .":</strong></p>";
         }
         foreach ($result as $entry) {
           $output .= search_item($entry, $name);
