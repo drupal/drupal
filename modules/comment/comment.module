@@ -291,7 +291,7 @@ function comment_post($edit) {
   ** Redirect the user the node he commented on:
   */
 
-  drupal_goto(drupal_url(array("id" => $edit["nid"], "node")));
+  drupal_goto(drupal_url(array("id" => $edit["nid"]), "node"));
 
 }
 
