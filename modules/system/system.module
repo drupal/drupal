@@ -48,7 +48,7 @@ function system_view_options() {
   $output .= form_textfield("Name", "site_name", variable_get("site_name", "drupal"), 55, 55, "The name of this website.");
   $output .= form_textfield("E-mail address", "site_mail", variable_get("site_mail", ini_get("sendmail_from")), 55, 128, "A valid e-mail address for this website, used by the auto-mailer during registration, new password requests, notifications, etc.");
   $output .= form_textfield("Slogan", "site_slogan", variable_get("site_slogan", ""), 55, 128, "The slogan of this website. Some themes display a slogan when available.");
-  $output .= form_textarea("Mission", "site_mission", variable_get("site_mission", ""), 55, 5, "Your site's mission statement or focus. When enabled, this mission is listed at Drupal.org");
+  $output .= form_textarea("Mission", "site_mission", variable_get("site_mission", ""), 55, 5, "Your site's mission statement or focus.");
   $output .= form_textarea("Footer message", "site_footer", variable_get("site_footer", ""), 55, 5, "This text will be displayed at the bottom of each page.  Useful for adding a copyright notice to your pages.");
   $output .= form_textfield("Anonymous user", "anonymous", variable_get("anonymous", "Anonymous"), 55, 55, "The name used to indicate anonymous users.");
   foreach (module_list() as $name) { if (module_hook($name, "page")) $pages[$name] = $name; }
