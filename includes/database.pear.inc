@@ -106,4 +106,10 @@ function db_next_id($name) {
   return $db_handle->nextID($name);
 }
 
+function db_affected_rows() {
+  global $db_handle;
+
+  return $db_handle->affectedRows();
+}
+
 ?>

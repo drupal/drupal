@@ -108,4 +108,8 @@ function db_next_id($name) {
   return $id;
 }
 
+function db_affected_rows() {
+  return mysql_affected_rows();
+}
+
 ?>
