@@ -147,6 +147,7 @@ function taxonomy_save_vocabulary($edit) {
   cache_clear_all();
 
   drupal_set_message($message);
+  
   return $edit;
 }
 
@@ -919,16 +920,10 @@ function taxonomy_admin() {
       }
       else {
         taxonomy_save_term($edit);
-        if (!$edit['tid']) {
-          // if INSERT show form again
-          $output .= taxonomy_form_term();
-          break;
-        }
-        // else (UPDATE or DELETE) fall through
       }
+      drupal_goto('admin/taxonomy');
       // fall through:
     default:
-      $output .= taxonomy_overview();
   }
 
   print theme('page', $output);
