@@ -1140,7 +1140,7 @@ function user_page() {
       theme("footer");
       break;
     case t("Delete account"):
-    case t("delete"):
+    case "delete":
       $output = user_delete();
       theme("header");
       theme("box", t("User account"), user_menu());
