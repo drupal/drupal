@@ -1037,7 +1037,15 @@ function drupal_attributes($attributes = NULL) {
 }
 
 function l($text, $url, $attributes = array(), $query = NULL, $fragment = NULL) {
-  return "<a href=\"". url($url, $query, $fragment) ."\"". ($url == $_GET['q'] ? ' class="active"' : NULL) . drupal_attributes($attributes) .">$text</a>";
+  if ($url == $_GET['q']) {
+    if (isset($attributes['class'])) {
+      $attributes['class'] .= ' active';
+    }
+    else {
+      $attributes['class'] = 'active';
+    }
+  }
+  return "<a href=\"". url($url, $query, $fragment) ."\"". drupal_attributes($attributes) .">$text</a>";
 }
 
 function field_get($string, $name) {
