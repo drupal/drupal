@@ -5,7 +5,7 @@
 <head>
   <title>{head_title}</title>
   {head}
-  <link type="text/css" rel="stylesheet" href="{stylesheet}" />
+  <link type="text/css" rel="stylesheet" href="{path}/xtemplate.css" />
 </head>
 
 <body{onload_attributes}>
