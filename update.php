@@ -555,14 +555,28 @@ function update_70() {
 }
 
 function update_71() {
-  update_sql("ALTER TABLE {system} ADD bootstrap int(2)");
+  if ($GLOBALS["db_type"] == "pgsql") {
+    update_sql("ALTER TABLE {system} ADD bootstrap integer");
+  }
+  else {
+    update_sql("ALTER TABLE {system} ADD bootstrap int(2)");
+  }
 }
 
 function update_72() {
-  update_sql("ALTER TABLE {blocks} ADD throttle tinyint(1) NOT NULL DEFAULT '0'");
+  if ($GLOBALS["db_type"] == "pgsql") {
+    update_sql("ALTER TABLE {blocks} ADD throttle smallint");
+    update_sql("ALTER TABLE {blocks} ALTER COLUMN throttle SET DEFAULT '0'");
+    update_sql("UPDATE {blocks} SET throttle = 0");
+    update_sql("ALTER TABLE {blocks} ALTER COLUMN throttle SET NOT NULL");
+  }
+  else {
+    update_sql("ALTER TABLE {blocks} ADD throttle tinyint(1) NOT NULL DEFAULT '0'");
+  }
 }
 
 function update_73() {
+  /* MySQL only update */
   if ($GLOBALS["db_type"] == "mysql") {
     update_sql("ALTER TABLE {book} CHANGE log log longtext");
     update_sql("ALTER TABLE {boxes} CHANGE body body longtext");
@@ -590,19 +604,48 @@ function update_73() {
 }
 
 function update_74() {
-  update_sql("ALTER TABLE {system} ADD throttle tinyint(1) NOT NULL DEFAULT '0'");
+  if ($GLOBALS["db_type"] == "pgsql") {
+    update_sql("ALTER TABLE {system} ADD throttle smallint");
+    update_sql("ALTER TABLE {system} ALTER COLUMN throttle SET DEFAULT '0'");
+    update_sql("UPDATE {system} SET throttle = 0");
+    update_sql("ALTER TABLE {system} ALTER COLUMN throttle SET NOT NULL");
+  }
+  else {
+    update_sql("ALTER TABLE {system} ADD throttle tinyint(1) NOT NULL DEFAULT '0'");
+  }
 }
 
 function update_75() {
-  update_sql("ALTER TABLE {feed} ADD etag varchar(255) NOT NULL DEFAULT ''");
-  update_sql("ALTER TABLE {feed} ADD modified int(10) NOT NULL DEFAULT 0");
-  update_sql("ALTER TABLE {feed} CHANGE timestamp checked int(10) NOT NULL DEFAULT 0");
-  update_sql("UPDATE {blocks} SET module = 'aggregator' WHERE module = 'import'");
-  update_sql("UPDATE {system} SET filename = 'modules/aggregator.module', name = 'aggregator' WHERE filename = 'modules/import.module'");
+  if ($GLOBALS["db_type"] == "pgsql") {
+    update_sql("ALTER TABLE {feed} ADD etag text");
+    update_sql("ALTER TABLE {feed} ALTER COLUMN etag SET DEFAULT ''");
+    update_sql("ALTER TABLE {feed} ALTER COLUMN etag SET NOT NULL");
+
+    update_sql("ALTER TABLE {feed} ADD modified integer");
+    update_sql("ALTER TABLE {feed} ALTER COLUMN modified SET DEFAULT '0'");
+    update_sql("UPDATE {feed} SET modified = 0");
+    update_sql("ALTER TABLE {feed} ALTER COLUMN modified SET NOT NULL");
+
+    update_sql("ALTER TABLE {feed} RENAME timestamp TO checked");
+
+    update_sql("UPDATE {blocks} SET module = 'aggregator' WHERE module = 'import'");
+    update_sql("UPDATE {system} SET filename = 'modules/aggregator.module', name = 'aggregator' WHERE filename = 'modules/import.module'");
+  }
+  else {
+    update_sql("ALTER TABLE {feed} ADD etag varchar(255) NOT NULL DEFAULT ''");
+    update_sql("ALTER TABLE {feed} ADD modified int(10) NOT NULL DEFAULT 0");
+    update_sql("ALTER TABLE {feed} CHANGE timestamp checked int(10) NOT NULL DEFAULT 0");
+    update_sql("UPDATE {blocks} SET module = 'aggregator' WHERE module = 'import'");
+    update_sql("UPDATE {system} SET filename = 'modules/aggregator.module', name = 'aggregator' WHERE filename = 'modules/import.module'");
+  }
 }
 
 function update_76() {
-  update_sql("ALTER TABLE {feed} ADD image longtext");
+  if ($GLOBALS["db_type"] == "pgsql") {
+    update_sql("ALTER TABLE {feed} ADD image text");
+  } else {
+    update_sql("ALTER TABLE {feed} ADD image longtext");
+  }
 }
 
 function update_77() {
