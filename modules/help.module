@@ -43,7 +43,7 @@ function help_admin() {
       $temp = module_invoke($name, "help", "admin/".$name."/help");
       if (!empty($temp)) {
         $links[] = l($name, "admin/help#$name");
-  $output .= "<h2><a id=\"$name\">". ucfirst($name) ." module</a></h2>";
+        $output .= "<h2><a id=\"$name\">". ucfirst($name) ." module</a></h2>";
         $output .= $temp;
       }
     }
