@@ -47,6 +47,12 @@ function category_expire_threshold($cid) {
   return $category->threshold;
 }
 
+// return default comment status of category $cid:
+function category_comment($cid) {
+  $category = category_get_object("cid", $cid);
+  return $category->comment;
+}
+
 // return linked string with name of category $cid:
 function category_name($cid) {
   $category = category_get_object("cid", $cid);

@@ -195,8 +195,10 @@ CREATE TABLE modules (
 DROP TABLE IF EXISTS node;
 CREATE TABLE node (
   nid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
-  lid int(10) DEFAULT '0' NOT NULL,
-  pid int(10) DEFAULT '0' NOT NULL,
+  lid int(10) unsigned DEFAULT '0' NOT NULL,
+  pid int(10) unsigned DEFAULT '0' NOT NULL,
+  cid int(10) unsigned DEFAULT '0' NOT NULL,
+  tid int(10) unsigned DEFAULT '0' NOT NULL,
   log text NOT NULL,
   type varchar(16) DEFAULT '' NOT NULL,
   title varchar(128) DEFAULT '' NOT NULL,
@@ -204,9 +206,8 @@ CREATE TABLE node (
   votes int(11) DEFAULT '0' NOT NULL,
   author int(6) DEFAULT '0' NOT NULL,
   status int(4) DEFAULT '1' NOT NULL,
+  comment int(2) DEFAULT '1' NOT NULL,
   timestamp int(11) DEFAULT '0' NOT NULL,
-  cid int(10) unsigned DEFAULT '0' NOT NULL,
-  tid int(10) unsigned DEFAULT '0' NOT NULL,
   KEY type (lid,type),
   KEY author (author),
   KEY title (title,type),
