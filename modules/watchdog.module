@@ -5,41 +5,42 @@ function watchdog_help($section = "admin/help") {
   $output = "";
 
   switch ($section) {
-    case "admin/help":
-    case "admin/watchdog/help":
-      $output .= "<p>Watchdog module monitors your web site, capturing system events in a log to be reviewed by an authorized individual at a later time.  The Watchdog log is simply a list of recorded events containing usage data, performance data, errors, warnings and operational information.  It is vital to ". l("check the Watchdog report", "admin/watchdog") ." on a regular basis as it is often the only way to tell what is going on.</p>";
-      $output .= "<p>To ease administration, the watchdog will automatically discard old log entries, ". l("as configured", "admin/system/modules/watchdog") .". Needs \"cron.php\" to discard the entries.</p>";
+    case 'admin/help':
+    case 'admin/watchdog/help':
+      $output .= "<p>Watchdog module monitors your web site, capturing system events in a log to be reviewed by an authorized individual at a later time.  The Watchdog log is simply a list of recorded events containing usage data, performance data, errors, warnings and operational information.  It is vital to %watchdog on a regular basis as it is often the only way to tell what is going on.</p>";
+      $output .= "<p>To ease administration, the watchdog will automatically discard old log entries, %log-entry. Needs \"cron.php\" to discard the entries.</p>";
+      $output = t($output, array("%watchdog" => l(t("check the Watchdog report"), "admin/watchdog"), "%log-entry" => l(t("as configured"), "admin/system/modules/watchdog")));
       break;
-   case "admin/watchdog":
-     $output = "The watchdog module monitors your web site, captures system events in a log and records them to be reviewed by an authorized individual at a later time.  The watchdog log is simply a list of events recorded during operation and contains usage data, performance data, errors, warnings and operational information. It is vital to check the watchdog report on a regular basis as it is often the only way to tell what is going on.";
+   case 'admin/watchdog':
+     $output = t("The watchdog module monitors your web site, captures system events in a log and records them to be reviewed by an authorized individual at a later time.  The watchdog log is simply a list of events recorded during operation and contains usage data, performance data, errors, warnings and operational information. It is vital to check the watchdog report on a regular basis as it is often the only way to tell what is going on.");
      break;
-  case "admin/watchdog/user":
-     $output = "Watchdog events that have to do with users.";
+  case 'admin/watchdog/user':
+     $output = t("Watchdog events that have to do with users.");
      break;
-  case "admin/watchdog/regular":
-    $output = "Watchdog events that are \"normal\" and have no other classification.";
+  case 'admin/watchdog/regular':
+    $output = t("Watchdog events that are \"normal\" and have no other classification.");
     break;
-  case "admin/watchdog/httpd":
-    $output = "Watchdog events that are from the web server.";
+  case 'admin/watchdog/httpd':
+    $output = t("Watchdog events that are from the web server.");
     break;
-  case "admin/watchdog/special":
-    $output = "Watchdog events about adding, changing, and moderating nodes and comments.";
+  case 'admin/watchdog/special':
+    $output = t("Watchdog events about adding, changing, and moderating nodes and comments.");
     break;
-  case "admin/watchdog/error":
-    $output = "Watchdog general error events, such as invalid login, permission denied, and database errors.";
+  case 'admin/watchdog/error':
+    $output = t("Watchdog general error events, such as invalid login, permission denied, and database errors.");
     break;
-  case "admin/watchdog/warning":
-    $output = "Watchdog warning events. These events don't stop Drupal from running, but are things you should no to correct.";
+  case 'admin/watchdog/warning':
+    $output = t("Watchdog warning events. These events don't stop Drupal from running, but are things you should no to correct.");
+    break;
+  case 'admin/system/modules#description':
+    $output = t("Logs and records system events.");
+    break;
+  case 'admin/system/modules/watchdog':
+    $output = t("Watchdog logs your system events. To see these logs go to %watchdog. Since these logs can grow out of control if kept around forever, below set how long an item should be kept in the log.<br />Note:<ul><li>To discard entries as set below you must run \"cron.php\" regularly.</li></ul>", array("%watchdog" => l(t("Site monitoring"), "admin/watchdog")));
     break;
   }
 
-  return t($output);
-}
-
-function watchdog_system($field){
-  $system["description"] = t("Logs and records system events.");
-  $system["admin_help"] = t("Watchdog logs your system events. To see these logs go to <a href=\"%watchdog\">Site monitoring</a>. Since these logs can grow out of control if kept around forever, below set how long an item should be kept in the log.<br />Note:<ul><li>To discard entries as set below you must run \"cron.php\" regularly.</li></ul>", array("%watchdog" => url("admin/watchdog")));
-  return $system[$field];
+  return $output;
 }
 
 function watchdog_perm() {

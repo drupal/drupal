@@ -1,14 +1,6 @@
 <?php
 // $Id$
 
-function taxonomy_system($field){
-  $output = "";
-
-  if ($field == "description") {$output = taxonomy_help("admin/system/modules"); };
-
-  return $output;
-}
-
 function taxonomy_feed($taxonomy) {
   global $id, $type;
 
@@ -76,12 +68,12 @@ function taxonomy_form_vocabulary($edit = array()) {
     }
   }
 
-  $form .= form_textfield(t("Vocabulary name"), "name", $edit["name"], 50, 64, t("Required") . ". " . t("The name for this vocabulary.  Example: 'Topic'") . ".");
-  $form .= form_textarea(t("Description"), "description", $edit["description"], 60, 5, t("Optional") . ". " . t("Description of the vocabulary, can be used by modules."));
-  $form .= form_select(t("Types"), "nodes", explode(",", $edit["nodes"]), $nodetypes, t("Required") . ". " . t("A list of node types you want to associate this vocabulary with."), "", 1);
-  $form .= form_checkbox(t("Related terms"), "relations", 1, $edit["relations"], t("Optional") . ". " . t("Allows ". l("related terms", "admin/taxonomy/help#relatedterms") ." in this vocabulary."));
-  $form .= form_select(t("Hierarchy"), "hierarchy", $edit["hierarchy"], array(t("Disabled"), t("Single"), t("Multiple")), t("Optional") . ". ". t("Allows ". l("a tree-like hierarchy", "admin/taxonomy/help#hierarchy") ." between terms of this vocabulary."), "", 0);
-  $form .= form_checkbox(t("Multiple select"), "multiple", 1, $edit["multiple"], t("Optional") . ". " . t("Allows nodes to have more than one term in this vocabulary."));
+  $form .= form_textfield(t("Vocabulary name"), "name", $edit["name"], 50, 64, t("Required") .". ". t("The name for this vocabulary.  Example: 'Topic'") .".");
+  $form .= form_textarea(t("Description"), "description", $edit["description"], 60, 5, t("Optional") .". ". t("Description of the vocabulary, can be used by modules."));
+  $form .= form_select(t("Types"), "nodes", explode(",", $edit["nodes"]), $nodetypes, t("Required") .". ". t("A list of node types you want to associate this vocabulary with."), "", 1);
+  $form .= form_checkbox(t("Related terms"), "relations", 1, $edit["relations"], t("Optional") .". ". t("Allows ". l("related terms", "admin/taxonomy/help#relatedterms") ." in this vocabulary."));
+  $form .= form_select(t("Hierarchy"), "hierarchy", $edit["hierarchy"], array(t("Disabled"), t("Single"), t("Multiple")), t("Optional") .". ". t("Allows ". l("a tree-like hierarchy", "admin/taxonomy/help#hierarchy") ." between terms of this vocabulary."), "", 0);
+  $form .= form_checkbox(t("Multiple select"), "multiple", 1, $edit["multiple"], t("Optional") .". ". t("Allows nodes to have more than one term in this vocabulary."));
   $form .= form_checkbox(t("Required"), "required", 1, $edit["required"], t("If enabled every node <b>must</b> have at least one term in this vocabulary"));
   $form .= form_weight(t("Weight"), "weight", $edit["weight"], 10, t("Optional. In listings, the heavier vocabularies will sink and the lighter vocabularies will be positioned nearer the top."));
   $form .= form_submit(t("Submit"));
@@ -152,8 +144,8 @@ function taxonomy_form_term($edit = array()) {
   $vocabulary_id = isset($edit["vid"]) ? $edit["vid"] : arg(4);
   $vocabulary = taxonomy_get_vocabulary($vocabulary_id);
 
-  $form = form_textfield(t("Term name"), "name", $edit["name"], 50, 64, t("Required") . ". " . t("The name for this term.  Example: 'Linux'."));
-  $form .= form_textarea(t("Description"), "description", $edit["description"], 60, 5, t("Optional") . ". " . t("A description of the term."));
+  $form = form_textfield(t("Term name"), "name", $edit["name"], 50, 64, t("Required") .". ". t("The name for this term.  Example: 'Linux'."));
+  $form .= form_textarea(t("Description"), "description", $edit["description"], 60, 5, t("Optional") .". ". t("A description of the term."));
 
   if ($vocabulary->hierarchy) {
     $parent = array_keys(taxonomy_get_parents($edit["tid"]));
@@ -166,15 +158,15 @@ function taxonomy_form_term($edit = array()) {
     $exclude[] = $edit["tid"];
 
     if ($vocabulary->hierarchy == 1) {
-      $form .= _taxonomy_term_select(t("Parent"), "parent", $parent, $vocabulary_id, t("Required") . ". " . l(t("Parent term"), "admin/taxonomy/help#parent") .".", 0, "<" . t("root") . ">", $exclude);
+      $form .= _taxonomy_term_select(t("Parent"), "parent", $parent, $vocabulary_id, t("Required") .". ". l(t("Parent term"), "admin/taxonomy/help#parent") .".", 0, "<". t("root") .">", $exclude);
     }
     elseif ($vocabulary->hierarchy == 2) {
-      $form .= _taxonomy_term_select(t("Parents"), "parent", $parent, $vocabulary_id, t("Required") . ". ". l(t("Parent terms"), "admin/taxonomy/help#parent") .".", 1, "<" . t("root") . ">", $exclude);
+      $form .= _taxonomy_term_select(t("Parents"), "parent", $parent, $vocabulary_id, t("Required") .". ". l(t("Parent terms"), "admin/taxonomy/help#parent") .".", 1, "<". t("root") .">", $exclude);
     }
   }
 
   if ($vocabulary->relations) {
-    $form .= _taxonomy_term_select(t("Related terms"), "relations", array_keys(taxonomy_get_related($edit["tid"])), $vocabulary_id, t("Optional") . ". ", 1, "<" . t("none") . ">", array($edit["tid"]));
+    $form .= _taxonomy_term_select(t("Related terms"), "relations", array_keys(taxonomy_get_related($edit["tid"])), $vocabulary_id, t("Optional") .". ", 1, "<". t("none") .">", array($edit["tid"]));
   }
 
   $form .= form_textarea(t("Synonyms"), "synonyms", implode("\n", taxonomy_get_synonyms($edit["tid"])), 30, 5, t("Optional") . ". ". t(l("Synonyms", "admin/taxonomy/help#synonyms") ." of this term, one synonym per line."));
@@ -277,7 +269,7 @@ function _taxonomy_confirm_del_term($tid) {
 
 function taxonomy_overview() {
 
-  $output .= "<h3>" . t("Vocabularies overview") . "</h3>";
+  $output .= "<h3>". t("Vocabularies overview") ."</h3>";
 
   $header = array(t("name"), t("node types"), array("data" => t("operations"), "colspan" => 3));
 
@@ -308,7 +300,7 @@ function taxonomy_form($vocabulary_id, $value = 0) {
   }
   else {
     $verb = "can";
-    $blank = "<" . t("none") . ">";
+    $blank = "<". t("none") .">";
   }
 
   if ($vocabulary->multiple) {
@@ -615,7 +607,7 @@ function _taxonomy_term_select($title, $name, $value, $vocabulary_id, $descripti
 
   if (count($options) > 0) {
     foreach ($options as $option) {
-      $select .= "<option value=\"".$option["tid"]."\"". (is_array($value) ? (in_array($option["tid"], $value) ? " selected=\"selected\"" : "") : ($option["tid"] == $value ? " selected=\"selected\"" : "")) .">". check_form($option["name"]) ."</option>";
+      $select .= "<option value=\"". $option["tid"] ."\"". (is_array($value) ? (in_array($option["tid"], $value) ? " selected=\"selected\"" : "") : ($option["tid"] == $value ? " selected=\"selected\"" : "")) .">". check_form($option["name"]) ."</option>";
     }
 
     $size = min(12, count($options));
@@ -666,7 +658,7 @@ function taxonomy_select_nodes($taxonomy, $pager = 1) {
       $sql_count = "SELECT COUNT(DISTINCT(n.nid)) FROM {node} n INNER JOIN {term_node} r ON n.nid = r.nid INNER JOIN {users} u ON n.uid = u.uid WHERE r.tid IN ($taxonomy->str_tids) AND n.status = '1'";
     }
     else {
-      $sql = "SELECT n.nid, n.title, n.type, n.created, n.changed, n.uid, u.name FROM {node} n INNER JOIN {term_node} r ON n.nid = r.nid INNER JOIN {users} u ON n.uid = u.uid WHERE r.tid IN ($taxonomy->str_tids) AND n.status = '1' GROUP BY n.nid, n.title, n.type, n.created, n.changed, n.uid, u.name HAVING COUNT(n.nid) = ".count($taxonomy->tids)." ORDER BY static DESC, created DESC";
+      $sql = "SELECT n.nid, n.title, n.type, n.created, n.changed, n.uid, u.name FROM {node} n INNER JOIN {term_node} r ON n.nid = r.nid INNER JOIN {users} u ON n.uid = u.uid WHERE r.tid IN ($taxonomy->str_tids) AND n.status = '1' GROUP BY n.nid, n.title, n.type, n.created, n.changed, n.uid, u.name HAVING COUNT(n.nid) = ". count($taxonomy->tids) ." ORDER BY static DESC, created DESC";
 
       // Special trick as we could not find anything better:
       $count = db_num_rows(db_query("SELECT n.nid FROM {node} n INNER JOIN {term_node} r ON n.nid = r.nid WHERE r.tid IN ($taxonomy->str_tids) AND n.status = '1' GROUP BY n.nid HAVING COUNT(n.nid) = ". count($taxonomy->tids)));
@@ -807,16 +799,16 @@ function taxonomy_help($section = "admin/taxonomy/help") {
   $output = "";
 
   switch ($section) {
-    case "admin/system/modules":
+    case 'admin/system/modules#description':
       $output = t("Enables the organization of content into categories.");
       break;
-    case "admin/taxonomy":
+    case 'admin/taxonomy':
       $output = t("The taxonomy module allows you to classify content into categories and subcategories; it allows multiple lists of categories for classification (controlled vocabularies) and offers the possibility of creating thesauri (controlled vocabularies that indicate the relationship of terms) and taxonomies (controlled vocabularies where relationships are indicated hierarchically). To delete a term choose \"edit term\". To delete a vocabulary, and all its terms, choose \"edit vocabulary\".");
       break;
-    case "admin/taxonomy/add/vocabulary":
+    case 'admin/taxonomy/add/vocabulary':
       $output = t("When you create a controlled vocabulary you are creating a set of terms to use for describing content (known as descriptors in indexing lingo).  Drupal allows you to describe each node type (blog, story, etc.) using one or many of these terms. For simple implementations, you might create a set of categories without subcategories, similar to Slashdot.org's or Kuro5hin.org's sections. For more complex implementations, you might create a hierarchical list of categories.");
       break;
-    case "admin/taxonomy/help":
+    case 'admin/taxonomy/help':
       $output .= "<h3>Background</h3><p>Taxonomy is the study of classification. Drupal's taxonomy module allows you to define categories which are used to classify content. The module supports hierarchical classification and association between terms, allowing for truly flexible information retrieval and classification. For more details about %classification-types and insight into the development of the <i>taxonomy.module</i>, see this %drupal-dis.</p>";
       $output .= "<h3>An example taxonomy: food</h3><ul><li>Dairy<ul><li>Milk</li></ul></li><li>Drink<ul><li>Alchohol<ul><li>Beer</li><li>Wine</li></ul></li><li>Pop</li><li>Milk</li></ul></li><li>Meat<ul><li>Beef</li><li>Chicken</li><li>Lamb</li></ul></li><li>Spices<ul><li>Sugar</li></ul></li></ul>";
       $output .= "<p><b>Notes</b></p><ul><li>The term <i>Milk</i> appears within both <i>Dairy</i> and <i>Drink</i>.  This is an example of <i>multiple parents</i> for a term.</li><li>In Drupal the order of siblings (e.g. <i>Beef</i>, <i>Chicken</i>, <i>Lamb</i>) in a taxonomy may be controlled with the <i>weight</i> parameter.</li></ul>";

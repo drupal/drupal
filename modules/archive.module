@@ -5,21 +5,13 @@ function archive_help($section) {
   $output = "";
 
   switch ($section) {
-    case 'admin/system/modules':
+    case 'admin/system/modules#description':
       $output = t("Displays a calendar to navigate old content.");
       break;
     case 'admin/system/modules/archive':
       $output = t("Choose the starting \"day of the week\" for the displayed calendar block.");
       break;
   }
-
-  return $output;
-}
-function archive_system($field){
-  $output = "";
-
-  if ($field == "description") { $output = archive_help("admin/system/modules"); }
-  else if ($field == "admin_help") { $output = archive_help("admin/system/modules/archive"); };
 
   return $output;
 }
@@ -64,7 +56,7 @@ function archive_calendar($original = 0) {
   // Extract last day of the month:
   $last = date("t", $start_of_month);
 
-  $end_of_month = mktime(23,59,59, $month, $last, $year);
+  $end_of_month = mktime(23, 59, 59, $month, $last, $year);
 
   $cache = cache_get("archive:calendar:$start_of_month");
 
@@ -97,7 +89,7 @@ function archive_calendar($original = 0) {
   $weekstart = variable_get("default_firstday", 0);
 
   // Last day of week
-  ($weekstart - 1 == -1 ) ? $lastday = 6 : $lastday = $weekstart - 1;
+  ($weekstart - 1 == -1) ? $lastday = 6 : $lastday = $weekstart - 1;
 
   // Generate the days of the week:
   $firstcolumn = mktime(0, 0, 0, 3, 20 + $weekstart, 1994);

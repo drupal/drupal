@@ -1,15 +1,6 @@
 <?php
 // $Id$
 
-function blog_system($field){
-  $output = "";
-
-  if ($field == "description") { $output = blog_help("admin/system/modules"); }
-  else if ($field == "admin_help") { $output = blog_help("admin/system/modules/blog"); };
-
-  return $output;
-}
-
 function blog_settings() {
   $output = form_textarea(t("Explanation or submission guidelines"), "blog_help", variable_get("blog_help", ""), 70, 4, t("This text is displayed at the top of the blog submission form.  It's useful for helping or instructing your users."));
   $words = t("words");
@@ -84,9 +75,9 @@ function blog_help($section) {
       $output .= "<p>Blogs are made up of individual entries (nodes) that are timestamped and are typically viewed by day as you would a diary.  Blogs often contain links to things you've seen and/or agree/disagree with.  A typical example of a long term blog can be seen at %scripting-com.</p>";
       $output .= "<p>The blog module adds a \"user blogs\" navigation link to the site, which takes any visitor to a page that displays the most recent blog entries from all the users on the site. Personal user menus gain a \"create a blog entry\" link (which takes you to a submission form) and a \"view personal blog\" link (which displays your blog entries as other people will see them).  On the bottom of each of your own blog entries, there is an \"edit this blog entry\" link that lets you edit or delete that entry.</p>";
       $output .= "<p>If a user has the ability to post blogs, then the import module (news aggregator) will display a blog-it link <b>(b)</b> next to each news item in its lists.  Click on this and you will be taken to the blog submission form, with the title, a link to the item, and a link to the source into the body text already in the text box, ready for you to add your explanation.  This actively encourages people to add blog entries about things they see and hear elsewhere in the Drupal site and from your syndicated partner sites.</p>";
-      $output = t($output,array("%scripting-com" => "<a href=\"http://www.scripting.com/\">http://www.scripting.com/</a>" ));
+      $output = t($output, array("%scripting-com" => "<a href=\"http://www.scripting.com/\">http://www.scripting.com/</a>" ));
       break;
-    case 'admin/system/modules':
+    case 'admin/system/modules#description':
       $output .= t("Enables keeping a blog or easily and regularly updated web page.");
       break;
     case 'admin/system/modules/blog':
@@ -108,7 +99,7 @@ function blog_feed_user($uid = 0) {
   }
 
   $result = db_query_range("SELECT n.nid, n.title, n.teaser, n.created, u.name, u.uid FROM {node} n INNER JOIN {users} u ON n.uid = u.uid WHERE n.type = 'blog' AND u.uid = %d AND n.status = 1 ORDER BY n.nid DESC", $uid, 0, 15);
-  $channel["title"] = $account->name. "'s blog";
+  $channel["title"] = $account->name ."'s blog";
   $channel["link"] = url("blog/view/$uid");
   $channel["description"] = $term->description;
   node_feed($result, $channel);
@@ -136,7 +127,7 @@ function blog_page_user($uid) {
     node_view(node_load(array("nid" => $node->nid)), 1);
   }
   print pager_display(NULL, variable_get("default_nodes_main", 10));
-  print "<div style=\"text-align: right\">" . l("<img src=\"". theme("image", "xml.gif") ."\" width=\"36\" height=\"14\" style=\"border: 0px;\" alt=\"\" title=\"\" />", "blog/feed/$account->uid", array("title" => t("View the XML version of %username's blog", array ("%username" => $account->name)))) . "</div>";
+  print "<div style=\"text-align: right\">" . l("<img src=\"". theme("image", "xml.gif") ."\" width=\"36\" height=\"14\" style=\"border: 0px;\" alt=\"\" title=\"\" />", "blog/feed/$account->uid", array("title" => t("View the XML version of %username's blog", array("%username" => $account->name)))) . "</div>";
 }
 
 function blog_page_last() {
@@ -247,7 +238,7 @@ function blog_view($node, $main = 0) {
     $breadcrumb[] = l(t("Home"), NULL);
     $breadcrumb[] = l(t("%name's blog", array("%name" => $node->name)), "blog/$node->uid");
     // print the breadcrumb
-    theme("breadcrumb",$breadcrumb);
+    theme("breadcrumb", $breadcrumb);
   }
   // prepair the node content
   $node = blog_content($node);
@@ -265,7 +256,7 @@ function blog_link($type, $node = 0, $main) {
       menu("node/add/blog", t("blog entry"), "blog_page", NULL, 0);
     }
     if (user_access("maintain personal blog")) {
-      menu("blog/" . $user->uid,t("my blog"), "user_page", NULL, 1);
+      menu("blog/" . $user->uid, t("my blog"), "user_page", NULL, 1);
     }
   }
 

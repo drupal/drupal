@@ -1,13 +1,6 @@
 <?php
 /* $Id$ */
 
-function path_system($field) {
-  $system["description"] = path_help("admin/system/modules");
-  $system["admin_help"] =  path_help("admin/system/modules/path");
-
-  return $system[$field];
-}
-
 function path_admin() {
   $op = strtolower($_POST["op"]);
   $edit = $_POST["edit"];
@@ -111,27 +104,30 @@ function path_form($edit = "", $error = "") {
 }
 
 function path_help($section = "admin/path/help") {
+  $output = "";
+
   switch ($section) {
-    case "admin/system/modules":
-      $output = "Enables users to create custom URLs.";
+    case "admin/system/modules#description":
+      $output = t("Enables users to create custom URLs.");
       break;
-
     case "admin/path":
-      $output = "Drupal provides users complete control over URLs through aliasing. While the original Drupal URLs are always created and accessible, advanced users have the option to override these normal paths.";
+      $output = t("Drupal provides users complete control over URLs through aliasing. While the original Drupal URLs are always created and accessible, advanced users have the option to override these normal paths.");
       break;
-
     case "admin/path/add":
-      $output = "Enter the path you wish to create the alias for, followed by the name of the new alias. Each path can be associated with only one alias.";
+      $output = t("Enter the path you wish to create the alias for, followed by the name of the new alias. Each path can be associated with only one alias.");
       break;
-
     case "admin/path/help":
       $output .= "<h3>Background</h3><p>URL aliasing gives users the ability to have control over all Drupal paths. This functionality will integrate seamlessly into node forms and also provide the administrator an interface to view all aliases that have been created.</p><p>Aliases have a 1 to 1 relationship with their original Drupal URLs. In otherwards you cannot have an alias map to more than one path. Likewise, a Drupal URL can't be mapped to more than one alias.</p>";
       $output .= "<h3>Permissions</h3><p>Two new permissions are introduced for aliasing URLs: <i>create url aliases</i> and <i>administer url aliases</i>.</p>";
-      $output .= "<ol><li><b>create url aliases</b> - Allows users to create aliases for nodes. Enabling this permission will display a new path field to the user in any node form, allowing them to enter an alias for that node. They will be able to edit/delete the alias after it is created using the same form.</li><li><b>administer url aliases</b> - Allows users to access the alias administration interface.  They must also have the <i>access administration pages</i> permission set as well. This interface displays all aliases and provides a way to create and modify them as well. This is also the location to build aliases for things other than nodes.  For example, you can create an alias for a taxonomy URL or even re-map the admin path (although the original admin path will still be accessible since aliases do not cancel out original paths).</li></ol>";
+      $output .= "<ol>";
+      $output .= "<li><b>create url aliases</b> - Allows users to create aliases for nodes. Enabling this permission will display a new path field to the user in any node form, allowing them to enter an alias for that node. They will be able to edit/delete the alias after it is created using the same form.</li>";
+      $output .= "<li><b>administer url aliases</b> - Allows users to access the alias administration interface.  They must also have the <i>access administration pages</i> permission set as well. This interface displays all aliases and provides a way to create and modify them as well. This is also the location to build aliases for things other than nodes.  For example, you can create an alias for a taxonomy URL or even re-map the admin path (although the original admin path will still be accessible since aliases do not cancel out original paths).</li>";
+      $output .= "</ol>";
+      $output = t($output);
       break;
   }
 
-  return t($output);
+  return $output;
 }
 
 function path_link($type, $node = NULL) {

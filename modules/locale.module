@@ -4,7 +4,7 @@
 function locale_help($section = "admin/locale/help") {
   $output = "";
 
-  switch($section) {
+  switch ($section) {
     case 'admin/help':
     case 'admin/locale/help':
       $output .= "<p>Most programs are written and documented in English, and use English to interact with users.  This is also true for a great deal of web sites.  However, most people are less comfortable with English than with their native language, and would prefer to use their mother tongue as much as possible.  Many people love see their web site showing a lot less English, and far more of their own language.</p>";
@@ -33,9 +33,9 @@ function locale_help($section = "admin/locale/help") {
     mysql> ALTER TABLE {locales} ADD nl TEXT DEFAULT '' NOT NULL;
     mysql> ALTER TABLE {locales} ADD fr TEXT DEFAULT '' NOT NULL;
   </pre>";
-      $output = t($output,  array("%overview" => l(t("overview"), "admin/locale") ));
+      $output = t($output,  array("%overview" => l(t("overview"), "admin/locale")));
       break;
-    case 'admin/system/modules':
+    case 'admin/system/modules#description':
       $output = t("Enables the translation of the user interface to languages other than English.");
       break;
     case 'admin/locale':
@@ -51,14 +51,6 @@ function locale_help($section = "admin/locale/help") {
       $output = t("Start by searching the untranslated strings.");
       break;
   }
-
-  return $output;
-}
-
-function locale_system($field){
-  $output = "";
-
-  if ($field == "description") { $output = locale_help("admin/system/modules"); }
 
   return $output;
 }

@@ -13,7 +13,7 @@ function admin_help($section) {
   $output = "";
 
   switch ($section) {
-    case "admin/system/modules":
+    case "admin/system/modules#description":
       $output .= t("Handles the administration pages.");
       break;
     case "admin":
@@ -23,15 +23,6 @@ function admin_help($section) {
       $output = t("This is a complete overview of the site administration page.");
       break;
   }
-  return $output;
-}
-
-function admin_system($field){
-  $output = "";
-  if ($field == "description") {
-    $output = admin_help("admin/system/modules");
-  }
-
   return $output;
 }
 

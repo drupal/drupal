@@ -154,7 +154,7 @@ function bloggerapi_driver($method, $params = 0, $error = 0) {
       case "editPost":
         $node = node_load(array("nid" => $cparams[1]));
         if ($node->uid == $user->uid) {
-          return array("nid" => $cparams[1], "type" => "blog", "name" => $user->name, "title" => $title, "body" => $cparams[4], "status" => 1, "moderate" => 0, "comment" => 2, "promote" => 0, "revision" => 0);
+          return array("nid" => $cparams[1], "uid" => $user->uid, "type" => "blog", "name" => $user->name, "title" => $title, "body" => $cparams[4], "status" => 1, "moderate" => 0, "comment" => 2, "promote" => 0, "revision" => 0);
         }
         else {
           return bloggerapi_error("Error updating node");
@@ -190,7 +190,7 @@ function bloggerapi_user_blogs() {
   global $user;
 
   if ($user->uid) {
-    $struct = new xmlrpcval(array("url" => new xmlrpcval(url("blog/$user->uid")), "blogid" => new xmlrpcval($user->uid), "blogName" => new xmlrpcval($user->name . "'s blog at ". variable_get("site_name", "drupal"))),"struct");
+    $struct = new xmlrpcval(array("url" => new xmlrpcval(url("blog/$user->uid")), "blogid" => new xmlrpcval($user->uid), "blogName" => new xmlrpcval($user->name . "'s blog at ". variable_get("site_name", "drupal"))), "struct");
     return new xmlrpcval(array($struct), "array");
   }
   else {
@@ -218,13 +218,13 @@ function bloggerapi_user_info() {
 function bloggerapi_node_load($nid) {
   global $user;
 
-  $blog = node_load(array("nid" => $nid));
+  $blog = node_load(array("nid" => $nid, "type" => "blog"));
   if ($blog->uid == $user->uid) {
     $body = "<title>$blog->title</title>\n". $blog->body;
     return new xmlrpcval(array("userid" => new xmlrpcval($user->name, "string"),
-                               "dateCreated" => new xmlrpcval(iso8601_encode($blog->timestamp),"dateTime.iso8601"),
-                               "content" => new xmlrpcval($body,"string"),
-                               "postid" => new xmlrpcval($blog->nid,"string")
+                               "dateCreated" => new xmlrpcval(iso8601_encode($blog->timestamp), "dateTime.iso8601"),
+                               "content" => new xmlrpcval($body, "string"),
+                               "postid" => new xmlrpcval($blog->nid, "string")
                               ), "struct");
   }
   else {
@@ -236,14 +236,14 @@ function bloggerapi_node_recent($num) {
   global $user;
 
   if (($num == 0) or ($num > 100)) $num = 50;
-  $result = db_query_range("SELECT n.*, u.name FROM {node} n INNER JOIN {users} u ON n.uid = u.uid WHERE n.uid = %d ORDER BY n.nid DESC", $user->uid, 0, $num);
+  $result = db_query_range("SELECT n.*, u.name FROM {node} n INNER JOIN {users} u ON n.uid = u.uid WHERE n.type = 'blog' AND n.uid = %d ORDER BY n.nid DESC", $user->uid, 0, $num);
   if ($result) {
     while ($blog = db_fetch_object($result)) {
       $body = "<title>$blog->title</title>\n". $blog->body;
-      $blogs[] = new xmlrpcval(array("userid" => new xmlrpcval($blog->name,"string"),
-                                     "dateCreated" => new xmlrpcval(iso8601_encode($blog->created),"dateTime.iso8601"),
-                                     "content" => new xmlrpcval($body,"string"),
-                                     "postid" => new xmlrpcval($blog->nid,"string")
+      $blogs[] = new xmlrpcval(array("userid" => new xmlrpcval($blog->name, "string"),
+                                     "dateCreated" => new xmlrpcval(iso8601_encode($blog->created), "dateTime.iso8601"),
+                                     "content" => new xmlrpcval($body, "string"),
+                                     "postid" => new xmlrpcval($blog->nid, "string")
                                     ), "struct");
     }
     return new xmlrpcval($blogs, "array");
@@ -257,7 +257,7 @@ function bloggerapi_node_recent($num) {
 function bloggerapi_node_delete($nid) {
   global $user;
 
-  $node = node_load(array("nid" => $nid));
+  $node = node_load(array("nid" => $nid, "type" => "blog"));
   if ($node->uid == $user->uid) {
     if (node_access("delete", $node)) {
 
@@ -270,7 +270,7 @@ function bloggerapi_node_delete($nid) {
 
       watchdog("special", "$node->type: deleted '$node->title', via Blogger API");
       $message = "Node: $node->nid, was deleted";
-      return new xmlrpcval($message, "string");
+      return new xmlrpcval(1, "boolean");
     }
   }
   else {
@@ -282,7 +282,7 @@ function bloggerapi_node_delete($nid) {
 ** Helper functions
 */
 
-function tt(){
+function tt() {
   $tt = array_flip(get_html_translation_table(HTML_ENTITIES));
   $tt["&apos;"] = "'";
   return $tt;
@@ -293,7 +293,7 @@ function bloggerapi_error($message) {
 
   $error->error = 1;
   $error->error_msg = $message;
-  $error->error_resp = new xmlrpcresp(0, $xmlrpcerruser+1, $message);
+  $error->error_resp = new xmlrpcresp(0, $xmlrpcerruser + 1, $message);
   return $error;
 }
 
@@ -321,7 +321,7 @@ function bloggerapi_convert($params) {
 }
 
 function bloggerapi_title($body) {
-  $title = strip_tags(strtr($title ? $title : substr(strip_tags(strtr($body, tt() )), 0, 30), tt() ));
+  $title = strip_tags(strtr($title ? $title : substr(strip_tags(strtr($body, tt())), 0, 30), tt()));
   return $title;
 }
 
@@ -331,14 +331,6 @@ function bloggerapi_title($body) {
 
 function bloggerapi_perm() {
   return array("access Blogger API");
-}
-
-function bloggerapi_system($field){
-  $output = "";
-
-  if ($field == "description") {$output .= bloggerapi_help("admin/system/modules"); };
-
-  return $output;
 }
 
 function bloggerapi_help($section) {
@@ -364,10 +356,10 @@ function bloggerapi_help($section) {
       $output .= "<p>You can't use remote authentication when posting using a Blogger API enabled client, even when you could use that to authenticate on the site itself.  You will have to use the site's local username, enter a password for that account, and then use that combination to post using the Blogger API client.</p>";
       $output .= "<h3>Notes and limitations</h3>";
       $output .= "<ul><li>The Blogger API contains an AppKey that is discarded in the Drupal Implementation.</li><li>The Blogger API does not allow for a title element. Our work around for this is either to use &lt;title&gt;&lt;/title&gt; tags in the body of your post or let the module create a title by inspecting the first few lines of the post body.</li><li>The publish parameter is always set to <i>1</i>.</li><li>When using the <i>getUserInfo</i> call, Drupal attempts to generate a first and last name from the Drupal username; no distinction is made internally</li><li><i>GetUsersBlogs</i> only returns one blog because unlike Blogger, Drupal only allows one blog per user.</li></ul>";
-      $output = t($output, array("%blogger-com" => "<a href=\"http://www.blogger.com/\">Blogger</a>", "%blogger_api" => "%blogger-api\">Blogger API</a>", "%client-radio" => "<a href=\"http://radio.userland.com/\">Radio</a>", "%client-blogbuddy" => "<a href=\"http://blogbuddy.sourceforge.net/\">BlogBuddy</a>", "%client-w_bloggar" => "<a href=\"http://www.wbloggar.com/\">w.bloggar</a>", "%client-textrouter" => "<a href=\"http://projects.kittle.info/tr/\">TextRouter</a>", "%xml-rpc" => "<a href=\"http://www.xmlrpc.com/\">XML-RPC</a>", "%userland-software" => "<a href=\"http://www.userland.com/\">UserLand Software</a>", "%weblogs-com" => "<a href=\"http://www.weblogs.com/\">weblogs.com</a>", "%dist-auth" => l(t("distributed authentication"), "user/help"), "%echo-proj" => "<a href=\"http://www.intertwingly.net/wiki/pie/RoadMap\">". t("Echo project") ."</a>", "%bloggerapi-newpost" => "%blogger-api/xmlrpc_newPost.html\">blogger.newPost()*</a>", "%bloggerapi-editpost" => "%blogger-api/xmlrpc_editPost.html\">blogger.editPost()*</a>", "%bloggerapi-getuserblogs" => "%blogger-api/xmlrpc_getUserBlogs.html\">blogger.getUsersBlogs()*</a>", "%bloggerapi-getuserinfo" => "%blogger-api/xmlrpc_getUserInfo.html\">blogger.getUserInfo()*</a>", "%bloggerapi-gettemplate" => "%blogger-api/xmlrpc_getTemplate.html\">blogger.getTemplate()*</a>", "%bloggerapi-settemplate" => "%blogger-api/xmlrpc_setTemplate.html\">blogger.setTemplate()*</a>", "%mess-296" => "%blogger-dev/296\">blogger.getPost()*</a>", "%mess-225" => "%blogger-dev/225\">blogger.getRecentPosts()*</a>", "%mess-147" => "%blogger-dev/147\">blogger.deletePost()*</a>","%mod-config" => l(t("modules configuration page"), "admin/systems/modules"), "%user-management" => l(t("user management"), "admin/user/permission") ));
+      $output = t($output, array("%blogger-com" => "<a href=\"http://www.blogger.com/\">Blogger</a>", "%blogger_api" => "%blogger-api\">Blogger API</a>", "%client-radio" => "<a href=\"http://radio.userland.com/\">Radio</a>", "%client-blogbuddy" => "<a href=\"http://blogbuddy.sourceforge.net/\">BlogBuddy</a>", "%client-w_bloggar" => "<a href=\"http://www.wbloggar.com/\">w.bloggar</a>", "%client-textrouter" => "<a href=\"http://projects.kittle.info/tr/\">TextRouter</a>", "%xml-rpc" => "<a href=\"http://www.xmlrpc.com/\">XML-RPC</a>", "%userland-software" => "<a href=\"http://www.userland.com/\">UserLand Software</a>", "%weblogs-com" => "<a href=\"http://www.weblogs.com/\">weblogs.com</a>", "%dist-auth" => l(t("distributed authentication"), "user/help"), "%echo-proj" => "<a href=\"http://www.intertwingly.net/wiki/pie/RoadMap\">". t("Echo project") ."</a>", "%bloggerapi-newpost" => "%blogger-api/xmlrpc_newPost.html\">blogger.newPost()*</a>", "%bloggerapi-editpost" => "%blogger-api/xmlrpc_editPost.html\">blogger.editPost()*</a>", "%bloggerapi-getuserblogs" => "%blogger-api/xmlrpc_getUserBlogs.html\">blogger.getUsersBlogs()*</a>", "%bloggerapi-getuserinfo" => "%blogger-api/xmlrpc_getUserInfo.html\">blogger.getUserInfo()*</a>", "%bloggerapi-gettemplate" => "%blogger-api/xmlrpc_getTemplate.html\">blogger.getTemplate()*</a>", "%bloggerapi-settemplate" => "%blogger-api/xmlrpc_setTemplate.html\">blogger.setTemplate()*</a>", "%mess-296" => "%blogger-dev/296\">blogger.getPost()*</a>", "%mess-225" => "%blogger-dev/225\">blogger.getRecentPosts()*</a>", "%mess-147" => "%blogger-dev/147\">blogger.deletePost()*</a>","%mod-config" => l(t("modules configuration page"), "admin/systems/modules"), "%user-management" => l(t("user management"), "admin/user/permission")));
       $output = strtr($output, array("%blogger-api" => "<a href=\"http://www.blogger.com/developers/api/1_docs","%blogger-dev" => "<a href=\"http://groups.yahoo.com/group/bloggerDev/message"));
       break;
-    case 'admin/system/modules':
+    case 'admin/system/modules#description':
       $output .= t("Enables users to post using tools or applications that support the Blogger API.");
       break;
   }

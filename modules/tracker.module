@@ -8,18 +8,11 @@ function tracker_help($section = "admin/tracker/help") {
     case 'admin/tracker/help':
       $output =  t("<p>The tracker module is a handy module for displaying the most recent posts.  By following the <i>view recent posts</i> link in the user block, a user may quickly review all recent postings.</p>");
       break;
-    case 'admin/system/modules':
+    case 'admin/system/modules#description':
       $output = t("Enables tracking of recent posts for users.");
       break;
   }
 
-  return $output;
-}
-
-function tracker_system($field) {
-  $output = "";
-
-  if ($field == "description") {$output = tracker_help("admin/system/modules"); };
   return $output;
 }
 
@@ -73,7 +66,7 @@ function tracker_posts($id = 0) {
 
     $comments = array();
     while ($comment = db_fetch_object($cresult)) {
-      $comments[] = "<li>". t("%subject by %author", array("%subject" => l($comment->subject, "node/view/$node->nid#$comment->cid"), "%author" => format_name($comment))). " ". (node_is_new($comment->nid, $comment->timestamp) ? theme("theme_mark") : "") ."</li>\n";
+      $comments[] = "<li>". t("%subject by %author", array("%subject" => l($comment->subject, "node/view/$node->nid#$comment->cid"), "%author" => format_name($comment))) ." ". (node_is_new($comment->nid, $comment->timestamp) ? theme("theme_mark") : "") ."</li>\n";
     }
 
     if ($comments) {

@@ -1,15 +1,6 @@
 <?php
 // $Id$
 
-function forum_system($field){
-  $output = "";
-
-  if ($field == "description") { $output = forum_help("admin/system/modules"); }
-  else if ($field == "admin_help") { $output = forum_help("admin/system/modules/forum"); };
-
-  return $output;
-}
-
 function forum_node($field) {
   $info["name"] = t("forum topic");
   $info["description"] = t("A forum is a threaded discussion, enabling users to communicate about a particular topic.");
@@ -42,7 +33,7 @@ function forum_settings() {
       $output .= form_textarea(t("Explanation or submission guidelines"), "forum_help", variable_get("forum_help", ""), 70, 5, t("This text will be displayed at the top of the forum submission form.  Useful for helping or instructing your users."));
       $output .= form_select(t("Forum vocabulary"), "forum_nav_vocabulary", variable_get("forum_nav_vocabulary", ""), $vocs, t("The taxonomy vocabulary that will be used as the navigation tree."));
       $output .= form_textfield(t("Forum icon path"), "forum_icon_path", variable_get("forum_icon_path", ""), 30, 255, t("The path to the forum icons.  Leave blank to disable icons.  Don't add a trailing slash.  Default icons are available in the 'misc' directory."));
-      $number = array(5 => 5, 10 => 10, 15 => 15, 20 => 20, 25 => 25, 30 => 30, 35 => 35, 40 => 40, 50 => 50, 60 => 60, 80 => 80, 100 => 100, 10000=>10000);
+      $number = array(5 => 5, 10 => 10, 15 => 15, 20 => 20, 25 => 25, 30 => 30, 35 => 35, 40 => 40, 50 => 50, 60 => 60, 80 => 80, 100 => 100, 10000 => 10000);
       $output .= form_select(t("Hot topic threshold"), "forum_hot_topic", variable_get("forum_hot_topic", 15), $number, t("The number of posts a topic must have to be considered <b>hot</b>."));
       $number = array(10 => 10, 25 => 25, 50 => 50, 75 => 75, 100 => 100);
       $output .= form_select(t("Topics per page"), "forum_per_page", variable_get("forum_per_page", 25), $number, t("The default number of topics displayed per page; links to browse older messages are automatically being displayed."));
@@ -110,7 +101,7 @@ function forum_link($type, $node = 0, $main = 0) {
   if (!$main && $type == "node" && $node->type == "forum") {
     // get previous and next topic
 
-    $result = db_query("SELECT n.nid, n.title, n.body, GREATEST(n.created, MAX(c.timestamp)) AS date_sort, COUNT(c.nid) AS num_comments FROM {node} n INNER JOIN {forum} f ON n.nid = f.nid INNER JOIN {comments} c ON n.nid = c.nid WHERE n.nid = f.nid AND f.tid = %d AND n.status = 1 GROUP BY n.nid, n.title, n.body, n.created ORDER BY ". _forum_get_topic_order(isset($user->sortby) ? $user->sortby : variable_get("forum_order",1)), $node->tid);
+    $result = db_query("SELECT n.nid, n.title, n.body, GREATEST(n.created, MAX(c.timestamp)) AS date_sort, COUNT(c.nid) AS num_comments FROM {node} n INNER JOIN {forum} f ON n.nid = f.nid INNER JOIN {comments} c ON n.nid = c.nid WHERE n.nid = f.nid AND f.tid = %d AND n.status = 1 GROUP BY n.nid, n.title, n.body, n.created ORDER BY ". _forum_get_topic_order(isset($user->sortby) ? $user->sortby : variable_get("forum_order", 1)), $node->tid);
 
     while ($topic = db_fetch_object($result)) {
       if ($stop == 1) {
@@ -130,11 +121,11 @@ function forum_link($type, $node = 0, $main = 0) {
     }
 
     if ($prev) {
-      $links[] = l(t("previous forum topic"), "node/view/$prev->nid", array("title" => $prev->title .": ". substr(strip_tags($prev->body), 0, 100)."..."));
+      $links[] = l(t("previous forum topic"), "node/view/$prev->nid", array("title" => $prev->title .": ". substr(strip_tags($prev->body), 0, 100) ."..."));
     }
 
     if ($next) {
-      $links[] = l(t("next forum topic"), "node/view/$next->nid", array("title" => $next->title .": ". substr(strip_tags($next->body), 0, 100)."..."));
+      $links[] = l(t("next forum topic"), "node/view/$next->nid", array("title" => $next->title .": ". substr(strip_tags($next->body), 0, 100) ."..."));
     }
   }
 
@@ -161,7 +152,7 @@ function forum_view($node, $main = 0) {
     $breadcrumb[] = l(t("Forums"), "forum");
     $breadcrumb[] = l($term_data->name, "forum/$term_data->tid");
     // print the breadcrumb
-    theme("breadcrumb",$breadcrumb);
+    theme("breadcrumb", $breadcrumb);
   }
   // prepair the node content
   $node = forum_content($node);
@@ -330,13 +321,13 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
   $forum_topic_list_header = array(
       array("data" => "&nbsp;"),
       array("data" => t("Topic"), "field" => "n.title"),
-      array("data" => t("Replies"),"field" => "num_comments"),
+      array("data" => t("Replies"), "field" => "num_comments"),
       array("data" => t("Created"), "field" => "n.created"),
       array("data" => t("Last reply"), "field" => "date_sort", "sort" => "desc"),
   );
 
   $sql_sortby = _forum_get_topic_order($sortby);
-  for ($i=0; $i < count($forum_topic_list_header); $i++) {
+  for ($i = 0; $i < count($forum_topic_list_header); $i++) {
     if ($forum_topic_list_header[$i]["field"] == $sql_sortby) {
       $forum_topic_list_header[$i]["order"] = $sql_sortby;
     }
@@ -346,7 +337,7 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
   $voc = taxonomy_get_vocabulary($term->vid);
 
   // show topics with the correct tid, or in the forum but with shadow = 1
-  $sql = "SELECT n.nid, n.title, u.name AS name, u.uid AS uid, n.created AS timestamp, GREATEST(n.created, MAX(c.timestamp)) AS date_sort, COUNT(c.nid) AS num_comments, n.comment AS comment_mode, f.tid FROM {node} n INNER JOIN {term_node} r ON n.nid = r.nid INNER JOIN {users} u ON n.uid = u.uid LEFT JOIN {comments} c ON n.nid = c.nid INNER JOIN {forum} f ON n.nid = f.nid WHERE n.nid = r.nid AND ((r.tid = '".check_query($tid)."' AND f.shadow = 1) OR f.tid = '".check_query($tid)."') AND n.status = 1 AND n.type = 'forum' GROUP BY n.nid, n.title, u.name, u.uid, n.created, n.comment, f.tid";
+  $sql = "SELECT n.nid, n.title, u.name AS name, u.uid AS uid, n.created AS timestamp, GREATEST(n.created, MAX(c.timestamp)) AS date_sort, COUNT(c.nid) AS num_comments, n.comment AS comment_mode, f.tid FROM {node} n INNER JOIN {term_node} r ON n.nid = r.nid INNER JOIN {users} u ON n.uid = u.uid LEFT JOIN {comments} c ON n.nid = c.nid INNER JOIN {forum} f ON n.nid = f.nid WHERE n.nid = r.nid AND ((r.tid = '". check_query($tid) ."' AND f.shadow = 1) OR f.tid = '". check_query($tid) ."') AND n.status = 1 AND n.type = 'forum' GROUP BY n.nid, n.title, u.name, u.uid, n.created, n.comment, f.tid";
   $sql .= tablesort_sql($forum_topic_list_header);
 
   $sql_count = "SELECT COUNT(DISTINCT(n.nid)) FROM {node} n INNER JOIN {forum} f ON n.nid = f.nid INNER JOIN {term_node} r ON n.nid = r.nid WHERE n.nid = r.nid AND ( (r.tid = '".check_query($tid)."' AND f.shadow = 1) OR f.tid = '".check_query($tid)."') AND n.status = 1 AND n.type = 'forum'";
@@ -400,7 +391,7 @@ function _forum_new($tid) {
     $read[] = $r->nid;
   }
 
-  $nid = db_result(db_query_range("SELECT n.nid FROM {node} n INNER JOIN {forum} f ON n.nid = f.nid WHERE n.type = 'forum' AND f.nid = n.nid AND n.status = 1 AND f.tid = %d ".($read ? "AND NOT (n.nid IN (".implode(",", $read).")) " : "") ."ORDER BY created", $tid, 0, 1));
+  $nid = db_result(db_query_range("SELECT n.nid FROM {node} n INNER JOIN {forum} f ON n.nid = f.nid WHERE n.type = 'forum' AND f.nid = n.nid AND n.status = 1 AND f.tid = %d ". ($read ? "AND NOT (n.nid IN (". implode(",", $read) .")) " : "") ."ORDER BY created", $tid, 0, 1));
 
   return $nid ? $nid : 0;
 }
@@ -428,7 +419,7 @@ function forum_page() {
       }
 
       if (empty($sortby)) {
-        $sortby = isset($user->sortby) ? $user->sortby : variable_get("forum_order",1);
+        $sortby = isset($user->sortby) ? $user->sortby : variable_get("forum_order", 1);
       }
 
       if (empty($forum_per_page)) {
@@ -529,7 +520,7 @@ function forum_theme_list($forums, $parents, $tid) {
       if ($links) {
         $description .= " <div class=\"navigation\">". t("Jump to: %links", array("%links" => implode(", ", $links))) .".</div>\n";
       }
-      $description .="</div>\n";
+      $description .= "</div>\n";
 
       $rows[] = array(
         array("data" => $description, "class" => "description"),
@@ -601,7 +592,7 @@ function _forum_icon($new_posts, $num_posts = 0, $comment_mode = 0) {
     }
 
     // default
-    $file = $base_path."/forum-$icon.gif";
+    $file = $base_path ."/forum-$icon.gif";
 
     return "<img src=\"$file\" alt=\"\" title=\"\" />";
   }
@@ -647,17 +638,17 @@ function forum_help($section = "admin/forum/help") {
     case 'admin/forum/help':
       $output .= "<h3>Creating a forum</h3>";
       $output .= "<p>The forum module uses taxonomy to organize itself. To create a forum you first have to create a %taxonomy. When doing this, choose a sensible name for it (such as \"fora\") and make sure under \"Types\" that \"forum\" is selected. Once you have done this, %taxo-terms to it. Each term will become a forum. If you fill in the description field, users will be given additonal information about the forum on the main forum page. For example: \"troubleshooting\" - \"Please ask your questions here.\"</p>";
-      $output .= "<p>When you are happy with your vocabulary, go to ". l("site configuration &raquo; modules &raquo; forum","admin/system/modules/forum") ." and set <b>Forum vocabulary</b> to the one you have just created. There will now be fora active on the site. For users to access them they must have the \"access content\" %permission and to create a topic they must have the \"create forum topics\" %permission. These permissions can be set in the %permission pages.</p>";
+      $output .= "<p>When you are happy with your vocabulary, go to %forums and set <b>Forum vocabulary</b> to the one you have just created. There will now be fora active on the site. For users to access them they must have the \"access content\" %permission and to create a topic they must have the \"create forum topics\" %permission. These permissions can be set in the %permission pages.</p>";
       $output .= "<h4>Icons</h4>";
       $output .= "<p>To disable icons, set the icon path as blank in %forums.</p>";
       $output .= "<p>All files in the icon directory are assumed to be images. You may use images of whatever size you wish, but it is recommended to use 15x15 or 16x16.</p>";
-      $output = t($output, array("%taxonomy" => l(t("taxonomy vocabulary"), "admin/taxonomy/add/vocabulary"), "%taxo-terms" => l(t("add some terms"), "admin/taxonomy"), "%forums" => l(t("site configutation &raquo; modules &raquo; forum"), "admin/system/modules/forum"), "%permission" => l(t("permission"), "admin/user/permission") ));
+      $output = t($output, array("%taxonomy" => l(t("taxonomy vocabulary"), "admin/taxonomy/add/vocabulary"), "%taxo-terms" => l(t("add some terms"), "admin/taxonomy"), "%forums" => l(t("site configutation &raquo; modules &raquo; forum"), "admin/system/modules/forum"), "%permission" => l(t("permission"), "admin/user/permission")));
       break;
-    case 'admin/system/modules':
+    case 'admin/system/modules#description':
       $output = t("Enable threaded discussions about general topics.");
       break;
     case 'admin/system/modules/forum':
-      $output = t("Forums are threaded discussions based on the taxonomy system so you must first %taxonomy-create of type \"forum\" to place the forum tree in. Then %taxonomy-add to this taxonomy. Each term becomes the name of a forum. If you define a term as a \"Container\" (See below) the term is not a forum itself, but rather holds forms. This lets you group your forums.", array("%taxonomy-create" => l(t("create a taxonomy"), "admin/taxonomy/add/vocabulary"), "%taxonomy" => l(t("add terms"), "admin/taxonomy") ));
+      $output = t("Forums are threaded discussions based on the taxonomy system so you must first %taxonomy-create of type \"forum\" to place the forum tree in. Then %taxonomy-add to this taxonomy. Each term becomes the name of a forum. If you define a term as a \"Container\" (See below) the term is not a forum itself, but rather holds forms. This lets you group your forums.", array("%taxonomy-create" => l(t("create a taxonomy"), "admin/taxonomy/add/vocabulary"), "%taxonomy" => l(t("add terms"), "admin/taxonomy")));
       break;
   }
 

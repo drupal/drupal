@@ -51,32 +51,22 @@ function import_help($section = "admin/import/help") {
       $output .= "</ul>";
       $output .= "<h3>RSS feed blocks</h3>";
       $output .= "<p>In addition to providing subscribed content through the news aggregator, Drupal automatically creates a block for each subscribed feed and every bundle created.  Beside each headline in each block, Drupal includes an icon which acts a blog it link. Enable any or all of the blocks using block management.</p>";
-      $output = t($output, array(
-        "%amphetadesk" => "<a href=\"http://www.disobey.com/amphetadesk/\">AmphetaDesk</a>",
-        "%rss" => "<a href=\"http://groups.yahoo.com/group/rss-dev/files/specification.html\">Rich Site Summary</a>",
-        "%slashdot-rss" => "<a href=\"http://slashdot.org/slashdot.rdf\">http://slashdot.org/slashdot.rfd</a>",
-        "%syndic8" => "<a href=\"http://www.syndic8.com/\">Syndic8</a>",
-        "%rss-what" => "<a href=\"http://www.xml.com/pub/a/2002/12/18/dive-into-xml.html\">What is RSS</a>",
-        "%rss-evolution" => "<a href=\"http://www.webreference.com/authoring/languages/xml/rss/1/\">The Evolution of RSS</a>",
-        "%admin-news" => l(t("RSS/RDF"), "admin/node/syndication/news"),
-        "%new-feed" => l(t("new feed"), "admin/node/syndication/news/add/feed"),
-        "%update-items" => l(t("update items"), "admin/node/syndication/news"),
-      ));
+      $output = t($output, array("%amphetadesk" => "<a href=\"http://www.disobey.com/amphetadesk/\">AmphetaDesk</a>", "%rss" => "<a href=\"http://groups.yahoo.com/group/rss-dev/files/specification.html\">Rich Site Summary</a>", "%slashdot-rss" => "<a href=\"http://slashdot.org/slashdot.rdf\">http://slashdot.org/slashdot.rfd</a>", "%syndic8" => "<a href=\"http://www.syndic8.com/\">Syndic8</a>", "%rss-what" => "<a href=\"http://www.xml.com/pub/a/2002/12/18/dive-into-xml.html\">What is RSS</a>", "%rss-evolution" => "<a href=\"http://www.webreference.com/authoring/languages/xml/rss/1/\">The Evolution of RSS</a>", "%admin-news" => l(t("RSS/RDF"), "admin/node/syndication/news"), "%new-feed" => l(t("new feed"), "admin/node/syndication/news/add/feed"), "%update-items" => l(t("update items"), "admin/node/syndication/news")));
       break;
-    case 'admin/system/modules':
+    case 'admin/system/modules#description':
       $output = t("Used to aggregate syndicated content (RSS and RDF).");
       break;
     case 'admin/system/modules/import':
       $output = t("Drupal's news aggregator controls how many RSS/RDF items from a single source are displayed in a \"Block\", and on the page that goes with that block.");
       break;
     case 'admin/node/syndication/news':
-      $output = t("Several web sites, especially news related sites, syndicate parts of their site's content for other web sites to display. Usually, the syndicated content includes the latest headlines with a direct link to that story on the remote site. Some syndicated content also includes a description of the headline. The standard method of syndication is using the XML based Rich Site Summary (RSS). To get a feed to work you <b>must</b> run \"cron.php\". To display the feed in a block you must turn on the %block. <br /><ul><li>To delete a feed choose \"edit feed\"</li><li>To clear all of the entries from a feed choose \"Remove items\"</li><li>To check whether a feed is working, and to get new items <b>now</b> click on \"update items\"</li></ul><ul><li>To delete a bundle choose \"edit bundle\".</li></ul>", array("%block" => l(t("feed's block"), "admin/system/block") ));
+      $output = t("Several web sites, especially news related sites, syndicate parts of their site's content for other web sites to display. Usually, the syndicated content includes the latest headlines with a direct link to that story on the remote site. Some syndicated content also includes a description of the headline. The standard method of syndication is using the XML based Rich Site Summary (RSS). To get a feed to work you <b>must</b> run \"cron.php\". To display the feed in a block you must turn on the %block. <br /><ul><li>To delete a feed choose \"edit feed\"</li><li>To clear all of the entries from a feed choose \"Remove items\"</li><li>To check whether a feed is working, and to get new items <b>now</b> click on \"update items\"</li></ul><ul><li>To delete a bundle choose \"edit bundle\".</li></ul>", array("%block" => l(t("feed's block"), "admin/system/block")));
       break;
     case 'admin/node/syndication/news/add/feed':
-      $output = t("Add a site that has an RSS/RDF feed. The URL is the full path to the RSS feed file. For the feed to update automatically you must run \"cron.php\". The \"Attributes\" are used to bundle this feed with other feeds (See %bundle), and to tag articles from this feed.<br />Note: If you already have a feed with the URL you are planning to use, the system will not accept another feed with the same URL.", array("%bundle" => l(t("add new bundle"), "admin/node/syndication/news/add/bundle") ));
+      $output = t("Add a site that has an RSS/RDF feed. The URL is the full path to the RSS feed file. For the feed to update automatically you must run \"cron.php\". The \"Attributes\" are used to bundle this feed with other feeds (See %bundle), and to tag articles from this feed.<br />Note: If you already have a feed with the URL you are planning to use, the system will not accept another feed with the same URL.", array("%bundle" => l(t("add new bundle"), "admin/node/syndication/news/add/bundle")));
       break;
     case 'admin/node/syndication/news/add/bundle':
-      $output = t("Bundles provide a generalized way of creating composite feeds. They allow you, for example, to combine various sport-related feeds into one bundle called <i>Sport</i>. If an article from a feed has been \"tag\"-ged (See %tag too look at and change tags.) with a matching \"Attribute\" then it will be added to the bundle.", array("%tag" => l(t("tag news item"), "admin/node/syndication/news/tag") ));
+      $output = t("Bundles provide a generalized way of creating composite feeds. They allow you, for example, to combine various sport-related feeds into one bundle called <i>Sport</i>. If an article from a feed has been \"tag\"-ged (See %tag too look at and change tags.) with a matching \"Attribute\" then it will be added to the bundle.", array("%tag" => l(t("tag news item"), "admin/node/syndication/news/tag")));
       break;
     case 'admin/node/syndication/news/tag':
       $output = t("This allows you to see and change an news item's \"tag\". All articles are originally tagged with the \"Attributes\" of their feed.");
@@ -84,15 +74,6 @@ function import_help($section = "admin/import/help") {
   }
 
   return $output;
-}
-
-function import_system($field){
-  $output = "";
-
-  $system["description"] = import_help("admin/system/modules");
-  $system["admin_help"] = import_help("admin/system/modules/import");
-
-  return $system[$field];
 }
 
 function import_settings() {
@@ -119,7 +100,7 @@ function import_link($type) {
     if (user_access("administer news feeds")) {
 
       menu("admin/node/syndication", t("syndication"), NULL, NULL, 5);
-      menu("admin/node/syndication/news", t("RSS/RDF"), "import_admin", import_help("admin/node/syndication/news") );
+      menu("admin/node/syndication/news", t("RSS/RDF"), "import_admin", import_help("admin/node/syndication/news"));
       menu("admin/node/syndication/news/add/feed", t("new feed"), "import_admin", import_help("admin/node/syndication/news/add/feed"), 2);
       menu("admin/node/syndication/news/add/bundle", t("new bundle"), "import_admin", import_help("admin/node/syndication/news/add/bundle"), 3);
       menu("admin/node/syndication/news/tag", t("tag items"), "import_admin", import_help("admin/node/syndication/news/tag"), 4);
@@ -535,7 +516,7 @@ function import_get_bundle($bid) {
 function import_view() {
   $result = db_query("SELECT f.*, COUNT(i.iid) AS items FROM {feed} f LEFT JOIN {item} i ON f.fid = i.fid GROUP BY f.fid, f.title, f.url, f.refresh, f.timestamp, f.attributes, f.link, f.description ORDER BY f.title");
 
-  $output .= "<h3>". t("Feed overview"). "</h3>";
+  $output .= "<h3>". t("Feed overview") ."</h3>";
 
   $header = array(t("title"), t("attributes"), t("items"), t("last update"), t("next update"), array("data" => t("operations"), "colspan" => 3));
   unset($rows);
@@ -546,7 +527,7 @@ function import_view() {
 
   $result = db_query("SELECT * FROM {bundle} ORDER BY title");
 
-  $output .= "<h3>". t("Bundle overview"). "</h3>";
+  $output .= "<h3>". t("Bundle overview") ."</h3>";
 
   $header = array(t("title"), t("attributes"), t("operations"));
   unset($rows);
@@ -568,7 +549,7 @@ function import_tag() {
   }
 
   $output .= table($header, $rows);
-  $output .= "<input type=\"submit\" name=\"op\" value=\"" . t("Save attributes") . "\" />\n";
+  $output .= "<input type=\"submit\" name=\"op\" value=\"". t("Save attributes") ."\" />\n";
 
   return form($output);
 }
@@ -768,7 +749,7 @@ function import_page_sources() {
     $output .= "<div style=\"margin-left: 20px;\">$feed->description</div><br />";
   }
 
-  $output .= "<div style=\"text-align: right\">" . l("<img src=\"". theme("image", "xml.gif") ."\" width=\"36\" height=\"14\" style=\"border: 0px;\" />", "import/fd", array("title" => t("View the list of syndicated web sites in XML format."))) . "</div><br />";
+  $output .= "<div style=\"text-align: right\">". l("<img src=\"". theme("image", "xml.gif") ."\" width=\"36\" height=\"14\" style=\"border: 0px;\" />", "import/fd", array("title" => t("View the list of syndicated web sites in XML format."))) ."</div><br />";
 
   theme("header");
   theme("box", t("News feeds"), import_page_info());

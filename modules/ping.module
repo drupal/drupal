@@ -17,20 +17,12 @@ function ping_help($section = "admin/ping/help") {
       $output = t($output,  array("%weblogs" => "<a href=\"http://www.weblogs.com/\">Weblogs.com</a>", "%weblogs-XML" => "<a href=\"http://www.xmlrpc.com/weblogsCom/\">". t("XML-RPC interface of weblogs.com") ."</a>", "%weblogs-RSS" => "<a href=\"http://www.xmlrpc.com/weblogsComForRSS\">". t("Weblogs.Com for RSS") ."</a>", "%weblogs-RSS-changes" => "<a href=\"http://www.weblogs.com/rssUpdates/changes.xml\">". t("the weblogs.com for RSS") ."</a>", "%blo-gs" => "<a href=\"http://blo.gs/\">blo.gs</a>", "%blogtracker" => "<a href=\"http://www.dansanderson.com/blogtracker\">blogtracker</a>", "%blogrolling" => "<a href=\"http://www.blogrolling.com\">blogtolling.com</a>", "%blo-gs-XML" => "<a href=\"http://blo.gs/ping.php\">". t("XML-RPC interface of blo.gs") ."</a>" ));
       break;
 
-    case 'admin/system/modules':
+    case 'admin/system/modules#description':
       $output = t("Alerts other site(s) that your site has been updated.");
       break;
   }
 
   return t($output);
-}
-
-function ping_system($field){
-  $output = "";
-
-  if ($field == "description") { $output = ping_help("admin/system/modules"); };
-
-  return $output;
 }
 
 function ping_cron() {

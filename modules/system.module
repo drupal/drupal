@@ -2,6 +2,7 @@
 // $Id$
 
 function system_help($section = "admin/system/help") {
+  global $base_url;
   $output = "";
 
   switch ($section) {
@@ -19,33 +20,27 @@ function system_help($section = "admin/system/help") {
       break;
     case "admin/system/help":
       $output .= "<p>Drupal comes with system-wide defaults but the setting-module provides control over many Drupal preferences, behaviours including visual and operational settings.</p>";
-      $output .= "<h3><a id=\"cron\">Cron</a></h3>". system_help_cron();
-      $output .= "<h3><a id=\"cache\">Cache</a></h3>". system_help_cache();
-      $output = t($output);
+      $output .= "<h3><a id=\"cron\">Cron</a></h3>";
+      // Start of system_help_cron
+      $output .= "<p>Some modules require regularly scheduled actions, such as cleaning up logfiles.  Cron, which stands for chronograph, is a periodic command scheduler executing commands at intervals specified in seconds.  It can be used to control the execution of daily, weekly and monthly jobs (or anything with a period measured in seconds).   Automating tasks is one of the best ways to keep a system running smoothly, and if most of your administration does not require your direct involvement, cron is an ideal solution.</p>";
+      $output .= "<p>Whenever %cron-link is accessed, cron will run: it calls the _cron hook in each module allowing the module to run tasks if they have not been executed in the last <i>n</i> seconds, where n is the period of that task.  When all the tasks are finished, cron is done.</p>";
+      $output .= "<p>The recommended way to set up your cron system is to set up a Unix/Linux crontab entry (see \"man crontab\") that frequently visits %cron-link.  Note that cron does not guarantee the commands will be executed at the specified interval.  However, Drupal will try its best to run the tasks as close to the specified intervals as possible.  The more you visit cron.php, the more accurate cron will be.</p>";
+      $output .= "<p>If your hosting company does not allow you to set up crontab entries, you can always ask someone else to set up an entry for you. After all, virtually any Unix/Linux machine with access to the internet can set up a crontab entry to frequently visit %cron-link.</p>";
+      $output .= "<p>For the Unix/Linux crontab itself, use a browser like %lynx or %wget but make sure the process terminates: either use <code>/usr/bin/lynx -source $base_url/cron.php</code> or <code>/usr/bin/wget -o /dev/null -O /dev/null %cron-link</code>.  Take a look at the example scripts in the <code>scripts</code>-directory. Make sure to adjust them to fit your needs.  A good crontab line to run the cron script once every hour would be:";
+      $output .= "<pre>     00 * * * * /home/www/drupal/scripts/cron-lynx.sh</pre>";
+      $output .= "Note that it is essential to access <code>cron.php</code> using a browser on the web site's domain; do not run it using command line PHP and avoid using <code>localhost</code> or <code>127.0.0.1</code> or some of the environment varibles will not be set correctly and features may not work as expected.</p>";
+      // End of system_help_cron
+      $output .= "<h3><a id=\"cache\">Cache</a></h3>";
+      // Start of system_help_cache
+      $output .= "<p>Drupal has a caching mechanism which stores dynamically generated web pages in a database.  By caching a web page, Drupal does not have to create the page each time someone wants to view it, instead it takes only one SQL query to display it, reducing response time and the server's load.  Only pages requested by \"anonymous\" users are cached.</p>";
+      // End of system_help_cache
+      $output = t($output, array("%cron-link" => "<a href=\"$base_url/cron.php\
+\">$base_url/cron.php</a>", "%lynx" => "<a href=\"http://lynx.browser.org\">lynx</a>", "%wget" => "<a href=\"http://www.gnu.org/software/wget/wget.html\">wget</a>" ));
+      break;
+    case 'admin/system/modules#description':
+      $output = t("Configuration system that lets administrators modify the workings of the site.");
       break;
   }
-
-  return $output;
-}
-
-function system_system($field) {
-  $system["description"] = t("Configuration system that lets administrators modify the workings of the site."); // NOTE: we can't move this to the help function.
-  return $system[$field];
-}
-
-function system_help_cache() {
-  $output .= "<p>Drupal has a caching mechanism which stores dynamically generated web pages in a database.  By caching a web page, Drupal does not have to create the page each time someone wants to view it, instead it takes only one SQL query to display it, reducing response time and the server's load.  Only pages requested by \"anonymous\" users are cached.</p>";
-  return $output;
-}
-
-function system_help_cron() {
-  global $base_url;
-
-  $output .= "<p>Some modules require regularly scheduled actions, such as cleaning up logfiles.  Cron, which stands for chronograph, is a periodic command scheduler executing commands at intervals specified in seconds.  It can be used to control the execution of daily, weekly and monthly jobs (or anything with a period measured in seconds).   Automating tasks is one of the best ways to keep a system running smoothly, and if most of your administration does not require your direct involvement, cron is an ideal solution.</p>";
-  $output .= "<p>Whenever <a href=\"$base_url/cron.php\">$base_url/cron.php</a> is accessed, cron will run: it calls the _cron hook in each module allowing the module to run tasks if they have not been executed in the last <i>n</i> seconds, where n is the period of that task.  When all the tasks are finished, cron is done.</p>";
-  $output .= "<p>The recommended way to set up your cron system is to set up a Unix/Linux crontab entry (see \"man crontab\") that frequently visits <a href=\"$base_url/cron.php\">$base_url/cron.php</a>.  Note that cron does not guarantee the commands will be executed at the specified interval.  However, Drupal will try its best to run the tasks as close to the specified intervals as possible.  The more you visit cron.php, the more accurate cron will be.</p>";
-  $output .= "<p>If your hosting company does not allow you to set up crontab entries, you can always ask someone else to set up an entry for you. After all, virtually any Unix/Linux machine with access to the internet can set up a crontab entry to frequently visit <a href=\"$base_url/cron.php\">$base_url/cron.php</a>.</p>";
-  $output .= "<p>For the Unix/Linux crontab itself, use a browser like <i>lynx</i> or <i>wget</i> but make sure the process terminates: either use <code>/usr/bin/lynx -source $base_url/cron.php</code> or <code>/usr/bin/wget -o /dev/null -O /dev/null $base_url/cron.php</code>.  Take a look at the example scripts in the <code>scripts</code>-directory. Make sure to adjust them to fit your needs.  A good crontab line to run the cron script once every hour would be: <pre>     00 * * * * /home/www/drupal/scripts/cron-lynx.sh</pre>Note that it is essential to access <code>cron.php</code> using a browser on the web site's domain; do not run it using command line PHP and avoid using <code>localhost</code> or <code>127.0.0.1</code> or some of the environment varibles will not be set correctly and features may not work as expected.</p>";
 
   return $output;
 }
@@ -57,10 +52,6 @@ function system_perm() {
 function system_link($type) {
   if ($type == "system") {
     if (user_access("administer site configuration")) {
-      $help["general"] = t("General configuration options for your site. Set up the name of the site, e-mail address used in mail-outs, clean URL options, caching, etc.");
-      $help["themes"] = t("Select which themes are available to your users and specify the default theme.");
-      $help["modules"] = t("Modules are plugins for Drupal that extend its core functionality.  Here you can select which modules are enabled. On the left hand side click on the name of the module for their individual configurations.  Once a module is enabled, you will need to grant permissions to users in user management.");
-      $help["filters"] = t("Filters fit between the raw text in a node and the HTML output. They allow you to replace text selectively. Uses include automatic conversion of emoticons into graphics and filtering HTML content from users' submissions.");
 
       menu("admin/system", t("configuration"), "system_admin", system_help("admin/system"), 3);
       menu("admin/system/themes", t("themes"), "system_admin", system_help("admin/system/themes"), 2);
@@ -78,7 +69,7 @@ function system_link($type) {
       foreach (module_list(1) as $name) {
         // NOTE: refresh the list because some modules might have been enabled/disabled.
         if (module_hook($name, "settings")) {
-          menu("admin/system/modules/$name", t($name), "system_admin", module_invoke($name, "system", "admin_help"));
+          menu("admin/system/modules/$name", t($name), "system_admin", module_invoke($name, "help", "admin/system/modules/$name") ? module_invoke($name, "help", "admin/system/modules/$name") : module_invoke($name, "system", "admin_help"));
         }
       }
       menu("admin/system/filters", t("filters"), "system_admin", system_help("admin/system/filters"), 4);
@@ -306,8 +297,8 @@ function system_listing($type, $directory, $required = array()) {
   foreach ($files as $filename => $file) {
     include_once($filename);
     if ($type == "module") {
-      $info->name = module_invoke($file->name, "system", "name") ? module_invoke($file->name, "system", "name") : $file->name;
-      $info->description = module_invoke($file->name, "system", "description");
+      $info->name = module_invoke($file->name, "help", "admin/system/modules#name") ? module_invoke($file->name, "help", "admin/system/modules#name") : module_invoke($file->name, "system", "name") ? module_invoke($file->name, "system", "name") : $file->name;
+      $info->description = module_invoke($file->name, "help", "admin/system/modules#description") ? module_invoke($file->name, "help", "admin/system/modules#description") : module_invoke($file->name, "system", "description");
     }
     elseif ($type == "theme") {
       $class = "Theme_$file->name";

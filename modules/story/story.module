@@ -5,7 +5,7 @@ function story_help($section = "admin/story/help") {
   $output = "";
 
   switch ($section) {
-    case "admin/system/modules":
+    case "admin/system/modules#description":
       $output = t("Enables users to submit stories, articles or similar content.");
       break;
     case "admin/system/modules/story":
@@ -14,18 +14,9 @@ function story_help($section = "admin/story/help") {
     case "admin/story/help":
       $output = "<p>The story module lets your users submit articles for consideration by the rest of the community, who can vote on them if moderation is enabled.  Stories usually follow a publishing flow of <b>submit -&gt; moderate -&gt; post to the main page -&gt; comments</b>.  Administrators are able to shortcut this flow as desired.</p>";
       $output .= "In %story-config you can set up an introductory text for story authors, and a floor on the number of words which may be included in a story. This is designed to help discourage the submission of trivially short stories.";
-      $output = t($output, array("%story-config" => l(t("site configuration &raquo; modules &raquo; story"), "admin/system/modules/story") ));
+      $output = t($output, array("%story-config" => l(t("site configuration &raquo; modules &raquo; story"), "admin/system/modules/story")));
       break;
   }
-
-  return $output;
-}
-
-function story_system($field){
-  $output = "";
-
-  if ($field == "description") { $output = story_help("admin/system/modules"); }
-  else if ($field == "admin_help") { $output = story_help("admin/system/modules/story"); };
 
   return $output;
 }

@@ -36,7 +36,7 @@ function block_help($section = "admin/block/help") {
       $output .= "<p>For more in-depth examples, we recommend that you check the existing boxes and use them as a starting point.</p>";
       $output = t($output, array("%pcre" => "<a href=\"http://php.net/pcre/\">". t("Perl-Compatible Regular Expressions (PCRE)") ."</a>"));
       break;
-    case 'admin/system/modules':
+    case 'admin/system/modules#description':
       $output = t("Controls the boxes that are displayed around the main content.");
       break;
     case 'admin/system/block':
@@ -49,14 +49,6 @@ function block_help($section = "admin/block/help") {
       $output = t("This page show you the placement of your blocks in different themes types. The numbers are the weight of each block, which is used to sort them within the sidebars.");
       break;
   }
-
-  return $output;
-}
-
-function block_system($field){
-  $output = "";
-
-  if ($field == "description") { $output = block_help("admin/system/modules"); }
 
   return $output;
 }
@@ -337,7 +329,7 @@ function block_user($type, &$edit, &$user) {
       while ($block = db_fetch_object($result)) {
         $data = module_invoke($block->module, "block", "list");
         if ($data[$block->delta]["info"]) {
-          $form .= "<tr><td>".$data[$block->delta]["info"]."</td><td>". form_checkbox(NULL, "block][$block->module][$block->delta", 1, $user->block[$block->module][$block->delta]) ."</td></tr>\n";
+          $form .= "<tr><td>". $data[$block->delta]["info"] ."</td><td>". form_checkbox(NULL, "block][$block->module][$block->delta", 1, $user->block[$block->module][$block->delta]) ."</td></tr>\n";
         }
       }
 

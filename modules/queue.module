@@ -1,20 +1,11 @@
 <?php
 // $Id$
 
-function queue_system($field){
-  $output = "";
-
-  if ($field == "description") {$output = queue_help("admin/system/modules"); }
-  else if ($field == "admin_help") {$output = queue_help("admin/system/modules/queue"); };
-
-  return $output;
-}
-
 function queue_help($section) {
   $output = "";
 
   switch ($section) {
-    case 'admin/system/modules':
+    case 'admin/system/modules#description':
       $output = t("Enables content to be moderated by the community.");
       break;
     case 'admin/system/modules/queue':

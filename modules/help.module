@@ -1,18 +1,10 @@
 <?php
 // $Id$
 
-function help_system($field){
-  $output = "";
-
-  if ($field == "description") {$output = admin_help("admin/system/modules"); };
-
-  return $output;
-}
-
 function help_link($type) {
   if ($type == "system" && user_access("access administration pages")) {
     menu("admin/help/glossary", t("glossary"), "help_glossary", NULL, 8);
-    menu("admin/help", t("help"), "help_admin", NULL, 9);
+    menu("admin/help", t("help"), "help_help", NULL, 9);
   }
 }
 
@@ -39,7 +31,7 @@ function help_glossary() {
   return $output;
 }
 
-function help_admin($section = "admin/help") {
+function help_help($section = "admin/help") {
   $output = "";
 
   switch ($section) {
@@ -57,9 +49,8 @@ function help_admin($section = "admin/help") {
       }
       $output = "<small>". implode(" &middot; ", $links) ."</small><hr />". $output;
       break;
-
-    case 'admin/system/modules':
-      $out = t("Manages displaying online help.");
+    case 'admin/system/modules#description':
+      $output = t("Manages displaying online help.");
       break;
   }
   return $output;
