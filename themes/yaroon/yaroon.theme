@@ -109,9 +109,9 @@
 
     } // close header function
 
-    function story($story, $main = 0) {
+    function node($node, $main = 0) {
 
-      switch ($story->tid) {
+      switch ($node->tid) {
         case 0: $color = "#c4a2a2"; $img = "square2.gif"; break;
         case 1: $color = "#a2c4a7"; $img = "square3.gif"; break;
         case 2: $color = "#c2c4a2"; $img = "square4.gif"; break;
@@ -127,8 +127,8 @@
                 <table border="0" cellpadding="0" cellspacing="1" width="100%">
                   <tr>
                     <td>
-                      <a href="index.php?topic=<?php echo $story->tid; ?>"><img src="themes/yaroon/images/<?php echo $img; ?>" border="0" /></a>&nbsp;<b style="font-size: 12pt"><?php echo check_output($story->title); ?></b>
-                      <?php echo strtr(t("by %a on %b"), array("%a" => format_username($story->userid), "%b" => format_date($story->timestamp), "small")); ?>
+                      <a href="index.php?topic=<?php echo $node->tid; ?>"><img src="themes/yaroon/images/<?php echo $img; ?>" border="0" /></a>&nbsp;<b style="font-size: 12pt"><?php echo check_output($node->title); ?></b>
+                      <?php echo strtr(t("by %a on %b"), array("%a" => format_username($node->userid), "%b" => format_date($node->timestamp), "small")); ?>
                     </td>
                   </tr>
                   <tr><td bgcolor="<?php echo $color; ?>"><img src="themes/yaroon/images/pixel.gif" width="1" height="1" alt="" border="0" /></td></tr>
@@ -136,17 +136,14 @@
                     <td>
 
 <?php
-
-                      echo "<br />". check_output($story->abstract, 1) ."<br />";
-                      if (!$main && $story->body)
-                        echo "<br />". check_output($story->body, 1) ."<br />";
+             echo "<br />". check_output($node->body, 1) ."<br />";
              echo"  </td>
                   </tr>
                   <tr>
                     <td align=\"right\">
                       <font color=\"". $color ."\">";
                       if ($main)
-                        echo "". theme_morelink($this, $story) ."";
+                        echo "". theme_morelink($this, $node) ."";
                       echo"</font>";
 
 ?>
@@ -157,7 +154,7 @@
                 </table>
 
 <?php
-    } // close story function
+    } // close node function
 
     function comment($comment, $link = "") {
       echo "<a name=\"$comment->cid\"></a>\n";

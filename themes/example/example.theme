@@ -47,35 +47,33 @@
 
     } // close header function
 
-    function story($story, $main = 0) {
+    function node($node, $main = 0) {
 ?>
 
               <TABLE BORDER="1" CELLSPACING="0" CELLPADDING="3" WIDTH="100%">
                 <TR>
                   <TD COLSPAN="2">
-                    <BIG><?php echo check_output($story->title); ?></BIG>
+                    <BIG><?php echo check_output($node->title); ?></BIG>
                   </TD>
                 </TR>
                 <TR>
                   <TD>
 
 <?php
-                     echo strtr(t("by %a on %b"), array("%a" => format_username($story->userid), "%b" => format_date($story->timestamp, "small")));
+                     echo strtr(t("by %a on %b"), array("%a" => format_username($node->userid), "%b" => format_date($node->timestamp, "small")));
 ?>
 
                    </TD>
                    <TD ALIGN="right">
 <?php
-                     echo category_name($story->cid) ." / ". topic_name($story->tid);
+                     echo category_name($node->cid) ." / ". topic_name($node->tid);
 ?>
                    </TD>
                  </TR>
                  <TR>
                    <TD COLSPAN="2">
 <?php
-                        echo "<P>". check_output($story->abstract, 1) ."</P>";
-                        if (!$main && $story->body)
-                          echo "<P>". check_output($story->body, 1) ."</P>";
+                          echo "<P>". check_output($node->body, 1) ."</P>";
 ?>
                    </TD>
                  </TR>
@@ -83,7 +81,7 @@
                    <TD COLSPAN="2">
 <?php
                      if ($main)
-                       echo theme_morelink($this, $story);
+                       echo theme_morelink($this, $node);
 ?>
 
                    </TD>
@@ -93,7 +91,7 @@
 
 <?php
 
-    } // close story function
+    } // close node function
 
     function comment($comment, $link = "") {
       echo "<A NAME=\"$comment->cid\"></A>\n";

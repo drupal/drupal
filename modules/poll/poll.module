@@ -113,7 +113,6 @@ function poll_view($node, $main = 0, $block = 0) {
 
       $node->totalvotes = max(1, $node->totalvotes);
 
-      if (!$block) $output .= "<small>Posted by " . format_username($node->userid) . " on " . format_date($node->timestamp, "large") . "</small><br>\r\n";
       foreach ($node->choice as $key => $value) {
         if ($value) {
           if ($main) {
@@ -135,7 +134,6 @@ function poll_view($node, $main = 0, $block = 0) {
 
       $node->totalvotes = max(1, $node->totalvotes);
 
-      if (!$block) $output .= "<small>Posted by " . format_username($node->userid) . " on " . format_date($node->timestamp, "large") . "</small><br><br>\r\n";
       $output .= "<table align=\"center\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\"><tr><td align=\"left\">";
       foreach ($node->choice as $key => $value) {
         if ($value) {
@@ -147,7 +145,11 @@ function poll_view($node, $main = 0, $block = 0) {
       $output = form($REQUEST_URI, $output);
    }
 
-   if (!$block) $theme->box($title, $output);
+
+   if (!$block) {
+     $node->body = $output;
+     $theme->node($node, 1);
+   }
    return array("title" => $title, "content" => $output);
 }
 

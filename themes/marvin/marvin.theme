@@ -67,6 +67,26 @@
      print "<BR><BR>\n\n";
    }
 
+   function node($node, $main = 0) {
+     print "\n<!-- node: \"$node->title\" -->\n";
+     print "<TABLE BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"2\" WIDTH=\"100%\">\n";
+     print " <TR><TD COLSPAN=\"2\"><IMG SRC=\"themes/marvin/images/drop.gif\" ALT=\"\"> &nbsp; <B>". check_output($node->title) ."</B></TD></TR>\n";
+     print " <TR VALIGN=\"bottom\"><TD COLSPAN=\"2\" BGCOLOR=\"#000000\" WIDTH=\"100%\"><IMG SRC=\"themes/marvin/images/pixel.gif\" WIDTH=\"1\" HEIGHT=\"0\" ALT=\"\"></TD></TR>\n";
+     print " <TR>\n";
+     print "  <TD>\n";
+     print "   <FONT COLOR=\"#7C7C7C\"><SMALL>". strtr(t("Submitted by %a on %b"), array("%a" => format_username($node->userid), "%b" => format_date($node->timestamp, "large"))); ?><?php print "</SMALL></FONT></TD><TD ALIGN=\"right\" VALIGN=\"top\" NOWRAP><SMALL>". category_name($node->cid) ." / ". topic_name($node->tid) ."</SMALL>\n";
+     print "  </TD>\n";
+     print " </TR>\n";
+     print " <TR><TD COLSPAN=\"2\">&nbsp;</TD></TR>\n";
+     print " <TR>\n";
+     print "  <TD COLSPAN=\"2\"><P>". check_output($node->body, 1) ."</P></TD>\n";
+     print " </TR>\n";
+     print " <TR><TD COLSPAN=\"2\">&nbsp;</TD></TR>\n";
+     if ($main) print " <TR><TD COLSPAN=\"2\">". theme_morelink($this, $node) ."</TD></TR>\n";
+     print "</TABLE>\n";
+     print "<BR><BR>\n\n";
+   }
+
    function comment($comment, $link = "") {
      print "<A NAME=\"$comment->cid\">\n";
 

@@ -95,14 +95,14 @@ function c(subject,mod,author,date,body) {document.writeln("<table border=\"0\" 
     } // close linksbar function
 
 
-    function story($story, $main = 0) {
-      echo "\n<!-- story: \"$story->title\" -->\n";
-      $title = check_output($story->title);
-      $subleft = strtr(t("Submitted by %a on %b"), array("%a" => format_username($story->userid), "%b" => format_date($story->timestamp, "large")));
-      $subright = category_name($story->cid) ." / ". topic_name($story->tid);
-      $body = check_output($story->abstract, 1) . "<br>" . ((!$main && $story->body)?"<br>" . check_output($story->body, 1):"") . "<hr color=\"#404040\" size=\"1\"><div align=\"right\">" . ($main?theme_morelink($this, $story):"");
+    function node($node, $main = 0) {
+      echo "\n<!-- node: \"$node->title\" -->\n";
+      $title = check_output($node->title);
+      $subleft = strtr(t("Submitted by %a on %b"), array("%a" => format_username($node->userid), "%b" => format_date($node->timestamp, "large")));
+      $subright = category_name($node->cid) ." / ". topic_name($node->tid);
+      $body = check_output($node->body, 1) . "<hr color=\"#404040\" size=\"1\"><div align=\"right\">" . ($main?theme_morelink($this, $node):"");
       print "<script language=\"JavaScript\"><!--\ns(\"". $this->stripbreaks(addslashes($title)) ."\",\"". $this->stripbreaks(addslashes($subleft)) ."\",\"". $this->stripbreaks(addslashes($subright)) ."\",\"". $this->stripbreaks(addslashes($body)) ."\"); // -->\n</script>\n";
-    } // close story function
+    } // close node function
 
 
 
