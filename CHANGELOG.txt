@@ -15,7 +15,9 @@ Drupal x.x.x, xxxx-xx-xx
     * refactored the throttle module configuration.
     * added a 'add child page' link to book pages.
 - performance:
+    * improved performance of the forum topics block.
     * improved performance of the tracker module.
+    * improved performance of the node pages.
 
 Drupal 4.5.0, 2004-10-18
 ------------------------
