@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.86 2002/12/10 20:14:08 dries Exp $
+// $Id: comment.module,v 1.87 2002/12/10 20:36:03 dries Exp $
 
 $GLOBALS["cmodes"] = array(1 => t("Flat list - collapsed"), 2 => t("Flat list - expanded"), 3 => t("Threaded list - collapsed"), 4 => t("Threaded list - expanded"));
 $GLOBALS["corder"] = array(1 => t("Date - newest first"), 2 => t("Date - oldest first"));
@@ -313,7 +313,7 @@ function comment_links($comment, $return = 1) {
   */
 
   if ($return) {
-    $links[] = l(t("return"), array("id" => $comment->nid), "node", $comment->cid);
+    $links[] = l(t("parent"), array("id" => $comment->nid), "node", $comment->cid);
   }
 
   /*
