@@ -12,7 +12,8 @@ $_section = array("status" => array(2 => "enabled: always", 1 => "enabled: custo
 
 function section_help() {
  ?>
-  under construction
+  <P>When submitting new stories, every story is assigned a section or category.  These sections can be maintained from the administration pages.</P>
+  <P>For moderation purpose, you can specify a post, dump and expiration thresholds for each available section according to type and urgency level a section.  Some section do not really "expire" and stay interesting and active as time passes by, whereas news-related stories are only considered "hot" over a short period of time.</P>
  <?
 }
 

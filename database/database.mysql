@@ -8,19 +8,11 @@ CREATE TABLE affiliates (
   PRIMARY KEY (id)
 );
 
-CREATE TABLE sections (
-  name varchar(64) DEFAULT '' NOT NULL,
-  post tinyint(3) DEFAULT '0' NOT NULL,
-  dump tinyint(3) DEFAULT '0' NOT NULL,
-  timout tinyint(3) DEFAULT '0' NOT NULL,
-  status tinyint(2) DEFAULT '0' NOT NULL,
-  PRIMARY KEY (name)
-);
-
 CREATE TABLE blocks (
   name varchar(64) DEFAULT '' NOT NULL,
   module varchar(64) DEFAULT '' NOT NULL,
   offset tinyint(2) DEFAULT '0' NOT NULL,
+  status tinyint(2) DEFAULT '0' NOT NULL,
   weight tinyint(1) DEFAULT '0' NOT NULL,
   region tinyint(1) DEFAULT '0' NOT NULL,
   PRIMARY KEY (name)
@@ -117,6 +109,15 @@ CREATE TABLE layout (
 
 CREATE TABLE modules (
   name varchar(64) DEFAULT '' NOT NULL,
+  PRIMARY KEY (name)
+);
+
+CREATE TABLE sections (
+  name varchar(64) DEFAULT '' NOT NULL,
+  post tinyint(3) DEFAULT '0' NOT NULL,
+  dump tinyint(3) DEFAULT '0' NOT NULL,
+  timout tinyint(3) DEFAULT '0' NOT NULL,
+  status tinyint(2) DEFAULT '0' NOT NULL,
   PRIMARY KEY (name)
 );
 
