@@ -1088,12 +1088,13 @@ function url($url = NULL, $query = NULL, $fragment = NULL, $absolute = NULL) {
   }
 }
 
-function drupal_attributes($attributes = NULL) {
-  if (is_array($attributes)) {
+function drupal_attributes($attributes = array()) {
+  if (count($attributes)) {
     $t = array();
     foreach ($attributes as $key => $value) {
       $t[] = "$key=\"$value\"";
     }
+
     return " ". implode($t, " ");
   }
 }
