@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.44 2002/01/31 15:32:30 kjartan Exp $
+// $Id: user.module,v 1.45 2002/02/18 16:42:24 unconed Exp $
 
 session_set_save_handler("sess_open", "sess_close", "sess_read", "sess_write", "sess_destroy", "sess_gc");
 session_start();
@@ -169,7 +169,7 @@ function user_validate_name($name) {
   if (ereg(" \$", $name)) return t("The Username cannot end with a space.");
   if (ereg("  ", $name)) return t("The Username cannot contain multiple spaces in a row.");
   // if (ereg("[^a-zA-Z0-9@-@]", $name)) return t("The Username contains an illegal character.");
-  if (!ereg('^[a-z0-9]+(@[a-z0-9]+)?$', $name)) t("The name contains an illegal character.");
+  if (!ereg('^[a-z0-9]+(@[a-z0-9]+)?$', $name)) return t("The name contains an illegal character.");
   if (strlen($name) > 56) return t("The Username '$name' is too long: it must be less than 56 characters.");
 }
 
