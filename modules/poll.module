@@ -328,7 +328,7 @@ function poll_view_results(&$node, $main, $block, $links) {
   }
   $output .= "<div class=\"total\">". t("Total votes") .": $votestotal</div>";
 
-  $output .= ($block ? "<div class=\"links\" />". theme("links", $links) ."</div>" : "") ."</div>";
+  $output .= ($block ? "<div class=\"links\">". theme("links", $links) ."</div>" : "") ."</div>";
 
   return $output;
 }
