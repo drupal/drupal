@@ -24,3 +24,8 @@ img {
 table {
   font-size: 1em;
 }
+.calendar .day-today      { background-color: #ccc; }
+.calendar .day-selected   { background-color: #bbb; }
+.calendar .header-month   { background-color: #ddd; }
+.calendar .header-week    { background-color: #ccc; }
+.calendar .day-blank      { background-color: #ddd; }
