@@ -32,7 +32,7 @@ function node_del($field, $value) {
 }
 
 function node_get_comments($nid) {
-  $comment = db_fetch_object(db_query("SELECT COUNT(c.lid) AS number FROM node n LEFT JOIN comments c ON n.nid = c.lid WHERE n.nid = '$nid' GROUP BY n.nid", 1));
+  $comment = db_fetch_object(db_query("SELECT COUNT(c.lid) AS number FROM node n LEFT JOIN comments c ON n.nid = c.lid WHERE n.nid = '$nid' GROUP BY n.nid"));
   return $comment->number ? $comment->number : 0;
 }
 
