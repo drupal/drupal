@@ -85,7 +85,7 @@ function admin_page() {
         menu_build("admin");
 
         print "<div id=\"menu\">";
-        echo "<h1><a href=\"index.php\">". variable_get("site_name", "drupal") ."</a></h1>";
+        echo "<h1><a href=\"$base_url\">". variable_get("site_name", "drupal") ."</a></h1>";
         print menu_tree("admin") ;
         print "</div>";
         print theme_footer();
