@@ -730,6 +730,7 @@ function aggregator_edit() {
       drupal_set_message(t('The feed has been updated.'));
     }
 
+    menu_rebuild();
     drupal_goto($_GET['q']);
   }
   else if ($_POST['op'] == t('Delete')) {
@@ -745,6 +746,7 @@ function aggregator_edit() {
       drupal_set_message(t('The feed has been deleted.'));
     }
 
+    menu_rebuild();
     drupal_goto('aggregator/'. arg(1));
   }
 
@@ -774,6 +776,7 @@ function aggregator_admin_edit_category($category = 0) {
     case t('Submit'):
       aggregator_save_category($edit);
       drupal_set_message($edit['title'] ? t('The category has been updated.') : t('The category has been deleted.'));
+      menu_rebuild();
       drupal_goto('admin/aggregator');
       break;
     default:
@@ -803,6 +806,7 @@ function aggregator_admin_edit_feed($feed = 0) {
     case t('Submit'):
       aggregator_save_feed($edit);
       drupal_set_message($edit['title'] ? t('The feed has been updated.') : t('The feed has been deleted.'));
+      menu_rebuild();
       drupal_goto('admin/aggregator');
       break;
     default:
