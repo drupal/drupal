@@ -29,11 +29,11 @@ M: Alexander Schwartz <alexander.schwartz@gmx.net>
 S: maintained
 
 DISTRIBUTED AUTHENTICATION MODULES
-P: Moshe Weitzman <weitzman@prospero.com>
+M: Moshe Weitzman <weitzman@tejasa.com>
 S: maintained
 
 POLL MODULE
-P: Steven Wittens <unconed@drop.org>
+M: Steven Wittens <unconed@drop.org>
 S: maintained
 
 POSTGRES PORT
@@ -45,16 +45,16 @@ M: Simon Lindsay <simon@iseek.ws>
 S: maintained
 
 TAXONOMY SYSTEM
-P: Marco Molinari <marco@porciletto.org>
+M: Marco Molinari <marco@porciletto.org>
 S: maintained
 
 THEME GOOFY, THEME UNCONED
-P: Steven Wittens <unconed@drop.org>
+M: Steven Wittens <unconed@drop.org>
 S: maintained
 
 USER SYSTEM
-P: Moshe Weitzman <weitzman@tejasa.com>
+M: Moshe Weitzman <weitzman@tejasa.com>
 S: maintained
 
 THE REST:
-P: Dries <dries@drupal.org>
+M: Dries <dries@drupal.org>
