@@ -224,7 +224,7 @@ function node_attributes_save($type, $edit) {
 function node_attributes_view($string) {
   foreach (explode(",", $string) as $attribute) {
     if ($attribute = trim($attribute)) {
-      $array[] = "<a href=\"?meta=". urlencode($attribute) ."\">$attribute</a>";
+      $array[] = "<a href=\"index.php?meta=". urlencode($attribute) ."\">$attribute</a>";
     }
   }
   return $array ? $array : array();
