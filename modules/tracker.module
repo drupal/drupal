@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.module,v 1.98 2004/10/06 20:00:56 dries Exp $
+// $Id: tracker.module,v 1.99 2004/10/06 20:43:05 dries Exp $
 
 /**
  * @file
@@ -52,7 +52,10 @@ function tracker_menu($may_cache) {
  * Menu callback. Prints a listing of active nodes on the site.
  */
 function tracker_track_user() {
-  tracker_page(arg(1));
+  if ($account = user_load(array('uid' => arg(1)))) {
+    drupal_set_title($account->name);
+    tracker_page($account->uid);
+  }
 }
 
 /**
