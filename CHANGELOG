@@ -49,6 +49,7 @@ drupal 4.0.0, xx/xx/xxxx
     * modules and themes can now be enabled/disabled using the administrative pages.
     * added URL abstraction for links.
     * usability changes (renamed links, better UI, etc)
+- collaboratively revised and expanded the drupal documentation.
 
 drupal 3.0.1, 15/10/2001
 ------------------------
