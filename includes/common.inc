@@ -12,7 +12,7 @@ function conf_init() {
 function error_handler($errno, $message, $filename, $line, $variables) {
   $types = array(1 => "error", 2 => "warning", 4 => "parse error", 8 => "notice", 16 => "core error", 32 => "core warning", 64 => "compile error", 128 => "compile warning", 256 => "user error", 512 => "user warning", 1024 => "user notice");
   $entry = $types[$errno] .": $message in $filename on line $line.";
-  if ($errno == 1 || $errno == 2 || $errno == 4) {
+  if (($errno == 1 || $errno == 2 || $errno == 4) && error_reporting()) {
     watchdog("error", $types[$errno] .": $message in $filename on line $line.");
     print $entry;
   }
