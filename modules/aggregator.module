@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.132 2003/11/13 19:52:54 dries Exp $
+// $Id: aggregator.module,v 1.133 2003/11/14 20:31:21 dries Exp $
 
 
 function import_help($section = "admin/help#import") {
@@ -152,7 +152,7 @@ function import_bundle_block($attributes) {
   }
 
   $output = "<div class=\"import-block\"><div class=\"bundle\">";
-  $output .= theme("theme_item_list", $items);
+  $output .= theme("item_list", $items);
   $output .= "</div></div>";
 
   return $output;
