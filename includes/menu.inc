@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.21 2003/09/28 11:08:17 dries Exp $
+// $Id: menu.inc,v 1.22 2003/09/28 13:42:12 dries Exp $
 
 /**
  * Register a menu item with the menu system.
@@ -199,7 +199,7 @@ function _render_item($path) {
     $css = " class=\"active\"";
   }
 
-  return "<a href=\"". url($path) ."\"$css>". t($_list[$path]["title"]) ."</a>";
+  return "<a href=\"". url($path) ."\"$css>". $_list[$path]["title"] ."</a>";
 }
 
 
