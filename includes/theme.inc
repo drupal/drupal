@@ -103,7 +103,7 @@ function theme_blocks($region, &$theme) {
       else $result = db_query("SELECT * FROM blocks WHERE status = 2". (($region == "left" OR $region == "right") ? ($region == "left" ? " AND region = 0" : " AND region = 1") : "") ." ORDER BY weight");
       while ($result && ($block = db_fetch_object($result))) {
         $blocks = module_invoke($block->module, "block");
-        if ($blocks[$block->offset]["content"])
+        if ($blocks[$block->delta]["content"])
           $theme->box(t($blocks[$block->delta]["subject"]), $blocks[$block->delta]["content"], $region);
       }
       break;
