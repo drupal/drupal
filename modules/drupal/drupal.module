@@ -26,7 +26,7 @@ function drupal_page() {
   $output .= "<H3>Mailing lists</H3>\n";
   $output .= " <LI><A HREF=\"node.php?title=mailing+lists\">mailing lists</A></LI>";
   $output .= "<H3>Development</H3>\n";
-  $output .= " <LI><A HREF=\"node.php?title=development\">drupal development</A> (<A HREF=\"node.php?title=development\">CVS</A>)</LI>\n";
+  $output .= " <LI><A HREF=\"node.php?title=development\">drupal development</A> (<A HREF=\"node.php?title=CVS\">CVS</A>)</LI>\n";
   $theme->box("Support and development", $output);
 
   $theme->footer();
