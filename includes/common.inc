@@ -985,7 +985,7 @@ function drupal_attributes($attributes = NULL) {
 }
 
 function l($text, $url, $attributes = array(), $query = NULL, $fragment = NULL) {
-  return "<a href=\"". url($url, $query, $fragment) ."\"". drupal_attributes($attributes) .">$text</a>";
+  return "<a href=\"". url($url, $query, $fragment) ."\"". ($url == $_GET['q'] ? ' class="active"' : NULL) . drupal_attributes($attributes) .">$text</a>";
 }
 
 function field_get($string, $name) {

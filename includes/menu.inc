@@ -259,11 +259,7 @@ function _menu_sort($a, $b) {
 function _render_item($path) {
   global $_list;
 
-  if ($path == $_GET["q"]) {
-    $css = " class=\"active\"";
-  }
-
-  return "<a href=\"". url($path) ."\"$css>". $_list[$path]["title"] ."</a>";
+  return l($_list[$path]["title"], $path);
 }
 
 
