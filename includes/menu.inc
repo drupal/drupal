@@ -87,9 +87,6 @@ function menu_menu() {
     $item = array_pop($path);
     $output = implode(" &middot; ", menu_menu_row($item->name));
   }
-  else {
-    $output = implode( " &middot; ", menu_menu_row());
-  }
 
   return $output;
 }
