@@ -19,7 +19,7 @@ function node_help() {
   if ($mod == "node") {
     foreach (module_list() as $name) {
       if (module_hook($name, "status") && $name != "node") {
-        print "<H3>". ucfirst($name) ." type</H3>";
+        print "<h3>". ucfirst($name) ." type</h3>";
         print module_invoke($name, "help");
       }
     }
@@ -38,9 +38,9 @@ function node_conf_options() {
 function node_conf_filters() {
   $output .= form_select("Enable HTML tags", "filter_html", variable_get("filter_html", 0), array("Disabled", "Enabled"), "Allow HTML and PHP tags in user-contributed content.");
   $output .= form_textfield("Allowed HTML tags", "allowed_html", variable_get("allowed_html", "<A><B><BLOCKQUOTE><DD><DL><DT><I><LI><OL><U><UL>"), 64, 128, "If enabled, optionally specify tags which should not be stripped.  'STYLE' attributes, 'ON' attributes and unclosed tags are always stripped.");
-  $output .= "<HR>";
+  $output .= "<hr />";
   $output .= form_select("Enable link tags", "filter_link", variable_get("filter_link", 0), array("Disabled", "Enabled"), "Substitute special [[link]] tags.");
-  $output .= "<HR>";
+  $output .= "<hr />";
   return $output;
 }
 
@@ -108,19 +108,19 @@ function node_overview($query) {
   $color = array("#ffffff", "#e5e5e5");
   $query = node_query($query ? $query : 0);
 
-  $result = db_query("SELECT n.* FROM node n $query[1] LIMIT 50");
+  $result = db_query("SELECT n.*, u.name FROM node n LEFT JOIN users u ON n.author = u.id  $query[1] LIMIT 50");
 
   $output .= status($query[0]);
-  $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
-  $output .= " <TR><TH>title</TH><TH>type</TH><TH>status</TH><TH>meta attributes</TH><TH>author</TH><TH>date</TH></TR>\n";
+  $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
+  $output .= " <tr><th>title</th><th>type</th><th>status</th><th>meta attributes</th><th>author</th><th>date</th></tr>\n";
 
   while ($node = db_fetch_object($result)) {
     $bg = $color[$i++ % sizeof($color)];
 
-    $output .= " <TR BGCOLOR=\"$bg\"><TD><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></TD><TD ALIGN=\"center\">$node->type</TD><TD>". node_status($node->status) ."</TD><TD>". check_output($node->attributes) ."</TD><TD>". format_name($node->name) ."</TD><TD>". format_date($node->timestamp, "small") ."</TD></TR>\n";
-    $output .= " <TR BGCOLOR=\"$bg\"><TD ALIGN=\"right\" COLSPAN=\"6\"><SMALL>". implode(", ", node_links($node->nid, $node->type)) ."</SMALL></TD>\n";
+    $output .= " <tr bgcolor=\"$bg\"><td><a href=\"node.php?id=$node->nid\">". check_output($node->title) ."</a></td><td align=\"center\">$node->type</td><td>". node_status($node->status) ."</td><td>". check_output($node->attributes) ."</td><td>". format_name($node->name) ."</td><td>". format_date($node->timestamp, "small") ."</td></tr>\n";
+    $output .= " <tr bgcolor=\"$bg\"><td align=\"right\" colspan=\"6\"><small>". implode(", ", node_links($node->nid, $node->type)) ."</small></td>\n";
   }
-  $output .= "</TABLE>\n";
+  $output .= "</table>\n";
 
   return $output;
 }
@@ -269,11 +269,11 @@ function node_module_find() {
     }
   }
 
-  $output .= "<FORM ACTION=\"$REQUEST_URI\" METHOD=\"POST\">\n";
-  $output .= " <INPUT SIZE=\"50\" VALUE=\"". check_form($keys) ."\" NAME=\"keys\" TYPE=\"text\">\n";
-  $output .= " <SELECT NAME=\"type\">$options</SELECT>\n";
-  $output .= " <INPUT TYPE=\"submit\" VALUE=\"Search\">\n";
-  $output .= "</FORM>\n";
+  $output .= "<form action=\"$REQUEST_URI\" method=\"POST\">\n";
+  $output .= " <input size=\"50\" value=\"". check_form($keys) ."\" name=\"keys\" type=\"text\">\n";
+  $output .= " <select name=\"type\">$options</select>\n";
+  $output .= " <input type=\"submit\" value=\"Search\">\n";
+  $output .= "</form>\n";
 
   return $output;
 }
@@ -291,11 +291,11 @@ function node_admin() {
 
     foreach (module_list() as $name) {
       if (module_hook($name, "status") && $name != "node") {
-        $link[] = "<A HREF=\"admin.php?mod=node&type=$name&op=add\">add $name</A>";
+        $link[] = "<a href=\"admin.php?mod=node&type=$name&op=add\">add $name</a>";
       }
     }
 
-    print "<SMALL>". implode(" | ", $link) ." | <A HREF=\"admin.php?mod=node&op=default\">node settings</A> | <A HREF=\"admin.php?mod=node&op=listing\">node listings</A> | <A HREF=\"admin.php?mod=node&op=search\">search node</A> | <A HREF=\"admin.php?mod=node\">overview</A> | <A HREF=\"admin.php?mod=node&op=help\">help</A></SMALL><HR>\n";
+    print "<small>". implode(" | ", $link) ." | <a href=\"admin.php?mod=node&op=default\">node settings</a> | <a href=\"admin.php?mod=node&op=listing\">node listings</a> | <a href=\"admin.php?mod=node&op=search\">search node</a> | <a href=\"admin.php?mod=node\">overview</a> | <a href=\"admin.php?mod=node&op=help\">help</a></small><hr />\n";
 
     $id = check_input($edit[nid] ? $edit[nid] : $id);
 
