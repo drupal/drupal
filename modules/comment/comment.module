@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.310 2004/11/29 12:59:21 dries Exp $
+// $Id: comment.module,v 1.311 2004/11/29 17:52:35 dries Exp $
 
 /**
  * @file
@@ -1468,7 +1468,7 @@ function theme_comment_threshold($threshold) {
   $result = db_query('SELECT fid, filter FROM {moderation_filters} ');
   $options .= ' <option value="0">'. t('-- threshold --') .'</option>';
   while ($filter = db_fetch_object($result)) {
-    $filters .= " <option value=\"$filter->fid\"". ($threshold == $filter->fid ? ' selected="selected"' : '') .'>'. t($filter->filter) .'</option>';
+    $filters .= " <option value=\"$filter->fid\"". ($threshold == $filter->fid ? ' selected="selected"' : '') .'>'. $filter->filter .'</option>';
   }
 
   if ($filters) {
