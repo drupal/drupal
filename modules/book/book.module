@@ -419,7 +419,7 @@ function book_nodeapi(&$node, $op, $teaser, $page) {
   switch ($op) {
     case 'view':
       if (!$teaser) {
-        $book = db_fetch_object(db_query('SELECT * FROM {book} WHERE nid = %d', $node->nid));
+        $book = db_fetch_array(db_query('SELECT * FROM {book} WHERE nid = %d', $node->nid));
 
         if ($book) {
           foreach ($book as $key => $value) {
@@ -454,7 +454,7 @@ function book_navigation($node) {
     $output .= '<div class="book">';
 
     if ($tree = book_tree($node->nid)) {
-      $output .= '<div class="tree">'. book_tree($node->nid) .'</div>';
+      $output .= '<div class="tree">'. $tree .'</div>';
     }
 
     if ($prev = book_prev($node)) {
