@@ -145,8 +145,8 @@
                   <tr>
                     <td align=\"right\">
                       <font color=\"". $color ."\">";
-                      if ($main || $links)
-                        echo $this->links($links, $main, $node);
+                      if (node_links($links, $node, $main))
+                        echo $this->links($links, $main);
                       echo"</font>";
 
 ?>
