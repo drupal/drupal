@@ -130,7 +130,7 @@ function aggregator_bundle_block($attributes) {
       $where[] = "attributes LIKE '%". check_query(trim($key)) ."%'";
     }
 
-    $result = db_query_range("SELECT * FROM {item} WHERE ". implode(" OR ", $where) ." ORDER BY timestamp DESC", 0, variable_get("aggregator_block_limit", 15));
+    $result = db_query_range("SELECT * FROM {item} WHERE ". implode(" OR ", $where) ." ORDER BY timestamp DESC, iid DESC", 0, variable_get("aggregator_block_limit", 15));
   }
 
   $items = array();
@@ -142,7 +142,7 @@ function aggregator_bundle_block($attributes) {
 }
 
 function aggregator_feed_block($feed) {
-  $result = db_query_range("SELECT * FROM {item} WHERE fid = %d ORDER BY timestamp DESC ", $feed->fid, 0, variable_get("aggregator_block_limit", 15));
+  $result = db_query_range("SELECT * FROM {item} WHERE fid = %d ORDER BY timestamp DESC, iid DESC", $feed->fid, 0, variable_get("aggregator_block_limit", 15));
 
   $items = array();
   while ($item = db_fetch_object($result)) {
@@ -597,7 +597,7 @@ function aggregator_view() {
 }
 
 function aggregator_tag() {
-  $result = db_query_range("SELECT i.*, f.title AS feed FROM {item} i INNER JOIN {feed} f ON i.fid = f.fid ORDER BY i.timestamp DESC", 0, 50);
+  $result = db_query_range("SELECT i.*, f.title AS feed FROM {item} i INNER JOIN {feed} f ON i.fid = f.fid ORDER BY i.timestamp DESC, i.iid DESC", 0, 50);
 
   $header = array(t("date"), t("feed"), t("news item"));
   while ($item = db_fetch_object($result)) {
@@ -663,7 +663,7 @@ function aggregator_admin() {
 }
 
 function aggregator_page_last() {
-  $result = db_query_range("SELECT i.*, f.title AS ftitle, f.link AS flink FROM {item} i INNER JOIN {feed} f ON i.fid = f.fid ORDER BY i.timestamp DESC", 0, variable_get("aggregator_page_limit", 75));
+  $result = db_query_range("SELECT i.*, f.title AS ftitle, f.link AS flink FROM {item} i INNER JOIN {feed} f ON i.fid = f.fid ORDER BY i.timestamp DESC, i.iid DESC", 0, variable_get("aggregator_page_limit", 75));
 
   $output = "<div id=\"aggregator\">";
   while ($item = db_fetch_object($result)) {
@@ -679,7 +679,7 @@ function aggregator_page_feed($fid) {
 
   $info = theme('aggregator_feed', $feed);
 
-  $result = db_query_range("SELECT * FROM {item} WHERE fid = %d ORDER BY timestamp DESC", $fid, 0, variable_get("aggregator_page_limit", 75));
+  $result = db_query_range("SELECT * FROM {item} WHERE fid = %d ORDER BY timestamp DESC, iid DESC", $fid, 0, variable_get("aggregator_page_limit", 75));
   while ($item = db_fetch_object($result)) {
     $content .= theme('aggregator_page_item', $item);
   }
@@ -696,7 +696,7 @@ function aggregator_page_bundle($bid) {
 
   $keys = explode(",", $bundle->attributes);
   foreach ($keys as $key) $where[] = "i.attributes LIKE '%". trim($key) ."%'";
-  $result = db_query_range("SELECT i.*, f.title AS ftitle, f.link AS flink FROM {item} i, {feed} f WHERE (". implode(" OR ", $where) .") AND i.fid = f.fid ORDER BY timestamp DESC", 0, variable_get("aggregator_page_limit", 75));
+  $result = db_query_range("SELECT i.*, f.title AS ftitle, f.link AS flink FROM {item} i, {feed} f WHERE (". implode(" OR ", $where) .") AND i.fid = f.fid ORDER BY timestamp DESC, iid DESC", 0, variable_get("aggregator_page_limit", 75));
 
   while ($item = db_fetch_object($result)) {
     $content .= theme('aggregator_page_item', $item);
