@@ -233,17 +233,23 @@ function user_validate_picture($file, &$edit, $user) {
   if (!$info || !$info['extension']) {
     form_set_error('picture', t('The uploaded file was not an image.'));
   }
-  else if (!image_scale($file->filepath, $file->filepath, $maxwidth, $maxheight)) {
-    form_set_error('picture', t('The uploaded image is too large; the maximum dimensions are %dimensions pixels.', array('%dimensions' => variable_get('user_picture_dimensions', '85x85'))));
+  else if (image_get_toolkit()) {
+    image_scale($file->filepath, $file->filepath, $maxwidth, $maxheight);
   }
   else if (filesize($file->filepath) > (variable_get('user_picture_file_size', '30') * 1000)) {
     form_set_error('picture', t('The uploaded image is too large; the maximum file size is %size kB.', array('%size' => variable_get('user_picture_file_size', '30'))));
   }
-  else if ($file = file_save_upload('picture', variable_get('user_picture_path', 'pictures') .'/picture-'. $user->uid . '.' . $info['extension'], 1)) {
-    $edit['picture'] = $file->filepath;
+  else if ($info['width'] > $maxwidth || $info['height'] > $maxheight) {
+    form_set_error('picture', t('The uploaded image is too large; the maximum dimensions are %dimensions pixels.', array('%dimensions' => variable_get('user_picture_dimensions', '85x85'))));
   }
-  else {
-    form_set_error('picture', t("Failed to upload the picture image; the %directory directory doesn't exist.", array('%directory' => '<em>'. variable_get('user_picture_path', 'pictures') .'</em>')));
+
+  if (!form_get_errors()) {
+    if ($file = file_save_upload('picture', variable_get('user_picture_path', 'pictures') .'/picture-'. $user->uid . '.' . $info['extension'], 1)) {
+      $edit['picture'] = $file->filepath;
+    }
+    else {
+      form_set_error('picture', t("Failed to upload the picture image; the %directory directory doesn't exist.", array('%directory' => '<em>'. variable_get('user_picture_path', 'pictures') .'</em>')));
+    }
   }
 }
 
