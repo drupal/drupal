@@ -280,9 +280,7 @@ function node_search($keys) {
   // The select must always provide the following fields - lno, title,
   // created, uid, name, count
   //
-  $find = do_search(array("keys" => $keys,
-                          "type" => "node",
-                          "select" => "select s.lno as lno, n.title as title, n.created as created, u.uid as uid, u.name as name, s.count as count FROM search_index s, node n LEFT JOIN users u ON n.uid = u.uid WHERE s.lno = n.nid AND s.type = 'node' AND s.word like '%' AND n.status = 1"));
+  $find = do_search(array("keys" => $keys, "type" => "node", "select" => "select s.lno as lno, n.title as title, n.created as created, u.uid as uid, u.name as name, s.count as count FROM search_index s, node n LEFT JOIN users u ON n.uid = u.uid WHERE s.lno = n.nid AND s.type = 'node' AND s.word like '%' AND n.status = 1"));
 
   return $find;
 }
@@ -462,7 +460,7 @@ function node_admin_edit($node) {
     $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";
     $output .= " <tr><th>older revisions</th><th colspan=\"3\">operations</th></tr>";
     foreach ($node->revisions as $key => $revision) {
-      $output .= " <tr><td>". t("revision #%r revised by %u on %d", array("%r" => $key, "%u" => format_name(user_load(array("uid" => $revision["uid"]))), "%d" => format_date($revision["timestamp"], "small"))) . ($revision["history"] ? "<br /><small>". $revision["history"] ."</small>" : "") ."</td><td>".l(t("view revision"), array("id" => $node->nid, "revision" =>$key))."</td><td>".la(t("rollback revision"), array("mod" => "node", "op" => "rollback+revision", "id" => $node->nid, "revision" => $key))."</td><td>". la(t("delete revision"), array("mod" => "node", "op" => "delete+revision", "id" => $node->nid, "revision" => $key))."</td></tr>";
+      $output .= " <tr><td>". t("revision #%r revised by %u on %d", array("%r" => $key, "%u" => format_name(user_load(array("uid" => $revision["uid"]))), "%d" => format_date($revision["timestamp"], "small"))) . ($revision["history"] ? "<br /><small>". $revision["history"] ."</small>" : "") ."</td><td>". l(t("view revision"), array("id" => $node->nid, "revision" =>$key)) ."</td><td>". la(t("rollback revision"), array("mod" => "node", "op" => "rollback+revision", "id" => $node->nid, "revision" => $key)) ."</td><td>". la(t("delete revision"), array("mod" => "node", "op" => "delete+revision", "id" => $node->nid, "revision" => $key)) ."</td></tr>";
     }
     $output .= "</table>";
   }
@@ -495,7 +493,7 @@ function node_admin_nodes() {
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
   $output .= " <tr><th>title</th><th>type</th><th>author</th><th>status</th><th colspan=\"2\">operations</th></tr>\n";
   while ($node = db_fetch_object($result)) {
-    $output .= "<tr><td>".l(check_output($node->title), array("id" => $node->nid))."</td><td>$node->type</td><td nowrap=\"nowrap\">". format_name($node) ."</td><td>". ($node->status ? t("published") : t("not published")) ."</td><td nowrap=\"nowrap\">".la(t("edit node"), array("mod" => "node", "op" => "edit", "id" => $node->nid))."</td><td nowrap=\"nowrap\">".la(t("delete node"), array("mod" => "node", "op" => "delete", "id" => $node->nid))."</td></tr>";
+    $output .= "<tr><td>". l(check_output($node->title), array("id" => $node->nid)) ."</td><td>$node->type</td><td nowrap=\"nowrap\">". format_name($node) ."</td><td>". ($node->status ? t("published") : t("not published")) ."</td><td nowrap=\"nowrap\">". la(t("edit node"), array("mod" => "node", "op" => "edit", "id" => $node->nid)) ."</td><td nowrap=\"nowrap\">". la(t("delete node"), array("mod" => "node", "op" => "delete", "id" => $node->nid)) ."</td></tr>";
   }
   $output .= "</table>";
 
@@ -666,7 +664,7 @@ function node_block() {
   global $theme;
 
   $block[0][subject] = t("Syndicate");
-  $block[0][content] = "<div align=\"center\">".lm("<img src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" border=\"0\" alt=\"XML\" />", array("mod" => "node", "op" => "feed"), t("Read the XML version of this page."))."</div>\n";
+  $block[0][content] = "<div align=\"center\">". lm("<img src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" border=\"0\" alt=\"XML\" />", array("mod" => "node", "op" => "feed"), t("Read the XML version of this page.")) ."</div>\n";
   $block[0][info] = "Syndicate";
 
   return $block;
@@ -902,7 +900,7 @@ function node_add($type) {
     foreach (module_list() as $name) {
       if (module_hook($name, "node") && node_access("create", array("type" => $name))) {
         $output .= "<li>";
-        $output .= " ".lm(module_invoke($name, "node", "name"), array("mod" => "node", "op" => "add", "type" => $name), t("Add a new %s.", array("%s" => module_invoke($name, "node", "name"))));
+        $output .= " ". lm(module_invoke($name, "node", "name"), array("mod" => "node", "op" => "add", "type" => $name), t("Add a new %s.", array("%s" => module_invoke($name, "node", "name"))));
         $output .= " <div style=\"margin-left: 20px;\">". module_invoke($name, "node", "description") ."</div>";
         $output .= "</li>";
       }
@@ -1213,7 +1211,8 @@ function node_page() {
         foreach ((explode(",", $or)) as $t) {
           $terms[] = "'".check_query($t)."'";
         }
-      } else if ($and) {
+      }
+      else if ($and) {
         foreach ((explode(",", $and)) as $t) {
           $terms[] = "'".check_query($t)."'";
         }
@@ -1222,10 +1221,12 @@ function node_page() {
       if ($or) {
         // this is an OR of terms
         $result = db_query("SELECT DISTINCT(n.nid), type FROM node n LEFT JOIN term_node r ON n.nid = r.nid WHERE tid IN (".implode(",", $terms).") AND ". ($id ? "nid = '$id'" : "promote = '1'") ." AND status = '1' ORDER BY static DESC, created DESC LIMIT ". ($user->nodes ? $user->nodes : variable_get("default_nodes_main", 10)));
-      } else if ($and) {
+      } 
+      else if ($and) {
         // this is an AND
         $result = db_query("SELECT n.nid, type, count(*) AS c FROM node n LEFT JOIN term_node r ON n.nid = r.nid WHERE tid IN (".implode(",", $terms).")  AND ". ($id ? "nid = '$id'" : "promote = '1'") ." AND status = '1' GROUP BY n.nid HAVING c = ".count($terms)." ORDER BY static DESC, created DESC LIMIT ". ($user->nodes ? $user->nodes : variable_get("default_nodes_main", 10)));
-      } else {
+      }
+      else {
         $result = db_query("SELECT nid, type FROM node WHERE ". ($id ? "nid = '$id'" : "promote = '1'") ." AND status = '1' ORDER BY static DESC, changed DESC LIMIT ". ($user->nodes ? $user->nodes : variable_get("default_nodes_main", 10)));
       }
 

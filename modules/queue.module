@@ -9,8 +9,8 @@ function queue_conf_options() {
 
   $output .= form_select(t("Post threshold"), "queue_threshold_post", variable_get("queue_threshold_post", 4), $threshold_post, t("If new submissions are subject to moderation, select a post threshold."));
   $output .= form_select(t("Dump threshold"), "queue_threshold_dump", variable_get("queue_threshold_dump", -2), $threshold_dump, t("If new submissions are subject to moderation, select a dump threshold."));
-  $output .= form_select(t("Expiration threshold"),"queue_threshold_expire", variable_get("queue_threshold_expire", 8), $threshold_expire, t("If new submissions are subject to moderation, select an expiration threshold."));
-  $output .= form_select(t("Show comments"),"queue_show_comments", variable_get("queue_show_comments", 1), array(0 => "Disabled", 1 => "Enabled"), t("If enabled comments will be shown below the moderation form."));
+  $output .= form_select(t("Expiration threshold"), "queue_threshold_expire", variable_get("queue_threshold_expire", 8), $threshold_expire, t("If new submissions are subject to moderation, select an expiration threshold."));
+  $output .= form_select(t("Show comments"), "queue_show_comments", variable_get("queue_show_comments", 1), array(0 => "Disabled", 1 => "Enabled"), t("If enabled comments will be shown below the moderation form."));
 
   return $output;
 }
@@ -21,7 +21,7 @@ function queue_perm() {
 
 function queue_link($type) {
   if ($type == "menu.view" && user_access("access submission queue")) {
-    $links[] = la(t("view submissions"), array("mod" => "queue"), t("Moderate the content in the submission queue."))." (<span style=\"color: red;\">". queue_count() ."</span>)";
+    $links[] = lm(t("view submissions"), array("mod" => "queue"), t("Moderate the content in the submission queue.")) ." (<span style=\"color: red;\">". queue_count() ."</span>)";
   }
 
   return $links ? $links : array();
@@ -84,10 +84,10 @@ function queue_overview() {
   $output .= " <tr><th>". t("Subject") ."</th><th>". t("Author") ."</th><th>". t("Type") ."</th><th>". t("Score") ."</th></tr>";
   while ($node = db_fetch_object($result)) {
     if ($user->uid == $node->uid || field_get($node->users, $user->uid)) {
-      $output .= " <tr><td>".la(check_output($node->title), array("mod" => "queue", "op" => "view", "id" => $node->nid))."</td><td align=\"center\">". format_name($node) ."</td><td align=\"center\">". module_invoke($node->type, "node", "name") ."</td><td align=\"center\">". queue_score($node->nid) ."</td></tr>";
+      $output .= " <tr><td>". la(check_output($node->title), array("mod" => "queue", "op" => "view", "id" => $node->nid)) ."</td><td align=\"center\">". format_name($node) ."</td><td align=\"center\">". module_invoke($node->type, "node", "name") ."</td><td align=\"center\">". queue_score($node->nid) ."</td></tr>";
     }
     else {
-      $output .= " <tr><td>".lm(check_output($node->title), array("mod" => "queue", "op" => "view", "id" => $node->nid))."</td><td align=\"center\">". format_name($node) ."</td><td align=\"center\">". module_invoke($node->type, "node", "name") ."</td><td align=\"center\">".lm(t("vote"), array("mod" => "queue", "op" => "view", "id" => $node->nid))."</td></tr>";
+      $output .= " <tr><td>". lm(check_output($node->title), array("mod" => "queue", "op" => "view", "id" => $node->nid)) ."</td><td align=\"center\">". format_name($node) ."</td><td align=\"center\">". module_invoke($node->type, "node", "name") ."</td><td align=\"center\">". lm(t("vote"), array("mod" => "queue", "op" => "view", "id" => $node->nid)) ."</td></tr>";
     }
 
     if ($node->teaser) {

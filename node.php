@@ -42,7 +42,7 @@ if ($number > 1) {
 
   while ($node = db_fetch_object($result)) {
     if (node_access("view", $node)) {
-      $output .= "<p><b>".l(check_output($node->title), array("id" => $node->nid))."</b><br /><small>$node->type - ". format_name($node) ." - ". format_date($node->ccreated, "small") ."</small></p>";
+      $output .= "<p><b>". l(check_output($node->title), array("id" => $node->nid)) ."</b><br /><small>$node->type - ". format_name($node) ." - ". format_date($node->ccreated, "small") ."</small></p>";
     }
   }
 
@@ -51,7 +51,7 @@ if ($number > 1) {
   $theme->footer();
 }
 elseif ($number) {
-  $node = ($title ? node_load(array("title" => $title, "status" => 1)) : node_load(array("nid" => ($edit[id] ? $edit[id] : $id))));
+  $node = ($title ? node_load(array("title" => $title, "status" => 1)) : node_load(array("nid" => ($edit["id"] ? $edit["id"] : $id))));
 
   if (node_access("view", $node)) {
     if (isset($revision)) {

@@ -33,14 +33,14 @@ function archive_display($original = 0) {
   // Generate calendar header:
   $output .= "\n<!-- calendar -->\n";
   $output .= "<table width=\"100%\" border=\"1\" cellspacing=\"0\" cellpadding=\"1\">\n";
-  $output .= " <tr><td align=\"center\" colspan=\"7\"><small>".lm("&lt;", array("mod" => "archive", "date" => $prev))." &nbsp; ". date("F Y", $original) ." &nbsp; " . ($next <= $thislast ? lm("&gt;", array("mod" => "archive", "date" => $next)) : "&gt;") . "</small></td></tr>\n";
+  $output .= " <tr><td align=\"center\" colspan=\"7\"><small>". lm("&lt;", array("mod" => "archive", "date" => $prev)) ."&nbsp;". date("F Y", $original) ."&nbsp;". ($next <= $thislast ? lm("&gt;", array("mod" => "archive", "date" => $next)) : "&gt;") ."</small></td></tr>\n";
 
   // Generate the days of the week:
   $somesunday = mktime(0, 0, 0, 3, 20, 1994);
 
   $output .= " <tr>";
   for ($i = 0; $i < 7; $i++) {
-    $output .= "<td align=\"center\"><small>" . substr(ucfirst(t(date("l", $somesunday + $i * 86400))), 0, 1) . "</small></td>";
+    $output .= "<td align=\"center\"><small>". substr(ucfirst(t(date("l", $somesunday + $i * 86400))), 0, 1) ."</small></td>";
   }
   $output .= "</tr>\n";
 
@@ -72,7 +72,7 @@ function archive_display($original = 0) {
     }
     else {
       // due to text-decoration we use drupal_url() instead of lm()
-      $output .= "  <td align=\"center\"><small><a href=\"".drupal_url(array("mod" => "archive", "date" => $date), "module")." \" style=\"text-decoration: none;\">$nday</a></small></td>\n";
+      $output .= "  <td align=\"center\"><small><a href=\"". drupal_url(array("mod" => "archive", "date" => $date), "module") ." \" style=\"text-decoration: none;\">$nday</a></small></td>\n";
     }
 
     // Start every week on a new line:

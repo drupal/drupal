@@ -28,18 +28,18 @@ function tracker_comments($id = 0) {
   }
 
   while ($node = db_fetch_object($sresult)) {
-    $output .= format_plural($node->comments, "comment", "comments") ." ". t("attached to node") ." ".l(check_output($node->title), array("id" => $node->nid)).":\n";
+    $output .= format_plural($node->comments, "comment", "comments") ." ". t("attached to node") ." ". l(check_output($node->title), array("id" => $node->nid)) .":\n";
 
     if ($id) {
-      $cresult = db_query("SELECT * FROM comments WHERE timestamp > $period AND uid = '%s' AND nid = '$node->nid' ORDER BY cid DESC", $id);
+      $cresult = db_query("SELECT c.*, u.name FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.timestamp > $period AND c.uid = '%d' AND c.nid = '%d' ORDER BY cid DESC", $id, $node->nid);
     }
     else {
-      $cresult = db_query("SELECT c.*, u.name FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.timestamp > $period AND c.nid = '$node->nid' ORDER BY c.cid DESC");
+      $cresult = db_query("SELECT c.*, u.name FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.timestamp > $period AND c.nid = '%d' ORDER BY cid DESC", $node->nid);
     }
 
     $output .= "<ul>";
     while ($comment = db_fetch_object($cresult)) {
-      $output .= " <li>".l(check_output($comment->subject), array("id" => $node->nid, "cid" => $comment->cid, "pid" => $comment->pid."#".$comment->cid))." by ".lm(check_output($comment->name), array("mod" => "user", "op" => "view", "id" => $comment->uid))." (". t("replies") .": ". comment_num_replies($comment->cid) .") ". (comment_is_new($comment) ? "<span style=\"color: red;\">*</span>" : "") ."</li>\n";
+      $output .= " <li>". l(check_output($comment->subject), array("id" => $node->nid, "cid" => $comment->cid, "pid" => $comment->pid ."#". $comment->cid)) ." by ". lm(check_output($comment->name), array("mod" => "user", "op" => "view", "id" => $comment->uid)) ." (". t("replies") .": ". comment_num_replies($comment->cid) .") ". (comment_is_new($comment) ? "<span style=\"color: red;\">*</span>" : "") ."</li>\n";
     }
     $output .= " </ul>\n";
   }

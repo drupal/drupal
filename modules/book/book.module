@@ -384,7 +384,7 @@ function book_view($node, $main = 0) {
 
     if ($node->title) {
       foreach (book_location($node) as $level) {
-        $location .= "$indent ".l($level->title, array("id" => $level->nid))."<br />";
+        $location .= "$indent ". l($level->title, array("id" => $level->nid)) ."<br />";
         $indent .= "-";
       }
 
@@ -406,7 +406,7 @@ function book_view($node, $main = 0) {
     }
 
     $output .= " <tr><td colspan=\"3\"><hr /></td></tr>";
-    $output .= " <tr><td align=\"left\" width=\"33%\">". ($prev ? l(t("previous"), array("id" => $prev->nid), t("View the previous page in this book.")) : t("previous")) ."</td><td align=\"center\" width=\"34%\">".lm(t("index"), array("mod" => "book"), t("View this book's table of contents."))."</td><td align=\"right\" width=\"33%\">". ($next ? l(t("next"), array("id" => $next->nid), t("View the next page in this book.")) : t("next")) ."</td></tr>";
+    $output .= " <tr><td align=\"left\" width=\"33%\">". ($prev ? l(t("previous"), array("id" => $prev->nid), t("View the previous page in this book.")) : t("previous")) ."</td><td align=\"center\" width=\"34%\">". lm(t("index"), array("mod" => "book"), t("View this book's table of contents.")) ."</td><td align=\"right\" width=\"33%\">". ($next ? l(t("next"), array("id" => $next->nid), t("View the next page in this book.")) : t("next")) ."</td></tr>";
     $output .= " <tr><td align=\"left\" width=\"33%\">". ($prev ? "<small>". check_output($prev->title) ."</small>" : "&nbsp;") ."</td><td align=\"center\" width=\"34%\">". ($node->parent ? l(t("up"), array("id" => $node->parent), t("View this page's parent section.")) : t("up")) ."</td><td align=\"right\" width=\"33%\">". ($next ? "<small>". check_output($next->title) ."</small>" : "&nbsp;") ."</td></tr>";
     $output .= " <tr><td colspan=\"3\"><hr /></td></tr>";
     $output .= " <tr><td colspan=\"3\" align=\"right\"><div style=\"margin: 10 10 10 10;\">". $theme->links(link_node($node, $main)) ."</div></td></tr>";
@@ -462,7 +462,7 @@ function book_tree_recurse($nid, $depth, $children) {
   if ($depth > 0) {
     if ($children[$nid]) {
       foreach ($children[$nid] as $foo => $node) {
-        $output .= "<li>".l(check_output($node->title), array("id" => $node->nid))."</li>";
+        $output .= "<li>". l(check_output($node->title), array("id" => $node->nid)) ."</li>";
 
         if ($tree = book_tree_recurse($node->nid, $depth - 1, $children)) {
           $output .= "<ul>$tree</ul>";
@@ -508,7 +508,7 @@ function book_render() {
 
     if ($node) {
       // output the content:
-      $output .= "<dt>".l(check_output($node->title), array("id" => $node->nid))."</dt><dd>". book_body($node) ."<br /><br /></dd>";
+      $output .= "<dt>". l(check_output($node->title), array("id" => $node->nid)) ."</dt><dd>". book_body($node) ."<br /><br /></dd>";
     }
   }
 
@@ -608,12 +608,12 @@ function book_admin_view_line($node, $depth = 0) {
   */
 
   $output .= "<tr>";
-  $output .= " <td><div style=\"padding-left: ". (25 * $depth) ."px;\">".l(check_output($node->title), array("id" => $node->nid))."</div></td>";
+  $output .= " <td><div style=\"padding-left: ". (25 * $depth) ."px;\">". l(check_output($node->title), array("id" => $node->nid)) ."</div></td>";
   $output .= " <td align=\"center\">$revision</td>";
-  $output .= " <td>".la(t("edit node"), array("mod" => "node", "op" => "edit", "id" => $node->nid))."</td>";
+  $output .= " <td>". la(t("edit node"), array("mod" => "node", "op" => "edit", "id" => $node->nid)) ."</td>";
   //TODO: get this link to work. Must pass $nid along so it is received by book_node_link()
-  //$output .= " <td>".la(t("edit book outline"), array("mod" => "book", "nid" => $node->nid, "op" => "Edit+book+outline"))."</td>";
-  $output .= " <td>".la(t("delete node"), array("mod" => "node", "op" => "delete", "id" => $node->nid))."</td>";
+  //$output .= " <td>". la(t("edit book outline"), array("mod" => "book", "nid" => $node->nid, "op" => "Edit+book+outline")) ."</td>";
+  $output .= " <td>". la(t("delete node"), array("mod" => "node", "op" => "delete", "id" => $node->nid)) ."</td>";
   $output .= "</tr>";
 
   return $output;
@@ -660,7 +660,7 @@ function book_admin_orphan() {
   $output .= " <tr><th>title</th><th colspan=\"2\">operations</th></tr>";
   foreach ($pages as $nid => $node) {
     if ($node->parent && empty($pages[$node->parent])) {
-      $output .= "<tr><td>".l(check_output($node->title), array("id" => $node->nid))."</td><td>".la(t("edit page"), array("mod" => "node", "op" => "edit", "id" => $node->nid))."</td><td>".la(t("delete page"), array("mod" => "node", "op" => "delete", "id" => $node->nid))."</td>";
+      $output .= "<tr><td>". l(check_output($node->title), array("id" => $node->nid)) ."</td><td>". la(t("edit page"), array("mod" => "node", "op" => "edit", "id" => $node->nid)) ."</td><td>". la(t("delete page"), array("mod" => "node", "op" => "delete", "id" => $node->nid)) ."</td>";
     }
   }
   $output .= "</table>";

@@ -40,7 +40,7 @@ function watchdog_overview($type) {
   $output .= " <tr><th>date</th><th>message</th><th>user</th><th>operations</th></tr>";
   while ($watchdog = db_fetch_object($result)) {
     if ($background = $color[$watchdog->type]) {
-      $output .= " <tr bgcolor=\"$background\"><td>". format_date($watchdog->timestamp, "small") ."</td><td>". substr(check_output($watchdog->message), 0, 64) ."</td><td align=\"center\">". format_name($watchdog) ."</a></td><td align=\"center\">".la(t("details"), array("mod" => "watchdog", "op" => "view", "id" => $watchdog->wid))."</td></tr>";
+      $output .= " <tr bgcolor=\"$background\"><td>". format_date($watchdog->timestamp, "small") ."</td><td>". substr(check_output($watchdog->message), 0, 64) ."</td><td align=\"center\">". format_name($watchdog) ."</a></td><td align=\"center\">". la(t("details"), array("mod" => "watchdog", "op" => "view", "id" => $watchdog->wid)) ."</td></tr>";
     }
   }
   $output .= "</table>";
@@ -79,7 +79,7 @@ function watchdog_admin() {
     $links[] = la(t("overview"), array("mod" => "watchdog"));
     $links[] = la(t("help"), array("mod" => "watchdog", "op" => "help"));
 
-    print "<small>".implode(" | ", $links)."</small><hr />";
+    print "<small>". implode(" | ", $links) ."</small><hr />";
 
     switch ($op) {
       case "help":

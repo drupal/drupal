@@ -34,7 +34,7 @@ function block_admin_display() {
   $result = db_query("SELECT * FROM blocks ORDER BY module");
 
   // Generate output:
-  $output .= "<form action=\"".drupal_url(array("mod" => "block"), "admin")." method=\"post\">\n";
+  $output .= "<form action=\"". drupal_url(array("mod" => "block"), "admin") ." method=\"post\">\n";
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
   $output .= " <tr><th>block</th><th>module</th><th>status</th><th>weight</th><th>region</th><th>path</th></tr>\n";
 
@@ -128,7 +128,7 @@ function block_admin() {
 
   if (user_access("administer blocks")) {
 
-    print "<small>".la(t("configure"), array("mod" => "block"))." | ".la(t("preview"), array("mod" => "block", "op" => "preview"))." | ".la(t("help"), array("mod" => "block", "op" => "help"))."</small><hr>\n";
+    print "<small>". la(t("configure"), array("mod" => "block")) ." | ". la(t("preview"), array("mod" => "block", "op" => "preview")) ." | ". la(t("help"), array("mod" => "block", "op" => "help")) ."</small><hr>\n";
 
     block_init();
 

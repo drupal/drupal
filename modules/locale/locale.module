@@ -95,7 +95,7 @@ function locale_languages($translation) {
   global $languages;
 
   foreach ($languages as $key=>$value) {
-    $output .= ($translation->$key) ? "<a href=\"#\" title=\"".check_output($translation->$key)."\">$key</a> " : "<strike>$key</strike> ";
+    $output .= ($translation->$key) ? "<a href=\"#\" title=\"". check_output($translation->$key) ."\">$key</a> " : "<strike>$key</strike> ";
   }
 
   return $output;
@@ -106,10 +106,10 @@ function locale_links($translation) {
 
   foreach ($languages as $key=>$value) {
     if ($translation) {
-      $output .= la(t("translated '$key' strings"), array("mod" => "locale", "op" => "translated", "language" => $key))." | ";
+      $output .= la(t("translated '$key' strings"), array("mod" => "locale", "op" => "translated", "language" => $key)) ." | ";
     }
     else {
-      $output .= la(t("untranslated '$key' strings"), array("mod" => "locale", "op" => "untranslated", "language" => $key))." | ";
+      $output .= la(t("untranslated '$key' strings"), array("mod" => "locale", "op" => "untranslated", "language" => $key)) ." | ";
     }
   }
 
@@ -156,18 +156,18 @@ function locale_seek() {
       $string_query[] = "string LIKE '%". check_query($edit["string"]) ."%'";
       if ($edit["status"] != 2) {
         if (strlen($edit["language"]) == 2) {
-          $string_query[] = check_query($edit["language"]). " LIKE '%". check_query($edit["string"]) ."%'";
+          $string_query[] = check_query($edit["language"]) ." LIKE '%". check_query($edit["string"]) ."%'";
         }
         else {
           foreach ($languages as $key=>$value) {
-            $string_query[] = check_query($key). " LIKE '%". check_query($edit["string"]) ."%'";
+            $string_query[] = check_query($key) ." LIKE '%". check_query($edit["string"]) ."%'";
           }
         }
       }
-      $query[] = "(" . implode(" || ", $string_query) . ")";
+      $query[] = "(". implode(" || ", $string_query) .")";
     }
 
-    $result = db_query("SELECT * FROM locales". (count($query) ? " WHERE ". implode(" && ", $query) : ""). " ORDER BY string");
+    $result = db_query("SELECT * FROM locales". (count($query) ? " WHERE ". implode(" && ", $query) : "") ." ORDER BY string");
 
     $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
     $output .= " <tr><th>string</th>";
@@ -191,7 +191,7 @@ function locale_seek() {
         $output .= "<td align=\"center\">". check_output(locale_languages($locale)) ."</td>";
       }
 
-      $output .= "<td nowrap=\"nowrap\">".la(t("edit locale"), array("mod" => "locale", "op" => "edit", "id" => $locale->lid))."</td><td nowrap=\"nowrap\">".la(t("delete locale"), array("mod" => "locale", "op" => "delete", "id" => $locale->lid))."</td></tr>";
+      $output .= "<td nowrap=\"nowrap\">". la(t("edit locale"), array("mod" => "locale", "op" => "edit", "id" => $locale->lid)) ."</td><td nowrap=\"nowrap\">". la(t("delete locale"), array("mod" => "locale", "op" => "delete", "id" => $locale->lid)) ."</td></tr>";
     }
     $output .= "</table>\n";
   }
@@ -216,7 +216,7 @@ function locale_admin() {
     print status("locale disabled.");
   }
   else if (user_access("administer locales")) {
-    print "<small>". locale_links(1) . locale_links(0) .la(t("search"), array("mod" => "locale", "op" => "Search"))." | ".la(t("overview"), array("mod" => "locale", "op" => "overview"))." | ".la(t("help"), array("mod" => "locale", "op" => "help"))."</small><hr />\n";
+    print "<small>". locale_links(1) . locale_links(0) . la(t("search"), array("mod" => "locale", "op" => "Search")) ." | ". la(t("overview"), array("mod" => "locale", "op" => "overview")) ." | ". la(t("help"), array("mod" => "locale", "op" => "help")) ."</small><hr />\n";
 
     switch ($op) {
       case "delete":

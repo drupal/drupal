@@ -47,7 +47,7 @@ function forum_link($type) {
 
 function forum_view($node) {
   global $theme;
-  $output .= "<p>".lm(t("Forum"), array("mod" => "forum"))." / <b>".l(check_output($node->title), array("id" => $node->nid))."</b>:</p><p>". check_output($node->body) ."</p>";
+  $output .= "<p>". lm(t("Forum"), array("mod" => "forum")) ." / <b>". l(check_output($node->title), array("id" => $node->nid)) ."</b>:</p><p>". check_output($node->body) ."</p>";
   $output .= "<p>". $theme->links(link_node($node, $main)) ."</p>";
 
   $theme->box(t("Discussion forum"), $output);
@@ -81,7 +81,7 @@ function forum_page() {
     $output .= " <tr><th>". t("Forum") ."</th><th>". t("Comments") ."</th><th>". t("Last comment") ."</th></tr>";
     while ($node = db_fetch_object($result)) {
       $node = node_load(array("nid" => $node->nid));
-      $output .= " <tr><td>".l(check_output($node->title), array("id" => $node->nid))."<br /><small>". check_output($node->body, 1) ."</small></td><td align=\"center\">". forum_num_comments($node->nid) ."</td><td align=\"center\">". forum_last_comment($node->nid) ."</td></tr>";
+      $output .= " <tr><td>". l(check_output($node->title), array("id" => $node->nid)) ."<br /><small>". check_output($node->body, 1) ."</small></td><td align=\"center\">". forum_num_comments($node->nid) ."</td><td align=\"center\">". forum_last_comment($node->nid) ."</td></tr>";
     }
     $output .= "</table>";
 

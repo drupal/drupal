@@ -459,7 +459,7 @@ function user_block() {
     // Display account settings:
     $block[0]["subject"] = $user->name;
 
-    $output .= "<div style=\"{ width: 155; }\">\n";
+    $output = "<div style=\"{ width: 155; }\">\n";
 
     $links = array_merge(module_invoke_all("link", "menu.create"), array(""), module_invoke_all("link", "menu.view"), array(""), module_invoke_all("link", "menu.settings"), array(""), module_invoke_all("link", "menu.misc"));
     $output .= @implode("<br />\n", $links);
@@ -470,18 +470,17 @@ function user_block() {
   else {
     $block[1]["subject"] = t("Log in");
 
-    $output .= "<div align=\"center\">\n";
+    $output = "<div align=\"center\">\n";
     $output .= "<form action=\"".drupal_url(array("mod" => "user", "op" => "login"), "module")."\" method=\"post\">\n";
     $output .= "<b>". t("Username") .":</b><br /><input name=\"edit[name]\" size=\"15\" /><br />\n";
     $output .= "<b>". t("Password") .":</b><br /><input name=\"edit[pass]\" size=\"15\" type=\"password\" /><br />\n";
-    $output .=  "<input name=\"edit[remember_me]\" type=\"checkbox\" />". t("Remember me") ."<br />\n";
+    $output .= "<input name=\"edit[remember_me]\" type=\"checkbox\" />". t("Remember me") ."<br />\n";
     $output .= "<input type=\"submit\" value=\"". t("Log in") ."\" /><br />\n";
-    $output .= "</div>\n";
+    $output .= "</form></div>\n";
     if (variable_get("account_register", 1)) {
       $output .= "&#187; ".lm(t("Register"), array("mod" => "user", "op" => "register"), t("Create a new user account."))."\n";
     }
-    $output .= "<br \>&#187; ".lm(t("New password"), array("mod" => "user", "op" => "password"), t("Request new password via e-mail"))."</a><br />";
-    $output .= "</form>\n";
+    $output .= "<br \>&#187; ".lm(t("New password"), array("mod" => "user", "op" => "password"), t("Request new password via e-mail"))."<br />";
 
     $block[1]["content"] = $output;
   }
@@ -940,7 +939,7 @@ function user_register($edit = array()) {
 
     //the first user may login immediately, and receives a customized welcome email.
     if ($user->uid == 1) {
-      user_mail($edit["mail"], t("drupal user account details for %s", array("%s" => $edit["name"])), t("%username,\n\nYou may now login to %uri using the following username and password:\n\n  username: %username\n  password: %password\n\nAfter logging in, you may wish to visit the following pages:\n\nAdministration: %uriadmin.php\nEdit user account: %uri".drupal_url(array("mod" => "user", "op" => "edit"), "module")."\n\n--drupal"), $variables, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
+      user_mail($edit["mail"], t("drupal user account details for %s", array("%s" => $edit["name"])), strtr(t("%username,\n\nYou may now login to %uri using the following username and password:\n\n  username: %username\n  password: %password\n\nAfter logging in, you may wish to visit the following pages:\n\nAdministration: %uriadmin.php\nEdit user account: %uri". drupal_url(array("mod" => "user", "op" => "edit"), "module") ."\n\n--drupal"), $variables), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
       // This should not be t()'ed. No point as its only shown once in the sites lifetime, and it would be bad to store the password
       $output .= "<p>Welcome to Drupal. You are user #1, which gives you full and immediate access. All future registrants will receive their passwords via email, so please configure your email settings using the Administration pages.</p><p> Your password is <b>$pass</b>. You may change your password on the next page.</p><p>Please login below.</p>";
       $output .= form_hidden("name", $user->name);
@@ -1179,6 +1178,7 @@ function user_page() {
     case t("Save user information"):
     case "edit":
       $output = user_edit($edit);
+      $theme = theme_init();
       $theme->header();
       $theme->box(t("User account"), user_menu());
       $theme->box(t("Edit user information"), $output);

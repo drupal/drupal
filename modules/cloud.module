@@ -78,7 +78,7 @@ function cloud_update($site) {
 
 function cloud_form($edit = array()) {
   $period = array(900 => format_interval(900), 1800 => format_interval(1800), 3600 => format_interval(3600), 7200 => format_interval(7200), 10800 => format_interval(10800), 21600 => format_interval(21600), 32400 => format_interval(32400), 43200 => format_interval(43200), 64800 => format_interval(64800), 86400 => format_interval(86400), 172800 => format_interval(172800), 259200 => format_interval(259200), 604800 => format_interval(604800), 1209600 => format_interval(1209600), 2419200 => format_interval(2419200));
-  $threshold = array (0 => "0 bytes", 10 => "10 bytes", 20 => "20 bytes", 40 => "40 bytes", 60 => "60 bytes", 80 => "80 bytes", 160 => "160 bytes", 320 => "320 bytes", 640 => "640 bytes");
+  $threshold = array(0 => "0 bytes", 10 => "10 bytes", 20 => "20 bytes", 40 => "40 bytes", 60 => "60 bytes", 80 => "80 bytes", 160 => "160 bytes", 320 => "320 bytes", 640 => "640 bytes");
 
   $form .= form_textfield("Site name", "name", $edit["name"], 50, 128, "The name of the website you want to monitor for updates.");
   $form .= form_textfield("Site URL", "link", $edit["link"], 50, 255, "The URL of the website you want to monitor for updates.");
@@ -118,7 +118,7 @@ function cloud_display() {
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
   $output .= " <tr><th>site</th><th>last update</th><th colspan=\"2\">operations</th></tr>\n";
   while ($site = db_fetch_object($result)) {
-    $output .= " <tr><td><a href=\"". check_output($site->link) ."\">". check_output($site->name) ."</a></td><td>". ($site->timestamp ? format_interval(time() - $site->timestamp) ." ago" : "never") ."</td><td>".la(t("edit site"), array("mod" => "cloud", "op" => "edit", "id" => $site->sid))."</td><td>".la(t("update site"), array("mod" => "cloud", "op" => "update", "id" => $site->sid))."</td></tr>\n";
+    $output .= " <tr><td><a href=\"". check_output($site->link) ."\">". check_output($site->name) ."</a></td><td>". ($site->timestamp ? format_interval(time() - $site->timestamp) ." ago" : "never") ."</td><td>". la(t("edit site"), array("mod" => "cloud", "op" => "edit", "id" => $site->sid)) ."</td><td>". la(t("update site"), array("mod" => "cloud", "op" => "update", "id" => $site->sid)) ."</td></tr>\n";
   }
   $output .= "</table>\n";
 
@@ -137,7 +137,8 @@ function cloud_list($limit = 10) {
       if ($hour < 12) {
         if ($hour == 0) {
           $output .= "<br />". t("Updated < 1 hours ago:");
-      } else {
+      }
+      else {
           $output .= "<br />". t("Updated %a ago:", array("%a" => format_plural($hour, "hour", "hours")));
         }
       }
@@ -163,7 +164,7 @@ function cloud_page() {
 
 function cloud_block() {
   $block[0]["subject"] = t("Site cloud");
-  $block[0]["content"] = cloud_list(20) . "<br /><div align=\"right\">".lm(t("more"), array("mod" => "cloud"), t("Monitor other sites in the cloud."))."</div>";
+  $block[0]["content"] = cloud_list(20) ."<br /><div align=\"right\">". lm(t("more"), array("mod" => "cloud"), t("Monitor other sites in the cloud.")) ."</div>";
   $block[0]["info"] = t("Site cloud");
   return $block;
 }
@@ -172,7 +173,7 @@ function cloud_admin() {
   global $op, $id, $edit;
 
   if (user_access("administer site cloud")) {
-    print "<small>".la(t("add new site"), array("mod" => "cloud", "op" => "add"))." | ".la(t("overview"), array("mod" => "cloud"))." | ".la(t("help"), array("mod" => "cloud", "op" => "help"))."</small><hr />\n";
+    print "<small>". la(t("add new site"), array("mod" => "cloud", "op" => "add")) ." | ". la(t("overview"), array("mod" => "cloud")) ." | ". la(t("help"), array("mod" => "cloud", "op" => "help")) ."</small><hr />\n";
 
     switch ($op) {
       case "add":

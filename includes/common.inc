@@ -117,7 +117,8 @@ function t($string, $args = 0) {
   global $languages;
   if (!$args) {
     return $string;
-  } else {
+  }
+  else {
     return strtr($string, $args);
   }
 }
@@ -582,7 +583,7 @@ function form_select($title, $name, $value, $options, $description = 0, $extra =
     foreach ($options as $key=>$choice) {
       $select .= "<option value=\"$key\"". (is_array($value) ? (in_array($key, $value) ? " selected=\"selected\"" : "") : ($key == $value ? " selected=\"selected\"" : "")) .">". check_form($choice) ."</option>";
     }
-    return form_item($title, "<select name=\"edit[$name]".($multiple ? "[]" : "")."\"" .($multiple ? " multiple " : "").($extra ? " $extra" : "") .">$select</select>", $description);
+    return form_item($title, "<select name=\"edit[$name]". ($multiple ? "[]" : "") ."\"". ($multiple ? " multiple " : "") . ($extra ? " $extra" : "") .">$select</select>", $description);
   }
 }
 
@@ -607,10 +608,10 @@ function form_submit($value) {
  */
 function drupal_url($args = array(), $script = "node") {
   $t = array();
-  foreach($args as $k => $v) {
+  foreach ($args as $k => $v) {
     $t[] = "$k=$v";
   }
-  return "$script.php?".implode("&amp;", $t);
+  return "$script.php?". implode("&amp;", $t);
 }
 
 /**
@@ -623,17 +624,17 @@ function drupal_url($args = array(), $script = "node") {
  * @param $script      script to be invoked; optional, defaults to node
  */
 function l($linktext, $args = array(), $title = "", $script = "node") {
-  return "<a href=\"".drupal_url($args, $script)."\" title=\"$title\">$linktext</a>";
+  return "<a href=\"". drupal_url($args, $script) ."\" title=\"$title\">$linktext</a>";
 }
 
 function la($linktext, $args = array(), $title = "") {
   // we don't call l() to avoid another duplication of the array
-  return "<a href=\"".drupal_url($args, "admin")."\" title=\"$title\">$linktext</a>";
+  return "<a href=\"". drupal_url($args, "admin") ."\" title=\"$title\">$linktext</a>";
 }
 
 function lm($linktext, $args = array(), $title = "") {
   // we don't call l() to avoid another duplication of the array
-  return "<a href=\"".drupal_url($args, "module")."\" title=\"$title\">$linktext</a>";
+  return "<a href=\"". drupal_url($args, "module") ."\" title=\"$title\">$linktext</a>";
 }
 
 function field_get($string, $name) {

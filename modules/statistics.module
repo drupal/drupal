@@ -92,7 +92,7 @@ function statistics_admin() {
 
   if (user_access("administer statistics")) {
 
-    print "<small>".la(t("internal referrers"), array("mod" => "statistics", "type" => "internal+referrer"))." | ".la(t("external referrers"), array("mod" => "statistics", "type" => "external+referrer"))." | ".la(t("help"), array("mod" => "statistics", "op" => "help"))."</small><hr />\n";
+    print "<small>". la(t("internal referrers"), array("mod" => "statistics", "type" => "internal+referrer")) ." | ". la(t("external referrers"), array("mod" => "statistics", "type" => "external+referrer")) ." | ". la(t("help"), array("mod" => "statistics", "op" => "help")) ."</small><hr />\n";
 
     switch ($op) {
       case "help":

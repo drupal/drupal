@@ -1,10 +1,11 @@
 <?php
+// $Id$
 
 function db_connect($url) {
   $url = parse_url($url);
 
   mysql_pconnect($url["host"], $url["user"], $url["pass"]) or die(mysql_error());
-  mysql_select_db(substr($url["path"], 1)) or die ("unable to select database");
+  mysql_select_db(substr($url["path"], 1)) or die("unable to select database");
 
   // NOTE: we are using a persistent connection!
 }
@@ -15,7 +16,8 @@ function db_query($query) {
     $args = array_map("check_query", $args);
     $args[0] = $query;
     return _db_query(call_user_func_array("sprintf", $args));
-  } else {
+  }
+  else {
     return _db_query($query);
   }
 }
@@ -27,7 +29,8 @@ function db_queryd($query) {
     $args = array_map("check_query", $args);
     $args[0] = $query;
     return _db_query(call_user_func_array("sprintf", $args), 1);
-  } else {
+  }
+  else {
     return _db_query($query, 1);
   }
 }
@@ -48,7 +51,8 @@ function _db_query($query, $debug = 0) {
 
   if (!mysql_errno()) {
     return $result;
-  } else {
+  }
+  else {
     trigger_error(mysql_error() ."\nquery: ". htmlspecialchars($query), E_USER_ERROR);
   }
 }

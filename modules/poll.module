@@ -28,7 +28,7 @@ function poll_block() {
 
 function poll_cron() {
   // Close polls that have exceeded their allowed runtime
-  $result = db_query("SELECT p.nid FROM poll p LEFT JOIN node n ON p.nid=n.nid WHERE (n.created + p.runtime) < '" . time() . "' AND p.active = '1' AND p.runtime != '0'");
+  $result = db_query("SELECT p.nid FROM poll p LEFT JOIN node n ON p.nid=n.nid WHERE (n.created + p.runtime) < '". time() ."' AND p.active = '1' AND p.runtime != '0'");
   while ($poll = db_fetch_object($result)) {
     db_query("UPDATE poll SET active='0' WHERE nid='$poll->nid'");
   }
@@ -55,12 +55,12 @@ function poll_form(&$node, &$help, &$error) {
       }
 
       if ($node->chvotes[$i] < 0) {
-        $error["chvotes][$i"] = "<span style=\"color: red;\">" . t("Negative values are not allowed.") . "</span>";
+        $error["chvotes][$i"] = "<span style=\"color: red;\">". t("Negative values are not allowed.") ."</span>";
       }
     }
 
     if ($actualchoices < 2) {
-      $error["choice][0"] = "<span style=\"color: red;\">" . t("You must fill in at least two choices.") . "</span>";
+      $error["choice][0"] = "<span style=\"color: red;\">". t("You must fill in at least two choices.") ."</span>";
     }
   }
   else {
@@ -71,10 +71,10 @@ function poll_form(&$node, &$help, &$error) {
     $opts[$c] = $c;
   }
   $output .= form_select(t("Number of choices"), "choices", $node->choices, $opts, t("This item only specifies the number of boxes in this form, but it doesn't have to equal the actual amount of options: you can leave the extra boxes empty."));
-  $output .= form_submit(t("Preview")) . "<br><br><br>";
+  $output .= form_submit(t("Preview")) ."<br /><br /><br />";
 
   for ($a = 0; $a < $node->choices; $a++) {
-    $output .= form_textfield(t("Choice"). " " . ($a + 1), "choice][$a", $node->choice[$a], 50, 127, $error["choice][$a"]);
+    $output .= form_textfield(t("Choice") ." ". ($a + 1), "choice][$a", $node->choice[$a], 50, 127, $error["choice][$a"]);
     if ($admin) {
       $output .= form_textfield(t("Votes for choice %n", array("%n" => ($a + 1))), "chvotes][$a", $node->chvotes[$a] ? $node->chvotes[$a] : 0, 7, 7, $error["chvotes][$a"]);
     }
@@ -97,8 +97,7 @@ function poll_help() {
 function poll_insert($node) {
   if (!user_access("administer nodes")) {
     // Make sure all votes are 0 initially
-    for ($i = 0; $i < count($node->chvotes); $i++)
-      $node->chvotes[$i] = 0;
+    for ($i = 0; $i < count($node->chvotes); $i++) $node->chvotes[$i] = 0;
     $node->active = 1;
   }
 
@@ -192,7 +191,7 @@ function poll_view(&$node, $main = 0, $block = 0) {
   if (user_access("vote on polls")) {
     if ($user->uid) {
       // Pad the UID with underscores to allow a simple strstr() search
-      $id = "_" . $user->uid . "_";
+      $id = "_". $user->uid ."_";
     }
     else {
       $id = $REMOTE_ADDR;
@@ -205,7 +204,7 @@ function poll_view(&$node, $main = 0, $block = 0) {
   if (($pollid == $pollidcount) && isset($pollvote) && ($allowvotes)) {
     // The user has submitted a valid vote
     if (!empty($node->choice[$pollvote])) {
-      $node->voters = $node->voters ? ($node->voters . " " . $id) : $id;
+      $node->voters = $node->voters ? ($node->voters ." ". $id) : $id;
       db_query("UPDATE poll SET voters='$node->voters' WHERE nid='$node->nid'");
       db_query("UPDATE poll_choices SET chvotes = chvotes + 1 WHERE nid='$node->nid' AND chorder='$pollvote'");
       $allowvotes = false;
@@ -215,7 +214,7 @@ function poll_view(&$node, $main = 0, $block = 0) {
 
   if ($allowvotes) {
     // Display the vote form
-    $url = request_uri() . (strstr(request_uri(), "?") ? "&" : "?") . "pollid=" . $pollidcount;
+    $url = request_uri() . (strstr(request_uri(), "?") ? "&" : "?") ."pollid=". $pollidcount;
     $output .= "<form action=\"$url\" method=\"post\">";
     $output .= "<table border=\"0\" align=\"center\"><tr><td>";
 
@@ -225,9 +224,9 @@ function poll_view(&$node, $main = 0, $block = 0) {
       }
     }
     if ($block) {
-      $output .= "</td></tr><tr><td><div align=\"center\">" . form_submit(t("Vote")) . "</div></td></tr></table>";
+      $output .= "</td></tr><tr><td><div align=\"center\">". form_submit(t("Vote")) ."</div></td></tr></table>";
     } else {
-      $output .= "</td><td valign=\"middle\"><div align=\"right\">&nbsp;&nbsp;&nbsp;" . form_submit(t("Vote")) . "</div></td></tr></table>";
+      $output .= "</td><td valign=\"middle\"><div align=\"right\">&nbsp;&nbsp;&nbsp;". form_submit(t("Vote")) ."</div></td></tr></table>";
     }
     $output .= "</form>";
   }
@@ -243,8 +242,8 @@ function poll_view(&$node, $main = 0, $block = 0) {
 
     // Define CSS classes for the bars
     $output .= "<style type=\"text/css\">";
-    $output .= "td.pollfg { background-color: " . $theme->foreground . "; font-size: 5pt; }";
-    $output .= "td.pollbg { background-color: " . $theme->background . "; font-size: 5pt; }";
+    $output .= "td.pollfg { background-color: ". $theme->foreground ."; font-size: 5pt; }";
+    $output .= "td.pollbg { background-color: ". $theme->background ."; font-size: 5pt; }";
     $output .= "</style>";
 
     foreach ($node->choice as $key => $value) {
@@ -252,7 +251,7 @@ function poll_view(&$node, $main = 0, $block = 0) {
         $width = round($node->chvotes[$key] * 100 / $votesmax);
         $percentage = round($node->chvotes[$key] * 100 / max($votestotal, 1));
 
-        $output .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"95%\" align=\"center\"><tr><td>$value</td><td><div align=\"right\"> $percentage%" . (!$block ? " (" . $node->chvotes[$key] . " votes)" : "") . "</div></td></tr></table>";
+        $output .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"95%\" align=\"center\"><tr><td>$value</td><td><div align=\"right\"> $percentage%". (!$block ? " (". $node->chvotes[$key] ." votes)" : "") ."</div></td></tr></table>";
         if ($width == 0) {
           $output .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"95%\" align=\"center\"><tr><td class=\"pollbg\" width=\"100%\">&nbsp;</td></tr></table>";
         }
@@ -260,11 +259,11 @@ function poll_view(&$node, $main = 0, $block = 0) {
           $output .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"95%\" align=\"center\"><tr><td class=\"pollfg\" width=\"100%\">&nbsp;</td></tr></table>";
         }
         else {
-          $output .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"95%\" align=\"center\"><tr><td class=\"pollfg\" width=\"" . $width . "%\">&nbsp;</td><td class=\"pollbg\" width=\"" . (100 - $width) . "%\">&nbsp;</td></tr></table>";
+          $output .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"95%\" align=\"center\"><tr><td class=\"pollfg\" width=\"". $width ."%\">&nbsp;</td><td class=\"pollbg\" width=\"". (100 - $width) ."%\">&nbsp;</td></tr></table>";
         }
       }
     }
-    $output .= "<br><div align=\"center\">Total votes: " . $votestotal . "</div>";
+    $output .= "<br /><div align=\"center\">Total votes: ". $votestotal ."</div>";
   }
   // Force the output on both the mainpage and elsewhere
   $node->body = $output;

@@ -7,8 +7,8 @@ $GLOBALS["corder"] = array(1 => "Date - newest first", 2 => "Date - oldest first
 function comment_help() {
   $output .= "<p>The comment module enables users to submit posts that are directly associated with a piece of content.  These associated posts are called <i>comments</i>.  Comments may be <i>threaded</i>, which means that Drupal keeps track of multiple subconversations around a piece of content.  Threading helps to keep the comment conversation more organized.  Users are presented with several ways to view the comment conversation, and if desired, users may easily choose a <i>flat</i> presentation of comments instead of threaded.  Further, users may choose to order their comments view by <i>newest first</i> or by <i>oldest first</i>.  Finally, users may view a folded list or an expanded list of comments.  Folded limits the comment display to <i>subject</i> only.  Drupal remembers the comment view preference of each user whenever he changes a view setting.</p>";
   $output .= "<p>Since a busy site generates lots of comments, Drupal takes care to present a personalized view of comments for each user.  The home page lists displays the number of read and unread comments for a given post for the current user.  Also, the tracker module (when installed) displays all recent comments on the site.  Finally, comments which the user has not yet read are highlighted with a red star (this graphic may depend on the current theme).</p>";
-  $output .= "<p>Comments behave like other user submissions in Drupal.  Specifically, ".la("filters", array("mod" => "system", "type" => "filter"))." like smileys and HTML work fine if the administrator has enabled them.  Also, throttles are usually enabled to prevent a single user from spamming the web site with too many comments in a short period of time.</p>";
-  $output .= "<p>Administrators may control which persons are allowed to submit and administer comments.  These controls appear in the ".la("user permissions", array("mod" => "user", "op" => "permission"))." administration page.  Additionally, administrators may edit or search through comments on the ".la("comments admininistration page", array("mod" => "comment")).", as well as set the default display view for new users.</p>";
+  $output .= "<p>Comments behave like other user submissions in Drupal.  Specifically, ". la("filters", array("mod" => "system", "type" => "filter")) ." like smileys and HTML work fine if the administrator has enabled them.  Also, throttles are usually enabled to prevent a single user from spamming the web site with too many comments in a short period of time.</p>";
+  $output .= "<p>Administrators may control which persons are allowed to submit and administer comments.  These controls appear in the ". la("user permissions", array("mod" => "user", "op" => "permission")) ." administration page.  Additionally, administrators may edit or search through comments on the ". la("comments admininistration page", array("mod" => "comment")) .", as well as set the default display view for new users.</p>";
 
   return $output;
 }
@@ -161,13 +161,15 @@ function comment_reply($pid, $nid) {
 
     if (node_comment_mode($nid) == 1) {
       $theme->box(t("Reply"), t("This discussion is closed: you can't post new comments."));
-    } else if (user_access("post comments", $context)) {
+    }
+    else if (user_access("post comments", $context)) {
       $theme->box(t("Reply"), comment_form(array("pid" => $pid, "nid" => $nid)));
     }
     else {
       $theme->box(t("Reply"), t("You are not authorized to post comments."));
     }
-  } else {
+  }
+  else {
     $theme->box(t("Reply"), t("You are not authorized to view comments."));
   }
 }
@@ -201,7 +203,7 @@ function comment_preview($edit) {
   $theme->box(t("Reply"), comment_form($edit));
 
   if ($edit["pid"]) {
-    $comment = db_fetch_object(db_query("SELECT c.*, u.uid, u.name FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.cid = '%s'", $edit[pid]));
+    $comment = db_fetch_object(db_query("SELECT c.*, u.uid, u.name FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.cid = '%s'", $edit["pid"]));
     comment_view($comment, t("reply to this comment"));
   }
   else {
@@ -379,7 +381,7 @@ function comment_links($comment, $return = 1) {
   $links = array();
 
   if ($return) {
-    $links[] = l("<span style=\"color: $theme->type;\">". t("return") ."</span>", array("id" => $comment->nid."#".$comment->cid));;
+    $links[] = l("<span style=\"color: $theme->type;\">". t("return") ."</span>", array("id" => $comment->nid ."#". $comment->cid));
   }
 
   if (user_access("administer comments")) {
@@ -416,7 +418,7 @@ function comment_view($comment, $folded = 0) {
     $theme->comment($comment, $folded);
   }
   else {
-    print l(check_output($comment->subject), array("id" => $comment->nid, "cid" => $comment->cid."#".$comment->cid)). " by ". format_name($comment) ."</small><p />";
+    print l(check_output($comment->subject), array("id" => $comment->nid, "cid" => $comment->cid ."#". $comment->cid)) ." by ". format_name($comment) ."</small><p />";
   }
 }
 
@@ -488,7 +490,7 @@ function comment_render($nid, $cid) {
     }
 
     print "<a name=\"comment\"></a>\n";
-    print "<form method=\"post\" action=\"".request_uri()."\">\n";
+    print "<form method=\"post\" action=\"". request_uri() ."\">\n";
 
     /*
     ** Render control panel:
@@ -509,7 +511,7 @@ function comment_render($nid, $cid) {
         print " <tr><th>Subject</th><th>Author</th><th>Date</th><th>Score</th></tr>\n";
         while ($comment = db_fetch_object($result)) {
           if (comment_visible($comment, $threshold)) {
-            print " <tr><td>".l(check_output($comment->subject), array("id" => $comment->nid, "cid" => $comment->cid."#".$comment->cid))."</td><td>". format_name($comment) ."</td><td>". format_date($comment->timestamp, "small") ."</td><td>$comment->score</td></tr>\n";
+            print " <tr><td>". l(check_output($comment->subject), array("id" => $comment->nid, "cid" => $comment->cid ."#". $comment->cid)) ."</td><td>". format_name($comment) ."</td><td>". format_date($comment->timestamp, "small") ."</td><td>$comment->score</td></tr>\n";
           }
         }
         print "</table>\n";
@@ -576,9 +578,7 @@ function comment_search($keys) {
   // The select statement may optionally provide "nid", which is a secondary
   // identifier which is currently used byt the comment module.
   //
-  $find = do_search(array("keys" => $keys,
-                          "type" => "comment",
-                          "select" => "select s.lno as lno, c.nid as nid, c.subject as title, c.timestamp as created, u.uid as uid, u.name as name, s.count as count FROM search_index s, comments c LEFT JOIN users u ON c.uid = u.uid WHERE s.lno = c.cid AND s.type = 'comment' AND s.word like '%'"));
+  $find = do_search(array("keys" => $keys, "type" => "comment", "select" => "select s.lno as lno, c.nid as nid, c.subject as title, c.timestamp as created, u.uid as uid, u.name as name, s.count as count FROM search_index s, comments c LEFT JOIN users u ON c.uid = u.uid WHERE s.lno = c.cid AND s.type = 'comment' AND s.word like '%'"));
 
   return $find;
 }
@@ -605,7 +605,7 @@ function comment_link($type, $node = 0, $main = 0) {
         $all = comment_num_all($node->nid);
         $new = comment_num_new($node->nid);
 
-        $links[] = l(format_plural($all, "comment", "comments") . ($new ? ", $new ". t("new") : ""), array("id" => $node->nid."#comment"), t("View this posting and all of its comments."));
+        $links[] = l(format_plural($all, "comment", "comments") . ($new ? ", $new ". t("new") : ""), array("id" => $node->nid ."#comment"), t("View this posting and all of its comments."));
       }
     }
     else {
@@ -616,8 +616,9 @@ function comment_link($type, $node = 0, $main = 0) {
 
       if (user_access("post comments")) {
         if ($node->comment == 2) {
-          $links[] = lm(t("add new comment"), array("mod" => "comment", "op" => "reply", "id" => $node->nid."#comment"), t("Share your thoughts and opinions related to this posting."));
-        } else {
+          $links[] = lm(t("add new comment"), array("mod" => "comment", "op" => "reply", "id" => $node->nid ."#comment"), t("Share your thoughts and opinions related to this posting."));
+        }
+        else {
           $links[] = t("This discussion is closed: you can't post new comments.");
         }
       }
@@ -642,7 +643,7 @@ function comment_node_link($node) {
     $output .= " <tr><th>title</th><th>author</th><th colspan=\"3\">operations</th></tr>";
 
     while ($comment = db_fetch_object($result)) {
-      $output .= "<tr><td>".l($comment->subject, array("id" => $node->nid, "cid" => $comment->cid."#".$comment->cid))."</td><td>". format_name($comment) ."</td><td>".l(t("view comment"), array("id" => $node->nid, "cid" => $comment->cid."#".$comment->cid))."</td><td>".la(t("edit comment"), array("mod" => "comment", "op" => "edit", "id" => $comment->cid))."</td><td>".la(t("delete comment"), array("mod" => "comment", "op" => "delete", "id" => $comment->cid))."</td></tr>";
+      $output .= "<tr><td>". l($comment->subject, array("id" => $node->nid, "cid" => $comment->cid ."#". $comment->cid)) ."</td><td>". format_name($comment) ."</td><td>". l(t("view comment"), array("id" => $node->nid, "cid" => $comment->cid ."#". $comment->cid)) ."</td><td>". la(t("edit comment"), array("mod" => "comment", "op" => "edit", "id" => $comment->cid)) ."</td><td>". la(t("delete comment"), array("mod" => "comment", "op" => "delete", "id" => $comment->cid)) ."</td></tr>";
     }
 
     $output .= "</table>";
@@ -707,7 +708,7 @@ function comment_admin_overview() {
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
   $output .= " <tr><th>subject</th><th>author</th><th>date</th><th colspan=\"2\">operations</th></tr>\n";
   while ($comment = db_fetch_object($result)) {
-    $output .= " <tr><td>".l(check_output($comment->subject), array("id" => $comment->nid, "cid" => $comment->cid, "pid" => $comment->pid."#".$comment->cid))."</td><td>". format_name($comment) ."</td><td>". format_date($comment->timestamp, "small") ."</td><td>".la(t("edit comment"), array("mod" => comment, "op" => edit, "id" => $comment->cid))."</td><td>".la(t("delete comment"), array("mod" => "comment", "op" => "delete", "id" => $comment->cid))."</td></tr>\n";
+    $output .= " <tr><td>". l(check_output($comment->subject), array("id" => $comment->nid, "cid" => $comment->cid, "pid" => $comment->pid ."#". $comment->cid)) ."</td><td>". format_name($comment) ."</td><td>". format_date($comment->timestamp, "small") ."</td><td>". la(t("edit comment"), array("mod" => comment, "op" => edit, "id" => $comment->cid)) ."</td><td>". la(t("delete comment"), array("mod" => "comment", "op" => "delete", "id" => $comment->cid)) ."</td></tr>\n";
   }
   $output .= "</table>\n";
 
@@ -736,7 +737,7 @@ function comment_admin() {
 
   if (user_access("administer comments")) {
 
-    print "<small>".la(t("overview"), array("mod" => "comment"))." | ".la(t("search comment"), array("mod" => "comment", "op" => "search"))."</small><hr />\n";
+    print "<small>". la(t("overview"), array("mod" => "comment")) ." | ". la(t("search comment"), array("mod" => "comment", "op" => "search")) ."</small><hr />\n";
 
     switch ($op) {
       case "edit":
@@ -778,9 +779,7 @@ function comment_update_index() {
   // "select"'s value is used to select the node id and text fields from
   // the table we are indexing. In this case, we also check against the
   // last run date for the comments update.
-  return array("last_update" => "comment_cron_last",
-         "node_type" => "comment",
-         "select" => "SELECT c.cid as lno, c.subject as text1, c.comment as text2 FROM comments c WHERE timestamp > ". variable_get("comment_cron_last", 1));
+  return array("last_update" => "comment_cron_last", "node_type" => "comment", "select" => "SELECT c.cid as lno, c.subject as text1, c.comment as text2 FROM comments c WHERE timestamp > ". variable_get("comment_cron_last", 1));
 }
 
 ?>
