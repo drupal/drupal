@@ -178,8 +178,6 @@ function import_refresh($feed) {
 
       db_query("UPDATE feed SET timestamp = '". time() ."', link = '". check_input($link[1]) ."', description = '". check_input($description[1]) ."' WHERE fid = '". $feed[fid] ."'");
 
-      unset($title, $link, $description);
-
       /*
       ** Extract and process individual items:
       */
@@ -198,13 +196,23 @@ function import_refresh($feed) {
         $a = eregi("<author>(.*)</author>", $item, $author);
         $d = eregi("<description>(.*)</description>", $item, $description);
 
-        if ($l || $t || $a || $d) {
-          $title = strip_tags(strtr($title[1], $tt));
+        if ($t || $l || $a || $d) {
+
+          /*
+          ** Strip invalid tags and provide default values (if required):
+          */
+
+          $title = strip_tags(strtr($title[1] ? $title[1] : $feed[title], $tt));
+          $link = $link[1] ? $link[1] : $feed[link];
           $description = strtr($description[1], $tt);
 
-          // print "<pre>title = ". htmlentities($title) ."\n\ndescription = ". htmlentities($description) ."\n\nauthor = ". htmlentities($author[1]) ."</pre><hr />";
+          // print "<pre>title = ". htmlentities($title) ."\n\ndescription = ". htmlentities($description) ."\n\nlink = ". htmlentities($link) ."</pre><hr />";
+          
+          /*
+          ** Save this item:
+          */
 
-          import_save_item(array(fid => $feed[fid], title => $title, link => $link[1], author => $author[1], description => $description, attributes => $feed[attributes]));
+          import_save_item(array(fid => $feed[fid], title => $title, link => $link, author => $author[1], description => $description, attributes => $feed[attributes]));
         }
       }
     }
@@ -224,7 +232,7 @@ function import_save_item($edit) {
     db_query("DELETE FROM item WHERE iid = '". check_input($edit[iid]) ."'");
   }
   else if ($edit[title] && $edit[link]) {
-    if (!db_fetch_object(db_query("SELECT iid FROM item WHERE link = '". check_input($edit[link]) ."'"))) {
+    if (!db_fetch_object(db_query("SELECT iid FROM item WHERE title = '". check_input($edit[title]) ."' AND link = '". check_input($edit[link]) ."' AND description = '". check_input($edit[description]) ."'"))) {
       db_query("INSERT INTO item (fid, title, link, author, description, attributes, timestamp) VALUES ('". check_input($edit[fid]) ."', '". check_input($edit[title]) ."', '". check_input($edit[link]) ."', '". check_input($edit[author]) ."', '". check_input($edit[description]) ."', '". check_input($edit[attributes]) ."', '". time() ."')");
     }
   }
