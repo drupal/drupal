@@ -1,5 +1,5 @@
 <?php
-// $Id: tablesort.inc,v 1.28 2004/09/09 05:51:08 dries Exp $
+// $Id: tablesort.inc,v 1.29 2004/10/15 22:16:00 unconed Exp $
 
 /**
  * @file
@@ -112,7 +112,12 @@ function tablesort_header($cell, $header, $ts) {
 function tablesort_cell($cell, $header, $ts, $i) {
   if ($header[$i]['data'] == $ts['name'] && $header[$i]['field']) {
     if (is_array($cell)) {
-      $cell['class'] .= ' active';
+      if (isset($cell['class'])) {
+        $cell['class'] .= ' active';
+      }
+      else {
+        $cell['class'] = 'active';
+      }
     }
     else {
       $cell = array('data' => $cell, 'class' => 'active');
