@@ -227,7 +227,7 @@ function node_teaser($body) {
  */
 function node_get_module_name($node) {
   if (is_array($node)) {
-    if ($pos = strpos($node['type'], '/')) {
+    if ($pos = strpos($node['type'], '-')) {
       return substr($node['type'], 0, $pos);
     }
     else {
@@ -235,7 +235,7 @@ function node_get_module_name($node) {
     }
   }
   else if (is_object($node)) {
-    if ($pos = strpos($node->type, '/')) {
+    if ($pos = strpos($node->type, '-')) {
       return substr($node->type, 0, $pos);
     }
     else {
@@ -243,7 +243,7 @@ function node_get_module_name($node) {
     }
   }
   else if (is_string($node)) {
-    if ($pos = strpos($node, '/')) {
+    if ($pos = strpos($node, '-')) {
       return substr($node, 0, $pos);
     }
     else {
@@ -1521,8 +1521,7 @@ function node_page() {
       node_feed();
       return;
     case 'add':
-      // When a module defines multiple node types, the URL is of the form 'foo/bar':
-      print theme('page', node_add(arg(3) ? arg(2) ."/". arg(3) : arg(2)));
+      print theme('page', node_add(arg(2)));
       break;
     case 'edit':
       print theme('page', node_edit(arg(2)));
