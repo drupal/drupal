@@ -303,12 +303,13 @@ function user_search($keys) {
 
 function user_block($op = "list", $delta = 0) {
   global $user, $edit;
-  if ($op == "list") {
-      $blocks[0]["info"] = t("Log in");
-      $blocks[1]["info"] = t("User information");
-      $blocks[2]["info"] = t("Who's new");
 
-      return $blocks;
+  if ($op == "list") {
+     $blocks[0]["info"] = t("Log in");
+     $blocks[1]["info"] = t("User information");
+     $blocks[2]["info"] = t("Who's new");
+
+     return $blocks;
   }
   else {
     switch ($delta) {
@@ -316,9 +317,17 @@ function user_block($op = "list", $delta = 0) {
         if (!$user->uid) {
           $output = "<div align=\"center\">\n";
           $output .= "<form action=\"". url("user/login") ."\" method=\"post\">\n";
-          // Save the referer.  We record where the user came from such that we
-          // can redirect him after having completed the login form.
-          if (!$edit["destination"]) $edit["destination"] = request_uri();
+          /*
+          ** Save the referer.  We record where the user came from such 
+          ** that we/ can redirect him after having completed the login 
+          ** form.
+          */
+          
+          if (empty($edit)) {
+            $edit["destination"] = request_uri();
+          }
+          // NOTE: special care needs to be taken because on pages with forms, such as node and comment submission pages, the $edit variable might already be set.
+          
           $output .= "<input name=\"edit[destination]\" type=\"hidden\" value=\"" . $edit["destination"] . "\" />";
           $output .= "<b>". t("Username") .":</b><br /><input name=\"edit[name]\" size=\"15\" /><br />\n";
           $output .= "<b>". t("Password") .":</b><br /><input name=\"edit[pass]\" size=\"15\" type=\"password\" /><br />\n";
@@ -610,7 +619,7 @@ function user_login($edit = array(), $msg = "") {
   ** can redirect him after having completed the login form.
   */
 
-  if (!$edit["destination"]) {
+  if (empty($edit)) {
     $edit["destination"] = request_uri();
   }
   $output .= form_hidden("destination", $edit["destination"]);
