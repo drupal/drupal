@@ -4,7 +4,7 @@ global $id, $mod, $nid, $user, $recent_activity;
 
 if (variable_get("statistics_enable_node_counter", 0)) {
   /* node view counters are enabled */
-  if ($id > 0 && (!$mod)) {
+  if (isset($id) && empty($mod) && empty($op)) {
     /* a node has been viewed, so updated the node's counters */
     db_query("UPDATE statistics SET daycount = daycount + 1, totalcount = totalcount + 1, timestamp = '%s' WHERE nid = '%s'", time(), $id);
     /* if we affected 0 rows, this is the first time viewing the node */
@@ -841,7 +841,7 @@ function statistics_get($nid) {
 /* Block hook */
 function statistics_block() {
 
-  $block[0]["subject"] = variable_get("statistics_block_top_title", "Top nodes");
+  $block[0]["subject"] = variable_get("statistics_block_top_title", "Popular content");
   $block[0]["content"] = statistics_display_topnodes_block();
   $block[0]["info"] = "Top nodes";
 
