@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.290 2004/10/07 14:33:54 unconed Exp $
+// $Id: comment.module,v 1.291 2004/10/09 06:43:50 dries Exp $
 
 /**
  * @file
@@ -1414,7 +1414,7 @@ function comment_already_moderated($uid, $users) {
 function theme_comment_form($edit, $title) {
   global $user;
 
-  $form .= "<a id=\"comment\"></a>\n";
+  $form .= "<a id=\"comment-form\"></a>\n";
 
   // contact information:
   if ($user->uid) {
