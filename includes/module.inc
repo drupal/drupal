@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.41 2003/01/06 19:50:59 dries Exp $
+// $Id: module.inc,v 1.42 2003/03/09 17:28:51 kjartan Exp $
 
 // initialize modules:
 function module_init() {
@@ -45,7 +45,7 @@ function module_list() {
   static $list;
 
   if (!$list) {
-    $list = array("drupal" => "drupal", "system" => "system", "user" => "user", "watchdog" => "watchdog");
+    $list = array("system" => "system", "user" => "user", "watchdog" => "watchdog");
     $result = db_query("SELECT name, filename FROM system WHERE type = 'module' AND status = '1' ORDER BY name");
     while ($module = db_fetch_object($result)) {
       if (file_exists($module->filename)) {
