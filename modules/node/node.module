@@ -8,7 +8,7 @@ $nstatus = array(0 => dumped, 1 => expired, 2 => queued, 3 => posted);
 function node_overview($query = 0) {
   global $user, $nstatus;
 
-  $result = db_query("SELECT n.*, u.userid FROM node n LEFT JOIN users u ON n.author = u.id". ($query ? " WHERE $query" : ""));
+  $result = db_query("SELECT n.*, u.userid FROM node n LEFT JOIN users u ON n.author = u.id ". ($query ? "WHERE $query" : "") ." ORDER BY n.timestamp DESC");
 
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
   $output .= " <TR><TH>title</TH><TH>type</TH><TH>status</TH><TH>author</TH><TH>date</TH><TH COLSPAN=\"3\">operations</TH></TR>\n";
