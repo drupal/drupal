@@ -1,8 +1,16 @@
-drupal x.x.x, xx/xx/xxxx
+drupal 4.0.0, xx/xx/xxxx
 ------------------------
 - added tracker.module:
     * replaces the previous "your [site]" links.
-- added weblogs.module.
+- added weblogs.module. 
+    * this will ping weblogs.com when new content is promoted.
+- added taxonomy module which replaces the meta module.
+    * supports relations, hierarchies and synonyms.
+- added a chaching system.
+    * speeds up pages for anonymous users and reduces system load.
+- added support for external SMTP libraries.
+- added an archive extension to the calendar.
+- added blogger API support.
 - themes:
     * cleaned up the theme system.
     * moved themes that are not maintained to contributions CVS repository.
@@ -12,12 +20,33 @@ drupal x.x.x, xx/xx/xxxx
     * using ANSI SQL queries to be more portable.
 - rewrote the user system:
     * added support for Drupal authentication through XML-RPC and through a Jabber server.
-- various updates:
-    * improved the search system by making it context sensitive.
+    * added support for modules to add more user data.
+    * users may delete their own account.
+    * added who's new and who's online blocks.
+- changed block system:
+    * various hard coded blocks are now dynamic.
+    * blocks can now be enabled and/or be set by the user.
+    * blocks can be set to ownly show up on some pages.
+    * merged box module with block module.
+- rewrote large parts of the node system:
     * fixed node retrieval based on titles.
+    * blogs can be updated.
+    * teasers (abstracts) on all node types.
+    * improved error checking and usability changes.
+    * revision support.
+- improved book module to support text, html and php pages.
+- added a general outliner which will let any node type be linked to a book.
+- search:
+    * improved the search system by making it context sensitive.
+    * added proper indexing.
+- various updates:
+    * changed output to valid XHTML.
     * improved multiple sites using the same Drupal database support.
     * added support for session ids in URLs instead of cookies.
     * made front page a configuration setting.
+    * made each cloud site have its own settings.
+    * modules and themes can now be enabled/disabled using the administrative pages.
+    * usabilty changes (renamed links, better UI, etc)
 
 drupal 3.0.1, 15/10/2001
 ------------------------
