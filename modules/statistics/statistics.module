@@ -75,7 +75,7 @@ function statistics_referrer_internal() {
   $output .= statistics_table_1("SELECT url, timestamp FROM referrer WHERE url LIKE '%". check_input($HTTP_HOST) ."%' ORDER BY timestamp DESC LIMIT 15");
 
   $output .= "<h3>Internal referrers of the last ". format_interval(variable_get("referrer_clear", 604800)) ."</h3>\n";
-  $output .= statistics_table_2("SELECT url, COUNT(url) AS count FROM referrer WHERE url LIKE '%". check_input($HTTP_HOST) ."%' GROUP BY url, timestamp ORDER BY count DESC, timestamp");
+  $output .= statistics_table_2("SELECT url, COUNT(url) AS count FROM referrer WHERE url LIKE '%". check_input($HTTP_HOST) ."%' GROUP BY url ORDER BY count DESC");
 
   return $output;
 }
@@ -87,7 +87,7 @@ function statistics_referrer_external() {
   $output .= statistics_table_1("SELECT url, timestamp FROM referrer WHERE url NOT LIKE '%". check_input($HTTP_HOST) ."%' ORDER BY timestamp DESC LIMIT 15");
 
   $output .= "<h3>External referrers of the last ". format_interval(variable_get("referrer_clear", 604800)) ."</h3>\n";
-  $output .= statistics_table_2("SELECT url, COUNT(url) AS count FROM referrer WHERE url NOT LIKE '%". check_input($HTTP_HOST) ."%' GROUP BY url, timestamp ORDER BY count DESC, timestamp");
+  $output .= statistics_table_2("SELECT url, COUNT(url) AS count FROM referrer WHERE url NOT LIKE '%". check_input($HTTP_HOST) ."%' GROUP BY url ORDER BY count DESC");
 
   return $output;
 }
