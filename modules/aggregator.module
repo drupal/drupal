@@ -70,7 +70,7 @@ function import_format_item($item, $feed = 0) {
   }
 
   // external link
-  $output .= "<a href=\"$item->link\" target=\"_new\">$item->title</a>";
+  $output .= "<a href=\"$item->link\">$item->title</a>";
 
   return $output ."<br />";
 }
