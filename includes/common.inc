@@ -503,7 +503,7 @@ function check_url($uri) {
 }
 
 function check_form($text) {
-  return drupal_specialchars($text, 0);
+  return drupal_specialchars($text, ENT_QUOTES);
 }
 
 function check_query($text) {
