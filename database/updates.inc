@@ -1,5 +1,5 @@
 <?php
-/* $Id: updates.inc,v 1.40 2004/08/12 15:16:15 unconed Exp $ */
+/* $Id: updates.inc,v 1.41 2004/08/12 18:00:08 dries Exp $ */
 
 // Define the various updates in an array("date : comment" => "function");
 $sql_updates = array(
@@ -1507,7 +1507,7 @@ function update_101() {
 
     // but not the fixed fields
     unset($fields['lid'], $fields['location'], $fields['string']);
-  
+
     // insert locales
     $list = _locale_get_iso639_list();
     foreach ($fields as $key => $value) {
@@ -1524,7 +1524,7 @@ function update_101() {
         }
       }
     }
-  
+
     // get all strings
     $result = db_query('SELECT * FROM {locales}');
     while($entry = db_fetch_object($result)) {
