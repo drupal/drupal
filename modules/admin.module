@@ -1,5 +1,5 @@
 <?php
-// $Id: admin.module,v 1.19 2003/06/08 08:39:28 dries Exp $
+// $Id: admin.module,v 1.20 2003/06/15 19:06:20 dries Exp $
 
 include_once "includes/common.inc";
 
@@ -57,7 +57,7 @@ function admin_page() {
         ** Body:
         */
 
-        print "<div id=\"logo\"><a href=\"http://drupal.org/\"><img src=\"misc/druplicon-small.gif\" alt=\"Druplicon - Drupal logo\" /></a></div>";
+        print "<div id=\"logo\"><a href=\"http://drupal.org/\"><img src=\"misc/druplicon-small.gif\" alt=\"Druplicon - Drupal logo\" title=\"Druplicon - Drupal logo\" /></a></div>";
         print "<div id=\"main\">";
 
         if ($path = menu_path()) {

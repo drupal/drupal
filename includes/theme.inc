@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.140 2003/06/13 17:34:14 dries Exp $
+// $Id: theme.inc,v 1.141 2003/06/15 19:06:16 dries Exp $
 
 /**
 * Basic theme
@@ -25,11 +25,11 @@ class BaseTheme {
     $output .= "<html><head><title>". $title ? $title : variable_get(site_name, "drupal") ."</title>";
     $output .= theme_head($main);
     $output .= "</head><body bgcolor=\"$this->background\" text=\"$this->foreground". theme_onload_attribute(). "\">";
-    $output .= "<table border=\"0\" cellspacing=\"4\" cellpadding=\"4\"><tr><td valign=\"top\" width=\"170\">";
+    $output .= "<table border=\"0\" cellspacing=\"4\" cellpadding=\"4\"><tr><td style=\"vertical-align: top; width: 170px;\">";
 
     print $output;
     $this->box(t("Navigation"), @implode("<br />", link_page())); theme_blocks("all", $this);
-    print "</td><td valign=\"top\">";
+    print "</td><td style=\"vertical-align: top;\">";
 
   }
 

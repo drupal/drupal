@@ -1,5 +1,5 @@
 <?php
-// $Id: page.module,v 1.83 2003/05/24 16:26:13 dries Exp $
+// $Id: page.module,v 1.84 2003/06/15 19:06:23 dries Exp $
 
 function page_help() {
   $output .= "<p>The page module is used to create a <i>static page</i>.  Unlike a story, a static page is a persistent web page on your site which usually shortcuts the typical lifecycle of user generated content (i.e. submit -&gt; moderate -&gt; post -&gt; comment).  A static page is usually linked from the main navigation bar, using whatever text the author wishes.  To create a static page without this navigation link, simply skip the form field which requests link text.</p>";
@@ -115,7 +115,7 @@ function page_view($node, $main = 0) {
     ** Add the node specific links:
     */
 
-    theme("box", $node->title, "$node->body<div align=\"right\">". theme("links", link_node($node, $main)) ."</div>");
+    theme("box", $node->title, "$node->body<div style=\"text-align: right;\">". theme("links", link_node($node, $main)) ."</div>");
   }
 }
 
