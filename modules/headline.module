@@ -27,11 +27,13 @@ function headline_blocks() {
     
     // Load backend from database:
     $backend = new backend($channel->id);
-    
-    // Read headline from backend class:
-    $content = "";
-    for (reset($backend->headline); $headline = current($backend->headline); next($backend->headline)) {
-      $content .= "<LI>$headline</LI>\n";
+
+    if ($backend->headlines) {
+      unset($content);    
+      foreach ($backend->headlines as $headline) $content .= "<LI>$headline</LI>\n";
+    }
+    else {
+      $content = "no headlines available\n";
     }
 
     // Print backend box to screen:
@@ -79,12 +81,15 @@ function headline_block() {
   $result = db_query("SELECT * FROM channel");
   while ($channel = db_fetch_object($result)) {
     $backend = new Backend($channel->id);
-    $content = "";
     
-    if ($backend->headline) {
-      for (reset($backend->headline); $headline = current($backend->headline); next($backend->headline)) {
+    if ($backend->headlines) {
+      unset($content);
+      foreach ($backend->headlines as $headline) {
         $content .= "<LI>$headline</LI>\n";
       }
+    }
+    else {
+      $content = "no headlines available";
     }
  
     $blocks[$channel->id]["subject"] = $backend->site;
@@ -111,7 +116,7 @@ function headline_admin_main() {
     $output .= "<TR>\n";
     $output .= " <TD><A HREF=\"$backend->url\">$backend->site</A></TD>\n";
     $output .= " <TD><A HREF=\"mailto:$backend->contact\">$backend->contact</A></TD>\n";
-    $output .= " <TD ALIGN=\"center\">". format_interval(time() - $backend->timestamp) ." ago</TD>\n";
+    $output .= " <TD ALIGN=\"center\">". ($backend->timestamp == 1 ? "failed" : format_interval(time() - $backend->timestamp) ." ago") ."</TD>\n";
     $output .= " <TD ALIGN=\"center\"><A HREF=\"admin.php?mod=headline&op=refresh&id=$backend->id\">refresh</A></TD>\n";
     $output .= " <TD ALIGN=\"center\"><A HREF=\"admin.php?mod=headline&op=delete&id=$backend->id\">delete</A></TD>\n";
     $output .= "</TR>\n";

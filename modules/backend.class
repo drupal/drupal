@@ -16,7 +16,7 @@ class backend {
   // Contains the parsed rdf/rss/xml file:
   var $headlines = array();   // latest headlines
 
-  function backend($id, $site = "", $url = "", $file = "", $contact = "", $timout = 3600) {
+  function backend($id, $site = "", $url = "", $file = "", $contact = "", $timout = 10800) {
     // Get channel info:
     $result = db_query("SELECT * FROM channel WHERE id = '$id' OR site = '$site'");
 
@@ -153,7 +153,7 @@ class backend {
 
   function add() {
     // Add channel:    
-    $result = db_query("INSERT INTO channel (site, file, url, contact, timestamp) VALUES ('". check_input($this->site) ."', '". check_input($this->file) ."', '". check_input($this->url) ."', '". check_input($this->contact) ."', 42)");
+    $result = db_query("INSERT INTO channel (site, file, url, contact, timestamp) VALUES ('". check_input($this->site) ."', '". check_input($this->file) ."', '". check_input($this->url) ."', '". check_input($this->contact) ."', 1)");
   }
   
   function delete() {
@@ -169,7 +169,7 @@ class backend {
     $result = db_query("DELETE FROM headlines WHERE id = $this->id");    
 
     // Mark channel as invalid to enforce an update:
-    $result = db_query("UPDATE channel SET timestamp = 42 WHERE id = $this->id");    
+    $result = db_query("UPDATE channel SET timestamp = 1 WHERE id = $this->id");    
   }
 
   function dump() {

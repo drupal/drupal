@@ -265,7 +265,7 @@ function comment_post($pid, $sid, $subject, $comment) {
     watchdog("comment", "discussion: added comment with subject '$subject'");
 
     // Add comment to database:
-    db_query("INSERT INTO comments (pid, sid, author, subject, comment, hostname, timestamp) VALUES ($pid, $sid, '$user->id', '". check_input($subject) ."', '". check_input($comment) ."', '". getenv("REMOTE_ADDR") ."', '". time() ."')");
+    db_query("INSERT INTO comments (pid, sid, author, subject, comment, hostname, timestamp, score) VALUES ($pid, $sid, '$user->id', '". check_input($subject) ."', '". check_input($comment) ."', '". getenv("REMOTE_ADDR") ."', '". time() ."', '". ($user->userid ? 1 : 0) ."')");
     
     // Compose header:
     header("Location: discussion.php?id=$sid");

@@ -168,7 +168,7 @@
 
      // Moderation:
      print "        <TD ALIGN=\"right\" ROWSPAN=\"3\" VALIGN=\"middle\" WIDTH=\"15%\">\n";
-     theme_comment_moderation($comment->cid, $comment->userid, $comment->score, $comment->votes);
+     print theme_comment_moderation($comment);
      print "        </TD>\n";
      print "       </TR>\n";
 

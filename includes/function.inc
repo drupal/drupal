@@ -68,7 +68,7 @@ function format_interval($timestamp) {
     $output .= floor($timestamp / 60) ." min ";
     $timestamp = $timestamp % 60;
   }
-  if ($timestamp > 0) {
+  if ($timestamp >= 0) {
     $output .= "$timestamp sec";
   }
   return $output;

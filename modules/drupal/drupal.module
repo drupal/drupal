@@ -22,7 +22,7 @@ function drupal_page() {
   ";
 
   $handle = opendir("drupal");
-  while ($file = readdir($handle)) if (ereg(".jpg", $file)) $output .= " <LI><SMALL><A HREF=\"drupal/$file\">$file</A></SMALL></LI>\n";
+  while ($file = readdir($handle)) if (ereg(".jpg", $file) || ereg(".gif", $file)) $output .= " <LI><SMALL><A HREF=\"drupal/$file\">$file</A></SMALL></LI>\n";
   closedir($handle);
 
   $theme->header();
