@@ -94,6 +94,8 @@ function taxonomy_save_vocabulary($edit) {
     db_query("INSERT INTO vocabulary ". _prepare_insert($data, 1) ." VALUES ". _prepare_insert($data, 2));
     return t("created new vocabulary '%name'.", array("%name" => $edit["name"]));
   }
+
+  cache_clear_all();
 }
 
 function taxonomy_del_vocabulary($vid) {
@@ -104,6 +106,8 @@ function taxonomy_del_vocabulary($vid) {
   while ($term = db_fetch_object($result)) {
     taxonomy_del_term($term->tid);
   }
+
+  cache_clear_all();
 
   return t("deleted vocabulary '%name'.", array("%name" => $vocabulary->name));
 }
@@ -213,6 +217,8 @@ function taxonomy_save_term($edit) {
     }
   }
 
+  cache_clear_all();
+
   return $message;
 }
 
@@ -224,6 +230,8 @@ function taxonomy_del_term($tid) {
   db_query("DELETE FROM term_relation WHERE tid1 = '%d' OR tid2 = '%d'", $tid, $tid);
   db_query("DELETE FROM term_synonym WHERE tid = '%d'", $tid);
   db_query("DELETE FROM term_node WHERE tid = '%d'", $tid);
+
+  cache_clear_all();
 
   return t("deleted term '%name'.", array("%name" => $term->name));
 }
@@ -354,7 +362,7 @@ function taxonomy_node_get_terms($nid, $key = "tid") {
   static $terms;
 
   if (!isset($terms[$nid])) {
-    $result = db_query("SELECT t.* FROM term_data t, term_node r WHERE r.tid = t.tid AND r.nid = '%d' ORDER BY weight", $nid);
+    $result = db_query("SELECT t.* FROM term_data t, term_node r WHERE r.tid = t.tid AND r.nid = '%d' ORDER BY weight, name", $nid);
     $terms[$nid] = array();
     while ($term = db_fetch_object($result)) {
       $terms[$nid][$term->$key] = $term;
@@ -382,7 +390,7 @@ function taxonomy_node_delete($nid) {
 // relations: return array of related terms
 function taxonomy_get_related($tid, $key = "tid") {
   if ($tid) {
-    $result = db_query("SELECT t.*, tid1, tid2 FROM term_relation, term_data t WHERE (t.tid = tid1 OR t.tid = tid2) AND (tid1 = '%d' OR tid2 = '%d') AND t.tid != '%d' ORDER BY weight", $tid, $tid, $tid);
+    $result = db_query("SELECT t.*, tid1, tid2 FROM term_relation, term_data t WHERE (t.tid = tid1 OR t.tid = tid2) AND (tid1 = '%d' OR tid2 = '%d') AND t.tid != '%d' ORDER BY weight, name", $tid, $tid, $tid);
     $related = array();
     while ($term = db_fetch_object($result)) {
       $related[$term->$key] = $term;
@@ -512,6 +520,44 @@ function _taxonomy_term_children($tid) {
     }
   }
   return $children[$tid] ? $children[$tid] : array();
+}
+
+/**
+ * Try to map a string to existing vocabularies
+ * Provide case insensitive and trimmed map so as to
+ * maximize likelihood of successful mapping.
+ *
+ * @param   string  $name  Name of the vocabulary to search
+ * @return  array   array of matching vocabularies, as objects
+ */
+function taxonomy_get_vocabulary_by_name($name) {
+  // LOWER is ANSI SQL-92
+  $db_result = db_query("SELECT * FROM vocabulary WHERE LOWER('%s') LIKE LOWER(name)", trim($name));
+  $result = array();
+  while ($vocabulary = db_fetch_object($db_result)) {
+    $result[] = $vocabulary;
+  }
+
+  return $result;
+}
+
+/**
+ * Try to map a string to existing terms
+ * Provide case insensitive and trimmed map so as to
+ * maximize likelihood of successful mapping.
+ *
+ * @param   string  $name  Name of the term to search
+ * @return  array   array of matching terms, as objects
+ */
+function taxonomy_get_term_by_name($name) {
+  // LOWER is ANSI SQL-92
+  $db_result = db_query("SELECT * FROM term_data WHERE LOWER('%s') LIKE LOWER(name)", trim($name));
+  $result = array();
+  while ($term = db_fetch_object($db_result)) {
+    $result[] = $term;
+  }
+
+  return $result;
 }
 
 function taxonomy_get_vocabulary($vid) {
