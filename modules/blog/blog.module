@@ -14,15 +14,6 @@ function blog_help() {
  <?php
 }
 
-function blog_cron() {
-  $result = db_query("SELECT n.nid, n.timestamp, SUM(m.score) / COUNT(m.cid) AS score, COUNT(m.cid) AS votes FROM node n LEFT JOIN moderate m ON m.nid = n.nid WHERE n.type = 'blog' AND n.status = '". node_status("posted") ."' GROUP BY n.nid, n.title, n.comment, n.timestamp, b.body, u.uid, u.name ORDER BY n.timestamp DESC LIMIT 30");
-  while ($node = db_fetch_object($result)) {
-    if ($node->score > 3 && $node->votes > 4) {
-      db_query("UPDATE node SET promote = '1' WHERE nid = '$node->nid'");
-    }
-  }
-}
-
 function blog_perm() {
   return array("administer blogs", "access blogs", "post blogs");
 }
@@ -120,7 +111,6 @@ function blog_page_user($uid = 0, $date = 0) {
     }
 
     if ($blog->comment) {
-      $links[] = "<a href=\"node.php?id=$blog->nid\">". t("moderate") ."</a>";
       $links[] = "<a href=\"node.php?id=$blog->nid\">". format_plural($blog->comments, t("comment"), t("comments")) ."</a>";
     }
 
@@ -157,7 +147,6 @@ function blog_page_last() {
     }
 
     if ($blog->comment) {
-      $links[] = "<a href=\"node.php?id=$blog->nid\">". t("moderate") ."</a>";
       $links[] = "<a href=\"node.php?id=$blog->nid\">". format_plural($blog->comments, t("comment"), t("comments")) ."</a>";
     }
 
