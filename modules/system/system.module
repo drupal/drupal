@@ -173,7 +173,7 @@ function system_modules() {
     asort($modules);
   }
 
-  $required = array("user", "drupal", "system", "watchdog");
+  $required = array("user", "system", "watchdog");
 
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
   $output .= "<tr><th>module</th><th>description</th><th>enabled</th><th colspan=\"2\">operations</th></tr>\n";
