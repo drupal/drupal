@@ -27,7 +27,7 @@ class BaseTheme {
     if ($user->uid) {
       // Display account settings:
 
-      $output .= "<div width=\"125\">\n";
+      $output .= "<div style=\"width: 125;\">\n";
 
       foreach (module_list() as $name) {
         if (module_hook($name, "link")) {

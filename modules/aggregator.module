@@ -3,11 +3,11 @@
 
 function import_help() {
  ?>
-  <P>In Drupal you have <I>feeds</I> and <I>bundles</I>.   Feeds define news sources and bundles categoriz syndicated content by source, topic or any other heuristic.   Bundles provide a generalized way of creating composite feeds.  They allow you, for example, to combine various sport-related feeds into one bundle called "Sport".</P>
-  <P>You can have several providers of news feeds.  You can add a feed by clicking the "add feed" link on the import administration pages.  Give the feed a name, supply the URI and a comma-separated list of attributes that you want to associate the feed with.  The update interval defines how often Drupal should go out to try and grab fresh content.  The expiration time defines how long syndicated content is kept in the database.  So set the update and expiration time and save your settings.  You have just defined your first feed.  If you have more feeds repeat as necessary.</P>
-  <P>To verify whether your feed works, press "update items" at the overview page.  The number of items that have been sucessfully fetched, should then become visible in the third column of the feed overview.</P>
-  <P>Now you have to define some bundles.  Bundles look for feeds that contain one of the keywords associated with the bundle and display those feeds together.  To define a bundle you have to give it a name and a comma-separated list of keywords just like this is the case for feeds.</P>
-  <P>Your newly created bundle will now show up in the list of blocks that you can see at the block related administration pages.  There you can customize where and when your bundles will be displayed.</P>
+  <p>In Drupal you have <i>feeds</i> and <i>bundles</i>.   Feeds define news sources and bundles categoriz syndicated content by source, topic or any other heuristic.   Bundles provide a generalized way of creating composite feeds.  They allow you, for example, to combine various sport-related feeds into one bundle called "Sport".</p>
+  <p>You can have several providers of news feeds.  You can add a feed by clicking the "add feed" link on the import administration pages.  Give the feed a name, supply the URI and a comma-separated list of attributes that you want to associate the feed with.  The update interval defines how often Drupal should go out to try and grab fresh content.  The expiration time defines how long syndicated content is kept in the database.  So set the update and expiration time and save your settings.  You have just defined your first feed.  If you have more feeds repeat as necessary.</p>
+  <p>To verify whether your feed works, press "update items" at the overview page.  The number of items that have been sucessfully fetched, should then become visible in the third column of the feed overview.</p>
+  <p>Now you have to define some bundles.  Bundles look for feeds that contain one of the keywords associated with the bundle and display those feeds together.  To define a bundle you have to give it a name and a comma-separated list of keywords just like this is the case for feeds.</p>
+  <p>Your newly created bundle will now show up in the list of blocks that you can see at the block related administration pages.  There you can customize where and when your bundles will be displayed.</p>
  <?php
 }
 
@@ -15,6 +15,7 @@ function import_conf_options() {
   $number = array(5 => 5, 10 => 10, 15 => 15, 20 => 20, 25 => 25, 30 => 30, 35 => 35, 40 => 40, 45 => 45, 50 => 50, 55 => 55, 60 => 60, 65 => 65, 70 => 70, 75 => 75, 80 => 80, 85 => 85, 90 => 90, 95 => 95, 100 => 100);
   $output .= form_select("Items per block", "import_block_limit", variable_get("import_block_limit", 15), $number, "The maximum number of items displayed in one block.");
   $output .= form_select("Items per page", "import_page_limit", variable_get("import_page_limit", 75), $number, "The maximum number of items displayed on one page.");
+
   return $output;
 }
 
@@ -52,7 +53,7 @@ function import_format_item($item, $feed = 0) {
   global $theme, $user;
 
   if ($user->uid && user_access("post blogs")) {
-    $output .= "<a href=\"module.php?mod=node&op=add&type=blog&iid=$item->iid\"><img src=\"". $theme->image("blog.gif") ."\" border=\"0\" width=\"12\" height=\"16\" alt=\"" . t("Blog this item") . "\" /></a> ";
+    $output .= "<a href=\"module.php?mod=node&op=add&type=blog&iid=$item->iid\"><img src=\"". $theme->image("blog.gif") ."\" border=\"0\" width=\"12\" height=\"16\" alt=\"". t("Blog this item") ."\" /></a> ";
   }
 
   $output .= "<a href=\"". check_output($item->link) ."\" target=\"new\">". check_output($item->title) ."</a>";
@@ -95,9 +96,9 @@ function import_get_bundles($attributes = 0) {
 
   $i = 0;
   while ($bundle = db_fetch_object($result)) {
-    $block[$i][subject] = $bundle->title;
-    $block[$i][content] = import_bundle_block($bundle->attributes) ."<p><div align=\"right\"><a href=\"module.php?mod=import&op=bundle&id=$bundle->bid\">". t("more") ."</a></div></p>";
-    $block[$i][info] = "$bundle->title bundle";
+    $block[$i]["subject"] = $bundle->title;
+    $block[$i]["content"] = import_bundle_block($bundle->attributes) ."<p><div align=\"right\"><a href=\"module.php?mod=import&op=bundle&id=$bundle->bid\">". t("more") ."</a></div></p>";
+    $block[$i]["info"] = "$bundle->title bundle";
 
     $i++;
   }
@@ -110,9 +111,9 @@ function import_get_feeds($attributes = 0) {
 
   $i = 0;
   while ($feed = db_fetch_object($result)) {
-    $block[$i][subject] = $feed->title;
-    $block[$i][content] = import_feed_block($feed) ."<p><div align=\"right\"><a href=\"module.php?mod=import&op=feed&id=$feed->fid\">". t("more") ."</a></div></p>";
-    $block[$i][info] = "$feed->title feed";
+    $block[$i]["subject"] = $feed->title;
+    $block[$i]["content"] = import_feed_block($feed) ."<p><div align=\"right\"><a href=\"module.php?mod=import&op=feed&id=$feed->fid\">". t("more") ."</a></div></p>";
+    $block[$i]["info"] = "$feed->title feed";
 
     $i++;
   }
@@ -121,8 +122,8 @@ function import_get_feeds($attributes = 0) {
 }
 
 function import_remove($feed) {
-  db_query("DELETE FROM item WHERE fid = '$feed[fid]'");
-  return "feed '$feed[title]' reset.";
+  db_query("DELETE FROM item WHERE fid = '". $feed["fid"] ."'");
+  return "feed '". $feed["title"] ."' reset.";
 }
 
 function import_refresh($feed) {
@@ -131,15 +132,15 @@ function import_refresh($feed) {
   ** Check whether the feed is properly configured:
   */
 
-  if (!ereg("^http://|ftp://", $feed[url])) {
-    watchdog("warning", "import: invalid or missing URL for '$feed[title]'");
+  if (!ereg("^http://|ftp://", $feed["url"])) {
+    watchdog("warning", "import: invalid or missing URL for '". $feed["title"] ."'");
   }
 
   /*
   ** Grab the headlines:
   */
 
-  if ($fp = @fopen($feed[url], "r")) {
+  if ($fp = @fopen($feed["url"], "r")) {
     // fetch data:
     while (!feof($fp)) {
       $data .= fgets($fp, 128);
@@ -167,7 +168,14 @@ function import_refresh($feed) {
     eregi("<link>(.*)</link>", $channel, $link);
     eregi("<description>(.*)</description>", $channel, $description);
 
-    db_query("UPDATE feed SET timestamp = '". time() ."', link = '". check_input($link[1]) ."', description = '". check_input($description[1]) ."' WHERE fid = '". $feed[fid] ."'");
+    /*
+    ** Strip invalid tags and provide default values (if required):
+    */
+
+    $link = strip_tags($link[1]);
+    $description = filter(strtr($description[1], $tt));
+
+    db_query("UPDATE feed SET timestamp = '". time() ."', link = '". check_input($link) ."', description = '". check_input($description) ."' WHERE fid = '". $feed["fid"] ."'");
 
     /*
     ** Extract and process individual items:
@@ -193,8 +201,9 @@ function import_refresh($feed) {
         */
 
         $title = strip_tags(strtr($title[1] ? $title[1] : substr(strip_tags(strtr($description[1], $tt)), 0, 30), $tt));
-        $link = $link[1] ? $link[1] : $feed[link];
-        $description = strtr($description[1], $tt);
+        $link = strip_tags($link[1] ? $link[1] : $feed["link"]);
+        $author = strip_tags($author[1]);
+        $description = filter(strtr($description[1], $tt));
 
         // print "<pre>title = ". htmlentities($title) ."\n\ndescription = ". htmlentities($description) ."\n\nlink = ". htmlentities($link) ."</pre><hr />";
 
@@ -202,12 +211,12 @@ function import_refresh($feed) {
         ** Save this item:
         */
 
-        import_save_item(array(fid => $feed[fid], title => $title, link => $link, author => $author[1], description => $description, attributes => $feed[attributes]));
+        import_save_item(array(fid => $feed["fid"], title => $title, link => $link, author => $author, description => $description, attributes => $feed["attributes"]));
       }
     }
 
     /*
-    ** Remove expired items:
+    ** Remove all the old, expired items:
     */
 
     unset($items);
@@ -224,50 +233,50 @@ function import_refresh($feed) {
 
   }
   else {
-    watchdog("warning", "import: failed to syndicate from '$feed[title]'". ($errstr ? ": $errstr" : ""));
+    watchdog("warning", "import: failed to syndicate from '". $feed["title"] ."'". ($errstr ? ": $errstr" : ""));
   }
 
-  return "feed '$feed[title]' updated.";
+  return "feed '". $feed["title"] ."' updated.";
 }
 
 function import_save_item($edit) {
-  if ($edit[iid] && $edit[title]) {
-    db_query("UPDATE item SET title = '". check_input($edit[title]) ."', link = '". check_input($edit[link]) ."', author = '". check_input($edit[author]) ."', description = '". check_input($edit[description]) ."', attributes = '". check_input($edit[attributes]) ."' WHERE iid = '$edit[iid]'");
+  if ($edit["iid"] && $edit["title"]) {
+    db_query("UPDATE item SET title = '". check_input($edit["title"]) ."', link = '". check_input($edit["link"]) ."', author = '". check_input($edit["author"]) ."', description = '". check_input($edit["description"]) ."', attributes = '". check_input($edit["attributes"]) ."' WHERE iid = '". check_input($edit["iid"]) ."'");
   }
-  else if ($edit[iid]) {
-    db_query("DELETE FROM item WHERE iid = '". check_input($edit[iid]) ."'");
+  else if ($edit["iid"]) {
+    db_query("DELETE FROM item WHERE iid = '". check_input($edit["iid"]) ."'");
   }
-  else if ($edit[title] && $edit[link]) {
-    if (!db_fetch_object(db_query("SELECT iid FROM item WHERE title = '". check_input($edit[title]) ."' AND link = '". check_input($edit[link]) ."' AND description = '". check_input($edit[description]) ."'"))) {
-      db_query("INSERT INTO item (fid, title, link, author, description, attributes, timestamp) VALUES ('". check_input($edit[fid]) ."', '". check_input($edit[title]) ."', '". check_input($edit[link]) ."', '". check_input($edit[author]) ."', '". check_input($edit[description]) ."', '". check_input($edit[attributes]) ."', '". time() ."')");
+  else if ($edit["title"] && $edit["link"]) {
+    if (!db_fetch_object(db_query("SELECT iid FROM item WHERE title = '". check_input($edit["title"]) ."' AND link = '". check_input($edit["link"]) ."' AND description = '". check_input($edit["description"]) ."'"))) {
+      db_query("INSERT INTO item (fid, title, link, author, description, attributes, timestamp) VALUES ('". check_input($edit["fid"]) ."', '". check_input($edit["title"]) ."', '". check_input($edit["link"]) ."', '". check_input($edit["author"]) ."', '". check_input($edit["description"]) ."', '". check_input($edit["attributes"]) ."', '". time() ."')");
     }
   }
 }
 
 function import_form_bundle($edit = array()) {
 
-  $form .= form_textfield("Title", "title", $edit[title], 50, 64, "The name of the bundle.");
-  $form .= form_textfield("Attributes", "attributes", $edit[attributes], 50, 128, "A comma-seperated list of keywords describing the bundle.");
+  $form .= form_textfield("Title", "title", $edit["title"], 50, 64, "The name of the bundle.");
+  $form .= form_textfield("Attributes", "attributes", $edit["attributes"], 50, 128, "A comma-seperated list of keywords describing the bundle.");
 
   $form .= form_submit("Submit");
 
-  if ($edit[bid]) {
+  if ($edit["bid"]) {
     $form .= form_submit("Delete");
-    $form .= form_hidden("bid", $edit[bid]);
+    $form .= form_hidden("bid", $edit["bid"]);
   }
 
   return form($form);
 }
 
 function import_save_bundle($edit) {
-  if ($edit[bid] && $edit[title]) {
-    db_query("UPDATE bundle SET title = '". check_input($edit[title]) ."', attributes = '". check_input($edit[attributes]) ."' WHERE bid = '". check_input($edit[bid]) ."'");
+  if ($edit["bid"] && $edit["title"]) {
+    db_query("UPDATE bundle SET title = '". check_input($edit["title"]) ."', attributes = '". check_input($edit["attributes"]) ."' WHERE bid = '". check_input($edit["bid"]) ."'");
   }
-  else if ($edit[bid]) {
-    db_query("DELETE FROM bundle WHERE bid = '". check_input($edit[bid]) ."'");
+  else if ($edit["bid"]) {
+    db_query("DELETE FROM bundle WHERE bid = '". check_input($edit["bid"]) ."'");
   }
-  else if ($edit[title]) {
-    db_query("INSERT INTO bundle (title, attributes) VALUES ('". check_input($edit[title]) ."', '". check_input($edit[attributes]) ."')");
+  else if ($edit["title"]) {
+    db_query("INSERT INTO bundle (title, attributes) VALUES ('". check_input($edit["title"]) ."', '". check_input($edit["attributes"]) ."')");
   }
 
   module_rehash_blocks("import");
@@ -277,39 +286,41 @@ function import_form_feed($edit = array()) {
 
   $period = array(900 => format_interval(900), 1800 => format_interval(1800), 3600 => format_interval(3600), 7200 => format_interval(7200), 10800 => format_interval(10800), 21600 => format_interval(21600), 32400 => format_interval(32400), 43200 => format_interval(43200), 64800 => format_interval(64800), 86400 => format_interval(86400), 172800 => format_interval(172800), 259200 => format_interval(259200), 604800 => format_interval(604800), 1209600 => format_interval(1209600), 2419200 => format_interval(2419200));
 
-  if ($edit[refresh] == "") $edit[refresh] = 3600;
+  if ($edit["refresh"] == "") {
+    $edit["refresh"] = 3600;
+  }
 
-  $form .= form_textfield("Title", "title", $edit[title], 50, 64, "The name of the feed; typically the name of the website you syndicate content from.");
-  $form .= form_textfield("Url", "url", $edit[url], 50, 128, "The fully-qualified URL of the feed.");
-  $form .= form_textfield("Attributes", "attributes", $edit[attributes], 50, 128, "A comma-seperated list of keywords describing the feed.");
-  $form .= form_select("Update interval", "refresh", $edit[refresh], $period, "The refresh interval indicating how often you want to update this feed.  Requires crontab.");
+  $form .= form_textfield("Title", "title", $edit["title"], 50, 64, "The name of the feed; typically the name of the website you syndicate content from.");
+  $form .= form_textfield("Url", "url", $edit["url"], 50, 128, "The fully-qualified URL of the feed.");
+  $form .= form_textfield("Attributes", "attributes", $edit["attributes"], 50, 128, "A comma-seperated list of keywords describing the feed.");
+  $form .= form_select("Update interval", "refresh", $edit["refresh"], $period, "The refresh interval indicating how often you want to update this feed.  Requires crontab.");
 
   $form .= form_submit("Submit");
 
-  if ($edit[fid]) {
+  if ($edit["fid"]) {
     $form .= form_submit("Delete");
-    $form .= form_hidden("fid", $edit[fid]);
+    $form .= form_hidden("fid", $edit["fid"]);
   }
 
   return form($form);
 }
 
 function import_save_feed($edit) {
-  if ($edit[fid] && $edit[title]) {
-    db_query("UPDATE feed SET title = '". check_input($edit[title]) ."', url = '". check_input($edit[url]) ."', attributes = '". check_input($edit[attributes]) ."', refresh = '". check_input($edit[refresh]) ."' WHERE fid = '". check_input($edit[fid]) ."'");
-    db_query("DELETE FROM item WHERE fid = '". check_input($edit[fid]) ."'");
+  if ($edit["fid"] && $edit["title"]) {
+    db_query("UPDATE feed SET title = '". check_input($edit["title"]) ."', url = '". check_input($edit["url"]) ."', attributes = '". check_input($edit["attributes"]) ."', refresh = '". check_input($edit["refresh"]) ."' WHERE fid = '". check_input($edit["fid"]) ."'");
+    db_query("DELETE FROM item WHERE fid = '". check_input($edit["fid"]) ."'");
   }
-  else if ($edit[fid]) {
-    db_query("DELETE FROM feed WHERE fid = '". check_input($edit[fid]) ."'");
-    db_query("DELETE FROM item WHERE fid = '". check_input($edit[fid]) ."'");
+  else if ($edit["fid"]) {
+    db_query("DELETE FROM feed WHERE fid = '". check_input($edit["fid"]) ."'");
+    db_query("DELETE FROM item WHERE fid = '". check_input($edit["fid"]) ."'");
   }
-  else if ($edit[title]) {
-    db_query("INSERT INTO feed (title, url, attributes, refresh) VALUES ('". check_input($edit[title]) ."', '". check_input($edit[url]) ."', '". check_input($edit[attributes]) ."', '". check_input($edit[refresh]) ."')");
+  else if ($edit["title"]) {
+    db_query("INSERT INTO feed (title, url, attributes, refresh) VALUES ('". check_input($edit["title"]) ."', '". check_input($edit["url"]) ."', '". check_input($edit["attributes"]) ."', '". check_input($edit["refresh"]) ."')");
   }
 }
 
 function import_save_attributes($edit) {
-  foreach($edit as $iid => $value) {
+  foreach ($edit as $iid => $value) {
     db_query("UPDATE item SET attributes = '". check_input($value) ."' WHERE iid = '". check_input($iid) ."'");
   }
   return "attributes has been saved";
@@ -359,7 +370,7 @@ function import_fd_collect($edit) {
 
   set_time_limit(180);
 
-  if ($fp = @fopen($edit[url], "r")) {
+  if ($fp = @fopen($edit["url"], "r")) {
     // fetch data:
     while (!feof($fp)) {
       $data .= fgets($fp, 128);
@@ -373,7 +384,7 @@ function import_fd_collect($edit) {
     $items = explode("</channel>", $data);
 
     foreach ($items as $item) {
-      unset ($link, $title);
+      unset($link, $title);
 
       // print "<pre>item = ". htmlentities($item) ."\n\n</pre>";
 
@@ -394,7 +405,7 @@ function import_fd_collect($edit) {
     return form($output);
   }
   else {
-    print status("failed to open '$edit[url]': $errstr.");
+    print status("failed to open '". $edit["url"] ."': $errstr.");
   }
 }
 
@@ -413,7 +424,7 @@ function import_tag() {
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
   $output .= " <tr><th>time</th><th>feed</th><th>item</th></tr>\n";
   while ($item = db_fetch_object($result)) {
-    $output .= " <tr><td valign=\"top\" nowrap=\"nowrap\">". format_date($item->timestamp, "custom", "m/d/y") ."<br />".format_date($item->timestamp, "custom", "H:i") ."</td><td align=\"center\" valign=\"top\" nowrap=\"nowrap\"><a href=\"admin.php?mod=import&type=feed&op=edit&id=$item->fid\">". check_output($item->feed) ."</a></td><td><a href=\"". check_output($item->link) ."\">". check_output($item->title) ."</a>". ($item->description ? "<br /><small><i>". check_output($item->description, 1) ."</i></small>" : "") ."<br /><input type=\"text\" name=\"edit[$item->iid]\" value=\"". check_form($item->attributes) ."\" size=\"50\" /></td></tr>\n";
+    $output .= " <tr><td valign=\"top\" nowrap=\"nowrap\">". format_date($item->timestamp, "custom", "m/d/y") ."<br />". format_date($item->timestamp, "custom", "H:i") ."</td><td align=\"center\" valign=\"top\" nowrap=\"nowrap\"><a href=\"admin.php?mod=import&type=feed&op=edit&id=$item->fid\">". check_output($item->feed) ."</a></td><td><a href=\"". check_output($item->link) ."\">". check_output($item->title) ."</a>". ($item->description ? "<br /><small><i>". check_output($item->description, 1) ."</i></small>" : "") ."<br /><input type=\"text\" name=\"edit[$item->iid]\" value=\"". check_form($item->attributes) ."\" size=\"50\" /></td></tr>\n";
   }
   $output .= "</table>\n";
   $output .= "<input type=\"submit\" name=\"op\" value=\"Save attributes\" />\n";
@@ -428,21 +439,25 @@ function import_admin() {
 
     print "<small><a href=\"admin.php?mod=import&type=feed&op=add\">add new feed</a> | <a href=\"admin.php?mod=import&type=bundle&op=add\">add new bundle</a> | <a href=\"admin.php?mod=import&op=fd\">import feeds</a> | <a href=\"admin.php?mod=import&op=tag\">tag items</a> | <a href=\"admin.php?mod=import&op=view\">overview</a> | <a href=\"admin.php?mod=import&op=help\">help</a></small><hr />";
 
-    switch($op) {
+    switch ($op) {
       case "help":
         print import_help();
         break;
       case "add":
-        if ($type == "bundle")
+        if ($type == "bundle") {
           print import_form_bundle();
-        else
+        }
+        else {
           print import_form_feed();
+        }
         break;
       case "edit":
-        if ($type == "bundle")
+        if ($type == "bundle") {
           print import_form_bundle(import_get_bundle($id));
-        else
+        }
+        else {
           print import_form_feed(import_get_feed($id));
+        }
         break;
       case "fd":
         print import_fd_form();
@@ -470,16 +485,16 @@ function import_admin() {
         print import_tag();
         break;
       case "Delete":
-        $edit[title] = 0;
+        $edit["title"] = 0;
         // fall through:
       case "Submit":
-        if ($type == "bundle")
+        if ($type == "bundle") {
           print status(import_save_bundle($edit));
-        else
+        }
+        else {
           print status(import_save_feed($edit));
+        }
         // fall through:
-        print import_view();
-        break;
       default:
         print import_view();
     }
@@ -675,7 +690,7 @@ function import_page() {
   global $op, $id;
 
   if (user_access("access news feeds")) {
-    switch($op) {
+    switch ($op) {
       case "feed":
         import_page_feed($id);
         break;

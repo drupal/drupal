@@ -423,7 +423,7 @@ function book_toc_recurse($nid, $indent, $toc, $children) {
   return $toc;
 }
 
-function book_toc($parent = "", $indent = "", $toc = array()) {
+function book_toc($parent = 0, $indent = "", $toc = array()) {
 
   $result = db_query("SELECT n.nid, n.title, b.parent FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.type = 'book' AND n.status = '1' ORDER BY b.weight, n.title");
 
@@ -446,45 +446,42 @@ function book_toc($parent = "", $indent = "", $toc = array()) {
   ** Iterate root book nodes:
   */
 
-  $toc = book_toc_recurse(0, $indent, $toc, $children, $titles);
+  $toc = book_toc_recurse($parent, $indent, $toc, $children);
 
   return $toc;
 }
 
-function book_tree($parent = "", $depth = 0) {
 
-  if ($depth < 3) {
+function book_tree_recurse($nid, $depth, $children) {
 
-    /*
-    ** Select all child nodes and render them into a table of contents:
-    */
-
-    $result = db_query("SELECT n.nid FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE b.parent = '$parent' AND (n.moderate = 0 OR n.revisions != '') ORDER BY b.weight, n.title");
-
-    while ($page = db_fetch_object($result)) {
-      // load the node:
-      $node = node_load(array("nid" => $page->nid));
-
-      // take the most recent approved revision:
-      if ($node->moderate) {
-        $node = book_revision_load($node, array("moderate" => 0, "status" => 1));
-      }
-
-      if ($node) {
-        // output the content:
+  if ($depth > 1) {
+    if ($children[$nid]) {
+      foreach ($children[$nid] as $foo => $node) {
         $output .= "<li><a href=\"node.php?id=$node->nid\">". check_output($node->title) ."</a></li>";
-
-        // build the sub-tree of each child:
-        $output .= book_tree($node->nid, $depth + 1);
+        $output .= book_tree_recurse($node->nid, $depth - 1, $children);
       }
     }
-
-    $output = "<ul>$output</ul>";
-
   }
 
   return $output;
 }
+
+
+function book_tree($parent = 0, $depth = 3) {
+
+  $result = db_query("SELECT n.nid, n.title, b.parent FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.type = 'book' AND n.status = '1' ORDER BY b.weight, n.title");
+
+  while ($node = db_fetch_object($result)) {
+    $list = $children[$node->parent] ? $children[$node->parent] : array();
+    array_push($list, $node);
+    $children[$node->parent] = $list;
+  }
+  $output = book_tree_recurse($parent, $depth, $children);
+  $output = "<ul>$output</ul>";
+
+  return $output;
+}
+
 
 function book_render() {
   global $theme;

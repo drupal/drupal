@@ -58,12 +58,12 @@ function forum_form(&$node, &$help, &$error) {
 
 
 function forum_num_comments($nid) {
-  $value = db_fetch_object(db_query("SELECT COUNT(cid) AS count FROM comments WHERE lid = '$nid'"));
+  $value = db_fetch_object(db_query("SELECT COUNT(cid) AS count FROM comments WHERE nid = '$nid'"));
   return ($value) ? $value->count : 0;
 }
 
 function forum_last_comment($nid) {
-  $value = db_fetch_object(db_query("SELECT timestamp FROM comments WHERE lid = '$nid' ORDER BY timestamp DESC LIMIT 1"));
+  $value = db_fetch_object(db_query("SELECT timestamp FROM comments WHERE nid = '$nid' ORDER BY timestamp DESC LIMIT 1"));
   return ($value) ? format_date($value->timestamp, "small") : "&nbsp;";
 }
 

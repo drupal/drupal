@@ -19,7 +19,7 @@ function node_index() {
 }
 
 function node_get_comments($nid) {
-  $comment = db_fetch_object(db_query("SELECT COUNT(c.lid) AS number FROM node n LEFT JOIN comments c ON n.nid = c.lid WHERE n.nid = '$nid' GROUP BY n.nid"));
+  $comment = db_fetch_object(db_query("SELECT COUNT(c.nid) AS number FROM node n LEFT JOIN comments c ON n.nid = c.nid WHERE n.nid = '$nid' GROUP BY n.nid"));
   return $comment->number ? $comment->number : 0;
 }
 
@@ -65,34 +65,6 @@ function node_invoke($node, $name, $arg = 0) {
   if (function_exists($function)) {
     return ($arg ? $function($node, $arg) : $function($node));
   }
-}
-
-function node_object($node) {
-
-  if (is_array($node)) {
-    foreach ($node as $key => $value) {
-      $object->$key = $value;
-    }
-  }
-  else {
-    $object = $node;
-  }
-
-  return $object;
-}
-
-function node_array($node) {
-
-  if (is_object($node)) {
-    foreach ($node as $key => $value) {
-      $array[$key] = $value;
-    }
-  }
-  else {
-    $array = $node;
-  }
-
-  return $array;
 }
 
 function node_load($conditions) {
@@ -232,9 +204,7 @@ function node_save($node, $filter) {
 function node_view($node, $main = 0) {
   global $theme;
 
-  if (is_array($node)) {
-    $node = node_object($node);
-  }
+  $node = array2object($node);
 
   /*
   ** The "view" hook can be implemented to overwrite the default function
@@ -265,9 +235,7 @@ function node_access($op, $node = 0) {
     ** Convert the node to an object if necessary:
     */
 
-    if (is_array($node)) {
-      $node = node_object($node);
-    }
+    $node = array2object($node);
 
     /*
     ** Construct a function:
@@ -720,7 +688,7 @@ function node_validate($node, &$error) {
   ** Convert the node to an object if necessary:
   */
 
-  $node = node_object($node);
+  $node = array2object($node);
 
   /*
   ** Validate the title field:
@@ -950,7 +918,7 @@ function node_preview($node) {
   ** Convert the array to an object:
   */
 
-  $node = node_object($node);
+  $node = array2object($node);
 
   /*
   ** Load the user's name when needed:
@@ -1008,13 +976,6 @@ function node_submit($node) {
   if (user_access("post content")) {
 
     /*
-    ** Verify a user's submission rate and avoid duplicate nodes being
-    ** inserted:
-    */
-
-    throttle("node", variable_get("max_node_rate", 900));
-
-    /*
     ** Fixup the node when required:
     */
 
@@ -1066,6 +1027,13 @@ function node_submit($node) {
       */
 
       if (node_access("create", $node)) {
+
+        /*
+        ** Verify a user's submission rate and avoid duplicate nodes being
+        ** inserted:
+        */
+
+        throttle("node", variable_get("max_node_rate", 900));
 
         /*
         ** Compile a list of the node fields and their default values that users
@@ -1135,7 +1103,7 @@ function node_delete($edit) {
       */
 
       db_query("DELETE FROM node WHERE nid = '$node->nid'");
-      db_query("DELETE FROM comments WHERE lid = '$node->nid'");
+      db_query("DELETE FROM comments WHERE nid = '$node->nid'");
 
       /*
       ** Call the node specific callback (if any):

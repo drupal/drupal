@@ -50,6 +50,34 @@ function throttle($type, $rate) {
   }
 }
 
+function array2object($node) {
+
+  if (is_array($node)) {
+    foreach ($node as $key => $value) {
+      $object->$key = $value;
+    }
+  }
+  else {
+    $object = $node;
+  }
+
+  return $object;
+}
+
+function object2array($node) {
+
+  if (is_object($node)) {
+    foreach ($node as $key => $value) {
+      $array[$key] = $value;
+    }
+  }
+  else {
+    $array = $node;
+  }
+
+  return $array;
+}
+
 function path_uri() {
   global $HTTP_HOST, $REQUEST_URI;
   return "http://". $HTTP_HOST . substr($REQUEST_URI, 0, strrpos($REQUEST_URI, "/")) ."/";
@@ -287,7 +315,7 @@ function check_input($text) {
 }
 
 function check_output($text, $nl2br = 0) {
-  return ($text) ? ($nl2br ? nl2br(stripslashes($text)) : stripslashes($text)) : message_na();
+  return ($text) ? ($nl2br ? str_replace("\r", "", str_replace("\n", "<br />", stripslashes($text))) : stripslashes($text)) : message_na();
 }
 
 function check_file($filename) {
@@ -542,14 +570,16 @@ function link_node($node, $main = 0) {
 
 function timer_start() {
   global $timer;
-  $timer = explode(" ", microtime());
+  list($usec, $sec) = explode(" ", microtime());
+  $timer = (float)$usec + (float)$sec;
 }
 
 function timer_print() {
   global $timer;
-  $stop = explode(" ", microtime());
-  $diff = $stop[0] - $timer[0];
-  print "<pre>execution time: $diff ms</pre>";
+  list($usec, $sec) = explode(" ", microtime());
+  $stop = (float)$usec + (float)$sec;
+  $diff = $stop - $timer;
+  print "<pre>execution time: $diff sec</pre>";
 }
 
 function query_print() {
