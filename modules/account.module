@@ -62,7 +62,7 @@ function account_ac() {
 
   $output .= "<FORM ACTION=\"admin.php?mod=account&op=access\" METHOD=\"post\">\n";
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\">\n";
-  $output .= " <TR><TH>mask</TH><TH>type</TH><TH>reason</TH><TH>oparations</TH></TR>\n";
+  $output .= " <TR><TH>mask</TH><TH>type</TH><TH>reason</TH><TH>operations</TH></TR>\n";
   while ($rule = db_fetch_object($result)) {
     $output .= " <TR><TD>$rule->mask</TD><TD ALIGN=\"center\">$rule->type</TD><TD>". check_output($rule->reason) ."</TD><TD><A HREF=\"admin.php?mod=account&op=delete&id=$rule->id\">delete rule</A></TD></TR>\n";
   }
