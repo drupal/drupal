@@ -214,7 +214,7 @@ function user_access($string) {
   ** To reduce the number of SQL queries, we cache the user's permissions
   ** in a static variable.
   */
-  
+
   if (isset($perm)) {
     if ($user->uid) {
       $perm = db_result(db_query("SELECT p.perm FROM role r, permission p WHERE r.rid = p.rid AND name = '%s'", $user->role), 0);
@@ -289,7 +289,7 @@ function user_search($keys) {
 
   $result = db_query_range("SELECT * FROM users WHERE name LIKE '%$keys%'", 0, 20);
   while ($account = db_fetch_object($result)) {
-    $find[$i++] = array("title" => $account->name, "link" => (strstr($_SERVER["PHP_SELF"], "admin") ? url("admin/user/edit/$account->uid") : url("user/view/$account->uid")), "user" => $account->name);
+    $find[$i++] = array("title" => $account->name, "link" => (strstr(request_uri(), "admin") ? url("admin/user/edit/$account->uid") : url("user/view/$account->uid")), "user" => $account->name);
   }
   return $find;
 }
