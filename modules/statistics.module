@@ -18,7 +18,7 @@ function statistics_help($section) {
       <p>The module counts how many times, and from where -- using HTTP referrer -- each of your posts is viewed. Once we have that count the module can do the following with it:
       <ul>
       <li>The count can be displayed in the node's link section next to \"# comments\".</li>
-      <li>A configurable block can be added which can display the day's top stories, the all time top stories, and the last stories read. Each section in the block has a title, which you can change, as well as being able to change how many node titles will be displayed</li>
+      <li>A configurable block can be added which can display the day's top stories, the all time top stories, and the last stories read. Each section in the block has a title, which you can change, as well as being able to change how many node titles will be displayed.</li>
       <li>A configurable user page can be added, which can display the day's top stories, the all time top stories, and the last stories read.  You can individually configure how many posts are displayed in each section.</li>
       <li>A configurable block can be added that displays the count of how many users, as well as a list of their names, and guests are currently accessing your site.</li>
       </ul>
