@@ -40,7 +40,6 @@ function account_create($error = "") {
   $output .= "<B>". t("E-mail address") .":</B><BR>\n";
   $output .= "<INPUT NAME=\"email\"><BR>\n";
   $output .= "<SMALL><I>". t("You will be sent instructions on how to validate your account via this e-mail address: make sure it is accurate.") ."</I></SMALL><P>\n";
-
   $output .= "<INPUT NAME=\"op\" TYPE=\"submit\" VALUE=\"". t("Create account") ."\">\n";
   $output .= "</FORM>\n";
 
