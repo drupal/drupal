@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.127 2003/02/27 22:48:32 dries Exp $
+// $Id: theme.inc,v 1.128 2003/03/11 23:08:01 dries Exp $
 
 /**
 * Basic theme
@@ -116,8 +116,12 @@ function theme_error($message) {
   return "<div style=\"color: red;\">$message</div>";
 }
 
-function theme_list() {
+function theme_list($refresh = 0) {
   static $list;
+
+  if ($refresh) {
+    unset($list);
+  }
 
   if (!$list) {
     $list = array();
@@ -142,16 +146,18 @@ function theme_init() {
 
   $themes = theme_list();
   $name = $user->theme ? $user->theme : variable_get("theme_default", 0);
+
   if (is_object($themes[$name])) {
     include_once($themes[$name]->filename);
-    $theme_class = "Theme_$name";
-    @$obj =& new $theme_class();
-    $obj->path = dirname($themes[$name]->filename);
-    return $obj;
+    $class = "Theme_$name";
+    $instance =& new $class();
+    $instance->path = dirname($themes[$name]->filename);
+  }
+  else {
+    $instance =& new BaseTheme;
   }
 
-  @$obj =& new BaseTheme;
-  return $obj;
+  return $instance;
 }
 
 /**
