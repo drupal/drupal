@@ -1,5 +1,5 @@
 <?php
-/* $Id: updates.inc,v 1.30 2004/08/03 09:27:00 dries Exp $ */
+/* $Id: updates.inc,v 1.31 2004/08/03 18:01:48 dries Exp $ */
 
 // Define the various updates in an array("date : comment" => "function");
 $sql_updates = array(
@@ -1207,9 +1207,13 @@ function update_95() {
 
 function update_96() {
   $ret = array();
+
   $ret[] = update_sql('ALTER TABLE {accesslog} DROP nid');
   $ret[] = update_sql('ALTER TABLE {accesslog} ADD title VARCHAR(255) DEFAULT NULL');
   $ret[] = update_sql('ALTER TABLE {accesslog} ADD path VARCHAR(255) DEFAULT NULL');
+
+  $ret[] = update_sql("ALTER TABLE {menu} ADD description varchar(255) DEFAULT '' NOT NULL");
+
   return $ret;
 }
 
