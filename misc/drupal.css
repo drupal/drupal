@@ -128,8 +128,10 @@ th {
   margin: 0.5em;
 }
 #forum td.created, #forum td.posts, #forum td.topics, #forum td.last-reply, #forum td.replies, #forum td.pager {
-  text-align: center;
   white-space: nowrap;
+}
+#forum td.posts, #forum td.topics, #forum td.replies, #forum td.pager {
+  text-align: center;
 }
 .item-list .icon {
   color: #555;

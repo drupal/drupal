@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.114 2003/08/22 17:06:42 dries Exp $
+// $Id: forum.module,v 1.115 2003/08/22 21:35:25 dries Exp $
 
 function forum_system($field){
   $output = "";
@@ -321,7 +321,8 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
   global $user, $forum_topic_list_header;
 
   $forum_topic_list_header = array(
-      array("data" => t("Topic"), "field" => "n.title", "colspan" => "2"),
+      array("data" => "&nbsp;"),
+      array("data" => t("Topic"), "field" => "n.title"),
       array("data" => t("Replies"),"field" => "num_comments"),
       array("data" => t("Created"), "field" => "n.created"),
       array("data" => t("Last reply"), "field" => "date_sort", "sort" => "desc"),
