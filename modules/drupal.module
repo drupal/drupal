@@ -13,7 +13,8 @@ function drupal_render($id, $cid) {
   $output .= " <P>We don't have a real demo site yet but drupal is used by (and created for) <A HREF=\"http://drop.org/\">http://drop.org/</A>.  Create an account, play with it for a bit, read the <A HREF=\"module.php?mod=documentation\">documentation</A> and spend some time getting used to it.</P>\n";
   $theme->box("Introduction", $output);
 
-  $output  = "<LI><A HREF=\"drupal/drupal-1.00.tgz\">drupal 1.00</A> (2001/01/15 - latest version)</LI>\n";
+  $output  = "<LI><A HREF=\"drupal/drupal-2.00.tgz\">drupal 2.00</A> (2001/03/15 - latest version)</LI>\n";
+  $output .= "<LI><A HREF=\"drupal/drupal-1.00.tgz\">drupal 1.00</A> (2001/01/15)</LI>\n";
   $output .= "<LI><A HREF=\"drupal/drupal-1.00-rc2.tgz\">drupal 1.00-rc2</A> (2001/01/08)</LI>\n";
   $output .= "<LI><A HREF=\"drupal/drupal-1.00-rc1.tgz\">drupal 1.00-rc1</A> (2001/01/01)</LI>\n";
   $theme->box("Download", $output);
