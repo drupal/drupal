@@ -433,7 +433,7 @@ function node_save($node) {
 
     // Prepare the query:
     foreach ($node as $key => $value) {
-      if (in_array($key, $fields)) {
+      if (in_array((string) $key, $fields)) {
         $k[] = check_query($key);
         $v[] = $value;
         $s[] = "'%s'";
