@@ -275,7 +275,7 @@ function blog_link($type, $node = 0) {
     $links[] = "<a href=\"module.php?mod=blog&op=view&name=". urlencode($user->userid) ."\">". t("view your blog") ."</a>";
   }
 
-  if ($type == "node" && $node) {
+  if ($type == "node" && $node->type == "blog") {
     $links[] = "<a href=\"module.php?mod=blog&op=view&name=". urlencode($node->userid) ."\">". strtr(t("%a's blog"), array("%a" => $node->userid)) ."</a>";
   }
 
