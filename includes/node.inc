@@ -1,5 +1,5 @@
 <?php
-// $Id: node.inc,v 1.81 2001/11/24 15:10:36 dries Exp $
+// $Id: node.inc,v 1.82 2001/12/06 17:33:04 dries Exp $
 
 // TODO: still used by themes, yet doesn't return anything at the moment
 function node_index() {
@@ -118,7 +118,6 @@ function node_load($conditions) {
   }
 
   return $node;
-
 }
 
 function node_save($node, $filter) {
