@@ -123,7 +123,7 @@ CREATE TABLE comments (
   link varchar(16) NOT NULL default '',
   score integer NOT NULL default '0',
   status smallint  NOT NULL default '0',
-  thread vharchar(255) NOT NULL,
+  thread varchar(255) NOT NULL,
   users text default '',
   PRIMARY KEY  (cid)
 );
