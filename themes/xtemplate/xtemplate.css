@@ -48,33 +48,34 @@ img {
 .header .menu {
   background-color: #69c;
   padding: 5px 5px 0px 5px;
+
 }
-.menu logo {
+.menu #logo {
   vertical-align: bottom;
   float: left;
-  width: 30%;
 }
-.menu #links {
-  white-space: nowrap;
+.menu #primary {
+  padding-top: 15px;
+  position: absolute;
   text-align: right;
-  float: right;
-  color: #9cf;
-  width: 60%;
-}
-.menu #links #primary {
   font-size: 1.1em;
-}
-.menu #links #primary a {
-  color: #fff;
-  font-weight: bold;
-}
-.menu #links #secondary {
-  font-size: 0.9em;
-  margin-bottom: 12px;
-}
-.menu #links #secondary a {
   color: #9cf;
+  left: 225px;
+}
+.menu #primary a {
   font-weight: bold;
+  color: #fff;
+}
+.menu #secondary {
+  position: absolute;
+  text-align: right;
+  font-size: 0.9em;
+  color: #9cf;
+  left: 225px;
+}
+.menu #secondary a {
+  font-weight: bold;
+  color: #9cf;
 }
 #secondary form {
   display: inline;
