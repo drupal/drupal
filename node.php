@@ -76,8 +76,7 @@ function node_failure() {
 }
 
 function node_history($node) {
-  global $status;
-  if ($node->status == $status[expired] || $node->status == $status[posted]) {
+  if ($node->status == node_status("expired") || $node->status == node_status("posted")) {
     $output .= "<dt><b>". format_date($node->timestamp) ." by ". format_name($node) .":</b></dt><dd>". check_output($node->log, 1) ."<p /></dd>";
   }
   if ($node->pid) {
@@ -86,10 +85,10 @@ function node_history($node) {
   return $output;
 }
 
-$number = ($title ? db_num_rows(db_query("SELECT nid FROM node WHERE title = '$title' AND status = $status[posted]")) : 1);
+$number = ($title ? db_num_rows(db_query("SELECT nid FROM node WHERE title = '$title' AND status = '". node_status("posted") ."'")) : 1);
 
 if ($number > 1) {
-  $result = db_query("SELECT n.*, u.name, u.uid FROM node n LEFT JOIN user u ON n.author = u.uid WHERE n.title = '$title' AND n.status = $status[posted] ORDER BY timestamp DESC");
+  $result = db_query("SELECT n.*, u.name, u.uid FROM node n LEFT JOIN user u ON n.author = u.uid WHERE n.title = '$title' AND n.status = '". node_status("posted") ."' ORDER BY timestamp DESC");
 
   while ($node = db_fetch_object($result)) {
     if (node_access($node)) {
