@@ -39,23 +39,6 @@ function locale_help($section = "admin/help#locale") {
       <p>Whenever Drupal encounters an interface string which needs to be displayed, it tries to translate it into the currently selected language. If a translation is not available, then the string is remembered, so you can look up untranslated strings easily.</p>
       <p>Drupal provides two options to translate these strings. First is the integrated web interface, where you can search for untranslated strings, and specify their translations via simple web forms. An easier, and much less time consuming method is to import translations already done for your language. This is achieved by the use of GNU gettext Portable Object files. These are editable with quite convenient desktop editors specifically architected for supporting your work with GNU Gettext files. The import feature allows you to add strings from such files into the site database. The export functionality enables you to share your translations with others, generating Portable Object files from your site strings.");
       break;
-
-      // TODO: integrate a rewritten version of this help into the big help screen above
-      /*
-      "<p>To translate strings start at the <a href=\"%search\">search</a> page of the locale section in the administration pages. There you will see a list of the languages you have configured. Choose the appropriate settings and search for the strings you want to translate.</p>
-      <p>At the locale page, users with the proper access rights will see the various texts that need translation on the left column of the table.</p>
-      <p>Below the text you can see an example URI where this text shows up one your site or a file and the line number in the source code.  Chances are most of these texts will be used and displayed on more than one page, though only one example URI is presented.</p>
-      <p>The second column displays the supported languages as defined in the configuration file.  See below for more information on how to support new languages.  If the symbol for a language is seen like <strike>this</strike>, it means that this entry still needs to be translated into that language.  If not, it has been translated already.</p>
-      <p>To add or change a translation click the \"edit locale\" link in the third column, the \"operations\" column.  You'll be presented the original text and fields for translation in the supported languages.  Enter the translations and confirm by clicking the \"Save translations\" button.  The translations need not be accurate; they are for your site so you can choose what to show to your users.</p>
-      <p>To delete a translation, click the \"delete locale\" link at the overview page and the translation will be immediately deleted without confirmation.  Deleting translations is convenient for removing texts that belonged to an obsolete module.</p>
-      <p>In some texts special strings such as \"%a\" and \"%b\" show up.  Those get replaced by some string at run-time when Drupal dynamically generate pages.  You can find out which string this is by looking at the page where the text appears.  This is where the above mentioned URI and code line numbers can come in handy.</p>
-      <h3>Uploading PO files</h3>
-      <p>PO files are files containing translations as used by <a href=\"%gettext\">GNU gettext</a>.</p>
-      <p>The Drupal project distributes user contributed PO files in a number of languages. These files can be obtained from the <a href=\"%translations\">Drupal translations</a> home page.</p>
-      <p>If you want to provide a PO file for a not yet supported language or update an existing PO files, read about it in the <a href=\"%handbook\">Drupal handbook</a> home page.</p>
-      <p>Once you got the appropriate PO file, all you have to do is to add the locale and upload it from the <a href=\"%addlocale\">manage locale</a> screen.</p>
-      <p>Note that uploading and parsing the uploaded file can take quite some time, depending on the connection to the server and the server's power.</p>
-       ", array("%search" => url("admin/locale/string/search"), "%addlocale" => url("admin/locale/languages/add"), "%translations" => 'http://www.Drupal.org/translations/', "%handbook" => 'http://www.Drupal.org/handbook/po-files', "%gettext" => 'http://www.gnu.org/software/gettext/gettext.html'));*/
   }
 }
 
@@ -293,6 +276,10 @@ function locale_admin_manage() {
           db_query("UPDATE {locales_meta} SET name = '%s', isdefault = %d, enabled = %d WHERE locale = '%s'", $edit['name'][$key], ($edit['sitedefault'] == $key), $edit['enabled'][$key], $key);
         }
       }
+
+      // Changing the locale settings impacts the interface:
+      cache_clear_all();
+
       break;
 
     // Remove existing language
@@ -304,6 +291,10 @@ function locale_admin_manage() {
         drupal_set_message(t('%locale language removed.', array('%locale' => '<em>'. t($languages['name'][$edit['langcode']]) .'</em>')));
         watchdog('special', t('%locale language removed.', array('%locale' => '<em>'. $edit['langcode'] .'</em>')));
       }
+
+      // Changing the locale settings impacts the interface:
+      cache_clear_all();
+
       break;
   }
   print theme('page', _locale_admin_manage_screen());
