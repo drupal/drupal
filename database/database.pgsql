@@ -264,6 +264,16 @@ CREATE TABLE filters (
 CREATE INDEX filters_module_idx ON filters(module);
 
 --
+-- Table structure for table 'flood'
+--
+
+CREATE TABLE flood (
+  event varchar(64) NOT NULL default '',
+  hostname varchar(128) NOT NULL default '',
+  timestamp int(11) NOT NULL default '0'
+);
+
+--
 -- Table structure for table 'forum'
 --
 

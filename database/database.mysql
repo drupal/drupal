@@ -263,6 +263,16 @@ CREATE TABLE filters (
 ) TYPE=MyISAM;
 
 --
+-- Table structure for table 'flood'
+--
+
+CREATE TABLE flood (
+  event varchar(64) NOT NULL default '',
+  hostname varchar(128) NOT NULL default '',
+  timestamp int(11) NOT NULL default '0'
+) TYPE=MyISAM;
+
+--
 -- Table structure for table 'forum'
 --
 
