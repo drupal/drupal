@@ -54,7 +54,7 @@ INSTALLATION
    into a directory within your webserver's document root or your
    public HTML directory:
 
-     $ mv drupal-4.1.0 /var/www/html
+     $ mv drupal-x.x.x /var/www/html
 
    NOTE: when copying files, ensure you also copy the hidden .htaccess
    file.
@@ -100,7 +100,7 @@ INSTALLATION
 
 4. CONNECTING DRUPAL
 
-   Drupal server options are specified in includes/conf.php
+   Drupal server options are specified in includes/conf.php.
 
    Drupal allows for multiple virtual host installations; to configure
    a virtual server host, you can create the configuration file
@@ -152,7 +152,7 @@ a few active modules, one theme, and no user access rights.
 
 Standard services can be selected and configured through the
 administration panel; additional community-contributed modules and
-themes are available from drupal.org
+themes are available from drupal.org.
 
 CUSTOMIZING YOUR THEME(S)
 -------------------------
