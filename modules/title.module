@@ -1,5 +1,5 @@
 <?php
-// $Id: title.module,v 1.28 2004/02/15 20:09:46 dries Exp $
+// $Id: title.module,v 1.29 2004/02/21 23:52:11 kjartan Exp $
 
 function title_help($section) {
   $output = "";
@@ -26,6 +26,7 @@ function title_page() {
   $title = urldecode(arg(1));
   $result = db_query("SELECT n.*, u.name, u.uid FROM {node} n INNER JOIN {users} u ON n.uid = u.uid WHERE n.title = '%s' AND n.status = 1 ORDER BY n.created DESC", $title);
 
+  $title = trim(str_replace(array('_', '%', '*'), ' ', $title));
   if (db_num_rows($result) == 0) {
     // No node with exact title found, try substring.
     $result = db_query("SELECT n.*, u.name, u.uid FROM {node} n INNER JOIN {users} u ON n.uid = u.uid WHERE n.title LIKE '%%%s%%' AND n.status = 1 ORDER BY n.created DESC", $title);
