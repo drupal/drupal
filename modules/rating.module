@@ -27,7 +27,7 @@ function rating_list($limit) {
   $output .= "<TABLE CELLPADDING=\"1\" CELLSPACING=\"1\">\n";
   while ($account = db_fetch_object($result)) {
     $ranking = $account->old - $account->new;
-    $output .= "<TR><TD ALIGN=\"right\">". ++$i ."</TD><TD>". format_username($account->userid) ."</TD><TD ALIGN=\"right\">". check_output($account->rating) ."</TD><TD>(". ($ranking < 0 ? "" : "+") ."$ranking)</TD></TR>";
+    $output .= "<TR><TD ALIGN=\"right\">". ++$i .".</TD><TD>". format_username($account->userid) ."</TD><TD ALIGN=\"right\">". check_output($account->rating) ."</TD><TD>(". ($ranking < 0 ? "" : "+") ."$ranking)</TD></TR>";
   }
   $output .= "</TABLE>\n";
   return $output;
