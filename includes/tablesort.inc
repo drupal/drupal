@@ -1,5 +1,5 @@
 <?php
-// $Id: tablesort.inc,v 1.17 2004/03/30 21:01:19 dries Exp $
+// $Id: tablesort.inc,v 1.18 2004/05/25 05:03:03 dries Exp $
 
 function tablesort_init($header) {
   static $ts;
@@ -95,7 +95,7 @@ function tablesort_get_sort($headers) {
   // user has not specified a sort.  check module for default and if none, use 'asc'
   else {
     foreach ($headers as $header) {
-      if (isset($header['sort'])) {
+      if (is_array($header) && isset($header['sort'])) {
         return $header['sort'];
       }
     }
