@@ -1,5 +1,5 @@
 <?php
-// $Id: admin.php,v 1.59 2002/12/28 23:21:31 dries Exp $
+// $Id: admin.php,v 1.60 2002/12/30 23:30:53 dries Exp $
 
 include_once "includes/common.inc";
 
@@ -17,6 +17,7 @@ function admin_page($mod) {
   <html>
    <head>
     <title><?php echo variable_get("site_name", "drupal") . " " . t("administration pages"); ?></title>
+    <link rel="stylesheet" type="text/css" media="print" href="misc/print.css" />
     <style type="text/css" title="layout" media="Screen">
       @import url("misc/admin.css");
     </style>
