@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.107 2002/05/02 18:47:35 dries Exp $
+// $Id: common.inc,v 1.108 2002/05/02 18:56:11 kjartan Exp $
 
 function conf_init() {
   global $HTTP_HOST;
@@ -639,7 +639,7 @@ function form_submit($value) {
 function drupal_url($args = array(), $script = "node") {
   $t = array();
   foreach ($args as $key => $value) {
-    $t[] = "$key = $value";
+    $t[] = "$key=$value";
   }
   return "$script.php?". implode("&amp;", $t);
 }
