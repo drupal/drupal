@@ -51,6 +51,7 @@ Drupal x.x.x, xxxx-xx-xx
 - UI translation:
     * managing translations is now completely done through the administration interface
     * added support for importing/exporting gettext .po files
+- made Drupal work with PHP5
 
 Drupal 4.4.2, 2004-07-04
 ------------------------
