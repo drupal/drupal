@@ -347,7 +347,7 @@ function taxonomy_node_form($type, $node = '') {
 
 // return 1 if node identified by $nid contains a taxonomy term identified by $tid in his body or title
 function taxonomy_node_has_term($nid, $tid) {
-  $term_name = db_result(db_query("SELECT name FROM term_data WHERE tid = '%s'", $tid));
+  $term_name = db_result(db_query("SELECT name FROM term_data WHERE tid = '%d'", $tid));
 
   return db_result(db_query("SELECT COUNT(n.nid) FROM node n WHERE n.nid = '%d' AND ((n.body LIKE '%%%s%%') OR (n.body LIKE '%%%s%%'))", $nid, $term_name, $term_name));
 }

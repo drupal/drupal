@@ -1264,7 +1264,7 @@ function comment_moderate() {
       foreach ($moderation as $cid => $vote) {
         if ($vote) {
           if (($vote == 'offline') && (user_access("administer comments"))) {
-            db_query("UPDATE comments SET status = 1 WHERE cid = '%s'", $cid);
+            db_query("UPDATE comments SET status = 1 WHERE cid = '%d'", $cid);
             watchdog("special", "comment: unpublished comment #". $cid);
 
             /*

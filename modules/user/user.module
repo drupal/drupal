@@ -1201,7 +1201,7 @@ function user_admin_access($edit = array()) {
     }
   }
   else if ($id) {
-    db_query("DELETE FROM access WHERE aid = '%s'", $id);
+    db_query("DELETE FROM access WHERE aid = '%d'", $id);
   }
 
   $header = array(t("type"), t("mask"), t("operations"));
@@ -1258,7 +1258,7 @@ function user_admin_perm($edit = array()) {
     while ($role = db_fetch_object($result)) {
       // delete, so if we clear every checkbox we reset that role;
       // otherwise permissions are active and denied everywhere
-      db_query("DELETE FROM permission WHERE rid = '%s'", $role->rid);
+      db_query("DELETE FROM permission WHERE rid = '%d'", $role->rid);
       $perm = $edit[$role->rid] ? implode(", ", array_keys($edit[$role->rid])) : "";
       if ($perm) {
         db_query("INSERT INTO permission (rid, perm) VALUES ('%s', '%s')", $role->rid, $perm);
@@ -1321,11 +1321,11 @@ function user_admin_role($edit = array()) {
   $id = arg(3);
 
   if ($op == t("Save role")) {
-    db_query("UPDATE role SET name = '%s' WHERE rid = '%s'", $edit["name"], $id);
+    db_query("UPDATE role SET name = '%s' WHERE rid = '%d'", $edit["name"], $id);
   }
   else if ($op == t("Delete role")) {
-    db_query("DELETE FROM role WHERE rid = '%s'", $id);
-    db_query("DELETE FROM permission WHERE rid = '%s'", $id);
+    db_query("DELETE FROM role WHERE rid = '%d'", $id);
+    db_query("DELETE FROM permission WHERE rid = '%d'", $id);
   }
   else if ($op == t("Add role")) {
     db_query("INSERT INTO role (name) VALUES ('%s')", $edit["name"]);
@@ -1335,7 +1335,7 @@ function user_admin_role($edit = array()) {
     ** Display role form:
     */
 
-    $role = db_fetch_object(db_query("SELECT * FROM role WHERE rid = '%s'", $id));
+    $role = db_fetch_object(db_query("SELECT * FROM role WHERE rid = '%d'", $id));
 
     $output .= form_textfield(t("Role name"), "name", $role->name, 32, 64, t("The name for this role.  Example: 'moderator', 'editorial board', 'site architect'."));
     $output .= form_submit(t("Save role"));

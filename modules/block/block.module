@@ -213,7 +213,7 @@ function block_admin_preview() {
 }
 
 function block_box_get($bid) {
-  return db_fetch_array(db_query("SELECT * FROM boxes WHERE bid = '%s'", $bid));
+  return db_fetch_array(db_query("SELECT * FROM boxes WHERE bid = '%d'", $bid));
 }
 
 function block_box_form($edit = array()) {
@@ -241,7 +241,7 @@ function block_box_save($edit) {
   }
 
   if ($edit["bid"]) {
-    db_query("UPDATE boxes SET title = '%s', body = '%s', info = '%s', type = '%s' WHERE bid = '%s'", $edit["title"], $edit["body"], $edit["info"], $edit["type"], $edit["bid"]);
+    db_query("UPDATE boxes SET title = '%s', body = '%s', info = '%s', type = '%s' WHERE bid = '%d'", $edit["title"], $edit["body"], $edit["info"], $edit["type"], $edit["bid"]);
     return t("the block has been updated.");
   }
   else {
@@ -252,7 +252,7 @@ function block_box_save($edit) {
 
 function block_box_delete($bid) {
   if ($bid) {
-    db_query("DELETE FROM boxes WHERE bid = '%s'", $bid);
+    db_query("DELETE FROM boxes WHERE bid = '%d'", $bid);
     return t("the block has been deleted.");
   }
 }

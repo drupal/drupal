@@ -640,13 +640,13 @@ function format_size($size) {
 }
 
 function cache_get($key) {
-  $cache = db_fetch_object(db_query("SELECT data, created FROM cache WHERE cid = '%s'", $key));
+  $cache = db_fetch_object(db_query("SELECT data, created FROM cache WHERE cid = '%d'", $key));
   return $cache->data ? $cache : 0;
 }
 
 function cache_set($cid, $data, $expire = 0) {
-  if (db_fetch_object(db_query("SELECT cid FROM cache WHERE cid = '%s'", $cid))) {
-    db_query("UPDATE cache SET data = '%s', created = %d, expire = %d WHERE cid = '%s'", $data, time(), $expire, $cid);
+  if (db_fetch_object(db_query("SELECT cid FROM cache WHERE cid = '%d'", $cid))) {
+    db_query("UPDATE cache SET data = '%s', created = %d, expire = %d WHERE cid = '%d'", $data, time(), $expire, $cid);
   }
   else {
     db_query("INSERT INTO cache (cid, data, created, expire) VALUES('%s', '%s', %d, %d)", $cid, $data, time(), $expire);
@@ -658,7 +658,7 @@ function cache_clear_all($cid = NULL) {
     db_query("DELETE FROM cache WHERE expire <> 0");
   }
   else {
-    db_query("DELETE FROM cache WHERE cid = '%s'", $cid);
+    db_query("DELETE FROM cache WHERE cid = '%d'", $cid);
   }
 }
 
