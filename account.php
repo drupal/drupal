@@ -7,7 +7,6 @@ function navigation() {
 }
 
 function validateAccount($uname, $email) {
-
   ### Verify username and e-mail address:
   if ((!$email) || ($email=="") || (strrpos($uname,' ') > 0) || (!eregi("^[_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,3}$", $email))) $rval = "the specified e-mail address is not valid.<BR>";
   if ((!$uname) || ($uname=="") || (ereg("[^a-zA-Z0-9_-]",$uname))) $rval = "the specified username '$uname' is not valid.<BR>";
@@ -319,7 +318,7 @@ function user_edit_home() {
 
   <P>
    <B>Theme:</B><BR>
-   <SELECT NAME="theme">
+   <SELECT NAME="thm">
    <?php
      include "themes/list.php";
      $themelist = explode(" ", $themelist);
@@ -351,7 +350,7 @@ function user_edit_home() {
   $theme->footer();
 }
 
-function user_save_home($uid, $uname, $storynum, $theme, $ublockon, $ublock) {
+function user_save_home($uid, $uname, $storynum, $thm, $ublockon, $ublock) {
 	global $user, $userinfo;
 	include "functions.inc";
 	dbconnect();
@@ -362,7 +361,7 @@ function user_save_home($uid, $uname, $storynum, $theme, $ublockon, $ublock) {
 	getusrinfo($user);
 	mysql_query("UNLOCK TABLES");
 	docookie($userinfo[uid],$userinfo[uname],$userinfo[pass],$userinfo[storynum],$userinfo[umode],$userinfo[uorder],$userinfo[thold],$userinfo[noscore],$userinfo[ublockon],$userinfo[theme]);
-	Header("Location: account.php?theme=$theme");
+	Header("Location: account.php?theme=$thm");
 }
 
 function user_edit_comm() {
@@ -472,7 +471,7 @@ switch($op) {
     user_edit_home();
     break;
   case "Save homepage settings":
-    user_save_home($uid, $uname, $storynum, $theme, $ublockon, $ublock);
+    user_save_home($uid, $uname, $storynum, $thm, $ublockon, $ublock);
     userinfo($uname);
     break;
   case "editcomm":
