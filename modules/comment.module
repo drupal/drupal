@@ -534,8 +534,8 @@ function comment_post($edit) {
         // Allow modules to respond to the updating of a comment.
         module_invoke_all('comment', 'update', $edit);
 
-        // Add entry to the watchdog log.
-        watchdog('content', t('Comment: updated %subject.', array('%subject' => '<em>'. $edit['subject'] .'</em>')), l(t('view'), 'node/'. $edit['nid'], NULL, NULL, 'comment-'. $edit['cid']));
+        // Add an entry to the watchdog log.
+        watchdog('content', t('Comment: updated %subject.', array('%subject' => '<em>'. $edit['subject'] .'</em>')), WATCHDOG_NOTICE, l(t('view'), 'node/'. $edit['nid'], NULL, NULL, 'comment-'. $edit['cid']));
       }
       else {
         // Add the comment to database.
@@ -638,7 +638,7 @@ function comment_post($edit) {
         module_invoke_all('comment', 'insert', $edit);
 
         // Add an entry to the watchdog log.
-        watchdog('content', t('Comment: added %subject.', array('%subject' => '<em>'. $edit['subject'] .'</em>')), l(t('view'), 'node/'. $edit['nid'], NULL, NULL, 'comment-'. $edit['cid']));
+        watchdog('content', t('Comment: added %subject.', array('%subject' => '<em>'. $edit['subject'] .'</em>')), WATCHDOG_NOTICE, l(t('view'), 'node/'. $edit['nid'], NULL, NULL, 'comment-'. $edit['cid']));
       }
 
       // Clear the cache so an anonymous user can see his comment being added.
