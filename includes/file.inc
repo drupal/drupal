@@ -14,10 +14,9 @@
 
 define('FILE_DOWNLOADS_PUBLIC', 1);
 define('FILE_DOWNLOADS_PRIVATE', 2);
-#define('FILE_SEPARATOR', PHP_OS == 'WINNT' ? '\\' : '/');
-define('FILE_SEPARATOR', '/');
 define('FILE_CREATE_DIRECTORY', 1);
 define('FILE_MODIFY_PERMISSIONS', 2);
+define('FILE_DIRECTORY_TEMP', PHP_OS == 'WINNT' ? 'c:\\windows\\temp' : '/tmp');
 
 /**
  * Create the download path to a file.
@@ -45,7 +44,7 @@ function file_create_path($dest = 0) {
 
   $regex = (PHP_OS == 'WINNT' ? '.?:\\\\' : '/');
   if (!file_check_location($dest, variable_get('file_directory_path', 'files')) && !preg_match("|^$regex|", $dest)) {
-    return variable_get('file_directory_path', 'files') . FILE_SEPARATOR . trim($dest, '\\/');
+    return variable_get('file_directory_path', 'files') .'/'. trim($dest, '\\/');
   }
   else {
     return $dest;
@@ -65,7 +64,7 @@ function file_check_directory(&$directory, $mode = 0, $form_item = NULL) {
 
   // Check if directory exists.
   if (!is_dir($directory)) {
-    if (($mode & FILE_CREATE_DIRECTORY) && mkdir($directory, 0760)) {
+    if (($mode & FILE_CREATE_DIRECTORY) && @mkdir($directory, 0760)) {
       drupal_set_message(t('Created directory %directory.', array('%directory' => "<em>$directory</em>")));
     }
     else {
@@ -78,7 +77,7 @@ function file_check_directory(&$directory, $mode = 0, $form_item = NULL) {
 
   // Check to see if the directory is writable.
   if (!is_writable($directory)) {
-    if (($mode & FILE_MODIFY_PERMISSIONS) && chmod($directory, 0760)) {
+    if (($mode & FILE_MODIFY_PERMISSIONS) && @chmod($directory, 0760)) {
       drupal_set_message(t('Modified permissions on directory %directory.', array('%directory' => "<em>$directory</em>")));
     }
     else {
@@ -208,7 +207,7 @@ function file_copy(&$source, $dest = 0, $replace = 0) {
 
   // If destination file is not specified then use filename of source file.
   $basename = $basename ? $basename : basename($source);
-  $dest = $directory . FILE_SEPARATOR . $basename;
+  $dest = $directory .'/'. $basename;
 
   // Make sure source and destination filenames are not the same, makes no sense
   // to copy it if they are. In fact copying the file will most likely result in
@@ -227,7 +226,7 @@ function file_copy(&$source, $dest = 0, $replace = 0) {
 
       $counter = 0;
       do {
-        $dest = $directory . FILE_SEPARATOR . $name .'_'. $counter++ . $ext;
+        $dest = $directory .'/'. $name .'_'. $counter++ . $ext;
       } while (file_exists($dest));
     }
 
@@ -265,7 +264,7 @@ function file_move(&$source, $dest = 0, $replace = 0) {
 }
 
 function file_create_filename($basename, $directory) {
-  $dest = $directory . FILE_SEPARATOR . $basename;
+  $dest = $directory .'/'. $basename;
 
   if (file_exists($dest)) {
     // Destination file already exists, generate an alternative.
@@ -279,7 +278,7 @@ function file_create_filename($basename, $directory) {
 
     $counter = 0;
     do {
-      $dest = $directory . FILE_SEPARATOR . $name .'_'. $counter++ . $ext;
+      $dest = $directory .'/'. $name .'_'. $counter++ . $ext;
     } while (file_exists($dest));
   }
 
@@ -309,7 +308,7 @@ function file_save_upload($source, $dest = 0, $replace = 0) {
   // Make sure $source exists in $_FILES.
   if ($file = file_check_upload($source)) {
     if (!$dest) {
-      $dest = variable_get('file_directory_temp', (PHP_OS == 'WINNT' ? 'c:\\windows\\temp' : '/tmp'));
+      $dest = variable_get('file_directory_temp', FILE_DIRECTORY_TEMP);
       $temporary = 1;
       if (is_file($file->filepath)) {
         // If this file was uploaded by this user before replace the temporary copy.
@@ -367,7 +366,7 @@ function file_save_data($data, $dest, $replace = 0) {
     return 0;
   }
 
-  $temp = variable_get('file_directory_temp', (PHP_OS == 'WINNT' ? 'c:\\windows\\temp' : '/tmp'));
+  $temp = variable_get('file_directory_temp', FILE_DIRECTORY_TEMP);
   $file = tempnam($temp, 'file');
   if (!$fp = fopen($file, 'wb')) {
     drupal_set_message(t('Unable to create file.'), 'error');

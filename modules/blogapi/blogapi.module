@@ -539,7 +539,7 @@ function blogapi_blogapi() {
 function blogapi_rsd() {
   global $base_url;
 
-  $xmlrpc = $base_url . FILE_SEPARATOR . 'xmlrpc.php';
+  $xmlrpc = $base_url .'/'. 'xmlrpc.php';
   $base = url('', NULL, NULL, TRUE);
   $blogid = 1; # until we figure out how to handle multiple bloggers
 

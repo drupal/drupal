@@ -205,7 +205,7 @@ function user_validate_picture($file, &$edit, $user) {
   else if ($size[0] > $maxwidth || $size[1] > $maxheight) {
     form_set_error('picture', t('The uploaded image is too large; the maximum dimensions are %dimensions pixels.', array('%dimensions' => variable_get('user_picture_dimensions', '85x85'))));
   }
-  else if ($file = file_save_upload('picture', variable_get('user_picture_path', 'pictures') . FILE_SEPARATOR .'picture-'. $user->uid . $extension, 1)) {
+  else if ($file = file_save_upload('picture', variable_get('user_picture_path', 'pictures') .'/picture-'. $user->uid . $extension, 1)) {
     $edit['picture'] = $file->filepath;
   }
   else {
@@ -361,7 +361,7 @@ function user_perm() {
  * Ensure that user pictures (avatars) are always downloadable.
  */
 function user_file_download($file) {
-  if (strpos($file, variable_get('user_picture_path', 'pictures') . FILE_SEPARATOR . 'picture-') === 0) {
+  if (strpos($file, variable_get('user_picture_path', 'pictures') .'/picture-') === 0) {
     list($width, $height, $type, $attr) = @getimagesize(file_create_path($file));
     $types = array(
       IMAGETYPE_GIF => 'image/gif',
@@ -1245,7 +1245,7 @@ function user_configure_settings() {
   file_check_directory(file_create_path(variable_get('user_picture_path', 'pictures')), 1, 'user_picture_path');
 
   $group  = form_radios(t('Picture support'), 'user_pictures', variable_get('user_pictures', 0), array(t('Disabled'), t('Enabled')), t('Enable picture support.'));
-  $group .= form_textfield(t('Picture image path'), 'user_picture_path', variable_get('user_picture_path', 'pictures'), 45, 255, t('Subdirectory in the directory "%dir" where pictures will be stored.', array('%dir' => variable_get('file_directory_path', 'files') . FILE_SEPARATOR)));
+  $group .= form_textfield(t('Picture image path'), 'user_picture_path', variable_get('user_picture_path', 'pictures'), 45, 255, t('Subdirectory in the directory "%dir" where pictures will be stored.', array('%dir' => variable_get('file_directory_path', 'files') .'/')));
   $group .= form_textfield(t('Default picture'), 'user_picture_default', variable_get('user_picture_default', ''), 45, 255, t('URL of picture to display for users with no custom picture selected. Leave blank for none.'));
   $group .= form_textfield(t('Picture maximum dimensions'), 'user_picture_dimensions', variable_get('user_picture_dimensions', '85x85'), 10, 10, t('Maximum dimensions for pictures.'));
   $group .= form_textfield(t('Picture maximum file size'), 'user_picture_file_size', variable_get('user_picture_file_size', '30'), 10, 10, t('Maximum file size for pictures, in kB.'));

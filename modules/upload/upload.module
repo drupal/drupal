@@ -177,7 +177,7 @@ function upload_nodeapi(&$node, $op, $arg) {
       break;
     case 'load':
       if (variable_get("upload_$node->type", 1) == 1 && user_access('upload files')) {
-        $output->files = upload_load($node);
+        $output['files'] = upload_load($node);
       }
       break;
     case 'view':
@@ -209,7 +209,6 @@ function upload_nodeapi(&$node, $op, $arg) {
           foreach ($previews as $file) {
             $old = file_create_filename($file->filename, file_create_path());
             $new = url($old);
-            //drupal_set_message("debug: $old $new");
             $node->body = str_replace($old, $new, $node->body);
             $node->teaser = str_replace($old, $new, $node->teaser);
           }
