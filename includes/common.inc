@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.276 2003/12/10 23:09:31 dries Exp $
+// $Id: common.inc,v 1.277 2003/12/12 19:44:57 dries Exp $
 
 /**
  * @name drupal_title
@@ -815,7 +815,13 @@ function drupal_get_path_alias($path) {
  */
 function drupal_get_normal_path($path) {
   $map = drupal_get_path_map();
-  return $map[$path];
+
+  if ($map[$path]) {
+    return $map[$path];
+  }
+  else {
+    return $path;
+  }
 }
 
 function url($url = NULL, $query = NULL) {
@@ -945,17 +951,10 @@ header("Content-Type: text/html; charset=utf-8");
 
 // initialize the _GET["q"] prior to loading the modules and invoking their 'init' hook:
 if (!empty($_GET["q"])) {
-  if ($path = drupal_get_normal_path(trim($_GET["q"], "/"))) {
-    $_GET["q"] = $path;
-  }
+  $_GET["q"] = drupal_get_normal_path(trim($_GET["q"], "/"));
 }
 else {
-  if ($path = drupal_get_normal_path(variable_get("site_frontpage", "node"))) {
-    $_GET["q"] = $path;
-  }
-  else {
-    $_GET["q"] = variable_get("site_frontpage", "node");
-  }
+  $_GET["q"] = drupal_get_normal_path(variable_get("site_frontpage", "node"));
 }
 
 // initialize installed modules:
