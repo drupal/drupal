@@ -658,20 +658,22 @@ function comment_link($type, $node = 0, $main = 0) {
   }
 
   if ($type == "admin" && user_access("administer comments")) {
-    $settings = "If you really have a lot of comments, you can enable moderation. You assign moderation permissions to role(s), then setup some 'moderation votes'; these votes will appear to moderators in a dropdown menu near the comment. You also have to assign, for every role and every vote, a value, which can be either positive or negative; use the moderation matrix to do this. This allows for some roles having greater 'weight' in their moderation, if you wish. If you set a value to 0, that vote won't be available to that role. When a user moderates, the value of their vote is added or subtracted to the score of that comment. Finally, you may want to setup the comment thresholds: these are floor/ceiling values which users see in the comment control panel. Threshholds are useful for hiding poorly rated comments while reading your site.";
+    $help["general"] = "To be written: description of comment module.  Anyone?";
+    $help["settings"] = "If you really have a lot of comments, you can enable moderation. You assign moderation permissions to role(s), then setup some 'moderation votes'; these votes will appear to moderators in a dropdown menu near the comment. You also have to assign, for every role and every vote, a value, which can be either positive or negative; use the moderation matrix to do this. This allows for some roles having greater 'weight' in their moderation, if you wish. If you set a value to 0, that vote won't be available to that role. When a user moderates, the value of their vote is added or subtracted to the score of that comment. Finally, you may want to setup the comment thresholds: these are floor/ceiling values which users see in the comment control panel. Threshholds are useful for hiding poorly rated comments while reading your site.";
 
-    menu_add("comment management", url("admin/comment"), "Administer comments.", $help["comment"], "content management", 1);
-     menu_add("new or updated comments", url("admin/comment&amp;status=0"),  "Display new or updated comments.", NULL, "comment management");
-     menu_add("comments that await approval", url("admin/comment&amp;status=1"), "Display comments that await approval.", NULL, "comment management");
-     menu_add("search comment", url("admin/comment/search"), "Search a comment.", NULL, "comment management", 8);
-     menu_add("help", url("admin/comment/help"), "More information about the comment system.", NULL, "comment management", 9);
+    menu("admin/comment", "comment management", "comment_admin", $help["general"], 2);
+    menu("admin/comment/0", "new or updated comments", "comment_admin");
+    menu("admin/comment/1", "comments that await approval", "comment_admin");
+    menu("admin/comment/search", "search comment", "comment_admin", NULL, 8);
+    menu("admin/comment/help", "help", "comment_help", NULL, 9);
+    menu("admin/comment/edit", "edit comment", "comment_admin", NULL, 0, 1);
 
     // comment settings:
     if (user_access("administer moderation")) {
-      menu_add("comment moderation votes", url("admin/comment/votes"), "Configure the comment moderation votes.", $settings, "site configuration", 5);
-      menu_add("comment moderation matrix", url("admin/comment/matrix"), "Configure the comment moderation matrix.", $settings, "site configuration", 5);
-      menu_add("comment moderation thresholds", url("admin/comment/filters"), "Configure the comment moderation thresholds.", $settings, "site configuration", 5);
-      menu_add("initial comment scores", url("admin/comment/roles"), "Configure the initial comment score.", $settings, "site configuration", 5);
+      menu("admin/comment/votes", "comment moderation votes", "comment_admin", $help["settings"], 5);
+      menu("admin/comment/matrix", "ccomment moderation matrix", "comment_admin", $help["settings"], 5);
+      menu("admin/comment/filters", "comment moderation thresholds", "comment_admin", $help["settings"], 5);
+      menu("admin/comment/roles", "initial comment scores", "comment_admin", $help["settings"], 5);
     }
   }
 
@@ -990,10 +992,7 @@ function comment_admin() {
 
   if (user_access("administer comments")) {
     switch ($op) {
-      case "help":
-        print comment_help();
-        break;
-      case "edit":
+     case "edit":
         print comment_admin_edit(arg(3));
         break;
       case "search":
@@ -1036,7 +1035,7 @@ function comment_admin() {
           $status = $comment_settings["status"];
           $comment_page = $comment_settings["comment_page"];
         }
-        print comment_admin_overview($status, $comment_page);
+        print comment_admin_overview(0, $comment_page);
         break;
       case t("Submit"):
         print status(comment_save(check_query(arg(3)), $edit));
@@ -1044,10 +1043,10 @@ function comment_admin() {
           $status = $comment_settings["status"];
           $comment_page = $comment_settings["comment_page"];
         }
-        print comment_admin_overview($status, $comment_page);
+        print comment_admin_overview(0, $comment_page);
         break;
       default:
-        print comment_admin_overview($status, $comment_page);
+        print comment_admin_overview(arg(2), $comment_page);
     }
   }
   else {

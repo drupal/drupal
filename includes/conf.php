@@ -42,7 +42,7 @@ $base_url = "http://localhost";
 #   automatically become the default language.  You can add a language
 #   but make sure your SQL table, called locales is updated
 #   appropriately.
-$languages = array("en" => "English");
+$languages = array("en" => "english");
 
 #
 # Custom navigation links:

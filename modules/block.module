@@ -51,10 +51,10 @@ function block_link($type) {
   if ($type == "admin" && user_access("administer blocks")) {
    $help["block"] = "Blocks are the boxes visible in the side bars on the left- and right-hand side of the website.  They are either exported by the Drupal or by any of the active modules.  Adminstrators can enable or disable block, as well control the block placement by assigning them a region and/or by assigning each block (within a region) a weight to sort them vertically.  The path setting lets you define which pages you want the specific blocks to be shown.";
 
-    menu_add("block management", url("admin/block"), "Block management", $help["block"], NULL, 2);
-    menu_add("add new block", url("admin/block/add"), "Create a new block", $help["block"], "block management", 2);
-    menu_add("preview placement", url("admin/block/preview"), "Preview the block placement", $help["block"], "block management", 3);
-    menu_add("help", url("admin/block/help"), "More information about blocks", NULL, "block management", 5);
+    menu("admin/block", "block management", block_admin, $help["block"], 3);
+    menu("admin/block/add", "create new block", block_admin, $help["block"], 2);
+    menu("admin/block/preview", "preview placement", block_admin, $help["block"], 3);
+    menu("admin/block/help", "help", block_help, NULL, 9);
   }
 }
 
@@ -267,9 +267,6 @@ function block_admin() {
     }
 
     switch ($op) {
-      case "help":
-        block_help();
-        break;
       case "preview":
         block_admin_preview();
         break;

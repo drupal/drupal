@@ -416,25 +416,25 @@ function user_link($type) {
     $help["search"] = "On this page you can query any username.  For example, one may search for 'br' and Drupal might return 'brian', 'brad', and 'brenda'.";
     $help["setting"] = "Administrators may choose to restrict registration to their site.  That restriction may be accomplished on this page.  Also, the list of words which may be included in a system generated password is also listed on this page.  Drupal generates passwords by joining small words from the password list until the new password is greater than 6 characters.";
 
-    menu_add("user management", url("admin/user"), "User management", $help["user"]);
-     menu_add("create new account", url("admin/user/create"), "Create a new user account.", $help["create"], "user management", 1);
-     menu_add("view user accounts", url("admin/user/account"), "Display user account listings.", $help["view"], "user management", 2);
-     menu_add("access rules", url("admin/user/access"), "Configure access rules.", $help["access"], "user management", 3);
-      menu_add("e-mail rules", url("admin/user/access/mail"), "Allow or deny certain e-mail addresses.", $help["access"], "access rules");
-      menu_add("username rules", url("admin/user/access/user"), "Allow or deny certain usernames.", $help["access"], "access rules");
-     menu_add("user roles", url("admin/user/role"), "Configure user roles.", $help["role"], "user management", 4);
-     menu_add("user permissions", url("admin/user/permission"), "Configure user permissions.", $help["permission"], "user management", 5);
-     menu_add("search account", url("admin/user/search"), "Search a user account.", $help["search"], "user management", 5);
-     menu_add("help", url("admin/user/help"), "More information about user management.", NULL, "user management", 7);
+    menu("admin/user", "user management", "user_admin", $help["user"], 2);
+    menu("admin/user/create", "create new account", "user_admin", $help["create"], 1);
+    menu("admin/user/account", "view user accounts", "user_admin", $help["view"], 2);
+    menu("admin/user/access", "access rules", NULL, $help["access"], 3);
+    menu("admin/user/access/mail", "e-mail rules", "user_admin", $help["access"]);
+    menu("admin/user/access/user", "username rules", "user_admin", $help["access"]);
+    menu("admin/user/role", "user roles", "user_admin", $help["role"], 4);
+    menu("admin/user/permission", "user permissions", "user_admin", $help["permission"], 5);
+    menu("admin/user/search", "search account", "user_admin", $help["search"], 8);
+    menu("admin/user/help", "help", "user_help", NULL, 9);
+    menu("admin/user/edit", "edit user account", "user_admin", NULL, 0, 1); // hidden menu
+    menu("admin/user/account/0", "active users", "user_admin", $help["view"], 1);
+    menu("admin/user/account/1", "new users", "user_admin", $help["view"], 2);
+    menu("admin/user/account/2", "blocked users", "user_admin", $help["view"], 3);
 
-     menu_add("active users", url("admin/user/account/0"), t("Active users."), $help["view"], "view user accounts", 1);
-     menu_add("new users", url("admin/user/account/1"), t("New users."), $help["view"], "view user accounts", 2);
-     menu_add("blocked users", url("admin/user/account/2"), t("Blocked users."), $help["view"], "view user accounts", 3);
-
-     $i = 3;
-     foreach (user_roles(1) as $key => $value) {
-       menu_add("users with role '$value'", url("admin/user/account/". $i++), NULL, $help["view"], "view user accounts", 4);
-     }
+    $i = 3;
+    foreach (user_roles(1) as $key => $value) {
+      menu("admin/user/account/". $i++, "users with role '$value'", "user_admin", $help["view"], 4);
+    }
   }
 
   return $links ? $links : array();
@@ -1527,9 +1527,6 @@ function user_admin() {
     }
 
     switch ($op) {
-      case "help":
-        print user_help();
-        break;
       case "search":
         print search_type("user", url("admin/user/search"));
         break;
@@ -1823,9 +1820,9 @@ function user_help_devel_da() {
 </p>
 <pre>function blogger_page() {
 
-  $theme(&quot;header&quot;);
-  $theme(&quot;box&quot;, &quot;Blogger&quot;, blogger_auth_help());
-  $theme(&quot;footer&quot;);
+  theme(&quot;header&quot;);
+  theme(&quot;box&quot;, &quot;Blogger&quot;, blogger_auth_help());
+  theme(&quot;footer&quot;);
 }</pre>
 <p>The _page function is not currently used, but it might be in the future. For
   now, just copy what you see here, substituting your module name for <i>blogger</i>.</p>

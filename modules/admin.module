@@ -11,8 +11,12 @@ function status($message) {
 
 function admin_link($type) {
   if ($type == "admin") {
-    menu_add("sitemap", url("admin/admin/sitemap"), "Sitemap", NULL, NULL, 8);
+    menu("admin/sitemap", "sitemap", "sitemap_callback", NULL, 8);
   }
+}
+
+function sitemap_callback() {
+  return menu_map('admin');
 }
 
 function admin_admin() {
@@ -48,7 +52,8 @@ function admin_page() {
 
         print "<div id=\"menu\">";
         echo "<h1><a href=\"index.php\">". variable_get("site_name", "drupal") ."</a></h1>";
-        print menu_tree() ;
+        //print menu_tree('admin') ;
+        print menu_tree('admin') ;
 
         print "</div>";
 
@@ -60,7 +65,7 @@ function admin_page() {
         print "<div id=\"main\">";
 
         if ($path = menu_path()) {
-          print "<h2>". l(t("Administration"), "admin") ." &gt; $path</h2>";
+          print "<h2>". l(t("Administration"), "admin") ." $path</h2>";
         }
         else {
           print "<h2>". t("Administration") ."</h2>";
@@ -76,10 +81,11 @@ function admin_page() {
           print "<small>$help</small>";
         }
 
-        print "<hr /><br />";
+        print "<hr />";
 
         if (arg(1)) {
-          print module_invoke(arg(1), "admin");
+          //print module_invoke(arg(1), "admin");
+          print menu_execute_action();
         }
         else {
           print "<h2>". t("System messages") ."</h2>";
@@ -88,7 +94,6 @@ function admin_page() {
 
         print "</div>";
 
-        db_query("DELETE FROM menu");
       ?>
     </body>
    </html>

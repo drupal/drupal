@@ -8,7 +8,7 @@ function help_system($field){
 
 function help_link($type) {
   if ($type == "admin") {
-    menu_add("help", url("admin/help"), "Help", NULL, NULL, 9);
+    menu("admin/help", "help", "help_admin", NULL, 9);
   }
 }
 

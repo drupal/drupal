@@ -48,13 +48,18 @@ function locale_link($type) {
   global $languages;
 
   if ($type == "admin" && user_access("administer locales")) {
-    menu_add("locale", url("admin/locale"), "Translate this site.", NULL, NULL, 3);
-    menu_add("search string", url("admin/locale/search"), "Search a string.", NULL, "locale", 8);
-    menu_add("help", url("admin/locale/help"), "More information about the locale system.", NULL, "locale", 9);
+    $help["general"] = "To be written: description of locale module.  Anyone?";
+
+    menu("admin/locale", "localization", NULL, $help["general"], 5);
+    menu("admin/locale/search", "search string", "locale_admin", NULL, 8);
+    menu("admin/locale/help", "help", "locale_help", NULL, 9);
+    menu("admin/locale/edit", "edit string", "locale_admin", NULL, 0, 1); // hidden menu
+    menu("admin/locale/delete", "delete string", "locale_admin", NULL, 0, 1); // hidden menu
 
     foreach ($languages as $key => $value) {
-      menu_add("translated '$key' strings", url("admin/locale/translated/$key"), "Display translated '$key' strings.", NULL, "locale");
-      menu_add("untranslated '$key' strings", url("admin/locale/untranslated/$key"), "Display untranslated '$key' strings.", NULL, "locale");
+      menu("admin/locale/$key", "$value", NULL, $help["general"]);
+      menu("admin/locale/$key/translated", "translated strings", "locale_admin");
+      menu("admin/locale/$key/untranslated", "untranslated strings", "locale_admin");
     }
   }
 }
@@ -62,6 +67,8 @@ function locale_link($type) {
 function locale_delete($lid) {
   db_query("DELETE FROM locales WHERE lid = '%d'", $lid);
   locale_refresh_cache();
+
+  return t("deleted string");
 }
 
 function locale_save($lid) {
@@ -72,6 +79,8 @@ function locale_save($lid) {
   locale_refresh_cache();
   // delete form data so it will remember where it came from
   $edit = '';
+
+  return t("saved string");
 }
 
 function locale_refresh_cache() {
@@ -194,11 +203,8 @@ function locale_admin() {
 
     switch ($op) {
       case "delete":
-        locale_delete(check_query(arg(3)));
+        print status(locale_delete(check_query(arg(3))));
         print locale_seek();
-        break;
-      case "help":
-        print locale_help();
         break;
       case "edit":
         print locale_edit(check_query(arg(3)));
@@ -207,20 +213,21 @@ function locale_admin() {
       case t("Search"):
         print locale_seek();
         break;
-      case "translated":
-        $edit["status"] = 1;
-        $edit["language"] = arg(3);
-        print locale_seek();
-        break;
-      case "untranslated":
-        $edit["status"] = 2;
-        $edit["language"] = arg(3);
-        print locale_seek();
-        break;
       case t("Save translations"):
-        print locale_save(check_query(arg(3)));
-      default:
+        print status(locale_save(check_query(arg(3))));
         print locale_seek();
+        break;
+      default:
+        if (arg(3) == "translated") {
+          $edit["status"] = 1;
+          $edit["language"] = arg(2);
+          print locale_seek();
+        }
+        else {
+          $edit["status"] = 2;
+          $edit["language"] = arg(2);
+          print locale_seek();
+        }
     }
   }
   else {

@@ -1,159 +1,155 @@
 <?php
-// $Id$
 
-function menu_trail() {
-
-  global $QUERY_STRING;
-  static $trail = NULL;
-
-  /*
-  ** Retrieve the currently active link.
-  */
-
-  if (empty($trail)) {
-
-    $path = array();
-    $item = db_fetch_object(db_query("SELECT * FROM menu WHERE link LIKE '%%%s'", $QUERY_STRING));
-
-    /*
-    ** Compile an array of menu objects that represent the path to
-    ** the root link.
-    */
-
-    if ($item) {
-      $path[] = $item;
-
-      while ($item->parent) {
-        $result = db_query("SELECT * FROM menu WHERE name = '%s' ORDER BY weight, name", $item->parent);
-        if ($item = db_fetch_object($result)) {
-          $path[] = $item;
-        }
-      }
-    }
-
-    $trail = array_reverse($path);
-  }
-
-  return $trail;
+function menu_add() {
+  trigger_error(t("the 'menu_add()' function is depricated"), E_USER_ERROR);
 }
 
-function menu_in_trail($item) {
-  $trail = menu_trail();
+function menu($path, $title, $callback = NULL, $help = NULL, $weight = 0, $hidden = 0) {
+  global $_gmenu;
 
-  foreach ($trail as $menu) {
-    if ($menu->link == $item->link) {
-      return 1;
+  if (isset($_gmenu[$path])) {
+    if (empty($_gmenu[$path]["callback"])) { // dummy item -> fill in
+      $_gmenu[$path] = array("title" => $title, "callback" => $callback, "help" => $help, "weight" => $weight, "hidden" => $hidden, "children" => $_gmenu[$path]["children"]);
+      return true;
+    }
+    else { // real item found
+      trigger_error(t("While trying to add '%path' to menu, item already exists.", array("%path" => $path)), E_USER_ERROR);
+      return false;
     }
   }
-  return 0;
+  // if this is reached we need to create a new item
+  $_gmenu[$path] = array("title" => $title, "callback" => $callback, "help" => $help, "weight" => $weight, "hidden" => $hidden, "children" => array());
+  // does the item have an existing parent?
+  $parent = substr($path, 0, strrpos($path, "/"));
+  while (!isset($_gmenu[$parent])) {
+    $_gmenu[$parent] = array("children" => array($path));
+    $path = $parent;
+    $parent = substr($parent, 0, strrpos($parent, "/"));
+  }
+  $_gmenu[$parent]["children"][] = $path;
+
+  return true;
 }
 
-function menu_item($item) {
-
+function menu_item($in_path) {
+  global $_gmenu;
   /*
   ** If you want to theme your links, or if you want to replace them
   ** by an image, this would be the function to customize.
   */
+  $trail = menu_trail();
+  if (end($trail) == $in_path)
+    return t($_gmenu[$in_path]["title"]);
+  else
+    return "<a href=\"".url($in_path)."\">". t($_gmenu[$in_path]["title"]) ."</a>";
+}
 
-  if (stristr(request_uri(), $item->link) == $item->link) {
-    return t($item->name);
+function query_string() {
+  return $GLOBALS["q"];
+}
+
+function menu_trail() {
+  global $_gmenu;
+  static $_gmenu_trail; // cache
+
+  if (!isset($_gmenu_trail)) {
+    $_gmenu_trail = array();
+    $cuqs = query_string();
+
+    while (!empty($cuqs) && !isset($_gmenu[$cuqs])) {
+      $cuqs = substr($cuqs, 0, strrpos($cuqs, "/"));
+    }
+
+    if (!empty($cuqs)) {
+      do {
+        $_gmenu_trail[] = $cuqs;
+        $cuqs = substr($cuqs, 0, strrpos($cuqs, "/"));
+      } while (!empty($cuqs) && isset($_gmenu[$cuqs]));
+    }
+    $_gmenu_trail = array_reverse($_gmenu_trail);
   }
-  else if ($item->title) {
-    return "<a href=\"$item->link\" title=\"". t($item->title) ."\">". t($item->name) ."</a>";
-  }
-  else {
-    return "<a href=\"$item->link\">". t($item->name) ."</a>";
-  }
+
+  return $_gmenu_trail;
 }
 
 function menu_path() {
 
-  $path = menu_trail();
+  $trail = menu_trail();
 
   $links = array();
 
-  foreach ($path as $item) {
+  foreach ($trail as $item) {
     $links[] = menu_item($item);
   }
 
   return implode(" &gt; ", $links);
 }
 
-function menu_menu_row($parent = "") {
-
-  $links = array();
-
-  $result = db_query("SELECT * FROM menu WHERE parent = '%s' ORDER BY weight, name", $parent);
-  while ($menu = db_fetch_object($result)) {
-    $links[] = menu_item($menu);
-  }
-
-  return $links;
-}
-
-function menu_menu() {
-  $path = menu_trail();
-  if ($path) {
-    $item = array_pop($path);
-    $output = implode(" &middot; ", menu_menu_row($item->name));
-  }
-
-  return $output;
-}
-
 function menu_help() {
+  global $_gmenu;
   $path = menu_trail();
   if ($path) {
     $item = array_pop($path);
-    $output = $item->help;
+    $output = $_gmenu[$item]["help"];
   }
 
-  return $output;
+  return @$output;
 }
 
-function menu_tree($parent = "", $all = 1) {
+function _menu_sort($a, $b) {
+  global $_gmenu;
+  $a = &$_gmenu[$a];
+  $b = &$_gmenu[$b];
+  return $a["weight"] < $b["weight"] ? -11 : ($a["weight"] > $b["weight"] ? 1 : ($a["name"] < $b["name"] ? -1 : 1));
+}
 
-  if ($all) {
-    $result = db_query("SELECT * FROM menu WHERE parent = '%s' ORDER BY weight, name", $parent);
-  }
+function menu_tree($parent = "") {
+  global $_gmenu;
 
-  if (db_num_rows($result)) {
-    $output = "<ul>";
-    while ($item = db_fetch_object($result)) {
-      $all = (stristr(request_uri(), $item->link) == $item->link) ? 1 : 0;
-      $output .= "<li>";
-      $output .= menu_item($item);
-      $output .= menu_tree($item->name, menu_in_trail($item));
-      $output .= "</li>";
+  if ($_gmenu[$parent]["children"]) {
+    $output = "\n<ul>\n";
+    usort($_gmenu[$parent]["children"], "_menu_sort");
+    foreach ($_gmenu[$parent]["children"] as $item) {
+      if ($_gmenu[$item]["hidden"] == 0) {
+        $output .= "<li>";
+        $output .= menu_item($item);
+        if (in_array($item, menu_trail($item))) {
+          $output .= menu_tree($item);
+        }
+        $output .= "</li>\n";
+      }
     }
-    $output .= "</ul>";
+    $output .= "</ul>\n";
   }
 
   return $output;
 }
 
 function menu_map($parent = "") {
+  global $_gmenu;
 
-  $result = db_query("SELECT * FROM menu WHERE parent = '%s' ORDER BY weight, name", $parent);
-
-  if (db_num_rows($result)) {
-    $output = "<ul>";
-    while ($item = db_fetch_object($result)) {
+  $output = "<ul>";
+  usort($_gmenu[$parent]["children"], "_menu_sort");
+  foreach ($_gmenu[$parent]["children"] as $item) {
+    if ($_gmenu[$item]["hidden"] == 0) {
       $output .= "<li>";
       $output .= menu_item($item);
-      $output .= menu_map($item->name);
+      $output .= menu_map($item);
       $output .= "</li>";
     }
-    $output .= "</ul>";
   }
+  $output .= "</ul>";
 
   return $output;
 }
 
+function menu_execute_action() {
+  global $_gmenu;
+  $trail = menu_trail();
+  $selected_menu = array_pop($trail);
 
-function menu_add($name, $link, $title = NULL, $help = NULL, $parent = NULL, $weight = 1) {
-  if (!db_result(db_query("SELECT name FROM menu WHERE link = '%s'", $link))) {
-    db_query("INSERT INTO menu (name, link, title, help, parent, weight) VALUES ('%s', '%s', '%s', '%s', '%s', '%d')", $name, $link, $title, $help, $parent, $weight);
+  if ($_gmenu[$selected_menu]["callback"]) {
+    return call_user_func_array($_gmenu[$selected_menu]["callback"], explode("/", substr(query_string(), strlen($selected_menu) + 1)));
   }
 }
 

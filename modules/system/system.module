@@ -34,13 +34,20 @@ function system_perm() {
 
 function system_link($type) {
   if ($type == "admin" && user_access("administer site configuration")) {
-    menu_add("site configuration", url("admin/system"), "Site configuration.", NULL, NULL, 2);
-     menu_add("module selector", url("admin/system/modules/selector"), "Module selector.", NULL, "site configuration", 1);
-     menu_add("module settings", url("admin/system/modules/settings"), "Site settings.", NULL, "site configuration", 2);
-     menu_add("theme selector", url("admin/system/themes/selector"), "Theme selector.", NULL, "site configuration", 3);
-     menu_add("theme settings", url("admin/system/themes/settings"), "Theme selector.", NULL, "site configuration", 4);
-     menu_add("content filters", url("admin/system/filters"), "Content filters.", NULL, "site configuration", 5);
-     menu_add("help", url("admin/system/help"), "Help.", NULL, "site configuration", 9);
+    $help["general"] = "General configuration help: to be written.  Anyone?";
+    $help["themes"] = "Theme help: to be written.  Anyone?";
+    $help["modules"] = "Module help: to be written.  Anyone?";
+    $help["filters"] = "Filter help: to be written.  Anyone?";
+
+    menu("admin/system", "site configuration", NULL, $help["general"], 3);
+    menu("admin/system/themes", "themes", NULL, $help["themes"], 1);
+    menu("admin/system/themes/selector", "theme selector", "system_admin", $help["themes"]);
+    menu("admin/system/themes/settings", "theme settings", "system_admin", $help["themes"]);
+    menu("admin/system/modules", "modules", NULL, $help["modules"], 2);
+    menu("admin/system/modules/selector", "module selector", "system_admin", $help["modules"]);
+    menu("admin/system/modules/settings", "module settings", "system_admin", $help["modules"]);
+    menu("admin/system/filters", "filters", "system_admin", $help["filters"], 3);
+    menu("admin/system/help", "help", "system_help", NULL, 9);
   }
 }
 
@@ -285,9 +292,6 @@ function system_admin() {
     }
 
     switch ($op) {
-      case "help":
-        print system_help();
-        break;
       case "modules":
         if (arg(3) == "settings") {
           print system_view("modules");

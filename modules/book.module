@@ -117,13 +117,13 @@ function book_link($type, $node = 0, $main = 0) {
     $help["book"] = "The collaborative book offers a mean to organize content, authored by many users, in an online manual, outline or FAQ.";
     $help["orphan"] = "As pages in a book are edited, reorganized and removed, child pages might be left behind.  We refer to such pages as 'orphan pages'.  On this page, administrators can review their books for orphans and reaffiliate those pages as desired.";
 
-    menu_add("collaborative books", url("admin/book"), "Maintain collaborative books.", $help["book"], "content management");
-    menu_add("orphan pages", url("admin/book/orphan"), "Display all orphan pages.", $orphan, "collaborative books", 8);
-    menu_add("help", url("admin/book/help"), "More information about the collaborative book.", NULL, "collaborative books", 9);
+    menu("admin/node/book", "collaborative books", "book_admin", $help["book"], 4);
+    menu("admin/node/book/orphan", "orphan pages", "book_admin", $help["orphan"], 8);
+    menu("admin/node/book/help", "help", "book_help", NULL, 9);
 
     $result = db_query("SELECT n.nid, n.title FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE b.parent = 0 ORDER BY b.weight, n.title");
     while ($book = db_fetch_object($result)) {
-      menu_add("administer book '$book->title'", url("admin/book/view/$book->nid"), "Display a book outline.", NULL, "collaborative books");
+      menu("admin/node/book/$book->nid", "'$book->title' book", "book_admin");
     }
   }
 
@@ -621,12 +621,7 @@ function book_print_recurse($parent = "", $depth = 1) {
 
 function book_admin_view_line($node, $depth = 0) {
 
-  $row = array(
-          "<div style=\"padding-left: ". (25 * $depth) ."px;\">". form_textfield(NULL, "$node->nid][title", $node->title, 64, 255) ."</div>",
-          form_weight(NULL, "$node->nid][weight", $node->weight),
-          l(t("view node"), "node/view/$node->nid"),
-          l(t("edit node"), "admin/node/edit/$node->nid"),
-          l(t("delete node"), "admin/node/delete/$node->nid"));
+  $row = array("<div style=\"padding-left: ". (25 * $depth) ."px;\">". form_textfield(NULL, "$node->nid][title", $node->title, 64, 255) ."</div>", form_weight(NULL, "$node->nid][weight", $node->weight), l(t("view node"), "node/view/$node->nid"), l(t("edit node"), "admin/node/edit/$node->nid"), l(t("delete node"), "admin/node/delete/$node->nid"));
 
   return $row;
 }
@@ -719,7 +714,7 @@ function book_admin() {
 
   if (user_access("administer nodes")) {
     if (empty($op)) {
-      $op = arg(2);
+      $op = arg(3);
     }
 
     switch ($op) {
@@ -735,13 +730,9 @@ function book_admin() {
       case t("Save book pages");
         print status(book_admin_save(arg(3), $edit));
         // fall through:
-      case "view":
+      default:
         print book_admin_view(arg(3));
         break;
-      case "help":
-        book_help();
-        break;
-      default:
     }
   }
 }

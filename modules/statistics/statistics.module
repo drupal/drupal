@@ -116,19 +116,19 @@ function statistics_link($type, $node = 0, $main = 0) {
     $help["top nodes block"] = "The statistics module exports a block that can display the day's top viewed nodes, the all time top viewed nodes and the last nodes viewed.  Each of these links can be enabled or disabled individually, and the number of nodes displayed for each can be configured with a drop down menu. If you disable all sections of this block, it will not appear.";
     $help["who is online block"] = "This statistics module exports a block that can display how many user's and guests are currently online.  You can configure the name of the block, the name of a sub-block for displaying names of user's currently online, how recently a user must have been active to be considered online, the maximum characters to display from a user's name and the maximum number of user names to display.";
 
-    menu_add("popular posts", url("admin/statistics/statistics"), "Display the top nodes.", $help["statistics"], "site monitoring", 2, 1);
-    menu_add("referrer log", url("admin/statistics/referrers"), "Display the referrers.", $help["referrers"], "site monitoring", 3, 1);
-     menu_add("view all referrers", url("admin/statistics/referrers/all"), "Display all referrers.", $help["referrers"], "referrer log", 1);
-     menu_add("view internal referrers", url("admin/statistics/referrers/internal"), "Display internal referrers.", $help["referrers"], "referrer log", 1);
-     menu_add("view external referrers", url("admin/statistics/referrers/external"), "Display external referrers.", $help["referrers"], "referrer log", 1);
-    menu_add("access log", url("admin/statistics/log"), "Display the access log.", $help["access"], "site monitoring", 4);
-    menu_add("configure 'top nodes' page", url("admin/statistics/top+nodes+page"), "Configure the top node page.", $help["top nodes page"], "site monitoring", 5);
-    menu_add("help", url("admin/statistics/help"), "More information about the statistics.", NULL, "site monitoring", 6);
+    menu("admin/statistics", "site statistics", "statistics_admin", $help["statistics"], 6);
+    menu("admin/statistics/statistics", "post popular posts", "statistics_admin", $help["statistics"]);
+    menu("admin/statistics/referrers", "referrer log", "statistics_admin", $help["referrers"]);
+    menu("admin/statistics/referrers/internal", "internal referrers only", "statistics_admin", $help["referrers"]);
+    menu("admin/statistics/referrers/external", "external referrers only", "statistics_admin", $help["referrers"]);
+    menu("admin/statistics/log", "access log", "statistics_admin", $help["access"]);
+    menu("admin/statistics/top nodes page", "configure 'top nodes' page", "statistics_admin", $help["top nodes page"], 5);
+    menu("admin/statistics/help", "help", "statistics_help", NULL, 9);
 
     // block configuration:
-    menu_add("configure 'top nodes' block", url("admin/statistics/top+nodes+block"), "Configure the 'top nodes block'", $help["top nodes block"], "block management", 2);
-    menu_add("configure 'who is online' block", url("admin/statistics/whos+online+block"), "Configure the 'top nodes block'", $help["who is online block"], "block management", 2);
-  }
+    menu("admin/block/top nodes block", "configure 'top nodes' block", "statistics_admin", $help["top nodes block"], 5);
+    menu("admin/block/whos online block", "configure 'who is online' block", "statistics_admin", $help["who is online block"], 5);
+}
 
   return $links ? $links : array();
 }
@@ -265,9 +265,6 @@ function statistics_admin() {
 
     /* non-configuration admin pages */
     switch ($op) {
-      case "help":
-        print statistics_help();
-        exit;
       case "statistics":
         print statistics_admin_displaycounts();
         exit;
@@ -527,6 +524,7 @@ function statistics_admin_displaycounts() {
 
 function statistics_admin_displaylog() {
   global $uid, $nid, $hostname;
+    // TODO: this is broken due to the URL changes
 
   if ($uid) {
     $user = user_load(array("uid" => $uid));
