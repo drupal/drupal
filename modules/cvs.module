@@ -1,0 +1,43 @@
+<?php
+
+$module = array("cron" => "cvs_cron",
+                "conf" => "cvs_conf",
+                "page" => "cvs_page");
+
+function cvs_cron() {
+  $result = db_query("SELECT * FROM cvs WHERE status = '0' ORDER BY timestamp DESC LIMIT 50");
+
+  while ($cvs = db_fetch_object($result)) {
+    $body .= "File: $cvs->files\nDate: ". format_date($cvs->timestamp) ."\nUser: $cvs->user\n\n$cvs->message\n----------------------------------------------------------------------\n";
+  }
+
+  $result = db_query("UPDATE cvs SET status = '1'");
+
+  if ($body) mail(variable_get(cvs_mail, "root@localhost"), "CVS log messages", $body, "From: no-reply");
+}
+
+function cvs_conf() {
+  $output .= "<B>Recepient for log messages:</B><BR>\n";
+  $output .= "<INPUT NAME=\"edit[cvs_mail]\" MAXLENGTH=\"55\" SIZE=\"30\" VALUE=\"". variable_get(cvs_mail, "root@localhost") ."\"><BR>\n";
+  $output .= "<I><SMALL>The e-mail address to mail the CVS log messages to.  Multiple recipients can be specified by putting a comma between each address.</SMALL></I><P>\n";
+  return $output;
+}
+
+function cvs_page() {
+  global $theme;
+
+  $result = db_query("SELECT * FROM cvs ORDER BY timestamp DESC LIMIT 50");
+
+  while ($cvs = db_fetch_object($result)) {
+    $output .= "<b>File:</b> $cvs->files<br />";
+    $output .= "<b>Date:</b> ". format_date($cvs->timestamp) ."<br />";
+    $output .= "<b>User:</b> $cvs->user<br />";
+    $output .= "\n". htmlentities($cvs->message) ."<hr />";
+  }
+
+  $theme->header();
+  $theme->box("CVS commit messages", "<pre>$output</pre>");
+  $theme->footer();
+}
+
+?>

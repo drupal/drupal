@@ -1,8 +1,5 @@
-# 14/04/2001:
-ALTER TABLE node ADD cid int(10) unsigned DEFAULT '0' NOT NULL;
-ALTER TABLE node ADD tid int(10) unsigned DEFAULT '0' NOT NULL;
-ALTER TABLE story DROP section;
-ALTER TABLE comments ADD KEY(lid);
+# 19/04/2001:
+ALTER TABLE node ADD comment int(2) DEFAULT '1' NOT NULL;
 
 CREATE TABLE cvs (
   user varchar(32) DEFAULT '' NOT NULL,
@@ -11,6 +8,12 @@ CREATE TABLE cvs (
   message text,
   timestamp int(11) DEFAULT '0' NOT NULL
 );
+
+# 14/04/2001:
+ALTER TABLE node ADD cid int(10) unsigned DEFAULT '0' NOT NULL;
+ALTER TABLE node ADD tid int(10) unsigned DEFAULT '0' NOT NULL;
+ALTER TABLE story DROP section;
+ALTER TABLE comments ADD KEY(lid);
 
 CREATE TABLE category (
   cid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
