@@ -107,12 +107,11 @@ function menu_reset() {
   switch ($op) {
     case t('Reset'):
       db_query('DELETE FROM {menu}');
-      menu_rebuild();
       drupal_set_message(t('all menu items reset.'));
-      print theme('page', menu_overview_tree());
+      drupal_goto('admin/menu');
       break;
     case t('Cancel'):
-      print theme('page', menu_overview_tree());
+      drupal_goto('admin/menu');
       break;
     default:
       $output = '<p>'. t('Are you sure you want to reset all menu items to their default settings? Any custom menu items will be lost.') .'</p>';
@@ -132,7 +131,7 @@ function menu_add_menu() {
   switch ($op) {
     case t('Submit'):
       menu_edit_item_save($edit);
-      $output .= menu_overview_tree();
+      drupal_goto('admin/menu');
       break;
     default:
       $edit['pid'] = 0;
@@ -151,12 +150,11 @@ function menu_reset_item($mid) {
   switch ($op) {
     case t('Reset'):
       db_query('DELETE FROM {menu} WHERE mid = %d', $mid);
-      menu_rebuild();
       drupal_set_message(t('menu item reset.'));
-      print theme('page', menu_overview_tree());
+      drupal_goto('admin/menu');
       break;
     case t('Cancel'):
-      print theme('page', menu_overview_tree());
+      drupal_goto('admin/menu');
       break;
     default:
       $output = '<p>'. t('Are you sure you want to reset this item to its default values?') .'</p>';
@@ -173,12 +171,11 @@ function menu_delete_item($mid) {
   switch ($op) {
     case t('Delete'):
       db_query('DELETE FROM {menu} WHERE mid = %d', $mid);
-      menu_rebuild();
       drupal_set_message(t('menu item deleted.'));
-      print theme('page', menu_overview_tree());
+      drupal_goto('admin/menu');
       break;
     case t('Cancel'):
-      print theme('page', menu_overview_tree());
+      drupal_goto('admin/menu');
       break;
     default:
       $output = '<p>'. t('Are you sure you want to delete this custom menu item?') .'</p>';
@@ -197,9 +194,8 @@ function menu_disable_item($mid) {
   $type &= ~MENU_VISIBLE_IN_BREADCRUMB;
   $type |= MENU_MODIFIED_BY_ADMIN;
   db_query('UPDATE {menu} SET type = %d WHERE mid = %d', $type, $mid);
-  menu_rebuild();
   drupal_set_message(t('menu item disabled.'));
-  print theme('page', menu_overview_tree());
+  drupal_goto('admin/menu');
 }
 
 /**
@@ -214,11 +210,11 @@ function menu_edit_item($mid = 0) {
   switch ($op) {
     case t('Submit'):
       menu_edit_item_save($edit);
-      $output .= menu_overview_tree();
+      drupal_goto('admin/menu');
       break;
     case t('Delete'):
       menu_edit_item_delete($edit);
-      $output .= menu_overview_tree();
+      drupal_goto('admin/menu');
       break;
     default:
       if ($mid > 0) {
