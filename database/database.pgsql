@@ -681,8 +681,11 @@ INSERT INTO blocks(module,delta,status) VALUES('user', '1', '1');
 --- Functions
 ---
 
-CREATE FUNCTION "greatest"(integer, integer) RETURNS integer AS '
+CREATE FUNCTION greatest(integer, integer) RETURNS integer AS '
 BEGIN
+  IF $2 IS NULL THEN
+    RETURN $1;
+  END IF;
   IF $1 > $2 THEN
     RETURN $1;
   END IF;
