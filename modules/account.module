@@ -1,6 +1,11 @@
 <?
 
-$module = array("admin" => "account_admin");
+$module = array("cron"  => "account_cron",
+                "admin" => "account_admin");
+
+function account_cron() {
+  // clean-up user database
+}
 
 function account_display($order = "username") {
   $sort = array("ID" => "id", "fake e-mail address" => "fake_email", "homepage" => "url", "hostname" => "last_host", "last access date" => "last_access", "real e-mail address" => "real_email", "real name" => "name", "status" => "status", "theme" => "theme", "timezone" => "timezone", "username" => "userid");

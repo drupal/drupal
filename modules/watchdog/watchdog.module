@@ -1,6 +1,11 @@
 <?
 
-$module = array("admin" => "watchdog_admin");
+$module = array("cron" => "watchdog_cron", 
+                "admin" => "watchdog_admin");
+
+function watchdog_cron() {
+  watchdog_clean();
+}
 
 function watchdog_display($order = "date") {
   $colors = array("#D8BFD8", "#6495ED", "#6A5ADF", "#FFFFFF", "#FFA500", "#FF3C3C");
@@ -31,7 +36,7 @@ function watchdog_display($order = "date") {
   $output .= " </TR>\n";
 
   while ($watchdog = db_fetch_object($result)) {
-    $output .= " <TR BGCOLOR=\"". $colors[$watchdog->level] ."\"><TD>". format_date($watchdog->timestamp) ."</TD><TD>". substr(check_output($watchdog->message), 0, 44) ."</TD><TD ALIGN=\"center\">". format_username($watchdog->userid, 1) ."</A></TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=watchdog&op=view&id=$watchdog->id\">more</A></TD></TR>\n";
+    $output .= " <TR BGCOLOR=\"". $colors[$watchdog->level] ."\"><TD>". format_date($watchdog->timestamp) ."</TD><TD>". substr(check_output($watchdog->message), 0, 44) ."</TD><TD ALIGN=\"center\">". format_username($watchdog->userid, 1) ."</A></TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=watchdog&op=view&id=$watchdog->id\">details</A></TD></TR>\n";
   }
 
   $output .= "</TABLE>\n";

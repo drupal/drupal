@@ -254,7 +254,7 @@ function account_user($uname) {
 
     $result = db_query("SELECT d.* FROM diaries d LEFT JOIN users u ON u.id = d.author WHERE u.userid = '$uname' AND d.timestamp > ". (time() - 1209600) ."  ORDER BY id DESC LIMIT 2");
     while ($diary = db_fetch_object($result)) {
-      $box3 .= "<DL><DT><B>". date("l, F jS", $diary->timestamp) .":</B></DT><DD><P>". check_output($diary->text) ."</P><P>[ <A HREF=\"diary.php?op=view&name=$uname\">more</A> ]</P></DD></DL>\n";
+      $box3 .= "<DL><DT><B>". date("l, F jS", $diary->timestamp) .":</B></DT><DD><P>". check_output($diary->text) ."</P><P>[ <A HREF=\"module.php?mod=diary&op=view&name=$uname\">more</A> ]</P></DD></DL>\n";
       $diaries++;
     }
     

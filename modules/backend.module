@@ -1,6 +1,7 @@
 <?
 
 $module = array("page"  => "backend_page",
+                "cron"  => "backend_cron",
                 "admin" => "backend_admin");
 
 include "includes/theme.inc";
@@ -42,6 +43,9 @@ function backend_page() {
   $theme->footer();
 }
 
+function backend_cron() {
+  // update backends
+}
 
 function backend_admin_main() {
   global $theme;
@@ -50,7 +54,7 @@ function backend_admin_main() {
   $result = db_query("SELECT * FROM channel ORDER BY id");
 
   $output .= "<TABLE BORDER=\"1\" CELLSPADDING=\"2\" CELLSPACING=\"2\">\n";
-  $output .= " <TH>Site</TH><TH>Contact</TH><TH>Last updated</TH><TH COLSPAN=\"2\">Operations</TH></TR>\n";
+  $output .= " <TH>site</TH><TH>contact</TH><TH>last updated</TH><TH COLSPAN=\"2\">operations</TH></TR>\n";
 
   while ($channel = db_fetch_object($result)) {
     // Load backend from database:

@@ -2,23 +2,37 @@
 
 $module = array("admin" => "cron_admin");
 
-function cron_admin() {
+include_once "includes/function.inc";
+
+
+function cron_reset($name) {
+  cron_delete($name);
+}
+
+function cron_display() {
   // Perform query:
   $result = db_query("SELECT * FROM cron");
  
   // Generate output:
+  $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
+  $output .= " <TR><TH>module</TH><TH>interval</TH><TH>last exection</TH><TH COLSPAN=\"2\">operations</TH></TR>\n";
   while ($cron = db_fetch_object($result)) {
-    $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
-    $output .= " <TR><TH VALIGN=\"top\">Name:</TH><TD>". check_output($cron->name) ."</TD></TR>\n";
-    $output .= " <TR><TH VALIGN=\"top\">Help:</TH><TD>". check_output($cron->help) ."</TD></TR>\n";
-    $output .= " <TR><TH VALIGN=\"top\">Code:</TH><TD><CODE>". nl2br($cron->code) ."</CODE></TD></TR>\n";
-    $output .= " <TR><TH VALIGN=\"top\">Last run:</TH><TD>". format_date($cron->timestamp) ."</TD></TR>\n";
-    $output .= " <TR><TH VALIGN=\"top\">Scheduled:</TH><TD>every $cron->scheduled seconds</TD></TR>\n";
-    $output .= "</TABLE>\n";
-    $output .= "<BR><BR>\n";
+    $output .= " <TR><TD>". check_output($cron->module) ."</TD><TD>every ". format_interval($cron->scheduled) ."</TD><TD>". format_interval(time() - $cron->timestamp) ." ago</TD><TD ALIGN=\"center\"><A HREF=\"cron.php\">execute</A></TD><TD><A HREF=\"admin.php?mod=cron&op=reset&name=$cron->module\">reset</A></TD></TR>\n";
   }
-
+  $output .= "</TABLE>\n";
   print $output;
+}
+
+function cron_admin() {
+  global $op, $name;
+
+  switch($op) {
+    case "reset":
+      cron_reset($name);
+      break;
+  }
+  
+  cron_display();
 }
 
 ?>

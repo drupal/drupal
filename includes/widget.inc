@@ -80,9 +80,9 @@ function display_new_diaries($theme, $num = 20) {
       $content .= "<P><B>". date("l, M jS", $diary->timestamp) ."</B></P>\n";
       $time = date("F jS", $diary->timestamp);
     }
-    $content .= "<LI><A HREF=\"diary.php?op=view&name=$diary->userid\">$diary->userid</A></LI>\n";
+    $content .= "<LI><A HREF=\"module.php?mod=diary&op=view&name=$diary->userid\">$diary->userid</A></LI>\n";
   }
-  $content .= "<P ALIGN=\"right\">[ <A HREF=\"diary.php\"><FONT COLOR=\"$theme->hlcolor2\">more</FONT></A> ]</P>";
+  $content .= "<P ALIGN=\"right\">[ <A HREF=\"module.php?mod=diary\"><FONT COLOR=\"$theme->hlcolor2\">more</FONT></A> ]</P>";
   $theme->box("Recent diary entries", $content);
 }
 
@@ -94,12 +94,6 @@ function display_new_headlines($theme, $num = 10) {
   while ($story = db_fetch_object($result)) $content .= "<LI><A HREF=\"discussion.php?id=$story->id\">$story->subject</A></LI>\n";
   $content .= "<P ALIGN=\"right\">[ <A HREF=\"search.php\"><FONT COLOR=\"$theme->hlcolor2\">more</FONT></A> ]</P>";
   $theme->box("Latest headlines", $content);
-}
-
-function display_calendar($theme, $date) {
-  include "includes/calendar.inc";
-  $calendar = new Calendar($date);
-  $theme->box("Browse archives", $calendar->display());
 }
 
 function display_account($theme) {

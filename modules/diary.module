@@ -1,6 +1,197 @@
 <?
 
-function diary_edit($id) {
+$module = array("page"  => "diary_page",
+                "admin" => "diary_admin");
+
+
+include "includes/theme.inc";
+
+function diary_page_overview($num = 20) {
+  global $theme, $user;
+
+  $result = db_query("SELECT d.*, u.userid FROM diaries d LEFT JOIN users u ON d.author = u.id ORDER BY d.timestamp DESC LIMIT $num");
+
+  $output .= "<P>This part of the website is dedicated to providing easy to write and easy to read online diaries or journals filled with daily thoughts, poetry, boneless blather, spiritual theories, intimate details, valuable experiences, cynical rants, semi-coherent comments, writing experiments, artistic babblings, critics on actuality, fresh insights, diverse dreams, chronicles and general madness available for general human consumption.</P>";
+
+  while ($diary = db_fetch_object($result)) {
+    if ($time != date("F jS", $diary->timestamp)) {
+      $output .= "<B>". date("l, F jS", $diary->timestamp) ."</B>\n";
+      $time = date("F jS", $diary->timestamp);
+    }
+    $output .= "<DL>\n";
+    $output .= " <DD><P><B>$diary->userid wrote:</B></P></DD>\n";
+    $output .= " <DL>\n";
+    $output .= "  <DD><P>". check_output($diary->text, 1) ."</P><P>[ <A HREF=\"module.php?mod=diary&op=view&name=$diary->userid\">more</A> ]</P></DD>\n";
+    $output .= " </DL>\n";
+    $output .= "</DL>\n";
+  }
+
+  $theme->header();
+  $theme->box("Online diary", $output);
+  $theme->footer();
+
+}
+
+function diary_page_entry($timestamp, $text, $id = 0) {
+  if ($id) {
+    $output .= "<DL>\n";
+    $output .= " <DT><B>". date("l, F jS", $timestamp) .":</B> </DT>\n";
+    $output .= " <DD><P>[ <A HREF=\"module.php?mod=diary&op=edit&id=$id\">edit</A> ]</P><P>". check_output($text, 1) ."</P></DD>\n";
+    $output .= "</DL>\n";
+  }
+  else {
+    $output .= "<DL>\n";
+    $output .= " <DT><B>". date("l, F jS", $timestamp) .":</B></DT>\n";
+    $output .= " <DD><P>". check_output($text, 1) ."</P></DD>\n";
+    $output .= "</DL>\n";
+  }
+  return $output;
+}
+
+function diary_page_display($username) {
+  global $theme, $user;
+
+  $result = db_query("SELECT d.*, u.userid FROM diaries d LEFT JOIN users u ON d.author = u.id WHERE u.userid = '$username' ORDER BY timestamp DESC");
+
+  if ($username == $user->userid) {
+    $output .= diary_page_entry(time(), "<BIG><A HREF=\"module.php?mod=diary&op=add\">Add new diary entry!</A></BIG><P>");
+    while ($diary = db_fetch_object($result)) $output .= diary_page_entry($diary->timestamp, $diary->text, $diary->id);
+  }
+  else {
+    $output .= "<P>". format_username($username) ."'s diary:</P>\n";
+    while ($diary = db_fetch_object($result)) $output .= diary_page_entry($diary->timestamp, $diary->text);
+  }
+
+  $theme->header();
+  $theme->box("$username's online diary", $output);
+  $theme->footer();
+}
+
+function diary_page_add() {
+  global $theme, $user, $allowed_html;
+  
+  $output .= "<FORM ACTION=\"module.php?mod=diary\" METHOD=\"post\">\n";
+
+  $output .= "<P>\n"; 
+  $output .= " <B>Enter new diary entry:</B><BR>\n";
+  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"15\" NAME=\"text\" MAXLENGTH=\"20\"></TEXTAREA><BR>\n";
+  $output .= " <SMALL><I>Allowed HTML tags: ". htmlspecialchars($allowed_html) .".</I></SMALL>\n";
+  $output .= "</P>\n";
+
+  $output .= "<P>\n";
+  $output .= " <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Preview diary entry\">\n";
+  $output .= "</P>\n";
+
+  $output .= "</FORM>\n";
+  
+  $theme->header();
+  $theme->box("Online diary", $output);
+  $theme->footer();
+}
+
+function diary_page_edit($id) {
+  global $theme, $user, $allowed_html;
+
+  $result = db_query("SELECT * FROM diaries WHERE id = $id");
+  $diary = db_fetch_object($result);
+
+  $output .= diary_page_entry($diary->timestamp, $diary->text);
+
+  $output .= "<FORM ACTION=\"module.php?mod=diary\" METHOD=\"post\">\n";
+
+  $output .= "<P>\n";
+  $output .= " <B>Edit diary entry:</B><BR>\n";
+  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"15\" NAME=\"text\">". check_input($diary->text) ."</TEXTAREA><BR>\n";
+  $output .= " <SMALL><I>Allowed HTML tags: ". htmlspecialchars($allowed_html) .".</I></SMALL>\n";
+  $output .= "</P>\n";
+
+  $output .= "<P>\n";
+  $output .= " <INPUT TYPE=\"hidden\" NAME=\"id\" VALUE=\"$diary->id\">\n";
+  $output .= " <INPUT TYPE=\"hidden\" NAME=\"timestamp\" VALUE=\"$diary->timestamp\">\n";
+  $output .= " <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Preview diary entry\"> <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Submit diary entry\">\n";
+  $output .= "</P>\n";
+
+  $output .= "</FORM>\n";
+  
+  $theme->header();
+  $theme->box("Online diary", $output);
+  $theme->footer();
+}
+
+function diary_page_preview($text, $timestamp, $id = 0) {
+  global $theme, $user, $allowed_html;
+
+  $output .= diary_page_entry($timestamp, $text);
+
+  $output .= "<FORM ACTION=\"module.php?mod=diary\" METHOD=\"post\">\n";
+
+  $output .= "<P>\n";
+  $output .= " <B>Preview diary entry:</B><BR>\n";
+  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"15\" NAME=\"text\">". check_output($text) ."</TEXTAREA><BR>\n";
+  $output .= " <SMALL><I>Allowed HTML tags: ". htmlspecialchars($allowed_html) .".</I></SMALL>\n";
+  $output .= "</P>\n";
+
+  $output .= "<P>\n";
+  $output .= " <INPUT TYPE=\"hidden\" NAME=\"id\" VALUE=\"$id\">\n";
+  $output .= " <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Preview diary entry\">\n";
+  $output .= " <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Submit diary entry\">\n";
+  $output .= "</P>\n";
+
+  $output .= "</FORM>\n";
+
+  $theme->header();
+  $theme->box("Online diary", $output);
+  $theme->footer();
+}
+
+function diary_page_submit($text, $id = 0) {
+  global $user, $theme;
+
+  if ($id) {
+    watchdog("message", "old diary entry updated");
+    db_query("UPDATE diaries SET text =  '". check_input($text) ."' WHERE id = $id");
+  }
+  else {
+    watchdog("diary", "new diary entry added");
+    db_query("INSERT INTO diaries (author, text, timestamp) VALUES ('$user->id', '". check_input($text) ."', '". time() ."')");
+  }
+
+  header("Location: module.php?mod=diary&op=view&name=$user->userid");
+}
+
+function diary_page() {
+  global $op, $id, $name, $text, $timestamp;
+
+  // Security check:
+  if (strstr($id, " ") || strstr($name, " ")) {
+    watchdog("error", "diary: attempt to provide malicious input through URI");
+    exit();
+  }
+
+  switch($op) {
+    case "add":
+      diary_page_add();
+      break;
+   case "edit":
+      diary_page_edit($id);
+      break;
+    case "view":
+      diary_page_display($name);
+      break;
+    case "Preview diary entry":
+      if ($id) diary_page_preview($text, $timestamp, $id);
+      else diary_page_preview($text, time());
+      break;
+    case "Submit diary entry":
+      if ($id) diary_page_submit($text, $id);
+      else diary_page_submit($text);
+      break;
+    default:
+      diary_page_overview();
+  }
+}
+
+function diary_admin_edit($id) {
   $result = db_query("SELECT d.*, u.userid FROM diaries d LEFT JOIN users u ON d.author = u.id WHERE d.id = $id");
 
   $diary = db_fetch_object($result);
@@ -25,12 +216,12 @@ function diary_edit($id) {
   print $output;
 }
 
-function diary_save($id, $text) {
+function diary_admin_save($id, $text) {
   db_query("UPDATE diaries SET text = '". check_input($text) ."' WHERE id = $id");
   watchdog("message", "modified diary entry #$id.");
 }
 
-function diary_display($order = "date") {
+function diary_admin_display($order = "date") {
   // Initialize variables:
   $fields = array("author" => "author", "date" => "timestamp DESC");
 
@@ -59,7 +250,7 @@ function diary_display($order = "date") {
   $output .= " </TR>\n";
 
   while ($diary = db_fetch_object($result)) {
-    $output .= " <TR><TD><A HREF=\"diary.php?op=view&name=$diary->userid\">$diary->userid on ". format_date($diary->date, "small") ."</A></TD><TD>". format_username($diary->userid, 1) ."</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=diary&op=edit&id=$diary->id\">edit</A></TD></TR>\n";
+    $output .= " <TR><TD><A HREF=\"module.php?mod=diary&op=view&name=$diary->userid\">$diary->userid on ". format_date($diary->date, "small") ."</A></TD><TD>". format_username($diary->userid, 1) ."</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=diary&op=edit&id=$diary->id\">edit</A></TD></TR>\n";
   }
 
   $output .= "</TABLE>\n";
@@ -73,17 +264,17 @@ function diary_admin() {
  
   switch ($op) {
     case "edit":
-      diary_edit($id);
+      diary_admin_edit($id);
       break;
     case "Save diary entry":
-      diary_save($id, $text);
-      diary_edit($id);
+      diary_admin_save($id, $text);
+      diary_admin_edit($id);
       break;
     case "Update":
-      diary_display($order);
+      diary_admin_display($order);
       break;
     default:
-      diary_display();
+      diary_admin_display();
   }
 }
 

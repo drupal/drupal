@@ -7,7 +7,7 @@ function error_flood() {
 } 
 
 function error_httpd() {
-  global $REDIRECT_STATUS, $REDIRECT_URL, $HTTP_REFERER;
+  global $REDIRECT_STATUS, $REDIRECT_URL, $HTTP_REFERER, $HTTP_USER_AGENT;
 
   switch($REDIRECT_STATUS) {
     case 500:
@@ -29,7 +29,7 @@ function error_httpd() {
       $message = "unknown error";
   }
 
-  watchdog("error", "message: `$message' - requested url: $REDIRECT_URL - referring url: $HTTP_REFERER");
+  watchdog("error", "message: `$message' - requested url: $REDIRECT_URL - referring url: $HTTP_REFERER - user agent: $HTTP_USER_AGENT");
  
   print "<PRE>\n";
   print "<H1>Oops, an error occured!</H1>\n";
