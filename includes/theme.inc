@@ -242,13 +242,14 @@ function theme_links($links, $delimiter = ' | ') {
  * @param $title
  *   The title text is displayed when the image is hovered in some popular browsers.
  * @param $attr
- *   Attributes placed in the img tag.
- *   This parameter overrides the default auto-detection of width and height.
+ *   Attributes placed in the img tag. 
+ * @param $getsize
+ *   If set to true, the image's dimension are fetched and added as width/height attributes.
  * @return
  *   A string containing the image tag.
  */
-function theme_image($path, $alt = NULL, $title = NULL, $attr = NULL) {
-  if (isset($attr) || (file_exists($path) && (list($width, $height, $type, $attr) = getimagesize($path)))) {
+function theme_image($path, $alt = '', $title = '', $attr = '', $getsize = true) {
+  if (!$getsize || (file_exists($path) && (list($width, $height, $type, $attr) = @getimagesize($path)))) {
     return "<img src=\"$path\" $attr alt=\"$alt\" title=\"$title\" />";
   }
 }
