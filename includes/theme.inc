@@ -39,11 +39,11 @@ function init_theme() {
 
   // Only select the user selected theme if it is available in the
   // list of enabled themes.
-  $theme = $user->theme && $themes[$user->theme] ? $user->theme : variable_get('theme_default', 'bluemarine');
+  $theme = $user->theme && $themes[$user->theme]->status ? $user->theme : variable_get('theme_default', 'bluemarine');
 
   // Allow modules to override the present theme... only select custom theme
   // if it is available in the list of enabled themes.
-  $theme = $custom_theme && $themes[$custom_theme] ? $custom_theme : $theme;
+  $theme = $custom_theme && $themes[$custom_theme]->status ? $custom_theme : $theme;
 
   // Store the identifier for retrieving theme settings with.
   $theme_key = $theme;
@@ -99,7 +99,7 @@ function list_themes($refresh = FALSE) {
 
   if (!$list) {
     $list = array();
-    $result = db_query("SELECT * FROM {system} where type = 'theme' AND status = '1' ORDER BY name");
+    $result = db_query("SELECT * FROM {system} WHERE type = 'theme' ORDER BY name");
     while ($theme = db_fetch_object($result)) {
       if (file_exists($theme->filename)) {
         $list[$theme->name] = $theme;

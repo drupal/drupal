@@ -633,7 +633,7 @@ function system_theme_settings() {
     $function = $themes[$key]->prefix .'_settings';
     if (function_exists($function)) {
       $group = $function();
-      if (strpos($themes[$key]->description, '.theme')) {
+      if (strpos($themes[$key]->description, '.theme') || ($themes[$key]->description == '')) {
         $form .= form_group(t('Theme-specific settings'), $group, t('These settings only exist for the %theme theme and all the styles based on it.', array('%theme' => $themes[$key]->prefix)));
       }
       else {
