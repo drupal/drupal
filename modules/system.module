@@ -68,6 +68,12 @@ function system_menu($may_cache) {
       'access' => TRUE,
       'type' => MENU_CALLBACK);
 
+    // Clean URL tester
+    $items[] = array('path' => 'system/test',
+      'callback' => 'system_test',
+      'access' => TRUE,
+      'type' => MENU_CALLBACK);
+
     $access = user_access('administer site configuration');
 
     // Themes:
@@ -107,6 +113,12 @@ function system_menu($may_cache) {
   }
 
   return $items;
+}
+
+/**
+ * Menu callback: dummy clean URL tester.
+ */
+function system_test() {
 }
 
 /**
@@ -185,7 +197,11 @@ function system_view_general() {
   $group .= form_textarea(t('Footer message'), 'site_footer', variable_get('site_footer', ''), 70, 5, t('This text will be displayed at the bottom of each page.  Useful for adding a copyright notice to your pages.'));
   $group .= form_textfield(t('Anonymous user'), 'anonymous', variable_get('anonymous', 'Anonymous'), 70, 70, t('The name used to indicate anonymous users.'));
   $group .= form_textfield(t('Default front page'), 'site_frontpage', variable_get('site_frontpage', 'node'), 70, 70, t('The home page displays content from this relative URL.  If you are not using clean URLs, specify the part after "?q=".  If unsure, specify "node".'));
-  $group .= form_radios(t('Clean URLs'), 'clean_url', variable_get('clean_url', 0), array(t('Disabled'), t('Enabled')), t('Enable or disable clean URLs.  If enabled, you\'ll need <code>ModRewrite</code> support.  See also the <code>.htaccess</code> file in Drupal\'s top-level directory.'));
+
+  // check if clean URLs are supported (HTTP 200 = Ok)
+  $request = drupal_http_request($GLOBALS['base_url'] . '/system/test');
+  $supported = $request->code == 200;
+  $group .= form_radios(t('Clean URLs'), 'clean_url', variable_get('clean_url', 0), array(t('Disabled'), t('Enabled')), t('This option makes Drupal emit clean URLs (i.e. without <code>?q=</code> in the URL). You\'ll need <code>ModRewrite</code> support for this to work. See the <code>.htaccess</code> file in Drupal\'s top-level directory for more information.'), false, $supported ? NULL : array('disabled' => 'disabled'));
 
   $output = form_group(t('General settings'), $group);
 
