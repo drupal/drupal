@@ -1,5 +1,5 @@
 <?php
-// $Id: story.module,v 1.114 2003/03/07 22:11:44 kjartan Exp $
+// $Id: story.module,v 1.115 2003/03/08 14:35:42 kjartan Exp $
 
 function story_help() {
   $output .= "<p>The story module enables to users to submit thoughful, cohesive posts for consideration by the rest of the community.  Stories usually follow a specific content flow: <i>submit -&gt; moderate -&gt; post to home page -&gt; comment</i>.  Administrators are able to shortcut this flow as desired.</p>";
@@ -22,7 +22,6 @@ function story_settings() {
 function story_node($field) {
   $info["name"] = t("story");
   $info["description"] = t("A story is a post that is submitted to the attention of other users and is queued in the submission queue.  Users and moderators vote on the posts they like or dislike, promoting or demoting them.  When a post gets above a certain threshold it gets automatically published to front page.");
-
   return $info[$field];
 }
 

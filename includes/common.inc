@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.177 2003/03/07 22:11:43 kjartan Exp $
+// $Id: common.inc,v 1.178 2003/03/08 14:35:42 kjartan Exp $
 
 function conf_init() {
   global $HTTP_HOST, $PHP_SELF;
@@ -216,7 +216,7 @@ function table_cell($cell, $header = 0) {
 
 function table($header, $rows) {
 
-  $output .= "<table>\n";
+  $output = "<table>\n";
 
   /*
   ** Emit the table header:

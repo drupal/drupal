@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.70 2003/03/07 06:37:30 dries Exp $
+// $Id: system.module,v 1.71 2003/03/08 14:35:42 kjartan Exp $
 
 function system_help() {
   $output .= "<p>Drupal comes with system-wide defaults but the setting-module provides control over many Drupal preferences, behaviors including visual and operational settings.</p>";
@@ -318,7 +318,7 @@ function system_init() {
 }
 
 function system_admin() {
-  global $HTTP_POST_VARS, $system_init_status;
+  global $system_init_status;
 
   if (user_access("administer site configuration")) {
     session_register("system_init_status");

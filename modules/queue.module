@@ -1,5 +1,5 @@
 <?php
-// $Id: queue.module,v 1.68 2003/03/07 22:11:44 kjartan Exp $
+// $Id: queue.module,v 1.69 2003/03/08 14:35:42 kjartan Exp $
 
 function queue_system($field){
   $system["description"] = t("Enables content to be moderated by the community.");
@@ -221,7 +221,7 @@ function queue_block($op = "list", $delta = 0) {
 
 function queue_nodeapi(&$node, $op, $arg = 0) {
   switch ($op) {
-    case "conf":
+    case "settings":
       $output[t("Queue")] = form_checkbox("", "queue_$node->type", 1, variable_get("queue_$node->type", 0));
       return $output;
     case "fields":
