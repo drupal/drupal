@@ -245,7 +245,7 @@ function book_edit($id) {
     if ($node->status != $status[posted]) {
       return t("You can only update accepted pages: pages that are still queued or already expired can not be updated.");
     }
-    else if (db_result(db_query("SELECT COUNT(nid) FROM node WHERE pid = '$node->nid' AND status = '$status[queued]'"))) {
+    else if (db_result(db_query("SELECT COUNT(n.nid) FROM node n LEFT JOIN book b ON n.nid = b.nid AND n.lid = b.lid WHERE b.pid = '$node->nid' AND n.status = '$status[queued]'"))) {
       return t("There is already an update for this node in the queue: we can only process one update at once.");
     }
     else {
