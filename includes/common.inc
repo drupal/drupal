@@ -376,7 +376,7 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
  *  1 = Log errors to database.
  *  2 = Log errors to database and to screen.
  */
-function error_handler($errno, $message, $filename, $line, $variables) {
+function error_handler($errno, $message, $filename, $line) {
   if ($errno & (E_ALL ^ E_NOTICE)) {
     $types = array(1 => 'error', 2 => 'warning', 4 => 'parse error', 8 => 'notice', 16 => 'core error', 32 => 'core warning', 64 => 'compile error', 128 => 'compile warning', 256 => 'user error', 512 => 'user warning', 1024 => 'user notice', 2048 => 'strict warning');
     $entry = $types[$errno] .': '. $message .' in '. $filename .' on line '. $line .'.';
@@ -389,7 +389,7 @@ function error_handler($errno, $message, $filename, $line, $variables) {
   }
 }
 
-function _fix_gpc_magic(&$item, $key) {
+function _fix_gpc_magic(&$item) {
   if (is_array($item)) {
     array_walk($item, '_fix_gpc_magic');
   }
@@ -1352,7 +1352,7 @@ function form_select($title, $name, $value, $options, $description = NULL, $extr
  * provided by file.inc.
  */
 function form_file($title, $name, $size, $description = NULL, $required = FALSE) {
-  return theme('form_element', $title, '<input type="file" class="'. _form_get_class('form-file', $required, _form_get_error($name)) .'" name="edit['. $name .']" id="edit-'. $name .'" size="'. $size ."\" />\n", $description, 'edit-'. $name, $required, _form_get_error($error));
+  return theme('form_element', $title, '<input type="file" class="'. _form_get_class('form-file', $required, _form_get_error($name)) .'" name="edit['. $name .']" id="edit-'. $name .'" size="'. $size ."\" />\n", $description, 'edit-'. $name, $required, _form_get_error($name));
 }
 
 /**
