@@ -122,7 +122,7 @@ function story_form(&$node) {
     $output .= implode('', taxonomy_node_form('story', $node));
   }
 
-  $output .= form_textarea(t('Body'), 'body', $node->body, 60, 15, '', NULL, TRUE);
+  $output .= form_textarea(t('Body'), 'body', $node->body, 60, 20, '', NULL, TRUE);
 
   return $output;
 }

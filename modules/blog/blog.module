@@ -10,7 +10,7 @@
  * Implementation of hook_settings().
  */
 function blog_settings() {
-  $output = form_textarea(t('Explanation or submission guidelines'), 'blog_help', variable_get('blog_help', ''), 70, 4, t("This text is displayed at the top of the blog submission form.  It's useful for helping or instructing your users."));
+  $output = form_textarea(t('Explanation or submission guidelines'), 'blog_help', variable_get('blog_help', ''), 70, 5, t('This text will be displayed at the top of the blog submission form.  It is useful for helping or instructing your users.'));
   $output .= form_select(t('Minimum number of words in a blog entry'), 'minimum_blog_size', variable_get('minimum_blog_size', 0), drupal_map_assoc(array(0, 10, 25, 50, 75, 100, 125, 150, 175, 200)), t("The minimum number of words a personal blog entry should contain.  This is useful to rule out submissions that do not meet the site's standards, such as short test posts."));
   return $output;
 }
@@ -179,7 +179,7 @@ function blog_page_last() {
  */
 function blog_validate(&$node) {
   if (isset($node->body) && count(explode(' ', $node->body)) < variable_get('minimum_blog_size', 0)) {
-    form_set_error('body', t('The body of your blog is too short.'));
+    form_set_error('body', t('The body of your blog is too short. You need at least %words words to submit your blog.', array('%words' => variable_get('minimum_story_size', 0))));
   }
 }
 
@@ -210,7 +210,7 @@ function blog_form(&$node) {
     $output .= implode('', taxonomy_node_form('blog', $node));
   }
 
-  $output .= form_textarea(t('Body'), 'body', $node->body, 60, 15, '', NULL, TRUE);
+  $output .= form_textarea(t('Body'), 'body', $node->body, 60, 20, '', NULL, TRUE);
 
   return $output;
 }

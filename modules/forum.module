@@ -70,17 +70,13 @@ function forum_settings() {
     if ($voc) {
       $group  = form_select(t('Forum vocabulary'), 'forum_nav_vocabulary', variable_get('forum_nav_vocabulary', ''), $vocs, t("The taxonomy vocabulary that will be used as the navigation tree.  The vocabulary's terms define the forums."));
       $group .= _taxonomy_term_select(t('Containers'), 'forum_containers', variable_get('forum_containers', array()), variable_get('forum_nav_vocabulary', ''), t('You can choose forums which will not have topics, but will be just containers for other forums.  This lets you both group and nest forums.'), 1, '<'. t('none') .'>');
-
       $output = form_group(t('Forum structure settings'), $group);
 
-      $group  = form_textarea(t('Explanation or submission guidelines'), 'forum_help', variable_get('forum_help', ''), 70, 5, t('This text will be displayed at the top of the forum submission form.  Useful for helping or instructing your users.'));
+      $group  = form_textarea(t('Explanation or submission guidelines'), 'forum_help', variable_get('forum_help', ''), 70, 5, t('This text will be displayed at the top of the forum submission form.  It is useful for helping or instructing your users.'));
       $group .= form_textfield(t('Forum icon path'), 'forum_icon_path', variable_get('forum_icon_path', ''), 30, 255, t('The path to the forum icons.  Leave blank to disable icons.  Don\'t add a trailing slash.  Default icons are available in the "misc" directory.'));
-      $number = drupal_map_assoc(array(5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 80, 100, 10000));
-      $group .= form_select(t('Hot topic threshold'), 'forum_hot_topic', variable_get('forum_hot_topic', 15), $number, t('The number of posts a topic must have to be considered <strong>hot</strong>.'));
-      $number = drupal_map_assoc(array(10, 25, 50, 75, 100));
-      $group .= form_select(t('Topics per page'), 'forum_per_page', variable_get('forum_per_page', 25), $number, t('The default number of topics displayed per page; links to browse older messages are automatically being displayed.'));
-      $forder = array(1 => t('Date - newest first'), 2 => t('Date - oldest first'), 3 => t('Posts - most active first'), 4=> t('Posts - least active first'));
-      $group .= form_radios(t('Default order'), 'forum_order', variable_get('forum_order', '1'), $forder, t('The default display order for topics.'));
+      $group .= form_select(t('Hot topic threshold'), 'forum_hot_topic', variable_get('forum_hot_topic', 15), drupal_map_assoc(array(5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 80, 100, 10000)), t('The number of posts a topic must have to be considered <strong>hot</strong>.'));
+      $group .= form_select(t('Topics per page'), 'forum_per_page', variable_get('forum_per_page', 25), drupal_map_assoc(array(10, 25, 50, 75, 100)), t('The default number of topics displayed per page; links to browse older messages are automatically being displayed.'));
+      $group .= form_radios(t('Default order'), 'forum_order', variable_get('forum_order', '1'), array(1 => t('Date - newest first'), 2 => t('Date - oldest first'), 3 => t('Posts - most active first'), 4=> t('Posts - least active first')), t('The default display order for topics.'));
       $output .= form_group(t('Forum viewing options'), $group);
 
       $group = form_select(t('Number of topics in block'), 'forum_block_num', variable_get('forum_block_num', '5'), drupal_map_assoc(array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)), t('The number of topics to show in the "Forum topics" block.  To enable the block, go to the <a href="%block-administration">block administration</a> page.', array('%block-administration' => url('admin/block'))));
@@ -296,7 +292,7 @@ function forum_form(&$node) {
     $output .= form_checkbox(t('Leave shadow copy'), 'shadow', 1, $shadow, t('If you move this topic, you can leave a link in the old forum to the new forum.'));
   }
 
-  $output .= form_textarea(t('Body'), 'body', $node->body, 60, 10, '');
+  $output .= form_textarea(t('Body'), 'body', $node->body, 60, 20, '');
 
   return $output;
 }
