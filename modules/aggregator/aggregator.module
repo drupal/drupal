@@ -108,7 +108,9 @@ function aggregator_link($type) {
     menu('admin/syndication', t('syndication'), $access ? 'aggregator_help_page' : MENU_DENIED, 5);
     menu('admin/syndication/news', t('RSS/RDF'), $access ? 'aggregator_admin_overview' : MENU_DENIED);
     menu('admin/syndication/news/add/feed', t('new feed'), $access ? 'aggregator_admin_edit_feed' : MENU_DENIED, 2);
+    menu('admin/syndication/news/edit/feed', t('new feed'), $access ? 'aggregator_admin_edit_feed' : MENU_DENIED, 2);
     menu('admin/syndication/news/add/category', t('new category'), $access ? 'aggregator_admin_edit_category' : MENU_DENIED, 3);
+    menu('admin/syndication/news/edit/category', t('new category'), $access ? 'aggregator_admin_edit_category' : MENU_DENIED, 3);
     menu('admin/syndication/news/remove', t('remove items'), $access ? 'aggregator_admin_remove_feed' : MENU_DENIED, 0, MENU_HIDE, MENU_LOCKED);
     menu('admin/syndication/news/update', t('update items'), $access ? 'aggregator_admin_refresh_feed' : MENU_DENIED, 0, MENU_HIDE, MENU_LOCKED);
     menu('admin/syndication/news/help', t('help'), $access ? 'aggregator_help_page' : MENU_DENIED, 9);
@@ -709,7 +711,7 @@ function aggregator_page_source() {
   $feed = db_fetch_object(db_query('SELECT * FROM {aggregator_feed} WHERE fid = %d', arg(2)));
   $info = theme('aggregator_feed', $feed);
 
-  _aggregator_page_list('SELECT * FROM {aggregator_item} WHERE fid = '. $feed->fid .' ORDER BY timestamp DESC, iid DESC', arg(1), "<div class=\"feed\">$info</div>");
+  _aggregator_page_list('SELECT * FROM {aggregator_item} WHERE fid = '. $feed->fid .' ORDER BY timestamp DESC, iid DESC', arg(3), "<div class=\"feed\">$info</div>");
 }
 
 /**
@@ -718,7 +720,7 @@ function aggregator_page_source() {
 function aggregator_page_category() {
   $category = db_fetch_object(db_query('SELECT cid, title FROM {aggregator_category} WHERE cid = %d', arg(2)));
 
-  _aggregator_page_list('SELECT i.*, f.title AS ftitle, f.link AS flink FROM {aggregator_category_item} c LEFT JOIN {aggregator_item} i ON c.iid = i.iid LEFT JOIN {aggregator_feed} f ON i.fid = f.fid WHERE cid = '. $category->cid .' ORDER BY timestamp DESC, iid DESC', arg(1));
+  _aggregator_page_list('SELECT i.*, f.title AS ftitle, f.link AS flink FROM {aggregator_category_item} c LEFT JOIN {aggregator_item} i ON c.iid = i.iid LEFT JOIN {aggregator_feed} f ON i.fid = f.fid WHERE cid = '. $category->cid .' ORDER BY timestamp DESC, iid DESC', arg(3));
 }
 
 /**
