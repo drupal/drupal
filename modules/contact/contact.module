@@ -43,7 +43,7 @@ function contact_menu($may_cache) {
  */
 function contact_user($type, $edit, &$user, $category = NULL) {
   if ($type == 'form' && $category == 'account') {
-    return array(array('title' => t('Contact settings'), 'data' => form_checkbox(t('Personal contact form'), 'contact', 1, $edit['contact'], t('Allow other users to contact you by e-mail via <a href="%url">your personal contact form</a>.  Note that your e-mail address is not made public and that privileged users such as site administrators are able to contact you even if you choose not to enable this feature.', array('%url' => "user/$user->uid/contact"))), 'weight' => 2));
+    return array(array('title' => t('Contact settings'), 'data' => form_checkbox(t('Personal contact form'), 'contact', 1, $edit['contact'], t('Allow other users to contact you by e-mail via <a href="%url">your personal contact form</a>. Note that your e-mail address is not made public and that privileged users such as site administrators are able to contact you even if you choose not to enable this feature.', array('%url' => "user/$user->uid/contact"))), 'weight' => 2));
   }
   if ($type == 'validate') {
     return array('contact' => $edit['contact']);
@@ -61,10 +61,10 @@ function contact_mail_user() {
       $output = t('Please <a href="%login">login</a> or <a href="%register">register</a> to send %name a message.', array('%login' => url('user/login'), '%register' => url('user/register'), '%name' => $account->name));
     }
     else if (!valid_email_address($user->mail)) {
-      $output = t('You need to provide a valid e-mail address to contact other users.  Please edit your <a href="%url">user information</a>.', array('%url' => url("user/$user->uid/edit")));
+      $output = t('You need to provide a valid e-mail address to contact other users. Please edit your <a href="%url">user information</a>.', array('%url' => url("user/$user->uid/edit")));
     }
     else if (!flood_is_allowed('contact', CONTACT_HOURLY_THRESHOLD)) {
-      $output = t("You can't contact more than %number users per hour.  Please try again later.", array('%number' => CONTACT_HOURLY_THRESHOLD));
+      $output = t("You can't contact more than %number users per hour. Please try again later.", array('%number' => CONTACT_HOURLY_THRESHOLD));
     }
     else {
       $edit = $_POST['edit'];
@@ -72,7 +72,7 @@ function contact_mail_user() {
       if ($edit) {
         // Validate the message:
         if (!$edit['message']) {
-          form_set_error('message',  t('You must enter a message.'));
+          form_set_error('message', t('You must enter a message.'));
         }
         if (!$edit['subject']) {
           form_set_error('subject', t('You must enter a subject.'));
