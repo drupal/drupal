@@ -1,5 +1,5 @@
 <?php
-// $Id: admin.php,v 1.62 2003/01/02 23:35:04 dries Exp $
+// $Id: admin.php,v 1.63 2003/01/04 11:03:13 dries Exp $
 
 include_once "includes/common.inc";
 
@@ -62,8 +62,13 @@ function admin_page($mod) {
         print "<small>$help</small><br /><br />";
       }
 
+      if ($mod) {
+        print module_invoke($mod, "admin");
+      }
+      else {
+        print watchdog_overview("actions");
+      }
 
-      module_invoke($mod, "admin");
       print "</div>";
 
       db_query("DELETE FROM menu");

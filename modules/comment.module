@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.91 2003/01/02 18:34:13 dries Exp $
+// $Id: comment.module,v 1.92 2003/01/04 11:03:15 dries Exp $
 
 $GLOBALS["cmodes"] = array(1 => t("Flat list - collapsed"), 2 => t("Flat list - expanded"), 3 => t("Threaded list - collapsed"), 4 => t("Threaded list - expanded"));
 $GLOBALS["corder"] = array(1 => t("Date - newest first"), 2 => t("Date - oldest first"));
@@ -201,7 +201,7 @@ function comment_post($edit) {
     */
 
     $edit["subject"] = strip_tags($edit["subject"]);
-   
+
     if ($edit["subject"] == "") {
       $edit["subject"] = substr(strip_tags($edit["comment"]), 0, 29);
     }
@@ -249,7 +249,7 @@ function comment_post($edit) {
         ** Add entry to the watchdog log:
         */
 
-        watchdog("special", "comment: updated '". $edit["subject"] ."'");
+        watchdog("special", "comment: updated '". $edit["subject"] ."'", l(t("view comment"), array("id" => $edit["nid"], "cid" => $edit["cid"])));
       }
       else {
         /*
@@ -282,7 +282,7 @@ function comment_post($edit) {
         ** Add entry to the watchdog log:
         */
 
-        watchdog("special", "comment: added '". $edit["subject"] ."'");
+        watchdog("special", "comment: added '". $edit["subject"] ."'", l(t("view comment"), array("id" => $edit["nid"], "cid" => $edit["cid"])));
       }
 
       /*

@@ -192,7 +192,7 @@ CREATE TABLE item (
   link varchar(255) NOT NULL default '',
   author varchar(255) NOT NULL default '',
   description text NOT NULL default '',
-  timestamp integer default NULL default '',
+  timestamp integer NOT NULL default '0',
   attributes varchar(255) NOT NULL default '',
   PRIMARY KEY  (iid)
 );
@@ -554,6 +554,7 @@ CREATE TABLE watchdog (
   uid integer NOT NULL default '0',
   type varchar(16) NOT NULL default '',
   message text NOT NULL default '',
+  link varchar(255) NOT NULL default '',
   location varchar(128) NOT NULL default '',
   hostname varchar(128) NOT NULL default '',
   timestamp integer NOT NULL default '0',
