@@ -147,7 +147,7 @@ function cache_clear_all($cid = NULL) {
  * Store the current page in the cache.
  */
 function page_set_cache() {
-  global $user;
+  global $user, $base_url;
 
   if (!$user->uid && $_SERVER['REQUEST_METHOD'] == 'GET') {
     // This will fail in some cases, see page_get_cache() for the explanation.
@@ -160,7 +160,7 @@ function page_set_cache() {
           $data = gzencode($data, FORCE_GZIP);
         }
       }
-      cache_set(request_uri(), $data, 1, drupal_get_headers());
+      cache_set($base_url . request_uri(), $data, 1, drupal_get_headers());
     }
   }
 }
@@ -174,12 +174,12 @@ function page_set_cache() {
  * get cached either.
  */
 function page_get_cache() {
-  global $user;
+  global $user, $base_url;
 
   $cache = NULL;
 
   if (!$user->uid && $_SERVER['REQUEST_METHOD'] == 'GET' && count(drupal_set_message()) == 0) {
-    $cache = cache_get(request_uri());
+    $cache = cache_get($base_url . request_uri());
 
     if (empty($cache)) {
       ob_start();
