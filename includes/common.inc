@@ -764,10 +764,10 @@ function form_select($title, $name, $value, $options, $description = NULL, $extr
 
 function form_radios($title, $name, $value, $options, $description = NULL) {
   if (count($options) > 0) {
-    foreach ($options as $key=>$choice) {
+    foreach ($options as $key => $choice) {
       $output .= form_radio($choice, $name, $key, ($key == $value));
     }
-    return theme("form_element", $title, $output, $description);
+    return theme("form_element", $title, $output, $description, $name);
   }
 }
 

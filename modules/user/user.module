@@ -675,7 +675,7 @@ function user_login($edit = array(), $msg = "") {
     $output .= form_textfield(t("Username"), "name", $edit["name"], 30, 64, t("Enter your %s username.", array("%s" => variable_get("site_name", "local"))));
   }
   $output .= form_password(t("Password"), "pass", $pass, 30, 64, t("Enter the password that accompanies your username."));
-  $output .= form_checkbox(t("Remember me"), "remember_me", 1, 0, 0);
+  $output .= form_checkbox(t("Remember me"), "remember_me");
   $output .= form_submit(t("Log in"));
   $items[] = l(t("Request new password"), "user/password");
   if (variable_get("user_register", 1)) {
