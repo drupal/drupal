@@ -804,7 +804,7 @@ function filter_filter($op, $delta = 0, $format = -1, $text = '') {
         case 2:
           return _filter_old_urls($text, $format);
         case 3:
-          return _filter_autop($text, $format);
+          return _filter_autop($text);
         default:
           return $text;
       }
@@ -923,20 +923,20 @@ function _filter_old_urls($text) {
  * Convert line breaks into <p> and <br> in an intelligent fashion.
  * From: http://photomatt.net/scripts/autop
  */
-function _filter_autop($text, $br = 1) {
+function _filter_autop($text) {
   $text = preg_replace('|\n*$|', '', $text) ."\n\n"; // just to make things a little easier, pad the end
   $text = preg_replace('|<br />\s*<br />|', "\n\n", $text);
   $text = preg_replace('!(<(?:table|ul|ol|li|pre|form|blockquote|h[1-6])[^>]*>)!', "\n$1", $text); // Space things out a little
   $text = preg_replace('!(</(?:table|ul|ol|li|pre|form|blockquote|h[1-6])>)!', "$1\n", $text); // Space things out a little
   $text = preg_replace("/\n\n+/", "\n\n", $text); // take care of duplicates
-  $text = preg_replace('/\n?(.+?)(?:\n\s*\n|\z)/s', "\t<p>$1</p>\n", $text); // make paragraphs, including one at the end
+  $text = preg_replace('/\n?(.+?)(?:\n\s*\n|\z)/s', "<p>$1</p>\n", $text); // make paragraphs, including one at the end
   $text = preg_replace('|<p>\s*?</p>|', '', $text); // under certain strange conditions it could create a P of entirely whitespace
   $text = preg_replace("|<p>(<li.+?)</p>|", "$1", $text); // problem with nested lists
   $text = preg_replace('|<p><blockquote([^>]*)>|i', "<blockquote$1><p>", $text);
   $text = str_replace('</blockquote></p>', '</p></blockquote>', $text);
   $text = preg_replace('!<p>\s*(</?(?:table|tr|td|th|div|ul|ol|li|pre|select|form|blockquote|p|h[1-6])[^>]*>)!', "$1", $text);
   $text = preg_replace('!(</?(?:table|tr|td|th|div|ul|ol|li|pre|select|form|blockquote|p|h[1-6])[^>]*>)\s*</p>!', "$1", $text);
-  if ($br) $text = preg_replace('|(?<!<br />)\s*\n|', "<br />\n", $text); // optionally make line breaks
+  $text = preg_replace('|(?<!<br />)\s*\n|', "<br />\n", $text); // make line breaks
   $text = preg_replace('!(</?(?:table|tr|td|th|div|dl|dd|dt|ul|ol|li|pre|select|form|blockquote|p|h[1-6])[^>]*>)\s*<br />!', "$1", $text);
   $text = preg_replace('!<br />(\s*</?(?:p|li|div|th|pre|td|ul|ol)>)!', '$1', $text);
   $text = preg_replace('/&([^#])(?![a-z]{1,8};)/', '&#038;$1', $text);
