@@ -157,19 +157,19 @@ function blog_page_user($uid = 0, $date = 0, $all = 0) {
 
     if ($date != date("dny", $blog->created)) {
       $date = date("dny", $blog->created);
-      $output .= "<tr><td colspan=\"2\"><b>".lm(format_date($blog->created, custom, "d M Y"), array("mod" => "blog", "id" => $blog->uid, "date" => mktime(23, 59, 59, date("n", $blog->created), date("d", $blog->created), date("Y", $blog->created))), t("Permanent link to this blog entry."))."</b></td></tr>";
+      $output .= "<tr><td colspan=\"3\"><b>". lm(format_date($blog->created, "small", "d M Y"), array("mod" => "blog", "id" => $blog->uid, "date" => mktime(23, 59, 59, date("n", $blog->created), date("d", $blog->created), date("Y", $blog->created))), "", array("title" => t("Permanent link to this date."))) ."</b></td></tr>";
     }
 
     $links = link_node($blog, 1);
 
-    $output .= "<tr><td><div style=\"margin-left: 20px;\"><b>". check_output($blog->title) ."</b></div></td><td align=\"right\">". $theme->links($links) ."</td></tr>";
-    $output .= "<tr><td colspan=\"2\"><div style=\"margin-left: 40px;\">". check_output($blog->teaser, 1) ."</div><br /></td></tr>";
+    $output .= "<tr><td><div style=\"margin-left: 20px;\"><b>". check_output($blog->title) ."</b></div></td><td align=\"right\">". $theme->links($links) ."</td><td>". l('<img src="misc/blog.gif" width="12" height="16" border="0" align="top">', array("id" => $node->nid), "node", "", array("title" => t("Permanent link to this blog entry"))) ."</td></tr>";
+    $output .= "<tr><td colspan=\"3\"><div style=\"margin-left: 40px;\">". check_output($blog->teaser, 1) ."</div><br /></td></tr>";
 
   }
 
   $output .= "</table>";
   $output .= lm("<img src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" align=\"right\" border=\"0\" />", array("mod" => "blog", "op" => "feed", "id" => $account->uid), "", array("title" => t("Read the XML version of this page."))) ."\n";
-  if (!$all) {
+  if (!$all && !$date) {
     $output .= lm(t("show all blogs"), array("mod" => "blog", "op" => "view", "id" => $account->uid, "all" => 1), "", array("title" => t("Show all blogs by this user")));
   }
   else {
@@ -303,7 +303,6 @@ function blog_link($type, $node = 0, $main) {
   }
 
   if ($type == "node" && $node->type == "blog") {
-    global $op;
     if (blog_access("update", $node)) {
       $links[] = lm(t("edit this blog"), array("mod" => "node", "op" => "edit", "id" => $node->nid), "", array("title" => t("Edit this blog entry.")));
     }
