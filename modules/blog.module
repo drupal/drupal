@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.71 2002/04/20 11:52:49 dries Exp $
+// $Id: blog.module,v 1.72 2002/05/02 19:36:03 kjartan Exp $
 
 function blog_conf_options() {
  $output .= form_textarea("Explanation or submission guidelines", "blog_help", variable_get("blog_help", ""), 55, 4, "This text will be displayed at the top of the blog submission form.  Useful for helping or instructing your users.");
@@ -250,7 +250,7 @@ function blog_form(&$node, &$help, &$error) {
 
 
 function blog_page() {
-  global $theme, $id, $op, $date, $all;
+  global $theme, $id, $op, $date, $all, $name;
 
   if (user_access("access content")) {
     switch ($op) {
@@ -264,6 +264,10 @@ function blog_page() {
         break;
       default:
         $theme->header();
+        if ($name) {
+          $user = user_load(array("name" => $name));
+          $id = $user->uid;
+        }
         if ($id) {
           blog_page_user($id, $date, $all);
         }
