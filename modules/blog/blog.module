@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.158 2004/01/14 22:30:09 dries Exp $
+// $Id: blog.module,v 1.159 2004/01/17 09:07:00 dries Exp $
 
 function blog_settings() {
   $output = form_textarea(t("Explanation or submission guidelines"), "blog_help", variable_get("blog_help", ""), 70, 4, t("This text is displayed at the top of the blog submission form.  It's useful for helping or instructing your users."));
@@ -82,6 +82,9 @@ function blog_help($section) {
     case 'admin/system/modules/blog':
       $output .= t("A weblog is a running journal of a users ideas.  Enter the minimum word count for a single entry, and the text displayed on the entry submission form");
       break;
+    case 'node/add/blog':
+      $output = variable_get('blog_help', '');
+      break;
   }
 
   return $output;
@@ -159,15 +162,9 @@ function blog_validate(&$node) {
   return $error;
 }
 
-function blog_form(&$node, &$help, &$error) {
+function blog_form(&$node, &$error) {
   global $nid;
   $iid = $_GET["iid"];
-
-  /*
-  ** Carry out some explanation or submission guidelines:
-  */
-
-  $help = variable_get("blog_help", "");
 
   if (empty($node->body)) {
     /*

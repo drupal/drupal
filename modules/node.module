@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.316 2004/01/14 22:30:09 dries Exp $
+// $Id: node.module,v 1.317 2004/01/17 09:07:00 dries Exp $
 
 function node_help($section = "admin/help#node") {
   global $mod;
@@ -1092,19 +1092,11 @@ function node_form($edit, $error = NULL) {
   // $error and $param must be passed by reference.
   $function = $edit->type ."_form";
   if (function_exists($function)) {
-    $form .= $function($edit, $help, $error, $param);
+    $form .= $function($edit, $error, $param);
   }
 
   // Append extra node form:
   $form .= implode("", node_invoke_nodeapi($edit, "form post", $error));
-
-  /*
-  ** Add the help text:
-  */
-
-  if ($help) {
-    $output .= "<p>$help</p>";
-  }
 
   $output .= "<div class=\"node-form\">";
 
