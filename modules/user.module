@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.98 2002/09/25 22:05:47 kjartan Exp $
+// $Id: user.module,v 1.99 2002/09/30 08:58:22 kjartan Exp $
 
 session_set_save_handler("sess_open", "sess_close", "sess_read", "sess_write", "sess_destroy", "sess_gc");
 session_start();
@@ -980,7 +980,7 @@ function user_view($uid = 0) {
   }
 
   if ($user->uid && $user->uid == $uid) {
-    $output .= form_item(t("Name"), check_output("$user->name ($user->init)"));
+    $output = form_item(t("Name"), check_output("$user->name ($user->init)"));
     $output .= form_item(t("E-mail address"), check_output($user->mail));
 
     foreach (module_list() as $module) {
@@ -995,7 +995,7 @@ function user_view($uid = 0) {
     $theme->footer();
   }
   else if ($uid && $account = user_load(array("uid" => $uid, "status" => 1))) {
-    $output .= form_item(t("Name"), check_output($account->name));
+    $output = form_item(t("Name"), check_output($account->name));
 
     foreach (module_list() as $module) {
       if (module_hook($module, "user")) {
