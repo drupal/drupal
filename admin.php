@@ -26,7 +26,7 @@ function admin_page($mod) {
     <h1>Administration</h1>
     <?php
 
-      $links[] = "<a href=\index.php\">home</a>";
+      $links[] = "<a href=\"index.php\">home</a>";
       foreach (module_list() as $name) {
         if (module_hook($name, "link")) $links = array_merge($links, module_invoke($name, "link", "admin"));
       }
