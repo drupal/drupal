@@ -173,6 +173,14 @@ function book_delete(&$node) {
   db_query("DELETE FROM book WHERE nid = '%d'", $node->nid);
 }
 
+function book_validate($node, &$error) {
+
+  // Make sure user has permissions to create php content:
+  $node->format = $node->format && user_access("create php content");
+
+  return $node;
+}
+
 function book_form(&$node, &$help, &$error) {
   global $user, $op;
 
@@ -198,7 +206,9 @@ function book_form(&$node, &$help, &$error) {
 
   if (user_access("administer nodes")) {
     $output .= form_select(t("Weight"), "weight", $node->weight, array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30), t("The heavier pages will sink and the lighter pages will be positioned nearer the top."));
-    $output .= form_select("Type", "format", $node->format, array(0 => "HTML / text", 1 => "PHP"));
+    if (user_access("create php content")) {
+      $output .= form_select("Type", "format", $node->format, array(0 => "HTML / text", 1 => "PHP"));
+    }
   }
   else {
 
@@ -327,7 +337,7 @@ function book_body($node) {
     */
 
     if ($op == t("Preview")) {
-      if (user_access("administer nodes")) {
+      if (user_access("create php content")) {
         $node->body = stripslashes($node->body);  // see also book_form()
       }
       else {
