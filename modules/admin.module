@@ -1,5 +1,5 @@
 <?php
-// $Id: admin.module,v 1.28 2003/09/28 11:08:17 dries Exp $
+// $Id: admin.module,v 1.29 2003/09/30 10:58:29 dries Exp $
 
 include_once "includes/common.inc";
 
@@ -43,6 +43,8 @@ function admin_link($type) {
 
 function admin_page() {
   if (user_access("access administration pages")) {
+    theme("header");
+
     if ($help = menu_get_active_help()) {
       $contents = "<small>$help</small><hr />";
     }
@@ -58,7 +60,6 @@ function admin_page() {
     array_pop($breadcrumb);
     $title = menu_get_active_title();
 
-    theme("header");
     theme("breadcrumb", $breadcrumb);
     theme("box", $title, $contents);
     theme("footer");
