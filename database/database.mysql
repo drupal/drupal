@@ -360,12 +360,12 @@ CREATE TABLE role (
 #
 
 CREATE TABLE search_index (
-  word varchar(50) default NULL,
-  lno int(10) unsigned default NULL,
-  type varchar(16) default NULL,
-  count int(10) unsigned default NULL,
-  KEY lno (lno),
-  KEY word (word)
+ word varchar(50) NOT NULL,
+ lno int(10) unsigned NOT NULL,
+ type varchar(16) default NULL,
+ count int(10) unsigned default NULL,
+ KEY lno (lno),
+ KEY word (word)
 ) TYPE=MyISAM;
 
 #
