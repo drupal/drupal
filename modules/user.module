@@ -914,9 +914,6 @@ function user_pass() {
   else if ($edit['mail'] && !($account = user_load(array('mail' => $edit['mail'], 'status' => 1)))) {
     form_set_error('mail', t('Sorry. The e-mail address %email is not recognized.', array('%email' => '<em>'. $edit['mail'] .'</em>')));
   }
-  else if ($edit) {
-    drupal_set_message(t('You must provider either a username or e-mail address.'), 'error');
-  }
   if ($account) {
     $from = variable_get('site_mail', ini_get('sendmail_from'));
     $pass = user_password();
@@ -942,6 +939,9 @@ function user_pass() {
     drupal_goto('user');
   }
   else {
+    if ($edit) {
+      drupal_set_message(t('You must provider either a username or e-mail address.'), 'error');
+    }
     // Display form:
     $output = '<p>'. t('Enter your username <strong><em>or</em></strong> your e-mail address.') .'</p>';
     $output .= form_textfield(t('Username'), 'name', $edit['name'], 30, 64);
