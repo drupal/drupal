@@ -674,7 +674,7 @@ function lm($text, $args = array(), $anchor = "", $attributes = array()) {
 }
 
 function field_get($string, $name) {
-  ereg(", $name=([^,]+)", ",$string", $regs);
+  ereg(",$name=([^,]+)", ",$string", $regs);
   return $regs[1];
 }
 
