@@ -109,7 +109,7 @@ function book_form($edit = array()) {
   $form .= form_item(t("Category"), category_form_select("book", $edit));
 
   if ($edit[pid]) {
-    $node = node_get_object("nid", $edit[pid]);
+    $node = node_get_object(array("nid" => $edit[pid]));
     $form .= form_item(t("Parent"), "<A HREF=\"node.php?id=$node->id\">". check_output($node->title) ."</A>", t("The parent subject or category the page belongs in."));
     $form .= form_hidden("parent", $edit[parent]);
   }
@@ -157,7 +157,7 @@ function book_save($edit) {
 
 function book_parent($nid) {
   global $status;
-  if ($node = node_get_object("nid", $nid)) {
+  if ($node = node_get_object(array("nid" => $nid))) {
     $list[$nid] = $nid;
   }
   if ($node->pid) {
@@ -205,7 +205,7 @@ function book_admin() {
       print book_form();
       break;
     case "edit":
-      print book_form(node_get_array(nid, $id));
+      print book_form(node_get_array(array(nid => $id)));
       break;
     case "listing":
       print node_listing(book_query());
@@ -246,7 +246,7 @@ function book_page() {
 function book_update($id) {
   global $status;
 
-  if ($node = node_get_object("nid", $id)) {
+  if ($node = node_get_object(array("nid" => $id))) {
     if ($node->status != $status[posted]) {
       return t("You can only update accepted pages: pages that are still queued or already expired can not be updated.");
     }

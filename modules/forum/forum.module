@@ -48,7 +48,7 @@ function forum_page() {
   $output .= "<TABLE BORDER=\"0\" CELLSPACING=\"4\" CELLPADDING=\"4\">\n";
   $output .= " <TR><TH>". t("Forum") ."</TH><TH>". t("Comments") ."</TH><TH>". t("Last comment") ."</TH><TH>". t("Moderators") ."</TH></TR>";
   while ($node = db_fetch_object($result)) {
-    $node = node_get_object("nid", $node->nid);
+    $node = node_get_object(array("nid" => $node->nid));
     $output .= " <TR><TD><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A><BR><SMALL>". check_output($node->body, 1) ."</SMALL></TD><TD ALIGN=\"center\">". forum_num_comments($node->nid) ."</TD><TD ALIGN=\"center\">". forum_last_comment($node->nid) ."</TD><TD ALIGN=\"center\"><SMALL>". check_output($node->moderate) ."</SMALL></TD></TR>";
   }
   $output .= "</TABLE>\n";
@@ -72,7 +72,7 @@ function forum_admin() {
       print forum_form();
       break;
     case "edit":
-      print forum_form(node_get_array(nid, $id));
+      print forum_form(node_get_array(array(nid => $id)));
       break;
    case t("Submit"):
       print status(forum_save($edit));

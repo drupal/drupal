@@ -13,12 +13,12 @@ class Poll {
 }
 
 function poll_cron() {
-  $result = _node_get("type", "poll");
+  $result = _node_get(array("type" => "poll"));
   while ($poll = db_fetch_array($result)) {
     if ($poll[active]) {
       if (($poll[timestamp] + $poll[runtime]) < time()) {
         $poll[active] = 0;
-        node_save($poll, array(filter));
+        node_save($poll, array(active));
       }
     }
   }
@@ -98,10 +98,10 @@ function poll_view($node, $main = 0, $block = 0) {
       if (($node->active) && (!field_get($node->voters, $user->userid))) {
         $result = db_query("UPDATE poll_choices SET chvotes=chvotes+1 WHERE nid='" . $node->nid . "' && chid='" . check_input($chid) . "'");
         if (($result) && ($user)) {
-          $new = node_get_array("nid", $node->nid);
+          $new = node_get_array(array("nid" => $node->nid));
           $new[voters] = field_set($node->voters, $user->userid,1);
           node_save($new, array(voters));
-          $node = node_get_object("nid", $node->nid);            
+          $node = node_get_object(array("nid" => $node->nid));
         }
       }
       
@@ -228,10 +228,7 @@ function poll_save($edit) {
 }
 
 function poll_block() {  
-  $result = _node_get("type", "poll");
-  while ($poll = db_fetch_object($result)) {
-    if ($poll->active) break;
-  }
+  $poll = node_get_object(array("type" => "poll", "active" => 1));
   if ($poll) {
     $poll = poll_view($poll, 0, 1);
     $output = "<b>" . $poll[title] . "</b><br>" . $poll[content];
@@ -266,7 +263,7 @@ function poll_admin() {
       print poll_overview(poll_query($type));
       break;
     case "edit":
-      print poll_form(poll_get_choices_array(node_get_array("nid", check_input($id))));
+      print poll_form(poll_get_choices_array(node_get_array(array("nid" => check_input($id)))));
       break;
     case "help":
       poll_help();

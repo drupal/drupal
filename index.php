@@ -17,7 +17,7 @@ $result = db_query("SELECT nid FROM node WHERE promote = '1' AND status = '$stat
 
 $theme->header();
 while ($node = db_fetch_object($result)) {
-  node_view(node_get_object("nid", $node->nid), 1);
+  node_view(node_get_object(array("nid" => $node->nid)), 1);
 }
 $theme->footer();
 

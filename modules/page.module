@@ -66,7 +66,7 @@ function page_admin() {
       print page_form();
       break;
     case "edit":
-      print page_form(node_get_array(nid, $id));
+      print page_form(node_get_array(array(nid => $id)));
       break;
     case "listing":
       print node_listing(page_query());

@@ -31,7 +31,7 @@ function moderate_overview($query = array()) {
 function moderate_node($edit, $name) {
   global $user;
 
-  $node = node_get_array("nid", $edit[nid]);
+  $node = node_get_array(array("nid" => $edit[nid]));
   if ($node && strstr($node[moderate], $user->userid)) {
     $edit[type] = $node[type];
     return node_invoke($edit, $name);
@@ -86,7 +86,7 @@ function moderate_admin() {
     default:
       switch ($op) {
         case "edit":
-          print moderate_node_edit(node_get_array("nid", $id));
+          print moderate_node_edit(node_get_array(array("nid" => $id)));
           break;
         case t("Preview"):
           print moderate_node_edit($edit);

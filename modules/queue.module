@@ -18,7 +18,7 @@ function queue_score($id) {
 function queue_vote($id, $vote) {
   global $status, $user;
 
-  if ($node = node_get_object(nid, $id)) {
+  if ($node = node_get_object(array(nid => $id))) {
 
     if (!field_get($node->users, $user->userid)) {
 
@@ -63,7 +63,7 @@ function queue_node($id) {
   global $theme, $user;
 
 
-  $node = node_get_object(nid, $id);
+  $node = node_get_object(array(nid => $id));
 
   if ($user->id == $node->author || field_get($node->users, $user->userid)) {
     header("Location: node.php?id=$node->nid");
@@ -72,7 +72,7 @@ function queue_node($id) {
     $queue_votes = array("neutral (+0)" => "+ 0", "post it (+1)" => "+ 1", "dump it (-1)" => "- 1");
       // The keys of this associative array are displayed in each submission's selection box whereas the corresponding values represent the mathematical calculation to be performed to update a comment's value.
 
-    if ($n = node_get_object("nid", $node->pid)) {
+    if ($n = node_get_object(array("nid" => $node->pid))) {
       $output .= " ". t("The above node is a proposed update of an existing node:") ." \"<A HREF=\"node.php?id=$n->nid\">". check_output($n->title) ."</A>\".";
     }
 

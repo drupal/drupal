@@ -3,10 +3,14 @@
 $status = array(dumped => 0, expired => 1, queued => 2, posted => 3);
 $rstatus = array(0 => dumped, 1 => expired, 2 => queued, 3 => posted);
 
-function _node_get($field, $value) {
-  $result = db_query("SELECT lid, type FROM node WHERE $field = '$value'");
+function _node_get($conditions) {
+  foreach ($conditions as $key => $value) { 
+    $where[] = "$key = '$value'";
+	$nwhere[] = "n.$key = '$value'";
+  }
+  $result = db_query("SELECT lid, type FROM node WHERE " . implode(", ", $where));
   if ($node = db_fetch_object($result)) {
-    return db_query("SELECT n.*, l.*, u.userid FROM node n LEFT JOIN $node->type l ON n.lid = l.lid AND n.nid = l.nid LEFT JOIN users u ON n.author = u.id WHERE n.$field = '$value' ORDER BY n.timestamp DESC");
+    return db_query("SELECT n.*, l.*, u.userid FROM node n LEFT JOIN $node->type l ON n.lid = l.lid AND n.nid = l.nid LEFT JOIN users u ON n.author = u.id WHERE " . implode(", ", $nwhere) . " ORDER BY n.timestamp DESC");
   }
 }
 
@@ -25,18 +29,19 @@ function node_submission_status($index = -1) {
   return $index < 0 ? $status : $status[$index];
 }
 
-function node_get_object($field, $value) {
-  return db_fetch_object(_node_get($field, $value));
+function node_get_object($conditions) {
+  return db_fetch_object(_node_get($conditions));
 }
 
-function node_get_array($field, $value) {
-  return db_fetch_array(_node_get($field, $value));
+function node_get_array($conditions) {
+  return db_fetch_array(_node_get($conditions));
 }
 
-function node_del($field, $value) {
+function node_del($conditions) {
   global $status;
-  if ($node = node_get_object($field, $value)) {
+  if ($node = node_get_object($conditions)) {
     if ($node->status == $status[dumped]) {
+	  module_invoke($node->type, "delete", $node);
       db_query("DELETE FROM node WHERE nid = '$node->nid'");
       db_query("DELETE FROM $node->type WHERE lid = '$node->lid' AND nid = '$node->nid'");
       db_query("DELETE FROM comments WHERE lid = '$node->nid'");
@@ -57,7 +62,7 @@ function node_save($node, $filter) {
   $rows = array(nid, pid, lid, cid, tid, log, type, title, score, votes, author, status, comment, promote, moderate, timestamp);
 
   if ($node[nid] > 0) {
-    $n = node_get_object("nid", $node[nid]);
+    $n = node_get_object(array("nid" => $node[nid]));
 
     $u1 = array();
     $u2 = array();
@@ -82,7 +87,7 @@ function node_save($node, $filter) {
     return $node[nid];
   }
   else {
-    $duplicate = node_get_object("title", $node[title]);
+    $duplicate = node_get_object(array("title" => $node[title]));
 
     if ($duplicate && (time() - $duplicate->timestamp < 60)) {
       watchdog("warning", "node: duplicate '$node[title]'");
