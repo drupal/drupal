@@ -322,6 +322,7 @@ CREATE TABLE profile_fields (
   name varchar(128) default NULL,
   explanation TEXT default NULL,
   category varchar(255) default NULL,
+  page varchar(255) default NULL,
   type varchar(128) default NULL,
   weight tinyint(1) DEFAULT '0' NOT NULL,
   overview tinyint(1) DEFAULT '0' NOT NULL,
