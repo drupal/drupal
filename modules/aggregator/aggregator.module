@@ -468,10 +468,6 @@ function aggregator_parse_feed(&$data, $feed) {
   }
   xml_parser_free($xml_parser);
 
-  // initialize the translation table:
-  $tt = array_flip(get_html_translation_table(HTML_SPECIALCHARS));
-  $tt['&apos;'] = "'";
-
   /*
   ** We reverse the array such that we store the first item last,
   ** and the last item first.  In the database, the newest item
@@ -486,7 +482,7 @@ function aggregator_parse_feed(&$data, $feed) {
     // Prepare the item:
     foreach ($item as $key => $value) {
       // TODO: Make handling of aggregated HTML more flexible/configurable.
-      $value = strtr(trim($value), $tt);
+      $value = decode_entities(trim($value));
       $value = strip_tags($value, '<a> <b> <br> <dd> <dl> <dt> <em> <i> <li> <ol> <p> <strong> <u> <ul>');
       $value = preg_replace('/\Wstyle\s*=[^>]+?>/i', '>', $value);
       $value = preg_replace('/\Won[a-z]+\s*=[^>]+?>/i', '>', $value);
@@ -1112,7 +1108,7 @@ function theme_aggregator_page_item($item) {
   $output .= " <div class=\"body\">\n";
   $output .= '  <div class="title"><a href="'. check_url($item->link) .'">'. check_plain($item->title) ."</a></div>\n";
   if ($item->description) {
-    $output .= '  <div class="description">'. check_plain($item->description) ."</div>\n";
+    $output .= '  <div class="description">'. $item->description ."</div>\n";
   }
   if ($item->ftitle && $item->fid) {
     $output .= '  <div class="source">'. t('Source') .': '. l($item->ftitle, "aggregator/sources/$item->fid") ."</div>\n";
