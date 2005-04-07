@@ -1,5 +1,5 @@
 <?php
-/* $Id: menu.inc,v 1.78 2005/02/28 16:23:27 dries Exp $ */
+/* $Id: menu.inc,v 1.79 2005/04/07 20:00:48 dries Exp $ */
 
 /**
  * @file
@@ -198,12 +198,13 @@ define('MENU_ACCESS_DENIED', 3);
 function menu_get_menu() {
   global $_menu;
   global $user;
+  global $locale;
 
   if (!isset($_menu['items'])) {
     // _menu_build() may indirectly call this function, so prevent infinite loops.
     $_menu['items'] = array();
 
-    $cid = 'menu:'. $user->uid;
+    $cid = "menu:$user->uid:$locale";
     if ($cached = cache_get($cid)) {
       $_menu = unserialize($cached->data);
     }
