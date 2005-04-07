@@ -311,7 +311,7 @@ function comment_configure() {
   $group  = form_radios(t('Default display mode'), 'comment_default_mode', variable_get('comment_default_mode', 4), _comment_get_modes(), t('The default view for comments. Expanded views display the body of the comment. Threaded views keep replies together.'));
   $group .= form_radios(t('Default display order'), 'comment_default_order', variable_get('comment_default_order', 1), _comment_get_orders(), t('The default sorting for new users and anonymous users while viewing comments. These users may change their view using the comment control panel. For registered users, this change is remembered as a persistent user preference.'));
   $group .= form_select(t('Default comments per page'), 'comment_default_per_page', variable_get('comment_default_per_page', '50'), _comment_per_page(), t('Default number of comments for each page: more comments are distributed in several pages.'));
-  $group .= form_radios(t('Comment controls'), 'comment_controls', variable_get('comment_controls', 0), array(t('Display above the comments'), t('Display below the comments'), t('Display above and below the comments'), t('Do not display')), t('Position of the comment controls box.  The comment controls let the user change the default display mode and display order of comments.'));
+  $group .= form_radios(t('Comment controls'), 'comment_controls', variable_get('comment_controls', 3), array(t('Display above the comments'), t('Display below the comments'), t('Display above and below the comments'), t('Do not display')), t('Position of the comment controls box.  The comment controls let the user change the default display mode and display order of comments.'));
   $output = form_group(t('Comment viewing options'), $group);
 
   $group  = form_radios(t('Anonymous poster settings'), 'comment_anonymous', variable_get('comment_anonymous', 0), array(t('Anonymous posters may not enter their contact information'), t('Anonymous posters may leave their contact information'), t('Anonymous posters must leave their contact information')), t('This feature is only useful if you allow anonymous users to post comments.  See the <a href="%url">permissions page</a>.', array('%url' => url('admin/access/permissions'))));
@@ -853,7 +853,7 @@ function comment_render($node, $cid = 0) {
 
       // Start a form, for use with comment control and moderation.
       $result = pager_query($query, $comments_per_page, 0, "SELECT COUNT(*) FROM {comments} WHERE status = 0 AND nid = %d", $nid);
-      if (db_num_rows($result) && (variable_get('comment_controls', 0) == 0 || variable_get('comment_controls', 0) == 2)) {
+      if (db_num_rows($result) && (variable_get('comment_controls', 3) == 0 || variable_get('comment_controls', 3) == 2)) {
         $output .= '<form method="post" action="'. url('comment') ."\"><div>\n";
         $output .= theme('comment_controls', $threshold, $mode, $order, $comments_per_page);
         $output .= form_hidden('nid', $nid);
@@ -894,7 +894,7 @@ function comment_render($node, $cid = 0) {
 
       $output .= '</div></form>';
 
-      if (db_num_rows($result) && (variable_get('comment_controls', 0) == 1 || variable_get('comment_controls', 0) == 2)) {
+      if (db_num_rows($result) && (variable_get('comment_controls', 3) == 1 || variable_get('comment_controls', 3) == 2)) {
         $output .= '<form method="post" action="'. url('comment') ."\"><div>\n";
         $output .= theme('comment_controls', $threshold, $mode, $order, $comments_per_page);
         $output .= form_hidden('nid', $nid);
