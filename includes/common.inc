@@ -1736,6 +1736,7 @@ function mime_header_encode($string, $charset = 'UTF-8') {
 
 /**
  * Decode all HTML entities (including numerical ones) to regular UTF-8 bytes.
+ * Double-escaped entities will only be decoded once ("&amp;lt;" becomes "&lt;", not "<").
  *
  * @param $text
  *   The text to decode entities in.
@@ -1751,20 +1752,33 @@ function decode_entities($text, $exclude = array()) {
     $table = array_flip(get_html_translation_table(HTML_ENTITIES));
     // PHP gives us ISO-8859-1 data, we need UTF-8.
     $table = array_map('utf8_encode', $table);
+    // Add apostrophe (XML)
+    $table['&apos;'] = "'";
   }
-  $text = strtr($text, array_diff($table, $exclude));
+  $newtable = array_diff($table, $exclude);
 
-  // Any remaining entities are numerical. Use a regexp to replace them.
-  return preg_replace('/&#(x?)([A-Za-z0-9]+);/e', '_decode_entities("$1", "$2", "$0", $exclude)', $text);
+  // Use a regexp to select all entities in one pass, to avoid decoding double-escaped entities twice.
+  return preg_replace('/&(#x?)?([A-Za-z0-9]+);/e', '_decode_entities("$1", "$2", "$0", $newtable, $exclude)', $text);
 }
 
 /**
  * Helper function for decode_entities
  */
-function _decode_entities($hex, $codepoint, $original, $exclude) {
-  if ($hex != '') {
+function _decode_entities($prefix, $codepoint, $original, &$table, &$exclude) {
+  // Named entity
+  if (!$prefix) {
+    if (isset($table[$original])) {
+      return $table[$original];
+    }
+    else {
+      return $original;
+    }
+  }
+  // Hexadecimal numerical entity
+  if ($prefix == '#x') {
     $codepoint = base_convert($codepoint, 16, 10);
   }
+  // Encode codepoint as UTF-8 bytes
   if ($codepoint < 0x80) {
     $str = chr($codepoint);
   }
@@ -1783,6 +1797,7 @@ function _decode_entities($hex, $codepoint, $original, $exclude) {
          . chr(0x80 | (($codepoint >> 6)  & 0x3F))
          . chr(0x80 | ( $codepoint        & 0x3F));
   }
+  // Check for excluded characters
   if (in_array($str, $exclude)) {
     return $original;
   }
