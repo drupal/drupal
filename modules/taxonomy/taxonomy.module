@@ -624,16 +624,18 @@ function taxonomy_get_tree($vid, $parent = 0, $depth = -1, $max_depth = NULL) {
   }
 
   $max_depth = (is_null($max_depth)) ? count($children[$vid]) : $max_depth;
-  foreach ($children[$vid][$parent] as $child) {
-    if ($max_depth > $depth) {
-      $terms[$vid][$child]->depth = $depth;
-      // The "parent" attribute is not useful, as it would show one parent only.
-      unset($terms[$vid][$child]->parent);
-      $terms[$vid][$child]->parents = $parents[$vid][$child];
-      $tree[] = $terms[$vid][$child];
+  if ($children[$vid][$parent]) {
+    foreach ($children[$vid][$parent] as $child) {
+      if ($max_depth > $depth) {
+        $terms[$vid][$child]->depth = $depth;
+        // The "parent" attribute is not useful, as it would show one parent only.
+        unset($terms[$vid][$child]->parent);
+        $terms[$vid][$child]->parents = $parents[$vid][$child];
+        $tree[] = $terms[$vid][$child];
 
-      if ($children[$vid][$child]) {
-        $tree = array_merge($tree, taxonomy_get_tree($vid, $child, $depth, $max_depth));
+        if ($children[$vid][$child]) {
+          $tree = array_merge($tree, taxonomy_get_tree($vid, $child, $depth, $max_depth));
+        }
       }
     }
   }
