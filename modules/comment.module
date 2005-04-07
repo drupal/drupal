@@ -696,7 +696,7 @@ function comment_links($comment, $return = 1) {
     }
   }
 
-  if ($moderation = theme('comment_moderation_form', $comment)) {
+  if ($moderation = comment_moderation_form($comment)) {
     $links[] = $moderation;
   }
 
@@ -882,16 +882,14 @@ function comment_render($node, $cid = 0) {
         }
       }
 
-      /*
-      ** Use the standard pager; $pager_total is the number of returned rows,
-      ** is global and defined in pager.inc.
-      */
+      // Use the standard pager; $pager_total is the number of returned rows,
+      // is global and defined in pager.inc.
       if ($pager = theme('pager', NULL, $comments_per_page, 0, array('comments_per_page' => $comments_per_page))) {
         $output .= $pager;
       }
 
       if (db_num_rows($result) && comment_user_can_moderate($node)) {
-        $output .= '<div align="center">'. form_submit(t('Moderate comments')) .'</div><br />';
+        $output .= '<div id="comment-moderation-button">'. form_submit(t('Moderate comments')) .'</div>';
       }
 
       $output .= '</div></form>';
@@ -1251,9 +1249,7 @@ function comment_visible($comment, $threshold = 0) {
 function comment_moderate() {
   global $user;
 
-  $moderation = $_POST['moderation'];
-
-  if ($moderation) {
+  if ($moderation = $_POST['edit']['moderation']) {
     $result = db_query('SELECT DISTINCT mid, value, ABS(value) FROM {moderation_roles} WHERE rid IN (%s) ORDER BY mid, ABS(value), value', implode(', ', array_keys($user->roles)));
     while ($mod = db_fetch_object($result)) {
       $votes[$mod->mid] = $mod->value;
@@ -1281,10 +1277,6 @@ function comment_moderate() {
             $new_score = round($tot_score / count($users));
             db_query("UPDATE {comments} SET score = '$new_score', users = '%s' WHERE cid = %d", serialize($users), $cid);
 
-            /*
-            ** Fire a hook
-            */
-
             module_invoke_all('comment', 'moderate', $cid, $vote);
           }
         }
@@ -1304,8 +1296,8 @@ function comment_save_settings() {
   // this functions perform doubletime: it either saves the
   // user's comment viewing options, or it handles comment
   // moderation. let's figure out which one we're using, eh?
-  if ($_POST['moderation']) {
-    comment_moderate($edit); // include code inline?
+  if ($edit['moderation']) {
+    comment_moderate();
   }
   else if ($user->uid) {
     $user = user_save($user, array('mode' => $mode, 'sort' => $order, 'threshold' => $threshold, 'comments_per_page' => $comments_per_page));
@@ -1515,45 +1507,27 @@ function theme_comment_controls($threshold = 1, $mode = 3, $order = 1, $comments
   return theme('box', t('Comment viewing options'), $output);
 }
 
-function theme_comment_moderation_form($comment) {
+function comment_moderation_form($comment) {
   global $comment_votes, $user, $node;
   static $votes;
 
   $op = $_POST['op'];
 
-  if ($op == 'reply') {
-    // preview comment:
-    $output .= '&nbsp;';
-  }
-  else if ((comment_user_can_moderate($node)) && $user->uid != $comment->uid && !(comment_already_moderated($user->uid, $comment->users))) {
+  if ((comment_user_can_moderate($node)) && $user->uid != $comment->uid && !(comment_already_moderated($user->uid, $comment->users))) {
     // comment hasn't been moderated yet:
-
     if (!isset($votes) && $user->roles) {
       $result = db_query('SELECT v.mid, v.vote, MAX(v.weight) AS weight, MAX(r.value) AS value FROM {moderation_votes} v INNER JOIN {moderation_roles} r ON r.mid = v.mid WHERE r.rid IN (%s) GROUP BY v.mid, v.vote ORDER BY weight', implode(', ', array_keys($user->roles)));
-      $votes = array();
+      $votes = array(0 => t('unmoderated'));
       while ($vote = db_fetch_object($result)) {
         if ($vote->value != 0) {
-          $votes[] = $vote;
+          $votes[$vote->mid] = $vote->vote;
         }
       }
     }
-
-    $options .= ' <option value="">'. t('moderate comments') ."</option>\n";
-    if ($votes) {
-      foreach ($votes as $vote) {
-        $options .= " <option value=\"$vote->mid\">$vote->vote</option>\n";
-      }
+    if (count($votes) > 1) {
+      return form_select(t('Moderation'), 'moderation]['. $comment->cid, 0, $votes);
     }
-
-    if (user_access('administer comments')) {
-      $options .= ' <option value="">'. t('---') ."</option>\n";
-      $options .= ' <option value="offline">'. t('unpublish') ."</option>\n";
-    }
-
-    $output .= "<select name=\"moderation[$comment->cid]\">$options</select>\n";
   }
-
-  return $output;
 }
 
 function theme_comment($comment, $links = 0) {

@@ -490,6 +490,16 @@ tr.watchdog-error {
 tr.watchdog-error .active {
   background: #eeb9b9;
 }
+.comment .links .form-item {
+  display: inline;
+  white-space: nowrap;
+}
+.comment .links .form-item br {
+  display: none;
+}
+#comment-moderation-button {
+  text-align: center;
+}
 
 /* Tab navigation */
 ul.primary {
