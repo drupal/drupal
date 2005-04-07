@@ -198,12 +198,13 @@ define('MENU_ACCESS_DENIED', 3);
 function menu_get_menu() {
   global $_menu;
   global $user;
+  global $locale;
 
   if (!isset($_menu['items'])) {
     // _menu_build() may indirectly call this function, so prevent infinite loops.
     $_menu['items'] = array();
 
-    $cid = 'menu:'. $user->uid;
+    $cid = "menu:$user->uid:$locale";
     if ($cached = cache_get($cid)) {
       $_menu = unserialize($cached->data);
     }
