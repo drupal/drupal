@@ -2282,8 +2282,7 @@ function update_124() {
   $result = db_query("SELECT c.nid, c.timestamp, c.name, c.uid, COUNT(c.nid) as comment_count FROM {node} n LEFT JOIN {comments} c ON c.nid = n.nid WHERE c.status = 0 GROUP BY c.nid, c.timestamp, c.name, c.uid");
   while ($comment_record = db_fetch_object($result)) {
     $count = db_result(db_query('SELECT COUNT(cid) FROM {comments} WHERE nid = %d AND status = 0', $comment_record->nid));
-    $ret[] = update_sql("UPDATE {node_comment_statistics} SET comment_count = $count, last_comment_timestamp = $comment_record->timestamp, last_comment_name = '$comment_record->name', last_comment_uid = $comment_record->uid WHERE nid = $comment_record->nid");
-  }
+    $ret[] = db_query("UPDATE {node_comment_statistics} SET comment_count = %d, last_comment_timestamp = %d, last_comment_name = '%s', last_comment_uid = %d WHERE nid = %d", $count, $comment_record->timestamp, $comment_record->name, $comment_record->uid, $comment_record->nid);
 
   return $ret;
 }
