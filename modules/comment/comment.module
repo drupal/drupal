@@ -942,7 +942,8 @@ function comment_admin_edit($cid) {
     $form .= form_textarea(t('Comment'), 'comment', $comment->comment, 70, 15, '');
     $form .= filter_form('format', $comment->format);
     $form .= form_radios(t('Status'), 'status', $comment->status, array(t('Published'), t('Not published')));
-    $form .= form_hidden('cid', $cid);
+    $form .= form_hidden('nid', $comment->nid);
+    $form .= form_hidden('cid', $comment->cid);
     $form .= form_submit(t('Submit'));
     print theme('page', form($form));
   }
