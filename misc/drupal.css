@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.101 2005/04/07 05:21:30 dries Exp $ */
+/* $Id: drupal.css,v 1.102 2005/04/08 14:59:14 dries Exp $ */
 
 /*
 ** HTML elements
@@ -367,9 +367,10 @@ dl.multiselect .form-item {
 #permissions td.module, #blocks td.region {
   font-weight: bold;
 }
-#permissions td.permission, #blocks td.block {
-  padding-left: 2em;
+#permissions td.permission, #blocks td.block, #taxonomy td.term, #taxonomy td.message {
+  padding-left: 1.5em;
 }
+
 #access-rules .access-type, #access-rules .rule-type {
   margin-right: 1em;
   float: left;
