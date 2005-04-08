@@ -60,17 +60,24 @@ function db_prefix_tables($sql) {
   global $db_prefix;
 
   if (is_array($db_prefix)) {
-    $prefix = $db_prefix['default'];
-    foreach ($db_prefix as $key => $val) {
-      if ($key !== 'default') {
+    if (array_key_exists('default', $db_prefix)) {
+      $tmp = $db_prefix;
+      unset($tmp['default']);
+      foreach ($tmp as $key => $val) {
         $sql = strtr($sql, array('{'. $key. '}' => $val. $key));
       }
+      return strtr($sql, array('{' => $db_prefix['default'], '}' => ''));
+    }
+    else {
+      foreach ($db_prefix as $key => $val) {
+        $sql = strtr($sql, array('{'. $key. '}' => $val. $key));
+      }
+      return strtr($sql, array('{' => '', '}' => ''));
     }
   }
   else {
-    $prefix = $db_prefix;
+    return strtr($sql, array('{' => $db_prefix, '}' => ''));
   }
-  return strtr($sql, array('{' => $prefix, '}' => ''));
 }
 
 /**
