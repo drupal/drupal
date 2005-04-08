@@ -193,6 +193,14 @@ function forum_form_forum($edit = array()) {
 function _forum_parent_select($tid, $title, $name) {
 
   $parents = taxonomy_get_parents($tid);
+  if ($parents) {
+    $parent = array_shift($parents);
+    $parent = $parent->tid;
+  }
+  else {
+    $parent = 0;
+  }
+
   $children = taxonomy_get_tree(_forum_get_vid, $tid);
 
   // A term can't be the child of itself, nor of its children.
@@ -211,11 +219,7 @@ function _forum_parent_select($tid, $title, $name) {
     }
   }
 
-  if (!$parents) {
-    $parents = 0;
-  }
-
-  return form_select($title, $name, $parents, $options, NULL, 0, FALSE, TRUE);
+  return form_select($title, $name, $parent, $options, NULL, 0, FALSE, TRUE);
 }
 
 /**
