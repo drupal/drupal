@@ -104,7 +104,8 @@ $sql_updates = array(
   "2005-02-23" => "update_125",
   "2005-03-03" => "update_126",
   "2005-03-18" => "update_127",
-  "2005-03-21" => "update_128"
+  "2005-03-21" => "update_128",
+  "2005-04-08: first update since Drupal 4.6.0 release" => "update_129"
 );
 
 function update_32() {
@@ -2345,6 +2346,19 @@ function update_128() {
   }
   elseif ($GLOBALS['db_type'] == 'pgsql') {
     $ret[] = update_sql('ALTER TABLE {term_node} ADD PRIMARY KEY (tid,nid)');
+  }
+
+  return $ret;
+}
+
+function update_129() {
+  $ret = array();
+
+  if ($GLOBALS['db_type'] == 'mysql') {
+    $ret[] = update_sql("ALTER TABLE {vocabulary} ADD tags tinyint(3) unsigned default '0' NOT NULL");
+  }
+  elseif ($GLOBALS['db_type'] == 'pgsql') {
+    $ret[] = update_sql("ALTER TABLE {vocabulary} ADD tags smallint default '0' NOT NULL");
   }
 
   return $ret;

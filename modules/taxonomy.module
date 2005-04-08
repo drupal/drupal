@@ -68,11 +68,6 @@ function taxonomy_menu($may_cache) {
       'access' => user_access('administer taxonomy'),
       'type' => MENU_CALLBACK);
 
-    $items[] = array('path' => 'admin/taxonomy/preview/vocabulary', 'title' => t('preview vocabulary'),
-      'callback' => 'taxonomy_admin',
-      'access' => user_access('administer taxonomy'),
-      'type' => MENU_CALLBACK);
-
     $items[] = array('path' => 'admin/taxonomy/add/term', 'title' => t('add term'),
       'callback' => 'taxonomy_admin',
       'access' => user_access('administer taxonomy'),
@@ -88,6 +83,22 @@ function taxonomy_menu($may_cache) {
       'access' => user_access('access content'),
       'type' => MENU_CALLBACK);
   }
+  else {
+    if (is_numeric(arg(2))) {
+      $items[] = array('path' => 'admin/taxonomy/' . arg(2), 'title' => t('add term'),
+        'callback' => 'taxonomy_admin',
+        'access' => user_access('administer taxonomy'),
+        'type' => MENU_CALLBACK);
+
+      $items[] = array('path' => 'admin/taxonomy/' . arg(2) . '/list', 'title' => t('list'),
+        'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
+
+      $items[] = array('path' => 'admin/taxonomy/' . arg(2) . '/add/term', 'title' => t('add term'),
+        'callback' => 'taxonomy_admin',
+        'access' => user_access('administer taxonomy'),
+        'type' => MENU_LOCAL_TASK);
+    }
+  }
 
   return $items;
 }
@@ -102,9 +113,10 @@ function taxonomy_form_vocabulary($edit = array()) {
   $form .= form_textarea(t('Description'), 'description', $edit['description'], 60, 5, t('Description of the vocabulary; can be used by modules.'));
   $form .= form_textfield(t('Help text'), 'help', $edit['help'], 50, 255, t('Instructions to present to the user when choosing a term.'));
   $form .= form_checkboxes(t('Types'), 'nodes', $edit['nodes'], $nodes, t('A list of node types you want to associate with this vocabulary.'), NULL, TRUE);
-  $form .= form_checkbox(t('Related terms'), 'relations', 1, $edit['relations'], t('Allows <a href="%help-url">related terms</a> in this vocabulary.', array('%help-url' => url('admin/help/taxonomy', NULL, NULL, 'related-terms'))));
   $form .= form_radios(t('Hierarchy'), 'hierarchy', $edit['hierarchy'], array(t('Disabled'), t('Single'), t('Multiple')), t('Allows <a href="%help-url">a tree-like hierarchy</a> between terms of this vocabulary.', array('%help-url' => url('admin/help/taxonomy', NULL, NULL, 'hierarchy'))));
-  $form .= form_checkbox(t('Multiple select'), 'multiple', 1, $edit['multiple'], t('Allows nodes to have more than one term in this vocabulary.'));
+  $form .= form_checkbox(t('Related terms'), 'relations', 1, $edit['relations'], t('Allows <a href="%help-url">related terms</a> in this vocabulary.', array('%help-url' => url('admin/help/taxonomy', NULL, NULL, 'related-terms'))));
+  $form .= form_checkbox(t('Free tagging'), 'tags', 1, $edit['tags'], t('Content is categorized by typing terms instead of choosing from a list.'));
+  $form .= form_checkbox(t('Multiple select'), 'multiple', 1, $edit['multiple'], t('Allows nodes to have more than one term from this vocabulary (always true for free tagging).'));
   $form .= form_checkbox(t('Required'), 'required', 1, $edit['required'], t('If enabled, every node <strong>must</strong> have at least one term in this vocabulary.'));
   $form .= form_weight(t('Weight'), 'weight', $edit['weight'], 10, t('In listings, the heavier vocabularies will sink and the lighter vocabularies will be positioned nearer the top.'));
   $form .= form_submit(t('Submit'));
@@ -122,7 +134,7 @@ function taxonomy_save_vocabulary($edit) {
     $edit['nodes'] = array();
   }
 
-  $data = array('name' => $edit['name'], 'description' => $edit['description'], 'help' => $edit['help'], 'multiple' => $edit['multiple'], 'required' => $edit['required'], 'hierarchy' => $edit['hierarchy'], 'relations' => $edit['relations'], 'weight' => $edit['weight'],  'module' => isset($edit['module']) ? $edit['module'] : 'taxonomy');
+  $data = array('name' => $edit['name'], 'description' => $edit['description'], 'help' => $edit['help'], 'multiple' => $edit['multiple'], 'required' => $edit['required'], 'hierarchy' => $edit['hierarchy'], 'relations' => $edit['relations'], 'tags' => $edit['tags'], 'weight' => $edit['weight'],  'module' => isset($edit['module']) ? $edit['module'] : 'taxonomy');
   if ($edit['vid'] && $edit['name']) {
     db_query('UPDATE {vocabulary} SET '. _taxonomy_prepare_update($data) .' WHERE vid = %d', $edit['vid']);
     db_query("DELETE FROM {vocabulary_node_types} WHERE vid = %d", $edit['vid']);
@@ -345,36 +357,77 @@ function _taxonomy_confirm_del_term($tid) {
  * Generate a tabular listing of administrative functions for vocabularies.
  */
 function taxonomy_overview() {
-  $header = array(t('Name'), t('Type'), array('data' => t('Operations'), 'colspan' => '3'));
 
-  $vocabularies = taxonomy_get_vocabularies();
+  $vid = arg(2);
 
-  foreach ($vocabularies as $vocabulary) {
-    if ($vocabulary->module == 'taxonomy') { // only show vocabularies that can be configured through the vocabulary module
-      $types = array();
-      foreach($vocabulary->nodes as $type) {
-        $node_type = node_invoke($type, 'node_name');
-        $types[] = $node_type ? $node_type : $type;
+  // Show all vocabularies and their terms. if vocabulary is "Free tagging",
+  // don't show terms here, but instruct user to "view terms" instead.
+  if (!$vid) {
+    $header = array(t('Name'), t('Type'), array('data' => t('Operations'), 'colspan' => '3'));
+    $vocabularies = taxonomy_get_vocabularies();
+    foreach ($vocabularies as $vocabulary) {
+      if ($vocabulary->module == 'taxonomy') {
+        $types = array();
+        foreach ($vocabulary->nodes as $type) {
+          $node_type = node_invoke($type, 'node_name');
+          $types[] = $node_type ? $node_type : $type;
+        }
+        $rows[] = array('<strong>'.check_plain($vocabulary->name).'</strong>', implode(', ', $types), l(t('edit vocabulary'), "admin/taxonomy/edit/vocabulary/$vocabulary->vid"), l(t('add term'), "admin/taxonomy/add/term/$vocabulary->vid"), l(t('view terms'), "admin/taxonomy/$vocabulary->vid"));
+
+        // Show terms if non-free.
+        if (!$vocabulary->tags) {
+          $tree = taxonomy_get_tree($vocabulary->vid);
+          if ($tree) {
+            foreach ($tree as $term) {
+              $rows[] = array(array('data' => _taxonomy_depth($term->depth) . ' ' . check_plain($term->name), 'class' => 'term'), NULL, NULL, NULL, l(t('edit term'), "admin/taxonomy/edit/term/$term->tid"));
+            }
+          }
+          else {
+            $rows[] = array(array('data' => t('No terms available.'), 'colspan' => '5', 'class' => 'message'));
+          }
+        }
+        elseif ($vocabulary->tags) {
+          $rows[] = array(array('data' => t('This is a free tagging vocabulary:') . ' ' . l(t('view terms'), "admin/taxonomy/$vocabulary->vid") . '.', 'colspan' => '5', 'class' => 'message'));
+        }
       }
+    }
 
-      $rows[] = array(check_plain($vocabulary->name), implode(', ', $types), l(t('edit vocabulary'), "admin/taxonomy/edit/vocabulary/$vocabulary->vid"), l(t('add term'), "admin/taxonomy/add/term/$vocabulary->vid"), l(t('preview form'), "admin/taxonomy/preview/vocabulary/$vocabulary->vid"));
-
-      $tree = taxonomy_get_tree($vocabulary->vid);
-      if ($tree) {
-        unset($data);
-      foreach ($tree as $term) {
-        $data .= _taxonomy_depth($term->depth) .' '. check_plain($term->name) .' ('. l(t('edit term'), "admin/taxonomy/edit/term/$term->tid") .')<br />';
-      }
-      $rows[] = array(array('data' => $data, 'colspan' => '5'));
-      }
+    if (!$rows) {
+      $rows[] = array(array('data' => t('No categories available.'), 'colspan' => '5', 'class' => 'message'));
     }
   }
 
-  if (!$rows) {
-    $rows[] = array(array('data' => t('No categories available.'), 'colspan' => '5'));
+  // Free tagging vocabularies get their own terms pager
+  // since there is a greater chance of 1000+ terms.
+  else {
+    $header = array(t('Name'), array('data' => t('Operations'), 'width' => '60'));
+    $vocabulary = taxonomy_get_vocabulary($vid);
+    if ($vocabulary->module == 'taxonomy') {
+      drupal_set_title(check_plain($vocabulary->name));
+      $start_from      = $_GET['from'] ? $_GET['from'] : 0;
+      $total_entries   = 0;  // total count for pager
+      $page_increment  = 25; // number of tids per page
+      $displayed_count = 0;  // number of tids shown
+
+      $tree = taxonomy_get_tree($vocabulary->vid);
+      foreach ($tree as $term) {
+        $total_entries++; // we're counting all-totals, not displayed
+        if (($start_from && $start_from > $total_entries) || ($displayed_count == $page_increment)) { continue; }
+        $rows[] = array(_taxonomy_depth($term->depth) . ' ' . check_plain($term->name), l(t('edit term'), "admin/taxonomy/edit/term/$term->tid"));
+        $displayed_count++; // we're counting tids displayed
+      }
+
+      if (!$rows) {
+        $rows[] = array(array('data' => t('No terms available.'), 'colspan' => '2'));
+      }
+
+      $GLOBALS['pager_from_array'][] = $start_from;
+      $GLOBALS['pager_total'][]      = $total_entries;
+      $rows[] = array(array('data' => theme('pager', NULL, $page_increment), 'colspan' => '2'));
+    }
   }
 
-  return theme('table', $header, $rows);
+  return theme('table', $header, $rows, array('id' => 'taxonomy'));
 }
 
 /**
@@ -397,10 +450,11 @@ function taxonomy_form($vid, $value = 0, $help = NULL, $name = 'taxonomy') {
  * Generate a set of options for selecting a term from all vocabularies. Can be
  * passed to form_select.
  */
-function taxonomy_form_all($value = 0, $help = NULL, $name = 'taxonomy') {
+function taxonomy_form_all($free_tags = 0) {
   $vocabularies = taxonomy_get_vocabularies();
   $options = array();
   foreach ($vocabularies as $vid => $vocabulary) {
+    if ($vocabulary->tags && !$free_tags) { continue; }
     $tree = taxonomy_get_tree($vid);
     $options[$vocabulary->name] = array();
     if ($tree) {
@@ -442,12 +496,12 @@ function taxonomy_get_vocabularies($type = NULL) {
  * Generate a form for selecting terms to associate with a node.
  */
 function taxonomy_node_form($type, $node = '', $help = NULL, $name = 'taxonomy') {
-  if (!$node->taxonomy) {
+  if (!array_key_exists('taxonomy', $node)) {
     if ($node->nid) {
-      $terms = array_keys(taxonomy_node_get_terms($node->nid));
+      $terms = taxonomy_node_get_terms($node->nid);
     }
     else {
-      $terms = 0;
+      $terms = array();
     }
   }
   else {
@@ -456,7 +510,26 @@ function taxonomy_node_form($type, $node = '', $help = NULL, $name = 'taxonomy')
 
   $c = db_query("SELECT v.*, n.type FROM {vocabulary} v INNER JOIN {vocabulary_node_types} n ON v.vid = n.vid WHERE n.type = '%s' ORDER BY v.weight, v.name", $type);
   while ($vocabulary = db_fetch_object($c)) {
-    $result[] = taxonomy_form($vocabulary->vid, $terms, $help, $name);
+    if ($vocabulary->tags) {
+      $typed_terms = array();
+      foreach ($terms as $term) {
+        if ($term->vid == $vocabulary->vid) {
+
+          // Commas and quotes in terms are special cases, so encode 'em.
+          if (preg_match('/,/', $term->name) || preg_match('/"/', $term->name)) {
+            $term->name = '"'.preg_replace('/"/', '""', $term->name).'"';
+          }
+
+          $typed_terms[] = $term->name;
+        }
+      }
+      $typed_string = implode(', ', $typed_terms) . (array_key_exists('tags', $terms) ? $terms['tags'][$vocabulary->vid] : NULL);
+      $result[] = form_textfield($vocabulary->name, 'taxonomy][tags]['. $vocabulary->vid, $typed_string, 50, 100, t('A comma-separated list of terms describing this content (Example: funny, bungie jumping, "Company, Inc.").'), NULL, ($vocabulary->required ? TRUE : FALSE));
+    }
+    else {
+      $ntterms = array_key_exists('taxonomy', $node) ? $terms : array_keys($terms);
+      $result[] = taxonomy_form($vocabulary->vid, $ntterms, $help, $name);
+    }
   }
   return $result ? $result : array();
 }
@@ -490,10 +563,67 @@ function taxonomy_node_get_terms($nid, $key = 'tid') {
 }
 
 /**
+ * Make sure incoming vids are free tagging enabled.
+ */
+function taxonomy_node_validate(&$node) {
+  if ($node->taxonomy) {
+    $terms = $node->taxonomy;
+    if ($terms['tags']) {
+      foreach ($terms['tags'] as $vid => $vid_value) {
+        $vocabulary = taxonomy_get_vocabulary($vid);
+        if (!$vocabulary->tags) {
+          form_set_error("taxonomy[tags][$vid", t('The %name vocabulary can not be modified in this way.', array('%name' => theme('placeholder', $vocabulary->name))));
+        }
+      }
+    }
+  }
+}
+
+/**
  * Save term associations for a given node.
  */
 function taxonomy_node_save($nid, $terms) {
-  taxonomy_node_delete($nid);
+
+  // Free tagging vocabularies do not send their tids in the form,
+  // so we'll detect them here and process them independently.
+  if ($terms['tags']) {
+    $typed_input = $terms['tags'];
+    unset($terms['tags']);
+
+    foreach ($typed_input as $vid => $vid_value) {
+      // This regexp allows the following types of user input:
+      // this, "somecmpany, llc", "and ""this"" w,o.rks", foo bar
+      $regexp = '%(?:^|,\ *)("(?>[^"]*)(?>""[^"]* )*"|(?: [^",]*))%x';
+      preg_match_all($regexp, $vid_value, $matches);
+      $typed_terms = $matches[1];
+
+      foreach ($typed_terms as $typed_term) {
+        // If a user has escaped a term (to demonstrate that it is a group,
+        // or includes a comma or quote character), we remove the escape
+        // formatting so to save the term into the DB as the user intends.
+        $typed_term = str_replace('""', '"', preg_replace('/^"(.*)"$/', '\1', $typed_term));
+        $typed_term = trim($typed_term);
+        if ($typed_term == "") { continue; }
+
+        // See if the term exists in the chosen vocabulary
+        // and return the tid, otherwise, add a new record.
+        $possibilities = taxonomy_get_term_by_name($typed_term);
+        $typed_term_tid = NULL; // tid match if any.
+        foreach ($possibilities as $possibility) {
+          if ($possibility->vid == $vid) {
+            $typed_term_tid = $possibility->tid;
+          }
+        }
+
+        if (!$typed_term_tid) {
+          $new_term = taxonomy_save_term(array('vid' => $vid, 'name' => $typed_term));
+          $typed_term_tid = $new_term['tid'];
+        }
+
+        db_query('INSERT INTO {term_node} (nid, tid) VALUES (%d, %d)', $nid, $typed_term_tid);
+      }
+    }
+  }
 
   if (is_array($terms)) {
     foreach ($terms as $term) {
@@ -896,6 +1026,9 @@ function taxonomy_nodeapi($node, $op, $arg = 0) {
     case 'delete':
       taxonomy_node_delete($node->nid);
       break;
+    case 'validate':
+      taxonomy_node_validate($node);
+      break;
     case 'rss item':
       return taxonomy_rss_item($node);
       break;
@@ -982,6 +1115,20 @@ function taxonomy_admin() {
     $op = arg(2);
   }
 
+  // Special block for our "add term" menu localtask. this covers
+  // the use of the "add term" LOCAL_TASK on a "view terms" page.
+  if (is_numeric(arg(2)) && arg(3) == 'add' && arg(4) == 'term') {
+    if ($op != t('Submit')) {
+      $output = taxonomy_form_term(array('vid' => arg(2)));
+      print theme('page', $output);
+      return;
+    }
+    else {
+      taxonomy_save_term($edit);
+      drupal_goto('admin/taxonomy');
+    }
+  }
+
   switch ($op) {
     case 'add':
       if (arg(3) == 'vocabulary') {
@@ -998,9 +1145,6 @@ function taxonomy_admin() {
       else if (arg(3) == 'term') {
         $output = taxonomy_form_term(object2array(taxonomy_get_term(arg(4))));
       }
-      break;
-    case 'preview':
-      $output = taxonomy_form(arg(4));
       break;
     case t('Delete'):
       if (!$edit['confirm']) {
@@ -1053,7 +1197,7 @@ function taxonomy_help($section) {
     case 'admin/modules#description':
       return t('Enables the categorization of content.');
     case 'admin/taxonomy':
-      return t('<p>The taxonomy module allows you to classify content into categories and subcategories; it allows multiple lists of categories for classification (controlled vocabularies) and offers the possibility of creating thesauri (controlled vocabularies that indicate the relationship of terms) and taxonomies (controlled vocabularies where relationships are indicated hierarchically). To delete a term choose "edit term". To delete a vocabulary, and all its terms, choose "edit vocabulary".</p>');
+      return t('<p>The taxonomy module allows you to classify content into categories and subcategories; it allows multiple lists of categories for classification (controlled vocabularies) and offers the possibility of creating thesauri (controlled vocabularies that indicate the relationship of terms), taxonomies (controlled vocabularies where relationships are indicated hierarchically), and free vocabularies where terms, or tags, are defined during content creation. To delete a term, choose "edit term". To delete a vocabulary and all its terms, choose "edit vocabulary".</p>');
     case 'admin/taxonomy/add/vocabulary':
       return t("<p>When you create a controlled vocabulary you are creating a set of terms to use for describing content (known as descriptors in indexing lingo).  Drupal allows you to describe each piece of content (blog, story, etc.) using one or many of these terms. For simple implementations, you might create a set of categories without subcategories, similar to Slashdot.org's or Kuro5hin.org's sections. For more complex implementations, you might create a hierarchical list of categories.</p>");
     case 'admin/help#taxonomy':
@@ -1071,8 +1215,9 @@ function taxonomy_help($section) {
       <li><strong>Vocabulary name</strong>: The name for this vocabulary. Example: <em>Dairy</em>.</li>
       <li><strong>Description</strong>: Description of the vocabulary. This can be used by modules and feeds.</li>
       <li><strong>Types</strong>: The list of content types you want to associate this vocabulary with. Some available types are blog, book, forum, page, and story.</li>
-      <li><a id="related-terms"></a><strong>Related terms</strong>: Allows relationships between terms within this vocabulary. Think of these as <em>see also</em> references.</li>
       <li><a id="hierarchy"></a><strong>Hierarchy</strong>: Allows a tree-like vocabulary, as in our <em>Foods</em> example above.</li>
+      <li><a id="related-terms"></a><strong>Related terms</strong>: Allows relationships between terms within this vocabulary. Think of these as <em>see also</em> references.</li>
+      <li><strong>Free tagging</strong>: Content is categorized at time of creation by typing comma-separated terms instead of choosing from a pre-defined list. This is helpful if you\'d like to define and expand the vocabulary during content creation, as opposed to deciding all terms beforehand and then choosing from a controlled list. Administrators may also edit and modify the vocabulary through the normal administrative screens.</li>
       <li><strong>Multiple select</strong>: Allows pieces of content to be described using more than one term. Content may then appear on multiple taxonomy pages.</li>
       <li><strong>Required</strong>: If selected, each piece of content must have a term in this vocabulary associated with it.</li>
       <li><strong>Weight</strong>: The overall weight for this vocabulary in listings with multiple vocabularies.</li>

@@ -739,6 +739,7 @@ CREATE TABLE vocabulary (
   hierarchy tinyint(3) unsigned NOT NULL default '0',
   multiple tinyint(3) unsigned NOT NULL default '0',
   required tinyint(3) unsigned NOT NULL default '0',
+  tags tinyint(3) unsigned NOT NULL default '0',
   module varchar(255) NOT NULL default '',
   weight tinyint(4) NOT NULL default '0',
   PRIMARY KEY (vid)
