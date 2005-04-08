@@ -24,7 +24,7 @@ function db_connect($url) {
   $url = parse_url($url);
 
   $conn_string = ' user='. $url['user'] .' dbname='. substr($url['path'], 1) .' password='. $url['pass'] . ' host=' . $url['host'];
-  $conn_string .= ($url['port']) ? ' port=' . $url['port'] : '';
+  $conn_string .= isset($url['port']) ? ' port=' . $url['port'] : '';
   $connection = pg_connect($conn_string) or die(pg_last_error());
 
   return $connection;
