@@ -1,6 +1,11 @@
 Drupal x.x.x, xxxx-xx-xx
 ------------------------
 
+- added free tagging support (folksonomies).
+
+Drupal x.x.x, xxxx-xx-xx
+------------------------
+
 - PHP5 compliance
 - search:
     * added UTF-8 support to make it work with all languages.
