@@ -981,7 +981,7 @@ function form($form, $method = 'post', $action = NULL, $attributes = NULL) {
   if (!$action) {
     $action = request_uri();
   }
-  return '<form action="'. $action .'" method="'. $method .'"'. drupal_attributes($attributes) .">\n". $form ."\n</form>\n";
+  return '<form action="'. check_url($action) .'" method="'. $method .'"'. drupal_attributes($attributes) .">\n". $form ."\n</form>\n";
 }
 
 /**
