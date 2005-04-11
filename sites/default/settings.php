@@ -1,5 +1,5 @@
 <?php
-// $Id: settings.php,v 1.14 2005/04/11 19:05:52 dries Exp $
+// $Id: settings.php,v 1.15 2005/04/11 20:38:57 dries Exp $
 
 /**
  * @file
@@ -88,7 +88,6 @@ $db_prefix = '';
  * a trailing slash; Drupal will add it for you.
  */
 $base_url = 'http://localhost';
-$base_url = 'http://169.254.115.224/~dries/drupal-cvs';
 
 /**
  * PHP settings:
