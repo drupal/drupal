@@ -35,7 +35,7 @@ function profile_menu($may_cache) {
   if ($may_cache) {
     $items[] = array('path' => 'profile', 'title' => t('user list'),
       'callback' => 'profile_browse',
-      'access' => TRUE,
+      'access' => user_access('access user profiles'),
       'type' => MENU_SUGGESTED_ITEM);
     $items[] = array('path' => 'admin/settings/profile', 'title' => t('profiles'),
       'callback' => 'profile_admin_overview',

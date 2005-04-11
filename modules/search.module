@@ -108,8 +108,8 @@ function search_menu($may_cache) {
     $keys = search_get_keys();
     $keys = strlen($keys) ? '/'. $keys : '';
     foreach (module_list() as $name) {
-      if (module_hook($name, 'search')) {
-        $items[] = array('path' => 'search/'. $name . $keys, 'title' => module_invoke($name, 'search', 'name'),
+      if (module_hook($name, 'search') && $title = module_invoke($name, 'search', 'name')) {
+        $items[] = array('path' => 'search/'. $name . $keys, 'title' => $title,
           'callback' => 'search_view',
           'access' => user_access('search content'),
           'type' => MENU_LOCAL_TASK);
