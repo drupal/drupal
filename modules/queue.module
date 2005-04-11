@@ -164,7 +164,7 @@ function queue_view($nid) {
   $edit = $_POST['edit'];
 
   // An associative array with the possible voting options.
-  $votes = array('+ 0' => t('neutral (+0)'), '+ 1' => t('post it (+1)'), '- 1' => t('dump it (-1)'));
+  $votes = array('0' => t('neutral (+0)'), '1' => t('post it (+1)'), '-1' => t('dump it (-1)'));
 
   // Load the node from the database.
   $node = node_load(array('nid' => $nid, 'moderate' => 1));
