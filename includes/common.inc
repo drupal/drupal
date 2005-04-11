@@ -927,7 +927,12 @@ function format_name($object) {
       $name = $object->name;
     }
 
-    $output = l($name, 'user/'. $object->uid, array('title' => t('View user profile.')));
+    if (user_access('access user profiles')) {
+      $output = l($name, 'user/'. $object->uid, array('title' => t('View user profile.')));
+    }
+    else {
+      $output = $name;
+    }
   }
   else if ($object->name) {
     // Sometimes modules display content composed by people who are
