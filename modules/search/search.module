@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.123 2005/03/31 21:18:08 dries Exp $
+// $Id: search.module,v 1.124 2005/04/11 22:48:27 unconed Exp $
 
 /**
  * @file
@@ -108,8 +108,8 @@ function search_menu($may_cache) {
     $keys = search_get_keys();
     $keys = strlen($keys) ? '/'. $keys : '';
     foreach (module_list() as $name) {
-      if (module_hook($name, 'search')) {
-        $items[] = array('path' => 'search/'. $name . $keys, 'title' => module_invoke($name, 'search', 'name'),
+      if (module_hook($name, 'search') && $title = module_invoke($name, 'search', 'name')) {
+        $items[] = array('path' => 'search/'. $name . $keys, 'title' => $title,
           'callback' => 'search_view',
           'access' => user_access('search content'),
           'type' => MENU_LOCAL_TASK);

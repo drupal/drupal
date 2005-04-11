@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.436 2005/04/10 10:22:40 unconed Exp $ */
+/* $Id: common.inc,v 1.437 2005/04/11 22:48:27 unconed Exp $ */
 
 /**
  * @file
@@ -927,7 +927,12 @@ function format_name($object) {
       $name = $object->name;
     }
 
-    $output = l($name, 'user/'. $object->uid, array('title' => t('View user profile.')));
+    if (user_access('access user profiles')) {
+      $output = l($name, 'user/'. $object->uid, array('title' => t('View user profile.')));
+    }
+    else {
+      $output = $name;
+    }
   }
   else if ($object->name) {
     // Sometimes modules display content composed by people who are
