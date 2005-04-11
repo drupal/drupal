@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.6 2005/03/31 09:25:33 unconed Exp $
+// $Id: contact.module,v 1.7 2005/04/11 11:06:01 unconed Exp $
 
 /**
  * @file
@@ -88,7 +88,7 @@ function contact_mail_user() {
 
           // Tidy up the body:
           foreach ($message as $key => $value) {
-            $message[$key] = wordwrap(check_plain($value));
+            $message[$key] = wordwrap($value);
           }
 
           // Prepare all fields:
