@@ -14,13 +14,13 @@ function forum_help($section) {
     case 'admin/forum':
       return t('<p>This is a list of existing containers and forums that you can edit. Containers hold forums and, in turn, forums hold threaded discussions. Both containers and forums can be placed inside other containers and forums. By planning the structure of your containers and forums well, you make it easier for users to find a topic area of interest to them.</p>');
     case 'admin/forum/add/container':
-      return t('<p>Containers help you organize your forums. The job of a container is to hold, or contain, other forums that are related. For example, a container named "Food" might hold two forums named "Fruit" and "Vegetables". Containers are usually placed at the top (root) level of your forum but you can also place a container within another container or forum.</p>');
+      return t('<p>Containers help you organize your forums. The job of a container is to hold, or contain, other forums that are related. For example, a container named "Food" might hold two forums named "Fruit" and "Vegetables".</p>');
     case 'admin/forum/add/forum':
-      return t('<p>A forum holds threaded topic discussions that are related. For example, a forum named "Fruit" might contain topic discussions titled "Apples" and "Bananas". You can place a forum into a container, another forum, or at the top (root) level of your forum.</p>');
+      return t('<p>A forum holds discussion topics that are related. For example, a forum named "Fruit" might contain topics titled "Apples" and "Bananas".</p>');
     case 'admin/modules#description':
       return t('Enables threaded discussions about general topics.');
     case 'node/add#forum':
-      return t('A forum is a threaded discussion, enabling users to communicate about a particular topic.');
+      return t('Create a new topic for discussion in the forums.');
   }
 }
 
@@ -145,11 +145,11 @@ function _forum_confirm_delete($tid) {
  * @param $edit Associative array containing a container term to be added or edited.
  */
 function forum_form_container($edit = array()) {
-  $form = form_textfield(t('Container name'), 'name', $edit['name'], 50, 64, t('The container name is used on the forum listing page to identify a group of forums.'), NULL, TRUE);
-  $form .= form_textarea(t('Description'), 'description', $edit['description'], 60, 5, t('The description can provide additional information about the forum grouping.'));
+  $form = form_textfield(t('Container name'), 'name', $edit['name'], 50, 64, t('The container name is used to identify related forums.'), NULL, TRUE);
+  $form .= form_textarea(t('Description'), 'description', $edit['description'], 60, 5, t('The container description can give users more information about the forums it contains.'));
 
-  $form .= _forum_parent_select($edit['tid'], t('Parent'), 'parent][');
-  $form .= form_weight(t('Weight'), 'weight', $edit['weight'], 10, t('In listings, the heavier terms (with a larger weight) will sink and the lighter terms will be positioned nearer the top.'));
+  $form .= _forum_parent_select($edit['tid'], t('Parent'), 'parent][', 'container');
+  $form .= form_weight(t('Weight'), 'weight', $edit['weight'], 10, t('When listing containers, those with with light (small) weights get listed before containers with heavier (larger) weights. Containers with equal weights are sorted alphabetically.'));
 
   $form .= form_hidden('vid', _forum_get_vid());
   $form .= form_submit(t('Submit'));
@@ -167,11 +167,11 @@ function forum_form_container($edit = array()) {
  * @param $edit Associative array containing a forum term to be added or edited.
  */
 function forum_form_forum($edit = array()) {
-  $form = form_textfield(t('Forum name'), 'name', $edit['name'], 50, 64, t('The name is used to identify the forum.'), NULL, TRUE);
-  $form .= form_textarea(t('Description'), 'description', $edit['description'], 60, 5, t('The description can be used to provide more information about the forum, or further details about the topic.'));
+  $form = form_textfield(t('Forum name'), 'name', $edit['name'], 50, 64, t('The forum name is used to identify related topic discussions.'), NULL, TRUE);
+  $form .= form_textarea(t('Description'), 'description', $edit['description'], 60, 5, t('The forum description can give users more information about the discussion topics it contains.'));
 
-  $form .= _forum_parent_select($edit['tid'], t('Parent'), 'parent][');
-  $form .= form_weight(t('Weight'), 'weight', $edit['weight'], 10, t('In listings, the heavier (with a higher weight value) terms will sink and the lighter terms will be positioned nearer the top.'));
+  $form .= _forum_parent_select($edit['tid'], t('Parent'), 'parent][', 'forum');
+  $form .= form_weight(t('Weight'), 'weight', $edit['weight'], 10, t('When listing forums, those with light (small) weights get listed before forums with heavier (larger) weights. Forums with equal weights are sorted alphabetically.'));
 
   $form .= form_hidden('vid', _forum_get_vid());
   $form .= form_submit(t('Submit'));
@@ -190,7 +190,7 @@ function forum_form_forum($edit = array()) {
  * @param $title Title to display the select box with
  * @param $name Name to use in the forum
  */
-function _forum_parent_select($tid, $title, $name) {
+function _forum_parent_select($tid, $title, $name, $child_type) {
 
   $parents = taxonomy_get_parents($tid);
   if ($parents) {
@@ -218,8 +218,14 @@ function _forum_parent_select($tid, $title, $name) {
       }
     }
   }
+  if ($child_type == 'container') {
+    $description = t('Containers are usually placed at the top (root) level of your forum but you can also place a container inside a parent container or forum.');
+  }
+  else if ($child_type == 'forum') {
+    $description = t('You may place your forum inside a parent container or forum, or at the top (root) level of your forum.');
+  }
 
-  return form_select($title, $name, $parent, $options, NULL, 0, FALSE, TRUE);
+  return form_select($title, $name, $parent, $options, $description, 0, FALSE, TRUE);
 }
 
 /**
@@ -241,7 +247,7 @@ function forum_overview() {
     }
   }
   else {
-    $rows[] = array(array('data' => '<em>' . t('There are no existing containers or forums. You may add some on the <a href="%container">add container</a> or <a href="%forum">add forum</a> pages.', array('%container' => url('admin/forum/add/container'), '%forum' => url('admin/forum/add/forum'))) . '</em>', 'colspan' => 2));
+    $rows[] = array(array('data' => t('There are no containers or forums.'), 'colspan' => 2));
   }
   return theme('table', $header, $rows);
 }
