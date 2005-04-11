@@ -1,5 +1,5 @@
 <?php
-// $Id: session.inc,v 1.14 2005/03/01 20:15:10 dries Exp $
+// $Id: session.inc,v 1.15 2005/04/11 19:05:52 dries Exp $
 
 /**
  * @file
@@ -45,7 +45,7 @@ function sess_read($key) {
 function sess_write($key, $value) {
   global $user;
 
-  db_query("UPDATE {sessions} SET uid = %d, hostname = '%s', session = '%s', timestamp = %d WHERE sid = '%s'", $user->uid, $_SERVER["REMOTE_ADDR"], $value, time(), $key);
+  db_query("UPDATE {sessions} SET uid = %d, cache = %d, hostname = '%s', session = '%s', timestamp = %d WHERE sid = '%s'", $user->uid, $user->cache, $_SERVER["REMOTE_ADDR"], $value, time(), $key);
 
   return '';
 }
