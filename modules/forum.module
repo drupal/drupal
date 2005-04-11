@@ -19,6 +19,8 @@ function forum_help($section) {
       return t('<p>A forum holds discussion topics that are related. For example, a forum named "Fruit" might contain topics titled "Apples" and "Bananas".</p>');
     case 'admin/modules#description':
       return t('Enables threaded discussions about general topics.');
+    case 'admin/forum/configure':
+      return t('This is where you can configure system-wide options for how your forums act and display.');
     case 'node/add#forum':
       return t('Create a new topic for discussion in the forums.');
   }
