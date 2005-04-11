@@ -88,7 +88,6 @@ $db_prefix = '';
  * a trailing slash; Drupal will add it for you.
  */
 $base_url = 'http://localhost';
-$base_url = 'http://169.254.115.224/~dries/drupal-cvs';
 
 /**
  * PHP settings:
