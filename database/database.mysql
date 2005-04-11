@@ -574,6 +574,7 @@ CREATE TABLE sessions (
   sid varchar(32) NOT NULL default '',
   hostname varchar(128) NOT NULL default '',
   timestamp int(11) NOT NULL default '0',
+  cache int(11) NOT NULL default '0',
   session longtext,
   KEY uid (uid),
   PRIMARY KEY (sid),

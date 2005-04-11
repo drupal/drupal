@@ -2,6 +2,8 @@ Drupal x.x.x, xxxx-xx-xx
 ------------------------
 
 - added free tagging support (folksonomies).
+- performance:
+    * added 'loose caching' option for high-traffic sites.
 
 Drupal x.x.x, xxxx-xx-xx
 ------------------------

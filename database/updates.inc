@@ -105,7 +105,8 @@ $sql_updates = array(
   "2005-03-03" => "update_126",
   "2005-03-18" => "update_127",
   "2005-03-21" => "update_128",
-  "2005-04-08: first update since Drupal 4.6.0 release" => "update_129"
+  "2005-04-08: first update since Drupal 4.6.0 release" => "update_129",
+  "2005-04-10" => "update_130"
 );
 
 function update_32() {
@@ -2361,6 +2362,17 @@ function update_129() {
     $ret[] = update_sql("ALTER TABLE {vocabulary} ADD tags smallint default '0' NOT NULL");
   }
 
+  return $ret;
+}
+
+function update_130() {
+  $ret = array();
+  if ($GLOBALS['db_type'] == 'mysql') {
+    $ret[] = update_sql("ALTER TABLE sessions ADD cache int(11) NOT NULL default '0' AFTER timestamp");
+  }
+  elseif ($GLOBALS['db_type'] == 'pgsql') {
+    $ret[] = update_sql("ALTER TABLE sessions ADD cache int(11) NOT NULL default '0' AFTER timestamp");
+  }
   return $ret;
 }
 
