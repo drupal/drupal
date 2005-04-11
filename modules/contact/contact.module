@@ -88,7 +88,7 @@ function contact_mail_user() {
 
           // Tidy up the body:
           foreach ($message as $key => $value) {
-            $message[$key] = wordwrap(check_plain($value));
+            $message[$key] = wordwrap($value);
           }
 
           // Prepare all fields:
