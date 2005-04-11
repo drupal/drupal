@@ -89,6 +89,7 @@ function user_load($array = array()) {
  *
  * @param $array
  *   An array of fields and values to save. For example array('name' => 'My name');
+ *   Setting a field to null deletes it from the data column.
  *
  * @param $category
  *   (optional) The category for storing profile information in.
@@ -114,7 +115,6 @@ function user_save($account, $array = array(), $category = 'account') {
         else if ($key != 'roles') {
           // Roles is a special case: it used below.
           if ($value === null) {
-            // Setting a field to null deletes it from the data column.
             unset($data[$key]);
           }
           else {
