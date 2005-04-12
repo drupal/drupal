@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.193 2005/04/08 14:59:14 dries Exp $
+// $Id: taxonomy.module,v 1.194 2005/04/12 05:09:13 dries Exp $
 
 /**
  * @file
@@ -583,6 +583,7 @@ function taxonomy_node_validate(&$node) {
  * Save term associations for a given node.
  */
 function taxonomy_node_save($nid, $terms) {
+  taxonomy_node_delete($nid);
 
   // Free tagging vocabularies do not send their tids in the form,
   // so we'll detect them here and process them independently.
