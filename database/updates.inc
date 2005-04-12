@@ -106,7 +106,8 @@ $sql_updates = array(
   "2005-03-18" => "update_127",
   "2005-03-21" => "update_128",
   "2005-04-08: first update since Drupal 4.6.0 release" => "update_129",
-  "2005-04-10" => "update_130"
+  "2005-04-10" => "update_130",
+  "2005-04-11" => "update_131"
 );
 
 function update_32() {
@@ -2376,4 +2377,18 @@ function update_130() {
   return $ret;
 }
 
+function update_131() {
+  $ret = array();
+
+  if ($GLOBALS['db_type'] == 'mysql') {
+    $ret[] = update_sql("ALTER TABLE {boxes} DROP INDEX title");
+    $ret[] = update_sql("ALTER TABLE {boxes} ADD INDEX title (title)");
+  }
+  elseif ($GLOBALS['db_type'] == 'pgsql') {
+    $ret[] = update_sql("DROP INDEX boxes_title_idx");;
+    $ret[] = update_sql("CREATE INDEX title ON {boxes} (title)");
+  }
+
+  return $ret;
+}
 ?>

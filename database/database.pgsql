@@ -153,8 +153,7 @@ CREATE TABLE boxes (
   info varchar(128) NOT NULL default '',
   format smallint NOT NULL default '0',
   PRIMARY KEY  (bid),
-  UNIQUE (info),
-  UNIQUE (title)
+  UNIQUE (info)
 );
 
 --

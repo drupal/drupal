@@ -312,12 +312,13 @@ function block_box_add() {
 
   switch ($op) {
     case t('Save block'):
-      block_box_save($edit);
-      drupal_set_message(t('The new block has been added.'));
-      drupal_goto('admin/block');
-
+      if (block_box_save($edit)) {
+        drupal_set_message(t('The new block has been added.'));
+        drupal_goto('admin/block');
+      }
+      // deliberate no break
     default:
-      $form = block_box_form();
+      $form = block_box_form($edit);
       $form .= form_submit(t('Save block'));
       $output .= form($form);
   }
@@ -368,8 +369,13 @@ function block_box_save($edit, $delta = NULL) {
     db_query("UPDATE {boxes} SET title = '%s', body = '%s', info = '%s', format = %d WHERE bid = %d", $edit['title'], $edit['body'], $edit['info'], $edit['format'], $delta);
   }
   else {
+    if (empty($edit['info']) || db_num_rows(db_query("SELECT info FROM {boxes} WHERE info = '%s'", $edit['info']))) {
+      form_set_error('title', t('Please ensure each block description is unique.'));
+      return false;
+    }
     db_query("INSERT INTO {boxes} (title, body, info, format) VALUES  ('%s', '%s', '%s', %d)", $edit['title'], $edit['body'], $edit['info'], $edit['format']);
   }
+  return true;
 }
 
 /**
