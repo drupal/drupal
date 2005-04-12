@@ -366,29 +366,27 @@ function taxonomy_overview() {
     $header = array(t('Name'), t('Type'), array('data' => t('Operations'), 'colspan' => '3'));
     $vocabularies = taxonomy_get_vocabularies();
     foreach ($vocabularies as $vocabulary) {
-      if ($vocabulary->module == 'taxonomy') {
-        $types = array();
-        foreach ($vocabulary->nodes as $type) {
-          $node_type = node_invoke($type, 'node_name');
-          $types[] = $node_type ? $node_type : $type;
-        }
-        $rows[] = array('<strong>'.check_plain($vocabulary->name).'</strong>', implode(', ', $types), l(t('edit vocabulary'), "admin/taxonomy/edit/vocabulary/$vocabulary->vid"), l(t('add term'), "admin/taxonomy/add/term/$vocabulary->vid"), l(t('view terms'), "admin/taxonomy/$vocabulary->vid"));
+      $types = array();
+      foreach ($vocabulary->nodes as $type) {
+        $node_type = node_invoke($type, 'node_name');
+        $types[] = $node_type ? $node_type : $type;
+      }
+      $rows[] = array('<strong>'.check_plain($vocabulary->name).'</strong>', implode(', ', $types), l(t('edit vocabulary'), "admin/taxonomy/edit/vocabulary/$vocabulary->vid"), l(t('add term'), "admin/taxonomy/add/term/$vocabulary->vid"), l(t('view terms'), "admin/taxonomy/$vocabulary->vid"));
 
-        // Show terms if non-free.
-        if (!$vocabulary->tags) {
-          $tree = taxonomy_get_tree($vocabulary->vid);
-          if ($tree) {
-            foreach ($tree as $term) {
-              $rows[] = array(array('data' => _taxonomy_depth($term->depth) . ' ' . check_plain($term->name), 'class' => 'term'), NULL, NULL, NULL, l(t('edit term'), "admin/taxonomy/edit/term/$term->tid"));
-            }
-          }
-          else {
-            $rows[] = array(array('data' => t('No terms available.'), 'colspan' => '5', 'class' => 'message'));
+      // Show terms if non-free.
+      if (!$vocabulary->tags) {
+        $tree = taxonomy_get_tree($vocabulary->vid);
+        if ($tree) {
+          foreach ($tree as $term) {
+            $rows[] = array(array('data' => _taxonomy_depth($term->depth) . ' ' . check_plain($term->name), 'class' => 'term'), NULL, NULL, NULL, l(t('edit term'), "admin/taxonomy/edit/term/$term->tid"));
           }
         }
-        elseif ($vocabulary->tags) {
-          $rows[] = array(array('data' => t('This is a free tagging vocabulary:') . ' ' . l(t('view terms'), "admin/taxonomy/$vocabulary->vid") . '.', 'colspan' => '5', 'class' => 'message'));
+        else {
+          $rows[] = array(array('data' => t('No terms available.'), 'colspan' => '5', 'class' => 'message'));
         }
+      }
+      elseif ($vocabulary->tags) {
+        $rows[] = array(array('data' => t('This is a free tagging vocabulary:') . ' ' . l(t('view terms'), "admin/taxonomy/$vocabulary->vid") . '.', 'colspan' => '5', 'class' => 'message'));
       }
     }
 
