@@ -583,6 +583,7 @@ function taxonomy_node_validate(&$node) {
  * Save term associations for a given node.
  */
 function taxonomy_node_save($nid, $terms) {
+  taxonomy_node_delete($nid);
 
   // Free tagging vocabularies do not send their tids in the form,
   // so we'll detect them here and process them independently.
