@@ -226,7 +226,7 @@ function blog_view(&$node, $teaser = FALSE, $page = FALSE) {
 /**
  * Implementation of hook_link().
  */
-function blog_link($type, $node = 0, $main) {
+function blog_link($type, $node = 0, $main = 0) {
   $links = array();
 
   if ($type == 'node' && $node->type == 'blog') {
