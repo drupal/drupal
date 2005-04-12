@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.45 2005/04/11 19:05:51 dries Exp $
+// $Id: bootstrap.inc,v 1.46 2005/04/12 16:55:11 dries Exp $
 
 /**
  * @file
@@ -201,7 +201,6 @@ function variable_del($name) {
  */
 function cache_get($key) {
   global $user;
-  $sid = session_id();
 
   // CACHE_ENABLED_LOOSE garbage collection
   $cache_flush = variable_get('cache_flush', 0);
@@ -275,7 +274,6 @@ function cache_set($cid, $data, $expire = CACHE_PERMANENT, $headers = NULL) {
  */
 function cache_clear_all($cid = NULL, $wildcard = false) {
   global $user;
-  $sid = session_id();
 
   if (empty($cid)) {
     if (variable_get('cache', CACHE_DISABLED) == CACHE_ENABLED_STRICT) {
