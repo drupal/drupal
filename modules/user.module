@@ -529,7 +529,7 @@ function user_block($op = 'list', $delta = 0, $edit = array()) {
         return $block;
 
       case 2:
-        if (user_access('access content') && user_access('access user profiles')) {
+        if (user_access('access content')) {
           $result = db_query_range('SELECT uid, name FROM {users} WHERE status != 0 ORDER BY uid DESC', 0, 5);
           while ($account = db_fetch_object($result)) {
             $items[] = format_name($account);
@@ -543,7 +543,7 @@ function user_block($op = 'list', $delta = 0, $edit = array()) {
         return $block;
 
       case 3:
-        if (user_access('access content') && user_access('access user profiles')) {
+        if (user_access('access content')) {
           // Count users with activity in the past defined period.
           $time_period = variable_get('user_block_seconds_online', 2700);
 
@@ -637,7 +637,7 @@ function user_menu($may_cache) {
     $items[] = array('path' => 'user', 'title' => t('user account'),
       'callback' => 'user_page', 'access' => TRUE, 'type' => MENU_CALLBACK);
 
-    //registration and login pages. 
+    //registration and login pages.
     $items[] = array('path' => 'user/login', 'title' => t('log in'),
       'type' => MENU_DEFAULT_LOCAL_TASK);
     $items[] = array('path' => 'user/register', 'title' => t('register'),
@@ -726,7 +726,7 @@ function user_menu($may_cache) {
               'title' => $category['title'],
               'type' => $category['name'] == 'account' ? MENU_DEFAULT_LOCAL_TASK : MENU_LOCAL_TASK,
               'weight' => $category['weight'],
-              'access' => $admin_access);
+              'access' => ($admin_access || $user->uid == arg(1)));
           }
         }
       }
