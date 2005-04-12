@@ -225,7 +225,7 @@ function system_view_general() {
   $output .= form_group(t('Error handling'), $group);
 
   // Caching:
-  $group  = form_radios(t('Cache support'), 'cache', variable_get('cache', 0), array(t('Disabled'), t('Enabled')), t('Enable or disable the caching of rendered pages.  When caching is enabled, Drupal will flush the cache when required to make sure updates take effect immediately.  Check the <a href="%documentation">cache documentation</a> for information on Drupal\'s cache system.', array('%documentation' => url('admin/help', NULL, NULL, 'cache'))));
+  $group  = form_radios(t('Cache support'), 'cache', variable_get('cache', 0), array(t('Disabled'), t('Enabled')), t('Enable or disable the caching of rendered pages.  When caching is enabled, Drupal will flush the cache when required to make sure updates take effect immediately.  Check the <a href="%documentation">cache documentation</a> for information on Drupal\'s cache system.', array('%documentation' => url('admin/help/system#cache', NULL, NULL, 'cache'))));
 
   $output .= form_group(t('Cache settings'), $group);
 
