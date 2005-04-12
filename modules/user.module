@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.458 2005/04/12 18:32:00 dries Exp $
+// $Id: user.module,v 1.459 2005/04/12 21:26:18 dries Exp $
 
 /**
  * @file
@@ -935,7 +935,7 @@ function user_pass() {
     $mail_success = user_mail($account->mail, $subject, $body, $headers);
 
     if ($mail_success) {
-      watchdog('user', t('Password mailed to %name at %email.', array('%name' => theme('placeholder', $account->mail))));
+      watchdog('user', t('Password mailed to %name at %email.', array('%name' => theme('placeholder', $account->name), '%email' => theme('placeholder', $account->mail))));
       drupal_set_message(t('Your password and further instructions have been sent to your e-mail address.'));
     }
     else {
