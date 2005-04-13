@@ -241,8 +241,10 @@ function theme_get_settings($key = NULL) {
     'toggle_comment_user_picture'   =>  0,
   );
 
-  foreach (node_list() as $type) {
-    $defaults['toggle_node_info_' . $type] = 1;
+  if (module_exist('node')) {
+    foreach (node_list() as $type) {
+      $defaults['toggle_node_info_' . $type] = 1;
+    }
   }
   $settings = array_merge($defaults, variable_get('theme_settings', array()));
 
