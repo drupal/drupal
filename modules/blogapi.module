@@ -507,7 +507,7 @@ function blogapi_blogger_title(&$contents) {
     $contents = ereg_replace('<title>[^<]*</title>', '', $contents);
   }
   else {
-    list($title, $rest) = explode("\n", $contents, 2);
+    list($title, $contents) = explode("\n", $contents, 2);
   }
   return $title;
 }
