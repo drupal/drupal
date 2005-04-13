@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.39 2005/04/01 15:54:59 dries Exp $
+// $Id: blogapi.module,v 1.40 2005/04/13 19:03:36 dries Exp $
 
 /**
  * @file
@@ -507,7 +507,7 @@ function blogapi_blogger_title(&$contents) {
     $contents = ereg_replace('<title>[^<]*</title>', '', $contents);
   }
   else {
-    list($title, $rest) = explode("\n", $contents, 2);
+    list($title, $contents) = explode("\n", $contents, 2);
   }
   return $title;
 }
