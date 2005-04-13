@@ -1643,7 +1643,7 @@ function user_admin_account() {
       $roles[] = $role->name;
     }
 
-    $rows[] = array($account->uid, format_name($account), $status[$account->status], implode(',<br />', $roles), format_date($account->changed, 'small'), l(t('edit'), "user/$account->uid/edit", array(), $destination));
+    $rows[] = array($account->uid, format_name($account), $status[$account->status], implode(', ', $roles), format_date($account->changed, 'small'), l(t('edit'), "user/$account->uid/edit", array(), $destination));
   }
 
   $pager = theme('pager', NULL, 50, 0, tablesort_pager());
