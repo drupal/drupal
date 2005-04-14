@@ -104,7 +104,8 @@ $sql_updates = array(
   "2005-02-23" => "update_125",
   "2005-03-03" => "update_126",
   "2005-03-18" => "update_127",
-  "2005-03-21" => "update_128"
+  "2005-03-21" => "update_128",
+  "2005-04-14" => "update_129"
 );
 
 function update_32() {
@@ -2326,17 +2327,6 @@ function update_127() {
   return $ret;
 }
 
-function update_sql($sql) {
-  $edit = $_POST["edit"];
-  $result = db_query($sql);
-  if ($result) {
-    return array('1', nl2br(htmlentities($sql)) ." ", "<div style=\"color: green;\">OK</div>\n");
-  }
-  else {
-    return array('0', nl2br(htmlentities($sql)) ." ", "<div style=\"color: red;\">FAILED</div>\n");
-  }
-}
-
 function update_128() {
   $ret = array();
 
@@ -2350,4 +2340,38 @@ function update_128() {
   return $ret;
 }
 
+function update_129() {
+  /**
+   * PostgreSQL only update.
+   */
+  $ret = array();
+
+  if ($GLOBALS['db_type'] == 'pgsql') {
+    $ret[] = update_sql('DROP TABLE {search_total}');
+
+    $ret[] = update_sql("CREATE TABLE {search_total} (
+              word varchar(50) NOT NULL default '',
+              count float default NULL)");
+    $ret[] = update_sql('CREATE INDEX {search_total}_word_idx ON {search_total}(word)');
+
+    /**
+     * Wipe the search index
+     */
+    include_once('modules/search.module');
+    search_wipe();
+  }
+
+  return $ret;
+}
+
+function update_sql($sql) {
+  $edit = $_POST["edit"];
+  $result = db_query($sql);
+  if ($result) {
+    return array('1', nl2br(htmlentities($sql)) ." ", "<div style=\"color: green;\">OK</div>\n");
+  }
+  else {
+    return array('0', nl2br(htmlentities($sql)) ." ", "<div style=\"color: red;\">FAILED</div>\n");
+  }
+}
 ?>
