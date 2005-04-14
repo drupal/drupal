@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysql.inc,v 1.27 2004/11/29 13:10:43 dries Exp $
+// $Id: database.mysql.inc,v 1.28 2005/04/14 18:50:16 dries Exp $
 
 /**
  * @file
@@ -28,7 +28,7 @@ function db_connect($url) {
      $url['host'] = $url['host'] .':'. $url['port'];
   }
 
-  $connection = mysql_connect($url['host'], $url['user'], $url['pass']) or die(mysql_error());
+  $connection = mysql_connect($url['host'], $url['user'], $url['pass'], TRUE) or die(mysql_error());
   mysql_select_db(substr($url['path'], 1)) or die('unable to select database');
 
   return $connection;
