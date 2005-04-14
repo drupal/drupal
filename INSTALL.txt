@@ -84,7 +84,7 @@ INSTALLATION
    where
 
     'drupal' is the name of your database
-    'nobody@localhost' is the userid of your webserver MySQL account
+    'nobody@localhost' is the username of your webserver MySQL account
     'password' is the password required to log in as the MySQL user
 
    If successful, MySQL will reply with:
@@ -106,7 +106,7 @@ INSTALLATION
    directory and run it directly as SQL commands.
 
    From the command line, use (again, replacing 'nobody' and
-   'drupal' with your MySQL userid and name of your database):
+   'drupal' with your MySQL username and name of your database):
 
      mysql -u nobody -p drupal < database/database.mysql
 
@@ -118,9 +118,9 @@ INSTALLATION
    base URL to the web site. Open the configuration file and edit the
    $db_url line to match the database defined in the previous steps:
 
-     $db_url = "mysql://userid:password@localhost/database";
+     $db_url = "mysql://username:password@localhost/database";
 
-   where 'userid', 'password', 'localhost' and 'database' are the
+   where 'username', 'password', 'localhost' and 'database' are the
    username, password, host and database name for your set up.
 
    Set $base_url to match the address to your Drupal site:

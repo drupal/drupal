@@ -37,8 +37,8 @@
  *
  * Note that the $db_url variable gets parsed using PHP's built-in
  * URL parser (i.e. using the "parse_url()" function) so make sure
- * not to confuse the parser. If your db_user, db_password,
- * db_hostname, or db_name contain characters used to delineate
+ * not to confuse the parser. If your username, password
+ * or database name contain characters used to delineate
  * $db_url parts, you can escape them via URI hex encodings:
  *
  *   : = %3a   / = %2f   @ = %40
@@ -75,10 +75,10 @@
  *   );
  *
  * Database URL format:
- * $db_url = 'mysql://db_user:db_password@db_hostname/db_name';
- * $db_url = 'pgsql://db_user:db_password@db_hostname/db_name';
+ * $db_url = 'mysql://username:password@localhost/database';
+ * $db_url = 'pgsql://username:password@localhost/database';
  */
-$db_url = 'mysql://drupal:drupal@localhost/drupal';
+$db_url = 'mysql://username:password@localhost/database';
 $db_prefix = '';
 
 /**
