@@ -283,7 +283,7 @@ function statistics_top_users() {
     array('data' => t('User'), 'field' => 'u.name'),
   );
 
-  $sql = "SELECT COUNT(a.uid) AS hits, a.uid, u.name FROM {accesslog} a LEFT JOIN {users} u ON a.uid = u.uid GROUP BY a.uid". tablesort_sql($header);
+  $sql = "SELECT COUNT(a.uid) AS hits, a.uid, u.name FROM {accesslog} a LEFT JOIN {users} u ON a.uid = u.uid GROUP BY a.uid, u.name". tablesort_sql($header);
   $sql_cnt = "SELECT COUNT(DISTINCT(uid)) FROM {accesslog}";
   $result = pager_query($sql, 30, 0, $sql_cnt);
 

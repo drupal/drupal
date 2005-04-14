@@ -107,7 +107,8 @@ $sql_updates = array(
   "2005-03-21" => "update_128",
   "2005-04-08: first update since Drupal 4.6.0 release" => "update_129",
   "2005-04-10" => "update_130",
-  "2005-04-11" => "update_131"
+  "2005-04-11" => "update_131",
+  "2005-04-14" => "update_132"
 );
 
 function update_32() {
@@ -2329,17 +2330,6 @@ function update_127() {
   return $ret;
 }
 
-function update_sql($sql) {
-  $edit = $_POST["edit"];
-  $result = db_query($sql);
-  if ($result) {
-    return array('1', nl2br(htmlentities($sql)) ." ", "<div style=\"color: green;\">OK</div>\n");
-  }
-  else {
-    return array('0', nl2br(htmlentities($sql)) ." ", "<div style=\"color: red;\">FAILED</div>\n");
-  }
-}
-
 function update_128() {
   $ret = array();
 
@@ -2391,4 +2381,28 @@ function update_131() {
 
   return $ret;
 }
+
+function update_132() {
+  /**
+   * PostgreSQL only update.
+   */
+  $ret = array();
+
+  if ($GLOBALS['db_type'] == 'pgsql') {
+    $ret[] = update_sql('DROP TABLE {search_total}');
+    $ret[] = update_sql("CREATE TABLE {search_total} (
+              word varchar(50) NOT NULL default '',
+              count float default NULL)");
+    $ret[] = update_sql('CREATE INDEX {search_total}_word_idx ON {search_total}(word)');
+
+    /**
+     * Wipe the search index
+     */
+    include_once('modules/search.module');
+    search_wipe();
+  }
+
+  return $ret;
+}
+
 ?>
