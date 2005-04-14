@@ -2405,4 +2405,15 @@ function update_132() {
   return $ret;
 }
 
+function update_sql($sql) {
+  $edit = $_POST["edit"];
+  $result = db_query($sql);
+  if ($result) {
+    return array('1', nl2br(htmlentities($sql)) ." ", "<div style=\"color: green;\">OK</div>\n");
+  }
+  else {
+    return array('0', nl2br(htmlentities($sql)) ." ", "<div style=\"color: red;\">FAILED</div>\n");
+  }
+}
+
 ?>
