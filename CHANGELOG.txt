@@ -1,11 +1,12 @@
-Drupal 4.6.0, 2005-04-15
+Drupal x.x.x, xxxx-xx-xx
+(Development version)
 ------------------------
 
 - added free tagging support (folksonomies).
 - performance:
     * added 'loose caching' option for high-traffic sites.
 
-Drupal x.x.x, xxxx-xx-xx
+Drupal 4.6.0, 2005-04-15
 ------------------------
 
 - PHP5 compliance
