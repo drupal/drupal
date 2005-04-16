@@ -1,5 +1,5 @@
 <?php
-/* $Id: updates.inc,v 1.107 2005/04/14 19:57:11 dries Exp $ */
+/* $Id: updates.inc,v 1.108 2005/04/16 08:01:48 dries Exp $ */
 
 /**
  * @file
@@ -2359,10 +2359,10 @@ function update_129() {
 function update_130() {
   $ret = array();
   if ($GLOBALS['db_type'] == 'mysql') {
-    $ret[] = update_sql("ALTER TABLE sessions ADD cache int(11) NOT NULL default '0' AFTER timestamp");
+    $ret[] = update_sql("ALTER TABLE {sessions} ADD cache int(11) NOT NULL default '0' AFTER timestamp");
   }
   elseif ($GLOBALS['db_type'] == 'pgsql') {
-    $ret[] = update_sql("ALTER TABLE sessions ADD cache int(11) NOT NULL default '0' AFTER timestamp");
+    $ret[] = update_sql("ALTER TABLE {sessions} ADD cache int(11) NOT NULL default '0' AFTER timestamp");
   }
   return $ret;
 }
