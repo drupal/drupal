@@ -1,4 +1,4 @@
-// $Id: INSTALL.txt,v 1.18 2005/04/14 18:34:31 dries Exp $
+// $Id: INSTALL.txt,v 1.19 2005/04/16 12:05:06 dries Exp $
 
 CONTENTS OF THIS FILE
 ---------------------
@@ -42,8 +42,8 @@ INSTALLATION
    The files are in .tar.gz format and can be extracted using most
    compression tools. On a typical Unix command line, use:
 
-     wget http://drupal.org/files/project/drupal-x.x.x.tgz
-     tar -zxvf drupal-x.x.x.tgz
+     wget http://drupal.org/files/project/drupal-x.x.x.tar.gz
+     tar -zxvf drupal-x.x.x.tar.gz
 
    This will create a new directory drupal-x.x.x/ containing all
    Drupal files and directories. Move the contents of that directory
