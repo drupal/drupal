@@ -12,6 +12,7 @@
 define('PROFILE_PRIVATE', 1);
 define('PROFILE_PUBLIC', 2);
 define('PROFILE_PUBLIC_LISTINGS', 3);
+define('PROFILE_HIDDEN', 4);
 
 /**
  * Implementation of hook_help().
@@ -59,7 +60,7 @@ function profile_block($op = 'list', $delta = 0, $edit = array()) {
         if ($use_fields = variable_get('profile_block_author_fields', array())) {
           // Compile a list of fields to show
           $fields = array();
-          $result = db_query('SELECT name, title, type, visibility FROM {profile_fields} WHERE visibility != %d ORDER BY weight', PROFILE_PRIVATE);
+          $result = db_query('SELECT name, title, type, visibility FROM {profile_fields} WHERE visibility == %d ORDER BY weight', PROFILE_PUBLIC, PROFILE_PUBLIC_LISTING);
             while ($record = db_fetch_object($result)) {
               // Endure that field is displayed only if it is among the defined block fields and, if it is private, the user has appropriate permissions.
               if (in_array($record->name, $use_fields)) {
@@ -215,10 +216,10 @@ function profile_load_profile(&$user) {
 
 function profile_save_profile(&$edit, &$user, $category) {
   if (($_GET['q'] == 'user/register') ? 1 : 0) {
-    $result = db_query('SELECT fid, name, type FROM {profile_fields} WHERE register = 1 ORDER BY category, weight');
+    $result = db_query('SELECT fid, name, type FROM {profile_fields} WHERE register = 1 AND visibility != %d ORDER BY category, weight', PROFILE_HIDDEN);
   }
   else {
-    $result = db_query("SELECT fid, name, type FROM {profile_fields} WHERE LOWER(category) = LOWER('%s')", $category);
+    $result = db_query("SELECT fid, name, type FROM {profile_fields} WHERE LOWER(category) = LOWER('%s') AND visibility != %d", $category, PROFILE_HIDDEN);
     // We use LOWER('%s') instead of PHP's strtolower() to avoid UTF-8 conversion issues.
   }
   while ($field = db_fetch_object($result)) {
@@ -278,10 +279,10 @@ function profile_view_profile($user) {
 
   // Show private fields to administrators and people viewing their own account.
   if (user_access('administer users') || $GLOBALS['user']->uid == $user->uid) {
-    $result = db_query('SELECT * FROM {profile_fields} ORDER BY category, weight');
+    $result = db_query('SELECT * FROM {profile_fields} WHERE visibility != %d ORDER BY category, weight', PROFILE_HIDDEN);
   }
   else {
-    $result = db_query('SELECT * FROM {profile_fields} WHERE visibility != %d ORDER BY category, weight', PROFILE_PRIVATE);
+    $result = db_query('SELECT * FROM {profile_fields} WHERE visibility != %d AND visibility != %d ORDER BY category, weight', PROFILE_PRIVATE, PROFILE_HIDDEN);
   }
 
   while ($field = db_fetch_object($result)) {
@@ -576,7 +577,7 @@ Unless you know what you are doing, it is highly recommended that you prefix the
     $group .= form_textarea(t('Selection options'), 'options', $edit['options'], 70, 8, t('A list of all options.  Put each option on a separate line.  Example options are "red", "blue", "green", etc.'));
   }
   $group .= form_weight(t('Weight'), 'weight', $edit['weight'], 5, t('The weights define the order in which the form fields are shown.  Lighter fields "float up" towards the top of the category.'));
-  $group .= form_radios(t('Visibility'), 'visibility', $edit['visibility'], array(PROFILE_PRIVATE => t('Private field, content only available to privileged users.'), PROFILE_PUBLIC => t('Public field, content shown on profile page but not used on member list pages.'), PROFILE_PUBLIC_LISTINGS => t('Public field, content shown on profile page and on member list pages.')));
+  $group .= form_radios(t('Visibility'), 'visibility', $edit['visibility'], array(PROFILE_HIDDEN => t('Hidden profile field, only accessible by administrators, modules and themes.'), PROFILE_PRIVATE => t('Private field, content only available to privileged users.'), PROFILE_PUBLIC => t('Public field, content shown on profile page but not used on member list pages.'), PROFILE_PUBLIC_LISTINGS => t('Public field, content shown on profile page and on member list pages.')));
   if ($type == 'selection' || $type == 'list') {
     $group .= form_textfield(t('Page title'), 'page', $edit['page'], 70, 128, t('The title of the page showing all users with the specified field.  The word <code>%value</code> will be substituted with the corresponding value.  An example page title is "People whose favorite color is %value".  Only applicable if the field is configured to be shown on member list pages.'));
   }
