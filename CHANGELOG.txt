@@ -2,8 +2,9 @@ Drupal x.x.x, xxxx-xx-xx (Development version)
 ------------------------
 
 - added free tagging support (folksonomies).
-- blocks:
+- profiles:
     * added a block to display author information along with posts.
+    * added support for private profile fields.
 - performance:
     * added 'loose caching' option for high-traffic sites.
 
