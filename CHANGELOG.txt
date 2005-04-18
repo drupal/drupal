@@ -1,8 +1,9 @@
-Drupal x.x.x, xxxx-xx-xx
-(Development version)
+Drupal x.x.x, xxxx-xx-xx (Development version)
 ------------------------
 
 - added free tagging support (folksonomies).
+- blocks:
+    * added a block to display author information along with posts.
 - performance:
     * added 'loose caching' option for high-traffic sites.
 
