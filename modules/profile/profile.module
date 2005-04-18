@@ -26,6 +26,67 @@ function profile_help($section) {
 }
 
 /**
+ * Implementation of hook_block().
+ */
+function profile_block($op = 'list', $delta = 0, $edit = array()) {
+
+  if ($op == 'list') {
+     $blocks[0]['info'] = t('Author information');
+
+     return $blocks;
+  }
+  else if ($op == 'configure' && $delta == 0) {
+    // Compile a list of fields to show
+    $fields = array();
+    $result = db_query('SELECT name, title FROM {profile_fields} ORDER BY weight');
+    while ($record = db_fetch_object($result)) {
+      $fields[$record->name] = $record->title;
+    }
+    $fields['user_profile'] = t('Link to full user profile');
+    $output .= form_checkboxes(t('Profile fields to display'), 'profile_block_author_fields', variable_get('profile_block_author_fields', NULL), $fields, t('Select which profile fields you wish to display in the block.  Only fields designated as public in the <a href="%profile-admin">profile field configuration</a> are available.', array('%profile-admin' => url('admin/settings/profile'))));
+    return $output;
+  }
+  else if ($op == 'save' && $delta == 0) {
+    variable_set('profile_block_author_fields', $edit['profile_block_author_fields']);
+  }
+  else if ($op == 'view') {
+    if (user_access('access user profiles')) {
+      if ((arg(0) == 'node') && is_numeric(arg(1)) && (arg(2) == NULL)) {
+        $result = db_query('SELECT uid FROM {node} WHERE nid = %d ORDER BY uid DESC', arg(1));
+        $node = db_fetch_object($result);
+        $account = user_load(array('uid' => $node->uid));
+
+        if ($use_fields = variable_get('profile_block_author_fields', array())) {
+          // Compile a list of fields to show
+          $fields = array();
+          $result = db_query('SELECT name, title, type, visibility FROM {profile_fields} WHERE visibility != %d ORDER BY weight', PROFILE_PRIVATE);
+            while ($record = db_fetch_object($result)) {
+              // Endure that field is displayed only if it is among the defined block fields and, if it is private, the user has appropriate permissions.
+              if (in_array($record->name, $use_fields)) {
+              $fields[] = $record;
+            }
+          }
+        }
+
+        if ($fields) {
+          $output .= theme('profile_block', $account, $fields, true);
+        }
+
+        if (in_array('user_profile', $use_fields)) {
+          $output .= '<div>' . l(t('View full user profile'), 'user/' . $account->uid) . '</div>';
+        }
+      }
+
+      if ($output) {
+         $block['subject'] = t('About %name', array('%name' => $account->name));
+         $block['content'] = $output;
+         return $block;
+      }
+    }
+  }
+}
+
+/**
  * Implementation of hook_menu().
  */
 function profile_menu($may_cache) {
@@ -102,7 +163,7 @@ function profile_browse() {
 
     $output = '<div id="profile">';
     while ($account = db_fetch_object($result)) {
-      $output .= theme('profile_profile', user_load(array('uid' => $account->uid)), $fields);
+      $output .= theme('profile_listing', user_load(array('uid' => $account->uid)), $fields);
     }
     $output .= theme('pager', NULL, 20);
 
@@ -133,7 +194,7 @@ function profile_browse() {
 
     $output = '<div id="profile">';
     while ($account = db_fetch_object($result)) {
-      $output .= theme('profile_profile', user_load(array('uid' => $account->uid)), $fields);
+      $output .= theme('profile_listing', user_load(array('uid' => $account->uid)), $fields);
     }
     $output .= '</div>';
     $output .= theme('pager', NULL, 20);
@@ -167,7 +228,7 @@ function profile_save_profile(&$edit, &$user, $category) {
     db_query("DELETE FROM {profile_values} WHERE fid = %d AND uid = %d", $field->fid, $user->uid);
     db_query("INSERT INTO {profile_values} (fid, uid, value) VALUES (%d, %d, '%s')", $field->fid, $user->uid, $edit[$field->name]);
     // Mark field as handled (prevents saving to user->data).
-    $edit[$field->name] = null;
+    $edit[$field->name] = NULL;
   }
 }
 
@@ -558,7 +619,20 @@ function profile_admin_overview() {
   print theme('page', $output);
 }
 
-function theme_profile_profile($user, $fields = array()) {
+function theme_profile_block($user, $fields = array()) {
+
+  $output .= theme('user_picture', $user);
+
+  foreach ($fields as $field) {
+    if ($value = profile_view_field($user, $field)) {
+      $output .= "<p><strong>$field->title:</strong><br />$value</p>\n";
+    }
+  }
+
+  return $output;
+}
+
+function theme_profile_listing($user, $fields = array()) {
 
   $output  = "<div class=\"profile\">\n";
   $output .= theme('user_picture', $user);
