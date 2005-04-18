@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.163 2005/04/12 18:52:47 dries Exp $
+// $Id: block.module,v 1.164 2005/04/18 20:31:50 dries Exp $
 
 /**
  * @file
@@ -276,7 +276,7 @@ function block_admin_configure($module = NULL, $delta = 0) {
 
       // Module-specific block configurations.
       if ($settings = module_invoke($module, 'block', 'configure', $delta)) {
-        $form = form_group(t('Block-specific settings'), $settings);
+        $form = form_group(t('Block specific settings'), $settings);
       }
 
       foreach (node_list() as $type) {
