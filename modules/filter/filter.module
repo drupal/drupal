@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.58 2005/04/20 02:55:20 unconed Exp $
+// $Id: filter.module,v 1.59 2005/04/20 03:01:07 unconed Exp $
 
 /**
  * @file
@@ -956,7 +956,7 @@ function _filter_autop($text) {
     if ($i % 2) {
       // Opening or closing tag?
       $open = ($chunk{1} != '/');
-      list(, $tag) = split('[< ]', $chunk);
+      list($tag) = split('[ >]', substr($chunk, 2 - $open), 2);
       if (!$ignore) {
         if ($open) {
           $ignore = true;
