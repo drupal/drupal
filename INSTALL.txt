@@ -42,7 +42,7 @@ INSTALLATION
    The files are in .tar.gz format and can be extracted using most
    compression tools. On a typical Unix command line, use:
 
-     wget http://drupal.org/files/project/drupal-x.x.x.tar.gz
+     wget http://drupal.org/files/projects/drupal-x.x.x.tar.gz
      tar -zxvf drupal-x.x.x.tar.gz
 
    This will create a new directory drupal-x.x.x/ containing all
