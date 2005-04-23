@@ -128,10 +128,9 @@ function search_admin() {
   if ($_POST) {
     // If the word length settings change, the index needs to be rebuilt.
     if (variable_get('minimum_word_size', 3) != $_POST['edit']['minimum_word_size']) {
-      // Note: ensure logical order of messages
-      system_settings_save();
       drupal_set_message(t('The index will be rebuilt.'));
       search_wipe();
+      system_settings_save();
     }
     else {
       system_settings_save();
