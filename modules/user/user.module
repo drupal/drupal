@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.464 2005/04/24 16:34:36 dries Exp $
+// $Id: user.module,v 1.465 2005/04/24 22:09:16 unconed Exp $
 
 /**
  * @file
@@ -1277,7 +1277,7 @@ function user_page() {
         }
       }
       else {
-        print user_view(arg(1));
+        return user_view(arg(1));
       }
   }
 
