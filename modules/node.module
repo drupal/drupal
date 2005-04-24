@@ -1708,12 +1708,12 @@ function node_page() {
       break;
     case 'delete':
     case t('Delete'):
-      // Note: we redirect from node/uid/edit to node/uid/delete to make the tabs disappear.
-      if ($_GET['q'] == 'node/'. arg(1) .'/edit') {
-        unset($_REQUEST['destination']);
-        drupal_goto('node/'. arg(1) .'/delete');
-      }
       $edit['nid'] = $edit['nid'] ? $edit['nid'] : arg(1);
+      $node = node_load(array('nid' => $edit['nid']));
+      $breadcrumb[] = array('path' => 'node/'. $edit['nid'], 'title' => $node->title);
+      $breadcrumb[] = array('path' => 'node/'. arg(1) .'/delete', 'title' => t('delete'));
+      menu_set_location($breadcrumb);
+
       $output = node_delete($edit);
       if (!$output) {
         drupal_set_message(t('The node has been deleted.'));
