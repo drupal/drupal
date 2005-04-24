@@ -1235,7 +1235,7 @@ function user_page() {
         }
       }
       else {
-        print user_view(arg(1));
+        user_view(arg(1));
       }
   }
 
