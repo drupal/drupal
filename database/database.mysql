@@ -526,17 +526,6 @@ CREATE TABLE poll_choices (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'queue'
---
-
-CREATE TABLE queue (
-  nid int(10) unsigned NOT NULL,
-  uid int(10) unsigned NOT NULL,
-  vote int(3) NOT NULL default '0',
-  PRIMARY KEY (nid, uid)
-) TYPE=MyISAM;
-
---
 -- Table structure for table 'role'
 --
 
