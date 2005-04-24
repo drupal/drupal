@@ -691,6 +691,8 @@ function book_admin_view_line($node, $depth = 0) {
 function book_admin_view_book($nid, $depth = 1) {
   $result = db_query(db_rewrite_sql('SELECT n.nid FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE b.parent = %d ORDER BY b.weight, n.title'), $nid);
 
+  $rows = array();
+
   while ($node = db_fetch_object($result)) {
     $node = node_load(array('nid' => $node->nid));
     $rows[] = book_admin_view_line($node, $depth);
