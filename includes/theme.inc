@@ -1,5 +1,5 @@
 <?php
-/* $Id: theme.inc,v 1.229 2005/04/13 17:59:39 dries Exp $ */
+/* $Id: theme.inc,v 1.230 2005/04/24 16:22:30 dries Exp $ */
 
 /**
  * @file
@@ -739,8 +739,13 @@ function theme_block($block) {
  */
 function theme_mark($type = MARK_NEW) {
   global $user;
-  if ($user->uid && $type != MARK_READ) {
-    return '<span class="marker">*</span>';
+  if ($user->uid) {
+    if ($type == MARK_NEW) {
+      return '<span class="marker">'. t('new') .'</span>';
+    }
+    else if ($type == MARK_UPDATED) {
+      return '<span class="marker">'. t('updated') .'</span>';
+    }
   }
 }
 
