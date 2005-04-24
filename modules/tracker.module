@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.module,v 1.114 2005/02/12 07:51:14 dries Exp $
+// $Id: tracker.module,v 1.115 2005/04/24 16:34:35 dries Exp $
 
 /**
  * @file
@@ -118,7 +118,7 @@ function tracker_page($uid = 0) {
   $output .= theme('table', $header, $rows);
   $output .= '</div>';
 
-  print theme('page', $output);
+  return $output;
 }
 
 ?>

@@ -1,5 +1,5 @@
 <?php
-/* $Id: menu.inc,v 1.79 2005/04/07 20:00:48 dries Exp $ */
+/* $Id: menu.inc,v 1.80 2005/04/24 16:34:32 dries Exp $ */
 
 /**
  * @file
@@ -351,8 +351,7 @@ function menu_execute_active_handler() {
     $arguments = array_merge($arguments, explode('/', $arg));
   }
 
-  call_user_func_array($menu['items'][$mid]['callback'], $arguments);
-  return MENU_FOUND;
+  return call_user_func_array($menu['items'][$mid]['callback'], $arguments);
 }
 
 /**

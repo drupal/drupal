@@ -1,5 +1,5 @@
 <?php
-// $Id: index.php,v 1.82 2004/08/21 06:42:34 dries Exp $
+// $Id: index.php,v 1.83 2005/04/24 16:34:32 dries Exp $
 
 /**
  * @file
@@ -15,13 +15,18 @@ include_once 'includes/common.inc';
 
 fix_gpc_magic();
 
-$status = menu_execute_active_handler();
-switch ($status) {
+$return = menu_execute_active_handler();
+switch ($return) {
   case MENU_NOT_FOUND:
     drupal_not_found();
     break;
   case MENU_ACCESS_DENIED:
     drupal_access_denied();
+    break;
+  default:
+    if (!empty($return)) {
+      print theme('page', $return);
+    }
     break;
 }
 

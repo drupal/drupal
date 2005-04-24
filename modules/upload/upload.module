@@ -1,5 +1,5 @@
 <?php
-/* $Id: upload.module,v 1.31 2005/04/01 15:55:01 dries Exp $ */
+/* $Id: upload.module,v 1.32 2005/04/24 16:34:36 dries Exp $ */
 
 /**
  * @file
@@ -97,7 +97,7 @@ function upload_admin() {
     $output .= form_group(t('Settings for %role', array('%role' => "<em>$role</em>")), $group);
   }
 
-  print theme('page', system_settings_form($output));
+  return system_settings_form($output);
 }
 
 function upload_download() {

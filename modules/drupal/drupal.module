@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal.module,v 1.100 2005/03/31 09:25:33 unconed Exp $
+// $Id: drupal.module,v 1.101 2005/04/24 16:34:33 dries Exp $
 
 /**
  * @file
@@ -199,7 +199,7 @@ function drupal_menu($may_cache) {
  * Menu callback; print Drupal-authentication-specific information from user/help.
  */
 function drupal_page_help() {
-  print theme('page', drupal_help('user/help#drupal'));
+  return drupal_help('user/help#drupal');
 }
 
 /**

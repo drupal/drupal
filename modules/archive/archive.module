@@ -1,5 +1,5 @@
 <?php
-// $Id: archive.module,v 1.79 2005/04/01 15:54:58 dries Exp $
+// $Id: archive.module,v 1.80 2005/04/24 16:34:32 dries Exp $
 
 /**
  * @file
@@ -249,7 +249,7 @@ function archive_page($year = 0, $month = 0, $day = 0) {
       $output .= node_view(node_load(array('nid' => $nid->nid)), 1);
     }
   }
-  print theme('page', $output);
+  return $output;
 }
 
 ?>
