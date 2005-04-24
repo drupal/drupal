@@ -739,8 +739,13 @@ function theme_block($block) {
  */
 function theme_mark($type = MARK_NEW) {
   global $user;
-  if ($user->uid && $type != MARK_READ) {
-    return '<span class="marker">*</span>';
+  if ($user->uid) {
+    if ($type == MARK_NEW) {
+      return '<span class="marker">'. t('new') .'</span>';
+    }
+    else if ($type == MARK_UPDATED) {
+      return '<span class="marker">'. t('updated') .'</span>';
+    }
   }
 }
 
