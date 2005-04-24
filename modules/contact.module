@@ -15,7 +15,9 @@ define('CONTACT_HOURLY_THRESHOLD', 3);
 function contact_help($section) {
   switch ($section) {
     case 'admin/modules#description':
-      return t('Enables the use of personal contact forms.');
+      return t('Enables the use of both personal and site-wide contact forms.');
+    case 'admin/contact':
+      return t('This page lets you setup <a href="%form">your site-wide contact form</a>.  To do so, add one or more subjects.  You can associate different recipients with each subject to route e-mails to different people.  For example, you can route website feedback to the webmaster and direct product information requests to the sales department.  On the <a href="%settings">settings page</a> you can customize the information shown above the contact form.  This can be useful to provide additional contact information such as your postal address and telephone number.', array('%settings' => url('admin/settings/contact'), '%form' => url('contact', NULL, NULL, TRUE)));
   }
 }
 
@@ -26,7 +28,23 @@ function contact_menu($may_cache) {
   global $user;
   $items = array();
 
-  if (!$may_cache) {
+  if ($may_cache) {
+    $items[] = array('path' => 'contact', 'title' => t('contact us'),
+      'callback' => 'contact_mail_page', 'access' => user_access('access content'),
+      'type' => MENU_SUGGESTED_ITEM);
+    $items[] = array('path' => 'admin/contact', 'title' => t('contact form'),
+      'callback' => 'contact_admin', 'access' => user_access('administer site configuration'));
+    $items[] = array('path' => 'admin/contact/list', 'title' => t('list'),
+      'callback' => 'contact_admin', 'access' => user_access('administer site configuration'),
+      'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -1);
+    $items[] = array('path' => 'admin/contact/edit', 'title' => t('add subject'),
+      'callback' => 'contact_admin_edit', 'access' => user_access('administer site configuration'),
+      'type' => MENU_LOCAL_TASK);
+    $items[] = array('path' => 'admin/contact/delete', 'title' => t('delete contact'),
+      'callback' => 'contact_admin_delete', 'access' => user_access('administer site configuration'),
+      'type' => MENU_CALLBACK);
+  }
+  else {
     if (arg(0) == 'user' && is_numeric(arg(1))) {
       $items[] = array('path' => "user/". arg(1) ."/contact", 'title' => t('contact'),
         'callback' => 'contact_mail_user', 'type' => MENU_LOCAL_TASK, 'weight' => 2);
@@ -34,6 +52,14 @@ function contact_menu($may_cache) {
   }
 
   return $items;
+}
+
+/**
+ * Implementation of hook_settings().
+ */
+function contact_settings() {
+  $output = form_textarea(t('Additional information'), 'contact_form_information', variable_get('contact_form_information', t('You can leave us a message using the contact form below.')), 70, 8, t('Information to show on the <a href="%form">contact page</a>.  Can be anything from submission guidelines to your postal address or telephone number.', array('%form' => url('contact'))));
+  return $output;
 }
 
 /**
@@ -106,7 +132,7 @@ function contact_mail_user() {
 
           // Log the operation:
           flood_register_event('contact');
-          watchdog('mail', t('%name-from sent %name-to an e-mail.', array('%name-from' => $user->name, '%name-to' => $account->name)));
+          watchdog('mail', t('%name-from sent %name-to an e-mail.', array('%name-from' => theme('placeholder', $user->name), '%name-to' => theme('placeholder', $account->name))));
 
           // Set a status message:
           drupal_set_message(t('Your message has been sent.'));
@@ -132,6 +158,152 @@ function contact_mail_user() {
   else {
     drupal_not_found();
   }
+}
+
+function contact_admin_edit($subject = NULL) {
+  if (isset($_POST['edit'])) {
+    $edit = $_POST['edit'];
+
+    if (empty($edit['subject'])) {
+      form_set_error('subject', t('You must enter a subject.'));
+    }
+    if (empty($edit['recipients'])) {
+      form_set_error('recipients', t('You must enter one or more recipients.'));
+    }
+
+    if (!form_get_errors()) {
+      db_query("DELETE FROM {contact} WHERE subject = '%s'", $subject);
+      db_query("INSERT INTO {contact} (subject, recipients, reply) VALUES ('%s', '%s', '%s')", $edit['subject'], $edit['recipients'], $edit['reply']);
+      drupal_goto('admin/contact');
+    }
+  }
+
+  $subject = db_fetch_object(db_query("SELECT * FROM {contact} WHERE subject = '%s'", $subject));
+
+  $form = form_textfield(t('Subject'), 'subject', $subject->subject, 50, 255, t("Example: 'website feedback' or 'product information'."), NULL, TRUE);
+  $form .= form_textarea(t('Recipients'), 'recipients', $subject->recipients, 50, 4, t("Example: 'webmaster@yoursite.com' or 'sales@yoursite.com'.  To specify multiple repecients, separate each e-mail address with a comma."), NULL, TRUE);
+  $form .= form_textarea(t('Auto-reply'), 'reply', $subject->reply, 50, 10, t("Optional auto-reply.  Leave empty if you don't want to send the user an auto-reply message."));
+  $form .= form_submit(t('Submit'));
+
+  print theme('page', form($form));
+}
+
+function contact_admin_delete($subject) {
+  if ($_POST['op'] != t('Delete')) {
+    print theme('page', theme('confirm',
+                  t('Are you sure you want to delete %subject?', array('%subject' => theme('placeholder', $subject))),
+                  'admin/contact/delete/'. $subject,
+                  t('This action cannot be undone.'),
+                  t('Delete'),
+                  t('Cancel')));
+  }
+  else {
+    db_query("DELETE FROM {contact} WHERE subject = '%s'", $subject);
+    drupal_goto('admin/contact');
+  }
+}
+
+
+function contact_admin() {
+  $result = db_query('SELECT subject, recipients FROM {contact} ORDER BY subject');
+  $rows = array();
+  while ($subject = db_fetch_object($result)) {
+    $rows[] = array($subject->subject, $subject->recipients, l(t('edit'), 'admin/contact/edit/'. $subject->subject), l(t('delete'), 'admin/contact/delete/'. $subject->subject));
+  }
+  $header = array(t('Subject'), t('Recipients'), array('data' => t('Operations'), 'colspan' => 2));
+  print theme('page', theme('table', $header, $rows));
+}
+
+function contact_mail_page() {
+  global $user;
+
+  if (!flood_is_allowed('contact', CONTACT_HOURLY_THRESHOLD)) {
+    $output = t("You can't send more than %number messages per hour. Please try again later.", array('%number' => CONTACT_HOURLY_THRESHOLD));
+  }
+  else {
+    if (isset($_POST['edit'])) {
+      $edit = $_POST['edit'];
+    }
+ 
+    if ($edit) {
+      // Validate the fields:
+      if (!$edit['name']) {
+        form_set_error('name', t('You must enter a name.'));
+      }
+      if (!$edit['mail'] || !valid_email_address($edit['mail'])) {
+        form_set_error('mail', t('You must enter a valid e-mail address.'));
+      }
+      if (!$edit['message']) {
+        form_set_error('message', t('You must enter a message.'));
+      }
+      
+      if (!form_get_errors()) {
+        // Prepare the sender:
+        $from = $edit['mail'];
+        
+        // Compose the body:
+        $message[] = t("%name sent a message using the contact form at $form.", array('$name' => $edit['name'], '%form' => url($_GET['q'], NULL, NULL, TRUE)));
+        $message[] = t('Message:');
+        $message[] = $edit['message'];
+
+        // Tidy up the body:
+        foreach ($message as $key => $value) {
+          $message[$key] = wordwrap($value);
+        }
+
+        // Format the subject:
+        $subject = '['. variable_get('site_subject', 'drupal') .'] '. $edit['subject'];
+
+        // Prepare the body:
+        $body = implode("\n\n", $message);
+
+        // Load the subject information:
+        $contact = db_fetch_object(db_query("SELECT * FROM {contact} WHERE subject = '%s'", $edit['subject']));
+
+        // Send the e-mail to the recipients:
+        user_mail($contact->recipients, $contact->subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
+
+        // Send an auto-reply if necessary:
+        if ($contact->reply) {
+          user_mail($from, $contact->subject, wordwrap($contact->reply), "From: $contact->recipients\nReply-to: $contact->recipients\nX-Mailer: Drupal\nReturn-path: $contact->recipients\nErrors-to: $contact->recipients");
+        }
+
+        // Log the operation:
+        flood_register_event('contact');
+        watchdog('mail', t('%name-from sent an e-mail regarding %subject.', array('%name-from' => theme('placeholder', $edit['name'] ." <$from>"), '%subject' => theme('placeholder', $contact->subject))));
+
+        // Set a status message:
+        drupal_set_message(t('Your message has been sent.'));
+
+        // Jump to home page:
+        drupal_goto();
+      }
+    }
+    else {
+      $edit['name'] = $user->name;
+      $edit['mail'] = $user->mail;
+    }
+ 
+    $result = db_query('SELECT subject FROM contact ORDER BY subject');
+    while ($subject = db_fetch_object($result)) {
+      $subjects[$subject->subject] = $subject->subject;
+    }
+
+    if ($subjects) {
+      $output  = variable_get('contact_form_information', t('You can leave us a message using the contact form below.'));
+      $output .= form_textfield(t('Name'), 'name', $edit['name'], 50, 255, NULL, NULL, TRUE);
+      $output .= form_textfield(t('E-mail'), 'mail', $edit['mail'], 50, 255, NULL, NULL, TRUE);
+      $output .= form_select(t('Subject'), 'subject', $edit['subject'], $subjects);
+      $output .= form_textarea(t('Message'), 'message', $edit['message'], 70, 8, NULL, NULL, TRUE);
+      $output .= form_submit(t('Send e-mail'));
+      $output  = form($output);
+    }
+    else {
+      $output = t('The contact form has not been configured.');
+    }
+  }
+
+  print theme('page', $output);
 }
 
 ?>

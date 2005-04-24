@@ -196,7 +196,17 @@ CREATE TABLE comments (
 CREATE INDEX comments_nid_idx ON comments(nid);
 
 --
--- Table structre for table 'node_last_comment'
+-- Table structre for table 'contact'
+--
+
+CREATE TABLE contact (
+  subject varchar(255) NOT NULL default '',
+  recipients longtext NOT NULL default '',
+  reply longtext NOT NULL default ''
+);
+
+--
+-- Table structre for table 'node_comment_statistics'
 --
 
 CREATE TABLE node_comment_statistics (

@@ -108,7 +108,8 @@ $sql_updates = array(
   "2005-04-08: first update since Drupal 4.6.0 release" => "update_129",
   "2005-04-10" => "update_130",
   "2005-04-11" => "update_131",
-  "2005-04-14" => "update_132"
+  "2005-04-14" => "update_132",
+  "2005-04-20" => "update_133"
 );
 
 function update_32() {
@@ -2405,6 +2406,15 @@ function update_132() {
   return $ret;
 }
 
+function update_133() {
+  $ret[] = update_sql("CREATE TABLE contact (
+    subject varchar(255) NOT NULL default '',
+    recipients longtext NOT NULL default '',
+    reply longtext NOT NULL default ''
+    )");
+
+  return $ret;
+}
 function update_sql($sql) {
   $edit = $_POST["edit"];
   $result = db_query($sql);
