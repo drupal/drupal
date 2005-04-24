@@ -249,7 +249,7 @@ function archive_page($year = 0, $month = 0, $day = 0) {
       $output .= node_view(node_load(array('nid' => $nid->nid)), 1);
     }
   }
-  print theme('page', $output);
+  return $output;
 }
 
 ?>

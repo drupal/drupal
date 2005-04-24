@@ -199,7 +199,7 @@ function drupal_menu($may_cache) {
  * Menu callback; print Drupal-authentication-specific information from user/help.
  */
 function drupal_page_help() {
-  print theme('page', drupal_help('user/help#drupal'));
+  return drupal_help('user/help#drupal');
 }
 
 /**

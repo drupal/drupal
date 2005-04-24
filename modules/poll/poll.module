@@ -274,7 +274,7 @@ function poll_page() {
   }
   $output .= '</ul>';
   $output .= theme("pager", NULL, 15);
-  print theme('page', $output);
+  return $output;
 }
 
 /**
@@ -361,7 +361,7 @@ function poll_view_results(&$node, $teaser, $page, $block) {
 function poll_results() {
   if ($node = node_load(array('nid' => arg(1)))) {
     drupal_set_title(check_plain($node->title));
-    print theme('page', node_show($node, 0));
+    return node_show($node, 0);
   }
   else {
     drupal_not_found();

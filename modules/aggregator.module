@@ -762,7 +762,7 @@ function aggregator_edit() {
     $output = aggregator_form_feed(aggregator_get_feed(arg(2)));
   }
 
-  print theme('page', $output);
+  return $output;
 }
 
 
@@ -792,7 +792,7 @@ function aggregator_admin_edit_category($category = 0) {
         $output = aggregator_form_category();
       }
   }
-  print theme('page', $output);
+  return $output;
 }
 
 /**
@@ -822,7 +822,7 @@ function aggregator_admin_edit_feed($feed = 0) {
         $output = aggregator_form_feed();
       }
   }
-  print theme('page', $output);
+  return $output;
 }
 
 /**
@@ -845,7 +845,7 @@ function aggregator_admin_refresh_feed($feed) {
  * Menu callback; displays the aggregator administration page.
  */
 function aggregator_admin_overview() {
-  print theme('page', aggregator_view());
+  return aggregator_view();
 }
 
 /**
@@ -946,7 +946,7 @@ function _aggregator_page_list($sql, $op, $header = '') {
     $output .= $pager;
   }
 
-  print theme('page', $output);
+  return $output;
 }
 
 /**
@@ -971,7 +971,7 @@ function aggregator_page_sources() {
   }
   $output .= theme('xml_icon', url('aggregator/opml'));
   $output .= '</div>';
-  print theme('page', $output);
+  return $output;
 }
 
 /**
@@ -1020,7 +1020,7 @@ function aggregator_page_categories() {
   }
   $output .= '</div>';
 
-  print theme('page', $output);
+  return $output;
 }
 
 /**

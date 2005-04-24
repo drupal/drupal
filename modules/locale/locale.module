@@ -283,7 +283,7 @@ function locale_admin_manage() {
     drupal_goto('admin/locale/language/overview');
   }
 
-  print theme('page', _locale_admin_manage_screen());
+  return _locale_admin_manage_screen();
 }
 
 /**
@@ -327,7 +327,7 @@ function locale_admin_manage_delete_screen() {
                   t('Delete'),
                   t('Cancel'),
                   $extra);
-  print theme('page', $output);
+  return $output;
 }
 
 /**
@@ -364,7 +364,7 @@ function locale_admin_manage_add() {
       }
       break;
   }
-  print theme('page', _locale_admin_manage_add_screen());
+  return _locale_admin_manage_add_screen();
 }
 
 // ---------------------------------------------------------------------------------
@@ -397,7 +397,7 @@ function locale_admin_import() {
       drupal_goto('admin/locale');
       break;
   }
-  print theme('page', _locale_admin_import_screen());
+  return _locale_admin_import_screen();
 }
 
 
@@ -414,7 +414,7 @@ function locale_admin_export() {
       _locale_export_po($_POST['edit']['langcode']);
       break;
   }
-  print theme('page', _locale_admin_export_screen());
+  return _locale_admin_export_screen();
 }
 
 
@@ -449,7 +449,7 @@ function locale_admin_string() {
       break;
     default:
   }
-  print theme('page', $output);
+  return $output;
 }
 
 ?>

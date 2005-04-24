@@ -15,13 +15,18 @@ include_once 'includes/common.inc';
 
 fix_gpc_magic();
 
-$status = menu_execute_active_handler();
-switch ($status) {
+$return = menu_execute_active_handler();
+switch ($return) {
   case MENU_NOT_FOUND:
     drupal_not_found();
     break;
   case MENU_ACCESS_DENIED:
     drupal_access_denied();
+    break;
+  default:
+    if (!empty($return)) {
+      print theme('page', $return);
+    }
     break;
 }
 

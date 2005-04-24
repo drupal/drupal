@@ -310,7 +310,7 @@ function filter_admin_overview() {
   $group .= form($form);
   $output .= '<h2>'. t('Add new input format') .'</h2>'. $group;
 
-  print theme('page', $output);
+  return $output;
 }
 
 /**
@@ -403,7 +403,7 @@ function filter_admin_delete() {
                   t('Delete'),
                   t('Cancel'),
                   $extra);
-  print theme('page', $output);
+  return $output;
 }
 
 /**
@@ -449,7 +449,7 @@ function filter_admin_filters() {
   $group .= $tiplist;
   $output .= '<h2>'. t('Formatting guidelines') .'</h2>'. $group;
 
-  print theme('page', $output);
+  return $output;
 }
 
 /**
@@ -505,7 +505,7 @@ function filter_admin_order() {
   $form .= form_submit(t('Save configuration'));
   $output = form($form);
 
-  print theme('page', $output);
+  return $output;
 }
 
 /**
@@ -544,7 +544,7 @@ function filter_admin_configure() {
     $output = t('No settings are available.');
   }
 
-  print theme('page', $output);
+  return $output;
 }
 
 /**
@@ -764,7 +764,7 @@ function filter_tips_long() {
   else {
     $output = theme('filter_tips', _filter_tips(-1, true), true);
   }
-  print theme('page', $output);
+  return $output;
 }
 
 /**

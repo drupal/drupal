@@ -149,7 +149,7 @@ function blog_page_user($uid) {
     $output .= theme('xml_icon', url("blog/$account->uid/feed"));
 
     drupal_set_html_head('<link rel="alternate" type="application/rss+xml" title="RSS - '. $title .'" href="'. url("blog/$account->uid/feed") .'" />');
-    print theme('page', $output);
+    return $output;
   }
   else {
     drupal_not_found();
@@ -173,7 +173,7 @@ function blog_page_last() {
   $output .= theme('xml_icon', url('blog/feed'));
 
   drupal_set_html_head('<link rel="alternate" type="application/rss+xml" title="RSS - blogs" href="'. url('blog/feed') .'" />');
-  print theme('page', $output);
+  return $output;
 }
 
 /**

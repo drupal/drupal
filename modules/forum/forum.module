@@ -105,7 +105,7 @@ function forum_admin() {
       $output = forum_overview();
   }
 
-  print theme('page', $output);
+  return $output;
 }
 
 /**
@@ -299,7 +299,7 @@ function forum_admin_configure() {
   $forder = array(1 => t('Date - newest first'), 2 => t('Date - oldest first'), 3 => t('Posts - most active first'), 4=> t('Posts - least active first'));
   $output .= form_radios(t('Default order'), 'forum_order', variable_get('forum_order', '1'), $forder, t('The default display order for topics.'));
 
-  print theme('page', system_settings_form($output));
+  return system_settings_form($output);
 }
 
 /**
@@ -736,11 +736,11 @@ function forum_page($tid = 0) {
       $topics = forum_get_topics($tid, $sortby, $forum_per_page);
     }
 
-    print theme('page', theme('forum_display', $forums, $topics, $parents, $tid, $sortby, $forum_per_page));
+    return theme('forum_display', $forums, $topics, $parents, $tid, $sortby, $forum_per_page);
   }
   else {
     drupal_set_title(t('Warning'));
-    print theme('page', forum_help('admin/settings/forum'));
+    return forum_help('admin/settings/forum');
   }
 }
 

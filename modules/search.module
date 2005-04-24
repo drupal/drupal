@@ -162,7 +162,7 @@ function search_admin() {
   $group .= form_textfield(t('Minimum word length to search for'), 'remove_short', variable_get('remove_short', 3), 3, 3, t('The number of characters a word has to be to be searched for, including wildcard characters.'));
   $output .= form_group(t('Indexing settings'), $group);
 
-  print theme('page', system_settings_form($output));
+  return system_settings_form($output);
 }
 
 /**
@@ -598,7 +598,7 @@ function search_view() {
 
     $output .= $results;
 
-    print theme('page', $output);
+    return $output;
   }
   else {
     drupal_access_denied();

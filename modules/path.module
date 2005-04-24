@@ -95,7 +95,7 @@ function path_menu($may_cache) {
  * Menu callback; presents an overview of all URL aliases.
  */
 function path_admin() {
-  print theme('page', path_overview());
+  return path_overview();
 }
 
 /**
@@ -114,7 +114,7 @@ function path_admin_edit($pid = 0) {
     $output = path_form();
   }
 
-  print theme('page', $output);
+  return $output;
 }
 
 /**

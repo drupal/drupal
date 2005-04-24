@@ -70,7 +70,7 @@ function system_menu($may_cache) {
 
     $items[] = array('path' => 'admin', 'title' => t('administer'),
       'access' => user_access('access administration pages'),
-      'callback' => 'system_admin_page',
+      'callback' => 'watchdog_overview',
       'weight' => 9);
 
     // Themes:
@@ -117,13 +117,6 @@ function system_menu($may_cache) {
 function system_test() {
   variable_set('clean_url_ok', 1);
   exit;
-}
-
-/**
- * Menu callback; provides the main page of the administration section.
- */
-function system_admin_page() {
-  watchdog_overview('actions');
 }
 
 /**
@@ -574,7 +567,7 @@ function system_themes() {
   system_listing_save();
   $form = system_theme_listing();
   $form .= form_submit(t('Save configuration'));
-  print theme('page', form($form));
+  return form($form);
 }
 
 /**
@@ -584,7 +577,7 @@ function system_modules() {
   system_listing_save();
   $form = system_module_listing();
   $form .= form_submit(t('Save configuration'));
-  print theme('page', form($form));
+  return form($form);
 }
 
 /**
@@ -600,7 +593,7 @@ function system_site_settings($module = NULL) {
     $form = system_view_general();
   }
 
-  print theme('page', system_settings_form($form));
+  return system_settings_form($form);
 }
 
 /**
@@ -711,7 +704,7 @@ function system_theme_settings($key = '') {
   $form .= form_submit(t('Save configuration'));
   $form .= form_submit(t('Reset to defaults'));
 
-  print theme('page', form($form, 'post', null, array('enctype' => 'multipart/form-data')));
+  return form($form, 'post', null, array('enctype' => 'multipart/form-data'));
 
 }
 

@@ -154,7 +154,7 @@ function statistics_access_log($aid) {
     $output .= ' <tr><th>'. t('User') .'</th><td>'. format_name($access) .'</td></tr>';
     $output .= ' <tr><th>'. t('Hostname') ."</th><td>$access->hostname</td></tr>";
     $output .= '</table>';
-    print theme('page', $output);
+    return $output;
   }
   else {
     drupal_not_found();
@@ -184,7 +184,7 @@ function statistics_node_tracker() {
     }
 
     drupal_set_title(check_plain($node->title));
-    print theme('page', theme('table', $header, $rows));
+    return theme('table', $header, $rows);
   }
   else {
     drupal_not_found();
@@ -212,7 +212,7 @@ function statistics_user_tracker() {
     }
 
     drupal_set_title($account->name);
-    print theme('page', theme('table', $header, $rows));
+    return theme('table', $header, $rows);
   }
   else {
     drupal_not_found();
@@ -245,7 +245,7 @@ function statistics_recent_hits($type = 'all', $id = 0) {
     $rows[] = array(array('data' => $pager, 'colspan' => '4'));
   }
 
-  print theme('page', theme('table', $header, $rows));
+  return theme('table', $header, $rows);
 }
 
 /**
@@ -270,7 +270,7 @@ function statistics_top_pages() {
   }
 
   drupal_set_title(t('Top pages in the past %interval', array('%interval' => format_interval(variable_get('statistics_flush_accesslog_timer', 259200)))));
-  print theme('page', theme('table', $header, $rows));
+  return theme('table', $header, $rows);
 }
 
 /**
@@ -296,7 +296,7 @@ function statistics_top_users() {
   }
 
   drupal_set_title(t('Top users in the past %interval', array('%interval' => format_interval(variable_get('statistics_flush_accesslog_timer', 259200)))));
-  print theme('page', theme('table', $header, $rows));
+  return theme('table', $header, $rows);
 }
 
 /**
@@ -323,7 +323,7 @@ function statistics_top_referrers() {
     $rows[] = array(array('data' => $pager, 'colspan' => '3'));
   }
 
-  print theme('page', theme('table', $header, $rows));
+  return theme('table', $header, $rows);
 }
 
 /**

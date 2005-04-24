@@ -177,7 +177,7 @@ function profile_browse() {
     $output .= '</div>';
 
     drupal_set_title($title);
-    print theme('page', $output);
+    return $output;
   }
   else if ($name && !$field->id) {
     drupal_not_found();
@@ -201,7 +201,7 @@ function profile_browse() {
     $output .= theme('pager', NULL, 20);
 
     drupal_set_title(t('user list'));
-    print theme('page', $output);
+    return $output;
   }
 }
 
@@ -523,7 +523,7 @@ function profile_admin_add($type) {
   }
 
   drupal_set_title(t('Add new %type', array('%type' => _profile_field_types($type))));
-  print theme('page', _profile_field_form($type, $data));
+  return _profile_field_form($type, $data);
 }
 
 /**
@@ -551,7 +551,7 @@ function profile_admin_edit($fid) {
   }
 
   drupal_set_title(t('Edit %type', array('%type' => $data['type'])));
-  print theme('page', _profile_field_form($data['type'], $data));
+  return _profile_field_form($data['type'], $data);
 }
 
 /**
@@ -617,7 +617,7 @@ function profile_admin_overview() {
   }
   $output .= '</ul>';
 
-  print theme('page', $output);
+  return $output;
 }
 
 function theme_profile_block($user, $fields = array()) {

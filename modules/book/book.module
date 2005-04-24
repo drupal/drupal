@@ -288,7 +288,7 @@ function book_outline() {
         }
 
         drupal_set_title(check_plain($node->title));
-        print theme('page', form($output));
+        return form($output);
     }
   }
 }
@@ -611,7 +611,7 @@ function book_render() {
   }
 
   drupal_set_title(t('Books'));
-  print theme('page', $output);
+  return $output;
 }
 
 /**
@@ -767,7 +767,7 @@ function book_admin_orphan() {
     $output .= theme('table', $header, $rows);
   }
 
-  print theme('page', $output);
+  return $output;
 }
 
 /**
@@ -785,7 +785,7 @@ function book_admin($nid = 0) {
       $output .= book_admin_view($nid);
       break;
   }
-  print theme('page', $output);
+  return $output;
 }
 
 /**

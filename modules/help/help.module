@@ -63,7 +63,7 @@ function help_main() {
    <dt>Visitor</dt><dd>A person who does not have an account at your Drupal site or a person who has an account at your Drupal site but is <strong>not</strong> logged in with that account. Also termed \"anonymous user\".</dd>
   </dl>", array('%Drupal' => 'http://drupal.org', '%handbook' => 'http://drupal.org/handbook', '%help_pages' => help_links_as_list(), '%taxonomy' => url('admin/help/taxonomy')));
 
-  print theme('page', $output);
+  return $output;
 }
 
 function help_links_as_list() {
@@ -103,7 +103,7 @@ function help_page() {
       $output .= $temp;
     }
   }
-  print theme('page', $output);
+  return $output;
 }
 
 ?>

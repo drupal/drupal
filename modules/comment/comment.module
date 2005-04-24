@@ -329,7 +329,7 @@ function comment_configure() {
     $output .= form_group(t('Comment moderation settings'), $group);
   }
 
-  print theme('page', system_settings_form($output));
+  return system_settings_form($output);
 }
 
 /**
@@ -361,7 +361,7 @@ function comment_edit($cid) {
   $comment = drupal_unpack($comment);
   $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
   if (comment_access('edit', $comment)) {
-    print theme('page', comment_preview(object2array($comment)));
+    return comment_preview(object2array($comment));
   }
   else {
     drupal_access_denied();
@@ -380,15 +380,13 @@ function comment_reply($nid, $pid = NULL) {
     $edit = $_POST['edit'];
     $edit = comment_validate_form($edit);
     drupal_set_title(t('Post comment'));
-    print theme('page', comment_post($edit));
-    return;
+    return comment_post($edit);
   }
   else if ($_POST['op'] == t('Preview comment')) {
     $edit = $_POST['edit'];
     $edit = comment_validate_form($edit);
     drupal_set_title(t('Preview comment'));
-    print theme('page', comment_preview($edit));
-    return;
+    return comment_preview($edit);
   }
 
   // or are we merely showing the form?
@@ -423,7 +421,7 @@ function comment_reply($nid, $pid = NULL) {
   }
 
   drupal_set_title(t('Add new comment'));
-  print theme('page', $output);
+  return $output;
 }
 
 function comment_validate_form($edit) {
@@ -661,7 +659,7 @@ function comment_post($edit) {
       }
     }
     else {
-      print theme('page', comment_preview($edit));
+      return comment_preview($edit);
     }
   }
   else {
@@ -945,7 +943,7 @@ function comment_admin_edit($cid) {
     $form .= form_hidden('nid', $comment->nid);
     $form .= form_hidden('cid', $comment->cid);
     $form .= form_submit(t('Submit'));
-    print theme('page', form($form));
+    return form($form);
   }
 }
 
@@ -989,7 +987,7 @@ function comment_delete($cid) {
     drupal_set_message(t('The comment no longer exists.'));
   }
 
-  print theme('page', $output);
+  return $output;
 }
 
 function comment_save($id, $edit) {
@@ -1042,7 +1040,7 @@ function comment_admin_overview($type = 'new') {
     $rows[] = array(array('data' => t('No comments available.'), 'colspan' => '6'));
   }
 
-  print theme('page', theme('table', $header, $rows));
+  return theme('table', $header, $rows);
 }
 
 /**
@@ -1091,7 +1089,7 @@ function comment_matrix_settings() {
   $output .= theme('table', $header, $rows);
   if ($rows) { $output .= '<br />'. form_submit(t('Submit votes')); }
 
-  print theme('page', form($output));
+  return form($output);
 }
 
 /**
@@ -1121,7 +1119,7 @@ function comment_role_settings() {
   $output .= theme('table', $header, $rows);
   $output .= '<br />'. form_submit(t('Save scores'));
 
-  print theme('page', form($output));
+  return form($output);
 }
 
 /**
@@ -1176,7 +1174,7 @@ function comment_vote_settings($mid = 0) {
     $form .= form_submit(t('Add new vote'));
   }
 
-  print theme('page', $output . form($form));
+  return $output . form($form);
 }
 
 /**
@@ -1230,7 +1228,7 @@ function comment_threshold_settings($fid = 0) {
     $form .= form_submit(t('Add new threshold'));
   }
 
-  print theme('page', $output . form($form));
+  return $output . form($form);
 }
 
 /**

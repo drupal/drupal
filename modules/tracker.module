@@ -118,7 +118,7 @@ function tracker_page($uid = 0) {
   $output .= theme('table', $header, $rows);
   $output .= '</div>';
 
-  print theme('page', $output);
+  return $output;
 }
 
 ?>

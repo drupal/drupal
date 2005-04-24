@@ -97,7 +97,7 @@ function upload_admin() {
     $output .= form_group(t('Settings for %role', array('%role' => "<em>$role</em>")), $group);
   }
 
-  print theme('page', system_settings_form($output));
+  return system_settings_form($output);
 }
 
 function upload_download() {

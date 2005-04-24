@@ -104,7 +104,7 @@ function menu_perm() {
 function menu_overview() {
   menu_rebuild();
 
-  print theme('page', menu_overview_tree());
+  return menu_overview_tree();
 }
 
 /**
@@ -124,7 +124,7 @@ function menu_reset() {
                       'admin/menu',
                       t('Any custom additions or changes to the menu will be lost.'),
                       t('Reset all'));
-      print theme('page', $output);
+      return $output;
   }
 }
 
@@ -150,7 +150,7 @@ function menu_add_menu() {
       $output .= menu_edit_item_form($edit);
   }
 
-  print theme('page', $output);
+  return $output;
 }
 
 /**
@@ -171,7 +171,7 @@ function menu_reset_item($mid) {
                       'admin/menu',
                       t('Any customizations will be lost. This action cannot be undone.'),
                       t('Reset'));
-      print theme('page', $output);
+      return $output;
   }
 }
 
@@ -204,7 +204,7 @@ function menu_delete_item($mid) {
         $message = t('Are you sure you want to delete the custom menu item %item?', array('%item' => theme('placeholder', $menu->title)));
       }
       $output = theme('confirm', $message, 'admin/menu', t('This action cannot be undone.'), t('Delete'));
-      print theme('page', $output);
+      return $output;
   }
 }
 
@@ -260,7 +260,7 @@ function menu_edit_item($mid = 0) {
       $output .= menu_edit_item_form($edit);
   }
 
-  print theme('page', $output);
+  return $output;
 }
 
 /**

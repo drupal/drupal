@@ -614,7 +614,7 @@ function node_configure() {
   $output .= form_select(t('Length of trimmed posts'), 'teaser_length', variable_get('teaser_length', 600), array(0 => t('Unlimited'), 200 => t('200 characters'), 400 => t('400 characters'), 600 => t('600 characters'), 800 => t('800 characters'), 1000 => t('1000 characters'), 1200 => t('1200 characters'), 1400 => t('1400 characters'), 1600 => t('1600 characters'), 1800 => t('1800 characters'), 2000 => t('2000 characters')), t("The maximum number of characters used in the trimmed version of a post.  Drupal will use this setting to determine at which offset long posts should be trimmed.  The trimmed version of a post is typically used as a teaser when displaying the post on the main page, in XML feeds, etc.  To disable teasers, set to 'Unlimited'. Note that this setting will only affect new or updated content and will not affect existing teasers."));
   $output .= form_radios(t('Preview post'), 'node_preview', variable_get('node_preview', 0), array(t('Optional'), t('Required')), t('Must users preview posts before submitting?'));
 
-  print theme('page', system_settings_form($output));
+  return system_settings_form($output);
 }
 
 /**
@@ -958,6 +958,10 @@ function node_types_configure($type = NULL) {
     // Go to the listing page when we submit this form, system_settings_save() calls drupal_goto().
     if ($_POST['op']) {
       $_GET['q'] = 'admin/node/configure/types';
+      $options = 'options_'. $type;
+      if (empty($node->$options)) {
+        $node->$options = array();
+      }
     }
     system_settings_save();
 
@@ -968,7 +972,7 @@ function node_types_configure($type = NULL) {
     $output = form_group(t('Submission form'), $group);
     $output .= form_group(t('Workflow'), implode('', node_invoke_nodeapi($node, 'settings')));
 
-    print theme('page', system_settings_form($output));
+    return system_settings_form($output);
   }
   else {
     $header = array(t('Type'), t('Operations'));
@@ -978,7 +982,7 @@ function node_types_configure($type = NULL) {
       $rows[] = array(node_invoke($type, 'node_name'), l(t('configure'), 'admin/node/configure/types/'. $type));
     }
 
-    print theme('page', theme('table', $header, $rows));
+    return theme('table', $header, $rows);
   }
 }
 
@@ -1111,7 +1115,7 @@ function node_admin() {
     default:
       $output = node_admin_nodes();
   }
-  print theme('page', $output);
+  return $output;
 }
 
 /**
@@ -1661,13 +1665,13 @@ function node_page() {
       node_feed();
       return;
     case 'add':
-      print theme('page', node_add(arg(2)));
+      return node_add(arg(2));
       break;
     case 'edit':
-      print theme('page', node_edit(arg(1)));
+      return node_edit(arg(1));
       break;
     case 'revisions':
-      print theme('page', node_revision_overview(arg(1)));
+      return node_revision_overview(arg(1));
       break;
     case 'rollback-revision':
       node_revision_rollback(arg(1), arg(3));
@@ -1680,7 +1684,7 @@ function node_page() {
         $node = node_load(array('nid' => arg(1)), $_GET['revision']);
         if ($node->nid) {
           drupal_set_title(check_plain($node->title));
-          print theme('page', node_show($node, arg(2)));
+          return node_show($node, arg(2));
         }
         else {
           drupal_not_found();
@@ -1690,7 +1694,7 @@ function node_page() {
     case t('Preview'):
       $edit = node_validate($edit);
       drupal_set_title(t('Preview'));
-      print theme('page', node_preview($edit));
+      return node_preview($edit);
       break;
     case t('Submit'):
       if ($nid = node_submit($edit)) {
@@ -1703,7 +1707,7 @@ function node_page() {
       }
       else {
         drupal_set_title(t('Submit'));
-        print theme('page', node_preview($edit));
+        return node_preview($edit);
       }
       break;
     case 'delete':
@@ -1719,11 +1723,11 @@ function node_page() {
         drupal_set_message(t('The node has been deleted.'));
         drupal_goto('admin/node');
       }
-      print theme('page', node_delete($edit));
+      return node_delete($edit);
       break;
     default:
       drupal_set_title('');
-      print theme('page', node_page_default());
+      return node_page_default();
   }
 }
 

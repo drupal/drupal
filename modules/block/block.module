@@ -299,7 +299,7 @@ function block_admin_configure($module = NULL, $delta = 0) {
 
       $form .= form_submit(t('Save block'));
 
-      print theme('page', form($form));
+      return form($form);
   }
 }
 
@@ -323,7 +323,7 @@ function block_box_add() {
       $output .= form($form);
   }
 
-  print theme('page', $output);
+  return $output;
 }
 
 /**
@@ -348,7 +348,7 @@ function block_box_delete($bid = 0) {
                     t('Delete'));
   }
 
-  print theme('page', $output);
+  return $output;
 }
 
 function block_box_form($edit = array()) {
@@ -390,7 +390,7 @@ function block_admin() {
     cache_clear_all();
     drupal_goto($_GET['q']);
   }
-  print theme('page', block_admin_display());
+  return block_admin_display();
 }
 
 /**

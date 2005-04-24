@@ -951,7 +951,7 @@ function user_pass() {
     $output .= form_textfield(t('Username'), 'name', $edit['name'], 30, 64);
     $output .= form_textfield(t('E-mail address'), 'mail', $edit['mail'], 30, 64);
     $output .= form_submit(t('E-mail new password'));
-    print theme('page', form($output));
+    return form($output);
   }
 }
 
@@ -1207,8 +1207,7 @@ function user_edit($category = 'account') {
                       'user/'. $account->uid,
                       t('Deleting a user will remove all their submissions as well. This action cannot be undone.'),
                       t('Delete'));
-      print theme('page', $output);
-      return;
+      return $output;
     }
   }
   else if ($_POST['op'] == t('Delete')) {
@@ -1224,7 +1223,7 @@ function user_edit($category = 'account') {
   $output = form($output, 'post', 0, array('enctype' => 'multipart/form-data'));
 
   drupal_set_title($account->name);
-  print theme('page', $output);
+  return $output;
 }
 
 function user_view($uid = 0) {
@@ -1242,7 +1241,7 @@ function user_view($uid = 0) {
     }
 
     drupal_set_title($account->name);
-    print theme('page', theme('user_profile', $account, $fields));
+    return theme('user_profile', $account, $fields);
   }
   else {
     drupal_not_found();
@@ -1262,11 +1261,11 @@ function user_page() {
   switch ($op) {
     case t('Create new account'):
     case 'register':
-      print theme('page', user_register($edit));
+      return user_register($edit);
       break;
     case t('Log in'):
     case 'login':
-      print theme('page', user_login($edit));
+      return user_login($edit);
       break;
     default:
       if (!arg(1)) {
@@ -1274,7 +1273,7 @@ function user_page() {
           drupal_goto('user/'. $user->uid);
         }
         else {
-          print theme('page', user_login($edit));
+          return user_login($edit);
         }
       }
       else {
@@ -1397,7 +1396,7 @@ function user_admin_access_check() {
   $form .= form_submit('Check e-mail');
   $output .= form($form);
 
-  print theme('page', $output);
+  return $output;
 }
 
 /**
@@ -1419,7 +1418,7 @@ function user_admin_access_add() {
   $form = _user_admin_access_form($edit);
   $form .= form_submit(t('Add rule'));
 
-  print theme('page', form($form, 'post', NULL, array('id' => 'access-rules')));
+  return form($form, 'post', NULL, array('id' => 'access-rules'));
 }
 
 /**
@@ -1442,7 +1441,7 @@ function user_admin_access_delete($aid = 0) {
                     t('Delete'),
                     t('Cancel'),
                     $extra);
-    print theme('page', $output);
+    return $output;
   }
 }
 
@@ -1465,7 +1464,7 @@ function user_admin_access_edit($aid = 0) {
   }
   $form = _user_admin_access_form($edit);
   $form .= form_submit(t('Save rule'));
-  print theme('page', form($form, 'post', NULL, array('id' => 'access-rules')));
+  return form($form, 'post', NULL, array('id' => 'access-rules'));
 }
 
 function _user_admin_access_form($edit) {
@@ -1492,7 +1491,7 @@ function user_admin_access() {
   }
   $output .= theme('table', $header, $rows);
 
-  print theme('page', $output);
+  return $output;
 }
 
 function user_roles($membersonly = 0, $permission = 0) {
@@ -1577,7 +1576,7 @@ function user_admin_perm() {
   $output = theme('table', $header, $rows, array('id' => 'permissions'));
   $output .= form_submit(t('Save permissions'));
 
-  print theme('page', form($output));
+  return form($output);
 }
 
 /**
@@ -1659,7 +1658,7 @@ function user_admin_role() {
     $output = form($output);
   }
 
-  print theme('page', $output);
+  return $output;
 }
 
 function user_admin_account() {
@@ -1709,7 +1708,7 @@ function user_configure() {
   }
   $output = system_settings_form(user_configure_settings());
 
-  print theme('page', $output);
+  return $output;
 }
 
 function user_admin() {
@@ -1732,7 +1731,7 @@ function user_admin() {
     default:
       $output = user_admin_account();
   }
-  print theme('page', $output);
+  return $output;
 }
 
 /**
@@ -1812,7 +1811,7 @@ function user_help($section) {
  * Menu callback; Prints user-specific help information.
  */
 function user_help_page() {
-  print theme('page', user_help('user/help#user'));
+  return user_help('user/help#user');
 }
 
 /**

@@ -125,7 +125,7 @@ function watchdog_overview() {
   $output  = '<div class="container-inline">'. form($form) .'</div>';
   $output .= theme('table', $header, $rows);
 
-  print theme('page', $output);
+  return $output;
 }
 
 /**
@@ -146,7 +146,7 @@ function watchdog_event($id) {
     $output .= ' <tr><th>'. t('Hostname') ."</th><td>$watchdog->hostname</td></tr>";
     $output .= '</table>';
   }
-  print theme('page', $output);
+  return $output;
 }
 
 function _watchdog_get_message_types() {
