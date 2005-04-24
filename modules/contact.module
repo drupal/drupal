@@ -242,8 +242,7 @@ function contact_mail_page() {
         $from = $edit['mail'];
         
         // Compose the body:
-        $message[] = t("%name sent a message using the contact form at $form.", array('$name' => $edit['name'], '%form' => url($_GET['q'], NULL, NULL, TRUE)));
-        $message[] = t('Message:');
+        $message[] = t("%name sent a message using the contact form at %form:", array('%name' => $edit['name'], '%form' => url($_GET['q'], NULL, NULL, TRUE)));
         $message[] = $edit['message'];
 
         // Tidy up the body:
