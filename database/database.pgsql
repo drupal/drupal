@@ -538,19 +538,6 @@ CREATE TABLE poll_choices (
 CREATE INDEX poll_choices_nid_idx ON poll_choices(nid);
 
 --
--- Table structure for queue
---
-
-CREATE TABLE queue (
-  nid integer NOT NULL default '0',
-  uid integer NOT NULL default '0',
-  vote integer NOT NULL default '0',
-  PRIMARY KEY (nid, uid)
-);
-CREATE INDEX queue_nid_idx ON queue(nid);
-CREATE INDEX queue_uid_idx ON queue(uid);
-
---
 -- Table structure for role
 --
 
