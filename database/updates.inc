@@ -109,7 +109,7 @@ $sql_updates = array(
   "2005-04-10" => "update_130",
   "2005-04-11" => "update_131",
   "2005-04-14" => "update_132",
-  "2005-04-20" => "update_133"
+  "2005-04-24" => "update_133"
 );
 
 function update_32() {
@@ -2407,14 +2407,24 @@ function update_132() {
 }
 
 function update_133() {
-  $ret[] = update_sql("CREATE TABLE contact (
+  $ret[] = update_sql("CREATE TABLE {contact} (
     subject varchar(255) NOT NULL default '',
     recipients longtext NOT NULL default '',
     reply longtext NOT NULL default ''
     )");
 
+  if ($GLOBALS['db_type'] == 'mysql') {
+    $ret[] = update_sql("ALTER TABLE {users} ADD login int(11) NOT NULL default '0'");
+  }
+  elseif ($GLOBALS['db_type'] == 'pgsql') {
+    $ret[] = update_sql("ALTER TABLE {users} ADD login integer");
+    $ret[] = update_sql("ALTER TABLE {users} ALTER COLUMN login SET NOT NULL");
+    $ret[] = update_sql("ALTER TABLE {users} ALTER COLUMN login SET DEFAULT '0'");
+  }
+
   return $ret;
 }
+
 function update_sql($sql) {
   $edit = $_POST["edit"];
   $result = db_query($sql);

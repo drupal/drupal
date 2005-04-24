@@ -224,7 +224,7 @@ function contact_mail_page() {
     if (isset($_POST['edit'])) {
       $edit = $_POST['edit'];
     }
- 
+
     if ($edit) {
       // Validate the fields:
       if (!$edit['name']) {
@@ -236,11 +236,11 @@ function contact_mail_page() {
       if (!$edit['message']) {
         form_set_error('message', t('You must enter a message.'));
       }
-      
+
       if (!form_get_errors()) {
         // Prepare the sender:
         $from = $edit['mail'];
-        
+
         // Compose the body:
         $message[] = t("%name sent a message using the contact form at %form:", array('%name' => $edit['name'], '%form' => url($_GET['q'], NULL, NULL, TRUE)));
         $message[] = $edit['message'];
@@ -282,7 +282,7 @@ function contact_mail_page() {
       $edit['name'] = $user->name;
       $edit['mail'] = $user->mail;
     }
- 
+
     $result = db_query('SELECT subject FROM contact ORDER BY subject');
     while ($subject = db_fetch_object($result)) {
       $subjects[$subject->subject] = $subject->subject;
