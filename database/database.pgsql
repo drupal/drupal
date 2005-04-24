@@ -702,6 +702,7 @@ CREATE TABLE users (
   signature varchar(255) NOT NULL default '',
   created integer NOT NULL default '0',
   changed integer NOT NULL default '0',
+  login integer NOT NULL default '0',
   status smallint NOT NULL default '0',
   timezone varchar(8) default NULL,
   language varchar(12) NOT NULL default '',

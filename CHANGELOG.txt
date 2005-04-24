@@ -2,6 +2,8 @@ Drupal x.x.x, xxxx-xx-xx (Development version)
 ------------------------
 
 - added free tagging support (folksonomies).
+- added a site-wide contact form.
+- reworked the 'request new password' functionality.
 - profiles:
     * added a block to display author information along with posts.
     * added support for private profile fields.
