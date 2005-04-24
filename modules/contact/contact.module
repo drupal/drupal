@@ -274,8 +274,8 @@ function contact_mail_page() {
         // Set a status message:
         drupal_set_message(t('Your message has been sent.'));
 
-        // Jump to home page:
-        drupal_goto();
+        // Jump to contact page:
+        drupal_goto('contact');
       }
     }
     else {
