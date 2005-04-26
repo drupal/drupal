@@ -98,11 +98,10 @@ function aggregator_perm() {
  */
 function aggregator_menu($may_cache) {
   $items = array();
+  $edit = user_access('administer news feeds');
+  $view = user_access('access news feeds');
 
   if ($may_cache) {
-    $edit = user_access('administer news feeds');
-    $view = user_access('access news feeds');
-
     $items[] = array('path' => 'admin/aggregator', 'title' => t('aggregator'),
       'callback' => 'aggregator_admin_overview', 'access' => $edit);
     $items[] = array('path' => 'admin/aggregator/edit/feed', 'title' => t('edit feed'),
@@ -136,41 +135,45 @@ function aggregator_menu($may_cache) {
       'callback' => 'aggregator_page_categories', 'access' => $view,
       'type' => MENU_ITEM_GROUPING);
 
-    // Sources:
-    $result = db_query('SELECT title, fid FROM {aggregator_feed} ORDER BY title');
-    while ($feed = db_fetch_object($result)) {
-      $items[] = array('path' => 'aggregator/sources/'. $feed->fid, 'title' => $feed->title,
-        'callback' => 'aggregator_page_source', 'access' => $view);
-      $items[] = array('path' => 'aggregator/sources/'. $feed->fid .'/view', 'title' => t('view'),
-        'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
-      $items[] = array('path' => 'aggregator/sources/'. $feed->fid .'/categorize', 'title' => t('categorize'),
-        'callback' => 'aggregator_page_source', 'access' => $edit,
-        'type' => MENU_LOCAL_TASK);
-      $items[] = array('path' => 'aggregator/sources/'. $feed->fid .'/configure', 'title' => t('configure'),
-        'callback' => 'aggregator_edit', 'access' => $edit,
-        'type' => MENU_LOCAL_TASK,
-        'weight' => 1);
-    }
-
-    // Categories:
-    $result = db_query('SELECT title, cid FROM {aggregator_category} ORDER BY title');
-    while ($category = db_fetch_object($result)) {
-      $items[] = array('path' => 'aggregator/categories/'. $category->cid, 'title' => $category->title,
-        'callback' => 'aggregator_page_category', 'access' => $view);
-      $items[] = array('path' => 'aggregator/categories/'. $category->cid .'/view', 'title' => t('view'),
-        'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
-      $items[] = array('path' => 'aggregator/categories/'. $category->cid .'/categorize', 'title' => t('categorize'),
-        'callback' => 'aggregator_page_category', 'access' => $edit,
-        'type' => MENU_LOCAL_TASK);
-      $items[] = array('path' => 'aggregator/categories/'. $category->cid .'/configure', 'title' => t('configure'),
-        'callback' => 'aggregator_edit', 'access' => $edit,
-        'type' => MENU_LOCAL_TASK,
-        'weight' => 1);
-    }
-
     $items[] = array('path' => 'aggregator/opml', 'title' => t('opml'),
       'callback' => 'aggregator_page_opml', 'access' => $view,
       'type' => MENU_CALLBACK);
+  }
+  else {
+    if (arg(0) == 'aggregator' && is_numeric(arg(2))) {
+      if (arg(1) == 'sources') {
+        $feed = db_fetch_object(db_query('SELECT title, fid FROM {aggregator_feed} WHERE fid = %d', arg(2)));
+        if ($feed) {
+          $items[] = array('path' => 'aggregator/sources/'. $feed->fid, 'title' => $feed->title,
+                           'callback' => 'aggregator_page_source', 'access' => $view);
+          $items[] = array('path' => 'aggregator/sources/'. $feed->fid .'/view', 'title' => t('view'),
+                           'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
+          $items[] = array('path' => 'aggregator/sources/'. $feed->fid .'/categorize', 'title' => t('categorize'),
+                           'callback' => 'aggregator_page_source', 'access' => $edit,
+                           'type' => MENU_LOCAL_TASK);
+          $items[] = array('path' => 'aggregator/sources/'. $feed->fid .'/configure', 'title' => t('configure'),
+                           'callback' => 'aggregator_edit', 'access' => $edit,
+                           'type' => MENU_LOCAL_TASK,
+                           'weight' => 1);
+        }
+      }
+      else if (arg(1) == 'categories') {
+        $category = db_fetch_object(db_query('SELECT title, cid FROM {aggregator_category} WHERE cid = %d', arg(2)));
+        if ($category) {
+          $items[] = array('path' => 'aggregator/categories/'. $category->cid, 'title' => $category->title,
+                           'callback' => 'aggregator_page_category', 'access' => $view);
+          $items[] = array('path' => 'aggregator/categories/'. $category->cid .'/view', 'title' => t('view'),
+                           'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
+          $items[] = array('path' => 'aggregator/categories/'. $category->cid .'/categorize', 'title' => t('categorize'),
+                           'callback' => 'aggregator_page_category', 'access' => $edit,
+                           'type' => MENU_LOCAL_TASK);
+          $items[] = array('path' => 'aggregator/categories/'. $category->cid .'/configure', 'title' => t('configure'),
+                           'callback' => 'aggregator_edit', 'access' => $edit,
+                           'type' => MENU_LOCAL_TASK,
+                           'weight' => 1);
+        }
+      }
+    }
   }
 
   return $items;
