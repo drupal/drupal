@@ -118,7 +118,7 @@ function blogapi_new_post($req_params) {
   $edit = array();
   $edit['type'] = _blogapi_blogid($params[0]);
   // get the node type defaults
-  $node_type_default = variable_get('node_options_'. $edit['type']);
+  $node_type_default = variable_get('node_options_'. $edit['type'], array());
   $edit['uid'] = $user->uid;
   $edit['name'] = $user->name;
   $edit['promote'] = $node_type_default['promote'];
