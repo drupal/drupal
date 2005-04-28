@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.215 2005/04/24 16:34:32 dries Exp $
+// $Id: blog.module,v 1.216 2005/04/28 19:21:41 unconed Exp $
 
 /**
  * @file
@@ -102,17 +102,17 @@ function blog_page($a = NULL, $b = NULL) {
 
   if (is_numeric($a)) { // $a is a user ID
     if ($b == 'feed') {
-      blog_feed_user($a);
+      return blog_feed_user($a);
     }
     else {
-      blog_page_user($a);
+      return blog_page_user($a);
     }
   }
   else if ($a == 'feed') {
-    blog_feed_last();
+    return blog_feed_last();
   }
   else {
-    blog_page_last();
+    return blog_page_last();
   }
 }
 
