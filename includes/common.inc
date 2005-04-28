@@ -208,13 +208,13 @@ function drupal_not_found() {
   $status = MENU_NOT_FOUND;
   if ($path) {
     menu_set_active_item($path);
-    $status = menu_execute_active_handler();
+    $return = menu_execute_active_handler();
   }
 
-  if ($status != MENU_FOUND) {
+  if (empty($return)) {
     drupal_set_title(t('Page not found'));
-    print theme('page', '');
   }
+  print theme('page', $return);
 }
 
 /**
@@ -228,13 +228,14 @@ function drupal_access_denied() {
   $status = MENU_NOT_FOUND;
   if ($path) {
     menu_set_active_item($path);
-    $status = menu_execute_active_handler();
+    $return = menu_execute_active_handler();
   }
 
-  if ($status != MENU_FOUND) {
+  if (empty($return)) {
     drupal_set_title(t('Access denied'));
-    print theme('page', message_access());
+    $return = message_access();
   }
+  print theme('page', $return);
 }
 
 /**

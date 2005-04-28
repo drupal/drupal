@@ -102,17 +102,17 @@ function blog_page($a = NULL, $b = NULL) {
 
   if (is_numeric($a)) { // $a is a user ID
     if ($b == 'feed') {
-      blog_feed_user($a);
+      return blog_feed_user($a);
     }
     else {
-      blog_page_user($a);
+      return blog_page_user($a);
     }
   }
   else if ($a == 'feed') {
-    blog_feed_last();
+    return blog_feed_last();
   }
   else {
-    blog_page_last();
+    return blog_page_last();
   }
 }
 
