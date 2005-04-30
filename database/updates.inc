@@ -109,7 +109,8 @@ $sql_updates = array(
   "2005-04-10" => "update_130",
   "2005-04-11" => "update_131",
   "2005-04-14" => "update_132",
-  "2005-04-24" => "update_133"
+  "2005-04-24" => "update_133",
+  "2005-04-30" => "update_134"
 );
 
 function update_32() {
@@ -2422,6 +2423,17 @@ function update_133() {
     $ret[] = update_sql("ALTER TABLE {users} ALTER COLUMN login SET DEFAULT '0'");
   }
 
+  return $ret;
+}
+
+function update_134() {
+  if ($GLOBALS['db_type'] == 'mysql') {
+    $ret[] = update_sql('ALTER TABLE {blocks} DROP types');
+  }
+  else {
+    // Postgres can only drop columns since 7.4
+    #$ret[] = update_sql('ALTER TABLE {blocks} DROP types');
+  }
   return $ret;
 }
 

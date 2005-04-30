@@ -152,16 +152,15 @@ function _block_rehash($order_by = array('weight')) {
           $block['pages'] = $old_blocks[$module][$delta]->pages;
           $block['custom'] = $old_blocks[$module][$delta]->custom;
           $block['throttle'] = $old_blocks[$module][$delta]->throttle;
-          $block['types'] = $old_blocks[$module][$delta]->types;
         }
         else {
           $block['status'] = $block['weight'] = $block['region'] = $block['custom'] = 0;
-          $block['pages'] = $block['types'] = '';
+          $block['pages'] = '';
         }
 
         // reinsert blocks into table
-        db_query("INSERT INTO {blocks} (module, delta, status, weight, region, visibility, pages, custom, throttle, types) VALUES ('%s', '%s', %d, %d, %d, %d, '%s', %d, %d, '%s')",
-          $block['module'], $block['delta'], $block['status'], $block['weight'], $block['region'], $block['visibility'], $block['pages'], $block['custom'], $block['throttle'], $block['types']);
+        db_query("INSERT INTO {blocks} (module, delta, status, weight, region, visibility, pages, custom, throttle) VALUES ('%s', '%s', %d, %d, %d, %d, '%s', %d, %d)",
+          $block['module'], $block['delta'], $block['status'], $block['weight'], $block['region'], $block['visibility'], $block['pages'], $block['custom'], $block['throttle']);
 
         $blocks[] = $block;
 
@@ -256,13 +255,7 @@ function block_admin_configure($module = NULL, $delta = 0) {
 
   switch ($op) {
     case t('Save block'):
-      if ($edit['types']) {
-        $types = implode(',', $edit['types']);
-      }
-      else {
-        $types = '';
-      }
-      db_query("UPDATE {blocks} SET visibility = %d, pages = '%s', custom = %d, types = '%s' WHERE module = '%s' AND delta = '%s'", $edit['visibility'], $edit['pages'], $edit['custom'], $types, $module, $delta);
+      db_query("UPDATE {blocks} SET visibility = %d, pages = '%s', custom = %d WHERE module = '%s' AND delta = '%s'", $edit['visibility'], $edit['pages'], $edit['custom'], $module, $delta);
       module_invoke($module, 'block', 'save', $delta, $edit);
       drupal_set_message('The block configuration has been saved.');
       cache_clear_all();
@@ -271,7 +264,7 @@ function block_admin_configure($module = NULL, $delta = 0) {
     default:
       // Always evaluates to TRUE, but a validation step may be added later.
       if (!$edit) {
-        $edit = db_fetch_array(db_query("SELECT pages, visibility, custom, types FROM {blocks} WHERE module = '%s' AND delta = '%s'", $module, $delta));
+        $edit = db_fetch_array(db_query("SELECT pages, visibility, custom FROM {blocks} WHERE module = '%s' AND delta = '%s'", $module, $delta));
       }
 
       // Module-specific block configurations.
@@ -279,23 +272,17 @@ function block_admin_configure($module = NULL, $delta = 0) {
         $form = form_group(t('Block specific settings'), $settings);
       }
 
-      foreach (node_list() as $type) {
-        $content_types[$type] = node_invoke($type, 'node_name');
-      }
       // Get the block subject for the page title.
       $info = module_invoke($module, 'block', 'list');
       drupal_set_title(t("'%name' block", array('%name' => $info[$delta]['info'])));
 
       // Standard block configurations.
       $group_1 = form_radios(t('Custom visibility settings'), 'custom', $edit['custom'], array(t('Users cannot control whether or not they see this block.'), t('Show this block by default, but let individual users hide it.'), t('Hide this block by default but let individual users show it.')), t('Allow individual users to customize the visibility of this block in their account settings.'));
-      $group_2 = form_radios(t('Show block on specific pages'), 'visibility', $edit['visibility'], array(t('Show on every page except the listed pages.'), t('Show on only the listed pages.')));
-      $group_2 .= form_textarea(t('Pages'), 'pages', $edit['pages'], 40, 5, t("Enter one page per line as Drupal paths. The '*' character is a wildcard. Example paths are '<em>blog</em>' for the blog page and '<em>blog/*</em>' for every personal blog. '<em>&lt;front&gt;</em>' is the front page."));
-      $group_3 = form_checkboxes(t('Restrict block to specific content types'), 'types', explode(',', $edit['types']), $content_types, t('Selecting one or more content types will cause this block to only be shown on pages of the selected types. This feature works alone or in conjunction with page specific visibility settings. For example, you can specify that a block only appear on book pages in the \'FAQ\' path.'), NULL, FALSE);
+      $group_2 = form_radios(t('Show block on specific pages'), 'visibility', $edit['visibility'], array(t('Show on every page except the listed pages.'), t('Show on only the listed pages.'), t('Show if the following PHP code returns <code>TRUE</code> (PHP-mode, experts only).')));
+      $group_2 .= form_textarea(t('Pages'), 'pages', $edit['pages'], 70, 5, t("Enter one page per line as Drupal paths. The '*' character is a wildcard. Example paths are '%blog' for the blog page and %blog1 for every personal blog. %front is the front page. If the PHP-mode is chosen, enter PHP code between %php.  Note that executing incorrect PHP-code can break your Drupal site.", array('%blog' => theme('placeholder', 'blog'), '%blog1' =>  theme('placeholder', 'blog/*'), '%front' => theme('placeholder', '<front>'), '%php' => theme('placeholder', '<?php ?>'))));
 
       $form .= form_group(t('User specific visibility settings'), $group_1);
       $form .= form_group(t('Page specific visibility settings'), $group_2);
-      $form .= form_group(t('Content specific visibility settings'), $group_3);
-
 
       $form .= form_submit(t('Save block'));
 
@@ -475,33 +462,19 @@ function block_list($region, $regions = array('left' => 0, 'right' => 1, 'all' =
 
       // Match path if necessary
       if ($block['pages']) {
-        $path = drupal_get_path_alias($_GET['q']);
-        $regexp = '/^('. preg_replace(array('/(\r\n?|\n)/', '/\\\\\*/', '/(^|\|)\\\\<front\\\\>($|\|)/'), array('|', '.*', '\1'. variable_get('site_frontpage', 'node') .'\2'), preg_quote($block['pages'], '/')) .')$/';
-        $page_match = !($block['visibility'] xor preg_match($regexp, $path));
+        if ($block['visibility'] < 2) {
+          $path = drupal_get_path_alias($_GET['q']);
+          $regexp = '/^('. preg_replace(array('/(\r\n?|\n)/', '/\\\\\*/', '/(^|\|)\\\\<front\\\\>($|\|)/'), array('|', '.*', '\1'. variable_get('site_frontpage', 'node') .'\2'), preg_quote($block['pages'], '/')) .')$/';
+          $page_match = !($block['visibility'] xor preg_match($regexp, $path));
+        }
+        else {
+          $page_match = drupal_eval($block['pages']);
+        }
       }
       else {
         $page_match = TRUE;
       }
-      // Match node type if necessary
-      $type_match = FALSE;
-      if ($block['types'] != '') {
-        if (arg(0) == 'node' && is_numeric(arg(1))) {
-          $node = node_load(array('nid' => arg(1)));
-          $types = explode(',', $block['types']);
-          //Match on any one selected type
-          foreach ($types as $type) {
-            if ($node->type == $type) {
-              $type_match = TRUE;
-              break;
-            }
-          }
-        }
-      }
-      else {
-        $type_match = TRUE;
-      }
-
-      if ($enabled && $page_match && $type_match) {
+      if ($enabled && $page_match) {
         // Check the current throttle status and see if block should be displayed
         // based on server load.
         if (!($block['throttle'] && (module_invoke('throttle', 'status') > 0))) {
