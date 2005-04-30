@@ -79,8 +79,8 @@
         <!-- END: tabs -->
 
         <!-- END: title -->
-          <!-- BEGIN: help -->
-        <div id="help">{help}</div>
+        <!-- BEGIN: help -->
+        {help}
         <!-- END: help -->
         <!-- BEGIN: message -->
         {message}

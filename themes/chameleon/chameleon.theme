@@ -74,11 +74,9 @@ function chameleon_page($content) {
     $output .= $tabs;
   }
 
-  if ($help = menu_get_active_help()) {
-    $output .= "<div id=\"help\">$help</div><hr />";
-  }
+  $output .= theme('help');
 
-  $output .= theme_status_messages();
+  $output .= theme('status_messages');
 
   $output .= "\n<!-- begin content -->\n";
   $output .= $content;
@@ -140,7 +138,6 @@ function chameleon_node($node, $main = 0, $page = 0) {
 }
 
 function chameleon_comment($comment, $link = "") {
-
   $submitted = array(t('By %author at %date', array('%author' => format_name($comment), '%date' => format_date($comment->timestamp. 'small'))));
   $links = array($link);
 
@@ -152,4 +149,11 @@ function chameleon_comment($comment, $link = "") {
 
   return $output;
 }
+
+function chameleon_help() {
+  if ($help = menu_get_active_help()) {
+    return '<div class="help">'. $help .'</div><hr />';
+  }
+}
+
 ?>

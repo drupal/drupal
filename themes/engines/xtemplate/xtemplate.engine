@@ -150,12 +150,12 @@ function xtemplate_page($content) {
     $xtemplate->template->parse("header.title");
   }
 
-  if ($help = menu_get_active_help()) {
+  if ($help = theme('help')) {
     $xtemplate->template->assign("help", $help);
     $xtemplate->template->parse("header.help");
   }
 
-  if ($message = theme_status_messages()) {
+  if ($message = theme('status_messages')) {
     $xtemplate->template->assign("message", $message);
     $xtemplate->template->parse("header.message");
   }

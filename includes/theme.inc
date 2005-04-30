@@ -26,20 +26,6 @@ define('MARK_UPDATED', 2);
  */
 
 /**
- * Hook Help - returns theme specific help and information.
- *
- * @param section defines the @a section of the help to be returned.
- *
- * @return a string containing the help output.
- */
-function theme_help($section) {
-  switch ($section) {
-    case 'admin/themes#description':
-      return t('The base theme');
-  }
-}
-
-/**
  * Initialize the theme system by loading the theme.
  *
  * @return
@@ -395,11 +381,9 @@ function theme_page($content) {
    $output .= $tabs;
   }
 
-  if ($help = menu_get_active_help()) {
-    $output .= '<small>'. $help .'</small><hr />';
-  }
+  $output .= theme('help');
 
-  $output .= theme_status_messages();
+  $output .= theme('status_messages');
 
   $output .= "\n<!-- begin content -->\n";
   $output .= $content;
@@ -486,6 +470,17 @@ function theme_image($path, $alt = '', $title = '', $attr = '', $getsize = true)
  */
 function theme_breadcrumb($breadcrumb) {
   return '<div class="breadcrumb">'. implode($breadcrumb, ' &raquo; ') .'</div>';
+}
+
+/**
+ * Return a themed help message.
+ *
+ * @return a string containing the helptext for the current page.
+ */
+function theme_help() {
+  if ($help = menu_get_active_help()) {
+    return '<div class="help">'. $help .'</div>';
+  }
 }
 
 /**
