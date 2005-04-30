@@ -1354,7 +1354,7 @@ function user_admin_create($edit = array()) {
 
       drupal_set_message(t('Created a new user account. No e-mail has been sent.'));
 
-      return;
+      drupal_goto('admin/user');
     }
   }
 
