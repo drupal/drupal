@@ -1,5 +1,5 @@
 <?php
-// $Id: xtemplate.engine,v 1.12 2005/03/31 09:25:33 unconed Exp $
+// $Id: xtemplate.engine,v 1.13 2005/04/30 17:47:57 dries Exp $
 
 /**
  * @file
@@ -150,12 +150,12 @@ function xtemplate_page($content) {
     $xtemplate->template->parse("header.title");
   }
 
-  if ($help = menu_get_active_help()) {
+  if ($help = theme('help')) {
     $xtemplate->template->assign("help", $help);
     $xtemplate->template->parse("header.help");
   }
 
-  if ($message = theme_status_messages()) {
+  if ($message = theme('status_messages')) {
     $xtemplate->template->assign("message", $message);
     $xtemplate->template->parse("header.message");
   }

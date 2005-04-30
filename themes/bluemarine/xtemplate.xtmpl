@@ -63,7 +63,7 @@
         <!-- END: tabs -->
         <!-- END: title -->
         <!-- BEGIN: help -->
-        <div id="help">{help}</div>
+        {help}
         <!-- END: help -->
         <!-- BEGIN: message -->
         {message}
