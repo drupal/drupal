@@ -257,7 +257,7 @@ function block_admin_configure($module = NULL, $delta = 0) {
     case t('Save block'):
       db_query("UPDATE {blocks} SET visibility = %d, pages = '%s', custom = %d WHERE module = '%s' AND delta = '%s'", $edit['visibility'], $edit['pages'], $edit['custom'], $module, $delta);
       module_invoke($module, 'block', 'save', $delta, $edit);
-      drupal_set_message('The block configuration has been saved.');
+      drupal_set_message(t('The block configuration has been saved.'));
       cache_clear_all();
       drupal_goto('admin/block');
 
