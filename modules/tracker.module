@@ -60,7 +60,7 @@ function tracker_menu($may_cache) {
 function tracker_track_user() {
   if ($account = user_load(array('uid' => arg(1)))) {
     drupal_set_title($account->name);
-    tracker_page($account->uid);
+    return tracker_page($account->uid);
   }
 }
 
