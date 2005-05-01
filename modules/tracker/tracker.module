@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.module,v 1.115 2005/04/24 16:34:35 dries Exp $
+// $Id: tracker.module,v 1.116 2005/05/01 16:09:52 dries Exp $
 
 /**
  * @file
@@ -60,7 +60,7 @@ function tracker_menu($may_cache) {
 function tracker_track_user() {
   if ($account = user_load(array('uid' => arg(1)))) {
     drupal_set_title($account->name);
-    tracker_page($account->uid);
+    return tracker_page($account->uid);
   }
 }
 
