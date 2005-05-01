@@ -324,7 +324,7 @@ CREATE TABLE locales_meta (
 
 CREATE TABLE locales_source (
   lid int(11) NOT NULL auto_increment,
-  location varchar(128) NOT NULL default '',
+  location varchar(256) NOT NULL default '',
   source blob NOT NULL,
   PRIMARY KEY (lid)
 ) TYPE=MyISAM;
