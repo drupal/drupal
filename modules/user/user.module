@@ -1388,12 +1388,12 @@ function user_admin_access_check() {
 
   $form = form_textfield(t('Username'), 'test', '', 32, 64, t('Enter a username to check if it will be denied or allowed.'));
   $form .= form_hidden('type', 'user');
-  $form .= form_submit('Check username');
+  $form .= form_submit(t('Check username'));
   $output .= form($form);
 
   $form = form_textfield(t('E-mail'), 'test', '', 32, 64, t('Enter an e-mail address to check if it will be denied or allowed.'));
   $form .= form_hidden('type', 'mail');
-  $form .= form_submit('Check e-mail');
+  $form .= form_submit(t('Check e-mail'));
   $output .= form($form);
 
   return $output;
