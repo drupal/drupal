@@ -558,12 +558,20 @@ function profile_admin_edit($fid) {
  * Menu callback; deletes a field from all user profiles.
  */
 function profile_admin_delete($fid) {
-  db_query('DELETE FROM {profile_fields} WHERE fid = %d', $fid);
-
-  cache_clear_all();
-
-  drupal_set_message(t('The field has been deleted.'));
-  drupal_goto('admin/settings/profile');
+  $field = db_fetch_object(db_query("SELECT title FROM {profile_fields} WHERE fid = %d", $fid));
+  if ($_POST['edit']['confirm']) {
+    db_query('DELETE FROM {profile_fields} WHERE fid = %d', $fid);
+    cache_clear_all();
+    drupal_set_message(t('The field %field has been deleted.', array('%field' => theme('placeholder', $field->title))));
+    drupal_goto('admin/settings/profile');
+  }
+  else {
+    $output = theme('confirm',
+                    t('Do you want to remove the field %field?',
+                    array('%field' => $field->title)),
+                    'admin/settings/profile');
+    return $output;
+  }
 }
 
 function _profile_field_form($type, $edit = array()) {
