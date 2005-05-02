@@ -1180,7 +1180,7 @@ function taxonomy_rss_item($node) {
   $terms = taxonomy_node_get_terms($node->nid);
   foreach ($terms as $term) {
     $output[] = array('key'   => 'category',
-                      'value' => $term->name,
+                      'value' => check_plain($term->name),
                       'attributes' => array('domain' => url('taxonomy/term/'.$term->tid, NULL, NULL, TRUE)));
   }
   return $output;
