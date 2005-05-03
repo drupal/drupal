@@ -7,7 +7,7 @@
  *
  * When enabled, the site interface can be displayed in different
  * languages. The setup of languages and translations is completely
- * we based. Gettext portable object files are supported.
+ * web based. Gettext portable object files are supported.
  */
 
 // ---------------------------------------------------------------------------------
