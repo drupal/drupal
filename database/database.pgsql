@@ -326,7 +326,7 @@ CREATE TABLE locales_meta (
 
 CREATE TABLE locales_source (
   lid SERIAL,
-  location varchar(256) NOT NULL default '',
+  location varchar(255) NOT NULL default '',
   source text NOT NULL,
   PRIMARY KEY  (lid)
 );
