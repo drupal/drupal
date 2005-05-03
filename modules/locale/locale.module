@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.121 2005/04/24 16:34:34 dries Exp $
+// $Id: locale.module,v 1.122 2005/05/03 05:22:53 dries Exp $
 
 /**
  * @file
@@ -7,7 +7,7 @@
  *
  * When enabled, the site interface can be displayed in different
  * languages. The setup of languages and translations is completely
- * we based. Gettext portable object files are supported.
+ * web based. Gettext portable object files are supported.
  */
 
 // ---------------------------------------------------------------------------------
