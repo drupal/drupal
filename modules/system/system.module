@@ -652,9 +652,44 @@ function system_theme_settings($key = '') {
   // System wide only settings.
   if (!$key) {
     // Menu settings
-    $group = form_textarea(t('Primary links'), "$var][primary_links", $settings['primary_links'], 70, 8, t('The HTML code for the primary links.'));
-    $group .= form_textarea(t('Secondary links'), "$var][secondary_links", $settings['secondary_links'], 70, 8, t('The HTML code for the secondary links.'));
-    $form .= form_group(t('Menu Settings'), $group, t('Customize the menus that are displayed at the top and/or bottom of the page. This configuration screen is only available in the site wide display configuration.'));
+
+    $header = array(t('link text'), t('url'), t('description'));
+    foreach (array('Primary', 'Secondary') as $utype) {
+      $group = '';
+      $rows = array();
+
+      //Use $utype field , and strtolower() it to get the type field.. to avoid issues with ucfirst() and unicode.
+      $type = strtolower($utype);
+      $value = theme_get_setting($type . '_links');
+      if (!is_array($value)) {
+        $value = array();
+      }
+
+      //Increment the link count, if the user has requested more links.
+      if (variable_get($type . '_links_more', false)) {
+        variable_del($type . '_links_more');
+        variable_set($type . '_link_count', variable_get($type . '_link_count', 5) + 5);
+      }
+
+      //Get the amount of links to show, possibly expanding if there are more links defined than the count specifies.
+      $count = variable_get($type . '_link_count', 5);
+      $count = ($count > sizeof($value['link'])) ? $count : sizeof($value['link']);
+      if (variable_get($type . '_link_count', 5) != $count) {
+        variable_set($type . '_link_count', $count);
+      }
+
+      for ($i = 0; $i < $count; $i++) {
+        $row = array();
+        foreach (array('text', 'link', 'description') as $field) {
+          $row[] = form_textfield('', $var . '][' . $type . '_links][' . $field . '][' . $i, $value[$field][$i], 15, 90);
+        }
+        $rows[] = $row;
+      }
+
+      $group .= form_item('', theme("table", $header, $rows), t('You can specify your _TYPE_ links here, one link per line.<br /> The link text field is the text you want to link.<br /> The url field is the location the link points to.<br /> The description field is an optional description of where the link points.', array('_TYPE_' => $type)));
+      $group .= form_checkbox(t('I need more _TYPE_ links.', array('_TYPE_' => $type)), $type . '_links_more', 1, FALSE, t('Checking this box will give you 5 additional _TYPE_ links.', array('_TYPE_' => $type)));
+      $form .= form_group(t('_TYPE_ link settings', array('_TYPE_' => $utype)), $group);
+    }
 
     // Toggle node display.
     $group = '';

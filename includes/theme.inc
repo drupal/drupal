@@ -211,8 +211,8 @@ function path_to_theme() {
  */
 function theme_get_settings($key = NULL) {
   $defaults = array(
-    'primary_links'                 =>  l(t('edit primary links'), 'admin/themes/settings'),
-    'secondary_links'               =>  l(t('edit secondary links'), 'admin/themes/settings'),
+    'primary_links'                 =>  array(),
+    'secondary_links'               =>  array(),
     'mission'                       =>  '',
     'default_logo'                  =>  1,
     'logo_path'                     =>  '',
