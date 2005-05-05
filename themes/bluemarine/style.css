@@ -14,7 +14,7 @@ tr.dark td, tr.light td {
   padding: 0.3em;
 }
 h1, h2, h3, h4, h5, h6 {
-  margin: 0.5;
+  margin-bottom: 0.5em;
 }
 h1 {
   font-size: 1.3em;
@@ -24,6 +24,10 @@ h2 {
 }
 h3, h4, h5, h6 {
   font-size: 1.1em;
+}
+p {
+  margin-top: 0.5em;
+  margin-bottom: 0.9em;
 }
 a {
   text-decoration: none;
@@ -83,6 +87,7 @@ table {
 #logo img {
   float: left;
   padding: 0em 1.0em 0em 1em;
+  border: 0;
 }
 #menu {
   padding: 0.5em 0.5em 0 0.5em;

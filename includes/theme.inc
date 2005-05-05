@@ -289,12 +289,38 @@ function theme_get_setting($setting_name, $refresh = FALSE) {
       }
     }
 
-    if (!$settings['toggle_primary_links']) {
-      $settings['primary_links'] = '';
-    }
+    foreach (array('primary', 'secondary') as $type) {
+      // Get the data to populate the textfields, if the variable is not an array .. try to parse the old-style link format.
+      $value = $settings[$type . '_links'];
 
-    if (!$settings['toggle_secondary_links']) {
-      $settings['secondary_links'] = '';
+      // Clear out existing (internal) values
+      $settings[$type .'_links'] = array();
+
+      // Get the amount of links to show, possibly expanding if there are more links defined than the count specifies.
+      $count = variable_get($type . '_link_count', 5);
+      $count = ($count > sizeof($value['link'])) ? $count : sizeof($value['link']);
+
+      if ($settings['toggle_' . $type . '_links']) {
+        for ($i =0; $i < $count; $i++) {
+          unset($attributes);
+          if (!empty($value['text'][$i])) {
+            if (!empty($value['description'][$i])) {
+              $attributes['title'] = $value['description'][$i];
+            }
+            $text = $value['text'][$i];
+            $link = $value['link'][$i];
+            if (substr($link, 0, 7) == 'http://') {
+              $settings[$type .'_links'][] = '<a href="'. $link .'"'. drupal_attributes($attributes) .'>'. $text .'</a>';
+            }
+            else {
+              $settings[$type .'_links'][] = l($text, $link, $attributes);
+            }
+          }
+        }
+        if ($settings[$type .'_links'] == array()) {
+          $settings[$type .'_links'] = array(l(t('edit %type links', array('%type' => $type)),'admin/themes/settings'));
+        }
+      }
     }
   }
 

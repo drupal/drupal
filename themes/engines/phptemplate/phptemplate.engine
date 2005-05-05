@@ -119,37 +119,6 @@ function phptemplate_page($content) {
     $frontpage = true;
   }
 
-  $links['primary'] = array();
-  $links['secondary'] = array();
-
-  foreach (array('primary', 'secondary') as $type) {
-    //Get the data to populate the textfields, if the variable is not an array .. try to parse the old-style link format.
-    $value = theme_get_setting($type . '_links');
-
-    //Get the amount of links to show, possibly expanding if there are more links defined than the count specifies.
-    $count = variable_get($type . '_link_count', 5);
-    $count = ($count > sizeof($value['link'])) ? $count : sizeof($value['link']);
-
-    if (theme_get_setting('toggle_' . $type . '_links')) {
-      for ($i =0; $i < $count; $i++) {
-        unset($attributes);
-        if (!empty($value['text'][$i])) {
-          if (!empty($value['description'][$i])) {
-            $attributes['title'] = $value['description'][$i];
-          }
-          $text = $value['text'][$i];
-          $link = $value['link'][$i];
-          if (substr($link, 0, 4) == 'http') {
-            $links[$type][] = '<a href="'. $link .'"'. drupal_attributes($attributes) .'>'. $text .'</a>';
-          }
-          else {
-            $links[$type][] = l($text, $link, $attributes);
-          }
-        }
-      }
-    }
-  }
-
   /**
   * Populate sidebars.
   */
@@ -185,8 +154,8 @@ function phptemplate_page($content) {
     'search_button_text'  => t('search'),
     'search_description'  => t('Enter the terms you wish to search for.'),
     'title'               => drupal_get_title(),
-    'primary_links'       => $links['primary'],
-    'secondary_links'     => $links['secondary'],
+    'primary_links'       => theme_get_setting('primary_links'),
+    'secondary_links'     => theme_get_setting('secondary_links'),
     'breadcrumb'          => theme('breadcrumb', drupal_get_breadcrumb()),
     'tabs'                => theme('menu_local_tasks'),
     'messages'            => theme('status_messages'),

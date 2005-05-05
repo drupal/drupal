@@ -658,20 +658,20 @@ function system_theme_settings($key = '') {
       $group = '';
       $rows = array();
 
-      //Use $utype field , and strtolower() it to get the type field.. to avoid issues with ucfirst() and unicode.
+      // Use $utype field , and strtolower() it to get the type field.. to avoid issues with ucfirst() and unicode.
       $type = strtolower($utype);
-      $value = theme_get_setting($type . '_links');
+      $value = $settings[$type . '_links'];
       if (!is_array($value)) {
         $value = array();
       }
 
-      //Increment the link count, if the user has requested more links.
+      // Increment the link count, if the user has requested more links.
       if (variable_get($type . '_links_more', false)) {
         variable_del($type . '_links_more');
         variable_set($type . '_link_count', variable_get($type . '_link_count', 5) + 5);
       }
 
-      //Get the amount of links to show, possibly expanding if there are more links defined than the count specifies.
+      // Get the amount of links to show, possibly expanding if there are more links defined than the count specifies.
       $count = variable_get($type . '_link_count', 5);
       $count = ($count > sizeof($value['link'])) ? $count : sizeof($value['link']);
       if (variable_get($type . '_link_count', 5) != $count) {

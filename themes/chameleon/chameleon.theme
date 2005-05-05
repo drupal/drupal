@@ -43,8 +43,8 @@ function chameleon_page($content) {
 
   $output .= "</div>\n";
 
-  $primary_links = theme_get_setting('primary_links');
-  $secondary_links = theme_get_setting('secondary_links');
+  $primary_links = theme('links', theme_get_setting('primary_links'));
+  $secondary_links = theme('links', theme_get_setting('secondary_links'));
   if ($primary_links || $secondary_links) {
     $output .= ' <div class="navlinks">';
     if ($primary_links) {

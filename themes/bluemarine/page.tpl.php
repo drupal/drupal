@@ -20,8 +20,8 @@
 
     </td>
     <td id="menu">
-      <div id="secondary"><?php print (is_array($secondary_links) && count($secondary_links) > 0) ? theme('links', $secondary_links) : l(t('edit secondary links'),'admin/themes/settings') ?></div>
-      <div id="primary"><?php print (is_array($primary_links) && count($primary_links) > 0) ? theme('links', $primary_links) : l(t('edit primary links'), 'admin/themes/settings') ?></div>
+      <div id="secondary"><?php print theme('links', $secondary_links) ?></div>
+      <div id="primary"><?php print theme('links', $primary_links) ?></div>
       <?php if ($search_box) { ?><form action="<?php print $search_url ?>" method="post">
         <div id="search">
           <input class="form-text" type="text" size="15" value="" name="keys" alt="<?php print $search_description ?>" />
@@ -43,7 +43,7 @@
         <?php print $breadcrumb ?>
         <h1 class="title"><?php print $title ?></h1>
         <div class="tabs"><?php print $tabs ?></div>
-        <div id="help"><?php print $help ?></div>
+        <?php print $help ?>
         <?php print $messages ?>
 
         <?php print $content; ?>
