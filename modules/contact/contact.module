@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.12 2005/04/24 16:34:33 dries Exp $
+// $Id: contact.module,v 1.13 2005/05/05 22:22:46 dries Exp $
 
 /**
  * @file
@@ -135,7 +135,7 @@ function contact_mail_user() {
           watchdog('mail', t('%name-from sent %name-to an e-mail.', array('%name-from' => theme('placeholder', $user->name), '%name-to' => theme('placeholder', $account->name))));
 
           // Set a status message:
-          drupal_set_message(t('Your message has been sent.'));
+          drupal_set_message(t('The message has been sent.'));
 
           // Jump to the user's profile page:
           drupal_goto("user/$account->uid");

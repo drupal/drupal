@@ -36,7 +36,7 @@
     <td class="primary-links" width="70%" align="center" valign="middle">
       <?php if (is_array($primary_links)) : ?>
         <?php foreach ($primary_links as $link): ?>
-          <?php print $link?> |  
+          <?php print $link?> |
         <?php endforeach; ?>
       <?php endif; ?>
     </td>
@@ -48,7 +48,7 @@
     <td class="secondary-links" width="75%"  align="center" valign="middle">
       <?php if (is_array($secondary_links)) : ?>
         <?php foreach ($secondary_links as $link): ?>
-          <?php print $link?> | 
+          <?php print $link?> |
         <?php endforeach; ?>
       <?php endif; ?>
     </td>
@@ -71,43 +71,43 @@
     <td id="sidebar-left">
       <?php print $sidebar_left ?>
     </td>
-    <?php endif; ?>	
-    
+    <?php endif; ?>
+
     <td valign="top">
       <?php if ($mission != ""): ?>
       <div id="mission"><?php print $mission ?></div>
       <?php endif; ?>
-      
+
       <div id="main">
         <?php if ($title != ""): ?>
           <?php print $breadcrumb ?>
           <h1 class="title"><?php print $title ?></h1>
-          
+
           <?php if ($tabs != ""): ?>
             <div class="tabs"><?php print $tabs ?></div>
           <?php endif; ?>
-          
+
         <?php endif; ?>
-        
+
         <?php if ($help != ""): ?>
             <div id="help"><?php print $help ?></div>
         <?php endif; ?>
-        
+
         <?php if ($messages != ""): ?>
           <?php print $messages ?>
         <?php endif; ?>
-        
+
       <!-- start main content -->
       <?php print($content) ?>
       <!-- end main content -->
-      
+
       </div><!-- main -->
     </td>
     <?php if ($sidebar_right != ""): ?>
     <td id="sidebar-right">
       <?php print $sidebar_right ?>
     </td>
-    <?php endif; ?>	
+    <?php endif; ?>
   </tr>
 </table>
 
@@ -117,13 +117,13 @@
     <?php if (is_array($primary_links)) : ?>
       <div class="primary-links">
         <?php foreach ($primary_links as $link): ?>
-          <?php print $link?> |  
+          <?php print $link?> |
         <?php endforeach; ?>
       </div>
     <?php endif; ?>
     <?php if (is_array($secondary_links)) : ?>
       <div class="secondary-links">
-        <?php foreach ($secondary_links as $link): ?> 
+        <?php foreach ($secondary_links as $link): ?>
           <?php print $link?> |
         <?php endforeach; ?>
       </div>

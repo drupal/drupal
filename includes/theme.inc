@@ -1,5 +1,5 @@
 <?php
-/* $Id: theme.inc,v 1.233 2005/05/05 07:35:57 dries Exp $ */
+/* $Id: theme.inc,v 1.234 2005/05/05 22:22:45 dries Exp $ */
 
 /**
  * @file
@@ -814,19 +814,8 @@ function theme_item_list($items = array(), $title = NULL) {
 }
 
 /**
- * Return a themed error message.
- * REMOVE: this function is deprecated an no longer used in core.
- *
- * @param $message
- *   The error message to be themed.
- *
- * @return
- *   A string containing the error output.
+ * Returns code that emits the 'more help'-link.
  */
-function theme_error($message) {
-  return '<div class="error">'. $message .'</div>';
-}
-
 function theme_more_help_link($url) {
   return '<div class="more-help-link">' . t('[<a href="%link">more help...</a>]', array('%link' => $url)) . '</div>';
 }

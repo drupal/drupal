@@ -4,9 +4,9 @@ Drupal x.x.x, xxxx-xx-xx (Development version)
 - added free tagging support (folksonomies).
 - added a site-wide contact form.
 - theme system:
-    * removed the Xtemplate theme engine.
-    * added the PHPTemplate theme engine.
+    * added the PHPTemplate theme engine and removed the Xtemplate engine.
     * converted the bluemarine theme from XTemplate to PHPTemplate.
+    * converted the pushbutton theme from XTemplate to PHPTemplate.
 - reworked the 'request new password' functionality.
 - profiles:
     * added a block to display author information along with posts.
