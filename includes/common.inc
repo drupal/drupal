@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.438 2005/04/28 19:23:19 unconed Exp $ */
+/* $Id: common.inc,v 1.439 2005/05/05 09:07:08 dries Exp $ */
 
 /**
  * @file
@@ -1051,11 +1051,13 @@ function form_item($title, $value, $description = NULL, $id = NULL, $required = 
  *   The form items within the group, as an HTML string.
  * @param $description
  *   Explanatory text to display after the form item group.
+ * @param $attributes
+ *   An associative array of HTML attributes to add to the fieldset tag.
  * @return
  *   A themed HTML string representing the form item group.
  */
-function form_group($legend, $group, $description = NULL) {
-  return '<fieldset>' . ($legend ? '<legend>'. $legend .'</legend>' : '') . $group . ($description ? '<div class="description">'. $description .'</div>' : '') . "</fieldset>\n";
+function form_group($legend, $group, $description = NULL, $attributes = NULL) {
+  return '<fieldset' . drupal_attributes($attributes) .'>' . ($legend ? '<legend>'. $legend .'</legend>' : '') . $group . ($description ? '<div class="description">'. $description .'</div>' : '') . "</fieldset>\n";
 }
 
 /**
