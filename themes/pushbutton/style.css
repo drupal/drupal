@@ -1,0 +1,606 @@
+/* $Id$ */
+
+/*
+** HTML elements
+*/
+body  {
+  color: #000;
+  background-color: #fff;
+  margin: 0;
+  padding: 0;
+}
+body, p, td, li, ul, ol  {
+  font-family: Verdana, Helvetica, Arial, sans-serif;
+}
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Trebuchet MS", Geneva, Arial, Helvetica, SunSans-Regular, Verdana, sans-serif;
+  margin: 0;
+}
+h1 {
+  color: #369;
+  font-size: 1.6em;
+}
+img {
+  display: block;
+  border: 0;
+}
+tr.dark td, tr.light td {
+  padding: 0.3em;
+}
+a:link {
+  text-decoration: none;
+  font-weight: bold;
+  color: #ff8c00;
+}
+a:visited {
+  text-decoration: none;
+  font-weight: bold;
+  color: #c96;
+}
+a:hover, a:active {
+  font-weight: bold;
+  color: #ff4500;
+  text-decoration: underline;
+}
+fieldset {
+  border: 1px solid #ccc;
+}
+p {
+  margin: 0 0 1.3em 0;
+  padding: 0;
+}
+blockquote {
+  border-left: 4px solid #69c;
+  padding: 0 15px 0 15px;
+  margin: 25px 100px 25px 50px;
+  color: #696969;
+  text-align: left;
+  font-size: 1.2em;
+  line-height: 1.3em;
+  font-family: "Trebuchet MS", Geneva, Arial, Helvetica, SunSans-Regular, Verdana, sans-serif;
+}
+pre {
+  background-color: #eee;
+  padding: 0.75em 1.5em;
+  font-size: 1.2em;
+  border: 1px solid #ddd;
+}
+.form-item {
+  margin-top: 1em;
+}
+.form-item label {
+  color: #369;
+}
+.item-list .title {
+  color: #369;
+  font-size: 0.85em;
+}
+
+/*
+** Page layout blocks / IDs
+*/
+#primary-menu  {
+  background-color: #e0edfb;
+}
+#primary-menu tr {
+  background: transparent url(header-a.jpg) left bottom repeat;
+}
+td#home {
+  background: transparent url(logo-background.jpg) left top repeat;
+}
+td#home a:link img, td#home a:visited img {
+  background: transparent url(logo-active.jpg) repeat;
+  width: 144px;
+  height: 63px;
+}
+td#home a:hover img {
+  background: transparent url(logo-hover.jpg) repeat;
+  width: 144px;
+  height: 63px;
+}
+.primary-links, .primary-links a:link, .primary-links a:visited {
+  color: #369;
+}
+.primary-links a:hover {
+  color: #000;
+}
+#primary-menu .primary-links   {
+  background: transparent url(header-b.jpg) left top no-repeat;
+  font-size: 0.79em;
+}
+#primary-menu .primary-links h1, #primary-menu .primary-links h2, #primary-menu .primary-links h3 {
+  font-size: 2.3em;
+  color: #369;
+}
+#secondary-menu {
+  background-color: #369;
+  border-top: 3px solid #69c;
+  border-bottom: 3px solid #69c;
+}
+.secondary-links, .secondary-links a:link, .secondary-links a:visited  {
+  color: #e4e9eb;
+}
+.secondary-links a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+#secondary-menu .secondary-links {
+  font-size: 0.85em;
+}
+.tabs {
+  margin: 15px 0 15px 0;
+}
+.tabs ul.primary {
+  border-collapse: collapse;
+  padding: 0 0 3px 10px;
+  white-space: nowrap;
+  list-style: none;
+  margin: 0 0 0 0;
+  height: auto;
+  line-height: normal;
+  border-bottom: 2px solid #336699;
+}
+.tabs ul.primary li {
+  display: inline;
+}
+.tabs ul.primary li a {
+  padding: 3px 10px 3px 10px;
+  background: #fff url(tabs-off.png) left top no-repeat;
+  border-color: #6699CC;
+  border-width: 2px;
+  border-style: none solid none none;
+  height: auto;
+  margin-right: 10px;
+  text-decoration: none;
+  text-transform: lowercase;
+}
+.tabs ul.primary li.active a {
+  background: #336699 url(tabs-on.png) left top no-repeat;
+  border-right: 2px solid #336699;
+  color: #fff;
+}
+.tabs ul.primary li a:hover {
+  background-color: #fffaf0;
+  color: #ff4500;
+}
+.tabs ul.secondary {
+  border-collapse: collapse;
+  padding: 10px 0 10px 0px;
+  margin: 0 0 0 0;
+  white-space: nowrap;
+  list-style: none;
+  height: auto;
+  line-height: normal;
+  border-bottom: none;
+}
+.tabs ul.secondary li {
+  display: inline;
+  height: auto;
+  padding: 0 0 0 10px;
+  text-decoration: none;
+  border-right: none;
+}
+.tabs ul.secondary li a {
+  background: #fff url(tabs-option-off.png) left center no-repeat;
+  padding: 10px 0 10px 25px;
+  margin: 0 0 0 0;
+}
+.tabs ul.secondary li a.active {
+  background: #fff url(tabs-option-on.png) left center no-repeat;
+  color: #369;
+  border-bottom: none;
+}
+.tabs ul.secondary li a:hover {
+  background: #fff url(tabs-option-hover.png) left center no-repeat;
+  color: #FF4500
+}
+#content {
+  background-color: #fff;
+}
+#contentstart {
+  background-color: #fff;
+}
+#menu {
+  padding: 0.5em 0.5em 0 0.5em;
+  text-align: right;
+  vertical-align: middle;
+}
+#search .form-text, #search .form-submit {
+  border: 1px solid #369;
+  font-size: 0.85em;
+}
+#search .form-text {
+  width: 8em;
+  height: 1.4em;
+  padding: 0 0.5em 0 0.5em;
+  margin: 0 0 0.5em 0;
+}
+#search .form-submit {
+  height: 1.5em;
+}
+#mission {
+  background-color: #fff;
+  color: #696969;
+  border-top: 2px solid #dcdcdc;
+  border-bottom: 2px solid #dcdcdc;
+  padding: 10px 10px 10px 10px;
+  margin: 20px 35px 0px 35px;
+  font-family: "Trebuchet MS", Geneva, Arial, Helvetica, SunSans-Regular, Verdana, sans-serif;
+  font-size: 1.1em;
+  font-weight: normal;
+}
+#site-info {
+  background-color: #bdd3ea;
+  background-image: url('header-c.png');
+  font-family: "Trebuchet MS", Geneva, Arial, Helvetica, SunSans-Regular, Verdana, sans-serif;
+}
+.site-name {
+  font-size: 1.2em;
+}
+.site-name a:link, .site-name a:visited {
+  color: #fff;
+}
+.site-name a:hover {
+  color: #ff8c00;
+  text-decoration: none;
+}
+.site-slogan {
+  font-size: 0.8em;
+  font-weight: bold;
+}
+#main {
+  /* padding in px not ex because IE messes up 100% width tables otherwise */
+  padding: 30px 35px 50px 35px;
+  background: transparent url(background.png) center center no-repeat;
+}
+#mission, .node .content, .comment .content {
+  line-height: 1.4;
+}
+#help {
+  font-size: 0.9em;
+  margin-bottom: 1em;
+}
+.breadcrumb {
+  margin-bottom: .5em;
+}
+.messages {
+  background-color: #eee;
+  border: 1px solid #ccc;
+  padding: 0.3em;
+  margin-bottom: 1em;
+}
+.error {
+  border-color: red;
+}
+.nav {
+  padding: 0px 0px 0px 0px;
+  margin: 0px 0px 0px 0px;
+}
+#sidebar-left, #sidebar-right {
+  font-size: 0.75em;
+  width: 175px;
+  /* padding in px not ex because IE messes up 100% width tables otherwise */
+  padding: 25px 10px 75px 10px;
+  vertical-align: top;
+  background: #FFFAF0;
+}
+#sidebar-left {
+  border-right: 3px solid #f5f5f5;
+}
+#sidebar-right {
+  border-left: 3px solid #f5f5f5;
+}
+#sidebar-left li, #sidebar-right li {
+  font-size: 1em;
+}
+.node .content {
+  text-align: left;
+  font-size: 0.85em;
+  line-height: 1.3;
+}
+.comment .content {
+  text-align: left;
+  font-size: 0.85em;
+  line-height: 1.3;
+}
+#footer-message {
+  padding: 15px 100px 30px 100px;
+  font-size: 0.85em;
+  text-align: center;
+  color: #aaa;
+}
+table#footer-menu {
+  border-top: 3px solid #6699cc;
+  border-bottom: 3px solid #6699cc;
+  background-color: #369;
+  color: #e4e9eb;
+}
+#footer-menu td {
+  padding: 5px;
+  font-size: 0.75em;
+}
+#footer-menu .primary-links, #footer-menu a:link, #footer-menu a:visited  {
+  color: #e4e9eb;
+}
+#footer-menu a:hover  {
+  color: #fff;
+  text-decoration: underline;
+}
+#footer-menu .primary-links h1, #footer-menu .primary-links h2, #footer-menu .primary-links h3 {
+  font-size: 1.3em;
+  color: #e4e9eb;
+}
+/*
+** Common declarations for child classes of node, comment, block, box, etc.
+** If you want any of them styled differently for a specific parent, add
+** additional rules /with only the differing properties!/ to .parent .class.
+** See .comment .title for an example.
+*/
+#content .title, #content .title a {
+  color: #369;
+}
+.content h1 {
+  color: #369;
+  font-size: 1.9em;
+}
+.content h2 {
+  color: #58b;
+  font-size: 1.7em;
+}
+.content h3 {
+  color: #69c;
+  font-size: 1.5em;
+}
+.content h4 {
+  color: #8be;
+  font-size: 1.3em;
+}
+.content h5 {
+  color: #96c6f6;
+  font-size: 1.15em;
+}
+.submitted {
+  color: #999;
+  font-size: 0.79em;
+}
+.links {
+  color: #ff8c00;
+  font-size: 0.8em;
+  padding: 0px 0px 0px 0px;
+  margin: 0px 0px 0px 0px;
+}
+.links a {
+  font-weight: bold;
+}
+.box {
+  padding: 0 0 1.5em 0;
+}
+.box {
+  padding: 0px 0px 0px 0px;
+  margin: 0px 0px 0px 0px;
+}
+.box h2 {
+  font-size: 9px;
+}
+.block .title h3 {
+  border-bottom: 2px solid #6699cc;
+  color: #369;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 10px 5px 10px 30px;
+  margin-bottom: .25em;
+  background: transparent url(icon-block.png) left center no-repeat;
+}
+.block .content {
+  padding: 5px 5px 5px 5px;
+}
+.block {
+  margin-bottom: 1.5em;
+}
+.box .title {
+  font-size: 1.1em;
+}
+.node {
+  margin: .5em 0 2.5em 0;
+}
+.node .content, .comment .content {
+  margin: .5em 0 .5em 0;
+}
+.node .taxonomy {
+  color: #999;
+  font-size: 0.83em;
+  padding: 1.5em;
+}
+.node .picture {
+  border: 1px solid #fff;
+  float: right;
+  margin: 0.5em;
+}
+.comment {
+  border: 1px solid #abc;
+  padding: .5em;
+  margin-bottom: 1em;
+}
+.comment .title {
+  font-size: 1em;
+  padding: 10px 0px 12px 19px;
+  background: transparent url(icon-comment.png) left center no-repeat;
+}
+.comment .new {
+  font-weight: bold;
+  font-size: 1em;
+  margin-left: 2px;
+  color: red;
+}
+.comment .picture {
+  border: 1px solid #fff;
+  float: right;
+  margin: 10px;
+}
+.links {
+  font-size: 0.75em;
+}
+.links .prev, .links .next, .links .up {
+  font-size: 1.15em;
+}
+.titles .prev, .titles .next  {
+  font-size: 0.85em;
+  font-weight: bold;
+  color: #444;
+}
+.hide {
+  display: none
+}
+.nav .links .next a:link {
+  padding: 15px 15px 17px 0;
+  background: transparent url(arrow-next.png) right center no-repeat;
+}
+.nav .links .next a:hover {
+  padding: 15px 15px 17px 0;
+  background: transparent url(arrow-next-hover.png) right center no-repeat;
+}
+.nav .links .prev a:link {
+  padding: 15px 0 17px 15px;
+  background: transparent url(arrow-prev.png) left center no-repeat;
+}
+.nav .links .prev a:hover {
+  padding: 15px 0 17px 15px;
+  background: transparent url(arrow-prev-hover.png) left center no-repeat;
+}
+.nav .links .up a:link {
+  padding: 11px 0 15px 0;
+  background: transparent url(arrow-up.png) center top no-repeat;
+}
+.nav .links .up a:hover {
+  padding: 11px 0 15px 0;
+  background: transparent url(arrow-up-hover.png) center top no-repeat;
+}
+
+/*
+** Module specific styles
+*/
+.content .active {
+  color: #369;
+}
+#aggregator .feed {
+  background-color: #eee;
+  border: 1px solid #ccc;
+  padding: 1em;
+  margin: 1em 0 1em 0;
+}
+#aggregator .news-item .source {
+  color: #999;
+  font-style: italic;
+  font-size: 0.85em;
+}
+#aggregator .title {
+  font-size: 1em;
+}
+#aggregator h3 {
+  margin-top: 1em;
+}
+#tracker th {
+  text-align: center;
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+  border-left: 1px solid #fafafa;
+}
+#tracker th img {
+  float: right;
+}
+#tracker tr.light, #tracker tr.dark {
+  background-color: #fff;
+}
+#tracker td {
+  vertical-align: top;
+  padding: 1em 1em 1em 0;
+  border-bottom: 1px solid #bbb;
+}
+#forum {
+  margin: 15px 0 15px 0;
+  background-color: #fff;
+}
+#forum table {
+  width: 100%;
+  border: 2px solid #69c;
+}
+#forum table tr th {
+  text-align: center;
+  background: #69c;
+  color: #fff;
+  font-size: 0.75em;
+  border-bottom: 1px solid #aaa;
+}
+#forum table tr th a  {
+  color: #fff;
+  text-decoration: underline;
+}
+#forum table tr th img  {
+  margin: 0;
+}
+#forum tr.dark {
+  background: #e0edfb;
+}
+#forum tr.light {
+  background: #fff;
+}
+#forum td {
+  padding: 0.5em 0.5em 0.5em 0.5em;
+}
+#forum td.container {
+  color: #000;
+  background: #369 url(forum-container.jpg) right top no-repeat;
+  border: 2px solid #69c;
+}
+#forum td.container a {
+  color: #e4e9eb;
+  padding: 20px 0 20px 35px;
+  background: transparent url(forum-link.png) left center no-repeat;
+}
+#forum td.container a:visited {
+  color: #e4e9eb;
+}
+#forum td.statistics, #forum td.settings, #forum td.pager {
+  height: 1.5em;
+  border: 1px solid #bbb;
+}
+#forum td .name {
+  color: #96c;
+}
+#forum td .links {
+  padding-top: 0.7em;
+  font-size: 0.9em;
+}
+.block-forum h3 {
+  margin-bottom: .5em;
+}
+.calendar a {
+  text-decoration: none;
+}
+.calendar td, .calendar th {
+  padding: 0.4em 0;
+  border-color: #888;
+}
+.calendar .row-week td a {
+  padding: 0.4em 0;
+}
+.calendar .day-today {
+  background-color: #69c;
+}
+.calendar .day-today a {
+  color: #fff;
+}
+.calendar .day-selected {
+  background-color: #369;
+  color: #fff;
+}
+.calendar .header-week {
+  background-color: #ccc;
+}
+.calendar .day-blank {
+  background-color: #ccc;
+}
+.calendar .row-week td a:hover {
+  background-color: #fff; color: #000;
+}
