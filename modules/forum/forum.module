@@ -337,7 +337,7 @@ function forum_block($op = 'list', $delta = 0, $edit = array()) {
         switch ($delta) {
           case 0:
             $title = t('Active forum topics');
-            $sql = db_rewrite_sql("SELECT n.nid, n.title, l.last_comment_timestamp, l.comment_count FROM {node} n INNER JOIN {node_comment_statistics} l ON n.nid = l.nid WHERE n.status = 1 AND n.type='forum' ORDER BY l.last_comment_timestamp DESC");
+            $sql = db_rewrite_sql("SELECT n.nid, n.title, l.last_comment_timestamp, l.comment_count FROM {node} n INNER JOIN {node_comment_statistics} l ON n.nid = l.nid WHERE n.status = 1 AND n.type = 'forum' ORDER BY l.last_comment_timestamp DESC");
             $content = node_title_list(db_query_range($sql, 0, variable_get('forum_block_num_0', '5')));
             break;
 

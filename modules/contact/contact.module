@@ -135,7 +135,7 @@ function contact_mail_user() {
           watchdog('mail', t('%name-from sent %name-to an e-mail.', array('%name-from' => theme('placeholder', $user->name), '%name-to' => theme('placeholder', $account->name))));
 
           // Set a status message:
-          drupal_set_message(t('Your message has been sent.'));
+          drupal_set_message(t('The message has been sent.'));
 
           // Jump to the user's profile page:
           drupal_goto("user/$account->uid");

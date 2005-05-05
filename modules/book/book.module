@@ -248,19 +248,19 @@ function book_outline() {
     switch ($op) {
       case t('Add to book outline'):
         db_query('INSERT INTO {book} (nid, parent, weight) VALUES (%d, %d, %d)', $node->nid, $edit['parent'], $edit['weight']);
-        drupal_set_message(t('Added the post to the book.'));
+        drupal_set_message(t('The post has been added to the book.'));
         drupal_goto("node/$node->nid");
         break;
 
       case t('Update book outline'):
         db_query('UPDATE {book} SET parent = %d, weight = %d WHERE nid = %d', $edit['parent'], $edit['weight'], $node->nid);
-        drupal_set_message(t('Updated the book outline.'));
+        drupal_set_message(t('The book outline has been updated.'));
         drupal_goto("node/$node->nid");
         break;
 
       case t('Remove from book outline'):
         db_query('DELETE FROM {book} WHERE nid = %d', $node->nid);
-        drupal_set_message(t('Removed the post from the book.'));
+        drupal_set_message(t('The post has been removed from the book.'));
         drupal_goto("node/$node->nid");
         break;
 
@@ -424,7 +424,7 @@ function book_nodeapi(&$node, $op, $teaser, $page) {
         $book = db_fetch_array(db_query('SELECT * FROM {book} WHERE nid = %d', $node->nid));
         if ($book) {
           if ($node->moderate && user_access('administer nodes')) {
-            drupal_set_message(t("This update/post awaits moderation and won't be accessible until approved."));
+            drupal_set_message(t("The post has been submitted for moderation and won't be accessible until it has been approved."));
           }
 
           foreach ($book as $key => $value) {
@@ -666,8 +666,6 @@ function book_admin_edit_line($node, $depth = 0) {
 function book_admin_edit_book($nid, $depth = 1) {
   $result = db_query(db_rewrite_sql('SELECT n.nid FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE b.parent = %d ORDER BY b.weight, n.title'), $nid);
 
-  $rows = array();
-
   while ($node = db_fetch_object($result)) {
     $node = node_load(array('nid' => $node->nid));
     $rows[] = book_admin_edit_line($node, $depth);
@@ -716,7 +714,7 @@ function book_admin_save($nid, $edit = array()) {
       }
     }
 
-    $message = t('Updated book %title.', array('%title' => theme('placeholder', $book->title)));
+    $message = t('The book %title has been updated.', array('%title' => theme('placeholder', $book->title)));
     watchdog('content', $message);
 
     return $message;

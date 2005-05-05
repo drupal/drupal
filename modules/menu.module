@@ -115,7 +115,7 @@ function menu_reset() {
   switch ($op) {
     case t('Reset all'):
       db_query('DELETE FROM {menu}');
-      drupal_set_message(t('All menu items reset.'));
+      drupal_set_message(t('The menu items have been reset to their default settings.'));
       drupal_goto('admin/menu');
       break;
     default:
@@ -161,7 +161,7 @@ function menu_reset_item($mid) {
   switch ($op) {
     case t('Reset'):
       db_query('DELETE FROM {menu} WHERE mid = %d', $mid);
-      drupal_set_message(t('Menu item reset.'));
+      drupal_set_message(t("The menu item was reset to its default settings."));
       drupal_goto('admin/menu');
       break;
     default:
@@ -189,10 +189,10 @@ function menu_delete_item($mid) {
     case t('Delete'):
       db_query('DELETE FROM {menu} WHERE mid = %d', $mid);
       if ($menu->type & MENU_IS_ROOT) {
-        drupal_set_message(t('Menu deleted.'));
+        drupal_set_message(t('The menu has been removed.'));
       }
       else {
-        drupal_set_message(t('Menu item deleted.'));
+        drupal_set_message(t('The menu item has been removed.'));
       }
       drupal_goto('admin/menu');
       break;
@@ -218,7 +218,7 @@ function menu_disable_item($mid) {
   $type &= ~MENU_VISIBLE_IN_BREADCRUMB;
   $type |= MENU_MODIFIED_BY_ADMIN;
   db_query('UPDATE {menu} SET type = %d WHERE mid = %d', $type, $mid);
-  drupal_set_message(t('Menu item disabled.'));
+  drupal_set_message(t('The menu item has been disabled.'));
   drupal_goto('admin/menu');
 }
 
@@ -348,12 +348,12 @@ function menu_edit_item_save($edit) {
 
   if ($edit['mid']) {
     db_query("UPDATE {menu} SET pid = %d, path = '%s', title = '%s', description = '%s', weight = %d, type = %d WHERE mid = %d", $edit['pid'], $edit['path'], $edit['title'], $edit['description'], $edit['weight'], $edit['type'] | MENU_MODIFIED_BY_ADMIN, $edit['mid']);
-    drupal_set_message(t('Updated menu item %title.', array('%title' => theme('placeholder', $edit['title']))));
+    drupal_set_message(t('The menu item %title has been updated.', array('%title' => theme('placeholder', $edit['title']))));
   }
   else {
     $mid = db_next_id('{menu}_mid');
     db_query("INSERT INTO {menu} (mid, pid, path, title, description, weight, type) VALUES (%d, %d, '%s', '%s', '%s', %d, %d)", $mid, $edit['pid'], $edit['path'], $edit['title'], $edit['description'], $edit['weight'], $edit['type'] | MENU_MODIFIED_BY_ADMIN);
-    drupal_set_message(t('Created new menu item %title.', array('%title' => theme('placeholder', $edit['title']))));
+    drupal_set_message(t('The menu item %title has been created.', array('%title' => theme('placeholder', $edit['title']))));
     if (array_key_exists($edit['path'], $menu['path index'])) {
       $old_mid = $menu['path index'][$edit['path']];
       $old_item = $menu['items'][$old_mid];

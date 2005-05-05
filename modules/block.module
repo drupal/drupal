@@ -116,8 +116,6 @@ function block_admin_save($edit) {
                 $block['region'], $block['status'], $block['weight'], $block['throttle'], $module, $delta);
     }
   }
-
-  return t('The block settings have been updated.');
 }
 
 /**
@@ -300,7 +298,7 @@ function block_box_add() {
   switch ($op) {
     case t('Save block'):
       if (block_box_save($edit)) {
-        drupal_set_message(t('The new block has been added.'));
+        drupal_set_message(t('The block has been created.'));
         drupal_goto('admin/block');
       }
       // deliberate no break
@@ -323,7 +321,7 @@ function block_box_delete($bid = 0) {
 
   if ($_POST['edit']['confirm']) {
     db_query('DELETE FROM {boxes} WHERE bid = %d', $bid);
-    drupal_set_message(t('The block %name has been deleted.', array('%name' => theme('placeholder', $info))));
+    drupal_set_message(t('The block %name has been removed.', array('%name' => theme('placeholder', $info))));
     cache_clear_all();
     drupal_goto('admin/block');
   }
@@ -373,7 +371,8 @@ function block_admin() {
   $op = $_POST['op'];
 
   if ($op == t('Save blocks')) {
-    drupal_set_message(block_admin_save($edit));
+    block_admin_save($edit);
+    drupal_set_message(t('The blocks have been saved.'));
     cache_clear_all();
     drupal_goto($_GET['q']);
   }

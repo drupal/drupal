@@ -325,7 +325,7 @@ function filter_admin_save() {
     $name = trim($name);
 
     if (strlen($name) == 0) {
-      drupal_set_message(t('You must enter a name for this input format.'));
+      drupal_set_message(t('The input format name must be specified.'));
       drupal_goto('admin/filters');
     }
     else {
@@ -358,14 +358,14 @@ function filter_admin_add() {
   $name = trim($edit['name']);
 
   if (strlen($name) == 0) {
-    drupal_set_message(t('You must enter a name for this input format.'));
+    drupal_set_message(t('The input format must have a name.'));
     drupal_goto('admin/filters');
   }
   else {
     db_query("INSERT INTO {filter_formats} (name) VALUES ('%s')", $name);
   }
 
-  drupal_set_message(t('Added input format %format.', array('%format' => theme('placeholder', $edit['name']))));
+  drupal_set_message(t('Input format %format has been created.', array('%format' => theme('placeholder', $edit['name']))));
   drupal_goto('admin/filters');
 }
 
@@ -386,7 +386,7 @@ function filter_admin_delete() {
 
       cache_clear_all('filter:'. $edit['format'], true);
 
-      drupal_set_message(t('Deleted input format %format.', array('%format' => theme('placeholder', $edit['name']))));
+      drupal_set_message(t('Input format %format has been removed.', array('%format' => theme('placeholder', $edit['name']))));
     }
     drupal_goto('admin/filters');
   }
@@ -516,7 +516,7 @@ function filter_admin_order_save($format, $weights) {
     list($module, $delta) = explode('/', $id);
     db_query("UPDATE {filters} SET weight = %d WHERE format = %d AND module = '%s' AND delta = %d", $weight, $format, $module, $delta);
   }
-  drupal_set_message(t('The filter weights have been saved.'));
+  drupal_set_message(t('The filter ordering has been saved.'));
 
   cache_clear_all('filter:'. $format, true);
 
