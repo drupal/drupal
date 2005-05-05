@@ -1663,14 +1663,13 @@ function user_admin_role() {
 
 function user_admin_account() {
   $header = array(
-    array('data' => t('ID'), 'field' => 'u.uid'),
     array('data' => t('Username'), 'field' => 'u.name'),
     array('data' => t('Status'), 'field' => 'u.status'),
     array('data' => t('Roles')),
-    array('data' => t('Last access'), 'field' => 'u.login', 'sort' => 'desc'),
+    array('data' => t('Member for'), 'field' => 'u.created', 'sort' => 'desc'),
     t('Operations')
   );
-  $sql = 'SELECT u.uid, u.name, u.status, u.login, u.changed FROM {users} u WHERE uid != 0';
+  $sql = 'SELECT u.uid, u.name, u.status, u.created, u.login FROM {users} u WHERE uid != 0';
   $sql .= tablesort_sql($header);
   $result = pager_query($sql, 50);
 
@@ -1684,13 +1683,13 @@ function user_admin_account() {
       $roles[] = $role->name;
     }
 
-    $rows[] = array($account->uid, format_name($account), $status[$account->status], implode(', ', $roles), format_date($account->changed, 'small'), l(t('edit'), "user/$account->uid/edit", array(), $destination));
+    $rows[] = array(format_name($account), $status[$account->status], implode(', ', $roles), format_interval(time() - $account->created), l(t('edit'), "user/$account->uid/edit", array(), $destination));
 
   }
 
   $pager = theme('pager', NULL, 50, 0, tablesort_pager());
   if (!empty($pager)) {
-    $rows[] = array(array('data' => $pager, 'colspan' => '6'));
+    $rows[] = array(array('data' => $pager, 'colspan' => '5'));
   }
   return theme('table', $header, $rows);
 }
