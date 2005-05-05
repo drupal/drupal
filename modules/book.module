@@ -107,15 +107,6 @@ function book_menu($may_cache) {
           'type' => MENU_LOCAL_TASK, 'weight' => 2);
       }
     }
-
-    // We don't want to cache these menu items because they could change whenever
-    // a book page or outline node is edited.
-    if (arg(0) == 'admin' && arg(1) == 'node' && arg(2) == 'book') {
-      $result = db_query(db_rewrite_sql('SELECT n.nid, n.title FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE b.parent = 0 ORDER BY b.weight, n.title'));
-      while ($book = db_fetch_object($result)) {
-        $items[] = array('path' => 'admin/node/book/'. $book->nid, 'title' => t('"%title" book', array('%title' => $book->title)));
-      }
-    }
   }
 
   return $items;
@@ -593,24 +584,8 @@ function book_tree($parent = 0, $depth = 3, $unfold = array()) {
  * Menu callback; prints a listing of all books.
  */
 function book_render() {
-  $result = db_query(db_rewrite_sql('SELECT n.nid FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE b.parent = 0 AND n.status = 1 AND n.moderate = 0 ORDER BY b.weight, n.title'));
+  $result = db_query(db_rewrite_sql('SELECT n.nid, n.title FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE b.parent = 0 AND n.status = 1 AND n.moderate = 0 ORDER BY b.weight, n.title'));
 
-  while ($page = db_fetch_object($result)) {
-    // Load the node:
-    $node = node_load(array('nid' => $page->nid));
-
-    if ($node) {
-      // Take the most recent approved revision, extract the page and check output:
-      $node = book_content($node, TRUE);
-      // Output the content:
-      $output .= '<div class="book">';
-      $output .= '<div class="title">'. l($node->title, 'node/'. $node->nid) .'</div>';
-      $output .= '<div class="body">'. $node->teaser .'</div>';
-      $output .= '</div>';
-    }
-  }
-
-  drupal_set_title(t('Books'));
   return $output;
 }
 
@@ -684,19 +659,19 @@ function book_print_recurse($parent = '', $depth = 1) {
   return $output;
 }
 
-function book_admin_view_line($node, $depth = 0) {
+function book_admin_edit_line($node, $depth = 0) {
   return array('<div style="padding-left: '. (25 * $depth) .'px;">'. form_textfield(NULL, $node->nid .'][title', $node->title, 64, 255) .'</div>', form_weight(NULL, $node->nid .'][weight', $node->weight, 15), l(t('view'), 'node/'. $node->nid), l(t('edit'), 'node/'. $node->nid .'/edit'), l(t('delete'), 'node/'.$node->nid.'/delete'));
 }
 
-function book_admin_view_book($nid, $depth = 1) {
+function book_admin_edit_book($nid, $depth = 1) {
   $result = db_query(db_rewrite_sql('SELECT n.nid FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE b.parent = %d ORDER BY b.weight, n.title'), $nid);
 
   $rows = array();
 
   while ($node = db_fetch_object($result)) {
     $node = node_load(array('nid' => $node->nid));
-    $rows[] = book_admin_view_line($node, $depth);
-    $rows = array_merge($rows, book_admin_view_book($node->nid, $depth + 1));
+    $rows[] = book_admin_edit_line($node, $depth);
+    $rows = array_merge($rows, book_admin_edit_book($node->nid, $depth + 1));
   }
 
   return $rows;
@@ -705,20 +680,21 @@ function book_admin_view_book($nid, $depth = 1) {
 /**
  * Display an administrative view of the hierarchy of a book.
  */
-function book_admin_view($nid, $depth = 0) {
-  if ($nid) {
-    $node = node_load(array('nid' => $nid));
-
-    $output .= '<h3>'. check_plain($node->title) .'</h3>';
-
+function book_admin_edit($nid, $depth = 0) {
+  $node = node_load(array('nid' => $nid));
+  if ($node->nid) {
     $header = array(t('Title'), t('Weight'), array('data' => t('Operations'), 'colspan' => '3'));
-    $rows[] = book_admin_view_line($node);
-    $rows = array_merge($rows, book_admin_view_book($nid));
+    $rows[] = book_admin_edit_line($node);
+    $rows = array_merge($rows, book_admin_edit_book($nid));
 
     $output .= theme('table', $header, $rows);
     $output .= form_submit(t('Save book pages'));
 
+    drupal_set_title(check_plain($node->title));
     return form($output);
+  }
+  else {
+    drupal_not_found();
   }
 }
 
@@ -762,8 +738,8 @@ function book_admin_orphan() {
     $header = array(t('Title'), t('Weight'), array('data' => t('Operations'), 'colspan' => '3'));
     foreach ($pages as $nid => $node) {
       if ($node->parent && empty($pages[$node->parent])) {
-        $rows[] = book_admin_view_line($node, $depth);
-        $rows = array_merge($rows, book_admin_view_book($node->nid, $depth + 1));
+        $rows[] = book_admin_edit_line($node, $depth);
+        $rows = array_merge($rows, book_admin_edit_book($node->nid, $depth + 1));
       }
     }
     $output .= theme('table', $header, $rows);
@@ -779,15 +755,26 @@ function book_admin($nid = 0) {
   $op = $_POST['op'];
   $edit = $_POST['edit'];
 
-  switch ($op) {
-    case t('Save book pages'):
-      drupal_set_message(book_admin_save($nid, $edit));
-      // fall through:
-    default:
-      $output .= book_admin_view($nid);
-      break;
+  if ($op == t('Save book pages')) {
+    drupal_set_message(book_admin_save($nid, $edit));
   }
-  return $output;
+
+  if ($nid) {
+    return book_admin_edit($nid);
+  }
+  else {
+    return book_admin_overview();
+  }
+}
+
+function book_admin_overview() {
+  $result = db_query(db_rewrite_sql('SELECT n.nid, n.title FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE b.parent = 0 ORDER BY b.weight, n.title'));
+  while ($book = db_fetch_object($result)) {
+    $rows[] = array(l($book->title, "node/$book->nid"), l(t('outline'), "admin/node/book/$book->nid"));
+  }
+  $headers = array(t('Book'), t('Operations'));
+
+  return theme('table', $headers, $rows);
 }
 
 /**
