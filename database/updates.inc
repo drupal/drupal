@@ -1,5 +1,5 @@
 <?php
-/* $Id: updates.inc,v 1.112 2005/05/04 18:12:17 dries Exp $ */
+/* $Id: updates.inc,v 1.113 2005/05/05 07:32:27 dries Exp $ */
 
 /**
  * @file
@@ -2402,24 +2402,6 @@ function update_132() {
      */
     include_once('modules/search.module');
     search_wipe();
-  }
-
-  return $ret;
-}
-
-function update_130() {
-  $ret = array();
-
-  if ($GLOBALS['db_type'] == 'mysql') {
-    $ret[] = update_sql("ALTER TABLE {locales_source} CHANGE location location varchar(255) NOT NULL default ''");
-  }
-  elseif ($GLOBALS['db_type'] == 'pgsql') {
-    $ret[] = update_sql("ALTER TABLE {locales_source} RENAME location TO location_old");
-    $ret[] = update_sql("ALTER TABLE {locales_source} ADD location varchar(255)");
-    $ret[] = update_sql("ALTER TABLE {locales_source} ALTER location SET NOT NULL");
-    $ret[] = update_sql("ALTER TABLE {locales_source} ALTER location SET DEFAULT ''");
-    $ret[] = update_sql("UPDATE {locales_source} SET location = location_old");
-    $ret[] = update_sql("ALTER TABLE {locales_source} DROP location_old");
   }
 
   return $ret;
