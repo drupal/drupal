@@ -10,6 +10,12 @@
  * a forum topic, weblog post, story, collaborative book page, etc.
  */
 
+/*
+ * Constants
+ */
+ define('COMMENT_PUBLISHED', 0);
+ define('COMMENT_NOT_PUBLISHED', 1);
+
 /**
  * Implementation of hook_help().
  */
@@ -164,7 +170,7 @@ function comment_block($op = 'list', $delta = 0) {
     return $blocks;
   }
   else if ($op == 'view' && user_access('access comments')) {
-    $result = db_query_range(db_rewrite_sql('SELECT c.nid, c.* FROM {comments} c WHERE c.status = 0 ORDER BY c.timestamp DESC', 'c'), 0, 10);
+    $result = db_query_range(db_rewrite_sql('SELECT c.nid, c.* FROM {comments} c WHERE c.status = %d ORDER BY c.timestamp DESC', 'c'), COMMENT_PUBLISHED, 0, 10);
     $items = array();
     while ($comment = db_fetch_object($result)) {
       $items[] = l($comment->subject, 'node/'. $comment->nid, NULL, NULL, 'comment-'. $comment->cid) .'<br />'. t('%time ago', array('%time' => format_interval(time() - $comment->timestamp)));
@@ -272,7 +278,7 @@ function comment_nodeapi(&$node, $op, $arg = 0) {
 
     case 'update index':
       $text = '';
-      $comments = db_query('SELECT subject, comment, format FROM {comments} WHERE nid = %d AND status = 0', $node->nid);
+      $comments = db_query('SELECT subject, comment, format FROM {comments} WHERE nid = %d AND status = %d', $node->nid, COMMENT_PUBLISHED);
       while ($comment = db_fetch_object($comments)) {
         $text .= '<h2>'. check_plain($comment->subject) .'</h2>'. check_output($comment->comment, $comment->format);
       }
@@ -395,7 +401,7 @@ function comment_reply($nid, $pid = NULL) {
     // if this is a reply to another comment, show that comment first
     // else, we'll just show the user the node they're commenting on.
     if ($pid) {
-      $comment = db_fetch_object(db_query('SELECT c.*, u.uid, u.name AS registered_name, u.picture, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = 0', $pid));
+      $comment = db_fetch_object(db_query('SELECT c.*, u.uid, u.name AS registered_name, u.picture, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = %d', $pid, COMMENT_PUBLISHED));
       $comment = drupal_unpack($comment);
       $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
       $output .= theme('comment_view', $comment);
@@ -502,7 +508,7 @@ function comment_preview($edit) {
   $output .= theme('comment_form', $edit, t('Reply'));
 
   if ($edit['pid']) {
-    $comment = db_fetch_object(db_query('SELECT c.*, u.uid, u.name AS registered_name, u.picture, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = 0', $edit['pid']));
+    $comment = db_fetch_object(db_query('SELECT c.*, u.uid, u.name AS registered_name, u.picture, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = %d', $edit['pid'], COMMENT_PUBLISHED));
     $comment = drupal_unpack($comment);
     $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
     $output .= theme('comment_view', $comment);
@@ -543,7 +549,7 @@ function comment_post($edit) {
       }
       else {
         // Add the comment to database.
-        $status = user_access('post comments without approval') ? 0 : 1;
+        $status = user_access('post comments without approval') ? COMMENT_PUBLISHED : COMMENT_NOT_PUBLISHED;
         $roles = variable_get('comment_roles', array());
         $score = 0;
 
@@ -650,7 +656,7 @@ function comment_post($edit) {
 
       // Explain the approval queue if necessary, and then
       // redirect the user to the node he's commenting on.
-      if ($status == 1) {
+      if ($status == COMMENT_NOT_PUBLISHED) {
         drupal_set_message(t('Your comment has been queued for moderation by site administrators and will be published after approval.'));
         drupal_goto('node/'. $edit['nid']);
       }
@@ -743,7 +749,7 @@ function comment_render($node, $cid = 0) {
       $output .= '<form method="post" action="'. url('comment') ."\"><div>\n";
       $output .= form_hidden('nid', $nid);
 
-      $result = db_query('SELECT c.cid, c.pid, c.nid, c.subject, c.comment, c.format, c.timestamp, c.name, c.mail, c.homepage, u.uid, u.name AS registered_name, u.picture, u.data, c.score, c.users FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = 0 GROUP BY c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, c.name, c.mail, u.picture, c.homepage, u.uid, u.name, u.picture, u.data, c.score, c.users', $cid);
+      $result = db_query('SELECT c.cid, c.pid, c.nid, c.subject, c.comment, c.format, c.timestamp, c.name, c.mail, c.homepage, u.uid, u.name AS registered_name, u.picture, u.data, c.score, c.users FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = %d GROUP BY c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, c.name, c.mail, u.picture, c.homepage, u.uid, u.name, u.picture, u.data, c.score, c.users', $cid, COMMENT_PUBLISHED);
 
       if ($comment = db_fetch_object($result)) {
         $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
@@ -758,7 +764,7 @@ function comment_render($node, $cid = 0) {
     else {
       // Multiple comment view
 
-      $query .= "SELECT c.cid as cid, c.pid, c.nid, c.subject, c.comment, c.format, c.timestamp, c.name , c.mail, c.homepage, u.uid, u.name AS registered_name, u.picture, u.data, c.score, c.users, c.thread FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.nid = %d AND c.status = 0";
+      $query .= "SELECT c.cid as cid, c.pid, c.nid, c.subject, c.comment, c.format, c.timestamp, c.name , c.mail, c.homepage, u.uid, u.name AS registered_name, u.picture, u.data, c.score, c.users, c.thread FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.nid = %d AND c.status = %d";
 
       $query .= ' GROUP BY c.cid, c.pid, c.nid, c.subject, c.comment, c.format, c.timestamp, c.name, c.mail, u.picture, c.homepage, u.uid, u.name, u.picture, u.data, c.score, c.users, c.thread';
 
@@ -850,7 +856,7 @@ function comment_render($node, $cid = 0) {
       }
 
       // Start a form, for use with comment control and moderation.
-      $result = pager_query($query, $comments_per_page, 0, "SELECT COUNT(*) FROM {comments} WHERE status = 0 AND nid = %d", $nid);
+      $result = pager_query($query, $comments_per_page, 0, "SELECT COUNT(*) FROM {comments} WHERE status = %d AND nid = %d", $nid, COMMENT_PUBLISHED);
       if (db_num_rows($result) && (variable_get('comment_controls', 3) == 0 || variable_get('comment_controls', 3) == 2)) {
         $output .= '<form method="post" action="'. url('comment') ."\"><div>\n";
         $output .= theme('comment_controls', $threshold, $mode, $order, $comments_per_page);
@@ -1015,7 +1021,7 @@ function comment_admin_overview($type = 'new') {
   );
 
   $destination = drupal_get_destination();
-  $status = ($type == 'approval') ? 1 : 0;
+  $status = ($type == 'approval') ? COMMENT_NOT_PUBLISHED : COMMENT_PUBLISHED;
   $sql = 'SELECT c.subject, c.nid, c.cid, c.comment, c.timestamp, c.status, c.name, c.homepage, u.name AS registered_name, u.uid FROM {comments} c INNER JOIN {users} u ON u.uid = c.uid WHERE c.status = '. db_escape_string($status);
   $sql .= tablesort_sql($header);
   $result = pager_query($sql, 50);
@@ -1025,7 +1031,7 @@ function comment_admin_overview($type = 'new') {
     $rows[] = array(
         l($comment->subject, "node/$comment->nid", array('title' => truncate_utf8($comment->comment, 128)), NULL, "comment-$comment->cid") ." ". theme('mark', node_mark($comment->nid, $comment->timestamp)),
         format_name($comment),
-        ($comment->status == 0 ? t('Published') : t('Not published')),
+        ($comment->status == COMMENT_PUBLISHED ? t('Published') : t('Not published')),
         format_date($comment->timestamp, 'small'),
         l(t('edit'), "admin/comment/edit/$comment->cid", array(), $destination),
         l(t('delete'), "admin/comment/delete/$comment->cid", array(), $destination)
@@ -1323,7 +1329,7 @@ function comment_num_replies($pid) {
   static $cache;
 
   if (!isset($cache[$pid])) {
-    $cache[$pid] = db_result(db_query('SELECT COUNT(cid) FROM {comments} WHERE pid = %d AND status = 0', $pid));
+    $cache[$pid] = db_result(db_query('SELECT COUNT(cid) FROM {comments} WHERE pid = %d AND status = %d', $pid, COMMENT_PUBLISHED));
   }
 
   return $cache[$pid];
@@ -1348,7 +1354,7 @@ function comment_num_new($nid, $timestamp = 0) {
     $timestamp = ($timestamp > NODE_NEW_LIMIT ? $timestamp : NODE_NEW_LIMIT);
 
     // Use the timestamp to retrieve the number of new comments.
-    $result = db_result(db_query('SELECT COUNT(c.cid) FROM {node} n INNER JOIN {comments} c ON n.nid = c.nid WHERE n.nid = %d AND timestamp > %d AND c.status = 0', $nid, $timestamp));
+    $result = db_result(db_query('SELECT COUNT(c.cid) FROM {node} n INNER JOIN {comments} c ON n.nid = c.nid WHERE n.nid = %d AND timestamp > %d AND c.status = %d', $nid, $timestamp, COMMENT_PUBLISHED));
 
     return $result;
   }
@@ -1651,12 +1657,12 @@ function _comment_per_page() {
  * - comment_count: the total number of approved/published comments on this node.
  */
 function _comment_update_node_statistics($nid) {
-  $count = db_result(db_query('SELECT COUNT(cid) FROM {comments} WHERE nid = %d AND status = 0', $nid));
+  $count = db_result(db_query('SELECT COUNT(cid) FROM {comments} WHERE nid = %d AND status = %d', $nid, COMMENT_PUBLISHED));
 
   // comments exist
   if ($count > 0) {
     $node = node_load(array('nid' => $nid));
-    $last_reply = db_fetch_object(db_query_range('SELECT cid, name, timestamp, uid FROM {comments} WHERE nid = %d AND status = 0 ORDER BY cid DESC', $nid, 0, 1));
+    $last_reply = db_fetch_object(db_query_range('SELECT cid, name, timestamp, uid FROM {comments} WHERE nid = %d AND status = %d ORDER BY cid DESC', $nid, COMMENT_PUBLISHED, 0, 1));
     db_query("UPDATE {node_comment_statistics} SET comment_count = %d, last_comment_timestamp = %d, last_comment_name = '%s', last_comment_uid = %d WHERE nid = %d", $count, $last_reply->timestamp, $last_reply->uid ? NULL : $last_reply->name, $last_reply->uid, $nid);
   }
 
