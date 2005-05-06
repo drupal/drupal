@@ -56,7 +56,7 @@
       <?php if ($search_box): ?>
       <form action="<?php print $search_url ?>" method="post">
         <div id="search">
-          <input class="form-text" type="text" size="15" value="" name="keys" alt="<?php print $search_description ?>" />
+          <input class="form-text" type="text" size="15" value="" name="edit[keys]" alt="<?php print $search_description ?>" />
           <input class="form-submit" type="submit" value="<?php print $search_button_text ?>" alt="submit" />
         </div>
       </form>
