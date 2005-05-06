@@ -110,7 +110,8 @@ $sql_updates = array(
   "2005-04-11" => "update_131",
   "2005-04-14" => "update_132",
   "2005-04-24" => "update_133",
-  "2005-04-30" => "update_134"
+  "2005-04-30" => "update_134",
+  "2005-05-06" => "update_135"
 );
 
 function update_32() {
@@ -2435,6 +2436,15 @@ function update_134() {
     #$ret[] = update_sql('ALTER TABLE {blocks} DROP types');
   }
   return $ret;
+}
+
+function update_135() {
+  $result = db_query("SELECT delta FROM {blocks} WHERE module = 'aggregator'");
+  while ($block = db_fetch_object($result)) {
+    list($type, $id) = explode(':', $block->delta);
+    db_query("UPDATE {blocks} SET delta = '%s' WHERE module = 'aggregator' AND delta = '%s'", $type .'-'. $id, $block->delta);
+  }
+  return array();
 }
 
 function update_sql($sql) {
