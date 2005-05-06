@@ -132,7 +132,7 @@ function _forum_confirm_delete($tid) {
 
   $extra = form_hidden('tid', $tid);
   $output = theme('confirm',
-                  t('Are you sure you want to delete the forum %name?', array('%name' => '<em>'. $term->name .'</em>')),
+                  t('Are you sure you want to delete the forum %name?', array('%name' => theme('placeholder', $term->name)),
                   'admin/forums',
                   t('Deleting a forum or container will delete all sub-forums as well. This action cannot be undone.'),
                   t('Delete'),
