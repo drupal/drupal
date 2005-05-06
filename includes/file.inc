@@ -442,11 +442,15 @@ function file_transfer($source, $headers) {
   $source = file_create_path($source);
 
   // Transfer file in 1024 byte chunks to save memory usage.
-  $fd = fopen($source, 'rb');
-  while (!feof($fd)) {
-    print fread($fd, 1024);
+  if ($fd = fopen($source, 'rb')) {
+    while (!feof($fd)) {
+      print fread($fd, 1024);
+    }
+    fclose($fd);
   }
-  fclose($fd);
+  else {
+    drupal_not_found();
+  }
   exit();
 }
 
