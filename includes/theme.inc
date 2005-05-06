@@ -474,16 +474,17 @@ function theme_links($links, $delimiter = ' | ') {
  *   The alternative text for text-based browsers.
  * @param $title
  *   The title text is displayed when the image is hovered in some popular browsers.
- * @param $attr
- *   Attributes placed in the img tag.
+ * @param $attributes
+ *   Associative array of attributes to be placed in the img tag.
  * @param $getsize
  *   If set to true, the image's dimension are fetched and added as width/height attributes.
  * @return
  *   A string containing the image tag.
  */
-function theme_image($path, $alt = '', $title = '', $attr = '', $getsize = true) {
-  if (!$getsize || (file_exists($path) && (list($width, $height, $type, $attr) = @getimagesize($path)))) {
-    return "<img src=\"$path\" $attr alt=\"$alt\" title=\"$title\" />";
+function theme_image($path, $alt = '', $title = '', $attributes = NULL, $getsize = TRUE) {
+  if (!$getsize || (file_exists($path) && (list($width, $height, $type, $image_attributes) = @getimagesize($path)))) {
+    $attributes = drupal_attributes($attributes);
+    return "<img src=\"$path\" alt=\"$alt\" title=\"$title\" $image_attributes $attributes />";
   }
 }
 
