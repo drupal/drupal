@@ -616,7 +616,7 @@ function book_print($nid = 0, $depth = 1) {
     }
   }
 
-  $output .= book_print_recurse($nid, $depth);
+  $output .= book_print_recurse($nid, $depth + 1);
 
   $html = '<html><head><title>'. check_plain($node->title) .'</title>';
   $html .= '<base href="'. $base_url .'/" />';
