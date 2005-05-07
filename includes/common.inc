@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.439 2005/05/05 09:07:08 dries Exp $ */
+/* $Id: common.inc,v 1.440 2005/05/07 01:48:06 unconed Exp $ */
 
 /**
  * @file
@@ -8,6 +8,21 @@
  * The functions that are critical and need to be available even when serving
  * a cached page are instead located in bootstrap.inc.
  */
+
+/**
+ * Return status for saving which involved creating a new item.
+ */
+define('SAVED_NEW', 1);
+
+/**
+ * Return status for saving which involved an update to an existing item.
+ */
+define('SAVED_UPDATED', 2);
+
+/**
+ * Return status for saving which deleted an existing item.
+ */
+define('SAVED_DELETED', 3);
 
 /**
  * Set the breadcrumb trail for the current page.
