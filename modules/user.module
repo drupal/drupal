@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.469 2005/05/07 11:39:54 dries Exp $
+// $Id: user.module,v 1.470 2005/05/07 22:37:26 dries Exp $
 
 /**
  * @file
@@ -123,7 +123,7 @@ function user_save($account, $array = array(), $category = 'account') {
         }
       }
     }
-    $query .= "data = '%s', ";
+    $query .= "data = '%s' ";
     $v[] = serialize($data);
 
     db_query("UPDATE {users} SET $query WHERE uid = %d", array_merge($v, array($account->uid)));
