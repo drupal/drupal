@@ -164,7 +164,7 @@ function upload_nodeapi(&$node, $op, $arg) {
 
         $file = _upload_image($file);
 
-        $maxsize = variable_get("upload_maxsize_total", 0);
+        $maxsize = variable_get("upload_maxsize_total", 0) * 1024 * 1024;
         $total_size = upload_count_size() + $filesize;
         $total_usersize = upload_count_size($user->uid) + $filesize;
 
