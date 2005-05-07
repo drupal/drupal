@@ -10,6 +10,21 @@
  */
 
 /**
+ * Return status for saving which involved creating a new item.
+ */
+define('SAVED_NEW', 1);
+
+/**
+ * Return status for saving which involved an update to an existing item.
+ */
+define('SAVED_UPDATED', 2);
+
+/**
+ * Return status for saving which deleted an existing item.
+ */
+define('SAVED_DELETED', 3);
+
+/**
  * Set the breadcrumb trail for the current page.
  *
  * @param $breadcrumb

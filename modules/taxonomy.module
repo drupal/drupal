@@ -141,10 +141,10 @@ function taxonomy_save_vocabulary($edit) {
       db_query("INSERT INTO {vocabulary_node_types} (vid, type) VALUES (%d, '%s')", $edit['vid'], $type);
     }
     module_invoke_all('taxonomy', 'update', 'vocabulary', $edit);
-    $message = t('Updated vocabulary %name.', array('%name' => theme('placeholder', $edit['name'])));
+    $status = SAVED_UPDATED;
   }
   else if ($edit['vid']) {
-    $message = taxonomy_del_vocabulary($edit['vid']);
+    $status = taxonomy_del_vocabulary($edit['vid']);
   }
   else {
     $data['vid'] = $edit['vid'] = db_next_id('{vocabulary}_vid');
@@ -153,14 +153,12 @@ function taxonomy_save_vocabulary($edit) {
       db_query("INSERT INTO {vocabulary_node_types} (vid, type) VALUES (%d, '%s')", $edit['vid'], $type);
     }
     module_invoke_all('taxonomy', 'insert', 'vocabulary', $edit);
-    $message = t('Created new vocabulary %name.', array('%name' => theme('placeholder', $edit['name'])));
+    $status = SAVED_NEW;
   }
 
   cache_clear_all();
 
-  drupal_set_message($message);
-
-  return $edit;
+  return $status;
 }
 
 function taxonomy_del_vocabulary($vid) {
@@ -177,7 +175,7 @@ function taxonomy_del_vocabulary($vid) {
 
   cache_clear_all();
 
-  return t('deleted vocabulary "%name".', array('%name' => $vocabulary->name));
+  return SAVED_DELETED;
 }
 
 function _taxonomy_confirm_del_vocabulary($vid) {
@@ -185,9 +183,10 @@ function _taxonomy_confirm_del_vocabulary($vid) {
 
   $extra  = form_hidden('type', 'vocabulary');
   $extra .= form_hidden('vid', $vid);
+  $extra .= form_hidden('name', $vocabulary->name);
 
   $output = theme('confirm',
-                  t('Are you sure you want to delete the vocabulary %title?', array('%title' => $vocabulary->name)),
+                  t('Are you sure you want to delete the vocabulary %title?', array('%title' => theme('placeholder', $vocabulary->name))),
                   'admin/taxonomy',
                   t('Deleting a vocabulary will delete all the terms in it. This action cannot be undone.'),
                   t('Delete'),
@@ -247,7 +246,7 @@ function taxonomy_save_term($edit) {
 
     db_query('UPDATE {term_data} SET '. _taxonomy_prepare_update($data) .' WHERE tid = %d', $edit['tid']);
     module_invoke_all('taxonomy', 'update', 'term', $edit);
-    $message = t('The term %term has been updated.', array('%term' => theme('placeholder', $edit['name'])));
+    $status = SAVED_UPDATED;
   }
   else if ($edit['tid']) {
     return taxonomy_del_term($edit['tid']);
@@ -257,7 +256,7 @@ function taxonomy_save_term($edit) {
     $data = array('tid' => $edit['tid'], 'name' => $edit['name'], 'description' => $edit['description'], 'vid' => $edit['vid'], 'weight' => $edit['weight']);
     db_query('INSERT INTO {term_data} '. _taxonomy_prepare_insert($data, 1) .' VALUES '. _taxonomy_prepare_insert($data, 2));
     module_invoke_all('taxonomy', 'insert', 'term', $edit);
-    $message = t('Created new term %term.', array('%term' => theme('placeholder', $edit['name'])));
+    $status = SAVED_NEW;
   }
 
   db_query('DELETE FROM {term_relation} WHERE tid1 = %d OR tid2 = %d', $edit['tid'], $edit['tid']);
@@ -297,8 +296,7 @@ function taxonomy_save_term($edit) {
 
   cache_clear_all();
 
-  drupal_set_message($message);
-  return $edit;
+  return $status;
 }
 
 function taxonomy_del_term($tid) {
@@ -1154,15 +1152,33 @@ function taxonomy_admin() {
         break;
       }
       else {
+        $deleted_name = $edit['name'];
         $edit['name'] = 0;
         // fall through:
       }
     case t('Submit'):
       if (arg(3) == 'vocabulary') {
-        taxonomy_save_vocabulary($edit);
+        switch (taxonomy_save_vocabulary($edit)) {
+          case SAVED_NEW:
+            drupal_set_message(t('Created new vocabulary %name.', array('%name' => theme('placeholder', $edit['name']))));
+            break;
+          case SAVED_UPDATED:
+            drupal_set_message(t('Updated vocabulary %name.', array('%name' => theme('placeholder', $edit['name']))));
+            break;
+          case SAVED_DELETED:
+            drupal_set_message(t('Deleted vocabulary %name.', array('%name' => theme('placeholder', $deleted_name))));
+            break;
+        }
       }
       else {
-        taxonomy_save_term($edit);
+        switch (taxonomy_save_term($edit)) {
+          case SAVED_NEW:
+            drupal_set_message(t('Created new term %term.', array('%term' => theme('placeholder', $edit['name']))));
+            break;
+          case SAVED_UPDATED:
+            drupal_set_message(t('The term %term has been updated.', array('%term' => theme('placeholder', $edit['name']))));
+            break;
+        }
       }
       drupal_goto('admin/taxonomy');
     default:

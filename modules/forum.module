@@ -94,12 +94,26 @@ function forum_admin() {
         $edit['name'] = 0;
       }
     case t('Submit'):
-      $edit = taxonomy_save_term($edit);
+      $status = taxonomy_save_term($edit);
       if (arg(3) == 'container') {
         $containers = variable_get('forum_containers', array());
         $containers[] = $edit['tid'];
         variable_set('forum_containers', $containers);
-       }
+        if ($status == SAVED_NEW) {
+          drupal_set_message(t('Created new forum container %term.', array('%term' => theme('placeholder', $edit['name']))));
+        }
+        else {
+          drupal_set_message(t('The forum container %term has been updated.', array('%term' => theme('placeholder', $edit['name']))));
+        }
+      }
+      else {
+        if ($status == SAVED_NEW) {
+          drupal_set_message(t('Created new forum %term.', array('%term' => theme('placeholder', $edit['name']))));
+        }
+        else {
+          drupal_set_message(t('The forum %term has been updated.', array('%term' => theme('placeholder', $edit['name']))));
+        }
+      }
       drupal_goto('admin/forum');
     default:
       $output = forum_overview();
