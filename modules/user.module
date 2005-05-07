@@ -126,7 +126,7 @@ function user_save($account, $array = array(), $category = 'account') {
     $query .= "data = '%s', ";
     $v[] = serialize($data);
 
-    db_query("UPDATE {users} SET $query changed = %d WHERE uid = %d", array_merge($v, array(time(), $account->uid)));
+    db_query("UPDATE {users} SET $query WHERE uid = %d", array_merge($v, array($account->uid)));
 
     // Reload user roles if provided
     if (is_array($array['roles'])) {
@@ -147,7 +147,6 @@ function user_save($account, $array = array(), $category = 'account') {
   }
   else {
     $array['created'] = time();
-    $array['changed'] = time();
     $array['uid'] = db_next_id('{users}_uid');
 
     // Note, we wait with saving the data column to prevent module-handled
@@ -392,7 +391,7 @@ function user_fields() {
     }
     else {
       // Make sure we return the default fields at least
-      $fields = array('uid', 'name', 'pass', 'mail', 'picture', 'mode', 'sort', 'threshold', 'theme', 'signature', 'created', 'changed', 'login', 'status', 'timezone', 'language', 'init', 'data');
+      $fields = array('uid', 'name', 'pass', 'mail', 'picture', 'mode', 'sort', 'threshold', 'theme', 'signature', 'created', 'access', 'login', 'status', 'timezone', 'language', 'init', 'data');
     }
   }
 
@@ -549,7 +548,7 @@ function user_block($op = 'list', $delta = 0, $edit = array()) {
 
           // Perform database queries to gather online user lists.
           $guests = db_fetch_object(db_query('SELECT COUNT(sid) AS count FROM {sessions} WHERE timestamp >= %d AND uid = 0', time() - $time_period));
-          $users = db_query('SELECT DISTINCT(uid), MAX(timestamp) AS max_timestamp FROM {sessions} WHERE timestamp >= %d AND uid != 0 GROUP BY uid ORDER BY max_timestamp DESC', time() - $time_period );
+          $users = db_query('SELECT uid, name, access FROM {users} WHERE access >= %d AND uid != 0 ORDER BY access DESC', time() - $time_period);
           $total_users = db_num_rows($users);
 
           // Format the output with proper grammar.
@@ -565,8 +564,8 @@ function user_block($op = 'list', $delta = 0, $edit = array()) {
           if ($max_users) {
             $items = array();
 
-            while ($max_users-- && $uid = db_fetch_object($users)) {
-              $items[] = format_name(user_load(array('uid' => $uid->uid)));
+            while ($max_users-- && $account = db_fetch_object($users)) {
+              $items[] = format_name($account);
             }
 
             if ($items) {
@@ -1667,9 +1666,10 @@ function user_admin_account() {
     array('data' => t('Status'), 'field' => 'u.status'),
     array('data' => t('Roles')),
     array('data' => t('Member for'), 'field' => 'u.created', 'sort' => 'desc'),
+    array('data' => t('Last access'), 'field' => 'u.access'),
     t('Operations')
   );
-  $sql = 'SELECT u.uid, u.name, u.status, u.created, u.login FROM {users} u WHERE uid != 0';
+  $sql = 'SELECT u.uid, u.name, u.status, u.created, u.access FROM {users} u WHERE uid != 0';
   $sql .= tablesort_sql($header);
   $result = pager_query($sql, 50);
 
@@ -1683,13 +1683,13 @@ function user_admin_account() {
       $roles[] = $role->name;
     }
 
-    $rows[] = array(format_name($account), $status[$account->status], implode(', ', $roles), format_interval(time() - $account->created), l(t('edit'), "user/$account->uid/edit", array(), $destination));
+    $rows[] = array(format_name($account), $status[$account->status], implode(', ', $roles), format_interval(time() - $account->created), t('%time ago', array('%time' => format_interval(time() - $account->access))), l(t('edit'), "user/$account->uid/edit", array(), $destination));
 
   }
 
   $pager = theme('pager', NULL, 50, 0, tablesort_pager());
   if (!empty($pager)) {
-    $rows[] = array(array('data' => $pager, 'colspan' => '5'));
+    $rows[] = array(array('data' => $pager, 'colspan' => '6'));
   }
   return theme('table', $header, $rows);
 }

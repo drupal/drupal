@@ -46,6 +46,7 @@ function sess_write($key, $value) {
   global $user;
 
   db_query("UPDATE {sessions} SET uid = %d, cache = %d, hostname = '%s', session = '%s', timestamp = %d WHERE sid = '%s'", $user->uid, $user->cache, $_SERVER["REMOTE_ADDR"], $value, time(), $key);
+  db_query("UPDATE {users} SET access = %d WHERE uid = %d", time(), $user->uid);
 
   return '';
 }

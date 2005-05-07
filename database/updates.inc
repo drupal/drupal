@@ -111,7 +111,8 @@ $sql_updates = array(
   "2005-04-14" => "update_132",
   "2005-04-24" => "update_133",
   "2005-04-30" => "update_134",
-  "2005-05-06" => "update_135"
+  "2005-05-06" => "update_135",
+  "2005-05-08" => "update_136"
 );
 
 function update_32() {
@@ -2445,6 +2446,14 @@ function update_135() {
     db_query("UPDATE {blocks} SET delta = '%s' WHERE module = 'aggregator' AND delta = '%s'", $type .'-'. $id, $block->delta);
   }
   return array();
+}
+
+function update_136() {
+  $ret = array();
+  $ret[] = update_sql("ALTER TABLE {users} CHANGE COLUMN changed access int(11) NOT NULL default '0'");
+  $ret[] = update_sql('UPDATE {users} SET access = login WHERE login > created');
+  $ret[] = update_sql('UPDATE {users} SET access = created WHERE access = 0');
+  return $ret;
 }
 
 function update_sql($sql) {
