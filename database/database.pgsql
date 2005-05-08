@@ -783,8 +783,8 @@ INSERT INTO system VALUES ('modules/system.module','system','module','',1,0,0);
 INSERT INTO system VALUES ('modules/taxonomy.module','taxonomy','module','',1,0,0);
 INSERT INTO system VALUES ('modules/user.module','user','module','',1,0,0);
 INSERT INTO system VALUES ('modules/watchdog.module','watchdog','module','',1,0,0);
-INSERT INTO system VALUES ('themes/bluemarine/xtemplate.xtmpl','bluemarine','theme','themes/engines/xtemplate/xtemplate.engine',1,0,0);
-INSERT INTO system VALUES ('themes/engines/xtemplate/xtemplate.engine','xtemplate','theme_engine','',1,0,0);
+INSERT INTO `system` VALUES ('themes/engines/phptemplate/phptemplate.engine', 'phptemplate', 'theme_engine', '', 1, 0, 0);
+INSERT INTO `system` VALUES ('themes/bluemarine/page.tpl.php', 'bluemarine', 'theme', 'themes/engines/phptemplate/phptemplate.engine', 1, 0, 0);
 
 INSERT INTO variable(name,value) VALUES('update_start', 's:10:"2005-03-21";');
 INSERT INTO variable(name,value) VALUES('theme_default','s:10:"bluemarine";');
