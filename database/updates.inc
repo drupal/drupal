@@ -1,5 +1,5 @@
 <?php
-/* $Id: updates.inc,v 1.116 2005/05/10 19:58:21 dries Exp $ */
+/* $Id: updates.inc,v 1.117 2005/05/10 20:48:32 dries Exp $ */
 
 /**
  * @file
@@ -113,7 +113,8 @@ $sql_updates = array(
   "2005-04-30" => "update_134",
   "2005-05-06" => "update_135",
   "2005-05-08" => "update_136",
-  "2005-05-09" => "update_137"
+  "2005-05-09" => "update_137",
+  "2005-05-10" => "update_138"
 );
 
 function update_32() {
@@ -2457,7 +2458,7 @@ function update_136() {
   return $ret;
 }
 
- function update_137() {
+function update_137() {
   $ret = array();
 
   if ($GLOBALS['db_type'] == 'mysql') {
@@ -2470,8 +2471,15 @@ function update_136() {
     $ret[] = update_sql("ALTER TABLE {locales_source} ALTER location SET DEFAULT ''");
     $ret[] = update_sql("UPDATE {locales_source} SET location = location_old");
     $ret[] = update_sql("ALTER TABLE {locales_source} DROP location_old");
-   }
-   return $ret;
+  }
+  return $ret;
+}
+
+function update_138() {
+  $ret = array();
+  // duplicate of update_97 which never got into the default database.* files.
+  $ret[] = update_sql("INSERT INTO {url_alias} (src, dst) VALUES ('node/feed', 'rss.xml')");
+  return $ret;
 }
 
 function update_sql($sql) {

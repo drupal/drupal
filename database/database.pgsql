@@ -783,8 +783,8 @@ INSERT INTO system VALUES ('modules/system.module','system','module','',1,0,0);
 INSERT INTO system VALUES ('modules/taxonomy.module','taxonomy','module','',1,0,0);
 INSERT INTO system VALUES ('modules/user.module','user','module','',1,0,0);
 INSERT INTO system VALUES ('modules/watchdog.module','watchdog','module','',1,0,0);
-INSERT INTO `system` VALUES ('themes/engines/phptemplate/phptemplate.engine', 'phptemplate', 'theme_engine', '', 1, 0, 0);
-INSERT INTO `system` VALUES ('themes/bluemarine/page.tpl.php', 'bluemarine', 'theme', 'themes/engines/phptemplate/phptemplate.engine', 1, 0, 0);
+INSERT INTO system VALUES ('themes/engines/phptemplate/phptemplate.engine', 'phptemplate', 'theme_engine', '', 1, 0, 0);
+INSERT INTO system VALUES ('themes/bluemarine/page.tpl.php', 'bluemarine', 'theme', 'themes/engines/phptemplate/phptemplate.engine', 1, 0, 0);
 
 INSERT INTO variable(name,value) VALUES('update_start', 's:10:"2005-03-21";');
 INSERT INTO variable(name,value) VALUES('theme_default','s:10:"bluemarine";');
@@ -811,13 +811,14 @@ INSERT INTO filters VALUES (2,'filter',1,0);
 INSERT INTO filters VALUES (3,'filter',2,0);
 INSERT INTO variable (name,value) VALUES ('filter_html_1','i:1;');
 
-INSERT INTO locales_meta(locale, name, enabled, isdefault) VALUES('en', 'English', '1', '1');
+INSERT INTO locales_meta (locale, name, enabled, isdefault) VALUES ('en', 'English', '1', '1');
+
+INSERT INTO url_alias (src, dst) VALUES ('node/feed', 'rss.xml');
 
 ---
 --- Alter some sequences
 ---
 ALTER SEQUENCE menu_mid_seq RESTART 2;
-
 
 ---
 --- Functions
@@ -838,7 +839,6 @@ END;
 CREATE FUNCTION greatest(integer, integer, integer) RETURNS integer AS '
   SELECT greatest($1, greatest($2, $3));
 ' LANGUAGE 'sql';
-
 
 CREATE FUNCTION "rand"() RETURNS float AS '
 BEGIN
