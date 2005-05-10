@@ -23,7 +23,7 @@ function _locale_add_language($code, $name, $onlylanguage = TRUE) {
   // the language addition, we need to inform the user on how to start
   // a translation
   if ($onlylanguage) {
-    drupal_set_message(t('The language %locale has been created, and can now be used to import a translation. More information is available in the <a href="%locale-help">help screen</a>.', array('%locale' => theme('placeholder', t($name)), '%locale-help' => url('admin/help/locale')));
+    drupal_set_message(t('The language %locale has been created, and can now be used to import a translation. More information is available in the <a href="%locale-help">help screen</a>.', array('%locale' => theme('placeholder', t($name)), '%locale-help' => url('admin/help/locale'))));
   }
   else {
     drupal_set_message(t('The language %locale has been created.', array('%locale' => theme('placeholder', t($name)))));
