@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.13 2005/05/05 22:22:46 dries Exp $
+// $Id: contact.module,v 1.14 2005/05/11 16:36:06 dries Exp $
 
 /**
  * @file
@@ -279,7 +279,7 @@ function contact_mail_page() {
         drupal_goto('contact');
       }
     }
-    else {
+    else if ($user->uid) {
       $edit['name'] = $user->name;
       $edit['mail'] = $user->mail;
     }
