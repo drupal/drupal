@@ -279,7 +279,7 @@ function contact_mail_page() {
         drupal_goto('contact');
       }
     }
-    else {
+    else if ($user->uid) {
       $edit['name'] = $user->name;
       $edit['mail'] = $user->mail;
     }
