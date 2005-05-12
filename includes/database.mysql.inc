@@ -28,7 +28,14 @@ function db_connect($url) {
      $url['host'] = $url['host'] .':'. $url['port'];
   }
 
-  $connection = mysql_connect($url['host'], $url['user'], $url['pass'], TRUE) or die(mysql_error());
+  // - TRUE makes mysql_connect() always open a new link, even if
+  //   mysql_connect() was called before with the same parameters.
+  //   This is important if you are using two databases on the same
+  //   server.
+  // - 2 means CLIENT_FOUND_ROWS: return the number of found
+  //   (matched) rows, not the number of affected rows.
+  $connection = mysql_connect($url['host'], $url['user'], $url['pass'], TRUE, 2) or die(mysql_error());
+
   mysql_select_db(substr($url['path'], 1)) or die('unable to select database');
 
   return $connection;
