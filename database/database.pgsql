@@ -25,6 +25,7 @@ CREATE TABLE accesslog (
   url varchar(255) default NULL,
   hostname varchar(128) default NULL,
   uid integer default '0',
+  timer integer NOT NULL default '0',
   timestamp integer NOT NULL default '0',
   PRIMARY KEY (aid)
 );

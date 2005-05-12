@@ -17,6 +17,63 @@ define('WATCHDOG_NOTICE', 0);
 define('WATCHDOG_WARNING', 1);
 define('WATCHDOG_ERROR', 2);
 
+/**
+ * Start the timer with the specified name.  If you start and stop
+ * the same timer multiple times, the measured intervals will be
+ * accumulated.
+ *
+ * @param name
+ *   The name of the timer.
+ */
+function timer_start($name) {
+  global $timers;
+
+  list($usec, $sec) = explode(' ', microtime());
+  $timers[$name]['start'] = (float)$usec + (float)$sec;
+  $timers[$name]['count']++;
+}
+
+/**
+ * Read the current timer value without stopping the timer.
+ *
+ * @param name
+ *   The name of the timer.
+ * @return
+ *   The current timer value in ms.
+ */
+function timer_read($name) {
+  global $timers;
+
+  list($usec, $sec) = explode(' ', microtime());
+  $stop = (float)$usec + (float)$sec;
+  $diff = round(($stop - $timers[$name]['start']) * 1000, 2);
+
+  return $timers[$name]['time'] + $diff;
+}
+
+/**
+ * Stop the timer with the specified name.
+ *
+ * @param name
+ *   The name of the timer.
+ * @return
+ *   A timer array.  The array contains the number of times the
+ *   timer has been started and stopped (count) and the accumulated
+ *   timer value in ms (time).
+ */
+function timer_stop($name) {
+  global $timers;
+
+  list($usec, $sec) = explode(' ', microtime());
+  $stop = (float)$usec + (float)$sec;
+  $diff = round(($stop - $timers[$name]['start']) * 1000, 2);
+
+  $timers[$name]['time'] += $diff;
+
+  unset($timers[$name]['start']);
+
+  return $timers[$name];
+}
 
 /**
  * Locate the appropriate configuration file.
@@ -171,8 +228,11 @@ function variable_get($name, $default) {
 function variable_set($name, $value) {
   global $conf;
 
+  db_query('LOCK TABLES {variable} WRITE');
   db_query("DELETE FROM {variable} WHERE name = '%s'", $name);
   db_query("INSERT INTO {variable} (name, value) VALUES ('%s', '%s')", $name, serialize($value));
+  db_query('UNLOCK TABLES');
+
   cache_clear_all('variables');
 
   $conf[$name] = $value;
@@ -255,10 +315,12 @@ function cache_get($key) {
 function cache_set($cid, $data, $expire = CACHE_PERMANENT, $headers = NULL) {
   $data = db_encode_blob($data);
 
+  db_query('LOCK TABLES {cache} WRITE');
   db_query("UPDATE {cache} SET data = '%s', created = %d, expire = %d, headers = '%s' WHERE cid = '%s'", $data, time(), $expire, $headers, $cid);
   if (!db_affected_rows()) {
     @db_query("INSERT INTO {cache} (cid, data, created, expire, headers) VALUES ('%s', '%s', %d, %d, '%s')", $cid, $data, time(), $expire, $headers);
   }
+  db_query('UNLOCK TABLES');
 }
 
 /**
@@ -471,10 +533,6 @@ function drupal_set_title($title = NULL) {
  * Set HTTP headers in preparation for a page response.
  */
 function drupal_page_header() {
-  if (variable_get('dev_timer', 0)) {
-    timer_start();
-  }
-
   if (variable_get('cache', 0)) {
     if ($cache = page_get_cache()) {
       bootstrap_invoke_all('init');
@@ -626,15 +684,6 @@ function request_uri() {
 }
 
 /**
- * Begin a global timer, for benchmarking of page execution time.
- */
-function timer_start() {
-  global $timer;
-  list($usec, $sec) = explode(' ', microtime());
-  $timer = (float)$usec + (float)$sec;
-}
-
-/**
  * Log a system message.
  *
  * @param $type
@@ -689,6 +738,9 @@ function drupal_get_messages() {
 
   return $messages;
 }
+
+// Start a page timer:
+timer_start('page');
 
 unset($conf);
 $config = conf_init();

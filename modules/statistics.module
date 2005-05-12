@@ -71,12 +71,8 @@ function statistics_exit() {
     }
   }
   if ((variable_get('statistics_enable_access_log', 0)) && (module_invoke('throttle', 'status') == 0)) {
-    // Statistical logs are enabled.
-    $referrer = referer_uri();
-    $hostname = $_SERVER['REMOTE_ADDR'];
-
     // Log this page access.
-    db_query("INSERT INTO {accesslog} (title, path, url, hostname, uid, timestamp) values('%s', '%s', '%s', '%s', %d, %d)", drupal_get_title(), $_GET['q'], $referrer, $hostname, $user->uid, time());
+    db_query("INSERT INTO {accesslog} (title, path, url, hostname, uid, timer, timestamp) values('%s', '%s', '%s', '%s', %d, %d, %d)", drupal_get_title(), $_GET['q'], referer_uri(), $_SERVER['REMOTE_ADDR'], $user->uid, timer_read('page'), time());
   }
 }
 
@@ -220,7 +216,7 @@ function statistics_user_tracker() {
 }
 
 /**
- * Menu callback; presents the "Recent hits" page.
+ * Menu callback; presents the "recent hits" page.
  */
 function statistics_recent_hits($type = 'all', $id = 0) {
   $header = array(
@@ -249,24 +245,27 @@ function statistics_recent_hits($type = 'all', $id = 0) {
 }
 
 /**
- * Menu callback; presents the "Top pages" page.
+ * Menu callback; presents the "top pages" page.
  */
 function statistics_top_pages() {
-  $sql = "SELECT COUNT(path) AS hits, path, title FROM {accesslog} GROUP BY path, title";
+  $sql = "SELECT COUNT(path) AS hits, path, title, AVG(timer) AS average_time, SUM(timer) AS total_time FROM {accesslog} GROUP BY path, title";
   $sql_cnt = "SELECT COUNT(DISTINCT(path)) FROM {accesslog}";
 
   $header = array(
     array('data' => t('Hits'), 'field' => 'hits', 'sort' => 'desc'),
-    array('data' => t('Page'), 'field' => 'path')
+    array('data' => t('Page'), 'field' => 'path'),
+    array('data' => t('Average generation time'), 'field' => 'average_time'),
+    array('data' => t('Total generation time'), 'field' => 'total_time')
   );
   $sql .= tablesort_sql($header);
   $result = pager_query($sql, 30, 0, $sql_cnt);
 
   while ($page = db_fetch_object($result)) {
-    $rows[] = array($page->hits, _statistics_format_item($page->title, $page->path));
+    $rows[] = array($page->hits, _statistics_format_item($page->title, $page->path), t('%time ms', array('%time' => round($page->average_time))), format_interval(round($page->total_time / 1000)));
   }
+
   if ($pager = theme('pager', NULL, 30, 0, tablesort_pager())) {
-    $rows[] = array(array('data' => $pager, 'colspan' => '2'));
+    $rows[] = array(array('data' => $pager, 'colspan' => '4'));
   }
 
   drupal_set_title(t('Top pages in the past %interval', array('%interval' => format_interval(variable_get('statistics_flush_accesslog_timer', 259200)))));
@@ -274,7 +273,7 @@ function statistics_top_pages() {
 }
 
 /**
- * Menu callback; presents the "Top users" page.
+ * Menu callback; presents the "top users" page.
  */
 function statistics_top_users() {
 
@@ -300,7 +299,7 @@ function statistics_top_users() {
 }
 
 /**
- * Menu callback; presents the "Top referrers" page.
+ * Menu callback; presents the "referrer" page.
  */
 function statistics_top_referrers() {
   $query = "SELECT url, COUNT(url) AS hits, MAX(timestamp) AS last FROM {accesslog} WHERE url NOT LIKE '%%%s%%' AND url <> '' GROUP BY url";

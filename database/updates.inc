@@ -114,7 +114,8 @@ $sql_updates = array(
   "2005-05-06" => "update_135",
   "2005-05-08" => "update_136",
   "2005-05-09" => "update_137",
-  "2005-05-10" => "update_138"
+  "2005-05-10" => "update_138",
+  "2005-05-11" => "update_139"
 );
 
 function update_32() {
@@ -2479,6 +2480,12 @@ function update_138() {
   $ret = array();
   // duplicate of update_97 which never got into the default database.* files.
   $ret[] = update_sql("INSERT INTO {url_alias} (src, dst) VALUES ('node/feed', 'rss.xml')");
+  return $ret;
+}
+
+function update_139() {
+  $ret = array();
+  $ret[] = update_sql("ALTER TABLE {accesslog} ADD timer int(10) unsigned NOT NULL default '0'");
   return $ret;
 }
 
