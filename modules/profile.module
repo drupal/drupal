@@ -160,7 +160,7 @@ function profile_browse() {
     }
 
     // Extract the affected users:
-    $result = pager_query("SELECT u.uid FROM {users} u INNER JOIN {profile_values} v ON u.uid = v.uid WHERE v.fid = %d AND $query ORDER BY u.changed DESC", 20, 0, NULL, $field->fid);
+    $result = pager_query("SELECT u.uid FROM {users} u INNER JOIN {profile_values} v ON u.uid = v.uid WHERE v.fid = %d AND $query ORDER BY u.access DESC", 20, 0, NULL, $field->fid);
 
     $output = '<div id="profile">';
     while ($account = db_fetch_object($result)) {
@@ -191,7 +191,7 @@ function profile_browse() {
     }
 
     // Extract the affected users:
-    $result = pager_query("SELECT uid FROM {users} WHERE uid > 0 ORDER BY changed DESC", 20, 0, NULL);
+    $result = pager_query("SELECT uid FROM {users} WHERE uid > 0 ORDER BY access DESC", 20, 0, NULL);
 
     $output = '<div id="profile">';
     while ($account = db_fetch_object($result)) {
@@ -237,6 +237,10 @@ function profile_view_field($user, $field) {
   // Only allow browsing of private fields for admins
   $browse = user_access('administer users') || $field->visibility != PROFILE_PRIVATE;
 
+  if ($field->fid == 18 || $field->fid == 19 || $field->fid == 20) {
+    return;
+  }
+  
   if ($value = $user->{$field->name}) {
     switch ($field->type) {
       case 'textfield':
