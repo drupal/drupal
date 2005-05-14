@@ -738,12 +738,18 @@ function watchdog($type, $message, $severity = WATCHDOG_NOTICE, $link = NULL) {
 }
 
 /**
- * Set a message for the user to see.
+ * Set a message which reflects the status of the performed operation.
  *
- * The message is stored in the session so that it can persist through a redirect.
+ * If the function is called with no arguments, this function returns all set
+ * messages without clearing them.
  *
- * If called with no arguments, this function returns all set messages without
- * clearing them.
+ * @param $message
+ *   The message should begin with a capital letter and always ends with a
+ *   period '.'.
+ * @param $type
+ *   The type of the message. One of the following values are possible:
+ *   - 'status'
+ *   - 'error'
  */
 function drupal_set_message($message = NULL, $type = 'status') {
   if (isset($message)) {
