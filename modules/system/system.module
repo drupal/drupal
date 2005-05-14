@@ -142,7 +142,7 @@ function system_user($type, $edit, &$user, $category = NULL) {
 
         // Screenshot column.
         $screenshot = dirname($value->filename) .'/screenshot.png';
-        $row[] = file_exists($screenshot) ? theme('image', $screenshot, t('Screenshot for %theme theme', array('%theme' => $value->name)), '', 'class="screenshot"', false) : t('no screenshot');
+        $row[] = file_exists($screenshot) ? theme('image', $screenshot, t('Screenshot for %theme theme', array('%theme' => $value->name)), '', array('class' => 'screenshot'), false) : t('no screenshot');
 
         // Information field.
         $field = '<strong>'. $value->name .'</strong>';
@@ -419,7 +419,7 @@ function system_theme_listing() {
     $row = array();
 
     // Screenshot column.
-    $row[] = file_exists($info->screenshot) ? theme('image', $info->screenshot, t('Screenshot for %theme theme', array('%theme' => $info->name)), '', 'class="screenshot"', false) : t('no screenshot');
+    $row[] = file_exists($info->screenshot) ? theme('image', $info->screenshot, t('Screenshot for %theme theme', array('%theme' => $info->name)), '', array('class' => 'screenshot'), false) : t('no screenshot');
 
     // Information field.
     $row[] = "<strong>$info->name</strong><br /><em>" . dirname($info->filename) . '</em>';
