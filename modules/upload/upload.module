@@ -94,7 +94,7 @@ function upload_admin() {
     $group = form_textfield(t('Permitted file extensions'), "upload_extensions_$rid", variable_get("upload_extensions_$rid", "jpg jpeg gif png txt html doc xls pdf ppt pps"), 60, 255, t('Extensions that users in this role can upload. Separate extensions with a space and do not include the leading dot.'));
     $group .= form_textfield(t('Maximum file size per upload'), "upload_uploadsize_$rid", variable_get("upload_uploadsize_$rid", 1), 5, 5, t('The maximum size of a file a user can upload (in megabytes).'));
     $group .= form_textfield(t('Total file size per user'), "upload_usersize_$rid", variable_get("upload_usersize_$rid", 10), 5, 5, t('The maximum size of all files a user can have on the site (in megabytes).'));
-    $output .= form_group(t('Settings for %role', array('%role' => "<em>$role</em>")), $group);
+    $output .= form_group(t('Settings for %role', array('%role' => theme('placeholder', $role))), $group);
   }
 
   return system_settings_form($output);
