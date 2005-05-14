@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.126 2005/04/24 16:34:35 dries Exp $
+// $Id: search.module,v 1.127 2005/05/14 17:26:02 dries Exp $
 
 /**
  * @file
@@ -215,11 +215,7 @@ function search_cron() {
     $total = db_result(db_query("SELECT SUM(score) FROM {search_index} WHERE word = '%s'", $word));
     db_query("UPDATE {search_total} SET count = %d WHERE word = '%s'", $total, $word);
     if (!db_affected_rows()) {
-      // Note: affected rows does not count matching rows that already had the right value!
-      $exists = db_result(db_query("SELECT COUNT(*) FROM {search_total} WHERE word = '%s'", $word));
-      if (!$exists) {
-        db_query("INSERT INTO {search_total} (word, count) VALUES ('%s', %d)", $word, $total);
-      }
+      db_query("INSERT INTO {search_total} (word, count) VALUES ('%s', %d)", $word, $total);
     }
   }
   // Find words that were deleted from search_index, but are still in
