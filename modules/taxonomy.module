@@ -375,7 +375,7 @@ function taxonomy_overview() {
         $tree = taxonomy_get_tree($vocabulary->vid);
         if ($tree) {
           foreach ($tree as $term) {
-            $rows[] = array(array('data' => _taxonomy_depth($term->depth) . ' ' . check_plain($term->name), 'class' => 'term'), NULL, NULL, NULL, l(t('edit term'), "admin/taxonomy/edit/term/$term->tid"));
+            $rows[] = array(array('data' => _taxonomy_depth($term->depth) . ' ' . l($term->name, "taxonomy/term/$term->tid"), 'class' => 'term'), NULL, NULL, NULL, l(t('edit term'), "admin/taxonomy/edit/term/$term->tid"));
           }
         }
         else {
