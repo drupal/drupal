@@ -47,19 +47,23 @@ function file_create_url($path) {
  *
  * @param $dest Path to verify
  * @return Path to file with file system directory appended if necessary.
+ *         Returns FALSE if the path is invalid (i.e. outside the configured 'files'-directory).
  */
 function file_create_path($dest = 0) {
+  $file_path = variable_get('file_directory_path', 'files');
   if (!$dest) {
-    return variable_get('file_directory_path', 'files');
+    return $file_path;
   }
-
-  $regex = (IS_WINDOWS ? '.?:\\\\' : '/');
-  if (!file_check_location($dest, variable_get('file_directory_path', 'files')) && !preg_match("|^$regex|", $dest)) {
-    return variable_get('file_directory_path', 'files') .'/'. trim($dest, '\\/');
-  }
-  else {
+  // file_check_location() checks whether the destination is inside the Drupal /files directory.
+  if (file_check_location($dest, $file_path)) {
     return $dest;
   }
+  // Not found, try again with prefixed dirctory path.
+  else if (file_check_location($file_path . '/' . $dest, $file_path)) {
+    return $file_path . '/' . $dest;
+  }
+  // File not found.
+  return FALSE;
 }
 
 /**
