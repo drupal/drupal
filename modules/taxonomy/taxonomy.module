@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.200 2005/05/07 01:48:06 unconed Exp $
+// $Id: taxonomy.module,v 1.201 2005/05/14 21:40:42 dries Exp $
 
 /**
  * @file
@@ -375,7 +375,7 @@ function taxonomy_overview() {
         $tree = taxonomy_get_tree($vocabulary->vid);
         if ($tree) {
           foreach ($tree as $term) {
-            $rows[] = array(array('data' => _taxonomy_depth($term->depth) . ' ' . check_plain($term->name), 'class' => 'term'), NULL, NULL, NULL, l(t('edit term'), "admin/taxonomy/edit/term/$term->tid"));
+            $rows[] = array(array('data' => _taxonomy_depth($term->depth) . ' ' . l($term->name, "taxonomy/term/$term->tid"), 'class' => 'term'), NULL, NULL, NULL, l(t('edit term'), "admin/taxonomy/edit/term/$term->tid"));
           }
         }
         else {
