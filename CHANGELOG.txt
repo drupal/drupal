@@ -13,6 +13,7 @@ Drupal x.x.x, xxxx-xx-xx (Development version)
     * added support for private profile fields.
 - performance:
     * added 'loose caching' option for high-traffic sites.
+    * improved performance of path aliasing.
     * added the ability to track page generation times.
 
 Drupal 4.6.0, 2005-04-15

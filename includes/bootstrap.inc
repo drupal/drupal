@@ -448,7 +448,7 @@ function drupal_load($type, $name) {
   // print $name. '<br />';
   static $files = array();
 
-  if ($files[$type][$name]) {
+  if (isset($files[$type][$name])) {
     return TRUE;
   }
 
@@ -465,32 +465,66 @@ function drupal_load($type, $name) {
 }
 
 /**
- * Return an array mapping path aliases to their internal Drupal paths.
+ * Given an alias, return its Drupal system URL if one exists. Given a Drupal
+ * system URL return its alias if one exists.
+ *
+ * @param $action
+ *   One of the following values:
+ *   - wipe: delete the alias cache.
+ *   - source: indicates that given a Drupal system URL, return an alias if one exists.
+ *   - alias: indicates that given an path alias, return the Drupal system URL if one exists.
+ * @param $path
+ *   The path to investigate for corresponding aliases or system URLs.
  */
-function drupal_get_path_map($action = '') {
-  static $map = NULL;
+function drupal_lookup_path($action, $path = '') {
+  static $map = array();
+  static $count = NULL;
 
-  if ($action == 'rebuild') {
-    $map = NULL;
+  if ($count === NULL) {
+    $count = db_result(db_query('SELECT COUNT(pid) FROM {url_alias}'));
   }
 
-  if (is_null($map)) {
-    $map = array();  // Make $map non-null in case no aliases are defined.
-    $result = db_query('SELECT * FROM {url_alias}');
-    while ($data = db_fetch_object($result)) {
-      $map[$data->dst] = $data->src;
+  if ($action == 'wipe') {
+    $map = array();
+  }
+  elseif ($count > 0 && $path != '') {
+    if ($action == 'source') {
+      if (isset($map[$path])) {
+        return $map[$path];
+      }
+      if ($alias = db_result(db_query("SELECT dst FROM {url_alias} WHERE src = '%s'", $path))) {
+        $map[$path] = $alias;
+        return $alias;
+      }
+      else {
+        $map[$path] = $path;
+      }
+    }
+    elseif ($action == 'alias') {
+      if ($alias = array_search($path, $map)) {
+        return $alias;
+      }
+      if (!isset($map[$path])) {
+        if ($src = db_result(db_query("SELECT src FROM {url_alias} WHERE dst = '%s'", $path))) {
+          $map[$src] = $path;
+          return $src;
+        }
+        else {
+          $map[$path] = $path;
+        }
+      }
     }
   }
 
-  return $map;
+  return FALSE;
 }
 
 /**
  * Given an internal Drupal path, return the alias set by the administrator.
  */
 function drupal_get_path_alias($path) {
-  if (($map = drupal_get_path_map()) && ($newpath = array_search($path, $map))) {
-    return $newpath;
+  if ($alias = drupal_lookup_path('source', $path)) {
+    return $alias;
   }
   elseif (function_exists('conf_url_rewrite')) {
     return conf_url_rewrite($path, 'outgoing');
@@ -644,7 +678,7 @@ function arg($index) {
     $arguments = explode('/', $_GET['q']);
   }
 
-  if (array_key_exists($index, $arguments)) {
+  if ($arguments[$index] !== NULL) {
     return $arguments[$index];
   }
 }

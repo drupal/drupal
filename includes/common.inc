@@ -80,18 +80,19 @@ function drupal_get_html_head() {
 }
 
 /**
- * Regenerate the path map from the information in the database.
+ * Reset the static variable which holds the aliases mapped for this request.
  */
-function drupal_rebuild_path_map() {
-  drupal_get_path_map('rebuild');
+function drupal_clear_path_cache() {
+  drupal_lookup_path('wipe');
 }
 
 /**
  * Given a path alias, return the internal path it represents.
  */
 function drupal_get_normal_path($path) {
-  if (($map = drupal_get_path_map()) && isset($map[$path])) {
-    return $map[$path];
+  //drupal_get_path_alias($path);
+  if ($src = drupal_lookup_path('alias', $path)) {
+    return $src;
   }
   elseif (function_exists('conf_url_rewrite')) {
     return conf_url_rewrite($path, 'incoming');
@@ -1531,7 +1532,7 @@ function url($path = NULL, $query = NULL, $fragment = NULL, $absolute = FALSE) {
  *   An HTML string ready for insertion in a tag.
  */
 function drupal_attributes($attributes = array()) {
-  if ($attributes) {
+  if (is_array($attributes)) {
     $t = array();
     foreach ($attributes as $key => $value) {
       $t[] = $key .'="'. check_plain($value) .'"';
@@ -1551,7 +1552,8 @@ function drupal_attributes($attributes = array()) {
  * @param $text
  *   The text to be enclosed with the anchor tag.
  * @param $path
- *   The Drupal path being linked to, such as "admin/node".
+ *   The Drupal path being linked to, such as "admin/node". Note, this must be a
+ *   system URL as the url() function will generate the alias.
  * @param $attributes
  *   An associative array of HTML attributes to apply to the anchor tag.
  * @param $query
@@ -1567,7 +1569,7 @@ function drupal_attributes($attributes = array()) {
  *   an HTML string containing a link to the given path.
  */
 function l($text, $path, $attributes = array(), $query = NULL, $fragment = NULL, $absolute = FALSE, $html = FALSE) {
-  if (drupal_get_normal_path($path) == $_GET['q']) {
+  if ($path == $_GET['q']) {
     if (isset($attributes['class'])) {
       $attributes['class'] .= ' active';
     }

@@ -115,7 +115,8 @@ $sql_updates = array(
   "2005-05-08" => "update_136",
   "2005-05-09" => "update_137",
   "2005-05-10" => "update_138",
-  "2005-05-11" => "update_139"
+  "2005-05-11" => "update_139",
+  "2005-05-12" => "update_140"
 );
 
 function update_32() {
@@ -2486,6 +2487,18 @@ function update_138() {
 function update_139() {
   $ret = array();
   $ret[] = update_sql("ALTER TABLE {accesslog} ADD timer int(10) unsigned NOT NULL default '0'");
+  return $ret;
+}
+
+function update_140() {
+  $ret = array();
+
+  if ($GLOBALS['db_type'] == 'mysql') {
+    $ret[] = update_sql("ALTER TABLE {url_alias} ADD INDEX (src)");
+  }
+  elseif ($GLOBALS['db_type'] == 'pgsql') {
+    $ret[] = update_sql("CREATE INDEX url_alias_src ON {url_alias}(src)");
+  }
   return $ret;
 }
 

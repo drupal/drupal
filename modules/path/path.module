@@ -132,11 +132,11 @@ function path_admin_delete($pid = 0) {
 function path_set_alias($path = NULL, $alias = NULL, $pid = NULL) {
   if ($path && !$alias) {
     db_query("DELETE FROM {url_alias} WHERE src = '%s'", $path);
-    drupal_rebuild_path_map();
+    drupal_clear_path_cache();
   }
   else if (!$path && $alias) {
     db_query("DELETE FROM {url_alias} WHERE dst = '%s'", $alias);
-    drupal_rebuild_path_map();
+    drupal_clear_path_cache();
   }
   else if ($path && $alias) {
     $path_count = db_result(db_query("SELECT COUNT(src) FROM {url_alias} WHERE src = '%s'", $path));
@@ -145,7 +145,7 @@ function path_set_alias($path = NULL, $alias = NULL, $pid = NULL) {
     // We have an insert:
     if ($path_count == 0 && $alias_count == 0) {
       db_query("INSERT INTO {url_alias} (src, dst) VALUES ('%s', '%s')", $path, $alias);
-      drupal_rebuild_path_map();
+      drupal_clear_path_cache();
     }
     else if ($path_count >= 1 && $alias_count == 0) {
       if ($pid) {
@@ -154,11 +154,11 @@ function path_set_alias($path = NULL, $alias = NULL, $pid = NULL) {
       else {
         db_query("INSERT INTO {url_alias} (src, dst) VALUES ('%s', '%s')", $path, $alias);
       }
-      drupal_rebuild_path_map();
+      drupal_clear_path_cache();
     }
     else if ($path_count == 0 && $alias_count == 1) {
       db_query("UPDATE {url_alias} SET src = '%s' WHERE dst = '%s'", $path, $alias);
-      drupal_rebuild_path_map();
+      drupal_clear_path_cache();
     }
     else if ($path_count == 1 && $alias_count == 1) {
       // This will delete the path that alias was originally pointing to:
