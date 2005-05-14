@@ -500,6 +500,7 @@ CREATE TABLE url_alias (
   PRIMARY KEY  (pid)
 );
 CREATE INDEX url_alias_dst_idx ON url_alias(dst);
+CREATE INDEX url_alias_src ON url_alias(src)
 --
 -- Table structure for permission
 --
