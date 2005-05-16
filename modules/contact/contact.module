@@ -237,7 +237,10 @@ function contact_mail_page() {
       if (!$edit['message']) {
         form_set_error('message', t('You must enter a message.'));
       }
-
+      if (!$edit['subject']) {
+        form_set_error('subject', t('You must select a valid subject.'));
+      }
+      
       if (!form_get_errors()) {
         // Prepare the sender:
         $from = $edit['mail'];
@@ -285,6 +288,7 @@ function contact_mail_page() {
     }
 
     $result = db_query('SELECT subject FROM contact ORDER BY subject');
+    $subjects[] = '--';
     while ($subject = db_fetch_object($result)) {
       $subjects[$subject->subject] = $subject->subject;
     }
@@ -293,7 +297,7 @@ function contact_mail_page() {
       $output  = variable_get('contact_form_information', t('You can leave us a message using the contact form below.'));
       $output .= form_textfield(t('Name'), 'name', $edit['name'], 50, 255, NULL, NULL, TRUE);
       $output .= form_textfield(t('E-mail'), 'mail', $edit['mail'], 50, 255, NULL, NULL, TRUE);
-      $output .= form_select(t('Subject'), 'subject', $edit['subject'], $subjects);
+      $output .= form_select(t('Subject'), 'subject', $edit['subject'], $subjects, NULL, NULL, NULL, TRUE);
       $output .= form_textarea(t('Message'), 'message', $edit['message'], 70, 8, NULL, NULL, TRUE);
       $output .= form_submit(t('Send e-mail'));
       $output  = form($output);
