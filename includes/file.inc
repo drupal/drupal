@@ -170,7 +170,14 @@ function file_check_upload($source) {
  * @return 0 for invalid path or the real path of the source.
  */
 function file_check_location($source, $directory = 0) {
-  $source = realpath($source);
+  $check = realpath($source);
+  if ($check) {
+    $source = $check;
+  }
+  else {
+    // This file does not yet exist
+    $source = realpath(dirname($source)) .'/'. basename($source);
+  }
   $directory = realpath($directory);
   if ($directory && strpos($source, $directory) !== 0) {
     return 0;
