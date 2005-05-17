@@ -388,7 +388,7 @@ function node_load($conditions, $revision = NULL, $reset = NULL) {
   }
 
   // Retrieve the node.
-  $node = db_fetch_object(db_query('SELECT n.*, u.uid, u.name, u.picture, u.data FROM {node} n INNER JOIN {users} u ON u.uid = n.uid WHERE '. implode(' AND ', $cond)));
+  $node = db_fetch_object(db_query(db_rewrite_sql('SELECT n.*, u.uid, u.name, u.picture, u.data FROM {node} n INNER JOIN {users} u ON u.uid = n.uid WHERE '. implode(' AND ', $cond))));
   $node = drupal_unpack($node);
 
   // Unserialize the revisions and user data fields.
