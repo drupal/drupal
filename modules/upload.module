@@ -247,7 +247,7 @@ function upload_nodeapi(&$node, $op, $arg) {
         foreach ($node->files as $file) {
           if ($file->list) {
             $rows[] = array(
-              '<a href="'. ($file->fid ? file_create_url($file->filepath) : url(file_create_filename($file->filename, file_create_path()))) . '">'. $file->filename .'</a>',
+              '<a href="'. check_url(($file->fid ? file_create_url($file->filepath) : url(file_create_filename($file->filename, file_create_path())))) .'">'. check_plain($file->filename) .'</a>',
               format_size($file->filesize)
             );
             // We save the list of files still in preview for later

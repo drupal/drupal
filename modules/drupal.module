@@ -114,8 +114,10 @@ function drupal_directory_ping($arguments) {
 function drupal_directory_page($sort = 'name') {
   $result = db_query('SELECT * FROM {directory} ORDER BY '. $sort);
 
+  // Note: All fields except the mission are treated as plain-text.
+  // The mission is stripped of any HTML tags to keep the output simple and consistent.
   while ($site = db_fetch_object($result)) {
-    $output .= "<a href=\"$site->link\">$site->name</a> - $site->slogan<div style=\"padding-left: 20px;\">$site->mission</div><br />";
+    $output .= '<a href="'. check_url($site->link) .'">'. check_plain($site->name) .'</a> - '. check_plain($site->slogan) .'<div style="padding-left: 20px;">'. strip_tags($site->mission) .'</div><br />';
   }
 
   return $output;
