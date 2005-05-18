@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.191 2005/05/12 11:21:35 dries Exp $
+// $Id: statistics.module,v 1.192 2005/05/18 21:12:17 unconed Exp $
 
 /**
  * @file
@@ -316,7 +316,7 @@ function statistics_top_referrers() {
   $result = pager_query($query, 30, 0, $query_cnt, $_SERVER['HTTP_HOST']);
 
   while ($referrer = db_fetch_object($result)) {
-    $rows[] = array($referrer->hits, '<a href="'. $referrer->url .'">'. _statistics_column_width($referrer->url) .'</a>', t('%time ago', array('%time' => format_interval(time() - $referrer->last))));
+    $rows[] = array($referrer->hits, '<a href="'. check_url($referrer->url) .'">'. check_plain(_statistics_column_width($referrer->url)) .'</a>', t('%time ago', array('%time' => format_interval(time() - $referrer->last))));
   }
   if ($pager = theme('pager', NULL, 30, 0, tablesort_pager())) {
     $rows[] = array(array('data' => $pager, 'colspan' => '3'));
