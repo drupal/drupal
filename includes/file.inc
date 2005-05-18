@@ -54,8 +54,12 @@ function file_create_path($dest = 0) {
   if (!$dest) {
     return $file_path;
   }
-  // file_check_location() checks whether the destination is inside the Drupal /files directory.
+  // file_check_location() checks whether the destination is inside the Drupal files directory.
   if (file_check_location($dest, $file_path)) {
+    return $dest;
+  }
+  // check if the destination is instead inside the Drupal temporary files directory.
+  else if (file_check_location($dest, variable_get('file_directory_temp', FILE_DIRECTORY_TEMP))) {
     return $dest;
   }
   // Not found, try again with prefixed dirctory path.
