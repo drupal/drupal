@@ -207,7 +207,7 @@ function upload_nodeapi(&$node, $op, $arg) {
         }
 
         if ($error['extension'] == count($user->roles) && $user->uid != 1) {
-          form_set_error('upload', t('The selected file %name can not be attached to this post, because it is only possible to attach files with the following extensions: %files-allowed', array('%files-allowed' => theme('placeholder', $extensions))));
+          form_set_error('upload', t('The selected file %name can not be attached to this post, because it is only possible to attach files with the following extensions: %files-allowed', array('%name' => theme('placeholder', $file->filename), '%files-allowed' => theme('placeholder', $extensions))));
         }
         elseif ($error['uploadsize'] == count($user->roles) && $user->uid != 1) {
           form_set_error('upload', t('The selected file %name can not be attached to this post, because it exceeded the maximum filesize of %maxsize', array('%name' => theme('placeholder', $file->filename), '%maxsize' => theme('placeholder', format_size($uploadsize)))));
