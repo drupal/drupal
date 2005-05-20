@@ -806,11 +806,11 @@ function format_plural($count, $singular, $plural) {
  */
 function format_size($size) {
   $suffix = t('bytes');
-  if ($size > 1024) {
+  if ($size >= 1024) {
     $size = round($size / 1024, 2);
     $suffix = t('KB');
   }
-  if ($size > 1024) {
+  if ($size >= 1024) {
     $size = round($size / 1024, 2);
     $suffix = t('MB');
   }
