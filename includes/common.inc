@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.441 2005/05/14 09:23:47 dries Exp $ */
+/* $Id: common.inc,v 1.442 2005/05/20 11:31:16 dries Exp $ */
 
 /**
  * @file
@@ -806,11 +806,11 @@ function format_plural($count, $singular, $plural) {
  */
 function format_size($size) {
   $suffix = t('bytes');
-  if ($size > 1024) {
+  if ($size >= 1024) {
     $size = round($size / 1024, 2);
     $suffix = t('KB');
   }
-  if ($size > 1024) {
+  if ($size >= 1024) {
     $size = round($size / 1024, 2);
     $suffix = t('MB');
   }
