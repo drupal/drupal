@@ -741,7 +741,7 @@ function taxonomy_get_tree($vid, $parent = 0, $depth = -1, $max_depth = NULL) {
   if (!isset($children[$vid])) {
     $children[$vid] = array();
 
-    $result = db_query('SELECT t.*, parent FROM {term_data} t, {term_hierarchy} h WHERE t.tid = h.tid AND t.vid = %d ORDER BY weight, name', $vid);
+    $result = db_query(db_rewrite_sql('SELECT t.tid, t.*, parent FROM {term_data} t, {term_hierarchy} h WHERE t.tid = h.tid AND t.vid = %d ORDER BY weight, name', 't', 'tid'), $vid);
     while ($term = db_fetch_object($result)) {
       $children[$vid][$term->parent][] = $term->tid;
       $parents[$vid][$term->tid][] = $term->parent;
@@ -1052,10 +1052,11 @@ function taxonomy_term_page($str_tids = '', $depth = 0, $op = 'page') {
   $rss_tids = urlencode($str_tids);
 
   if ($tids) {
-    // Build title:
-    $result = db_query('SELECT name FROM {term_data} WHERE tid IN (%s)', implode(',', $tids));
+    $result = db_query(db_rewrite_sql('SELECT t.tid, t.name FROM {term_data} t WHERE t.tid IN (%s)', 't', 'tid'), implode(',', $tids));
+    $tids = array(); // we rebuild the $tids-array so it only contains terms the user has access to.
     $names = array();
     while ($term = db_fetch_object($result)) {
+      $tids[] = $term->tid;
       $names[] = $term->name;
     }
 
