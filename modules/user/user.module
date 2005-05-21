@@ -805,7 +805,7 @@ function user_login($edit = array(), $msg = '') {
   else if ($edit['name'] && $edit['pass']) {
 
     if (!$user->uid) {
-      $user = user_authenticate($edit['name'], $edit['pass']);
+      $user = user_authenticate($edit['name'], trim($edit['pass']));
     }
 
     if ($user->uid) {
@@ -1158,6 +1158,8 @@ function user_edit_validate($uid, &$edit) {
 
   // If required, check that proposed passwords match.  If so, add the new password to $edit.
   if ($edit['pass1']) {
+    $edit['pass1'] = trim($edit['pass1']);
+    $edit['pass2'] = trim($edit['pass2']);
     if ($edit['pass1'] == $edit['pass2']) {
       $edit['pass'] = $edit['pass1'];
     }
