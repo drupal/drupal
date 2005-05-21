@@ -14,7 +14,7 @@
   <tr>
     <td id="logo">
 
-      <a href="./" title="Home"><img src="<?php print $logo ?>" alt="Home" border="0" /></a>
+      <a href="./" title="Home"><img src="<?php print $logo ?>" alt="Home" /></a>
       <h1 class='site-name'><a href="./" title="Home"><?php print $site_name ?></a></h1>
       <div class='site-slogan'><?php print $site_slogan ?></div>
 
