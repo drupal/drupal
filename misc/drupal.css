@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.102 2005/04/08 14:59:14 dries Exp $ */
+/* $Id: drupal.css,v 1.103 2005/05/21 11:53:01 dries Exp $ */
 
 /*
 ** HTML elements
@@ -171,9 +171,7 @@ tr.light .form-item, tr.dark .form-item {
   display: block;
   width: 95%;
 }
-.node-form fieldset {
-  display: inline;
-}
+
 .node-form .admin .form-item .title {
   margin-top: 0;
 }
