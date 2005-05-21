@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.297 2005/05/06 08:43:21 dries Exp $
+// $Id: book.module,v 1.298 2005/05/21 09:59:15 dries Exp $
 
 /**
  * @file
@@ -620,7 +620,7 @@ function book_print($nid = 0, $depth = 1) {
 
   $html = '<html><head><title>'. check_plain($node->title) .'</title>';
   $html .= '<base href="'. $base_url .'/" />';
-  $html .= "<style type=\"text/css\">\n@import url(misc/print.css);\n</style>";
+  $html .= theme_stylesheet_import('misc/print.css', 'print');
   $html .= '</head><body>'. $output .'</body></html>';
 
   print $html;
