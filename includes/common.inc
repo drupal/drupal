@@ -430,6 +430,38 @@ function fix_gpc_magic() {
 }
 
 /**
+ * An unchecked checkbox is not present in $_POST so we fix it here by
+ * proving a default value of 0.  Also, with form_checkboxes() we expect
+ * an array, but HTML does not send the empty array.  This is also taken
+ * care off.
+ */
+function fix_checkboxes() {
+  if (isset($_POST['form_array'])) {
+    $_POST['edit'] = _fix_checkboxes($_POST['edit'], $_POST['form_array'], array());
+  }
+  if (isset($_POST['form_zero'])) {
+    $_POST['edit'] = _fix_checkboxes($_POST['edit'], $_POST['form_zero'], 0);
+  }
+}
+
+function _fix_checkboxes($array1, $array2, $value) {
+  if (is_array($array2) && count($array2)) {
+    foreach ($array2 as $k => $v) {
+      if (is_array($v) && count($v)) {
+        $array1[$k] = _fix_checkboxes($array1[$k], $v, $value);
+      }
+      else if (!isset($array1[$k])) {
+        $array1[$k] = $value;
+      }
+    }
+  }
+  else {
+    $array1 = $value;
+  }
+  return $array1;
+}
+
+/**
  * @name Conversion
  * @{
  * Converts data structures to different types.
@@ -1160,9 +1192,7 @@ function form_checkbox($title, $name, $value = 1, $checked = FALSE, $description
   if (!is_null($title)) {
     $element = '<label class="option">'. $element .' '. $title .'</label>';
   }
-  // Note: because unchecked boxes are not included in the POST data, we include
-  // a form_hidden() which will be overwritten for a checked box.
-  return form_hidden($name, 0) . theme('form_element', NULL, $element, $description, $name, $required, _form_get_error($name));
+  return form_hidden($name, 1, 'form_zero') . theme('form_element', NULL, $element, $description, $name, $required, _form_get_error($name));
 }
 
 /**
@@ -1195,10 +1225,7 @@ function form_checkboxes($title, $name, $values, $options, $description = NULL, 
     foreach ($options as $key => $choice) {
       $choices .= '<label class="option"><input type="checkbox" class="form-checkbox" name="edit['. $name .'][]" value="'. $key .'"'. (in_array($key, $values) ? ' checked="checked"' : ''). drupal_attributes($attributes) .' /> '. $choice .'</label><br />';
     }
-    // Note: because unchecked boxes are not included in the POST data, we
-    // include a form_hidden() which will be overwritten as soon as there is at
-    // least one checked box.
-    return form_hidden($name, 0) . theme('form_element', $title, $choices, $description, NULL, $required, _form_get_error($name));
+    return form_hidden($name, 1, 'form_array') . theme('form_element', $title, $choices, $description, NULL, $required, _form_get_error($name));
   }
 }
 
@@ -1376,8 +1403,8 @@ function form_file($title, $name, $size, $description = NULL, $required = FALSE)
  * but be sure to validate the data on the receiving page as it is possible for
  * an attacker to change the value before it is submitted.
  */
-function form_hidden($name, $value) {
-  return '<input type="hidden" name="edit['. $name .']" value="'. check_plain($value) ."\" />\n";
+function form_hidden($name, $value, $edit = 'edit') {
+  return '<input type="hidden" name="'. $edit .'['. $name .']" value="'. check_plain($value) ."\" />\n";
 }
 
 /**

@@ -14,6 +14,7 @@ drupal_page_header();
 include_once 'includes/common.inc';
 
 fix_gpc_magic();
+fix_checkboxes();
 
 $return = menu_execute_active_handler();
 switch ($return) {
