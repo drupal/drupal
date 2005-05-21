@@ -678,7 +678,7 @@ function arg($index) {
     $arguments = explode('/', $_GET['q']);
   }
 
-  if ($arguments[$index] !== NULL) {
+  if (isset($arguments[$index])) {
     return $arguments[$index];
   }
 }
