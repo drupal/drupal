@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.49 2005/05/14 18:32:22 dries Exp $
+// $Id: bootstrap.inc,v 1.50 2005/05/21 11:33:03 dries Exp $
 
 /**
  * @file
@@ -678,7 +678,7 @@ function arg($index) {
     $arguments = explode('/', $_GET['q']);
   }
 
-  if ($arguments[$index] !== NULL) {
+  if (isset($arguments[$index])) {
     return $arguments[$index];
   }
 }
