@@ -542,13 +542,13 @@ function taxonomy_node_get_terms_by_vocabulary($nid, $vid, $key = 'tid') {
 }
 
 /**
- * Find all terms associated to the given node.
+ * Find all terms associated to the given node, ordered by vocabulary and term weight.
  */
 function taxonomy_node_get_terms($nid, $key = 'tid') {
   static $terms;
 
   if (!isset($terms[$nid])) {
-    $result = db_query('SELECT t.* FROM {term_data} t, {term_node} r WHERE r.tid = t.tid AND r.nid = %d ORDER BY weight, name', $nid);
+    $result = db_query('SELECT t.* FROM {term_node} r INNER JOIN {term_data} t ON r.tid = t.tid INNER JOIN {vocabulary} v ON t.vid = v.vid WHERE r.nid = %d ORDER BY v.weight, t.weight, t.name', $nid);
     $terms[$nid] = array();
     while ($term = db_fetch_object($result)) {
       $terms[$nid][$term->$key] = $term;
