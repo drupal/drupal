@@ -171,9 +171,7 @@ tr.light .form-item, tr.dark .form-item {
   display: block;
   width: 95%;
 }
-.node-form fieldset {
-  display: inline;
-}
+
 .node-form .admin .form-item .title {
   margin-top: 0;
 }
