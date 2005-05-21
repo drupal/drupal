@@ -1,5 +1,5 @@
 <?php
-// $Id: index.php,v 1.83 2005/04/24 16:34:32 dries Exp $
+// $Id: index.php,v 1.84 2005/05/21 18:33:58 dries Exp $
 
 /**
  * @file
@@ -14,6 +14,7 @@ drupal_page_header();
 include_once 'includes/common.inc';
 
 fix_gpc_magic();
+fix_checkboxes();
 
 $return = menu_execute_active_handler();
 switch ($return) {
