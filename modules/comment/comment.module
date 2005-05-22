@@ -493,10 +493,7 @@ function comment_preview($edit) {
 
   $output = '';
 
-  $comment = new StdClass();
-  foreach ($edit as $key => $value) {
-    $comment->$key = $value;
-  }
+  $comment = array2object($edit);
 
   // Attach the user and time information.
   $comment->uid = $user->uid;
@@ -504,7 +501,7 @@ function comment_preview($edit) {
   $comment->name = check_plain($user->name ? $user->name : $comment->name);
 
   // Preview the comment.
-  $output .= theme('comment_view', $comment, theme('links', module_invoke_all('link', 'comment', $comment, 1)));
+  $output .= theme('comment_preview', $comment, theme('links', module_invoke_all('link', 'comment', $comment, 1)));
   $output .= theme('comment_form', $edit, t('Reply'));
 
   if ($edit['pid']) {
@@ -1430,6 +1427,13 @@ function theme_comment_form($edit, $title) {
 
   return theme('box', $title, form($form, 'post', url('comment/reply/'. $edit['nid'])));
 }
+
+function theme_comment_preview($comment, $links = '', $visible = 1) {
+  $output = '<div class="preview">';
+  $output .= theme('comment_view', $comment, $links, $visible);
+  $output .= '</div>';
+  return $output;
+};
 
 function theme_comment_view($comment, $links = '', $visible = 1) {
 
