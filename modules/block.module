@@ -20,7 +20,7 @@ function block_help($section) {
 <ul>
 <li>Its enabled checkbox. Disabled blocks are never shown.</li>
 <li>Its throttle checkbox. Throttled blocks are hidden during high server loads.</li>
-<li>Its path options. Blocks can be configured to only show/hide on certain pages</li>.
+<li>Its path options. Blocks can be configured to only show/hide on certain pages.</li>
 <li>User settings. You can choose to let your users decide whether to show/hide certain blocks.</li>
 <li>Its function. Dynamic blocks (such as those defined by modules) may be empty on certain pages and will not be shown.</li>
 </ul>
