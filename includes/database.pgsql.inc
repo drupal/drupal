@@ -185,7 +185,7 @@ function db_query_range($query) {
   $from = array_pop($args);
 
   $query = db_prefix_tables($query);
-  if (count(func_get_args()) > 3) {
+  if (count($args) > 1) {
     // Check for array (alternative syntax).
     if (is_array($args[1])) {
       $args = array_merge(array($query), $args[1]);
