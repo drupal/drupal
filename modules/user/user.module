@@ -533,9 +533,8 @@ function user_block($op = 'list', $delta = 0, $edit = array()) {
         if (user_access('access content')) {
           $result = db_query_range('SELECT uid, name FROM {users} WHERE status != 0 ORDER BY uid DESC', 0, 5);
           while ($account = db_fetch_object($result)) {
-            $items[] = format_name($account);
+            $items[] = $account;
           }
-
           $output = theme('user_list', $items);
 
           $block['subject'] = t('Who\'s new');
@@ -563,19 +562,14 @@ function user_block($op = 'list', $delta = 0, $edit = array()) {
 
           // Display a list of currently online users.
           $max_users = variable_get('user_block_max_list_count', 10);
-          if ($max_users) {
-            $items = array();
+          $items = array();
 
-            while ($max_users-- && $account = db_fetch_object($users)) {
-              $items[] = format_name($account);
-            }
+          while ($max_users-- && $account = db_fetch_object($users)) {
+            $items[] = $account;
+          }
 
-            if ($items) {
-              if (db_fetch_object($users)) {
-                $items[] = '...';
-              }
-              $output .= theme('item_list', $items, t('Online users:'));
-            }
+          if ($items) {
+            $output .= theme('user_list', $items, t('Online users'));
           }
 
           $block['subject'] = t('Who\'s online');
@@ -618,7 +612,16 @@ function theme_user_profile($account, $fields) {
   return $output;
 }
 
-function theme_user_list($items, $title = NULL) {
+/**
+ * Make a list of users.
+ * @param $items an array with user objects. Should contain at least the name and uid
+ *
+ * @ingroup themeable
+ */
+function theme_user_list($users, $title = NULL) {
+  foreach ($users as $user) {
+    $items[] = format_name($user);
+  }
   return theme('item_list', $items, $title);
 }
 
