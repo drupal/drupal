@@ -195,7 +195,6 @@ function phptemplate_node($node, $main = 0, $page = 0) {
       'name'           => format_name($node),
       'date'           => format_date($node->created),
       'sticky'         => $node->sticky,
-      'picture'        => theme_get_setting('toggle_node_user_picture') ? theme('user_picture', $node) : '',
       'content'        => ($main && $node->teaser) ? $node->teaser : $node->body,
       'links'          => $node->links ? theme('links', $node->links) : '',
       'mission'        => $mission,
@@ -211,6 +210,7 @@ function phptemplate_node($node, $main = 0, $page = 0) {
   // Display info only on certain node types.
   if (theme_get_setting('toggle_node_info_' . $node->type)) {
     $variables['submitted'] =  t('Submitted by %a on %b.', array('%a' => format_name($node), '%b' => format_date($node->created)));
+    $variables['picture'] = theme_get_setting('toggle_node_user_picture') ? theme('user_picture', $node) : '';
   }
 
   return _phptemplate_callback('node', $variables, 'node-' . $node->type);
