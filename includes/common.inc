@@ -1353,7 +1353,7 @@ function form_textarea($title, $name, $value, $cols, $rows, $description = NULL,
     }
   }
 
-  return theme('form_element', $title, $pre .'<textarea wrap="virtual"'. $cols .' rows="'. $rows .'" name="edit['. $name .']" id="edit-'. $name .'" class="'. _form_get_class('textarea', $required, _form_get_error($name)) .'"'. drupal_attributes($attributes) .'>'. check_plain($value) .'</textarea>'. $post, $description, 'edit-'. $name, $required, _form_get_error($name));
+  return theme('form_element', $title, $pre .'<textarea'. $cols .' rows="'. $rows .'" name="edit['. $name .']" id="edit-'. $name .'" class="'. _form_get_class('textarea', $required, _form_get_error($name)) .'"'. drupal_attributes($attributes) .'>'. check_plain($value) .'</textarea>'. $post, $description, 'edit-'. $name, $required, _form_get_error($name));
 }
 
 /**
@@ -1984,7 +1984,7 @@ function drupal_add_js($file) {
 function drupal_implode_autocomplete($array) {
   $output = array();
   foreach ($array as $k => $v) {
-    $output[] = str_replace('|', '&#124;', $k) .'|'. str_replace('|', '&#124;', $v);    
+    $output[] = str_replace('|', '&#124;', $k) .'|'. str_replace('|', '&#124;', $v);
   }
   return implode('||', $output);
 }
