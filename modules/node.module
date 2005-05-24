@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.488 2005/05/17 20:24:33 dries Exp $
+// $Id: node.module,v 1.489 2005/05/24 06:00:21 unconed Exp $
 
 /**
  * @file
@@ -1317,7 +1317,7 @@ function node_form($edit) {
   if (user_access('administer nodes')) {
     $output .= '<div class="admin">';
 
-    $author = form_textfield(t('Authored by'), 'name', $edit->name, 20, 60);
+    $author = form_autocomplete(t('Authored by'), 'name', $edit->name, 20, 60, 'user/autocomplete');
     $author .= form_textfield(t('Authored on'), 'date', $edit->date, 20, 25, NULL, NULL, TRUE);
 
     $output .= '<div class="authored">';
