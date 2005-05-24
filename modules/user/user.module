@@ -641,6 +641,9 @@ function user_menu($may_cache) {
     $items[] = array('path' => 'user', 'title' => t('user account'),
       'callback' => 'user_page', 'access' => TRUE, 'type' => MENU_CALLBACK);
 
+    $items[] = array('path' => 'user/autocomplete', 'title' => t('user autocomplete'),
+      'callback' => 'user_autocomplete', 'access' => $admin_access, 'type' => MENU_CALLBACK);
+
     //registration and login pages.
     $items[] = array('path' => 'user/login', 'title' => t('log in'),
       'type' => MENU_DEFAULT_LOCAL_TASK);
@@ -1852,6 +1855,19 @@ function _user_forms(&$edit, $account, $category, $hook = 'form') {
   }
 
   return $output;
+}
+
+/**
+ * Retrieve a pipe delimited string of autocomplete suggestions for existing users
+ */
+function user_autocomplete($string) {
+  $matches = array();
+  $result = db_query_range('SELECT name FROM {users} WHERE LOWER(name) LIKE LOWER("%%%s%%")', $string, 0, 10);
+  while ($user = db_fetch_object($result)) {
+    $matches[$user->name] = check_plain($user->name);
+  }
+  print drupal_implode_autocomplete($matches);
+  exit();
 }
 
 ?>

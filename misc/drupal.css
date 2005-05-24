@@ -551,3 +551,28 @@ ul.secondary a {
 ul.secondary a.active {
   border-bottom: 4px solid #999;
 }
+
+/*
+** Autocomplete styles
+*/
+#autocomplete {
+  position: absolute;
+  border: 1px solid;
+  overflow: hidden;
+}
+#autocomplete ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+#autocomplete li {
+  background: #fff;
+  color: #000;
+  white-space: pre;
+  cursor: default;
+}
+#autocomplete li.selected {
+  background: #0072b9;
+  color: #fff;
+}
+

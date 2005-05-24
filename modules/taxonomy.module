@@ -82,6 +82,11 @@ function taxonomy_menu($may_cache) {
       'callback' => 'taxonomy_term_page',
       'access' => user_access('access content'),
       'type' => MENU_CALLBACK);
+
+    $items[] = array('path' => 'taxonomy/autocomplete', 'title' => t('autocomplete taxonomy'),
+      'callback' => 'taxonomy_autocomplete',
+      'access' => user_access('access content'),
+      'type' => MENU_CALLBACK);
   }
   else {
     if (is_numeric(arg(2))) {
@@ -519,7 +524,7 @@ function taxonomy_node_form($type, $node = '', $help = NULL, $name = 'taxonomy')
         }
       }
       $typed_string = implode(', ', $typed_terms) . (array_key_exists('tags', $terms) ? $terms['tags'][$vocabulary->vid] : NULL);
-      $result[] = form_textfield($vocabulary->name, "$name][tags][". $vocabulary->vid, $typed_string, 50, 100, t('A comma-separated list of terms describing this content (Example: funny, bungie jumping, "Company, Inc.").'), NULL, ($vocabulary->required ? TRUE : FALSE));
+      $result[] = form_autocomplete($vocabulary->name, "$name][tags][". $vocabulary->vid, $typed_string, 50, 100, 'taxonomy/autocomplete/'. $vocabulary->vid, t('A comma-separated list of terms describing this content (Example: funny, bungie jumping, "Company, Inc.").'), NULL, ($vocabulary->required ? TRUE : FALSE));
     }
     else {
       $ntterms = array_key_exists('taxonomy', $node) ? $terms : array_keys($terms);
@@ -1257,6 +1262,38 @@ function taxonomy_help($section) {
  */
 function _taxonomy_get_tid_from_term($term) {
   return $term->tid;
+}
+
+/**
+ * Helper function for autocompletion
+ */
+function taxonomy_autocomplete($vid, $string = '') {
+  // The user enters a comma-separated list of tags. We only autocomplete the last tag.
+  // This regexp allows the following types of user input:
+  // this, "somecmpany, llc", "and ""this"" w,o.rks", foo bar
+  $regexp = '%(?:^|,\ *)("(?>[^"]*)(?>""[^"]* )*"|(?: [^",]*))%x';
+  preg_match_all($regexp, $string, $matches);
+  $array = $matches[1];
+
+  // Fetch last tag
+  $last_string = trim(array_pop($array));
+  if ($last_string != '') {
+    $result = db_query_range("SELECT name FROM {term_data} WHERE vid = %d AND LOWER(name) LIKE LOWER('%%%s%%')", $vid, $last_string, 0, 10);
+
+    $prefix = count($array) ? implode(', ', $array) .', ' : '';
+
+    $matches = array();
+    while ($tag = db_fetch_object($result)) {
+      $n = $tag->name;
+      // Commas and quotes in terms are special cases, so encode 'em.
+      if (preg_match('/,/', $tag->name) || preg_match('/"/', $tag->name)) {
+        $n = '"'. preg_replace('/"/', '""', $tag->name) .'"';
+      }
+      $matches[$prefix . $n] = check_plain($tag->name);
+    }
+    print drupal_implode_autocomplete($matches);
+    exit();
+  }
 }
 
 ?>

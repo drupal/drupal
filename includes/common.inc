@@ -1257,6 +1257,41 @@ function form_textfield($title, $name, $value, $size, $maxlength, $description =
 }
 
 /**
+ * Format a single-line text field that uses Ajax for autocomplete.
+ *
+ * @param $title
+ *   The label for the text field.
+ * @param $name
+ *   The internal name used to refer to the field.
+ * @param $value
+ *   The initial value for the field at page load time.
+ * @param $size
+ *   A measure of the visible size of the field (passed directly to HTML).
+ * @param $maxlength
+ *   The maximum number of characters that may be entered in the field.
+ * @param $callback_path
+ *   A drupal path for the Ajax autocomplete callback.
+ * @param $description
+ *   Explanatory text to display after the form item.
+ * @param $attributes
+ *   An associative array of HTML attributes to add to the form item.
+ * @param $required
+ *   Whether the user must enter some text in the field.
+ * @return
+ *   A themed HTML string representing the field.
+ */
+function form_autocomplete($title, $name, $value, $size, $maxlength, $callback_path, $description = NULL, $attributes = NULL, $required = FALSE) {
+  drupal_add_js('misc/autocomplete.js');
+
+  $size = $size ? ' size="'. $size .'"' : '';
+
+  $output = theme('form_element', $title, '<input type="text" maxlength="'. $maxlength .'" class="'. _form_get_class('form-text form-autocomplete', $required, _form_get_error($name)) .'" name="edit['. $name .']" id="edit-'. $name .'"'. $size .' value="'. check_plain($value) .'"'. drupal_attributes($attributes) .' />', $description, 'edit-'. $name, $required, _form_get_error($name));
+  $output .= '<input class="autocomplete" type="hidden" id="edit-'. $name .'-autocomplete" value="'. check_url(url($callback_path, NULL, NULL, TRUE)) .'" disabled="disabled" />';
+
+  return $output;
+}
+
+/**
  * Format a single-line text field that does not display its contents visibly.
  *
  * @param $title
@@ -1915,6 +1950,43 @@ if (version_compare(phpversion(), '5.0') < 0) {
       return $object;
     }
   ');
+}
+
+/**
+ * Add a JavaScript file to the output.
+ *
+ * The first time this function is invoked per page request,
+ * it adds "misc/drupal.js" to the output. Other scripts
+ * depends on the 'killswitch' inside it.
+ */
+function drupal_add_js($file) {
+  static $sent = array();
+  if (!isset($sent['misc/drupal.js'])) {
+    drupal_set_html_head('<script type="text/javascript" src="misc/drupal.js"></script>');
+    $sent['misc/drupal.js'] = true;
+  }
+  if (!isset($sent[$file])) {
+    drupal_set_html_head('<script type="text/javascript" src="'. check_url($file) .'"></script>');
+    $sent[$file] = true;
+  }
+}
+
+/**
+ * Implode a PHP array into a string that can be decoded by the autocomplete JS routines.
+ *
+ * Items are separated by double pipes. Each item consists of a key-value pair
+ * separated by single pipes. Entities are used to ensure pipes in the strings
+ * pass unharmed.
+ *
+ * The key is what is filled in in the text-box (plain-text), the value is what
+ * is displayed in the suggestion list (HTML).
+ */
+function drupal_implode_autocomplete($array) {
+  $output = array();
+  foreach ($array as $k => $v) {
+    $output[] = str_replace('|', '&#124;', $k) .'|'. str_replace('|', '&#124;', $v);    
+  }
+  return implode('||', $output);
 }
 
 // Set the Drupal custom error handler.

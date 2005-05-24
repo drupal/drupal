@@ -1317,7 +1317,7 @@ function node_form($edit) {
   if (user_access('administer nodes')) {
     $output .= '<div class="admin">';
 
-    $author = form_textfield(t('Authored by'), 'name', $edit->name, 20, 60);
+    $author = form_autocomplete(t('Authored by'), 'name', $edit->name, 20, 60, 'user/autocomplete');
     $author .= form_textfield(t('Authored on'), 'date', $edit->date, 20, 25, NULL, NULL, TRUE);
 
     $output .= '<div class="authored">';
