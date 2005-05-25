@@ -179,8 +179,8 @@ function upload_nodeapi(&$node, $op, $arg) {
           // all roles prevent it.
           foreach ($user->roles as $rid => $name) {
             $extensions = variable_get("upload_extensions_$rid", 'jpg jpeg gif png txt html doc xls pdf ppt pps');
-            $uploadsize = variable_get("upload_uploadsize_$rid", 1);
-            $usersize = variable_get("upload_usersize_$rid", 1);
+            $uploadsize = variable_get("upload_uploadsize_$rid", 1) * 1024 * 1024;
+            $usersize = variable_get("upload_usersize_$rid", 1) * 1024 * 1024;
 
             $regex = '/\.('. ereg_replace(' +', '|', preg_quote($extensions)) .')$/i';
 
@@ -188,11 +188,11 @@ function upload_nodeapi(&$node, $op, $arg) {
               $error['extension']++;
             }
 
-            if ($file->filesize > $uploadsize * 1024 * 1024) {
+            if ($file->filesize > $uploadsize) {
               $error['uploadsize']++;
             }
 
-            if ($total_usersize + $file->filesize > $usersize * 1024 * 1024) {
+            if ($total_usersize + $file->filesize > $usersize) {
               $error['usersize']++;
             }
           }
