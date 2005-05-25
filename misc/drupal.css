@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.105 2005/05/25 00:14:42 unconed Exp $ */
+/* $Id: drupal.css,v 1.106 2005/05/25 01:12:15 unconed Exp $ */
 
 /*
 ** HTML elements
@@ -579,9 +579,6 @@ ul.secondary a.active {
 /* Animated throbber */
 input.form-autocomplete {
   background: url('throbber.gif') no-repeat 100% 2px;
-}
-input.form-autocomplete > * {
-  margin-right: 17px;
 }
 input.throbbing {
   background-position: 100% -18px;
