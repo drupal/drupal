@@ -1100,7 +1100,7 @@ function user_edit_form($uid, $edit) {
   // Picture/avatar:
   if (variable_get('user_pictures', 0)) {
     $group = '';
-    if ($edit['picture'] && ($picture = theme_user_picture(array2object($edit)))) {
+    if ($edit['picture'] && ($picture = theme('user_picture', array2object($edit)))) {
       $group .= $picture;
       $group .= form_checkbox(t('Delete picture'), 'picture_delete', 1, 0, t('Check this box to delete your current picture.'));
     }
