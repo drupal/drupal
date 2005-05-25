@@ -44,7 +44,6 @@ function jsAC(input, db) {
   var ac = this;
   this.input = input;
   this.db = db;
-  this.db.owner = this;
   this.input.onkeydown = function (event) { return ac.onkeydown(this, event); };
   this.input.onkeyup = function (event) { ac.onkeyup(this, event) };
   this.input.onblur = function () { ac.hidePopup() };
@@ -181,7 +180,7 @@ jsAC.prototype.populatePopup = function () {
   this.popup.style.top   = (pos.y + this.input.offsetHeight) +'px';
   this.popup.style.left  = pos.x +'px';
   this.popup.style.width = (this.input.offsetWidth - 4) +'px';
-  addClass(this.input, 'throbbing');
+  this.db.owner = this;
   this.db.search(this.input.value);
 }
 
@@ -241,7 +240,10 @@ ACDB.prototype.search = function(searchString) {
     clearTimeout(this.timer);
   }
   var db = this;
-  this.timer = setTimeout(function() { HTTPGet(db.uri +'/'+ searchString +'/'+ db.max, db.receive, db); }, this.delay);
+  this.timer = setTimeout(function() {
+    addClass(db.owner.input, 'throbbing');
+    HTTPGet(db.uri +'/'+ searchString +'/'+ db.max, db.receive, db);
+  }, this.delay);
 }
 
 /**
@@ -249,6 +251,7 @@ ACDB.prototype.search = function(searchString) {
  */
 ACDB.prototype.receive = function(string, xmlhttp, acdb) {
   if (xmlhttp.status != 200) {
+    removeClass(acdb.owner.input, 'throbbing');
     return alert('An HTTP error '+ xmlhttp.status +' occured.\n'+ acdb.uri);
   }
   // Split into array of key->value pairs

@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.104 2005/05/24 06:00:21 unconed Exp $ */
+/* $Id: drupal.css,v 1.105 2005/05/25 00:14:42 unconed Exp $ */
 
 /*
 ** HTML elements
@@ -555,6 +555,7 @@ ul.secondary a.active {
 /*
 ** Autocomplete styles
 */
+/* Suggestion list */
 #autocomplete {
   position: absolute;
   border: 1px solid;
@@ -575,4 +576,13 @@ ul.secondary a.active {
   background: #0072b9;
   color: #fff;
 }
-
+/* Animated throbber */
+input.form-autocomplete {
+  background: url('throbber.gif') no-repeat 100% 2px;
+}
+input.form-autocomplete > * {
+  margin-right: 17px;
+}
+input.throbbing {
+  background-position: 100% -18px;
+}
