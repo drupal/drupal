@@ -580,9 +580,6 @@ ul.secondary a.active {
 input.form-autocomplete {
   background: url('throbber.gif') no-repeat 100% 2px;
 }
-input.form-autocomplete > * {
-  margin-right: 17px;
-}
 input.throbbing {
   background-position: 100% -18px;
 }
