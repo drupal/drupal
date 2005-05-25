@@ -72,13 +72,13 @@ function pager_query($query, $limit = 10, $element = 0, $count_query = NULL) {
   if (count($args)) {
     $pager_total_items[$element] = db_result(db_query($count_query, $args));
     $pager_total[$element] = ceil($pager_total_items[$element] / $limit);
-    $pager_page_array[$element] = max(0, min(((int)$pager_total[$element]) - 1));
+    $pager_page_array[$element] = max(0, min($pager_page_array[$element], ((int)$pager_total[$element]) - 1));
     return db_query_range($query, $args, $pager_page_array[$element] * $limit, $limit);
   }
   else {
     $pager_total_items[$element] = db_result(db_query($count_query));
     $pager_total[$element] = ceil($pager_total_items[$element] / $limit);
-    $pager_page_array[$element] = max(0, min(((int)$pager_total[$element]) - 1));
+    $pager_page_array[$element] = max(0, min($pager_page_array[$element], ((int)$pager_total[$element]) - 1));
     return db_query_range($query, $pager_page_array[$element] * $limit, $limit);
   }
 }
@@ -384,7 +384,7 @@ function theme_pager_list($limit, $element = 0, $quantity = 5, $text = '', $attr
  * @return
  *   An HTML string that generates the link.
  */
-function theme_pager_link($page_new, $element, $attributes = array()) {
+function theme_pager_link($text, $page_new, $element, $attributes = array()) {
   $q = $_GET['q'];
   $page = array_key_exists('page', $_GET) ? $_GET['page'] : '';
 
