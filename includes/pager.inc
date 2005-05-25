@@ -49,8 +49,8 @@
  * @ingroup database
  */
 function pager_query($query, $limit = 10, $element = 0, $count_query = NULL) {
-  global $pager_from_array, $pager_total;
-  $from = $_GET['from'];
+  global $pager_page_array, $pager_total, $pager_total_items;
+  $page = $_GET['page'];
 
   // Substitute in query arguments.
   $args = func_get_args();
@@ -65,16 +65,21 @@ function pager_query($query, $limit = 10, $element = 0, $count_query = NULL) {
     $count_query = preg_replace(array('/SELECT.*?FROM/As', '/ORDER BY .*/'), array('SELECT COUNT(*) FROM', ''), $query);
   }
 
-  // Convert comma-separated $from to an array, used by other functions.
-  $pager_from_array = explode(',', $from);
+  // Convert comma-separated $page to an array, used by other functions.
+  $pager_page_array = explode(',', $page);
 
+  // We calculate the total of pages as ceil(items / limit).
   if (count($args)) {
-    $pager_total[$element] = db_result(db_query($count_query, $args));
-    return db_query_range($query, $args, (int)$pager_from_array[$element], (int)$limit);
+    $pager_total_items[$element] = db_result(db_query($count_query, $args));
+    $pager_total[$element] = ceil($pager_total_items[$element] / $limit);
+    $pager_page_array[$element] = max(0, min(((int)$pager_total[$element]) - 1));
+    return db_query_range($query, $args, $pager_page_array[$element] * $limit, $limit);
   }
   else {
-    $pager_total[$element] = db_result(db_query($count_query));
-    return db_query_range($query, (int)$pager_from_array[$element], (int)$limit);
+    $pager_total_items[$element] = db_result(db_query($count_query));
+    $pager_total[$element] = ceil($pager_total_items[$element] / $limit);
+    $pager_page_array[$element] = max(0, min(((int)$pager_total[$element]) - 1));
+    return db_query_range($query, $pager_page_array[$element] * $limit, $limit);
   }
 }
 
@@ -101,7 +106,7 @@ function theme_pager($tags = array(), $limit = 10, $element = 0, $attributes = a
   global $pager_total;
   $output = '';
 
-  if ($pager_total[$element] > $limit) {
+  if ($pager_total[$element] > 1) {
     $output .= '<div id="pager" class="container-inline">';
     $output .= theme('pager_first', ($tags[0] ? $tags[0] : t('first page')), $limit, $element, $attributes);
     $output .= theme('pager_previous', ($tags[1] ? $tags[1] : t('previous page')), $limit, $element, 1, $attributes);
@@ -138,11 +143,12 @@ function theme_pager($tags = array(), $limit = 10, $element = 0, $attributes = a
  * @ingroup themeable
  */
 function theme_pager_first($text, $limit, $element = 0, $attributes = array()) {
-  global $pager_from_array;
+  global $pager_page_array;
   $output = '<div class="pager-first">';
 
-  if ($pager_from_array[$element]) {
-    $output .= '<a href="'. pager_link(pager_load_array(0, $element, $pager_from_array), $element, $attributes) .'">'. $text .'</a>';
+  // If we are anywhere but the first page
+  if ($pager_page_array[$element] > 0) {
+    $output .= theme('pager_link', $text, pager_load_array(0, $element, $pager_page_array), $element, $attributes);
   }
   else {
     $output .= ' ';
@@ -170,14 +176,19 @@ function theme_pager_first($text, $limit, $element = 0, $attributes = array()) {
  * @ingroup themeable
  */
 function theme_pager_previous($text, $limit, $element = 0, $interval = 1, $attributes = array()) {
-  global $pager_from_array;
+  global $pager_page_array;
   $output = '<div class="pager-previous">';
-  $from_new = pager_load_array(((int)$pager_from_array[$element] - ((int)$limit * (int)$interval)), $element, $pager_from_array);
-  if ($from_new[$element] < 1) {
-    $output .= theme('pager_first', $text, $limit, $element, $attributes);
-  }
-  else {
-    $output .= '<a href="'. pager_link($from_new, $element, $attributes) .'">'. $text .'</a>';
+  // If we are anywhere but the first page
+  if ($pager_page_array[$element] > 0) {
+    $page_new = pager_load_array($pager_page_array[$element] - $interval, $element, $pager_page_array);
+    // If the previous page is the first page, mark the link as such.
+    if ($page_new[$element] == 0) {
+      $output .= theme('pager_first', $text, $limit, $element, $attributes);
+    }
+    // The previous page is not the first page.
+    else {
+      $output .= theme('pager_link', $text, $page_new, $element, $attributes);
+    }
   }
   $output .= '</div>';
   return $output;
@@ -202,11 +213,19 @@ function theme_pager_previous($text, $limit, $element = 0, $interval = 1, $attri
  * @ingroup themeable
  */
 function theme_pager_next($text, $limit, $element = 0, $interval = 1, $attributes = array()) {
-  global $pager_from_array, $pager_total;
+  global $pager_page_array, $pager_total;
   $output = '<div class="pager-next">';
-  $from_new = pager_load_array(((int)$pager_from_array[$element] + ((int)$limit * (int)$interval)), $element, $pager_from_array);
-  if ($from_new[$element] < $pager_total[$element]) {
-    $output .= '<a href="'. pager_link($from_new, $element, $attributes) .'">'. $text .'</a>';
+  // If we are anywhere but the last page
+  if ($pager_page_array[$element] < ($pager_total[$element] - 1)) {
+    $page_new = pager_load_array($pager_page_array[$element] + $interval, $element, $pager_page_array);
+    // If the next page is the last page, mark the link as such.
+    if ($page_new[$element] == ($pager_total[$element] - 1)) {
+      $output .= theme('pager_last', $text, $limit, $element, $attributes);
+    }
+    // The next page is not the last page.
+    else {
+      $output .= theme('pager_link', $text, $page_new, $element, $attributes);
+    }
   }
   else {
     $output .= ' ';
@@ -232,16 +251,12 @@ function theme_pager_next($text, $limit, $element = 0, $interval = 1, $attribute
  * @ingroup themeable
  */
 function theme_pager_last($text, $limit, $element = 0, $attributes = array()) {
-  global $pager_from_array, $pager_total;
+  global $pager_page_array, $pager_total;
 
   $output = '<div class="pager-last">';
-  $last_num = (($pager_total[$element] % $limit) ? ($pager_total[$element] % $limit) : $limit);
-  $from_new = pager_load_array(($pager_total[$element] - $last_num), $element, $pager_from_array);
-  if ($from_new[$element] < ($pager_from_array[$element] + $limit)) {
-    $output .= theme('pager_next', $text, $limit, $element, 1, $attributes);
-  }
-  else if (($from_new[$element] > $pager_from_array[$element]) && ($from_new[$element] > 0) && ($from_new[$element] < $pager_total[$element])) {
-    $output .= '<a href="'. pager_link($from_new, $element, $attributes) .'">'. $text .'</a>';
+  // If we are anywhere but the last page
+  if ($pager_page_array[$element] < ($pager_total[$element] - 1)) {
+    $output .= theme('pager_link', $text, pager_load_array($pager_total[$element] - 1, $element, $pager_page_array), $element, $attributes);
   }
   else {
     $output .= ' ';
@@ -265,11 +280,14 @@ function theme_pager_last($text, $limit, $element = 0, $attributes = array()) {
  * @ingroup themeable
  */
 function theme_pager_detail($limit, $element = 0, $format = '%d through %d of %d.') {
-  global $pager_from_array, $pager_total;
+  global $pager_page_array, $pager_total, $pager_total_items;
 
   $output = '<div class="pager-detail">';
-  if ($pager_total[$element] > (int)$pager_from_array[$element] + 1) {
-    $output .= sprintf($format, (int)$pager_from_array[$element] + 1, ((int)$pager_from_array[$element] + $limit <= $pager_total[$element] ? (int)$pager_from_array[$element] + $limit : $pager_total[$element]), $pager_total[$element]);
+  if ($pager_total[$element] > 1) {
+    $output .= sprintf($format,
+                       $pager_page_array[$element] * $limit + 1,
+                       min($pager_total_items[$element], ($pager_page_array[$element] + 1) * $limit),
+                       $pager_total_items[$element]);
   }
   $output .= '</div>';
 
@@ -295,38 +313,27 @@ function theme_pager_detail($limit, $element = 0, $format = '%d through %d of %d
  * @ingroup themeable
  */
 function theme_pager_list($limit, $element = 0, $quantity = 5, $text = '', $attributes = array()) {
-  global $pager_from_array, $pager_total;
+  global $pager_page_array, $pager_total;
 
   $output = '<div class="pager-list">';
   // Calculate various markers within this pager piece:
   // Middle is used to "center" pages around the current page.
-  $pager_middle = ceil((int)$quantity / 2);
-  // offset adds "offset" second page
-  $pager_offset = (int)$pager_from_array[$element] % (int)$limit;
+  $pager_middle = ceil($quantity / 2);
   // current is the page we are currently paged to
-  if (($pager_current = (ceil(($pager_from_array[$element] + 1) / $limit))) < 1) {
-    $pager_current = 1;
-  }
+  $pager_current = $pager_page_array[$element] + 1;
   // first is the first page listed by this pager piece (re quantity)
-  $pager_first = (int)$pager_current - (int)$pager_middle + 1;
+  $pager_first = $pager_current - $pager_middle + 1;
   // last is the last page listed by this pager piece (re quantity)
-  $pager_last = (int)$pager_current + (int)$quantity - (int)$pager_middle;
-  // max is the maximum number of pages content can is divided into
-  if (!$pager_max = (ceil($pager_total[$element] / $limit))) {
-    $pager_max = 1;
-  }
-  if ((int)$pager_offset) {
-    // adjust for offset second page
-    $pager_max++;
-    $pager_current++;
-  }
+  $pager_last = $pager_current + $quantity - $pager_middle;
+  // max is the maximum page number
+  $pager_max = $pager_total[$element];
   // End of marker calculations.
 
   // Prepare for generation loop.
-  $i = (int)$pager_first;
+  $i = $pager_first;
   if ($pager_last > $pager_max) {
     // Adjust "center" if at end of query.
-    $i = $i + (int)($pager_max - $pager_last);
+    $i = $i + ($pager_max - $pager_last);
     $pager_last = $pager_max;
   }
   if ($i <= 0) {
@@ -364,14 +371,11 @@ function theme_pager_list($limit, $element = 0, $quantity = 5, $text = '', $attr
 
   return $output;
 }
-/**
- * @} End of "Pager pieces".
- */
 
 /**
  * Format a link to a specific query result page.
  *
- * @param $from_new
+ * @param $page_new
  *   The first result to display on the linked page.
  * @param $element
  *   An optional integer to distinguish between multiple pagers on one page.
@@ -380,25 +384,34 @@ function theme_pager_list($limit, $element = 0, $quantity = 5, $text = '', $attr
  * @return
  *   An HTML string that generates the link.
  */
-function pager_link($from_new, $element, $attributes = array()) {
+function theme_pager_link($page_new, $element, $attributes = array()) {
   $q = $_GET['q'];
-  $from = array_key_exists('from', $_GET) ? $_GET['from'] : '';
+  $page = array_key_exists('page', $_GET) ? $_GET['page'] : '';
 
   foreach ($attributes as $key => $value) {
     $query[] = $key .'='. $value;
   }
 
-  $from_new = pager_load_array($from_new[$element], $element, explode(',', $from));
+  $page_new = pager_load_array($page_new[$element], $element, explode(',', $page));
   if (count($attributes)) {
-    $url = url($q, 'from='. implode($from_new, ',') .'&'. implode('&', $query));
+    $url = url($q, 'page='. implode($page_new, ',') .'&'. implode('&', $query));
   }
   else {
-    $url = url($q, 'from='. implode($from_new, ','));
+    $url = url($q, 'page='. implode($page_new, ','));
   }
 
-  return check_url($url);
+  return '<a href="'. check_url($url) .'">'. check_plain($text) .'</a>';
 }
+/**
+ * @} End of "Pager pieces".
+ */
 
+/**
+ * Helper function
+ *
+ * Copies $old_array to $new_array and sets $new_array[$element] = $value
+ * Fills in $new_array[0 .. $element - 1] = 0
+ */
 function pager_load_array($value, $element, $old_array) {
   $new_array = $old_array;
   // Look for empty elements.
