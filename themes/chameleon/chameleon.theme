@@ -9,6 +9,7 @@
 function chameleon_features() {
   return array(
        'logo',
+       'toggle_favicon',
        'toggle_name',
        'toggle_slogan',
        'toggle_primary_links',
@@ -17,6 +18,10 @@ function chameleon_features() {
 
 function chameleon_page($content) {
   $language = $GLOBALS['locale'];
+
+  if (theme_get_setting('toggle_favicon')) {
+    drupal_set_html_head('<link rel="shortcut icon" href="'. check_url(theme_get_setting('favicon')) .'" type="image/x-icon" />');
+  }
 
   $title = drupal_get_title();
 

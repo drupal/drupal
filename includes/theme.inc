@@ -216,7 +216,10 @@ function theme_get_settings($key = NULL) {
     'mission'                       =>  '',
     'default_logo'                  =>  1,
     'logo_path'                     =>  '',
+    'default_favicon'               =>  1,
+    'favicon_path'                  =>  '',
     'toggle_logo'                   =>  1,
+    'toggle_favicon'                =>  1,
     'toggle_name'                   =>  1,
     'toggle_search'                 =>  1,
     'toggle_slogan'                 =>  0,
@@ -286,6 +289,20 @@ function theme_get_setting($setting_name, $refresh = FALSE) {
       }
       elseif ($settings['logo_path']) {
         $settings['logo'] = $settings['logo_path'];
+      }
+    }
+
+    if ($settings['toggle_favicon']) {
+      if ($settings['default_favicon']) {
+        if (file_exists($favicon = dirname($theme_object->filename) .'/favicon.ico')) {
+          $settings['favicon'] = $favicon;
+        }
+        else {
+          $settings['favicon'] = 'misc/favicon.ico';
+        }
+      }
+      elseif ($settings['favicon_path']) {
+        $settings['favicon'] = $settings['favicon_path'];
       }
     }
 

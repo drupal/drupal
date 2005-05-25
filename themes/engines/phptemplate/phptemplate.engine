@@ -93,6 +93,7 @@ function _phptemplate_default_variables($hook, $variables) {
 function phptemplate_features() {
   return array(
        'logo',
+       'toggle_favicon',
        'toggle_name',
        'toggle_search',
        'toggle_slogan',
@@ -110,13 +111,14 @@ function phptemplate_features() {
 function phptemplate_page($content) {
   /* Set title and breadcrumb to declared values */
 
-  if (file_exists(path_to_theme() . '/favicon.ico')) {
-    drupal_set_html_head("<link rel=\"shortcut icon\" href=\"" . path_to_theme() . "/favicon.ico\" />\n");
-  }
-
   if ($_GET['q'] == variable_get('site_frontpage', 'node')) {
     $mission = theme_get_setting('mission');
     $frontpage = true;
+  }
+
+  /* Add favicon */
+  if (theme_get_setting('toggle_favicon')) {
+    drupal_set_html_head('<link rel="shortcut icon" href="'. check_url(theme_get_setting('favicon')) .'" type="image/x-icon" />');
   }
 
   /**
