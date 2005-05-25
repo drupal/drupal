@@ -952,10 +952,12 @@ function _taxonomy_prepare_insert($data, $stage) {
  * @param $pager
  *   Whether the nodes are to be used with a pager (the case on most Drupal
  *   pages) or not (in an XML feed, for example).
+ * @param $order
+ *   The order clause for the query that retrieve the nodes. 
  * @return
  *   A resource identifier pointing to the query results.
  */
-function taxonomy_select_nodes($tids = array(), $operator = 'or', $depth = 0, $pager = TRUE) {
+function taxonomy_select_nodes($tids = array(), $operator = 'or', $depth = 0, $pager = TRUE, $order = 'n.sticky DESC, n.created DESC') {
   if (count($tids) > 0) {
     // For each term ID, generate an array of descendant term IDs to the right depth.
     $descendant_tids = array();
@@ -970,7 +972,7 @@ function taxonomy_select_nodes($tids = array(), $operator = 'or', $depth = 0, $p
 
     if ($operator == 'or') {
       $str_tids = implode(',', call_user_func_array('array_merge', $descendant_tids));
-      $sql = 'SELECT DISTINCT(n.nid), n.sticky, n.title, n.created FROM {node} n INNER JOIN {term_node} tn ON n.nid = tn.nid WHERE tn.tid IN ('. $str_tids .') AND n.status = 1 ORDER BY n.sticky DESC, n.created DESC';
+      $sql = 'SELECT DISTINCT(n.nid), n.sticky, n.title, n.created FROM {node} n INNER JOIN {term_node} tn ON n.nid = tn.nid WHERE tn.tid IN ('. $str_tids .') AND n.status = 1 ORDER BY '. $order;
       $sql_count = 'SELECT COUNT(DISTINCT(n.nid)) FROM {node} n INNER JOIN {term_node} tn ON n.nid = tn.nid WHERE tn.tid IN ('. $str_tids .') AND n.status = 1';
     }
     else {
@@ -980,7 +982,7 @@ function taxonomy_select_nodes($tids = array(), $operator = 'or', $depth = 0, $p
         $joins .= ' INNER JOIN {term_node} tn'. $index .' ON n.nid = tn'. $index .'.nid';
         $wheres .= ' AND tn'. $index .'.tid IN ('. implode(',', $tids) .')';
       }
-      $sql = 'SELECT n.nid, n.sticky, n.title, n.created FROM {node} n '. $joins .' WHERE n.status = 1 '. $wheres .' ORDER BY n.sticky DESC, n.created DESC';
+      $sql = 'SELECT n.nid, n.sticky, n.title, n.created FROM {node} n '. $joins .' WHERE n.status = 1 '. $wheres .' ORDER BY '. $order;
       $sql_count = 'SELECT COUNT(n.nid) FROM {node} n '. $joins .' WHERE n.status = 1 ' . $wheres;
     }
     $sql = db_rewrite_sql($sql);
