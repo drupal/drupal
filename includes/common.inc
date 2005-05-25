@@ -1811,7 +1811,8 @@ function truncate_utf8($string, $len, $wordsafe = FALSE) {
 }
 
 /**
- * Encodes MIME/HTTP header values that contain non US-ASCII characters.
+ * Encodes MIME/HTTP header values that contain non-ASCII, UTF-8 encoded
+ * characters.
  *
  * For example, mime_header_encode('tést.txt') returns "=?UTF-8?B?dMOpc3QudHh0?=".
  *
@@ -1819,18 +1820,24 @@ function truncate_utf8($string, $len, $wordsafe = FALSE) {
  *
  * Notes:
  * - Only encode strings that contain non-ASCII characters.
- * - The chunks come in groupings of 4 bytes when using base64 encoding.
- * - trim() is used to ensure that no extra spacing is added by chunk_split() or
- *   preg_replace().
+ * - We progressively cut-off a chunk with truncate_utf8(). This is to ensure
+ *   each chunk starts and ends on a character boundary.
  * - Using \n as the chunk separator may cause problems on some systems and may
  *   have to be changed to \r\n or \r.
  */
-function mime_header_encode($string, $charset = 'UTF-8') {
+function mime_header_encode($string) {
   if (!preg_match('/^[\x20-\x7E]*$/', $string)) {
-    $chunk_size = 75 - 7 - strlen($charset);
-    $chunk_size -= $chunk_size % 4;
-    $string = trim(chunk_split(base64_encode($string), $chunk_size, "\n"));
-    $string = trim(preg_replace('/^(.*)$/m', " =?$charset?B?\\1?=", $string));
+    $chunk_size = 47; // floor((75 - strlen("=?UTF-8?B??=")) * 0.75);
+    $len = strlen($string);
+    $output = '';
+    while ($len > 0) {
+      $chunk = truncate_utf8($string, $chunk_size);
+      $output .= ' =?'. $charset .'?B?'. base64_encode($chunk) ."?=\n";
+      $c = strlen($chunk);
+      $string = substr($string, $c);
+      $len -= $c;
+    }
+    return trim($output);
   }
   return $string;
 }
