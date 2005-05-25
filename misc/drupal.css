@@ -555,6 +555,7 @@ ul.secondary a.active {
 /*
 ** Autocomplete styles
 */
+/* Suggestion list */
 #autocomplete {
   position: absolute;
   border: 1px solid;
@@ -575,4 +576,13 @@ ul.secondary a.active {
   background: #0072b9;
   color: #fff;
 }
-
+/* Animated throbber */
+input.form-autocomplete {
+  background: url('throbber.gif') no-repeat 100% 2px;
+}
+input.form-autocomplete > * {
+  margin-right: 17px;
+}
+input.throbbing {
+  background-position: 100% -18px;
+}
