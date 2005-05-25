@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.446 2005/05/25 03:46:24 unconed Exp $ */
+/* $Id: common.inc,v 1.447 2005/05/25 04:18:54 unconed Exp $ */
 
 /**
  * @file
@@ -1035,6 +1035,7 @@ function form($form, $method = 'post', $action = NULL, $attributes = NULL) {
   if (!$action) {
     $action = request_uri();
   }
+  // Anonymous div to satisfy XHTML compliancy.
   return '<form action="'. check_url($action) .'" method="'. $method .'"'. drupal_attributes($attributes) .">\n<div>". $form ."\n</div></form>\n";
 }
 
