@@ -352,13 +352,19 @@ function forum_block($op = 'list', $delta = 0, $edit = array()) {
           case 0:
             $title = t('Active forum topics');
             $sql = db_rewrite_sql("SELECT n.nid, n.title, l.last_comment_timestamp, l.comment_count FROM {node} n INNER JOIN {node_comment_statistics} l ON n.nid = l.nid WHERE n.status = 1 AND n.type = 'forum' ORDER BY l.last_comment_timestamp DESC");
-            $content = node_title_list(db_query_range($sql, 0, variable_get('forum_block_num_0', '5')));
+            $result = db_query_range($sql, 0, variable_get('forum_block_num_0', '5'));
+            if (db_num_rows($result)) {
+              $content = node_title_list($result);
+            }
             break;
 
           case 1:
             $title = t('New forum topics');
             $sql = db_rewrite_sql("SELECT n.nid, n.title, l.comment_count FROM {node} n INNER JOIN {node_comment_statistics} l ON n.nid = l.nid WHERE n.type = 'forum' AND n.status = 1 ORDER BY n.nid DESC");
-            $content = node_title_list(db_query_range($sql, 0, variable_get('forum_block_num_1', '5')));
+            $result = db_query_range($sql, 0, variable_get('forum_block_num_1', '5'));
+            if (db_num_rows($result)) {
+              $content = node_title_list($result);
+            }
             break;
         }
 
