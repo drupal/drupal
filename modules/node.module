@@ -1667,17 +1667,31 @@ function node_page() {
     case 'add':
       return node_add(arg(2));
       break;
-    case 'edit':
-      return node_edit(arg(1));
-      break;
     case 'revisions':
-      return node_revision_overview(arg(1));
+      if (user_access('administer nodes')) {
+        return node_revision_overview(arg(1));
+      }
+      else {
+        drupal_access_denied();
+      }
       break;
     case 'rollback-revision':
       node_revision_rollback(arg(1), arg(3));
       break;
     case 'delete-revision':
       node_revision_delete(arg(1), arg(3));
+      break;
+    case 'edit':
+      if (is_numeric(arg(1))) {
+        $node = node_load(array('nid' => arg(1)));
+        if ($node->nid) {
+          drupal_set_title($node->title);
+          return node_edit(arg(1));
+        }
+        else {
+          drupal_not_found();
+        }
+      }
       break;
     case 'view':
       if (is_numeric(arg(1))) {
