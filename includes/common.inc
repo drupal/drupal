@@ -1035,6 +1035,7 @@ function form($form, $method = 'post', $action = NULL, $attributes = NULL) {
   if (!$action) {
     $action = request_uri();
   }
+  // Anonymous div to satisfy XHTML compliancy.
   return '<form action="'. check_url($action) .'" method="'. $method .'"'. drupal_attributes($attributes) .">\n<div>". $form ."\n</div></form>\n";
 }
 
