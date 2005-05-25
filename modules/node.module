@@ -909,7 +909,7 @@ function node_admin_nodes() {
     $join .= $filters[$key]['join'];
   }
   $where = count($where) ? 'WHERE '. implode(' AND ', $where) : '';
-  $result = pager_query('SELECT n.*, u.name, u.uid FROM {node} n '. $join .' INNER JOIN {users} u ON n.uid = u.uid '. $where, 50, 0, NULL, $args);
+  $result = pager_query('SELECT n.*, u.name, u.uid FROM {node} n '. $join .' INNER JOIN {users} u ON n.uid = u.uid '. $where .' ORDER BY n.changed DESC', 50, 0, NULL, $args);
 
   // Make sure the update controls are disabled if we don't have any rows to select from.
   $disabled = !db_num_rows($result);
