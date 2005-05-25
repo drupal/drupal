@@ -1035,7 +1035,7 @@ function form($form, $method = 'post', $action = NULL, $attributes = NULL) {
   if (!$action) {
     $action = request_uri();
   }
-  return '<form action="'. check_url($action) .'" method="'. $method .'"'. drupal_attributes($attributes) .">\n". $form ."\n</form>\n";
+  return '<form action="'. check_url($action) .'" method="'. $method .'"'. drupal_attributes($attributes) .">\n<div>". $form ."\n</div></form>\n";
 }
 
 /**
@@ -1188,7 +1188,7 @@ function form_radios($title, $name, $value, $options, $description = NULL, $requ
  *   A themed HTML string representing the checkbox.
  */
 function form_checkbox($title, $name, $value = 1, $checked = FALSE, $description = NULL, $attributes = NULL, $required = FALSE) {
-  $element = '<input type="checkbox" class="'. _form_get_class('form-checkbox', $required, _form_get_error($name)) .'" name="edit['. $name .']" id="edit-'. $name .'" value="'. $value .'"'. ($checked ? ' checked="checked"' : '') . drupal_attributes($attributes) .' />';
+  $element = '<input type="checkbox" class="'. _form_get_class('form-checkbox', $required, _form_get_error($name)) .'" name="edit['. $name .']" id="edit-'. form_clean_id($name).'" value="'. $value .'"'. ($checked ? ' checked="checked"' : '') . drupal_attributes($attributes) .' />';
   if (!is_null($title)) {
     $element = '<label class="option">'. $element .' '. $title .'</label>';
   }
@@ -1253,7 +1253,7 @@ function form_checkboxes($title, $name, $values, $options, $description = NULL, 
  */
 function form_textfield($title, $name, $value, $size, $maxlength, $description = NULL, $attributes = NULL, $required = FALSE) {
   $size = $size ? ' size="'. $size .'"' : '';
-  return theme('form_element', $title, '<input type="text" maxlength="'. $maxlength .'" class="'. _form_get_class('form-text', $required, _form_get_error($name)) .'" name="edit['. $name .']" id="edit-'. $name .'"'. $size .' value="'. check_plain($value) .'"'. drupal_attributes($attributes) .' />', $description, 'edit-'. $name, $required, _form_get_error($name));
+  return theme('form_element', $title, '<input type="text" maxlength="'. $maxlength .'" class="'. _form_get_class('form-text', $required, _form_get_error($name)) .'" name="edit['. $name .']" id="edit-'. form_clean_id($name) .'"'. $size .' value="'. check_plain($value) .'"'. drupal_attributes($attributes) .' />', $description, 'edit-'. $name, $required, _form_get_error($name));
 }
 
 /**
@@ -1285,8 +1285,8 @@ function form_autocomplete($title, $name, $value, $size, $maxlength, $callback_p
 
   $size = $size ? ' size="'. $size .'"' : '';
 
-  $output = theme('form_element', $title, '<input type="text" maxlength="'. $maxlength .'" class="'. _form_get_class('form-text form-autocomplete', $required, _form_get_error($name)) .'" name="edit['. $name .']" id="edit-'. $name .'"'. $size .' value="'. check_plain($value) .'"'. drupal_attributes($attributes) .' />', $description, 'edit-'. $name, $required, _form_get_error($name));
-  $output .= '<input class="autocomplete" type="hidden" id="edit-'. $name .'-autocomplete" value="'. check_url(url($callback_path, NULL, NULL, TRUE)) .'" disabled="disabled" />';
+  $output = theme('form_element', $title, '<input type="text" maxlength="'. $maxlength .'" class="'. _form_get_class('form-text form-autocomplete', $required, _form_get_error($name)) .'" name="edit['. $name .']" id="edit-'. form_clean_id($name) .'"'. $size .' value="'. check_plain($value) .'"'. drupal_attributes($attributes) .' />', $description, 'edit-'. $name, $required, _form_get_error($name));
+  $output .= '<input class="autocomplete" type="hidden" id="edit-'. form_clean_id($name) .'-autocomplete" value="'. check_url(url($callback_path, NULL, NULL, TRUE)) .'" disabled="disabled" />';
 
   return $output;
 }
@@ -1315,7 +1315,7 @@ function form_autocomplete($title, $name, $value, $size, $maxlength, $callback_p
  */
 function form_password($title, $name, $value, $size, $maxlength, $description = NULL, $attributes = NULL, $required = FALSE) {
   $size = $size ? ' size="'. $size .'"' : '';
-  return theme('form_element', $title, '<input type="password" class="'. _form_get_class('form-password', $required, _form_get_error($name)) .'" maxlength="'. $maxlength .'" name="edit['. $name .']" id="edit-'. $name .'"'. $size .' value="'. check_plain($value) .'"'. drupal_attributes($attributes) .' />', $description, 'edit-'. $name, $required, _form_get_error($name));
+  return theme('form_element', $title, '<input type="password" class="'. _form_get_class('form-password', $required, _form_get_error($name)) .'" maxlength="'. $maxlength .'" name="edit['. $name .']" id="edit-'. form_clean_id($name) .'"'. $size .' value="'. check_plain($value) .'"'. drupal_attributes($attributes) .' />', $description, 'edit-'. $name, $required, _form_get_error($name));
 }
 
 /**
@@ -1353,7 +1353,7 @@ function form_textarea($title, $name, $value, $cols, $rows, $description = NULL,
     }
   }
 
-  return theme('form_element', $title, $pre .'<textarea'. $cols .' rows="'. $rows .'" name="edit['. $name .']" id="edit-'. $name .'" class="'. _form_get_class('textarea', $required, _form_get_error($name)) .'"'. drupal_attributes($attributes) .'>'. check_plain($value) .'</textarea>'. $post, $description, 'edit-'. $name, $required, _form_get_error($name));
+  return theme('form_element', $title, $pre .'<textarea'. $cols .' rows="'. $rows .'" name="edit['. $name .']" id="edit-'. form_clean_id($name) .'" class="'. _form_get_class('textarea', $required, _form_get_error($name)) .'"'. drupal_attributes($attributes) .'>'. check_plain($value) .'</textarea>'. $post, $description, 'edit-'. $name, $required, _form_get_error($name));
 }
 
 /**
@@ -1398,7 +1398,7 @@ function form_select($title, $name, $value, $options, $description = NULL, $extr
       $select .= '<option value="'. $key .'"'. (is_array($value) ? (in_array($key, $value) ? ' selected="selected"' : '') : ($value == $key ? ' selected="selected"' : '')) .'>'. check_plain($choice) .'</option>';
     }
   }
-  return theme('form_element', $title, '<select name="edit['. $name .']'. ($multiple ? '[]' : '') .'"'. ($multiple ? ' multiple="multiple" ' : '') . ($extra ? ' '. $extra : '') .' id="edit-'. $name .'">'. $select .'</select>', $description, 'edit-'. $name, $required, _form_get_error($name));
+  return theme('form_element', $title, '<select name="edit['. $name .']'. ($multiple ? '[]' : '') .'"'. ($multiple ? ' multiple="multiple" ' : '') . ($extra ? ' '. $extra : '') .' id="edit-'. form_clean_id($name) .'">'. $select .'</select>', $description, 'edit-'. $name, $required, _form_get_error($name));
 }
 
 /**
@@ -1421,7 +1421,7 @@ function form_select($title, $name, $value, $options, $description = NULL, $extr
  * provided by file.inc.
  */
 function form_file($title, $name, $size, $description = NULL, $required = FALSE) {
-  return theme('form_element', $title, '<input type="file" class="'. _form_get_class('form-file', $required, _form_get_error($name)) .'" name="edit['. $name .']" id="edit-'. $name .'" size="'. $size ."\" />\n", $description, 'edit-'. $name, $required, _form_get_error($name));
+  return theme('form_element', $title, '<input type="file" class="'. _form_get_class('form-file', $required, _form_get_error($name)) .'" name="edit['. $name .']" id="edit-'. form_clean_id($name) .'" size="'. $size ."\" />\n", $description, 'edit-'. $name, $required, _form_get_error($name));
 }
 
 /**
@@ -1503,6 +1503,19 @@ function form_weight($title = NULL, $name = 'weight', $value = 0, $delta = 10, $
   }
 
   return form_select($title, $name, $value, $weights, $description, $extra);
+}
+
+/**
+ * Remove invalid characters from an HTML ID attribute string
+ *
+ * @param $id
+ *   The ID to clean
+ * @return
+ *   The cleaned ID
+ */
+function form_clean_id($id = NULL) {
+  $id = str_replace('][', '-', $id);
+  return $id;
 }
 
 /**

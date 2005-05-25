@@ -576,22 +576,22 @@ function theme_node($node, $teaser = FALSE, $page = FALSE) {
  */
 function theme_form_element($title, $value, $description = NULL, $id = NULL, $required = FALSE, $error = FALSE) {
 
-  $output  = "<div class=\"form-item\">\n";
+  $output  = '<div class="form-item">'."\n";
   $required = $required ? '<span class="form-required">*</span>' : '';
 
   if ($title) {
     if ($id) {
-      $output .= " <label for=\"$id\">$title:</label>$required<br />\n";
+      $output .= ' <label for="'. form_clean_id($id) .'">'. $title .':</label>'. $required ."<br />\n";
     }
     else {
-      $output .= " <label>$title:</label>$required<br />\n";
+      $output .= ' <label>'. $title .':</label>'. $required ."<br />\n";
     }
   }
 
   $output .= " $value\n";
 
   if ($description) {
-    $output .= " <div class=\"description\">$description</div>\n";
+    $output .= ' <div class="description">'. $description ."</div>\n";
   }
 
   $output .= "</div>\n";
