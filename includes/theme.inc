@@ -843,7 +843,7 @@ function theme_more_help_link($url) {
  */
 function theme_xml_icon($url) {
   if ($image = theme('image', 'misc/xml.png', t('XML feed'), t('XML feed'))) {
-    return '<div class="xml-icon"><a href="'. check_url($url) .'">'. $image. '</a></div>';
+    return '<span class="xml-icon"><a href="'. check_url($url) .'">'. $image. '</a></span>';
   }
 }
 
