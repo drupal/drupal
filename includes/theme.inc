@@ -1,5 +1,5 @@
 <?php
-/* $Id: theme.inc,v 1.238 2005/05/25 06:03:17 unconed Exp $ */
+/* $Id: theme.inc,v 1.239 2005/05/26 19:08:14 dries Exp $ */
 
 /**
  * @file
@@ -843,7 +843,7 @@ function theme_more_help_link($url) {
  */
 function theme_xml_icon($url) {
   if ($image = theme('image', 'misc/xml.png', t('XML feed'), t('XML feed'))) {
-    return '<div class="xml-icon"><a href="'. check_url($url) .'">'. $image. '</a></div>';
+    return '<span class="xml-icon"><a href="'. check_url($url) .'">'. $image. '</a></span>';
   }
 }
 
