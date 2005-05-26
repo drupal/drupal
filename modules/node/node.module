@@ -277,7 +277,7 @@ function node_list() {
   foreach (module_list() as $module) {
     if (module_hook($module, 'node_name')) {
       $module_types = module_invoke($module, 'node_types');
-      if ($module_types) {
+      if (is_array($module_types)) {
         foreach ($module_types as $type) {
           $types[] = $type;
         }
