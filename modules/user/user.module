@@ -605,7 +605,7 @@ function theme_user_profile($account, $fields) {
   $output = "<div class=\"profile\">\n";
   $output .= theme('user_picture', $account);
   foreach ($fields as $category => $value) {
-    $output .= "<h2>$category</h2>$value";
+    $output .= theme('box', $category, $value);
   }
   $output .= "</div>\n";
 
