@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.476 2005/05/25 19:54:49 dries Exp $
+// $Id: user.module,v 1.477 2005/05/26 19:03:05 dries Exp $
 
 /**
  * @file
@@ -605,7 +605,7 @@ function theme_user_profile($account, $fields) {
   $output = "<div class=\"profile\">\n";
   $output .= theme('user_picture', $account);
   foreach ($fields as $category => $value) {
-    $output .= "<h2>$category</h2>$value";
+    $output .= theme('box', $category, $value);
   }
   $output .= "</div>\n";
 
