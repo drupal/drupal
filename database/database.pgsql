@@ -201,8 +201,8 @@ CREATE INDEX comments_nid_idx ON comments(nid);
 
 CREATE TABLE contact (
   subject varchar(255) NOT NULL default '',
-  recipients longtext NOT NULL default '',
-  reply longtext NOT NULL default ''
+  recipients text NOT NULL default '',
+  reply text NOT NULL default ''
 );
 
 --
@@ -500,7 +500,7 @@ CREATE TABLE url_alias (
   PRIMARY KEY  (pid)
 );
 CREATE INDEX url_alias_dst_idx ON url_alias(dst);
-CREATE INDEX url_alias_src ON url_alias(src)
+CREATE INDEX url_alias_src ON url_alias(src);
 --
 -- Table structure for permission
 --
@@ -700,7 +700,7 @@ CREATE TABLE users (
   PRIMARY KEY  (uid),
   UNIQUE (name)
 );
-CREATE INDEX users_changed_idx ON users(changed);
+CREATE INDEX users_access_idx ON users(access);
 
 CREATE SEQUENCE users_uid_seq INCREMENT 1 START 1;
 
