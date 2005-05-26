@@ -7,7 +7,9 @@ Drupal x.x.x, xxxx-xx-xx (Development version)
     * added the PHPTemplate theme engine and removed the Xtemplate engine.
     * converted the bluemarine theme from XTemplate to PHPTemplate.
     * converted the pushbutton theme from XTemplate to PHPTemplate.
-- reworked the 'request new password' functionality.
+- usability:
+    * reworked the 'request new password' functionality.
+    * added support for auto-complete forms (AJAX)
 - profiles:
     * added a block to display author information along with posts.
     * added support for private profile fields.
