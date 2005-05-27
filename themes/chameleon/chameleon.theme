@@ -133,8 +133,12 @@ function chameleon_node($node, $main = 0, $page = 0) {
     $terms = taxonomy_link("taxonomy terms", $node);
   }
 
+  $links = array_merge($submitted, $terms);
   if ($node->links) {
-    $output .= " <div class=\"links\">". theme('links', array_merge($submitted, $terms, $node->links)) ."</div>\n";
+    $links = array_merge($links, $node->links);
+  }
+  if (count($links)) {
+    $output .= " <div class=\"links\">". theme('links', $links) ."</div>\n";   
   }
 
   $output .= "</div>\n";
