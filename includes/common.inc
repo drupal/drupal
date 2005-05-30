@@ -1832,7 +1832,7 @@ function mime_header_encode($string) {
     $output = '';
     while ($len > 0) {
       $chunk = truncate_utf8($string, $chunk_size);
-      $output .= ' =?'. $charset .'?B?'. base64_encode($chunk) ."?=\n";
+      $output .= ' =?UTF-8?B?'. base64_encode($chunk) ."?=\n";
       $c = strlen($chunk);
       $string = substr($string, $c);
       $len -= $c;
