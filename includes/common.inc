@@ -140,7 +140,7 @@ function drupal_get_headers() {
  */
 function drupal_get_destination() {
   $destination[] = $_GET['q'];
-  $params = array('from', 'sort', 'order');
+  $params = array('page', 'sort', 'order');
   foreach ($params as $param) {
     if (isset($_GET[$param])) {
       $destination[] = "$param=". $_GET[$param];

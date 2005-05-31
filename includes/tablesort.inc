@@ -27,7 +27,7 @@ function tablesort_init($header) {
  */
 function tablesort_pager() {
   $cgi = $_SERVER['REQUEST_METHOD'] == 'GET' ? $_GET : $_POST;
-  unset($cgi['q'], $cgi['from']);
+  unset($cgi['q'], $cgi['page']);
   return $cgi;
 }
 
