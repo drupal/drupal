@@ -1,5 +1,5 @@
 <?php
-// $Id: tablesort.inc,v 1.32 2005/03/31 09:25:33 unconed Exp $
+// $Id: tablesort.inc,v 1.33 2005/05/31 19:54:31 unconed Exp $
 
 /**
  * @file
@@ -27,7 +27,7 @@ function tablesort_init($header) {
  */
 function tablesort_pager() {
   $cgi = $_SERVER['REQUEST_METHOD'] == 'GET' ? $_GET : $_POST;
-  unset($cgi['q'], $cgi['from']);
+  unset($cgi['q'], $cgi['page']);
   return $cgi;
 }
 

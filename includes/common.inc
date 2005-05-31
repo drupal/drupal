@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.450 2005/05/30 18:08:49 unconed Exp $ */
+/* $Id: common.inc,v 1.451 2005/05/31 19:54:31 unconed Exp $ */
 
 /**
  * @file
@@ -140,7 +140,7 @@ function drupal_get_headers() {
  */
 function drupal_get_destination() {
   $destination[] = $_GET['q'];
-  $params = array('from', 'sort', 'order');
+  $params = array('page', 'sort', 'order');
   foreach ($params as $param) {
     if (isset($_GET[$param])) {
       $destination[] = "$param=". $_GET[$param];
