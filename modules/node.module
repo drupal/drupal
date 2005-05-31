@@ -782,7 +782,7 @@ function node_admin_nodes() {
           foreach ($edit['nodes'] as $nid => $value) {
             if ($value) {
               $title = db_result(db_query('SELECT title FROM {node} WHERE nid = %d', $nid));
-              $extra .= '<li>'. form_hidden('nodes]['. $nid, 1) . $title .'</li>';
+              $extra .= '<li>'. form_hidden('nodes]['. $nid, 1) . check_plain($title) .'</li>';
             }
           }
           $extra .= '</ul>';
@@ -1629,7 +1629,10 @@ function node_page_default() {
   $result = pager_query(db_rewrite_sql('SELECT n.nid, n.sticky, n.created FROM {node} n WHERE n.promote = 1 AND n.status = 1 ORDER BY n.sticky DESC, n.created DESC'), variable_get('default_nodes_main', 10));
 
   if (db_num_rows($result)) {
-    drupal_set_html_head('<link rel="alternate" type="application/rss+xml" title="RSS" href="'. url('node/feed', NULL, NULL, TRUE) .'" />');
+    drupal_add_link(array('rel' => 'alternate',
+                          'type' => 'application/rss+xml',
+                          'title' => t('RSS'),
+                          'href' => url('node/feed', NULL, NULL, TRUE)));
 
     $output = '';
     while ($node = db_fetch_object($result)) {

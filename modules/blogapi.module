@@ -530,7 +530,10 @@ function blogapi_menu($may_cache) {
   $items = array();
 
   if ($_GET['q'] == variable_get('site_frontpage', 'node')) {
-    drupal_set_html_head('<link rel="EditURI" type="application/rsd+xml" title="RSD" href="' . url('blogapi/rsd', NULL, NULL, TRUE) . '" />');
+    drupal_add_link(array('rel' => 'EditURI',
+                          'type' => 'application/rsd+xml',
+                          'title' => t('RSD'),
+                          'href' => url('blogapi/rsd', NULL, NULL, TRUE)));
   }
 
   if ($may_cache) {

@@ -1613,7 +1613,6 @@ function drupal_attributes($attributes = array()) {
     foreach ($attributes as $key => $value) {
       $t[] = $key .'="'. check_plain($value) .'"';
     }
-
     return ' '. implode($t, ' ');
   }
 }
@@ -1972,6 +1971,14 @@ if (version_compare(phpversion(), '5.0') < 0) {
     }
   ');
 }
+
+/**
+ * Add a <link> tag to the page's HEAD.
+ */
+function drupal_add_link($attributes) {
+  drupal_set_html_head('<link'. drupal_attributes($attributes) .">\n");
+}
+
 
 /**
  * Add a JavaScript file to the output.

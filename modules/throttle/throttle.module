@@ -63,26 +63,34 @@ function throttle_exit() {
     }
 
     // update the throttle status
+    $message = '';
     if ($max_users && $users > $max_users) {
       if (!$throttle) {
         variable_set('throttle_level', 1);
-        cache_clear_all();
-        watchdog('throttle', t('Throttle: %users %user accessing site; throttle enabled.', array('%users' => "<em>$users</em>", '%user' => format_plural($users, 'user', 'users'))));
+        $message = format_plural($users,
+                                 '1 user accessing site; throttle enabled.',
+                                 '%count users accessing site; throttle enabled.');
       }
     }
     elseif ($max_guests && $guests > $max_guests) {
       if (!$throttle) {
         variable_set('throttle_level', 1);
-        cache_clear_all();
-        watchdog('throttle', t('Throttle: %guests %guest accessing site; throttle enabled.', array('%guests' => "<em>$guests</em>", '%guest' => format_plural($guests, 'guest', 'guests'))));
+        $message = format_plural($guests,
+                                 '1 guest accessing site; throttle enabled.',
+                                 '%count guests accessing site; throttle enabled.');
       }
     }
     else {
       if ($throttle) {
         variable_set('throttle_level', 0);
-        cache_clear_all();
-        watchdog('throttle', t('Throttle: %users %user, %guests %guest accessing site; throttle disabled.', array('%users' => "<em>$users</em>", '%user' => format_plural($users, 'user', 'users'), '%guests' => "<em>$guests</em>", '%guest' => format_plural($guests, 'guest', 'guests'))));
+        // Note: unorthodox format_plural() usage due to Gettext plural limitations.
+        $message = format_plural($users, '1 user', '%count users') .', ';
+        $message .= format_plural($guests, '1 guest accessing site; throttle disabled', '%count guests accessing site; throttle disabled');
       }
+    }
+    if ($message) {
+      cache_clear_all();
+      watchdog('throttle', t('Throttle') .': '. $message);
     }
   }
 }
@@ -90,7 +98,7 @@ function throttle_exit() {
 function _throttle_validate($value, $form) {
   if ($value != NULL) {
     if (!is_numeric($value) || $value < 0) {
-      form_set_error($form, t("'%value' is not a valid auto-throttle setting.  Please enter a positive numeric value.", array('%value' => $value)));
+      form_set_error($form, t("'%value' is not a valid auto-throttle setting.  Please enter a positive numeric value.", array('%value' => theme('placeholder', $value))));
     }
   }
 }
