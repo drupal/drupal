@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.193 2005/05/19 19:05:27 dries Exp $
+// $Id: statistics.module,v 1.194 2005/05/31 21:14:26 unconed Exp $
 
 /**
  * @file
@@ -144,11 +144,11 @@ function statistics_access_log($aid) {
   if ($access = db_fetch_object($result)) {
     $output  = '<table border="1" cellpadding="2" cellspacing="2">';
     $output .= ' <tr><th>'. t('Page URL') ."</th><td>". l(url($access->path, NULL, NULL, TRUE), $access->url) ."</td></tr>";
-    $output .= ' <tr><th>'. t('Page title') ."</th><td>$access->title</td></tr>";
+    $output .= ' <tr><th>'. t('Page title') .'</th><td>'. check_plain($access->title) .'</td></tr>';
     $output .= ' <tr><th>'. t('Referrer') ."</th><td>". ($access->url ? l($access->url, $access->url) : '') ."</td></tr>";
     $output .= ' <tr><th>'. t('Date') .'</th><td>'. format_date($access->timestamp, 'large') .'</td></tr>';
     $output .= ' <tr><th>'. t('User') .'</th><td>'. format_name($access) .'</td></tr>';
-    $output .= ' <tr><th>'. t('Hostname') ."</th><td>$access->hostname</td></tr>";
+    $output .= ' <tr><th>'. t('Hostname') .'</th><td>'. check_plain($access->hostname) .'</td></tr>';
     $output .= '</table>';
     return $output;
   }
