@@ -213,7 +213,7 @@ function upload_nodeapi(&$node, $op, $arg) {
           form_set_error('upload', t('The selected file %name can not be attached to this post, because it exceeded the maximum filesize of %maxsize', array('%name' => theme('placeholder', $file->filename), '%maxsize' => theme('placeholder', format_size($uploadsize)))));
         }
         elseif ($error['usersize'] == count($user->roles) && $user->uid != 1) {
-          form_set_error('upload', t('The selected file %name can not be attached to this post, because the disk quota of %quota has been reached', array('%name' => theme('placeholder', $file->filename), '%quote' => theme('placeholder', format_size($usersize)))));
+          form_set_error('upload', t('The selected file %name can not be attached to this post, because the disk quota of %quota has been reached', array('%name' => theme('placeholder', $file->filename), '%quota' => theme('placeholder', format_size($usersize)))));
         }
         else {
           $key = 'upload_'. count($_SESSION['file_uploads']);
