@@ -95,11 +95,12 @@ function poll_validate(&$node) {
   if (isset($node->title)) {
     // Check for at least two options and validate amount of votes:
     $realchoices = 0;
+    // Renumber fields
+    $node->choice = array_values($node->choice);
     foreach ($node->choice as $i => $choice) {
       if ($choice['chtext'] != '') {
         $realchoices++;
       }
-
       if ($choice['chvotes'] < 0) {
         form_set_error("choice][$i][chvotes", t('Negative values are not allowed.'));
       }

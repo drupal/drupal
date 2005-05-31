@@ -473,7 +473,7 @@ function theme_links($links, $delimiter = ' | ') {
  */
 function theme_image($path, $alt = '', $title = '', $attr = '', $getsize = true) {
   if (!$getsize || (file_exists($path) && (list($width, $height, $type, $attr) = @getimagesize($path)))) {
-    return "<img src=\"$path\" $attr alt=\"$alt\" title=\"$title\" />";
+    return '<img src="'. check_url($path) .'" '. $attr .' alt="'. check_plain($alt) .'" title="'. check_plain($title) .'" />';
   }
 }
 

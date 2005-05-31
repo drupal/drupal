@@ -1518,7 +1518,6 @@ function drupal_attributes($attributes = array()) {
     foreach ($attributes as $key => $value) {
       $t[] = $key .'="'. check_plain($value) .'"';
     }
-
     return ' '. implode($t, ' ');
   }
 }
@@ -1864,6 +1863,13 @@ function drupal_eval($code) {
  */
 function drupal_get_path($type, $name) {
   return dirname(drupal_get_filename($type, $name));
+}
+
+/**
+ * Add a <link> tag to the page's HEAD.
+ */
+function drupal_add_link($attributes) {
+  drupal_set_html_head('<link'. drupal_attributes($attributes) .">\n");
 }
 
 /**

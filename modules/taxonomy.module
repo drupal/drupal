@@ -165,7 +165,7 @@ function taxonomy_del_vocabulary($vid) {
 
   cache_clear_all();
 
-  return t('deleted vocabulary "%name".', array('%name' => $vocabulary->name));
+  return t('deleted vocabulary "%name".', array('%name' => theme('placeholder', $vocabulary->name)));
 }
 
 function _taxonomy_confirm_del_vocabulary($vid) {
@@ -175,7 +175,7 @@ function _taxonomy_confirm_del_vocabulary($vid) {
   $extra .= form_hidden('vid', $vid);
 
   $output = theme('confirm',
-                  t('Are you sure you want to delete the vocabulary %title?', array('%title' => $vocabulary->name)),
+                  t('Are you sure you want to delete the vocabulary %title?', array('%title' => theme('placeholder', $vocabulary->name))),
                   'admin/taxonomy',
                   t('Deleting a vocabulary will delete all the terms in it. This action cannot be undone.'),
                   t('Delete'),
@@ -942,7 +942,10 @@ function taxonomy_term_page($str_tids = '', $depth = 0, $op = 'page') {
           $breadcrumbs = array_reverse($breadcrumbs);
           menu_set_location($breadcrumbs);
 
-          drupal_set_html_head('<link rel="alternate" type="application/rss+xml" title="RSS - '. $title .'" href="'. url('taxonomy/term/'. $rss_tids .'/'. $depth .'/feed') .'" />');
+          drupal_add_link(array('rel' => 'alternate',
+                                'type' => 'application/rss+xml',
+                                'title' => 'RSS - '. $title,
+                                'href' => url('taxonomy/term/'. $rss_tids .'/'. $depth .'/feed')));
 
           $output = taxonomy_render_nodes(taxonomy_select_nodes($tids, $operator, $depth, TRUE));
           $output .= theme('xml_icon', url("taxonomy/term/$rss_tids/$depth/feed"));
