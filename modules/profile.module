@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.97 2005/05/12 16:20:36 dries Exp $
+// $Id: profile.module,v 1.98 2005/06/01 04:29:57 unconed Exp $
 
 /**
  * @file
@@ -269,7 +269,7 @@ function profile_view_field($user, $field) {
         $fields = array();
         foreach ($values as $value) {
           if ($value = trim($value)) {
-            $fields[] = $browse ? l($value, "profile/$field->name/$value") : check_plain($value);
+            $fields[] = $browse ? l($value, "profile/". urlencode($field->name) ."/". urlencode($value)) : check_plain($value);
           }
         }
         return implode(', ', $fields);
