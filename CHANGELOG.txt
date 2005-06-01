@@ -1,6 +1,10 @@
+Drupal 4.6.0, 2005-06-01
+------------------------
+- fixed bugs, including a critical input validation bug.
+
 Drupal 4.5.2, 2005-01-15
 ------------------------
-- fixed bugs: a cross-site scripting (XSS) vulnerability has been fixed.
+- fixed bugs, including a cross-site scripting (XSS) vulnerability.
 
 Drupal 4.5.1, 2004-12-01
 ------------------------
