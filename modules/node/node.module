@@ -172,7 +172,7 @@ function node_teaser($body, $format = NULL) {
   // parse errors.
   if (isset($format)) {
     $filters = filter_list_format($format);
-    if (isset($filters['filter/1']) && strpos($body, '<?') != false) {
+    if (isset($filters['filter/1']) && strpos($body, '<?') !== false) {
       return $body;
     }
   }
