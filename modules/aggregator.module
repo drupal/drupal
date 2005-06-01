@@ -1097,14 +1097,14 @@ function theme_aggregator_summary_item($item) {
 function theme_aggregator_page_item($item) {
   static $last;
 
-  $date = date('Ymd', $item->timestamp);
+  $date = format_date($item->timestamp, 'custom', 'Ymd');
   if ($date != $last) {
     $last = $date;
-    $output .= '<h3>'. date('F j, Y', $item->timestamp) ."</h3>\n";
+    $output .= '<h3>'. format_date($item->timestamp, 'custom', 'F j, Y') ."</h3>\n";
   }
 
   $output .= "<div class=\"news-item\">\n";
-  $output .= ' <div class="date">'. date('H:i', $item->timestamp) ."</div>\n";
+  $output .= ' <div class="date">'. format_date($item->timestamp, 'custom', 'H:i') ."</div>\n";
   $output .= " <div class=\"body\">\n";
   $output .= '  <div class="title"><a href="'. check_url($item->link) .'">'. check_plain($item->title) ."</a></div>\n";
   if ($item->description) {
