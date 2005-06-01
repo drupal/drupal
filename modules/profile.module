@@ -269,7 +269,7 @@ function profile_view_field($user, $field) {
         $fields = array();
         foreach ($values as $value) {
           if ($value = trim($value)) {
-            $fields[] = $browse ? l($value, "profile/$field->name/$value") : check_plain($value);
+            $fields[] = $browse ? l($value, "profile/". urlencode($field->name) ."/". urlencode($value)) : check_plain($value);
           }
         }
         return implode(', ', $fields);
