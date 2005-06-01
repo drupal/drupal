@@ -77,7 +77,7 @@ function throttle_exit() {
         variable_set('throttle_level', 1);
         $message = format_plural($guests,
                                  '1 guest accessing site; throttle enabled.',
-                                 '%count guests accessing site; throttle enabled.'));
+                                 '%count guests accessing site; throttle enabled.');
       }
     }
     else {
