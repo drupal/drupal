@@ -2,7 +2,7 @@
  * Only enable Javascript functionality if all required features are supported.
  */
 function isJsEnabled() {
-  if (document.jsEnabled == undefined) {
+  if (typeof document.jsEnabled == 'undefined') {
     // Note: ! casts to boolean implicitly.
     document.jsEnabled = !(
      !document.getElementsByTagName ||
