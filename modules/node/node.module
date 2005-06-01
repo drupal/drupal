@@ -153,23 +153,28 @@ function node_mark($nid, $timestamp) {
 }
 
 /**
- * Automatically generate a teaser for the given body text.
+ * Automatically generate a teaser for a node body in a given format.
  */
-function node_teaser($body) {
+function node_teaser($body, $format = NULL) {
 
   $size = variable_get('teaser_length', 600);
 
   // find where the delimiter is in the body
   $delimiter = strpos($body, '<!--break-->');
 
-  // If the size is zero, and there is no delimiter, we return the entire body.
+  // If the size is zero, and there is no delimiter, the entire body is the teaser.
   if ($size == 0 && $delimiter == 0) {
     return $body;
   }
 
-  // If the body contains PHP code, do not split it up to prevent parse errors.
-  if (strpos($body, '<?') != false) {
-    return $body;
+  // We check for the presence of the PHP evaluator filter in the current
+  // format. If the body contains PHP code, we do not split it up to prevent
+  // parse errors.
+  if (isset($format)) {
+    $filters = filter_list_format($format);
+    if (isset($filters['filter/1']) && strpos($body, '<?') != false) {
+      return $body;
+    }
   }
 
   // If a valid delimiter has been specified, use it to chop of the teaser.
@@ -177,59 +182,25 @@ function node_teaser($body) {
     return substr($body, 0, $delimiter);
   }
 
-  // If we have a short body, return the entire body.
+  // If we have a short body, the entire body is the teaser.
   if (strlen($body) < $size) {
     return $body;
   }
 
   // In some cases, no delimiter has been specified (e.g. when posting using
   // the Blogger API). In this case, we try to split at paragraph boundaries.
-  if ($length = strpos($body, '</p>', $size)) {
-    return substr($body, 0, $length + 4);
-  }
-
-  if ($length = strpos($body, '<br />', $size)) {
-    return substr($body, 0, $length);
-  }
-
-  if ($length = strpos($body, '<br>', $size)) {
-    return substr($body, 0, $length);
-  }
-
-  if ($length = strpos($body, "\n", $size)) {
-    return substr($body, 0, $length);
-  }
-
-  // When even the first paragraph is too long, try to split at the end of
+  // When even the first paragraph is too long, we try to split at the end of
   // the next sentence.
-  if ($length = strpos($body, '. ', $size)) {
-    return substr($body, 0, $length + 1);
+  $breakpoints = array('</p>' => 4, '<br />' => 0, '<br>' => 0, "\n" => 0, '. ' => 1, '! ' => 1, '? ' => 1, '。' => 1, '؟ ' => 1); 
+  foreach ($breakpoints as $point => $charnum) {
+    if ($length = strpos($body, $point, $size)) {
+      return substr($body, 0, $length + $charnum);
+    }
   }
-
-  if ($length = strpos($body, '! ', $size)) {
-    return substr($body, 0, $length + 1);
-  }
-
-  if ($length = strpos($body, '? ', $size)) {
-    return substr($body, 0, $length + 1);
-  }
-
-  if ($length = strpos($body, '。', $size)) {
-    return substr($body, 0, $length + 1);
-  }
-
-  if ($length = strpos($body, '、', $size)) {
-    return substr($body, 0, $length + 1);
-  }
-
-  if ($length = strpos($body, '؟ ', $size)) {
-    return substr($body, 0, $length + 1);
-  }
-
-  // If all else fails, simply truncate the string.
+  
+  // If all else fails, we simply truncate the string.
   return truncate_utf8($body, $size);
 }
-
 
 /**
  * Determine the module that defines the node type of the given node.
@@ -1216,7 +1187,7 @@ function node_validate($node) {
   // Auto-generate the teaser, but only if it hasn't been set (e.g. by a
   // module-provided 'teaser' form item).
   if (!isset($node->teaser)) {
-    $node->teaser = node_teaser($node->body);
+    $node->teaser = node_teaser($node->body, $node->format);
   }
 
   if (node_last_changed($node->nid) > $node->changed) {
@@ -1496,7 +1467,7 @@ function node_preview($node) {
     // Extract a teaser, if it hasn't been set (e.g. by a module-provided
     // 'teaser' form item).
     if (!isset($node->teaser)) {
-      $node->teaser = node_teaser($node->body);
+      $node->teaser = node_teaser($node->body, $node->format);
     }
 
     // Display a preview of the node:
