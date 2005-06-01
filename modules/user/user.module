@@ -1023,7 +1023,11 @@ function user_register($edit = array()) {
 
       // TODO: Is this necessary? Won't session_write() replicate this?
       unset($edit['session']);
-      $account = user_save('', array_merge(array('name' => $edit['name'], 'pass' => $pass, 'init' => $edit['mail'], 'mail' => $edit['mail'], 'roles' => array(_user_authenticated_id()), 'status' => (variable_get('user_register', 1) == 1 ? 1 : 0)), $edit));
+      if (array_intersect(array_keys($edit), array('uid', 'roles', 'init', 'session', 'status'))) {
+        watchdog('security', t('Detected malicious attempt to alter protected user fields.'), WATCHDOG_WARNING);
+        drupal_goto('user/register');
+      }
+      $account = user_save('', array_merge($edit, array('pass' => $pass, 'init' => $edit['mail'], 'roles' => array(_user_authenticated_id()), 'status' => (variable_get('user_register', 1) == 1 ? 1 : 0))));
       watchdog('user', t('New user: %name %email.', array('%name' => theme('placeholder', $edit['name']), '%email' => theme('placeholder', '<'. $edit['mail'] .'>'))), WATCHDOG_NOTICE, l(t('edit'), 'user/'. $account->uid .'/edit'));
 
       $variables = array('%username' => $edit['name'], '%site' => variable_get('site_name', 'drupal'), '%password' => $pass, '%uri' => $base_url, '%uri_brief' => substr($base_url, strlen('http://')), '%mailto' => $edit['mail'], '%date' => format_date(time()), '%login_uri' => url('user', NULL, NULL, TRUE), '%edit_uri' => url('user/'. $account->uid .'/edit', NULL, NULL, TRUE), '%login_url' => user_pass_reset_url($account));
