@@ -209,7 +209,7 @@ function contact_admin() {
   $result = db_query('SELECT subject, recipients FROM {contact} ORDER BY subject');
   $rows = array();
   while ($subject = db_fetch_object($result)) {
-    $rows[] = array($subject->subject, $subject->recipients, l(t('edit'), 'admin/contact/edit/'. $subject->subject), l(t('delete'), 'admin/contact/delete/'. $subject->subject));
+    $rows[] = array($subject->subject, $subject->recipients, l(t('edit'), 'admin/contact/edit/'. urlencode($subject->subject)), l(t('delete'), 'admin/contact/delete/'. urlencode($subject->subject)));
   }
   $header = array(t('Subject'), t('Recipients'), array('data' => t('Operations'), 'colspan' => 2));
   return theme('table', $header, $rows);
