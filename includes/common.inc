@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.453 2005/06/04 14:13:43 dries Exp $ */
+/* $Id: common.inc,v 1.454 2005/06/05 19:10:53 unconed Exp $ */
 
 /**
  * @file
@@ -1986,7 +1986,7 @@ if (version_compare(phpversion(), '5.0') < 0) {
  * Add a <link> tag to the page's HEAD.
  */
 function drupal_add_link($attributes) {
-  drupal_set_html_head('<link'. drupal_attributes($attributes) .">\n");
+  drupal_set_html_head('<link'. drupal_attributes($attributes) ." />\n");
 }
 
 
