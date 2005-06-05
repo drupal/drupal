@@ -60,7 +60,8 @@ function book_link($type, $node = 0, $main = 0) {
       if (book_access('create', $node)) {
         $links[] = l(t('add child page'), "node/add/book/parent/$node->nid");
       }
-      $links[] = l(t('printer-friendly version'), 'book/print/'. $node->nid, array('title' => t('Show a printer-friendly version of this book page and its sub-pages.')));
+      $links[] = l(t('printer-friendly version'), 'book/export/html/'. $node->nid, array('title' => t('Show a printer-friendly version of this book page and its sub-pages.')));
+      $links[] = l(t('export as XML'), 'book/export/docbook/'. $node->nid, array('title' => t('Export this book page and its sub-pages as Docbook-like XML.')));
     }
   }
 
@@ -90,8 +91,14 @@ function book_menu($may_cache) {
       'callback' => 'book_render',
       'access' => user_access('access content'),
       'type' => MENU_SUGGESTED_ITEM);
-    $items[] = array('path' => 'book/print', 'title' => t('printer-friendly version'),
-      'callback' => 'book_print',
+    $items[] = array(
+      'path' => 'book/export/docbook',
+      'title' => t('export XML'),
+      'callback' => 'book_export_docbook',
+      'access' => user_access('access content'),
+      'type' => MENU_CALLBACK);
+    $items[] = array('path' => 'book/export/printer', 'title' => t('printer-friendly version'),
+      'callback' => 'book_export_html',
       'access' => user_access('access content'),
       'type' => MENU_CALLBACK);
   }
@@ -324,6 +331,9 @@ function book_location($node, $nodes = array()) {
   return $nodes;
 }
 
+/**
+ * Accumulates the nodes up to the root of the book from the given node in the $nodes array.
+ */
 function book_location_down($node, $nodes = array()) {
   $last_direct_child = db_fetch_object(db_query(db_rewrite_sql('SELECT n.nid, n.title, b.parent, b.weight FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE b.parent = %d ORDER BY b.weight DESC, n.title DESC'), $node->nid));
   if ($last_direct_child) {
@@ -334,7 +344,7 @@ function book_location_down($node, $nodes = array()) {
 }
 
 /**
- * Fetch the node object of the previous page of the book.
+ * Fetches the node object of the previous page of the book.
  */
 function book_prev($node) {
   // If the parent is zero, we are at the start of a book so there is no previous.
@@ -358,7 +368,7 @@ function book_prev($node) {
 }
 
 /**
- * Fetch the node object of the next page of the book.
+ * Fetches the node object of the next page of the book.
  */
 function book_next($node) {
   // get first direct child
@@ -378,6 +388,12 @@ function book_next($node) {
   }
 }
 
+/**
+ * Returns the content of a given node.  If $teaser if true, returns
+ * the teaser rather than full content.  Displays the most recently
+ * approved revision of a node (if any) unless we have to display this
+ * page in the context of the moderation queue.
+ */
 function book_content($node, $teaser = FALSE) {
   $op = $_POST['op'];
 
@@ -500,6 +516,9 @@ function theme_book_navigation($node) {
   return $node;
 }
 
+/**
+ * This is a helper function for book_toc().
+ */
 function book_toc_recurse($nid, $indent, $toc, $children, $exclude) {
   if ($children[$nid]) {
     foreach ($children[$nid] as $foo => $node) {
@@ -513,6 +532,9 @@ function book_toc_recurse($nid, $indent, $toc, $children, $exclude) {
   return $toc;
 }
 
+/**
+ * Returns an array of titles and nid entries of book pages in table of contents order.
+ */
 function book_toc($exclude = 0) {
   $result = db_query(db_rewrite_sql('SELECT n.nid, n.title, b.parent, b.weight FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE n.status = 1 ORDER BY b.weight, n.title'));
 
@@ -536,6 +558,9 @@ function book_toc($exclude = 0) {
   return $toc;
 }
 
+/**
+ * This is a helper function for book_tree()
+ */
 function book_tree_recurse($nid, $depth, $children, $unfold = array()) {
   if ($depth > 0) {
     if ($children[$nid]) {
@@ -566,6 +591,10 @@ function book_tree_recurse($nid, $depth, $children, $unfold = array()) {
   return $output;
 }
 
+/**
+ * Returns an HTML nested list (wrapped in a menu-class div) representing the book nodes
+ * as a tree.
+ */
 function book_tree($parent = 0, $depth = 3, $unfold = array()) {
   $result = db_query(db_rewrite_sql('SELECT n.nid, n.title, b.parent, b.weight FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE n.status = 1 AND n.moderate = 0 ORDER BY b.weight, n.title'));
 
@@ -590,44 +619,58 @@ function book_render() {
 }
 
 /**
- * Menu callback; generates printer-friendly book page with all descendants.
+ * Menu callback; generates a printer-friendly book page with all descendants.
  */
-function book_print($nid = 0, $depth = 1) {
+function book_export_html($nid = 0, $depth = 1) {
   global $base_url;
-  $result = db_query(db_rewrite_sql('SELECT n.nid, n.title, b.weight FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE n.status = 1 AND n.nid = %d AND n.moderate = 0 ORDER BY b.weight, n.title'), $nid);
 
-  while ($page = db_fetch_object($result)) {
-    // load the node:
-    $node = node_load(array('nid' => $page->nid));
+  $output .= book_recurse($nid, $depth, 'book_node_visitor_print_pre', 'book_node_visitor_print_post');
 
-    if ($node) {
-      // output the content:
-      if (node_hook($node, 'content')) {
-        $node = node_invoke($node, 'content');
-      }
-      // Allow modules to change $node->body before viewing.
-      node_invoke_nodeapi($node, 'view', $node->body, false);
+  $html = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">';
+  $html .= '<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">';
 
-      $output .= '<h1 id="'. $node->nid .'" name="'. $node->nid .'" class="book-h'. $depth .'">'. check_plain($node->title) .'</h1>';
-
-      if ($node->body) {
-        $output .= $node->body;
-      }
-    }
-  }
-
-  $output .= book_print_recurse($nid, $depth + 1);
-
-  $html = '<html><head><title>'. check_plain($node->title) .'</title>';
-  $html .= '<base href="'. $base_url .'/" />';
-  $html .= theme_stylesheet_import('misc/print.css', 'print');
-  $html .= '</head><body>'. $output .'</body></html>';
+  $html .= "<head>\n<title>". check_plain($node->title) ."</title>\n";
+  $html .= '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />';
+  $html .= '<base href="'. $base_url .'/" />' . "\n";
+  $html .= "<style type=\"text/css\">\n@import url(misc/print.css);\n</style>\n";
+  $html .= "</head>\n<body>\n". $output . "\n</body>\n</html>\n";
 
   print $html;
 }
 
-function book_print_recurse($parent = '', $depth = 1) {
-  $result = db_query(db_rewrite_sql('SELECT n.nid, n.title, b.weight FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE n.status = 1 AND b.parent = %d AND n.moderate = 0 ORDER BY b.weight, n.title'), $parent);
+/**
+ * Menu callback; generates XML output of entire book hierarchy beneath
+ * the given node.
+ */
+function book_export_docbook($nid = 0, $depth = 1) {
+  $xml = "<?xml version='1.0'?>\n";
+  $xml .= "<book>\n";
+  $xml .= book_recurse($nid, $depth, 'book_node_visitor_xml_pre', 'book_node_visitor_xml_post');
+  $xml .= "</book>\n";
+  print $xml;
+
+}
+
+/**
+ * Traverses the book tree.  Applies the $visit_pre() callback to each
+ * node, is called recursively for each child of the node (in weight,
+ * title order).  Finally appends the output of the $visit_post()
+ * callback to the output before returning the generated output.
+ *
+ * @param nid
+ *  - the node id (nid) of the root node of the book hierarchy.
+ * @param depth
+ *  - the depth of the given node in the book hierarchy.
+ * @param visit_pre
+ *  - a function callback to be called upon visiting a node in the tree
+ * @param visit_post
+ *  - a function callback to be called after visiting a node in the tree,
+ *    but before recursively visiting children.
+ * @return
+ *  - the output generated in visiting each node
+ */
+function book_recurse($nid = 0, $depth = 1, $visit_pre, $visit_post) {
+  $result = db_query(db_rewrite_sql('SELECT n.nid, n.title, b.weight FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE n.status = 1 AND n.nid = %d AND n.moderate = 0 ORDER BY b.weight, n.title'), $nid);
 
   while ($page = db_fetch_object($result)) {
     // Load the node:
@@ -639,32 +682,140 @@ function book_print_recurse($parent = '', $depth = 1) {
     }
 
     if ($node) {
-      // Output the content:
-      if (node_hook($node, 'content')) {
-        $node = node_invoke($node, 'content');
+      if (function_exists($visit_pre)) {
+        $output .= call_user_func($visit_pre, $node, $depth, $nid);
       }
-      // Allow modules to change $node->body before viewing.
-      node_invoke_nodeapi($node, 'view', $node->body, false);
-
-      $output .= '<h1 id="'. $node->nid .'" name="'. $node->nid .'" class="book-h'. $depth .'">'. check_plain($node->title) .'</h1>';
-
-      if ($node->body) {
-        $output .= '<ul>'. $node->body .'</ul>';
+      else { # default
+        $output .= book_node_visitor_print_pre($node, $depth, $nid);
       }
 
-      $output .= book_print_recurse($node->nid, $depth + 1);
+      $children = db_query(db_rewrite_sql('SELECT n.nid, n.title, b.weight FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE n.status = 1 AND b.parent = %d AND n.moderate = 0 ORDER BY b.weight, n.title'), $node->nid);
+      while ($childpage = db_fetch_object($children)) {
+          $childnode = node_load(array('nid' => $childpage->nid));
+          if ($childnode->nid != $node->nid) {
+              $output .= book_recurse($childnode->nid, $depth+1, $visit_pre, $visit_post);
+          }
+      }
+      if (function_exists($visit_post)) {
+        $output .= call_user_func($visit_post, $node);
+      }
+      else { # default
+        $output .= book_node_visitor_print_post();
+      }
     }
   }
 
   return $output;
 }
 
+/**
+ * Generates printer-friendly HTML for a node.  This function
+ * is a 'pre-node' visitor function for book_recurse().
+ *
+ * @param $node
+ *   - the node to generate output for.
+ * @param $depth
+ *   - the depth of the given node in the hierarchy. This
+ *   is used only for generating output.
+ * @param $nid
+ *   - the node id (nid) of the given node. This
+ *   is used only for generating output.
+ * @return
+ *   - the HTML generated for the given node.
+ */
+function book_node_visitor_print_pre($node, $depth, $nid) {
+  // Output the content:
+  if (node_hook($node, 'content')) {
+    $node = node_invoke($node, 'content');
+  }
+  // Allow modules to change $node->body before viewing.
+  node_invoke_nodeapi($node, 'view', $node->body, false);
+
+  $output .= '<div id="node-'.$node->nid. '" class="section-'.$depth.'">'."\n";
+  $output .= '<h1 class="book-heading">'. check_plain($node->title) ."</h1>\n";
+
+  if ($node->body) {
+    $output .= $node->body;
+  }
+  return $output;
+}
+
+/**
+ * Finishes up generation of printer-friendly HTML after visiting a
+ * node. This function is a 'post-node' visitor function for
+ * book_recurse().
+ */
+function book_node_visitor_print_post() {
+  return "</div>\n";
+}
+
+/**
+ * Generates XML for a given node. This function is a 'pre-node'
+ * visitor function for book_recurse().  The generated XML is
+ * DocBook-like - the node's HTML content wrapped in a CDATA
+ * processing instruction, and put inside a <literallayout> tag.  The
+ * node body has an md5-hash applied; the value of this is stored as
+ * node metadata to allow importing code to determine if contents have
+ * changed.
+ *
+ * @param $node
+ *   - the node to generate output for.
+ * @param $depth
+ *   - the depth of the given node in the hierarchy. This
+ *   is currently not used.
+ * @param $nid
+ *   - the node id (nid) of the given node. This
+ *   is used only for generating output (e.g., ID attribute)
+ * @return
+ *   - the generated XML for the given node.
+ */
+function book_node_visitor_xml_pre($node, $depth, $nid) {
+  // Output the content:
+  if (node_hook($node, 'content')) {
+    $node = node_invoke($node, 'content');
+  }
+  // Allow modules to change $node->body before viewing.
+  node_invoke_nodeapi($node, 'view', $node->body, false);
+
+  $output .= '<section id="node-'.$node->nid .'">'."\n";
+  $output .= "<sectioninfo>\n";
+  $output .= "<releaseinfo>\n";
+  $output .= "md5-hash:" . md5($node->body) . "\n";
+  $output .= "weight:". $node->weight . "\n";
+  $output .= "</releaseinfo>\n";
+  $output .= "</sectioninfo>\n";
+  $output .= '<title>'. check_plain($node->title) ."</title>\n";
+  // wrap the node body in a CDATA declaration
+  $output .= "<literallayout>";
+  $output .= "<![CDATA[";
+  if ($node->body) {
+    $output .= $node->body;
+  }
+  $output .= "]]>";
+  $output .= "</literallayout>\n";
+  return $output;
+}
+
+/**
+ * Completes the XML generated for the node. This
+ * function is a 'post-node' visitor function for
+ * book_recurse().
+ */
+function book_node_visitor_xml_post() {
+  return "</section>\n";
+}
+
+/**
+ * Creates a row for the 'admin' view of a book.  Each row represents a page in the book, in the tree representing the book
+ */
 function book_admin_edit_line($node, $depth = 0) {
   return array('<div style="padding-left: '. (25 * $depth) .'px;">'. form_textfield(NULL, $node->nid .'][title', $node->title, 64, 255) .'</div>', form_weight(NULL, $node->nid .'][weight', $node->weight, 15), l(t('view'), 'node/'. $node->nid), l(t('edit'), 'node/'. $node->nid .'/edit'), l(t('delete'), 'node/'.$node->nid.'/delete'));
 }
 
 function book_admin_edit_book($nid, $depth = 1) {
   $result = db_query(db_rewrite_sql('SELECT n.nid FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE b.parent = %d ORDER BY b.weight, n.title'), $nid);
+
+  $rows = array();
 
   while ($node = db_fetch_object($result)) {
     $node = node_load(array('nid' => $node->nid));
@@ -696,6 +847,9 @@ function book_admin_edit($nid, $depth = 0) {
   }
 }
 
+/**
+ * Saves the changes to a book made by an administrator in the book admin view.
+ */
 function book_admin_save($nid, $edit = array()) {
   if ($nid) {
     $book = node_load(array('nid' => $nid));
@@ -765,6 +919,9 @@ function book_admin($nid = 0) {
   }
 }
 
+/**
+ * Returns an administrative overview of all books.
+ */
 function book_admin_overview() {
   $result = db_query(db_rewrite_sql('SELECT n.nid, n.title FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE b.parent = 0 ORDER BY b.weight, n.title'));
   while ($book = db_fetch_object($result)) {
