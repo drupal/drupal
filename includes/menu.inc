@@ -1,5 +1,5 @@
 <?php
-/* $Id: menu.inc,v 1.80 2005/04/24 16:34:32 dries Exp $ */
+/* $Id: menu.inc,v 1.81 2005/06/05 09:47:13 dries Exp $ */
 
 /**
  * @file
@@ -604,7 +604,7 @@ function theme_menu_item($mid, $children = '', $leaf = TRUE) {
  * @ingroup themeable
  */
 function theme_menu_item_link($item, $link_item) {
-  return l($item['title'], $link_item['path'], array_key_exists('description', $item) ? array('title' => $items['description']) : array());
+  return l($item['title'], $link_item['path'], array_key_exists('description', $item) ? array('title' => $item['description']) : array());
 }
 
 /**
