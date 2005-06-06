@@ -817,6 +817,8 @@ INSERT INTO locales_meta (locale, name, enabled, isdefault) VALUES ('en', 'Engli
 
 INSERT INTO url_alias (src, dst) VALUES ('node/feed', 'rss.xml');
 
+INSERT INTO variable (name, value) VALUES ('node_options_forum', 'a:1:{i:0;s:6:"status";}');
+
 ---
 --- Alter some sequences
 ---

@@ -118,13 +118,13 @@ function blogapi_new_post($req_params) {
   $edit = array();
   $edit['type'] = _blogapi_blogid($params[0]);
   // get the node type defaults
-  $node_type_default = variable_get('node_options_'. $edit['type'], array());
+  $node_type_default = variable_get('node_options_'. $edit['type'], array('status', 'promote'));
   $edit['uid'] = $user->uid;
   $edit['name'] = $user->name;
-  $edit['promote'] = $node_type_default['promote'];
+  $edit['promote'] = in_array('promote', $node_type_default);
   $edit['comment'] = variable_get('comment_'. $edit['type'], 2);
-  $edit['moderate'] = $node_type_default['moderate'];
-  $edit['revision'] = $node_type_default['revision'];
+  $edit['moderate'] = in_array('moderate', $node_type_default);
+  $edit['revision'] = in_array('revision', $node_type_default);
   $edit['format'] = FILTER_FORMAT_DEFAULT;
   $edit['status'] = $params[4];
 
