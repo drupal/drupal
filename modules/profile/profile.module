@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.98 2005/06/01 04:29:57 unconed Exp $
+// $Id: profile.module,v 1.99 2005/06/06 14:07:04 dries Exp $
 
 /**
  * @file
@@ -240,7 +240,7 @@ function profile_view_field($user, $field) {
   if ($field->fid == 18 || $field->fid == 19 || $field->fid == 20) {
     return;
   }
-  
+
   if ($value = $user->{$field->name}) {
     switch ($field->type) {
       case 'textfield':

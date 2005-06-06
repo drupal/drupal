@@ -1,6 +1,5 @@
-Drupal x.x.x, xxxx-xx-xx (Development version)
+Drupal x.x.x, xxxx-xx-xx (development version)
 ------------------------
-
 - added free tagging support (folksonomies).
 - added a site-wide contact form.
 - theme system:
@@ -13,14 +12,19 @@ Drupal x.x.x, xxxx-xx-xx (Development version)
 - profiles:
     * added a block to display author information along with posts.
     * added support for private profile fields.
+- book module:
+    * added Docbook-like XML export functionality.
 - performance:
     * added 'loose caching' option for high-traffic sites.
     * improved performance of path aliasing.
     * added the ability to track page generation times.
 
+Drupal 4.6.1, 2005-06-01
+------------------------
+- fixed bugs, including a critical input validation bug.
+
 Drupal 4.6.0, 2005-04-15
 ------------------------
-
 - PHP5 compliance
 - search:
     * added UTF-8 support to make it work with all languages.
