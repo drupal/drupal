@@ -953,7 +953,7 @@ function _taxonomy_prepare_insert($data, $stage) {
  *   Whether the nodes are to be used with a pager (the case on most Drupal
  *   pages) or not (in an XML feed, for example).
  * @param $order
- *   The order clause for the query that retrieve the nodes. 
+ *   The order clause for the query that retrieve the nodes.
  * @return
  *   A resource identifier pointing to the query results.
  */

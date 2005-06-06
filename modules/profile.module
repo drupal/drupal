@@ -240,7 +240,7 @@ function profile_view_field($user, $field) {
   if ($field->fid == 18 || $field->fid == 19 || $field->fid == 20) {
     return;
   }
-  
+
   if ($value = $user->{$field->name}) {
     switch ($field->type) {
       case 'textfield':

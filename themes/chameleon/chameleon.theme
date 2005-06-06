@@ -138,7 +138,7 @@ function chameleon_node($node, $main = 0, $page = 0) {
     $links = array_merge($links, $node->links);
   }
   if (count($links)) {
-    $output .= " <div class=\"links\">". theme('links', $links) ."</div>\n";   
+    $output .= " <div class=\"links\">". theme('links', $links) ."</div>\n";
   }
 
   $output .= "</div>\n";

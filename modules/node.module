@@ -191,13 +191,13 @@ function node_teaser($body, $format = NULL) {
   // the Blogger API). In this case, we try to split at paragraph boundaries.
   // When even the first paragraph is too long, we try to split at the end of
   // the next sentence.
-  $breakpoints = array('</p>' => 4, '<br />' => 0, '<br>' => 0, "\n" => 0, '. ' => 1, '! ' => 1, '? ' => 1, '。' => 1, '؟ ' => 1); 
+  $breakpoints = array('</p>' => 4, '<br />' => 0, '<br>' => 0, "\n" => 0, '. ' => 1, '! ' => 1, '? ' => 1, '。' => 1, '؟ ' => 1);
   foreach ($breakpoints as $point => $charnum) {
     if ($length = strpos($body, $point, $size)) {
       return substr($body, 0, $length + $charnum);
     }
   }
-  
+
   // If all else fails, we simply truncate the string.
   return truncate_utf8($body, $size);
 }
