@@ -475,7 +475,7 @@ function _statistics_column_width($column, $width = 35) {
 function _statistics_format_item($title, $link) {
   $link = ($link ? $link : '/');
   $output  = ($title ? "$title<br />" : '');
-  $output .= l($link, $link);
+  $output .= l(_statistics_column_width($link), $link);
   return $output;
 }
 
