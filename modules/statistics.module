@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.194 2005/05/31 21:14:26 unconed Exp $
+// $Id: statistics.module,v 1.195 2005/06/06 14:04:47 dries Exp $
 
 /**
  * @file
@@ -475,7 +475,7 @@ function _statistics_column_width($column, $width = 35) {
 function _statistics_format_item($title, $link) {
   $link = ($link ? $link : '/');
   $output  = ($title ? "$title<br />" : '');
-  $output .= l($link, $link);
+  $output .= l(_statistics_column_width($link), $link);
   return $output;
 }
 
