@@ -61,7 +61,8 @@ function book_link($type, $node = 0, $main = 0) {
         $links[] = l(t('add child page'), "node/add/book/parent/$node->nid");
       }
       $links[] = l(t('printer-friendly version'), 'book/export/html/'. $node->nid, array('title' => t('Show a printer-friendly version of this book page and its sub-pages.')));
-      $links[] = l(t('export as XML'), 'book/export/docbook/'. $node->nid, array('title' => t('Export this book page and its sub-pages as Docbook-like XML.')));
+      $links[] = l(t('export DocBook XML'), 'book/export/docbook/'. $node->nid, array('title' => t('Export this book page and its sub-pages as DocBook XML.')));
+      $links[] = l(t('export OPML'), 'book/export/opml/'. $node->nid, array('title' => t('Export this book page and its sub-pages as OPML.')));
     }
   }
 
@@ -75,15 +76,25 @@ function book_menu($may_cache) {
   $items = array();
 
   if ($may_cache) {
-    $items[] = array('path' => 'book', 'title' => t('books'),
-      'access' => user_access('access content'), 'type' => MENU_NORMAL_ITEM, 'weight' => 5);
-    $items[] = array('path' => 'node/add/book', 'title' => t('book page'),
+    $items[] = array(
+      'path' => 'book',
+      'title' => t('books'),
+      'access' => user_access('access content'),
+      'type' => MENU_NORMAL_ITEM,
+      'weight' => 5);
+    $items[] = array(
+      'path' => 'node/add/book',
+      'title' => t('book page'),
       'access' => user_access('create book pages'));
-    $items[] = array('path' => 'admin/node/book', 'title' => t('books'),
+    $items[] = array(
+      'path' => 'admin/node/book',
+      'title' => t('books'),
       'callback' => 'book_admin',
       'access' => user_access('administer nodes'),
       'weight' => 4);
-    $items[] = array('path' => 'admin/node/book/orphan', 'title' => t('orphan pages'),
+    $items[] = array(
+      'path' => 'admin/node/book/orphan',
+      'title' => t('orphan pages'),
       'callback' => 'book_admin_orphan',
       'access' => user_access('administer nodes'),
       'weight' => 8);
@@ -92,13 +103,8 @@ function book_menu($may_cache) {
       'access' => user_access('access content'),
       'type' => MENU_SUGGESTED_ITEM);
     $items[] = array(
-      'path' => 'book/export/docbook',
-      'title' => t('export XML'),
-      'callback' => 'book_export_docbook',
-      'access' => user_access('access content'),
-      'type' => MENU_CALLBACK);
-    $items[] = array('path' => 'book/export/printer', 'title' => t('printer-friendly version'),
-      'callback' => 'book_export_html',
+      'path' => 'book/export',
+      'callback' => 'book_export',
       'access' => user_access('access content'),
       'type' => MENU_CALLBACK);
   }
@@ -624,36 +630,111 @@ function book_render() {
 }
 
 /**
- * Menu callback; generates a printer-friendly book page with all descendants.
+ * Menu callback; Generates various representation of a book page with
+ * all descendants and prints the requested representation to output.
+ *
+ * Notes: For HTML output, the given node is /embedded to its absolute
+ * depth in a top level section/.  For example, a child node with
+ * depth 2 in the hierarchy is contained in (otherwise empty) <div>
+ * elements corresponding to depth 0 and depth 1.  This is intended to
+ * support WYSIWYG output - e.g., level 3 sections always look like
+ * level 3 sections, no matter their depth relative to the node
+ * selected to be exported as printer-friendly HTML.
+ *
+ * DocBook XML and OPML outputs do not attempt to embed a node to its
+ * absolute level in the parent book.
+
+ *    For DocBook output, the exported node will be a document fragment
+ * unless the node is a level 0 node (book), specifically
+ *    <ul>
+ *      <li>a <chapter> for level 1 elements, </li>
+ *      <li>a <section> for levels 2 and deeper.</li>
+ *    </ul>
+ *
+ *    For OPML output, the exported node will be the top level element
+ * in the OPML outline.
+ *
+ * @param type
+ *   - a string encoding the type of output requested.
+ *       The following types are supported:
+ *          1) HTML (printer friendly output)
+ *          2) DocBook XML
+ *          3) OPML (Outline Processor Markup Language) outlines
+ * @param nid
+ *   - an integer representing the node id (nid) of the node to export
+ *
  */
-function book_export_html($nid = 0, $depth = 1) {
+function book_export($type = 'html', $nid = 0) {
   global $base_url;
-
-  $output .= book_recurse($nid, $depth, 'book_node_visitor_print_pre', 'book_node_visitor_print_post');
-
-  $html = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">';
-  $html .= '<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">';
-
-  $html .= "<head>\n<title>". check_plain($node->title) ."</title>\n";
-  $html .= '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />';
-  $html .= '<base href="'. $base_url .'/" />' . "\n";
-  $html .= "<style type=\"text/css\">\n@import url(misc/print.css);\n</style>\n";
-  $html .= "</head>\n<body>\n". $output . "\n</body>\n</html>\n";
-
-  print $html;
+  $type = strtolower($type);
+  $depth = _book_get_depth($nid);
+  switch ($type) {
+    case 'docbook':
+      $xml = "<?xml version='1.0'?>\n";
+      $xml .= "<!DOCTYPE book PUBLIC \"-//OASIS//DTD Docbook XML V4.1.2//EN\" \"http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd\">\n";
+      $xml .= book_recurse($nid, $depth, 'book_node_visitor_xml_pre', 'book_node_visitor_xml_post');
+      drupal_set_header('Content-Type: text/xml; charset=utf-8');
+      print $xml;
+      break;
+    case 'html':
+      for ($i = 1; $i < $depth; $i++) {
+        $output .= "<div class=\"section-$i\">\n";
+      }
+      $output .= book_recurse($nid, $depth, 'book_node_visitor_html_pre', 'book_node_visitor_html_post');
+      for ($i = 1; $i < $depth; $i++) {
+        $output .= "</div>\n";
+      }
+      $html = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
+      $html .= '<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">';
+      $html .= "<head>\n<title>". check_plain($node->title) ."</title>\n";
+      $html .= '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />';
+      $html .= '<base href="'. $base_url .'/" />' . "\n";
+      $html .= "<style type=\"text/css\">\n@import url(misc/print.css);\n</style>\n";
+      $html .= "</head>\n<body>\n". $output . "\n</body>\n</html>\n";
+      print $html;
+      break;
+    case 'opml':
+      $output .= book_recurse($nid, $depth, 'book_node_visitor_opml_pre', 'book_node_visitor_opml_post');
+      $ompl  = "<?xml version='1.0'?>\n";
+      $opml .= "<opml version='1.0'>\n";
+      $opml .= "<head>\n<title>". check_plain($node->title) ."</title>\n";
+      $opml .= "</head>\n<body>\n". $output . "\n</body>\n</opml>\n";
+      drupal_set_header('Content-Type: text/xml; charset=utf-8');
+      print $opml;
+      break;
+  }
 }
 
 /**
- * Menu callback; generates XML output of entire book hierarchy beneath
- * the given node.
+ * Given a node, this function returns the depth of the node in its hierarchy.
+ * A root node has depth 1, and children of a node of depth n have depth (n+1).
+ *
+ * @param node
+ *   - the node whose depth to compute.
+ * @return
+ *   - the depth of the given node in its hierarchy.  Returns 0 if the node
+ *  does not exist or is not part of a book hierarchy.
  */
-function book_export_docbook($nid = 0, $depth = 1) {
-  $xml = "<?xml version='1.0'?>\n";
-  $xml .= "<book>\n";
-  $xml .= book_recurse($nid, $depth, 'book_node_visitor_xml_pre', 'book_node_visitor_xml_post');
-  $xml .= "</book>\n";
-  print $xml;
-
+function _book_get_depth($nid) {
+  $depth = 0;
+  if ($nid) {
+    while ($nid) {
+      $result = db_query(db_rewrite_sql('SELECT b.parent FROM {book} b WHERE b.nid = %d'), $nid);
+      $obj =  db_fetch_object($result);
+      $parent = $obj->parent;
+      if ($nid == $parent->parent) {
+        $nid = 0;
+      }
+      else {
+        $nid = $parent;
+      }
+      $depth++;
+    }
+    return $depth;
+  }
+  else {
+    return 0;
+  }
 }
 
 /**
@@ -676,7 +757,6 @@ function book_export_docbook($nid = 0, $depth = 1) {
  */
 function book_recurse($nid = 0, $depth = 1, $visit_pre, $visit_post) {
   $result = db_query(db_rewrite_sql('SELECT n.nid, n.title, b.weight FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE n.status = 1 AND n.nid = %d AND n.moderate = 0 ORDER BY b.weight, n.title'), $nid);
-
   while ($page = db_fetch_object($result)) {
     // Load the node:
     $node = node_load(array('nid' => $page->nid));
@@ -690,8 +770,8 @@ function book_recurse($nid = 0, $depth = 1, $visit_pre, $visit_post) {
       if (function_exists($visit_pre)) {
         $output .= call_user_func($visit_pre, $node, $depth, $nid);
       }
-      else { # default
-        $output .= book_node_visitor_print_pre($node, $depth, $nid);
+      else {
+        $output .= book_node_visitor_html_pre($node, $depth, $nid);
       }
 
       $children = db_query(db_rewrite_sql('SELECT n.nid, n.title, b.weight FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE n.status = 1 AND b.parent = %d AND n.moderate = 0 ORDER BY b.weight, n.title'), $node->nid);
@@ -702,10 +782,10 @@ function book_recurse($nid = 0, $depth = 1, $visit_pre, $visit_post) {
           }
       }
       if (function_exists($visit_post)) {
-        $output .= call_user_func($visit_post, $node);
+        $output .= call_user_func($visit_post, $node, $depth);
       }
       else { # default
-        $output .= book_node_visitor_print_post();
+        $output .= book_node_visitor_html_post($node, $depth);
       }
     }
   }
@@ -728,16 +808,16 @@ function book_recurse($nid = 0, $depth = 1, $visit_pre, $visit_post) {
  * @return
  *   - the HTML generated for the given node.
  */
-function book_node_visitor_print_pre($node, $depth, $nid) {
+function book_node_visitor_html_pre($node, $depth, $nid) {
   // Output the content:
   if (node_hook($node, 'content')) {
     $node = node_invoke($node, 'content');
   }
   // Allow modules to change $node->body before viewing.
-  node_invoke_nodeapi($node, 'view', $node->body, false);
+  node_invoke_nodeapi($node, 'print', $node->body, false);
 
-  $output .= '<div id="node-'.$node->nid. '" class="section-'.$depth.'">'."\n";
-  $output .= '<h1 class="book-heading">'. check_plain($node->title) ."</h1>\n";
+  $output .= "<div id=\"node-". $node->nid ."\" class=\"section-$depth\">\n";
+  $output .= "<h1 class=\"book-heading\">". check_plain($node->title) ."</h1>\n";
 
   if ($node->body) {
     $output .= $node->body;
@@ -750,18 +830,19 @@ function book_node_visitor_print_pre($node, $depth, $nid) {
  * node. This function is a 'post-node' visitor function for
  * book_recurse().
  */
-function book_node_visitor_print_post() {
+function book_node_visitor_html_post($node, $depth) {
   return "</div>\n";
 }
 
 /**
  * Generates XML for a given node. This function is a 'pre-node'
- * visitor function for book_recurse().  The generated XML is
- * DocBook-like - the node's HTML content wrapped in a CDATA
- * processing instruction, and put inside a <literallayout> tag.  The
- * node body has an md5-hash applied; the value of this is stored as
- * node metadata to allow importing code to determine if contents have
- * changed.
+ * visitor function for book_recurse().  The generated XML is valid
+ * DocBook, but each node's HTML content is wrapped in a CDATA
+ * section, and put inside a <literallayout> element.  The node body
+ * has an md5-hash applied; the value of this is stored as node
+ * metadata to allow importing code to determine if contents have
+ * changed.  The weight of a node is also stored as metadata to
+ * allow the node to be properly re-imported.
  *
  * @param $node
  *   - the node to generate output for.
@@ -770,7 +851,7 @@ function book_node_visitor_print_post() {
  *   is currently not used.
  * @param $nid
  *   - the node id (nid) of the given node. This
- *   is used only for generating output (e.g., ID attribute)
+ *   is used only for generating output (e.g., id attribute)
  * @return
  *   - the generated XML for the given node.
  */
@@ -780,34 +861,99 @@ function book_node_visitor_xml_pre($node, $depth, $nid) {
     $node = node_invoke($node, 'content');
   }
   // Allow modules to change $node->body before viewing.
-  node_invoke_nodeapi($node, 'view', $node->body, false);
+  node_invoke_nodeapi($node, 'export_xml', $node->body, false);
 
-  $output .= '<section id="node-'.$node->nid .'">'."\n";
-  $output .= "<sectioninfo>\n";
-  $output .= "<releaseinfo>\n";
-  $output .= "md5-hash:" . md5($node->body) . "\n";
-  $output .= "weight:". $node->weight . "\n";
-  $output .= "</releaseinfo>\n";
-  $output .= "</sectioninfo>\n";
-  $output .= '<title>'. check_plain($node->title) ."</title>\n";
+  $releaseinfo  = "<releaseinfo>\n";
+  $releaseinfo .= "md5-hash:" . md5($node->body) . "\n";
+  $releaseinfo .= "weight:". $node->weight . "\n";
+  $releaseinfo .= "depth:". $depth . "\n";
+  $releaseinfo .= "</releaseinfo>\n";
+
+  $title = "<title>". check_plain($node->title) ."</title>\n";
+
   // wrap the node body in a CDATA declaration
-  $output .= "<literallayout>";
-  $output .= "<![CDATA[";
+  $content = "<literallayout>";
+  $content .= "<![CDATA[";
   if ($node->body) {
-    $output .= $node->body;
+    $content .= $node->body;
   }
-  $output .= "]]>";
-  $output .= "</literallayout>\n";
+  $content .= "]]>";
+  $content .= "</literallayout>\n";
+
+  if ($depth == 1) {
+      $output .= "<book>\n";
+      $output .= $title;
+      $output .= "<bookinfo>\n$releaseinfo</bookinfo>\n";
+      $output .= "<preface>\n";
+      $output .= "<title>Preface</title>\n";
+      $output .= $content;
+      $output .= "</preface>\n";
+  }
+  else if ($depth == 2) {
+      $output .= "<chapter id=\"node-".$node->nid ."\">\n";
+      $output .= "<chapterinfo>\n$releaseinfo</chapterinfo>\n";
+      $output .= $title;
+      $output .= $content;
+  }
+  else {
+      $output .= "<section id=\"node-".$node->nid ."\">\n";
+      $output .= "<sectioninfo>\n$releaseinfo</sectioninfo>\n";
+      $output .= $title;
+      $output .= $content;
+  }
+
   return $output;
 }
 
 /**
- * Completes the XML generated for the node. This
- * function is a 'post-node' visitor function for
- * book_recurse().
+ * Completes the XML generation for the node. This function is a
+ * 'post-node' visitor function for book_recurse().
  */
-function book_node_visitor_xml_post() {
-  return "</section>\n";
+function book_node_visitor_xml_post($node, $depth) {
+  if ($depth == 1) {
+    return "</book>\n";
+  }
+  else if ($depth == 2) {
+    return "</chapter>\n";
+  }
+  else {
+    return "</section>\n";
+  }
+}
+
+/**
+ * Generates OPML for a node.  This function is a 'pre-node' visitor
+ * function for book_recurse().
+ *
+ * @param $node
+ *   - the node to generate output for.
+ * @param $depth
+ *   - the depth of the given node in the hierarchy. This is used only
+ *   for generating output.
+ * @param $nid
+ *   - the node id (nid) of the given node. This is used only for
+ *   generating output.
+ * @return
+ *   - the OPML generated for the given node.
+ */
+function book_node_visitor_opml_pre($node, $depth, $nid) {
+  // Output the content:
+  if (node_hook($node, 'content')) {
+    $node = node_invoke($node, 'content');
+  }
+
+  $output .= "<outline type=\"id:node-". $node->nid ."\"\n";
+  $text = check_plain($node->title);
+  $output .= "text=\"$text\">\n";
+  return $output;
+}
+
+/**
+ * Finishes up generation of OPML after visiting a node. This function
+ * is a 'post-node' visitor function for book_recurse().
+ */
+function book_node_visitor_opml_post($node, $depth) {
+  return "</outline>\n";
 }
 
 /**
@@ -943,17 +1089,44 @@ function book_admin_overview() {
 function book_help($section) {
   switch ($section) {
     case 'admin/help#book':
-      return t("
-      <p>The book organises content into a nested hierarchical structure. It is particularly good for manuals, Frequently Asked Questions (FAQs) and the like, allowing you to have chapters, sections, etc.</p>
-      <p>A book is simply a collection of nodes that have been linked together. These nodes are usually of type <em>book page</em>, but you can insert nodes of any type into a book outline. Every node in the book has a <em>parent</em> node which  \"contains\" it. This is how book.module establishes its hierarchy. At any given level in the hierarchy, a book can contain many nodes. All these sibling nodes are sorted according to the <em>weight</em> that you give them.</p>
-      <p>Book pages contain a <em>log message</em> field which helps your users understand the motivation behind an edit of a book page. Each edited version of a book page is stored as a new revision of a node. This capability makes it easy to revert to an old version of a page, should that be desirable.</p>
-      <p>Like other node types, book submissions and edits may be subject to moderation, depending on your configuration.  Similarly, books use <a href=\"%permissions\">permissions</a> to determine who may read and write to them. Only administrators are allowed to create new books, which are really just nodes whose parent is <em>&lt;top-level&gt;</em>.  To include an existing node in your book, click on the \"outline\"-tab on the node's page.  This enables you to place the node wherever you'd like within the book hierarchy. To add a new node into your book, use the <a href=\"%create\">create content &raquo; book page</a> link.</p>
-      <p>Administrators may review the hierarchy of their books by clicking on the <a href=\"%collaborative-book\">collaborative book</a> link in the administration pages. There, nodes may be edited, reorganized, removed from book, and deleted. This behavior may change in the future. When a parent node is deleted, it may leave behind child nodes.  These nodes are now <em>orphans</em>. Administrators should periodically <a href=\"%orphans-book\">review their books for orphans</a> and reaffiliate those pages as desired. Finally, administrators may also <a href=\"%export-book\">export their books</a> to a single, flat HTML page which is suitable for printing.</p>
-      <h3>Maintaining a FAQ using a collaborative book</h3>
-      <p>Collaborative books let you easily set up a Frequently Asked Questions (FAQ) section on your web site. The main benefit is that you don't have to write all the questions/answers by yourself - let the community do it for you!</p>
-      <p>In order to set up the FAQ, you have to create a new book which will hold all your content. To do so, click on the <a href=\"%create\">create content &raquo; book page</a> link. Give it a thoughtful title, and body. A title like \"Estonia Travel - FAQ\" is nice. You may always edit these fields later. You will probably want to designate <em>&lt;top-level&gt;</em> as the parent of this page. Leave the <em>log message</em> and <em>type</em> fields blank for now. After you have submitted this book page, you are ready to begin filling up your book with questions that are frequently asked.</p>
-      <p>Whenever you come across a post which you want to include in your FAQ, click on the <em>administer</em> link. Then click on the <em>edit book outline</em> button at the bottom of the page. Then place the relevant post wherever is most appropriate in your book by selecting a <em>parent</em>. Books are quite flexible. They can have sections like <em>Flying to Estonia</em>, <em>Eating in Estonia</em> and so on. As you get more experienced with the book module, you can reorganize posts in your book so that it stays organized.</p>
-      <p>Notes:</p><ul><li>Any comments attached to those relevant posts which you designate as book pages will also be transported into your book. This is a great feature, since much wisdom is shared via comments. Remember that all future comments and edits will automatically be reflected in your book.</li><li>You may wish to edit the title of posts when adding them to your FAQ. This is done on the same page as the <em>Edit book outline</em> button. Clear titles improve navigability enormously.</li><li>Book pages may come from any content type (blog, story, page, etc.). If you are creating a post solely for inclusion in your book, then use the <a href=\"%create\">create content &raquo; book page</a> link.</li><li>If you don't see the <em>administer</em> link, then you probably have insufficient <a href=\"%permissions\">permissions</a>.</li></ul>", array('%permissions' => url('admin/access/permissions'), "%create" => url('node/add/book'), '%collaborative-book' => url('admin/node/book'), '%orphans-book' => url('admin/node/book/orphan'), '%export-book' => url('book/print')));
+      return t(
+"<p>The \"book\" content type is suited for creating structured, multi-page hypertexts such as site resource guides, manuals, and Frequently Asked Questions (FAQs).  It permits a document to have chapters, sections, subsections, etc.  Authors with suitable permissions can add pages to a collaborative book,  placing them into the existing document by adding them to a table of contents menu. </p>
+
+<p>Books have additional ''previous'', ''up'', and ''next'' navigation elements at the bottom of each page for moving through the text.  Additional navigation may be provided by enabling the \"book navigation block\" on the
+<a href = \"%book-block\" title = \"block administration\">block administration page</a>.
+</p>
+
+<p>Users can select the \"printer-friendly version\" link visible at the bottom of a book page to generate a printer-friendly display of the page and all of its subsections.  They can choose to <em>export</em> the page and its subsections as DocBook XML (for offline editing, or production of print or other electronic publication formats) by selecting the \"export DocBook XML\" link.  DocBook export currently treats node content as preformatted text.   Selecting the \"export OPML\" link will generate an outline document (titles only) in OPML format, readable by many outline editing tools.  Note: it may be neccessary to shift-click on the link to save the results to a file on the local computer.</p>
+
+<p>Administrators can view a book outline, from which is it possible to change the titles of sections, and their <i>weight</i> (thus reordering sections).   From this outline, it is also possible to edit and/or delete book pages.   Many content types besides pages (for example, blog entries, stories, and polls) can be added to a collaborative book by choosing the \"outline\" tab when viewing the post.</p>
+
+<p>You can:</p><ul><li>create new book pages:
+<a href=\"%create\">create content &raquo; book page</a>
+</li>
+<li>administer books (choose a book from the list and select \"outline\"):
+<a href=\"%collaborative-book\">administer  &raquo; content  &raquo; books</a>
+</li>
+<li>set workflow and other global book settings:
+<a href=\"%workflow\" title = \"book page content type\">administer  &raquo; content  &raquo; [configure]  &raquo; [content types]  &raquo; book page</a>
+</li>
+<li>enable the book navigation block:
+<a href = \"%book-block\" title = \"administer block\">administer  &raquo; block</a>
+</li>
+<li>control who can create, edit, and maintain book pages by setting access permissions:
+<a href = \"%permissions\" title = \"access permissions\">administer  &raquo; access control</a>
+</li></ul>
+
+<p>For more information, visit the  <a href = \"%book-module-help\" title = \"book module online help\">online documentation</a>.
+",
+array(
+      '%create' => url('node/add/book'),
+      '%collaborative-book' => url('admin/node/book'),
+      '%workflow' => url('admin/node/configure/types/book'),
+      '%book-block' => url('admin/block'),
+      '%permissions' => url('admin/access/permissions'),
+      '%book-module-help' => url('http://drupal.org/handbook/modules/book')
+      )
+);
     case 'admin/modules#description':
       return t('Allows users to collaboratively author a book.');
     case 'admin/node/book':

@@ -17,6 +17,7 @@ Drupal x.x.x, xxxx-xx-xx (development version)
     * made it possible to block certain IPs/hostnames.
 - book module:
     * added Docbook-like XML export functionality.
+    * added OPML export functionality.
 - performance:
     * added 'loose caching' option for high-traffic sites.
     * improved performance of path aliasing.
