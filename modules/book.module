@@ -615,7 +615,12 @@ function book_tree($parent = 0, $depth = 3, $unfold = array()) {
 function book_render() {
   $result = db_query(db_rewrite_sql('SELECT n.nid, n.title FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE b.parent = 0 AND n.status = 1 AND n.moderate = 0 ORDER BY b.weight, n.title'));
 
-  return $output;
+  $books = array();
+  while ($node = db_fetch_object($result)) {
+    $books[] = l($node->title, 'node/'. $node->nid);
+  }
+
+  return theme('item_list', $books);
 }
 
 /**
