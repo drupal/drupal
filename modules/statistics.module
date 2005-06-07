@@ -47,6 +47,8 @@ function statistics_help($section) {
       return t('<p>This page shows you the most recent hits.</p>');
     case 'admin/logs/referrers':
       return t('<p>This page shows you all external referrers. These are links pointing to your web site from outside your web site.</p>');
+    case 'admin/logs/visitors':
+      return t('<p>When you ban a visitor, you prevent his IP address from accessing your site. Unlike blocking a user, banning a visitor works even for anonymous users. The most common use for this is to block bots/web crawlers that are consuming too many resources.</p>');
   }
 }
 
@@ -281,18 +283,21 @@ function statistics_top_visitors() {
     array('data' => t('Hits'), 'field' => 'hits', 'sort' => 'desc'),
     array('data' => t('Visitor'), 'field' => 'u.name'),
     array('data' => t('Total page generation time'), 'field' => 'total'),
+    array('data' => t('Operations'))
   );
 
-  $sql = "SELECT COUNT(a.uid) AS hits, a.uid, u.name, a.hostname, SUM(a.timer) AS total FROM {accesslog} a LEFT JOIN {users} u ON a.uid = u.uid GROUP BY a.hostname". tablesort_sql($header);
+  $sql = "SELECT COUNT(a.uid) AS hits, a.uid, u.name, a.hostname, SUM(a.timer) AS total, ac.aid FROM {accesslog} a LEFT JOIN {access} ac ON ac.type = 'host' AND LOWER(a.hostname) LIKE (ac.mask) LEFT JOIN {users} u ON a.uid = u.uid GROUP BY a.hostname". tablesort_sql($header);
   $sql_cnt = "SELECT COUNT(DISTINCT(uid)) FROM {accesslog}";
   $result = pager_query($sql, 30, 0, $sql_cnt);
 
   while ($account = db_fetch_object($result)) {
-    $rows[] = array($account->hits, ($account->uid ? format_name($account) : $account->hostname), format_interval(round($account->total / 1000)));
+    $qs = drupal_get_destination();
+    $ban_link = $account->aid ? l(t('unban'), "admin/access/rules/delete/$account->aid", array(), $qs) : l(t('ban'), "admin/access/rules/add/$account->hostname/host", array(), $qs);
+    $rows[] = array($account->hits, ($account->uid ? format_name($account) : $account->hostname), format_interval(round($account->total / 1000)), $ban_link);
   }
 
   if ($pager = theme('pager', NULL, 30, 0, tablesort_pager())) {
-    $rows[] = array(array('data' => $pager, 'colspan' => '3'));
+    $rows[] = array(array('data' => $pager, 'colspan' => '4'));
   }
 
   drupal_set_title(t('Top visitors in the past %interval', array('%interval' => format_interval(variable_get('statistics_flush_accesslog_timer', 259200)))));
@@ -387,6 +392,7 @@ function statistics_cron() {
 function statistics_title_list($dbfield, $dbrows) {
   return db_query_range(db_rewrite_sql("SELECT n.nid, n.title, u.uid, u.name FROM {node_counter} s INNER JOIN {node} n ON s.nid = n.nid INNER JOIN {users} u ON n.uid = u.uid WHERE %s <> '0' AND n.status = 1 ORDER BY %s DESC"), 's.'. $dbfield, 's.'. $dbfield, 0, $dbrows);
 }
+
 
 /**
  * Retrieves a node's "view statistics".

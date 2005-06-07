@@ -779,6 +779,18 @@ function drupal_get_messages() {
   return $messages;
 }
 
+/**
+ * Perform an access check for a given mask and rule type. Rules are usually created via admin/access/rules page.
+ *
+ */
+function drupal_deny($type, $mask) {
+  $allow = db_fetch_object(db_query("SELECT * FROM {access} WHERE status = 1 AND type = '%s' AND LOWER('%s') LIKE LOWER(mask)", $type, $mask));
+  $deny = db_fetch_object(db_query("SELECT * FROM {access} WHERE status = 0 AND type = '%s' AND LOWER('%s') LIKE LOWER(mask)", $type, $mask));
+
+  return $deny && !$allow;
+}
+
+
 // Start a page timer:
 timer_start('page');
 
@@ -787,6 +799,14 @@ $config = conf_init();
 
 include_once "$config/settings.php";
 include_once 'includes/database.inc';
+
+// deny access to hosts which were banned. t() is not yet available.
+if (drupal_deny('host', $_SERVER['REMOTE_ADDR'])) {
+  header('HTTP/1.0 403 Forbidden');
+  print "Sorry, ". $_SERVER['REMOTE_ADDR']. " has been banned.";
+  exit();
+}
+
 include_once 'includes/session.inc';
 include_once 'includes/module.inc';
 

@@ -376,13 +376,6 @@ function user_mail($mail, $subject, $message, $header) {
   }
 }
 
-function user_deny($type, $mask) {
-  $allow = db_fetch_object(db_query("SELECT * FROM {access} WHERE status = 1 AND type = '%s' AND LOWER('%s') LIKE LOWER(mask)", $type, $mask));
-  $deny = db_fetch_object(db_query("SELECT * FROM {access} WHERE status = 0 AND type = '%s' AND LOWER('%s') LIKE LOWER(mask)", $type, $mask));
-
-  return $deny && !$allow;
-}
-
 function user_fields() {
   static $fields;
 
@@ -678,7 +671,7 @@ function user_menu($may_cache) {
     $items[] = array('path' => 'admin/access/roles/edit', 'title' => t('edit role'),
       'callback' => 'user_admin_role', 'access' => $admin_access,
       'type' => MENU_CALLBACK);
-    $items[] = array('path' => 'admin/access/rules', 'title' => t('account rules'),
+    $items[] = array('path' => 'admin/access/rules', 'title' => t('access rules'),
       'callback' => 'user_admin_access', 'access' => $admin_access,
       'type' => MENU_LOCAL_TASK, 'weight' => 10);
     $items[] = array('path' => 'admin/access/rules/list', 'title' => t('list'),
@@ -805,7 +798,7 @@ function user_login($edit = array(), $msg = '') {
     drupal_goto('user');
   }
 
-  if (user_deny('user', $edit['name'])) {
+  if (drupal_deny('user', $edit['name'])) {
     $error = t('The name %s has been denied access.', array('%s' => theme('placeholder', $edit['name'])));
   }
   else if ($edit['name'] && $edit['pass']) {
@@ -1123,7 +1116,7 @@ function user_edit_validate($uid, &$edit) {
   else if (db_num_rows(db_query("SELECT uid FROM {users} WHERE uid != %d AND LOWER(name) = LOWER('%s')", $uid, $edit['name'])) > 0) {
     form_set_error('name', t('The name %name is already taken.', array('%name' => theme('placeholder', $edit['name']))));
   }
-  else if (user_deny('user', $edit['name'])) {
+  else if (drupal_deny('user', $edit['name'])) {
     form_set_error('name', t('The name %name has been denied access.', array('%name' => theme('placeholder', $edit['name']))));
   }
 
@@ -1134,7 +1127,7 @@ function user_edit_validate($uid, &$edit) {
   else if (db_num_rows(db_query("SELECT uid FROM {users} WHERE uid != %d AND LOWER(mail) = LOWER('%s')", $uid, $edit['mail'])) > 0) {
     form_set_error('mail', t('The e-mail address %email is already taken.', array('%email' => theme('placeholder', $edit['mail']))));
   }
-  else if (user_deny('mail', $edit['mail'])) {
+  else if (drupal_deny('mail', $edit['mail'])) {
     form_set_error('mail', t('The e-mail address %email has been denied access.', array('%email' => theme('placeholder', $edit['mail']))));
   }
 
@@ -1391,7 +1384,7 @@ function user_admin_access_check() {
   $edit = $_POST['edit'];
 
   if ($op) {
-    if (user_deny($edit['type'], $edit['test'])) {
+    if (drupal_deny($edit['type'], $edit['test'])) {
       drupal_set_message(t('%test is not allowed.', array('%test' => theme('placeholder', $edit['test']))));
     }
     else {
@@ -1399,15 +1392,20 @@ function user_admin_access_check() {
     }
   }
 
-  $form = form_textfield(t('Username'), 'test', '', 32, 64, t('Enter a username to check if it will be denied or allowed.'));
+  $form = form_textfield('', 'test', '', 32, 64, t('Enter a username to check if it will be denied or allowed.'));
   $form .= form_hidden('type', 'user');
   $form .= form_submit(t('Check username'));
-  $output .= form($form);
+  $output .= form_group(t('Username'), form($form));
 
-  $form = form_textfield(t('E-mail'), 'test', '', 32, 64, t('Enter an e-mail address to check if it will be denied or allowed.'));
+  $form = form_textfield('', 'test', '', 32, 64, t('Enter an e-mail address to check if it will be denied or allowed.'));
   $form .= form_hidden('type', 'mail');
   $form .= form_submit(t('Check e-mail'));
-  $output .= form($form);
+  $output .= form_group(t('E-mail'), form($form));
+
+  $form = form_textfield('', 'test', '', 32, 64, t('Enter a host to check if it will be denied or allowed.'));
+  $form .= form_hidden('type', 'host');
+  $form .= form_submit(t('Check host'));
+  $output .= form_group(t('Host'), form($form));
 
   return $output;
 }
@@ -1415,7 +1413,7 @@ function user_admin_access_check() {
 /**
  * Menu callback: add an access rule
  */
-function user_admin_access_add() {
+function user_admin_access_add($mask = NULL, $type = NULL) {
   if ($edit = $_POST['edit']) {
     if (!$edit['mask']) {
       form_set_error('mask', t('You must enter a mask.'));
@@ -1426,6 +1424,10 @@ function user_admin_access_add() {
       drupal_set_message(t('The access rule has been added.'));
       drupal_goto('admin/access/rules');
     }
+  }
+  else {
+    $edit['mask'] = $mask;
+    $edit['type'] = $type;
   }
 
   $form = _user_admin_access_form($edit);
@@ -1482,7 +1484,7 @@ function user_admin_access_edit($aid = 0) {
 
 function _user_admin_access_form($edit) {
   $output = '<div class="access-type">'. form_radios(t('Access type'), 'status', $edit['status'], array('1' => t('Allow'), '0' => t('Deny'))) .'</div>';
-  $output .= '<div class="rule-type">'. form_radios(t('Rule type'), 'type', $edit['type'] ? $edit['type'] : 'user', array('user' => t('Username'), 'mail' => t('E-mail'))) .'</div>';
+  $output .= '<div class="rule-type">'. form_radios(t('Rule type'), 'type', $edit['type'] ? $edit['type'] : 'user', array('user' => t('Username'), 'mail' => t('E-mail'), 'host' => t('Host'))) .'</div>';
   $output .= '<div class="mask">'. form_textfield(t('Mask'), 'mask', $edit['mask'], 32, 64, '%: '. t('Matches any number of characters, even zero characters') .'.<br />_: '. t('Matches exactly one character.'), NULL, TRUE) .'</div>';
 
   return $output;
@@ -1494,7 +1496,7 @@ function _user_admin_access_form($edit) {
 function user_admin_access() {
   $header = array(array('data' => t('Access type'), 'field' => 'status'), array('data' => t('Rule type'), 'field' => 'type'), array('data' =>t('Mask'), 'field' => 'mask'), array('data' => t('Operations'), 'colspan' => 2));
   $result = db_query("SELECT aid, type, status, mask FROM {access}". tablesort_sql($header));
-  $access_types = array('user' => t('username'), 'mail' => t('e-mail'));
+  $access_types = array('user' => t('username'), 'mail' => t('e-mail'), 'host' => t('host'));
   $rows = array();
   while ($rule = db_fetch_object($result)) {
     $rows[] = array($rule->status ? t('allow') : t('deny'), $access_types[$rule->type], $rule->mask, l(t('edit'), 'admin/access/rules/edit/'. $rule->aid), l(t('delete'), 'admin/access/rules/delete/'. $rule->aid));
@@ -1751,8 +1753,8 @@ function user_help($section) {
     case 'admin/user/create':
     case 'admin/user/account/create':
       return t('<p>This web page allows the administrators to register a new users by hand. Note that you cannot have a user where either the e-mail address or the username match another user in the system.</p>');
-    case 'admin/access/rules':
-      return t('<p>Set up username and e-mail address access rules for new accounts. If a username or email address for a new account matches any deny rule, but not an allow rule, then the new account will not be allowed to be created.</p>');
+    case strstr($section, 'admin/access/rules'):
+      return t('<p>Set up username and e-mail address access rules for new accounts. If a username or email address for a new account matches any deny rule, but not an allow rule, then the new account will not be allowed to be created. A host rule is effective for every page view, not just registrations.</p>');
     case 'admin/access':
       return t('<p>In this area you will define the permissions for each user role (role names are defined on the <a href="%role">user roles page</a>). Each permission describes a fine-grained logical operation, such as being able to access the administration pages, or adding/modifying a user account. You could say a permission represents access granted to a user to perform a set of operations.</p>', array('%role' => url('admin/access/roles')));
     case 'admin/access/roles':

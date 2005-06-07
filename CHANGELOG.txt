@@ -12,6 +12,9 @@ Drupal x.x.x, xxxx-xx-xx (development version)
 - profiles:
     * added a block to display author information along with posts.
     * added support for private profile fields.
+- statistics module:
+    * added the ability to track page generation times.
+    * made it possible to block certain IPs/hostnames.
 - book module:
     * added Docbook-like XML export functionality.
 - performance:
