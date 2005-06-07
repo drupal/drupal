@@ -185,8 +185,6 @@ function _system_zonelist() {
 }
 
 function system_view_general() {
-  global $conf;
-
   // General settings:
   $group  = form_textfield(t('Name'), 'site_name', variable_get('site_name', 'drupal'), 70, 70, t('The name of this web site.'));
   $group .= form_textfield(t('E-mail address'), 'site_mail', variable_get('site_mail', ini_get('sendmail_from')), 70, 128, t('A valid e-mail address for this website, used by the auto-mailer during registration, new password requests, notifications, etc.'));
