@@ -499,7 +499,7 @@ function theme_links($links, $delimiter = ' | ') {
  *   A string containing the image tag.
  */
 function theme_image($path, $alt = '', $title = '', $attributes = NULL, $getsize = TRUE) {
-  if (!$getsize || (file_exists($path) && (list($width, $height, $type, $image_attributes) = @getimagesize($path)))) {
+  if (!$getsize || (is_file($path) && (list($width, $height, $type, $image_attributes) = @getimagesize($path)))) {
     $attributes = drupal_attributes($attributes);
     return '<img src="'. check_url($path) .'" alt="'. check_plain($alt) .'" title="'. check_plain($title) .'" '. $image_attributes . $attributes .'/>';
   }
