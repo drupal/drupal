@@ -958,7 +958,7 @@ function _forum_icon($new_posts, $num_posts = 0, $comment_mode = 0, $sticky = 0)
     }
 
     // default
-    $file = "misc/forum-$icon.png";
+    $file = variable_get('forum_icon_path', 'misc') ."/forum-$icon.png";
 
     $output = theme('image', $file);
   }
