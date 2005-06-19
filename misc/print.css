@@ -9,10 +9,10 @@ th {
   color: #006;
   border-bottom: 1px solid #ccc;
 }
-tr.dark {
+tr.odd {
   background-color: #ddd;
 }
-tr.light {
+tr.even {
   background-color: #fff;
 }
 td {

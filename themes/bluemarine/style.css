@@ -10,7 +10,7 @@ body {
   background-color: #fff;
   font: 76% Verdana, Arial, Helvetica, sans-serif;
 }
-tr.dark td, tr.light td {
+tr.odd td, tr.even td {
   padding: 0.3em;
 }
 h1, h2, h3, h4, h5, h6 {

@@ -30,11 +30,11 @@ th {
 th.active img {
   display: inline;
 }
-tr.dark, tr.light {
+tr.even, tr.odd {
   background-color: #eee;
   border-bottom: 1px solid #ccc;
 }
-tr.dark, tr.light {
+tr.even, tr.odd {
   padding: 0.1em 0.6em;
 }
 td.active {
@@ -134,7 +134,7 @@ br.clear {
   margin-top: 1em;
   margin-bottom: 1em;
 }
-tr.light .form-item, tr.dark .form-item {
+tr.odd .form-item, tr.even .form-item {
   margin-top: 0;
   margin-bottom: 0;
   white-space: nowrap;

@@ -702,8 +702,8 @@ function theme_table($header, $rows, $attributes = NULL) {
         $cells = $row;
       }
 
-      // Add light/dark class
-      $class = ($number % 2 == 1) ? 'light': 'dark';
+      // Add odd/even class
+      $class = ($number % 2 == 1) ? 'even': 'odd';
       if (isset($attributes['class'])) {
         $attributes['class'] .= ' '. $class;
       }

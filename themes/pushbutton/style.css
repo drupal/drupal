@@ -24,7 +24,7 @@ img {
   display: block;
   border: 0;
 }
-tr.dark td, tr.light td {
+tr.odd td, tr.even td {
   padding: 0.3em;
 }
 a:link {
@@ -509,7 +509,7 @@ table#footer-menu {
 #tracker th img {
   float: right;
 }
-#tracker tr.light, #tracker tr.dark {
+#tracker tr.even, #tracker tr.odd {
   background-color: #fff;
 }
 #tracker td {
@@ -539,10 +539,10 @@ table#footer-menu {
 #forum table tr th img  {
   margin: 0;
 }
-#forum tr.dark {
+#forum tr.odd {
   background: #e0edfb;
 }
-#forum tr.light {
+#forum tr.even {
   background: #fff;
 }
 #forum td {
