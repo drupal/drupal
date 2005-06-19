@@ -472,7 +472,7 @@ function theme_links($links, $delimiter = ' | ') {
  *   A string containing the image tag.
  */
 function theme_image($path, $alt = '', $title = '', $attr = '', $getsize = true) {
-  if (!$getsize || (file_exists($path) && (list($width, $height, $type, $attr) = @getimagesize($path)))) {
+  if (!$getsize || (is_file($path) && (list($width, $height, $type, $image_attributes) = @getimagesize($path)))) {
     return '<img src="'. check_url($path) .'" '. $attr .' alt="'. check_plain($alt) .'" title="'. check_plain($title) .'" />';
   }
 }

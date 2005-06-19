@@ -80,7 +80,7 @@ function image_toolkit_invoke($method, $params = array()) {
  *      'mime_type': image's MIME type ('image/jpeg', 'image/gif', etc.)
  */
 function image_get_info($file) {
-  if (!file_exists($file)) {
+  if (!is_file($file)) {
     return false;
   }
 
