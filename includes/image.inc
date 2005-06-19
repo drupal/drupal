@@ -1,5 +1,5 @@
 <?php
-// $Id: image.inc,v 1.4 2005/03/29 00:01:23 unconed Exp $
+// $Id: image.inc,v 1.5 2005/06/19 08:59:06 dries Exp $
 
 /**
  * Return a list of available toolkits.
@@ -80,7 +80,7 @@ function image_toolkit_invoke($method, $params = array()) {
  *      'mime_type': image's MIME type ('image/jpeg', 'image/gif', etc.)
  */
 function image_get_info($file) {
-  if (!file_exists($file)) {
+  if (!is_file($file)) {
     return false;
   }
 
