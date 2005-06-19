@@ -672,7 +672,7 @@ function theme_table($header, $rows, $attributes = NULL) {
   $output = '<table'. drupal_attributes($attributes) .">\n";
 
   // Format the table header:
-  if (is_array($header)) {
+  if (count($header)) {
     $ts = tablesort_init($header);
     $output .= ' <tr>';
     foreach ($header as $cell) {
@@ -683,7 +683,7 @@ function theme_table($header, $rows, $attributes = NULL) {
   }
 
   // Format the table rows:
-  if (is_array($rows)) {
+  if (count($rows)) {
     foreach ($rows as $number => $row) {
       $attributes = array();
 
