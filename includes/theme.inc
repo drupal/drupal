@@ -1,5 +1,5 @@
 <?php
-/* $Id: theme.inc,v 1.241 2005/06/19 08:13:14 dries Exp $ */
+/* $Id: theme.inc,v 1.242 2005/06/19 08:50:46 dries Exp $ */
 
 /**
  * @file
@@ -702,8 +702,8 @@ function theme_table($header, $rows, $attributes = NULL) {
         $cells = $row;
       }
 
-      // Add light/dark class
-      $class = ($number % 2 == 1) ? 'light': 'dark';
+      // Add odd/even class
+      $class = ($number % 2 == 1) ? 'even': 'odd';
       if (isset($attributes['class'])) {
         $attributes['class'] .= ' '. $class;
       }

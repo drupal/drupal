@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.10 2005/05/05 10:58:27 dries Exp $ */
+/* $Id: style.css,v 1.11 2005/06/19 08:50:46 dries Exp $ */
 
 /*
 ** HTML elements
@@ -24,7 +24,7 @@ img {
   display: block;
   border: 0;
 }
-tr.dark td, tr.light td {
+tr.odd td, tr.even td {
   padding: 0.3em;
 }
 a:link {
@@ -509,7 +509,7 @@ table#footer-menu {
 #tracker th img {
   float: right;
 }
-#tracker tr.light, #tracker tr.dark {
+#tracker tr.even, #tracker tr.odd {
   background-color: #fff;
 }
 #tracker td {
@@ -539,10 +539,10 @@ table#footer-menu {
 #forum table tr th img  {
   margin: 0;
 }
-#forum tr.dark {
+#forum tr.odd {
   background: #e0edfb;
 }
-#forum tr.light {
+#forum tr.even {
   background: #fff;
 }
 #forum td {
