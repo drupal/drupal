@@ -1691,8 +1691,11 @@ function user_admin_account() {
   $status = array(t('blocked'), t('active'));
   $destination = drupal_get_destination();
   while ($account = db_fetch_object($result)) {
-    $rows[] = array(format_name($account), $status[$account->status], format_interval(time() - $account->created), t('%time ago', array('%time' => format_interval(time() - $account->access))), l(t('edit'), "user/$account->uid/edit", array(), $destination));
-
+    $rows[] = array(format_name($account),
+                    $status[$account->status],
+                    format_interval(time() - $account->created),
+                    $account->access ? t('%time ago', array('%time' => format_interval(time() - $account->access))) : t('never'),
+                    l(t('edit'), "user/$account->uid/edit", array(), $destination));
   }
 
   $pager = theme('pager', NULL, 50, 0, tablesort_pager());
