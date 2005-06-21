@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.64 2005/06/01 03:21:44 unconed Exp $
+// $Id: filter.module,v 1.65 2005/06/21 09:45:44 dries Exp $
 
 /**
  * @file
@@ -725,7 +725,8 @@ function filter_form($name = 'format', $value = FILTER_FORMAT_DEFAULT) {
       $output .= theme('filter_tips', $tips);
       $output .= '</div>';
     }
-    return theme('form_element', t('Input format'), $output, $extra, NULL, _form_get_error($name));
+    $group = theme('form_element', NULL, $output, $extra, NULL, _form_get_error($name));
+    return form_group_collapsible(t('Input format'), $group, TRUE);
   }
   else {
     // Only one format available: use a hidden form item and only show tips.

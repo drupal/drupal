@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.108 2005/06/19 08:50:46 dries Exp $ */
+/* $Id: drupal.css,v 1.109 2005/06/21 09:45:43 dries Exp $ */
 
 /*
 ** HTML elements
@@ -585,4 +585,32 @@ input.form-autocomplete {
 }
 input.throbbing {
   background-position: 100% -18px;
+}
+
+/*
+** Collapsing fieldsets
+*/
+html.js fieldset.collapsed {
+  border-bottom-width: 0;
+  border-left-width: 0;
+  border-right-width: 0;
+  margin-bottom: 0;
+}
+
+html.js fieldset.collapsed * {
+   display: none;
+}
+
+html.js fieldset.collapsed legend,
+html.js fieldset.collapsed legend * {
+  display: inline;
+}
+
+html.js fieldset.collapsible legend a {
+  padding-left: 15px;
+  background: url('menu-expanded.png') 5px 50% no-repeat;
+}
+
+html.js fieldset.collapsed legend a {
+  background-image: url('menu-collapsed.png');
 }

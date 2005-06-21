@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.496 2005/06/06 14:07:04 dries Exp $
+// $Id: node.module,v 1.497 2005/06/21 09:45:44 dries Exp $
 
 /**
  * @file
@@ -1292,7 +1292,7 @@ function node_form($edit) {
     $author .= form_textfield(t('Authored on'), 'date', $edit->date, 20, 25, NULL, NULL, TRUE);
 
     $output .= '<div class="authored">';
-    $output .= form_group(t('Authoring information'), $author);
+    $output .= form_group_collapsible(t('Authoring information'), $author, TRUE);
     $output .= "</div>\n";
 
     $node_options = variable_get('node_options_'. $edit->type, array('status', 'promote'));
@@ -1303,7 +1303,7 @@ function node_form($edit) {
     $options .= form_checkbox(t('Create new revision'), 'revision', 1, isset($edit->revision) ? $edit->revision : in_array('revision', $node_options));
 
     $output .= '<div class="options">';
-    $output .= form_group(t('Options'), $options);
+    $output .= form_group_collapsible(t('Publishing options'), $options, TRUE);
     $output .= "</div>\n";
 
     $extras .= implode('</div><div class="extra">', node_invoke_nodeapi($edit, 'form admin'));
