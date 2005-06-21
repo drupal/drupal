@@ -1110,6 +1110,33 @@ function form_group($legend, $group, $description = NULL, $attributes = NULL) {
 }
 
 /**
+ * Format a group of form items.
+ *
+ * @param $legend
+ *   The label for the form item group.
+ * @param $group
+ *   The form items within the group, as an HTML string.
+ * @param $collapsed
+ *   A boolean value decided whether the group starts collapsed.
+ * @param $description
+ *   Explanatory text to display after the form item group.
+ * @param $attributes
+ *   An associative array of HTML attributes to add to the fieldset tag.
+ * @return
+ *   A themed HTML string representing the form item group.
+ */
+function form_group_collapsible($legend, $group, $collapsed = FALSE, $description = NULL, $attributes = NULL) {
+  drupal_add_js('misc/collapse.js');
+
+  $attributes['class'] .= ' collapsible';
+  if ($collapsed) {
+    $attributes['class'] .= ' collapsed';
+  }
+
+  return '<fieldset' . drupal_attributes($attributes) .'>' . ($legend ? '<legend>'. $legend .'</legend>' : '') . $group . ($description ? '<div class="description">'. $description .'</div>' : '') . "</fieldset>\n";
+}
+
+/**
  * Format a radio button.
  *
  * @param $title

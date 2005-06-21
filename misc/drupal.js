@@ -8,6 +8,7 @@ function isJsEnabled() {
      !document.getElementsByTagName ||
      !document.createElement        ||
      !document.createTextNode       ||
+     !document.documentElement      ||
      !document.getElementById);
   }
   return document.jsEnabled;
@@ -15,7 +16,7 @@ function isJsEnabled() {
 
 // Global Killswitch
 if (isJsEnabled()) {
-
+  document.documentElement.className = 'js';
 }
 
 /**
