@@ -304,7 +304,7 @@ function user_password($length = 10) {
  *   (optional) The account to check, if not given use currently logged in user.
  *
  * @return
- *   TRUE iff the current user has the requested permission.
+ *   boolean TRUE if the current user has the requested permission.
  *
  * All permission checks in Drupal should go through this function. This
  * way, we guarantee consistent behavior, and ensure that the superuser
@@ -319,8 +319,8 @@ function user_access($string, $account = NULL) {
   }
 
   // User #1 has all privileges:
-  if ($account->uid == 1) {
-    return 1;
+  if ($account->uid === 1) {
+    return TRUE;
   }
 
   // To reduce the number of SQL queries, we cache the user's permissions
@@ -329,12 +329,14 @@ function user_access($string, $account = NULL) {
     $result = db_query('SELECT DISTINCT(p.perm) FROM {role} r INNER JOIN {permission} p ON p.rid = r.rid INNER JOIN {users_roles} ur ON ur.rid = r.rid WHERE ur.uid = %d', $account->uid);
 
     while ($row = db_fetch_object($result)) {
-      $perm[$account->uid] .= "$row->perm, ";
+      $perm[$account->uid][] = $row->perm;
     }
   }
+
   if (isset($perm[$account->uid])) {
-    return strstr($perm[$account->uid], "$string, ");
+    return in_array($string, $perm[$account->uid]);
   }
+
   return FALSE;
 }
 
