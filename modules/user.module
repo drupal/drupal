@@ -319,7 +319,7 @@ function user_access($string, $account = NULL) {
   }
 
   // User #1 has all privileges:
-  if ($account->uid === 1) {
+  if ($account->uid == 1) {
     return TRUE;
   }
 
