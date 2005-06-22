@@ -351,7 +351,7 @@ function menu_execute_active_handler() {
     $arguments = array_merge($arguments, explode('/', $arg));
   }
 
-  return call_user_func_array($menu['items'][$mid]['callback'], $arguments);
+  return function_exists($menu['items'][$mid]['callback']) ?  call_user_func_array($menu['items'][$mid]['callback'], $arguments) : '';
 }
 
 /**

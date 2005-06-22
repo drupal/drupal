@@ -7,7 +7,7 @@
  */
 
 include_once 'includes/bootstrap.inc';
-include_once 'includes/common.inc' ;
+drupal_bootstrap('full');
 
 // If not in 'safe mode', increase the maximum execution time:
 if (!ini_get('safe_mode')) {

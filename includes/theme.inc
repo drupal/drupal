@@ -34,6 +34,7 @@ define('MARK_UPDATED', 2);
 function init_theme() {
   global $user, $custom_theme, $theme_engine, $theme_key;
 
+  drupal_bootstrap('database');
   $themes = list_themes();
 
   // Only select the user selected theme if it is available in the

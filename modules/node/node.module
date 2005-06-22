@@ -1470,7 +1470,7 @@ function node_preview($node) {
 
     // Display a preview of the node:
     // Previewing alters $node so it needs to be cloned.
-    $output = theme('node_preview', clone($node));
+    $output = theme('node_preview', drupal_clone($node));
 
     $output .= node_form($node);
 

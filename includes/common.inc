@@ -812,7 +812,7 @@ function format_plural($count, $singular, $plural) {
   if ($count == 1) return t($singular, array("%count" => $count));
 
   // get the plural index through the gettext formula
-  $index = (function_exists('locale')) ? locale_get_plural($count) : -1;
+  $index = (function_exists('locale_get_plural')) ? locale_get_plural($count) : -1;
   if ($index < 0) { // backward compatibility
     return t($plural, array("%count" => $count));
   }
@@ -2001,12 +2001,8 @@ function drupal_get_path($type, $name) {
 /**
  * Provide a substitute clone() function for PHP4.
  */
-if (version_compare(phpversion(), '5.0') < 0) {
-  eval('
-    function clone($object) {
-      return $object;
-    }
-  ');
+function drupal_clone($object) {
+  return version_compare(phpversion(), '5.0') < 0 ? $object : clone($object);
 }
 
 /**
@@ -2054,44 +2050,48 @@ function drupal_implode_autocomplete($array) {
   return implode('||', $output);
 }
 
-// Set the Drupal custom error handler.
-set_error_handler('error_handler');
+function _drupal_bootstrap_full() {
+  static $called;
+  global $locale;
 
-include_once 'includes/theme.inc';
-include_once 'includes/pager.inc';
-include_once 'includes/menu.inc';
-include_once 'includes/tablesort.inc';
-include_once 'includes/file.inc';
-include_once 'includes/xmlrpc.inc';
-include_once 'includes/image.inc';
-
-// Emit the correct charset HTTP header.
-drupal_set_header('Content-Type: text/html; charset=utf-8');
-
-// Initialize $_GET['q'] prior to loading modules and invoking hook_init().
-if (!empty($_GET['q'])) {
-  $_GET['q'] = drupal_get_normal_path(trim($_GET['q'], '/'));
-}
-else {
-  $_GET['q'] = drupal_get_normal_path(variable_get('site_frontpage', 'node'));
-}
-
-// Initialize all enabled modules.
-module_init();
-
-if (!user_access('bypass input data check')) {
-  // We can't use $_REQUEST because it consists of the contents of $_POST,
-  // $_GET and $_COOKIE: if any of the input arrays share a key, only one
-  // value will be verified.
-  if (!valid_input_data($_GET)
-   || !valid_input_data($_POST)
-   || !valid_input_data($_COOKIE)
-   || !valid_input_data($_FILES)) {
-    die('Terminated request because of suspicious input data.');
+  if ($called) {
+    return;
   }
+  $called = 1;
+  require_once './includes/theme.inc';
+  require_once './includes/pager.inc';
+  require_once './includes/menu.inc';
+  require_once './includes/tablesort.inc';
+  require_once './includes/file.inc';
+  require_once './includes/xmlrpc.inc';
+  require_once './includes/image.inc';
+  // Set the Drupal custom error handler.
+  set_error_handler('error_handler');
+  // Emit the correct charset HTTP header.
+  drupal_set_header('Content-Type: text/html; charset=utf-8');
+  // Initialize $_GET['q'] prior to loading modules and invoking hook_init().
+  if (!empty($_GET['q'])) {
+    $_GET['q'] = drupal_get_normal_path(trim($_GET['q'], '/'));
+  }
+  else {
+    $_GET['q'] = drupal_get_normal_path(variable_get('site_frontpage', 'node'));
+  }
+  // Initialize all enabled modules.
+  module_init();
+  if (!user_access('bypass input data check')) {
+    // We can't use $_REQUEST because it consists of the contents of $_POST,
+    // $_GET and $_COOKIE: if any of the input arrays share a key, only one
+    // value will be verified.
+    if (!valid_input_data($_GET)
+    || !valid_input_data($_POST)
+    || !valid_input_data($_COOKIE)
+    || !valid_input_data($_FILES)) {
+      die('Terminated request because of suspicious input data.');
+    }
+  }
+  fix_gpc_magic();
+  fix_checkboxes();
+  // Initialize the localization system.
+  $locale = locale_initialize();
 }
-
-// Initialize the localization system.
-$locale = locale_initialize();
-
 ?>

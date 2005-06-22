@@ -789,27 +789,71 @@ function drupal_is_denied($type, $mask) {
   return $deny && !$allow;
 }
 
+/**
+ * A string describing a phase of Drupal to load. Each phase adds to the
+ * previous one, so invoking a later phase automatically runs the earlier
+ * phases too. The most important usage is that if you want to access
+ * Drupal database from a script without loading anything else, you can
+ * include bootstrap.inc, and call drupal_bootstrap('database').
+ *
+ * @param $phase
+ *   A string. Allowed values are:
+ *    'database': initialize database layer.
+ *    'session': initialize session handling.
+ *    'page cache': load bootstrap.inc and module.inc, start the variable
+ *                  system and try to serve a page from the cache.
+ *    'full': Drupal is fully loaded, validate and fix input data.
+ */
+function drupal_bootstrap($phase) {
+  static $phases = array('database', 'session', 'page cache', 'full');
 
-// Start a page timer:
-timer_start('page');
-
-unset($conf);
-$config = conf_init();
-
-include_once "$config/settings.php";
-include_once 'includes/database.inc';
-
-// deny access to hosts which were banned. t() is not yet available.
-if (drupal_is_denied('host', $_SERVER['REMOTE_ADDR'])) {
-  header('HTTP/1.0 403 Forbidden');
-  print "Sorry, ". $_SERVER['REMOTE_ADDR']. " has been banned.";
-  exit();
+  while ($current_phase = array_shift($phases)) {
+    _drupal_bootstrap($current_phase);
+    if ($phase == $current_phase) {
+      return;
+    }
+  }
 }
 
-include_once 'includes/session.inc';
-include_once 'includes/module.inc';
+function _drupal_bootstrap($phase) {
+  global $conf;
 
-// Initialize configuration variables, using values from conf.php if available.
-$conf = variable_init(isset($conf) ? $conf : array());
+  switch ($phase) {
+    case 'database':
+      global $db_url, $base_url;
+      unset($conf);
+      require_once conf_init() .'/settings.php';
+      require_once './includes/database.inc';
+      // Initialize the default database.
+      db_set_active();
+      break;
+    case 'session':
+      require_once './includes/session.inc';
+      session_set_save_handler("sess_open", "sess_close", "sess_read", "sess_write", "sess_destroy", "sess_gc");
+      session_start();
+      break;
+    case 'page cache':
+      require_once './includes/bootstrap.inc';
+      require_once './includes/module.inc';
+      // Start a page timer:
+      timer_start('page');
+
+      // deny access to hosts which were banned. t() is not yet available.
+      if (drupal_is_denied('host', $_SERVER['REMOTE_ADDR'])) {
+        header('HTTP/1.0 403 Forbidden');
+        print "Sorry, ". $_SERVER['REMOTE_ADDR']. " has been banned.";
+        exit();
+      }
+
+      // Initialize configuration variables, using values from conf.php if available.
+      $conf = variable_init(isset($conf) ? $conf : array());
+      drupal_page_header();
+      break;
+    case 'full':
+      require_once './includes/common.inc';
+      _drupal_bootstrap_full();
+      break;
+  }
+}
 
 ?>

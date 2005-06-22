@@ -9,12 +9,8 @@
  * prints the appropriate page.
  */
 
-include_once 'includes/bootstrap.inc';
-drupal_page_header();
-include_once 'includes/common.inc';
-
-fix_gpc_magic();
-fix_checkboxes();
+require_once './includes/bootstrap.inc';
+drupal_bootstrap('full');
 
 $return = menu_execute_active_handler();
 switch ($return) {
