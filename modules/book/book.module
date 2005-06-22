@@ -281,7 +281,7 @@ function book_outline() {
         $page = db_fetch_object(db_query('SELECT * FROM {book} WHERE nid = %d', $node->nid));
 
         $output  = form_select(t('Parent'), 'parent', $page->parent, book_toc($node->nid), t('The parent page in the book.'));
-        $output .= form_weight(t('Weight'), 'weight', $node->weight, 15, t('Pages at a given level are ordered first by weight and then by title.'));
+        $output .= form_weight(t('Weight'), 'weight', $page->weight, 15, t('Pages at a given level are ordered first by weight and then by title.'));
 
         if ($page->nid) {
           $output .= form_submit(t('Update book outline'));
