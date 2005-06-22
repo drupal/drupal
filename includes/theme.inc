@@ -1,5 +1,5 @@
 <?php
-/* $Id: theme.inc,v 1.243 2005/06/19 08:59:06 dries Exp $ */
+/* $Id: theme.inc,v 1.244 2005/06/22 20:19:58 dries Exp $ */
 
 /**
  * @file
@@ -34,6 +34,7 @@ define('MARK_UPDATED', 2);
 function init_theme() {
   global $user, $custom_theme, $theme_engine, $theme_key;
 
+  drupal_bootstrap('database');
   $themes = list_themes();
 
   // Only select the user selected theme if it is available in the

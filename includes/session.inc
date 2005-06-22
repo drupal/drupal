@@ -1,13 +1,10 @@
 <?php
-// $Id: session.inc,v 1.16 2005/05/07 11:39:54 dries Exp $
+// $Id: session.inc,v 1.17 2005/06/22 20:19:58 dries Exp $
 
 /**
  * @file
  * User session handling functions.
  */
-
-session_set_save_handler("sess_open", "sess_close", "sess_read", "sess_write", "sess_destroy", "sess_gc");
-session_start();
 
 /*** Session functions *****************************************************/
 

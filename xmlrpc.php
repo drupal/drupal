@@ -1,5 +1,5 @@
 <?php
-// $Id: xmlrpc.php,v 1.9 2004/08/21 06:42:34 dries Exp $
+// $Id: xmlrpc.php,v 1.10 2005/06/22 20:19:56 dries Exp $
 
 /**
  * @file
@@ -7,8 +7,7 @@
  */
 
 include_once 'includes/bootstrap.inc';
-include_once 'includes/common.inc';
-include_once 'includes/xmlrpc.inc';
+drupal_bootstrap('full');
 include_once 'includes/xmlrpcs.inc';
 
 $functions = module_invoke_all('xmlrpc');

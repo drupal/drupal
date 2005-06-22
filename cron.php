@@ -1,5 +1,5 @@
 <?php
-// $Id: cron.php,v 1.28 2005/01/09 09:22:38 dries Exp $
+// $Id: cron.php,v 1.29 2005/06/22 20:19:55 dries Exp $
 
 /**
  * @file
@@ -7,7 +7,7 @@
  */
 
 include_once 'includes/bootstrap.inc';
-include_once 'includes/common.inc' ;
+drupal_bootstrap('full');
 
 // If not in 'safe mode', increase the maximum execution time:
 if (!ini_get('safe_mode')) {

@@ -1,5 +1,5 @@
 <?php
-// $Id: index.php,v 1.84 2005/05/21 18:33:58 dries Exp $
+// $Id: index.php,v 1.85 2005/06/22 20:19:56 dries Exp $
 
 /**
  * @file
@@ -9,12 +9,8 @@
  * prints the appropriate page.
  */
 
-include_once 'includes/bootstrap.inc';
-drupal_page_header();
-include_once 'includes/common.inc';
-
-fix_gpc_magic();
-fix_checkboxes();
+require_once './includes/bootstrap.inc';
+drupal_bootstrap('full');
 
 $return = menu_execute_active_handler();
 switch ($return) {

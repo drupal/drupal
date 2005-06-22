@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.40 2005/04/08 14:24:03 dries Exp $
+// $Id: database.inc,v 1.41 2005/06/22 20:19:58 dries Exp $
 
 /**
  * @file
@@ -278,8 +278,5 @@ function db_rewrite_sql($query, $primary_table = 'n', $primary_field = 'nid',  $
 /**
  * @} End of "defgroup database".
  */
-
-// Initialize the default database.
-db_set_active();
 
 ?>

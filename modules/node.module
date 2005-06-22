@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.498 2005/06/21 18:58:26 dries Exp $
+// $Id: node.module,v 1.499 2005/06/22 20:19:58 dries Exp $
 
 /**
  * @file
@@ -1470,7 +1470,7 @@ function node_preview($node) {
 
     // Display a preview of the node:
     // Previewing alters $node so it needs to be cloned.
-    $output = theme('node_preview', clone($node));
+    $output = theme('node_preview', drupal_clone($node));
 
     $output .= node_form($node);
 
