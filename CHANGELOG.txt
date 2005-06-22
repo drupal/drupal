@@ -8,7 +8,8 @@ Drupal x.x.x, xxxx-xx-xx (development version)
     * converted the pushbutton theme from XTemplate to PHPTemplate.
 - usability:
     * reworked the 'request new password' functionality.
-    * added support for auto-complete forms (AJAX)
+    * reworked the node edit form.
+    * added support for auto-complete forms (AJAX).
 - profiles:
     * added a block to display author information along with posts.
     * added support for private profile fields.
