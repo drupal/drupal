@@ -812,36 +812,38 @@ function user_login($edit = array(), $msg = '') {
     drupal_goto('user');
   }
 
-  if (user_is_blocked($edit['name'])) {
-    // blocked in user administration
-    $error = t('The username %name has been blocked.', array('%name' => theme('placeholder', $edit['name'])));
-  }
-  else if (drupal_is_denied('user', $edit['name'])) {
-    // denied by access controls
-    $error = t('The name %name is a reserved username.', array('%name' => theme('placeholder', $edit['name'])));
-  }
-  else if ($edit['name'] && $edit['pass']) {
-
-    if (!$user->uid) {
-      $user = user_authenticate($edit['name'], trim($edit['pass']));
+  if (isset($edit['name'])) {
+    if (user_is_blocked($edit['name'])) {
+      // blocked in user administration
+      $error = t('The username %name has been blocked.', array('%name' => theme('placeholder', $edit['name'])));
     }
-
-    if ($user->uid) {
-      watchdog('user', t('Session opened for %name.', array('%name' => theme('placeholder', $user->name))));
-
-      // Update the user table timestamp noting user has logged in.
-      db_query("UPDATE {users} SET login = '%d' WHERE uid = '%s'", time(), $user->uid);
-
-      user_module_invoke('login', $edit, $user);
-
-      // Redirect the user to the page he logged on from.
-      drupal_goto();
+    else if (drupal_is_denied('user', $edit['name'])) {
+      // denied by access controls
+      $error = t('The name %name is a reserved username.', array('%name' => theme('placeholder', $edit['name'])));
     }
-    else {
-      if (!$error) {
-        $error = t('Sorry. Unrecognized username or password.') .' '. l(t('Have you forgotten your password?'), 'user/password');
+    else if ($edit['pass']) {
+
+      if (!$user->uid) {
+        $user = user_authenticate($edit['name'], trim($edit['pass']));
       }
-      watchdog('user', t('Login attempt failed for %user: %error.', array('%user' => theme('placeholder', $edit['name']), '%error' => theme('placeholder', $error))));
+
+      if ($user->uid) {
+        watchdog('user', t('Session opened for %name.', array('%name' => theme('placeholder', $user->name))));
+
+        // Update the user table timestamp noting user has logged in.
+        db_query("UPDATE {users} SET login = '%d' WHERE uid = '%s'", time(), $user->uid);
+
+        user_module_invoke('login', $edit, $user);
+
+        // Redirect the user to the page he logged on from.
+        drupal_goto();
+      }
+      else {
+        if (!$error) {
+          $error = t('Sorry. Unrecognized username or password.') .' '. l(t('Have you forgotten your password?'), 'user/password');
+        }
+        watchdog('user', t('Login attempt failed for %user: %error.', array('%user' => theme('placeholder', $edit['name']), '%error' => theme('placeholder', $error))));
+      }
     }
   }
 
