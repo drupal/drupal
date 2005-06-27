@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.53 2005/06/22 20:19:57 dries Exp $
+// $Id: bootstrap.inc,v 1.54 2005/06/27 18:38:46 dries Exp $
 
 /**
  * @file
@@ -833,7 +833,6 @@ function _drupal_bootstrap($phase) {
       session_start();
       break;
     case 'page cache':
-      require_once './includes/bootstrap.inc';
       require_once './includes/module.inc';
       // Start a page timer:
       timer_start('page');
