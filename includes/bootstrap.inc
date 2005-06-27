@@ -833,7 +833,6 @@ function _drupal_bootstrap($phase) {
       session_start();
       break;
     case 'page cache':
-      require_once './includes/bootstrap.inc';
       require_once './includes/module.inc';
       // Start a page timer:
       timer_start('page');
