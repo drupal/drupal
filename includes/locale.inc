@@ -75,8 +75,8 @@ function _locale_admin_manage_add_screen() {
 
   $edit = &$_POST['edit'];
   $output .= '<h2>'. t('Custom language') .'</h2>';
-  $form = form_textfield(t('Language code'), 'langcode', $edit['langcode'], 70, 12, t("Commonly this is an <a href=\"%iso-codes\">ISO 639 language code</a> with an optional country code for regional variants. Examples include 'en', 'en-US' and 'zh-cn'.", array('%iso-codes' => 'http://www.w3.org/WAI/ER/IG/ert/iso639.htm')));
-  $form .= form_textfield(t('Language name in English'), 'langname', $edit['langname'], 70, 64, t('Name of the language. Will be available for translation in all languages.'));
+  $form = form_textfield(t('Language code'), 'langcode', $edit['langcode'], 60, 12, t("Commonly this is an <a href=\"%iso-codes\">ISO 639 language code</a> with an optional country code for regional variants. Examples include 'en', 'en-US' and 'zh-cn'.", array('%iso-codes' => 'http://www.w3.org/WAI/ER/IG/ert/iso639.htm')));
+  $form .= form_textfield(t('Language name in English'), 'langname', $edit['langname'], 60, 64, t('Name of the language. Will be available for translation in all languages.'));
   $form .= form_submit(t('Add language'));
   $output .= form($form);
 
@@ -945,11 +945,11 @@ function _locale_string_edit($lid) {
   $form = '';
   while ($translation = db_fetch_object($result)) {
     $orig = $translation->source;
-    $form .= (strlen($orig) > 40) ? form_textarea($languages['name'][$translation->locale], $translation->locale, $translation->translation, 70, 15) : form_textfield($languages['name'][$translation->locale], $translation->locale, $translation->translation, 50, 128);
+    $form .= (strlen($orig) > 40) ? form_textarea($languages['name'][$translation->locale], $translation->locale, $translation->translation, 60, 15) : form_textfield($languages['name'][$translation->locale], $translation->locale, $translation->translation, 60, 128);
     unset($languages['name'][$translation->locale]);
   }
   foreach ($languages['name'] as $key => $lang) {
-    $form .= (strlen($orig) > 40) ? form_textarea($lang, $key, '', 70, 15) : form_textfield($lang, $key, '', 50, 128);
+    $form .= (strlen($orig) > 40) ? form_textarea($lang, $key, '', 60, 15) : form_textfield($lang, $key, '', 60, 128);
   }
   $form = form_item(t('Original text'), wordwrap(check_plain($orig, 0))) . $form;
 

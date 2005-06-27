@@ -174,8 +174,8 @@ function path_set_alias($path = NULL, $alias = NULL, $pid = NULL) {
  */
 function path_form($edit = '') {
 
-  $form .= form_textfield(t('Existing system path'), 'src', $edit['src'], 50, 64, t('Specify the existing path you wish to alias. For example: node/28, forum/1, taxonomy/term/1+2.'));
-  $form .= form_textfield(t('New path alias'), 'dst', $edit['dst'], 50, 64, t('Specify an alternative path by which this data can be accessed.  For example, type "about" when writing an about page.  Use a relative path and don\'t add a trailing slash or the URL alias won\'t work.'));
+  $form .= form_textfield(t('Existing system path'), 'src', $edit['src'], 60, 64, t('Specify the existing path you wish to alias. For example: node/28, forum/1, taxonomy/term/1+2.'));
+  $form .= form_textfield(t('New path alias'), 'dst', $edit['dst'], 60, 64, t('Specify an alternative path by which this data can be accessed.  For example, type "about" when writing an about page.  Use a relative path and don\'t add a trailing slash or the URL alias won\'t work.'));
 
   if ($edit['pid']) {
     $form .= form_hidden('pid', $edit['pid']);

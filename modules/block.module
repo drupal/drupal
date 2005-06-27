@@ -275,9 +275,9 @@ function block_admin_configure($module = NULL, $delta = 0) {
       drupal_set_title(t("'%name' block", array('%name' => $info[$delta]['info'])));
 
       // Standard block configurations.
-      $group_1 = form_radios(t('Custom visibility settings'), 'custom', $edit['custom'], array(t('Users cannot control whether or not they see this block.'), t('Show this block by default, but let individual users hide it.'), t('Hide this block by default but let individual users show it.')), t('Allow individual users to customize the visibility of this block in their account settings.'));
-      $group_2 = form_radios(t('Show block on specific pages'), 'visibility', $edit['visibility'], array(t('Show on every page except the listed pages.'), t('Show on only the listed pages.'), t('Show if the following PHP code returns <code>TRUE</code> (PHP-mode, experts only).')));
-      $group_2 .= form_textarea(t('Pages'), 'pages', $edit['pages'], 70, 5, t("Enter one page per line as Drupal paths. The '*' character is a wildcard. Example paths are '%blog' for the blog page and %blog1 for every personal blog. %front is the front page. If the PHP-mode is chosen, enter PHP code between %php.  Note that executing incorrect PHP-code can break your Drupal site.", array('%blog' => theme('placeholder', 'blog'), '%blog1' =>  theme('placeholder', 'blog/*'), '%front' => theme('placeholder', '<front>'), '%php' => theme('placeholder', '<?php ?>'))));
+      $group_1  = form_radios(t('Custom visibility settings'), 'custom', $edit['custom'], array(t('Users cannot control whether or not they see this block.'), t('Show this block by default, but let individual users hide it.'), t('Hide this block by default but let individual users show it.')), t('Allow individual users to customize the visibility of this block in their account settings.'));
+      $group_2  = form_radios(t('Show block on specific pages'), 'visibility', $edit['visibility'], array(t('Show on every page except the listed pages.'), t('Show on only the listed pages.'), t('Show if the following PHP code returns <code>TRUE</code> (PHP-mode, experts only).')));
+      $group_2 .= form_textarea(t('Pages'), 'pages', $edit['pages'], 60, 5, t("Enter one page per line as Drupal paths. The '*' character is a wildcard. Example paths are '%blog' for the blog page and %blog1 for every personal blog. %front is the front page. If the PHP-mode is chosen, enter PHP code between %php.  Note that executing incorrect PHP-code can break your Drupal site.", array('%blog' => theme('placeholder', 'blog'), '%blog1' =>  theme('placeholder', 'blog/*'), '%front' => theme('placeholder', '<front>'), '%php' => theme('placeholder', '<?php ?>'))));
 
       $form .= form_group(t('User specific visibility settings'), $group_1);
       $form .= form_group(t('Page specific visibility settings'), $group_2);
@@ -337,10 +337,10 @@ function block_box_delete($bid = 0) {
 }
 
 function block_box_form($edit = array()) {
-  $output = form_textfield(t('Block title'), 'title', $edit['title'], 50, 64, t('The title of the block as shown to the user.'));
+  $output  = form_textfield(t('Block title'), 'title', $edit['title'], 60, 64, t('The title of the block as shown to the user.'));
   $output .= filter_form('format', $edit['format']);
-  $output .= form_textarea(t('Block body'), 'body', $edit['body'], 70, 10, t('The content of the block as shown to the user.'));
-  $output .= form_textfield(t('Block description'), 'info', $edit['info'], 50, 64, t('A brief description of your block. Used on the <a href="%overview">block overview page</a>.', array('%overview' => url('admin/block'))));
+  $output .= form_textarea(t('Block body'), 'body', $edit['body'], 60, 15, t('The content of the block as shown to the user.'));
+  $output .= form_textfield(t('Block description'), 'info', $edit['info'], 60, 64, t('A brief description of your block. Used on the <a href="%overview">block overview page</a>.', array('%overview' => url('admin/block'))));
 
   return $output;
 }

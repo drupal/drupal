@@ -960,7 +960,7 @@ function book_node_visitor_opml_post($node, $depth) {
  * Creates a row for the 'admin' view of a book.  Each row represents a page in the book, in the tree representing the book
  */
 function book_admin_edit_line($node, $depth = 0) {
-  return array('<div style="padding-left: '. (25 * $depth) .'px;">'. form_textfield(NULL, $node->nid .'][title', $node->title, 64, 255) .'</div>', form_weight(NULL, $node->nid .'][weight', $node->weight, 15), l(t('view'), 'node/'. $node->nid), l(t('edit'), 'node/'. $node->nid .'/edit'), l(t('delete'), 'node/'.$node->nid.'/delete'));
+  return array('<div style="padding-left: '. (25 * $depth) .'px;">'. form_textfield(NULL, $node->nid .'][title', $node->title, 60, 255) .'</div>', form_weight(NULL, $node->nid .'][weight', $node->weight, 15), l(t('view'), 'node/'. $node->nid), l(t('edit'), 'node/'. $node->nid .'/edit'), l(t('delete'), 'node/'.$node->nid.'/delete'));
 }
 
 function book_admin_edit_book($nid, $depth = 1) {

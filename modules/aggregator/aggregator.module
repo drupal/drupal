@@ -596,7 +596,7 @@ function aggregator_save_item($edit) {
 }
 
 function aggregator_form_category($edit = array()) {
-  $form = form_textfield(t('Title'), 'title', $edit['title'], 50, 64);
+  $form  = form_textfield(t('Title'), 'title', $edit['title'], 60, 64);
   $form .= form_textarea(t('Description'), 'description', $edit['description'], 60, 5);
   $form .= form_submit(t('Submit'));
 
@@ -629,8 +629,8 @@ function aggregator_form_feed($edit = array()) {
     $edit['refresh'] = 3600;
   }
 
-  $form .= form_textfield(t('Title'), 'title', $edit['title'], 50, 64, t('The name of the feed; typically the name of the web site you syndicate content from.'));
-  $form .= form_textfield(t('URL'), 'url', $edit['url'], 50, 255, t('The fully-qualified URL of the feed.'));
+  $form .= form_textfield(t('Title'), 'title', $edit['title'], 60, 64, t('The name of the feed; typically the name of the web site you syndicate content from.'));
+  $form .= form_textfield(t('URL'), 'url', $edit['url'], 60, 255, t('The fully-qualified URL of the feed.'));
   $form .= form_select(t('Update interval'), 'refresh', $edit['refresh'], $period, t('The refresh interval indicating how often you want to update this feed.  Requires crontab.'));
 
   // Handling of categories:

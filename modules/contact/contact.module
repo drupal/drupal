@@ -58,7 +58,7 @@ function contact_menu($may_cache) {
  * Implementation of hook_settings().
  */
 function contact_settings() {
-  $output = form_textarea(t('Additional information'), 'contact_form_information', variable_get('contact_form_information', t('You can leave us a message using the contact form below.')), 70, 8, t('Information to show on the <a href="%form">contact page</a>.  Can be anything from submission guidelines to your postal address or telephone number.', array('%form' => url('contact'))));
+  $output = form_textarea(t('Additional information'), 'contact_form_information', variable_get('contact_form_information', t('You can leave us a message using the contact form below.')), 60, 5, t('Information to show on the <a href="%form">contact page</a>.  Can be anything from submission guidelines to your postal address or telephone number.', array('%form' => url('contact'))));
   return $output;
 }
 
@@ -147,8 +147,8 @@ function contact_mail_user() {
 
       $output  = form_item(t('From'), $user->name .' &lt;'. $user->mail .'&gt;');
       $output .= form_item(t('To'), $account->name);
-      $output .= form_textfield(t('Subject'), 'subject', $edit['subject'], 50, 50, NULL, NULL, TRUE);
-      $output .= form_textarea(t('Message'), 'message', $edit['message'], 70, 8, NULL, NULL, TRUE);
+      $output .= form_textfield(t('Subject'), 'subject', $edit['subject'], 60, 50, NULL, NULL, TRUE);
+      $output .= form_textarea(t('Message'), 'message', $edit['message'], 60, 15, NULL, NULL, TRUE);
       $output .= form_submit(t('Send e-mail'));
       $output  = form($output);
     }
@@ -181,9 +181,9 @@ function contact_admin_edit($subject = NULL) {
 
   $subject = db_fetch_object(db_query("SELECT * FROM {contact} WHERE subject = '%s'", $subject));
 
-  $form = form_textfield(t('Subject'), 'subject', $subject->subject, 50, 255, t("Example: 'website feedback' or 'product information'."), NULL, TRUE);
-  $form .= form_textarea(t('Recipients'), 'recipients', $subject->recipients, 50, 4, t("Example: 'webmaster@yoursite.com' or 'sales@yoursite.com'.  To specify multiple repecients, separate each e-mail address with a comma."), NULL, TRUE);
-  $form .= form_textarea(t('Auto-reply'), 'reply', $subject->reply, 50, 10, t("Optional auto-reply.  Leave empty if you don't want to send the user an auto-reply message."));
+  $form = form_textfield(t('Subject'), 'subject', $subject->subject, 60, 255, t("Example: 'website feedback' or 'product information'."), NULL, TRUE);
+  $form .= form_textarea(t('Recipients'), 'recipients', $subject->recipients, 60, 5, t("Example: 'webmaster@yoursite.com' or 'sales@yoursite.com'.  To specify multiple repecients, separate each e-mail address with a comma."), NULL, TRUE);
+  $form .= form_textarea(t('Auto-reply'), 'reply', $subject->reply, 60, 5, t("Optional auto-reply.  Leave empty if you don't want to send the user an auto-reply message."));
   $form .= form_submit(t('Submit'));
 
   return form($form);
@@ -295,10 +295,10 @@ function contact_mail_page() {
 
     if ($subjects) {
       $output  = variable_get('contact_form_information', t('You can leave us a message using the contact form below.'));
-      $output .= form_textfield(t('Name'), 'name', $edit['name'], 50, 255, NULL, NULL, TRUE);
-      $output .= form_textfield(t('E-mail'), 'mail', $edit['mail'], 50, 255, NULL, NULL, TRUE);
+      $output .= form_textfield(t('Name'), 'name', $edit['name'], 60, 255, NULL, NULL, TRUE);
+      $output .= form_textfield(t('E-mail'), 'mail', $edit['mail'], 60, 255, NULL, NULL, TRUE);
       $output .= form_select(t('Subject'), 'subject', $edit['subject'], $subjects, NULL, NULL, NULL, TRUE);
-      $output .= form_textarea(t('Message'), 'message', $edit['message'], 70, 8, NULL, NULL, TRUE);
+      $output .= form_textarea(t('Message'), 'message', $edit['message'], 60, 5, NULL, NULL, TRUE);
       $output .= form_submit(t('Send e-mail'));
       $output  = form($output);
     }

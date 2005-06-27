@@ -1104,8 +1104,8 @@ function user_register($edit = array()) {
 
 function user_edit_form($uid, $edit) {
   // Account information:
-  $group  = form_textfield(t('Username'), 'name', $edit['name'], 30, 55, t('Your full name or your preferred username: only letters, numbers and spaces are allowed.'), NULL, TRUE);
-  $group .= form_textfield(t('E-mail address'), 'mail', $edit['mail'], 30, 55, t('Insert a valid e-mail address.  All e-mails from the system will be sent to this address. The e-mail address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by e-mail.'), NULL, TRUE);
+  $group  = form_textfield(t('Username'), 'name', $edit['name'], 60, 55, t('Your full name or your preferred username: only letters, numbers and spaces are allowed.'), NULL, TRUE);
+  $group .= form_textfield(t('E-mail address'), 'mail', $edit['mail'], 60, 55, t('Insert a valid e-mail address.  All e-mails from the system will be sent to this address. The e-mail address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by e-mail.'), NULL, TRUE);
   $group .= form_item(t('Password'), '<input type="password" class="form-password" name="edit[pass1]" size="12" maxlength="24" /> <input type="password" class="form-password" name="edit[pass2]" size="12" maxlength="24" />', t('Enter your new password twice if you want to change your current password, or leave it blank if you are happy with your current password.'), NULL, TRUE);
 
   if (user_access('administer users')) {
@@ -1340,27 +1340,27 @@ function _user_mail_text($messageid, $variables = array()) {
 function user_configure_settings() {
   // User registration settings.
   $group = form_radios(t('Public registrations'), 'user_register', variable_get('user_register', 1), array(t('Only site administrators can create new user accounts.'), t('Visitors can create accounts and no administrator approval is required.'), t('Visitors can create accounts but administrator approval is required.')));
-  $group .= form_textarea(t('User registration guidelines'), 'user_registration_help', variable_get('user_registration_help', ''), 70, 4, t('This text is displayed at the top of the user registration form.  It\'s useful for helping or instructing your users.'));
+  $group .= form_textarea(t('User registration guidelines'), 'user_registration_help', variable_get('user_registration_help', ''), 60, 5, t('This text is displayed at the top of the user registration form.  It\'s useful for helping or instructing your users.'));
   $output = form_group(t('User registration settings'), $group);
 
   // User e-mail settings.
-  $group = form_textfield(t('Subject of welcome e-mail'), 'user_mail_welcome_subject', _user_mail_text('welcome_subject'), 70, 180, t('Customize the subject of your welcome e-mail, which is sent to new members upon registering.') .' '. t('Available variables are:') .' %username, %site, %password, %uri, %uri_brief, %mailto, %date, %login_uri, %edit_uri, %login_url.');
-  $group .= form_textarea(t('Body of welcome e-mail'), 'user_mail_welcome_body', _user_mail_text('welcome_body'), 70, 10, t('Customize the body of the welcome e-mail, which is sent to new members upon registering.') .' '. t('Available variables are:') .' %username, %site, %password, %uri, %uri_brief, %mailto, %login_uri, %edit_uri, %login_url.');
-  $group .= form_textfield(t('Subject of welcome e-mail (awaiting admin approval)'), 'user_mail_approval_subject', _user_mail_text('approval_subject'), 70, 180, t('Customize the subject of your awaiting approval welcome e-mail, which is sent to new members upon registering.') .' '. t('Available variables are:') .' %username, %site, %password, %uri, %uri_brief, %mailto, %date, %login_uri, %edit_uri, %login_url.');
-  $group .= form_textarea(t('Body of welcome e-mail (awaiting admin approval)'), 'user_mail_approval_body', _user_mail_text('approval_body'), 70, 10, t('Customize the body of the awaiting approval welcome e-mail, which is sent to new members upon registering.') .' '. t('Available variables are:') .' %username, %site, %password, %uri, %uri_brief, %mailto, %login_uri, %edit_uri, %login_url.');
-  $group .= form_textfield(t('Subject of password recovery e-mail'), 'user_mail_pass_subject', _user_mail_text('pass_subject'), 70, 180, t('Customize the Subject of your forgotten password e-mail.') .' '. t('Available variables are:') .' %username, %site, %login_url, %uri, %uri_brief, %mailto, %date, %login_uri, %edit_uri.');
-  $group .= form_textarea(t('Body of password recovery e-mail'), 'user_mail_pass_body', _user_mail_text('pass_body'), 70, 10, t('Customize the body of the forgotten password e-mail.') .' '. t('Available variables are:') .' %username, %site, %login_url, %uri, %uri_brief, %mailto, %login_uri, %edit_uri.');
+  $group = form_textfield(t('Subject of welcome e-mail'), 'user_mail_welcome_subject', _user_mail_text('welcome_subject'), 60, 180, t('Customize the subject of your welcome e-mail, which is sent to new members upon registering.') .' '. t('Available variables are:') .' %username, %site, %password, %uri, %uri_brief, %mailto, %date, %login_uri, %edit_uri, %login_url.');
+  $group .= form_textarea(t('Body of welcome e-mail'), 'user_mail_welcome_body', _user_mail_text('welcome_body'), 60, 15, t('Customize the body of the welcome e-mail, which is sent to new members upon registering.') .' '. t('Available variables are:') .' %username, %site, %password, %uri, %uri_brief, %mailto, %login_uri, %edit_uri, %login_url.');
+  $group .= form_textfield(t('Subject of welcome e-mail (awaiting admin approval)'), 'user_mail_approval_subject', _user_mail_text('approval_subject'), 50, 180, t('Customize the subject of your awaiting approval welcome e-mail, which is sent to new members upon registering.') .' '. t('Available variables are:') .' %username, %site, %password, %uri, %uri_brief, %mailto, %date, %login_uri, %edit_uri, %login_url.');
+  $group .= form_textarea(t('Body of welcome e-mail (awaiting admin approval)'), 'user_mail_approval_body', _user_mail_text('approval_body'), 60, 15, t('Customize the body of the awaiting approval welcome e-mail, which is sent to new members upon registering.') .' '. t('Available variables are:') .' %username, %site, %password, %uri, %uri_brief, %mailto, %login_uri, %edit_uri, %login_url.');
+  $group .= form_textfield(t('Subject of password recovery e-mail'), 'user_mail_pass_subject', _user_mail_text('pass_subject'), 60, 180, t('Customize the Subject of your forgotten password e-mail.') .' '. t('Available variables are:') .' %username, %site, %login_url, %uri, %uri_brief, %mailto, %date, %login_uri, %edit_uri.');
+  $group .= form_textarea(t('Body of password recovery e-mail'), 'user_mail_pass_body', _user_mail_text('pass_body'), 60, 15, t('Customize the body of the forgotten password e-mail.') .' '. t('Available variables are:') .' %username, %site, %login_url, %uri, %uri_brief, %mailto, %login_uri, %edit_uri.');
   $output .= form_group(t('User email settings'), $group);
 
   // Picture settings.
   file_check_directory(file_create_path(variable_get('user_picture_path', 'pictures')), 1, 'user_picture_path');
 
   $group  = form_radios(t('Picture support'), 'user_pictures', variable_get('user_pictures', 0), array(t('Disabled'), t('Enabled')), t('Enable picture support.'));
-  $group .= form_textfield(t('Picture image path'), 'user_picture_path', variable_get('user_picture_path', 'pictures'), 45, 255, t('Subdirectory in the directory "%dir" where pictures will be stored.', array('%dir' => variable_get('file_directory_path', 'files') .'/')));
-  $group .= form_textfield(t('Default picture'), 'user_picture_default', variable_get('user_picture_default', ''), 45, 255, t('URL of picture to display for users with no custom picture selected. Leave blank for none.'));
-  $group .= form_textfield(t('Picture maximum dimensions'), 'user_picture_dimensions', variable_get('user_picture_dimensions', '85x85'), 10, 10, t('Maximum dimensions for pictures.'));
-  $group .= form_textfield(t('Picture maximum file size'), 'user_picture_file_size', variable_get('user_picture_file_size', '30'), 10, 10, t('Maximum file size for pictures, in kB.'));
-  $group .= form_textarea(t('Picture guidelines'), 'user_picture_guidelines', variable_get('user_picture_guidelines', ''), 70, 4, t('This text is displayed at the picture upload form in addition to the default guidelines.  It\'s useful for helping or instructing your users.'));
+  $group .= form_textfield(t('Picture image path'), 'user_picture_path', variable_get('user_picture_path', 'pictures'), 30, 255, t('Subdirectory in the directory "%dir" where pictures will be stored.', array('%dir' => variable_get('file_directory_path', 'files') .'/')));
+  $group .= form_textfield(t('Default picture'), 'user_picture_default', variable_get('user_picture_default', ''), 30, 255, t('URL of picture to display for users with no custom picture selected. Leave blank for none.'));
+  $group .= form_textfield(t('Picture maximum dimensions'), 'user_picture_dimensions', variable_get('user_picture_dimensions', '85x85'), 15, 10, t('Maximum dimensions for pictures.'));
+  $group .= form_textfield(t('Picture maximum file size'), 'user_picture_file_size', variable_get('user_picture_file_size', '30'), 15, 10, t('Maximum file size for pictures, in kB.'));
+  $group .= form_textarea(t('Picture guidelines'), 'user_picture_guidelines', variable_get('user_picture_guidelines', ''), 60, 5, t('This text is displayed at the picture upload form in addition to the default guidelines.  It\'s useful for helping or instructing your users.'));
 
   $output .= form_group(t('Pictures'), $group);
 
@@ -1413,17 +1413,17 @@ function user_admin_access_check() {
     }
   }
 
-  $form = form_textfield('', 'test', '', 32, 64, t('Enter a username to check if it will be denied or allowed.'));
+  $form = form_textfield('', 'test', '', 30, 64, t('Enter a username to check if it will be denied or allowed.'));
   $form .= form_hidden('type', 'user');
   $form .= form_submit(t('Check username'));
   $output .= form_group(t('Username'), form($form));
 
-  $form = form_textfield('', 'test', '', 32, 64, t('Enter an e-mail address to check if it will be denied or allowed.'));
+  $form = form_textfield('', 'test', '', 30, 64, t('Enter an e-mail address to check if it will be denied or allowed.'));
   $form .= form_hidden('type', 'mail');
   $form .= form_submit(t('Check e-mail'));
   $output .= form_group(t('E-mail'), form($form));
 
-  $form = form_textfield('', 'test', '', 32, 64, t('Enter a host to check if it will be denied or allowed.'));
+  $form = form_textfield('', 'test', '', 30, 64, t('Enter a host to check if it will be denied or allowed.'));
   $form .= form_hidden('type', 'host');
   $form .= form_submit(t('Check host'));
   $output .= form_group(t('Host'), form($form));
@@ -1506,7 +1506,7 @@ function user_admin_access_edit($aid = 0) {
 function _user_admin_access_form($edit) {
   $output = '<div class="access-type">'. form_radios(t('Access type'), 'status', $edit['status'], array('1' => t('Allow'), '0' => t('Deny'))) .'</div>';
   $output .= '<div class="rule-type">'. form_radios(t('Rule type'), 'type', $edit['type'] ? $edit['type'] : 'user', array('user' => t('Username'), 'mail' => t('E-mail'), 'host' => t('Host'))) .'</div>';
-  $output .= '<div class="mask">'. form_textfield(t('Mask'), 'mask', $edit['mask'], 32, 64, '%: '. t('Matches any number of characters, even zero characters') .'.<br />_: '. t('Matches exactly one character.'), NULL, TRUE) .'</div>';
+  $output .= '<div class="mask">'. form_textfield(t('Mask'), 'mask', $edit['mask'], 30, 64, '%: '. t('Matches any number of characters, even zero characters') .'.<br />_: '. t('Matches exactly one character.'), NULL, TRUE) .'</div>';
 
   return $output;
 }
@@ -1668,7 +1668,7 @@ function user_admin_role() {
     // Display the role form.
     $role = db_fetch_object(db_query('SELECT * FROM {role} WHERE rid = %d', $id));
 
-    $output .= form_textfield(t('Role name'), 'name', $role->name, 32, 64, t('The name for this role. Example: "moderator", "editorial board", "site architect".'));
+    $output .= form_textfield(t('Role name'), 'name', $role->name, 30, 64, t('The name for this role. Example: "moderator", "editorial board", "site architect".'));
     $output .= form_submit(t('Save role'));
     $output .= form_submit(t('Delete role'));
 

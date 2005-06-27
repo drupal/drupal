@@ -330,13 +330,13 @@ function profile_form_profile($edit, $user, $category) {
     switch ($field->type) {
       case 'textfield':
       case 'url':
-        $fields[$category] .= form_textfield(check_plain($field->title), $field->name, $edit[$field->name], 70, 255, _profile_form_explanation($field), NULL, $field->required);
+        $fields[$category] .= form_textfield(check_plain($field->title), $field->name, $edit[$field->name], 60, 255, _profile_form_explanation($field), NULL, $field->required);
         break;
       case 'textarea':
-        $fields[$category] .= form_textarea(check_plain($field->title), $field->name, $edit[$field->name], 70, 5, _profile_form_explanation($field), NULL, $field->required);
+        $fields[$category] .= form_textarea(check_plain($field->title), $field->name, $edit[$field->name], 60, 5, _profile_form_explanation($field), NULL, $field->required);
         break;
       case 'list':
-        $fields[$category] .= form_textarea(check_plain($field->title), $field->name, $edit[$field->name], 70, 5, _profile_form_explanation($field), NULL, $field->required);
+        $fields[$category] .= form_textarea(check_plain($field->title), $field->name, $edit[$field->name], 60, 5, _profile_form_explanation($field), NULL, $field->required);
         break;
       case 'checkbox':
         $fields[$category] .= form_checkbox(check_plain($field->title), $field->name, 1, $edit[$field->name], _profile_form_explanation($field), NULL, $field->required);
@@ -580,21 +580,21 @@ function profile_admin_delete($fid) {
 
 function _profile_field_form($type, $edit = array()) {
 
-  $group  = form_textfield(t('Category'), 'category', $edit['category'], 70, 128, t('The category the new field should be part of.  Categories are used to group fields logically.  An example category is "Personal information".'));
-  $group .= form_textfield(t('Title'), 'title', $edit['title'], 70, 128, t('The title of the new field.  The title will be shown to the user.  An example title is "Favorite color".'));
-  $group .= form_textfield(t('Form name'), 'name', $edit['name'], 70, 128, t('The name of the field.  The form name is not shown to the user but used internally in the HTML code and URLs.
+  $group  = form_textfield(t('Category'), 'category', $edit['category'], 60, 128, t('The category the new field should be part of.  Categories are used to group fields logically.  An example category is "Personal information".'));
+  $group .= form_textfield(t('Title'), 'title', $edit['title'], 60, 128, t('The title of the new field.  The title will be shown to the user.  An example title is "Favorite color".'));
+  $group .= form_textfield(t('Form name'), 'name', $edit['name'], 60, 128, t('The name of the field.  The form name is not shown to the user but used internally in the HTML code and URLs.
 Unless you know what you are doing, it is highly recommended that you prefix the form name with <code>profile_</code> to avoid name clashes with other fields.  Spaces or any other special characters except dash (-) and underscore (_) are not allowed. An example name is "profile_favorite_color" or perhaps just "profile_color".'));
-  $group .= form_textarea(t('Explanation'), 'explanation', $edit['explanation'], 70, 3, t('An optional explanation to go with the new field.  The explanation will be shown to the user.'));
+  $group .= form_textarea(t('Explanation'), 'explanation', $edit['explanation'], 60, 5, t('An optional explanation to go with the new field.  The explanation will be shown to the user.'));
   if ($type == 'selection') {
-    $group .= form_textarea(t('Selection options'), 'options', $edit['options'], 70, 8, t('A list of all options.  Put each option on a separate line.  Example options are "red", "blue", "green", etc.'));
+    $group .= form_textarea(t('Selection options'), 'options', $edit['options'], 60, 5, t('A list of all options.  Put each option on a separate line.  Example options are "red", "blue", "green", etc.'));
   }
   $group .= form_weight(t('Weight'), 'weight', $edit['weight'], 5, t('The weights define the order in which the form fields are shown.  Lighter fields "float up" towards the top of the category.'));
   $group .= form_radios(t('Visibility'), 'visibility', $edit['visibility'], array(PROFILE_HIDDEN => t('Hidden profile field, only accessible by administrators, modules and themes.'), PROFILE_PRIVATE => t('Private field, content only available to privileged users.'), PROFILE_PUBLIC => t('Public field, content shown on profile page but not used on member list pages.'), PROFILE_PUBLIC_LISTINGS => t('Public field, content shown on profile page and on member list pages.')));
   if ($type == 'selection' || $type == 'list') {
-    $group .= form_textfield(t('Page title'), 'page', $edit['page'], 70, 128, t('The title of the page showing all users with the specified field.  The word <code>%value</code> will be substituted with the corresponding value.  An example page title is "People whose favorite color is %value".  Only applicable if the field is configured to be shown on member list pages.'));
+    $group .= form_textfield(t('Page title'), 'page', $edit['page'], 60, 128, t('The title of the page showing all users with the specified field.  The word <code>%value</code> will be substituted with the corresponding value.  An example page title is "People whose favorite color is %value".  Only applicable if the field is configured to be shown on member list pages.'));
   }
   else {
-    $group .= form_textfield(t('Page title'), 'page', $edit['page'], 70, 128, t('The title of the page showing all users with the specified field.  Only applicable if the field is configured to be shown on member listings.'));
+    $group .= form_textfield(t('Page title'), 'page', $edit['page'], 60, 128, t('The title of the page showing all users with the specified field.  Only applicable if the field is configured to be shown on member listings.'));
   }
   $group .= form_checkbox(t('The user must enter a value.'), 'required', 1, $edit['required']);
   $group .= form_checkbox(t('Visible in user registration form.'), 'register', 1, $edit['register']);

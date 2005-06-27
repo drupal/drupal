@@ -938,7 +938,7 @@ function node_types_configure($type = NULL) {
 
     $node = new stdClass();
     $node->type = $type;
-    $group = form_textarea(t('Explanation or submission guidelines'), $type .'_help', variable_get($type .'_help', ''), 70, 5, t('This text will be displayed at the top of the %type submission form. It is useful for helping or instructing your users.', array('%type' => node_invoke($type, 'node_name'))));
+    $group = form_textarea(t('Explanation or submission guidelines'), $type .'_help', variable_get($type .'_help', ''), 60, 5, t('This text will be displayed at the top of the %type submission form. It is useful for helping or instructing your users.', array('%type' => node_invoke($type, 'node_name'))));
     $group .= form_select(t('Minimum number of words'), 'minimum_'. $type .'_size', variable_get('minimum_'. $type .'_size', 0), drupal_map_assoc(array(0, 10, 25, 50, 75, 100, 125, 150, 175, 200)), t('The minimum number of words a %type must be to be considered valid. This can be useful to rule out submissions that do not meet the site\'s standards, such as short test posts.', array('%type' => node_invoke($type, 'node_name'))));
     $output = form_group(t('Submission form'), $group);
     $output .= form_group(t('Workflow'), implode('', node_invoke_nodeapi($node, 'settings')));
@@ -1288,8 +1288,8 @@ function node_form($edit) {
   if (user_access('administer nodes')) {
     $output .= '<div class="admin">';
 
-    $author = form_autocomplete(t('Authored by'), 'name', $edit->name, 20, 60, 'user/autocomplete');
-    $author .= form_textfield(t('Authored on'), 'date', $edit->date, 20, 25, NULL, NULL, TRUE);
+    $author = form_autocomplete(t('Authored by'), 'name', $edit->name, 30, 60, 'user/autocomplete');
+    $author .= form_textfield(t('Authored on'), 'date', $edit->date, 30, 25, NULL, NULL, TRUE);
 
     $output .= '<div class="authored">';
     $output .= form_group_collapsible(t('Authoring information'), $author, TRUE);

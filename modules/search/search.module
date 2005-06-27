@@ -158,8 +158,8 @@ function search_admin() {
   $output .= form_group(t('Indexing throttle'), $group);
   // Indexing settings:
   $group = '<em>'. t('<p>Changing the setting below will cause the site index to be rebuilt. The search index is not cleared but systematically updated to reflect the new settings. Searching will continue to work but new content won\'t be indexed until all existing content has been re-indexed.</p><p>The default settings should be appropriate for the majority of sites.</p>') .'</em>';
-  $group .= form_textfield(t('Minimum word length to index'), 'minimum_word_size', variable_get('minimum_word_size', 3), 3, 3, t('The number of characters a word has to be to be indexed. Words shorter than this will not be searchable.'));
-  $group .= form_textfield(t('Minimum word length to search for'), 'remove_short', variable_get('remove_short', 3), 3, 3, t('The number of characters a word has to be to be searched for, including wildcard characters.'));
+  $group .= form_textfield(t('Minimum word length to index'), 'minimum_word_size', variable_get('minimum_word_size', 3), 5, 3, t('The number of characters a word has to be to be indexed. Words shorter than this will not be searchable.'));
+  $group .= form_textfield(t('Minimum word length to search for'), 'remove_short', variable_get('remove_short', 3), 5, 3, t('The number of characters a word has to be to be searched for, including wildcard characters.'));
   $output .= form_group(t('Indexing settings'), $group);
 
   return system_settings_form($output);
@@ -659,7 +659,7 @@ function search_form($action = '', $keys = '', $type = null, $prompt = null) {
 
   $output = ' <div class="search-form">';
   $box = '<div class="container-inline">';
-  $box .= form_textfield('', 'keys', $keys, $prompt ? 40 : 20, 255);
+  $box .= form_textfield('', 'keys', $keys, $prompt ? 40 : 30, 255);
   $box .= form_submit(t('Search'));
   $box .= '</div>';
   $output .= form_item($prompt, $box);

@@ -83,8 +83,8 @@ function upload_menu($may_cache) {
 function upload_admin() {
   system_settings_save();
 
-  $group .= form_textfield(t('Maximum total file size'), 'upload_maxsize_total', variable_get('upload_maxsize_total', 0), 10, 10, t('The maximum size of a file a user can upload in megabytes. Enter 0 for unlimited.'));
-  $group .= form_textfield(t('Maximum resolution for uploaded images'), 'upload_max_resolution', variable_get('upload_max_resolution', 0), 10, 10, t('The maximum allowed image size expressed as WIDTHxHEIGHT (e.g. 640x480). Set to 0 for no restriction.'));
+  $group .= form_textfield(t('Maximum total file size'), 'upload_maxsize_total', variable_get('upload_maxsize_total', 0), 15, 10, t('The maximum size of a file a user can upload in megabytes. Enter 0 for unlimited.'));
+  $group .= form_textfield(t('Maximum resolution for uploaded images'), 'upload_max_resolution', variable_get('upload_max_resolution', 0), 15, 10, t('The maximum allowed image size expressed as WIDTHxHEIGHT (e.g. 640x480). Set to 0 for no restriction.'));
 
   $output = form_group(t('General settings'), $group);
 

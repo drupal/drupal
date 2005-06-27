@@ -298,7 +298,7 @@ function comment_nodeapi(&$node, $op, $arg = 0) {
 function comment_user($type, $edit, &$user, $category = NULL) {
   if ($type == 'form' && $category == 'account') {
     // when user tries to edit his own data
-    return array(array('title' => t('Comment settings'), 'data' => form_textarea(t('Signature'), 'signature', $edit['signature'], 64, 3, t('Your signature will be publicly displayed at the end of your comments.')), 'weight' => 2));
+    return array(array('title' => t('Comment settings'), 'data' => form_textarea(t('Signature'), 'signature', $edit['signature'], 60, 5, t('Your signature will be publicly displayed at the end of your comments.')), 'weight' => 2));
   }
   if ($type == 'validate') {
     // validate user data editing
@@ -931,16 +931,16 @@ function comment_admin_edit($cid) {
   if ($comment) {
     if (!$comment->uid) {
       // If comment from non-registered user, allow admin to modify anonymous fields.
-      $form .= form_textfield(t('Name'), 'name', $comment->name ? $comment->name : variable_get('anonymous', 'Anonymous') , 20, 60);
-      $form .= form_textfield(t('E-mail'), 'mail', $comment->mail, 20, 64);
-      $form .= form_textfield(t('Homepage'), 'homepage', $comment->homepage, 20, 255);
+      $form .= form_textfield(t('Name'), 'name', $comment->name ? $comment->name : variable_get('anonymous', 'Anonymous'), 60, 60);
+      $form .= form_textfield(t('E-mail'), 'mail', $comment->mail, 60, 64);
+      $form .= form_textfield(t('Homepage'), 'homepage', $comment->homepage, 60, 255);
     }
     else {
       // Otherwise, just display the author's name.
       $form .= form_item(t('Author'), format_name($comment));
     }
-    $form .= form_textfield(t('Subject'), 'subject', $comment->subject, 70, 128);
-    $form .= form_textarea(t('Comment'), 'comment', $comment->comment, 70, 15, '');
+    $form .= form_textfield(t('Subject'), 'subject', $comment->subject, 60, 128);
+    $form .= form_textarea(t('Comment'), 'comment', $comment->comment, 60, 15, '');
     $form .= filter_form('format', $comment->format);
     $form .= form_radios(t('Status'), 'status', $comment->status, array(t('Published'), t('Not published')));
     $form .= form_hidden('nid', $comment->nid);
@@ -1081,7 +1081,7 @@ function comment_matrix_settings() {
   while ($vote = db_fetch_object($result)) {
     $row = array($vote->vote);
     foreach (array_keys($role_names) as $rid) {
-      $row[] = array('data' => form_textfield(NULL, "$rid][$vote->mid", $mod_roles[$rid][$vote->mid], 4, 3));
+      $row[] = array('data' => form_textfield(NULL, "$rid][$vote->mid", $mod_roles[$rid][$vote->mid], 15, 3));
     }
     $rows[] = $row;
   }
@@ -1116,7 +1116,7 @@ function comment_role_settings() {
   $header = array(t('User role'), t('Initial score'));
 
   while ($role = db_fetch_object($result)) {
-    $rows[] = array($role->name, array('data' => form_textfield(NULL, $role->rid, $start_values[$role->rid], 4, 3), 'align' => 'center'));
+    $rows[] = array($role->name, array('data' => form_textfield(NULL, $role->rid, $start_values[$role->rid], 15, 3), 'align' => 'center'));
   }
 
   $output .= theme('table', $header, $rows);
@@ -1167,8 +1167,8 @@ function comment_vote_settings($mid = 0) {
   }
 
   $output .= '<br /><h3>'. (isset($mid) ? t('Edit moderation option') : t('Add new moderation option')) .'</h3>';
-  $form .= form_textfield(t('Vote'), 'vote', $vote->vote, 32, 64, t('The name of this vote.  Example: "off topic", "excellent", "sucky".'));
-  $form .= form_textfield(t('Weight'), 'weight', $vote->weight, 32, 64, t('Used to order votes in the comment control box; heavier sink.'));
+  $form .= form_textfield(t('Vote'), 'vote', $vote->vote, 30, 64, t('The name of this vote.  Example: "off topic", "excellent", "sucky".'));
+  $form .= form_textfield(t('Weight'), 'weight', $vote->weight, 30, 64, t('Used to order votes in the comment control box; heavier sink.'));
   if ($mid) {
     $form .= form_submit(t('Save vote'));
     $form .= form_submit(t('Delete vote'));
@@ -1221,8 +1221,8 @@ function comment_threshold_settings($fid = 0) {
   }
 
   $output .= '<br /><h3>'. (isset($fid) ? t('Edit threshold') : t('Add new threshold')) .'</h3>';
-  $form .= form_textfield(t('Threshold name'), 'filter', $filter->filter, 32, 64, t('The name of this threshold. Example: "good comments", "+1 comments", "everything".'));
-  $form .= form_textfield(t('Minimum score'), 'minimum', $filter->minimum, 32, 64, t('Show all comments whose score is larger or equal to the provided minimal score. Range: -127 +128'));
+  $form .= form_textfield(t('Threshold name'), 'filter', $filter->filter, 30, 64, t('The name of this threshold. Example: "good comments", "+1 comments", "everything".'));
+  $form .= form_textfield(t('Minimum score'), 'minimum', $filter->minimum, 30, 64, t('Show all comments whose score is larger or equal to the provided minimal score. Range: -127 +128'));
   if ($fid) {
     $form .= form_submit(t('Save threshold'));
     $form .= form_submit(t('Delete threshold'));
@@ -1390,23 +1390,23 @@ function theme_comment_form($edit, $title) {
     $form .= form_item(t('Your name'), format_name($user));
   }
   else if (variable_get('comment_anonymous', 0) == 1) {
-    $form .= form_textfield(t('Your name'), 'name', $edit['name'] ? $edit['name'] : variable_get('anonymous', 'Anonymous') , 20, 60);
-    $form .= form_textfield(t('E-mail'), 'mail', $edit['mail'], 20, 64, t('The content of this field is kept private and will not be shown publicly.'));
-    $form .= form_textfield(t('Homepage'), 'homepage', $edit['homepage'], 20, 255);
+    $form .= form_textfield(t('Your name'), 'name', $edit['name'] ? $edit['name'] : variable_get('anonymous', 'Anonymous') , 30, 60);
+    $form .= form_textfield(t('E-mail'), 'mail', $edit['mail'], 30, 64, t('The content of this field is kept private and will not be shown publicly.'));
+    $form .= form_textfield(t('Homepage'), 'homepage', $edit['homepage'], 30, 255);
   }
   else if (variable_get('comment_anonymous', 0) == 2) {
-    $form .= form_textfield(t('Your name'), 'name', $edit['name'] ? $edit['name'] : variable_get('anonymous', 'Anonymous') , 20, 60, NULL, NULL, TRUE);
-    $form .= form_textfield(t('E-mail'), 'mail', $edit['mail'], 20, 64, t('The content of this field is kept private and will not be shown publicly.'), NULL, TRUE);
-    $form .= form_textfield(t('Homepage'), 'homepage', $edit['homepage'], 20, 255);
+    $form .= form_textfield(t('Your name'), 'name', $edit['name'] ? $edit['name'] : variable_get('anonymous', 'Anonymous') , 30, 60, NULL, NULL, TRUE);
+    $form .= form_textfield(t('E-mail'), 'mail', $edit['mail'], 30, 64, t('The content of this field is kept private and will not be shown publicly.'), NULL, TRUE);
+    $form .= form_textfield(t('Homepage'), 'homepage', $edit['homepage'], 30, 255);
   }
 
   // subject field:
   if (variable_get('comment_subject_field', 1)) {
-    $form .= form_textfield(t('Subject'), 'subject', $edit['subject'], 50, 64);
+    $form .= form_textfield(t('Subject'), 'subject', $edit['subject'], 60, 64);
   }
 
   // comment field:
-  $form .= form_textarea(t('Comment'), 'comment', $edit['comment'] ? $edit['comment'] : $user->signature, 70, 10, '', NULL, TRUE);
+  $form .= form_textarea(t('Comment'), 'comment', $edit['comment'] ? $edit['comment'] : $user->signature, 60, 15, '', NULL, TRUE);
 
   // format selector
   $form .= filter_form('format', $edit['format']);

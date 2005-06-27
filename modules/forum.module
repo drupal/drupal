@@ -161,7 +161,7 @@ function _forum_confirm_delete($tid) {
  * @param $edit Associative array containing a container term to be added or edited.
  */
 function forum_form_container($edit = array()) {
-  $form = form_textfield(t('Container name'), 'name', $edit['name'], 50, 64, t('The container name is used to identify related forums.'), NULL, TRUE);
+  $form = form_textfield(t('Container name'), 'name', $edit['name'], 60, 64, t('The container name is used to identify related forums.'), NULL, TRUE);
   $form .= form_textarea(t('Description'), 'description', $edit['description'], 60, 5, t('The container description can give users more information about the forums it contains.'));
 
   $form .= _forum_parent_select($edit['tid'], t('Parent'), 'parent][', 'container');
@@ -183,7 +183,7 @@ function forum_form_container($edit = array()) {
  * @param $edit Associative array containing a forum term to be added or edited.
  */
 function forum_form_forum($edit = array()) {
-  $form = form_textfield(t('Forum name'), 'name', $edit['name'], 50, 64, t('The forum name is used to identify related topic discussions.'), NULL, TRUE);
+  $form = form_textfield(t('Forum name'), 'name', $edit['name'], 60, 64, t('The forum name is used to identify related topic discussions.'), NULL, TRUE);
   $form .= form_textarea(t('Description'), 'description', $edit['description'], 60, 5, t('The forum description can give users more information about the discussion topics it contains.'));
 
   $form .= _forum_parent_select($edit['tid'], t('Parent'), 'parent][', 'forum');
