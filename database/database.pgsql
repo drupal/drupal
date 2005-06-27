@@ -1,6 +1,3 @@
--- PostgreSQL include file 31/10/2002
--- Maintainer: James Arthur, j_a_arthurATyahooDOTcom
-
 --
 -- Table structure for access
 --
