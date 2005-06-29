@@ -499,6 +499,13 @@ function node_view($node, $teaser = FALSE, $page = FALSE, $links = TRUE) {
   if ($links) {
     $node->links = module_invoke_all('link', 'node', $node, !$page);
   }
+  // unset unused $node part so that a bad theme can not open a security hole
+  if ($teaser) {
+    unset($node->body);
+  }
+  else {
+    unset($node->teaser);
+  }
 
   return theme('node', $node, $teaser, $page);
 }
@@ -1469,7 +1476,9 @@ function node_preview($node) {
 
     // Display a preview of the node:
     // Previewing alters $node so it needs to be cloned.
-    $output = theme('node_preview', clone($node));
+    if (!form_get_errors()) {
+      $output = theme('node_preview', clone($node));
+    }
 
     $output .= node_form($node);
 
