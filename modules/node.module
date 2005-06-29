@@ -472,6 +472,13 @@ function node_save($node) {
     node_invoke($node, 'update');
     node_invoke_nodeapi($node, 'update');
   }
+  // unset unused $node part so that a bad theme can not open a security hole
+  if ($teaser) {
+    unset($node->body);
+  }
+  else {
+    unset($node->teaser);
+  }
 
   // Clear the cache so an anonymous poster can see the node being added or updated.
   cache_clear_all();
@@ -1330,15 +1337,17 @@ function node_preview($node) {
     }
 
     // Display a preview of the node:
-    if ($node->teaser && $node->teaser != $node->body) {
-      $output = '<h3>'. t('Preview trimmed version') .'</h3>';
-      $output .= node_view($node, 1);
-      $output .= '<p><em>'. t('The trimmed version of your post shows what your post looks like when promoted to the main page or when exported for syndication. You can insert the delimiter "&lt;!--break--&gt;" (without the quotes) to fine-tune where your post gets split.') .'</em></p>';
-      $output .= '<h3>'. t('Preview full version') .'</h3>';
-      $output .= node_view($node, 0);
-    }
-    else {
-      $output .= node_view($node, 0);
+    if (!form_get_errors()) {
+      if ($node->teaser && $node->teaser != $node->body) {
+        $output = '<h3>'. t('Preview trimmed version') .'</h3>';
+        $output .= node_view($node, 1);
+        $output .= '<p><em>'. t('The trimmed version of your post shows what your post looks like when promoted to the main page or when exported for syndication. You can insert the delimiter "&lt;!--break--&gt;" (without the quotes) to fine-tune where your post gets split.') .'</em></p>';
+        $output .= '<h3>'. t('Preview full version') .'</h3>';
+        $output .= node_view($node, 0);
+      }
+      else {
+        $output .= node_view($node, 0);
+      }
     }
 
     $output .= node_form($node);

@@ -503,8 +503,11 @@ function comment_preview($edit) {
   $comment->timestamp = time();
   $comment->name = $user->name ? $user->name : $comment->name;
 
-  // Preview the comment.
-  $output .= theme('comment_view', $comment, theme('links', module_invoke_all('link', 'comment', $comment, 1)));
+  // Preview the comment if there were no errors, including the 'The supplied input format is invalid.'
+  // error message, ie. this is a security check here.
+  if (!form_get_errors()) {
+    $output .= theme('comment_view', $comment, theme('links', module_invoke_all('link', 'comment', $comment, 1)));
+  }
   $output .= theme('comment_form', $edit, t('Reply'));
 
   if ($edit['pid']) {
@@ -689,7 +692,7 @@ function comment_post($edit) {
       }
     }
     else {
-      print theme('page', comment_preview($edit));
+      return comment_preview($edit);
     }
   }
   else {
