@@ -1,3 +1,4 @@
+
 Drupal x.x.x, xxxx-xx-xx (development version)
 ------------------------
 - added free tagging support (folksonomies).
@@ -23,6 +24,10 @@ Drupal x.x.x, xxxx-xx-xx (development version)
     * added 'loose caching' option for high-traffic sites.
     * improved performance of path aliasing.
     * added the ability to track page generation times.
+
+Drupal 4.6.2, 2005-06-29
+------------------------
+- fixed bugs, including two critical "arbitrary PHP code execution" bugs.
 
 Drupal 4.6.1, 2005-06-01
 ------------------------
@@ -71,6 +76,14 @@ Drupal 4.6.0, 2005-04-15
     * improved performance of the node pages.
 - documentation:
     * improved and extended PHPDoc/Doxygen comments.
+
+Drupal 4.5.4, 2005-06-29
+------------------------
+- fixed bugs, including two critical "arbitrary PHP code execution" bugs.
+
+Drupal 4.5.3, 2005-06-01
+------------------------
+- fixed bugs, including a critical input validation bug.
 
 Drupal 4.5.2, 2005-01-15
 ------------------------
@@ -134,6 +147,10 @@ Drupal 4.5.0, 2004-10-18
 - UI translation:
     * managing translations is now completely done through the administration interface
     * added support for importing/exporting gettext .po files
+
+Drupal 4.4.3, 2005-06-01
+------------------------
+- fixed bugs, including a critical input validation bug.
 
 Drupal 4.4.2, 2004-07-04
 ------------------------
