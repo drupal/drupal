@@ -61,12 +61,6 @@ $xmlrpcTypes=array($xmlrpcI4 => 1,
     $xmlrpcArray => 2,
     $xmlrpcStruct => 3);
 
-$xmlEntities=array(   "amp" => "&",
-    "quot" => '"',
-    "lt" => "<",
-    "gt" => ">",
-    "apos" => "'");
-
 $xmlrpcerr["unknown_method"]=1;
 $xmlrpcstr["unknown_method"]="Unknown method";
 $xmlrpcerr["invalid_return"]=2;
@@ -92,9 +86,6 @@ $xmlrpcerruser=800;
 // let XML parse errors start at 100
 $xmlrpcerrxml=100;
 
-// formulate backslashes for escaping regexp
-$xmlrpc_backslash=chr(92).chr(92);
-
 // used to store state during parsing
 // quick explanation of components:
 //   st - used to build up a string for evaluation
@@ -108,36 +99,6 @@ $xmlrpc_backslash=chr(92).chr(92);
 //   method - used to store method name
 
 $_xh=array();
-
-function xmlrpc_entity_decode($string) {
-  $top=split("&", $string);
-  $op="";
-  $i=0;
-  while($i<sizeof($top)) {
-    if (ereg("^([#a-zA-Z0-9]+);", $top[$i], $regs)) {
-      $op.=ereg_replace("^[#a-zA-Z0-9]+;",
-          xmlrpc_lookup_entity($regs[1]),
-          $top[$i]);
-    } else {
-      if ($i==0)
-        $op=$top[$i];
-      else
-        $op.="&" . $top[$i];
-    }
-    $i++;
-  }
-  return $op;
-}
-
-function xmlrpc_lookup_entity($ent) {
-  global $xmlEntities;
-
-  if (isset($xmlEntities[strtolower($ent)]))
-    return $xmlEntities[strtolower($ent)];
-  if (ereg("^#([0-9]+)$", $ent, $regs))
-    return chr($regs[1]);
-  return "?";
-}
 
 function xmlrpc_se($parser, $name, $attrs) {
   global $_xh, $xmlrpcDateTime, $xmlrpcString;
@@ -237,9 +198,9 @@ function xmlrpc_ee($parser, $name) {
       case "BASE64":
       if ($_xh[$parser]['qt']==1) {
         // we use double quotes rather than single so backslashification works OK
-        $_xh[$parser]['st'].="\"". $_xh[$parser]['ac'] . "\"";
+        $_xh[$parser]['st'].="'". $_xh[$parser]['ac'] ."'";
       } else if ($_xh[$parser]['qt']==2) {
-        $_xh[$parser]['st'].="base64_decode('". $_xh[$parser]['ac'] . "')";
+        $_xh[$parser]['st'].="base64_decode('". $_xh[$parser]['ac'] ."')";
       } else if ($name=="BOOLEAN") {
         $_xh[$parser]['st'].=$_xh[$parser]['ac'];
       } else {
@@ -262,12 +223,12 @@ function xmlrpc_ee($parser, $name) {
       // deal with a string value
       if (strlen($_xh[$parser]['ac'])>0 &&
           $_xh[$parser]['vt']==$xmlrpcString) {
-        $_xh[$parser]['st'].="\"". $_xh[$parser]['ac'] . "\"";
+        $_xh[$parser]['st'].="'". $_xh[$parser]['ac'] . "'";
       }
     // This if() detects if no scalar was inside <VALUE></VALUE>
     // and pads an empty "".
     if($_xh[$parser]['st'][strlen($_xh[$parser]['st'])-1] == '(') {
-      $_xh[$parser]['st'].= '""';
+      $_xh[$parser]['st'].= "''";
     }
     $_xh[$parser]['st'].=", '" . $_xh[$parser]['vt'] . "')";
     if ($_xh[$parser]['cm']) $_xh[$parser]['st'].=",";
@@ -306,7 +267,7 @@ function xmlrpc_ee($parser, $name) {
 
 function xmlrpc_cd($parser, $data)
 {
-  global $_xh, $xmlrpc_backslash;
+  global $_xh;
 
   //if (ereg("^[\n\r \t]+$", $data)) return;
   // print "adding [${data}]\n";
@@ -323,10 +284,21 @@ function xmlrpc_cd($parser, $data)
     }
     // replace characters that eval would
     // do special things with
-    $_xh[$parser]['ac'].=str_replace('$', '\$',
-        str_replace('"', '\"', str_replace(chr(92),
-            $xmlrpc_backslash, $data)));
+    $_xh[$parser]['ac'].= xmlrpc_escape_php($data);
   }
+}
+
+/**
+ * Escapes a piece of text so it can be placed literally between single quotes
+ * as a string inside PHP code.
+ *
+ * A single slash is converted to a double slash, a single quote converted to
+ * a slash followed by a quote.
+ */
+function xmlrpc_escape_php($data) {
+  return str_replace(array('\\', "'"),
+                     array('\\\\', "\\'"),
+                     $data);
 }
 
 function xmlrpc_dh($parser, $data)
@@ -337,9 +309,7 @@ function xmlrpc_dh($parser, $data)
       $_xh[$parser]['qt']=1;
       $_xh[$parser]['lv']=2;
     }
-    $_xh[$parser]['ac'].=str_replace('$', '\$',
-        str_replace('"', '\"', str_replace(chr(92),
-            $xmlrpc_backslash, $data)));
+    $_xh[$parser]['ac'].= xmlrpc_escape_php($data);
   }
 }
 

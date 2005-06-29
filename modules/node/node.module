@@ -498,6 +498,13 @@ function node_view($node, $teaser = FALSE, $page = FALSE, $links = TRUE) {
   if ($links) {
     $node->links = module_invoke_all('link', 'node', $node, !$page);
   }
+  // unset unused $node part so that a bad theme can not open a security hole
+  if ($teaser) {
+    unset($node->body);
+  }
+  else {
+    unset($node->teaser);
+  }
 
   return theme('node', $node, $teaser, $page);
 }
@@ -508,10 +515,10 @@ function node_view($node, $teaser = FALSE, $page = FALSE, $links = TRUE) {
 function node_prepare($node, $teaser = FALSE) {
   $node->readmore = (strlen($node->teaser) < strlen($node->body));
   if ($teaser == FALSE) {
-    $node->body = check_output($node->body, $node->format);
+    $node->body = check_output($node->body, $node->format, FALSE);
   }
   else {
-    $node->teaser = check_output($node->teaser, $node->format);
+    $node->teaser = check_output($node->teaser, $node->format, FALSE);
   }
   return $node;
 }
@@ -567,7 +574,7 @@ function node_search($op = 'search', $keys = null) {
                            'user' => format_name($node),
                            'date' => $node->changed,
                            'extra' => $extra,
-                           'snippet' => search_excerpt($keys, check_output($node->body, $node->format)));
+                           'snippet' => search_excerpt($keys, check_output($node->body, $node->format, FALSE)));
       }
       return $results;
   }
@@ -1470,7 +1477,9 @@ function node_preview($node) {
 
     // Display a preview of the node:
     // Previewing alters $node so it needs to be cloned.
-    $output = theme('node_preview', drupal_clone($node));
+    if (!form_get_errors()) {
+      $output = theme('node_preview', drupal_clone($node));
+    }
 
     $output .= node_form($node);
 

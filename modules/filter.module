@@ -646,13 +646,34 @@ function filter_list_format($format) {
  * @{
  * Modules which need to have content filtered can use these functions to
  * interact with the filter system.
+ *
+ * For more info, see the hook_filter() documentation.
+ *
+ * Note: because filters can inject JavaScript or execute PHP code, security is
+ * vital here. When a user supplies a $format, you should validate it with
+ * filter_access($format) before accepting/using it. This is normally done in
+ * the validation stage of the node system. You should for example never make a
+ * preview of content in a disallowed format.
  */
 
 /**
  * Run all the enabled filters on a piece of text.
+ *
+ * @param $text
+ *    The text to be filtered.
+ * @param $format
+ *    The format of the text to be filtered. Specify FILTER_FORMAT_DEFAULT for
+ *    the default format.
+ * @param $check
+ *    Whether to check the $format with filter_access() first. Defaults to TRUE.
+ *    Note that this will check the permissions of the current user, so you
+ *    should specify $check = FALSE when viewing other people's content.  When
+ *    showing content that is not (yet) stored in the database (eg. upon preview),
+ *    set to TRUE so the user's permissions are checked.
  */
-function check_output($text, $format = FILTER_FORMAT_DEFAULT) {
-  if (isset($text)) {
+function check_output($text, $format = FILTER_FORMAT_DEFAULT, $check = TRUE) {
+  // When $check = true, do an access check on $format.
+  if (isset($text) && (!$check || filter_access($format))) {
     if ($format == FILTER_FORMAT_DEFAULT) {
       $format = variable_get('filter_default_format', 1);
     }
