@@ -1,4 +1,8 @@
-Drupal 4.6.0, 2005-06-01
+Drupal 4.5.4, 2005-06-29
+------------------------
+- fixed bugs, including two critical "arbitrary PHP code execution" bugs.
+
+Drupal 4.5.3, 2005-06-01
 ------------------------
 - fixed bugs, including a critical input validation bug.
 
