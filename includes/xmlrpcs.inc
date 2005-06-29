@@ -1,7 +1,7 @@
 <?php
 // by Edd Dumbill (C) 1999-2001
 // <edd@usefulinc.com>
-// $Id: xmlrpcs.inc,v 1.9 2004/01/06 12:09:41 unconed Exp $
+// $Id: xmlrpcs.inc,v 1.10 2005/06/29 19:53:14 dries Exp $
 
 // Copyright (c) 1999,2000,2001 Edd Dumbill.
 // All rights reserved.
@@ -246,7 +246,7 @@ class xmlrpc_server {
     for($i=0; $i<sizeof($_xh[$parser]['params']); $i++) {
       //print "<!-- " . $_xh[$parser]['params'][$i]. "-->\n";
       $plist.="$i - " .  $_xh[$parser]['params'][$i]. " \n";
-      eval('$m->addParam(' . $_xh[$parser]['params'][$i]. ");");
+      $m->addParam(eval('return '. $_xh[$parser]['params'][$i] .';'));
     }
     // uncomment this to really see what the server's getting!
     // xmlrpc_debugmsg($plist);
@@ -265,13 +265,12 @@ class xmlrpc_server {
       }
       if ( (!isset($dmap[$methName]['signature']))
            || $sr[0]) {
+        $f = $dmap[$methName]['function'];
         // if no signature or correct signature
         if ($sysCall) {
-          eval('$r=' . $dmap[$methName]['function'] .
-               '($this, $m);');
+          $r = $f($this, $m);
         } else {
-          eval('$r=' . $dmap[$methName]['function'] .
-               '($m);');
+          $r = $f($m);
         }
       } else {
         $r=new xmlrpcresp(0,
