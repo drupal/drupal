@@ -79,8 +79,7 @@ function tablesort_header($cell, $header, $ts) {
     if ($cell['data'] == $ts['name']) {
       $ts['sort'] = (($ts['sort'] == 'asc') ? 'desc' : 'asc');
       $cell['class'] = 'active';
-      $title = ($ts['sort'] == 'asc' ? t('sort ascending') : t('sort descending'));
-      $image = '&nbsp;'. theme('image', 'misc/arrow-'. $ts['sort'] .'.png', t('sort icon'), $title);
+      $image = theme('tablesort_indicator', $ts['sort']);
     }
     else {
       // If the user clicks a different header, we want to sort ascending initially.
