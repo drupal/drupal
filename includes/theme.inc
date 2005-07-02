@@ -1,5 +1,5 @@
 <?php
-/* $Id: theme.inc,v 1.244 2005/06/22 20:19:58 dries Exp $ */
+/* $Id: theme.inc,v 1.245 2005/07/02 12:32:09 dries Exp $ */
 
 /**
  * @file
@@ -725,6 +725,23 @@ function theme_table($header, $rows, $attributes = NULL) {
 
   $output .= "</table>\n";
   return $output;
+}
+
+/**
+ * Return a themed sort icon.
+ *
+ * @param $style
+ *   Set to either asc or desc.  This sets which icon to show.
+ * @return
+ *   A themed sort icon.
+ */
+function theme_tablesort_indicator($style) {
+  if ($style == "asc"){
+    return theme('image', 'misc/arrow-asc.png', t('sort icon'), t('sort ascending'));
+  }
+  else {
+    return theme('image', 'misc/arrow-desc.png', t('sort icon'), t('sort descending'));
+  }
 }
 
 /**
