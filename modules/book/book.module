@@ -299,7 +299,7 @@ function book_outline() {
 
 
 /**
- * Return the the most recent revision that matches the specified conditions.
+ * Return the most recent revision that matches the specified conditions.
  */
 function book_revision_load($page, $conditions = array()) {
 
