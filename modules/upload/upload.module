@@ -383,7 +383,7 @@ function upload_form($node) {
     $output .= form_button(t('Attach'), 'fileop');
   }
 
-  return '<div class="attachments">'. form_group_collapsible(t('File Attachments'), $output, TRUE, t('Changes made to the attachments are not permanent until you save this post.  The first "listed" file will be included in RSS feeds.')) .'</div>';
+  return '<div class="attachments">'. form_group_collapsible(t('File attachments'), $output, TRUE, t('Changes made to the attachments are not permanent until you save this post.  The first "listed" file will be included in RSS feeds.')) .'</div>';
 }
 
 function upload_load($node) {
