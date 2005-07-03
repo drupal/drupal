@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.54 2005/06/27 18:38:46 dries Exp $
+// $Id: bootstrap.inc,v 1.55 2005/07/03 10:09:08 dries Exp $
 
 /**
  * @file
@@ -820,8 +820,8 @@ function _drupal_bootstrap($phase) {
 
   switch ($phase) {
     case 'database':
-      global $db_url, $base_url;
-      unset($conf);
+      global $db_url, $db_prefix, $base_url;
+      $conf = array();
       require_once conf_init() .'/settings.php';
       require_once './includes/database.inc';
       // Initialize the default database.

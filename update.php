@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.147 2005/04/06 19:04:02 dries Exp $
+// $Id: update.php,v 1.148 2005/07/03 10:09:08 dries Exp $
 
 /**
  * @file
@@ -207,7 +207,7 @@ function update_info() {
 
 if (isset($_GET["op"])) {
   include_once "includes/bootstrap.inc";
-  include_once "includes/common.inc";
+  drupal_bootstrap('full');
 
   // Access check:
   if (($access_check == 0) || ($user->uid == 1)) {
