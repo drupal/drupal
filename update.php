@@ -207,7 +207,7 @@ function update_info() {
 
 if (isset($_GET["op"])) {
   include_once "includes/bootstrap.inc";
-  include_once "includes/common.inc";
+  drupal_bootstrap('full');
 
   // Access check:
   if (($access_check == 0) || ($user->uid == 1)) {
