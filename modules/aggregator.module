@@ -1,5 +1,5 @@
 <?php
-/* $Id: aggregator.module,v 1.243 2005/06/27 18:33:30 dries Exp $ */
+/* $Id: aggregator.module,v 1.244 2005/07/03 15:56:04 dries Exp $ */
 
 /**
  * @file
@@ -642,7 +642,7 @@ function aggregator_form_feed($edit = array()) {
     if ($category->fid) $values[] = check_plain($category->cid);
   }
   if ($options) {
-    $form .= form_checkboxes(t('Categorize news items'), 'category', $values, $options, t('New items in this feed will be automatically filed in the the checked categories as they are received.'));
+    $form .= form_checkboxes(t('Categorize news items'), 'category', $values, $options, t('New items in this feed will be automatically filed in the checked categories as they are received.'));
   }
 
   // Form buttons:
