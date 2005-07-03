@@ -230,11 +230,9 @@ function ACDB(uri) {
  * Performs a cached and delayed search
  */
 ACDB.prototype.search = function(searchString) {
-  if (this.docache) {
-    this.searchString = searchString;
-    if (this.cache[searchString]) {
-      return this.match(this.cache[searchString]);
-    }
+  this.searchString = searchString;
+  if (this.cache[searchString]) {
+    return this.owner.found(this.cache[searchString]);
   }
   if (this.timer) {
     clearTimeout(this.timer);
