@@ -671,9 +671,8 @@ function user_menu($may_cache) {
     $items[] = array('path' => 'admin/user/create', 'title' => t('add user'),
       'callback' => 'user_admin', 'access' => $admin_access,
       'type' => MENU_LOCAL_TASK);
-    $items[] = array('path' => 'admin/user/configure', 'title' => t('configure'),
-      'callback' => 'user_configure', 'access' => $admin_access,
-      'type' => MENU_LOCAL_TASK);
+    $items[] = array('path' => 'admin/settings/user', 'title' => t('users'),
+      'callback' => 'user_configure', 'access' => $admin_access);
     $items[] = array('path' => 'admin/access', 'title' => t('access control'),
       'callback' => 'user_admin_perm', 'access' => $admin_access);
     $items[] = array('path' => 'admin/access/permissions', 'title' => t('permissions'),

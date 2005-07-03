@@ -639,16 +639,12 @@ function node_menu($may_cache) {
       'type' => MENU_CALLBACK);
     $items[] = array('path' => 'admin/node/overview', 'title' => t('list'),
       'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
-    $items[] = array('path' => 'admin/node/configure', 'title' => t('configure'),
+    $items[] = array('path' => 'admin/settings/node', 'title' => t('posts'),
       'callback' => 'node_configure',
-      'access' => user_access('administer nodes'),
-      'type' => MENU_LOCAL_TASK);
-    $items[] = array('path' => 'admin/node/configure/settings', 'title' => t('settings'),
-      'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
-    $items[] = array('path' => 'admin/node/configure/types', 'title' => t('content types'),
+      'access' => user_access('administer nodes'));
+    $items[] = array('path' => 'admin/settings/content-types', 'title' => t('content types'),
       'callback' => 'node_types_configure',
-      'access' => user_access('administer nodes'),
-      'type' => MENU_LOCAL_TASK);
+      'access' => user_access('administer nodes'));
     if (module_exist('search')) {
       $items[] = array('path' => 'admin/node/search', 'title' => t('search'),
         'callback' => 'node_admin',
