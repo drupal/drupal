@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.456 2005/06/22 20:19:57 dries Exp $ */
+/* $Id: common.inc,v 1.457 2005/07/06 14:20:11 dries Exp $ */
 
 /**
  * @file
@@ -1831,7 +1831,7 @@ function drupal_convert_to_utf8($data, $encoding) {
  * @return
  *   The truncated string.
  */
-function truncate_utf8($string, $len, $wordsafe = FALSE) {
+function truncate_utf8($string, $len, $wordsafe = FALSE, $dots = FALSE) {
   $slen = strlen($string);
   if ($slen <= $len) {
     return $string;
@@ -1840,10 +1840,10 @@ function truncate_utf8($string, $len, $wordsafe = FALSE) {
     while (($string[--$len] != ' ') && ($len > 0)) {};
   }
   if ((ord($string[$len]) < 0x80) || (ord($string[$len]) >= 0xC0)) {
-    return substr($string, 0, $len);
+    return substr($string, 0, $len) . ($dots ? ' ...' : '');
   }
   while (ord($string[--$len]) < 0xC0) {};
-  return substr($string, 0, $len);
+  return substr($string, 0, $len) . ($dots ? ' ...' : '');
 }
 
 /**
