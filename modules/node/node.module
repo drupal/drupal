@@ -693,7 +693,7 @@ function node_menu($may_cache) {
       }
     }
     else if (arg(0) == 'admin' && arg(1) == 'node' && arg(2) == 'configure' && arg(3) == 'types' && is_string(arg(4))) {
-      $items[] = array('path' => 'admin/node/configure/types/'. arg(4),
+      $items[] = array('path' => 'admin/settings/content-types/'. arg(4),
         'title' => t("'%name' content type", array('%name' => node_invoke(arg(4), 'node_name'))),
         'type' => MENU_CALLBACK);
     }
@@ -931,7 +931,7 @@ function node_types_configure($type = NULL) {
   if (isset($type)) {
     // Go to the listing page when we submit this form, system_settings_save() calls drupal_goto().
     if ($_POST['op']) {
-      $_GET['q'] = 'admin/node/configure/types';
+      $_GET['q'] = 'admin/settings/content-types';
       $options = 'options_'. $type;
       if (empty($node->$options)) {
         $node->$options = array();
@@ -953,7 +953,7 @@ function node_types_configure($type = NULL) {
 
     $rows = array();
     foreach (node_list() as $type) {
-      $rows[] = array(node_invoke($type, 'node_name'), l(t('configure'), 'admin/node/configure/types/'. $type));
+      $rows[] = array(node_invoke($type, 'node_name'), l(t('configure'), 'admin/settings/content-types/'. $type));
     }
 
     return theme('table', $header, $rows);
