@@ -1,1065 +1,428 @@
 <?php
-// by Edd Dumbill (C) 1999-2001
-// <edd@usefulinc.com>
-// $Id$
+/*
+  Drupal XML-RPC library. Based on the IXR - The Incutio XML-RPC Library - (c) Incutio Ltd 2002-2005
+   Version 1.7 (beta) - Simon Willison, 23rd May 2005
+   Site:   http://scripts.incutio.com/xmlrpc/
+   Manual: http://scripts.incutio.com/xmlrpc/manual.php
+   This version is made available under the GNU GPL License
+*/
 
-
-// Copyright (c) 1999,2000,2001 Edd Dumbill.
-// All rights reserved.
-//
-// Redistribution and use in source and binary forms, with or without
-// modification, are permitted provided that the following conditions
-// are met:
-//
-//    * Redistributions of source code must retain the above copyright
-//      notice, this list of conditions and the following disclaimer.
-//
-//    * Redistributions in binary form must reproduce the above
-//      copyright notice, this list of conditions and the following
-//      disclaimer in the documentation and/or other materials provided
-//      with the distribution.
-//
-//    * Neither the name of the "XML-RPC for PHP" nor the names of its
-//      contributors may be used to endorse or promote products derived
-//      from this software without specific prior written permission.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
-// FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
-// REGENTS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-// INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-// HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-// STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
-// OF THE POSSIBILITY OF SUCH DAMAGE.
-
-if (!function_exists('xml_parser_create')) {
-  dl("xml.so");
-}
-
-$xmlrpcI4="i4";
-$xmlrpcInt="int";
-$xmlrpcBoolean="boolean";
-$xmlrpcDouble="double";
-$xmlrpcString="string";
-$xmlrpcDateTime="dateTime.iso8601";
-$xmlrpcBase64="base64";
-$xmlrpcArray="array";
-$xmlrpcStruct="struct";
-
-
-$xmlrpcTypes=array($xmlrpcI4 => 1,
-    $xmlrpcInt => 1,
-    $xmlrpcBoolean => 1,
-    $xmlrpcString => 1,
-    $xmlrpcDouble => 1,
-    $xmlrpcDateTime => 1,
-    $xmlrpcBase64 => 1,
-    $xmlrpcArray => 2,
-    $xmlrpcStruct => 3);
-
-$xmlrpcerr["unknown_method"]=1;
-$xmlrpcstr["unknown_method"]="Unknown method";
-$xmlrpcerr["invalid_return"]=2;
-$xmlrpcstr["invalid_return"]="Invalid return payload: enabling debugging to examine incoming payload";
-$xmlrpcerr["incorrect_params"]=3;
-$xmlrpcstr["incorrect_params"]="Incorrect parameters passed to method";
-$xmlrpcerr["introspect_unknown"]=4;
-$xmlrpcstr["introspect_unknown"]="Can't introspect: method unknown";
-$xmlrpcerr["http_error"]=5;
-$xmlrpcstr["http_error"]="Didn't receive 200 OK from remote server.";
-$xmlrpcerr["no_data"]=6;
-$xmlrpcstr["no_data"]="No data received from server.";
-$xmlrpcerr["no_ssl"]=7;
-$xmlrpcstr["no_ssl"]="No SSL support compiled in.";
-$xmlrpcerr["curl_fail"]=8;
-$xmlrpcstr["curl_fail"]="CURL error";
-
-$xmlrpcName="XML-RPC for PHP";
-$xmlrpcVersion="1.02";
-
-// let user errors start at 800
-$xmlrpcerruser=800;
-// let XML parse errors start at 100
-$xmlrpcerrxml=100;
-
-// used to store state during parsing
-// quick explanation of components:
-//   st - used to build up a string for evaluation
-//   ac - used to accumulate values
-//   qt - used to decide if quotes are needed for evaluation
-//   cm - used to denote struct or array (comma needed)
-//   isf - used to indicate a fault
-//   lv - used to indicate "looking for a value": implements
-//        the logic to allow values with no types to be strings
-//   params - used to store parameters in method calls
-//   method - used to store method name
-
-$_xh=array();
-
-function xmlrpc_se($parser, $name, $attrs) {
-  global $_xh, $xmlrpcDateTime, $xmlrpcString;
-
-  switch($name) {
-    case "STRUCT":
-      case "ARRAY":
-      $_xh[$parser]['st'].="array(";
-    $_xh[$parser]['cm']++;
-    // this last line turns quoting off
-    // this means if we get an empty array we'll
-    // simply get a bit of whitespace in the eval
-    $_xh[$parser]['qt']=0;
-    break;
-    case "NAME":
-      $_xh[$parser]['st'].="'"; $_xh[$parser]['ac']="";
-    break;
-    case "FAULT":
-      $_xh[$parser]['isf']=1;
-    break;
-    case "PARAM":
-      $_xh[$parser]['st']="";
-    break;
-    case "VALUE":
-      $_xh[$parser]['st'].="new xmlrpcval(";
-    $_xh[$parser]['vt']=$xmlrpcString;
-    $_xh[$parser]['ac']="";
-    $_xh[$parser]['qt']=0;
-    $_xh[$parser]['lv']=1;
-    // look for a value: if this is still 1 by the
-    // time we reach the first data segment then the type is string
-    // by implication and we need to add in a quote
-    break;
-
-    case "I4":
-      case "INT":
-      case "STRING":
-      case "BOOLEAN":
-      case "DOUBLE":
-      case "DATETIME.ISO8601":
-      case "BASE64":
-      $_xh[$parser]['ac']=""; // reset the accumulator
-
-    if ($name=="DATETIME.ISO8601" || $name=="STRING") {
-      $_xh[$parser]['qt']=1;
-      if ($name=="DATETIME.ISO8601")
-        $_xh[$parser]['vt']=$xmlrpcDateTime;
-    } else if ($name=="BASE64") {
-      $_xh[$parser]['qt']=2;
-    } else {
-      // No quoting is required here -- but
-      // at the end of the element we must check
-      // for data format errors.
-      $_xh[$parser]['qt']=0;
-    }
-    break;
-    case "MEMBER":
-      $_xh[$parser]['ac']="";
-    break;
-    default:
-    break;
+function xmlrpc_value($data, $type = FALSE) {
+  $xmlrpc_value = new stdClass();
+  $xmlrpc_value->data = $data;
+  if (!$type) {
+    $type = xmlrpc_value_calculate_type($xmlrpc_value);
   }
-
-  if ($name!="VALUE") $_xh[$parser]['lv']=0;
+  $xmlrpc_value->type = $type;
+  if ($type == 'struct') {
+    /* Turn all the values in the array in to new xmlrpc_values */
+    foreach ($xmlrpc_value->data as $key => $value) {
+      $xmlrpc_value->data[$key] = xmlrpc_value($value);
+    }
+  }
+  if ($type == 'array') {
+    for ($i = 0, $j = count($xmlrpc_value->data); $i < $j; $i++) {
+      $xmlrpc_value->data[$i] = xmlrpc_value($xmlrpc_value->data[$i]);
+    }
+  }
+  return $xmlrpc_value;
 }
 
-function xmlrpc_ee($parser, $name) {
-  global $_xh,$xmlrpcTypes,$xmlrpcString;
-
-  switch($name) {
-    case "STRUCT":
-      case "ARRAY":
-      if ($_xh[$parser]['cm'] && substr($_xh[$parser]['st'], -1) ==',') {
-        $_xh[$parser]['st']=substr($_xh[$parser]['st'],0,-1);
+function xmlrpc_value_calculate_type(&$xmlrpc_value) {
+  $type = gettype($xmlrpc_value->data);
+  switch ($type) {
+    case 'boolean': case 'double':
+      return $type;
+    case 'integer':
+      return 'int';
+    case 'array':
+      return range(0, count($xmlrpc_value->data) - 1) == array_keys($xmlrpc_value->data) ? 'array' : 'struct';
+    case 'object':
+      if ($xmlrpc_value->data->is_date) {
+        return 'date';
       }
-    $_xh[$parser]['st'].=")";
-    $_xh[$parser]['vt']=strtolower($name);
-    $_xh[$parser]['cm']--;
-    break;
-    case "NAME":
-      $_xh[$parser]['st'].= $_xh[$parser]['ac'] . "' => ";
-    break;
-    case "BOOLEAN":
-      // special case here: we translate boolean 1 or 0 into PHP
-      // constants true or false
-      if ($_xh[$parser]['ac']=='1')
-        $_xh[$parser]['ac']="true";
-      else
-        $_xh[$parser]['ac']="false";
-    $_xh[$parser]['vt']=strtolower($name);
-    // Drop through intentionally.
-    case "I4":
-      case "INT":
-      case "STRING":
-      case "DOUBLE":
-      case "DATETIME.ISO8601":
-      case "BASE64":
-      if ($_xh[$parser]['qt']==1) {
-        // we use double quotes rather than single so backslashification works OK
-        $_xh[$parser]['st'].="'". $_xh[$parser]['ac'] ."'";
-      } else if ($_xh[$parser]['qt']==2) {
-        $_xh[$parser]['st'].="base64_decode('". $_xh[$parser]['ac'] ."')";
-      } else if ($name=="BOOLEAN") {
-        $_xh[$parser]['st'].=$_xh[$parser]['ac'];
+      if ($xmlrpc_value->data->is_base64) {
+        return 'base64';
+      }
+      $xmlrpc_value->data = get_object_vars($xmlrpc_value->data);
+      return 'struct';
+    default:
+      return string;
+  }
+}
+
+function xmlrpc_value_get_xml($xmlrpc_value) {
+  /* Return XML for this value */
+  switch ($xmlrpc_value->type) {
+    case 'boolean':
+      return '<boolean>'. (($xmlrpc_value->data) ? '1' : '0') .'</boolean>';
+      break;
+    case 'int':
+      return '<int>'. $xmlrpc_value->data .'</int>';
+      break;
+    case 'double':
+      return '<double>'. $xmlrpc_value->data .'</double>';
+      break;
+    case 'string':
+      /*** check this! this was htmlspecialchars, I changed to check_plain ***/
+      return '<string>'. check_plain($xmlrpc_value->data) .'</string>';
+      break;
+    case 'array':
+      $return = '<array><data>'."\n";
+      foreach ($xmlrpc_value->data as $item) {
+        $return .= '  <value>'. xmlrpc_value_get_xml($item) ."</value>\n";
+      }
+      $return .= '</data></array>';
+      return $return;
+      break;
+    case 'struct':
+      $return = '<struct>'."\n";
+      foreach ($xmlrpc_value->data as $name => $value) {
+        /*** check this! this was htmlspecialchars, I changed to check_plain ***/
+        $return .= "  <member><name>". check_plain($name) ."</name><value>";
+        $return .= xmlrpc_value_get_xml($value)."</value></member>\n";
+      }
+      $return .= '</struct>';
+      return $return;
+      break;
+    case 'date':
+      return xmlrpc_date_get_xml($xmlrpc_value->data);
+      break;
+    case 'base64':
+      return xmlrpc_base64_get_xml($xmlrpc_value->data);
+      break;
+  }
+  return FALSE;
+}
+
+function xmlrpc_message($message) {
+  $xmlrpc_message = new stdClass();
+  $xmlrpc_message->array_structs = array();   // The stack used to keep track of the current array/struct
+  $xmlrpc_message->array_structs_types = array(); // Stack keeping track of if things are structs or array
+  $xmlrpc_message->current_struct_name = array();  // A stack as well
+  $xmlrpc_message->message = $message;
+  return $xmlrpc_message;
+}
+
+function xmlrpc_message_parse(&$xmlrpc_message) {
+  // first remove the XML declaration
+  $xmlrpc_message->message = preg_replace('/<\?xml(.*)?\?'.'>/', '', $xmlrpc_message->message);
+  if (trim($xmlrpc_message->message) == '') {
+    return FALSE;
+  }
+  $xmlrpc_message->_parser = xml_parser_create();
+  // Set XML parser to take the case of tags in to account
+  xml_parser_set_option($xmlrpc_message->_parser, XML_OPTION_CASE_FOLDING, FALSE);
+  // Set XML parser callback functions
+  /* do not set object. $xmlrpc_message does not have member functions any more
+  xml_set_object($xmlrpc_message->_parser, $xmlrpc_message); */
+  xml_set_element_handler($xmlrpc_message->_parser, 'xmlrpc_message_tag_open', 'xmlrpc_message_tag_close');
+  xml_set_character_data_handler($xmlrpc_message->_parser, 'xmlrpc_message_cdata');
+  xmlrpc_message_set($xmlrpc_message);
+  if (!xml_parse($xmlrpc_message->_parser, $xmlrpc_message->message)) {
+    /* die(sprintf('XML error: %s at line %d',
+      xml_error_string(xml_get_error_code($xmlrpc_message->_parser)),
+      xml_get_current_line_number($xmlrpc_message->_parser))); */
+    return FALSE;
+  }
+  xml_parser_free($xmlrpc_message->_parser);
+  // Grab the error messages, if any
+  $xmlrpc_message = xmlrpc_message_get();
+  if ($xmlrpc_message->messagetype == 'fault') {
+    $xmlrpc_message->fault_code = $xmlrpc_message->params[0]['faultCode'];
+    $xmlrpc_message->fault_string = $xmlrpc_message->params[0]['faultString'];
+  }
+  return TRUE;
+}
+
+function xmlrpc_message_set($value = NULL) {
+  static $xmlrpc_message;
+  if ($value) {
+    $xmlrpc_message = $value;
+  }
+  return $xmlrpc_message;
+}
+
+function xmlrpc_message_get() {
+  return xmlrpc_message_set();
+}
+
+function xmlrpc_message_tag_open($parser, $tag, $attr) {
+  $xmlrpc_message = xmlrpc_message_get();
+  $xmlrpc_message->current_tag_contents = '';
+  switch($tag) {
+    case 'methodCall':
+    case 'methodResponse':
+    case 'fault':
+      $xmlrpc_message->messagetype = $tag;
+      break;
+    /* Deal with stacks of arrays and structs */
+    case 'data':
+      $xmlrpc_message->array_structs_types[] = 'array';
+      $xmlrpc_message->array_structs[] = array();
+      break;
+    case 'struct':
+      $xmlrpc_message->array_structs_types[] = 'struct';
+      $xmlrpc_message->array_structs[] = array();
+      break;
+  }
+  xmlrpc_message_set($xmlrpc_message);
+}
+
+function xmlrpc_message_cdata($parser, $cdata) {
+  $xmlrpc_message = xmlrpc_message_get();
+  $xmlrpc_message->current_tag_contents .= $cdata;
+  xmlrpc_message_set($xmlrpc_message);
+}
+
+function xmlrpc_message_tag_close($parser, $tag) {
+  $xmlrpc_message = xmlrpc_message_get();
+  $value_flag = FALSE;
+  switch($tag) {
+    case 'int':
+    case 'i4':
+      $value = (int)trim($xmlrpc_message->current_tag_contents);
+      $value_flag = TRUE;
+      break;
+    case 'double':
+      $value = (double)trim($xmlrpc_message->current_tag_contents);
+      $value_flag = TRUE;
+      break;
+    case 'string':
+      $value = $xmlrpc_message->current_tag_contents;
+      $value_flag = TRUE;
+      break;
+    case 'dateTime.iso8601':
+      $value = xmlrpc_date(trim($xmlrpc_message->current_tag_contents));
+      // $value = $iso->getTimestamp();
+      $value_flag = TRUE;
+      break;
+    case 'value':
+      // "If no type is indicated, the type is string."
+      if (trim($xmlrpc_message->current_tag_contents) != '') {
+        $value = (string)$xmlrpc_message->current_tag_contents;
+        $value_flag = TRUE;
+      }
+      break;
+    case 'boolean':
+      $value = (boolean)trim($xmlrpc_message->current_tag_contents);
+      $value_flag = TRUE;
+      break;
+    case 'base64':
+      $value = base64_decode(trim($xmlrpc_message->current_tag_contents));
+      $value_flag = TRUE;
+      break;
+    /* Deal with stacks of arrays and structs */
+    case 'data':
+    case 'struct':
+      $value = array_pop($xmlrpc_message->array_structs );
+      array_pop($xmlrpc_message->array_structs_types);
+      $value_flag = TRUE;
+      break;
+    case 'member':
+      array_pop($xmlrpc_message->current_struct_name);
+      break;
+    case 'name':
+      $xmlrpc_message->current_struct_name[] = trim($xmlrpc_message->current_tag_contents);
+      break;
+    case 'methodName':
+      $xmlrpc_message->methodname = trim($xmlrpc_message->current_tag_contents);
+      break;
+  }
+  if ($value_flag) {
+    if (count($xmlrpc_message->array_structs ) > 0) {
+      // Add value to struct or array
+      if ($xmlrpc_message->array_structs_types[count($xmlrpc_message->array_structs_types)-1] == 'struct') {
+        // Add to struct
+        $xmlrpc_message->array_structs [count($xmlrpc_message->array_structs )-1][$xmlrpc_message->current_struct_name[count($xmlrpc_message->current_struct_name)-1]] = $value;
       } else {
-        // we have an I4, INT or a DOUBLE
-        // we must check that only 0123456789-.<space> are characters here
-        if (!ereg("^\-?[0123456789 \t\.]+$", $_xh[$parser]['ac'])) {
-          // TODO: find a better way of throwing an error
-          // than this!
-          error_log("XML-RPC: non numeric value received in INT or DOUBLE");
-          $_xh[$parser]['st'].="ERROR_NON_NUMERIC_FOUND";
-        } else {
-          // it's ok, add it on
-          $_xh[$parser]['st'].=$_xh[$parser]['ac'];
-        }
+        // Add to array
+        $xmlrpc_message->array_structs [count($xmlrpc_message->array_structs )-1][] = $value;
       }
-    $_xh[$parser]['ac']=""; $_xh[$parser]['qt']=0;
-    $_xh[$parser]['lv']=3; // indicate we've found a value
-    break;
-    case "VALUE":
-      // deal with a string value
-      if (strlen($_xh[$parser]['ac'])>0 &&
-          $_xh[$parser]['vt']==$xmlrpcString) {
-        $_xh[$parser]['st'].="'". $_xh[$parser]['ac'] . "'";
-      }
-    // This if() detects if no scalar was inside <VALUE></VALUE>
-    // and pads an empty "".
-    if($_xh[$parser]['st'][strlen($_xh[$parser]['st'])-1] == '(') {
-      $_xh[$parser]['st'].= "''";
+    } else {
+      // Just add as a paramater
+      $xmlrpc_message->params[] = $value;
     }
-    $_xh[$parser]['st'].=", '" . $_xh[$parser]['vt'] . "')";
-    if ($_xh[$parser]['cm']) $_xh[$parser]['st'].=",";
-    break;
-    case "MEMBER":
-      $_xh[$parser]['ac']=""; $_xh[$parser]['qt']=0;
-    break;
-    case "DATA":
-      $_xh[$parser]['ac']=""; $_xh[$parser]['qt']=0;
-    break;
-    case "PARAM":
-      $_xh[$parser]['params'][]=$_xh[$parser]['st'];
-    break;
-    case "METHODNAME":
-      $_xh[$parser]['method']=ereg_replace("^[\n\r\t ]+", "",
-          $_xh[$parser]['ac']);
-    break;
-    case "BOOLEAN":
-      // special case here: we translate boolean 1 or 0 into PHP
-      // constants true or false
-      if ($_xh[$parser]['ac']=='1')
-        $_xh[$parser]['ac']="true";
-      else
-        $_xh[$parser]['ac']="false";
-    $_xh[$parser]['vt']=strtolower($name);
-    break;
-    default:
-    break;
   }
-  // if it's a valid type name, set the type
-  if (isset($xmlrpcTypes[strtolower($name)])) {
-    $_xh[$parser]['vt']=strtolower($name);
+  if (!in_array($tag, array("data", "struct", "member"))) {
+    $xmlrpc_message->current_tag_contents = '';
   }
-
+  xmlrpc_message_set($xmlrpc_message);
 }
 
-function xmlrpc_cd($parser, $data)
-{
-  global $_xh;
+function xmlrpc_request($method, $args) {
+  $xmlrpc_request = new stdClass();
+  $xmlrpc_request->method = $method;
+  $xmlrpc_request->args = $args;
+  $xmlrpc_request->xml = <<<EOD
+<?xml version="1.0"?>
+<methodCall>
+<methodName>{$xmlrpc_request->method}</methodName>
+<params>
 
-  //if (ereg("^[\n\r \t]+$", $data)) return;
-  // print "adding [${data}]\n";
-
-  if ($_xh[$parser]['lv']!=3) {
-    // "lookforvalue==3" means that we've found an entire value
-    // and should discard any further character data
-    if ($_xh[$parser]['lv']==1) {
-      // if we've found text and we're just in a <value> then
-      // turn quoting on, as this will be a string
-      $_xh[$parser]['qt']=1;
-      // and say we've found a value
-      $_xh[$parser]['lv']=2;
-    }
-    // replace characters that eval would
-    // do special things with
-    $_xh[$parser]['ac'].= xmlrpc_escape_php($data);
+EOD;
+  foreach ($xmlrpc_request->args as $arg) {
+    $xmlrpc_request->xml .= '<param><value>';
+    $v = xmlrpc_value($arg);
+    $xmlrpc_request->xml .= xmlrpc_value_get_xml($v);
+    $xmlrpc_request->xml .= "</value></param>\n";
   }
+  $xmlrpc_request->xml .= '</params></methodCall>';
+  return $xmlrpc_request;
+}
+
+
+function xmlrpc_error($code = NULL, $message = NULL) {
+  static $xmlrpc_error;
+  if ($code) {
+    $xmlrpc_error = new stdClass();
+    $xmlrpc_error->is_error = TRUE;
+    $xmlrpc_error->code = $code;
+    $xmlrpc_error->message = $message;
+  }
+  return $xmlrpc_error;
+}
+
+function xmlrpc_error_get_xml($xmlrpc_error) {
+    return <<<EOD
+<methodResponse>
+  <fault>
+  <value>
+    <struct>
+    <member>
+      <name>faultCode</name>
+      <value><int>{$xmlrpc_error->code}</int></value>
+    </member>
+    <member>
+      <name>faultString</name>
+      <value><string>{$xmlrpc_error->message}</string></value>
+    </member>
+    </struct>
+  </value>
+  </fault>
+</methodResponse>
+
+EOD;
+}
+
+function xmlrpc_date($time) {
+  $xmlrpc_date = new stdClass();
+  $xmlrpc_date->is_date = TRUE;
+  // $time can be a PHP timestamp or an ISO one
+  if (is_numeric($time)) {
+    $xmlrpc_date->year = date('Y', $time);
+    $xmlrpc_date->month = date('m', $time);
+    $xmlrpc_date->day = date('d', $time);
+    $xmlrpc_date->hour = date('H', $time);
+    $xmlrpc_date->minute = date('i', $time);
+    $xmlrpc_date->second = date('s', $time);
+  }
+  else {
+    $xmlrpc_date->year = substr($time, 0, 4);
+    $xmlrpc_date->month = substr($time, 4, 2);
+    $xmlrpc_date->day = substr($time, 6, 2);
+    $xmlrpc_date->hour = substr($time, 9, 2);
+    $xmlrpc_date->minute = substr($time, 12, 2);
+    $xmlrpc_date->second = substr($time, 15, 2);
+  }
+  return $xmlrpc_date;
+}
+
+function xmlrpc_date_get_xml($xmlrpc_date) {
+  return '<dateTime.iso8601>'. $xmlrpc_date->year . $xmlrpc_date->month . $xmlrpc_date->day .'T'. $xmlrpc_date->hour .':'. $xmlrpc_date->minute .':'. $xmlrpc_date->second .'</dateTime.iso8601>';
+}
+
+function xmlrpc_base64($data) {
+  $xmlrpc_base64 = new stdClass();
+  $xmlrpc_base64->is_base64 = TRUE;
+  $xmlrpc_base64->data = $data;
+  return $xmlrpc_base64;
+}
+
+function xmlrpc_base64_get_xml($xmlrpc_base64) {
+  return '<base64>'. base64_encode($xmlrpc_base64->data) .'</base64>';
 }
 
 /**
- * Escapes a piece of text so it can be placed literally between single quotes
- * as a string inside PHP code.
+ * Perform an XML-RPC request.
  *
- * A single slash is converted to a double slash, a single quote converted to
- * a slash followed by a quote.
+ * @param $url
+ *    An absolute URL of the XML-RPC server
+ * @param $method
+ *    The method to be executed
+ * @param ...
+ *   A variable number of arguments of the method.
+ * @return
+ *   The return value of the method on success or FALSE. On FALSE, see
+ *   xmlrpc_errno() and xmlrpc_error_msg().
  */
-function xmlrpc_escape_php($data) {
-  return str_replace(array('\\', "'"),
-                     array('\\\\', "\\'"),
-                     $data);
+function xmlrpc() {
+  $args = func_get_args();
+  $url = array_shift($args);
+  $method = array_shift($args);
+  $xmlrpc_request = xmlrpc_request($method, $args);
+//  $request .= "Content-Type: text/xml$r";
+  $result = drupal_http_request($url, array("Content-Type" => "text/xml"), 'POST', $xmlrpc_request->xml);
+  if ($result->code != 200) {
+    xmlrpc_error(-$result->code, $result->error);
+    return FALSE;
+  }
+  $message = xmlrpc_message($result->data);
+  // Now parse what we've got back
+  if (!xmlrpc_message_parse($message)) {
+    // XML error
+    xmlrpc_error(-32700, t('parse error. not well formed'));
+    return FALSE;
+  }
+  // Is the message a fault?
+  if ($message->messagetype == 'fault') {
+    xmlrpc_error($message->faultcode, $message->faultstring);
+    return FALSE;
+  }
+  // Message must be OK
+  return $message->params[0];
 }
 
-function xmlrpc_dh($parser, $data)
-{
-  global $_xh;
-  if (substr($data, 0, 1) == "&" && substr($data, -1, 1) == ";") {
-    if ($_xh[$parser]['lv']==1) {
-      $_xh[$parser]['qt']=1;
-      $_xh[$parser]['lv']=2;
-    }
-    $_xh[$parser]['ac'].= xmlrpc_escape_php($data);
+/**
+ * Perform multiple calls in one request if possible.
+ *
+ * @param $url
+ *    An absolute URL of the XML-RPC server
+ * @param $calls
+ *    An array of calls. Each call is an array, where the first element
+ *    is the method name, further elements are the arguments.
+ * @return
+ */
+function xmlrpc_multicall() {
+  $args = func_get_args();
+  $url = $args[0];
+  $client = xmlrpc_client_multicall($url);
+  foreach ($args[1] as $call) {
+    $method = array_shift($call);
+    $calls[] = array(
+      'methodName' => $method,
+      'params' => $args
+    );
   }
+  $result = xmlrpc($url, 'system.multicall', $calls);
+//    $result = xmlrpc_client_multicall_query($client);
+//    $results[$method] = ($result === FALSE) ? xmlrpc_error() : $result;
+//    return $results;
 }
 
-class xmlrpc_client {
-  var $path;
-  var $server;
-  var $port;
-  var $errno;
-  var $errstring;
-  var $debug=0;
-  var $username="";
-  var $password="";
-  var $cert="";
-  var $certpass="";
-
-  function xmlrpc_client($path, $server, $port=0) {
-    $this->port=$port; $this->server=$server; $this->path=$path;
-  }
-
-  function setDebug($in) {
-    if ($in) {
-      $this->debug=1;
-    } else {
-      $this->debug=0;
-    }
-  }
-
-  function setCredentials($u, $p) {
-    $this->username=$u;
-    $this->password=$p;
-  }
-
-  function setCertificate($cert, $certpass) {
-    $this->cert = $cert;
-    $this->certpass = $certpass;
-  }
-
-  function send($msg, $timeout=0, $method='http') {
-    // where msg is an xmlrpcmsg
-    $msg->debug=$this->debug;
-
-    if ($method == 'https') {
-      return $this->sendPayloadHTTPS($msg,
-          $this->server,
-          $this->port, $timeout,
-          $this->username, $this->password,
-          $this->cert,
-          $this->certpass);
-    } else {
-      return $this->sendPayloadHTTP10($msg, $this->server, $this->port,
-          $timeout, $this->username,
-          $this->password);
-    }
-  }
-
-  function sendPayloadHTTP10($msg, $server, $port, $timeout=0,
-      $username="", $password="") {
-    if ($port==0) $port=80;
-    if($timeout>0)
-      $fp=fsockopen($server, $port,
-          $this->errno, $this->errstr, $timeout);
-    else
-      $fp=fsockopen($server, $port,
-          $this->errno, $this->errstr);
-    if (!$fp) {
-      return 0;
-    }
-    // Only create the payload if it was not created previously
-    if(empty($msg->payload)) $msg->createPayload();
-
-    // thanks to Grant Rauscher <grant7@firstworld.net>
-    // for this
-    $credentials="";
-    if ($username!="") {
-      $credentials="Authorization: Basic " .
-        base64_encode($username . ":" . $password) . "\r\n";
-    }
-
-    $op= "POST " . $this->path. " HTTP/1.0\r\nUser-Agent: PHP XMLRPC 1.0\r\n" .
-      "Host: ". $this->server  . "\r\n" .
-      $credentials .
-      "Content-Type: text/xml\r\nContent-Length: " .
-      strlen($msg->payload) . "\r\n\r\n" .
-      $msg->payload;
-
-    if (!fputs($fp, $op, strlen($op))) {
-      $this->errstr="Write error";
-      return 0;
-    }
-    $resp=$msg->parseResponseFile($fp);
-    fclose($fp);
-    return $resp;
-  }
-
-  // contributed by Justin Miller <justin@voxel.net>
-  // requires curl to be built into PHP
-  function sendPayloadHTTPS($msg, $server, $port, $timeout=0,
-      $username="", $password="", $cert="",
-      $certpass="") {
-    global $xmlrpcerr, $xmlrpcstr;
-    if ($port == 0) $port = 443;
-
-    // Only create the payload if it was not created previously
-    if(empty($msg->payload)) $msg->createPayload();
-
-    if (!function_exists("curl_init")) {
-      $r=new xmlrpcresp(0, $xmlrpcerr["no_ssl"],
-          $xmlrpcstr["no_ssl"]);
-      return $r;
-    }
-
-    $curl = curl_init("https://" . $server . ':' . $port .
-        $this->path);
-
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-    // results into variable
-    if ($this->debug) {
-      curl_setopt($curl, CURLOPT_VERBOSE, 1);
-    }
-    curl_setopt($curl, CURLOPT_USERAGENT, 'PHP XMLRPC 1.0');
-    // required for XMLRPC
-    curl_setopt($curl, CURLOPT_POST, 1);
-    // post the data
-    curl_setopt($curl, CURLOPT_POSTFIELDS, $msg->payload);
-    // the data
-    curl_setopt($curl, CURLOPT_HEADER, 1);
-    // return the header too
-    curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: text/xml'));
-    // required for XMLRPC
-    if ($timeout) curl_setopt($curl, CURLOPT_TIMEOUT, $timeout == 1 ? 1 :
-        $timeout - 1);
-    // timeout is borked
-    if ($username && $password) curl_setopt($curl, CURLOPT_USERPWD,
-        "$username:$password");
-    // set auth stuff
-    if ($cert) curl_setopt($curl, CURLOPT_SSLCERT, $cert);
-    // set cert file
-    if ($certpass) curl_setopt($curl, CURLOPT_SSLCERTPASSWD,
-        $certpass);
-    // set cert password
-
-    $result = curl_exec($curl);
-
-    if (!$result) {
-      $resp=new xmlrpcresp(0,
-          $xmlrpcerr["curl_fail"],
-          $xmlrpcstr["curl_fail"]. ": ".
-          curl_error($curl));
-    } else {
-      $resp = $msg->parseResponse($result);
-    }
-    curl_close($curl);
-    return $resp;
-  }
-
-} // end class xmlrpc_client
-
-class xmlrpcresp {
-  var $xv;
-  var $fn;
-  var $fs;
-  var $hdrs;
-
-  function xmlrpcresp($val, $fcode=0, $fstr="") {
-    if ($fcode!=0) {
-      $this->xv=0;
-      $this->fn=$fcode;
-      $this->fs=htmlspecialchars($fstr);
-    } else {
-      $this->xv=$val;
-      $this->fn=0;
-    }
-  }
-
-  function faultCode() {
-    if (isset($this->fn))
-      return $this->fn;
-    else
-      return 0;
-  }
-
-  function faultString() { return $this->fs; }
-  function value() { return $this->xv; }
-
-  function serialize() {
-    $rs="<methodResponse>\n";
-    if ($this->fn) {
-      $rs.="<fault>
-        <value>
-        <struct>
-        <member>
-        <name>faultCode</name>
-        <value><int>" . $this->fn . "</int></value>
-        </member>
-        <member>
-        <name>faultString</name>
-        <value><string>" . $this->fs . "</string></value>
-        </member>
-        </struct>
-        </value>
-        </fault>";
-    } else {
-      $rs.="<params>\n<param>\n" . $this->xv->serialize() .
-        "</param>\n</params>";
-    }
-    $rs.="\n</methodResponse>";
-    return $rs;
-  }
+/**
+ * Returns the last XML-RPC client error number
+ */
+function xmlrpc_errno() {
+  $error = xmlrpc_error();
+  return $error->code;
 }
 
-class xmlrpcmsg {
-  var $payload;
-  var $methodname;
-  var $params=array();
-  var $debug=0;
-
-  function xmlrpcmsg($meth, $pars=0) {
-    $this->methodname=$meth;
-    if (is_array($pars) && sizeof($pars)>0) {
-      for($i=0; $i<sizeof($pars); $i++)
-        $this->addParam($pars[$i]);
-    }
-  }
-
-  function xml_header() {
-    return "<?xml version=\"1.0\"?>\n<methodCall>\n";
-  }
-
-  function xml_footer() {
-    return "</methodCall>\n";
-  }
-
-  function createPayload() {
-    $this->payload=$this->xml_header();
-    $this->payload.="<methodName>" . $this->methodname . "</methodName>\n";
-    //  if (sizeof($this->params)) {
-    $this->payload.="<params>\n";
-    for($i=0; $i<sizeof($this->params); $i++) {
-      $p=$this->params[$i];
-      $this->payload.="<param>\n" . $p->serialize() .
-        "</param>\n";
-    }
-    $this->payload.="</params>\n";
-    // }
-    $this->payload.=$this->xml_footer();
-    $this->payload=str_replace("\n", "\r\n", $this->payload);
-  }
-
-  function method($meth="") {
-    if ($meth!="") {
-      $this->methodname=$meth;
-    }
-    return $this->methodname;
-  }
-
-  function serialize() {
-    $this->createPayload();
-    return $this->payload;
-  }
-
-  function addParam($par) { $this->params[]=$par; }
-  function getParam($i) { return $this->params[$i]; }
-  function getNumParams() { return sizeof($this->params); }
-
-  function parseResponseFile($fp) {
-    $ipd="";
-
-    while($data=fread($fp, 32768)) {
-      $ipd.=$data;
-    }
-    return $this->parseResponse($ipd);
-  }
-
-  function parseResponse($data="") {
-    global $_xh,$xmlrpcerr,$xmlrpcstr;
-
-
-    $xmlparser = drupal_xml_parser_create($data);
-    $parser = (int)$xmlparser;
-
-    $_xh[$parser]=array();
-
-    $_xh[$parser]['st']="";
-    $_xh[$parser]['cm']=0;
-    $_xh[$parser]['isf']=0;
-    $_xh[$parser]['ac']="";
-    $_xh[$parser]['qt']="";
-    $_xh[$parser]['ha']="";
-    $_xh[$parser]['ac']="";
-
-    xml_parser_set_option($xmlparser, XML_OPTION_CASE_FOLDING, true);
-    xml_set_element_handler($xmlparser, "xmlrpc_se", "xmlrpc_ee");
-    xml_set_character_data_handler($xmlparser, "xmlrpc_cd");
-    xml_set_default_handler($xmlparser, "xmlrpc_dh");
-    $xmlrpc_value=new xmlrpcval;
-
-    if ($this->debug)
-##print "<pre>---GOT---\n" . htmlspecialchars($data) .  "\n---END---\n</pre>";
-##print "<p>---GOT---\n" . nl2br(htmlspecialchars($data)) .  "\n---END---\n</p>";
-      print "<p>---GOT---\n" . nl2br($data) .  "\n---END---\n</p>";
-    if ($data=="") {
-      error_log("No response received from server.");
-      $r=new xmlrpcresp(0, $xmlrpcerr["no_data"],
-          $xmlrpcstr["no_data"]);
-      xml_parser_free($xmlparser);
-      return $r;
-    }
-    // see if we got an HTTP 200 OK, else bomb
-    // but only do this if we're using the HTTP protocol.
-    if (ereg("^HTTP",$data) &&
-        !ereg("^HTTP/[0-9\.]+ 200 ", $data)) {
-      $errstr= substr($data, 0, strpos($data, "\n")-1);
-      error_log("HTTP error, got response: " .$errstr);
-      $r=new xmlrpcresp(0, $xmlrpcerr["http_error"],
-          $xmlrpcstr["http_error"]. " (" . $errstr . ")");
-      xml_parser_free($xmlparser);
-      return $r;
-    }
-
-    // if using HTTP, then gotta get rid of HTTP headers here
-    // and we store them in the 'ha' bit of our data array
-    if (ereg("^HTTP", $data)) {
-      $ar=explode("\r\n", $data);
-      $newdata="";
-      $hdrfnd=0;
-      for ($i=0; $i<sizeof($ar); $i++) {
-        if (!$hdrfnd) {
-          if (strlen($ar[$i])>0) {
-            $_xh[$parser]['ha'].=$ar[$i]. "\r\n";
-          } else {
-            $hdrfnd=1;
-          }
-        } else {
-          $newdata.=$ar[$i] . "\r\n";
-        }
-      }
-      $data=$newdata;
-    }
-
-    if (!xml_parse($xmlparser, $data, sizeof($data))) {
-      // thanks to Peter Kocks <peter.kocks@baygate.com>
-      if((xml_get_current_line_number($xmlparser)) == 1)
-        $errstr = "XML error at line 1, check URL";
-      else
-        $errstr = sprintf("XML error: %s at line %d",
-            xml_error_string(xml_get_error_code($xmlparser)),
-            xml_get_current_line_number($xmlparser));
-      error_log($errstr);
-      $r=new xmlrpcresp(0, $xmlrpcerr["invalid_return"],
-          $xmlrpcstr["invalid_return"]);
-      xml_parser_free($xmlparser);
-      return $r;
-    }
-    xml_parser_free($xmlparser);
-    if ($this->debug) {
-      print "<pre>---EVALING---[" .
-        strlen($_xh[$parser]['st']) . " chars]---\n" .
-        htmlspecialchars($_xh[$parser]['st']) . ";\n---END---</pre>";
-    }
-    if (strlen($_xh[$parser]['st'])==0) {
-      // then something odd has happened
-      // and it's time to generate a client side error
-      // indicating something odd went on
-      $r=new xmlrpcresp(0, $xmlrpcerr["invalid_return"],
-          $xmlrpcstr["invalid_return"]);
-    } else {
-      eval('$v=' . $_xh[$parser]['st'] . '; $allOK=1;');
-      if ($_xh[$parser]['isf']) {
-        $f=$v->structmem("faultCode");
-        $fs=$v->structmem("faultString");
-        $r=new xmlrpcresp($v, $f->scalarval(),
-            $fs->scalarval());
-      } else {
-        $r=new xmlrpcresp($v);
-      }
-    }
-    $r->hdrs=split("\r?\n", $_xh[$parser]['ha']);
-    return $r;
-  }
-
+/**
+ * Returns the last XML-RPC client error message
+ */
+function xmlrpc_error_msg() {
+  $error = xmlrpc_error();
+  return $error->message;
 }
-
-class xmlrpcval {
-  var $me=array();
-  var $mytype=0;
-
-  function xmlrpcval($val=-1, $type="") {
-    global $xmlrpcTypes;
-    $this->me=array();
-    $this->mytype=0;
-    if ($val!=-1 || $type!="") {
-      if ($type=="") $type="string";
-      if ($xmlrpcTypes[$type]==1) {
-        $this->addScalar($val,$type);
-      }
-      else if ($xmlrpcTypes[$type]==2)
-        $this->addArray($val);
-      else if ($xmlrpcTypes[$type]==3)
-        $this->addStruct($val);
-    }
-  }
-
-  function addScalar($val, $type="string") {
-    global $xmlrpcTypes, $xmlrpcBoolean;
-
-    if ($this->mytype==1) {
-      echo "<strong>xmlrpcval</strong>: scalar can have only one value<br />";
-      return 0;
-    }
-    $typeof=$xmlrpcTypes[$type];
-    if ($typeof!=1) {
-      echo "<strong>xmlrpcval</strong>: not a scalar type (${typeof})<br />";
-      return 0;
-    }
-
-    if ($type==$xmlrpcBoolean) {
-      if (strcasecmp($val,"true")==0 ||
-          $val==1 || ($val==true &&
-            strcasecmp($val,"false"))) {
-        $val=1;
-      } else {
-        $val=0;
-      }
-    }
-
-    if ($this->mytype==2) {
-      // we're adding to an array here
-      $ar=$this->me["array"];
-      $ar[]=new xmlrpcval($val, $type);
-      $this->me["array"]=$ar;
-    } else {
-      // a scalar, so set the value and remember we're scalar
-      $this->me[$type]=$val;
-      $this->mytype=$typeof;
-    }
-    return 1;
-  }
-
-  function addArray($vals) {
-    global $xmlrpcTypes;
-    if ($this->mytype!=0) {
-      echo "<strong>xmlrpcval</strong>: already initialized as a [" .
-        $this->kindOf() . "]<br />";
-      return 0;
-    }
-
-    $this->mytype=$xmlrpcTypes["array"];
-    $this->me["array"]=$vals;
-    return 1;
-  }
-
-  function addStruct($vals) {
-    global $xmlrpcTypes;
-    if ($this->mytype!=0) {
-      echo "<strong>xmlrpcval</strong>: already initialized as a [" .
-        $this->kindOf() . "]<br />";
-      return 0;
-    }
-    $this->mytype=$xmlrpcTypes["struct"];
-    $this->me["struct"]=$vals;
-    return 1;
-  }
-
-  function dump($ar) {
-    reset($ar);
-    while ( list( $key, $val ) = each( $ar ) ) {
-      echo "$key => $val<br />";
-      if ($key == 'array')
-        while ( list( $key2, $val2 ) = each( $val ) ) {
-          echo "-- $key2 => $val2<br />";
-        }
-    }
-  }
-
-  function kindOf() {
-    switch($this->mytype) {
-      case 3:
-        return "struct";
-        break;
-      case 2:
-        return "array";
-        break;
-      case 1:
-        return "scalar";
-        break;
-      default:
-        return "undef";
-    }
-  }
-
-  function serializedata($typ, $val) {
-    $rs="";
-    global $xmlrpcTypes, $xmlrpcBase64, $xmlrpcString,
-    $xmlrpcBoolean;
-    switch($xmlrpcTypes[$typ]) {
-      case 3:
-        // struct
-        $rs.="<struct>\n";
-        reset($val);
-        while(list($key2, $val2)=each($val)) {
-          $rs.="<member><name>${key2}</name>\n";
-          $rs.=$this->serializeval($val2);
-          $rs.="</member>\n";
-        }
-        $rs.="</struct>";
-        break;
-      case 2:
-        // array
-        $rs.="<array>\n<data>\n";
-        for($i=0; $i<sizeof($val); $i++) {
-          $rs.=$this->serializeval($val[$i]);
-        }
-        $rs.="</data>\n</array>";
-        break;
-      case 1:
-        switch ($typ) {
-          case $xmlrpcBase64:
-            $rs.="<${typ}>" . base64_encode($val) . "</${typ}>";
-            break;
-          case $xmlrpcBoolean:
-            $rs.="<${typ}>" . ($val ? "1" : "0") . "</${typ}>";
-            break;
-          case $xmlrpcString:
-            $rs.="<${typ}>" . htmlspecialchars($val). "</${typ}>";
-            break;
-          default:
-            $rs.="<${typ}>${val}</${typ}>";
-        }
-        break;
-      default:
-        break;
-    }
-    return $rs;
-  }
-
-  function serialize() {
-    return $this->serializeval($this);
-  }
-
-  function serializeval($o) {
-    global $xmlrpcTypes;
-    $rs="";
-    $ar=$o->me;
-    reset($ar);
-    list($typ, $val) = each($ar);
-    $rs.="<value>";
-    $rs.=$this->serializedata($typ, $val);
-    $rs.="</value>\n";
-    return $rs;
-  }
-
-  function structmem($m) {
-    $nv=$this->me["struct"][$m];
-    return $nv;
-  }
-
-  function structreset() {
-    reset($this->me["struct"]);
-  }
-
-  function structeach() {
-    return each($this->me["struct"]);
-  }
-
-  function getval() {
-    // UNSTABLE
-    global $xmlrpcBoolean, $xmlrpcBase64;
-    reset($this->me);
-    list($a,$b)=each($this->me);
-    // contributed by I Sofer, 2001-03-24
-    // add support for nested arrays to scalarval
-    // I've created a new method here, so as to
-    // preserve back compatibility
-
-    if (is_array($b))    {
-      foreach ($b as $id => $cont) {
-        $b[$id] = $cont->scalarval();
-      }
-    }
-
-    // add support for structures directly encoding php objects
-    if (is_object($b))  {
-      $t = get_object_vars($b);
-      foreach ($t as $id => $cont) {
-        $t[$id] = $cont->scalarval();
-      }
-      foreach ($t as $id => $cont) {
-        eval('$b->'.$id.' = $cont;');
-      }
-    }
-    // end contrib
-    return $b;
-  }
-
-  function scalarval() {
-    global $xmlrpcBoolean, $xmlrpcBase64;
-    reset($this->me);
-    list($a,$b)=each($this->me);
-    return $b;
-  }
-
-  function scalartyp() {
-    global $xmlrpcI4, $xmlrpcInt;
-    reset($this->me);
-    list($a,$b)=each($this->me);
-    if ($a==$xmlrpcI4)
-      $a=$xmlrpcInt;
-    return $a;
-  }
-
-  function arraymem($m) {
-    $nv=$this->me["array"][$m];
-    return $nv;
-  }
-
-  function arraysize() {
-    reset($this->me);
-    list($a,$b)=each($this->me);
-    return sizeof($b);
-  }
-}
-
-// date helpers
-function iso8601_encode($timet, $utc=0) {
-  // return an ISO8601 encoded string
-  // really, timezones ought to be supported
-  // but the XML-RPC spec says:
-  //
-  // "Don't assume a timezone. It should be specified by the server in its
-  // documentation what assumptions it makes about timezones."
-  //
-  // these routines always assume localtime unless
-  // $utc is set to 1, in which case UTC is assumed
-  // and an adjustment for locale is made when encoding
-  if (!$utc) {
-    $t=strftime("%Y%m%dT%H:%M:%S", $timet);
-  } else {
-    if (function_exists("gmstrftime"))
-      // gmstrftime doesn't exist in some versions
-      // of PHP
-      $t=gmstrftime("%Y%m%dT%H:%M:%S", $timet);
-    else {
-      $t=strftime("%Y%m%dT%H:%M:%S", $timet-date("Z"));
-    }
-  }
-  return $t;
-}
-
-function iso8601_decode($idate, $utc=0) {
-  // return a timet in the localtime, or UTC
-  $t=0;
-  if (ereg("([0-9]{4})([0-9]{2})([0-9]{2})T([0-9]{2}):([0-9]{2}):([0-9]{2})",
-        $idate, $regs)) {
-    if ($utc) {
-      $t=gmmktime($regs[4], $regs[5], $regs[6], $regs[2], $regs[3], $regs[1]);
-    } else {
-      $t=mktime($regs[4], $regs[5], $regs[6], $regs[2], $regs[3], $regs[1]);
-    }
-  }
-  return $t;
-}
-
-/*****************************************************************
- * _xmlrpc_decode takes a message in PHP xmlrpc object format and *
- * translates it into native PHP types.                            *
- *                                                                *
- * author: Dan Libby (dan@libby.com)                              *
- *****************************************************************/
-function _xmlrpc_decode($xmlrpc_val) {
-  $kind = $xmlrpc_val->kindOf();
-
-  if($kind == "scalar") {
-    return $xmlrpc_val->scalarval();
-  }
-  else if($kind == "array") {
-    $size = $xmlrpc_val->arraysize();
-    $arr = array();
-
-    for($i = 0; $i < $size; $i++) {
-      $arr[]=_xmlrpc_decode($xmlrpc_val->arraymem($i));
-    }
-    return $arr;
-  }
-  else if($kind == "struct") {
-    $xmlrpc_val->structreset();
-    $arr = array();
-
-    while(list($key,$value)=$xmlrpc_val->structeach()) {
-      $arr[$key] = _xmlrpc_decode($value);
-    }
-    return $arr;
-  }
-}
-
-/****************************************************************
- * _xmlrpc_encode takes native php types and encodes them into   *
- * xmlrpc PHP object format.                                     *
- * BUG: All sequential arrays are turned into structs.  I don't  *
- * know of a good way to determine if an array is sequential     *
- * only.                                                         *
- *                                                               *
- * feature creep -- could support more types via optional type   *
- * argument.                                                     *
- *                                                               *
- * author: Dan Libby (dan@libby.com)                             *
- ****************************************************************/
-function _xmlrpc_encode($php_val) {
-  global $xmlrpcInt;
-  global $xmlrpcDouble;
-  global $xmlrpcString;
-  global $xmlrpcArray;
-  global $xmlrpcStruct;
-  global $xmlrpcBoolean;
-
-  $type = gettype($php_val);
-  $xmlrpc_val = new xmlrpcval;
-
-  switch($type) {
-    case "array":
-      case "object":
-      $arr = array();
-    while (list($k,$v) = each($php_val)) {
-      $arr[$k] = _xmlrpc_encode($v);
-    }
-    $xmlrpc_val->addStruct($arr);
-    break;
-    case "integer":
-      $xmlrpc_val->addScalar($php_val, $xmlrpcInt);
-    break;
-    case "double":
-      $xmlrpc_val->addScalar($php_val, $xmlrpcDouble);
-    break;
-    case "string":
-      $xmlrpc_val->addScalar($php_val, $xmlrpcString);
-    break;
-    // <G_Giunta_2001-02-29>
-    // Add support for encoding/decoding of booleans, since they are supported in PHP
-    case "boolean":
-      $xmlrpc_val->addScalar($php_val, $xmlrpcBoolean);
-    break;
-    // </G_Giunta_2001-02-29>
-    case "unknown type":
-    default:
-      // giancarlo pinerolo <ping@alt.it>
-      // it has to return
-      // an empty object in case (which is already
-      // at this point), not a boolean.
-      break;
-  }
-  return $xmlrpc_val;
-}
-
 ?>

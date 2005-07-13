@@ -22,53 +22,123 @@ function blogapi_help($section) {
  * Implementation of hook_xmlrpc().
  */
 function blogapi_xmlrpc() {
-  $methods = array('blogger.getUsersBlogs' => array('function' => 'blogapi_get_users_blogs'),
-                   'blogger.getUserInfo' => array('function' => 'blogapi_get_user_info'),
-                   'blogger.newPost' => array('function' => 'blogapi_new_post'),
-                   'blogger.editPost' => array('function' => 'blogapi_edit_post'),
-                   'blogger.deletePost' => array('function' => 'blogapi_delete_post'),
-                   'blogger.getRecentPosts' => array('function' => 'blogapi_get_recent_posts'),
-                   'metaWeblog.newPost' => array('function' => 'blogapi_new_post'),
-                   'metaWeblog.editPost' => array('function' => 'blogapi_edit_post'),
-                   'metaWeblog.getPost' => array('function' => 'blogapi_get_post'),
-                   'metaWeblog.newMediaObject' => array('function' => 'blogapi_new_media_object'),
-                   'metaWeblog.getCategories' => array('function' => 'blogapi_get_category_list'),
-                   'metaWeblog.getRecentPosts' => array('function' => 'blogapi_get_recent_posts'),
-                   'mt.getRecentPostTitles' => array('function' => 'blogapi_get_recent_post_titles'),
-                   'mt.getCategoryList' => array('function' => 'blogapi_get_category_list'),
-                   'mt.getPostCategories' => array('function' => 'blogapi_get_post_categories'),
-                   'mt.setPostCategories' => array('function' => 'blogapi_set_post_categories'),
-                   'mt.supportedMethods' => array('function' => 'blogapi_supported_methods'),
-                   'mt.supportedTextFilters' => array('function' => 'blogapi_supported_text_filters'),
-                   'mt.getTrackbackPings' => array('function' => 'blogapi_get_trackback_pings'),
-                   'mt.publishPost' => array('function' => 'blogapi_publish_post')
-                   );
-
-  return $methods;
+  return array(
+    array(
+      'blogger.getUsersBlogs',
+      'blogapi_blogger_get_users_blogs',
+      array('array', 'string', 'string', 'string'),
+      t('Returns a list of weblogs to which an author has posting privileges.')),
+    array(
+      'blogger.getUserInfo',
+      'blogapi_blogger_get_user_info',
+      array('struct', 'string', 'string', 'string'),
+      t('Returns information about an author in the system.')),
+    array(
+      'blogger.newPost',
+      'blogapi_blogger_new_post',
+      array('string', 'string', 'string', 'string', 'string', 'string', 'boolean'),
+      t('Creates a new post, and optionally publishes it.')),
+    array(
+      'blogger.editPost',
+      'blogapi_blogger_edit_post',
+      array('boolean', 'string', 'string', 'string', 'string', 'string', 'boolean'),
+      t('Updates the information about an existing post.')),
+    array(
+      'blogger.deletePost',
+      'blogapi_blogger_delete_post',
+      array('boolean', 'string', 'string', 'string', 'string', 'boolean'),
+      t('Deletes a post.')),
+    array(
+      'blogger.getRecentPosts',
+      'blogapi_blogger_get_recent_posts',
+      array('array', 'string', 'string', 'string', 'string', 'int'),
+      t('Returns a list of the most recent posts in the system.')),
+    array(
+      'metaWeblog.newPost',
+      'blogapi_metaweblog_new_post',
+      array('string', 'string', 'string', 'string', 'struct', 'boolean'),
+      t('Creates a new post, and optionally publishes it.')),
+    array(
+      'metaWeblog.editPost',
+      'blogapi_metaweblog_edit_post',
+      array('boolean', 'string', 'string', 'string', 'struct', 'boolean'),
+      t('Updates information about an existing post.')),
+    array(
+      'metaWeblog.getPost',
+      'blogapi_metaweblog_get_post',
+      array('struct', 'string', 'string', 'string'),
+      t('Returns information about a specific post.')),
+    array(
+      'metaWeblog.newMediaObject',
+      'blogapi_metaweblog_new_media_object',
+      array('string', 'string', 'string', 'string', 'struct'),
+      t('Uploads a file to your webserver.')),
+    array(
+      'metaWeblog.getCategories',
+      'blogapi_metaweblog_get_category_list',
+      array('struct', 'string', 'string', 'string'),
+      t('Returns a list of all categories to which the post is assigned.')),
+    array(
+      'metaWeblog.getRecentPosts',
+      'blogapi_metaweblog_get_recent_posts',
+      array('array', 'string', 'string', 'string', 'int'),
+      t('Returns a list of the most recent posts in the system.')),
+    array(
+      'mt.getRecentPostTitles',
+      'blogapi_mt_get_recent_post_titles',
+      array('array', 'string', 'string', 'string', 'int'),
+      t('Returns a bandwidth-friendly list of the most recent posts in the system.')),
+    array(
+      'mt.getCategoryList',
+      'blogapi_mt_get_category_list',
+      array('array', 'string', 'string', 'string'),
+      t('Returns a list of all categories defined in the weblog.')),
+    array(
+      'mt.getPostCategories',
+      'blogapi_mt_get_post_categories',
+      array('array', 'string', 'string', 'string'),
+      t('Returns a list of all categories to which the post is assigned.')),
+    array(
+      'mt.setPostCategories',
+      'blogapi_mt_set_post_categories',
+      array('boolean', 'string', 'string', 'string', 'array'),
+      t('Sets the categories for a post.')),
+    array(
+      'mt.supportedMethods',
+      'xmlrpc_server_list_methods',
+      array('array'),
+      t('Retrieve information about the XML-RPC methods supported by the server.')),
+    array(
+      'mt.supportedTextFilters',
+      'blogapi_mt_supported_text_filters',
+      array('array'),
+      t('Retrieve information about the text formatting plugins supported by the server.')),
+    array(
+      'mt.getTrackbackPings',
+      'blogapi_mt_get_trackback_pings',
+      array('array', 'string'),
+      t('Retrieve the list of TrackBack pings posted to a particular entry. This could be used to programmatically retrieve the list of pings for a particular entry, then iterate through each of those pings doing the same, until one has built up a graph of the web of entries referencing one another on a particular topic.')),
+    array(
+      'mt.publishPost',
+      'blogap_mti_publish_post',
+      array('boolean', 'string', 'string', 'string'),
+      t('Publish (rebuild) all of the static files related to an entry from your weblog. Equivalent to saving an entry in the system (but without the ping).')));
 }
 
 /**
  * Blogging API callback. Finds the URL of a user's blog.
  */
-function blogapi_get_users_blogs($req_params) {
-  $params = blogapi_convert($req_params);
-  // Remove unused appkey from bloggerAPI.
-  if (count($params) == 6) {
-    $params = array_slice($params, 1);
-  }
 
-  $user = blogapi_validate_user($params[1], $params[2]);
+function blogapi_blogger_get_users_blogs() {
+
+  $user = blogapi_validate_user($username, $password);
   if ($user->uid) {
     $types = _blogapi_get_node_types();
     $structs = array();
     foreach ($types as $type) {
-      $structs[] = new xmlrpcval(array('url' => new xmlrpcval(url('blog/' . $user->uid, NULL, NULL, true)),
-                                      'blogid' => new xmlrpcval($type, 'string'),
-                                      'blogName' => new xmlrpcval($user->name . ": " . $type)),
-                            'struct');
+      $structs[] = array('url' => url('blog/' . $user->uid, NULL, NULL, true), 'blogid' => $type, 'blogName' => $user->name . ": " . $type);
     }
-    $resp = new xmlrpcval($structs, 'array');
-    return new xmlrpcresp($resp);
+    return $structs;
   }
   else {
     return blogapi_error($user);
@@ -78,21 +148,18 @@ function blogapi_get_users_blogs($req_params) {
 /**
  * Blogging API callback. Returns profile information about a user.
  */
-function blogapi_get_user_info($req_params) {
-  $params = blogapi_convert($req_params);
-
-  $user = blogapi_validate_user($params[1], $params[2]);
+function blogapi_blogger_get_user_info($appkey, $username, $password) {
+  $user = blogapi_validate_user($username, $password);
 
   if ($user->uid) {
     $name = explode(' ', $user->realname ? $user->realname : $user->name, 2);
-    $struct = new xmlrpcval(array('userid' => new xmlrpcval($user->uid, 'string'),
-                                  'lastname' => new xmlrpcval($name[1], 'string'),
-                                  'firstname' => new xmlrpcval($name[0], 'string'),
-                                  'nickname' => new xmlrpcval($user->name, 'string'),
-                                  'email' => new xmlrpcval($user->mail, 'string'),
-                                  'url' => new xmlrpcval(url('blog/' . $user->uid, NULL, NULL, true), 'string')),
-                            'struct');
-    return new xmlrpcresp($struct);
+    return array(
+      'userid' => $user->uid,
+      'lastname' => $name[1],
+      'firstname' => $name[0],
+      'nickname' => $user->name,
+      'email' => $user->mail,
+      'url' => url('blog/' . $user->uid, NULL, NULL, true));
   }
   else {
     return blogapi_error($user);
@@ -102,21 +169,14 @@ function blogapi_get_user_info($req_params) {
 /**
  * Blogging API callback. Inserts a new blog post as a node.
  */
-function blogapi_new_post($req_params) {
-  $params = blogapi_convert($req_params);
-
-  // Remove unused appkey from bloggerAPI.
-  if (count($params) == 6) {
-    $params = array_slice($params, 1);
-  }
-
-  $user = blogapi_validate_user($params[1], $params[2]);
+function blogapi_blogger_new_post($appkey, $blogid, $username, $password, $content, $publish) {
+  $user = blogapi_validate_user($username, $password);
   if (!$user->uid) {
     return blogapi_error($user);
   }
 
   $edit = array();
-  $edit['type'] = _blogapi_blogid($params[0]);
+  $edit['type'] = _blogapi_blogid($blogid);
   // get the node type defaults
   $node_type_default = variable_get('node_options_'. $edit['type'], array('status', 'promote'));
   $edit['uid'] = $user->uid;
@@ -126,17 +186,17 @@ function blogapi_new_post($req_params) {
   $edit['moderate'] = in_array('moderate', $node_type_default);
   $edit['revision'] = in_array('revision', $node_type_default);
   $edit['format'] = FILTER_FORMAT_DEFAULT;
-  $edit['status'] = $params[4];
+  $edit['status'] = $publish;
 
   // check for bloggerAPI vs. metaWeblogAPI
-  if (is_array($params[3])) {
-    $edit['title'] = $params[3]['title'];
-    $edit['body'] = $params[3]['description'];
-    _blogapi_mt_extra($edit, $params[3]);
+  if (is_array($content)) {
+    $edit['title'] = $content['title'];
+    $edit['body'] = $content['description'];
+    _blogapi_mt_extra($edit, $content);
   }
   else {
-    $edit['title'] = blogapi_blogger_title($params[3]);
-    $edit['body'] = $params[3];
+    $edit['title'] = blogapi_blogger_title($content);
+    $edit['body'] = $content;
   }
 
   if (!valid_input_data($edit['title'], $edit['body'])) {
@@ -156,7 +216,7 @@ function blogapi_new_post($req_params) {
   $nid = node_save($node);
   if ($nid) {
     watchdog('content', t('%type: added %title using blog API.', array('%type' => '<em>'. t($node->type) .'</em>', '%title' => theme('placeholder', $node->title))), WATCHDOG_NOTICE, l(t('view'), "node/$nid"));
-    return new xmlrpcresp(new xmlrpcval($nid, 'string'));
+    return $nid;
   }
 
   return blogapi_error(t('Error storing post.'));
@@ -165,19 +225,15 @@ function blogapi_new_post($req_params) {
 /**
  * Blogging API callback. Modifies the specified blog node.
  */
-function blogapi_edit_post($req_params) {
-  $params = blogapi_convert($req_params);
-  if (count($params) == 6) {
-    $params = array_slice($params, 1);
-  }
+function blogapi_blogger_edit_post($appkey, $postid, $username, $password, $content, $publish) {
 
-  $user = blogapi_validate_user($params[1], $params[2]);
+  $user = blogapi_validate_user($username, $password);
 
   if (!$user->uid) {
     return blogapi_error($user);
   }
 
-  $node = node_load(array('nid' => $params[0]));
+  $node = node_load(array('nid' => $postid));
   if (!$node) {
     return blogapi_error(message_na());
   }
@@ -188,20 +244,20 @@ function blogapi_edit_post($req_params) {
     return blogapi_error(message_access());
   }
 
-  $node->status = $params[4];
+  $node->status = $publish;
 
   // check for bloggerAPI vs. metaWeblogAPI
-  if (is_array($params[3])) {
-    $node->title = $params[3]['title'];
-    $node->body = $params[3]['description'];
-    _blogapi_mt_extra($node, $params[3]);
+  if (is_array($content)) {
+    $node->title = $content['title'];
+    $node->body = $content['description'];
+    _blogapi_mt_extra($node, $content);
   }
   else {
-    $node->title = blogapi_blogger_title($params[3]);
-    $node->body = $params[3];
+    $node->title = blogapi_blogger_title($content);
+    $node->body = $content;
   }
 
-  if (!valid_input_data($title, $body)) {
+  if (!valid_input_data($node->title, $node->body)) {
     return blogapi_error(t('Terminated request because of suspicious input data.'));
   }
 
@@ -218,57 +274,78 @@ function blogapi_edit_post($req_params) {
   $nid = node_save($node);
   if ($nid) {
     watchdog('content', t('%type: updated %title using blog API.', array('%type' => '<em>'. t($node->type) .'</em>', '%title' => theme('placeholder', $node->title))), WATCHDOG_NOTICE, l(t('view'), "node/$nid"));
-    return new xmlrpcresp(new xmlrpcval(true, 'boolean'));
+    return true;
   }
 
   return blogapi_error(t('Error storing post.'));
 }
 
 /**
- * Blogging API callback. Returns a specified blog node.
+ * Blogging API callback. Removes the specified blog node.
  */
-function blogapi_get_post($req_params) {
-  $params = blogapi_convert($req_params);
-  $user = blogapi_validate_user($params[1], $params[2]);
+function blogapi_blogger_delete_post($appkey, $postid, $username, $password, $content, $publish) {
+  $user = blogapi_validate_user($username, $password);
   if (!$user->uid) {
     return blogapi_error($user);
   }
 
-  $node = node_load(array('nid' => $params[0]));
-
-  $blog = _blogapi_get_post($node, true);
-
-  return new xmlrpcresp($blog);
+  node_delete(array('nid' => $postid, 'confirm' => 1));
+  return true;
 }
 
 /**
- * Blogging API callback. Removes the specified blog node.
+ * Blogging API callback. Returns the latest few postings in a user's blog. $bodies TRUE
+ * <a href="http://movabletype.org/docs/mtmanual_programmatic.html#item_mt%2EgetRecentPostTitles">
+ * returns a bandwidth-friendly list</a>.
  */
-function blogapi_delete_post($req_params) {
-  $params = blogapi_convert($req_params);
-
-  $user = blogapi_validate_user($params[2], $params[3]);
+function blogapi_blogger_get_recent_posts($appkey, $blogid, $username, $password, $number_of_posts, $bodies = TRUE) {
+  // Remove unused appkey (from bloggerAPI).
+  $user = blogapi_validate_user($username, $password);
   if (!$user->uid) {
     return blogapi_error($user);
   }
 
-  $ret = node_delete(array('nid' => $params[1], 'confirm' => 1));
-  return new xmlrpcresp(new xmlrpcval(true, 'boolean'));
+  $type = _blogapi_blogid($blogid);
+  $result = db_query_range('SELECT n.nid, n.title,'. ($bodies ? ' n.body,' : '') ." n.created, u.name FROM {node} n, {users} u WHERE n.uid=u.uid AND n.type = '%s' AND n.uid = %d ORDER BY n.created DESC", $type, $user->uid, 0, $number_of_posts);
+  while ($blog = db_fetch_object($result)) {
+    $blogs[] = _blogapi_get_post($blog, $bodies);
+  }
+  return $blogs;
+}
+
+function blogapi_metaweblog_new_post($blogid, $username, $password, $content, $publish) {
+  return blogapi_blogger_new_post('0123456789ABCDEF', $blogid, $username, $password, $content, $publish);
+}
+
+function blogapi_metaweblog_edit_post($postid, $username, $password, $content, $publish) {
+  return blogapi_blogger_edit_post('0123456789ABCDEF', $postid, $username, $password, $content, $publish);
+}
+
+/**
+ * Blogging API callback. Returns a specified blog node.
+ */
+function blogapi_metaweblog_get_post($postid, $username, $password) {
+  $user = blogapi_validate_user($username, $password);
+  if (!$user->uid) {
+    return blogapi_error($user);
+  }
+
+  $node = node_load(array('nid' => $postid));
+
+  return _blogapi_get_post($node, true);
 }
 
 /**
  * Blogging API callback. Inserts a file into Drupal.
  */
-function blogapi_new_media_object($req_params) {
-  $params = blogapi_convert($req_params);
-
-  $user = blogapi_validate_user($params[1], $params[2]);
+function blogapi_metaweblog_new_media_object($blogid, $username, $password, $file) {
+  $user = blogapi_validate_user($username, $password);
   if (!$user->uid) {
     return blogapi_error($user);
   }
 
-  $name = basename($params[3]['name']);
-  $data = $params[3]['bits'];
+  $name = basename($file['name']);
+  $data = $file['bits'];
 
   if (!$data) {
     return blogapi_error(t('No file sent.'));
@@ -279,17 +356,14 @@ function blogapi_new_media_object($req_params) {
   }
 
   // Return the successful result.
-  $result = new xmlrpcval(array('url' => new xmlrpcval(file_create_url($file), 'string')), 'struct');
-  return new xmlrpcresp($result);
+  return array('url' => file_create_url($file));
 }
-
 /**
  * Blogging API callback. Returns a list of the taxonomy terms that can be
  * associated with a blog node.
  */
-function blogapi_get_category_list($req_params) {
-  $params = blogapi_convert($req_params);
-  $type = _blogapi_blogid($params[0]);
+function blogapi_metaweblog_get_category_list($blogid, $username, $password) {
+  $type = _blogapi_blogid($blogid);
   $vocabularies = module_invoke('taxonomy', 'get_vocabularies', $type, 'vid');
   $categories = array();
   if ($vocabularies) {
@@ -300,140 +374,102 @@ function blogapi_get_category_list($req_params) {
         foreach (module_invoke('taxonomy', 'get_parents', $term->tid, 'tid') as $parent) {
           $term_name = $parent->name . '/' . $term_name;
         }
-        $categories[] = new xmlrpcval(array('categoryName' => new xmlrpcval($term_name, 'string'),
-                                            'categoryId' => new xmlrpcval($term->tid, 'string')),
-                                      'struct');
+        $categories[] = array('categoryName' => $term_name, 'categoryId' => $term->tid);
       }
     }
   }
-  return new xmlrpcresp(new xmlrpcval($categories, 'array'));
+  return $categories;
+}
+
+function blogai_metaweblog_get_recent_posts($blogid, $username, $password, $number_of_posts) {
+  return blogapi_blogger_get_recent_posts('0123456789ABCDEF', $blogid, $username, $password, $number_of_posts, TRUE);
+}
+
+// see above
+function blogapi_mt_get_recent_post_titles($blogid, $username, $password, $number_of_posts) {
+  return blogapi_blogger_get_recent_posts('0123456789ABCDEF', $blogid, $username, $password, $number_of_posts, FALSE);
+}
+
+/* **** */
+function blogapi_mt_get_category_list($blogid, $username, $password) {
+  return blogapi_metaweblog_get_category_list($blogid, $username, $password);
 }
 
 /**
  * Blogging API callback. Returns a list of the taxonomy terms that are
  * assigned to a particular node.
  */
-function blogapi_get_post_categories($req_params) {
-  $params = blogapi_convert($req_params);
-  $user = blogapi_validate_user($params[1], $params[2]);
+function blogapi_mt_get_post_categories($postid, $username, $password) {
+  $user = blogapi_validate_user($username, $password);
   if (!$user->uid) {
     return blogapi_error($user);
   }
 
-  $terms = module_invoke('taxonomy', 'node_get_terms', $params[0], 'tid');
+  $terms = module_invoke('taxonomy', 'node_get_terms', $postid, 'tid');
   $categories = array();
   foreach ($terms as $term) {
     $term_name = $term->name;
     foreach (module_invoke('taxonomy', 'get_parents', $term->tid, 'tid') as $parent) {
       $term_name = $parent->name . '/' . $term_name;
     }
-    $categories[] = new xmlrpcval(array('categoryName' => new xmlrpcval($term_name, 'string'),
-                                        'categoryId' => new xmlrpcval($term->tid, 'string'),
-                                        'isPrimary' => new xmlrpcval(true, 'boolean')),
-                                  'struct');
+    $categories[] = array('categoryName' => $term_name, 'categoryId' => $term->tid, 'isPrimary' => true);
   }
-  return new xmlrpcresp(new xmlrpcval($categories, 'array'));
+  return $categories;
 }
 
 /**
  * Blogging API callback. Assigns taxonomy terms to a particular node.
  */
-function blogapi_set_post_categories($req_params) {
-  $params = blogapi_convert($req_params);
-  $user = blogapi_validate_user($params[1], $params[2]);
+function blogapi_mt_set_post_categories($postid, $username, $password, $categories) {
+  $user = blogapi_validate_user($username, $password);
   if (!$user->uid) {
     return blogapi_error($user);
   }
 
-  $nid = $params[0];
+  $nid = $postid;
   $terms = array();
-  foreach ($params[3] as $category) {
+  foreach ($categories as $category) {
     $terms[] = $category['categoryId']->scalarval();
   }
   module_invoke('taxonomy', 'node_save', $nid, $terms);
-  return new xmlrpcresp(new xmlrpcval(true, 'boolean'));
-}
-
-/**
- * Blogging API callback. Returns the latest few postings in a user's blog. $bodies TRUE
- * <a href="http://movabletype.org/docs/mtmanual_programmatic.html#item_mt%2EgetRecentPostTitles">
- * returns a bandwidth-friendly list</a>.
- */
-function blogapi_get_recent_posts($req_params, $bodies = TRUE) {
-  $params = blogapi_convert($req_params);
-
-  // Remove unused appkey (from bloggerAPI).
-  if (count($params) == 5) {
-    $params = array_slice($params, 1);
-  }
-  $user = blogapi_validate_user($params[1], $params[2]);
-  if (!$user->uid) {
-    return blogapi_error($user);
-  }
-
-  $type = _blogapi_blogid($params[0]);
-  $result = db_query_range('SELECT n.nid, n.title,'. ($bodies ? ' n.body,' : '') ." n.created, u.name FROM {node} n, {users} u WHERE n.uid=u.uid AND n.type = '%s' AND n.uid = %d ORDER BY n.created DESC",  $type, $user->uid, 0, $params[3]);
-  while ($blog = db_fetch_object($result)) {
-    $xmlrpcval = _blogapi_get_post($blog, $bodies);
-    $blogs[] = $xmlrpcval;
-  }
-  return new xmlrpcresp(new xmlrpcval($blogs, 'array'));
-}
-
-// see above
-function blogapi_get_recent_post_titles($req_params) {
-  return blogapi_get_recent_posts($req_params, TRUE);
-}
-
-/**
- * Blogging API callback. Sends a list of supported methods to the client.
- */
-function blogapi_supported_methods($req_params) {
-  $methods = array_keys(blogapi_xmlrpc());
-
-  $output = array();
-  foreach ($methods as $method) {
-    $output[] = new xmlrpcval($method, 'string');
-  }
-  return new xmlrpcresp(new xmlrpcval($output, 'array'));
+  return true;
 }
 
 /**
  * Blogging API callback. Sends a list of available input formats.
  */
-function blogapi_supported_text_filters($req_params) {
-  global $user;
-
+function blogapi_mt_supported_text_filters() {
   // NOTE: we're only using anonymous' formats because the MT spec
   // does not allow for per-user formats.
   $formats = filter_formats();
 
   $filters = array();
   foreach ($formats as $format) {
-    $filter['key'] = new xmlrpcval($format->format, 'string');
-    $filter['label'] = new xmlrpcval($format->name, 'string');
-    $filters[] = new xmlrpcval($filter, 'struct');
+    $filter['key'] = $format->format;
+    $filter['label'] = $format->name;
+    $filters[] = $filter;
   }
 
-  return new xmlrpcresp(new xmlrpcval($filters, 'array'));
+  return $filters;
 }
 
 /**
  * Blogging API callback. Can not be implemented without support from
  * trackback module.
  */
-function blogapi_get_trackback_pings($req_params) {
+function blogapi_mt_get_trackback_pings() {
   return blogapi_error(t('Not implemented.'));
 }
 
 /**
  * Blogging API callback. Publishes the given node
  */
-function blogapi_publish_post($req_params) {
-  $params = blogapi_convert($req_params);
-
-  $user = blogapi_validate_user($params[1], $params[2]);
-  $node = node_load(array('nid' => $params[0]));
+function blogap_mti_publish_post($postid, $username, $password) {
+  $user = blogapi_validate_user($username, $password);
+  if (!$user->uid) {
+    return blogapi_error($user);
+  }
+  $node = node_load(array('nid' => $postid));
   if (!$node) {
     return blogapi_error(t('Invalid post.'));
   }
@@ -445,38 +481,21 @@ function blogapi_publish_post($req_params) {
 
   node_save($node);
 
-  return new xmlrpcresp(new xmlrpcval(true, 'boolean'));
-}
-
-
-/**
- * Process the parameters to an XMLRPC callback, and return them as an array.
- */
-function blogapi_convert($params) {
-  $cparams = array();
-  $num_params= $params->getNumParams();
-
-  for ($i = 0; $i < $num_params; $i++) {
-    $sn = $params->getParam($i);
-    $cparams[] = $sn->getval();
-  }
-
-  return $cparams;
+  return true;
 }
 
 /**
  * Prepare an error message for returning to the XMLRPC caller.
  */
 function blogapi_error($message) {
-  global $xmlrpcusererr;
-
+  static $xmlrpcusererr;
   if (!is_array($message)) {
     $message = array($message);
   }
 
   $message = implode(' ', $message);
 
-  return new xmlrpcresp(0, $xmlrpcusererr + 1, strip_tags($message));
+  return xmlrpc_error($xmlrpcusererr + 1, strip_tags($message));
 }
 
 /**
@@ -651,12 +670,12 @@ function _blogapi_mt_extra(&$node, $struct) {
 
 function _blogapi_get_post($node, $bodies = true) {
   $xmlrpcval = array (
-    'userid' => new xmlrpcval($node->name, 'string'),
-    'dateCreated' => new xmlrpcval(iso8601_encode($node->created), 'dateTime.iso8601'),
-    'title' => new xmlrpcval($node->title, 'string'),
-    'postid' => new xmlrpcval($node->nid, 'string'),
-    'link' => new xmlrpcval(url('node/'.$node->nid, NULL, NULL, true)),
-    'permaLink' => new xmlrpcval(url('node/'.$node->nid, NULL, NULL, true)),
+    'userid' => $node->name,
+    'dateCreated' => xmlrpc_date($node->created),
+    'title' => $node->title,
+    'postid' => $node->nid,
+    'link' => url('node/'.$node->nid, NULL, NULL, true),
+    'permaLink' => url('node/'.$node->nid, NULL, NULL, true),
   );
   if ($bodies) {
     if ($node->comment = 1) {
@@ -666,14 +685,14 @@ function _blogapi_get_post($node, $bodies = true) {
       $comment = 1;
     }
 
-    $xmlrpcval['content'] = new xmlrpcval("<title>$blog->title</title>$node->body", 'string');
-    $xmlrpcval['description'] = new xmlrpcval($node->body, 'string');
+    $xmlrpcval['content'] = "<title>$node->title</title>$node->body";
+    $xmlrpcval['description'] = $node->body;
     // Add MT specific fields
-    $xmlrpcval['mt_allow_comments'] = new xmlrpcval($comment, 'int');
-    $xmlrpcval['mt_convert_breaks'] = new xmlrpcval($node->format, 'string');
+    $xmlrpcval['mt_allow_comments'] = $comment;
+    $xmlrpcval['mt_convert_breaks'] = $node->format;
   }
 
-  return new xmlrpcval($xmlrpcval, 'struct');
+  return $xmlrpcval;
 }
 
 function _blogapi_blogid($id) {
