@@ -11,6 +11,7 @@ Drupal x.x.x, xxxx-xx-xx (development version)
     * reworked the 'request new password' functionality.
     * reworked the node edit form.
     * added support for auto-complete forms (AJAX).
+    * reorganized some settings pages.
 - profiles:
     * added a block to display author information along with posts.
     * added support for private profile fields.
