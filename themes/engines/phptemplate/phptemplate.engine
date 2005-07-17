@@ -1,5 +1,5 @@
 <?php
-// $Id: phptemplate.engine,v 1.4 2005/05/25 06:03:18 unconed Exp $
+// $Id: phptemplate.engine,v 1.5 2005/07/17 19:19:55 dries Exp $
 
 /**
  * @file
@@ -172,7 +172,7 @@ function phptemplate_page($content) {
     'closure'             => theme('closure')
   );
   if ((arg(0) == 'node') && is_int(arg(1))) {
-    $variables['node'] = node_load(array('nid' => arg(1)));
+    $variables['node'] = node_load(arg(1));
   }
 
   return _phptemplate_callback('page', $variables);
