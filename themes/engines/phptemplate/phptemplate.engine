@@ -198,11 +198,10 @@ function phptemplate_node($node, $main = 0, $page = 0) {
       'date'           => format_date($node->created),
       'content'        => ($main && $node->teaser) ? $node->teaser : $node->body,
       'links'          => $node->links ? theme('links', $node->links) : '',
-      'mission'        => $mission,
-      'page'           => $page,
       'taxonomy'       => $taxonomy,
       'main'           => $main,
-      'page'           => $page
+      'page'           => $page,
+      'node'           => $node  // we pass the actual node to allow more customization
     );
 
   // Flatten the node object's member fields.
