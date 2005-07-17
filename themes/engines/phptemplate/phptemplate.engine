@@ -124,21 +124,21 @@ function phptemplate_page($content) {
   /**
   * Populate sidebars.
   */
-  $layout = "none";
+  $layout = 'none';
   global $sidebar_indicator;
   /**
    * Sidebar_indicator tells the block counting code to count sidebars seperately.
    */
   $sidebar_indicator = 'left';
-  $sidebar_left = theme("blocks", "left");
-  if ($sidebar_left != "") {
-    $layout = "left";
+  $sidebar_left = theme('blocks', 'left');
+  if ($sidebar_left != '') {
+    $layout = 'left';
   }
 
   $sidebar_indicator = 'right';
-  $sidebar_right = theme("blocks", "right");
-  if ($sidebar_right != "") {
-    $layout = ($layout == "left") ? "both" : "right";
+  $sidebar_right = theme('blocks', 'right');
+  if ($sidebar_right != '') {
+    $layout = ($layout == 'left') ? 'both' : 'right';
   }
   $sidebar_indicator = null;
 
@@ -178,7 +178,7 @@ function phptemplate_page($content) {
   return _phptemplate_callback('page', $variables);
 }
 
-/**
+/*
  * Prepare the values passed to the theme_node function to be passed
  * into a pluggable template engine.
  */
@@ -192,22 +192,21 @@ function phptemplate_node($node, $main = 0, $page = 0) {
 
   $variables = array(
       'title'          => check_plain($node->title),
-      'node_url'       => url('node/' . $node->nid),
-      'terms'          => theme('links',$taxonomy),
+      'node_url'       => url('node/'. $node->nid),
+      'terms'          => theme('links', $taxonomy),
       'name'           => format_name($node),
       'date'           => format_date($node->created),
-      'sticky'         => $node->sticky,
       'content'        => ($main && $node->teaser) ? $node->teaser : $node->body,
       'links'          => $node->links ? theme('links', $node->links) : '',
       'mission'        => $mission,
       'page'           => $page,
       'taxonomy'       => $taxonomy,
-
-    /* Lastly , pass the actual node to allow more customization */
-      'node'           => $node,
       'main'           => $main,
       'page'           => $page
     );
+
+  // Flatten the node object's member fields.
+  $variables = array_merge(object2array($node), $variables);
 
   // Display info only on certain node types.
   if (theme_get_setting('toggle_node_info_' . $node->type)) {
@@ -289,7 +288,7 @@ function _phptemplate_default($hook, $variables, $file = null) {
       else {
         $variables['hook'] = $hook;
         watchdog('error', 'PHPTemplate was instructed to override the  ' . $hook . ' theme function, but no valid template file was found.');
-        $file = "themes/engines/phptemplate/default.tpl.php";
+        $file = 'themes/engines/phptemplate/default.tpl.php';
       }
     }
   }
