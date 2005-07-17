@@ -160,7 +160,7 @@ function statistics_access_log($aid) {
 }
 
 function statistics_node_tracker() {
-  if ($node = node_load(array('nid' => arg(1)))) {
+  if ($node = node_load(arg(1))) {
 
     $header = array(
         array('data' => t('Time'), 'field' => 'a.timestamp', 'sort' => 'desc'),

@@ -329,9 +329,8 @@ function node_invoke_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
 /**
  * Load a node object from the database.
  *
- * @param $conditions
- *   An array of conditions to match against in the database query. Most calls
- *   will simply use array('nid' => 52).
+ * @param $param
+ *   Either the nid of the node or an array of conditions to match against in the database query
  * @param $revision
  *   Which numbered revision to load. Defaults to the current version.
  * @param $reset
@@ -340,26 +339,30 @@ function node_invoke_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
  * @return
  *   A fully-populated node object.
  */
-function node_load($conditions, $revision = NULL, $reset = NULL) {
+function node_load($param = array(), $revision = NULL, $reset = NULL) {
   static $nodes = array();
 
   if ($reset) {
     $nodes = array();
   }
 
-  $cachable = (count($conditions) == 1 && isset($conditions['nid']) && $revision == NULL);
-
-  if ($cachable && isset($nodes[$conditions['nid']])) {
-    return $nodes[$conditions['nid']];
+  if (is_numeric($param)) {
+    $cachable = $revision == NULL;
+    if ($cachable && $nodes[$param]) {
+      return $nodes[$param];
+    }
+    $cond = 'n.nid = '. $param;
   }
-
-  // Turn the conditions into a query.
-  foreach ($conditions as $key => $value) {
-    $cond[] = 'n.'. db_escape_string($key) ." = '". db_escape_string($value) ."'";
+  else {
+    // Turn the conditions into a query.
+    foreach ($conditions as $key => $value) {
+      $cond[] = 'n.'. db_escape_string($key) ." = '". db_escape_string($value) ."'";
+    }
+    $cond = implode(' AND ', $cond);
   }
 
   // Retrieve the node.
-  $node = db_fetch_object(db_query(db_rewrite_sql('SELECT n.*, u.uid, u.name, u.picture, u.data FROM {node} n INNER JOIN {users} u ON u.uid = n.uid WHERE '. implode(' AND ', $cond))));
+  $node = db_fetch_object(db_query(db_rewrite_sql('SELECT n.*, u.uid, u.name, u.picture, u.data FROM {node} n INNER JOIN {users} u ON u.uid = n.uid WHERE '. $cond)));
   $node = drupal_unpack($node);
 
   // Unserialize the revisions and user data fields.
@@ -387,7 +390,7 @@ function node_load($conditions, $revision = NULL, $reset = NULL) {
   }
 
   if ($cachable) {
-    $nodes[$conditions['nid']] = $node;
+    $nodes[$param] = $node;
   }
 
   return $node;
@@ -566,7 +569,7 @@ function node_search($op = 'search', $keys = null) {
       $find = do_search($keys, 'node', 'INNER JOIN {node} n ON n.nid = i.sid '. $join .' INNER JOIN {users} u ON n.uid = u.uid', 'n.status = 1'. (empty($where) ? '' : ' AND '. $where));
       $results = array();
       foreach ($find as $item) {
-        $node = node_load(array('nid' => $item));
+        $node = node_load($item);
         $extra = node_invoke_nodeapi($node, 'search result');
         $results[] = array('link' => url('node/'. $item),
                            'type' => node_invoke($node, 'node_name'),
@@ -664,7 +667,7 @@ function node_menu($may_cache) {
   }
   else {
     if (arg(0) == 'node' && is_numeric(arg(1))) {
-      $node = node_load(array('nid' => arg(1)));
+      $node = node_load(arg(1));
       if ($node->nid) {
         $items[] = array('path' => 'node/'. arg(1), 'title' => t('view'),
           'callback' => 'node_page',
@@ -965,7 +968,7 @@ function node_types_configure($type = NULL) {
  */
 function node_revision_overview($nid) {
   if (user_access('administer nodes')) {
-    $node = node_load(array('nid' => $nid));
+    $node = node_load($nid);
 
     drupal_set_title(check_plain($node->title));
 
@@ -999,7 +1002,7 @@ function node_revision_create($node) {
   // "Revision" is the name of the field used to indicate that we have to
   // create a new revision of a node.
   if ($node->nid && $node->revision) {
-    $prev = node_load(array('nid' => $node->nid));
+    $prev = node_load($node->nid);
     $node->revisions = $prev->revisions;
     unset($prev->revisions);
     $node->revisions[] = array('uid' => $user->uid, 'timestamp' => time(), 'node' => $prev, 'history' => $node->history);
@@ -1015,7 +1018,7 @@ function node_revision_rollback($nid, $revision) {
   global $user;
 
   if (user_access('administer nodes')) {
-    $node = node_load(array('nid' => $nid));
+    $node = node_load($nid);
 
     // Extract the specified revision:
     $rev = $node->revisions[$revision]['node'];
@@ -1046,7 +1049,7 @@ function node_revision_rollback($nid, $revision) {
  */
 function node_revision_delete($nid, $revision) {
   if (user_access('administer nodes')) {
-    $node = node_load(array('nid' => $nid));
+    $node = node_load($nid);
 
     unset($node->revisions[$revision]);
 
@@ -1126,7 +1129,7 @@ function node_feed($nodes = 0, $channel = array()) {
 
   while ($node = db_fetch_object($nodes)) {
     // Load the specified node:
-    $item = node_load(array('nid' => $node->nid));
+    $item = node_load($node->nid);
     $link = url("node/$node->nid", NULL, NULL, 1);
 
     // Filter and prepare node teaser
@@ -1427,7 +1430,7 @@ function node_add($type) {
 function node_edit($id) {
   global $user;
 
-  $node = node_load(array('nid' => $id));
+  $node = node_load($id);
 
   drupal_set_title(check_plain($node->title));
 
@@ -1559,7 +1562,7 @@ function node_submit(&$node) {
  * Ask for confirmation, and delete the node.
  */
 function node_delete($edit) {
-  $node = node_load(array('nid' => $edit['nid']));
+  $node = node_load($edit['nid']);
 
   if (node_access('delete', $node)) {
 
@@ -1610,7 +1613,7 @@ function node_page_default() {
 
     $output = '';
     while ($node = db_fetch_object($result)) {
-      $output .= node_view(node_load(array('nid' => $node->nid)), 1);
+      $output .= node_view(node_load($node->nid), 1);
     }
     $output .= theme('pager', NULL, variable_get('default_nodes_main', 10));
   }
@@ -1660,7 +1663,7 @@ function node_page() {
       break;
     case 'edit':
       if (is_numeric(arg(1))) {
-        $node = node_load(array('nid' => arg(1)));
+        $node = node_load(arg(1));
         if ($node->nid) {
           drupal_set_title($node->title);
           return node_edit(arg(1));
@@ -1672,7 +1675,7 @@ function node_page() {
       break;
     case 'view':
       if (is_numeric(arg(1))) {
-        $node = node_load(array('nid' => arg(1)), $_GET['revision']);
+        $node = node_load(arg(1), $_GET['revision']);
         if ($node->nid) {
           drupal_set_title(check_plain($node->title));
           return node_show($node, arg(2));
@@ -1733,7 +1736,7 @@ function node_update_index() {
 
   while ($node = db_fetch_object($result)) {
     $last_comment = $node->last_comment_timestamp;
-    $node = node_load(array('nid' => $node->nid));
+    $node = node_load($node->nid);
 
     // We update this variable per node in case cron times out, or if the node
     // cannot be indexed (PHP nodes which call drupal_goto, for example).

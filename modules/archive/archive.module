@@ -246,7 +246,7 @@ function archive_page($year = 0, $month = 0, $day = 0) {
     $result = db_query_range($sql, $date, $date_end, 0, 20);
 
     while ($nid = db_fetch_object($result)) {
-      $output .= node_view(node_load(array('nid' => $nid->nid)), 1);
+      $output .= node_view(node_load($nid->nid), 1);
     }
   }
   return $output;

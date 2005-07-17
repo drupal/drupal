@@ -136,7 +136,7 @@ function comment_menu($may_cache) {
   }
   else {
     if (arg(0) == 'comment' && arg(1) == 'reply' && is_numeric(arg(2))) {
-      $node = node_load(array('nid' => arg(2)));
+      $node = node_load(arg(2));
       if ($node->nid) {
         $items[] = array('path' => 'comment/reply', 'title' => t('reply to comment'),
           'callback' => 'comment_reply', 'access' => node_access('view', $node), 'type' => MENU_CALLBACK);
@@ -376,7 +376,7 @@ function comment_edit($cid) {
 
 function comment_reply($nid, $pid = NULL) {
   // set the breadcrumb trail
-  $node = node_load(array('nid' => $nid));
+  $node = node_load($nid);
   menu_set_location(array(array('path' => "node/$nid", 'title' => $node->title), array('path' => "comment/reply/$nid")));
 
   $output = '';
@@ -514,7 +514,7 @@ function comment_preview($edit) {
     $output .= theme('comment_view', $comment);
   }
   else {
-    $output .= node_view(node_load(array('nid' => $edit['nid'])));
+    $output .= node_view(node_load($edit['nid']));
     $edit['pid'] = 0;
   }
 
@@ -1260,7 +1260,7 @@ function comment_moderate() {
       $votes[$mod->mid] = $mod->value;
     }
 
-    $node = node_load(array('nid' => db_result(db_query('SELECT nid FROM {comments} WHERE cid = %d', key($moderation)))));
+    $node = node_load(db_result(db_query('SELECT nid FROM {comments} WHERE cid = %d', key($moderation))));
 
     if (user_access('administer comments') || comment_user_can_moderate($node)) {
       foreach ($moderation as $cid => $vote) {
@@ -1668,7 +1668,7 @@ function _comment_update_node_statistics($nid) {
 
   // comments exist
   if ($count > 0) {
-    $node = node_load(array('nid' => $nid));
+    $node = node_load($nid);
     $last_reply = db_fetch_object(db_query_range('SELECT cid, name, timestamp, uid FROM {comments} WHERE nid = %d AND status = %d ORDER BY cid DESC', $nid, COMMENT_PUBLISHED, 0, 1));
     db_query("UPDATE {node_comment_statistics} SET comment_count = %d, last_comment_timestamp = %d, last_comment_name = '%s', last_comment_uid = %d WHERE nid = %d", $count, $last_reply->timestamp, $last_reply->uid ? NULL : $last_reply->name, $last_reply->uid, $nid);
   }

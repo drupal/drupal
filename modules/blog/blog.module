@@ -143,7 +143,7 @@ function blog_page_user($uid) {
 
     $result = pager_query(db_rewrite_sql("SELECT n.nid, n.sticky, n.created FROM {node} n WHERE type = 'blog' AND n.uid = %d AND n.status = 1 ORDER BY n.sticky DESC, n.created DESC"), variable_get('default_nodes_main', 10), 0, NULL, $account->uid);
     while ($node = db_fetch_object($result)) {
-      $output .= node_view(node_load(array('nid' => $node->nid)), 1);
+      $output .= node_view(node_load($node->nid), 1);
     }
     $output .= theme('pager', NULL, variable_get('default_nodes_main', 10));
     $output .= theme('xml_icon', url("blog/$account->uid/feed"));
@@ -170,7 +170,7 @@ function blog_page_last() {
   $result = pager_query(db_rewrite_sql("SELECT n.nid, n.created FROM {node} n WHERE n.type = 'blog' AND n.status = 1 ORDER BY n.created DESC"), variable_get('default_nodes_main', 10));
 
   while ($node = db_fetch_object($result)) {
-    $output .= node_view(node_load(array('nid' => $node->nid)), 1);
+    $output .= node_view(node_load($node->nid), 1);
   }
   $output .= theme('pager', NULL, variable_get('default_nodes_main', 10));
   $output .= theme('xml_icon', url('blog/feed'));
@@ -195,7 +195,7 @@ function blog_form(&$node) {
     ** database and quote it in the blog:
     */
 
-    if ($nid && $blog = node_load(array('nid' => $nid))) {
+    if ($nid && $blog = node_load($nid)) {
       $node->body = '<em>'. $blog->body .'</em> ['. l($blog->name, "node/$nid") .']';
     }
 
