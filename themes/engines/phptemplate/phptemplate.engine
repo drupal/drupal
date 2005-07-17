@@ -172,7 +172,7 @@ function phptemplate_page($content) {
     'closure'             => theme('closure')
   );
   if ((arg(0) == 'node') && is_int(arg(1))) {
-    $variables['node'] = node_load(array('nid' => arg(1)));
+    $variables['node'] = node_load(arg(1));
   }
 
   return _phptemplate_callback('page', $variables);
