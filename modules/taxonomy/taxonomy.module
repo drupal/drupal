@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.209 2005/06/27 18:33:33 dries Exp $
+// $Id: taxonomy.module,v 1.210 2005/07/17 18:29:32 dries Exp $
 
 /**
  * @file
@@ -1005,7 +1005,7 @@ function taxonomy_select_nodes($tids = array(), $operator = 'or', $depth = 0, $p
 function taxonomy_render_nodes($result) {
   if (db_num_rows($result) > 0) {
     while ($node = db_fetch_object($result)) {
-      $output .= node_view(node_load(array('nid' => $node->nid)), 1);
+      $output .= node_view(node_load($node->nid), 1);
     }
     $output .= theme('pager', NULL, variable_get('default_nodes_main', 10), 0);
   }

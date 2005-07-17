@@ -21,6 +21,8 @@ Drupal x.x.x, xxxx-xx-xx (development version)
 - book module:
     * added Docbook-like XML export functionality.
     * added OPML export functionality.
+- XML-RPC:
+    * replaced the XML-RCP library by a better one.
 - performance:
     * added 'loose caching' option for high-traffic sites.
     * improved performance of path aliasing.
