@@ -230,7 +230,7 @@ function node_get_module_name($node) {
  * Get a list of all the defined node types.
  *
  * @return
- *   An associate array of consisting of (node type, modulename) pairs for all node types.
+ *   An associate array of consisting of (node type, module name) pairs for all node types.
  */
 function node_list() {
   static $types = array();
