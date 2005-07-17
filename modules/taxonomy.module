@@ -109,7 +109,7 @@ function taxonomy_menu($may_cache) {
 }
 
 function taxonomy_form_vocabulary($edit = array()) {
-  foreach (node_list() as $type) {
+  foreach (node_list() as $type => $module) {
     $node_type = node_invoke($type, 'node_name');
     $nodes[$type] = $node_type ? $node_type : $type;
   }

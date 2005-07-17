@@ -32,7 +32,7 @@ function node_help($section) {
       <dt>Published</dt><dd>When using Drupal's moderation system a node remains unpublished -- unavailable to non-moderators -- until it is marked Published.</dd></dl>
       <p>Now that you know what is in a node, here are some of the types of nodes available.</p>", array("%teaser" => url("admin/node/configure/settings")));
 
-      foreach (node_list() as $type) {
+      foreach (node_list() as $type => $module) {
         $output .= '<h3>'. t('Node type: %module', array('%module' => node_invoke($type, 'node_name'))). '</h3>';
         $output .= implode("\n", module_invoke_all('help', 'node/add#'. $type));
       }
@@ -212,49 +212,41 @@ function node_teaser($body, $format = NULL) {
  */
 function node_get_module_name($node) {
   if (is_array($node)) {
-    if ($pos = strpos($node['type'], '-')) {
-      return substr($node['type'], 0, $pos);
-    }
-    else {
-      return $node['type'];
-    }
+    $type = $node['type'];
   }
   else if (is_object($node)) {
-    if ($pos = strpos($node->type, '-')) {
-      return substr($node->type, 0, $pos);
-    }
-    else {
-      return $node->type;
-    }
+    $type = $node->type;
   }
   else if (is_string($node)) {
-    if ($pos = strpos($node, '-')) {
-      return substr($node, 0, $pos);
-    }
-    else {
-      return $node;
-    }
+    $type = $node;
   }
+
+  $modules = node_list();
+
+  return $modules[$type];
 }
 
 /**
  * Get a list of all the defined node types.
  *
  * @return
- *   A list of all node types.
+ *   An associate array of consisting of (node type, modulename) pairs for all node types.
  */
 function node_list() {
-  $types = array();
-  foreach (module_list() as $module) {
-    if (module_hook($module, 'node_name')) {
-      $module_types = module_invoke($module, 'node_types');
-      if (is_array($module_types)) {
-        foreach ($module_types as $type) {
-          $types[] = $type;
+  static $types = array();
+
+  if (empty($types)) {
+    foreach (module_list() as $module) {
+      if (module_hook($module, 'node_name')) {
+        $module_types = module_invoke($module, 'node_types');
+        if (is_array($module_types)) {
+          foreach ($module_types as $type) {
+            $types[$type] = $module;
+          }
         }
-      }
-      else {
-        $types[] = $module;
+        else {
+          $types[$module] = $module;
+        }
       }
     }
   }
@@ -781,7 +773,7 @@ function node_admin_nodes() {
   /*
   ** Filters
   */
-  $node_types = drupal_map_assoc(node_list());
+  $node_types = drupal_map_assoc(array_keys(node_list()));
   foreach ($node_types as $k => $v) {
     $node_types[$k] = node_invoke($v, 'node_name');
   }
@@ -955,7 +947,7 @@ function node_types_configure($type = NULL) {
     $header = array(t('Type'), t('Operations'));
 
     $rows = array();
-    foreach (node_list() as $type) {
+    foreach (node_list() as $type => $module) {
       $rows[] = array(node_invoke($type, 'node_name'), l(t('configure'), 'admin/settings/content-types/'. $type));
     }
 
@@ -1388,7 +1380,7 @@ function node_add($type) {
   $edit = $_POST['edit'];
 
   // If a node type has been specified, validate its existence.
-  if (in_array($type, node_list()) && node_access('create', $type)) {
+  if (array_key_exists($type, node_list()) && node_access('create', $type)) {
     // Initialize settings:
     $node = array('uid' => $user->uid, 'name' => $user->name, 'type' => $type);
 
@@ -1404,7 +1396,7 @@ function node_add($type) {
   }
   else {
     // If no (valid) node type has been provided, display a node type overview.
-    foreach (node_list() as $type) {
+    foreach (node_list() as $type => $module) {
       if (node_access('create', $type)) {
         $out = '<dt>'. l(node_invoke($type, 'node_name'), "node/add/$type", array('title' => t('Add a new %s.', array('%s' => node_invoke($type, 'node_name'))))) .'</dt>';
         $out .= '<dd>'. implode("\n", module_invoke_all('help', 'node/add#'. $type)) .'</dd>';
