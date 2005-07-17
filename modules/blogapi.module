@@ -233,7 +233,7 @@ function blogapi_blogger_edit_post($appkey, $postid, $username, $password, $cont
     return blogapi_error($user);
   }
 
-  $node = node_load('nid' => $postid);
+  $node = node_load($postid);
   if (!$node) {
     return blogapi_error(message_na());
   }
