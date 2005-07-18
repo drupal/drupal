@@ -94,7 +94,7 @@ function forum_admin() {
         $edit['name'] = 0;
       }
     case t('Submit'):
-      $status = taxonomy_save_term($edit);
+      list($status, $object) = array_values(taxonomy_save_term($edit));
       if (arg(3) == 'container') {
         $containers = variable_get('forum_containers', array());
         $containers[] = $edit['tid'];
@@ -290,8 +290,8 @@ function _forum_get_vid() {
     // Check to see if a forum vocabulary exists
     $vid = db_result(db_query("SELECT vid FROM {vocabulary} WHERE module='%s'", 'forum'));
     if (!$vid) {
-      $vocabulary = taxonomy_save_vocabulary(array('name' => 'Forums', 'multiple' => 0, 'required' => 1, 'hierarchy' => 1, 'relations' => 0, 'module' => 'forum', 'nodes' => array('forum')));
-      $vid = $vocabulary['vid'];
+      list($status, $object) = array_values(taxonomy_save_vocabulary(array('name' => 'Forums', 'multiple' => 0, 'required' => 1, 'hierarchy' => 1, 'relations' => 0, 'module' => 'forum', 'nodes' => array('forum'))));
+      $vid = $object['vid'];
     }
     variable_set('forum_nav_vocabulary', $vid);
   }

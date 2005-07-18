@@ -163,7 +163,7 @@ function taxonomy_save_vocabulary($edit) {
 
   cache_clear_all();
 
-  return $status;
+  return array('status' => $status, 'object' => $edit);
 }
 
 function taxonomy_del_vocabulary($vid) {
@@ -301,7 +301,7 @@ function taxonomy_save_term($edit) {
 
   cache_clear_all();
 
-  return $status;
+  return array('status' => $status, 'object' => $edit);
 }
 
 function taxonomy_del_term($tid) {
@@ -617,8 +617,8 @@ function taxonomy_node_save($nid, $terms) {
         }
 
         if (!$typed_term_tid) {
-          $new_term = taxonomy_save_term(array('vid' => $vid, 'name' => $typed_term));
-          $typed_term_tid = $new_term['tid'];
+          list($status, $object) = array_values(taxonomy_save_term(array('vid' => $vid, 'name' => $typed_term)));
+          $typed_term_tid = $object['tid'];
         }
 
         db_query('INSERT INTO {term_node} (nid, tid) VALUES (%d, %d)', $nid, $typed_term_tid);
@@ -1169,7 +1169,8 @@ function taxonomy_admin() {
       }
     case t('Submit'):
       if (arg(3) == 'vocabulary') {
-        switch (taxonomy_save_vocabulary($edit)) {
+        list($status, $object) = array_values(taxonomy_save_vocabulary($edit));
+        switch ($status) {
           case SAVED_NEW:
             drupal_set_message(t('Created new vocabulary %name.', array('%name' => theme('placeholder', $edit['name']))));
             break;
@@ -1182,7 +1183,8 @@ function taxonomy_admin() {
         }
       }
       else {
-        switch (taxonomy_save_term($edit)) {
+        list($status, $object) = array_values(taxonomy_save_term($edit));
+        switch ($status) {
           case SAVED_NEW:
             drupal_set_message(t('Created new term %term.', array('%term' => theme('placeholder', $edit['name']))));
             break;
