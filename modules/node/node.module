@@ -347,7 +347,7 @@ function node_load($param = array(), $revision = NULL, $reset = NULL) {
   }
   else {
     // Turn the conditions into a query.
-    foreach ($conditions as $key => $value) {
+    foreach ($param as $key => $value) {
       $cond[] = 'n.'. db_escape_string($key) ." = '". db_escape_string($value) ."'";
     }
     $cond = implode(' AND ', $cond);
