@@ -23,16 +23,16 @@ if (isJsEnabled()) {
  * Make IE's XMLHTTP object accessible through XMLHttpRequest()
  */
 if (typeof XMLHttpRequest == 'undefined') {
- XMLHttpRequest = function () {
-   var msxmls = ['MSXML3', 'MSXML2', 'Microsoft']
-   for (var i=0; i < msxmls.length; i++) {
-     try {
-       return new ActiveXObject(msxmls[i]+'.XMLHTTP')
-     }
-     catch (e) { }
-   }
-   throw new Error("No XML component installed!")
- }
+  XMLHttpRequest = function () {
+    var msxmls = ['MSXML3', 'MSXML2', 'Microsoft']
+    for (var i=0; i < msxmls.length; i++) {
+      try {
+        return new ActiveXObject(msxmls[i]+'.XMLHTTP')
+      }
+      catch (e) { }
+    }
+    throw new Error("No XML component installed!")
+  }
 }
 
 /**
@@ -41,16 +41,55 @@ if (typeof XMLHttpRequest == 'undefined') {
 function HTTPGet(uri, callbackFunction, callbackParameter) {
   var xmlHttp = new XMLHttpRequest();
   var bAsync = true;
-  if (!callbackFunction)
+  if (!callbackFunction) {
     bAsync = false;
+  }
   xmlHttp.open('GET', uri, bAsync);
   xmlHttp.send(null);
 
   if (bAsync) {
     if (callbackFunction) {
       xmlHttp.onreadystatechange = function() {
-        if (xmlHttp.readyState == 4)
-          callbackFunction(xmlHttp.responseText, xmlHttp, callbackParameter)
+        if (xmlHttp.readyState == 4) {
+          callbackFunction(xmlHttp.responseText, xmlHttp, callbackParameter);
+        }
+      }
+    }
+    return true;
+  }
+  else {
+    return xmlHttp.responseText;
+  }
+}
+
+/**
+ * Creates an HTTP POST request and sends the response to the callback function
+ */
+function HTTPPost(uri, object, callbackFunction, callbackParameter) {
+  var xmlHttp = new XMLHttpRequest();
+  var bAsync = true;
+  if (!callbackFunction) {
+    bAsync = false;
+  }
+  xmlHttp.open('POST', uri, bAsync);
+
+  var toSend = '';
+  if (typeof object == 'object') {
+    xmlHttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    for (var i in object)
+      toSend += (toSend ? '&' : '') + i + '=' + escape(object[i]);
+  }
+  else {
+    toSend = object;
+  }
+  xmlHttp.send(toSend);
+
+  if (bAsync) {
+    if (callbackFunction) {
+      xmlHttp.onreadystatechange = function() {
+        if (xmlHttp.readyState == 4) {
+          callbackFunction(xmlHttp.responseText, xmlHttp, callbackParameter);
+        }
       }
     }
     return true;
