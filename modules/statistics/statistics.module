@@ -351,13 +351,6 @@ function statistics_settings() {
 }
 
 /**
- * Saves the values entered in the "config statistics" administration form.
- */
-function statistics_save_statistics($edit) {
-  variable_set('statistics_display_counter', $edit['statistics_display_counter']);
-}
-
-/**
  * Implementation of hook_cron().
  */
 function statistics_cron() {
