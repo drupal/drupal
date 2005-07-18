@@ -92,6 +92,40 @@ function menu_block($op = 'list', $delta = 0) {
 }
 
 /**
+ * Implementation of hook_nodeapi().
+ */
+function menu_nodeapi(&$node, $op) {
+
+  if (user_access('administer menu')) {
+    switch ($op) {
+      case 'form post':
+        $edit = $_POST['edit'];
+        $edit['nid'] = $node->nid;
+        return menu_node_form($edit);
+        break;
+
+      case 'insert':
+      case 'update':
+        if ($node->menu['delete']) {
+          menu_node_form_delete($node);
+          menu_rebuild();
+        }
+        elseif ($node->menu['title']) {
+          $node->menu['path'] = ($node->menu['path']) ? $node->menu['path'] : "node/$node->nid";
+          menu_edit_item_save($node->menu);
+          menu_rebuild();
+        }
+        break;
+
+      case 'delete':
+        menu_node_form_delete($node);
+        menu_rebuild();
+        break;
+    }
+  }
+}
+
+/**
  * Implementation of hook_perm().
  */
 function menu_perm() {
@@ -502,4 +536,42 @@ function menu_parent_options($mid, $pid = 0, $depth = 0) {
   return $options;
 }
 
+/**
+ * Add menu item fields to the node form.
+ */
+function menu_node_form($edit = array()) {
+  $item = array();
+  if ($edit['nid'] > 0) {
+    $item = db_fetch_array(db_query("SELECT * FROM {menu} WHERE path = 'node/%d'", $edit['nid']));
+    if (is_array($edit['menu'])) {
+      $item = ($_POST['op'] == t('Preview')) ? array_merge($item, $edit['menu']) : array_merge($edit['menu'], $item);
+    }
+  }
+
+  $group = form_textfield(t('Title'), 'menu][title', $item['title'], 60, 128, t('The name to display for this link.'));
+  // Generate a list of possible parents (not including this item or descendants).
+  $options = menu_parent_options($edit['mid']);
+  $group .= form_select(t('Parent item'), 'menu][pid', $item['pid'], $options);
+  $group .= form_hidden('menu][description', $item['description']);
+  $group .= form_hidden('menu][path', $item['path']);
+  $group .= form_hidden('menu][weight', ($item['weight']) ? $item['weight'] : 0);
+  $group .= form_hidden('menu][mid', ($item['mid']) ? $item['mid'] : 0);
+  $group .= form_hidden('menu][type', ($item['type']) ? $item['type'] : MENU_CUSTOM_ITEM);
+
+  if ($item['mid'] > 0) {
+    $group .= form_checkbox(t('Check to delete this menu item.'), 'menu][delete', 1, $item['delete'], null);
+  }
+  $form = form_group_collapsible(t('Menu item settings'), $group, TRUE);
+
+  return $form;
+}
+
+/**
+ * Remove the menu item.
+ */
+function menu_node_form_delete($node) {
+  if (db_query("DELETE FROM {menu} WHERE path = 'node/%s'", $node->nid)) {
+    drupal_set_message(t('The menu item has been removed.'));
+  }
+}
 ?>

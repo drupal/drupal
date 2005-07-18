@@ -10,6 +10,7 @@ Drupal x.x.x, xxxx-xx-xx (development version)
 - usability:
     * reworked the 'request new password' functionality.
     * reworked the node edit form.
+    * improve menu system integration.
     * added support for auto-complete forms (AJAX).
     * reorganized some settings pages.
 - profiles:
