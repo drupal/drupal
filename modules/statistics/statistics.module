@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.198 2005/07/17 18:29:32 dries Exp $
+// $Id: statistics.module,v 1.199 2005/07/18 05:40:17 dries Exp $
 
 /**
  * @file
@@ -348,13 +348,6 @@ function statistics_settings() {
   $output .= form_group(t('Content viewing counter settings'), $group);
 
   return $output;
-}
-
-/**
- * Saves the values entered in the "config statistics" administration form.
- */
-function statistics_save_statistics($edit) {
-  variable_set('statistics_display_counter', $edit['statistics_display_counter']);
 }
 
 /**
