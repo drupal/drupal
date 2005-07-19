@@ -34,11 +34,9 @@ function taxonomy_link($type, $node = NULL) {
       }
     }
     else {
-      $links = array();
       foreach (taxonomy_node_get_terms($node->nid) as $term) {
         $links[] = l($term->name, 'taxonomy/term/'. $term->tid);
       }
-
     }
     return $links;
   }
@@ -359,13 +357,11 @@ function _taxonomy_confirm_del_term($tid) {
  * Generate a tabular listing of administrative functions for vocabularies.
  */
 function taxonomy_overview() {
-
   $vid = arg(2);
 
-  // Show all vocabularies and their terms. if vocabulary is "Free tagging",
-  // don't show terms here, but instruct user to "view terms" instead.
+  // Show all vocabularies, and a "view terms" link to the pagers.
   if (!$vid) {
-    $header = array(t('Name'), t('Type'), array('data' => t('Operations'), 'colspan' => '3'));
+    $header = array(t('Name'), t('Type'), array('data' => t('Operations'), 'colspan' => '2'));
     $vocabularies = taxonomy_get_vocabularies();
     foreach ($vocabularies as $vocabulary) {
       $types = array();
@@ -373,38 +369,23 @@ function taxonomy_overview() {
         $node_type = node_invoke($type, 'node_name');
         $types[] = $node_type ? $node_type : $type;
       }
-      $rows[] = array('<strong>'. check_plain($vocabulary->name) .'</strong>', implode(', ', $types), l(t('edit vocabulary'), "admin/taxonomy/edit/vocabulary/$vocabulary->vid"), l(t('add term'), "admin/taxonomy/add/term/$vocabulary->vid"), l(t('view terms'), "admin/taxonomy/$vocabulary->vid"));
-
-      // Show terms if non-free.
-      if (!$vocabulary->tags) {
-        $tree = taxonomy_get_tree($vocabulary->vid);
-        if ($tree) {
-          foreach ($tree as $term) {
-            $rows[] = array(array('data' => _taxonomy_depth($term->depth) . ' ' . l($term->name, "taxonomy/term/$term->tid"), 'class' => 'term'), NULL, NULL, NULL, l(t('edit term'), "admin/taxonomy/edit/term/$term->tid"));
-          }
-        }
-        else {
-          $rows[] = array(array('data' => t('No terms available.'), 'colspan' => '5', 'class' => 'message'));
-        }
-      }
-      elseif ($vocabulary->tags) {
-        $rows[] = array(array('data' => t('This is a free tagging vocabulary:') . ' ' . l(t('view terms'), "admin/taxonomy/$vocabulary->vid") . '.', 'colspan' => '5', 'class' => 'message'));
-      }
+      $rows[] = array('<strong>'. check_plain($vocabulary->name) .'</strong>', implode(', ', $types), l(t('edit vocabulary'), "admin/taxonomy/edit/vocabulary/$vocabulary->vid"), l(t('edit terms'), "admin/taxonomy/$vocabulary->vid"));
     }
 
     if (!$rows) {
-      $rows[] = array(array('data' => t('No categories available.'), 'colspan' => '5', 'class' => 'message'));
+      $rows[] = array(array('data' => t('No categories available.'), 'colspan' => '4', 'class' => 'message'));
     }
   }
 
-  // Free tagging vocabularies get their own terms pager
-  // since there is a greater chance of 1000+ terms.
+  // Show the vocabulary's terms with a pager.
   else {
-    $header = array(t('Name'), array('data' => t('Operations'), 'width' => '60'));
+    $destination = drupal_get_destination();
+
+    $header = array(t('Name'), t('Operations'));
     $vocabulary = taxonomy_get_vocabulary($vid);
-    if ($vocabulary->module == 'taxonomy') {
+
       drupal_set_title(check_plain($vocabulary->name));
-      $start_from      = $_GET['from'] ? $_GET['from'] : 0;
+      $start_from      = $_GET['page'] ? $_GET['page'] : 0;
       $total_entries   = 0;  // total count for pager
       $page_increment  = 25; // number of tids per page
       $displayed_count = 0;  // number of tids shown
@@ -412,18 +393,20 @@ function taxonomy_overview() {
       $tree = taxonomy_get_tree($vocabulary->vid);
       foreach ($tree as $term) {
         $total_entries++; // we're counting all-totals, not displayed
-        if (($start_from && $start_from > $total_entries) || ($displayed_count == $page_increment)) { continue; }
-        $rows[] = array(_taxonomy_depth($term->depth) . ' ' . check_plain($term->name), l(t('edit term'), "admin/taxonomy/edit/term/$term->tid"));
+        if (($start_from && ($start_from * $page_increment) >= $total_entries) || ($displayed_count == $page_increment)) { continue; }
+        $rows[] = array(_taxonomy_depth($term->depth) . ' ' . check_plain($term->name), l(t('edit'), "admin/taxonomy/edit/term/$term->tid", array(), $destination));
         $displayed_count++; // we're counting tids displayed
-      }
 
       if (!$rows) {
         $rows[] = array(array('data' => t('No terms available.'), 'colspan' => '2'));
       }
 
-      $GLOBALS['pager_from_array'][] = $start_from;
-      $GLOBALS['pager_total'][]      = $total_entries;
-      $rows[] = array(array('data' => theme('pager', NULL, $page_increment), 'colspan' => '2'));
+      $GLOBALS['pager_page_array'][] = $start_from;  // FIXME
+      $GLOBALS['pager_total'][] = intval($total_entries / $page_increment) + 1; // FIXME
+
+      if ($total_entries >= $page_increment) {
+        $rows[] = array(array('data' => theme('pager', NULL, $page_increment), 'colspan' => '2'));
+      }
     }
   }
 
@@ -707,7 +690,7 @@ function taxonomy_get_children($tid, $vid = 0, $key = 'tid') {
     $result = db_query('SELECT t.* FROM {term_hierarchy} h, {term_data} t WHERE t.vid = %d AND h.tid = t.tid AND h.parent = %d ORDER BY weight, name', $vid, $tid);
   }
   else {
-    $result = db_query('SELECT t.* FROM {term_hierarchy} h, {term_data} t WHERE h.tid = t.tid AND parent = %d ORDER BY weight', $tid);
+    $result = db_query('SELECT t.* FROM {term_hierarchy} h, {term_data} t WHERE h.tid = t.tid AND parent = %d ORDER BY weight, name', $tid);
   }
   $children = array();
   while ($term = db_fetch_object($result)) {
