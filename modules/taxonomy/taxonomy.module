@@ -384,29 +384,29 @@ function taxonomy_overview() {
     $header = array(t('Name'), t('Operations'));
     $vocabulary = taxonomy_get_vocabulary($vid);
 
-      drupal_set_title(check_plain($vocabulary->name));
-      $start_from      = $_GET['page'] ? $_GET['page'] : 0;
-      $total_entries   = 0;  // total count for pager
-      $page_increment  = 25; // number of tids per page
-      $displayed_count = 0;  // number of tids shown
+    drupal_set_title(check_plain($vocabulary->name));
+    $start_from      = $_GET['page'] ? $_GET['page'] : 0;
+    $total_entries   = 0;  // total count for pager
+    $page_increment  = 25; // number of tids per page
+    $displayed_count = 0;  // number of tids shown
 
-      $tree = taxonomy_get_tree($vocabulary->vid);
-      foreach ($tree as $term) {
-        $total_entries++; // we're counting all-totals, not displayed
-        if (($start_from && ($start_from * $page_increment) >= $total_entries) || ($displayed_count == $page_increment)) { continue; }
-        $rows[] = array(_taxonomy_depth($term->depth) . ' ' . check_plain($term->name), l(t('edit'), "admin/taxonomy/edit/term/$term->tid", array(), $destination));
-        $displayed_count++; // we're counting tids displayed
+    $tree = taxonomy_get_tree($vocabulary->vid);
+    foreach ($tree as $term) {
+      $total_entries++; // we're counting all-totals, not displayed
+      if (($start_from && ($start_from * $page_increment) >= $total_entries) || ($displayed_count == $page_increment)) { continue; }
+      $rows[] = array(_taxonomy_depth($term->depth) . ' ' . check_plain($term->name), l(t('edit'), "admin/taxonomy/edit/term/$term->tid", array(), $destination));
+      $displayed_count++; // we're counting tids displayed
+    }
 
-      if (!$rows) {
-        $rows[] = array(array('data' => t('No terms available.'), 'colspan' => '2'));
-      }
+    if (!$rows) {
+      $rows[] = array(array('data' => t('No terms available.'), 'colspan' => '2'));
+    }
 
-      $GLOBALS['pager_page_array'][] = $start_from;  // FIXME
-      $GLOBALS['pager_total'][] = intval($total_entries / $page_increment) + 1; // FIXME
+    $GLOBALS['pager_page_array'][] = $start_from;  // FIXME
+    $GLOBALS['pager_total'][] = intval($total_entries / $page_increment) + 1; // FIXME
 
-      if ($total_entries >= $page_increment) {
-        $rows[] = array(array('data' => theme('pager', NULL, $page_increment), 'colspan' => '2'));
-      }
+    if ($total_entries >= $page_increment) {
+      $rows[] = array(array('data' => theme('pager', NULL, $page_increment), 'colspan' => '2'));
     }
   }
 
