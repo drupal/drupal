@@ -9,7 +9,7 @@ Drupal x.x.x, xxxx-xx-xx (development version)
     * converted the pushbutton theme from XTemplate to PHPTemplate.
 - usability:
     * reworked the 'request new password' functionality.
-    * reworked the node edit form.
+    * reworked the node and comment edit forms.
     * improve menu system integration.
     * added support for auto-complete forms (AJAX).
     * reorganized some settings pages.
