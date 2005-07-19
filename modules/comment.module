@@ -95,10 +95,6 @@ function comment_menu($may_cache) {
     $access = user_access('administer comments');
     $items[] = array('path' => 'admin/comment', 'title' => t('comments'),
       'callback' => 'comment_admin_overview', 'access' => $access);
-    $items[] = array('path' => 'admin/comment/edit', 'title' => t('edit comment'),
-      'callback' => 'comment_admin_edit', 'access' => $access, 'type' => MENU_CALLBACK);
-    $items[] = array('path' => 'admin/comment/delete', 'title' => t('delete comment'),
-      'callback' => 'comment_delete', 'access' => $access, 'type' => MENU_CALLBACK);
 
     // Tabs:
     $items[] = array('path' => 'admin/comment/list', 'title' => t('list'),
@@ -128,11 +124,12 @@ function comment_menu($may_cache) {
       'callback' => 'comment_vote_settings', 'access' => $access,'type' => MENU_LOCAL_TASK);
 
     $access = user_access('post comments');
+    $items[] = array('path' => 'comment/reply', 'title' => t('reply to comment'),
+      'callback' => 'comment_save_settings', 'access' => 1, 'type' => MENU_CALLBACK);
     $items[] = array('path' => 'comment/edit', 'title' => t('edit comment'),
       'callback' => 'comment_edit', 'access' => $access, 'type' => MENU_CALLBACK);
-
-    $items[] = array('path' => 'comment', 'title' => t('reply to comment'),
-      'callback' => 'comment_save_settings', 'access' => 1, 'type' => MENU_CALLBACK);
+    $items[] = array('path' => 'comment/delete', 'title' => t('delete comment'),
+      'callback' => 'comment_delete', 'access' => $access, 'type' => MENU_CALLBACK);
   }
   else {
     if (arg(0) == 'comment' && arg(1) == 'reply' && is_numeric(arg(2))) {
@@ -352,7 +349,7 @@ function comment_access($op, $comment) {
   global $user;
 
   if ($op == 'edit') {
-    return $user->uid && $user->uid == $comment->uid && comment_num_replies($comment->cid) == 0;
+    return ($user->uid && $user->uid == $comment->uid && comment_num_replies($comment->cid) == 0) || user_access('administer comments');
   }
 }
 
@@ -367,7 +364,7 @@ function comment_edit($cid) {
   $comment = drupal_unpack($comment);
   $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
   if (comment_access('edit', $comment)) {
-    return comment_preview(object2array($comment));
+    return theme('comment_form', object2array($comment));
   }
   else {
     drupal_access_denied();
@@ -384,13 +381,19 @@ function comment_reply($nid, $pid = NULL) {
   // are we posting or previewing a reply?
   if ($_POST['op'] == t('Post comment')) {
     $edit = $_POST['edit'];
-    $edit = comment_validate_form($edit);
+    $edit = comment_validate($edit);
     drupal_set_title(t('Post comment'));
-    return comment_post($edit);
+    if (!$cid = comment_save($edit)) {
+      // comment could not be posted. show edit form with errors
+      return comment_preview($edit);
+    }
+    else {
+      drupal_goto("node/$nid#comment-$cid");
+    }
   }
   else if ($_POST['op'] == t('Preview comment')) {
     $edit = $_POST['edit'];
-    $edit = comment_validate_form($edit);
+    $edit = comment_validate($edit);
     drupal_set_title(t('Preview comment'));
     return comment_preview($edit);
   }
@@ -413,25 +416,54 @@ function comment_reply($nid, $pid = NULL) {
 
     // should we show the reply box?
     if (node_comment_mode($nid) != 2) {
-      $output .= theme('box', t('Reply'), t("This discussion is closed: you can't post new comments."));
+      drupal_set_message(t("This discussion is closed: you can't post new comments."), 'error');
     }
     else if (user_access('post comments')) {
       $output .= theme('comment_form', array('pid' => $pid, 'nid' => $nid), t('Reply'));
     }
     else {
-      $output .= theme('box', t('Reply'), t('You are not authorized to post comments.'));
+      drupal_set_message(t('You are not authorized to post comments.'), 'error');
     }
   }
   else {
-    $output .= theme('box', t('Reply'), t('You are not authorized to view comments.'));
+    drupal_set_message(t('You are not authorized to view comments.'), 'error');
   }
 
-  drupal_set_title(t('Add new comment'));
   return $output;
 }
 
-function comment_validate_form($edit) {
+function comment_validate($edit) {
   global $user;
+
+  // only admins can change these fields
+  if (!user_access('administer comments')) {
+    $edit['uid'] = $user->uid;
+    $edit['timestamp'] = time();
+    $edit['status'] = user_access('post comments without approval') ? 0 : 1;
+  }
+  else {
+    if (strtotime($edit['date']) != -1) {
+      $edit['timestamp'] = strtotime($edit['date']);
+    }
+    else {
+      form_set_error('date', t('You have to specify a valid date.'));
+    }
+
+    if ($edit['uid']) {
+      // if a registered user posted the comment, we assume you only want to transfer authorship
+      // to another registered user. Name changes are freely allowed on anon comments.
+      if ($account = user_load(array('name' => $edit['author']))) {
+        $edit['uid'] = $account->uid;
+      }
+      else {
+        form_set_error('author', t('You have to specify a valid author.'));
+      }
+    }
+    else {
+      $edit['uid'] = 0;
+      $edit['name'] = $edit['author'];
+    }
+  }
 
   // Validate the comment's subject.  If not specified, extract
   // one from the comment's body.
@@ -485,7 +517,6 @@ function comment_validate_form($edit) {
       }
     }
   }
-
   return $edit;
 }
 
@@ -497,14 +528,20 @@ function comment_preview($edit) {
   $comment = array2object($edit);
 
   // Attach the user and time information.
-  $comment->uid = $user->uid;
-  $comment->timestamp = time();
-  $comment->name = check_plain($user->name ? $user->name : $comment->name);
+  if ($edit['author']) {
+    $account = user_load(array('name' => $edit['author']));
+  }
+  elseif ($user->uid) {
+    $account = $user;
+  }
+  if ($account) {
+    $comment->uid = $account->uid;
+    $comment->name = check_plain($account->name);
+  }
+  $comment->timestamp = $edit['timestamp'] ? $edit['timestamp'] : time();
 
   // Preview the comment.
-  if (!form_get_errors()) {
-    $output .= theme('comment_preview', $comment, theme('links', module_invoke_all('link', 'comment', $comment, 1)));
-  }
+  $output .= theme('comment_view', $comment);
   $output .= theme('comment_form', $edit, t('Reply'));
 
   if ($edit['pid']) {
@@ -521,10 +558,19 @@ function comment_preview($edit) {
   return $output;
 }
 
-function comment_post($edit) {
+/**
+ * Accepts a submission of new or changed comment content.
+ *
+ * @param $edit
+ *   A comment array.
+ *
+ * @return
+ *   If the comment is successfully saved the comment ID is returned.  If the comment
+ *   is not saved, FALSE is returned.
+ */
+function comment_save($edit) {
   global $user;
-
-  if (user_access('post comments') && node_comment_mode($edit['nid']) == 2) {
+  if (user_access('post comments') && (user_access('administer coments') || node_comment_mode($edit['nid']) == 2)) {
     if (!form_get_errors()) {
       // Check for duplicate comments.  Note that we have to use the
       // validated/filtered data to perform such check.
@@ -534,10 +580,8 @@ function comment_post($edit) {
       }
 
       if ($edit['cid']) {
-        // Update the comment in the database.  Note that the update
-        // query will fail if the comment isn't owned by the current
-        // user.
-        db_query("UPDATE {comments} SET subject = '%s', comment = '%s', format = '%s' WHERE cid = %d AND uid = %d", $edit['subject'], $edit['comment'], $edit['format'], $edit['cid'], $user->uid);
+        // Update the comment in the database.
+        db_query("UPDATE {comments} SET status = '%s', timestamp = '%d', subject = '%s', comment = '%s', format = '%s', uid = %d, name = '%s' WHERE cid = %d", $edit['status'], $edit['timestamp'], $edit['subject'], $edit['comment'], $edit['format'], $edit['uid'], $edit['name'], $edit['cid']);
 
         _comment_update_node_statistics($edit['nid']);
 
@@ -640,7 +684,7 @@ function comment_post($edit) {
         }
 
 
-        db_query("INSERT INTO {comments} (cid, nid, pid, uid, subject, comment, format, hostname, timestamp, status, score, users, thread, name, mail, homepage) VALUES (%d, %d, %d, %d, '%s', '%s', %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s')", $edit['cid'], $edit['nid'], $edit['pid'], $edit['uid'], $edit['subject'], $edit['comment'], $edit['format'], $_SERVER['REMOTE_ADDR'], $edit['timestamp'], $status, $score, $users, $thread, $edit['name'], $edit['mail'], $edit['homepage']);
+        db_query("INSERT INTO {comments} (cid, nid, pid, uid, subject, comment, format, hostname, timestamp, status, score, users, thread, name, mail, homepage) VALUES (%d, %d, %d, %d, '%s', '%s', %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s')", $edit['cid'], $edit['nid'], $edit['pid'], $edit['uid'], $edit['subject'], $edit['comment'], $edit['format'], $_SERVER['REMOTE_ADDR'], $edit['timestamp'], $edit['status'], $score, $users, $thread, $edit['name'], $edit['mail'], $edit['homepage']);
 
         _comment_update_node_statistics($edit['nid']);
 
@@ -658,18 +702,18 @@ function comment_post($edit) {
       // redirect the user to the node he's commenting on.
       if ($status == COMMENT_NOT_PUBLISHED) {
         drupal_set_message(t('Your comment has been queued for moderation by site administrators and will be published after approval.'));
-        drupal_goto('node/'. $edit['nid']);
       }
-      else {
-        drupal_goto('node/'. $edit['nid'] .'#comment-'. $edit['cid']);
-      }
+      return $edit['cid'];
     }
     else {
-      return comment_preview($edit);
+      return FALSE;
     }
   }
   else {
-    watchdog('content', t('Comment: unauthorized comment submitted or comment submitted to a closed node (%subject).', array('%subject' => theme('placeholder', $edit['subject']))), WATCHDOG_WARNING);
+    $txt = t('Comment: unauthorized comment submitted or comment submitted to a closed node %subject.', array('%subject' => theem('placeholder', $edit['subject'])));
+    watchdog('content', $txt, WATCHDOG_WARNING);
+    drupal_set_message($txt, 'error');
+    return FALSE;
   }
 }
 
@@ -685,8 +729,8 @@ function comment_links($comment, $return = 1) {
 
   if (node_comment_mode($comment->nid) == 2) {
     if (user_access('administer comments') && user_access('access administration pages')) {
-      $links[] = l(t('delete'), "admin/comment/delete/$comment->cid");
-      $links[] = l(t('edit'), "admin/comment/edit/$comment->cid");
+      $links[] = l(t('delete'), "comment/delete/$comment->cid");
+      $links[] = l(t('edit'), "comment/edit/$comment->cid");
       $links[] = l(t('reply'), "comment/reply/$comment->nid/$comment->cid");
     }
     else if (user_access('post comments')) {
@@ -914,44 +958,6 @@ function comment_render($node, $cid = 0) {
   return $output;
 }
 
-/**
- * Menu callback; edit a comment from the administrative interface.
- */
-function comment_admin_edit($cid) {
-  // Comment edits need to be saved.
-  if ($_POST['op'] == t('Submit')) {
-    $edit = $_POST['edit'];
-    comment_save($edit['cid'], $edit);
-    drupal_goto('admin/comment');
-  }
-
-  // If we're not saving our changes above, we're editing it.
-  $result = db_query('SELECT c.*, u.name AS registered_name, u.uid FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d', $cid);
-  $comment = db_fetch_object($result);
-  $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
-  $comment = drupal_unpack($comment);
-
-  if ($comment) {
-    if (!$comment->uid) {
-      // If comment from non-registered user, allow admin to modify anonymous fields.
-      $form .= form_textfield(t('Name'), 'name', $comment->name ? $comment->name : variable_get('anonymous', 'Anonymous'), 60, 60);
-      $form .= form_textfield(t('E-mail'), 'mail', $comment->mail, 60, 64);
-      $form .= form_textfield(t('Homepage'), 'homepage', $comment->homepage, 60, 255);
-    }
-    else {
-      // Otherwise, just display the author's name.
-      $form .= form_item(t('Author'), format_name($comment));
-    }
-    $form .= form_textfield(t('Subject'), 'subject', $comment->subject, 60, 128);
-    $form .= form_textarea(t('Comment'), 'comment', $comment->comment, 60, 15, '');
-    $form .= filter_form('format', $comment->format);
-    $form .= form_radios(t('Status'), 'status', $comment->status, array(t('Published'), t('Not published')));
-    $form .= form_hidden('nid', $comment->nid);
-    $form .= form_hidden('cid', $comment->cid);
-    $form .= form_submit(t('Submit'));
-    return form($form);
-  }
-}
 
 /**
  * Menu callback; delete a comment.
@@ -976,7 +982,6 @@ function comment_delete($cid) {
     cache_clear_all();
 
     drupal_goto("node/$comment->nid");
-
   }
   else if ($comment->cid) {
     $output = theme('confirm',
@@ -984,27 +989,12 @@ function comment_delete($cid) {
                     'node/'. $comment->nid,
                     t('Any replies to this comment will be lost. This action cannot be undone.'),
                     t('Delete'));
-    // Show comment that is being deleted
-    $comment->comment = check_output($comment->comment, $comment->format, FALSE);
-    $output .= theme('comment', $comment);
-
   }
   else {
     drupal_set_message(t('The comment no longer exists.'));
   }
 
   return $output;
-}
-
-function comment_save($id, $edit) {
-  db_query("UPDATE {comments} SET subject = '%s', comment = '%s', status = %d, format = '%s', name = '%s', mail = '%s', homepage = '%s' WHERE cid = %d", $edit['subject'], $edit['comment'], $edit['status'], $edit['format'], $edit['name'], $edit['mail'], $edit['homepage'], $id);
-  watchdog('content', t('Comment: modified %subject.', array('%subject' => theme('placeholder', $edit['subject']))));
-  drupal_set_message(t('The comment has been saved.'));
-
-  _comment_update_node_statistics($edit['nid']);
-
-  // Allow modules to respond to the updating of a comment.
-  module_invoke_all('comment', 'update', $edit);
 }
 
 /**
@@ -1033,8 +1023,8 @@ function comment_admin_overview($type = 'new') {
         format_name($comment),
         ($comment->status == COMMENT_PUBLISHED ? t('Published') : t('Not published')),
         format_date($comment->timestamp, 'small'),
-        l(t('edit'), "admin/comment/edit/$comment->cid", array(), $destination),
-        l(t('delete'), "admin/comment/delete/$comment->cid", array(), $destination)
+        l(t('edit'), "comment/edit/$comment->cid", array(), $destination),
+        l(t('delete'), "comment/delete/$comment->cid", array(), $destination)
       );
   }
 
@@ -1383,14 +1373,35 @@ function comment_already_moderated($uid, $users) {
 ** overridden by themes.
 */
 
-function theme_comment_form($edit, $title) {
+function theme_comment_form($edit, $title = NULL) {
   global $user;
 
   $form .= "<a id=\"comment-form\"></a>\n";
-
   // contact information:
   if ($user->uid) {
-    $form .= form_item(t('Your name'), format_name($user));
+    if ($edit['cid'] && user_access('administer comments')) {
+      $form .= '<div class="admin">';
+
+      if ($edit['author']) {
+        $author = $edit['author'];
+      }
+      elseif ($edit['name']) {
+        $author = $edit['name'];
+      }
+      else {
+        $author = $edit['registered_name'];
+      }
+      $output = form_autocomplete(t('Authored by'), 'author', $author, 30, 60, 'user/autocomplete');
+
+      $output .= form_textfield(t('Authored on'), 'date', $edit['date'] ? $edit['date'] : format_date($edit['timestamp'], 'custom', 'Y-m-d H:i O'), 20, 25, NULL, NULL, TRUE);
+      $output .= form_radios(t('Status'), 'status', $edit['status'], array(t('Published'), t('Not published')));
+      $output .= '<div class="authored">';
+      $form .= form_group_collapsible(t('Administration'), $output, TRUE);
+      $form .= "</div>\n";
+    }
+    else {
+      $form .= form_item(t('Your name'), format_name($user));
+    }
   }
   else if (variable_get('comment_anonymous', 0) == 1) {
     $form .= form_textfield(t('Your name'), 'name', $edit['name'] ? $edit['name'] : variable_get('anonymous', 'Anonymous') , 30, 60);
@@ -1403,21 +1414,17 @@ function theme_comment_form($edit, $title) {
     $form .= form_textfield(t('Homepage'), 'homepage', $edit['homepage'], 30, 255);
   }
 
-  // subject field:
   if (variable_get('comment_subject_field', 1)) {
     $form .= form_textfield(t('Subject'), 'subject', $edit['subject'], 60, 64);
   }
 
-  // comment field:
   $form .= form_textarea(t('Comment'), 'comment', $edit['comment'] ? $edit['comment'] : $user->signature, 60, 15, '', NULL, TRUE);
 
-  // format selector
   $form .= filter_form('format', $edit['format']);
-
-  // preview button:
   $form .= form_hidden('cid', $edit['cid']);
   $form .= form_hidden('pid', $edit['pid']);
   $form .= form_hidden('nid', $edit['nid']);
+  $form .= form_hidden('uid', $edit['uid']);
 
   $form .= form_submit(t('Preview comment'));
 
@@ -1428,7 +1435,8 @@ function theme_comment_form($edit, $title) {
     $form .= form_submit(t('Post comment'));
   }
 
-  return theme('box', $title, form($form, 'post', url('comment/reply/'. $edit['nid'])));
+  $destination = $_REQUEST['destination'] ? 'destination='. $_REQUEST['destination'] : '';
+  return theme('box', $title, form($form, 'post', url('comment/reply/'. $edit['nid'], $destination)));
 }
 
 function theme_comment_preview($comment, $links = '', $visible = 1) {
