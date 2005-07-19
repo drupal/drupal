@@ -369,7 +369,7 @@ function taxonomy_overview() {
         $node_type = node_invoke($type, 'node_name');
         $types[] = $node_type ? $node_type : $type;
       }
-      $rows[] = array('<strong>'. check_plain($vocabulary->name) .'</strong>', implode(', ', $types), l(t('edit vocabulary'), "admin/taxonomy/edit/vocabulary/$vocabulary->vid"), l(t('edit terms'), "admin/taxonomy/$vocabulary->vid"));
+      $rows[] = array(check_plain($vocabulary->name), implode(', ', $types), l(t('edit vocabulary'), "admin/taxonomy/edit/vocabulary/$vocabulary->vid"), l(t('edit terms'), "admin/taxonomy/$vocabulary->vid"));
     }
 
     if (!$rows) {
