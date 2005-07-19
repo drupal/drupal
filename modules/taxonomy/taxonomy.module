@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.214 2005/07/19 17:09:55 dries Exp $
+// $Id: taxonomy.module,v 1.215 2005/07/19 18:08:03 dries Exp $
 
 /**
  * @file
@@ -369,7 +369,7 @@ function taxonomy_overview() {
         $node_type = node_invoke($type, 'node_name');
         $types[] = $node_type ? $node_type : $type;
       }
-      $rows[] = array('<strong>'. check_plain($vocabulary->name) .'</strong>', implode(', ', $types), l(t('edit vocabulary'), "admin/taxonomy/edit/vocabulary/$vocabulary->vid"), l(t('edit terms'), "admin/taxonomy/$vocabulary->vid"));
+      $rows[] = array(check_plain($vocabulary->name), implode(', ', $types), l(t('edit vocabulary'), "admin/taxonomy/edit/vocabulary/$vocabulary->vid"), l(t('edit terms'), "admin/taxonomy/$vocabulary->vid"));
     }
 
     if (!$rows) {
