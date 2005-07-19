@@ -330,7 +330,7 @@ function blogapi_metaweblog_get_post($postid, $username, $password) {
     return blogapi_error($user);
   }
 
-  $node = node_load('nid' => $postid);
+  $node = node_load($postid);
 
   return _blogapi_get_post($node, true);
 }
@@ -469,7 +469,7 @@ function blogap_mti_publish_post($postid, $username, $password) {
   if (!$user->uid) {
     return blogapi_error($user);
   }
-  $node = node_load('nid' => $postid);
+  $node = node_load($postid);
   if (!$node) {
     return blogapi_error(t('Invalid post.'));
   }
