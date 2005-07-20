@@ -710,7 +710,7 @@ function comment_save($edit) {
     }
   }
   else {
-    $txt = t('Comment: unauthorized comment submitted or comment submitted to a closed node %subject.', array('%subject' => theem('placeholder', $edit['subject'])));
+    $txt = t('Comment: unauthorized comment submitted or comment submitted to a closed node %subject.', array('%subject' => theme('placeholder', $edit['subject'])));
     watchdog('content', $txt, WATCHDOG_WARNING);
     drupal_set_message($txt, 'error');
     return FALSE;
