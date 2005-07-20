@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.489 2005/07/19 17:57:55 dries Exp $
+// $Id: user.module,v 1.490 2005/07/20 00:50:34 unconed Exp $
 
 /**
  * @file
@@ -328,6 +328,7 @@ function user_access($string, $account = NULL) {
   if (!isset($perm[$account->uid])) {
     $result = db_query('SELECT DISTINCT(p.perm) FROM {role} r INNER JOIN {permission} p ON p.rid = r.rid INNER JOIN {users_roles} ur ON ur.rid = r.rid WHERE ur.uid = %d', $account->uid);
 
+    $perm[$account->uid] = '';
     while ($row = db_fetch_object($result)) {
       $perm[$account->uid] .= "$row->perm, ";
     }
