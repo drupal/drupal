@@ -673,7 +673,7 @@ function node_menu($may_cache) {
           'weight' => 1,
           'type' => MENU_LOCAL_TASK);
         $items[] = array('path' => 'node/'. arg(1) .'/delete', 'title' => t('delete'),
-          'callback' => 'node_page',
+          'callback' => 'node_delete_page',
           'access' => node_access('delete', $node),
           'weight' => 1,
           'type' => MENU_CALLBACK);
@@ -1696,25 +1696,33 @@ function node_page() {
         return node_preview($edit);
       }
       break;
-    case 'delete':
+
     case t('Delete'):
       // Note: we redirect from node/uid/edit to node/uid/delete to make the tabs disappear.
-      if ($_GET['q'] == 'node/'. arg(1) .'/edit') {
+      if ($_REQUEST['destination']) {
+        $destination = drupal_get_destination();
         unset($_REQUEST['destination']);
-        drupal_goto('node/'. arg(1) .'/delete');
       }
-      $edit['nid'] = $edit['nid'] ? $edit['nid'] : arg(1);
-      $output = node_delete($edit);
-      if (!$output) {
-        drupal_set_message(t('The node has been deleted.'));
-        drupal_goto('admin/node');
-      }
-      return node_delete($edit);
-      break;
+      drupal_goto('node/'. arg(1) .'/delete', $destination);
+
     default:
       drupal_set_title('');
       return node_page_default();
   }
+}
+
+/**
+ * Menu callback; the page for deleting a single node.
+ */
+function node_delete_page() {
+  $edit = $_POST['edit'];
+  $edit['nid'] = $edit['nid'] ? $edit['nid'] : arg(1);
+  $node = node_load($edit['nid']);
+  if (!($output = node_delete($edit))) {
+    drupal_set_message(t('%title has been deleted.', array('%title' => theme('placeholder', $node->title))));
+    drupal_goto('');
+  }
+  return $output;
 }
 
 /**
