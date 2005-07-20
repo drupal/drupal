@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.457 2005/07/06 14:20:11 dries Exp $ */
+/* $Id: common.inc,v 1.458 2005/07/20 10:48:20 dries Exp $ */
 
 /**
  * @file
@@ -133,20 +133,28 @@ function drupal_get_headers() {
 
 /**
  * Prepare a destination query string for use in combination with
- * drupal_goto().  Used to direct the user back to the referring page
- * after completing a form.
+ * drupal_goto(). Used to direct the user back to the referring page
+ * after completing a form. By default the current URL is returned.
+ * If a destination exists in the previous request, that destination
+ * is returned.  As such, a destination can persist across multiple
+ * pages.
  *
  * @see drupal_goto()
  */
 function drupal_get_destination() {
-  $destination[] = $_GET['q'];
-  $params = array('page', 'sort', 'order');
-  foreach ($params as $param) {
-    if (isset($_GET[$param])) {
-      $destination[] = "$param=". $_GET[$param];
-    }
+  if ($_REQUEST['destination']) {
+    return 'destination='. urlencode($_REQUEST['destination']);
   }
-  return 'destination='. urlencode(implode('&', $destination));
+  else {
+    $destination[] = $_GET['q'];
+    $params = array('page', 'sort', 'order');
+    foreach ($params as $param) {
+      if (isset($_GET[$param])) {
+        $destination[] = "$param=". $_GET[$param];
+      }
+    }
+    return 'destination='. urlencode(implode('&', $destination));
+  }
 }
 
 /**
