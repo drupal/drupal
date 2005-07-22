@@ -83,7 +83,6 @@ function upload_menu($may_cache) {
 function upload_admin() {
   system_settings_save();
 
-  $group .= form_textfield(t('Maximum total file size'), 'upload_maxsize_total', variable_get('upload_maxsize_total', 0), 15, 10, t('The maximum size of a file a user can upload in megabytes. Enter 0 for unlimited.'));
   $group .= form_textfield(t('Maximum resolution for uploaded images'), 'upload_max_resolution', variable_get('upload_max_resolution', 0), 15, 10, t('The maximum allowed image size expressed as WIDTHxHEIGHT (e.g. 640x480). Set to 0 for no restriction.'));
 
   $output = form_group(t('General settings'), $group);
@@ -164,19 +163,11 @@ function upload_nodeapi(&$node, $op, $arg) {
 
         $file = _upload_image($file);
 
-        $maxsize = variable_get("upload_maxsize_total", 0) * 1024 * 1024;
-        $total_size = upload_count_size() + $filesize;
-        $total_usersize = upload_count_size($user->uid) + $filesize;
-
-        if ($maxsize && $total_size > $maxsize) {
-          form_set_error('upload', t('The selected file %name can not be attached to this post, because it exceeded the maximum filesize of %max-size', array('%name' => theme('placeholder', $file->filename), '%max-size' => theme('placeholder', format_size($maxsize)))));
-          break;
-        }
-
         // Don't do any checks for uid #1.
         if ($user->uid != 1) {
           // Validate file against all users roles. Only denies an upload when
           // all roles prevent it.
+          $total_usersize = upload_space_used($user->uid) + $filesize;
           foreach ($user->roles as $rid => $name) {
             $extensions = variable_get("upload_extensions_$rid", 'jpg jpeg gif png txt html doc xls pdf ppt pps');
             $uploadsize = variable_get("upload_uploadsize_$rid", 1) * 1024 * 1024;
@@ -188,11 +179,11 @@ function upload_nodeapi(&$node, $op, $arg) {
               $error['extension']++;
             }
 
-            if ($file->filesize > $uploadsize) {
+            if ($uploadsize && $file->filesize > $uploadsize) {
               $error['uploadsize']++;
             }
 
-            if ($total_usersize + $file->filesize > $usersize) {
+            if ($usersize && $total_usersize + $file->filesize > $usersize) {
               $error['usersize']++;
             }
           }
@@ -207,13 +198,13 @@ function upload_nodeapi(&$node, $op, $arg) {
         }
 
         if ($error['extension'] == count($user->roles) && $user->uid != 1) {
-          form_set_error('upload', t('The selected file %name can not be attached to this post, because it is only possible to attach files with the following extensions: %files-allowed', array('%name' => theme('placeholder', $file->filename), '%files-allowed' => theme('placeholder', $extensions))));
+          form_set_error('upload', t('The selected file %name can not be attached to this post, because it is only possible to attach files with the following extensions: %files-allowed.', array('%name' => theme('placeholder', $file->filename), '%files-allowed' => theme('placeholder', $extensions))));
         }
         elseif ($error['uploadsize'] == count($user->roles) && $user->uid != 1) {
-          form_set_error('upload', t('The selected file %name can not be attached to this post, because it exceeded the maximum filesize of %maxsize', array('%name' => theme('placeholder', $file->filename), '%maxsize' => theme('placeholder', format_size($uploadsize)))));
+          form_set_error('upload', t('The selected file %name can not be attached to this post, because it exceeded the maximum filesize of %maxsize.', array('%name' => theme('placeholder', $file->filename), '%maxsize' => theme('placeholder', format_size($uploadsize)))));
         }
         elseif ($error['usersize'] == count($user->roles) && $user->uid != 1) {
-          form_set_error('upload', t('The selected file %name can not be attached to this post, because the disk quota of %quota has been reached', array('%name' => theme('placeholder', $file->filename), '%quota' => theme('placeholder', format_size($usersize)))));
+          form_set_error('upload', t('The selected file %name can not be attached to this post, because the disk quota of %quota has been reached.', array('%name' => theme('placeholder', $file->filename), '%quota' => theme('placeholder', format_size($usersize)))));
         }
         else {
           $key = 'upload_'. count($_SESSION['file_uploads']);
@@ -314,15 +305,26 @@ function upload_nodeapi(&$node, $op, $arg) {
   return $output;
 }
 
-function upload_count_size($uid = 0) {
-  if ($uid) {
-    $result = db_query("SELECT SUM(f.filesize) FROM {files} f INNER JOIN {node} n ON f.nid = n.nid WHERE uid = %d", $uid);
-  }
-  else {
-    $result = db_query("SELECT SUM(f.filesize) FROM {files} f INNER JOIN {node} n ON f.nid = n.nid");
-  }
+/**
+ * Determine how much disk space is occupied by a user's uploaded files.
+ *
+ * @param $uid
+ *   The integer user id of a user.
+ * @return
+ *   The ammount of disk space used by the user in bytes.
+ */
+function upload_space_used($uid) {
+  return db_result(db_query('SELECT SUM(f.filesize) FROM {files} f INNER JOIN {node} n ON f.nid = n.nid WHERE uid = %d', $uid));
+}
 
-  return db_result($result);
+/**
+ * Determine how much disk space is occupied by uploaded files.
+ *
+ * @return
+ *   The ammount of disk space used by uploaded files in bytes.
+ */
+function upload_total_space_used() {
+  return db_result(db_query('SELECT SUM(f.filesize) FROM {files} f INNER JOIN {node} n ON f.nid = n.nid'));
 }
 
 function upload_save($node) {

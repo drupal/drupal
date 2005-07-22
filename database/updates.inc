@@ -116,7 +116,8 @@ $sql_updates = array(
   "2005-05-09" => "update_137",
   "2005-05-10" => "update_138",
   "2005-05-11" => "update_139",
-  "2005-05-12" => "update_140"
+  "2005-05-12" => "update_140",
+  "2005-05-22" => "update_141"
 );
 
 function update_32() {
@@ -2499,6 +2500,14 @@ function update_140() {
   elseif ($GLOBALS['db_type'] == 'pgsql') {
     $ret[] = update_sql("CREATE INDEX url_alias_src ON {url_alias}(src)");
   }
+  return $ret;
+}
+
+function update_141() {
+  $ret = array();
+
+  variable_del('upload_maxsize_total');
+
   return $ret;
 }
 
