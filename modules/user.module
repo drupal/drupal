@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.490 2005/07/20 00:50:34 unconed Exp $
+// $Id: user.module,v 1.491 2005/07/23 05:53:43 dries Exp $
 
 /**
  * @file
@@ -1572,7 +1572,6 @@ function user_admin_perm() {
     drupal_set_message(t('The changes have been saved.'));
 
     // Clear the cached pages and menus:
-    cache_clear_all();
     menu_rebuild();
 
     drupal_goto($_GET['q']);
