@@ -1572,7 +1572,6 @@ function user_admin_perm() {
     drupal_set_message(t('The changes have been saved.'));
 
     // Clear the cached pages and menus:
-    cache_clear_all();
     menu_rebuild();
 
     drupal_goto($_GET['q']);

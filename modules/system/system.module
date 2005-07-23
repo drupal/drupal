@@ -511,7 +511,6 @@ function system_listing_save($edit = array()) {
       variable_set('theme_default', $edit['theme_default']);
     }
 
-    cache_clear_all();
     menu_rebuild();
 
     drupal_set_message(t('The configuration options have been saved.'));
@@ -553,7 +552,6 @@ function system_settings_save() {
   else {
     return;
   }
-  cache_clear_all();
   menu_rebuild();
   drupal_goto($_GET['q']);
 }
