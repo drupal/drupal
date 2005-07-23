@@ -10,7 +10,7 @@
  */
 
 require_once './includes/bootstrap.inc';
-drupal_bootstrap('full');
+drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 
 $return = menu_execute_active_handler();
 switch ($return) {

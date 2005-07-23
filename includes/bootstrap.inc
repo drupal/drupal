@@ -17,6 +17,11 @@ define('WATCHDOG_NOTICE', 0);
 define('WATCHDOG_WARNING', 1);
 define('WATCHDOG_ERROR', 2);
 
+define('DRUPAL_BOOTSTRAP_DATABASE', 0);
+define('DRUPAL_BOOTSTRAP_SESSION', 1);
+define('DRUPAL_BOOTSTRAP_PAGE_CACHE', 2);
+define('DRUPAL_BOOTSTRAP_FULL', 3);
+
 /**
  * Start the timer with the specified name.  If you start and stop
  * the same timer multiple times, the measured intervals will be
@@ -794,20 +799,21 @@ function drupal_is_denied($type, $mask) {
  * previous one, so invoking a later phase automatically runs the earlier
  * phases too. The most important usage is that if you want to access
  * Drupal database from a script without loading anything else, you can
- * include bootstrap.inc, and call drupal_bootstrap('database').
+ * include bootstrap.inc, and call drupal_bootstrap(DRUPAL_BOOTSTRAP_DATABASE).
  *
  * @param $phase
- *   A string. Allowed values are:
- *    'database': initialize database layer.
- *    'session': initialize session handling.
- *    'page cache': load bootstrap.inc and module.inc, start the variable
- *                  system and try to serve a page from the cache.
- *    'full': Drupal is fully loaded, validate and fix input data.
+ *   A constant. Allowed values are:
+ *     DRUPAL_BOOTSTRAP_DATABASE: initialize database layer.
+ *     DRUPAL_BOOTSTRAP_SESSION: initialize session handling.
+ *     DRUPAL_BOOTSTRAP_PAGE_CACHE: load bootstrap.inc and module.inc, start
+ *       the variable system and try to serve a page from the cache.
+ *     DRUPAL_BOOTSTRAP_FULL: Drupal is fully loaded, validate and fix input
+ *       data.
  */
 function drupal_bootstrap($phase) {
-  static $phases = array('database', 'session', 'page cache', 'full');
+  static $phases = array(DRUPAL_BOOTSTRAP_DATABASE, DRUPAL_BOOTSTRAP_SESSION, DRUPAL_BOOTSTRAP_PAGE_CACHE, DRUPAL_BOOTSTRAP_FULL);
 
-  while ($current_phase = array_shift($phases)) {
+  while (!is_null($current_phase = array_shift($phases))) {
     _drupal_bootstrap($current_phase);
     if ($phase == $current_phase) {
       return;
@@ -819,7 +825,7 @@ function _drupal_bootstrap($phase) {
   global $conf;
 
   switch ($phase) {
-    case 'database':
+    case DRUPAL_BOOTSTRAP_DATABASE:
       global $db_url, $db_prefix, $base_url;
       $conf = array();
       require_once conf_init() .'/settings.php';
@@ -827,12 +833,14 @@ function _drupal_bootstrap($phase) {
       // Initialize the default database.
       db_set_active();
       break;
-    case 'session':
+
+    case DRUPAL_BOOTSTRAP_SESSION:
       require_once './includes/session.inc';
       session_set_save_handler("sess_open", "sess_close", "sess_read", "sess_write", "sess_destroy", "sess_gc");
       session_start();
       break;
-    case 'page cache':
+
+    case DRUPAL_BOOTSTRAP_PAGE_CACHE:
       require_once './includes/module.inc';
       // Start a page timer:
       timer_start('page');
@@ -848,7 +856,8 @@ function _drupal_bootstrap($phase) {
       $conf = variable_init(isset($conf) ? $conf : array());
       drupal_page_header();
       break;
-    case 'full':
+
+    case DRUPAL_BOOTSTRAP_FULL:
       require_once './includes/common.inc';
       _drupal_bootstrap_full();
       break;

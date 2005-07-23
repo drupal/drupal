@@ -248,7 +248,6 @@ function _locale_import_po($file, $lang, $mode) {
     }
   }
 
-  // Successful import
   // rebuild locale cache
   cache_clear_all("locale:$lang");
 
