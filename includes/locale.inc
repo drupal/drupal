@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.46 2005/06/27 18:33:29 dries Exp $
+// $Id: locale.inc,v 1.47 2005/07/23 05:57:27 dries Exp $
 
 /**
  * @file
@@ -248,7 +248,6 @@ function _locale_import_po($file, $lang, $mode) {
     }
   }
 
-  // Successful import
   // rebuild locale cache
   cache_clear_all("locale:$lang");
 
