@@ -113,6 +113,8 @@ function taxonomy_form_vocabulary($edit = array()) {
   }
 
   $form .= form_textfield(t('Vocabulary name'), 'name', $edit['name'], 60, 64, t('The name for this vocabulary.  Example: "Topic".'), NULL, TRUE);
+  // Prepend extra vocabulary form elements.
+  $form .= implode('', module_invoke_all('taxonomy', 'form pre', 'vocabulary', $edit));
   $form .= form_textarea(t('Description'), 'description', $edit['description'], 60, 5, t('Description of the vocabulary; can be used by modules.'));
   $form .= form_textfield(t('Help text'), 'help', $edit['help'], 60, 255, t('Instructions to present to the user when choosing a term.'));
   $form .= form_checkboxes(t('Types'), 'nodes', $edit['nodes'], $nodes, t('A list of node types you want to associate with this vocabulary.'), NULL, TRUE);
@@ -122,6 +124,8 @@ function taxonomy_form_vocabulary($edit = array()) {
   $form .= form_checkbox(t('Multiple select'), 'multiple', 1, $edit['multiple'], t('Allows nodes to have more than one term from this vocabulary (always true for free tagging).'));
   $form .= form_checkbox(t('Required'), 'required', 1, $edit['required'], t('If enabled, every node <strong>must</strong> have at least one term in this vocabulary.'));
   $form .= form_weight(t('Weight'), 'weight', $edit['weight'], 10, t('In listings, the heavier vocabularies will sink and the lighter vocabularies will be positioned nearer the top.'));
+  // Append extra vocabulary form elements.
+  $form .= implode('', module_invoke_all('taxonomy', 'form post', 'vocabulary', $edit));
   $form .= form_submit(t('Submit'));
 
   if ($edit['vid']) {
@@ -203,6 +207,8 @@ function taxonomy_form_term($edit = array()) {
   $vocabulary = taxonomy_get_vocabulary($vocabulary_id);
 
   $form = form_textfield(t('Term name'), 'name', $edit['name'], 60, 64, t('The name for this term.  Example: "Linux".'), NULL, TRUE);
+  // Prepend extra term form elements.
+  $form .= implode('', module_invoke_all('taxonomy', 'form pre', 'term', $edit));
   $form .= form_textarea(t('Description'), 'description', $edit['description'], 60, 5, t('A description of the term.'));
 
   if ($vocabulary->hierarchy) {
@@ -229,6 +235,8 @@ function taxonomy_form_term($edit = array()) {
 
   $form .= form_textarea(t('Synonyms'), 'synonyms', implode("\n", taxonomy_get_synonyms($edit['tid'])), 60, 5, t('<a href="%help-url">Synonyms</a> of this term, one synonym per line.', array('%help-url' => url('admin/help/taxonomy', NULL, NULL, 'synonyms'))));
   $form .= form_weight(t('Weight'), 'weight', $edit['weight'], 10, t('In listings, the heavier terms will sink and the lighter terms will be positioned nearer the top.'));
+  // Append extra term form elements.
+  $form .= implode('', module_invoke_all('taxonomy', 'form post', 'term', $edit));
   $form .= form_hidden('vid', $vocabulary->vid);
   $form .= form_submit(t('Submit'));
 
