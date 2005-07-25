@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.459 2005/07/25 20:38:29 unconed Exp $ */
+/* $Id: common.inc,v 1.460 2005/07/25 20:40:35 unconed Exp $ */
 
 /**
  * @file
@@ -1831,7 +1831,7 @@ function drupal_implode_autocomplete($array) {
 
 function _drupal_bootstrap_full() {
   static $called;
-  global $locale;
+  global $locale, $multibyte;
 
   if ($called) {
     return;
@@ -1849,6 +1849,8 @@ function _drupal_bootstrap_full() {
   set_error_handler('error_handler');
   // Emit the correct charset HTTP header.
   drupal_set_header('Content-Type: text/html; charset=utf-8');
+  // Detect string handling method
+  $multibyte = unicode_check();
   // Initialize $_GET['q'] prior to loading modules and invoking hook_init().
   if (!empty($_GET['q'])) {
     $_GET['q'] = drupal_get_normal_path(trim($_GET['q'], '/'));
