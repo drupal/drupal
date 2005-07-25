@@ -52,7 +52,7 @@ function tablesort_sql($header, $before = '') {
   $ts = tablesort_init($header);
   if ($ts['sql']) {
     $sql = db_escape_string($ts['sql']);
-    $sort = strtoupper(db_escape_string($ts['sort']));
+    $sort = drupal_strtoupper(db_escape_string($ts['sort']));
     return " ORDER BY $before $sql $sort";
   }
 }
