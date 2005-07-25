@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.219 2005/07/17 18:29:31 dries Exp $
+// $Id: blog.module,v 1.220 2005/07/25 17:18:43 unconed Exp $
 
 /**
  * @file
@@ -259,6 +259,9 @@ function blog_menu($may_cache) {
       'callback' => 'blog_page',
       'access' => user_access('access content'),
       'type' => MENU_SUGGESTED_ITEM);
+    $items[] = array('path' => 'blog/'. $user->uid, 'title' => t('my blog'),	 
+      'access' => user_access('edit own blog'),	 
+      'type' => MENU_DYNAMIC_ITEM);
   }
 
   return $items;
