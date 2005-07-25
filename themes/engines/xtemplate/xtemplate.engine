@@ -114,9 +114,20 @@ function xtemplate_comment($comment, $links = 0) {
 function xtemplate_page($content) {
   global $xtemplate;
 
+  // Construct page title
+  if (drupal_get_title()) {
+    $head_title = array(strip_tags(drupal_get_title()), variable_get('site_name', 'drupal'));
+  }
+  else {
+    $head_title = array(variable_get('site_name', 'drupal'));
+    if (variable_get('site_slogan', '')) {
+      $head_title[] = variable_get('site_slogan', '');
+    }
+  }
+
   $xtemplate->template->assign(array(
     "language" => $GLOBALS['locale'],
-    "head_title" => (drupal_get_title() ? strip_tags(drupal_get_title()) ." | ". variable_get("site_name", "drupal") : variable_get("site_name", "drupal") ." | ". variable_get("site_slogan", "")),
+    "head_title" => implode(' | ', $head_title),
     "head" => drupal_get_html_head(),
     "styles" => theme_get_styles(),
     "onload_attributes" => theme_onload_attribute(),
