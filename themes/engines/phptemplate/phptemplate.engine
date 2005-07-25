@@ -142,8 +142,19 @@ function phptemplate_page($content) {
   }
   $sidebar_indicator = null;
 
+  // Construct page title
+  if (drupal_get_title()) {
+    $head_title = array(strip_tags(drupal_get_title()), variable_get('site_name', 'drupal'));
+  }
+  else {
+    $head_title = array(variable_get('site_name', 'drupal'));
+    if (variable_get('site_slogan', '')) {
+      $head_title[] = variable_get('site_slogan', '');
+    }
+  }
+
   $variables = array(
-    'head_title'          => (drupal_get_title() ? strip_tags(drupal_get_title()) .' | '. variable_get('site_name', 'drupal') : variable_get('site_name', 'drupal') .' | '. variable_get('site_slogan', '')),
+    'head_title'          => implode(' | ', $head_title),
     'language'            => $GLOBALS['locale'],
     'site'                => variable_get('site_name', 'drupal'),
     'head'                => drupal_get_html_head(),
