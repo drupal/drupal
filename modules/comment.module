@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.360 2005/07/20 15:13:12 dries Exp $
+// $Id: comment.module,v 1.361 2005/07/25 09:41:29 unconed Exp $
 
 /**
  * @file
@@ -258,7 +258,7 @@ function comment_nodeapi(&$node, $op, $arg = 0) {
     case 'load':
       return db_fetch_array(db_query("SELECT last_comment_timestamp, last_comment_name, comment_count FROM {node_comment_statistics} WHERE nid = %d", $node->nid));
     case 'validate':
-      if (!user_access('administer nodes')) {
+      if (!user_access('administer comments')) {
         // Force default for normal users:
         $node->comment = variable_get("comment_$node->type", 2);
       }
