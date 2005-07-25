@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.218 2005/07/23 05:51:56 dries Exp $
+// $Id: system.module,v 1.219 2005/07/25 20:38:30 unconed Exp $
 
 /**
  * @file
@@ -234,11 +234,11 @@ function system_view_general() {
   $group = '';
   $toolkits_available = image_get_available_toolkits();
   if (count($toolkits_available) > 1) {
-      $group .= form_radios(t('Select an image processing toolkit'), 'image_toolkit', variable_get('image_toolkit', image_get_toolkit()), $toolkits_available);
+    $group .= form_radios(t('Select an image processing toolkit'), 'image_toolkit', variable_get('image_toolkit', image_get_toolkit()), $toolkits_available);
   }
   $group .= image_toolkit_invoke('settings');
   if ($group) {
-    $output .= form_group_collapsible(t('Image handling'), '<p>'.$group.'</p>', TRUE);
+    $output .= form_group_collapsible(t('Image handling'), '<p>'. $group .'</p>', TRUE);
   }
 
   // Date settings:
@@ -275,6 +275,9 @@ function system_view_general() {
   $group .= form_select(t('First day of week'), 'date_first_day', variable_get('date_first_day', 0), array(0 => t('Sunday'), 1 => t('Monday'), 2 => t('Tuesday'), 3 => t('Wednesday'), 4 => t('Thursday'), 5 => t('Friday'), 6 => t('Saturday')), t('The first day of the week for calendar views.'));
 
   $output .= form_group_collapsible(t('Date settings'), $group, TRUE);
+
+  // String handling: report status and errors.
+  $output .= form_group_collapsible(t('String handling'), unicode_settings(), TRUE);  
 
   return $output;
 }
@@ -678,7 +681,7 @@ function system_theme_settings($key = '') {
       $rows = array();
 
       // Use $utype field , and strtolower() it to get the type field.. to avoid issues with ucfirst() and unicode.
-      $type = strtolower($utype);
+      $type = drupal_strtolower($utype);
       $value = $settings[$type . '_links'];
       if (!is_array($value)) {
         $value = array();

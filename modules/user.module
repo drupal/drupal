@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.491 2005/07/23 05:53:43 dries Exp $
+// $Id: user.module,v 1.492 2005/07/25 20:38:30 unconed Exp $
 
 /**
  * @file
@@ -57,8 +57,8 @@ function user_load($array = array()) {
       $params[] = $value;
     }
     else {
-      $query .= "LOWER(u.$key) = '%s' AND ";
-      $params[] = strtolower($value);
+      $query .= "LOWER(u.$key) = LOWER('%s') AND ";
+      $params[] = $value;
     }
   }
   $result = db_query_range("SELECT u.* FROM {users} u WHERE $query u.status < 3", $params, 0, 1);

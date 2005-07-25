@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.307 2005/07/25 09:31:37 unconed Exp $
+// $Id: book.module,v 1.308 2005/07/25 20:38:30 unconed Exp $
 
 /**
  * @file
@@ -662,7 +662,7 @@ function book_render() {
  */
 function book_export($type = 'html', $nid = 0) {
   global $base_url;
-  $type = strtolower($type);
+  $type = drupal_strtolower($type);
   $depth = _book_get_depth($nid);
   switch ($type) {
     case 'docbook':

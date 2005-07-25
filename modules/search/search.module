@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.128 2005/06/27 18:33:32 dries Exp $
+// $Id: search.module,v 1.129 2005/07/25 20:38:30 unconed Exp $
 
 /**
  * @file
@@ -357,7 +357,7 @@ function search_index($sid, $type, $text) {
     if ($tag) {
       // Increase or decrease score per word based on tag
       list($tagname) = explode(' ', $value, 2);
-      $tagname = strtolower($tagname);
+      $tagname = drupal_strtolower($tagname);
       if ($tagname{0} == '/') {
         $score -= $tags[substr($tagname, 1)];
         if ($score < 1) { // possible due to bad HTML
@@ -389,9 +389,8 @@ function search_index($sid, $type, $text) {
         $words = search_keywords_split($value);
         foreach ($words as $word) {
           // Check wordlength
-          if (string_length($word) >= $minimum_word_size) {
-            // Note: strtolower can be used because the value is only used internally.
-            $word = strtolower($word);
+          if (drupal_strlen($word) >= $minimum_word_size) {
+            $word = drupal_strtolower($word);
             if ($link) {
               if (!isset($results[$linknid])) {
                 $results[$linknid] = array();
@@ -484,13 +483,12 @@ function do_search($keywords, $type, $join = '', $where = '1', $variation = true
       continue;
     }
     if (strpos($word, '�') !== false) {
-      // Note: strtolower can be used because the value is only used internally.
       $words[] = "i.word LIKE '%s'";
-      $arguments[] = str_replace('�', '%', strtolower($word));
+      $arguments[] = str_replace('�', '%', drupal_strtolower($word));
     }
     else {
       $words[] = "i.word = '%s'";
-      $arguments[] = strtolower($word);
+      $arguments[] = drupal_strtolower($word);
     }
   }
   // Tell the user which words were excluded
