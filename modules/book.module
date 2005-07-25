@@ -662,7 +662,7 @@ function book_render() {
  */
 function book_export($type = 'html', $nid = 0) {
   global $base_url;
-  $type = strtolower($type);
+  $type = drupal_strtolower($type);
   $depth = _book_get_depth($nid);
   switch ($type) {
     case 'docbook':

@@ -57,8 +57,8 @@ function user_load($array = array()) {
       $params[] = $value;
     }
     else {
-      $query .= "LOWER(u.$key) = '%s' AND ";
-      $params[] = strtolower($value);
+      $query .= "LOWER(u.$key) = LOWER('%s') AND ";
+      $params[] = $value;
     }
   }
   $result = db_query_range("SELECT u.* FROM {users} u WHERE $query u.status < 3", $params, 0, 1);
