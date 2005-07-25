@@ -111,7 +111,7 @@ function book_menu($may_cache) {
     // We don't want to cache these menu items because they could change whenever
     // a book page or outline node is edited.
     if (arg(0) == 'admin' && arg(1) == 'node' && arg(2) == 'book') {
-      $result = db_query(db_rewrite_sql('SELECT n.nid, n.title FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE b.parent = 0 ORDER BY b.weight, n.title'));
+      $result = db_query(db_rewrite_sql('SELECT n.nid, n.title, b.weight FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE b.parent = 0 ORDER BY b.weight, n.title'));
       while ($book = db_fetch_object($result)) {
         $items[] = array('path' => 'admin/node/book/'. $book->nid, 'title' => t('"%title" book', array('%title' => $book->title)));
       }
@@ -352,7 +352,7 @@ function book_prev($node) {
   }
 
   // Previous on the same level:
-  $direct_above = db_fetch_object(db_query(db_rewrite_sql("SELECT n.nid, n.title FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE b.parent = %d AND n.status = 1 AND n.moderate = 0 AND (b.weight < %d OR (b.weight = %d AND n.title < '%s')) ORDER BY b.weight DESC, n.title DESC"), $node->parent, $node->weight, $node->weight, $node->title));
+  $direct_above = db_fetch_object(db_query(db_rewrite_sql("SELECT n.nid, n.title, b.weight FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE b.parent = %d AND n.status = 1 AND n.moderate = 0 AND (b.weight < %d OR (b.weight = %d AND n.title < '%s')) ORDER BY b.weight DESC, n.title DESC"), $node->parent, $node->weight, $node->weight, $node->title));
   if ($direct_above) {
     // Get last leaf of $above.
     $path = book_location_down($direct_above);
@@ -593,7 +593,7 @@ function book_tree($parent = 0, $depth = 3, $unfold = array()) {
  * Menu callback; prints a listing of all books.
  */
 function book_render() {
-  $result = db_query(db_rewrite_sql('SELECT n.nid FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE b.parent = 0 AND n.status = 1 AND n.moderate = 0 ORDER BY b.weight, n.title'));
+  $result = db_query(db_rewrite_sql('SELECT n.nid, b.weight, n.title FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE b.parent = 0 AND n.status = 1 AND n.moderate = 0 ORDER BY b.weight, n.title'));
 
   while ($page = db_fetch_object($result)) {
     // Load the node:
@@ -689,7 +689,7 @@ function book_admin_view_line($node, $depth = 0) {
 }
 
 function book_admin_view_book($nid, $depth = 1) {
-  $result = db_query(db_rewrite_sql('SELECT n.nid FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE b.parent = %d ORDER BY b.weight, n.title'), $nid);
+  $result = db_query(db_rewrite_sql('SELECT n.nid, b.weight, n.title FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE b.parent = %d ORDER BY b.weight, n.title'), $nid);
 
   $rows = array();
 
