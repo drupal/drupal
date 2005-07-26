@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.219 2005/07/25 20:38:30 unconed Exp $
+// $Id: system.module,v 1.220 2005/07/26 01:56:31 unconed Exp $
 
 /**
  * @file
@@ -599,8 +599,6 @@ function system_site_settings($module = NULL) {
  * Menu callback; display theme configuration for entire site and individual themes.
  */
 function system_theme_settings($key = '') {
-  system_settings_save();
-
   // Default settings are defined in theme_get_settings() in includes/theme.inc
   if ($key) {
     $settings = theme_get_settings($key);
@@ -620,11 +618,8 @@ function system_theme_settings($key = '') {
       $filename = ($key) ? str_replace('/', '_', $key) . '_logo.' . $parts['extension'] : 'logo.' . $parts['extension'];
 
       if ($file = file_save_upload('logo_upload', $filename, 1)) {
-        $settings['default_logo'] = 0;
-        $settings['logo_path'] = $file->filepath;
-
-        // Update the variable table with the new settings so that they take effect immediately.
-        variable_set($var, $settings);
+        $_POST['edit'][$var]['default_logo'] = 0;
+        $_POST['edit'][$var]['logo_path'] = $file->filepath;
       }
     }
     else {
@@ -638,13 +633,12 @@ function system_theme_settings($key = '') {
     $filename = ($key) ? str_replace('/', '_', $key) . '_favicon.' . $parts['extension'] : 'favicon.' . $parts['extension'];
 
     if ($file = file_save_upload('favicon_upload', $filename, 1)) {
-      $settings['default_favicon'] = 0;
-      $settings['favicon_path'] = $file->filepath;
-
-      // Update the variable table with the new settings so that they take effect immediately.
-      variable_set($var, $settings);
+      $_POST['edit'][$var]['default_favicon'] = 0;
+      $_POST['edit'][$var]['favicon_path'] = $file->filepath;
     }
   }
+
+  system_settings_save();
 
   $form = '';
 
