@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysql.inc,v 1.31 2005/06/22 20:19:58 dries Exp $
+// $Id: database.mysql.inc,v 1.32 2005/07/27 01:58:43 unconed Exp $
 
 /**
  * @file
@@ -34,9 +34,36 @@ function db_connect($url) {
   //   server.
   // - 2 means CLIENT_FOUND_ROWS: return the number of found
   //   (matched) rows, not the number of affected rows.
-  $connection = mysql_connect($url['host'], $url['user'], $url['pass'], TRUE, 2) or die(mysql_error());
+  $connection = @mysql_connect($url['host'], $url['user'], $url['pass'], TRUE, 2);
+  if (!$connection) {
+    drupal_maintenance_theme();
+    drupal_set_title('Unable to connect to database server');
+    print theme('maintenance_page', '<p>This either means that the username and password information in your <code>settings.php</code> file is incorrect or we can\'t contact the MySQL database server. This could mean your hosting provider\'s database server is down.</p>
+<p>The MySQL error was: '. theme('placeholder', mysql_error()) .'.</p>
+<p>Currently, the username is '. theme('placeholder', $url['user']) .' and the database server is '. theme('placeholder', $url['host']) .'.</p>
+<ul>
+  <li>Are you sure you have the correct username and password?</li>
+  <li>Are you sure that you have typed the correct hostname?</li>
+  <li>Are you sure that the database server is running?</li>
+</ul>
+<p>For more help, see the <a href="http://drupal.org/node/258">Installation and upgrading handbook</a>. If you are unsure what these terms mean you should probably contact your hosting provider.</p>');
+    exit;
+  }
 
-  mysql_select_db(substr($url['path'], 1)) or die('unable to select database');
+  if (!mysql_select_db(substr($url['path'], 1))) {
+    drupal_maintenance_theme();
+    drupal_set_title('Unable to select database');
+    print theme('maintenance_page', '<p>We were able to connect to the MySQL database server (which means your username and password is okay) but not able to select the database.</p>
+<p>The MySQL error was: '. theme('placeholder', mysql_error()) .'.</p>
+<p>Currently, the database is '. theme('placeholder', substr($url['path'], 1)) .'. The username is '. theme('placeholder', $url['user']) .' and the database server is '. theme('placeholder', $url['host']) .'.</p>
+<ul>
+  <li>Are you sure you have the correct database name?</li>
+  <li>Are you sure the database exists?</li>
+  <li>Are you sure the username has permission to access the database?</li>
+</ul>
+<p>For more help, see the <a href="http://drupal.org/node/258">Installation and upgrading handbook</a>. If you are unsure what these terms mean you should probably contact your hosting provider.</p>');
+    exit;
+  }
 
   return $connection;
 }

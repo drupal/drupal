@@ -1,9 +1,16 @@
 <?php
-// $Id: unicode.inc,v 1.1 2005/07/25 20:40:35 unconed Exp $
+// $Id: unicode.inc,v 1.2 2005/07/27 01:58:43 unconed Exp $
 
 define('UNICODE_ERROR', -1);
 define('UNICODE_SINGLEBYTE', 0);
 define('UNICODE_MULTIBYTE', 1);
+
+/**
+ * Wrapper around _unicode_check().
+ */
+function unicode_check() {
+  $GLOBALS['multibyte'] = _unicode_check();
+}
 
 /**
  * Perform checks about Unicode support in PHP, and set the right settings if
@@ -16,7 +23,7 @@ define('UNICODE_MULTIBYTE', 1);
  * @param $errors
  *   Whether to report any fatal errors with form_set_error().
  */
-function unicode_check($errors = false) {
+function _unicode_check($errors = false) {
   // Set the standard C locale to ensure consistent, ASCII-only string handling.
   setlocale(LC_CTYPE, 'C');
 
@@ -70,7 +77,7 @@ function unicode_check($errors = false) {
  * Return the required Unicode status and errors for admin/settings.
  */
 function unicode_settings() {
-  $status = unicode_check(true);
+  $status = _unicode_check(true);
   $options = array(UNICODE_SINGLEBYTE => t('Standard PHP: operations on Unicode strings are emulated on a best-effort basis. Install the <a href="%url">PHP mbstring extension</a> for improved Unicode support.', array('%url' => 'http://www.php.net/manual/nl/ref.mbstring.php')),
                    UNICODE_MULTIBYTE => t('Multi-byte: operations on Unicode strings are supported through the <a href="%url">PHP mbstring extension</a>.', array('%url' => 'http://www.php.net/manual/nl/ref.mbstring.php')),
                    UNICODE_ERROR => t('Invalid: the current configuration is incompatible with Drupal.'));

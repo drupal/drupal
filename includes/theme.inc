@@ -1,5 +1,5 @@
 <?php
-/* $Id: theme.inc,v 1.246 2005/07/23 05:57:27 dries Exp $ */
+/* $Id: theme.inc,v 1.247 2005/07/27 01:58:43 unconed Exp $ */
 
 /**
  * @file
@@ -160,7 +160,7 @@ function list_theme_engines($refresh = FALSE) {
 function theme() {
   global $theme, $theme_engine;
 
-  if (!$theme) {
+  if ($theme === NULL) {
     // Initialize the enabled theme.
     $theme = init_theme();
   }
@@ -435,6 +435,31 @@ function theme_page($content) {
 
   $output .= '</td></tr></table>';
   $output .= theme_closure();
+  $output .= '</body></html>';
+
+  return $output;
+}
+
+function theme_maintenance_page($content) {
+  drupal_set_header('Content-Type: text/html; charset=utf-8');
+  theme('add_style', 'misc/drupal.css');
+  theme('add_style', 'misc/maintenance.css');
+  $output = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
+  $output .= '<html xmlns="http://www.w3.org/1999/xhtml">';
+  $output .= '<head>';
+  $output .= '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />';
+  $output .= ' <title>'. drupal_get_title() .'</title>';
+  $output .= theme_get_styles();
+  $output .= '</head>';
+  $output .= '<body>';
+  $output .= '<h1>' . drupal_get_title() . '</h1>';
+
+  $output .= theme('status_messages');
+
+  $output .= "\n<!-- begin content -->\n";
+  $output .= $content;
+  $output .= "\n<!-- end content -->\n";
+
   $output .= '</body></html>';
 
   return $output;

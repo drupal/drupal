@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.41 2005/06/22 20:19:58 dries Exp $
+// $Id: database.inc,v 1.42 2005/07/27 01:58:43 unconed Exp $
 
 /**
  * @file
@@ -116,7 +116,11 @@ function db_set_active($name = 'default') {
       include_once($handler);
     }
     else {
-      die('Unsupported database type');
+      drupal_maintenance_theme();
+      drupal_set_title('Unsupported database type');
+      print theme('maintenance_page', '<p>The database type '. theme('placeholder', $db_type) .' is unsupported. Please use either <var>mysql</var> for MySQL databases or <var>pgsql</var> for PostgreSQL databases. The database information is in your <code>settings.php</code> file.</p>
+<p>For more help, see the <a href="http://drupal.org/node/258">Installation and upgrading handbook</a>. If you are unsure what these terms mean you should probably contact your hosting provider.</p>');
+      exit;
     }
 
     $db_conns[$name] = db_connect($connect_url);

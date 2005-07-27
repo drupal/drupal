@@ -1,5 +1,5 @@
 <?php
-// $Id: database.pgsql.inc,v 1.9 2005/06/22 20:19:58 dries Exp $
+// $Id: database.pgsql.inc,v 1.10 2005/07/27 01:58:43 unconed Exp $
 
 /**
  * @file
@@ -25,7 +25,32 @@ function db_connect($url) {
 
   $conn_string = ' user='. $url['user'] .' dbname='. substr($url['path'], 1) .' password='. $url['pass'] . ' host=' . $url['host'];
   $conn_string .= isset($url['port']) ? ' port=' . $url['port'] : '';
-  $connection = pg_connect($conn_string) or die(pg_last_error());
+
+  // pg_last_error() does not return a useful error message for database
+  // connection errors. We must turn on error tracking to get at a good error
+  // message, which will be stored in $php_errormsg.
+  $track_errors_previous = ini_get('track_errors');
+  ini_set('track_errors', 1);
+
+  $connection = @pg_connect($conn_string);
+  if (!$connection) {
+    drupal_maintenance_theme();
+    drupal_set_title('Unable to connect to database');
+    print theme('maintenance_page', '<p>This either means that the database information in your <code>settings.php</code> file is incorrect or we can\'t contact the PostgreSQL database server. This could mean your hosting provider\'s database server is down.</p>
+<p>The PostgreSQL error was: '. theme('placeholder', decode_entities($php_errormsg)) .'</p>
+<p>Currently, the database is '. theme('placeholder', substr($url['path'], 1)) .', the username is '. theme('placeholder', $url['user']) .', and the database server is '. theme('placeholder', $url['host']) .'.</p>
+<ul>
+  <li>Are you sure you have the correct username and password?</li>
+  <li>Are you sure that you have typed the correct hostname?</li>
+  <li>Are you sure you have the correct database name?</li>
+  <li>Are you sure that the database server is running?</li>
+</ul>
+<p>For more help, see the <a href="http://drupal.org/node/258">Installation and upgrading handbook</a>. If you are unsure what these terms mean you should probably contact your hosting provider.</p>');
+    exit;
+  }
+
+  // Restore error tracking setting
+  ini_set('track_errors', $track_errors_previous);
 
   return $connection;
 }
