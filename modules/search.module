@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.129 2005/07/25 20:38:30 unconed Exp $
+// $Id: search.module,v 1.130 2005/07/27 01:27:09 unconed Exp $
 
 /**
  * @file
@@ -476,7 +476,7 @@ function do_search($keywords, $type, $join = '', $where = '1', $variation = true
   $refused = array();
   // Build WHERE clause
   foreach ($keys as $word) {
-    if (string_length($word) < variable_get('remove_short', 3)) {
+    if (drupal_substr($word) < variable_get('remove_short', 3)) {
       if ($word != '') {
         $refused[] = str_replace('�', '*', $word);
       }
