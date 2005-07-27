@@ -864,4 +864,20 @@ function _drupal_bootstrap($phase) {
   }
 }
 
+/**
+ * Enables use of the theme system without requiring database access. Since
+ * there is not database access no theme will be enabled and the default
+ * themable fuctions will be called. Some themable functions can not be used
+ * without the full Drupal API loaded. For example, theme_page() is
+ * unavailable and theme_maintenance_page() must be used in its place.
+ */
+function drupal_maintenance_theme() {
+  global $theme;
+  require_once './includes/theme.inc';
+  require_once './includes/common.inc';
+  require_once './includes/unicode.inc';
+  unicode_check();
+  $theme = '';
+}
+
 ?>

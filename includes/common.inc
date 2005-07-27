@@ -1831,7 +1831,7 @@ function drupal_implode_autocomplete($array) {
 
 function _drupal_bootstrap_full() {
   static $called;
-  global $locale, $multibyte;
+  global $locale;
 
   if ($called) {
     return;
@@ -1850,7 +1850,7 @@ function _drupal_bootstrap_full() {
   // Emit the correct charset HTTP header.
   drupal_set_header('Content-Type: text/html; charset=utf-8');
   // Detect string handling method
-  $multibyte = unicode_check();
+  unicode_check();
   // Initialize $_GET['q'] prior to loading modules and invoking hook_init().
   if (!empty($_GET['q'])) {
     $_GET['q'] = drupal_get_normal_path(trim($_GET['q'], '/'));
