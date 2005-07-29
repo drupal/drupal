@@ -335,7 +335,7 @@ function user_access($string, $account = NULL) {
   }
 
   if (isset($perm[$account->uid])) {
-    return strstr($perm[$account->uid], "$string, ");
+    return strpos($perm[$account->uid], "$string, ") !== FALSE;
   }
 
   return FALSE;
