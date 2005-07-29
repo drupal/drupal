@@ -658,8 +658,14 @@ function _locale_import_append_plural($entry, $key) {
  */
 function _locale_import_shorten_comments($comment) {
   $comm = '';
-  while(strlen($comm) < 128 && count($comment)) {
-    $comm .= substr(array_shift($comment), 1) .', ';
+  while (count($comment)) {
+    $test = $comm . substr(array_shift($comment), 1) .', ';
+    if (strlen($comm) < 130) {
+      $comm = $test;
+    }
+    else {
+      break;
+    }
   }
   return substr($comm, 0, -2);
 }
