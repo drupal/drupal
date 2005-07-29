@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.492 2005/07/25 20:38:30 unconed Exp $
+// $Id: user.module,v 1.493 2005/07/29 07:18:36 unconed Exp $
 
 /**
  * @file
@@ -209,7 +209,7 @@ function user_save($account, $array = array(), $category = 'account') {
  * Verify the syntax of the given name.
  */
 function user_validate_name($name) {
-  if (!$name) return t('You must enter a username.');
+  if (!strlen($name)) return t('You must enter a username.');
   if (substr($name, 0, 1) == ' ') return t('The username cannot begin with a space.');
   if (substr($name, -1) == ' ') return t('The username cannot end with a space.');
   if (ereg('  ', $name)) return t('The username cannot contain multiple spaces in a row.');
