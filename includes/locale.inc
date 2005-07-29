@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.47 2005/07/23 05:57:27 dries Exp $
+// $Id: locale.inc,v 1.48 2005/07/29 06:50:10 unconed Exp $
 
 /**
  * @file
@@ -58,7 +58,7 @@ function _locale_admin_manage_screen() {
     }
   }
 
-  return form(theme('table', $header, $rows) . form_submit(t('Save configuration')), 'POST', url('admin/locale'));
+  return form(theme('table', $header, $rows) . form_submit(t('Save configuration')), 'post', url('admin/locale'));
 }
 
 /**
@@ -106,7 +106,7 @@ function _locale_admin_import_screen() {
   $form .= form_select(t('Import into'), 'langcode', '', $languages, t('Choose the language you want to add strings into. If you choose a language which is not yet set up, then it will be added.'));
   $form .= form_radios(t('Mode'), 'mode', 'overwrite', array('overwrite' => t('Strings in the uploaded file replace existing ones, new ones are added'), 'keep' => t('Existing strings are kept, only new strings are added')));
   $form .= form_submit(t('Import'));
-  $output = form($form, 'POST', url('admin/locale/language/import'), array('enctype' => 'multipart/form-data'));
+  $output = form($form, 'post', url('admin/locale/language/import'), array('enctype' => 'multipart/form-data'));
   return $output;
 }
 
@@ -966,7 +966,7 @@ function _locale_string_language_list($translation) {
   $output = '';
   foreach ($languages['name'] as $key => $value) {
     if (isset($translation[$key])) {
-      $output .= ($translation[$key] != '') ? $key .' ' : "<strike>$key</strike> ";
+      $output .= ($translation[$key] != '') ? $key .' ' : "<em class=\"locale-untranslated\">$key</em> ";
     }
   }
 
@@ -1049,8 +1049,7 @@ function _locale_string_seek() {
       $arr[$locale->lid]['source'] = $locale->source;
     }
     foreach ($arr as $lid => $value) {
-      $source = htmlspecialchars($value['source']);
-      $rows[] = array(array('data' => (strlen($source) > 150 ? substr($source, 0, 150) .'...' : $source) .'<br /><small>'. $value['location'] .'</small>'), array('data' => _locale_string_language_list($value['locales']), 'align' => 'center'), array('data' => l(t('edit'), "admin/locale/string/edit/$lid"), 'nowrap' => 'nowrap'), array('data' => l(t('delete'), "admin/locale/string/delete/$lid"), 'nowrap' => 'nowrap'));
+      $rows[] = array(array('data' => check_plain(truncate_utf8($value['source'], 150, FALSE, TRUE)) .'<br /><small>'. $value['location'] .'</small>'), array('data' => _locale_string_language_list($value['locales']), 'align' => 'center'), array('data' => l(t('edit'), "admin/locale/string/edit/$lid"), 'class' => 'nowrap'), array('data' => l(t('delete'), "admin/locale/string/delete/$lid"), 'class' => 'nowrap'));
     }
 
     $request = array();
@@ -1088,7 +1087,7 @@ function _locale_string_seek_form() {
   $form .= form_radios(t('Search in'), 'searchin', ($query->searchin ? $query->searchin : 'all'), array('all' => t('All strings in that language'), 'translated' => t('Only translated strings'), 'untranslated' => t('Only untranslated strings')));
 
   $form .= form_submit(t('Search'));
-  $output = form(form_group(t('Search strings'), $form), 'POST', url('admin/locale/string/search'));
+  $output = form(form_group(t('Search strings'), $form), 'post', url('admin/locale/string/search'));
 
   return $output;
 }
