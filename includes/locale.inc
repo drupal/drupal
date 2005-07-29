@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.48 2005/07/29 06:50:10 unconed Exp $
+// $Id: locale.inc,v 1.49 2005/07/29 18:56:58 unconed Exp $
 
 /**
  * @file
@@ -658,8 +658,14 @@ function _locale_import_append_plural($entry, $key) {
  */
 function _locale_import_shorten_comments($comment) {
   $comm = '';
-  while(strlen($comm) < 128 && count($comment)) {
-    $comm .= substr(array_shift($comment), 1) .', ';
+  while (count($comment)) {
+    $test = $comm . substr(array_shift($comment), 1) .', ';
+    if (strlen($comm) < 130) {
+      $comm = $test;
+    }
+    else {
+      break;
+    }
   }
   return substr($comm, 0, -2);
 }
