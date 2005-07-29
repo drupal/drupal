@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.493 2005/07/29 07:18:36 unconed Exp $
+// $Id: user.module,v 1.494 2005/07/29 21:34:56 unconed Exp $
 
 /**
  * @file
@@ -335,7 +335,7 @@ function user_access($string, $account = NULL) {
   }
 
   if (isset($perm[$account->uid])) {
-    return strstr($perm[$account->uid], "$string, ");
+    return strpos($perm[$account->uid], "$string, ") !== FALSE;
   }
 
   return FALSE;
