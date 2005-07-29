@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.511 2005/07/29 03:29:53 unconed Exp $
+// $Id: node.module,v 1.512 2005/07/29 21:06:33 unconed Exp $
 
 /**
  * @file
@@ -510,10 +510,10 @@ function node_view($node, $teaser = FALSE, $page = FALSE, $links = TRUE) {
 function node_prepare($node, $teaser = FALSE) {
   $node->readmore = (strlen($node->teaser) < strlen($node->body));
   if ($teaser == FALSE) {
-    $node->body = check_output($node->body, $node->format, FALSE);
+    $node->body = check_markup($node->body, $node->format, FALSE);
   }
   else {
-    $node->teaser = check_output($node->teaser, $node->format, FALSE);
+    $node->teaser = check_markup($node->teaser, $node->format, FALSE);
   }
   return $node;
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.67 2005/06/29 19:53:14 dries Exp $
+// $Id: filter.module,v 1.68 2005/07/29 21:06:33 unconed Exp $
 
 /**
  * @file
@@ -671,7 +671,7 @@ function filter_list_format($format) {
  *    showing content that is not (yet) stored in the database (eg. upon preview),
  *    set to TRUE so the user's permissions are checked.
  */
-function check_output($text, $format = FILTER_FORMAT_DEFAULT, $check = TRUE) {
+function check_markup($text, $format = FILTER_FORMAT_DEFAULT, $check = TRUE) {
   // When $check = true, do an access check on $format.
   if (isset($text) && (!$check || filter_access($format))) {
     if ($format == FILTER_FORMAT_DEFAULT) {

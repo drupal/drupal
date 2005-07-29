@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.174 2005/07/20 11:44:40 dries Exp $
+// $Id: block.module,v 1.175 2005/07/29 21:06:33 unconed Exp $
 
 /**
  * @file
@@ -104,7 +104,7 @@ function block_block($op = 'list', $delta = 0, $edit = array()) {
     case 'view':
       $block = db_fetch_object(db_query('SELECT * FROM {boxes} WHERE bid = %d', $delta));
       $data['subject'] = check_plain($block->title);
-      $data['content'] = check_output($block->body, $block->format, FALSE);
+      $data['content'] = check_markup($block->body, $block->format, FALSE);
       return $data;
   }
 }

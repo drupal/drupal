@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.362 2005/07/29 08:18:19 unconed Exp $
+// $Id: comment.module,v 1.363 2005/07/29 21:06:33 unconed Exp $
 
 /**
  * @file
@@ -277,7 +277,7 @@ function comment_nodeapi(&$node, $op, $arg = 0) {
       $text = '';
       $comments = db_query('SELECT subject, comment, format FROM {comments} WHERE nid = %d AND status = %d', $node->nid, COMMENT_PUBLISHED);
       while ($comment = db_fetch_object($comments)) {
-        $text .= '<h2>'. check_plain($comment->subject) .'</h2>'. check_output($comment->comment, $comment->format, FALSE);
+        $text .= '<h2>'. check_plain($comment->subject) .'</h2>'. check_markup($comment->comment, $comment->format, FALSE);
       }
       return $text;
 
@@ -472,8 +472,8 @@ function comment_validate($edit) {
     // 1) Filter it into HTML
     // 2) Strip out all HTML tags
     // 3) Convert entities back to plain-text.
-  // Note: format is checked by check_output().
-    $edit['subject'] = truncate_utf8(decode_entities(strip_tags(check_output($edit['comment'], $edit['format']))), 29, TRUE);
+  // Note: format is checked by check_markup().
+    $edit['subject'] = truncate_utf8(decode_entities(strip_tags(check_markup($edit['comment'], $edit['format']))), 29, TRUE);
   }
 
   // Validate the comment's body.
@@ -1458,7 +1458,7 @@ function theme_comment_view($comment, $links = '', $visible = 1) {
 
   // Switch to folded/unfolded view of the comment
   if ($visible) {
-    $comment->comment = check_output($comment->comment, $comment->format, FALSE);
+    $comment->comment = check_markup($comment->comment, $comment->format, FALSE);
     $output .= theme('comment', $comment, $links);
   }
   else {

@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.100 2005/06/27 18:33:32 dries Exp $
+// $Id: profile.module,v 1.101 2005/07/29 21:06:33 unconed Exp $
 
 /**
  * @file
@@ -246,7 +246,7 @@ function profile_view_field($user, $field) {
       case 'textfield':
         return check_plain($value);
       case 'textarea':
-        return check_output($value);
+        return check_markup($value);
       case 'selection':
         return $browse ? l($value, "profile/$field->name/$value") : check_plain($value);
       case 'checkbox':
