@@ -648,9 +648,6 @@ function search_form($action = '', $keys = '', $type = null, $prompt = null) {
   if (!$action) {
     $action = url('search/'. $type);
   }
-  if (!$type) {
-    $type = 'node';
-  }
   if (is_null($prompt)) {
     $prompt = t('Enter your keywords');
   }

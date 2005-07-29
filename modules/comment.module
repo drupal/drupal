@@ -1676,7 +1676,6 @@ function _comment_update_node_statistics($nid) {
 
   // comments exist
   if ($count > 0) {
-    $node = node_load($nid);
     $last_reply = db_fetch_object(db_query_range('SELECT cid, name, timestamp, uid FROM {comments} WHERE nid = %d AND status = %d ORDER BY cid DESC', $nid, COMMENT_PUBLISHED, 0, 1));
     db_query("UPDATE {node_comment_statistics} SET comment_count = %d, last_comment_timestamp = %d, last_comment_name = '%s', last_comment_uid = %d WHERE nid = %d", $count, $last_reply->timestamp, $last_reply->uid ? NULL : $last_reply->name, $last_reply->uid, $nid);
   }

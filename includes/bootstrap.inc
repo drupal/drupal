@@ -450,7 +450,6 @@ function bootstrap_invoke_all($op) {
  *   TRUE if the item is loaded or has already been loaded.
  */
 function drupal_load($type, $name) {
-  // print $name. '<br />';
   static $files = array();
 
   if (isset($files[$type][$name])) {
