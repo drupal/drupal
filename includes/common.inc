@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.461 2005/07/27 01:58:43 unconed Exp $ */
+/* $Id: common.inc,v 1.462 2005/07/29 19:05:03 unconed Exp $ */
 
 /**
  * @file
@@ -1250,7 +1250,7 @@ function form_checkbox($title, $name, $value = 1, $checked = FALSE, $description
  * @param $required
  *   Whether the user must check a box before submitting the form.
  * @return
- *   A themed HTML string representing the radio button set.
+ *   A themed HTML string representing the check button set.
  */
 function form_checkboxes($title, $name, $values, $options, $description = NULL, $attributes = NULL, $required = FALSE) {
   if (count($options) > 0) {
