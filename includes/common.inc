@@ -1250,7 +1250,7 @@ function form_checkbox($title, $name, $value = 1, $checked = FALSE, $description
  * @param $required
  *   Whether the user must check a box before submitting the form.
  * @return
- *   A themed HTML string representing the check button set.
+ *   A themed HTML string representing the checkbox set.
  */
 function form_checkboxes($title, $name, $values, $options, $description = NULL, $attributes = NULL, $required = FALSE) {
   if (count($options) > 0) {
