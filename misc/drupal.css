@@ -193,6 +193,9 @@ tr.odd .form-item, tr.even .form-item {
   float: none;
   display: block;
 }
+.nowrap {
+  white-space: nowrap;
+}
 .ok {
   color: #080;
 }
@@ -334,6 +337,11 @@ tr.odd .form-item, tr.even .form-item {
 }
 #forum td.posts, #forum td.topics, #forum td.replies, #forum td.pager {
   text-align: center;
+}
+
+.locale-untranslated {
+  font-style: normal;
+  text-decoration: line-through;
 }
 
 #node-admin-filter ul {
