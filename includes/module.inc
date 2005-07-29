@@ -8,10 +8,12 @@
 
 /**
  * Initialize all modules.
- *
  */
 function module_init() {
-  module_load_all();
+  // Load all the modules that have been enabled in the system table.
+  foreach (module_list(TRUE, FALSE) as $module) {
+    drupal_load('module', $module);
+  }
   module_invoke_all('init');
 }
 
@@ -69,24 +71,6 @@ function module_list($refresh = FALSE, $bootstrap = TRUE) {
   }
   return $list;
 }
-
-/**
- * Load all the modules that have been enabled in the system table.
- *
- * @return
- *   TRUE if all modules were loaded successfully.
- */
-function module_load_all() {
-  $list = module_list(TRUE, FALSE);
-  $status = TRUE;
-
-  foreach ($list as $module) {
-    $status = (drupal_load('module', $module) && $status);
-  }
-
-  return $status;
-}
-
 
 /**
  * Determine whether a given module exists.
