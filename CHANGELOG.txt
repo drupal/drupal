@@ -12,7 +12,9 @@ Drupal x.x.x, xxxx-xx-xx (development version)
     * reworked the node and comment edit forms.
     * improve menu system integration.
     * added support for auto-complete forms (AJAX).
+    * added support for collapsible page sections.
     * reorganized some settings pages.
+    * added friendly database error screens.
 - profiles:
     * added a block to display author information along with posts.
     * added support for private profile fields.
@@ -23,11 +25,14 @@ Drupal x.x.x, xxxx-xx-xx (development version)
     * added Docbook-like XML export functionality.
     * added OPML export functionality.
 - XML-RPC:
-    * replaced the XML-RCP library by a better one.
+    * replaced the XML-RPC library by a better one.
 - performance:
     * added 'loose caching' option for high-traffic sites.
     * improved performance of path aliasing.
     * added the ability to track page generation times.
+- internationalization:
+    * improved Unicode string handling API.
+    * added support for PHP's multibyte string module.
 
 Drupal 4.6.2, 2005-06-29
 ------------------------
