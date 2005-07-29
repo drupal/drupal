@@ -580,7 +580,7 @@ function node_search($op = 'search', $keys = null) {
                            'user' => format_name($node),
                            'date' => $node->changed,
                            'extra' => $extra,
-                           'snippet' => search_excerpt($keys, check_output($node->body, $node->format, FALSE)));
+                           'snippet' => search_excerpt($keys, $node->body));
       }
       return $results;
   }
