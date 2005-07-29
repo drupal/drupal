@@ -442,13 +442,12 @@ function theme_page($content) {
 
 function theme_maintenance_page($content) {
   drupal_set_header('Content-Type: text/html; charset=utf-8');
-  theme('add_style', 'misc/drupal.css');
   theme('add_style', 'misc/maintenance.css');
   $output = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
   $output .= '<html xmlns="http://www.w3.org/1999/xhtml">';
   $output .= '<head>';
-  $output .= '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />';
   $output .= ' <title>'. drupal_get_title() .'</title>';
+  $output .= drupal_get_html_head();
   $output .= theme_get_styles();
   $output .= '</head>';
   $output .= '<body>';
