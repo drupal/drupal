@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.509 2005/07/20 10:48:20 dries Exp $
+// $Id: node.module,v 1.510 2005/07/29 03:21:09 unconed Exp $
 
 /**
  * @file
@@ -562,6 +562,17 @@ function node_search($op = 'search', $keys = null) {
       $results = array();
       foreach ($find as $item) {
         $node = node_load($item);
+
+        // Get node output (filtered and with module-specific fields).
+        if (node_hook($node, 'view')) {
+          node_invoke($node, 'view', false, false);
+        }
+        else {
+          $node = node_prepare($node, false);
+        }
+        // Allow modules to change $node->body before viewing.
+        node_invoke_nodeapi($node, 'view', false, false);
+
         $extra = node_invoke_nodeapi($node, 'search result');
         $results[] = array('link' => url('node/'. $item),
                            'type' => node_invoke($node, 'node_name'),
