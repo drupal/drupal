@@ -1,5 +1,5 @@
 <?php
-/* $Id: updates.inc,v 1.121 2005/07/29 04:12:18 unconed Exp $ */
+/* $Id: updates.inc,v 1.122 2005/07/29 20:31:04 unconed Exp $ */
 
 /**
  * @file
@@ -2522,10 +2522,10 @@ function update_sql($sql) {
   $edit = $_POST["edit"];
   $result = db_query($sql);
   if ($result) {
-    return array('1', nl2br(htmlentities($sql)) ." ", "<div style=\"color: green;\">OK</div>\n");
+    return array('1', check_plain($sql) ."\n<span class=\"success\">OK</span>\n");
   }
   else {
-    return array('0', nl2br(htmlentities($sql)) ." ", "<div style=\"color: red;\">FAILED</div>\n");
+    return array('0', check_plain($sql) ."\n<span class=\"failure\">FAILED</span>\n");
   }
 }
 
