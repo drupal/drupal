@@ -2522,10 +2522,10 @@ function update_sql($sql) {
   $edit = $_POST["edit"];
   $result = db_query($sql);
   if ($result) {
-    return array('1', nl2br(htmlentities($sql)) ." ", "<div style=\"color: green;\">OK</div>\n");
+    return array('1', check_plain($sql) ."\n<span class=\"success\">OK</span>\n");
   }
   else {
-    return array('0', nl2br(htmlentities($sql)) ." ", "<div style=\"color: red;\">FAILED</div>\n");
+    return array('0', check_plain($sql) ."\n<span class=\"failure\">FAILED</span>\n");
   }
 }
 

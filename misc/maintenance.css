@@ -17,3 +17,14 @@ h1 {
   color: #004975;
   font-weight: bold;
 }
+
+/* Update styles */
+h3.update {
+  font-size: 1em;
+}
+pre.update span.success {
+  color: #6bb521;
+}
+pre.update span.failure {
+  color: #b63300;
+}

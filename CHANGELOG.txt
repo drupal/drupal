@@ -15,6 +15,7 @@ Drupal x.x.x, xxxx-xx-xx (development version)
     * added support for collapsible page sections.
     * reorganized some settings pages.
     * added friendly database error screens.
+    * improved styling of update.php.
 - profiles:
     * added a block to display author information along with posts.
     * added support for private profile fields.
