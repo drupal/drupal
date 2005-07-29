@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.308 2005/07/25 20:38:30 unconed Exp $
+// $Id: book.module,v 1.309 2005/07/29 03:49:16 unconed Exp $
 
 /**
  * @file
@@ -91,12 +91,17 @@ function book_menu($may_cache) {
       'title' => t('books'),
       'callback' => 'book_admin',
       'access' => user_access('administer nodes'),
-      'weight' => 4);
+      'type' => MENU_LOCAL_TASK,
+      'weight' => -1);
+    $items[] = array(
+      'path' => 'admin/node/book/list',
+      'title' => t('list'),
+      'type' => MENU_DEFAULT_LOCAL_TASK);
     $items[] = array(
       'path' => 'admin/node/book/orphan',
       'title' => t('orphan pages'),
       'callback' => 'book_admin_orphan',
-      'access' => user_access('administer nodes'),
+      'type' => MENU_LOCAL_TASK,
       'weight' => 8);
     $items[] = array('path' => 'book', 'title' => t('books'),
       'callback' => 'book_render',
