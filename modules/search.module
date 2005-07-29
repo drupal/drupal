@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.131 2005/07/29 06:43:32 unconed Exp $
+// $Id: search.module,v 1.132 2005/07/29 08:18:20 unconed Exp $
 
 /**
  * @file
@@ -647,9 +647,6 @@ function search_form($action = '', $keys = '', $type = null, $prompt = null) {
 
   if (!$action) {
     $action = url('search/'. $type);
-  }
-  if (!$type) {
-    $type = 'node';
   }
   if (is_null($prompt)) {
     $prompt = t('Enter your keywords');

@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.58 2005/07/29 04:12:19 unconed Exp $
+// $Id: bootstrap.inc,v 1.59 2005/07/29 08:18:19 unconed Exp $
 
 /**
  * @file
@@ -450,7 +450,6 @@ function bootstrap_invoke_all($op) {
  *   TRUE if the item is loaded or has already been loaded.
  */
 function drupal_load($type, $name) {
-  // print $name. '<br />';
   static $files = array();
 
   if (isset($files[$type][$name])) {
