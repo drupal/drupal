@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.110 2005/07/23 05:55:11 dries Exp $ */
+/* $Id: drupal.css,v 1.111 2005/07/29 06:59:29 unconed Exp $ */
 
 /*
 ** HTML elements
@@ -193,6 +193,9 @@ tr.odd .form-item, tr.even .form-item {
   float: none;
   display: block;
 }
+.nowrap {
+  white-space: nowrap;
+}
 .ok {
   color: #080;
 }
@@ -334,6 +337,11 @@ tr.odd .form-item, tr.even .form-item {
 }
 #forum td.posts, #forum td.topics, #forum td.replies, #forum td.pager {
   text-align: center;
+}
+
+.locale-untranslated {
+  font-style: normal;
+  text-decoration: line-through;
 }
 
 #node-admin-filter ul {

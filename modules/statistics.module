@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.199 2005/07/18 05:40:17 dries Exp $
+// $Id: statistics.module,v 1.200 2005/07/29 06:59:29 unconed Exp $
 
 /**
  * @file
@@ -171,7 +171,7 @@ function statistics_node_tracker() {
     $result = pager_query('SELECT a.aid, a.timestamp, a.url, a.uid, u.name FROM {accesslog} a LEFT JOIN {users} u ON a.uid = u.uid WHERE a.path LIKE \'node/%d%%\'' . tablesort_sql($header), 30, 0, NULL, $node->nid);
     while ($log = db_fetch_object($result)) {
       $rows[] = array(
-        array('data' => format_date($log->timestamp, 'small'), 'nowrap' => 'nowrap'),
+        array('data' => format_date($log->timestamp, 'small'), 'class' => 'nowrap'),
         l(_statistics_column_width($log->url), $log->url),
         format_name($log),
         l(t('details'), "admin/logs/access/$log->aid"));
@@ -200,7 +200,7 @@ function statistics_user_tracker() {
     $result = pager_query('SELECT aid, timestamp, path, title FROM {accesslog} WHERE uid = %d' . tablesort_sql($header), 30, 0, NULL, $account->uid);
     while ($log = db_fetch_object($result)) {
       $rows[] = array(
-        array('data' => format_date($log->timestamp, 'small'), 'nowrap' => 'nowrap'),
+        array('data' => format_date($log->timestamp, 'small'), 'class' => 'nowrap'),
         _statistics_format_item($log->title, $log->path),
         l(t('details'), "admin/logs/access/$log->aid"));
     }
@@ -233,7 +233,7 @@ function statistics_recent_hits($type = 'all', $id = 0) {
   $result = pager_query($sql, 30);
   while ($log = db_fetch_object($result)) {
     $rows[] = array(
-      array('data' => format_date($log->timestamp, 'small'), 'nowrap' => 'nowrap'),
+      array('data' => format_date($log->timestamp, 'small'), 'class' => 'nowrap'),
       _statistics_format_item($log->title, $log->path),
       format_name($log),
       l(t('details'), "admin/logs/access/$log->aid"));
