@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.510 2005/07/29 03:21:09 unconed Exp $
+// $Id: node.module,v 1.511 2005/07/29 03:29:53 unconed Exp $
 
 /**
  * @file
@@ -580,7 +580,7 @@ function node_search($op = 'search', $keys = null) {
                            'user' => format_name($node),
                            'date' => $node->changed,
                            'extra' => $extra,
-                           'snippet' => search_excerpt($keys, check_output($node->body, $node->format, FALSE)));
+                           'snippet' => search_excerpt($keys, $node->body));
       }
       return $results;
   }
