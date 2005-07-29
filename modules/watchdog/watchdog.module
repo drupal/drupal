@@ -1,5 +1,5 @@
 <?php
-// $Id: watchdog.module,v 1.122 2005/04/24 16:34:36 dries Exp $
+// $Id: watchdog.module,v 1.123 2005/07/29 04:12:19 unconed Exp $
 
 /**
  * @file
@@ -141,6 +141,7 @@ function watchdog_event($id) {
     $output .= ' <tr><th>'. t('Date') .'</th><td>'. format_date($watchdog->timestamp, 'large') .'</td></tr>';
     $output .= ' <tr><th>'. t('User') .'</th><td>'. format_name($watchdog) .'</td></tr>';
     $output .= ' <tr><th>'. t('Location') ."</th><td>". l($watchdog->location, $watchdog->location) ."</td></tr>";
+    $output .= ' <tr><th>'. t('Referrer') ."</th><td>". l($watchdog->referer, $watchdog->referer) ."</td></tr>";
     $output .= ' <tr><th>'. t('Message') ."</th><td>$watchdog->message</td></tr>";
     $output .= ' <tr><th>'. t('Severity') .'</th><td>'. $severity[$watchdog->severity] .'</td></tr>';
     $output .= ' <tr><th>'. t('Hostname') ."</th><td>$watchdog->hostname</td></tr>";

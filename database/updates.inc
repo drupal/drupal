@@ -1,5 +1,5 @@
 <?php
-/* $Id: updates.inc,v 1.120 2005/07/22 19:06:19 dries Exp $ */
+/* $Id: updates.inc,v 1.121 2005/07/29 04:12:18 unconed Exp $ */
 
 /**
  * @file
@@ -117,7 +117,8 @@ $sql_updates = array(
   "2005-05-10" => "update_138",
   "2005-05-11" => "update_139",
   "2005-05-12" => "update_140",
-  "2005-05-22" => "update_141"
+  "2005-05-22" => "update_141",
+  "2005-07-29" => "update_142"
 );
 
 function update_32() {
@@ -2508,6 +2509,12 @@ function update_141() {
 
   variable_del('upload_maxsize_total');
 
+  return $ret;
+}
+
+function update_142() {
+  $ret = array();
+  $ret[] = update_sql("ALTER TABLE {watchdog} ADD COLUMN referer varchar(128) NOT NULL");
   return $ret;
 }
 
