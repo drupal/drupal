@@ -237,7 +237,7 @@ function blog_link($type, $node = 0, $main = 0) {
   $links = array();
 
   if ($type == 'node' && $node->type == 'blog') {
-    if (arg(0) != 'blog' && arg(1) != $node->uid) {
+    if (arg(0) != 'blog' || arg(1) != $node->uid) {
       $links[] = l(t("%username's blog", array('%username' => $node->name)), "blog/$node->uid", array('title' => t("Read %username's latest blog entries.", array('%username' => $node->name))));
     }
   }
