@@ -739,7 +739,7 @@ function request_uri() {
  */
 function watchdog($type, $message, $severity = WATCHDOG_NOTICE, $link = NULL) {
   global $user;
-  db_query("INSERT INTO {watchdog} (uid, type, message, severity, link, location, hostname, timestamp) VALUES (%d, '%s', '%s', %d, '%s', '%s', '%s', %d)", $user->uid, $type, $message, $severity, $link, request_uri(), $_SERVER['REMOTE_ADDR'], time());
+  db_query("INSERT INTO {watchdog} (uid, type, message, severity, link, location, referer, hostname, timestamp) VALUES (%d, '%s', '%s', %d, '%s', '%s', '%s', '%s', %d)", $user->uid, $type, $message, $severity, $link, request_uri(), referer_uri(), $_SERVER['REMOTE_ADDR'], time());
 }
 
 /**

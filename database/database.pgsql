@@ -762,6 +762,7 @@ CREATE TABLE watchdog (
   severity smallint NOT NULL default '0',
   link varchar(255) NOT NULL default '',
   location varchar(128) NOT NULL default '',
+  referer varchar(128) NOT NULL default '',
   hostname varchar(128) NOT NULL default '',
   timestamp integer NOT NULL default '0',
   PRIMARY KEY  (wid)
