@@ -36,7 +36,7 @@ CREATE TABLE aggregator_category (
   title varchar(255) NOT NULL default '',
   description text,
   block smallint NOT NULL default '0',
-  PRIMARY KEY  (cid),
+  PRIMARY KEY (cid),
   UNIQUE (title)
 );
 
@@ -47,7 +47,7 @@ CREATE TABLE aggregator_category (
 CREATE TABLE aggregator_category_feed (
   fid integer NOT NULL default '0',
   cid integer NOT NULL default '0',
-  PRIMARY KEY  (fid,cid)
+  PRIMARY KEY (fid,cid)
 );
 
 --
@@ -57,7 +57,7 @@ CREATE TABLE aggregator_category_feed (
 CREATE TABLE aggregator_category_item (
   iid integer NOT NULL default '0',
   cid integer NOT NULL default '0',
-  PRIMARY KEY  (iid,cid)
+  PRIMARY KEY (iid,cid)
 );
 
 --
@@ -76,7 +76,7 @@ CREATE TABLE aggregator_feed (
   etag varchar(255) NOT NULL default '',
   modified integer NOT NULL default '0',
   block smallint NOT NULL default '0',
-  PRIMARY KEY  (fid),
+  PRIMARY KEY (fid),
   UNIQUE (url),
   UNIQUE (title)
 );
@@ -93,7 +93,7 @@ CREATE TABLE aggregator_item (
   author varchar(255) NOT NULL default '',
   description text,
   timestamp integer default NULL,
-  PRIMARY KEY  (iid)
+  PRIMARY KEY (iid)
 );
 
 --
@@ -149,7 +149,7 @@ CREATE TABLE boxes (
   body text default '',
   info varchar(128) NOT NULL default '',
   format smallint NOT NULL default '0',
-  PRIMARY KEY  (bid),
+  PRIMARY KEY (bid),
   UNIQUE (info)
 );
 
@@ -163,7 +163,7 @@ CREATE TABLE cache (
   expire integer NOT NULL default '0',
   created integer NOT NULL default '0',
   headers text default '',
-  PRIMARY KEY  (cid)
+  PRIMARY KEY (cid)
 );
 CREATE INDEX cache_expire_idx ON cache(expire);
 
@@ -181,14 +181,14 @@ CREATE TABLE comments (
   hostname varchar(128) NOT NULL default '',
   timestamp integer NOT NULL default '0',
   score integer NOT NULL default '0',
-  status smallint  NOT NULL default '0',
+  status smallint NOT NULL default '0',
   format smallint NOT NULL default '0',
   thread varchar(255) default '',
   users text default '',
   name varchar(60) default NULL,
   mail varchar(64) default NULL,
   homepage varchar(255) default NULL,
-  PRIMARY KEY  (cid)
+  PRIMARY KEY (cid)
 );
 CREATE INDEX comments_nid_idx ON comments(nid);
 
@@ -209,7 +209,7 @@ CREATE TABLE contact (
 CREATE TABLE node_comment_statistics (
   nid integer NOT NULL,
   last_comment_timestamp integer NOT NULL default '0',
-  last_comment_name varchar(60)  default NULL,
+  last_comment_name varchar(60) default NULL,
   last_comment_uid integer NOT NULL default '0',
   comment_count integer NOT NULL default '0',
   PRIMARY KEY (nid)
@@ -227,7 +227,7 @@ CREATE TABLE directory (
   slogan text NOT NULL default '',
   mission text NOT NULL default '',
   timestamp integer NOT NULL default '0',
-  PRIMARY KEY  (link)
+  PRIMARY KEY (link)
 );
 
 --
@@ -242,7 +242,7 @@ CREATE TABLE files (
   filemime varchar(255) NOT NULL default '',
   filesize integer NOT NULL default '0',
   list smallint NOT NULL default '0',
-  PRIMARY KEY  (fid)
+  PRIMARY KEY (fid)
 );
 
 --
@@ -288,7 +288,7 @@ CREATE TABLE forum (
   nid integer NOT NULL default '0',
   tid integer NOT NULL default '0',
   shadow integer NOT NULL default '0',
-  PRIMARY KEY  (nid)
+  PRIMARY KEY (nid)
 );
 CREATE INDEX forum_tid_idx ON forum(tid);
 
@@ -300,7 +300,7 @@ CREATE TABLE history (
   uid integer NOT NULL default '0',
   nid integer NOT NULL default '0',
   timestamp integer NOT NULL default '0',
-  PRIMARY KEY  (uid,nid)
+  PRIMARY KEY (uid,nid)
 );
 
 --
@@ -314,7 +314,7 @@ CREATE TABLE locales_meta (
   isdefault int4 NOT NULL default '0',
   plurals int4 NOT NULL default '0',
   formula varchar(128) NOT NULL default '',
-  PRIMARY KEY  (locale)
+  PRIMARY KEY (locale)
 );
 
 --
@@ -326,7 +326,7 @@ CREATE TABLE locales_source (
   lid SERIAL,
   location varchar(255) NOT NULL default '',
   source text NOT NULL,
-  PRIMARY KEY  (lid)
+  PRIMARY KEY (lid)
 );
 
 --
@@ -339,7 +339,7 @@ CREATE TABLE locales_target (
   locale varchar(12) NOT NULL default '',
   plid int4 NOT NULL default '0',
   plural int4 NOT NULL default '0',
-  UNIQUE  (lid)
+  UNIQUE (lid)
 );
 CREATE INDEX locales_target_lid_idx ON locales_target(lid);
 CREATE INDEX locales_target_lang_idx ON locales_target(locale);
@@ -359,7 +359,7 @@ CREATE TABLE menu (
   description varchar(255) NOT NULL default '',
   weight smallint NOT NULL default '0',
   type smallint NOT NULL default '0',
-  PRIMARY KEY  (mid)
+  PRIMARY KEY (mid)
 );
 --
 -- Table structure for table 'moderation_filters'
@@ -369,7 +369,7 @@ CREATE TABLE moderation_filters (
   fid SERIAL,
   filter varchar(255) NOT NULL default '',
   minimum smallint NOT NULL default '0',
-  PRIMARY KEY  (fid)
+  PRIMARY KEY (fid)
 );
 
 --
@@ -392,7 +392,7 @@ CREATE TABLE moderation_votes (
   mid SERIAL,
   vote varchar(255) default NULL,
   weight smallint NOT NULL default '0',
-  PRIMARY KEY  (mid)
+  PRIMARY KEY (mid)
 );
 
 --
@@ -415,7 +415,7 @@ CREATE TABLE node (
   revisions text NOT NULL default '',
   sticky integer NOT NULL default '0',
   format smallint NOT NULL default '0',
-  PRIMARY KEY  (nid)
+  PRIMARY KEY (nid)
 );
 CREATE INDEX node_type_idx ON node(type);
 CREATE INDEX node_title_idx ON node(title,type);
@@ -437,7 +437,7 @@ CREATE TABLE node_access (
   grant_view smallint NOT NULL default '0',
   grant_update smallint NOT NULL default '0',
   grant_delete smallint NOT NULL default '0',
-  PRIMARY KEY  (nid,gid,realm)
+  PRIMARY KEY (nid,gid,realm)
 );
 
 
@@ -450,7 +450,7 @@ CREATE TABLE node_counter (
   totalcount integer NOT NULL default '0',
   daycount integer NOT NULL default '0',
   timestamp integer NOT NULL default '0',
-  PRIMARY KEY  (nid)
+  PRIMARY KEY (nid)
 );
 CREATE INDEX node_counter_totalcount_idx ON node_counter(totalcount);
 CREATE INDEX node_counter_daycount_idx ON node_counter(daycount);
@@ -494,7 +494,7 @@ CREATE TABLE url_alias (
   pid serial,
   src varchar(128) NOT NULL default '',
   dst varchar(128) NOT NULL default '',
-  PRIMARY KEY  (pid)
+  PRIMARY KEY (pid)
 );
 CREATE INDEX url_alias_dst_idx ON url_alias(dst);
 CREATE INDEX url_alias_src ON url_alias(src);
@@ -518,7 +518,7 @@ CREATE TABLE poll (
   runtime integer NOT NULL default '0',
   polled text NOT NULL default '',
   active integer NOT NULL default '0',
-  PRIMARY KEY  (nid)
+  PRIMARY KEY (nid)
 );
 
 --
@@ -531,7 +531,7 @@ CREATE TABLE poll_choices (
   chtext varchar(128) NOT NULL default '',
   chvotes integer NOT NULL default '0',
   chorder integer NOT NULL default '0',
-  PRIMARY KEY  (chid)
+  PRIMARY KEY (chid)
 );
 CREATE INDEX poll_choices_nid_idx ON poll_choices(nid);
 
@@ -542,7 +542,7 @@ CREATE INDEX poll_choices_nid_idx ON poll_choices(nid);
 CREATE TABLE role (
   rid SERIAL,
   name varchar(32) NOT NULL default '',
-  PRIMARY KEY  (rid),
+  PRIMARY KEY (rid),
   UNIQUE (name)
 );
 
@@ -609,7 +609,7 @@ CREATE TABLE system (
   status integer NOT NULL default '0',
   throttle smallint NOT NULL default '0',
   bootstrap integer NOT NULL default '0',
-  PRIMARY KEY  (filename)
+  PRIMARY KEY (filename)
 );
 
 --
@@ -622,7 +622,7 @@ CREATE TABLE term_data (
   name varchar(255) NOT NULL default '',
   description text default '',
   weight smallint NOT NULL default '0',
-  PRIMARY KEY  (tid)
+  PRIMARY KEY (tid)
 );
 CREATE INDEX term_data_vid_idx ON term_data(vid);
 
@@ -694,7 +694,7 @@ CREATE TABLE users (
   picture varchar(255) NOT NULL DEFAULT '',
   init varchar(64) default '',
   data text default '',
-  PRIMARY KEY  (uid),
+  PRIMARY KEY (uid),
   UNIQUE (name)
 );
 CREATE INDEX users_access_idx ON users(access);
@@ -718,7 +718,7 @@ CREATE TABLE users_roles (
 CREATE TABLE variable (
   name varchar(48) NOT NULL default '',
   value text NOT NULL default '',
-  PRIMARY KEY  (name)
+  PRIMARY KEY (name)
 );
 
 --
@@ -737,7 +737,7 @@ CREATE TABLE vocabulary (
   tags smallint NOT NULL default '0',
   module varchar(255) NOT NULL default '',
   weight smallint NOT NULL default '0',
-  PRIMARY KEY  (vid)
+  PRIMARY KEY (vid)
 );
 
 --
@@ -765,7 +765,7 @@ CREATE TABLE watchdog (
   referer varchar(128) NOT NULL default '',
   hostname varchar(128) NOT NULL default '',
   timestamp integer NOT NULL default '0',
-  PRIMARY KEY  (wid)
+  PRIMARY KEY (wid)
 );
 
 --

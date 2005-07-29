@@ -213,7 +213,7 @@ CREATE TABLE contact (
 CREATE TABLE node_comment_statistics (
   nid int(10) unsigned NOT NULL auto_increment,
   last_comment_timestamp int(11) NOT NULL default '0',
-  last_comment_name varchar(60)  default NULL,
+  last_comment_name varchar(60) default NULL,
   last_comment_uid int(10) NOT NULL default '0',
   comment_count int(10) unsigned NOT NULL default '0',
   PRIMARY KEY (nid),
@@ -289,7 +289,7 @@ CREATE TABLE flood (
 
 CREATE TABLE forum (
   nid int(10) unsigned NOT NULL default '0',
-  tid int(10) unsigned NOT NULL default  '0',
+  tid int(10) unsigned NOT NULL default '0',
   PRIMARY KEY (nid),
   KEY tid (tid)
 ) TYPE=MyISAM;
@@ -560,7 +560,7 @@ CREATE TABLE search_index (
 CREATE TABLE search_total (
   word varchar(50) NOT NULL default '',
   count int(10) unsigned default NULL,
-  PRIMARY KEY word (word)
+  PRIMARY KEY (word)
 ) TYPE=MyISAM;
 
 --
