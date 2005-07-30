@@ -1,5 +1,5 @@
 <?php
-// $Id: phptemplate.engine,v 1.9 2005/07/30 17:13:48 unconed Exp $
+// $Id: phptemplate.engine,v 1.10 2005/07/30 20:54:02 unconed Exp $
 
 /**
  * @file
@@ -235,14 +235,14 @@ function phptemplate_comment($comment, $links = 0) {
   return _phptemplate_callback('comment', array(
     'author'    => format_name($comment),
     'comment'   => $comment,
-                      array('%a' => format_name($comment),
-                            '%b' => format_date($comment->timestamp))),
     'content'   => $comment->comment,
     'date'      => format_date($comment->timestamp),
     'links'     => $links,
     'new'       => $comment->new ? t('new') : '',
     'picture'   => theme_get_setting('toggle_comment_user_picture') ? theme('user_picture', $comment) : '',
     'submitted' => t('Submitted by %a on %b.',
+                      array('%a' => format_name($comment),
+                            '%b' => format_date($comment->timestamp))),
     'title'     => l($comment->subject, $_GET['q'], NULL, NULL, "comment-$comment->cid")
   ));
 }
