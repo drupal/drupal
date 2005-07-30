@@ -455,7 +455,7 @@ function statistics_block($op = 'list', $delta = 0, $edit = array()) {
         }
 
         if (count($content)) {
-          $block['content'] = implode($content, '<br />');
+          $block['content'] = implode('<br />', $content);
           $block['subject'] = t('Popular content');
           return $block;
         }

@@ -538,7 +538,7 @@ function theme_image($path, $alt = '', $title = '', $attributes = NULL, $getsize
  * @return a string containing the breadcrumb output.
  */
 function theme_breadcrumb($breadcrumb) {
-  return '<div class="breadcrumb">'. implode($breadcrumb, ' &raquo; ') .'</div>';
+  return '<div class="breadcrumb">'. implode(' » ', $breadcrumb) .'</div>';
 }
 
 /**
@@ -900,7 +900,7 @@ function theme_xml_icon($url) {
  */
 function theme_closure($main = 0) {
   $footer = module_invoke_all('footer', $main);
-  return implode($footer, "\n");
+  return implode("\n", $footer);
 }
 
 /**

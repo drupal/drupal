@@ -1648,7 +1648,7 @@ function drupal_attributes($attributes = array()) {
     foreach ($attributes as $key => $value) {
       $t[] = $key .'="'. check_plain($value) .'"';
     }
-    return ' '. implode($t, ' ');
+    return ' '. implode(' ', $t);
   }
 }
 
