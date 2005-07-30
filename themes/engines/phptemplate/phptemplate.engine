@@ -1,5 +1,5 @@
 <?php
-// $Id: phptemplate.engine,v 1.8 2005/07/25 06:59:37 unconed Exp $
+// $Id: phptemplate.engine,v 1.9 2005/07/30 17:13:48 unconed Exp $
 
 /**
  * @file
@@ -92,16 +92,17 @@ function _phptemplate_default_variables($hook, $variables) {
 
 function phptemplate_features() {
   return array(
-       'logo',
-       'toggle_favicon',
-       'toggle_name',
-       'toggle_search',
-       'toggle_slogan',
-       'toggle_mission',
-       'toggle_primary_links',
-       'toggle_secondary_links',
-       'toggle_node_user_picture',
-       'toggle_comment_user_picture');
+    'logo',
+    'toggle_comment_user_picture',
+    'toggle_favicon',
+    'toggle_mission',
+    'toggle_name',
+    'toggle_node_user_picture',
+    'toggle_primary_links',
+    'toggle_search',
+    'toggle_secondary_links',
+    'toggle_slogan'
+  );
 }
 
 /**
@@ -154,33 +155,32 @@ function phptemplate_page($content) {
   }
 
   $variables = array(
-    'head_title'          => implode(' | ', $head_title),
-    'language'            => $GLOBALS['locale'],
-    'site'                => variable_get('site_name', 'drupal'),
+    'breadcrumb'          => theme('breadcrumb', drupal_get_breadcrumb()),
+    'closure'             => theme('closure'),
+    'content'             => '<!-- begin content -->' . $content . '<!-- end content -->',
+    'footer_message'      => variable_get('site_footer', FALSE),
     'head'                => drupal_get_html_head(),
-    'onload_attributes'   => theme('onload_attribute'),
+    'head_title'          => implode(' | ', $head_title),
+    'help'                => theme('help'),
+    'language'            => $GLOBALS['locale'],
+    'layout'              => $layout,
     'logo'                => theme_get_setting('logo'),
+    'messages'            => theme('status_messages'),
+    'mission'             => $mission,
+    'onload_attributes'   => theme('onload_attribute'),
+    'primary_links'       => theme_get_setting('primary_links'),
     'site_name'           => (theme_get_setting('toggle_name') ? variable_get('site_name', 'Drupal') : ''),
     'site_slogan'         => (theme_get_setting('toggle_slogan') ? variable_get('site_slogan', '') : ''),
     'search_box'          => theme_get_setting('toggle_search'),
-    'search_url'          => url('search'),
     'search_button_text'  => t('search'),
     'search_description'  => t('Enter the terms you wish to search for.'),
-    'title'               => drupal_get_title(),
-    'primary_links'       => theme_get_setting('primary_links'),
+    'search_url'          => url('search'),
     'secondary_links'     => theme_get_setting('secondary_links'),
-    'breadcrumb'          => theme('breadcrumb', drupal_get_breadcrumb()),
-    'tabs'                => theme('menu_local_tasks'),
-    'messages'            => theme('status_messages'),
-    'layout'              => $layout,
-    'help'                => theme('help'),
-    'styles'              => theme_get_styles(),
-    'mission'             => $mission,
     'sidebar_left'        => $sidebar_left,
-    'content'             => '<!-- begin content -->' . $content . '<!-- end content -->',
     'sidebar_right'       => $sidebar_right,
-    'footer_message'      => variable_get('site_footer', FALSE),
-    'closure'             => theme('closure')
+    'styles'              => theme_get_styles(),
+    'tabs'                => theme('menu_local_tasks'),
+    'title'               => drupal_get_title()
   );
   if ((arg(0) == 'node') && is_int(arg(1))) {
     $variables['node'] = node_load(arg(1));
@@ -202,18 +202,18 @@ function phptemplate_node($node, $main = 0, $page = 0) {
   }
 
   $variables = array(
-      'title'          => check_plain($node->title),
-      'node_url'       => url('node/'. $node->nid),
-      'terms'          => theme('links', $taxonomy),
-      'name'           => format_name($node),
-      'date'           => format_date($node->created),
-      'content'        => ($main && $node->teaser) ? $node->teaser : $node->body,
-      'links'          => $node->links ? theme('links', $node->links) : '',
-      'taxonomy'       => $taxonomy,
-      'main'           => $main,
-      'page'           => $page,
-      'node'           => $node  // we pass the actual node to allow more customization
-    );
+    'content'        => ($main && $node->teaser) ? $node->teaser : $node->body,
+    'date'           => format_date($node->created),
+    'links'          => $node->links ? theme('links', $node->links) : '',
+    'main'           => $main,
+    'name'           => format_name($node),
+    'node'           => $node,  // we pass the actual node to allow more customization
+    'node_url'       => url('node/'. $node->nid),
+    'page'           => $page,
+    'taxonomy'       => $taxonomy,
+    'terms'          => theme('links', $taxonomy),
+    'title'          => check_plain($node->title)
+  );
 
   // Flatten the node object's member fields.
   $variables = array_merge(object2array($node), $variables);
@@ -233,18 +233,17 @@ function phptemplate_node($node, $main = 0, $page = 0) {
  */
 function phptemplate_comment($comment, $links = 0) {
   return _phptemplate_callback('comment', array(
-    'new'       => $comment->new ? t('new') : '',
+    'author'    => format_name($comment),
     'comment'   => $comment,
-    'submitted' => t('Submitted by %a on %b.',
                       array('%a' => format_name($comment),
                             '%b' => format_date($comment->timestamp))),
-    'title'     => l($comment->subject, $_GET['q'], NULL, NULL, "comment-$comment->cid"),
-
-    'picture'   => theme_get_setting('toggle_comment_user_picture') ? theme('user_picture', $comment) : '',
-    'links'     => $links,
     'content'   => $comment->comment,
-    'author'    => format_name($comment),
-    'date'      => format_date($comment->timestamp)
+    'date'      => format_date($comment->timestamp),
+    'links'     => $links,
+    'new'       => $comment->new ? t('new') : '',
+    'picture'   => theme_get_setting('toggle_comment_user_picture') ? theme('user_picture', $comment) : '',
+    'submitted' => t('Submitted by %a on %b.',
+    'title'     => l($comment->subject, $_GET['q'], NULL, NULL, "comment-$comment->cid")
   ));
 }
 
@@ -262,9 +261,9 @@ function phptemplate_block($block) {
  */
 function phptemplate_box($title, $content, $region = 'main') {
   return _phptemplate_callback('box', array(
-    'title'   =>   $title,
     'content' =>   $content,
-    'region'  =>   $region
+    'region'  =>   $region,
+    'title'   =>   $title
   ));
 }
 
@@ -304,7 +303,7 @@ function _phptemplate_default($hook, $variables, $file = null) {
   }
 
   if ($file) {
-     extract($variables);                // Extract the vars to local namespace
+    extract($variables);           // Extract the vars to local namespace
     ob_start();                    // Start output buffering
     include($file);                // Include the file
     $contents = ob_get_contents(); // Get the contents of the buffer
