@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.220 2005/07/26 01:56:31 unconed Exp $
+// $Id: system.module,v 1.221 2005/07/30 18:48:00 unconed Exp $
 
 /**
  * @file
@@ -721,20 +721,32 @@ function system_theme_settings($key = '') {
   $group = '';
 
   // Toggle settings
-  $toggles = array('toggle_name' => t('Site name'),
-        'toggle_slogan' => t('Site slogan'),
-        'toggle_mission' => t('Mission statement'),
-        'toggle_primary_links' => t('Primary links'),
-        'toggle_secondary_links' => t('Secondary links'),
-        'toggle_node_user_picture' => t('User pictures in posts'),
-        'toggle_comment_user_picture' => t('User pictures in comments'),
-        'toggle_search' => t('Search box'),
-        'toggle_favicon' => t('Shortcut icon'));
+  $toggles = array(
+    'toggle_name'                 => t('Site name'),
+    'toggle_slogan'               => t('Site slogan'),
+    'toggle_mission'              => t('Mission statement'),
+    'toggle_primary_links'        => t('Primary links'),
+    'toggle_secondary_links'      => t('Secondary links'),
+    'toggle_node_user_picture'    => t('User pictures in posts'),
+    'toggle_comment_user_picture' => t('User pictures in comments'),
+    'toggle_search'               => t('Search box'),
+    'toggle_favicon'              => t('Shortcut icon')
+  );
+
+  // Some features are not always available  
+  $disabled = array();
+  if (!variable_get('user_pictures', 0)) {
+    $disabled['toggle_node_user_picture'] = true;
+    $disabled['toggle_comment_user_picture'] = true;
+  }
+  if (!module_exist('search')) {
+    $disabled['toggle_search'] = true;
+  }
 
   foreach ($toggles as $name => $title) {
     if ((!$key) || in_array($name, $features)) {
       // disable search box if search.module is disabled
-      $group .= form_checkbox($title, "$var][$name", 1, $settings[$name], NULL, (!module_exist('search') && $name == 'toggle_search') ? array('disabled' => 'disabled') : NULL);
+      $group .= form_checkbox($title, "$var][$name", 1, $settings[$name], NULL, isset($disabled[$name]) ? array('disabled' => 'disabled') : NULL);
     }
   }
   if ($group) {
