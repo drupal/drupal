@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.463 2005/07/29 19:07:17 unconed Exp $ */
+/* $Id: common.inc,v 1.464 2005/07/30 12:52:54 unconed Exp $ */
 
 /**
  * @file
@@ -1648,7 +1648,7 @@ function drupal_attributes($attributes = array()) {
     foreach ($attributes as $key => $value) {
       $t[] = $key .'="'. check_plain($value) .'"';
     }
-    return ' '. implode($t, ' ');
+    return ' '. implode(' ', $t);
   }
 }
 

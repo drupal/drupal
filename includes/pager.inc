@@ -1,5 +1,5 @@
 <?php
-// $Id: pager.inc,v 1.44 2005/05/25 05:42:05 unconed Exp $
+// $Id: pager.inc,v 1.45 2005/07/30 12:52:54 unconed Exp $
 
 /**
  * @file
@@ -394,10 +394,10 @@ function theme_pager_link($text, $page_new, $element, $attributes = array()) {
 
   $page_new = pager_load_array($page_new[$element], $element, explode(',', $page));
   if (count($attributes)) {
-    $url = url($q, 'page='. implode($page_new, ',') .'&'. implode('&', $query));
+    $url = url($q, 'page='. implode(',', $page_new) .'&'. implode('&', $query));
   }
   else {
-    $url = url($q, 'page='. implode($page_new, ','));
+    $url = url($q, 'page='. implode(',', $page_new));
   }
 
   return '<a href="'. check_url($url) .'">'. check_plain($text) .'</a>';

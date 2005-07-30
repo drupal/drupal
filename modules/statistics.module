@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.200 2005/07/29 06:59:29 unconed Exp $
+// $Id: statistics.module,v 1.201 2005/07/30 12:52:54 unconed Exp $
 
 /**
  * @file
@@ -455,7 +455,7 @@ function statistics_block($op = 'list', $delta = 0, $edit = array()) {
         }
 
         if (count($content)) {
-          $block['content'] = implode($content, '<br />');
+          $block['content'] = implode('<br />', $content);
           $block['subject'] = t('Popular content');
           return $block;
         }
