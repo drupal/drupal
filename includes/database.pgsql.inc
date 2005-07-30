@@ -1,5 +1,5 @@
 <?php
-// $Id: database.pgsql.inc,v 1.10 2005/07/27 01:58:43 unconed Exp $
+// $Id: database.pgsql.inc,v 1.11 2005/07/30 18:01:51 unconed Exp $
 
 /**
  * @file
@@ -59,22 +59,16 @@ function db_connect($url) {
  * Helper function for db_query().
  */
 function _db_query($query, $debug = 0) {
-  global $active_db, $last_result;
-  global $queries;
-  static $dev_query;
+  global $active_db, $last_result, $queries;
 
-  if (!isset($dev_query)) {
-    $dev_query = function_exists('dev_query') ? variable_get('dev_query', 0) : $GLOBALS['conf']['dev_query'];
-  }
-
-  if ($dev_query) {
+  if (variable_get('dev_query', 0)) {
     list($usec, $sec) = explode(' ', microtime());
     $timer = (float)$usec + (float)$sec;
   }
 
   $last_result = pg_query($active_db, $query);
 
-  if ($dev_query) {
+  if (variable_get('dev_query', 0)) {
     list($usec, $sec) = explode(' ', microtime());
     $stop = (float)$usec + (float)$sec;
     $diff = $stop - $timer;
