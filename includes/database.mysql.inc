@@ -72,22 +72,16 @@ function db_connect($url) {
  * Helper function for db_query().
  */
 function _db_query($query, $debug = 0) {
-  global $active_db;
-  global $queries;
-  static $dev_query;
+  global $active_db, $queries;
 
-  if (!isset($dev_query)) {
-    $dev_query = function_exists('dev_query') ? variable_get('dev_query', 0) : $GLOBALS['conf']['dev_query'];
-  }
-
-  if ($dev_query) {
+  if (variable_get('dev_query', 0)) {
     list($usec, $sec) = explode(' ', microtime());
     $timer = (float)$usec + (float)$sec;
   }
 
   $result = mysql_query($query, $active_db);
 
-  if ($dev_query) {
+  if (variable_get('dev_query', 0)) {
     list($usec, $sec) = explode(' ', microtime());
     $stop = (float)$usec + (float)$sec;
     $diff = $stop - $timer;
