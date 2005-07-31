@@ -1,5 +1,5 @@
 <?php
-// $Id: throttle.module,v 1.49 2005/05/31 21:14:27 unconed Exp $
+// $Id: throttle.module,v 1.50 2005/07/31 10:36:33 dries Exp $
 
 /**
  * @file
@@ -119,15 +119,12 @@ function throttle_help($section) {
  * Implementation of hook_settings().
  */
 function throttle_settings() {
-  // Tune auto-throttle.
   _throttle_validate(variable_get('throttle_anonymous', ''), 'throttle_anonymous');
   _throttle_validate(variable_get('throttle_user', ''), 'throttle_user');
-  $group = form_textfield(t('Auto-throttle on anonymous users'), 'throttle_anonymous', variable_get('throttle_anonymous', 0), 5, 6, t('The congestion control throttle can be automatically enabled when the number of anonymous users currently visiting your site exceeds the specified threshold.  For example, to start the throttle when your site has 250 anonymous users online at once, enter \'250\' in this field. Leave this value blank or set to "0" if you do not wish to auto-throttle on anonymous users.  You can inspect the current number of anonymous users using the "Who\'s online" block.'));
-  $group .= form_textfield(t('Auto-throttle on authenticated users'), 'throttle_user', variable_get('throttle_user', 0), 5, 6, t('The congestion control throttle can be automatically enabled when the number of authenticated users currently visiting your site exceeds the specified threshold.  For example, to start the throttle when your site has 50 registered users online at once, enter \'50\' in this field. Leave this value blank or set to "0" if you do not wish to auto-throttle on authenticated users.  You can inspect the current number of authenticated users using the "Who\'s online" block.'));
+  $output = form_textfield(t('Auto-throttle on anonymous users'), 'throttle_anonymous', variable_get('throttle_anonymous', 0), 5, 6, t('The congestion control throttle can be automatically enabled when the number of anonymous users currently visiting your site exceeds the specified threshold.  For example, to start the throttle when your site has 250 anonymous users online at once, enter \'250\' in this field. Leave this value blank or set to "0" if you do not wish to auto-throttle on anonymous users.  You can inspect the current number of anonymous users using the "Who\'s online" block.'));
+  $output .= form_textfield(t('Auto-throttle on authenticated users'), 'throttle_user', variable_get('throttle_user', 0), 5, 6, t('The congestion control throttle can be automatically enabled when the number of authenticated users currently visiting your site exceeds the specified threshold.  For example, to start the throttle when your site has 50 registered users online at once, enter \'50\' in this field. Leave this value blank or set to "0" if you do not wish to auto-throttle on authenticated users.  You can inspect the current number of authenticated users using the "Who\'s online" block.'));
   $probabilities = array(0 => '100%', 1 => '50%', 2 => '33.3%', 3 => '25%', 4 => '20%', 5 => '16.6%', 7 => '12.5%', 9 => '10%', 19 => '5%', 99 => '1%', 199 => '.5%', 399 => '.25%', 989 => '.1%');
-  $group .= form_select(t('Auto-throttle probability limiter'), 'throttle_probability_limiter', variable_get('throttle_probability_limiter', 9), $probabilities, t('The auto-throttle probability limiter is an efficiency mechanism to statistically reduce the overhead of the auto-throttle.  The limiter is expressed as a percentage of page views, so for example if set to the default of 10% we only perform the extra database queries to update the throttle status 1 out of every 10 page views.  The busier your site, the lower you should set the limiter value.'));
-  $period = drupal_map_assoc(array(1800, 3600, 7200, 10800, 14400, 18000, 21600, 43200, 64800, 86400, 172800, 259200, 604800), 'format_interval');
-  $output .= form_group(t('Auto-throttle tuning'), $group);
+  $output .= form_select(t('Auto-throttle probability limiter'), 'throttle_probability_limiter', variable_get('throttle_probability_limiter', 9), $probabilities, t('The auto-throttle probability limiter is an efficiency mechanism to statistically reduce the overhead of the auto-throttle.  The limiter is expressed as a percentage of page views, so for example if set to the default of 10% we only perform the extra database queries to update the throttle status 1 out of every 10 page views.  The busier your site, the lower you should set the limiter value.'));
 
   return $output;
 }
