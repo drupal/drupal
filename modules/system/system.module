@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.222 2005/07/31 08:58:01 dries Exp $
+// $Id: system.module,v 1.223 2005/07/31 10:12:47 dries Exp $
 
 /**
  * @file
@@ -733,7 +733,7 @@ function system_theme_settings($key = '') {
     'toggle_favicon'              => t('Shortcut icon')
   );
 
-  // Some features are not always available  
+  // Some features are not always available
   $disabled = array();
   if (!variable_get('user_pictures', 0)) {
     $disabled['toggle_node_user_picture'] = true;

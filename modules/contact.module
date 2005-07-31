@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.18 2005/06/27 18:33:32 dries Exp $
+// $Id: contact.module,v 1.19 2005/07/31 10:12:47 dries Exp $
 
 /**
  * @file
@@ -37,7 +37,7 @@ function contact_menu($may_cache) {
     $items[] = array('path' => 'admin/contact/list', 'title' => t('list'),
       'callback' => 'contact_admin', 'access' => user_access('administer site configuration'),
       'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -1);
-    $items[] = array('path' => 'admin/contact/edit', 'title' => t('add subject'),
+    $items[] = array('path' => 'admin/contact/edit', 'title' => t('add category'),
       'callback' => 'contact_admin_edit', 'access' => user_access('administer site configuration'),
       'type' => MENU_LOCAL_TASK);
     $items[] = array('path' => 'admin/contact/delete', 'title' => t('delete contact'),
@@ -58,8 +58,7 @@ function contact_menu($may_cache) {
  * Implementation of hook_settings().
  */
 function contact_settings() {
-  $output = form_textarea(t('Additional information'), 'contact_form_information', variable_get('contact_form_information', t('You can leave us a message using the contact form below.')), 60, 5, t('Information to show on the <a href="%form">contact page</a>.  Can be anything from submission guidelines to your postal address or telephone number.', array('%form' => url('contact'))));
-  return $output;
+  return form_textarea(t('Additional information'), 'contact_form_information', variable_get('contact_form_information', t('You can leave us a message using the contact form below.')), 60, 5, t('Information to show on the <a href="%form">contact page</a>.  Can be anything from submission guidelines to your postal address or telephone number.', array('%form' => url('contact'))));
 }
 
 /**
@@ -161,57 +160,61 @@ function contact_mail_user() {
   }
 }
 
-function contact_admin_edit($subject = NULL) {
+function contact_admin_edit($category = NULL) {
   if (isset($_POST['edit'])) {
     $edit = $_POST['edit'];
 
-    if (empty($edit['subject'])) {
-      form_set_error('subject', t('You must enter a subject.'));
+    if (empty($edit['category'])) {
+      form_set_error('category', t('You must enter a category.'));
     }
     if (empty($edit['recipients'])) {
       form_set_error('recipients', t('You must enter one or more recipients.'));
     }
 
     if (!form_get_errors()) {
-      db_query("DELETE FROM {contact} WHERE subject = '%s'", $subject);
-      db_query("INSERT INTO {contact} (subject, recipients, reply) VALUES ('%s', '%s', '%s')", $edit['subject'], $edit['recipients'], $edit['reply']);
+      db_query("DELETE FROM {contact} WHERE category = '%s'", $category);
+      db_query("INSERT INTO {contact} (category, recipients, reply) VALUES ('%s', '%s', '%s')", $edit['category'], $edit['recipients'], $edit['reply']);
       drupal_goto('admin/contact');
     }
   }
+  else {
+    $category           = db_fetch_object(db_query("SELECT * FROM {contact} WHERE category = '%s'", $category));
+    $edit['category']   = $category->category;
+    $edit['recipients'] = $category->recipients;
+    $edit['reply']      = $category->reply;
+  }
 
-  $subject = db_fetch_object(db_query("SELECT * FROM {contact} WHERE subject = '%s'", $subject));
-
-  $form = form_textfield(t('Subject'), 'subject', $subject->subject, 60, 255, t("Example: 'website feedback' or 'product information'."), NULL, TRUE);
-  $form .= form_textarea(t('Recipients'), 'recipients', $subject->recipients, 60, 5, t("Example: 'webmaster@yoursite.com' or 'sales@yoursite.com'.  To specify multiple repecients, separate each e-mail address with a comma."), NULL, TRUE);
-  $form .= form_textarea(t('Auto-reply'), 'reply', $subject->reply, 60, 5, t("Optional auto-reply.  Leave empty if you don't want to send the user an auto-reply message."));
+  $form  = form_textfield(t('Category'), 'category', $edit['category'], 60, 255, t("Example: 'website feedback' or 'product information'."), NULL, TRUE);
+  $form .= form_textarea(t('Recipients'), 'recipients', $edit['recipients'], 60, 5, t("Example: 'webmaster@yoursite.com' or 'sales@yoursite.com'.  To specify multiple repecients, separate each e-mail address with a comma."), NULL, TRUE);
+  $form .= form_textarea(t('Auto-reply'), 'reply', $edit['reply'], 60, 5, t("Optional auto-reply.  Leave empty if you don't want to send the user an auto-reply message."));
   $form .= form_submit(t('Submit'));
 
   return form($form);
 }
 
-function contact_admin_delete($subject) {
+function contact_admin_delete($category) {
   if ($_POST['op'] != t('Delete')) {
     return theme('confirm',
-                  t('Are you sure you want to delete %subject?', array('%subject' => theme('placeholder', $subject))),
-                  'admin/contact/delete/'. $subject,
+                  t('Are you sure you want to delete %category?', array('%category' => theme('placeholder', $category))),
+                  'admin/contact/delete/'. $category,
                   t('This action cannot be undone.'),
                   t('Delete'),
                   t('Cancel'));
   }
   else {
-    db_query("DELETE FROM {contact} WHERE subject = '%s'", $subject);
+    db_query("DELETE FROM {contact} WHERE category = '%s'", $category);
     drupal_goto('admin/contact');
   }
 }
 
 
 function contact_admin() {
-  $result = db_query('SELECT subject, recipients FROM {contact} ORDER BY subject');
+  $result = db_query('SELECT category, recipients FROM {contact} ORDER BY category');
   $rows = array();
-  while ($subject = db_fetch_object($result)) {
-    $rows[] = array($subject->subject, $subject->recipients, l(t('edit'), 'admin/contact/edit/'. urlencode($subject->subject)), l(t('delete'), 'admin/contact/delete/'. urlencode($subject->subject)));
+  while ($category = db_fetch_object($result)) {
+    $rows[] = array($category->category, $category->recipients, l(t('edit'), 'admin/contact/edit/'. urlencode($category->category)), l(t('delete'), 'admin/contact/delete/'. urlencode($category->category)));
   }
-  $header = array(t('Subject'), t('Recipients'), array('data' => t('Operations'), 'colspan' => 2));
+  $header = array(t('Category'), t('Recipients'), array('data' => t('Operations'), 'colspan' => 2));
   return theme('table', $header, $rows);
 }
 
@@ -234,11 +237,22 @@ function contact_mail_page() {
       if (!$edit['mail'] || !valid_email_address($edit['mail'])) {
         form_set_error('mail', t('You must enter a valid e-mail address.'));
       }
+      if (!$edit['subject']) {
+        form_set_error('subject', t('You must enter a subject.'));
+      }
       if (!$edit['message']) {
         form_set_error('message', t('You must enter a message.'));
       }
-      if (!$edit['subject']) {
-        form_set_error('subject', t('You must select a valid subject.'));
+      if (!$edit['category']) {
+        // Look if there is only one category
+        $result = db_query('SELECT category FROM {contact}');
+        if (db_num_rows($result) == 1) {
+          $category = db_fetch_object($result);
+          $edit['category'] = $category->category;
+        }
+        else {
+          form_set_error('category', t('You must select a valid category.'));
+        }
       }
 
       if (!form_get_errors()) {
@@ -254,28 +268,28 @@ function contact_mail_page() {
           $message[$key] = wordwrap($value);
         }
 
-        // Format the subject:
-        $subject = '['. variable_get('site_subject', 'drupal') .'] '. $edit['subject'];
+        // Format the category:
+        $subject = '['. $edit['category'] .'] '. $edit['subject'];
 
         // Prepare the body:
         $body = implode("\n\n", $message);
 
-        // Load the subject information:
-        $contact = db_fetch_object(db_query("SELECT * FROM {contact} WHERE subject = '%s'", $edit['subject']));
+        // Load the category information:
+        $contact = db_fetch_object(db_query("SELECT * FROM {contact} WHERE category = '%s'", $edit['category']));
 
         // Send the e-mail to the recipients:
-        user_mail($contact->recipients, $contact->subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
+        user_mail($contact->recipients, $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
 
         // Send an auto-reply if necessary:
         if ($contact->reply) {
-          user_mail($from, $contact->subject, wordwrap($contact->reply), "From: $contact->recipients\nReply-to: $contact->recipients\nX-Mailer: Drupal\nReturn-path: $contact->recipients\nErrors-to: $contact->recipients");
+          user_mail($from, $subject, wordwrap($contact->reply), "From: $contact->recipients\nReply-to: $contact->recipients\nX-Mailer: Drupal\nReturn-path: $contact->recipients\nErrors-to: $contact->recipients");
         }
 
         // Log the operation:
         flood_register_event('contact');
-        watchdog('mail', t('%name-from sent an e-mail regarding %subject.', array('%name-from' => theme('placeholder', $edit['name'] ." <$from>"), '%subject' => theme('placeholder', $contact->subject))));
+        watchdog('mail', t('%name-from sent an e-mail regarding %category.', array('%name-from' => theme('placeholder', $edit['name'] ." <$from>"), '%category' => theme('placeholder', $contact->category))));
 
-        // Set a status message:
+        // Set a status message:subject
         drupal_set_message(t('Your message has been sent.'));
 
         // Jump to contact page:
@@ -287,17 +301,20 @@ function contact_mail_page() {
       $edit['mail'] = $user->mail;
     }
 
-    $result = db_query('SELECT subject FROM contact ORDER BY subject');
-    $subjects[] = '--';
-    while ($subject = db_fetch_object($result)) {
-      $subjects[$subject->subject] = $subject->subject;
+    $result = db_query('SELECT category FROM {contact} ORDER BY category');
+    $categories[] = '--';
+    while ($category = db_fetch_object($result)) {
+      $categories[$category->category] = $category->category;
     }
 
-    if ($subjects) {
+    if (count($categories) > 1) {
       $output  = variable_get('contact_form_information', t('You can leave us a message using the contact form below.'));
-      $output .= form_textfield(t('Name'), 'name', $edit['name'], 60, 255, NULL, NULL, TRUE);
-      $output .= form_textfield(t('E-mail'), 'mail', $edit['mail'], 60, 255, NULL, NULL, TRUE);
-      $output .= form_select(t('Subject'), 'subject', $edit['subject'], $subjects, NULL, NULL, NULL, TRUE);
+      $output .= form_textfield(t('Your name'), 'name', $edit['name'], 60, 255, NULL, NULL, TRUE);
+      $output .= form_textfield(t('Your e-mail address'), 'mail', $edit['mail'], 60, 255, NULL, NULL, TRUE);
+      $output .= form_textfield(t('Subject'), 'subject', $edit['subject'], 60, 255, NULL, NULL, TRUE);
+      if (count($categories) > 2) {
+        $output .= form_select(t('Category'), 'category', $edit['category'], $categories, NULL, NULL, NULL, TRUE);
+      }
       $output .= form_textarea(t('Message'), 'message', $edit['message'], 60, 5, NULL, NULL, TRUE);
       $output .= form_submit(t('Send e-mail'));
       $output  = form($output);
@@ -309,5 +326,4 @@ function contact_mail_page() {
 
   return $output;
 }
-
 ?>

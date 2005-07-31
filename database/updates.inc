@@ -1,5 +1,5 @@
 <?php
-/* $Id: updates.inc,v 1.122 2005/07/29 20:31:04 unconed Exp $ */
+/* $Id: updates.inc,v 1.123 2005/07/31 10:12:47 dries Exp $ */
 
 /**
  * @file
@@ -118,7 +118,8 @@ $sql_updates = array(
   "2005-05-11" => "update_139",
   "2005-05-12" => "update_140",
   "2005-05-22" => "update_141",
-  "2005-07-29" => "update_142"
+  "2005-07-29" => "update_142",
+  "2005-07-30" => "update_143"
 );
 
 function update_32() {
@@ -2515,6 +2516,20 @@ function update_141() {
 function update_142() {
   $ret = array();
   $ret[] = update_sql("ALTER TABLE {watchdog} ADD COLUMN referer varchar(128) NOT NULL");
+  return $ret;
+}
+
+function update_143() {
+  $ret = array();
+
+  if ($GLOBALS['db_type'] == 'mysql') {
+    $ret[] = update_sql("ALTER TABLE {contact} CHANGE subject category VARCHAR(255) NOT NULL ");
+  }
+  elseif ($GLOBALS['db_type'] == 'pgsql') {
+    $ret[] = update_sql("ALTER TABLE {contact} RENAME COLUMN subject TO category");
+  }
+  $ret[] = update_sql("ALTER TABLE {contact} ADD PRIMARY KEY (category)");
+
   return $ret;
 }
 
