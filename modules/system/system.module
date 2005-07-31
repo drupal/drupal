@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.221 2005/07/30 18:48:00 unconed Exp $
+// $Id: system.module,v 1.222 2005/07/31 08:58:01 dries Exp $
 
 /**
  * @file
@@ -277,7 +277,7 @@ function system_view_general() {
   $output .= form_group_collapsible(t('Date settings'), $group, TRUE);
 
   // String handling: report status and errors.
-  $output .= form_group_collapsible(t('String handling'), unicode_settings(), TRUE);  
+  $output .= form_group_collapsible(t('String handling'), unicode_settings(), TRUE);
 
   return $output;
 }
