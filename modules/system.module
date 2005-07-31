@@ -277,7 +277,7 @@ function system_view_general() {
   $output .= form_group_collapsible(t('Date settings'), $group, TRUE);
 
   // String handling: report status and errors.
-  $output .= form_group_collapsible(t('String handling'), unicode_settings(), TRUE);  
+  $output .= form_group_collapsible(t('String handling'), unicode_settings(), TRUE);
 
   return $output;
 }
