@@ -1,5 +1,5 @@
 <?php
-// $Id: image.inc,v 1.6 2005/07/31 09:57:27 dries Exp $
+// $Id: image.inc,v 1.7 2005/07/31 10:16:12 dries Exp $
 
 /**
  * Return a list of available toolkits.
@@ -266,7 +266,7 @@ function image_gd_crop($source, $destination, $x, $y, $width, $height) {
 
   $im = image_gd_open($source, $info['extension']);
   $res = imageCreateTrueColor($width, $height);
-  imageCopy($im, $res, 0, 0, $x, $y, $width, $height);
+  imageCopy($res, $im, 0, 0, $x, $y, $width, $height);
   $result = image_gd_close($res, $destination, $info['extension']);
 
   imageDestroy($res);
