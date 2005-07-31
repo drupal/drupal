@@ -78,6 +78,7 @@ function image_toolkit_invoke($method, $params = array()) {
  *      'height': image's height in pixels
  *      'extension': commonly used extension for the image
  *      'mime_type': image's MIME type ('image/jpeg', 'image/gif', etc.)
+ *      'file_size': image's physical size (in bytes)
  */
 function image_get_info($file) {
   if (!is_file($file)) {
@@ -86,6 +87,7 @@ function image_get_info($file) {
 
   $details = false;
   $data = @getimagesize($file);
+  $file_size = @filesize($file);
 
   if (is_array($data)) {
     $extensions = array('1' => 'gif', '2' => 'jpg', '3' => 'png');
@@ -93,6 +95,7 @@ function image_get_info($file) {
     $details = array('width'     => $data[0],
                      'height'    => $data[1],
                      'extension' => $extension,
+                     'file_size' => $file_size,
                      'mime_type' => $data['mime']);
   }
 
