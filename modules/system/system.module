@@ -733,7 +733,7 @@ function system_theme_settings($key = '') {
     'toggle_favicon'              => t('Shortcut icon')
   );
 
-  // Some features are not always available  
+  // Some features are not always available
   $disabled = array();
   if (!variable_get('user_pictures', 0)) {
     $disabled['toggle_node_user_picture'] = true;

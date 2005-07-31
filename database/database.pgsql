@@ -197,9 +197,10 @@ CREATE INDEX comments_nid_idx ON comments(nid);
 --
 
 CREATE TABLE contact (
-  subject varchar(255) NOT NULL default '',
+  category varchar(255) NOT NULL default '',
   recipients text NOT NULL default '',
-  reply text NOT NULL default ''
+  reply text NOT NULL default '',
+  PRIMARY KEY (category)
 );
 
 --

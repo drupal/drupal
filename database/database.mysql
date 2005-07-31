@@ -201,10 +201,11 @@ CREATE TABLE comments (
 --
 
 CREATE TABLE contact (
-  subject varchar(255) NOT NULL default '',
+  category varchar(255) NOT NULL default '',
   recipients longtext NOT NULL default '',
-  reply longtext NOT NULL default ''
-);
+  reply longtext NOT NULL default '',
+  PRIMARY KEY (category)
+) TYPE=MyISAM;
 
 --
 -- Table structre for table 'node_comment_statistics'
