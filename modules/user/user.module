@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.495 2005/07/31 21:54:39 unconed Exp $
+// $Id: user.module,v 1.496 2005/08/01 05:14:05 dries Exp $
 
 /**
  * @file
@@ -639,7 +639,7 @@ function theme_user_profile($account, $fields) {
  */
 function theme_user_list($users, $title = NULL) {
   foreach ($users as $user) {
-    $items[] = format_name($user);
+    $items[] = theme('username', $user);
   }
   return theme('item_list', $items, $title);
 }
@@ -1722,7 +1722,7 @@ function user_admin_account() {
   $status = array(t('blocked'), t('active'));
   $destination = drupal_get_destination();
   while ($account = db_fetch_object($result)) {
-    $rows[] = array(format_name($account),
+    $rows[] = array(theme('username', $account),
                     $status[$account->status],
                     format_interval(time() - $account->created),
                     $account->access ? t('%time ago', array('%time' => format_interval(time() - $account->access))) : t('never'),

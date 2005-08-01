@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.259 2005/07/18 19:31:16 dries Exp $
+// $Id: forum.module,v 1.260 2005/08/01 05:14:05 dries Exp $
 
 /**
  * @file
@@ -581,7 +581,7 @@ function forum_delete(&$node) {
  */
 function _forum_format($topic) {
   if ($topic && $topic->timestamp) {
-    return t('%time ago<br />by %author', array('%time' => format_interval(time() - $topic->timestamp), '%author' => format_name($topic)));
+    return t('%time ago<br />by %author', array('%time' => format_interval(time() - $topic->timestamp), '%author' => theme('username', $topic)));
   }
   else {
     return message_na();

@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.101 2005/07/29 21:06:33 unconed Exp $
+// $Id: profile.module,v 1.102 2005/08/01 05:14:05 dries Exp $
 
 /**
  * @file
@@ -649,7 +649,7 @@ function theme_profile_listing($user, $fields = array()) {
 
   $output  = "<div class=\"profile\">\n";
   $output .= theme('user_picture', $user);
-  $output .= ' <div class="name">'. format_name($user) ."</div>\n";
+  $output .= ' <div class="name">'. theme('username', $user) ."</div>\n";
 
   foreach ($fields as $field) {
     if ($value = profile_view_field($user, $field)) {

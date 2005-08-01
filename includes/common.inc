@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.464 2005/07/30 12:52:54 unconed Exp $ */
+/* $Id: common.inc,v 1.465 2005/08/01 05:14:05 dries Exp $ */
 
 /**
  * @file
@@ -964,53 +964,6 @@ function format_date($timestamp, $type = 'medium', $format = '', $timezone = NUL
   return $date;
 }
 
-/**
- * Format a username.
- *
- * @param $object
- *   The user object to format, usually returned from user_load().
- * @return
- *   A string containing an HTML link to the user's page if the passed object
- *   suggests that this is a site user. Otherwise, only the username is returned.
- */
-function format_name($object) {
-
-  if ($object->uid && $object->name) {
-    // Shorten the name when it is too long or it will break many tables.
-    if (strlen($object->name) > 20) {
-      $name = truncate_utf8($object->name, 15) .'...';
-    }
-    else {
-      $name = $object->name;
-    }
-
-    if (user_access('access user profiles')) {
-      $output = l($name, 'user/'. $object->uid, array('title' => t('View user profile.')));
-    }
-    else {
-      $output = $name;
-    }
-  }
-  else if ($object->name) {
-    // Sometimes modules display content composed by people who are
-    // not registered members of the site (e.g. mailing list or news
-    // aggregator modules). This clause enables modules to display
-    // the true author of the content.
-    if ($object->homepage) {
-      $output = '<a href="'. $object->homepage .'">'. $object->name .'</a>';
-    }
-    else {
-      $output = $object->name;
-    }
-
-    $output .= ' ('. t('not verified') .')';
-  }
-  else {
-    $output = variable_get('anonymous', 'Anonymous');
-  }
-
-  return $output;
-}
 /**
  * @} End of "defgroup format".
  */

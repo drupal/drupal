@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.513 2005/07/31 10:28:50 dries Exp $
+// $Id: node.module,v 1.514 2005/08/01 05:14:05 dries Exp $
 
 /**
  * @file
@@ -577,7 +577,7 @@ function node_search($op = 'search', $keys = null) {
         $results[] = array('link' => url('node/'. $item),
                            'type' => node_invoke($node, 'node_name'),
                            'title' => $node->title,
-                           'user' => format_name($node),
+                           'user' => theme('username', $node),
                            'date' => $node->changed,
                            'extra' => $extra,
                            'snippet' => search_excerpt($keys, $node->body));
@@ -913,7 +913,7 @@ function node_admin_nodes() {
     $rows[] = array(form_checkbox(NULL, 'nodes]['. $node->nid, 1, 0),
                     l($node->title, 'node/'. $node->nid) .' '. theme('mark', node_mark($node->nid, $node->changed)),
                     node_invoke($node, 'node_name'),
-                    format_name($node),
+                    theme('username', $node),
                     ($node->status ? t('published') : t('not published')),
                     l(t('edit'), 'node/'. $node->nid .'/edit', array(), $destination));
   }
@@ -979,7 +979,7 @@ function node_revision_overview($nid) {
       $header = array(t('Older revisions'), array('colspan' => '3', 'data' => t('Operations')));
 
       foreach ($node->revisions as $key => $revision) {
-        $rows[] = array(t('revision #%r revised by %u on %d', array('%r' => $key, '%u' => format_name(user_load(array('uid' => $revision['uid']))), '%d' => format_date($revision['timestamp'], 'small'))) . ($revision['history'] ? '<br /><small>'. $revision['history'] .'</small>' : ''), l(t('view'), "node/$node->nid", array(), "revision=$key"), l(t('rollback'), "node/$node->nid/rollback-revision/$key"), l(t('delete'), "node/$node->nid/delete-revision/$key"));
+        $rows[] = array(t('revision #%r revised by %u on %d', array('%r' => $key, '%u' => theme('username', user_load(array('uid' => $revision['uid']))), '%d' => format_date($revision['timestamp'], 'small'))) . ($revision['history'] ? '<br /><small>'. $revision['history'] .'</small>' : ''), l(t('view'), "node/$node->nid", array(), "revision=$key"), l(t('rollback'), "node/$node->nid/rollback-revision/$key"), l(t('delete'), "node/$node->nid/delete-revision/$key"));
       }
       $output .= theme('table', $header, $rows);
     }

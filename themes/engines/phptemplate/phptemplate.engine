@@ -1,5 +1,5 @@
 <?php
-// $Id: phptemplate.engine,v 1.10 2005/07/30 20:54:02 unconed Exp $
+// $Id: phptemplate.engine,v 1.11 2005/08/01 05:14:05 dries Exp $
 
 /**
  * @file
@@ -206,7 +206,7 @@ function phptemplate_node($node, $main = 0, $page = 0) {
     'date'           => format_date($node->created),
     'links'          => $node->links ? theme('links', $node->links) : '',
     'main'           => $main,
-    'name'           => format_name($node),
+    'name'           => theme('username', $node),
     'node'           => $node,  // we pass the actual node to allow more customization
     'node_url'       => url('node/'. $node->nid),
     'page'           => $page,
@@ -220,7 +220,7 @@ function phptemplate_node($node, $main = 0, $page = 0) {
 
   // Display info only on certain node types.
   if (theme_get_setting('toggle_node_info_' . $node->type)) {
-    $variables['submitted'] =  t('Submitted by %a on %b.', array('%a' => format_name($node), '%b' => format_date($node->created)));
+    $variables['submitted'] =  t('Submitted by %a on %b.', array('%a' => theme('username', $node), '%b' => format_date($node->created)));
     $variables['picture'] = theme_get_setting('toggle_node_user_picture') ? theme('user_picture', $node) : '';
   }
 
@@ -233,7 +233,7 @@ function phptemplate_node($node, $main = 0, $page = 0) {
  */
 function phptemplate_comment($comment, $links = 0) {
   return _phptemplate_callback('comment', array(
-    'author'    => format_name($comment),
+    'author'    => theme('username', $comment),
     'comment'   => $comment,
     'content'   => $comment->comment,
     'date'      => format_date($comment->timestamp),
@@ -241,7 +241,7 @@ function phptemplate_comment($comment, $links = 0) {
     'new'       => $comment->new ? t('new') : '',
     'picture'   => theme_get_setting('toggle_comment_user_picture') ? theme('user_picture', $comment) : '',
     'submitted' => t('Submitted by %a on %b.',
-                      array('%a' => format_name($comment),
+                      array('%a' => theme('username', $comment),
                             '%b' => format_date($comment->timestamp))),
     'title'     => l($comment->subject, $_GET['q'], NULL, NULL, "comment-$comment->cid")
   ));

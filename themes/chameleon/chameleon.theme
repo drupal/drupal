@@ -1,5 +1,5 @@
 <?php
-// $Id: chameleon.theme,v 1.30 2005/06/06 14:07:04 dries Exp $
+// $Id: chameleon.theme,v 1.31 2005/08/01 05:14:05 dries Exp $
 
 /**
  * @file
@@ -126,7 +126,7 @@ function chameleon_node($node, $main = 0, $page = 0) {
 
   $output .= " </div>\n";
 
-  $submitted = theme_get_setting("toggle_node_info_$node->type") ? array(t("By %author at %date", array('%author' => format_name($node), '%date' => format_date($node->created, 'small')))) : array();
+  $submitted = theme_get_setting("toggle_node_info_$node->type") ? array(t("By %author at %date", array('%author' => theme('username', $node), '%date' => format_date($node->created, 'small')))) : array();
 
   $terms = array();
   if (module_exist('taxonomy')) {
@@ -147,7 +147,7 @@ function chameleon_node($node, $main = 0, $page = 0) {
 }
 
 function chameleon_comment($comment, $link = "") {
-  $submitted = array(t('By %author at %date', array('%author' => format_name($comment), '%date' => format_date($comment->timestamp. 'small'))));
+  $submitted = array(t('By %author at %date', array('%author' => theme('username', $comment), '%date' => format_date($comment->timestamp. 'small'))));
   $links = array($link);
 
   $output  = "<div class=\"comment\">\n";

@@ -1,5 +1,5 @@
 <?php
-/* $Id: theme.inc,v 1.249 2005/07/30 12:52:54 unconed Exp $ */
+/* $Id: theme.inc,v 1.250 2005/08/01 05:14:05 dries Exp $ */
 
 /**
  * @file
@@ -580,10 +580,10 @@ function theme_node($node, $teaser = FALSE, $page = FALSE) {
   }
 
   if ($page == 0) {
-    $output = '<h2 class="title">'. check_plain($node->title) .'</h2> by '. format_name($node);
+    $output = '<h2 class="title">'. check_plain($node->title) .'</h2> by '. theme('username', $node);
   }
   else {
-    $output = 'by '. format_name($node);
+    $output = 'by '. theme('username', $node);
   }
 
   if (count($terms)) {
@@ -994,6 +994,53 @@ function theme_confirm($question, $path, $description = NULL, $yes = NULL, $no =
   return form($output, 'post', NULL, array('class' => 'confirmation'));
 }
 
+/**
+ * Format a username.
+ *
+ * @param $object
+ *   The user object to format, usually returned from user_load().
+ * @return
+ *   A string containing an HTML link to the user's page if the passed object
+ *   suggests that this is a site user. Otherwise, only the username is returned.
+ */
+function theme_username($object) {
+
+  if ($object->uid && $object->name) {
+    // Shorten the name when it is too long or it will break many tables.
+    if (drupal_strlen($object->name) > 20) {
+      $name = drupal_substr($object->name, 0, 15) .'...';
+    }
+    else {
+      $name = $object->name;
+    }
+
+    if (user_access('access user profiles')) {
+      $output = l($name, 'user/'. $object->uid, array('title' => t('View user profile.')));
+    }
+    else {
+      $output = $name;
+    }
+  }
+  else if ($object->name) {
+    // Sometimes modules display content composed by people who are
+    // not registered members of the site (e.g. mailing list or news
+    // aggregator modules). This clause enables modules to display
+    // the true author of the content.
+    if ($object->homepage) {
+      $output = '<a href="'. $object->homepage .'">'. $object->name .'</a>';
+    }
+    else {
+      $output = $object->name;
+    }
+
+    $output .= ' ('. t('not verified') .')';
+  }
+  else {
+    $output = variable_get('anonymous', 'Anonymous');
+  }
+
+  return $output;
+}
 
 /**
  * @} End of "defgroup themeable".

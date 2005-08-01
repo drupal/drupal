@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.201 2005/07/30 12:52:54 unconed Exp $
+// $Id: statistics.module,v 1.202 2005/08/01 05:14:05 dries Exp $
 
 /**
  * @file
@@ -149,7 +149,7 @@ function statistics_access_log($aid) {
     $output .= ' <tr><th>'. t('Page title') .'</th><td>'. check_plain($access->title) .'</td></tr>';
     $output .= ' <tr><th>'. t('Referrer') ."</th><td>". ($access->url ? l($access->url, $access->url) : '') ."</td></tr>";
     $output .= ' <tr><th>'. t('Date') .'</th><td>'. format_date($access->timestamp, 'large') .'</td></tr>';
-    $output .= ' <tr><th>'. t('User') .'</th><td>'. format_name($access) .'</td></tr>';
+    $output .= ' <tr><th>'. t('User') .'</th><td>'. theme('username', $access) .'</td></tr>';
     $output .= ' <tr><th>'. t('Hostname') .'</th><td>'. check_plain($access->hostname) .'</td></tr>';
     $output .= '</table>';
     return $output;
@@ -173,7 +173,7 @@ function statistics_node_tracker() {
       $rows[] = array(
         array('data' => format_date($log->timestamp, 'small'), 'class' => 'nowrap'),
         l(_statistics_column_width($log->url), $log->url),
-        format_name($log),
+        theme('username', $log),
         l(t('details'), "admin/logs/access/$log->aid"));
     }
 
@@ -235,7 +235,7 @@ function statistics_recent_hits($type = 'all', $id = 0) {
     $rows[] = array(
       array('data' => format_date($log->timestamp, 'small'), 'class' => 'nowrap'),
       _statistics_format_item($log->title, $log->path),
-      format_name($log),
+      theme('username', $log),
       l(t('details'), "admin/logs/access/$log->aid"));
   }
 
@@ -293,7 +293,7 @@ function statistics_top_visitors() {
   while ($account = db_fetch_object($result)) {
     $qs = drupal_get_destination();
     $ban_link = $account->aid ? l(t('unban'), "admin/access/rules/delete/$account->aid", array(), $qs) : l(t('ban'), "admin/access/rules/add/$account->hostname/host", array(), $qs);
-    $rows[] = array($account->hits, ($account->uid ? format_name($account) : $account->hostname), format_interval(round($account->total / 1000)), $ban_link);
+    $rows[] = array($account->hits, ($account->uid ? theme('username', $account) : $account->hostname), format_interval(round($account->total / 1000)), $ban_link);
   }
 
   if ($pager = theme('pager', NULL, 30, 0, tablesort_pager())) {

@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.363 2005/07/29 21:06:33 unconed Exp $
+// $Id: comment.module,v 1.364 2005/08/01 05:14:05 dries Exp $
 
 /**
  * @file
@@ -1020,7 +1020,7 @@ function comment_admin_overview($type = 'new') {
     $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
     $rows[] = array(
         l($comment->subject, "node/$comment->nid", array('title' => truncate_utf8($comment->comment, 128)), NULL, "comment-$comment->cid") ." ". theme('mark', node_mark($comment->nid, $comment->timestamp)),
-        format_name($comment),
+        theme('username', $comment),
         ($comment->status == COMMENT_PUBLISHED ? t('Published') : t('Not published')),
         format_date($comment->timestamp, 'small'),
         l(t('edit'), "comment/edit/$comment->cid", array(), $destination),
@@ -1400,7 +1400,7 @@ function theme_comment_form($edit, $title = NULL) {
       $form .= "</div>\n";
     }
     else {
-      $form .= form_item(t('Your name'), format_name($user));
+      $form .= form_item(t('Your name'), theme('username', $user));
     }
   }
   else if (variable_get('comment_anonymous', 0) == 1) {
@@ -1554,7 +1554,7 @@ function theme_comment($comment, $links = 0) {
   $output  = "<div class=\"comment\">\n";
   $output .= '<div class="subject">'. l($comment->subject, $_GET['q'], NULL, NULL, "comment-$comment->cid") . ' ' . theme('mark', $comment->new) ."</div>\n";
   $output .= '<div class="moderation">'. $comment->moderation ."</div>\n";
-  $output .= '<div class="credit">'. t('by %a on %b', array('%a' => format_name($comment), '%b' => format_date($comment->timestamp))) ."</div>\n";
+  $output .= '<div class="credit">'. t('by %a on %b', array('%a' => theme('username', $comment), '%b' => format_date($comment->timestamp))) ."</div>\n";
   $output .= "<div class=\"body\">$comment->comment</div>\n";
   $output .= "<div class=\"links\">$links</div>\n";
   $output .= "</div>\n";
@@ -1564,7 +1564,7 @@ function theme_comment($comment, $links = 0) {
 function theme_comment_folded($comment) {
   $output  = "<div class=\"comment-folded\">\n";
   $output .= ' <span class="subject">'. l($comment->subject, comment_node_url() .'/'. $comment->cid, NULL, NULL, "comment-$comment->cid") . ' '. theme('mark', $comment->new) .'</span> ';
-  $output .= '<span class="credit">'. t('by') .' '. format_name($comment) ."</span>\n";
+  $output .= '<span class="credit">'. t('by') .' '. theme('username', $comment) ."</span>\n";
   $output .= "</div>\n";
   return $output;
 }
