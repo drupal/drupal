@@ -5,7 +5,6 @@
   <title><?php print $head_title ?></title>
   <?php print $head ?>
   <?php print $styles ?>
-  <script type="text/javascript"> </script>
 </head>
 
 <body<?php print $onload_attributes ?>>
