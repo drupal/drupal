@@ -5,7 +5,6 @@
   <title>{head_title}</title>
   {head}
   {styles}
-  <script type="text/javascript"> </script>
 </head>
 
 <body{onload_attributes}>
