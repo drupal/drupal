@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.49 2005/07/19 16:32:05 dries Exp $
+// $Id: blogapi.module,v 1.50 2005/08/02 22:18:12 unconed Exp $
 
 /**
  * @file
@@ -43,6 +43,11 @@ function blogapi_xmlrpc() {
       'blogapi_blogger_edit_post',
       array('boolean', 'string', 'string', 'string', 'string', 'string', 'boolean'),
       t('Updates the information about an existing post.')),
+    array(
+      'blogger.getPost',
+      'blogapi_blogger_get_post',
+      array('struct', 'string', 'string', 'string', 'string'),
+      t('Returns information about a specific post.')),
     array(
       'blogger.deletePost',
       'blogapi_blogger_delete_post',
@@ -129,7 +134,7 @@ function blogapi_xmlrpc() {
  * Blogging API callback. Finds the URL of a user's blog.
  */
 
-function blogapi_blogger_get_users_blogs() {
+function blogapi_blogger_get_users_blogs($appid, $username, $password) {
 
   $user = blogapi_validate_user($username, $password);
   if ($user->uid) {
@@ -281,6 +286,20 @@ function blogapi_blogger_edit_post($appkey, $postid, $username, $password, $cont
 }
 
 /**
+ * Blogging API callback. Returns a specified blog node.
+ */
+function blogapi_blogger_get_post($appkey, $postid, $username, $password) {
+  $user = blogapi_validate_user($username, $password);
+  if (!$user->uid) {
+    return blogapi_error($user);
+  }
+
+  $node = node_load($postid);
+
+  return _blogapi_get_post($node, true);
+}
+
+/**
  * Blogging API callback. Removes the specified blog node.
  */
 function blogapi_blogger_delete_post($appkey, $postid, $username, $password, $content, $publish) {
@@ -321,18 +340,8 @@ function blogapi_metaweblog_edit_post($postid, $username, $password, $content, $
   return blogapi_blogger_edit_post('0123456789ABCDEF', $postid, $username, $password, $content, $publish);
 }
 
-/**
- * Blogging API callback. Returns a specified blog node.
- */
 function blogapi_metaweblog_get_post($postid, $username, $password) {
-  $user = blogapi_validate_user($username, $password);
-  if (!$user->uid) {
-    return blogapi_error($user);
-  }
-
-  $node = node_load($postid);
-
-  return _blogapi_get_post($node, true);
+  return blogapi_blogger_get_post('01234567890ABCDEF', $postid, $username, $password);
 }
 
 /**
@@ -356,7 +365,7 @@ function blogapi_metaweblog_new_media_object($blogid, $username, $password, $fil
   }
 
   // Return the successful result.
-  return array('url' => file_create_url($file));
+  return array('url' => file_create_url($file), 'struct');
 }
 /**
  * Blogging API callback. Returns a list of the taxonomy terms that can be
@@ -381,7 +390,7 @@ function blogapi_metaweblog_get_category_list($blogid, $username, $password) {
   return $categories;
 }
 
-function blogai_metaweblog_get_recent_posts($blogid, $username, $password, $number_of_posts) {
+function blogapi_metaweblog_get_recent_posts($blogid, $username, $password, $number_of_posts) {
   return blogapi_blogger_get_recent_posts('0123456789ABCDEF', $blogid, $username, $password, $number_of_posts, TRUE);
 }
 
@@ -429,7 +438,7 @@ function blogapi_mt_set_post_categories($postid, $username, $password, $categori
   $nid = $postid;
   $terms = array();
   foreach ($categories as $category) {
-    $terms[] = $category['categoryId']->scalarval();
+    $terms[] = $category['categoryId'];
   }
   module_invoke('taxonomy', 'node_save', $nid, $terms);
   return true;
@@ -505,7 +514,7 @@ function blogapi_validate_user($username, $password) {
   global $user;
 
   $user = user_authenticate($username, $password);
-
+  
   if ($user->uid) {
     if (user_access('edit own blog', $user)) {
       return $user;
@@ -660,7 +669,7 @@ function _blogapi_mt_extra(&$node, $struct) {
 
   // dateCreated
   if ($struct['dateCreated']) {
-    $node->created = iso8601_decode($struct['dateCreated'], 1);
+    $node->created = mktime($struct['dateCreated']->hour, $struct['dateCreated']->minute, $struct['dateCreated']->second, $struct['dateCreated']->month, $struct['dateCreated']->day, $struct['dateCreated']->year);
   }
 
   if ($was_array) {
