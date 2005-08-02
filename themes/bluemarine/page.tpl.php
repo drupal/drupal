@@ -5,6 +5,7 @@
   <title><?php print $head_title ?></title>
   <?php print $head ?>
   <?php print $styles ?>
+  <script type="text/javascript"><?php /* Needed to avoid Flash of Unstyle Content in IE */ ?> </script>
 </head>
 
 <body<?php print $onload_attributes ?>>
