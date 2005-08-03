@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.496 2005/08/01 05:14:05 dries Exp $
+// $Id: user.module,v 1.497 2005/08/03 23:23:48 unconed Exp $
 
 /**
  * @file
@@ -454,7 +454,7 @@ function user_search($op = 'search', $keys = null) {
         $keys = preg_replace('!\*+!', '%', $keys);
         $result = pager_query("SELECT * FROM {users} WHERE LOWER(name) LIKE LOWER('%%%s%%')", 15, 0, NULL, $keys);
         while ($account = db_fetch_object($result)) {
-          $find[] = array('title' => $account->name, 'link' => url("user/$account->uid/view"));
+          $find[] = array('title' => $account->name, 'link' => url('user/'. $account->uid));
         }
         return $find;
       }
