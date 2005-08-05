@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.514 2005/08/01 05:14:05 dries Exp $
+// $Id: node.module,v 1.515 2005/08/05 00:38:38 unconed Exp $
 
 /**
  * @file
@@ -1671,6 +1671,9 @@ function node_page() {
           drupal_set_title($node->title);
           return node_edit(arg(1));
         }
+        else if (db_result(db_query('SELECT nid FROM {node} WHERE nid = %d', arg(1)))) {
+          drupal_access_denied();
+        }
         else {
           drupal_not_found();
         }
@@ -1682,6 +1685,9 @@ function node_page() {
         if ($node->nid) {
           drupal_set_title(check_plain($node->title));
           return node_show($node, arg(2));
+        }
+        else if (db_result(db_query('SELECT nid FROM {node} WHERE nid = %d', arg(1)))) {
+          drupal_access_denied();
         }
         else {
           drupal_not_found();
