@@ -35,7 +35,7 @@ function timer_start($name) {
 
   list($usec, $sec) = explode(' ', microtime());
   $timers[$name]['start'] = (float)$usec + (float)$sec;
-  $timers[$name]['count']++;
+  $timers[$name]['count'] = isset($timers[$name]['count']) ? $timers[$name]['count']++ : 1;
 }
 
 /**
