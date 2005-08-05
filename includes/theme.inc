@@ -1,5 +1,5 @@
 <?php
-/* $Id: theme.inc,v 1.250 2005/08/01 05:14:05 dries Exp $ */
+/* $Id: theme.inc,v 1.251 2005/08/05 00:22:03 unconed Exp $ */
 
 /**
  * @file
@@ -349,9 +349,12 @@ function theme_get_setting($setting_name, $refresh = FALSE) {
  * Add a theme stylesheet to be included later. This is handled separately from
  * drupal_set_html_head() to enforce the correct CSS cascading order.
  */
-function theme_add_style($style = '') {
+function theme_add_style($path = '', $media = 'all') {
   static $styles = array();
-  if ($style) {
+  if ($path) {
+    $style = new stdClass();
+    $style->path = $path;
+    $style->media = $media;
     $styles[] = $style;
   }
   return $styles;
@@ -363,7 +366,7 @@ function theme_add_style($style = '') {
 function theme_get_styles() {
   $output = '';
   foreach (theme_add_style() as $style) {
-    $output .= theme('stylesheet_import', $style);
+    $output .= theme('stylesheet_import', $style->path, $style->media);
   }
   return $output;
 }
@@ -833,8 +836,8 @@ function theme_mark($type = MARK_NEW) {
 /**
  * Import a stylesheet using @import.
  *
- * @param $stylesheet
- *  The filename to point the link at.
+ * @param $path
+ *  The path to the stylesheet.
  *
  * @param $media
  *  The media type to specify for the stylesheet
@@ -842,8 +845,8 @@ function theme_mark($type = MARK_NEW) {
  * @return
  *  A string containing the HTML for the stylesheet import.
  */
-function theme_stylesheet_import($stylesheet, $media = 'all') {
-  return '<style type="text/css" media="'. $media .'">@import "'. $stylesheet .'";</style>';
+function theme_stylesheet_import($path, $media = 'all') {
+  return '<style type="text/css" media="'. $media .'">@import "'. $path .'";</style>';
 }
 
 /**
