@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.515 2005/08/05 00:38:38 unconed Exp $
+// $Id: node.module,v 1.516 2005/08/05 13:11:10 unconed Exp $
 
 /**
  * @file
@@ -1881,7 +1881,7 @@ function node_access($op, $node = NULL, $uid = NULL) {
         $grants[] = "'". $realm . $gid ."'";
       }
     }
-    $sql .= implode(',', $grants) .') AND grant_'. $op .' = 1';
+    $sql .= implode(',', $grants) .') AND grant_'. $op .' >= 1';
     $result = db_query($sql, $node->nid);
     return (db_result($result));
   }
