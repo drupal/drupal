@@ -1,5 +1,5 @@
 <?php
-// $Id: watchdog.module,v 1.124 2005/08/01 05:14:05 dries Exp $
+// $Id: watchdog.module,v 1.125 2005/08/06 00:35:38 unconed Exp $
 
 /**
  * @file
@@ -88,7 +88,7 @@ function watchdog_overview() {
   $header = array(
     ' ',
     array('data' => t('Type'), 'field' => 'w.type'),
-    array('data' => t('Date'), 'field' => 'w.timestamp', 'sort' => 'desc'),
+    array('data' => t('Date'), 'field' => 'w.wid', 'sort' => 'desc'),
     array('data' => t('Message'), 'field' => 'w.message'),
     array('data' => t('User'), 'field' => 'u.name'),
     array('data' => t('Operations'), 'colspan' => '2')
