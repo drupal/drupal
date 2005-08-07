@@ -464,7 +464,7 @@ function node_save($node) {
  * @param $node
  *   A node array or node object.
  * @param $teaser
- *   Whether to display only the teaser for the node.
+ *   Whether to display the teaser only, as on the main page.
  * @param $page
  *   Whether the node is being displayed by itself as a page.
  * @param $links
