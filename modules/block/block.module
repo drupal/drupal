@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.175 2005/07/29 21:06:33 unconed Exp $
+// $Id: block.module,v 1.176 2005/08/07 15:30:03 dries Exp $
 
 /**
  * @file
@@ -340,7 +340,7 @@ function block_box_form($edit = array()) {
   $output  = form_textfield(t('Block title'), 'title', $edit['title'], 60, 64, t('The title of the block as shown to the user.'));
   $output .= filter_form('format', $edit['format']);
   $output .= form_textarea(t('Block body'), 'body', $edit['body'], 60, 15, t('The content of the block as shown to the user.'));
-  $output .= form_textfield(t('Block description'), 'info', $edit['info'], 60, 64, t('A brief description of your block. Used on the <a href="%overview">block overview page</a>.', array('%overview' => url('admin/block'))));
+  $output .= form_textfield(t('Block description'), 'info', $edit['info'], 60, 64, t('A brief description of your block. Used on the <a href="%overview">block overview page</a>.', array('%overview' => url('admin/block'))), NULL, TRUE);
 
   return $output;
 }
@@ -355,7 +355,7 @@ function block_box_save($edit, $delta = NULL) {
   }
   else {
     if (empty($edit['info']) || db_num_rows(db_query("SELECT info FROM {boxes} WHERE info = '%s'", $edit['info']))) {
-      form_set_error('title', t('Please ensure each block description is unique.'));
+      form_set_error('info', t('Please ensure that each block description is unique.'));
       return false;
     }
     db_query("INSERT INTO {boxes} (title, body, info, format) VALUES  ('%s', '%s', '%s', %d)", $edit['title'], $edit['body'], $edit['info'], $edit['format']);
