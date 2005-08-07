@@ -1,5 +1,5 @@
 <?php
-// $Id: chameleon.theme,v 1.31 2005/08/01 05:14:05 dries Exp $
+// $Id: chameleon.theme,v 1.32 2005/08/07 14:55:17 dries Exp $
 
 /**
  * @file
@@ -107,17 +107,17 @@ function chameleon_page($content) {
   return $output;
 }
 
-function chameleon_node($node, $main = 0, $page = 0) {
+function chameleon_node($node, $teaser = 0, $page = 0) {
 
   $output  = "<div class=\"node\">\n";
 
   if (!$page) {
-    $output .= " <h2 class=\"title\">". ($main ? l($node->title, "node/$node->nid") : check_plain($node->title)) ."</h2>\n";
+    $output .= " <h2 class=\"title\">". ($teaser ? l($node->title, "node/$node->nid") : check_plain($node->title)) ."</h2>\n";
   }
 
   $output .= " <div class=\"content\">\n";
 
-  if ($main && $node->teaser) {
+  if ($teaser && $node->teaser) {
     $output .= $node->teaser;
   }
   else {

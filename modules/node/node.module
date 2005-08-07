@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.516 2005/08/05 13:11:10 unconed Exp $
+// $Id: node.module,v 1.517 2005/08/07 14:55:17 dries Exp $
 
 /**
  * @file
@@ -464,7 +464,7 @@ function node_save($node) {
  * @param $node
  *   A node array or node object.
  * @param $teaser
- *   Whether to display only the teaser for the node.
+ *   Whether to display the teaser only, as on the main page.
  * @param $page
  *   Whether the node is being displayed by itself as a page.
  * @param $links
