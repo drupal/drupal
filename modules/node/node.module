@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.517 2005/08/07 14:55:17 dries Exp $
+// $Id: node.module,v 1.518 2005/08/07 15:53:26 dries Exp $
 
 /**
  * @file
@@ -1210,7 +1210,7 @@ function node_validate($node) {
     }
 
     if (!$node->date) {
-      $node->date = format_date($node->created, 'custom', 'Y-m-d H:i O');
+      $node->date = format_date($node->created, 'custom', 'Y-m-d H:i:s O');
     }
 
     // Validate the "authored by" field.
