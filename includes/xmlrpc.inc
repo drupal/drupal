@@ -36,7 +36,7 @@ function xmlrpc_value_calculate_type(&$xmlrpc_value) {
     case 'integer':
       return 'int';
     case 'array':
-      return range(0, count($xmlrpc_value->data) - 1) == array_keys($xmlrpc_value->data) ? 'array' : 'struct';
+      return range(0, count($xmlrpc_value->data) - 1) === array_keys($xmlrpc_value->data) ? 'array' : 'struct';
     case 'object':
       if ($xmlrpc_value->data->is_date) {
         return 'date';
@@ -64,7 +64,6 @@ function xmlrpc_value_get_xml($xmlrpc_value) {
       return '<double>'. $xmlrpc_value->data .'</double>';
       break;
     case 'string':
-      /*** check this! this was htmlspecialchars, I changed to check_plain ***/
       return '<string>'. check_plain($xmlrpc_value->data) .'</string>';
       break;
     case 'array':
@@ -78,7 +77,6 @@ function xmlrpc_value_get_xml($xmlrpc_value) {
     case 'struct':
       $return = '<struct>'."\n";
       foreach ($xmlrpc_value->data as $name => $value) {
-        /*** check this! this was htmlspecialchars, I changed to check_plain ***/
         $return .= "  <member><name>". check_plain($name) ."</name><value>";
         $return .= xmlrpc_value_get_xml($value)."</value></member>\n";
       }
