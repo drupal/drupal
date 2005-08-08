@@ -402,7 +402,7 @@ CREATE TABLE moderation_votes (
 
 CREATE TABLE node (
   nid int(10) unsigned NOT NULL auto_increment,
-  type varchar(16) NOT NULL default '',
+  type varchar(32) NOT NULL default '',
   title varchar(128) NOT NULL default '',
   uid int(10) NOT NULL default '0',
   status int(4) NOT NULL default '1',
