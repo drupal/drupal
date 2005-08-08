@@ -1,5 +1,5 @@
 <?php
-/* $Id: updates.inc,v 1.123 2005/07/31 10:12:47 dries Exp $ */
+/* $Id: updates.inc,v 1.124 2005/08/08 18:51:48 unconed Exp $ */
 
 /**
  * @file
@@ -119,7 +119,8 @@ $sql_updates = array(
   "2005-05-12" => "update_140",
   "2005-05-22" => "update_141",
   "2005-07-29" => "update_142",
-  "2005-07-30" => "update_143"
+  "2005-07-30" => "update_143",
+  "2005-08-08" => "update_144"
 );
 
 function update_32() {
@@ -2530,6 +2531,22 @@ function update_143() {
   }
   $ret[] = update_sql("ALTER TABLE {contact} ADD PRIMARY KEY (category)");
 
+  return $ret;
+}
+
+function update_144() {
+  $ret = array();
+  if ($GLOBALS['db_type'] == 'mysql') {
+    $ret[] = update_sql("ALTER TABLE {node} CHANGE type type VARCHAR(32) NOT NULL");
+  }
+  elseif ($GLOBALS['db_type'] == 'pgsql') {
+    $ret[] = update_sql("ALTER TABLE {node} RENAME type TO type_old");
+    $ret[] = update_sql("ALTER TABLE {node} ADD type varchar(32)");
+    $ret[] = update_sql("ALTER TABLE {node} ALTER type SET NOT NULL");
+    $ret[] = update_sql("ALTER TABLE {node} ALTER type SET DEFAULT ''");
+    $ret[] = update_sql("UPDATE {node} SET type = type_old");
+    $ret[] = update_sql("ALTER TABLE {node} DROP type_old");
+  }
   return $ret;
 }
 
