@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.32 2005/07/18 16:46:28 dries Exp $
+// $Id: menu.module,v 1.33 2005/08/09 00:37:02 unconed Exp $
 
 /**
  * @file
@@ -544,7 +544,7 @@ function menu_node_form($edit = array()) {
   if ($edit['nid'] > 0) {
     $item = db_fetch_array(db_query("SELECT * FROM {menu} WHERE path = 'node/%d'", $edit['nid']));
     if (is_array($edit['menu'])) {
-      $item = ($_POST['op'] == t('Preview')) ? array_merge($item, $edit['menu']) : array_merge($edit['menu'], $item);
+      $item = !is_array($item) ? $edit['menu'] : (($_POST['op'] == t('Preview')) ? array_merge($item, $edit['menu']) : array_merge($edit['menu'], $item));
     }
   }
 
