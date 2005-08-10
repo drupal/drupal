@@ -49,7 +49,7 @@ function sess_write($key, $value) {
 }
 
 function sess_destroy($key) {
-  db_query("DELETE FROM {sessions} WHERE sid = '$key'");
+  db_query("DELETE FROM {sessions} WHERE sid = '%s'", $key);
 }
 
 function sess_gc($lifetime) {
