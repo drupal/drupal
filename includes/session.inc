@@ -1,5 +1,5 @@
 <?php
-// $Id: session.inc,v 1.17 2005/06/22 20:19:58 dries Exp $
+// $Id: session.inc,v 1.18 2005/08/10 20:42:54 dries Exp $
 
 /**
  * @file
@@ -49,7 +49,7 @@ function sess_write($key, $value) {
 }
 
 function sess_destroy($key) {
-  db_query("DELETE FROM {sessions} WHERE sid = '$key'");
+  db_query("DELETE FROM {sessions} WHERE sid = '%s'", $key);
 }
 
 function sess_gc($lifetime) {
