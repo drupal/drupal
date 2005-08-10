@@ -193,7 +193,7 @@ function phptemplate_page($content) {
  * Prepare the values passed to the theme_node function to be passed
  * into a pluggable template engine.
  */
-function phptemplate_node($node, $main = 0, $page = 0) {
+function phptemplate_node($node, $teaser = 0, $page = 0) {
   if (module_exist('taxonomy')) {
     $taxonomy = taxonomy_link('taxonomy terms', $node);
   }
@@ -202,15 +202,15 @@ function phptemplate_node($node, $main = 0, $page = 0) {
   }
 
   $variables = array(
-    'content'        => ($main && $node->teaser) ? $node->teaser : $node->body,
+    'content'        => ($teaser && $node->teaser) ? $node->teaser : $node->body,
     'date'           => format_date($node->created),
     'links'          => $node->links ? theme('links', $node->links) : '',
-    'main'           => $main,
     'name'           => theme('username', $node),
     'node'           => $node,  // we pass the actual node to allow more customization
     'node_url'       => url('node/'. $node->nid),
     'page'           => $page,
     'taxonomy'       => $taxonomy,
+    'teaser'         => $teaser,
     'terms'          => theme('links', $taxonomy),
     'title'          => check_plain($node->title)
   );
