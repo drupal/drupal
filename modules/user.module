@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.498 2005/08/05 01:18:39 unconed Exp $
+// $Id: user.module,v 1.499 2005/08/10 20:38:57 dries Exp $
 
 /**
  * @file
@@ -1798,7 +1798,7 @@ function user_help($section) {
       <li>Authenticated user: this role is assigned automatically to authenticated users. Most registered users will belong to this user role unless specified otherwise.</li>
       </ul>', array('%permissions' => url('admin/access/permissions')));
     case 'admin/user/search':
-      return t('<p>Enter a simple pattern ("*" may be user as a wildcard match) to search for a username.  For example, one may search for "br" and Drupal might return "brian", "brad", and "brenda".</p>');
+      return t('<p>Enter a simple pattern ("*" may be used as a wildcard match) to search for a username.  For example, one may search for "br" and Drupal might return "brian", "brad", and "brenda".</p>');
     case 'admin/modules#description':
       return t('Manages the user registration and login system.');
     case 'admin/user/configure':
