@@ -1,5 +1,5 @@
 <?php
-// $Id: pager.inc,v 1.45 2005/07/30 12:52:54 unconed Exp $
+// $Id: pager.inc,v 1.46 2005/08/10 20:50:14 dries Exp $
 
 /**
  * @file
@@ -262,35 +262,6 @@ function theme_pager_last($text, $limit, $element = 0, $attributes = array()) {
     $output .= ' ';
   }
   $output .= '</div>';
-  return $output;
-}
-
-/**
- * Format a summary of the current pager position, such as "6 through 10 of 52".
- *
- * @param $limit
- *   The number of query results to display per page.
- * @param $element
- *   An optional integer to distinguish between multiple pagers on one page.
- * @param $format
- *   A printf-style format string for customizing the pager text.
- * @return
- *   An HTML string that generates this piece of the query pager.
- *
- * @ingroup themeable
- */
-function theme_pager_detail($limit, $element = 0, $format = '%d through %d of %d.') {
-  global $pager_page_array, $pager_total, $pager_total_items;
-
-  $output = '<div class="pager-detail">';
-  if ($pager_total[$element] > 1) {
-    $output .= sprintf($format,
-                       $pager_page_array[$element] * $limit + 1,
-                       min($pager_total_items[$element], ($pager_page_array[$element] + 1) * $limit),
-                       $pager_total_items[$element]);
-  }
-  $output .= '</div>';
-
   return $output;
 }
 
