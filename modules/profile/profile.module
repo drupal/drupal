@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.103 2005/08/10 20:48:40 dries Exp $
+// $Id: profile.module,v 1.104 2005/08/10 20:52:00 dries Exp $
 
 /**
  * @file
@@ -53,8 +53,7 @@ function profile_block($op = 'list', $delta = 0, $edit = array()) {
   else if ($op == 'view') {
     if (user_access('access user profiles')) {
       if ((arg(0) == 'node') && is_numeric(arg(1)) && (arg(2) == NULL)) {
-        $result = db_query('SELECT uid FROM {node} WHERE nid = %d ORDER BY uid DESC', arg(1));
-        $node = db_fetch_object($result);
+        $node = node_load(arg(1));
         $account = user_load(array('uid' => $node->uid));
 
         if ($use_fields = variable_get('profile_block_author_fields', array())) {
