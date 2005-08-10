@@ -550,7 +550,7 @@ function user_block($op = 'list', $delta = 0, $edit = array()) {
 
       case 2:
         if (user_access('access content')) {
-          $result = db_query_range('SELECT uid, name FROM {users} WHERE status != 0 ORDER BY uid DESC', 0, 5);
+          $result = db_query_range('SELECT uid, name FROM {users} WHERE status != 0 ORDER BY created DESC', 0, 5);
           while ($account = db_fetch_object($result)) {
             $items[] = $account;
           }
