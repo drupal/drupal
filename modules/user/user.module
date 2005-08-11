@@ -193,12 +193,13 @@ function user_save($account, $array = array(), $category = 'account') {
   }
 
   // Save distributed authentication mappings
+  $authmaps = array();
   foreach ($array as $key => $value) {
     if (substr($key, 0, 4) == 'auth') {
       $authmaps[$key] = $value;
     }
   }
-  if ($authmaps) {
+  if (sizeof($authmaps) > 0) {
     user_set_authmaps($user, $authmaps);
   }
 
