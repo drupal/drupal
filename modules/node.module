@@ -1154,7 +1154,7 @@ function node_feed($nodes = 0, $channel = array()) {
 
     // Allow modules to add additional item fields
     $extra = node_invoke_nodeapi($item, 'rss item');
-    $extra = array_merge($extra, array(array('key' => 'pubDate', 'value' =>  date('r', $item->changed))));
+    $extra = array_merge($extra, array(array('key' => 'pubDate', 'value' =>  date('r', $item->created))));
     $items .= format_rss_item($item->title, $link, $item->teaser, $extra);
   }
 
@@ -1216,7 +1216,7 @@ function node_validate($node) {
     }
 
     if (!$node->date) {
-      $node->date = format_date($node->created, 'custom', 'Y-m-d H:i O');
+      $node->date = format_date($node->created, 'custom', 'Y-m-d H:i:s O');
     }
 
     // Validate the "authored by" field.
