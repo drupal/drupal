@@ -1,3 +1,5 @@
+// $Id: autocomplete.js,v 1.4 2005/08/11 13:00:17 dries Exp $
+
 // Global Killswitch
 if (isJsEnabled()) {
   addLoadEvent(autocompleteAutoAttach);

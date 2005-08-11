@@ -1,3 +1,5 @@
+// $Id: drupal.js,v 1.5 2005/08/11 13:00:17 dries Exp $
+
 /**
  * Only enable Javascript functionality if all required features are supported.
  */

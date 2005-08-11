@@ -1,3 +1,5 @@
+// $Id: collapse.js,v 1.2 2005/08/11 13:00:17 dries Exp $
+
 if (isJsEnabled()) {
   addLoadEvent(collapseAutoAttach);
 }
