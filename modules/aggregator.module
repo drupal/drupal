@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.245 2005/08/11 13:02:08 dries Exp $
+// $Id: aggregator.module,v 1.246 2005/08/11 13:12:44 dries Exp $
 
 /**
  * @file
@@ -275,16 +275,38 @@ function aggregator_remove($feed) {
  * Call-back function used by the XML parser.
  */
 function aggregator_element_start($parser, $name, $attributes) {
-  global $item, $element, $tag;
+  global $item, $element, $tag, $items, $channel;
 
   switch ($name) {
     case 'IMAGE':
     case 'TEXTINPUT':
+    case 'CONTENT':
+    case 'SUMMARY':
+    case 'TAGLINE':
+    case 'SUBTITLE':
+    case 'LOGO':
+    case 'INFO':
+    case 'ID':
       $element = $name;
+      break;
+    case 'LINK':
+      if ($attributes['REL'] == 'alternate') {
+        if ($element == 'ITEM') {
+          $items[$item]['LINK'] = $attributes['HREF'];
+        }
+        else {
+          $channel['LINK'] = $attributes['HREF'];
+        }
+      }
       break;
     case 'ITEM':
       $element = $name;
       $item += 1;
+      break;
+    case 'ENTRY':
+      $element = 'ITEM';
+      $item += 1;
+      break;
   }
 
   $tag = $name;
@@ -300,6 +322,10 @@ function aggregator_element_end($parser, $name) {
     case 'IMAGE':
     case 'TEXTINPUT':
     case 'ITEM':
+    case 'ENTRY':
+    case 'CONTENT':
+    case 'INFO':
+    case 'ID':
       $element = '';
   }
 }
@@ -315,8 +341,26 @@ function aggregator_element_data($parser, $data) {
       $items[$item][$tag] .= $data;
       break;
     case 'IMAGE':
+    case 'LOGO':
       $image[$tag] .= $data;
       break;
+    case 'LINK':
+      if ($data) {
+        $items[$item][$tag] .= $data;
+      }
+      break;
+    case 'CONTENT':
+      $items[$item]['DESCRIPTION'] .= $data;
+      break;
+    case 'SUMMARY':
+      $items[$item]['DESCRIPTION'] .= $data;
+      break;
+    case 'TAGLINE':
+    case 'SUBTITLE':
+      $channel['DESCRIPTION'] .= $data;
+      break;
+    case 'INFO':
+    case 'ID':
     case 'TEXTINPUT':
       // The sub-element is not supported. However, we must recognize
       // it or its contents will end up in the item array.
@@ -488,7 +532,6 @@ function aggregator_parse_feed(&$data, $feed) {
       $value = preg_replace('/\Won[a-z]+\s*=[^>]+?>/i', '>', $value);
       $item[$key] = $value;
     }
-
     /*
     ** Resolve the item's title.  If no title is found, we use
     ** up to 40 characters of the description ending at a word
