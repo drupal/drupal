@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.500 2005/08/10 20:46:29 dries Exp $
+// $Id: user.module,v 1.501 2005/08/11 13:52:44 dries Exp $
 
 /**
  * @file
@@ -193,12 +193,13 @@ function user_save($account, $array = array(), $category = 'account') {
   }
 
   // Save distributed authentication mappings
+  $authmaps = array();
   foreach ($array as $key => $value) {
     if (substr($key, 0, 4) == 'auth') {
       $authmaps[$key] = $value;
     }
   }
-  if ($authmaps) {
+  if (sizeof($authmaps) > 0) {
     user_set_authmaps($user, $authmaps);
   }
 
