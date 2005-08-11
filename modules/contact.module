@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.19 2005/07/31 10:12:47 dries Exp $
+// $Id: contact.module,v 1.20 2005/08/11 07:33:21 dries Exp $
 
 /**
  * @file
@@ -129,6 +129,11 @@ function contact_mail_user() {
           // Send the e-mail:
           user_mail($to, $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
 
+          // Send a copy if requested:
+          if ($edit['copy']) {
+            user_mail($from, $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
+          }
+
           // Log the operation:
           flood_register_event('contact');
           watchdog('mail', t('%name-from sent %name-to an e-mail.', array('%name-from' => theme('placeholder', $user->name), '%name-to' => theme('placeholder', $account->name))));
@@ -148,6 +153,7 @@ function contact_mail_user() {
       $output .= form_item(t('To'), $account->name);
       $output .= form_textfield(t('Subject'), 'subject', $edit['subject'], 60, 50, NULL, NULL, TRUE);
       $output .= form_textarea(t('Message'), 'message', $edit['message'], 60, 15, NULL, NULL, TRUE);
+      $output .= form_checkbox(t('Send me a copy.'), 'copy', $edit['copy']);
       $output .= form_submit(t('Send e-mail'));
       $output  = form($output);
     }
@@ -280,6 +286,11 @@ function contact_mail_page() {
         // Send the e-mail to the recipients:
         user_mail($contact->recipients, $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
 
+        // If the user requests it, send a copy.
+        if ($edit['copy']) {
+          user_mail($from, $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
+        }
+
         // Send an auto-reply if necessary:
         if ($contact->reply) {
           user_mail($from, $subject, wordwrap($contact->reply), "From: $contact->recipients\nReply-to: $contact->recipients\nX-Mailer: Drupal\nReturn-path: $contact->recipients\nErrors-to: $contact->recipients");
@@ -316,6 +327,7 @@ function contact_mail_page() {
         $output .= form_select(t('Category'), 'category', $edit['category'], $categories, NULL, NULL, NULL, TRUE);
       }
       $output .= form_textarea(t('Message'), 'message', $edit['message'], 60, 5, NULL, NULL, TRUE);
+      $output .= form_checkbox(t('Send me a copy.'), 'copy', $edit['copy']);
       $output .= form_submit(t('Send e-mail'));
       $output  = form($output);
     }
