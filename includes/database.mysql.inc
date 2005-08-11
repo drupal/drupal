@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysql.inc,v 1.33 2005/07/30 18:01:51 unconed Exp $
+// $Id: database.mysql.inc,v 1.34 2005/08/11 13:51:07 dries Exp $
 
 /**
  * @file
@@ -97,6 +97,7 @@ function _db_query($query, $debug = 0) {
   }
   else {
     trigger_error(mysql_error() ."\nquery: ". htmlspecialchars($query), E_USER_ERROR);
+    return FALSE;
   }
 }
 
