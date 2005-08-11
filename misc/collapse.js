@@ -1,3 +1,5 @@
+// $Id$
+
 if (isJsEnabled()) {
   addLoadEvent(collapseAutoAttach);
 }

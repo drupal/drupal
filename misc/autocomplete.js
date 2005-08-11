@@ -1,3 +1,5 @@
+// $Id$
+
 // Global Killswitch
 if (isJsEnabled()) {
   addLoadEvent(autocompleteAutoAttach);
