@@ -1,5 +1,5 @@
 <?php
-/* $Id: path.module,v 1.60 2005/06/27 18:33:32 dries Exp $ */
+// $Id: path.module,v 1.61 2005/08/11 13:02:08 dries Exp $
 
 /**
  * @file
