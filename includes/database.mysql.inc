@@ -97,6 +97,7 @@ function _db_query($query, $debug = 0) {
   }
   else {
     trigger_error(mysql_error() ."\nquery: ". htmlspecialchars($query), E_USER_ERROR);
+    return FALSE;
   }
 }
 
