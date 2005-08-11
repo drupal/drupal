@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.518 2005/08/07 15:53:26 dries Exp $
+// $Id: node.module,v 1.519 2005/08/11 12:53:39 dries Exp $
 
 /**
  * @file
@@ -1148,7 +1148,7 @@ function node_feed($nodes = 0, $channel = array()) {
 
     // Allow modules to add additional item fields
     $extra = node_invoke_nodeapi($item, 'rss item');
-    $extra = array_merge($extra, array(array('key' => 'pubDate', 'value' =>  date('r', $item->changed))));
+    $extra = array_merge($extra, array(array('key' => 'pubDate', 'value' =>  date('r', $item->created))));
     $items .= format_rss_item($item->title, $link, $item->teaser, $extra);
   }
 
