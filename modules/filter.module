@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.69 2005/08/14 09:53:40 dries Exp $
+// $Id: filter.module,v 1.70 2005/08/14 17:50:35 dries Exp $
 
 /**
  * @file
@@ -705,4 +705,317 @@ function check_markup($text, $format = FILTER_FORMAT_DEFAULT, $check = TRUE) {
     }
 
     // Store in cache with a minimum expiration time of 1 day.
-    i
+    if ($cache) {
+      cache_set($id, $text, time() + (60 * 60 * 24));
+    }
+  }
+  else {
+    $text = message_na();
+  }
+
+  return $text;
+}
+
+/**
+ * Generate a selector for choosing a format in a form.
+ *
+ * @param $name
+ *   The internal name used to refer to the form element.
+ * @param $value
+ *   The ID of the format that is currently selected.
+ * @return
+ *   HTML for the form element.
+ */
+function filter_form($name = 'format', $value = FILTER_FORMAT_DEFAULT) {
+  if ($value == FILTER_FORMAT_DEFAULT) {
+    $value = variable_get('filter_default_format', 1);
+  }
+  $formats = filter_formats();
+
+  $extra = l(t('More information about formatting options'), 'filter/tips');
+
+  if (count($formats) > 1) {
+    // Multiple formats available: display radio buttons with tips.
+    $output = '';
+    foreach ($formats as $format) {
+      $tips = _filter_tips($format->format, false);
+
+      // TODO: get support for block-level radios so the <br /> is not output?
+      $output .= '<div>';
+      $output .= '<label class="option"><input type="radio" class="form-radio" name="edit['. $name .']" value="'. $format->format .'"'. ($format->format == $value ? ' checked="checked"' : '') .' /> '. $format->name .'</label>';
+      $output .= theme('filter_tips', $tips);
+      $output .= '</div>';
+    }
+    $group = theme('form_element', NULL, $output, $extra, NULL, _form_get_error($name));
+    return form_group_collapsible(t('Input format'), $group, TRUE);
+  }
+  else {
+    // Only one format available: use a hidden form item and only show tips.
+    $format = array_shift($formats);
+    $output = form_hidden($name, $format->format);
+    $tips = _filter_tips(variable_get('filter_default_format', 1), false);
+    $output .= form_item(t('Formatting guidelines'), theme('filter_tips', $tips, false, $extra), $extra);
+    return $output;
+  }
+}
+
+/**
+ * Returns true if the user is allowed to access this format.
+ */
+function filter_access($format) {
+  if (user_access('administer filters') || ($format == FILTER_FORMAT_DEFAULT) || ($format == variable_get('filter_default_format', 1))) {
+    return true;
+  }
+  else {
+    $formats = filter_formats();
+    return isset($formats[$format]);
+  }
+}
+/**
+ * @} End of "Filtering functions".
+ */
+
+/**
+ * Menu callback; show a page with long filter tips.
+ */
+function filter_tips_long() {
+  $format = arg(2);
+  if ($format) {
+    $output = theme('filter_tips', _filter_tips($format, true), true);
+  }
+  else {
+    $output = theme('filter_tips', _filter_tips(-1, true), true);
+  }
+  return $output;
+}
+
+/**
+ * Helper function for fetching filter tips.
+ */
+function _filter_tips($format, $long = false) {
+  if ($format == -1) {
+    $formats = filter_formats();
+  }
+  else {
+    $formats = array(db_fetch_object(db_query("SELECT * FROM {filter_formats} WHERE format = %d", $format)));
+  }
+
+  $tips = array();
+
+  foreach ($formats as $format) {
+    $filters = filter_list_format($format->format);
+
+    $tips[$format->name] = array();
+    foreach ($filters as $id => $filter) {
+      if ($tip = module_invoke($filter->module, 'filter_tips', $filter->delta, $format->format, $long)) {
+        $tips[$format->name][] = array('tip' => $tip, 'id' => $id);
+      }
+    }
+  }
+
+  return $tips;
+}
+
+/**
+ * Format a set of filter tips.
+ *
+ * @ingroup themeable
+ */
+function theme_filter_tips($tips, $long = false, $extra = '') {
+  $output = '';
+
+  $multiple = count($tips) > 1;
+  if ($multiple) {
+    $output = t('Input formats') .':';
+  }
+
+  if (count($tips)) {
+    if ($multiple) {
+      $output .= '<ul>';
+    }
+    foreach ($tips as $name => $tiplist) {
+      if ($multiple) {
+        $output .= '<li>';
+        $output .= '<strong>'. $name .'</strong>:<br />';
+      }
+
+      $tips = '';
+      foreach ($tiplist as $tip) {
+        $tips .= '<li'. ($long ? ' id="filter-'. str_replace("/", "-", $tip['id']) .'">' : '>') . $tip['tip'] . '</li>';
+      }
+
+      if ($tips) {
+        $output .= "<ul class=\"tips\">$tips</ul>";
+      }
+
+      if ($multiple) {
+        $output .= '</li>';
+      }
+    }
+    if ($multiple) {
+      $output .= '</ul>';
+    }
+  }
+
+  return $output;
+}
+
+/**
+ * @name Standard filters
+ * @{
+ * Filters implemented by the filter.module.
+ */
+
+/**
+ * Implementation of hook_filter(). Contains a basic set of essential filters.
+ * - HTML filter:
+ *     Validates user-supplied HTML, transforming it as necessary.
+ * - PHP evaluator:
+ *     Executes PHP code.
+ * - Line break converter:
+ *     Converts newlines into paragraph and break tags.
+ */
+function filter_filter($op, $delta = 0, $format = -1, $text = '') {
+  switch ($op) {
+    case 'list':
+      return array(0 => t('HTML filter'), 1 => t('PHP evaluator'), 2 => t('Line break converter'));
+
+    case 'no cache':
+      return $delta == 1; // No caching for the PHP evaluator.
+
+    case 'description':
+      switch ($delta) {
+        case 0:
+          return t('Allows you to restrict if users can post HTML and which tags to filter out.');
+        case 1:
+          return t('Runs a piece of PHP code. The usage of this filter should be restricted to administrators only!');
+        case 2:
+          return t('Converts line breaks into HTML (i.e. &lt;br&gt; and &lt;p&gt; tags).');
+        default:
+          return;
+      }
+
+    case 'process':
+      switch ($delta) {
+        case 0:
+          return _filter_html($text, $format);
+        case 1:
+          return drupal_eval($text);
+        case 2:
+          return _filter_autop($text);
+        default:
+          return $text;
+      }
+
+    case 'settings':
+      switch ($delta) {
+        case 0:
+          return _filter_html_settings($format);
+        default:
+          return;
+      }
+
+    default:
+      return $text;
+  }
+}
+
+/**
+ * Settings for the HTML filter.
+ */
+function _filter_html_settings($format) {
+  $group = form_radios(t('Filter HTML tags'), "filter_html_$format", variable_get("filter_html_$format", FILTER_HTML_STRIP), array(FILTER_HTML_STRIP => t('Strip tags'), FILTER_HTML_ESCAPE => t('Escape tags')), t('How to deal with HTML tags in user-contributed content. If set to "Strip tags", dangerous tags are removed (see below).  If set to "Escape tags", all HTML is escaped and presented as it was typed.'));
+  $group .= form_textfield(t('Allowed HTML tags'), "allowed_html_$format", variable_get("allowed_html_$format", '<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd>'), 60, 255, t('If "Strip tags" is selected, optionally specify tags which should not be stripped. Javascript event attributes are always stripped.'));
+  $group .= form_checkbox(t('Display HTML help'), "filter_html_help_$format", 1, variable_get("filter_html_help_$format", 1), t('If enabled, Drupal will display some basic HTML help in the long filter tips.'));
+  $group .= form_radios(t('HTML style attributes'), "filter_style_$format", variable_get("filter_style_$format", FILTER_STYLE_STRIP), array(FILTER_STYLE_ALLOW => t('Allowed'), FILTER_STYLE_STRIP => t('Removed')), t('If "Strip tags" is selected, you can choose whether "STYLE" attributes are allowed or removed from input.'));
+  $group .= form_checkbox(t('Spam link deterrent'), "filter_html_nofollow_$format", 1, variable_get("filter_html_nofollow_$format", FALSE), t('If enabled, Drupal will add rel="nofollow" to all links, as a measure to reduce the effectiveness of spam links. Note: this will also prevent valid links from being followed by search engines, therefore it is likely most effective when enabled for anonymous users.'));
+  $output .= form_group(t('HTML filter'), $group);
+
+  return $output;
+}
+
+/**
+ * HTML filter. Provides filtering of input into accepted HTML.
+ */
+function _filter_html($text, $format) {
+  if (variable_get("filter_html_$format", FILTER_HTML_STRIP) == FILTER_HTML_STRIP) {
+    // Allow users to enter HTML, but filter it
+    $text = strip_tags($text, variable_get("allowed_html_$format", '<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd>'));
+    if (variable_get("filter_style_$format", FILTER_STYLE_STRIP)) {
+      $text = preg_replace('/\Wstyle\s*=[^>]+?>/i', '>', $text);
+    }
+    $text = preg_replace('/\Won[a-z]+\s*=[^>]+?>/i', '>', $text);
+  }
+
+  if (variable_get("filter_html_$format", FILTER_HTML_STRIP) == FILTER_HTML_ESCAPE) {
+    // Escape HTML
+    $text = check_plain($text);
+  }
+
+  if (variable_get("filter_html_nofollow_$format", FALSE)) {
+    $text = preg_replace('/<a([^>]+)>/i', '<a\\1 rel="nofollow">', $text);
+  }
+
+  return trim($text);
+}
+
+/**
+ * Convert line breaks into <p> and <br> in an intelligent fashion.
+ * Based on: http://photomatt.net/scripts/autop
+ */
+function _filter_autop($text) {
+  // Split at <pre>, <script>, <style> and </pre>, </script>, </style> tags.
+  // We don't apply any processing to the contents of these tags to avoid messing
+  // up code. We look for matched pairs and allow basic nesting. For example:
+  // "processed <pre> ignored <script> ignored </script> ignored </pre> processed"
+  $chunks = preg_split('@(</?(?:pre|script|style)[^>]*>)@i', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
+  // Note: PHP ensures the array consists of alternating delimiters and literals
+  // and begins and ends with a literal (inserting NULL as required).
+  $ignore = false;
+  $ignoretag = '';
+  $output = '';
+  foreach ($chunks as $i => $chunk) {
+    if ($i % 2) {
+      // Opening or closing tag?
+      $open = ($chunk{1} != '/');
+      list($tag) = split('[ >]', substr($chunk, 2 - $open), 2);
+      if (!$ignore) {
+        if ($open) {
+          $ignore = true;
+          $ignoretag = $tag;
+        }
+      }
+      // Only allow a matching tag to close it.
+      else if (!$open && $ignoretag == $tag) {
+        $ignore = false;
+        $ignoretag = '';
+      }
+    }
+    else if (!$ignore) {
+      $chunk = preg_replace('|\n*$|', '', $chunk) ."\n\n"; // just to make things a little easier, pad the end
+      $chunk = preg_replace('|<br />\s*<br />|', "\n\n", $chunk);
+      $chunk = preg_replace('!(<(?:table|ul|ol|li|pre|form|blockquote|h[1-6])[^>]*>)!', "\n$1", $chunk); // Space things out a little
+      $chunk = preg_replace('!(</(?:table|ul|ol|li|pre|form|blockquote|h[1-6])>)!', "$1\n", $chunk); // Space things out a little
+      $chunk = preg_replace("/\n\n+/", "\n\n", $chunk); // take care of duplicates
+      $chunk = preg_replace('/\n?(.+?)(?:\n\s*\n|\z)/s', "<p>$1</p>\n", $chunk); // make paragraphs, including one at the end
+      $chunk = preg_replace('|<p>\s*?</p>|', '', $chunk); // under certain strange conditions it could create a P of entirely whitespace
+      $chunk = preg_replace("|<p>(<li.+?)</p>|", "$1", $chunk); // problem with nested lists
+      $chunk = preg_replace('|<p><blockquote([^>]*)>|i', "<blockquote$1><p>", $chunk);
+      $chunk = str_replace('</blockquote></p>', '</p></blockquote>', $chunk);
+      $chunk = preg_replace('!<p>\s*(</?(?:table|tr|td|th|div|ul|ol|li|pre|select|form|blockquote|p|h[1-6])[^>]*>)!', "$1", $chunk);
+      $chunk = preg_replace('!(</?(?:table|tr|td|th|div|ul|ol|li|pre|select|form|blockquote|p|h[1-6])[^>]*>)\s*</p>!', "$1", $chunk);
+      $chunk = preg_replace('|(?<!<br />)\s*\n|', "<br />\n", $chunk); // make line breaks
+      $chunk = preg_replace('!(</?(?:table|tr|td|th|div|dl|dd|dt|ul|ol|li|pre|select|form|blockquote|p|h[1-6])[^>]*>)\s*<br />!', "$1", $chunk);
+      $chunk = preg_replace('!<br />(\s*</?(?:p|li|div|th|pre|td|ul|ol)>)!', '$1', $chunk);
+      $chunk = preg_replace('/&([^#])(?![a-z]{1,8};)/', '&amp;$1', $chunk);
+    }
+    $output .= $chunk;
+  }
+  return $output;
+}
+
+/**
+ * @} End of "Standard filters".
+ */
+
+?>
