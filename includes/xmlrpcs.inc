@@ -1,5 +1,5 @@
 <?php
-// $Id: xmlrpcs.inc,v 1.13 2005/08/14 09:53:40 dries Exp $
+// $Id: xmlrpcs.inc,v 1.14 2005/08/14 22:27:40 dries Exp $
 
 function xmlrpc_server($callbacks) {
   $xmlrpc_server = new stdClass();
@@ -45,7 +45,7 @@ function xmlrpc_server($callbacks) {
   }
 
   $data = file_get_contents('php://input');
-  if (!data) {
+  if (!$data) {
      die('XML-RPC server accepts POST requests only.');
   }
   $xmlrpc_server->message = xmlrpc_message($data);
