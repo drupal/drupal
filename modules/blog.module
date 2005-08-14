@@ -259,8 +259,8 @@ function blog_menu($may_cache) {
       'callback' => 'blog_page',
       'access' => user_access('access content'),
       'type' => MENU_SUGGESTED_ITEM);
-    $items[] = array('path' => 'blog/'. $user->uid, 'title' => t('my blog'),	 
-      'access' => user_access('edit own blog'),	 
+    $items[] = array('path' => 'blog/'. $user->uid, 'title' => t('my blog'),
+      'access' => user_access('edit own blog'),
       'type' => MENU_DYNAMIC_ITEM);
   }
 

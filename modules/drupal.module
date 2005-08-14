@@ -70,22 +70,15 @@ function drupal_cron() {
 /**
  * Callback function from drupal_xmlrpc() called when another site pings this one.
  */
-function drupal_directory_ping($arguments) {
+function drupal_directory_ping($link, $name, $mail, $slogan, $mission) {
 
   /*
   ** Parse our parameters:
   */
 
-  $argument = $arguments->getparam(0);
-  $link = strip_tags($argument->scalarval());
-  $argument = $arguments->getparam(1);
-  $name = trim(strip_tags($argument->scalarval()));
-  $argument = $arguments->getparam(2);
-  $mail = strip_tags($argument->scalarval());
-  $argument = $arguments->getparam(3);
-  $slogan = strip_tags($argument->scalarval());
-  $argument = $arguments->getparam(4);
-  $mission = strip_tags($argument->scalarval());
+  foreach (array('link', 'name', 'mail', 'slogan', 'mission') as $key) {
+    $$key = strip_tags($$key);
+  }
 
   /*
   ** Update the data in our database and send back a reply:
@@ -97,10 +90,10 @@ function drupal_directory_ping($arguments) {
 
     watchdog('directory ping', t('Ping from %name (%link).', array('%name' => theme('placeholder', $name), '%link' => theme('placeholder', $link))), WATCHDOG_NOTICE, '<a href="'. check_url($link) .'">view</a>');
 
-    return new xmlrpcresp(new xmlrpcval(1, 'int'));
+    return 1;
   }
   else {
-    return new xmlrpcresp(new xmlrpcval(0, 'int'));
+    return 0;
   }
 
 }
@@ -127,7 +120,17 @@ function drupal_directory_page($sort = 'name') {
  * Implementation of hook_xmlrpc().
  */
 function drupal_xmlrpc() {
-  return array('drupal.site.ping' => array('function' => 'drupal_directory_ping'), 'drupal.login' => array('function' => 'drupal_login'));
+  return array(
+    array(
+      'drupal.site.ping',
+      'drupal_directory_ping',
+      array('boolean', 'string', 'string', 'string', 'string', 'string'),
+      t('Handling ping request')),
+    array(
+      'drupal.login',
+      'drupal_login',
+      array('int', 'string', 'string'),
+      t('Logging into a drupal site')));
 }
 
 /**
@@ -136,16 +139,10 @@ function drupal_xmlrpc() {
 function drupal_notify($server) {
   global $base_url;
 
-  $url = parse_url($server);
+  $result = xmlrpc($server, 'drupal.site.ping', $base_url, variable_get('site_name', ''), variable_get('site_mail', ''), variable_get('site_slogan', ''), variable_get('site_mission', ''));
 
-  $client = new xmlrpc_client($url['path'], $url['host'], 80);
-
-  $message = new xmlrpcmsg('drupal.site.ping', array(new xmlrpcval($base_url, 'string'), new xmlrpcval(variable_get('site_name', ''), 'string'), new xmlrpcval(variable_get('site_mail', ''), 'string'), new xmlrpcval(variable_get('site_slogan', ''), 'string'), new xmlrpcval(variable_get('site_mission', ''), 'string')));
-
-  $result = $client->send($message, 5);
-
-  if (!$result || $result->faultCode()) {
-    watchdog('directory ping', t('Failed to notify %url at %path: %error.', array('%url' => theme('placeholder', $url['host']), '%path' => theme('placeholder', $url['path']), '%error' => theme('placeholder', $result->faultString()))), WATCHDOG_WARNING);
+  if ($result === FALSE) {
+    watchdog('directory ping', t('Failed to notify %server, error code: %errno, error message: %error_msg.', array('%server' => theme('placeholder', $server), '%errno' => theme('placeholder', xmlrpc_errno()), '%error_msg' => theme('placeholder', xmlrpc_error_msg()))), WATCHDOG_WARNING);
   }
 
 }
@@ -169,19 +166,13 @@ function drupal_info($field = 0) {
  * Implementation of hook_auth().
  */
 function drupal_auth($username, $password, $server) {
-
-  $message = new xmlrpcmsg('drupal.login', array(new xmlrpcval($username, 'string'), new xmlrpcval($password, 'string')));
-
-  // TODO remove hard coded Port 80
-  // TODO manage server/path such that HTTP_HOST/xml.rpc.php is not assumed
-  $client = new xmlrpc_client('/xmlrpc.php', $server, 80);
-  $result = $client->send($message, 5);
-  if ($result && !$result->faultCode()) {
-    $value = $result->value();
-    $login = $value->scalarval();
+  $result = xmlrpc('http://'. $server .'/xmlrpc.php', 'drupal.login', $username, $password);
+  if ($result === FALSE) {
+    drupal_set_message(t('Error %code : %message', array('%code' => theme('placeholder', xmlrpc_errno()), '%message' =>  theme('placeholder', xmlrpc_error_msg()))), 'error');
   }
-
-  return $login;
+  else {
+    return $result;
+  }
 }
 
 /**
@@ -209,17 +200,12 @@ function drupal_page_help() {
  *
  * Remote clients are usually other Drupal instances.
  */
-function drupal_login($arguments) {
-  $argument = $arguments->getparam(0);
-  $username = $argument->scalarval();
-  $argument = $arguments->getparam(1);
-  $password = $argument->scalarval();
-
+function drupal_login($username, $password) {
   if ($user = user_load(array('name' => $username, 'pass' => $password, 'status' => 1))) {
-    return new xmlrpcresp(new xmlrpcval($user->uid, 'int'));
+    return $user->uid;
   }
   else {
-    return new xmlrpcresp(new xmlrpcval(0, 'int'));
+    return 0;
   }
 }
 
