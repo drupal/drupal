@@ -443,6 +443,10 @@ function blogapi_publish_post($req_params) {
     return blogapi_error(message_access());
   }
 
+  $terms = module_invoke('taxonomy', 'node_get_terms', $node->nid, 'tid');
+  foreach ($terms as $term) {
+    $node->taxonomy[] = $term->tid;
+  }
   node_save($node);
 
   return new xmlrpcresp(new xmlrpcval(true, 'boolean'));
