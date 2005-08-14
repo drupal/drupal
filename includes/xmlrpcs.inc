@@ -1,5 +1,5 @@
 <?php
-// $Id: xmlrpcs.inc,v 1.12 2005/08/11 12:57:41 dries Exp $
+// $Id: xmlrpcs.inc,v 1.13 2005/08/14 09:53:40 dries Exp $
 
 function xmlrpc_server($callbacks) {
   $xmlrpc_server = new stdClass();
@@ -55,6 +55,7 @@ function xmlrpc_server($callbacks) {
   if ($xmlrpc_server->message->messagetype != 'methodCall') {
     xmlrpc_server_error(-32600, t('server error. invalid xml-rpc. not conforming to spec. Request must be a method_call'));
   }
+  xmlrpc_server_set($xmlrpc_server);
   $result = xmlrpc_server_call($xmlrpc_server, $xmlrpc_server->message->methodname, $xmlrpc_server->message->params);
   // Is the result an error?
   if ($result->is_error) {
@@ -114,9 +115,10 @@ function xmlrpc_server_get() {
   return xmlrpc_server_set();
 }
 
-function xmlrpc_server_multicall($xmlrpc_server, $methodcalls) {
+function xmlrpc_server_multicall($methodcalls) {
   // See http://www.xmlrpc.com/discuss/msgReader$1208
   $return = array();
+  $xmlrpc_server = xmlrpc_server_get();
   foreach ($methodcalls as $call) {
     $method = $call['methodName'];
     $params = $call['params'];
@@ -131,7 +133,7 @@ function xmlrpc_server_multicall($xmlrpc_server, $methodcalls) {
         'faultString' => $result->message
       );
     } else {
-      $return[] = array($result);
+      $return[] = $result;
     }
   }
   return $return;

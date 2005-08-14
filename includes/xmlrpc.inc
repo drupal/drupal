@@ -1,5 +1,5 @@
 <?php
-// $Id: xmlrpc.inc,v 1.20 2005/08/11 12:57:41 dries Exp $
+// $Id: xmlrpc.inc,v 1.21 2005/08/14 09:53:40 dries Exp $
 
 /*
   Drupal XML-RPC library. Based on the IXR - The Incutio XML-RPC Library - (c) Incutio Ltd 2002-2005
@@ -120,9 +120,6 @@ function xmlrpc_message_parse(&$xmlrpc_message) {
   xml_set_character_data_handler($xmlrpc_message->_parser, 'xmlrpc_message_cdata');
   xmlrpc_message_set($xmlrpc_message);
   if (!xml_parse($xmlrpc_message->_parser, $xmlrpc_message->message)) {
-    /* die(sprintf('XML error: %s at line %d',
-      xml_error_string(xml_get_error_code($xmlrpc_message->_parser)),
-      xml_get_current_line_number($xmlrpc_message->_parser))); */
     return FALSE;
   }
   xml_parser_free($xmlrpc_message->_parser);
@@ -392,22 +389,19 @@ function xmlrpc() {
  *    An array of calls. Each call is an array, where the first element
  *    is the method name, further elements are the arguments.
  * @return
+ *    An array of results.
  */
 function xmlrpc_multicall() {
   $args = func_get_args();
   $url = $args[0];
-  $client = xmlrpc_client_multicall($url);
   foreach ($args[1] as $call) {
     $method = array_shift($call);
     $calls[] = array(
       'methodName' => $method,
-      'params' => $args
+      'params' => $call
     );
   }
-  $result = xmlrpc($url, 'system.multicall', $calls);
-//    $result = xmlrpc_client_multicall_query($client);
-//    $results[$method] = ($result === FALSE) ? xmlrpc_error() : $result;
-//    return $results;
+  return xmlrpc($url, 'system.multicall', $calls);
 }
 
 /**
