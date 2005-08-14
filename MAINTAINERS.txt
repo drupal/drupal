@@ -20,10 +20,6 @@ BLOG API
 M: James Walker <walkah@walkah.net>
 S: maintained
 
-CODING STYLE CHECKER
-M: Alexander Schwartz <alexander.schwartz@gmx.net>
-S: maintained
-
 DISTRIBUTED AUTHENTICATION MODULES
 M: Moshe Weitzman <weitzman@tejasa.com>
 S: maintained
@@ -50,6 +46,10 @@ S: maintained
 
 STATISTICS MODULE
 M: Jeremy Andrews <jeremy@kerneltrap.com>
+S: maintained
+
+XML-RPC SERVER/CLIENT
+M: Károly Négyesi <chx@mail.tvnet.hu>
 S: maintained
 
 DEBIAN PACKAGE
