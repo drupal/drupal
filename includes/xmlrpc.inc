@@ -47,7 +47,7 @@ function xmlrpc_value_calculate_type(&$xmlrpc_value) {
       $xmlrpc_value->data = get_object_vars($xmlrpc_value->data);
       return 'struct';
     default:
-      return string;
+      return 'string';
   }
 }
 
