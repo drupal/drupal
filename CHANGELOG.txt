@@ -1,3 +1,7 @@
+Drupal 4.5.5, 2005-08-15
+------------------------
+- fixed bugs, including a critical "arbitrary PHP code execution" bug.
+
 Drupal 4.5.4, 2005-06-29
 ------------------------
 - fixed bugs, including two critical "arbitrary PHP code execution" bugs.
