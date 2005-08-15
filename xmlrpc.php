@@ -11,8 +11,5 @@ include_once 'includes/common.inc';
 include_once 'includes/xmlrpc.inc';
 include_once 'includes/xmlrpcs.inc';
 
-$functions = module_invoke_all('xmlrpc');
-
-$server = new xmlrpc_server($functions);
-
+xmlrpc_server(module_invoke_all('xmlrpc'));
 ?>
