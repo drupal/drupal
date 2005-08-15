@@ -38,6 +38,10 @@ function drupal_get_breadcrumb() {
   return $breadcrumb;
 }
 
+function drupal_add_link($attributes) {
+  drupal_set_html_head('<link'. drupal_attributes($attributes) ." />\n");
+}
+
 /**
  * Add output to the head tag of the HTML page.
  */
