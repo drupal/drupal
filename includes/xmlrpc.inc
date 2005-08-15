@@ -1,5 +1,5 @@
 <?php
-// $Id: xmlrpc.inc,v 1.21 2005/08/14 09:53:40 dries Exp $
+// $Id: xmlrpc.inc,v 1.22 2005/08/15 11:47:09 dries Exp $
 
 /*
   Drupal XML-RPC library. Based on the IXR - The Incutio XML-RPC Library - (c) Incutio Ltd 2002-2005
@@ -49,7 +49,7 @@ function xmlrpc_value_calculate_type(&$xmlrpc_value) {
       $xmlrpc_value->data = get_object_vars($xmlrpc_value->data);
       return 'struct';
     default:
-      return string;
+      return 'string';
   }
 }
 
