@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.223 2005/07/31 10:12:47 dries Exp $
+// $Id: system.module,v 1.224 2005/08/16 18:06:18 dries Exp $
 
 /**
  * @file
@@ -18,7 +18,7 @@ function system_help($section) {
     case 'admin/settings':
       return t('<p>General configuration options for your site. Set up the name of the site, e-mail address used in mail-outs, clean URL options, caching, etc.</p>');
     case 'admin/themes':
-      return t('<p>Select which themes are available to your users and specify the default theme. To configure site-wide display settings, click the "configure" task above. Alternately, to override these settings in a specific theme, click the "configure" link for the corresponding theme.</p>');
+      return t('<p>Select which themes are available to your users and specify the default theme. To configure site-wide display settings, click the "configure" task above. Alternately, to override these settings in a specific theme, click the "configure" link for the corresponding theme.  Note that different themes may have different regions available for rendering content like blocks.  If you want consistency in what your users see, you may wish to enable only one theme.</p>');
     case 'admin/themes/settings':
       return t('<p>These options control the default display settings for your entire site, across all themes. Unless they have been overridden by a specific theme, these settings will be used.</p>');
     case 'admin/themes/settings/'. arg(3):
@@ -328,15 +328,21 @@ function system_theme_data() {
 
     // Add templates to the site listing
     foreach (call_user_func($engine->name . '_templates') as $template) {
-      $template->template = TRUE;
-      $template->name = basename(dirname($template->filename));
-      $template->owner = $engine->filename;
-      $template->prefix = $engine->name;
-      // do not double-insert templates with theme files in their directory
+      // Do not double-insert templates with theme files in their directory,
+      // but do register their engine data.
       if (array_key_exists($template->name, $themes)) {
-        continue;
+        $themes[$template->name]->template = TRUE;
+        $themes[$template->name]->owner = $engine->filename;
+        $themes[$template->name]->prefix = $engine->name;
       }
-      $themes[$template->name] = $template;
+      else {
+        $template->template = TRUE;
+        $template->name = basename(dirname($template->filename));
+        $template->owner = $engine->filename;
+        $template->prefix = $engine->name;
+
+        $themes[$template->name] = $template;
+      }
     }
   }
 
@@ -366,6 +372,57 @@ function system_theme_data() {
   }
 
   return $themes;
+}
+
+/**
+ * Get a list of available regions from a specified theme.
+ *
+ * @param $theme
+ *   The name of a theme.
+ * @return
+ *   An array of regions in the form $region['name'] = 'description'.
+ */
+function system_region_list($theme) {
+  static $list = array();
+
+  if(!array_key_exists($theme, $list)) {
+
+    $themes = list_themes();
+
+    if (strpos($themes[$theme]->filename, '.css')) {
+      // File is a style, which can't have its own regions; use its theme instead.
+      $theme = basename(dirname($themes[$theme]->description));
+    }
+    if (file_exists($file = dirname($themes[$theme]->filename) .'/' . $themes[$theme]->name . '.theme')) {
+      include_once($file);
+    }
+
+    $regions = function_exists($theme . '_regions') ? call_user_func($theme . '_regions') : array();
+    if (strpos($themes[$theme]->description, '.engine')) {
+      // File is a template; include its engine's regions.
+      include_once($themes[$theme]->description);
+      $theme_engine = basename($themes[$theme]->description, '.engine');
+      $engine_regions = function_exists($theme_engine . '_regions') ? call_user_func($theme_engine . '_regions') : array();
+      $regions = array_merge($engine_regions, $regions);
+    }
+
+    $list[$theme] = $regions;
+  }
+
+  return $list[$theme];
+}
+
+/**
+ * Get the name of the default region for a given theme.
+ *
+ * @param $theme
+ *   The name of a theme.
+ * @return
+ *   A string that is the region name.
+ */
+function system_default_region($theme) {
+  $regions = array_keys(system_region_list($theme));
+  return $regions[0];
 }
 
 /**
@@ -506,6 +563,10 @@ function system_listing_save($edit = array()) {
       if (($edit['type'] == 'theme') && ($edit['theme_default'] == $name)) {
         $status = 1;
       }
+      // If status is being set to 1 from 0, initialize block data for this theme if necessary.
+      if (($status == 1) && db_num_rows(db_query("SELECT status FROM {system} WHERE type = '%s' AND name = '%s' AND status = 0", $edit['type'], $name))) {
+        system_initialize_theme_blocks($name);
+      }
 
       db_query("UPDATE {system} SET status = %d, throttle = %d WHERE type = '%s' AND name = '%s'", $status, $edit['throttle'][$name], $edit['type'], $name);
     }
@@ -518,6 +579,31 @@ function system_listing_save($edit = array()) {
 
     drupal_set_message(t('The configuration options have been saved.'));
     drupal_goto($_GET['q']);
+  }
+}
+/**
+ * Assign an initial, default set of blocks for a theme.  This function is called the first
+ * time a new theme is enabled.  The new theme gets a copy of the default theme's blocks,
+ * with the difference that if a particular region isn't available in the new theme, the block
+ * is assigned instead to the new theme's default region.
+ *
+ * @param $theme
+ *   The name of a theme.
+ */
+function system_initialize_theme_blocks($theme) {
+  $default_theme = variable_get('theme_default', 'bluemarine');
+  $regions = system_region_list($theme);
+  // Initialize theme's blocks if none already registered.
+  if (!(db_num_rows(db_query("SELECT module FROM {blocks} WHERE theme = '%s'", $theme)))) {
+    $result = db_query("SELECT * FROM {blocks} WHERE theme = '%s'", $default_theme);
+    while($block = db_fetch_array($result)) {
+      // If the region isn't supported by the theme, assign the block to the theme's default region.
+      if (!array_key_exists($block['region'], $regions)) {
+        $block['region'] = system_default_region($theme);
+      }
+      db_query("INSERT INTO {blocks} (module, delta, theme, status, weight, region, visibility, pages, custom, throttle) VALUES ('%s', '%s', '%s', %d, %d, '%s', %d, '%s', %d, %d)",
+          $block['module'], $block['delta'], $theme, $block['status'], $block['weight'], $block['region'], $block['visibility'], $block['pages'], $block['custom'], $block['throttle']);
+    }
   }
 }
 

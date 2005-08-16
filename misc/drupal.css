@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.111 2005/07/29 06:59:29 unconed Exp $ */
+/* $Id: drupal.css,v 1.112 2005/08/16 18:06:18 dries Exp $ */
 
 /*
 ** HTML elements
@@ -86,6 +86,12 @@ td.menu-disabled {
 */
 .breadcrumb {
   padding-bottom: .5em
+}
+.block-region {
+  background-color: #ffff66;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  padding: 3px;
 }
 .block ul {
   margin: 0;
@@ -343,7 +349,6 @@ tr.odd .form-item, tr.even .form-item {
   font-style: normal;
   text-decoration: line-through;
 }
-
 #node-admin-filter ul {
   list-style-type: none;
   padding: 0px;
@@ -618,3 +623,4 @@ html.js fieldset.collapsible legend a {
 html.js fieldset.collapsed legend a {
   background-image: url('menu-collapsed.png');
 }
+

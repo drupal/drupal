@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.252 2005/08/11 12:57:41 dries Exp $
+// $Id: theme.inc,v 1.253 2005/08/16 18:06:18 dries Exp $
 
 /**
  * @file
@@ -798,7 +798,7 @@ function theme_box($title, $content, $region = 'main') {
  *
  * @param $block
  *   An object populated with fields from the "blocks" database table
- *   ($block->module, $block->delta, $block->region, ...) and fields returned by
+ *   ($block->module, $block->delta ...) and fields returned by
  *   <i>module</i>_block('view') ($block->subject, $block->content, ...).
  * @return
  *   A string containing the block output.
@@ -945,6 +945,10 @@ function theme_blocks($region) {
       $output .= theme('block', $block);
     }
   }
+
+  // Add any content assigned to this region through drupal_set_content() calls.
+  $output .= drupal_get_content($region);
+
   return $output;
 }
 

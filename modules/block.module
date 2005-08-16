@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.176 2005/08/07 15:30:03 dries Exp $
+// $Id: block.module,v 1.177 2005/08/16 18:06:18 dries Exp $
 
 /**
  * @file
@@ -13,8 +13,8 @@ function block_help($section) {
   switch ($section) {
     case 'admin/help#block':
       return t('
-<p>Blocks are the boxes visible in the sidebar(s) of your web site. These are usually generated automatically by modules (e.g. recent forum topics), but you can also create your own blocks.</p>
-<p>The sidebar each block appears in depends on both which theme you are using (some are left-only, some right, some both), and on the settings in block management.</p>
+<p>Blocks are the boxes visible in the sidebar(s) of your web site and other regions. These are usually generated automatically by modules (e.g. recent forum topics), but you can also create your own blocks.</p>
+<p>The region each block appears in depends on both which theme you are using (some are left-only, some right, some both, and some may offer other regions), and on the settings in block management.</p>
 <p>The block management screen lets you specify the vertical sort-order of the blocks within a sidebar. You do this by assigning a weight to each block. Lighter blocks (smaller weight) "float up" towards the top of the sidebar. Heavier ones "sink down" towards the bottom of it.</p>
 <p>A block\'s visibility depends on:</p>
 <ul>
@@ -31,8 +31,8 @@ function block_help($section) {
       return t('Controls the boxes that are displayed around the main content.');
     case 'admin/block':
       return t("
-<p>Blocks are the boxes in the left and right side bars of the web site. They are made available by modules or created manually.</p>
-<p>Only enabled blocks are shown. You can position the blocks by deciding which side of the page they will show up on (sidebar) and in which order they appear (weight).</p>
+<p>Blocks are content rendered into regions, often boxes in the left and right side bars of the web site. They are made available by modules or created manually.</p>
+<p>Only enabled blocks are shown. You can position the blocks by deciding which area of the page they will show up on (e.g., a sidebar) and in which order they appear (weight).  Highlighting on this page shows the regions where content will be rendered.</p>
 <p>If you want certain blocks to disable themselves temporarily during high server loads, check the 'Throttle' box. You can configure the auto-throttle on the <a href=\"%throttle\">throttle configuration page</a> after having enabled the throttle module.</p>
 ", array('%throttle' => url('admin/settings/throttle')));
     case 'admin/block/add':
@@ -71,6 +71,18 @@ function block_menu($may_cache) {
       'access' => user_access('administer blocks'),
       'callback' => 'block_box_add',
       'type' => MENU_LOCAL_TASK);
+    foreach (list_themes() as $key => $theme) {
+      if ($theme->status) {
+        if ($key == variable_get('theme_default', 'bluemarine')) {
+          $items[] = array('path' => 'admin/block/list/' . $key, 'title' => t('%key settings', array('%key' => $key)),
+            'access' => user_access('administer blocks'), 'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
+        }
+        else {
+          $items[] = array('path' => 'admin/block/list/' . $key, 'title' => t('%key settings', array('%key' => $key)),
+            'access' => user_access('administer blocks'), 'type' => MENU_LOCAL_TASK);
+        }
+      }
+    }
   }
 
   return $items;
@@ -112,8 +124,8 @@ function block_block($op = 'list', $delta = 0, $edit = array()) {
 function block_admin_save($edit) {
   foreach ($edit as $module => $blocks) {
     foreach ($blocks as $delta => $block) {
-      db_query("UPDATE {blocks} SET region = %d, status = %d, weight = %d, throttle = %d WHERE module = '%s' AND delta = '%s'",
-                $block['region'], $block['status'], $block['weight'], $block['throttle'], $module, $delta);
+      db_query("UPDATE {blocks} SET status = %d, weight = %d, region = '%s', throttle = %d WHERE module = '%s' AND delta = '%s' AND theme = '%s'",
+                $block['status'], $block['weight'], $block['region'], $block['throttle'], $module, $delta, $block['theme']);
     }
   }
 }
@@ -129,12 +141,18 @@ function block_admin_save($edit) {
  *   Blocks currently exported by modules, sorted by $order_by.
  */
 function _block_rehash($order_by = array('weight')) {
-  $result = db_query('SELECT * FROM {blocks} ');
+  global $theme_key;
+
+  if (empty($theme_key)) {
+    init_theme();
+  }
+
+  $result = db_query("SELECT * FROM {blocks} WHERE theme = '%s'", $theme_key);
   while ($old_block = db_fetch_object($result)) {
     $old_blocks[$old_block->module][$old_block->delta] = $old_block;
   }
 
-  db_query('DELETE FROM {blocks} ');
+  db_query("DELETE FROM {blocks} WHERE theme = '%s'", $theme_key);
 
   foreach (module_list() as $module) {
     $module_blocks = module_invoke($module, 'block', 'list');
@@ -142,6 +160,7 @@ function _block_rehash($order_by = array('weight')) {
       foreach ($module_blocks as $delta => $block) {
         $block['module'] = $module;
         $block['delta']  = $delta;
+        // If previously written to database, load values.
         if ($old_blocks[$module][$delta]) {
           $block['status'] = $old_blocks[$module][$delta]->status;
           $block['weight'] = $old_blocks[$module][$delta]->weight;
@@ -151,15 +170,19 @@ function _block_rehash($order_by = array('weight')) {
           $block['custom'] = $old_blocks[$module][$delta]->custom;
           $block['throttle'] = $old_blocks[$module][$delta]->throttle;
         }
+        // Otherwise, use any set values, or else substitute defaults.
         else {
-          $block['status'] = $block['weight'] = $block['region'] = $block['custom'] = 0;
-          $block['pages'] = '';
+          $properties = array ('status' => 0, 'weight' => 0, 'region' => 'left', 'pages' => '', 'custom' => 0);
+          foreach ($properties as $property => $default) {
+            if (!isset ($block[$property])) {
+              $block[$property] = $default;
+            }
+          }
         }
 
         // reinsert blocks into table
-        db_query("INSERT INTO {blocks} (module, delta, status, weight, region, visibility, pages, custom, throttle) VALUES ('%s', '%s', %d, %d, %d, %d, '%s', %d, %d)",
-          $block['module'], $block['delta'], $block['status'], $block['weight'], $block['region'], $block['visibility'], $block['pages'], $block['custom'], $block['throttle']);
-
+        db_query("INSERT INTO {blocks} (module, delta, theme, status, weight, region, visibility, pages, custom, throttle) VALUES ('%s', '%s', '%s', %d, %d, '%s', %d, '%s', %d, %d)",
+          $block['module'], $block['delta'], $theme_key, $block['status'], $block['weight'], $block['region'], $block['visibility'], $block['pages'], $block['custom'], $block['throttle']);
         $blocks[] = $block;
 
         // build array to sort on
@@ -178,17 +201,32 @@ function _block_rehash($order_by = array('weight')) {
  * Prepare the main block administration form.
  */
 function block_admin_display() {
+  global $theme_key, $custom_theme;
+
+  // If non-default theme configuration has been selected, set the custom theme.
+  if (arg(3)) {
+    $custom_theme = arg(3);
+    init_theme();
+  }
+
   $blocks = _block_rehash();
 
-  $header = array(t('Block'), t('Enabled'), t('Weight'), t('Sidebar'));
+  $block_regions = system_region_list($theme_key);
+
+  // Highlight regions on page, to provide visual reference.
+  foreach ($block_regions as $key => $value) {
+    drupal_set_content($key, '<div class="block-region">' . $value . '</div>');
+  }
+
+  $header = array(t('Block'), t('Enabled'), t('Weight'), t('Placement'));
   if (module_exist('throttle')) {
     $header[] = t('Throttle');
   }
   $header[] = array('data' => t('Operations'), 'colspan' => 2);
 
-  $left = array();
-  $right = array();
+  $regions = array();
   $disabled = array();
+
   foreach ($blocks as $block) {
     if ($block['module'] == 'block') {
       $delete = l(t('delete'), 'admin/block/delete/'. $block['delta']);
@@ -198,10 +236,10 @@ function block_admin_display() {
     }
 
     $row = array(array('data' => $block['info'], 'class' => 'block'),
-      form_checkbox(NULL, $block['module'] .']['. $block['delta'] .'][status', 1, $block['status']),
+      form_checkbox(NULL, $block['module'] .']['. $block['delta'] .'][status', 1, $block['status']) . form_hidden($block['module'] .']['. $block['delta'] .'][theme', $theme_key),
       form_weight(NULL, $block['module'] .']['. $block['delta'] .'][weight', $block['weight']),
-      form_radios(NULL, $block['module'] .']['. $block['delta'] .'][region', $block['region'],
-      array(t('left'), t('right'))));
+      form_select(NULL, $block['module'] .']['. $block['delta'] .'][region', isset($block['region']) ? $block['region'] : system_default_region(),
+      $block_regions));
 
     if (module_exist('throttle')) {
       $row[] = form_checkbox(NULL, $block['module'] .']['. $block['delta'] .'][throttle', 1, $block['throttle']);
@@ -209,11 +247,10 @@ function block_admin_display() {
     $row[] = l(t('configure'), 'admin/block/configure/'. $block['module'] .'/'. $block['delta']);
     $row[] = $delete;
     if ($block['status']) {
-      if ($block['region'] == 0) {
-        $left[] = $row;
-      }
-      if ($block['region'] == 1) {
-        $right[] = $row;
+      foreach ($block_regions as $key => $value) {
+        if ($block['region'] == $key) {
+          $regions[$key][] = $row;
+        }
       }
     }
     else if ($block['region'] <= 1) {
@@ -222,13 +259,13 @@ function block_admin_display() {
   }
 
   $rows = array();
-  if (count($left)) {
-    $rows[] = array(array('data' => t('Left sidebar'), 'class' => 'region', 'colspan' => (module_exist('throttle') ? 7 : 6)));
-    $rows = array_merge($rows, $left);
-  }
-  if (count($right)) {
-    $rows[] = array(array('data' => t('Right sidebar'), 'class' => 'region', 'colspan' => (module_exist('throttle') ? 7 : 6)));
-    $rows = array_merge($rows, $right);
+
+  if (count($regions)) {
+    foreach ($regions as $region => $row) {
+      $region_title = t('%region', array ('%region' => ucfirst($block_regions[$region])));
+      $rows[] = array(array('data' => $region_title, 'class' => 'region', 'colspan' => (module_exist('throttle') ? 7 : 6)));
+      $rows = array_merge($rows, $row);
+    }
   }
   if (count($disabled)) {
     $rows[] = array(array('data' => t('Disabled'), 'class' => 'region', 'colspan' => (module_exist('throttle') ? 7 : 6)));
@@ -237,7 +274,7 @@ function block_admin_display() {
   $output = theme('table', $header, $rows, array('id' => 'blocks'));
   $output .= form_submit(t('Save blocks'));
 
-  return form($output, 'post', url('admin/block'));
+  return form($output, 'post', arg(3) ? url('admin/block/list/' . $theme_key) : url('admin/block'));
 }
 
 function block_box_get($bid) {
@@ -412,39 +449,31 @@ function block_user($type, $edit, &$user, $category = NULL) {
   }
 }
 
- /**
-  * Return all blocks in the specied region for the current user. You may
-  * use this function to implement variable block regions.  The default
-  * regions are 'left', 'right' and 'all', where 'all' means both left and
-  * right.
-  *
-  * @param $region
-  *   This is a string which describes in a human readable form which region
-  *   you need.
-  *
-  * @param $regions
-  *   This is an optional array and contains map(s) from the string $region to
-  *   the numerical region value(s) in the blocks table. See default value for
-  *   examples.
-  *
-  * @return
-  *   An array of block objects, indexed with <i>module</i>_<i>delta</i>.
-  *   If you are displaying your blocks in one or two sidebars, you may check
-  *   whether this array is empty to see how many columns are going to be
-  *   displayed.
-  *
-  * @todo
-  *   Add a proper primary key (bid) to the blocks table so we don't have
-  *   to mess around with this <i>module</i>_<i>delta</i> construct.
-  *   Currently, the blocks table has no primary key defined!
-  */
-function block_list($region, $regions = array('left' => 0, 'right' => 1, 'all' => '0, 1')) {
-  global $user;
+/**
+ * Return all blocks in the specified region for the current user.
+ *
+ * @param $region
+ *   The name of a region.
+ *
+ * @return
+ *   An array of block objects, indexed with <i>module</i>_<i>delta</i>.
+ *   If you are displaying your blocks in one or two sidebars, you may check
+ *   whether this array is empty to see how many columns are going to be
+ *   displayed.
+ *
+ * @todo
+ *   Add a proper primary key (bid) to the blocks table so we don't have
+ *   to mess around with this <i>module</i>_<i>delta</i> construct.
+ *   Currently, the blocks table has no primary key defined!
+ */
+function block_list($region) {
+  global $user, $theme_key;
+
   static $blocks = array();
 
   if (!isset($blocks[$region])) {
     $blocks[$region] = array();
-    $result = db_query("SELECT * FROM {blocks} WHERE status = 1 AND region IN (%s) ORDER BY weight, module", $regions[$region]);
+    $result = db_query("SELECT * FROM {blocks} WHERE theme = '%s' AND status = 1 AND region = '%s' ORDER BY weight, module", $theme_key, $region);
     while ($block = db_fetch_array($result)) {
       // Use the user's block visibility setting, if necessary
       if ($block['custom'] != 0) {

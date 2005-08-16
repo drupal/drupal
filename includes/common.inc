@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.466 2005/08/11 12:57:41 dries Exp $
+// $Id: common.inc,v 1.467 2005/08/16 18:06:18 dries Exp $
 
 /**
  * @file
@@ -23,6 +23,50 @@ define('SAVED_UPDATED', 2);
  * Return status for saving which deleted an existing item.
  */
 define('SAVED_DELETED', 3);
+
+/**
+ * Set content for a specified region.
+ *
+ * @param $region
+ *   Page region the content is assigned to.
+ *
+ * @param $data
+ *   Content to be set.
+ */
+function drupal_set_content($region = null, $data = null) {
+  static $content = array();
+
+  if (!is_null($region) && !is_null($data)) {
+    $content[$region][] = $data;
+  }
+  return $content;
+}
+
+/**
+ * Get assigned content.
+ *
+ * @param $region
+ *   A specified region to fetch content for.  If null, all regions will be returned.
+ *
+ * @param $delimiter
+ *   Content to be inserted between exploded array elements.
+ */
+function drupal_get_content($region = null, $delimiter = ' ') {
+  $content = drupal_set_content();
+  if (isset($region)) {
+    if (is_array($content[$region])) {
+      return implode ($delimiter, $content[$region]);
+    }
+  }
+  else {
+    foreach (array_keys($content) as $region) {
+      if (is_array($content[$region])) {
+        $content[$region] = implode ($delimiter, $content[$region]);
+      }
+    }
+    return $content;
+  }
+}
 
 /**
  * Set the breadcrumb trail for the current page.

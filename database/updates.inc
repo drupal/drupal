@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.125 2005/08/11 12:57:41 dries Exp $
+// $Id: updates.inc,v 1.126 2005/08/16 18:06:18 dries Exp $
 
 /**
  * @file
@@ -120,7 +120,8 @@ $sql_updates = array(
   "2005-05-22" => "update_141",
   "2005-07-29" => "update_142",
   "2005-07-30" => "update_143",
-  "2005-08-08" => "update_144"
+  "2005-08-08" => "update_144",
+  "2005-08-15" => "update_145"
 );
 
 function update_32() {
@@ -2547,6 +2548,28 @@ function update_144() {
     $ret[] = update_sql("UPDATE {node} SET type = type_old");
     $ret[] = update_sql("ALTER TABLE {node} DROP type_old");
   }
+  return $ret;
+}
+
+function update_145() {
+  $default_theme = variable_get('theme_default', 'bluemarine');
+  $ret = array();
+  $ret[] = update_sql("ALTER TABLE {blocks} CHANGE region region varchar(64) default 'left' NOT NULL");
+  $ret[] = update_sql("ALTER TABLE {blocks} ADD theme varchar(255) NOT NULL default ''");
+
+  // Intialize block data for default theme
+  $ret[] = update_sql("UPDATE {blocks} SET region = 'left' WHERE region = '0'");
+  $ret[] = update_sql("UPDATE {blocks} SET region = 'right' WHERE region = '1'");
+  db_query("UPDATE {blocks} SET theme = '%s'", $default_theme);
+
+  // Initialze block data for other enabled themes.
+  $themes = list_themes();
+  foreach (array_keys($themes) as $theme) {
+    if (($theme != $default_theme) && $themes[$theme]->status == 1) {
+      system_initialize_theme_blocks($theme);
+    }
+  }
+
   return $ret;
 }
 

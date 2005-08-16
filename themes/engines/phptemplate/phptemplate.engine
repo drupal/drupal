@@ -1,5 +1,5 @@
 <?php
-// $Id: phptemplate.engine,v 1.12 2005/08/10 20:55:59 dries Exp $
+// $Id: phptemplate.engine,v 1.13 2005/08/16 18:06:18 dries Exp $
 
 /**
  * @file
@@ -15,6 +15,22 @@ function phptemplate_init($template) {
 
 function phptemplate_templates($directory = 'themes') {
   return system_listing('^page\.tpl\.php$', $directory, 'filename');
+}
+
+/**
+ * Declare the available regions implemented by this engine.
+ *
+ * @return
+ *  An array of regions.  The first array element will be used as the default region for themes.
+ */
+function phptemplate_regions() {
+  return array(
+       'left' => t('left sidebar'),
+       'right' => t('right sidebar'),
+       'content' => t('content'),
+       'header' => t('header'),
+       'footer' => t('footer')
+  );
 }
 
 /**
@@ -68,6 +84,7 @@ function _phptemplate_callback($hook, $variables = array(), $file = null) {
  *   A sequential array of variables passed to the theme function.
  */
 function _phptemplate_default_variables($hook, $variables) {
+  global $theme;
   static $count = array();
   $count[$hook] = is_int($count[$hook]) ? $count[$hook] : 1;
   $variables['zebra'] = ($count[$hook] % 2) ? 'odd' : 'even';
@@ -79,7 +96,18 @@ function _phptemplate_default_variables($hook, $variables) {
     $variables['block_zebra'] = ($count['block_counter'][$sidebar_indicator] % 2) ? 'odd' : 'even';
     $variables['block_id'] = $count['block_counter'][$sidebar_indicator]++;
   }
-
+  elseif ($hook == 'page') {
+    $regions = system_region_list($theme);
+    // Load all region content assigned via blocks.
+    foreach (array_keys($regions) as $region) {
+      // Skip blocks in this region that have already been loaded.
+      // This pre-loading is necessary because phptemplate uses variable names different from
+      // the region names, e.g., 'sidebar_left' instead of 'left'.
+      if (!in_array($region, array('left', 'right', 'footer'))) {
+        $variables[$region] .= theme('blocks', $region);
+      }
+    }
+  }
   // Tell all templates where they are located.
   $variables['directory'] = path_to_theme();
 
@@ -128,7 +156,7 @@ function phptemplate_page($content) {
   $layout = 'none';
   global $sidebar_indicator;
   /**
-   * Sidebar_indicator tells the block counting code to count sidebars seperately.
+   * Sidebar_indicator tells the block counting code to count sidebars separately.
    */
   $sidebar_indicator = 'left';
   $sidebar_left = theme('blocks', 'left');
@@ -158,7 +186,7 @@ function phptemplate_page($content) {
     'breadcrumb'          => theme('breadcrumb', drupal_get_breadcrumb()),
     'closure'             => theme('closure'),
     'content'             => '<!-- begin content -->' . $content . '<!-- end content -->',
-    'footer_message'      => variable_get('site_footer', FALSE),
+    'footer_message'      => variable_get('site_footer', FALSE) . "\n" . theme('blocks', 'footer'),
     'head'                => drupal_get_html_head(),
     'head_title'          => implode(' | ', $head_title),
     'help'                => theme('help'),

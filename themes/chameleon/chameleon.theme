@@ -1,5 +1,5 @@
 <?php
-// $Id: chameleon.theme,v 1.32 2005/08/07 14:55:17 dries Exp $
+// $Id: chameleon.theme,v 1.33 2005/08/16 18:06:18 dries Exp $
 
 /**
  * @file
@@ -14,6 +14,13 @@ function chameleon_features() {
        'toggle_slogan',
        'toggle_primary_links',
        'toggle_secondary_links');
+}
+
+function chameleon_regions() {
+  return array(
+       'left' => t('left sidebar'),
+       'right' => t('right sidebar')
+  );
 }
 
 function chameleon_page($content) {
