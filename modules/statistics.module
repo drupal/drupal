@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.202 2005/08/01 05:14:05 dries Exp $
+// $Id: statistics.module,v 1.203 2005/08/16 19:48:04 dries Exp $
 
 /**
  * @file
@@ -250,7 +250,7 @@ function statistics_recent_hits($type = 'all', $id = 0) {
  * Menu callback; presents the "top pages" page.
  */
 function statistics_top_pages() {
-  $sql = "SELECT COUNT(path) AS hits, path, title, AVG(timer) AS average_time, SUM(timer) AS total_time FROM {accesslog} GROUP BY path, title";
+  $sql = "SELECT COUNT(path) AS hits, path, title, AVG(timer) AS average_time, SUM(timer) AS total_time FROM {accesslog} GROUP BY path";
   $sql_cnt = "SELECT COUNT(DISTINCT(path)) FROM {accesslog}";
 
   $header = array(
