@@ -54,7 +54,10 @@
       </form>
       <?php endif; ?>
     </td>
-    </tr>
+  </tr>
+  <tr>
+    <td colspan="2"><div><?php print $header ?></div></td>
+  </tr>
 </table>
 
 <table id="content" border="0" cellpadding="15" cellspacing="0" width="100%">

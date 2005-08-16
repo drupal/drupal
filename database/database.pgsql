@@ -116,9 +116,10 @@ CREATE TABLE authmap (
 CREATE TABLE blocks (
   module varchar(64) NOT NULL default '',
   delta varchar(32) NOT NULL default '0',
+  theme varchar(255) NOT NULL default '',
   status smallint NOT NULL default '0',
   weight smallint NOT NULL default '0',
-  region smallint NOT NULL default '0',
+  region varchar(64) DEFAULT 'left' NOT NULL,
   custom smallint NOT NULL default '0',
   throttle smallint NOT NULL default '0',
   visibility smallint NOT NULL default '0',
@@ -798,8 +799,8 @@ INSERT INTO permission VALUES (1,'access content',0);
 INSERT INTO role (name) VALUES ('authenticated user');
 INSERT INTO permission VALUES (2,'access comments, access content, post comments, post comments without approval',0);
 
-INSERT INTO blocks(module,delta,status) VALUES('user', 0, 1);
-INSERT INTO blocks(module,delta,status) VALUES('user', 1, 1);
+INSERT INTO blocks(module,delta,theme,status) VALUES('user', 0, 'bluemarine', 1);
+INSERT INTO blocks(module,delta,theme,status) VALUES('user', 1, 'bluemarine', 1);
 
 INSERT INTO node_access VALUES (0, 0, 'all', 1, 0, 0);
 

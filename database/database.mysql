@@ -121,9 +121,10 @@ CREATE TABLE authmap (
 CREATE TABLE blocks (
   module varchar(64) DEFAULT '' NOT NULL,
   delta varchar(32) NOT NULL default '0',
+  theme varchar(255) NOT NULL default '',
   status tinyint(2) DEFAULT '0' NOT NULL,
   weight tinyint(1) DEFAULT '0' NOT NULL,
-  region tinyint(1) DEFAULT '0' NOT NULL,
+  region varchar(64) DEFAULT 'left' NOT NULL,
   custom tinyint(2) DEFAULT '0' NOT NULL,
   throttle tinyint(1) DEFAULT '0' NOT NULL,
   visibility tinyint(1) DEFAULT '0' NOT NULL,
@@ -805,8 +806,8 @@ REPLACE variable SET name='update_start', value='s:10:"2005-03-21";';
 
 REPLACE variable SET name='theme_default', value='s:10:"bluemarine";';
 
-REPLACE blocks SET module = 'user', delta = '0', status = '1';
-REPLACE blocks SET module = 'user', delta = '1', status = '1';
+REPLACE blocks SET module = 'user', delta = '0', theme = 'bluemarine', status = '1';
+REPLACE blocks SET module = 'user', delta = '1', theme = 'bluemarine', status = '1';
 
 INSERT INTO sequences (name, id) VALUES ('menu_mid', 1);
 

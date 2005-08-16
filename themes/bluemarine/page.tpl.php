@@ -30,6 +30,9 @@
       </form><?php } ?>
     </td>
   </tr>
+  <tr>
+    <td colspan="2"><div><?php print $header ?></div></td>
+  </tr>
 </table>
 
 <table border="0" cellpadding="0" cellspacing="0" id="content">

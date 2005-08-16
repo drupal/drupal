@@ -16,6 +16,13 @@ function chameleon_features() {
        'toggle_secondary_links');
 }
 
+function chameleon_regions() {
+  return array(
+       'left' => t('left sidebar'),
+       'right' => t('right sidebar')
+  );
+}
+
 function chameleon_page($content) {
   $language = $GLOBALS['locale'];
 

@@ -25,6 +25,50 @@ define('SAVED_UPDATED', 2);
 define('SAVED_DELETED', 3);
 
 /**
+ * Set content for a specified region.
+ *
+ * @param $region
+ *   Page region the content is assigned to.
+ *
+ * @param $data
+ *   Content to be set.
+ */
+function drupal_set_content($region = null, $data = null) {
+  static $content = array();
+
+  if (!is_null($region) && !is_null($data)) {
+    $content[$region][] = $data;
+  }
+  return $content;
+}
+
+/**
+ * Get assigned content.
+ *
+ * @param $region
+ *   A specified region to fetch content for.  If null, all regions will be returned.
+ *
+ * @param $delimiter
+ *   Content to be inserted between exploded array elements.
+ */
+function drupal_get_content($region = null, $delimiter = ' ') {
+  $content = drupal_set_content();
+  if (isset($region)) {
+    if (is_array($content[$region])) {
+      return implode ($delimiter, $content[$region]);
+    }
+  }
+  else {
+    foreach (array_keys($content) as $region) {
+      if (is_array($content[$region])) {
+        $content[$region] = implode ($delimiter, $content[$region]);
+      }
+    }
+    return $content;
+  }
+}
+
+/**
  * Set the breadcrumb trail for the current page.
  *
  * @param $breadcrumb

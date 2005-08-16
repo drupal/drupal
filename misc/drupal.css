@@ -87,6 +87,12 @@ td.menu-disabled {
 .breadcrumb {
   padding-bottom: .5em
 }
+.block-region {
+  background-color: #ffff66;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  padding: 3px;
+}
 .block ul {
   margin: 0;
   padding: 0 0 0.25em 1em;
@@ -343,7 +349,6 @@ tr.odd .form-item, tr.even .form-item {
   font-style: normal;
   text-decoration: line-through;
 }
-
 #node-admin-filter ul {
   list-style-type: none;
   padding: 0px;
@@ -618,3 +623,4 @@ html.js fieldset.collapsible legend a {
 html.js fieldset.collapsed legend a {
   background-image: url('menu-collapsed.png');
 }
+
