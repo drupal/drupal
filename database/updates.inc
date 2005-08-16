@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.126 2005/08/16 18:06:18 dries Exp $
+// $Id: updates.inc,v 1.127 2005/08/16 19:54:36 dries Exp $
 
 /**
  * @file
@@ -2474,9 +2474,9 @@ function update_137() {
   elseif ($GLOBALS['db_type'] == 'pgsql') {
     $ret[] = update_sql("ALTER TABLE {locales_source} RENAME location TO location_old");
     $ret[] = update_sql("ALTER TABLE {locales_source} ADD location varchar(255)");
+    $ret[] = update_sql("UPDATE {locales_source} SET location = location_old");
     $ret[] = update_sql("ALTER TABLE {locales_source} ALTER location SET NOT NULL");
     $ret[] = update_sql("ALTER TABLE {locales_source} ALTER location SET DEFAULT ''");
-    $ret[] = update_sql("UPDATE {locales_source} SET location = location_old");
     $ret[] = update_sql("ALTER TABLE {locales_source} DROP location_old");
   }
   return $ret;
