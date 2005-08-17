@@ -24,6 +24,8 @@ Drupal x.x.x, xxxx-xx-xx (development version)
 - book module:
     * added Docbook-like XML export functionality.
     * added OPML export functionality.
+- block system:
+    * extended support for theme-specific block regions.
 - syndication:
     * made the aggregator module parse Atom feeds.
 - XML-RPC:
