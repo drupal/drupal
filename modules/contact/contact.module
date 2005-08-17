@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.20 2005/08/11 07:33:21 dries Exp $
+// $Id: contact.module,v 1.21 2005/08/17 00:55:50 unconed Exp $
 
 /**
  * @file
@@ -68,7 +68,7 @@ function contact_settings() {
  */
 function contact_user($type, $edit, &$user, $category = NULL) {
   if ($type == 'form' && $category == 'account') {
-    return array(array('title' => t('Contact settings'), 'data' => form_checkbox(t('Personal contact form'), 'contact', 1, $edit['contact'], t('Allow other users to contact you by e-mail via <a href="%url">your personal contact form</a>. Note that your e-mail address is not made public and that privileged users such as site administrators are able to contact you even if you choose not to enable this feature.', array('%url' => "user/$user->uid/contact"))), 'weight' => 2));
+    return array(array('title' => t('Contact settings'), 'data' => form_checkbox(t('Personal contact form'), 'contact', 1, $edit['contact'], t('Allow other users to contact you by e-mail via <a href="%url">your personal contact form</a>. Note that your e-mail address is not made public and that privileged users such as site administrators are able to contact you even if you choose not to enable this feature.', array('%url' => url("user/$user->uid/contact")))), 'weight' => 2));
   }
   if ($type == 'validate') {
     return array('contact' => $edit['contact']);
