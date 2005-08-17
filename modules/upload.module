@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.45 2005/08/11 13:02:08 dries Exp $
+// $Id: upload.module,v 1.46 2005/08/17 19:27:03 dries Exp $
 
 /**
  * @file
@@ -380,12 +380,13 @@ function upload_form($node) {
   if (count($node->files)) {
     $output = theme('table', $header, $rows);
   }
+
   if (user_access('upload files')) {
     $output .= form_file(t('Attach new file'), "upload", 40);
     $output .= form_button(t('Attach'), 'fileop');
   }
 
-  return '<div class="attachments">'. form_group_collapsible(t('File attachments'), $output, TRUE, t('Changes made to the attachments are not permanent until you save this post.  The first "listed" file will be included in RSS feeds.')) .'</div>';
+  return '<div class="attachments">'. form_group_collapsible(t('File attachments'), $output, empty($node->files), t('Changes made to the attachments are not permanent until you save this post.  The first "listed" file will be included in RSS feeds.')) .'</div>';
 }
 
 function upload_load($node) {
