@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.150 2005/07/29 20:31:03 unconed Exp $
+// $Id: update.php,v 1.151 2005/08/17 00:49:36 unconed Exp $
 
 /**
  * @file
@@ -72,15 +72,6 @@ function update_page() {
       break;
 
     default:
-      // NOTE: We need the following five lines in order to fix a bug with
-      //       database.mysql (issue #15337).  We should be able to remove
-      //       this work around in the future.
-      $result = db_query("SELECT * FROM {variable} WHERE name = 'update_start' AND value LIKE '%;\"'");
-      if ($variable = db_fetch_object($result)) {
-        $variable->value = unserialize(substr($variable->value, 0, -2) .'";');
-        variable_set('update_start', $variable->value);
-      }
-
       $start = variable_get("update_start", 0);
       $i = 1;
       foreach ($sql_updates as $date => $sql) {
