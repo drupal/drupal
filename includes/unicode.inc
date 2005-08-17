@@ -1,5 +1,5 @@
 <?php
-// $Id: unicode.inc,v 1.2 2005/07/27 01:58:43 unconed Exp $
+// $Id: unicode.inc,v 1.3 2005/08/17 01:25:07 unconed Exp $
 
 define('UNICODE_ERROR', -1);
 define('UNICODE_SINGLEBYTE', 0);
@@ -326,7 +326,6 @@ function drupal_strlen($text) {
 function drupal_strtoupper($text) {
   global $multibyte;
   if ($multibyte == UNICODE_MULTIBYTE) {  
-    //return mb_convert_case($text, MB_CASE_UPPER, 'utf-8');
     return mb_strtoupper($text);
   }
   else {
