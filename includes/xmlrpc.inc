@@ -1,5 +1,5 @@
 <?php
-// $Id: xmlrpc.inc,v 1.22 2005/08/15 11:47:09 dries Exp $
+// $Id: xmlrpc.inc,v 1.23 2005/08/17 15:01:14 dries Exp $
 
 /*
   Drupal XML-RPC library. Based on the IXR - The Incutio XML-RPC Library - (c) Incutio Ltd 2002-2005
@@ -340,25 +340,21 @@ function xmlrpc_base64_get_xml($xmlrpc_base64) {
   return '<base64>'. base64_encode($xmlrpc_base64->data) .'</base64>';
 }
 
-/**
- * Perform an XML-RPC request.
- *
- * @param $url
- *    An absolute URL of the XML-RPC server
- * @param $method
- *    The method to be executed
- * @param ...
- *   A variable number of arguments of the method.
- * @return
- *   The return value of the method on success or FALSE. On FALSE, see
- *   xmlrpc_errno() and xmlrpc_error_msg().
- */
-function xmlrpc() {
+function _xmlrpc() {
   $args = func_get_args();
   $url = array_shift($args);
-  $method = array_shift($args);
+  if (is_array($args[0])) {
+    $method = 'system.multicall';
+    $multicall_args = array();
+    foreach ($args[0] as $call) {
+      $multicall_args[] = array('methodName' => array_shift($call),'params' => $call);
+    }
+    $args = array($multicall_args);
+  }
+  else {
+    $method = array_shift($args);
+  }
   $xmlrpc_request = xmlrpc_request($method, $args);
-//  $request .= "Content-Type: text/xml$r";
   $result = drupal_http_request($url, array("Content-Type" => "text/xml"), 'POST', $xmlrpc_request->xml);
   if ($result->code != 200) {
     xmlrpc_error(-$result->code, $result->error);
@@ -378,30 +374,6 @@ function xmlrpc() {
   }
   // Message must be OK
   return $message->params[0];
-}
-
-/**
- * Perform multiple calls in one request if possible.
- *
- * @param $url
- *    An absolute URL of the XML-RPC server
- * @param $calls
- *    An array of calls. Each call is an array, where the first element
- *    is the method name, further elements are the arguments.
- * @return
- *    An array of results.
- */
-function xmlrpc_multicall() {
-  $args = func_get_args();
-  $url = $args[0];
-  foreach ($args[1] as $call) {
-    $method = array_shift($call);
-    $calls[] = array(
-      'methodName' => $method,
-      'params' => $call
-    );
-  }
-  return xmlrpc($url, 'system.multicall', $calls);
 }
 
 /**
