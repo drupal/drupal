@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.364 2005/08/01 05:14:05 dries Exp $
+// $Id: comment.module,v 1.365 2005/08/17 20:07:35 dries Exp $
 
 /**
  * @file
@@ -1281,16 +1281,14 @@ function comment_moderate() {
 }
 
 function comment_save_settings() {
-  $mode              = db_escape_string($_POST['mode']);
-  $order             = db_escape_string($_POST['order']);
-  $threshold         = db_escape_string($_POST['threshold']);
-  $comments_per_page = db_escape_string($_POST['comments_per_page']);
-
   global $user;
+
   $edit = $_POST['edit'];
-  // this functions perform doubletime: it either saves the
-  // user's comment viewing options, or it handles comment
-  // moderation. let's figure out which one we're using, eh?
+  $mode = $edit['mode'];
+  $order = $edit['order'];
+  $threshold = $edit['threshold'];
+  $comments_per_page = $edit['comments_per_page'];
+
   if ($edit['moderation']) {
     comment_moderate();
   }
@@ -1303,6 +1301,7 @@ function comment_save_settings() {
     $_SESSION['comment_threshold'] = $threshold;
     $_SESSION['comment_comments_per_page'] = $comments_per_page;
   }
+
   drupal_goto('node/'. $edit['nid'] .'#comment');
 }
 
@@ -1468,58 +1467,36 @@ function theme_comment_view($comment, $links = '', $visible = 1) {
   return $output;
 }
 
-function theme_comment_mode_form($mode) {
-
-  $modes = _comment_get_modes();
-  foreach ($modes as $key => $value) {
-    $options .= " <option value=\"$key\"". ($mode == $key ? ' selected="selected"' : '') .">$value</option>\n";
-  }
-
-  return "<select name=\"mode\">$options</select>\n";
-}
-
-function theme_comment_order_form($order) {
-
-  $orders = _comment_get_orders();
-  foreach ($orders as $key=>$value) {
-    $options .= " <option value=\"$key\"". ($order == $key ? ' selected="selected"' : '') .">$value</option>\n";
-  }
-
-  return "<select name=\"order\">$options</select>\n";
-}
-
-function theme_comment_per_page_form($comments_per_page) {
-  foreach (_comment_per_page() as $i) {
-    $options .= " <option value=\"$i\"". ($comments_per_page == $i ? ' selected="selected"' : '') .'>'. t('%a comments per page', array('%a' => $i)) .'</option>';
-  }
-  return "<select name=\"comments_per_page\">$options</select>\n";
-}
-
-function theme_comment_threshold($threshold) {
-  $result = db_query('SELECT fid, filter FROM {moderation_filters} ');
-  $options .= ' <option value="0">'. t('-- threshold --') .'</option>';
-  while ($filter = db_fetch_object($result)) {
-    $filters .= " <option value=\"$filter->fid\"". ($threshold == $filter->fid ? ' selected="selected"' : '') .'>'. $filter->filter .'</option>';
-  }
-
-  if ($filters) {
-    return "<select name=\"threshold\">$filters</select>\n";
-  }
-  else {
-    return "<input type=\"hidden\" name=\"threshold\" value=\"$threshold\" />\n";
-  }
-}
-
 function theme_comment_controls($threshold = 1, $mode = 3, $order = 1, $comments_per_page = 50) {
   static $output;
+  $options    = array();
+  $result     = db_query('SELECT fid, filter FROM {moderation_filters} ');
+  $filters    = array();
+  $filters[0] = t('-- threshold --');
+
+  while($filter = db_fetch_object($result)) {
+    $filters[$filter->fid] = $filter->filter;
+  }
 
   if (!$output) {
-    $output .= theme('comment_mode_form', $mode);
-    $output .= theme('comment_order_form', $order);
-    $output .= theme('comment_per_page_form', $comments_per_page);
-    $output .= theme('comment_threshold', $threshold);
+    $output .= '<div class="container-inline">';
+    $output .= form_select(NULL, 'mode', $mode, _comment_get_modes());
+    $output .= form_select(NULL, 'order', $order, _comment_get_orders());
+
+    foreach (_comment_per_page() as $i) {
+      $options[] = t('%a comments per page', array('%a' => $i));
+    }
+    $output .= form_select(NULL, 'comments_per_page', $comments_per_page, $options);
+
+    if ($filters) {
+      $output .= form_select(NULL, 'threshold', $threshold, $filters);
+    }
+    else {
+      $output .= form_hidden('threshold', $threshold);
+    }
 
     $output .= ' '. form_submit(t('Save settings'));
+    $output .= '</div>';
 
     $output = form_item(NULL, $output, t('Select your preferred way to display the comments and click "Save settings" to activate your changes.'));
   }
