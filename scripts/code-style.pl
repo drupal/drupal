@@ -9,8 +9,6 @@
 # code.  This program tries to show as many improvements as possible with
 # no false positives.
 
-# $Id$
-
 $comment = 0;
 $program = 0;
 if ($ARGV[0] eq '-debug') {

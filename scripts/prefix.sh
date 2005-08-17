@@ -1,4 +1,5 @@
 #!/bin/sh
+# $Id$
 
 if [ $# != 2 ]; then
   cat >&2 << EOH
