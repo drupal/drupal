@@ -326,7 +326,6 @@ function drupal_strlen($text) {
 function drupal_strtoupper($text) {
   global $multibyte;
   if ($multibyte == UNICODE_MULTIBYTE) {  
-    //return mb_convert_case($text, MB_CASE_UPPER, 'utf-8');
     return mb_strtoupper($text);
   }
   else {
