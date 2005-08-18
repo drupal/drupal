@@ -134,6 +134,9 @@ function forum_taxonomy($op, $type, $object) {
       node_delete($edit);
     }
   }
+  elseif ($op == 'delete' && $type == 'vocabulary' && $object->vid == _forum_get_vid())  {
+    variable_del('forum_nav_vocabulary');
+  }
 }
 
 /**
