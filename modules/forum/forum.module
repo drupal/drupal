@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.260 2005/08/01 05:14:05 dries Exp $
+// $Id: forum.module,v 1.261 2005/08/18 21:53:55 dries Exp $
 
 /**
  * @file
@@ -133,6 +133,9 @@ function forum_taxonomy($op, $type, $object) {
       $edit['confirm'] = TRUE;
       node_delete($edit);
     }
+  }
+  elseif ($op == 'delete' && $type == 'vocabulary' && $object->vid == _forum_get_vid())  {
+    variable_del('forum_nav_vocabulary');
   }
 }
 
