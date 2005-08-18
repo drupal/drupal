@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.224 2005/08/16 18:06:18 dries Exp $
+// $Id: system.module,v 1.225 2005/08/18 22:07:13 dries Exp $
 
 /**
  * @file
@@ -126,14 +126,8 @@ function system_test() {
  */
 function system_user($type, $edit, &$user, $category = NULL) {
   if ($type == 'form' && $category == 'account') {
-    $allthemes = list_themes();
-
-    // list only active themes
-    foreach ($allthemes as $key => $theme) {
-      if ($theme->status) {
-        $themes[$key] = $theme;
-      }
-    }
+    $themes = list_themes();
+    ksort($themes);
 
     if (count($themes) > 1) {
       $rows = array();
@@ -145,8 +139,7 @@ function system_user($type, $edit, &$user, $category = NULL) {
         $row[] = file_exists($screenshot) ? theme('image', $screenshot, t('Screenshot for %theme theme', array('%theme' => $value->name)), '', array('class' => 'screenshot'), false) : t('no screenshot');
 
         // Information field.
-        $field = '<strong>'. $value->name .'</strong>';
-        $row[] = $field;
+        $row[] = '<strong>'. $value->name .'</strong>';
 
         // Reset to follow site default theme if user selects the site default
         if ($key == variable_get('theme_default', 'bluemarine')) {
@@ -485,7 +478,7 @@ function system_theme_listing() {
     // enabled, default, and operations columns
     $row[] = array('data' => form_checkbox('', 'status]['. $info->name, 1, $info->status), 'align' => 'center');
     $row[] = array('data' => form_radio('', 'theme_default', $info->name, (variable_get('theme_default', 'bluemarine') == $info->name) ? 1 : 0), 'align' => 'center');
-    if (function_exists($info->prefix . '_settings') || function_exists($info->prefix . '_features')) {
+    if ($info->status && (function_exists($info->prefix . '_settings') || function_exists($info->prefix . '_features'))) {
       $row[] = array('data' => l(t('configure'), 'admin/themes/settings/' . $info->name), 'align' => 'center');
     }
     else {
