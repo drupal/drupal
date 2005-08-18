@@ -1,4 +1,4 @@
-// $Id: drupal.js,v 1.5 2005/08/11 13:00:17 dries Exp $
+// $Id: drupal.js,v 1.6 2005/08/18 05:14:06 dries Exp $
 
 /**
  * Only enable Javascript functionality if all required features are supported.
@@ -33,7 +33,7 @@ if (typeof XMLHttpRequest == 'undefined') {
       }
       catch (e) { }
     }
-    throw new Error("No XML component installed!")
+    throw new Error("No XML component installed!");
   }
 }
 
