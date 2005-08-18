@@ -33,7 +33,7 @@ if (typeof XMLHttpRequest == 'undefined') {
       }
       catch (e) { }
     }
-    throw new Error("No XML component installed!")
+    throw new Error("No XML component installed!");
   }
 }
 
