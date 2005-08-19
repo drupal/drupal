@@ -652,7 +652,7 @@ function t($string, $args = 0) {
  * Encode special characters in a plain-text string for display as HTML.
  */
 function check_plain($text) {
-  return htmlspecialchars($text, ENT_QUOTES);
+  return htmlspecialchars($text);
 }
 
 /**
