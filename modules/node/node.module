@@ -1420,7 +1420,7 @@ function node_add($type) {
       $output = t('Choose the appropriate item from the list:') .'<dl>'. implode('', $item) .'</dl>';
     }
     else {
-      $output = message_access();
+      $output = t('You are not allowed to create content.');
     }
   }
 
