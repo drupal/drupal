@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.519 2005/08/11 12:53:39 dries Exp $
+// $Id: node.module,v 1.520 2005/08/22 10:11:15 dries Exp $
 
 /**
  * @file
@@ -1647,6 +1647,21 @@ function node_page() {
     case 'feed':
       node_feed();
       return;
+    case 'view':
+      if (is_numeric(arg(1))) {
+        $node = node_load(arg(1), $_GET['revision']);
+        if ($node->nid) {
+          drupal_set_title(check_plain($node->title));
+          return node_show($node, arg(2));
+        }
+        else if (db_result(db_query('SELECT nid FROM {node} WHERE nid = %d', arg(1)))) {
+          drupal_access_denied();
+        }
+        else {
+          drupal_not_found();
+        }
+      }
+      break;
     case 'add':
       return node_add(arg(2));
       break;
@@ -1679,21 +1694,6 @@ function node_page() {
         }
       }
       break;
-    case 'view':
-      if (is_numeric(arg(1))) {
-        $node = node_load(arg(1), $_GET['revision']);
-        if ($node->nid) {
-          drupal_set_title(check_plain($node->title));
-          return node_show($node, arg(2));
-        }
-        else if (db_result(db_query('SELECT nid FROM {node} WHERE nid = %d', arg(1)))) {
-          drupal_access_denied();
-        }
-        else {
-          drupal_not_found();
-        }
-      }
-      break;
     case t('Preview'):
       $edit = node_validate($edit);
       drupal_set_title(t('Preview'));
@@ -1713,7 +1713,6 @@ function node_page() {
         return node_preview($edit);
       }
       break;
-
     case t('Delete'):
       // Note: we redirect from node/uid/edit to node/uid/delete to make the tabs disappear.
       if ($_REQUEST['destination']) {
