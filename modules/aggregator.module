@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.246 2005/08/11 13:12:44 dries Exp $
+// $Id: aggregator.module,v 1.247 2005/08/22 19:45:42 dries Exp $
 
 /**
  * @file
@@ -73,6 +73,7 @@ function aggregator_settings() {
   $period = drupal_map_assoc(array(3600, 10800, 21600, 32400, 43200, 86400, 172800, 259200, 604800, 1209600, 2419200, 4838400, 9676800), 'format_interval');
 
   $output = '';
+  $output .= form_textfield(t('Allowed HTML tags'), 'aggregator_allowed_html_tags', variable_get('aggregator_allowed_html_tags', '<a> <b> <br> <dd> <dl> <dt> <em> <i> <li> <ol> <p> <strong> <u> <ul>'), 80, 255, t('The list of tags which are allowed in feeds, i.e., which will not be removed by Drupal.'));
   $output .= form_select(t('Items shown in sources and categories pages'), 'aggregator_summary_items', variable_get('aggregator_summary_items', 3), $items, t('The number of items which will be shown with each feed or category in the feed and category summary pages.'));
    $output .= form_select(t('Discard news items older than'), 'aggregator_clear', variable_get('aggregator_clear', 9676800), $period, t('Older news items will be automatically discarded.  Requires crontab.'));
   $output .= form_radios(t('Category selection type'), 'aggregator_category_selector', variable_get('aggregator_category_selector', 'check'), array('check' => t('checkboxes'), 'select' => t('multiple selector')), t('The type of category selection widget which is shown on categorization pages. Checkboxes are easier to use; a multiple selector is good for working with large numbers of categories.'));
@@ -525,9 +526,8 @@ function aggregator_parse_feed(&$data, $feed) {
 
     // Prepare the item:
     foreach ($item as $key => $value) {
-      // TODO: Make handling of aggregated HTML more flexible/configurable.
       $value = decode_entities(trim($value));
-      $value = strip_tags($value, '<a> <b> <br> <dd> <dl> <dt> <em> <i> <li> <ol> <p> <strong> <u> <ul>');
+      $value = strip_tags($value, variable_get('aggregator_allowed_html_tags', '<a> <b> <br> <dd> <dl> <dt> <em> <i> <li> <ol> <p> <strong> <u> <ul>'));
       $value = preg_replace('/\Wstyle\s*=[^>]+?>/i', '>', $value);
       $value = preg_replace('/\Won[a-z]+\s*=[^>]+?>/i', '>', $value);
       $item[$key] = $value;
