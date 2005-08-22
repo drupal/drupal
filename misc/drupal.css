@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.113 2005/08/22 11:48:58 dries Exp $ */
+/* $Id: drupal.css,v 1.114 2005/08/22 20:29:00 dries Exp $ */
 
 /*
 ** HTML elements
@@ -176,10 +176,6 @@ tr.odd .form-item, tr.even .form-item {
 .node-form textarea {
   display: block;
   width: 95%;
-}
-* html .node-form fieldset {
-/* Note: IE-only CSS due to "* html". Sadly required for fieldsets to appear correctly. */
-  display: inline;
 }
 .node-form .attachments fieldset {
   float: none;
@@ -591,21 +587,19 @@ html.js fieldset.collapsed {
   border-right-width: 0;
   margin-bottom: 0;
 }
-
 html.js fieldset.collapsed * {
    display: none;
 }
-
+html.js fieldset.collapsed table *,
 html.js fieldset.collapsed legend,
 html.js fieldset.collapsed legend * {
   display: inline;
 }
-
 html.js fieldset.collapsible legend a {
   padding-left: 15px;
+  display: block;
   background: url('menu-expanded.png') 5px 50% no-repeat;
 }
-
 html.js fieldset.collapsed legend a {
   background-image: url('menu-collapsed.png');
 }
