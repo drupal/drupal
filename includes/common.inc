@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.470 2005/08/19 11:10:35 dries Exp $
+// $Id: common.inc,v 1.471 2005/08/22 20:24:53 dries Exp $
 
 /**
  * @file
@@ -395,7 +395,14 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
   // Parse headers.
   while ($line = trim(array_shift($headers))) {
     list($header, $value) = explode(':', $line, 2);
-    $result->headers[$header] = trim($value);
+    if (isset($result->headers[$header]) && $header == 'Set-Cookie') {
+      // RFC 2109: the Set-Cookie response header comprises the token Set-
+      // Cookie:, followed by a comma-separated list of one or more cookies.
+      $result->headers[$header] .= ','. trim($value);
+    }
+    else {
+      $result->headers[$header] = trim($value);
+    }
   }
 
   $responses = array(
