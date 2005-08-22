@@ -177,10 +177,6 @@ tr.odd .form-item, tr.even .form-item {
   display: block;
   width: 95%;
 }
-* html .node-form fieldset {
-/* Note: IE-only CSS due to "* html". Sadly required for fieldsets to appear correctly. */
-  display: inline;
-}
 .node-form .attachments fieldset {
   float: none;
   display: block;
@@ -591,21 +587,19 @@ html.js fieldset.collapsed {
   border-right-width: 0;
   margin-bottom: 0;
 }
-
 html.js fieldset.collapsed * {
    display: none;
 }
-
+html.js fieldset.collapsed table *,
 html.js fieldset.collapsed legend,
 html.js fieldset.collapsed legend * {
   display: inline;
 }
-
 html.js fieldset.collapsible legend a {
   padding-left: 15px;
+  display: block;
   background: url('menu-expanded.png') 5px 50% no-repeat;
 }
-
 html.js fieldset.collapsed legend a {
   background-image: url('menu-collapsed.png');
 }
