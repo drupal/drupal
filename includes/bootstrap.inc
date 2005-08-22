@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.60 2005/08/05 00:49:02 unconed Exp $
+// $Id: bootstrap.inc,v 1.61 2005/08/22 05:06:42 dries Exp $
 
 /**
  * @file
@@ -10,8 +10,7 @@ define('CACHE_PERMANENT', 0);
 define('CACHE_TEMPORARY', -1);
 
 define('CACHE_DISABLED', 0);
-define('CACHE_ENABLED_STRICT', 1);
-define('CACHE_ENABLED_LOOSE', 2);
+define('CACHE_ENABLED', 1);
 
 define('WATCHDOG_NOTICE', 0);
 define('WATCHDOG_WARNING', 1);
@@ -267,9 +266,9 @@ function variable_del($name) {
 function cache_get($key) {
   global $user;
 
-  // CACHE_ENABLED_LOOSE garbage collection
+  // Garbage collection necessary when enforcing a minimum cache lifetime
   $cache_flush = variable_get('cache_flush', 0);
-  if ($cache_flush && ($cache_flush + variable_get('cache_flush_delay', 300) <= time())) {
+  if ($cache_flush && ($cache_flush + variable_get('cache_lifetime', 0) <= time())) {
     // Time to flush old cache data
     db_query("DELETE FROM {cache} WHERE expire != %d AND expire <= %d", CACHE_PERMANENT, $cache_flush);
     variable_set('cache_flush', 0);
@@ -277,14 +276,16 @@ function cache_get($key) {
 
   $cache = db_fetch_object(db_query("SELECT data, created, headers, expire FROM {cache} WHERE cid = '%s'", $key));
   if (isset($cache->data)) {
-    // If data is permanent or using strict caching, always return data.
-    if ($cache->expire == CACHE_PERMANENT || variable_get('cache', CACHE_DISABLED) == CACHE_ENABLED_STRICT) {
+    // If the data is permanent or we're not enforcing a minimum cache lifetime
+    // always return the cached data.
+    if ($cache->expire == CACHE_PERMANENT || !variable_get('cache_lifetime', 0)) {
       $cache->data = db_decode_blob($cache->data);
     }
-    // If using loose caching, validate data is current before we return it by
-    // making sure the cache entry was created before the timestamp in the
-    // current session's cache timer.  The cache variable is already loaded
-    // into the $user object by sess_read in session.inc.
+    // If enforcing a minimum cache lifetime, validate that the data is
+    // currenly valid for this user before we return it by making sure the
+    // cache entry was created before the timestamp in the current session's
+    // cache timer.  The cache variable is loaded into the $user object by
+    // sess_read() in session.inc.
     else {
       if ($user->cache > $cache->created) {
         // This cache data is too old and thus not valid for us, ignore it.
@@ -343,28 +344,28 @@ function cache_clear_all($cid = NULL, $wildcard = false) {
   global $user;
 
   if (empty($cid)) {
-    if (variable_get('cache', CACHE_DISABLED) == CACHE_ENABLED_STRICT) {
-      // Strict caching, flush all temporary cache entries:
-      db_query("DELETE FROM {cache} WHERE expire != %d AND expire < %d", CACHE_PERMANENT, time());
-    }
-    else {
-      $cache_flush = variable_get('cache_flush', 0);
-      // Loose caching, only flush temporary cache entries that have been
-      // invalidated for more than maximum allowable time.
-      if ($cache_flush && ($cache_flush + variable_get('cache_flush_delay', 300) <= time())) {
-        // Only flush cache data older than $cache_flush, as newer data may
-        // now be valid.
-        db_query("DELETE FROM {cache} WHERE expire != %d AND expire <= %d", CACHE_PERMANENT, $cache_flush);
-        variable_set('cache_flush', 0);
-      }
-      // Invalidate temporary cache data only for current user/session.  We
-      // set $user->cache, which gets saved into the sessions table by
-      // sess_write() in session.inc.
+    if (variable_get('cache_lifetime', 0)) {
+      // We store the time in the current user's $user->cache variable which
+      // will be saved into the sessions table by sess_write().  We then
+      // simulate that the cache was flushed for this user by not returning
+      // cached data that was cached before the timestamp.
       $user->cache = time();
-      if (variable_get('cache_flush', 0) == 0) {
-        // Set timestamp to know which cache entries we eventually clear:
+
+      $cache_flush = variable_get('cache_flush', 0);
+      if ($cache_flush == 0) {
+        // This is the first request to clear the cache, start a timer.
         variable_set('cache_flush', time());
       }
+      else if (time() > ($cache_flush + variable_get('cache_lifetime', 0))) {
+        // Clear the cache for everyone, cache_flush_delay seconds have
+        // passed since the first request to clear the cache.
+        db_query("DELETE FROM {cache} WHERE expire != %d AND expire < %d", CACHE_PERMANENT, time());
+        variable_set('cache_flush', 0);
+      }
+    }
+    else {
+      // No minimum cache lifetime, flush all temporary cache entries now.
+      db_query("DELETE FROM {cache} WHERE expire != %d AND expire < %d", CACHE_PERMANENT, time());
     }
   }
   else {
@@ -484,6 +485,7 @@ function drupal_lookup_path($action, $path = '') {
   static $map = array();
   static $count = NULL;
 
+
   if ($count === NULL) {
     $count = db_result(db_query('SELECT COUNT(pid) FROM {url_alias}'));
   }
@@ -493,6 +495,8 @@ function drupal_lookup_path($action, $path = '') {
   }
   elseif ($count > 0 && $path != '') {
     if ($action == 'source') {
+      if (TRUE) return;
+
       if (isset($map[$path])) {
         return $map[$path];
       }

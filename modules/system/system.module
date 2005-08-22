@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.225 2005/08/18 22:07:13 dries Exp $
+// $Id: system.module,v 1.226 2005/08/22 05:09:01 dries Exp $
 
 /**
  * @file
@@ -207,7 +207,10 @@ function system_view_general() {
   $output .= form_group_collapsible(t('Error handling'), $group, TRUE);
 
   // Caching:
-  $group  = form_radios(t('Page cache'), 'cache', variable_get('cache', CACHE_DISABLED), array(CACHE_DISABLED => t('Disabled (low-traffic sites)'), CACHE_ENABLED_STRICT => t('Strict (medium-traffic sites)'), CACHE_ENABLED_LOOSE => t('Loose (high-traffic sites)')), t("Drupal has a caching mechanism which stores dynamically generated web pages in a database.  By caching a web page, Drupal does not have to create the page each time someone wants to view it, instead it takes only one SQL query to display it, reducing response time and the server's load.  Only pages requested by \"anonymous\" users are cached.  In order to reduce server load and save bandwidth, Drupal stores and sends cached pages compressed.  Drupal supports strict caching and loose caching.  Strict caching immediately deletes cached data as soon as it becomes invalid for any user.  Loose caching delays the deletion of cached data to provide better performance for high traffic sites."));
+  $group  = form_radios(t('Page cache'), 'cache', variable_get('cache', CACHE_DISABLED), array(CACHE_DISABLED => t('Disabled'), CACHE_ENABLED => t('Enabled')), t("Drupal has a caching mechanism which stores dynamically generated web pages in a database.  By caching a web page, Drupal does not have to create the page each time someone wants to view it, instead it takes only one SQL query to display it, reducing response time and the server's load.  Only pages requested by \"anonymous\" users are cached.  In order to reduce server load and save bandwidth, Drupal stores and sends compressed cached pages."));
+  $period = drupal_map_assoc(array(0, 60, 180, 300, 600, 900, 1800, 2700, 3600, 10800, 21600, 32400, 43200, 86400), 'format_interval');
+  $period[0] = t('none');
+  $group .= form_select(t('Minimum cache lifetime'), 'cache_lifetime', variable_get('cache_lifetime', 0), $period, t('Enabling the cache will offer a sufficient performance boost for most low-traffic and medium-traffic sites.  On high-traffic sites it can become necessary to enforce a minimum cache lifetime.  The minimum cache lifetime is the minimum amount of time that will go by before the cache is emptied and recreated.  A larger minimum cache lifetime offers better performance, but users will not see new content for a longer period of time.'));
 
   $output .= form_group_collapsible(t('Cache settings'), $group, TRUE);
 
