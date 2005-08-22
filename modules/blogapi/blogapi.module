@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.51 2005/08/07 14:55:17 dries Exp $
+// $Id: blogapi.module,v 1.52 2005/08/22 20:39:43 dries Exp $
 
 /**
  * @file
@@ -215,7 +215,7 @@ function blogapi_blogger_new_post($appkey, $blogid, $username, $password, $conte
   }
 
   if (!node_access('create', $node)) {
-    return blogapi_error(message_access());
+    return blogapi_error(t('You do not have permission to create the type of post you wanted to create.'));
   }
 
   $nid = node_save($node);
@@ -246,7 +246,7 @@ function blogapi_blogger_edit_post($appkey, $postid, $username, $password, $cont
   unset($node->teaser);
 
   if (!node_access('update', $node)) {
-    return blogapi_error(message_access());
+    return blogapi_error(t('You do not have permission to update this post.'));
   }
 
   $node->status = $publish;
@@ -485,7 +485,7 @@ function blogap_mti_publish_post($postid, $username, $password) {
 
   $node->status = 1;
   if (!node_access('update', $node)) {
-    return blogapi_error(message_access());
+    return blogapi_error(t('You do not have permission to update this post.'));
   }
 
   node_save($node);
@@ -520,7 +520,7 @@ function blogapi_validate_user($username, $password) {
       return $user;
     }
     else {
-      return message_access();
+      return t("You either tried to edit somebody else's blog or you don't have permission to edit your own blog.");
     }
   }
   else {

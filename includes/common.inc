@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.471 2005/08/22 20:24:53 dries Exp $
+// $Id: common.inc,v 1.472 2005/08/22 20:39:43 dries Exp $
 
 /**
  * @file
@@ -301,7 +301,7 @@ function drupal_access_denied() {
 
   if (empty($return)) {
     drupal_set_title(t('Access denied'));
-    $return = message_access();
+    $return = t('You are not authorized to access this page.');
   }
   print theme('page', $return);
 }
@@ -568,16 +568,6 @@ function object2array($object) {
  * @{
  * Frequently used messages.
  */
-
-/**
- * Return a string with an "access denied" message.
- *
- * Always consider whether to use drupal_access_denied() instead to return a
- * proper (and customizable) 403 error.
- */
-function message_access() {
-  return t('You are not authorized to access this page.');
-}
 
 /**
  * Return a string with a "not applicable" message.
