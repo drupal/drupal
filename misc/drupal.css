@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.112 2005/08/16 18:06:18 dries Exp $ */
+/* $Id: drupal.css,v 1.113 2005/08/22 11:48:58 dries Exp $ */
 
 /*
 ** HTML elements
@@ -180,20 +180,6 @@ tr.odd .form-item, tr.even .form-item {
 * html .node-form fieldset {
 /* Note: IE-only CSS due to "* html". Sadly required for fieldsets to appear correctly. */
   display: inline;
-}
-.node-form .admin .form-item .title {
-  margin-top: 0;
-}
-.node-form .admin .authored .form-item {
-  margin-bottom: 1.1em;
-}
-.node-form .admin .authored .form-text  {
-  width: auto;
-}
-.node-form .admin .authored, .node-form .admin .options, .node-form .admin .extra {
-  float: left;
-  margin-right: 2em;
-  margin-bottom: 1em;
 }
 .node-form .attachments fieldset {
   float: none;
