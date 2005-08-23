@@ -448,8 +448,8 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
 /**
  * Log errors as defined by administrator
  * Error levels:
- *  1 = Log errors to database.
- *  2 = Log errors to database and to screen.
+ *  0 = Log errors to database.
+ *  1 = Log errors to database and to screen.
  */
 function error_handler($errno, $message, $filename, $line) {
   if ($errno & (E_ALL ^ E_NOTICE)) {
