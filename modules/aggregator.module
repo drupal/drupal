@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.248 2005/08/23 05:16:50 dries Exp $
+// $Id: aggregator.module,v 1.249 2005/08/23 05:45:08 dries Exp $
 
 /**
  * @file
@@ -1030,8 +1030,13 @@ function aggregator_page_sources() {
 /**
  * Menu callback; generates an OPML representation of all feeds.
  */
-function aggregator_page_opml() {
-  $result = db_query('SELECT * FROM {aggregator_feed} ORDER BY title');
+function aggregator_page_opml($cid = NULL) {
+  if ($cid) {
+    $result = db_query('SELECT f.title, f.url FROM {aggregator_feed} f LEFT JOIN {aggregator_category_feed} c on f.fid = c.fid WHERE c.cid = %d ORDER BY title', $cid);
+  }
+  else {
+    $result = db_query('SELECT * FROM {aggregator_feed} ORDER BY title');
+  }
 
   $output = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
   $output .= "<opml version=\"1.1\">\n";
