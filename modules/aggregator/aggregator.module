@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.247 2005/08/22 19:45:42 dries Exp $
+// $Id: aggregator.module,v 1.248 2005/08/23 05:16:50 dries Exp $
 
 /**
  * @file
@@ -351,10 +351,10 @@ function aggregator_element_data($parser, $data) {
       }
       break;
     case 'CONTENT':
-      $items[$item]['DESCRIPTION'] .= $data;
+      $items[$item]['CONTENT'] .= $data;
       break;
     case 'SUMMARY':
-      $items[$item]['DESCRIPTION'] .= $data;
+      $items[$item]['SUMMARY'] .= $data;
       break;
     case 'TAGLINE':
     case 'SUBTITLE':
@@ -557,6 +557,16 @@ function aggregator_parse_feed(&$data, $feed) {
     }
     else {
       $link = $feed['link'];
+    }
+
+    /**
+     * Atom feeds have a CONTENT and/or SUMMARY tag instead of a DESCRIPTION tag
+     */
+    if ($item['CONTENT']) {
+      $item['DESCRIPTION'] = $item['CONTENT'];
+    }
+    else if ($item['SUMMARY']) {
+      $item['DESCRIPTION'] = $item['SUMMARY'];
     }
 
     /*
