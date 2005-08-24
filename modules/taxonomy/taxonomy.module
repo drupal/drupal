@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.217 2005/07/25 04:55:37 unconed Exp $
+// $Id: taxonomy.module,v 1.218 2005/08/24 15:40:43 dries Exp $
 
 /**
  * @file
@@ -1251,7 +1251,7 @@ function taxonomy_help($section) {
       <h3><a id="taxonomy-url"></a>Displaying content organized by terms</h3>
       <p>In order to view the content associated with a term or a collection of terms, you should browse to a properly formed Taxonomy URL. For example, <a href="%taxo-example">taxonomy/term/1+2</a>.  Taxonomy URLs always contain one or more term IDs at the end of the URL. You may learn the term ID for a given term by hovering over that term in the <a href="%taxo-overview">taxonomy overview</a> page and noting the number at the end or the URL.  To build a Taxonomy URL start with "taxonomy/term/". Then list the term IDs, separated by "+" to choose content tagged with <strong>any</strong> of the given term IDs, or separated by "," to choose content tagged with <strong>all</strong> of the given term IDs. In other words, "+" is less specific than ",". Finally, you may optionally specify a "depth" in the vocabulary hierarchy. This defaults to "0", which means only the explicitly listed terms are searched. A positive number indicates the number of additional levels of the tree to search. You may also use the value "all", which means that all descendant terms are searched.</p>
       <h3>RSS feeds</h3>
-      <p>Every term, or collection of terms, provides an <a href="%userland-rss">RSS</a> feed to which interested users may subscribe. The URL format for a sample RSS feed is <a href="%sample-rss">taxonomy/term/1+2/0/feed</a>. These are built just like <a href="%taxo-help">Taxonomy URLs</a>, but are followed by the word "feed".</p>', array('%classification-types' => 'http://www.eleganthack.com/archives/002165.html', '%drupal-dis' => 'http://drupal.org/node/55', '%slashdot' => 'http://slashdot.com/', '%taxo-example' => url('taxonomy/term/1+2'), '%taxo-overview' => url('admin/taxonomy'), '%userland-rss' => 'http://backend.userland.com/stories/rss', '%sample-rss' => url('taxonomy/term/1+2/feed'), '%taxo-help' => url('admin/help/taxonomy', NULL, 'taxonomy-url')));
+      <p>Every term, or collection of terms, provides an <a href="%userland-rss">RSS</a> feed to which interested users may subscribe. The URL format for a sample RSS feed is <a href="%sample-rss">taxonomy/term/1+2/0/feed</a>. These are built just like <a href="%taxo-help">Taxonomy URLs</a>, but are followed by the word "feed".</p>', array('%classification-types' => 'http://en.wikipedia.org/wiki/Taxonomic_classification', '%drupal-dis' => 'http://drupal.org/node/55', '%slashdot' => 'http://slashdot.org/', '%taxo-example' => url('taxonomy/term/1+2'), '%taxo-overview' => url('admin/taxonomy'), '%userland-rss' => 'http://backend.userland.com/stories/rss', '%sample-rss' => url('taxonomy/term/1+2/feed'), '%taxo-help' => url('admin/help/taxonomy', NULL, 'taxonomy-url')));
   }
 }
 
