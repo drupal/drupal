@@ -13,15 +13,13 @@
 <table border="0" cellpadding="0" cellspacing="0" id="header">
   <tr>
     <td id="logo">
-
-      <a href="./" title="Home"><img src="<?php print $logo ?>" alt="Home" /></a>
-      <h1 class='site-name'><a href="./" title="Home"><?php print $site_name ?></a></h1>
-      <div class='site-slogan'><?php print $site_slogan ?></div>
-
+      <?php if ($logo) { ?><a href="./" title="Home"><img src="<?php print $logo ?>" alt="Home" /></a><?php } ?>
+      <?php if ($site_name) { ?><h1 class='site-name'><a href="./" title="Home"><?php print $site_name ?></a></h1><?php } ?>
+      <?php if ($site_slogan) { ?><div class='site-slogan'><?php print $site_slogan ?></div><?php } ?>
     </td>
     <td id="menu">
-      <div id="secondary"><?php print theme('links', $secondary_links) ?></div>
-      <div id="primary"><?php print theme('links', $primary_links) ?></div>
+      <?php if ($secondary_links) { ?><div id="secondary"><?php print theme('links', $secondary_links) ?></div><?php } ?>
+      <?php if ($primary_links) { ?><div id="primary"><?php print theme('links', $primary_links) ?></div><?php } ?>
       <?php if ($search_box) { ?><form action="<?php print $search_url ?>" method="post">
         <div id="search">
           <input class="form-text" type="text" size="15" value="" name="edit[keys]" alt="<?php print $search_description ?>" />
