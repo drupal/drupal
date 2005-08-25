@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.152 2005/08/17 01:44:14 unconed Exp $
+// $Id: update.php,v 1.153 2005/08/25 21:03:53 dries Exp $
 
 /**
  * @file
@@ -83,79 +83,6 @@ function update_info_page() {
   $output .= "<li>Before doing anything, backup your database. This process will change your database and its values, and some things might get lost.</li>\n";
   $output .= "<li>Update your Drupal sources, check the notes below and <a href=\"update.php?op=update\">run the database upgrade script</a>. Don't upgrade your database twice as it may cause problems.</li>\n";
   $output .= "<li>Go through the various administration pages to change the existing and new settings to your liking.</li>\n";
-  $output .= "</ol>";
-  $output .= "Notes:";
-  $output .= "<ol>";
-  $output .= " <li>If you <strong>upgrade from Drupal 4.4.x</strong>, you will need to create the <code>users_roles</code> and <code>locales_meta</code> tables manually before upgrading. To create these tables, issue the following SQL commands:
-
-  <p>MySQL specific example:</p>
-  <pre>
-  CREATE TABLE users_roles (
-    uid int(10) unsigned NOT NULL default '0',
-    rid int(10) unsigned NOT NULL default '0',
-    PRIMARY KEY (uid, rid)
-  );
-  CREATE TABLE locales_meta (
-    locale varchar(12) NOT NULL default '',
-    name varchar(64) NOT NULL default '',
-    enabled int(2) NOT NULL default '0',
-    isdefault int(2) NOT NULL default '0',
-    plurals int(1) NOT NULL default '0',
-    formula varchar(128) NOT NULL default '',
-    PRIMARY KEY  (locale)
-  );
-  </pre>
-
-  <p>PostgreSQL specific example:</p>
-  <pre>
-  CREATE TABLE users_roles (
-    uid integer NOT NULL default '0',
-    rid integer NOT NULL default '0',
-    PRIMARY KEY (uid, rid)
-  );
-  CREATE TABLE locales_meta (
-    locale varchar(12) NOT NULL default '',
-    name varchar(64) NOT NULL default '',
-    enabled int4 NOT NULL default '0',
-    isdefault int4 NOT NULL default '0',
-    plurals int4 NOT NULL default '0',
-    formula varchar(128) NOT NULL default '',
-    PRIMARY KEY  (locale)
-  );
-  </pre>
-  </li>";
-  $output .= " <li>If you <strong>upgrade from Drupal 4.3.x</strong>, you will need to add the <code>bootstrap</code> and <code>throttle</code> fields to the <code>system</code> table manually before upgrading. To add the required fields, issue the following SQL commands:
-
-  <p>MySQL specific example:</p>
-  <pre>
-  ALTER TABLE system ADD throttle tinyint(1) NOT NULL DEFAULT '0';
-  ALTER TABLE system ADD bootstrap int(2);
-  </pre>
-
-  <p>PostgreSQL specific example:</p>
-  <pre>
-  ALTER TABLE system ADD throttle smallint;
-  ALTER TABLE system ALTER COLUMN throttle SET DEFAULT '0';
-  UPDATE system SET throttle = 0;
-  ALTER TABLE system ALTER COLUMN throttle SET NOT NULL;
-  ALTER TABLE system ADD bootstrap integer;
-  </pre>
-  </li>";
-  $output .= " <li>If you <strong>upgrade from Drupal 4.2.0</strong>, you will need to create the <code>sessions</code> table manually before upgrading. After creating the table, you will want to log in and immediately continue the upgrade. To create the <code>sessions</code> table, issue the following SQL command:
-
-  <p>MySQL specific example:</p>
-  <pre>
-  CREATE TABLE sessions (
-  uid int(10) unsigned NOT NULL,
-  sid varchar(32) NOT NULL default '',
-  hostname varchar(128) NOT NULL default '',
-  timestamp int(11) NOT NULL default '0',
-  session text,
-  KEY uid (uid),
-  KEY sid (sid(4)),
-  KEY timestamp (timestamp));
-  </pre>
-  </li>";
   $output .= "</ol>";
   $output .= '<p>For more help, see the <a href="http://drupal.org/node/258">Installation and upgrading handbook</a>. If you are unsure what these terms mean you should probably contact your hosting provider.</p>';
   return $output;
