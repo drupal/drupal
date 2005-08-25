@@ -1,5 +1,5 @@
 <?php
-// $Id: page.module,v 1.132 2005/02/08 19:44:39 dries Exp $
+// $Id: page.module,v 1.133 2005/08/25 21:14:16 dries Exp $
 
 /**
  * @file
@@ -77,4 +77,4 @@ function page_form(&$node) {
   return $output;
 }
 
-?>
+

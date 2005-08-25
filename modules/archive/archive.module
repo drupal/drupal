@@ -1,5 +1,5 @@
 <?php
-// $Id: archive.module,v 1.81 2005/07/17 18:29:31 dries Exp $
+// $Id: archive.module,v 1.82 2005/08/25 21:14:16 dries Exp $
 
 /**
  * @file
@@ -252,4 +252,4 @@ function archive_page($year = 0, $month = 0, $day = 0) {
   return $output;
 }
 
-?>
+

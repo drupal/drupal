@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.521 2005/08/22 20:39:43 dries Exp $
+// $Id: node.module,v 1.522 2005/08/25 21:14:16 dries Exp $
 
 /**
  * @file
@@ -2000,4 +2000,4 @@ function node_db_rewrite_sql($query, $primary_table, $primary_field) {
  * @} End of "defgroup node_access".
  */
 
-?>
+

@@ -1,5 +1,5 @@
 <?php
-// $Id: help.module,v 1.46 2005/04/24 16:34:34 dries Exp $
+// $Id: help.module,v 1.47 2005/08/25 21:14:16 dries Exp $
 
 /**
  * @file
@@ -106,4 +106,4 @@ function help_page() {
   return $output;
 }
 
-?>
+

@@ -1,5 +1,5 @@
 <?php
-// $Id: unicode.inc,v 1.3 2005/08/17 01:25:07 unconed Exp $
+// $Id: unicode.inc,v 1.4 2005/08/25 21:14:16 dries Exp $
 
 define('UNICODE_ERROR', -1);
 define('UNICODE_SINGLEBYTE', 0);
@@ -449,4 +449,3 @@ function drupal_substr($text, $start, $length = NULL) {
   }  
 }
 
-?>

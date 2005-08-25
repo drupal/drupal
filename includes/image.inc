@@ -1,5 +1,5 @@
 <?php
-// $Id: image.inc,v 1.7 2005/07/31 10:16:12 dries Exp $
+// $Id: image.inc,v 1.8 2005/08/25 21:14:16 dries Exp $
 
 /**
  * Return a list of available toolkits.
@@ -299,4 +299,4 @@ function image_gd_close($res, $destination, $extension) {
   return $close_func($res, $destination);
 }
 
-?>
+

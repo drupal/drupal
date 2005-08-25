@@ -1,5 +1,5 @@
 <?php
-// $Id: tablesort.inc,v 1.35 2005/07/25 20:38:30 unconed Exp $
+// $Id: tablesort.inc,v 1.36 2005/08/25 21:14:16 dries Exp $
 
 /**
  * @file
@@ -203,4 +203,4 @@ function tablesort_get_sort($headers) {
   return 'asc';
 }
 
-?>
+

@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.132 2005/07/29 08:18:20 unconed Exp $
+// $Id: search.module,v 1.133 2005/08/25 21:14:17 dries Exp $
 
 /**
  * @file
@@ -844,4 +844,4 @@ function theme_search_item($item, $type) {
 }
 
 
-?>
+

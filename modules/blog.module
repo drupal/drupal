@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.222 2005/07/31 08:58:01 dries Exp $
+// $Id: blog.module,v 1.223 2005/08/25 21:14:16 dries Exp $
 
 /**
  * @file
@@ -291,4 +291,4 @@ function blog_block($op = 'list', $delta = 0) {
   }
 }
 
-?>
+

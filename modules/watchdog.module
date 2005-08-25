@@ -1,5 +1,5 @@
 <?php
-// $Id: watchdog.module,v 1.125 2005/08/06 00:35:38 unconed Exp $
+// $Id: watchdog.module,v 1.126 2005/08/25 21:14:17 dries Exp $
 
 /**
  * @file
@@ -161,4 +161,4 @@ function _watchdog_get_message_types() {
   return $types;
 }
 
-?>
+

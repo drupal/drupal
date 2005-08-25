@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.123 2005/05/05 22:22:46 dries Exp $
+// $Id: locale.module,v 1.124 2005/08/25 21:14:16 dries Exp $
 
 /**
  * @file
@@ -452,4 +452,4 @@ function locale_admin_string() {
   return $output;
 }
 
-?>
+

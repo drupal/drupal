@@ -1,5 +1,5 @@
 <?php
-// $Id: story.module,v 1.167 2005/04/01 15:55:01 dries Exp $
+// $Id: story.module,v 1.168 2005/08/25 21:14:17 dries Exp $
 
 /**
  * @file
@@ -79,4 +79,4 @@ function story_form(&$node) {
   return $output;
 }
 
-?>
+

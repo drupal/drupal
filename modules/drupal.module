@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal.module,v 1.105 2005/07/13 18:46:15 dries Exp $
+// $Id: drupal.module,v 1.106 2005/08/25 21:14:16 dries Exp $
 
 /**
  * @file
@@ -209,4 +209,4 @@ function drupal_login($username, $password) {
   }
 }
 
-?>
+

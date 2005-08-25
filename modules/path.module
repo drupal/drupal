@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.61 2005/08/11 13:02:08 dries Exp $
+// $Id: path.module,v 1.62 2005/08/25 21:14:16 dries Exp $
 
 /**
  * @file
@@ -318,4 +318,4 @@ function path_save($edit) {
   }
 }
 
-?>
+

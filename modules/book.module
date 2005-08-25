@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.310 2005/07/29 07:13:25 dries Exp $
+// $Id: book.module,v 1.311 2005/08/25 21:14:16 dries Exp $
 
 /**
  * @file
@@ -1143,4 +1143,4 @@ array(
   }
 }
 
-?>
+

@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.21 2005/08/17 00:55:50 unconed Exp $
+// $Id: contact.module,v 1.22 2005/08/25 21:14:16 dries Exp $
 
 /**
  * @file
@@ -338,4 +338,4 @@ function contact_mail_page() {
 
   return $output;
 }
-?>
+

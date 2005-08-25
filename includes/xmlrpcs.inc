@@ -1,5 +1,5 @@
 <?php
-// $Id: xmlrpcs.inc,v 1.14 2005/08/14 22:27:40 dries Exp $
+// $Id: xmlrpcs.inc,v 1.15 2005/08/25 21:14:16 dries Exp $
 
 function xmlrpc_server($callbacks) {
   $xmlrpc_server = new stdClass();
@@ -285,4 +285,4 @@ function xmlrpc_server_method_help($xmlrpc_server, $method) {
   return $xmlrpc_server->help[$method];
 }
 
-?>
+

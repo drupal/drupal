@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.104 2005/08/10 20:52:00 dries Exp $
+// $Id: profile.module,v 1.105 2005/08/25 21:14:17 dries Exp $
 
 /**
  * @file
@@ -676,4 +676,4 @@ function _profile_field_serialize($type = NULL) {
   return $type == 'date';
 }
 
-?>
+

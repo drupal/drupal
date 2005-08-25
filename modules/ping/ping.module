@@ -1,5 +1,5 @@
 <?php
-// $Id: ping.module,v 1.30 2005/07/13 18:46:15 dries Exp $
+// $Id: ping.module,v 1.31 2005/08/25 21:14:16 dries Exp $
 
 /**
  * @file
@@ -64,4 +64,4 @@ function ping_ping($name = '', $url = '') {
   }
 }
 
-?>
+

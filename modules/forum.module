@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.261 2005/08/18 21:53:55 dries Exp $
+// $Id: forum.module,v 1.262 2005/08/25 21:14:16 dries Exp $
 
 /**
  * @file
@@ -1011,4 +1011,4 @@ function _forum_get_topic_order_sql($sortby) {
   return $order['field'] .' '. $order['sort'];
 }
 
-?>
+

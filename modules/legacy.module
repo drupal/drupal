@@ -1,5 +1,5 @@
 <?php
-// $Id: legacy.module,v 1.5 2005/02/12 09:23:06 dries Exp $
+// $Id: legacy.module,v 1.6 2005/08/25 21:14:16 dries Exp $
 
 /**
  * @file
@@ -183,4 +183,4 @@ function _legacy_filter_old_urls($text) {
   return $text;
 }
 
-?>
+

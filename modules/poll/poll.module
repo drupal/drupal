@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.166 2005/07/17 18:29:32 dries Exp $
+// $Id: poll.module,v 1.167 2005/08/25 21:14:17 dries Exp $
 
 /**
  * @file
@@ -456,4 +456,4 @@ function poll_update($node) {
   }
 }
 
-?>
+

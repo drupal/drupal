@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.226 2005/08/22 05:09:01 dries Exp $
+// $Id: system.module,v 1.227 2005/08/25 21:14:17 dries Exp $
 
 /**
  * @file
@@ -857,4 +857,4 @@ function system_theme_settings($key = '') {
 
 }
 
-?>
+

@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.365 2005/08/17 20:07:35 dries Exp $
+// $Id: comment.module,v 1.366 2005/08/25 21:14:16 dries Exp $
 
 /**
  * @file
@@ -1662,4 +1662,4 @@ function _comment_update_node_statistics($nid) {
     db_query("UPDATE {node_comment_statistics} SET comment_count = %d, last_comment_timestamp = %d, last_comment_name = '%s', last_comment_uid = %d WHERE nid = %d", 0, NULL, 0, 0, $nid);
   }
 }
-?>
+

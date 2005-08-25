@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.49 2005/07/29 18:56:58 unconed Exp $
+// $Id: locale.inc,v 1.50 2005/08/25 21:14:16 dries Exp $
 
 /**
  * @file
@@ -1311,4 +1311,4 @@ function _locale_get_iso639_list() {
   );
 }
 
-?>
+

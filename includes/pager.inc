@@ -1,5 +1,5 @@
 <?php
-// $Id: pager.inc,v 1.46 2005/08/10 20:50:14 dries Exp $
+// $Id: pager.inc,v 1.47 2005/08/25 21:14:16 dries Exp $
 
 /**
  * @file
@@ -397,4 +397,4 @@ function pager_load_array($value, $element, $old_array) {
   return $new_array;
 }
 
-?>
+

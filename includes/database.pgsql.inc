@@ -1,5 +1,5 @@
 <?php
-// $Id: database.pgsql.inc,v 1.12 2005/08/11 13:51:07 dries Exp $
+// $Id: database.pgsql.inc,v 1.13 2005/08/25 21:14:16 dries Exp $
 
 /**
  * @file
@@ -259,4 +259,4 @@ function db_escape_string($text) {
  * @} End of "ingroup database".
  */
 
-?>
+

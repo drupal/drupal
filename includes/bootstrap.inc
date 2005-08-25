@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.63 2005/08/25 21:11:52 dries Exp $
+// $Id: bootstrap.inc,v 1.64 2005/08/25 21:14:15 dries Exp $
 
 /**
  * @file
@@ -881,4 +881,3 @@ function drupal_maintenance_theme() {
   $theme = '';
 }
 
-?>

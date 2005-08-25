@@ -1,5 +1,5 @@
 <?php
-// $Id: xmlrpc.inc,v 1.23 2005/08/17 15:01:14 dries Exp $
+// $Id: xmlrpc.inc,v 1.24 2005/08/25 21:14:16 dries Exp $
 
 /*
   Drupal XML-RPC library. Based on the IXR - The Incutio XML-RPC Library - (c) Incutio Ltd 2002-2005
@@ -391,4 +391,4 @@ function xmlrpc_error_msg() {
   $error = xmlrpc_error();
   return $error->message;
 }
-?>
+

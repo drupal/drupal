@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.177 2005/08/16 18:06:18 dries Exp $
+// $Id: block.module,v 1.178 2005/08/25 21:14:16 dries Exp $
 
 /**
  * @file
@@ -520,4 +520,4 @@ function block_list($region) {
   return $blocks[$region];
 }
 
-?>
+

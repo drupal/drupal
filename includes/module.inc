@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.68 2005/07/29 07:09:30 dries Exp $
+// $Id: module.inc,v 1.69 2005/08/25 21:14:16 dries Exp $
 
 /**
  * @file
@@ -199,4 +199,4 @@ function module_invoke_all() {
  * @} End of "defgroup hooks".
  */
 
-?>
+

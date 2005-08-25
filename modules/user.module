@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.501 2005/08/11 13:52:44 dries Exp $
+// $Id: user.module,v 1.502 2005/08/25 21:14:17 dries Exp $
 
 /**
  * @file
@@ -1911,4 +1911,4 @@ function user_autocomplete($string) {
   exit();
 }
 
-?>
+

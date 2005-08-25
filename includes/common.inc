@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.473 2005/08/23 05:19:44 dries Exp $
+// $Id: common.inc,v 1.474 2005/08/25 21:14:15 dries Exp $
 
 /**
  * @file
@@ -1897,4 +1897,3 @@ function _drupal_bootstrap_full() {
   // Initialize the localization system.
   $locale = locale_initialize();
 }
-?>

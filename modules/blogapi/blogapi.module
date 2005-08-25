@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.52 2005/08/22 20:39:43 dries Exp $
+// $Id: blogapi.module,v 1.53 2005/08/25 21:14:16 dries Exp $
 
 /**
  * @file
@@ -724,4 +724,4 @@ function _blogapi_get_node_types() {
 
   return $types;
 }
-?>
+

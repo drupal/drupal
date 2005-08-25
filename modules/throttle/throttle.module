@@ -1,5 +1,5 @@
 <?php
-// $Id: throttle.module,v 1.50 2005/07/31 10:36:33 dries Exp $
+// $Id: throttle.module,v 1.51 2005/08/25 21:14:17 dries Exp $
 
 /**
  * @file
@@ -129,4 +129,4 @@ function throttle_settings() {
   return $output;
 }
 
-?>
+

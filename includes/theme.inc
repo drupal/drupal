@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.254 2005/08/18 22:07:14 dries Exp $
+// $Id: theme.inc,v 1.255 2005/08/25 21:14:16 dries Exp $
 
 /**
  * @file
@@ -1077,4 +1077,4 @@ function _theme_table_cell($cell, $header = 0) {
 
   return $output;
 }
-?>
+

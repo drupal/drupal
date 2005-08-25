@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.45 2005/08/11 12:57:41 dries Exp $
+// $Id: file.inc,v 1.46 2005/08/25 21:14:16 dries Exp $
 
 /**
  * @file
@@ -550,4 +550,4 @@ function file_scan_directory($dir, $mask, $nomask = array('.', '..', 'CVS'), $ca
   return $files;
 }
 
-?>
+

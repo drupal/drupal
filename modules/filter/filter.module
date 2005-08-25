@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.70 2005/08/14 17:50:35 dries Exp $
+// $Id: filter.module,v 1.71 2005/08/25 21:14:16 dries Exp $
 
 /**
  * @file
@@ -1018,4 +1018,4 @@ function _filter_autop($text) {
  * @} End of "Standard filters".
  */
 
-?>
+

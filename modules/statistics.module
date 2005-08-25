@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.203 2005/08/16 19:48:04 dries Exp $
+// $Id: statistics.module,v 1.204 2005/08/25 21:14:17 dries Exp $
 
 /**
  * @file
@@ -489,4 +489,4 @@ function statistics_nodeapi(&$node, $op, $arg = 0) {
   }
 }
 
-?>
+

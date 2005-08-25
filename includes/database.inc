@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.42 2005/07/27 01:58:43 unconed Exp $
+// $Id: database.inc,v 1.43 2005/08/25 21:14:16 dries Exp $
 
 /**
  * @file
@@ -283,4 +283,4 @@ function db_rewrite_sql($query, $primary_table = 'n', $primary_field = 'nid',  $
  * @} End of "defgroup database".
  */
 
-?>
+

@@ -1,5 +1,5 @@
 <?php
-// $Id: session.inc,v 1.18 2005/08/10 20:42:54 dries Exp $
+// $Id: session.inc,v 1.19 2005/08/25 21:14:16 dries Exp $
 
 /**
  * @file
@@ -67,4 +67,4 @@ function sess_gc($lifetime) {
 
 }
 
-?>
+

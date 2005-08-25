@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.249 2005/08/23 05:45:08 dries Exp $
+// $Id: aggregator.module,v 1.250 2005/08/25 21:14:16 dries Exp $
 
 /**
  * @file
@@ -1187,4 +1187,4 @@ function theme_aggregator_page_item($item) {
   return $output;
 }
 
-?>
+

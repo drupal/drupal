@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.46 2005/08/17 19:27:03 dries Exp $
+// $Id: upload.module,v 1.47 2005/08/25 21:14:17 dries Exp $
 
 /**
  * @file
@@ -423,4 +423,4 @@ function _upload_image($file) {
   return $file;
 }
 
-?>
+
