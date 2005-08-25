@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.61 2005/08/22 05:06:42 dries Exp $
+// $Id: bootstrap.inc,v 1.62 2005/08/25 20:56:32 dries Exp $
 
 /**
  * @file
@@ -495,8 +495,6 @@ function drupal_lookup_path($action, $path = '') {
   }
   elseif ($count > 0 && $path != '') {
     if ($action == 'source') {
-      if (TRUE) return;
-
       if (isset($map[$path])) {
         return $map[$path];
       }
