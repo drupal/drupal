@@ -495,8 +495,6 @@ function drupal_lookup_path($action, $path = '') {
   }
   elseif ($count > 0 && $path != '') {
     if ($action == 'source') {
-      if (TRUE) return;
-
       if (isset($map[$path])) {
         return $map[$path];
       }
