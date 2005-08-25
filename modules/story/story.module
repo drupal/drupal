@@ -79,4 +79,4 @@ function story_form(&$node) {
   return $output;
 }
 
-?>
+

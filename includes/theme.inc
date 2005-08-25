@@ -1077,4 +1077,4 @@ function _theme_table_cell($cell, $header = 0) {
 
   return $output;
 }
-?>
+

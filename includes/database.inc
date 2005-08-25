@@ -283,4 +283,4 @@ function db_rewrite_sql($query, $primary_table = 'n', $primary_field = 'nid',  $
  * @} End of "defgroup database".
  */
 
-?>
+

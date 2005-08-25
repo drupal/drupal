@@ -676,4 +676,4 @@ function _profile_field_serialize($type = NULL) {
   return $type == 'date';
 }
 
-?>
+

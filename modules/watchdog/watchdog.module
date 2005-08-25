@@ -161,4 +161,4 @@ function _watchdog_get_message_types() {
   return $types;
 }
 
-?>
+

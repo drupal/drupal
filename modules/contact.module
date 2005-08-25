@@ -338,4 +338,4 @@ function contact_mail_page() {
 
   return $output;
 }
-?>
+

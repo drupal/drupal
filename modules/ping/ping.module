@@ -64,4 +64,4 @@ function ping_ping($name = '', $url = '') {
   }
 }
 
-?>
+

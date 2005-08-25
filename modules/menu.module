@@ -574,4 +574,4 @@ function menu_node_form_delete($node) {
     drupal_set_message(t('The menu item has been removed.'));
   }
 }
-?>
+

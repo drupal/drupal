@@ -299,4 +299,4 @@ function image_gd_close($res, $destination, $extension) {
   return $close_func($res, $destination);
 }
 
-?>
+

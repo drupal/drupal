@@ -1662,4 +1662,4 @@ function _comment_update_node_statistics($nid) {
     db_query("UPDATE {node_comment_statistics} SET comment_count = %d, last_comment_timestamp = %d, last_comment_name = '%s', last_comment_uid = %d WHERE nid = %d", 0, NULL, 0, 0, $nid);
   }
 }
-?>
+

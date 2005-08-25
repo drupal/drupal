@@ -273,4 +273,4 @@ function db_escape_string($text) {
  * @} End of "ingroup database".
  */
 
-?>
+

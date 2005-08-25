@@ -456,4 +456,4 @@ function poll_update($node) {
   }
 }
 
-?>
+

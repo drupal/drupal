@@ -423,4 +423,4 @@ function _upload_image($file) {
   return $file;
 }
 
-?>
+

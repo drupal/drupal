@@ -724,4 +724,4 @@ function _blogapi_get_node_types() {
 
   return $types;
 }
-?>
+

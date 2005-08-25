@@ -129,4 +129,4 @@ function throttle_settings() {
   return $output;
 }
 
-?>
+

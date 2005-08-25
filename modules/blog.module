@@ -291,4 +291,4 @@ function blog_block($op = 'list', $delta = 0) {
   }
 }
 
-?>
+

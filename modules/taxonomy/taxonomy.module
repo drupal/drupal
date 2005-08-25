@@ -1294,4 +1294,4 @@ function taxonomy_autocomplete($vid, $string = '') {
   }
 }
 
-?>
+

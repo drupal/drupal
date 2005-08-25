@@ -106,4 +106,4 @@ function help_page() {
   return $output;
 }
 
-?>
+

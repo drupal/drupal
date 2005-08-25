@@ -1187,4 +1187,4 @@ function theme_aggregator_page_item($item) {
   return $output;
 }
 
-?>
+

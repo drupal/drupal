@@ -449,4 +449,3 @@ function drupal_substr($text, $start, $length = NULL) {
   }  
 }
 
-?>

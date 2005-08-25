@@ -391,4 +391,4 @@ function xmlrpc_error_msg() {
   $error = xmlrpc_error();
   return $error->message;
 }
-?>
+

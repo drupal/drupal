@@ -520,4 +520,4 @@ function block_list($region) {
   return $blocks[$region];
 }
 
-?>
+

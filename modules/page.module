@@ -77,4 +77,4 @@ function page_form(&$node) {
   return $output;
 }
 
-?>
+

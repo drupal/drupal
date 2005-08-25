@@ -452,4 +452,4 @@ function locale_admin_string() {
   return $output;
 }
 
-?>
+

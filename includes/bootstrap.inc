@@ -881,4 +881,3 @@ function drupal_maintenance_theme() {
   $theme = '';
 }
 
-?>

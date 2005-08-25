@@ -550,4 +550,4 @@ function file_scan_directory($dir, $mask, $nomask = array('.', '..', 'CVS'), $ca
   return $files;
 }
 
-?>
+

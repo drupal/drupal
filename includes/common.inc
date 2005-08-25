@@ -1897,4 +1897,3 @@ function _drupal_bootstrap_full() {
   // Initialize the localization system.
   $locale = locale_initialize();
 }
-?>

@@ -285,4 +285,4 @@ function xmlrpc_server_method_help($xmlrpc_server, $method) {
   return $xmlrpc_server->help[$method];
 }
 
-?>
+
