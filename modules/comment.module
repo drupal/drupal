@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.366 2005/08/25 21:14:16 dries Exp $
+// $Id: comment.module,v 1.367 2005/08/28 15:16:58 dries Exp $
 
 /**
  * @file
@@ -251,7 +251,7 @@ function comment_nodeapi(&$node, $op, $arg = 0) {
       if (user_access('administer comments')) {
         $selected = isset($node->comment) ? $node->comment : variable_get("comment_$node->type", 2);
         $output = form_radios('', 'comment', $selected, array(t('Disabled'), t('Read only'), t('Read/write')));
-        return form_group_collapsible(t('User comments'), $output, TRUE);
+        return form_group_collapsible(t('Comment options'), $output, TRUE);
       }
       break;
 
