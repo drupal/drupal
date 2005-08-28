@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.220 2005/08/28 15:29:34 dries Exp $
+// $Id: taxonomy.module,v 1.221 2005/08/28 15:58:52 dries Exp $
 
 /**
  * @file
@@ -131,7 +131,7 @@ function taxonomy_form_vocabulary($edit = array()) {
   return form($form);
 }
 
-function taxonomy_save_vocabulary($edit) {
+function taxonomy_save_vocabulary(&$edit) {
   $edit['nodes'] = ($edit['nodes']) ? $edit['nodes'] : array();
   $edit['weight'] = ($edit['weight']) ? $edit['weight'] : 0;
 
@@ -160,7 +160,7 @@ function taxonomy_save_vocabulary($edit) {
 
   cache_clear_all();
 
-  return array('status' => $status, 'object' => $edit);
+  return $status;
 }
 
 function taxonomy_del_vocabulary($vid) {
@@ -246,7 +246,7 @@ function taxonomy_form_term($edit = array()) {
   return form($form);
 }
 
-function taxonomy_save_term($edit) {
+function taxonomy_save_term(&$edit) {
   if ($edit['tid'] && $edit['name']) {
     $data = array('name' => $edit['name'], 'description' => $edit['description'], 'weight' => $edit['weight']);
 
@@ -302,7 +302,7 @@ function taxonomy_save_term($edit) {
 
   cache_clear_all();
 
-  return array('status' => $status, 'object' => $edit);
+  return $status;
 }
 
 function taxonomy_del_term($tid) {
@@ -603,8 +603,9 @@ function taxonomy_node_save($nid, $terms) {
         }
 
         if (!$typed_term_tid) {
-          list($status, $object) = array_values(taxonomy_save_term(array('vid' => $vid, 'name' => $typed_term)));
-          $typed_term_tid = $object['tid'];
+          $edit = array('vid' => $vid, 'name' => $typed_term);
+          $status = taxonomy_save_term($edit);
+          $typed_term_tid = $edit['tid'];
         }
 
         db_query('INSERT INTO {term_node} (nid, tid) VALUES (%d, %d)', $nid, $typed_term_tid);
@@ -1155,8 +1156,7 @@ function taxonomy_admin() {
       }
     case t('Submit'):
       if (arg(3) == 'vocabulary') {
-        list($status, $object) = array_values(taxonomy_save_vocabulary($edit));
-        switch ($status) {
+        switch (taxonomy_save_vocabulary($edit)) {
           case SAVED_NEW:
             drupal_set_message(t('Created new vocabulary %name.', array('%name' => theme('placeholder', $edit['name']))));
             break;
@@ -1169,8 +1169,7 @@ function taxonomy_admin() {
         }
       }
       else {
-        list($status, $object) = array_values(taxonomy_save_term($edit));
-        switch ($status) {
+        switch (taxonomy_save_term($edit)) {
           case SAVED_NEW:
             drupal_set_message(t('Created new term %term.', array('%term' => theme('placeholder', $edit['name']))));
             break;

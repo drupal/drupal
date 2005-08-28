@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.263 2005/08/28 15:29:34 dries Exp $
+// $Id: forum.module,v 1.264 2005/08/28 15:58:52 dries Exp $
 
 /**
  * @file
@@ -91,27 +91,38 @@ function forum_admin() {
         break;
       }
       else {
+        $name = $edit['name'];
         $edit['name'] = 0;
       }
     case t('Submit'):
-      list($status, $object) = array_values(taxonomy_save_term($edit));
+      $status = taxonomy_save_term($edit);
       if (arg(3) == 'container') {
-        $containers = variable_get('forum_containers', array());
-        $containers[] = $edit['tid'];
-        variable_set('forum_containers', $containers);
-        if ($status == SAVED_NEW) {
-          drupal_set_message(t('Created new forum container %term.', array('%term' => theme('placeholder', $edit['name']))));
-        }
-        else {
-          drupal_set_message(t('The forum container %term has been updated.', array('%term' => theme('placeholder', $edit['name']))));
+        switch ($status) {
+          case SAVED_NEW:
+            $containers = variable_get('forum_containers', array());
+            $containers[] = $edit['tid'];
+            variable_set('forum_containers', $containers);
+            drupal_set_message(t('Created new forum container %term.', array('%term' => theme('placeholder', $edit['name']))));
+            break;
+          case SAVED_UPDATED:
+            drupal_set_message(t('The forum container %term has been updated.', array('%term' => theme('placeholder', $edit['name']))));
+            break;
+          case SAVED_UPDATED:
+            drupal_set_message(t('The forum container %term has been deleted.', array('%term' => theme('placeholder', $name))));
+            break;
         }
       }
       else {
-        if ($status == SAVED_NEW) {
-          drupal_set_message(t('Created new forum %term.', array('%term' => theme('placeholder', $edit['name']))));
-        }
-        else {
-          drupal_set_message(t('The forum %term has been updated.', array('%term' => theme('placeholder', $edit['name']))));
+        switch ($status) {
+          case SAVED_NEW:
+            drupal_set_message(t('Created new forum %term.', array('%term' => theme('placeholder', $edit['name']))));
+            break;
+          case SAVED_UPDATED:
+            drupal_set_message(t('The forum %term has been updated.', array('%term' => theme('placeholder', $edit['name']))));
+            break;
+          case SAVED_DELETED:
+            drupal_set_message(t('The forum %term has been deleted.', array('%term' => theme('placeholder', $name))));
+            break;
         }
       }
       drupal_goto('admin/forum');
@@ -293,8 +304,9 @@ function _forum_get_vid() {
     // Check to see if a forum vocabulary exists
     $vid = db_result(db_query("SELECT vid FROM {vocabulary} WHERE module='%s'", 'forum'));
     if (!$vid) {
-      list($status, $object) = array_values(taxonomy_save_vocabulary(array('name' => 'Forums', 'multiple' => 0, 'required' => 1, 'hierarchy' => 1, 'relations' => 0, 'module' => 'forum', 'nodes' => array('forum'))));
-      $vid = $object['vid'];
+      $edit = array('name' => 'Forums', 'multiple' => 0, 'required' => 1, 'hierarchy' => 1, 'relations' => 0, 'module' => 'forum', 'nodes' => array('forum'));
+      taxonomy_save_vocabulary($edit);
+      $vid = $edit['vid'];
     }
     variable_set('forum_nav_vocabulary', $vid);
   }
