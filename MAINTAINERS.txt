@@ -40,8 +40,8 @@ PATH MODULE
 M: Matt Westgate <drupal@asitis.org>
 S: maintained
 
-POSTGRES PORT
-M: Adrian Rossouw <adrian@obsidian.co.za>
+POSTGRESQL PORT
+M: Piotr Krukowiecki <pgsql@cvbge.org>
 S: maintained
 
 STATISTICS MODULE
