@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.474 2005/08/25 21:14:15 dries Exp $
+// $Id: common.inc,v 1.475 2005/08/28 16:19:24 dries Exp $
 
 /**
  * @file
@@ -649,7 +649,7 @@ function t($string, $args = 0) {
  * Encode special characters in a plain-text string for display as HTML.
  */
 function check_plain($text) {
-  return htmlspecialchars($text);
+  return htmlspecialchars($text, ENT_QUOTES);
 }
 
 /**
