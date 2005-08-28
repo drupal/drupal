@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.221 2005/08/28 15:58:52 dries Exp $
+// $Id: taxonomy.module,v 1.222 2005/08/28 16:30:50 dries Exp $
 
 /**
  * @file
@@ -460,10 +460,10 @@ function taxonomy_form_all($free_tags = 0) {
  */
 function taxonomy_get_vocabularies($type = NULL) {
   if ($type) {
-    $result = db_query("SELECT v.*, n.type FROM {vocabulary} v LEFT JOIN {vocabulary_node_types} n ON v.vid = n.vid WHERE n.type = '%s' ORDER BY v.weight, v.name", $type);
+    $result = db_query(db_rewrite_sql("SELECT v.vid, v.*, n.type FROM {vocabulary} v LEFT JOIN {vocabulary_node_types} n ON v.vid = n.vid WHERE n.type = '%s' ORDER BY v.weight, v.name", 'v', 'vid'), $type);
   }
   else {
-    $result = db_query('SELECT v.*, n.type FROM {vocabulary} v LEFT JOIN {vocabulary_node_types} n ON v.vid = n.vid ORDER BY v.weight, v.name');
+    $result = db_query(db_rewrite_sql('SELECT v.*, n.type FROM {vocabulary} v LEFT JOIN {vocabulary_node_types} n ON v.vid = n.vid ORDER BY v.weight, v.name', 'v', 'vid'));
   }
 
   $vocabularies = array();
@@ -494,7 +494,7 @@ function taxonomy_node_form($type, $node = '', $help = NULL, $name = 'taxonomy')
     $terms = $node->taxonomy;
   }
 
-  $c = db_query("SELECT v.*, n.type FROM {vocabulary} v INNER JOIN {vocabulary_node_types} n ON v.vid = n.vid WHERE n.type = '%s' ORDER BY v.weight, v.name", $type);
+  $c = db_query(db_rewrite_sql("SELECT v.*, n.type FROM {vocabulary} v INNER JOIN {vocabulary_node_types} n ON v.vid = n.vid WHERE n.type = '%s' ORDER BY v.weight, v.name", 'v', 'vid'), $type);
   while ($vocabulary = db_fetch_object($c)) {
     if ($vocabulary->tags) {
       $typed_terms = array();
@@ -524,7 +524,7 @@ function taxonomy_node_form($type, $node = '', $help = NULL, $name = 'taxonomy')
  * Find all terms associated to the given node, within one vocabulary.
  */
 function taxonomy_node_get_terms_by_vocabulary($nid, $vid, $key = 'tid') {
-  $result = db_query('SELECT t.* FROM {term_data} t, {term_node} r WHERE t.tid = r.tid AND t.vid = %d AND r.nid = %d ORDER BY weight', $vid, $nid);
+  $result = db_query(db_rewrite_sql('SELECT t.tid, t.* FROM {term_data} t, {term_node} r WHERE t.tid = r.tid AND t.vid = %d AND r.nid = %d ORDER BY weight', 't', 'tid'), $vid, $nid);
   $terms = array();
   while ($term = db_fetch_object($result)) {
     $terms[$term->$key] = $term;
@@ -658,7 +658,7 @@ function taxonomy_get_related($tid, $key = 'tid') {
  */
 function taxonomy_get_parents($tid, $key = 'tid') {
   if ($tid) {
-    $result = db_query('SELECT t.* FROM {term_hierarchy} h, {term_data} t WHERE h.parent = t.tid AND h.tid = %d ORDER BY weight, name', $tid);
+    $result = db_query(db_rewrite_sql('SELECT t.tid, t.* FROM {term_hierarchy} h, {term_data} t WHERE h.parent = t.tid AND h.tid = %d ORDER BY weight, name', 't', 'tid'), $tid);
     $parents = array();
     while ($parent = db_fetch_object($result)) {
       $parents[$parent->$key] = $parent;
@@ -691,10 +691,10 @@ function taxonomy_get_parents_all($tid) {
  */
 function taxonomy_get_children($tid, $vid = 0, $key = 'tid') {
   if ($vid) {
-    $result = db_query('SELECT t.* FROM {term_hierarchy} h, {term_data} t WHERE t.vid = %d AND h.tid = t.tid AND h.parent = %d ORDER BY weight, name', $vid, $tid);
+    $result = db_query(db_rewrite_sql('SELECT t.* FROM {term_hierarchy} h, {term_data} t WHERE t.vid = %d AND h.tid = t.tid AND h.parent = %d ORDER BY weight, name', 't', 'tid'), $vid, $tid);
   }
   else {
-    $result = db_query('SELECT t.* FROM {term_hierarchy} h, {term_data} t WHERE h.tid = t.tid AND parent = %d ORDER BY weight, name', $tid);
+    $result = db_query(db_rewrite_sql('SELECT t.* FROM {term_hierarchy} h, {term_data} t WHERE h.tid = t.tid AND parent = %d ORDER BY weight, name', 't', 'tid'), $tid);
   }
   $children = array();
   while ($term = db_fetch_object($result)) {
@@ -837,7 +837,7 @@ function _taxonomy_term_children($tid) {
  *   An array of matching term objects.
  */
 function taxonomy_get_term_by_name($name) {
-  $db_result = db_query("SELECT * FROM {term_data} WHERE LOWER('%s') LIKE LOWER(name)", trim($name));
+  $db_result = db_query(db_rewrite_sql("SELECT t.tid, t.* FROM {term_data} t WHERE LOWER('%s') LIKE LOWER(name)", 't', 'tid'), trim($name));
   $result = array();
   while ($term = db_fetch_object($db_result)) {
     $result[] = $term;
