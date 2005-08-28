@@ -1,5 +1,5 @@
 <?php
-// $Id: settings.php,v 1.16 2005/04/14 18:34:31 dries Exp $
+// $Id: settings.php,v 1.17 2005/08/28 18:26:20 dries Exp $
 
 /**
  * @file
@@ -125,4 +125,3 @@ ini_set('session.use_trans_sid',    0);
 //  'anonymous' => 'Visitor'
 //);
 
-?>

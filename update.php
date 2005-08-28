@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.153 2005/08/25 21:03:53 dries Exp $
+// $Id: update.php,v 1.154 2005/08/28 18:26:20 dries Exp $
 
 /**
  * @file
@@ -129,4 +129,3 @@ if ($output) {
   print theme('maintenance_page', $output);
 }
 
-?>

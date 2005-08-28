@@ -1,5 +1,5 @@
 <?php
-// $Id: index.php,v 1.86 2005/07/23 05:57:27 dries Exp $
+// $Id: index.php,v 1.87 2005/08/28 18:26:20 dries Exp $
 
 /**
  * @file
@@ -29,4 +29,3 @@ switch ($return) {
 
 drupal_page_footer();
 
-?>
