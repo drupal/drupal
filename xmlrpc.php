@@ -12,4 +12,3 @@ include_once './includes/xmlrpc.inc';
 include_once './includes/xmlrpcs.inc';
 
 xmlrpc_server(module_invoke_all('xmlrpc'));
-?>

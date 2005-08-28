@@ -129,4 +129,3 @@ if ($output) {
   print theme('maintenance_page', $output);
 }
 
-?>

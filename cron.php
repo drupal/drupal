@@ -29,4 +29,3 @@ module_invoke_all('cron');
 variable_set('cron_busy', false);
 watchdog('cron', t('Cron run completed'));
 
-?>

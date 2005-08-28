@@ -29,4 +29,3 @@ switch ($return) {
 
 drupal_page_footer();
 
-?>

@@ -125,4 +125,3 @@ ini_set('session.use_trans_sid',    0);
 //  'anonymous' => 'Visitor'
 //);
 
-?>
