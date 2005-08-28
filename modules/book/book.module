@@ -7,10 +7,10 @@
  */
 
 /**
- * Implementation of hook_node_name().
+ * Implementation of hook_node().
  */
-function book_node_name($node) {
-  return t('book page');
+function book_node() {
+  return array('book' => array('name' => t('book page'), 'base' => 'book'));
 }
 
 /**

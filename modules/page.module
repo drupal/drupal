@@ -26,10 +26,10 @@ function page_perm() {
 }
 
 /**
- * Implementation of hook_node_name().
+ * Implementation of hook_node().
  */
-function page_node_name($node) {
-  return t('page');
+function page_node() {
+  return array('page' => array('name' => t('page'), 'base' => 'page'));
 }
 
 /**

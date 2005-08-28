@@ -27,10 +27,10 @@ function forum_help($section) {
 }
 
 /**
- * Implementation of hook_node_name().
+ * Implementation of hook_node().
  */
-function forum_node_name($node) {
-  return t('forum topic');
+function forum_node() {
+  return array('forum' => array('name' => t('forum topic'), 'base' => 'forum'));
 }
 
 /**

@@ -258,10 +258,10 @@ function poll_load($node) {
 }
 
 /**
- * Implementation of hook_node_name().
+ * Implementation of hook_node().
  */
-function poll_node_name($node) {
-  return t("poll");
+function poll_node() {
+  return array('poll' => array('name' => t("poll"), 'base' => 'poll'));
 }
 
 function poll_page() {

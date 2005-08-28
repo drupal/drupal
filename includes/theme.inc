@@ -232,7 +232,7 @@ function theme_get_settings($key = NULL) {
   );
 
   if (module_exist('node')) {
-    foreach (node_list() as $type) {
+    foreach (node_get_types() as $type) {
       $defaults['toggle_node_info_' . $type] = 1;
     }
   }
