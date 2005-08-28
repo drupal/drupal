@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.219 2005/08/25 21:14:17 dries Exp $
+// $Id: taxonomy.module,v 1.220 2005/08/28 15:29:34 dries Exp $
 
 /**
  * @file
@@ -107,17 +107,12 @@ function taxonomy_menu($may_cache) {
 }
 
 function taxonomy_form_vocabulary($edit = array()) {
-  foreach (node_list() as $type => $module) {
-    $node_type = node_invoke($type, 'node_name');
-    $nodes[$type] = $node_type ? $node_type : $type;
-  }
-
   $form .= form_textfield(t('Vocabulary name'), 'name', $edit['name'], 60, 64, t('The name for this vocabulary.  Example: "Topic".'), NULL, TRUE);
   // Prepend extra vocabulary form elements.
   $form .= implode('', module_invoke_all('taxonomy', 'form pre', 'vocabulary', $edit));
   $form .= form_textarea(t('Description'), 'description', $edit['description'], 60, 5, t('Description of the vocabulary; can be used by modules.'));
   $form .= form_textfield(t('Help text'), 'help', $edit['help'], 60, 255, t('Instructions to present to the user when choosing a term.'));
-  $form .= form_checkboxes(t('Types'), 'nodes', $edit['nodes'], $nodes, t('A list of node types you want to associate with this vocabulary.'), NULL, TRUE);
+  $form .= form_checkboxes(t('Types'), 'nodes', $edit['nodes'], node_get_types(), t('A list of node types you want to associate with this vocabulary.'), NULL, TRUE);
   $form .= form_radios(t('Hierarchy'), 'hierarchy', $edit['hierarchy'], array(t('Disabled'), t('Single'), t('Multiple')), t('Allows <a href="%help-url">a tree-like hierarchy</a> between terms of this vocabulary.', array('%help-url' => url('admin/help/taxonomy', NULL, NULL, 'hierarchy'))));
   $form .= form_checkbox(t('Related terms'), 'relations', 1, $edit['relations'], t('Allows <a href="%help-url">related terms</a> in this vocabulary.', array('%help-url' => url('admin/help/taxonomy', NULL, NULL, 'related-terms'))));
   $form .= form_checkbox(t('Free tagging'), 'tags', 1, $edit['tags'], t('Content is categorized by typing terms instead of choosing from a list.'));
@@ -374,7 +369,7 @@ function taxonomy_overview() {
     foreach ($vocabularies as $vocabulary) {
       $types = array();
       foreach ($vocabulary->nodes as $type) {
-        $node_type = node_invoke($type, 'node_name');
+        $node_type = node_get_name($type);
         $types[] = $node_type ? $node_type : $type;
       }
       $rows[] = array(check_plain($vocabulary->name), implode(', ', $types), l(t('edit vocabulary'), "admin/taxonomy/edit/vocabulary/$vocabulary->vid"), l(t('edit terms'), "admin/taxonomy/$vocabulary->vid"));

@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.227 2005/08/25 21:14:17 dries Exp $
+// $Id: system.module,v 1.228 2005/08/28 15:29:34 dries Exp $
 
 /**
  * @file
@@ -790,11 +790,11 @@ function system_theme_settings($key = '') {
     }
 
     // Toggle node display.
-    $node_list = module_invoke('node', 'list');
-    if ($node_list) {
+    $node_type = module_invoke('node', 'get_types');
+    if ($node_types) {
       $group = '';
-      foreach ($node_list as $type => $module) {
-        $group .= form_checkbox(node_invoke($type, 'node_name'), "$var][toggle_node_info_$type", 1, $settings["toggle_node_info_$type"]);
+      foreach ($node_types as $type => $name) {
+        $group .= form_checkbox($name, "$var][toggle_node_info_$type", 1, $settings["toggle_node_info_$type"]);
       }
       $form .= form_group(t('Display post information on'), $group, t('Enable or disable the "submitted by Username on date" text when displaying posts of the above type'));
     }

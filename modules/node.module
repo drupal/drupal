@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.523 2005/08/25 21:22:00 dries Exp $
+// $Id: node.module,v 1.524 2005/08/28 15:29:34 dries Exp $
 
 /**
  * @file
@@ -32,8 +32,8 @@ function node_help($section) {
       <dt>Published</dt><dd>When using Drupal's moderation system a node remains unpublished -- unavailable to non-moderators -- until it is marked Published.</dd></dl>
       <p>Now that you know what is in a node, here are some of the types of nodes available.</p>", array("%teaser" => url("admin/node/configure/settings")));
 
-      foreach (node_list() as $type => $module) {
-        $output .= '<h3>'. t('Node type: %module', array('%module' => node_invoke($type, 'node_name'))). '</h3>';
+      foreach (node_get_types() as $type => $name) {
+        $output .= '<h3>'. t('Node type: %name', array('%name' => $name)). '</h3>';
         $output .= implode("\n", module_invoke_all('help', 'node/add#'. $type));
       }
 
@@ -202,55 +202,73 @@ function node_teaser($body, $format = NULL) {
   return truncate_utf8($body, $size);
 }
 
-/**
- * Determine the module that defines the node type of the given node.
- *
- * @param &$node
- *   Either a node object, a node array, or a string containing the node type.
- * @return
- *   A string containing the name of the defining module.
- */
-function node_get_module_name($node) {
-  if (is_array($node)) {
-    $type = $node['type'];
-  }
-  else if (is_object($node)) {
-    $type = $node->type;
-  }
-  else if (is_string($node)) {
-    $type = $node;
-  }
+function _node_names($op = '', $node = NULL) {
+  static $node_names, $node_list;
 
-  $modules = node_list();
-
-  return $modules[$type];
+  if (!isset($node_names)) {
+    $node_names = module_invoke_all('node');
+    foreach ($node_names as $type => $value) {
+      $node_list[$type] = $value['name'];
+    }
+  }
+  if ($node) {
+    if (is_array($node)) {
+      $type = $node['type'];
+    }
+    elseif (is_object($node)) {
+      $type = $node->type;
+    }
+    elseif (is_string($node)) {
+      $type = $node;
+    }
+    if (!isset($node_names[$type])) {
+      return FALSE;
+    }
+  }
+  switch ($op) {
+    case 'base':
+      return $node_names[$type]['base'];
+    case 'list':
+      return $node_list;
+    case 'name':
+      return $node_list[$type];
+  }
 }
 
 /**
- * Get a list of all the defined node types.
+ * Determine the basename for hook_load etc.
  *
+ * @param $node
+ *   Either a node object, a node array, or a string containing the node type.
  * @return
- *   An associate array of consisting of (node type, module name) pairs for all node types.
+ *   The basename for hook_load, hook_nodeapi etc.
  */
-function node_list() {
-  static $types = array();
+function node_get_base($node) {
+  return _node_names('base', $node);
+}
 
-  if (empty($types)) {
-    foreach (module_list() as $module) {
-      if (module_hook($module, 'node_name')) {
-        $module_types = module_invoke($module, 'node_types');
-        if (is_array($module_types)) {
-          foreach ($module_types as $type) {
-            $types[$type] = $module;
-          }
-        }
-        else {
-          $types[$module] = $module;
-        }
-      }
-    }
-  }
-  return $types;
+/**
+ * Determine the human readable name for a given type.
+ *
+ * @param $node
+ *   Either a node object, a node array, or a string containing the node type.
+ * @return
+ *   The human readable name of the node type.
+ */
+function node_get_name($node) {
+  return _node_names('name', $node);
+}
+
+/**
+ * Return the list of available node types.
+ *
+ * @param $node
+ *   Either a node object, a node array, or a string containing the node type.
+ * @return
+ *   An array consisting (type => name) pairs.
+ */
+function node_get_types() {
+  return _node_names('list');
 }
 
 /**
@@ -264,9 +282,7 @@ function node_list() {
  *   TRUE iff the $hook exists in the node type of $node.
  */
 function node_hook(&$node, $hook) {
-  $function = node_get_module_name($node) ."_$hook";
-
-  return function_exists($function);
+  return module_hook(node_get_base($node), $hook);
 }
 
 /**
@@ -282,9 +298,8 @@ function node_hook(&$node, $hook) {
  *   The returned value of the invoked hook.
  */
 function node_invoke(&$node, $hook, $a2 = NULL, $a3 = NULL, $a4 = NULL) {
-  $function = node_get_module_name($node) ."_$hook";
-
-  if (function_exists($function)) {
+  if (node_hook($node, $hook)) {
+    $function = node_get_base($node) ."_$hook";
     return ($function($node, $a2, $a3, $a4));
   }
 }
@@ -303,16 +318,14 @@ function node_invoke(&$node, $hook, $a2 = NULL, $a3 = NULL, $a4 = NULL) {
  */
 function node_invoke_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
   $return = array();
-  foreach (module_list() as $name) {
+  foreach (module_implements('nodeapi') as $name) {
     $function = $name .'_nodeapi';
-    if (function_exists($function)) {
-      $result = $function($node, $op, $a3, $a4);
-      if (is_array($result)) {
-        $return = array_merge($return, $result);
-      }
-      else if (isset($result)) {
-        $return[] = $result;
-      }
+    $result = $function($node, $op, $a3, $a4);
+    if (is_array($result)) {
+      $return = array_merge($return, $result);
+    }
+    else if (isset($result)) {
+      $return[] = $result;
     }
   }
   return $return;
@@ -575,7 +588,7 @@ function node_search($op = 'search', $keys = null) {
 
         $extra = node_invoke_nodeapi($node, 'search result');
         $results[] = array('link' => url('node/'. $item),
-                           'type' => node_invoke($node, 'node_name'),
+                           'type' => node_get_name($node),
                            'title' => $node->title,
                            'user' => theme('username', $node),
                            'date' => $node->changed,
@@ -700,7 +713,7 @@ function node_menu($may_cache) {
     }
     else if (arg(0) == 'admin' && arg(1) == 'settings' && arg(2) == 'content-types' && is_string(arg(3))) {
       $items[] = array('path' => 'admin/settings/content-types/'. arg(3),
-        'title' => t("'%name' content type", array('%name' => node_invoke(arg(3), 'node_name'))),
+        'title' => t("'%name' content type", array('%name' => node_get_name(arg(3)))),
         'type' => MENU_CALLBACK);
     }
   }
@@ -784,10 +797,6 @@ function node_admin_nodes() {
   /*
   ** Filters
   */
-  $node_types = drupal_map_assoc(array_keys(node_list()));
-  foreach ($node_types as $k => $v) {
-    $node_types[$k] = node_invoke($v, 'node_name');
-  }
   // Regular filters
   $filters = array(
     'status'   => array('title' => t('status'),
@@ -796,7 +805,7 @@ function node_admin_nodes() {
                                            'promote-1'  => t('promoted'),      'promote-0' => t('not promoted'),
                                            'sticky-1'   => t('sticky'),        'sticky-0' => t('not sticky'))),
     'type'     => array('title' => t('type'), 'where' => "n.type = '%s'",
-                        'options' => $node_types));
+                        'options' => node_get_types()));
   // Merge all vocabularies into one for retrieving $value below
   if ($taxonomy = module_invoke('taxonomy', 'form_all')) {
     $terms = array();
@@ -912,7 +921,7 @@ function node_admin_nodes() {
   while ($node = db_fetch_object($result)) {
     $rows[] = array(form_checkbox(NULL, 'nodes]['. $node->nid, 1, 0),
                     l($node->title, 'node/'. $node->nid) .' '. theme('mark', node_mark($node->nid, $node->changed)),
-                    node_invoke($node, 'node_name'),
+                    node_get_name($node),
                     theme('username', $node),
                     ($node->status ? t('published') : t('not published')),
                     l(t('edit'), 'node/'. $node->nid .'/edit', array(), $destination));
@@ -947,8 +956,8 @@ function node_types_configure($type = NULL) {
 
     $node = new stdClass();
     $node->type = $type;
-    $group = form_textarea(t('Explanation or submission guidelines'), $type .'_help', variable_get($type .'_help', ''), 60, 5, t('This text will be displayed at the top of the %type submission form. It is useful for helping or instructing your users.', array('%type' => node_invoke($type, 'node_name'))));
-    $group .= form_select(t('Minimum number of words'), 'minimum_'. $type .'_size', variable_get('minimum_'. $type .'_size', 0), drupal_map_assoc(array(0, 10, 25, 50, 75, 100, 125, 150, 175, 200)), t('The minimum number of words a %type must be to be considered valid. This can be useful to rule out submissions that do not meet the site\'s standards, such as short test posts.', array('%type' => node_invoke($type, 'node_name'))));
+    $group = form_textarea(t('Explanation or submission guidelines'), $type .'_help', variable_get($type .'_help', ''), 60, 5, t('This text will be displayed at the top of the %type submission form. It is useful for helping or instructing your users.', array('%type' => node_get_name($type))));
+    $group .= form_select(t('Minimum number of words'), 'minimum_'. $type .'_size', variable_get('minimum_'. $type .'_size', 0), drupal_map_assoc(array(0, 10, 25, 50, 75, 100, 125, 150, 175, 200)), t('The minimum number of words a %type must be to be considered valid. This can be useful to rule out submissions that do not meet the site\'s standards, such as short test posts.', array('%type' => node_get_name($type))));
     $output = form_group(t('Submission form'), $group);
     $output .= form_group(t('Workflow'), implode('', node_invoke_nodeapi($node, 'settings')));
 
@@ -958,8 +967,8 @@ function node_types_configure($type = NULL) {
     $header = array(t('Type'), t('Operations'));
 
     $rows = array();
-    foreach (node_list() as $type => $module) {
-      $rows[] = array(node_invoke($type, 'node_name'), l(t('configure'), 'admin/settings/content-types/'. $type));
+    foreach (node_get_types() as $type => $name) {
+      $rows[] = array($name, l(t('configure'), 'admin/settings/content-types/'. $type));
     }
 
     return theme('table', $header, $rows);
@@ -1190,7 +1199,7 @@ function node_validate($node) {
   // Make sure the body has the minimum number of words.
   // todo use a better word counting algorithm that will work in other languages
   if (isset($node->body) && count(explode(' ', $node->body)) < variable_get('minimum_'. $node->type .'_size', 0)) {
-    form_set_error('body', t('The body of your %type is too short. You need at least %words words.', array('%words' => variable_get('minimum_'. $node->type .'_size', 0), '%type' => node_invoke($node->type, 'node_name'))));
+    form_set_error('body', t('The body of your %type is too short. You need at least %words words.', array('%words' => variable_get('minimum_'. $node->type .'_size', 0), '%type' => node_get_name($node))));
   }
 
   // Auto-generate the teaser, but only if it hasn't been set (e.g. by a
@@ -1279,7 +1288,7 @@ function node_form($edit) {
 
   // Get the node-specific bits.
   // We can't use node_invoke() because $param must be passed by reference.
-  $function = node_get_module_name($edit) .'_form';
+  $function = node_get_base($edit) .'_form';
   $param = array();
   if (function_exists($function)) {
     $form .= $function($edit, $param);
@@ -1391,7 +1400,7 @@ function node_add($type) {
   $edit = $_POST['edit'];
 
   // If a node type has been specified, validate its existence.
-  if (array_key_exists($type, node_list()) && node_access('create', $type)) {
+  if (array_key_exists($type, node_get_types()) && node_access('create', $type)) {
     // Initialize settings:
     $node = array('uid' => $user->uid, 'name' => $user->name, 'type' => $type);
 
@@ -1403,15 +1412,15 @@ function node_add($type) {
       }
     }
     $output = node_form($node);
-    drupal_set_title(t('Submit %name', array('%name' => node_invoke($node, 'node_name'))));
+    drupal_set_title(t('Submit %name', array('%name' => node_get_name($node))));
   }
   else {
     // If no (valid) node type has been provided, display a node type overview.
-    foreach (node_list() as $type => $module) {
+    foreach (node_get_types() as $type => $name) {
       if (node_access('create', $type)) {
-        $out = '<dt>'. l(node_invoke($type, 'node_name'), "node/add/$type", array('title' => t('Add a new %s.', array('%s' => node_invoke($type, 'node_name'))))) .'</dt>';
+        $out = '<dt>'. l($name, "node/add/$type", array('title' => t('Add a new %s.', array('%s' => $name)))) .'</dt>';
         $out .= '<dd>'. implode("\n", module_invoke_all('help', 'node/add#'. $type)) .'</dd>';
-        $item[node_invoke($type, 'node_name')] = $out;
+        $item[$name] = $out;
       }
     }
 
@@ -1485,8 +1494,7 @@ function node_preview($node) {
 
     $output .= node_form($node);
 
-    $name = node_invoke($node, 'node_name');
-    drupal_set_breadcrumb(array(l(t('Home'), NULL), l(t('create content'), 'node/add'), l(t('Submit %name', array('%name' => $name)), 'node/add/'. $node->type)));
+    drupal_set_breadcrumb(array(l(t('Home'), NULL), l(t('create content'), 'node/add'), l(t('Submit %name', array('%name' => node_get_name($node))), 'node/add/'. $node->type)));
 
     return $output;
   }
@@ -1543,7 +1551,7 @@ function node_submit(&$node) {
     if (node_access('update', $node)) {
       $node->nid = node_save($node);
       watchdog('content', t('%type: updated %title.', array('%type' => theme('placeholder', t($node->type)), '%title' => theme('placeholder', $node->title))), WATCHDOG_NOTICE, l(t('view'), 'node/'. $node->nid));
-      $msg = t('The %post was updated.', array ('%post' => node_invoke($node, 'node_name')));
+      $msg = t('The %post was updated.', array ('%post' => node_get_name($node)));
     }
   }
   else {
@@ -1552,7 +1560,7 @@ function node_submit(&$node) {
     if (node_access('create', $node)) {
       $node->nid = node_save($node);
       watchdog('content', t('%type: added %title.', array('%type' => theme('placeholder', t($node->type)), '%title' => theme('placeholder', $node->title))), WATCHDOG_NOTICE, l(t('view'), "node/$node->nid"));
-      $msg = t('Your %post was created.', array ('%post' => node_invoke($node, 'node_name')));
+      $msg = t('Your %post was created.', array ('%post' => node_get_name($node)));
     }
   }
 
@@ -1865,7 +1873,7 @@ function node_access($op, $node = NULL, $uid = NULL) {
 
   // Can't use node_invoke(), because the access hook takes the $op parameter
   // before the $node parameter.
-  $access = module_invoke(node_get_module_name($node), 'access', $op, $node);
+  $access = module_invoke(node_get_base($node), 'access', $op, $node);
   if (!is_null($access)) {
     return $access;
   }

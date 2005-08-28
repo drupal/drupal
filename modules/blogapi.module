@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.53 2005/08/25 21:14:16 dries Exp $
+// $Id: blogapi.module,v 1.54 2005/08/28 15:29:34 dries Exp $
 
 /**
  * @file
@@ -544,12 +544,8 @@ function blogapi_blogger_title(&$contents) {
 
 function blogapi_settings() {
   $output = form_select(t('XML-RPC Engine'), 'blogapi_engine', variable_get('blogapi_engine', 0), array(0 => 'Blogger', 1 => 'MetaWeblog', 2 => 'Movabletype'), t('RSD or Really-Simple-Discovery is a mechanism which allows external blogger tools to discover the APIs they can use to interact with Drupal. Here you can set the preferred method for blogger tools to interact with your site. The common XML-RPC engines are Blogger, MetaWeblog and Movabletype. If you are not sure which is the correct setting, choose Blogger.'));
-  foreach (node_list() as $type => $module) {
-      $node_types[$type] = node_invoke($type, 'node_name');
-      if (in_array($type, array('blog'))) {
-          $defaults[] = $type;
-      }
-  }
+  $node_types = node_get_types();
+  $defaults = isset($node_types['blog']) ? array('blog') : array();
   $output .= form_checkboxes(t('Blog types'), "blogapi_node_types", variable_get('blogapi_node_types', $defaults), $node_types, t('Select the content types for which you wish to enable posting via blogapi. Each type will appear as a different "blog" in the client application (if supported).'), 0, 1);
   return $output;
 }
@@ -716,7 +712,7 @@ function _blogapi_blogid($id) {
 function _blogapi_get_node_types() {
   $available_types = variable_get('blogapi_node_types', array('blog'));
   $types = array();
-  foreach (node_list() as $type => $module) {
+  foreach (node_get_types() as $type => $name) {
     if (node_access('create', $type) && in_array($type, $available_types)) {
       $types[] = $type;
     }

@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.262 2005/08/25 21:14:16 dries Exp $
+// $Id: forum.module,v 1.263 2005/08/28 15:29:34 dries Exp $
 
 /**
  * @file
@@ -27,10 +27,10 @@ function forum_help($section) {
 }
 
 /**
- * Implementation of hook_node_name().
+ * Implementation of hook_node().
  */
-function forum_node_name($node) {
-  return t('forum topic');
+function forum_node() {
+  return array('forum' => array('name' => t('forum topic'), 'base' => 'forum'));
 }
 
 /**
