@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.168 2005/08/28 15:29:34 dries Exp $
+// $Id: poll.module,v 1.169 2005/08/29 19:58:49 dries Exp $
 
 /**
  * @file
@@ -258,9 +258,9 @@ function poll_load($node) {
 }
 
 /**
- * Implementation of hook_node().
+ * Implementation of hook_node_info().
  */
-function poll_node() {
+function poll_node_info() {
   return array('poll' => array('name' => t("poll"), 'base' => 'poll'));
 }
 

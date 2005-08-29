@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.312 2005/08/28 15:29:34 dries Exp $
+// $Id: book.module,v 1.313 2005/08/29 19:58:49 dries Exp $
 
 /**
  * @file
@@ -7,9 +7,9 @@
  */
 
 /**
- * Implementation of hook_node().
+ * Implementation of hook_node_info().
  */
-function book_node() {
+function book_node_info() {
   return array('book' => array('name' => t('book page'), 'base' => 'book'));
 }
 

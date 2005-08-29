@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.224 2005/08/28 15:29:34 dries Exp $
+// $Id: blog.module,v 1.225 2005/08/29 19:58:49 dries Exp $
 
 /**
  * @file
@@ -7,9 +7,9 @@
  */
 
 /**
- * Implementation of hook_node().
+ * Implementation of hook_node_info().
  */
-function blog_node() {
+function blog_node_info() {
   return array('blog' => array('name' => t('personal blog entry'), 'base' => 'blog'));
 }
 

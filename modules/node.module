@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.524 2005/08/28 15:29:34 dries Exp $
+// $Id: node.module,v 1.525 2005/08/29 19:58:49 dries Exp $
 
 /**
  * @file
@@ -206,7 +206,7 @@ function _node_names($op = '', $node = NULL) {
   static $node_names, $node_list;
 
   if (!isset($node_names)) {
-    $node_names = module_invoke_all('node');
+    $node_names = module_invoke_all('node_info');
     foreach ($node_names as $type => $value) {
       $node_list[$type] = $value['name'];
     }

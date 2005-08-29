@@ -1,5 +1,5 @@
 <?php
-// $Id: page.module,v 1.134 2005/08/28 15:29:34 dries Exp $
+// $Id: page.module,v 1.135 2005/08/29 19:58:49 dries Exp $
 
 /**
  * @file
@@ -26,9 +26,9 @@ function page_perm() {
 }
 
 /**
- * Implementation of hook_node().
+ * Implementation of hook_node_info().
  */
-function page_node() {
+function page_node_info() {
   return array('page' => array('name' => t('page'), 'base' => 'page'));
 }
 

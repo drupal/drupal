@@ -1,5 +1,5 @@
 <?php
-// $Id: story.module,v 1.169 2005/08/28 15:29:34 dries Exp $
+// $Id: story.module,v 1.170 2005/08/29 19:58:49 dries Exp $
 
 /**
  * @file
@@ -19,9 +19,9 @@ function story_help($section) {
 }
 
 /**
- * Implementation of hook_node().
+ * Implementation of hook_node_info().
  */
-function story_node() {
+function story_node_info() {
   return array('story' => array('name' => t('story'), 'base' => 'story'));
 }
 
