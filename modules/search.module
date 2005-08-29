@@ -251,7 +251,7 @@ function update_index($search_array) {
       $wordlist = $node['text1'] .' '. $node['text2'];
 
       // Strip heaps of stuff out of it.
-      $wordlist = preg_replace("'<[\/\!]*?[^<>]*?>'si", '', $wordlist);
+      $wordlist = preg_replace("'<[\/\!]*?[^<>]*?>'si", ' ', $wordlist);
 
       // Remove punctuation/special characters (same rule as do_search()).
       $wordlist = preg_replace("'(!|%|,|:|;|\(|\)|\&|\"|\'|\.|-|\/|\?|\\\)'", '', $wordlist);
