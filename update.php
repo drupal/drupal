@@ -21,7 +21,7 @@ if (!ini_get("safe_mode")) {
   set_time_limit(180);
 }
 
-include_once "database/updates.inc";
+include_once './database/updates.inc';
 
 function update_data($start) {
   global $sql_updates;
@@ -99,7 +99,7 @@ function update_access_denied_page() {
 </ol>';
 }
 
-include_once "includes/bootstrap.inc";
+include_once './includes/bootstrap.inc';
 drupal_maintenance_theme();
 if (isset($_GET["op"])) {
   drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
@@ -125,7 +125,7 @@ else {
   $output = update_info_page();
 }
 
-if ($output) {
+if (isset($output)) {
   print theme('maintenance_page', $output);
 }
 
