@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysql.inc,v 1.35 2005/08/25 21:14:16 dries Exp $
+// $Id: database.mysql.inc,v 1.36 2005/08/29 19:32:55 dries Exp $
 
 /**
  * @file
@@ -268,6 +268,21 @@ function db_decode_blob($data) {
 function db_escape_string($text) {
   return addslashes($text);
 }
+
+/**
+ * Lock a table.
+ */
+function db_lock_table($table) {
+  db_query('LOCK TABLES {%s} WRITE', $table);
+}
+
+/**
+ * Unlock all locked tables.
+ */
+function db_unlock_tables() {
+  db_query('UNLOCK TABLES');
+}
+
 
 /**
  * @} End of "ingroup database".
