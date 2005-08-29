@@ -256,6 +256,22 @@ function db_escape_string($text) {
 }
 
 /**
+ * Lock a table.
+ * This function automatically starts a transaction.
+ */
+function db_lock_table($table) {
+  db_query('BEGIN; LOCK TABLE {%s} IN EXCLUSIVE MODE', $table);
+}
+
+/**
+ * Unlock all locked tables.
+ * This function automatically commits a transation.
+ */
+function db_unlock_tables() {
+  db_query('COMMIT');
+}
+
+/**
  * @} End of "ingroup database".
  */
 

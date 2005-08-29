@@ -270,6 +270,21 @@ function db_escape_string($text) {
 }
 
 /**
+ * Lock a table.
+ */
+function db_lock_table($table) {
+  db_query('LOCK TABLES {%s} WRITE', $table);
+}
+
+/**
+ * Unlock all locked tables.
+ */
+function db_unlock_tables() {
+  db_query('UNLOCK TABLES');
+}
+
+
+/**
  * @} End of "ingroup database".
  */
 
