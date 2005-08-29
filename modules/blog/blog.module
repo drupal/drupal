@@ -7,9 +7,9 @@
  */
 
 /**
- * Implementation of hook_node().
+ * Implementation of hook_node_info().
  */
-function blog_node() {
+function blog_node_info() {
   return array('blog' => array('name' => t('personal blog entry'), 'base' => 'blog'));
 }
 

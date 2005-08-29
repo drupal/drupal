@@ -7,9 +7,9 @@
  */
 
 /**
- * Implementation of hook_node().
+ * Implementation of hook_node_info().
  */
-function book_node() {
+function book_node_info() {
   return array('book' => array('name' => t('book page'), 'base' => 'book'));
 }
 

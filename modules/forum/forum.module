@@ -27,9 +27,9 @@ function forum_help($section) {
 }
 
 /**
- * Implementation of hook_node().
+ * Implementation of hook_node_info().
  */
-function forum_node() {
+function forum_node_info() {
   return array('forum' => array('name' => t('forum topic'), 'base' => 'forum'));
 }
 

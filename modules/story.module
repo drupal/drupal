@@ -19,9 +19,9 @@ function story_help($section) {
 }
 
 /**
- * Implementation of hook_node().
+ * Implementation of hook_node_info().
  */
-function story_node() {
+function story_node_info() {
   return array('story' => array('name' => t('story'), 'base' => 'story'));
 }
 
