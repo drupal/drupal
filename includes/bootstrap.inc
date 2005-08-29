@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.64 2005/08/25 21:14:15 dries Exp $
+// $Id: bootstrap.inc,v 1.65 2005/08/29 19:17:17 dries Exp $
 
 /**
  * @file
@@ -232,10 +232,10 @@ function variable_get($name, $default) {
 function variable_set($name, $value) {
   global $conf;
 
-  db_query('LOCK TABLE {variable} WRITE');
+  db_lock_table('variable');
   db_query("DELETE FROM {variable} WHERE name = '%s'", $name);
   db_query("INSERT INTO {variable} (name, value) VALUES ('%s', '%s')", $name, serialize($value));
-  db_query('UNLOCK TABLE');
+  db_unlock_tables();
 
   cache_clear_all('variables');
 
@@ -321,12 +321,12 @@ function cache_get($key) {
 function cache_set($cid, $data, $expire = CACHE_PERMANENT, $headers = NULL) {
   $data = db_encode_blob($data);
 
-  db_query('LOCK TABLE {cache} WRITE');
+  db_lock_table('cache');
   db_query("UPDATE {cache} SET data = '%s', created = %d, expire = %d, headers = '%s' WHERE cid = '%s'", $data, time(), $expire, $headers, $cid);
   if (!db_affected_rows()) {
     @db_query("INSERT INTO {cache} (cid, data, created, expire, headers) VALUES ('%s', '%s', %d, %d, '%s')", $cid, $data, time(), $expire, $headers);
   }
-  db_query('UNLOCK TABLE');
+  db_unlock_tables();
 }
 
 /**
