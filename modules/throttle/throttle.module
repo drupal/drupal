@@ -1,5 +1,5 @@
 <?php
-// $Id: throttle.module,v 1.51 2005/08/25 21:14:17 dries Exp $
+// $Id: throttle.module,v 1.52 2005/08/30 15:04:54 dries Exp $
 
 /**
  * @file
@@ -56,7 +56,7 @@ function throttle_exit() {
       $guests = 0;
     }
     if ($max_users = variable_get('throttle_user', 0)) {
-      $users = db_result(db_query('SELECT COUNT(DISTINCT(uid)) AS count FROM {sessions} WHERE timestamp >= %d AND uid != 0 GROUP BY uid ORDER BY timestamp DESC', time() - $time_period));
+      $users = db_result(db_query('SELECT COUNT(DISTINCT(uid)) AS count FROM {sessions} WHERE timestamp >= %d AND uid != 0', time() - $time_period));
     }
     else {
       $users = 0;
