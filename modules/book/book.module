@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.313 2005/08/29 19:58:49 dries Exp $
+// $Id: book.module,v 1.314 2005/08/30 15:22:29 dries Exp $
 
 /**
  * @file
@@ -145,7 +145,7 @@ function book_block($op = 'list', $delta = 0) {
   else if ($op == 'view') {
     // Only display this block when the user is browsing a book:
     if (arg(0) == 'node' && is_numeric(arg(1))) {
-      $result = db_query(db_rewrite_sql('SELECT n.nid, n.title, b.parent FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE n.nid = %d'), arg(1));
+      $result = db_query(db_rewrite_sql('SELECT n.nid, n.title, b.parent FROM {node} n INNER JOIN {book} b ON n.vid = b.vid WHERE n.nid = %d'), arg(1));
       if (db_num_rows($result) > 0) {
         $node = db_fetch_object($result);
 
@@ -172,7 +172,7 @@ function book_block($op = 'list', $delta = 0) {
 function book_load($node) {
   global $user;
 
-  $book = db_fetch_object(db_query('SELECT parent, weight, log FROM {book} WHERE nid = %d', $node->nid));
+  $book = db_fetch_object(db_query('SELECT parent, weight FROM {book} WHERE vid = %d', $node->vid));
 
   if (arg(2) == 'edit' && !user_access('administer nodes')) {
     // If a user is about to update a book page, we overload some
@@ -194,14 +194,19 @@ function book_load($node) {
  * Implementation of hook_insert().
  */
 function book_insert($node) {
-  db_query("INSERT INTO {book} (nid, parent, weight, log) VALUES (%d, %d, %d, '%s')", $node->nid, $node->parent, $node->weight, $node->log);
+  db_query("INSERT INTO {book} (nid, vid, parent, weight) VALUES (%d, %d, %d, %d)", $node->nid, $node->vid, $node->parent, $node->weight);
 }
 
 /**
  * Implementation of hook_update().
  */
 function book_update($node) {
-  db_query("UPDATE {book} SET parent = %d, weight = %d, log = '%s' WHERE nid = %d", $node->parent, $node->weight, $node->log, $node->nid);
+  if ($node->revision) {
+    db_query("INSERT INTO {book} (nid, vid, parent, weight) VALUES (%d, %d, %d, %d, '%s')", $node->nid, $node->vid, $node->parent, $node->weight);
+  }
+  else {
+    db_query("UPDATE {book} SET parent = %d, weight = %d WHERE vid = %d", $node->parent, $node->weight, $node->vid);
+  }
 }
 
 /**
@@ -234,6 +239,7 @@ function book_form(&$node) {
 
   $output .= form_textarea(t('Body'), 'body', $node->body, 60, 20, '', NULL, TRUE);
   $output .= filter_form('format', $node->format);
+
   $output .= form_textarea(t('Log message'), 'log', $node->log, 60, 5, t('An explanation of the additions or updates being made to help other authors understand your motivations.'));
 
   if (user_access('administer nodes')) {
@@ -261,13 +267,15 @@ function book_outline() {
   if ($node->nid) {
     switch ($op) {
       case t('Add to book outline'):
-        db_query('INSERT INTO {book} (nid, parent, weight) VALUES (%d, %d, %d)', $node->nid, $edit['parent'], $edit['weight']);
+        db_query('INSERT INTO {book} (nid, vid, parent, weight) VALUES (%d, %d, %d, %d)', $node->nid, $node->vid, $edit['parent'], $edit['weight']);
+        db_query("UPDATE {node_revisions} SET log = '%s' WHERE vid = %d", $edit['log'], $node->vid);
         drupal_set_message(t('The post has been added to the book.'));
         drupal_goto("node/$node->nid");
         break;
 
       case t('Update book outline'):
-        db_query('UPDATE {book} SET parent = %d, weight = %d WHERE nid = %d', $edit['parent'], $edit['weight'], $node->nid);
+        db_query('UPDATE {book} SET parent = %d, weight = %d WHERE vid = %d', $edit['parent'], $edit['weight'], $node->vid);
+        db_query("UPDATE {node_revisions} SET log = '%s' WHERE vid = %d", $edit['log'], $node->vid);
         drupal_set_message(t('The book outline has been updated.'));
         drupal_goto("node/$node->nid");
         break;
@@ -279,10 +287,11 @@ function book_outline() {
         break;
 
       default:
-        $page = db_fetch_object(db_query('SELECT * FROM {book} WHERE nid = %d', $node->nid));
+        $page = db_fetch_object(db_query('SELECT * FROM {book} WHERE vid = %d', $node->vid));
 
         $output  = form_select(t('Parent'), 'parent', $page->parent, book_toc($node->nid), t('The parent page in the book.'));
         $output .= form_weight(t('Weight'), 'weight', $page->weight, 15, t('Pages at a given level are ordered first by weight and then by title.'));
+        $output .= form_textarea(t('Log message'), 'log', $node->log, 60, 5, t('An explanation to help other authors understand your motivations to put this post into the book.'));
 
         if ($page->nid) {
           $output .= form_submit(t('Update book outline'));
@@ -330,7 +339,7 @@ function book_revision_load($page, $conditions = array()) {
  * Return the path (call stack) to a certain book page.
  */
 function book_location($node, $nodes = array()) {
-  $parent = db_fetch_object(db_query(db_rewrite_sql('SELECT n.nid, n.title, b.parent, b.weight FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE n.nid = %d'), $node->parent));
+  $parent = db_fetch_object(db_query(db_rewrite_sql('SELECT n.nid, n.title, b.parent, b.weight FROM {node} n INNER JOIN {book} b ON n.vid = b.vid WHERE n.nid = %d'), $node->parent));
   if ($parent->title) {
     $nodes = book_location($parent, $nodes);
     array_push($nodes, $parent);
@@ -360,7 +369,7 @@ function book_prev($node) {
   }
 
   // Previous on the same level:
-  $direct_above = db_fetch_object(db_query(db_rewrite_sql("SELECT n.nid, n.title, b.weight FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE b.parent = %d AND n.status = 1 AND n.moderate = 0 AND (b.weight < %d OR (b.weight = %d AND n.title < '%s')) ORDER BY b.weight DESC, n.title DESC"), $node->parent, $node->weight, $node->weight, $node->title));
+  $direct_above = db_fetch_object(db_query(db_rewrite_sql("SELECT n.nid, n.title, b.weight FROM {node} n INNER JOIN {book} b ON n.vid = b.vid WHERE b.parent = %d AND n.status = 1 AND n.moderate = 0 AND (b.weight < %d OR (b.weight = %d AND n.title < '%s')) ORDER BY b.weight DESC, n.title DESC"), $node->parent, $node->weight, $node->weight, $node->title));
   if ($direct_above) {
     // Get last leaf of $above.
     $path = book_location_down($direct_above);
@@ -369,7 +378,7 @@ function book_prev($node) {
   }
   else {
     // Direct parent:
-    $prev = db_fetch_object(db_query(db_rewrite_sql('SELECT n.nid, n.title FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE n.nid = %d AND n.status = 1 AND n.moderate = 0'), $node->parent));
+    $prev = db_fetch_object(db_query(db_rewrite_sql('SELECT n.nid, n.title FROM {node} n INNER JOIN {book} b ON n.vid = b.vid WHERE n.nid = %d AND n.status = 1 AND n.moderate = 0'), $node->parent));
     return $prev;
   }
 }
@@ -379,7 +388,7 @@ function book_prev($node) {
  */
 function book_next($node) {
   // get first direct child
-  $child = db_fetch_object(db_query(db_rewrite_sql('SELECT n.nid, n.title, b.weight FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE b.parent = %d AND n.status = 1 AND n.moderate = 0 ORDER BY b.weight ASC, n.title ASC'), $node->nid));
+  $child = db_fetch_object(db_query(db_rewrite_sql('SELECT n.nid, n.title, b.weight FROM {node} n INNER JOIN {book} b ON n.vid = b.vid WHERE b.parent = %d AND n.status = 1 AND n.moderate = 0 ORDER BY b.weight ASC, n.title ASC'), $node->nid));
   if ($child) {
     return $child;
   }
@@ -388,7 +397,7 @@ function book_next($node) {
   array_push($path = book_location($node), $node); // Path to top-level node including this one.
 
   while (($leaf = array_pop($path)) && count($path)) {
-    $next = db_fetch_object(db_query(db_rewrite_sql("SELECT n.nid, n.title, b.weight FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE b.parent = %d AND n.status = 1 AND n.moderate = 0 AND (b.weight > %d OR (b.weight = %d AND n.title > '%s')) ORDER BY b.weight ASC, n.title ASC"), $leaf->parent, $leaf->weight, $leaf->weight, $leaf->title));
+    $next = db_fetch_object(db_query(db_rewrite_sql("SELECT n.nid, n.title, b.weight FROM {node} n INNER JOIN {book} b ON n.vid = b.vid WHERE b.parent = %d AND n.status = 1 AND n.moderate = 0 AND (b.weight > %d OR (b.weight = %d AND n.title > '%s')) ORDER BY b.weight ASC, n.title ASC"), $leaf->parent, $leaf->weight, $leaf->weight, $leaf->title));
     if ($next) {
       return $next;
     }
@@ -429,10 +438,6 @@ function book_content($node, $teaser = FALSE) {
  */
 function book_view(&$node, $teaser = FALSE, $page = FALSE) {
   $node = book_content($node, $teaser);
-
-  if (!$teaser && $node->moderate) {
-    $node->body .= '<div class="log"><div class="title">'. t('Log') .':</div>'. $node->log .'</div>';
-  }
 }
 
 /**
@@ -444,7 +449,7 @@ function book_nodeapi(&$node, $op, $teaser, $page) {
   switch ($op) {
     case 'view':
       if (!$teaser) {
-        $book = db_fetch_array(db_query('SELECT * FROM {book} WHERE nid = %d', $node->nid));
+        $book = db_fetch_array(db_query('SELECT * FROM {book} WHERE vid = %d', $node->vid));
         if ($book) {
           if ($node->moderate && user_access('administer nodes')) {
             drupal_set_message(t("The post has been submitted for moderation and won't be accessible until it has been approved."));
@@ -543,7 +548,7 @@ function book_toc_recurse($nid, $indent, $toc, $children, $exclude) {
  * Returns an array of titles and nid entries of book pages in table of contents order.
  */
 function book_toc($exclude = 0) {
-  $result = db_query(db_rewrite_sql('SELECT n.nid, n.title, b.parent, b.weight FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE n.status = 1 ORDER BY b.weight, n.title'));
+  $result = db_query(db_rewrite_sql('SELECT n.nid, n.title, b.parent, b.weight FROM {node} n INNER JOIN {book} b ON n.vid = b.vid WHERE n.status = 1 ORDER BY b.weight, n.title'));
 
   while ($node = db_fetch_object($result)) {
     if (!$children[$node->parent]) {
@@ -603,7 +608,7 @@ function book_tree_recurse($nid, $depth, $children, $unfold = array()) {
  * as a tree.
  */
 function book_tree($parent = 0, $depth = 3, $unfold = array()) {
-  $result = db_query(db_rewrite_sql('SELECT n.nid, n.title, b.parent, b.weight FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE n.status = 1 AND n.moderate = 0 ORDER BY b.weight, n.title'));
+  $result = db_query(db_rewrite_sql('SELECT n.nid, n.title, b.parent, b.weight FROM {node} n INNER JOIN {book} b ON n.vid = b.vid WHERE n.status = 1 AND n.moderate = 0 ORDER BY b.weight, n.title'));
 
   while ($node = db_fetch_object($result)) {
     $list = $children[$node->parent] ? $children[$node->parent] : array();
@@ -620,7 +625,7 @@ function book_tree($parent = 0, $depth = 3, $unfold = array()) {
  * Menu callback; prints a listing of all books.
  */
 function book_render() {
-  $result = db_query(db_rewrite_sql('SELECT n.nid, n.title, b.weight FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE b.parent = 0 AND n.status = 1 AND n.moderate = 0 ORDER BY b.weight, n.title'));
+  $result = db_query(db_rewrite_sql('SELECT n.nid, n.title, b.weight FROM {node} n INNER JOIN {book} b ON n.vid = b.vid WHERE b.parent = 0 AND n.status = 1 AND n.moderate = 0 ORDER BY b.weight, n.title'));
 
   $books = array();
   while ($node = db_fetch_object($result)) {
@@ -757,7 +762,7 @@ function _book_get_depth($nid) {
  *  - the output generated in visiting each node
  */
 function book_recurse($nid = 0, $depth = 1, $visit_pre, $visit_post) {
-  $result = db_query(db_rewrite_sql('SELECT n.nid, n.title, b.weight FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE n.status = 1 AND n.nid = %d AND n.moderate = 0 ORDER BY b.weight, n.title'), $nid);
+  $result = db_query(db_rewrite_sql('SELECT n.nid, n.title, b.weight FROM {node} n INNER JOIN {book} b ON n.vid = b.vid WHERE n.status = 1 AND n.nid = %d AND n.moderate = 0 ORDER BY b.weight, n.title'), $nid);
   while ($page = db_fetch_object($result)) {
     // Load the node:
     $node = node_load($page->nid);
@@ -775,7 +780,7 @@ function book_recurse($nid = 0, $depth = 1, $visit_pre, $visit_post) {
         $output .= book_node_visitor_html_pre($node, $depth, $nid);
       }
 
-      $children = db_query(db_rewrite_sql('SELECT n.nid, n.title, b.weight FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE n.status = 1 AND b.parent = %d AND n.moderate = 0 ORDER BY b.weight, n.title'), $node->nid);
+      $children = db_query(db_rewrite_sql('SELECT n.nid, n.title, b.weight FROM {node} n INNER JOIN {book} b ON n.vid = b.vid WHERE n.status = 1 AND b.parent = %d AND n.moderate = 0 ORDER BY b.weight, n.title'), $node->nid);
       while ($childpage = db_fetch_object($children)) {
           $childnode = node_load($childpage->nid);
           if ($childnode->nid != $node->nid) {
@@ -965,7 +970,7 @@ function book_admin_edit_line($node, $depth = 0) {
 }
 
 function book_admin_edit_book($nid, $depth = 1) {
-  $result = db_query(db_rewrite_sql('SELECT n.nid, b.weight FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE b.parent = %d ORDER BY b.weight, n.title'), $nid);
+  $result = db_query(db_rewrite_sql('SELECT n.nid, b.weight FROM {node} n INNER JOIN {book} b ON n.vid = b.vid WHERE b.parent = %d ORDER BY b.weight, n.title'), $nid);
 
   $rows = array();
 
@@ -1008,15 +1013,16 @@ function book_admin_save($nid, $edit = array()) {
 
     foreach ($edit as $nid => $value) {
       // Check to see whether the title needs updating:
-      $title = db_result(db_query('SELECT title FROM {node} WHERE nid = %d', $nid));
-      if ($title != $value['title']) {
+      $node = db_fetch_object(db_query('SELECT title, vid FROM {node} WHERE nid = %d', $nid));
+      if ($node->title != $value['title']) {
         db_query("UPDATE {node} SET title = '%s' WHERE nid = %d", $value['title'], $nid);
+        db_query("UPDATE {book} SET title = '%s' WHERE vid = %d", $value['title'], $node->vid);
       }
 
       // Check to see whether the weight needs updating:
-      $weight = db_result(db_query('SELECT weight FROM {book} WHERE nid = %d', $nid));
-      if ($weight != $value['weight']) {
-        db_query('UPDATE {book} SET weight = %d WHERE nid = %d', $value['weight'], $nid);
+      $node = db_fetch_object(db_query('SELECT b.vid, b.weight FROM {book} b INNER JOIN {node} n ON n.vid = b.vid WHERE n.nid = %d', $nid));
+      if ($node->weight != $value['weight']) {
+        db_query('UPDATE {book} SET weight = %d WHERE vid = %d', $value['weight'], $node->vid);
       }
     }
 
@@ -1031,7 +1037,7 @@ function book_admin_save($nid, $edit = array()) {
  * Menu callback; displays a listing of all orphaned book pages.
  */
 function book_admin_orphan() {
-  $result = db_query(db_rewrite_sql('SELECT n.nid, n.title, n.status, b.parent FROM {node} n INNER JOIN {book} b ON n.nid = b.nid'));
+  $result = db_query(db_rewrite_sql('SELECT n.nid, n.title, n.status, b.parent FROM {node} n INNER JOIN {book} b ON n.vid = b.vid'));
 
   while ($page = db_fetch_object($result)) {
     $pages[$page->nid] = $page;
@@ -1075,7 +1081,7 @@ function book_admin($nid = 0) {
  * Returns an administrative overview of all books.
  */
 function book_admin_overview() {
-  $result = db_query(db_rewrite_sql('SELECT n.nid, n.title, b.weight FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE b.parent = 0 ORDER BY b.weight, n.title'));
+  $result = db_query(db_rewrite_sql('SELECT n.nid, n.title, b.weight FROM {node} n INNER JOIN {book} b ON n.vid = b.vid WHERE b.parent = 0 ORDER BY b.weight, n.title'));
   while ($book = db_fetch_object($result)) {
     $rows[] = array(l($book->title, "node/$book->nid"), l(t('outline'), "admin/node/book/$book->nid"));
   }

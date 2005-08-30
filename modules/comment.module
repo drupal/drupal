@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.367 2005/08/28 15:16:58 dries Exp $
+// $Id: comment.module,v 1.368 2005/08/30 15:22:29 dries Exp $
 
 /**
  * @file
@@ -793,7 +793,7 @@ function comment_render($node, $cid = 0) {
       $output .= '<form method="post" action="'. url('comment') ."\"><div>\n";
       $output .= form_hidden('nid', $nid);
 
-      $result = db_query('SELECT c.cid, c.pid, c.nid, c.subject, c.comment, c.format, c.timestamp, c.name, c.mail, c.homepage, u.uid, u.name AS registered_name, u.picture, u.data, c.score, c.users FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = %d GROUP BY c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, c.name, c.mail, u.picture, c.homepage, u.uid, u.name, u.picture, u.data, c.score, c.users', $cid, COMMENT_PUBLISHED);
+      $result = db_query('SELECT c.cid, c.pid, c.nid, c.subject, c.comment, c.format, c.timestamp, c.name, c.mail, c.homepage, u.uid, u.name AS registered_name, u.picture, u.data, c.score, c.users FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = %d GROUP BY c.cid, c.pid, c.nid, c.subject, c.comment, c.format, c.timestamp, c.name, c.mail, u.picture, c.homepage, u.uid, u.name, u.picture, u.data, c.score, c.users', $cid, COMMENT_PUBLISHED);
 
       if ($comment = db_fetch_object($result)) {
         $comment->name = $comment->uid ? $comment->registered_name : $comment->name;

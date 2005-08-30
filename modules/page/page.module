@@ -1,5 +1,5 @@
 <?php
-// $Id: page.module,v 1.135 2005/08/29 19:58:49 dries Exp $
+// $Id: page.module,v 1.136 2005/08/30 15:22:29 dries Exp $
 
 /**
  * @file
@@ -73,6 +73,8 @@ function page_form(&$node) {
 
   $output .= form_textarea(t('Body'), 'body', $node->body, 60, 20, '', NULL, TRUE);
   $output .= filter_form('format', $node->format);
+
+  $output .= form_textarea(t('Log message'), 'log', $node->log, 60, 5, t('An explanation of the additions or updates being made to help other authors understand your motivations.'));
 
   return $output;
 }

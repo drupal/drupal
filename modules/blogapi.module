@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.54 2005/08/28 15:29:34 dries Exp $
+// $Id: blogapi.module,v 1.55 2005/08/30 15:22:29 dries Exp $
 
 /**
  * @file
@@ -218,9 +218,9 @@ function blogapi_blogger_new_post($appkey, $blogid, $username, $password, $conte
     return blogapi_error(t('You do not have permission to create the type of post you wanted to create.'));
   }
 
-  $nid = node_save($node);
-  if ($nid) {
-    watchdog('content', t('%type: added %title using blog API.', array('%type' => '<em>'. t($node->type) .'</em>', '%title' => theme('placeholder', $node->title))), WATCHDOG_NOTICE, l(t('view'), "node/$nid"));
+  node_save(&$node);
+  if ($node->nid) {
+    watchdog('content', t('%type: added %title using blog API.', array('%type' => '<em>'. t($node->type) .'</em>', '%title' => theme('placeholder', $node->title))), WATCHDOG_NOTICE, l(t('view'), "node/$node->nid"));
     return $nid;
   }
 
@@ -276,9 +276,9 @@ function blogapi_blogger_edit_post($appkey, $postid, $username, $password, $cont
   foreach ($terms as $term) {
     $node->taxonomy[] = $term->tid;
   }
-  $nid = node_save($node);
-  if ($nid) {
-    watchdog('content', t('%type: updated %title using blog API.', array('%type' => '<em>'. t($node->type) .'</em>', '%title' => theme('placeholder', $node->title))), WATCHDOG_NOTICE, l(t('view'), "node/$nid"));
+  node_save(&$node);
+  if ($node->nid) {
+    watchdog('content', t('%type: updated %title using blog API.', array('%type' => '<em>'. t($node->type) .'</em>', '%title' => theme('placeholder', $node->title))), WATCHDOG_NOTICE, l(t('view'), "node/$node->nid"));
     return true;
   }
 
@@ -325,7 +325,12 @@ function blogapi_blogger_get_recent_posts($appkey, $blogid, $username, $password
   }
 
   $type = _blogapi_blogid($blogid);
-  $result = db_query_range('SELECT n.nid, n.title,'. ($bodies ? ' n.body,' : '') ." n.created, u.name FROM {node} n, {users} u WHERE n.uid=u.uid AND n.type = '%s' AND n.uid = %d ORDER BY n.created DESC", $type, $user->uid, 0, $number_of_posts);
+  if ($bodies) {
+    $result = db_query_range("SELECT n.nid, n.title, r.body, n.created, u.name FROM {node} n, {node_revisions} r, {users} u WHERE n.uid = u.uid AND n.vid = r.vid AND n.type = '%s' AND n.uid = %d ORDER BY n.created DESC",  $type, $user->uid, 0, $number_of_posts);
+  }
+  else {
+    $result = db_query_range("SELECT n.nid, n.title, n.created, u.name FROM {node} n, {users} u WHERE n.uid = u.uid AND n.type = '%s' AND n.uid = %d ORDER BY n.created DESC", $type, $user->uid, 0, $number_of_posts);
+  }
   while ($blog = db_fetch_object($result)) {
     $blogs[] = _blogapi_get_post($blog, $bodies);
   }

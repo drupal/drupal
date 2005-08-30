@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.265 2005/08/29 19:58:49 dries Exp $
+// $Id: forum.module,v 1.266 2005/08/30 15:22:29 dries Exp $
 
 /**
  * @file
@@ -335,7 +335,7 @@ function forum_admin_configure() {
  * Implementation of hook_load().
  */
 function forum_load($node) {
-  $forum = db_fetch_object(db_query('SELECT * FROM {forum} WHERE nid = %d', $node->nid));
+  $forum = db_fetch_object(db_query('SELECT * FROM {forum} WHERE vid = %d', $node->vid));
 
   return $forum;
 }
@@ -546,7 +546,12 @@ function forum_validate(&$node) {
  * Implementation of hook_update().
  */
 function forum_update($node) {
-  db_query('UPDATE {forum} SET tid = %d WHERE nid = %d', $node->tid, $node->nid);
+  if ($node->is_new || $node->revision) {
+    db_query("INSERT INTO {forum} (nid, vid, tid) VALUES (%d, %d, %d)", $node->nid, $node->vid, $node->tid);
+  }
+  else {
+    db_query('UPDATE {forum} SET tid = %d WHERE vid = %d', $node->tid, $node->vid);
+  }
 }
 
 /**
@@ -579,7 +584,7 @@ function forum_form(&$node) {
  * Implementation of hook_insert().
  */
 function forum_insert($node) {
-  db_query('INSERT INTO {forum} (nid, tid) VALUES (%d, %d)', $node->nid, $node->tid);
+  db_query('INSERT INTO {forum} (nid, vid, tid) VALUES (%d, %d, %d)', $node->nid, $node->vid, $node->tid);
 }
 
 /**
@@ -704,7 +709,7 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
 
   $term = taxonomy_get_term($tid);
 
-  $sql = db_rewrite_sql("SELECT n.nid, f.tid, n.title, n.sticky, u.name, u.uid, n.created AS timestamp, n.comment AS comment_mode, l.last_comment_timestamp, IF(l.last_comment_uid, cu.name, l.last_comment_name) AS last_comment_name, l.last_comment_uid, l.comment_count AS num_comments FROM {node} n, {node_comment_statistics} l, {users} cu, {term_node} r, {users} u, {forum} f WHERE n.status = 1 AND l.last_comment_uid = cu.uid AND n.nid = l.nid AND n.nid = r.nid AND r.tid = %d AND n.uid = u.uid AND n.nid = f.nid");
+  $sql = db_rewrite_sql("SELECT n.nid, f.tid, n.title, n.sticky, u.name, u.uid, n.created AS timestamp, n.comment AS comment_mode, l.last_comment_timestamp, IF(l.last_comment_uid, cu.name, l.last_comment_name) AS last_comment_name, l.last_comment_uid, l.comment_count AS num_comments FROM {node} n, {node_comment_statistics} l, {users} cu, {term_node} r, {users} u, {forum} f WHERE n.status = 1 AND l.last_comment_uid = cu.uid AND n.nid = l.nid AND n.nid = r.nid AND r.tid = %d AND n.uid = u.uid AND n.vid = f.vid");
   $sql .= tablesort_sql($forum_topic_list_header, 'n.sticky DESC,');
 
   $sql_count = db_rewrite_sql("SELECT COUNT(n.nid) FROM {node} n INNER JOIN {term_node} r ON n.nid = r.nid AND r.tid = %d WHERE n.status = 1 AND n.type = 'forum'");

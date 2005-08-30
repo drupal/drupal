@@ -131,12 +131,13 @@ CREATE TABLE blocks (
 --
 
 CREATE TABLE book (
+  vid integer NOT NULL default '0',
   nid integer NOT NULL default '0',
   parent integer NOT NULL default '0',
   weight smallint NOT NULL default '0',
-  log text default '',
-  PRIMARY KEY (nid)
+  PRIMARY KEY (vid)
 );
+CREATE INDEX book_vid_idx ON book(vid);
 CREATE INDEX book_nid_idx ON book(nid);
 CREATE INDEX book_parent ON book(parent);
 
@@ -239,13 +240,15 @@ CREATE TABLE directory (
 CREATE TABLE files (
   fid SERIAL,
   nid integer NOT NULL default '0',
+  vid integer NOT NULL default '0',
   filename varchar(255) NOT NULL default '',
   filepath varchar(255) NOT NULL default '',
   filemime varchar(255) NOT NULL default '',
   filesize integer NOT NULL default '0',
-  list smallint NOT NULL default '0',
-  PRIMARY KEY (fid)
+  list smallint NOT NULL default '0'
 );
+CREATE INDEX files_fid_idx ON files(fid);
+CREATE INDEX files_vid_idx ON files(vid);
 
 --
 -- Table structure for table 'filter_formats'
@@ -403,6 +406,7 @@ CREATE TABLE moderation_votes (
 
 CREATE TABLE node (
   nid SERIAL,
+  vid integer NOT NULL default '0',
   type varchar(32) NOT NULL default '',
   title varchar(128) NOT NULL default '',
   uid integer NOT NULL default '0',
@@ -412,11 +416,7 @@ CREATE TABLE node (
   comment integer NOT NULL default '0',
   promote integer NOT NULL default '0',
   moderate integer NOT NULL default '0',
-  teaser text NOT NULL default '',
-  body text NOT NULL default '',
-  revisions text NOT NULL default '',
   sticky integer NOT NULL default '0',
-  format smallint NOT NULL default '0',
   PRIMARY KEY (nid)
 );
 CREATE INDEX node_type_idx ON node(type);
@@ -427,6 +427,7 @@ CREATE INDEX node_moderate_idx ON node (moderate);
 CREATE INDEX node_promote_status_idx ON node (promote, status);
 CREATE INDEX node_created ON node(created);
 CREATE INDEX node_changed ON node(changed);
+CREATE INDEX node_vid_idx ON node(vid);
 
 --
 -- Table structure for table `node_access`
@@ -442,6 +443,24 @@ CREATE TABLE node_access (
   PRIMARY KEY (nid,gid,realm)
 );
 
+--
+-- Table structure for table 'node_revisions'
+--
+
+CREATE TABLE node_revisions (
+  nid integer NOT NULL default '0',
+  vid integer NOT NULL default '0',
+  uid integer NOT NULL default '0',
+  title varchar(128) NOT NULL default '',
+  body text NOT NULL default '',
+  teaser text NOT NULL default '',
+  log text NOT NULL default '',
+  timestamp integer NOT NULL default '0',
+  format int NOT NULL default '0',
+  PRIMARY KEY  (nid,vid)
+);
+CREATE INDEX node_revisions_uid_idx ON node_revisions(uid);
+CREATE SEQUENCE node_revisions_vid_seq INCREMENT 1 START 1;
 
 --
 -- Table structure for table 'node_counter'

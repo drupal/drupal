@@ -136,11 +136,12 @@ CREATE TABLE blocks (
 --
 
 CREATE TABLE book (
+  vid int(10) unsigned NOT NULL default '0',
   nid int(10) unsigned NOT NULL default '0',
   parent int(10) NOT NULL default '0',
   weight tinyint(3) NOT NULL default '0',
-  log longtext,
-  PRIMARY KEY (nid),
+  PRIMARY KEY (vid),
+  KEY nid (nid),
   KEY parent (parent)
 ) TYPE=MyISAM;
 
@@ -243,12 +244,14 @@ CREATE TABLE directory (
 CREATE TABLE files (
   fid int(10) unsigned NOT NULL default '0',
   nid int(10) unsigned NOT NULL default '0',
+  vid int(10) unsigned NOT NULL default '0',
   filename varchar(255) NOT NULL default '',
   filepath varchar(255) NOT NULL default '',
   filemime varchar(255) NOT NULL default '',
   filesize int(10) unsigned NOT NULL default '0',
   list tinyint(1) unsigned NOT NULL default '0',
-  PRIMARY KEY (fid)
+  KEY vid (vid),
+  KEY fid (fid)
 ) TYPE=MyISAM;
 
 --
@@ -403,6 +406,7 @@ CREATE TABLE moderation_votes (
 
 CREATE TABLE node (
   nid int(10) unsigned NOT NULL auto_increment,
+  vid int(10) unsigned NOT NULL default '0',
   type varchar(32) NOT NULL default '',
   title varchar(128) NOT NULL default '',
   uid int(10) NOT NULL default '0',
@@ -412,16 +416,13 @@ CREATE TABLE node (
   comment int(2) NOT NULL default '0',
   promote int(2) NOT NULL default '0',
   moderate int(2) NOT NULL default '0',
-  teaser longtext NOT NULL,
-  body longtext NOT NULL,
-  revisions longtext NOT NULL,
   sticky int(2) NOT NULL default '0',
-  format int(4) NOT NULL default '0',
   PRIMARY KEY (nid),
   KEY node_type (type(4)),
   KEY node_title_type (title,type(4)),
   KEY status (status),
   KEY uid (uid),
+  KEY vid (vid),
   KEY node_moderate (moderate),
   KEY node_promote_status (promote, status),
   KEY node_created (created),
@@ -441,6 +442,24 @@ CREATE TABLE node_access (
   grant_update tinyint(1) unsigned NOT NULL default '0',
   grant_delete tinyint(1) unsigned NOT NULL default '0',
   PRIMARY KEY (nid,gid,realm)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table 'node_revisions'
+--
+
+CREATE TABLE node_revisions (
+  nid int(10) unsigned NOT NULL,
+  vid int(10) unsigned NOT NULL,
+  uid int(10) NOT NULL default '0',
+  title varchar(128) NOT NULL default '',
+  body longtext NOT NULL default '',
+  teaser longtext NOT NULL default '',
+  log longtext NOT NULL default '',
+  timestamp int(11) NOT NULL default '0',
+  format int(4) NOT NULL default '0',
+  PRIMARY KEY  (nid,vid),
+  KEY uid (uid)
 ) TYPE=MyISAM;
 
 --

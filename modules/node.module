@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.525 2005/08/29 19:58:49 dries Exp $
+// $Id: node.module,v 1.526 2005/08/30 15:22:29 dries Exp $
 
 /**
  * @file
@@ -367,31 +367,27 @@ function node_load($param = array(), $revision = NULL, $reset = NULL) {
   }
 
   // Retrieve the node.
-  $node = db_fetch_object(db_query(db_rewrite_sql('SELECT n.*, u.uid, u.name, u.picture, u.data FROM {node} n INNER JOIN {users} u ON u.uid = n.uid WHERE '. $cond)));
-  $node = drupal_unpack($node);
-
-  // Unserialize the revisions and user data fields.
-  if ($node->revisions) {
-    $node->revisions = unserialize($node->revisions);
+  if ($revision) {
+    $node = db_fetch_object(db_query(db_rewrite_sql('SELECT n.nid, r.vid, n.type, n.status, n.created, n.changed, n.comment, n.promote, n.moderate, n.sticky, r.timestamp AS revision_timestamp, r.title, r.body, r.teaser, r.log, r.format, u.uid, u.name, u.picture, u.data FROM {node} n INNER JOIN {users} u ON u.uid = n.uid INNER JOIN {node_revisions} r ON r.nid = n.nid AND r.vid = %d WHERE '. $cond), $revision));
+  }
+  else {
+    $node = db_fetch_object(db_query(db_rewrite_sql('SELECT n.nid, n.vid, n.type, n.status, n.created, n.changed, n.comment, n.promote, n.moderate, n.sticky, r.timestamp AS revision_timestamp, r.title, r.body, r.teaser, r.log, r.format, u.uid, u.name, u.picture, u.data FROM {node} n INNER JOIN {users} u ON u.uid = n.uid INNER JOIN {node_revisions} r ON r.vid = n.vid WHERE '. $cond)));
   }
 
-  // Call the node specific callback (if any) and piggy-back the
-  // results to the node or overwrite some values.
-  if ($extra = node_invoke($node, 'load')) {
-    foreach ($extra as $key => $value) {
-      $node->$key = $value;
+  if ($node->nid) {
+    // Call the node specific callback (if any) and piggy-back the
+    // results to the node or overwrite some values.
+    if ($extra = node_invoke($node, 'load')) {
+      foreach ($extra as $key => $value) {
+        $node->$key = $value;
+      }
     }
-  }
 
-  if ($extra = node_invoke_nodeapi($node, 'load')) {
-    foreach ($extra as $key => $value) {
-      $node->$key = $value;
+    if ($extra = node_invoke_nodeapi($node, 'load')) {
+      foreach ($extra as $key => $value) {
+        $node->$key = $value;
+      }
     }
-  }
-
-  // Return the desired revision.
-  if (!is_null($revision) && is_array($node->revisions[$revision])) {
-   $node = $node->revisions[$revision]['node'];
   }
 
   if ($cachable) {
@@ -405,61 +401,100 @@ function node_load($param = array(), $revision = NULL, $reset = NULL) {
  * Save a node object into the database.
  */
 function node_save($node) {
-  // Fetch fields to save to node table:
-  $fields = node_invoke_nodeapi($node, 'fields');
+  global $user;
 
-  // Serialize the revisions field:
-  if ($node->revisions) {
-    $node->revisions = serialize($node->revisions);
-  }
+  $node->is_new = false;
 
   // Apply filters to some default node fields:
   if (empty($node->nid)) {
     // Insert a new node.
+    $node->is_new = true;
 
     // Set some required fields:
     if (!$node->created) {
       $node->created = time();
     }
-    if (!$node->changed) {
+    $node->nid = db_next_id('{node}_nid');
+    $node->vid = db_next_id('{node_revisions}_vid');;
+  }
+  else {
+    // We need to ensure that all node fields are filled.
+    $node_current = node_load($node->nid);
+    foreach ($node as $field => $data) {
+      $node_current->$field = $data;
+    }
+    $node = $node_current;
+
+    if ($node->revision) {
+      $node->old_vid = $node->vid;
+      $node->vid = db_next_id('{node_revisions}_vid');
+      // We always update the timestamp for new revisions.
       $node->changed = time();
     }
-    $node->nid = db_next_id('{node}_nid');
+  }
 
-    // Prepare the query:
-    foreach ($node as $key => $value) {
-      if (in_array((string) $key, $fields)) {
-        $k[] = db_escape_string($key);
-        $v[] = $value;
-        $s[] = "'%s'";
-      }
+  if (!$node->changed) {
+    $node->changed = time();
+  }
+
+  // Split off revisions data to another structure
+  $revisions_table_values = array('nid' => $node->nid, 'vid' => $node->vid,
+                     'title' => $node->title, 'body' => $node->body,
+                     'teaser' => $node->teaser, 'log' => $node->log, 'timestamp' => $node->changed,
+                     'uid' => $user->uid, 'format' => $node->format);
+  $revisions_table_types = array('nid' => '%d', 'vid' => '%d',
+                     'title' => "'%s'", 'body' => "'%s'",
+                     'teaser' => "'%s'", 'log' => "'%s'", 'timestamp' => '%d',
+                     'uid' => '%d', 'format' => '%d');
+  $node_table_values = array('nid' => $node->nid, 'vid' => $node->vid,
+                    'title' => $node->title, 'type' => $node->type, 'uid' => $node->uid,
+                    'status' => $node->status, 'created' => $node->created,
+                    'changed' => $node->changed, 'comment' => $node->comment,
+                    'promote' => $node->promote, 'moderate' => $node->moderate,
+                    'sticky' => $node->sticky);
+  $node_table_types = array('nid' => '%d', 'vid' => '%d',
+                    'title' => "'%s'", 'type' => "'%s'", 'uid' => '%d',
+                    'status' => '%d', 'created' => '%d',
+                    'changed' => '%d', 'comment' => '%d',
+                    'promote' => '%d', 'moderate' => '%d',
+                    'sticky' => '%d');
+
+  //Generate the node table query and the
+  //the node_revisions table query
+  if ($node->is_new) {
+    $node_query = 'INSERT INTO {node} ('. implode(', ', array_keys($node_table_types)) .') VALUES ('. implode(', ', $node_table_types) .')';
+    $revisions_query = 'INSERT INTO {node_revisions} ('. implode(', ', array_keys($revisions_table_types)) .') VALUES ('. implode(', ', $revisions_table_types) .')';
+  }
+  else {
+    $arr = array();
+    foreach ($node_table_types as $key => $value) {
+      $arr[] = $key .' = '. $value;
     }
+    $node_table_values[] = $node->nid;
+    $node_query = 'UPDATE {node} SET '. implode(', ', $arr) .' WHERE nid = %d';
+    if ($node->revision) {
+      $revisions_query = 'INSERT INTO {node_revisions} ('. implode(', ', array_keys($revisions_table_types)) .') VALUES ('. implode(', ', $revisions_table_types) .')';
+    }
+    else {
+      $arr = array();
+      foreach ($revisions_table_types as $key => $value) {
+        $arr[] = $key .' = '. $value;
+      }
+      $revisions_table_values[] = $node->vid;
+      $revisions_query = 'UPDATE {node_revisions} SET '. implode(', ', $arr) .' WHERE vid = %d';
+    }
+  }
 
-    // Insert the node into the database:
-    db_query("INSERT INTO {node} (". implode(", ", $k) .") VALUES(". implode(", ", $s) .")", $v);
+  // Insert the node into the database:
+  db_query($node_query, $node_table_values);
+  db_query($revisions_query, $revisions_table_values);
 
-    // Call the node specific callback (if any):
+  // Call the node specific callback (if any):
+  if ($node->is_new) {
     node_invoke($node, 'insert');
     node_invoke_nodeapi($node, 'insert');
   }
   else {
-    // Update an existing node.
-
-    // Set some required fields:
-    $node->changed = time();
-
-    // Prepare the query:
-    foreach ($node as $key => $value) {
-      if (in_array($key, $fields)) {
-        $q[] = db_escape_string($key) ." = '%s'";
-        $v[] = $value;
-      }
-    }
-
-    // Update the node in the database:
-    db_query("UPDATE {node} SET ". implode(', ', $q) ." WHERE nid = '$node->nid'", $v);
-
-    // Call the node specific callback (if any):
     node_invoke($node, 'update');
     node_invoke_nodeapi($node, 'update');
   }
@@ -468,7 +503,7 @@ function node_save($node) {
   cache_clear_all();
 
   // Return the node ID:
-  return $node->nid;
+  return $node;
 }
 
 /**
@@ -492,6 +527,10 @@ function node_view($node, $teaser = FALSE, $page = FALSE, $links = TRUE) {
   // Remove the delimiter (if any) that separates the teaser from the body.
   // TODO: this strips legitimate uses of '<!--break-->' also.
   $node->body = str_replace('<!--break-->', '', $node->body);
+
+  if ($node->log != '' && !$teaser && $node->moderate) {
+    $node->body .= '<div class="log"><div class="title">'. t('Log') .':</div>'. $node->log .'</div>';
+  }
 
   // The 'view' hook can be implemented to overwrite the default function
   // to display nodes.
@@ -701,8 +740,7 @@ function node_menu($may_cache) {
           'access' => node_access('delete', $node),
           'weight' => 1,
           'type' => MENU_CALLBACK);
-
-        if ($node->revisions) {
+        if (user_access('administer nodes') && db_result(db_query('SELECT COUNT(vid) FROM {node_revisions} WHERE nid = %d', arg(1))) > 1) {
           $items[] = array('path' => 'node/'. arg(1) .'/revisions', 'title' => t('revisions'),
             'callback' => 'node_page',
             'access' => user_access('administer nodes'),
@@ -982,45 +1020,44 @@ function node_revision_overview($nid) {
   if (user_access('administer nodes')) {
     $node = node_load($nid);
 
-    drupal_set_title(check_plain($node->title));
+    drupal_set_title(t('Revisions for %title', array('%title' => check_plain($node->title))));
 
-    if ($node->revisions) {
-      $header = array(t('Older revisions'), array('colspan' => '3', 'data' => t('Operations')));
+    if ($node->vid) {
+      $header = array('', t('Author'), t('Title'), t('Date'), array('colspan' => '3', 'data' => t('Operations')));
 
-      foreach ($node->revisions as $key => $revision) {
-        $rows[] = array(t('revision #%r revised by %u on %d', array('%r' => $key, '%u' => theme('username', user_load(array('uid' => $revision['uid']))), '%d' => format_date($revision['timestamp'], 'small'))) . ($revision['history'] ? '<br /><small>'. $revision['history'] .'</small>' : ''), l(t('view'), "node/$node->nid", array(), "revision=$key"), l(t('rollback'), "node/$node->nid/rollback-revision/$key"), l(t('delete'), "node/$node->nid/delete-revision/$key"));
+      $revisions = node_revision_list($node);
+
+      $i = 0;
+      foreach ($revisions as $revision) {
+        $row = ++$i;
+        if ($revision->current_vid) {
+          $rows[] = array(
+            array('data' => $row .' '. t('(current)'), 'rowspan' => ($revision->log != '') ? 2 : 1),
+            theme('username', $revision),
+            $revision->title,
+            format_date($revision->timestamp, 'small'),
+            l(t('view'), "node/$node->nid"),
+            '', '');
+        }
+        else {
+          $rows[] = array(
+            array('data' => $row, 'rowspan' => ($revision->log != '') ? 2 : 1),
+            theme('username', $revision),
+            $revision->title,
+            format_date($revision->timestamp, 'small'),
+            l(t('view'), "node/$node->nid/revision/". $revision->vid),
+            l(t('set active'), "node/$node->nid/rollback-revision/". $revision->vid),
+            l(t('delete'), "node/$node->nid/delete-revision/". $revision->vid));
+        }
+        if ($revision->log != '') {
+          $rows[] = array(array('data' => $revision->log, 'colspan' => 6));
+        }
       }
       $output .= theme('table', $header, $rows);
     }
   }
 
   return $output;
-}
-
-
-/**
- * Return the revision with the specified revision number.
- */
-function node_revision_load($node, $revision) {
-  return $node->revisions[$revision]['node'];
-}
-
-/**
- * Create and return a new revision of the given node.
- */
-function node_revision_create($node) {
-  global $user;
-
-  // "Revision" is the name of the field used to indicate that we have to
-  // create a new revision of a node.
-  if ($node->nid && $node->revision) {
-    $prev = node_load($node->nid);
-    $node->revisions = $prev->revisions;
-    unset($prev->revisions);
-    $node->revisions[] = array('uid' => $user->uid, 'timestamp' => time(), 'node' => $prev, 'history' => $node->history);
-  }
-
-  return $node;
 }
 
 /**
@@ -1030,28 +1067,14 @@ function node_revision_rollback($nid, $revision) {
   global $user;
 
   if (user_access('administer nodes')) {
-    $node = node_load($nid);
+    if($title = db_fetch_object(db_query('SELECT title, timestamp FROM {node_revisions} WHERE nid = %d AND vid = %d', $nid, $revision))) {
+      db_query('UPDATE {node} SET vid = %d, changed = %d WHERE nid = %d', $revision, $title->timestamp, $nid);
 
-    // Extract the specified revision:
-    $rev = $node->revisions[$revision]['node'];
-
-    // Inherit all the past revisions:
-    $rev->revisions = $node->revisions;
-
-    // Save the original/current node:
-    $rev->revisions[] = array('uid' => $user->uid, 'timestamp' => time(), 'node' => $node);
-
-    // Remove the specified revision:
-    unset($rev->revisions[$revision]);
-
-    // Save the node:
-    foreach ($node as $key => $value) {
-      $filter[] = $key;
+      drupal_set_message(t('%title has been rolled back to the revision from %revision-date', array('%revision-date' => theme('placeholder', format_date($title->timestamp)), '%title' => theme('placeholder', check_plain($title->title)))));
     }
-
-    node_save($rev, $filter);
-
-    drupal_set_message(t('Rolled back to revision %revision of %title', array('%revision' => "<em>#$revision</em>", '%title' => theme('placeholder', $node->title))));
+    else {
+      drupal_set_message(t('You tried to roll back to an invalid revision.'), 'error');
+    }
     drupal_goto('node/'. $nid .'/revisions');
   }
 }
@@ -1061,14 +1084,17 @@ function node_revision_rollback($nid, $revision) {
  */
 function node_revision_delete($nid, $revision) {
   if (user_access('administer nodes')) {
-    $node = node_load($nid);
+    $count_revisions = db_result(db_query('SELECT COUNT(vid) FROM {node_revisions} WHERE nid = %d', $nid));
+    // Don't delete the last revision of the node or the current revision
+    if ($count_revisions > 1) {
+      db_query("DELETE FROM {node_revisions} WHERE nid = %d AND vid = %d", $nid, $revision);
+      drupal_set_message(t('Deleted revision with the ID %revision.', array('%revision' => theme('placeholder', $revision))));
+    }
+    else {
+      drupal_set_message(t('Deletion failed. You tried to delete the current revision.'));
+    }
 
-    unset($node->revisions[$revision]);
-
-    node_save($node, array('nid', 'revisions'));
-
-    drupal_set_message(t('Deleted revision %revision of %title', array('%revision' => "<em>#$revision</em>", '%title' => theme('placeholder', $node->title))));
-    drupal_goto('node/'. $nid . (count($node->revisions) ? '/revisions' : ''));
+    drupal_goto("node/$nid/revisions");
   }
 }
 
@@ -1076,12 +1102,13 @@ function node_revision_delete($nid, $revision) {
  * Return a list of all the existing revision numbers.
  */
 function node_revision_list($node) {
-  if (is_array($node->revisions)) {
-    return array_keys($node->revisions);
+  $revisions = array();
+  $result = db_query('SELECT r.vid, r.title, r.log, r.uid, n.vid AS current_vid, r.timestamp, u.name FROM {node_revisions} r LEFT JOIN {node} n ON n.vid = r.vid INNER JOIN {users} u ON u.uid = r.uid WHERE r.nid = %d ORDER BY r.timestamp ASC', $node->nid);
+  while ($revision = db_fetch_object($result)) {
+    $revisions[] = $revision;
   }
-  else {
-    return array();
-  }
+
+  return $revisions;
 }
 
 /**
@@ -1256,9 +1283,6 @@ function node_validate($node) {
     $node->revision = in_array('revision', $node_options);
     unset($node->created);
   }
-
-  // Create a new revision when required.
-  $node = node_revision_create($node);
 
   // Do node-type-specific validation checks.
   node_invoke($node, 'validate');
@@ -1549,7 +1573,7 @@ function node_submit(&$node) {
     // Check whether the current user has the proper access rights to
     // perform this operation:
     if (node_access('update', $node)) {
-      $node->nid = node_save($node);
+      node_save(&$node);
       watchdog('content', t('%type: updated %title.', array('%type' => theme('placeholder', t($node->type)), '%title' => theme('placeholder', $node->title))), WATCHDOG_NOTICE, l(t('view'), 'node/'. $node->nid));
       $msg = t('The %post was updated.', array ('%post' => node_get_name($node)));
     }
@@ -1558,7 +1582,7 @@ function node_submit(&$node) {
     // Check whether the current user has the proper access rights to
     // perform this operation:
     if (node_access('create', $node)) {
-      $node->nid = node_save($node);
+      node_save(&$node);
       watchdog('content', t('%type: added %title.', array('%type' => theme('placeholder', t($node->type)), '%title' => theme('placeholder', $node->title))), WATCHDOG_NOTICE, l(t('view'), "node/$node->nid"));
       $msg = t('Your %post was created.', array ('%post' => node_get_name($node)));
     }
@@ -1578,8 +1602,8 @@ function node_delete($edit) {
   if (node_access('delete', $node)) {
 
     if ($edit['confirm']) {
-      // Delete the specified node:
       db_query('DELETE FROM {node} WHERE nid = %d', $node->nid);
+      db_query('DELETE FROM {node_revisions} WHERE nid = %d', $node->nid);
 
       // Call the node-specific callback (if any):
       node_invoke($node, 'delete');
@@ -1702,6 +1726,18 @@ function node_page() {
         }
       }
       break;
+    case 'revision':
+      if (is_numeric(arg(1)) && is_numeric(arg(3))) {
+        $node = node_load(arg(1), arg(3));
+        if ($node->nid) {
+          drupal_set_title(t('Revision of %title', array('%title' => theme('placeholder', $node->title))));
+          print theme('page', node_show($node, arg(2)));
+        }
+        else {
+          drupal_not_found();
+        }
+      }
+      break;
     case t('Preview'):
       $edit = node_validate($edit);
       drupal_set_title(t('Preview'));
@@ -1799,9 +1835,6 @@ function node_nodeapi(&$node, $op, $arg = 0) {
     case 'settings':
       // $node contains the type name in this operation
       return form_checkboxes(t('Default options'), 'node_options_'. $node->type, variable_get('node_options_'. $node->type, array('status', 'promote')), array('status' => t('Published'), 'moderate' => t('In moderation queue'), 'promote' => t('Promoted to front page'), 'sticky' => t('Sticky at top of lists'), 'revision' => t('Create new revision')), t('Users with the <em>administer nodes</em> permission will be able to override these options.'));
-
-    case 'fields':
-      return array('nid', 'uid', 'type', 'title', 'teaser', 'body', 'revisions', 'status', 'promote', 'moderate', 'sticky', 'created', 'changed', 'format');
   }
 }
 

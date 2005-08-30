@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.48 2005/08/29 19:01:18 dries Exp $
+// $Id: upload.module,v 1.49 2005/08/30 15:22:29 dries Exp $
 
 /**
  * @file
@@ -314,7 +314,7 @@ function upload_nodeapi(&$node, $op, $arg) {
  *   The ammount of disk space used by the user in bytes.
  */
 function upload_space_used($uid) {
-  return db_result(db_query('SELECT SUM(f.filesize) FROM {files} f INNER JOIN {node} n ON f.nid = n.nid WHERE uid = %d', $uid));
+  return db_result(db_query('SELECT SUM(f.filesize) FROM {files} f INNER JOIN {node_revisions} n ON f.vid = n.vid WHERE uid = %d', $uid));
 }
 
 /**
@@ -324,7 +324,7 @@ function upload_space_used($uid) {
  *   The ammount of disk space used by uploaded files in bytes.
  */
 function upload_total_space_used() {
-  return db_result(db_query('SELECT SUM(f.filesize) FROM {files} f INNER JOIN {node} n ON f.nid = n.nid'));
+  return db_result(db_query('SELECT SUM(f.filesize) FROM {files} f INNER JOIN {node_revisions} n ON f.vid = n.vid'));
 }
 
 function upload_save($node) {
@@ -336,18 +336,33 @@ function upload_save($node) {
       // Insert new files:
       if ($file = file_save_upload($file, $file->filename)) {
         $fid = db_next_id('{files}_fid');
-        db_query("INSERT INTO {files} (fid, nid, filename, filepath, filemime, filesize, list) VALUES (%d, %d, '%s', '%s', '%s', %d, %d)",
-                 $fid, $node->nid, $file->filename, $file->filepath, $file->filemime, $file->filesize, $node->list[$key]);
+        db_query("INSERT INTO {files} (fid, nid, vid, filename, filepath, filemime, filesize, list) VALUES (%d, %d, %d, '%s', '%s', '%s', %d, %d)",
+                 $fid, $node->nid, $node->vid, $file->filename, $file->filepath, $file->filemime, $file->filesize, $node->list[$key]);
       }
     }
-    else {
-      // Remove or update existing files:
-      if ($node->remove[$key]) {
+  }
+  // Remove or update existing files:
+  foreach ((array)$node->remove as $key => $value) {
+    if ($node->remove[$key]) {
+      db_query('DELETE FROM {files} WHERE fid = %d AND vid = %d', $key, $node->vid);
+      // We only delete a file if it isn't used anymore by any revision.
+      $count = db_result(db_query('SELECT COUNT(fid) FROM {files} WHERE fid = %d', $key));
+      if (!($count > 0)) {
         file_delete($file->filepath);
-        db_query("DELETE FROM {files} WHERE fid = %d", $key);
       }
-      if ($file->list != $node->list[$key]) {
-        db_query("UPDATE {files} SET list = %d WHERE fid = %d", $node->list[$key], $key);
+    }
+  }
+  foreach ((array)$node->list as $key => $value) {
+    if (!$node->remove[$key]) {
+      db_query('UPDATE {files} SET list = %d WHERE fid = %d AND vid = %d', $node->list[$key], $key, $node->vid);
+    }
+  }
+  if ($node->old_vid) {
+    foreach ((array)$node->remove as $key => $remove) {
+      if (!$remove) {
+        $file = db_fetch_object(db_query('SELECT * FROM {files} WHERE vid = %d AND fid = %d', $node->old_vid, $key));
+        db_query("INSERT INTO {files} (fid, nid, vid, filename, filepath, filemime, filesize, list) VALUES (%d, %d, %d, '%s', '%s', '%s', %d, %d)",
+                 $key, $node->nid, $node->vid, $file->filename, $file->filepath, $file->filemime, $file->filesize, $file->list);
       }
     }
   }
@@ -392,8 +407,8 @@ function upload_form($node) {
 function upload_load($node) {
   $files = array();
 
-  if ($node->nid) {
-    $result = db_query("SELECT * FROM {files} WHERE nid = %d", $node->nid);
+  if ($node->vid) {
+    $result = db_query("SELECT * FROM {files} WHERE vid = %d", $node->vid);
     while ($file = db_fetch_object($result)) {
       $files[$file->fid] = $file;
     }

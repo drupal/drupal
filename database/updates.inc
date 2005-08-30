@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.128 2005/08/16 20:17:54 dries Exp $
+// $Id: updates.inc,v 1.129 2005/08/30 15:19:20 dries Exp $
 
 /**
  * @file
@@ -43,7 +43,8 @@ $sql_updates = array(
   "2005-07-29" => "update_142",
   "2005-07-30" => "update_143",
   "2005-08-08" => "update_144",
-  "2005-08-15" => "update_145"
+  "2005-08-15" => "update_145",
+  "2005-08-25" => "update_146"
 );
 
 function update_110() {
@@ -700,6 +701,78 @@ function update_145() {
     if (($theme != $default_theme) && $themes[$theme]->status == 1) {
       system_initialize_theme_blocks($theme);
     }
+  }
+
+  return $ret;
+}
+
+function update_146() {
+  $ret = array();
+
+  if ($GLOBALS['db_type'] == 'mysql') {
+    $ret[] = update_sql("CREATE TABLE {node_revisions}
+                                SELECT nid, nid AS vid, uid, type, title, body, teaser, changed AS timestamp, format
+                                FROM {node}");
+
+    $ret[] = update_sql("ALTER TABLE {node_revisions} CHANGE nid nid int(10) unsigned NOT NULL default '0'");
+    $ret[] = update_sql("ALTER TABLE {node_revisions} ADD log longtext");
+
+    $ret[] = update_sql("ALTER TABLE {node} ADD vid int(10) unsigned NOT NULL default '0'");
+    $ret[] = update_sql("ALTER TABLE {files} ADD vid int(10) unsigned NOT NULL default '0'");
+    $ret[] = update_sql("ALTER TABLE {book} ADD vid int(10) unsigned NOT NULL default '0'");
+    $ret[] = update_sql("ALTER TABLE {forum} ADD vid int(10) unsigned NOT NULL default '0'");
+
+    $ret[] = update_sql("ALTER TABLE {book} DROP PRIMARY KEY");
+    $ret[] = update_sql("ALTER TABLE {forum} DROP PRIMARY KEY");
+    $ret[] = update_sql("ALTER TABLE {files} DROP PRIMARY KEY");
+
+    $ret[] = update_sql("UPDATE {node} SET vid = nid");
+    $ret[] = update_sql("UPDATE {forum} SET vid = nid");
+    $ret[] = update_sql("UPDATE {book} SET vid = nid");
+    $ret[] = update_sql("UPDATE {files} SET vid = nid");
+
+    $ret[] = update_sql("ALTER TABLE {book} ADD PRIMARY KEY vid (vid)");
+    $ret[] = update_sql("ALTER TABLE {forum} ADD PRIMARY KEY vid (vid)");
+    $ret[] = update_sql("ALTER TABLE {node_revisions} ADD PRIMARY KEY vid (vid)");
+    $ret[] = update_sql("ALTER TABLE {node_revisions} ADD KEY nid (nid)");
+    $ret[] = update_sql("ALTER TABLE {node_revisions} ADD KEY uid (uid)");
+
+    $ret[] = update_sql("CREATE TABLE {old_revisions} SELECT nid, type, revisions FROM {node} WHERE revisions != ''");
+
+    $ret[] = update_sql("ALTER TABLE {book} ADD KEY nid (nid)");
+    $ret[] = update_sql("ALTER TABLE {forum} ADD KEY nid (nid)");
+    $ret[] = update_sql("ALTER TABLE {files} ADD KEY fid (fid)");
+    $ret[] = update_sql("ALTER TABLE {files} ADD KEY vid (vid)");
+    $vid = db_next_id('{node}_nid');
+    $ret[] = update_sql("INSERT INTO {sequences} (name, id) VALUES ('{node_revisions}_vid', $vid)");
+  }
+  else { // pgsql
+    $ret[] = update_sql("CREATE TABLE {node_revisions} AS
+                                SELECT nid, nid AS vid, uid, type, title, body, teaser, changed AS timestamp, format
+                                FROM {node}");
+
+    $ret[] = update_sql("UPDATE {node} SET vid = nid");
+    $ret[] = update_sql("UPDATE {forum} SET vid = nid");
+    $ret[] = update_sql("UPDATE {book} SET vid = nid");
+    $ret[] = update_sql("UPDATE {files} SET vid = nid");
+
+    $ret[] = update_sql("CREATE TABLE {old_revisions} AS SELECT nid, type, revisions FROM {node} WHERE revisions != ''");
+  }
+
+  // Move logs too.
+  $result = db_query("SELECT nid, log FROM {book} WHERE log != ''");
+  while ($row = db_fetch_object($result)) {
+    db_query("UPDATE {node_revisions} SET log = '%s' WHERE vid = %d", $row->log, $row->nid);
+  }
+
+  if ($GLOBALS['db_type'] == 'mysql') {
+    $ret[] = update_sql("ALTER TABLE {book} DROP log");
+    $ret[] = update_sql("ALTER TABLE {node} DROP teaser");
+    $ret[] = update_sql("ALTER TABLE {node} DROP body");
+    $ret[] = update_sql("ALTER TABLE {node} DROP format");
+    $ret[] = update_sql("ALTER TABLE {node} DROP revisions");
+  }
+  else { // pgsql
   }
 
   return $ret;
