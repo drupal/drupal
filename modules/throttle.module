@@ -56,7 +56,7 @@ function throttle_exit() {
       $guests = 0;
     }
     if ($max_users = variable_get('throttle_user', 0)) {
-      $users = db_result(db_query('SELECT COUNT(DISTINCT(uid)) AS count FROM {sessions} WHERE timestamp >= %d AND uid != 0 GROUP BY uid ORDER BY timestamp DESC', time() - $time_period));
+      $users = db_result(db_query('SELECT COUNT(DISTINCT(uid)) AS count FROM {sessions} WHERE timestamp >= %d AND uid != 0', time() - $time_period));
     }
     else {
       $users = 0;
