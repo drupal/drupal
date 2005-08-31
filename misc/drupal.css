@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.115 2005/08/31 18:37:30 dries Exp $ */
+/* $Id: drupal.css,v 1.116 2005/08/31 21:17:26 unconed Exp $ */
 
 /*
 ** HTML elements
@@ -571,10 +571,10 @@ ul.secondary a.active {
   color: #fff;
 }
 /* Animated throbber */
-input.form-autocomplete {
+html.js input.form-autocomplete {
   background: url('throbber.gif') no-repeat 100% 2px;
 }
-input.throbbing {
+html.js input.throbbing {
   background-position: 100% -18px;
 }
 
