@@ -17,10 +17,9 @@ function autocompleteAutoAttach() {
       if (!acdb[uri]) {
         acdb[uri] = new ACDB(uri);
       }
-      id = input.id.substr(0, input.id.length - 13);
-      input = document.getElementById(id);
+      input = $(input.id.substr(0, input.id.length - 13));
       input.setAttribute('autocomplete', 'OFF');
-      input.form.onsubmit = autocompleteSubmit;
+      addSubmitEvent(input.form, autocompleteSubmit);
       new jsAC(input, acdb[uri]);
     }
   }

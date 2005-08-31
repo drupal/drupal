@@ -579,6 +579,28 @@ input.throbbing {
 }
 
 /*
+** Progressbar styles
+*/
+.progress {
+  font-weight: bold;
+}
+.progress .bar {
+  background: #fff url('progress.gif');
+  border: 1px solid #00375a;
+  height: 1.5em;
+  margin-top: 0.2em;
+}
+.progress .filled {
+  background: #0072b9;
+  height: 1.33em;
+  border-bottom: 0.67em solid #004a73;
+  width: 0%;
+}
+.progress .percentage {
+  float: right;
+}
+
+/*
 ** Collapsing fieldsets
 */
 html.js fieldset.collapsed {
