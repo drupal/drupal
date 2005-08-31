@@ -9,12 +9,15 @@ Drupal x.x.x, xxxx-xx-xx (development version)
 - usability:
     * reworked the 'request new password' functionality.
     * reworked the node and comment edit forms.
-    * improve menu system integration.
+    * made it easy to add nodes to the navigation menu.
     * added support for auto-complete forms (AJAX).
-    * added support for collapsible page sections.
+    * added support for collapsible page sections (AJAX).
+    * improved file upload functionality (AJAX).
     * reorganized some settings pages.
     * added friendly database error screens.
     * improved styling of update.php.
+- node system:
+    * reworked the revision functionality.
 - profiles:
     * added a block to display author information along with posts.
     * added support for private profile fields.
@@ -25,7 +28,7 @@ Drupal x.x.x, xxxx-xx-xx (development version)
     * added Docbook-like XML export functionality.
     * added OPML export functionality.
 - block system:
-    * extended support for theme-specific block regions.
+    * added support for theme-specific block regions.
 - syndication:
     * made the aggregator module parse Atom feeds.
 - XML-RPC:
