@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.49 2005/08/30 15:22:29 dries Exp $
+// $Id: upload.module,v 1.50 2005/08/31 18:37:30 dries Exp $
 
 /**
  * @file
@@ -59,6 +59,12 @@ function upload_menu($may_cache) {
       'callback' => 'upload_admin',
       'access' => user_access('administer site configuration'),
       'type' => MENU_NORMAL_ITEM
+    );
+    $items[] = array(
+      'path' => 'upload/js',
+      'callback' => 'upload_js',
+      'access' => user_access('upload files'),
+      'type' => MENU_CALLBACK
     );
   }
   else {
@@ -378,8 +384,18 @@ function upload_delete($node) {
 }
 
 function upload_form($node) {
+  drupal_add_js('misc/progress.js');
+  drupal_add_js('misc/upload.js');
+
+  $output = '<div id="fileop-wrapper">'. _upload_form($node) .'</div>';
+
+  return '<div class="attachments">'. form_group_collapsible(t('File attachments'), $output, empty($node->files), t('Changes made to the attachments are not permanent until you save this post. The first "listed" file will be included in RSS feeds.')) .'</div>';
+}
+
+function _upload_form($node) {
   $header = array(t('Delete'), t('List'), t('Url'), t('Size'));
   $rows = array();
+  $output = '';
 
   if (is_array($node->files)) {
     foreach ($node->files as $key => $file) {
@@ -393,15 +409,19 @@ function upload_form($node) {
   }
 
   if (count($node->files)) {
-    $output = theme('table', $header, $rows);
+    $output .= theme('table', $header, $rows);
   }
 
   if (user_access('upload files')) {
+    $output .= '<div id="fileop-hide">';
     $output .= form_file(t('Attach new file'), "upload", 40);
     $output .= form_button(t('Attach'), 'fileop');
+    // The class triggers the js upload behaviour.
+    $output .= form_hidden('fileop', url('upload/js', NULL, NULL, TRUE), 'edit', array('class' => 'upload'));
+    $output .= '</div>';
   }
 
-  return '<div class="attachments">'. form_group_collapsible(t('File attachments'), $output, empty($node->files), t('Changes made to the attachments are not permanent until you save this post.  The first "listed" file will be included in RSS feeds.')) .'</div>';
+  return $output;
 }
 
 function upload_load($node) {
@@ -438,4 +458,16 @@ function _upload_image($file) {
   return $file;
 }
 
+/**
+ * Menu-callback for JavaScript-based uploads.
+ */
+function upload_js() {
+  // We only do the upload.module part of the node validation process.
+  $node = array2object($_POST['edit']);
+  upload_nodeapi(&$node, 'validate', NULL);
+  $output = theme('status_messages') . _upload_form($node);
 
+  // We send the updated file attachments form.
+  print drupal_call_js('window.parent.iframeHandler', $output);
+  exit;
+}

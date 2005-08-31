@@ -1,4 +1,4 @@
-// $Id: drupal.js,v 1.6 2005/08/18 05:14:06 dries Exp $
+// $Id: drupal.js,v 1.7 2005/08/31 18:37:30 dries Exp $
 
 /**
  * Only enable Javascript functionality if all required features are supported.
@@ -102,6 +102,42 @@ function HTTPPost(uri, object, callbackFunction, callbackParameter) {
 }
 
 /**
+ * Redirects a button's form submission to a hidden iframe and displays the result
+ * in a given wrapper. The iframe should contain a call to
+ * window.parent.iframeHandler() after submission.
+ */
+function redirectFormButton(uri, button, handler) {
+  // Insert the iframe
+  var div = document.createElement('div');
+  div.innerHTML = '<iframe name="redirect-target" id="redirect-target" src="" style="width:0px;height:0px;border:0;"></iframe>';
+  button.parentNode.appendChild(div);
+
+  // Trap the button
+  button.onfocus = function() {
+    button.onclick = function() {
+      // Prepare vars for use in anonymous function.
+      var button = this;
+      var action = button.form.action;
+      var target = button.form.target;
+      // Redirect form submission
+      this.form.action = uri;
+      this.form.target = 'redirect-target';
+      handler.onsubmit();
+      // Set iframe handler for later
+      window.iframeHandler = function (data) {
+        // Restore form submission
+        button.form.action = action;
+        button.form.target = target;
+        handler.oncomplete(data);
+      }
+    }
+  }
+  button.onblur = function() {
+    button.onclick = null;
+  }
+}
+
+/**
  * Adds a function to the window onload event
  */
 function addLoadEvent(func) {
@@ -113,6 +149,21 @@ function addLoadEvent(func) {
     window.onload = function() {
       oldOnload();
       func();
+    }
+  }
+}
+
+/**
+ * Adds a function to the window onload event
+ */
+function addSubmitEvent(form, func) {
+  var oldSubmit = form.onsubmit;
+  if (typeof oldSubmit != 'function') {
+    form.onsubmit = func;
+  }
+  else {
+    form.onsubmit = function() {
+      return oldSubmit() && func();
     }
   }
 }
@@ -196,7 +247,7 @@ function eregReplace(search, replace, subject) {
  */
 function removeNode(node) {
   if (typeof node == 'string') {
-    node = document.getElementById(node);
+    node = $(node);
   }
   if (node && node.parentNode) {
     return node.parentNode.removeChild(node);
@@ -204,4 +255,11 @@ function removeNode(node) {
   else {
     return false;
   }
+}
+
+/**
+ * Wrapper around document.getElementById().
+ */
+function $(id) {
+  return document.getElementById(id);
 }

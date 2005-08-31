@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.114 2005/08/22 20:29:00 dries Exp $ */
+/* $Id: drupal.css,v 1.115 2005/08/31 18:37:30 dries Exp $ */
 
 /*
 ** HTML elements
@@ -576,6 +576,28 @@ input.form-autocomplete {
 }
 input.throbbing {
   background-position: 100% -18px;
+}
+
+/*
+** Progressbar styles
+*/
+.progress {
+  font-weight: bold;
+}
+.progress .bar {
+  background: #fff url('progress.gif');
+  border: 1px solid #00375a;
+  height: 1.5em;
+  margin-top: 0.2em;
+}
+.progress .filled {
+  background: #0072b9;
+  height: 1.33em;
+  border-bottom: 0.67em solid #004a73;
+  width: 0%;
+}
+.progress .percentage {
+  float: right;
 }
 
 /*

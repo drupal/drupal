@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.475 2005/08/28 16:19:24 dries Exp $
+// $Id: common.inc,v 1.476 2005/08/31 18:37:30 dries Exp $
 
 /**
  * @file
@@ -1461,6 +1461,10 @@ function form_file($title, $name, $size, $description = NULL, $required = FALSE)
  *   The internal name used to refer to the field.
  * @param $value
  *   The stored data.
+ * @param $edit
+ *   The array name to prefix to the $name.
+ * @param $attributes
+ *   An array of HTML attributes for the input tag.
  * @return
  *   A themed HTML string representing the hidden field.
  *
@@ -1468,8 +1472,8 @@ function form_file($title, $name, $size, $description = NULL, $required = FALSE)
  * but be sure to validate the data on the receiving page as it is possible for
  * an attacker to change the value before it is submitted.
  */
-function form_hidden($name, $value, $edit = 'edit') {
-  return '<input type="hidden" name="'. $edit .'['. $name .']" value="'. check_plain($value) ."\" />\n";
+function form_hidden($name, $value, $edit = 'edit', $attributes = NULL) {
+  return '<input type="hidden" name="'. $edit .'['. $name .']" id="'. form_clean_id($edit .'-'. $name) .'" value="'. check_plain($value) .'"'. drupal_attributes($attributes) ." />\n";
 }
 
 /**
@@ -1488,7 +1492,7 @@ function form_hidden($name, $value, $edit = 'edit') {
  *   A themed HTML string representing the button.
  */
 function form_button($value, $name = 'op', $type = 'submit', $attributes = NULL) {
-  return '<input type="'. $type .'" class="form-'. $type .'" name="'. $name .'" value="'. check_plain($value) .'" '. drupal_attributes($attributes) ." />\n";
+  return '<input type="'. $type .'" class="form-'. $type .'" name="'. $name .'" id="'. form_clean_id($name) .'" value="'. check_plain($value) .'" '. drupal_attributes($attributes) ." />\n";
 }
 
 /**
@@ -1802,6 +1806,51 @@ function drupal_add_js($file) {
   if (!isset($sent[$file])) {
     drupal_set_html_head('<script type="text/javascript" src="'. check_url($file) .'"></script>');
     $sent[$file] = true;
+  }
+}
+
+/**
+ * Generates a Javascript call, while importing the arguments as is.
+ * PHP arrays are turned into JS objects to preserve keys. This means the array
+ * keys must conform to JS's member naming rules.
+ *
+ * @param $function
+ *   The name of the function to call.
+ * @param $arguments
+ *   An array of arguments.
+ */
+function drupal_call_js($function) {
+  $arguments = func_get_args();
+  array_shift($arguments);
+  $args = array();
+  foreach ($arguments as $arg) {
+    $args[] = drupal_to_js($arg);
+  }
+  $output = '<script type="text/javascript">'. $function .'('. implode(', ', $args) .');</script>';
+  return $output;
+}
+
+/**
+ * Converts a PHP variable into its Javascript equivalent.
+ */
+function drupal_to_js($var) {
+  switch (gettype($var)) {
+    case 'boolean':
+    case 'integer':
+    case 'double':
+      return $var;
+    case 'resource':
+    case 'string':
+      return '"'. str_replace(array("\r", "\n"), array('\r', '\n'), addslashes($var)) .'"';
+    case 'array':
+    case 'object':
+      $output = array();
+      foreach ($var as $k => $v) {
+        $output[] = $k .': '. drupal_to_js($v);
+      }
+      return '{ '. implode(', ', $output) .' }';
+    default:
+      return 'null';
   }
 }
 

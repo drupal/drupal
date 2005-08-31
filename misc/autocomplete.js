@@ -1,4 +1,4 @@
-// $Id: autocomplete.js,v 1.4 2005/08/11 13:00:17 dries Exp $
+// $Id: autocomplete.js,v 1.5 2005/08/31 18:37:30 dries Exp $
 
 // Global Killswitch
 if (isJsEnabled()) {
@@ -17,10 +17,9 @@ function autocompleteAutoAttach() {
       if (!acdb[uri]) {
         acdb[uri] = new ACDB(uri);
       }
-      id = input.id.substr(0, input.id.length - 13);
-      input = document.getElementById(id);
+      input = $(input.id.substr(0, input.id.length - 13));
       input.setAttribute('autocomplete', 'OFF');
-      input.form.onsubmit = autocompleteSubmit;
+      addSubmitEvent(input.form, autocompleteSubmit);
       new jsAC(input, acdb[uri]);
     }
   }
