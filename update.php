@@ -101,6 +101,7 @@ function update_access_denied_page() {
 
 include_once './includes/bootstrap.inc';
 drupal_maintenance_theme();
+
 if (isset($_GET["op"])) {
   drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 
@@ -122,6 +123,7 @@ if (isset($_GET["op"])) {
   }
 }
 else {
+  drupal_bootstrap(DRUPAL_BOOTSTRAP_DATABASE);
   $output = update_info_page();
 }
 
