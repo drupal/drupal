@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.155 2005/08/29 18:48:25 dries Exp $
+// $Id: update.php,v 1.156 2005/08/31 17:56:07 dries Exp $
 
 /**
  * @file
@@ -101,6 +101,7 @@ function update_access_denied_page() {
 
 include_once './includes/bootstrap.inc';
 drupal_maintenance_theme();
+
 if (isset($_GET["op"])) {
   drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 
@@ -122,6 +123,7 @@ if (isset($_GET["op"])) {
   }
 }
 else {
+  drupal_bootstrap(DRUPAL_BOOTSTRAP_DATABASE);
   $output = update_info_page();
 }
 
