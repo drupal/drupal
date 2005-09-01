@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.250 2005/08/25 21:14:16 dries Exp $
+// $Id: aggregator.module,v 1.251 2005/09/01 19:50:18 dries Exp $
 
 /**
  * @file
@@ -75,7 +75,7 @@ function aggregator_settings() {
   $output = '';
   $output .= form_textfield(t('Allowed HTML tags'), 'aggregator_allowed_html_tags', variable_get('aggregator_allowed_html_tags', '<a> <b> <br> <dd> <dl> <dt> <em> <i> <li> <ol> <p> <strong> <u> <ul>'), 80, 255, t('The list of tags which are allowed in feeds, i.e., which will not be removed by Drupal.'));
   $output .= form_select(t('Items shown in sources and categories pages'), 'aggregator_summary_items', variable_get('aggregator_summary_items', 3), $items, t('The number of items which will be shown with each feed or category in the feed and category summary pages.'));
-   $output .= form_select(t('Discard news items older than'), 'aggregator_clear', variable_get('aggregator_clear', 9676800), $period, t('Older news items will be automatically discarded.  Requires crontab.'));
+  $output .= form_select(t('Discard news items older than'), 'aggregator_clear', variable_get('aggregator_clear', 9676800), $period, t('Older news items will be automatically discarded.  Requires crontab.'));
   $output .= form_radios(t('Category selection type'), 'aggregator_category_selector', variable_get('aggregator_category_selector', 'check'), array('check' => t('checkboxes'), 'select' => t('multiple selector')), t('The type of category selection widget which is shown on categorization pages. Checkboxes are easier to use; a multiple selector is good for working with large numbers of categories.'));
   return $output;
 }
@@ -132,6 +132,8 @@ function aggregator_menu($may_cache) {
       'weight' => 5);
     $items[] = array('path' => 'aggregator/sources', 'title' => t('sources'),
       'callback' => 'aggregator_page_sources', 'access' => $view);
+    $items[] = array('path' => 'aggregator/rss', 'title' => t('rss feed'),
+      'callback' => 'aggregator_page_rss', 'access' => $view );
     $items[] = array('path' => 'aggregator/categories', 'title' => t('categories'),
       'callback' => 'aggregator_page_categories', 'access' => $view,
       'type' => MENU_ITEM_GROUPING);
@@ -999,6 +1001,15 @@ function _aggregator_page_list($sql, $op, $header = '') {
     $output .= $pager;
   }
 
+  // arg(1) is undefined if we are at the top aggregator URL
+  // is there a better way to do this?
+  if (!arg(1)) {
+    $output .= theme('xml_icon', url('aggregator/rss'));
+  }
+  elseif (arg(1) == 'categories' && arg(2) && !arg(3)) {
+    $output .= theme('xml_icon', url('aggregator/rss/' . arg(2)));
+  }
+
   return $output;
 }
 
@@ -1025,6 +1036,41 @@ function aggregator_page_sources() {
   $output .= theme('xml_icon', url('aggregator/opml'));
   $output .= '</div>';
   return $output;
+}
+
+/**
+ * Menu callback; generate an RSS 0.92 feed of aggregator items or categories.
+ */
+function aggregator_page_rss() {
+  global $base_url;
+
+  // arg(2) is the passed cid, only select for that category
+  $result = NULL;
+  if (arg(2)) {
+    $category = db_fetch_object(db_query('SELECT cid, title FROM {aggregator_category} WHERE cid = %d', arg(2)));
+    $url = '/categories/' . $category->cid;
+    $title = ' ' . t('in category') . ' ' . $category->title;
+    $sql = 'SELECT i.*, f.title AS ftitle, f.link AS flink FROM {aggregator_category_item} c LEFT JOIN {aggregator_item} i ON c.iid = i.iid LEFT JOIN {aggregator_feed} f ON i.fid = f.fid WHERE cid = %d ORDER BY timestamp DESC, iid DESC';
+    $result = db_query_range($sql, $category->cid, 0, 15);
+  }
+  // or, get the default aggregator items
+  else {
+    $sql = 'SELECT i.*, f.title AS ftitle, f.link AS flink FROM {aggregator_item} i INNER JOIN {aggregator_feed} f ON i.fid = f.fid ORDER BY i.timestamp DESC, i.iid DESC';
+    $result = db_query_range($sql, 0, 15);
+  }
+
+  while ($item = db_fetch_object($result)) {
+    $items .= format_rss_item($item->ftitle . ': ' . $item->title, $item->link, $item->description, array('pubDate' => date('r', $item->timestamp)));
+  }
+
+  $output .= "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
+  $output .= "<!DOCTYPE rss [<!ENTITY % HTMLlat1 PUBLIC \"-//W3C//ENTITIES Latin 1 for XHTML//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml-lat1.ent\">]>\n";
+  $output .= "<rss version=\"0.92\">\n";
+  $output .= format_rss_channel(variable_get('site_name', t('Drupal')) . ' ' . t('aggregator'), $base_url . '/' . url('aggregator' . $url), variable_get('site_name', t('Drupal')) . ' - ' . t('aggregated feeds') . $title, $items, 'en');
+  $output .= "</rss>\n";
+
+  drupal_set_header('Content-Type: text/xml; charset=utf-8');
+  print $output;
 }
 
 /**
