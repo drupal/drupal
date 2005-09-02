@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.116 2005/08/31 21:17:26 unconed Exp $ */
+/* $Id: drupal.css,v 1.117 2005/09/02 19:18:14 dries Exp $ */
 
 /*
 ** HTML elements
@@ -210,11 +210,11 @@ tr.odd .form-item, tr.even .form-item {
   padding-bottom: 1em;
 }
 #aggregator .news-item .date {
-  float: left;
+  float: right;
 }
 #aggregator .news-item .body {
   margin-top: 1em;
-  margin-left: 4em;
+  margin-left: 1em;
 }
 #aggregator .news-item .body .feed {
   font-size: 0.9em;

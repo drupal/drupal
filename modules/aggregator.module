@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.251 2005/09/01 19:50:18 dries Exp $
+// $Id: aggregator.module,v 1.252 2005/09/02 19:18:14 dries Exp $
 
 /**
  * @file
@@ -132,13 +132,13 @@ function aggregator_menu($may_cache) {
       'weight' => 5);
     $items[] = array('path' => 'aggregator/sources', 'title' => t('sources'),
       'callback' => 'aggregator_page_sources', 'access' => $view);
-    $items[] = array('path' => 'aggregator/rss', 'title' => t('rss feed'),
-      'callback' => 'aggregator_page_rss', 'access' => $view );
     $items[] = array('path' => 'aggregator/categories', 'title' => t('categories'),
       'callback' => 'aggregator_page_categories', 'access' => $view,
       'type' => MENU_ITEM_GROUPING);
-
-    $items[] = array('path' => 'aggregator/opml', 'title' => t('opml'),
+    $items[] = array('path' => 'aggregator/rss', 'title' => t('RSS feed'),
+      'callback' => 'aggregator_page_rss', 'access' => $view,
+      'type' => MENU_CALLBACK);
+    $items[] = array('path' => 'aggregator/opml', 'title' => t('OPML feed'),
       'callback' => 'aggregator_page_opml', 'access' => $view,
       'type' => MENU_CALLBACK);
   }
@@ -1210,12 +1210,16 @@ function theme_aggregator_page_item($item) {
   $output .= "<div class=\"news-item\">\n";
   $output .= ' <div class="date">'. format_date($item->timestamp, 'custom', 'H:i') ."</div>\n";
   $output .= " <div class=\"body\">\n";
-  $output .= '  <div class="title"><a href="'. check_url($item->link) .'">'. check_plain($item->title) ."</a></div>\n";
+
+  $source = '';
+  if ($item->ftitle && $item->fid) {
+    $source = '<span class="source">'. l($item->ftitle, "aggregator/sources/$item->fid") .":</span>\n";
+  }
+
+  $output .= '  <div class="title">'. $source .'<a href="'. check_url($item->link) .'">'. check_plain($item->title) ."</a></div>\n";
+
   if ($item->description) {
     $output .= '  <div class="description">'. $item->description ."</div>\n";
-  }
-  if ($item->ftitle && $item->fid) {
-    $output .= '  <div class="source">'. t('Source') .': '. l($item->ftitle, "aggregator/sources/$item->fid") ."</div>\n";
   }
 
   $result = db_query('SELECT c.title, c.cid FROM {aggregator_category_item} ci LEFT JOIN {aggregator_category} c ON ci.cid = c.cid WHERE ci.iid = %d ORDER BY c.title', $item->iid);

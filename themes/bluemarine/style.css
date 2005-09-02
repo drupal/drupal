@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.10 2005/06/19 08:50:46 dries Exp $ */
+/* $Id: style.css,v 1.11 2005/09/02 19:18:14 dries Exp $ */
 
 /*
 ** HTML elements
@@ -278,7 +278,7 @@ table {
   padding: 1em;
   margin: 1em 0 1em 0;
 }
-#aggregator .news-item .source, #aggregator .news-item .categories, #aggregator .source, #aggregator .age {
+#aggregator .news-item .categories, #aggregator .source, #aggregator .age {
   color: #999;
   font-style: italic;
   font-size: 0.9em;
