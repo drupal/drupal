@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.50 2005/08/31 18:37:30 dries Exp $
+// $Id: upload.module,v 1.51 2005/09/02 02:11:41 unconed Exp $
 
 /**
  * @file
@@ -464,7 +464,7 @@ function _upload_image($file) {
 function upload_js() {
   // We only do the upload.module part of the node validation process.
   $node = array2object($_POST['edit']);
-  upload_nodeapi(&$node, 'validate', NULL);
+  upload_nodeapi($node, 'validate', NULL);
   $output = theme('status_messages') . _upload_form($node);
 
   // We send the updated file attachments form.

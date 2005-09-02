@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.526 2005/08/30 15:22:29 dries Exp $
+// $Id: node.module,v 1.527 2005/09/02 02:11:41 unconed Exp $
 
 /**
  * @file
@@ -400,7 +400,7 @@ function node_load($param = array(), $revision = NULL, $reset = NULL) {
 /**
  * Save a node object into the database.
  */
-function node_save($node) {
+function node_save(&$node) {
   global $user;
 
   $node->is_new = false;
@@ -501,9 +501,6 @@ function node_save($node) {
 
   // Clear the cache so an anonymous poster can see the node being added or updated.
   cache_clear_all();
-
-  // Return the node ID:
-  return $node;
 }
 
 /**
@@ -1573,7 +1570,7 @@ function node_submit(&$node) {
     // Check whether the current user has the proper access rights to
     // perform this operation:
     if (node_access('update', $node)) {
-      node_save(&$node);
+      node_save($node);
       watchdog('content', t('%type: updated %title.', array('%type' => theme('placeholder', t($node->type)), '%title' => theme('placeholder', $node->title))), WATCHDOG_NOTICE, l(t('view'), 'node/'. $node->nid));
       $msg = t('The %post was updated.', array ('%post' => node_get_name($node)));
     }
@@ -1582,7 +1579,7 @@ function node_submit(&$node) {
     // Check whether the current user has the proper access rights to
     // perform this operation:
     if (node_access('create', $node)) {
-      node_save(&$node);
+      node_save($node);
       watchdog('content', t('%type: added %title.', array('%type' => theme('placeholder', t($node->type)), '%title' => theme('placeholder', $node->title))), WATCHDOG_NOTICE, l(t('view'), "node/$node->nid"));
       $msg = t('Your %post was created.', array ('%post' => node_get_name($node)));
     }

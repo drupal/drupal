@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.55 2005/08/30 15:22:29 dries Exp $
+// $Id: blogapi.module,v 1.56 2005/09/02 02:11:41 unconed Exp $
 
 /**
  * @file
@@ -218,10 +218,10 @@ function blogapi_blogger_new_post($appkey, $blogid, $username, $password, $conte
     return blogapi_error(t('You do not have permission to create the type of post you wanted to create.'));
   }
 
-  node_save(&$node);
+  node_save($node);
   if ($node->nid) {
     watchdog('content', t('%type: added %title using blog API.', array('%type' => '<em>'. t($node->type) .'</em>', '%title' => theme('placeholder', $node->title))), WATCHDOG_NOTICE, l(t('view'), "node/$node->nid"));
-    return $nid;
+    return $node->nid;
   }
 
   return blogapi_error(t('Error storing post.'));
@@ -276,7 +276,7 @@ function blogapi_blogger_edit_post($appkey, $postid, $username, $password, $cont
   foreach ($terms as $term) {
     $node->taxonomy[] = $term->tid;
   }
-  node_save(&$node);
+  node_save($node);
   if ($node->nid) {
     watchdog('content', t('%type: updated %title using blog API.', array('%type' => '<em>'. t($node->type) .'</em>', '%title' => theme('placeholder', $node->title))), WATCHDOG_NOTICE, l(t('view'), "node/$node->nid"));
     return true;
