@@ -88,8 +88,3 @@ ul {
 .item-list ul li {
   list-style: square;
 }
-#aggregator .source {
-  color: gray;
-  font-style: italic;
-  font-size: 0.9em;
-}

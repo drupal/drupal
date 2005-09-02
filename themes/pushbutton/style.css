@@ -488,11 +488,6 @@ table#footer-menu {
   padding: 1em;
   margin: 1em 0 1em 0;
 }
-#aggregator .news-item .source {
-  color: #999;
-  font-style: italic;
-  font-size: 0.85em;
-}
 #aggregator .title {
   font-size: 1em;
 }
