@@ -1,5 +1,5 @@
 <?php
-// $Id: phptemplate.engine,v 1.14 2005/09/04 13:13:31 dries Exp $
+// $Id: phptemplate.engine,v 1.15 2005/09/04 13:52:08 dries Exp $
 
 /**
  * @file
@@ -331,13 +331,12 @@ function _phptemplate_default($hook, $variables, $file = NULL) {
   }
 
   if ($file) {
-    unset($variables['file']);     // Make sure we don't override $file
-    extract($variables);           // Extract the vars to local namespace
-    ob_start();                    // Start output buffering
-    include($file);                // Include the file
-    $contents = ob_get_contents(); // Get the contents of the buffer
-    ob_end_clean();                // End buffering and discard
-    return $contents;              // Return the contents
+    extract($variables, EXTR_SKIP);  // Extract the vars to local namespace
+    ob_start();                      // Start output buffering
+    include($file);                  // Include the file
+    $contents = ob_get_contents();   // Get the contents of the buffer
+    ob_end_clean();                  // End buffering and discard
+    return $contents;                // Return the contents
   }
 
 }
