@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.256 2005/08/28 15:29:34 dries Exp $
+// $Id: theme.inc,v 1.257 2005/09/06 20:32:53 dries Exp $
 
 /**
  * @file
@@ -692,12 +692,18 @@ function theme_submenu($links) {
  *
  * @param $attributes
  *   An array of HTML attributes to apply to the table tag.
+ * @param $caption
+ *   A localized string to use for the <caption> tag.
  * @return
  *   An HTML string representing the table.
  */
-function theme_table($header, $rows, $attributes = NULL) {
+function theme_table($header, $rows, $attributes = NULL, $caption = NULL) {
 
   $output = '<table'. drupal_attributes($attributes) .">\n";
+
+  if (isset($caption)) {
+    $output .= '<caption>'. $caption ."</caption>\n";
+  }
 
   // Format the table header:
   if (count($header)) {
