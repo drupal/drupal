@@ -265,9 +265,6 @@ function file_copy(&$source, $dest = 0, $replace = FILE_EXISTS_RENAME) {
         case FILE_EXISTS_ERROR:
           drupal_set_message(t('The selected file %file could not be copied, because a file by that name already exists in the destination.', array('%file' => theme('placeholder', $source))), 'error');
           return 0;
-
-        case FILE_EXISTS_REPLACE:
-          // Leave $dest where it is for replace.
       }
     }
 
