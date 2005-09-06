@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.105 2005/08/25 21:14:17 dries Exp $
+// $Id: profile.module,v 1.106 2005/09/06 19:05:10 dries Exp $
 
 /**
  * @file
@@ -59,7 +59,7 @@ function profile_block($op = 'list', $delta = 0, $edit = array()) {
         if ($use_fields = variable_get('profile_block_author_fields', array())) {
           // Compile a list of fields to show
           $fields = array();
-          $result = db_query('SELECT name, title, type, visibility FROM {profile_fields} WHERE visibility = %d ORDER BY weight', PROFILE_PUBLIC);
+          $result = db_query('SELECT name, title, type, visibility FROM {profile_fields} WHERE visibility IN (%d, %d) ORDER BY weight', PROFILE_PUBLIC, PROFILE_PUBLIC_LISTINGS);
             while ($record = db_fetch_object($result)) {
               // Endure that field is displayed only if it is among the defined block fields and, if it is private, the user has appropriate permissions.
               if (in_array($record->name, $use_fields)) {
