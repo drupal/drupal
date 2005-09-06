@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.503 2005/09/06 19:10:50 dries Exp $
+// $Id: user.module,v 1.504 2005/09/06 19:22:50 dries Exp $
 
 /**
  * @file
@@ -1364,9 +1364,11 @@ function user_configure_settings() {
   $group .= form_textarea(t('Body of password recovery e-mail'), 'user_mail_pass_body', _user_mail_text('pass_body'), 60, 15, t('Customize the body of the forgotten password e-mail.') .' '. t('Available variables are:') .' %username, %site, %login_url, %uri, %uri_brief, %mailto, %login_uri, %edit_uri.');
   $output .= form_group(t('User email settings'), $group);
 
-  // Picture settings.
-  file_check_directory(file_create_path(variable_get('user_picture_path', 'pictures')), 1, 'user_picture_path');
-
+  // If picture support is enabled, check whether the picture directory exists:
+  if (variable_get('user_pictures', 0)) {
+    file_check_directory(file_create_path(variable_get('user_picture_path', 'pictures')), 1, 'user_picture_path');
+  }
+  
   $group  = form_radios(t('Picture support'), 'user_pictures', variable_get('user_pictures', 0), array(t('Disabled'), t('Enabled')), t('Enable picture support.'));
   $group .= form_textfield(t('Picture image path'), 'user_picture_path', variable_get('user_picture_path', 'pictures'), 30, 255, t('Subdirectory in the directory "%dir" where pictures will be stored.', array('%dir' => variable_get('file_directory_path', 'files') .'/')));
   $group .= form_textfield(t('Default picture'), 'user_picture_default', variable_get('user_picture_default', ''), 30, 255, t('URL of picture to display for users with no custom picture selected. Leave blank for none.'));
