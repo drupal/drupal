@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.106 2005/09/06 19:05:10 dries Exp $
+// $Id: profile.module,v 1.107 2005/09/06 20:39:10 dries Exp $
 
 /**
  * @file
@@ -69,6 +69,7 @@ function profile_block($op = 'list', $delta = 0, $edit = array()) {
         }
 
         if ($fields) {
+          _profile_update_user_fields($fields, $account);
           $output .= theme('profile_block', $account, $fields, true);
         }
 
@@ -163,7 +164,9 @@ function profile_browse() {
 
     $output = '<div id="profile">';
     while ($account = db_fetch_object($result)) {
-      $output .= theme('profile_listing', user_load(array('uid' => $account->uid)), $fields);
+      $account = user_load(array('uid' => $account->uid));
+      _profile_update_user_fields($fields, $account);
+      $output .= theme('profile_listing', $account, $fields);
     }
     $output .= theme('pager', NULL, 20);
 
@@ -194,7 +197,9 @@ function profile_browse() {
 
     $output = '<div id="profile">';
     while ($account = db_fetch_object($result)) {
-      $output .= theme('profile_listing', user_load(array('uid' => $account->uid)), $fields);
+      $account = user_load(array('uid' => $account->uid));
+      _profile_update_user_fields($fields, $account);
+      $output .= theme('profile_listing', $account, $fields);
     }
     $output .= '</div>';
     $output .= theme('pager', NULL, 20);
@@ -362,6 +367,17 @@ function profile_form_profile($edit, $user, $category) {
       $output[] = array('title' => $category, 'data' => $data);
     }
     return $output;
+  }
+}
+
+/**
+ * Helper function: update an array of user fields by calling profile_view_field
+ */
+function _profile_update_user_fields(&$fields, $account) {
+  foreach ($fields as $key => $field) {
+    if ($value = profile_view_field($account, $field)) {
+      $fields[$key]->value = $value;
+    }
   }
 }
 
@@ -631,12 +647,12 @@ function profile_admin_overview() {
   return $output;
 }
 
-function theme_profile_block($user, $fields = array()) {
+function theme_profile_block($account, $fields = array()) {
 
-  $output .= theme('user_picture', $user);
+  $output .= theme('user_picture', $account);
 
   foreach ($fields as $field) {
-    if ($value = profile_view_field($user, $field)) {
+    if ($field->value) {
       $output .= "<p><strong>$field->title:</strong><br />$value</p>\n";
     }
   }
@@ -644,14 +660,14 @@ function theme_profile_block($user, $fields = array()) {
   return $output;
 }
 
-function theme_profile_listing($user, $fields = array()) {
+function theme_profile_listing($account, $fields = array()) {
 
   $output  = "<div class=\"profile\">\n";
-  $output .= theme('user_picture', $user);
-  $output .= ' <div class="name">'. theme('username', $user) ."</div>\n";
+  $output .= theme('user_picture', $account);
+  $output .= ' <div class="name">'. theme('username', $account) ."</div>\n";
 
   foreach ($fields as $field) {
-    if ($value = profile_view_field($user, $field)) {
+    if ($field->value) {
       $output .= " <div class=\"field\">$value</div>\n";
     }
   }
