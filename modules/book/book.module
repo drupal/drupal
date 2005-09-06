@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.314 2005/08/30 15:22:29 dries Exp $
+// $Id: book.module,v 1.315 2005/09/06 18:55:41 dries Exp $
 
 /**
  * @file
@@ -202,7 +202,7 @@ function book_insert($node) {
  */
 function book_update($node) {
   if ($node->revision) {
-    db_query("INSERT INTO {book} (nid, vid, parent, weight) VALUES (%d, %d, %d, %d, '%s')", $node->nid, $node->vid, $node->parent, $node->weight);
+    db_query("INSERT INTO {book} (nid, vid, parent, weight) VALUES (%d, %d, %d, %d)", $node->nid, $node->vid, $node->parent, $node->weight);
   }
   else {
     db_query("UPDATE {book} SET parent = %d, weight = %d WHERE vid = %d", $node->parent, $node->weight, $node->vid);
