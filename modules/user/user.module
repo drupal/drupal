@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.502 2005/08/25 21:14:17 dries Exp $
+// $Id: user.module,v 1.503 2005/09/06 19:10:50 dries Exp $
 
 /**
  * @file
@@ -524,7 +524,7 @@ function user_block($op = 'list', $delta = 0, $edit = array()) {
           // might already be set.
 
           $output .= form_textfield(t('Username'), 'name', $edit['name'], 15, 64);
-          $output .= form_password(t('Password'), 'pass', $pass, 15, 64);
+          $output .= form_password(t('Password'), 'pass', '', 15, 64);
           $output .= form_submit(t('Log in'));
           $output .= "</div>\n";
 
