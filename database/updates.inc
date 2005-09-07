@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.129 2005/08/30 15:19:20 dries Exp $
+// $Id: updates.inc,v 1.130 2005/09/07 20:32:00 dries Exp $
 
 /**
  * @file
@@ -44,7 +44,8 @@ $sql_updates = array(
   "2005-07-30" => "update_143",
   "2005-08-08" => "update_144",
   "2005-08-15" => "update_145",
-  "2005-08-25" => "update_146"
+  "2005-08-25" => "update_146",
+  "2005-09-07" => "update_147"
 );
 
 function update_110() {
@@ -773,6 +774,17 @@ function update_146() {
     $ret[] = update_sql("ALTER TABLE {node} DROP revisions");
   }
   else { // pgsql
+  }
+
+  return $ret;
+}
+
+function update_147() {
+  $ret = array();
+
+  // this update is mysql only, pgsql should get it right in the first try.
+  if ($GLOBALS['db_type'] == 'mysql') {
+    $ret[] = update_sql("ALTER TABLE {node_revisions} DROP type");
   }
 
   return $ret;
