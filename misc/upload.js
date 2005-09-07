@@ -42,8 +42,10 @@ jsUpload.prototype.onsubmit = function () {
   this.progress.element.style.width = '28em';
   this.progress.element.style.height = hide.offsetHeight +'px';
   hide.parentNode.insertBefore(this.progress.element, hide);
-  // Hide file form
-  hide.style.display = 'none';
+  // Hide file form (cannot use display: none, this mysteriously aborts form
+  // submission in Konqueror)
+  hide.style.position = 'absolute';
+  hide.style.left = '-2000px';
 }
 
 /**

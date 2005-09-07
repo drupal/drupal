@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.117 2005/09/02 19:18:14 dries Exp $ */
+/* $Id: drupal.css,v 1.118 2005/09/07 13:49:39 unconed Exp $ */
 
 /*
 ** HTML elements
@@ -619,10 +619,13 @@ html.js fieldset.collapsed legend * {
 }
 html.js fieldset.collapsible legend a {
   padding-left: 15px;
-  display: block;
   background: url('menu-expanded.png') 5px 50% no-repeat;
 }
 html.js fieldset.collapsed legend a {
   background-image: url('menu-collapsed.png');
+}
+// Note: IE-only fix due to '* html' (breaks Konqueror otherwise).
+* html.js fieldset.collapsible legend a {
+  display: block;
 }
 

@@ -1,4 +1,4 @@
-// $Id: drupal.js,v 1.7 2005/08/31 18:37:30 dries Exp $
+// $Id: drupal.js,v 1.8 2005/09/07 13:49:39 unconed Exp $
 
 /**
  * Only enable Javascript functionality if all required features are supported.
@@ -108,9 +108,19 @@ function HTTPPost(uri, object, callbackFunction, callbackParameter) {
  */
 function redirectFormButton(uri, button, handler) {
   // Insert the iframe
-  var div = document.createElement('div');
-  div.innerHTML = '<iframe name="redirect-target" id="redirect-target" src="" style="width:0px;height:0px;border:0;"></iframe>';
-  button.parentNode.appendChild(div);
+  var iframe = document.createElement('iframe');
+  with (iframe) {
+    name = 'redirect-target';
+    setAttribute('name', 'redirect-target');
+    id = 'redirect-target';
+  }
+  with (iframe.style) {
+    position = 'absolute';
+    height = '1px';
+    width = '1px';
+    visibility = 'hidden';
+  }
+  document.body.appendChild(iframe);
 
   // Trap the button
   button.onfocus = function() {
@@ -119,10 +129,13 @@ function redirectFormButton(uri, button, handler) {
       var button = this;
       var action = button.form.action;
       var target = button.form.target;
+
       // Redirect form submission
       this.form.action = uri;
       this.form.target = 'redirect-target';
+
       handler.onsubmit();
+
       // Set iframe handler for later
       window.iframeHandler = function (data) {
         // Restore form submission
@@ -130,6 +143,8 @@ function redirectFormButton(uri, button, handler) {
         button.form.target = target;
         handler.oncomplete(data);
       }
+
+      return true;
     }
   }
   button.onblur = function() {
