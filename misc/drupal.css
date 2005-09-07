@@ -592,8 +592,8 @@ html.js input.throbbing {
 }
 .progress .filled {
   background: #0072b9;
-  height: 1.33em;
-  border-bottom: 0.67em solid #004a73;
+  height: 1em;
+  border-bottom: 0.5em solid #004a73;
   width: 0%;
 }
 .progress .percentage {
