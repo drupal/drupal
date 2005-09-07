@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.119 2005/09/07 20:50:01 dries Exp $ */
+/* $Id: drupal.css,v 1.120 2005/09/07 20:56:00 dries Exp $ */
 
 /*
 ** HTML elements
@@ -452,7 +452,7 @@ img.screenshot {
 #tracker table {
   width: 100%;
 }
-.user-login-block {
+#user-login-form {
   text-align: center;
 }
 .more-help-link {

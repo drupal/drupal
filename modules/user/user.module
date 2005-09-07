@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.505 2005/09/07 20:41:38 dries Exp $
+// $Id: user.module,v 1.506 2005/09/07 20:56:00 dries Exp $
 
 /**
  * @file
@@ -517,8 +517,6 @@ function user_block($op = 'list', $delta = 0, $edit = array()) {
         if (!$user->uid && !(arg(0) == 'user' && !is_numeric(arg(1)))) {
           $edit = $_POST['edit'];
 
-          $output = "<div class=\"user-login-block\">\n";
-
           // NOTE: special care needs to be taken because on pages with forms,
           // such as node and comment submission pages, the $edit variable
           // might already be set.
@@ -526,9 +524,8 @@ function user_block($op = 'list', $delta = 0, $edit = array()) {
           $output .= form_textfield(t('Username'), 'name', $edit['name'], 15, 64);
           $output .= form_password(t('Password'), 'pass', '', 15, 64);
           $output .= form_submit(t('Log in'));
-          $output .= "</div>\n";
 
-          $output  = form($output, 'post', url('user/login', drupal_get_destination()));
+          $output  = form($output, 'post', url('user/login', drupal_get_destination()), array('id' => 'user-login-form'));
 
           if (variable_get('user_register', 1)) {
             $items[] = l(t('Create new account'), 'user/register', array('title' => t('Create a new user account.')));
