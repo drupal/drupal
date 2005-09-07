@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.368 2005/08/30 15:22:29 dries Exp $
+// $Id: comment.module,v 1.369 2005/09/07 20:45:53 dries Exp $
 
 /**
  * @file
@@ -107,7 +107,7 @@ function comment_menu($may_cache) {
       'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
     $items[] = array('path' => 'admin/comment/list/approval', 'title' => t('approval queue'),
       'callback' => 'comment_admin_overview', 'access' => $access,
-      'callback arguments' => 'approval',
+      'callback arguments' => array('approval'),
       'type' => MENU_LOCAL_TASK);
 
     $items[] = array('path' => 'admin/comment/configure/settings', 'title' => t('settings'),
