@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.133 2005/08/25 21:14:17 dries Exp $
+// $Id: search.module,v 1.134 2005/09/07 20:57:39 dries Exp $
 
 /**
  * @file
@@ -652,15 +652,13 @@ function search_form($action = '', $keys = '', $type = null, $prompt = null) {
     $prompt = t('Enter your keywords');
   }
 
-  $output = ' <div class="search-form">';
   $box = '<div class="container-inline">';
   $box .= form_textfield('', 'keys', $keys, $prompt ? 40 : 30, 255);
   $box .= form_submit(t('Search'));
   $box .= '</div>';
   $output .= form_item($prompt, $box);
-  $output .= '</div>';
 
-  return form($output, 'post', $action);
+  return form($output, 'post', $action, array('class' => 'search-form'));
 }
 
 /**
