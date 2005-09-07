@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.504 2005/09/06 19:22:50 dries Exp $
+// $Id: user.module,v 1.505 2005/09/07 20:41:38 dries Exp $
 
 /**
  * @file
@@ -662,7 +662,7 @@ function user_menu($may_cache) {
       'callback' => 'user_page', 'access' => TRUE, 'type' => MENU_CALLBACK);
 
     $items[] = array('path' => 'user/autocomplete', 'title' => t('user autocomplete'),
-      'callback' => 'user_autocomplete', 'access' => $admin_access, 'type' => MENU_CALLBACK);
+      'callback' => 'user_autocomplete', 'access' => $view_access, 'type' => MENU_CALLBACK);
 
     //registration and login pages.
     $items[] = array('path' => 'user/login', 'title' => t('log in'),
@@ -1368,7 +1368,7 @@ function user_configure_settings() {
   if (variable_get('user_pictures', 0)) {
     file_check_directory(file_create_path(variable_get('user_picture_path', 'pictures')), 1, 'user_picture_path');
   }
-  
+
   $group  = form_radios(t('Picture support'), 'user_pictures', variable_get('user_pictures', 0), array(t('Disabled'), t('Enabled')), t('Enable picture support.'));
   $group .= form_textfield(t('Picture image path'), 'user_picture_path', variable_get('user_picture_path', 'pictures'), 30, 255, t('Subdirectory in the directory "%dir" where pictures will be stored.', array('%dir' => variable_get('file_directory_path', 'files') .'/')));
   $group .= form_textfield(t('Default picture'), 'user_picture_default', variable_get('user_picture_default', ''), 30, 255, t('URL of picture to display for users with no custom picture selected. Leave blank for none.'));
