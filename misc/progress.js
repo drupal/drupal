@@ -22,7 +22,8 @@ function progressBar(id) {
  */
 progressBar.prototype.setProgress = function (percentage, status) {
   var divs = this.element.getElementsByTagName('div');
-  for (i in divs) {
+  var div;
+  for (var i = 0; div = divs[i]; ++i) {
     if (percentage >= 0) {
       if (hasClass(divs[i], 'filled')) {
         divs[i].style.width = percentage + '%';
