@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.107 2005/09/06 20:39:10 dries Exp $
+// $Id: profile.module,v 1.108 2005/09/08 19:32:31 dries Exp $
 
 /**
  * @file
@@ -219,7 +219,7 @@ function profile_load_profile(&$user) {
 }
 
 function profile_save_profile(&$edit, &$user, $category) {
-  if (($_GET['q'] == 'user/register') ? 1 : 0) {
+  if ($_GET['q'] == 'user/register' || $_GET['q'] == 'admin/user/create') {
     $result = db_query('SELECT fid, name, type FROM {profile_fields} WHERE register = 1 AND visibility != %d ORDER BY category, weight', PROFILE_HIDDEN);
   }
   else {
@@ -320,7 +320,7 @@ function _profile_form_explanation($field) {
 
 function profile_form_profile($edit, $user, $category) {
 
-  if (($_GET['q'] == 'user/register') ? 1 : 0) {
+  if ($_GET['q'] == 'user/register' || $_GET['q'] == 'admin/user/create') {
     $result = db_query('SELECT * FROM {profile_fields} WHERE register = 1 ORDER BY category, weight');
   }
   else {
@@ -431,7 +431,7 @@ function _profile_map_month($month) {
 
 function profile_validate_profile($edit, $category) {
 
-  if (($_GET['q'] == 'user/register') ? 1 : 0) {
+  if ($_GET['q'] == 'user/register' || $_GET['q'] == 'admin/user/create') {
     $result = db_query('SELECT * FROM {profile_fields} WHERE register = 1 ORDER BY category, weight');
   }
   else {
