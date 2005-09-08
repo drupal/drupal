@@ -797,7 +797,7 @@ function system_theme_settings($key = '') {
     }
 
     // Toggle node display.
-    $node_type = module_invoke('node', 'get_types');
+    $node_types = module_invoke('node', 'get_types');
     if ($node_types) {
       $group = '';
       foreach ($node_types as $type => $name) {
