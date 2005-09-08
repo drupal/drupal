@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.268 2005/09/07 20:56:00 dries Exp $
+// $Id: forum.module,v 1.269 2005/09/08 19:22:28 dries Exp $
 
 /**
  * @file
@@ -107,7 +107,7 @@ function forum_admin() {
           case SAVED_UPDATED:
             drupal_set_message(t('The forum container %term has been updated.', array('%term' => theme('placeholder', $edit['name']))));
             break;
-          case SAVED_UPDATED:
+          case SAVED_DELETED:
             drupal_set_message(t('The forum container %term has been deleted.', array('%term' => theme('placeholder', $name))));
             break;
         }
