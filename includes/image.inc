@@ -1,5 +1,5 @@
 <?php
-// $Id: image.inc,v 1.8 2005/08/25 21:14:16 dries Exp $
+// $Id: image.inc,v 1.9 2005/09/08 19:17:34 dries Exp $
 
 /**
  * Return a list of available toolkits.
@@ -11,7 +11,7 @@ function image_get_available_toolkits() {
 
   $output = array();
   foreach ($toolkits as $file => $toolkit) {
-    include_once($file);
+    include_once "./$file";
     $function = str_replace('.', '_', $toolkit->name) .'_info';
     if (function_exists($function)) {
       $info = $function();
@@ -31,7 +31,7 @@ function image_get_toolkit() {
   static $toolkit;
   if (!$toolkit) {
     $toolkit = variable_get('image_toolkit', 'gd');
-    $toolkit_file = 'includes/image.'.$toolkit.'.inc';
+   $toolkit_file = './includes/image.'.$toolkit.'.inc';
     if ($toolkit != 'gd' && file_exists($toolkit_file)) {
       include_once $toolkit_file;
     }

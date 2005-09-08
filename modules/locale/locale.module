@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.124 2005/08/25 21:14:16 dries Exp $
+// $Id: locale.module,v 1.125 2005/09/08 19:19:01 dries Exp $
 
 /**
  * @file
@@ -258,7 +258,7 @@ function locale_get_plural($count) {
  * Page handler for the language management screen
  */
 function locale_admin_manage() {
-  include_once 'includes/locale.inc';
+  include_once './includes/locale.inc';
   $edit = &$_POST['edit'];
 
   if ($_POST['op'] == t('Save configuration')) {
@@ -290,7 +290,7 @@ function locale_admin_manage() {
  * User interface for the language deletion confirmation screen
  */
 function locale_admin_manage_delete_screen() {
-  include_once 'includes/locale.inc';
+  include_once './includes/locale.inc';
   $langcode = arg(4);
   $edit = $_POST['edit'];
 
@@ -334,7 +334,7 @@ function locale_admin_manage_delete_screen() {
  * Page handler for the language addition screen
  */
 function locale_admin_manage_add() {
-  include_once 'includes/locale.inc';
+  include_once './includes/locale.inc';
   $edit = &$_POST['edit'];
   $isocodes = _locale_get_iso639_list();
 
@@ -374,7 +374,7 @@ function locale_admin_manage_add() {
  * Page handler for the translation import screen
  */
 function locale_admin_import() {
-  include_once 'includes/locale.inc';
+  include_once './includes/locale.inc';
   $edit = &$_POST['edit'];
   switch ($_POST['op']) {
     case t('Import'):
@@ -408,7 +408,7 @@ function locale_admin_import() {
  * Page handler for the translation export screen
  */
 function locale_admin_export() {
-  include_once 'includes/locale.inc';
+  include_once './includes/locale.inc';
   switch ($_POST['op']) {
     case t('Export'):
       _locale_export_po($_POST['edit']['langcode']);
@@ -425,7 +425,7 @@ function locale_admin_export() {
  * Page handler for the string search and administration screen
  */
 function locale_admin_string() {
-  include_once 'includes/locale.inc';
+  include_once './includes/locale.inc';
   $op = ($_POST['op'] ? $_POST['op'] : arg(3));
   $edit =& $_POST['edit'];
 

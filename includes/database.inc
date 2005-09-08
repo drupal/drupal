@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.43 2005/08/25 21:14:16 dries Exp $
+// $Id: database.inc,v 1.44 2005/09/08 19:17:34 dries Exp $
 
 /**
  * @file
@@ -110,10 +110,10 @@ function db_set_active($name = 'default') {
     }
 
     $db_type = substr($connect_url, 0, strpos($connect_url, '://'));
-    $handler = "includes/database.$db_type.inc";
+   $handler = "./includes/database.$db_type.inc";
 
     if (is_file($handler)) {
-      include_once($handler);
+      include_once $handler;
     }
     else {
       drupal_maintenance_theme();

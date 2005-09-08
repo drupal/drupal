@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.506 2005/09/07 20:56:00 dries Exp $
+// $Id: user.module,v 1.507 2005/09/08 19:19:01 dries Exp $
 
 /**
  * @file
@@ -370,7 +370,7 @@ function user_is_blocked($name) {
  */
 function user_mail($mail, $subject, $message, $header) {
   if (variable_get('smtp_library', '') && file_exists(variable_get('smtp_library', ''))) {
-    include_once variable_get('smtp_library', '');
+   include_once './' . variable_get('smtp_library', '');
     return user_mail_wrapper($mail, $subject, $message, $header);
   }
   else {

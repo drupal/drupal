@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.65 2005/08/29 19:17:17 dries Exp $
+// $Id: bootstrap.inc,v 1.66 2005/09/08 19:17:34 dries Exp $
 
 /**
  * @file
@@ -460,7 +460,7 @@ function drupal_load($type, $name) {
   $filename = drupal_get_filename($type, $name);
 
   if ($filename) {
-    include_once($filename);
+    include_once "./$filename";
     $files[$type][$name] = TRUE;
 
     return TRUE;

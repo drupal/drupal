@@ -1,12 +1,12 @@
 <?php
-// $Id: cron.php,v 1.31 2005/08/28 18:26:20 dries Exp $
+// $Id: cron.php,v 1.32 2005/09/08 19:17:34 dries Exp $
 
 /**
  * @file
  * Handles incoming requests to fire off regularly-scheduled tasks (cron jobs).
  */
 
-include_once 'includes/bootstrap.inc';
+include_once './includes/bootstrap.inc';
 drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 
 // If not in 'safe mode', increase the maximum execution time:

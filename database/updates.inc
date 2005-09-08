@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.130 2005/09/07 20:32:00 dries Exp $
+// $Id: updates.inc,v 1.131 2005/09/08 19:17:34 dries Exp $
 
 /**
  * @file
@@ -545,7 +545,7 @@ function update_132() {
     /**
      * Wipe the search index
      */
-    include_once('modules/search.module');
+    include_once './modules/search.module';
     search_wipe();
   }
 
