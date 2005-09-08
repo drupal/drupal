@@ -1373,7 +1373,8 @@ function user_configure_settings() {
 
   // If picture support is enabled, check whether the picture directory exists:
   if (variable_get('user_pictures', 0)) {
-    file_check_directory(file_create_path(variable_get('user_picture_path', 'pictures')), 1, 'user_picture_path');
+    $picture_path = file_create_path(variable_get('user_picture_path', 'pictures'));
+    file_check_directory($picture_path, 1, 'user_picture_path');
   }
 
   $group  = form_radios(t('Picture support'), 'user_pictures', variable_get('user_pictures', 0), array(t('Disabled'), t('Enabled')), t('Enable picture support.'));
