@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.252 2005/09/02 19:18:14 dries Exp $
+// $Id: aggregator.module,v 1.253 2005/09/08 20:08:42 dries Exp $
 
 /**
  * @file
@@ -289,9 +289,12 @@ function aggregator_element_start($parser, $name, $attributes) {
     case 'SUBTITLE':
     case 'LOGO':
     case 'INFO':
-    case 'ID':
       $element = $name;
       break;
+    case 'ID':
+      if ($element != 'ITEM') {
+        $element = $name;
+      }
     case 'LINK':
       if ($attributes['REL'] == 'alternate') {
         if ($element == 'ITEM') {
@@ -328,9 +331,13 @@ function aggregator_element_end($parser, $name) {
     case 'ENTRY':
     case 'CONTENT':
     case 'INFO':
+      $element = '';
+      break;
     case 'ID':
+      if ($element == 'ID') {
       $element = '';
   }
+}
 }
 
 /**
