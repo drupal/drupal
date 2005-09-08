@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.231 2005/09/08 19:46:05 dries Exp $
+// $Id: system.module,v 1.232 2005/09/08 19:56:23 unconed Exp $
 
 /**
  * @file
@@ -797,7 +797,7 @@ function system_theme_settings($key = '') {
     }
 
     // Toggle node display.
-    $node_type = module_invoke('node', 'get_types');
+    $node_types = module_invoke('node', 'get_types');
     if ($node_types) {
       $group = '';
       foreach ($node_types as $type => $name) {
