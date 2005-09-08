@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.230 2005/09/08 19:19:01 dries Exp $
+// $Id: system.module,v 1.231 2005/09/08 19:46:05 dries Exp $
 
 /**
  * @file
@@ -22,7 +22,8 @@ function system_help($section) {
     case 'admin/themes/settings':
       return t('<p>These options control the default display settings for your entire site, across all themes. Unless they have been overridden by a specific theme, these settings will be used.</p>');
     case 'admin/themes/settings/'. arg(3):
-      $theme = array_pop(explode('.', arg(3), 2));
+      $reference = explode('.', arg(3), 2);
+      $theme = array_pop($reference);
       return t('<p>These options control the display settings for the <code>%template</code> theme. When your site is displayed using this theme, these settings will be used. By clicking "Reset to defaults," you can choose to use the <a href="%global">global settings</a> for this theme.</p>', array('%template' => $theme, '%global' => url('admin/themes/settings')));
     case 'admin/modules':
       return t('<p>Modules are plugins for Drupal that extend its core functionality. Here you can select which modules are enabled. Click on the name of the module in the navigation menu for their individual configuration pages. Once a module is enabled, new <a href="%permissions">permissions</a> might be made available. Modules can automatically be temporarily disabled to reduce server load when your site becomes extremely busy by enabling the throttle.module and checking throttle. The auto-throttle functionality must be enabled on the <a href="%throttle">throttle configuration page</a> after having enabled the throttle module.</p>', array('%permissions' => url('admin/access/permissions'), '%throttle' => url('admin/settings/throttle')));
@@ -733,7 +734,8 @@ function system_theme_settings($key = '') {
     $group = form_checkbox(t('Use the default logo'), "$var][default_logo", 1, $settings['default_logo'], t('Check here if you want the theme to use the logo supplied with it.'));
     $group .= form_textfield(t('Path to custom logo'), "$var][logo_path", $settings['logo_path'], 60, 128, t('The path to the file you would like to use as your logo file instead of the default logo.'));
 
-    file_check_directory(variable_get('file_directory_path', 'files'), FILE_CREATE_DIRECTORY, 'file_directory_path');
+    $directory_path = variable_get('file_directory_path', 'files');
+    file_check_directory($directory_path, FILE_CREATE_DIRECTORY, 'file_directory_path');
     $group .= form_file(t('Upload logo image'), 'logo_upload', 40, t("If you don't have direct file access to the server, use this field to upload your logo."));
 
     $form .= form_group(t('Logo image settings'), $group);
@@ -745,7 +747,8 @@ function system_theme_settings($key = '') {
     $group .= form_checkbox(t('Use the default shortcut icon.'), "$var][default_favicon", 1, $settings['default_favicon'], t('Check here if you want the theme to use the default shortcut icon.'));
     $group .= form_textfield(t('Path to custom icon'), "$var][favicon_path", $settings['favicon_path'], 60, 128, t('The path to the image file you would like to use as your custom shortcut icon.'));
 
-    file_check_directory(variable_get('file_directory_path', 'files'), FILE_CREATE_DIRECTORY, 'file_directory_path');
+    $directory_path = variable_get('file_directory_path', 'files');
+    file_check_directory($directory_path, FILE_CREATE_DIRECTORY, 'file_directory_path');
     $group .= form_file(t('Upload icon image'), 'favicon_upload', 40, t("If you don't have direct file access to the server, use this field to upload your shortcut icon."));
 
     $form .= form_group(t('Shortcut icon settings'), $group);
