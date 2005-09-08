@@ -68,11 +68,11 @@ function init_theme() {
 
   if (strpos($themes[$theme]->filename, '.theme')) {
     // file is a theme; include it
-    include_once($themes[$theme]->filename);
+   include_once './' . $themes[$theme]->filename;
   }
   elseif (strpos($themes[$theme]->description, '.engine')) {
     // file is a template; include its engine
-    include_once($themes[$theme]->description);
+   include_once './' . $themes[$theme]->description;
     $theme_engine = basename($themes[$theme]->description, '.engine');
     if (function_exists($theme_engine .'_init')) {
       call_user_func($theme_engine .'_init', $themes[$theme]);

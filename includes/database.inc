@@ -110,10 +110,10 @@ function db_set_active($name = 'default') {
     }
 
     $db_type = substr($connect_url, 0, strpos($connect_url, '://'));
-    $handler = "includes/database.$db_type.inc";
+   $handler = "./includes/database.$db_type.inc";
 
     if (is_file($handler)) {
-      include_once($handler);
+      include_once $handler;
     }
     else {
       drupal_maintenance_theme();

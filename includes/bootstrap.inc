@@ -460,7 +460,7 @@ function drupal_load($type, $name) {
   $filename = drupal_get_filename($type, $name);
 
   if ($filename) {
-    include_once($filename);
+    include_once "./$filename";
     $files[$type][$name] = TRUE;
 
     return TRUE;

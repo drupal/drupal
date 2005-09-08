@@ -545,7 +545,7 @@ function update_132() {
     /**
      * Wipe the search index
      */
-    include_once('modules/search.module');
+    include_once './modules/search.module';
     search_wipe();
   }
 

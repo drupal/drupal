@@ -370,7 +370,7 @@ function user_is_blocked($name) {
  */
 function user_mail($mail, $subject, $message, $header) {
   if (variable_get('smtp_library', '') && file_exists(variable_get('smtp_library', ''))) {
-    include_once variable_get('smtp_library', '');
+   include_once './' . variable_get('smtp_library', '');
     return user_mail_wrapper($mail, $subject, $message, $header);
   }
   else {
