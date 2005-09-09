@@ -709,8 +709,9 @@ function node_menu($may_cache) {
       }
     }
     else if (arg(0) == 'admin' && arg(1) == 'node' && arg(2) == 'configure' && arg(3) == 'types' && is_string(arg(4))) {
+      $arg4 = arg(4);
       $items[] = array('path' => 'admin/node/configure/types/'. arg(4),
-        'title' => t("'%name' content type", array('%name' => node_invoke(arg(4), 'node_name'))),
+        'title' => t("'%name' content type", array('%name' => node_invoke($arg4, 'node_name'))),
         'type' => MENU_CALLBACK);
     }
   }

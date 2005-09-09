@@ -1290,7 +1290,8 @@ function user_configure_settings() {
   $output .= form_group(t('User email settings'), $group);
 
   // Picture settings.
-  file_check_directory(file_create_path(variable_get('user_picture_path', 'pictures')), 1, 'user_picture_path');
+  $picture_path = file_create_path(variable_get('user_picture_path', 'pictures'));
+  file_check_directory($picture_path, 1, 'user_picture_path');
 
   $group  = form_radios(t('Picture support'), 'user_pictures', variable_get('user_pictures', 0), array(t('Disabled'), t('Enabled')), t('Enable picture support.'));
   $group .= form_textfield(t('Picture image path'), 'user_picture_path', variable_get('user_picture_path', 'pictures'), 45, 255, t('Subdirectory in the directory "%dir" where pictures will be stored.', array('%dir' => variable_get('file_directory_path', 'files') .'/')));
