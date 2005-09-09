@@ -210,7 +210,8 @@ function phptemplate_page($content) {
     'tabs'                => theme('menu_local_tasks'),
     'title'               => drupal_get_title()
   );
-  if ((arg(0) == 'node') && is_int(arg(1))) {
+
+  if ((arg(0) == 'node') && is_numeric(arg(1))) {
     $variables['node'] = node_load(arg(1));
   }
 
