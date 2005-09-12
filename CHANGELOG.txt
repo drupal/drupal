@@ -31,6 +31,7 @@ Drupal x.x.x, xxxx-xx-xx (development version)
     * added support for theme-specific block regions.
 - syndication:
     * made the aggregator module parse Atom feeds.
+    * made the aggregator generate RSS feeds.
 - XML-RPC:
     * replaced the XML-RPC library by a better one.
 - performance:
@@ -40,6 +41,7 @@ Drupal x.x.x, xxxx-xx-xx (development version)
 - internationalization:
     * improved Unicode string handling API.
     * added support for PHP's multibyte string module.
+- added support for PHP5's 'mysqli' extension.
 
 Drupal 4.6.3, 2005-08-15
 ------------------------
