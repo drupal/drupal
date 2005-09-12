@@ -76,6 +76,7 @@
  *
  * Database URL format:
  * $db_url = 'mysql://username:password@localhost/database';
+ * $db_url = 'mysqli://username:password@localhost/database';
  * $db_url = 'pgsql://username:password@localhost/database';
  */
 $db_url = 'mysql://username:password@localhost/database';

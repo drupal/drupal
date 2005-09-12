@@ -118,7 +118,7 @@ function db_set_active($name = 'default') {
     else {
       drupal_maintenance_theme();
       drupal_set_title('Unsupported database type');
-      print theme('maintenance_page', '<p>The database type '. theme('placeholder', $db_type) .' is unsupported. Please use either <var>mysql</var> for MySQL databases or <var>pgsql</var> for PostgreSQL databases. The database information is in your <code>settings.php</code> file.</p>
+      print theme('maintenance_page', '<p>The database type '. theme('placeholder', $db_type) .' is unsupported. Please use either <var>mysql</var> for MySQL 3.x &amp; 4.0.x databases, <var>mysqli</var> for MySQL 4.1.x+ databases, or <var>pgsql</var> for PostgreSQL databases. The database information is in your <code>settings.php</code> file.</p>
 <p>For more help, see the <a href="http://drupal.org/node/258">Installation and upgrading handbook</a>. If you are unsure what these terms mean you should probably contact your hosting provider.</p>');
       exit;
     }

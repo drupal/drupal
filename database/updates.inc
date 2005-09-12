@@ -4,6 +4,27 @@
 /**
  * @file
  * All incremental database updates performed between Drupal releases.
+ *
+ * For all updates after 147, please use the following syntax:
+ *
+ * function update_N() {
+ *   $ret = array();
+ *
+ *   switch ($GLOBALS['db_type']) {
+ *     case 'pgsql':
+ *       // PostgreSQL code goes here
+ *       break;
+ *     case 'mysql':
+ *     case 'mysqli':
+ *       // MySQL code goes here
+ *       break;
+ *     default:
+ *       break;
+ *   }
+ *
+ *   return $ret;
+ * }
+ *
  */
 
 // Define the various updates in an array("date : comment" => "function");
