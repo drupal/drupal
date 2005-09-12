@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.222 2005/08/28 16:30:50 dries Exp $
+// $Id: taxonomy.module,v 1.223 2005/09/12 21:55:41 dries Exp $
 
 /**
  * @file
@@ -134,6 +134,7 @@ function taxonomy_form_vocabulary($edit = array()) {
 function taxonomy_save_vocabulary(&$edit) {
   $edit['nodes'] = ($edit['nodes']) ? $edit['nodes'] : array();
   $edit['weight'] = ($edit['weight']) ? $edit['weight'] : 0;
+  $edit['tags'] = ($edit['tags']) ? $edit['tags'] : 0;
 
   $data = array('name' => $edit['name'], 'description' => $edit['description'], 'help' => $edit['help'], 'multiple' => $edit['multiple'], 'required' => $edit['required'], 'hierarchy' => $edit['hierarchy'], 'relations' => $edit['relations'], 'tags' => $edit['tags'], 'weight' => $edit['weight'],  'module' => isset($edit['module']) ? $edit['module'] : 'taxonomy');
   if ($edit['vid'] && $edit['name']) {
