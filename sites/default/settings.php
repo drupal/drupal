@@ -1,5 +1,5 @@
 <?php
-// $Id: settings.php,v 1.17 2005/08/28 18:26:20 dries Exp $
+// $Id: settings.php,v 1.18 2005/09/12 20:13:04 dries Exp $
 
 /**
  * @file
@@ -76,6 +76,7 @@
  *
  * Database URL format:
  * $db_url = 'mysql://username:password@localhost/database';
+ * $db_url = 'mysqli://username:password@localhost/database';
  * $db_url = 'pgsql://username:password@localhost/database';
  */
 $db_url = 'mysql://username:password@localhost/database';
