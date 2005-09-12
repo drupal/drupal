@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.178 2005/08/25 21:14:16 dries Exp $
+// $Id: block.module,v 1.179 2005/09/12 18:26:59 dries Exp $
 
 /**
  * @file
@@ -471,10 +471,12 @@ function block_list($region) {
 
   static $blocks = array();
 
-  if (!isset($blocks[$region])) {
-    $blocks[$region] = array();
-    $result = db_query("SELECT * FROM {blocks} WHERE theme = '%s' AND status = 1 AND region = '%s' ORDER BY weight, module", $theme_key, $region);
+  if (!count($blocks)) {
+    $result = db_query("SELECT * FROM {blocks} WHERE theme = '%s' AND status = 1 ORDER BY region, weight, module", $theme_key);
     while ($block = db_fetch_array($result)) {
+      if(!isset($blocks[$block->region])) {
+        $blocks[$block->region] = array();
+      }
       // Use the user's block visibility setting, if necessary
       if ($block['custom'] != 0) {
         if ($user->uid && isset($user->block[$block['module']][$block['delta']])) {
@@ -516,6 +518,10 @@ function block_list($region) {
         }
       }
     }
+  }
+  // Create an empty array if there were no entries
+  if(!isset($blocks[$region])) {
+    $blocks[$region] = array();
   }
   return $blocks[$region];
 }

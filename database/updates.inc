@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.131 2005/09/08 19:17:34 dries Exp $
+// $Id: updates.inc,v 1.132 2005/09/12 18:26:59 dries Exp $
 
 /**
  * @file
@@ -45,7 +45,8 @@ $sql_updates = array(
   "2005-08-08" => "update_144",
   "2005-08-15" => "update_145",
   "2005-08-25" => "update_146",
-  "2005-09-07" => "update_147"
+  "2005-09-07" => "update_147",
+  "2005-09-12" => "update_148"
 );
 
 function update_110() {
@@ -786,6 +787,14 @@ function update_147() {
   if ($GLOBALS['db_type'] == 'mysql') {
     $ret[] = update_sql("ALTER TABLE {node_revisions} DROP type");
   }
+
+  return $ret;
+}
+
+function update_148() {
+  $ret = array();
+
+  $ret[] = update_sql('ALTER TABLE {blocks} ADD PRIMARY KEY (module, delta)');
 
   return $ret;
 }
