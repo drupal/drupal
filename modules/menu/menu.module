@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.34 2005/08/25 21:14:16 dries Exp $
+// $Id: menu.module,v 1.35 2005/09/13 19:10:06 dries Exp $
 
 /**
  * @file
@@ -303,7 +303,7 @@ function menu_edit_item($mid = 0) {
 function menu_edit_item_form($edit) {
   $menu = menu_get_menu();
 
-  $form .= form_textfield(t('Title'), 'title', $edit['title'], 60, 128, t('The name to display for this link.'), NULL, TRUE);
+  $form .= form_textfield(t('Title'), 'title', $edit['title'], 60, 128, t('The name of the menu.'), NULL, TRUE);
 
   if ($edit['pid'] == 0) {
     // Display a limited set of fields for menus (not items).
