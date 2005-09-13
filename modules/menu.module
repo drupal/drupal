@@ -303,7 +303,7 @@ function menu_edit_item($mid = 0) {
 function menu_edit_item_form($edit) {
   $menu = menu_get_menu();
 
-  $form .= form_textfield(t('Title'), 'title', $edit['title'], 60, 128, t('The name to display for this link.'), NULL, TRUE);
+  $form .= form_textfield(t('Title'), 'title', $edit['title'], 60, 128, t('The name of the menu.'), NULL, TRUE);
 
   if ($edit['pid'] == 0) {
     // Display a limited set of fields for menus (not items).
