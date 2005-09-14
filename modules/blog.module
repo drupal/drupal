@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.226 2005/09/07 20:17:18 dries Exp $
+// $Id: blog.module,v 1.227 2005/09/14 21:16:00 dries Exp $
 
 /**
  * @file
@@ -42,7 +42,7 @@ function blog_access($op, $node) {
  */
 function blog_user($type, &$edit, &$user) {
   if ($type == 'view' && user_access('edit own blog', $user)) {
-    return array(t('History') => form_item(t('Blog'), l(t('view recent blog entries'), "blog/$user->uid", array('title' => t("Read %username's latest blog entries.", array('%username' => $user->name))))));
+    return array(t('History') => array('blog' => form_item(t('Blog'), l(t('view recent blog entries'), "blog/$user->uid", array('title' => t("Read %username's latest blog entries.", array('%username' => $user->name)))))));
   }
 }
 

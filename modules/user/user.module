@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.509 2005/09/08 19:46:05 dries Exp $
+// $Id: user.module,v 1.510 2005/09/14 21:16:00 dries Exp $
 
 /**
  * @file
@@ -467,7 +467,7 @@ function user_search($op = 'search', $keys = null) {
  */
 function user_user($type, &$edit, &$user, $category = NULL) {
   if ($type == 'view') {
-    return array(t('History') => form_item(t('Member for'), format_interval(time() - $user->created)));
+    return array(t('History') => array('history'=> form_item(t('Member for'), format_interval(time() - $user->created))));
   }
 
   if ($type == 'form' && $category == 'account') {
@@ -618,10 +618,21 @@ function theme_user_picture($account) {
   }
 }
 
+/**
+ * Theme a user page
+ * @param $account the user object
+ * @param $fields an mulidimensional array for the fields, in the form of
+ *                array('category1'=> array('name1' => field1, 'name2' => field2),
+ *                      'category2'=> array('name3' => field3, 'name4' => field4, 'name5' => field5),
+ *                      .. etc);
+ *
+ * @ingroup themeable
+ */
 function theme_user_profile($account, $fields) {
   $output = "<div class=\"profile\">\n";
   $output .= theme('user_picture', $account);
   foreach ($fields as $category => $value) {
+    $value = implode('', $value);
     $output .= theme('box', $category, $value);
   }
   $output .= "</div>\n";
@@ -1281,11 +1292,10 @@ function user_view($uid = 0) {
     foreach (module_list() as $module) {
       if ($data = module_invoke($module, 'user', 'view', '', $account)) {
         foreach ($data as $category => $content) {
-          $fields[$category] .= $content;
+          $fields[$category] = $content;
         }
       }
     }
-
     drupal_set_title($account->name);
     return theme('user_profile', $account, $fields);
   }
