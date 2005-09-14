@@ -123,8 +123,7 @@ CREATE TABLE blocks (
   custom smallint NOT NULL default '0',
   throttle smallint NOT NULL default '0',
   visibility smallint NOT NULL default '0',
-  pages text NOT NULL default '',
-  PRIMARY KEY (module, detla)
+  pages text NOT NULL default ''
 );
 
 --

@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.133 2005/09/12 20:13:04 dries Exp $
+// $Id: updates.inc,v 1.134 2005/09/14 21:37:11 dries Exp $
 
 /**
  * @file
@@ -66,8 +66,7 @@ $sql_updates = array(
   "2005-08-08" => "update_144",
   "2005-08-15" => "update_145",
   "2005-08-25" => "update_146",
-  "2005-09-07" => "update_147",
-  "2005-09-12" => "update_148"
+  "2005-09-07" => "update_147"
 );
 
 function update_110() {
@@ -812,13 +811,6 @@ function update_147() {
   return $ret;
 }
 
-function update_148() {
-  $ret = array();
-
-  $ret[] = update_sql('ALTER TABLE {blocks} ADD PRIMARY KEY (module, delta)');
-
-  return $ret;
-}
 
 function update_sql($sql) {
   $edit = $_POST["edit"];

@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.179 2005/09/12 18:26:59 dries Exp $
+// $Id: block.module,v 1.180 2005/09/14 21:37:11 dries Exp $
 
 /**
  * @file
@@ -473,17 +473,17 @@ function block_list($region) {
 
   if (!count($blocks)) {
     $result = db_query("SELECT * FROM {blocks} WHERE theme = '%s' AND status = 1 ORDER BY region, weight, module", $theme_key);
-    while ($block = db_fetch_array($result)) {
+    while ($block = db_fetch_object($result)) {
       if(!isset($blocks[$block->region])) {
         $blocks[$block->region] = array();
       }
       // Use the user's block visibility setting, if necessary
-      if ($block['custom'] != 0) {
-        if ($user->uid && isset($user->block[$block['module']][$block['delta']])) {
-          $enabled = $user->block[$block['module']][$block['delta']];
+      if ($block->custom != 0) {
+        if ($user->uid && isset($user->block[$block->module][$block->delta])) {
+          $enabled = $user->block[$block->module][$block->delta];
         }
         else {
-          $enabled = ($block['custom'] == 1);
+          $enabled = ($block->custom == 1);
         }
       }
       else {
@@ -491,30 +491,32 @@ function block_list($region) {
       }
 
       // Match path if necessary
-      if ($block['pages']) {
-        if ($block['visibility'] < 2) {
+      if ($block->pages) {
+        if ($block->visibility < 2) {
           $path = drupal_get_path_alias($_GET['q']);
-          $regexp = '/^('. preg_replace(array('/(\r\n?|\n)/', '/\\\\\*/', '/(^|\|)\\\\<front\\\\>($|\|)/'), array('|', '.*', '\1'. preg_quote(variable_get('site_frontpage', 'node'), '/') .'\2'), preg_quote($block['pages'], '/')) .')$/';
-        $page_match = !($block['visibility'] xor preg_match($regexp, $path));
+          $regexp = '/^('. preg_replace(array('/(\r\n?|\n)/', '/\\\\\*/', '/(^|\|)\\\\<front\\\\>($|\|)/'), array('|', '.*', '\1'. preg_quote(variable_get('site_frontpage', 'node'), '/') .'\2'), preg_quote($block->pages, '/')) .')$/';
+          $page_match = !($block->visibility xor preg_match($regexp, $path));
         }
         else {
-          $page_match = drupal_eval($block['pages']);
+          $page_match = drupal_eval($block->pages);
         }
       }
       else {
         $page_match = TRUE;
       }
+
       if ($enabled && $page_match) {
         // Check the current throttle status and see if block should be displayed
         // based on server load.
-        if (!($block['throttle'] && (module_invoke('throttle', 'status') > 0))) {
-          $array = module_invoke($block['module'], 'block', 'view', $block['delta']);
-          if (is_array($array)) {
-            $block = array_merge($block, $array);
+        if (!($block->throttle && (module_invoke('throttle', 'status') > 0))) {
+          if (is_array($array = module_invoke($block->module, 'block', 'view', $block->delta))) {
+            foreach ($array as $k => $v) {
+              $block->$k = $v;
+            }
           }
         }
-        if (isset($block['content']) && $block['content']) {
-          $blocks[$region]["$block[module]_$block[delta]"] = (object) $block;
+        if (isset($block->content) && $block->content) {
+          $blocks[$block->region]["{$block->module}_{$block->delta}"] = $block;
         }
       }
     }
