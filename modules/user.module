@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.510 2005/09/14 21:16:00 dries Exp $
+// $Id: user.module,v 1.511 2005/09/15 21:45:21 dries Exp $
 
 /**
  * @file
@@ -1604,7 +1604,7 @@ function user_admin_perm() {
       foreach ($permissions as $perm) {
         $row[] = array('data' => t($perm), 'class' => 'permission');
         foreach ($role_names as $rid => $name) {
-          $row[] = form_checkbox('', "$rid][$perm", 1, strstr($role_permissions[$rid], $perm));
+          $row[] = form_checkbox('', "$rid][$perm", 1, strstr($role_permissions[$rid], $perm), NULL, array('title' => $name .': '. t($perm)));
         }
         $rows[] = $row;
         unset($row);
