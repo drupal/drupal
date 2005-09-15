@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.258 2005/09/08 19:17:34 dries Exp $
+// $Id: theme.inc,v 1.259 2005/09/15 20:58:17 dries Exp $
 
 /**
  * @file
@@ -697,8 +697,7 @@ function theme_submenu($links) {
  * @return
  *   An HTML string representing the table.
  */
-function theme_table($header, $rows, $attributes = NULL, $caption = NULL) {
-
+function theme_table($header, $rows, $attributes = array(), $caption = NULL) {
   $output = '<table'. drupal_attributes($attributes) .">\n";
 
   if (isset($caption)) {
@@ -708,15 +707,16 @@ function theme_table($header, $rows, $attributes = NULL, $caption = NULL) {
   // Format the table header:
   if (count($header)) {
     $ts = tablesort_init($header);
-    $output .= ' <tr>';
+    $output .= ' <thead><tr>';
     foreach ($header as $cell) {
       $cell = tablesort_header($cell, $header, $ts);
       $output .= _theme_table_cell($cell, 1);
     }
-    $output .= " </tr>\n";
+    $output .= " </tr></thead>\n";
   }
 
   // Format the table rows:
+  $output .= "<tbody>\n";
   if (count($rows)) {
     foreach ($rows as $number => $row) {
       $attributes = array();
@@ -756,7 +756,7 @@ function theme_table($header, $rows, $attributes = NULL, $caption = NULL) {
     }
   }
 
-  $output .= "</table>\n";
+  $output .= "</tbody></table>\n";
   return $output;
 }
 
