@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.71 2005/08/25 21:14:16 dries Exp $
+// $Id: filter.module,v 1.72 2005/09/17 12:44:59 dries Exp $
 
 /**
  * @file
@@ -34,11 +34,11 @@ function filter_help($section) {
     case 'admin/filters/'. arg(2):
       return t('
 <p>Every <em>filter</em> performs one particular change on the user input, for example stripping out malicious HTML or making URLs clickable. Choose which filters you want to apply to text in this input format.</p>
-<p>If you notice some filters are causing conflicts in the output, you can <a href="%order">rearrange them</a>.</p>', array('%configure' => url('admin/filters/'. arg(2) .'/configure'), '%order' => url('admin/filters/'. arg(2) .'/order')));
+<p>If you notice some filters are causing conflicts in the output, you can <a href="%rearrange">rearrange them</a>.</p>', array('%rearrange' => url('admin/filters/'. arg(2) .'/order')));
 
     case 'admin/filters/'. arg(2) .'/configure':
       return t('
-<p>If you cannot find the settings for a certain filter, make sure you\'ve enabled it on the <a href="%url">list filters</a> tab first.</p>', array('%url' => url('admin/filters/'. arg(2) .'/list')));
+<p>If you cannot find the settings for a certain filter, make sure you\'ve enabled it on the <a href="%url">view tab</a> first.</p>', array('%url' => url('admin/filters/'. arg(2))));
 
     case 'admin/filters/'. arg(2) .'/order':
       return t('
@@ -67,7 +67,8 @@ function filter_filter_tips($delta, $format, $long = false) {
                   return $output;
                 }
 
-                $output .= t('<p>This site allows HTML content. While learning all of HTML may feel intimidating, learning how to use a very small number of the most basic HTML "tags" is very easy. This table provides examples for each tag that is enabled on this site.</p>
+                $output .= t('
+<p>This site allows HTML content. While learning all of HTML may feel intimidating, learning how to use a very small number of the most basic HTML "tags" is very easy. This table provides examples for each tag that is enabled on this site.</p>
 <p>For more information see W3C\'s <a href="http://www.w3.org/TR/html/">HTML Specifications</a> or use your favorite search engine to find other sites that explain HTML.</p>');
                 $tips = array(
                   'a' => array( t('Anchors are used to make links to other pages.'), '<a href="'. $base_url .'">'. variable_get('site_name', 'drupal') .'</a>'),
@@ -124,7 +125,8 @@ function filter_filter_tips($delta, $format, $long = false) {
                 }
                 $output .= theme('table', $header, $rows);
 
-                $output .= t('<p>Most unusual characters can be directly entered without any problems.</p>
+                $output .= t('
+<p>Most unusual characters can be directly entered without any problems.</p>
 <p>If you do encounter problems, try using HTML character entities. A common example looks like &amp;amp; for an ampersand &amp; character. For a full list of entities see HTML\'s <a href="http://www.w3.org/TR/html4/sgml/entities.html">entities</a> page. Some of the available characters include:</p>');
                 $entities = array(
                   array( t('Ampersand'), '&amp;'),
@@ -188,7 +190,6 @@ function filter_filter_tips($delta, $format, $long = false) {
           return t('Lines and paragraphs break automatically.');
         case 1:
           return t('Lines and paragraphs are automatically recognized. The &lt;br /&gt; line break, &lt;p&gt; paragraph and &lt;/p&gt; close paragraph tags are inserted automatically. If paragraphs are not recognized simply add a couple blank lines.');
-      break;
       }
   }
 }
@@ -204,12 +205,19 @@ function filter_menu($may_cache) {
     $items[] = array('path' => 'admin/filters', 'title' => t('input formats'),
       'callback' => 'filter_admin_overview',
       'access' => user_access('administer filters'));
-
+    $items[] = array('path' => 'admin/filters/list', 'title' => t('list'),
+      'callback' => 'filter_admin_overview',
+      'type' => MENU_DEFAULT_LOCAL_TASK,
+      'access' => user_access('administer filters'));
+    $items[] = array('path' => 'admin/filters/add', 'title' => t('add input format'),
+      'callback' => 'filter_admin_add',
+      'type' => MENU_LOCAL_TASK,
+      'weight' => 1,
+      'access' => user_access('administer filters'));
     $items[] = array('path' => 'admin/filters/delete', 'title' => t('delete input format'),
       'callback' => 'filter_admin_delete',
       'type' => MENU_CALLBACK,
       'access' => user_access('administer filters'));
-
     $items[] = array('path' => 'filter/tips', 'title' => t('compose tips'),
       'callback' => 'filter_tips_long', 'access' => TRUE,
       'type' => MENU_SUGGESTED_ITEM);
@@ -220,27 +228,26 @@ function filter_menu($may_cache) {
 
       if (isset($formats[arg(2)])) {
         $items[] = array('path' => 'admin/filters/'. arg(2), 'title' => t("'%format' input format", array('%format' => $formats[arg(2)]->name)),
-        'callback' => 'filter_admin_filters',
-        'type' => MENU_CALLBACK,
-        'access' => user_access('administer filters'));
-
-        $items[] = array('path' => 'admin/filters/'. arg(2) .'/list', 'title' => t('list'),
-        'callback' => 'filter_admin_filters',
-        'type' => MENU_DEFAULT_LOCAL_TASK,
-        'weight' => 0,
-        'access' => user_access('administer filters'));
-
+          'callback' => 'filter_admin_format',
+          'callback arguments' => array('format' => $formats[arg(2)]),
+          'type' => MENU_CALLBACK,
+          'access' => user_access('administer filters'));
+        $items[] = array('path' => 'admin/filters/'. arg(2) .'/list', 'title' => t('view'),
+          'callback' => 'filter_admin_format',
+          'callback arguments' => array('format' => $formats[arg(2)]),
+          'type' => MENU_DEFAULT_LOCAL_TASK,
+          'weight' => 0,
+          'access' => user_access('administer filters'));
         $items[] = array('path' => 'admin/filters/'. arg(2) .'/configure', 'title' => t('configure'),
-        'callback' => 'filter_admin_configure',
-        'type' => MENU_LOCAL_TASK,
-        'weight' => 1,
-        'access' => user_access('administer filters'));
-
+          'callback' => 'filter_admin_configure',
+          'type' => MENU_LOCAL_TASK,
+          'weight' => 1,
+          'access' => user_access('administer filters'));
         $items[] = array('path' => 'admin/filters/'. arg(2) .'/order', 'title' => t('rearrange'),
-        'callback' => 'filter_admin_order',
-        'type' => MENU_LOCAL_TASK,
-        'weight' => 2,
-        'access' => user_access('administer filters'));
+          'callback' => 'filter_admin_order',
+          'type' => MENU_LOCAL_TASK,
+          'weight' => 2,
+          'access' => user_access('administer filters'));
       }
     }
   }
@@ -256,43 +263,39 @@ function filter_perm() {
 }
 
 /**
- * Menu callback; allows administrators to set up input formats.
+ * Displays a list of all input formats and which one is the default
  */
 function filter_admin_overview() {
-  // Process form submission
-  switch ($_POST['op']) {
-    case t('Save input formats'):
-      filter_admin_save();
-      break;
-    case t('Add input format'):
-      filter_admin_add();
-      break;
+
+  $edit = isset($_POST['edit']) ? $_POST['edit'] : '';
+
+  // Process form submission to set the default format
+  if (is_numeric($edit['default'])) {
+    drupal_set_message(t('Default format updated.'));
+    variable_set('filter_default_format', $edit['default']);
   }
 
   // Overview of all formats.
   $formats = filter_formats();
-  $roles = user_roles();
   $error = false;
 
-  $header = array(t('Name'), t('Default'));
-  foreach ($roles as $name) {
-    $header[] = $name;
-  }
-  $header[] = array('data' => t('Operations'), 'colspan' => 2);
+  $header = array(t('Default'), t('Name'), t('Roles'), array('data' => t('Operations'), 'colspan' => 2));
 
   $rows = array();
   foreach ($formats as $id => $format) {
+    $roles = array();
+    foreach (user_roles() as $rid => $name) {
+      //prepare a roles array with roles that may access the filter
+      if (strstr($format->roles, ",$rid,")){
+        $roles[] = $name;
+      }
+    }
     $row = array();
     $default = ($id == variable_get('filter_default_format', 1));
 
-    $row[] = form_textfield('', "name][$id", $format->name, 15, 255);
     $row[] = form_radio('', 'default', $id, $default);
-
-    foreach ($roles as $rid => $name) {
-      $checked = strstr($format->roles, ",$rid,");
-      $row[] = form_checkbox('', "roles][$id][$rid", 1, $default || $checked, NULL, $default ? array('disabled' => 'disabled') : NULL);
-    }
-
+    $row[] = $format->name;
+    $row[] = $roles ? implode(', ',$roles) : t('No roles may use this format');
     $row[] = l(t('configure'), 'admin/filters/'. $id);
     $row[] = $default ? '' : l('delete', 'admin/filters/delete/'. $id);
 
@@ -300,73 +303,24 @@ function filter_admin_overview() {
   }
 
   $group = theme('table', $header, $rows);
-  $group .= form_submit(t('Save input formats'));
-  $output = '<h2>'. t('Permissions and settings') . '</h2>' . form($group);
-
-  // Form to add a new format.
-  $group = t("<p>To add a new input format, type its name here. After it has been added, you can configure its options.</p>");
-  $form = form_textfield(t('Name'), 'name', '', 30, 255);
-  $form .= form_submit(t('Add input format'));
-  $group .= form($form);
-  $output .= '<h2>'. t('Add new input format') .'</h2>'. $group;
+  $group .= form_submit(t('Set default format'));
+  $output = form($group);
 
   return $output;
-}
-
-/**
- * Save input formats on the overview page.
- */
-function filter_admin_save() {
-  $edit = $_POST['edit'];
-
-  variable_set('filter_default_format', $edit['default']);
-
-  foreach ($edit['name'] as $id => $name) {
-    $name = trim($name);
-
-    if (strlen($name) == 0) {
-      drupal_set_message(t('The input format name must be specified.'));
-      drupal_goto('admin/filters');
-    }
-    else {
-      db_query("UPDATE {filter_formats} SET name='%s' WHERE format = %d", $name, $id);
-    }
-  }
-
-  // We store the roles as a string for ease of use.
-  // We use leading and trailing comma's to allow easy substring matching.
-  foreach ($edit['roles'] as $id => $format) {
-    $roles = ',';
-    foreach ($format as $rid => $value) {
-      if ($value) {
-        $roles .= $rid .',';
-      }
-    }
-    db_query("UPDATE {filter_formats} SET roles = '%s' WHERE format = %d", $roles, $id);
-  }
-
-  drupal_set_message(t('The input format settings have been updated.'));
-  drupal_goto('admin/filters');
 }
 
 /**
  * Add a new input format.
  */
 function filter_admin_add() {
-  $edit = $_POST['edit'];
+  if ($_POST['op']) {
+    $edit = $_POST['edit'];
 
-  $name = trim($edit['name']);
-
-  if (strlen($name) == 0) {
-    drupal_set_message(t('The input format must have a name.'));
-    drupal_goto('admin/filters');
-  }
-  else {
-    db_query("INSERT INTO {filter_formats} (name) VALUES ('%s')", $name);
+    filter_admin_filters_save($format->format, $edit);
   }
 
-  drupal_set_message(t('Input format %format has been created.', array('%format' => theme('placeholder', $edit['name']))));
-  drupal_goto('admin/filters');
+  $output=  filter_admin_format_form($format);
+  return $output;
 }
 
 /**
@@ -380,13 +334,13 @@ function filter_admin_delete() {
       db_query("DELETE FROM {filters} WHERE format = %d", $edit['format']);
 
       $default = variable_get('filter_default_format', 1);
-      db_query("UPDATE {node} SET format = %d WHERE format = %d", $default, $edit['format']);
+      db_query("UPDATE {node_revisions} SET format = %d WHERE format = %d", $default, $edit['format']);
       db_query("UPDATE {comments} SET format = %d WHERE format = %d", $default, $edit['format']);
       db_query("UPDATE {boxes} SET format = %d WHERE format = %d", $default, $edit['format']);
 
       cache_clear_all('filter:'. $edit['format'], true);
 
-      drupal_set_message(t('Input format %format has been removed.', array('%format' => theme('placeholder', $edit['name']))));
+      drupal_set_message(t('Deleted input format %format.', array('%format' => theme('placeholder', $edit['name']))));
     }
     drupal_goto('admin/filters');
   }
@@ -409,37 +363,16 @@ function filter_admin_delete() {
 /**
  * Menu callback; configure the filters for a format.
  */
-function filter_admin_filters() {
-  $format = arg(2);
-
-  // Handle saving of weights.
+function filter_admin_format($format) {
   if ($_POST['op']) {
-    filter_admin_filters_save($format, $_POST['edit']);
+    $edit = $_POST['edit'];
+    filter_admin_filters_save($format->format, $edit);
   }
 
-  $all = filter_list_all();
-  $enabled = filter_list_format($format);
-
-  // Table with filters
-  $header = array(t('Enabled'), t('Name'), t('Description'));
-  $rows = array();
-  foreach ($all as $id => $filter) {
-    $row = array();
-    $row[] = form_checkbox('', $id, 1, isset($enabled[$id]));
-    $row[] = $filter->name;
-    $row[] = module_invoke($filter->module, 'filter', 'description', $filter->delta);
-
-    $rows[] = $row;
-  }
-  $form = theme('table', $header, $rows);
-  if (!$empty) {
-    $form .= form_submit(t('Save configuration'));
-  }
-
-  $output .= '<h2>'. t('Filters') .'</h2>'. form($form);
+  $output = filter_admin_format_form($format);
 
   // Composition tips (guidelines)
-  $tips = _filter_tips($format, false);
+  $tips = _filter_tips($format->format, false);
   $extra = l(t('More information about formatting options'), 'filter/tips');
   $tiplist = theme('filter_tips', $tips, false, $extra);
   if (!$tiplist) {
@@ -453,12 +386,67 @@ function filter_admin_filters() {
 }
 
 /**
+ * Renders a form for a format
+ */
+function filter_admin_format_form($format) {
+  $edit = $_POST['edit'];
+
+  $default = ($format->format == variable_get('filter_default_format', 1));
+
+  //Add the name of the object
+  $form = form_group(t('Name'), form_textfield(t('Name'), 'name', isset($edit) ? $edit['name'] : $format->name, 60, 127, t('Give the name of this filter format'), NULL, TRUE));
+
+  //Add a row of checkboxes for form group
+  foreach (user_roles() as $rid => $name) {
+    $checked = strstr($format->roles, ",$rid,");
+    $group .= form_checkbox($name, 'roles]['.$rid, 1, isset($edit) ? $edit['roles'][$rid] : ($default || $checked), NULL, $default ? array('disabled' => 'disabled') : NULL);
+  }
+  if ($default) {
+    $help = t('All roles for the default format must be enabled and cannot be changed.');
+    $group .= form_hidden('default_format', 1);
+  }
+  $form .= form_group(t('Roles'), $group, $default ? $help : t('Choose which roles may use this filter format.'));
+
+  // Table with filters
+  $all = filter_list_all();
+  $enabled = filter_list_format($format->format);
+
+  $group = '';
+  foreach ($all as $id => $filter) {
+    $group .= form_checkbox($filter->name, $id, 1, isset($edit) ? $edit[$id] : isset($enabled[$id]), module_invoke($filter->module, 'filter', 'description', $filter->delta));
+  }
+
+  $form .= form_group(t('Filters'), $group, t('Choose the filters that will be used in this filter format'));
+  $form .= form_submit(t('Save configuration'));
+
+  return form($form);
+}
+
+/**
  * Save enabled/disabled status for filters in a format.
  */
 function filter_admin_filters_save($format, $toggles) {
   $current = filter_list_format($format);
-
+  $edit = $_POST['edit'];
+  $name = trim($edit['name']);
   $cache = true;
+
+  //make sure a title is specified
+  if (strlen($name) == 0) {
+    form_set_error('name', t('You must enter a name for this input format.'));
+   return;
+  }
+
+  if (!$format) { //add a new filter format.
+    $new = true;
+    db_query("INSERT INTO {filter_formats} (name) VALUES ('%s')", $name);
+    $result = db_fetch_object(db_query("SELECT MAX(format) AS format FROM {filter_formats}"));
+    $format = $result->format;
+   drupal_set_message(t('Added input format %format.', array('%format' => theme('placeholder', $edit['name']))));
+  }
+  else {
+    drupal_set_message(t('The input format settings have been updated.'));
+  }
 
   db_query("DELETE FROM {filters} WHERE format = %d", $format);
   foreach ($toggles as $id => $checked) {
@@ -473,13 +461,27 @@ function filter_admin_filters_save($format, $toggles) {
     }
   }
 
-  // Update the format's 'no cache' flag.
-  db_query('UPDATE {filter_formats} SET cache = %d WHERE format = %d', (int)$cache, $format);
+  // We store the roles as a string for ease of use.
+  // we should always set all roles to true when saving a default role. disabled checkboxes may not always return TRUE.
+  // We use leading and trailing comma's to allow easy substring matching.
+  $roles = ',';
+  foreach ($edit['roles'] as $rid => $value) {
+    if ($value || $edit['default_format']) {
+      $roles .= $rid .',';
+    }
+  }
+
+  db_query("UPDATE {filter_formats} SET cache = %d, name='%s', roles = '%s' WHERE format = %d", $cache, $name, $roles, $format);
 
   cache_clear_all('filter:'. $format, true);
 
-  drupal_set_message(t('The input format has been updated.'));
-  drupal_goto('admin/filters/'. arg(2) .'/list');
+  // if a new filter was added, return to the main list of filters, otherwise stay on edit filter page to show new changes
+  if ($new) {
+    drupal_goto('admin/filters/');
+  }
+  else {
+    drupal_goto('admin/filters/' . arg(2)) ;
+  }
 }
 
 /**
@@ -519,8 +521,7 @@ function filter_admin_order_save($format, $weights) {
   drupal_set_message(t('The filter ordering has been saved.'));
 
   cache_clear_all('filter:'. $format, true);
-
-  drupal_goto('admin/filters/'. arg(2) .'/order');
+  drupal_goto($_GET['q']);
 }
 
 /**
@@ -746,8 +747,7 @@ function filter_form($name = 'format', $value = FILTER_FORMAT_DEFAULT) {
       $output .= theme('filter_tips', $tips);
       $output .= '</div>';
     }
-    $group = theme('form_element', NULL, $output, $extra, NULL, _form_get_error($name));
-    return form_group_collapsible(t('Input format'), $group, TRUE);
+    return theme('form_element', t('input format'), $output, $extra, NULL, _form_get_error($name));
   }
   else {
     // Only one format available: use a hidden form item and only show tips.
@@ -826,7 +826,7 @@ function theme_filter_tips($tips, $long = false, $extra = '') {
 
   $multiple = count($tips) > 1;
   if ($multiple) {
-    $output = t('Input formats') .':';
+    $output = t('input formats') .':';
   }
 
   if (count($tips)) {
@@ -925,11 +925,11 @@ function filter_filter($op, $delta = 0, $format = -1, $text = '') {
  */
 function _filter_html_settings($format) {
   $group = form_radios(t('Filter HTML tags'), "filter_html_$format", variable_get("filter_html_$format", FILTER_HTML_STRIP), array(FILTER_HTML_STRIP => t('Strip tags'), FILTER_HTML_ESCAPE => t('Escape tags')), t('How to deal with HTML tags in user-contributed content. If set to "Strip tags", dangerous tags are removed (see below).  If set to "Escape tags", all HTML is escaped and presented as it was typed.'));
-  $group .= form_textfield(t('Allowed HTML tags'), "allowed_html_$format", variable_get("allowed_html_$format", '<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd>'), 60, 255, t('If "Strip tags" is selected, optionally specify tags which should not be stripped. Javascript event attributes are always stripped.'));
+  $group .= form_textfield(t('Allowed HTML tags'), "allowed_html_$format", variable_get("allowed_html_$format", '<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd>'), 64, 255, t('If "Strip tags" is selected, optionally specify tags which should not be stripped. Javascript event attributes are always stripped.'));
   $group .= form_checkbox(t('Display HTML help'), "filter_html_help_$format", 1, variable_get("filter_html_help_$format", 1), t('If enabled, Drupal will display some basic HTML help in the long filter tips.'));
   $group .= form_radios(t('HTML style attributes'), "filter_style_$format", variable_get("filter_style_$format", FILTER_STYLE_STRIP), array(FILTER_STYLE_ALLOW => t('Allowed'), FILTER_STYLE_STRIP => t('Removed')), t('If "Strip tags" is selected, you can choose whether "STYLE" attributes are allowed or removed from input.'));
   $group .= form_checkbox(t('Spam link deterrent'), "filter_html_nofollow_$format", 1, variable_get("filter_html_nofollow_$format", FALSE), t('If enabled, Drupal will add rel="nofollow" to all links, as a measure to reduce the effectiveness of spam links. Note: this will also prevent valid links from being followed by search engines, therefore it is likely most effective when enabled for anonymous users.'));
-  $output .= form_group(t('HTML filter'), $group);
+  $output .= form_group_collapsible(t('HTML filter'), $group, TRUE);
 
   return $output;
 }
