@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.66 2005/09/08 19:17:34 dries Exp $
+// $Id: bootstrap.inc,v 1.67 2005/09/18 10:32:05 dries Exp $
 
 /**
  * @file
@@ -476,8 +476,8 @@ function drupal_load($type, $name) {
  * @param $action
  *   One of the following values:
  *   - wipe: delete the alias cache.
- *   - source: indicates that given a Drupal system URL, return an alias if one exists.
- *   - alias: indicates that given an path alias, return the Drupal system URL if one exists.
+ *   - alias: return an alias for a given Drupal system path (if one exists).
+ *   - source: return the Drupal system URL for a path alias (if one exists).
  * @param $path
  *   The path to investigate for corresponding aliases or system URLs.
  */
@@ -494,7 +494,7 @@ function drupal_lookup_path($action, $path = '') {
     $map = array();
   }
   elseif ($count > 0 && $path != '') {
-    if ($action == 'source') {
+    if ($action == 'alias') {
       if (isset($map[$path])) {
         return $map[$path];
       }
@@ -506,7 +506,7 @@ function drupal_lookup_path($action, $path = '') {
         $map[$path] = $path;
       }
     }
-    elseif ($action == 'alias') {
+    elseif ($action == 'source') {
       if ($alias = array_search($path, $map)) {
         return $alias;
       }
@@ -529,16 +529,14 @@ function drupal_lookup_path($action, $path = '') {
  * Given an internal Drupal path, return the alias set by the administrator.
  */
 function drupal_get_path_alias($path) {
-  if ($alias = drupal_lookup_path('source', $path)) {
-    return $alias;
+  $result = $path;
+  if ($alias = drupal_lookup_path('alias', $path)) {
+    $result = $alias;
   }
-  elseif (function_exists('conf_url_rewrite')) {
-    return conf_url_rewrite($path, 'outgoing');
+  if (function_exists('custom_url_rewrite')) {
+    $result = custom_url_rewrite('alias', $result, $path);
   }
-  else {
-    // No alias found. Return the normal path.
-    return $path;
-  }
+  return $result;
 }
 
 /**
@@ -682,6 +680,7 @@ function arg($index) {
 
   if (empty($arguments) || $q != $_GET['q']) {
     $arguments = explode('/', $_GET['q']);
+    $q = $_GET['q'];
   }
 
   if (isset($arguments[$index])) {
