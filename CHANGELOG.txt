@@ -32,6 +32,7 @@ Drupal x.x.x, xxxx-xx-xx (development version)
 - syndication:
     * made the aggregator module parse Atom feeds.
     * made the aggregator generate RSS feeds.
+    * added RSS feed settings.
 - XML-RPC:
     * replaced the XML-RPC library by a better one.
 - performance:
