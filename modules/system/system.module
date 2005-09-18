@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.234 2005/09/13 19:12:19 dries Exp $
+// $Id: system.module,v 1.235 2005/09/18 10:37:57 dries Exp $
 
 /**
  * @file
@@ -237,6 +237,12 @@ function system_view_general() {
   if ($group) {
     $output .= form_group_collapsible(t('Image handling'), '<p>'. $group .'</p>', TRUE);
   }
+
+  // Feed settings
+  $group = '';
+  $group .= form_select(t('Number of items per feed'), 'feed_default_items', variable_get('feed_default_items', 10), drupal_map_assoc(array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30)), t('The default number of items to include in a feed.'));
+  $group .= form_select(t('Display of XML feed items'), 'feed_item_length', variable_get('feed_item_length','teaser'), array('title' => t('Titles only'), 'teaser' => t('Titles plus teaser'), 'fulltext' => t('Full text')), t('Global setting for the length of XML feed items that are output by default.'));
+  $output .= form_group_collapsible(t('RSS feed settings'), $group, TRUE);
 
   // Date settings:
   $zones = _system_zonelist();

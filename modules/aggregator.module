@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.253 2005/09/08 20:08:42 dries Exp $
+// $Id: aggregator.module,v 1.254 2005/09/18 10:37:57 dries Exp $
 
 /**
  * @file
@@ -1058,21 +1058,33 @@ function aggregator_page_rss() {
     $url = '/categories/' . $category->cid;
     $title = ' ' . t('in category') . ' ' . $category->title;
     $sql = 'SELECT i.*, f.title AS ftitle, f.link AS flink FROM {aggregator_category_item} c LEFT JOIN {aggregator_item} i ON c.iid = i.iid LEFT JOIN {aggregator_feed} f ON i.fid = f.fid WHERE cid = %d ORDER BY timestamp DESC, iid DESC';
-    $result = db_query_range($sql, $category->cid, 0, 15);
+    $result = db_query_range($sql, $category->cid, 0, variable_get('feed_default_items', 10));
   }
   // or, get the default aggregator items
   else {
     $sql = 'SELECT i.*, f.title AS ftitle, f.link AS flink FROM {aggregator_item} i INNER JOIN {aggregator_feed} f ON i.fid = f.fid ORDER BY i.timestamp DESC, i.iid DESC';
-    $result = db_query_range($sql, 0, 15);
+    $result = db_query_range($sql, 0, variable_get('feed_default_items', 10));
   }
 
   while ($item = db_fetch_object($result)) {
+    switch (variable_get('feed_item_length', 'teaser')) {
+      case 'teaser':
+        $teaser = node_teaser($item->description);
+        if ($teaser != $item_description) {
+          $teaser .= '<p><a href="'. check_url($item->link) .'">'. t('read more') ."</a></p>\n";
+        }
+        $item->description = $teaser;
+        break;
+      case 'title':
+        $item->description = '';
+        break;
+    }
     $items .= format_rss_item($item->ftitle . ': ' . $item->title, $item->link, $item->description, array('pubDate' => date('r', $item->timestamp)));
   }
 
   $output .= "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
   $output .= "<!DOCTYPE rss [<!ENTITY % HTMLlat1 PUBLIC \"-//W3C//ENTITIES Latin 1 for XHTML//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml-lat1.ent\">]>\n";
-  $output .= "<rss version=\"0.92\">\n";
+  $output .= "<rss version=\"2.0\">\n";
   $output .= format_rss_channel(variable_get('site_name', t('Drupal')) . ' ' . t('aggregator'), $base_url . '/' . url('aggregator' . $url), variable_get('site_name', t('Drupal')) . ' - ' . t('aggregated feeds') . $title, $items, 'en');
   $output .= "</rss>\n";
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.227 2005/09/14 21:16:00 dries Exp $
+// $Id: blog.module,v 1.228 2005/09/18 10:37:57 dries Exp $
 
 /**
  * @file
@@ -77,7 +77,7 @@ function blog_feed_user($uid = 0) {
     $account = $user;
   }
 
-  $result = db_query_range(db_rewrite_sql("SELECT n.nid, n.title, r.teaser, n.created, u.name, u.uid FROM {node} n INNER JOIN {node_revisions} r ON n.vid = r.vid INNER JOIN {users} u ON n.uid = u.uid WHERE n.type = 'blog' AND u.uid = %d AND n.status = 1 ORDER BY n.created DESC"), $uid, 0, 15);
+  $result = db_query_range(db_rewrite_sql("SELECT n.nid, n.title, r.teaser, n.created, u.name, u.uid FROM {node} n INNER JOIN {node_revisions} r ON n.vid = r.vid INNER JOIN {users} u ON n.uid = u.uid WHERE n.type = 'blog' AND u.uid = %d AND n.status = 1 ORDER BY n.created DESC"), $uid, 0, variable_get('feed_default_items', 10));
   $channel['title'] = $account->name ."'s blog";
   $channel['link'] = url("blog/$uid", NULL, NULL, TRUE);
   $channel['description'] = $term->description;
@@ -88,7 +88,7 @@ function blog_feed_user($uid = 0) {
  * Displays an RSS feed containing recent blog entries of all users.
  */
 function blog_feed_last() {
-  $result = db_query_range(db_rewrite_sql("SELECT n.nid, n.title, r.teaser, n.created, u.name, u.uid FROM {node} n INNER JOIN {node_revisions} r ON n.vid = r.vid INNER JOIN {users} u ON n.uid = u.uid WHERE n.type = 'blog' AND n.status = 1 ORDER BY n.created DESC"), 0, 15);
+  $result = db_query_range(db_rewrite_sql("SELECT n.nid, n.title, r.teaser, n.created, u.name, u.uid FROM {node} n INNER JOIN {node_revisions} r ON n.vid = r.vid INNER JOIN {users} u ON n.uid = u.uid WHERE n.type = 'blog' AND n.status = 1 ORDER BY n.created DESC"), 0, variable_get('feed_default_items', 10));
   $channel['title'] = variable_get('site_name', 'drupal') .' blogs';
   $channel['link'] = url('blog', NULL, NULL, TRUE);
   $channel['description'] = $term->description;

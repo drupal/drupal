@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.527 2005/09/02 02:11:41 unconed Exp $
+// $Id: node.module,v 1.528 2005/09/18 10:37:57 dries Exp $
 
 /**
  * @file
@@ -1160,29 +1160,58 @@ function node_feed($nodes = 0, $channel = array()) {
   global $base_url, $locale;
 
   if (!$nodes) {
-    $nodes = db_query_range(db_rewrite_sql('SELECT n.nid FROM {node} n WHERE n.promote = 1 AND n.status = 1 ORDER BY n.created DESC'), 0, 15);
+    $nodes = db_query_range(db_rewrite_sql('SELECT n.nid FROM {node} n WHERE n.promote = 1 AND n.status = 1 ORDER BY n.created DESC'), 0, variable_get('feed_default_items', 10));
   }
+
+  $item_length = variable_get('feed_item_length', 'teaser');
+  $namespaces = array('xmlns:dc="http://purl.org/dc/elements/1.1/"');
 
   while ($node = db_fetch_object($nodes)) {
     // Load the specified node:
     $item = node_load($node->nid);
     $link = url("node/$node->nid", NULL, NULL, 1);
 
-    // Filter and prepare node teaser
-    if (node_hook($item, 'view')) {
-      node_invoke($item, 'view', TRUE, FALSE);
-    }
-    else {
-      $item = node_prepare($item, TRUE);
+    if ($item_length != 'title') {
+      $teaser = ($item_length == 'teaser') ? TRUE : FALSE;
+
+      // Filter and prepare node teaser
+      if (node_hook($item, 'view')) {
+        node_invoke($item, 'view', $teaser, FALSE);
+      }
+      else {
+        $item = node_prepare($item, $teaser);
+      }
+
+      // Allow modules to change $node->teaser before viewing.
+      node_invoke_nodeapi($item, 'view', $teaser, FALSE);
     }
 
-    // Allow modules to change $node->teaser before viewing.
-    node_invoke_nodeapi($item, 'view', true, false);
+    // Prepare the item description
+    switch ($item_length) {
+      case 'fulltext':
+        $item_text = $item->body;
+        break;
+      case 'teaser':
+        $item_text = $item->teaser;
+        if ($item->readmore) {
+          $item_text .= '<p>'. l(t('read more'), 'node/'. $item->nid, NULL, NULL, NULL, TRUE) .'</p>';
+        }
+        break;
+      case 'title':
+        $item_text = '';
+        break;
+    }
 
     // Allow modules to add additional item fields
     $extra = node_invoke_nodeapi($item, 'rss item');
-    $extra = array_merge($extra, array(array('key' => 'pubDate', 'value' =>  date('r', $item->created))));
-    $items .= format_rss_item($item->title, $link, $item->teaser, $extra);
+    $extra = array_merge($extra, array(array('key' => 'pubDate', 'value' =>  date('r', $item->created)),
+                                       array('key' => 'dc:creator', 'value' => $item->name)));
+    foreach ($extra as $element) {
+      if ($element['namespace']) {
+        $namespaces = array_merge($namespaces, array($element['namespace']));
+      }
+    }
+    $items .= format_rss_item($item->title, $link, $item_text, $extra);
   }
 
   $channel_defaults = array(
@@ -1196,7 +1225,7 @@ function node_feed($nodes = 0, $channel = array()) {
 
   $output = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
   $output .= "<!DOCTYPE rss [<!ENTITY % HTMLlat1 PUBLIC \"-//W3C//ENTITIES Latin 1 for XHTML//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml-lat1.ent\">]>\n";
-  $output .= "<rss version=\"". $channel["version"] . "\" xml:base=\"". $base_url ."\">\n";
+  $output .= "<rss version=\"". $channel["version"] . "\" xml:base=\"". $base_url ."\" ". implode(' ', $namespaces) .">\n";
   $output .= format_rss_channel($channel['title'], $channel['link'], $channel['description'], $items, $channel['language']);
   $output .= "</rss>\n";
 

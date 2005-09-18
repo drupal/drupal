@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.223 2005/09/12 21:55:41 dries Exp $
+// $Id: taxonomy.module,v 1.224 2005/09/18 10:37:57 dries Exp $
 
 /**
  * @file
@@ -979,7 +979,7 @@ function taxonomy_select_nodes($tids = array(), $operator = 'or', $depth = 0, $p
       $result = pager_query($sql, variable_get('default_nodes_main', 10), 0, $sql_count);
     }
     else {
-      $result = db_query_range($sql, 0, 15);
+      $result = db_query_range($sql, 0, variable_get('feed_default_items', 10));
     }
   }
 
