@@ -291,11 +291,13 @@ CREATE TABLE flood (
 
 CREATE TABLE forum (
   nid integer NOT NULL default '0',
+  vid integer NOT NULL default '0',
   tid integer NOT NULL default '0',
   shadow integer NOT NULL default '0',
   PRIMARY KEY (nid)
 );
 CREATE INDEX forum_tid_idx ON forum(tid);
+CREATE INDEX forum_vid_idx ON forum(vid);
 
 --
 -- Table structure for history
