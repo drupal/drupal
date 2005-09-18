@@ -674,6 +674,7 @@ function book_export($type = 'html', $nid = 0) {
   global $base_url;
   $type = drupal_strtolower($type);
   $depth = _book_get_depth($nid);
+  $node = node_load($nid);
   switch ($type) {
     case 'docbook':
       $xml = "<?xml version='1.0'?>\n";
