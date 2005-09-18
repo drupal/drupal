@@ -922,7 +922,9 @@ function _menu_append_contextual_items() {
 
       $_menu['items'][$mid]['access'] = $item['access'];
       $_menu['items'][$mid]['callback'] = $item['callback'];
-      $_menu['items'][$mid]['callback arguments'] = $item['callback arguments'];
+      if (isset($item['callback arguments'])) {
+        $_menu['items'][$mid]['callback arguments'] = $item['callback arguments'];
+      }
     }
     else {
       if (!array_key_exists('path', $item)) {
@@ -1037,5 +1039,4 @@ function _menu_build_local_tasks($pid) {
 
   return $forked;
 }
-
 
