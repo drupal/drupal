@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.22 2005/08/25 21:14:16 dries Exp $
+// $Id: contact.module,v 1.23 2005/09/18 12:04:10 dries Exp $
 
 /**
  * @file
@@ -102,6 +102,7 @@ function contact_mail_user() {
         if (!$edit['subject']) {
           form_set_error('subject', t('You must enter a subject.'));
         }
+        form_validate($edit, $edit['mail'] . $user->name . $user->mail);
 
         if (!form_get_errors()) {
           // Compose the body:
@@ -154,6 +155,7 @@ function contact_mail_user() {
       $output .= form_textfield(t('Subject'), 'subject', $edit['subject'], 60, 50, NULL, NULL, TRUE);
       $output .= form_textarea(t('Message'), 'message', $edit['message'], 60, 15, NULL, NULL, TRUE);
       $output .= form_checkbox(t('Send me a copy.'), 'copy', $edit['copy']);
+      $output .= form_token($edit['mail'] . $user->name . $user->mail);
       $output .= form_submit(t('Send e-mail'));
       $output  = form($output);
     }
@@ -260,6 +262,7 @@ function contact_mail_page() {
           form_set_error('category', t('You must select a valid category.'));
         }
       }
+      form_validate($edit, $user->name . $user->mail);
 
       if (!form_get_errors()) {
         // Prepare the sender:
@@ -328,6 +331,7 @@ function contact_mail_page() {
       }
       $output .= form_textarea(t('Message'), 'message', $edit['message'], 60, 5, NULL, NULL, TRUE);
       $output .= form_checkbox(t('Send me a copy.'), 'copy', $edit['copy']);
+      $output .= form_token($user->name . $user->mail);
       $output .= form_submit(t('Send e-mail'));
       $output  = form($output);
     }

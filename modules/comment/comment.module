@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.370 2005/09/18 10:37:57 dries Exp $
+// $Id: comment.module,v 1.371 2005/09/18 12:04:10 dries Exp $
 
 /**
  * @file
@@ -519,6 +519,9 @@ function comment_validate($edit) {
       }
     }
   }
+  // verify that this submission was actually generated using a local form
+  form_validate($edit, 'comment'. $edit['nid'] . $edit['pid']);
+
   return $edit;
 }
 
@@ -1426,6 +1429,8 @@ function theme_comment_form($edit, $title = NULL) {
   $form .= form_hidden('pid', $edit['pid']);
   $form .= form_hidden('nid', $edit['nid']);
   $form .= form_hidden('uid', $edit['uid']);
+  // generate a token used to validate that submissions came from this form
+  $form .= form_token('comment'. $edit['nid'] . $edit['pid']);
 
   $form .= form_submit(t('Preview comment'));
 
