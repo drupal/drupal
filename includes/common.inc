@@ -134,16 +134,14 @@ function drupal_clear_path_cache() {
  * Given a path alias, return the internal path it represents.
  */
 function drupal_get_normal_path($path) {
-  //drupal_get_path_alias($path);
-  if ($src = drupal_lookup_path('alias', $path)) {
-    return $src;
+  $result = $path;
+  if ($src = drupal_lookup_path('source', $path)) {
+    $result = $src;
   }
-  elseif (function_exists('conf_url_rewrite')) {
-    return conf_url_rewrite($path, 'incoming');
+  if (function_exists('custom_url_rewrite')) {
+    $result = custom_url_rewrite('source', $result, $path);
   }
-  else {
-    return $path;
-  }
+  return $result;
 }
 
 /**
