@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.134 2005/09/14 21:37:11 dries Exp $
+// $Id: updates.inc,v 1.135 2005/09/18 17:08:44 dries Exp $
 
 /**
  * @file
@@ -66,7 +66,8 @@ $sql_updates = array(
   "2005-08-08" => "update_144",
   "2005-08-15" => "update_145",
   "2005-08-25" => "update_146",
-  "2005-09-07" => "update_147"
+  "2005-09-07" => "update_147",
+  "2005-09-18" => "update_148"
 );
 
 function update_110() {
@@ -811,6 +812,26 @@ function update_147() {
   return $ret;
 }
 
+function update_148() {
+  $ret = array();
+
+  // Add support for tracking users' session ids (useful for tracking anon users)
+  switch ($GLOBALS['db_type']) {
+    case 'pgsql':
+      $ret[] = update_sql("ALTER TABLE {accesslog} ADD sid varchar(32)");
+      $ret[] = update_sql("ALTER TABLE {accesslog} ALTER sid SET NOT NULL");
+      $ret[] = update_sql("ALTER TABLE {accesslog} ALTER sid SET DEFAULT ''");
+      break;
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql("ALTER TABLE {accesslog} ADD sid varchar(32) NOT NULL default ''");
+      break;
+    default:
+      break;
+ }
+
+  return $ret;
+}
 
 function update_sql($sql) {
   $edit = $_POST["edit"];

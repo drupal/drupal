@@ -16,6 +16,7 @@ CREATE TABLE access (
 
 CREATE TABLE accesslog (
   aid SERIAL,
+  sid varchar(32) NOT NULL default '',
   mask varchar(255) NOT NULL default '',
   title varchar(255) default NULL,
   path varchar(255) default NULL,

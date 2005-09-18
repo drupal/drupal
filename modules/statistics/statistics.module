@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.204 2005/08/25 21:14:17 dries Exp $
+// $Id: statistics.module,v 1.205 2005/09/18 17:09:56 dries Exp $
 
 /**
  * @file
@@ -74,7 +74,7 @@ function statistics_exit() {
   }
   if ((variable_get('statistics_enable_access_log', 0)) && (module_invoke('throttle', 'status') == 0)) {
     // Log this page access.
-    db_query("INSERT INTO {accesslog} (title, path, url, hostname, uid, timer, timestamp) values('%s', '%s', '%s', '%s', %d, %d, %d)", drupal_get_title(), $_GET['q'], referer_uri(), $_SERVER['REMOTE_ADDR'], $user->uid, timer_read('page'), time());
+    db_query("INSERT INTO {accesslog} (title, path, url, hostname, uid, sid, timer, timestamp) values('%s', '%s', '%s', '%s', %d, '%s', %d, %d)", drupal_get_title(), $_GET['q'], referer_uri(), $_SERVER['REMOTE_ADDR'], $user->uid, session_id(), timer_read('page'), time());
   }
 }
 
