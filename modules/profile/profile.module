@@ -653,7 +653,7 @@ function theme_profile_block($account, $fields = array()) {
 
   foreach ($fields as $field) {
     if ($field->value) {
-      $output .= "<p><strong>$field->title:</strong><br />$value</p>\n";
+      $output .= "<p><strong>$field->title:</strong><br />$field->value</p>\n";
     }
   }
 
