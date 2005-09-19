@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.224 2005/09/18 10:37:57 dries Exp $
+// $Id: taxonomy.module,v 1.225 2005/09/19 15:04:11 dries Exp $
 
 /**
  * @file
@@ -398,7 +398,7 @@ function taxonomy_overview() {
     foreach ($tree as $term) {
       $total_entries++; // we're counting all-totals, not displayed
       if (($start_from && ($start_from * $page_increment) >= $total_entries) || ($displayed_count == $page_increment)) { continue; }
-      $rows[] = array(_taxonomy_depth($term->depth) . ' ' . check_plain($term->name), l(t('edit'), "admin/taxonomy/edit/term/$term->tid", array(), $destination));
+      $rows[] = array(_taxonomy_depth($term->depth) . ' ' . l(check_plain($term->name), "taxonomy/term/$term->tid"), l(t('edit'), "admin/taxonomy/edit/term/$term->tid", array(), $destination));
       $displayed_count++; // we're counting tids displayed
     }
 
