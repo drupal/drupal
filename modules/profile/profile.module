@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.109 2005/09/14 21:16:00 dries Exp $
+// $Id: profile.module,v 1.110 2005/09/19 14:59:44 dries Exp $
 
 /**
  * @file
@@ -653,7 +653,7 @@ function theme_profile_block($account, $fields = array()) {
 
   foreach ($fields as $field) {
     if ($field->value) {
-      $output .= "<p><strong>$field->title:</strong><br />$value</p>\n";
+      $output .= "<p><strong>$field->title:</strong><br />$field->value</p>\n";
     }
   }
 
