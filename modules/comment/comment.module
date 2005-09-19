@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.371 2005/09/18 12:04:10 dries Exp $
+// $Id: comment.module,v 1.372 2005/09/19 15:11:05 dries Exp $
 
 /**
  * @file
@@ -167,7 +167,7 @@ function comment_block($op = 'list', $delta = 0) {
     return $blocks;
   }
   else if ($op == 'view' && user_access('access comments')) {
-    $result = db_query_range(db_rewrite_sql('SELECT c.nid, c.* FROM {comments} c WHERE c.status = %d ORDER BY c.timestamp DESC', 'c'), COMMENT_PUBLISHED, 0, 10);
+    $result = db_query_range(db_rewrite_sql('SELECT c.nid, c.* FROM {comments} c INNER JOIN {node} n ON n.nid = c.nid WHERE n.status = 1 AND c.status = %d ORDER BY c.timestamp DESC', 'c'), COMMENT_PUBLISHED, 0, 10);
     $items = array();
     while ($comment = db_fetch_object($result)) {
       $items[] = l($comment->subject, 'node/'. $comment->nid, NULL, NULL, 'comment-'. $comment->cid) .'<br />'. t('%time ago', array('%time' => format_interval(time() - $comment->timestamp)));
