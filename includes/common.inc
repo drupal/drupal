@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.478 2005/09/18 11:50:22 dries Exp $
+// $Id: common.inc,v 1.479 2005/09/19 19:14:54 dries Exp $
 
 /**
  * @file
@@ -1057,7 +1057,7 @@ function form_token($key) {
   }
 
   // the verification token is an md5 hash of the form key and our private key
-  return form_hidden('form_token', md5($key . variable_get('drupal_private_key', '')));
+  return form_hidden('form_token', md5($_SERVER['REMOTE_ADDR'] . $key . variable_get('drupal_private_key', '')));
 }
 
 /**
@@ -1080,7 +1080,7 @@ function form_validate($edit, $key, $error_message = NULL) {
     $error = t('Validation error, please try again.  If this error persists, please contact the site administrator.');
   }
 
-  if ($edit['form_token'] != md5($key . variable_get('drupal_private_key', ''))) {
+  if ($edit['form_token'] != md5($_SERVER['REMOTE_ADDR'] . $key . variable_get('drupal_private_key', ''))) {
     // setting this error will cause the form to fail validation
     form_set_error('form_token', $error);
   }
