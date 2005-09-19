@@ -1,4 +1,4 @@
-// $Id: INSTALL.txt,v 1.20 2005/04/23 05:07:08 unconed Exp $
+// $Id: INSTALL.txt,v 1.21 2005/09/19 19:00:23 dries Exp $
 
 CONTENTS OF THIS FILE
 ---------------------
@@ -162,6 +162,10 @@ INSTALLATION
      sites/sub.example.com/settings.php
      sites/example.com/settings.php
      sites/default/settings.php
+
+   If you are installing on a non-standard port number, the ':' is
+   replaced by a '.'. For example, http://www.drupal.org:8080/mysite/test/
+   could be loaded from sites/www.drupal.org.8080.mysite.test/.
 
    Each site configuration can have its own site-specific modules and
    themes that will be made available in addition to those installed
