@@ -18,8 +18,6 @@
  *     case 'mysqli':
  *       // MySQL code goes here
  *       break;
- *     default:
- *       break;
  *   }
  *
  *   return $ret;
@@ -825,8 +823,6 @@ function update_148() {
     case 'mysql':
     case 'mysqli':
       $ret[] = update_sql("ALTER TABLE {accesslog} ADD sid varchar(32) NOT NULL default ''");
-      break;
-    default:
       break;
  }
 
