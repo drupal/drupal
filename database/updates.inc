@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.135 2005/09/18 17:08:44 dries Exp $
+// $Id: updates.inc,v 1.136 2005/09/22 05:19:16 dries Exp $
 
 /**
  * @file
@@ -17,8 +17,6 @@
  *     case 'mysql':
  *     case 'mysqli':
  *       // MySQL code goes here
- *       break;
- *     default:
  *       break;
  *   }
  *
@@ -825,8 +823,6 @@ function update_148() {
     case 'mysql':
     case 'mysqli':
       $ret[] = update_sql("ALTER TABLE {accesslog} ADD sid varchar(32) NOT NULL default ''");
-      break;
-    default:
       break;
  }
 
