@@ -328,7 +328,7 @@ function update_118() {
 function update_119() {
   $ret = array();
 
-  foreach (node_list() as $type) {
+  foreach (node_get_types() as $type => $name) {
     $node_options = array();
     if (variable_get('node_status_'. $type, 1)) {
       $node_options[] = 'status';
