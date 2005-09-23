@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.269 2005/09/08 19:22:28 dries Exp $
+// $Id: forum.module,v 1.270 2005/09/23 08:47:13 dries Exp $
 
 /**
  * @file
@@ -517,6 +517,8 @@ function forum_validate(&$node) {
   // Make sure all fields are set properly:
   $node->icon = $node->icon ? $node->icon : '';
 
+  node_validate_title($node,t('You have to specify a subject.'));
+
   if ($node->taxonomy) {
     // Extract the node's proper topic ID.
     $vocabulary = variable_get('forum_nav_vocabulary', '');
@@ -558,6 +560,8 @@ function forum_update($node) {
  * Implementation of hook_form().
  */
 function forum_form(&$node) {
+  $output = form_textfield(t('Subject'), 'title', $node->title, 60, 128, NULL, NULL, TRUE);
+
   if (!$node->nid) {
     // new topic
     $node->taxonomy[] = arg(3);
@@ -566,7 +570,7 @@ function forum_form(&$node) {
     $node->taxonomy = array($node->tid);
   }
 
-  $output = implode('', taxonomy_node_form('forum', $node));
+  $output .= implode('', taxonomy_node_form('forum', $node));
 
   if ($node->nid) {
     // if editing, give option to leave shadows

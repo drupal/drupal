@@ -1,5 +1,5 @@
 <?php
-// $Id: story.module,v 1.170 2005/08/29 19:58:49 dries Exp $
+// $Id: story.module,v 1.171 2005/09/23 08:47:13 dries Exp $
 
 /**
  * @file
@@ -64,10 +64,17 @@ function story_menu($may_cache) {
 }
 
 /**
+ * Implementation of hook_validate().
+ */
+function story_validate(&$node) {
+  node_validate_title($node);
+}
+
+/**
  * Implementation of hook_form().
  */
 function story_form(&$node) {
-  $output = '';
+  $output = form_textfield(t('Title'), 'title', $node->title, 60, 128, NULL, NULL, TRUE);
 
   if (function_exists('taxonomy_node_form')) {
     $output .= implode('', taxonomy_node_form('story', $node));

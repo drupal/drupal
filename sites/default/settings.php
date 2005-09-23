@@ -1,5 +1,5 @@
 <?php
-// $Id: settings.php,v 1.18 2005/09/12 20:13:04 dries Exp $
+// $Id: settings.php,v 1.19 2005/09/23 08:47:13 dries Exp $
 
 /**
  * @file
@@ -30,6 +30,10 @@
  *  9. sites/org
  *
  * 10. sites/default
+ *
+ * If you are installing on a non-standard port number, the ':' is
+ * replaced by a '.'. For example, http://www.drupal.org:8080/mysite/test/
+ * could be loaded from sites/www.drupal.org.8080.mysite.test/.
  */
 
 /**

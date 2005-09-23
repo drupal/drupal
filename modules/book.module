@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.316 2005/09/18 11:26:17 dries Exp $
+// $Id: book.module,v 1.317 2005/09/23 08:47:13 dries Exp $
 
 /**
  * @file
@@ -225,13 +225,16 @@ function book_validate(&$node) {
     $node->weight = 0;
     $node->revision = 1;
   }
+
+  node_validate_title($node);
 }
 
 /**
  * Implementation of hook_form().
  */
 function book_form(&$node) {
-  $output = form_select(t('Parent'), 'parent', ($node->parent ? $node->parent : arg(4)), book_toc($node->nid), t('The parent that this page belongs in. Note that pages whose parent is &lt;top-level&gt; are regarded as independent, top-level books.'));
+  $output = form_textfield(t('Title'), 'title', $node->title, 60, 128, NULL, NULL, TRUE);
+  $output .= form_select(t('Parent'), 'parent', ($node->parent ? $node->parent : arg(4)), book_toc($node->nid), t('The parent that this page belongs in. Note that pages whose parent is &lt;top-level&gt; are regarded as independent, top-level books.'));
 
   if (function_exists('taxonomy_node_form')) {
     $output .= implode('', taxonomy_node_form('book', $node));

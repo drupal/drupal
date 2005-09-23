@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.228 2005/09/18 10:37:57 dries Exp $
+// $Id: blog.module,v 1.229 2005/09/23 08:47:13 dries Exp $
 
 /**
  * @file
@@ -183,11 +183,20 @@ function blog_page_last() {
 }
 
 /**
+ * Implementation of hook_validate().
+ */
+function blog_validate(&$node) {
+  node_validate_title($node);
+}
+
+/**
  * Implementation of hook_form().
  */
 function blog_form(&$node) {
   global $nid;
   $iid = $_GET['iid'];
+
+  $output = form_textfield(t('Title'), 'title', $node->title, 60, 128, NULL, NULL, TRUE);
 
   if (empty($node->body)) {
     /*

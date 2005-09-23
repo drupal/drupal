@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.528 2005/09/18 10:37:57 dries Exp $
+// $Id: node.module,v 1.529 2005/09/23 08:47:13 dries Exp $
 
 /**
  * @file
@@ -1242,13 +1242,6 @@ function node_validate($node) {
   // Convert the node to an object, if necessary.
   $node = array2object($node);
 
-  // Validate the title field.
-  if (isset($node->title)) {
-    if (trim($node->title) == '') {
-      form_set_error('title', t('You have to specify a title.'));
-    }
-  }
-
   // Make sure the body has the minimum number of words.
   // todo use a better word counting algorithm that will work in other languages
   if (isset($node->body) && count(explode(' ', $node->body)) < variable_get('minimum_'. $node->type .'_size', 0)) {
@@ -1325,6 +1318,16 @@ function node_validate($node) {
 }
 
 /**
+ * Validate the title of a node
+ */
+function node_validate_title($node, $message = NULL) {
+  // Validate the title field.
+  if (trim($node->title) == '') {
+    form_set_error('title', isset($message) ? $message : t('You have to specify a title.'));
+  }
+}
+
+/**
  * Generate the node editing form.
  */
 function node_form($edit) {
@@ -1378,9 +1381,8 @@ function node_form($edit) {
     $output .= $extras ? '<div class="extra">'. $extras .'</div></div>' : '</div>';
   }
 
-  // Add the default fields.
+  // Open the enclosing div.
   $output .= '<div class="standard">';
-  $output .= form_textfield(t('Title'), 'title', $edit->title, 60, 128, NULL, NULL, TRUE);
 
   // Add the node-type-specific fields.
   $output .= $form;
