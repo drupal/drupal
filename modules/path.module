@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.63 2005/09/23 13:11:57 dries Exp $
+// $Id: path.module,v 1.64 2005/09/23 21:21:03 dries Exp $
 
 /**
  * @file
@@ -18,7 +18,7 @@ function path_help($section) {
     case 'admin/path/add':
       return t('<p>Enter the path you wish to create the alias for, followed by the name of the new alias.</p>');
     case 'admin/help#path':
-      return t("
+      return t('
 <h3>Background</h3>
 <p>A very powerful feature of Drupal is the ability to have control over all paths. The path module is the tool that provides this functionality and is part of the basic Drupal installation, although it is not enabled by default. Some examples of re-mapping paths are:</p>
 <pre>
@@ -45,7 +45,7 @@ node/feed => index.rdf
 <ol><li><strong>create url aliases</strong> - Allows users to create aliases for nodes. Enabling this permission will display a path field to the user in any node form, allowing them to enter an alias for that node. They will be able to edit/delete the alias after it is created using the same form.</li><li><strong>administer url aliases</strong> - Allows users to access the alias administration interface. This interface displays all aliases and provides a way to create and modify them. This is also the location to build aliases for things other than nodes. For example, you can create an alias for a taxonomy URL or even re-map the admin path (although the original admin path will still be accessible since aliases do not cancel out original paths).</li></ol>
 
 <h3>Mass URL aliasing</h3>
-<p>Drupal also comes with user defined mass URL aliasing capabilities. You might like to see completely different URLs used by Drupal, or even URLs translated to the visitors' native language, in which case this feature is handy. You need to have a working PHP programming knowledge to make use of this feature however. Read on in the <a href="%mass-alias-doc">Drupal Handbook about mass url aliasing.</a></p>", array("%mass-alias-doc", "http://drupal.org/node/23708"));
+<p>Drupal also comes with user defined mass URL aliasing capabilities. You might like to see completely different URLs used by Drupal, or even URLs translated to the visitors\' native language, in which case this feature is handy. You need to have a working PHP programming knowledge to make use of this feature however. Read on in the <a href="%mass-alias-doc">Drupal Handbook about mass url aliasing.</a></p>', array("%mass-alias-doc" => "http://drupal.org/node/23708"));
   }
 }
 
