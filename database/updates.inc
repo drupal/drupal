@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.136 2005/09/22 05:19:16 dries Exp $
+// $Id: updates.inc,v 1.137 2005/09/23 13:13:12 dries Exp $
 
 /**
  * @file
@@ -328,7 +328,7 @@ function update_118() {
 function update_119() {
   $ret = array();
 
-  foreach (node_list() as $type) {
+  foreach (node_get_types() as $type => $name) {
     $node_options = array();
     if (variable_get('node_status_'. $type, 1)) {
       $node_options[] = 'status';
