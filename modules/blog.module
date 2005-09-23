@@ -183,11 +183,20 @@ function blog_page_last() {
 }
 
 /**
+ * Implementation of hook_validate().
+ */
+function blog_validate(&$node) {
+  node_validate_title($node);
+}
+
+/**
  * Implementation of hook_form().
  */
 function blog_form(&$node) {
   global $nid;
   $iid = $_GET['iid'];
+
+  $output = form_textfield(t('Title'), 'title', $node->title, 60, 128, NULL, NULL, TRUE);
 
   if (empty($node->body)) {
     /*

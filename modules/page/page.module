@@ -64,9 +64,18 @@ function page_menu($may_cache) {
 }
 
 /**
+ * Implementation of hook_validate().
+ */
+function page_validate(&$node) {
+  node_validate_title($node);
+}
+
+/**
  * Implementation of hook_form().
  */
 function page_form(&$node) {
+  $output = form_textfield(t('Title'), 'title', $node->title, 60, 128, NULL, NULL, TRUE);
+
   if (function_exists('taxonomy_node_form')) {
     $output .= implode('', taxonomy_node_form('page', $node));
   }

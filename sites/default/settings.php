@@ -30,6 +30,10 @@
  *  9. sites/org
  *
  * 10. sites/default
+ *
+ * If you are installing on a non-standard port number, the ':' is
+ * replaced by a '.'. For example, http://www.drupal.org:8080/mysite/test/
+ * could be loaded from sites/www.drupal.org.8080.mysite.test/.
  */
 
 /**
