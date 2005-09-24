@@ -951,13 +951,10 @@ function theme_forum_topic_list($tid, $topics, $sortby, $forum_per_page) {
         );
       }
     }
-
-    if ($pager = theme('pager', NULL, $forum_per_page, 0, tablesort_pager())) {
-      $rows[] = array(array('data' => $pager, 'colspan' => '5', 'class' => 'pager'));
-    }
   }
 
   $output .= theme('table', $forum_topic_list_header, $rows);
+  $output .= theme('pager', NULL, $forum_per_page, 0, tablesort_pager());
 
   return $output;
 }

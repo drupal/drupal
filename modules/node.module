@@ -962,15 +962,12 @@ function node_admin_nodes() {
                     l(t('edit'), 'node/'. $node->nid .'/edit', array(), $destination));
   }
 
-  if ($pager = theme('pager', NULL, 50, 0)) {
-    $rows[] = array(array('data' => $pager, 'colspan' => '7'));
-  }
-
   if (!$rows) {
     $rows[] = array(array('data' => t('No posts available.'), 'colspan' => '6'));
   }
 
   $output .= theme('table', $header, $rows);
+  $output .= theme('pager', NULL, 50, 0);
   return form($output, 'post', url('admin/node/action'));
 }
 

@@ -1065,12 +1065,9 @@ function _locale_string_seek() {
       }
     }
 
-    if ($pager = theme('pager', NULL, 50, 0, $request)) {
-      $rows[] = array(array('data' => "$pager", 'colspan' => '5'));
-    }
-
     $output .= theme('table', $header, $rows);
 
+    $output .= theme('pager', NULL, 50, 0, $request);
   }
 
   return $output;
