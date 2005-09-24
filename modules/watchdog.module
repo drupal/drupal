@@ -1,5 +1,5 @@
 <?php
-// $Id: watchdog.module,v 1.126 2005/08/25 21:14:17 dries Exp $
+// $Id: watchdog.module,v 1.127 2005/09/24 07:53:26 dries Exp $
 
 /**
  * @file
@@ -117,13 +117,9 @@ function watchdog_overview() {
     $rows[] = array(array('data' => t('No log messages available.'), 'colspan' => '7'));
   }
 
-  $pager = theme('pager', NULL, 50, 0, tablesort_pager());
-  if (!empty($pager)) {
-    $rows[] = array(array('data' => $pager, 'colspan' => '7'));
-  }
-
   $output  = '<div class="container-inline">'. form($form) .'</div>';
   $output .= theme('table', $header, $rows);
+  $output .= theme('pager', NULL, 50, 0, tablesort_pager());
 
   return $output;
 }

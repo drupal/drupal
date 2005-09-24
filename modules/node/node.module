@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.529 2005/09/23 08:47:13 dries Exp $
+// $Id: node.module,v 1.530 2005/09/24 07:53:26 dries Exp $
 
 /**
  * @file
@@ -962,15 +962,12 @@ function node_admin_nodes() {
                     l(t('edit'), 'node/'. $node->nid .'/edit', array(), $destination));
   }
 
-  if ($pager = theme('pager', NULL, 50, 0)) {
-    $rows[] = array(array('data' => $pager, 'colspan' => '7'));
-  }
-
   if (!$rows) {
     $rows[] = array(array('data' => t('No posts available.'), 'colspan' => '6'));
   }
 
   $output .= theme('table', $header, $rows);
+  $output .= theme('pager', NULL, 50, 0);
   return form($output, 'post', url('admin/node/action'));
 }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.205 2005/09/18 17:09:56 dries Exp $
+// $Id: statistics.module,v 1.206 2005/09/24 07:53:26 dries Exp $
 
 /**
  * @file
@@ -177,12 +177,10 @@ function statistics_node_tracker() {
         l(t('details'), "admin/logs/access/$log->aid"));
     }
 
-    if ($pager = theme('pager', NULL, 30, 0, tablesort_pager())) {
-      $rows[] = array(array('data' => $pager, 'colspan' => '4'));
-    }
-
     drupal_set_title(check_plain($node->title));
-    return theme('table', $header, $rows);
+    $output = theme('table', $header, $rows);
+    $output .= theme('pager', NULL, 30, 0, tablesort_pager());
+    return $output;
   }
   else {
     drupal_not_found();
@@ -205,12 +203,10 @@ function statistics_user_tracker() {
         l(t('details'), "admin/logs/access/$log->aid"));
     }
 
-    if ($pager = theme('pager', NULL, 30, 0, tablesort_pager())) {
-      $rows[] = array(array('data' => $pager, 'colspan' => '3'));
-    }
-
     drupal_set_title($account->name);
-    return theme('table', $header, $rows);
+    $output = theme('table', $header, $rows);
+    $output .= theme('pager', NULL, 30, 0, tablesort_pager());
+    return $output;
   }
   else {
     drupal_not_found();
@@ -239,11 +235,9 @@ function statistics_recent_hits($type = 'all', $id = 0) {
       l(t('details'), "admin/logs/access/$log->aid"));
   }
 
-  if ($pager = theme('pager', NULL, 30, 0, tablesort_pager())) {
-    $rows[] = array(array('data' => $pager, 'colspan' => '4'));
-  }
-
-  return theme('table', $header, $rows);
+  $output = theme('table', $header, $rows);
+  $output .= theme('pager', NULL, 30, 0, tablesort_pager());
+  return $output;
 }
 
 /**
@@ -266,12 +260,10 @@ function statistics_top_pages() {
     $rows[] = array($page->hits, _statistics_format_item($page->title, $page->path), t('%time ms', array('%time' => round($page->average_time))), format_interval(round($page->total_time / 1000)));
   }
 
-  if ($pager = theme('pager', NULL, 30, 0, tablesort_pager())) {
-    $rows[] = array(array('data' => $pager, 'colspan' => '4'));
-  }
-
   drupal_set_title(t('Top pages in the past %interval', array('%interval' => format_interval(variable_get('statistics_flush_accesslog_timer', 259200)))));
-  return theme('table', $header, $rows);
+  $output = theme('table', $header, $rows);
+  $output .= theme('pager', NULL, 30, 0, tablesort_pager());
+  return $output;
 }
 
 /**
@@ -296,12 +288,10 @@ function statistics_top_visitors() {
     $rows[] = array($account->hits, ($account->uid ? theme('username', $account) : $account->hostname), format_interval(round($account->total / 1000)), $ban_link);
   }
 
-  if ($pager = theme('pager', NULL, 30, 0, tablesort_pager())) {
-    $rows[] = array(array('data' => $pager, 'colspan' => '4'));
-  }
-
   drupal_set_title(t('Top visitors in the past %interval', array('%interval' => format_interval(variable_get('statistics_flush_accesslog_timer', 259200)))));
-  return theme('table', $header, $rows);
+  $output = theme('table', $header, $rows);
+  $output .= theme('pager', NULL, 30, 0, tablesort_pager());
+  return $output;
 }
 
 /**
@@ -324,11 +314,10 @@ function statistics_top_referrers() {
   while ($referrer = db_fetch_object($result)) {
     $rows[] = array($referrer->hits, '<a href="'. check_url($referrer->url) .'">'. check_plain(_statistics_column_width($referrer->url)) .'</a>', t('%time ago', array('%time' => format_interval(time() - $referrer->last))));
   }
-  if ($pager = theme('pager', NULL, 30, 0, tablesort_pager())) {
-    $rows[] = array(array('data' => $pager, 'colspan' => '3'));
-  }
 
-  return theme('table', $header, $rows);
+  $output = theme('table', $header, $rows);
+  $output .= theme('pager', NULL, 30, 0, tablesort_pager());
+  return $output;
 }
 
 /**

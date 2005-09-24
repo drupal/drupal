@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.373 2005/09/19 19:13:35 dries Exp $
+// $Id: comment.module,v 1.374 2005/09/24 07:53:26 dries Exp $
 
 /**
  * @file
@@ -938,9 +938,7 @@ function comment_render($node, $cid = 0) {
 
       // Use the standard pager; $pager_total is the number of returned rows,
       // is global and defined in pager.inc.
-      if ($pager = theme('pager', NULL, $comments_per_page, 0, array('comments_per_page' => $comments_per_page))) {
-        $output .= $pager;
-      }
+      $output .= theme('pager', NULL, $comments_per_page, 0, array('comments_per_page' => $comments_per_page));
 
       if (db_num_rows($result) && comment_user_can_moderate($node)) {
         $output .= '<div id="comment-moderation-button">'. form_submit(t('Moderate comments')) .'</div>';

@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.module,v 1.121 2005/08/28 15:29:34 dries Exp $
+// $Id: tracker.module,v 1.122 2005/09/24 07:53:26 dries Exp $
 
 /**
  * @file
@@ -108,14 +108,11 @@ function tracker_page($uid = 0) {
     );
   }
 
-  if ($pager = theme('pager', NULL, 25, 0)) {
-   $rows[] = array(array('data' => $pager, 'colspan' => '5'));
-  }
-
   $header = array(t('Type'), t('Post'), t('Author'), t('Replies'), t('Last post'));
 
   $output .= '<div id="tracker">';
   $output .= theme('table', $header, $rows);
+  $output .= theme('pager', NULL, 25, 0);
   $output .= '</div>';
 
   return $output;

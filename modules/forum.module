@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.270 2005/09/23 08:47:13 dries Exp $
+// $Id: forum.module,v 1.271 2005/09/24 07:53:26 dries Exp $
 
 /**
  * @file
@@ -951,13 +951,10 @@ function theme_forum_topic_list($tid, $topics, $sortby, $forum_per_page) {
         );
       }
     }
-
-    if ($pager = theme('pager', NULL, $forum_per_page, 0, tablesort_pager())) {
-      $rows[] = array(array('data' => $pager, 'colspan' => '5', 'class' => 'pager'));
-    }
   }
 
   $output .= theme('table', $forum_topic_list_header, $rows);
+  $output .= theme('pager', NULL, $forum_per_page, 0, tablesort_pager());
 
   return $output;
 }

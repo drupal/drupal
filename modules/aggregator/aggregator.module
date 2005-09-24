@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.254 2005/09/18 10:37:57 dries Exp $
+// $Id: aggregator.module,v 1.255 2005/09/24 07:53:26 dries Exp $
 
 /**
  * @file
@@ -1004,9 +1004,7 @@ function _aggregator_page_list($sql, $op, $header = '') {
   }
   $output .= '</div>';
 
-  if ($pager = theme('pager', NULL, 20, 0)) {
-    $output .= $pager;
-  }
+  $output .= theme('pager', NULL, 20, 0);
 
   // arg(1) is undefined if we are at the top aggregator URL
   // is there a better way to do this?

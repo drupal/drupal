@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.50 2005/08/25 21:14:16 dries Exp $
+// $Id: locale.inc,v 1.51 2005/09/24 07:53:26 dries Exp $
 
 /**
  * @file
@@ -1065,12 +1065,9 @@ function _locale_string_seek() {
       }
     }
 
-    if ($pager = theme('pager', NULL, 50, 0, $request)) {
-      $rows[] = array(array('data' => "$pager", 'colspan' => '5'));
-    }
-
     $output .= theme('table', $header, $rows);
 
+    $output .= theme('pager', NULL, 50, 0, $request);
   }
 
   return $output;

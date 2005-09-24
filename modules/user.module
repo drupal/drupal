@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.511 2005/09/15 21:45:21 dries Exp $
+// $Id: user.module,v 1.512 2005/09/24 07:53:26 dries Exp $
 
 /**
  * @file
@@ -1722,11 +1722,9 @@ function user_admin_account() {
                     l(t('edit'), "user/$account->uid/edit", array(), $destination));
   }
 
-  $pager = theme('pager', NULL, 50, 0, tablesort_pager());
-  if (!empty($pager)) {
-    $rows[] = array(array('data' => $pager, 'colspan' => '5'));
-  }
-  return theme('table', $header, $rows);
+  $output = theme('table', $header, $rows);
+  $output .= theme('pager', NULL, 50, 0, tablesort_pager());
+  return $output;
 }
 
 function user_configure() {
