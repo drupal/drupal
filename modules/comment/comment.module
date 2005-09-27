@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.375 2005/09/27 18:10:19 dries Exp $
+// $Id: comment.module,v 1.376 2005/09/27 18:34:59 dries Exp $
 
 /**
  * @file
@@ -906,7 +906,7 @@ function comment_render($node, $cid = 0) {
       }
 
       // Start a form, for use with comment control and moderation.
-      $result = pager_query($query, $comments_per_page, 0, "SELECT COUNT(*) FROM {comments} WHERE status = %d AND nid = %d", $nid, COMMENT_PUBLISHED);
+      $result = pager_query($query, $comments_per_page, 0, "SELECT COUNT(*) FROM {comments} WHERE nid = %d AND status = %d" , $nid, COMMENT_PUBLISHED);
       if (db_num_rows($result) && (variable_get('comment_controls', 3) == 0 || variable_get('comment_controls', 3) == 2)) {
         $output .= '<form method="post" action="'. url('comment') ."\"><div>\n";
         $output .= theme('comment_controls', $threshold, $mode, $order, $comments_per_page);
