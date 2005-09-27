@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.530 2005/09/24 07:53:26 dries Exp $
+// $Id: node.module,v 1.531 2005/09/27 15:09:28 dries Exp $
 
 /**
  * @file
@@ -1319,8 +1319,10 @@ function node_validate($node) {
  */
 function node_validate_title($node, $message = NULL) {
   // Validate the title field.
-  if (trim($node->title) == '') {
-    form_set_error('title', isset($message) ? $message : t('You have to specify a title.'));
+  if (isset($node->title)) {
+    if (trim($node->title) == '') {
+      form_set_error('title', isset($message) ? $message : t('You have to specify a title.'));
+    }
   }
 }
 
