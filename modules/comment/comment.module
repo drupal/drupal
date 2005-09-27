@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.374 2005/09/24 07:53:26 dries Exp $
+// $Id: comment.module,v 1.375 2005/09/27 18:10:19 dries Exp $
 
 /**
  * @file
@@ -1005,7 +1005,6 @@ function comment_delete($cid) {
  * Menu callback; present an administrative comment listing.
  */
 function comment_admin_overview($type = 'new') {
-
   $header = array(
     array('data' => t('Subject'), 'field' => 'subject'),
     array('data' => t('Author'), 'field' => 'u.name'),
@@ -1032,15 +1031,13 @@ function comment_admin_overview($type = 'new') {
       );
   }
 
-  if ($pager = theme('pager', NULL, 50, 0, tablesort_pager())) {
-    $rows[] = array(array('data' => $pager, 'colspan' => '6'));
-  }
-
   if (!$rows) {
     $rows[] = array(array('data' => t('No comments available.'), 'colspan' => '6'));
   }
 
-  return theme('table', $header, $rows);
+  $output = theme('table', $header, $rows);
+  $output .= theme('pager', NULL, 50, 0, tablesort_pager());
+  return $output;
 }
 
 /**
