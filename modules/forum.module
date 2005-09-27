@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.271 2005/09/24 07:53:26 dries Exp $
+// $Id: forum.module,v 1.272 2005/09/27 15:06:35 dries Exp $
 
 /**
  * @file
@@ -302,7 +302,7 @@ function _forum_get_vid() {
   $vid = variable_get('forum_nav_vocabulary', '');
   if (empty($vid)) {
     // Check to see if a forum vocabulary exists
-    $vid = db_result(db_query("SELECT vid FROM {vocabulary} WHERE module='%s'", 'forum'));
+    $vid = db_result(db_query("SELECT vid FROM {vocabulary} WHERE module = '%s'", 'forum'));
     if (!$vid) {
       $edit = array('name' => 'Forums', 'multiple' => 0, 'required' => 1, 'hierarchy' => 1, 'relations' => 0, 'module' => 'forum', 'nodes' => array('forum'));
       taxonomy_save_vocabulary($edit);
