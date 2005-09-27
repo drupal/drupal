@@ -242,6 +242,7 @@ CREATE TABLE files (
   fid SERIAL,
   nid integer NOT NULL default '0',
   vid integer NOT NULL default '0',
+  description varchar(255) NOT NULL default '',
   filename varchar(255) NOT NULL default '',
   filepath varchar(255) NOT NULL default '',
   filemime varchar(255) NOT NULL default '',

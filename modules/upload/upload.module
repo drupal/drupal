@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.51 2005/09/02 02:11:41 unconed Exp $
+// $Id: upload.module,v 1.52 2005/09/27 15:54:39 dries Exp $
 
 /**
  * @file
@@ -152,6 +152,7 @@ function upload_nodeapi(&$node, $op, $arg) {
             $node->files[$file->source] = $file;
             $node->files[$key]->list = $node->list[$key];
             $node->files[$key]->remove = $node->remove[$key];
+            $node->files[$key]->description = $node->description[$key];
             if ($file->source) {
               $filesize += $file->filesize;
             }
@@ -244,7 +245,7 @@ function upload_nodeapi(&$node, $op, $arg) {
         foreach ($node->files as $file) {
           if ($file->list) {
             $rows[] = array(
-              '<a href="'. check_url(($file->fid ? file_create_url($file->filepath) : url(file_create_filename($file->filename, file_create_path())))) .'">'. check_plain($file->filename) .'</a>',
+              '<a href="'. check_url(($file->fid ? file_create_url($file->filepath) : url(file_create_filename($file->filename, file_create_path())))) .'">'. check_plain($file->description ? $file->description : $file->filename) .'</a>',
               format_size($file->filesize)
             );
             // We save the list of files still in preview for later
@@ -342,8 +343,8 @@ function upload_save($node) {
       // Insert new files:
       if ($file = file_save_upload($file, $file->filename)) {
         $fid = db_next_id('{files}_fid');
-        db_query("INSERT INTO {files} (fid, nid, vid, filename, filepath, filemime, filesize, list) VALUES (%d, %d, %d, '%s', '%s', '%s', %d, %d)",
-                 $fid, $node->nid, $node->vid, $file->filename, $file->filepath, $file->filemime, $file->filesize, $node->list[$key]);
+        db_query("INSERT INTO {files} (fid, nid, vid, filename, filepath, filemime, filesize, list, description) VALUES (%d, %d, %d, '%s', '%s', '%s', %d, %d, '%s')",
+                 $fid, $node->nid, $node->vid, $file->filename, $file->filepath, $file->filemime, $file->filesize, $node->list[$key], $file->description);
       }
     }
   }
@@ -360,15 +361,15 @@ function upload_save($node) {
   }
   foreach ((array)$node->list as $key => $value) {
     if (!$node->remove[$key]) {
-      db_query('UPDATE {files} SET list = %d WHERE fid = %d AND vid = %d', $node->list[$key], $key, $node->vid);
+      db_query('UPDATE {files} SET list = %d, description = \'%s\' WHERE fid = %d AND vid = %d', $node->list[$key], $node->description[$key], $key, $node->vid);
     }
   }
   if ($node->old_vid) {
     foreach ((array)$node->remove as $key => $remove) {
       if (!$remove) {
         $file = db_fetch_object(db_query('SELECT * FROM {files} WHERE vid = %d AND fid = %d', $node->old_vid, $key));
-        db_query("INSERT INTO {files} (fid, nid, vid, filename, filepath, filemime, filesize, list) VALUES (%d, %d, %d, '%s', '%s', '%s', %d, %d)",
-                 $key, $node->nid, $node->vid, $file->filename, $file->filepath, $file->filemime, $file->filesize, $file->list);
+        db_query("INSERT INTO {files} (fid, nid, vid, filename, filepath, filemime, filesize, list, description) VALUES (%d, %d, %d, '%s', '%s', '%s', %d, %d, '%s')",
+                 $key, $node->nid, $node->vid, $file->filename, $file->filepath, $file->filemime, $file->filesize, $file->list, $file->description);
       }
     }
   }
@@ -393,7 +394,7 @@ function upload_form($node) {
 }
 
 function _upload_form($node) {
-  $header = array(t('Delete'), t('List'), t('Url'), t('Size'));
+  $header = array(t('Delete'), t('List'), t('Description'), t('Size'));
   $rows = array();
   $output = '';
 
@@ -402,7 +403,7 @@ function _upload_form($node) {
       $rows[] = array(
         form_checkbox('', "remove][$key", 1, $file->remove),
         form_checkbox('', "list][$key", 1, $file->list),
-        $file->filename ."<br /><small>". file_create_url(($file->fid ? $file->filepath : file_create_filename($file->filename, file_create_path()))) ."</small>",
+        form_textfield('', "description][$key", $file->description ? $file->description : $file->filename, 60, 256) ."<br /><small>". file_create_url(($file->fid ? $file->filepath : file_create_filename($file->filename, file_create_path()))) ."</small>",
         format_size($file->filesize)
       );
     }

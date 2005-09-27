@@ -247,6 +247,7 @@ CREATE TABLE files (
   nid int(10) unsigned NOT NULL default '0',
   vid int(10) unsigned NOT NULL default '0',
   filename varchar(255) NOT NULL default '',
+  description varchar(255) NOT NULL default '',
   filepath varchar(255) NOT NULL default '',
   filemime varchar(255) NOT NULL default '',
   filesize int(10) unsigned NOT NULL default '0',

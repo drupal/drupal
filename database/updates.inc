@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.137 2005/09/23 13:13:12 dries Exp $
+// $Id: updates.inc,v 1.138 2005/09/27 15:54:39 dries Exp $
 
 /**
  * @file
@@ -65,7 +65,8 @@ $sql_updates = array(
   "2005-08-15" => "update_145",
   "2005-08-25" => "update_146",
   "2005-09-07" => "update_147",
-  "2005-09-18" => "update_148"
+  "2005-09-18" => "update_148",
+  "2005-09-27" => "update_149"
 );
 
 function update_110() {
@@ -825,6 +826,22 @@ function update_148() {
       $ret[] = update_sql("ALTER TABLE {accesslog} ADD sid varchar(32) NOT NULL default ''");
       break;
  }
+
+  return $ret;
+}
+
+function update_149() {
+  $ret = array();
+
+  switch ($GLOBALS['db_type']) {
+    case 'pgsql':
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql("ALTER TABLE {files} ADD COLUMN description VARCHAR(255) NOT NULL DEFAULT ''");
+      break;
+    default:
+      break;
+  }
 
   return $ret;
 }
