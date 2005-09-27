@@ -570,8 +570,6 @@ function menu_node_form($edit = array()) {
  * Remove the menu item.
  */
 function menu_node_form_delete($node) {
-  if (db_query("DELETE FROM {menu} WHERE path = 'node/%s'", $node->nid)) {
-    drupal_set_message(t('The menu item has been removed.'));
-  }
+  db_query("DELETE FROM {menu} WHERE path = 'node/%s'", $node->nid);
 }
 
