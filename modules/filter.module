@@ -747,7 +747,8 @@ function filter_form($name = 'format', $value = FILTER_FORMAT_DEFAULT) {
       $output .= theme('filter_tips', $tips);
       $output .= '</div>';
     }
-    return theme('form_element', t('input format'), $output, $extra, NULL, _form_get_error($name));
+
+    return form_group_collapsible(t('Input format'), $output, $extra);
   }
   else {
     // Only one format available: use a hidden form item and only show tips.
