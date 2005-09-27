@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.35 2005/09/13 19:10:06 dries Exp $
+// $Id: menu.module,v 1.36 2005/09/27 15:11:07 dries Exp $
 
 /**
  * @file
@@ -570,8 +570,6 @@ function menu_node_form($edit = array()) {
  * Remove the menu item.
  */
 function menu_node_form_delete($node) {
-  if (db_query("DELETE FROM {menu} WHERE path = 'node/%s'", $node->nid)) {
-    drupal_set_message(t('The menu item has been removed.'));
-  }
+  db_query("DELETE FROM {menu} WHERE path = 'node/%s'", $node->nid);
 }
 
