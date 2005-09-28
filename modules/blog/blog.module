@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.229 2005/09/23 08:47:13 dries Exp $
+// $Id: blog.module,v 1.230 2005/09/28 12:55:07 dries Exp $
 
 /**
  * @file
@@ -10,7 +10,7 @@
  * Implementation of hook_node_info().
  */
 function blog_node_info() {
-  return array('blog' => array('name' => t('personal blog entry'), 'base' => 'blog'));
+  return array('blog' => array('name' => t('blog entry'), 'base' => 'blog'));
 }
 
 /**
@@ -55,7 +55,7 @@ function blog_help($section) {
       return t("
       <p>Drupal's blog module allows registered users to maintain an online weblog (commonly known as a blog), often referred to as an online journal or diary.  These can be filled with daily thoughts, poetry, boneless blabber, spiritual theories, intimate details, valuable experiences, cynical rants, semi-coherent comments, writing experiments, artistic babblings, critics on current facts, fresh insights, diverse dreams, chronicles and mumbling madness available for public consumption.</p>
       <p>Blogs are made up of individual entries (nodes) that are timestamped and are typically viewed by day as you would a diary.  Blogs often contain links to things you've seen and/or agree/disagree with.  A typical example of a long term blog can be seen at %scripting-com.</p>
-      <p>The blog module adds a \"user blogs\" navigation link to the site, which takes any visitor to a page that displays the most recent blog entries from all the users on the site. Personal user menus gain a \"create a blog entry\" link (which takes you to a submission form) and a \"view personal blog\" link (which displays your blog entries as other people will see them).  On the bottom of each of your own blog entries, there is an \"edit this blog entry\" link that lets you edit or delete that entry.</p>
+      <p>The blog module adds a \"user blogs\" navigation link to the site, which takes any visitor to a page that displays the most recent blog entries from all the users on the site. Personal user menus gain a \"create a blog entry\" link (which takes you to a submission form) and a \"view blog\" link (which displays your blog entries as other people will see them).  On the bottom of each of your own blog entries, there is an \"edit this blog entry\" link that lets you edit or delete that entry.</p>
       <p>If a user has the ability to post blogs, then the import module (news aggregator) will display a blog-it link <strong>(b)</strong> next to each news item in its lists.  Click on this and you will be taken to the blog submission form, with the title, a link to the item, and a link to the source into the body text already in the text box, ready for you to add your explanation.  This actively encourages people to add blog entries about things they see and hear elsewhere in the Drupal site and from your syndicated partner sites.</p>", array('%scripting-com' => '<a href="http://www.scripting.com/">http://www.scripting.com/</a>'));
     case 'admin/modules#description':
       return t('Enables keeping an easily and regularly updated web page or a blog.');
