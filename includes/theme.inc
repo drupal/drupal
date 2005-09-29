@@ -831,10 +831,10 @@ function theme_mark($type = MARK_NEW) {
   global $user;
   if ($user->uid) {
     if ($type == MARK_NEW) {
-      return '<span class="marker">'. t('new') .'</span>';
+      return ' <span class="marker">'. t('new') .'</span>';
     }
     else if ($type == MARK_UPDATED) {
-      return '<span class="marker">'. t('updated') .'</span>';
+      return ' <span class="marker">'. t('updated') .'</span>';
     }
   }
 }
