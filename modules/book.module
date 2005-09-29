@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.317 2005/09/23 08:47:13 dries Exp $
+// $Id: book.module,v 1.318 2005/09/29 21:56:12 dries Exp $
 
 /**
  * @file
@@ -310,34 +310,6 @@ function book_outline() {
   }
 }
 
-
-/**
- * Return the most recent revision that matches the specified conditions.
- */
-function book_revision_load($page, $conditions = array()) {
-
-  $revisions = array_reverse(node_revision_list($page));
-
-  foreach ($revisions as $revision) {
-
-    // Extract the specified revision:
-    $node = node_revision_load($page, $revision);
-
-    // Check to see if the conditions are met:
-    $status = TRUE;
-
-    foreach ($conditions as $key => $value) {
-      if ($node->$key != $value) {
-        $status = FALSE;
-      }
-    }
-
-    if ($status) {
-      return $node;
-    }
-  }
-}
-
 /**
  * Return the path (call stack) to a certain book page.
  */
@@ -415,17 +387,6 @@ function book_next($node) {
  */
 function book_content($node, $teaser = FALSE) {
   $op = $_POST['op'];
-
-  // Always display the most recently approved revision of a node
-  // (if any) unless we have to display this page in the context of
-  // the moderation queue.
-  if ($op != t('Preview') && $node->moderate && arg(0) != 'queue') {
-    $revision = book_revision_load($node, array('moderate' => 0, 'status' => 1));
-
-    if ($revision) {
-      $node = $revision;
-    }
-  }
 
   // Extract the page body.
   $node = node_prepare($node, $teaser);
@@ -676,42 +637,49 @@ function book_render() {
 function book_export($type = 'html', $nid = 0) {
   global $base_url;
   $type = drupal_strtolower($type);
-  $depth = _book_get_depth($nid);
-  $node = node_load($nid);
-  switch ($type) {
-    case 'docbook':
-      $xml = "<?xml version='1.0'?>\n";
-      $xml .= "<!DOCTYPE book PUBLIC \"-//OASIS//DTD Docbook XML V4.1.2//EN\" \"http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd\">\n";
-      $xml .= book_recurse($nid, $depth, 'book_node_visitor_xml_pre', 'book_node_visitor_xml_post');
-      drupal_set_header('Content-Type: text/xml; charset=utf-8');
-      print $xml;
-      break;
-    case 'html':
-      for ($i = 1; $i < $depth; $i++) {
-        $output .= "<div class=\"section-$i\">\n";
-      }
-      $output .= book_recurse($nid, $depth, 'book_node_visitor_html_pre', 'book_node_visitor_html_post');
-      for ($i = 1; $i < $depth; $i++) {
-        $output .= "</div>\n";
-      }
-      $html = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
-      $html .= '<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">';
-      $html .= "<head>\n<title>". check_plain($node->title) ."</title>\n";
-      $html .= '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />';
-      $html .= '<base href="'. $base_url .'/" />' . "\n";
-      $html .= "<style type=\"text/css\">\n@import url(misc/print.css);\n</style>\n";
-      $html .= "</head>\n<body>\n". $output . "\n</body>\n</html>\n";
-      print $html;
-      break;
-    case 'opml':
-      $output .= book_recurse($nid, $depth, 'book_node_visitor_opml_pre', 'book_node_visitor_opml_post');
-      $ompl  = "<?xml version='1.0'?>\n";
-      $opml .= "<opml version='1.0'>\n";
-      $opml .= "<head>\n<title>". check_plain($node->title) ."</title>\n";
-      $opml .= "</head>\n<body>\n". $output . "\n</body>\n</opml>\n";
-      drupal_set_header('Content-Type: text/xml; charset=utf-8');
-      print $opml;
-      break;
+  if ($nid) {
+    $depth = _book_get_depth($nid);
+    $node = node_load($nid);
+    switch ($type) {
+      case 'docbook':
+        $xml = "<?xml version='1.0'?>\n";
+        $xml .= "<!DOCTYPE book PUBLIC \"-//OASIS//DTD Docbook XML V4.1.2//EN\" \"http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd\">\n";
+        $xml .= book_recurse($nid, $depth, 'book_node_visitor_xml_pre', 'book_node_visitor_xml_post');
+        drupal_set_header('Content-Type: text/xml; charset=utf-8');
+        print $xml;
+        break;
+      case 'html':
+        for ($i = 1; $i < $depth; $i++) {
+          $output .= "<div class=\"section-$i\">\n";
+        }
+        $output .= book_recurse($nid, $depth, 'book_node_visitor_html_pre', 'book_node_visitor_html_post');
+        for ($i = 1; $i < $depth; $i++) {
+          $output .= "</div>\n";
+        }
+        $html = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
+        $html .= '<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">';
+        $html .= "<head>\n<title>". check_plain($node->title) ."</title>\n";
+        $html .= '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />';
+        $html .= '<base href="'. $base_url .'/" />' . "\n";
+        $html .= "<style type=\"text/css\">\n@import url(misc/print.css);\n</style>\n";
+        $html .= "</head>\n<body>\n". $output . "\n</body>\n</html>\n";
+        print $html;
+        break;
+      case 'opml':
+        $output .= book_recurse($nid, $depth, 'book_node_visitor_opml_pre', 'book_node_visitor_opml_post');
+        $ompl  = "<?xml version='1.0'?>\n";
+        $opml .= "<opml version='1.0'>\n";
+        $opml .= "<head>\n<title>". check_plain($node->title) ."</title>\n";
+        $opml .= "</head>\n<body>\n". $output . "\n</body>\n</opml>\n";
+        drupal_set_header('Content-Type: text/xml; charset=utf-8');
+        print $opml;
+        break;
+      default:
+        drupal_not_found();
+    }
+  }
+  else {
+    drupal_not_found();
   }
 }
 
@@ -770,11 +738,6 @@ function book_recurse($nid = 0, $depth = 1, $visit_pre, $visit_post) {
   while ($page = db_fetch_object($result)) {
     // Load the node:
     $node = node_load($page->nid);
-
-    // Take the most recent approved revision:
-    if ($node->moderate) {
-      $node = book_revision_load($node, array('moderate' => 0, 'status' => 1));
-    }
 
     if ($node) {
       if (function_exists($visit_pre)) {
