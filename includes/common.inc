@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.479 2005/09/19 19:14:54 dries Exp $
+// $Id: common.inc,v 1.480 2005/09/29 12:33:34 dries Exp $
 
 /**
  * @file
@@ -332,11 +332,13 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
   $uri = parse_url($url);
   switch ($uri['scheme']) {
     case 'http':
-      $fp = @fsockopen($uri['host'], ($uri['port'] ? $uri['port'] : 80), $errno, $errstr, 15);
+      $port = $uri['port'] ? $uri['port'] : 80;
+      $fp = @fsockopen($uri['host'], $port, $errno, $errstr, 15);
       break;
     case 'https':
       // Note: Only works for PHP 4.3 compiled with OpenSSL.
-      $fp = @fsockopen('ssl://'. $uri['host'], ($uri['port'] ? $uri['port'] : 443), $errno, $errstr, 20);
+      $port = $uri['port'] ? $uri['port'] : 443;
+      $fp = @fsockopen('ssl://'. $uri['host'], $port, $errno, $errstr, 20);
       break;
     default:
       $result->error = 'invalid schema '. $uri['scheme'];
@@ -357,7 +359,8 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
 
   // Create HTTP request.
   $defaults = array(
-    'Host' => 'Host: '. $uri['host'],
+    // RFC 2616: "non-standard ports MUST, default ports MAY be included". We always add it.
+    'Host' => "Host: $uri[host]:$port",
     'User-Agent' => 'User-Agent: Drupal (+http://www.drupal.org/)',
     'Content-Length' => 'Content-Length: '. strlen($data)
   );
