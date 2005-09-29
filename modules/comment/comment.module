@@ -1638,7 +1638,7 @@ function _comment_get_orders() {
  * can choose.
  */
 function _comment_per_page() {
-  return drupal_map_assoc(array(10, 30, 50, 70, 90));
+  return drupal_map_assoc(array(10, 30, 50, 70, 90, 150, 200, 250, 300));
 }
 
 /**
