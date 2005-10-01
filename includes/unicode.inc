@@ -1,5 +1,5 @@
 <?php
-// $Id: unicode.inc,v 1.6 2005/09/29 12:37:58 dries Exp $
+// $Id: unicode.inc,v 1.7 2005/10/01 13:21:47 dries Exp $
 
 define('UNICODE_ERROR', -1);
 define('UNICODE_SINGLEBYTE', 0);
@@ -231,6 +231,31 @@ function mime_header_encode($string) {
     return trim($output);
   }
   return $string;
+}
+
+/**
+ * Complement to mime_header_encode
+ */
+function mime_header_decode($header) {
+  // First step: encoded chunks followed by other encoded chunks (need to collapse whitespace)
+  $header = preg_replace_callback('/=\?([^?]+)\?(Q|B)\?([^?]+|\?(?!=))\?=\s+(?==\?)/', '_mime_header_decode', $header);
+  // Second step: remaining chunks (do not collapse whitespace)
+  return preg_replace_callback('/=\?([^?]+)\?(Q|B)\?([^?]+|\?(?!=))\?=/', '_mime_header_decode', $header);
+}
+
+/**
+ * Helper function to mime_header_decode
+ */
+function _mime_header_decode($matches) {
+  // Regexp groups:
+  // 1: Character set name
+  // 2: Escaping method (Q or B)
+  // 3: Encoded data
+  $data = ($matches[2] == 'B') ? base64_decode($matches[3]) : str_replace('_', ' ', quoted_printable_decode($matches[3]));
+  if (strtolower($matches[1]) != 'utf-8') {
+    $data = drupal_convert_to_utf8($data, $matches[1]);
+  }
+  return $data;
 }
 
 /**
