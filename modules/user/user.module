@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.512 2005/09/24 07:53:26 dries Exp $
+// $Id: user.module,v 1.513 2005/10/01 13:42:00 dries Exp $
 
 /**
  * @file
@@ -424,7 +424,7 @@ function user_fields() {
  * Implementation of hook_perm().
  */
 function user_perm() {
-  return array('administer users', 'access user profiles');
+  return array('administer access control', 'administer users', 'access user profiles');
 }
 
 /**
@@ -662,6 +662,7 @@ function user_menu($may_cache) {
   $items = array();
 
   $admin_access = user_access('administer users');
+  $access_access = user_access('administer access control');
   // users should always be allowed to see their own user page
   $view_access = (user_access('access user profiles') || ($user->uid == arg(1)));
 
@@ -684,7 +685,7 @@ function user_menu($may_cache) {
     $items[] = array('path' => 'user/help', 'title' => t('help'),
       'callback' => 'user_help_page', 'type' => MENU_CALLBACK);
 
-    //admin pages
+    //admin user pages
     $items[] = array('path' => 'admin/user', 'title' => t('users'),
       'callback' => 'user_admin', 'access' => $admin_access);
     $items[] = array('path' => 'admin/user/list', 'title' => t('list'),
@@ -694,33 +695,35 @@ function user_menu($may_cache) {
       'type' => MENU_LOCAL_TASK);
     $items[] = array('path' => 'admin/settings/user', 'title' => t('users'),
       'callback' => 'user_configure', 'access' => $admin_access);
+
+    //admin access pages
     $items[] = array('path' => 'admin/access', 'title' => t('access control'),
-      'callback' => 'user_admin_perm', 'access' => $admin_access);
+      'callback' => 'user_admin_perm', 'access' => $access_access);
     $items[] = array('path' => 'admin/access/permissions', 'title' => t('permissions'),
-      'callback' => 'user_admin_perm', 'access' => $admin_access,
+      'callback' => 'user_admin_perm', 'access' => $access_access,
       'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
     $items[] = array('path' => 'admin/access/roles', 'title' => t('roles'),
-      'callback' => 'user_admin_role', 'access' => $admin_access,
+      'callback' => 'user_admin_role', 'access' => $access_access,
       'type' => MENU_LOCAL_TASK);
     $items[] = array('path' => 'admin/access/roles/edit', 'title' => t('edit role'),
-      'callback' => 'user_admin_role', 'access' => $admin_access,
+      'callback' => 'user_admin_role', 'access' => $access_access,
       'type' => MENU_CALLBACK);
     $items[] = array('path' => 'admin/access/rules', 'title' => t('access rules'),
-      'callback' => 'user_admin_access', 'access' => $admin_access,
+      'callback' => 'user_admin_access', 'access' => $access_access,
       'type' => MENU_LOCAL_TASK, 'weight' => 10);
     $items[] = array('path' => 'admin/access/rules/list', 'title' => t('list'),
-      'access' => $admin_access, 'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
+      'access' => $access_access, 'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
     $items[] = array('path' => 'admin/access/rules/add', 'title' => t('add rule'),
-      'callback' => 'user_admin_access_add', 'access' => $admin_access,
+      'callback' => 'user_admin_access_add', 'access' => $access_access,
       'type' => MENU_LOCAL_TASK);
     $items[] = array('path' => 'admin/access/rules/check', 'title' => t('check rules'),
-      'callback' => 'user_admin_access_check', 'access' => $admin_access,
+      'callback' => 'user_admin_access_check', 'access' => $access_access,
       'type' => MENU_LOCAL_TASK);
     $items[] = array('path' => 'admin/access/rules/edit', 'title' => t('edit rule'),
-      'callback' => 'user_admin_access_edit', 'access' => $admin_access,
+      'callback' => 'user_admin_access_edit', 'access' => $access_access,
       'type' => MENU_CALLBACK);
     $items[] = array('path' => 'admin/access/rules/delete', 'title' => t('delete rule'),
-      'callback' => 'user_admin_access_delete', 'access' => $admin_access,
+      'callback' => 'user_admin_access_delete', 'access' => $access_access,
       'type' => MENU_CALLBACK);
 
     if (module_exist('search')) {
@@ -1138,7 +1141,7 @@ function user_edit_form($uid, $edit) {
   $group .= form_textfield(t('E-mail address'), 'mail', $edit['mail'], 60, 55, t('Insert a valid e-mail address.  All e-mails from the system will be sent to this address. The e-mail address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by e-mail.'), NULL, TRUE);
   $group .= form_item(t('Password'), '<input type="password" class="form-password" name="edit[pass1]" size="12" maxlength="24" /> <input type="password" class="form-password" name="edit[pass2]" size="12" maxlength="24" />', t('Enter your new password twice if you want to change your current password, or leave it blank if you are happy with your current password.'), NULL, TRUE);
 
-  if (user_access('administer users')) {
+  if (user_access('administer access control')) {
     $group .= form_radios(t('Status'), 'status', $edit['status'], array(t('Blocked'), t('Active')));
     $group .= form_checkboxes(t('Roles'), 'roles', array_keys($edit['roles']), user_roles(1), t('Select at least one role.  The user receives the combined permissions of all of the selected roles.'), NULL, TRUE);
   }
@@ -1183,7 +1186,7 @@ function user_edit_validate($uid, &$edit) {
   }
 
   // Validate the user roles:
-  if (user_access('administer users') && $_GET['q'] != 'admin/user/create') {
+  if (user_access('administer access control') && $_GET['q'] != 'admin/user/create') {
     if (!$edit['roles']) {
       form_set_error('roles', t('You must select at least one role.'));
       $edit['roles'] = array();
