@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.272 2005/09/27 15:06:35 dries Exp $
+// $Id: forum.module,v 1.273 2005/10/01 13:30:06 dries Exp $
 
 /**
  * @file
@@ -715,6 +715,7 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
 
   $sql = db_rewrite_sql("SELECT n.nid, f.tid, n.title, n.sticky, u.name, u.uid, n.created AS timestamp, n.comment AS comment_mode, l.last_comment_timestamp, IF(l.last_comment_uid, cu.name, l.last_comment_name) AS last_comment_name, l.last_comment_uid, l.comment_count AS num_comments FROM {node} n, {node_comment_statistics} l, {users} cu, {term_node} r, {users} u, {forum} f WHERE n.status = 1 AND l.last_comment_uid = cu.uid AND n.nid = l.nid AND n.nid = r.nid AND r.tid = %d AND n.uid = u.uid AND n.vid = f.vid");
   $sql .= tablesort_sql($forum_topic_list_header, 'n.sticky DESC,');
+  $sql .= ', n.created DESC';  // Always add a secondary sort order so that the news forum topics are on top.
 
   $sql_count = db_rewrite_sql("SELECT COUNT(n.nid) FROM {node} n INNER JOIN {term_node} r ON n.nid = r.nid AND r.tid = %d WHERE n.status = 1 AND n.type = 'forum'");
 
