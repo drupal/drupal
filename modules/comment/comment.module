@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.377 2005/09/29 08:04:51 dries Exp $
+// $Id: comment.module,v 1.378 2005/10/01 08:43:51 dries Exp $
 
 /**
  * @file
@@ -546,8 +546,10 @@ function comment_preview($edit) {
   }
   $comment->timestamp = $edit['timestamp'] ? $edit['timestamp'] : time();
 
-  // Preview the comment.
-  $output .= theme('comment_view', $comment);
+  // Preview the comment with security check.
+  if (!form_get_errors()) {
+    $output .= theme('comment_view', $comment);
+  }
   $output .= theme('comment_form', $edit, t('Reply'));
 
   if ($edit['pid']) {
