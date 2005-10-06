@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.318 2005/09/29 21:56:12 dries Exp $
+// $Id: book.module,v 1.319 2005/10/06 09:17:17 dries Exp $
 
 /**
  * @file
@@ -634,12 +634,12 @@ function book_render() {
  *   - an integer representing the node id (nid) of the node to export
  *
  */
-function book_export($type = 'html', $nid = 0) {
+function book_export($type = 'html', $nid = FALSE) {
   global $base_url;
   $type = drupal_strtolower($type);
-  if ($nid) {
+  $node = node_load($nid);
+  if ($node) {
     $depth = _book_get_depth($nid);
-    $node = node_load($nid);
     switch ($type) {
       case 'docbook':
         $xml = "<?xml version='1.0'?>\n";
