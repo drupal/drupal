@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.480 2005/09/29 12:33:34 dries Exp $
+// $Id: common.inc,v 1.481 2005/10/06 08:51:05 dries Exp $
 
 /**
  * @file
@@ -240,17 +240,6 @@ function drupal_goto($path = '', $query = NULL, $fragment = NULL) {
   }
 
   $url = url($path, $query, $fragment, TRUE);
-
-  if (ini_get('session.use_trans_sid') && session_id() && !strstr($url, session_id())) {
-    $sid = session_name() . '=' . session_id();
-
-    if (strstr($url, '?') && !strstr($url, $sid)) {
-      $url = $url .'&'. $sid;
-    }
-    else {
-      $url = $url .'?'. $sid;
-    }
-  }
 
   // Before the redirect, allow modules to react to the end of the page request.
   module_invoke_all('exit', $url);

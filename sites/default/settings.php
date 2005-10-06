@@ -1,5 +1,5 @@
 <?php
-// $Id: settings.php,v 1.19 2005/09/23 08:47:13 dries Exp $
+// $Id: settings.php,v 1.20 2005/10/06 08:51:05 dries Exp $
 
 /**
  * @file
@@ -114,6 +114,7 @@ ini_set('session.gc_maxlifetime',   200000);
 ini_set('session.save_handler',     'user');
 ini_set('session.use_only_cookies', 1);
 ini_set('session.use_trans_sid',    0);
+ini_set('url_rewriter.tags',        '');
 
 /**
  * Variable overrides:
