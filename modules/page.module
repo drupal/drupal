@@ -88,10 +88,10 @@ function page_form(&$node) {
 
 
   $form['log'] = array(
-    type => 'textarea', title => t('Log message'), default_value => $node->log, rows => 5, 
+    type => 'textarea', title => t('Log message'), default_value => $node->log, rows => 5,
     description => t('An explanation of the additions or updates being made to help other authors understand your motivations.')
   );
-  
+
   return $form;
 }
 

@@ -997,7 +997,7 @@ function url($path = NULL, $query = NULL, $fragment = NULL, $absolute = FALSE) {
     // Apache.
     $script = (strpos($_SERVER['SERVER_SOFTWARE'], 'Apache') === false) ? 'index.php' : '';
   }
-    
+
   $path = drupal_get_path_alias($path);
 
   if (isset($fragment)) {

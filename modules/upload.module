@@ -222,7 +222,7 @@ function upload_nodeapi(&$node, $op, $arg) {
         $key = 'upload_' . $x;
         if ($file = file_check_upload($key)) {
           $node->files[$key] = $file;
-        } 
+        }
       }
       break;
 
