@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.181 2005/10/07 06:09:13 dries Exp $
+// $Id: block.module,v 1.182 2005/10/07 06:51:43 dries Exp $
 
 /**
  * @file
@@ -215,7 +215,7 @@ function block_admin_display() {
     $form[$block['module']][$block['delta']]['theme'] = array(type => 'hidden', value => $theme_key);
     $form[$block['module']][$block['delta']]['weight'] = array(type => 'weight', default_value => $block['weight']);
     $form[$block['module']][$block['delta']]['region'] = array(type => 'select', default_value => isset($block['region']) ? $block['region'] : system_default_region(), options => $block_regions);
-    
+
     if ($throttle) {
       $form[$block['module']][$block['delta']]['throttle'] = array(type => 'checkbox', default_value => $block['throttle']);
     }
@@ -230,7 +230,7 @@ function block_admin_display() {
 }
 
 function theme_block_admin_display($form) {
-  
+
   global $theme_key, $custom_theme;
   $throttle = module_exist('throttle');
 
@@ -240,7 +240,7 @@ function theme_block_admin_display($form) {
     init_theme();
   }
   $block_regions = system_region_list($theme_key);
-  
+
   // Highlight regions on page, to provide visual reference.
   foreach ($block_regions as $key => $value) {
     drupal_set_content($key, '<div class="block-region">' . $value . '</div>');
@@ -270,7 +270,7 @@ function theme_block_admin_display($form) {
       }
     }
   }
-  
+
   $rows = array();
   if (count($regions)) {
     foreach ($regions as $region => $row) {
@@ -320,7 +320,7 @@ function block_admin_configure($module = NULL, $delta = 0) {
 
       // Module-specific block configurations.
       if ($settings = module_invoke($module, 'block', 'configure', $delta)) {
-      	  $form['block_settings'] = array(type => 'fieldset',
+          $form['block_settings'] = array(type => 'fieldset',
             title => t('Block specific settings'),
             collapsible => true,
             collapsed => false,
@@ -336,7 +336,7 @@ function block_admin_configure($module = NULL, $delta = 0) {
       drupal_set_title(t("'%name' block", array('%name' => $info[$delta]['info'])));
 
       // Standard block configurations.
-      
+
       $form['user_vis_settings'] = array(type => 'fieldset',
         title => t('User specific visibility settings'),
         collapsible => true,
@@ -350,7 +350,7 @@ function block_admin_configure($module = NULL, $delta = 0) {
         options => array(t('Users cannot control whether or not they see this block.'), t('Show this block by default, but let individual users hide it.'), t('Hide this block by default but let individual users show it.')), t('Allow individual users to customize the visibility of this block in their account settings.'),
         default_value => $edit['custom']);
 
-        
+
       $form['page_vis_settings'] = array(type => 'fieldset',
         title => t('Page specific visibility settings'),
         collapsible => true,

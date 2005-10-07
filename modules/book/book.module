@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.320 2005/10/07 06:09:13 dries Exp $
+// $Id: book.module,v 1.321 2005/10/07 06:51:43 dries Exp $
 
 /**
  * @file
@@ -302,19 +302,19 @@ function book_outline() {
 
       default:
         $page = db_fetch_object(db_query('SELECT * FROM {book} WHERE vid = %d', $node->vid));
-        
+
         $form['parent'] = array(
-          type => 'select', title => t('Parent'), default_value => $page->parent, 
-          options => book_toc($node->nid), description => t('The parent page in the book.') 
+          type => 'select', title => t('Parent'), default_value => $page->parent,
+          options => book_toc($node->nid), description => t('The parent page in the book.')
         );
-        
+
         $form['weight'] = array(
           type => 'weight', title => t('Weight'), default_value => $page->weight, delta => 15,
           description => t('Pages at a given level are ordered first by weight and then by title.')
         );
-        
+
         $form['log'] = array(
-          type => 'textarea', title => t('Log message'), cols => 60, rows => 5, 
+          type => 'textarea', title => t('Log message'), cols => 60, rows => 5,
           default_value => $node->log, description => t('An explanation to help other authors understand your motivations to put this post into the book.')
         );
 

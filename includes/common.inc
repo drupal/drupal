@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.482 2005/10/07 06:09:13 dries Exp $
+// $Id: common.inc,v 1.483 2005/10/07 06:51:16 dries Exp $
 
 /**
  * @file
@@ -997,7 +997,7 @@ function url($path = NULL, $query = NULL, $fragment = NULL, $absolute = FALSE) {
     // Apache.
     $script = (strpos($_SERVER['SERVER_SOFTWARE'], 'Apache') === false) ? 'index.php' : '';
   }
-    
+
   $path = drupal_get_path_alias($path);
 
   if (isset($fragment)) {

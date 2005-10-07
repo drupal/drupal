@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.52 2005/10/07 06:09:13 dries Exp $
+// $Id: locale.inc,v 1.53 2005/10/07 06:51:16 dries Exp $
 
 /**
  * @file
@@ -51,7 +51,7 @@ function _locale_admin_manage_screen() {
       $isdefault = $key;
     }
     if ($key == 'en') {
-      $form['name']['en'] = array(type => 'markup', value => check_plain($lang));    
+      $form['name']['en'] = array(type => 'markup', value => check_plain($lang));
     }
     else {
       $original = db_fetch_object(db_query("SELECT COUNT(*) AS strings FROM {locales_source}"));
@@ -66,7 +66,7 @@ function _locale_admin_manage_screen() {
   $form['enabled'] = array(type => 'checkboxes', options => $options, default_value => $enabled, return_value => 1);
   $form['sitedefault'] = array(type => 'radios', options => $options, default_value => $isdefault, return_value => 1);
   $form['submit'] = array(type => 'submit', value => t('Save configuration'));
-  
+
   return drupal_get_form('_locale_admin_manage_screen', $form);
 }
 
@@ -979,15 +979,15 @@ function _locale_string_edit($lid) {
   $form = array();
   while ($translation = db_fetch_object($result)) {
     $orig = $translation->source;
-    $form[$translation->locale] = (strlen($orig) > 40) ? 
+    $form[$translation->locale] = (strlen($orig) > 40) ?
    array(type => 'textarea', title => $languages['name'][$translation->locale], default_value => $translation->translation, cols => 60, rows => 15)
  : array(type => 'textfield', title => $languages['name'][$translation->locale], default_value => $translation->translation, size => 60, maxlength => 128);
     unset($languages['name'][$translation->locale]);
   }
   $form = array(type => 'item', title => t('Original text'), value => wordwrap(check_plain($orig, 0)));
   foreach ($languages['name'] as $key => $lang) {
-    $form[$key] = (strlen($orig) > 40) ? 
-array(type => 'textarea', title => $lang, cols => 60, rows => 15) : 
+    $form[$key] = (strlen($orig) > 40) ?
+array(type => 'textarea', title => $lang, cols => 60, rows => 15) :
 array(type => 'textfield', title => $lang, size => 60, maxlength => 128);
   }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.58 2005/10/07 06:09:13 dries Exp $
+// $Id: blogapi.module,v 1.59 2005/10/07 06:51:43 dries Exp $
 
 /**
  * @file
@@ -561,7 +561,7 @@ function blogapi_settings() {
     default_value => variable_get('blogapi_node_types', $defaults), options => $node_types,
     description => t('Select the content types for which you wish to enable posting via blogapi. Each type will appear as a different "blog" in the client application (if supported).')
   );
-    
+
   return $form;
 }
 

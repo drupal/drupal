@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.274 2005/10/07 06:09:13 dries Exp $
+// $Id: forum.module,v 1.275 2005/10/07 06:51:43 dries Exp $
 
 /**
  * @file
@@ -564,7 +564,7 @@ function forum_form(&$node) {
   else {
     $node->taxonomy = array($node->tid);
   }
-  
+
   if (function_exists('taxonomy_node_form')) {
     $form['taxonomy'] = taxonomy_node_form('forum', $node);
   }

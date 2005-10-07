@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.171 2005/10/07 06:09:13 dries Exp $
+// $Id: poll.module,v 1.172 2005/10/07 06:51:43 dries Exp $
 
 /**
  * @file
@@ -304,7 +304,7 @@ function poll_view_voting(&$node, $teaser, $page, $block) {
   if ($_POST['op'] == t('Vote')) {
     poll_vote($node);
   }
-  
+
   if ($node->choice) {
     $list = array();
     foreach ($node->choice as $i => $choice) {

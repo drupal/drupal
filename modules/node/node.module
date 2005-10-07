@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.532 2005/10/07 06:09:13 dries Exp $
+// $Id: node.module,v 1.533 2005/10/07 06:51:43 dries Exp $
 
 /**
  * @file
@@ -1482,7 +1482,7 @@ function node_form($node) {
     // Append extra node form elements.
     $form = array_merge($form, $nodeapi);
   }
- 
+
   $form['title'][weight] = isset($form['title'][weight]) ? $form['title'][weight] : -17;
   $form['body'][weight] = isset($form['body'][weight]) ? $form['body'][weight] : -5;
 
@@ -1492,9 +1492,9 @@ function node_form($node) {
   if ($node->type) {
     if (!form_get_errors()) {
       if ($_POST['op'] == t('Preview')|| !variable_get('node_preview', 0)) {
-       
+
       }
-    }     
+    }
   }
   $form['submit'] = array(type => 'submit', value => t('Submit'), weight => 20);
   if ($node->nid && node_access('delete', $node)) {
@@ -1760,7 +1760,7 @@ function node_page_default() {
  */
 function node_page() {
   $edit = $_POST['edit'];
- 
+
   $op = arg(1);
 
   if (is_numeric($op)) {
@@ -1803,7 +1803,7 @@ function node_page() {
     case 'delete-revision':
       node_revision_delete(arg(1), arg(3));
       break;
-    case 'edit': 
+    case 'edit':
       if ($_POST['op'] == t('Delete')) {
         // Note: we redirect from node/uid/edit to node/uid/delete to make the tabs disappear.
         if ($_REQUEST['destination']) {

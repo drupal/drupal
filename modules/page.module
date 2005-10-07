@@ -1,5 +1,5 @@
 <?php
-// $Id: page.module,v 1.138 2005/10/07 06:09:13 dries Exp $
+// $Id: page.module,v 1.139 2005/10/07 06:51:43 dries Exp $
 
 /**
  * @file
@@ -88,10 +88,10 @@ function page_form(&$node) {
 
 
   $form['log'] = array(
-    type => 'textarea', title => t('Log message'), default_value => $node->log, rows => 5, 
+    type => 'textarea', title => t('Log message'), default_value => $node->log, rows => 5,
     description => t('An explanation of the additions or updates being made to help other authors understand your motivations.')
   );
-  
+
   return $form;
 }
 

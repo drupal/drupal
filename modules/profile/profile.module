@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.111 2005/10/07 06:09:13 dries Exp $
+// $Id: profile.module,v 1.112 2005/10/07 06:51:43 dries Exp $
 
 /**
  * @file
@@ -336,16 +336,16 @@ function profile_form_profile($edit, $user, $category) {
     $category = $field->category;
     switch ($field->type) {
       case 'textfield':
-      case 'url':        
+      case 'url':
         $fields[$category][$field->name] = array(type => 'textfield', title => check_plain($field->title), default_value => $edit[$field->name], size => 60, maxlength => 255, description => _profile_form_explanation($field), required => $field->required);
         break;
-      case 'textarea':       
+      case 'textarea':
         $fields[$category][$field->name] = array(type => 'textarea', title => check_plain($field->title), default_value => $edit[$field->name], cols => 60, rows => 5, description => _profile_form_explanation($field), required => $field->required);
         break;
       case 'list':
         $fields[$category][$field->name] = array(type => 'textarea', title => check_plain($field->title), default_value => $edit[$field->name], cols => 60, rows => 5, description => _profile_form_explanation($field), required => $field->required);
         break;
-      case 'checkbox':        
+      case 'checkbox':
         $fields[$category][$field->name] = array(type => 'checkbox', title => check_plain($field->title), return_value => 1, default_value => $edit[$field->name], description => _profile_form_explanation($field), required => $field->required);
         break;
       case 'selection':
@@ -548,7 +548,7 @@ function profile_admin_delete($fid) {
 }
 
 function _profile_field_form($type, $edit = array()) {
-  
+
   $form['fields'] = array(type => 'fieldset', title => t('Field settings'));
   $form['fields']['category'] = array(type => 'textfield', title => t('Category'), default_value => $edit['category'], size => 60, maxlength => 128, description => t('The category the new field should be part of.  Categories are used to group fields logically.  An example category is "Personal information".'));
   $form['fields']['title'] = array(type => 'textfield', title => t('Title'), default_value => $edit['title'], size => 60, maxlength => 128, description => t('The title of the new field.  The title will be shown to the user.  An example title is "Favorite color".'));

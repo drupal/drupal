@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.226 2005/10/07 06:09:13 dries Exp $
+// $Id: taxonomy.module,v 1.227 2005/10/07 06:51:43 dries Exp $
 
 /**
  * @file
@@ -118,7 +118,7 @@ function taxonomy_form_vocabulary($edit = array()) {
   $form['multiple'] = array(type => 'checkbox', title => t('Multiple select'), default_value => $edit['multiple'], return_value => 1, description => t('Allows nodes to have more than one term from this vocabulary (always true for free tagging).'));
   $form['required'] = array(type => 'checkbox', title => t('Required'), default_value => $edit['required'], return_value => 1, description => t('If enabled, every node <strong>must</strong> have at least one term in this vocabulary.'));
   $form['weight'] = array(type => 'weight', title => t('Weight'), default_value => $edit['weight'], delta => 10, description => t('In listings, the heavier vocabularies will sink and the lighter vocabularies will be positioned nearer the top.'));
- 
+
   // Add extra vocabulary form elements.
   $extra = module_invoke_all('taxonomy', 'form', 'vocabulary');
   if (is_array($extra)) {
@@ -519,7 +519,7 @@ function taxonomy_node_form($type, $node = '', $help = NULL, $name = 'taxonomy')
       }
       $typed_string = implode(', ', $typed_terms) . (array_key_exists('tags', $terms) ? $terms['tags'][$vocabulary->vid] : NULL);
 
-      
+
       $form[$name]['tags'][$vocabulary->vid] = array( type => textfield, default_value => $typed_string, size => 60, maxlength => 100,
             autocomplete_path => 'taxonomy/autocomplete/'. $vocabulary->vid, required => ($vocabulary->required ? TRUE : FALSE), title => $vocabulary->name,
             description => t('A comma-separated list of terms describing this content (Example: funny, bungie jumping, "Company, Inc.").') );
