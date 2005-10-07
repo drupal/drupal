@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.513 2005/10/01 13:42:00 dries Exp $
+// $Id: user.module,v 1.514 2005/10/07 06:09:13 dries Exp $
 
 /**
  * @file
@@ -467,7 +467,8 @@ function user_search($op = 'search', $keys = null) {
  */
 function user_user($type, &$edit, &$user, $category = NULL) {
   if ($type == 'view') {
-    return array(t('History') => array('history'=> form_item(t('Member for'), format_interval(time() - $user->created))));
+    $form['member'] = array(type => 'item', title => t('Member for'), value => format_interval(time() - $user->created));
+    return array(t('History') => array('history'=> drupal_get_form('member', $form)));
   }
 
   if ($type == 'form' && $category == 'account') {
@@ -499,10 +500,11 @@ function user_block($op = 'list', $delta = 0, $edit = array()) {
   }
   else if ($op == 'configure' && $delta == 3) {
     $period = drupal_map_assoc(array(30, 60, 120, 180, 300, 600, 900, 1800, 2700, 3600, 5400, 7200, 10800, 21600, 43200, 86400), 'format_interval');
-    $output = form_select(t('User activity'), 'user_block_seconds_online', variable_get('user_block_seconds_online', 900), $period, t('A user is considered online for this long after they have last viewed a page.'));
-    $output .= form_select(t('User list length'), 'user_block_max_list_count', variable_get('user_block_max_list_count', 10), drupal_map_assoc(array(0, 5, 10, 15, 20, 25, 30, 40, 50, 75, 100)), t('Maximum number of currently online users to display.'));
+    $form['user_block_seconds_online'] = array(type => 'select', title => t('User activity'), default_value => variable_get('user_block_seconds_online', 900), options => $period, description => t('A user is considered online for this long after they have last viewed a page.'));
+    $form['user_block_max_list_count'] = array(type => 'select', title => t('User list length'), default_value => variable_get('user_block_max_list_count', 10), options => drupal_map_assoc(array(0, 5, 10, 15, 20, 25, 30, 40, 50, 75, 100)), description => t('Maximum number of currently online users to display.'));
 
-    return $output;
+    //return drupal_get_form('user_block', $form);
+    return $form;
   }
   else if ($op == 'save' && $delta == 3) {
     variable_set('user_block_seconds_online', $edit['user_block_seconds_online']);
@@ -515,18 +517,10 @@ function user_block($op = 'list', $delta = 0, $edit = array()) {
       case 0:
         // For usability's sake, avoid showing two login forms on one page.
         if (!$user->uid && !(arg(0) == 'user' && !is_numeric(arg(1)))) {
-          $edit = $_POST['edit'];
-
-          // NOTE: special care needs to be taken because on pages with forms,
-          // such as node and comment submission pages, the $edit variable
-          // might already be set.
-
-          $output .= form_textfield(t('Username'), 'name', $edit['name'], 15, 64);
-          $output .= form_password(t('Password'), 'pass', '', 15, 64);
-          $output .= form_submit(t('Log in'));
-
-          $output  = form($output, 'post', url('user/login', drupal_get_destination()), array('id' => 'user-login-form'));
-
+          $form['name'] = array(type => 'textfield', title => t('Username'), maxlength => 64, size => 15, required => TRUE);
+          $form['pass'] = array(type => 'password', title => t('Password'), maxlength => 64, size => 15, required => TRUE);
+          $form['submit'] = array(type => 'submit', value => t('Log in'));
+          $output .= drupal_get_form('user_login_block', $form, 'user_login');
           if (variable_get('user_register', 1)) {
             $items[] = l(t('Create new account'), 'user/register', array('title' => t('Create a new user account.')));
           }
@@ -595,6 +589,15 @@ function user_block($op = 'list', $delta = 0, $edit = array()) {
         return $block;
     }
   }
+}
+
+
+
+function theme_user_login_block($form) {
+  $output = "<div class=\"user-login-block\">\n";
+  $output .= form_render($form);
+  $output .= "</div>\n";
+  return $output;
 }
 
 function theme_user_picture($account) {
@@ -827,6 +830,8 @@ function user_auth_help_links() {
 
 /*** User features *********************************************************/
 
+
+
 function user_login($edit = array(), $msg = '') {
   global $user, $base_url;
 
@@ -872,6 +877,7 @@ function user_login($edit = array(), $msg = '') {
 
   // Display error message (if any):
   if ($error) {
+    $form['error'] = array(type => 'value', value => 1);
     drupal_set_message($error, 'error');
   }
 
@@ -879,16 +885,23 @@ function user_login($edit = array(), $msg = '') {
   if ($msg) {
     $output .= "<p>$msg</p>";
   }
+  $form['name'] = array(type => 'textfield', title => t('Username'), size => 30, maxlength => 64, required => TRUE);
   if (count(user_auth_help_links()) > 0) {
-    $output .= form_textfield(t('Username'), 'name', $edit['name'], 30, 64, t('Enter your %s username, or an ID from one of our affiliates: %a.', array('%s' => variable_get('site_name', 'local'), '%a' => implode(', ', user_auth_help_links()))));
+    $form['name'][description] = t('Enter your %s username, or an ID from one of our affiliates: %a.', array('%s' => variable_get('site_name', 'local'), '%a' => implode(', ', user_auth_help_links())));
   }
   else {
-    $output .= form_textfield(t('Username'), 'name', $edit['name'], 30, 64, t('Enter your %s username.', array('%s' => variable_get('site_name', 'local'))));
+    $form['name'][description] = t('Enter your %s username.', array('%s' => variable_get('site_name', 'local')));
   }
-  $output .= form_password(t('Password'), 'pass', $pass, 30, 64, t('Enter the password that accompanies your username.'));
-  $output .= form_submit(t('Log in'));
+  $form['pass'] = array(type => 'password', title => t('Password'), size => 30, maxlength => 64, description => t('Enter the password that accompanies your username.'), required => TRUE);
+  $form['submit'] = array(type => 'submit', value => t('Log in'), weight => 2);
+  return drupal_get_form('user_login', $form);
+}
 
-  return form($output, 'post', url('user/login', drupal_get_destination()));
+function user_login_execute($form) {
+  global $form_values;
+  if (!isset($form_values['error'])) {
+    return user_login($form_values);
+  }
 }
 
 function user_authenticate($name, $pass) {
@@ -991,12 +1004,17 @@ function user_pass() {
       drupal_set_message(t('You must provide either a username or e-mail address.'), 'error');
     }
     // Display form:
-    $output = '<p>'. t('Enter your username <strong><em>or</em></strong> your e-mail address.') .'</p>';
-    $output .= form_textfield(t('Username'), 'name', $edit['name'], 30, 64);
-    $output .= form_textfield(t('E-mail address'), 'mail', $edit['mail'], 30, 64);
-    $output .= form_submit(t('E-mail new password'));
-    return form($output);
+    $form['name'] = array(type => 'textfield', title => t('Username'), default_value => $edit['name'], size => 30, maxlength => 64);
+    $form['mail'] = array(type => 'textfield', title => t('E-mail address'), default_value => $edit['mail'], size => 30, maxlength => 64);
+    $form['submit'] = array(type => 'submit', value => t('E-mail new password'));
+    return drupal_get_form('user_logout', $form);
   }
+}
+
+function theme_user_logout($form) {
+  $output = '<p>'. t('Enter your username <strong><em>or</em></strong> your e-mail address.') .'</p>';
+  $output .= form_render($form);
+  return $output;
 }
 
 /**
@@ -1075,12 +1093,12 @@ function user_register($edit = array()) {
       if ($account->uid == 1) {
         user_mail($edit['mail'], t('drupal user account details for %s', array('%s' => $edit['name'])), strtr(t("%username,\n\nYou may now login to %uri using the following username and password:\n\n  username: %username\n  password: %password\n\n%edit_uri\n\n--drupal"), $variables), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
         // This should not be t()'ed. No point as its only shown once in the sites lifetime, and it would be bad to store the password.
-        $output .= "<p>Welcome to Drupal. You are user #1, which gives you full and immediate access.  All future registrants will receive their passwords via e-mail, so please configure your e-mail settings using the Administration pages.</p><p> Your password is <strong>$pass</strong>. You may change your password on the next page.</p><p>Please login below.</p>";
-        $output .= form_hidden('destination', 'user/'. $account->uid .'/edit');
-        $output .= form_hidden('name', $account->name);
-        $output .= form_hidden('pass', $pass);
-        $output .= form_submit(t('Log in'));
-        return form($output);
+        $form['instructions'] = array(type => 'markup', value => "<p>Welcome to Drupal. You are user #1, which gives you full and immediate access.  All future registrants will receive their passwords via e-mail, so please configure your e-mail settings using the Administration pages.</p><p> Your password is <strong>$pass</strong>. You may change your password on the next page.</p><p>Please login below.</p>");
+        $form[action] = 'user/'. $account->uid .'/edit';
+        $form['name'] = array(type => 'hidden', value => $account->name);
+        $form['pass'] = array(type => 'hidden', value => $pass);
+        $form['submit'] = array(type => 'submit', value => t('Log in'));
+        return drupal_get_form('user_register', $form);
       }
       else {
         if ($admin) {
@@ -1109,57 +1127,57 @@ function user_register($edit = array()) {
   }
 
   // Display the registration form.
-  $output .= variable_get('user_registration_help', '');
+  $form['user_registration_help'] = array(type => 'markup', value => variable_get('user_registration_help', ''));
   $affiliates = user_auth_help_links();
   if (!$admin && count($affiliates) > 0) {
     $affiliates = implode(', ', $affiliates);
-    $output .= '<p>'. t('Note: if you have an account with one of our affiliates (%s), you may <a href="%login_uri">login now</a> instead of registering.', array('%s' => $affiliates, '%login_uri' => url('user'))) .'</p>';
+    $form['affiliates'] = array(type => 'markup', value => '<p>'. t('Note: if you have an account with one of our affiliates (%s), you may <a href="%login_uri">login now</a> instead of registering.', array('%s' => $affiliates, '%login_uri' => url('user'))) .'</p>');
   }
-  $default = form_textfield(t('Username'), 'name', $edit['name'], 30, 64, t('Your full name or your preferred username; only letters, numbers and spaces are allowed.'), NULL, TRUE);
-  $default .= form_textfield(t('E-mail address'), 'mail', $edit['mail'], 30, 64, t('A password and instructions will be sent to this e-mail address, so make sure it is accurate.'), NULL, TRUE);
+  $form['name'] = array(type => 'textfield', title => t('Username'), default_value => $edit['name'], size => 30, maxlength => 64, description => t('Your full name or your preferred username; only letters, numbers and spaces are allowed.'), required => TRUE);
+  $form['mail'] = array(type => 'textfield', title => t('E-mail address'), default_value => $edit['mail'], size => 30, maxlength => 64, description => t('A password and instructions will be sent to this e-mail address, so make sure it is accurate.'), required => TRUE);
   if ($admin) {
-    $default .= form_password(t('Password'), 'pass', $edit['pass'], 30, 55,t('Provide a password for the new account.'), NULL, TRUE);
+    $form['pass'] = array(type => 'password', title => t('Password'), default_value => $edit['pass'], size => 30, maxlength => 55, description => t('Provide a password for the new account.'), required => TRUE);
   }
   $extra = _user_forms($edit, $account, $category, 'register');
   // Only display form_group around default fields if there are other groups.
   if ($extra) {
-    $output .= form_group(t('Account information'), $default);
-    $output .= $extra;
-  }
-  else {
-    $output .= $default;
-  }
 
-  $output .= form_submit(t('Create new account'));
+    $form['account'] = array(type => 'fieldset', value => t('Account information'));
+    $form['account']['name'] = $form['name'];
+    $form['account']['mail'] = $form['mail'];
+    $form['account']['pass'] = $form['pass'];
+    unset($form['name']);
+    unset($form['mail']);
+    unset($form['pass']);
+    $form = array_merge($form, $extra);
+  }
+  $form['submit'] = array(type => 'submit', value => t('Create new account'), weight => 30);
 
-  return form($output);
+  return drupal_get_form('user_register', $form);
 }
 
 function user_edit_form($uid, $edit) {
   // Account information:
-  $group  = form_textfield(t('Username'), 'name', $edit['name'], 60, 55, t('Your full name or your preferred username: only letters, numbers and spaces are allowed.'), NULL, TRUE);
-  $group .= form_textfield(t('E-mail address'), 'mail', $edit['mail'], 60, 55, t('Insert a valid e-mail address.  All e-mails from the system will be sent to this address. The e-mail address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by e-mail.'), NULL, TRUE);
-  $group .= form_item(t('Password'), '<input type="password" class="form-password" name="edit[pass1]" size="12" maxlength="24" /> <input type="password" class="form-password" name="edit[pass2]" size="12" maxlength="24" />', t('Enter your new password twice if you want to change your current password, or leave it blank if you are happy with your current password.'), NULL, TRUE);
-
+  $form['account'] = array(type => 'fieldset', title => t('Account information'), weight => 0);
+  $form['account']['name'] = array(type => 'textfield', title => t('Username'), default_value => $edit['name'], size => 60, maxlength => 55, description => t('Your full name or your preferred username: only letters, numbers and spaces are allowed.'), required => TRUE);
+  $form['account']['mail'] = array(type => 'textfield', title => t('E-mail address'), default_value => $edit['mail'], size => 60, maxlength => 55, description => t('Insert a valid e-mail address.  All e-mails from the system will be sent to this address. The e-mail address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by e-mail.'), required => TRUE);
+  $form['account']['pass'] = array(type => 'item', title => t('Password'), value => '<input type="password" class="form-password" name="edit[pass1]" size="12" maxlength="24" /> <input type="password" class="form-password" name="edit[pass2]" size="12" maxlength="24" />', required => true);
   if (user_access('administer access control')) {
-    $group .= form_radios(t('Status'), 'status', $edit['status'], array(t('Blocked'), t('Active')));
-    $group .= form_checkboxes(t('Roles'), 'roles', array_keys($edit['roles']), user_roles(1), t('Select at least one role.  The user receives the combined permissions of all of the selected roles.'), NULL, TRUE);
+    $form['account']['status'] = array(type => 'radios', title => t('Status'), default_value => $edit['status'], options => array(t('Blocked'), t('Active')));
+    $form['account']['roles'] = array(type => 'checkboxes', title => t('Roles'), default_value => array_keys($edit['roles']), options => user_roles(1), description => t('Select at least one role.  The user receives the combined permissions of all of the selected roles.'), required => TRUE);
   }
-
-  $data[] = array('title' => t('Account information'), 'data' => $group, 'weight' => 0);
 
   // Picture/avatar:
   if (variable_get('user_pictures', 0)) {
-    $group = '';
+    $form['picture'] = array(type => 'fieldset', title => t('Picture'), weight => 1);
     if ($edit['picture'] && ($picture = theme('user_picture', array2object($edit)))) {
-      $group .= $picture;
-      $group .= form_checkbox(t('Delete picture'), 'picture_delete', 1, 0, t('Check this box to delete your current picture.'));
+      $form['picture']['current_picture'] = array(type => 'markup', value => $picture);
+      $form['picture']['picture_delete'] = array(type => 'checkbox', title => t('Delete picture'), return_value => 1, default_value => 0, description => t('Check this box to delete your current picture.'));
     }
-    $group .= form_file(t('Upload picture'), 'picture', 48, t('Your virtual face or picture.  Maximum dimensions are %dimensions and the maximum size is %size kB.', array('%dimensions' => variable_get('user_picture_dimensions', '85x85'), '%size' => variable_get('user_picture_file_size', '30'))) .' '. variable_get('user_picture_guidelines', ''));
-    $data[] = array('title' => t('Picture'), 'data' => $group, 'weight' => 1);
+    $form['picture']['picture'] = array(type => 'file', title => t('Upload picture'), size => 48, description => t('Your virtual face or picture.  Maximum dimensions are %dimensions and the maximum size is %size kB.', array('%dimensions' => variable_get('user_picture_dimensions', '85x85'), '%size' => variable_get('user_picture_file_size', '30'))) .' '. variable_get('user_picture_guidelines', ''));
   }
 
-  return $data;
+  return $form;
 }
 
 function user_edit_validate($uid, &$edit) {
@@ -1190,12 +1208,6 @@ function user_edit_validate($uid, &$edit) {
     if (!$edit['roles']) {
       form_set_error('roles', t('You must select at least one role.'));
       $edit['roles'] = array();
-    }
-    else {
-      // Before form submission, $edit['roles'] contains ('role id' => 'role name') tuples.
-      // After form submission, $edit['roles'] contains ('number' => 'role id') tuples.  We
-      // flip the array to always have the role id's in the keys.
-      $edit['roles'] = array_flip($edit['roles']);
     }
   }
 
@@ -1262,12 +1274,7 @@ function user_edit($category = 'account') {
       drupal_goto('admin/user');
     }
     else {
-      $output = theme('confirm',
-                      t('Are you sure you want to delete the account %name?', array('%name' => theme('placeholder', $account->name))),
-                      'user/'. $account->uid,
-                      t('Deleting a user will remove all their submissions as well. This action cannot be undone.'),
-                      t('Delete'));
-      return $output;
+      return confirm_form('user_confirm_delete', $form, t('Are you sure you want to delete the account %name?', array('%name' => theme('placeholder', $account->name))), 'user/'. $account->uid, t('Deleting a user will remove all their submissions as well. This action cannot be undone.'), t('Delete'));
     }
   }
   else if ($_POST['op'] == t('Delete')) {
@@ -1275,15 +1282,15 @@ function user_edit($category = 'account') {
     drupal_goto("user/$account->uid/delete");
   }
 
-  $output  = _user_forms($edit, $account, $category);
-  $output .= form_submit(t('Submit'));
+  $form = _user_forms($edit, $account, $category);
+  $form['submit'] = array(type => 'submit', value => t('Submit'), weight => 30);
   if (user_access('administer users')) {
-    $output .= form_submit(t('Delete'));
+    $form['delete'] = array(type => 'submit', value => t('Delete'), weight => 30);
   }
-  $output = form($output, 'post', 0, array('enctype' => 'multipart/form-data'));
+  $form[attributes] = array('enctype' => 'multipart/form-data');
 
   drupal_set_title($account->name);
-  return $output;
+  return drupal_get_form('user_edit', $form);
 }
 
 function user_view($uid = 0) {
@@ -1321,10 +1328,6 @@ function user_page() {
     case t('Create new account'):
     case 'register':
       return user_register($edit);
-      break;
-    case t('Log in'):
-    case 'login':
-      return user_login($edit);
       break;
     default:
       if (!arg(1)) {
@@ -1370,36 +1373,6 @@ function _user_mail_text($messageid, $variables = array()) {
 }
 
 function user_configure_settings() {
-  // User registration settings.
-  $group = form_radios(t('Public registrations'), 'user_register', variable_get('user_register', 1), array(t('Only site administrators can create new user accounts.'), t('Visitors can create accounts and no administrator approval is required.'), t('Visitors can create accounts but administrator approval is required.')));
-  $group .= form_textarea(t('User registration guidelines'), 'user_registration_help', variable_get('user_registration_help', ''), 60, 5, t('This text is displayed at the top of the user registration form.  It\'s useful for helping or instructing your users.'));
-  $output = form_group(t('User registration settings'), $group);
-
-  // User e-mail settings.
-  $group = form_textfield(t('Subject of welcome e-mail'), 'user_mail_welcome_subject', _user_mail_text('welcome_subject'), 60, 180, t('Customize the subject of your welcome e-mail, which is sent to new members upon registering.') .' '. t('Available variables are:') .' %username, %site, %password, %uri, %uri_brief, %mailto, %date, %login_uri, %edit_uri, %login_url.');
-  $group .= form_textarea(t('Body of welcome e-mail'), 'user_mail_welcome_body', _user_mail_text('welcome_body'), 60, 15, t('Customize the body of the welcome e-mail, which is sent to new members upon registering.') .' '. t('Available variables are:') .' %username, %site, %password, %uri, %uri_brief, %mailto, %login_uri, %edit_uri, %login_url.');
-  $group .= form_textfield(t('Subject of welcome e-mail (awaiting admin approval)'), 'user_mail_approval_subject', _user_mail_text('approval_subject'), 50, 180, t('Customize the subject of your awaiting approval welcome e-mail, which is sent to new members upon registering.') .' '. t('Available variables are:') .' %username, %site, %password, %uri, %uri_brief, %mailto, %date, %login_uri, %edit_uri, %login_url.');
-  $group .= form_textarea(t('Body of welcome e-mail (awaiting admin approval)'), 'user_mail_approval_body', _user_mail_text('approval_body'), 60, 15, t('Customize the body of the awaiting approval welcome e-mail, which is sent to new members upon registering.') .' '. t('Available variables are:') .' %username, %site, %password, %uri, %uri_brief, %mailto, %login_uri, %edit_uri, %login_url.');
-  $group .= form_textfield(t('Subject of password recovery e-mail'), 'user_mail_pass_subject', _user_mail_text('pass_subject'), 60, 180, t('Customize the Subject of your forgotten password e-mail.') .' '. t('Available variables are:') .' %username, %site, %login_url, %uri, %uri_brief, %mailto, %date, %login_uri, %edit_uri.');
-  $group .= form_textarea(t('Body of password recovery e-mail'), 'user_mail_pass_body', _user_mail_text('pass_body'), 60, 15, t('Customize the body of the forgotten password e-mail.') .' '. t('Available variables are:') .' %username, %site, %login_url, %uri, %uri_brief, %mailto, %login_uri, %edit_uri.');
-  $output .= form_group(t('User email settings'), $group);
-
-  // If picture support is enabled, check whether the picture directory exists:
-  if (variable_get('user_pictures', 0)) {
-    $picture_path = file_create_path(variable_get('user_picture_path', 'pictures'));
-    file_check_directory($picture_path, 1, 'user_picture_path');
-  }
-
-  $group  = form_radios(t('Picture support'), 'user_pictures', variable_get('user_pictures', 0), array(t('Disabled'), t('Enabled')), t('Enable picture support.'));
-  $group .= form_textfield(t('Picture image path'), 'user_picture_path', variable_get('user_picture_path', 'pictures'), 30, 255, t('Subdirectory in the directory "%dir" where pictures will be stored.', array('%dir' => variable_get('file_directory_path', 'files') .'/')));
-  $group .= form_textfield(t('Default picture'), 'user_picture_default', variable_get('user_picture_default', ''), 30, 255, t('URL of picture to display for users with no custom picture selected. Leave blank for none.'));
-  $group .= form_textfield(t('Picture maximum dimensions'), 'user_picture_dimensions', variable_get('user_picture_dimensions', '85x85'), 15, 10, t('Maximum dimensions for pictures.'));
-  $group .= form_textfield(t('Picture maximum file size'), 'user_picture_file_size', variable_get('user_picture_file_size', '30'), 15, 10, t('Maximum file size for pictures, in kB.'));
-  $group .= form_textarea(t('Picture guidelines'), 'user_picture_guidelines', variable_get('user_picture_guidelines', ''), 60, 5, t('This text is displayed at the picture upload form in addition to the default guidelines.  It\'s useful for helping or instructing your users.'));
-
-  $output .= form_group(t('Pictures'), $group);
-
-  return $output;
 }
 
 /**
@@ -1412,28 +1385,52 @@ function user_admin_access_check() {
   $edit = $_POST['edit'];
 
   if ($op) {
-    if (drupal_is_denied($edit['type'], $edit['test'])) {
-      drupal_set_message(t('%test is not allowed.', array('%test' => theme('placeholder', $edit['test']))));
+    if ($edit['user']) {
+      if (drupal_is_denied('user', $edit['user']['test'])) {
+        drupal_set_message(t('The username %name is not allowed.', array('%name' => theme('placeholder', $edit['user']['test']))));
+      }
+      else {
+        drupal_set_message(t('The username %name is allowed.', array('%name' => theme('placeholder', $edit['user']['test']))));
+      }
     }
-    else {
-      drupal_set_message(t('%test is allowed.', array('%test' => theme('placeholder', $edit['test']))));
+    if ($edit['mail']) {
+      if (drupal_is_denied('mail', $edit['mail']['test'])) {
+        drupal_set_message(t('The e-mail address %mail is not allowed.', array('%mail' => theme('placeholder', $edit['mail']['test']))));
+      }
+      else {
+        drupal_set_message(t('The e-mail address %mail is allowed.', array('%mail' => theme('placeholder', $edit['mail']['test']))));
+      }
+    }
+    if ($edit['host']) {
+      if (drupal_is_denied('host', $edit['host']['test'])) {
+        drupal_set_message(t('The hostname %host is not allowed.', array('%host' => theme('placeholder', $edit['host']['test']))));
+      }
+      else {
+        drupal_set_message(t('The hostname %host is allowed.', array('%host' => theme('placeholder', $edit['host']['test']))));
+      }
     }
   }
 
-  $form = form_textfield('', 'test', '', 30, 64, t('Enter a username to check if it will be denied or allowed.'));
-  $form .= form_hidden('type', 'user');
-  $form .= form_submit(t('Check username'));
-  $output .= form_group(t('Username'), form($form));
+  $form['user'] = array(type => 'fieldset', title => t('Username'));
+  $form['user']['test'] = array(type => 'textfield', title => '', description => t('Enter a username to check if it will be denied or allowed.'), size => 30, maxlength => 64);
+  $form['user']['type'] = array(type => 'hidden', value => 'user');
+  $form['user']['submit'] = array(type => 'submit', value => t('Check username'));
+  $output .= drupal_get_form('check_user', $form);
+  unset($form); // prevent endless loop?
 
-  $form = form_textfield('', 'test', '', 30, 64, t('Enter an e-mail address to check if it will be denied or allowed.'));
-  $form .= form_hidden('type', 'mail');
-  $form .= form_submit(t('Check e-mail'));
-  $output .= form_group(t('E-mail'), form($form));
+  $form['mail'] = array(type => 'fieldset', title => t('E-mail'));
+  $form['mail']['test'] = array(type => 'textfield', title => '', description => t('Enter an e-mail address to check if it will be denied or allowed.'), size => 30, maxlength => 64);
+  $form['mail']['type'] = array(type => 'hidden', value => 'mail');
+  $form['mail']['submit'] = array(type => 'submit', value => t('Check e-mail'));
+  $output .= drupal_get_form('check_mail', $form);
+  unset($form); // prevent endless loop?
 
-  $form = form_textfield('', 'test', '', 30, 64, t('Enter a host to check if it will be denied or allowed.'));
-  $form .= form_hidden('type', 'host');
-  $form .= form_submit(t('Check host'));
-  $output .= form_group(t('Host'), form($form));
+  $form['host'] = array(type => 'fieldset', title => t('Hostname'));
+  $form['host']['test'] = array(type => 'textfield', title => '', description => t('Enter a hostname or IP address to check if it will be denied or allowed.'), size => 30, maxlength => 64);
+  $form['host']['type'] = array(type => 'hidden', value => 'host');
+  $form['host']['submit'] = array(type => 'submit', value => t('Check hostname'));
+  $output .= drupal_get_form('check_host', $form);
+  unset($form); // prevent endless loop?
 
   return $output;
 }
@@ -1459,33 +1456,33 @@ function user_admin_access_add($mask = NULL, $type = NULL) {
   }
 
   $form = _user_admin_access_form($edit);
-  $form .= form_submit(t('Add rule'));
+  $form['submit'] = array(type => 'submit', value => t('Add rule'));
 
-  return form($form, 'post', NULL, array('id' => 'access-rules'));
+  return drupal_get_form('access_rule', $form);
 }
 
 /**
  * Menu callback: delete an access rule
  */
 function user_admin_access_delete($aid = 0) {
-  if ($_POST['edit']['confirm']) {
-    db_query('DELETE FROM {access} WHERE aid = %d', $aid);
-    drupal_set_message(t('The access rule has been deleted.'));
-    drupal_goto('admin/access/rules');
-  }
-  else {
-    $access_types = array('user' => t('username'), 'mail' => t('e-mail'));
-    $edit = db_fetch_object(db_query('SELECT aid, type, status, mask FROM {access} WHERE aid = %d', $aid));
+  $access_types = array('user' => t('username'), 'mail' => t('e-mail'));
+  $edit = db_fetch_object(db_query('SELECT aid, type, status, mask FROM {access} WHERE aid = %d', $aid));
 
-    $output = theme('confirm',
-                    t('Are you sure you want to delete the %type rule for %rule?', array('%type' => $access_types[$edit->type], '%rule' => theme('placeholder', $edit->mask))),
-                    'admin/access/rules',
-                    t('This action cannot be undone.'),
-                    t('Delete'),
-                    t('Cancel'),
-                    $extra);
-    return $output;
-  }
+  $form = array();
+  $form['aid'] = array(type => 'hidden', value => $aid);
+  $output = confirm_form('user_admin_access_delete_confirm', $form,
+                  t('Are you sure you want to delete the %type rule for %rule?', array('%type' => $access_types[$edit->type], '%rule' => theme('placeholder', $edit->mask))),
+                  'admin/access/rules',
+                  t('This action cannot be undone.'),
+                  t('Delete'),
+                  t('Cancel'));
+  return $output;
+}
+
+function user_admin_access_delete_confirm_execute($form_id, $edit) {
+  db_query('DELETE FROM {access} WHERE aid = %d', $edit['aid']);
+  drupal_set_message(t('The access rule has been deleted.'));
+  drupal_goto('admin/access/rules');
 }
 
 /**
@@ -1506,16 +1503,17 @@ function user_admin_access_edit($aid = 0) {
     $edit = db_fetch_array(db_query('SELECT aid, type, status, mask FROM {access} WHERE aid = %d', $aid));
   }
   $form = _user_admin_access_form($edit);
-  $form .= form_submit(t('Save rule'));
-  return form($form, 'post', NULL, array('id' => 'access-rules'));
+  $form['submit'] = array(type => 'submit', value => t('Save rule'));
+
+  return drupal_get_form('access_rule', $form);
 }
 
 function _user_admin_access_form($edit) {
-  $output = '<div class="access-type">'. form_radios(t('Access type'), 'status', $edit['status'], array('1' => t('Allow'), '0' => t('Deny'))) .'</div>';
-  $output .= '<div class="rule-type">'. form_radios(t('Rule type'), 'type', $edit['type'] ? $edit['type'] : 'user', array('user' => t('Username'), 'mail' => t('E-mail'), 'host' => t('Host'))) .'</div>';
-  $output .= '<div class="mask">'. form_textfield(t('Mask'), 'mask', $edit['mask'], 30, 64, '%: '. t('Matches any number of characters, even zero characters') .'.<br />_: '. t('Matches exactly one character.'), NULL, TRUE) .'</div>';
+  $form['status'] = array(type => 'radios', title => t('Access type'), default_value => $edit['status'], options => array('1' => t('Allow'), '0' => t('Deny')));
+  $form['type'] = array(type => 'radios', title => t('Rule type'), default_value => $edit['type'], options => array('user' => t('Username'), 'mail' => t('E-mail'), 'host' => t('Host'), default_value => 'host'));
+  $form['mask'] = array(type => 'textfield', title => t('Mask'), default_value => $edit['mask'], size => 30, maxlength => 64, description => '%: '. t('Matches any number of characters, even zero characters') .'.<br />_: '. t('Matches exactly one character.'), required => TRUE);
 
-  return $output;
+  return $form;
 }
 
 /**
@@ -1558,31 +1556,6 @@ function user_roles($membersonly = 0, $permission = 0) {
  * Menu callback: administer permissions.
  */
 function user_admin_perm() {
-  $edit = $_POST['edit'];
-  if ($edit) {
-    // Save permissions:
-    $result = db_query('SELECT * FROM {role}');
-    while ($role = db_fetch_object($result)) {
-      // Delete, so if we clear every checkbox we reset that role;
-      // otherwise permissions are active and denied everywhere.
-      db_query('DELETE FROM {permission} WHERE rid = %d', $role->rid);
-      foreach ($edit[$role->rid] as $key => $value) {
-        if (!$value) {
-          unset($edit[$role->rid][$key]);
-        }
-      }
-      if (count($edit[$role->rid])) {
-        db_query("INSERT INTO {permission} (rid, perm) VALUES (%d, '%s')", $role->rid, implode(', ', array_keys($edit[$role->rid])));
-      }
-    }
-
-    drupal_set_message(t('The changes have been saved.'));
-
-    // Clear the cached pages and menus:
-    menu_rebuild();
-
-    drupal_goto($_GET['q']);
-  }
 
   // Compile role array:
   $result = db_query('SELECT r.rid, p.perm FROM {role} r LEFT JOIN {permission} p ON r.rid = p.rid ORDER BY name');
@@ -1598,27 +1571,88 @@ function user_admin_perm() {
   }
 
   // Render role/permission overview:
-  $header = array_merge(array(t('Permission')), $role_names);
-
+  $options = array();
   foreach (module_list() as $module) {
     if ($permissions = module_invoke($module, 'perm')) {
-      $rows[] = array(array('data' => t('%module module', array('%module' => $module)), 'class' => 'module', 'colspan' => count($role_names) + 1));
+      $form['permission'][] = array(type => 'markup', value => t('%module module', array('%module' => $module)));
       asort($permissions);
       foreach ($permissions as $perm) {
-        $row[] = array('data' => t($perm), 'class' => 'permission');
+        $options[$perm] = '';
+        $form['permission'][$perm] = array(type => 'markup', value => t($perm));
         foreach ($role_names as $rid => $name) {
-          $row[] = form_checkbox('', "$rid][$perm", 1, strstr($role_permissions[$rid], $perm), NULL, array('title' => $name .': '. t($perm)));
+          // Builds arrays for checked boxes for each role
+          if (strstr($role_permissions[$rid], $perm)) {
+            $status[$rid][] = $perm;
+          }
         }
-        $rows[] = $row;
-        unset($row);
       }
     }
   }
+  // Have to build checkboxes here after checkbox arrays are built
+  foreach ($role_names as $rid => $name) {
+    $form['checkboxes'][$rid] = array(type => 'checkboxes', options => $options, default_value => $status[$rid], tree => TRUE);
+    $form['role_names'][$rid] = array(type => 'markup', value => $name, tree => TRUE);
+  }
+  $form['submit'] = array(type => 'submit', value => t('Save permissions'));
 
+  return drupal_get_form('user_admin_perm', $form);
+}
+
+function theme_user_admin_perm($form) {
+  foreach (element_children($form['permission']) as $key) {
+    // Don't take form control structures
+    if (is_array($form['permission'][$key])) {
+      $row = array();
+      // Module name
+      if (is_numeric($key)) {
+        $row[] = array('data' => form_render($form['permission'][$key]), 'class' => 'module', 'colspan' => count($form['role_names']) + 1);
+      // Permissions
+      } else {
+        $row[] = array('data' => form_render($form['permission'][$key]), 'class' => 'permission');
+        foreach (element_children($form['checkboxes']) as $rid) {
+          if (is_array($form['checkboxes'][$rid])) {
+            $row[] = array('data' => form_render($form['checkboxes'][$rid][$key]), 'align' => 'center');
+          }
+        }
+      }
+      $rows[] = $row;
+    }
+  }
+  $header[] = (t('Permission'));
+  foreach (element_children($form['role_names']) as $rid) {
+    if (is_array($form['role_names'][$rid])) {
+      $header[] = form_render($form['role_names'][$rid]);
+    }
+  }
   $output = theme('table', $header, $rows, array('id' => 'permissions'));
-  $output .= form_submit(t('Save permissions'));
+  $output .= form_render($form);
+  return $output;
+}
 
-  return form($output);
+function user_admin_perm_execute() {
+  $edit = $GLOBALS['form_values']['checkboxes'];
+  // Save permissions:
+  $result = db_query('SELECT * FROM {role}');
+  while ($role = db_fetch_object($result)) {
+    // Delete, so if we clear every checkbox we reset that role;
+    // otherwise permissions are active and denied everywhere.
+    db_query('DELETE FROM {permission} WHERE rid = %d', $role->rid);
+    foreach ($edit[$role->rid] as $key => $value) {
+      if (!$value) {
+        unset($edit[$role->rid][$key]);
+      }
+    }
+    if (count($edit[$role->rid])) {
+      db_query("INSERT INTO {permission} (rid, perm) VALUES (%d, '%s')", $role->rid, implode(', ', array_keys($edit[$role->rid])));
+    }
+  }
+
+  drupal_set_message(t('The changes have been saved.'));
+
+  // Clear the cached pages and menus:
+  menu_rebuild();
+
+  drupal_goto($_GET['q']);
 }
 
 /**
@@ -1673,34 +1707,32 @@ function user_admin_role() {
   else if ($id) {
     // Display the role form.
     $role = db_fetch_object(db_query('SELECT * FROM {role} WHERE rid = %d', $id));
-
-    $output .= form_textfield(t('Role name'), 'name', $role->name, 30, 64, t('The name for this role. Example: "moderator", "editorial board", "site architect".'));
-    $output .= form_submit(t('Save role'));
-    $output .= form_submit(t('Delete role'));
-
-    $output = form($output);
+    $form['name'] = array(type => 'textfield', title => t('Role name'), default_value => $role->name, size => 30, maxlength => 64, description => t('The name for this role. Example: "moderator", "editorial board", "site architect".'));
+    $form['submit'] = array(type => 'submit', value => t('Save role'));
+    $form['delete'] = array(type => 'submit', value => t('Delete role'));
+    return drupal_get_form('user_admin_role', $form);
   }
+  $form['name'] = array(type => 'textfield', size => 32, maxlength => 64);
+  $form['submit'] = array(type => 'submit', value => t('Add role'));
+  return drupal_get_form('user_admin_new_role', $form);
+}
 
-  if (!$output) {
-    // Render the role overview.
-    $result = db_query('SELECT * FROM {role} ORDER BY name');
+function theme_user_admin_new_role($form) {
+  // Render the role overview.
+  $result = db_query('SELECT * FROM {role} ORDER BY name');
 
-    $header = array(t('Name'), t('Operations'));
-    while ($role = db_fetch_object($result)) {
-      if ($role->name != 'anonymous user' && $role->name != 'authenticated user') {
-        $rows[] = array($role->name, l(t('edit'), 'admin/access/roles/edit/'. $role->rid));
-      }
-      else {
-        $rows[] = array($role->name, '<span class="disabled">'. t('locked') .'</span>');
-      }
+  $header = array(t('Name'), t('Operations'));
+  while ($role = db_fetch_object($result)) {
+    if ($role->name != 'anonymous user' && $role->name != 'authenticated user') {
+      $rows[] = array($role->name, l(t('edit'), 'admin/access/roles/edit/'. $role->rid));
     }
-    $rows[] = array('<input type="text" size="32" maxlength="64" name="edit[name]" />', '<input type="submit" name="op" value="'. t('Add role') .'" />');
-
-    $output = theme('table', $header, $rows);
-    $output = form($output);
+    else {
+      $rows[] = array($role->name, '<span class="disabled">'. t('locked') .'</span>');
+    }
   }
+  $rows[] = array(form_render($form['name']), form_render($form['submit']));
 
-  return $output;
+  return theme('table', $header, $rows);
 }
 
 function user_admin_account() {
@@ -1731,19 +1763,35 @@ function user_admin_account() {
 }
 
 function user_configure() {
-  $op = $_POST['op'];
-  $edit = $_POST['edit'];
+  // User registration settings.
+  $form['registration'] = array(type => 'fieldset', title => t('User registration settings'));
+  $form['registration']['user_register'] = array(type => 'radios', title => t('Public registrations'), default_value => variable_get('user_register', 1), options => array(t('Only site administrators can create new user accounts.'), t('Visitors can create accounts and no administrator approval is required.'), t('Visitors can create accounts but administrator approval is required.')));
+  $form['registration']['user_registration_help'] = array(type => 'textarea', title => t('User registration guidelines'), default_value => variable_get('user_registration_help', ''), cols => 60, rows => 5, description => t('This text is displayed at the top of the user registration form.  It\'s useful for helping or instructing your users.'));
 
-  if (empty($op)) {
-    $op = arg(3);
+  // User e-mail settings.
+  $form['email'] = array(type => 'fieldset', title => t('User email settings'));
+  $form['email']['user_mail_welcome_subject'] = array(type => 'textfield', title => t('Subject of welcome e-mail'), default_value => _user_mail_text('welcome_subject'), size => 60, maxlength => 180, description => t('Customize the subject of your welcome e-mail, which is sent to new members upon registering.') .' '. t('Available variables are:') .' %username, %site, %password, %uri, %uri_brief, %mailto, %date, %login_uri, %edit_uri, %login_url.');
+  $form['email']['user_mail_welcome_body'] = array(type => 'textarea', title => t('Body of welcome e-mail'), default_value => _user_mail_text('welcome_body'), cols => 60, rows => 15, description => t('Customize the body of the welcome e-mail, which is sent to new members upon registering.') .' '. t('Available variables are:') .' %username, %site, %password, %uri, %uri_brief, %mailto, %login_uri, %edit_uri, %login_url.');
+  $form['email']['user_mail_approval_subject'] = array(type => 'textfield', title => t('Subject of welcome e-mail (awaiting admin approval)'), default_value => _user_mail_text('approval_subject'), size => 60, maxlength => 180, description => t('Customize the subject of your awaiting approval welcome e-mail, which is sent to new members upon registering.') .' '. t('Available variables are:') .' %username, %site, %password, %uri, %uri_brief, %mailto, %date, %login_uri, %edit_uri, %login_url.');
+  $form['email']['user_mail_approval_body'] = array(type => 'textarea', title => t('Body of welcome e-mail (awaiting admin approval)'), default_value => _user_mail_text('approval_body'), cols => 60, rows => 15, description => t('Customize the body of the awaiting approval welcome e-mail, which is sent to new members upon registering.') .' '. t('Available variables are:') .' %username, %site, %password, %uri, %uri_brief, %mailto, %login_uri, %edit_uri, %login_url.');
+  $form['email']['user_mail_pass_subject'] = array(type => 'textfield', title => t('Subject of password recovery e-mail'), default_value => _user_mail_text('pass_subject'), size => 60, maxlength => 180, description => t('Customize the Subject of your forgotten password e-mail.') .' '. t('Available variables are:') .' %username, %site, %login_url, %uri, %uri_brief, %mailto, %date, %login_uri, %edit_uri.');
+  $form['email']['user_mail_pass_body'] = array(type => 'textarea', title => t('Body of password recovery e-mail'), default_value => _user_mail_text('pass_body'), cols => 60, rows => 15, description => t('Customize the body of the forgotten password e-mail.') .' '. t('Available variables are:') .' %username, %site, %login_url, %uri, %uri_brief, %mailto, %login_uri, %edit_uri.');
+
+  // If picture support is enabled, check whether the picture directory exists:
+  if (variable_get('user_pictures', 0)) {
+    $picture_path = file_create_path(variable_get('user_picture_path', 'pictures'));
+    file_check_directory($picture_path, 1, 'user_picture_path');
   }
 
-  if ($_POST) {
-    system_settings_save();
-  }
-  $output = system_settings_form(user_configure_settings());
+  $form['pictures'] = array(type => 'fieldset', title => t('Pictures'));
+  $form['pictures']['user_pictures'] = array(type => 'radios', title => t('Picture support'), default_value => variable_get('user_pictures', 0), options => array(t('Disabled'), t('Enabled')), description => t('Enable picture support.'));
+  $form['pictures']['user_picture_path'] = array(type => 'textfield', title => t('Picture image path'), default_value => variable_get('user_picture_path', 'pictures'), size => 30, maxlength => 255, description => t('Subdirectory in the directory "%dir" where pictures will be stored.', array('%dir' => variable_get('file_directory_path', 'files') .'/')));
+  $form['pictures']['user_picture_default'] = array(type => 'textfield', title => t('Default picture'), default_value => variable_get('user_picture_default', ''), size => 30, maxlength => 255, description => t('URL of picture to display for users with no custom picture selected. Leave blank for none.'));
+  $form['pictures']['user_picture_dimensions'] = array(type => 'textfield', title => t('Picture maximum dimensions'), default_value => variable_get('user_picture_dimensions', '85x85'), size => 15, maxlength => 10, description => t('Maximum dimensions for pictures.'));
+  $form['pictures']['user_picture_file_size'] = array(type => 'textfield', title => t('Picture maximum file size'), default_value => variable_get('user_picture_file_size', '30'), size => 15, maxlength => 10, description => t('Maximum file size for pictures, in kB.'));
+  $form['pictures']['user_picture_guidelines'] = array(type => 'textarea', title => t('Picture guidelines'), default_value => variable_get('user_picture_guidelines', ''), cols => 60, rows => 5, description => t('This text is displayed at the picture upload form in addition to the default guidelines.  It\'s useful for helping or instructing your users.'));
 
-  return $output;
+  return system_settings_form('user_configure_settings', $form);
 }
 
 function user_admin() {
@@ -1880,15 +1928,9 @@ function _user_forms(&$edit, $account, $category, $hook = 'form') {
       $groups = array_merge($data, $groups);
     }
   }
-
   usort($groups, '_user_sort');
 
-  $output = '';
-  foreach ($groups as $group) {
-    $output .= form_group($group['title'], $group['data']);
-  }
-
-  return $output;
+  return empty($groups) ? FALSE : $groups;
 }
 
 /**

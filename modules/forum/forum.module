@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.273 2005/10/01 13:30:06 dries Exp $
+// $Id: forum.module,v 1.274 2005/10/07 06:09:13 dries Exp $
 
 /**
  * @file
@@ -158,15 +158,10 @@ function forum_taxonomy($op, $type, $object) {
 function _forum_confirm_delete($tid) {
   $term = taxonomy_get_term($tid);
 
-  $extra = form_hidden('tid', $tid);
-  $output = theme('confirm',
-                  t('Are you sure you want to delete the forum %name?', array('%name' => theme('placeholder', $term->name))),
-                  'admin/forums',
-                  t('Deleting a forum or container will delete all sub-forums as well. This action cannot be undone.'),
-                  t('Delete'),
-                  t('Cancel'),
-                  $extra);
-  return $output;
+  $form['tid'] = array(type => 'hidden', value => $tid);
+
+  return confirm_form('forum_confirm_delete', $form, t('Are you sure you want to delete the forum %name?', array('%name' => theme('placeholder', $term->name))),
+                  'admin/forums', t('Deleting a forum or container will delete all sub-forums as well. This action cannot be undone.'), t('Delete'), t('Cancel'));
 }
 
 /**
@@ -175,20 +170,20 @@ function _forum_confirm_delete($tid) {
  * @param $edit Associative array containing a container term to be added or edited.
  */
 function forum_form_container($edit = array()) {
-  $form = form_textfield(t('Container name'), 'name', $edit['name'], 60, 64, t('The container name is used to identify related forums.'), NULL, TRUE);
-  $form .= form_textarea(t('Description'), 'description', $edit['description'], 60, 5, t('The container description can give users more information about the forums it contains.'));
+  $form['name'] = array(title => t('Container name'), type => 'textfield', default_value => $edit['name'], size => 60, maxlength =>  64, description => t('The container name is used to identify related forums.'), required => TRUE);
+  $form['description'] = array(type => 'textarea', title => t('Description'), default_value => $edit['description'], cols => 60, rows => 5, description => ('The container description can give users more information about the forums it contains.'));
+  $form['parent'][tree] = TRUE;
+  $form['parent'][0] = _forum_parent_select($edit['tid'], t('Parent'), 'container');
+  $form['weight'] = array(type => 'weight', title => t('Weight'), default_value => $edit['weight'], delta => 10, description => t('When listing containers, those with with light (small) weights get listed before containers with heavier (larger) weights. Containers with equal weights are sorted alphabetically.'));
 
-  $form .= _forum_parent_select($edit['tid'], t('Parent'), 'parent][', 'container');
-  $form .= form_weight(t('Weight'), 'weight', $edit['weight'], 10, t('When listing containers, those with with light (small) weights get listed before containers with heavier (larger) weights. Containers with equal weights are sorted alphabetically.'));
-
-  $form .= form_hidden('vid', _forum_get_vid());
-  $form .= form_submit(t('Submit'));
+  $form['vid'] = array(type => 'hidden', value => _forum_get_vid());
+  $form['submit'] = array(type => 'submit', value => t('Submit'));
   if ($edit['tid']) {
-    $form .= form_submit(t('Delete'));
-    $form .= form_hidden('tid', $edit['tid']);
+    $form['delete'] = array(type => 'submit', value => t('Delete'));
+    $form['tid'] = array(type => 'hidden', value => $edit['tid']);
   }
 
-  return form($form);
+  return drupal_get_form('forum_form_container', $form);
 }
 
 /**
@@ -197,20 +192,20 @@ function forum_form_container($edit = array()) {
  * @param $edit Associative array containing a forum term to be added or edited.
  */
 function forum_form_forum($edit = array()) {
-  $form = form_textfield(t('Forum name'), 'name', $edit['name'], 60, 64, t('The forum name is used to identify related topic discussions.'), NULL, TRUE);
-  $form .= form_textarea(t('Description'), 'description', $edit['description'], 60, 5, t('The forum description can give users more information about the discussion topics it contains.'));
+  $form['name'] = array(type => 'textfield', title => t('Forum name'), default_value => $edit['name'], size => 60, maxlength =>  64, description => t('The forum name is used to identify related discussions.'), required => TRUE);
+  $form['description'] = array(type => 'textarea', title => t('Description'), default_value => $edit['description'], cols => 60, rows => 5, description => ('The forum description can give users more information about the discussion topics it contains.'));
+  $form['parent'][tree] = TRUE;
+  $form['parent'][0] = _forum_parent_select($edit['tid'], t('Parent'), 'forum');
+  $form['weight'] = array(type => 'weight', title => t('Weight'), default_value => $edit['weight'], delta => 10, description => t('When listing forums, those with with light (small) weights get listed before containers with heavier (larger) weights. Forums with equal weights are sorted alphabetically.'));
 
-  $form .= _forum_parent_select($edit['tid'], t('Parent'), 'parent][', 'forum');
-  $form .= form_weight(t('Weight'), 'weight', $edit['weight'], 10, t('When listing forums, those with light (small) weights get listed before forums with heavier (larger) weights. Forums with equal weights are sorted alphabetically.'));
-
-  $form .= form_hidden('vid', _forum_get_vid());
-  $form .= form_submit(t('Submit'));
+  $form['vid'] = array(type => 'hidden', value => _forum_get_vid());
+  $form['submit' ] = array(type => 'submit', value => t('Submit'));
   if ($edit['tid']) {
-    $form .= form_submit(t('Delete'));
-    $form .= form_hidden('tid', $edit['tid']);
+    $form['delete'] = array(type => 'submit', value => t('Delete'));
+    $form['tid'] = array(type => 'hidden', value => $edit['tid']);
   }
 
-  return form($form);
+  return drupal_get_form('forum_form_forum', $form);
 }
 
 /**
@@ -218,9 +213,9 @@ function forum_form_forum($edit = array()) {
  *
  * @param $tid ID of the term which is being added or edited
  * @param $title Title to display the select box with
- * @param $name Name to use in the forum
+ * @param $child_type Whether the child is forum or container
  */
-function _forum_parent_select($tid, $title, $name, $child_type) {
+function _forum_parent_select($tid, $title, $child_type) {
 
   $parents = taxonomy_get_parents($tid);
   if ($parents) {
@@ -255,7 +250,7 @@ function _forum_parent_select($tid, $title, $name, $child_type) {
     $description = t('You may place your forum inside a parent container or forum, or at the top (root) level of your forum.');
   }
 
-  return form_select($title, $name, $parent, $options, $description, 0, FALSE, TRUE);
+  return array(type => 'select', title => $title, default_value => $parent, options => $options, description => $description, required => TRUE);
 }
 
 /**
@@ -318,17 +313,17 @@ function _forum_get_vid() {
  * Implementation of hook_settings
  */
 function forum_admin_configure() {
-  system_settings_save();
 
-  $output .= form_textfield(t('Forum icon path'), 'forum_icon_path', variable_get('forum_icon_path', ''), 30, 255, t('The path to the forum icons.  Leave blank to disable icons. Don\'t add a trailing slash.  Default icons are available in the "misc" directory. You may use images of whatever size you wish, but it is recommended to use 15x15 or 16x16. '));
+  $form = array();
+  $form['forum_icon_path'] = array(type => 'textfield', title => t('Forum icon path'), default_value => variable_get('forum_icon_path', ''), size => 30, maxlength =>  255, description => t('The path to the forum icons.  Leave blank to disable icons. Don\'t add a trailing slash.  Default icons are available in the "misc" directory. You may use images of whatever size you wish, but it is recommended to use 15x15 or 16x16. '));
   $number = drupal_map_assoc(array(5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 80, 100, 10000));
-  $output .= form_select(t('Hot topic threshold'), 'forum_hot_topic', variable_get('forum_hot_topic', 15), $number, t('The number of posts a topic must have to be considered hot.'));
+  $form['forum_hot_topic'] = array(type => 'select', title => t('Hot topic threshold'), default_value => variable_get('forum_hot_topic', 15), options => $number, description => t('The number of posts a topic must have to be considered hot.'));
   $number = drupal_map_assoc(array(10, 25, 50, 75, 100));
-  $output .= form_select(t('Topics per page'), 'forum_per_page', variable_get('forum_per_page', 25), $number, t('The default number of topics displayed per page; links to browse older messages are automatically being displayed.'));
+  $form['forum_per_page'] = array(type => 'select', title => t('Topics per page'), default_value => variable_get('forum_per_page', 25), options => $number, description => t('The default number of topics displayed per page; links to browse older messages are automatically being displayed.'));
   $forder = array(1 => t('Date - newest first'), 2 => t('Date - oldest first'), 3 => t('Posts - most active first'), 4=> t('Posts - least active first'));
-  $output .= form_radios(t('Default order'), 'forum_order', variable_get('forum_order', '1'), $forder, t('The default display order for topics.'));
+  $form['forum_order'] = array(type => 'radios', title => t('Default order'), default_value => variable_get('forum_order', '1'), options => $forder, description => t('The default display order for topics.'));
 
-  return system_settings_form($output);
+  return system_settings_form('forum_admin_configure', $form);
 }
 
 /**
@@ -354,8 +349,8 @@ function forum_block($op = 'list', $delta = 0, $edit = array()) {
       return $blocks;
 
     case 'configure':
-      $output = form_select(t('Number of topics'), 'forum_block_num_'. $delta, variable_get('forum_block_num_'. $delta, '5'), drupal_map_assoc(array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)));
-      return $output;
+      $form['forum_block_num_'. $delta] = array(type => 'select', title => t('Number of topics'), default_value => variable_get('forum_block_num_'. $delta, '5'), options => drupal_map_assoc(array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)));
+      return $form;
 
     case 'save':
       variable_set('forum_block_num_'. $delta, $edit['forum_block_num_'. $delta]);
@@ -560,7 +555,7 @@ function forum_update($node) {
  * Implementation of hook_form().
  */
 function forum_form(&$node) {
-  $output = form_textfield(t('Subject'), 'title', $node->title, 60, 128, NULL, NULL, TRUE);
+  $form['title'] = array(type => 'textfield', title => t('Subject'), default_value => $node->title, size => 60, maxlength => 128, required => TRUE);
 
   if (!$node->nid) {
     // new topic
@@ -569,19 +564,22 @@ function forum_form(&$node) {
   else {
     $node->taxonomy = array($node->tid);
   }
-
-  $output .= implode('', taxonomy_node_form('forum', $node));
+  
+  if (function_exists('taxonomy_node_form')) {
+    $form['taxonomy'] = taxonomy_node_form('forum', $node);
+  }
 
   if ($node->nid) {
     // if editing, give option to leave shadows
     $shadow = (count(taxonomy_node_get_terms($node->nid)) > 1);
-    $output .= form_checkbox(t('Leave shadow copy'), 'shadow', 1, $shadow, t('If you move this topic, you can leave a link in the old forum to the new forum.'));
+    $form['shadow'] = array(type => 'checkbox', 'title' => t('Leave shadow copy'),  default_value => $shadow, description => t('If you move this topic, you can leave a link in the old forum to the new forum.'));
   }
 
-  $output .= form_textarea(t('Body'), 'body', $node->body, 60, 20, '');
-  $output .= filter_form('format', $node->format);
+  $form['body'] = array(type => 'textarea', title => t('Body'), default_value => $node->body, required => TRUE
+  );
+  $form = array_merge($form, filter_form($node->format));
 
-  return $output;
+  return $form;
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.134 2005/09/07 20:57:39 dries Exp $
+// $Id: search.module,v 1.135 2005/10/07 06:09:13 dries Exp $
 
 /**
  * @file
@@ -96,11 +96,6 @@ function search_menu($may_cache) {
       'callback' => 'search_view',
       'access' => user_access('search content'),
       'type' => MENU_SUGGESTED_ITEM);
-
-    $items[] = array('path' => 'admin/settings/search', 'title' => t('search'),
-      'callback' => 'search_admin',
-      'type' => MENU_NORMAL_ITEM,
-      'access' => user_access('administer site configuration'));
   }
   else if (arg(0) == 'search') {
     // To remember the user's search keywords when switching across tabs,
@@ -120,23 +115,21 @@ function search_menu($may_cache) {
   return $items;
 }
 
+/**
+ * Implementation of hook_validate().
+ */
+function search_settings_form_validate($form_id, &$form) {
+  // If the word length settings change, the index needs to be rebuilt.
+  if (variable_get('minimum_word_size', 3) != $form['minimum_word_size']) {
+    drupal_set_message(t('The index will be rebuilt.'));
+    search_wipe();
+  }
+}
 
 /**
  * Menu callback; displays the search module settings page.
  */
-function search_admin() {
-  if ($_POST) {
-    // If the word length settings change, the index needs to be rebuilt.
-    if (variable_get('minimum_word_size', 3) != $_POST['edit']['minimum_word_size']) {
-      drupal_set_message(t('The index will be rebuilt.'));
-      search_wipe();
-      system_settings_save();
-    }
-    else {
-      system_settings_save();
-    }
-  }
-
+function search_settings() {
   // Collect some stats
   $remaining = 0;
   $total = 0;
@@ -150,19 +143,21 @@ function search_admin() {
   $count = format_plural($remaining, 'There is 1 item left to index.', 'There are %count items left to index.');
   $percentage = ((int)min(100, 100 * ($total - $remaining) / max(1, $total))) . '%';
   $status = '<p><strong>'. t('%percentage of the site has been indexed.', array('%percentage' => $percentage)) .' '. $count .'</strong></p>';
-  $output = form_group('Indexing status', $status);
+  $form['search_admin'] = array(type => 'fieldset', title => t('Indexing status'));
+  $form['search_admin']['status'] = array(type => 'markup', value => $status);
+
+  $items = drupal_map_assoc(array(10, 20, 50, 100, 200, 500));
 
   // Indexing throttle:
-  $items = drupal_map_assoc(array(10, 20, 50, 100, 200, 500));
-  $group = form_select(t('Items to index per cron run'), 'search_cron_limit', variable_get('search_cron_limit', 100), $items, t('The maximum amount of items that will be indexed in one cron run. Set this number lower if your cron is timing out or if PHP is running out of memory.'));
-  $output .= form_group(t('Indexing throttle'), $group);
+  $form['indexing_throttle'] = array(type => 'fieldset', title => t('Indexing throttle'));
+  $form['indexing_throttle']['search_cron_limit'] = array(type => 'select', title => t('Items to index per cron run'), default_value => variable_get('search_cron_limit', 100), options => $items, description => t('The maximum amount of items that will be indexed in one cron run. Set this number lower if your cron is timing out or if PHP is running out of memory.'));
   // Indexing settings:
-  $group = '<em>'. t('<p>Changing the setting below will cause the site index to be rebuilt. The search index is not cleared but systematically updated to reflect the new settings. Searching will continue to work but new content won\'t be indexed until all existing content has been re-indexed.</p><p>The default settings should be appropriate for the majority of sites.</p>') .'</em>';
-  $group .= form_textfield(t('Minimum word length to index'), 'minimum_word_size', variable_get('minimum_word_size', 3), 5, 3, t('The number of characters a word has to be to be indexed. Words shorter than this will not be searchable.'));
-  $group .= form_textfield(t('Minimum word length to search for'), 'remove_short', variable_get('remove_short', 3), 5, 3, t('The number of characters a word has to be to be searched for, including wildcard characters.'));
-  $output .= form_group(t('Indexing settings'), $group);
+  $form['indexing_settings'] = array(type => 'fieldset', title => t('Indexing settings'));
+  $form['indexing_settings']['info'] = array(type => 'markup', value => '<em>'. t('<p>Changing the setting below will cause the site index to be rebuilt. The search index is not cleared but systematically updated to reflect the new settings. Searching will continue to work but new content won\'t be indexed until all existing content has been re-indexed.</p><p>The default settings should be appropriate for the majority of sites.</p>') .'</em>');
+  $form['indexing_settings']['minimum_word_size'] = array(type => 'textfield', title => t('Minimum word length to index'), default_value => variable_get('minimum_word_size', 3), size => 5, maxlength => 3, description => t('The number of characters a word has to be to be indexed. Words shorter than this will not be searchable.'));
+  $form['indexing_settings']['remove_short'] = array(type => 'textfield', title => t('Minimum word length to search for'), default_value => variable_get('remove_short', 3), size => 5, maxlength => 3, description => t('The number of characters a word has to be to be searched for, including wildcard characters.'));
 
-  return system_settings_form($output);
+  return $form;
 }
 
 /**
@@ -652,13 +647,21 @@ function search_form($action = '', $keys = '', $type = null, $prompt = null) {
     $prompt = t('Enter your keywords');
   }
 
-  $box = '<div class="container-inline">';
-  $box .= form_textfield('', 'keys', $keys, $prompt ? 40 : 30, 255);
-  $box .= form_submit(t('Search'));
-  $box .= '</div>';
-  $output .= form_item($prompt, $box);
+  $form[action] = $action;
+  $form['prompt'] = array(type => 'item', title => $prompt);
+  $form['keys'] = array(type => 'textfield', title => '', default_value => $keys, size => $prompt ? 40 : 30, maxlength => 255);
+  $form['submit'] = array(type => 'submit', value => t('Search'));
+  $form[attributes] = array('class' => 'search-form');
 
-  return form($output, 'post', $action, array('class' => 'search-form'));
+  return drupal_get_form('search_form', $form);
+}
+
+function theme_search_form($form) {
+  $output  = form_render($form['prompt']);
+  $output .= '<div class="container-inline">';
+  $output .= form_render($form);
+  $output .= '</div>';
+  return $output;
 }
 
 /**
@@ -840,6 +843,3 @@ function theme_search_item($item, $type) {
 
   return $output;
 }
-
-
-

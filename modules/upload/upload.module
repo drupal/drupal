@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.52 2005/09/27 15:54:39 dries Exp $
+// $Id: upload.module,v 1.53 2005/10/07 06:09:13 dries Exp $
 
 /**
  * @file
@@ -55,12 +55,6 @@ function upload_menu($may_cache) {
 
   if ($may_cache) {
     $items[] = array(
-      'path' => 'admin/settings/upload', 'title' => t('uploads'),
-      'callback' => 'upload_admin',
-      'access' => user_access('administer site configuration'),
-      'type' => MENU_NORMAL_ITEM
-    );
-    $items[] = array(
       'path' => 'upload/js',
       'callback' => 'upload_js',
       'access' => user_access('upload files'),
@@ -86,23 +80,32 @@ function upload_menu($may_cache) {
   return $items;
 }
 
-function upload_admin() {
-  system_settings_save();
-
-  $group .= form_textfield(t('Maximum resolution for uploaded images'), 'upload_max_resolution', variable_get('upload_max_resolution', 0), 15, 10, t('The maximum allowed image size expressed as WIDTHxHEIGHT (e.g. 640x480). Set to 0 for no restriction.'));
-
-  $output = form_group(t('General settings'), $group);
+function upload_settings() {
+  $form['settings_general'] = array(type => 'fieldset', title => t('General settings'));
+  $form['settings_general']['upload_max_resolution'] = array(
+    type => 'textfield', title => t('Maximum resolution for uploaded images'), default_value => variable_get('upload_max_resolution', 0),
+    size => 15, maxlength => 10, description => t('The maximum allowed image size expressed as WIDTHxHEIGHT (e.g. 640x480). Set to 0 for no restriction.')
+  );
 
   $roles = user_roles(0, 'upload files');
 
   foreach ($roles as $rid => $role) {
-    $group = form_textfield(t('Permitted file extensions'), "upload_extensions_$rid", variable_get("upload_extensions_$rid", "jpg jpeg gif png txt html doc xls pdf ppt pps"), 60, 255, t('Extensions that users in this role can upload. Separate extensions with a space and do not include the leading dot.'));
-    $group .= form_textfield(t('Maximum file size per upload'), "upload_uploadsize_$rid", variable_get("upload_uploadsize_$rid", 1), 5, 5, t('The maximum size of a file a user can upload (in megabytes).'));
-    $group .= form_textfield(t('Total file size per user'), "upload_usersize_$rid", variable_get("upload_usersize_$rid", 10), 5, 5, t('The maximum size of all files a user can have on the site (in megabytes).'));
-    $output .= form_group(t('Settings for %role', array('%role' => theme('placeholder', $role))), $group);
+    $form["settings_role_$rid"] = array(type => 'fieldset', title => t('Settings for %role', array('%role' => theme('placeholder', $role))), collapsible => TRUE, collapsed => TRUE);
+    $form["settings_role_$rid"]["upload_extensions_$rid"] = array(
+      type => 'textfield', title => t('Permitted file extensions'), default_value => variable_get("upload_extensions_$rid", "jpg jpeg gif png txt html doc xls pdf ppt pps"),
+      size => 60, maxlength => 255, description => t('Extensions that users in this role can upload. Separate extensions with a space and do not include the leading dot.')
+    );
+    $form["settings_role_$rid"]["upload_uploadsize_$rid"] = array(
+      type => 'textfield', title => t('Maximum file size per upload'), default_value => variable_get("upload_uploadsize_$rid", 1),
+      size => 5, maxlength => 5, description => t('The maximum size of a file a user can upload (in megabytes).')
+    );
+    $form["settings_role_$rid"]["upload_usersize_$rid"] = array(
+      type => 'textfield', title => t('Total file size per user'), default_value => variable_get("upload_usersize_$rid", 10),
+      size => 5, maxlength => 5, description => t('The maximum size of all files a user can have on the site (in megabytes).')
+    );
   }
 
-  return system_settings_form($output);
+  return $form;
 }
 
 function upload_download() {
@@ -134,17 +137,13 @@ function upload_file_download($file) {
 function upload_nodeapi(&$node, $op, $arg) {
   switch ($op) {
     case 'settings':
-      return form_radios(t('Attachments'), 'upload_'. $node->type, variable_get('upload_'. $node->type, 1), array(t('Disabled'), t('Enabled')));
-
-    case 'form param':
-      if (variable_get("upload_$node->type", 1) && user_access('upload files')) {
-        $output['options'] = array('enctype' => 'multipart/form-data');
-      }
-      break;
-
+      $form['upload_'. $node->type] = array(
+        type => 'radios', title => t('Attachments'), default_value => variable_get('upload_'. $node->type, 1),
+        options => array(t('Disabled'), t('Enabled'))
+      );
+      return $form;
     case 'validate':
       $node->files = upload_load($node);
-
       // Double check existing files:
       if (is_array($node->list)) {
         foreach ($node->list as $key => $value) {
@@ -164,12 +163,10 @@ function upload_nodeapi(&$node, $op, $arg) {
           $node->list[$key] = $file->list;
         }
       }
-
       if (($file = file_check_upload('upload')) && user_access('upload files')) {
         global $user;
 
         $file = _upload_image($file);
-
         // Don't do any checks for uid #1.
         if ($user->uid != 1) {
           // Validate file against all users roles. Only denies an upload when
@@ -221,11 +218,18 @@ function upload_nodeapi(&$node, $op, $arg) {
           $node->files[$key] = $file;
         }
       }
+      for ($x = 0; $x < count($_SESSION['file_uploads']); $x++) {
+        $key = 'upload_' . $x;
+        if ($file = file_check_upload($key)) {
+          $node->files[$key] = $file;
+        } 
+      }
       break;
 
-    case 'form post':
+    case 'form':
       if (variable_get("upload_$node->type", 1) == 1 && user_access('upload files')) {
         $output = upload_form($node);
+        $output[attributes] = array('enctype' => 'multipart/form-data');
       }
       break;
 
@@ -388,9 +392,14 @@ function upload_form($node) {
   drupal_add_js('misc/progress.js');
   drupal_add_js('misc/upload.js');
 
-  $output = '<div id="fileop-wrapper">'. _upload_form($node) .'</div>';
+  $form['attachments'] = array(
+    type => 'fieldset', title => t('File attachments'), collapsible => TRUE, collapsed => empty($node->files),
+    description => t('Changes made to the attachments are not permanent until you save this post. The first "listed" file will be included in RSS feeds.'),
+    prefix => '<div class="attachments">', suffix => '</div>', weight => 15
+  );
+  $form['attachments'] += _upload_form($node);
 
-  return '<div class="attachments">'. form_group_collapsible(t('File attachments'), $output, empty($node->files), t('Changes made to the attachments are not permanent until you save this post. The first "listed" file will be included in RSS feeds.')) .'</div>';
+  return $form;
 }
 
 function _upload_form($node) {
@@ -398,30 +407,59 @@ function _upload_form($node) {
   $rows = array();
   $output = '';
 
-  if (is_array($node->files)) {
+  $form[theme] = 'upload_form_new';
+  if (is_array($node->files) && count($node->files)) {
+    $form['current'][theme] = 'upload_form_current';
+    $form['current']['description'][tree] = TRUE;
     foreach ($node->files as $key => $file) {
-      $rows[] = array(
-        form_checkbox('', "remove][$key", 1, $file->remove),
-        form_checkbox('', "list][$key", 1, $file->list),
-        form_textfield('', "description][$key", $file->description ? $file->description : $file->filename, 60, 256) ."<br /><small>". file_create_url(($file->fid ? $file->filepath : file_create_filename($file->filename, file_create_path()))) ."</small>",
-        format_size($file->filesize)
-      );
+      $options[$key] = '';
+      if ($file->remove) {
+        $remove[] = $key;
+      }
+      if ($file->list) {
+        $list[] = $key;
+      }
+      $description = "<small>". file_create_url(($file->fid ? $file->filepath : file_create_filename($file->filename, file_create_path()))) ."</small>";
+      $form['current']['description'][$key] = array(type => 'textfield', default_value => $file->description ? $file->description : $file->filename, size => 60, maxlength => 256, description => $description );
+      $form['current']['size'][$key] = array(type => 'markup', value => format_size($file->filesize));
     }
-  }
-
-  if (count($node->files)) {
-    $output .= theme('table', $header, $rows);
+    $form['current']['remove'] = array(type => 'checkboxes', options => $options, default_value => $remove);
+    $form['current']['list'] = array(type => 'checkboxes', options => $options, default_value => $list);
+    $form['files'][$key] = array(type => 'hidden', value => 1);
   }
 
   if (user_access('upload files')) {
-    $output .= '<div id="fileop-hide">';
-    $output .= form_file(t('Attach new file'), "upload", 40);
-    $output .= form_button(t('Attach'), 'fileop');
+
+    $form['new']['upload'] = array(type => 'file', title => t('Attach new file'), size => 40);
+    $form['new']['fileop'] = array(type => 'button', value => t('Attach'), name=> 'fileop', attributes => array('id' => 'fileop'));
     // The class triggers the js upload behaviour.
-    $output .= form_hidden('fileop', url('upload/js', NULL, NULL, TRUE), 'edit', array('class' => 'upload'));
-    $output .= '</div>';
+    $form['fileop'] = array(type => 'hidden', value => url('upload/js', NULL, NULL, TRUE), attributes => array('class' => 'upload'));
   }
 
+  return $form;
+}
+
+function theme_upload_form_new($form) {
+  $output .= '<div id="fileop-wrapper">' . "\n";
+  $output .= '<div id="fileop-hide">' . "\n";
+  $output .= form_render($form) . "\n";
+  $output .= "</div>\n";
+  $output .= "</div>\n";
+  return $output;
+}
+
+function theme_upload_form_current(&$form) {
+  $header = array(t('Delete'), t('List'), t('Description'), t('Size'));
+  foreach (element_children($form['description']) as $key) {
+    $row = array();
+    $row[] = form_render($form['remove'][$key]);
+    $row[] = form_render($form['list'][$key]);
+    $row[] = form_render($form['description'][$key]);
+    $row[] = form_render($form['size'][$key]);
+    $rows[] = $row;
+  }
+  $output = theme('table', $header, $rows);
+  $output .= form_render($form);
   return $output;
 }
 
@@ -466,7 +504,9 @@ function upload_js() {
   // We only do the upload.module part of the node validation process.
   $node = array2object($_POST['edit']);
   upload_nodeapi($node, 'validate', NULL);
-  $output = theme('status_messages') . _upload_form($node);
+  $form = _upload_form($node);
+  $form = _form_builder($form);
+  $output = theme('status_messages') . form_render($form);
 
   // We send the updated file attachments form.
   print drupal_call_js('window.parent.iframeHandler', $output);

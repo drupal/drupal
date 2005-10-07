@@ -1,5 +1,5 @@
 <?php
-// $Id: phptemplate.engine,v 1.17 2005/09/09 05:32:31 dries Exp $
+// $Id: phptemplate.engine,v 1.18 2005/10/07 06:11:06 dries Exp $
 
 /**
  * @file
@@ -199,10 +199,7 @@ function phptemplate_page($content) {
     'primary_links'       => theme_get_setting('primary_links'),
     'site_name'           => (theme_get_setting('toggle_name') ? variable_get('site_name', 'Drupal') : ''),
     'site_slogan'         => (theme_get_setting('toggle_slogan') ? variable_get('site_slogan', '') : ''),
-    'search_box'          => theme_get_setting('toggle_search'),
-    'search_button_text'  => t('search'),
-    'search_description'  => t('Enter the terms you wish to search for.'),
-    'search_url'          => url('search'),
+    'search_box'          => (theme_get_setting('toggle_search') ? search_box() : ''),
     'secondary_links'     => theme_get_setting('secondary_links'),
     'sidebar_left'        => $sidebar_left,
     'sidebar_right'       => $sidebar_right,

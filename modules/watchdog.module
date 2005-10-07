@@ -1,5 +1,5 @@
 <?php
-// $Id: watchdog.module,v 1.127 2005/09/24 07:53:26 dries Exp $
+// $Id: watchdog.module,v 1.128 2005/10/07 06:09:13 dries Exp $
 
 /**
  * @file
@@ -77,13 +77,18 @@ function watchdog_overview() {
     $_SESSION['watchdog_overview_filter'] = 'all';
   }
 
-  $op = $_POST['op'];
-  if ($op == t('Filter') && isset($_POST['edit']['filter'])) {
-    $_SESSION['watchdog_overview_filter'] = $_POST['edit']['filter'];
+  if (empty($_SESSION['watchdog_overview_filter'])) {
+    $_SESSION['watchdog_overview_filter'] = 'all';
   }
 
-  $form  = form_select(t('Filter by message type'), 'filter', $_SESSION['watchdog_overview_filter'], $names);
-  $form .= form_submit(t('Filter'));
+  $form['filter'] = array(
+    type => 'select',
+    title => t('Filter by message type'),
+    options => $names,
+    default_value => $_SESSION['watchdog_overview_filter']
+  );
+
+  $form['submit'] = array(type => 'submit', value =>t('Filter'));
 
   $header = array(
     ' ',
@@ -117,11 +122,20 @@ function watchdog_overview() {
     $rows[] = array(array('data' => t('No log messages available.'), 'colspan' => '7'));
   }
 
-  $output  = '<div class="container-inline">'. form($form) .'</div>';
+  $output  = drupal_get_form('watchdog_form_overview', $form);
   $output .= theme('table', $header, $rows);
   $output .= theme('pager', NULL, 50, 0, tablesort_pager());
 
   return $output;
+}
+
+function theme_watchdog_form_overview($form) {
+  return '<div class="container-inline">'. form_render($form) .'</div>';
+}
+
+function watchdog_form_overview_execute($form_id, $form) {
+  global $form_values;
+  $_SESSION['watchdog_overview_filter'] = $form_values['filter'];
 }
 
 /**

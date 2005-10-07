@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.65 2005/09/24 07:53:26 dries Exp $
+// $Id: path.module,v 1.66 2005/10/07 06:09:13 dries Exp $
 
 /**
  * @file
@@ -89,10 +89,7 @@ function path_admin() {
  * Menu callback; handles pages for creating and editing URL aliases.
  */
 function path_admin_edit($pid = 0) {
-  if ($_POST['op'] == t('Create new alias') || $_POST['op'] == t('Update alias')) {
-    $output = path_save($_POST['edit']);
-  }
-  elseif ($pid) {
+  if ($pid) {
     $alias = path_load($pid);
     drupal_set_title($alias['dst']);
     $output = path_form(path_load($pid));
@@ -161,18 +158,18 @@ function path_set_alias($path = NULL, $alias = NULL, $pid = NULL) {
  */
 function path_form($edit = '') {
 
-  $form .= form_textfield(t('Existing system path'), 'src', $edit['src'], 60, 64, t('Specify the existing path you wish to alias. For example: node/28, forum/1, taxonomy/term/1+2.'));
-  $form .= form_textfield(t('New path alias'), 'dst', $edit['dst'], 60, 64, t('Specify an alternative path by which this data can be accessed.  For example, type "about" when writing an about page.  Use a relative path and don\'t add a trailing slash or the URL alias won\'t work.'));
+  $form['src'] = array(type => 'textfield', title => t('Existing system path'), default_value => $edit['src'], size => 60, maxlength => 64, description => t('Specify the existing path you wish to alias. For example: node/28, forum/1, taxonomy/term/1+2.'));
+  $form['dst'] = array(type => 'textfield', default_value => $edit['dst'], size => 60, maxlength => 64, description => t('Specify an alternative path by which this data can be accessed.  For example, type "about" when writing an about page.  Use a relative path and don\'t add a trailing slash or the URL alias won\'t work.'));
 
   if ($edit['pid']) {
-    $form .= form_hidden('pid', $edit['pid']);
-    $form .= form_submit(t('Update alias'));
+    $form['pid'] = array(type => 'hidden', value => $edit['pid']);
+    $form['submit'] = array(type => 'submit', value => t('Update alias'));
   }
   else {
-    $form .= form_submit(t('Create new alias'));
+    $form['submit'] = array(type => 'submit', value => t('Create new alias'));
   }
 
-  return form($form);
+  return drupal_get_form('path_form', $form);
 }
 
 /**
@@ -194,12 +191,12 @@ function path_nodeapi(&$node, $op, $arg) {
         }
         break;
 
-      case 'form pre':
-        $output = form_textfield(t('Path alias'), 'path', $node->path, 60, 250, t('Optionally specify an alternative URL by which this node can be accessed.  For example, type "about" when writing an about page.  Use a relative path and don\'t add a trailing slash or the URL alias won\'t work.'));
+      case 'form':
+        $form['path'] = array(type => 'textfield', title => t('Path alias'), weight => -16, default_value => $node->path, size => 60, maxlength => 250, description => t('Optionally specify an alternative URL by which this node can be accessed.  For example, type "about" when writing an about page.  Use a relative path and don\'t add a trailing slash or the URL alias won\'t work.'));
         if ($node->path) {
-          $output .= form_hidden('pid', db_result(db_query("SELECT pid FROM {url_alias} WHERE dst = '%s'", $node->path)));
+          $form['pid'] = array(type => 'hidden', value => db_result(db_query("SELECT pid FROM {url_alias} WHERE dst = '%s'", $node->path)));
         }
-        return $output;
+        return $form;
 
       case 'load':
         $path = "node/$node->nid";
@@ -275,7 +272,8 @@ function path_load($pid) {
 /**
  * Verify that a new URL alias is valid, and save it to the database.
  */
-function path_save($edit) {
+function path_form_execute() {
+  $edit = $GLOBALS['form_values'];
   $src = $edit['src'];
   $dst = $edit['dst'];
   $pid = $edit['pid'];

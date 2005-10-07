@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.170 2005/09/23 08:47:13 dries Exp $
+// $Id: poll.module,v 1.171 2005/10/07 06:09:13 dries Exp $
 
 /**
  * @file
@@ -123,7 +123,7 @@ function poll_validate(&$node) {
 function poll_form(&$node) {
   $admin = user_access('administer nodes');
 
-  $output = form_textfield(t('Question'), 'title', $node->title, 60, 128, NULL, NULL, TRUE);
+  $form['title'] = array(type => 'textfield', title => t('Question'), size => 60, maxlength => 128, required => TRUE, default_value => $node->title, weight => -1);
 
   if (function_exists('taxonomy_node_form')) {
     $output .= implode('', taxonomy_node_form('poll', $node));
@@ -138,34 +138,29 @@ function poll_form(&$node) {
     $node->choices *= 2;
   }
 
-  $output .= '<div class="poll-form">';
-
   // Poll choices
   $opts = drupal_map_assoc(range(2, $node->choices * 2 + 5));
+  $form['choice'] = array(type => 'fieldset', title => t('Choices'), prefix => '<div class="poll-form">', suffix => '</div>', tree => TRUE);
   for ($a = 0; $a < $node->choices; $a++) {
-    $group1 .= form_textfield(t('Choice %n', array('%n' => ($a + 1))), "choice][$a][chtext", $node->choice[$a]['chtext'], 60, 127);
+    $form['choice'][$a]['chtext'] = array(type => 'textfield', title => t('Choice %n', array('%n' => ($a + 1))), default_value => $node->choice[$a]['chtext'], size => 60, maxlength => 127);
     if ($admin) {
-      $group1 .= form_textfield(t('Votes for choice %n', array('%n' => ($a + 1))), "choice][$a][chvotes", (int)$node->choice[$a]['chvotes'], 5, 7);
+      $form['choice'][$a]['chvotes'] = array(type => 'textfield', title => t('Votes for choice %n', array('%n' => ($a + 1))), default_value => (int)$node->choice[$a]['chvotes'], size => 5, maxlength => 7);
     }
   }
-  $group1 .= form_hidden('choices', $node->choices);
-  $group1 .= form_checkbox(t('Need more choices'), 'morechoices', 1, 0, t("If the amount of boxes above isn't enough, check this box and click the Preview button below to add some more."));
-  $output .= form_group(t('Choices'), $group1);
-
+  $form['choices'] = array(type => 'hidden', value => $node->choices);
+  $form['morechoices'] = array(type => 'checkbox', title => t('Need more choices'), return_value => 1, default_value => 0, description => t("If the amount of boxes above isn't enough, check this box and click the Preview button below to add some more."));
 
   // Poll attributes
   $_duration = array(0 => t('Unlimited')) + drupal_map_assoc(array(86400, 172800, 345600, 604800, 1209600, 2419200, 4838400, 9676800, 31536000), "format_interval");
   $_active = array(0 => t('Closed'), 1 => t('Active'));
 
   if ($admin) {
-    $group2 .= form_radios(t('Poll status'), 'active', isset($node->active) ? $node->active : 1, $_active, t('When a poll is closed, visitors can no longer vote for it.'));
+    $form['settings'] = array(type => 'fieldset', title => t('Settings'), suffix => '</div>');
+    $form['settings']['active'] = array(type => 'radios', title => t('Poll status'), default_value => isset($node->active) ? $node->active : 1, options => $_active, description => t('When a poll is closed, visitors can no longer vote for it.'));
   }
-  $group2 .= form_select(t('Poll duration'), 'runtime', $node->runtime ? $node->runtime : 0, $_duration, t('After this period, the poll will be closed automatically.'));
+  $form['settings']['runtime'] = array(type => 'select', title => t('Poll duration'), default_value => $node->runtime ? $node->runtime : 0, options => $_duration, description => t('After this period, the poll will be closed automatically.'));
 
-  $output .= form_group(t('Settings'), $group2);
-  $output .= '</div>';
-
-  return $output;
+  return $form;
 }
 
 function poll_insert($node) {
@@ -306,24 +301,36 @@ function poll_teaser($node) {
  * Generates the voting form for a poll.
  */
 function poll_view_voting(&$node, $teaser, $page, $block) {
-  $output = '<div class="poll">';
-
-  $form = '<div class="vote-form">';
-  $form .= '<div class="choices">';
+  if ($_POST['op'] == t('Vote')) {
+    poll_vote($node);
+  }
+  
   if ($node->choice) {
     $list = array();
     foreach ($node->choice as $i => $choice) {
       $list[$i] = check_plain($choice['chtext']);
     }
-    $form .= form_radios($page ? '' : check_plain($node->title), 'choice', -1, $list);
+    $form['choice'] = array(type => 'radios', title => $page ? '' : check_plain($node->title), default_value => -1, options => $list);
   }
-  $form .= '</div>';
-  $form .= form_hidden('nid', $node->nid);
-  $form .= form_submit(t('Vote'), 'vote') .'</div>';
+  $form['nid'] = array(type => 'hidden', value => $node->nid);
+  $form['vote'] = array(type => 'submit', value => t('Vote'));
+  return drupal_get_form('poll_view_voting', $form);
+}
 
-  $output .= form($form, 'post', url('poll/vote/'. $node->nid));
+/**
+ * Themes the voting form for a poll.
+ */
+function theme_poll_view_voting($form) {
+  $output .= '<div class="poll">';
+  $output .= '  <div class="vote-form">';
+  $output .= '    <div class="choices">';
+  $output .= form_render($form['choice']);
+  $output .= '    </div>';
+  $output .= form_render($form['nid']);
+  $output .= form_render($form['vote']);
+  $output .= '  </div>';
+  $output .= form_render($form);
   $output .= '</div>';
-
   return $output;
 }
 
@@ -378,7 +385,7 @@ function poll_results() {
  * Callback for processing a vote
  */
 function poll_vote(&$node) {
-  $nid = arg(2);
+  $nid = arg(1);
   if ($node = node_load($nid)) {
     $edit = $_POST['edit'];
     $choice = $edit['choice'];

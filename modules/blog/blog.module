@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.230 2005/09/28 12:55:07 dries Exp $
+// $Id: blog.module,v 1.231 2005/10/07 06:09:13 dries Exp $
 
 /**
  * @file
@@ -42,7 +42,11 @@ function blog_access($op, $node) {
  */
 function blog_user($type, &$edit, &$user) {
   if ($type == 'view' && user_access('edit own blog', $user)) {
-    return array(t('History') => array('blog' => form_item(t('Blog'), l(t('view recent blog entries'), "blog/$user->uid", array('title' => t("Read %username's latest blog entries.", array('%username' => $user->name)))))));
+    $form['blog'] = array(
+      type => 'item', title => t('Blog'), 
+      value => l(t('view recent blog entries'), "blog/$user->uid", array('title' => t("Read %username's latest blog entries.", array('%username' => $user->name))))
+    );
+    return array(t('History') => $form);
   }
 }
 
@@ -196,7 +200,6 @@ function blog_form(&$node) {
   global $nid;
   $iid = $_GET['iid'];
 
-  $output = form_textfield(t('Title'), 'title', $node->title, 60, 128, NULL, NULL, TRUE);
 
   if (empty($node->body)) {
     /*
@@ -213,16 +216,17 @@ function blog_form(&$node) {
       // Note: $item->description has been validated on aggregation.
       $node->body = '<a href="'. check_url($item->link) .'">'. check_plain($item->title) .'</a> - <em>'. $item->description .'</em> [<a href="'. check_url($item->flink) .'">'. check_plain($item->ftitle) ."</a>]\n";
     }
+
   }
 
   if (function_exists('taxonomy_node_form')) {
-    $output .= implode('', taxonomy_node_form('blog', $node));
+    $form['taxonomy'] = taxonomy_node_form('blog', $node);
   }
 
-  $output .= form_textarea(t('Body'), 'body', $node->body, 60, 20, '', NULL, TRUE);
-  $output .= filter_form('format', $node->format);
-
-  return $output;
+  $form['title'] = array(type => 'textfield', title => t('Title'), size => 60, maxlength => 128, required => TRUE, default_value => $node->title);
+  $form['body'] = array(type => 'textarea', title => t('Body'), default_value => $node->body, required => TRUE);
+  $form = array_merge($form, filter_form($node->format));
+  return $form;
 }
 
 /**

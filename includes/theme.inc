@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.260 2005/09/29 08:02:55 dries Exp $
+// $Id: theme.inc,v 1.261 2005/10/07 06:09:13 dries Exp $
 
 /**
  * @file
@@ -956,55 +956,6 @@ function theme_blocks($region) {
   $output .= drupal_get_content($region);
 
   return $output;
-}
-
-/**
- * Output a confirmation form
- *
- * This function outputs a complete form for confirming an action. A link is
- * offered to go back to the item that is being changed in case the user changes
- * his/her mind.
- *
- * You should use $_POST['edit'][$name] (where $name is usually 'confirm') to
- * check if the confirmation was successful.
- *
- * @param $question
- *   The question to ask the user (e.g. "Are you sure you want to delete the
- *   block <em>foo</em>?").
- * @param $path
- *   The page to go to if the user denies the action.
- * @param $description
- *   Additional text to display (defaults to "This action cannot be undone.").
- * @param $yes
- *   A caption for the button which confirms the action (e.g. "Delete",
- *   "Replace", ...).
- * @param $no
- *   A caption for the link which denies the action (e.g. "Cancel").
- * @param $extra
- *   Additional HTML to inject into the form, for example form_hidden()s.
- * @param $name
- *   The internal name used to refer to the confirmation item.
- * @return
- *   A themed HTML string representing the form.
- */
-function theme_confirm($question, $path, $description = NULL, $yes = NULL, $no = NULL, $extra = NULL, $name = 'confirm') {
-  drupal_set_title($question);
-
-  if (is_null($description)) {
-    $description = t('This action cannot be undone.');
-  }
-
-  $output .= '<p>'. $description ."</p>\n";
-  if (!is_null($extra)) {
-    $output .= $extra;
-  }
-  $output .= '<div class="container-inline">';
-  $output .= form_submit($yes ? $yes : t('Confirm'));
-  $output .= l($no ? $no : t('Cancel'), $path);
-  $output .= "</div>\n";
-
-  $output .= form_hidden($name, 1);
-  return form($output, 'post', NULL, array('class' => 'confirmation'));
 }
 
 /**

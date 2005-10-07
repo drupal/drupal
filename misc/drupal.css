@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.120 2005/09/07 20:56:00 dries Exp $ */
+/* $Id: drupal.css,v 1.121 2005/10/07 06:09:13 dries Exp $ */
 
 /*
 ** HTML elements
@@ -629,3 +629,8 @@ html.js fieldset.collapsed legend a {
   display: block;
 }
 
+/*
+** Temporary CSS for porting of drupal forms.
+*/
+form { border: 3px solid red; }
+form.form-api { border : 0px; }

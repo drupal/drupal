@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.36 2005/09/27 15:11:07 dries Exp $
+// $Id: menu.module,v 1.37 2005/10/07 06:09:13 dries Exp $
 
 /**
  * @file
@@ -98,7 +98,7 @@ function menu_nodeapi(&$node, $op) {
 
   if (user_access('administer menu')) {
     switch ($op) {
-      case 'form post':
+      case 'form':
         $edit = $_POST['edit'];
         $edit['nid'] = $node->nid;
         return menu_node_form($edit);
@@ -153,12 +153,10 @@ function menu_reset() {
       drupal_goto('admin/menu');
       break;
     default:
-      $output = theme('confirm',
-                      t('Are you sure you want to reset all menu items to their default settings?'),
-                      'admin/menu',
-                      t('Any custom additions or changes to the menu will be lost.'),
-                      t('Reset all'));
-      return $output;
+      return confirm_form('menu_confirm_reset', array(),
+        t('Are you sure you want to reset all menu items to their default settings?'),
+        'admin/menu', t('Any custom additions or changes to the menu will be lost.'),
+        t('Reset all'));
   }
 }
 
@@ -200,12 +198,10 @@ function menu_reset_item($mid) {
       break;
     default:
       $title = db_result(db_query('SELECT title FROM {menu} WHERE mid = %d', $mid));
-      $output = theme('confirm',
-                      t('Are you sure you want to reset the item %item to its default values?', array('%item' => theme('placeholder', $title))),
-                      'admin/menu',
-                      t('Any customizations will be lost. This action cannot be undone.'),
-                      t('Reset'));
-      return $output;
+      return confirm_form('menu_item_confirm_reset', array(),
+        t('Are you sure you want to reset the item %item to its default values?', array('%item' => theme('placeholder', $title))),
+        'admin/menu', t('Any customizations will be lost. This action cannot be undone.'),
+        t('Reset'));
   }
 }
 
@@ -237,8 +233,7 @@ function menu_delete_item($mid) {
       else {
         $message = t('Are you sure you want to delete the custom menu item %item?', array('%item' => theme('placeholder', $menu->title)));
       }
-      $output = theme('confirm', $message, 'admin/menu', t('This action cannot be undone.'), t('Delete'));
-      return $output;
+      return confirm_form('menu_confirm_delete', $form, $message, 'admin/menu', t('This action cannot be undone.'), t('Delete'));
   }
 }
 
@@ -303,16 +298,16 @@ function menu_edit_item($mid = 0) {
 function menu_edit_item_form($edit) {
   $menu = menu_get_menu();
 
-  $form .= form_textfield(t('Title'), 'title', $edit['title'], 60, 128, t('The name of the menu.'), NULL, TRUE);
+  $form['title'] = array(type => 'textfield', title => t('Title'), default_value => $edit['title'], size => 60, maxlength => 128, description => t('The name of the menu.'), required => TRUE);
 
   if ($edit['pid'] == 0) {
     // Display a limited set of fields for menus (not items).
-    $form .= form_hidden('path', '');
-    $form .= form_hidden('pid', 0);
-    $form .= form_hidden('weight', 0);
+    $form['path'] = array(type => 'hidden', value => '');
+    $form['pid'] = array(type => 'hidden', value => 0);
+    $form['weight'] = array(type => 'hidden', value => 0);
   }
   else {
-    $form .= form_textfield(t('Description'), 'description', $edit['description'], 60, 128, t('The description displayed when hovering over a menu item.'));
+    $form['description'] = array(type => textfield, title => t('Description'), default_value => $edit['description'], size => 60, maxlength => 128, description => t('The description displayed when hovering over a menu item.'));
 
     $path_description = t('The Drupal path this menu item links to.');
     if (isset($edit['path']) && array_key_exists($edit['path'], $menu['path index']) && $menu['path index'][$edit['path']] != $edit['mid']) {
@@ -322,34 +317,34 @@ function menu_edit_item_form($edit) {
     }
 
     if ($edit['type'] & MENU_CREATED_BY_ADMIN) {
-      $form .= form_textfield(t('Path'), 'path', $edit['path'], 60, 128, $path_description, NULL, TRUE);
+      $form['path'] = array(type => 'textfield', title => t('Path'), default_value => $edit['path'], size => 60, maxlength => 128, description => $path_description, required => TRUE);
     }
     else {
-      $form .= form_item(t('Path'), l($edit['path'], $edit['path']));
-      $form .= form_hidden('path', $edit['path']);
+      $form['_path'] = array(type => 'item', title => t('Path'), title => l($edit['path'], $edit['path']));
+      $form['path'] = array(type => 'hidden', value => $edit['path']);
     }
-
-    $form .= form_checkbox(t('Expanded'), 'expanded', 1, ($edit['type'] & MENU_EXPANDED), t('If selected and this menu item has children, the menu will always appear expanded.'));
+    $expanded = $edit['type'] & MENU_EXPANDED ? 1 : 0;
+    $form['expanded'] = array(type => 'checkbox', title => t('Expanded'), default_value => $expanded, description => t('If selected and this menu item has children, the menu will always appear expanded.'));
 
     // Generate a list of possible parents (not including this item or descendants).
     $options = menu_parent_options($edit['mid']);
-    $form .= form_select(t('Parent item'), 'pid', $edit['pid'], $options);
+    $form['pid'] = array(type => 'select', title => t('Parent item'), default_value =>  $edit['pid'], options => $options);
 
-    $form .= form_weight(t('Weight'), 'weight', $edit['weight'], 10, t('Optional. In the menu, the heavier items will sink and the lighter items will be positioned nearer the top.'));
+    $form['weight'] = array(type => 'weight', title => t('Weight'), default_value => $edit['weight'], delta => 10, description => t('Optional. In the menu, the heavier items will sink and the lighter items will be positioned nearer the top.'));
   }
 
-  $form .= form_submit(t('Submit'));
+  $form['submit'] = array(type => 'submit', value => t('Submit'));
 
-  $form .= form_hidden('mid', $edit['mid']);
+  $form['mid'] = array(type => 'hidden', value => $edit['mid']);
 
   // Always enable menu items (but not menus) when editing them.
   if (!($edit['type'] & MENU_IS_ROOT)) {
     $edit['type'] |= MENU_VISIBLE_IN_TREE | MENU_VISIBLE_IN_BREADCRUMB;
   }
 
-  $form .= form_hidden('type', $edit['type']);
+  $form['type'] = array(type => 'hidden', value => $edit['type']);
 
-  return form($form);
+  return drupal_get_form('menu_edit_item_form', $form);
 }
 
 /**
@@ -548,20 +543,23 @@ function menu_node_form($edit = array()) {
     }
   }
 
-  $group = form_textfield(t('Title'), 'menu][title', $item['title'], 60, 128, t('The name to display for this link.'));
+  $form['menu'] = array(type => 'fieldset', title => t('Menu item settings'), collapsible => TRUE, collapsed => TRUE, tree => TRUE);
+
+  $form['menu']['title'] = array(type => 'textfield', title => t('Title'), default_value => $item['title'], size => 60, maxlength => 128, description => t('The name to display for this link.'));
+
   // Generate a list of possible parents (not including this item or descendants).
   $options = menu_parent_options($edit['mid']);
-  $group .= form_select(t('Parent item'), 'menu][pid', $item['pid'], $options);
-  $group .= form_hidden('menu][description', $item['description']);
-  $group .= form_hidden('menu][path', $item['path']);
-  $group .= form_hidden('menu][weight', ($item['weight']) ? $item['weight'] : 0);
-  $group .= form_hidden('menu][mid', ($item['mid']) ? $item['mid'] : 0);
-  $group .= form_hidden('menu][type', ($item['type']) ? $item['type'] : MENU_CUSTOM_ITEM);
+  $form['menu']['pid'] = array(type => select, title => t('Parent item'), default_value => $item['pid'], options => $options);
+  $form['menu']['description'] = array(type => 'hidden', value => $item['description']);
+  $form['menu']['path'] = array(type => 'hidden', value => $item['path']);
+  $form['menu']['weight'] = array(type => 'hidden', value => $item['weight'] ? $item['weight'] : 0);
+
+  $form['menu']['mid'] = array(type => 'hidden', value => $item['mid'] ? $item['mid'] : 0);
+  $form['menu']['type'] = array(type => 'hidden', value => $item['type'] ? $item['type'] : MENU_CUSTOM_ITEM);
 
   if ($item['mid'] > 0) {
-    $group .= form_checkbox(t('Check to delete this menu item.'), 'menu][delete', 1, $item['delete'], null);
+    $form['menu']['delete'] = array(type => 'checkbox', title => t('Check to delete this menu item.'), default_value => $item['delete']);
   }
-  $form = form_group_collapsible(t('Menu item settings'), $group, TRUE);
 
   return $form;
 }

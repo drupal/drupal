@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.255 2005/09/24 07:53:26 dries Exp $
+// $Id: aggregator.module,v 1.256 2005/10/07 06:09:13 dries Exp $
 
 /**
  * @file
@@ -72,12 +72,30 @@ function aggregator_settings() {
   $items = array(0 => t('none')) + drupal_map_assoc(array(3, 5, 10, 15, 20, 25), '_aggregator_items');
   $period = drupal_map_assoc(array(3600, 10800, 21600, 32400, 43200, 86400, 172800, 259200, 604800, 1209600, 2419200, 4838400, 9676800), 'format_interval');
 
-  $output = '';
-  $output .= form_textfield(t('Allowed HTML tags'), 'aggregator_allowed_html_tags', variable_get('aggregator_allowed_html_tags', '<a> <b> <br> <dd> <dl> <dt> <em> <i> <li> <ol> <p> <strong> <u> <ul>'), 80, 255, t('The list of tags which are allowed in feeds, i.e., which will not be removed by Drupal.'));
-  $output .= form_select(t('Items shown in sources and categories pages'), 'aggregator_summary_items', variable_get('aggregator_summary_items', 3), $items, t('The number of items which will be shown with each feed or category in the feed and category summary pages.'));
-  $output .= form_select(t('Discard news items older than'), 'aggregator_clear', variable_get('aggregator_clear', 9676800), $period, t('Older news items will be automatically discarded.  Requires crontab.'));
-  $output .= form_radios(t('Category selection type'), 'aggregator_category_selector', variable_get('aggregator_category_selector', 'check'), array('check' => t('checkboxes'), 'select' => t('multiple selector')), t('The type of category selection widget which is shown on categorization pages. Checkboxes are easier to use; a multiple selector is good for working with large numbers of categories.'));
-  return $output;
+  $form['aggregator_allowed_html_tags'] = array(
+    type => 'textfield', title => t('Allowed HTML tags'), size => 80, maxlength => 255,
+    default_value => variable_get('aggregator_allowed_html_tags', '<a> <b> <br> <dd> <dl> <dt> <em> <i> <li> <ol> <p> <strong> <u> <ul>'), 
+    description => t('The list of tags which are allowed in feeds, i.e., which will not be removed by Drupal.')
+  );
+
+  $form['aggregator_summary_items'] = array(
+    type => 'select', title => t('Items shown in sources and categories pages') , 
+    default_value => variable_get('aggregator_summary_items', 3), options => $items, 
+    description =>  t('The number of items which will be shown with each feed or category in the feed and category summary pages.')
+  );
+
+  $form['aggregator_clear'] = array(
+    type => 'select', title => t('Discard news items older than'), 
+    default_value => variable_get('aggregator_clear', 9676800), options => $period, 
+    description => t('Older news items will be automatically discarded.  Requires crontab.')
+  );
+  
+  $form['aggregator_category_selector'] = array(
+    type => 'radios', title => t('Category selection type'), default_value => variable_get('aggregator_category_selector', 'check'),
+    options => array('check' => t('checkboxes'), 'select' => t('multiple selector')),
+    description => t('The type of category selection widget which is shown on categorization pages. Checkboxes are easier to use; a multiple selector is good for working with large numbers of categories.')
+  );
+  return $form;
 }
 
 /**
@@ -219,9 +237,8 @@ function aggregator_block($op, $delta = 0, $edit = array()) {
       else {
         $value = db_result(db_query('SELECT block FROM {aggregator_feed} WHERE fid = %d', $id));
       }
-
-      $output = form_select(t('Number of news items in block'), 'block', $value, drupal_map_assoc(array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)));
-      return $output;
+      $form['block'] = array(type => 'select', title => t('Number of news items in block'), default_value => $value, options => drupal_map_assoc(array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)));
+      return $form;
     }
     else if ($op == 'save') {
       list($type, $id) = explode('-', $delta);
@@ -658,16 +675,16 @@ function aggregator_save_item($edit) {
 }
 
 function aggregator_form_category($edit = array()) {
-  $form  = form_textfield(t('Title'), 'title', $edit['title'], 60, 64);
-  $form .= form_textarea(t('Description'), 'description', $edit['description'], 60, 5);
-  $form .= form_submit(t('Submit'));
+  $form['title'] = array(type => 'textfield', title => t('Title'), default_value => $edit['title'], size => 60, maxlength =>  64);
+  $form['description'] = array(type => 'textarea', title => t('Description'), default_value => $edit['description'], cols => 60, rows =>  5);
+  $form['submit'] = array(type => 'submit', value =>t('Submit'));
 
   if ($edit['cid']) {
-    $form .= form_submit(t('Delete'));
-    $form .= form_hidden('cid', $edit['cid']);
+    $form['delete'] = array(type => 'submit', value =>t('Delete'));
+    $form['cid'] = array(type => 'hidden', value => $edit['cid']);
   }
 
-  return form($form);
+  return drupal_get_form('aggregator_form_category', $form);
 }
 
 function aggregator_save_category($edit) {
@@ -691,9 +708,10 @@ function aggregator_form_feed($edit = array()) {
     $edit['refresh'] = 3600;
   }
 
-  $form .= form_textfield(t('Title'), 'title', $edit['title'], 60, 64, t('The name of the feed; typically the name of the web site you syndicate content from.'));
-  $form .= form_textfield(t('URL'), 'url', $edit['url'], 60, 255, t('The fully-qualified URL of the feed.'));
-  $form .= form_select(t('Update interval'), 'refresh', $edit['refresh'], $period, t('The refresh interval indicating how often you want to update this feed.  Requires crontab.'));
+  
+  $form['title'] = array(type => 'textfield', title => t('Title'), default_value => $edit['title'], size => 60, maxlength =>  64, description => t('The name of the feed; typically the name of the web site you syndicate content from.'));
+  $form['url'] = array(type => 'textfield', title => t('URL'), default_value => $edit['url'], size => 60, maxlength => 255, description => t('The fully-qualified URL of the feed.'));
+  $form['refresh'] = array(type => 'select', title => t('Update interval'), default_value => $edit['refresh'], options => $period, description => t('The refresh interval indicating how often you want to update this feed.  Requires crontab.'));
 
   // Handling of categories:
   $options = array();
@@ -704,17 +722,16 @@ function aggregator_form_feed($edit = array()) {
     if ($category->fid) $values[] = check_plain($category->cid);
   }
   if ($options) {
-    $form .= form_checkboxes(t('Categorize news items'), 'category', $values, $options, t('New items in this feed will be automatically filed in the checked categories as they are received.'));
+    $form['category'] = array(type => 'checkboxes', title => t('Categorize news items'), default_value => $values, options => $options, description => t('New items in this feed will be automatically filed in the checked categories as they are received.'));
   }
+  $form['submit'] = array(type => 'submit', value =>t('Submit'));
 
-  // Form buttons:
-  $form .= form_submit(t('Submit'));
   if ($edit['fid']) {
-    $form .= form_submit(t('Delete'));
-    $form .= form_hidden('fid', $edit['fid']);
+    $form['delete'] = array(type => 'submit', value =>t('Delete'));
+    $form['fid'] = array(type => 'hidden', value => $edit['fid']);
   }
 
-  return form($form);
+  return drupal_get_form('aggregator_form_feed', $form);
 }
 
 function aggregator_save_feed($edit) {
@@ -786,7 +803,6 @@ function aggregator_view() {
 }
 
 function aggregator_edit() {
-
   if ($_POST['op'] == t('Submit')) {
     if (arg(1) == 'categories') {
       aggregator_save_category($_POST['edit']);
@@ -941,82 +957,97 @@ function aggregator_page_category() {
  * menu callbacks use this function to print their feeds.
  */
 function _aggregator_page_list($sql, $op, $header = '') {
-  if (user_access('administer news feeds') && $op == 'categorize') {
-    if ($edit = $_POST['edit']) {
-      foreach ($edit['categories'] as $iid => $selection) {
-        db_query('DELETE FROM {aggregator_category_item} WHERE iid = %d', $iid);
-        foreach ($selection as $cid) {
-          if ($cid) {
-            db_query('INSERT INTO {aggregator_category_item} (cid, iid) VALUES (%d, %d)', $cid, $iid);
-          }
-        }
-      }
-      drupal_set_message(t('The categories have been saved.'));
-      drupal_goto($_GET['q']);
-    }
-    else {
-      $categorize = true;
-    }
-  }
+  $categorize = (user_access('administer news feeds') && ($op == 'categorize'));
 
   $output = '<div id="aggregator">';
-  if ($header) {
-    $output .= $header;
-  }
-  if ($links) {
-    $output .= theme('links', $links);
-  }
+
+  $form['header'] = array(value => $header);
+  $output .= $form['header'][value];
 
   $result = pager_query($sql, 20);
-
-  $rows = array();
   $categories = array();
   while ($item = db_fetch_object($result)) {
-    if ($categorize) {
-      $categories_result = db_query('SELECT c.cid, c.title, ci.iid FROM {aggregator_category} c LEFT JOIN {aggregator_category_item} ci ON c.cid = ci.cid AND ci.iid = %d', $item->iid);
-      if (variable_get('aggregator_category_selector', 'check') == 'select') {
-        $selected = array();
-        while ($category = db_fetch_object($categories_result)) {
-          if (!$done) {
-            $categories[$category->cid] = check_plain($category->title);
-          }
-          if ($category->iid) {
-            $selected[] = $category->cid;
-          }
-        }
-        $done = true;
-        $form = form_select(NULL, 'categories]['. $item->iid, $selected, $categories, NULL, 'size="10"', true);
-      }
-      else {
-        $form = '';
-        while ($category = db_fetch_object($categories_result)) {
-          $form .= form_checkbox(check_plain($category->title), 'categories]['. $item->iid .'][', $category->cid, !is_null($category->iid));
-        }
-      }
-      $rows[] = array(theme('aggregator_page_item', $item), array('data' => $form, 'class' => 'categorize-item'));
-    }
-    else {
-      $output .= theme('aggregator_page_item', $item);
-    }
-  }
-  if ($categorize) {
-    $output .= form(theme('table', array('', t('Categorize')), $rows) . form_submit(t('Save categories')));
-  }
-  $output .= '</div>';
+    $form['items'][$item->iid] = array(value => theme('aggregator_page_item', $item));
+    $output .= $form['items'][$item->iid][value];
+    $form['categories'][$item->iid] = array();
 
-  $output .= theme('pager', NULL, 20, 0);
+    if ($categorize) {
+
+      $categories_result = db_query('SELECT c.cid, c.title, ci.iid FROM {aggregator_category} c LEFT JOIN {aggregator_category_item} ci ON c.cid = ci.cid AND ci.iid = %d', $item->iid);
+      $selected = array();
+      while ($category = db_fetch_object($categories_result)) {
+        if (!$done) {
+          $categories[$category->cid] = check_plain($category->title);
+        }
+        if ($category->iid) {
+          $selected[] = $category->cid;
+        }
+      }
+      $done = true;
+      $form['categories'][$item->iid] = array(
+        type => variable_get('aggregator_category_selector', 'checkboxes'), 
+        default_value => $selected, options => $categories,
+        size => 10, multiple => true
+      );
+    }
+  }
+  $output .= '</div>'; 
+  $form['submit'] = array(type => 'submit', value => t('Save categories'));
+  $form['pager'] = array(value => theme('pager', NULL, 20, 0));
+  $output .= $form['pager'][value];
 
   // arg(1) is undefined if we are at the top aggregator URL
   // is there a better way to do this?
   if (!arg(1)) {
-    $output .= theme('xml_icon', url('aggregator/rss'));
+    $form['xml_icon'] = array(value => theme('xml_icon', url('aggregator/rss')));
   }
   elseif (arg(1) == 'categories' && arg(2) && !arg(3)) {
-    $output .= theme('xml_icon', url('aggregator/rss/' . arg(2)));
+    $form['xml_icon'] = array(value => theme('xml_icon', url('aggregator/rss/' . arg(2))));
   }
+  $output .= $form['xml_icon'][value];
 
+  return ($categorize) ? drupal_get_form('aggregator_page_list', $form) : $output;
+}
+
+function theme_aggregator_page_list($form) {
+  $output = '<div id="aggregator">';
+  $output .= form_render($form['header']);
+  $rows = array();
+  if ($form['items']) {
+    foreach (element_children($form['items']) as $key) {
+      if (is_array($form['items'][$key])) {
+        $rows[] = array(form_render($form['items'][$key]), array('data' => form_render($form['categories'][$key]), 'class' => 'categorize-item'));
+      }
+    }
+  }
+  $output .= theme('table', array('', t('Categorize')), $rows);
+  $output .= form_render($form['submit']);
+  $output .= '</div>';
+  $output .= form_render($form);
   return $output;
 }
+
+function aggregator_page_list_validate($form_id, &$form) {
+  if (!user_access('administer news feeds')) {
+    form_error($form, t('You are not allowed to categorize this feed item.'));
+  }
+}
+
+function aggregator_page_list_execute($form_id, $form) {
+  global $form_values;
+  foreach ($form_values['categories'] as $iid => $selection) {
+    db_query('DELETE FROM {aggregator_category_item} WHERE iid = %d', $iid);
+    foreach ($selection as $cid) {
+      if ($cid) {
+        db_query('INSERT INTO {aggregator_category_item} (cid, iid) VALUES (%d, %d)', $cid, $iid);
+      }
+    }
+  }
+  drupal_set_message(t('The categories have been saved.'));
+  drupal_goto($_GET['q']);
+}
+
+
 
 /**
  * Menu callback; displays all the feeds used by the aggregator.
