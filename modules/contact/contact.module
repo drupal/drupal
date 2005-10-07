@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.24 2005/10/04 12:09:15 dries Exp $
+// $Id: contact.module,v 1.25 2005/10/07 06:48:33 dries Exp $
 
 /**
  * @file
@@ -58,7 +58,12 @@ function contact_menu($may_cache) {
  * Implementation of hook_settings().
  */
 function contact_settings() {
-  return form_textarea(t('Additional information'), 'contact_form_information', variable_get('contact_form_information', t('You can leave us a message using the contact form below.')), 60, 5, t('Information to show on the <a href="%form">contact page</a>.  Can be anything from submission guidelines to your postal address or telephone number.', array('%form' => url('contact'))));
+  $form['contact_form_information'] = array(
+    type => 'textarea', title => t('Additional information'), cols => 60, rows => 5,
+    default_value => variable_get('contact_form_information', t('You can leave us a message using the contact form below.')),
+    description => t('Information to show on the <a href="%form">contact page</a>.  Can be anything from submission guidelines to your postal address or telephone number.', array('%form' => url('contact')))
+  );
+  return $form;
 }
 
 /**
@@ -68,7 +73,10 @@ function contact_settings() {
  */
 function contact_user($type, $edit, &$user, $category = NULL) {
   if ($type == 'form' && $category == 'account') {
-    return array(array('title' => t('Contact settings'), 'data' => form_checkbox(t('Personal contact form'), 'contact', 1, $edit['contact'], t('Allow other users to contact you by e-mail via <a href="%url">your personal contact form</a>. Note that your e-mail address is not made public and that privileged users such as site administrators are able to contact you even if you choose not to enable this feature.', array('%url' => url("user/$user->uid/contact")))), 'weight' => 2));
+    $form['contact'] = array(type => 'fieldset', title => t('Contact settings'), weight => 5, collapsible => TRUE, collapsed => FALSE);
+    $form['contact']['contact'] = array(type => 'checkbox', title => t('Personal contact form'), return_value => 1, default_value => $edit['contact'], description => t('Allow other users to contact you by e-mail via <a href="%url">your personal contact form</a>. Note that your e-mail address is not made public and that privileged users such as site administrators are able to contact you even if you choose not to enable this feature.', array('%url' => url("user/$user->uid/contact"))));
+    return $form;
+    //return array(array('title' => t('Contact settings'), 'data' => drupal_get_form('contact_user', $form), 'weight' => 2));
   }
   if ($type == 'validate') {
     return array('contact' => $edit['contact']);
@@ -92,80 +100,68 @@ function contact_mail_user() {
       $output = t("You can't contact more than %number users per hour. Please try again later.", array('%number' => CONTACT_HOURLY_THRESHOLD));
     }
     else {
-      $edit = $_POST['edit'];
+      drupal_set_title($account->name);
 
-      if ($edit) {
-        // Validate the message:
-        if (!$edit['message']) {
-          form_set_error('message', t('You must enter a message.'));
-        }
-        if (!$edit['subject']) {
-          form_set_error('subject', t('You must enter a subject.'));
-        }
-        form_validate($edit, $user->name . $user->mail);
-
-        if (!form_get_errors()) {
-          // Compose the body:
-          $message[] = "$account->name,";
-          $message[] = t("%name (%name-url) has sent you a message via your contact form (%form-url) at %site.", array('%name' => $user->name, '%name-url' => url("user/$user->uid", NULL, NULL, TRUE), '%form-url' => url($_GET['q'], NULL, NULL, TRUE), '%site' => variable_get('site_name', 'drupal')));
-          $message[] = t("If you don't want to receive such e-mails, you can change your settings at %url.", array('%url' => url("user/$account->uid", NULL, NULL, TRUE)));
-          $message[] = t('Message:');
-          $message[] = $edit['message'];
-
-          // Tidy up the body:
-          foreach ($message as $key => $value) {
-            $message[$key] = wordwrap($value);
-          }
-
-          // Prepare all fields:
-          $to = $account->mail;
-          $from = $user->mail;
-
-          // Format the subject:
-          $subject = '['. variable_get('site_name', 'drupal') .'] '. $edit['subject'];
-
-          // Prepare the body:
-          $body = implode("\n\n", $message);
-
-          // Send the e-mail:
-          user_mail($to, $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
-
-          // Send a copy if requested:
-          if ($edit['copy']) {
-            user_mail($from, $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
-          }
-
-          // Log the operation:
-          flood_register_event('contact');
-          watchdog('mail', t('%name-from sent %name-to an e-mail.', array('%name-from' => theme('placeholder', $user->name), '%name-to' => theme('placeholder', $account->name))));
-
-          // Set a status message:
-          drupal_set_message(t('The message has been sent.'));
-
-          // Jump to the user's profile page:
-          drupal_goto("user/$account->uid");
-        }
-      }
-      else {
-        $edit['mail'] = $user->mail;
-      }
-
-      $output  = form_item(t('From'), $user->name .' &lt;'. $user->mail .'&gt;');
-      $output .= form_item(t('To'), $account->name);
-      $output .= form_textfield(t('Subject'), 'subject', $edit['subject'], 60, 50, NULL, NULL, TRUE);
-      $output .= form_textarea(t('Message'), 'message', $edit['message'], 60, 15, NULL, NULL, TRUE);
-      $output .= form_checkbox(t('Send me a copy.'), 'copy', $edit['copy']);
-      $output .= form_token($user->name . $user->mail);
-      $output .= form_submit(t('Send e-mail'));
-      $output  = form($output);
+      $form[token] = $user->name . $user->mail;
+      $form['from'] = array(type => 'item', title => t('From'), value => $user->name .' &lt;'. $user->mail .'&gt;');
+      $form['to'] = array(type => 'item', title => t('To'), value => $account->name);
+      $form['subject'] = array(type => 'textfield', title => t('Subject'), size => 60, maxlength => 50, required => TRUE);
+      $form['message'] = array(type => 'textarea', title => t('Message'), cols => 60, rows => 15, required => TRUE);
+      $form['copy'] = array(type => 'checkbox', title => ('Send me a copy.'));
+      $form['submit'] = array(type => 'submit', value => t('Send e-mail'));
+      $output = drupal_get_form('contact_user_mail', $form);
     }
 
-    drupal_set_title($account->name);
     return $output;
   }
   else {
     drupal_not_found();
   }
+}
+
+function contact_user_mail_execute($form_id, $edit) {
+  global $user;
+
+  $account = user_load(array('uid' => arg(1), 'status' => 1));
+  // Compose the body:
+  $message[] = "$account->name,";
+  $message[] = t("%name (%name-url) has sent you a message via your contact form (%form-url) at %site.", array('%name' => $user->name, '%name-url' => url("user/$user->uid", NULL, NULL, TRUE), '%form-url' => url($_GET['q'], NULL, NULL, TRUE), '%site' => variable_get('site_name', 'drupal')));
+  $message[] = t("If you don't want to receive such e-mails, you can change your settings at %url.", array('%url' => url("user/$account->uid", NULL, NULL, TRUE)));
+  $message[] = t('Message:');
+  $message[] = $edit['message'];
+
+  // Tidy up the body:
+  foreach ($message as $key => $value) {
+    $message[$key] = wordwrap($value);
+  }
+
+  // Prepare all fields:
+  $to = $account->mail;
+  $from = $user->mail;
+
+  // Format the subject:
+  $subject = '['. variable_get('site_name', 'drupal') .'] '. $edit['subject'];
+
+  // Prepare the body:
+  $body = implode("\n\n", $message);
+
+  // Send the e-mail:
+  user_mail($to, $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
+
+  // Send a copy if requested:
+  if ($edit['copy']) {
+    user_mail($from, $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
+  }
+
+  // Log the operation:
+  flood_register_event('contact');
+  watchdog('mail', t('%name-from sent %name-to an e-mail.', array('%name-from' => theme('placeholder', $user->name), '%name-to' => theme('placeholder', $account->name))));
+
+  // Set a status message:
+  drupal_set_message(t('The message has been sent.'));
+
+  // Jump to the user's profile page:
+  drupal_goto("user/$account->uid");
 }
 
 function contact_admin_edit($category = NULL) {
@@ -192,22 +188,22 @@ function contact_admin_edit($category = NULL) {
     $edit['reply']      = $category->reply;
   }
 
-  $form  = form_textfield(t('Category'), 'category', $edit['category'], 60, 255, t("Example: 'website feedback' or 'product information'."), NULL, TRUE);
-  $form .= form_textarea(t('Recipients'), 'recipients', $edit['recipients'], 60, 5, t("Example: 'webmaster@yoursite.com' or 'sales@yoursite.com'.  To specify multiple repecients, separate each e-mail address with a comma."), NULL, TRUE);
-  $form .= form_textarea(t('Auto-reply'), 'reply', $edit['reply'], 60, 5, t("Optional auto-reply.  Leave empty if you don't want to send the user an auto-reply message."));
-  $form .= form_submit(t('Submit'));
+  $form['category'] = array(type => 'textfield', title => t('Category'), size => 60, maxlength => 255, default_value => $edit['category'], description => t("Example: 'website feedback' or 'product information'."), required => TRUE);
+  $form['recipients'] = array(type => 'textarea', title => t('Recipients'), cols => 60, rows => 5, default_value => $edit['recipients'], description => t("Example: 'webmaster@yoursite.com' or 'sales@yoursite.com'.  To specify multiple repecients, separate each e-mail address with a comma."), required => TRUE);
+  $form['reply'] = array(type => 'textarea', title => t('Auto-reply'), cols => 60, rows => 5, default_value => $edit['reply'], description => t("Optional auto-reply.  Leave empty if you don't want to send the user an auto-reply message."));
+  $form['submit'] = array(type => 'submit', value => t('Submit'));
 
-  return form($form);
+  return drupal_get_form('contact_admin_edit', $form);
 }
 
 function contact_admin_delete($category) {
   if ($_POST['op'] != t('Delete')) {
-    return theme('confirm',
-                  t('Are you sure you want to delete %category?', array('%category' => theme('placeholder', $category))),
-                  'admin/contact/delete/'. $category,
-                  t('This action cannot be undone.'),
-                  t('Delete'),
-                  t('Cancel'));
+    return confirm_form('contact_admin_delete', array(),
+                    t('Are you sure you want to delete %category?', array('%category' => theme('placeholder', $category))),
+                    'admin/contact',
+                    t('This action cannot be undone.'),
+                    t('Delete'),
+                    t('Cancel'));
   }
   else {
     db_query("DELETE FROM {contact} WHERE category = '%s'", $category);
@@ -233,84 +229,7 @@ function contact_mail_page() {
     $output = t("You can't send more than %number messages per hour. Please try again later.", array('%number' => CONTACT_HOURLY_THRESHOLD));
   }
   else {
-    if (isset($_POST['edit'])) {
-      $edit = $_POST['edit'];
-    }
-
-    if ($edit) {
-      // Validate the fields:
-      if (!$edit['name']) {
-        form_set_error('name', t('You must enter a name.'));
-      }
-      if (!$edit['mail'] || !valid_email_address($edit['mail'])) {
-        form_set_error('mail', t('You must enter a valid e-mail address.'));
-      }
-      if (!$edit['subject']) {
-        form_set_error('subject', t('You must enter a subject.'));
-      }
-      if (!$edit['message']) {
-        form_set_error('message', t('You must enter a message.'));
-      }
-      if (!$edit['category']) {
-        // Look if there is only one category
-        $result = db_query('SELECT category FROM {contact}');
-        if (db_num_rows($result) == 1) {
-          $category = db_fetch_object($result);
-          $edit['category'] = $category->category;
-        }
-        else {
-          form_set_error('category', t('You must select a valid category.'));
-        }
-      }
-      form_validate($edit, $user->name . $user->mail);
-
-      if (!form_get_errors()) {
-        // Prepare the sender:
-        $from = $edit['mail'];
-
-        // Compose the body:
-        $message[] = t("%name sent a message using the contact form at %form:", array('%name' => $edit['name'], '%form' => url($_GET['q'], NULL, NULL, TRUE)));
-        $message[] = $edit['message'];
-
-        // Tidy up the body:
-        foreach ($message as $key => $value) {
-          $message[$key] = wordwrap($value);
-        }
-
-        // Format the category:
-        $subject = '['. $edit['category'] .'] '. $edit['subject'];
-
-        // Prepare the body:
-        $body = implode("\n\n", $message);
-
-        // Load the category information:
-        $contact = db_fetch_object(db_query("SELECT * FROM {contact} WHERE category = '%s'", $edit['category']));
-
-        // Send the e-mail to the recipients:
-        user_mail($contact->recipients, $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
-
-        // If the user requests it, send a copy.
-        if ($edit['copy']) {
-          user_mail($from, $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
-        }
-
-        // Send an auto-reply if necessary:
-        if ($contact->reply) {
-          user_mail($from, $subject, wordwrap($contact->reply), "From: $contact->recipients\nReply-to: $contact->recipients\nX-Mailer: Drupal\nReturn-path: $contact->recipients\nErrors-to: $contact->recipients");
-        }
-
-        // Log the operation:
-        flood_register_event('contact');
-        watchdog('mail', t('%name-from sent an e-mail regarding %category.', array('%name-from' => theme('placeholder', $edit['name'] ." <$from>"), '%category' => theme('placeholder', $contact->category))));
-
-        // Set a status message:subject
-        drupal_set_message(t('Your message has been sent.'));
-
-        // Jump to contact page:
-        drupal_goto('contact');
-      }
-    }
-    else if ($user->uid) {
+    if ($user->uid) {
       $edit['name'] = $user->name;
       $edit['mail'] = $user->mail;
     }
@@ -322,18 +241,18 @@ function contact_mail_page() {
     }
 
     if (count($categories) > 1) {
-      $output  = variable_get('contact_form_information', t('You can leave us a message using the contact form below.'));
-      $output .= form_textfield(t('Your name'), 'name', $edit['name'], 60, 255, NULL, NULL, TRUE);
-      $output .= form_textfield(t('Your e-mail address'), 'mail', $edit['mail'], 60, 255, NULL, NULL, TRUE);
-      $output .= form_textfield(t('Subject'), 'subject', $edit['subject'], 60, 255, NULL, NULL, TRUE);
+      $form[token] = $user->name . $user->mail;
+      $form['contact_information'] = array(type => 'markup', value => variable_get('contact_form_information', t('You can leave us a message using the contact form below.')));
+      $form['name'] = array(type => 'textfield', title => t('Your name'), size => 60, maxlength => 255, default_value => $edit['name'], required => TRUE);
+      $form['mail'] = array(type => 'textfield', title => t('Your e-mail address'), size => 60, maxlength => 255, default_value => $edit['mail'], required => TRUE);
+      $form['subject'] = array(type => 'textfield', title => t('Subject'), size => 60, maxlength => 255, default_value => $edit['subject'], required => TRUE);
       if (count($categories) > 2) {
-        $output .= form_select(t('Category'), 'category', $edit['category'], $categories, NULL, NULL, NULL, TRUE);
+        $form['category'] = array(type => 'select', title => t('Category'), size => 60, maxlength => 255, default_value => $edit['category'], options => $categories, required => TRUE);
       }
-      $output .= form_textarea(t('Message'), 'message', $edit['message'], 60, 5, NULL, NULL, TRUE);
-      $output .= form_checkbox(t('Send me a copy.'), 'copy', $edit['copy']);
-      $output .= form_token($user->name . $user->mail);
-      $output .= form_submit(t('Send e-mail'));
-      $output  = form($output);
+      $form['message'] = array(type => 'textarea', title => t('Message'), cols => 60, rows => 5, default_value => $edit['message'], required => TRUE);
+      $form['copy'] = array(type => 'checkbox', title => t('Send me a copy.'), default_value => $edit['copy'], return_value => 1);
+      $form['submit'] = array(type => 'submit', value => t('Send e-mail'));
+      $output = drupal_get_form('contact_mail_page', $form);
     }
     else {
       $output = t('The contact form has not been configured.');
@@ -343,3 +262,64 @@ function contact_mail_page() {
   return $output;
 }
 
+function contact_mail_page_validate($form_id, &$form) {
+  global $form_values;
+  if (!$form['category']) {
+    // Look if there is only one category
+    $result = db_query('SELECT category FROM {contact}');
+    if (db_num_rows($result) == 1) {
+      $category = db_fetch_object($result);
+      $form_values['category'] = $category->category;
+    }
+    else {
+      form_set_error('category', t('You must select a valid category.'));
+    }
+  }
+}
+
+function contact_mail_page_execute($form_id, $edit) {
+
+  // Prepare the sender:
+  $from = $edit['mail'];
+
+  // Compose the body:
+  $message[] = t("%name sent a message using the contact form at %form:", array('%name' => $edit['name'], '%form' => url($_GET['q'], NULL, NULL, TRUE)));
+  $message[] = $edit['message'];
+
+  // Tidy up the body:
+  foreach ($message as $key => $value) {
+    $message[$key] = wordwrap($value);
+  }
+
+  // Format the category:
+  $subject = '['. $edit['category'] .'] '. $edit['subject'];
+
+  // Prepare the body:
+  $body = implode("\n\n", $message);
+
+  // Load the category information:
+  $contact = db_fetch_object(db_query("SELECT * FROM {contact} WHERE category = '%s'", $edit['category']));
+
+  // Send the e-mail to the recipients:
+  user_mail($contact->recipients, $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
+
+  // If the user requests it, send a copy.
+  if ($edit['copy']) {
+    user_mail($from, $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
+  }
+
+  // Send an auto-reply if necessary:
+  if ($contact->reply) {
+    user_mail($from, $subject, wordwrap($contact->reply), "From: $contact->recipients\nReply-to: $contact->recipients\nX-Mailer: Drupal\nReturn-path: $contact->recipients\nErrors-to: $contact->recipients");
+  }
+
+  // Log the operation:
+  flood_register_event('contact');
+  watchdog('mail', t('%name-from sent an e-mail regarding %category.', array('%name-from' => theme('placeholder', $edit['name'] ." <$from>"), '%category' => theme('placeholder', $contact->category))));
+
+  // Set a status message:subject
+  drupal_set_message(t('Your message has been sent.'));
+
+  // Jump to contact page:
+  drupal_goto('contact');
+}
