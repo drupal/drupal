@@ -1162,6 +1162,7 @@ function user_edit($category = 'account') {
     menu_set_location($breadcrumb);
     if ($edit['confirm']) {
       db_query('DELETE FROM {users} WHERE uid = %d', $account->uid);
+      db_query('DELETE FROM {sessions} WHERE uid = %d', $account->uid);
       db_query('DELETE FROM {users_roles} WHERE uid = %d', $account->uid);
       db_query('DELETE FROM {authmap} WHERE uid = %d', $account->uid);
       drupal_set_message(t('The account has been deleted.'));
