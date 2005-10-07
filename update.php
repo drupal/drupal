@@ -54,11 +54,20 @@ function update_selection_page() {
   $dates[$i] = "No updates available";
 
   // make update form and output it.
-  $form = form_select("Perform updates from", "start", (isset($selected) ? $selected : -1), $dates, "This defaults to the first available update since the last update you performed.");
-  $form .= form_submit("Update");
+  $form['start'] = array(
+    type => 'select',
+    title => t('Perform updates from'),
+    default_value => (isset($selected) ? $selected : -1),
+    options => $dates,
+    description => t('This defaults to the first available update since the last update you performed.')
+  );
+  $form['submit'] = array(
+    type => 'submit',
+    value => t('Update')
+  );
 
   drupal_set_title('Drupal database update');
-  return form($form);
+  return drupal_get_form('update_script_selection_form', $form);
 }
 
 function update_do_updates() {

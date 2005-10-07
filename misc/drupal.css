@@ -629,3 +629,8 @@ html.js fieldset.collapsed legend a {
   display: block;
 }
 
+/*
+** Temporary CSS for porting of drupal forms.
+*/
+form { border: 3px solid red; }
+form.form-api { border : 0px; }

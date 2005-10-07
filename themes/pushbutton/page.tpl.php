@@ -45,14 +45,7 @@
       <?php print theme('links', $secondary_links) ?>
     </td>
     <td  width="25%"  align="center" valign="middle">
-      <?php if ($search_box): ?>
-      <form action="<?php print $search_url ?>" method="post">
-        <div id="search">
-          <input class="form-text" type="text" size="15" value="" name="edit[keys]" alt="<?php print $search_description ?>" />
-          <input class="form-submit" type="submit" value="<?php print $search_button_text ?>" alt="submit" />
-        </div>
-      </form>
-      <?php endif; ?>
+      <?php print $search_box ?>
     </td>
   </tr>
   <tr>
