@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.483 2005/10/07 06:51:16 dries Exp $
+// $Id: common.inc,v 1.484 2005/10/08 12:38:20 dries Exp $
 
 /**
  * @file
@@ -250,6 +250,17 @@ function drupal_goto($path = '', $query = NULL, $fragment = NULL) {
   // daemon. In some cases this can go wrong, so we make sure none
   // of the code below the drupal_goto() call gets executed when we redirect.
   exit();
+}
+
+
+/**
+ * Generates a site offline message
+ */
+function drupal_site_offline() {
+  header('HTTP/1.0 503 Service unavailable');
+  drupal_set_title(t('Site offline'));
+  print theme('maintenance_page', variable_get('site_offline_message',
+    t('%site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('%site' => variable_get('site_name', t('This drupal site'))))));
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: index.php,v 1.87 2005/08/28 18:26:20 dries Exp $
+// $Id: index.php,v 1.88 2005/10/08 12:38:20 dries Exp $
 
 /**
  * @file
@@ -19,6 +19,9 @@ switch ($return) {
     break;
   case MENU_ACCESS_DENIED:
     drupal_access_denied();
+    break;
+  case MENU_SITE_OFFLINE:
+    drupal_site_offline();
     break;
   default:
     if (!empty($return)) {

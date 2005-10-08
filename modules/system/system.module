@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.237 2005/10/08 12:21:47 dries Exp $
+// $Id: system.module,v 1.238 2005/10/08 12:38:20 dries Exp $
 
 /**
  * @file
@@ -412,6 +412,29 @@ function system_view_general() {
   );
 
 
+  // Site offline/maintenance settings
+  $form['site_status'] = array(
+    type => 'fieldset',
+    title => t('Site maintenance'),
+    collapsible => TRUE,
+    collapsed => TRUE);
+
+  $form['site_status']['site_offline'] = array(
+    type => 'radios',
+    title => t('Site status'),
+    default_value => variable_get('site_offline', 0),
+    options => array(t('Online'), t('Offline')),
+    description => t('When set to "Online", all visitors will be able to browse your site normally. When set to "Offline", only users with the "administer site configuration" permission will be able to access your site to perform maintenance, all other visitors will see the site offline message configured below.')
+  );
+
+  $form['site_status']['site_offline_message'] = array(
+    type => 'textarea',
+    rows => 5,
+    title => t('Site offline message'),
+    default_value => variable_get('site_offline_message', t('%site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('%site' => variable_get('site_name', t('This drupal site'))))),
+    description => t('Message to show visitors when site is offline.')
+  );
+
   // String handling: report status and errors.
   $form['strings'] = array(type => 'fieldset', title => t('String handling'), collapsible => TRUE, collapsed => TRUE);
   $form['strings'] = array_merge($form['strings'], unicode_settings());
@@ -638,7 +661,7 @@ function system_settings_form($form_id, $form) {
   $form['buttons']['reset'] = array(type => 'submit', value => t('Reset to defaults') );
 
   if (!empty($_POST) && form_get_errors()) {
-    drupal_set_message(t('Your settings are not saved because of the errors above'), 'error');
+    drupal_set_message(t('The settings have not been saved because of the errors.'), 'error');
   }
 
   return drupal_get_form($form_id, $form, 'system_settings_form');

@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.85 2005/09/18 17:03:26 dries Exp $
+// $Id: menu.inc,v 1.86 2005/10/08 12:38:20 dries Exp $
 
 /**
  * @file
@@ -164,6 +164,7 @@ define('MENU_CUSTOM_MENU', MENU_IS_ROOT | MENU_VISIBLE_IN_TREE | MENU_CREATED_BY
 define('MENU_FOUND', 1);
 define('MENU_NOT_FOUND', 2);
 define('MENU_ACCESS_DENIED', 3);
+define('MENU_SITE_OFFLINE', 4);
 
 /**
  * @} End of "Menu status codes".
@@ -324,6 +325,10 @@ function menu_set_location($location) {
  * act as if the user were in a different location on the site.
  */
 function menu_execute_active_handler() {
+  if (_menu_site_is_offline()) {
+    return MENU_SITE_OFFLINE;
+  }
+
   $menu = menu_get_menu();
 
   // Determine the menu item containing the callback.
@@ -1040,3 +1045,19 @@ function _menu_build_local_tasks($pid) {
   return $forked;
 }
 
+/**
+ * Returns TRUE if the is offline for maintenance.
+ */
+function _menu_site_is_offline() {
+  // Check if site is set to offline mode
+  if (variable_get('site_offline', 0)) {
+    // Check if the user has administration privileges
+    if (!user_access('administer site configuration')) {
+      // Check if this is an attempt to login
+      if (drupal_get_normal_path($_GET['q']) != 'user/login') {
+        return TRUE;
+      }
+    }
+  }
+  return FALSE;
+}
