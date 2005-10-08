@@ -20,6 +20,9 @@ switch ($return) {
   case MENU_ACCESS_DENIED:
     drupal_access_denied();
     break;
+  case MENU_SITE_OFFLINE:
+    drupal_site_offline();
+    break;
   default:
     if (!empty($return)) {
       print theme('page', $return);
