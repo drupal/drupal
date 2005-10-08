@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.321 2005/10/07 06:51:43 dries Exp $
+// $Id: book.module,v 1.322 2005/10/08 14:48:33 dries Exp $
 
 /**
  * @file
@@ -17,7 +17,7 @@ function book_node_info() {
  * Implementation of hook_perm().
  */
 function book_perm() {
-  return array('create book pages', 'maintain books', 'edit own book pages');
+  return array('create book pages', 'maintain books', 'edit own book pages', 'export books', 'see printer-friendly version');
 }
 
 /**
@@ -60,9 +60,13 @@ function book_link($type, $node = 0, $main = 0) {
       if (book_access('create', $node)) {
         $links[] = l(t('add child page'), "node/add/book/parent/$node->nid");
       }
-      $links[] = l(t('printer-friendly version'), 'book/export/html/'. $node->nid, array('title' => t('Show a printer-friendly version of this book page and its sub-pages.')));
-      $links[] = l(t('export DocBook XML'), 'book/export/docbook/'. $node->nid, array('title' => t('Export this book page and its sub-pages as DocBook XML.')));
-      $links[] = l(t('export OPML'), 'book/export/opml/'. $node->nid, array('title' => t('Export this book page and its sub-pages as OPML.')));
+      if (user_access('see printer-friendly version')) {
+        $links[] = l(t('printer-friendly version'), 'book/export/html/'. $node->nid, array('title' => t('Show a printer-friendly version of this book page and its sub-pages.')));
+      }
+      if (user_access('export books')) {
+        $links[] = l(t('export DocBook XML'), 'book/export/docbook/'. $node->nid, array('title' => t('Export this book page and its sub-pages as DocBook XML.')));
+        $links[] = l(t('export OPML'), 'book/export/opml/'. $node->nid, array('title' => t('Export this book page and its sub-pages as OPML.')));
+      }
     }
   }
 
@@ -110,7 +114,7 @@ function book_menu($may_cache) {
     $items[] = array(
       'path' => 'book/export',
       'callback' => 'book_export',
-      'access' => user_access('access content'),
+      'access' => (user_access('export books') || user_access('see printer-friendly version')) && user_access('access content'),
       'type' => MENU_CALLBACK);
   }
   else {
@@ -664,37 +668,52 @@ function book_export($type = 'html', $nid = FALSE) {
     $depth = _book_get_depth($nid);
     switch ($type) {
       case 'docbook':
-        $xml = "<?xml version='1.0'?>\n";
-        $xml .= "<!DOCTYPE book PUBLIC \"-//OASIS//DTD Docbook XML V4.1.2//EN\" \"http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd\">\n";
-        $xml .= book_recurse($nid, $depth, 'book_node_visitor_xml_pre', 'book_node_visitor_xml_post');
-        drupal_set_header('Content-Type: text/xml; charset=utf-8');
-        print $xml;
+        if (user_access('export books')) {
+          $xml = "<?xml version='1.0'?>\n";
+          $xml .= "<!DOCTYPE book PUBLIC \"-//OASIS//DTD Docbook XML V4.1.2//EN\" \"http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd\">\n";
+          $xml .= book_recurse($nid, $depth, 'book_node_visitor_xml_pre', 'book_node_visitor_xml_post');
+          drupal_set_header('Content-Type: text/xml; charset=utf-8');
+          print $xml;
+        }
+        else {
+          drupal_access_denied();
+        }
         break;
       case 'html':
-        for ($i = 1; $i < $depth; $i++) {
-          $output .= "<div class=\"section-$i\">\n";
+        if (user_access('see printer-friendly version')) {
+          for ($i = 1; $i < $depth; $i++) {
+            $output .= "<div class=\"section-$i\">\n";
+          }
+          $output .= book_recurse($nid, $depth, 'book_node_visitor_html_pre', 'book_node_visitor_html_post');
+          for ($i = 1; $i < $depth; $i++) {
+            $output .= "</div>\n";
+          }
+          $html = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
+          $html .= '<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">';
+          $html .= "<head>\n<title>". check_plain($node->title) ."</title>\n";
+          $html .= '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />';
+          $html .= '<base href="'. $base_url .'/" />' . "\n";
+          $html .= "<style type=\"text/css\">\n@import url(misc/print.css);\n</style>\n";
+          $html .= "</head>\n<body>\n". $output . "\n</body>\n</html>\n";
+          print $html;
         }
-        $output .= book_recurse($nid, $depth, 'book_node_visitor_html_pre', 'book_node_visitor_html_post');
-        for ($i = 1; $i < $depth; $i++) {
-          $output .= "</div>\n";
+        else {
+          drupal_access_denied();
         }
-        $html = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
-        $html .= '<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">';
-        $html .= "<head>\n<title>". check_plain($node->title) ."</title>\n";
-        $html .= '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />';
-        $html .= '<base href="'. $base_url .'/" />' . "\n";
-        $html .= "<style type=\"text/css\">\n@import url(misc/print.css);\n</style>\n";
-        $html .= "</head>\n<body>\n". $output . "\n</body>\n</html>\n";
-        print $html;
         break;
       case 'opml':
-        $output .= book_recurse($nid, $depth, 'book_node_visitor_opml_pre', 'book_node_visitor_opml_post');
-        $ompl  = "<?xml version='1.0'?>\n";
-        $opml .= "<opml version='1.0'>\n";
-        $opml .= "<head>\n<title>". check_plain($node->title) ."</title>\n";
-        $opml .= "</head>\n<body>\n". $output . "\n</body>\n</opml>\n";
-        drupal_set_header('Content-Type: text/xml; charset=utf-8');
-        print $opml;
+        if (user_access('export books')) {
+          $output .= book_recurse($nid, $depth, 'book_node_visitor_opml_pre', 'book_node_visitor_opml_post');
+          $opml  = "<?xml version='1.0'?>\n";
+          $opml .= "<opml version='1.0'>\n";
+          $opml .= "<head>\n<title>". check_plain($node->title) ."</title>\n";
+          $opml .= "</head>\n<body>\n". $output . "\n</body>\n</opml>\n";
+          drupal_set_header('Content-Type: text/xml; charset=utf-8');
+          print $opml;
+        }
+        else {
+          drupal_access_denied();
+        }
         break;
       default:
         drupal_not_found();
