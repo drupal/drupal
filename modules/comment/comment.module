@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.379 2005/10/07 06:09:13 dries Exp $
+// $Id: comment.module,v 1.380 2005/10/08 12:21:47 dries Exp $
 
 /**
  * @file
@@ -417,8 +417,9 @@ function comment_validate(&$edit) {
     $edit['status'] = user_access('post comments without approval') ? 0 : 1;
   }
   else {
-    if (strtotime($edit['date']) != -1) {
-      $edit['timestamp'] = strtotime($edit['date']);
+    $date = isset($edit['date']) ? $edit['date'] : 'now';
+    if (strtotime($date) != -1) {
+      $edit['timestamp'] = strtotime($date);
     }
     else {
       form_set_error('date', t('You have to specify a valid date.'));
@@ -492,8 +493,6 @@ function comment_validate(&$edit) {
       }
     }
   }
-  // verify that this submission was actually generated using a local form
-  form_validate($edit, 'comment'. $edit['nid'] . $edit['pid']);
 
   return $edit;
 }
@@ -522,7 +521,7 @@ function comment_preview($edit) {
   if (!form_get_errors()) {
     $output .= theme('comment_view', $comment);
   }
-  $output .= theme('comment_form', $edit, t('Reply'));
+  $output .= comment_form($edit, t('Reply'));
 
   if ($edit['pid']) {
     $comment = db_fetch_object(db_query('SELECT c.*, u.uid, u.name AS registered_name, u.picture, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = %d', $edit['pid'], COMMENT_PUBLISHED));

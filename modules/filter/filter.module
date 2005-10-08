@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.74 2005/10/07 06:09:13 dries Exp $
+// $Id: filter.module,v 1.75 2005/10/08 12:21:47 dries Exp $
 
 /**
  * @file
@@ -764,7 +764,7 @@ function filter_form($value = FILTER_FORMAT_DEFAULT) {
     $format = array_shift($formats);
     $form['format'][$format->name] = array(type => 'value', value => $format->format);
     $tips = _filter_tips(variable_get('filter_default_format', 1), false);
-    $form['format']['guidelines'] = array(type => 'item', title => t('Formatting guidelines'), value => theme('filter_tips', $tips, false, $extra), $extra);
+    $form['format']['guidelines'] = array(type => 'markup', title => t('Formatting guidelines'), value => theme('filter_tips', $tips, false, $extra));
     return $form;
   }
 }

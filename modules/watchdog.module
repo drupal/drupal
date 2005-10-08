@@ -1,5 +1,5 @@
 <?php
-// $Id: watchdog.module,v 1.128 2005/10/07 06:09:13 dries Exp $
+// $Id: watchdog.module,v 1.129 2005/10/08 12:21:47 dries Exp $
 
 /**
  * @file
@@ -89,6 +89,7 @@ function watchdog_overview() {
   );
 
   $form['submit'] = array(type => 'submit', value =>t('Filter'));
+  $output = drupal_get_form('watchdog_form_overview', $form);
 
   $header = array(
     ' ',
@@ -122,7 +123,7 @@ function watchdog_overview() {
     $rows[] = array(array('data' => t('No log messages available.'), 'colspan' => '7'));
   }
 
-  $output  = drupal_get_form('watchdog_form_overview', $form);
+
   $output .= theme('table', $header, $rows);
   $output .= theme('pager', NULL, 50, 0, tablesort_pager());
 

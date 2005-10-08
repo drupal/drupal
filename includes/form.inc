@@ -517,7 +517,7 @@ function _form_builder($form, $parents = array(), $multiple = FALSE) {
       $ref =& $ref[$parent];
     }
     $default_value = $posted ? $edit : $form[default_value];
-    $form[value] = $form[value] ? $form[value] : $default_value;
+    $form[value] = isset($form[value]) ? $form[value] : $default_value;
     if (isset($form[execute])) {
       if ($_POST[$form[name]] == $form[value]) {
         $form_execute = $form_execute || $form[execute];
@@ -591,12 +591,6 @@ function form_render(&$elements) {
   }
 
   return $elements[prefix] . $content . $elements[suffix];
-}
-
-function _print_rp($var) {
-  echo "<pre>";
-  print_r($var);
-  echo "</pre>";
 }
 
 /**

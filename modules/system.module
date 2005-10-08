@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.236 2005/10/07 06:09:13 dries Exp $
+// $Id: system.module,v 1.237 2005/10/08 12:21:47 dries Exp $
 
 /**
  * @file
@@ -636,6 +636,10 @@ function system_initialize_theme_blocks($theme) {
 function system_settings_form($form_id, $form) {
   $form['buttons']['submit'] = array(type => 'submit', value => t('Save configuration') );
   $form['buttons']['reset'] = array(type => 'submit', value => t('Reset to defaults') );
+
+  if (!empty($_POST) && form_get_errors()) {
+    drupal_set_message(t('Your settings are not saved because of the errors above'), 'error');
+  }
 
   return drupal_get_form($form_id, $form, 'system_settings_form');
 }

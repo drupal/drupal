@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.533 2005/10/07 06:51:43 dries Exp $
+// $Id: node.module,v 1.534 2005/10/08 12:21:47 dries Exp $
 
 /**
  * @file
@@ -1291,8 +1291,7 @@ function node_feed($nodes = 0, $channel = array()) {
 
     // Allow modules to add additional item fields
     $extra = node_invoke_nodeapi($item, 'rss item');
-    $extra = array_merge($extra, array(array('key' => 'pubDate', 'value' =>  date('r', $item->created)),
-                                       array('key' => 'dc:creator', 'value' => $item->name)));
+    $extra = array_merge($extra, array(array('key' => 'pubDate', 'value' =>  date('r', $item->created)), array('key' => 'dc:creator', 'value' => $item->name)));
     foreach ($extra as $element) {
       if ($element['namespace']) {
         $namespaces = array_merge($namespaces, array($element['namespace']));
@@ -1432,13 +1431,14 @@ function node_form($node) {
 
   /**
    * Basic node information.
-   * These elements set the value property, making them immutable.
+   * These elements are just values so they are not even sent to the client.
    */
-  $form['nid']     = array(type => 'hidden', value => $node->nid);
-  $form['uid']     = array(type => 'hidden', value => $node->uid);
-  $form['created'] = array(type => 'hidden', value => $node->created);
-  $form['changed'] = array(type => 'hidden', value => $node->changed);
-  $form['type']    = array(type => 'hidden', value => $node->type);
+  $form['nid']     = array(type => 'value', value => $node->nid);
+  $form['vid']     = array(type => 'value', value => $node->vid);
+  $form['uid']     = array(type => 'value', value => $node->uid);
+  $form['created'] = array(type => 'value', value => $node->created);
+  $form['changed'] = array(type => 'value', value => $node->changed);
+  $form['type']    = array(type => 'value', value => $node->type);
 
   if ($op == t('Preview')) {
     $form['node_preview'] = array(value => node_preview(array2object($_POST['edit'])), weight => -100);
