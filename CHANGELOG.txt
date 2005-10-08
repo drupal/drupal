@@ -11,6 +11,7 @@ Drupal x.x.x, xxxx-xx-xx (development version)
     * reworked the 'request new password' functionality.
     * reworked the node and comment edit forms.
     * made it easy to add nodes to the navigation menu.
+    * added site 'offline for maintenance' feature.
     * added support for auto-complete forms (AJAX).
     * added support for collapsible page sections (AJAX).
     * improved file upload functionality (AJAX).
