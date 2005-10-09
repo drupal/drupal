@@ -651,7 +651,7 @@ function theme_select($element) {
     if (is_array($choice)) {
       $select .= '<optgroup label="'. $key .'">';
       foreach ($choice as $key => $choice) {
-        $select .= '<option value="'. $key .'"'. (is_array($elementp[value]) ? (in_array($key, $element[value]) ? ' selected="selected"' : '') : ($element[value] == $key ? ' selected="selected"' : '')) .'>'. check_plain($choice) .'</option>';
+        $select .= '<option value="'. $key .'"'. (is_array($element[value]) ? (in_array($key, $element[value]) ? ' selected="selected"' : '') : ($element[value] == $key ? ' selected="selected"' : '')) .'>'. check_plain($choice) .'</option>';
       }
       $select .= '</optgroup>';
     }
@@ -781,7 +781,8 @@ function expand_date($element) {
 
 
 /**
- * Roll out a single checkbox element to a list of checkboxes, using the options array as index.
+ * Roll out a single adios element
+ * to a list of radios, using the options array as index.
  */
 function expand_radios($element) {
   if (count($element[options]) > 0) {
@@ -861,10 +862,7 @@ function expand_checkboxes($element) {
     }
     foreach ($element[options] as $key => $choice) {
       if (!isset($element[$key])) {
-        $element[$key] = array(
-          type => 'checkbox', processed => TRUE, title => $choice, tree => TRUE,
-          value => in_array($key, $value), attributes => $element[attributes]
-        );
+        $element[$key] = array(type => 'checkbox', processed => TRUE, title => $choice, tree => TRUE, default_value => in_array($key, $value), attributes => $element[attributes]);
       }
     }
   }

@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.238 2005/10/08 12:38:20 dries Exp $
+// $Id: system.module,v 1.239 2005/10/09 10:39:15 dries Exp $
 
 /**
  * @file
@@ -829,10 +829,9 @@ function system_modules() {
   }
 
 
-  /**
-   * Handle status checkboxes, including overriding the generated checkboxes for required modules.
-   */
-   $form['status'] = array(type => 'checkboxes', default_value => $status, options => $options, tree => TRUE);
+  // Handle status checkboxes, including overriding the generated
+  // checkboxes for required modules.
+  $form['status'] = array(type => 'checkboxes', default_value => $status, options => $options, tree => TRUE);
   $required = array('block', 'filter', 'system', 'user', 'watchdog');
   foreach ($required as $require) {
     $form['status'][$require] = array(type => 'hidden', value => 1, suffix => t('required'));
@@ -879,11 +878,11 @@ function theme_system_modules($form) {
 
 
 function system_modules_execute($form_id, $edit) {
-  db_query("update {system} set status = 0, throttle = 0 where type = 'module'");
+  db_query("UPDATE {system} SET status = 0, throttle = 0 WHERE type = 'module'");
 
   foreach ($edit['status'] as $key => $choice) {
     if ($choice) {
-      db_query("update {system} set status = 1 where type = 'module' and name = '%s'", $key);
+      db_query("UPDATE {system} SET status = 1 WHERE type = 'module' AND name = '%s'", $key);
     }
   }
 
