@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.68 2005/09/19 19:13:35 dries Exp $
+// $Id: bootstrap.inc,v 1.69 2005/10/09 21:51:43 dries Exp $
 
 /**
  * @file
@@ -380,6 +380,16 @@ function cache_clear_all($cid = NULL, $wildcard = false) {
 
 /**
  * Store the current page in the cache.
+ *
+ * We try to store a gzipped version of the cache. This requires the
+ * PHP zlib extension (http://php.net/manual/en/ref.zlib.php).
+ * Presence of the extension is checked by testing for the function
+ * gzencode. There are two compression algorithms: gzip and deflate.
+ * The majority of all modern browsers support gzip or both of them.
+ * We thus only deal with the gzip variant and unzip the cache in case
+ * the browser does not accept gzip encoding.
+ *
+ * @see drupal_page_header
  */
 function page_set_cache() {
   global $user, $base_url;
@@ -387,16 +397,23 @@ function page_set_cache() {
   if (!$user->uid && $_SERVER['REQUEST_METHOD'] == 'GET') {
     // This will fail in some cases, see page_get_cache() for the explanation.
     if ($data = ob_get_contents()) {
+      $cache = TRUE;
       if (function_exists('gzencode')) {
-        if (version_compare(phpversion(), '4.2', '>=')) {
+        // We do not store the data in case the zlib mode is deflate.
+        // This should be rarely happening.
+        if (zlib_get_coding_type() == 'deflate') {
+          $cache = FALSE;
+        }
+        else if (zlib_get_coding_type() == FALSE) {
           $data = gzencode($data, 9, FORCE_GZIP);
         }
-        else {
-          $data = gzencode($data, FORCE_GZIP);
-        }
+        // The remaining case is 'gzip' which means the data is
+        // already compressed and nothing left to do but to store it.
       }
       ob_end_flush();
-      cache_set($base_url . request_uri(), $data, CACHE_TEMPORARY, drupal_get_headers());
+      if ($cache && $data) {
+        cache_set($base_url . request_uri(), $data, CACHE_TEMPORARY, drupal_get_headers());
+      }
     }
   }
 }
@@ -569,6 +586,8 @@ function drupal_set_title($title = NULL) {
 
 /**
  * Set HTTP headers in preparation for a page response.
+ *
+ * @see page_set_cache
  */
 function drupal_page_header() {
   if (variable_get('cache', 0)) {
