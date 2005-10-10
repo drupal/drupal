@@ -371,7 +371,7 @@ function xmlrpc() {
   }
   // Is the message a fault?
   if ($message->messagetype == 'fault') {
-    xmlrpc_error($message->faultcode, $message->faultstring);
+    xmlrpc_error($message->fault_code, $message->fault_string);
     return FALSE;
   }
   // Message must be OK
