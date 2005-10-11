@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.517 2005/10/11 19:44:35 dries Exp $
+// $Id: user.module,v 1.518 2005/10/11 20:52:16 unconed Exp $
 
 /**
  * @file
@@ -517,6 +517,7 @@ function user_block($op = 'list', $delta = 0, $edit = array()) {
       case 0:
         // For usability's sake, avoid showing two login forms on one page.
         if (!$user->uid && !(arg(0) == 'user' && !is_numeric(arg(1)))) {
+          $form['#attributes'] = array('id' => 'user-login-form');
           $form['name'] = array('#type' => 'textfield', '#title' => t('Username'), '#maxlength' => 64, '#size' => 15);
           $form['pass'] = array('#type' => 'password', '#title' => t('Password'), '#maxlength' => 64, '#size' => 15);
           $form['submit'] = array('#type' => 'submit', '#value' => t('Log in'));
@@ -589,15 +590,6 @@ function user_block($op = 'list', $delta = 0, $edit = array()) {
         return $block;
     }
   }
-}
-
-
-
-function theme_user_login_block($form) {
-  $output = "<div class=\"user-login-block\">\n";
-  $output .= form_render($form);
-  $output .= "</div>\n";
-  return $output;
 }
 
 function theme_user_picture($account) {
