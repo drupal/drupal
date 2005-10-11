@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.122 2005/10/11 11:56:45 dries Exp $ */
+/* $Id: drupal.css,v 1.123 2005/10/11 19:52:34 unconed Exp $ */
 
 /*
 ** HTML elements
@@ -623,13 +623,7 @@ html.js fieldset.collapsible legend a {
 html.js fieldset.collapsed legend a {
   background-image: url('menu-collapsed.png');
 }
-// Note: IE-only fix due to '* html' (breaks Konqueror otherwise).
+/* Note: IE-only fix due to '* html' (breaks Konqueror otherwise). */
 * html.js fieldset.collapsible legend a {
   display: block;
 }
-
-/*
-** Temporary CSS for porting of drupal forms.
-*/
-form { border: 3px solid red; }
-form.form-api { border : 0px; }
