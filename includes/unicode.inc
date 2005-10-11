@@ -81,7 +81,7 @@ function unicode_settings() {
   $options = array(UNICODE_SINGLEBYTE => t('Standard PHP: operations on Unicode strings are emulated on a best-effort basis. Install the <a href="%url">PHP mbstring extension</a> for improved Unicode support.', array('%url' => 'http://www.php.net/mbstring')),
                    UNICODE_MULTIBYTE => t('Multi-byte: operations on Unicode strings are supported through the <a href="%url">PHP mbstring extension</a>.', array('%url' => 'http://www.php.net/mbstring')),
                    UNICODE_ERROR => t('Invalid: the current configuration is incompatible with Drupal.'));
-  $form['settings'] = array(type => 'item', title =>t('String handling method'), value => $options[$status]); 
+  $form['settings'] = array('#type' => 'item', '#title' =>t('String handling method'), '#value' => $options[$status]); 
   return $form;
 }
 
