@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.121 2005/10/07 06:09:13 dries Exp $ */
+/* $Id: drupal.css,v 1.122 2005/10/11 11:56:45 dries Exp $ */
 
 /*
 ** HTML elements
@@ -25,7 +25,6 @@ th {
   text-align: left;
   padding-right: 1em;
   border-bottom: 3px solid #ccc;
-  white-space: nowrap;
 }
 th.active img {
   display: inline;
