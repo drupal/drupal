@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.37 2005/10/07 06:09:13 dries Exp $
+// $Id: menu.module,v 1.38 2005/10/11 19:44:34 dries Exp $
 
 /**
  * @file
@@ -298,16 +298,16 @@ function menu_edit_item($mid = 0) {
 function menu_edit_item_form($edit) {
   $menu = menu_get_menu();
 
-  $form['title'] = array(type => 'textfield', title => t('Title'), default_value => $edit['title'], size => 60, maxlength => 128, description => t('The name of the menu.'), required => TRUE);
+  $form['title'] = array('#type' => 'textfield', '#title' => t('Title'), '#default_value' => $edit['title'], '#size' => 60, '#maxlength' => 128, '#description' => t('The name of the menu.'), '#required' => TRUE);
 
   if ($edit['pid'] == 0) {
     // Display a limited set of fields for menus (not items).
-    $form['path'] = array(type => 'hidden', value => '');
-    $form['pid'] = array(type => 'hidden', value => 0);
-    $form['weight'] = array(type => 'hidden', value => 0);
+    $form['path'] = array('#type' => 'hidden', '#value' => '');
+    $form['pid'] = array('#type' => 'hidden', '#value' => 0);
+    $form['weight'] = array('#type' => 'hidden', '#value' => 0);
   }
   else {
-    $form['description'] = array(type => textfield, title => t('Description'), default_value => $edit['description'], size => 60, maxlength => 128, description => t('The description displayed when hovering over a menu item.'));
+    $form['description'] = array('#type' => textfield, '#title' => t('Description'), '#default_value' => $edit['description'], '#size' => 60, '#maxlength' => 128, '#description' => t('The description displayed when hovering over a menu item.'));
 
     $path_description = t('The Drupal path this menu item links to.');
     if (isset($edit['path']) && array_key_exists($edit['path'], $menu['path index']) && $menu['path index'][$edit['path']] != $edit['mid']) {
@@ -317,32 +317,32 @@ function menu_edit_item_form($edit) {
     }
 
     if ($edit['type'] & MENU_CREATED_BY_ADMIN) {
-      $form['path'] = array(type => 'textfield', title => t('Path'), default_value => $edit['path'], size => 60, maxlength => 128, description => $path_description, required => TRUE);
+      $form['path'] = array('#type' => 'textfield', '#title' => t('Path'), '#default_value' => $edit['path'], '#size' => 60, '#maxlength' => 128, '#description' => $path_description, '#required' => TRUE);
     }
     else {
-      $form['_path'] = array(type => 'item', title => t('Path'), title => l($edit['path'], $edit['path']));
-      $form['path'] = array(type => 'hidden', value => $edit['path']);
+      $form['_path'] = array('#type' => 'item', '#title' => t('Path'), '#title' => l($edit['path'], $edit['path']));
+      $form['path'] = array('#type' => 'hidden', '#value' => $edit['path']);
     }
     $expanded = $edit['type'] & MENU_EXPANDED ? 1 : 0;
-    $form['expanded'] = array(type => 'checkbox', title => t('Expanded'), default_value => $expanded, description => t('If selected and this menu item has children, the menu will always appear expanded.'));
+    $form['expanded'] = array('#type' => 'checkbox', '#title' => t('Expanded'), '#default_value' => $expanded, '#description' => t('If selected and this menu item has children, the menu will always appear expanded.'));
 
     // Generate a list of possible parents (not including this item or descendants).
     $options = menu_parent_options($edit['mid']);
-    $form['pid'] = array(type => 'select', title => t('Parent item'), default_value =>  $edit['pid'], options => $options);
+    $form['pid'] = array('#type' => 'select', '#title' => t('Parent item'), '#default_value' =>  $edit['pid'], '#options' => $options);
 
-    $form['weight'] = array(type => 'weight', title => t('Weight'), default_value => $edit['weight'], delta => 10, description => t('Optional. In the menu, the heavier items will sink and the lighter items will be positioned nearer the top.'));
+    $form['weight'] = array('#type' => 'weight', '#title' => t('Weight'), '#default_value' => $edit['weight'], '#delta' => 10, '#description' => t('Optional. In the menu, the heavier items will sink and the lighter items will be positioned nearer the top.'));
   }
 
-  $form['submit'] = array(type => 'submit', value => t('Submit'));
+  $form['submit'] = array('#type' => 'submit', '#value' => t('Submit'));
 
-  $form['mid'] = array(type => 'hidden', value => $edit['mid']);
+  $form['mid'] = array('#type' => 'hidden', '#value' => $edit['mid']);
 
   // Always enable menu items (but not menus) when editing them.
   if (!($edit['type'] & MENU_IS_ROOT)) {
     $edit['type'] |= MENU_VISIBLE_IN_TREE | MENU_VISIBLE_IN_BREADCRUMB;
   }
 
-  $form['type'] = array(type => 'hidden', value => $edit['type']);
+  $form['type'] = array('#type' => 'hidden', '#value' => $edit['type']);
 
   return drupal_get_form('menu_edit_item_form', $form);
 }
@@ -543,22 +543,22 @@ function menu_node_form($edit = array()) {
     }
   }
 
-  $form['menu'] = array(type => 'fieldset', title => t('Menu item settings'), collapsible => TRUE, collapsed => TRUE, tree => TRUE);
+  $form['menu'] = array('#type' => 'fieldset', '#title' => t('Menu item settings'), '#collapsible' => TRUE, '#collapsed' => TRUE, '#tree' => TRUE);
 
-  $form['menu']['title'] = array(type => 'textfield', title => t('Title'), default_value => $item['title'], size => 60, maxlength => 128, description => t('The name to display for this link.'));
+  $form['menu']['title'] = array('#type' => 'textfield', '#title' => t('Title'), '#default_value' => $item['title'], '#size' => 60, '#maxlength' => 128, '#description' => t('The name to display for this link.'));
 
   // Generate a list of possible parents (not including this item or descendants).
   $options = menu_parent_options($edit['mid']);
-  $form['menu']['pid'] = array(type => select, title => t('Parent item'), default_value => $item['pid'], options => $options);
-  $form['menu']['description'] = array(type => 'hidden', value => $item['description']);
-  $form['menu']['path'] = array(type => 'hidden', value => $item['path']);
-  $form['menu']['weight'] = array(type => 'hidden', value => $item['weight'] ? $item['weight'] : 0);
+  $form['menu']['pid'] = array('#type' => select, '#title' => t('Parent item'), '#default_value' => $item['pid'], '#options' => $options);
+  $form['menu']['description'] = array('#type' => 'hidden', '#value' => $item['description']);
+  $form['menu']['path'] = array('#type' => 'hidden', '#value' => $item['path']);
+  $form['menu']['weight'] = array('#type' => 'hidden', '#value' => $item['weight'] ? $item['weight'] : 0);
 
-  $form['menu']['mid'] = array(type => 'hidden', value => $item['mid'] ? $item['mid'] : 0);
-  $form['menu']['type'] = array(type => 'hidden', value => $item['type'] ? $item['type'] : MENU_CUSTOM_ITEM);
+  $form['menu']['mid'] = array('#type' => 'hidden', '#value' => $item['mid'] ? $item['mid'] : 0);
+  $form['menu']['type'] = array('#type' => 'hidden', '#value' => $item['type'] ? $item['type'] : MENU_CUSTOM_ITEM);
 
   if ($item['mid'] > 0) {
-    $form['menu']['delete'] = array(type => 'checkbox', title => t('Check to delete this menu item.'), default_value => $item['delete']);
+    $form['menu']['delete'] = array('#type' => 'checkbox', '#title' => t('Check to delete this menu item.'), '#default_value' => $item['delete']);
   }
 
   return $form;

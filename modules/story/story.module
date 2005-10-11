@@ -1,5 +1,5 @@
 <?php
-// $Id: story.module,v 1.172 2005/10/07 06:09:13 dries Exp $
+// $Id: story.module,v 1.173 2005/10/11 19:44:35 dries Exp $
 
 /**
  * @file
@@ -75,21 +75,17 @@ function story_validate(&$node) {
  */
 function story_form(&$node) {
 
-  $form['title'] = array(type => 'textfield', title => t('Title'), size => 60, maxlength => 128, required => TRUE, default_value => $node->title);
-
-  if (function_exists('taxonomy_node_form')) {
-    $form['taxonomy'] = taxonomy_node_form('story', $node);
-  }
+  $form['title'] = array('#type' => 'textfield', '#title' => t('Title'), '#size' => 60, '#maxlength' => 128, '#required' => TRUE, '#default_value' => $node->title);
 
   $form['body'] = array(
-    type => 'textarea', title => t('Body'), default_value => $node->body, required => TRUE
+    '#type' => 'textarea', '#title' => t('Body'), '#default_value' => $node->body, '#required' => TRUE
   );
   $form = array_merge($form, filter_form($node->format));
 
 
   $form['log'] = array(
-    type => 'textarea', title => t('Log message'), default_value => $node->log, rows => 5,
-    description => t('An explanation of the additions or updates being made to help other authors understand your motivations.')
+    '#type' => 'textarea', '#title' => t('Log message'), '#default_value' => $node->log, '#rows' => 5,
+    '#description' => t('An explanation of the additions or updates being made to help other authors understand your motivations.')
   );
 
   return $form;

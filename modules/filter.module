@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.75 2005/10/08 12:21:47 dries Exp $
+// $Id: filter.module,v 1.76 2005/10/11 19:44:34 dries Exp $
 
 /**
  * @file
@@ -291,13 +291,13 @@ function filter_admin_overview() {
     $row = array();
     $default = ($id == variable_get('filter_default_format', 1));
     $options[$id] = '';
-    $form[$format->name]['id'] = array(type => 'markup', value => $id);
-    $form[$format->name]['roles'] = array(type => 'markup', value => $roles ? implode(', ',$roles) : t('No roles may use this format'));
-    $form[$format->name]['configure'] = array(type => 'markup', value => l(t('configure'), 'admin/filters/'. $id));
-    $form[$format->name]['delete'] = array(type => 'markup', value => $default ? '' : l('delete', 'admin/filters/delete/'. $id));
+    $form[$format->name]['id'] = array('#type' => 'markup', '#value' => $id);
+    $form[$format->name]['roles'] = array('#type' => 'markup', '#value' => $roles ? implode(', ',$roles) : t('No roles may use this format'));
+    $form[$format->name]['configure'] = array('#type' => 'markup', '#value' => l(t('configure'), 'admin/filters/'. $id));
+    $form[$format->name]['delete'] = array('#type' => 'markup', '#value' => $default ? '' : l('delete', 'admin/filters/delete/'. $id));
   }
-  $form['default'] = array(type => 'radios', options => $options, default_value => variable_get('filter_default_format', 1));
-  $form['submit'] = array(type => 'submit', value => t('Set default format'));
+  $form['default'] = array('#type' => 'radios', '#options' => $options, '#default_value' => variable_get('filter_default_format', 1));
+  $form['submit'] = array('#type' => 'submit', '#value' => t('Set default format'));
   return drupal_get_form('filter_admin_overview', $form);
 }
 
@@ -305,7 +305,7 @@ function theme_filter_admin_overview($form) {
   foreach ($form as $name => $element) {
     if (isset($element['roles']) && is_array($element['roles'])) {
       $rows[] = array(
-        form_render($form['default'][$element['id'][value]]),
+        form_render($form['default'][$element['id']['#value']]),
         $name,
         form_render($element['roles']),
         form_render($element['configure']),
@@ -360,8 +360,8 @@ function filter_admin_delete() {
   $format = arg(3);
   $format = db_fetch_object(db_query('SELECT * FROM {filter_formats} WHERE format = %d', $format));
 
-  $form['format'] = array(type => 'hidden', value => $format->format);
-  $form['name'] = array(type => 'hidden', value => $format->name);
+  $form['format'] = array('#type' => 'hidden', '#value' => $format->format);
+  $form['name'] = array('#type' => 'hidden', '#value' => $format->name);
 
   return confirm_form('filter_admin_delete', $form, t('Are you sure you want to delete the input format %format?', array('%format' => theme('placeholder', $format->name))), 'admin/filters', t('If you have any content left in this input format, it will be switched to the default input format. This action cannot be undone.'), t('Delete'), t('Cancel'));
 
@@ -402,33 +402,33 @@ function filter_admin_format_form($format) {
   $default = ($format->format == variable_get('filter_default_format', 1));
   if ($default) {
     $help = t('All roles for the default format must be enabled and cannot be changed.');
-    $form['default_format'] = array(type => 'hidden', value => 1);
+    $form['default_format'] = array('#type' => 'hidden', '#value' => 1);
   }
 
   //Add the name of the object
-  $form['name'] = array(type => 'fieldset', title => t('Name'));
-  $form['name']['name'] = array(type => 'textfield', default_value => $format->name, size => 60, maxlength => 127, description => t('Give the name of this filter format'), required => TRUE);
+  $form['name'] = array('#type' => 'fieldset', '#title' => t('Name'));
+  $form['name']['name'] = array('#type' => 'textfield', '#default_value' => $format->name, '#size' => 60, '#maxlength' => 127, '#description' => t('Give the name of this filter format'), '#required' => TRUE);
 
   //Add a row of checkboxes for form group
-  $form['roles'] = array(type => 'fieldset', title => t('Roles'), description => $default ? $help : t('Choose which roles may use this filter format.'), tree => TRUE);
+  $form['roles'] = array('#type' => 'fieldset', '#title' => t('Roles'), '#description' => $default ? $help : t('Choose which roles may use this filter format.'), '#tree' => TRUE);
   $form['roles']['hidden'] = array();
   foreach (user_roles() as $rid => $name) {
     $checked = strstr($format->roles, ",$rid,");
-    $form['roles'][$rid] = array(type => 'checkbox', title => $name, default_value => ($default || $checked));
+    $form['roles'][$rid] = array('#type' => 'checkbox', '#title' => $name, '#default_value' => ($default || $checked));
     if ($default) {
-      $form['roles'][$rid][attributes] = array('disabled' => 'disabled');
+      $form['roles'][$rid]['#attributes'] = array('disabled' => 'disabled');
     }
   }
   // Table with filters
   $all = filter_list_all();
   $enabled = filter_list_format($format->format);
 
-  $form['filters'] = array(type => 'fieldset', title => t('Filters'), description => t('Choose the filters that will be used in this filter format'));
+  $form['filters'] = array('#type' => 'fieldset', '#title' => t('Filters'), '#description' => t('Choose the filters that will be used in this filter format'));
   foreach ($all as $id => $filter) {
-    $form['filters'][$id] = array(type => 'checkbox', title => $filter->name, default_value => isset($enabled[$id]), description => module_invoke($filter->module, 'filter', 'description', $filter->delta));
+    $form['filters'][$id] = array('#type' => 'checkbox', '#title' => $filter->name, '#default_value' => isset($enabled[$id]), '#description' => module_invoke($filter->module, 'filter', 'description', $filter->delta));
   }
 
-  $form['submit'] = array(type => 'submit', value => t('Save configuration'));
+  $form['submit'] = array('#type' => 'submit', '#value' => t('Save configuration'));
 
   return drupal_get_form('filter_admin_format_form', $form);
 }
@@ -475,7 +475,8 @@ function filter_admin_filters_save($format, $toggles) {
   // We store the roles as a string for ease of use.
   // we should always set all roles to true when saving a default role.
   // We use leading and trailing comma's to allow easy substring matching.
-  $roles = ','. implode(',', $edit['default_format'] ? user_roles() : array_keys($edit['roles'])) .',';
+  $roles = isset($edit['roles']) ? $edit['roles'] : array();
+  $roles = ','. implode(',', ($edit['default_format'] ? user_roles() : $roles)) .',';
 
   db_query("UPDATE {filter_formats} SET cache = %d, name='%s', roles = '%s' WHERE format = %d", $cache, $name, $roles, $format);
 
@@ -503,10 +504,10 @@ function filter_admin_order() {
   $filters = filter_list_format($format);
 
   foreach ($filters as $id => $filter) {
-    $form['name'][$id] = array(type => 'markup', value => $filter->name);
-    $form['weight'][$id] = array(type => 'weight', default_value => $filter->weight);
+    $form['name'][$id] = array('#type' => 'markup', '#value' => $filter->name);
+    $form['weight'][$id] = array('#type' => 'weight', '#default_value' => $filter->weight);
   }
-  $form['submit'] = array(type => 'submit', value => t('Save configuration'));
+  $form['submit'] = array('#type' => 'submit', '#value' => t('Save configuration'));
 
   return drupal_get_form('filter_admin_order', $form);
 }
@@ -751,37 +752,48 @@ function filter_form($value = FILTER_FORMAT_DEFAULT) {
 
   $extra = l(t('More information about formatting options'), 'filter/tips');
 
-  $form['format'] = array(type => 'fieldset', title => t('Input format'), collapsible => TRUE, collapsed => TRUE, weight => -4);
+  $form['format'] = array('#type' => 'fieldset', '#title' => t('Input format'), '#collapsible' => TRUE, '#collapsed' => TRUE, '#weight' => -4);
   if (count($formats) > 1) {
     // Multiple formats available: display radio buttons with tips.
     foreach ($formats as $format) {
-      $form['format'][$format->format] = array(type => 'filter_format', title => $format->name, default_value => $value, return_value => $format->format, parents => array('format'), description => theme('filter_tips', _filter_tips($format->format, false)));
+      $form['format'][$format->format] = array('#type' => 'filter_format', '#title' => $format->name, '#default_value' => $value, '#return_value' => $format->format, '#parents' => array('format'), '#description' => theme('filter_tips', _filter_tips($format->format, false)), '#valid' => 'filter_form');
     }
     return $form;
   }
   else {
     // Only one format available: use a hidden form item and only show tips.
     $format = array_shift($formats);
-    $form['format'][$format->name] = array(type => 'value', value => $format->format);
+    $form['format'][$format->name] = array('#type' => 'value', '#value' => $format->format);
     $tips = _filter_tips(variable_get('filter_default_format', 1), false);
-    $form['format']['guidelines'] = array(type => 'markup', title => t('Formatting guidelines'), value => theme('filter_tips', $tips, false, $extra));
+    $form['format']['guidelines'] = array('#type' => 'markup', '#title' => t('Formatting guidelines'), '#value' => theme('filter_tips', $tips, false, $extra));
     return $form;
   }
 }
 
 function filter_elements() {
-  $type['filter_format'] = array(input => TRUE);
+  $type['filter_format'] = array('#input' => TRUE);
   return $type;
 }
 
 function theme_filter_format($element) {
   $output .= '<div>';
-  $output .= '<label class="option"><input type="radio" class="form-radio" name="' . $element[name] . '" value="'. $element[return_value] .'"'. (($element[default_value] == $element[return_value]) ? ' checked="checked"' : '') .' /> '. $element[title] .'</label>';
-  $output .= $element[description];
+  $output .= '<label class="option"><input type="radio" class="form-radio" name="' . $element['#name'] . '" value="'. $element['#return_value'] .'"'. (($element['#default_value'] == $element['#return_value']) ? ' checked="checked"' : '') .' /> '. $element['#title'] .'</label>';
+  $output .= $element['#description'];
   $output .= '</div>';
   return $output;
 }
 
+function filter_form_valid($element) {
+  static $validated;
+  if ($validated) {
+    return;
+  }
+  $validated = 1;
+  $formats = filter_formats();
+  if (!isset($formats[$element['#value']])) {
+    form_set_error($element['#parents'][0], t('The supplied input format is invalid.'));
+  }
+}
 
 /**
  * Returns true if the user is allowed to access this format.
@@ -948,12 +960,12 @@ function filter_filter($op, $delta = 0, $format = -1, $text = '') {
  * Settings for the HTML filter.
  */
 function _filter_html_settings($format) {
-  $form['filter_html'] = array(type => 'fieldset', title => t('HTML filter'), collapsible => TRUE, collapsed => TRUE);
-  $form['filter_html']["filter_html_$format"] = array(type => 'radios', title => t('Filter HTML tags'), default_value => variable_get("filter_html_$format", FILTER_HTML_STRIP), options => array(FILTER_HTML_STRIP => t('Strip tags'), FILTER_HTML_ESCAPE => t('Escape tags')), description => t('How to deal with HTML tags in user-contributed content. If set to "Strip tags", dangerous tags are removed (see below). If set to "Escape tags", all HTML is escaped and presented as it was typed.'));
-  $form['filter_html']["allowed_html_$format"] = array(type => 'textfield', title => t('Allowed HTML tags'), default_value => variable_get("allowed_html_$format", '<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd>'), size => 64, maxlength => 255, description => t('If "Strip tags" is selected, optionally specify tags which should not be stripped. Javascript event attributes are always stripped.'));
-  $form['filter_html']["filter_html_help_$format"] = array(type => 'checkbox', title => t('Display HTML help'), default_value => variable_get("filter_html_help_$format", 1), description => t('If enabled, Drupal will display some basic HTML help in the long filter tips.'));
-  $form['filter_html']["filter_style_$format"] = array(type => 'radios', title => t('HTML style attributes'), default_value => variable_get("filter_style_$format", FILTER_STYLE_STRIP), options => array(FILTER_STYLE_ALLOW => t('Allowed'), FILTER_STYLE_STRIP => t('Removed')), description => t('If "Strip tags" is selected, you can choose whether "STYLE" attributes are allowed or removed from input.'));
-  $form['filter_html']["filter_html_nofollow_$format"] = array(type => 'checkbox', title => t('Spam link deterrent'), default_value => variable_get("filter_html_nofollow_$format", FALSE), description => t('If enabled, Drupal will add rel="nofollow" to all links, as a measure to reduce the effectiveness of spam links. Note: this will also prevent valid links from being followed by search engines, therefore it is likely most effective when enabled for anonymous users.'));
+  $form['filter_html'] = array('#type' => 'fieldset', '#title' => t('HTML filter'), '#collapsible' => TRUE, '#collapsed' => TRUE);
+  $form['filter_html']["filter_html_$format"] = array('#type' => 'radios', '#title' => t('Filter HTML tags'), '#default_value' => variable_get("filter_html_$format", FILTER_HTML_STRIP), '#options' => array(FILTER_HTML_STRIP => t('Strip tags'), FILTER_HTML_ESCAPE => t('Escape tags')), '#description' => t('How to deal with HTML tags in user-contributed content. If set to "Strip tags", dangerous tags are removed (see below). If set to "Escape tags", all HTML is escaped and presented as it was typed.'));
+  $form['filter_html']["allowed_html_$format"] = array('#type' => 'textfield', '#title' => t('Allowed HTML tags'), '#default_value' => variable_get("allowed_html_$format", '<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd>'), '#size' => 64, '#maxlength' => 255, '#description' => t('If "Strip tags" is selected, optionally specify tags which should not be stripped. Javascript event attributes are always stripped.'));
+  $form['filter_html']["filter_html_help_$format"] = array('#type' => 'checkbox', '#title' => t('Display HTML help'), '#default_value' => variable_get("filter_html_help_$format", 1), '#description' => t('If enabled, Drupal will display some basic HTML help in the long filter tips.'));
+  $form['filter_html']["filter_style_$format"] = array('#type' => 'radios', '#title' => t('HTML style attributes'), '#default_value' => variable_get("filter_style_$format", FILTER_STYLE_STRIP), '#options' => array(FILTER_STYLE_ALLOW => t('Allowed'), FILTER_STYLE_STRIP => t('Removed')), '#description' => t('If "Strip tags" is selected, you can choose whether "STYLE" attributes are allowed or removed from input.'));
+  $form['filter_html']["filter_html_nofollow_$format"] = array('#type' => 'checkbox', '#title' => t('Spam link deterrent'), '#default_value' => variable_get("filter_html_nofollow_$format", FALSE), '#description' => t('If enabled, Drupal will add rel="nofollow" to all links, as a measure to reduce the effectiveness of spam links. Note: this will also prevent valid links from being followed by search engines, therefore it is likely most effective when enabled for anonymous users.'));
 
   return $form;
 }

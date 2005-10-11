@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.239 2005/10/09 10:39:15 dries Exp $
+// $Id: system.module,v 1.240 2005/10/11 19:44:35 dries Exp $
 
 /**
  * @file
@@ -54,29 +54,29 @@ function system_perm() {
  */
 function system_elements() {
   // Top level form
-  $type['form'] = array(method => 'POST', action => request_uri());
+  $type['form'] = array('#method' => 'POST', '#action' => request_uri());
 
   // Inputs
-  $type['checkbox'] = array(input => TRUE, return_value => 1);
-  $type['submit'] = array(input => TRUE, name => 'op', button_type => 'submit', execute => TRUE);
-  $type['button'] = array(input => TRUE, name => 'op', button_type => 'submit', exexute => FALSE);
-  $type['textfield'] = array(input => TRUE, size => 60, maxlength => 70, autocomplete_path => FALSE);
-  $type['password'] = array(input => TRUE, size => 60, maxlength => 70);
-  $type['textarea'] = array(input => TRUE, cols => 60, rows => 20);
-  $type['radios'] = array(input => TRUE, process => 'expand_radios');
-  $type['radio'] = array(input => TRUE);
-  $type['checkboxes'] = array(input => TRUE, process => 'expand_checkboxes', tree => TRUE);
-  $type['select'] = array(input => TRUE);
-  $type['weight'] = array(input => TRUE, delta => 10);
-  $type['date'] = array(input => TRUE, process => 'expand_date');
-  $type['file'] = array(input => TRUE, size => 60);
+  $type['checkbox'] = array('#input' => TRUE, '#return_value' => 1);
+  $type['submit'] = array('#input' => TRUE, '#name' => 'op', '#button_type' => 'submit', '#execute' => TRUE);
+  $type['button'] = array('#input' => TRUE, '#name' => 'op', '#button_type' => 'submit', exexute => FALSE);
+  $type['textfield'] = array('#input' => TRUE, '#size' => 60, '#maxlength' => 70, '#autocomplete_path' => FALSE);
+  $type['password'] = array('#input' => TRUE, '#size' => 60, '#maxlength' => 70);
+  $type['textarea'] = array('#input' => TRUE, '#cols' => 60, '#rows' => 20);
+  $type['radios'] = array('#input' => TRUE, '#process' => 'expand_radios');
+  $type['radio'] = array('#input' => TRUE);
+  $type['checkboxes'] = array('#input' => TRUE, '#process' => 'expand_checkboxes', '#tree' => TRUE);
+  $type['select'] = array('#input' => TRUE);
+  $type['weight'] = array('#input' => TRUE, '#delta' => 10);
+  $type['date'] = array('#input' => TRUE, '#process' => 'expand_date');
+  $type['file'] = array('#input' => TRUE, '#size' => 60);
 
   // Form structure
   $type['item'] = array();
-  $type['hidden'] = array(input => TRUE);
-  $type['value'] = array(input => TRUE);
-  $type['markup'] = array(prefix => '', suffix => '');
-  $type['fieldset'] = array(collapsible => FALSE, collapsed => FALSE);
+  $type['hidden'] = array('#input' => TRUE);
+  $type['value'] = array('#input' => TRUE);
+  $type['markup'] = array('#prefix' => '', '#suffix' => '');
+  $type['fieldset'] = array('#collapsible' => FALSE, '#collapsed' => FALSE);
   return $type;
 }
 
@@ -170,30 +170,44 @@ function system_user($type, $edit, &$user, $category = NULL) {
     }
 
     $form['themes'] = array(
-      type => 'fieldset', title => t('Theme configuration'), description => t('Selecting a different theme will change the look and feel of the site.'), weight => 2, collapsible => TRUE, collapsed => FALSE
-    );
+      '#type' => 'fieldset', '#title' => t('Theme configuration'), '#description' => t('Selecting a different theme will change the look and feel of the site.'), '#weight' => 2, '#collapsible' => TRUE, '#collapsed' => FALSE, '#theme' => 'system_user');
 
     foreach ($themes as $info) {
       $info->screenshot = dirname($info->filename) . '/screenshot.png';
       $screenshot = file_exists($info->screenshot) ? theme('image', $info->screenshot, t('Screenshot for %theme theme', array('%theme' => $info->name)), '', array('class' => 'screenshot'), false) : t('no screenshot');
 
-      $form['themes'][$info->name]['screenshot'] = array(type => 'markup', value => $screenshot);
-      $form['themes'][$info->name]['description'] = array(type => 'item', title => $info->name,  value => dirname($info->filename));
+      $form['themes'][$info->name]['screenshot'] = array('#type' => 'markup', '#value' => $screenshot);
+      $form['themes'][$info->name]['description'] = array('#type' => 'item', '#title' => $info->name,  '#value' => dirname($info->filename));
       $options[$info->name] = '';
     }
 
-    $form['themes']['theme'] = array(type => 'radios', options => $options, default_value => $edit['theme']);
+    $form['themes']['theme'] = array('#type' => 'radios', '#options' => $options, '#default_value' => $edit['theme'] ? $edit['theme'] : variable_get('theme_default', 'bluemarine'));
 
     if (variable_get('configurable_timezones', 1)) {
       $zones = _system_zonelist();
-      $form['locale'] = array(type=>'item', title => t('Locale settings'), weight => 6);
+      $form['locale'] = array('#type'=>'item', '#title' => t('Locale settings'), '#weight' => 6);
       $form['locale']['timezone'] = array(
-        type => 'select', title => t('Time zone'), default_value => strlen($edit['timezone']) ? $edit['timezone'] : variable_get('date_default_timezone', 0),
-        options => $zones, descriptions => t('Select your current local time. Dates and times throughout this site will be displayed using this time zone.')
+        '#type' => 'select', '#title' => t('Time zone'), '#default_value' => strlen($edit['timezone']) ? $edit['timezone'] : variable_get('date_default_timezone', 0),
+        '#options' => $zones, descriptions => t('Select your current local time. Dates and times throughout this site will be displayed using this time zone.')
       );
     }
     return $form;
   }
+}
+
+function theme_system_user($form) {
+  foreach (element_children($form) as $key) {
+    $row = array();
+    if (is_array($form[$key]['description'])) {
+      $row[] = form_render($form[$key]['screenshot']);
+      $row[] = form_render($form[$key]['description']);
+      $row[] = form_render($form['theme'][$key]);
+    }
+    $rows[] = $row;
+  }
+
+  $output = theme('table', $header, $rows);
+  return $output;
 }
 
 function _system_zonelist() {
@@ -210,117 +224,117 @@ function _system_zonelist() {
 function system_view_general() {
   // General settings:
   $form['general'] = array(
-    type => 'fieldset', title => t('General settings'),
-    collapsible => TRUE, collapsed => TRUE
+    '#type' => 'fieldset', '#title' => t('General settings'),
+    '#collapsible' => TRUE, '#collapsed' => TRUE
   );
   $form['general']['site_name'] = array(
-    type => 'textfield', title => t('Name'), default_value => variable_get('site_name', 'drupal'),
-    description => t('The name of this web site.')
+    '#type' => 'textfield', '#title' => t('Name'), '#default_value' => variable_get('site_name', 'drupal'),
+    '#description' => t('The name of this web site.')
   );
   $form['general']['site_mail'] = array(
-    type => 'textfield', title => t('E-mail address'), default_value => variable_get('site_mail', ini_get('sendmail_from')), maxlength => 128,
-    description => t('A valid e-mail address for this website, used by the auto-mailer during registration, new password requests, notifications, etc.')
+    '#type' => 'textfield', '#title' => t('E-mail address'), '#default_value' => variable_get('site_mail', ini_get('sendmail_from')), '#maxlength' => 128,
+    '#description' => t('A valid e-mail address for this website, used by the auto-mailer during registration, new password requests, notifications, etc.')
   );
   $form['general']['site_slogan'] = array(
-    type => 'textfield', title => t('Slogan'), default_value => variable_get('site_slogan', ''),
-    maxlength => 128, description => t('The slogan of this website. Some themes display a slogan when available.')
+    '#type' => 'textfield', '#title' => t('Slogan'), '#default_value' => variable_get('site_slogan', ''),
+    '#maxlength' => 128, '#description' => t('The slogan of this website. Some themes display a slogan when available.')
   );
 
   $form['general']['site_mission'] = array(
-    type => 'textarea', title => t('Mission'), default_value => variable_get('site_mission', ''),
-    rows => 5, description => t('Your site\'s mission statement or focus.')
+    '#type' => 'textarea', '#title' => t('Mission'), '#default_value' => variable_get('site_mission', ''),
+    '#rows' => 5, '#description' => t('Your site\'s mission statement or focus.')
   );
   $form['general']['site_footer'] = array(
-    type => 'textarea', title => t('Footer message'), default_value => variable_get('site_footer', ''), rows => 5,
-    description => t('This text will be displayed at the bottom of each page.  Useful for adding a copyright notice to your pages.')
+    '#type' => 'textarea', '#title' => t('Footer message'), '#default_value' => variable_get('site_footer', ''), '#rows' => 5,
+    '#description' => t('This text will be displayed at the bottom of each page.  Useful for adding a copyright notice to your pages.')
   );
   $form['general']['anonymous'] = array(
-    type => 'textfield', title => t('Anonymous user'), default_value => variable_get('anonymous', 'Anonymous'),
-    description => t('The name used to indicate anonymous users.')
+    '#type' => 'textfield', '#title' => t('Anonymous user'), '#default_value' => variable_get('anonymous', 'Anonymous'),
+    '#description' => t('The name used to indicate anonymous users.')
   );
   $form['general']['site_frontpage'] = array(
-    type => 'textfield', title => t('Default front page'), default_value => variable_get('site_frontpage', 'node'),
-    description => t('The home page displays content from this relative URL.  If you are not using clean URLs, specify the part after "?q=".  If unsure, specify "node".')
+    '#type' => 'textfield', '#title' => t('Default front page'), '#default_value' => variable_get('site_frontpage', 'node'),
+    '#description' => t('The home page displays content from this relative URL.  If you are not using clean URLs, specify the part after "?q=".  If unsure, specify "node".')
   );
 
   // We check for clean URL support using an image on the client side.
   $form['general']['clean_url'] = array(
-    type => 'radios', title => t('Clean URLs'), default_value => variable_get('clean_url', 0), options => array(t('Disabled'), t('Enabled')),
-    description => t('This option makes Drupal emit clean URLs (i.e. without <code>?q=</code> in the URL). You\'ll need <code>ModRewrite</code> support for this to work. See the <code>.htaccess</code> file in Drupal\'s top-level directory for more information.')
+    '#type' => 'radios', '#title' => t('Clean URLs'), '#default_value' => variable_get('clean_url', 0), '#options' => array(t('Disabled'), t('Enabled')),
+    '#description' => t('This option makes Drupal emit clean URLs (i.e. without <code>?q=</code> in the URL). You\'ll need <code>ModRewrite</code> support for this to work. See the <code>.htaccess</code> file in Drupal\'s top-level directory for more information.')
   );
 
   variable_set('clean_url_ok', 0);
   global $base_url;
   // We will use a random URL so there is no way a proxy or a browser could cache the "no such image" answer.
-  $form['general']['clean_url_test'] = array(type => 'markup', value => '<img style="position: relative; left: -1000em;" src="'. $base_url. '/system/test/'. user_password(20) .'.png" alt="" />');
+  $form['general']['clean_url_test'] = array('#type' => 'markup', '#value' => '<img style="position: relative; left: -1000em;" src="'. $base_url. '/system/test/'. user_password(20) .'.png" alt="" />');
 
   // Error handling:
 
-  $form['errors'] = array( type => 'fieldset', title =>t('Error handling'), collapsible => TRUE, collapsed => TRUE );
+  $form['errors'] = array( '#type' => 'fieldset', '#title' =>t('Error handling'), '#collapsible' => TRUE, '#collapsed' => TRUE );
   $form['errors']['site_403'] = array(
-    type => 'textfield', title => t('Default 403 (access denied) page'), default_value => variable_get('site_403', ''),
-    description => t('This page is displayed when the requested document is denied to the current user.  If you are not using clean URLs, specify the part after "?q=". If unsure, specify nothing.')
+    '#type' => 'textfield', '#title' => t('Default 403 (access denied) page'), '#default_value' => variable_get('site_403', ''),
+    '#description' => t('This page is displayed when the requested document is denied to the current user.  If you are not using clean URLs, specify the part after "?q=". If unsure, specify nothing.')
   );
 
   $form['errors']['site_404'] = array(
-    type => 'textfield', title => t('Default 404 (not found) page'), default_value =>  variable_get('site_404', ''),
-    description => t('This page is displayed when no other content matches the requested document.  If you are not using clean URLs, specify the part after "?q=". If unsure, specify nothing.')
+    '#type' => 'textfield', '#title' => t('Default 404 (not found) page'), '#default_value' =>  variable_get('site_404', ''),
+    '#description' => t('This page is displayed when no other content matches the requested document.  If you are not using clean URLs, specify the part after "?q=". If unsure, specify nothing.')
   );
 
   $form['errors']['error_level'] = array(
-    type => 'select', title => t('Error reporting'), default_value => variable_get('error_level', 1),
-    options => array(t('Write errors to the log'), t('Write errors to the log and to the screen')),
-    description =>  t('Where Drupal, PHP and SQL errors are logged. On a production server it is recommended that errors are only written to the error log. On a test server it can be helpful to write logs to the screen.')
+    '#type' => 'select', '#title' => t('Error reporting'), '#default_value' => variable_get('error_level', 1),
+    '#options' => array(t('Write errors to the log'), t('Write errors to the log and to the screen')),
+    '#description' =>  t('Where Drupal, PHP and SQL errors are logged. On a production server it is recommended that errors are only written to the error log. On a test server it can be helpful to write logs to the screen.')
   );
 
   $period = drupal_map_assoc(array(3600, 10800, 21600, 32400, 43200, 86400, 172800, 259200, 604800, 1209600, 2419200), 'format_interval');
   $period['1000000000'] = t('Never');
   $form['errors']['watchdog_clear'] = array(
-    type => 'select', title => t('Discard log entries older than'), default_value => variable_get('watchdog_clear', 604800), options => $period,
-    description => t('The time log entries should be kept.  Older entries will be automatically discarded.  Requires crontab.')
+    '#type' => 'select', '#title' => t('Discard log entries older than'), '#default_value' => variable_get('watchdog_clear', 604800), '#options' => $period,
+    '#description' => t('The time log entries should be kept.  Older entries will be automatically discarded.  Requires crontab.')
   );
 
 
   // Caching:
-  $form['cache'] = array(type => 'fieldset', title => t('Cache settings'), collapsible => TRUE, collapsed => TRUE);
+  $form['cache'] = array('#type' => 'fieldset', '#title' => t('Cache settings'), '#collapsible' => TRUE, '#collapsed' => TRUE);
 
   $form['cache']['cache']  = array(
-    type => 'radios',  title => t('Page cache'), default_value => variable_get('cache', CACHE_DISABLED),
-    options => array(CACHE_DISABLED => t('Disabled'), CACHE_ENABLED => t('Enabled')),
-    description => t("Drupal has a caching mechanism which stores dynamically generated web pages in a database.  By caching a web page, Drupal does not have to create the page each time someone wants to view it, instead it takes only one SQL query to display it, reducing response time and the server's load.  Only pages requested by \"anonymous\" users are cached.  In order to reduce server load and save bandwidth, Drupal stores and sends compressed cached pages.")
+    '#type' => 'radios',  '#title' => t('Page cache'), '#default_value' => variable_get('cache', CACHE_DISABLED),
+    '#options' => array(CACHE_DISABLED => t('Disabled'), CACHE_ENABLED => t('Enabled')),
+    '#description' => t("Drupal has a caching mechanism which stores dynamically generated web pages in a database.  By caching a web page, Drupal does not have to create the page each time someone wants to view it, instead it takes only one SQL query to display it, reducing response time and the server's load.  Only pages requested by \"anonymous\" users are cached.  In order to reduce server load and save bandwidth, Drupal stores and sends compressed cached pages.")
   );
 
   $period = drupal_map_assoc(array(0, 60, 180, 300, 600, 900, 1800, 2700, 3600, 10800, 21600, 32400, 43200, 86400), 'format_interval');
   $period[0] = t('none');
   $form['cache']['cache_lifetime'] = array(
-    type => 'select', title => t('Minimum cache lifetime'), default_value => variable_get('cache_lifetime', 0), options => $period,
-    description => t('Enabling the cache will offer a sufficient performance boost for most low-traffic and medium-traffic sites.  On high-traffic sites it can become necessary to enforce a minimum cache lifetime.  The minimum cache lifetime is the minimum amount of time that will go by before the cache is emptied and recreated.  A larger minimum cache lifetime offers better performance, but users will not see new content for a longer period of time.')
+    '#type' => 'select', '#title' => t('Minimum cache lifetime'), '#default_value' => variable_get('cache_lifetime', 0), '#options' => $period,
+    '#description' => t('Enabling the cache will offer a sufficient performance boost for most low-traffic and medium-traffic sites.  On high-traffic sites it can become necessary to enforce a minimum cache lifetime.  The minimum cache lifetime is the minimum amount of time that will go by before the cache is emptied and recreated.  A larger minimum cache lifetime offers better performance, but users will not see new content for a longer period of time.')
   );
 
 
   // File system:
-  $form['files'] = array(type => 'fieldset', title => t('File system settings'), collapsible => TRUE, collapsed => TRUE);
+  $form['files'] = array('#type' => 'fieldset', '#title' => t('File system settings'), '#collapsible' => TRUE, '#collapsed' => TRUE);
 
   $directory_path = variable_get('file_directory_path', 'files');
   file_check_directory($directory_path, FILE_CREATE_DIRECTORY, 'file_directory_path');
 
   $form['files']['file_directory_path'] = array(
-    type => 'textfield', title => t('File system path'), default_value => $directory_path, maxlength => 255, valid => 'directory',
-    description => t('A file system path where the files will be stored. This directory has to exist and be writable by Drupal. If the download method is set to public this directory has to be relative to Drupal installation directory, and be accessible over the web. When download method is set to private this directory should not be accessible over the web. Changing this location after the site has been in use will cause problems so only change this setting on an existing site if you know what you are doing.')
+    '#type' => 'textfield', '#title' => t('File system path'), '#default_value' => $directory_path, '#maxlength' => 255, '#valid' => 'directory',
+    '#description' => t('A file system path where the files will be stored. This directory has to exist and be writable by Drupal. If the download method is set to public this directory has to be relative to Drupal installation directory, and be accessible over the web. When download method is set to private this directory should not be accessible over the web. Changing this location after the site has been in use will cause problems so only change this setting on an existing site if you know what you are doing.')
   );
 
   $directory_temp = variable_get('file_directory_temp', FILE_DIRECTORY_TEMP);
   file_check_directory($directory_temp, FILE_CREATE_DIRECTORY, 'file_directory_temp');
 
   $form['files']['file_directory_tmp'] = array(
-    type => 'textfield', title => t('Temporary directory'), default_value => $directory_temp, maxlength => 255, valid => 'directory',
-    description => t('Location where uploaded files will be kept during previews. Relative paths will be resolved relative to the file system path.')
+    '#type' => 'textfield', '#title' => t('Temporary directory'), '#default_value' => $directory_temp, '#maxlength' => 255, '#valid' => 'directory',
+    '#description' => t('Location where uploaded files will be kept during previews. Relative paths will be resolved relative to the file system path.')
   );
 
   $form['files']['file_downloads'] = array(
-    type => 'radios', title => t('Download method'), default_value => variable_get('file_downloads', FILE_DOWNLOADS_PUBLIC),
-    options => array(FILE_DOWNLOADS_PUBLIC => t('Public - files are available using http directly.'), FILE_DOWNLOADS_PRIVATE => t('Private - files are transferred by Drupal.')),
-    description => t('If you want any sort of access control on the downloading of files, this needs to be set to <em>private</em>. You can change this at any time, however all download URLs will change and there may be unexpected problems so it is not recommended.')
+    '#type' => 'radios', '#title' => t('Download method'), '#default_value' => variable_get('file_downloads', FILE_DOWNLOADS_PUBLIC),
+    '#options' => array(FILE_DOWNLOADS_PUBLIC => t('Public - files are available using http directly.'), FILE_DOWNLOADS_PRIVATE => t('Private - files are transferred by Drupal.')),
+    '#description' => t('If you want any sort of access control on the downloading of files, this needs to be set to <em>private</em>. You can change this at any time, however all download URLs will change and there may be unexpected problems so it is not recommended.')
   );
 
   /*
@@ -329,28 +343,28 @@ function system_view_general() {
   $toolkits_available = image_get_available_toolkits();
   if (count($toolkits_available) > 1) {
     $group['image_toolkit'] = array(
-      type => 'radios', title => t('Select an image processing toolkit'),
-      default_value => variable_get('image_toolkit', image_get_toolkit()), options => $toolkits_available
+      '#type' => 'radios', '#title' => t('Select an image processing toolkit'),
+      '#default_value' => variable_get('image_toolkit', image_get_toolkit()), '#options' => $toolkits_available
     );
   }
   $group['toolkit'] = image_toolkit_invoke('settings');
   if (is_array($group)) {
-    $form['image'] = array(type => 'fieldset', title => t('Image handling'), collapsible => TRUE, collapsed => true);
+    $form['image'] = array('#type' => 'fieldset', '#title' => t('Image handling'), '#collapsible' => TRUE, '#collapsed' => true);
     $form['image'] = array_merge($form['image'], $group);
   }
   */
 
   // Feed settings
-  $form['feed'] = array(type => 'fieldset', title => t('RSS feed settings'), collapsible => TRUE, collapsed => TRUE);
+  $form['feed'] = array('#type' => 'fieldset', '#title' => t('RSS feed settings'), '#collapsible' => TRUE, '#collapsed' => TRUE);
   $form['feed']['feed_default_items'] = array(
-    type => 'select', title => t('Number of items per feed'), default_value => variable_get('feed_default_items', 10),
-    options => drupal_map_assoc(array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30)),
-    description => t('The default number of items to include in a feed.')
+    '#type' => 'select', '#title' => t('Number of items per feed'), '#default_value' => variable_get('feed_default_items', 10),
+    '#options' => drupal_map_assoc(array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30)),
+    '#description' => t('The default number of items to include in a feed.')
   );
   $form['feed']['feed_item_length'] = array(
-    type => 'select', title => t('Display of XML feed items'), default_value => variable_get('feed_item_length','teaser'),
-    options => array('title' => t('Titles only'), 'teaser' => t('Titles plus teaser'), 'fulltext' => t('Full text')),
-    description => t('Global setting for the length of XML feed items that are output by default.')
+    '#type' => 'select', '#title' => t('Display of XML feed items'), '#default_value' => variable_get('feed_item_length','teaser'),
+    '#options' => array('title' => t('Titles only'), 'teaser' => t('Titles plus teaser'), 'fulltext' => t('Full text')),
+    '#description' => t('Global setting for the length of XML feed items that are output by default.')
   );
 
   // Date settings:
@@ -379,64 +393,64 @@ function system_view_general() {
     $datelongchoices[$f] = format_date(time(), 'custom', $f);
   }
 
-  $form['dates'] = array(type => 'fieldset', title => t('Date settings'), collapsible => TRUE, collapsed => TRUE);
+  $form['dates'] = array('#type' => 'fieldset', '#title' => t('Date settings'), '#collapsible' => TRUE, '#collapsed' => TRUE);
   $form['dates']['date_default_timezone'] = array(
-    type => 'select', title => t('Default time zone'), default_value => variable_get('date_default_timezone', 0),
-    options => $zones, description => t('Select the default site time zone.')
+    '#type' => 'select', '#title' => t('Default time zone'), '#default_value' => variable_get('date_default_timezone', 0),
+    '#options' => $zones, '#description' => t('Select the default site time zone.')
   );
 
   $form['dates']['configurable_timezones'] = array(
-    type => 'radios', title => t('Configurable time zones'), default_value => variable_get('configurable_timezones', 1), options => array(t('Disabled'), t('Enabled')),
-    description => t('Enable or disable user-configurable time zones.  When enabled, users can set their own time zone and dates will be updated accordingly.')
+    '#type' => 'radios', '#title' => t('Configurable time zones'), '#default_value' => variable_get('configurable_timezones', 1), '#options' => array(t('Disabled'), t('Enabled')),
+    '#description' => t('Enable or disable user-configurable time zones.  When enabled, users can set their own time zone and dates will be updated accordingly.')
   );
 
   $form['dates']['date_format_short'] = array(
-    type => 'select', title => t('Short date format'), default_value => variable_get('date_format_short', $dateshort[0]),
-    options => $dateshortchoices,  description => t('The short format of date display.')
+    '#type' => 'select', '#title' => t('Short date format'), '#default_value' => variable_get('date_format_short', $dateshort[0]),
+    '#options' => $dateshortchoices,  '#description' => t('The short format of date display.')
   );
 
   $form['dates']['date_format_medium'] = array(
-    type => 'select', title => t('Medium date format'), default_value => variable_get('date_format_medium', $datemedium[0]),
-    options => $datemediumchoices, description => t('The medium sized date display.')
+    '#type' => 'select', '#title' => t('Medium date format'), '#default_value' => variable_get('date_format_medium', $datemedium[0]),
+    '#options' => $datemediumchoices, '#description' => t('The medium sized date display.')
   );
 
   $form['dates']['date_format_long'] = array(
-    type => 'select', title => t('Long date format'), default_value => variable_get('date_format_long', $datelong[0]),
-    options => $datelongchoices, description => t('Longer date format used for detailed display.')
+    '#type' => 'select', '#title' => t('Long date format'), '#default_value' => variable_get('date_format_long', $datelong[0]),
+    '#options' => $datelongchoices, '#description' => t('Longer date format used for detailed display.')
   );
 
   $form['dates']['date_first_day'] = array(
-    type => 'select', title => t('First day of week'), default_value => variable_get('date_first_day', 0),
-    options => array(0 => t('Sunday'), 1 => t('Monday'), 2 => t('Tuesday'), 3 => t('Wednesday'), 4 => t('Thursday'), 5 => t('Friday'), 6 => t('Saturday')),
-    description => t('The first day of the week for calendar views.')
+    '#type' => 'select', '#title' => t('First day of week'), '#default_value' => variable_get('date_first_day', 0),
+    '#options' => array(0 => t('Sunday'), 1 => t('Monday'), 2 => t('Tuesday'), 3 => t('Wednesday'), 4 => t('Thursday'), 5 => t('Friday'), 6 => t('Saturday')),
+    '#description' => t('The first day of the week for calendar views.')
   );
 
 
   // Site offline/maintenance settings
   $form['site_status'] = array(
-    type => 'fieldset',
-    title => t('Site maintenance'),
-    collapsible => TRUE,
-    collapsed => TRUE);
+    '#type' => 'fieldset',
+    '#title' => t('Site maintenance'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE);
 
   $form['site_status']['site_offline'] = array(
-    type => 'radios',
-    title => t('Site status'),
-    default_value => variable_get('site_offline', 0),
-    options => array(t('Online'), t('Offline')),
-    description => t('When set to "Online", all visitors will be able to browse your site normally. When set to "Offline", only users with the "administer site configuration" permission will be able to access your site to perform maintenance, all other visitors will see the site offline message configured below.')
+    '#type' => 'radios',
+    '#title' => t('Site status'),
+    '#default_value' => variable_get('site_offline', 0),
+    '#options' => array(t('Online'), t('Offline')),
+    '#description' => t('When set to "Online", all visitors will be able to browse your site normally. When set to "Offline", only users with the "administer site configuration" permission will be able to access your site to perform maintenance, all other visitors will see the site offline message configured below.')
   );
 
   $form['site_status']['site_offline_message'] = array(
-    type => 'textarea',
-    rows => 5,
-    title => t('Site offline message'),
-    default_value => variable_get('site_offline_message', t('%site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('%site' => variable_get('site_name', t('This drupal site'))))),
-    description => t('Message to show visitors when site is offline.')
+    '#type' => 'textarea',
+    '#rows' => 5,
+    '#title' => t('Site offline message'),
+    '#default_value' => variable_get('site_offline_message', t('%site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('%site' => variable_get('site_name', t('This drupal site'))))),
+    '#description' => t('Message to show visitors when site is offline.')
   );
 
   // String handling: report status and errors.
-  $form['strings'] = array(type => 'fieldset', title => t('String handling'), collapsible => TRUE, collapsed => TRUE);
+  $form['strings'] = array('#type' => 'fieldset', '#title' => t('String handling'), '#collapsible' => TRUE, '#collapsed' => TRUE);
   $form['strings'] = array_merge($form['strings'], unicode_settings());
 
   return $form;
@@ -657,8 +671,8 @@ function system_initialize_theme_blocks($theme) {
 
 // Add the submit / reset buttons and run drupal_get_form()
 function system_settings_form($form_id, $form) {
-  $form['buttons']['submit'] = array(type => 'submit', value => t('Save configuration') );
-  $form['buttons']['reset'] = array(type => 'submit', value => t('Reset to defaults') );
+  $form['buttons']['submit'] = array('#type' => 'submit', '#value' => t('Save configuration') );
+  $form['buttons']['reset'] = array('#type' => 'submit', '#value' => t('Reset to defaults') );
 
   if (!empty($_POST) && form_get_errors()) {
     drupal_set_message(t('The settings have not been saved because of the errors.'), 'error');
@@ -719,14 +733,14 @@ function system_themes() {
     $info->screenshot = dirname($info->filename) . '/screenshot.png';
     $screenshot = file_exists($info->screenshot) ? theme('image', $info->screenshot, t('Screenshot for %theme theme', array('%theme' => $info->name)), '', array('class' => 'screenshot'), false) : t('no screenshot');
 
-    $form[$info->name]['screenshot'] = array(type => 'markup', value => $screenshot);
-    $form[$info->name]['description'] = array(type => 'item', title => $info->name,  value => dirname($info->filename));
+    $form[$info->name]['screenshot'] = array('#type' => 'markup', '#value' => $screenshot);
+    $form[$info->name]['description'] = array('#type' => 'item', '#title' => $info->name,  '#value' => dirname($info->filename));
     $options[$info->name] = '';
     if ($info->status) {
       $status[] = $info->name;
     }
     if ($info->status && (function_exists($info->prefix . '_settings') || function_exists($info->prefix . '_features'))) {
-      $form[$info->name]['operations'] = array(type => 'markup', value => l(t('configure'), 'admin/themes/settings/' . $info->name) );
+      $form[$info->name]['operations'] = array('#type' => 'markup', '#value' => l(t('configure'), 'admin/themes/settings/' . $info->name) );
     }
     else {
       // Dummy element for form_render. Cleaner than adding a check in the theme function.
@@ -734,10 +748,10 @@ function system_themes() {
     }
   }
 
-  $form['status'] = array(type => 'checkboxes', options => $options, default_value => $status);
-  $form['theme_default'] = array(type => 'radios', options => $options, default_value => variable_get('theme_default', 'bluemarine'));
-  $form['buttons']['submit'] = array(type => 'submit', value => t('Save configuration') );
-  $form['buttons']['reset'] = array(type => 'submit', value => t('Reset to defaults') );
+  $form['status'] = array('#type' => 'checkboxes', '#options' => $options, '#default_value' => $status);
+  $form['theme_default'] = array('#type' => 'radios', '#options' => $options, '#default_value' => variable_get('theme_default', 'bluemarine'));
+  $form['buttons']['submit'] = array('#type' => 'submit', '#value' => t('Save configuration') );
+  $form['buttons']['reset'] = array('#type' => 'submit', '#value' => t('Reset to defaults') );
 
   return drupal_get_form('system_themes', $form);
 }
@@ -804,8 +818,8 @@ function system_modules() {
 
     $file->description = module_invoke($file->name, 'help', 'admin/modules#description');
 
-    $form['name'][$file->name] = array(value => $file->name);
-    $form['description'][$file->name] = array(value => $file->description);
+    $form['name'][$file->name] = array('#value' => $file->name);
+    $form['description'][$file->name] = array('#value' => $file->description);
     $options[$file->name] = '';
     if ($file->status) {
       $status[] = $file->name;
@@ -831,24 +845,24 @@ function system_modules() {
 
   // Handle status checkboxes, including overriding the generated
   // checkboxes for required modules.
-  $form['status'] = array(type => 'checkboxes', default_value => $status, options => $options, tree => TRUE);
+  $form['status'] = array('#type' => 'checkboxes', '#default_value' => $status, '#options' => $options, '#tree' => TRUE);
   $required = array('block', 'filter', 'system', 'user', 'watchdog');
   foreach ($required as $require) {
-    $form['status'][$require] = array(type => 'hidden', value => 1, suffix => t('required'));
+    $form['status'][$require] = array('#type' => 'hidden', '#value' => 1, '#suffix' => t('required'));
   }
 
   /**
    * Handle throttle checkboxes, including overriding the generated checkboxes for required modules.
    */
   if (module_exist('throttle')) {
-    $form['throttle'] = array(type => 'checkboxes', default_value => $throttle, options => $options, tree => TRUE);
+    $form['throttle'] = array('#type' => 'checkboxes', '#default_value' => $throttle, '#options' => $options, '#tree' => TRUE);
     $throttle_required = array_merge($required, array('throttle'));
     foreach ($throttle_required as $require) {
-      $form['throttle'][$require] = array(type => 'hidden', value => 1, suffix => t('required'));
+      $form['throttle'][$require] = array('#type' => 'hidden', '#value' => 1, '#suffix' => t('required'));
     }
   }
 
-  $form['buttons']['submit'] = array(type => 'submit', value => t('Save configuration'));
+  $form['buttons']['submit'] = array('#type' => 'submit', '#value' => t('Save configuration'));
 
   return drupal_get_form('system_modules', $form);
 }
@@ -935,7 +949,7 @@ function system_theme_settings($key = '') {
     $var = 'theme_settings';
   }
 
-  $form['var'] = array(type => 'hidden', value => $var);
+  $form['var'] = array('#type' => 'hidden', '#value' => $var);
 
   // Check for a new uploaded logo, and use that instead.
   if ($file = file_check_upload('logo_upload')) {
@@ -967,36 +981,36 @@ function system_theme_settings($key = '') {
 
   // Logo settings
   if ((!$key) || in_array('logo', $features)) {
-    $form['logo'] = array(type => 'fieldset', title => t('Logo image settings'));
+    $form['logo'] = array('#type' => 'fieldset', '#title' => t('Logo image settings'));
     $form['logo']["default_logo"] = array(
-      type => 'checkbox', title => t('Use the default logo'), default_value => $settings['default_logo'], tree => FALSE,
-      description => t('Check here if you want the theme to use the logo supplied with it.')
+      '#type' => 'checkbox', '#title' => t('Use the default logo'), '#default_value' => $settings['default_logo'], '#tree' => FALSE,
+      '#description' => t('Check here if you want the theme to use the logo supplied with it.')
     );
     $form['logo']['logo_path'] = array(
-      type => 'textfield', title => t('Path to custom logo'), size => 60, maxlength => 128,
-      description => t('The path to the file you would like to use as your logo file instead of the default logo.'));
+      '#type' => 'textfield', '#title' => t('Path to custom logo'), '#size' => 60, '#maxlength' => 128,
+      '#description' => t('The path to the file you would like to use as your logo file instead of the default logo.'));
 
     $form['logo']['logo_upload'] = array(
-      type => 'file', title => t('Upload logo image'), maxlength => 40,
-      description => t("If you don't have direct file access to the server, use this field to upload your logo.")
+      '#type' => 'file', '#title' => t('Upload logo image'), '#maxlength' => 40,
+      '#description' => t("If you don't have direct file access to the server, use this field to upload your logo.")
     );
   }
 
   // Icon settings
   if ((!$key) || in_array('toggle_favicon', $features)) {
-    $form['favicon'] = array(type => 'fieldset', title => t('Shortcut icon settings'));
-    $form['favicon']['text'] = array(value => t('Your shortcut icon or \'favicon\' is displayed in the address bar and bookmarks of most browsers.'));
+    $form['favicon'] = array('#type' => 'fieldset', '#title' => t('Shortcut icon settings'));
+    $form['favicon']['text'] = array('#value' => t('Your shortcut icon or \'favicon\' is displayed in the address bar and bookmarks of most browsers.'));
     $form['favicon']['default_favicon'] = array(
-      type => 'checkbox', title => t('Use the default shortcut icon.'), default_value => $settings['default_favicon'],
-      description => t('Check here if you want the theme to use the default shortcut icon.')
+      '#type' => 'checkbox', '#title' => t('Use the default shortcut icon.'), '#default_value' => $settings['default_favicon'],
+      '#description' => t('Check here if you want the theme to use the default shortcut icon.')
     );
     $form['favicon']['favicon_path'] = array(
-      type => 'textfield', title => t('Path to custom icon'), default_value =>  $settings['favicon_path'],
-      description => t('The path to the image file you would like to use as your custom shortcut icon.')
+      '#type' => 'textfield', '#title' => t('Path to custom icon'), '#default_value' =>  $settings['favicon_path'],
+      '#description' => t('The path to the image file you would like to use as your custom shortcut icon.')
     );
 
     $form['favicon']['favicon_upload'] = array(
-      type => 'file', title => t('Upload icon image'), description => t("If you don't have direct file access to the server, use this field to upload your shortcut icon.")
+      '#type' => 'file', '#title' => t('Upload icon image'), '#description' => t("If you don't have direct file access to the server, use this field to upload your shortcut icon.")
     );
   }
 
@@ -1011,9 +1025,9 @@ function system_theme_settings($key = '') {
     $node_types = module_invoke('node', 'get_types');
     if ($node_types) {
       $group = '';
-      $form['node_info'] = array(type => 'fieldset', title => t('Display post information on'), description =>  t('Enable or disable the "submitted by Username on date" text when displaying posts of the above type'));
+      $form['node_info'] = array('#type' => 'fieldset', '#title' => t('Display post information on'), '#description' =>  t('Enable or disable the "submitted by Username on date" text when displaying posts of the above type'));
       foreach ($node_types as $type => $name) {
-        $form['node_info']["toggle_node_info_$type"] = array(type => 'checkbox', title => $name, default_value => $settings["toggle_node_info_$type"]);
+        $form['node_info']["toggle_node_info_$type"] = array('#type' => 'checkbox', '#title' => $name, '#default_value' => $settings["toggle_node_info_$type"]);
       }
     }
   }
@@ -1043,11 +1057,11 @@ function system_theme_settings($key = '') {
     $disabled['toggle_search'] = true;
   }
 
-  $form['toggles'] = array(type => 'fieldset', title => t('Toggle display'), description => t('Enable or disable the display of certain page elements.'));
+  $form['toggles'] = array('#type' => 'fieldset', '#title' => t('Toggle display'), '#description' => t('Enable or disable the display of certain page elements.'));
   foreach ($toggles as $name => $title) {
     if ((!$key) || in_array($name, $features)) {
       // disable search box if search.module is disabled
-      $form['toggles'][$name] = array(type => 'checkbox', title => $title, default_value => $settings[$name], attributes =>  isset($disabled[$name]) ? array('disabled' => 'disabled') : NULL);
+      $form['toggles'][$name] = array('#type' => 'checkbox', '#title' => $title, '#default_value' => $settings[$name], '#attributes' =>  isset($disabled[$name]) ? array('disabled' => 'disabled') : NULL);
     }
   }
 
@@ -1057,17 +1071,17 @@ function system_theme_settings($key = '') {
     if (function_exists($function)) {
       if ($themes[$key]->template) {
         // file is a template or a style of a template
-        $form['specific'] = array(type => 'fieldset', title => t('Engine-specific settings'), description => t('These settings only exist for all the templates and styles based on the %engine theme engine.', array('%engine' => $themes[$key]->prefix)));
+        $form['specific'] = array('#type' => 'fieldset', '#title' => t('Engine-specific settings'), '#description' => t('These settings only exist for all the templates and styles based on the %engine theme engine.', array('%engine' => $themes[$key]->prefix)));
       }
       else {
         // file is a theme or a style of a theme
-        $form['specific'] = array(type => 'fieldset', title => t('Theme-specific settings'), description => t('These settings only exist for the %theme theme and all the styles based on it.', array('%theme' => $themes[$key]->prefix)));
+        $form['specific'] = array('#type' => 'fieldset', '#title' => t('Theme-specific settings'), '#description' => t('These settings only exist for the %theme theme and all the styles based on it.', array('%theme' => $themes[$key]->prefix)));
       }
       $group = $function();
       $form['specific'] = array_merge($form['specific'], (is_array($group) ? $group : array()));
     }
   }
-  $form[attributes] = array('enctype' => 'multipart/form-data');
+  $form['#attributes'] = array('enctype' => 'multipart/form-data');
 
   return system_settings_form('system_theme_settings', $form);
 
@@ -1094,21 +1108,21 @@ function system_navigation_links_form($type, $utype) {
     variable_set($type . '_link_count', $count);
   }
   $form = array(
-    type => 'item', title => t('_TYPE_ link settings', array('_TYPE_' => $utype)), theme => 'system_navigation_links_form',
-    description => t('You can specify your _TYPE_ links here, one link per line.<br /> The link text field is the text you want to link.<br /> The url field is the location the link points to.<br /> The description field is an optional description of where the link points.', array('_TYPE_' => $type))
+    '#type' => 'item', '#title' => t('_TYPE_ link settings', array('_TYPE_' => $utype)), '#theme' => 'system_navigation_links_form',
+    '#description' => t('You can specify your _TYPE_ links here, one link per line.<br /> The link text field is the text you want to link.<br /> The url field is the location the link points to.<br /> The description field is an optional description of where the link points.', array('_TYPE_' => $type))
   );
 
-  $form[tree] = TRUE;
+  $form['#tree'] = TRUE;
 
   for ($i = 0; $i < $count; $i++) {
     foreach (array('text', 'link', 'description') as $field) {
-      $form[$field][$i] = array(type => 'textfield', default_value => $value[$field][$i], size => 15, maxlength => 90);
+      $form[$field][$i] = array('#type' => 'textfield', '#default_value' => $value[$field][$i], '#size' => 15, '#maxlength' => 90);
     }
   }
 
   $form[$type . '_links_more'] = array(
-    type => 'checkbox', title => t('I need more _TYPE_ links.', array('_TYPE_' => $type)), default_value => FALSE,
-    description => t('Checking this box will give you 5 additional _TYPE_ links.', array('_TYPE_' => $type))
+    '#type' => 'checkbox', '#title' => t('I need more _TYPE_ links.', array('_TYPE_' => $type)), '#default_value' => FALSE,
+    '#description' => t('Checking this box will give you 5 additional _TYPE_ links.', array('_TYPE_' => $type))
   );
   return $form;
 }
@@ -1130,9 +1144,9 @@ function theme_system_navigation_links_form(&$form) {
 
 
 function search_box() {
-  $form[action] = url('search');
-  $form['keys'] = array(type => 'textfield', size=> 15, value => '', attributes => array('alt' => t('Enter the terms you wish to search for.'), 'class' => 'form-text'));
-  $form['submit'] = array(type => 'submit', value => t('search'));
+  $form['#action'] = url('search');
+  $form['keys'] = array('#type' => 'textfield', '#size'=> 15, '#value' => '', '#attributes' => array('alt' => t('Enter the terms you wish to search for.'), 'class' => 'form-text'));
+  $form['submit'] = array('#type' => 'submit', '#value' => t('search'));
   return drupal_get_form('search_box', $form);
 }
 
@@ -1179,12 +1193,12 @@ function confirm_form($form_id, $form, $question, $path, $description = NULL, $y
 
   $description = ($description) ? $description : t('This action cannot be undone.');
   drupal_set_title($question);
-  $form[attributes] = array('class' => 'confirmation');
-  $form['description'] = array(value => $description);
-  $form[$name] = array(type => 'hidden', value => 1);
+  $form['#attributes'] = array('class' => 'confirmation');
+  $form['description'] = array('#value' => $description);
+  $form[$name] = array('#type' => 'hidden', '#value' => 1);
 
-  $form['actions'] = array(prefix => '<div class="container-inline">', suffix => '</div>');
-  $form['actions']['submit'] = array(type => 'submit', value => $yes ? $yes : t('Confirm'));
-  $form['actions']['cancel'] = array(value => l($no ? $no : t('Cancel'), $path));
+  $form['actions'] = array('#prefix' => '<div class="container-inline">', '#suffix' => '</div>');
+  $form['actions']['submit'] = array('#type' => 'submit', '#value' => $yes ? $yes : t('Confirm'));
+  $form['actions']['cancel'] = array('#value' => l($no ? $no : t('Cancel'), $path));
   return drupal_get_form($form_id, $form, 'confirm_form');
 }

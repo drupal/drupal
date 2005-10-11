@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.322 2005/10/08 14:48:33 dries Exp $
+// $Id: book.module,v 1.323 2005/10/11 19:44:34 dries Exp $
 
 /**
  * @file
@@ -238,35 +238,31 @@ function book_validate(&$node) {
  */
 function book_form(&$node) {
   $form['parent'] = array(
-    type => 'select', title => t('Parent'), default_value => ($node->parent ? $node->parent : arg(4)), options => book_toc($node->nid), weight => -15,
-    description => t('The parent that this page belongs in. Note that pages whose parent is &lt;top-level&gt; are regarded as independent, top-level books.')
+    '#type' => 'select', '#title' => t('Parent'), '#default_value' => ($node->parent ? $node->parent : arg(4)), '#options' => book_toc($node->nid), '#weight' => -15,
+    '#description' => t('The parent that this page belongs in. Note that pages whose parent is &lt;top-level&gt; are regarded as independent, top-level books.')
   );
 
-  if (function_exists('taxonomy_node_form')) {
-    $form['taxonomy'] = taxonomy_node_form('book', $node);
-  }
-
-  $form['title'] = array(type => 'textfield', title => t('Title'), size => 60, maxlength => 128, required => TRUE, default_value => $node->title);
+  $form['title'] = array('#type' => 'textfield', '#title' => t('Title'), '#size' => 60, '#maxlength' => 128, '#required' => TRUE, '#default_value' => $node->title);
   $form['body'] = array(
-    type => 'textarea', title => t('Body'), default_value => $node->body, required => TRUE
+    '#type' => 'textarea', '#title' => t('Body'), '#default_value' => $node->body, '#required' => TRUE
   );
   $form = array_merge($form, filter_form($node->format));
 
   $form['log'] = array(
-    type => 'textarea', title => t('Log message'), default_value => $node->log, rows => 5, weight => 19,
-    description => t('An explanation of the additions or updates being made to help other authors understand your motivations.')
+    '#type' => 'textarea', '#title' => t('Log message'), '#default_value' => $node->log, '#rows' => 5, '#weight' => 19,
+    '#description' => t('An explanation of the additions or updates being made to help other authors understand your motivations.')
   );
 
   if (user_access('administer nodes')) {
     $form['weight'] = array(
-        type => 'weight', title => t('Weight'),  default_value => $node->weight, delta => 15, weight => -14,
-        description => t('Pages at a given level are ordered first by weight and then by title.')
+        '#type' => 'weight', '#title' => t('Weight'),  '#default_value' => $node->weight, '#delta' => 15, '#weight' => -14,
+        '#description' => t('Pages at a given level are ordered first by weight and then by title.')
     );
   }
   else {
     // If a regular user updates a book page, we create a new revision
     // authored by that user:
-    $form['revision'] = array(type => 'hidden', value => 1);
+    $form['revision'] = array('#type' => 'hidden', '#value' => 1);
   }
 
   return $form;
@@ -308,26 +304,26 @@ function book_outline() {
         $page = db_fetch_object(db_query('SELECT * FROM {book} WHERE vid = %d', $node->vid));
 
         $form['parent'] = array(
-          type => 'select', title => t('Parent'), default_value => $page->parent,
-          options => book_toc($node->nid), description => t('The parent page in the book.')
+          '#type' => 'select', '#title' => t('Parent'), '#default_value' => $page->parent,
+          '#options' => book_toc($node->nid), '#description' => t('The parent page in the book.')
         );
 
         $form['weight'] = array(
-          type => 'weight', title => t('Weight'), default_value => $page->weight, delta => 15,
-          description => t('Pages at a given level are ordered first by weight and then by title.')
+          '#type' => 'weight', '#title' => t('Weight'), '#default_value' => $page->weight, '#delta' => 15,
+          '#description' => t('Pages at a given level are ordered first by weight and then by title.')
         );
 
         $form['log'] = array(
-          type => 'textarea', title => t('Log message'), cols => 60, rows => 5,
-          default_value => $node->log, description => t('An explanation to help other authors understand your motivations to put this post into the book.')
+          '#type' => 'textarea', '#title' => t('Log message'), '#cols' => 60, '#rows' => 5,
+          '#default_value' => $node->log, '#description' => t('An explanation to help other authors understand your motivations to put this post into the book.')
         );
 
         if ($page->nid) {
-          $form['update'] = array(type => 'submit', value => t('Update book outline'));
-          $form['remove'] = array(type => 'submit', value => t('Remove from book outline'));
+          $form['update'] = array('#type' => 'submit', '#value' => t('Update book outline'));
+          $form['remove'] = array('#type' => 'submit', '#value' => t('Remove from book outline'));
         }
         else {
-          $form['add'] = array(type => 'submit', value => t('Add to book outline'));
+          $form['add'] = array('#type' => 'submit', '#value' => t('Add to book outline'));
         }
 
         drupal_set_title(check_plain($node->title));
@@ -974,18 +970,18 @@ function book_node_visitor_opml_post($node, $depth) {
  * Creates a row for the 'admin' view of a book.  Each row represents a page in the book, in the tree representing the book
  */
 function book_admin_edit_line($node, $depth = 0) {
-  $form[tree] = TRUE;
-  $form[$node->nid]['title'] = array(type => 'textfield', default_value => $node->title, size => 60, maxlength => 255);
-  $form[$node->nid]['weight'] = array(type => 'weight', default_value => $node->weight, delta => 15);
-  $form['depth'] = array(value => $depth);
-  $form['nid'] = array(value => $node->nid);
+  $form['#tree'] = TRUE;
+  $form[$node->nid]['title'] = array('#type' => 'textfield', '#default_value' => $node->title, '#size' => 60, '#maxlength' => 255);
+  $form[$node->nid]['weight'] = array('#type' => 'weight', '#default_value' => $node->weight, '#delta' => 15);
+  $form['depth'] = array('#value' => $depth);
+  $form['nid'] = array('#value' => $node->nid);
   return drupal_get_form('book_admin_edit_line', $form);
 }
 
 function theme_book_admin_edit_line($form) {
-  $nid = $form['nid'][value];
+  $nid = $form['nid']['#value'];
   return array(
-    '<div style="padding-left: '. (25 * $form['depth'][value]) .'px;">'. form_render($form[$nid]['title']) .'</div>', form_render($form[$nid]['weight']), l(t('view'), 'node/'. $nid), l(t('edit'), 'node/'. $nid .'/edit'), l(t('delete'), 'node/'.$nid.'/delete')
+    '<div style="padding-left: '. (25 * $form['depth']['#value']) .'px;">'. form_render($form[$nid]['title']) .'</div>', form_render($form[$nid]['weight']), l(t('view'), 'node/'. $nid), l(t('edit'), 'node/'. $nid .'/edit'), l(t('delete'), 'node/'.$nid.'/delete')
   );
 }
 
@@ -1015,7 +1011,7 @@ function book_admin_edit($nid, $depth = 0) {
     $rows[] = book_admin_edit_line($node);
     $rows = array_merge($rows, book_admin_edit_book($nid));
 
-    $form['save'] = array(type => 'submit', value => t('Save book pages'));
+    $form['save'] = array('#type' => 'submit', '#value' => t('Save book pages'));
 
     return theme('table', $header, $rows) . $form;
   }

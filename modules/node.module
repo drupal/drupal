@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.534 2005/10/08 12:21:47 dries Exp $
+// $Id: node.module,v 1.535 2005/10/11 19:44:34 dries Exp $
 
 /**
  * @file
@@ -265,7 +265,7 @@ function node_get_name($node) {
  * @param $node
  *   Either a node object, a node array, or a string containing the node type.
  * @return
- *   An array consisting (type => name) pairs.
+ *   An array consisting ('#type' => name) pairs.
  */
 function node_get_types() {
   return _node_names('list');
@@ -641,22 +641,22 @@ function node_search($op = 'search', $keys = null) {
 function node_configure() {
 
   $form['default_nodes_main'] = array(
-    type => 'select', title => t('Number of posts on main page'), default_value => variable_get('default_nodes_main', 10),
-    options =>  drupal_map_assoc(array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30)),
-    description => t('The default maximum number of posts to display per page on overview pages such as the main page.')
+    '#type' => 'select', '#title' => t('Number of posts on main page'), '#default_value' => variable_get('default_nodes_main', 10),
+    '#options' =>  drupal_map_assoc(array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30)),
+    '#description' => t('The default maximum number of posts to display per page on overview pages such as the main page.')
   );
 
   $form['teaser_length'] = array(
-    type => 'select', title => t('Length of trimmed posts'), default_value => variable_get('teaser_length', 600),
-    options => array(0 => t('Unlimited'), 200 => t('200 characters'), 400 => t('400 characters'), 600 => t('600 characters'),
+    '#type' => 'select', '#title' => t('Length of trimmed posts'), '#default_value' => variable_get('teaser_length', 600),
+    '#options' => array(0 => t('Unlimited'), 200 => t('200 characters'), 400 => t('400 characters'), 600 => t('600 characters'),
       800 => t('800 characters'), 1000 => t('1000 characters'), 1200 => t('1200 characters'), 1400 => t('1400 characters'),
       1600 => t('1600 characters'), 1800 => t('1800 characters'), 2000 => t('2000 characters')),
-    description => t("The maximum number of characters used in the trimmed version of a post.  Drupal will use this setting to determine at which offset long posts should be trimmed.  The trimmed version of a post is typically used as a teaser when displaying the post on the main page, in XML feeds, etc.  To disable teasers, set to 'Unlimited'. Note that this setting will only affect new or updated content and will not affect existing teasers.")
+    '#description' => t("The maximum number of characters used in the trimmed version of a post.  Drupal will use this setting to determine at which offset long posts should be trimmed.  The trimmed version of a post is typically used as a teaser when displaying the post on the main page, in XML feeds, etc.  To disable teasers, set to 'Unlimited'. Note that this setting will only affect new or updated content and will not affect existing teasers.")
   );
 
   $form['node_preview'] = array(
-    type => 'radios', title => t('Preview post'), default_value => variable_get('node_preview', 0),
-    options => array(t('Optional'), t('Required')), description => t('Must users preview posts before submitting?')
+    '#type' => 'radios', '#title' => t('Preview post'), '#default_value' => variable_get('node_preview', 0),
+    '#options' => array(t('Optional'), t('Required')), '#description' => t('Must users preview posts before submitting?')
   );
 
   return system_settings_form('node_configure', $form);
@@ -847,23 +847,23 @@ function node_filter_form() {
   $filters = node_filters();
 
   $i = 0;
-  $form['filters'] = array(type => 'fieldset', title => t('Show only items where'), theme => 'node_filters');
+  $form['filters'] = array('#type' => 'fieldset', '#title' => t('Show only items where'), '#theme' => 'node_filters');
   foreach ($session as $filter) {
     list($type, $value) = $filter;
     $string = ($i++ ? '<em>and</em> where <strong>%a</strong> is <strong>%b</strong>' : '<strong>%a</strong> is <strong>%b</strong>');
-    $form['filters']['current'][] = array(value => t($string, array('%a' => $filters[$type]['title'] , '%b' => $filters[$type]['options'][$value])));
+    $form['filters']['current'][] = array('#value' => t($string, array('%a' => $filters[$type]['title'] , '%b' => $filters[$type]['options'][$value])));
   }
 
   foreach ($filters as $key => $filter) {
     $names[$key] = $filter['title'];
-    $form['filters']['status'][$key] = array(type => 'select', options => $filter['options']);
+    $form['filters']['status'][$key] = array('#type' => 'select', '#options' => $filter['options']);
   }
 
-  $form['filters']['filter'] = array(type => 'radios', options => $names, default_value => 'status');
-  $form['filters']['buttons']['submit'] = array(type => 'submit', value => (count($session) ? t('Refine') : t('Filter')));
+  $form['filters']['filter'] = array('#type' => 'radios', '#options' => $names, '#default_value' => 'status');
+  $form['filters']['buttons']['submit'] = array('#type' => 'submit', '#value' => (count($session) ? t('Refine') : t('Filter')));
   if (count($session)) {
-    $form['filters']['buttons']['undo'] = array(type => 'submit', value => t('Undo'));
-    $form['filters']['buttons']['reset'] = array(type => 'submit', value => t('Reset'));
+    $form['filters']['buttons']['undo'] = array('#type' => 'submit', '#value' => t('Undo'));
+    $form['filters']['buttons']['reset'] = array('#type' => 'submit', '#value' => t('Reset'));
   }
 
   return drupal_get_form('node_filter_form', $form);
@@ -968,30 +968,30 @@ function node_admin_nodes() {
   $result = pager_query('SELECT n.*, u.name, u.uid FROM {node} n '. $filter['join'] .' INNER JOIN {users} u ON n.uid = u.uid '. $filter['where'] .' ORDER BY n.changed DESC', 50, 0, NULL, $filter['args']);
 
   $form['options'] = array(
-    type => 'fieldset', title => t('Update options'),
-    prefix => "<div class=\"container-inline\">" , suffix => "</div>"
+    '#type' => 'fieldset', '#title' => t('Update options'),
+    '#prefix' => "<div class=\"container-inline\">" , '#suffix' => "</div>"
   );
   $options = array();
   foreach (node_operations() as $key => $value) {
     $options[$key] = $value[0];
   }
-  $form['options']['operation'] = array(type => 'select', options => $options,  default_value => 'approve');
-  $form['options']['submit'] = array(type => 'submit', value => t('Update'));
+  $form['options']['operation'] = array('#type' => 'select', '#options' => $options,  '#default_value' => 'approve');
+  $form['options']['submit'] = array('#type' => 'submit', '#value' => t('Update'));
 
   $destination = drupal_get_destination();
   while ($node = db_fetch_object($result)) {
     $nodes[$node->nid] = '';
-    $form['title'][$node->nid] = array(value => l($node->title, 'node/'. $node->nid) .' '. theme('mark', node_mark($node->nid, $node->changed)));
-    $form['name'][$node->nid] =  array(value => node_get_name($node));
-    $form['username'][$node->nid] = array(value => theme('username', $node));
-    $form['status'][$node->nid] =  array(value =>  ($node->status ? t('published') : t('not published')));
-    $form['operations'][$node->nid] = array(value => l(t('edit'), 'node/'. $node->nid .'/edit', array(), $destination));
+    $form['title'][$node->nid] = array('#value' => l($node->title, 'node/'. $node->nid) .' '. theme('mark', node_mark($node->nid, $node->changed)));
+    $form['name'][$node->nid] =  array('#value' => node_get_name($node));
+    $form['username'][$node->nid] = array('#value' => theme('username', $node));
+    $form['status'][$node->nid] =  array('#value' =>  ($node->status ? t('published') : t('not published')));
+    $form['operations'][$node->nid] = array('#value' => l(t('edit'), 'node/'. $node->nid .'/edit', array(), $destination));
   }
-  $form['nodes'] = array(type => 'checkboxes', options => $nodes);
+  $form['nodes'] = array('#type' => 'checkboxes', '#options' => $nodes);
   $form['pager'] = array('value' => theme('pager', NULL, 50, 0));
 
-  $form[method] = 'post';
-  $form[action] =  url('admin/node/action');
+  $form['#method'] = 'post';
+  $form['#action'] =  url('admin/node/action');
 
   // Call the form first, to allow for the form_values array to be populated.
   $output .= drupal_get_form('node_admin_nodes', $form);
@@ -1028,7 +1028,7 @@ function theme_node_admin_nodes($form) {
   }
 
   $output .= theme('table', $header, $rows);
-  if ($form['pager'][value]) {
+  if ($form['pager']['#value']) {
     $output .= form_render($form['pager']);
   }
 
@@ -1037,14 +1037,14 @@ function theme_node_admin_nodes($form) {
 
 function node_multiple_delete_form() {
   global $form_values;
-  $form['nodes'] = array(prefix => '<ul>', suffix => '</ul>');
+  $form['nodes'] = array('#prefix' => '<ul>', '#suffix' => '</ul>');
   foreach ($form_values['nodes'] as $nid => $value) {
     if ($value) {
       $title = db_result(db_query('SELECT title FROM {node} WHERE nid = %d', $nid));
-      $form['nodes'][$nid] = array(type => 'hidden', value => $nid, tree => TRUE, prefix => '<li>', suffix => check_plain($title) .'</li>');
+      $form['nodes'][$nid] = array('#type' => 'hidden', '#value' => $nid, '#tree' => TRUE, '#prefix' => '<li>', '#suffix' => check_plain($title) .'</li>');
     }
   }
-  $form['operation'] = array(type => 'hidden', value => 'delete');
+  $form['operation'] = array('#type' => 'hidden', '#value' => 'delete');
 
   return confirm_form('node_multiple_delete_form', $form,
                       t('Are you sure you want to delete these items?'),
@@ -1071,16 +1071,16 @@ function node_types_configure($type = NULL) {
     // Go to the listing page when we submit this form, system_settings_save() calls drupal_goto().
     $node = new stdClass();
     $node->type = $type;
-    $form['submission'] = array(type => 'fieldset', title =>t('Submission form') );
+    $form['submission'] = array('#type' => 'fieldset', '#title' =>t('Submission form') );
     $form['submission'][$type . '_help']  = array(
-      type => 'textarea', title => t('Explanation or submission guidelines'), default_value =>  variable_get($type .'_help', ''), cols => 60, rows => 5,
-      description => t('This text will be displayed at the top of the %type submission form. It is useful for helping or instructing your users.', array('%type' => node_get_name($type)))
+      '#type' => 'textarea', '#title' => t('Explanation or submission guidelines'), '#default_value' =>  variable_get($type .'_help', ''), '#cols' => 60, '#rows' => 5,
+      '#description' => t('This text will be displayed at the top of the %type submission form. It is useful for helping or instructing your users.', array('%type' => node_get_name($type)))
     );
     $form['submission']['minimum_'. $type .'_size'] = array(
-      type => 'select', title => t('Minimum number of words'), default_value => variable_get('minimum_'. $type .'_size', 0), options => drupal_map_assoc(array(0, 10, 25, 50, 75, 100, 125, 150, 175, 200)),
-      description => t('The minimum number of words a %type must be to be considered valid. This can be useful to rule out submissions that do not meet the site\'s standards, such as short test posts.', array('%type' => node_get_name($type)))
+      '#type' => 'select', '#title' => t('Minimum number of words'), '#default_value' => variable_get('minimum_'. $type .'_size', 0), '#options' => drupal_map_assoc(array(0, 10, 25, 50, 75, 100, 125, 150, 175, 200)),
+      '#description' => t('The minimum number of words a %type must be to be considered valid. This can be useful to rule out submissions that do not meet the site\'s standards, such as short test posts.', array('%type' => node_get_name($type)))
     );
-    $form['workflow'] = array(type => 'fieldset', title =>t('Workflow'));
+    $form['workflow'] = array('#type' => 'fieldset', '#title' =>t('Workflow'));
     $form['workflow'] = array_merge($form['workflow'], node_invoke_nodeapi($node, 'settings'));
 
     return system_settings_form($type . '_node_settings', $form);
@@ -1393,11 +1393,6 @@ function node_validate($node) {
   node_invoke($node, 'validate');
   node_invoke_nodeapi($node, 'validate');
 
-  // Check input format access
-  if (array_key_exists('format', $node) && !filter_access($node->format)) {
-    form_set_error('format', t('The supplied input format is invalid.'));
-  }
-
   $node->validated = TRUE;
 
   return $node;
@@ -1427,21 +1422,21 @@ function node_form($node) {
   }
 
   // Set the id of the top-level form tag
-  $form[attributes]['id'] = 'node-form';
+  $form['#attributes']['id'] = 'node-form';
 
   /**
    * Basic node information.
    * These elements are just values so they are not even sent to the client.
    */
-  $form['nid']     = array(type => 'value', value => $node->nid);
-  $form['vid']     = array(type => 'value', value => $node->vid);
-  $form['uid']     = array(type => 'value', value => $node->uid);
-  $form['created'] = array(type => 'value', value => $node->created);
-  $form['changed'] = array(type => 'value', value => $node->changed);
-  $form['type']    = array(type => 'value', value => $node->type);
+  $form['nid']     = array('#type' => 'value', '#value' => $node->nid);
+  $form['vid']     = array('#type' => 'value', '#value' => $node->vid);
+  $form['uid']     = array('#type' => 'value', '#value' => $node->uid);
+  $form['created'] = array('#type' => 'value', '#value' => $node->created);
+  $form['changed'] = array('#type' => 'value', '#value' => $node->changed);
+  $form['type']    = array('#type' => 'value', '#value' => $node->type);
 
   if ($op == t('Preview')) {
-    $form['node_preview'] = array(value => node_preview(array2object($_POST['edit'])), weight => -100);
+    $form['node_preview'] = array('#value' => node_preview(array2object($_POST['edit'])), '#weight' => -100);
   }
 
   // Get the node-specific bits.
@@ -1457,37 +1452,39 @@ function node_form($node) {
    * Node author information
    */
 
-  $form['author'] = array(type => 'fieldset', title => t('Authoring information'), collapsible => TRUE, collapsed => TRUE, weight => -18);
-  $form['author']['name'] = array(type => 'textfield', title => t('Authored by'), maxlength => 60, autocomplete_path => 'user/autocomplete', default_value => $node->name, weight => -1);
-  $form['author']['date'] = array(type => 'textfield', title =>t('Authored on'), maxlength => 25, required => TRUE, default_value => $node->date);
+  if (user_access('administer nodes')) {
+    $form['author'] = array('#type' => 'fieldset', '#title' => t('Authoring information'), '#collapsible' => TRUE, '#collapsed' => TRUE, '#weight' => -18);
+    $form['author']['name'] = array('#type' => 'textfield', '#title' => t('Authored by'), '#maxlength' => 60, '#autocomplete_path' => 'user/autocomplete', '#default_value' => $node->name, '#weight' => -1);
+    $form['author']['date'] = array('#type' => 'textfield', '#title' => t('Authored on'), '#maxlength' => 25, '#required' => TRUE, '#default_value' => $node->date);
 
-  $node_options = variable_get('node_options_'. $node->type, array('status', 'promote'));
+    $node_options = variable_get('node_options_'. $node->type, array('status', 'promote'));
 
-  /**
-   * Node options
-   */
-  $form['options'] = array(type => 'fieldset', title => t('Publishing options'), collapsible => TRUE, collapsed => TRUE, weight => -18);
-  $form['options']['status']   = array(type => 'checkbox', title => t('Published'), default_value => in_array('status', $node_options));
-  $form['options']['moderate'] = array(type => 'checkbox', title => t('In moderation queue'), default_value => in_array('moderate', $node_options));
-  $form['options']['promote']  = array(type => 'checkbox', title => t('Promoted to front page'), default_value => in_array('promote', $node_options));
-  $form['options']['sticky']   = array(type => 'checkbox', title =>t('Sticky at top of lists'), default_value => in_array('sticky', $node_options));
-  $form['options']['revision'] = array(type => 'checkbox', title =>t('Create new revision'), default_value => in_array('revision', $node_options));
+    /**
+    * Node options
+    */
+    $form['options'] = array('#type' => 'fieldset', '#title' => t('Publishing options'), '#collapsible' => TRUE, '#collapsed' => TRUE, '#weight' => -18);
+    $form['options']['status']   = array('#type' => 'checkbox', '#title' => t('Published'), '#default_value' => in_array('status', $node_options));
+    $form['options']['moderate'] = array('#type' => 'checkbox', '#title' => t('In moderation queue'), '#default_value' => in_array('moderate', $node_options));
+    $form['options']['promote']  = array('#type' => 'checkbox', '#title' => t('Promoted to front page'), '#default_value' => in_array('promote', $node_options));
+    $form['options']['sticky']   = array('#type' => 'checkbox', '#title' =>t('Sticky at top of lists'), '#default_value' => in_array('sticky', $node_options));
+    $form['options']['revision'] = array('#type' => 'checkbox', '#title' =>t('Create new revision'), '#default_value' => in_array('revision', $node_options));
+  }
 
 
   $nodeapi = node_invoke_nodeapi($node, 'form');
   if (is_array($nodeapi)) {
     foreach ($nodeapi as $key => $element) {
-      $nodeapi[$key][weight] = isset($nodeapi[$key][weight]) ? $nodeapi[$key][weight] : -18;
+      $nodeapi[$key]['#weight'] = isset($nodeapi[$key]['#weight']) ? $nodeapi[$key]['#weight'] : -18;
     }
     // Append extra node form elements.
     $form = array_merge($form, $nodeapi);
   }
 
-  $form['title'][weight] = isset($form['title'][weight]) ? $form['title'][weight] : -17;
-  $form['body'][weight] = isset($form['body'][weight]) ? $form['body'][weight] : -5;
+  $form['title']['#weight'] = isset($form['title']['#weight']) ? $form['title']['#weight'] : -17;
+  $form['body']['#weight'] = isset($form['body']['#weight']) ? $form['body']['#weight'] : -5;
 
   // Add the buttons.
-  $form['preview'] = array(type => 'button', value => t('Preview'), weight => 19);
+  $form['preview'] = array('#type' => 'button', '#value' => t('Preview'), '#weight' => 19);
 
   if ($node->type) {
     if (!form_get_errors()) {
@@ -1496,9 +1493,9 @@ function node_form($node) {
       }
     }
   }
-  $form['submit'] = array(type => 'submit', value => t('Submit'), weight => 20);
+  $form['submit'] = array('#type' => 'submit', '#value' => t('Submit'), '#weight' => 20);
   if ($node->nid && node_access('delete', $node)) {
-    $form['delete'] = array(type => 'button', value => t('Delete'), weight => 21);
+    $form['delete'] = array('#type' => 'button', '#value' => t('Delete'), '#weight' => 21);
   }
   return drupal_get_form($node->type . '_node_form', $form, 'node_form');
 }
@@ -1687,7 +1684,7 @@ function node_delete($edit) {
   $node = node_load($edit['nid']);
 
   if (node_access('delete', $node)) {
-    $form['nid'] = array(type => 'hidden', value => $node->nid);
+    $form['nid'] = array('#type' => 'hidden', '#value' => $node->nid);
     $output = confirm_form('node_delete_confirm', $form,
                    t('Are you sure you want to delete %title?', array('%title' => theme('placeholder', $node->title))),
                    $_GET['destination'] ? $_GET['destination'] : 'node/'. $node->nid, t('This action cannot be undone.'),
@@ -1908,10 +1905,10 @@ function node_nodeapi(&$node, $op, $arg = 0) {
   switch ($op) {
     case 'settings':
       $form['node_options_'. $node->type] = array(
-        type => 'checkboxes', title => t('Default options'), default_value => variable_get('node_options_'. $node->type, array('status', 'promote')),
-        options => array('status' => t('Published'), 'moderate' => t('In moderation queue'), 'promote' => t('Promoted to front page'),
+        '#type' => 'checkboxes', '#title' => t('Default options'), '#default_value' => variable_get('node_options_'. $node->type, array('status', 'promote')),
+        '#options' => array('status' => t('Published'), 'moderate' => t('In moderation queue'), 'promote' => t('Promoted to front page'),
         'sticky' => t('Sticky at top of lists'), 'revision' => t('Create new revision')),
-        description => t('Users with the <em>administer nodes</em> permission will be able to override these options.')
+        '#description' => t('Users with the <em>administer nodes</em> permission will be able to override these options.')
       );
       return $form;
   }

@@ -1,5 +1,5 @@
 <?php
-// $Id: watchdog.module,v 1.129 2005/10/08 12:21:47 dries Exp $
+// $Id: watchdog.module,v 1.130 2005/10/11 19:44:35 dries Exp $
 
 /**
  * @file
@@ -82,13 +82,13 @@ function watchdog_overview() {
   }
 
   $form['filter'] = array(
-    type => 'select',
-    title => t('Filter by message type'),
-    options => $names,
-    default_value => $_SESSION['watchdog_overview_filter']
+    '#type' => 'select',
+    '#title' => t('Filter by message type'),
+    '#options' => $names,
+    '#default_value' => $_SESSION['watchdog_overview_filter']
   );
 
-  $form['submit'] = array(type => 'submit', value =>t('Filter'));
+  $form['submit'] = array('#type' => 'submit', '#value' =>t('Filter'));
   $output = drupal_get_form('watchdog_form_overview', $form);
 
   $header = array(

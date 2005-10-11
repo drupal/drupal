@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.172 2005/10/07 06:51:43 dries Exp $
+// $Id: poll.module,v 1.173 2005/10/11 19:44:35 dries Exp $
 
 /**
  * @file
@@ -123,11 +123,7 @@ function poll_validate(&$node) {
 function poll_form(&$node) {
   $admin = user_access('administer nodes');
 
-  $form['title'] = array(type => 'textfield', title => t('Question'), size => 60, maxlength => 128, required => TRUE, default_value => $node->title, weight => -1);
-
-  if (function_exists('taxonomy_node_form')) {
-    $output .= implode('', taxonomy_node_form('poll', $node));
-  }
+  $form['title'] = array('#type' => 'textfield', '#title' => t('Question'), '#size' => 60, '#maxlength' => 128, '#required' => TRUE, '#default_value' => $node->title, '#weight' => -1);
 
   if (!isset($node->choices)) {
     $node->choices = max(2, count($node->choice) ? count($node->choice) : 5);
@@ -140,25 +136,25 @@ function poll_form(&$node) {
 
   // Poll choices
   $opts = drupal_map_assoc(range(2, $node->choices * 2 + 5));
-  $form['choice'] = array(type => 'fieldset', title => t('Choices'), prefix => '<div class="poll-form">', suffix => '</div>', tree => TRUE);
+  $form['choice'] = array('#type' => 'fieldset', '#title' => t('Choices'), '#prefix' => '<div class="poll-form">', '#suffix' => '</div>', '#tree' => TRUE);
   for ($a = 0; $a < $node->choices; $a++) {
-    $form['choice'][$a]['chtext'] = array(type => 'textfield', title => t('Choice %n', array('%n' => ($a + 1))), default_value => $node->choice[$a]['chtext'], size => 60, maxlength => 127);
+    $form['choice'][$a]['chtext'] = array('#type' => 'textfield', '#title' => t('Choice %n', array('%n' => ($a + 1))), '#default_value' => $node->choice[$a]['chtext'], '#size' => 60, '#maxlength' => 127);
     if ($admin) {
-      $form['choice'][$a]['chvotes'] = array(type => 'textfield', title => t('Votes for choice %n', array('%n' => ($a + 1))), default_value => (int)$node->choice[$a]['chvotes'], size => 5, maxlength => 7);
+      $form['choice'][$a]['chvotes'] = array('#type' => 'textfield', '#title' => t('Votes for choice %n', array('%n' => ($a + 1))), '#default_value' => (int)$node->choice[$a]['chvotes'], '#size' => 5, '#maxlength' => 7);
     }
   }
-  $form['choices'] = array(type => 'hidden', value => $node->choices);
-  $form['morechoices'] = array(type => 'checkbox', title => t('Need more choices'), return_value => 1, default_value => 0, description => t("If the amount of boxes above isn't enough, check this box and click the Preview button below to add some more."));
+  $form['choices'] = array('#type' => 'hidden', '#value' => $node->choices);
+  $form['morechoices'] = array('#type' => 'checkbox', '#title' => t('Need more choices'), '#return_value' => 1, '#default_value' => 0, '#description' => t("If the amount of boxes above isn't enough, check this box and click the Preview button below to add some more."));
 
   // Poll attributes
   $_duration = array(0 => t('Unlimited')) + drupal_map_assoc(array(86400, 172800, 345600, 604800, 1209600, 2419200, 4838400, 9676800, 31536000), "format_interval");
   $_active = array(0 => t('Closed'), 1 => t('Active'));
 
   if ($admin) {
-    $form['settings'] = array(type => 'fieldset', title => t('Settings'), suffix => '</div>');
-    $form['settings']['active'] = array(type => 'radios', title => t('Poll status'), default_value => isset($node->active) ? $node->active : 1, options => $_active, description => t('When a poll is closed, visitors can no longer vote for it.'));
+    $form['settings'] = array('#type' => 'fieldset', '#title' => t('Settings'), '#suffix' => '</div>');
+    $form['settings']['active'] = array('#type' => 'radios', '#title' => t('Poll status'), '#default_value' => isset($node->active) ? $node->active : 1, '#options' => $_active, '#description' => t('When a poll is closed, visitors can no longer vote for it.'));
   }
-  $form['settings']['runtime'] = array(type => 'select', title => t('Poll duration'), default_value => $node->runtime ? $node->runtime : 0, options => $_duration, description => t('After this period, the poll will be closed automatically.'));
+  $form['settings']['runtime'] = array('#type' => 'select', '#title' => t('Poll duration'), '#default_value' => $node->runtime ? $node->runtime : 0, '#options' => $_duration, '#description' => t('After this period, the poll will be closed automatically.'));
 
   return $form;
 }
@@ -310,10 +306,10 @@ function poll_view_voting(&$node, $teaser, $page, $block) {
     foreach ($node->choice as $i => $choice) {
       $list[$i] = check_plain($choice['chtext']);
     }
-    $form['choice'] = array(type => 'radios', title => $page ? '' : check_plain($node->title), default_value => -1, options => $list);
+    $form['choice'] = array('#type' => 'radios', '#title' => $page ? '' : check_plain($node->title), '#default_value' => -1, '#options' => $list);
   }
-  $form['nid'] = array(type => 'hidden', value => $node->nid);
-  $form['vote'] = array(type => 'submit', value => t('Vote'));
+  $form['nid'] = array('#type' => 'hidden', '#value' => $node->nid);
+  $form['vote'] = array('#type' => 'submit', '#value' => t('Vote'));
   return drupal_get_form('poll_view_voting', $form);
 }
 

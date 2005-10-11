@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.232 2005/10/07 06:51:43 dries Exp $
+// $Id: blog.module,v 1.233 2005/10/11 19:44:34 dries Exp $
 
 /**
  * @file
@@ -43,8 +43,8 @@ function blog_access($op, $node) {
 function blog_user($type, &$edit, &$user) {
   if ($type == 'view' && user_access('edit own blog', $user)) {
     $form['blog'] = array(
-      type => 'item', title => t('Blog'),
-      value => l(t('view recent blog entries'), "blog/$user->uid", array('title' => t("Read %username's latest blog entries.", array('%username' => $user->name))))
+      '#type' => 'item', '#title' => t('Blog'),
+      '#value' => l(t('view recent blog entries'), "blog/$user->uid", array('title' => t("Read %username's latest blog entries.", array('%username' => $user->name))))
     );
     return array(t('History') => $form);
   }
@@ -219,12 +219,8 @@ function blog_form(&$node) {
 
   }
 
-  if (function_exists('taxonomy_node_form')) {
-    $form['taxonomy'] = taxonomy_node_form('blog', $node);
-  }
-
-  $form['title'] = array(type => 'textfield', title => t('Title'), size => 60, maxlength => 128, required => TRUE, default_value => $node->title);
-  $form['body'] = array(type => 'textarea', title => t('Body'), default_value => $node->body, required => TRUE);
+  $form['title'] = array('#type' => 'textfield', '#title' => t('Title'), '#size' => 60, '#maxlength' => 128, '#required' => TRUE, '#default_value' => $node->title);
+  $form['body'] = array('#type' => 'textarea', '#title' => t('Body'), '#default_value' => $node->body, '#required' => TRUE);
   $form = array_merge($form, filter_form($node->format));
   return $form;
 }

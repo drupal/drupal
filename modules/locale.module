@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.126 2005/10/07 06:09:13 dries Exp $
+// $Id: locale.module,v 1.127 2005/10/11 19:44:34 dries Exp $
 
 /**
  * @file
@@ -108,7 +108,7 @@ function locale_user($type, $edit, &$user, $category = NULL) {
       $user->language = key($languages['name']);
     }
     $languages['name'] = array_map('check_plain', $languages['name']);
-    return array(array('title' => t('Interface language settings'), 'data' => $form['locale_user'] = array(type => 'radios', title => t('Language'), default_value => $user->language, options => $languages['name'], description => t('Selecting a different locale will change the interface language of the site.'))));
+    return array(array('title' => t('Interface language settings'), 'data' => $form['locale_user'] = array('#type' => 'radios', '#title' => t('Language'), '#default_value' => $user->language, '#options' => $languages['name'], '#description' => t('Selecting a different locale will change the interface language of the site.'))));
   }
 }
 
@@ -319,7 +319,7 @@ function locale_admin_manage_delete_screen() {
   // For other locales, warn user that data loss is ahead
   $languages = locale_supported_languages(FALSE, TRUE);
 
-  $form['langcode'] = array(type => 'hidden', value => $langcode);
+  $form['langcode'] = array('#type' => 'hidden', '#value' => $langcode);
   return confirm_form('locale_admin_manage_delete_screen', $form,
                   t('Are you sure you want to delete the language %name?', array('%name' => theme('placeholder', t($languages['name'][$langcode])))),
                   'admin/locale/language/overview',

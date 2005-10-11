@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.112 2005/10/07 06:51:43 dries Exp $
+// $Id: profile.module,v 1.113 2005/10/11 19:44:35 dries Exp $
 
 /**
  * @file
@@ -44,7 +44,7 @@ function profile_block($op = 'list', $delta = 0, $edit = array()) {
       $fields[$record->name] = $record->title;
     }
     $fields['user_profile'] = t('Link to full user profile');
-    $form['profile_block_author_fields'] = array(type => 'checkboxes', title => t('Profile fields to display'), default_value => variable_get('profile_block_author_fields', NULL), options => $fields, description => t('Select which profile fields you wish to display in the block.  Only fields designated as public in the <a href="%profile-admin">profile field configuration</a> are available.', array('%profile-admin' => url('admin/settings/profile'))));
+    $form['profile_block_author_fields'] = array('#type' => 'checkboxes', '#title' => t('Profile fields to display'), '#default_value' => variable_get('profile_block_author_fields', NULL), '#options' => $fields, '#description' => t('Select which profile fields you wish to display in the block.  Only fields designated as public in the <a href="%profile-admin">profile field configuration</a> are available.', array('%profile-admin' => url('admin/settings/profile'))));
     return $form;
   }
   else if ($op == 'save' && $delta == 0) {
@@ -297,7 +297,7 @@ function profile_view_profile($user) {
     if ($value = profile_view_field($user, $field)) {
       $description = ($field->visibility == PROFILE_PRIVATE) ? t('The content of this field is private and only visible to yourself.') : '';
       $title = ($field->type != 'checkbox') ? check_plain($field->title) : '';
-      $form = array(type => 'item', title => $title, value => $value, description => $description);
+      $form = array('#type' => 'item', '#title' => $title, '#value' => $value, '#description' => $description);
       $fields[$field->category][$field->name] = form_render(_form_builder($form));
     }
   }
@@ -330,23 +330,23 @@ function profile_form_profile($edit, $user, $category) {
   }
   // Only add form group if items exist
   if (db_num_rows($result)) {
-    $fields[$category] = array(type => 'fieldset', title => $category);
+    $fields[$category] = array('#type' => 'fieldset', '#title' => $category);
   }
   while ($field = db_fetch_object($result)) {
     $category = $field->category;
     switch ($field->type) {
       case 'textfield':
       case 'url':
-        $fields[$category][$field->name] = array(type => 'textfield', title => check_plain($field->title), default_value => $edit[$field->name], size => 60, maxlength => 255, description => _profile_form_explanation($field), required => $field->required);
+        $fields[$category][$field->name] = array('#type' => 'textfield', '#title' => check_plain($field->title), '#default_value' => $edit[$field->name], '#size' => 60, '#maxlength' => 255, '#description' => _profile_form_explanation($field), '#required' => $field->required);
         break;
       case 'textarea':
-        $fields[$category][$field->name] = array(type => 'textarea', title => check_plain($field->title), default_value => $edit[$field->name], cols => 60, rows => 5, description => _profile_form_explanation($field), required => $field->required);
+        $fields[$category][$field->name] = array('#type' => 'textarea', '#title' => check_plain($field->title), '#default_value' => $edit[$field->name], '#cols' => 60, '#rows' => 5, '#description' => _profile_form_explanation($field), '#required' => $field->required);
         break;
       case 'list':
-        $fields[$category][$field->name] = array(type => 'textarea', title => check_plain($field->title), default_value => $edit[$field->name], cols => 60, rows => 5, description => _profile_form_explanation($field), required => $field->required);
+        $fields[$category][$field->name] = array('#type' => 'textarea', '#title' => check_plain($field->title), '#default_value' => $edit[$field->name], '#cols' => 60, '#rows' => 5, '#description' => _profile_form_explanation($field), '#required' => $field->required);
         break;
       case 'checkbox':
-        $fields[$category][$field->name] = array(type => 'checkbox', title => check_plain($field->title), return_value => 1, default_value => $edit[$field->name], description => _profile_form_explanation($field), required => $field->required);
+        $fields[$category][$field->name] = array('#type' => 'checkbox', '#title' => check_plain($field->title), '#return_value' => 1, '#default_value' => $edit[$field->name], '#description' => _profile_form_explanation($field), '#required' => $field->required);
         break;
       case 'selection':
         $options = array('--');
@@ -356,10 +356,10 @@ function profile_form_profile($edit, $user, $category) {
             $options[$line] = $line;
           }
         }
-        $fields[$category][$field->name] = array(type => 'select', title => check_plain($field->title), default_value => $edit[$field->name], options => $options, description => _profile_form_explanation($field), required => $field->required);
+        $fields[$category][$field->name] = array('#type' => 'select', '#title' => check_plain($field->title), '#default_value' => $edit[$field->name], '#options' => $options, '#description' => _profile_form_explanation($field), '#required' => $field->required);
         break;
       case 'date':
-        $fields[$category][$field->name] = array(type => 'date', title => check_plain($field->title), default_value => $edit[$field->name], description, description => _profile_form_explanation($field), required => $field->required);
+        $fields[$category][$field->name] = array('#type' => 'date', '#title' => check_plain($field->title), '#default_value' => $edit[$field->name], description, '#description' => _profile_form_explanation($field), '#required' => $field->required);
         break;
     }
   }
@@ -549,26 +549,26 @@ function profile_admin_delete($fid) {
 
 function _profile_field_form($type, $edit = array()) {
 
-  $form['fields'] = array(type => 'fieldset', title => t('Field settings'));
-  $form['fields']['category'] = array(type => 'textfield', title => t('Category'), default_value => $edit['category'], size => 60, maxlength => 128, description => t('The category the new field should be part of.  Categories are used to group fields logically.  An example category is "Personal information".'));
-  $form['fields']['title'] = array(type => 'textfield', title => t('Title'), default_value => $edit['title'], size => 60, maxlength => 128, description => t('The title of the new field.  The title will be shown to the user.  An example title is "Favorite color".'));
-  $form['fields']['name'] = array(type => 'textfield', title => t('Form name'), default_value => $edit['name'], size => 60, maxlength => 128, description => t('The name of the field.  The form name is not shown to the user but used internally in the HTML code and URLs.
+  $form['fields'] = array('#type' => 'fieldset', '#title' => t('Field settings'));
+  $form['fields']['category'] = array('#type' => 'textfield', '#title' => t('Category'), '#default_value' => $edit['category'], '#size' => 60, '#maxlength' => 128, '#description' => t('The category the new field should be part of.  Categories are used to group fields logically.  An example category is "Personal information".'));
+  $form['fields']['title'] = array('#type' => 'textfield', '#title' => t('Title'), '#default_value' => $edit['title'], '#size' => 60, '#maxlength' => 128, '#description' => t('The title of the new field.  The title will be shown to the user.  An example title is "Favorite color".'));
+  $form['fields']['name'] = array('#type' => 'textfield', '#title' => t('Form name'), '#default_value' => $edit['name'], '#size' => 60, '#maxlength' => 128, '#description' => t('The name of the field.  The form name is not shown to the user but used internally in the HTML code and URLs.
 Unless you know what you are doing, it is highly recommended that you prefix the form name with <code>profile_</code> to avoid name clashes with other fields.  Spaces or any other special characters except dash (-) and underscore (_) are not allowed. An example name is "profile_favorite_color" or perhaps just "profile_color".'));
-  $form['fields']['explanation'] = array(type => 'textarea', title => t('Explanation'), default_value => $edit['explanation'], cols => 60, rows => 5, description => t('An optional explanation to go with the new field.  The explanation will be shown to the user.'));
+  $form['fields']['explanation'] = array('#type' => 'textarea', '#title' => t('Explanation'), '#default_value' => $edit['explanation'], '#cols' => 60, '#rows' => 5, '#description' => t('An optional explanation to go with the new field.  The explanation will be shown to the user.'));
   if ($type == 'selection') {
-    $form['fields']['options'] = array(type => 'textarea', title => t('Selection options'), default_value => $edit['options'], cols => 60, rows => 5, description => t('A list of all options.  Put each option on a separate line.  Example options are "red", "blue", "green", etc.'));
+    $form['fields']['options'] = array('#type' => 'textarea', '#title' => t('Selection options'), '#default_value' => $edit['options'], '#cols' => 60, '#rows' => 5, '#description' => t('A list of all options.  Put each option on a separate line.  Example options are "red", "blue", "green", etc.'));
   }
-  $form['fields']['weight'] = array(type => 'weight', title => t('Weight'), default_value => $edit['weight'], delta => 5, description =>  t('The weights define the order in which the form fields are shown.  Lighter fields "float up" towards the top of the category.'));
-  $form['fields']['visibility'] = array(type => 'radios', title => t('Visibility'), default_value => $edit['visibility'], options => array(PROFILE_HIDDEN => t('Hidden profile field, only accessible by administrators, modules and themes.'), PROFILE_PRIVATE => t('Private field, content only available to privileged users.'), PROFILE_PUBLIC => t('Public field, content shown on profile page but not used on member list pages.'), PROFILE_PUBLIC_LISTINGS => t('Public field, content shown on profile page and on member list pages.')));
+  $form['fields']['weight'] = array('#type' => 'weight', '#title' => t('Weight'), '#default_value' => $edit['weight'], '#delta' => 5, '#description' =>  t('The weights define the order in which the form fields are shown.  Lighter fields "float up" towards the top of the category.'));
+  $form['fields']['visibility'] = array('#type' => 'radios', '#title' => t('Visibility'), '#default_value' => $edit['visibility'], '#options' => array(PROFILE_HIDDEN => t('Hidden profile field, only accessible by administrators, modules and themes.'), PROFILE_PRIVATE => t('Private field, content only available to privileged users.'), PROFILE_PUBLIC => t('Public field, content shown on profile page but not used on member list pages.'), PROFILE_PUBLIC_LISTINGS => t('Public field, content shown on profile page and on member list pages.')));
   if ($type == 'selection' || $type == 'list') {
-    $form['fields']['page'] = array(type => 'textfield', title => t('Page title'), default_value => $edit['page'], size => 60, maxlength => 128, description => t('The title of the page showing all users with the specified field.  The word <code>%value</code> will be substituted with the corresponding value.  An example page title is "People whose favorite color is %value".  Only applicable if the field is configured to be shown on member list pages.'));
+    $form['fields']['page'] = array('#type' => 'textfield', '#title' => t('Page title'), '#default_value' => $edit['page'], '#size' => 60, '#maxlength' => 128, '#description' => t('The title of the page showing all users with the specified field.  The word <code>%value</code> will be substituted with the corresponding value.  An example page title is "People whose favorite color is %value".  Only applicable if the field is configured to be shown on member list pages.'));
   }
   else {
-    $form['fields']['page'] = array(type => 'textfield', title => t('Page title'), default_value => $edit['page'], size => 60, maxlength => 128, description => t('The title of the page showing all users with the specified field.  Only applicable if the field is configured to be shown on member listings.'));
+    $form['fields']['page'] = array('#type' => 'textfield', '#title' => t('Page title'), '#default_value' => $edit['page'], '#size' => 60, '#maxlength' => 128, '#description' => t('The title of the page showing all users with the specified field.  Only applicable if the field is configured to be shown on member listings.'));
   }
-  $form['fields']['required'] = array(type => 'checkbox', title => t('The user must enter a value.'), return_value => 1, default_value => $edit['required']);
-  $form['fields']['register'] = array(type => 'checkbox', title => t('Visible in user registration form.'), return_value => 1, default_value => $edit['register']);
-  $form['submit'] = array(type => 'submit', value => t('Save field'));
+  $form['fields']['required'] = array('#type' => 'checkbox', '#title' => t('The user must enter a value.'), '#return_value' => 1, '#default_value' => $edit['required']);
+  $form['fields']['register'] = array('#type' => 'checkbox', '#title' => t('Visible in user registration form.'), '#return_value' => 1, '#default_value' => $edit['register']);
+  $form['submit'] = array('#type' => 'submit', '#value' => t('Save field'));
 
   return drupal_get_form('_profile_field_form', $form);
 }

@@ -10,319 +10,10 @@
  */
 
 /**
- * Form property constants.
- *
- * These constants are defined to keep the namespace of the form tree available for elements.
- * Properties are strings that start with '_' (underscore) and have special meaning for the form api.
- */
-
-/**
- * Keyword: type.
- * Required: true
- * Description: Used to specify the form element type. Form elements are defined by implementation of hook_elements.
- */
-define('type', '_type');
-
-define('theme', '_theme');
-
-define('theme_used', '_theme_used');
-/**
- * Keyword: name.
- * Internal: For use within the form api. Should not be set by the developer.
- * Description: The form_builder function populates this property based on the location of the form element in the form tree.
- */
-define('name', '_name');
-
-/**
- * Keyword: id.
- * Internal: For use within the form api. Should not be set by the developer.
- * Description: The form_builder function populates this property based on the location of the form element in the form tree.
- *              This is used for the form_set_error notification, along with the stylesheets to be used.
- */
-define('id', '_id');
-
-/**
- * Keyword: printed
- * Internal: For use within the form api. Should not be set by the developer.
- * Description: Used by form_render to ascertain wether or not a form element has been printed yet
- */
-define('printed', '_printed');
-
-/**
- * Keyword: built
- * Internal: For use within the form api. Should not be set by the developer.
- * Description: Used by _form_builder to ascertain wether or not a form element has been built yet
- */
-define('built', '_built');
-
-/**
- * Keyword: processed
- * Internal: For use within the form api. Should not be set by the developer.
- * Description: Used by _form_builder to ascertain wether or not a form element has been processed (ie: expanded to multiple elements)
- */
-define('processed', '_processed');
-
-
-/**
- * Keyword: variable
- * Internal: For use within the form api. Should not be set by the developer.
- * Description: used by form builder to populate a global form_variables array.
- */
-define('variable', '_variable');
-
-/**
- * Keyword: id.
- * Internal: For use within the form api. Should not be set by the developer.
- * Description: The form_builder function uses this property to keep track of the parent form elements, and uses this to generate the id and name properties.
- */
-define('parents', '_parents');
-
-/**
- * Keyword: input.
- * Description: Wether or not an input is possible for this form element. True / False. Set in the hook_elements implementation.
- */
-define('input', '_input');
-
-/**
- * Keyword: validated.
- * Description: Wether or not an input has been validated.
- */
-define('validated', '_validated');
-
-/**
- * Keyword: value.
- * Used: For all form elements except 'textarea' and the 'default' fallback.
- * Description: The value the form element should be set as. Setting this yourself is not required, although it might be a good idea for form elements that
- *              don't change. See the default_value property.
- */
-define('value', '_value');
-
-/**
- * Keyword: default_value.
- * Used: For all form elements that have a value property.
- * Description: The value the form element should be initialized as. If no submission for this element exists, the element will be set to this value.
- *              This means that you do not have to set the value properties for form elements, as they will be automatically handled by the form api.
- */
-define('default_value', '_default_value');
-
-/**
- * Keyword: return_value.
- * Used: For select , radio and checkbox elements.
- * Description: The value the form element will return.
- */
-define('return_value', '_return_value');
-
-/**
- * Keyword: title
- * Used: For all form elements that have visible output.
- * Description: The title of the form element. The developer should use the t() function to translate this property.
- */
-define('title', '_title');
-
-/**
- * Keyword: description
- * Used: For all form elements that have visible output.
- * Description: The description of the form element. The developer should use the t() function to translate this property.
- */
-define('description', '_description');
-
-/**
- * Keyword: required
- * Used: For all form elements that have visible output.
- * Description: Wether or not the element is required. This automatically validates for empty fields, and flags inputs as required.
- */
-define('required', '_required');
-
-/**
- * Keyword: cols
- * Used: textarea elements.
- * Description: How many columns wide the textarea should be.
- */
-define('cols', '_cols');
-
-/**
- * Keyword: rows
- * Used: textarea elements.
- * Description: How many rows high the textarea should be.
- */
-define('rows', '_rows');
-
-/**
- * Keyword: size
- * Used: textfield elements.
- * Description: How many characters wide should the textfield be.
- */
-define('size', '_size');
-
-/**
- * Keyword: maxlength
- * Used: For textfield element types.
- * Description: The maximum amount of characters to accept as input.
- */
-define('maxlength', '_maxlength');
-
-/**
- * Keyword: valid
- * Used: For all form elements that have the value property.
- * Description: A list of validation functions that need to be passed.
- */
-define('valid', '_valid');
-define('validation_arguments', '_validation_arguments');
-
-/**
- * Keyword: weight
- * Used: all elements.
- * Description: Used by the form_render function to sort the list of elements before being output.
- */
-define('weight', '_weight');
-
-/**
- * Keyword: collapsible
- * Used: fieldset elements.
- * Description: Wether or not the fieldset can be collapsed with javascript.
- */
-define('collapsible', '_collapsible');
-
-/**
- * Keyword: collapsed
- * Used: fieldset elements.
- * Description: Wether or not the fieldset is collapsed by default. See collapsible property.
- */
-define('collapsed', '_collapsed');
-
-/**
- * Keyword: autocomplete_path
- * Used: textfield elements.
- * Description: The path the AJAX autocomplete script uses as the source for autocompletion.
- */
-define('autocomplete_path', '_autocomplete_path');
-
-/**
- * Keyword: action
- * Used: form elements.
- * Description: The path to which the form will be submitted.
- */
-define('action', '_action');
-
-/**
- * Keyword: method
- * Used: form elements.
- * Description: The HTTP method the form will be submitted with (GET/POST). Default is 'post'.
- */
-define('method', '_method');
-
-/**
- * Keyword: attributes
- * Used: all visible form elements.
- * Description: Additional html attributes, such as 'class' can be set using this mechanism.
- */
-define('attributes', '_attributes');
-
-/**
- * Keyword: options
- * Used: select boxes, checkboxes and radios form elements.
- * Description: An associative array containing the options to be used. In the format 'return_value' => 'Display Value'
- *
- * It is possible to group options together; to do this, change the format of
- * $options to an associative array in which the keys are group labels, and the
- * values are associative arrays in the normal $options format.
- */
-define('options', '_options');
-
-/**
- * Keyword: extra
- * Used: select boxes.
- * Description: Additional HTML to inject into the select element tag.
- */
-define('extra', '_extra');
-
-/**
- * Keyword: multiple
- * Used: select boxes.
- * Description: Wether the user may select more than one item.
- */
-define('multiple', '_multiple');
-
-/**
- * Keyword: button_type
- * Used: buttons.
- * Description: The type of button to display (cancel or submit)
- */
-define('button_type', '_button_type');
-
-
-
-/**
- * Keyword: error
- * Used: All visible form elements.
- * Description: Wether or not a form element has been flagged as having an error.
- */
-define('error', '_error');
-
-/**
- * Keyword: prefix
- * Used: markup element.
- * Description: Text to include before the value and children properties.
- */
-define('prefix', '_prefix');
-
-/**
- * Keyword: suffix
- * Used: markup element.
- * Description: Text to include after the value and children properties.
- */
-define('suffix', '_suffix');
-
-/**
- * Keyword: error
- * Used: weight form element.
- * Description: Number of weights to have selectable.
- */
-define('delta', '_delta');
-
-/**
- * Multiple elements. For use in the poll module, and for file uploads.
- */
-
-/**
- * Keyword : process
- * Used : By any element, used to modify a form element.
- */
-define('process', '_process');
-
-/**
- * Keyword: multiple
- */
-define('multiple', '_multiple');
-
-/**
- * Keyword: min
- */
-define('minimum', '_minimum');
-
-/**
- * Keyword: max
- */
-define('maximum', '_maximum');
-
-/**
- * Keyword: increment
- */
-define('increment', '_increment');
-
-define('spawned', '_spawned');
-
-define('tree', '_tree');
-
-define('token', '_token');
-
-define('execute', '_execute');
-
-/**
  * Check if the key is a property.
  */
 function element_property($key) {
- return (substr($key, 0, 1) == '_');
+  return $key{0} == '#';
 }
 
 function element_properties($element) {
@@ -333,7 +24,7 @@ function element_properties($element) {
  * Check if the key is a child.
  */
 function element_child($key) {
-  return (substr($key, 0, 1) != '_');
+  return $key{0} != '#';
 }
 
 function element_children($element) {
@@ -358,10 +49,10 @@ function drupal_get_form($form_id, &$form, $callback = NULL) {
   global $form_values, $form_execute;
   $form_values = array();
   $form_execute = FALSE;
-  $form[type] = 'form';
-  $form[attributes]['class'] .= ' form-api';
-  if (isset($form[token])) {
-    $form['form_token'] = array(type => 'hidden', value => md5($_SERVER['REMOTE_ADDR'] . $form[token] . variable_get('drupal_private_key', '')));
+  $form['#type'] = 'form';
+  $form['#attributes']['class'] .= ' form-api';
+  if (isset($form['#token'])) {
+    $form['form_token'] = array('#type' => 'hidden', '#value' => md5($_SERVER['REMOTE_ADDR'] . $form['#token'] . variable_get('drupal_private_key', '')));
   }
   $form = array_merge(_element_info('form'), $form);
 
@@ -375,18 +66,21 @@ function drupal_get_form($form_id, &$form, $callback = NULL) {
     $function($form);
   }
 
-  if (!$form[built]) {
+  if (!$form['#built']) {
     $form = _form_builder($form);
   }
-  if ($form_execute) {
-    drupal_execute_form($form_id, $form, $callback);
+  if (!empty($_POST['edit'])) {
+    drupal_validate_form($form_id, $form, $callback);
+    if ($form_execute && !form_get_errors()) {
+      drupal_execute_form($form_id, $form, $callback);
+    }
   }
 
   if (function_exists('theme_' . $form_id)) {
-    $form[theme] = $form_id;
+    $form['#theme'] = $form_id;
   }
   elseif (function_exists('theme_' . $callback)) {
-    $form[theme] = $callback;
+    $form['#theme'] = $callback;
   }
   return form_render($form);
 }
@@ -394,8 +88,8 @@ function drupal_get_form($form_id, &$form, $callback = NULL) {
 function drupal_validate_form($form_id, &$form, $callback = NULL) {
   global $form_values;
 
-  if (isset($form[token])) {
-    if ($form_values['form_token'] != md5($_SERVER['REMOTE_ADDR'] . $form[token] . variable_get('drupal_private_key', ''))) {
+  if (isset($form['#token'])) {
+    if ($form_values['form_token'] != md5($_SERVER['REMOTE_ADDR'] . $form['#token'] . variable_get('drupal_private_key', ''))) {
       // setting this error will cause the form to fail validation
       form_set_error('form_token', t('Validation error, please try again.  If this error persists, please contact the site administrator.'));
     }
@@ -418,21 +112,16 @@ function drupal_validate_form($form_id, &$form, $callback = NULL) {
 
 function drupal_execute_form($form_id, $form, $callback = NULL) {
   global $form_values;
-  if (!empty($_POST['edit'])) {
-    drupal_validate_form($form_id, $form, $callback);
-    if (!form_get_errors()) {
-      foreach (module_implements('form_execute_alter') as $module) {
-        $function = $module .'_form_execute_alter';
-        $function($form_id, $form_values);
-      }
+  foreach (module_implements('form_execute_alter') as $module) {
+    $function = $module .'_form_execute_alter';
+    $function($form_id, $form_values);
+  }
 
-      if (function_exists($form_id . '_execute')) {
-        call_user_func($form_id . '_execute', $form_id, $form_values);
-      }
-      elseif (function_exists($callback . '_execute')) {
-        call_user_func($callback . '_execute', $form_id, $form_values);
-      }
-    }
+  if (function_exists($form_id . '_execute')) {
+    call_user_func($form_id . '_execute', $form_id, $form_values);
+  }
+  elseif (function_exists($callback . '_execute')) {
+    call_user_func($callback . '_execute', $form_id, $form_values);
   }
 }
 
@@ -444,30 +133,27 @@ function _form_validate(&$elements) {
   }
 
   /* Validate the current input */
-  if (!$elements[validated] && $elements[input]) {
-    if ($elements[required]) {
-      if (!$elements[value]) {
-        form_error($elements, t('%name field is required', array('%name' => $elements[title])));
+  if (!$elements['#validated'] && $elements['#input']) {
+    if ($elements['#required'] && !$elements['#value']) {
+        form_error($elements, t('%name field is required', array('%name' => $elements['#title'])));
+    }
+    if ($elements['#valid']) {
+      if (is_array($elements['#valid'])) {
+        foreach ($elements['#valid'] as $key => $valid) {
+          $args = is_array($elements['#validation_arguments'][$key]) ? $elements['#validation_arguments'][$key] : array();
+          if (function_exists($valid . '_valid'))  {
+            call_user_func_array($valid . '_valid', array_merge(array($elements), $args));
+          }
+        }
       }
-      if ($elements[valid]) {
-        if (is_array($elements[valid])) {
-          foreach ($elements[valid] as $key => $valid) {
-            $args = is_array($elements[validation_arguments][$key]) ? $elements[validation_arguments][$key] : array();
-            if (function_exists('valid_' . $valid))  {
-              call_user_func_array('valid_' . $valid, array_merge(array($elements), $args));
-            }
-          }
+      else {
+        $args = is_array($elements['#validation_arguments']) ? $elements['#validation_arguments'] : array();
+        if (function_exists($elements['#valid'] . '_valid'))  {
+          call_user_func_array($elements['#valid'] . '_valid', array_merge(array($elements), $args));
         }
-        else {
-          $args = is_array($elements[validation_arguments]) ? $elements[validation_arguments] : array();
-          if (function_exists('valid_' . $elements[valid]))  {
-            call_user_func_array('valid_' . $elements[valid], array_merge(array($elements), $args));
-          }
-        }
-
       }
     }
-    $elements[validated] = TRUE;
+    $elements['#validated'] = TRUE;
   }
 }
 
@@ -475,8 +161,8 @@ function _form_validate(&$elements) {
  * Flag an element as having an error.
  */
 function form_error(&$element, $message) {
-  $element[error] = TRUE;
-  $GLOBALS['form'][$element[name]] = $message;
+  $element['#error'] = TRUE;
+  $GLOBALS['form'][$element['#name']] = $message;
   drupal_set_message($message, 'error');
 }
 
@@ -490,56 +176,57 @@ function _form_builder($form, $parents = array(), $multiple = FALSE) {
   global $form_values;
   global $form_execute;
 
-  if ($form[built] == TRUE) {
+  if ($form['#built'] == TRUE) {
     return $form;
   }
-  $form[built] = TRUE;
+  $form['#built'] = TRUE;
 
-  $form[parents] = ($form[parents]) ? $form[parents] : $parents;
+  $form['#parents'] = ($form['#parents']) ? $form['#parents'] : $parents;
   /* Use element defaults */
-  if ((!empty($form[type])) && ($info = _element_info($form[type]))) {
+  if ((!empty($form['#type'])) && ($info = _element_info($form['#type']))) {
     $form += $info;
   }
 
-  if ($form[input]) {
-    if (!$form[tree]) {
-      $form[parents] = array(array_pop($form[parents]));
+  if ($form['#input']) {
+    if (!$form['#tree']) {
+      $form['#parents'] = array(array_pop($form['#parents']));
     }
 
-    $form[name] = ($form[name]) ? $form[name] : 'edit[' . implode('][', $form[parents]) . ']';
-    $form[id] =  ($form[id]) ? $form[id] : 'edit-' . implode('-', $form[parents]);
+    $form['#name'] = ($form['#name']) ? $form['#name'] : 'edit[' . implode('][', $form['#parents']) . ']';
+    $form['#id'] =  ($form['#id']) ? $form['#id'] : 'edit-' . implode('-', $form['#parents']);
 
     $posted = isset($_POST['edit']);
     $edit = $posted ? $_POST['edit'] : array();
     $ref =& $form_values;
-    foreach ($form[parents] as $parent) {
+    foreach ($form['#parents'] as $parent) {
       $edit = isset($edit[$parent]) ? $edit[$parent] : NULL;
       $ref =& $ref[$parent];
     }
-    $default_value = $posted ? $edit : $form[default_value];
-    $form[value] = isset($form[value]) ? $form[value] : $default_value;
-    if (isset($form[execute])) {
-      if ($_POST[$form[name]] == $form[value]) {
-        $form_execute = $form_execute || $form[execute];
+    if (!isset($form['#value'])) {
+      $form['#value'] = $posted ? $edit : $form['#default_value'];
+    }
+    if (isset($form['#execute'])) {
+      if ($_POST[$form['#name']] == $form['#value']) {
+        $form_execute = $form_execute || $form['#execute'];
       }
     }
 
-    $ref = $form[value];
+    $ref = $form['#value'];
   }
 
   // Allow for elements to expand to multiple elements. Radios, checkboxes and files for instance.
-  if (function_exists($form[process]) && !$form[processed]) {
-    $form = call_user_func($form[process], $form);
-    $form[processed] = TRUE;
+  if (function_exists($form['#process']) && !$form['#processed']) {
+    $form = call_user_func($form['#process'], $form);
+    $form['#processed'] = TRUE;
   }
 
   // Recurse through all child elements.
   $count  = 0;
   foreach (element_children($form) as $key) {
-    $form[$key][tree] = (isset($form[$key][tree])) ? $form[$key][tree] : $form[tree];
+    $form[$key]['#tree'] = (isset($form[$key]['#tree'])) ? $form[$key]['#tree'] : $form['#tree'];
     # Assign a decimal placeholder weight, to preserve original array order
-    $form[$key][weight] = $form[$key][weight] ? $form[$key][weight] : $count/10;
-    $form[$key] = _form_builder($form[$key], array_merge($form[parents], array($key)));
+    $form[$key]['#weight'] = $form[$key]['#weight'] ? $form[$key]['#weight'] : $count/10;
+    $form[$key] = _form_builder($form[$key], array_merge($form['#parents'], array($key)));
     $count++;
   }
 
@@ -564,14 +251,14 @@ function form_render(&$elements) {
     uasort($elements, "_form_sort");
   }
 
-  if (!$elements[children]) {
+  if (!$elements['#children']) {
     /* render all the children using a theme function */
-    if ($elements[theme] && !$elements[theme_used]) {
-      $elements[theme_used] = TRUE;
-      $previous_type = $elements[type];
-      $elements[type] = 'markup';
-      $content = theme($elements[theme], $elements);
-      $elements[type] = $previous_type;
+    if ($elements['#theme'] && !$elements['#theme_used']) {
+      $elements['#theme_used'] = TRUE;
+      $previous_type = $elements['#type'];
+      $elements['#type'] = 'markup';
+      $content = theme($elements['#theme'], $elements);
+      $elements['#type'] = $previous_type;
     }
     /* render each of the children using form_render and concatenate them */
     if (!$content) {
@@ -581,26 +268,28 @@ function form_render(&$elements) {
     }
   }
   if ($content) {
-    $elements[children] = $content;
+    $elements['#children'] = $content;
   }
 
   /* Call the form element renderer */
-  if (!$elements[printed]) {
-    $content = theme(($elements[type]) ? $elements[type]: 'markup', $elements);
-    $elements[printed] = TRUE;
+  if (!$elements['#printed']) {
+    $content = theme(($elements['#type']) ? $elements['#type']: 'markup', $elements);
+    $elements['#printed'] = TRUE;
   }
 
-  return $elements[prefix] . $content . $elements[suffix];
+  if ($content) {
+    return $elements['#prefix'] . $content . $elements['#suffix'];
+  }
 }
 
 /**
  * Function used by uasort in form render to sort form via weight.
  */
 function _form_sort($a, $b) {
-  if ($a[weight] == $b[weight]) {
+  if ($a['#weight'] == $b['#weight']) {
     return 0;
   }
-  return ($a[weight] < $b[weight]) ? -1 : 1;
+  return ($a['#weight'] < $b['#weight']) ? -1 : 1;
 }
 
 /**
@@ -609,10 +298,10 @@ function _form_sort($a, $b) {
 function _element_info($type, $refresh = null) {
   static $cache;
   $basic_defaults = array(
-    description => NULL,
-    attributes => array(),
-    required => FALSE,
-    tree => FALSE
+    '#description' => NULL,
+    '#attributes' => array(),
+    '#required' => FALSE,
+    '#tree' => FALSE
   );
   if ($refresh || !is_array($cache)) {
     $cache = array();
@@ -647,19 +336,19 @@ function _element_info($type, $refresh = null) {
  */
 function theme_select($element) {
   $select = '';
-  foreach ($element[options] as $key => $choice) {
+  foreach ($element['#options'] as $key => $choice) {
     if (is_array($choice)) {
       $select .= '<optgroup label="'. $key .'">';
       foreach ($choice as $key => $choice) {
-        $select .= '<option value="'. $key .'"'. (is_array($element[value]) ? (in_array($key, $element[value]) ? ' selected="selected"' : '') : ($element[value] == $key ? ' selected="selected"' : '')) .'>'. check_plain($choice) .'</option>';
+        $select .= '<option value="'. $key .'"'. (is_array($element['#value']) ? (in_array($key, $element['#value']) ? ' selected="selected"' : '') : ($element['#value'] == $key ? ' selected="selected"' : '')) .'>'. check_plain($choice) .'</option>';
       }
       $select .= '</optgroup>';
     }
     else {
-      $select .= '<option value="'. $key .'"'. (is_array($element[value]) ? (in_array($key, $element[value]) ? ' selected="selected"' : '') : ($element[value] == $key ? ' selected="selected"' : '')) .'>'. check_plain($choice) .'</option>';
+      $select .= '<option value="'. $key .'"'. (is_array($element['#value']) ? (in_array($key, $element['#value']) ? ' selected="selected"' : '') : ($element['#value'] == $key ? ' selected="selected"' : '')) .'>'. check_plain($choice) .'</option>';
     }
   }
-  return theme('form_element', $element[title], '<select name="'. $element[name] .''. ($element[multiple] ? '[]' : '') .'"'. ($element[multiple] ? ' multiple="multiple" ' : '') . ($element[extra] ? ' '. $element[extra] : '') .' id="' . $element[id] .'">'. $select .'</select>', $element[description], $element[name], $element[required], _form_get_error($element[name]));
+  return theme('form_element', $element['#title'], '<select name="'. $element['#name'] .''. ($element['#multiple'] ? '[]' : '') .'"'. ($element['#multiple'] ? ' multiple="multiple" ' : '') . ($element['#extra'] ? ' '. $element['#extra'] : '') .' id="' . $element['#id'] .'">'. $select .'</select>', $element['#description'], $element['#name'], $element['#required'], _form_get_error($element['#name']));
 }
 
 /**
@@ -672,16 +361,16 @@ function theme_select($element) {
  *   A themed HTML string representing the form item group.
  */
 function theme_fieldset($element) {
-  if ($element[collapsible]) {
+  if ($element['#collapsible']) {
     drupal_add_js('misc/collapse.js');
 
-    $element[attributes]['class'] .= ' collapsible';
-    if ($element[collapsed]) {
-     $element[attributes]['class'] .= ' collapsed';
+    $element['#attributes']['class'] .= ' collapsible';
+    if ($element['#collapsed']) {
+     $element['#attributes']['class'] .= ' collapsed';
     }
   }
 
-  return '<fieldset' . drupal_attributes($element[attributes]) .'>' . ($element[title] ? '<legend>'. $element[title] .'</legend>' : '') . $element[children] . $element[value] . ($element[description] ? '<div class="description">'. $element[description] .'</div>' : '') . "</fieldset>\n";
+  return '<fieldset' . drupal_attributes($element['#attributes']) .'>' . ($element['#title'] ? '<legend>'. $element['#title'] .'</legend>' : '') . $element['#children'] . $element['#value'] . ($element['#description'] ? '<div class="description">'. $element['#description'] .'</div>' : '') . "</fieldset>\n";
 
 }
 
@@ -697,15 +386,15 @@ function theme_fieldset($element) {
  */
 function theme_radio($element) {
   $output = '<input type="radio" ';
-  $output .= 'class="'. _form_get_class('form-radio', $element[required], _form_get_error($element[name])) .'" ';
-  $output .= 'name="' . $element[name] .'" ';
-  $output .= 'value="'. $element[return_value] .'" ';
-  $output .= ($element[value] == $element[return_value]) ? ' checked="checked" ' : ' ';
-  $output .= drupal_attributes($element[attributes]) .' />';
-  if (!is_null($element[title])) {
-    $output = '<label class="option">'. $output .' '. $element[title] .'</label>';
+  $output .= 'class="'. _form_get_class('form-radio', $element['#required'], _form_get_error($element['#name'])) .'" ';
+  $output .= 'name="' . $element['#name'] .'" ';
+  $output .= 'value="'. $element['#return_value'] .'" ';
+  $output .= ($element['#value'] == $element['#return_value']) ? ' checked="checked" ' : ' ';
+  $output .= drupal_attributes($element['#attributes']) .' />';
+  if (!is_null($element['#title'])) {
+    $output = '<label class="option">'. $output .' '. $element['#title'] .'</label>';
   }
-  return theme('form_element', NULL, $output, $element[description], $element[name], $element[required], _form_get_error($element[name]));
+  return theme('form_element', NULL, $output, $element['#description'], $element['#name'], $element['#required'], _form_get_error($element['#name']));
 }
 
 /**
@@ -718,11 +407,11 @@ function theme_radio($element) {
  *   A themed HTML string representing the radio button set.
  */
 function theme_radios($element) {
-  if ($element[title] || $element[description]) {
-    return theme('form_element', $element[title], $element[children], $element[description], $element[id], $element[required], _form_get_error($element[name]));
+  if ($element['#title'] || $element['#description']) {
+    return theme('form_element', $element['#title'], $element['#children'], $element['#description'], $element['#id'], $element['#required'], _form_get_error($element['#name']));
   }
   else {
-    return $element[children];
+    return $element['#children'];
   }
 }
 
@@ -736,8 +425,8 @@ function theme_radios($element) {
  *   A themed HTML string representing the radio button set.
  */
 function theme_date($element) {
-  $output = '<div class="container-inline">' . $element[children] . '</div>';
-  return theme('form_element', $element[title], $output, $element[description], $element[id], $element[required], _form_get_error($element[name]));
+  $output = '<div class="container-inline">' . $element['#children'] . '</div>';
+  return theme('form_element', $element['#title'], $output, $element['#description'], $element['#id'], $element['#required'], _form_get_error($element['#name']));
 }
 
 /**
@@ -745,8 +434,8 @@ function theme_date($element) {
  */
 function expand_date($element) {
   // Default to current date
-  if (!isset($element[value])) {
-    $element[value] = array('day' => format_date(time(), 'custom', 'j'),
+  if (!isset($element['#value'])) {
+    $element['#value'] = array('day' => format_date(time(), 'custom', 'j'),
                             'month' => format_date(time(), 'custom', 'n'),
                             'year' => format_date(time(), 'custom', 'Y'));
   }
@@ -773,7 +462,7 @@ function expand_date($element) {
         $options = drupal_map_assoc(range(1900, 2050));
         break;
     }
-    $element[$type] = array(type => 'radio', value => $element[value][$type], attributes => $element[attributes], parents => $element[parents], options => $options,  tree => TRUE);
+    $element[$type] = array('#type' => 'radio', '#value' => $element['#value'][$type], '#attributes' => $element['#attributes'], '#parents' => $element['#parents'], '#options' => $options,  '#tree' => TRUE);
   }
 
   return $element;
@@ -785,10 +474,10 @@ function expand_date($element) {
  * to a list of radios, using the options array as index.
  */
 function expand_radios($element) {
-  if (count($element[options]) > 0) {
-    foreach ($element[options] as $key => $choice) {
+  if (count($element['#options']) > 0) {
+    foreach ($element['#options'] as $key => $choice) {
       if (!$element[$key]) {
-        $element[$key] = array(type => 'radio', title => $choice, return_value => $key, default_value => $element[default_value], attributes => $element[attributes], parents => $element[parents], spawned => TRUE);
+        $element[$key] = array('#type' => 'radio', '#title' => $choice, '#return_value' => $key, '#default_value' => $element['#default_value'], '#attributes' => $element['#attributes'], '#parents' => $element['#parents'], '#spawned' => TRUE);
       }
     }
   }
@@ -807,7 +496,7 @@ function expand_radios($element) {
  *   A themed HTML string representing the form item.
  */
 function theme_item($element) {
-  return theme('form_element', $element[title], $element[value] . $element[children], $element[description], $element[id], $element[required], $element[error]);
+  return theme('form_element', $element['#title'], $element['#value'] . $element['#children'], $element['#description'], $element['#id'], $element['#required'], $element['#error']);
 }
 
 
@@ -823,18 +512,18 @@ function theme_item($element) {
 function theme_checkbox($element) {
   $checkbox = '<input ';
   $checkbox .= 'type="checkbox" ';
-  $checkbox .= 'class="'. _form_get_class('form-checkbox', $element[required], _form_get_error($element[name])) . '" ';
-  $checkbox .= 'name="'. $element[name] .'" ';
-  $checkbox .= 'id="'. $element[id].'" ' ;
-  $checkbox .= 'value="'. $element[return_value] .'" ';
-  $checkbox .= ($element[value] == $element[return_value]) ? ' checked="checked" ' : ' ';
-  $checkbox .= drupal_attributes($element[attributes]) . ' />';
+  $checkbox .= 'class="'. _form_get_class('form-checkbox', $element['#required'], _form_get_error($element['#name'])) . '" ';
+  $checkbox .= 'name="'. $element['#name'] .'" ';
+  $checkbox .= 'id="'. $element['#id'].'" ' ;
+  $checkbox .= 'value="'. $element['#return_value'] .'" ';
+  $checkbox .= ($element['#value'] == $element['#return_value']) ? ' checked="checked" ' : ' ';
+  $checkbox .= drupal_attributes($element['#attributes']) . ' />';
 
-  if (!is_null($element[title])) {
-    $checkbox = '<label class="option">'. $checkbox .' '. $element[title] .'</label>';
+  if (!is_null($element['#title'])) {
+    $checkbox = '<label class="option">'. $checkbox .' '. $element['#title'] .'</label>';
   }
 
-  return theme('form_element', NULL, $checkbox, $element[description], $element[name], $element[required], _form_get_error($element[name]));
+  return theme('form_element', NULL, $checkbox, $element['#description'], $element['#name'], $element['#required'], _form_get_error($element['#name']));
 }
 
 /**
@@ -846,23 +535,23 @@ function theme_checkbox($element) {
  *   A themed HTML string representing the checkbox set.
  */
 function theme_checkboxes($element) {
-  if ($element[title] || $element[description]) {
-    return theme('form_element', $element[title], $element[children], $element[description], 'edit-'. $element[name], $element[required], _form_get_error($element[name]));
+  if ($element['#title'] || $element['#description']) {
+    return theme('form_element', $element['#title'], $element['#children'], $element['#description'], 'edit-'. $element['#name'], $element['#required'], _form_get_error($element['#name']));
   }
   else {
-    return $element[children];
+    return $element['#children'];
   }
 }
 
 function expand_checkboxes($element) {
-  $value = is_array($element[value]) ? $element[value] : array();
-  if (count($element[options]) > 0) {
-    if (!isset($element[default_value]) || $element[default_value] == 0) {
-      $element[default_value] = array();
+  $value = is_array($element['#value']) ? $element['#value'] : array();
+  if (count($element['#options']) > 0) {
+    if (!isset($element['#default_value']) || $element['#default_value'] == 0) {
+      $element['#default_value'] = array();
     }
-    foreach ($element[options] as $key => $choice) {
+    foreach ($element['#options'] as $key => $choice) {
       if (!isset($element[$key])) {
-        $element[$key] = array(type => 'checkbox', processed => TRUE, title => $choice, tree => TRUE, default_value => in_array($key, $value), attributes => $element[attributes]);
+        $element[$key] = array('#type' => 'checkbox', '#processed' => TRUE, '#title' => $choice, '#tree' => TRUE, '#default_value' => in_array($key, $value), '#attributes' => $element['#attributes']);
       }
     }
   }
@@ -875,7 +564,7 @@ function theme_submit($element) {
 }
 
 function theme_button($element) {
-  return '<input type="submit" class="form-'. $element[button_type] .'" name="'. $element[name] .'" value="'. check_plain($element[value]) .'" '. drupal_attributes($element[attributes]) ." />\n";
+  return '<input type="submit" class="form-'. $element['#button_type'] .'" name="'. $element['#name'] .'" value="'. check_plain($element['#value']) .'" '. drupal_attributes($element['#attributes']) ." />\n";
 }
 
 /**
@@ -888,7 +577,7 @@ function theme_button($element) {
  *   A themed HTML string representing the hidden form field.
  */
 function theme_hidden($element) {
-  return '<input type="hidden" name="'. $element[name] . '" id="' . $element[id] . '" value="'. check_plain($element[value]) ."\" " . drupal_attributes($element[attributes]) ." />\n";
+  return '<input type="hidden" name="'. $element['#name'] . '" id="' . $element['#id'] . '" value="'. check_plain($element['#value']) ."\" " . drupal_attributes($element['#attributes']) ." />\n";
 }
 
 /**
@@ -901,15 +590,15 @@ function theme_hidden($element) {
  *   A themed HTML string representing the textfield.
  */
 function theme_textfield($element) {
-  $size = $element[size] ? ' size="' . $element[size] . '"' : '';
-  if ($element[autocomplete_path]) {
+  $size = $element['#size'] ? ' size="' . $element['#size'] . '"' : '';
+  if ($element['#autocomplete_path']) {
     drupal_add_js('misc/autocomplete.js');
     $class = ' form-autocomplete';
-    $extra =  '<input class="autocomplete" type="hidden" id="'. $element[id] .'-autocomplete" value="'. check_url(url($element[autocomplete_path], NULL, NULL, TRUE)) .'" disabled="disabled" />';
+    $extra =  '<input class="autocomplete" type="hidden" id="'. $element['#id'] .'-autocomplete" value="'. check_url(url($element['#autocomplete_path'], NULL, NULL, TRUE)) .'" disabled="disabled" />';
   }
 
-  $output = '<input type="text" maxlength="'. $element[maxlength] .'" class="'. _form_get_class("form-text$class", $element[required], _form_get_error($element[name])) .'" name="'. $element[name] .'" id="'. $element[id] .'" '. $size .' value="'. check_plain($element[value]) .'"'. drupal_attributes($element[attributes]) .' />';
-  return theme('form_element', $element[title], $output, $element[description], $element[id], $element[required], _form_get_error($element[name])). $extra;
+  $output = '<input type="text" maxlength="'. $element['#maxlength'] .'" class="'. _form_get_class("form-text$class", $element['#required'], _form_get_error($element['#name'])) .'" name="'. $element['#name'] .'" id="'. $element['#id'] .'" '. $size .' value="'. check_plain($element['#value']) .'"'. drupal_attributes($element['#attributes']) .' />';
+  return theme('form_element', $element['#title'], $output, $element['#description'], $element['#id'], $element['#required'], _form_get_error($element['#name'])). $extra;
 }
 
 /**
@@ -923,8 +612,8 @@ function theme_textfield($element) {
  */
 function theme_form($element) {
   // Anonymous div to satisfy XHTML compliancy.
-  $action = $element[action] ? 'action="' . check_url($element[action]) . '" ' : '';
-  return '<form '. $action . ' method="'. $element[method] .'" '. drupal_attributes($element[attributes]) .">\n<div>". $element[children] ."\n</div></form>\n";
+  $action = $element['#action'] ? 'action="' . check_url($element['#action']) . '" ' : '';
+  return '<form '. $action . ' method="'. $element['#method'] .'" '. drupal_attributes($element['#attributes']) .">\n<div>". $element['#children'] ."\n</div></form>\n";
 }
 
 
@@ -938,9 +627,9 @@ function theme_form($element) {
  *   A themed HTML string representing the textarea.
  */
 function theme_textarea($element) {
-  $cols = $element[cols] ? ' cols="'. $element[cols] .'"' : '';
+  $cols = $element['#cols'] ? ' cols="'. $element['#cols'] .'"' : '';
 
-  return theme('form_element', $element[title], '<textarea'. $cols .' rows="'. $element[rows] .'" name="'. $element[name] .'" id="' . $element[id] .'" class="'. _form_get_class('textarea', $element[required], _form_get_error($element[name])) .'"'. drupal_attributes($element[attributes]) .'>'. check_plain($element[value]) .'</textarea>', $element[description], $element[id], $element[required], _form_get_error($element[name]));
+  return theme('form_element', $element['#title'], '<textarea'. $cols .' rows="'. $element['#rows'] .'" name="'. $element['#name'] .'" id="' . $element['#id'] .'" class="'. _form_get_class('textarea', $element['#required'], _form_get_error($element['#name'])) .'"'. drupal_attributes($element['#attributes']) .'>'. check_plain($element['#value']) .'</textarea>', $element['#description'], $element['#id'], $element['#required'], _form_get_error($element['#name']));
 }
 
 /**
@@ -956,7 +645,7 @@ function theme_textarea($element) {
  */
 
 function theme_markup($element) {
-  return $element[value] . $element[children];
+  return $element['#value'] . $element['#children'];
 }
 
 
@@ -971,11 +660,11 @@ function theme_markup($element) {
 *   A themed HTML string representing the form.
 */
 function theme_password($element) {
-  $size = $element[size] ? ' size="'. $element[size] .'" ' : '';
+  $size = $element['#size'] ? ' size="'. $element['#size'] .'" ' : '';
 
-  $output = '<input type="password" maxlength="'. $element[maxlength] .'" class="'. _form_get_class("form-text $class", $element[required], _form_get_error($element[name])) .'" name="'. $element[name] .'" id="'. $element[id] .'" '. $size . drupal_attributes($element[attributes]) .' />';
+  $output = '<input type="password" maxlength="'. $element['#maxlength'] .'" class="'. _form_get_class("form-text $class", $element['#required'], _form_get_error($element['#name'])) .'" name="'. $element['#name'] .'" id="'. $element['#id'] .'" '. $size . drupal_attributes($element['#attributes']) .' />';
 
-  return theme('form_element', $element[title], $output, $element[description], $element[id], $element[required], _form_get_error($element[name]));
+  return theme('form_element', $element['#title'], $output, $element['#description'], $element['#id'], $element['#required'], _form_get_error($element['#name']));
 }
 
 /**
@@ -988,11 +677,11 @@ function theme_password($element) {
  *   A themed HTML string representing the form.
  */
 function theme_weight($element) {
-  for ($n = (-1 * $element[delta]); $n <= $element[delta]; $n++) {
+  for ($n = (-1 * $element['#delta']); $n <= $element['#delta']; $n++) {
     $weights[$n] = $n;
   }
-  $element[options] = $weights;
-  $element[type] = 'select';
+  $element['#options'] = $weights;
+  $element['#type'] = 'select';
 
   return form_render($element);
 }
@@ -1034,7 +723,7 @@ function form_get_errors() {
  * provided by file.inc.
  */
 function theme_file($element) {
-  return theme('form_element', $element[title], '<input type="file" class="'. _form_get_class('form-file', $element[required], _form_get_error($element[name])) .'" name="'. $element[name] .'" id="'. form_clean_id($element[id]) .'" size="'. $element[size] ."\" />\n", $element[description], $element[id], $element[required], _form_get_error($element[name]));
+  return theme('form_element', $element['#title'], '<input type="file" class="'. _form_get_class('form-file', $element['#required'], _form_get_error($element['#name'])) .'" name="'. $element['#name'] .'" id="'. form_clean_id($element['#id']) .'" size="'. $element['#size'] ."\" />\n", $element['#description'], $element['#id'], $element['#required'], _form_get_error($element['#name']));
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.182 2005/10/07 06:51:43 dries Exp $
+// $Id: block.module,v 1.183 2005/10/11 19:44:34 dries Exp $
 
 /**
  * @file
@@ -207,24 +207,24 @@ function block_admin_display() {
   $blocks = _block_rehash();
   $block_regions = system_region_list($theme_key);
 
-  $form[action] = arg(3) ? url('admin/block/list/' . $theme_key) : url('admin/block');
-  $form[tree] = TRUE;
+  $form['#action'] = arg(3) ? url('admin/block/list/' . $theme_key) : url('admin/block');
+  $form['#tree'] = TRUE;
   foreach ($blocks as $block) {
-    $form[$block['module']][$block['delta']]['info'] = array(type => 'markup', value => $block['info']);
-    $form[$block['module']][$block['delta']]['status'] = array(type => 'checkbox', default_value => $block['status']);
-    $form[$block['module']][$block['delta']]['theme'] = array(type => 'hidden', value => $theme_key);
-    $form[$block['module']][$block['delta']]['weight'] = array(type => 'weight', default_value => $block['weight']);
-    $form[$block['module']][$block['delta']]['region'] = array(type => 'select', default_value => isset($block['region']) ? $block['region'] : system_default_region(), options => $block_regions);
+    $form[$block['module']][$block['delta']]['info'] = array('#type' => 'markup', '#value' => $block['info']);
+    $form[$block['module']][$block['delta']]['status'] = array('#type' => 'checkbox', '#default_value' => $block['status']);
+    $form[$block['module']][$block['delta']]['theme'] = array('#type' => 'hidden', '#value' => $theme_key);
+    $form[$block['module']][$block['delta']]['weight'] = array('#type' => 'weight', '#default_value' => $block['weight']);
+    $form[$block['module']][$block['delta']]['region'] = array('#type' => 'select', '#default_value' => isset($block['region']) ? $block['region'] : system_default_region(), '#options' => $block_regions);
 
     if ($throttle) {
-      $form[$block['module']][$block['delta']]['throttle'] = array(type => 'checkbox', default_value => $block['throttle']);
+      $form[$block['module']][$block['delta']]['throttle'] = array('#type' => 'checkbox', '#default_value' => $block['throttle']);
     }
-    $form[$block['module']][$block['delta']]['configure'] = array(type => 'markup', value => l(t('configure'), 'admin/block/configure/'. $block['module'] .'/'. $block['delta']));
+    $form[$block['module']][$block['delta']]['configure'] = array('#type' => 'markup', '#value' => l(t('configure'), 'admin/block/configure/'. $block['module'] .'/'. $block['delta']));
     if ($block['module'] == 'block') {
-      $form[$block['module']][$block['delta']]['delete'] = array(type => 'markup', value => l(t('delete'), 'admin/block/delete/'. $block['delta']));
+      $form[$block['module']][$block['delta']]['delete'] = array('#type' => 'markup', '#value' => l(t('delete'), 'admin/block/delete/'. $block['delta']));
     }
   }
-  $form['submit'] = array(type => 'submit', value => t('Save blocks'));
+  $form['submit'] = array('#type' => 'submit', '#value' => t('Save blocks'));
 
   return drupal_get_form('block_admin_display', $form);
 }
@@ -260,10 +260,10 @@ function theme_block_admin_display($form) {
           }
           $row[] = form_render($block['configure']);
           $row[] = $block['delete'] ? form_render($block['delete']) : '';
-          if ($block['status'][default_value]) {
-            $regions[$block['region'][default_value]][] = $row;
+          if ($block['status']['#default_value']) {
+            $regions[$block['region']['#default_value']][] = $row;
           }
-          else if ($block['region'][default_value] <= 1) {
+          else if ($block['region']['#default_value'] <= 1) {
             $disabled[] = $row;
           }
         }
@@ -320,11 +320,11 @@ function block_admin_configure($module = NULL, $delta = 0) {
 
       // Module-specific block configurations.
       if ($settings = module_invoke($module, 'block', 'configure', $delta)) {
-          $form['block_settings'] = array(type => 'fieldset',
-            title => t('Block specific settings'),
-            collapsible => true,
-            collapsed => false,
-            weight => 0);
+          $form['block_settings'] = array('#type' => 'fieldset',
+            '#title' => t('Block specific settings'),
+            '#collapsible' => true,
+            '#collapsed' => false,
+            '#weight' => 0);
 
           foreach ($settings as $k => $v) {
             $form['block_settings'][$k] = $v;
@@ -337,43 +337,43 @@ function block_admin_configure($module = NULL, $delta = 0) {
 
       // Standard block configurations.
 
-      $form['user_vis_settings'] = array(type => 'fieldset',
-        title => t('User specific visibility settings'),
-        collapsible => true,
-        collapsed => false,
-        weight => 0);
+      $form['user_vis_settings'] = array('#type' => 'fieldset',
+        '#title' => t('User specific visibility settings'),
+        '#collapsible' => true,
+        '#collapsed' => false,
+        '#weight' => 0);
 
       $form['user_vis_settings']['custom'] = array(
-        type => 'radios',
-        title => t('Custom visibility settings'),
-        default_value => $edit['custom'],
-        options => array(t('Users cannot control whether or not they see this block.'), t('Show this block by default, but let individual users hide it.'), t('Hide this block by default but let individual users show it.')), t('Allow individual users to customize the visibility of this block in their account settings.'),
-        default_value => $edit['custom']);
+        '#type' => 'radios',
+        '#title' => t('Custom visibility settings'),
+        '#default_value' => $edit['custom'],
+        '#options' => array(t('Users cannot control whether or not they see this block.'), t('Show this block by default, but let individual users hide it.'), t('Hide this block by default but let individual users show it.')), t('Allow individual users to customize the visibility of this block in their account settings.'),
+        '#default_value' => $edit['custom']);
 
 
-      $form['page_vis_settings'] = array(type => 'fieldset',
-        title => t('Page specific visibility settings'),
-        collapsible => true,
-        collapsed => false,
-        weight => 0);
+      $form['page_vis_settings'] = array('#type' => 'fieldset',
+        '#title' => t('Page specific visibility settings'),
+        '#collapsible' => true,
+        '#collapsed' => false,
+        '#weight' => 0);
 
 
       $form['page_vis_settings']['visibility'] = array(
-        type => 'radios',
-        title => t('Show block on specific pages'),
-        default_value => $edit['visibility'],
-        options => array(t('Show on every page except the listed pages.'), t('Show on only the listed pages.'), t('Show if the following PHP code returns <code>TRUE</code> (PHP-mode, experts only).')),
-        default_value => $edit['visibility']);
+        '#type' => 'radios',
+        '#title' => t('Show block on specific pages'),
+        '#default_value' => $edit['visibility'],
+        '#options' => array(t('Show on every page except the listed pages.'), t('Show on only the listed pages.'), t('Show if the following PHP code returns <code>TRUE</code> (PHP-mode, experts only).')),
+        '#default_value' => $edit['visibility']);
 
       $form['page_vis_settings']['pages'] = array(
-        type => 'textarea',
-        title => t('Pages'),
-        default_value => $edit['pages'],
-        cols => 60,
-        rows => 5,
-        description => t("Enter one page per line as Drupal paths. The '*' character is a wildcard. Example paths are '%blog' for the blog page and %blog1 for every personal blog. %front is the front page. If the PHP-mode is chosen, enter PHP code between %php.  Note that executing incorrect PHP-code can break your Drupal site.", array('%blog' => theme('placeholder', 'blog'), '%blog1' =>  theme('placeholder', 'blog/*'), '%front' => theme('placeholder', '<front>'), '%php' => theme('placeholder', '<?php ?>'))));
+        '#type' => 'textarea',
+        '#title' => t('Pages'),
+        '#default_value' => $edit['pages'],
+        '#cols' => 60,
+        '#rows' => 5,
+        '#description' => t("Enter one page per line as Drupal paths. The '*' character is a wildcard. Example paths are '%blog' for the blog page and %blog1 for every personal blog. %front is the front page. If the PHP-mode is chosen, enter PHP code between %php.  Note that executing incorrect PHP-code can break your Drupal site.", array('%blog' => theme('placeholder', 'blog'), '%blog1' =>  theme('placeholder', 'blog/*'), '%front' => theme('placeholder', '<front>'), '%php' => theme('placeholder', '<?php ?>'))));
 
-      $form['submit'] = array(type => 'submit', value => t('Save block'));
+      $form['submit'] = array('#type' => 'submit', '#value' => t('Save block'));
 
       return drupal_get_form('block_config', $form);
   }
@@ -395,7 +395,7 @@ function block_box_add() {
       // deliberate no break
     default:
       $form = block_box_form($edit);
-      $form['submit'] = array(type => 'submit', value => t('Save block'));
+      $form['submit'] = array('#type' => 'submit', '#value' => t('Save block'));
   }
 
   return drupal_get_form('block_box_add', $form);
@@ -406,8 +406,8 @@ function block_box_add() {
  */
 function block_box_delete($bid = 0) {
   $box = block_box_get($bid);
-  $form['info'] = array(type => 'hidden', value => $box['info'] ? $box['info'] : $box['title']);
-  $form['bid'] = array(type => 'hidden', value => $bid);
+  $form['info'] = array('#type' => 'hidden', '#value' => $box['info'] ? $box['info'] : $box['title']);
+  $form['bid'] = array('#type' => 'hidden', '#value' => $bid);
 
   return confirm_form('block_box_delete_confirm', $form, t('Are you sure you want to delete the block %name?', array('%name' => theme('placeholder', $info))), 'admin/block', '', t('Delete'), t('Cancel'));
 }
@@ -425,10 +425,10 @@ function block_box_delete_confirm_execute($form_id, $edit) {
 
 
 function block_box_form($edit = array()) {
-  $form['title'] = array(type => 'textfield', title => t('Block title'), default_value => $edit['title'], size => 60, maxlength => 64, description => t('The title of the block as shown to the user.'));
+  $form['title'] = array('#type' => 'textfield', '#title' => t('Block title'), '#default_value' => $edit['title'], '#size' => 60, '#maxlength' => 64, '#description' => t('The title of the block as shown to the user.'));
   $form['format'] = filter_form($edit['format']);
-  $form['body'] = array(type => 'textarea', title => t('Block body'), default_value => $edit['body'], cols => 60, rows => 15, description => t('The content of the block as shown to the user.'));
-  $form['info'] = array(type => 'textfield', title => t('Block description'), default_value => $edit['info'], size => 60, maxlength => 64, description => t('A brief description of your block. Used on the <a href="%overview">block overview page</a>.', array('%overview' => url('admin/block'))), required => TRUE);
+  $form['body'] = array('#type' => 'textarea', '#title' => t('Block body'), '#default_value' => $edit['body'], '#cols' => 60, '#rows' => 15, '#description' => t('The content of the block as shown to the user.'));
+  $form['info'] = array('#type' => 'textfield', '#title' => t('Block description'), '#default_value' => $edit['info'], '#size' => 60, '#maxlength' => 64, '#description' => t('A brief description of your block. Used on the <a href="%overview">block overview page</a>.', array('%overview' => url('admin/block'))), '#required' => TRUE);
 
   return $form;
 }
@@ -478,12 +478,12 @@ function block_user($type, $edit, &$user, $category = NULL) {
     case 'form':
       if ($category == 'account') {
         $result = db_query('SELECT * FROM {blocks} WHERE status = 1 AND custom != 0 ORDER BY weight, module, delta');
-        $form['block'] = array(type => 'fieldset', title => t('Block configuration'), weight => 3, collapsible => TRUE, collapsed => FALSE, tree => TRUE);
+        $form['block'] = array('#type' => 'fieldset', '#title' => t('Block configuration'), '#weight' => 3, '#collapsible' => TRUE, '#collapsed' => FALSE, '#tree' => TRUE);
         while ($block = db_fetch_object($result)) {
           $data = module_invoke($block->module, 'block', 'list');
           if ($data[$block->delta]['info']) {
             $return = TRUE;
-            $form['block'][$block->module][$block->delta] = array(type => 'checkbox', title => $data[$block->delta]['info'], default_value => isset($user->block[$block->module][$block->delta]) ? $user->block[$block->module][$block->delta] : ($block->custom == 1));
+            $form['block'][$block->module][$block->delta] = array('#type' => 'checkbox', '#title' => $data[$block->delta]['info'], '#default_value' => isset($user->block[$block->module][$block->delta]) ? $user->block[$block->module][$block->delta] : ($block->custom == 1));
           }
         }
 

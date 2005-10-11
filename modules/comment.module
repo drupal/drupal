@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.380 2005/10/08 12:21:47 dries Exp $
+// $Id: comment.module,v 1.381 2005/10/11 19:44:34 dries Exp $
 
 /**
  * @file
@@ -204,7 +204,7 @@ function comment_link($type, $node = 0, $main = 0) {
 function comment_nodeapi(&$node, $op, $arg = 0) {
   switch ($op) {
     case 'settings':
-      $form['comment_'. $node->type] = array(type => 'radios', title => t('Default comment setting'), default_value => variable_get('comment_'. $node->type, 2), options => array(t('Disabled'), t('Read only'), t('Read/Write')), description => t('Users with the <em>administer comments</em> permission will be able to override this setting.'));
+      $form['comment_'. $node->type] = array('#type' => 'radios', '#title' => t('Default comment setting'), '#default_value' => variable_get('comment_'. $node->type, 2), '#options' => array(t('Disabled'), t('Read only'), t('Read/Write')), '#description' => t('Users with the <em>administer comments</em> permission will be able to override this setting.'));
       return $form;
     case 'fields':
       return array('comment');
@@ -212,8 +212,8 @@ function comment_nodeapi(&$node, $op, $arg = 0) {
     case 'form':
       if (user_access('administer comments')) {
         $selected = isset($node->comment) ? $node->comment : variable_get("comment_$node->type", 2);
-        $form['user_comments'] = array(type => 'fieldset', title => t('User Comments'), collapsible => TRUE, collapsed => TRUE);
-        $form['user_comments']['comment'] = array(type => 'radios', parents => array('comment'), default_value => $selected, options => array(t('Disabled'), t('Read only'), t('Read/Write')));
+        $form['user_comments'] = array('#type' => 'fieldset', '#title' => t('User Comments'), '#collapsible' => TRUE, '#collapsed' => TRUE);
+        $form['user_comments']['comment'] = array('#type' => 'radios', '#parents' => array('comment'), '#default_value' => $selected, '#options' => array(t('Disabled'), t('Read only'), t('Read/Write')));
         return $form;
       }
       break;
@@ -261,8 +261,8 @@ function comment_nodeapi(&$node, $op, $arg = 0) {
 function comment_user($type, $edit, &$user, $category = NULL) {
   if ($type == 'form' && $category == 'account') {
     // when user tries to edit his own data
-    $form['comment_settings'] = array(type => 'fieldset', title => t('Comment settings'), collapsible => TRUE, collapsed => FALSE, weight => 4);
-    $form['comment_settings']['signature'] = array(type => 'textarea', title => t('Signature'), default_value => $edit['comment_settings']['signature'], cols => 60, rows => 5, description => ('Your signature will be publicly displayed at the end of your comments.'));
+    $form['comment_settings'] = array('#type' => 'fieldset', '#title' => t('Comment settings'), '#collapsible' => TRUE, '#collapsed' => FALSE, '#weight' => 4);
+    $form['comment_settings']['signature'] = array('#type' => 'textarea', '#title' => t('Signature'), '#default_value' => $edit['comment_settings']['signature'], '#cols' => 60, '#rows' => 5, '#description' => ('Your signature will be publicly displayed at the end of your comments.'));
 
     return $form;
   }
@@ -272,37 +272,37 @@ function comment_user($type, $edit, &$user, $category = NULL) {
  * Menu callback; presents the comment settings page.
  */
 function comment_configure() {
-  $form['viewing_options'] = array(type => 'fieldset', title => t('Comment viewing options'), collapsible => TRUE, collapsed => TRUE, weight => 0);
+  $form['viewing_options'] = array('#type' => 'fieldset', '#title' => t('Comment viewing options'), '#collapsible' => TRUE, '#collapsed' => TRUE, '#weight' => 0);
 
-  $form['viewing_options']['comment_default_mode'] = array(type => 'radios', title => t('Default display mode'), default_value => variable_get('comment_default_mode', 4), options => _comment_get_modes(), description => t('The default view for comments. Expanded views display the body of the comment. Threaded views keep replies together.'));
+  $form['viewing_options']['comment_default_mode'] = array('#type' => 'radios', '#title' => t('Default display mode'), '#default_value' => variable_get('comment_default_mode', 4), '#options' => _comment_get_modes(), '#description' => t('The default view for comments. Expanded views display the body of the comment. Threaded views keep replies together.'));
 
-  $form['viewing_options']['comment_default_order'] = array(type => 'radios', title => t('Default display order'), default_value => variable_get('Default display order', 1), options => _comment_get_orders(), description => t('The default sorting for new users and anonymous users while viewing comments. These users may change their view using the comment control panel. For registered users, this change is remembered as a persistent user preference.'));
+  $form['viewing_options']['comment_default_order'] = array('#type' => 'radios', '#title' => t('Default display order'), '#default_value' => variable_get('Default display order', 1), '#options' => _comment_get_orders(), '#description' => t('The default sorting for new users and anonymous users while viewing comments. These users may change their view using the comment control panel. For registered users, this change is remembered as a persistent user preference.'));
 
   $form['viewing_options']['comment_default_per_page'] = array(
-    type => 'select',
-    title => t('Default comments per page'),
-    default_value => variable_get('comment_default_per_page', 50),
-    options => _comment_per_page(),
-    description => t('Default number of comments for each page: more comments are distributed in several pages.')
+    '#type' => 'select',
+    '#title' => t('Default comments per page'),
+    '#default_value' => variable_get('comment_default_per_page', 50),
+    '#options' => _comment_per_page(),
+    '#description' => t('Default number of comments for each page: more comments are distributed in several pages.')
   );
 
-  $form['viewing_options']['comment_controls'] = array(type => 'radios', title => t('Comment controls'), default_value => variable_get('comment_controls', 3), options => array(t('Display above the comments'), t('Display below the comments'), t('Display above and below the comments'), t('Do not display')), description => t('Position of the comment controls box.  The comment controls let the user change the default display mode and display order of comments.'));
+  $form['viewing_options']['comment_controls'] = array('#type' => 'radios', '#title' => t('Comment controls'), '#default_value' => variable_get('comment_controls', 3), '#options' => array(t('Display above the comments'), t('Display below the comments'), t('Display above and below the comments'), t('Do not display')), '#description' => t('Position of the comment controls box.  The comment controls let the user change the default display mode and display order of comments.'));
 
-  $form['posting_settings'] = array(type => 'fieldset', title => t('Comment posting settings'), collapsible => true, collapsed => true, weight => 0);
+  $form['posting_settings'] = array('#type' => 'fieldset', '#title' => t('Comment posting settings'), '#collapsible' => true, '#collapsed' => true, '#weight' => 0);
 
-  $form['posting_settings']['comment_anonymous'] = array(type => 'radios', title => t('Comment controls'), default_value => variable_get('comment_anonymous', 1), options => array(t('Anonymous posters may not enter their contact information'), t('Anonymous posters may leave their contact information'), t('Anonymous posters must leave their contact information')),description => t('This feature is only useful if you allow anonymous users to post comments.  See the <a href="%url">permissions page</a>.', array('%url' => url('admin/access/permissions'))));
+  $form['posting_settings']['comment_anonymous'] = array('#type' => 'radios', '#title' => t('Comment controls'), '#default_value' => variable_get('comment_anonymous', 1), '#options' => array(t('Anonymous posters may not enter their contact information'), t('Anonymous posters may leave their contact information'), t('Anonymous posters must leave their contact information')),'#description' => t('This feature is only useful if you allow anonymous users to post comments.  See the <a href="%url">permissions page</a>.', array('%url' => url('admin/access/permissions'))));
 
   $form['posting_settings']['comment_subject_field'] = array(
-    type => 'radios',
-    title => t('Comment subject field'),
-    default_value => variable_get('comment_subject_field', 1),
-    options => array(t('Disabled'), t('Enabled')),
-    description => t('Can users provide a unique subject for their comments?')
+    '#type' => 'radios',
+    '#title' => t('Comment subject field'),
+    '#default_value' => variable_get('comment_subject_field', 1),
+    '#options' => array(t('Disabled'), t('Enabled')),
+    '#description' => t('Can users provide a unique subject for their comments?')
   );
 
-  $form['posting_settings']['comment_preview'] = array(type => 'radios', title => t('Preview comment'), default_value => variable_get('comment_preview', 1), options => array(t('Optional'), t('Required')));
+  $form['posting_settings']['comment_preview'] = array('#type' => 'radios', '#title' => t('Preview comment'), '#default_value' => variable_get('comment_preview', 1), '#options' => array(t('Optional'), t('Required')));
 
-  $form['posting_settings']['comment_form_location'] = array(type => 'radios', title => t('Location of comment submission form'), default_value => variable_get('comment_form_location', 0), options => array(t('Display on separate page'), t('Display below post or comments')));
+  $form['posting_settings']['comment_form_location'] = array('#type' => 'radios', '#title' => t('Location of comment submission form'), '#default_value' => variable_get('comment_form_location', 0), '#options' => array(t('Display on separate page'), t('Display below post or comments')));
 
   return system_settings_form('comment_settings_form', $form);
 }
@@ -1088,65 +1088,65 @@ function comment_form($edit, $title = NULL) {
         $date = format_date($edit['timestamp'], 'custom', 'Y-m-d H:i O');
       }
 
-      $form['admin'] = array(type => 'fieldset', title => t('Administration'), collapsible => TRUE, collapsed => TRUE, weight => -2);
+      $form['admin'] = array('#type' => 'fieldset', '#title' => t('Administration'), '#collapsible' => TRUE, '#collapsed' => TRUE, '#weight' => -2);
 
-      $form['admin']['author'] = array(type => 'textfield', parents => array('author'), title => t('Authored by'), size => 30, maxlength => 60, autocomplete_path => 'user/autocomplete', default_value => $author, weight => -1);
+      $form['admin']['author'] = array('#type' => 'textfield', '#parents' => array('author'), '#title' => t('Authored by'), '#size' => 30, '#maxlength' => 60, '#autocomplete_path' => 'user/autocomplete', '#default_value' => $author, '#weight' => -1);
 
-      $form['admin']['date'] = array(type => 'textfield', parents => array('date'), title => t('Authored on'), size => 20, maxlength => 25, default_value => $date, weight => -1);
+      $form['admin']['date'] = array('#type' => 'textfield', '#parents' => array('date'), '#title' => t('Authored on'), '#size' => 20, '#maxlength' => 25, '#default_value' => $date, '#weight' => -1);
 
-      $form['admin']['status'] = array(type => 'radios', parents => array('status'), title => t('Status'), default_value =>  $status, options => array(t('Published'), t('Not published')), weight => -1);
+      $form['admin']['status'] = array('#type' => 'radios', '#parents' => array('status'), '#title' => t('Status'), '#default_value' =>  $status, '#options' => array(t('Published'), t('Not published')), '#weight' => -1);
 
     }
     else {
-      $form['author'] = array(type => 'item', title => t('Your name'), value => theme('username', $user)
+      $form['author'] = array('#type' => 'item', '#title' => t('Your name'), '#value' => theme('username', $user)
       );
     }
   }
   else if (variable_get('comment_anonymous', 1) == 2) {
-    $form['name'] = array(type => 'textfield', title => t('Your name'), maxlength => 60, size => 30, default_value => $edit['name'] ? $edit['name'] : variable_get('anonymous', 'Anonymous')
+    $form['name'] = array('#type' => 'textfield', '#title' => t('Your name'), '#maxlength' => 60, '#size' => 30, '#default_value' => $edit['name'] ? $edit['name'] : variable_get('anonymous', 'Anonymous')
     );
 
-    $form['mail'] = array(type => 'textfield', title => t('E-mail'), maxlength => 64, size => 30, default_value => $edit['mail'], description => t('The content of this field is kept private and will not be shown publicly.')
+    $form['mail'] = array('#type' => 'textfield', '#title' => t('E-mail'), '#maxlength' => 64, '#size' => 30, '#default_value' => $edit['mail'], '#description' => t('The content of this field is kept private and will not be shown publicly.')
     );
 
-    $form['homepage'] = array(type => 'textfield', title => t('Homepage'), maxlength => 255, size => 30, default_value => $edit['homepage']);
+    $form['homepage'] = array('#type' => 'textfield', '#title' => t('Homepage'), '#maxlength' => 255, '#size' => 30, '#default_value' => $edit['homepage']);
   }
   else if (variable_get('comment_anonymous', 1) == 3) {
-    $form['name'] = array(type => 'textfield', title => t('Your name'), maxlength => 60, size => 30, default_value => $edit['name'] ? $edit['name'] : variable_get('anonymous', 'Anonymous'), required => TRUE);
+    $form['name'] = array('#type' => 'textfield', '#title' => t('Your name'), '#maxlength' => 60, '#size' => 30, '#default_value' => $edit['name'] ? $edit['name'] : variable_get('anonymous', 'Anonymous'), '#required' => TRUE);
 
-    $form['name'] = array(type => 'textfield', title => t('E-mail'), maxlength => 64, size => 30, default_value => $edit['mail'],description => t('The content of this field is kept private and will not be shown publicly.'), required => TRUE);
+    $form['name'] = array('#type' => 'textfield', '#title' => t('E-mail'), '#maxlength' => 64, '#size' => 30, '#default_value' => $edit['mail'],'#description' => t('The content of this field is kept private and will not be shown publicly.'), '#required' => TRUE);
 
-    $form['homepage'] = array(type => 'textfield', title => t('Homepage'), maxlength => 255, size => 30, default_value => $edit['homepage']);
+    $form['homepage'] = array('#type' => 'textfield', '#title' => t('Homepage'), '#maxlength' => 255, '#size' => 30, '#default_value' => $edit['homepage']);
   }
 
   if (variable_get('comment_subject_field', 1) == 1) {
-    $form['subject'] = array(type => 'textfield', title => t('Subject'), size => 60, maxlength => 64, default_value => $edit['subject']);
+    $form['subject'] = array('#type' => 'textfield', '#title' => t('Subject'), '#size' => 60, '#maxlength' => 64, '#default_value' => $edit['subject']);
   }
 
-  $form['comment'] = array(type => 'textarea', title => t('Comment'), cols => 60, rows => 15, default_value => $edit['comment'] ? $edit['comment'] : $user->signature, required => TRUE
+  $form['comment'] = array('#type' => 'textarea', '#title' => t('Comment'), '#cols' => 60, '#rows' => 15, '#default_value' => $edit['comment'] ? $edit['comment'] : $user->signature, '#required' => TRUE
   );
 
   $form = array_merge($form, filter_form($node->format));
 
-  $form['cid'] = array(type => 'hidden', value => $edit['cid']);
-  $form['pid'] = array(type => 'hidden', value => $edit['pid']);
-  $form['nid'] = array(type => 'hidden', value => $edit['nid']);
-  $form['uid'] = array(type => 'hidden', value => $edit['uid']);
+  $form['cid'] = array('#type' => 'hidden', '#value' => $edit['cid']);
+  $form['pid'] = array('#type' => 'hidden', '#value' => $edit['pid']);
+  $form['nid'] = array('#type' => 'hidden', '#value' => $edit['nid']);
+  $form['uid'] = array('#type' => 'hidden', '#value' => $edit['uid']);
 
-  $form['preview'] = array(type => 'submit', value => t('Preview comment'), weight => 19);
-  $form[token] = 'comment' . $edit['nid'] . $edit['pid'];
+  $form['preview'] = array('#type' => 'submit', '#value' => t('Preview comment'), '#weight' => 19);
+  $form['#token'] = 'comment' . $edit['nid'] . $edit['pid'];
 
   // Only show post button if preview is optional or if we are in preview mode.
   // We show the post button in preview mode even if there are form errors so that
   // optional form elements (e.g., captcha) can be updated in preview mode.
   if ((variable_get('comment_preview', 1) == 0) || ($_POST['op'] == t('Preview comment')) || ($_POST['op'] == t('Post comment'))) {
-    $form['submit'] = array(type => 'submit', value => t('Post comment'), weight => 20);
+    $form['submit'] = array('#type' => 'submit', '#value' => t('Post comment'), '#weight' => 20);
   }
 
   if ($_REQUEST['destination']) {
-    $form[attributes]['destination'] = $_REQUEST['destination'];
+    $form['#attributes']['destination'] = $_REQUEST['destination'];
   }
-  $form[action] = url('comment/reply/'. $edit['nid']);
+  $form['#action'] = url('comment/reply/'. $edit['nid']);
 
   // Graft in extra form additions
   $form = array_merge($form, comment_invoke_comment($form, 'form'));
@@ -1198,20 +1198,20 @@ function theme_comment_view($comment, $links = '', $visible = 1) {
 
 function comment_controls($mode = 2, $order = 1, $comments_per_page = 50, $nid = 0, $top_or_bottom = '') {
 
-  $form['mode'] = array(type => 'select', default_value => $mode, options => _comment_get_modes(), weight => 1);
+  $form['mode'] = array('#type' => 'select', '#default_value' => $mode, '#options' => _comment_get_modes(), '#weight' => 1);
 
-  $form['order'] = array(type => 'select', default_value => $order, options => _comment_get_orders(), weight => 2);
+  $form['order'] = array('#type' => 'select', '#default_value' => $order, '#options' => _comment_get_orders(), '#weight' => 2);
 
   foreach (_comment_per_page() as $i) {
     $options[] = t('%a comments per page', array('%a' => $i));
   }
-  $form['comments_per_page'] = array(type => 'select', default_value => $comments_per_page, options => $options, weight => 3);
+  $form['comments_per_page'] = array('#type' => 'select', '#default_value' => $comments_per_page, '#options' => $options, '#weight' => 3);
 
-  $form['submit'] = array(type => 'submit', value => t('Save settings'), weight => 20);
+  $form['submit'] = array('#type' => 'submit', '#value' => t('Save settings'), '#weight' => 20);
 
-  $form['nid'] = array(type => 'hidden', value => $nid);
+  $form['nid'] = array('#type' => 'hidden', '#value' => $nid);
 
-  $form[action] = 'comment/reply';
+  $form['#action'] = 'comment/reply';
 
   return drupal_get_form('comment_controls'. $top_or_bottom, $form, 'comment_controls');
 }

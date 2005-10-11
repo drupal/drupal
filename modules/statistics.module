@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.208 2005/10/07 06:51:43 dries Exp $
+// $Id: statistics.module,v 1.209 2005/10/11 19:44:35 dries Exp $
 
 /**
  * @file
@@ -326,15 +326,15 @@ function statistics_top_referrers() {
 function statistics_settings() {
   // access log settings:
   $options = array('1' => t('Enabled'), '0' => t('Disabled'));
-  $form['access'] = array(type => 'fieldset', title => t('Access log settings'));
-  $form['access']['statistics_enable_access_log'] = array(type => 'radios', title => t('Enable access log'), default_value =>  variable_get('statistics_enable_access_log', 0), options => $options, description => t('Log each page access.  Required for referrer statistics.'));
+  $form['access'] = array('#type' => 'fieldset', '#title' => t('Access log settings'));
+  $form['access']['statistics_enable_access_log'] = array('#type' => 'radios', '#title' => t('Enable access log'), '#default_value' =>  variable_get('statistics_enable_access_log', 0), '#options' => $options, '#description' => t('Log each page access.  Required for referrer statistics.'));
   $period = drupal_map_assoc(array(3600, 10800, 21600, 32400, 43200, 86400, 172800, 259200, 604800, 1209600, 2419200, 4838400, 9676800), 'format_interval');
-  $form['access']['statistics_flush_accesslog_timer'] = array(type => 'select', title => t('Discard access logs older than'), default_value   => variable_get('statistics_flush_accesslog_timer', 259200), options => $period, description => t('Older access log entries (including referrer statistics) will be automatically discarded.  Requires crontab.'));
+  $form['access']['statistics_flush_accesslog_timer'] = array('#type' => 'select', '#title' => t('Discard access logs older than'), '#default_value'   => variable_get('statistics_flush_accesslog_timer', 259200), '#options' => $period, '#description' => t('Older access log entries (including referrer statistics) will be automatically discarded.  Requires crontab.'));
 
   // count content views settings
-  $form['content'] = array(type => 'fieldset', title => t('Content viewing counter settings'));
-  $form['content']['statistics_count_content_views'] = array(type => 'radios', title => t('Count content views'), default_value =>  variable_get('statistics_count_content_views', 0), options => $options, description => t('Increment a counter each time content is viewed.'));
-  $form['content']['statistics_display_counter'] = array(type => 'radios', title => t('Display counter values'), default_value =>  variable_get('statistics_display_counter', 0), options => $options, description => t('Display how many times given content has been viewed.'));
+  $form['content'] = array('#type' => 'fieldset', '#title' => t('Content viewing counter settings'));
+  $form['content']['statistics_count_content_views'] = array('#type' => 'radios', '#title' => t('Count content views'), '#default_value' =>  variable_get('statistics_count_content_views', 0), '#options' => $options, '#description' => t('Increment a counter each time content is viewed.'));
+  $form['content']['statistics_display_counter'] = array('#type' => 'radios', '#title' => t('Display counter values'), '#default_value' =>  variable_get('statistics_display_counter', 0), '#options' => $options, '#description' => t('Display how many times given content has been viewed.'));
 
   return $form;
 }
@@ -413,9 +413,9 @@ function statistics_block($op = 'list', $delta = 0, $edit = array()) {
     case 'configure':
       // Popular content block settings
       $numbers = array('0' => t('Disabled')) + drupal_map_assoc(array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30, 40));
-      $form['statistics_block_top_day_num'] = array(type => 'select', title => t("Number of day's top views to display"), default_value => variable_get('statistics_block_top_day_num', 0), options => $numbers, description => t('How many content items to display in "day" list.'));
-      $form['statistics_block_top_all_num'] = array(type => 'select', title => t('Number of all time views to display'), default_value => variable_get('statistics_block_top_all_num', 0), options => $numbers, description => t('How many content items to display in "all time" list.'));
-      $form['statistics_block_top_last_num'] = array(type => 'select', title => t('Number of most recent views to display'), default_value => variable_get('statistics_block_top_last_num', 0), options => $numbers, description => t('How many content items to display in "recently viewed" list.'));
+      $form['statistics_block_top_day_num'] = array('#type' => 'select', '#title' => t("Number of day's top views to display"), '#default_value' => variable_get('statistics_block_top_day_num', 0), '#options' => $numbers, '#description' => t('How many content items to display in "day" list.'));
+      $form['statistics_block_top_all_num'] = array('#type' => 'select', '#title' => t('Number of all time views to display'), '#default_value' => variable_get('statistics_block_top_all_num', 0), '#options' => $numbers, '#description' => t('How many content items to display in "all time" list.'));
+      $form['statistics_block_top_last_num'] = array('#type' => 'select', '#title' => t('Number of most recent views to display'), '#default_value' => variable_get('statistics_block_top_last_num', 0), '#options' => $numbers, '#description' => t('How many content items to display in "recently viewed" list.'));
       return $form;
 
     case 'save':

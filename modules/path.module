@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.66 2005/10/07 06:09:13 dries Exp $
+// $Id: path.module,v 1.67 2005/10/11 19:44:35 dries Exp $
 
 /**
  * @file
@@ -158,15 +158,15 @@ function path_set_alias($path = NULL, $alias = NULL, $pid = NULL) {
  */
 function path_form($edit = '') {
 
-  $form['src'] = array(type => 'textfield', title => t('Existing system path'), default_value => $edit['src'], size => 60, maxlength => 64, description => t('Specify the existing path you wish to alias. For example: node/28, forum/1, taxonomy/term/1+2.'));
-  $form['dst'] = array(type => 'textfield', default_value => $edit['dst'], size => 60, maxlength => 64, description => t('Specify an alternative path by which this data can be accessed.  For example, type "about" when writing an about page.  Use a relative path and don\'t add a trailing slash or the URL alias won\'t work.'));
+  $form['src'] = array('#type' => 'textfield', '#title' => t('Existing system path'), '#default_value' => $edit['src'], '#size' => 60, '#maxlength' => 64, '#description' => t('Specify the existing path you wish to alias. For example: node/28, forum/1, taxonomy/term/1+2.'));
+  $form['dst'] = array('#type' => 'textfield', '#default_value' => $edit['dst'], '#size' => 60, '#maxlength' => 64, '#description' => t('Specify an alternative path by which this data can be accessed.  For example, type "about" when writing an about page.  Use a relative path and don\'t add a trailing slash or the URL alias won\'t work.'));
 
   if ($edit['pid']) {
-    $form['pid'] = array(type => 'hidden', value => $edit['pid']);
-    $form['submit'] = array(type => 'submit', value => t('Update alias'));
+    $form['pid'] = array('#type' => 'hidden', '#value' => $edit['pid']);
+    $form['submit'] = array('#type' => 'submit', '#value' => t('Update alias'));
   }
   else {
-    $form['submit'] = array(type => 'submit', value => t('Create new alias'));
+    $form['submit'] = array('#type' => 'submit', '#value' => t('Create new alias'));
   }
 
   return drupal_get_form('path_form', $form);
@@ -192,9 +192,9 @@ function path_nodeapi(&$node, $op, $arg) {
         break;
 
       case 'form':
-        $form['path'] = array(type => 'textfield', title => t('Path alias'), weight => -16, default_value => $node->path, size => 60, maxlength => 250, description => t('Optionally specify an alternative URL by which this node can be accessed.  For example, type "about" when writing an about page.  Use a relative path and don\'t add a trailing slash or the URL alias won\'t work.'));
+        $form['path'] = array('#type' => 'textfield', '#title' => t('Path alias'), '#weight' => -16, '#default_value' => $node->path, '#size' => 60, '#maxlength' => 250, '#description' => t('Optionally specify an alternative URL by which this node can be accessed.  For example, type "about" when writing an about page.  Use a relative path and don\'t add a trailing slash or the URL alias won\'t work.'));
         if ($node->path) {
-          $form['pid'] = array(type => 'hidden', value => db_result(db_query("SELECT pid FROM {url_alias} WHERE dst = '%s'", $node->path)));
+          $form['pid'] = array('#type' => 'hidden', '#value' => db_result(db_query("SELECT pid FROM {url_alias} WHERE dst = '%s'", $node->path)));
         }
         return $form;
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.25 2005/10/07 06:48:33 dries Exp $
+// $Id: contact.module,v 1.26 2005/10/11 19:44:34 dries Exp $
 
 /**
  * @file
@@ -59,9 +59,9 @@ function contact_menu($may_cache) {
  */
 function contact_settings() {
   $form['contact_form_information'] = array(
-    type => 'textarea', title => t('Additional information'), cols => 60, rows => 5,
-    default_value => variable_get('contact_form_information', t('You can leave us a message using the contact form below.')),
-    description => t('Information to show on the <a href="%form">contact page</a>.  Can be anything from submission guidelines to your postal address or telephone number.', array('%form' => url('contact')))
+    '#type' => 'textarea', '#title' => t('Additional information'), '#cols' => 60, '#rows' => 5,
+    '#default_value' => variable_get('contact_form_information', t('You can leave us a message using the contact form below.')),
+    '#description' => t('Information to show on the <a href="%form">contact page</a>.  Can be anything from submission guidelines to your postal address or telephone number.', array('%form' => url('contact')))
   );
   return $form;
 }
@@ -73,8 +73,8 @@ function contact_settings() {
  */
 function contact_user($type, $edit, &$user, $category = NULL) {
   if ($type == 'form' && $category == 'account') {
-    $form['contact'] = array(type => 'fieldset', title => t('Contact settings'), weight => 5, collapsible => TRUE, collapsed => FALSE);
-    $form['contact']['contact'] = array(type => 'checkbox', title => t('Personal contact form'), return_value => 1, default_value => $edit['contact'], description => t('Allow other users to contact you by e-mail via <a href="%url">your personal contact form</a>. Note that your e-mail address is not made public and that privileged users such as site administrators are able to contact you even if you choose not to enable this feature.', array('%url' => url("user/$user->uid/contact"))));
+    $form['contact'] = array('#type' => 'fieldset', '#title' => t('Contact settings'), '#weight' => 5, '#collapsible' => TRUE, '#collapsed' => FALSE);
+    $form['contact']['contact'] = array('#type' => 'checkbox', '#title' => t('Personal contact form'), '#return_value' => 1, '#default_value' => $edit['contact'], '#description' => t('Allow other users to contact you by e-mail via <a href="%url">your personal contact form</a>. Note that your e-mail address is not made public and that privileged users such as site administrators are able to contact you even if you choose not to enable this feature.', array('%url' => url("user/$user->uid/contact"))));
     return $form;
     //return array(array('title' => t('Contact settings'), 'data' => drupal_get_form('contact_user', $form), 'weight' => 2));
   }
@@ -102,13 +102,13 @@ function contact_mail_user() {
     else {
       drupal_set_title($account->name);
 
-      $form[token] = $user->name . $user->mail;
-      $form['from'] = array(type => 'item', title => t('From'), value => $user->name .' &lt;'. $user->mail .'&gt;');
-      $form['to'] = array(type => 'item', title => t('To'), value => $account->name);
-      $form['subject'] = array(type => 'textfield', title => t('Subject'), size => 60, maxlength => 50, required => TRUE);
-      $form['message'] = array(type => 'textarea', title => t('Message'), cols => 60, rows => 15, required => TRUE);
-      $form['copy'] = array(type => 'checkbox', title => ('Send me a copy.'));
-      $form['submit'] = array(type => 'submit', value => t('Send e-mail'));
+      $form['#token'] = $user->name . $user->mail;
+      $form['from'] = array('#type' => 'item', '#title' => t('From'), '#value' => $user->name .' &lt;'. $user->mail .'&gt;');
+      $form['to'] = array('#type' => 'item', '#title' => t('To'), '#value' => $account->name);
+      $form['subject'] = array('#type' => 'textfield', '#title' => t('Subject'), '#size' => 60, '#maxlength' => 50, '#required' => TRUE);
+      $form['message'] = array('#type' => 'textarea', '#title' => t('Message'), '#cols' => 60, '#rows' => 15, '#required' => TRUE);
+      $form['copy'] = array('#type' => 'checkbox', '#title' => ('Send me a copy.'));
+      $form['submit'] = array('#type' => 'submit', '#value' => t('Send e-mail'));
       $output = drupal_get_form('contact_user_mail', $form);
     }
 
@@ -188,10 +188,10 @@ function contact_admin_edit($category = NULL) {
     $edit['reply']      = $category->reply;
   }
 
-  $form['category'] = array(type => 'textfield', title => t('Category'), size => 60, maxlength => 255, default_value => $edit['category'], description => t("Example: 'website feedback' or 'product information'."), required => TRUE);
-  $form['recipients'] = array(type => 'textarea', title => t('Recipients'), cols => 60, rows => 5, default_value => $edit['recipients'], description => t("Example: 'webmaster@yoursite.com' or 'sales@yoursite.com'.  To specify multiple repecients, separate each e-mail address with a comma."), required => TRUE);
-  $form['reply'] = array(type => 'textarea', title => t('Auto-reply'), cols => 60, rows => 5, default_value => $edit['reply'], description => t("Optional auto-reply.  Leave empty if you don't want to send the user an auto-reply message."));
-  $form['submit'] = array(type => 'submit', value => t('Submit'));
+  $form['category'] = array('#type' => 'textfield', '#title' => t('Category'), '#size' => 60, '#maxlength' => 255, '#default_value' => $edit['category'], '#description' => t("Example: 'website feedback' or 'product information'."), '#required' => TRUE);
+  $form['recipients'] = array('#type' => 'textarea', '#title' => t('Recipients'), '#cols' => 60, '#rows' => 5, '#default_value' => $edit['recipients'], '#description' => t("Example: 'webmaster@yoursite.com' or 'sales@yoursite.com'.  To specify multiple repecients, separate each e-mail address with a comma."), '#required' => TRUE);
+  $form['reply'] = array('#type' => 'textarea', '#title' => t('Auto-reply'), '#cols' => 60, '#rows' => 5, '#default_value' => $edit['reply'], '#description' => t("Optional auto-reply.  Leave empty if you don't want to send the user an auto-reply message."));
+  $form['submit'] = array('#type' => 'submit', '#value' => t('Submit'));
 
   return drupal_get_form('contact_admin_edit', $form);
 }
@@ -241,17 +241,17 @@ function contact_mail_page() {
     }
 
     if (count($categories) > 1) {
-      $form[token] = $user->name . $user->mail;
-      $form['contact_information'] = array(type => 'markup', value => variable_get('contact_form_information', t('You can leave us a message using the contact form below.')));
-      $form['name'] = array(type => 'textfield', title => t('Your name'), size => 60, maxlength => 255, default_value => $edit['name'], required => TRUE);
-      $form['mail'] = array(type => 'textfield', title => t('Your e-mail address'), size => 60, maxlength => 255, default_value => $edit['mail'], required => TRUE);
-      $form['subject'] = array(type => 'textfield', title => t('Subject'), size => 60, maxlength => 255, default_value => $edit['subject'], required => TRUE);
+      $form['#token'] = $user->name . $user->mail;
+      $form['contact_information'] = array('#type' => 'markup', '#value' => variable_get('contact_form_information', t('You can leave us a message using the contact form below.')));
+      $form['name'] = array('#type' => 'textfield', '#title' => t('Your name'), '#size' => 60, '#maxlength' => 255, '#default_value' => $edit['name'], '#required' => TRUE);
+      $form['mail'] = array('#type' => 'textfield', '#title' => t('Your e-mail address'), '#size' => 60, '#maxlength' => 255, '#default_value' => $edit['mail'], '#required' => TRUE);
+      $form['subject'] = array('#type' => 'textfield', '#title' => t('Subject'), '#size' => 60, '#maxlength' => 255, '#default_value' => $edit['subject'], '#required' => TRUE);
       if (count($categories) > 2) {
-        $form['category'] = array(type => 'select', title => t('Category'), size => 60, maxlength => 255, default_value => $edit['category'], options => $categories, required => TRUE);
+        $form['category'] = array('#type' => 'select', '#title' => t('Category'), '#size' => 60, '#maxlength' => 255, '#default_value' => $edit['category'], '#options' => $categories, '#required' => TRUE);
       }
-      $form['message'] = array(type => 'textarea', title => t('Message'), cols => 60, rows => 5, default_value => $edit['message'], required => TRUE);
-      $form['copy'] = array(type => 'checkbox', title => t('Send me a copy.'), default_value => $edit['copy'], return_value => 1);
-      $form['submit'] = array(type => 'submit', value => t('Send e-mail'));
+      $form['message'] = array('#type' => 'textarea', '#title' => t('Message'), '#cols' => 60, '#rows' => 5, '#default_value' => $edit['message'], '#required' => TRUE);
+      $form['copy'] = array('#type' => 'checkbox', '#title' => t('Send me a copy.'), '#default_value' => $edit['copy'], '#return_value' => 1);
+      $form['submit'] = array('#type' => 'submit', '#value' => t('Send e-mail'));
       $output = drupal_get_form('contact_mail_page', $form);
     }
     else {
