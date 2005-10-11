@@ -623,13 +623,7 @@ html.js fieldset.collapsible legend a {
 html.js fieldset.collapsed legend a {
   background-image: url('menu-collapsed.png');
 }
-// Note: IE-only fix due to '* html' (breaks Konqueror otherwise).
+/* Note: IE-only fix due to '* html' (breaks Konqueror otherwise). */
 * html.js fieldset.collapsible legend a {
   display: block;
 }
-
-/*
-** Temporary CSS for porting of drupal forms.
-*/
-form { border: 3px solid red; }
-form.form-api { border : 0px; }
