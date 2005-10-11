@@ -55,15 +55,15 @@ function update_selection_page() {
 
   // make update form and output it.
   $form['start'] = array(
-    type => 'select',
-    title => t('Perform updates from'),
-    default_value => (isset($selected) ? $selected : -1),
-    options => $dates,
-    description => t('This defaults to the first available update since the last update you performed.')
+    '#type' => 'select',
+    '#title' => t('Perform updates from'),
+    '#default_value' => (isset($selected) ? $selected : -1),
+    '#options' => $dates,
+    '#description' => t('This defaults to the first available update since the last update you performed.')
   );
   $form['submit'] = array(
-    type => 'submit',
-    value => t('Update')
+    '#type' => 'submit',
+    '#value' => t('Update')
   );
 
   drupal_set_title('Drupal database update');
