@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.209 2005/10/11 19:44:35 dries Exp $
+// $Id: statistics.module,v 1.210 2005/10/12 01:00:24 unconed Exp $
 
 /**
  * @file
@@ -62,13 +62,13 @@ function statistics_exit() {
 
   if (variable_get('statistics_count_content_views', 0)) {
     // We are counting content views.
-    if ((arg(0) == 'node') && arg(1)) {
+    if ((arg(0) == 'node') && is_numeric(arg(1)) && arg(2) == '') {
       // A node has been viewed, so update the node's counters.
       db_query('UPDATE {node_counter} SET daycount = daycount + 1, totalcount = totalcount + 1, timestamp = %d WHERE nid = %d', time(), arg(1));
       // If we affected 0 rows, this is the first time viewing the node.
       if (!db_affected_rows()) {
         // We must create a new row to store counters for the new node.
-        db_query('INSERT INTO {node_counter} (nid, daycount, totalcount, timestamp) VALUES(%d, 1, 1, %d)', arg(1), time());
+        db_query('INSERT INTO {node_counter} (nid, daycount, totalcount, timestamp) VALUES (%d, 1, 1, %d)', arg(1), time());
       }
     }
   }
