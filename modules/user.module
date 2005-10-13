@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.519 2005/10/13 10:02:31 unconed Exp $
+// $Id: user.module,v 1.520 2005/10/13 10:39:56 dries Exp $
 
 /**
  * @file
@@ -1086,7 +1086,7 @@ function user_register($edit = array()) {
         user_mail($edit['mail'], t('drupal user account details for %s', array('%s' => $edit['name'])), strtr(t("%username,\n\nYou may now login to %uri using the following username and password:\n\n  username: %username\n  password: %password\n\n%edit_uri\n\n--drupal"), $variables), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
         // This should not be t()'ed. No point as its only shown once in the sites lifetime, and it would be bad to store the password.
         $form['instructions'] = array('#type' => 'markup', '#value' => "<p>Welcome to Drupal. You are user #1, which gives you full and immediate access.  All future registrants will receive their passwords via e-mail, so please configure your e-mail settings using the Administration pages.</p><p> Your password is <strong>$pass</strong>. You may change your password on the next page.</p><p>Please login below.</p>");
-        $form['#action'] = 'user/'. $account->uid .'/edit';
+        $form['#action'] = url("user/$account->uid/edit");
         $form['name'] = array('#type' => 'hidden', '#value' => $account->name);
         $form['pass'] = array('#type' => 'hidden', '#value' => $pass);
         $form['submit'] = array('#type' => 'submit', '#value' => t('Log in'));
