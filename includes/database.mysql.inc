@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysql.inc,v 1.36 2005/08/29 19:32:55 dries Exp $
+// $Id: database.mysql.inc,v 1.37 2005/10/13 10:23:17 dries Exp $
 
 /**
  * @file
@@ -266,7 +266,7 @@ function db_decode_blob($data) {
  * Prepare user input for use in a database query, preventing SQL injection attacks.
  */
 function db_escape_string($text) {
-  return addslashes($text);
+  return mysql_real_escape_string($text);
 }
 
 /**
