@@ -134,7 +134,7 @@ function _form_validate(&$elements) {
 
   /* Validate the current input */
   if (!$elements['#validated'] && $elements['#input']) {
-    if ($elements['#required'] && !$elements['#value']) {
+    if ($elements['#required'] && !isset($elements['#value'])) {
         form_error($elements, t('%name field is required', array('%name' => $elements['#title'])));
     }
     if ($elements['#valid']) {
@@ -158,14 +158,51 @@ function _form_validate(&$elements) {
 }
 
 /**
+ * File an error against a form element. If the name of the element is
+ * edit[foo][bar] then you may pass either foo or foo][bar as $name
+ * foo will set an error for all its children.
+ */
+function form_set_error($name = NULL, $message = NULL) {
+  static $form = array();
+  if (isset($name) && !isset($form[$name])) {
+    $form[$name] = $message;
+    drupal_set_message($message, 'error');
+  }
+  return $form;
+}
+
+/**
+ * Return an associative array of all errors.
+ */
+function form_get_errors() {
+  $form = form_set_error();
+  if (!empty($form)) {
+    return $form;
+  }
+}
+
+/**
+ * Return the error message filed against the form with the specified name.
+ */
+function form_get_error($element) {
+  $form = form_set_error();
+  $key = $element['#parents'][0];
+  if (isset($form[$key])) {
+    return $form[$key];
+  }
+  $key = implode('][', $element['#parents']);
+  if (isset($form[$key])) {
+    return $form[$key];
+  }
+}
+
+/**
  * Flag an element as having an error.
  */
 function form_error(&$element, $message) {
   $element['#error'] = TRUE;
-  $GLOBALS['form'][$element['#name']] = $message;
-  drupal_set_message($message, 'error');
+  form_set_error(implode('][', $element['#parents']), $message);
 }
-
 
 /**
  * Adds some required properties to each form element, which are used internally in the form api.
@@ -348,7 +385,7 @@ function theme_select($element) {
       $select .= '<option value="'. $key .'"'. (is_array($element['#value']) ? (in_array($key, $element['#value']) ? ' selected="selected"' : '') : ($element['#value'] == $key ? ' selected="selected"' : '')) .'>'. check_plain($choice) .'</option>';
     }
   }
-  return theme('form_element', $element['#title'], '<select name="'. $element['#name'] .''. ($element['#multiple'] ? '[]' : '') .'"'. ($element['#multiple'] ? ' multiple="multiple" ' : '') . ($element['#extra'] ? ' '. $element['#extra'] : '') .' id="' . $element['#id'] .'">'. $select .'</select>', $element['#description'], $element['#name'], $element['#required'], _form_get_error($element['#name']));
+  return theme('form_element', $element['#title'], '<select name="'. $element['#name'] .''. ($element['#multiple'] ? '[]' : '') .'"'. ($element['#multiple'] ? ' multiple="multiple" ' : '') . ($element['#extra'] ? ' '. $element['#extra'] : '') .' id="' . $element['#id'] .'">'. $select .'</select>', $element['#description'], $element['#name'], $element['#required'], form_get_error($element));
 }
 
 /**
@@ -386,7 +423,7 @@ function theme_fieldset($element) {
  */
 function theme_radio($element) {
   $output = '<input type="radio" ';
-  $output .= 'class="'. _form_get_class('form-radio', $element['#required'], _form_get_error($element['#name'])) .'" ';
+  $output .= 'class="'. _form_get_class('form-radio', $element['#required'], form_get_error($element)) .'" ';
   $output .= 'name="' . $element['#name'] .'" ';
   $output .= 'value="'. $element['#return_value'] .'" ';
   $output .= ($element['#value'] == $element['#return_value']) ? ' checked="checked" ' : ' ';
@@ -394,7 +431,7 @@ function theme_radio($element) {
   if (!is_null($element['#title'])) {
     $output = '<label class="option">'. $output .' '. $element['#title'] .'</label>';
   }
-  return theme('form_element', NULL, $output, $element['#description'], $element['#name'], $element['#required'], _form_get_error($element['#name']));
+  return theme('form_element', NULL, $output, $element['#description'], $element['#name'], $element['#required'], form_get_error($element));
 }
 
 /**
@@ -408,7 +445,7 @@ function theme_radio($element) {
  */
 function theme_radios($element) {
   if ($element['#title'] || $element['#description']) {
-    return theme('form_element', $element['#title'], $element['#children'], $element['#description'], $element['#id'], $element['#required'], _form_get_error($element['#name']));
+    return theme('form_element', $element['#title'], $element['#children'], $element['#description'], $element['#id'], $element['#required'], form_get_error($element));
   }
   else {
     return $element['#children'];
@@ -426,7 +463,7 @@ function theme_radios($element) {
  */
 function theme_date($element) {
   $output = '<div class="container-inline">' . $element['#children'] . '</div>';
-  return theme('form_element', $element['#title'], $output, $element['#description'], $element['#id'], $element['#required'], _form_get_error($element['#name']));
+  return theme('form_element', $element['#title'], $output, $element['#description'], $element['#id'], $element['#required'], form_get_error($element));
 }
 
 /**
@@ -512,7 +549,7 @@ function theme_item($element) {
 function theme_checkbox($element) {
   $checkbox = '<input ';
   $checkbox .= 'type="checkbox" ';
-  $checkbox .= 'class="'. _form_get_class('form-checkbox', $element['#required'], _form_get_error($element['#name'])) . '" ';
+  $checkbox .= 'class="'. _form_get_class('form-checkbox', $element['#required'], form_get_error($element)) . '" ';
   $checkbox .= 'name="'. $element['#name'] .'" ';
   $checkbox .= 'id="'. $element['#id'].'" ' ;
   $checkbox .= 'value="'. $element['#return_value'] .'" ';
@@ -523,7 +560,7 @@ function theme_checkbox($element) {
     $checkbox = '<label class="option">'. $checkbox .' '. $element['#title'] .'</label>';
   }
 
-  return theme('form_element', NULL, $checkbox, $element['#description'], $element['#name'], $element['#required'], _form_get_error($element['#name']));
+  return theme('form_element', NULL, $checkbox, $element['#description'], $element['#name'], $element['#required'], form_get_error($element));
 }
 
 /**
@@ -536,7 +573,7 @@ function theme_checkbox($element) {
  */
 function theme_checkboxes($element) {
   if ($element['#title'] || $element['#description']) {
-    return theme('form_element', $element['#title'], $element['#children'], $element['#description'], 'edit-'. $element['#name'], $element['#required'], _form_get_error($element['#name']));
+    return theme('form_element', $element['#title'], $element['#children'], $element['#description'], 'edit-'. $element['#name'], $element['#required'], form_get_error($element));
   }
   else {
     return $element['#children'];
@@ -597,8 +634,8 @@ function theme_textfield($element) {
     $extra =  '<input class="autocomplete" type="hidden" id="'. $element['#id'] .'-autocomplete" value="'. check_url(url($element['#autocomplete_path'], NULL, NULL, TRUE)) .'" disabled="disabled" />';
   }
 
-  $output = '<input type="text" maxlength="'. $element['#maxlength'] .'" class="'. _form_get_class("form-text$class", $element['#required'], _form_get_error($element['#name'])) .'" name="'. $element['#name'] .'" id="'. $element['#id'] .'" '. $size .' value="'. check_plain($element['#value']) .'"'. drupal_attributes($element['#attributes']) .' />';
-  return theme('form_element', $element['#title'], $output, $element['#description'], $element['#id'], $element['#required'], _form_get_error($element['#name'])). $extra;
+  $output = '<input type="text" maxlength="'. $element['#maxlength'] .'" class="'. _form_get_class("form-text$class", $element['#required'], form_get_error($element)) .'" name="'. $element['#name'] .'" id="'. $element['#id'] .'" '. $size .' value="'. check_plain($element['#value']) .'"'. drupal_attributes($element['#attributes']) .' />';
+  return theme('form_element', $element['#title'], $output, $element['#description'], $element['#id'], $element['#required'], form_get_error($element)). $extra;
 }
 
 /**
@@ -629,7 +666,7 @@ function theme_form($element) {
 function theme_textarea($element) {
   $cols = $element['#cols'] ? ' cols="'. $element['#cols'] .'"' : '';
 
-  return theme('form_element', $element['#title'], '<textarea'. $cols .' rows="'. $element['#rows'] .'" name="'. $element['#name'] .'" id="' . $element['#id'] .'" class="'. _form_get_class('textarea', $element['#required'], _form_get_error($element['#name'])) .'"'. drupal_attributes($element['#attributes']) .'>'. check_plain($element['#value']) .'</textarea>', $element['#description'], $element['#id'], $element['#required'], _form_get_error($element['#name']));
+  return theme('form_element', $element['#title'], '<textarea'. $cols .' rows="'. $element['#rows'] .'" name="'. $element['#name'] .'" id="' . $element['#id'] .'" class="'. _form_get_class('textarea', $element['#required'], form_get_error($element)) .'"'. drupal_attributes($element['#attributes']) .'>'. check_plain($element['#value']) .'</textarea>', $element['#description'], $element['#id'], $element['#required'], form_get_error($element));
 }
 
 /**
@@ -662,9 +699,9 @@ function theme_markup($element) {
 function theme_password($element) {
   $size = $element['#size'] ? ' size="'. $element['#size'] .'" ' : '';
 
-  $output = '<input type="password" maxlength="'. $element['#maxlength'] .'" class="'. _form_get_class("form-text $class", $element['#required'], _form_get_error($element['#name'])) .'" name="'. $element['#name'] .'" id="'. $element['#id'] .'" '. $size . drupal_attributes($element['#attributes']) .' />';
+  $output = '<input type="password" maxlength="'. $element['#maxlength'] .'" class="'. _form_get_class("form-text $class", $element['#required'], form_get_error($element)) .'" name="'. $element['#name'] .'" id="'. $element['#id'] .'" '. $size . drupal_attributes($element['#attributes']) .' />';
 
-  return theme('form_element', $element['#title'], $output, $element['#description'], $element['#id'], $element['#required'], _form_get_error($element['#name']));
+  return theme('form_element', $element['#title'], $output, $element['#description'], $element['#id'], $element['#required'], form_get_error($element));
 }
 
 /**
@@ -687,23 +724,6 @@ function theme_weight($element) {
 }
 
 /**
- * File an error against the form element with the specified name.
- */
-function form_set_error($name, $message) {
-  $GLOBALS['form'][$name] = $message;
-  drupal_set_message($message, 'error');
-}
-
-/**
- * Return an associative array of all errors.
- */
-function form_get_errors() {
-  if (array_key_exists('form', $GLOBALS)) {
-    return $GLOBALS['form'];
-  }
-}
-
-/**
  * Format a file upload field.
  *
  * @param $title
@@ -723,18 +743,8 @@ function form_get_errors() {
  * provided by file.inc.
  */
 function theme_file($element) {
-  return theme('form_element', $element['#title'], '<input type="file" class="'. _form_get_class('form-file', $element['#required'], _form_get_error($element['#name'])) .'" name="'. $element['#name'] .'" id="'. form_clean_id($element['#id']) .'" size="'. $element['#size'] ."\" />\n", $element['#description'], $element['#id'], $element['#required'], _form_get_error($element['#name']));
+  return theme('form_element', $element['#title'], '<input type="file" class="'. _form_get_class('form-file', $element['#required'], form_get_error($element)) .'" name="'. $element['#name'] .'" id="'. form_clean_id($element['#id']) .'" size="'. $element['#size'] ."\" />\n", $element['#description'], $element['#id'], $element['#required'], form_get_error($element));
 }
-
-/**
- * Return the error message filed against the form with the specified name.
- */
-function _form_get_error($name) {
-  if (array_key_exists('form', $GLOBALS)) {
-    return $GLOBALS['form'][$name];
-  }
-}
-
 function _form_get_class($name, $required, $error) {
   return $name. ($required ? ' required' : '') . ($error ? ' error' : '');
 }

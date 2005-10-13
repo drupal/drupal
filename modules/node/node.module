@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.535 2005/10/11 19:44:34 dries Exp $
+// $Id: node.module,v 1.536 2005/10/13 10:02:31 unconed Exp $
 
 /**
  * @file
@@ -1083,6 +1083,7 @@ function node_types_configure($type = NULL) {
     $form['workflow'] = array('#type' => 'fieldset', '#title' =>t('Workflow'));
     $form['workflow'] = array_merge($form['workflow'], node_invoke_nodeapi($node, 'settings'));
 
+    $form['array_filter'] = array('#type' => 'value', '#value' => TRUE);
     return system_settings_form($type . '_node_settings', $form);
   }
   else {

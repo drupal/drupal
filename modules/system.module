@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.240 2005/10/11 19:44:35 dries Exp $
+// $Id: system.module,v 1.241 2005/10/13 10:02:31 unconed Exp $
 
 /**
  * @file
@@ -188,7 +188,7 @@ function system_user($type, $edit, &$user, $category = NULL) {
       $form['locale'] = array('#type'=>'item', '#title' => t('Locale settings'), '#weight' => 6);
       $form['locale']['timezone'] = array(
         '#type' => 'select', '#title' => t('Time zone'), '#default_value' => strlen($edit['timezone']) ? $edit['timezone'] : variable_get('date_default_timezone', 0),
-        '#options' => $zones, descriptions => t('Select your current local time. Dates and times throughout this site will be displayed using this time zone.')
+        '#options' => $zones, '#description' => t('Select your current local time. Dates and times throughout this site will be displayed using this time zone.')
       );
     }
     return $form;
@@ -684,7 +684,9 @@ function system_settings_form($form_id, $form) {
 /**
  * Execute the system_settings_form.
  *
- * Due to specific handling of checkboxes, this function does not handle 'tree' based forms.
+ * If you want node type configure style handling of your checkboxes,
+ * add an array_filter value to your form.
+ *
  */
 function system_settings_form_execute($form_id, $values) {
   $op = isset($_POST['op']) ? $_POST['op'] : '';
@@ -694,7 +696,7 @@ function system_settings_form_execute($form_id, $values) {
       variable_del($key);
     }
     else {
-      if (is_array($value)) {
+      if (is_array($value) && isset($values['array_filter'])) {
         $value = array_keys(array_filter($value));
       }
       variable_set($key, $value);
@@ -1057,11 +1059,14 @@ function system_theme_settings($key = '') {
     $disabled['toggle_search'] = true;
   }
 
-  $form['toggles'] = array('#type' => 'fieldset', '#title' => t('Toggle display'), '#description' => t('Enable or disable the display of certain page elements.'));
+  $form['theme_settings'] = array('#type' => 'fieldset', '#title' => t('Toggle display'), '#description' => t('Enable or disable the display of certain page elements.'), '#tree' => TRUE);
   foreach ($toggles as $name => $title) {
     if ((!$key) || in_array($name, $features)) {
       // disable search box if search.module is disabled
-      $form['toggles'][$name] = array('#type' => 'checkbox', '#title' => $title, '#default_value' => $settings[$name], '#attributes' =>  isset($disabled[$name]) ? array('disabled' => 'disabled') : NULL);
+      $form['theme_settings'][$name] = array('#type' => 'checkbox', '#title' => $title, '#default_value' => $settings[$name]);
+      if (isset($disabled[$name])) {
+        $form['theme_settings'][$name]['#attributes'] = array('disabled' => 'disabled');
+      }
     }
   }
 

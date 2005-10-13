@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.518 2005/10/11 20:52:16 unconed Exp $
+// $Id: user.module,v 1.519 2005/10/13 10:02:31 unconed Exp $
 
 /**
  * @file
@@ -476,7 +476,7 @@ function user_user($type, &$edit, &$user, $category = NULL) {
   }
 
   if ($type == 'validate' && $category == 'account') {
-    return user_edit_validate(arg(1), $edit);
+    return _user_edit_validate(arg(1), $edit);
   }
 
   if ($type == 'categories') {
@@ -1172,7 +1172,7 @@ function user_edit_form($uid, $edit) {
   return $form;
 }
 
-function user_edit_validate($uid, &$edit) {
+function _user_edit_validate($uid, &$edit) {
   // Validate the username:
   if ($error = user_validate_name($edit['name'])) {
     form_set_error('name', $error);

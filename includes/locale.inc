@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.54 2005/10/11 19:44:34 dries Exp $
+// $Id: locale.inc,v 1.55 2005/10/13 10:02:31 unconed Exp $
 
 /**
  * @file
@@ -60,7 +60,7 @@ function _locale_admin_manage_screen() {
       $ratio = ($original->strings > 0 && $translation->translation > 0) ? round(($translation->translation/$original->strings)*100., 2) : 0;
 
       $form['name'][$key] = array('#type' => 'textfield', '#default_value' => $lang, '#size' => 15, '#maxlength' => 64);
-      $form['translation'][$key] = array('#type' => 'markup', '#default_value' => "$translation->translation/$original->strings ($ratio%)");
+      $form['translation'][$key] = array('#type' => 'markup', '#value' => "$translation->translation/$original->strings ($ratio%)");
     }
   }
   $form['enabled'] = array('#type' => 'checkboxes', '#options' => $options, '#default_value' => $enabled, '#return_value' => 1);
@@ -984,7 +984,7 @@ function _locale_string_edit($lid) {
  : array('#type' => 'textfield', '#title' => $languages['name'][$translation->locale], '#default_value' => $translation->translation, '#size' => 60, '#maxlength' => 128);
     unset($languages['name'][$translation->locale]);
   }
-  $form = array('#type' => 'item', '#title' => t('Original text'), '#value' => wordwrap(check_plain($orig, 0)));
+  $form['item'] = array('#type' => 'item', '#title' => t('Original text'), '#value' => wordwrap(check_plain($orig, 0)));
   foreach ($languages['name'] as $key => $lang) {
     $form[$key] = (strlen($orig) > 40) ?
 array('#type' => 'textarea', '#title' => $lang, '#cols' => 60, '#rows' => 15) :
@@ -993,7 +993,7 @@ array('#type' => 'textfield', '#title' => $lang, '#size' => 60, '#maxlength' => 
 
   $form['submit'] = array('#type' => 'submit', '#value' => t('Save translations'));
 
-  return $form;
+  return drupal_get_form('_locale_string_edit', $form);
 }
 
 /**
