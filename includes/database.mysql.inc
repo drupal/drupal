@@ -266,7 +266,7 @@ function db_decode_blob($data) {
  * Prepare user input for use in a database query, preventing SQL injection attacks.
  */
 function db_escape_string($text) {
-  return addslashes($text);
+  return mysql_real_escape_string($text);
 }
 
 /**
