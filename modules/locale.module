@@ -108,7 +108,9 @@ function locale_user($type, $edit, &$user, $category = NULL) {
       $user->language = key($languages['name']);
     }
     $languages['name'] = array_map('check_plain', $languages['name']);
-    return array(array('title' => t('Interface language settings'), 'data' => $form['locale_user'] = array('#type' => 'radios', '#title' => t('Language'), '#default_value' => $user->language, '#options' => $languages['name'], '#description' => t('Selecting a different locale will change the interface language of the site.'))));
+    $form['locale'] = array('#title' => t('Interface language settings'), '#type' => 'fieldset', '#weight' => 1);
+    $form['locale']['language'] = array('#type' => 'radios', '#title' => t('Language'), '#default_value' => $user->language, '#options' => $languages['name'], '#description' => t('Selecting a different locale will change the interface language of the site.'));
+    return $form;
   }
 }
 
