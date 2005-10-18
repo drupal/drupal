@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.38 2005/10/11 19:44:34 dries Exp $
+// $Id: menu.module,v 1.39 2005/10/18 14:40:00 dries Exp $
 
 /**
  * @file
@@ -307,7 +307,7 @@ function menu_edit_item_form($edit) {
     $form['weight'] = array('#type' => 'hidden', '#value' => 0);
   }
   else {
-    $form['description'] = array('#type' => textfield, '#title' => t('Description'), '#default_value' => $edit['description'], '#size' => 60, '#maxlength' => 128, '#description' => t('The description displayed when hovering over a menu item.'));
+    $form['description'] = array('#type' => 'textfield', '#title' => t('Description'), '#default_value' => $edit['description'], '#size' => 60, '#maxlength' => 128, '#description' => t('The description displayed when hovering over a menu item.'));
 
     $path_description = t('The Drupal path this menu item links to.');
     if (isset($edit['path']) && array_key_exists($edit['path'], $menu['path index']) && $menu['path index'][$edit['path']] != $edit['mid']) {
