@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.485 2005/10/18 14:52:50 dries Exp $
+// $Id: common.inc,v 1.486 2005/10/18 14:54:54 dries Exp $
 
 /**
  * @file
@@ -1339,6 +1339,7 @@ function _drupal_bootstrap_full() {
   require_once './includes/unicode.inc';
   require_once './includes/image.inc';
   require_once './includes/form.inc';
+  require_once './includes/legacy.inc';
   // Set the Drupal custom error handler.
   set_error_handler('error_handler');
   // Emit the correct charset HTTP header.
