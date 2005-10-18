@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.261 2005/10/07 06:09:13 dries Exp $
+// $Id: theme.inc,v 1.262 2005/10/18 14:45:09 dries Exp $
 
 /**
  * @file
@@ -862,21 +862,23 @@ function theme_stylesheet_import($path, $media = 'all') {
  *   An array of items to be displayed in the list.
  * @param $title
  *   The title of the list.
+ * @param $type
+ *   The type of list to return (e.g. "ul", "ol")
  * @return
  *   A string containing the list output.
  */
-function theme_item_list($items = array(), $title = NULL) {
+function theme_item_list($items = array(), $title = NULL, $type = 'ul') {
   $output = '<div class="item-list">';
   if (isset($title)) {
     $output .= '<h3>'. $title .'</h3>';
   }
 
   if (isset($items)) {
-    $output .= '<ul>';
+    $output .= "<$type>";
     foreach ($items as $item) {
       $output .= '<li>'. $item .'</li>';
     }
-    $output .= '</ul>';
+    $output .= "</$type>";
   }
   $output .= '</div>';
   return $output;
