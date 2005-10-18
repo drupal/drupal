@@ -572,6 +572,16 @@ CREATE TABLE role (
 );
 
 --
+-- Table structure for table 'search_dataset'
+--
+CREATE TABLE search_dataset (
+  sid integer NOT NULL default '0',
+  type varchar(16) default NULL,
+  data text NOT NULL default '',
+  KEY sid_type (sid, type)
+);
+
+--
 -- Table structure for search_index
 --
 
@@ -581,10 +591,10 @@ CREATE TABLE search_index (
   type varchar(16) default NULL,
   fromsid integer NOT NULL default '0',
   fromtype varchar(16) default NULL,
-  score integer default NULL
+  score float default NULL
 );
-CREATE INDEX search_index_sid_idx ON search_index(sid);
-CREATE INDEX search_index_fromsid_idx ON search_index(fromsid);
+CREATE INDEX search_index_sid_type_idx ON search_index(sid, type);
+CREATE INDEX search_index_from_sid_type_idx ON search_index(fromsid, fromtype);
 CREATE INDEX search_index_word_idx ON search_index(word);
 
 --

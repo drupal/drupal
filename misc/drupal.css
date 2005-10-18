@@ -445,6 +445,13 @@ img.screenshot {
 .search-results .search-info {
   font-size: 0.85em;
 }
+.search-advanced .criterium {
+  float: left;
+  margin-right: 2em;
+}
+.search-advanced .action {
+  clear: left;
+}
 #tracker td.replies {
   text-align: center;
 }
