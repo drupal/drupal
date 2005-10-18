@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.138 2005/09/27 15:54:39 dries Exp $
+// $Id: updates.inc,v 1.139 2005/10/18 14:41:26 unconed Exp $
 
 /**
  * @file
@@ -66,7 +66,8 @@ $sql_updates = array(
   "2005-08-25" => "update_146",
   "2005-09-07" => "update_147",
   "2005-09-18" => "update_148",
-  "2005-09-27" => "update_149"
+  "2005-09-27" => "update_149",
+  "2005-10-15" => "update_150"
 );
 
 function update_110() {
@@ -843,6 +844,78 @@ function update_149() {
       break;
   }
 
+  return $ret;
+}
+
+function update_150() {
+  $ret = array();
+
+  $ret[] = update_sql("DELETE FROM {variable} WHERE name = 'node_cron_last'");
+  $ret[] = update_sql("DELETE FROM {variable} WHERE name = 'minimum_word_size'");
+  $ret[] = update_sql("DELETE FROM {variable} WHERE name = 'remove_short'");
+
+  $ret[] = update_sql("DELETE FROM {node_counter} WHERE nid = 0");
+
+  $ret[] = update_sql('DROP TABLE {search_index}');
+  $ret[] = update_sql('DROP TABLE {search_total}');
+  
+  switch ($GLOBALS['db_type']) {
+    case 'mysqli':
+    case 'mysql':
+      $ret[] = update_sql("CREATE TABLE {search_dataset} (
+                           sid int(10) unsigned NOT NULL default '0',
+                           type varchar(16) default NULL,
+                           data longtext NOT NULL,
+                           KEY sid_type (sid, type)
+                           )");
+
+      $ret[] = update_sql("CREATE TABLE {search_index} (
+                           word varchar(50) NOT NULL default '',
+                           sid int(10) unsigned NOT NULL default '0',
+                           type varchar(16) default NULL,
+                           fromsid int(10) unsigned NOT NULL default '0',
+                           fromtype varchar(16) default NULL,
+                           score float default NULL,
+                           KEY sid_type (sid, type),
+                           KEY from_sid_type (fromsid, fromtype),
+                           KEY word (word)
+                           )");
+
+      $ret[] = update_sql("CREATE TABLE {search_total} (
+                           word varchar(50) NOT NULL default '',
+                           count float default NULL,
+                           PRIMARY KEY word (word)
+                           )");
+      break;
+    case 'pgsql':
+      $ret[] = update_sql("CREATE TABLE {search_dataset} (
+                           sid integer NOT NULL default '0',
+                           type varchar(16) default NULL,
+                           data text NOT NULL default '',
+                           KEY sid_type (sid, type)
+                           )");
+
+      $ret[] = update_sql("CREATE TABLE {search_index} (
+                           word varchar(50) NOT NULL default '',
+                           sid integer NOT NULL default '0',
+                           type varchar(16) default NULL,
+                           fromsid integer NOT NULL default '0',
+                           fromtype varchar(16) default NULL,
+                           score float default NULL
+                           )");
+      $ret[] = update_sql("CREATE INDEX search_index_sid_type_idx ON {search_index}(sid, type)");
+      $ret[] = update_sql("CREATE INDEX search_index_from_sid_type_idx ON {search_index}(fromsid, fromtype)");
+      $ret[] = update_sql("CREATE INDEX search_index_word_idx ON {search_index}(word)");
+
+      $ret[] = update_sql("CREATE TABLE {search_total} (
+                           word varchar(50) NOT NULL default '',
+                           count float default NULL
+                           )");
+      $ret[] = update_sql("CREATE INDEX search_total_word_idx ON {search_total}(word)");
+      break;
+    default:
+      break;
+  }
   return $ret;
 }
 

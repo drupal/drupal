@@ -1,5 +1,5 @@
 <?php
-// $Id: database.pgsql.inc,v 1.14 2005/08/29 19:32:55 dries Exp $
+// $Id: database.pgsql.inc,v 1.15 2005/10/18 14:41:27 unconed Exp $
 
 /**
  * @file
@@ -220,6 +220,50 @@ function db_query_range($query) {
     $query = call_user_func_array('sprintf', $args);
   }
   $query .= ' LIMIT '. $count .' OFFSET '. $from;
+  return _db_query($query);
+}
+
+/**
+ * Runs a SELECT query and stores its results in a temporary table.
+ *
+ * Use this as a substitute for db_query() when the results need to stored
+ * in a temporary table. Temporary tables exist for the duration of the page
+ * request.
+ * User-supplied arguments to the query should be passed in as separate parameters
+ * so that they can be properly escaped to avoid SQL injection attacks.
+ *
+ * Note that if you need to know how many results were returned, you should do
+ * a SELECT COUNT(*) on the temporary table afterwards. db_num_rows() and
+ * db_affected_rows() do not give consistent result across different database
+ * types in this case.
+ *
+ * @param $query
+ *   A string containing a normal SELECT SQL query.
+ * @param ...
+ *   A variable number of arguments which are substituted into the query using
+ *   printf() syntax. Instead of a variable number of query arguments, you may
+ *   also pass a single array containing the query arguments.
+ * @param $table
+ *   The name of the temporary table to select into. This name will not be
+ *   prefixed as there is no risk of collision.
+ * @return
+ *   A database query result resource, or FALSE if the query was not executed
+ *   correctly.
+ */
+function db_query_temporary($query) {
+  $args = func_get_args();
+  $tablename = array_pop($args);
+
+  $query = preg_replace('/^SELECT/i', 'CREATE TEMPORARY TABLE '. $tablename .' AS', db_prefix_tables($query));
+  if (count($args) > 1) {
+    // Check for array (alternative syntax).
+    if (is_array($args[1])) {
+      $args = array_merge(array($query), $args[1]);
+    }
+    $args = array_map('db_escape_string', $args);
+    $args[0] = $query;
+    $query = call_user_func_array('sprintf', $args);
+  }
   return _db_query($query);
 }
 

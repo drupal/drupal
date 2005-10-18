@@ -563,6 +563,16 @@ CREATE TABLE role (
 ) TYPE=MyISAM;
 
 --
+-- Table structure for table 'search_dataset'
+--
+CREATE TABLE search_dataset (
+  sid int(10) unsigned NOT NULL default '0',
+  type varchar(16) default NULL,
+  data longtext NOT NULL,
+  KEY sid_type (sid, type)
+) TYPE=MyISAM;
+
+--
 -- Table structure for table 'search_index'
 --
 
@@ -572,9 +582,9 @@ CREATE TABLE search_index (
   type varchar(16) default NULL,
   fromsid int(10) unsigned NOT NULL default '0',
   fromtype varchar(16) default NULL,
-  score int(10) unsigned default NULL,
-  KEY sid (sid),
-  KEY fromsid (fromsid),
+  score float default NULL,
+  KEY sid_type (sid, type),
+  KEY from_sid_type (fromsid, fromtype),
   KEY word (word)
 ) TYPE=MyISAM;
 
@@ -584,7 +594,7 @@ CREATE TABLE search_index (
 
 CREATE TABLE search_total (
   word varchar(50) NOT NULL default '',
-  count int(10) unsigned default NULL,
+  count float default NULL,
   PRIMARY KEY (word)
 ) TYPE=MyISAM;
 

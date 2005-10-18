@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.123 2005/10/11 19:52:34 unconed Exp $ */
+/* $Id: drupal.css,v 1.124 2005/10/18 14:41:27 unconed Exp $ */
 
 /*
 ** HTML elements
@@ -444,6 +444,13 @@ img.screenshot {
 }
 .search-results .search-info {
   font-size: 0.85em;
+}
+.search-advanced .criterium {
+  float: left;
+  margin-right: 2em;
+}
+.search-advanced .action {
+  clear: left;
 }
 #tracker td.replies {
   text-align: center;
