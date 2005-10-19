@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.242 2005/10/18 14:36:46 dries Exp $
+// $Id: system.module,v 1.243 2005/10/19 09:28:21 unconed Exp $
 
 /**
  * @file
@@ -54,7 +54,7 @@ function system_perm() {
  */
 function system_elements() {
   // Top level form
-  $type['form'] = array('#method' => 'POST', '#action' => request_uri());
+  $type['form'] = array('#method' => 'post', '#action' => request_uri());
 
   // Inputs
   $type['checkbox'] = array('#input' => TRUE, '#return_value' => 1);
