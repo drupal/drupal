@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.381 2005/10/11 19:44:34 dries Exp $
+// $Id: comment.module,v 1.382 2005/10/20 08:53:59 unconed Exp $
 
 /**
  * @file
@@ -248,8 +248,8 @@ function comment_nodeapi(&$node, $op, $arg = 0) {
       $comments = db_result(db_query('SELECT comment_count FROM {node_comment_statistics} WHERE nid = %d', $node->nid));
       return format_plural($comments, '1 comment', '%count comments');
 
-    case 'rss item':
-      return array(array('key' => 'comments', 'value' => url('node/'.$node->nid, NULL, 'comment', TRUE)));
+    case 'rsss item':
+      return array(array('key' => 'comments', 'value' => url('node/'. $node->nid, NULL, 'comment', TRUE)));
   }
 }
 
