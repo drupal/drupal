@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysqli.inc,v 1.3 2005/10/18 14:41:27 unconed Exp $
+// $Id: database.mysqli.inc,v 1.4 2005/10/20 21:30:50 unconed Exp $
 
 /**
  * @file
@@ -21,6 +21,15 @@
  * Note that mysqli does not support persistent connections.
  */
 function db_connect($url) {
+  // Check if MySQLi support is present in PHP
+  if (!function_exists('mysqli_init')) {
+    drupal_maintenance_theme();
+    drupal_set_title('PHP MySQL support not enabled');
+    print theme('maintenance_page', '<p>We were unable to use the MySQL database because the MySQLi extension for PHP is not installed. Check your <code>PHP.ini</code> to see how you can enable it.</p>
+<p>For more help, see the <a href="http://drupal.org/node/258">Installation and upgrading handbook</a>. If you are unsure what these terms mean you should probably contact your hosting provider.</p>');
+    exit;
+  }
+
   $url = parse_url($url);
 
   // Allow for non-standard MySQL port.

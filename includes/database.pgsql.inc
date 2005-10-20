@@ -1,5 +1,5 @@
 <?php
-// $Id: database.pgsql.inc,v 1.15 2005/10/18 14:41:27 unconed Exp $
+// $Id: database.pgsql.inc,v 1.16 2005/10/20 21:30:50 unconed Exp $
 
 /**
  * @file
@@ -21,6 +21,15 @@
  * (e.g. your database and web server live on different machines).
  */
 function db_connect($url) {
+   // Check if MySQL support is present in PHP
+  if (!function_exists('pg_connect')) {
+    drupal_maintenance_theme();
+    drupal_set_title('PHP PostgreSQL support not enabled');
+    print theme('maintenance_page', '<p>We were unable to use the PostgreSQL database because the PostgreSQL extension for PHP is not installed. Check your <code>PHP.ini</code> to see how you can enable it.</p>
+<p>For more help, see the <a href="http://drupal.org/node/258">Installation and upgrading handbook</a>. If you are unsure what these terms mean you should probably contact your hosting provider.</p>');
+    exit;
+  }
+
   $url = parse_url($url);
 
   $conn_string = ' user='. $url['user'] .' dbname='. substr($url['path'], 1) .' password='. $url['pass'] . ' host=' . $url['host'];
