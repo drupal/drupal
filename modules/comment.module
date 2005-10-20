@@ -248,8 +248,8 @@ function comment_nodeapi(&$node, $op, $arg = 0) {
       $comments = db_result(db_query('SELECT comment_count FROM {node_comment_statistics} WHERE nid = %d', $node->nid));
       return format_plural($comments, '1 comment', '%count comments');
 
-    case 'rss item':
-      return array(array('key' => 'comments', 'value' => url('node/'.$node->nid, NULL, 'comment', TRUE)));
+    case 'rsss item':
+      return array(array('key' => 'comments', 'value' => url('node/'. $node->nid, NULL, 'comment', TRUE)));
   }
 }
 
