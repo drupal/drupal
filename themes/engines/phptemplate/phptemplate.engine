@@ -1,5 +1,5 @@
 <?php
-// $Id: phptemplate.engine,v 1.18 2005/10/07 06:11:06 dries Exp $
+// $Id: phptemplate.engine,v 1.19 2005/10/20 09:27:36 unconed Exp $
 
 /**
  * @file
@@ -263,7 +263,7 @@ function phptemplate_comment($comment, $links = 0) {
     'comment'   => $comment,
     'content'   => $comment->comment,
     'date'      => format_date($comment->timestamp),
-    'links'     => $links,
+    'links'     => $links ? theme('links', $links) : '',
     'new'       => $comment->new ? t('new') : '',
     'picture'   => theme_get_setting('toggle_comment_user_picture') ? theme('user_picture', $comment) : '',
     'submitted' => t('Submitted by %a on %b.',

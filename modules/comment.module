@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.383 2005/10/20 08:56:34 unconed Exp $
+// $Id: comment.module,v 1.384 2005/10/20 09:27:36 unconed Exp $
 
 /**
  * @file
@@ -762,7 +762,7 @@ function comment_render($node, $cid = 0) {
 
       if ($comment = db_fetch_object($result)) {
         $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
-        $output .= theme('comment_view', $comment, theme('links', module_invoke_all('link', 'comment', $comment, 1)));
+        $output .= theme('comment_view', $comment, module_invoke_all('link', 'comment', $comment, 1));
       }
     }
     else {
@@ -1226,12 +1226,12 @@ function theme_comment_controls($form) {
 }
 
 function theme_comment($comment, $links = 0) {
-  $output  = "<div class=\"comment\">\n";
+  $output  = '<div class="comment">';
   $output .= '<div class="subject">'. l($comment->subject, $_GET['q'], NULL, NULL, "comment-$comment->cid") . ' ' . theme('mark', $comment->new) ."</div>\n";
   $output .= '<div class="credit">'. t('by %a on %b', array('%a' => theme('username', $comment), '%b' => format_date($comment->timestamp))) ."</div>\n";
-  $output .= "<div class=\"body\">$comment->comment</div>\n";
-  $output .= "<div class=\"links\">$links</div>\n";
-  $output .= "</div>\n";
+  $output .= '<div class="body">'. $comment->comment .'</div>';
+  $output .= '<div class="links">'. theme('links', $links) .'</div>';
+  $output .= '</div>';
   return $output;
 }
 
@@ -1249,7 +1249,7 @@ function theme_comment_flat_collapsed($comment) {
 }
 
 function theme_comment_flat_expanded($comment) {
-  return theme('comment_view', $comment, theme('links', module_invoke_all('link', 'comment', $comment, 0)));
+  return theme('comment_view', $comment, module_invoke_all('link', 'comment', $comment, 0));
 }
 
 function theme_comment_thread_min($comment, $pid = 0) {
@@ -1265,7 +1265,7 @@ function theme_comment_thread_max($comment, $level = 0) {
     $output .= '<div style="margin-left:'. ($comment->depth * 25) ."px;\">\n";
   }
 
-  $output .= theme('comment_view', $comment, theme('links', module_invoke_all('link', 'comment', $comment, 0)));
+  $output .= theme('comment_view', $comment, module_invoke_all('link', 'comment', $comment, 0));
 
   if ($comment->depth) {
     $output .= "</div>\n";
