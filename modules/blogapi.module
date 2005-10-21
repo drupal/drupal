@@ -602,6 +602,7 @@ function blogapi_rsd() {
     $mt = 'true';
   }
 
+  header('Content-Type: application/rsd+xml');
   print <<<__RSD__
 <?xml version="1.0"?>
 <rsd version="1.0" xmlns="http://archipelago.phrasewise.com/rsd">
