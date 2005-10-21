@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.231 2005/10/19 09:46:22 unconed Exp $
+// $Id: taxonomy.module,v 1.232 2005/10/21 11:12:46 unconed Exp $
 
 /**
  * @file
@@ -30,16 +30,24 @@ function taxonomy_link($type, $node = NULL) {
     if (array_key_exists('taxonomy', $node)) {
       foreach ($node->taxonomy as $tid) {
         $term = taxonomy_get_term($tid);
-        $links[] = l($term->name, 'taxonomy/term/'. $term->tid);
+        $links[] = l($term->name, taxonomy_term_path($term));
       }
     }
     else {
       foreach (taxonomy_node_get_terms($node->nid) as $term) {
-        $links[] = l($term->name, 'taxonomy/term/'. $term->tid);
+        $links[] = l($term->name, taxonomy_term_path($term));
       }
     }
     return $links;
   }
+}
+
+function taxonomy_term_path($term) {
+  $vocabulary = taxonomy_get_vocabulary($term->vid);
+  if ($vocabulary->module != 'taxonomy' && $path = module_invoke($vocabulary->module, 'term_path', $term)) {
+    return $path;
+  }
+  return 'taxonomy/term/'. $term->tid;
 }
 
 /**
@@ -866,16 +874,20 @@ function taxonomy_get_term_by_name($name) {
  * Return the vocabulary object matching a vocabulary ID.
  */
 function taxonomy_get_vocabulary($vid) {
-  $result = db_query('SELECT v.*, n.type FROM {vocabulary} v LEFT JOIN {vocabulary_node_types} n ON v.vid = n.vid WHERE v.vid = %d ORDER BY v.weight, v.name', $vid);
-  $node_types = array();
-  while ($voc = db_fetch_object($result)) {
-    $node_types[] = $voc->type;
-    unset($voc->type);
-    $voc->nodes = $node_types;
-    $vocabulary = $voc;
+  static $vocabularies = array();
+
+  if (!array_key_exists($vid, $vocabularies)) {
+    $result = db_query('SELECT v.*, n.type FROM {vocabulary} v LEFT JOIN {vocabulary_node_types} n ON v.vid = n.vid WHERE v.vid = %d ORDER BY v.weight, v.name', $vid);
+    $node_types = array();
+    while ($voc = db_fetch_object($result)) {
+      $node_types[] = $voc->type;
+      unset($voc->type);
+      $voc->nodes = $node_types;
+      $vocabularies[$vid] = $voc;
+    }
   }
 
-  return $vocabulary;
+  return $vocabularies[$vid];
 }
 
 /**

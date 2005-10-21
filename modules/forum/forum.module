@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.276 2005/10/11 19:44:34 dries Exp $
+// $Id: forum.module,v 1.277 2005/10/21 11:12:46 unconed Exp $
 
 /**
  * @file
@@ -432,6 +432,10 @@ function forum_link($type, $node = 0, $main = 0) {
   }
 
   return $links;
+}
+
+function forum_term_path($term) {
+  return 'forum/'. $term->tid;
 }
 
 /**
