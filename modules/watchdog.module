@@ -1,5 +1,5 @@
 <?php
-// $Id: watchdog.module,v 1.130 2005/10/11 19:44:35 dries Exp $
+// $Id: watchdog.module,v 1.131 2005/10/21 10:50:03 unconed Exp $
 
 /**
  * @file
@@ -32,19 +32,12 @@ function watchdog_menu($may_cache) {
 
   if ($may_cache) {
     $items[] = array('path' => 'admin/logs', 'title' => t('logs'),
-      'callback' => 'watchdog_overview', 'access' => user_access('administer watchdog'));
+      'callback' => 'watchdog_overview');
     $items[] = array('path' => 'admin/logs/event', 'title' => t('details'),
-      'callback' => 'watchdog_event', 'access' => user_access('administer watchdog'),
+      'callback' => 'watchdog_event',
       'type' => MENU_CALLBACK);
   }
   return $items;
-}
-
-/**
- * Implementation of hook_perm().
- */
-function watchdog_perm() {
-  return array('administer watchdog');
 }
 
 /**
@@ -87,6 +80,7 @@ function watchdog_overview() {
     '#options' => $names,
     '#default_value' => $_SESSION['watchdog_overview_filter']
   );
+  $form['#action'] = 'admin/logs';
 
   $form['submit'] = array('#type' => 'submit', '#value' =>t('Filter'));
   $output = drupal_get_form('watchdog_form_overview', $form);
