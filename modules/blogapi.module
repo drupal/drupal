@@ -600,6 +600,7 @@ function blogapi_rsd() {
   $base = url('', NULL, NULL, TRUE);
   $blogid = 1; # until we figure out how to handle multiple bloggers
 
+  header('Content-Type: application/rsd+xml');
   print <<<__RSD__
 <?xml version="1.0"?>
 <rsd version="1.0" xmlns="http://archipelago.phrasewise.com/rsd">
