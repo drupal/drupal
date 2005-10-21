@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.114 2005/10/13 10:02:31 unconed Exp $
+// $Id: profile.module,v 1.115 2005/10/21 11:14:55 unconed Exp $
 
 /**
  * @file
@@ -252,9 +252,9 @@ function profile_view_field($user, $field) {
       case 'textarea':
         return check_markup($value);
       case 'selection':
-        return $browse ? l($value, "profile/$field->name/$value") : check_plain($value);
+        return $browse ? l($value, 'profile/'. drupal_urlencode($field->name) .'/'. drupal_urlencode($value)) : check_plain($value);
       case 'checkbox':
-        return $browse ? l($field->title, "profile/$field->name") : check_plain($field->title);
+        return $browse ? l($field->title, 'profile/'. drupal_urlencode($field->name)) : check_plain($field->title);
       case 'url':
         return '<a href="'. check_url($value) .'">'. check_plain($value) .'</a>';
       case 'date':
@@ -273,7 +273,7 @@ function profile_view_field($user, $field) {
         $fields = array();
         foreach ($values as $value) {
           if ($value = trim($value)) {
-            $fields[] = $browse ? l($value, "profile/". urlencode($field->name) ."/". urlencode($value)) : check_plain($value);
+            $fields[] = $browse ? l($value, "profile/". drupal_urlencode($field->name) ."/". drupal_urlencode($value)) : check_plain($value);
           }
         }
         return implode(', ', $fields);

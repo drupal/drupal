@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.137 2005/10/18 14:41:27 unconed Exp $
+// $Id: search.module,v 1.138 2005/10/21 11:14:55 unconed Exp $
 
 /**
  * @file
@@ -811,7 +811,7 @@ function search_view() {
       $type = 'node';
     }
     $keys = module_invoke($type, 'search', 'post', $_POST['edit']['keys']);
-    drupal_goto('search/'. urlencode($type) .'/'. urlencode(is_null($keys) ? $_POST['edit']['keys'] : $keys));
+    drupal_goto('search/'. drupal_urlencode($type) .'/'. drupal_urlencode(is_null($keys) ? $_POST['edit']['keys'] : $keys));
   }
   else if ($type == '') {
     // Note: search/node can not be a default tab because it would take on the
@@ -828,7 +828,7 @@ function search_view() {
       watchdog('search',
         t('Search: %keys (%type).', array('%keys' => theme('placeholder', $keys), '%type' => module_invoke($type, 'search', 'name'))),
         WATCHDOG_NOTICE,
-        l(t('results'), 'search/'. urlencode($type) .'/'. urlencode($keys))
+        l(t('results'), 'search/'. drupal_urlencode($type) .'/'. drupal_urlencode($keys))
         );
 
       // Collect the search results:

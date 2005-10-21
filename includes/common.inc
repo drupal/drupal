@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.486 2005/10/18 14:54:54 dries Exp $
+// $Id: common.inc,v 1.487 2005/10/21 11:14:28 unconed Exp $
 
 /**
  * @file
@@ -1293,6 +1293,18 @@ function drupal_implode_autocomplete($array) {
     $output[] = str_replace('|', '&#124;', $k) .'|'. str_replace('|', '&#124;', $v);
   }
   return implode('||', $output);
+}
+
+/**
+ * Wrapper around urlencode() which avoids Apache quirks.
+ *
+ * Should be used when placing arbitrary data inside the path of a clean URL. 
+ *
+ * @param $text
+ *   String to encode
+ */
+function drupal_urlencode($text) {
+  return variable_get('clean_url', '0') ? str_replace('%2F', '/', urlencode($text)) : urlencode($text);
 }
 
 /**
