@@ -1296,6 +1296,18 @@ function drupal_implode_autocomplete($array) {
 }
 
 /**
+ * Wrapper around urlencode() which avoids Apache quirks.
+ *
+ * Should be used when placing arbitrary data inside the path of a clean URL. 
+ *
+ * @param $text
+ *   String to encode
+ */
+function drupal_urlencode($text) {
+  return variable_get('clean_url', '0') ? str_replace('%2F', '/', urlencode($text)) : urlencode($text);
+}
+
+/**
  * Performs one or more XML-RPC request(s).
  *
  * @param $url
