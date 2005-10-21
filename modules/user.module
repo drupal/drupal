@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.520 2005/10/13 10:39:56 dries Exp $
+// $Id: user.module,v 1.521 2005/10/21 09:07:12 dries Exp $
 
 /**
  * @file
@@ -1278,7 +1278,7 @@ function user_edit($category = 'account') {
   $form = _user_forms($edit, $account, $category);
   $form['submit'] = array('#type' => 'submit', '#value' => t('Submit'), '#weight' => 30);
   if (user_access('administer users')) {
-    $form['delete'] = array('#type' => 'submit', '#value' => t('Delete'), '#weight' => 30);
+    $form['delete'] = array('#type' => 'submit', '#value' => t('Delete'), '#weight' => 31);
   }
   $form['#attributes'] = array('enctype' => 'multipart/form-data');
 
