@@ -1,5 +1,5 @@
 <?php
-// $Id: pager.inc,v 1.47 2005/08/25 21:14:16 dries Exp $
+// $Id: pager.inc,v 1.48 2005/10/21 10:58:15 unconed Exp $
 
 /**
  * @file
@@ -356,23 +356,19 @@ function theme_pager_list($limit, $element = 0, $quantity = 5, $text = '', $attr
  *   An HTML string that generates the link.
  */
 function theme_pager_link($text, $page_new, $element, $attributes = array()) {
-  $q = $_GET['q'];
-  $page = array_key_exists('page', $_GET) ? $_GET['page'] : '';
+  $page = isset($_GET['page']) ? $_GET['page'] : '';
+  if ($new_page = implode(',', pager_load_array($page_new[$element], $element, explode(',', $page)))) {
+    $attributes['page'] = $new_page;
+  }
 
+  $query = array();
   foreach ($attributes as $key => $value) {
     $query[] = $key .'='. $value;
   }
 
-  $page_new = pager_load_array($page_new[$element], $element, explode(',', $page));
-  if (count($attributes)) {
-    $url = url($q, 'page='. implode(',', $page_new) .'&'. implode('&', $query));
-  }
-  else {
-    $url = url($q, 'page='. implode(',', $page_new));
-  }
-
-  return '<a href="'. check_url($url) .'">'. check_plain($text) .'</a>';
+  return l($text, $_GET['q'], array(), count($query) ? implode('&', $query) : NULL);
 }
+
 /**
  * @} End of "Pager pieces".
  */
