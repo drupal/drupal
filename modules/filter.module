@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.76 2005/10/11 19:44:34 dries Exp $
+// $Id: filter.module,v 1.77 2005/10/22 15:14:46 dries Exp $
 
 /**
  * @file
@@ -284,7 +284,7 @@ function filter_admin_overview() {
     $roles = array();
     foreach (user_roles() as $rid => $name) {
       //prepare a roles array with roles that may access the filter
-      if (strstr($format->roles, ",$rid,")){
+      if (strstr($format->roles, ",$rid,")) {
         $roles[] = $name;
       }
     }

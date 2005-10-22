@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.244 2005/10/22 14:17:11 dries Exp $
+// $Id: system.module,v 1.245 2005/10/22 15:14:46 dries Exp $
 
 /**
  * @file
@@ -525,7 +525,7 @@ function system_theme_data() {
   foreach ($themes as $theme) {
     foreach (file_scan_directory(dirname($theme->filename), 'style.css$') as $style) {
       $style->style = TRUE;
-      $style->template = $theme->template;
+      $style->template = isset($theme->template) ? $theme->template : FALSE;
       $style->name = basename(dirname($style->filename));
       $style->owner = $theme->filename;
       $style->prefix = $theme->template ? $theme->prefix : $theme->name;
@@ -560,7 +560,7 @@ function system_theme_data() {
 function system_region_list($theme_key) {
   static $list = array();
 
-  if(!array_key_exists($theme_key, $list)) {
+  if (!array_key_exists($theme_key, $list)) {
 
     $result = db_query("SELECT * FROM {system} WHERE type = 'theme' AND name = '%s'", $theme_key);
     $theme = db_fetch_object($result);
@@ -705,7 +705,8 @@ function system_settings_form_execute($form_id, $values) {
   }
   if ($op == t('Reset to defaults')) {
     drupal_set_message(t('The configuration options have been reset to their default values.'));
-  } else {
+  }
+  else {
     drupal_set_message(t('The configuration options have been saved.'));
   }
 }

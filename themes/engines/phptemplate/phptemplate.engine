@@ -1,5 +1,5 @@
 <?php
-// $Id: phptemplate.engine,v 1.19 2005/10/20 09:27:36 unconed Exp $
+// $Id: phptemplate.engine,v 1.20 2005/10/22 15:14:46 dries Exp $
 
 /**
  * @file
@@ -60,7 +60,7 @@ function _phptemplate_callback($hook, $variables = array(), $file = NULL) {
     $variables = array_merge($variables, _phptemplate_variables($hook, $variables));
   }
 
-  if ($variables['template_file']) {
+  if (isset($variables['template_file'])) {
     $file = $variables['template_file'];
   }
 
@@ -86,13 +86,13 @@ function _phptemplate_callback($hook, $variables = array(), $file = NULL) {
 function _phptemplate_default_variables($hook, $variables) {
   global $theme;
   static $count = array();
-  $count[$hook] = is_int($count[$hook]) ? $count[$hook] : 1;
+  $count[$hook] = isset($count[$hook]) && is_int($count[$hook]) ? $count[$hook] : 1;
   $variables['zebra'] = ($count[$hook] % 2) ? 'odd' : 'even';
   $variables['id'] = $count[$hook]++;
 
   global $sidebar_indicator;
   if ($hook == 'block') {
-    $count['block_counter'][$sidebar_indicator] = is_int($count['block_counter'][$sidebar_indicator]) ? $count['block_counter'][$sidebar_indicator] : 1;
+    $count['block_counter'][$sidebar_indicator] = isset($count['block_counter'][$sidebar_indicator]) && is_int($count['block_counter'][$sidebar_indicator]) ? $count['block_counter'][$sidebar_indicator] : 1;
     $variables['block_zebra'] = ($count['block_counter'][$sidebar_indicator] % 2) ? 'odd' : 'even';
     $variables['block_id'] = $count['block_counter'][$sidebar_indicator]++;
   }
@@ -104,7 +104,7 @@ function _phptemplate_default_variables($hook, $variables) {
       // This pre-loading is necessary because phptemplate uses variable names different from
       // the region names, e.g., 'sidebar_left' instead of 'left'.
       if (!in_array($region, array('left', 'right', 'footer'))) {
-        $variables[$region] .= theme('blocks', $region);
+        isset($variables[$region]) ? $variables[$region] .= theme('blocks', $region) : $variables[$region] = theme('blocks', $region);
       }
     }
   }
@@ -118,6 +118,10 @@ function _phptemplate_default_variables($hook, $variables) {
   return $variables;
 }
 
+/**
+ * @return
+ *  Array of template features
+ */
 function phptemplate_features() {
   return array(
     'logo',
@@ -194,7 +198,7 @@ function phptemplate_page($content) {
     'layout'              => $layout,
     'logo'                => theme_get_setting('logo'),
     'messages'            => theme('status_messages'),
-    'mission'             => $mission,
+    'mission'             => isset($mission) ? $mission : '',
     'onload_attributes'   => theme('onload_attribute'),
     'primary_links'       => theme_get_setting('primary_links'),
     'site_name'           => (theme_get_setting('toggle_name') ? variable_get('site_name', 'Drupal') : ''),
@@ -263,7 +267,7 @@ function phptemplate_comment($comment, $links = 0) {
     'comment'   => $comment,
     'content'   => $comment->comment,
     'date'      => format_date($comment->timestamp),
-    'links'     => $links ? theme('links', $links) : '',
+    'links'     => isset($links) ? theme('links', $links) : '',
     'new'       => $comment->new ? t('new') : '',
     'picture'   => theme_get_setting('toggle_comment_user_picture') ? theme('user_picture', $comment) : '',
     'submitted' => t('Submitted by %a on %b.',
@@ -309,7 +313,7 @@ function phptemplate_box($title, $content, $region = 'main') {
  *   A suggested template file to use.
  */
 function _phptemplate_default($hook, $variables, $file = NULL) {
-  if ($file && file_exists(path_to_theme() . "/$file.tpl.php")) {
+  if (!empty($file) && file_exists(path_to_theme() . "/$file.tpl.php")) {
     $file = path_to_theme() . "/$file.tpl.php";
   }
   else {
@@ -328,8 +332,8 @@ function _phptemplate_default($hook, $variables, $file = NULL) {
     }
   }
 
-  if ($file) {
-    extract($variables, EXTR_SKIP);  // Extract the vars to local namespace
+  if (isset($file)) {
+    extract($variables, EXTR_SKIP);  // Extract the variables to a local namespace
     ob_start();                      // Start output buffering
     include "./$file";               // Include the file
     $contents = ob_get_contents();   // Get the contents of the buffer

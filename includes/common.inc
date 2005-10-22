@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.487 2005/10/21 11:14:28 unconed Exp $
+// $Id: common.inc,v 1.488 2005/10/22 15:14:46 dries Exp $
 
 /**
  * @file
@@ -53,10 +53,8 @@ function drupal_set_content($region = null, $data = null) {
  */
 function drupal_get_content($region = null, $delimiter = ' ') {
   $content = drupal_set_content();
-  if (isset($region)) {
-    if (is_array($content[$region])) {
+  if (isset($region) && isset($content[$region]) && is_array($content[$region])) {
       return implode ($delimiter, $content[$region]);
-    }
   }
   else {
     foreach (array_keys($content) as $region) {
@@ -78,7 +76,7 @@ function drupal_get_content($region = null, $delimiter = ' ') {
 function drupal_set_breadcrumb($breadcrumb = NULL) {
   static $stored_breadcrumb;
 
-  if (isset($breadcrumb)) {
+  if (!is_null($breadcrumb)) {
     $stored_breadcrumb = $breadcrumb;
   }
   return $stored_breadcrumb;
@@ -90,7 +88,7 @@ function drupal_set_breadcrumb($breadcrumb = NULL) {
 function drupal_get_breadcrumb() {
   $breadcrumb = drupal_set_breadcrumb();
 
-  if (!isset($breadcrumb)) {
+  if (is_null($breadcrumb)) {
     $breadcrumb = menu_get_active_breadcrumb();
   }
 
@@ -569,7 +567,7 @@ function locale_initialize() {
     // Useful for e.g. XML/HTML 'lang' attributes.
     $languages = array('en' => 'English');
   }
-  if ($user->uid && $languages[$user->language]) {
+  if ($user->uid && isset($languages[$user->language])) {
     return $user->language;
   }
   else {
@@ -1298,7 +1296,7 @@ function drupal_implode_autocomplete($array) {
 /**
  * Wrapper around urlencode() which avoids Apache quirks.
  *
- * Should be used when placing arbitrary data inside the path of a clean URL. 
+ * Should be used when placing arbitrary data inside the path of a clean URL.
  *
  * @param $text
  *   String to encode

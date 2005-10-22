@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.69 2005/10/09 21:51:43 dries Exp $
+// $Id: bootstrap.inc,v 1.70 2005/10/22 15:14:46 dries Exp $
 
 /**
  * @file
@@ -148,14 +148,14 @@ function conf_init() {
 function drupal_get_filename($type, $name, $filename = NULL) {
   static $files = array();
 
-  if (!$files[$type]) {
+  if (!isset($files[$type])) {
     $files[$type] = array();
   }
 
-  if ($filename && file_exists($filename)) {
+  if (!empty($filename) && file_exists($filename)) {
     $files[$type][$name] = $filename;
   }
-  elseif ($files[$type][$name]) {
+  elseif (isset($files[$type][$name])) {
     // nothing
   }
   elseif (($file = db_result(db_query("SELECT filename FROM {system} WHERE name = '%s' AND type = '%s'", $name, $type))) && file_exists($file)) {
@@ -722,7 +722,7 @@ function check_url($uri) {
 
 /**
  * Since request_uri() is only available on Apache, we generate an
- * equivalent using other environment vars.
+ * equivalent using other environment variables.
  */
 function request_uri() {
 
@@ -788,7 +788,8 @@ function drupal_set_message($message = NULL, $type = 'status') {
     $_SESSION['messages'][$type][] = $message;
   }
 
-  return $_SESSION['messages'];
+  // messages not set when DB connection fails
+  return isset($_SESSION['messages']) ? $_SESSION['messages'] : NULL;
 }
 
 /**
@@ -867,7 +868,7 @@ function _drupal_bootstrap($phase) {
       // deny access to hosts which were banned. t() is not yet available.
       if (drupal_is_denied('host', $_SERVER['REMOTE_ADDR'])) {
         header('HTTP/1.0 403 Forbidden');
-        print "Sorry, ". $_SERVER['REMOTE_ADDR']. " has been banned.";
+        print 'Sorry, '. $_SERVER['REMOTE_ADDR']. ' has been banned.';
         exit();
       }
 

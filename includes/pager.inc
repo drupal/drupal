@@ -1,5 +1,5 @@
 <?php
-// $Id: pager.inc,v 1.48 2005/10/21 10:58:15 unconed Exp $
+// $Id: pager.inc,v 1.49 2005/10/22 15:14:46 dries Exp $
 
 /**
  * @file
@@ -50,13 +50,13 @@
  */
 function pager_query($query, $limit = 10, $element = 0, $count_query = NULL) {
   global $pager_page_array, $pager_total, $pager_total_items;
-  $page = $_GET['page'];
+  $page = isset($_GET['page']) ? $_GET['page'] : '';
 
   // Substitute in query arguments.
   $args = func_get_args();
   $args = array_slice($args, 4);
   // Alternative syntax for '...'
-  if (is_array($args[0])) {
+  if (isset($args[0]) && is_array($args[0])) {
     $args = $args[0];
   }
 
@@ -72,13 +72,13 @@ function pager_query($query, $limit = 10, $element = 0, $count_query = NULL) {
   if (count($args)) {
     $pager_total_items[$element] = db_result(db_query($count_query, $args));
     $pager_total[$element] = ceil($pager_total_items[$element] / $limit);
-    $pager_page_array[$element] = max(0, min($pager_page_array[$element], ((int)$pager_total[$element]) - 1));
+    $pager_page_array[$element] = max(0, min((int)$pager_page_array[$element], ((int)$pager_total[$element]) - 1));
     return db_query_range($query, $args, $pager_page_array[$element] * $limit, $limit);
   }
   else {
     $pager_total_items[$element] = db_result(db_query($count_query));
     $pager_total[$element] = ceil($pager_total_items[$element] / $limit);
-    $pager_page_array[$element] = max(0, min($pager_page_array[$element], ((int)$pager_total[$element]) - 1));
+    $pager_page_array[$element] = max(0, min((int)$pager_page_array[$element], ((int)$pager_total[$element]) - 1));
     return db_query_range($query, $pager_page_array[$element] * $limit, $limit);
   }
 }

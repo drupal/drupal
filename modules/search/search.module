@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.138 2005/10/21 11:14:55 unconed Exp $
+// $Id: search.module,v 1.139 2005/10/22 15:14:46 dries Exp $
 
 /**
  * @file
@@ -452,7 +452,7 @@ function search_index($sid, $type, $text) {
           // None of the tags we look for make sense when nested identically.
           // If they are, it's probably broken HTML.
           $tagstack = array();
-          $score = 1;          
+          $score = 1;
         }
         else {
           // Add to open tag stack and increment score

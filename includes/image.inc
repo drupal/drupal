@@ -1,5 +1,5 @@
 <?php
-// $Id: image.inc,v 1.9 2005/09/08 19:17:34 dries Exp $
+// $Id: image.inc,v 1.10 2005/10/22 15:14:46 dries Exp $
 
 /**
  * Return a list of available toolkits.
@@ -125,7 +125,8 @@ function image_scale($source, $destination, $width, $height) {
   if ($aspect < $height / $width) {
     $width = (int)min($width, $info['width']);
     $height = (int)round($width * $aspect);
-  } else {
+  }
+  else {
     $height = (int)min($height, $info['height']);
     $width = (int)round($height / $aspect);
   }

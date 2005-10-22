@@ -1,5 +1,5 @@
 <?php
-// $Id: xmlrpcs.inc,v 1.15 2005/08/25 21:14:16 dries Exp $
+// $Id: xmlrpcs.inc,v 1.16 2005/10/22 15:14:46 dries Exp $
 
 function xmlrpc_server($callbacks) {
   $xmlrpc_server = new stdClass();
@@ -124,7 +124,8 @@ function xmlrpc_server_multicall($methodcalls) {
     $params = $call['params'];
     if ($method == 'system.multicall') {
       $result = xmlrpc_error(-32600, t('Recursive calls to system.multicall are forbidden'));
-    } else {
+    }
+    else {
       $result = xmlrpc_server_call($xmlrpc_server, $method, $params);
     }
     if ($result->is_error) {
@@ -132,7 +133,8 @@ function xmlrpc_server_multicall($methodcalls) {
         'faultCode' => $result->code,
         'faultString' => $result->message
       );
-    } else {
+    }
+    else {
       $return[] = $result;
     }
   }

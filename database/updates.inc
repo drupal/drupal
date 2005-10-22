@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.139 2005/10/18 14:41:26 unconed Exp $
+// $Id: updates.inc,v 1.140 2005/10/22 15:14:46 dries Exp $
 
 /**
  * @file
@@ -858,7 +858,7 @@ function update_150() {
 
   $ret[] = update_sql('DROP TABLE {search_index}');
   $ret[] = update_sql('DROP TABLE {search_total}');
-  
+
   switch ($GLOBALS['db_type']) {
     case 'mysqli':
     case 'mysql':

@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.86 2005/10/08 12:38:20 dries Exp $
+// $Id: menu.inc,v 1.87 2005/10/22 15:14:46 dries Exp $
 
 /**
  * @file
@@ -742,7 +742,18 @@ function _menu_sort($a, $b) {
   $a = &$menu['items'][$a];
   $b = &$menu['items'][$b];
 
-  return $a['weight'] < $b['weight'] ? -1 : ($a['weight'] > $b['weight'] ? 1 : ($a['title'] < $b['title'] ? -1 : 1));
+  if ($a['weight'] < $b['weight']) {
+    return -1;
+  }
+  elseif ($a['weight'] > $b['weight']) {
+    return 1;
+  }
+  elseif (isset($a['title']) && isset($b['title']) && ($a['title'] < $b['title'])) {
+    return -1;
+  }
+  else {
+    return 1;
+  }
 }
 
 /**

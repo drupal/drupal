@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.39 2005/10/18 14:40:00 dries Exp $
+// $Id: menu.module,v 1.40 2005/10/22 15:14:46 dries Exp $
 
 /**
  * @file
@@ -99,8 +99,8 @@ function menu_nodeapi(&$node, $op) {
   if (user_access('administer menu')) {
     switch ($op) {
       case 'form':
-        $edit = $_POST['edit'];
-        $edit['nid'] = $node->nid;
+        $edit = isset($_POST['edit']) ? $_POST['edit'] : '';
+        $edit['nid'] = isset($node->nid) ? $node->nid : '';
         return menu_node_form($edit);
         break;
 
@@ -145,7 +145,7 @@ function menu_overview() {
  * Menu callback; clear the database, resetting the menu to factory defaults.
  */
 function menu_reset() {
-  $op = $_POST['op'];
+  $op = isset($_POST['op']) ? $_POST['op'] : '';
   switch ($op) {
     case t('Reset all'):
       db_query('DELETE FROM {menu}');
@@ -164,8 +164,8 @@ function menu_reset() {
  * Menu callback; handle the adding of a new menu.
  */
 function menu_add_menu() {
-  $op = $_POST['op'];
-  $edit = $_POST['edit'];
+  $op = isset($_POST['op']) ? $_POST['op'] : '';
+  $edit = isset($_POST['edit']) ? $_POST['edit'] : '';
   $output = '';
 
   switch ($op) {
@@ -189,7 +189,7 @@ function menu_add_menu() {
  * Menu callback; reset a single modified item.
  */
 function menu_reset_item($mid) {
-  $op = $_POST['op'];
+  $op = isset($_POST['op']) ? $_POST['op'] : '';
   switch ($op) {
     case t('Reset'):
       db_query('DELETE FROM {menu} WHERE mid = %d', $mid);
@@ -209,7 +209,7 @@ function menu_reset_item($mid) {
  * Menu callback; delete a single custom item.
  */
 function menu_delete_item($mid) {
-  $op = $_POST['op'];
+  $op = isset($_POST['op']) ? $_POST['op'] : '';
   $result = db_query('SELECT type, title FROM {menu} WHERE mid = %d', $mid);
   $menu = db_fetch_object($result);
   if (!$menu) {
@@ -255,8 +255,8 @@ function menu_disable_item($mid) {
  * Menu callback; dispatch to the appropriate menu item edit function.
  */
 function menu_edit_item($mid = 0) {
-  $op = $_POST['op'];
-  $edit = $_POST['edit'];
+  $op = isset($_POST['op']) ? $_POST['op'] : '';
+  $edit = isset($_POST['edit']) ? $_POST['edit'] : '';
 
   $output = '';
 
@@ -419,7 +419,7 @@ function menu_overview_tree_rows($pid = 0, $depth = 0) {
 
   $rows = array();
 
-  if (isset($menu['items'][$pid]) && $menu['items'][$pid]['children']) {
+  if (isset($menu['items'][$pid]) && isset($menu['items'][$pid]['children'])) {
 
     usort($menu['items'][$pid]['children'], '_menu_sort');
     foreach ($menu['items'][$pid]['children'] as $mid) {

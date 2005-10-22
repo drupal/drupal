@@ -1,4 +1,4 @@
-// $Id: drupal.js,v 1.8 2005/09/07 13:49:39 unconed Exp $
+// $Id: drupal.js,v 1.9 2005/10/22 15:14:46 dries Exp $
 
 /**
  * Only enable Javascript functionality if all required features are supported.
@@ -125,7 +125,7 @@ function redirectFormButton(uri, button, handler) {
   // Trap the button
   button.onfocus = function() {
     button.onclick = function() {
-      // Prepare vars for use in anonymous function.
+      // Prepare variables for use in anonymous function.
       var button = this;
       var action = button.form.action;
       var target = button.form.target;

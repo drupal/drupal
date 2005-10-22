@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.537 2005/10/18 14:41:27 unconed Exp $
+// $Id: node.module,v 1.538 2005/10/22 15:14:46 dries Exp $
 
 /**
  * @file
@@ -120,7 +120,7 @@ function node_last_viewed($nid) {
     $history[$nid] = db_fetch_object(db_query("SELECT timestamp FROM {history} WHERE uid = '$user->uid' AND nid = %d", $nid));
   }
 
-  return ($history[$nid]->timestamp ? $history[$nid]->timestamp : 0);
+  return (isset($history[$nid]->timestamp) ? $history[$nid]->timestamp : 0);
 }
 
 /**
@@ -353,7 +353,7 @@ function node_load($param = array(), $revision = NULL, $reset = NULL) {
 
   if (is_numeric($param)) {
     $cachable = $revision == NULL;
-    if ($cachable && $nodes[$param]) {
+    if ($cachable && isset($nodes[$param])) {
       return $nodes[$param];
     }
     $cond = 'n.nid = '. $param;
@@ -1314,7 +1314,7 @@ function node_revision_rollback($nid, $revision) {
   global $user;
 
   if (user_access('administer nodes')) {
-    if($title = db_fetch_object(db_query('SELECT title, timestamp FROM {node_revisions} WHERE nid = %d AND vid = %d', $nid, $revision))) {
+    if ($title = db_fetch_object(db_query('SELECT title, timestamp FROM {node_revisions} WHERE nid = %d AND vid = %d', $nid, $revision))) {
       db_query('UPDATE {node} SET vid = %d, changed = %d WHERE nid = %d', $revision, $title->timestamp, $nid);
 
       drupal_set_message(t('%title has been rolled back to the revision from %revision-date', array('%revision-date' => theme('placeholder', format_date($title->timestamp)), '%title' => theme('placeholder', check_plain($title->title)))));
@@ -1362,8 +1362,8 @@ function node_revision_list($node) {
  * Menu callback; presents the content administration overview.
  */
 function node_admin() {
-  $op = $_POST['op'];
-  $edit = $_POST['edit'];
+  $op = isset($_POST['op']) ? $_POST['op'] : '';
+  $edit = isset($_POST['edit']) ? $_POST['edit'] : '';
 
   if (empty($op)) {
     $op = arg(2);
@@ -1500,20 +1500,20 @@ function node_validate($node) {
   // Auto-generate the teaser, but only if it hasn't been set (e.g. by a
   // module-provided 'teaser' form item).
   if (!isset($node->teaser)) {
-    $node->teaser = node_teaser($node->body, $node->format);
+    $node->teaser = isset($node->body) ? node_teaser($node->body, isset($node->format) ? $node->format : NULL) : '';
   }
 
-  if (node_last_changed($node->nid) > $node->changed) {
+  if (isset($node->nid) && (node_last_changed($node->nid) > $node->changed)) {
     form_set_error('changed', t('This content has been modified by another user, unable to save changes.'));
   }
 
   if (user_access('administer nodes')) {
     // Set up default values, if required.
-    if (!$node->created) {
+    if (!isset($node->created)) {
       $node->created = time();
     }
 
-    if (!$node->date) {
+    if (!isset($node->date)) {
       $node->date = format_date($node->created, 'custom', 'Y-m-d H:i:s O');
     }
 
@@ -1578,9 +1578,9 @@ function node_validate_title($node, $message = NULL) {
  * Generate the node editing form.
  */
 function node_form($node) {
-  $op = $_POST['op'];
+  $op = isset($_POST['op']) ? $_POST['op'] : '';
 
-  if (!$node->validated) {
+  if (!isset($node) || !isset($node->validated) || !$node->validated) {
     $node = node_validate($node);
   }
 
@@ -1664,7 +1664,7 @@ function node_form($node) {
 }
 
 function theme_node_form($form) {
-  $output .= '<div class="node-form">';
+  $output = '<div class="node-form">';
   if (isset($form['node_preview'])) {
     $output .= form_render($form['node_preview']);
   }
@@ -1690,7 +1690,7 @@ function theme_node_form($form) {
 function node_add($type) {
   global $user;
 
-  $edit = $_POST['edit'];
+  $edit = isset($_POST['edit']) ? $_POST['edit'] : '';
 
   // If a node type has been specified, validate its existence.
   if (array_key_exists($type, node_get_types()) && node_access('create', $type)) {
@@ -1733,7 +1733,7 @@ function node_add($type) {
  * Generate a node preview.
  */
 function node_preview($node) {
-  if (!$node->validated) {
+  if (!isset($node) || !isset($node->validated) || !$node->validated) {
     $node = node_validate($node);
   }
 
