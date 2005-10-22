@@ -45,6 +45,10 @@ Drupal x.x.x, xxxx-xx-xx (development version)
     * improved Unicode string handling API.
     * added support for PHP's multibyte string module.
 - added support for PHP5's 'mysqli' extension.
+- search module:
+    * made indexer smarter and more robust
+    * added advanced search operators (e.g. phrase, node type, ...)
+    * added customizable result ranking
 
 Drupal 4.6.3, 2005-08-15
 ------------------------
