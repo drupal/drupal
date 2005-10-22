@@ -125,7 +125,7 @@ function redirectFormButton(uri, button, handler) {
   // Trap the button
   button.onfocus = function() {
     button.onclick = function() {
-      // Prepare vars for use in anonymous function.
+      // Prepare variables for use in anonymous function.
       var button = this;
       var action = button.form.action;
       var target = button.form.target;

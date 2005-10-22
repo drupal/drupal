@@ -316,7 +316,9 @@ function theme_get_setting($setting_name, $refresh = FALSE) {
 
       // Get the amount of links to show, possibly expanding if there are more links defined than the count specifies.
       $count = variable_get($type . '_link_count', 5);
-      $count = ($count > sizeof($value['link'])) ? $count : sizeof($value['link']);
+      if (isset($value['link']) && $count > sizeof($value['link'])) {
+        $count = sizeof($value['link']);
+      }
 
       if ($settings['toggle_' . $type . '_links']) {
         for ($i =0; $i < $count; $i++) {

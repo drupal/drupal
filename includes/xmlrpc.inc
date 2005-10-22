@@ -232,11 +232,13 @@ function xmlrpc_message_tag_close($parser, $tag) {
       if ($xmlrpc_message->array_structs_types[count($xmlrpc_message->array_structs_types)-1] == 'struct') {
         // Add to struct
         $xmlrpc_message->array_structs [count($xmlrpc_message->array_structs )-1][$xmlrpc_message->current_struct_name[count($xmlrpc_message->current_struct_name)-1]] = $value;
-      } else {
+      }
+      else {
         // Add to array
         $xmlrpc_message->array_structs [count($xmlrpc_message->array_structs )-1][] = $value;
       }
-    } else {
+    }
+    else {
       // Just add as a paramater
       $xmlrpc_message->params[] = $value;
     }

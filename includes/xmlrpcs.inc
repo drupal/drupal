@@ -124,7 +124,8 @@ function xmlrpc_server_multicall($methodcalls) {
     $params = $call['params'];
     if ($method == 'system.multicall') {
       $result = xmlrpc_error(-32600, t('Recursive calls to system.multicall are forbidden'));
-    } else {
+    }
+    else {
       $result = xmlrpc_server_call($xmlrpc_server, $method, $params);
     }
     if ($result->is_error) {
@@ -132,7 +133,8 @@ function xmlrpc_server_multicall($methodcalls) {
         'faultCode' => $result->code,
         'faultString' => $result->message
       );
-    } else {
+    }
+    else {
       $return[] = $result;
     }
   }

@@ -125,7 +125,8 @@ function image_scale($source, $destination, $width, $height) {
   if ($aspect < $height / $width) {
     $width = (int)min($width, $info['width']);
     $height = (int)round($width * $aspect);
-  } else {
+  }
+  else {
     $height = (int)min($height, $info['height']);
     $width = (int)round($height / $aspect);
   }

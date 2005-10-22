@@ -858,7 +858,7 @@ function update_150() {
 
   $ret[] = update_sql('DROP TABLE {search_index}');
   $ret[] = update_sql('DROP TABLE {search_total}');
-  
+
   switch ($GLOBALS['db_type']) {
     case 'mysqli':
     case 'mysql':
