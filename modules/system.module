@@ -206,6 +206,7 @@ function theme_system_user($form) {
     $rows[] = $row;
   }
 
+  $header = array(t('Screenshot'), t('Name'), t('Selected'));
   $output = theme('table', $header, $rows);
   return $output;
 }
