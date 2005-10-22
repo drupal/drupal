@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.243 2005/10/19 09:28:21 unconed Exp $
+// $Id: system.module,v 1.244 2005/10/22 14:17:11 dries Exp $
 
 /**
  * @file
@@ -206,6 +206,7 @@ function theme_system_user($form) {
     $rows[] = $row;
   }
 
+  $header = array(t('Screenshot'), t('Name'), t('Selected'));
   $output = theme('table', $header, $rows);
   return $output;
 }
