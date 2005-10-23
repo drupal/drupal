@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.488 2005/10/22 15:14:46 dries Exp $
+// $Id: common.inc,v 1.489 2005/10/23 09:47:53 dries Exp $
 
 /**
  * @file
@@ -51,10 +51,12 @@ function drupal_set_content($region = null, $data = null) {
  * @param $delimiter
  *   Content to be inserted between exploded array elements.
  */
-function drupal_get_content($region = null, $delimiter = ' ') {
+function drupal_get_content($region = NULL, $delimiter = ' ') {
   $content = drupal_set_content();
-  if (isset($region) && isset($content[$region]) && is_array($content[$region])) {
+  if (isset($region)) {
+    if (isset($content[$region]) && is_array($content[$region])) {
       return implode ($delimiter, $content[$region]);
+    }
   }
   else {
     foreach (array_keys($content) as $region) {
