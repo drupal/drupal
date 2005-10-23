@@ -1,4 +1,4 @@
-// $Id: INSTALL.txt,v 1.21 2005/09/19 19:00:23 dries Exp $
+// $Id: INSTALL.txt,v 1.22 2005/10/23 17:49:26 dries Exp $
 
 CONTENTS OF THIS FILE
 ---------------------
@@ -8,7 +8,6 @@ CONTENTS OF THIS FILE
  * Installation
     - Drupal administration
     - Customizing your theme(s)
- * Upgrading
  * More Information
 
 REQUIREMENTS
@@ -247,22 +246,6 @@ that can be changed to reference your own logos.
 
 Most themes also contain stylesheets to tune the colors and layouts;
 check the themes/ directory for READMEs describing each alternate theme.
-
-UPGRADING
----------
-
-1. Backup your database and Drupal directory - especially your
-   configuration file in 'sites/default/settings.php'.
-
-2. Log on as the user with user ID 1.
-
-3. Remove all the old Drupal files then unpack the new Drupal
-   files into the directory that you run Drupal from.
-
-4. Modify the new configuration file to make sure
-   it has the latest and correct information.
-
-5. Run update.php by visiting http://www.example.com/update.php.
 
 MORE INFORMATION
 ----------------
