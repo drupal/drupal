@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.323 2005/10/11 19:44:34 dries Exp $
+// $Id: book.module,v 1.324 2005/10/23 18:08:06 dries Exp $
 
 /**
  * @file
@@ -444,7 +444,17 @@ function book_nodeapi(&$node, $op, $teaser, $page) {
           foreach ($book as $key => $value) {
             $node->$key = $value;
           }
-          $node = theme('book_navigation', $node);
+
+          $path = book_location($node);
+          // Construct the breadcrumb:
+          $node->breadcrumb = array(); // Overwrite the trail with a book trail.
+          foreach ($path as $level) {
+            $node->breadcrumb[] = array('path' => 'node/'. $level->nid, 'title' =>  $level->title);
+          }
+          $node->breadcrumb[] = array('path' => 'node/'. $node->nid);
+
+          $node->body .= theme('book_navigation', $node);
+
           if ($page) {
             menu_set_location($node->breadcrumb);
           }
@@ -461,16 +471,6 @@ function book_nodeapi(&$node, $op, $teaser, $page) {
  * @ingroup themeable
  */
 function theme_book_navigation($node) {
-  $path = book_location($node);
-
-  // Construct the breadcrumb:
-
-  $node->breadcrumb = array(); // Overwrite the trail with a book trail.
-  foreach ($path as $level) {
-    $node->breadcrumb[] = array('path' => 'node/'. $level->nid, 'title' =>  $level->title);
-  }
-  $node->breadcrumb[] = array('path' => 'node/'. $node->nid);
-
   if ($node->nid) {
     $output .= '<div class="book">';
 
@@ -509,9 +509,7 @@ function theme_book_navigation($node) {
     $output .= '</div>';
   }
 
-  $node->body = $node->body.$output;
-
-  return $node;
+  return $output;
 }
 
 /**
@@ -657,7 +655,6 @@ function book_render() {
  *
  */
 function book_export($type = 'html', $nid = FALSE) {
-  global $base_url;
   $type = drupal_strtolower($type);
   $node = node_load($nid);
   if ($node) {
@@ -684,14 +681,7 @@ function book_export($type = 'html', $nid = FALSE) {
           for ($i = 1; $i < $depth; $i++) {
             $output .= "</div>\n";
           }
-          $html = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
-          $html .= '<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">';
-          $html .= "<head>\n<title>". check_plain($node->title) ."</title>\n";
-          $html .= '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />';
-          $html .= '<base href="'. $base_url .'/" />' . "\n";
-          $html .= "<style type=\"text/css\">\n@import url(misc/print.css);\n</style>\n";
-          $html .= "</head>\n<body>\n". $output . "\n</body>\n</html>\n";
-          print $html;
+          print theme('book_export_html', check_plain($node->title), $output);
         }
         else {
           drupal_access_denied();
@@ -718,6 +708,23 @@ function book_export($type = 'html', $nid = FALSE) {
   else {
     drupal_not_found();
   }
+}
+
+/**
+ * How the book's HTML export should be themed
+ *
+ * @ingroup themeable
+ */
+function theme_book_export_html($title, $content) {
+  global $base_url;
+  $html = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
+  $html .= '<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">';
+  $html .= "<head>\n<title>". $title ."</title>\n";
+  $html .= '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />';
+  $html .= '<base href="'. $base_url .'/" />' . "\n";
+  $html .= "<style type=\"text/css\">\n@import url(misc/print.css);\n</style>\n";
+  $html .= "</head>\n<body>\n". $content . "\n</body>\n</html>\n";
+  return $html;
 }
 
 /**
