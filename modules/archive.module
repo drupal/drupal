@@ -1,5 +1,5 @@
 <?php
-// $Id: archive.module,v 1.82 2005/08/25 21:14:16 dries Exp $
+// $Id: archive.module,v 1.83 2005/10/24 18:50:10 dries Exp $
 
 /**
  * @file
@@ -216,7 +216,6 @@ function archive_menu($may_cache) {
 function archive_page($year = 0, $month = 0, $day = 0) {
   global $user;
 
-  $output = '';
   $op = $_POST['op'];
   $edit = $_POST['edit'];
 
@@ -234,10 +233,12 @@ function archive_page($year = 0, $month = 0, $day = 0) {
   $months = array(1 => t('January'), 2 => t('February'), 3 => t('March'), 4 => t('April'), 5 => t('May'), 6 => t('June'), 7 => t('July'), 8 => t('August'), 9 => t('September'), 10 => t('October'), 11 => t('November'), 12 => t('December'));
   $days = drupal_map_assoc(range(0, 31));
 
-  $start = '<div class="container-inline">';
-  $start .= form_select('', 'year', ($year ? $year : date('Y')), $years). form_select('', 'month', ($month ? $month : date('m')), $months) . form_select('', 'day', ($day ? $day : date('d')), $days) . form_submit(t('Show'));
-  $start .= '</div>';
-  $output .= form($start);
+  $form['year']  = array('#type' => 'select', '#default_value' => ($year ? $year : date('Y')), '#options' => $years);
+  $form['month'] = array('#type' => 'select', '#default_value' => ($month ? $month : date('m')), '#options' => $months);
+  $form['day']   = array('#type' => 'select', '#default_value' => ($day ? $day : date('d')), '#options' => $days);
+  $form['show']  = array('#type' => 'submit', '#value' => t('Show'));
+
+  $output = drupal_get_form('archive_dates', $form);
 
   if ($year && $month && $day) {
     // Fetch nodes for the selected date, if one was specified.
@@ -252,4 +253,11 @@ function archive_page($year = 0, $month = 0, $day = 0) {
   return $output;
 }
 
+/**
+ * Form theme function; displays the archive date navigation form inline.
+ */
+function theme_archive_dates($form) {
+  $output = '<div class="container-inline">' . form_render($form) . '</div>';
+  return $output;
+}
 
