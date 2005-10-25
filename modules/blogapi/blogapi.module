@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.61 2005/10/21 09:56:59 dries Exp $
+// $Id: blogapi.module,v 1.62 2005/10/25 03:43:57 unconed Exp $
 
 /**
  * @file
@@ -600,7 +600,7 @@ function blogapi_rsd() {
   $base = url('', NULL, NULL, TRUE);
   $blogid = 1; # until we figure out how to handle multiple bloggers
 
-  header('Content-Type: application/rsd+xml');
+  drupal_set_header('Content-Type: application/rsd+xml; charset=utf-8');
   print <<<__RSD__
 <?xml version="1.0"?>
 <rsd version="1.0" xmlns="http://archipelago.phrasewise.com/rsd">

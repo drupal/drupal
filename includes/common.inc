@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.489 2005/10/23 09:47:53 dries Exp $
+// $Id: common.inc,v 1.490 2005/10/25 03:43:57 unconed Exp $
 
 /**
  * @file
@@ -257,7 +257,7 @@ function drupal_goto($path = '', $query = NULL, $fragment = NULL) {
  * Generates a site offline message
  */
 function drupal_site_offline() {
-  header('HTTP/1.0 503 Service unavailable');
+  drupal_set_header('HTTP/1.0 503 Service unavailable');
   drupal_set_title(t('Site offline'));
   print theme('maintenance_page', variable_get('site_offline_message',
     t('%site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('%site' => variable_get('site_name', t('This drupal site'))))));
@@ -267,7 +267,7 @@ function drupal_site_offline() {
  * Generates a 404 error if the request can not be handled.
  */
 function drupal_not_found() {
-  header('HTTP/1.0 404 Not Found');
+  drupal_set_header('HTTP/1.0 404 Not Found');
   watchdog('page not found', t('%page not found.', array('%page' => theme('placeholder', $_GET['q']))), WATCHDOG_WARNING);
 
   $path = drupal_get_normal_path(variable_get('site_404', ''));
@@ -287,7 +287,7 @@ function drupal_not_found() {
  * Generates a 403 error if the request is not allowed.
  */
 function drupal_access_denied() {
-  header('HTTP/1.0 403 Forbidden');
+  drupal_set_header('HTTP/1.0 403 Forbidden');
   watchdog('access denied', t('%page denied access.', array('%page' => theme('placeholder', $_GET['q']))), WATCHDOG_WARNING, l(t('view'), $_GET['q']));
 
   $path = drupal_get_normal_path(variable_get('site_403', ''));
