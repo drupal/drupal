@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.245 2005/10/22 15:14:46 dries Exp $
+// $Id: system.module,v 1.246 2005/10/25 05:42:20 dries Exp $
 
 /**
  * @file
@@ -787,14 +787,18 @@ function system_themes_execute($form_id, $values) {
   db_query("UPDATE {system} SET status = 0 WHERE type = 'theme'");
 
   if ($_POST['op'] == t('Save configuration')) {
-    variable_set('theme_default', $values['theme_default']);
     if (is_array($values['status'])) {
       foreach ($values['status'] as $key => $choice) {
         if ($choice) {
+          // If theme status is being set to 1 from 0, initialize block data for this theme if necessary.
+          if (db_num_rows(db_query("SELECT status FROM {system} WHERE type = 'theme' AND name = '%s' AND status = 0", $key))) {
+            system_initialize_theme_blocks($key);
+          }
           db_query("UPDATE {system} SET status = 1 WHERE type = 'theme' and name = '%s'", $key);
         }
       }
     }
+    variable_set('theme_default', $values['theme_default']);
   }
   else {
     variable_del('theme_default');
