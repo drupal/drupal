@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.538 2005/10/22 15:14:46 dries Exp $
+// $Id: node.module,v 1.539 2005/10/26 01:24:09 unconed Exp $
 
 /**
  * @file
@@ -1508,15 +1508,6 @@ function node_validate($node) {
   }
 
   if (user_access('administer nodes')) {
-    // Set up default values, if required.
-    if (!isset($node->created)) {
-      $node->created = time();
-    }
-
-    if (!isset($node->date)) {
-      $node->date = format_date($node->created, 'custom', 'Y-m-d H:i:s O');
-    }
-
     // Validate the "authored by" field.
     if (empty($node->name)) {
       // The use of empty() is mandatory in the context of usernames
@@ -1574,15 +1565,32 @@ function node_validate_title($node, $message = NULL) {
   }
 }
 
+function node_form_validate($form_id, $edit) {
+  node_validate($edit);
+}
+
+function node_object_prepare(&$node) {
+  if (user_access('administer nodes')) {
+    // Set up default values, if required.
+    if (!isset($node->created)) {
+      $node->created = time();
+    }
+
+    if (!isset($node->date)) {
+      $node->date = format_date($node->created, 'custom', 'Y-m-d H:i:s O');
+    }
+  }
+  node_invoke($node, 'prepare');
+  node_invoke_nodeapi($node, 'prepare');
+}
+
 /**
  * Generate the node editing form.
  */
 function node_form($node) {
   $op = isset($_POST['op']) ? $_POST['op'] : '';
 
-  if (!isset($node) || !isset($node->validated) || !$node->validated) {
-    $node = node_validate($node);
-  }
+  node_object_prepare($node);
 
   // Set the id of the top-level form tag
   $form['#attributes']['id'] = 'node-form';
@@ -1597,10 +1605,6 @@ function node_form($node) {
   $form['created'] = array('#type' => 'value', '#value' => $node->created);
   $form['changed'] = array('#type' => 'value', '#value' => $node->changed);
   $form['type']    = array('#type' => 'value', '#value' => $node->type);
-
-  if ($op == t('Preview')) {
-    $form['node_preview'] = array('#value' => node_preview(array2object($_POST['edit'])), '#weight' => -100);
-  }
 
   // Get the node-specific bits.
   // We can't use node_invoke() because $param must be passed by reference.
@@ -1649,18 +1653,21 @@ function node_form($node) {
   // Add the buttons.
   $form['preview'] = array('#type' => 'button', '#value' => t('Preview'), '#weight' => 19);
 
-  if ($node->type) {
-    if (!form_get_errors()) {
-      if ($_POST['op'] == t('Preview')|| !variable_get('node_preview', 0)) {
-
-      }
-    }
-  }
   $form['submit'] = array('#type' => 'submit', '#value' => t('Submit'), '#weight' => 20);
   if ($node->nid && node_access('delete', $node)) {
     $form['delete'] = array('#type' => 'button', '#value' => t('Delete'), '#weight' => 21);
   }
+
+  if ($op == t('Preview')) {
+    $form['#post_process'] = 'node_form_add_preview';
+  }
+
   return drupal_get_form($node->type . '_node_form', $form, 'node_form');
+}
+
+function node_form_add_preview($form_id, $form, $edit) {
+  $form['node_preview'] = array('#value' => node_preview(node_validate($edit)), '#weight' => -100);
+  return $form;
 }
 
 function theme_node_form($form) {
@@ -1733,10 +1740,6 @@ function node_add($type) {
  * Generate a node preview.
  */
 function node_preview($node) {
-  if (!isset($node) || !isset($node->validated) || !$node->validated) {
-    $node = node_validate($node);
-  }
-
   if (node_access('create', $node) || node_access('update', $node)) {
     // Load the user's name when needed:
     if (isset($node->name)) {
@@ -1919,8 +1922,6 @@ function node_page_default() {
  * Menu callback; dispatches control to the appropriate operation handler.
  */
 function node_page() {
-  $edit = $_POST['edit'];
-
   $op = arg(1);
 
   if (is_numeric($op)) {

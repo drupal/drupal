@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.246 2005/10/25 05:42:20 dries Exp $
+// $Id: system.module,v 1.247 2005/10/26 01:24:09 unconed Exp $
 
 /**
  * @file
@@ -682,6 +682,24 @@ function system_settings_form($form_id, $form) {
   return drupal_get_form($form_id, $form, 'system_settings_form');
 }
 
+function system_theme_settings_execute($form_id, $values) {
+  $op = isset($_POST['op']) ? $_POST['op'] : '';
+  $key = $values['var'];
+
+  if ($op == t('Reset to defaults')) {
+    variable_del($key);
+  }
+  else {
+    variable_set($key, $values);
+  }
+  if ($op == t('Reset to defaults')) {
+    drupal_set_message(t('The configuration options have been reset to their default values.'));
+  }
+  else {
+    drupal_set_message(t('The configuration options have been saved.'));
+  }
+}
+
 /**
  * Execute the system_settings_form.
  *
@@ -1065,7 +1083,7 @@ function system_theme_settings($key = '') {
     $disabled['toggle_search'] = true;
   }
 
-  $form['theme_settings'] = array('#type' => 'fieldset', '#title' => t('Toggle display'), '#description' => t('Enable or disable the display of certain page elements.'), '#tree' => TRUE);
+  $form['theme_settings'] = array('#type' => 'fieldset', '#title' => t('Toggle display'), '#description' => t('Enable or disable the display of certain page elements.'));
   foreach ($toggles as $name => $title) {
     if ((!$key) || in_array($name, $features)) {
       // disable search box if search.module is disabled
