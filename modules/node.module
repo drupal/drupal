@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.540 2005/10/26 08:06:56 dries Exp $
+// $Id: node.module,v 1.541 2005/10/26 14:49:59 unconed Exp $
 
 /**
  * @file
@@ -1590,6 +1590,7 @@ function node_object_prepare(&$node) {
 function node_form($node) {
   $op = isset($_POST['op']) ? $_POST['op'] : '';
 
+  $node = array2object($node);
   node_object_prepare($node);
 
   // Set the id of the top-level form tag
