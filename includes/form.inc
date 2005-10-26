@@ -51,7 +51,6 @@ function drupal_get_form($form_id, &$form, $callback = NULL) {
   $form_execute = FALSE;
 
   $form['#type'] = 'form';
-  $form['#attributes']['class'] .= ' form-api';
   if (isset($form['#token'])) {
     $form['form_token'] = array('#type' => 'hidden', '#value' => md5($_SERVER['REMOTE_ADDR'] . $form['#token'] . variable_get('drupal_private_key',
 '')));
