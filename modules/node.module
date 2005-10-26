@@ -1150,7 +1150,7 @@ function node_admin_nodes() {
     $form['operations'][$node->nid] = array('#value' => l(t('edit'), 'node/'. $node->nid .'/edit', array(), $destination));
   }
   $form['nodes'] = array('#type' => 'checkboxes', '#options' => $nodes);
-  $form['pager'] = array('value' => theme('pager', NULL, 50, 0));
+  $form['pager'] = array('#value' => theme('pager', NULL, 50, 0));
 
   $form['#method'] = 'post';
   $form['#action'] =  url('admin/node/action');
