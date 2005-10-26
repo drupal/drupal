@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.539 2005/10/26 01:24:09 unconed Exp $
+// $Id: node.module,v 1.540 2005/10/26 08:06:56 dries Exp $
 
 /**
  * @file
@@ -1150,7 +1150,7 @@ function node_admin_nodes() {
     $form['operations'][$node->nid] = array('#value' => l(t('edit'), 'node/'. $node->nid .'/edit', array(), $destination));
   }
   $form['nodes'] = array('#type' => 'checkboxes', '#options' => $nodes);
-  $form['pager'] = array('value' => theme('pager', NULL, 50, 0));
+  $form['pager'] = array('#value' => theme('pager', NULL, 50, 0));
 
   $form['#method'] = 'post';
   $form['#action'] =  url('admin/node/action');
