@@ -17,7 +17,7 @@ function element_property($key) {
 }
 
 function element_properties($element) {
-  return array_filter(array_keys($element), 'element_property');
+  return array_filter(array_keys((array) $element), 'element_property');
 }
 
 /**
@@ -28,7 +28,7 @@ function element_child($key) {
 }
 
 function element_children($element) {
-  return array_filter(array_keys($element), 'element_child');
+  return array_filter(array_keys((array) $element), 'element_child');
 }
 
 /**
@@ -49,11 +49,15 @@ function drupal_get_form($form_id, &$form, $callback = NULL) {
   global $form_values, $form_execute;
   $form_values = array();
   $form_execute = FALSE;
+
   $form['#type'] = 'form';
   $form['#attributes']['class'] .= ' form-api';
   if (isset($form['#token'])) {
-    $form['form_token'] = array('#type' => 'hidden', '#value' => md5($_SERVER['REMOTE_ADDR'] . $form['#token'] . variable_get('drupal_private_key', '')));
+    $form['form_token'] = array('#type' => 'hidden', '#value' => md5($_SERVER['REMOTE_ADDR'] . $form['#token'] . variable_get('drupal_private_key',
+'')));
   }
+  $form['form_id'] = array('#type' => 'hidden', '#default_value' => $form_id);
+
   $form = array_merge(_element_info('form'), $form);
 
   foreach (module_implements('form_alter') as $module) {
@@ -61,15 +65,14 @@ function drupal_get_form($form_id, &$form, $callback = NULL) {
     $function($form);
   }
 
-  $function = $form_id . '_alter';
+  $function = $form_id . '_form_alter';
   if (function_exists($function)) {
     $function($form);
   }
 
-  if (!$form['#built']) {
-    $form = _form_builder($form);
-  }
-  if (!empty($_POST['edit'])) {
+  $form = _form_builder($form);
+
+  if (!empty($_POST['edit']) && (($form_values['form_id'] == $form_id) || ($form_values['form_id'] == $callback))) {
     drupal_validate_form($form_id, $form, $callback);
     if ($form_execute && !form_get_errors()) {
       drupal_execute_form($form_id, $form, $callback);
@@ -125,11 +128,13 @@ function drupal_execute_form($form_id, $form, $callback = NULL) {
   }
 }
 
-function _form_validate(&$elements) {
+function _form_validate($elements) {
 
   // Recurse through all children.
   foreach (element_children($elements) as $key) {
-    _form_validate($elements[$key]);
+    if (isset($elements[$key]) && $elements[$key]) {
+      _form_validate($elements[$key]);
+    }
   }
 
   /* Validate the current input */
@@ -209,26 +214,15 @@ function form_error(&$element, $message) {
  * This function also automatically assigns the value property from the $edit array, provided the
  * element doesn't already have an assigned value.
  */
-function _form_builder($form, $parents = array(), $multiple = FALSE) {
+function _form_builder($form) {
   global $form_values;
   global $form_execute;
-
-  if ($form['#built'] == TRUE) {
-    return $form;
-  }
-  $form['#built'] = TRUE;
-
-  $form['#parents'] = ($form['#parents']) ? $form['#parents'] : $parents;
   /* Use element defaults */
   if ((!empty($form['#type'])) && ($info = _element_info($form['#type']))) {
     $form += $info;
   }
 
   if ($form['#input']) {
-    if (!$form['#tree']) {
-      $form['#parents'] = array(array_pop($form['#parents']));
-    }
-
     $form['#name'] = ($form['#name']) ? $form['#name'] : 'edit[' . implode('][', $form['#parents']) . ']';
     $form['#id'] =  ($form['#id']) ? $form['#id'] : 'edit-' . implode('-', $form['#parents']);
 
@@ -240,7 +234,7 @@ function _form_builder($form, $parents = array(), $multiple = FALSE) {
       $ref =& $ref[$parent];
     }
     if (!isset($form['#value'])) {
-      $form['#value'] = $posted ? $edit : $form['#default_value'];
+      $form['#value'] = ($posted && isset($edit)) ? $edit : $form['#default_value'];
     }
     if (isset($form['#execute'])) {
       if ($_POST[$form['#name']] == $form['#value']) {
@@ -260,13 +254,31 @@ function _form_builder($form, $parents = array(), $multiple = FALSE) {
   // Recurse through all child elements.
   $count  = 0;
   foreach (element_children($form) as $key) {
+    // don't squash an existing tree value
     $form[$key]['#tree'] = (isset($form[$key]['#tree'])) ? $form[$key]['#tree'] : $form['#tree'];
+
+    if ($form[$key]['#tree']) {
+      //continue tree
+      $parents = (array) $form['#parents'];
+      array_push($parents, $key);
+    }
+    else {
+      $parents = array($key);
+    }
+
+    // don't squash existing parents value
+    $form[$key]['#parents'] = (isset($form[$key]['#parents'])) ? $form[$key]['#parents'] : $parents;
+
     # Assign a decimal placeholder weight, to preserve original array order
-    $form[$key]['#weight'] = $form[$key]['#weight'] ? $form[$key]['#weight'] : $count/10;
-    $form[$key] = _form_builder($form[$key], array_merge($form['#parents'], array($key)));
+    $form[$key]['#weight'] = $form[$key]['#weight'] ? $form[$key]['#weight'] : $count/1000;
+    $form[$key] = _form_builder($form[$key]);
     $count++;
   }
 
+  if (function_exists($form['#post_process']) && !$form['#post_processed']) {
+    $form = call_user_func($form['#post_process'], $form_id, $form, $form_values, $form['#parents']);
+    $form['#post_processed'] = TRUE;
+  }
 
   return $form;
 }
@@ -334,11 +346,14 @@ function _form_sort($a, $b) {
  */
 function _element_info($type, $refresh = null) {
   static $cache;
+
+  $parents = array();
   $basic_defaults = array(
     '#description' => NULL,
     '#attributes' => array(),
     '#required' => FALSE,
-    '#tree' => FALSE
+    '#tree' => FALSE,
+    '#parents' => $parents
   );
   if ($refresh || !is_array($cache)) {
     $cache = array();
@@ -385,7 +400,7 @@ function theme_select($element) {
       $select .= '<option value="'. $key .'"'. (is_array($element['#value']) ? (in_array($key, $element['#value']) ? ' selected="selected"' : '') : ($element['#value'] == $key ? ' selected="selected"' : '')) .'>'. check_plain($choice) .'</option>';
     }
   }
-  return theme('form_element', $element['#title'], '<select name="'. $element['#name'] .''. ($element['#multiple'] ? '[]' : '') .'"'. ($element['#multiple'] ? ' multiple="multiple" ' : '') . ($element['#extra'] ? ' '. $element['#extra'] : '') .' id="' . $element['#id'] .'">'. $select .'</select>', $element['#description'], $element['#name'], $element['#required'], form_get_error($element));
+  return theme('form_element', $element['#title'], '<select name="'. $element['#name'] .''. ($element['#multiple'] ? '[]' : '') .'"'. ($element['#multiple'] ? ' multiple="multiple" ' : '') . drupal_attributes($element['#attributes']) .' id="' . $element['#id'] .'">'. $select .'</select>', $element['#description'], $element['#id'], $element['#required'], form_get_error($element));
 }
 
 /**
@@ -499,7 +514,7 @@ function expand_date($element) {
         $options = drupal_map_assoc(range(1900, 2050));
         break;
     }
-    $element[$type] = array('#type' => 'radio', '#value' => $element['#value'][$type], '#attributes' => $element['#attributes'], '#parents' => $element['#parents'], '#options' => $options,  '#tree' => TRUE);
+    $element[$type] = array('#type' => 'select', '#value' => $element['#value'][$type], '#attributes' => $element['#attributes'], '#parents' => $element['#parents'], '#options' => $options,  '#tree' => TRUE);
   }
 
   return $element;
@@ -518,7 +533,6 @@ function expand_radios($element) {
       }
     }
   }
-
   return $element;
 }
 
@@ -582,13 +596,14 @@ function theme_checkboxes($element) {
 
 function expand_checkboxes($element) {
   $value = is_array($element['#value']) ? $element['#value'] : array();
+  $element['#tree'] = TRUE;
   if (count($element['#options']) > 0) {
     if (!isset($element['#default_value']) || $element['#default_value'] == 0) {
       $element['#default_value'] = array();
     }
     foreach ($element['#options'] as $key => $choice) {
       if (!isset($element[$key])) {
-        $element[$key] = array('#type' => 'checkbox', '#processed' => TRUE, '#title' => $choice, '#tree' => TRUE, '#default_value' => in_array($key, $value), '#attributes' => $element['#attributes']);
+        $element[$key] = array('#type' => 'checkbox', '#processed' => TRUE, '#title' => $choice, '#default_value' => in_array($key, $value), '#attributes' => $element['#attributes']);
       }
     }
   }
@@ -765,5 +780,3 @@ function form_clean_id($id = NULL) {
 /**
  * @} End of "defgroup form".
  */
-
-?>
