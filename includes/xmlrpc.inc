@@ -1,5 +1,5 @@
 <?php
-// $Id: xmlrpc.inc,v 1.26 2005/10/22 15:14:46 dries Exp $
+// $Id: xmlrpc.inc,v 1.27 2005/10/28 13:13:30 dries Exp $
 
 /*
   Drupal XML-RPC library. Based on the IXR - The Incutio XML-RPC Library - (c) Incutio Ltd 2002-2005
@@ -30,27 +30,43 @@ function xmlrpc_value($data, $type = FALSE) {
   return $xmlrpc_value;
 }
 
+/**
+ * Map PHP type to XML-RPC type.
+ *
+ * @param $xmlrpc_value
+ *   Variable whose type should be mapped.
+ * @return
+ *   XML-RPC type as string.
+ * @see
+ *   http://www.xmlrpc.com/spec#scalars
+ */
 function xmlrpc_value_calculate_type(&$xmlrpc_value) {
-  $type = gettype($xmlrpc_value->data);
-  switch ($type) {
-    case 'boolean': case 'double':
-      return $type;
-    case 'integer':
-      return 'int';
-    case 'array':
-      return range(0, count($xmlrpc_value->data) - 1) === array_keys($xmlrpc_value->data) ? 'array' : 'struct';
-    case 'object':
-      if ($xmlrpc_value->data->is_date) {
-        return 'date';
-      }
-      if ($xmlrpc_value->data->is_base64) {
-        return 'base64';
-      }
-      $xmlrpc_value->data = get_object_vars($xmlrpc_value->data);
-      return 'struct';
-    default:
-      return 'string';
+  // http://www.php.net/gettype: Never use gettype() to test for a certain type [...] Instead, use the is_* functions.
+  if (is_bool($xmlrpc_value->data)) {
+    return 'boolean';
   }
+  if (is_double($xmlrpc_value->data)) {
+    return 'double';
+  }
+  if (is_int($xmlrpc_value->data)) {
+      return 'int';
+  }
+  if (is_array($xmlrpc_value->data)) {
+    // empty or integer-indexed arrays are 'array', string-indexed arrays 'struct'
+    return empty($xmlrpc_value->data) || range(0, count($xmlrpc_value->data) - 1) === array_keys($xmlrpc_value->data) ? 'array' : 'struct';
+  }
+  if (is_object($xmlrpc_value->data)) {
+    if ($xmlrpc_value->data->is_date) {
+      return 'date';
+    }
+    if ($xmlrpc_value->data->is_base64) {
+      return 'base64';
+    }
+    $xmlrpc_value->data = get_object_vars($xmlrpc_value->data);
+    return 'struct';
+  }
+  // default
+  return 'string';
 }
 
 function xmlrpc_value_get_xml($xmlrpc_value) {
