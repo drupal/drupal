@@ -1351,7 +1351,6 @@ function _drupal_bootstrap_full() {
   require_once './includes/unicode.inc';
   require_once './includes/image.inc';
   require_once './includes/form.inc';
-  require_once './includes/legacy.inc';
   // Set the Drupal custom error handler.
   set_error_handler('error_handler');
   // Emit the correct charset HTTP header.
@@ -1379,7 +1378,6 @@ function _drupal_bootstrap_full() {
     }
   }
   fix_gpc_magic();
-  fix_checkboxes();
   // Initialize the localization system.
   $locale = locale_initialize();
 }
