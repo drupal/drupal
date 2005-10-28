@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.490 2005/10/25 03:43:57 unconed Exp $
+// $Id: common.inc,v 1.491 2005/10/28 01:06:36 unconed Exp $
 
 /**
  * @file
@@ -1351,7 +1351,6 @@ function _drupal_bootstrap_full() {
   require_once './includes/unicode.inc';
   require_once './includes/image.inc';
   require_once './includes/form.inc';
-  require_once './includes/legacy.inc';
   // Set the Drupal custom error handler.
   set_error_handler('error_handler');
   // Emit the correct charset HTTP header.
@@ -1379,7 +1378,6 @@ function _drupal_bootstrap_full() {
     }
   }
   fix_gpc_magic();
-  fix_checkboxes();
   // Initialize the localization system.
   $locale = locale_initialize();
 }
