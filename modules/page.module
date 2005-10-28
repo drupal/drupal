@@ -82,9 +82,11 @@ function page_form(&$node) {
   );
   $form = array_merge($form, filter_form($node->format));
 
-
   $form['log'] = array(
-    '#type' => 'textarea', '#title' => t('Log message'), '#default_value' => $node->log, '#rows' => 5,
+    '#type' => 'fieldset', '#title' => t('Log message'), '#collapsible' => TRUE, '#collapsed' => TRUE
+  );
+  $form['log']['message'] = array(
+    '#type' => 'textarea', '#default_value' => $node->log, '#rows' => 5,
     '#description' => t('An explanation of the additions or updates being made to help other authors understand your motivations.')
   );
 

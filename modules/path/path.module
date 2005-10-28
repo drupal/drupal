@@ -192,9 +192,10 @@ function path_nodeapi(&$node, $op, $arg) {
         break;
 
       case 'form':
-        $form['path'] = array('#type' => 'textfield', '#title' => t('Path alias'), '#weight' => -16, '#default_value' => $node->path, '#size' => 60, '#maxlength' => 250, '#description' => t('Optionally specify an alternative URL by which this node can be accessed.  For example, type "about" when writing an about page.  Use a relative path and don\'t add a trailing slash or the URL alias won\'t work.'));
+        $form['path'] = array('#type' => 'fieldset', '#title' => t('URL path settings'), '#collapsible' => TRUE, '#collapsed' => TRUE);
+        $form['path']['alias'] = array('#type' => 'textfield', '#default_value' => $node->path, '#size' => 60, '#maxlength' => 250, '#collapsible' => TRUE, '#collapsed' => TRUE, '#description' => t('Optionally specify an alternative URL by which this node can be accessed.  For example, type "about" when writing an about page.  Use a relative path and don\'t add a trailing slash or the URL alias won\'t work.'));
         if ($node->path) {
-          $form['pid'] = array('#type' => 'hidden', '#value' => db_result(db_query("SELECT pid FROM {url_alias} WHERE dst = '%s'", $node->path)));
+          $form['path']['pid'] = array('#type' => 'hidden', '#value' => db_result(db_query("SELECT pid FROM {url_alias} WHERE dst = '%s'", $node->path)));
         }
         return $form;
 
