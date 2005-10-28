@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.542 2005/10/28 00:28:14 unconed Exp $
+// $Id: node.module,v 1.543 2005/10/28 14:04:20 dries Exp $
 
 /**
  * @file
@@ -1615,8 +1615,8 @@ function node_form($node) {
    */
 
   if (user_access('administer nodes')) {
-    $form['author'] = array('#type' => 'fieldset', '#title' => t('Authoring information'), '#collapsible' => TRUE, '#collapsed' => TRUE, '#weight' => -18);
-    $form['author']['name'] = array('#type' => 'textfield', '#title' => t('Authored by'), '#maxlength' => 60, '#autocomplete_path' => 'user/autocomplete', '#default_value' => $node->name, '#weight' => -1);
+    $form['author'] = array('#type' => 'fieldset', '#title' => t('Authoring information'), '#collapsible' => TRUE, '#collapsed' => TRUE, '#weight' => -5);
+    $form['author']['name'] = array('#type' => 'textfield', '#title' => t('Authored by'), '#maxlength' => 60, '#autocomplete_path' => 'user/autocomplete', '#required' => TRUE, '#default_value' => $node->name, '#weight' => -1);
     $form['author']['date'] = array('#type' => 'textfield', '#title' => t('Authored on'), '#maxlength' => 25, '#required' => TRUE, '#default_value' => $node->date);
 
     $node_options = variable_get('node_options_'. $node->type, array('status', 'promote'));
@@ -1624,7 +1624,7 @@ function node_form($node) {
     /**
     * Node options
     */
-    $form['options'] = array('#type' => 'fieldset', '#title' => t('Publishing options'), '#collapsible' => TRUE, '#collapsed' => TRUE, '#weight' => -18);
+    $form['options'] = array('#type' => 'fieldset', '#title' => t('Publishing options'), '#collapsible' => TRUE, '#collapsed' => TRUE, '#weight' => -5);
     $form['options']['status']   = array('#type' => 'checkbox', '#title' => t('Published'), '#default_value' => in_array('status', $node_options));
     $form['options']['moderate'] = array('#type' => 'checkbox', '#title' => t('In moderation queue'), '#default_value' => in_array('moderate', $node_options));
     $form['options']['promote']  = array('#type' => 'checkbox', '#title' => t('Promoted to front page'), '#default_value' => in_array('promote', $node_options));
@@ -1632,18 +1632,17 @@ function node_form($node) {
     $form['options']['revision'] = array('#type' => 'checkbox', '#title' =>t('Create new revision'), '#default_value' => in_array('revision', $node_options));
   }
 
-
   $nodeapi = node_invoke_nodeapi($node, 'form');
   if (is_array($nodeapi)) {
     foreach ($nodeapi as $key => $element) {
-      $nodeapi[$key]['#weight'] = isset($nodeapi[$key]['#weight']) ? $nodeapi[$key]['#weight'] : -18;
+      $nodeapi[$key]['#weight'] = isset($nodeapi[$key]['#weight']) ? $nodeapi[$key]['#weight'] : -4;
     }
     // Append extra node form elements.
     $form = array_merge($form, $nodeapi);
   }
 
-  $form['title']['#weight'] = isset($form['title']['#weight']) ? $form['title']['#weight'] : -17;
-  $form['body']['#weight'] = isset($form['body']['#weight']) ? $form['body']['#weight'] : -5;
+  $form['title']['#weight'] = isset($form['title']['#weight']) ? $form['title']['#weight'] : -18;
+  $form['body']['#weight'] = isset($form['body']['#weight']) ? $form['body']['#weight'] : -17;
 
   // Add the buttons.
   $form['preview'] = array('#type' => 'button', '#value' => t('Preview'), '#weight' => 19);
@@ -1671,6 +1670,9 @@ function theme_node_form($form) {
     $output .= form_render($form['node_preview']);
   }
 
+  $output .= '  <div class="standard">';
+  $output .= form_render($form);
+  $output .= '  </div>';
   $output .= '  <div class="admin">';
   $output .= '    <div class="authored">';
   $output .= form_render($form['author']);
@@ -1678,9 +1680,6 @@ function theme_node_form($form) {
   $output .= '    <div class="options">';
   $output .= form_render($form['options']);
   $output .= '    </div>';
-  $output .= '</div>';
-  $output .= '  <div class="standard">';
-  $output .= form_render($form);
   $output .= '  </div>';
   $output .= '</div>';
   return $output;

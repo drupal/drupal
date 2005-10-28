@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.40 2005/10/22 15:14:46 dries Exp $
+// $Id: menu.module,v 1.41 2005/10/28 14:04:20 dries Exp $
 
 /**
  * @file
@@ -543,7 +543,7 @@ function menu_node_form($edit = array()) {
     }
   }
 
-  $form['menu'] = array('#type' => 'fieldset', '#title' => t('Menu item settings'), '#collapsible' => TRUE, '#collapsed' => TRUE, '#tree' => TRUE);
+  $form['menu'] = array('#type' => 'fieldset', '#title' => t('Menu settings'), '#collapsible' => TRUE, '#collapsed' => TRUE, '#tree' => TRUE);
 
   $form['menu']['title'] = array('#type' => 'textfield', '#title' => t('Title'), '#default_value' => $item['title'], '#size' => 60, '#maxlength' => 128, '#description' => t('The name to display for this link.'));
 
