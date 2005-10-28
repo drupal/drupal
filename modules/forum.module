@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.277 2005/10/21 11:12:46 unconed Exp $
+// $Id: forum.module,v 1.278 2005/10/28 00:42:55 unconed Exp $
 
 /**
  * @file
@@ -379,7 +379,7 @@ function forum_block($op = 'list', $delta = 0, $edit = array()) {
         }
 
         if ($content) {
-          $content .= '<div class="more-link">'. l(t('more'), 'forum', array('title' => t('Read the latest forum topics.'))) .'</div>';
+          $content .= '<div class="more-link">'. l(t('more'), 'forum', array('#title' => t('Read the latest forum topics.'))) .'</div>';
         }
 
         $block['subject'] = $title;
