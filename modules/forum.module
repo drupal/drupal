@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.279 2005/10/28 13:40:17 dries Exp $
+// $Id: forum.module,v 1.280 2005/10/28 13:56:26 dries Exp $
 
 /**
  * @file
@@ -239,7 +239,7 @@ function _forum_parent_select($tid, $title, $child_type) {
   if ($tree) {
     foreach ($tree as $term) {
       if (!in_array($term->tid, $exclude)) {
-        $options[$term->tid] = _forum_depth($term->depth).$term->name;
+        $options[$term->tid] = _taxonomy_depth($term->depth) . $term->name;
       }
     }
   }
@@ -263,10 +263,10 @@ function forum_overview() {
   if ($tree) {
     foreach ($tree as $term) {
       if (in_array($term->tid, variable_get('forum_containers', array()))) {
-        $rows[] = array(_forum_depth($term->depth) .' '. check_plain($term->name), l(t('edit container'), "admin/forum/edit/container/$term->tid"));
+        $rows[] = array(_taxonomy_depth($term->depth) .' '. check_plain($term->name), l(t('edit container'), "admin/forum/edit/container/$term->tid"));
       }
       else {
-        $rows[] = array(_forum_depth($term->depth) .' '. check_plain($term->name), l(t('edit forum'), "admin/forum/edit/forum/$term->tid"));
+        $rows[] = array(_taxonomy_depth($term->depth) .' '. check_plain($term->name), l(t('edit forum'), "admin/forum/edit/forum/$term->tid"));
        }
 
     }
@@ -275,19 +275,6 @@ function forum_overview() {
     $rows[] = array(array('data' => '<em>' . t('There are no existing containers or forums. You may add some on the <a href="%container">add container</a> or <a href="%forum">add forum</a> pages.', array('%container' => url('admin/forum/add/container'), '%forum' => url('admin/forum/add/forum'))) . '</em>', 'colspan' => 2));
   }
   return theme('table', $header, $rows);
-}
-
-/**
- * Helper function used to generate indentation for forum list
- *
- * @param $depth Depth of the indentation
- * @param $graphic HTML text to be repeated for each stage of depth
- */
-function _forum_depth($depth, $graphic = '--') {
-  for ($n = 0; $n < $depth; $n++) {
-    $result .= $graphic;
-  }
-  return $result;
 }
 
 /**
