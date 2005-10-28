@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.541 2005/10/26 14:49:59 unconed Exp $
+// $Id: node.module,v 1.542 2005/10/28 00:28:14 unconed Exp $
 
 /**
  * @file
@@ -1608,13 +1608,7 @@ function node_form($node) {
   $form['type']    = array('#type' => 'value', '#value' => $node->type);
 
   // Get the node-specific bits.
-  // We can't use node_invoke() because $param must be passed by reference.
-  $function = node_get_base($node) .'_form';
-  $param = array();
-  if (function_exists($function)) {
-    $node_form = $function($node, $param);
-    $form = array_merge($form, $function($node, $param));
-  }
+  $form = array_merge($form, node_invoke($node, 'form'));
 
   /**
    * Node author information
@@ -1772,7 +1766,9 @@ function node_preview($node) {
     // Display a preview of the node:
     // Previewing alters $node so it needs to be cloned.
     if (!form_get_errors()) {
-      $output = theme('node_preview', drupal_clone($node));
+      $cloned_node = drupal_clone($node);
+      $cloned_node->in_preview = TRUE;
+      $output = theme('node_preview', $cloned_node);
     }
     drupal_set_title(t('Preview'));
     drupal_set_breadcrumb(array(l(t('Home'), NULL), l(t('create content'), 'node/add'), l(t('Submit %name', array('%name' => node_get_name($node))), 'node/add/'. $node->type)));
