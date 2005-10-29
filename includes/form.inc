@@ -257,11 +257,18 @@ function _form_builder($form) {
     $form[$key]['#tree'] = (isset($form[$key]['#tree'])) ? $form[$key]['#tree'] : $form['#tree'];
 
     if ($form[$key]['#tree']) {
-      //continue tree
-      $parents = (array) $form['#parents'];
-      array_push($parents, $key);
+      if (!$form['#tree']) {
+        // begin tree
+        $parents = array($key);
+      }
+      else {
+        //continue tree
+        $parents = (array) $form['#parents'];
+        array_push($parents, $key);
+      }
     }
     else {
+      // no tree
       $parents = array($key);
     }
 
