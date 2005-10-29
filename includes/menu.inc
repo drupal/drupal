@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.87 2005/10/22 15:14:46 dries Exp $
+// $Id: menu.inc,v 1.88 2005/10/29 06:58:56 dries Exp $
 
 /**
  * @file
@@ -1065,7 +1065,7 @@ function _menu_site_is_offline() {
     // Check if the user has administration privileges
     if (!user_access('administer site configuration')) {
       // Check if this is an attempt to login
-      if (drupal_get_normal_path($_GET['q']) != 'user/login') {
+      if (drupal_get_normal_path($_GET['q']) != 'user') {
         return TRUE;
       }
     }
