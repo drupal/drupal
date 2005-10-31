@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.524 2005/10/28 00:37:06 unconed Exp $
+// $Id: user.module,v 1.525 2005/10/31 13:37:38 dries Exp $
 
 /**
  * @file
@@ -1622,7 +1622,7 @@ function theme_user_admin_perm($form) {
 }
 
 function user_admin_perm_execute() {
-  $edit = $GLOBALS['form_values']['checkboxes'];
+  $edit = $GLOBALS['form_values'];
   // Save permissions:
   $result = db_query('SELECT * FROM {role}');
   while ($role = db_fetch_object($result)) {
