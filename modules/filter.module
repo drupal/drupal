@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.77 2005/10/22 15:14:46 dries Exp $
+// $Id: filter.module,v 1.78 2005/10/31 13:40:13 dries Exp $
 
 /**
  * @file
@@ -752,8 +752,8 @@ function filter_form($value = FILTER_FORMAT_DEFAULT) {
 
   $extra = l(t('More information about formatting options'), 'filter/tips');
 
-  $form['format'] = array('#type' => 'fieldset', '#title' => t('Input format'), '#collapsible' => TRUE, '#collapsed' => TRUE, '#weight' => -4);
   if (count($formats) > 1) {
+    $form['format'] = array('#type' => 'fieldset', '#title' => t('Input format'), '#collapsible' => TRUE, '#collapsed' => TRUE, '#weight' => -4);
     // Multiple formats available: display radio buttons with tips.
     foreach ($formats as $format) {
       $form['format'][$format->format] = array('#type' => 'filter_format', '#title' => $format->name, '#default_value' => $value, '#return_value' => $format->format, '#parents' => array('format'), '#description' => theme('filter_tips', _filter_tips($format->format, false)), '#valid' => 'filter_form');
