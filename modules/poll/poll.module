@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.173 2005/10/11 19:44:35 dries Exp $
+// $Id: poll.module,v 1.174 2005/10/31 14:28:17 dries Exp $
 
 /**
  * @file
@@ -334,32 +334,53 @@ function theme_poll_view_voting($form) {
  * Generates a graphical representation of the results of a poll.
  */
 function poll_view_results(&$node, $teaser, $page, $block) {
-  // Display the results
-
   // Count the votes and find the maximum
   foreach ($node->choice as $choice) {
-    $votestotal += $choice['chvotes'];
-    $votesmax = max($votesmax, $choice['chvotes']);
+    $total_votes += $choice['chvotes'];
+    $max_votes = max($max_votes, $choice['chvotes']);
   }
 
-  // Output the divs for the text, bars and percentages
-  $output .= '<div class="poll">';
-  if ($block) {
-    $output .= '<div class="title">'. check_plain($node->title) .'</div>';
-  }
   foreach ($node->choice as $i => $choice) {
     if ($choice['chtext'] != '') {
-      $percentage = round($choice['chvotes'] * 100 / max($votestotal, 1));
-      $output .= '<div class="text">'. check_plain($choice['chtext']) .'</div>';
-      $output .= '<div class="bar">';
-      $output .= '<div style="width: '. $percentage .'%;" class="foreground"></div>';
-      $output .= '</div>';
-      $output .= '<div class="percent">'. $percentage .'%'. (!$block ? ' ('. format_plural($choice['chvotes'], '1 vote', '%count votes') .')' : '') .'</div>';
+      $poll_results .= theme('poll_bar', check_plain($choice['chtext']), round($choice['chvotes'] * 100 / max($total_votes, 1)), format_plural($choice['chvotes'], '1 vote', '%count votes'), $block);
     }
   }
-  $output .= '<div class="total">'. t('Total votes') .": $votestotal</div>";
 
-  $output .= '</div>';
+  $output .= theme('poll_results', check_plain($node->title), $poll_results, $total_votes, $node->links, $block);
+
+  return $output;
+}
+
+function theme_poll_results($title, $results, $votes, $links, $block) {
+  if ($block) {
+    $output .= '<div class="poll">';
+    $output .= '<div class="title">'. $title .'</div>';
+    $output .= $results;
+    $output .= '<div class="total">'. t('Total votes: %votes', array('%votes' => $votes)) .'</div>';
+    $output .= '</div>';
+    $output .= '<div class="links">'. theme('links', $links) .'</div>';
+  }
+  else {
+    $output .= '<div class="poll">';
+    $output .= $results;
+    $output .= '<div class="total">'. t('Total votes: %votes', array('%votes' => $votes)) .'</div>';
+    $output .= '</div>';
+  }
+
+  return $output;
+}
+
+function theme_poll_bar($title, $percentage, $votes, $block) {
+  if ($block) {
+    $output  = '<div class="text">'. $title .'</div>';
+    $output .= '<div class="bar"><div style="width: '. $percentage .'%;" class="foreground"></div></div>';
+    $output .= '<div class="percent">'. $percentage .'%</div>';
+  }
+  else {
+    $output  = '<div class="text">'. $title .'</div>';
+    $output .= '<div class="bar"><div style="width: '. $percentage .'%;" class="foreground"></div></div>';
+    $output .= '<div class="percent">'. $percentage .'% ('. $votes .')</div>';
+  }
 
   return $output;
 }
@@ -423,13 +444,6 @@ function poll_view(&$node, $teaser = FALSE, $page = FALSE, $block = FALSE) {
   global $user;
   $output = '';
 
-  if ($node->allowvotes && ($block || arg(2) != 'results')) {
-    $output .= poll_view_voting($node, $teaser, $page, $block);
-  }
-  else {
-    $output .= poll_view_results($node, $teaser, $page, $block);
-  }
-
   // Special display for side-block
   if ($block) {
     // No 'read more' link
@@ -441,7 +455,14 @@ function poll_view(&$node, $teaser = FALSE, $page = FALSE, $block = FALSE) {
       $links[] = l(t('results'), 'node/'. $node->nid .'/results', array('title' => t('View the current poll results.')));
     }
 
-    $output .= '<div class="links">'. theme("links", $links) .'</div>';
+    $node->links = $links;
+  }
+
+  if ($node->allowvotes && ($block || arg(2) != 'results')) {
+    $output .= poll_view_voting($node, $teaser, $page, $block);
+  }
+  else {
+    $output .= poll_view_results($node, $teaser, $page, $block);
   }
 
   $node->body = $node->teaser = $output;
@@ -463,5 +484,3 @@ function poll_update($node) {
     }
   }
 }
-
-
