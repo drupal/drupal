@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.78 2005/10/31 13:40:13 dries Exp $
+// $Id: filter.module,v 1.79 2005/10/31 13:57:17 dries Exp $
 
 /**
  * @file
@@ -475,7 +475,7 @@ function filter_admin_filters_save($format, $toggles) {
   // We store the roles as a string for ease of use.
   // we should always set all roles to true when saving a default role.
   // We use leading and trailing comma's to allow easy substring matching.
-  $roles = isset($edit['roles']) ? $edit['roles'] : array();
+  $roles = isset($edit['roles']) ? array_keys($edit['roles']) : array();
   $roles = ','. implode(',', ($edit['default_format'] ? user_roles() : $roles)) .',';
 
   db_query("UPDATE {filter_formats} SET cache = %d, name='%s', roles = '%s' WHERE format = %d", $cache, $name, $roles, $format);
