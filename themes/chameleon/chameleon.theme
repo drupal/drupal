@@ -1,5 +1,5 @@
 <?php
-// $Id: chameleon.theme,v 1.33 2005/08/16 18:06:18 dries Exp $
+// $Id: chameleon.theme,v 1.34 2005/11/01 10:01:42 dries Exp $
 
 /**
  * @file
@@ -153,9 +153,8 @@ function chameleon_node($node, $teaser = 0, $page = 0) {
   return $output;
 }
 
-function chameleon_comment($comment, $link = "") {
+function chameleon_comment($comment, $links = "") {
   $submitted = array(t('By %author at %date', array('%author' => theme('username', $comment), '%date' => format_date($comment->timestamp. 'small'))));
-  $links = array($link);
 
   $output  = "<div class=\"comment\">\n";
   $output .= " <h3 class=\"title\">". l($comment->subject, $_GET['q'], NULL, NULL, "comment-$comment->cid") ."</h3>\n";
