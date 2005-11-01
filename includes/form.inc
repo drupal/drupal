@@ -1,4 +1,6 @@
 <?php
+// $Id: form.inc,v 1.9 2005/11/01 09:58:01 dries Exp $
+
 /**
  * @defgroup form Form generation
  * @{

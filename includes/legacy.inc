@@ -1,4 +1,5 @@
-<?
+<?php
+// $Id: legacy.inc,v 1.2 2005/11/01 09:58:01 dries Exp $
 
 /**
  * An unchecked checkbox is not present in $_POST so we fix it here by
