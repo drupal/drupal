@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.248 2005/11/01 10:03:25 dries Exp $
+// $Id: system.module,v 1.249 2005/11/01 10:17:34 dries Exp $
 
 /**
  * @file
@@ -10,9 +10,22 @@
  * Implementation of hook_help().
  */
 function system_help($section) {
-  global $base_url;
-
   switch ($section) {
+    case 'admin/help#system':
+      $output = '<p>'. t('The system module provides system-wide defaults such as running jobs at a particular time, and storing web pages to improve efficiency.   The ability to run scheduled jobs makes administering the web site more usable, as administrators do not have to manually start jobs.   The storing of web pages, or caching, allows the site to efficiently re-use web pages and improve web site performance.  The settings module provides control over preferences, behaviours including visual and operational settings.') .'</p>';
+      $output .= '<p>'. t('Some modules require regularly scheduled actions, such as cleaning up logfiles. Cron, which stands for chronograph, is a periodic command scheduler executing commands at intervals specified in seconds. It can be used to control the execution of daily, weekly and monthly jobs (or anything with a period measured in seconds). The aggregator module periodically updates feeds using cron.  Ping periodically notifies services of new content on your site.  Search periodically indexes the content on your site.   Automating tasks is one of the best ways to keep a system running smoothly, and if most of your administration does not require your direct involvement, cron is an ideal solution.') .'</p>';
+      $output .= '<p>'. t('There is a caching mechanism which stores dynamically generated web pages in a database. By caching a web page, the system module does not have to create the page each time someone wants to view it, instead it takes only one SQL query to display it, reducing response time and the server\'s load. Only pages requested by <em>anonymous</em> users are cached. In order to reduce server load and save bandwidth, the system module stores and sends cached pages compressed.') .'</p>';
+      $output .= t('<p>You can</p>
+<ul>
+<li>activate your cron job on the cron page <a href="%file-cron">cron.php</a>.</li>
+<li>read how to <a href="%external-http-drupal-org-node-23714">configure cron jobs</a>.</li>
+<li>administer cache settings in <a href="%admin-settings">administer &gt;&gt; settings</a>.</li>
+</ul>
+', array('%file-cron' => 'cron.php', '%external-http-drupal-org-node-23714' => 'http://drupal.org/node/23714', '%admin-settings' => url('admin/settings')));
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%system">System page</a>.', array('%system' => 'http://www.drupal.org/handbook/modules/system/')) .'</p>';
+      return $output;
+    case 'admin/modules#description':
+      return t('Handles general site configuration for administrators.');
     case 'admin':
       return t('<p>Welcome to the administration section. Below are the most recent system events.</p>');
     case 'admin/settings':
@@ -27,18 +40,6 @@ function system_help($section) {
       return t('<p>These options control the display settings for the <code>%template</code> theme. When your site is displayed using this theme, these settings will be used. By clicking "Reset to defaults," you can choose to use the <a href="%global">global settings</a> for this theme.</p>', array('%template' => $theme, '%global' => url('admin/themes/settings')));
     case 'admin/modules':
       return t('<p>Modules are plugins for Drupal that extend its core functionality. Here you can select which modules are enabled. Click on the name of the module in the navigation menu for their individual configuration pages. Once a module is enabled, new <a href="%permissions">permissions</a> might be made available. Modules can automatically be temporarily disabled to reduce server load when your site becomes extremely busy by enabling the throttle.module and checking throttle. The auto-throttle functionality must be enabled on the <a href="%throttle">throttle configuration page</a> after having enabled the throttle module.</p>', array('%permissions' => url('admin/access/permissions'), '%throttle' => url('admin/settings/throttle')));
-    case 'admin/help#system':
-      return t("
-      <p>Drupal comes with system-wide defaults but the setting-module provides control over many Drupal preferences, behaviours including visual and operational settings.</p>
-      <h3><a id=\"cron\">Cron</a></h3>
-      <p>Some modules require regularly scheduled actions, such as cleaning up logfiles.  Cron, which stands for chronograph, is a periodic command scheduler executing commands at intervals specified in seconds.  It can be used to control the execution of daily, weekly and monthly jobs (or anything with a period measured in seconds).   Automating tasks is one of the best ways to keep a system running smoothly, and if most of your administration does not require your direct involvement, cron is an ideal solution.</p>
-      <p>The recommended way to set up your cron system is to set up a Unix/Linux crontab entry (see \"man crontab\") that frequently visits %cron-link.  Note that cron does not guarantee the commands will be executed at the specified interval.  However, Drupal will try its best to run the tasks as close to the specified intervals as possible.  The more you visit cron.php, the more accurate cron will be.</p>
-      <p>If your hosting company does not allow you to set up crontab entries, you can always ask someone else to set up an entry for you. After all, virtually any Unix/Linux machine with access to the internet can set up a crontab entry to frequently visit %cron-link.</p>
-      <p>For the Unix/Linux crontab itself, use a browser like <a href=\"%lynx\">lynx</a> or <a href=\"%wget\">wget</a> but make sure the process terminates: either use <code>/usr/bin/lynx -source %base_url/cron.php</code> or <code>/usr/bin/wget -o /dev/null -O /dev/null %cron-link</code>.  Take a look at the example scripts in the <code>scripts</code>-directory. Make sure to adjust them to fit your needs.  A good crontab line to run the cron script once every hour would be:
-      <pre>     00 * * * * /home/www/drupal/scripts/cron-lynx.sh</pre>
-      Note that it is essential to access <code>cron.php</code> using a browser on the web site's domain; do not run it using command line PHP and avoid using <code>localhost</code> or <code>127.0.0.1</code> or some of the environment variables will not be set correctly and features may not work as expected.</p>", array('%base_url' => $base_url, '%cron-link' => "<a href=\"$base_url/cron.php\">$base_url/cron.php</a>", '%lynx' => 'http://lynx.browser.org', '%wget' => 'http://www.gnu.org/software/wget/wget.html' ));
-    case 'admin/modules#description':
-      return t('Handles general site configuration for administrators.');
   }
 }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.326 2005/10/28 14:04:20 dries Exp $
+// $Id: book.module,v 1.327 2005/11/01 10:17:34 dries Exp $
 
 /**
  * @file
@@ -1122,44 +1122,21 @@ function book_admin_overview() {
 function book_help($section) {
   switch ($section) {
     case 'admin/help#book':
-      return t(
-"<p>The \"book\" content type is suited for creating structured, multi-page hypertexts such as site resource guides, manuals, and Frequently Asked Questions (FAQs).  It permits a document to have chapters, sections, subsections, etc.  Authors with suitable permissions can add pages to a collaborative book,  placing them into the existing document by adding them to a table of contents menu. </p>
-
-<p>Books have additional ''previous'', ''up'', and ''next'' navigation elements at the bottom of each page for moving through the text.  Additional navigation may be provided by enabling the \"book navigation block\" on the
-<a href = \"%book-block\" title = \"block administration\">block administration page</a>.
-</p>
-
-<p>Users can select the \"printer-friendly version\" link visible at the bottom of a book page to generate a printer-friendly display of the page and all of its subsections.  They can choose to <em>export</em> the page and its subsections as DocBook XML (for offline editing, or production of print or other electronic publication formats) by selecting the \"export DocBook XML\" link.  DocBook export currently treats node content as preformatted text.   Selecting the \"export OPML\" link will generate an outline document (titles only) in OPML format, readable by many outline editing tools.  Note: it may be neccessary to shift-click on the link to save the results to a file on the local computer.</p>
-
-<p>Administrators can view a book outline, from which is it possible to change the titles of sections, and their <i>weight</i> (thus reordering sections).   From this outline, it is also possible to edit and/or delete book pages.   Many content types besides pages (for example, blog entries, stories, and polls) can be added to a collaborative book by choosing the \"outline\" tab when viewing the post.</p>
-
-<p>You can:</p><ul><li>create new book pages:
-<a href=\"%create\">create content &raquo; book page</a>
-</li>
-<li>administer books (choose a book from the list and select \"outline\"):
-<a href=\"%collaborative-book\">administer  &raquo; content  &raquo; books</a>
-</li>
-<li>set workflow and other global book settings:
-<a href=\"%workflow\" title = \"book page content type\">administer  &raquo; content  &raquo; [configure]  &raquo; [content types]  &raquo; book page</a>
-</li>
-<li>enable the book navigation block:
-<a href = \"%book-block\" title = \"administer block\">administer  &raquo; block</a>
-</li>
-<li>control who can create, edit, and maintain book pages by setting access permissions:
-<a href = \"%permissions\" title = \"access permissions\">administer  &raquo; access control</a>
-</li></ul>
-
-<p>For more information, visit the  <a href = \"%book-module-help\" title = \"book module online help\">online documentation</a>.
-",
-array(
-      '%create' => url('node/add/book'),
-      '%collaborative-book' => url('admin/node/book'),
-      '%workflow' => url('admin/node/configure/types/book'),
-      '%book-block' => url('admin/block'),
-      '%permissions' => url('admin/access/permissions'),
-      '%book-module-help' => url('http://drupal.org/handbook/modules/book')
-      )
-);
+      $output = '<p>'. t('The <em>book</em> content type is suited for creating structured, multi-page hypertexts such as site resource guides, manuals, and Frequently Asked Questions (FAQs).  It permits a document to have chapters, sections, subsections, etc.  Authors with suitable permissions can add pages to a collaborative book,  placing them into the existing document by adding them to a table of contents menu. ') .'</p>';
+      $output .= '<p>'. t('Books have additional <em>previous</em>, <em>up</em>, and <em>next</em> navigation elements at the bottom of each page for moving through the text.  Additional navigation may be provided by enabling the <em>book navigation block</em> on the <a href="%admin-block">block administration page</a>.', array('%admin-block' => url('admin/block'))) .'</p>';
+      $output .= '<p>'. t('Users can select the <em>printer-friendly version</em> link visible at the bottom of a book page to generate a printer-friendly display of the page and all of its subsections.   They can choose to <em>export</em> the page and its subsections as DocBook XML (for offline editing, or production of print or other electronic publication formats), or as an outline (titles only), by selecting the <em>export DocBook XML</em> and <em>export OPML</em> links respectively.  DocBook export currently treats node content as preformatted text.') .'</p>';
+      $output .= '<p>'. t('Administrators can view a book outline, from which is it possible to change the titles of sections, and their <i>weight</i> (thus reordering sections).   From this outline, it is also possible to edit and/or delete book pages.   Many content types besides pages (for example, blog entries, stories, and polls) can be added to a collaborative book by choosing the <em>outline</em> tab when viewing the post.') .'</p>';
+      $output .= t('<p>You can</p>
+<ul>
+<li>create new book pages: <a href="%node-add-book">create content &gt;&gt; book page</a>.</li>
+<li>administer individual books (choose a book from list): <a href="%admin-node-book">administer &gt;&gt; content &gt;&gt; books</a>.</li>
+<li>set workflow and other global book settings on the book configuration page: <a href="%admin-node-configure-types-book" title="book page content type">administer &gt;&gt; content &gt;&gt; configure &gt;&gt; content types &gt;&gt; book page</a>.</li>
+<li>enable the book navigation block: <a href="%admin-block">administer &gt;&gt; block</a>.</li>
+<li>control who can create, edit, and maintain book pages by setting access permissions: <a href="%admin-access">administer &gt;&gt; access control</a>.</li>
+</ul>
+', array('%node-add-book' => url('node/add/book'), '%admin-node-book' => url('admin/node/book'), '%admin-node-configure-types-book' => url('admin/node/configure/types/book'), '%admin-block' => url('admin/block'), '%admin-access' => url('admin/access')));
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%book">Book page</a>.', array('%book' => 'http://www.drupal.org/handbook/modules/book/')) .'</p>';
+      return $output;
     case 'admin/modules#description':
       return t('Allows users to collaboratively author a book.');
     case 'admin/node/book':

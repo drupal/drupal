@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.232 2005/10/21 11:12:46 unconed Exp $
+// $Id: taxonomy.module,v 1.233 2005/11/01 10:17:34 dries Exp $
 
 /**
  * @file
@@ -308,6 +308,9 @@ function taxonomy_save_term(&$edit) {
         db_query('INSERT INTO {term_hierarchy} (tid, parent) VALUES (%d, %d)', $edit['tid'], $parent);
       }
     }
+  }
+  else {
+    db_query('INSERT INTO {term_hierarchy} (tid, parent) VALUES (%d, %d)', $edit['tid'], $edit['parent']);
   }
 
   db_query('DELETE FROM {term_synonym} WHERE tid = %d', $edit['tid']);
@@ -1235,47 +1238,26 @@ function taxonomy_rss_item($node) {
  */
 function taxonomy_help($section) {
   switch ($section) {
+    case 'admin/help#taxonomy':
+      $output = '<p>'. t('The taxonomy module is one of the most popular features because users often want to create categories to organize content by type. It can automatically classify new content, which is very useful for organizing content on-the-fly. A simple example would be organizing a list of music reviews by musical genre.') .'</p>';
+      $output .= '<p>'. t('Taxonomy is also the study of classification. The taxonomy module allows you to define vocabularies (sets of categories) which are used to classify content. The module supports hierarchical classification and association between terms, allowing for truly flexible information retrieval and classification. The taxonomy module allows multiple lists of categories for classification (controlled vocabularies) and offers the possibility of creating thesauri (controlled vocabularies that indicate the relationship of terms) and taxonomies (controlled vocabularies where relationships are indicated hierarchically). To delete a term choose <em>edit term</em>. To delete a vocabulary, and all its terms, choose <em>edit vocabulary.</em>') .'</p>';
+      $output .= '<p>'. t('A controlled vocabulary is a set of terms to use for describing content (known as descriptors in indexing lingo). Drupal allows you to describe each piece of content (blog, story, etc.) using one or many of these terms. For simple implementations, you might create a set of categories without subcategories, similar to Slashdot\'s sections. For more complex implementations, you might create a hierarchical list of categories.  ') .'</p>';
+      $output .= t('<p>You can</p>
+<ul>
+<li>add a vocabulary at <a href="%admin-taxonomy-add-vocabulary">administer &gt;&gt;  taxonomy &gt;&gt;  add vocabulary</a>.</li>
+<li>administer taxonomy at <a href="%admin-taxonomy">administer &gt;&gt;  taxonomy</a>.</li>
+<li>restrict content access by category for specific users roles using the <a href="%external-http-drupal-org-project-taxonomy_access">taxonomy access module</a>.</li>
+<li>build a custom view of your categories using the <a href="%external-http-drupal-org-project-taxonomy_browser">taxonomy browser</a>.</li>
+</ul>
+', array('%admin-taxonomy-add-vocabulary' => url('admin/taxonomy/add/vocabulary'), '%admin-taxonomy' => url('admin/taxonomy'), '%external-http-drupal-org-project-taxonomy_access' => 'http://drupal.org/project/taxonomy_access', '%external-http-drupal-org-project-taxonomy_browser' => 'http://drupal.org/project/taxonomy_browser'));
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%taxonomy">Taxonomy page</a>.', array('%taxonomy' => 'http://www.drupal.org/handbook/modules/taxonomy/')) .'</p>';
+      return $output;
     case 'admin/modules#description':
       return t('Enables the categorization of content.');
     case 'admin/taxonomy':
       return t('<p>The taxonomy module allows you to classify content into categories and subcategories; it allows multiple lists of categories for classification (controlled vocabularies) and offers the possibility of creating thesauri (controlled vocabularies that indicate the relationship of terms), taxonomies (controlled vocabularies where relationships are indicated hierarchically), and free vocabularies where terms, or tags, are defined during content creation. To delete a term, choose "edit term". To delete a vocabulary and all its terms, choose "edit vocabulary".</p>');
     case 'admin/taxonomy/add/vocabulary':
       return t("<p>When you create a controlled vocabulary you are creating a set of terms to use for describing content (known as descriptors in indexing lingo).  Drupal allows you to describe each piece of content (blog, story, etc.) using one or many of these terms. For simple implementations, you might create a set of categories without subcategories, similar to Slashdot.org's or Kuro5hin.org's sections. For more complex implementations, you might create a hierarchical list of categories.</p>");
-    case 'admin/help#taxonomy':
-      return t('
-      <h3>Background</h3>
-      <p>Taxonomy is the study of classification. Drupal\'s taxonomy module allows you to define vocabularies which are used to classify content. The module supports hierarchical classification and association between terms, allowing for truly flexible information retrieval and classification. For more details about <a href="%classification-types">classification types</a> and insight into the development of the taxonomy module, see this <a href="%drupal-dis">drupal.org discussion</a>.</p>
-      <h3>An example taxonomy: food</h3>
-      <ul><li>Dairy<ul><li>Milk</li></ul></li><li>Drink<ul><li>Alcohol<ul><li>Beer</li><li>Wine</li></ul></li><li>Pop</li><li>Milk</li></ul></li><li>Meat<ul><li>Beef</li><li>Chicken</li><li>Lamb</li></ul></li><li>Spices<ul><li>Sugar</li></ul></li></ul>
-      <p><strong>Notes</strong></p><ul><li>The term <em>Milk</em> appears within both <em>Dairy</em> and <em>Drink</em>.  This is an example of <em>multiple parents</em> for a term.</li><li>In Drupal the order of siblings (e.g. <em>Beef</em>, <em>Chicken</em>, <em>Lamb</em>) in a vocabulary may be controlled with the <em>weight</em> parameter.</li></ul>
-      <h3>Vocabularies</h3>
-      <p>When you create a controlled vocabulary you are creating a set of terms to use for describing content (known as descriptors in indexing lingo). Drupal allows you to describe each piece of content (blog, story, etc.) using one or many of these terms. For simple implementations, you might create a set of categories without subcategories, similar to <a href="%slashdot">Slashdot</a>\'s sections.  For more complex implementations, you might create a hierarchical list of categories such as <em>Food</em> taxonomy shown above.</p>
-      <h4>Setting up a vocabulary</h4>
-      <p>When setting up a controlled vocabulary, if you select the <em>hierarchy</em> option, you will be defining a tree structure of terms, as in a thesaurus. If you select the <em>related terms</em> option, you are allowing the definition of related terms (think <em>see also</em>), as in a thesaurus. Selecting <em>multiple select</em> will allow you to describe a piece of content using more than one term. That content will then appear on each term\'s page, increasing the chance that a user will find it.</p>
-      <p>When setting up a controlled vocabulary you are asked for: <ul>
-      <li><strong>Vocabulary name</strong>: The name for this vocabulary. Example: <em>Dairy</em>.</li>
-      <li><strong>Description</strong>: Description of the vocabulary. This can be used by modules and feeds.</li>
-      <li><strong>Types</strong>: The list of content types you want to associate this vocabulary with. Some available types are blog, book, forum, page, and story.</li>
-      <li><a id="hierarchy"></a><strong>Hierarchy</strong>: Allows a tree-like vocabulary, as in our <em>Foods</em> example above.</li>
-      <li><a id="related-terms"></a><strong>Related terms</strong>: Allows relationships between terms within this vocabulary. Think of these as <em>see also</em> references.</li>
-      <li><strong>Free tagging</strong>: Content is categorized at time of creation by typing comma-separated terms instead of choosing from a pre-defined list. This is helpful if you\'d like to define and expand the vocabulary during content creation, as opposed to deciding all terms beforehand and then choosing from a controlled list. Administrators may also edit and modify the vocabulary through the normal administrative screens.</li>
-      <li><strong>Multiple select</strong>: Allows pieces of content to be described using more than one term. Content may then appear on multiple taxonomy pages.</li>
-      <li><strong>Required</strong>: If selected, each piece of content must have a term in this vocabulary associated with it.</li>
-      <li><strong>Weight</strong>: The overall weight for this vocabulary in listings with multiple vocabularies.</li>
-      </ul></p>
-      <h4>Adding terms to a vocabulary</h4>
-      <p>Once done defining the vocabulary, you have to add terms to it to make it useful. The options you see when adding a term to a vocabulary will depend on what you selected for <em>related terms</em>, <em>hierarchy</em> and <em>multiple select</em>. These options are:</p>
-      <p><ul>
-      <li><strong>Term name</strong>: The name for this term. Example: <em>Milk</em>.</li>
-      <li><strong>Description</strong>: Description of the term that may be used by modules and feeds.  This is synonymous with a "scope note".</li>
-      <li><strong><a id="parent"></a>Parent</strong>: Select the term under which this term is a subset -- the branch of the hierarchy that this term belongs under. This is also known as the "Broader term" indicator used in thesauri.</li>
-      <li><strong><a id="synonyms"></a>Synonyms</strong>: Enter synonyms for this term, one synonym per line. Synonyms can be used for variant spellings, acronyms, and other terms that have the same meaning as the added term, but which are not explicitly listed in this vocabulary (i.e. <em>unauthorized terms</em>).</li>
-      <li><strong>Weight</strong>: The weight is used to sort the terms of this vocabulary.</li>
-      </ul></p>
-      <h3><a id="taxonomy-url"></a>Displaying content organized by terms</h3>
-      <p>In order to view the content associated with a term or a collection of terms, you should browse to a properly formed Taxonomy URL. For example, <a href="%taxo-example">taxonomy/term/1+2</a>.  Taxonomy URLs always contain one or more term IDs at the end of the URL. You may learn the term ID for a given term by hovering over that term in the <a href="%taxo-overview">taxonomy overview</a> page and noting the number at the end or the URL.  To build a Taxonomy URL start with "taxonomy/term/". Then list the term IDs, separated by "+" to choose content tagged with <strong>any</strong> of the given term IDs, or separated by "," to choose content tagged with <strong>all</strong> of the given term IDs. In other words, "+" is less specific than ",". Finally, you may optionally specify a "depth" in the vocabulary hierarchy. This defaults to "0", which means only the explicitly listed terms are searched. A positive number indicates the number of additional levels of the tree to search. You may also use the value "all", which means that all descendant terms are searched.</p>
-      <h3>RSS feeds</h3>
-      <p>Every term, or collection of terms, provides an <a href="%userland-rss">RSS</a> feed to which interested users may subscribe. The URL format for a sample RSS feed is <a href="%sample-rss">taxonomy/term/1+2/0/feed</a>. These are built just like <a href="%taxo-help">Taxonomy URLs</a>, but are followed by the word "feed".</p>', array('%classification-types' => 'http://en.wikipedia.org/wiki/Taxonomic_classification', '%drupal-dis' => 'http://drupal.org/node/55', '%slashdot' => 'http://slashdot.org/', '%taxo-example' => url('taxonomy/term/1+2'), '%taxo-overview' => url('admin/taxonomy'), '%userland-rss' => 'http://backend.userland.com/stories/rss', '%sample-rss' => url('taxonomy/term/1+2/feed'), '%taxo-help' => url('admin/help/taxonomy', NULL, 'taxonomy-url')));
   }
 }
 

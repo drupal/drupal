@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.62 2005/10/25 03:43:57 unconed Exp $
+// $Id: blogapi.module,v 1.63 2005/11/01 10:17:34 dries Exp $
 
 /**
  * @file
@@ -12,7 +12,17 @@
 function blogapi_help($section) {
   switch ($section) {
     case 'admin/help#blogapi':
-      return t('<p>This module adds support for several XML-RPC based blogging APIs. Specifically, it currently implements the %bloggerAPI, %metaweblogAPI, and most of the %moveabletype extensions.  This allows users to contribute to Drupal using external GUI applications, which can often offer richer functionality that online forms based editing.</p><p>This module also allows site administrators to configure which node types can be posted via the external applications. So, for instance, users can post forum topics as well as blog posts. Where supported, the external applications will display each node type as a separate "blog".</p>', array('%bloggerAPI' => '<a href="http://www.blogger.com/developers/api/1_docs/">Blogger API</a>', '%metaweblogAPI' => '<a href="http://www.xmlrpc.com/metaWeblogApi">MetaWeblog API</a>', '%moveabletype' => '<a href="http://www.movabletype.org/docs/mtmanual_programmatic.html">Movable Type API</a>. '));
+      $output = '<p>'. t('The blog API module enables a post to be posted to a site via external GUI applications.  Many users perfer to use external tools to improve their ability to read and post responses in a customized way.   The blog api provides users the freedom to use the blogging tools they want but still have the blogging server of choice.') .'</p>';
+      $output .= '<p>'. t('When this module is enabled and configured you can use programs like <a href="%external-http-ecto-kung-foo-tv">Ecto</a> to create and publish posts from your desktop. Blog API module supports several XML-RPC based blogging APIs such as the <a href="%-">Blogger API</a>, <a href="%external-http-www-xmlrpc-com-metaWeblogApi">MetaWeblog API</a>, and most of the <a href="%external-http-www-movabletype-org-docs-mtmanual_programmatic-html">Movable Type API</a>. Any desktop blogging tools or other services (e.g. <a href="%external-http-www-flickr-com">Flickr\'s</a> "post to blog") that support these APIs should work with this site.', array('%external-http-ecto-kung-foo-tv' => 'http://ecto.kung-foo.tv/', '%-' => url('http://www.blogger.com/developers/api/1_docs/'), '%external-http-www-xmlrpc-com-metaWeblogApi' => 'http://www.xmlrpc.com/metaWeblogApi', '%external-http-www-movabletype-org-docs-mtmanual_programmatic-html' => 'http://www.movabletype.org/docs/mtmanual_programmatic.html', '%external-http-www-flickr-com' => 'http://www.flickr.com')) .'</p>';
+      $output .= '<p>'. t('This module also allows site administrators to configure which content types can be posted via the external applications. So, for instance, users can post forum topics as well as blog posts. Where supported, the external applications will display each content type as a separate "blog".<!--break-->') .'</p>';
+      $output .= t('<p>You can</p>
+<ul>
+<li>view the XML-RPC page on your site at &gt;&gt; <a href="%file-xmlrpc">xmlrpc.php</a>.</li>
+<li><a href="%admin-settings-blogapi">administer &gt;&gt; settings &gt;&gt; blog api</a>.</li>
+</ul>
+', array('%file-xmlrpc' => 'xmlrpc.php', '%admin-settings-blogapi' => url('admin/settings/blogapi')));
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%blogapi">BlogApi page</a>.', array('%blogapi' => 'http://www.drupal.org/handbook/modules/blogapi/')) .'</p>';
+      return $output;
     case 'admin/modules#description':
       return t('Allows users to post content using applications that support XML-RPC blog APIs.');
   }

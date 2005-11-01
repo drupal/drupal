@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.543 2005/10/28 14:04:20 dries Exp $
+// $Id: node.module,v 1.544 2005/11/01 10:17:34 dries Exp $
 
 /**
  * @file
@@ -14,31 +14,24 @@ define('NODE_NEW_LIMIT', time() - 30 * 24 * 60 * 60);
 function node_help($section) {
   switch ($section) {
     case 'admin/help#node':
-      $output = t("
-      <h3>Nodes</h3>
-      <p>The core of the Drupal system is the node. All of the contents of the system are placed in nodes, or extensions of nodes.
-      A base node contains:<dl>
-      <dt>A Title</dt><dd>Up to 128 characters of text that titles the node.</dd>
-      <dt>A Teaser</dt><dd>A small block of text that is meant to get you interested in the rest of node. Drupal will automatically pull a small amount of the body of the node to make the teaser (To configure how long the teaser will be <a href=\"%teaser\">click here</a>). The teaser can be changed if you don't like what Drupal grabs.</dd>
-      <dt>The Body</dt><dd>The main text that comprises your content.</dd>
-      <dt>A Type</dt><dd>What kind of node is this? Blog, book, forum, comment, unextended, etc.</dd>
-      <dt>An Author</dt><dd>The author's name. It will either be \"anonymous\" or a valid user. You <em>cannot</em> set it to an arbitrary value.</dd>
-      <dt>Authored on</dt><dd>The date the node was written.</dd>
-      <dt>Changed</dt><dd>The last time this node was changed.</dd>
-      <dt>Sticky at top of lists</dt><dd>In listings such as the frontpage or a taxonomy overview the teasers of a selected amount of nodes is displayed. If you want to force a node to appear on the top of such a listing, you must set it to 'sticky'. This way it will float to the top of a listing, and it will not be pushed down by newer content.
-      <dt>Allow user comments</dt><dd>A node can have comments. These comments can be written by other users (Read-write), or only by admins (Read-only).</dd>
-      <dt>Revisions</dt><dd>Drupal has a revision system so that you can \"roll back\" to an older version of a post if the new version is not what you want.</dd>
-      <dt>Promote to front page</dt><dd>To get people to look at the new stuff on your site you can choose to move it to the front page. The front page is configured to show the teasers from only a few of the total nodes you have on your site (To configure how many teasers <a href=\"%teaser\">click here</a>).</dd>
-      <dt>Published</dt><dd>When using Drupal's moderation system a node remains unpublished -- unavailable to non-moderators -- until it is marked Published.</dd></dl>
-      <p>Now that you know what is in a node, here are some of the types of nodes available.</p>", array("%teaser" => url("admin/node/configure/settings")));
-
-      foreach (node_get_types() as $type => $name) {
-        $output .= '<h3>'. t('Node type: %name', array('%name' => $name)). '</h3>';
-        $output .= implode("\n", module_invoke_all('help', 'node/add#'. $type));
-      }
-
+      $output = '<p>'. t('All content in a website is stored and treated as <b>nodes</b>. Therefore nodes are any postings such as blogs, stories, polls and forums. The node module manages these content types and is one of the strengths of Drupal over other content management systems.') .'</p>';
+      $output .= '<p>'. t('Treating all content as nodes allows the flexibility of creating new types of content. It also allows you to painlessly apply new features or changes to all content. Comments are not stored as nodes but are always associated with a node.') .'</p>';
+      $output .= t('<p>Node module features</p>
+<ul>
+<li>The list tab provides an interface to search and sort all content on your site.</li>
+<li>The configure settings tab has basic settings for content on your site.</li>
+<li>The configure content types tab lists all content types for your site and lets you configure their default workflow.</li>
+<li>The search tab lets you search all content on your site</li>
+</ul>
+');
+      $output .= t('<p>You can</p>
+<ul>
+<li>search for content at <a href="%search">search</a>.</li>
+<li>administer nodes at <a href="%admin-node-configure-types">administer &gt;&gt; content &gt;&gt; configure &gt;&gt; content types</a>.</li>
+</ul>
+', array('%search' => url('search'), '%admin-node-configure-types' => url('admin/node/configure/types')));
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%node">Node page</a>.', array('%node' => 'http://www.drupal.org/handbook/modules/node/')) .'</p>';
       return $output;
-
     case 'admin/modules#description':
       return t('Allows content to be submitted to the site and displayed on pages.');
     case 'admin/node/configure':

@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.210 2005/10/12 01:00:24 unconed Exp $
+// $Id: statistics.module,v 1.211 2005/11/01 10:17:34 dries Exp $
 
 /**
  * @file
@@ -12,33 +12,36 @@
 function statistics_help($section) {
   switch ($section) {
     case 'admin/help#statistics':
-      return t("
-      <h3>Introduction</h3>
-      <p>The statistics module keeps track of numerous statistics for your site but be warned, statistical collection does cause a little overhead, thus everything comes <strong>disabled</strong> by default.</p>
-      <p>The module counts how many times, and from where -- using HTTP referrer -- each of your posts is viewed. Once we have that count the module can do the following with it:
-      <ul>
-      <li>The count can be displayed in the node's link section next to \"# comments\".</li>
-      <li>A configurable block can be added which can display a configurable number of the day's top stories, the all time top stories, and the last stories read.</li>
-      <li>A configurable user page can be added, which can display the day's top stories, the all time top stories, and the last stories read.  You can individually configure how many posts are displayed in each section.</li>
-      </ul>
-      <p>Notes on using the statistics:</p>
-      <ul>
-      <li>If you enable the view counters for content, this adds 1 database query for each node that is viewed (2 queries if it's the first time the node has ever been viewed).</li>
-      <li>If you enable the access log, this adds 1 database query for each page that Drupal displays.  Logged information includes:  HTTP referrer (if any), node being accessed (if any), user ID (if any), the IP address of the user, and the time the page was viewed.</li>
-      </ul>
-      <p>As with any new module, the statistics module needs to be <a href=\"%modules\">enabled</a> before you can use it.  Also refer to the <a href=\"%permissions\">permissions section</a>, as this module supports four separate permissions.</p>
-      <h3>Configuring the statistics module</h3>
-      <p>There are some configuration options added to the main <a href=\"%configuration\">administer &raquo; settings &raquo; statistics</a> section:</p>
-      <ul>
-      <li><em>enable access log</em> -- allows you to turn the access log on and off.  This log is used to store data about every page accessed, such as the remote host's IP address, where they came from (referrer), what node they've viewed, and their user name.  Enabling the log adds one database call per page displayed by Drupal.</li>
-      <li><em>discard access logs older than</em> -- allows you to configure how long an access log entry is saved, after which time it is deleted from the database table. To use this you need to run \"cron.php\"</li>
-      <li><em>enable node view counter</em> -- allows you to turn on and off the node-counting functionality of this module.  If it is turned on, an extra database query is added for each node displayed, which increments a counter.</li>
-      <li><em>display node view counters</em> -- allows you to globally disable the displaying of node view counters.</li>
-      </ul>
-      <h3>Popular content block</h3>
-      <p>This module creates a block that can display the day's top viewed content, the all time top viewed content, and the last content viewed.  Each of these links can be enabled or disabled individually, and the number of posts displayed for each can be configured with a drop down menu.  If you disable all sections of this block, it will not appear.</p>
-      <p>Don't forget to <a href=\"%block\">enable the block</a>.</p>",
-      array('%modules' => url('admin/modules'), '%permissions' => url('admin/access/permissions'), '%referer' => url('admin/logs/referrers'), '%configuration' => url('admin/settings/statistics'), '%block' => url('admin/block')));
+      $output = '<p>'. t('The statistics module keeps track of numerous statistics of site usage. It counts how many times, and from where each of your posts is viewed. The statistics module can be used to learn many useful things about how users are interacting with each other and with your site.') .'</p>';
+      $output .= t('<p>Statistics module features</p>
+<ul>
+<li>Logs show statistics for how many times your site and specific content on your site has been accessed.</li>
+<li>Referrers tells you from where visitors came from (referrer URL).</li>
+<li>Top pages shows you what\'s hot, what is the most popular content on your site.</li>
+<li>Top users shows you the most active users for your site.</li>
+<li>Recent hits displays information about the latest activity on your site.</li>
+<li>Node count displays the number of times a node has been accessed in the node\'s link section next to <em># comments</em>.</li>
+<li>Popular content block creates a block that can display the day\'s top viewed content, the all time top viewed content, and the last content viewed.</li>
+</ul>
+');
+      $output .= t('<p>Configuring the statistics module</p>
+<ul>
+<li>Enable access log allows you to turn the access log on and off. This log is used to store data about every page accessed, such as the remote host\'s IP address, where they came from (referrer), what node they\'ve viewed, and their user name. Enabling the log adds one database call per page displayed by Drupal.</li>
+<li>Discard access logs older than allows you to configure how long an access log entry is saved, after which time it is deleted from the database table. To use this you need to run <em>cron.php</em></li>
+<li>Enable node view counter allows you to turn on and off the node-counting functionality of this module. If it is turned on, an extra database query is added for each node displayed, which increments a counter.</li>
+<li>Display node view counters allows you to globally disable the displaying of node view counters.</li>
+</ul>
+');
+      $output .= t('<p>You can</p>
+<ul>
+<li>administer statistics <a href="%admin-settings-statistics">administer &gt;&gt; setttings &gt;&gt; statistics</a>.</li>
+<li>access statistics logs <a href="%admin-logs">administer &gt;&gt; logs</a>.</li>
+<li>view recent hits <a href="%admin-logs-hits">administer &gt;&gt; logs &gt;&gt; recent hits</a>.</li>
+<li>enable \'popular content\' block in block administration <a href="%admin-block">administer &gt;&gt; blocks </a> but only after you have enabled \'Count content views\' in settings.</li>
+</ul>
+', array('%admin-settings-statistics' => url('admin/settings/statistics'), '%admin-logs' => url('admin/logs'), '%admin-logs-hits' => url('admin/logs/hits'), '%admin-block' => url('admin/block')));
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%statistics">Statistics page</a>.', array('%statistics' => 'http://www.drupal.org/handbook/modules/statistics/')) .'</p>';
+      return $output;
     case 'admin/modules#description':
       return t('Logs access statistics for your site.');
     case 'admin/settings/statistics':

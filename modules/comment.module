@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.384 2005/10/20 09:27:36 unconed Exp $
+// $Id: comment.module,v 1.385 2005/11/01 10:17:34 dries Exp $
 
 /**
  * @file
@@ -19,31 +19,21 @@
 /**
  * Implementation of hook_help().
  */
-function comment_help($section = "admin/help#comment") {
+function comment_help($section) {
   switch ($section) {
     case 'admin/help#comment':
-      return t("
-      <p>When enabled, the Drupal comment module creates a discussion board for each Drupal node. Users can post comments to discuss a forum topic, weblog post, story, collaborative book page, etc. An administrator can give comment permissions to user groups, and users can (optionally) edit their last comment, assuming no others have been posted since.</p>
-
-      <h3>User control of comment display</h3>
-      <p>Attached to each comment board is a control panel for customizing the way that comments are displayed. Users can control the chronological ordering of posts (newest or oldest first) and the number of posts to display on each page. Additional settings include:</p>
-      <ul><li><strong>Threaded</strong> &mdash; Displays the posts grouped according to conversations and subconversations.</li>
-      <li><strong>Flat</strong> &mdash;  Displays the posts in chronological order, with no threading whatsoever.</li>
-      <li><strong>Expanded</strong> &mdash; Displays the title and text for each post.</li>
-      <li><strong>Collapsed</strong> &mdash; Displays only the title for each post.</li></ul>
-      <p>When a user chooses <em>save settings</em>, the comments are then redisplayed using the user's new choices. Administrators can set the default settings for the comment control panel, along with other comment defaults, in <a href=\"%comment-config\">administer &raquo; comments &raquo; configure</a>.</p>
-
-      <h3>Additional comment configurations</h3>
-      <p>Comments behave like other user submissions in Drupal. Filters, smileys and HTML that work in nodes will also work with comments. Administrators can control access to various comment module functions through <a href=\"%permissions\">administer &raquo; access control &raquo; permissions</a>. Know that in a new Drupal installation, all comment permissions are disabled by default. The choice of which permissions to grant to which roles (groups of users) is left up to the site administrator. The following permissions:</p>
-      <ul><li><strong>Access comments</strong> &mdash; Allows users to view comments.</li>
-      <li><strong>Administrate comments</strong> &mdash; Allows users complete control over configuring, editing and deleting all comments.</li>
-      <li><strong>Post comments</strong> &mdash; Allows users to post comments into an administrator moderation queue.</li>
-      <li><strong>Post comments without approval</strong> &mdash; Allows users to directly post comments, bypassing the moderation queue.</li></ul>
-
-      <h3>Notification of new comments</h3>
-      <p>Drupal provides specific features to inform site members when new comments have been posted.</p>
-      <p>Drupal displays the total number of comments attached to each node, and tracks comments read by individual site members. Members which have logged in will see a notice accompanying nodes which contain comments they have not read. Some administrators may want to <a href=\"%download-notify\">download, install and configure the notify module</a>. Users can then request that Drupal send them an e-mail when new comments are posted (the notify module requires that cron.php be configured properly).</p>
-      <p>The <em>tracker</em> module, disabled by default, displays all the site's recent posts.  There is a link to the <a href=\"%tracker\">recent posts</a> page in the navigation block.  This page is a useful way to browse new or updated nodes and comments. Content which the user has not yet read is tagged with a red star (this graphic depends on the current theme). Visit the comment board for any node, and Drupal will display a red <em>\"new\"</em> label beside the text of unread comments.</p>", array('%comment-config' => url('admin/comment/configure'), '%permissions' => url('admin/access/permissions'), '%tracker' => url('tracker'), '%download-notify' => 'http://drupal.org/project/releases', '%comment-initial' => url('admin/comment/configure/roles')));
+      $output = '<p>'. t('The comment module creates a discussion board for each post. Users can post comments to discuss a forum topic, weblog post, story, collaborative book page, etc. The ability to comment is an important part of involving members in a communtiy dialogue.') .'</p>';
+      $output .= '<p>'. t('An administrator can give comment permissions to user groups, and users can (optionally) edit their last comment, assuming no others have been posted since.  Attached to each comment board is a control panel for customizing the way that comments are displayed. Users can control the chronological ordering of posts (newest or oldest first) and the number of posts to display on each page.  Comments behave like other user submissions. Filters, smileys and HTML that work in nodes will also work with comments. The comment module provides specific features to inform site members when new comments have been posted. On sites with active commenting from users, the administrator can turn over comment moderation to the community.') .'</p>';
+      $output .= t('<p>You can</p>
+<ul>
+<li>control access for various comment module functions through access permissions <a href="%admin-access">administer &gt;&gt; access control</a>.</li>
+<li>administer comments <a href="%admin-comment-configure"> administer &gt;&gt; comments &gt;&gt; configure</a>.</li>
+</ul>
+', array('%admin-access' => url('admin/access'), '%admin-comment-configure' => url('admin/comment/configure')));
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%comment">Comment page</a>.', array('%comment' => 'http://www.drupal.org/handbook/modules/comment/')) .'</p>';
+      return $output;
+    case 'admin/modules#description':
+      return t('Allows users to comment on and discuss published content.');
     case 'admin/comment':
     case 'admin/comment/new':
       return t("<p>Below is a list of the latest comments posted to your site. Click on a subject to see the comment, the author's name to edit the author's user information , \"edit\" to modify the text, and \"delete\" to remove their submission.</p>");
@@ -52,8 +42,6 @@ function comment_help($section = "admin/help#comment") {
     case 'admin/comment/configure':
     case 'admin/comment/configure/settings':
       return t("<p>Comments can be attached to any node, and their settings are below. The display comes in two types: a \"flat list\" where everything is flush to the left side, and comments come in chronological order, and a \"threaded list\" where replies to other comments are placed immediately below and slightly indented, forming an outline. They also come in two styles: \"expanded\", where you see both the title and the contents, and \"collapsed\" where you only see the title. Preview comment forces a user to look at their comment by clicking on a \"Preview\" button before they can actually add the comment.</p>");
-    case 'admin/modules#description':
-      return t('Allows users to comment on and discuss published content.');
    }
 }
 

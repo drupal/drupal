@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.174 2005/10/31 14:28:17 dries Exp $
+// $Id: poll.module,v 1.175 2005/11/01 10:17:34 dries Exp $
 
 /**
  * @file
@@ -13,15 +13,16 @@
 function poll_help($section) {
   switch ($section) {
     case 'admin/help#poll':
-      return t("
-      <p>Users with the correct <a href=\"%permissions\">permissions</a> can create and/or vote on polls.</p>
-      <ul>
-      <li>To create a poll a user needs the \"create polls\" permission.</li>
-      <li>To vote on a poll question a user must have the \"vote on polls\" permission.</li>
-      <li>To view the results one needs the \"access content\" permission.</li>
-      <li>To administer polls you need the \"administer nodes\" permission.</li>
-      </ul>
-      <p>Creating a poll is much like creating any other node. Click \"create poll\" in your user box. The title of the poll should be the question, then enter the answers and the \"base\" vote counts. You can also choose the time period over which the vote will run.</p><p>The <a href=\"%poll\">Poll</a> item in the navigation links will take you to a page where you can see all the current polls, vote on them (if you haven't already) and view the results.</p>", array("%permissions" => url("admin/access/permissions"), "%poll" => url("poll")));
+      $output = '<p>'. t('The poll module can be used to create simple polls for site users.  A poll is a simple multiple choice questionnaire which displays the cummulative results of the answers to the poll.  Having polls on the site is a good way to get instant feedback from community members.') .'</p>';
+      $output .= '<p>'. t('Users can create a poll. The title of the poll should be the question, then enter the answers and the "base" vote counts. You can also choose the time period over which the vote will run.The <a href="%poll">poll</a> item in the navigation menu will take you to a page where you can see all the current polls, vote on them (if you haven\'t already) and view the results.', array('%poll' => url('poll'))) .'</p>';
+      $output .= t('<p>You can</p>
+<ul>
+<li>view the <a href="%poll">polls page</a>.</li>
+<li><a href="%admin-node-configure-types-poll">administer &gt;&gt; content &gt;&gt; configure &gt;&gt; poll</a>.</li>
+</ul>
+', array('%poll' => url('poll'), '%admin-node-configure-types-poll' => url('admin/node/configure/types/poll')));
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%poll">Poll page</a>.', array('%poll' => 'http://www.drupal.org/handbook/modules/poll/')) .'</p>';
+      return $output;
     case 'admin/modules#description':
       return t("Allows your site to capture votes on different topics in the form of multiple choice questions.");
     case 'node/add#poll':

@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.115 2005/10/21 11:14:55 unconed Exp $
+// $Id: profile.module,v 1.116 2005/11/01 10:17:34 dries Exp $
 
 /**
  * @file
@@ -19,6 +19,27 @@ define('PROFILE_HIDDEN', 4);
  */
 function profile_help($section) {
   switch ($section) {
+    case 'admin/help#profile':
+      $output = '<p>'. t('The profile module allows you to define custom fields (such as country, real name, age, ...) in the user profile.  This permits users of a site to share more information about themselves, and can help community-based sites to organize users around profile fields.') .'</p>';
+      $output .= t('<p>The following types of fields can be added to the user profile:</p>
+<ul>
+<li>single-line textfield</li>
+<li>multi-line textfield</li>
+<li>checkbox</li>
+<li>list selection</li>
+<li>freeform list</li>
+<li>URL</li>
+<li>date</li>
+</ul>
+');
+      $output .= t('<p>You can</p>
+<ul>
+<li>view user <a href="%profile">profiles</a>.</li>
+<li>administer profile settings: <a href="%admin-settings-profile">administer &gt;&gt; settings &gt;&gt; profiles</a>.</li>
+</ul>
+', array('%profile' => url('profile'), '%admin-settings-profile' => url('admin/settings/profile')));
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%profile">Profile page</a>.', array('%profile' => 'http://www.drupal.org/handbook/modules/profile/')) .'</p>';
+      return $output;
     case 'admin/modules#description':
       return t('Supports configurable user profiles.');
     case 'admin/settings/profile':

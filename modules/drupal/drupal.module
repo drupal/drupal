@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal.module,v 1.109 2005/10/11 19:44:34 dries Exp $
+// $Id: drupal.module,v 1.110 2005/11/01 10:17:34 dries Exp $
 
 /**
  * @file
@@ -12,12 +12,25 @@
 function drupal_help($section) {
   switch ($section) {
     case 'admin/help#drupal':
-      return t("
-<p>The \"Drupal\" module features a capability whereby other drupal sites may <em>call home</em> to report their existence. In turn, this enables a pod of Drupal sites to find, cooperate and advertise each other.</p>
-<p>Currently, the main application of this feature is the <a href=\"%drupal-sites\">Drupal sites</a> page. By default, fresh Drupal installations can use <a href=\"%Drupal\">drupal.org</a> as their <em>directory server</em> and report their existence. This reporting occurs via scheduled <a href=\"%xml-rpc\">XML-RPC</a> pings.</p>
-<p>Drupal administrators should simply enable this feature to get listed on the <a href=\"%drupal-sites\">Drupal sites</a> page. Just set your site's name, e-mail address, slogan and mission statement on the <a href=\"%site-settings\">administer &raquo; settings</a> page. Then make sure that the field called <em>Drupal XML-RPC server</em> on the <a href=\"%drupal-settings\">administer &raquo; settings &raquo; drupal</a> page is set to %drupal-xml-rpc, and enable this feature using the dropdown directly below.</p>
-<p>The listing of your site will occur shortly after your site's next cron run. Note that cron.php should be called using the domain name which you want to have listed at <a href=\"%Drupal\">drupal.org</a>. For example, don't kick off cron by requesting http://127.0.0.1/cron.php. Instead, use a publicly accessible domain name such as http://www.example.com/cron.php.</p>
-<p>Also note that your installation need not use drupal.org as its directory server. For example, this feature is perfectly capable of aggregating pings from all of your departmental drupal installations sites within an enterprise.</p>", array('%drupal-sites' => 'http://www.drupal.org/drupal-sites', '%Drupal' => 'http://www.drupal.org', '%drupal-xml-rpc' => 'http://www.drupal.org/xmlrpc.php', '%xml-rpc' => 'http://www.xmlrpc.com/', '%site-settings' => url('admin/settings'), '%drupal-settings' => url('admin/settings/drupal')));
+      $output = '<p>'. t('The Drupal module uses the XML-RPC network communication protocol to connect your site with a directory server that maintains a directory of sites.  Community leaders who have common interests may wish to be part of a larger community and showing sites in a common directory is a good way to do this.') .'</p>';
+      $output .= t('<p>Enabling the drupal module will:</p>
+<ul>
+<li>list your site in a site directory.</li>
+<li>allow members on all sites using the Drupal module to login to your site without registering using their distributed identification and vice versa.</li>
+<li>allow members to login to any other site which uses the Drupal module, using a login name which looks much like an email address for your site: <em>username@example.com</em></li>
+</ul>
+');
+      $output .= '<p>'. t('The Drupal module administration page allows you to set the xml-rpc server page.  The listing of your site in a site directory will occur shortly after your sites next cron run.') .'</p>';
+      $output .= t('<p>You can</p>
+<ul>
+<li>run your cron job at your sites <a href="%file-cron">cron page</a>.</li>
+<li>browse to the <a href="%external-http-www-drupal-org-xmlrpc-php">XML-RPC site directory</a>.</li>
+<li>view your <a href="%file-xmlrpc">XML-RPC page</a>.</li>
+<li>administer Drupal <a href="%admin-settings-drupal">administer &gt;&gt; settings &gt;&gt; drupal</a>.</li>
+</ul>
+', array('%file-cron' => 'cron.php', '%external-http-www-drupal-org-xmlrpc-php' => 'http://www.drupal.org/xmlrpc.php', '%file-xmlrpc' => 'xmlrpc.php', '%admin-settings-drupal' => url('admin/settings/drupal')));
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%drupal">Drupal page</a>.', array('%drupal' => 'http://www.drupal.org/handbook/modules/drupal/')) .'</p>';
+      return $output;
     case 'admin/modules#description':
       return t('Lets users log in using a Drupal ID and can notify a central server about your site.');
     case 'admin/settings/drupal':

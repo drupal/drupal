@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.233 2005/10/11 19:44:34 dries Exp $
+// $Id: blog.module,v 1.234 2005/11/01 10:17:34 dries Exp $
 
 /**
  * @file
@@ -56,11 +56,20 @@ function blog_user($type, &$edit, &$user) {
 function blog_help($section) {
   switch ($section) {
     case 'admin/help#blog':
-      return t("
-      <p>Drupal's blog module allows registered users to maintain an online weblog (commonly known as a blog), often referred to as an online journal or diary.  These can be filled with daily thoughts, poetry, boneless blabber, spiritual theories, intimate details, valuable experiences, cynical rants, semi-coherent comments, writing experiments, artistic babblings, critics on current facts, fresh insights, diverse dreams, chronicles and mumbling madness available for public consumption.</p>
-      <p>Blogs are made up of individual entries (nodes) that are timestamped and are typically viewed by day as you would a diary.  Blogs often contain links to things you've seen and/or agree/disagree with.  A typical example of a long term blog can be seen at %scripting-com.</p>
-      <p>The blog module adds a \"user blogs\" navigation link to the site, which takes any visitor to a page that displays the most recent blog entries from all the users on the site. Personal user menus gain a \"create a blog entry\" link (which takes you to a submission form) and a \"view blog\" link (which displays your blog entries as other people will see them).  On the bottom of each of your own blog entries, there is an \"edit this blog entry\" link that lets you edit or delete that entry.</p>
-      <p>If a user has the ability to post blogs, then the import module (news aggregator) will display a blog-it link <strong>(b)</strong> next to each news item in its lists.  Click on this and you will be taken to the blog submission form, with the title, a link to the item, and a link to the source into the body text already in the text box, ready for you to add your explanation.  This actively encourages people to add blog entries about things they see and hear elsewhere in the Drupal site and from your syndicated partner sites.</p>", array('%scripting-com' => '<a href="http://www.scripting.com/">http://www.scripting.com/</a>'));
+      $output = '<p>'. t('The blog module allows registered users to maintain an online weblog (commonly known as a blog), often referred to as an online journal or diary.  Blogs are made up of individual posts that are time stamped and are typically viewed by date as you would a diary. Blogs often contain links to webpages users have read and/or agree/disagree with.') .'</p>';
+      $output .= '<p>'. t('The blog module adds a <em>user blogs</em> navigation link to the site, which takes any visitor to a page that displays the most recent blog entries from all the users on the site. The navigation menu has a <em>create a blog entry</em> link (which takes you to a submission form) and a <em>view personal blog</em> link (which displays your blog entries as other people will see them).  The blog module also creates a <em>recent blog posts</em> block that can be enabled.') .'</p>';
+      $output .= '<p>'. t('If a user has the ability to post blogs, then the import module (news aggregator) will display a blog-it link next to each news item in its lists. Clicking on this takes the user to the blog submission form, with the title, a link to the item, and a link to the source into the body text already in the text box, ready for the user to add a comment or explanation. This actively encourages people to add blog entries about things they see and hear elsewhere in the website and from your syndicated partner sites.') .'</p>';
+      $output .= t('<p>You can</p>
+<ul>
+<li>read your blog via your user profile at <a href="%user">my account</a>.</li>
+<li>post a blog at <a href="%node-add-blog">create content &gt;&gt; personal blog entry</a>.</li>
+<li>administer blog at <a href="%admin-node-configure-types-blog">administer &gt;&gt; content &gt;&gt; configure &gt;&gt; content types &gt;&gt; personal blog entry</a>.</li>
+<li>administer blog api at <a href="%admin-settings-blogapi">administer &gt;&gt; settings &gt;&gt; blogapi</a>.</li>
+<li>enable the "recent blog posts" block at <a href="%admin-block">administer &gt;&gt; blocks</a> to show the 10 most recent blog posts.</li>
+</ul>
+', array('%user' => url('user'), '%node-add-blog' => url('node/add/blog'), '%admin-node-configure-types-blog' => url('admin/node/configure/types/blog'), '%admin-settings-blogapi' => url('admin/settings/blogapi'), '%admin-block' => url('admin/block')));
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%blog">Blog page</a>.', array('%blog' => 'http://www.drupal.org/handbook/modules/blog/')) .'</p>';
+      return $output;
     case 'admin/modules#description':
       return t('Enables keeping an easily and regularly updated web page or a blog.');
     case 'node/add#blog':

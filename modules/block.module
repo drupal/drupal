@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.184 2005/10/22 15:14:46 dries Exp $
+// $Id: block.module,v 1.185 2005/11/01 10:17:34 dries Exp $
 
 /**
  * @file
@@ -12,21 +12,30 @@
 function block_help($section) {
   switch ($section) {
     case 'admin/help#block':
-      return t('
-<p>Blocks are the boxes visible in the sidebar(s) of your web site and other regions. These are usually generated automatically by modules (e.g. recent forum topics), but you can also create your own blocks.</p>
-<p>The region each block appears in depends on both which theme you are using (some are left-only, some right, some both, and some may offer other regions), and on the settings in block management.</p>
-<p>The block management screen lets you specify the vertical sort-order of the blocks within a sidebar. You do this by assigning a weight to each block. Lighter blocks (smaller weight) "float up" towards the top of the sidebar. Heavier ones "sink down" towards the bottom of it.</p>
-<p>A block\'s visibility depends on:</p>
+      $output = '<p>'. t('Blocks are the boxes of related/grouped data that are visible in the sidebar(s) of your web site. These are usually generated automatically by modules (e.g. recent forum topics), but administrators can also create their own defined blocks.') .'</p>';
+      $output .= '<p>'. t('The sidebar each block appears in depends on both which theme you are using (some are left-only, some right, some both), and on the settings in block management.') .'</p>';
+      $output .= '<p>'. t('The block management screen lets you specify the vertical sort-order of the blocks within a sidebar. You do this by assigning a weight to each block. Lighter blocks (smaller weight) "float up" towards the top of the sidebar. Heavier ones "sink down" towards the bottom of it.') .'</p>';
+      $output .= t('<p>A block\'s visibility depends on:</p>
 <ul>
 <li>Its enabled checkbox. Disabled blocks are never shown.</li>
 <li>Its throttle checkbox. Throttled blocks are hidden during high server loads.</li>
 <li>Its path options. Blocks can be configured to only show/hide on certain pages.</li>
-<li>User settings. You can choose to let your users decide whether to show/hide certain blocks.</li>
+<li>User settings. Administrators can choose to let your users decide whether to show/hide certain blocks.</li>
 <li>Its function. Dynamic blocks (such as those defined by modules) may be empty on certain pages and will not be shown.</li>
 </ul>
-
-<h3>Administrator defined blocks</h3>
-<p>An administrator defined block contains content supplied by you (as opposed to being generated automatically by a module). Each admin-defined block consists of a title, a description, and a body which can be as long as you wish. The Drupal engine will render the content of the block.</p>');
+');
+      $output .= '<h3>'. t('Module blocks') .'</h3>';
+      $output .= '<p>'. t('Module blocks are available when modules are enabled.  These blocks can be administered in block administration.') .'</p>';
+      $output .= '<h3>'. t('Administrator defined blocks') .'</h3>';
+      $output .= '<p>'. t('An administrator defined block contains content supplied by the administrator. Each admin-defined block consists of a title, a description, and a body which can be as long as you wish. The Drupal engine will render the content of the block.') .'</p>';
+      $output .= t('<p>You can</p>
+<ul>
+<li>enable throttle and configure blocks at <a href="%admin-block">administer &gt;&gt; block</a>.</li>
+<li>add a block at <a href="%admin-block-add">administer &gt;&gt; block &gt;&gt; add block</a>.</li>
+</ul>
+', array('%admin-block' => url('admin/block'), '%admin-block-add' => url('admin/block/add')));
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%block">Block page</a>.', array('%block' => 'http://www.drupal.org/handbook/modules/block/')) .'</p>';
+      return $output;
     case 'admin/modules#description':
       return t('Controls the boxes that are displayed around the main content.');
     case 'admin/block':

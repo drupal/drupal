@@ -1,5 +1,5 @@
 <?php
-// $Id: legacy.module,v 1.6 2005/08/25 21:14:16 dries Exp $
+// $Id: legacy.module,v 1.7 2005/11/01 10:17:34 dries Exp $
 
 /**
  * @file
@@ -11,6 +11,22 @@
  */
 function legacy_help($section) {
   switch ($section) {
+    case 'admin/help#legacy':
+      $output = '<p>'. t('The legacy module provides legacy handlers for upgrades from older installations.  These handlers help automatically redirect references to pages from old installations and prevent <em>page not found</em> errors for your site.') .'</p>';
+      $output .= '<p>'. t('The legacy module handles legacy style taxonomy page, taxonomy feed, and blog feed paths.  It also handles URL upgrades from Drupal 4.1.   It rewrites old-style URLs to new-style URLs (clean URLs). ') .'</p>';
+      $output .= t('<p>Example Mappings:</p>
+<ul>
+<li><em>taxonomy/page/or/52,97</em> to <em>taxonomy/term/52+97</em>.</li>
+<li><em>taxonomy/feed/or/52,97</em> to <em>taxonomy/term/52+97/0/feed</em>.</li>
+<li><em>blog/feed/52</em> to <em>blog/52/feed</em>.</li>
+<li><em>node/view/52</em> to <em>node/52</em>.</li>
+<li><em>book/view/52</em> to <em>node/52</em>.</li>
+<li><em>user/view/52</em> to <em>user/52</em>.</li>
+</ul>
+');
+      $output .= '<p>'. t('Legacy module has no configurable options.') .'</p>';
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%legacy">Legacy page</a>.', array('%legacy' => 'http://www.drupal.org/handbook/modules/legacy/')) .'</p>';
+      return $output;
     case 'admin/modules#description':
       return t('Provides legacy handlers for upgrades from older Drupal installations.');
   }

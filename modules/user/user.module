@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.525 2005/10/31 13:37:38 dries Exp $
+// $Id: user.module,v 1.526 2005/11/01 10:17:34 dries Exp $
 
 /**
  * @file
@@ -1816,6 +1816,22 @@ function user_help($section) {
   global $user;
 
   switch ($section) {
+    case 'admin/help#user':
+      $output = '<p>'. t('The user module allows users to register, login, and logout. Users benefit from being able to sign on because it associates content they create with their account and allows various permissions to be set for their roles.  The user module supports user roles which can setup fine grained permissions allowing each role to do only what the administrator wants them to. Each user is assigned to one or more roles. By default there are two roles <em>anonymous</em> - a user who has not logged in, and <em>authenticated</em> a user who has signed up and who has been authorized. ') .'</p>';
+      $output .= '<p>'. t('Users can use their own name or handle and can fine tune some personal configuration settings through their individual my account page.  Registered users need to authenticate by supplying either a local username and password, or a remote username and password such as DelphiForums ID, or one from a Drupal powered website.  A visitor accessing your website is assigned an unique ID, the so-called session ID, which is stored in a cookie. For security\'s sake, the cookie does not contain personal information but acts as a key to retrieve the information stored on your server. ') .'</p>';
+      $output .= t('<p>You can</p>
+<ul>
+<li>view your <a href="%user">user page</a>.</li>
+<li>administer user at <a href="%admin-user">administer &gt;&gt; user</a>.</li>
+<li>allow users to select themes from their user account by enabling themes in <a href="%admin-themes">administer &gt;&gt; themes</a>.</li>
+<li>read user profile help at <a href="%admin-help-profile">administer &gt;&gt; help &gt;&gt; profile</a>.</li>
+<li>read about distributed authentication in the system module help at <a href="%admin-help-system">administer &gt;&gt; help &gt;&gt; system</a>.</li>
+</ul>
+', array('%user' => url('user'), '%admin-user' => url('admin/user'), '%admin-themes' => url('admin/themes'), '%admin-help-profile' => url('admin/help/profile'), '%admin-help-system' => url('admin/help/system')));
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%user">User page</a>.', array('%user' => 'http://www.drupal.org/handbook/modules/user/')) .'</p>';
+      return $output;
+    case 'admin/modules#description':
+      return t('Manages the user registration and login system.');
     case 'admin/user':
       return t('<p>Drupal allows users to register, login, logout, maintain user profiles, etc. No participant can use his own name to post content until he signs up for a user account.</p>');
     case 'admin/user/create':
@@ -1833,8 +1849,6 @@ function user_help($section) {
       </ul>', array('%permissions' => url('admin/access/permissions')));
     case 'admin/user/search':
       return t('<p>Enter a simple pattern ("*" may be used as a wildcard match) to search for a username.  For example, one may search for "br" and Drupal might return "brian", "brad", and "brenda".</p>');
-    case 'admin/modules#description':
-      return t('Manages the user registration and login system.');
     case 'admin/user/configure':
     case 'admin/user/configure/settings':
       return t('<p>In order to use the full power of Drupal a visitor must sign up for an account. This page lets you setup how a user signs up, logs out, the guidelines from the system about user subscriptions, and the e-mails the system will send to the user.</p>');
@@ -1854,30 +1868,6 @@ function user_help($section) {
         }
 
         return $output;
-    case 'admin/help#user':
-      $output = t("
-      <h3>Introduction</h3>
-      <p>Drupal offers a powerful access system that allows users to register, login, logout, maintain user profiles, etc. By using <a href=\"%user-role\">roles</a> you can setup fine grained <a href=\"%user-permission\">permissions</a> allowing each role to do only what you want them to. Each user is assigned to one or more roles. By default there are two roles \"anonymous\" - a user who has not logged in, and \"authorized\" a user who has signed up and who has been authorized. As anonymous users, participants suffer numerous disadvantages, for example they cannot sign their names to nodes, and their moderated posts beginning at a lower score.</p>
-      <p>In contrast, those with a user account can use their own name or handle and are granted various privileges: the most important is probably the ability to moderate new submissions, to rate comments, and to fine-tune the site to their personal liking, with saved personal settings.  Drupal themes make fine tuning quite a pleasure.</p>
-      <p>Registered users need to authenticate by supplying either a local username and password, or a remote username and password such as a <a href=\"%jabber\">Jabber ID</a>, <a href=\"%delphi-forums\">DelphiForums ID</a>, or one from a <a href=\"%drupal\">Drupal powered</a> website. See the <a href=\"%da-auth\">distributed authentication help</a> for more information on this innovative feature.
-      The local username and password, hashed with Message Digest 5 (MD5), are stored in your database. When you enter a password it is also hashed with MD5 and compared with what is in the database. If the hashes match, the username and password are correct. Once a user authenticated session is started, and until that session is over, the user won't have to re-authenticate. To keep track of the individual sessions, Drupal relies on <a href=\"%php-sess\">PHP sessions</a>. A visitor accessing your website is assigned an unique ID, the so-called session ID, which is stored in a cookie. For security's sake, the cookie does not contain personal information but acts as a key to retrieve the information stored on your server. When a visitor accesses your site, Drupal will check whether a specific session ID has been sent with the request. If this is the case, the prior saved environment is recreated.</p>
-      <h3>User preferences and profiles</h3><p>Each Drupal user has a profile, and a set of preferences which may be edited by clicking on the \"<a href=\"%user-prefs\">my account</a>\" link. Of course, a user must be logged into reach those pages. There, users will find a page for changing their preferred time zone, language, username, e-mail address, password, theme, signature, and <a href=\"%da-auth\">distributed authentication names</a>. Changes made here take effect immediately. Also, administrators may make profile and preferences changes in <a href=\"%admin-user\">account administration</a> on behalf of their users.</p>
-
-      <h3>Distributed authentication<a id=\"da\"></a></h3>
-      <p>One of the more tedious moments in visiting a new website is filling out the registration form. The reg form provides helpful information to the website owner, but not much value for the user. The value for the end user is usually the ability to post a messages or receive personalized news, etc. Distributed authentication (DA) gives the user what they want without having to fill out the reg form. Removing this obstacle yields more registered and active users for the website.</p>
-      <p>DA enables a new user to input a username and password into the login box and immediately be recognized, even if that user never registered on your site. This works because Drupal knows how to communicate with external registration databases. For example, lets say that your new user 'Joe' is already a registered member of Delphi Forums. If your Drupal has the delphi module installed, then Drupal will inform Joe on the registration and login screens that he may login with his Delphi ID instead of registering with your Drupal instance. Joe likes that idea, and logs in with a username of joe@remote.delphiforums.com and his usual Delphi password. Drupal then communicates with remote.delphiforums.com (usually using <a href=\"%xml\">XML</a>, <a href=\"%http-post\">HTTP-POST</a>, or <a href=\"%soap\">SOAP</a>) behind the scenes and asks &quot;is this password for username=joe?&quot; If Delphi replies yes, then Drupal will create a new local account for joe and log joe into it. Joe may keep on logging into your Drupal instance in the same manner, and he will be logged into the same joe@remote.delphiforums.com account.</p>
-      <p>One key element of DA is the 'authmap' table, which maps a user's authname (e.g. joe@remote.delphiforums.com) to his local UID (i.e. user identification number). This map is checked whenever a user successfully logs into an external authentication source. Once Drupal knows that the current user is definitely joe@remote.delphiforums.com (because Delphi says so), he looks up Joe's UID and logs Joe into that account.</p>
-      <p>To disable distributed authentication, simply <a href=\"%dis-module\">disable</a> or remove all DA modules. For a virgin install, that means removing/disabling the jabber module and the drupal module.</p>
-      <p>Drupal is setup so that it is very easy to add support for any external authentication source. You currently have the following authentication modules installed ...</p>", array('%user-role' => url('admin/access/roles'), '%user-permission' => url('admin/access/permissions'), '%jabber' => 'http://www.jabber.org/', '%delphi-forums' => 'http://www.delphiforums.com/', '%drupal' => 'http://www.drupal.org/', '%da-auth' => url('admin/help/user#da'), '%php-sess' => 'http://www.php.net/manual/en/ref.session.php', '%admin-user' => url('admin/user'), '%xml' => 'http://www.xmlrpc.org/', '%http-post' => 'http://www.w3.org/Protocols/', '%soap' => 'http://www.soapware.org/', '%dis-module' => url('admin/modules'),  '%user-prefs' => url('user/' . $user->uid)));
-
-      foreach (module_list() as $module) {
-        if (module_hook($module, 'auth')) {
-          $output = strtr($output, array('%module-list' => '<h4>'. module_invoke($module, 'info', 'name') ."</h4>\n%module-list"));
-          $output = strtr($output, array('%module-list' => module_invoke($module, 'help', 'user/help') . "\n%module-list"));
-        }
-      }
-
-      return strtr($output, array('%module-list' => ''));
   }
 
 }

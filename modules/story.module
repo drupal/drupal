@@ -1,5 +1,5 @@
 <?php
-// $Id: story.module,v 1.173 2005/10/11 19:44:35 dries Exp $
+// $Id: story.module,v 1.174 2005/11/01 10:17:34 dries Exp $
 
 /**
  * @file
@@ -11,6 +11,17 @@
  */
 function story_help($section) {
   switch ($section) {
+    case 'admin/help#story':
+      $output = '<p>'. t('The story module is used to create a content post type called <em>stories.</em> Stories are articles in their simplest form: they have a title, a teaser and a body. Stories are typically used to post news articles or as a group blog. ') .'</p>';
+      $output .= '<p>'. t('The story administration interface allows for complex configuration. It provides a submission form, workflow, default view permission, default edit permission, permissions for permission, and attachments.  Trackbacks can also be enabled.') .'</p>';
+      $output .= t('<p>You can</p>
+<ul>
+<li>post a story at <a href="%node-add-story">create content &gt;&gt; story</a>.</li>
+<li>configure story at <a href="%admin-node-configure-types"> administer &gt;&gt; content &gt;&gt; configure types &gt;&gt; story configure</a>.</li>
+</ul>
+', array('%node-add-story' => url('node/add/story'), '%admin-node-configure-types' => url('admin/node/configure/types')));
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%story">Story page</a>.', array('%story' => 'http://www.drupal.org/handbook/modules/story/')) .'</p>';
+      return $output;
     case 'admin/modules#description':
       return t('Allows users to submit stories, articles or similar content.');
     case 'node/add#story':

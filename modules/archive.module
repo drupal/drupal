@@ -1,5 +1,5 @@
 <?php
-// $Id: archive.module,v 1.83 2005/10/24 18:50:10 dries Exp $
+// $Id: archive.module,v 1.84 2005/11/01 10:17:34 dries Exp $
 
 /**
  * @file
@@ -11,6 +11,17 @@
  */
 function archive_help($section) {
   switch ($section) {
+    case 'admin/help#archive':
+      $output = '<p>'. t('The archive page allows content to be viewed by date.  It also provides a monthly calendar view that users can use to navigate through content.') .'</p>';
+      $output .= '<p>'. t('To view the archive by date, select the date in the calendar.  Administrators can enable the <em>browse archives</em> block in block administration to allow users to browse by calendar.  Clicking on a date in the monthly calendar view shows the content for that date.  Users can navigate to different months using arrows beside the month\'s name in the calendar display.   The current date will be highlighted in the calendar.') .'</p>';
+      $output .= t('<p>You can</p>
+<ul>
+<li>view your <a href="%archive">archive by day</a>.</li>
+<li>enable the <em>browse archives</em> block at <a href="%admin-block">administer &gt;&gt; block</a>.</li>
+</ul>
+', array('%archive' => url('archive'), '%admin-block' => url('admin/block')));
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%archive">Archive page</a>.', array('%archive' => 'http://www.drupal.org/handbook/modules/archive/')) .'</p>';
+      return $output;
     case 'admin/modules#description':
       return t('Displays a calendar for navigating older content.');
   }

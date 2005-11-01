@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.258 2005/10/11 19:44:34 dries Exp $
+// $Id: aggregator.module,v 1.259 2005/11/01 10:17:34 dries Exp $
 
 /**
  * @file
@@ -12,51 +12,21 @@
 function aggregator_help($section) {
   switch ($section) {
     case 'admin/help#aggregator':
-      return t('
-      <p>Thousands of sites (particularly news sites and weblogs) publish their latest headlines and/or stories in a machine-readable format so that other sites can easily link to them. This content is usually in the form of an <a href="http://blogs.law.harvard.edu/tech/rss">RSS</a> feed (which is an XML-based syndication standard).</p>
-      <p>You can read aggregated content from many sites using RSS feed readers, such as <a href="http://www.disobey.com/amphetadesk/">Amphetadesk</a>.</p>
-      <p>Drupal provides the means to aggregate feeds from many sites and display these aggregated feeds to your site\'s visitors. To do this, enable the aggregator module in site administration and then go to the aggregator configuration page, where you can subscribe to feeds and set up other options.</p>
-      <h3>How do I find RSS feeds to aggregate?</h3>
-      <p>Many web sites (especially weblogs) display small XML icons or other obvious links on their home page. You can follow these to obtain the web address for the RSS feed. Common extensions for RSS feeds are .rss, .xml and .rdf. For example: <a href="http://slashdot.org/slashdot.rdf">Slashdot RSS</a>.</p>
-      <p>If you can\'t find a feed for a site, or you want to find several feeds on a given topic, try an RSS syndication directory such as <a href="http://www.syndic8.com/">Syndic8</a>.</p>
-      <p>To learn more about RSS, read Mark Pilgrim\'s <a href="http://www.xml.com/pub/a/2002/12/18/dive-into-xml.html">What is RSS</a> and WebReference.com\'s <a href="http://www.webreference.com/authoring/languages/xml/rss/1/">The Evolution of RSS</a> articles.</p>
-      <p>NOTE: Enable your site\'s XML syndication button by turning on the Syndicate block in block management.</p>
-      <h3>How do I add a news feed?</h3>
-      <p>To subscribe to an RSS feed on another site, use the <a href="%admin-news">aggregation page</a>.</p>
-      <p>Once there, click the <a href="%new-feed">new feed</a> tab.  Drupal will then ask for the following:</p>
-      <ul>
-       <li><strong>Title</strong> -- The text entered here will be used in your news aggregator, within the administration configuration section, and as a title for the news feed block. As a general rule, use the web site name from which the feed originates.</li>
-       <li><strong>URL</strong> -- Here you\'ll enter the fully-qualified web address for the feed you wish to subscribe to.</li>
-       <li><strong>Update interval</strong> -- This is how often Drupal will scan the feed for new content. This defaults to every hour. Checking a feed more frequently that this is typically a waste of bandwidth and is considered somewhat impolite. For automatic updates to work, cron.php must be called regularly. If it is not, you\'ll have to manually update the feeds one at a time within the news aggregation administration page by using <a href="%update-items">update items</a>.</li>
-       <li><strong>Categorize news items</strong> -- As items are received from a feed they will be put in any categories you have selected here.</li>
-      </ul>
-      <p>Once you have submitted the new feed, check to make sure it is working properly by selecting <a href="%update-items">update items</a> on the <a href="%admin-news">aggregation page</a>. If you do not see any items listed for that feed, edit the feed and make sure that the URL was entered correctly.</p>
-      <h3>Adding categories</h3>
-      <p>News items can be filed into categories. To create a category, start at the <a href="%admin-news">aggregation page</a>.</p>
-      <p>Once there, select <a href="%new-category">new category</a> from the menu. Drupal will then ask for the following:</p>
-      <ul>
-       <li><strong>Title</strong> -- The title will be used in the <em>news by topics</em> listing in your news aggregator and for the block created for the bundle.</li>
-       <li><strong>Description</strong> -- A short description of the category to tell users more details about what news items they might find in the category.</li>
-      </ul>
-      <h3>Using the news aggregator</h3>
-      <p>The news aggregator has a number of ways that it displays your subscribed content:</p>
-      <ul>
-       <li><strong><a href="%news-aggregator">News aggregator</a></strong> (latest news) -- Displays all incoming items in the order in which they were received.</li>
-       <li><strong><a href="%sources">Sources</a></strong> -- Organizes incoming content by feed, displaying feed titles (each of which links to a page with the latest items from that feed) and item titles (which link to that item\'s actual story/article).</li>
-       <li><strong><a href="%categories">Categories</a></strong> -- Organizes incoming content by category, displaying category titles (each of which links to a page with the latest items from that category) and item titles (which link to that item\'s actual story/article).</li>
-      </ul>
-      <p>Pages that display items (for sources, categories, etc.) display the following for each item:
-      <ul>
-       <li>The title of the item (its headline).</li>
-       <li>The categories that the item belongs to, each of which links to that particular category page as detailed above.</li>
-       <li>A description containing the first few paragraphs or a summary of the item (if available).</li>
-       <li>The name of the feed, which links to the individual feed\'s page, listing information about that feed and items for that feed only. This is not shown on feed pages (they would link to the page you\'re currently on).</li>
-      </ul>
-      <p>Additionally, users with the <em>administer news feeds permission</em> will see a link to categorize the news items. Clicking this will allow them to select which category(s) each news item is in.</p>
-      <h3>Technical details</h3>
-      <p>Drupal automatically generates an OPML feed file that is available by selecting the XML icon on the News Sources page.</p>
-      <p>When fetching feeds Drupal supports conditional GETs, this reduces the bandwidth usage for feeds that have not been updated since the last check.</p>
-      <p>If a feed is permanently moved to a new location Drupal will automatically update the feed URL to the new address.</p>', array('%block' => url('admin/block'), '%admin-news' => url('admin/aggregator'), '%new-feed' => url('admin/aggregator/add/feed'), '%new-category' => url('admin/aggregator/add/category'), '%update-items' => url('admin/aggregator'), '%news-aggregator' => url('aggregator'), '%sources' => url('aggregator/sources'), '%categories' => url('aggregator/categories')));
+      $output = '<p>'. t('The news aggregator is a powerful on-site RSS syndicator/news reader that can gather fresh content from news sites and weblogs around the web.') .'</p>';
+      $output .= '<p>'. t('Users can view the latest news chronologically in the <a href="%aggregator">main news aggregator display</a> or by <a href="%aggregator-sources">source</a>. Administrators can add, edit and delete feeds and choose how often to check for newly updated news for each individual feed. Administrators can also tag individual feeds with categories, offering selective grouping of some feeds into separate displays. Listings of the latest news for individual sources or categorized sources can be enabled as blocks for display in the sidebar through the <a href="%admin-block">block administration page</a>. The news aggregator requires cron to check for the latest news from the sites to which you have subscribed. Drupal also provides a <a href="%aggregator-opml">machine-readable OPML file</a> of all of your subscribed feeds.', array('%aggregator' => url('aggregator'), '%aggregator-sources' => url('aggregator/sources'), '%admin-block' => url('admin/block'), '%aggregator-opml' => url('aggregator/opml'))) .'</p>';
+      $output .= t('<p>You can</p>
+<ul>
+<li>administer your list of news feeds <a href="%admin-aggregator">administer &gt;&gt;  aggregator</a>.</li>
+<li>add a new feed <a href="%admin-aggregator-add-feed">administer &gt;&gt; aggregator &gt;&gt; add feed</a>.</li>
+<li>add a new category <a href="%admin-aggregator-add-category">administer &gt;&gt; aggregator &gt;&gt; add category</a>.</li>
+<li>configure global settings for the news aggregator <a href="%admin-settings-aggregator">administer &gt;&gt; settings &gt;&gt; aggregator</a>.</li>
+<li>control access to the aggregator module through access permissions <a href="%admin-access">administer &gt;&gt; access control &gt;&gt; permissions</a>.</li>
+<li>set permissions to access new feeds for user roles such as anonymous users at <a href="%admin-access">administer &gt;&gt; access control</a>.</li>
+<li>view the <a href="%aggregator">aggregator page</a>.</li>
+</ul>
+', array('%admin-aggregator' => url('admin/aggregator'), '%admin-aggregator-add-feed' => url('admin/aggregator/add/feed'), '%admin-aggregator-add-category' => url('admin/aggregator/add/category'), '%admin-settings-aggregator' => url('admin/settings/aggregator'), '%admin-access' => url('admin/access'), '%aggregator' => url('aggregator')));
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%aggregator">Aggregator page</a>.', array('%aggregator' => 'http://www.drupal.org/handbook/modules/aggregator/')) .'</p>';
+      return $output;
     case 'admin/modules#description':
       return t('Aggregates syndicated content (RSS and RDF feeds).');
     case 'admin/aggregator':

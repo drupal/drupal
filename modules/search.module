@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.139 2005/10/22 15:14:46 dries Exp $
+// $Id: search.module,v 1.140 2005/11/01 10:17:34 dries Exp $
 
 /**
  * @file
@@ -93,8 +93,20 @@ define('PREG_CLASS_CJK', '\x{3041}-\x{30ff}\x{31f0}-\x{31ff}\x{3400}-\x{4db5}'.
 /**
  * Implementation of hook_help().
  */
-function search_help($section = 'admin/help#search') {
+function search_help($section) {
   switch ($section) {
+    case 'admin/help#search':
+      $output = '<p>'. t('The search module adds the ability to search for content by keywords.  Search is often the only practical way to find content on a large site.  Search is useful for finding users and posts by searching on keywords.') .'</p>';
+      $output .= '<p>'. t('The search engine works by maintaining an index of the words in your site\'s content. It indexes the posts and users.  You can adjust the settings to tweak the indexing behaviour. Note that the search requires cron to be set up correctly.  The index percentage sets the maximum amount of items that will be indexed in one cron run. Set this number lower if your cron is timing out or if PHP is running out of memory.') .'</p>';
+      $output .= t('<p>You can</p>
+<ul>
+<li>read about how your site uses cron in the <a href="%admin-help-system">administer &gt;&gt; help &gt;&gt; system</a>.</li>
+<li>run your <a href="%file-cron">cron.php</a>.</li>
+<li>read about <a href="%external-http-drupal-org-node-23714">configuring cron jobs</a>.</li>
+<li><a href="%admin-settings-search">administer &gt;&gt; settings &gt;&gt; search</a>.</ul>
+', array('%admin-help-system' => url('admin/help/system'), '%file-cron' => 'cron.php', '%external-http-drupal-org-node-23714' => 'http://drupal.org/node/23714', '%admin-settings-search' => url('admin/settings/search')));
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%search">Search page</a>.', array('%search' => 'http://www.drupal.org/handbook/modules/search/')) .'</p>';
+      return $output;
     case 'admin/modules#description':
       return t('Enables site-wide keyword searching.');
     case 'admin/settings/search':
