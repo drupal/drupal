@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.247 2005/10/26 01:24:09 unconed Exp $
+// $Id: system.module,v 1.248 2005/11/01 10:03:25 dries Exp $
 
 /**
  * @file
@@ -327,7 +327,7 @@ function system_view_general() {
   $directory_temp = variable_get('file_directory_temp', FILE_DIRECTORY_TEMP);
   file_check_directory($directory_temp, FILE_CREATE_DIRECTORY, 'file_directory_temp');
 
-  $form['files']['file_directory_tmp'] = array(
+  $form['files']['file_directory_temp'] = array(
     '#type' => 'textfield', '#title' => t('Temporary directory'), '#default_value' => $directory_temp, '#maxlength' => 255, '#valid' => 'directory',
     '#description' => t('Location where uploaded files will be kept during previews. Relative paths will be resolved relative to the file system path.')
   );
