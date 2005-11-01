@@ -1,4 +1,5 @@
-<?
+<?php
+// $Id$
 
 /**
  * An unchecked checkbox is not present in $_POST so we fix it here by
