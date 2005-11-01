@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.48 2005/09/13 19:05:34 dries Exp $
+// $Id: file.inc,v 1.49 2005/11/01 16:31:09 dries Exp $
 
 /**
  * @file
@@ -12,12 +12,10 @@
  * Common file handling functions.
  */
 
-define('IS_WINDOWS', substr(PHP_OS, 0, 3) == 'WIN');
 define('FILE_DOWNLOADS_PUBLIC', 1);
 define('FILE_DOWNLOADS_PRIVATE', 2);
 define('FILE_CREATE_DIRECTORY', 1);
 define('FILE_MODIFY_PERMISSIONS', 2);
-define('FILE_DIRECTORY_TEMP', IS_WINDOWS ? 'c:\\windows\\temp' : '/tmp');
 define('FILE_EXISTS_RENAME', 0);
 define('FILE_EXISTS_REPLACE', 1);
 define('FILE_EXISTS_ERROR', 2);
@@ -59,7 +57,7 @@ function file_create_path($dest = 0) {
     return $dest;
   }
   // check if the destination is instead inside the Drupal temporary files directory.
-  else if (file_check_location($dest, variable_get('file_directory_temp', FILE_DIRECTORY_TEMP))) {
+  else if (file_check_location($dest, variable_get('file_directory_temp', ini_get('upload_tmp_dir')))) {
     return $dest;
   }
   // Not found, try again with prefixed dirctory path.
@@ -363,7 +361,7 @@ function file_save_upload($source, $dest = 0, $replace = FILE_EXISTS_RENAME) {
   // Make sure $source exists in $_FILES.
   if ($file = file_check_upload($source)) {
     if (!$dest) {
-      $dest = variable_get('file_directory_temp', FILE_DIRECTORY_TEMP);
+      $dest = variable_get('file_directory_temp', ini_get('upload_tmp_dir'));
       $temporary = 1;
       if (is_file($file->filepath)) {
         // If this file was uploaded by this user before replace the temporary copy.
@@ -421,7 +419,7 @@ function file_save_data($data, $dest, $replace = FILE_EXISTS_RENAME) {
     return 0;
   }
 
-  $temp = variable_get('file_directory_temp', FILE_DIRECTORY_TEMP);
+  $temp = variable_get('file_directory_temp', ini_get('upload_tmp_dir'));
   $file = tempnam($temp, 'file');
   if (!$fp = fopen($file, 'wb')) {
     drupal_set_message(t('The file could not be created.'), 'error');

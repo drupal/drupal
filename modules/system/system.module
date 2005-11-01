@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.249 2005/11/01 10:17:34 dries Exp $
+// $Id: system.module,v 1.250 2005/11/01 16:31:09 dries Exp $
 
 /**
  * @file
@@ -325,7 +325,7 @@ function system_view_general() {
     '#description' => t('A file system path where the files will be stored. This directory has to exist and be writable by Drupal. If the download method is set to public this directory has to be relative to Drupal installation directory, and be accessible over the web. When download method is set to private this directory should not be accessible over the web. Changing this location after the site has been in use will cause problems so only change this setting on an existing site if you know what you are doing.')
   );
 
-  $directory_temp = variable_get('file_directory_temp', FILE_DIRECTORY_TEMP);
+  $directory_temp = variable_get('file_directory_temp', ini_get('upload_tmp_dir'));
   file_check_directory($directory_temp, FILE_CREATE_DIRECTORY, 'file_directory_temp');
 
   $form['files']['file_directory_temp'] = array(
