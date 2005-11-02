@@ -131,7 +131,7 @@ function poll_form(&$node) {
   }
 
   // User ticked 'need more choices'.
-  if ($node->morechoices) {
+  if ($_POST['edit']['morechoices']) {
     $node->choices *= 2;
   }
 
