@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.175 2005/11/01 10:17:34 dries Exp $
+// $Id: poll.module,v 1.176 2005/11/02 08:58:27 dries Exp $
 
 /**
  * @file
@@ -131,7 +131,7 @@ function poll_form(&$node) {
   }
 
   // User ticked 'need more choices'.
-  if ($node->morechoices) {
+  if ($_POST['edit']['morechoices']) {
     $node->choices *= 2;
   }
 
