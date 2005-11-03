@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.185 2005/11/01 10:17:34 dries Exp $
+// $Id: block.module,v 1.186 2005/11/03 15:39:37 dries Exp $
 
 /**
  * @file
@@ -358,7 +358,7 @@ function block_admin_configure($module = NULL, $delta = 0) {
         '#type' => 'radios',
         '#title' => t('Custom visibility settings'),
         '#default_value' => $edit['custom'],
-        '#options' => array(t('Users cannot control whether or not they see this block.'), t('Show this block by default, but let individual users hide it.'), t('Hide this block by default but let individual users show it.')), t('Allow individual users to customize the visibility of this block in their account settings.'),
+        '#options' => array(t('Users cannot control whether or not they see this block.'), t('Show this block by default, but let individual users hide it.'), t('Hide this block by default but let individual users show it.'), t('Allow individual users to customize the visibility of this block in their account settings.')),
         '#default_value' => $edit['custom']);
 
 
