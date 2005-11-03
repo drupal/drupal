@@ -1,5 +1,5 @@
 <?php
-// $Id: phptemplate.engine,v 1.21 2005/10/23 09:58:43 dries Exp $
+// $Id: phptemplate.engine,v 1.22 2005/11/03 19:40:36 dries Exp $
 
 /**
  * @file
@@ -130,9 +130,7 @@ function phptemplate_features() {
     'toggle_mission',
     'toggle_name',
     'toggle_node_user_picture',
-    'toggle_primary_links',
     'toggle_search',
-    'toggle_secondary_links',
     'toggle_slogan'
   );
 }
@@ -200,9 +198,9 @@ function phptemplate_page($content) {
     'messages'            => theme('status_messages'),
     'mission'             => isset($mission) ? $mission : '',
     'onload_attributes'   => theme('onload_attribute'),
-    'primary_links'       => theme_get_setting('primary_links'),
+    'primary_links'       => menu_primary_links(),
     'search_box'          => (theme_get_setting('toggle_search') ? search_box() : ''),
-    'secondary_links'     => theme_get_setting('secondary_links'),
+    'secondary_links'     => menu_secondary_links(),
     'sidebar_left'        => $sidebar_left,
     'sidebar_right'       => $sidebar_right,
     'site_name'           => (theme_get_setting('toggle_name') ? variable_get('site_name', 'Drupal') : ''),

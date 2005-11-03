@@ -34,7 +34,7 @@
     </td>
 
     <td class="primary-links" width="70%" align="center" valign="middle">
-      <?php print theme('links', $primary_links) ?>
+      <?php print theme('menu_links', $primary_links) ?>
     </td>
   </tr>
 </table>
@@ -42,7 +42,7 @@
 <table id="secondary-menu" summary="Navigation elements." border="0" cellpadding="0" cellspacing="0" width="100%">
   <tr>
     <td class="secondary-links" width="75%"  align="center" valign="middle">
-      <?php print theme('links', $secondary_links) ?>
+      <?php print theme('menu_links', $secondary_links) ?>
     </td>
     <td  width="25%"  align="center" valign="middle">
       <?php print $search_box ?>
@@ -104,16 +104,12 @@
     <td align="center" valign="middle">
     <?php if (is_array($primary_links)) : ?>
       <div class="primary-links">
-        <?php foreach ($primary_links as $link): ?>
-          <?php print $link?> |
-        <?php endforeach; ?>
+        <?php print theme('menu_links', $primary_links) ?>
       </div>
     <?php endif; ?>
     <?php if (is_array($secondary_links)) : ?>
       <div class="secondary-links">
-        <?php foreach ($secondary_links as $link): ?>
-          <?php print $link?> |
-        <?php endforeach; ?>
+        <?php print theme('menu_links', $secondary_links) ?>
       </div>
     <?php endif; ?>
     </td>
