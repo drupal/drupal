@@ -811,6 +811,7 @@ INSERT INTO system VALUES ('modules/block.module','block','module','',1,0,0);
 INSERT INTO system VALUES ('modules/comment.module','comment','module','',1,0,0);
 INSERT INTO system VALUES ('modules/filter.module','filter','module','',1,0,0);
 INSERT INTO system VALUES ('modules/help.module','help','module','',1,0,0);
+INSERT INTO system VALUES ('modules/menu.module','menu','module','',1,0,0);
 INSERT INTO system VALUES ('modules/node.module','node','module','',1,0,0);
 INSERT INTO system VALUES ('modules/page.module','page','module','',1,0,0);
 INSERT INTO system VALUES ('modules/story.module','story','module','',1,0,0);
@@ -852,10 +853,14 @@ INSERT INTO url_alias (src, dst) VALUES ('node/feed', 'rss.xml');
 
 INSERT INTO variable (name, value) VALUES ('node_options_forum', 'a:1:{i:0;s:6:"status";}');
 
+INSERT INTO menu VALUES (2, 0, '', 'Primary links', '', 0, 115);
+INSERT INTO variable VALUES ('menu_primary_menu', 'i:2;');
+INSERT INTO variable VALUES ('menu_secondary_menu', 'i:2;');
+
 ---
 --- Alter some sequences
 ---
-ALTER SEQUENCE menu_mid_seq RESTART 2;
+ALTER SEQUENCE menu_mid_seq RESTART 3;
 
 ---
 --- Functions
