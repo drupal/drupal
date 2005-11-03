@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.42 2005/11/01 10:17:34 dries Exp $
+// $Id: menu.module,v 1.43 2005/11/03 19:33:37 dries Exp $
 
 /**
  * @file
@@ -47,6 +47,11 @@ function menu_menu($may_cache) {
       'callback' => 'menu_reset',
       'access' => user_access('administer menu'),
       'type' => MENU_LOCAL_TASK);
+
+    $items[] = array('path' => 'admin/settings/menu',
+      'title' => t('menus'),
+      'callback' => 'menu_configure',
+      'access' => user_access('administer menu'));
   }
 
   return $items;
@@ -84,7 +89,50 @@ function menu_help($section) {
       return t('<p>Enter the name for your new menu. Remember to enable the newly created block in the %blocks administration page.</p>', array('%blocks' => l(t('blocks'), 'admin/block')));
     case 'admin/menu/item/add':
       return t('<p>Enter the title, path, position and the weight for your new menu item.</p>');
+    case 'admin/settings/menu':
+      return t('<p>Customize the menu settings.</p>');
   }
+}
+
+
+/**
+ * Menu callback; presents menu configuration options.
+ */
+function menu_configure() {
+  $menu = menu_get_menu();
+
+  $primary_options[0] = t('No primary links');
+  foreach ($menu['items'][0]['children'] as $mid) {
+    $primary_options[$mid] = $menu['items'][$mid]['title'];
+  }
+
+  $form['settings_links'] = array('#type' => 'fieldset', '#title' => t('Primary links settings'));
+  $form['settings_links']['intro'] = array(
+    '#type' => 'markup',
+    '#value' => t('Primary links is a navigation system which usually (depending on your theme) appears at the top-right of the browser window. There are usually two rows of links, primary and secondary. You may control which links appear in this area by choosing a menu from which the links will be generated and then placing your links into the menu using the <a href="%menu">menu administration</a> or the \'Menu settings\' pane on each edit node form.', array('%menu' => url('admin/menu')))
+  );
+
+  $form['settings_links']['menu_primary_menu'] = array(
+    '#type' => 'select',
+    '#title' => t('Menu containing primary links'),
+    '#default_value' => variable_get('menu_primary_menu', 0),
+    '#options' => $primary_options
+  );
+
+  $secondary_options[0] = t('No secondary links');
+  foreach ($menu['items'][0]['children'] as $mid) {
+    $secondary_options[$mid] = $menu['items'][$mid]['title'];
+  }
+
+  $form['settings_links']['menu_secondary_menu'] = array(
+    '#type' => 'select',
+    '#title' => t('Menu containing secondary links'),
+    '#default_value' => variable_get('menu_secondary_menu', 0),
+    '#options' => $secondary_options,
+    '#description' => t('If you select the same menu as primary links then secondary links will display the appropriate second level of your navigation hierarchy.')
+  );
+
+  return system_settings_form('menu_configure', $form);
 }
 
 /**

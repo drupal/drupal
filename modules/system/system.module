@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.250 2005/11/01 16:31:09 dries Exp $
+// $Id: system.module,v 1.251 2005/11/03 19:33:37 dries Exp $
 
 /**
  * @file
@@ -1043,11 +1043,6 @@ function system_theme_settings($key = '') {
 
   // System wide only settings.
   if (!$key) {
-    // Menu settings
-
-    $form['primary_links'] = system_navigation_links_form('primary', 'Primary');
-    $form['secondary_links'] = system_navigation_links_form('secondary', 'Secondary');
-
     // Toggle node display.
     $node_types = module_invoke('node', 'get_types');
     if ($node_types) {
@@ -1066,8 +1061,6 @@ function system_theme_settings($key = '') {
     'toggle_name'                 => t('Site name'),
     'toggle_slogan'               => t('Site slogan'),
     'toggle_mission'              => t('Mission statement'),
-    'toggle_primary_links'        => t('Primary links'),
-    'toggle_secondary_links'      => t('Secondary links'),
     'toggle_node_user_picture'    => t('User pictures in posts'),
     'toggle_comment_user_picture' => t('User pictures in comments'),
     'toggle_search'               => t('Search box'),
@@ -1116,62 +1109,6 @@ function system_theme_settings($key = '') {
   return system_settings_form('system_theme_settings', $form);
 
 }
-
-function system_navigation_links_form($type, $utype) {
-  $settings = theme_get_settings('');
-  $value = $settings[$type . '_links'];
-
-  if (!is_array($value)) {
-    $value = array();
-  }
-  // Increment the link count, if the user has requested more links.
-  if (variable_get($type . '_links_more', false)) {
-    variable_del($type . '_links_more');
-    variable_set($type . '_link_count', variable_get($type . '_link_count', 5) + 5);
-  }
-
-  // Get the amount of links to show, possibly expanding if there are more links defined than the count specifies.
-  $count = variable_get($type . '_link_count', 5);
-  $count = ($count > sizeof($value['link'])) ? $count : sizeof($value['link']);
-
-  if (variable_get($type . '_link_count', 5) != $count) {
-    variable_set($type . '_link_count', $count);
-  }
-  $form = array(
-    '#type' => 'item', '#title' => t('_TYPE_ link settings', array('_TYPE_' => $utype)), '#theme' => 'system_navigation_links_form',
-    '#description' => t('You can specify your _TYPE_ links here, one link per line.<br /> The link text field is the text you want to link.<br /> The url field is the location the link points to.<br /> The description field is an optional description of where the link points.', array('_TYPE_' => $type))
-  );
-
-  $form['#tree'] = TRUE;
-
-  for ($i = 0; $i < $count; $i++) {
-    foreach (array('text', 'link', 'description') as $field) {
-      $form[$field][$i] = array('#type' => 'textfield', '#default_value' => $value[$field][$i], '#size' => 15, '#maxlength' => 90);
-    }
-  }
-
-  $form[$type . '_links_more'] = array(
-    '#type' => 'checkbox', '#title' => t('I need more _TYPE_ links.', array('_TYPE_' => $type)), '#default_value' => FALSE,
-    '#description' => t('Checking this box will give you 5 additional _TYPE_ links.', array('_TYPE_' => $type))
-  );
-  return $form;
-}
-
-function theme_system_navigation_links_form(&$form) {
-  $header = array(t('link text'), t('url'), t('description'));
-  foreach (element_children($form['text']) as $key) {
-    $row = array();
-    $row[] = form_render($form['text'][$key]);
-    $row[] = form_render($form['link'][$key]);
-    $row[] = form_render($form['description'][$key]);
-    $rows[] = $row;
-
-  }
-  $output = theme('table', $header, $rows);
-  $output .= form_render($form);
-  return $output;
-}
-
 
 function search_box() {
   $form['#action'] = url('search');

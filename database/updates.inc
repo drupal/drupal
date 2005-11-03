@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.140 2005/10/22 15:14:46 dries Exp $
+// $Id: updates.inc,v 1.141 2005/11/03 19:33:37 dries Exp $
 
 /**
  * @file
@@ -67,7 +67,8 @@ $sql_updates = array(
   "2005-09-07" => "update_147",
   "2005-09-18" => "update_148",
   "2005-09-27" => "update_149",
-  "2005-10-15" => "update_150"
+  "2005-10-15" => "update_150",
+  "2005-10-23" => "update_151",
 );
 
 function update_110() {
@@ -916,6 +917,81 @@ function update_150() {
     default:
       break;
   }
+  return $ret;
+}
+
+function update_151() {
+  $ret = array();
+
+  $ts = variable_get('theme_settings', null);
+
+  // set up data array so we can loop over both sets of links
+  $menus = array(0 => array('links_var' => 'primary_links',
+                            'toggle_var' => 'toggle_primary_links',
+                            'more_var' => 'primary_links_more',
+                            'menu_name' => t('Primary links'),
+                            'menu_var' => 'menu_primary_menu',
+                            'pid' => 0),
+                 1 => array('links_var' => 'secondary_links',
+                            'toggle_var' => 'toggle_secondary_links',
+                            'more_var' => 'secondary_links_more',
+                            'menu_name' => t('Secondary links'),
+                            'menu_var' => 'menu_secondary_menu',
+                            'pid' => 0));
+
+  for ($loop = 0; $loop <= 1 ; $loop ++) {
+    // create new Primary and Secondary links menus
+    $menus[$loop]['pid'] = db_next_id('{menu}_mid');
+    $ret[] = update_sql("INSERT INTO {menu} (mid, pid, path, title, description, weight, type) " .
+                         "VALUES ({$menus[$loop]['pid']}, 0, '', '{$menus[$loop]['menu_name']}', '', 0, 115)");
+
+    // insert all entries from theme links into new menus
+    $num_inserted = 0;
+    if (is_array($ts) && is_array($ts[$menus[$loop]['links_var']])) {
+      $links = $ts[$menus[$loop]['links_var']];
+      for ($i = 0; $i < count($links['text']); $i++) {
+        if ($links['text'][$i] != "" && $links['link'][$i] != "") {
+          $num_inserted ++;
+          $node_unalias = db_fetch_array(db_query("SELECT src FROM {url_alias} WHERE dst = '%s'", $links['link'][$i]));
+          if (is_array($node_unalias)) {
+      $link_path = $node_unalias['src'];
+    }
+    else {
+      $link_path = $links['link'][$i];
+    }
+
+          $mid = db_next_id('{menu}_mid');
+          $ret[] = update_sql("INSERT INTO {menu} (mid, pid, path, title, description, weight, type) " .
+                               "VALUES ($mid, {$menus[$loop]['pid']}, '$link_path', '{$links['text'][$i]}', '{$links['description'][$i]}', 0, 118)");
+        }
+      }
+      // delete Secondary links if not populated.
+      if ($loop == 1 && $num_inserted == 0) {
+        db_query("DELETE FROM {menu} WHERE mid={$menus[$loop]['pid']}");
+      }
+    }
+
+    // set menu_primary_menu variable appropriately
+    if (!$ts[$menus[$loop]['toggle_var']] || $num_inserted == 0) {
+      variable_set($menus[$loop]['menu_var'], 0);
+    }
+    else {
+      variable_set($menus[$loop]['menu_var'], $menus[$loop]['pid']);
+    }
+    variable_del($menus[$loop]['toggle_var']);
+    unset($ts[$menus[$loop]['toggle_var']]);
+    variable_del($menus[$loop]['links_var']);
+    unset($ts[$menus[$loop]['links_var']]);
+    variable_del($menus[$loop]['more_var']);
+    unset($ts[$menus[$loop]['more_var']]);
+  }
+
+  if (is_array($ts)) {
+    variable_set('theme_settings', $ts);
+  }
+
+  $ret[] = update_sql("UPDATE {system} SET status = 1 WHERE name = 'menu'");
+
   return $ret;
 }
 

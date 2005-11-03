@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.263 2005/10/22 15:14:46 dries Exp $
+// $Id: theme.inc,v 1.264 2005/11/03 19:33:37 dries Exp $
 
 /**
  * @file
@@ -212,8 +212,6 @@ function path_to_theme() {
  */
 function theme_get_settings($key = NULL) {
   $defaults = array(
-    'primary_links'                 =>  array(),
-    'secondary_links'               =>  array(),
     'mission'                       =>  '',
     'default_logo'                  =>  1,
     'logo_path'                     =>  '',
@@ -225,8 +223,6 @@ function theme_get_settings($key = NULL) {
     'toggle_search'                 =>  1,
     'toggle_slogan'                 =>  0,
     'toggle_mission'                =>  1,
-    'toggle_primary_links'          =>  1,
-    'toggle_secondary_links'        =>  1,
     'toggle_node_user_picture'      =>  0,
     'toggle_comment_user_picture'   =>  0,
   );
@@ -307,41 +303,6 @@ function theme_get_setting($setting_name, $refresh = FALSE) {
       }
     }
 
-    foreach (array('primary', 'secondary') as $type) {
-      // Get the data to populate the textfields, if the variable is not an array .. try to parse the old-style link format.
-      $value = $settings[$type . '_links'];
-
-      // Clear out existing (internal) values
-      $settings[$type .'_links'] = array();
-
-      // Get the amount of links to show, possibly expanding if there are more links defined than the count specifies.
-      $count = variable_get($type . '_link_count', 5);
-      if (isset($value['link']) && $count > sizeof($value['link'])) {
-        $count = sizeof($value['link']);
-      }
-
-      if ($settings['toggle_' . $type . '_links']) {
-        for ($i =0; $i < $count; $i++) {
-          unset($attributes);
-          if (!empty($value['text'][$i])) {
-            if (!empty($value['description'][$i])) {
-              $attributes['title'] = $value['description'][$i];
-            }
-            $text = $value['text'][$i];
-            $link = $value['link'][$i];
-            if (substr($link, 0, 7) == 'http://') {
-              $settings[$type .'_links'][] = '<a href="'. check_url($link) .'"'. drupal_attributes($attributes) .'>'. check_plain($text) .'</a>';
-            }
-            else {
-              $settings[$type .'_links'][] = l($text, $link, $attributes);
-            }
-          }
-        }
-        if ($settings[$type .'_links'] == array()) {
-          $settings[$type .'_links'] = array(l(t('edit %type links', array('%type' => $type)),'admin/themes/settings'));
-        }
-      }
-    }
   }
 
   return isset($settings[$setting_name]) ? $settings[$setting_name] : NULL;
@@ -509,6 +470,9 @@ function theme_status_messages() {
  *   A string containing the themed links.
  */
 function theme_links($links, $delimiter = ' | ') {
+  if (!is_array($links)) {
+    return '';
+  }
   return implode($delimiter, $links);
 }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.88 2005/10/29 06:58:56 dries Exp $
+// $Id: menu.inc,v 1.89 2005/11/03 19:33:37 dries Exp $
 
 /**
  * @file
@@ -493,6 +493,25 @@ function menu_in_active_trail($mid) {
 }
 
 /**
+ * Returns true when the menu item is in the active trail within a
+ * specific subsection of the menu tree.
+ *
+ * @param $mid
+ *   The menu item being considered.
+ * @param $pid
+ *   The root of the subsection of the menu tree in which to look.
+ */
+function menu_in_active_trail_in_submenu($mid, $pid) {
+  $trail = _menu_get_active_trail_in_submenu($pid);
+
+  if (!$trail) {
+    return FALSE;
+  }
+
+  return in_array($mid, $trail);
+}
+
+/**
  * Populate the database representation of the menu.
  *
  * This need only be called at the start of pages that modify the menu.
@@ -708,6 +727,125 @@ function theme_menu_local_task($mid, $active, $primary) {
 }
 
 /**
+ * Returns an array containing the primary links.
+ * Can optionally descend from the root of the Primary links menu towards the
+ * current node for a specified number of levels and return that submenu.
+ * Used to generate a primary/secondary menu from different levels of one menu.
+ *
+ * @param $start_level
+ *   This optional parameter can be used to retrieve a context-sensitive array
+ *   of links at $start_level levels deep into the Primary links menu.
+ *   The default is to return the top-level links.
+ * @param $pid
+ *   The parent menu ID from which to search for children. Defaults to the
+ *   menu_primary_menu setting.
+ * @return An array containing the themed links as the values. The keys of
+ *   the array contain some extra encoded information about the results.
+ *   The format of the key is {level}-{num}{-active}.
+ *   level is the depth within the menu tree of this list.
+ *   num is the number within this array, used only to make the key unique.
+ *   -active is appended if this element is in the active trail.
+ */
+function menu_primary_links($start_level = 1, $pid = 0) {
+  if (!module_exist('menu')) {
+    return NULL;
+  }
+  if (!$pid) {
+    $pid = variable_get('menu_primary_menu', 0);
+  }
+  if (!$pid) {
+    return NULL;
+  }
+
+  if ($start_level < 1) {
+    $start_level = 1;
+  }
+
+  if ($start_level > 1) {
+    $trail = _menu_get_active_trail_in_submenu($pid);
+    if (!$trail) {
+      return NULL;
+    }
+    else {
+      $pid = $trail[$start_level - 1];
+    }
+  }
+
+  $menu = menu_get_menu();
+  if ($pid && is_array($menu['visible'][$pid]) && array_key_exists('children', $menu['visible'][$pid])) {
+    $count = 1;
+    foreach ($menu['visible'][$pid]['children'] as $cid) {
+      $index = "$start_level-$count";
+      if (menu_in_active_trail_in_submenu($cid, $pid)) {
+        $index .= "-active";
+      }
+      $links[$index] = menu_item_link($cid);
+      $count++;
+    }
+  }
+
+  // special case - provide link to admin/menu if primary links is empty.
+  if (is_null($links) && $start_level == 1 && $pid == variable_get('menu_primary_menu', 0)) {
+    $links['1-1'] = l(t('edit primary links'),'admin/menu');
+  }
+
+  return $links;
+}
+
+/**
+ * Returns an array containing the secondary links.
+ * Secondary links can be either a second level of the Primary links
+ * menu or generated from their own menu.
+ */
+function menu_secondary_links() {
+  $msm = variable_get('menu_secondary_menu', 0);
+  if ($msm == 0) {
+    return NULL;
+  }
+
+  if ($msm == variable_get('menu_primary_menu', 0)) {
+    return menu_primary_links(2, $msm);
+  }
+
+  return menu_primary_links(1, $msm);
+}
+
+/**
+ * Returns the themed HTML for primary and secondary links.
+ * Note that this function is overridden by most core themes because
+ * those themes display links in "link | link" format, not from a list.
+ * Also note that by default links rendered with this function are
+ * displayed with the same CSS as is used for the local tasks.
+ * If a theme wishes to render links from a ul it is expected that
+ * the theme will provide suitable CSS.
+ *
+ * @param $links
+ *   An array containing links to render.
+ * @return
+ *   A string containing the themed links.
+ *
+ * @ingroup themeable
+ */
+function theme_menu_links($links) {
+  if (!count($links)) {
+    return '';
+  }
+  $level_tmp = split('-', key($links));
+  $level = $level_tmp[0];
+  $output = "<ul class=\"links-$level\">\n";
+  foreach ($links as $index => $link) {
+    $output .= '<li';
+    if (stristr($index, 'active')) {
+      $output .= ' class="active"';
+    }
+    $output .= ">$link</li>\n";
+  }
+  $output .= '</ul>';
+
+  return $output;
+}
+
+/**
  * @} End of "defgroup menu".
  */
 
@@ -731,6 +869,56 @@ function _menu_get_active_trail() {
     }
   }
   return $trail;
+}
+
+/**
+ * Find the active trail through a specific subsection of the menu tree.
+ *
+ * @param $pid
+ *   The root item from which the active trail must descend.
+ */
+function _menu_get_active_trail_in_submenu($pid) {
+  static $trails;
+  static $built;
+
+  if (!$built) {
+    // Find all menu items which point to the current node and for each
+    // follow the parents up the chain to build an active trail.
+    $built = TRUE;
+    $menu = menu_get_menu();
+    $path = $_GET['q'];
+    $count = 0;
+    while ($path && !$count) {
+      foreach ($menu['items'] as $key => $item) {
+        if (array_key_exists('path', $item) && $item['path'] == $path) {
+          $trails[$count] = array();
+          $mid = $key;
+          while ($mid && $menu['items'][$mid]) {
+            array_unshift($trails[$count], $mid);
+            $mid = $menu['items'][$mid]['pid'];
+          }
+    $count ++;
+        }
+      }
+      $path = substr($path, 0, strrpos($path, '/'));
+    }
+  }
+
+  if ($trails) {
+    foreach ($trails as $key => $trail) {
+      for ($i = 0 ; $i < count($trail); $i++) {
+        if ($trail[$i] == $pid) {
+    // create a trail from $pid to the current page inclusive.
+          for ( ; $i < count($trail) ; $i++) {
+      $subtrail[] = $trail[$i];
+    }
+          return $subtrail;
+        }
+      }
+    }
+  }
+
+  return NULL;
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: chameleon.theme,v 1.34 2005/11/01 10:01:42 dries Exp $
+// $Id: chameleon.theme,v 1.35 2005/11/03 19:33:37 dries Exp $
 
 /**
  * @file
@@ -11,9 +11,7 @@ function chameleon_features() {
        'logo',
        'toggle_favicon',
        'toggle_name',
-       'toggle_slogan',
-       'toggle_primary_links',
-       'toggle_secondary_links');
+       'toggle_slogan');
 }
 
 function chameleon_regions() {
@@ -55,8 +53,8 @@ function chameleon_page($content) {
 
   $output .= "</div>\n";
 
-  $primary_links = theme('links', theme_get_setting('primary_links'));
-  $secondary_links = theme('links', theme_get_setting('secondary_links'));
+  $primary_links = theme('links', menu_primary_links());
+  $secondary_links = theme('links', menu_secondary_links());
   if ($primary_links || $secondary_links) {
     $output .= ' <div class="navlinks">';
     if ($primary_links) {
