@@ -235,7 +235,17 @@ function _form_builder($form) {
       $ref =& $ref[$parent];
     }
     if (!isset($form['#value'])) {
-      $form['#value'] = ($posted && isset($edit)) ? $edit : $form['#default_value'];
+      if ($posted) {
+        if (isset($edit)) {
+          $form['#value'] = $edit; // normal element
+        }
+        elseif (isset($form['#return_value'])) {
+          $form['#value'] = 0; // checkbox unchecked
+        }
+      }
+      if (!isset($form['#value'])) {
+        $form['#value'] = $form['#default_value'];
+      }
     }
     if (isset($form['#execute'])) {
       if ($_POST[$form['#name']] == $form['#value']) {
