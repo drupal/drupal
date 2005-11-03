@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.9 2005/11/01 09:58:01 dries Exp $
+// $Id: form.inc,v 1.10 2005/11/03 15:42:31 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -235,7 +235,17 @@ function _form_builder($form) {
       $ref =& $ref[$parent];
     }
     if (!isset($form['#value'])) {
-      $form['#value'] = ($posted && isset($edit)) ? $edit : $form['#default_value'];
+      if ($posted) {
+        if (isset($edit)) {
+          $form['#value'] = $edit; // normal element
+        }
+        elseif (isset($form['#return_value'])) {
+          $form['#value'] = 0; // checkbox unchecked
+        }
+      }
+      if (!isset($form['#value'])) {
+        $form['#value'] = $form['#default_value'];
+      }
     }
     if (isset($form['#execute'])) {
       if ($_POST[$form['#name']] == $form['#value']) {
