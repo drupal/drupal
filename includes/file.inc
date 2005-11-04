@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.49 2005/11/01 16:31:09 dries Exp $
+// $Id: file.inc,v 1.50 2005/11/04 20:19:14 dries Exp $
 
 /**
  * @file
@@ -69,7 +69,8 @@ function file_create_path($dest = 0) {
 }
 
 /**
- * Check that directory exists and is writable.
+ * Check that the directory exists and is writable. Directories need to
+ * have execute permissions to be considered a directory by FTP servers, etc.
  *
  * @param $directory Path to extract and verify directory for.
  * @param $mode Try to create the directory if it does not exist.
@@ -81,8 +82,9 @@ function file_check_directory(&$directory, $mode = 0, $form_item = NULL) {
 
   // Check if directory exists.
   if (!is_dir($directory)) {
-    if (($mode & FILE_CREATE_DIRECTORY) && @mkdir($directory, 0760)) {
+    if (($mode & FILE_CREATE_DIRECTORY) && @mkdir($directory)) {
       drupal_set_message(t('The directory %directory has been created.', array('%directory' => theme('placeholder', $directory))));
+      @chmod($directory, 0775); // Necessary for non-webserver users.
     }
     else {
       if ($form_item) {
@@ -94,7 +96,7 @@ function file_check_directory(&$directory, $mode = 0, $form_item = NULL) {
 
   // Check to see if the directory is writable.
   if (!is_writable($directory)) {
-    if (($mode & FILE_MODIFY_PERMISSIONS) && @chmod($directory, 0760)) {
+    if (($mode & FILE_MODIFY_PERMISSIONS) && @chmod($directory, 0775)) {
       drupal_set_message(t('The permissions of directory %directory have been changed to make it writable.', array('%directory' => theme('placeholder', $directory))));
     }
     else {
@@ -270,6 +272,10 @@ function file_copy(&$source, $dest = 0, $replace = FILE_EXISTS_RENAME) {
       drupal_set_message(t('The selected file %file could not be copied.', array('%file' => theme('placeholder', $source))), 'error');
       return 0;
     }
+
+    // Give everyone read access so that FTP'd users or
+    // non-webserver users can see/read these files.
+    @chmod($dest, 0664);
   }
 
   if (is_object($file)) {
