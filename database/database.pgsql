@@ -138,7 +138,6 @@ CREATE TABLE book (
   weight smallint NOT NULL default '0',
   PRIMARY KEY (vid)
 );
-CREATE INDEX book_vid_idx ON book(vid);
 CREATE INDEX book_nid_idx ON book(nid);
 CREATE INDEX book_parent ON book(parent);
 
@@ -295,7 +294,6 @@ CREATE TABLE forum (
   nid integer NOT NULL default '0',
   vid integer NOT NULL default '0',
   tid integer NOT NULL default '0',
-  shadow integer NOT NULL default '0',
   PRIMARY KEY (nid)
 );
 CREATE INDEX forum_tid_idx ON forum(tid);
@@ -424,7 +422,7 @@ CREATE TABLE node (
   PRIMARY KEY (nid)
 );
 CREATE INDEX node_type_idx ON node(type);
-CREATE INDEX node_title_idx ON node(title,type);
+CREATE INDEX node_title_type_idx ON node(title,type);
 CREATE INDEX node_status_idx ON node(status);
 CREATE INDEX node_uid_idx ON node(uid);
 CREATE INDEX node_moderate_idx ON node (moderate);
@@ -432,6 +430,7 @@ CREATE INDEX node_promote_status_idx ON node (promote, status);
 CREATE INDEX node_created ON node(created);
 CREATE INDEX node_changed ON node(changed);
 CREATE INDEX node_vid_idx ON node(vid);
+CREATE INDEX node_status_type_nid_idx ON node(status,type,nid);
 
 --
 -- Table structure for table `node_access`
@@ -522,7 +521,7 @@ CREATE TABLE url_alias (
   PRIMARY KEY (pid)
 );
 CREATE INDEX url_alias_dst_idx ON url_alias(dst);
-CREATE INDEX url_alias_src ON url_alias(src);
+CREATE INDEX url_alias_src_idx ON url_alias(src);
 --
 -- Table structure for permission
 --
@@ -577,9 +576,9 @@ CREATE TABLE role (
 CREATE TABLE search_dataset (
   sid integer NOT NULL default '0',
   type varchar(16) default NULL,
-  data text NOT NULL default '',
-  KEY sid_type (sid, type)
+  data text NOT NULL default ''
 );
+CREATE INDEX search_dataset_sid_type_idx on search_dataset(sid, type);
 
 --
 -- Table structure for search_index
@@ -594,7 +593,7 @@ CREATE TABLE search_index (
   score float default NULL
 );
 CREATE INDEX search_index_sid_type_idx ON search_index(sid, type);
-CREATE INDEX search_index_from_sid_type_idx ON search_index(fromsid, fromtype);
+CREATE INDEX search_index_fromsid_fromtype_idx ON search_index(fromsid, fromtype);
 CREATE INDEX search_index_word_idx ON search_index(word);
 
 --
@@ -603,9 +602,9 @@ CREATE INDEX search_index_word_idx ON search_index(word);
 
 CREATE TABLE search_total (
   word varchar(50) NOT NULL default '',
-  count float default NULL
+  count float default NULL,
+  PRIMARY KEY(word)
 );
-CREATE INDEX search_total_word_idx ON search_total(word);
 
 --
 -- Table structure for sessions

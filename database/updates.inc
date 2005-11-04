@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.141 2005/11/03 19:33:37 dries Exp $
+// $Id: updates.inc,v 1.142 2005/11/04 19:45:03 dries Exp $
 
 /**
  * @file
@@ -23,7 +23,40 @@
  *   return $ret;
  * }
  *
+ *
+ * A quick guide to mysql2postgres conversion. Usually (but not allways!) you will use following sql statements:
+ *
+ * - Adding a key (an index):
+ * mysql: ALTER TABLE {$table} ADD KEY $column ($column)
+ * pgsql: CREATE INDEX {$table}_$column_idx ON {$table}($column)  // Please note the _idx "extension"
+ *
+ * - Adding a primary key:
+ * mysql: ALTER TABLE {$table} ADD PRIMARY KEY $column ($column)
+ * pgsql: ALTER TABLE {$table} ADD PRIMARY KEY ($column)
+ *
+ * - Dropping a primary key:
+ * mysql: ALTER TABLE {$table} DROP PRIMARY KEY
+ * pgsql: ALTER TABLE {$table} DROP CONSTRAINT {$table}_pkey
+ *
+ * - Dropping a column:
+ * mysql: ALTER TABLE {$table} DROP $column
+ * pgsql: ALTER TABLE {$table} RENAME $column TO $column_old  // For compatibility reasons we don't drop columns but rename them
+ *
+ * - Dropping an index:
+ * mysql: ALTER TABLE {$table} DROP INDEX $index
+ * pgsql: DROP INDEX {$table}_$column_idx                            // When index was defined by CREATE INDEX
+ * pgsql: ALTER TABLE {$table} DROP CONSTRAINT {$table}_$column_key  // In case of UNIQUE($column)
+ *
+ * - Adding a column: (an example)
+ * mysql: $ret = update_sql("ALTER TABLE {vocabulary} ADD tags tinyint(3) unsigned default '0' NOT NULL");
+ * pgsql: db_add_column($ret, 'vocabulary', 'tags', 'smallint', array('default' => 0, 'not null' => TRUE));
+ *
+ * - Changing a column: (an example):
+ * mysql: $ret[] = update_sql("ALTER TABLE {locales_source} CHANGE location location varchar(255) NOT NULL default ''");
+ * pgsql: db_change_column($ret, 'locales_source', 'location', 'location', 'varchar(255)', array('not null' => TRUE, 'default' => ''));
+ *
  */
+
 
 // Define the various updates in an array("date : comment" => "function");
 $sql_updates = array(
@@ -69,6 +102,7 @@ $sql_updates = array(
   "2005-09-27" => "update_149",
   "2005-10-15" => "update_150",
   "2005-10-23" => "update_151",
+  "2005-10-28" => "update_152",
 );
 
 function update_110() {
@@ -520,7 +554,7 @@ function update_129() {
     $ret[] = update_sql("ALTER TABLE {vocabulary} ADD tags tinyint(3) unsigned default '0' NOT NULL");
   }
   elseif ($GLOBALS['db_type'] == 'pgsql') {
-    $ret[] = update_sql("ALTER TABLE {vocabulary} ADD tags smallint default '0' NOT NULL");
+    db_add_column($ret, 'vocabulary', 'tags', 'smallint', array('default' => 0, 'not null' => TRUE));
   }
 
   return $ret;
@@ -529,10 +563,10 @@ function update_129() {
 function update_130() {
   $ret = array();
   if ($GLOBALS['db_type'] == 'mysql') {
-    $ret[] = update_sql("ALTER TABLE {sessions} ADD cache int(11) NOT NULL default '0' AFTER timestamp");
+    $ret[] = update_sql("ALTER TABLE {sessions} ADD cache int(11) NOT NULL default '0'");
   }
   elseif ($GLOBALS['db_type'] == 'pgsql') {
-    $ret[] = update_sql("ALTER TABLE {sessions} ADD cache int(11) NOT NULL default '0' AFTER timestamp");
+    db_add_column($ret, 'sessions', 'cache', 'int', array('default' => 0, 'not null' => TRUE));
   }
   return $ret;
 }
@@ -542,11 +576,10 @@ function update_131() {
 
   if ($GLOBALS['db_type'] == 'mysql') {
     $ret[] = update_sql("ALTER TABLE {boxes} DROP INDEX title");
-    $ret[] = update_sql("ALTER TABLE {boxes} ADD INDEX title (title)");
+    // Removed recreation of the index, which is not present in the db schema
   }
   elseif ($GLOBALS['db_type'] == 'pgsql') {
-    $ret[] = update_sql("DROP INDEX boxes_title_idx");;
-    $ret[] = update_sql("CREATE INDEX title ON {boxes} (title)");
+    $ret[] = update_sql("ALTER TABLE {boxes} DROP CONSTRAINT {boxes}_title_key");
   }
 
   return $ret;
@@ -576,31 +609,33 @@ function update_132() {
 }
 
 function update_133() {
-  $ret[] = update_sql("CREATE TABLE {contact} (
-    subject varchar(255) NOT NULL default '',
-    recipients longtext NOT NULL default '',
-    reply longtext NOT NULL default ''
-    )");
+  $ret = array();
 
   if ($GLOBALS['db_type'] == 'mysql') {
+    $ret[] = update_sql("CREATE TABLE {contact} (
+      subject varchar(255) NOT NULL default '',
+      recipients longtext NOT NULL default '',
+      reply longtext NOT NULL default ''
+      )");
     $ret[] = update_sql("ALTER TABLE {users} ADD login int(11) NOT NULL default '0'");
   }
   elseif ($GLOBALS['db_type'] == 'pgsql') {
-    $ret[] = update_sql("ALTER TABLE {users} ADD login integer");
-    $ret[] = update_sql("ALTER TABLE {users} ALTER COLUMN login SET NOT NULL");
-    $ret[] = update_sql("ALTER TABLE {users} ALTER COLUMN login SET DEFAULT '0'");
+    // Table {contact} is changed in update_143() so I have moved it's creation there.
+    // It was never created here for postgres because of errors.
+
+    db_add_column($ret, 'users', 'login', 'int', array('default' => 0, 'not null' => TRUE));
   }
 
   return $ret;
 }
 
 function update_134() {
+  $ret = array();
   if ($GLOBALS['db_type'] == 'mysql') {
     $ret[] = update_sql('ALTER TABLE {blocks} DROP types');
   }
   else {
-    // Postgres can only drop columns since 7.4
-    #$ret[] = update_sql('ALTER TABLE {blocks} DROP types');
+    $ret[] = update_sql("ALTER TABLE {blocks} RENAME types TO types_old");
   }
   return $ret;
 }
@@ -616,7 +651,19 @@ function update_135() {
 
 function update_136() {
   $ret = array();
-  $ret[] = update_sql("ALTER TABLE {users} CHANGE COLUMN changed access int(11) NOT NULL default '0'");
+
+  switch ($GLOBALS['db_type']) {
+    case 'pgsql':
+      $ret[] = update_sql("DROP INDEX {users}_changed_idx"); // We drop the index first because it won't be renamed
+      $ret[] = update_sql("ALTER TABLE {users} RENAME changed TO access");
+      $ret[] = update_sql("CREATE INDEX {users}_access_idx on {users}(access)"); // Re-add the index
+      break;
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql("ALTER TABLE {users} CHANGE COLUMN changed access int(11) NOT NULL default '0'");
+      break;
+  }
+
   $ret[] = update_sql('UPDATE {users} SET access = login WHERE login > created');
   $ret[] = update_sql('UPDATE {users} SET access = created WHERE access = 0');
   return $ret;
@@ -629,12 +676,7 @@ function update_137() {
     $ret[] = update_sql("ALTER TABLE {locales_source} CHANGE location location varchar(255) NOT NULL default ''");
   }
   elseif ($GLOBALS['db_type'] == 'pgsql') {
-    $ret[] = update_sql("ALTER TABLE {locales_source} RENAME location TO location_old");
-    $ret[] = update_sql("ALTER TABLE {locales_source} ADD location varchar(255)");
-    $ret[] = update_sql("UPDATE {locales_source} SET location = location_old");
-    $ret[] = update_sql("ALTER TABLE {locales_source} ALTER location SET NOT NULL");
-    $ret[] = update_sql("ALTER TABLE {locales_source} ALTER location SET DEFAULT ''");
-    $ret[] = update_sql("ALTER TABLE {locales_source} DROP location_old");
+    db_change_column($ret, 'locales_source', 'location', 'location', 'varchar(255)', array('not null' => TRUE, 'default' => ''));
   }
   return $ret;
 }
@@ -648,7 +690,16 @@ function update_138() {
 
 function update_139() {
   $ret = array();
-  $ret[] = update_sql("ALTER TABLE {accesslog} ADD timer int(10) unsigned NOT NULL default '0'");
+  switch ($GLOBALS['db_type']) {
+    case 'pgsql':
+      db_add_column($ret, 'accesslog', 'timer', 'int', array('not null' => TRUE, 'default' => 0));
+      break;
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql("ALTER TABLE {accesslog} ADD timer int(10) unsigned NOT NULL default '0'");
+      break;
+  }
+
   return $ret;
 }
 
@@ -659,7 +710,7 @@ function update_140() {
     $ret[] = update_sql("ALTER TABLE {url_alias} ADD INDEX (src)");
   }
   elseif ($GLOBALS['db_type'] == 'pgsql') {
-    $ret[] = update_sql("CREATE INDEX url_alias_src ON {url_alias}(src)");
+    $ret[] = update_sql("CREATE INDEX {url_alias}_src_idx ON {url_alias}(src)");
   }
   return $ret;
 }
@@ -674,7 +725,15 @@ function update_141() {
 
 function update_142() {
   $ret = array();
-  $ret[] = update_sql("ALTER TABLE {watchdog} ADD COLUMN referer varchar(128) NOT NULL");
+  switch ($GLOBALS['db_type']) {
+    case 'pgsql':
+      db_add_column($ret, 'watchdog', 'referer', 'varchar(128)', array('not null' => TRUE, 'default' => ''));
+      break;
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql("ALTER TABLE {watchdog} ADD COLUMN referer varchar(128) NOT NULL");
+      break;
+  }
   return $ret;
 }
 
@@ -683,11 +742,16 @@ function update_143() {
 
   if ($GLOBALS['db_type'] == 'mysql') {
     $ret[] = update_sql("ALTER TABLE {contact} CHANGE subject category VARCHAR(255) NOT NULL ");
+    $ret[] = update_sql("ALTER TABLE {contact} ADD PRIMARY KEY (category)");
   }
   elseif ($GLOBALS['db_type'] == 'pgsql') {
-    $ret[] = update_sql("ALTER TABLE {contact} RENAME COLUMN subject TO category");
+    // Why the table is created here? See update_133().
+    $ret[] = update_sql("CREATE TABLE {contact} (
+      category varchar(255) NOT NULL default '',
+      recipients text NOT NULL default '',
+      reply text NOT NULL default '',
+      PRIMARY KEY (category))");
   }
-  $ret[] = update_sql("ALTER TABLE {contact} ADD PRIMARY KEY (category)");
 
   return $ret;
 }
@@ -698,12 +762,13 @@ function update_144() {
     $ret[] = update_sql("ALTER TABLE {node} CHANGE type type VARCHAR(32) NOT NULL");
   }
   elseif ($GLOBALS['db_type'] == 'pgsql') {
-    $ret[] = update_sql("ALTER TABLE {node} RENAME type TO type_old");
-    $ret[] = update_sql("ALTER TABLE {node} ADD type varchar(32)");
-    $ret[] = update_sql("ALTER TABLE {node} ALTER type SET NOT NULL");
-    $ret[] = update_sql("ALTER TABLE {node} ALTER type SET DEFAULT ''");
-    $ret[] = update_sql("UPDATE {node} SET type = type_old");
-    $ret[] = update_sql("ALTER TABLE {node} DROP type_old");
+    $ret[] = update_sql("DROP INDEX {node}_type_idx"); // Drop indexes using "type" column
+    $ret[] = update_sql("DROP INDEX {node}_title_idx");
+    db_change_column($ret, 'node', 'type', 'type', 'varchar(32)', array('not null' => TRUE, 'default' => ''));
+    // Let's recreate the indexes
+    $ret[] = update_sql("CREATE INDEX {node}_type_idx ON {node}(type)");
+    $ret[] = update_sql("CREATE INDEX {node}_title_type_idx ON {node}(title,type)");
+    $ret[] = update_sql("CREATE INDEX {node}_status_type_nid_idx ON {node}(status,type,nid)");
   }
   return $ret;
 }
@@ -711,8 +776,18 @@ function update_144() {
 function update_145() {
   $default_theme = variable_get('theme_default', 'bluemarine');
   $ret = array();
-  $ret[] = update_sql("ALTER TABLE {blocks} CHANGE region region varchar(64) default 'left' NOT NULL");
-  $ret[] = update_sql("ALTER TABLE {blocks} ADD theme varchar(255) NOT NULL default ''");
+
+  switch ($GLOBALS['db_type']) {
+    case 'pgsql':
+      db_change_column($ret, 'blocks', 'region', 'region', 'varchar(64)', array('default' => 'left', 'not null' => TRUE));
+      db_add_column($ret, 'blocks', 'theme', 'varchar(255)', array('not null' => TRUE, 'default' => ''));
+      break;
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql("ALTER TABLE {blocks} CHANGE region region varchar(64) default 'left' NOT NULL");
+      $ret[] = update_sql("ALTER TABLE {blocks} ADD theme varchar(255) NOT NULL default ''");
+      break;
+  }
 
   // Intialize block data for default theme
   $ret[] = update_sql("UPDATE {blocks} SET region = 'left' WHERE region = '0'");
@@ -771,16 +846,47 @@ function update_146() {
     $ret[] = update_sql("INSERT INTO {sequences} (name, id) VALUES ('{node_revisions}_vid', $vid)");
   }
   else { // pgsql
-    $ret[] = update_sql("CREATE TABLE {node_revisions} AS
-                                SELECT nid, nid AS vid, uid, type, title, body, teaser, changed AS timestamp, format
-                                FROM {node}");
+    $ret[] = update_sql("CREATE TABLE {node_revisions} (
+      nid integer NOT NULL default '0',
+      vid integer NOT NULL default '0',
+      uid integer NOT NULL default '0',
+      title varchar(128) NOT NULL default '',
+      body text NOT NULL default '',
+      teaser text NOT NULL default '',
+      log text NOT NULL default '',
+      timestamp integer NOT NULL default '0',
+      format int NOT NULL default '0',
+      PRIMARY KEY  (nid,vid))");
+    $ret[] = update_sql("INSERT INTO {node_revisions}
+      SELECT nid, nid AS vid, uid, title, body, teaser, changed AS timestamp, format
+      FROM {node}");
+    $ret[] = update_sql('CREATE INDEX {node_revisions}_uid_idx ON {node_revisions}(uid)');
+    $vid = db_next_id('{node}_nid');
+    $ret[] = update_sql("CREATE SEQUENCE {node_revisions}_vid_seq INCREMENT 1 START $vid");
+
+    db_add_column($ret, 'node',  'vid', 'int', array('not null' => TRUE, 'default' => 0));
+    db_add_column($ret, 'files', 'vid', 'int', array('not null' => TRUE, 'default' => 0));
+    db_add_column($ret, 'book',  'vid', 'int', array('not null' => TRUE, 'default' => 0));
+    db_add_column($ret, 'forum', 'vid', 'int', array('not null' => TRUE, 'default' => 0));
+
+    $ret[] = update_sql("ALTER TABLE {book} DROP CONSTRAINT {book}_pkey");
+    $ret[] = update_sql("ALTER TABLE {forum} DROP CONSTRAINT {forum}_pkey");
+    $ret[] = update_sql("ALTER TABLE {files} DROP CONSTRAINT {files}_pkey");
 
     $ret[] = update_sql("UPDATE {node} SET vid = nid");
     $ret[] = update_sql("UPDATE {forum} SET vid = nid");
     $ret[] = update_sql("UPDATE {book} SET vid = nid");
     $ret[] = update_sql("UPDATE {files} SET vid = nid");
 
+    $ret[] = update_sql("ALTER TABLE {book} ADD PRIMARY KEY (vid)");
+    $ret[] = update_sql("ALTER TABLE {forum} ADD PRIMARY KEY (nid)"); // We, The Postgres, will do it database.* way, not update() way.
+
     $ret[] = update_sql("CREATE TABLE {old_revisions} AS SELECT nid, type, revisions FROM {node} WHERE revisions != ''");
+
+    $ret[] = update_sql('CREATE INDEX {node}_vid_idx ON {node}(vid)');
+    $ret[] = update_sql('CREATE INDEX {forum}_vid_idx ON {forum}(vid)');
+    $ret[] = update_sql('CREATE INDEX {files}_fid_idx ON {files}(fid)');
+    $ret[] = update_sql('CREATE INDEX {files}_vid_idx ON {files}(vid)');
   }
 
   // Move logs too.
@@ -797,6 +903,11 @@ function update_146() {
     $ret[] = update_sql("ALTER TABLE {node} DROP revisions");
   }
   else { // pgsql
+    $ret[] = update_sql("ALTER TABLE {book} RENAME log TO log_old");
+    $ret[] = update_sql("ALTER TABLE {node} RENAME teaser TO teaser_old");
+    $ret[] = update_sql("ALTER TABLE {node} RENAME body TO body_old");
+    $ret[] = update_sql("ALTER TABLE {node} RENAME format TO format_old");
+    $ret[] = update_sql("ALTER TABLE {node} RENAME revisions TO revisions_old");
   }
 
   return $ret;
@@ -819,9 +930,7 @@ function update_148() {
   // Add support for tracking users' session ids (useful for tracking anon users)
   switch ($GLOBALS['db_type']) {
     case 'pgsql':
-      $ret[] = update_sql("ALTER TABLE {accesslog} ADD sid varchar(32)");
-      $ret[] = update_sql("ALTER TABLE {accesslog} ALTER sid SET NOT NULL");
-      $ret[] = update_sql("ALTER TABLE {accesslog} ALTER sid SET DEFAULT ''");
+      db_add_column($ret, 'accesslog', 'sid', 'varchar(32)', array('not null' => TRUE, 'default' => ''));
       break;
     case 'mysql':
     case 'mysqli':
@@ -837,6 +946,8 @@ function update_149() {
 
   switch ($GLOBALS['db_type']) {
     case 'pgsql':
+      db_add_column($ret, 'files', 'description', 'varchar(255)', array('not null' => TRUE, 'default' => ''));
+      break;
     case 'mysql':
     case 'mysqli':
       $ret[] = update_sql("ALTER TABLE {files} ADD COLUMN description VARCHAR(255) NOT NULL DEFAULT ''");
@@ -890,29 +1001,26 @@ function update_150() {
       break;
     case 'pgsql':
       $ret[] = update_sql("CREATE TABLE {search_dataset} (
-                           sid integer NOT NULL default '0',
-                           type varchar(16) default NULL,
-                           data text NOT NULL default '',
-                           KEY sid_type (sid, type)
-                           )");
+        sid integer NOT NULL default '0',
+        type varchar(16) default NULL,
+        data text NOT NULL default '')");
+      $ret[] = update_sql("CREATE INDEX {search_dataset}_sid_type_idx on {search_dataset}(sid, type)");
 
       $ret[] = update_sql("CREATE TABLE {search_index} (
-                           word varchar(50) NOT NULL default '',
-                           sid integer NOT NULL default '0',
-                           type varchar(16) default NULL,
-                           fromsid integer NOT NULL default '0',
-                           fromtype varchar(16) default NULL,
-                           score float default NULL
-                           )");
-      $ret[] = update_sql("CREATE INDEX search_index_sid_type_idx ON {search_index}(sid, type)");
-      $ret[] = update_sql("CREATE INDEX search_index_from_sid_type_idx ON {search_index}(fromsid, fromtype)");
-      $ret[] = update_sql("CREATE INDEX search_index_word_idx ON {search_index}(word)");
+        word varchar(50) NOT NULL default '',
+        sid integer NOT NULL default '0',
+        type varchar(16) default NULL,
+        fromsid integer NOT NULL default '0',
+        fromtype varchar(16) default NULL,
+        score float default NULL)");
+      $ret[] = update_sql("CREATE INDEX {search_index}_sid_type_idx ON {search_index}(sid, type)");
+      $ret[] = update_sql("CREATE INDEX {search_index}_fromsid_fromtype_idx ON {search_index}(fromsid, fromtype)");
+      $ret[] = update_sql("CREATE INDEX {search_index}_word_idx ON {search_index}(word)");
 
       $ret[] = update_sql("CREATE TABLE {search_total} (
-                           word varchar(50) NOT NULL default '',
-                           count float default NULL
-                           )");
-      $ret[] = update_sql("CREATE INDEX search_total_word_idx ON {search_total}(word)");
+        word varchar(50) NOT NULL default '',
+        count float default NULL,
+        PRIMARY KEY(word))");
       break;
     default:
       break;
@@ -994,6 +1102,121 @@ function update_151() {
 
   return $ret;
 }
+
+function update_152() {
+  $ret = array();
+
+  // Postgresql only update
+  switch ($GLOBALS['db_type']) {
+    case 'pgsql':
+      $ret[] = update_sql("ALTER TABLE {forum} RENAME shadow TO shadow_old");
+      break;
+    case 'mysql':
+    case 'mysqli':
+      break;
+  }
+
+  return $ret;
+}
+
+
+/**
+ * Adds a column to a database. Uses syntax appropriate for PostgreSQL.
+ * Saves result of SQL commands in $ret array.
+ *
+ * Note: when you add a column with NOT NULL and you are not sure if there are rows in table already,
+ *  you MUST also add DEFAULT. Otherwise PostgreSQL won't work if the table is not empty. If NOT NULL and
+ *  DEFAULT is set the Postgresql version will set values of the added column in old rows to the DEFAULT value.
+ *
+ * @param $ret
+ *  Array to which results will be added.
+ * @param $table
+ *  Name of the table, without {}
+ * @param $column
+ *  Name of the column
+ * @param $type
+ *  Type of column
+ * @param $attributes
+ *  Additional optional attributes. Recognized atributes:
+ *    - not null    => TRUE/FALSE
+ *    - default     => NULL/FALSE/value (without '')
+ * @return
+ *  nothing, but modifies $ret parametr.
+ */
+function db_add_column(&$ret, $table, $column, $type, $attributes = array()) {
+  if (array_key_exists('not null', $attributes) and $attributes['not null']) {
+    $not_null = 'NOT NULL';
+  }
+  if (array_key_exists('default', $attributes)) {
+    if (is_null($attributes['default'])) {
+      $default_val = 'NULL';
+      $default = 'default NULL';
+    }
+    elseif ($attributes['default'] === FALSE) {
+      $default = '';
+    }
+    else {
+      $default_val = "'$attributes[default]'";
+      $default = "default '$attributes[default]'";
+    }
+  }
+
+  $ret[] = update_sql("ALTER TABLE {". $table ."} ADD $column $type");
+  if ($default) { $ret[] = update_sql("ALTER TABLE {". $table ."} ALTER $column SET $default"); }
+  if ($not_null) {
+    if ($default) { $ret[] = update_sql("UPDATE {". $table ."} SET $column = $default_val"); }
+    $ret[] = update_sql("ALTER TABLE {". $table ."} ALTER $column SET NOT NULL");
+  }
+}
+
+/**
+ * Changes a column definition. Uses syntax appropriate for PostgreSQL.
+ * Saves result of SQL commands in $ret array.
+ *
+ * @param $ret
+ *  Array to which results will be added.
+ * @param $table
+ *  Name of the table, without {}
+ * @param $column
+ *  Name of the column to change
+ * @param $column_new
+ *  New name for the column (set to the same as $column if you don't want to change the name)
+ * @param $type
+ *  Type of column
+ * @param $attributes
+ *  Additional optional attributes. Recognized atributes:
+ *    - not null    => TRUE/FALSE
+ *    - default     => NULL/FALSE/value (without '')
+ * @return
+ *  nothing, but modifies $ret parametr.
+ */
+function db_change_column(&$ret, $table, $column, $column_new, $type, $attributes = array()) {
+  if (array_key_exists('not null', $attributes) and $attributes['not null']) {
+    $not_null = 'NOT NULL';
+  }
+  if (array_key_exists('default', $attributes)) {
+    if (is_null($attributes['default'])) {
+      $default_val = 'NULL';
+      $default = 'default NULL';
+    }
+    elseif ($attributes['default'] === FALSE) {
+      $default = '';
+    }
+    else {
+      $default_val = "'$attributes[default]'";
+      $default = "default '$attributes[default]'";
+    }
+  }
+
+  $ret[] = update_sql("ALTER TABLE {". $table ."} RENAME $column TO ". $column ."_old");
+  $ret[] = update_sql("ALTER TABLE {". $table ."} ADD $column_new $type");
+  $ret[] = update_sql("UPDATE {". $table ."} SET $column_new = ". $column ."_old");
+  if ($default) { $ret[] = update_sql("ALTER TABLE {". $table ."} ALTER $column_new SET $default"); }
+  if ($not_null) { $ret[] = update_sql("ALTER TABLE {". $table ."} ALTER $column_new SET NOT NULL"); }
+  // We don't drop columns for now
+  // $ret[] = update_sql("ALTER TABLE {". $table ."} DROP ". $column ."_old");
+}
+
 
 function update_sql($sql) {
   $edit = $_POST["edit"];
