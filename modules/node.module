@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.544 2005/11/01 10:17:34 dries Exp $
+// $Id: node.module,v 1.545 2005/11/04 19:40:28 dries Exp $
 
 /**
  * @file
@@ -900,7 +900,7 @@ function node_menu($may_cache) {
           'weight' => 1,
           'type' => MENU_LOCAL_TASK);
         $items[] = array('path' => 'node/'. arg(1) .'/delete', 'title' => t('delete'),
-          'callback' => 'node_delete_page',
+          'callback' => 'node_delete_confirm',
           'access' => node_access('delete', $node),
           'weight' => 1,
           'type' => MENU_CALLBACK);
@@ -1103,8 +1103,8 @@ function node_admin_nodes_execute($form_id, $edit) {
       }
     }
     drupal_set_message(t('The update has been performed.'));
+    drupal_goto('admin/node');
   }
-  drupal_goto('admin/node');
 }
 
 function node_admin_nodes_validate($form_id, $edit) {
@@ -1192,11 +1192,11 @@ function theme_node_admin_nodes($form) {
 
 function node_multiple_delete_form() {
   global $form_values;
-  $form['nodes'] = array('#prefix' => '<ul>', '#suffix' => '</ul>');
+  $form['nodes'] = array('#prefix' => '<ul>', '#suffix' => '</ul>', '#tree' => TRUE);
   foreach ($form_values['nodes'] as $nid => $value) {
     if ($value) {
       $title = db_result(db_query('SELECT title FROM {node} WHERE nid = %d', $nid));
-      $form['nodes'][$nid] = array('#type' => 'hidden', '#value' => $nid, '#tree' => TRUE, '#prefix' => '<li>', '#suffix' => check_plain($title) .'</li>');
+      $form['nodes'][$nid] = array('#type' => 'hidden', '#value' => $nid, '#prefix' => '<li>', '#suffix' => check_plain($title) .'</li>');
     }
   }
   $form['operation'] = array('#type' => 'hidden', '#value' => 'delete');
@@ -1211,7 +1211,7 @@ function node_multiple_delete_form() {
 function node_multiple_delete_form_execute($form_id, $edit) {
   if ($edit['confirm']) {
     foreach ($edit['nodes'] as $nid => $value) {
-      node_delete(array('nid' => $nid, 'confirm' => 1));
+      node_delete($nid);
     }
     drupal_set_message(t('The items have been deleted.'));
   }
@@ -1833,13 +1833,15 @@ function node_form_execute($form_id, $edit) {
 }
 
 /**
- * Ask for confirmation, and delete the node.
+ * Menu callback -- ask for confirmation of node deletion
  */
-function node_delete($edit) {
+function node_delete_confirm() {
+  $edit = $_POST['edit'];
+  $edit['nid'] = $edit['nid'] ? $edit['nid'] : arg(1);
   $node = node_load($edit['nid']);
 
   if (node_access('delete', $node)) {
-    $form['nid'] = array('#type' => 'hidden', '#value' => $node->nid);
+    $form['nid'] = array('#type' => 'value', '#value' => $node->nid);
     $output = confirm_form('node_delete_confirm', $form,
                    t('Are you sure you want to delete %title?', array('%title' => theme('placeholder', $node->title))),
                    $_GET['destination'] ? $_GET['destination'] : 'node/'. $node->nid, t('This action cannot be undone.'),
@@ -1849,32 +1851,41 @@ function node_delete($edit) {
   return $output;
 }
 
-function node_delete_confirm_execute() {
-  global $form_values;
-  $node = node_load($form_values['nid']);
+/**
+ * Execute node deletion
+ */
+function node_delete_confirm_execute($form_id, $form_values) {
+  if ($form_values['confirm']) {
+    node_delete($form_values['nid']);
+    drupal_goto('node');
+  }
+}
+
+/**
+ * Delete a node.
+ */
+function node_delete($nid) {
+
+  $node = node_load($nid);
 
   if (node_access('delete', $node)) {
+    db_query('DELETE FROM {node} WHERE nid = %d', $node->nid);
+    db_query('DELETE FROM {node_revisions} WHERE nid = %d', $node->nid);
 
-    if ($form_values['confirm']) {
-      db_query('DELETE FROM {node} WHERE nid = %d', $node->nid);
-      db_query('DELETE FROM {node_revisions} WHERE nid = %d', $node->nid);
+    // Call the node-specific callback (if any):
+    node_invoke($node, 'delete');
+    node_invoke_nodeapi($node, 'delete');
 
-      // Call the node-specific callback (if any):
-      node_invoke($node, 'delete');
-      node_invoke_nodeapi($node, 'delete');
+    // Clear the cache so an anonymous poster can see the node being deleted.
+    cache_clear_all();
 
-      // Clear the cache so an anonymous poster can see the node being deleted.
-      cache_clear_all();
-
-      // Remove this node from the search index if needed.
-      if (function_exists('search_wipe')) {
-        search_wipe($node->nid, 'node');
-      }
-
-      watchdog('content', t('%type: deleted %title.', array('%type' => theme('placeholder', t($node->type)), '%title' => theme('placeholder', $node->title))));
+    // Remove this node from the search index if needed.
+    if (function_exists('search_wipe')) {
+      search_wipe($node->nid, 'node');
     }
+    drupal_set_message(t('%title has been deleted.', array('%title' => theme('placeholder', $node->title))));
+    watchdog('content', t('%type: deleted %title.', array('%type' => theme('placeholder', t($node->type)), '%title' => theme('placeholder', $node->title))));
   }
-  drupal_goto('node');
 }
 
 /**
@@ -1993,20 +2004,6 @@ function node_page() {
       drupal_set_title('');
       return node_page_default();
   }
-}
-
-/**
- * Menu callback; the page for deleting a single node.
- */
-function node_delete_page() {
-  $edit = $_POST['edit'];
-  $edit['nid'] = $edit['nid'] ? $edit['nid'] : arg(1);
-  $node = node_load($edit['nid']);
-  if (!($output = node_delete($edit))) {
-    drupal_set_message(t('%title has been deleted.', array('%title' => theme('placeholder', $node->title))));
-    drupal_goto('');
-  }
-  return $output;
 }
 
 /**

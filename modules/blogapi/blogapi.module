@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.63 2005/11/01 10:17:34 dries Exp $
+// $Id: blogapi.module,v 1.64 2005/11/04 19:40:26 dries Exp $
 
 /**
  * @file
@@ -318,7 +318,7 @@ function blogapi_blogger_delete_post($appkey, $postid, $username, $password, $co
     return blogapi_error($user);
   }
 
-  node_delete(array('nid' => $postid, 'confirm' => 1));
+  node_delete($postid);
   return true;
 }
 

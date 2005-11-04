@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.281 2005/11/01 10:17:34 dries Exp $
+// $Id: forum.module,v 1.282 2005/11/04 19:40:26 dries Exp $
 
 /**
  * @file
@@ -154,9 +154,7 @@ function forum_taxonomy($op, $type, $object = NULL) {
   if ($op == 'delete' && $type == 'term' && $object->vid == _forum_get_vid())  {
     $results = db_query('SELECT f.nid FROM {forum} f WHERE f.tid = %d', $object->tid);
     while ($node = db_fetch_object($results)) {
-      $edit['nid'] = $node->nid;
-      $edit['confirm'] = TRUE;
-      node_delete($edit);
+      node_delete($node->nid);
     }
   }
   elseif ($op == 'delete' && $type == 'vocabulary' && $object->vid == _forum_get_vid())  {
