@@ -1,5 +1,5 @@
 <?php
-// $Id: database.pgsql.inc,v 1.16 2005/10/20 21:30:50 unconed Exp $
+// $Id: database.pgsql.inc,v 1.17 2005/11/04 13:02:51 unconed Exp $
 
 /**
  * @file
@@ -253,8 +253,8 @@ function db_query_range($query) {
  *   printf() syntax. Instead of a variable number of query arguments, you may
  *   also pass a single array containing the query arguments.
  * @param $table
- *   The name of the temporary table to select into. This name will not be
- *   prefixed as there is no risk of collision.
+ *   The name of the temporary table to select into. This name will be
+ *   prefixed for compatibility reasons (there is no risk of collision).
  * @return
  *   A database query result resource, or FALSE if the query was not executed
  *   correctly.
@@ -263,7 +263,7 @@ function db_query_temporary($query) {
   $args = func_get_args();
   $tablename = array_pop($args);
 
-  $query = preg_replace('/^SELECT/i', 'CREATE TEMPORARY TABLE '. $tablename .' AS', db_prefix_tables($query));
+  $query = preg_replace('/^SELECT/i', 'CREATE TEMPORARY TABLE {'. $tablename .'} AS SELECT', db_prefix_tables($query));
   if (count($args) > 1) {
     // Check for array (alternative syntax).
     if (is_array($args[1])) {
