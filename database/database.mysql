@@ -204,10 +204,12 @@ CREATE TABLE comments (
 --
 
 CREATE TABLE contact (
+  cid int(10) unsigned NOT NULL auto_increment,
   category varchar(255) NOT NULL default '',
   recipients longtext NOT NULL default '',
   reply longtext NOT NULL default '',
-  PRIMARY KEY (category)
+  PRIMARY KEY (cid),
+  UNIQUE KEY category (category)
 ) TYPE=MyISAM;
 
 --

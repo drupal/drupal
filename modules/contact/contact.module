@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.27 2005/11/01 10:17:34 dries Exp $
+// $Id: contact.module,v 1.28 2005/11/05 08:00:20 dries Exp $
 
 /**
  * @file
@@ -175,7 +175,7 @@ function contact_user_mail_execute($form_id, $edit) {
   drupal_goto("user/$account->uid");
 }
 
-function contact_admin_edit($category = NULL) {
+function contact_admin_edit($cid = NULL) {
   if (isset($_POST['edit'])) {
     $edit = $_POST['edit'];
 
@@ -187,13 +187,14 @@ function contact_admin_edit($category = NULL) {
     }
 
     if (!form_get_errors()) {
-      db_query("DELETE FROM {contact} WHERE category = '%s'", $category);
+      db_query("DELETE FROM {contact} WHERE cid = '%d'", $cid);
       db_query("INSERT INTO {contact} (category, recipients, reply) VALUES ('%s', '%s', '%s')", $edit['category'], $edit['recipients'], $edit['reply']);
       drupal_goto('admin/contact');
     }
   }
   else {
-    $category           = db_fetch_object(db_query("SELECT * FROM {contact} WHERE category = '%s'", $category));
+    $category           = db_fetch_object(db_query("SELECT * FROM {contact} WHERE cid = '%d'", $cid));
+    $edit['cid'] = $category->cid;
     $edit['category']   = $category->category;
     $edit['recipients'] = $category->recipients;
     $edit['reply']      = $category->reply;
@@ -207,27 +208,28 @@ function contact_admin_edit($category = NULL) {
   return drupal_get_form('contact_admin_edit', $form);
 }
 
-function contact_admin_delete($category) {
+function contact_admin_delete($cid) {
+  $info = db_fetch_object(db_query("SELECT cid, category FROM {contact} WHERE cid = '%d'",$cid));
   if ($_POST['op'] != t('Delete')) {
     return confirm_form('contact_admin_delete', array(),
-                    t('Are you sure you want to delete %category?', array('%category' => theme('placeholder', $category))),
+                    t('Are you sure you want to delete %category?', array('%category' => theme('placeholder', $info->category))),
                     'admin/contact',
                     t('This action cannot be undone.'),
                     t('Delete'),
                     t('Cancel'));
   }
   else {
-    db_query("DELETE FROM {contact} WHERE category = '%s'", $category);
+    db_query("DELETE FROM {contact} WHERE cid = '%d'", $cid);
     drupal_goto('admin/contact');
   }
 }
 
 
 function contact_admin() {
-  $result = db_query('SELECT category, recipients FROM {contact} ORDER BY category');
+  $result = db_query('SELECT cid, category, recipients FROM {contact} ORDER BY category');
   $rows = array();
   while ($category = db_fetch_object($result)) {
-    $rows[] = array($category->category, $category->recipients, l(t('edit'), 'admin/contact/edit/'. urlencode($category->category)), l(t('delete'), 'admin/contact/delete/'. urlencode($category->category)));
+    $rows[] = array($category->category, $category->recipients, l(t('edit'), 'admin/contact/edit/'. $category->cid), l(t('delete'), 'admin/contact/delete/'. $category->cid));
   }
   $header = array(t('Category'), t('Recipients'), array('data' => t('Operations'), 'colspan' => 2));
   return theme('table', $header, $rows);
