@@ -103,6 +103,7 @@ $sql_updates = array(
   "2005-10-15" => "update_150",
   "2005-10-23" => "update_151",
   "2005-10-28" => "update_152",
+  "2005-11-03" => "update_153"
 );
 
 function update_110() {
@@ -1118,6 +1119,24 @@ function update_152() {
 
   return $ret;
 }
+
+function update_153(){
+  $ret = array();
+  switch ($GLOBALS['db_type']) {
+    case 'pgsql':
+      $ret[] = update_sql("ALTER TABLE {contact} DROP CONSTRAINT {contact}_pkey category");
+      $ret[] = update_sql("ALTER TABLE {contact} ADD COLUMN cid int PRIMARY KEY");
+      $ret[] = update_sql("ALTER TABLE {contact} ADD UNIQUE (category)");
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql("ALTER TABLE {contact} DROP PRIMARY KEY");
+      $ret[] = update_sql("ALTER TABLE {contact} ADD COLUMN cid int(11) NOT NULL PRIMARY KEY auto_increment");
+       $ret[] = update_sql("ALTER TABLE {contact} ADD UNIQUE KEY category (category)");
+  }
+  $ret = array();
+
+}
+
 
 
 /**
