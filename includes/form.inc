@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.10 2005/11/03 15:42:31 dries Exp $
+// $Id: form.inc,v 1.11 2005/11/06 11:38:56 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -54,6 +54,11 @@ function drupal_get_form($form_id, &$form, $callback = NULL) {
 
   $form['#type'] = 'form';
   if (isset($form['#token'])) {
+    // Make sure that a private key is set:
+    if (!variable_get('drupal_private_key', '')) {
+      variable_set('drupal_private_key', mt_rand());
+    }
+
     $form['form_token'] = array('#type' => 'hidden', '#value' => md5($_SERVER['REMOTE_ADDR'] . $form['#token'] . variable_get('drupal_private_key',
 '')));
   }
