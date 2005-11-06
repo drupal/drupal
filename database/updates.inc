@@ -1071,7 +1071,9 @@ function update_151() {
 
           $mid = db_next_id('{menu}_mid');
           $ret[] = update_sql("INSERT INTO {menu} (mid, pid, path, title, description, weight, type) " .
-                               "VALUES ($mid, {$menus[$loop]['pid']}, '$link_path', '{$links['text'][$i]}', '{$links['description'][$i]}', 0, 118)");
+                               "VALUES ($mid, {$menus[$loop]['pid']}, '" . db_escape_string($link_path) .
+                               "', '" . db_escape_string($links['text'][$i]) .
+                               "', '" . db_escape_string($links['description'][$i]) . "', 0, 118)");
         }
       }
       // delete Secondary links if not populated.
