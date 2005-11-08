@@ -658,7 +658,7 @@ function comment_post($edit) {
         drupal_goto('node/'. $edit['nid']);
       }
       else {
-        drupal_goto('node/'. $edit['nid'] .'#comment-'. $edit['cid']);
+        drupal_goto('node/'. $edit['nid'], NULL,  'comment-'. $edit['cid']);
       }
     }
     else {
@@ -929,7 +929,7 @@ function comment_admin_edit($cid) {
   $comment = drupal_unpack($comment);
 
   if ($comment) {
-    if (!$comment->uid) {
+    if (!$comment->uid && (variable_get('comment_anonymous', 0) > 0)) {
       // If comment from non-registered user, allow admin to modify anonymous fields.
       $form .= form_textfield(t('Name'), 'name', $comment->name ? $comment->name : variable_get('anonymous', 'Anonymous') , 20, 60);
       $form .= form_textfield(t('E-mail'), 'mail', $comment->mail, 20, 64);
@@ -1310,7 +1310,7 @@ function comment_save_settings() {
     $_SESSION['comment_threshold'] = $threshold;
     $_SESSION['comment_comments_per_page'] = $comments_per_page;
   }
-  drupal_goto('node/'. $edit['nid'] .'#comment');
+  drupal_goto('node/'. $edit['nid'], NULL, 'comment');
 }
 
 function comment_num_all($nid) {
