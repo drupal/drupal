@@ -68,12 +68,7 @@ function drupal_get_form($form_id, &$form, $callback = NULL) {
 
   foreach (module_implements('form_alter') as $module) {
     $function = $module .'_form_alter';
-    $function($form);
-  }
-
-  $function = $form_id . '_form_alter';
-  if (function_exists($function)) {
-    $function($form);
+    $function($form_id, $form);
   }
 
   $form = _form_builder($form);
