@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.144 2005/11/06 11:33:28 dries Exp $
+// $Id: updates.inc,v 1.145 2005/11/08 12:02:23 dries Exp $
 
 /**
  * @file
@@ -53,7 +53,7 @@
  *
  * - Changing a column: (an example):
  * mysql: $ret[] = update_sql("ALTER TABLE {locales_source} CHANGE location location varchar(255) NOT NULL default ''");
- * pgsql: db_change_column($ret, 'locales_source', 'location', 'location', 'varchar(255)', array('not null' => TRUE, 'default' => ''));
+ * pgsql: db_change_column($ret, 'locales_source', 'location', 'location', 'varchar(255)', array('not null' => TRUE, 'default' => "''"));
  *
  */
 
@@ -677,7 +677,7 @@ function update_137() {
     $ret[] = update_sql("ALTER TABLE {locales_source} CHANGE location location varchar(255) NOT NULL default ''");
   }
   elseif ($GLOBALS['db_type'] == 'pgsql') {
-    db_change_column($ret, 'locales_source', 'location', 'location', 'varchar(255)', array('not null' => TRUE, 'default' => ''));
+    db_change_column($ret, 'locales_source', 'location', 'location', 'varchar(255)', array('not null' => TRUE, 'default' => "''"));
   }
   return $ret;
 }
@@ -728,7 +728,7 @@ function update_142() {
   $ret = array();
   switch ($GLOBALS['db_type']) {
     case 'pgsql':
-      db_add_column($ret, 'watchdog', 'referer', 'varchar(128)', array('not null' => TRUE, 'default' => ''));
+      db_add_column($ret, 'watchdog', 'referer', 'varchar(128)', array('not null' => TRUE, 'default' => "''"));
       break;
     case 'mysql':
     case 'mysqli':
@@ -765,7 +765,7 @@ function update_144() {
   elseif ($GLOBALS['db_type'] == 'pgsql') {
     $ret[] = update_sql("DROP INDEX {node}_type_idx"); // Drop indexes using "type" column
     $ret[] = update_sql("DROP INDEX {node}_title_idx");
-    db_change_column($ret, 'node', 'type', 'type', 'varchar(32)', array('not null' => TRUE, 'default' => ''));
+    db_change_column($ret, 'node', 'type', 'type', 'varchar(32)', array('not null' => TRUE, 'default' => "''"));
     // Let's recreate the indexes
     $ret[] = update_sql("CREATE INDEX {node}_type_idx ON {node}(type)");
     $ret[] = update_sql("CREATE INDEX {node}_title_type_idx ON {node}(title,type)");
@@ -780,8 +780,8 @@ function update_145() {
 
   switch ($GLOBALS['db_type']) {
     case 'pgsql':
-      db_change_column($ret, 'blocks', 'region', 'region', 'varchar(64)', array('default' => 'left', 'not null' => TRUE));
-      db_add_column($ret, 'blocks', 'theme', 'varchar(255)', array('not null' => TRUE, 'default' => ''));
+      db_change_column($ret, 'blocks', 'region', 'region', 'varchar(64)', array('default' => "'left'", 'not null' => TRUE));
+      db_add_column($ret, 'blocks', 'theme', 'varchar(255)', array('not null' => TRUE, 'default' => "''"));
       break;
     case 'mysql':
     case 'mysqli':
@@ -931,7 +931,7 @@ function update_148() {
   // Add support for tracking users' session ids (useful for tracking anon users)
   switch ($GLOBALS['db_type']) {
     case 'pgsql':
-      db_add_column($ret, 'accesslog', 'sid', 'varchar(32)', array('not null' => TRUE, 'default' => ''));
+      db_add_column($ret, 'accesslog', 'sid', 'varchar(32)', array('not null' => TRUE, 'default' => "''"));
       break;
     case 'mysql':
     case 'mysqli':
@@ -947,7 +947,7 @@ function update_149() {
 
   switch ($GLOBALS['db_type']) {
     case 'pgsql':
-      db_add_column($ret, 'files', 'description', 'varchar(255)', array('not null' => TRUE, 'default' => ''));
+      db_add_column($ret, 'files', 'description', 'varchar(255)', array('not null' => TRUE, 'default' => "''"));
       break;
     case 'mysql':
     case 'mysqli':
@@ -1126,17 +1126,20 @@ function update_153(){
   $ret = array();
   switch ($GLOBALS['db_type']) {
     case 'pgsql':
-      $ret[] = update_sql("ALTER TABLE {contact} DROP CONSTRAINT {contact}_pkey category");
-      $ret[] = update_sql("ALTER TABLE {contact} ADD COLUMN cid int PRIMARY KEY");
-      $ret[] = update_sql("ALTER TABLE {contact} ADD UNIQUE (category)");
+      $ret[] = update_sql("ALTER TABLE {contact} DROP CONSTRAINT {contact}_pkey");
+      $ret[] = update_sql("CREATE SEQUENCE {contact}_cid_seq");
+      db_add_column($ret, 'contact', 'cid', 'integer', array('not null' => TRUE, 'default' => "nextval('{contact}_cid_seq')"));
+      $ret[] = update_sql("ALTER TABLE {contact} ADD PRIMARY KEY (cid)");
+      $ret[] = update_sql("ALTER TABLE {contact} ADD CONSTRAINT {contact}_category_key UNIQUE (category)");
+      break;
     case 'mysql':
     case 'mysqli':
       $ret[] = update_sql("ALTER TABLE {contact} DROP PRIMARY KEY");
       $ret[] = update_sql("ALTER TABLE {contact} ADD COLUMN cid int(11) NOT NULL PRIMARY KEY auto_increment");
-       $ret[] = update_sql("ALTER TABLE {contact} ADD UNIQUE KEY category (category)");
+      $ret[] = update_sql("ALTER TABLE {contact} ADD UNIQUE KEY category (category)");
+      break;
   }
-  $ret = array();
-
+  return $ret;
 }
 
 
@@ -1160,7 +1163,7 @@ function update_153(){
  * @param $attributes
  *  Additional optional attributes. Recognized atributes:
  *    - not null    => TRUE/FALSE
- *    - default     => NULL/FALSE/value (without '')
+ *    - default     => NULL/FALSE/value (with or without '', it wont' be added)
  * @return
  *  nothing, but modifies $ret parametr.
  */
@@ -1177,8 +1180,8 @@ function db_add_column(&$ret, $table, $column, $type, $attributes = array()) {
       $default = '';
     }
     else {
-      $default_val = "'$attributes[default]'";
-      $default = "default '$attributes[default]'";
+      $default_val = "$attributes[default]";
+      $default = "default $attributes[default]";
     }
   }
 
@@ -1207,7 +1210,7 @@ function db_add_column(&$ret, $table, $column, $type, $attributes = array()) {
  * @param $attributes
  *  Additional optional attributes. Recognized atributes:
  *    - not null    => TRUE/FALSE
- *    - default     => NULL/FALSE/value (without '')
+ *    - default     => NULL/FALSE/value (with or without '', it wont' be added)
  * @return
  *  nothing, but modifies $ret parametr.
  */
@@ -1224,8 +1227,8 @@ function db_change_column(&$ret, $table, $column, $column_new, $type, $attribute
       $default = '';
     }
     else {
-      $default_val = "'$attributes[default]'";
-      $default = "default '$attributes[default]'";
+      $default_val = "$attributes[default]";
+      $default = "default $attributes[default]";
     }
   }
 

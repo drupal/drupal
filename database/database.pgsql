@@ -199,7 +199,7 @@ CREATE INDEX comments_nid_idx ON comments(nid);
 --
 
 CREATE TABLE contact (
-  cid int NOT NULL,
+  cid SERIAL,
   category varchar(255) NOT NULL default '',
   recipients text NOT NULL default '',
   reply text NOT NULL default '',
