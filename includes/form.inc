@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.11 2005/11/06 11:38:56 dries Exp $
+// $Id: form.inc,v 1.12 2005/11/08 20:02:24 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -114,7 +114,7 @@ function drupal_validate_form($form_id, &$form, $callback = NULL) {
   if (function_exists($form_id . '_validate')) {
     call_user_func($form_id . '_validate', $form_id, $form_values);
   }
-  if (function_exists($callback . '_validate')) {
+  elseif (function_exists($callback . '_validate')) {
     call_user_func($callback . '_validate', $form_id, $form_values);
   }
 }
