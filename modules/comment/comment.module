@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.385 2005/11/01 10:17:34 dries Exp $
+// $Id: comment.module,v 1.386 2005/11/08 20:57:41 dries Exp $
 
 /**
  * @file
@@ -348,7 +348,7 @@ function comment_reply($nid, $pid = NULL) {
       return comment_preview($edit);
     }
     else {
-      drupal_goto("node/$nid#comment-$cid");
+      drupal_goto("node/$nid", NULL, "comment-$cid");
     }
   }
   else if ($_POST['op'] == t('Preview comment')) {
@@ -548,7 +548,7 @@ function comment_save($edit) {
 
       if ($edit['cid']) {
         // Update the comment in the database.
-        db_query("UPDATE {comments} SET status = '%s', timestamp = '%d', subject = '%s', comment = '%s', format = '%s', uid = %d, name = '%s' WHERE cid = %d", $edit['status'], $edit['timestamp'], $edit['subject'], $edit['comment'], $edit['format'], $edit['uid'], $edit['name'], $edit['cid']);
+        db_query("UPDATE {comments} SET status = '%s', timestamp = %d, subject = '%s', comment = '%s', format = '%s', uid = %d, name = '%s' WHERE cid = %d", $edit['status'], $edit['timestamp'], $edit['subject'], $edit['comment'], $edit['format'], $edit['uid'], $edit['name'], $edit['cid']);
 
         _comment_update_node_statistics($edit['nid']);
 
@@ -991,7 +991,7 @@ function comment_save_settings() {
     $_SESSION['comment_comments_per_page'] = $comments_per_page;
   }
 
-  drupal_goto('node/'. $edit['nid'] .'#comment');
+  drupal_goto('node/'. $edit['nid'], NULL, 'comment');
 }
 
 function comment_num_all($nid) {
