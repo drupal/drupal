@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.233 2005/11/01 10:17:34 dries Exp $
+// $Id: taxonomy.module,v 1.234 2005/11/08 15:17:34 dries Exp $
 
 /**
  * @file
@@ -30,12 +30,12 @@ function taxonomy_link($type, $node = NULL) {
     if (array_key_exists('taxonomy', $node)) {
       foreach ($node->taxonomy as $tid) {
         $term = taxonomy_get_term($tid);
-        $links[] = l($term->name, taxonomy_term_path($term));
+        $links[] = l($term->name, taxonomy_term_path($term), array('rel' => 'tag', 'title' => $term->description));
       }
     }
     else {
       foreach (taxonomy_node_get_terms($node->nid) as $term) {
-        $links[] = l($term->name, taxonomy_term_path($term));
+        $links[] = l($term->name, taxonomy_term_path($term), array('rel' => 'tag', 'title' => $term->description));
       }
     }
     return $links;
