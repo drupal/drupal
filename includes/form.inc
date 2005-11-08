@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.12 2005/11/08 20:02:24 dries Exp $
+// $Id: form.inc,v 1.13 2005/11/08 20:17:42 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -68,12 +68,7 @@ function drupal_get_form($form_id, &$form, $callback = NULL) {
 
   foreach (module_implements('form_alter') as $module) {
     $function = $module .'_form_alter';
-    $function($form);
-  }
-
-  $function = $form_id . '_form_alter';
-  if (function_exists($function)) {
-    $function($form);
+    $function($form_id, $form);
   }
 
   $form = _form_builder($form);
