@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.64 2005/11/04 19:40:26 dries Exp $
+// $Id: blogapi.module,v 1.65 2005/11/09 19:03:35 dries Exp $
 
 /**
  * @file
@@ -231,7 +231,8 @@ function blogapi_blogger_new_post($appkey, $blogid, $username, $password, $conte
   node_save($node);
   if ($node->nid) {
     watchdog('content', t('%type: added %title using blog API.', array('%type' => '<em>'. t($node->type) .'</em>', '%title' => theme('placeholder', $node->title))), WATCHDOG_NOTICE, l(t('view'), "node/$node->nid"));
-    return $node->nid;
+    // blogger.newPost returns a string so we cast the nid to a string by putting it in double quotes:
+    return "$node->nid";
   }
 
   return blogapi_error(t('Error storing post.'));
@@ -312,7 +313,7 @@ function blogapi_blogger_get_post($appkey, $postid, $username, $password) {
 /**
  * Blogging API callback. Removes the specified blog node.
  */
-function blogapi_blogger_delete_post($appkey, $postid, $username, $password, $content, $publish) {
+function blogapi_blogger_delete_post($appkey, $postid, $username, $password, $publish) {
   $user = blogapi_validate_user($username, $password);
   if (!$user->uid) {
     return blogapi_error($user);
@@ -341,6 +342,7 @@ function blogapi_blogger_get_recent_posts($appkey, $blogid, $username, $password
   else {
     $result = db_query_range("SELECT n.nid, n.title, n.created, u.name FROM {node} n, {users} u WHERE n.uid = u.uid AND n.type = '%s' AND n.uid = %d ORDER BY n.created DESC", $type, $user->uid, 0, $number_of_posts);
   }
+  $blogs = array ();
   while ($blog = db_fetch_object($result)) {
     $blogs[] = _blogapi_get_post($blog, $bodies);
   }
@@ -621,7 +623,7 @@ function blogapi_rsd() {
     <apis>
       <api name="MetaWeblog" preferred="false" apiLink="$xmlrpc" blogID="$blogid" />
       <api name="Blogger" preferred="true" apiLink="$xmlrpc" blogID="$blogid" />
-      <api name="Movabletype" preferred="false" apiLink="$xmlrpc" blogID="$blogid" />
+      <api name="MovableType" preferred="false" apiLink="$xmlrpc" blogID="$blogid" />
     </apis>
   </service>
 </rsd>
@@ -682,7 +684,7 @@ function _blogapi_mt_extra(&$node, $struct) {
 
   // dateCreated
   if ($struct['dateCreated']) {
-    $node->created = mktime($struct['dateCreated']->hour, $struct['dateCreated']->minute, $struct['dateCreated']->second, $struct['dateCreated']->month, $struct['dateCreated']->day, $struct['dateCreated']->year);
+    $node->date = $struct['dateCreated']->iso8601;
   }
 
   if ($was_array) {
