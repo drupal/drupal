@@ -221,7 +221,8 @@ function blogapi_blogger_new_post($appkey, $blogid, $username, $password, $conte
   $nid = node_save($node);
   if ($nid) {
     watchdog('content', t('%type: added %title using blog API.', array('%type' => '<em>'. t($node->type) .'</em>', '%title' => theme('placeholder', $node->title))), WATCHDOG_NOTICE, l(t('view'), "node/$nid"));
-    return $nid;
+    // blogger.newPost returns a string
+    return "$nid";
   }
 
   return blogapi_error(t('Error storing post.'));
@@ -302,7 +303,7 @@ function blogapi_blogger_get_post($appkey, $postid, $username, $password) {
 /**
  * Blogging API callback. Removes the specified blog node.
  */
-function blogapi_blogger_delete_post($appkey, $postid, $username, $password, $content, $publish) {
+function blogapi_blogger_delete_post($appkey, $postid, $username, $password, $publish) {
   $user = blogapi_validate_user($username, $password);
   if (!$user->uid) {
     return blogapi_error($user);
@@ -326,6 +327,7 @@ function blogapi_blogger_get_recent_posts($appkey, $blogid, $username, $password
 
   $type = _blogapi_blogid($blogid);
   $result = db_query_range('SELECT n.nid, n.title,'. ($bodies ? ' n.body,' : '') ." n.created, u.name FROM {node} n, {users} u WHERE n.uid=u.uid AND n.type = '%s' AND n.uid = %d ORDER BY n.created DESC", $type, $user->uid, 0, $number_of_posts);
+  $blogs = array ();
   while ($blog = db_fetch_object($result)) {
     $blogs[] = _blogapi_get_post($blog, $bodies);
   }
@@ -613,7 +615,7 @@ function blogapi_rsd() {
     <apis>
       <api name="MetaWeblog" preferred="$metaweblog" apiLink="$xmlrpc" blogID="$blogid" />
       <api name="Blogger" preferred="$blogger" apiLink="$xmlrpc" blogID="$blogid" />
-      <api name="Movabletype" preferred="$mt" apiLink="$xmlrpc" blogID="$blogid" />
+      <api name="MovableType" preferred="$mt" apiLink="$xmlrpc" blogID="$blogid" />
     </apis>
   </service>
 </rsd>
