@@ -340,6 +340,7 @@ function xmlrpc_date($time) {
     $xmlrpc_date->minute = substr($time, 12, 2);
     $xmlrpc_date->second = substr($time, 15, 2);
   }
+  $xmlrpc_date->iso8601 = $time;
   return $xmlrpc_date;
 }
 
