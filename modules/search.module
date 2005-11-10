@@ -931,7 +931,10 @@ function search_form($action = '', $keys = '', $type = null, $prompt = null) {
   $form['basic']['inline']['keys'] = array('#type' => 'textfield', '#title' => '', '#default_value' => $keys, '#size' => $prompt ? 40 : 30, '#maxlength' => 255);
   $form['basic']['inline']['submit'] = array('#type' => 'submit', '#value' => t('Search'));
 
-  $form = array_merge($form, module_invoke($type, 'search', 'form', $keys));
+  $form_module = module_invoke($type, 'search', 'form', $keys);
+  if (is_array($form_module)) {
+    $form = array_merge($form, $form_module);
+  }
 
   return drupal_get_form('search_form', $form);
 }
