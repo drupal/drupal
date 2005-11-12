@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.13 2005/11/08 20:17:42 dries Exp $
+// $Id: form.inc,v 1.14 2005/11/12 03:45:57 unconed Exp $
 
 /**
  * @defgroup form Form generation
@@ -71,9 +71,9 @@ function drupal_get_form($form_id, &$form, $callback = NULL) {
     $function($form_id, $form);
   }
 
-  $form = _form_builder($form);
+  $form = _form_builder($form_id, $form);
 
-  if (!empty($_POST['edit']) && (($form_values['form_id'] == $form_id) || ($form_values['form_id'] == $callback))) {
+  if (!empty($_POST['edit']) && (($_POST['edit']['form_id'] == $form_id) || ($_POST['edit']['form_id'] == $callback))) {
     drupal_validate_form($form_id, $form, $callback);
     if ($form_execute && !form_get_errors()) {
       drupal_execute_form($form_id, $form, $callback);
@@ -215,7 +215,7 @@ function form_error(&$element, $message) {
  * This function also automatically assigns the value property from the $edit array, provided the
  * element doesn't already have an assigned value.
  */
-function _form_builder($form) {
+function _form_builder($form_id, $form) {
   global $form_values;
   global $form_execute;
   /* Use element defaults */
@@ -227,7 +227,7 @@ function _form_builder($form) {
     $form['#name'] = ($form['#name']) ? $form['#name'] : 'edit[' . implode('][', $form['#parents']) . ']';
     $form['#id'] =  ($form['#id']) ? $form['#id'] : 'edit-' . implode('-', $form['#parents']);
 
-    $posted = isset($_POST['edit']);
+    $posted = (isset($_POST['edit']) && ($_POST['edit']['form_id'] == $form_id));
     $edit = $posted ? $_POST['edit'] : array();
     $ref =& $form_values;
     foreach ($form['#parents'] as $parent) {
@@ -289,7 +289,7 @@ function _form_builder($form) {
 
     # Assign a decimal placeholder weight, to preserve original array order
     $form[$key]['#weight'] = $form[$key]['#weight'] ? $form[$key]['#weight'] : $count/1000;
-    $form[$key] = _form_builder($form[$key]);
+    $form[$key] = _form_builder($form_id, $form[$key]);
     $count++;
   }
 
