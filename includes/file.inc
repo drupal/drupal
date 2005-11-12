@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.50 2005/11/04 20:19:14 dries Exp $
+// $Id: file.inc,v 1.51 2005/11/12 09:23:50 dries Exp $
 
 /**
  * @file
@@ -27,12 +27,12 @@ define('FILE_EXISTS_ERROR', 2);
  * @return URL pointing to the file
  */
 function file_create_url($path) {
-  if (strpos($path, variable_get('file_directory_path', 'files')) !== false) {
-    $path = trim(substr($path, strlen(variable_get('file_directory_path', 'files'))), '\\/');
+  if (strpos($path, file_directory_path()) !== false) {
+    $path = trim(substr($path, strlen(file_directory_path())), '\\/');
   }
   switch (variable_get('file_downloads', FILE_DOWNLOADS_PUBLIC)) {
     case FILE_DOWNLOADS_PUBLIC:
-      return $GLOBALS['base_url'] .'/'. variable_get('file_directory_path', 'files') .'/'. str_replace('\\', '/', $path);
+      return $GLOBALS['base_url'] .'/'. file_directory_path() .'/'. str_replace('\\', '/', $path);
     case FILE_DOWNLOADS_PRIVATE:
       return url('system/files', 'file='. $path, NULL, TRUE);
   }
@@ -48,7 +48,7 @@ function file_create_url($path) {
  *         Returns FALSE if the path is invalid (i.e. outside the configured 'files'-directory).
  */
 function file_create_path($dest = 0) {
-  $file_path = variable_get('file_directory_path', 'files');
+  $file_path = file_directory_path();
   if (!$dest) {
     return $file_path;
   }
@@ -57,10 +57,10 @@ function file_create_path($dest = 0) {
     return $dest;
   }
   // check if the destination is instead inside the Drupal temporary files directory.
-  else if (file_check_location($dest, variable_get('file_directory_temp', ini_get('upload_tmp_dir')))) {
+  else if (file_check_location($dest, file_directory_temp())) {
     return $dest;
   }
-  // Not found, try again with prefixed dirctory path.
+  // Not found, try again with prefixed directory path.
   else if (file_check_location($file_path . '/' . $dest, $file_path)) {
     return $file_path . '/' . $dest;
   }
@@ -367,7 +367,7 @@ function file_save_upload($source, $dest = 0, $replace = FILE_EXISTS_RENAME) {
   // Make sure $source exists in $_FILES.
   if ($file = file_check_upload($source)) {
     if (!$dest) {
-      $dest = variable_get('file_directory_temp', ini_get('upload_tmp_dir'));
+      $dest = file_directory_temp();
       $temporary = 1;
       if (is_file($file->filepath)) {
         // If this file was uploaded by this user before replace the temporary copy.
@@ -425,7 +425,7 @@ function file_save_data($data, $dest, $replace = FILE_EXISTS_RENAME) {
     return 0;
   }
 
-  $temp = variable_get('file_directory_temp', ini_get('upload_tmp_dir'));
+  $temp = file_directory_temp();
   $file = tempnam($temp, 'file');
   if (!$fp = fopen($file, 'wb')) {
     drupal_set_message(t('The file could not be created.'), 'error');
@@ -549,6 +549,52 @@ function file_scan_directory($dir, $mask, $nomask = array('.', '..', 'CVS'), $ca
   }
 
   return $files;
+}
+
+/**
+ * Determine the default temporary directory.
+ */
+function file_directory_temp() {
+  $temporary_directory = variable_get('file_directory_temp', NULL);
+
+  if (is_null($temporary_directory)) {
+    $directories = array();
+
+    // Has PHP been set with an upload_tmp_dir?
+    if (ini_get('upload_tmp_dir')) {
+      $directories[] = ini_get('upload_tmp_dir');
+    }
+
+    // Operating system specific dirs.
+    if (substr(PHP_OS, 0, 3) == 'WIN') {
+      $directories[] = 'c:\\windows\\temp';
+      $directories[] = 'c:\\winnt\\temp';
+      $path_delimiter = '\\';
+    }
+    else {
+      $directories[] = '/tmp';
+      $path_delimiter = '/';
+    }
+
+    foreach ($directories as $directory) {
+      if (!$temporary_directory && is_dir($directory)) {
+        $temporary_directory = $directory;
+      }
+    }
+
+    // if a directory has been found, use it, otherwise default to 'files/tmp' or 'files\\tmp';
+    $temporary_directory = $temporary_directory ? $temporary_directory : file_directory_path() . $path_delimiter . 'tmp';
+    variable_set('file_directory_temp', $temporary_directory);
+  }
+
+  return $temporary_directory;
+}
+
+/**
+ * Determine the default 'files' directory.
+ */
+function file_directory_path() {
+  return variable_get('file_directory_path', 'files');
 }
 
 

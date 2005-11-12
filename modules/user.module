@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.527 2005/11/12 09:14:30 dries Exp $
+// $Id: user.module,v 1.528 2005/11/12 09:23:50 dries Exp $
 
 /**
  * @file
@@ -1777,7 +1777,7 @@ function user_configure() {
 
   $form['pictures'] = array('#type' => 'fieldset', '#title' => t('Pictures'));
   $form['pictures']['user_pictures'] = array('#type' => 'radios', '#title' => t('Picture support'), '#default_value' => variable_get('user_pictures', 0), '#options' => array(t('Disabled'), t('Enabled')), '#description' => t('Enable picture support.'));
-  $form['pictures']['user_picture_path'] = array('#type' => 'textfield', '#title' => t('Picture image path'), '#default_value' => variable_get('user_picture_path', 'pictures'), '#size' => 30, '#maxlength' => 255, '#description' => t('Subdirectory in the directory "%dir" where pictures will be stored.', array('%dir' => variable_get('file_directory_path', 'files') .'/')));
+  $form['pictures']['user_picture_path'] = array('#type' => 'textfield', '#title' => t('Picture image path'), '#default_value' => variable_get('user_picture_path', 'pictures'), '#size' => 30, '#maxlength' => 255, '#description' => t('Subdirectory in the directory "%dir" where pictures will be stored.', array('%dir' => file_directory_path() .'/')));
   $form['pictures']['user_picture_default'] = array('#type' => 'textfield', '#title' => t('Default picture'), '#default_value' => variable_get('user_picture_default', ''), '#size' => 30, '#maxlength' => 255, '#description' => t('URL of picture to display for users with no custom picture selected. Leave blank for none.'));
   $form['pictures']['user_picture_dimensions'] = array('#type' => 'textfield', '#title' => t('Picture maximum dimensions'), '#default_value' => variable_get('user_picture_dimensions', '85x85'), '#size' => 15, '#maxlength' => 10, '#description' => t('Maximum dimensions for pictures.'));
   $form['pictures']['user_picture_file_size'] = array('#type' => 'textfield', '#title' => t('Picture maximum file size'), '#default_value' => variable_get('user_picture_file_size', '30'), '#size' => 15, '#maxlength' => 10, '#description' => t('Maximum file size for pictures, in kB.'));

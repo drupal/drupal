@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.251 2005/11/03 19:33:37 dries Exp $
+// $Id: system.module,v 1.252 2005/11/12 09:23:50 dries Exp $
 
 /**
  * @file
@@ -317,7 +317,7 @@ function system_view_general() {
   // File system:
   $form['files'] = array('#type' => 'fieldset', '#title' => t('File system settings'), '#collapsible' => TRUE, '#collapsed' => TRUE);
 
-  $directory_path = variable_get('file_directory_path', 'files');
+  $directory_path = file_directory_path();
   file_check_directory($directory_path, FILE_CREATE_DIRECTORY, 'file_directory_path');
 
   $form['files']['file_directory_path'] = array(
@@ -325,7 +325,7 @@ function system_view_general() {
     '#description' => t('A file system path where the files will be stored. This directory has to exist and be writable by Drupal. If the download method is set to public this directory has to be relative to Drupal installation directory, and be accessible over the web. When download method is set to private this directory should not be accessible over the web. Changing this location after the site has been in use will cause problems so only change this setting on an existing site if you know what you are doing.')
   );
 
-  $directory_temp = variable_get('file_directory_temp', ini_get('upload_tmp_dir'));
+  $directory_temp = file_directory_temp();
   file_check_directory($directory_temp, FILE_CREATE_DIRECTORY, 'file_directory_temp');
 
   $form['files']['file_directory_temp'] = array(
@@ -961,7 +961,7 @@ function system_site_settings($module = NULL) {
  * Menu callback; display theme configuration for entire site and individual themes.
  */
 function system_theme_settings($key = '') {
-  $directory_path = variable_get('file_directory_path', 'files');
+  $directory_path = file_directory_path();
   file_check_directory($directory_path, FILE_CREATE_DIRECTORY, 'file_directory_path');
 
   // Default settings are defined in theme_get_settings() in includes/theme.inc
