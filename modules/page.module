@@ -82,7 +82,7 @@ function page_menu($may_cache) {
 /**
  * Implementation of hook_validate().
  */
-function page_validate(&$node) {
+function page_validate($node) {
   node_validate_title($node);
 }
 

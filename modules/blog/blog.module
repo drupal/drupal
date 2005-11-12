@@ -198,7 +198,7 @@ function blog_page_last() {
 /**
  * Implementation of hook_validate().
  */
-function blog_validate(&$node) {
+function blog_validate($node) {
   node_validate_title($node);
 }
 

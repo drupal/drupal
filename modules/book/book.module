@@ -221,15 +221,20 @@ function book_delete(&$node) {
 }
 
 /**
- * Implementation of hook_validate().
+ * Implementation of hook_execute().
  */
-function book_validate(&$node) {
+function book_execute(&$node) {
   // Set default values for non-administrators.
   if (!user_access('administer nodes')) {
     $node->weight = 0;
     $node->revision = 1;
   }
+}
 
+/**
+ * Implementation of hook_validate().
+ */
+function book_validate($node) {
   node_validate_title($node);
 }
 

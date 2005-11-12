@@ -77,7 +77,7 @@ function story_menu($may_cache) {
 /**
  * Implementation of hook_validate().
  */
-function story_validate(&$node) {
+function story_validate($node) {
   node_validate_title($node);
 }
 
