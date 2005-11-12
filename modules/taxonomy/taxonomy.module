@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.234 2005/11/08 15:17:34 dries Exp $
+// $Id: taxonomy.module,v 1.235 2005/11/12 04:31:56 unconed Exp $
 
 /**
  * @file
@@ -919,7 +919,11 @@ function _taxonomy_term_select($title, $name, $value, $vocabulary_id, $descripti
       $value = $tree[0]->tid;
     }
   }
-  return array('#type' => 'select', '#title' => $title, '#default_value' => $value, '#options' => $options, '#description' => $description, '#multiple' => $multiple, '#size' => $multiple ? 'size="'. min(12, count($options)) .'"' : 0, '#weight' => -15);
+  return array('#type' => 'select', '#title' => $title, '#default_value' => $value, '#options' => $options, '#description' => $description, '#multiple' => $multiple, '#size' => $multiple ? 'size="'. min(12, count($options)) .'"' : 0, '#weight' => -15, '#theme' => 'taxonomy_term_select');
+}
+
+function theme_taxonomy_term_select($element) {
+  return theme('select', $element);
 }
 
 function _taxonomy_depth($depth, $graphic = '--') {
