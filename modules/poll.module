@@ -97,7 +97,7 @@ function poll_execute(&$node) {
   $node->choice = array_values($node->choice);
   $node->teaser = poll_teaser($node);
 }
- 
+
 /**
  * Implementation of hook_validate().
  */
