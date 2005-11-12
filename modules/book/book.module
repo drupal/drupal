@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.327 2005/11/01 10:17:34 dries Exp $
+// $Id: book.module,v 1.328 2005/11/12 02:54:13 unconed Exp $
 
 /**
  * @file
@@ -221,15 +221,20 @@ function book_delete(&$node) {
 }
 
 /**
- * Implementation of hook_validate().
+ * Implementation of hook_execute().
  */
-function book_validate(&$node) {
+function book_execute(&$node) {
   // Set default values for non-administrators.
   if (!user_access('administer nodes')) {
     $node->weight = 0;
     $node->revision = 1;
   }
+}
 
+/**
+ * Implementation of hook_validate().
+ */
+function book_validate($node) {
   node_validate_title($node);
 }
 

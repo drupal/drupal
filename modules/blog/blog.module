@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.234 2005/11/01 10:17:34 dries Exp $
+// $Id: blog.module,v 1.235 2005/11/12 02:54:13 unconed Exp $
 
 /**
  * @file
@@ -198,7 +198,7 @@ function blog_page_last() {
 /**
  * Implementation of hook_validate().
  */
-function blog_validate(&$node) {
+function blog_validate($node) {
   node_validate_title($node);
 }
 

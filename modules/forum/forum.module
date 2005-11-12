@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.282 2005/11/04 19:40:26 dries Exp $
+// $Id: forum.module,v 1.283 2005/11/12 02:54:13 unconed Exp $
 
 /**
  * @file
@@ -506,15 +506,40 @@ function forum_view(&$node, $teaser = FALSE, $page = FALSE) {
 }
 
 /**
+ * Implementation of hook_execute().
+ *
+ * Check in particular that only a "leaf" term in the associated taxonomy
+ * vocabulary is selected, not a "container" term.
+ */
+function forum_execute(&$node) {
+  // Make sure all fields are set properly:
+  $node->icon = $node->icon ? $node->icon : '';
+
+  if ($node->taxonomy) {
+    // Extract the node's proper topic ID.
+    $vocabulary = variable_get('forum_nav_vocabulary', '');
+    foreach ($node->taxonomy as $term) {
+      if (db_result(db_query('SELECT COUNT(*) FROM {term_data} WHERE tid = %d AND vid = %d', $term, $vocabulary))) {
+        $node->tid = $term;
+      }
+    }
+    if ($node->tid && $node->shadow) {
+      $terms = array_keys(taxonomy_node_get_terms($node->nid));
+      if (!in_array($node->tid, $terms)) {
+        $terms[] = $node->tid;
+      }
+      $node->taxonomy = $terms;
+    }
+  }
+}
+
+/**
  * Implementation of hook_validate().
  *
  * Check in particular that only a "leaf" term in the associated taxonomy
  * vocabulary is selected, not a "container" term.
  */
-function forum_validate(&$node) {
-  // Make sure all fields are set properly:
-  $node->icon = $node->icon ? $node->icon : '';
-
+function forum_validate($node) {
   node_validate_title($node,t('You have to specify a subject.'));
 
   if ($node->taxonomy) {
@@ -527,17 +552,7 @@ function forum_validate(&$node) {
           $term = taxonomy_get_term($term);
           form_set_error('taxonomy', t('The item %forum is only a container for forums. Please select one of the forums below it.', array('%forum' => theme('placeholder', $term->name))));
         }
-        else {
-          $node->tid = $term;
-        }
       }
-    }
-    if ($node->tid && $node->shadow) {
-      $terms = array_keys(taxonomy_node_get_terms($node->nid));
-      if (!in_array($node->tid, $terms)) {
-        $terms[] = $node->tid;
-      }
-      $node->taxonomy = $terms;
     }
   }
 }
@@ -571,7 +586,7 @@ function forum_form(&$node) {
   if ($node->nid) {
     // if editing, give option to leave shadows
     $shadow = (count(taxonomy_node_get_terms($node->nid)) > 1);
-    $form['shadow'] = array('#type' => 'checkbox', 'title' => t('Leave shadow copy'),  '#default_value' => $shadow, '#description' => t('If you move this topic, you can leave a link in the old forum to the new forum.'));
+    $form['shadow'] = array('#type' => 'checkbox', '#title' => t('Leave shadow copy'), '#default_value' => $shadow, '#description' => t('If you move this topic, you can leave a link in the old forum to the new forum.'));
   }
 
   $form['body'] = array('#type' => 'textarea', '#title' => t('Body'), '#default_value' => $node->body, '#required' => TRUE

@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.545 2005/11/04 19:40:28 dries Exp $
+// $Id: node.module,v 1.546 2005/11/12 02:54:13 unconed Exp $
 
 /**
  * @file
@@ -1476,19 +1476,13 @@ function node_feed($nodes = 0, $channel = array()) {
 }
 
 /**
- * Perform validation checks on the given node.
+ * Prepare node for save and allow modules to make changes.
  */
-function node_validate($node) {
+function node_execute($node) {
   global $user;
 
   // Convert the node to an object, if necessary.
   $node = array2object($node);
-
-  // Make sure the body has the minimum number of words.
-  // todo use a better word counting algorithm that will work in other languages
-  if (isset($node->body) && count(explode(' ', $node->body)) < variable_get('minimum_'. $node->type .'_size', 0)) {
-    form_set_error('body', t('The body of your %type is too short. You need at least %words words.', array('%words' => variable_get('minimum_'. $node->type .'_size', 0), '%type' => node_get_name($node))));
-  }
 
   // Auto-generate the teaser, but only if it hasn't been set (e.g. by a
   // module-provided 'teaser' form item).
@@ -1496,32 +1490,16 @@ function node_validate($node) {
     $node->teaser = isset($node->body) ? node_teaser($node->body, isset($node->format) ? $node->format : NULL) : '';
   }
 
-  if (isset($node->nid) && (node_last_changed($node->nid) > $node->changed)) {
-    form_set_error('changed', t('This content has been modified by another user, unable to save changes.'));
-  }
-
   if (user_access('administer nodes')) {
-    // Validate the "authored by" field.
-    if (empty($node->name)) {
-      // The use of empty() is mandatory in the context of usernames
-      // as the empty string denotes the anonymous user.  In case we
-      // are dealing with an anonymous user we set the user ID to 0.
-      $node->uid = 0;
-    }
-    else if ($account = user_load(array('name' => $node->name))) {
+    // Populate the "authored by" field.
+    if ($account = user_load(array('name' => $node->name))) {
       $node->uid = $account->uid;
     }
     else {
-      form_set_error('name', t('The username %name does not exist.', array ('%name' => theme('placeholder', $node->name))));
+      $node->uid = 0;
     }
 
-    // Validate the "authored on" field.
-    if (strtotime($node->date) != -1) {
-      $node->created = strtotime($node->date);
-    }
-    else {
-      form_set_error('date', t('You have to specify a valid date.'));
-    }
+    $node->created = strtotime($node->date);
   }
   else {
     // Validate for normal users:
@@ -1537,12 +1515,49 @@ function node_validate($node) {
   }
 
   // Do node-type-specific validation checks.
-  node_invoke($node, 'validate');
-  node_invoke_nodeapi($node, 'validate');
+  node_invoke($node, 'execute');
+  node_invoke_nodeapi($node, 'execute');
 
   $node->validated = TRUE;
 
   return $node;
+}
+
+/**
+ * Perform validation checks on the given node.
+ */
+function node_validate($node) {
+  // Convert the node to an object, if necessary.
+  $node = array2object($node);
+
+  // Make sure the body has the minimum number of words.
+  // todo use a better word counting algorithm that will work in other languages
+  if (isset($node->body) && count(explode(' ', $node->body)) < variable_get('minimum_'. $node->type .'_size', 0)) {
+    form_set_error('body', t('The body of your %type is too short. You need at least %words words.', array('%words' => variable_get('minimum_'. $node->type .'_size', 0), '%type' => node_get_name($node))));
+  }
+
+  if (isset($node->nid) && (node_last_changed($node->nid) > $node->changed)) {
+    form_set_error('changed', t('This content has been modified by another user, unable to save changes.'));
+  }
+
+  if (user_access('administer nodes')) {
+    // Validate the "authored by" field.
+    if (!empty($node->name) && !($account = user_load(array('name' => $node->name)))) {
+      // The use of empty() is mandatory in the context of usernames
+      // as the empty string denotes the anonymous user.  In case we
+      // are dealing with an anonymous user we set the user ID to 0.
+      form_set_error('name', t('The username %name does not exist.', array ('%name' => theme('placeholder', $node->name))));
+    }
+
+    // Validate the "authored on" field.
+    if (strtotime($node->date) == -1) {
+      form_set_error('date', t('You have to specify a valid date.'));
+    }
+  }
+
+  // Do node-type-specific validation checks.
+  node_invoke($node, 'validate');
+  node_invoke_nodeapi($node, 'validate');
 }
 
 
@@ -1796,12 +1811,7 @@ function node_form_execute($form_id, $edit) {
   global $user;
 
   // Fix up the node when required:
-  $node = node_validate($edit);
-
-  // If something went wrong, go back to the preview form.
-  if (form_get_errors()) {
-    return node_form($edit);
-  }
+  $node = node_execute($edit);
 
   // Prepare the node's body:
   if ($node->nid) {
