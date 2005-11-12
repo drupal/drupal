@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.43 2005/11/03 19:33:37 dries Exp $
+// $Id: menu.module,v 1.44 2005/11/12 11:26:16 dries Exp $
 
 /**
  * @file
@@ -106,17 +106,21 @@ function menu_configure() {
     $primary_options[$mid] = $menu['items'][$mid]['title'];
   }
 
-  $form['settings_links'] = array('#type' => 'fieldset', '#title' => t('Primary links settings'));
+  $form['settings_links'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Primary links settings'),
+  );
+
   $form['settings_links']['intro'] = array(
-    '#type' => 'markup',
-    '#value' => t('Primary links is a navigation system which usually (depending on your theme) appears at the top-right of the browser window. There are usually two rows of links, primary and secondary. You may control which links appear in this area by choosing a menu from which the links will be generated and then placing your links into the menu using the <a href="%menu">menu administration</a> or the \'Menu settings\' pane on each edit node form.', array('%menu' => url('admin/menu')))
+    '#type' => 'item',
+    '#value' => t('Primary links is a navigation system which usually (depending on your theme) appears at the top-right of the browser window. There are usually two rows of links, primary and secondary. You may control which links appear in this area by choosing a menu from which the links will be generated and then placing your links into the menu using the <a href="%menu">menu administration</a> or the \'Menu settings\' pane on each node authoring form.', array('%menu' => url('admin/menu'))),
   );
 
   $form['settings_links']['menu_primary_menu'] = array(
     '#type' => 'select',
     '#title' => t('Menu containing primary links'),
     '#default_value' => variable_get('menu_primary_menu', 0),
-    '#options' => $primary_options
+    '#options' => $primary_options,
   );
 
   $secondary_options[0] = t('No secondary links');
@@ -129,7 +133,30 @@ function menu_configure() {
     '#title' => t('Menu containing secondary links'),
     '#default_value' => variable_get('menu_secondary_menu', 0),
     '#options' => $secondary_options,
-    '#description' => t('If you select the same menu as primary links then secondary links will display the appropriate second level of your navigation hierarchy.')
+    '#description' => t('If you select the same menu as primary links then secondary links will display the appropriate second level of your navigation hierarchy.'),
+  );
+
+  $form['settings_authoring'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Node authoring form settings'),
+  );
+
+  $form['settings_authoring']['intro'] = array(
+    '#type' => 'item',
+    '#value' => t('On each post authoring form there is a \'Menu settings\' pane. This setting allows you to limit what is displayed in the \'Parent item\' drop-down menu of that pane. This can be used to force new menu items to be created in the primary links menu or to hide admin menu items.'),
+  );
+
+  $authoring_options = array(0 => t('Show all menus'));
+  foreach ($menu['items'][0]['children'] as $mid) {
+    $authoring_options[$mid] = $menu['items'][$mid]['title'];
+  }
+
+  $form['settings_authoring']['menu_parent_items'] = array(
+    '#type' => 'select',
+    '#title' => t('Restrict parent items to'),
+    '#default_value' => variable_get('menu_parent_items', 0),
+    '#options' => $authoring_options,
+    '#description' => t('Choose the menu from which parent items will be made available. Only this menu item and its children will be shown.'),
   );
 
   return system_settings_form('menu_configure', $form);
@@ -365,7 +392,7 @@ function menu_edit_item($mid = 0) {
 function menu_edit_item_form($edit) {
   $menu = menu_get_menu();
 
-  $form['title'] = array('#type' => 'textfield', '#title' => t('Title'), '#default_value' => $edit['title'], '#size' => 60, '#maxlength' => 128, '#description' => t('The name of the menu.'), '#required' => TRUE);
+  $form['title'] = array('#type' => 'textfield', '#title' => t('Title'), '#default_value' => $edit['title'], '#description' => t('The name of the menu.'), '#required' => TRUE);
 
   if ($edit['pid'] == 0) {
     // Display a limited set of fields for menus (not items).
@@ -374,7 +401,7 @@ function menu_edit_item_form($edit) {
     $form['weight'] = array('#type' => 'hidden', '#value' => 0);
   }
   else {
-    $form['description'] = array('#type' => 'textfield', '#title' => t('Description'), '#default_value' => $edit['description'], '#size' => 60, '#maxlength' => 128, '#description' => t('The description displayed when hovering over a menu item.'));
+    $form['description'] = array('#type' => 'textfield', '#title' => t('Description'), '#default_value' => $edit['description'], '#description' => t('The description displayed when hovering over a menu item.'));
 
     $path_description = t('The Drupal path this menu item links to.');
     if (isset($edit['path']) && array_key_exists($edit['path'], $menu['path index']) && $menu['path index'][$edit['path']] != $edit['mid']) {
@@ -384,7 +411,7 @@ function menu_edit_item_form($edit) {
     }
 
     if ($edit['type'] & MENU_CREATED_BY_ADMIN) {
-      $form['path'] = array('#type' => 'textfield', '#title' => t('Path'), '#default_value' => $edit['path'], '#size' => 60, '#maxlength' => 128, '#description' => $path_description, '#required' => TRUE);
+      $form['path'] = array('#type' => 'textfield', '#title' => t('Path'), '#default_value' => $edit['path'], '#description' => $path_description, '#required' => TRUE);
     }
     else {
       $form['_path'] = array('#type' => 'item', '#title' => t('Path'), '#title' => l($edit['path'], $edit['path']));
@@ -397,7 +424,7 @@ function menu_edit_item_form($edit) {
     $options = menu_parent_options($edit['mid']);
     $form['pid'] = array('#type' => 'select', '#title' => t('Parent item'), '#default_value' =>  $edit['pid'], '#options' => $options);
 
-    $form['weight'] = array('#type' => 'weight', '#title' => t('Weight'), '#default_value' => $edit['weight'], '#delta' => 10, '#description' => t('Optional. In the menu, the heavier items will sink and the lighter items will be positioned nearer the top.'));
+    $form['weight'] = array('#type' => 'weight', '#title' => t('Weight'), '#default_value' => $edit['weight'], '#description' => t('Optional. In the menu, the heavier items will sink and the lighter items will be positioned nearer the top.'));
   }
 
   $form['submit'] = array('#type' => 'submit', '#value' => t('Submit'));
@@ -610,22 +637,89 @@ function menu_node_form($edit = array()) {
     }
   }
 
-  $form['menu'] = array('#type' => 'fieldset', '#title' => t('Menu settings'), '#collapsible' => TRUE, '#collapsed' => TRUE, '#tree' => TRUE);
+  $form['menu'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Menu settings'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#tree' => TRUE,
+  );
 
-  $form['menu']['title'] = array('#type' => 'textfield', '#title' => t('Title'), '#default_value' => $item['title'], '#size' => 60, '#maxlength' => 128, '#description' => t('The name to display for this link.'));
+  $form['menu']['title'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Title'),
+    '#default_value' => $item['title'],
+    '#size' => 60,
+    '#maxlength' => 128,
+    '#description' => t('The name to display for this link.'),
+  );
 
-  // Generate a list of possible parents (not including this item or descendants).
-  $options = menu_parent_options($edit['mid']);
-  $form['menu']['pid'] = array('#type' => select, '#title' => t('Parent item'), '#default_value' => $item['pid'], '#options' => $options);
-  $form['menu']['description'] = array('#type' => 'hidden', '#value' => $item['description']);
-  $form['menu']['path'] = array('#type' => 'hidden', '#value' => $item['path']);
-  $form['menu']['weight'] = array('#type' => 'hidden', '#value' => $item['weight'] ? $item['weight'] : 0);
+  $form['menu']['description'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Description'),
+    '#default_value' => $item['description'],
+    '#size' => 60,
+    '#maxlength' => 128,
+    '#description' => t('The description displayed when hovering over a menu item.'),
+  );
 
-  $form['menu']['mid'] = array('#type' => 'hidden', '#value' => $item['mid'] ? $item['mid'] : 0);
-  $form['menu']['type'] = array('#type' => 'hidden', '#value' => $item['type'] ? $item['type'] : MENU_CUSTOM_ITEM);
+  // Generate a list of possible parents. Exclude this item and its children.
+  $pid = variable_get('menu_parent_items', 0);
+  $options = array();
+  $menu = menu_get_menu();
+  $depth = 0;
+  // if $pid is not root, add it to the option list
+  if ($pid > 0 && isset($menu['items'][$pid])) {
+    $depth = 1;
+    $title = $menu['items'][$pid]['title'];
+    if (!($menu['items'][$pid]['type'] & MENU_VISIBLE_IN_TREE)) {
+      $title .= ' ('. t('disabled') .')';
+    }
+    $options[$pid] = $title;
+  }
+  $options += menu_parent_options($item['mid'], $pid, $depth);
+
+  $form['menu']['pid'] = array(
+    '#type' => select,
+    '#title' => t('Parent item'),
+    '#default_value' => $item['pid'],
+    '#options' => $options,
+  );
+
+  $form['menu']['path'] = array(
+    '#type' => 'hidden',
+    '#value' => $item['path'],
+  );
+
+  $form['menu']['weight'] = array(
+    '#type' => 'weight',
+    '#title' => t('Weight'),
+    '#default_value' => $item['weight'],
+    '#delta' => 10,
+    '#description' => t('Optional. In the menu, the heavier items will sink and the lighter items will be positioned nearer the top.'),
+  );
+
+  $form['menu']['mid'] = array(
+    '#type' => 'hidden',
+    '#value' => $item['mid'] ? $item['mid'] : 0,
+  );
+
+  $form['menu']['type'] = array(
+    '#type' => 'hidden',
+    '#value' => $item['type'] ? $item['type'] : MENU_CUSTOM_ITEM,
+  );
 
   if ($item['mid'] > 0) {
-    $form['menu']['delete'] = array('#type' => 'checkbox', '#title' => t('Check to delete this menu item.'), '#default_value' => $item['delete']);
+    $form['menu']['delete'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Check to delete this menu item.'),
+      '#default_value' => $item['delete'],
+    );
+
+    $form['menu']['advanced'] = array(
+      '#type' => 'item',
+      '#value' => t('You may also <a href="%menuitem">edit the advanced settings</a> for this menu item.', array('%menuitem' => url("admin/menu/item/edit/{$item['mid']}"))),
+    );
   }
 
   return $form;

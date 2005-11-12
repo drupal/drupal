@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.528 2005/11/12 09:23:50 dries Exp $
+// $Id: user.module,v 1.529 2005/11/12 11:26:16 dries Exp $
 
 /**
  * @file
@@ -884,7 +884,7 @@ function user_login($edit = array(), $msg = '') {
   else {
     $form['name']['#description'] = t('Enter your %s username.', array('%s' => variable_get('site_name', 'local')));
   }
-  $form['pass'] = array('#type' => 'password', '#title' => t('Password'), '#size' => 30, '#maxlength' => 64, '#description' => t('Enter the password that accompanies your username.'), '#required' => TRUE);
+  $form['pass'] = array('#type' => 'password', '#title' => t('Password'), '#description' => t('Enter the password that accompanies your username.'), '#required' => TRUE);
   $form['submit'] = array('#type' => 'submit', '#value' => t('Log in'), '#weight' => 2);
   return drupal_get_form('user_login', $form);
 }
@@ -1151,8 +1151,8 @@ function user_register($edit = array()) {
 function user_edit_form($uid, $edit) {
   // Account information:
   $form['account'] = array('#type' => 'fieldset', '#title' => t('Account information'), '#weight' => 0);
-  $form['account']['name'] = array('#type' => 'textfield', '#title' => t('Username'), '#default_value' => $edit['name'], '#size' => 60, '#maxlength' => 55, '#description' => t('Your full name or your preferred username: only letters, numbers and spaces are allowed.'), '#required' => TRUE);
-  $form['account']['mail'] = array('#type' => 'textfield', '#title' => t('E-mail address'), '#default_value' => $edit['mail'], '#size' => 60, '#maxlength' => 55, '#description' => t('Insert a valid e-mail address.  All e-mails from the system will be sent to this address. The e-mail address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by e-mail.'), '#required' => TRUE);
+  $form['account']['name'] = array('#type' => 'textfield', '#title' => t('Username'), '#default_value' => $edit['name'], '#maxlength' => 55, '#description' => t('Your full name or your preferred username: only letters, numbers and spaces are allowed.'), '#required' => TRUE);
+  $form['account']['mail'] = array('#type' => 'textfield', '#title' => t('E-mail address'), '#default_value' => $edit['mail'], '#maxlength' => 55, '#description' => t('Insert a valid e-mail address.  All e-mails from the system will be sent to this address. The e-mail address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by e-mail.'), '#required' => TRUE);
   $form['account']['pass'] = array('#type' => 'item', '#title' => t('Password'), '#value' => '<input type="password" class="form-password" name="edit[pass1]" size="12" maxlength="24" /> <input type="password" class="form-password" name="edit[pass2]" size="12" maxlength="24" />', '#required' => true);
   if (user_access('administer access control')) {
     $form['account']['status'] = array('#type' => 'radios', '#title' => t('Status'), '#default_value' => $edit['status'], '#options' => array(t('Blocked'), t('Active')));
@@ -1164,7 +1164,7 @@ function user_edit_form($uid, $edit) {
     $form['picture'] = array('#type' => 'fieldset', '#title' => t('Picture'), '#weight' => 1);
     if ($edit['picture'] && ($picture = theme('user_picture', array2object($edit)))) {
       $form['picture']['current_picture'] = array('#type' => 'markup', '#value' => $picture);
-      $form['picture']['picture_delete'] = array('#type' => 'checkbox', '#title' => t('Delete picture'), '#return_value' => 1, '#default_value' => 0, '#description' => t('Check this box to delete your current picture.'));
+      $form['picture']['picture_delete'] = array('#type' => 'checkbox', '#title' => t('Delete picture'), '#description' => t('Check this box to delete your current picture.'));
     }
     $form['picture']['picture'] = array('#type' => 'file', '#title' => t('Upload picture'), '#size' => 48, '#description' => t('Your virtual face or picture.  Maximum dimensions are %dimensions and the maximum size is %size kB.', array('%dimensions' => variable_get('user_picture_dimensions', '85x85'), '%size' => variable_get('user_picture_file_size', '30'))) .' '. variable_get('user_picture_guidelines', ''));
   }
@@ -1581,7 +1581,7 @@ function user_admin_perm() {
   }
   // Have to build checkboxes here after checkbox arrays are built
   foreach ($role_names as $rid => $name) {
-    $form['checkboxes'][$rid] = array('#type' => 'checkboxes', '#options' => $options, '#default_value' => $status[$rid], '#tree' => TRUE);
+    $form['checkboxes'][$rid] = array('#type' => 'checkboxes', '#options' => $options, '#default_value' => $status[$rid]);
     $form['role_names'][$rid] = array('#type' => 'markup', '#value' => $name, '#tree' => TRUE);
   }
   $form['submit'] = array('#type' => 'submit', '#value' => t('Save permissions'));
@@ -1758,16 +1758,16 @@ function user_configure() {
   // User registration settings.
   $form['registration'] = array('#type' => 'fieldset', '#title' => t('User registration settings'));
   $form['registration']['user_register'] = array('#type' => 'radios', '#title' => t('Public registrations'), '#default_value' => variable_get('user_register', 1), '#options' => array(t('Only site administrators can create new user accounts.'), t('Visitors can create accounts and no administrator approval is required.'), t('Visitors can create accounts but administrator approval is required.')));
-  $form['registration']['user_registration_help'] = array('#type' => 'textarea', '#title' => t('User registration guidelines'), '#default_value' => variable_get('user_registration_help', ''), '#cols' => 60, '#rows' => 5, '#description' => t('This text is displayed at the top of the user registration form.  It\'s useful for helping or instructing your users.'));
+  $form['registration']['user_registration_help'] = array('#type' => 'textarea', '#title' => t('User registration guidelines'), '#default_value' => variable_get('user_registration_help', ''), '#description' => t('This text is displayed at the top of the user registration form.  It\'s useful for helping or instructing your users.'));
 
   // User e-mail settings.
   $form['email'] = array('#type' => 'fieldset', '#title' => t('User email settings'));
-  $form['email']['user_mail_welcome_subject'] = array('#type' => 'textfield', '#title' => t('Subject of welcome e-mail'), '#default_value' => _user_mail_text('welcome_subject'), '#size' => 60, '#maxlength' => 180, '#description' => t('Customize the subject of your welcome e-mail, which is sent to new members upon registering.') .' '. t('Available variables are:') .' %username, %site, %password, %uri, %uri_brief, %mailto, %date, %login_uri, %edit_uri, %login_url.');
-  $form['email']['user_mail_welcome_body'] = array('#type' => 'textarea', '#title' => t('Body of welcome e-mail'), '#default_value' => _user_mail_text('welcome_body'), '#cols' => 60, '#rows' => 15, '#description' => t('Customize the body of the welcome e-mail, which is sent to new members upon registering.') .' '. t('Available variables are:') .' %username, %site, %password, %uri, %uri_brief, %mailto, %login_uri, %edit_uri, %login_url.');
-  $form['email']['user_mail_approval_subject'] = array('#type' => 'textfield', '#title' => t('Subject of welcome e-mail (awaiting admin approval)'), '#default_value' => _user_mail_text('approval_subject'), '#size' => 60, '#maxlength' => 180, '#description' => t('Customize the subject of your awaiting approval welcome e-mail, which is sent to new members upon registering.') .' '. t('Available variables are:') .' %username, %site, %password, %uri, %uri_brief, %mailto, %date, %login_uri, %edit_uri, %login_url.');
-  $form['email']['user_mail_approval_body'] = array('#type' => 'textarea', '#title' => t('Body of welcome e-mail (awaiting admin approval)'), '#default_value' => _user_mail_text('approval_body'), '#cols' => 60, '#rows' => 15, '#description' => t('Customize the body of the awaiting approval welcome e-mail, which is sent to new members upon registering.') .' '. t('Available variables are:') .' %username, %site, %password, %uri, %uri_brief, %mailto, %login_uri, %edit_uri, %login_url.');
-  $form['email']['user_mail_pass_subject'] = array('#type' => 'textfield', '#title' => t('Subject of password recovery e-mail'), '#default_value' => _user_mail_text('pass_subject'), '#size' => 60, '#maxlength' => 180, '#description' => t('Customize the Subject of your forgotten password e-mail.') .' '. t('Available variables are:') .' %username, %site, %login_url, %uri, %uri_brief, %mailto, %date, %login_uri, %edit_uri.');
-  $form['email']['user_mail_pass_body'] = array('#type' => 'textarea', '#title' => t('Body of password recovery e-mail'), '#default_value' => _user_mail_text('pass_body'), '#cols' => 60, '#rows' => 15, '#description' => t('Customize the body of the forgotten password e-mail.') .' '. t('Available variables are:') .' %username, %site, %login_url, %uri, %uri_brief, %mailto, %login_uri, %edit_uri.');
+  $form['email']['user_mail_welcome_subject'] = array('#type' => 'textfield', '#title' => t('Subject of welcome e-mail'), '#default_value' => _user_mail_text('welcome_subject'), '#maxlength' => 180, '#description' => t('Customize the subject of your welcome e-mail, which is sent to new members upon registering.') .' '. t('Available variables are:') .' %username, %site, %password, %uri, %uri_brief, %mailto, %date, %login_uri, %edit_uri, %login_url.');
+  $form['email']['user_mail_welcome_body'] = array('#type' => 'textarea', '#title' => t('Body of welcome e-mail'), '#default_value' => _user_mail_text('welcome_body'), '#rows' => 15, '#description' => t('Customize the body of the welcome e-mail, which is sent to new members upon registering.') .' '. t('Available variables are:') .' %username, %site, %password, %uri, %uri_brief, %mailto, %login_uri, %edit_uri, %login_url.');
+  $form['email']['user_mail_approval_subject'] = array('#type' => 'textfield', '#title' => t('Subject of welcome e-mail (awaiting admin approval)'), '#default_value' => _user_mail_text('approval_subject'), '#maxlength' => 180, '#description' => t('Customize the subject of your awaiting approval welcome e-mail, which is sent to new members upon registering.') .' '. t('Available variables are:') .' %username, %site, %password, %uri, %uri_brief, %mailto, %date, %login_uri, %edit_uri, %login_url.');
+  $form['email']['user_mail_approval_body'] = array('#type' => 'textarea', '#title' => t('Body of welcome e-mail (awaiting admin approval)'), '#default_value' => _user_mail_text('approval_body'), '#rows' => 15, '#description' => t('Customize the body of the awaiting approval welcome e-mail, which is sent to new members upon registering.') .' '. t('Available variables are:') .' %username, %site, %password, %uri, %uri_brief, %mailto, %login_uri, %edit_uri, %login_url.');
+  $form['email']['user_mail_pass_subject'] = array('#type' => 'textfield', '#title' => t('Subject of password recovery e-mail'), '#default_value' => _user_mail_text('pass_subject'), '#maxlength' => 180, '#description' => t('Customize the Subject of your forgotten password e-mail.') .' '. t('Available variables are:') .' %username, %site, %login_url, %uri, %uri_brief, %mailto, %date, %login_uri, %edit_uri.');
+  $form['email']['user_mail_pass_body'] = array('#type' => 'textarea', '#title' => t('Body of password recovery e-mail'), '#default_value' => _user_mail_text('pass_body'), '#rows' => 15, '#description' => t('Customize the body of the forgotten password e-mail.') .' '. t('Available variables are:') .' %username, %site, %login_url, %uri, %uri_brief, %mailto, %login_uri, %edit_uri.');
 
   // If picture support is enabled, check whether the picture directory exists:
   if (variable_get('user_pictures', 0)) {
@@ -1781,7 +1781,7 @@ function user_configure() {
   $form['pictures']['user_picture_default'] = array('#type' => 'textfield', '#title' => t('Default picture'), '#default_value' => variable_get('user_picture_default', ''), '#size' => 30, '#maxlength' => 255, '#description' => t('URL of picture to display for users with no custom picture selected. Leave blank for none.'));
   $form['pictures']['user_picture_dimensions'] = array('#type' => 'textfield', '#title' => t('Picture maximum dimensions'), '#default_value' => variable_get('user_picture_dimensions', '85x85'), '#size' => 15, '#maxlength' => 10, '#description' => t('Maximum dimensions for pictures.'));
   $form['pictures']['user_picture_file_size'] = array('#type' => 'textfield', '#title' => t('Picture maximum file size'), '#default_value' => variable_get('user_picture_file_size', '30'), '#size' => 15, '#maxlength' => 10, '#description' => t('Maximum file size for pictures, in kB.'));
-  $form['pictures']['user_picture_guidelines'] = array('#type' => 'textarea', '#title' => t('Picture guidelines'), '#default_value' => variable_get('user_picture_guidelines', ''), '#cols' => 60, '#rows' => 5, '#description' => t('This text is displayed at the picture upload form in addition to the default guidelines.  It\'s useful for helping or instructing your users.'));
+  $form['pictures']['user_picture_guidelines'] = array('#type' => 'textarea', '#title' => t('Picture guidelines'), '#default_value' => variable_get('user_picture_guidelines', ''), '#description' => t('This text is displayed at the picture upload form in addition to the default guidelines.  It\'s useful for helping or instructing your users.'));
 
   return system_settings_form('user_configure_settings', $form);
 }

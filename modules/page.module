@@ -1,5 +1,5 @@
 <?php
-// $Id: page.module,v 1.143 2005/11/12 02:54:13 unconed Exp $
+// $Id: page.module,v 1.144 2005/11/12 11:26:16 dries Exp $
 
 /**
  * @file
@@ -91,7 +91,7 @@ function page_validate($node) {
  */
 function page_form(&$node) {
 
-  $form['title'] = array('#type' => 'textfield', '#title' => t('Title'), '#size' => 60, '#maxlength' => 128, '#required' => TRUE, '#default_value' => $node->title);
+  $form['title'] = array('#type' => 'textfield', '#title' => t('Title'), '#required' => TRUE, '#default_value' => $node->title);
 
   $form['body'] = array(
     '#type' => 'textarea', '#title' => t('Body'), '#default_value' => $node->body, '#required' => TRUE
@@ -102,7 +102,7 @@ function page_form(&$node) {
     '#type' => 'fieldset', '#title' => t('Log message'), '#collapsible' => TRUE, '#collapsed' => TRUE
   );
   $form['log']['message'] = array(
-    '#type' => 'textarea', '#default_value' => $node->log, '#rows' => 5,
+    '#type' => 'textarea', '#default_value' => $node->log,
     '#description' => t('An explanation of the additions or updates being made to help other authors understand your motivations.')
   );
 

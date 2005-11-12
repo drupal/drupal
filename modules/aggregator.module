@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.259 2005/11/01 10:17:34 dries Exp $
+// $Id: aggregator.module,v 1.260 2005/11/12 11:26:16 dries Exp $
 
 /**
  * @file
@@ -645,8 +645,8 @@ function aggregator_save_item($edit) {
 }
 
 function aggregator_form_category($edit = array()) {
-  $form['title'] = array('#type' => 'textfield', '#title' => t('Title'), '#default_value' => $edit['title'], '#size' => 60, '#maxlength' =>  64);
-  $form['description'] = array('#type' => 'textarea', '#title' => t('Description'), '#default_value' => $edit['description'], '#cols' => 60, '#rows' =>  5);
+  $form['title'] = array('#type' => 'textfield', '#title' => t('Title'), '#default_value' => $edit['title'], '#maxlength' =>  64);
+  $form['description'] = array('#type' => 'textarea', '#title' => t('Description'), '#default_value' => $edit['description']);
   $form['submit'] = array('#type' => 'submit', '#value' =>t('Submit'));
 
   if ($edit['cid']) {
@@ -679,8 +679,8 @@ function aggregator_form_feed($edit = array()) {
   }
 
 
-  $form['title'] = array('#type' => 'textfield', '#title' => t('Title'), '#default_value' => $edit['title'], '#size' => 60, '#maxlength' =>  64, '#description' => t('The name of the feed; typically the name of the web site you syndicate content from.'));
-  $form['url'] = array('#type' => 'textfield', '#title' => t('URL'), '#default_value' => $edit['url'], '#size' => 60, '#maxlength' => 255, '#description' => t('The fully-qualified URL of the feed.'));
+  $form['title'] = array('#type' => 'textfield', '#title' => t('Title'), '#default_value' => $edit['title'], '#maxlength' =>  64, '#description' => t('The name of the feed; typically the name of the web site you syndicate content from.'));
+  $form['url'] = array('#type' => 'textfield', '#title' => t('URL'), '#default_value' => $edit['url'], '#maxlength' => 255, '#description' => t('The fully-qualified URL of the feed.'));
   $form['refresh'] = array('#type' => 'select', '#title' => t('Update interval'), '#default_value' => $edit['refresh'], '#options' => $period, '#description' => t('The refresh interval indicating how often you want to update this feed.  Requires crontab.'));
 
   // Handling of categories:

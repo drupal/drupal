@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal.module,v 1.110 2005/11/01 10:17:34 dries Exp $
+// $Id: drupal.module,v 1.111 2005/11/12 11:26:16 dries Exp $
 
 /**
  * @file
@@ -59,7 +59,7 @@ function drupal_settings() {
     form_set_error('drupal_directory', t('You must set your site mission on the <a href="%url">administer &raquo; settings</a> page.' , array('%url' => url('admin/settings'))));
   }
 
-  $form['drupal_server'] =  array('#type' => 'textfield', '#title' => t('Drupal XML-RPC server'), '#default_value' => variable_get('drupal_server', 'http://www.drupal.org/xmlrpc.php'), '#size' => 60, '#maxlength' => 128, '#description' => t('The URL of your root Drupal XML-RPC server.'));
+  $form['drupal_server'] =  array('#type' => 'textfield', '#title' => t('Drupal XML-RPC server'), '#default_value' => variable_get('drupal_server', 'http://www.drupal.org/xmlrpc.php'), '#description' => t('The URL of your root Drupal XML-RPC server.'));
 
   $form['drupal_directory'] = array(
     '#type' => 'radios', '#title' => t('Drupal directory'), '#default_value' => variable_get('drupal_directory', 0),

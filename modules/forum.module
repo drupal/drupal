@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.283 2005/11/12 02:54:13 unconed Exp $
+// $Id: forum.module,v 1.284 2005/11/12 11:26:16 dries Exp $
 
 /**
  * @file
@@ -182,11 +182,11 @@ function _forum_confirm_delete($tid) {
  * @param $edit Associative array containing a container term to be added or edited.
  */
 function forum_form_container($edit = array()) {
-  $form['name'] = array('#title' => t('Container name'), '#type' => 'textfield', '#default_value' => $edit['name'], '#size' => 60, '#maxlength' =>  64, '#description' => t('The container name is used to identify related forums.'), '#required' => TRUE);
-  $form['description'] = array('#type' => 'textarea', '#title' => t('Description'), '#default_value' => $edit['description'], '#cols' => 60, '#rows' => 5, '#description' => ('The container description can give users more information about the forums it contains.'));
+  $form['name'] = array('#title' => t('Container name'), '#type' => 'textfield', '#default_value' => $edit['name'], '#maxlength' =>  64, '#description' => t('The container name is used to identify related forums.'), '#required' => TRUE);
+  $form['description'] = array('#type' => 'textarea', '#title' => t('Description'), '#default_value' => $edit['description'], '#description' => ('The container description can give users more information about the forums it contains.'));
   $form['parent']['#tree'] = TRUE;
   $form['parent'][0] = _forum_parent_select($edit['tid'], t('Parent'), 'container');
-  $form['weight'] = array('#type' => 'weight', '#title' => t('Weight'), '#default_value' => $edit['weight'], '#delta' => 10, '#description' => t('When listing containers, those with with light (small) weights get listed before containers with heavier (larger) weights. Containers with equal weights are sorted alphabetically.'));
+  $form['weight'] = array('#type' => 'weight', '#title' => t('Weight'), '#default_value' => $edit['weight'], '#description' => t('When listing containers, those with with light (small) weights get listed before containers with heavier (larger) weights. Containers with equal weights are sorted alphabetically.'));
 
   $form['vid'] = array('#type' => 'hidden', '#value' => _forum_get_vid());
   $form['submit'] = array('#type' => 'submit', '#value' => t('Submit'));
@@ -204,11 +204,11 @@ function forum_form_container($edit = array()) {
  * @param $edit Associative array containing a forum term to be added or edited.
  */
 function forum_form_forum($edit = array()) {
-  $form['name'] = array('#type' => 'textfield', '#title' => t('Forum name'), '#default_value' => $edit['name'], '#size' => 60, '#maxlength' =>  64, '#description' => t('The forum name is used to identify related discussions.'), '#required' => TRUE);
-  $form['description'] = array('#type' => 'textarea', '#title' => t('Description'), '#default_value' => $edit['description'], '#cols' => 60, '#rows' => 5, '#description' => ('The forum description can give users more information about the discussion topics it contains.'));
+  $form['name'] = array('#type' => 'textfield', '#title' => t('Forum name'), '#default_value' => $edit['name'], '#maxlength' =>  64, '#description' => t('The forum name is used to identify related discussions.'), '#required' => TRUE);
+  $form['description'] = array('#type' => 'textarea', '#title' => t('Description'), '#default_value' => $edit['description'], '#description' => ('The forum description can give users more information about the discussion topics it contains.'));
   $form['parent']['#tree'] = TRUE;
   $form['parent'][0] = _forum_parent_select($edit['tid'], t('Parent'), 'forum');
-  $form['weight'] = array('#type' => 'weight', '#title' => t('Weight'), '#default_value' => $edit['weight'], '#delta' => 10, '#description' => t('When listing forums, those with with light (small) weights get listed before containers with heavier (larger) weights. Forums with equal weights are sorted alphabetically.'));
+  $form['weight'] = array('#type' => 'weight', '#title' => t('Weight'), '#default_value' => $edit['weight'], '#description' => t('When listing forums, those with with light (small) weights get listed before containers with heavier (larger) weights. Forums with equal weights are sorted alphabetically.'));
 
   $form['vid'] = array('#type' => 'hidden', '#value' => _forum_get_vid());
   $form['submit' ] = array('#type' => 'submit', '#value' => t('Submit'));
@@ -573,7 +573,7 @@ function forum_update($node) {
  * Implementation of hook_form().
  */
 function forum_form(&$node) {
-  $form['title'] = array('#type' => 'textfield', '#title' => t('Subject'), '#default_value' => $node->title, '#size' => 60, '#maxlength' => 128, '#required' => TRUE);
+  $form['title'] = array('#type' => 'textfield', '#title' => t('Subject'), '#default_value' => $node->title, '#required' => TRUE);
 
   if (!$node->nid) {
     // new topic

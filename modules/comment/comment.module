@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.386 2005/11/08 20:57:41 dries Exp $
+// $Id: comment.module,v 1.387 2005/11/12 11:26:16 dries Exp $
 
 /**
  * @file
@@ -249,8 +249,8 @@ function comment_nodeapi(&$node, $op, $arg = 0) {
 function comment_user($type, $edit, &$user, $category = NULL) {
   if ($type == 'form' && $category == 'account') {
     // when user tries to edit his own data
-    $form['comment_settings'] = array('#type' => 'fieldset', '#title' => t('Comment settings'), '#collapsible' => TRUE, '#collapsed' => FALSE, '#weight' => 4);
-    $form['comment_settings']['signature'] = array('#type' => 'textarea', '#title' => t('Signature'), '#default_value' => $edit['comment_settings']['signature'], '#cols' => 60, '#rows' => 5, '#description' => ('Your signature will be publicly displayed at the end of your comments.'));
+    $form['comment_settings'] = array('#type' => 'fieldset', '#title' => t('Comment settings'), '#collapsible' => TRUE, '#weight' => 4);
+    $form['comment_settings']['signature'] = array('#type' => 'textarea', '#title' => t('Signature'), '#default_value' => $edit['comment_settings']['signature'], '#description' => ('Your signature will be publicly displayed at the end of your comments.'));
 
     return $form;
   }
@@ -1108,10 +1108,10 @@ function comment_form($edit, $title = NULL) {
   }
 
   if (variable_get('comment_subject_field', 1) == 1) {
-    $form['subject'] = array('#type' => 'textfield', '#title' => t('Subject'), '#size' => 60, '#maxlength' => 64, '#default_value' => $edit['subject']);
+    $form['subject'] = array('#type' => 'textfield', '#title' => t('Subject'), '#maxlength' => 64, '#default_value' => $edit['subject']);
   }
 
-  $form['comment'] = array('#type' => 'textarea', '#title' => t('Comment'), '#cols' => 60, '#rows' => 15, '#default_value' => $edit['comment'] ? $edit['comment'] : $user->signature, '#required' => TRUE
+  $form['comment'] = array('#type' => 'textarea', '#title' => t('Comment'), '#rows' => 15, '#default_value' => $edit['comment'] ? $edit['comment'] : $user->signature, '#required' => TRUE
   );
 
   $form = array_merge($form, filter_form($node->format));

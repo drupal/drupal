@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.57 2005/11/12 09:14:30 dries Exp $
+// $Id: locale.inc,v 1.58 2005/11/12 11:25:47 dries Exp $
 
 /**
  * @file
@@ -100,7 +100,7 @@ function _locale_admin_manage_add_screen() {
   $form = array();
   $form['header'] = array('#prefix' => '<h2>', '#value' => t('Custom language') , '#suffix' => '</h2>');
   $form['langcode'] = array('#type' => 'textfield', '#title' => t('Language code'), '#default_value' => $edit['langcode'], '#size' => 12, '#maxlength' => 60, '#description' => t("Commonly this is an <a href=\"%iso-codes\">ISO 639 language code</a> with an optional country code for regional variants. Examples include 'en', 'en-US' and 'zh-cn'.", array('%iso-codes' => 'http://www.w3.org/WAI/ER/IG/ert/iso639.htm')));
-  $form['langname'] = array('#type' => 'textfield', '#title' => t('Language name in English'), '#default_value' => $edit['langname'], '#size' => 60, '#maxlength' => 64, '#description' => t('Name of the language. Will be available for translation in all languages.'));
+  $form['langname'] = array('#type' => 'textfield', '#title' => t('Language name in English'), '#default_value' => $edit['langname'], '#maxlength' => 64, '#description' => t('Name of the language. Will be available for translation in all languages.'));
   $form['submit'] = array('#type' => 'submit', '#value' => t('Add custom language'));
 
   $output .= drupal_get_form('_locale_custom_language', $form);
@@ -980,15 +980,15 @@ function _locale_string_edit($lid) {
   while ($translation = db_fetch_object($result)) {
     $orig = $translation->source;
     $form[$translation->locale] = (strlen($orig) > 40) ?
-   array('#type' => 'textarea', '#title' => $languages['name'][$translation->locale], '#default_value' => $translation->translation, '#cols' => 60, '#rows' => 15)
- : array('#type' => 'textfield', '#title' => $languages['name'][$translation->locale], '#default_value' => $translation->translation, '#size' => 60, '#maxlength' => 128);
+   array('#type' => 'textarea', '#title' => $languages['name'][$translation->locale], '#default_value' => $translation->translation, '#rows' => 15)
+ : array('#type' => 'textfield', '#title' => $languages['name'][$translation->locale], '#default_value' => $translation->translation);
     unset($languages['name'][$translation->locale]);
   }
   $form['item'] = array('#type' => 'item', '#title' => t('Original text'), '#value' => wordwrap(check_plain($orig, 0)));
   foreach ($languages['name'] as $key => $lang) {
     $form[$key] = (strlen($orig) > 40) ?
-array('#type' => 'textarea', '#title' => $lang, '#cols' => 60, '#rows' => 15) :
-array('#type' => 'textfield', '#title' => $lang, '#size' => 60, '#maxlength' => 128);
+array('#type' => 'textarea', '#title' => $lang, '#rows' => 15) :
+array('#type' => 'textfield', '#title' => $lang);
   }
 
   $form['submit'] = array('#type' => 'submit', '#value' => t('Save translations'));

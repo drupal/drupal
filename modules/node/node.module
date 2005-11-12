@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.546 2005/11/12 02:54:13 unconed Exp $
+// $Id: node.module,v 1.547 2005/11/12 11:26:16 dries Exp $
 
 /**
  * @file
@@ -1228,7 +1228,7 @@ function node_types_configure($type = NULL) {
     $node->type = $type;
     $form['submission'] = array('#type' => 'fieldset', '#title' =>t('Submission form') );
     $form['submission'][$type . '_help']  = array(
-      '#type' => 'textarea', '#title' => t('Explanation or submission guidelines'), '#default_value' =>  variable_get($type .'_help', ''), '#cols' => 60, '#rows' => 5,
+      '#type' => 'textarea', '#title' => t('Explanation or submission guidelines'), '#default_value' =>  variable_get($type .'_help', ''),
       '#description' => t('This text will be displayed at the top of the %type submission form. It is useful for helping or instructing your users.', array('%type' => node_get_name($type)))
     );
     $form['submission']['minimum_'. $type .'_size'] = array(

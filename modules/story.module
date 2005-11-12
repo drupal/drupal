@@ -1,5 +1,5 @@
 <?php
-// $Id: story.module,v 1.175 2005/11/12 02:54:13 unconed Exp $
+// $Id: story.module,v 1.176 2005/11/12 11:26:16 dries Exp $
 
 /**
  * @file
@@ -86,7 +86,7 @@ function story_validate($node) {
  */
 function story_form(&$node) {
 
-  $form['title'] = array('#type' => 'textfield', '#title' => t('Title'), '#size' => 60, '#maxlength' => 128, '#required' => TRUE, '#default_value' => $node->title);
+  $form['title'] = array('#type' => 'textfield', '#title' => t('Title'), '#required' => TRUE, '#default_value' => $node->title);
 
   $form['body'] = array(
     '#type' => 'textarea', '#title' => t('Body'), '#default_value' => $node->body, '#required' => TRUE
@@ -95,7 +95,7 @@ function story_form(&$node) {
 
 
   $form['log'] = array(
-    '#type' => 'textarea', '#title' => t('Log message'), '#default_value' => $node->log, '#rows' => 5,
+    '#type' => 'textarea', '#title' => t('Log message'), '#default_value' => $node->log,
     '#description' => t('An explanation of the additions or updates being made to help other authors understand your motivations.')
   );
 

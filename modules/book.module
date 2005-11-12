@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.328 2005/11/12 02:54:13 unconed Exp $
+// $Id: book.module,v 1.329 2005/11/12 11:26:16 dries Exp $
 
 /**
  * @file
@@ -247,7 +247,7 @@ function book_form(&$node) {
     '#description' => t('The parent that this page belongs in. Note that pages whose parent is &lt;top-level&gt; are regarded as independent, top-level books.')
   );
 
-  $form['title'] = array('#type' => 'textfield', '#title' => t('Title'), '#size' => 60, '#maxlength' => 128, '#required' => TRUE, '#default_value' => $node->title);
+  $form['title'] = array('#type' => 'textfield', '#title' => t('Title'), '#required' => TRUE, '#default_value' => $node->title);
   $form['body'] = array(
     '#type' => 'textarea', '#title' => t('Body'), '#default_value' => $node->body, '#required' => TRUE
   );
@@ -257,7 +257,7 @@ function book_form(&$node) {
     '#type' => 'fieldset', '#title' => t('Log message'), '#collapsible' => TRUE, '#collapsed' => TRUE
   );
   $form['log']['message'] = array(
-    '#type' => 'textarea', '#default_value' => $node->log, '#rows' => 5, '#weight' => 18,
+    '#type' => 'textarea', '#default_value' => $node->log, '#weight' => 18,
     '#description' => t('An explanation of the additions or updates being made to help other authors understand your motivations.')
   );
 
@@ -322,7 +322,7 @@ function book_outline() {
         );
 
         $form['log'] = array(
-          '#type' => 'textarea', '#title' => t('Log message'), '#cols' => 60, '#rows' => 5,
+          '#type' => 'textarea', '#title' => t('Log message'),
           '#default_value' => $node->log, '#description' => t('An explanation to help other authors understand your motivations to put this post into the book.')
         );
 
@@ -986,7 +986,7 @@ function book_node_visitor_opml_post($node, $depth) {
  */
 function book_admin_edit_line($node, $depth = 0) {
   $form['#tree'] = TRUE;
-  $form[$node->nid]['title'] = array('#type' => 'textfield', '#default_value' => $node->title, '#size' => 60, '#maxlength' => 255);
+  $form[$node->nid]['title'] = array('#type' => 'textfield', '#default_value' => $node->title, '#maxlength' => 255);
   $form[$node->nid]['weight'] = array('#type' => 'weight', '#default_value' => $node->weight, '#delta' => 15);
   $form['depth'] = array('#value' => $depth);
   $form['nid'] = array('#value' => $node->nid);

@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.252 2005/11/12 09:23:50 dries Exp $
+// $Id: system.module,v 1.253 2005/11/12 11:26:16 dries Exp $
 
 /**
  * @file
@@ -61,9 +61,9 @@ function system_elements() {
   $type['checkbox'] = array('#input' => TRUE, '#return_value' => 1);
   $type['submit'] = array('#input' => TRUE, '#name' => 'op', '#button_type' => 'submit', '#execute' => TRUE);
   $type['button'] = array('#input' => TRUE, '#name' => 'op', '#button_type' => 'submit', '#execute' => FALSE);
-  $type['textfield'] = array('#input' => TRUE, '#size' => 60, '#maxlength' => 70, '#autocomplete_path' => FALSE);
-  $type['password'] = array('#input' => TRUE, '#size' => 60, '#maxlength' => 70);
-  $type['textarea'] = array('#input' => TRUE, '#cols' => 60, '#rows' => 20);
+  $type['textfield'] = array('#input' => TRUE, '#size' => 60, '#maxlength' => 128, '#autocomplete_path' => FALSE);
+  $type['password'] = array('#input' => TRUE, '#size' => 30, '#maxlength' => 64);
+  $type['textarea'] = array('#input' => TRUE, '#cols' => 60, '#rows' => 5);
   $type['radios'] = array('#input' => TRUE, '#process' => 'expand_radios');
   $type['radio'] = array('#input' => TRUE);
   $type['checkboxes'] = array('#input' => TRUE, '#process' => 'expand_checkboxes', '#tree' => TRUE);
@@ -171,7 +171,7 @@ function system_user($type, $edit, &$user, $category = NULL) {
     }
 
     $form['themes'] = array(
-      '#type' => 'fieldset', '#title' => t('Theme configuration'), '#description' => t('Selecting a different theme will change the look and feel of the site.'), '#weight' => 2, '#collapsible' => TRUE, '#collapsed' => FALSE, '#theme' => 'system_user');
+      '#type' => 'fieldset', '#title' => t('Theme configuration'), '#description' => t('Selecting a different theme will change the look and feel of the site.'), '#weight' => 2, '#collapsible' => TRUE, '#theme' => 'system_user');
 
     foreach ($themes as $info) {
       $info->screenshot = dirname($info->filename) . '/screenshot.png';
@@ -234,20 +234,20 @@ function system_view_general() {
     '#description' => t('The name of this web site.')
   );
   $form['general']['site_mail'] = array(
-    '#type' => 'textfield', '#title' => t('E-mail address'), '#default_value' => variable_get('site_mail', ini_get('sendmail_from')), '#maxlength' => 128,
+    '#type' => 'textfield', '#title' => t('E-mail address'), '#default_value' => variable_get('site_mail', ini_get('sendmail_from')),
     '#description' => t('A valid e-mail address for this website, used by the auto-mailer during registration, new password requests, notifications, etc.')
   );
   $form['general']['site_slogan'] = array(
     '#type' => 'textfield', '#title' => t('Slogan'), '#default_value' => variable_get('site_slogan', ''),
-    '#maxlength' => 128, '#description' => t('The slogan of this website. Some themes display a slogan when available.')
+    '#description' => t('The slogan of this website. Some themes display a slogan when available.')
   );
 
   $form['general']['site_mission'] = array(
     '#type' => 'textarea', '#title' => t('Mission'), '#default_value' => variable_get('site_mission', ''),
-    '#rows' => 5, '#description' => t('Your site\'s mission statement or focus.')
+    '#description' => t('Your site\'s mission statement or focus.')
   );
   $form['general']['site_footer'] = array(
-    '#type' => 'textarea', '#title' => t('Footer message'), '#default_value' => variable_get('site_footer', ''), '#rows' => 5,
+    '#type' => 'textarea', '#title' => t('Footer message'), '#default_value' => variable_get('site_footer', ''),
     '#description' => t('This text will be displayed at the bottom of each page.  Useful for adding a copyright notice to your pages.')
   );
   $form['general']['anonymous'] = array(
@@ -445,7 +445,6 @@ function system_view_general() {
 
   $form['site_status']['site_offline_message'] = array(
     '#type' => 'textarea',
-    '#rows' => 5,
     '#title' => t('Site offline message'),
     '#default_value' => variable_get('site_offline_message', t('%site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('%site' => variable_get('site_name', t('This drupal site'))))),
     '#description' => t('Message to show visitors when site is offline.')
@@ -872,7 +871,7 @@ function system_modules() {
 
   // Handle status checkboxes, including overriding the generated
   // checkboxes for required modules.
-  $form['status'] = array('#type' => 'checkboxes', '#default_value' => $status, '#options' => $options, '#tree' => TRUE);
+  $form['status'] = array('#type' => 'checkboxes', '#default_value' => $status, '#options' => $options);
   $required = array('block', 'filter', 'system', 'user', 'watchdog');
   foreach ($required as $require) {
     $form['status'][$require] = array('#type' => 'hidden', '#value' => 1, '#suffix' => t('required'));
@@ -882,7 +881,7 @@ function system_modules() {
    * Handle throttle checkboxes, including overriding the generated checkboxes for required modules.
    */
   if (module_exist('throttle')) {
-    $form['throttle'] = array('#type' => 'checkboxes', '#default_value' => $throttle, '#options' => $options, '#tree' => TRUE);
+    $form['throttle'] = array('#type' => 'checkboxes', '#default_value' => $throttle, '#options' => $options);
     $throttle_required = array_merge($required, array('throttle'));
     foreach ($throttle_required as $require) {
       $form['throttle'][$require] = array('#type' => 'hidden', '#value' => 1, '#suffix' => t('required'));
@@ -1014,7 +1013,7 @@ function system_theme_settings($key = '') {
       '#description' => t('Check here if you want the theme to use the logo supplied with it.')
     );
     $form['logo']['logo_path'] = array(
-      '#type' => 'textfield', '#title' => t('Path to custom logo'), '#size' => 60, '#maxlength' => 128,
+      '#type' => 'textfield', '#title' => t('Path to custom logo'),
       '#description' => t('The path to the file you would like to use as your logo file instead of the default logo.'));
 
     $form['logo']['logo_upload'] = array(

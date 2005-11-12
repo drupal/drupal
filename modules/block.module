@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.186 2005/11/03 15:39:37 dries Exp $
+// $Id: block.module,v 1.187 2005/11/12 11:26:16 dries Exp $
 
 /**
  * @file
@@ -334,7 +334,6 @@ function block_admin_configure($module = NULL, $delta = 0) {
           $form['block_settings'] = array('#type' => 'fieldset',
             '#title' => t('Block specific settings'),
             '#collapsible' => true,
-            '#collapsed' => false,
             '#weight' => 0);
 
           foreach ($settings as $k => $v) {
@@ -351,7 +350,6 @@ function block_admin_configure($module = NULL, $delta = 0) {
       $form['user_vis_settings'] = array('#type' => 'fieldset',
         '#title' => t('User specific visibility settings'),
         '#collapsible' => true,
-        '#collapsed' => false,
         '#weight' => 0);
 
       $form['user_vis_settings']['custom'] = array(
@@ -365,7 +363,6 @@ function block_admin_configure($module = NULL, $delta = 0) {
       $form['page_vis_settings'] = array('#type' => 'fieldset',
         '#title' => t('Page specific visibility settings'),
         '#collapsible' => true,
-        '#collapsed' => false,
         '#weight' => 0);
 
 
@@ -380,8 +377,6 @@ function block_admin_configure($module = NULL, $delta = 0) {
         '#type' => 'textarea',
         '#title' => t('Pages'),
         '#default_value' => $edit['pages'],
-        '#cols' => 60,
-        '#rows' => 5,
         '#description' => t("Enter one page per line as Drupal paths. The '*' character is a wildcard. Example paths are '%blog' for the blog page and %blog1 for every personal blog. %front is the front page. If the PHP-mode is chosen, enter PHP code between %php.  Note that executing incorrect PHP-code can break your Drupal site.", array('%blog' => theme('placeholder', 'blog'), '%blog1' =>  theme('placeholder', 'blog/*'), '%front' => theme('placeholder', '<front>'), '%php' => theme('placeholder', '<?php ?>'))));
 
       $form['submit'] = array('#type' => 'submit', '#value' => t('Save block'));
@@ -436,10 +431,10 @@ function block_box_delete_confirm_execute($form_id, $edit) {
 
 
 function block_box_form($edit = array()) {
-  $form['title'] = array('#type' => 'textfield', '#title' => t('Block title'), '#default_value' => $edit['title'], '#size' => 60, '#maxlength' => 64, '#description' => t('The title of the block as shown to the user.'));
+  $form['title'] = array('#type' => 'textfield', '#title' => t('Block title'), '#default_value' => $edit['title'], '#maxlength' => 64, '#description' => t('The title of the block as shown to the user.'));
   $form['format'] = filter_form($edit['format']);
-  $form['body'] = array('#type' => 'textarea', '#title' => t('Block body'), '#default_value' => $edit['body'], '#cols' => 60, '#rows' => 15, '#description' => t('The content of the block as shown to the user.'));
-  $form['info'] = array('#type' => 'textfield', '#title' => t('Block description'), '#default_value' => $edit['info'], '#size' => 60, '#maxlength' => 64, '#description' => t('A brief description of your block. Used on the <a href="%overview">block overview page</a>.', array('%overview' => url('admin/block'))), '#required' => TRUE);
+  $form['body'] = array('#type' => 'textarea', '#title' => t('Block body'), '#default_value' => $edit['body'], '#rows' => 15, '#description' => t('The content of the block as shown to the user.'));
+  $form['info'] = array('#type' => 'textfield', '#title' => t('Block description'), '#default_value' => $edit['info'], '#maxlength' => 64, '#description' => t('A brief description of your block. Used on the <a href="%overview">block overview page</a>.', array('%overview' => url('admin/block'))), '#required' => TRUE);
 
   return $form;
 }
@@ -489,7 +484,7 @@ function block_user($type, $edit, &$user, $category = NULL) {
     case 'form':
       if ($category == 'account') {
         $result = db_query('SELECT * FROM {blocks} WHERE status = 1 AND custom != 0 ORDER BY weight, module, delta');
-        $form['block'] = array('#type' => 'fieldset', '#title' => t('Block configuration'), '#weight' => 3, '#collapsible' => TRUE, '#collapsed' => FALSE, '#tree' => TRUE);
+        $form['block'] = array('#type' => 'fieldset', '#title' => t('Block configuration'), '#weight' => 3, '#collapsible' => TRUE, '#tree' => TRUE);
         while ($block = db_fetch_object($result)) {
           $data = module_invoke($block->module, 'block', 'list');
           if ($data[$block->delta]['info']) {

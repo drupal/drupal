@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.57 2005/11/01 10:17:34 dries Exp $
+// $Id: upload.module,v 1.58 2005/11/12 11:26:16 dries Exp $
 
 /**
  * @file
@@ -105,7 +105,7 @@ function upload_settings() {
     $form["settings_role_$rid"] = array('#type' => 'fieldset', '#title' => t('Settings for %role', array('%role' => theme('placeholder', $role))), '#collapsible' => TRUE, '#collapsed' => TRUE);
     $form["settings_role_$rid"]["upload_extensions_$rid"] = array(
       '#type' => 'textfield', '#title' => t('Permitted file extensions'), '#default_value' => variable_get("upload_extensions_$rid", "jpg jpeg gif png txt html doc xls pdf ppt pps"),
-      '#size' => 60, '#maxlength' => 255, '#description' => t('Extensions that users in this role can upload. Separate extensions with a space and do not include the leading dot.')
+      '#maxlength' => 255, '#description' => t('Extensions that users in this role can upload. Separate extensions with a space and do not include the leading dot.')
     );
     $form["settings_role_$rid"]["upload_uploadsize_$rid"] = array(
       '#type' => 'textfield', '#title' => t('Maximum file size per upload'), '#default_value' => variable_get("upload_uploadsize_$rid", 1),
@@ -432,7 +432,7 @@ function _upload_form($node) {
         $list[] = $key;
       }
       $description = "<small>". file_create_url(($file->fid ? $file->filepath : file_create_filename($file->filename, file_create_path()))) ."</small>";
-      $form['current']['description'][$key] = array('#type' => 'textfield', '#default_value' => $file->description ? $file->description : $file->filename, '#size' => 60, '#maxlength' => 256, '#description' => $description );
+      $form['current']['description'][$key] = array('#type' => 'textfield', '#default_value' => $file->description ? $file->description : $file->filename, '#maxlength' => 256, '#description' => $description );
       $form['current']['size'][$key] = array('#type' => 'markup', '#value' => format_size($file->filesize));
     }
     $form['current']['remove'] = array('#type' => 'checkboxes', '#options' => $options, '#default_value' => $remove);
