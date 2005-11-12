@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.526 2005/11/01 10:17:34 dries Exp $
+// $Id: user.module,v 1.527 2005/11/12 09:14:30 dries Exp $
 
 /**
  * @file
@@ -851,7 +851,7 @@ function user_login($edit = array(), $msg = '') {
         watchdog('user', t('Session opened for %name.', array('%name' => theme('placeholder', $user->name))));
 
         // Update the user table timestamp noting user has logged in.
-        db_query("UPDATE {users} SET login = '%d' WHERE uid = '%s'", time(), $user->uid);
+        db_query("UPDATE {users} SET login = %d WHERE uid = '%s'", time(), $user->uid);
 
         user_module_invoke('login', $edit, $user);
 
@@ -1029,7 +1029,7 @@ function user_pass_reset($uid, $timestamp, $hashed_pass) {
       watchdog('user', t('One time login URL used for %name with timestamp %timestamp.', array('%name' => "<em>$account->name</em>", '%timestamp' => $timestamp)));
       // Update the user table noting user has logged in.
       // And this also makes this hashed password a one-time-only login.
-      db_query("UPDATE {users} SET login = '%d' WHERE uid = %d", time(), $account->uid);
+      db_query("UPDATE {users} SET login = %d WHERE uid = %d", time(), $account->uid);
       // Now we can set the new user.
       $user = $account;
       // And proceed with normal login, going to user page.

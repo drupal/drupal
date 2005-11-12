@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.177 2005/11/12 02:54:13 unconed Exp $
+// $Id: poll.module,v 1.178 2005/11/12 09:14:30 dries Exp $
 
 /**
  * @file
@@ -97,7 +97,7 @@ function poll_execute(&$node) {
   $node->choice = array_values($node->choice);
   $node->teaser = poll_teaser($node);
 }
- 
+
 /**
  * Implementation of hook_validate().
  */

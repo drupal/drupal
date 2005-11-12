@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.56 2005/10/21 11:14:28 unconed Exp $
+// $Id: locale.inc,v 1.57 2005/11/12 09:14:30 dries Exp $
 
 /**
  * @file
@@ -173,10 +173,10 @@ function _locale_import_po($file, $lang, $mode) {
     // Get the plural formula
     if ($hdr["Plural-Forms"] && $p = _locale_import_parse_plural_forms($hdr["Plural-Forms"], $file->filename)) {
       list($nplurals, $plural) = $p;
-      db_query("UPDATE {locales_meta} SET plurals = '%d', formula = '%s' WHERE locale = '%s'", $nplurals, $plural, $lang);
+      db_query("UPDATE {locales_meta} SET plurals = %d, formula = '%s' WHERE locale = '%s'", $nplurals, $plural, $lang);
     }
     else {
-      db_query("UPDATE {locales_meta} SET plurals = '%d', formula = '%s' WHERE locale = '%s'", 0, '', $lang);
+      db_query("UPDATE {locales_meta} SET plurals = %d, formula = '%s' WHERE locale = '%s'", 0, '', $lang);
     }
   }
   else {
