@@ -418,7 +418,7 @@ function filter_admin_format_form($format) {
 
   //Add the name of the object
   $form['name'] = array('#type' => 'fieldset', '#title' => t('Name'));
-  $form['name']['name'] = array('#type' => 'textfield', '#default_value' => $format->name, '#size' => 60, '#maxlength' => 127, '#description' => t('Give the name of this filter format'), '#required' => TRUE);
+  $form['name']['name'] = array('#type' => 'textfield', '#default_value' => $format->name, '#description' => t('Give the name of this filter format'), '#required' => TRUE);
 
   //Add a row of checkboxes for form group
   $form['roles'] = array('#type' => 'fieldset', '#title' => t('Roles'), '#description' => $default ? $help : t('Choose which roles may use this filter format.'), '#tree' => TRUE);
