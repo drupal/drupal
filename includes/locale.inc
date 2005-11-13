@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.58 2005/11/12 11:25:47 dries Exp $
+// $Id: locale.inc,v 1.59 2005/11/13 02:32:18 unconed Exp $
 
 /**
  * @file
@@ -132,7 +132,7 @@ function _locale_admin_import_screen() {
   $form['mode'] = array('#type' => 'radios', '#title' => t('Mode'), '#default_value' => 'overwrite', '#options' => array('overwrite' => t('Strings in the uploaded file replace existing ones, new ones are added'), 'keep' => t('Existing strings are kept, only new strings are added')));
   $form['submit'] = array('#type' => 'submit', '#value' => t('Import'));
   $form['#attributes']['enctype'] = 'multipart/form-data';
-  $form['#action'] = 'admin/locale/language/import';
+  $form['#action'] = url('admin/locale/language/import');
 
   return drupal_get_form('_locale_admin_import', $form);
 }
@@ -1127,7 +1127,7 @@ function _locale_string_seek_form() {
   $form['search']['language'] = array('#type' => 'radios', '#title' => t('Language'), '#default_value' => ($query->language ? $query->language : 'all'), '#options' => array_merge(array('all' => t('All languages'), 'en' => t('English (provided by Drupal)')), $languages['name']));
   $form['search']['searchin'] = array('#type' => 'radios', '#title' => t('Search in'), '#default_value' => ($query->searchin ? $query->searchin : 'all'), '#options' => array('all' => t('All strings in that language'), 'translated' => t('Only translated strings'), 'untranslated' => t('Only untranslated strings')));
   $form['search']['submit'] = array('#type' => 'submit', '#value' => t('Search'));
-  $form['#action'] = 'admin/locale/string/search';
+  $form['#action'] = url('admin/locale/string/search');
 
   return drupal_get_form('_locale_string_seek', $form);
 }

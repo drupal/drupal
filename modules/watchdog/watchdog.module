@@ -1,5 +1,5 @@
 <?php
-// $Id: watchdog.module,v 1.132 2005/11/01 10:17:34 dries Exp $
+// $Id: watchdog.module,v 1.133 2005/11/13 02:32:18 unconed Exp $
 
 /**
  * @file
@@ -91,7 +91,7 @@ function watchdog_overview() {
     '#options' => $names,
     '#default_value' => $_SESSION['watchdog_overview_filter']
   );
-  $form['#action'] = 'admin/logs';
+  $form['#action'] = url('admin/logs');
 
   $form['submit'] = array('#type' => 'submit', '#value' =>t('Filter'));
   $output = drupal_get_form('watchdog_form_overview', $form);

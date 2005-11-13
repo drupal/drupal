@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.387 2005/11/12 11:26:16 dries Exp $
+// $Id: comment.module,v 1.388 2005/11/13 02:32:18 unconed Exp $
 
 /**
  * @file
@@ -1199,7 +1199,7 @@ function comment_controls($mode = 2, $order = 1, $comments_per_page = 50, $nid =
 
   $form['nid'] = array('#type' => 'hidden', '#value' => $nid);
 
-  $form['#action'] = 'comment/reply';
+  $form['#action'] = url('comment/reply');
 
   return drupal_get_form('comment_controls'. $top_or_bottom, $form, 'comment_controls');
 }
