@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.117 2005/11/12 11:26:16 dries Exp $
+// $Id: profile.module,v 1.118 2005/11/13 08:33:44 dries Exp $
 
 /**
  * @file
@@ -349,12 +349,12 @@ function profile_form_profile($edit, $user, $category) {
     $result = db_query("SELECT * FROM {profile_fields} WHERE LOWER(category) = LOWER('%s') ORDER BY weight", $category);
     // We use LOWER('%s') instead of PHP's strtolower() to avoid UTF-8 conversion issues.
   }
-  // Only add form group if items exist
-  if (db_num_rows($result)) {
-    $fields[$category] = array('#type' => 'fieldset', '#title' => $category);
-  }
+
   while ($field = db_fetch_object($result)) {
     $category = $field->category;
+    if (!isset($fields[$category])) {
+      $fields[$category] = array('#type' => 'fieldset', '#title' => $category, '#weight' => $w++);
+    }
     switch ($field->type) {
       case 'textfield':
       case 'url':
@@ -380,7 +380,7 @@ function profile_form_profile($edit, $user, $category) {
         $fields[$category][$field->name] = array('#type' => 'select', '#title' => check_plain($field->title), '#default_value' => $edit[$field->name], '#options' => $options, '#description' => _profile_form_explanation($field), '#required' => $field->required);
         break;
       case 'date':
-        $fields[$category][$field->name] = array('#type' => 'date', '#title' => check_plain($field->title), '#default_value' => $edit[$field->name], description, '#description' => _profile_form_explanation($field), '#required' => $field->required);
+        $fields[$category][$field->name] = array('#type' => 'date', '#title' => check_plain($field->title), '#default_value' => $edit[$field->name], '#description' => _profile_form_explanation($field), '#required' => $field->required);
         break;
     }
   }
