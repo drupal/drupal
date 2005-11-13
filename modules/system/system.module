@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.253 2005/11/12 11:26:16 dries Exp $
+// $Id: system.module,v 1.254 2005/11/13 07:57:11 dries Exp $
 
 /**
  * @file
@@ -317,20 +317,22 @@ function system_view_general() {
   // File system:
   $form['files'] = array('#type' => 'fieldset', '#title' => t('File system settings'), '#collapsible' => TRUE, '#collapsed' => TRUE);
 
-  $directory_path = file_directory_path();
-  file_check_directory($directory_path, FILE_CREATE_DIRECTORY, 'file_directory_path');
-
   $form['files']['file_directory_path'] = array(
-    '#type' => 'textfield', '#title' => t('File system path'), '#default_value' => $directory_path, '#maxlength' => 255, '#valid' => 'directory',
-    '#description' => t('A file system path where the files will be stored. This directory has to exist and be writable by Drupal. If the download method is set to public this directory has to be relative to Drupal installation directory, and be accessible over the web. When download method is set to private this directory should not be accessible over the web. Changing this location after the site has been in use will cause problems so only change this setting on an existing site if you know what you are doing.')
+    '#type' => 'textfield',
+    '#title' => t('File system path'),
+    '#default_value' => file_directory_path(),
+    '#maxlength' => 255,
+    '#description' => t('A file system path where the files will be stored. This directory has to exist and be writable by Drupal. If the download method is set to public this directory has to be relative to Drupal installation directory, and be accessible over the web. When download method is set to private this directory should not be accessible over the web. Changing this location after the site has been in use will cause problems so only change this setting on an existing site if you know what you are doing.'),
+    '#post_process' => 'system_check_directory',
   );
 
-  $directory_temp = file_directory_temp();
-  file_check_directory($directory_temp, FILE_CREATE_DIRECTORY, 'file_directory_temp');
-
   $form['files']['file_directory_temp'] = array(
-    '#type' => 'textfield', '#title' => t('Temporary directory'), '#default_value' => $directory_temp, '#maxlength' => 255, '#valid' => 'directory',
-    '#description' => t('Location where uploaded files will be kept during previews. Relative paths will be resolved relative to the file system path.')
+    '#type' => 'textfield',
+    '#title' => t('Temporary directory'),
+    '#default_value' => file_directory_temp(),
+    '#maxlength' => 255,
+    '#description' => t('Location where uploaded files will be kept during previews. Relative paths will be resolved relative to the Drupal installation directory.'),
+    '#post_process' => 'system_check_directory',
   );
 
   $form['files']['file_downloads'] = array(
@@ -455,6 +457,23 @@ function system_view_general() {
   $form['strings'] = array_merge($form['strings'], unicode_settings());
 
   return $form;
+}
+
+/**
+ * Checks the existence of the directory specified in $form_element. This
+ * function is called from the system_view_general form to check both the
+ * file_directory_path and file_directory_temp directories. If validation
+ * fails, the form element is flagged with an error from within the
+ * file_check_directory function.
+ *
+ * @param $form_id
+ *   The id of the form.
+ * @param $form_element
+ *   The form element containing the name of the directory to check.
+ */
+function system_check_directory($form_id, $form_element) {
+  file_check_directory($form_element['#value'], FILE_CREATE_DIRECTORY, $form_element['#parents'][0]);
+  return $form_element;
 }
 
 /**
