@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.211 2005/11/01 10:17:34 dries Exp $
+// $Id: statistics.module,v 1.212 2005/11/13 02:40:18 unconed Exp $
 
 /**
  * @file
@@ -247,7 +247,7 @@ function statistics_recent_hits($type = 'all', $id = 0) {
  * Menu callback; presents the "top pages" page.
  */
 function statistics_top_pages() {
-  $sql = "SELECT COUNT(path) AS hits, path, title, AVG(timer) AS average_time, SUM(timer) AS total_time FROM {accesslog} GROUP BY path";
+  $sql = "SELECT COUNT(path) AS hits, path, title, AVG(timer) AS average_time, SUM(timer) AS total_time FROM {accesslog} GROUP BY path, title";
   $sql_cnt = "SELECT COUNT(DISTINCT(path)) FROM {accesslog}";
 
   $header = array(
@@ -281,7 +281,7 @@ function statistics_top_visitors() {
     array('data' => t('Operations'))
   );
 
-  $sql = "SELECT COUNT(a.uid) AS hits, a.uid, u.name, a.hostname, SUM(a.timer) AS total, ac.aid FROM {accesslog} a LEFT JOIN {access} ac ON ac.type = 'host' AND LOWER(a.hostname) LIKE (ac.mask) LEFT JOIN {users} u ON a.uid = u.uid GROUP BY a.hostname". tablesort_sql($header);
+  $sql = "SELECT COUNT(a.uid) AS hits, a.uid, u.name, a.hostname, SUM(a.timer) AS total, ac.aid FROM {accesslog} a LEFT JOIN {access} ac ON ac.type = 'host' AND LOWER(a.hostname) LIKE (ac.mask) LEFT JOIN {users} u ON a.uid = u.uid GROUP BY a.hostname, a.uid, u.name, ac.aid". tablesort_sql($header);
   $sql_cnt = "SELECT COUNT(DISTINCT(uid)) FROM {accesslog}";
   $result = pager_query($sql, 30, 0, $sql_cnt);
 
