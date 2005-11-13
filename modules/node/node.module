@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.547 2005/11/12 11:26:16 dries Exp $
+// $Id: node.module,v 1.548 2005/11/13 02:43:33 unconed Exp $
 
 /**
  * @file
@@ -1922,7 +1922,7 @@ function node_page_default() {
       <p>The first thing you will need to do is <a href=\"%register\">create the first account</a>. This account will have full administration rights and will allow you to configure your website. Once logged in, you can visit the <a href=\"%admin\">administration section</a> and <a href=\"%config\">set up your site's configuration</a>.</p>
       <p>Drupal comes with various modules, each of which contains a specific piece of functionality. You should visit the <a href=\"%modules\">module list</a> and enable those modules which suit your website's needs.</p>
       <p><a href=\"%themes\">Themes</a> handle the presentation of your website. You can use one of the existing themes, modify them or create your own from scratch.</p>
-      <p>We suggest you look around the administration section and explore the various options Drupal offers you. For more information, you can refer to the <a href=\"%handbook\">Drupal handbooks online</a>.</p>", array('%drupal' => 'http://www.drupal.org/', '%register' => url('user/register'), '%admin' => url('admin'), '%config' => url('admin'), '%modules' => url('admin/modules'), '%themes' => url('admin/themes'), '%handbook' => 'http://www.drupal.org/handbooks'));
+      <p>We suggest you look around the administration section and explore the various options Drupal offers you. For more information, you can refer to the <a href=\"%handbook\">Drupal handbooks online</a>.</p>", array('%drupal' => 'http://www.drupal.org/', '%register' => url('user/register'), '%admin' => url('admin'), '%config' => url('admin/settings'), '%modules' => url('admin/modules'), '%themes' => url('admin/themes'), '%handbook' => 'http://www.drupal.org/handbooks'));
   }
 
   return $output;
