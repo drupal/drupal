@@ -283,7 +283,8 @@ function xmlrpc_server_method_signature($xmlrpc_server, $methodname) {
   return $return;
 }
 
-function xmlrpc_server_method_help($xmlrpc_server, $method) {
+function xmlrpc_server_method_help($method) {
+  $xmlrpc_server = xmlrpc_server_get();
   return $xmlrpc_server->help[$method];
 }
 
