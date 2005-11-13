@@ -1199,7 +1199,7 @@ function comment_controls($mode = 2, $order = 1, $comments_per_page = 50, $nid =
 
   $form['nid'] = array('#type' => 'hidden', '#value' => $nid);
 
-  $form['#action'] = 'comment/reply';
+  $form['#action'] = url('comment/reply');
 
   return drupal_get_form('comment_controls'. $top_or_bottom, $form, 'comment_controls');
 }
