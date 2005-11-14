@@ -203,6 +203,8 @@ CREATE TABLE contact (
   category varchar(255) NOT NULL default '',
   recipients text NOT NULL default '',
   reply text NOT NULL default '',
+  weight smallint NOT NULL default '0',
+  selected smallint NOT NULL default '0',
   PRIMARY KEY (cid),
   UNIQUE (category)
 );
