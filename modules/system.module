@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.254 2005/11/13 07:57:11 dries Exp $
+// $Id: system.module,v 1.255 2005/11/14 22:19:14 dries Exp $
 
 /**
  * @file
@@ -826,7 +826,8 @@ function system_themes_execute($form_id, $values) {
   if ($_POST['op'] == t('Save configuration')) {
     if (is_array($values['status'])) {
       foreach ($values['status'] as $key => $choice) {
-        if ($choice) {
+        // Always enable the default theme, despite its status checkbox being checked:
+        if ($choice || $values['theme_default'] == $key) {
           // If theme status is being set to 1 from 0, initialize block data for this theme if necessary.
           if (db_num_rows(db_query("SELECT status FROM {system} WHERE type = 'theme' AND name = '%s' AND status = 0", $key))) {
             system_initialize_theme_blocks($key);
