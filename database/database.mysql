@@ -208,6 +208,8 @@ CREATE TABLE contact (
   category varchar(255) NOT NULL default '',
   recipients longtext NOT NULL default '',
   reply longtext NOT NULL default '',
+  weight tinyint(3) NOT NULL default '0',
+  selected tinyint(1) NOT NULL default '0',
   PRIMARY KEY (cid),
   UNIQUE KEY category (category)
 ) TYPE=MyISAM;

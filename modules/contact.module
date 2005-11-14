@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.30 2005/11/12 11:26:16 dries Exp $
+// $Id: contact.module,v 1.31 2005/11/14 22:23:11 dries Exp $
 
 /**
  * @file
@@ -87,7 +87,6 @@ function contact_user($type, $edit, &$user, $category = NULL) {
     $form['contact'] = array('#type' => 'fieldset', '#title' => t('Contact settings'), '#weight' => 5, '#collapsible' => TRUE);
     $form['contact']['contact'] = array('#type' => 'checkbox', '#title' => t('Personal contact form'), '#default_value' => $edit['contact'], '#description' => t('Allow other users to contact you by e-mail via <a href="%url">your personal contact form</a>. Note that your e-mail address is not made public and that privileged users such as site administrators are able to contact you even if you choose not to enable this feature.', array('%url' => url("user/$user->uid/contact"))));
     return $form;
-    //return array(array('title' => t('Contact settings'), 'data' => drupal_get_form('contact_user', $form), 'weight' => 2));
   }
   if ($type == 'validate') {
     return array('contact' => $edit['contact']);
@@ -188,28 +187,33 @@ function contact_admin_edit($cid = NULL) {
 
     if (!form_get_errors()) {
       db_query("DELETE FROM {contact} WHERE cid = %d", $cid);
-      db_query("INSERT INTO {contact} (category, recipients, reply) VALUES ('%s', '%s', '%s')", $edit['category'], $edit['recipients'], $edit['reply']);
+      db_query("INSERT INTO {contact} (category, recipients, reply, weight, selected) VALUES ('%s', '%s', '%s', %d, %d)", $edit['category'], $edit['recipients'], $edit['reply'], $edit['weight'], $edit['selected']);
+      drupal_set_message(t('Category %category has been updated.', array('%category' => theme('placeholder', $edit['category']))));
       drupal_goto('admin/contact');
     }
   }
   else {
     $category           = db_fetch_object(db_query("SELECT * FROM {contact} WHERE cid = %d", $cid));
-    $edit['cid'] = $category->cid;
+    $edit['cid']        = $category->cid;
     $edit['category']   = $category->category;
     $edit['recipients'] = $category->recipients;
     $edit['reply']      = $category->reply;
+    $edit['weight']     = $category->weight;
+    $edit['selected']   = $category->selected;
   }
 
   $form['category'] = array('#type' => 'textfield', '#title' => t('Category'), '#maxlength' => 255, '#default_value' => $edit['category'], '#description' => t("Example: 'website feedback' or 'product information'."), '#required' => TRUE);
   $form['recipients'] = array('#type' => 'textarea', '#title' => t('Recipients'), '#default_value' => $edit['recipients'], '#description' => t("Example: 'webmaster@yoursite.com' or 'sales@yoursite.com'.  To specify multiple repecients, separate each e-mail address with a comma."), '#required' => TRUE);
   $form['reply'] = array('#type' => 'textarea', '#title' => t('Auto-reply'), '#default_value' => $edit['reply'], '#description' => t("Optional auto-reply.  Leave empty if you don't want to send the user an auto-reply message."));
+  $form['weight'] = array('#type' => 'weight', '#title' => t('Weight'), '#default_value' => $edit['weight'], '#description' => t('When listing categories, those with with light (small) weights get listed before categories with heavier (larger) weights. Categories with equal weights are sorted alphabetically.'));
+  $form['selected'] = array('#type' => 'select', '#title' => t('Selected'), '#options' => array('0' => t('No'), '1' => t('Yes')), '#default_value' => $edit['selected'], '#description' => t('Set this to <em>Yes</em> if you would like this category to be selected by default.'));
   $form['submit'] = array('#type' => 'submit', '#value' => t('Submit'));
 
   return drupal_get_form('contact_admin_edit', $form);
 }
 
 function contact_admin_delete($cid) {
-  $info = db_fetch_object(db_query("SELECT cid, category FROM {contact} WHERE cid = %d",$cid));
+  $info = db_fetch_object(db_query("SELECT cid, category FROM {contact} WHERE cid = %d", $cid));
   if ($_POST['op'] != t('Delete')) {
     return confirm_form('contact_admin_delete', array(),
                     t('Are you sure you want to delete %category?', array('%category' => theme('placeholder', $info->category))),
@@ -226,12 +230,12 @@ function contact_admin_delete($cid) {
 
 
 function contact_admin() {
-  $result = db_query('SELECT cid, category, recipients FROM {contact} ORDER BY category');
+  $result = db_query('SELECT cid, category, recipients, selected FROM {contact} ORDER BY weight, category');
   $rows = array();
   while ($category = db_fetch_object($result)) {
-    $rows[] = array($category->category, $category->recipients, l(t('edit'), 'admin/contact/edit/'. $category->cid), l(t('delete'), 'admin/contact/delete/'. $category->cid));
+    $rows[] = array($category->category, $category->recipients, ($category->selected ? t('Yes') : t('No')), l(t('edit'), 'admin/contact/edit/'. $category->cid), l(t('delete'), 'admin/contact/delete/'. $category->cid));
   }
-  $header = array(t('Category'), t('Recipients'), array('data' => t('Operations'), 'colspan' => 2));
+  $header = array(t('Category'), t('Recipients'), t('Selected'), array('data' => t('Operations'), 'colspan' => 2));
   return theme('table', $header, $rows);
 }
 
@@ -247,10 +251,13 @@ function contact_mail_page() {
       $edit['mail'] = $user->mail;
     }
 
-    $result = db_query('SELECT category FROM {contact} ORDER BY category');
+    $result = db_query('SELECT cid, category, selected FROM {contact} ORDER BY weight, category');
     $categories[] = '--';
     while ($category = db_fetch_object($result)) {
-      $categories[$category->category] = $category->category;
+      $categories[$category->cid] = $category->category;
+      if ($category->selected) {
+        $default_category = $category->cid;
+      }
     }
 
     if (count($categories) > 1) {
@@ -260,7 +267,7 @@ function contact_mail_page() {
       $form['mail'] = array('#type' => 'textfield', '#title' => t('Your e-mail address'), '#maxlength' => 255, '#default_value' => $edit['mail'], '#required' => TRUE);
       $form['subject'] = array('#type' => 'textfield', '#title' => t('Subject'), '#maxlength' => 255, '#default_value' => $edit['subject'], '#required' => TRUE);
       if (count($categories) > 2) {
-        $form['category'] = array('#type' => 'select', '#title' => t('Category'), '#size' => 60, '#maxlength' => 255, '#default_value' => $edit['category'], '#options' => $categories, '#required' => TRUE);
+        $form['cid'] = array('#type' => 'select', '#title' => t('Category'), '#default_value' => $default_category, '#options' => $categories, '#required' => TRUE);
       }
       $form['message'] = array('#type' => 'textarea', '#title' => t('Message'), '#default_value' => $edit['message'], '#required' => TRUE);
       $form['copy'] = array('#type' => 'checkbox', '#title' => t('Send me a copy.'), '#default_value' => $edit['copy']);
@@ -277,7 +284,7 @@ function contact_mail_page() {
 
 function contact_mail_page_validate($form_id, &$form) {
   global $form_values;
-  if (!$form['category']) {
+  if (!$form['cid']) {
     // Look if there is only one category
     $result = db_query('SELECT category FROM {contact}');
     if (db_num_rows($result) == 1) {
@@ -304,14 +311,14 @@ function contact_mail_page_execute($form_id, $edit) {
     $message[$key] = wordwrap($value);
   }
 
+  // Load the category information:
+  $contact = db_fetch_object(db_query("SELECT * FROM {contact} WHERE cid = %d", $edit['cid']));
+
   // Format the category:
-  $subject = '['. $edit['category'] .'] '. $edit['subject'];
+  $subject = '['. $contact->category .'] '. $edit['subject'];
 
   // Prepare the body:
   $body = implode("\n\n", $message);
-
-  // Load the category information:
-  $contact = db_fetch_object(db_query("SELECT * FROM {contact} WHERE category = '%s'", $edit['category']));
 
   // Send the e-mail to the recipients:
   user_mail($contact->recipients, $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");

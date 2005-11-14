@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.146 2005/11/14 21:57:49 dries Exp $
+// $Id: updates.inc,v 1.147 2005/11/14 22:23:11 dries Exp $
 
 /**
  * @file
@@ -103,7 +103,8 @@ $sql_updates = array(
   "2005-10-15" => "update_150",
   "2005-10-23" => "update_151",
   "2005-10-28" => "update_152",
-  "2005-11-03" => "update_153"
+  "2005-11-03" => "update_153",
+  "2005-11-14" => "update_154"
 );
 
 function update_110() {
@@ -1128,7 +1129,7 @@ function update_153(){
     case 'pgsql':
       $ret[] = update_sql("ALTER TABLE {contact} DROP CONSTRAINT {contact}_pkey");
       $ret[] = update_sql("CREATE SEQUENCE {contact}_cid_seq");
-      db_add_column($ret, 'contact', 'cid', 'integer', array('not null' => TRUE, 'default' => "nextval('{contact}_cid_seq')"));
+      db_add_column($ret, 'contact', 'cid', 'int', array('not null' => TRUE, 'default' => "nextval('{contact}_cid_seq')"));
       $ret[] = update_sql("ALTER TABLE {contact} ADD PRIMARY KEY (cid)");
       $ret[] = update_sql("ALTER TABLE {contact} ADD CONSTRAINT {contact}_category_key UNIQUE (category)");
       break;
@@ -1137,6 +1138,22 @@ function update_153(){
       $ret[] = update_sql("ALTER TABLE {contact} DROP PRIMARY KEY");
       $ret[] = update_sql("ALTER TABLE {contact} ADD COLUMN cid int(11) NOT NULL PRIMARY KEY auto_increment");
       $ret[] = update_sql("ALTER TABLE {contact} ADD UNIQUE KEY category (category)");
+      break;
+  }
+  return $ret;
+}
+
+function update_154() {
+  $ret = array();
+  switch ($GLOBALS['db_type']) {
+    case 'pgsql':
+      db_add_column($ret, 'contact', 'weight', 'smallint', array('not null' => TRUE, 'default' => 0));
+      db_add_column($ret, 'contact', 'selected', 'smallint', array('not null' => TRUE, 'default' => 0));
+      break;
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql("ALTER TABLE {contact} ADD COLUMN weight tinyint(3) NOT NULL DEFAULT 0");
+      $ret[] = update_sql("ALTER TABLE {contact} ADD COLUMN selected tinyint(1) NOT NULL DEFAULT 0");
       break;
   }
   return $ret;
