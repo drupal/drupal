@@ -1005,7 +1005,7 @@ function update_150() {
         sid integer NOT NULL default '0',
         type varchar(16) default NULL,
         data text NOT NULL default '')");
-      $ret[] = update_sql("CREATE INDEX {search_dataset}_sid_type_idx on {search_dataset}(sid, type)");
+      $ret[] = update_sql("CREATE INDEX {search_dataset}_sid_type_idx ON {search_dataset}(sid, type)");
 
       $ret[] = update_sql("CREATE TABLE {search_index} (
         word varchar(50) NOT NULL default '',
