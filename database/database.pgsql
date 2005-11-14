@@ -580,7 +580,7 @@ CREATE TABLE search_dataset (
   type varchar(16) default NULL,
   data text NOT NULL default ''
 );
-CREATE INDEX search_dataset_sid_type_idx on search_dataset(sid, type);
+CREATE INDEX search_dataset_sid_type_idx ON search_dataset(sid, type);
 
 --
 -- Table structure for search_index
