@@ -956,7 +956,9 @@ function user_logout() {
   // Destroy the current session:
   session_destroy();
   module_invoke_all('user', 'logout', NULL, $user);
-  unset($user);
+
+  // We have to use $GLOBALS to unset a global variable:
+  unset($GLOBALS['user']);
 
   drupal_goto();
 }
