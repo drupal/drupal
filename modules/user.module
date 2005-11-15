@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.530 2005/11/14 21:49:47 dries Exp $
+// $Id: user.module,v 1.531 2005/11/15 20:47:06 dries Exp $
 
 /**
  * @file
@@ -956,7 +956,9 @@ function user_logout() {
   // Destroy the current session:
   session_destroy();
   module_invoke_all('user', 'logout', NULL, $user);
-  unset($user);
+
+  // We have to use $GLOBALS to unset a global variable:
+  unset($GLOBALS['user']);
 
   drupal_goto();
 }
