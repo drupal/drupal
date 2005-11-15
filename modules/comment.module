@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.389 2005/11/13 09:05:38 dries Exp $
+// $Id: comment.module,v 1.390 2005/11/15 07:29:47 dries Exp $
 
 /**
  * @file
@@ -57,6 +57,12 @@ define('COMMENT_FORM_BELOW', 1);
 define('COMMENT_NODE_DISABLED', 0);
 define('COMMENT_NODE_READ_ONLY', 1);
 define('COMMENT_NODE_READ_WRITE', 2);
+
+/**
+ * Constants to define if comment preview is optional or required
+ */
+define('COMMENT_PREVIEW_OPTIONAL', 0);
+define('COMMENT_PREVIEW_REQUIRED', 1);
 
 /**
  * Implementation of hook_help().
@@ -361,7 +367,7 @@ function comment_configure() {
     '#description' => t('Can users provide a unique subject for their comments?')
   );
 
-  $form['posting_settings']['comment_preview'] = array('#type' => 'radios', '#title' => t('Preview comment'), '#default_value' => variable_get('comment_preview', 1), '#options' => array(t('Optional'), t('Required')));
+  $form['posting_settings']['comment_preview'] = array('#type' => 'radios', '#title' => t('Preview comment'), '#default_value' => variable_get('comment_preview', COMMENT_PREVIEW_REQUIRED), '#options' => array(t('Optional'), t('Required')));
 
   $form['posting_settings']['comment_form_location'] = array(
     '#type' => 'radios',
@@ -453,7 +459,7 @@ function comment_reply($nid, $pid = NULL) {
     }
 
     // should we show the reply box?
-    if (node_comment_mode($nid) != 2) {
+    if (node_comment_mode($nid) != COMMENT_NODE_READ_WRITE) {
       drupal_set_message(t("This discussion is closed: you can't post new comments."), 'error');
     }
     else if (user_access('post comments')) {
@@ -615,7 +621,7 @@ function comment_preview($edit) {
  */
 function comment_save($edit) {
   global $user;
-  if (user_access('post comments') && (user_access('administer coments') || node_comment_mode($edit['nid']) == 2)) {
+  if (user_access('post comments') && (user_access('administer coments') || node_comment_mode($edit['nid']) == COMMENT_NODE_READ_WRITE)) {
     if (!form_get_errors()) {
       // Check for duplicate comments.  Note that we have to use the
       // validated/filtered data to perform such check.
@@ -771,7 +777,7 @@ function comment_links($comment, $return = 1) {
     $links[] = l(t('parent'), comment_node_url(), NULL, NULL, "comment-$comment->cid");
   }
 
-  if (node_comment_mode($comment->nid) == 2) {
+  if (node_comment_mode($comment->nid) == COMMENT_NODE_READ_WRITE) {
     if (user_access('administer comments') && user_access('access administration pages')) {
       $links[] = l(t('delete'), "comment/delete/$comment->cid");
       $links[] = l(t('edit'), "comment/edit/$comment->cid");
@@ -1205,7 +1211,7 @@ function comment_form($edit, $title = NULL) {
   // Only show post button if preview is optional or if we are in preview mode.
   // We show the post button in preview mode even if there are form errors so that
   // optional form elements (e.g., captcha) can be updated in preview mode.
-  if ((variable_get('comment_preview', 1) == 0) || ($_POST['op'] == t('Preview comment')) || ($_POST['op'] == t('Post comment'))) {
+  if ((variable_get('comment_preview', COMMENT_PREVIEW_REQUIRED) == COMMENT_PREVIEW_OPTIONAL) || ($_POST['op'] == t('Preview comment')) || ($_POST['op'] == t('Post comment'))) {
     $form['submit'] = array('#type' => 'submit', '#value' => t('Post comment'), '#weight' => 20);
   }
 
