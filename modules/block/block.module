@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.188 2005/11/13 08:26:01 dries Exp $
+// $Id: block.module,v 1.189 2005/11/16 22:07:48 dries Exp $
 
 /**
  * @file
@@ -380,8 +380,10 @@ function block_admin_configure($module = NULL, $delta = 0) {
 }
 
 function block_admin_configure_validate($form_id, $form_values) {
-  if (empty($form_values['info']) || db_num_rows(db_query("SELECT bid FROM {boxes} WHERE bid != %d AND info = '%s'", $form_values['delta'], $form_values['info']))) {
-    form_set_error('info', t('Please ensure that each block description is unique.'));
+  if ($form_values['module'] == 'block') {
+    if (empty($form_values['info']) || db_num_rows(db_query("SELECT bid FROM {boxes} WHERE bid != %d AND info = '%s'", $form_values['delta'], $form_values['info']))) {
+      form_set_error('info', t('Please ensure that each block description is unique.'));
+    }
   }
 }
 
