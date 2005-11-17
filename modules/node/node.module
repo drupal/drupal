@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.548 2005/11/13 02:43:33 unconed Exp $
+// $Id: node.module,v 1.549 2005/11/17 06:48:25 dries Exp $
 
 /**
  * @file
@@ -1186,6 +1186,8 @@ function theme_node_admin_nodes($form) {
   if ($form['pager']['#value']) {
     $output .= form_render($form['pager']);
   }
+
+  $output .= form_render($form);
 
   return $output;
 }
