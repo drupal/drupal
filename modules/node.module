@@ -1187,6 +1187,8 @@ function theme_node_admin_nodes($form) {
     $output .= form_render($form['pager']);
   }
 
+  $output .= form_render($form);
+
   return $output;
 }
 
