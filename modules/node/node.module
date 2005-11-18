@@ -1670,7 +1670,9 @@ function node_form($node) {
 }
 
 function node_form_add_preview($form_id, $form, $edit) {
-  $form['node_preview'] = array('#value' => node_preview(node_validate($edit)), '#weight' => -100);
+  $edit = array2object($edit);
+  node_validate($edit);
+  $form['node_preview'] = array('#value' => node_preview($edit), '#weight' => -100);
   return $form;
 }
 
