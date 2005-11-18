@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.46 2005/11/17 06:42:13 dries Exp $
+// $Id: menu.module,v 1.47 2005/11/18 13:50:37 dries Exp $
 
 /**
  * @file
@@ -106,21 +106,17 @@ function menu_configure() {
     $primary_options[$mid] = $menu['items'][$mid]['title'];
   }
 
-  $form['settings_links'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Primary links settings'),
-  );
-
+  $form['settings_links'] = array('#type' => 'fieldset', '#title' => t('Primary links settings'));
   $form['settings_links']['intro'] = array(
-    '#type' => 'item',
-    '#value' => t('Primary links is a navigation system which usually (depending on your theme) appears at the top-right of the browser window. There are usually two rows of links, primary and secondary. You may control which links appear in this area by choosing a menu from which the links will be generated and then placing your links into the menu using the <a href="%menu">menu administration</a> or the \'Menu settings\' pane on each node authoring form.', array('%menu' => url('admin/menu'))),
+    '#type' => 'markup',
+    '#value' => t('Primary links is a navigation system which usually (depending on your theme) appears at the top-right of the browser window. There are usually two rows of links, primary and secondary. You may control which links appear in this area by choosing a menu from which the links will be generated and then placing your links into the menu using the <a href="%menu">menu administration</a> or the \'Menu settings\' pane on each edit node form.', array('%menu' => url('admin/menu')))
   );
 
   $form['settings_links']['menu_primary_menu'] = array(
     '#type' => 'select',
     '#title' => t('Menu containing primary links'),
     '#default_value' => variable_get('menu_primary_menu', 0),
-    '#options' => $primary_options,
+    '#options' => $primary_options
   );
 
   $secondary_options[0] = t('No secondary links');
@@ -133,30 +129,7 @@ function menu_configure() {
     '#title' => t('Menu containing secondary links'),
     '#default_value' => variable_get('menu_secondary_menu', 0),
     '#options' => $secondary_options,
-    '#description' => t('If you select the same menu as primary links then secondary links will display the appropriate second level of your navigation hierarchy.'),
-  );
-
-  $form['settings_authoring'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Node authoring form settings'),
-  );
-
-  $form['settings_authoring']['intro'] = array(
-    '#type' => 'item',
-    '#value' => t('On each post authoring form there is a \'Menu settings\' pane. This setting allows you to limit what is displayed in the \'Parent item\' drop-down menu of that pane. This can be used to force new menu items to be created in the primary links menu or to hide admin menu items.'),
-  );
-
-  $authoring_options = array(0 => t('Show all menus'));
-  foreach ($menu['items'][0]['children'] as $mid) {
-    $authoring_options[$mid] = $menu['items'][$mid]['title'];
-  }
-
-  $form['settings_authoring']['menu_parent_items'] = array(
-    '#type' => 'select',
-    '#title' => t('Restrict parent items to'),
-    '#default_value' => variable_get('menu_parent_items', 0),
-    '#options' => $authoring_options,
-    '#description' => t('Choose the menu from which parent items will be made available. Only this menu item and its children will be shown.'),
+    '#description' => t('If you select the same menu as primary links then secondary links will display the appropriate second level of your navigation hierarchy.')
   );
 
   return system_settings_form('menu_configure', $form);
@@ -539,22 +512,28 @@ function menu_overview_tree_rows($pid = 0, $depth = 0) {
         $operations[] = array('data' => t('locked'), 'colspan' => '3', 'align' => 'center');
       }
       else {
-        if ($menu['items'][$mid]['type'] & MENU_VISIBLE_IN_TREE) {
+        // Set the edit column.
+        if ($menu['items'][$mid]['type'] & (MENU_VISIBLE_IN_TREE | MENU_VISIBLE_IF_HAS_CHILDREN)) {
           $operations[] = array('data' => l(t('edit'), 'admin/menu/item/edit/'. $mid));
-          if ($menu['items'][$mid]['type'] & (MENU_IS_ROOT | MENU_VISIBLE_IF_HAS_CHILDREN)) {
-            // Disabling entire menus is done from block admin page.
-            // Menus which are only visible when they have children cannot be disabled.
-            $operations[] = array('data' => '');
-          }
-          else {
-            $operations[] = array('data' => l(t('disable'), 'admin/menu/item/disable/'. $mid));
-          }
         }
         else {
           $operations[] = array('data' => '');
+        }
+
+        // Set the disable column.
+        if ($menu['items'][$mid]['type'] & (MENU_IS_ROOT | MENU_VISIBLE_IF_HAS_CHILDREN)) {
+          // Disabling entire menus is done from block admin page.
+          // MENU_VISIBLE_IF_HAS_CHILDREN menus are always enabled so hide this operation.
+          $operations[] = array('data' => '');
+        }
+        else if ($menu['items'][$mid]['type'] & MENU_VISIBLE_IN_TREE) {
+          $operations[] = array('data' => l(t('disable'), 'admin/menu/item/disable/'. $mid));
+        }
+        else {
           $operations[] = array('data' => l(t('enable'), 'admin/menu/item/edit/'. $mid));
         }
 
+        // Set the reset column.
         if ($menu['items'][$mid]['type'] & MENU_CREATED_BY_ADMIN) {
           $operations[] = array('data' => l(t('delete'), 'admin/menu/item/delete/'. $mid));
         }
@@ -613,7 +592,7 @@ function menu_parent_options($mid, $pid = 0, $depth = 0) {
           for ($i = 0; $i < $depth; $i++) {
             $title = '--'. $title;
           }
-          if (!($menu['items'][$child]['type'] & MENU_VISIBLE_IN_TREE)) {
+          if (!($menu['items'][$child]['type'] & (MENU_VISIBLE_IN_TREE | MENU_VISIBLE_IF_HAS_CHILDREN))) {
             $title .= ' ('. t('disabled') .')';
           }
           $options[$child] = $title;
