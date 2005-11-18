@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.14 2005/11/12 03:45:57 unconed Exp $
+// $Id: form.inc,v 1.15 2005/11/18 13:48:09 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -224,8 +224,12 @@ function _form_builder($form_id, $form) {
   }
 
   if ($form['#input']) {
-    $form['#name'] = ($form['#name']) ? $form['#name'] : 'edit[' . implode('][', $form['#parents']) . ']';
-    $form['#id'] =  ($form['#id']) ? $form['#id'] : 'edit-' . implode('-', $form['#parents']);
+    if (!isset($form['#name'])) {
+      $form['#name'] = 'edit[' . implode('][', $form['#parents']) . ']';
+    }
+    if (!isset($form['#id'])) {
+      $form['#id'] =  'edit-' . implode('-', $form['#parents']);
+    }
 
     $posted = (isset($_POST['edit']) && ($_POST['edit']['form_id'] == $form_id));
     $edit = $posted ? $_POST['edit'] : array();
@@ -266,34 +270,37 @@ function _form_builder($form_id, $form) {
   $count  = 0;
   foreach (element_children($form) as $key) {
     // don't squash an existing tree value
-    $form[$key]['#tree'] = (isset($form[$key]['#tree'])) ? $form[$key]['#tree'] : $form['#tree'];
-
-    if ($form[$key]['#tree']) {
-      if (!$form['#tree']) {
-        // begin tree
-        $parents = array($key);
-      }
-      else {
-        //continue tree
-        $parents = (array) $form['#parents'];
-        array_push($parents, $key);
-      }
-    }
-    else {
-      // no tree
-      $parents = array($key);
+    if (!isset($form[$key]['#tree'])) {
+      $form[$key]['#tree'] = $form['#tree'];
     }
 
     // don't squash existing parents value
-    $form[$key]['#parents'] = (isset($form[$key]['#parents'])) ? $form[$key]['#parents'] : $parents;
+    if (!isset($form[$key]['#parents'])) {
+      if ($form[$key]['#tree']) {
+        if (!$form['#tree']) {
+          // begin tree
+          $form[$key]['#parents'] = array($key);
+        }
+        else {
+          //continue tree
+          $form[$key]['#parents'] = array_merge($form['#parents'], array($key));
+        }
+      }
+      else {
+        // no tree
+        $form[$key]['#parents'] = array($key);
+      }
+    }
 
     # Assign a decimal placeholder weight, to preserve original array order
-    $form[$key]['#weight'] = $form[$key]['#weight'] ? $form[$key]['#weight'] : $count/1000;
+    if (!isset($form[$key]['#weight'])) {
+      $form[$key]['#weight'] = $count/1000;
+    }
     $form[$key] = _form_builder($form_id, $form[$key]);
     $count++;
   }
 
-  if (function_exists($form['#post_process']) && !$form['#post_processed']) {
+  if (function_exists($form['#post_process']) && !isset($form['#post_processed'])) {
     $form = call_user_func($form['#post_process'], $form_id, $form, $form_values, $form['#parents']);
     $form['#post_processed'] = TRUE;
   }
