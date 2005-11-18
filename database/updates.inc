@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.147 2005/11/14 22:23:11 dries Exp $
+// $Id: updates.inc,v 1.148 2005/11/18 14:05:38 dries Exp $
 
 /**
  * @file
@@ -245,7 +245,7 @@ function update_113() {
       uid integer default '0',
       timestamp integer NOT NULL default '0'
     )");
-    $ret[] = update_sql("INSERT INTO accesslog (title, path, url, hostname, uid, timestamp) SELECT title, path, url, hostname, uid, timestamp FROM accesslog_t");
+    $ret[] = update_sql("INSERT INTO {accesslog} (title, path, url, hostname, uid, timestamp) SELECT title, path, url, hostname, uid, timestamp FROM {accesslog}_t");
 
     $ret[] = update_sql("DROP TABLE {accesslog}_t");
     $ret[] = update_sql("CREATE INDEX {accesslog}_timestamp_idx ON {accesslog} (timestamp);");
