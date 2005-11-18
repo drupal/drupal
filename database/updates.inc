@@ -245,7 +245,7 @@ function update_113() {
       uid integer default '0',
       timestamp integer NOT NULL default '0'
     )");
-    $ret[] = update_sql("INSERT INTO accesslog (title, path, url, hostname, uid, timestamp) SELECT title, path, url, hostname, uid, timestamp FROM accesslog_t");
+    $ret[] = update_sql("INSERT INTO {accesslog} (title, path, url, hostname, uid, timestamp) SELECT title, path, url, hostname, uid, timestamp FROM {accesslog}_t");
 
     $ret[] = update_sql("DROP TABLE {accesslog}_t");
     $ret[] = update_sql("CREATE INDEX {accesslog}_timestamp_idx ON {accesslog} (timestamp);");
