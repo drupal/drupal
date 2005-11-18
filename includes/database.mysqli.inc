@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysqli.inc,v 1.4 2005/10/20 21:30:50 unconed Exp $
+// $Id: database.mysqli.inc,v 1.5 2005/11/18 14:03:55 dries Exp $
 
 /**
  * @file
@@ -22,10 +22,10 @@
  */
 function db_connect($url) {
   // Check if MySQLi support is present in PHP
-  if (!function_exists('mysqli_init')) {
+  if (!function_exists('mysqli_init') && !extension_loaded('mysqli')) {
     drupal_maintenance_theme();
-    drupal_set_title('PHP MySQL support not enabled');
-    print theme('maintenance_page', '<p>We were unable to use the MySQL database because the MySQLi extension for PHP is not installed. Check your <code>PHP.ini</code> to see how you can enable it.</p>
+    drupal_set_title('PHP MySQLi support not enabled');
+    print theme('maintenance_page', '<p>We were unable to use the MySQLi database because the MySQLi extension for PHP is not installed. Check your <code>PHP.ini</code> to see how you can enable it.</p>
 <p>For more help, see the <a href="http://drupal.org/node/258">Installation and upgrading handbook</a>. If you are unsure what these terms mean you should probably contact your hosting provider.</p>');
     exit;
   }
@@ -70,6 +70,17 @@ function db_connect($url) {
 <p>For more help, see the <a href="http://drupal.org/node/258">Installation and upgrading handbook</a>. If you are unsure what these terms mean you should probably contact your hosting provider.</p>');
     exit;
   }
+
+
+  /**
+   * from: http://bugs.php.net/bug.php?id=33772
+   * Write and Close handlers are called after destructing objects since PHP
+   * 5.0.5. Thus destructors can use sessions but session handler can't use
+   * objects. In prior versions, they were called in the opposite order. It
+   * is possible to call session_write_close() from the destructor to solve
+   * this chicken and egg problem.
+   */
+  register_shutdown_function('session_write_close');
 
   return $connection;
 }
@@ -324,7 +335,8 @@ function db_decode_blob($data) {
  * Prepare user input for use in a database query, preventing SQL injection attacks.
  */
 function db_escape_string($text) {
-  return mysql_real_escape_string($text);
+  global $active_db;
+  return mysqli_real_escape_string($active_db, $text);
 }
 
 
