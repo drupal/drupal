@@ -1,5 +1,5 @@
 <?php
-// $Id: xmlrpc.inc,v 1.28 2005/11/09 19:03:35 dries Exp $
+// $Id: xmlrpc.inc,v 1.29 2005/11/21 21:35:43 dries Exp $
 
 /*
   Drupal XML-RPC library. Based on the IXR - The Incutio XML-RPC Library - (c) Incutio Ltd 2002-2005
@@ -331,6 +331,7 @@ function xmlrpc_date($time) {
     $xmlrpc_date->hour = date('H', $time);
     $xmlrpc_date->minute = date('i', $time);
     $xmlrpc_date->second = date('s', $time);
+    $xmlrpc_date->iso8601 = date('Ymd\TH:i:s');
   }
   else {
     $xmlrpc_date->year = substr($time, 0, 4);
@@ -339,8 +340,8 @@ function xmlrpc_date($time) {
     $xmlrpc_date->hour = substr($time, 9, 2);
     $xmlrpc_date->minute = substr($time, 12, 2);
     $xmlrpc_date->second = substr($time, 15, 2);
+    $xmlrpc_date->iso8601 = $time;
   }
-  $xmlrpc_date->iso8601 = $time;
   return $xmlrpc_date;
 }
 
