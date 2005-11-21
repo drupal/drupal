@@ -302,9 +302,9 @@ function _form_builder($form_id, $form) {
     $count++;
   }
 
-  if (function_exists($form['#post_process']) && !isset($form['#post_processed'])) {
-    $form = call_user_func($form['#post_process'], $form_id, $form, $form_values, $form['#parents']);
-    $form['#post_processed'] = TRUE;
+  if (function_exists($form['#after_build']) && !isset($form['#after_build_done'])) {
+    $form = call_user_func($form['#after_build'], $form, $form_values);
+    $form['#after_build_done'] = TRUE;
   }
 
   return $form;
