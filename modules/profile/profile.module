@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.118 2005/11/13 08:33:44 dries Exp $
+// $Id: profile.module,v 1.119 2005/11/21 09:42:14 dries Exp $
 
 /**
  * @file
@@ -286,7 +286,7 @@ function profile_view_field($user, $field) {
         $replace = array('d' => sprintf('%02d', $value['day']),
                          'j' => $value['day'],
                          'm' => sprintf('%02d', $value['month']),
-                         'M' => _profile_map_month($value['month']),
+                         'M' => map_month($value['month']),
                          'Y' => $value['year']);
         return strtr($format, $replace);
       case 'list':
@@ -396,14 +396,6 @@ function _profile_update_user_fields(&$fields, $account) {
       $fields[$key]->value = $value;
     }
   }
-}
-
-
-/**
- * Helper function for usage with drupal_map_assoc
- */
-function _profile_map_month($month) {
-  return format_date(gmmktime(0, 0, 0, $month, 2, 1970), 'custom', 'M', 0);
 }
 
 function profile_validate_profile($edit, $category) {

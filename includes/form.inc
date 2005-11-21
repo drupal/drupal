@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.15 2005/11/18 13:48:09 dries Exp $
+// $Id: form.inc,v 1.16 2005/11/21 09:42:13 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -493,13 +493,13 @@ function theme_radios($element) {
 }
 
 /**
- * Format a set of radio buttons.
+ * Format a date selection element.
  *
  * @param $element
  *   An associative array containing the properties of the element.
  *   Properties used : title, value, options, description, required and attributes.
  * @return
- *   A themed HTML string representing the radio button set.
+ *   A themed HTML string representing the date selection boxes.
  */
 function theme_date($element) {
   $output = '<div class="container-inline">' . $element['#children'] . '</div>';
@@ -507,7 +507,7 @@ function theme_date($element) {
 }
 
 /**
- * Roll out a single checkbox element to a list of checkboxes, using the options array as index.
+ * Roll out a single date element.
  */
 function expand_date($element) {
   // Default to current date
@@ -533,7 +533,7 @@ function expand_date($element) {
         $options = drupal_map_assoc(range(1, 31));
         break;
       case 'month':
-        $options = drupal_map_assoc(range(1, 12), '_profile_map_month');
+        $options = drupal_map_assoc(range(1, 12), 'map_month');
         break;
       case 'year':
         $options = drupal_map_assoc(range(1900, 2050));
@@ -545,9 +545,15 @@ function expand_date($element) {
   return $element;
 }
 
+/**
+ * Helper function for usage with drupal_map_assoc to display month names.
+ */
+function map_month($month) {
+  return format_date(gmmktime(0, 0, 0, $month, 2, 1970), 'custom', 'M', 0);
+}
 
 /**
- * Roll out a single adios element
+ * Roll out a single radios element
  * to a list of radios, using the options array as index.
  */
 function expand_radios($element) {
