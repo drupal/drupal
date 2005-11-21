@@ -140,8 +140,10 @@ function _form_validate($elements) {
 
   /* Validate the current input */
   if (!$elements['#validated'] && $elements['#input']) {
-    if ($elements['#required'] && !isset($elements['#value'])) {
-        form_error($elements, t('%name field is required', array('%name' => $elements['#title'])));
+    // An empty checkbox returns 0, an empty textfield returns '' so we use empty().
+    // Unfortunately, empty('0') returns TRUE so we need a special check for the '0' string.
+    if ($elements['#required'] && empty($elements['#value']) && $elements['#value'] !== '0') {
+      form_error($elements, t('%name field is required', array('%name' => $elements['#title'])));
     }
     if ($elements['#valid']) {
       if (is_array($elements['#valid'])) {
