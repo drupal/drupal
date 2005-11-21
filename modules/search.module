@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.142 2005/11/10 20:36:13 unconed Exp $
+// $Id: search.module,v 1.143 2005/11/21 15:55:17 unconed Exp $
 
 /**
  * @file
@@ -772,10 +772,10 @@ function do_search($keywords, $type, $join1 = '', $where1 = '1', $arguments1 = a
   // 'matches' is used to reject those items that cannot possibly match the query.
   $conditions = $where1 .' AND ('. $query[2] .") AND i.type = '%s'";
   $arguments = array_merge($arguments1, $query[3], array($type, $query[4]));
-  $result = db_query_temporary("SELECT i.type, i.sid, SUM(i.score * t.count) AS relevance, COUNT(*) AS matches FROM {search_index} i INNER JOIN {search_total} t ON i.word = t.word $join1 WHERE $conditions GROUP BY i.type, i.sid HAVING matches >= %d", $arguments, 'temp_search_sids');
+  $result = db_query_temporary("SELECT i.type, i.sid, SUM(i.score * t.count) AS relevance, COUNT(*) AS matches FROM {search_index} i INNER JOIN {search_total} t ON i.word = t.word $join1 WHERE $conditions GROUP BY i.type, i.sid HAVING COUNT(*) >= %d", $arguments, 'temp_search_sids');
 
   // Calculate maximum relevance, to normalize it
-  $normalize = db_result(db_query('SELECT MAX(relevance) FROM {temp_search_sids}'));
+  $normalize = db_result(db_query('SELECT MAX(relevance) FROM temp_search_sids'));
   if (!$normalize) {
     return array();
   }
@@ -784,14 +784,14 @@ function do_search($keywords, $type, $join1 = '', $where1 = '1', $arguments1 = a
   // Second pass: only keep items that match the complicated keywords conditions (phrase search, negative keywords, ...)
   $conditions = '('. $query[0] .')';
   $arguments = array_merge($arguments2, $query[1]);
-  $result = db_query_temporary("SELECT i.type, i.sid, $select2 FROM {temp_search_sids} i INNER JOIN {search_dataset} d ON i.sid = d.sid AND i.type = d.type $join2 WHERE $conditions ORDER BY score DESC", $arguments, 'temp_search_results');
-  if (($count = db_result(db_query('SELECT COUNT(*) FROM {temp_search_results}'))) == 0) {
+  $result = db_query_temporary("SELECT i.type, i.sid, $select2 FROM temp_search_sids i INNER JOIN {search_dataset} d ON i.sid = d.sid AND i.type = d.type $join2 WHERE $conditions ORDER BY score DESC", $arguments, 'temp_search_results');
+  if (($count = db_result(db_query('SELECT COUNT(*) FROM temp_search_results'))) == 0) {
     return array();
   }
   $count_query = "SELECT $count";
 
   // Do actual search query
-  $result = pager_query("SELECT * FROM {temp_search_results}", 10, 0, $count_query, $arguments);
+  $result = pager_query("SELECT * FROM temp_search_results", 10, 0, $count_query, $arguments);
   $results = array();
   while ($item = db_fetch_object($result)) {
     $results[] = $item->sid;
