@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.550 2005/11/18 14:09:42 dries Exp $
+// $Id: node.module,v 1.551 2005/11/21 18:10:26 dries Exp $
 
 /**
  * @file
@@ -1663,13 +1663,13 @@ function node_form($node) {
   }
 
   if ($op == t('Preview')) {
-    $form['#post_process'] = 'node_form_add_preview';
+    $form['#after_build'] = 'node_form_add_preview';
   }
 
   return drupal_get_form($node->type . '_node_form', $form, 'node_form');
 }
 
-function node_form_add_preview($form_id, $form, $edit) {
+function node_form_add_preview($form, $edit) {
   $edit = array2object($edit);
   node_validate($edit);
   $form['node_preview'] = array('#value' => node_preview($edit), '#weight' => -100);
