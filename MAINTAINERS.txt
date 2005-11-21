@@ -28,6 +28,10 @@ FILTER SYSTEM
 M: Steven Wittens <unconed@drupal.org>
 S: maintained
 
+FORM SYSTEM
+M: Károly Négyesi <chx@mail.tvnet.hu>
+S: maintained
+
 LOCALE MODULE
 M: Gabor Hojtsy <goba@php.net>
 S: maintained
