@@ -1,4 +1,4 @@
-// $Id: INSTALL.txt,v 1.22 2005/10/23 17:49:26 dries Exp $
+// $Id: INSTALL.txt,v 1.23 2005/11/21 16:24:41 unconed Exp $
 
 CONTENTS OF THIS FILE
 ---------------------
@@ -162,9 +162,11 @@ INSTALLATION
      sites/example.com/settings.php
      sites/default/settings.php
 
-   If you are installing on a non-standard port number, the ':' is
-   replaced by a '.'. For example, http://www.drupal.org:8080/mysite/test/
-   could be loaded from sites/www.drupal.org.8080.mysite.test/.
+   If you are installing on a non-standard port, the port number is
+   treated as the deepest subdomain. For example: http://www.example.com:8080/
+   could be loaded from sites/8080.www.example.com/. The port number
+   will be removed according to the pattern above if no port-specific
+   configuration is found, just like a real subdomain.
 
    Each site configuration can have its own site-specific modules and
    themes that will be made available in addition to those installed
