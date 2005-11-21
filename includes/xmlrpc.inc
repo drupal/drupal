@@ -331,6 +331,7 @@ function xmlrpc_date($time) {
     $xmlrpc_date->hour = date('H', $time);
     $xmlrpc_date->minute = date('i', $time);
     $xmlrpc_date->second = date('s', $time);
+    $xmlrpc_date->iso8601 = date('Ymd\TH:i:s');
   }
   else {
     $xmlrpc_date->year = substr($time, 0, 4);
@@ -339,8 +340,8 @@ function xmlrpc_date($time) {
     $xmlrpc_date->hour = substr($time, 9, 2);
     $xmlrpc_date->minute = substr($time, 12, 2);
     $xmlrpc_date->second = substr($time, 15, 2);
+    $xmlrpc_date->iso8601 = $time;
   }
-  $xmlrpc_date->iso8601 = $time;
   return $xmlrpc_date;
 }
 
