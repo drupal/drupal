@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.531 2005/11/15 20:47:06 dries Exp $
+// $Id: user.module,v 1.532 2005/11/21 09:17:04 dries Exp $
 
 /**
  * @file
@@ -663,16 +663,16 @@ function user_menu($may_cache) {
 
   if ($may_cache) {
     $items[] = array('path' => 'user', 'title' => t('user account'),
-      'callback' => 'user_page', 'access' => TRUE, 'type' => MENU_CALLBACK);
+      'callback' => 'user_login', 'access' => TRUE, 'type' => MENU_CALLBACK);
 
     $items[] = array('path' => 'user/autocomplete', 'title' => t('user autocomplete'),
       'callback' => 'user_autocomplete', 'access' => $view_access, 'type' => MENU_CALLBACK);
 
     //registration and login pages.
     $items[] = array('path' => 'user/login', 'title' => t('log in'),
-      'type' => MENU_DEFAULT_LOCAL_TASK);
+      'callback' => 'user_login', 'type' => MENU_DEFAULT_LOCAL_TASK);
     $items[] = array('path' => 'user/register', 'title' => t('register'),
-      'callback' => 'user_page', 'access' => $user->uid == 0 && variable_get('user_register', 1), 'type' => MENU_LOCAL_TASK);
+      'callback' => 'user_register', 'access' => $user->uid == 0 && variable_get('user_register', 1), 'type' => MENU_LOCAL_TASK);
     $items[] = array('path' => 'user/password', 'title' => t('request new password'),
       'callback' => 'user_pass', 'access' => $user->uid == 0, 'type' => MENU_LOCAL_TASK);
     $items[] = array('path' => 'user/reset', 'title' => t('reset password'),
@@ -730,7 +730,7 @@ function user_menu($may_cache) {
     //Your personal page
     if ($user->uid) {
       $items[] = array('path' => 'user/'. $user->uid, 'title' => t('my account'),
-        'callback' => 'user_page', 'access' => TRUE,
+        'callback' => 'user_view', 'callback arguments' => arg(1), 'access' => TRUE,
         'type' => MENU_DYNAMIC_ITEM);
     }
 
@@ -742,7 +742,8 @@ function user_menu($may_cache) {
   else {
     if (arg(0) == 'user' && is_numeric(arg(1))) {
       $items[] = array('path' => 'user/'. arg(1), 'title' => t('user'),
-        'type' => MENU_CALLBACK, 'callback' => 'user_page', 'access' => $view_access);
+        'type' => MENU_CALLBACK, 'callback' => 'user_view',
+        'callback arguments' => arg(1), 'access' => $view_access);
       $items[] = array('path' => 'user/'. arg(1) .'/view', 'title' => t('view'),
         'access' => $view_access, 'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
       $items[] = array('path' => 'user/'. arg(1) .'/edit', 'title' => t('edit'),
@@ -824,58 +825,17 @@ function user_auth_help_links() {
 
 
 
-function user_login($edit = array(), $msg = '') {
+function user_login($msg = '') {
   global $user, $base_url;
 
   // If we are already logged on, go to the user page instead.
   if ($user->uid) {
-    drupal_goto('user');
-  }
-
-  if (isset($edit['name'])) {
-    if (user_is_blocked($edit['name'])) {
-      // blocked in user administration
-      $error = t('The username %name has been blocked.', array('%name' => theme('placeholder', $edit['name'])));
-    }
-    else if (drupal_is_denied('user', $edit['name'])) {
-      // denied by access controls
-      $error = t('The name %name is a reserved username.', array('%name' => theme('placeholder', $edit['name'])));
-    }
-    else if ($edit['pass']) {
-
-      if (!$user->uid) {
-        $user = user_authenticate($edit['name'], trim($edit['pass']));
-      }
-
-      if ($user->uid) {
-        watchdog('user', t('Session opened for %name.', array('%name' => theme('placeholder', $user->name))));
-
-        // Update the user table timestamp noting user has logged in.
-        db_query("UPDATE {users} SET login = %d WHERE uid = '%s'", time(), $user->uid);
-
-        user_module_invoke('login', $edit, $user);
-
-        // Redirect the user to the page he logged on from.
-        drupal_goto();
-      }
-      else {
-        if (!$error) {
-          $error = t('Sorry. Unrecognized username or password.') .' '. l(t('Have you forgotten your password?'), 'user/password');
-        }
-        watchdog('user', t('Login attempt failed for %user: %error.', array('%user' => theme('placeholder', $edit['name']), '%error' => theme('placeholder', $error))));
-      }
-    }
-  }
-
-  // Display error message (if any):
-  if ($error) {
-    $form['error'] = array('#type' => 'value', '#value' => 1);
-    drupal_set_message($error, 'error');
+    drupal_goto('user/'. $user->uid);
   }
 
   // Display login form:
   if ($msg) {
-    $output .= "<p>$msg</p>";
+    $form['message'] = array('#value' => "<p>$msg</p>");
   }
   $form['name'] = array('#type' => 'textfield', '#title' => t('Username'), '#size' => 30, '#maxlength' => 64, '#required' => TRUE);
   if (count(user_auth_help_links()) > 0) {
@@ -889,10 +849,40 @@ function user_login($edit = array(), $msg = '') {
   return drupal_get_form('user_login', $form);
 }
 
-function user_login_execute($form) {
-  global $form_values;
-  if (!isset($form_values['error'])) {
-    return user_login($form_values);
+function user_login_validate($form_id, $form_values) {
+  if (isset($form_values['name'])) {
+    if (user_is_blocked($form_values['name'])) {
+      // blocked in user administration
+      form_set_error('login', t('The username %name has been blocked.', array('%name' => theme('placeholder', $form_values['name']))));
+    }
+    else if (drupal_is_denied('user', $form_values['name'])) {
+      // denied by access controls
+      form_set_error('login', t('The name %name is a reserved username.', array('%name' => theme('placeholder', $form_values['name']))));
+    }
+    else if ($form_values['pass']) {
+
+      $user = user_authenticate($form_values['name'], trim($form_values['pass']));
+
+      if (!$user->uid) {
+        form_set_error('login', t('Sorry. Unrecognized username or password.') .' '. l(t('Have you forgotten your password?'), 'user/password'));
+        watchdog('user', t('Login attempt failed for %user: %error.', array('%user' => theme('placeholder', $form_values['name']), '%error' => theme('placeholder', $error))));
+      }
+    }
+  }
+}
+
+function user_login_execute($form_id, $form_values) {
+  global $user;
+  if ($user->uid) {
+    watchdog('user', t('Session opened for %name.', array('%name' => theme('placeholder', $user->name))));
+
+    // Update the user table timestamp noting user has logged in.
+    db_query("UPDATE {users} SET login = %d WHERE uid = '%s'", time(), $user->uid);
+
+    user_module_invoke('login', $form_values, $user);
+
+    // Redirect the user to the page he logged on from.
+    drupal_goto();
   }
 }
 
@@ -964,48 +954,55 @@ function user_logout() {
 }
 
 function user_pass() {
-  global $base_url;
-  $edit = isset($_POST['edit']) ? $_POST['edit'] : '';
 
-  if ($edit['name'] && !($account = user_load(array('name' => $edit['name'], 'status' => 1)))) {
-    form_set_error('name', t('Sorry. The username %name is not recognized.', array('%name' => theme('placeholder', $edit['name']))));
-  }
-  else if ($edit['mail'] && !($account = user_load(array('mail' => $edit['mail'], 'status' => 1)))) {
-    form_set_error('mail', t('Sorry. The e-mail address %email is not recognized.', array('%email' => theme('placeholder', $edit['mail']))));
-  }
-  if ($account) {
-    $from = variable_get('site_mail', ini_get('sendmail_from'));
+  // Display form:
+  $form['name'] = array('#type' => 'textfield', '#title' => t('Username'), '#size' => 30, '#maxlength' => 64);
+  $form['mail'] = array('#type' => 'textfield', '#title' => t('E-mail address'), '#size' => 30, '#maxlength' => 64);
+  $form['submit'] = array('#type' => 'submit', '#value' => t('E-mail new password'), '#weight' => 2);
+  return drupal_get_form('user_pass', $form);
+}
 
-    // Mail one time login URL and instructions.
-    $variables = array('%username' => $account->name, '%site' => variable_get('site_name', 'drupal'), '%login_url' => user_pass_reset_url($account), '%uri' => $base_url, '%uri_brief' => substr($base_url, strlen('http://')), '%mailto' => $account->mail, '%date' => format_date(time()), '%login_uri' => url('user', NULL, NULL, TRUE), '%edit_uri' => url('user/'. $account->uid .'/edit', NULL, NULL, TRUE));
-    $subject = _user_mail_text('pass_subject', $variables);
-    $body = _user_mail_text('pass_body', $variables);
-    $headers = "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from";
-    $mail_success = user_mail($account->mail, $subject, $body, $headers);
+function user_pass_validate() {
+  global $form_values;
 
-    if ($mail_success) {
-      watchdog('user', t('Password reset instructions mailed to %name at %email.', array('%name' => '<em>'. $account->name .'</em>', '%email' => '<em>'. $account->mail .'</em>')));
-      drupal_set_message(t('Further instructions have been sent to your e-mail address.'));
-    }
-    else {
-      watchdog('user', t('Error mailing password reset instructions to %name at %email.', array('%name' => theme('placeholder', $account->name), '%email' => theme('placeholder', $account->mail))), WATCHDOG_ERROR);
-      drupal_set_message(t('Unable to send mail. Please contact the site admin.'));
-    }
-    drupal_goto('user');
+  $name = $form_values['name'];
+  $mail = $form_values['mail'];
+  if ($name && !($form_values['account'] = user_load(array('name' => $name, 'status' => 1)))) {
+    form_set_error('name', t('Sorry. The username %name is not recognized.', array('%name' => theme('placeholder', $name))));
   }
-  else {
-    if ($edit) {
-      drupal_set_message(t('You must provide either a username or e-mail address.'), 'error');
-    }
-    // Display form:
-    $form['name'] = array('#type' => 'textfield', '#title' => t('Username'), '#default_value' => $edit['name'], '#size' => 30, '#maxlength' => 64);
-    $form['mail'] = array('#type' => 'textfield', '#title' => t('E-mail address'), '#default_value' => $edit['mail'], '#size' => 30, '#maxlength' => 64);
-    $form['submit'] = array('#type' => 'submit', '#value' => t('E-mail new password'));
-    return drupal_get_form('user_logout', $form);
+  else if ($mail && !($form_values['account'] = user_load(array('mail' => $mail, 'status' => 1)))) {
+    form_set_error('mail', t('Sorry. The e-mail address %email is not recognized.', array('%email' => theme('placeholder', $mail))));
+  }
+  else if (!$mail && !$name) {
+    form_set_error('password', t('You must provide either a username or e-mail address.'));
   }
 }
 
-function theme_user_logout($form) {
+function user_pass_execute($form_id, $form_values) {
+  global $base_url;
+
+  $account = $form_values['account'];
+  $from = variable_get('site_mail', ini_get('sendmail_from'));
+
+  // Mail one time login URL and instructions.
+  $variables = array('%username' => $account->name, '%site' => variable_get('site_name', 'drupal'), '%login_url' => user_pass_reset_url($account), '%uri' => $base_url, '%uri_brief' => substr($base_url, strlen('http://')), '%mailto' => $account->mail, '%date' => format_date(time()), '%login_uri' => url('user', NULL, NULL, TRUE), '%edit_uri' => url('user/'. $account->uid .'/edit', NULL, NULL, TRUE));
+  $subject = _user_mail_text('pass_subject', $variables);
+  $body = _user_mail_text('pass_body', $variables);
+  $headers = "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from";
+  $mail_success = user_mail($account->mail, $subject, $body, $headers);
+
+  if ($mail_success) {
+      watchdog('user', t('Password reset instructions mailed to %name at %email.', array('%name' => '<em>'. $account->name .'</em>', '%email' => '<em>'. $account->mail .'</em>')));
+    drupal_set_message(t('Further instructions have been sent to your e-mail address.'));
+  }
+  else {
+    watchdog('user', t('Error mailing password reset instructions to %name at %email.', array('%name' => theme('placeholder', $account->name), '%email' => theme('placeholder', $account->mail))), WATCHDOG_ERROR);
+    drupal_set_message(t('Unable to send mail. Please contact the site admin.'));
+  }
+  drupal_goto('user');
+}
+
+function theme_user_pass($form) {
   $output = '<p>'. t('Enter your username <strong><em>or</em></strong> your e-mail address.') .'</p>';
   $output .= form_render($form);
   return $output;
@@ -1055,8 +1052,8 @@ function user_pass_rehash($password, $timestamp, $login) {
   return md5($timestamp . $password . $login);
 }
 
-function user_register($edit = array()) {
-  global $user, $base_url;
+function user_register() {
+  global $user;
 
   $admin = user_access('administer users');
 
@@ -1065,78 +1062,25 @@ function user_register($edit = array()) {
     drupal_goto('user/'. $user->uid);
   }
 
-  if ($edit) {
-    user_module_invoke('validate', $edit, $edit, 'account');
-
-    if (!form_get_errors()) {
-      $from = variable_get('site_mail', ini_get('sendmail_from'));
-      $pass = $admin ? $edit['pass'] : user_password();
-
-      // TODO: Is this necessary? Won't session_write() replicate this?
-      unset($edit['session']);
-      if (!$admin && array_intersect(array_keys($edit), array('uid', 'roles', 'init', 'session', 'status'))) {
-        watchdog('security', t('Detected malicious attempt to alter protected user fields.'), WATCHDOG_WARNING);
-        drupal_goto('user/register');
-      }
-      $account = user_save('', array_merge($edit, array('pass' => $pass, 'init' => $edit['mail'], 'roles' => array('authenticated user' => _user_authenticated_id()), 'status' => $admin || variable_get('user_register', 1))));
-      watchdog('user', t('New user: %name %email.', array('%name' => theme('placeholder', $edit['name']), '%email' => theme('placeholder', '<'. $edit['mail'] .'>'))), WATCHDOG_NOTICE, l(t('edit'), 'user/'. $account->uid .'/edit'));
-
-      $variables = array('%username' => $edit['name'], '%site' => variable_get('site_name', 'drupal'), '%password' => $pass, '%uri' => $base_url, '%uri_brief' => substr($base_url, strlen('http://')), '%mailto' => $edit['mail'], '%date' => format_date(time()), '%login_uri' => url('user', NULL, NULL, TRUE), '%edit_uri' => url('user/'. $account->uid .'/edit', NULL, NULL, TRUE), '%login_url' => user_pass_reset_url($account));
-
-      // The first user may login immediately, and receives a customized welcome e-mail.
-      if ($account->uid == 1) {
-        user_mail($edit['mail'], t('drupal user account details for %s', array('%s' => $edit['name'])), strtr(t("%username,\n\nYou may now login to %uri using the following username and password:\n\n  username: %username\n  password: %password\n\n%edit_uri\n\n--drupal"), $variables), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
-        // This should not be t()'ed. No point as its only shown once in the sites lifetime, and it would be bad to store the password.
-        $form['instructions'] = array('#type' => 'markup', '#value' => "<p>Welcome to Drupal. You are user #1, which gives you full and immediate access.  All future registrants will receive their passwords via e-mail, so please configure your e-mail settings using the Administration pages.</p><p> Your password is <strong>$pass</strong>. You may change your password on the next page.</p><p>Please login below.</p>");
-        $form['#action'] = url('user', 'destination=user/1/edit');
-        $form['name'] = array('#type' => 'hidden', '#value' => $account->name);
-        $form['pass'] = array('#type' => 'hidden', '#value' => $pass);
-        $form['submit'] = array('#type' => 'submit', '#value' => t('Log in'));
-        return drupal_get_form('user_register', $form);
-      }
-      else {
-        if ($admin) {
-          drupal_set_message(t('Created a new user account. No e-mail has been sent.'));
-
-          drupal_goto('admin/user');
-        }
-        else if ($account->status) {
-          // Create new user account, no administrator approval required.
-          $subject = _user_mail_text('welcome_subject', $variables);
-          $body = _user_mail_text('welcome_body', $variables);
-          user_mail($edit['mail'], $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
-          return t('Your password and further instructions have been sent to your e-mail address.');
-        }
-        else {
-          // Create new user account, administrator approval required.
-          $subject = _user_mail_text('approval_subject', $variables);
-          $body = _user_mail_text('approval_body', $variables);
-
-          user_mail($edit['mail'], $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
-          user_mail(variable_get('site_mail', ini_get('sendmail_from')), $subject, t("%u has applied for an account.\n\n%uri", array('%u' => $account->name, '%uri' => url("user/$account->uid/edit", NULL, NULL, TRUE))), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
-          return t('Thank you for applying for an account. Your account is currently pending approval by the site administrator.<br />In the meantime, your password and further instructions have been sent to your e-mail address.');
-        }
-      }
-    }
-  }
-
   // Display the registration form.
-  $form['user_registration_help'] = array('#type' => 'markup', '#value' => variable_get('user_registration_help', ''));
+  if (!$admin) {
+    $form['user_registration_help'] = array('#type' => 'markup', '#value' => variable_get('user_registration_help', ''));
+  }
   $affiliates = user_auth_help_links();
   if (!$admin && count($affiliates) > 0) {
     $affiliates = implode(', ', $affiliates);
     $form['affiliates'] = array('#type' => 'markup', '#value' => '<p>'. t('Note: if you have an account with one of our affiliates (%s), you may <a href="%login_uri">login now</a> instead of registering.', array('%s' => $affiliates, '%login_uri' => url('user'))) .'</p>');
   }
-  $form['name'] = array('#type' => 'textfield', '#title' => t('Username'), '#default_value' => $edit['name'], '#size' => 30, '#maxlength' => 64, '#description' => t('Your full name or your preferred username; only letters, numbers and spaces are allowed.'), '#required' => TRUE);
-  $form['mail'] = array('#type' => 'textfield', '#title' => t('E-mail address'), '#default_value' => $edit['mail'], '#size' => 30, '#maxlength' => 64, '#description' => t('A password and instructions will be sent to this e-mail address, so make sure it is accurate.'), '#required' => TRUE);
+  $form['name'] = array('#type' => 'textfield', '#title' => t('Username'), '#size' => 30, '#maxlength' => 64, '#description' => t('Your full name or your preferred username; only letters, numbers and spaces are allowed.'), '#required' => TRUE);
+  $form['mail'] = array('#type' => 'textfield', '#title' => t('E-mail address'), '#size' => 30, '#maxlength' => 64, '#description' => t('A password and instructions will be sent to this e-mail address, so make sure it is accurate.'), '#required' => TRUE);
   if ($admin) {
-    $form['pass'] = array('#type' => 'password', '#title' => t('Password'), '#default_value' => $edit['pass'], '#size' => 30, '#maxlength' => 55, '#description' => t('Provide a password for the new account.'), '#required' => TRUE);
+    $form['pass'] = array('#type' => 'password', '#title' => t('Password'), '#size' => 30, '#maxlength' => 55, '#description' => t('Provide a password for the new account.'), '#required' => TRUE);
   }
-  $extra = _user_forms($edit, $account, $category, 'register');
+  $extra = _user_forms($null, $null, $null, 'register');
   // Only display form_group around default fields if there are other groups.
   if ($extra) {
 
-    $form['account'] = array('#type' => 'fieldset', '#value' => t('Account information'));
+    $form['account'] = array('#type' => 'fieldset', '#title' => t('Account information'));
     $form['account']['name'] = $form['name'];
     $form['account']['mail'] = $form['mail'];
     $form['account']['pass'] = $form['pass'];
@@ -1148,6 +1092,65 @@ function user_register($edit = array()) {
   $form['submit'] = array('#type' => 'submit', '#value' => t('Create new account'), '#weight' => 30);
 
   return drupal_get_form('user_register', $form);
+}
+
+function user_register_validate($form_id, $form_values) {
+  user_module_invoke('validate', $form_values, $form_values, 'account');
+}
+
+function user_register_execute($form_id, $form_values) {
+  global $base_url;
+
+  $admin = user_access('administer users');
+
+  $mail = $form_values['mail'];
+  $name = $form_values['name'];
+  $pass = $admin ? $form_values['pass'] : user_password();
+  $from = variable_get('site_mail', ini_get('sendmail_from'));
+
+  if (!$admin && array_intersect(array_keys($form_values), array('uid', 'roles', 'init', 'session', 'status'))) {
+    watchdog('security', t('Detected malicious attempt to alter protected user fields.'), WATCHDOG_WARNING);
+    drupal_goto('user/register');
+  }
+  $account = user_save('', array_merge($form_values, array('pass' => $pass, 'init' => $mail, 'roles' => array('authenticated user' => _user_authenticated_id()), 'status' => $admin || variable_get('user_register', 1))));
+  watchdog('user', t('New user: %name %email.', array('%name' => theme('placeholder', $name), '%email' => theme('placeholder', '<'. $mail .'>'))), WATCHDOG_NOTICE, l(t('edit'), 'user/'. $account->uid .'/edit'));
+
+  $variables = array('%username' => $name, '%site' => variable_get('site_name', 'drupal'), '%password' => $pass, '%uri' => $base_url, '%uri_brief' => substr($base_url, strlen('http://')), '%mailto' => $mail, '%date' => format_date(time()), '%login_uri' => url('user', NULL, NULL, TRUE), '%edit_uri' => url('user/'. $account->uid .'/edit', NULL, NULL, TRUE), '%login_url' => user_pass_reset_url($account));
+
+  // The first user may login immediately, and receives a customized welcome e-mail.
+  if ($account->uid == 1) {
+    user_mail($mail, t('drupal user account details for %s', array('%s' => $name)), strtr(t("%username,\n\nYou may now login to %uri using the following username and password:\n\n  username: %username\n  password: %password\n\n%edit_uri\n\n--drupal"), $variables), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
+    // This should not be t()'ed. No point as its only shown once in the sites lifetime, and it would be bad to store the password.
+    $form['instructions'] = array('#type' => 'markup', '#value' => "<p>Welcome to Drupal. You are user #1, which gives you full and immediate access.  All future registrants will receive their passwords via e-mail, so please configure your e-mail settings using the Administration pages.</p><p> Your password is <strong>$pass</strong>. You may change your password on the next page.</p><p>Please login below.</p>");
+    $form['#action'] = url('user', 'destination=user/1/edit');
+    $form['name'] = array('#type' => 'hidden', '#value' => $account->name);
+    $form['pass'] = array('#type' => 'hidden', '#value' => $pass);
+    $form['submit'] = array('#type' => 'submit', '#value' => t('Log in'));
+    return drupal_get_form('user_register', $form);
+  }
+  else {
+    if ($admin) {
+      drupal_set_message(t('Created a new user account. No e-mail has been sent.'));
+
+      drupal_goto('admin/user');
+    }
+    else if ($account->status) {
+      // Create new user account, no administrator approval required.
+      $subject = _user_mail_text('welcome_subject', $variables);
+      $body = _user_mail_text('welcome_body', $variables);
+      user_mail($mail, $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
+      return t('Your password and further instructions have been sent to your e-mail address.');
+    }
+    else {
+      // Create new user account, administrator approval required.
+      $subject = _user_mail_text('approval_subject', $variables);
+      $body = _user_mail_text('approval_body', $variables);
+
+      user_mail($mail, $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
+      user_mail(variable_get('site_mail', ini_get('sendmail_from')), $subject, t("%u has applied for an account.\n\n%uri", array('%u' => $account->name, '%uri' => url("user/$account->uid/edit", NULL, NULL, TRUE))), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
+      return t('Thank you for applying for an account. Your account is currently pending approval by the site administrator.<br />In the meantime, your password and further instructions have been sent to your e-mail address.');
+    }
+  }
 }
 
 function user_edit_form($uid, $edit) {
@@ -1310,37 +1313,6 @@ function user_view($uid = 0) {
   else {
     drupal_not_found();
   }
-}
-
-function user_page() {
-  global $user;
-
-  $edit = isset($_POST['edit']) ? $_POST['edit'] : '';
-  $op = isset($_POST['op']) ? $_POST['op'] : '';
-
-  if (empty($op)) {
-    $op = arg(2) ? arg(2) : arg(1);
-  }
-
-  switch ($op) {
-    case t('Create new account'):
-    case 'register':
-      return user_register($edit);
-      break;
-    default:
-      if (!arg(1)) {
-        if ($user->uid) {
-          drupal_goto('user/'. $user->uid);
-        }
-        else {
-          return user_login($edit);
-        }
-      }
-      else {
-        return user_view(arg(1));
-      }
-  }
-
 }
 
 /*** Administrative features ***********************************************/
@@ -1551,16 +1523,34 @@ function user_roles($membersonly = 0, $permission = 0) {
 /**
  * Menu callback: administer permissions.
  */
-function user_admin_perm() {
+function user_admin_perm($str_rids = NULL) {
+  if (preg_match('/^([0-9]+[+ ])*[0-9]+$/', $str_rids)) {
+    // The '+' character in a query string may be parsed as ' '.
+    $rids = preg_split('/[+ ]/', $str_rids);
+  }
+
+  if($rids) {
+    $breadcrumbs = drupal_get_breadcrumb();
+    $breadcrumbs[] = l(t('all roles'), 'admin/access');
+    drupal_set_breadcrumb($breadcrumbs);
+    $result = db_query('SELECT r.rid, p.perm FROM {role} r LEFT JOIN {permission} p ON r.rid = p.rid WHERE r.rid IN (%s) ORDER BY name', implode(', ', $rids));
+  }
+  else {
+    $result = db_query('SELECT r.rid, p.perm FROM {role} r LEFT JOIN {permission} p ON r.rid = p.rid ORDER BY name');
+  }
 
   // Compile role array:
-  $result = db_query('SELECT r.rid, p.perm FROM {role} r LEFT JOIN {permission} p ON r.rid = p.rid ORDER BY name');
   $roles = array();
   while ($role = db_fetch_object($result)) {
     $role_permissions[$role->rid] = $role->perm;
   }
 
-  $result = db_query('SELECT rid, name FROM {role} ORDER BY name');
+  if($rids) {
+    $result = db_query('SELECT rid, name FROM {role} r WHERE r.rid IN (%s) ORDER BY name', implode(', ', $rids));
+  }
+  else {
+    $result = db_query('SELECT rid, name FROM {role} ORDER BY name');
+  }
   $role_names = array();
   while ($role = db_fetch_object($result)) {
     $role_names[$role->rid] = $role->name;
@@ -1587,7 +1577,7 @@ function user_admin_perm() {
   // Have to build checkboxes here after checkbox arrays are built
   foreach ($role_names as $rid => $name) {
     $form['checkboxes'][$rid] = array('#type' => 'checkboxes', '#options' => $options, '#default_value' => $status[$rid]);
-    $form['role_names'][$rid] = array('#type' => 'markup', '#value' => $name, '#tree' => TRUE);
+    $form['role_names'][$rid] = array('#type' => 'markup', '#value' => l($name, 'admin/access/'. $rid), '#tree' => TRUE);
   }
   $form['submit'] = array('#type' => 'submit', '#value' => t('Save permissions'));
 
@@ -1626,21 +1616,22 @@ function theme_user_admin_perm($form) {
   return $output;
 }
 
-function user_admin_perm_execute() {
-  $edit = $GLOBALS['form_values'];
+function user_admin_perm_execute($form_id, $edit) {
   // Save permissions:
   $result = db_query('SELECT * FROM {role}');
   while ($role = db_fetch_object($result)) {
-    // Delete, so if we clear every checkbox we reset that role;
-    // otherwise permissions are active and denied everywhere.
-    db_query('DELETE FROM {permission} WHERE rid = %d', $role->rid);
-    foreach ($edit[$role->rid] as $key => $value) {
-      if (!$value) {
-        unset($edit[$role->rid][$key]);
+    if(isset($edit[$role->rid])) {
+      // Delete, so if we clear every checkbox we reset that role;
+      // otherwise permissions are active and denied everywhere.
+      db_query('DELETE FROM {permission} WHERE rid = %d', $role->rid);
+      foreach ($edit[$role->rid] as $key => $value) {
+        if (!$value) {
+          unset($edit[$role->rid][$key]);
+        }
       }
-    }
-    if (count($edit[$role->rid])) {
-      db_query("INSERT INTO {permission} (rid, perm) VALUES (%d, '%s')", $role->rid, implode(', ', array_keys($edit[$role->rid])));
+      if (count($edit[$role->rid])) {
+        db_query("INSERT INTO {permission} (rid, perm) VALUES (%d, '%s')", $role->rid, implode(', ', array_keys($edit[$role->rid])));
+      }
     }
   }
 
@@ -1806,7 +1797,7 @@ function user_admin() {
       break;
     case t('Create new account'):
     case 'create':
-      $output = user_register($edit);
+      $output = user_register();
       break;
     default:
       $output = user_admin_account();
