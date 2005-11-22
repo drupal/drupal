@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.533 2005/11/21 18:36:12 dries Exp $
+// $Id: user.module,v 1.534 2005/11/22 21:00:40 dries Exp $
 
 /**
  * @file
@@ -1120,13 +1120,9 @@ function user_register_execute($form_id, $form_values) {
   // The first user may login immediately, and receives a customized welcome e-mail.
   if ($account->uid == 1) {
     user_mail($mail, t('drupal user account details for %s', array('%s' => $name)), strtr(t("%username,\n\nYou may now login to %uri using the following username and password:\n\n  username: %username\n  password: %password\n\n%edit_uri\n\n--drupal"), $variables), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
-    // This should not be t()'ed. No point as its only shown once in the sites lifetime, and it would be bad to store the password.
-    $form['instructions'] = array('#type' => 'markup', '#value' => "<p>Welcome to Drupal. You are user #1, which gives you full and immediate access.  All future registrants will receive their passwords via e-mail, so please configure your e-mail settings using the Administration pages.</p><p> Your password is <strong>$pass</strong>. You may change your password on the next page.</p><p>Please login below.</p>");
-    $form['#action'] = url('user', 'destination=user/1/edit');
-    $form['name'] = array('#type' => 'hidden', '#value' => $account->name);
-    $form['pass'] = array('#type' => 'hidden', '#value' => $pass);
-    $form['submit'] = array('#type' => 'submit', '#value' => t('Log in'));
-    return drupal_get_form('user_register', $form);
+    drupal_set_message(t('<p>Welcome to Drupal. You are user #1, which gives you full and immediate access.  All future registrants will receive their passwords via e-mail, so please make sure your website e-mail address is set properly under the general settings on the <a href="%settings">settings page</a>.</p><p> Your password is <strong>%pass</strong>. You may change your password below.</p>', array('%pass' => $pass, '%settings' => url('admin/settings'))));
+    user_authenticate($account->name, trim($pass));
+    drupal_goto('user/1/edit');
   }
   else {
     if ($admin) {
@@ -1139,7 +1135,9 @@ function user_register_execute($form_id, $form_values) {
       $subject = _user_mail_text('welcome_subject', $variables);
       $body = _user_mail_text('welcome_body', $variables);
       user_mail($mail, $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
-      return t('Your password and further instructions have been sent to your e-mail address.');
+      drupal_set_message(t('Your password and further instructions have been sent to your e-mail address.'));
+
+      drupal_goto();
     }
     else {
       // Create new user account, administrator approval required.
@@ -1148,7 +1146,9 @@ function user_register_execute($form_id, $form_values) {
 
       user_mail($mail, $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
       user_mail(variable_get('site_mail', ini_get('sendmail_from')), $subject, t("%u has applied for an account.\n\n%uri", array('%u' => $account->name, '%uri' => url("user/$account->uid/edit", NULL, NULL, TRUE))), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
-      return t('Thank you for applying for an account. Your account is currently pending approval by the site administrator.<br />In the meantime, your password and further instructions have been sent to your e-mail address.');
+      drupal_set_message(t('Thank you for applying for an account. Your account is currently pending approval by the site administrator.<br />In the meantime, your password and further instructions have been sent to your e-mail address.'));
+
+      drupal_goto();
     }
   }
 }
