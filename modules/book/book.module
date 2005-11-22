@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.329 2005/11/12 11:26:16 dries Exp $
+// $Id: book.module,v 1.330 2005/11/22 15:11:40 dries Exp $
 
 /**
  * @file
@@ -487,6 +487,7 @@ function theme_book_navigation($node) {
     }
 
     if ($prev = book_prev($node)) {
+      drupal_add_link(array('rel' => 'prev', 'href' => 'node/'. $prev->nid));
       $links .= '<div class="prev">';
       $links .= l(t('previous'), 'node/'. $prev->nid, array('title' => t('View the previous page.')));
       $links .= '</div>';
@@ -496,6 +497,7 @@ function theme_book_navigation($node) {
       $links .= '<div class="prev">&nbsp;</div>'; // Make an empty div to fill the space.
     }
     if ($next = book_next($node)) {
+      drupal_add_link(array('rel' => 'next', 'href' => 'node/'. $next->nid));
       $links .= '<div class="next">';
       $links .= l(t('next'), 'node/'. $next->nid, array('title' => t('View the next page.')));
       $links .= '</div>';
@@ -505,6 +507,7 @@ function theme_book_navigation($node) {
       $links .= '<div class="next">&nbsp;</div>'; // Make an empty div to fill the space.
     }
     if ($node->parent) {
+      drupal_add_link(array('rel' => 'index', 'href' => 'node/'. $node->parent));
       $links .= '<div class="up">';
       $links .= l(t('up'), 'node/'. $node->parent, array('title' => t('View this page\'s parent section.')));
       $links .= '</div>';
