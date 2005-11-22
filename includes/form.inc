@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.19 2005/11/21 18:14:23 dries Exp $
+// $Id: form.inc,v 1.20 2005/11/22 21:31:15 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -52,9 +52,9 @@ function element_children($element) {
  *
  */
 function drupal_get_form($form_id, &$form, $callback = NULL) {
-  global $form_values, $form_execute;
+  global $form_values, $form_submitted;
   $form_values = array();
-  $form_execute = FALSE;
+  $form_submitted = FALSE;
 
   $form['#type'] = 'form';
   if (isset($form['#token'])) {
@@ -70,6 +70,24 @@ function drupal_get_form($form_id, &$form, $callback = NULL) {
 
   $form = array_merge(_element_info('form'), $form);
 
+  if (!isset($form['#validate'])) {
+    if (function_exists($form_id .'_validate')) {
+      $form['#validate'] = array($form_id .'_validate');
+    }
+    elseif (function_exists($callback .'_validate')) {
+      $form['#validate'] = array($callback .'_validate');
+    }
+  }
+
+  if (!isset($form['#execute'])) {
+    if (function_exists($form_id .'_execute')) {
+      $form['#execute'] = array($form_id .'_execute');
+    }
+    elseif (function_exists($callback .'_execute')) {
+      $form['#execute'] = array($callback .'_execute');
+    }
+  }
+
   foreach (module_implements('form_alter') as $module) {
     $function = $module .'_form_alter';
     $function($form_id, $form);
@@ -79,7 +97,7 @@ function drupal_get_form($form_id, &$form, $callback = NULL) {
 
   if (!empty($_POST['edit']) && (($_POST['edit']['form_id'] == $form_id) || ($_POST['edit']['form_id'] == $callback))) {
     drupal_validate_form($form_id, $form, $callback);
-    if ($form_execute && !form_get_errors()) {
+    if ($form_submitted && !form_get_errors()) {
       drupal_execute_form($form_id, $form, $callback);
     }
   }
@@ -103,33 +121,22 @@ function drupal_validate_form($form_id, &$form, $callback = NULL) {
     }
   }
 
-  foreach (module_implements('form_validate_alter') as $module) {
-    $function = $module .'_form_validate_alter';
-    $function($form_id, $form_values);
-  }
-
   _form_validate($form);
-
-  if (function_exists($form_id . '_validate')) {
-    call_user_func($form_id . '_validate', $form_id, $form_values);
-  }
-  elseif (function_exists($callback . '_validate')) {
-    call_user_func($callback . '_validate', $form_id, $form_values);
-  }
 }
 
 function drupal_execute_form($form_id, $form, $callback = NULL) {
   global $form_values;
-  foreach (module_implements('form_execute_alter') as $module) {
-    $function = $module .'_form_execute_alter';
-    $function($form_id, $form_values);
-  }
 
-  if (function_exists($form_id . '_execute')) {
-    call_user_func($form_id . '_execute', $form_id, $form_values);
-  }
-  elseif (function_exists($callback . '_execute')) {
-    call_user_func($callback . '_execute', $form_id, $form_values);
+  if (isset($form['#execute'])) {
+    foreach ($form['#execute'] as $key => $function) {
+      if (isset($form['#execution_arguments'][$key])) {
+        $function_args = array_merge(array($form_id, $form_values), $form['#execution_arguments'][$key]);
+        call_user_func_array($function, $function_args);
+      }
+      else {
+        call_user_func($function, $form_id, $form_values);
+      }
+    }
   }
 }
 
@@ -149,19 +156,19 @@ function _form_validate($elements) {
     if ($elements['#required'] && empty($elements['#value']) && $elements['#value'] !== '0') {
       form_error($elements, t('%name field is required', array('%name' => $elements['#title'])));
     }
-    if ($elements['#valid']) {
-      if (is_array($elements['#valid'])) {
-        foreach ($elements['#valid'] as $key => $valid) {
-          $args = is_array($elements['#validation_arguments'][$key]) ? $elements['#validation_arguments'][$key] : array();
-          if (function_exists($valid . '_valid'))  {
-            call_user_func_array($valid . '_valid', array_merge(array($elements), $args));
+    if (isset($elements['#validate'])) {
+      if (is_array($elements['#validate'])) {
+        foreach ($elements['#validate'] as $key => $validate) {
+          $args = is_array($elements['#validate_arguments'][$key]) ? $elements['#validate_arguments'][$key] : array();
+          if (function_exists($validate))  {
+            call_user_func_array($validate, array_merge(array($elements), $args));
           }
         }
       }
       else {
-        $args = is_array($elements['#validation_arguments']) ? $elements['#validation_arguments'] : array();
-        if (function_exists($elements['#valid'] . '_valid'))  {
-          call_user_func_array($elements['#valid'] . '_valid', array_merge(array($elements), $args));
+        $args = is_array($elements['#validate_arguments']) ? $elements['#validate_arguments'] : array();
+        if (function_exists($elements['#validate']))  {
+          call_user_func_array($elements['#validate'], array_merge(array($elements), $args));
         }
       }
     }
@@ -223,7 +230,7 @@ function form_error(&$element, $message) {
  */
 function _form_builder($form_id, $form) {
   global $form_values;
-  global $form_execute;
+  global $form_submitted;
   /* Use element defaults */
   if ((!empty($form['#type'])) && ($info = _element_info($form['#type']))) {
     $form += $info;
@@ -257,9 +264,9 @@ function _form_builder($form_id, $form) {
         $form['#value'] = $form['#default_value'];
       }
     }
-    if (isset($form['#execute'])) {
+    if (isset($form['#form_submitted'])) {
       if ($_POST[$form['#name']] == $form['#value']) {
-        $form_execute = $form_execute || $form['#execute'];
+        $form_submitted = $form_submitted || $form['#form_submitted'];
       }
     }
 
