@@ -1181,7 +1181,7 @@ function comment_form($edit, $title = NULL) {
   return theme('box', $title, drupal_get_form('comment_form', $form));
 }
 
-function comment_form_add_preview($form_id, $form, $edit) {
+function comment_form_add_preview($form, $edit) {
   global $user;
 
   $output = '';
