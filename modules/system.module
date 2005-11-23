@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.256 2005/11/21 18:10:26 dries Exp $
+// $Id: system.module,v 1.257 2005/11/23 08:21:08 dries Exp $
 
 /**
  * @file
@@ -59,8 +59,8 @@ function system_elements() {
 
   // Inputs
   $type['checkbox'] = array('#input' => TRUE, '#return_value' => 1);
-  $type['submit'] = array('#input' => TRUE, '#name' => 'op', '#button_type' => 'submit', '#execute' => TRUE);
-  $type['button'] = array('#input' => TRUE, '#name' => 'op', '#button_type' => 'submit', '#execute' => FALSE);
+  $type['submit'] = array('#input' => TRUE, '#name' => 'op', '#button_type' => 'submit', '#form_submitted' => TRUE);
+  $type['button'] = array('#input' => TRUE, '#name' => 'op', '#button_type' => 'submit', '#form_submitted' => FALSE);
   $type['textfield'] = array('#input' => TRUE, '#size' => 60, '#maxlength' => 128, '#autocomplete_path' => FALSE);
   $type['password'] = array('#input' => TRUE, '#size' => 30, '#maxlength' => 64);
   $type['textarea'] = array('#input' => TRUE, '#cols' => 60, '#rows' => 5);
