@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.124 2005/10/18 14:41:27 unconed Exp $ */
+/* $Id: drupal.css,v 1.125 2005/11/23 08:19:46 dries Exp $ */
 
 /*
 ** HTML elements
@@ -488,16 +488,6 @@ tr.watchdog-error {
 }
 tr.watchdog-error .active {
   background: #eeb9b9;
-}
-.comment .links .form-item {
-  display: inline;
-  white-space: nowrap;
-}
-.comment .links .form-item br {
-  display: none;
-}
-#comment-moderation-button {
-  text-align: center;
 }
 
 /* Tab navigation */
