@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.330 2005/11/22 15:11:40 dries Exp $
+// $Id: book.module,v 1.331 2005/11/23 10:22:41 dries Exp $
 
 /**
  * @file
@@ -984,86 +984,82 @@ function book_node_visitor_opml_post($node, $depth) {
   return "</outline>\n";
 }
 
-/**
- * Creates a row for the 'admin' view of a book.  Each row represents a page in the book, in the tree representing the book
- */
-function book_admin_edit_line($node, $depth = 0) {
-  $form['#tree'] = TRUE;
-  $form[$node->nid]['title'] = array('#type' => 'textfield', '#default_value' => $node->title, '#maxlength' => 255);
-  $form[$node->nid]['weight'] = array('#type' => 'weight', '#default_value' => $node->weight, '#delta' => 15);
-  $form['depth'] = array('#value' => $depth);
-  $form['nid'] = array('#value' => $node->nid);
-  return drupal_get_form('book_admin_edit_line', $form);
-}
-
-function theme_book_admin_edit_line($form) {
-  $nid = $form['nid']['#value'];
-  return array(
-    '<div style="padding-left: '. (25 * $form['depth']['#value']) .'px;">'. form_render($form[$nid]['title']) .'</div>', form_render($form[$nid]['weight']), l(t('view'), 'node/'. $nid), l(t('edit'), 'node/'. $nid .'/edit'), l(t('delete'), 'node/'.$nid.'/delete')
+function _book_admin_table($nodes = array()) {
+  $form = array(
+    '#theme' => 'book_admin_table',
+    '#tree' => TRUE,
   );
-}
 
-function book_admin_edit_book($nid, $depth = 1) {
-  $result = db_query(db_rewrite_sql('SELECT n.nid, b.weight FROM {node} n INNER JOIN {book} b ON n.vid = b.vid WHERE b.parent = %d ORDER BY b.weight, n.title'), $nid);
-
-  $rows = array();
-
-  while ($node = db_fetch_object($result)) {
-    $node = node_load($node->nid);
-    $rows[] = book_admin_edit_line($node, $depth);
-    $rows = array_merge($rows, book_admin_edit_book($node->nid, $depth + 1));
+  foreach ($nodes as $node) {
+    $form = array_merge($form, _book_admin_table_tree($node, 0));
   }
 
-  return $rows;
+  return $form;
+}
+
+function _book_admin_table_tree($node, $depth) {
+  $form = array();
+
+  $form[] = array(
+    'nid' => array('#type' => 'value', '#value' => $node->nid),
+    'depth' => array('#type' => 'value', '#value' => $depth),
+    'title' => array(
+      '#type' => 'textfield',
+      '#default_value' => $node->title,
+      '#maxlength' => 255,
+    ),
+    'weight' => array(
+      '#type' => 'weight',
+      '#default_value' => $node->weight,
+      '#delta' => 15,
+    ),
+  );
+
+  $children = db_query(db_rewrite_sql('SELECT n.nid, b.weight FROM {node} n INNER JOIN {book} b ON n.vid = b.vid WHERE b.parent = %d ORDER BY b.weight, n.title'), $node->nid);
+  while ($child = db_fetch_object($children)) {
+    $form = array_merge($form, _book_admin_table_tree(node_load($child->nid), $depth + 1));
+  }
+
+  return $form;
+}
+
+function theme_book_admin_table($form) {
+  $header = array(t('Title'), t('Weight'), array('data' => t('Operations'), 'colspan' => '3'));
+
+  $rows = array();
+  foreach (element_children($form) as $key) {
+    $nid = $form[$key]['nid']['#value'];
+    $rows[] = array(
+      '<div style="padding-left: '. (25 * $form[$key]['depth']['#value']) .'px;">'. form_render($form[$key]['title']) .'</div>',
+      form_render($form[$key]['weight']),
+      l(t('view'), 'node/'. $nid),
+      l(t('edit'), 'node/'. $nid .'/edit'),
+      l(t('delete'), 'node/'. $nid .'/delete')
+    );
+  }
+
+  return theme('table', $header, $rows);
 }
 
 /**
  * Display an administrative view of the hierarchy of a book.
  */
-function book_admin_edit($nid, $depth = 0) {
+function book_admin_edit($nid) {
   $node = node_load($nid);
   if ($node->nid) {
     drupal_set_title(check_plain($node->title));
+    $form = array();
 
-    $header = array(t('Title'), t('Weight'), array('data' => t('Operations'), 'colspan' => '3'));
-    $rows[] = book_admin_edit_line($node);
-    $rows = array_merge($rows, book_admin_edit_book($nid));
+    $form['table'] = _book_admin_table(array($node));
+    $form['save'] = array(
+      '#type' => 'submit',
+      '#value' => t('Save book pages'),
+    );
 
-    $form['save'] = array('#type' => 'submit', '#value' => t('Save book pages'));
-
-    return theme('table', $header, $rows) . $form;
+    return drupal_get_form('book_admin_edit', $form);
   }
   else {
     drupal_not_found();
-  }
-}
-
-/**
- * Saves the changes to a book made by an administrator in the book admin view.
- */
-function book_admin_save($nid, $edit = array()) {
-  if ($nid) {
-    $book = node_load($nid);
-
-    foreach ($edit as $nid => $value) {
-      // Check to see whether the title needs updating:
-      $node = db_fetch_object(db_query('SELECT title, vid FROM {node} WHERE nid = %d', $nid));
-      if ($node->title != $value['title']) {
-        db_query("UPDATE {node} SET title = '%s' WHERE nid = %d", $value['title'], $nid);
-        db_query("UPDATE {book} SET title = '%s' WHERE vid = %d", $value['title'], $node->vid);
-      }
-
-      // Check to see whether the weight needs updating:
-      $node = db_fetch_object(db_query('SELECT b.vid, b.weight FROM {book} b INNER JOIN {node} n ON n.vid = b.vid WHERE n.nid = %d', $nid));
-      if ($node->weight != $value['weight']) {
-        db_query('UPDATE {book} SET weight = %d WHERE vid = %d', $value['weight'], $node->vid);
-      }
-    }
-
-    $message = t('The book %title has been updated.', array('%title' => theme('placeholder', $book->title)));
-    watchdog('content', $message);
-
-    return $message;
   }
 }
 
@@ -1073,23 +1069,58 @@ function book_admin_save($nid, $edit = array()) {
 function book_admin_orphan() {
   $result = db_query(db_rewrite_sql('SELECT n.nid, n.title, n.status, b.parent FROM {node} n INNER JOIN {book} b ON n.vid = b.vid'));
 
+  $pages = array();
   while ($page = db_fetch_object($result)) {
     $pages[$page->nid] = $page;
   }
 
-  if ($pages) {
-    $output .= '<h3>'. t('Orphan pages') .'</h3>';
-    $header = array(t('Title'), t('Weight'), array('data' => t('Operations'), 'colspan' => '3'));
-    foreach ($pages as $nid => $node) {
-      if ($node->parent && empty($pages[$node->parent])) {
-        $rows[] = book_admin_edit_line($node, $depth);
-        $rows = array_merge($rows, book_admin_edit_book($node->nid, $depth + 1));
+  $orphans = array();
+  if (count($pages)) {
+    foreach ($pages as $page) {
+      if ($page->parent && empty($pages[$page->parent])) {
+        $orphans[] = node_load($page->nid);
       }
     }
-    $output .= theme('table', $header, $rows);
   }
 
-  return $output;
+  if (count($orphans)) {
+    $form = array();
+
+    $form['table'] = _book_admin_table($orphans);
+    $form['save'] = array(
+      '#type' => 'submit',
+      '#value' => t('Save book pages'),
+    );
+
+    return drupal_get_form('book_admin_edit', $form);
+  }
+  else {
+    return '<p>'. t('There are no orphan pages.') .'</p>';
+  }
+}
+
+function book_admin_edit_execute($form_id, $form_values) {
+  foreach ($form_values['table'] as $row) {
+    $node = node_load($row['nid']);
+
+    if ($row['title'] != $node->title || $row['weight'] != $node->weight) {
+      $node->title = $row['title'];
+      $node->weight = $row['weight'];
+
+      node_save($node);
+      watchdog('content', t('%type: updated %title.', array('%type' => theme('placeholder', t('book')), '%title' => theme('placeholder', $node->title))), WATCHDOG_NOTICE, l(t('view'), 'node/'. $node->nid));
+    }
+  }
+
+  if (is_numeric(arg(3))) {
+    // Updating pages in a single book.
+    $book = node_load(arg(3));
+    drupal_set_message(t('Updated book %title.', array('%title' => theme('placeholder', $book->title))));
+  }
+  else {
+    // Updating the orphan pages.
+    drupal_set_message(t('Updated orphan book pages.'));
+  }
 }
 
 /**
@@ -1098,10 +1129,6 @@ function book_admin_orphan() {
 function book_admin($nid = 0) {
   $op = $_POST['op'];
   $edit = $_POST['edit'];
-
-  if ($op == t('Save book pages')) {
-    drupal_set_message(book_admin_save($nid, $edit));
-  }
 
   if ($nid) {
     return book_admin_edit($nid);
