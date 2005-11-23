@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.236 2005/11/12 11:26:16 dries Exp $
+// $Id: taxonomy.module,v 1.237 2005/11/23 08:27:55 dries Exp $
 
 /**
  * @file
@@ -513,7 +513,7 @@ function taxonomy_node_form($node) {
     $terms = $node->taxonomy;
   }
 
-  $c = db_query(db_rewrite_sql("SELECT v.*, n.type FROM {vocabulary} v INNER JOIN {vocabulary_node_types} n ON v.vid = n.vid WHERE n.type = '%s' ORDER BY v.weight, v.name", 'v', 'vid'), $node->type);
+  $c = db_query(db_rewrite_sql("SELECT v.* FROM {vocabulary} v INNER JOIN {vocabulary_node_types} n ON v.vid = n.vid WHERE n.type = '%s' ORDER BY v.weight, v.name", 'v', 'vid'), $node->type);
   while ($vocabulary = db_fetch_object($c)) {
     if ($vocabulary->tags) {
       $typed_terms = array();
