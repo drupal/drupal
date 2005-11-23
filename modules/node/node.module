@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.551 2005/11/21 18:10:26 dries Exp $
+// $Id: node.module,v 1.552 2005/11/23 16:18:28 dries Exp $
 
 /**
  * @file
@@ -729,7 +729,7 @@ function node_search($op = 'search', $keys = null) {
       $form = array();
 
       // Keyword boxes
-      $form['advanced'] = array('#type' => 'fieldset', '#title' => t('Advanced search'), '#collapsible' => true, '#collapsed' => true, '#attributes' => array('class' => 'search-advanced'));
+      $form['advanced'] = array('#type' => 'fieldset', '#title' => t('Advanced search'), '#collapsible' => TRUE, '#collapsed' => TRUE, '#attributes' => array('class' => 'search-advanced'));
 
       $form['advanced']['keywords'] = array('#type' => 'markup', '#prefix' => '<div class="criterium">', '#suffix' => '</div>');
       $form['advanced']['keywords']['or'] = array('#type' => 'textfield', '#title' => t('Containing any of the words'), '#size' => 30, '#maxlength' => 255);
@@ -1325,12 +1325,18 @@ function node_revision_rollback($nid, $revision) {
  * Delete the revision with specified revision number.
  */
 function node_revision_delete($nid, $revision) {
+
   if (user_access('administer nodes')) {
     $count_revisions = db_result(db_query('SELECT COUNT(vid) FROM {node_revisions} WHERE nid = %d', $nid));
     // Don't delete the last revision of the node or the current revision
     if ($count_revisions > 1) {
+      $node = node_load($nid, $revision);
+
       db_query("DELETE FROM {node_revisions} WHERE nid = %d AND vid = %d", $nid, $revision);
-      drupal_set_message(t('Deleted revision with the ID %revision.', array('%revision' => theme('placeholder', $revision))));
+
+      node_invoke_nodeapi($node, 'delete revision');
+      drupal_set_message(t('Deleted %title revision %revision.', array('%title' => theme('placeholder', $node->title), '%revision' => theme('placeholder', $revision))));
+      watchdog('content', t('%type: deleted %title revision %revision.', array('%type' => theme('placeholder', t($node->type)), '%title' => theme('placeholder', $node->title), '%revision' => theme('placeholder', $revision))));
     }
     else {
       drupal_set_message(t('Deletion failed. You tried to delete the current revision.'));
