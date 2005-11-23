@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.119 2005/11/21 09:42:14 dries Exp $
+// $Id: profile.module,v 1.120 2005/11/23 10:43:30 dries Exp $
 
 /**
  * @file
@@ -318,8 +318,8 @@ function profile_view_profile($user) {
     if ($value = profile_view_field($user, $field)) {
       $description = ($field->visibility == PROFILE_PRIVATE) ? t('The content of this field is private and only visible to yourself.') : '';
       $title = ($field->type != 'checkbox') ? check_plain($field->title) : '';
-      $form = array('#type' => 'item', '#title' => $title, '#value' => $value, '#description' => $description);
-      $fields[$field->category][$field->name] = drupal_get_form('profile_view_profile_' . $field->category .'_'. $field->name, $form, 'profile_view_profile');
+      $form = array('#title' => $title, '#value' => $value, '#description' => $description);
+      $fields[$field->category][$field->name] = theme('item', $form);
     }
   }
 
