@@ -513,7 +513,7 @@ function taxonomy_node_form($node) {
     $terms = $node->taxonomy;
   }
 
-  $c = db_query(db_rewrite_sql("SELECT v.*, n.type FROM {vocabulary} v INNER JOIN {vocabulary_node_types} n ON v.vid = n.vid WHERE n.type = '%s' ORDER BY v.weight, v.name", 'v', 'vid'), $node->type);
+  $c = db_query(db_rewrite_sql("SELECT v.* FROM {vocabulary} v INNER JOIN {vocabulary_node_types} n ON v.vid = n.vid WHERE n.type = '%s' ORDER BY v.weight, v.name", 'v', 'vid'), $node->type);
   while ($vocabulary = db_fetch_object($c)) {
     if ($vocabulary->tags) {
       $typed_terms = array();
