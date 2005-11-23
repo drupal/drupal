@@ -122,6 +122,18 @@ function drupal_validate_form($form_id, &$form, $callback = NULL) {
   }
 
   _form_validate($form);
+
+  if (isset($form['#validate'])) {
+    foreach ($form['#validate'] as $key => $function) {
+      if (isset($form['#validation_arguments'][$key])) {
+        $function_args = array_merge(array($form_id, $form_values), $form['#validation_arguments'][$key]);
+        call_user_func_array($function, $function_args);
+      }
+      else {
+        call_user_func($function, $form_id, $form_values);
+      }
+    }
+  }
 }
 
 function drupal_execute_form($form_id, $form, $callback = NULL) {
