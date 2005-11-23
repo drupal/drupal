@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.393 2005/11/22 15:48:46 dries Exp $
+// $Id: comment.module,v 1.394 2005/11/23 08:23:45 dries Exp $
 
 /**
  * @file
@@ -1181,7 +1181,7 @@ function comment_form($edit, $title = NULL) {
   return theme('box', $title, drupal_get_form('comment_form', $form));
 }
 
-function comment_form_add_preview($form_id, $form, $edit) {
+function comment_form_add_preview($form, $edit) {
   global $user;
 
   $output = '';
