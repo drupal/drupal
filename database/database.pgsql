@@ -822,7 +822,7 @@ ALTER SEQUENCE menu_mid_seq RESTART 2;
 --- Functions
 ---
 
-CREATE FUNCTION greatest(integer, integer) RETURNS integer AS '
+CREATE FUNCTION "greatest"(integer, integer) RETURNS integer AS '
 BEGIN
   IF $2 IS NULL THEN
     RETURN $1;
@@ -834,7 +834,7 @@ BEGIN
 END;
 ' LANGUAGE 'plpgsql';
 
-CREATE FUNCTION greatest(integer, integer, integer) RETURNS integer AS '
+CREATE FUNCTION "greatest"(integer, integer, integer) RETURNS integer AS '
   SELECT greatest($1, greatest($2, $3));
 ' LANGUAGE 'sql';
 
