@@ -1,5 +1,5 @@
 <?php
-// $Id: watchdog.module,v 1.133 2005/11/13 02:32:18 unconed Exp $
+// $Id: watchdog.module,v 1.134 2005/11/24 19:50:50 dries Exp $
 
 /**
  * @file
@@ -102,7 +102,7 @@ function watchdog_overview() {
     array('data' => t('Date'), 'field' => 'w.wid', 'sort' => 'desc'),
     array('data' => t('Message'), 'field' => 'w.message'),
     array('data' => t('User'), 'field' => 'u.name'),
-    array('data' => t('Operations'), 'colspan' => '2')
+    array('data' => t('Operations'))
   );
   $sql = 'SELECT w.*, u.name, u.uid FROM {watchdog} w INNER JOIN {users} u ON w.uid = u.uid '. $queries[$_SESSION['watchdog_overview_filter']] . tablesort_sql($header);
   $result = pager_query($sql, 50);
@@ -114,10 +114,9 @@ function watchdog_overview() {
         $icons[$watchdog->severity],
         t($watchdog->type),
         format_date($watchdog->timestamp, 'small'),
-        truncate_utf8($watchdog->message, 64),
+        l(truncate_utf8($watchdog->message, 64), 'admin/logs/event/'. $watchdog->wid, array(), NULL, NULL, FALSE, TRUE),
         theme('username', $watchdog),
         $watchdog->link,
-        l(t('details'), "admin/logs/event/$watchdog->wid")
       ),
       // Attributes for tr
       'class' => "watchdog-". preg_replace('/[^a-z]/i', '-', $watchdog->type) .' '. $classes[$watchdog->severity]
@@ -125,7 +124,7 @@ function watchdog_overview() {
   }
 
   if (!$rows) {
-    $rows[] = array(array('data' => t('No log messages available.'), 'colspan' => '7'));
+    $rows[] = array(array('data' => t('No log messages available.'), 'colspan' => 6));
   }
 
 
