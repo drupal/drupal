@@ -118,7 +118,7 @@ if (isset($_GET["op"])) {
   if (($access_check == 0) || ($user->uid == 1)) {
     $op = isset($_POST['op']) ? $_POST['op'] : '';
     switch ($op) {
-      case 'Update':
+      case t('Update'):
         $output = update_do_updates();
         break;
 
