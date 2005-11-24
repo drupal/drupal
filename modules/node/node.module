@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.553 2005/11/24 20:15:09 dries Exp $
+// $Id: node.module,v 1.554 2005/11/24 22:03:40 unconed Exp $
 
 /**
  * @file
@@ -855,24 +855,27 @@ function node_menu($may_cache) {
 
   if ($may_cache) {
     $items[] = array('path' => 'admin/node', 'title' => t('content'),
-      'callback' => 'node_admin',
+      'callback' => 'node_admin_nodes',
       'access' => user_access('administer nodes'));
-    $items[] = array('path' => 'admin/node/action', 'title' => t('content'),
-      'type' => MENU_CALLBACK);
     $items[] = array('path' => 'admin/node/overview', 'title' => t('list'),
       'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
+    $items[] = array('path' => 'admin/node/action', 'title' => t('content'),
+      'callback' => 'node_admin_nodes',
+      'type' => MENU_CALLBACK);
+
+    if (module_exist('search')) {
+      $items[] = array('path' => 'admin/node/search', 'title' => t('search'),
+        'callback' => 'node_admin_search',
+        'access' => user_access('administer nodes'),
+        'type' => MENU_LOCAL_TASK);
+    }
+
     $items[] = array('path' => 'admin/settings/node', 'title' => t('posts'),
       'callback' => 'node_configure',
       'access' => user_access('administer nodes'));
     $items[] = array('path' => 'admin/settings/content-types', 'title' => t('content types'),
       'callback' => 'node_types_configure',
       'access' => user_access('administer nodes'));
-    if (module_exist('search')) {
-      $items[] = array('path' => 'admin/node/search', 'title' => t('search'),
-        'callback' => 'node_admin',
-        'access' => user_access('administer nodes'),
-        'type' => MENU_LOCAL_TASK);
-    }
 
     $items[] = array('path' => 'node', 'title' => t('content'),
       'callback' => 'node_page',
@@ -1118,6 +1121,10 @@ function node_admin_nodes() {
   global $form_values;
   $output = node_filter_form();
 
+  if ($_POST['edit']['operation'] == 'delete') {
+    return node_multiple_delete_confirm();
+  }
+
   $filter = node_build_filter_query();
 
   $result = pager_query('SELECT n.*, u.name, u.uid FROM {node} n '. $filter['join'] .' INNER JOIN {users} u ON n.uid = u.uid '. $filter['where'] .' ORDER BY n.changed DESC', 50, 0, NULL, $filter['args']);
@@ -1150,11 +1157,6 @@ function node_admin_nodes() {
 
   // Call the form first, to allow for the form_values array to be populated.
   $output .= drupal_get_form('node_admin_nodes', $form);
-
-  // If you are attempting to delete nodes, display the multiple deletion form.
-  if ($form_values['operation'] == 'delete') {
-    $output = node_multiple_delete_form();
-  }
 
   return $output;
 }
@@ -1192,25 +1194,25 @@ function theme_node_admin_nodes($form) {
   return $output;
 }
 
-function node_multiple_delete_form() {
-  global $form_values;
+function node_multiple_delete_confirm() {
+  $edit = $_POST['edit'];
+
   $form['nodes'] = array('#prefix' => '<ul>', '#suffix' => '</ul>', '#tree' => TRUE);
-  foreach ($form_values['nodes'] as $nid => $value) {
-    if ($value) {
-      $title = db_result(db_query('SELECT title FROM {node} WHERE nid = %d', $nid));
-      $form['nodes'][$nid] = array('#type' => 'hidden', '#value' => $nid, '#prefix' => '<li>', '#suffix' => check_plain($title) .'</li>');
-    }
+  // array filter returns only elements with true values
+  foreach (array_filter($edit['nodes']) as $nid => $value) {
+    $title = db_result(db_query('SELECT title FROM {node} WHERE nid = %d', $nid));
+    $form['nodes'][$nid] = array('#type' => 'hidden', '#value' => $nid, '#prefix' => '<li>', '#suffix' => check_plain($title) ."</li>\n");
   }
   $form['operation'] = array('#type' => 'hidden', '#value' => 'delete');
 
-  return confirm_form('node_multiple_delete_form', $form,
+  return confirm_form('node_multiple_delete_confirm', $form,
                       t('Are you sure you want to delete these items?'),
                       'admin/node', t('This action cannot be undone.'),
                       t('Delete all'), t('Cancel'));
 }
 
 
-function node_multiple_delete_form_execute($form_id, $edit) {
+function node_multiple_delete_confirm_execute($form_id, $edit) {
   if ($edit['confirm']) {
     foreach ($edit['nodes'] as $nid => $value) {
       node_delete($nid);
@@ -1359,26 +1361,8 @@ function node_revision_list($node) {
   return $revisions;
 }
 
-/**
- * Menu callback; presents the content administration overview.
- */
-function node_admin() {
-  $op = isset($_POST['op']) ? $_POST['op'] : '';
-  $edit = isset($_POST['edit']) ? $_POST['edit'] : '';
-
-  if (empty($op)) {
-    $op = arg(2);
-  }
-
-  // Compile a list of the administrative links:
-  switch ($op) {
-    case 'search':
-    case t('Search'):
-      $output = search_form(url('admin/node/search'), $_POST['edit']['keys'], 'node') . search_data($_POST['edit']['keys'], 'node');
-      break;
-    default:
-      $output = node_admin_nodes();
-  }
+function node_admin_search() {
+  $output = search_form(url('admin/node/search'), $_POST['edit']['keys'], 'node') . search_data($_POST['edit']['keys'], 'node');
   return $output;
 }
 
