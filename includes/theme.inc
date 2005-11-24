@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.264 2005/11/03 19:33:37 dries Exp $
+// $Id: theme.inc,v 1.265 2005/11/24 20:08:54 dries Exp $
 
 /**
  * @file
@@ -839,7 +839,7 @@ function theme_item_list($items = array(), $title = NULL, $type = 'ul') {
     $output .= '<h3>'. $title .'</h3>';
   }
 
-  if (isset($items)) {
+  if (!empty($items)) {
     $output .= "<$type>";
     foreach ($items as $item) {
       $output .= '<li>'. $item .'</li>';
