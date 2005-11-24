@@ -1,3 +1,6 @@
+-- Do not show NOTICE: messages, it's hard to spot errors.
+set client_min_messages = 'warning';
+
 --
 -- Table structure for access
 --
@@ -869,35 +872,23 @@ ALTER SEQUENCE menu_mid_seq RESTART 3;
 --- Functions
 ---
 
-CREATE FUNCTION greatest(integer, integer) RETURNS integer AS '
-BEGIN
-  IF $2 IS NULL THEN
-    RETURN $1;
-  END IF;
-  IF $1 > $2 THEN
-    RETURN $1;
-  END IF;
-  RETURN $2;
-END;
-' LANGUAGE 'plpgsql';
+CREATE OR REPLACE FUNCTION "greatest"(numeric, numeric) RETURNS numeric AS '
+  SELECT CASE WHEN (($1 > $2) OR ($2 IS NULL)) THEN $1 ELSE $2 END;
+' LANGUAGE 'sql';
 
-CREATE FUNCTION greatest(integer, integer, integer) RETURNS integer AS '
+CREATE OR REPLACE FUNCTION "greatest"(numeric, numeric, numeric) RETURNS numeric AS '
   SELECT greatest($1, greatest($2, $3));
 ' LANGUAGE 'sql';
 
-CREATE FUNCTION "rand"() RETURNS float AS '
-BEGIN
-  RETURN random();
-END;
-' LANGUAGE 'plpgsql';
+CREATE OR REPLACE FUNCTION "rand"() RETURNS float AS '
+  SELECT random();
+' LANGUAGE 'sql';
 
-CREATE FUNCTION "concat"(text, text) RETURNS text AS '
-BEGIN
-  RETURN $1 || $2;
-END;
-' LANGUAGE 'plpgsql';
+CREATE OR REPLACE FUNCTION "concat"(text, text) RETURNS text AS '
+  SELECT $1 || $2;
+' LANGUAGE 'sql';
 
-CREATE FUNCTION "if"(boolean, anyelement, anyelement) RETURNS anyelement AS '
+CREATE OR REPLACE FUNCTION "if"(boolean, anyelement, anyelement) RETURNS anyelement AS '
   SELECT CASE WHEN $1 THEN $2 ELSE $3 END;
 ' LANGUAGE 'sql';
 

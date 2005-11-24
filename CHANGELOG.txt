@@ -49,6 +49,8 @@ Drupal x.x.x, xxxx-xx-xx (development version)
     * made indexer smarter and more robust
     * added advanced search operators (e.g. phrase, node type, ...)
     * added customizable result ranking
+- PostgreSQL support:
+    * removed dependency on PL/pgSQL procedural language
 
 Drupal 4.6.3, 2005-08-15
 ------------------------
