@@ -839,7 +839,7 @@ function theme_item_list($items = array(), $title = NULL, $type = 'ul') {
     $output .= '<h3>'. $title .'</h3>';
   }
 
-  if (isset($items)) {
+  if (!empty($items)) {
     $output .= "<$type>";
     foreach ($items as $item) {
       $output .= '<li>'. $item .'</li>';
