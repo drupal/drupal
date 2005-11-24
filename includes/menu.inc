@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.89 2005/11/03 19:33:37 dries Exp $
+// $Id: menu.inc,v 1.90 2005/11/24 22:04:10 unconed Exp $
 
 /**
  * @file
@@ -37,11 +37,12 @@
  * complete match with a callback it can find. If the path a/b/i is
  * requested in the tree above, the callback for a/b would be used.
  *
- * The found callback function is called with any arguments specified in
- * the "callback arguments" attribute of its menu item. After these
- * arguments, any remaining components of the path are appended as further
- * arguments. In this way, the callback for a/b above could respond to a
- * request for a/b/i differently than a request for a/b/j.
+ * The found callback function is called with any arguments specified
+ * in the "callback arguments" attribute of its menu item. The
+ * attribute must be an array. After these arguments, any remaining
+ * components of the path are appended as further arguments. In this
+ * way, the callback for a/b above could respond to a request for
+ * a/b/i differently than a request for a/b/j.
  *
  * For an illustration of this process, see page_example.module.
  *
