@@ -76,21 +76,24 @@ function profile_browse() {
 
     // Compile a list of fields to show
     $fields = array();
-    $result = db_query('SELECT name, title, type FROM {profile_fields} WHERE fid != %d AND visibility = %d ORDER BY weight', $field->fid, PROFILE_PUBLIC_LISTINGS);
+    $result = db_query('SELECT name, title, type, weight FROM {profile_fields} WHERE fid != %d AND visibility = %d ORDER BY weight', $field->fid, PROFILE_PUBLIC_LISTINGS);
     while ($record = db_fetch_object($result)) {
       $fields[] = $record;
     }
 
     // Determine what query to use:
+    $arguments = array($field->fid);
     switch ($field->type) {
       case 'checkbox':
         $query = 'v.value = 1';
         break;
       case 'selection':
-        $query = "v.value = '". db_escape_string($value) ."'";
+        $query = "v.value = '%s'";
+        $arguments[] = $value;
         break;
       case 'list':
-        $query = "v.value LIKE '%%". db_escape_string($value) ."%%'";
+        $query = "v.value LIKE '%%%s%%'";
+        $arguments[] = $value;
         break;
       default:
         drupal_not_found();
@@ -98,7 +101,7 @@ function profile_browse() {
     }
 
     // Extract the affected users:
-    $result = pager_query("SELECT u.uid FROM {users} u INNER JOIN {profile_values} v ON u.uid = v.uid WHERE v.fid = %d AND $query ORDER BY u.changed DESC", 20, 0, NULL, $field->fid);
+    $result = pager_query("SELECT u.uid, u.changed FROM {users} u INNER JOIN {profile_values} v ON u.uid = v.uid WHERE v.fid = %d AND $query ORDER BY u.changed DESC", 20, 0, NULL, $arguments);
 
     $output = '<div id="profile">';
     while ($account = db_fetch_object($result)) {
@@ -123,13 +126,13 @@ function profile_browse() {
   else {
     // Compile a list of fields to show
     $fields = array();
-    $result = db_query('SELECT name, title, type FROM {profile_fields} WHERE visibility = %d', PROFILE_PUBLIC_LISTINGS);
+    $result = db_query('SELECT name, title, type, weight FROM {profile_fields} WHERE visibility = %d ORDER BY weight', PROFILE_PUBLIC_LISTINGS);
     while ($record = db_fetch_object($result)) {
       $fields[] = $record;
     }
 
     // Extract the affected users:
-    $result = pager_query("SELECT uid FROM {users} WHERE uid > 0 ORDER BY changed DESC", 20, 0, NULL);
+    $result = pager_query("SELECT uid, changed FROM {users} WHERE uid > 0 ORDER BY changed DESC", 20, 0, NULL);
 
     $output = '<div id="profile">';
     while ($account = db_fetch_object($result)) {
@@ -154,7 +157,7 @@ function profile_load_profile(&$user) {
 
 function profile_save_profile(&$edit, &$user, $category) {
   if (($_GET['q'] == 'user/register') ? 1 : 0) {
-    $result = db_query('SELECT fid, name, type FROM {profile_fields} WHERE register = 1 ORDER BY category, weight');
+    $result = db_query('SELECT fid, name, type, category, weight FROM {profile_fields} WHERE register = 1 ORDER BY category, weight');
   }
   else {
     $result = db_query("SELECT fid, name, type FROM {profile_fields} WHERE LOWER(category) = LOWER('%s')", $category);
