@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.158 2005/10/11 20:46:17 unconed Exp $
+// $Id: update.php,v 1.159 2005/11/24 19:07:53 unconed Exp $
 
 /**
  * @file
@@ -118,7 +118,7 @@ if (isset($_GET["op"])) {
   if (($access_check == 0) || ($user->uid == 1)) {
     $op = isset($_POST['op']) ? $_POST['op'] : '';
     switch ($op) {
-      case 'Update':
+      case t('Update'):
         $output = update_do_updates();
         break;
 
