@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.120 2005/11/23 10:43:30 dries Exp $
+// $Id: profile.module,v 1.121 2005/11/24 20:54:22 unconed Exp $
 
 /**
  * @file
@@ -60,7 +60,7 @@ function profile_block($op = 'list', $delta = 0, $edit = array()) {
   else if ($op == 'configure' && $delta == 0) {
     // Compile a list of fields to show
     $fields = array();
-    $result = db_query('SELECT name, title FROM {profile_fields} ORDER BY weight');
+    $result = db_query('SELECT name, title, weight FROM {profile_fields} ORDER BY weight');
     while ($record = db_fetch_object($result)) {
       $fields[$record->name] = $record->title;
     }
@@ -80,10 +80,10 @@ function profile_block($op = 'list', $delta = 0, $edit = array()) {
         if ($use_fields = variable_get('profile_block_author_fields', array())) {
           // Compile a list of fields to show
           $fields = array();
-          $result = db_query('SELECT name, title, type, visibility FROM {profile_fields} WHERE visibility IN (%d, %d) ORDER BY weight', PROFILE_PUBLIC, PROFILE_PUBLIC_LISTINGS);
-            while ($record = db_fetch_object($result)) {
-              // Endure that field is displayed only if it is among the defined block fields and, if it is private, the user has appropriate permissions.
-              if (in_array($record->name, $use_fields)) {
+          $result = db_query('SELECT name, title, type, visibility, weight FROM {profile_fields} WHERE visibility IN (%d, %d) ORDER BY weight', PROFILE_PUBLIC, PROFILE_PUBLIC_LISTINGS);
+          while ($record = db_fetch_object($result)) {
+            // Ensure that field is displayed only if it is among the defined block fields and, if it is private, the user has appropriate permissions.
+            if (in_array($record->name, $use_fields)) {
               $fields[] = $record;
             }
           }
@@ -159,21 +159,24 @@ function profile_browse() {
 
     // Compile a list of fields to show
     $fields = array();
-    $result = db_query('SELECT name, title, type FROM {profile_fields} WHERE fid != %d AND visibility = %d ORDER BY weight', $field->fid, PROFILE_PUBLIC_LISTINGS);
+    $result = db_query('SELECT name, title, type, weight FROM {profile_fields} WHERE fid != %d AND visibility = %d ORDER BY weight', $field->fid, PROFILE_PUBLIC_LISTINGS);
     while ($record = db_fetch_object($result)) {
       $fields[] = $record;
     }
 
     // Determine what query to use:
+    $arguments = array($field->fid);
     switch ($field->type) {
       case 'checkbox':
         $query = 'v.value = 1';
         break;
       case 'selection':
-        $query = "v.value = '". db_escape_string($value) ."'";
+        $query = "v.value = '%s'";
+        $arguments[] = $value;
         break;
       case 'list':
-        $query = "v.value LIKE '%%". db_escape_string($value) ."%%'";
+        $query = "v.value LIKE '%%%s%%'";
+        $arguments[] = $value;
         break;
       default:
         drupal_not_found();
@@ -181,7 +184,7 @@ function profile_browse() {
     }
 
     // Extract the affected users:
-    $result = pager_query("SELECT u.uid FROM {users} u INNER JOIN {profile_values} v ON u.uid = v.uid WHERE v.fid = %d AND $query ORDER BY u.access DESC", 20, 0, NULL, $field->fid);
+    $result = pager_query("SELECT u.uid, u.access FROM {users} u INNER JOIN {profile_values} v ON u.uid = v.uid WHERE v.fid = %d AND $query ORDER BY u.access DESC", 20, 0, NULL, $arguments);
 
     $output = '<div id="profile">';
     while ($account = db_fetch_object($result)) {
@@ -208,13 +211,13 @@ function profile_browse() {
   else {
     // Compile a list of fields to show
     $fields = array();
-    $result = db_query('SELECT name, title, type FROM {profile_fields} WHERE visibility = %d', PROFILE_PUBLIC_LISTINGS);
+    $result = db_query('SELECT name, title, type, weight FROM {profile_fields} WHERE visibility = %d ORDER BY weight', PROFILE_PUBLIC_LISTINGS);
     while ($record = db_fetch_object($result)) {
       $fields[] = $record;
     }
 
     // Extract the affected users:
-    $result = pager_query("SELECT uid FROM {users} WHERE uid > 0 ORDER BY access DESC", 20, 0, NULL);
+    $result = pager_query("SELECT uid, access FROM {users} WHERE uid > 0 ORDER BY access DESC", 20, 0, NULL);
 
     $output = '<div id="profile">';
     while ($account = db_fetch_object($result)) {
@@ -634,7 +637,7 @@ function theme_profile_listing($account, $fields = array()) {
 
   foreach ($fields as $field) {
     if ($field->value) {
-      $output .= " <div class=\"field\">$value</div>\n";
+      $output .= " <div class=\"field\">$field->value</div>\n";
     }
   }
 
