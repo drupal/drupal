@@ -1,0 +1,73 @@
+// $Id: INSTALL.mysql.txt,v 1.1 2005/11/25 10:07:49 dries Exp $
+
+CONTENTS OF THIS FILE
+---------------------
+
+ * Introduction
+ * Installation and configuration:
+    - Database and user creation
+    - Drupal schema loading
+ 
+INTRODUCTION
+------------
+
+This file describes how to create a MySQL database for Drupal.
+
+If you control your databases through a web-based control panel, 
+check its documentation, as the following instructions are for the 
+command line only.
+
+INSTALLATION AND CONFIGURATION
+------------------------------
+
+1. CREATE THE DRUPAL DATABASE
+
+   This step is only necessary if you don't already have a database
+   set-up (e.g. by your host). In the following examples, 'dba_user' is
+   an example MySQL user which has the CREATE and GRANT privileges. Use
+   the appropriate user name for your system.
+
+   First, you must create a new database for your Drupal site
+   (here, 'databasename' is the name of the new database):
+
+     mysqladmin -u dba_user -p create databasename
+
+   MySQL will prompt for the 'dba_user' database password and then create
+   the initial database files. Next you must login and set the access
+   database rights:
+
+     mysql -u dba_user -p
+
+   Again, you will be asked for the 'dba_user' database password.
+   At the MySQL prompt, enter following command:
+
+     GRANT ALL PRIVILEGES ON databasename.*
+        TO username@localhost IDENTIFIED BY 'password';
+
+   where
+
+    'databasename' is the name of your database
+    'username@localhost' is the username of your MySQL account
+    'password' is the password required for that username
+
+   If successful, MySQL will reply with:
+
+     Query OK, 0 rows affected
+
+   To activate the new permissions, enter the following command:
+
+     FLUSH PRIVILEGES;
+
+2. LOAD THE DRUPAL DATABASE SCHEMA
+
+   Once you have a database, you must load the required tables into it.
+
+   If you use a web-based control panel, you should be able to upload
+   the file 'database.mysql' from Drupal's 'database' directory and
+   run it directly as SQL commands.
+
+   From the command line, use (again, replacing 'username' and
+   'databasename' with your MySQL username and database name):
+
+     mysql -u username -p databasename < database/database.mysql
+
