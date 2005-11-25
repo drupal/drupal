@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.394 2005/11/23 08:23:45 dries Exp $
+// $Id: comment.module,v 1.395 2005/11/25 10:11:59 dries Exp $
 
 /**
  * @file
@@ -231,15 +231,18 @@ function comment_link($type, $node = 0, $main = 0) {
   return $links;
 }
 
+function comment_form_alter($form_id, &$form) {
+  if (substr($form_id, -14) == '_node_settings') {
+    $form['workflow']['comment_'. $node->type] = array('#type' => 'radios', '#title' => t('Default comment setting'), '#default_value' => variable_get('comment_'. $node->type, COMMENT_NODE_READ_WRITE), '#options' => array(t('Disabled'), t('Read only'), t('Read/Write')), '#description' => t('Users with the <em>administer comments</em> permission will be able to override this setting.'));
+  }
+}
+
 /**
  * Implementation of hook_nodeapi().
  *
  */
 function comment_nodeapi(&$node, $op, $arg = 0) {
   switch ($op) {
-    case 'settings':
-      $form['comment_'. $node->type] = array('#type' => 'radios', '#title' => t('Default comment setting'), '#default_value' => variable_get('comment_'. $node->type, COMMENT_NODE_READ_WRITE), '#options' => array(t('Disabled'), t('Read only'), t('Read/Write')), '#description' => t('Users with the <em>administer comments</em> permission will be able to override this setting.'));
-      return $form;
     case 'fields':
       return array('comment');
 

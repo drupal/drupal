@@ -1,4 +1,4 @@
-// $Id: INSTALL.pgsql.txt,v 1.1 2005/11/25 10:07:49 dries Exp $
+// $Id: INSTALL.pgsql.txt,v 1.2 2005/11/25 10:11:59 dries Exp $
 
 CONTENTS OF THIS FILE
 ---------------------
@@ -14,41 +14,41 @@ INTRODUCTION
 
 This file describes how to create a PostgreSQL database for Drupal.
 
-If you control your databases through a web-based control panel, 
-check its documentation, as the following instructions are for the 
+If you control your databases through a web-based control panel,
+check its documentation, as the following instructions are for the
 command line only.
 
 INSTALLATION AND CONFIGURATION
 ------------------------------
 
 1. CREATE DATABASE USER
-   
+
    This step is only necessary if you don't already have a user setup
    (e.g. by your host) or you want to create new user for use with Drupal
    only. The following command creates a new user named "username" and
    asks for a password for that user:
 
      createuser --pwprompt --encrypted --no-adduser --no-createdb username
-  
+
    If everything works correctly, you'll see a "CREATE USER" notice.
 
 2. CREATE THE DRUPAL DATABASE
-   
+
    This step is only necessary if you don't already have a database
-   setup (e.g. by your host) or you want to create new database for 
+   setup (e.g. by your host) or you want to create new database for
    use with Drupal only. The following command creates a new database
    named "databasename", which is owned by previously created "username":
-     
+
      createdb --encoding=SQL_ASCII --owner=username databasename
-     
+
    If everything works correctly, you'll see a "CREATE DATABASE" notice.
 
-3. INSTALL THE PL/pgSQL LANGUAGE  
-   
+3. INSTALL THE PL/pgSQL LANGUAGE
+
    You must also install the PL/pgSQL language if it does not exist:
-   
+
      createlang plpgsql databasename
-   
+
    If everything works correctly, you won't see any messages. It is
    possible that the PL/pgSQL language was already installed; if so,
    running the above command would give you the following error:
@@ -60,7 +60,7 @@ INSTALLATION AND CONFIGURATION
 
    Once the database has been created, load the required tables into it:
 
-     psql -q -f database/database.pgsql databasename username 
+     psql -q -f database/database.pgsql databasename username
 
    If everything works correctly, you won't see any messages.
 

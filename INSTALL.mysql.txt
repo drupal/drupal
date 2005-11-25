@@ -1,4 +1,4 @@
-// $Id: INSTALL.mysql.txt,v 1.1 2005/11/25 10:07:49 dries Exp $
+// $Id: INSTALL.mysql.txt,v 1.2 2005/11/25 10:11:59 dries Exp $
 
 CONTENTS OF THIS FILE
 ---------------------
@@ -7,14 +7,14 @@ CONTENTS OF THIS FILE
  * Installation and configuration:
     - Database and user creation
     - Drupal schema loading
- 
+
 INTRODUCTION
 ------------
 
 This file describes how to create a MySQL database for Drupal.
 
-If you control your databases through a web-based control panel, 
-check its documentation, as the following instructions are for the 
+If you control your databases through a web-based control panel,
+check its documentation, as the following instructions are for the
 command line only.
 
 INSTALLATION AND CONFIGURATION

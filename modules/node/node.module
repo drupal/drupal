@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.554 2005/11/24 22:03:40 unconed Exp $
+// $Id: node.module,v 1.555 2005/11/25 10:11:59 dries Exp $
 
 /**
  * @file
@@ -1227,7 +1227,6 @@ function node_multiple_delete_confirm_execute($form_id, $edit) {
  */
 function node_types_configure($type = NULL) {
   if (isset($type)) {
-    // Go to the listing page when we submit this form, system_settings_save() calls drupal_goto().
     $node = new stdClass();
     $node->type = $type;
     $form['submission'] = array('#type' => 'fieldset', '#title' =>t('Submission form') );
@@ -1240,10 +1239,9 @@ function node_types_configure($type = NULL) {
       '#description' => t('The minimum number of words a %type must be to be considered valid. This can be useful to rule out submissions that do not meet the site\'s standards, such as short test posts.', array('%type' => node_get_name($type)))
     );
     $form['workflow'] = array('#type' => 'fieldset', '#title' =>t('Workflow'));
-    $form['workflow'] = array_merge($form['workflow'], node_invoke_nodeapi($node, 'settings'));
 
     $form['array_filter'] = array('#type' => 'value', '#value' => TRUE);
-    return system_settings_form($type . '_node_settings', $form);
+    return system_settings_form($type .'_node_settings', $form);
   }
   else {
     $header = array(t('Type'), t('Operations'));
@@ -2056,19 +2054,13 @@ function node_update_index() {
   }
 }
 
-/**
- * Implementation of hook_nodeapi().
- */
-function node_nodeapi(&$node, $op, $arg = 0) {
-  switch ($op) {
-    case 'settings':
-      $form['node_options_'. $node->type] = array(
-        '#type' => 'checkboxes', '#title' => t('Default options'), '#default_value' => variable_get('node_options_'. $node->type, array('status', 'promote')),
-        '#options' => array('status' => t('Published'), 'moderate' => t('In moderation queue'), 'promote' => t('Promoted to front page'),
-        'sticky' => t('Sticky at top of lists'), 'revision' => t('Create new revision')),
-        '#description' => t('Users with the <em>administer nodes</em> permission will be able to override these options.')
-      );
-      return $form;
+function node_form_alter($form_id, &$form) {
+  if (substr($form_id, -14) == '_node_settings') {
+    $form['workflow']['node_options_'. $node->type] = array(
+      '#type' => 'checkboxes', '#title' => t('Default options'), '#default_value' => variable_get('node_options_'. $node->type, array('status', 'promote')),
+      '#options' => array('status' => t('Published'), 'moderate' => t('In moderation queue'), 'promote' => t('Promoted to front page'), 'sticky' => t('Sticky at top of lists'), 'revision' => t('Create new revision')),
+      '#description' => t('Users with the <em>administer nodes</em> permission will be able to override these options.'),
+    );
   }
 }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.60 2005/11/21 15:36:53 dries Exp $
+// $Id: upload.module,v 1.61 2005/11/25 10:11:59 dries Exp $
 
 /**
  * @file
@@ -143,17 +143,20 @@ function upload_file_download($file) {
   }
 }
 
+function upload_form_alter($form_id, &$form) {
+  if (substr($form_id, -14) == '_node_settings') {
+    $form['workflow']['upload_'. $node->type] = array(
+      '#type' => 'radios', '#title' => t('Attachments'), '#default_value' => variable_get('upload_'. $node->type, 1),
+      '#options' => array(t('Disabled'), t('Enabled')),
+    );
+  }
+}
+
 /**
  * Implementation of hook_nodeapi().
  */
 function upload_nodeapi(&$node, $op, $arg) {
   switch ($op) {
-    case 'settings':
-      $form['upload_'. $node->type] = array(
-        '#type' => 'radios', '#title' => t('Attachments'), '#default_value' => variable_get('upload_'. $node->type, 1),
-        '#options' => array(t('Disabled'), t('Enabled'))
-      );
-      return $form;
     case 'validate':
       $node->files = upload_load($node);
       // Double check existing files:
