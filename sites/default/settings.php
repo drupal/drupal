@@ -1,5 +1,5 @@
 <?php
-// $Id: settings.php,v 1.20 2005/10/06 08:51:05 dries Exp $
+// $Id: settings.php,v 1.21 2005/11/25 10:39:00 dries Exp $
 
 /**
  * @file
@@ -79,9 +79,9 @@
  *   );
  *
  * Database URL format:
- * $db_url = 'mysql://username:password@localhost/database';
- * $db_url = 'mysqli://username:password@localhost/database';
- * $db_url = 'pgsql://username:password@localhost/database';
+ *   $db_url = 'mysql://username:password@localhost/database';
+ *   $db_url = 'mysqli://username:password@localhost/database';
+ *   $db_url = 'pgsql://username:password@localhost/database';
  */
 $db_url = 'mysql://username:password@localhost/database';
 $db_prefix = '';
@@ -90,9 +90,16 @@ $db_prefix = '';
  * Base URL:
  *
  * The URL of your website's main page. It is not allowed to have
- * a trailing slash; Drupal will add it for you.
+ * a trailing slash; Drupal will add it for you.  
+ * 
+ * Examples: 
+ *   $base_url = 'http://localhost';
+ *   $base_url = 'http://example.com/drupal';
+ * 
+ * By default, Drupal tries to set the $base_url for you using
+ * the code below.
  */
-$base_url = 'http://localhost';
+$base_url = 'http://'. $_SERVER['HTTP_HOST'];
 
 /**
  * PHP settings:
