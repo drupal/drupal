@@ -79,23 +79,23 @@
  *   );
  *
  * Database URL format:
- *   $db_url = 'mysql://username:password@localhost/database';
- *   $db_url = 'mysqli://username:password@localhost/database';
- *   $db_url = 'pgsql://username:password@localhost/database';
+ *   $db_url = 'mysql://username:password@localhost/databasename';
+ *   $db_url = 'mysqli://username:password@localhost/databasename';
+ *   $db_url = 'pgsql://username:password@localhost/databasename';
  */
-$db_url = 'mysql://username:password@localhost/database';
+$db_url = 'mysql://username:password@localhost/databasename';
 $db_prefix = '';
 
 /**
  * Base URL:
  *
  * The URL of your website's main page. It is not allowed to have
- * a trailing slash; Drupal will add it for you.  
- * 
- * Examples: 
+ * a trailing slash; Drupal will add it for you.
+ *
+ * Examples:
  *   $base_url = 'http://localhost';
  *   $base_url = 'http://example.com/drupal';
- * 
+ *
  * By default, Drupal tries to set the $base_url for you using
  * the code below.
  */
