@@ -1,4 +1,4 @@
-// $Id: INSTALL.pgsql.txt,v 1.2 2005/11/25 10:11:59 dries Exp $
+// $Id: INSTALL.pgsql.txt,v 1.3 2005/11/26 19:54:24 dries Exp $
 
 CONTENTS OF THIS FILE
 ---------------------
@@ -6,7 +6,6 @@ CONTENTS OF THIS FILE
  * Introduction
  * Installation and configuration:
     - Database and user creation
-    - PL/pgSQL procedural language installation
     - Drupal schema loading
 
 INTRODUCTION
@@ -39,24 +38,11 @@ INSTALLATION AND CONFIGURATION
    use with Drupal only. The following command creates a new database
    named "databasename", which is owned by previously created "username":
 
-     createdb --encoding=SQL_ASCII --owner=username databasename
+     createdb --encoding=UNICODE --owner=username databasename
 
    If everything works correctly, you'll see a "CREATE DATABASE" notice.
 
-3. INSTALL THE PL/pgSQL LANGUAGE
-
-   You must also install the PL/pgSQL language if it does not exist:
-
-     createlang plpgsql databasename
-
-   If everything works correctly, you won't see any messages. It is
-   possible that the PL/pgSQL language was already installed; if so,
-   running the above command would give you the following error:
-
-     createlang: language "plpgsql" is already
-     installed in database "databasename"
-
-4. LOAD THE DRUPAL DATABASE SCHEMA
+3. LOAD THE DRUPAL DATABASE SCHEMA
 
    Once the database has been created, load the required tables into it:
 
