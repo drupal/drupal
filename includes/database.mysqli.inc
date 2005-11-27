@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysqli.inc,v 1.5 2005/11/18 14:03:55 dries Exp $
+// $Id: database.mysqli.inc,v 1.6 2005/11/27 11:52:08 dries Exp $
 
 /**
  * @file
@@ -233,9 +233,15 @@ function db_affected_rows() {
  * @param $query
  *   A string containing an SQL query.
  * @param ...
- *   A variable number of arguments which are substituted into the query using
- *   printf() syntax. Instead of a variable number of query arguments, you may
- *   also pass a single array containing the query arguments.
+ *   A variable number of arguments which are substituted into the query
+ *   using printf() syntax. The query arguments can be enclosed in one
+ *   array instead.
+ *   Valid %-modifiers are: %s, %d, %f, %b (binary data, do not enclose
+ *   in '') and %%.
+ *
+ *   NOTE: using this syntax will cast NULL and FALSE values to decimal 0,
+ *   and TRUE values to decimal 1.
+ *
  * @param $from
  *   The first result row to return.
  * @param $count
@@ -248,17 +254,14 @@ function db_query_range($query) {
   $args = func_get_args();
   $count = array_pop($args);
   $from = array_pop($args);
+  array_shift($args);
 
   $query = db_prefix_tables($query);
-  if (count($args) > 1) {
-    // Check for array (alternative syntax).
-    if (is_array($args[1])) {
-      $args = array_merge(array($query), $args[1]);
-    }
-    $args = array_map('db_escape_string', $args);
-    $args[0] = $query;
-    $query = call_user_func_array('sprintf', $args);
+  if (isset($args[0]) and is_array($args[0])) { // 'All arguments in one array' syntax
+    $args = $args[0];
   }
+  _db_query_callback($args, TRUE);
+  $query = preg_replace_callback(DB_QUERY_REGEXP, '_db_query_callback', $query);
   $query .= ' LIMIT '. $from .', '. $count;
   return _db_query($query);
 }
@@ -275,14 +278,20 @@ function db_query_range($query) {
  * Note that if you need to know how many results were returned, you should do
  * a SELECT COUNT(*) on the temporary table afterwards. db_num_rows() and
  * db_affected_rows() do not give consistent result across different database
- * types.
+ * types in this case.
  *
  * @param $query
  *   A string containing a normal SELECT SQL query.
  * @param ...
- *   A variable number of arguments which are substituted into the query using
- *   printf() syntax. Instead of a variable number of query arguments, you may
- *   also pass a single array containing the query arguments.
+ *   A variable number of arguments which are substituted into the query
+ *   using printf() syntax. The query arguments can be enclosed in one
+ *   array instead.
+ *   Valid %-modifiers are: %s, %d, %f, %b (binary data, do not enclose
+ *   in '') and %%.
+ *
+ *   NOTE: using this syntax will cast NULL and FALSE values to decimal 0,
+ *   and TRUE values to decimal 1.
+ *
  * @param $table
  *   The name of the temporary table to select into. This name will not be
  *   prefixed as there is no risk of collision.
@@ -293,17 +302,14 @@ function db_query_range($query) {
 function db_query_temporary($query) {
   $args = func_get_args();
   $tablename = array_pop($args);
+  array_shift($args);
 
   $query = preg_replace('/^SELECT/i', 'CREATE TEMPORARY TABLE '. $tablename .' SELECT', db_prefix_tables($query));
-  if (count($args) > 1) {
-    // Check for array (alternative syntax).
-    if (is_array($args[1])) {
-      $args = array_merge(array($query), $args[1]);
-    }
-    $args = array_map('db_escape_string', $args);
-    $args[0] = $query;
-    $query = call_user_func_array('sprintf', $args);
+  if (isset($args[0]) and is_array($args[0])) { // 'All arguments in one array' syntax
+    $args = $args[0];
   }
+  _db_query_callback($args, TRUE);
+  $query = preg_replace_callback(DB_QUERY_REGEXP, '_db_query_callback', $query);
   return _db_query($query);
 }
 
@@ -316,7 +322,7 @@ function db_query_temporary($query) {
  *  Encoded data.
  */
 function db_encode_blob($data) {
-  return $data;
+  return "'". mysql_real_escape_string($data) ."'";
 }
 
 /**
@@ -338,7 +344,6 @@ function db_escape_string($text) {
   global $active_db;
   return mysqli_real_escape_string($active_db, $text);
 }
-
 
 /**
  * Lock a table.

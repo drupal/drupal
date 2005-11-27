@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.45 2005/09/12 20:13:04 dries Exp $
+// $Id: database.inc,v 1.46 2005/11/27 11:52:08 dries Exp $
 
 /**
  * @file
@@ -131,32 +131,64 @@ function db_set_active($name = 'default') {
 }
 
 /**
+ * Helper function for db_query().
+ */
+function _db_query_callback($match, $init = FALSE) {
+  static $args = NULL;
+  if ($init) {
+    $args = $match;
+    return;
+  }
+
+  switch ($match[1]) {
+    case '%d': // We must use type casting to int to convert false/null/(true?)
+      return (int) array_shift($args); // We don't need db_escape_string as numbers are db-safe
+    case '%s':
+      return db_escape_string(array_shift($args));
+    case '%%':
+      return '%';
+    case '%f':
+      return (float) array_shift($args);
+    case '%b': // binary data
+      return db_encode_blob(array_shift($args));
+  }
+}
+
+define('DB_QUERY_REGEXP', '/(%d|%s|%%|%f|%b)/');
+
+/**
  * Runs a basic query in the active database.
  *
- * User-supplied arguments to the query should be passed in as separate parameters
- * so that they can be properly escaped to avoid SQL injection attacks.
+ * User-supplied arguments to the query should be passed in as separate
+ * parameters so that they can be properly escaped to avoid SQL injection
+ * attacks.
  *
  * @param $query
  *   A string containing an SQL query.
  * @param ...
- *   A variable number of arguments which are substituted into the query using
- *   printf() syntax. Instead of a variable number of query arguments, you may
- *   also pass a single array containing the query arguments.
+ *   A variable number of arguments which are substituted into the query
+ *   using printf() syntax. Instead of a variable number of query arguments,
+ *   you may also pass a single array containing the query arguments.
+
+ *   Valid %-modifiers are: %s, %d, %f, %b (binary data, do not enclose
+ *   in '') and %%.
+ *
+ *   NOTE: using this syntax will cast NULL and FALSE values to decimal 0,
+ *   and TRUE values to decimal 1.
+ *
  * @return
- *   A database query result resource, or FALSE if the query was not executed
- *   correctly.
+ *   A database query result resource, or FALSE if the query was not
+ *   executed correctly.
  */
 function db_query($query) {
   $args = func_get_args();
+  array_shift($args);
   $query = db_prefix_tables($query);
-  if (count($args) > 1) {
-    if (is_array($args[1])) {
-      $args = array_merge(array($query), $args[1]);
-    }
-    $args = array_map('db_escape_string', $args);
-    $args[0] = $query;
-    $query = call_user_func_array('sprintf', $args);
+  if (isset($args[0]) and is_array($args[0])) { // 'All arguments in one array' syntax
+    $args = $args[0];
   }
+  _db_query_callback($args, TRUE);
+  $query = preg_replace_callback(DB_QUERY_REGEXP, '_db_query_callback', $query);
   return _db_query($query);
 }
 
@@ -167,15 +199,13 @@ function db_query($query) {
  */
 function db_queryd($query) {
   $args = func_get_args();
+  array_shift($args);
   $query = db_prefix_tables($query);
-  if (count($args) > 1) {
-    if (is_array($args[1])) {
-      $args = array_merge(array($query), $args[1]);
-    }
-    $args = array_map('db_escape_string', $args);
-    $args[0] = $query;
-    $query = call_user_func_array('sprintf', $args);
+  if (isset($args[0]) and is_array($args[0])) { // 'All arguments in one array' syntax
+    $args = $args[0];
   }
+  _db_query_callback($args, TRUE);
+  $query = preg_replace_callback(DB_QUERY_REGEXP, '_db_query_callback', $query);
   return _db_query($query, 1);
 }
 

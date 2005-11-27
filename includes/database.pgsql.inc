@@ -1,5 +1,5 @@
 <?php
-// $Id: database.pgsql.inc,v 1.18 2005/11/21 15:54:58 unconed Exp $
+// $Id: database.pgsql.inc,v 1.19 2005/11/27 11:52:08 dries Exp $
 
 /**
  * @file
@@ -194,17 +194,24 @@ function db_affected_rows() {
 /**
  * Runs a limited-range query in the active database.
  *
- * Use this as a substitute for db_query() when a subset of the query is to be
- * returned.
- * User-supplied arguments to the query should be passed in as separate parameters
- * so that they can be properly escaped to avoid SQL injection attacks.
+ * Use this as a substitute for db_query() when a subset of the query
+ * is to be returned.
+ * User-supplied arguments to the query should be passed in as separate
+ * parameters so that they can be properly escaped to avoid SQL injection
+ * attacks.
  *
  * @param $query
  *   A string containing an SQL query.
  * @param ...
- *   A variable number of arguments which are substituted into the query using
- *   printf() syntax. Instead of a variable number of query arguments, you may
- *   also pass a single array containing the query arguments.
+ *   A variable number of arguments which are substituted into the query
+ *   using printf() syntax. Instead of a variable number of query arguments,
+ *   you may also pass a single array containing the query arguments.
+ *   Valid %-modifiers are: %s, %d, %f, %b (binary data, do not enclose
+ *   in '') and %%.
+ *
+ *   NOTE: using this syntax will cast NULL and FALSE values to decimal 0,
+ *   and TRUE values to decimal 1.
+ *
  * @param $from
  *   The first result row to return.
  * @param $count
@@ -217,17 +224,14 @@ function db_query_range($query) {
   $args = func_get_args();
   $count = array_pop($args);
   $from = array_pop($args);
+  array_shift($args);
 
   $query = db_prefix_tables($query);
-  if (count($args) > 1) {
-    // Check for array (alternative syntax).
-    if (is_array($args[1])) {
-      $args = array_merge(array($query), $args[1]);
-    }
-    $args = array_map('db_escape_string', $args);
-    $args[0] = $query;
-    $query = call_user_func_array('sprintf', $args);
+  if (isset($args[0]) and is_array($args[0])) { // 'All arguments in one array' syntax
+    $args = $args[0];
   }
+  _db_query_callback($args, TRUE);
+  $query = preg_replace_callback(DB_QUERY_REGEXP, '_db_query_callback', $query);
   $query .= ' LIMIT '. $count .' OFFSET '. $from;
   return _db_query($query);
 }
@@ -249,9 +253,15 @@ function db_query_range($query) {
  * @param $query
  *   A string containing a normal SELECT SQL query.
  * @param ...
- *   A variable number of arguments which are substituted into the query using
- *   printf() syntax. Instead of a variable number of query arguments, you may
- *   also pass a single array containing the query arguments.
+ *   A variable number of arguments which are substituted into the query
+ *   using printf() syntax. The query arguments can be enclosed in one
+ *   array instead.
+ *   Valid %-modifiers are: %s, %d, %f, %b (binary data, do not enclose
+ *   in '') and %%.
+ *
+ *   NOTE: using this syntax will cast NULL and FALSE values to decimal 0,
+ *   and TRUE values to decimal 1.
+ *
  * @param $table
  *   The name of the temporary table to select into. This name will not be
  *   prefixed as there is no risk of collision.
@@ -262,22 +272,20 @@ function db_query_range($query) {
 function db_query_temporary($query) {
   $args = func_get_args();
   $tablename = array_pop($args);
+  array_shift($args);
 
   $query = preg_replace('/^SELECT/i', 'CREATE TEMPORARY TABLE '. $tablename .' AS SELECT', db_prefix_tables($query));
-  if (count($args) > 1) {
-    // Check for array (alternative syntax).
-    if (is_array($args[1])) {
-      $args = array_merge(array($query), $args[1]);
-    }
-    $args = array_map('db_escape_string', $args);
-    $args[0] = $query;
-    $query = call_user_func_array('sprintf', $args);
+  if (isset($args[0]) and is_array($args[0])) { // 'All arguments in one array' syntax
+    $args = $args[0];
   }
+  _db_query_callback($args, TRUE);
+  $query = preg_replace_callback(DB_QUERY_REGEXP, '_db_query_callback', $query);
   return _db_query($query);
 }
 
 /**
  * Returns a properly formatted Binary Large OBject value.
+ * In case of PostgreSQL encodes data for insert into bytea field.
  *
  * @param $data
  *   Data to encode.
@@ -285,11 +293,12 @@ function db_query_temporary($query) {
  *  Encoded data.
  */
 function db_encode_blob($data) {
-  return addcslashes($data, "\0..\37\\");
+  return "'". pg_escape_bytea($data) ."'";
 }
 
 /**
  * Returns text from a Binary Large OBject value.
+ * In case of PostgreSQL decodes data after select from bytea field.
  *
  * @param $data
  *   Data to decode.
@@ -297,7 +306,7 @@ function db_encode_blob($data) {
  *  Decoded data.
  */
 function db_decode_blob($data) {
-  return stripcslashes($data);
+  return pg_unescape_bytea($data);
 }
 
 /**

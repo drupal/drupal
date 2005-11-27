@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.148 2005/11/18 14:05:38 dries Exp $
+// $Id: updates.inc,v 1.149 2005/11/27 11:52:08 dries Exp $
 
 /**
  * @file
@@ -104,8 +104,9 @@ $sql_updates = array(
   "2005-10-23" => "update_151",
   "2005-10-28" => "update_152",
   "2005-11-03" => "update_153",
-  "2005-11-14" => "update_154"
-);
+  "2005-11-14" => "update_154",
+  "2005-11-27" => "update_155",
+); // Please leave trailing , in the last line
 
 function update_110() {
   $ret = array();
@@ -1159,6 +1160,30 @@ function update_154() {
   return $ret;
 }
 
+function update_155() {
+  $ret = array();
+
+  // Postgresql only update
+  switch ($GLOBALS['db_type']) {
+    case 'pgsql':
+      $ret[] = update_sql("DROP TABLE {cache}");
+      $ret[] = update_sql("CREATE TABLE {cache} (
+        cid varchar(255) NOT NULL default '',
+        data bytea default '',
+        expire integer NOT NULL default '0',
+        created integer NOT NULL default '0',
+        headers text default '',
+        PRIMARY KEY (cid)
+        )");
+      $ret[] = update_sql("CREATE INDEX {cache}_expire_idx ON {cache}(expire)");
+      break;
+    case 'mysql':
+    case 'mysqli':
+      break;
+  }
+
+  return $ret;
+}
 
 
 /**

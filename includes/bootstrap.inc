@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.72 2005/11/21 21:33:44 dries Exp $
+// $Id: bootstrap.inc,v 1.73 2005/11/27 11:52:08 dries Exp $
 
 /**
  * @file
@@ -321,12 +321,10 @@ function cache_get($key) {
  *   A string containing HTTP header information for cached pages.
  */
 function cache_set($cid, $data, $expire = CACHE_PERMANENT, $headers = NULL) {
-  $data = db_encode_blob($data);
-
   db_lock_table('cache');
-  db_query("UPDATE {cache} SET data = '%s', created = %d, expire = %d, headers = '%s' WHERE cid = '%s'", $data, time(), $expire, $headers, $cid);
+  db_query("UPDATE {cache} SET data = %b, created = %d, expire = %d, headers = '%s' WHERE cid = '%s'", $data, time(), $expire, $headers, $cid);
   if (!db_affected_rows()) {
-    @db_query("INSERT INTO {cache} (cid, data, created, expire, headers) VALUES ('%s', '%s', %d, %d, '%s')", $cid, $data, time(), $expire, $headers);
+    @db_query("INSERT INTO {cache} (cid, data, created, expire, headers) VALUES ('%s', %b, %d, %d, '%s')", $cid, $data, time(), $expire, $headers);
   }
   db_unlock_tables();
 }

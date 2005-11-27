@@ -164,7 +164,7 @@ CREATE TABLE boxes (
 
 CREATE TABLE cache (
   cid varchar(255) NOT NULL default '',
-  data text default '',
+  data bytea default '',
   expire integer NOT NULL default '0',
   created integer NOT NULL default '0',
   headers text default '',
