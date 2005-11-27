@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.395 2005/11/25 10:11:59 dries Exp $
+// $Id: comment.module,v 1.396 2005/11/27 11:07:02 dries Exp $
 
 /**
  * @file
@@ -918,10 +918,10 @@ function comment_render($node, $cid = 0) {
           $output .= theme('comment_flat_expanded', $comment);
         }
         else if ($mode == COMMENT_MODE_THREADED_COLLAPSED) {
-          $output .= theme('comment_thread_min', $comment);
+          $output .= theme('comment_thread_collapsed', $comment);
         }
         else if ($mode == COMMENT_MODE_THREADED_EXPANDED) {
-          $output .= theme('comment_thread_max', $comment);
+          $output .= theme('comment_thread_expanded', $comment);
         }
       }
 
@@ -1372,14 +1372,14 @@ function theme_comment_flat_expanded($comment) {
   return theme('comment_view', $comment, module_invoke_all('link', 'comment', $comment, 0));
 }
 
-function theme_comment_thread_min($comment, $pid = 0) {
+function theme_comment_thread_collapsed($comment) {
   $output  = '<div style="margin-left:'. ($comment->depth * 25) ."px;\">\n";
   $output .= theme('comment_view', $comment, '', 0);
   $output .= "</div>\n";
   return $output;
 }
 
-function theme_comment_thread_max($comment, $level = 0) {
+function theme_comment_thread_expanded($comment) {
   $output = '';
   if ($comment->depth) {
     $output .= '<div style="margin-left:'. ($comment->depth * 25) ."px;\">\n";
