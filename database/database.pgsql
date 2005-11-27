@@ -872,6 +872,9 @@ ALTER SEQUENCE menu_mid_seq RESTART 3;
 --- Functions
 ---
 
+--- Always installed in 'public' as prefix isn't appended to function names
+SET search_path TO public;
+
 CREATE OR REPLACE FUNCTION "greatest"(numeric, numeric) RETURNS numeric AS '
   SELECT CASE WHEN (($1 > $2) OR ($2 IS NULL)) THEN $1 ELSE $2 END;
 ' LANGUAGE 'sql';
