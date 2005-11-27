@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.491 2005/10/28 01:06:36 unconed Exp $
+// $Id: common.inc,v 1.492 2005/11/27 09:14:52 dries Exp $
 
 /**
  * @file
@@ -458,7 +458,7 @@ function error_handler($errno, $message, $filename, $line) {
     $entry = $types[$errno] .': '. $message .' in '. $filename .' on line '. $line .'.';
 
     if (variable_get('error_level', 1) == 1) {
-      print '<pre>'. $entry .'</pre>';
+      drupal_set_message($entry, 'error');
     }
 
     watchdog('php', t('%message in %file on line %line.', array('%error' => $types[$errno], '%message' => $message, '%file' => $filename, '%line' => $line)), WATCHDOG_ERROR);
