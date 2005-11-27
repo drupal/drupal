@@ -452,26 +452,6 @@ function taxonomy_form($vid, $value = 0, $help = NULL, $name = 'taxonomy') {
 }
 
 /**
- * Generate a set of options for selecting a term from all vocabularies. Can be
- * passed to form_select.
- */
-function taxonomy_form_all($free_tags = 0) {
-  $vocabularies = taxonomy_get_vocabularies();
-  $options = array();
-  foreach ($vocabularies as $vid => $vocabulary) {
-    if ($vocabulary->tags && !$free_tags) { continue; }
-    $tree = taxonomy_get_tree($vid);
-    $options[$vocabulary->name] = array();
-    if ($tree) {
-      foreach ($tree as $term) {
-        $options[$vocabulary->name][$term->tid] = _taxonomy_depth($term->depth, '-') . $term->name;
-      }
-    }
-  }
-  return $options;
-}
-
-/**
  * Return an array of all vocabulary objects.
  *
  * @param $type
