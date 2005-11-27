@@ -458,7 +458,7 @@ function error_handler($errno, $message, $filename, $line) {
     $entry = $types[$errno] .': '. $message .' in '. $filename .' on line '. $line .'.';
 
     if (variable_get('error_level', 1) == 1) {
-      print '<pre>'. $entry .'</pre>';
+      drupal_set_message($entry, 'error');
     }
 
     watchdog('php', t('%message in %file on line %line.', array('%error' => $types[$errno], '%message' => $message, '%file' => $filename, '%line' => $line)), WATCHDOG_ERROR);
