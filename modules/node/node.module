@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.555 2005/11/25 10:11:59 dries Exp $
+// $Id: node.module,v 1.556 2005/11/27 11:11:46 dries Exp $
 
 /**
  * @file
@@ -1239,6 +1239,7 @@ function node_types_configure($type = NULL) {
       '#description' => t('The minimum number of words a %type must be to be considered valid. This can be useful to rule out submissions that do not meet the site\'s standards, such as short test posts.', array('%type' => node_get_name($type)))
     );
     $form['workflow'] = array('#type' => 'fieldset', '#title' =>t('Workflow'));
+    $form['type'] = array('#type' => 'value', '#value' => $type);
 
     $form['array_filter'] = array('#type' => 'value', '#value' => TRUE);
     return system_settings_form($type .'_node_settings', $form);
@@ -2055,9 +2056,9 @@ function node_update_index() {
 }
 
 function node_form_alter($form_id, &$form) {
-  if (substr($form_id, -14) == '_node_settings') {
-    $form['workflow']['node_options_'. $node->type] = array(
-      '#type' => 'checkboxes', '#title' => t('Default options'), '#default_value' => variable_get('node_options_'. $node->type, array('status', 'promote')),
+  if (isset($form['type']) && $form['type']['#value'] .'_node_settings' == $form_id) {
+    $form['workflow']['node_options_'. $form['type']['#value']] = array(
+      '#type' => 'checkboxes', '#title' => t('Default options'), '#default_value' => variable_get('node_options_'. $form['type']['#value'], array('status', 'promote')),
       '#options' => array('status' => t('Published'), 'moderate' => t('In moderation queue'), 'promote' => t('Promoted to front page'), 'sticky' => t('Sticky at top of lists'), 'revision' => t('Create new revision')),
       '#description' => t('Users with the <em>administer nodes</em> permission will be able to override these options.'),
     );

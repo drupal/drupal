@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.61 2005/11/25 10:11:59 dries Exp $
+// $Id: upload.module,v 1.62 2005/11/27 11:11:46 dries Exp $
 
 /**
  * @file
@@ -144,9 +144,9 @@ function upload_file_download($file) {
 }
 
 function upload_form_alter($form_id, &$form) {
-  if (substr($form_id, -14) == '_node_settings') {
-    $form['workflow']['upload_'. $node->type] = array(
-      '#type' => 'radios', '#title' => t('Attachments'), '#default_value' => variable_get('upload_'. $node->type, 1),
+  if (isset($form['type']) && $form['type']['#value'] .'_node_settings' == $form_id) {
+    $form['workflow']['upload_'. $form['type']['#value']] = array(
+      '#type' => 'radios', '#title' => t('Attachments'), '#default_value' => variable_get('upload_'. $form['type']['#value'], 1),
       '#options' => array(t('Disabled'), t('Enabled')),
     );
   }

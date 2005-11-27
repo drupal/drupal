@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.396 2005/11/27 11:07:02 dries Exp $
+// $Id: comment.module,v 1.397 2005/11/27 11:11:46 dries Exp $
 
 /**
  * @file
@@ -232,8 +232,8 @@ function comment_link($type, $node = 0, $main = 0) {
 }
 
 function comment_form_alter($form_id, &$form) {
-  if (substr($form_id, -14) == '_node_settings') {
-    $form['workflow']['comment_'. $node->type] = array('#type' => 'radios', '#title' => t('Default comment setting'), '#default_value' => variable_get('comment_'. $node->type, COMMENT_NODE_READ_WRITE), '#options' => array(t('Disabled'), t('Read only'), t('Read/Write')), '#description' => t('Users with the <em>administer comments</em> permission will be able to override this setting.'));
+  if (isset($form['type']) && $form['type']['#value'] .'_node_settings' == $form_id) {
+    $form['workflow']['comment_'. $form['type']['#value']] = array('#type' => 'radios', '#title' => t('Default comment setting'), '#default_value' => variable_get('comment_'. $form['type']['#value'], COMMENT_NODE_READ_WRITE), '#options' => array(t('Disabled'), t('Read only'), t('Read/Write')), '#description' => t('Users with the <em>administer comments</em> permission will be able to override this setting.'));
   }
 }
 
