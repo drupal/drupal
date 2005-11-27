@@ -37,7 +37,7 @@ M: Gabor Hojtsy <goba@php.net>
 S: maintained
 
 MENU SYSTEM
-M: Jonathan Chaffer <jchaffer@structureinteractive.com>
+M: Richard Archer <drupal@juggernaut.com.au>
 S: maintained
 
 PATH MODULE
