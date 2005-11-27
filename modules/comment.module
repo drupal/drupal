@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.397 2005/11/27 11:11:46 dries Exp $
+// $Id: comment.module,v 1.398 2005/11/27 11:45:03 dries Exp $
 
 /**
  * @file
@@ -704,7 +704,7 @@ function comment_save($edit) {
           $edit['name'] = $user->name;
         }
 
-        db_query("INSERT INTO {comments} (cid, nid, pid, uid, subject, comment, format, hostname, timestamp, status, score, users, thread, name, mail, homepage) VALUES (%d, %d, %d, %d, '%s', '%s', %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s')", $edit['cid'], $edit['nid'], $edit['pid'], $edit['uid'], $edit['subject'], $edit['comment'], $edit['format'], $_SERVER['REMOTE_ADDR'], $edit['timestamp'], $edit['status'], $score, $users, $thread, $edit['name'], $edit['mail'], $edit['homepage']);
+        db_query("INSERT INTO {comments} (cid, nid, pid, uid, subject, comment, format, hostname, timestamp, status, score, users, thread, name, mail, homepage) VALUES (%d, %d, %d, %d, '%s', '%s', %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s')", $edit['cid'], $edit['nid'], $edit['pid'], $edit['uid'], $edit['subject'], $edit['comment'], $edit['format'], $_SERVER['REMOTE_ADDR'], $edit['timestamp'], $status, $score, $users, $thread, $edit['name'], $edit['mail'], $edit['homepage']);
 
         _comment_update_node_statistics($edit['nid']);
 
