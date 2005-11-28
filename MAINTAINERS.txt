@@ -24,6 +24,10 @@ DISTRIBUTED AUTHENTICATION MODULES
 M: Moshe Weitzman <weitzman@tejasa.com>
 S: maintained
 
+DOCUMENTATION COORDINATOR
+M: Charlie Lowe <cel4145@cyberdash.com>
+S: maintained
+
 FILTER SYSTEM
 M: Steven Wittens <unconed@drupal.org>
 S: maintained
@@ -48,6 +52,10 @@ POSTGRESQL PORT
 M: Piotr Krukowiecki <pgsql@cvbge.org>
 S: maintained
 
+SECURITY COORDINATOR
+M: Károly Négyesi <chx@mail.tvnet.hu>
+S: maintained
+
 STATISTICS MODULE
 M: Jeremy Andrews <jeremy@kerneltrap.com>
 S: maintained
@@ -58,6 +66,10 @@ S: maintained
 
 DEBIAN PACKAGE
 M: Hilko Bengen <bengen@debian.org>
+S: maintained
+
+TRANSLATIONS COORDINATOR
+M: Gerhard Killesreiter <gerhard@killesreiter.de>
 S: maintained
 
 THE REST:
