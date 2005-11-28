@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.143 2005/11/21 15:55:17 unconed Exp $
+// $Id: search.module,v 1.144 2005/11/28 20:00:21 unconed Exp $
 
 /**
  * @file
@@ -156,6 +156,10 @@ function search_menu($may_cache) {
       'callback' => 'search_view',
       'access' => user_access('search content'),
       'type' => MENU_SUGGESTED_ITEM);
+    $items[] = array('path' => 'admin/settings/search/wipe', 'title' => t('Clear Index'),
+      'callback' => 'search_wipe_confirm',
+      'access' => user_access('administer search'),
+      'type' => MENU_CALLBACK);
   }
   else if (arg(0) == 'search') {
     // To remember the user's search keywords when switching across tabs,
@@ -179,8 +183,12 @@ function search_menu($may_cache) {
  * Implementation of hook_validate().
  */
 function search_settings_form_validate($form_id, &$form) {
-  // If the word length settings change, the index needs to be rebuilt.
-  if (variable_get('minimum_word_size', 4) != $form['minimum_word_size']) {
+  if ($_POST['op'] == t('Re-index Site')) {
+    drupal_goto('admin/settings/search/wipe');
+  }
+  // If these settings change, the index needs to be rebuilt.
+  if ((variable_get('minimum_word_size', 3) != $form['minimum_word_size']) ||
+      (variable_get('overlap_cjk', true) != $form['overlap_cjk'])) {
     drupal_set_message(t('The index will be rebuilt.'));
     search_wipe();
   }
@@ -203,8 +211,9 @@ function search_settings() {
   $count = format_plural($remaining, 'There is 1 item left to index.', 'There are %count items left to index.');
   $percentage = ((int)min(100, 100 * ($total - $remaining) / max(1, $total))) . '%';
   $status = '<p><strong>'. t('%percentage of the site has been indexed.', array('%percentage' => $percentage)) .' '. $count .'</strong></p>';
-  $form['search_admin'] = array('#type' => 'fieldset', '#title' => t('Indexing status'));
-  $form['search_admin']['status'] = array('#type' => 'markup', '#value' => $status);
+  $form['status'] = array('#type' => 'fieldset', '#title' => t('Indexing status'));
+  $form['status']['status'] = array('#type' => 'markup', '#value' => $status);
+  $form['status']['wipe'] = array('#type' => 'submit', '#value' => t('Re-index Site'));
 
   $items = drupal_map_assoc(array(10, 20, 50, 100, 200, 500));
 
@@ -213,13 +222,33 @@ function search_settings() {
   $form['indexing_throttle']['search_cron_limit'] = array('#type' => 'select', '#title' => t('Items to index per cron run'), '#default_value' => variable_get('search_cron_limit', 100), '#options' => $items, '#description' => t('The maximum amount of items that will be indexed in one cron run. Set this number lower if your cron is timing out or if PHP is running out of memory.'));
   // Indexing settings:
   $form['indexing_settings'] = array('#type' => 'fieldset', '#title' => t('Indexing settings'));
-  $form['indexing_settings']['info'] = array('#type' => 'markup', '#value' => '<em>'. t('<p>Changing the setting below will cause the site index to be rebuilt. The search index is not cleared but systematically updated to reflect the new settings. Searching will continue to work but new content won\'t be indexed until all existing content has been re-indexed.</p><p>The default settings should be appropriate for the majority of sites.</p>') .'</em>');
-  $form['indexing_settings']['minimum_word_size'] = array('#type' => 'textfield', '#title' => t('Minimum word length to index'), '#default_value' => variable_get('minimum_word_size', 4), '#size' => 5, '#maxlength' => 3, '#description' => t('The number of characters a word has to be to be indexed. A lower setting means better search result ranking, but also a larger database. Each search query must contain at least one keyword that is this size (or longer).'));
+  $form['indexing_settings']['info'] = array('#type' => 'markup', '#value' => '<em>'. t('<p>Changing the settings below will cause the site index to be rebuilt. The search index is not cleared but systematically updated to reflect the new settings. Searching will continue to work but new content won\'t be indexed until all existing content has been re-indexed.</p><p>The default settings should be appropriate for the majority of sites.</p>') .'</em>');
+  $form['indexing_settings']['minimum_word_size'] = array('#type' => 'textfield', '#title' => t('Minimum word length to index'), '#default_value' => variable_get('minimum_word_size', 3), '#size' => 5, '#maxlength' => 3, '#description' => t('The number of characters a word has to be to be indexed. A lower setting means better search result ranking, but also a larger database. Each search query must contain at least one keyword that is this size (or longer).'));
   $form['indexing_settings']['remove_short'] = array('#type' => 'textfield', '#title' => t('Minimum word length to search for'), '#default_value' => variable_get('remove_short', 3), '#size' => 5, '#maxlength' => 3, '#description' => t('The number of characters a word has to be to be searched for, including wildcard characters.'));
+  $form['indexing_settings']['overlap_cjk'] = array('#type' => 'checkbox', '#title' => t('Simple CJK handling'), '#default_value' => variable_get('overlap_cjk', true), '#description' => t('Whether to apply a simple Chinese/Japanese/Korean tokenizer based on overlapping sequences. Turn this off if you want to use an external preprocessor for this instead. Does not affect other languages.'));
 
   // Per module settings
   $form = array_merge($form, module_invoke_all('search', 'admin'));
   return $form;
+}
+
+/**
+ * Menu callback: confirm wiping of the index.
+ */
+function search_wipe_confirm() {
+  return confirm_form('search_wipe_confirm', $form, t('Are you sure you want to re-index the site?'),
+                  'admin/forums', t(' The search index is not cleared but systematically updated to reflect the new settings. Searching will continue to work but new content won\'t be indexed until all existing content has been re-indexed. This action cannot be undone.'), t('Re-index Site'), t('Cancel'));
+}
+
+/**
+ * Handler for wipe confirmation
+ */
+function search_wipe_confirm_execute($form_id, &$form) {
+  if ($form['confirm']) {
+    search_wipe();
+    drupal_set_message(t('The index will be rebuilt.'));
+    drupal_goto('admin/settings/search');
+  }
 }
 
 /**
@@ -301,8 +330,10 @@ function search_simplify($text) {
   // Call an external processor for word handling.
   search_preprocess($text);
 
-  // Baseline CJK handling
-  $text = preg_replace_callback('/['. PREG_CLASS_CJK .']+/u', 'search_expand_cjk', $text);
+  // Simple CJK handling
+  if (variable_get('overlap_cjk', true)) {
+    $text = preg_replace_callback('/['. PREG_CLASS_CJK .']+/u', 'search_expand_cjk', $text);    
+  }
 
   // To improve searching for numerical data such as dates, IP addresses
   // or version numbers, we consider a group of numerical characters
@@ -325,21 +356,29 @@ function search_simplify($text) {
 
 /**
  * Basic CJK tokenizer. Simply splits a string into consecutive, overlapping
- * pairs of characters.
+ * sequences of characters ('minimum_word_size' long).
  */
 function search_expand_cjk($matches) {
-  $tokens = ' ';
-  // Split off first character
-  $last = drupal_substr($matches[0], 0, 1);
-  $str = substr($matches[0], strlen($last));
-  // Begin loop
+  $min = variable_get('minimum_word_size', 3);
+  $str = $matches[0];
   $l = drupal_strlen($str);
+  // Passthrough short words
+  if ($l <= $min) {
+    return $str;
+  }
+  $tokens = ' ';
+  // FIFO queue of characters
+  $chars = array();
+  // Begin loop
   for ($i = 0; $i < $l; ++$i) {
     // Grab next character
     $current = drupal_substr($str, 0, 1);
-    $str = substr($str, strlen($last));
-    $tokens .= $last . $current .' ';
-    $last = $current;
+    $str = substr($str, strlen($current));
+    $chars[] = $current;
+    if ($i >= $min - 1) {
+      $tokens .= implode('', $chars) .' ';
+      array_shift($chars);
+    }
   }
   return $tokens;
 }
@@ -585,7 +624,7 @@ function search_query_insert($keys, $option, $value = '') {
 /**
  * Parse a search query into SQL conditions.
  *
- * We build a query that matches the dataset bodies
+ * We build a query that matches the dataset bodies.
  */
 function search_parse_query($text) {
   $keys = array('positive' => array(), 'negative' => array());
@@ -600,15 +639,19 @@ function search_parse_query($text) {
   // Classify tokens
   $or = false;
   foreach ($matches as $match) {
+    $phrase = false;
     // Strip off quotes
     if ($match[2]{0} == '"') {
       $match[2] = substr($match[2], 1, -1);
+      $phrase = true;
     }
     // Simplify keyword according to indexing rules
-    $match[2] = search_simplify($match[2]);
+    $words = search_simplify($match[2]);
+    // Re-explode in case simplification added more words, except when matching a phrase
+    $words = $phrase ? array($words) : explode(' ', $words);
     // Negative matches
     if ($match[1] == '-') {
-      $keys['negative'][] = $match[2];
+      $keys['negative'] = array_merge($keys['negative'], $words);
     }
     // OR operator: instead of a single keyword, we store an array of all
     // OR'd keywords.
@@ -620,10 +663,11 @@ function search_parse_query($text) {
     // Plain keyword
     else {
       if ($or) {
-        $keys['positive'][count($keys['positive']) - 1][] = $match[2];
+        // Add to last element (which is an array)
+        $keys['positive'][count($keys['positive']) - 1] = array_merge($keys['positive'][count($keys['positive']) - 1], $words);
       }
       else {
-        $keys['positive'][] = $match[2];
+        $keys['positive'] = array_merge($keys['positive'], $words);
       }
     }
     $or = false;
