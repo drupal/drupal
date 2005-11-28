@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.21 2005/11/23 16:21:12 dries Exp $
+// $Id: form.inc,v 1.22 2005/11/28 16:37:11 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -286,8 +286,17 @@ function _form_builder($form_id, $form) {
   }
 
   // Allow for elements to expand to multiple elements. Radios, checkboxes and files for instance.
-  if (function_exists($form['#process']) && !$form['#processed']) {
-    $form = call_user_func($form['#process'], $form);
+  if (isset($form['#process']) && !$form['#processed']) {
+    if (is_array($form['#process'])) {
+      foreach ($form['#process'] as $process) {
+        if (function_exists($process)) {
+          $form = call_user_func($process, $form);
+        }
+      }
+    }
+    elseif (function_exists($form['#process'])) {
+      $form = call_user_func($form['#process'], $form);
+    }
     $form['#processed'] = TRUE;
   }
 
@@ -410,12 +419,12 @@ function _element_info($type, $refresh = null) {
     foreach (module_implements('elements') as $module) {
       $elements = module_invoke($module, 'elements');
       if (is_array($elements)) {
-        $cache = array_merge($cache, $elements);
+        $cache = array_merge_recursive($cache, $elements);
       }
     }
     if (sizeof($cache)) {
       foreach ($cache as $element_type => $info) {
-        $cache[$element_type] = array_merge($basic_defaults, $info);
+        $cache[$element_type] = array_merge_recursive($basic_defaults, $info);
       }
     }
   }
