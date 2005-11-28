@@ -517,6 +517,7 @@ function user_block($op = 'list', $delta = 0, $edit = array()) {
       case 0:
         // For usability's sake, avoid showing two login forms on one page.
         if (!$user->uid && !(arg(0) == 'user' && !is_numeric(arg(1)))) {
+          $form['#action'] = url($_GET['q'], drupal_get_destination());
           $form['#attributes'] = array('id' => 'user-login-form');
           $form['name'] = array('#type' => 'textfield', '#title' => t('Username'), '#maxlength' => 64, '#size' => 15);
           $form['pass'] = array('#type' => 'password', '#title' => t('Password'), '#maxlength' => 64, '#size' => 15);
