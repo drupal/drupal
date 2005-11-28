@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.180 2005/11/23 10:31:39 dries Exp $
+// $Id: poll.module,v 1.181 2005/11/28 23:49:50 unconed Exp $
 
 /**
  * @file
@@ -317,7 +317,7 @@ function poll_view_voting(&$node, $teaser, $page, $block) {
   }
   $form['nid'] = array('#type' => 'hidden', '#value' => $node->nid);
   $form['vote'] = array('#type' => 'submit', '#value' => t('Vote'));
-  $form['#action'] = 'node/'. $node->nid;
+  $form['#action'] = url('node/'. $node->nid);
   return drupal_get_form('poll_view_voting', $form);
 }
 
