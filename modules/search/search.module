@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.144 2005/11/28 20:00:21 unconed Exp $
+// $Id: search.module,v 1.145 2005/11/29 06:20:18 dries Exp $
 
 /**
  * @file
@@ -156,7 +156,7 @@ function search_menu($may_cache) {
       'callback' => 'search_view',
       'access' => user_access('search content'),
       'type' => MENU_SUGGESTED_ITEM);
-    $items[] = array('path' => 'admin/settings/search/wipe', 'title' => t('Clear Index'),
+    $items[] = array('path' => 'admin/settings/search/wipe', 'title' => t('Clear index'),
       'callback' => 'search_wipe_confirm',
       'access' => user_access('administer search'),
       'type' => MENU_CALLBACK);
@@ -183,7 +183,7 @@ function search_menu($may_cache) {
  * Implementation of hook_validate().
  */
 function search_settings_form_validate($form_id, &$form) {
-  if ($_POST['op'] == t('Re-index Site')) {
+  if ($_POST['op'] == t('Re-index site')) {
     drupal_goto('admin/settings/search/wipe');
   }
   // If these settings change, the index needs to be rebuilt.
@@ -213,7 +213,7 @@ function search_settings() {
   $status = '<p><strong>'. t('%percentage of the site has been indexed.', array('%percentage' => $percentage)) .' '. $count .'</strong></p>';
   $form['status'] = array('#type' => 'fieldset', '#title' => t('Indexing status'));
   $form['status']['status'] = array('#type' => 'markup', '#value' => $status);
-  $form['status']['wipe'] = array('#type' => 'submit', '#value' => t('Re-index Site'));
+  $form['status']['wipe'] = array('#type' => 'submit', '#value' => t('Re-index site'));
 
   $items = drupal_map_assoc(array(10, 20, 50, 100, 200, 500));
 
@@ -237,7 +237,7 @@ function search_settings() {
  */
 function search_wipe_confirm() {
   return confirm_form('search_wipe_confirm', $form, t('Are you sure you want to re-index the site?'),
-                  'admin/forums', t(' The search index is not cleared but systematically updated to reflect the new settings. Searching will continue to work but new content won\'t be indexed until all existing content has been re-indexed. This action cannot be undone.'), t('Re-index Site'), t('Cancel'));
+                  'admin/forums', t(' The search index is not cleared but systematically updated to reflect the new settings. Searching will continue to work but new content won\'t be indexed until all existing content has been re-indexed. This action cannot be undone.'), t('Re-index site'), t('Cancel'));
 }
 
 /**
