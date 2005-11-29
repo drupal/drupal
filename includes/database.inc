@@ -278,7 +278,7 @@ function db_rewrite_sql($query, $primary_table = 'n', $primary_field = 'nid',  $
   }
 
   if (!empty($join)) {
-    $query = preg_replace('|FROM[^[:upper:]/,]+|','\0 '. $join .' ', $query);
+    $query = preg_replace('|FROM[^[:upper:]/,_]+|','\0 '. $join .' ', $query);
   }
 
   if (!empty($where)) {
