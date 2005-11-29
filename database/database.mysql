@@ -129,7 +129,7 @@ CREATE TABLE blocks (
   custom tinyint(2) DEFAULT '0' NOT NULL,
   throttle tinyint(1) DEFAULT '0' NOT NULL,
   visibility tinyint(1) DEFAULT '0' NOT NULL,
-  pages text NOT NULL
+  pages text DEFAULT '' NOT NULL
 ) TYPE=MyISAM;
 
 --
