@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.259 2005/11/25 15:26:11 dries Exp $
+// $Id: system.module,v 1.260 2005/11/29 02:52:20 unconed Exp $
 
 /**
  * @file
@@ -840,6 +840,7 @@ function system_themes_execute($form_id, $values) {
     variable_del('theme_default');
   }
 
+  menu_rebuild();
   drupal_set_message(t('The configuration options have been saved.'));
   drupal_goto('admin/themes');
 }
