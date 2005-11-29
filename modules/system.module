@@ -53,7 +53,7 @@ function system_help_page() {
  * Implementation of hook_perm().
  */
 function system_perm() {
-  return array('administer site configuration', 'access administration pages', 'bypass input data check');
+  return array('administer site configuration', 'access administration pages');
 }
 
 /**

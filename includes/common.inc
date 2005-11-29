@@ -566,54 +566,6 @@ function valid_url($url, $absolute = FALSE) {
 }
 
 /**
- * Validate data input by a user.
- *
- * Ensures that user data cannot be used to perform attacks on the site.
- *
- * @param $data
- *   The input to check.
- * @return
- *   TRUE if the input data is acceptable.
- */
-function valid_input_data($data) {
-  if (is_array($data) || is_object($data)) {
-    // Form data can contain a number of nested arrays.
-    foreach ($data as $key => $value) {
-      if (!valid_input_data($key) || !valid_input_data($value)) {
-        return FALSE;
-      }
-    }
-  }
-  else if (isset($data)) {
-    // Detect dangerous input data.
-
-    // Decode all normal character entities.
-    $data = decode_entities($data, array('<', '&', '"'));
-
-    // Check strings:
-    $match  = preg_match('/\Wjavascript\s*:/i', $data);
-    $match += preg_match('/\Wexpression\s*\(/i', $data);
-    $match += preg_match('/\Walert\s*\(/i', $data);
-
-    // Check attributes:
-    $match += preg_match("/\W(dynsrc|datasrc|data|lowsrc|on[a-z]+)\s*=[^>]+?>/i", $data);
-
-    // Check tags:
-    $match += preg_match("/<\s*(applet|script|object|style|embed|form|blink|meta|html|frame|iframe|layer|ilayer|head|frameset|xml)/i", $data);
-
-    if ($match) {
-      watchdog('warning', t('Terminated request because of suspicious input data: %data.', array('%data' => '<em>'. drupal_specialchars($data) .'</em>')));
-      return FALSE;
-    }
-  }
-
-  return TRUE;
-}
-/**
- * @} End of "defgroup validation".
- */
-
-/**
  * @defgroup search Search interface
  * @{
  * The Drupal search interface manages a global search mechanism.
@@ -1098,7 +1050,7 @@ function form_item($title, $value, $description = NULL, $id = NULL, $required = 
  *   A themed HTML string representing the form item group.
  */
 function form_group($legend, $group, $description = NULL) {
-  return '<fieldset>' . ($legend ? '<legend>'. $legend .'</legend>' : '') . $group . ($description ? '<div class="description">'. $description .'</div>' : '') . "</fieldset>\n";
+  return '<fieldset>' . ($legend ? '<legend>'. check_plain($legend) .'</legend>' : '') . $group . ($description ? '<div class="description">'. $description .'</div>' : '') . "</fieldset>\n";
 }
 
 /**
@@ -1122,7 +1074,7 @@ function form_group($legend, $group, $description = NULL) {
  *   A themed HTML string representing the radio button.
  */
 function form_radio($title, $name, $value = 1, $checked = FALSE, $description = NULL, $attributes = NULL, $required = FALSE) {
-  $element = '<input type="radio" class="'. _form_get_class('form-radio', $required, _form_get_error($name)) .'" name="edit['. $name .']" value="'. $value .'"'. ($checked ? ' checked="checked"' : '') . drupal_attributes($attributes) .' />';
+  $element = '<input type="radio" class="'. _form_get_class('form-radio', $required, _form_get_error($name)) .'" name="edit['. $name .']" value="'. check_plain($value) .'"'. ($checked ? ' checked="checked"' : '') . drupal_attributes($attributes) .' />';
   if (!is_null($title)) {
     $element = '<label class="option">'. $element .' '. $title .'</label>';
   }
@@ -1154,7 +1106,7 @@ function form_radios($title, $name, $value, $options, $description = NULL, $requ
   if (count($options) > 0) {
     $choices = '';
     foreach ($options as $key => $choice) {
-      $choices .= '<label class="option"><input type="radio" class="form-radio" name="edit['. $name .']" value="'. $key .'"'. ($key == $value ? ' checked="checked"' : ''). drupal_attributes($attributes). ' /> '. $choice .'</label><br />';
+      $choices .= '<label class="option"><input type="radio" class="form-radio" name="edit['. $name .']" value="'. check_plain($key) .'"'. ($key == $value ? ' checked="checked"' : ''). drupal_attributes($attributes) .' /> '. $choice .'</label><br />';
     }
     return theme('form_element', $title, $choices, $description, NULL, $required, _form_get_error($name));
   }
@@ -1181,7 +1133,7 @@ function form_radios($title, $name, $value, $options, $description = NULL, $requ
  *   A themed HTML string representing the checkbox.
  */
 function form_checkbox($title, $name, $value = 1, $checked = FALSE, $description = NULL, $attributes = NULL, $required = FALSE) {
-  $element = '<input type="checkbox" class="'. _form_get_class('form-checkbox', $required, _form_get_error($name)) .'" name="edit['. $name .']" id="edit-'. $name .'" value="'. $value .'"'. ($checked ? ' checked="checked"' : '') . drupal_attributes($attributes) .' />';
+  $element = '<input type="checkbox" class="'. _form_get_class('form-checkbox', $required, _form_get_error($name)) .'" name="edit['. $name .']" id="edit-'. $name .'" value="'. check_plain($value) .'"'. ($checked ? ' checked="checked"' : '') . drupal_attributes($attributes) .' />';
   if (!is_null($title)) {
     $element = '<label class="option">'. $element .' '. $title .'</label>';
   }
@@ -1218,7 +1170,7 @@ function form_checkboxes($title, $name, $values, $options, $description = NULL, 
     }
     $choices = '';
     foreach ($options as $key => $choice) {
-      $choices .= '<label class="option"><input type="checkbox" class="form-checkbox" name="edit['. $name .'][]" value="'. $key .'"'. (in_array($key, $values) ? ' checked="checked"' : ''). drupal_attributes($attributes). ' /> '. $choice .'</label><br />';
+      $choices .= '<label class="option"><input type="checkbox" class="form-checkbox" name="edit['. $name .'][]" value="'. check_plain($key) .'"'. (in_array($key, $values) ? ' checked="checked"' : ''). drupal_attributes($attributes) .' /> '. $choice .'</label><br />';
     }
     // Note: because unchecked boxes are not included in the POST data, we
     // include a form_hidden() which will be overwritten as soon as there is at
@@ -1314,7 +1266,7 @@ function form_textarea($title, $name, $value, $cols, $rows, $description = NULL,
     }
   }
 
-  $output .= theme('form_element', $title, '<textarea wrap="virtual"'. $cols .' rows="'. $rows .'" name="edit['. $name .']" id="edit-'. $name .'" class="'. _form_get_class('textarea', $required, _form_get_error($name)) .'"'. drupal_attributes($attributes) .'>'. check_form($value) .'</textarea>', $description, 'edit-'. $name, $required, _form_get_error($name));
+  $output .= theme('form_element', $title, '<textarea wrap="virtual"'. check_plain($cols) .' rows="'. check_plain($rows) .'" name="edit['. $name .']" id="edit-'. $name .'" class="'. _form_get_class('textarea', $required, _form_get_error($name)) .'"'. drupal_attributes($attributes) .'>'. check_form($value) .'</textarea>', $description, 'edit-'. $name, $required, _form_get_error($name));
 
   // e.g. optionally plug in a WYSIWYG editor
   foreach (module_list() as $module_name) {
@@ -1358,14 +1310,14 @@ function form_select($title, $name, $value, $options, $description = NULL, $extr
   $select = '';
   foreach ($options as $key => $choice) {
     if (is_array($choice)) {
-      $select .= '<optgroup label="'. $key .'">';
+      $select .= '<optgroup label="'. check_plain($key) .'">';
       foreach ($choice as $key => $choice) {
-        $select .= '<option value="'. $key .'"'. (is_array($value) ? (in_array($key, $value) ? ' selected="selected"' : '') : ($value == $key ? ' selected="selected"' : '')) .'>'. check_form($choice) .'</option>';
+        $select .= '<option value="'. check_plain($key) .'"'. (is_array($value) ? (in_array($key, $value) ? ' selected="selected"' : '') : ($value == $key ? ' selected="selected"' : '')) .'>'. check_plain($choice) .'</option>';
       }
       $select .= '</optgroup>';
     }
     else {
-      $select .= '<option value="'. $key .'"'. (is_array($value) ? (in_array($key, $value) ? ' selected="selected"' : '') : ($value == $key ? ' selected="selected"' : '')) .'>'. check_form($choice) .'</option>';
+      $select .= '<option value="'. check_plain($key) .'"'. (is_array($value) ? (in_array($key, $value) ? ' selected="selected"' : '') : ($value == $key ? ' selected="selected"' : '')) .'>'. check_plain($choice) .'</option>';
     }
   }
   return theme('form_element', $title, '<select name="edit['. $name .']'. ($multiple ? '[]' : '') .'"'. ($multiple ? ' multiple="multiple" ' : '') . ($extra ? ' '. $extra : '') .' id="edit-'. $name .'">'. $select .'</select>', $description, 'edit-'. $name, $required, _form_get_error($name));
@@ -1838,6 +1790,10 @@ function _decode_entities($hex, $codepoint, $original, $exclude) {
   if ($hex != '') {
     $codepoint = base_convert($codepoint, 16, 10);
   }
+  else {
+    // Decimal numerical entity (strip leading zeros to avoid PHP octal notation)
+    $codepoint = preg_replace('/^0+/', '', $codepoint);
+  }
   if ($codepoint < 0x80) {
     $str = chr($codepoint);
   }
@@ -1912,18 +1868,6 @@ else {
 
 // Initialize all enabled modules.
 module_init();
-
-if (!user_access('bypass input data check')) {
-  // We can't use $_REQUEST because it consists of the contents of $_POST,
-  // $_GET and $_COOKIE: if any of the input arrays share a key, only one
-  // value will be verified.
-  if (!valid_input_data($_GET)
-   || !valid_input_data($_POST)
-   || !valid_input_data($_COOKIE)
-   || !valid_input_data($_FILES)) {
-    die('Terminated request because of suspicious input data.');
-  }
-}
 
 // Initialize the localization system.
 $locale = locale_initialize();

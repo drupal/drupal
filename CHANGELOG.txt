@@ -1,3 +1,7 @@
+Drupal 4.5.6, 2005-11-29
+------------------------
+- fixed bugs, including 3 security vulnerabilities.
+
 Drupal 4.5.5, 2005-08-15
 ------------------------
 - fixed bugs, including a critical "arbitrary PHP code execution" bug.
