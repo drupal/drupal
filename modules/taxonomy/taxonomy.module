@@ -1148,15 +1148,9 @@ function taxonomy_admin() {
 
   // Special block for our "add term" menu localtask. this covers
   // the use of the "add term" LOCAL_TASK on a "view terms" page.
-  if (is_numeric(arg(2)) && arg(3) == 'add' && arg(4) == 'term') {
-    if ($op != t('Submit')) {
-      $output = taxonomy_form_term(array('vid' => arg(2)));
-      return $output;
-    }
-    else {
-      taxonomy_save_term($edit);
-      drupal_goto('admin/taxonomy');
-    }
+  if (is_numeric(arg(2)) && arg(3) == 'add' && arg(4) == 'term' && $op != t('Submit')) {
+    $output = taxonomy_form_term(array('vid' => arg(2)));
+    return $output;
   }
 
   switch ($op) {
