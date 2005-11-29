@@ -1,3 +1,7 @@
+Drupal 4.6.4, 2005-11-29
+------------------------
+- fixed bugs, including 3 security vulnerabilities.
+
 Drupal 4.6.3, 2005-08-15
 ------------------------
 - fixed bugs, including a critical "arbitrary PHP code execution" bug.
@@ -53,6 +57,10 @@ Drupal 4.6.0, 2005-04-15
     * improved performance of the node pages.
 - documentation:
     * improved and extended PHPDoc/Doxygen comments.
+
+Drupal 4.5.6, 2005-11-29
+------------------------
+- fixed bugs, including 3 security vulnerabilities.
 
 Drupal 4.5.5, 2005-08-15
 ------------------------

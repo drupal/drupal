@@ -1241,8 +1241,11 @@ function user_page() {
           print theme('page', user_login($edit));
         }
       }
-      else {
+      elseif (user_access('access user profiles') || ($user->uid == arg(1))) {
         user_view(arg(1));
+      }
+      else {
+        drupal_access_denied();
       }
   }
 
