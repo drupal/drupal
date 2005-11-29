@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.556 2005/11/27 11:11:46 dries Exp $
+// $Id: node.module,v 1.557 2005/11/29 03:18:57 unconed Exp $
 
 /**
  * @file
@@ -1609,26 +1609,46 @@ function node_form($node) {
   // Get the node-specific bits.
   $form = array_merge($form, node_invoke($node, 'form'));
 
-  /**
-   * Node author information
-   */
+  // If this is a new node, fill in the default values.
+  $node_options = variable_get('node_options_'. $node->type, array('status', 'promote'));
+  if (!isset($node->status)) {
+    $node->status = in_array('status', $node_options);
+  }
+  if (!isset($node->moderate)) {
+    $node->moderate = in_array('moderate', $node_options);
+  }
+  if (!isset($node->promote)) {
+    $node->promote = in_array('promote', $node_options);
+  }
+  if (!isset($node->sticky)) {
+    $node->sticky = in_array('sticky', $node_options);
+  }
+  if (!isset($node->revision)) {
+    $node->revision = in_array('revision', $node_options);
+  }
 
   if (user_access('administer nodes')) {
+    // Node author information
     $form['author'] = array('#type' => 'fieldset', '#title' => t('Authoring information'), '#collapsible' => TRUE, '#collapsed' => TRUE, '#weight' => -5);
     $form['author']['name'] = array('#type' => 'textfield', '#title' => t('Authored by'), '#maxlength' => 60, '#autocomplete_path' => 'user/autocomplete', '#required' => TRUE, '#default_value' => $node->name, '#weight' => -1);
     $form['author']['date'] = array('#type' => 'textfield', '#title' => t('Authored on'), '#maxlength' => 25, '#required' => TRUE, '#default_value' => $node->date);
 
-    $node_options = variable_get('node_options_'. $node->type, array('status', 'promote'));
 
-    /**
-    * Node options
-    */
+    // Node options for administrators
     $form['options'] = array('#type' => 'fieldset', '#title' => t('Publishing options'), '#collapsible' => TRUE, '#collapsed' => TRUE, '#weight' => -5);
-    $form['options']['status']   = array('#type' => 'checkbox', '#title' => t('Published'), '#default_value' => in_array('status', $node_options));
-    $form['options']['moderate'] = array('#type' => 'checkbox', '#title' => t('In moderation queue'), '#default_value' => in_array('moderate', $node_options));
-    $form['options']['promote']  = array('#type' => 'checkbox', '#title' => t('Promoted to front page'), '#default_value' => in_array('promote', $node_options));
-    $form['options']['sticky']   = array('#type' => 'checkbox', '#title' =>t('Sticky at top of lists'), '#default_value' => in_array('sticky', $node_options));
-    $form['options']['revision'] = array('#type' => 'checkbox', '#title' =>t('Create new revision'), '#default_value' => in_array('revision', $node_options));
+    $form['options']['status']   = array('#type' => 'checkbox', '#title' => t('Published'), '#default_value' => $node->status);
+    $form['options']['moderate'] = array('#type' => 'checkbox', '#title' => t('In moderation queue'), '#default_value' => $node->moderate);
+    $form['options']['promote']  = array('#type' => 'checkbox', '#title' => t('Promoted to front page'), '#default_value' => $node->promote);
+    $form['options']['sticky']   = array('#type' => 'checkbox', '#title' => t('Sticky at top of lists'), '#default_value' => $node->sticky);
+    $form['options']['revision'] = array('#type' => 'checkbox', '#title' => t('Create new revision'), '#default_value' => $node->revision);
+  }
+  else {
+    // Don't show node options because the user doesn't have admin access.
+    $form['status']   = array('#type' => 'value', '#value' => $node->status);
+    $form['moderate'] = array('#type' => 'value', '#value' => $node->moderate);
+    $form['promote']  = array('#type' => 'value', '#value' => $node->promote);
+    $form['sticky']   = array('#type' => 'value', '#value' => $node->sticky);
+    $form['revision'] = array('#type' => 'value', '#value' => $node->revision);
   }
 
   $nodeapi = node_invoke_nodeapi($node, 'form');
