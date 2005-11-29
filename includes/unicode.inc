@@ -1,5 +1,5 @@
 <?php
-// $Id: unicode.inc,v 1.10 2005/10/11 19:44:34 dries Exp $
+// $Id: unicode.inc,v 1.11 2005/11/29 20:16:06 dries Exp $
 
 define('UNICODE_ERROR', -1);
 define('UNICODE_SINGLEBYTE', 0);
@@ -302,6 +302,10 @@ function _decode_entities($prefix, $codepoint, $original, &$table, &$exclude) {
   // Hexadecimal numerical entity
   if ($prefix == '#x') {
     $codepoint = base_convert($codepoint, 16, 10);
+  }
+  // Decimal numerical entity (strip leading zeros to avoid PHP octal notation)
+  else {
+    $codepoint = preg_replace('/^0+/', '', $codepoint);
   }
   // Encode codepoint as UTF-8 bytes
   if ($codepoint < 0x80) {

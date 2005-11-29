@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.73 2005/11/27 11:52:08 dries Exp $
+// $Id: bootstrap.inc,v 1.74 2005/11/29 20:16:06 dries Exp $
 
 /**
  * @file
@@ -708,14 +708,12 @@ function arg($index) {
 }
 
 /**
- * Prepare a URL for use in an HTML attribute.
+ * Prepare a URL for use in an HTML attribute. Strips harmful protocols.
  *
- * We replace ( and ) with their url-encoded equivalents to prevent XSS attacks.
  */
 function check_url($uri) {
   $uri = htmlspecialchars($uri, ENT_QUOTES);
-
-  $uri = strtr($uri, array('(' => '%28', ')' => '%29'));
+  $uri = filter_xss_bad_protocol($uri, FALSE);
 
   return $uri;
 }

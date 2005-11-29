@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.145 2005/11/29 06:20:18 dries Exp $
+// $Id: search.module,v 1.146 2005/11/29 20:17:10 dries Exp $
 
 /**
  * @file
@@ -332,7 +332,7 @@ function search_simplify($text) {
 
   // Simple CJK handling
   if (variable_get('overlap_cjk', true)) {
-    $text = preg_replace_callback('/['. PREG_CLASS_CJK .']+/u', 'search_expand_cjk', $text);    
+    $text = preg_replace_callback('/['. PREG_CLASS_CJK .']+/u', 'search_expand_cjk', $text);
   }
 
   // To improve searching for numerical data such as dates, IP addresses

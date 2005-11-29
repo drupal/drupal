@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.492 2005/11/27 09:14:52 dries Exp $
+// $Id: common.inc,v 1.493 2005/11/29 20:16:06 dries Exp $
 
 /**
  * @file
@@ -616,13 +616,6 @@ function t($string, $args = 0) {
 }
 
 /**
- * Encode special characters in a plain-text string for display as HTML.
- */
-function check_plain($text) {
-  return htmlspecialchars($text, ENT_QUOTES);
-}
-
-/**
  * @defgroup validation Input validation
  * @{
  * Functions to validate user input.
@@ -666,54 +659,6 @@ function valid_url($url, $absolute = FALSE) {
     return preg_match("/^". $allowed_characters ."+$/i", $url);
   }
 }
-
-/**
- * Validate data input by a user.
- *
- * Ensures that user data cannot be used to perform attacks on the site.
- *
- * @param $data
- *   The input to check.
- * @return
- *   TRUE if the input data is acceptable.
- */
-function valid_input_data($data) {
-  if (is_array($data) || is_object($data)) {
-    // Form data can contain a number of nested arrays.
-    foreach ($data as $key => $value) {
-      if (!valid_input_data($key) || !valid_input_data($value)) {
-        return FALSE;
-      }
-    }
-  }
-  else if (isset($data)) {
-    // Detect dangerous input data.
-
-    // Decode all normal character entities.
-    $data = decode_entities($data, array('<', '&', '"'));
-
-    // Check strings:
-    $match  = preg_match('/\Wjavascript\s*:/i', $data);
-    $match += preg_match('/\Wexpression\s*\(/i', $data);
-    $match += preg_match('/\Walert\s*\(/i', $data);
-
-    // Check attributes:
-    $match += preg_match("/\W(dynsrc|datasrc|data|lowsrc|on[a-z]+)\s*=[^>]+?>/i", $data);
-
-    // Check tags:
-    $match += preg_match("/<\s*(applet|script|object|style|embed|form|blink|meta|html|frame|iframe|layer|ilayer|head|frameset|xml)/i", $data);
-
-    if ($match) {
-      watchdog('security', t('Terminated request because of suspicious input data: %data.', array('%data' => theme('placeholder', $data))));
-      return FALSE;
-    }
-  }
-
-  return TRUE;
-}
-/**
- * @} End of "defgroup validation".
- */
 
 /**
  * Register an event for the current visitor (hostname/IP) to the flood control mechanism.
@@ -1366,17 +1311,7 @@ function _drupal_bootstrap_full() {
   }
   // Initialize all enabled modules.
   module_init();
-  if (!user_access('bypass input data check')) {
-    // We can't use $_REQUEST because it consists of the contents of $_POST,
-    // $_GET and $_COOKIE: if any of the input arrays share a key, only one
-    // value will be verified.
-    if (!valid_input_data($_GET)
-    || !valid_input_data($_POST)
-    || !valid_input_data($_COOKIE)
-    || !valid_input_data($_FILES)) {
-      die('Terminated request because of suspicious input data.');
-    }
-  }
+  // Undo magic quotes
   fix_gpc_magic();
   // Initialize the localization system.
   $locale = locale_initialize();

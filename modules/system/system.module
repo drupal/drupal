@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.260 2005/11/29 02:52:20 unconed Exp $
+// $Id: system.module,v 1.261 2005/11/29 20:17:10 dries Exp $
 
 /**
  * @file
@@ -47,7 +47,7 @@ function system_help($section) {
  * Implementation of hook_perm().
  */
 function system_perm() {
-  return array('administer site configuration', 'access administration pages', 'bypass input data check');
+  return array('administer site configuration', 'access administration pages');
 }
 
 /**
