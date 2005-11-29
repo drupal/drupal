@@ -1,5 +1,5 @@
 <?php
-// $Id: settings.php,v 1.22 2005/11/26 19:54:24 dries Exp $
+// $Id: settings.php,v 1.23 2005/11/29 15:17:58 dries Exp $
 
 /**
  * @file
@@ -89,17 +89,16 @@ $db_prefix = '';
 /**
  * Base URL:
  *
- * The URL of your website's main page. It is not allowed to have
- * a trailing slash; Drupal will add it for you.
+ * The URL to your Drupal installation. It is not allowed
+ * to have a trailing slash; Drupal will add it for you.
  *
  * Examples:
- *   $base_url = 'http://localhost';
- *   $base_url = 'http://example.com/drupal';
- *
- * By default, Drupal tries to set the $base_url for you using
- * the code below.
+ *   $base_url = 'http://www.example.com';
+ *   $base_url = 'http://www.example.com:8888';
+ *   $base_url = 'http://www.example.com/drupal';
+ *   $base_url = 'https://www.example.com:8888/drupal';
  */
-$base_url = 'http://'. $_SERVER['HTTP_HOST'];
+$base_url = 'http://www.example.com';
 
 /**
  * PHP settings:
