@@ -708,8 +708,14 @@ function arg($index) {
 }
 
 /**
+ * Encode special characters in a plain-text string for display as HTML.
+ */
+function check_plain($text) {
+  return htmlspecialchars($text, ENT_QUOTES);
+}
+
+/**
  * Prepare a URL for use in an HTML attribute. Strips harmful protocols.
- *
  */
 function check_url($uri) {
   $uri = htmlspecialchars($uri, ENT_QUOTES);
