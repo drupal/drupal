@@ -332,7 +332,7 @@ function search_simplify($text) {
 
   // Simple CJK handling
   if (variable_get('overlap_cjk', true)) {
-    $text = preg_replace_callback('/['. PREG_CLASS_CJK .']+/u', 'search_expand_cjk', $text);    
+    $text = preg_replace_callback('/['. PREG_CLASS_CJK .']+/u', 'search_expand_cjk', $text);
   }
 
   // To improve searching for numerical data such as dates, IP addresses

@@ -303,6 +303,10 @@ function _decode_entities($prefix, $codepoint, $original, &$table, &$exclude) {
   if ($prefix == '#x') {
     $codepoint = base_convert($codepoint, 16, 10);
   }
+  // Decimal numerical entity (strip leading zeros to avoid PHP octal notation)
+  else {
+    $codepoint = preg_replace('/^0+/', '', $codepoint);
+  }
   // Encode codepoint as UTF-8 bytes
   if ($codepoint < 0x80) {
     $str = chr($codepoint);

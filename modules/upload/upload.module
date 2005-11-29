@@ -208,14 +208,6 @@ function upload_nodeapi(&$node, $op, $arg) {
           }
         }
 
-        // Rename possibly executable scripts to prevent accidental execution.
-        // Uploaded files are attachments and should be shown in their original
-        // form, rather than run.
-        if (preg_match('/\.(php|pl|py|cgi|asp)$/i', $file->filename)) {
-          $file->filename .= '.txt';
-          $file->filemime = 'text/plain';
-        }
-
         if ($error['extension'] == count($user->roles) && $user->uid != 1) {
           form_set_error('upload', t('The selected file %name can not be attached to this post, because it is only possible to attach files with the following extensions: %files-allowed.', array('%name' => theme('placeholder', $file->filename), '%files-allowed' => theme('placeholder', $extensions))));
         }
