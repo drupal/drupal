@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.239 2005/11/28 12:24:58 dries Exp $
+// $Id: taxonomy.module,v 1.240 2005/11/29 17:41:27 dries Exp $
 
 /**
  * @file
@@ -1148,15 +1148,9 @@ function taxonomy_admin() {
 
   // Special block for our "add term" menu localtask. this covers
   // the use of the "add term" LOCAL_TASK on a "view terms" page.
-  if (is_numeric(arg(2)) && arg(3) == 'add' && arg(4) == 'term') {
-    if ($op != t('Submit')) {
-      $output = taxonomy_form_term(array('vid' => arg(2)));
-      return $output;
-    }
-    else {
-      taxonomy_save_term($edit);
-      drupal_goto('admin/taxonomy');
-    }
+  if (is_numeric(arg(2)) && arg(3) == 'add' && arg(4) == 'term' && $op != t('Submit')) {
+    $output = taxonomy_form_term(array('vid' => arg(2)));
+    return $output;
   }
 
   switch ($op) {
