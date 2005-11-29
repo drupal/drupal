@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.46 2005/11/27 11:52:08 dries Exp $
+// $Id: database.inc,v 1.47 2005/11/29 15:37:27 dries Exp $
 
 /**
  * @file
@@ -278,7 +278,7 @@ function db_rewrite_sql($query, $primary_table = 'n', $primary_field = 'nid',  $
   }
 
   if (!empty($join)) {
-    $query = preg_replace('|FROM[^[:upper:]/,]+|','\0 '. $join .' ', $query);
+    $query = preg_replace('|FROM[^[:upper:]/,_]+|','\0 '. $join .' ', $query);
   }
 
   if (!empty($where)) {
