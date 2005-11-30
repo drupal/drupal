@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.52 2005/11/29 20:16:06 dries Exp $
+// $Id: file.inc,v 1.53 2005/11/30 10:27:13 dries Exp $
 
 /**
  * @file
@@ -391,12 +391,6 @@ function file_save_upload($source, $dest = 0, $replace = FILE_EXISTS_RENAME) {
       }
     }
 
-    if (!user_access('bypass input data check') && !valid_input_data($file)) {
-      watchdog('security', t('The file %file has not been saved, because it may contain a possible attempt to exploit or abuse this system.', array('%file' => theme('placeholder', $source))), WATCHDOG_WARNING);
-      drupal_set_message(t('The file %file has not been saved, because it contains invalid data.', array('%file' => theme('placeholder', $source))), 'error');
-      return 0;
-    }
-
     // Check for file upload errors.
     switch ($file->error) {
       case 0: // UPLOAD_ERR_OK: File uploaded successfully
@@ -435,12 +429,6 @@ function file_save_upload($source, $dest = 0, $replace = FILE_EXISTS_RENAME) {
  * @return A string containing the resulting filename or 0 on error
  */
 function file_save_data($data, $dest, $replace = FILE_EXISTS_RENAME) {
-  if (!user_access('bypass input data check') && !valid_input_data($data)) {
-    watchdog('security', t('The file has not been saved, because it may contain a possible attempt to exploit or abuse this system.'), WATCHDOG_WARNING);
-    drupal_set_message(t('The file has not been saved, because it contains invalid data.'), 'error');
-    return 0;
-  }
-
   $temp = file_directory_temp();
   $file = tempnam($temp, 'file');
   if (!$fp = fopen($file, 'wb')) {
