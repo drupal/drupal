@@ -26,9 +26,6 @@ Drupal x.x.x, xxxx-xx-xx (development version)
 - statistics module:
     * added the ability to track page generation times.
     * made it possible to block certain IPs/hostnames.
-- book module:
-    * added Docbook-like XML export functionality.
-    * added OPML export functionality.
 - block system:
     * added support for theme-specific block regions.
 - syndication:
