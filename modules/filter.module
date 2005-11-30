@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.87 2005/11/30 15:31:23 dries Exp $
+// $Id: filter.module,v 1.88 2005/11/30 20:16:47 dries Exp $
 
 /**
  * @file
@@ -968,10 +968,9 @@ function filter_filter($op, $delta = 0, $format = -1, $text = '') {
 function _filter_html_settings($format) {
   $form['filter_html'] = array('#type' => 'fieldset', '#title' => t('HTML filter'), '#collapsible' => TRUE, '#collapsed' => TRUE);
   $form['filter_html']["filter_html_$format"] = array('#type' => 'radios', '#title' => t('Filter HTML tags'), '#default_value' => variable_get("filter_html_$format", FILTER_HTML_STRIP), '#options' => array(FILTER_HTML_STRIP => t('Strip disallowed tags'), FILTER_HTML_ESCAPE => t('Escape all tags')), '#description' => t('How to deal with HTML tags in user-contributed content. If set to "Strip disallowed tags", dangerous tags are removed (see below). If set to "Escape tags", all HTML is escaped and presented as it was typed.'));
-  $form['filter_html']["allowed_html_$format"] = array('#type' => 'textfield', '#title' => t('Allowed HTML tags'), '#default_value' => variable_get("allowed_html_$format", '<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd>'), '#size' => 64, '#maxlength' => 255, '#description' => t('If "Strip tags" is selected, optionally specify tags which should not be stripped. Javascript event attributes are always stripped.'));
+  $form['filter_html']["allowed_html_$format"] = array('#type' => 'textfield', '#title' => t('Allowed HTML tags'), '#default_value' => variable_get("allowed_html_$format", '<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd>'), '#size' => 64, '#maxlength' => 255, '#description' => t('If "Strip disallowed tags" is selected, optionally specify tags which should not be stripped. JavaScript event attributes are always stripped.'));
   $form['filter_html']["filter_html_help_$format"] = array('#type' => 'checkbox', '#title' => t('Display HTML help'), '#default_value' => variable_get("filter_html_help_$format", 1), '#description' => t('If enabled, Drupal will display some basic HTML help in the long filter tips.'));
   $form['filter_html']["filter_html_nofollow_$format"] = array('#type' => 'checkbox', '#title' => t('Spam link deterrent'), '#default_value' => variable_get("filter_html_nofollow_$format", FALSE), '#description' => t('If enabled, Drupal will add rel="nofollow" to all links, as a measure to reduce the effectiveness of spam links. Note: this will also prevent valid links from being followed by search engines, therefore it is likely most effective when enabled for anonymous users.'));
-
   return $form;
 }
 
@@ -1289,7 +1288,10 @@ function filter_xss_bad_protocol($string, $decode = TRUE) {
 }
 
 function _filter_xss_bad_protocol($m) {
-  static $allowed_protocols = array('http' => TRUE, 'https' => TRUE, 'ftp' => TRUE, 'news' => TRUE, 'nntp' => TRUE, 'telnet' => TRUE, 'gopher' => TRUE, 'mailto' => TRUE, 'e2dk' => TRUE, 'smb' => TRUE, 'irc' => TRUE, 'rsync' => TRUE, 'ssh' => TRUE, 'sftp' => TRUE);
+  static $allowed_protocols;
+  if (!isset($allowed_protocols)) {
+    $allowed_protocols = array_flip(variable_get('filter_allowed_protocols', array('http', 'https', 'ftp', 'news', 'nntp', 'telnet', 'mailto', 'irc', 'ssh', 'sftp', 'webcal')));
+  }
   $string = preg_replace('/\s+/', '', $m[1]);
   return isset($allowed_protocols[$string]) ? "$string:" : '';
 }
