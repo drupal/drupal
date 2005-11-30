@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.86 2005/11/30 00:12:23 unconed Exp $
+// $Id: filter.module,v 1.87 2005/11/30 15:31:23 dries Exp $
 
 /**
  * @file
@@ -980,7 +980,8 @@ function _filter_html_settings($format) {
  */
 function _filter_html($text, $format) {
   if (variable_get("filter_html_$format", FILTER_HTML_STRIP) == FILTER_HTML_STRIP) {
-    $text = filter_xss($text, $format);
+    $allowed_tags = preg_split('/\s+|<|>/', variable_get("allowed_html_$format", '<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd>'), -1, PREG_SPLIT_NO_EMPTY);
+    $text = filter_xss($text, $allowed_tags);
   }
 
   if (variable_get("filter_html_$format", FILTER_HTML_STRIP) == FILTER_HTML_ESCAPE) {
@@ -1066,12 +1067,14 @@ function _filter_autop($text) {
  * @param $string
  *   The string with raw HTML in it. It will be stripped of everything that can cause
  *   an XSS attack.
+ * @param $allowed_tags
+ *   An array of allowed tags.
  * @param $format
  *   The format to use.
  */
-function filter_xss($string, $format) {
+function filter_xss($string, $allowed_tags = array('a', 'em', 'strong', 'cite', 'code', 'ul', 'ol', 'li', 'dl', 'dt', 'dd')) {
   // Store the input format
-  _filter_xss_split($format);
+  _filter_xss_split($allowed_tags, TRUE);
   // Remove NUL characters (ignored by some browsers)
   $string = str_replace(chr(0), '', $string);
   // Remove Netscape 4 JS entities
@@ -1098,18 +1101,21 @@ function filter_xss($string, $format) {
 /**
  * Processes an HTML tag.
  *
- * @param
- *   On first call, a format identifier. On subsequent calls, an array where the
- *   first element is the HTML tag to process.
+ * @param @m
+ *   An array with various meaning depending on the value of $store.
+ *   If $store is TRUE then the array contains the allowed tags.
+ *   If $store is FALSE then the array has one element, the HTML tag to process.
+ * @param $store
+ *   Whether to store $m.
  * @return
- *   If the element isn't allowed, an empty string. Otherwise, the cleaned up version
- *   of the HTML element.
+ *   If the element isn't allowed, an empty string. Otherwise, the cleaned up
+ *   version of the HTML element.
  */
-function _filter_xss_split($m) {
+function _filter_xss_split($m, $store = FALSE) {
   static $allowed_html;
 
-  if (!isset($allowed_html)) {
-    $allowed_html = array_flip(preg_split('/\s+|<|>/', variable_get("allowed_html_$m", '<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd>'), -1, PREG_SPLIT_NO_EMPTY));
+  if ($store) {
+    $allowed_html = array_flip($m);
     return;
   }
 
