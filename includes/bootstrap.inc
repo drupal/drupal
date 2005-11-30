@@ -715,16 +715,6 @@ function check_plain($text) {
 }
 
 /**
- * Prepare a URL for use in an HTML attribute. Strips harmful protocols.
- */
-function check_url($uri) {
-  $uri = htmlspecialchars($uri, ENT_QUOTES);
-  $uri = filter_xss_bad_protocol($uri, FALSE);
-
-  return $uri;
-}
-
-/**
  * Since request_uri() is only available on Apache, we generate an
  * equivalent using other environment variables.
  */
