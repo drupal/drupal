@@ -1092,8 +1092,7 @@ function filter_xss($string, $format) {
     <[^>]*.(>|$)  # a string that starts with a <, up until the > or the end of the string
     |             # or
     >             # just a >
-    )%x
-    ', '_filter_xss_split', $string);
+    )%x', '_filter_xss_split', $string);
 }
 
 /**
@@ -1114,7 +1113,7 @@ function _filter_xss_split($m) {
     return;
   }
 
-  $string = &$m[1];
+  $string = $m[1];
 
   if (substr($string, 0, 1) != '<') {
     // We matched a lone ">" character
