@@ -311,11 +311,11 @@ function db_query_temporary($query) {
  *  Encoded data.
  */
 function db_encode_blob($data) {
-  return "'". mysql_real_escape_string($data) ."'";
+  return "'" . mysql_real_escape_string($data) . "'";
 }
 
 /**
- * Returns text from a Binary Large OBject value.
+ * Returns text from a Binary Large Object value.
  *
  * @param $data
  *   Data to decode.

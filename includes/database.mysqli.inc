@@ -314,7 +314,7 @@ function db_query_temporary($query) {
 }
 
 /**
- * Returns a properly formatted Binary Large OBject value.
+ * Returns a properly formatted Binary Large Object value.
  *
  * @param $data
  *   Data to encode.
@@ -322,7 +322,8 @@ function db_query_temporary($query) {
  *  Encoded data.
  */
 function db_encode_blob($data) {
-  return "'". mysql_real_escape_string($data) ."'";
+  global $active_db;
+  return "'" . mysqli_real_escape_string($active_db, $data) . "'";
 }
 
 /**
