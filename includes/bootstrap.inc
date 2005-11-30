@@ -387,15 +387,6 @@ function drupal_unpack($obj, $field = 'data') {
 }
 
 /**
- * Return the URI of the referring page.
- */
-function referer_uri() {
-  if (isset($_SERVER['HTTP_REFERER'])) {
-    return check_url($_SERVER['HTTP_REFERER']);
-  }
-}
-
-/**
  * Return a component of the current Drupal path.
  *
  * When viewing a page at the path "admin/node/configure", for example, arg(0)
@@ -426,17 +417,6 @@ function check_query($text) {
 }
 
 /**
- * Prepare a URL for use in an HTML attribute. Strips harmful protocols.
- *
- */
-function check_url($uri) {
-  $uri = htmlspecialchars($uri, ENT_QUOTES);
-  $uri = filter_xss_bad_protocol($uri, FALSE);
-
-  return $uri;
-}
-
-/**
  * Since request_uri() is only available on Apache, we generate an
  * equivalent using other environment vars.
  */
@@ -454,7 +434,7 @@ function request_uri() {
     }
   }
 
-  return check_url($uri);
+  return $uri;
 }
 
 /**

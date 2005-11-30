@@ -702,6 +702,26 @@ function check_file($filename) {
 }
 
 /**
+ * Prepare a URL for use in an HTML attribute. Strips harmful protocols.
+ *
+ */
+function check_url($uri) {
+  $uri = htmlspecialchars($uri, ENT_QUOTES);
+  $uri = filter_xss_bad_protocol($uri, FALSE);
+
+  return $uri;
+}
+
+/**
+ * Return the URI of the referring page.
+ */
+function referer_uri() {
+  if (isset($_SERVER['HTTP_REFERER'])) {
+    return check_url($_SERVER['HTTP_REFERER']);
+  }
+}
+
+/**
  * @defgroup format Formatting
  * @{
  * Functions to format numbers, strings, dates, etc.
