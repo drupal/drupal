@@ -1,4 +1,4 @@
-Drupal 4.6.4, 2005-11-29
+Drupal 4.6.4, 2005-11-30
 ------------------------
 - fixed bugs, including 3 security vulnerabilities.
 
@@ -58,7 +58,7 @@ Drupal 4.6.0, 2005-04-15
 - documentation:
     * improved and extended PHPDoc/Doxygen comments.
 
-Drupal 4.5.6, 2005-11-29
+Drupal 4.5.6, 2005-11-30
 ------------------------
 - fixed bugs, including 3 security vulnerabilities.
 
