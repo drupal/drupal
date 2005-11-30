@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.63 2005/11/29 20:17:10 dries Exp $
+// $Id: upload.module,v 1.64 2005/11/30 11:03:58 dries Exp $
 
 /**
  * @file
@@ -123,7 +123,7 @@ function upload_settings() {
 function upload_download() {
   foreach ($_SESSION['file_uploads'] as $file) {
     if ($file->_filename == $_GET['q']) {
-      file_transfer($file->filepath, array('Content-Type: '. $file->filemime, 'Content-Length: '. $file->filesize));
+      file_transfer($file->filepath, array('Content-Type: '. mime_header_encode($file->filemime), 'Content-Length: '. $file->filesize));
     }
   }
 }
@@ -134,9 +134,10 @@ function upload_file_download($file) {
     $result = db_query(db_rewrite_sql("SELECT f.nid, f.* FROM {files} f WHERE filepath = '%s'", 'f'), $file);
     if ($file = db_fetch_object($result)) {
       $name = mime_header_encode($file->filename);
+      $type = mime_header_encode($file->filemime);
       // Serve images and text inline for the browser to display rather than download.
       $disposition = ereg('^(text/|image/)', $file->filemime) ? 'inline' : 'attachment';
-      return array('Content-Type: '. $file->filemime .'; name='. $name,
+      return array('Content-Type: '. $type .'; name='. $name,
                    'Content-Length: '. $file->filesize,
                    'Content-Disposition: '. $disposition .'; filename='. $name);
     }

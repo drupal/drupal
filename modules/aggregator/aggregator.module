@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.261 2005/11/24 20:20:53 dries Exp $
+// $Id: aggregator.module,v 1.262 2005/11/30 11:03:58 dries Exp $
 
 /**
  * @file
@@ -524,10 +524,10 @@ function aggregator_parse_feed(&$data, $feed) {
     foreach ($item as $key => $value) {
       $value = decode_entities(trim($value));
       $value = strip_tags($value, variable_get('aggregator_allowed_html_tags', '<a> <b> <br> <dd> <dl> <dt> <em> <i> <li> <ol> <p> <strong> <u> <ul>'));
-      $value = preg_replace('/\Wstyle\s*=[^>]+?>/i', '>', $value);
-      $value = preg_replace('/\Won[a-z]+\s*=[^>]+?>/i', '>', $value);
+      $value = filter_xss($value);
       $item[$key] = $value;
     }
+
     /*
     ** Resolve the item's title.  If no title is found, we use
     ** up to 40 characters of the description ending at a word
@@ -601,12 +601,7 @@ function aggregator_parse_feed(&$data, $feed) {
       $entry = db_fetch_object(db_query("SELECT iid FROM {aggregator_item} WHERE fid = %d AND title = '%s'", $feed['fid'], $title));
     }
 
-    if (!valid_input_data($item['DESCRIPTION'])) {
-      drupal_set_message(t('The RSS feed from %site seems to be broken, because of suspicious input data.', array('%site' => theme('placeholder', $feed['title']))), 'error');
-    }
-    else {
-      aggregator_save_item(array('iid' => $entry->iid, 'fid' => $feed['fid'], 'timestamp' => $timestamp, 'title' => $title, 'link' => $link, 'author' => $item['AUTHOR'], 'description' => $item['DESCRIPTION']));
-    }
+    aggregator_save_item(array('iid' => $entry->iid, 'fid' => $feed['fid'], 'timestamp' => $timestamp, 'title' => $title, 'link' => $link, 'author' => $item['AUTHOR'], 'description' => $item['DESCRIPTION']));
   }
 
   /*
