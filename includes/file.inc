@@ -155,7 +155,7 @@ function file_check_upload($source) {
     else {
       $file->filemime = $_FILES["edit"]["type"][$source];
     }
-    if (((substr($file->filemime, 0, 5) == 'text/' || strpos($file->filemime, 'javascript')) && (substr($file->filepath, -4) != '.txt')) || preg_match('/\.(php|pl|py|cgi|asp)$/i', $file->filename)) {
+    if (((substr($file->filemime, 0, 5) == 'text/' || strpos($file->filemime, 'javascript')) && (substr($file->filename, -4) != '.txt')) || preg_match('/\.(php|pl|py|cgi|asp)$/i', $file->filename)) {
       $file->filemime = 'text/plain';
       rename($file->filepath, $file->filepath .'.txt');
       $file->filepath .= '.txt';
