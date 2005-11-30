@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysql.inc,v 1.43 2005/11/29 20:16:06 dries Exp $
+// $Id: database.mysql.inc,v 1.44 2005/11/30 16:47:34 dries Exp $
 
 /**
  * @file
@@ -311,11 +311,11 @@ function db_query_temporary($query) {
  *  Encoded data.
  */
 function db_encode_blob($data) {
-  return "'". mysql_real_escape_string($data) ."'";
+  return "'" . mysql_real_escape_string($data) . "'";
 }
 
 /**
- * Returns text from a Binary Large OBject value.
+ * Returns text from a Binary Large Object value.
  *
  * @param $data
  *   Data to decode.
