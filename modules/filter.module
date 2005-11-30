@@ -1195,7 +1195,10 @@ function filter_xss_bad_protocol($string, $decode = TRUE) {
 }
 
 function _filter_xss_bad_protocol($m) {
-  static $allowed_protocols = array('http' => TRUE, 'https' => TRUE, 'ftp' => TRUE, 'news' => TRUE, 'nntp' => TRUE, 'telnet' => TRUE, 'gopher' => TRUE, 'mailto' => TRUE, 'e2dk' => TRUE, 'smb' => TRUE, 'irc' => TRUE, 'rsync' => TRUE, 'ssh' => TRUE, 'sftp' => TRUE);
+  static $allowed_protocols;
+  if (!isset($allowed_protocols)) {
+    $allowed_protocols = array_flip(variable_get('filter_allowed_protocols', array('http', 'https', 'ftp', 'news', 'nntp', 'telnet', 'mailto', 'irc', 'ssh', 'sftp', 'webcal')));
+  }
   $string = preg_replace('/\s+/', '', $m[1]);
   return isset($allowed_protocols[$string]) ? "$string:" : '';
 }
