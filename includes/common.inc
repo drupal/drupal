@@ -1216,7 +1216,6 @@ function form_password($title, $name, $value, $size, $maxlength, $description = 
  *   A themed HTML string representing the field.
  */
 function form_textarea($title, $name, $value, $cols, $rows, $description = NULL, $attributes = NULL, $required = FALSE) {
-  $cols = $cols ? ' cols="'. $cols .'"' : '';
   $pre = '';
   $post = '';
 
@@ -1228,7 +1227,7 @@ function form_textarea($title, $name, $value, $cols, $rows, $description = NULL,
     }
   }
 
-  return theme('form_element', $title, $pre .'<textarea wrap="virtual"'. check_plain($cols) .' rows="'. check_plain($rows) .'" name="edit['. $name .']" id="edit-'. $name .'" class="'. _form_get_class('textarea', $required, _form_get_error($name)) .'"'. drupal_attributes($attributes) .'>'. check_plain($value) .'</textarea>'. $post, $description, 'edit-'. $name, $required, _form_get_error($name));
+  return theme('form_element', $title, $pre .'<textarea wrap="virtual" cols="'. check_plain($cols) .'" rows="'. check_plain($rows) .'" name="edit['. $name .']" id="edit-'. $name .'" class="'. _form_get_class('textarea', $required, _form_get_error($name)) .'"'. drupal_attributes($attributes) .'>'. check_plain($value) .'</textarea>'. $post, $description, 'edit-'. $name, $required, _form_get_error($name));
 }
 
 /**
