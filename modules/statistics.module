@@ -253,10 +253,13 @@ function statistics_admin_displaylog($type = 'all', $id = 0) {
       $title = '('. l(_statistics_column_width($log->path), $log->path, array('title' => $log->path)) .')';
 
     // display url if possible, constructing our own link as may not be local
-    if ($log->url)
+    if ($log->url) {
+      $log->url = check_url($log->url);
       $url = "<a href=\"$log->url\" title=\"$log->url\">". _statistics_column_width($log->url) .'</a>';
-    else
+    }
+    else {
       $url = message_na();
+    }
 
     $user = user_load(array('uid' => $log->uid));
     $rows[] = array(array('data' => format_date($log->timestamp, 'small'), 'nowrap' => 'nowrap'), $title, format_name($user), $log->hostname ? $log->hostname : message_na(), $url, ($user->uid ? l(t('track user'), "admin/logs/hits/user/$user->uid") : ''), ($log->title ? l(t('track title'), 'admin/logs/hits/page/'. urlencode($log->title)) : ''), ($log->hostname ? l(t('track host'), "admin/logs/hits/host/$log->hostname") : ''));
@@ -403,6 +406,7 @@ function statistics_top_referrers($view = 'all') {
   $result = pager_query($query, 50, 0, $query_cnt);
 
   while ($referrer = db_fetch_object($result)) {
+    $referrer->url = check_url($referrer->url);
     $rows[] = array('<a href="'. $referrer->url .'">'. _statistics_column_width($referrer->url, '_refer', 75) .'</a>', $referrer->hits, format_date($referrer->last_hit, 'small'));
   }
   if ($pager = theme('pager', NULL, 50, 0, tablesort_pager())) {
