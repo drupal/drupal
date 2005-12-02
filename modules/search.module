@@ -243,7 +243,7 @@ function search_wipe_confirm() {
 /**
  * Handler for wipe confirmation
  */
-function search_wipe_confirm_execute($form_id, &$form) {
+function search_wipe_confirm_submit($form_id, &$form) {
   if ($form['confirm']) {
     search_wipe();
     drupal_set_message(t('The index will be rebuilt.'));

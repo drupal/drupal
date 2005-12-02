@@ -129,7 +129,7 @@ function contact_mail_user() {
   }
 }
 
-function contact_user_mail_execute($form_id, $edit) {
+function contact_user_mail_submit($form_id, $edit) {
   global $user;
 
   $account = user_load(array('uid' => arg(1), 'status' => 1));
@@ -297,7 +297,7 @@ function contact_mail_page_validate($form_id, &$form) {
   }
 }
 
-function contact_mail_page_execute($form_id, $edit) {
+function contact_mail_page_submit($form_id, $edit) {
 
   // Prepare the sender:
   $from = $edit['mail'];

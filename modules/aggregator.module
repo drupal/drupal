@@ -1001,7 +1001,7 @@ function aggregator_page_list_validate($form_id, &$form) {
   }
 }
 
-function aggregator_page_list_execute($form_id, $form) {
+function aggregator_page_list_submit($form_id, $form) {
   global $form_values;
   foreach ($form_values['categories'] as $iid => $selection) {
     db_query('DELETE FROM {aggregator_category_item} WHERE iid = %d', $iid);
