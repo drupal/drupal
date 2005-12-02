@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.495 2005/12/02 10:29:45 dries Exp $
+// $Id: common.inc,v 1.496 2005/12/02 10:31:21 dries Exp $
 
 /**
  * @file
@@ -696,9 +696,7 @@ function check_file($filename) {
  *
  */
 function check_url($uri) {
-  $uri = filter_xss_bad_protocol($uri, FALSE);
-
-  return $uri;
+  return filter_xss_bad_protocol($uri, FALSE);
 }
 
 /**
