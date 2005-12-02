@@ -1,4 +1,4 @@
-// $Id: drupal.js,v 1.9 2005/10/22 15:14:46 dries Exp $
+// $Id: drupal.js,v 1.10 2005/12/02 21:28:18 dries Exp $
 
 /**
  * Only enable Javascript functionality if all required features are supported.
@@ -16,7 +16,7 @@ function isJsEnabled() {
   return document.jsEnabled;
 }
 
-// Global Killswitch
+// Global Killswitch on the <html> element
 if (isJsEnabled()) {
   document.documentElement.className = 'js';
 }
@@ -38,7 +38,7 @@ if (typeof XMLHttpRequest == 'undefined') {
 }
 
 /**
- * Creates an HTTP request and sends the response to the callback function
+ * Creates an HTTP GET request and sends the response to the callback function
  */
 function HTTPGet(uri, callbackFunction, callbackParameter) {
   var xmlHttp = new XMLHttpRequest();
@@ -169,7 +169,7 @@ function addLoadEvent(func) {
 }
 
 /**
- * Adds a function to the window onload event
+ * Adds a function to a given form's submit event
  */
 function addSubmitEvent(form, func) {
   var oldSubmit = form.onsubmit;
