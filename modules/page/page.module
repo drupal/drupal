@@ -1,5 +1,5 @@
 <?php
-// $Id: page.module,v 1.145 2005/11/23 16:18:28 dries Exp $
+// $Id: page.module,v 1.146 2005/12/02 15:13:17 dries Exp $
 
 /**
  * @file
@@ -73,7 +73,7 @@ function page_menu($may_cache) {
 
   if ($may_cache) {
     $items[] = array('path' => 'node/add/page', 'title' => t('page'),
-      'access' => page_access('create', NULL));
+      'access' => user_access('create pages'));
   }
 
   return $items;
