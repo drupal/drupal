@@ -350,6 +350,7 @@ function update_117() {
 
 function update_118() {
   $ret = array();
+  $node_types = array();
   $result = db_query('SELECT vid, nodes FROM {vocabulary}');
   while ($vocabulary = db_fetch_object($result)) {
     $node_types[$vocabulary->vid] = explode(',', $vocabulary->nodes);
