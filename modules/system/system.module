@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.262 2005/11/30 11:09:38 dries Exp $
+// $Id: system.module,v 1.263 2005/12/02 15:19:54 dries Exp $
 
 /**
  * @file
@@ -387,9 +387,9 @@ function system_view_general() {
   $datemedium = array('D, Y-m-d H:i', 'D, m/d/Y - H:i', 'D, d/m/Y - H:i',
           'D, Y/m/d - H:i', 'F j, Y - H:i', 'j F, Y - H:i', 'Y, F j - H:i',
           'D, m/d/Y - g:ia', 'D, d/m/Y - g:ia', 'D, Y/m/d - g:ia',
-          'F j, Y - g:ia', 'j F, Y - g:ia', 'Y, F j - g:ia');
+          'F j, Y - g:ia', 'j F Y - g:ia', 'Y, F j - g:ia');
   $datelong = array('l, F j, Y - H:i', 'l, j F, Y - H:i', 'l, Y,  F j - H:i',
-        'l, F j, Y - g:ia', 'l, j F, Y - g:ia', 'l, Y,  F j - g:ia');
+        'l, F j, Y - g:ia', 'l, j F Y - g:ia', 'l, Y,  F j - g:ia');
 
   // Date settings: construct choices for user
   foreach ($dateshort as $f) {
