@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.262 2005/11/30 11:03:58 dries Exp $
+// $Id: aggregator.module,v 1.263 2005/12/02 15:21:01 dries Exp $
 
 /**
  * @file
@@ -1001,7 +1001,7 @@ function aggregator_page_list_validate($form_id, &$form) {
   }
 }
 
-function aggregator_page_list_execute($form_id, $form) {
+function aggregator_page_list_submit($form_id, $form) {
   global $form_values;
   foreach ($form_values['categories'] as $iid => $selection) {
     db_query('DELETE FROM {aggregator_category_item} WHERE iid = %d', $iid);

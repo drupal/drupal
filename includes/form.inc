@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.22 2005/11/28 16:37:11 dries Exp $
+// $Id: form.inc,v 1.23 2005/12/02 15:21:01 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -41,7 +41,7 @@ function element_children($element) {
  * Processes a form array, and produces the HTML output of a form.
  * If there is input in the $_POST['edit'] variable, this function
  * will attempt to validate it, using <code>drupal_validate_form</code>,
- * and then execute the form using <code>drupal_execute_form</code>.
+ * and then submit the form using <code>drupal_submit_form</code>.
  *
  * @param $form_id
  *   A unique string identifying the form. Allows each form to be themed.
@@ -79,12 +79,12 @@ function drupal_get_form($form_id, &$form, $callback = NULL) {
     }
   }
 
-  if (!isset($form['#execute'])) {
-    if (function_exists($form_id .'_execute')) {
-      $form['#execute'] = array($form_id .'_execute');
+  if (!isset($form['#submit'])) {
+    if (function_exists($form_id .'_submit')) {
+      $form['#submit'] = array($form_id .'_submit');
     }
-    elseif (function_exists($callback .'_execute')) {
-      $form['#execute'] = array($callback .'_execute');
+    elseif (function_exists($callback .'_submit')) {
+      $form['#submit'] = array($callback .'_submit');
     }
   }
 
@@ -98,7 +98,7 @@ function drupal_get_form($form_id, &$form, $callback = NULL) {
   if (!empty($_POST['edit']) && (($_POST['edit']['form_id'] == $form_id) || ($_POST['edit']['form_id'] == $callback))) {
     drupal_validate_form($form_id, $form, $callback);
     if ($form_submitted && !form_get_errors()) {
-      drupal_execute_form($form_id, $form, $callback);
+      drupal_submit_form($form_id, $form, $callback);
     }
   }
 
@@ -136,11 +136,11 @@ function drupal_validate_form($form_id, &$form, $callback = NULL) {
   }
 }
 
-function drupal_execute_form($form_id, $form, $callback = NULL) {
+function drupal_submit_form($form_id, $form, $callback = NULL) {
   global $form_values;
 
-  if (isset($form['#execute'])) {
-    foreach ($form['#execute'] as $key => $function) {
+  if (isset($form['#submit'])) {
+    foreach ($form['#submit'] as $key => $function) {
       if (isset($form['#execution_arguments'][$key])) {
         $function_args = array_merge(array($form_id, $form_values), $form['#execution_arguments'][$key]);
         call_user_func_array($function, $function_args);

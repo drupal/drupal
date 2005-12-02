@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.398 2005/11/27 11:45:03 dries Exp $
+// $Id: comment.module,v 1.399 2005/12/02 15:21:01 dries Exp $
 
 /**
  * @file
@@ -1232,7 +1232,7 @@ function comment_form_validate($form_id, $form_values) {
   comment_validate($form_values);
 }
 
-function comment_form_execute($form_id, $form_values) {
+function comment_form_submit($form_id, $form_values) {
 
   $op = isset($_POST['op']) ? $_POST['op'] : '';
   $nid = $form_values['nid'];
@@ -1328,7 +1328,7 @@ function theme_comment_controls($form) {
   return theme('box', t('Comment viewing options'), $output);
 }
 
-function comment_controls_execute($form_id, $form_values) {
+function comment_controls_submit($form_id, $form_values) {
   global $user;
 
   $mode = $form_values['mode'];

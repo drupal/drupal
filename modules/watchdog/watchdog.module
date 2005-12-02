@@ -1,5 +1,5 @@
 <?php
-// $Id: watchdog.module,v 1.134 2005/11/24 19:50:50 dries Exp $
+// $Id: watchdog.module,v 1.135 2005/12/02 15:21:01 dries Exp $
 
 /**
  * @file
@@ -138,7 +138,7 @@ function theme_watchdog_form_overview($form) {
   return '<div class="container-inline">'. form_render($form) .'</div>';
 }
 
-function watchdog_form_overview_execute($form_id, $form) {
+function watchdog_form_overview_submit($form_id, $form) {
   global $form_values;
   $_SESSION['watchdog_overview_filter'] = $form_values['filter'];
 }

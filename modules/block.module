@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.189 2005/11/16 22:07:48 dries Exp $
+// $Id: block.module,v 1.190 2005/12/02 15:21:01 dries Exp $
 
 /**
  * @file
@@ -387,7 +387,7 @@ function block_admin_configure_validate($form_id, $form_values) {
   }
 }
 
-function block_admin_configure_execute($form_id, $form_values) {
+function block_admin_configure_submit($form_id, $form_values) {
   if (!form_get_errors()) {
     db_query("UPDATE {blocks} SET visibility = %d, pages = '%s', custom = %d WHERE module = '%s' AND delta = '%s'", $form_values['visibility'], $form_values['pages'], $form_values['custom'], $form_values['module'], $form_values['delta']);
     module_invoke($form_values['module'], 'block', 'save', $form_values['delta'], $form_values);
@@ -413,7 +413,7 @@ function block_box_add_validate($form_id, $form_values) {
   }
 }
 
-function block_box_add_execute($form_id, $form_values) {
+function block_box_add_submit($form_id, $form_values) {
   if (!form_get_errors()) {
     if (block_box_save($form_values)) {
       drupal_set_message(t('The block has been created.'));
@@ -436,7 +436,7 @@ function block_box_delete($bid = 0) {
 /**
  * Deletion of custom blocks.
  */
-function block_box_delete_confirm_execute($form_id, $form_values) {
+function block_box_delete_confirm_submit($form_id, $form_values) {
   db_query('DELETE FROM {boxes} WHERE bid = %d', $form_values['bid']);
   drupal_set_message(t('The block %name has been removed.', array('%name' => theme('placeholder', $form_values['info']))));
   cache_clear_all();

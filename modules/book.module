@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.334 2005/11/30 13:15:48 dries Exp $
+// $Id: book.module,v 1.335 2005/12/02 15:21:01 dries Exp $
 
 /**
  * @file
@@ -225,9 +225,9 @@ function book_delete(&$node) {
 }
 
 /**
- * Implementation of hook_execute().
+ * Implementation of hook_submit().
  */
-function book_execute(&$node) {
+function book_submit(&$node) {
   // Set default values for non-administrators.
   if (!user_access('administer nodes')) {
     $node->weight = 0;
@@ -968,7 +968,7 @@ function book_admin_orphan() {
   }
 }
 
-function book_admin_edit_execute($form_id, $form_values) {
+function book_admin_edit_submit($form_id, $form_values) {
   foreach ($form_values['table'] as $row) {
     $node = node_load($row['nid']);
 

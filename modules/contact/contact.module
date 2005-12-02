@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.31 2005/11/14 22:23:11 dries Exp $
+// $Id: contact.module,v 1.32 2005/12/02 15:21:01 dries Exp $
 
 /**
  * @file
@@ -129,7 +129,7 @@ function contact_mail_user() {
   }
 }
 
-function contact_user_mail_execute($form_id, $edit) {
+function contact_user_mail_submit($form_id, $edit) {
   global $user;
 
   $account = user_load(array('uid' => arg(1), 'status' => 1));
@@ -297,7 +297,7 @@ function contact_mail_page_validate($form_id, &$form) {
   }
 }
 
-function contact_mail_page_execute($form_id, $edit) {
+function contact_mail_page_submit($form_id, $edit) {
 
   // Prepare the sender:
   $from = $edit['mail'];

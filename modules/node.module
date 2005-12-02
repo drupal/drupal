@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.557 2005/11/29 03:18:57 unconed Exp $
+// $Id: node.module,v 1.558 2005/12/02 15:21:01 dries Exp $
 
 /**
  * @file
@@ -1065,7 +1065,7 @@ function theme_node_filters(&$form) {
 }
 
 
-function node_filter_form_execute() {
+function node_filter_form_submit() {
   global $form_values;
   $op = $_POST['op'];
   $filters = node_filters();
@@ -1095,7 +1095,7 @@ function node_filter_form_execute() {
 /**
  * Generate the content administration overview.
  */
-function node_admin_nodes_execute($form_id, $edit) {
+function node_admin_nodes_submit($form_id, $edit) {
   $operations = node_operations();
   if ($operations[$edit['operation']][1]) {
     // Flag changes
@@ -1212,7 +1212,7 @@ function node_multiple_delete_confirm() {
 }
 
 
-function node_multiple_delete_confirm_execute($form_id, $edit) {
+function node_multiple_delete_confirm_submit($form_id, $edit) {
   if ($edit['confirm']) {
     foreach ($edit['nodes'] as $nid => $value) {
       node_delete($nid);
@@ -1469,7 +1469,7 @@ function node_feed($nodes = 0, $channel = array()) {
 /**
  * Prepare node for save and allow modules to make changes.
  */
-function node_execute($node) {
+function node_submit($node) {
   global $user;
 
   // Convert the node to an object, if necessary.
@@ -1820,11 +1820,11 @@ function theme_node_preview($node) {
   return $output;
 }
 
-function node_form_execute($form_id, $edit) {
+function node_form_submit($form_id, $edit) {
   global $user;
 
   // Fix up the node when required:
-  $node = node_execute($edit);
+  $node = node_submit($edit);
 
   // Prepare the node's body:
   if ($node->nid) {
@@ -1877,7 +1877,7 @@ function node_delete_confirm() {
 /**
  * Execute node deletion
  */
-function node_delete_confirm_execute($form_id, $form_values) {
+function node_delete_confirm_submit($form_id, $form_values) {
   if ($form_values['confirm']) {
     node_delete($form_values['nid']);
     drupal_goto('node');

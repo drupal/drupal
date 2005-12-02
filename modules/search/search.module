@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.146 2005/11/29 20:17:10 dries Exp $
+// $Id: search.module,v 1.147 2005/12/02 15:21:01 dries Exp $
 
 /**
  * @file
@@ -243,7 +243,7 @@ function search_wipe_confirm() {
 /**
  * Handler for wipe confirmation
  */
-function search_wipe_confirm_execute($form_id, &$form) {
+function search_wipe_confirm_submit($form_id, &$form) {
   if ($form['confirm']) {
     search_wipe();
     drupal_set_message(t('The index will be rebuilt.'));

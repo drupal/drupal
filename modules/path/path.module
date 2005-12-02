@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.71 2005/11/12 11:26:16 dries Exp $
+// $Id: path.module,v 1.72 2005/12/02 15:21:01 dries Exp $
 
 /**
  * @file
@@ -267,7 +267,7 @@ function path_load($pid) {
 /**
  * Verify that a new URL alias is valid, and save it to the database.
  */
-function path_form_execute() {
+function path_form_submit() {
   $edit = $GLOBALS['form_values'];
   $src = $edit['src'];
   $dst = $edit['dst'];

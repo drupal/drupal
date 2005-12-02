@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.286 2005/11/26 19:45:31 dries Exp $
+// $Id: forum.module,v 1.287 2005/12/02 15:21:01 dries Exp $
 
 /**
  * @file
@@ -506,12 +506,12 @@ function forum_view(&$node, $teaser = FALSE, $page = FALSE) {
 }
 
 /**
- * Implementation of hook_execute().
+ * Implementation of hook_submit().
  *
  * Check in particular that only a "leaf" term in the associated taxonomy
  * vocabulary is selected, not a "container" term.
  */
-function forum_execute(&$node) {
+function forum_submit(&$node) {
   // Make sure all fields are set properly:
   $node->icon = $node->icon ? $node->icon : '';
 

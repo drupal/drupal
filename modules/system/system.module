@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.263 2005/12/02 15:19:54 dries Exp $
+// $Id: system.module,v 1.264 2005/12/02 15:21:01 dries Exp $
 
 /**
  * @file
@@ -704,7 +704,7 @@ function system_settings_form($form_id, $form) {
   return drupal_get_form($form_id, $form, 'system_settings_form');
 }
 
-function system_theme_settings_execute($form_id, $values) {
+function system_theme_settings_submit($form_id, $values) {
   $op = isset($_POST['op']) ? $_POST['op'] : '';
   $key = $values['var'];
 
@@ -729,7 +729,7 @@ function system_theme_settings_execute($form_id, $values) {
  * add an array_filter value to your form.
  *
  */
-function system_settings_form_execute($form_id, $values) {
+function system_settings_form_submit($form_id, $values) {
   $op = isset($_POST['op']) ? $_POST['op'] : '';
 
   foreach ($values as $key => $value) {
@@ -822,7 +822,7 @@ function theme_system_themes($form) {
 }
 
 
-function system_themes_execute($form_id, $values) {
+function system_themes_submit($form_id, $values) {
 
   db_query("UPDATE {system} SET status = 0 WHERE type = 'theme'");
 
@@ -941,7 +941,7 @@ function theme_system_modules($form) {
 }
 
 
-function system_modules_execute($form_id, $edit) {
+function system_modules_submit($form_id, $edit) {
   db_query("UPDATE {system} SET status = 0, throttle = 0 WHERE type = 'module'");
 
   foreach ($edit['status'] as $key => $choice) {
