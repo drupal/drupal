@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.47 2005/11/18 13:50:37 dries Exp $
+// $Id: menu.module,v 1.48 2005/12/02 15:10:03 dries Exp $
 
 /**
  * @file
@@ -622,7 +622,7 @@ function menu_node_form($edit = array()) {
   $form['menu']['title'] = array('#type' => 'textfield', '#title' => t('Title'), '#default_value' => $item['title'], '#description' => t('The name to display for this link.'));
 
   // Generate a list of possible parents (not including this item or descendants).
-  $options = menu_parent_options($edit['mid']);
+  $options = menu_parent_options($item['mid']);
   $form['menu']['pid'] = array('#type' => select, '#title' => t('Parent item'), '#default_value' => $item['pid'], '#options' => $options);
   $form['menu']['description'] = array('#type' => 'hidden', '#value' => $item['description']);
   $form['menu']['path'] = array('#type' => 'hidden', '#value' => $item['path']);
