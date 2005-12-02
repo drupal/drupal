@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.287 2005/12/02 15:21:01 dries Exp $
+// $Id: forum.module,v 1.288 2005/12/02 15:38:58 dries Exp $
 
 /**
  * @file
@@ -238,7 +238,7 @@ function _forum_parent_select($tid, $title, $child_type) {
     $parent = 0;
   }
 
-  $children = taxonomy_get_tree(_forum_get_vid, $tid);
+  $children = taxonomy_get_tree(_forum_get_vid(), $tid);
 
   // A term can't be the child of itself, nor of its children.
   foreach ($children as $child) {
