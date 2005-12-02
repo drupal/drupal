@@ -628,10 +628,7 @@ function check_file($filename) {
  *
  */
 function check_url($uri) {
-  $uri = htmlspecialchars($uri, ENT_QUOTES);
-  $uri = filter_xss_bad_protocol($uri, FALSE);
-
-  return $uri;
+  return filter_xss_bad_protocol($uri, FALSE);
 }
 
 /**
