@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.121 2005/11/24 20:54:22 unconed Exp $
+// $Id: profile.module,v 1.122 2005/12/03 17:12:56 dries Exp $
 
 /**
  * @file
@@ -90,7 +90,7 @@ function profile_block($op = 'list', $delta = 0, $edit = array()) {
         }
 
         if ($fields) {
-          _profile_update_user_fields($fields, $account);
+          $fields = _profile_update_user_fields($fields, $account);
           $output .= theme('profile_block', $account, $fields, true);
         }
 
@@ -189,7 +189,7 @@ function profile_browse() {
     $output = '<div id="profile">';
     while ($account = db_fetch_object($result)) {
       $account = user_load(array('uid' => $account->uid));
-      _profile_update_user_fields($fields, $account);
+      $fields = _profile_update_user_fields($fields, $account);
       $output .= theme('profile_listing', $account, $fields);
     }
     $output .= theme('pager', NULL, 20);
@@ -222,7 +222,7 @@ function profile_browse() {
     $output = '<div id="profile">';
     while ($account = db_fetch_object($result)) {
       $account = user_load(array('uid' => $account->uid));
-      _profile_update_user_fields($fields, $account);
+      $fields = _profile_update_user_fields($fields, $account);
       $output .= theme('profile_listing', $account, $fields);
     }
     $output .= '</div>';
@@ -393,12 +393,13 @@ function profile_form_profile($edit, $user, $category) {
 /**
  * Helper function: update an array of user fields by calling profile_view_field
  */
-function _profile_update_user_fields(&$fields, $account) {
+function _profile_update_user_fields($fields, $account) {
   foreach ($fields as $key => $field) {
     if ($value = profile_view_field($account, $field)) {
       $fields[$key]->value = $value;
     }
   }
+  return $fields;
 }
 
 function profile_validate_profile($edit, $category) {
