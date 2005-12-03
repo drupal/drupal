@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.91 2005/11/28 15:45:04 dries Exp $
+// $Id: menu.inc,v 1.92 2005/12/03 14:50:27 dries Exp $
 
 /**
  * @file
@@ -334,15 +334,10 @@ function menu_execute_active_handler() {
 
   // Determine the menu item containing the callback.
   $path = $_GET['q'];
-  while ($path && (!array_key_exists($path, $menu['path index']) || empty($menu['items'][$menu['path index'][$path]]['callback']))) {
+  while ($path && !isset($menu['callbacks'][$path])) {
     $path = substr($path, 0, strrpos($path, '/'));
   }
-  if (!array_key_exists($path, $menu['path index'])) {
-    return MENU_NOT_FOUND;
-  }
-  $mid = $menu['path index'][$path];
-
-  if (empty($menu['items'][$mid]['callback'])) {
+  if (!isset($menu['callbacks'][$path])) {
     return MENU_NOT_FOUND;
   }
 
@@ -351,13 +346,13 @@ function menu_execute_active_handler() {
   }
 
   // We found one, and are allowed to execute it.
-  $arguments = array_key_exists('callback arguments', $menu['items'][$mid]) ? $menu['items'][$mid]['callback arguments'] : array();
-  $arg = substr($_GET['q'], strlen($menu['items'][$mid]['path']) + 1);
+  $arguments = isset($menu['callbacks'][$path]['callback arguments']) ? $menu['callbacks'][$path]['callback arguments'] : array();
+  $arg = substr($_GET['q'], strlen($path) + 1);
   if (strlen($arg)) {
     $arguments = array_merge($arguments, explode('/', $arg));
   }
 
-  return function_exists($menu['items'][$mid]['callback']) ?  call_user_func_array($menu['items'][$mid]['callback'], $arguments) : '';
+  return function_exists($menu['callbacks'][$path]['callback']) ? call_user_func_array($menu['callbacks'][$path]['callback'], $arguments) : '';
 }
 
 /**
@@ -382,16 +377,16 @@ function menu_set_active_item($path = NULL) {
       $_GET['q'] = $path;
     }
 
-    while ($path && !array_key_exists($path, $menu['path index'])) {
+    while ($path && !isset($menu['path index'][$path])) {
       $path = substr($path, 0, strrpos($path, '/'));
     }
-    $stored_mid = array_key_exists($path, $menu['path index']) ? $menu['path index'][$path] : 0;
+    $stored_mid = isset($menu['path index'][$path]) ? $menu['path index'][$path] : 0;
 
     // Search for default local tasks to activate instead of this item.
     $continue = TRUE;
     while ($continue) {
       $continue = FALSE;
-      if (array_key_exists('children', $menu['items'][$stored_mid])) {
+      if (isset($menu['items'][$stored_mid]['children'])) {
         foreach ($menu['items'][$stored_mid]['children'] as $cid) {
           if ($menu['items'][$cid]['type'] & MENU_LINKS_TO_PARENT) {
             $stored_mid = $cid;
@@ -554,7 +549,7 @@ function menu_rebuild() {
           }
         }
 
-        $new_items[$mid] = array('mid' => $new_mid, 'pid' => $new_pid, 'path' => $item['path'], 'title' => $item['title'], 'description' => array_key_exists('description', $item) ? $item['description'] : '', 'weight' => $item['weight'], 'type' => $item['type']);
+        $new_items[$mid] = array('mid' => $new_mid, 'pid' => $new_pid, 'path' => $item['path'], 'title' => $item['title'], 'description' => isset($item['description']) ? $item['description'] : '', 'weight' => $item['weight'], 'type' => $item['type']);
       }
     }
 
@@ -629,7 +624,7 @@ function theme_menu_item($mid, $children = '', $leaf = TRUE) {
  * @ingroup themeable
  */
 function theme_menu_item_link($item, $link_item) {
-  return l($item['title'], $link_item['path'], array_key_exists('description', $item) ? array('title' => $item['description']) : array());
+  return l($item['title'], $link_item['path'], isset($item['description']) ? array('title' => $item['description']) : array());
 }
 
 /**
@@ -773,7 +768,7 @@ function menu_primary_links($start_level = 1, $pid = 0) {
   }
 
   $menu = menu_get_menu();
-  if ($pid && is_array($menu['visible'][$pid]) && array_key_exists('children', $menu['visible'][$pid])) {
+  if ($pid && is_array($menu['visible'][$pid]) && isset($menu['visible'][$pid]['children'])) {
     $count = 1;
     foreach ($menu['visible'][$pid]['children'] as $cid) {
       $index = "$start_level-$count";
@@ -891,7 +886,7 @@ function _menu_get_active_trail_in_submenu($pid) {
     $count = 0;
     while ($path && !$count) {
       foreach ($menu['items'] as $key => $item) {
-        if (array_key_exists('path', $item) && $item['path'] == $path) {
+        if (isset($item['path']) && $item['path'] == $path) {
           $trails[$count] = array();
           $mid = $key;
           while ($mid && $menu['items'][$mid]) {
@@ -961,6 +956,7 @@ function _menu_build() {
     0 => array('path' => '', 'title' => '', 'type' => MENU_IS_ROOT),
     1 => array('pid' => 0, 'path' => '', 'title' => t('Navigation'), 'weight' => -50, 'access' => TRUE, 'type' => MENU_IS_ROOT | MENU_VISIBLE_IN_TREE)
     );
+  $_menu['callbacks'] = array();
 
   // Build a sequential list of all menu items.
   $menu_item_list = module_invoke_all('menu', TRUE);
@@ -969,20 +965,28 @@ function _menu_build() {
   $temp_mid = -1;
 
   foreach ($menu_item_list as $item) {
-    if (!array_key_exists('path', $item)) {
+    if (!isset($item['path'])) {
       $item['path'] = '';
     }
-    if (!array_key_exists('type', $item)) {
+    if (!isset($item['type'])) {
       $item['type'] = MENU_NORMAL_ITEM;
     }
-    if (!array_key_exists('weight', $item)) {
+    if (!isset($item['weight'])) {
       $item['weight'] = 0;
     }
     $mid = $temp_mid;
-    if (array_key_exists($item['path'], $_menu['path index'])) {
+    if (isset($_menu['path index'][$item['path']])) {
       // Newer menu items overwrite older ones.
       unset($_menu['items'][$_menu['path index'][$item['path']]]);
     }
+    if (isset($item['callback'])) {
+      $_menu['callbacks'][$item['path']] = array('callback' => $item['callback']);
+      if (isset($item['callback arguments'])) {
+        $_menu['callbacks'][$item['path']]['callback arguments'] = $item['callback arguments'];
+      }
+    }
+    unset($item['callback']);
+    unset($item['callback arguments']);
     $_menu['items'][$mid] = $item;
     $_menu['path index'][$item['path']] = $mid;
 
@@ -995,7 +999,7 @@ function _menu_build() {
     while ($item = db_fetch_object($result)) {
       // Handle URL aliases if entered in menu administration.
       $item->path = drupal_get_normal_path($item->path);
-      if (array_key_exists($item->path, $_menu['path index'])) {
+      if (isset($_menu['path index'][$item->path])) {
         // The path is already declared.
         $old_mid = $_menu['path index'][$item->path];
         if ($old_mid < 0) {
@@ -1007,7 +1011,7 @@ function _menu_build() {
         else {
           // It has a permanent ID. Only replace with non-custom menu items.
           if ($item->type & MENU_CREATED_BY_ADMIN) {
-            $_menu['items'][$item->mid] = array('path' => $item->path, 'access' => TRUE, 'callback' => '');
+            $_menu['items'][$item->mid] = array('path' => $item->path, 'access' => TRUE);
           }
           else {
             // Leave the old item around as a shortcut to this one.
@@ -1019,7 +1023,7 @@ function _menu_build() {
       else {
         // The path was not declared, so this is a custom item or an orphaned one.
         if ($item->type & MENU_CREATED_BY_ADMIN) {
-          $_menu['items'][$item->mid] = array('path' => $item->path, 'access' => TRUE, 'callback' => '');
+          $_menu['items'][$item->mid] = array('path' => $item->path, 'access' => TRUE);
           if (!empty($item->path)) {
             $_menu['path index'][$item->path] = $item->mid;
           }
@@ -1055,7 +1059,7 @@ function _menu_item_is_accessible($mid) {
 
   // Follow the path up to find the first "access" attribute.
   $path = $menu['items'][$mid]['path'];
-  while ($path && (!array_key_exists($path, $menu['path index']) || !array_key_exists('access', $menu['items'][$menu['path index'][$path]]))) {
+  while ($path && (!isset($menu['path index'][$path]) || !isset($menu['items'][$menu['path index'][$path]]['access']))) {
     $path = substr($path, 0, strrpos($path, '/'));
   }
   if (empty($path)) {
@@ -1077,7 +1081,7 @@ function _menu_build_visible_tree($pid = 0) {
     $parent = $_menu['items'][$pid];
 
     $children = array();
-    if (array_key_exists('children', $parent)) {
+    if (isset($parent['children'])) {
       usort($parent['children'], '_menu_sort');
       foreach ($parent['children'] as $mid) {
         $children = array_merge($children, _menu_build_visible_tree($mid));
@@ -1121,24 +1125,22 @@ function _menu_append_contextual_items() {
   $new_items = array();
 
   foreach ($menu_item_list as $item) {
-    if (array_key_exists($item['path'], $_menu['path index'])) {
-      // The menu item already exists, so just add appropriate callback information.
-      $mid = $_menu['path index'][$item['path']];
-
-      $_menu['items'][$mid]['access'] = $item['access'];
-      $_menu['items'][$mid]['callback'] = $item['callback'];
+    if (isset($item['callback'])) {
+      $_menu['callbacks'][$item['path']] = array('callback' => $item['callback']);
       if (isset($item['callback arguments'])) {
-        $_menu['items'][$mid]['callback arguments'] = $item['callback arguments'];
+        $_menu['callbacks'][$item['path']]['callback arguments'] = $item['callback arguments'];
       }
     }
-    else {
-      if (!array_key_exists('path', $item)) {
+    unset($item['callback']);
+    unset($item['callback arguments']);
+    if (!isset($_menu['path index'][$item['path']])) {
+      if (!isset($item['path'])) {
         $item['path'] = '';
       }
-      if (!array_key_exists('type', $item)) {
+      if (!isset($item['type'])) {
         $item['type'] = MENU_NORMAL_ITEM;
       }
-      if (!array_key_exists('weight', $item)) {
+      if (!isset($item['weight'])) {
         $item['weight'] = 0;
       }
       $_menu['items'][$temp_mid] = $item;
@@ -1156,7 +1158,7 @@ function _menu_append_contextual_items() {
     $item = $_menu['items'][$mid];
     if (($item['type'] & MENU_VISIBLE_IN_TREE) && _menu_item_is_accessible($mid)) {
       $pid = $item['pid'];
-      while ($pid && !array_key_exists($pid, $_menu['visible'])) {
+      while ($pid && !isset($_menu['visible'][$pid])) {
         $pid = $_menu['items'][$pid]['pid'];
       }
       $_menu['visible'][$mid] = array('title' => $item['title'], 'path' => $item['path'], 'pid' => $pid);
@@ -1180,7 +1182,7 @@ function _menu_find_parents(&$items) {
         do {
           $parent = substr($parent, 0, strrpos($parent, '/'));
         }
-        while ($parent && !array_key_exists($parent, $_menu['path index']));
+        while ($parent && !isset($_menu['path index'][$parent]));
       }
 
       $pid = $parent ? $_menu['path index'][$parent] : 1;
@@ -1226,7 +1228,7 @@ function _menu_build_local_tasks($pid) {
     $parent = $_menu['items'][$pid];
 
     $children = array();
-    if (array_key_exists('children', $parent)) {
+    if (isset($parent['children'])) {
       foreach ($parent['children'] as $mid) {
         if (($_menu['items'][$mid]['type'] & MENU_IS_LOCAL_TASK) && _menu_item_is_accessible($mid)) {
           $children[] = $mid;
