@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.89 2005/12/02 15:46:46 dries Exp $
+// $Id: filter.module,v 1.90 2005/12/03 09:44:50 dries Exp $
 
 /**
  * @file
@@ -762,7 +762,15 @@ function filter_form($value = FILTER_FORMAT_DEFAULT) {
     $form['format'] = array('#type' => 'fieldset', '#title' => t('Input format'), '#collapsible' => TRUE, '#collapsed' => TRUE, '#weight' => -16);
     // Multiple formats available: display radio buttons with tips.
     foreach ($formats as $format) {
-      $form['format'][$format->format] = array('#type' => 'radio', '#title' => $format->name, '#default_value' => $value, '#return_value' => $format->format, '#parents' => array('format'), '#description' => theme('filter_tips', _filter_tips($format->format, false)), '#validate' => 'filter_form_validate');
+      $form['format'][$format->format] = array(
+        '#type' => 'filter_format',
+        '#title' => $format->name,
+        '#default_value' => $value,
+        '#return_value' => $format->format,
+        '#parents' => array('format'),
+        '#description' => theme('filter_tips', _filter_tips($format->format, false)),
+        '#validate' => array('filter_form_validate' => array())
+      );
     }
     return $form;
   }

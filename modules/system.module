@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.264 2005/12/02 15:21:01 dries Exp $
+// $Id: system.module,v 1.265 2005/12/03 09:44:50 dries Exp $
 
 /**
  * @file
@@ -64,12 +64,12 @@ function system_elements() {
   $type['textfield'] = array('#input' => TRUE, '#size' => 60, '#maxlength' => 128, '#autocomplete_path' => FALSE);
   $type['password'] = array('#input' => TRUE, '#size' => 30, '#maxlength' => 64);
   $type['textarea'] = array('#input' => TRUE, '#cols' => 60, '#rows' => 5);
-  $type['radios'] = array('#input' => TRUE, '#process' => 'expand_radios');
+  $type['radios'] = array('#input' => TRUE, '#process' => array('expand_radios' => array()));
   $type['radio'] = array('#input' => TRUE);
-  $type['checkboxes'] = array('#input' => TRUE, '#process' => 'expand_checkboxes', '#tree' => TRUE);
+  $type['checkboxes'] = array('#input' => TRUE, '#process' => array('expand_checkboxes' => array()), '#tree' => TRUE);
   $type['select'] = array('#input' => TRUE);
   $type['weight'] = array('#input' => TRUE, '#delta' => 10);
-  $type['date'] = array('#input' => TRUE, '#process' => 'expand_date');
+  $type['date'] = array('#input' => TRUE, '#process' => array('expand_date' => array()));
   $type['file'] = array('#input' => TRUE, '#size' => 60);
 
   // Form structure

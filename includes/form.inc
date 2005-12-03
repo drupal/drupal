@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.23 2005/12/02 15:21:01 dries Exp $
+// $Id: form.inc,v 1.24 2005/12/03 09:44:50 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -72,19 +72,21 @@ function drupal_get_form($form_id, &$form, $callback = NULL) {
 
   if (!isset($form['#validate'])) {
     if (function_exists($form_id .'_validate')) {
-      $form['#validate'] = array($form_id .'_validate');
+      $form['#validate'] = array($form_id .'_validate' => array());
     }
     elseif (function_exists($callback .'_validate')) {
-      $form['#validate'] = array($callback .'_validate');
+      $form['#validate'] = array($callback .'_validate' => array());
     }
   }
 
   if (!isset($form['#submit'])) {
     if (function_exists($form_id .'_submit')) {
-      $form['#submit'] = array($form_id .'_submit');
+      // we set submit here so that it can be altered but use reference for
+      // $form_values because it will change later
+      $form['#submit'] = array($form_id .'_submit' => array($form_id, &$form_values));
     }
     elseif (function_exists($callback .'_submit')) {
-      $form['#submit'] = array($callback .'_submit');
+      $form['#submit'] = array($callback .'_submit' => array($form_id, &$form_values));
     }
   }
 
@@ -121,70 +123,49 @@ function drupal_validate_form($form_id, &$form, $callback = NULL) {
     }
   }
 
-  _form_validate($form);
-
-  if (isset($form['#validate'])) {
-    foreach ($form['#validate'] as $key => $function) {
-      if (isset($form['#validation_arguments'][$key])) {
-        $function_args = array_merge(array($form_id, $form_values), $form['#validation_arguments'][$key]);
-        call_user_func_array($function, $function_args);
-      }
-      else {
-        call_user_func($function, $form_id, $form_values);
-      }
-    }
-  }
+  _form_validate($form, $form_id);
 }
 
 function drupal_submit_form($form_id, $form, $callback = NULL) {
   global $form_values;
 
   if (isset($form['#submit'])) {
-    foreach ($form['#submit'] as $key => $function) {
-      if (isset($form['#execution_arguments'][$key])) {
-        $function_args = array_merge(array($form_id, $form_values), $form['#execution_arguments'][$key]);
-        call_user_func_array($function, $function_args);
-      }
-      else {
-        call_user_func($function, $form_id, $form_values);
+    foreach ($form['#submit'] as $function => $args) {
+      if (function_exists($function)) {
+        call_user_func_array($function, $args);
       }
     }
   }
 }
 
-function _form_validate($elements) {
-
-  // Recurse through all children.
-  foreach (element_children($elements) as $key) {
-    if (isset($elements[$key]) && $elements[$key]) {
-      _form_validate($elements[$key]);
-    }
-  }
-
+function _form_validate($elements, $form_id = NULL) {
   /* Validate the current input */
-  if (!$elements['#validated'] && $elements['#input']) {
+  if (!$elements['#validated'] && ($elements['#input'] || isset($form_id))) {
     // An empty checkbox returns 0, an empty textfield returns '' so we use empty().
     // Unfortunately, empty('0') returns TRUE so we need a special check for the '0' string.
     if ($elements['#required'] && empty($elements['#value']) && $elements['#value'] !== '0') {
       form_error($elements, t('%name field is required', array('%name' => $elements['#title'])));
     }
     if (isset($elements['#validate'])) {
-      if (is_array($elements['#validate'])) {
-        foreach ($elements['#validate'] as $key => $validate) {
-          $args = is_array($elements['#validate_arguments'][$key]) ? $elements['#validate_arguments'][$key] : array();
-          if (function_exists($validate))  {
-            call_user_func_array($validate, array_merge(array($elements), $args));
-          }
+      foreach ($elements['#validate'] as $function => $args) {
+        $args = array_merge(array($elements), $args);
+        // for the full form we hand over a copy of $form_values
+        if (isset($form_id)) {
+          $args = array_merge(array($form_id, $GLOBALS['form_values']), $args);
         }
-      }
-      else {
-        $args = is_array($elements['#validate_arguments']) ? $elements['#validate_arguments'] : array();
-        if (function_exists($elements['#validate']))  {
-          call_user_func_array($elements['#validate'], array_merge(array($elements), $args));
+        if (function_exists($function))  {
+          call_user_func_array($function, $args);
         }
       }
     }
     $elements['#validated'] = TRUE;
+  }
+
+  // Recurse through all children.
+  foreach (element_children($elements) as $key) {
+    if (isset($elements[$key]) && $elements[$key]) {
+      _form_validate($elements[$key]);
+    }
   }
 }
 
@@ -287,15 +268,10 @@ function _form_builder($form_id, $form) {
 
   // Allow for elements to expand to multiple elements. Radios, checkboxes and files for instance.
   if (isset($form['#process']) && !$form['#processed']) {
-    if (is_array($form['#process'])) {
-      foreach ($form['#process'] as $process) {
-        if (function_exists($process)) {
-          $form = call_user_func($process, $form);
-        }
+    foreach ($form['#process'] as $process => $args) {
+      if (function_exists($process)) {
+        $form = call_user_func($process, array_merge($form, $args));
       }
-    }
-    elseif (function_exists($form['#process'])) {
-      $form = call_user_func($form['#process'], $form);
     }
     $form['#processed'] = TRUE;
   }
