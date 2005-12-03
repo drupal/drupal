@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.288 2005/12/02 15:38:58 dries Exp $
+// $Id: forum.module,v 1.289 2005/12/03 10:02:23 dries Exp $
 
 /**
  * @file
@@ -983,7 +983,7 @@ function _forum_icon($new_posts, $num_posts = 0, $comment_mode = 0, $sticky = 0)
       $icon = $new_posts ? 'new' : 'default';
     }
 
-    if ($comment_mode == 1) {
+    if ($comment_mode == COMMENT_NODE_READ_ONLY || $comment_mode == COMMENT_NODE_DISABLED) {
       $icon = 'closed';
     }
 
