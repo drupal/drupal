@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.399 2005/12/02 15:21:01 dries Exp $
+// $Id: comment.module,v 1.400 2005/12/03 19:39:15 dries Exp $
 
 /**
  * @file
@@ -298,8 +298,16 @@ function comment_nodeapi(&$node, $op, $arg = 0) {
 function comment_user($type, $edit, &$user, $category = NULL) {
   if ($type == 'form' && $category == 'account') {
     // when user tries to edit his own data
-    $form['comment_settings'] = array('#type' => 'fieldset', '#title' => t('Comment settings'), '#collapsible' => TRUE, '#weight' => 4);
-    $form['comment_settings']['signature'] = array('#type' => 'textarea', '#title' => t('Signature'), '#default_value' => $edit['comment_settings']['signature'], '#description' => ('Your signature will be publicly displayed at the end of your comments.'));
+    $form['comment_settings'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Comment settings'),
+      '#collapsible' => TRUE,
+      '#weight' => 4);
+    $form['comment_settings']['signature'] = array(
+      '#type' => 'textarea',
+      '#title' => t('Signature'),
+      '#default_value' => $edit['signature'],
+      '#description' => t('Your signature will be publicly displayed at the end of your comments.'));
 
     return $form;
   }
