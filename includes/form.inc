@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.24 2005/12/03 09:44:50 dries Exp $
+// $Id: form.inc,v 1.25 2005/12/04 08:14:07 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -63,8 +63,7 @@ function drupal_get_form($form_id, &$form, $callback = NULL) {
       variable_set('drupal_private_key', mt_rand());
     }
 
-    $form['form_token'] = array('#type' => 'hidden', '#value' => md5($_SERVER['REMOTE_ADDR'] . $form['#token'] . variable_get('drupal_private_key',
-'')));
+    $form['form_token'] = array('#type' => 'hidden', '#value' => md5($_SERVER['REMOTE_ADDR'] . $form['#token'] . variable_get('drupal_private_key', '')));
   }
   $form['form_id'] = array('#type' => 'hidden', '#default_value' => $form_id);
 
@@ -286,20 +285,8 @@ function _form_builder($form_id, $form) {
 
     // don't squash existing parents value
     if (!isset($form[$key]['#parents'])) {
-      if ($form[$key]['#tree']) {
-        if (!$form['#tree']) {
-          // begin tree
-          $form[$key]['#parents'] = array($key);
-        }
-        else {
-          //continue tree
-          $form[$key]['#parents'] = array_merge($form['#parents'], array($key));
-        }
-      }
-      else {
-        // no tree
-        $form[$key]['#parents'] = array($key);
-      }
+      // Check to see if a tree of child elements is present. If so, continue down the tree if required.
+      $form[$key]['#parents'] = $form[$key]['#tree'] && $form['#tree'] ? array_merge($form['#parents'], array($key)) : array($key);
     }
 
     # Assign a decimal placeholder weight, to preserve original array order
