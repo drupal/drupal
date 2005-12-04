@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.49 2005/12/03 10:06:10 dries Exp $
+// $Id: menu.module,v 1.50 2005/12/04 08:00:13 dries Exp $
 
 /**
  * @file
@@ -404,11 +404,6 @@ function menu_edit_item_form($edit) {
     $form['description'] = array('#type' => 'textfield', '#title' => t('Description'), '#default_value' => $edit['description'], '#description' => t('The description displayed when hovering over a menu item.'));
 
     $path_description = t('The Drupal path this menu item links to.');
-    if (isset($edit['path']) && array_key_exists($edit['path'], $menu['path index']) && $menu['path index'][$edit['path']] != $edit['mid']) {
-      $old_mid = $menu['path index'][$edit['path']];
-      $old_item = $menu['items'][$old_mid];
-      $path_description .= "\n". t('Since a menu item "%old" already exists for "%path", this menu item is shortcut to that location.', array('%old' => l($old_item['title'], 'admin/menu/item/edit/'. $old_mid), '%path' => $edit['path']));
-    }
 
     if ($edit['type'] & MENU_CREATED_BY_ADMIN) {
       $form['path'] = array('#type' => 'textfield', '#title' => t('Path'), '#default_value' => $edit['path'], '#description' => $path_description, '#required' => TRUE);
@@ -477,11 +472,6 @@ function menu_edit_item_save($edit) {
     $mid = db_next_id('{menu}_mid');
     db_query("INSERT INTO {menu} (mid, pid, path, title, description, weight, type) VALUES (%d, %d, '%s', '%s', '%s', %d, %d)", $mid, $edit['pid'], $edit['path'], $edit['title'], $edit['description'], $edit['weight'], $edit['type'] | MENU_MODIFIED_BY_ADMIN);
     drupal_set_message(t('The menu item %title has been created.', array('%title' => theme('placeholder', $edit['title']))));
-    if (array_key_exists($edit['path'], $menu['path index'])) {
-      $old_mid = $menu['path index'][$edit['path']];
-      $old_item = $menu['items'][$old_mid];
-      drupal_set_message(t('Since a menu item %old already exists for %path, this new menu item was created as a shortcut to that location.', array('%old' => l(theme('placeholder', $old_item['title']), 'admin/menu/item/edit/'. $old_mid, array(), NULL, NULL, FALSE, TRUE), '%path' => theme('placeholder', $edit['path']))));
-    }
   }
 }
 
