@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.336 2005/12/05 09:11:33 dries Exp $
+// $Id: book.module,v 1.337 2005/12/05 16:07:18 dries Exp $
 
 /**
  * @file
@@ -472,6 +472,9 @@ function book_nodeapi(&$node, $op, $teaser, $page) {
           }
         }
       }
+      break;
+    case 'revision delete':
+      db_query('DELETE FROM {book} WHERE vid = %d', $node->vid);
       break;
   }
 }

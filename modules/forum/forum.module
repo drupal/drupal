@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.290 2005/12/05 09:11:33 dries Exp $
+// $Id: forum.module,v 1.291 2005/12/05 16:07:18 dries Exp $
 
 /**
  * @file
@@ -70,6 +70,18 @@ function forum_access($op, $node) {
 function forum_perm() {
   return array('create forum topics', 'edit own forum topics', 'administer forums');
 }
+
+/**
+ * Implementation of hook_nodeapi().
+ */
+function forum_nodeapi(&$node, $op, $teaser, $page) {
+  switch ($op) {
+    case 'revision delete':
+      db_query('DELETE FROM {forum} WHERE vid = %d', $node->vid);
+      break;
+  }
+}
+
 
 /**
  * Administration page which allows maintaining forums
