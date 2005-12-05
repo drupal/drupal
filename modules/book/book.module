@@ -255,7 +255,7 @@ function book_form(&$node) {
   $form['body'] = array(
     '#type' => 'textarea', '#title' => t('Body'), '#default_value' => $node->body, '#rows' => 20, '#required' => TRUE
   );
-  $form = array_merge($form, filter_form($node->format));
+  $form['format'] = filter_form($node->format);
 
   $form['log'] = array(
     '#type' => 'fieldset', '#title' => t('Log message'), '#collapsible' => TRUE, '#collapsed' => TRUE
