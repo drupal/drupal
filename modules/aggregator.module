@@ -483,7 +483,9 @@ function aggregator_parse_feed(&$data, $feed) {
     foreach ($item as $key => $value) {
       // TODO: Make handling of aggregated HTML more flexible/configurable.
       $value = decode_entities(trim($value));
-      $value = filter_xss($value);
+      if ($key != 'LINK' && $key != 'GUID') {
+        $value = filter_xss($value);
+      }
       $item[$key] = $value;
     }
 
