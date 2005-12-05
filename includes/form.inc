@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.26 2005/12/05 08:41:29 dries Exp $
+// $Id: form.inc,v 1.27 2005/12/05 08:47:24 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -19,7 +19,7 @@
  * Check if the key is a property.
  */
 function element_property($key) {
-  return $key{0} == '#';
+  return $key[0] == '#';
 }
 
 function element_properties($element) {
@@ -30,7 +30,7 @@ function element_properties($element) {
  * Check if the key is a child.
  */
 function element_child($key) {
-  return $key{0} != '#';
+  return $key[0] != '#';
 }
 
 function element_children($element) {
@@ -358,10 +358,9 @@ function form_render(&$elements) {
  * Function used by uasort in form render to sort form via weight.
  */
 function _form_sort($a, $b) {
-  if ($a['#weight'] == $b['#weight']) {
-    return 0;
-  }
-  return ($a['#weight'] < $b['#weight']) ? -1 : 1;
+  $a_weight = (is_array($a) && isset($a['#weight'])) ? $a['#weight'] : 0;
+  $b_weight = (is_array($b) && isset($b['#weight'])) ? $b['#weight'] : 0;
+  return $a_weight - $b_weight;
 }
 
 /**
