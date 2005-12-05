@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.241 2005/12/05 09:11:33 dries Exp $
+// $Id: taxonomy.module,v 1.242 2005/12/05 13:15:42 dries Exp $
 
 /**
  * @file
@@ -145,13 +145,10 @@ function taxonomy_form_vocabulary($edit = array()) {
 }
 
 function taxonomy_save_vocabulary(&$edit) {
-  $edit['nodes'] = ($edit['nodes']) ? $edit['nodes'] : array();
-  $edit['weight'] = ($edit['weight']) ? $edit['weight'] : 0;
-  $edit['tags'] = ($edit['tags']) ? $edit['tags'] : 0;
+  $edit['nodes'] = empty($edit['nodes']) ? array() : $edit['nodes'];
 
-  $data = array('name' => $edit['name'], 'description' => $edit['description'], 'help' => $edit['help'], 'multiple' => $edit['multiple'], 'required' => $edit['required'], 'hierarchy' => $edit['hierarchy'], 'relations' => $edit['relations'], 'tags' => $edit['tags'], 'weight' => $edit['weight'],  'module' => isset($edit['module']) ? $edit['module'] : 'taxonomy');
   if ($edit['vid'] && $edit['name']) {
-    db_query('UPDATE {vocabulary} SET '. _taxonomy_prepare_update($data) .' WHERE vid = %d', $edit['vid']);
+    db_query("UPDATE {vocabulary} SET name = '%s', description = '%s', help = '%s', multiple = %d, required = %d, hierarchy = %d, relations = %d, tags = %d, weight = %d, module = '%s' WHERE vid = %d", $edit['name'], $edit['description'], $edit['help'], $edit['multiple'], $edit['required'], $edit['hierarchy'], $edit['relations'], $edit['tags'], $edit['weight'], isset($edit['module']) ? $edit['module'] : 'taxonomy', $edit['vid']);
     db_query("DELETE FROM {vocabulary_node_types} WHERE vid = %d", $edit['vid']);
     foreach ($edit['nodes'] as $type => $selected) {
       db_query("INSERT INTO {vocabulary_node_types} (vid, type) VALUES (%d, '%s')", $edit['vid'], $type);
@@ -163,8 +160,8 @@ function taxonomy_save_vocabulary(&$edit) {
     $status = taxonomy_del_vocabulary($edit['vid']);
   }
   else {
-    $data['vid'] = $edit['vid'] = db_next_id('{vocabulary}_vid');
-    db_query('INSERT INTO {vocabulary} '. _taxonomy_prepare_insert($data, 1) .' VALUES '. _taxonomy_prepare_insert($data, 2));
+    $edit['vid'] = db_next_id('{vocabulary}_vid');
+    db_query("INSERT INTO {vocabulary} (vid, name, description, help, multiple, required, hierarchy, relations, tags, weight, module) VALUES (%d, '%s', '%s', '%s', %d, %d, %d, %d, %d, %d, '%s')", $edit['vid'], $edit['name'], $edit['description'], $edit['help'], $edit['multiple'], $edit['required'], $edit['hierarchy'], $edit['relations'], $edit['tags'], $edit['weight'], isset($edit['module']) ? $edit['module'] : 'taxonomy');
     foreach ($edit['nodes'] as $type => $selected) {
       db_query("INSERT INTO {vocabulary_node_types} (vid, type) VALUES (%d, '%s')", $edit['vid'], $type);
     }
@@ -267,9 +264,7 @@ function taxonomy_form_term($edit = array()) {
 
 function taxonomy_save_term(&$edit) {
   if ($edit['tid'] && $edit['name']) {
-    $data = array('name' => $edit['name'], 'description' => $edit['description'], 'weight' => $edit['weight']);
-
-    db_query('UPDATE {term_data} SET '. _taxonomy_prepare_update($data) .' WHERE tid = %d', $edit['tid']);
+    db_query("UPDATE {term_data} SET name = '%s', description = '%s', weight = %d WHERE tid = %d", $edit['name'], $edit['description'], $edit['weight'], $edit['tid']);
     module_invoke_all('taxonomy', 'update', 'term', $edit);
     $status = SAVED_UPDATED;
   }
@@ -278,8 +273,7 @@ function taxonomy_save_term(&$edit) {
   }
   else {
     $edit['tid'] = db_next_id('{term_data}_tid');
-    $data = array('tid' => $edit['tid'], 'name' => $edit['name'], 'description' => $edit['description'], 'vid' => $edit['vid'], 'weight' => $edit['weight']);
-    db_query('INSERT INTO {term_data} '. _taxonomy_prepare_insert($data, 1) .' VALUES '. _taxonomy_prepare_insert($data, 2));
+    db_query("INSERT INTO {term_data} (tid, name, description, vid, weight) VALUES (%d, '%s', '%s', %d, %d)", $edit['tid'], $edit['name'], $edit['description'], $edit['vid'], $edit['weight']);
     module_invoke_all('taxonomy', 'insert', 'term', $edit);
     $status = SAVED_NEW;
   }
@@ -932,33 +926,6 @@ function _taxonomy_depth($depth, $graphic = '--') {
     $result .= $graphic;
   }
   return $result;
-}
-
-function _taxonomy_prepare_update($data) {
-  foreach ($data as $key => $value) {
-    $q[] = "$key = '". str_replace('%', '%%', db_escape_string($value)) ."'";
-  }
-  $result = implode(', ', $q);
-  return $result;
-}
-
-function _taxonomy_prepare_insert($data, $stage) {
-  if ($stage == 1) {
-    $result = implode(', ', array_keys($data));
-  }
-  else {
-    foreach (array_values($data) as $value) {
-      //Escape strings, but not integers
-      if (is_int($value)) {
-        $q[] = $value;
-      }
-      else {
-        $q[] = "'". str_replace('%', '%%', db_escape_string($value)) ."'";
-      }
-    }
-    $result = implode(', ', $q);
-  }
-  return "($result)";
 }
 
 /**
