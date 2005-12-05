@@ -490,7 +490,7 @@ CREATE TABLE profile_fields (
   KEY category (category),
   UNIQUE KEY name (name),
   PRIMARY KEY (fid)
-);
+) TYPE=MyISAM;
 
 --
 -- Table structure for table 'profile_values'
@@ -502,7 +502,7 @@ CREATE TABLE profile_values (
   value text,
   KEY uid (uid),
   KEY fid (fid)
-);
+) TYPE=MyISAM;
 
 
 --
