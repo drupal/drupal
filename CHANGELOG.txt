@@ -2,7 +2,6 @@ Drupal x.x.x, xxxx-xx-xx (development version)
 ------------------------
 - added free tagging support.
 - added a site-wide contact form.
-- refactored the form API.
 - theme system:
     * added the PHPTemplate theme engine and removed the Xtemplate engine.
     * converted the bluemarine theme from XTemplate to PHPTemplate.
@@ -18,6 +17,8 @@ Drupal x.x.x, xxxx-xx-xx (development version)
     * reorganized some settings pages.
     * added friendly database error screens.
     * improved styling of update.php.
+- refactored the forms API.
+    * made it possible to alter, extend or theme forms.
 - node system:
     * reworked the revision functionality.
 - profiles:
