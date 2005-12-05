@@ -269,7 +269,8 @@ function _form_builder($form_id, $form) {
   if (isset($form['#process']) && !$form['#processed']) {
     foreach ($form['#process'] as $process => $args) {
       if (function_exists($process)) {
-        $form = call_user_func($process, array_merge($form, $args));
+        $args = array_merge(array($form), $args);
+        $form = call_user_func_array($process, $args);
       }
     }
     $form['#processed'] = TRUE;
