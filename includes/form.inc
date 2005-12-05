@@ -358,10 +358,12 @@ function form_render(&$elements) {
  * Function used by uasort in form render to sort form via weight.
  */
 function _form_sort($a, $b) {
-  if ($a['#weight'] == $b['#weight']) {
+  $a_weight = (is_array($a) && isset($a['#weight'])) ? $a['#weight'] : 0;
+  $b_weight = (is_array($b) && isset($b['#weight'])) ? $b['#weight'] : 0;
+  if ($a_weight == $b_weight) {
     return 0;
   }
-  return ($a['#weight'] < $b['#weight']) ? -1 : 1;
+  return ($a_weight < $b_weight) ? -1 : 1;
 }
 
 /**
