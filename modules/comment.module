@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.400 2005/12/03 19:39:15 dries Exp $
+// $Id: comment.module,v 1.401 2005/12/05 09:11:33 dries Exp $
 
 /**
  * @file
@@ -232,8 +232,26 @@ function comment_link($type, $node = 0, $main = 0) {
 }
 
 function comment_form_alter($form_id, &$form) {
-  if (isset($form['type']) && $form['type']['#value'] .'_node_settings' == $form_id) {
-    $form['workflow']['comment_'. $form['type']['#value']] = array('#type' => 'radios', '#title' => t('Default comment setting'), '#default_value' => variable_get('comment_'. $form['type']['#value'], COMMENT_NODE_READ_WRITE), '#options' => array(t('Disabled'), t('Read only'), t('Read/Write')), '#description' => t('Users with the <em>administer comments</em> permission will be able to override this setting.'));
+  if (isset($form['type'])) {
+    if ($form['type']['#value'] .'_node_settings' == $form_id) {
+      $form['workflow']['comment_'. $form['type']['#value']] = array('#type' => 'radios', '#title' => t('Default comment setting'), '#default_value' => variable_get('comment_'. $form['type']['#value'], COMMENT_NODE_READ_WRITE), '#options' => array(t('Disabled'), t('Read only'), t('Read/Write')), '#description' => t('Users with the <em>administer comments</em> permission will be able to override this setting.'));
+    }
+    if ($form['type']['#value'] .'_node_form' == $form_id && user_access('administer comments')) {
+      $node = $form['#node'];
+      $selected = isset($node->comment) ? $node->comment : variable_get("comment_$node->type", COMMENT_NODE_READ_WRITE);
+      $form['user_comments'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('User Comments'),
+        '#collapsible' => TRUE,
+        '#collapsed' => TRUE,
+      );
+      $form['user_comments']['comment'] = array(
+        '#type' => 'radios',
+        '#parents' => array('comment'),
+        '#default_value' => $selected,
+        '#options' => array(t('Disabled'), t('Read only'), t('Read/Write')),
+      );
+    }
   }
 }
 
@@ -245,15 +263,6 @@ function comment_nodeapi(&$node, $op, $arg = 0) {
   switch ($op) {
     case 'fields':
       return array('comment');
-
-    case 'form':
-      if (user_access('administer comments')) {
-        $selected = isset($node->comment) ? $node->comment : variable_get("comment_$node->type", COMMENT_NODE_READ_WRITE);
-        $form['user_comments'] = array('#type' => 'fieldset', '#title' => t('User Comments'), '#collapsible' => TRUE, '#collapsed' => TRUE);
-        $form['user_comments']['comment'] = array('#type' => 'radios', '#parents' => array('comment'), '#default_value' => $selected, '#options' => array(t('Disabled'), t('Read only'), t('Read/Write')));
-        return $form;
-      }
-      break;
 
     case 'load':
       return db_fetch_array(db_query("SELECT last_comment_timestamp, last_comment_name, comment_count FROM {node_comment_statistics} WHERE nid = %d", $node->nid));
@@ -1156,8 +1165,7 @@ function comment_form($edit, $title = NULL) {
   $form['comment'] = array('#type' => 'textarea', '#title' => t('Comment'), '#rows' => 15, '#default_value' => $edit['comment'] ? $edit['comment'] : $user->signature, '#required' => TRUE
   );
 
-  $form = array_merge($form, filter_form($node->format));
-  $form['format']['#weight'] = 18;
+  $form['format'] = filter_form($node->format, 18);
 
   $form['cid'] = array('#type' => 'value', '#value' => $edit['cid']);
   $form['pid'] = array('#type' => 'value', '#value' => $edit['pid']);

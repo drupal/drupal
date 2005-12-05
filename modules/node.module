@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.558 2005/12/02 15:21:01 dries Exp $
+// $Id: node.module,v 1.559 2005/12/05 09:11:33 dries Exp $
 
 /**
  * @file
@@ -1605,9 +1605,16 @@ function node_form($node) {
   $form['created'] = array('#type' => 'value', '#value' => $node->created);
   $form['changed'] = array('#type' => 'value', '#value' => $node->changed);
   $form['type']    = array('#type' => 'value', '#value' => $node->type);
+  $form['#node']   = $node;
 
   // Get the node-specific bits.
   $form = array_merge($form, node_invoke($node, 'form'));
+  if (!isset($form['title']['#weight'])) {
+    $form['title']['#weight'] = -18;
+  }
+  if (!isset($form['body']['#weight'])) {
+    $form['body']['#weight'] = -17;
+  }
 
   // If this is a new node, fill in the default values.
   $node_options = variable_get('node_options_'. $node->type, array('status', 'promote'));
@@ -1650,18 +1657,6 @@ function node_form($node) {
     $form['sticky']   = array('#type' => 'value', '#value' => $node->sticky);
     $form['revision'] = array('#type' => 'value', '#value' => $node->revision);
   }
-
-  $nodeapi = node_invoke_nodeapi($node, 'form');
-  if (is_array($nodeapi)) {
-    foreach ($nodeapi as $key => $element) {
-      $nodeapi[$key]['#weight'] = isset($nodeapi[$key]['#weight']) ? $nodeapi[$key]['#weight'] : -4;
-    }
-    // Append extra node form elements.
-    $form = array_merge($form, $nodeapi);
-  }
-
-  $form['title']['#weight'] = isset($form['title']['#weight']) ? $form['title']['#weight'] : -18;
-  $form['body']['#weight'] = isset($form['body']['#weight']) ? $form['body']['#weight'] : -17;
 
   // Add the buttons.
   $form['preview'] = array('#type' => 'button', '#value' => t('Preview'), '#weight' => 19);

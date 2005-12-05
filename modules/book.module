@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.335 2005/12/02 15:21:01 dries Exp $
+// $Id: book.module,v 1.336 2005/12/05 09:11:33 dries Exp $
 
 /**
  * @file
@@ -255,7 +255,7 @@ function book_form(&$node) {
   $form['body'] = array(
     '#type' => 'textarea', '#title' => t('Body'), '#default_value' => $node->body, '#rows' => 20, '#required' => TRUE
   );
-  $form = array_merge($form, filter_form($node->format));
+  $form['format'] = filter_form($node->format);
 
   $form['log'] = array(
     '#type' => 'fieldset', '#title' => t('Log message'), '#collapsible' => TRUE, '#collapsed' => TRUE

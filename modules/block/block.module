@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.190 2005/12/02 15:21:01 dries Exp $
+// $Id: block.module,v 1.191 2005/12/05 09:11:33 dries Exp $
 
 /**
  * @file
@@ -445,10 +445,32 @@ function block_box_delete_confirm_submit($form_id, $form_values) {
 
 
 function block_box_form($edit = array()) {
-  $form['title'] = array('#type' => 'textfield', '#title' => t('Block title'), '#default_value' => $edit['title'], '#maxlength' => 64, '#description' => t('The title of the block as shown to the user.'));
+  $form['title'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Block title'),
+    '#default_value' => $edit['title'],
+    '#maxlength' => 64,
+    '#description' => t('The title of the block as shown to the user.'),
+    '#weight' => -18,
+  );
+  $form['body'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Block body'),
+    '#default_value' => $edit['body'],
+    '#rows' => 15,
+    '#description' => t('The content of the block as shown to the user.'),
+    '#weight' => -17,
+  );
   $form['format'] = filter_form($edit['format']);
-  $form['body'] = array('#type' => 'textarea', '#title' => t('Block body'), '#default_value' => $edit['body'], '#rows' => 15, '#description' => t('The content of the block as shown to the user.'));
-  $form['info'] = array('#type' => 'textfield', '#title' => t('Block description'), '#default_value' => $edit['info'], '#maxlength' => 64, '#description' => t('A brief description of your block. Used on the <a href="%overview">block overview page</a>.', array('%overview' => url('admin/block'))), '#required' => TRUE);
+  $form['info'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Block description'),
+    '#default_value' => $edit['info'],
+    '#maxlength' => 64,
+    '#description' => t('A brief description of your block. Used on the <a href="%overview">block overview page</a>.', array('%overview' => url('admin/block'))),
+    '#required' => TRUE,
+    '#weight' => -15,
+  );
 
   return $form;
 }

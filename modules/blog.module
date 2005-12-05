@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.237 2005/11/23 16:18:28 dries Exp $
+// $Id: blog.module,v 1.238 2005/12/05 09:11:33 dries Exp $
 
 /**
  * @file
@@ -230,7 +230,7 @@ function blog_form(&$node) {
 
   $form['title'] = array('#type' => 'textfield', '#title' => t('Title'), '#required' => TRUE, '#default_value' => $node->title);
   $form['body'] = array('#type' => 'textarea', '#title' => t('Body'), '#default_value' => $node->body, '#rows' => 20, '#required' => TRUE);
-  $form = array_merge($form, filter_form($node->format));
+  $form['filter'] = filter_form($node->format);
   return $form;
 }
 

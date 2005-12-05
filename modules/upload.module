@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.64 2005/11/30 11:03:58 dries Exp $
+// $Id: upload.module,v 1.65 2005/12/05 09:11:33 dries Exp $
 
 /**
  * @file
@@ -145,11 +145,28 @@ function upload_file_download($file) {
 }
 
 function upload_form_alter($form_id, &$form) {
-  if (isset($form['type']) && $form['type']['#value'] .'_node_settings' == $form_id) {
-    $form['workflow']['upload_'. $form['type']['#value']] = array(
-      '#type' => 'radios', '#title' => t('Attachments'), '#default_value' => variable_get('upload_'. $form['type']['#value'], 1),
-      '#options' => array(t('Disabled'), t('Enabled')),
-    );
+  if (isset($form['type'])) {
+    if ($form['type']['#value'] .'_node_settings' == $form_id) {
+      $form['workflow']['upload_'. $form['type']['#value']] = array(
+        '#type' => 'radios', '#title' => t('Attachments'), '#default_value' => variable_get('upload_'. $form['type']['#value'], 1),
+        '#options' => array(t('Disabled'), t('Enabled')),
+      );
+    }
+    if ($form['type']['#value'] .'_node_form' == $form_id && variable_get("upload_$node->type", 1) == 1 && user_access('upload files')) {
+      drupal_add_js('misc/progress.js');
+      drupal_add_js('misc/upload.js');
+      $form['attachments'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('File attachments'),
+        '#collapsible' => TRUE,
+        '#collapsed' => empty($node->files),
+        '#description' => t('Changes made to the attachments are not permanent until you save this post. The first "listed" file will be included in RSS feeds.'),
+        '#prefix' => '<div class="attachments">',
+        '#suffix' => '</div>',
+      );
+      $form['attachments'] += _upload_form($form['#node']);
+      $form['#attributes'] = array('enctype' => 'multipart/form-data');
+    }
   }
 }
 
@@ -231,13 +248,6 @@ function upload_nodeapi(&$node, $op, $arg) {
         if ($file = file_check_upload($key)) {
           $node->files[$key] = $file;
         }
-      }
-      break;
-
-    case 'form':
-      if (variable_get("upload_$node->type", 1) == 1 && user_access('upload files')) {
-        $output = upload_form($node);
-        $output['#attributes'] = array('enctype' => 'multipart/form-data');
       }
       break;
 
@@ -399,20 +409,6 @@ function upload_delete($node) {
     file_delete($file->filepath);
   }
   db_query("DELETE FROM {files} WHERE nid = %d", $node->nid);
-}
-
-function upload_form($node) {
-  drupal_add_js('misc/progress.js');
-  drupal_add_js('misc/upload.js');
-
-  $form['attachments'] = array(
-    '#type' => 'fieldset', '#title' => t('File attachments'), '#collapsible' => TRUE, '#collapsed' => empty($node->files),
-    '#description' => t('Changes made to the attachments are not permanent until you save this post. The first "listed" file will be included in RSS feeds.'),
-    '#prefix' => '<div class="attachments">', '#suffix' => '</div>'
-  );
-  $form['attachments'] += _upload_form($node);
-
-  return $form;
 }
 
 function _upload_form($node) {

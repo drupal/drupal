@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.240 2005/11/29 17:41:27 dries Exp $
+// $Id: taxonomy.module,v 1.241 2005/12/05 09:11:33 dries Exp $
 
 /**
  * @file
@@ -500,50 +500,51 @@ function taxonomy_get_vocabularies($type = NULL) {
 /**
  * Generate a form for selecting terms to associate with a node.
  */
-function taxonomy_node_form($node) {
-  if (!array_key_exists('taxonomy', $node)) {
-    if ($node->nid) {
-      $terms = taxonomy_node_get_terms($node->nid);
-    }
-    else {
-      $terms = array();
-    }
-  }
-  else {
-    $terms = $node->taxonomy;
-  }
+function taxonomy_form_alter($form_id, &$form) {
+  if (isset($form['type']) && $form['type']['#value'] .'_node_form' == $form_id) {
+    $node = $form['#node'];
 
-  $c = db_query(db_rewrite_sql("SELECT v.* FROM {vocabulary} v INNER JOIN {vocabulary_node_types} n ON v.vid = n.vid WHERE n.type = '%s' ORDER BY v.weight, v.name", 'v', 'vid'), $node->type);
-  while ($vocabulary = db_fetch_object($c)) {
-    if ($vocabulary->tags) {
-      $typed_terms = array();
-      foreach ($terms as $term) {
-        if ($term->vid == $vocabulary->vid) {
-
-          // Commas and quotes in terms are special cases, so encode 'em.
-          if (preg_match('/,/', $term->name) || preg_match('/"/', $term->name)) {
-            $term->name = '"'.preg_replace('/"/', '""', $term->name).'"';
-          }
-
-          $typed_terms[] = $term->name;
-        }
+    if (!array_key_exists('taxonomy', $node)) {
+      if ($node->nid) {
+        $terms = taxonomy_node_get_terms($node->nid);
       }
-      $typed_string = implode(', ', $typed_terms) . (array_key_exists('tags', $terms) ? $terms['tags'][$vocabulary->vid] : NULL);
-
-      $form['taxonomy']['tags'][$vocabulary->vid] = array('#type' => 'textfield', '#default_value' => $typed_string, '#maxlength' => 100, '#autocomplete_path' => 'taxonomy/autocomplete/'. $vocabulary->vid, '#required' => $vocabulary->required, '#title' => $vocabulary->name, '#description' => t('A comma-separated list of terms describing this content (Example: funny, bungie jumping, "Company, Inc.").'));
+      else {
+        $terms = array();
+      }
     }
     else {
-      $ntterms = array_key_exists('taxonomy', $node) ? $terms : array_keys($terms);
-      $form['taxonomy'][$vocabulary->vid] = taxonomy_form($vocabulary->vid, $ntterms, $help, 'taxonomy');
+      $terms = $node->taxonomy;
     }
-  }
-  if ($form) {
-    $form['taxonomy']['#tree'] = TRUE;
-    $form['taxonomy']['#weight'] = -15;
-    return $form;
-  }
-  else {
-    return array();
+
+    $c = db_query(db_rewrite_sql("SELECT v.* FROM {vocabulary} v INNER JOIN {vocabulary_node_types} n ON v.vid = n.vid WHERE n.type = '%s' ORDER BY v.weight, v.name", 'v', 'vid'), $node->type);
+
+    while ($vocabulary = db_fetch_object($c)) {
+      if ($vocabulary->tags) {
+        $typed_terms = array();
+        foreach ($terms as $term) {
+          if ($term->vid == $vocabulary->vid) {
+
+            // Commas and quotes in terms are special cases, so encode 'em.
+            if (preg_match('/,/', $term->name) || preg_match('/"/', $term->name)) {
+              $term->name = '"'.preg_replace('/"/', '""', $term->name).'"';
+            }
+
+            $typed_terms[] = $term->name;
+          }
+        }
+        $typed_string = implode(', ', $typed_terms) . (array_key_exists('tags', $terms) ? $terms['tags'][$vocabulary->vid] : NULL);
+
+        $form['taxonomy']['tags'][$vocabulary->vid] = array('#type' => 'textfield', '#default_value' => $typed_string, '#maxlength' => 100, '#autocomplete_path' => 'taxonomy/autocomplete/'. $vocabulary->vid, '#required' => $vocabulary->required, '#title' => $vocabulary->name, '#description' => t('A comma-separated list of terms describing this content (Example: funny, bungie jumping, "Company, Inc.").'));
+      }
+      else {
+        $ntterms = array_key_exists('taxonomy', $node) ? $terms : array_keys($terms);
+        $form['taxonomy'][$vocabulary->vid] = taxonomy_form($vocabulary->vid, $ntterms, $help, 'taxonomy');
+      }
+    }
+    if (isset($form['taxonomy'])) {
+      $form['taxonomy']['#tree'] = TRUE;
+      $form['taxonomy']['#weight'] = -15;
+    }
   }
 }
 
@@ -1055,9 +1056,6 @@ function taxonomy_nodeapi($node, $op, $arg = 0) {
       break;
     case 'rss item':
       return taxonomy_rss_item($node);
-      break;
-    case 'form':
-      return taxonomy_node_form($node);
       break;
   }
 }

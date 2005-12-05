@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.72 2005/12/02 15:21:01 dries Exp $
+// $Id: path.module,v 1.73 2005/12/05 09:11:33 dries Exp $
 
 /**
  * @file
@@ -185,14 +185,6 @@ function path_nodeapi(&$node, $op, $arg) {
         }
         break;
 
-      case 'form':
-        $form['path'] = array('#type' => 'fieldset', '#title' => t('URL path settings'), '#collapsible' => TRUE, '#collapsed' => TRUE);
-        $form['path']['path'] = array('#type' => 'textfield', '#default_value' => $node->path, '#maxlength' => 250, '#collapsible' => TRUE, '#collapsed' => TRUE, '#description' => t('Optionally specify an alternative URL by which this node can be accessed.  For example, type "about" when writing an about page.  Use a relative path and don\'t add a trailing slash or the URL alias won\'t work.'));
-        if ($node->path) {
-          $form['path']['pid'] = array('#type' => 'hidden', '#value' => db_result(db_query("SELECT pid FROM {url_alias} WHERE dst = '%s'", $node->path)));
-        }
-        return $form;
-
       case 'load':
         $path = "node/$node->nid";
         $alias = drupal_get_path_alias($path);
@@ -222,6 +214,36 @@ function path_nodeapi(&$node, $op, $arg) {
     }
   }
 }
+
+/**
+ * Implementation of hook_form_alter().
+ */
+function path_form_alter($form_id, &$form) {
+  if (isset($form['type']) && $form['type']['#value'] .'_node_form' == $form_id) {
+    $path = $form['#node']->path;
+    $form['path'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('URL path settings'),
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+    );
+    $form['path']['path'] = array(
+      '#type' => 'textfield',
+      '#default_value' => $path,
+      '#maxlength' => 250,
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+      '#description' => t('Optionally specify an alternative URL by which this node can be accessed.  For example, type "about" when writing an about page.  Use a relative path and don\'t add a trailing slash or the URL alias won\'t work.'),
+    );
+    if ($node->path) {
+      $form['path']['pid'] = array(
+        '#type' => 'value',
+        '#value' => db_result(db_query("SELECT pid FROM {url_alias} WHERE dst = '%s'", $path))
+      );
+    }
+  }
+}
+
 
 /**
  * Implementation of hook_perm().

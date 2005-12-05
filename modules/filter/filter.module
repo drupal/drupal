@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.90 2005/12/03 09:44:50 dries Exp $
+// $Id: filter.module,v 1.91 2005/12/05 09:11:33 dries Exp $
 
 /**
  * @file
@@ -750,7 +750,7 @@ function check_markup($text, $format = FILTER_FORMAT_DEFAULT, $check = TRUE) {
  * @return
  *   HTML for the form element.
  */
-function filter_form($value = FILTER_FORMAT_DEFAULT) {
+function filter_form($value = FILTER_FORMAT_DEFAULT, $weight = -16) {
   if ($value == FILTER_FORMAT_DEFAULT) {
     $value = variable_get('filter_default_format', 1);
   }
@@ -759,11 +759,17 @@ function filter_form($value = FILTER_FORMAT_DEFAULT) {
   $extra = l(t('More information about formatting options'), 'filter/tips');
 
   if (count($formats) > 1) {
-    $form['format'] = array('#type' => 'fieldset', '#title' => t('Input format'), '#collapsible' => TRUE, '#collapsed' => TRUE, '#weight' => -16);
+    $form = array(
+      '#type' => 'fieldset',
+      '#title' => t('Input format'),
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+      '#weight' => $weight,
+    );
     // Multiple formats available: display radio buttons with tips.
     foreach ($formats as $format) {
-      $form['format'][$format->format] = array(
-        '#type' => 'filter_format',
+      $form[$format->format] = array(
+        '#type' => 'radio',
         '#title' => $format->name,
         '#default_value' => $value,
         '#return_value' => $format->format,
@@ -772,16 +778,19 @@ function filter_form($value = FILTER_FORMAT_DEFAULT) {
         '#validate' => array('filter_form_validate' => array())
       );
     }
-    return $form;
   }
   else {
     // Only one format available: use a hidden form item and only show tips.
     $format = array_shift($formats);
-    $form['format'][$format->name] = array('#type' => 'value', '#value' => $format->format);
+    $form[$format->name] = array('#type' => 'value', '#value' => $format->format);
     $tips = _filter_tips(variable_get('filter_default_format', 1), false);
-    $form['format']['guidelines'] = array('#type' => 'markup', '#title' => t('Formatting guidelines'), '#value' => theme('filter_tips', $tips, false, $extra));
-    return $form;
+    $form['guidelines'] = array(
+      '#type' => 'markup',
+      '#title' => t('Formatting guidelines'),
+      '#value' => theme('filter_tips', $tips, false, $extra),
+    );
   }
+  return $form;
 }
 
 function filter_form_validate($element) {
