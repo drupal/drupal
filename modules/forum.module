@@ -72,6 +72,18 @@ function forum_perm() {
 }
 
 /**
+ * Implementation of hook_nodeapi().
+ */
+function forum_nodeapi(&$node, $op, $teaser, $page) {
+  switch ($op) {
+    case 'revision delete':
+      db_query('DELETE FROM {forum} WHERE vid = %d', $node->vid);
+      break;
+  }
+}
+
+
+/**
  * Administration page which allows maintaining forums
  */
 function forum_admin() {
