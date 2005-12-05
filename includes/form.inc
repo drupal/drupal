@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.25 2005/12/04 08:14:07 dries Exp $
+// $Id: form.inc,v 1.26 2005/12/05 08:41:29 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -269,7 +269,8 @@ function _form_builder($form_id, $form) {
   if (isset($form['#process']) && !$form['#processed']) {
     foreach ($form['#process'] as $process => $args) {
       if (function_exists($process)) {
-        $form = call_user_func($process, array_merge($form, $args));
+        $args = array_merge(array($form), $args);
+        $form = call_user_func_array($process, $args);
       }
     }
     $form['#processed'] = TRUE;
