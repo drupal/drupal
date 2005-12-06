@@ -974,6 +974,16 @@ function theme_username($object) {
   return $output;
 }
 
+function theme_progress_bar($percent, $message) {
+  $output = '<div id="progress" class="progress">';
+  $output .= '<div class="percentage">'. $percent .'%</div>';
+  $output .= '<div class="status">'. $message .'</div>';
+  $output .= '<div class="bar"><div class="filled" style="width: '. $percent .'%"></div></div>';
+  $output .= '</div>';
+
+  return $output;
+}
+
 /**
  * @} End of "defgroup themeable".
  */

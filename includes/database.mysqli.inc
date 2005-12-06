@@ -113,7 +113,7 @@ function _db_query($query, $debug = 0) {
     return $result;
   }
   else {
-    trigger_error(check_plain(mysqli_error($active_db) ."\nquery: ". $query), E_USER_ERROR);
+    trigger_error(check_plain(mysqli_error($active_db) ."\nquery: ". $query), E_USER_WARNING);
     return FALSE;
   }
 }

@@ -656,6 +656,7 @@ CREATE TABLE system (
   status int(2) NOT NULL default '0',
   throttle tinyint(1) DEFAULT '0' NOT NULL,
   bootstrap int(2) NOT NULL default '0',
+  schema_version smallint(2) unsigned NOT NULL,
   PRIMARY KEY (filename)
 ) TYPE=MyISAM;
 

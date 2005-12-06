@@ -67,7 +67,7 @@ function HTTPGet(uri, callbackFunction, callbackParameter) {
 /**
  * Creates an HTTP POST request and sends the response to the callback function
  */
-function HTTPPost(uri, object, callbackFunction, callbackParameter) {
+function HTTPPost(uri, callbackFunction, callbackParameter, object) {
   var xmlHttp = new XMLHttpRequest();
   var bAsync = true;
   if (!callbackFunction) {

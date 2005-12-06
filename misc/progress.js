@@ -2,12 +2,17 @@
  * A progressbar object. Initialized with the given id. Must be inserted into
  * the DOM afterwards through progressBar.element.
  *
+ * method is the function which will perform the HTTP request to get the
+ * progress bar status. Either HTTPGet or HTTPPost.
+ *
  * e.g. pb = new progressBar('myProgressBar');
  *      some_element.appendChild(pb.element);
  */
-function progressBar(id) {
+function progressBar(id, callback, method) {
   var pb = this;
   this.id = id;
+  this.method = method ? method : HTTPGet;
+  this.callback = callback;
 
   this.element = document.createElement('div');
   this.element.id = id;
@@ -36,6 +41,9 @@ progressBar.prototype.setProgress = function (percentage, status) {
       divs[i].innerHTML = status;
     }
   }
+  if (this.callback) {
+    this.callback(percentage, status);
+  }
 }
 
 /**
@@ -61,14 +69,14 @@ progressBar.prototype.sendPing = function () {
   if (this.timer) {
     clearTimeout(this.timer);
   }
-  HTTPGet(this.uri, this.receivePing, this);
+  this.method(this.uri, this.receivePing, this);
 }
 
 /**
  * HTTP callback function. Passes data back to the progressbar and sets a new
  * timer for the next ping.
  */
-progressBar.prototype.receivePing = function(string, xmlhttp, pb) {
+progressBar.prototype.receivePing = function (string, xmlhttp, pb) {
   if (xmlhttp.status != 200) {
     return alert('An HTTP error '+ xmlhttp.status +' occured.\n'+ pb.uri);
   }

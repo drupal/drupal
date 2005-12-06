@@ -92,7 +92,7 @@ function _db_query($query, $debug = 0) {
     return $last_result;
   }
   else {
-    trigger_error(check_plain(pg_last_error() ."\nquery: ". $query), E_USER_ERROR);
+    trigger_error(check_plain(pg_last_error() ."\nquery: ". $query), E_USER_WARNING);
     return FALSE;
   }
 }
