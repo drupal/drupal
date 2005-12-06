@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.147 2005/12/02 15:21:01 dries Exp $
+// $Id: search.module,v 1.148 2005/12/06 08:28:58 dries Exp $
 
 /**
  * @file
@@ -958,7 +958,6 @@ function search_view() {
  *   An HTML string containing the search form.
  */
 function search_form($action = '', $keys = '', $type = null, $prompt = null) {
-  $edit = $_POST['edit'];
 
   if (!$action) {
     $action = url('search/'. $type);
