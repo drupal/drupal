@@ -1,4 +1,4 @@
-// $Id: drupal.js,v 1.10 2005/12/02 21:28:18 dries Exp $
+// $Id: drupal.js,v 1.11 2005/12/06 09:25:22 dries Exp $
 
 /**
  * Only enable Javascript functionality if all required features are supported.
@@ -67,7 +67,7 @@ function HTTPGet(uri, callbackFunction, callbackParameter) {
 /**
  * Creates an HTTP POST request and sends the response to the callback function
  */
-function HTTPPost(uri, object, callbackFunction, callbackParameter) {
+function HTTPPost(uri, callbackFunction, callbackParameter, object) {
   var xmlHttp = new XMLHttpRequest();
   var bAsync = true;
   if (!callbackFunction) {

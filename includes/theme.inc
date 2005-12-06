@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.265 2005/11/24 20:08:54 dries Exp $
+// $Id: theme.inc,v 1.266 2005/12/06 09:25:22 dries Exp $
 
 /**
  * @file
@@ -970,6 +970,16 @@ function theme_username($object) {
   else {
     $output = variable_get('anonymous', 'Anonymous');
   }
+
+  return $output;
+}
+
+function theme_progress_bar($percent, $message) {
+  $output = '<div id="progress" class="progress">';
+  $output .= '<div class="percentage">'. $percent .'%</div>';
+  $output .= '<div class="status">'. $message .'</div>';
+  $output .= '<div class="bar"><div class="filled" style="width: '. $percent .'%"></div></div>';
+  $output .= '</div>';
 
   return $output;
 }

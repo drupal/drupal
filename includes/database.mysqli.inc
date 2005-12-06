@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysqli.inc,v 1.8 2005/11/30 16:47:34 dries Exp $
+// $Id: database.mysqli.inc,v 1.9 2005/12/06 09:25:22 dries Exp $
 
 /**
  * @file
@@ -113,7 +113,7 @@ function _db_query($query, $debug = 0) {
     return $result;
   }
   else {
-    trigger_error(check_plain(mysqli_error($active_db) ."\nquery: ". $query), E_USER_ERROR);
+    trigger_error(check_plain(mysqli_error($active_db) ."\nquery: ". $query), E_USER_WARNING);
     return FALSE;
   }
 }
