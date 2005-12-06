@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.538 2005/12/02 15:21:01 dries Exp $
+// $Id: user.module,v 1.539 2005/12/06 12:36:37 dries Exp $
 
 /**
  * @file
@@ -1663,6 +1663,7 @@ function user_admin_role() {
     if ($edit['name']) {
       db_query("UPDATE {role} SET name = '%s' WHERE rid = %d", $edit['name'], $id);
       drupal_set_message(t('The changes have been saved.'));
+      drupal_goto('admin/access/roles');
     }
     else {
       form_set_error('name', t('You must specify a valid role name.'));
