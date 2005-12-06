@@ -21,6 +21,8 @@ Drupal x.x.x, xxxx-xx-xx (development version)
     * made it possible to alter, extend or theme forms.
 - node system:
     * reworked the revision functionality.
+- upgrade system:
+    * allows contributed modules to plug into the upgrade system.
 - profiles:
     * added a block to display author information along with posts.
     * added support for private profile fields.
