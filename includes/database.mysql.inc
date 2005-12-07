@@ -29,7 +29,7 @@ function db_connect($url) {
   }
 
   $connection = mysql_connect($url['host'], $url['user'], $url['pass'], TRUE) or die(mysql_error());
-  mysql_select_db(substr($url['path'], 1)) or die('unable to select database');
+  mysql_select_db(substr($url['path'], 1), $connection) or die('unable to select database');
 
   return $connection;
 }
@@ -56,14 +56,14 @@ function _db_query($query, $debug = 0) {
   }
 
   if ($debug) {
-    print '<p>query: '. $query .'<br />error:'. mysql_error() .'</p>';
+    print '<p>query: '. $query .'<br />error:'. mysql_error($active_db) .'</p>';
   }
 
-  if (!mysql_errno()) {
+  if (!mysql_errno($active_db)) {
     return $result;
   }
   else {
-    trigger_error(check_plain(mysql_error() ."\nquery: ". $query), E_USER_ERROR);
+    trigger_error(check_plain(mysql_error($active_db) ."\nquery: ". $query), E_USER_ERROR);
     return FALSE;
   }
 }
@@ -136,7 +136,8 @@ function db_result($result, $row = 0) {
  * Determine whether the previous query caused an error.
  */
 function db_error() {
-  return mysql_errno();
+  global $active_db;
+  return mysql_errno($active_db);
 }
 
 /**
@@ -161,7 +162,8 @@ function db_next_id($name) {
  * Determine the number of rows changed by the preceding query.
  */
 function db_affected_rows() {
-  return mysql_affected_rows();
+  global $active_db;
+  return mysql_affected_rows($active_db);
 }
 
 /**
@@ -233,7 +235,8 @@ function db_decode_blob($data) {
  * Prepare user input for use in a database query, preventing SQL injection attacks.
  */
 function db_escape_string($text) {
-  return addslashes($text);
+  global $active_db;
+  return mysql_real_escape_string($text, $active_db);
 }
 
 /**
