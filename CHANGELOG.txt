@@ -19,6 +19,8 @@ Drupal x.x.x, xxxx-xx-xx (development version)
     * improved styling of update.php.
 - refactored the forms API.
     * made it possible to alter, extend or theme forms.
+- comment system:
+    * added support for "mass comment operations" to ease repetitive tasks.
 - node system:
     * reworked the revision functionality.
 - upgrade system:
