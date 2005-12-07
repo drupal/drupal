@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.265 2005/12/03 09:44:50 dries Exp $
+// $Id: system.module,v 1.266 2005/12/07 14:59:55 dries Exp $
 
 /**
  * @file
@@ -583,26 +583,29 @@ function system_region_list($theme_key) {
   static $list = array();
 
   if (!array_key_exists($theme_key, $list)) {
+    $theme = db_fetch_object(db_query("SELECT * FROM {system} WHERE type = 'theme' AND name = '%s'", $theme_key));
 
-    $result = db_query("SELECT * FROM {system} WHERE type = 'theme' AND name = '%s'", $theme_key);
-    $theme = db_fetch_object($result);
-
+    // Stylesheets can't have regions; use its theme.
     if (strpos($theme->filename, '.css')) {
-      // File is a style, which can't have its own regions; use its theme instead.
-      $list[$theme_key] = system_region_list(basename(dirname($theme->description)));
-      return $list[$theme_key];
-    }
-    if (file_exists($file = dirname($theme->filename) .'/' . $theme_key . '.theme')) {
-    include_once "./$file";
+      return system_region_list(basename(dirname($theme->description)));
     }
 
-    $regions = function_exists($theme_key . '_regions') ? call_user_func($theme_key . '_regions') : array();
-    if (strpos($theme->description, '.engine')) {
-      // File is a template; include its engine's regions.
-    include_once './' . $theme->description;
+    // If this is a custom theme, load it in before moving on.
+    if (file_exists($file = dirname($theme->filename) .'/' . $theme_key . '.theme')) {
+      include_once "./$file";
+    }
+
+    $regions = array();
+
+    // This theme has defined its own regions.
+    if (function_exists($theme_key . '_regions')) {
+      $regions = call_user_func($theme_key . '_regions');
+    }
+    // File is an engine; include its regions.
+    else if (strpos($theme->description, '.engine')) {
+      include_once './' . $theme->description;
       $theme_engine = basename($theme->description, '.engine');
-      $engine_regions = function_exists($theme_engine . '_regions') ? call_user_func($theme_engine . '_regions') : array();
-      $regions = array_merge($engine_regions, $regions);
+      $regions = function_exists($theme_engine . '_regions') ? call_user_func($theme_engine . '_regions') : array();
     }
 
     $list[$theme_key] = $regions;
