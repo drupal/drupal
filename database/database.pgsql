@@ -856,8 +856,6 @@ INSERT INTO variable (name,value) VALUES ('filter_html_1','i:1;');
 
 INSERT INTO locales_meta (locale, name, enabled, isdefault) VALUES ('en', 'English', '1', '1');
 
-INSERT INTO url_alias (src, dst) VALUES ('node/feed', 'rss.xml');
-
 INSERT INTO variable (name, value) VALUES ('node_options_forum', 'a:1:{i:0;s:6:"status";}');
 
 INSERT INTO menu VALUES (2, 0, '', 'Primary links', '', 0, 115);
