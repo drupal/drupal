@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysql.inc,v 1.45 2005/12/06 09:25:22 dries Exp $
+// $Id: database.mysql.inc,v 1.46 2005/12/07 15:17:27 dries Exp $
 
 /**
  * @file
@@ -63,7 +63,7 @@ function db_connect($url) {
     drupal_maintenance_theme();
     drupal_set_title('Unable to select database');
     print theme('maintenance_page', '<p>We were able to connect to the MySQL database server (which means your username and password is okay) but not able to select the database.</p>
-<p>The MySQL error was: '. theme('placeholder', mysql_error()) .'.</p>
+<p>The MySQL error was: '. theme('placeholder', mysql_error($connection)) .'.</p>
 <p>Currently, the database is '. theme('placeholder', substr($url['path'], 1)) .'. The username is '. theme('placeholder', $url['user']) .' and the database server is '. theme('placeholder', $url['host']) .'.</p>
 <ul>
   <li>Are you sure you have the correct database name?</li>
@@ -98,14 +98,14 @@ function _db_query($query, $debug = 0) {
   }
 
   if ($debug) {
-    print '<p>query: '. $query .'<br />error:'. mysql_error() .'</p>';
+    print '<p>query: '. $query .'<br />error:'. mysql_error($active_db) .'</p>';
   }
 
-  if (!mysql_errno()) {
+  if (!mysql_errno($active_db)) {
     return $result;
   }
   else {
-    trigger_error(check_plain(mysql_error() ."\nquery: ". $query), E_USER_WARNING);
+    trigger_error(check_plain(mysql_error($active_db) ."\nquery: ". $query), E_USER_WARNING);
     return FALSE;
   }
 }
@@ -178,7 +178,8 @@ function db_result($result, $row = 0) {
  * Determine whether the previous query caused an error.
  */
 function db_error() {
-  return mysql_errno();
+  global $active_db;
+  return mysql_errno($active_db);
 }
 
 /**
@@ -203,7 +204,8 @@ function db_next_id($name) {
  * Determine the number of rows changed by the preceding query.
  */
 function db_affected_rows() {
-  return mysql_affected_rows();
+  global $active_db;
+  return mysql_affected_rows($active_db);
 }
 
 /**
@@ -311,7 +313,8 @@ function db_query_temporary($query) {
  *  Encoded data.
  */
 function db_encode_blob($data) {
-  return "'" . mysql_real_escape_string($data) . "'";
+  global $active_db;
+  return "'" . mysql_real_escape_string($data, $active_db) . "'";
 }
 
 /**
@@ -330,7 +333,8 @@ function db_decode_blob($data) {
  * Prepare user input for use in a database query, preventing SQL injection attacks.
  */
 function db_escape_string($text) {
-  return mysql_real_escape_string($text);
+  global $active_db;
+  return mysql_real_escape_string($text, $active_db);
 }
 
 /**
