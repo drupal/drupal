@@ -650,7 +650,7 @@ CREATE TABLE system (
   status integer NOT NULL default '0',
   throttle smallint NOT NULL default '0',
   bootstrap integer NOT NULL default '0',
-  schema_version int2 NOT NULL CHECK (schema_version > 0),
+  schema_version smallint NOT NULL default 1,
   PRIMARY KEY (filename)
 );
 
