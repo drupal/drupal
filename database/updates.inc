@@ -1,10 +1,10 @@
 <?php
-// $Id: updates.inc,v 1.153 2005/12/06 09:25:03 dries Exp $
+// $Id: updates.inc,v 1.154 2005/12/07 20:57:45 dries Exp $
 
 function system_version($type) {
   switch ($type) {
     case SCHEMA:
-      return 155;
+      return 157;
 
     case SCHEMA_MIN:
       return 110;
@@ -1100,3 +1100,10 @@ function system_update_156() {
   system_themes();
   return array();
 }
+
+function system_update_157() {
+  $ret = array();
+  $ret[] = update_sql("DELETE FROM {url_alias} WHERE src = 'node/feed' AND dst = 'rss.xml'");
+  $ret[] = update_sql("INSERT INTO {url_alias} (src, dst) VALUES ('rss.xml', 'node/feed')");
+}
+

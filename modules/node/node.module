@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.559 2005/12/05 09:11:33 dries Exp $
+// $Id: node.module,v 1.560 2005/12/07 20:57:45 dries Exp $
 
 /**
  * @file
@@ -886,6 +886,10 @@ function node_menu($may_cache) {
       'access' => user_access('access content'),
       'type' => MENU_ITEM_GROUPING,
       'weight' => 1);
+    $items[] = array('path' => 'rss.xml', 'title' => t('rss feed'),
+      'callback' => 'node_feed',
+      'access' => user_access('access content'),
+      'type' => MENU_CALLBACK);
   }
   else {
     if (arg(0) == 'node' && is_numeric(arg(1))) {
@@ -1375,7 +1379,7 @@ function node_block($op = 'list', $delta = 0) {
   }
   else if ($op == 'view') {
     $block['subject'] = t('Syndicate');
-    $block['content'] = theme('xml_icon', url('node/feed'));
+    $block['content'] = theme('xml_icon', url('rss.xml'));
 
     return $block;
   }
@@ -1916,7 +1920,7 @@ function node_page_default() {
     drupal_add_link(array('rel' => 'alternate',
                           'type' => 'application/rss+xml',
                           'title' => t('RSS'),
-                          'href' => url('node/feed', NULL, NULL, TRUE)));
+                          'href' => url('rss.xml', NULL, NULL, TRUE)));
 
     $output = '';
     while ($node = db_fetch_object($result)) {
@@ -1947,9 +1951,6 @@ function node_page() {
   }
 
   switch ($op) {
-    case 'feed':
-      node_feed();
-      return;
     case 'view':
       if (is_numeric(arg(1))) {
         $node = node_load(arg(1), $_GET['revision']);
