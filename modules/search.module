@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.148 2005/12/06 08:28:58 dries Exp $
+// $Id: search.module,v 1.149 2005/12/07 15:32:11 unconed Exp $
 
 /**
  * @file
@@ -165,7 +165,7 @@ function search_menu($may_cache) {
     // To remember the user's search keywords when switching across tabs,
     // we dynamically add the keywords to the search tabs' paths.
     $keys = search_get_keys();
-    $keys = strlen($keys) ? '/'. $keys : '';
+    $keys = strlen($keys) ? '/'. drupal_urlencode($keys) : '';
     foreach (module_list() as $name) {
       if (module_hook($name, 'search') && $title = module_invoke($name, 'search', 'name')) {
         $items[] = array('path' => 'search/'. $name . $keys, 'title' => $title,
