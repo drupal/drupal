@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.401 2005/12/05 09:11:33 dries Exp $
+// $Id: comment.module,v 1.402 2005/12/07 05:35:02 dries Exp $
 
 /**
  * @file
@@ -111,7 +111,7 @@ function comment_menu($may_cache) {
       'callback' => 'comment_configure', 'access' => $access, 'type' => MENU_LOCAL_TASK);
 
     // Subtabs:
-    $items[] = array('path' => 'admin/comment/list/new', 'title' => t('new comments'),
+    $items[] = array('path' => 'admin/comment/list/new', 'title' => t('published comments'),
       'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
     $items[] = array('path' => 'admin/comment/list/approval', 'title' => t('approval queue'),
       'callback' => 'comment_admin_overview', 'access' => $access,
@@ -328,7 +328,7 @@ function comment_user($type, $edit, &$user, $category = NULL) {
 function comment_configure() {
   $form['viewing_options'] = array(
     '#type' => 'fieldset',
-    '#title' => t('Comment viewing options'),
+    '#title' => t('Viewing options'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
     '#weight' => 0,
@@ -372,7 +372,7 @@ function comment_configure() {
 
   $form['posting_settings'] = array(
     '#type' => 'fieldset',
-    '#title' => t('Comment posting settings'),
+    '#title' => t('Posting settings'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
     '#weight' => 0,
@@ -677,7 +677,7 @@ function comment_save($edit) {
           // the part of the thread value at the proper depth.
 
           // Get the parent comment:
-          $parent = db_fetch_object(db_query('SELECT * FROM {comments} WHERE cid = %d', $edit['pid']));
+          $parent = _comment_load($edit['pid']);
 
           // Strip the "/" from the end of the parent thread.
           $parent->thread = (string) rtrim((string) $parent->thread, '/');
@@ -1001,47 +1001,189 @@ function comment_delete($cid) {
 }
 
 /**
+ * Comment operations.  We offer different update operations depending on
+ * which comment administration page we're on.
+ */
+function comment_operations($action = NULL) {
+  if ($action == 'publish') {
+    $operations = array(
+      'publish' => array(t('Publish the selected comments'), 'UPDATE {comments} SET status = COMMENT_PUBLISHED WHERE cid = %d'),
+      'delete' => array(t('Delete the selected comments'), '')
+    );
+  }
+  else if ($action == 'unpublish') {
+    $operations = array(
+      'unpublish' => array(t('Unpublish the selected comments'), 'UPDATE {comments} SET status = COMMENT_NOT_PUBLISHED WHERE cid = %d'),
+      'delete' => array(t('Delete the selected comments'), '')
+    );
+  }
+  else {
+    $operations = array(
+      'publish' => array(t('Publish the selected comments'), 'UPDATE {comments} SET status = COMMENT_PUBLISHED WHERE cid = %d'),
+      'unpublish' => array(t('Unpublish the selected comments'), 'UPDATE {comments} SET status = COMMENT_NOT_PUBLISHED WHERE cid = %d'),
+      'delete' => array(t('Delete the selected comments'), '')
+    );
+  }
+  return $operations;
+}
+
+/**
  * Menu callback; present an administrative comment listing.
  */
 function comment_admin_overview($type = 'new') {
-  $header = array(
-    array('data' => t('Subject'), 'field' => 'subject'),
-    array('data' => t('Author'), 'field' => 'u.name'),
-    array('data' => t('Status'), 'field' => 'status'),
-    array('data' => t('Time'), 'field' => 'c.timestamp', 'sort' => 'desc'),
-    array('data' => t('Operations'), 'colspan' => '2')
-  );
+  global $form_values;
+  $edit = $_POST['edit'];
 
-  $destination = drupal_get_destination();
-  $status = ($type == 'approval') ? COMMENT_NOT_PUBLISHED : COMMENT_PUBLISHED;
-  $sql = 'SELECT c.subject, c.nid, c.cid, c.comment, c.timestamp, c.status, c.name, c.homepage, u.name AS registered_name, u.uid FROM {comments} c INNER JOIN {users} u ON u.uid = c.uid WHERE c.status = '. db_escape_string($status);
-  $sql .= tablesort_sql($header);
-  $result = pager_query($sql, 50);
-
-  while ($comment = db_fetch_object($result)) {
-    $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
-    $rows[] = array(
-        l($comment->subject, "node/$comment->nid", array('title' => truncate_utf8($comment->comment, 128)), NULL, "comment-$comment->cid") ." ". theme('mark', node_mark($comment->nid, $comment->timestamp)),
-        theme('username', $comment),
-        ($comment->status == COMMENT_PUBLISHED ? t('Published') : t('Not published')),
-        format_date($comment->timestamp, 'small'),
-        l(t('edit'), "comment/edit/$comment->cid", array(), $destination),
-        l(t('delete'), "comment/delete/$comment->cid", array(), $destination)
-      );
+  if ($edit['operation'] == 'delete') {
+    return comment_multiple_delete_confirm();
   }
 
-  if (!$rows) {
+  // build an 'Update options' form
+  $form['options'] = array(
+    '#type' => 'fieldset', '#title' => t('Update options'),
+    '#prefix' => '<div class="container-inline">', '#suffix' => '</div>'
+  );
+  $options = array();
+  foreach (comment_operations(arg(3) == 'approval' ? 'publish' : 'unpublish') as $key => $value) {
+    $options[$key] = $value[0];
+  }
+  $form['options']['operation'] = array('#type' => 'select', '#options' => $options, '#default_value' => 'publish');
+  $form['options']['submit'] = array('#type' => 'submit', '#value' => t('Update'));
+
+  // load the comments that we want to display
+  $status = ($type == 'approval') ? COMMENT_NOT_PUBLISHED : COMMENT_PUBLISHED;
+  $result = pager_query('SELECT c.subject, c.nid, c.cid, c.comment, c.timestamp, c.status, c.name, c.homepage, u.name AS registered_name, u.uid FROM {comments} c INNER JOIN {users} u ON u.uid = c.uid WHERE c.status = '. db_escape_string($status));
+
+  // build a table listing the appropriate comments
+  $destination = drupal_get_destination();
+  while ($comment = db_fetch_object($result)) {
+    $comments[$comment->cid] = '';
+    $form['subject'][$comment->cid] = array('#value' => l($comment->subject, 'node/'. $comment->nid, array('title' => truncate_utf8($comment->comment, 128)), NULL, 'comment-'. $comment->cid));
+    $form['username'][$comment->cid] = array('#value' => theme('username', $comment));
+    $form['timestamp'][$comment->cid] = array('#value' => format_date($comment->timestamp, 'small'));
+    $form['operations'][$comment->cid] = array('#value' => l(t('edit'), 'comment/edit/'. $comment->cid, array(), $destination));
+  }
+  $form['comments'] = array('#type' => 'checkboxes', '#options' => $comments);
+  $form['pager'] = array('#value' => theme('pager', NULL, 50, 0));
+
+  $form['#method'] = 'post';
+  $form['#action'] = url('admin/comment/action');
+
+  $output = drupal_get_form('comment_admin_overview', $form);
+
+  return $output;
+}
+
+/**
+ * We can't execute any 'Update options' if no comments were selected.
+ */
+function comment_admin_overview_validate($form_id, $edit) {
+  $edit['comments'] = array_diff($edit['comments'], array(0));
+  if (count($edit['comments']) == 0) {
+    form_set_error('', t('Please select one or more comments to perform the update on.'));
+    drupal_goto('admin/comment');
+  }
+}
+
+/**
+ * Execute the chosen 'Update option' on the selected comments, such as
+ * publishing, unpublishing or deleting.
+ */
+function comment_admin_overview_submit($form_id, $edit) {
+  $operations = comment_operations();
+  if ($operations[$edit['operation']][1]) {
+    // extract the appropriate database query operation
+    $query = $operations[$edit['operation']][1];
+    foreach ($edit['comments'] as $cid => $value) {
+      if ($value) {
+        // perform the update action, then refresh node statistics
+        db_query($query, $cid);
+        $comment = _comment_load($cid);
+        _comment_update_node_statistics($comment->nid);
+      }
+    }
+    cache_clear_all();
+    drupal_set_message(t('The update has been performed.'));
+    drupal_goto('admin/comment');
+  }
+}
+
+function theme_comment_admin_overview($form) {
+  $header = array(NULL, t('Subject'), t('Author'), t('Time'), t('Operations'));
+
+  $output = form_render($form['options']);
+  if (is_array($form['subject'])) {
+    foreach (element_children($form['subject']) as $key) {
+      $row = array();
+      $row[] = form_render($form['comments'][$key]);
+      $row[] = form_render($form['subject'][$key]);
+      $row[] = form_render($form['username'][$key]);
+      $row[] = form_render($form['timestamp'][$key]);
+      $row[] = form_render($form['operations'][$key]);
+      $rows[] = $row;
+    }
+  }
+  else {
     $rows[] = array(array('data' => t('No comments available.'), 'colspan' => '6'));
   }
 
-  $output = theme('table', $header, $rows);
-  $output .= theme('pager', NULL, 50, 0, tablesort_pager());
+  $output .= theme('table', $header, $rows);
+  if ($form['pager']['#value']) {
+    $output .= form_render($form['pager']);
+  }
+
+  $output .= form_render($form);
+
   return $output;
+}
+
+/**
+ * List the selected comments and verify that the admin really wants to delete
+ * them.
+ */
+function comment_multiple_delete_confirm() {
+  $edit = $_POST['edit'];
+
+  $form['comments'] = array('#prefix' => '<ul>', '#suffix' => '</ul>', '#tree' => TRUE);
+  // array_filter() returns only elements with actual values
+  foreach (array_filter($edit['comments']) as $cid => $value) {
+    $subject = db_result(db_query('SELECT subject FROM {comments} WHERE cid = %d', $cid));
+    $form['comments'][$cid] = array('#type' => 'hidden', '#value' => $cid, '#prefix' => '<li>', '#suffix' => check_plain($subject) .'</li>');
+  }
+  $form['operation'] = array('#type' => 'hidden', '#value' => 'delete');
+
+  return confirm_form('comment_multiple_delete_confirm', $form,
+                      t('Are you sure you want to delete these comments and all their children?'),
+                      'admin/comment', t('This action cannot be undone.'),
+                      t('Delete comments'), t('Cancel'));
+}
+
+/**
+ * Perform the actual comment deletion.
+ */
+function comment_multiple_delete_confirm_submit($form_id, $edit) {
+  if ($edit['confirm']) {
+    foreach ($edit['comments'] as $cid => $value) {
+      $comment = _comment_load($cid);
+      _comment_delete_thread($comment);
+      _comment_update_node_statistics($comment->nid);
+      cache_clear_all();
+    }
+    drupal_set_message(t('The comments have been deleted.'));
+  }
+  drupal_goto('admin/comment');
 }
 
 /**
 *** misc functions: helpers, privates, history
 **/
+
+/**
+ * Load the entire comment by cid.
+ */
+function _comment_load($cid) {
+  return db_fetch_object(db_query('SELECT * FROM {comments} WHERE cid = %d', $cid));
+}
 
 function comment_num_all($nid) {
   static $cache;
