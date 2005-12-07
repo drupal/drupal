@@ -85,14 +85,14 @@ function _db_query($query, $debug = 0) {
   }
 
   if ($debug) {
-    print '<p>query: '. $query .'<br />error:'. pg_last_error() .'</p>';
+    print '<p>query: '. $query .'<br />error:'. pg_last_error($active_db) .'</p>';
   }
 
   if ($last_result !== FALSE) {
     return $last_result;
   }
   else {
-    trigger_error(check_plain(pg_last_error() ."\nquery: ". $query), E_USER_WARNING);
+    trigger_error(check_plain(pg_last_error($active_db) ."\nquery: ". $query), E_USER_WARNING);
     return FALSE;
   }
 }
@@ -167,7 +167,8 @@ function db_result($result, $row = 0) {
  * Determine whether the previous query caused an error.
  */
 function db_error() {
-  return pg_last_error();
+  global $active_db;
+  return pg_last_error($active_db);
 }
 
 /**
