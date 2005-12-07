@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.154 2005/12/07 20:57:45 dries Exp $
+// $Id: updates.inc,v 1.155 2005/12/07 21:13:58 dries Exp $
 
 function system_version($type) {
   switch ($type) {
@@ -1098,12 +1098,13 @@ function system_update_156() {
   $ret = array();
   $ret[] = update_sql("DELETE FROM {cache}");
   system_themes();
-  return array();
+  return $ret;
 }
 
 function system_update_157() {
   $ret = array();
   $ret[] = update_sql("DELETE FROM {url_alias} WHERE src = 'node/feed' AND dst = 'rss.xml'");
   $ret[] = update_sql("INSERT INTO {url_alias} (src, dst) VALUES ('rss.xml', 'node/feed')");
+  return $ret;
 }
 
