@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.160 2005/12/06 09:25:03 dries Exp $
+// $Id: update.php,v 1.161 2005/12/07 20:59:34 dries Exp $
 
 /**
  * @file
@@ -136,8 +136,7 @@ function db_change_column(&$ret, $table, $column, $column_new, $type, $attribute
   $ret[] = update_sql("UPDATE {". $table ."} SET $column_new = ". $column ."_old");
   if ($default) { $ret[] = update_sql("ALTER TABLE {". $table ."} ALTER $column_new SET $default"); }
   if ($not_null) { $ret[] = update_sql("ALTER TABLE {". $table ."} ALTER $column_new SET NOT NULL"); }
-  // We don't drop columns for now
-  // $ret[] = update_sql("ALTER TABLE {". $table ."} DROP ". $column ."_old");
+  $ret[] = update_sql("ALTER TABLE {". $table ."} DROP ". $column ."_old");
 }
 
 /**
@@ -196,7 +195,7 @@ function update_fix_schema_version() {
     switch ($GLOBALS['db_type']) {
       case 'pgsql':
         $ret = array();
-        db_add_column($ret, 'system', 'schema_version', 'int2', array('not null' => TRUE));
+        db_add_column($ret, 'system', 'schema_version', 'smallint', array('not null' => TRUE, 'default' => 1));
         break;
 
       case 'mysql':
@@ -244,11 +243,12 @@ function update_fix_watchdog() {
   if (update_get_installed_version('system') < 142 && !variable_get('update_watchdog_fixed', FALSE)) {
     switch ($GLOBALS['db_type']) {
       case 'pgsql':
+        $ret = array();
         db_add_column($ret, 'watchdog', 'referer', 'varchar(128)', array('not null' => TRUE, 'default' => "''"));
         break;
       case 'mysql':
       case 'mysqli':
-        $ret[] = db_query("ALTER TABLE {watchdog} ADD COLUMN referer varchar(128) NOT NULL");
+        db_query("ALTER TABLE {watchdog} ADD COLUMN referer varchar(128) NOT NULL");
         break;
     }
 
