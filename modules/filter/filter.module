@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.91 2005/12/05 09:11:33 dries Exp $
+// $Id: filter.module,v 1.92 2005/12/08 09:05:30 dries Exp $
 
 /**
  * @file
@@ -1276,28 +1276,30 @@ function _filter_xss_attributes($attr) {
  *   Cleaned up and HTML-escaped version of $string.
  */
 function filter_xss_bad_protocol($string, $decode = TRUE) {
+  static $allowed_protocols;
+  if (!isset($allowed_protocols)) {
+    $allowed_protocols = array_flip(variable_get('filter_allowed_protocols', array('http', 'https', 'ftp', 'news', 'nntp', 'telnet', 'mailto', 'irc', 'ssh', 'sftp', 'webcal')));
+  }
+
   // Get the plain text representation of the attribute value (i.e. its meaning)
   if ($decode) {
     $string = decode_entities($string);
   }
   // Remove soft hyphen
   $string = str_replace(chr(194) . chr(173), '', $string);
-  $string2 = '';
   // Strip protocols
+
   do {
     $before = $string;
-    $string = preg_replace_callback('/^([^:]+):/', '_filter_xss_bad_protocol', $string);
+    $colonpos = strpos($string, ':');
+    if ($colonpos > 0) {
+      $protocol = substr($string, 0, $colonpos);
+      if (!isset($allowed_protocols[$protocol])) {
+        $string = substr($string, $colonpos + 1);
+      }
+    }
   } while ($before != $string);
   return check_plain($string);
-}
-
-function _filter_xss_bad_protocol($m) {
-  static $allowed_protocols;
-  if (!isset($allowed_protocols)) {
-    $allowed_protocols = array_flip(variable_get('filter_allowed_protocols', array('http', 'https', 'ftp', 'news', 'nntp', 'telnet', 'mailto', 'irc', 'ssh', 'sftp', 'webcal')));
-  }
-  $string = preg_replace('/\s+/', '', $m[1]);
-  return isset($allowed_protocols[$string]) ? "$string:" : '';
 }
 
 /**
