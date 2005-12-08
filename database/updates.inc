@@ -1,6 +1,9 @@
 <?php
-// $Id: updates.inc,v 1.155 2005/12/07 21:13:58 dries Exp $
+// $Id: updates.inc,v 1.156 2005/12/08 08:47:15 dries Exp $
 
+// SCHEMA and SCHEMA_MIN represent the minimum and maximum N modulename_update_N.
+// Update SCHEMA when a new update function is added.  Update SCHEMA_MIN when old
+// update functions are removed.
 function system_version($type) {
   switch ($type) {
     case SCHEMA:
