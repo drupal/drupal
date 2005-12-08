@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.162 2005/12/08 08:40:09 dries Exp $
+// $Id: update.php,v 1.163 2005/12/08 09:09:08 dries Exp $
 
 /**
  * @file
@@ -177,12 +177,12 @@ function update_fix_schema_version() {
     switch ($GLOBALS['db_type']) {
       case 'pgsql':
         $ret = array();
-        db_add_column($ret, 'system', 'schema_version', 'smallint', array('not null' => TRUE, 'default' => 1));
+        db_add_column($ret, 'system', 'schema_version', 'smallint', array('not null' => TRUE, 'default' => 0));
         break;
 
       case 'mysql':
       case 'mysqli':
-        db_query('ALTER TABLE {system} ADD schema_version smallint(2) unsigned not null');
+        db_query('ALTER TABLE {system} ADD schema_version smallint(2) unsigned not null default 0');
         break;
     }
 
