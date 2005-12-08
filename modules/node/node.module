@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.560 2005/12/07 20:57:45 dries Exp $
+// $Id: node.module,v 1.561 2005/12/08 15:30:27 dries Exp $
 
 /**
  * @file
@@ -2157,14 +2157,19 @@ function node_access($op, $node = NULL, $uid = NULL) {
   // If the module did not override the access rights, use those set in the
   // node_access table.
   if ($node->nid && $node->status) {
-    $sql = 'SELECT COUNT(*) FROM {node_access} WHERE (nid = 0 OR nid = %d) AND CONCAT(realm, gid) IN (';
     $grants = array();
     foreach (node_access_grants($op, $uid) as $realm => $gids) {
       foreach ($gids as $gid) {
-        $grants[] = "'". $realm . $gid ."'";
+        $grants[] = "(gid = $gid AND realm = '$realm')";
       }
     }
-    $sql .= implode(',', $grants) .') AND grant_'. $op .' >= 1';
+
+    $grants_sql = '';
+    if (count($grants)) {
+      $grants_sql = 'AND ('. implode(' OR ', $grants) .')';
+    }
+
+    $sql = "SELECT COUNT(*) FROM {node_access} WHERE (nid = 0 OR nid = %d) $grants_sql AND grant_$op >= 1";
     $result = db_query($sql, $node->nid);
     return (db_result($result));
   }
@@ -2207,14 +2212,19 @@ function _node_access_where_sql($op = 'view', $node_access_alias = 'na', $uid = 
     return;
   }
 
-  $sql = $node_access_alias .'.grant_'. $op .' = 1 AND CONCAT('. $node_access_alias .'.realm, '. $node_access_alias .'.gid) IN (';
   $grants = array();
   foreach (node_access_grants($op, $uid) as $realm => $gids) {
     foreach ($gids as $gid) {
-      $grants[] = "'". $realm . $gid ."'";
+      $grants[] = "($node_access_alias.gid = $gid AND $node_access_alias.realm = '$realm')";
     }
   }
-  $sql .= implode(',', $grants) .')';
+
+  $grants_sql = '';
+  if (count($grants)) {
+    $grants_sql = 'AND ('. implode(' OR ', $grants) .')';
+  }
+
+  $sql = "$node_access_alias.grant_$op >= 1 $grants_sql";
   return $sql;
 }
 
@@ -2253,14 +2263,19 @@ function node_access_view_all_nodes() {
   static $access;
 
   if (!isset($access)) {
-    $sql = 'SELECT COUNT(*) FROM {node_access} WHERE nid = 0 AND CONCAT(realm, gid) IN (';
     $grants = array();
     foreach (node_access_grants('view') as $realm => $gids) {
       foreach ($gids as $gid) {
-        $grants[] = "'". $realm . $gid ."'";
+        $grants[] = "(gid = $gid AND realm = '$realm')";
       }
     }
-    $sql .= implode(',', $grants) .') AND grant_view = 1';
+
+    $grants_sql = '';
+    if (count($grants)) {
+      $grants_sql = 'AND ('. implode(' OR ', $grants) .')';
+    }
+
+    $sql = "SELECT COUNT(*) FROM {node_access} WHERE nid = 0 $grants_sql AND grant_view >= 1";
     $result = db_query($sql);
     $access = db_result($result);
   }
