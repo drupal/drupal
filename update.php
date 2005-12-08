@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.161 2005/12/07 20:59:34 dries Exp $
+// $Id: update.php,v 1.162 2005/12/08 08:40:09 dries Exp $
 
 /**
  * @file
@@ -17,24 +17,6 @@
 // Enforce access checking?
 $access_check = TRUE;
 
-
-define('SCHEMA', 0);
-define('SCHEMA_MIN', 1);
-
-/**
- * Includes install files.
- */
-function update_include_install_files() {
-  // The system module (Drupal core) is currently a special case
-  include_once './database/updates.inc';
-
-  foreach (module_list() as $module) {
-    $install_file = './'. drupal_get_path('module', $module) .'/'. $module .'.install';
-    if (is_file($install_file)) {
-      include_once $install_file;
-    }
-  }
-}
 
 function update_sql($sql) {
   $result = db_query($sql);
@@ -204,7 +186,7 @@ function update_fix_schema_version() {
         break;
     }
 
-    update_set_installed_version('system', $sql_updates[$update_start]);
+    drupal_set_installed_schema_version('system', $sql_updates[$update_start]);
     variable_del('update_start');
   }
 }
@@ -220,7 +202,7 @@ function update_fix_schema_version() {
 function update_fix_sessions() {
   $ret = array();
 
-  if (update_get_installed_version('system') < 130 && !variable_get('update_sessions_fixed', FALSE)) {
+  if (drupal_get_installed_schema_version('system') < 130 && !variable_get('update_sessions_fixed', FALSE)) {
     if ($GLOBALS['db_type'] == 'mysql') {
       db_query("ALTER TABLE {sessions} ADD cache int(11) NOT NULL default '0' AFTER timestamp");
     }
@@ -240,7 +222,7 @@ function update_fix_sessions() {
  * when update 142 is removed. It is part of the Drupal 4.6 to 4.7 migration.
  */
 function update_fix_watchdog() {
-  if (update_get_installed_version('system') < 142 && !variable_get('update_watchdog_fixed', FALSE)) {
+  if (drupal_get_installed_schema_version('system') < 142 && !variable_get('update_watchdog_fixed', FALSE)) {
     switch ($GLOBALS['db_type']) {
       case 'pgsql':
         $ret = array();
@@ -269,64 +251,7 @@ function update_data($module, $number) {
   $_SESSION['update_results'][$module][$number] = $ret;
 
   // Update the installed version
-  update_set_installed_version($module, $number);
-}
-
-/**
- * Returns an array of availiable schema versions for a module.
- *
- * @param $module
- *   A module name.
- * @return
- *   If the module has updates, an array of available updates. Otherwise,
- *   FALSE.
- */
-function update_get_versions($module) {
-  if (!($max = module_invoke($module, 'version', SCHEMA))) {
-    return FALSE;
-  }
-  if (!($min = module_invoke($module, 'version', SCHEMA_MIN))) {
-    $min = 1;
-  }
-  return range($min, $max);
-}
-
-/**
- * Returns the currently installed schema version for a module.
- *
- * @param $module
- *   A module name.
- * @return
- *   The currently installed schema version.
- */
-function update_get_installed_version($module, $reset = FALSE) {
-  static $versions;
-
-  if ($reset) {
-    unset($versions);
-  }
-
-  if (!$versions) {
-    $versions = array();
-    $result = db_query("SELECT name, schema_version FROM {system} WHERE type = 'module'");
-    while ($row = db_fetch_object($result)) {
-      $versions[$row->name] = $row->schema_version;
-    }
-  }
-
-  return $versions[$module];
-}
-
-/**
- * Update the installed version information for a module.
- *
- * @param $module
- *   A module name.
- * @param $version
- *   The new schema version.
- */
-function update_set_installed_version($module, $version) {
-  db_query("UPDATE {system} SET schema_version = %d WHERE name = '%s'", $version, $module);
+  drupal_set_installed_schema_version($module, $number);
 }
 
 function update_selection_page() {
@@ -343,13 +268,13 @@ function update_selection_page() {
   );
   foreach (module_list() as $module) {
     if (module_hook($module, 'version')) {
-      $updates = drupal_map_assoc(update_get_versions($module));
+      $updates = drupal_map_assoc(drupal_get_schema_versions($module));
       $updates[] = 'No updates available';
 
       $form['start'][$module] = array(
         '#type' => 'select',
         '#title' => t('%name module', array('%name' => $module)),
-        '#default_value' => array_search(update_get_installed_version($module), $updates) + 1,
+        '#default_value' => array_search(drupal_get_installed_schema_version($module), $updates) + 1,
         '#options' => $updates,
       );
     }
@@ -375,8 +300,8 @@ function update_update_page() {
   // Set the installed version so updates start at the correct place.
   $_SESSION['update_remaining'] = array();
   foreach ($_POST['edit']['start'] as $module => $version) {
-    update_set_installed_version($module, $version - 1);
-    $max_version = max(update_get_versions($module));
+    drupal_set_installed_schema_version($module, $version - 1);
+    $max_version = max(drupal_get_schema_versions($module));
     if ($version <= $max_version) {
       foreach (range($version, $max_version) as $update) {
         $_SESSION['update_remaining'][] = array('module' => $module, 'version' => $update);
@@ -541,7 +466,7 @@ drupal_maintenance_theme();
 
 // Access check:
 if (($access_check == FALSE) || ($user->uid == 1)) {
-  update_include_install_files();
+  include_once './includes/install.inc';
 
   update_fix_schema_version();
   update_fix_sessions();
