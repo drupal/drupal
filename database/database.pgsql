@@ -650,7 +650,7 @@ CREATE TABLE system (
   status integer NOT NULL default '0',
   throttle smallint NOT NULL default '0',
   bootstrap integer NOT NULL default '0',
-  schema_version smallint NOT NULL default 1,
+  schema_version smallint NOT NULL default 0,
   PRIMARY KEY (filename)
 );
 
@@ -814,22 +814,21 @@ CREATE TABLE watchdog (
 -- Insert some default values
 --
 
-INSERT INTO system VALUES ('modules/block.module','block','module','',1,0,0,1);
-INSERT INTO system VALUES ('modules/comment.module','comment','module','',1,0,0,1);
-INSERT INTO system VALUES ('modules/filter.module','filter','module','',1,0,0,1);
-INSERT INTO system VALUES ('modules/help.module','help','module','',1,0,0,1);
-INSERT INTO system VALUES ('modules/menu.module','menu','module','',1,0,0,1);
-INSERT INTO system VALUES ('modules/node.module','node','module','',1,0,0,1);
-INSERT INTO system VALUES ('modules/page.module','page','module','',1,0,0,1);
-INSERT INTO system VALUES ('modules/story.module','story','module','',1,0,0,1);
-INSERT INTO system VALUES ('modules/system.module','system','module','',1,0,0,1);
-INSERT INTO system VALUES ('modules/taxonomy.module','taxonomy','module','',1,0,0,1);
-INSERT INTO system VALUES ('modules/user.module','user','module','',1,0,0,1);
-INSERT INTO system VALUES ('modules/watchdog.module','watchdog','module','',1,0,0,1);
-INSERT INTO system VALUES ('themes/engines/phptemplate/phptemplate.engine', 'phptemplate', 'theme_engine','',1,0,0,1);
-INSERT INTO system VALUES ('themes/bluemarine/page.tpl.php', 'bluemarine', 'theme', 'themes/engines/phptemplate/phptemplate.engine',1,0,0,1);
+INSERT INTO system (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES ('modules/block.module', 'block', 'module', '', 1, 0, 0, 0);
+INSERT INTO system (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES ('modules/comment.module', 'comment', 'module', '', 1, 0, 0, 0);
+INSERT INTO system (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES ('modules/filter.module', 'filter', 'module', '', 1, 0, 0, 0);
+INSERT INTO system (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES ('modules/help.module', 'help', 'module', '', 1, 0, 0, 0);
+INSERT INTO system (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES ('modules/menu.module', 'menu', 'module', '', 1, 0, 0, 0);
+INSERT INTO system (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES ('modules/node.module', 'node', 'module', '', 1, 0, 0, 0);
+INSERT INTO system (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES ('modules/page.module', 'page', 'module', '', 1, 0, 0, 0);
+INSERT INTO system (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES ('modules/story.module', 'story', 'module', '', 1, 0, 0, 0);
+INSERT INTO system (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES ('modules/system.module', 'system', 'module', '', 1, 0, 0, 0);
+INSERT INTO system (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES ('modules/taxonomy.module', 'taxonomy', 'module', '', 1, 0, 0, 0);
+INSERT INTO system (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES ('modules/user.module', 'user', 'module', '', 1, 0, 0, 0);
+INSERT INTO system (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES ('modules/watchdog.module', 'watchdog', 'module', '', 1, 0, 0, 0);
+INSERT INTO system (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES ('themes/engines/phptemplate/phptemplate.engine', 'phptemplate', 'theme_engine', '', 1, 0, 0, 0);
+INSERT INTO system (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES ('themes/bluemarine/page.tpl.php', 'bluemarine', 'theme', 'themes/engines/phptemplate/phptemplate.engine', 1, 0, 0, 0);
 
-INSERT INTO variable(name,value) VALUES('update_start', 's:10:"2005-03-21";');
 INSERT INTO variable(name,value) VALUES('theme_default','s:10:"bluemarine";');
 INSERT INTO users(uid,name,mail) VALUES(0,'','');
 INSERT INTO users_roles(uid,rid) VALUES(0, 1);
