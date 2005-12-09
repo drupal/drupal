@@ -29,8 +29,11 @@ foreach (module_list() as $module) {
 function drupal_get_schema_versions($module) {
   $functions = get_defined_functions();
   foreach ($functions['user'] as $function) {
-    if (strpos($function, $module .'_update') === 0) {
-      $updates[] = (int) substr($function, strlen($module .'_update_'));
+    if (strpos($function, $module .'_update_') === 0) {
+      $version = substr($function, strlen($module .'_update_'));
+      if (is_numeric($version)) {
+        $updates[] = $version;
+      }
     }
   }
   if (count($updates) == 0) {
