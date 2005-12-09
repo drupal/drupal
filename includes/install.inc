@@ -27,13 +27,16 @@ foreach (module_list() as $module) {
  *   FALSE.
  */
 function drupal_get_schema_versions($module) {
-  if (!($max = module_invoke($module, 'version', SCHEMA))) {
+  $functions = get_defined_functions();
+  foreach ($functions['user'] as $function) {
+    if (strpos($function, $module .'_update') === 0) {
+      $updates[] = (int) substr($function, strlen($module .'_update_'));
+    }
+  }
+  if (count($updates) == 0) {
     return FALSE;
   }
-  if (!($min = module_invoke($module, 'version', SCHEMA_MIN))) {
-    $min = 1;
-  }
-  return range($min, $max);
+  return $updates;
 }
 
 /**

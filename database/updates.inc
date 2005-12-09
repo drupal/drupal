@@ -1,19 +1,6 @@
 <?php
 // $Id$
 
-// SCHEMA and SCHEMA_MIN represent the minimum and maximum N modulename_update_N.
-// Update SCHEMA when a new update function is added.  Update SCHEMA_MIN when old
-// update functions are removed.
-function system_version($type) {
-  switch ($type) {
-    case SCHEMA:
-      return 159;
-
-    case SCHEMA_MIN:
-      return 110;
-  }
-}
-
 function system_update_110() {
   $ret = array();
 
