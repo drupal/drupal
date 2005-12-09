@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.33 2005/12/09 15:56:23 dries Exp $
+// $Id: contact.module,v 1.34 2005/12/09 17:25:53 dries Exp $
 
 /**
  * @file
@@ -303,7 +303,7 @@ function contact_mail_page_submit($form_id, $edit) {
   $from = $edit['mail'];
 
   // Compose the body:
-  $message[] = t("%name sent a message using the contact form at %form:", array('%name' => $edit['name'], '%form' => url($_GET['q'], NULL, NULL, TRUE)));
+  $message[] = t("%name sent a message using the contact form at %form.", array('%name' => $edit['name'], '%form' => url($_GET['q'], NULL, NULL, TRUE)));
   $message[] = $edit['message'];
 
   // Tidy up the body:
