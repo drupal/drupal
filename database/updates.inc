@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.156 2005/12/08 08:47:15 dries Exp $
+// $Id: updates.inc,v 1.157 2005/12/09 15:33:39 dries Exp $
 
 // SCHEMA and SCHEMA_MIN represent the minimum and maximum N modulename_update_N.
 // Update SCHEMA when a new update function is added.  Update SCHEMA_MIN when old
@@ -7,7 +7,7 @@
 function system_version($type) {
   switch ($type) {
     case SCHEMA:
-      return 157;
+      return 159;
 
     case SCHEMA_MIN:
       return 110;
@@ -1111,3 +1111,124 @@ function system_update_157() {
   return $ret;
 }
 
+function system_update_158() {
+  $ret = array();
+
+  switch ($GLOBALS['db_type']) {
+    case 'mysqli':
+    case 'mysql':
+      $ret[] = update_sql("ALTER TABLE {old_revisions} ADD done tinyint(1) NOT NULL DEFAULT 0");
+      $ret[] = update_sql("ALTER TABLE {old_revisions} ADD INDEX (done)");
+      break;
+
+    case 'pgsql':
+      break;
+  }
+
+  return $ret;
+}
+
+/**
+ * Retrieve data out of the old_revisions table and put into new revision
+ * system.
+ *
+ * The old_revisions table is not deleted because any data which could not be
+ * put into the new system is retained.
+ */
+function system_update_159() {
+  $ret = array();
+
+  $result = db_query_range("SELECT * FROM {old_revisions} WHERE done = 0 AND type IN ('page', 'story', 'poll', 'book', 'forum')", 0, 20);
+
+  $vid = db_next_id('{node_revisions}_vid');
+  while ($node = db_fetch_object($result)) {
+    $revisions = unserialize($node->revisions);
+    if (is_array($revisions) && count($revisions) > 0) {
+      $revisions_query = array();
+      $revisions_args = array();
+      $book_query = array();
+      $book_args = array();
+      $forum_query = array();
+      $forum_args = array();
+      foreach ($revisions as $version) {
+        $revision = array();
+        foreach ($version['node'] as $node_field => $node_value) {
+          $revision[$node_field] = $node_value;
+        }
+        $revision['uid'] = $version['uid'];
+        $revision['timestamp'] = $version['timestamp'];
+        $vid++;
+        $revisions_query[] = "(%d, %d, %d, '%s', '%s', '%s', '%s', %d, %d)";
+        $revisions_args = array_merge($revisions_args, array($node->nid, $vid, $revision['uid'], $revision['title'], $revision['body'], $revision['teaser'], $revision['log'], $revision['timestamp'], $revision['format']));
+        switch ($node->type) {
+          case 'forum':
+            if ($revision['tid'] > 0) {
+              $forum_query[] = "(%d, %d, %d)";
+              $forum_args = array_merge($forum_args, array($vid, $node->nid, $revision['tid']));
+            }
+            break;
+
+          case 'book':
+            $book_query[] = "(%d, %d, %d, %d)";
+            $book_args = array_merge($book_args, array($vid, $node->nid, $revision['parent'], $revision['weight']));
+            break;
+        }
+      }
+      if (count($revisions_query)) {
+        $revision_status = db_query("INSERT INTO {node_revisions} (nid, vid, uid, title, body, teaser, log, timestamp, format) VALUES ". implode(',', $revisions_query), $revisions_args);
+      }
+      if (count($forum_query)) {
+        $forum_status = db_query("INSERT INTO {forum} (vid, nid, tid) VALUES ". implode(',', $forum_query), $forum_args);
+      }
+      if (count($book_query)) {
+        $book_status = db_query("INSERT INTO {book} (vid, nid, parent, weight) VALUES ". implode(',', $book_query), $book_args);
+      }
+      $delete = FALSE;
+      switch ($node->type) {
+        case 'forum':
+          if ($forum_status && $revision_status) {
+            $delete = TRUE;
+          }
+          break;
+
+        case 'book':
+          if ($book_status && $revision_status) {
+            $delete = TRUE;
+          }
+          break;
+
+        default:
+          if ($revision_status) {
+            $delete = TRUE;
+          }
+          break;
+      }
+
+      if ($delete) {
+        db_query('DELETE FROM {old_revisions} WHERE nid = %d', $node->nid);
+      }
+      else {
+        db_query('UPDATE {old_revisions} SET done = 1 WHERE nid = %d', $node->nid);
+      }
+    }
+  }
+
+  switch ($GLOBALS['db_type']) {
+    case 'mysqli':
+    case 'mysql':
+      $ret[] = update_sql("UPDATE {sequences} SET id = $vid WHERE name = '{node_revisions}_vid'");
+      break;
+
+    case 'pgsql':
+      break;
+  }
+
+  if (db_num_rows($result) < 50) {
+    $ret[] = update_sql('ALTER TABLE {old_revisions} DROP done');
+  }
+  else {
+    $ret['#finished'] = FALSE;
+  }
+
+  return $ret;
+}

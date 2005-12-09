@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.163 2005/12/08 09:09:08 dries Exp $
+// $Id: update.php,v 1.164 2005/12/09 15:33:39 dries Exp $
 
 /**
  * @file
@@ -238,20 +238,45 @@ function update_fix_watchdog() {
   }
 }
 
+/**
+ * Perform one update and store the results which will later be displayed on
+ * the finished page.
+ *
+ * @param $module
+ *   The module whose update will be run.
+ * @param $number
+ *   The update number to run.
+ *
+ * @return
+ *   TRUE if the update was finished. Otherwise, false.
+ */
 function update_data($module, $number) {
   $ret = module_invoke($module, 'update_'. $number);
+  // Assume the update finished unless the update results indicate otherwise.
+  $finished = TRUE;
+  if (isset($ret['#finished'])) {
+    $finished = $ret['#finished'];
+    unset($ret['#finished']);
+  }
 
   // Save the query and results for display by update_finished_page().
   if (!isset($_SESSION['update_results'])) {
     $_SESSION['update_results'] = array();
   }
-  else if (!isset($_SESSION['update_results'][$module])) {
+  if (!isset($_SESSION['update_results'][$module])) {
     $_SESSION['update_results'][$module] = array();
   }
-  $_SESSION['update_results'][$module][$number] = $ret;
+  if (!isset($_SESSION['update_results'][$module][$number])) {
+    $_SESSION['update_results'][$module][$number] = array();
+  }
+  $_SESSION['update_results'][$module][$number] = array_merge($_SESSION['update_results'][$module][$number], $ret);
 
-  // Update the installed version
-  drupal_set_installed_schema_version($module, $number);
+  if ($finished) {
+    // Update the installed version
+    drupal_set_installed_schema_version($module, $number);
+  }
+
+  return $finished;
 }
 
 function update_selection_page() {
@@ -337,11 +362,11 @@ function update_progress_page() {
  *   the overall percent finished. The second element is a status message.
  */
 function update_do_updates() {
-  foreach ($_SESSION['update_remaining'] as $key => $update) {
-    update_data($update['module'], $update['version']);
-    unset($_SESSION['update_remaining'][$key]);
-    if (timer_read('page') > 1000) {
-      break;
+  while (($update = reset($_SESSION['update_remaining'])) && timer_read('page') < 1000) {
+    $update_finished = update_data($update['module'], $update['version']);
+    if ($update_finished) {
+      // Dequeue the completed update.
+      unset($_SESSION['update_remaining'][key($_SESSION['update_remaining'])]);
     }
   }
 
