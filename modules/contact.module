@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.34 2005/12/09 17:25:53 dries Exp $
+// $Id: contact.module,v 1.35 2005/12/09 22:21:01 dries Exp $
 
 /**
  * @file
@@ -289,7 +289,7 @@ function contact_mail_page_validate($form_id, &$form) {
     $result = db_query('SELECT cid FROM {contact}');
     if (db_num_rows($result) == 1) {
       $category = db_fetch_object($result);
-      $form_values['cid'] = $category->category;
+      $form_values['cid'] = $category->cid;
     }
     else {
       form_set_error('category', t('You must select a valid category.'));
