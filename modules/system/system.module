@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.267 2005/12/08 08:40:10 dries Exp $
+// $Id: system.module,v 1.268 2005/12/09 15:40:15 dries Exp $
 
 /**
  * @file
@@ -891,8 +891,13 @@ function system_modules() {
     }
 
     // Update the contents of the system table:
-    db_query("DELETE FROM {system} WHERE name = '%s' AND type = '%s'", $file->name, 'module');
-    db_query("INSERT INTO {system} (name, description, type, filename, status, throttle, bootstrap, schema_version) VALUES ('%s', '%s', '%s', '%s', %d, %d, %d, %d)", $file->name, $file->description, 'module', $file->filename, $file->status, $file->throttle, $bootstrap, $file->schema_version);
+    if (isset($file->status)) {
+      db_query("UPDATE {system} SET description = '%s', filename = '%s', bootstrap = %d WHERE name = '%s'", $file->description, $file->filename, $bootstrap, $file->name);
+    }
+    else {
+      // This is a new module.
+      db_query("INSERT INTO {system} (name, description, type, filename, status, throttle, bootstrap) VALUES ('%s', '%s', '%s', '%s', %d, %d, %d)", $file->name, $file->description, 'module', $file->filename, $file->status, $file->throttle, $bootstrap);
+    }
   }
 
 
