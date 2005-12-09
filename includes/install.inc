@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.2 2005/12/09 15:46:47 dries Exp $
+// $Id: install.inc,v 1.3 2005/12/09 16:14:26 dries Exp $
 
 define('SCHEMA', 0);
 define('SCHEMA_MIN', 1);
@@ -29,8 +29,11 @@ foreach (module_list() as $module) {
 function drupal_get_schema_versions($module) {
   $functions = get_defined_functions();
   foreach ($functions['user'] as $function) {
-    if (strpos($function, $module .'_update') === 0) {
-      $updates[] = (int) substr($function, strlen($module .'_update_'));
+    if (strpos($function, $module .'_update_') === 0) {
+      $version = substr($function, strlen($module .'_update_'));
+      if (is_numeric($version)) {
+        $updates[] = $version;
+      }
     }
   }
   if (count($updates) == 0) {

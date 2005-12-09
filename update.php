@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.164 2005/12/09 15:33:39 dries Exp $
+// $Id: update.php,v 1.165 2005/12/09 16:14:25 dries Exp $
 
 /**
  * @file
@@ -292,8 +292,9 @@ function update_selection_page() {
     '#collapsed' => TRUE,
   );
   foreach (module_list() as $module) {
-    if (module_hook($module, 'version')) {
-      $updates = drupal_map_assoc(drupal_get_schema_versions($module));
+    $updates = drupal_get_schema_versions($module);
+    if ($updates !== FALSE) {
+      $updates = drupal_map_assoc($updates);
       $updates[] = 'No updates available';
 
       $form['start'][$module] = array(
