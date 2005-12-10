@@ -1214,7 +1214,7 @@ function system_update_159() {
   }
 
   // FIXME - wrong - allways will be true? (limit was 20)
-  if (db_num_rows($result) < 50) {
+  if (db_num_rows($result) < 20) {
     $ret[] = update_sql('ALTER TABLE {old_revisions} DROP done');
   }
   else {
