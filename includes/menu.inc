@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.93 2005/12/10 19:26:47 dries Exp $
+// $Id: menu.inc,v 1.94 2005/12/10 20:01:55 dries Exp $
 
 /**
  * @file
@@ -780,7 +780,7 @@ function menu_primary_links($start_level = 1, $pid = 0) {
     }
   }
 
-  // special case - provide link to admin/menu if primary links is empty.
+  // Special case - provide link to admin/menu if primary links is empty.
   if (is_null($links) && $start_level == 1 && $pid == variable_get('menu_primary_menu', 0)) {
     $links['1-1'] = l(t('edit primary links'),'admin/menu');
   }
@@ -875,12 +875,11 @@ function _menu_get_active_trail() {
  */
 function _menu_get_active_trail_in_submenu($pid) {
   static $trails;
-  static $built;
 
-  if (!$built) {
+  if (!isset($trails)) {
     // Find all menu items which point to the current node and for each
     // follow the parents up the chain to build an active trail.
-    $built = TRUE;
+    $trails = array();
     $menu = menu_get_menu();
     $path = $_GET['q'];
     $count = 0;
@@ -893,7 +892,7 @@ function _menu_get_active_trail_in_submenu($pid) {
             array_unshift($trails[$count], $mid);
             $mid = $menu['items'][$mid]['pid'];
           }
-    $count ++;
+          $count ++;
         }
       }
       $path = substr($path, 0, strrpos($path, '/'));
@@ -901,13 +900,14 @@ function _menu_get_active_trail_in_submenu($pid) {
   }
 
   if ($trails) {
-    foreach ($trails as $key => $trail) {
-      for ($i = 0 ; $i < count($trail); $i++) {
+    foreach ($trails as $trail) {
+      $count_trail = count($trail);
+      for ($i = 0; $i < $count_trail; $i++) {
         if ($trail[$i] == $pid) {
-    // create a trail from $pid to the current page inclusive.
-          for ( ; $i < count($trail) ; $i++) {
-      $subtrail[] = $trail[$i];
-    }
+          // Return a trail from $pid down to the current page inclusive.
+          for ( ; $i < $count_trail; $i++) {
+            $subtrail[] = $trail[$i];
+          }
           return $subtrail;
         }
       }
