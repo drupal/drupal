@@ -1510,8 +1510,8 @@ function node_submit($node) {
   }
 
   // Do node-type-specific validation checks.
-  node_invoke($node, 'execute');
-  node_invoke_nodeapi($node, 'execute');
+  node_invoke($node, 'submit');
+  node_invoke_nodeapi($node, 'submit');
 
   $node->validated = TRUE;
 
