@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.540 2005/12/08 08:40:10 dries Exp $
+// $Id: user.module,v 1.541 2005/12/10 08:08:44 dries Exp $
 
 /**
  * @file
@@ -1930,7 +1930,7 @@ function _user_forms(&$edit, $account, $category, $hook = 'form') {
  */
 function user_autocomplete($string) {
   $matches = array();
-  $result = db_query_range('SELECT name FROM {users} WHERE LOWER(name) LIKE LOWER("%s%%")', $string, 0, 10);
+  $result = db_query_range("SELECT name FROM {users} WHERE LOWER(name) LIKE LOWER('%s%%')", $string, 0, 10);
   while ($user = db_fetch_object($result)) {
     $matches[$user->name] = check_plain($user->name);
   }
