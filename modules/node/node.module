@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.561 2005/12/08 15:30:27 dries Exp $
+// $Id: node.module,v 1.562 2005/12/10 08:12:59 dries Exp $
 
 /**
  * @file
@@ -1510,8 +1510,8 @@ function node_submit($node) {
   }
 
   // Do node-type-specific validation checks.
-  node_invoke($node, 'execute');
-  node_invoke_nodeapi($node, 'execute');
+  node_invoke($node, 'submit');
+  node_invoke_nodeapi($node, 'submit');
 
   $node->validated = TRUE;
 
