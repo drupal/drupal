@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.92 2005/12/08 09:05:30 dries Exp $
+// $Id: filter.module,v 1.93 2005/12/10 19:35:13 dries Exp $
 
 /**
  * @file
@@ -759,7 +759,7 @@ function filter_form($value = FILTER_FORMAT_DEFAULT, $weight = -16) {
   $extra = l(t('More information about formatting options'), 'filter/tips');
 
   if (count($formats) > 1) {
-    $form = array(
+    $form['format'] = array(
       '#type' => 'fieldset',
       '#title' => t('Input format'),
       '#collapsible' => TRUE,
@@ -768,7 +768,7 @@ function filter_form($value = FILTER_FORMAT_DEFAULT, $weight = -16) {
     );
     // Multiple formats available: display radio buttons with tips.
     foreach ($formats as $format) {
-      $form[$format->format] = array(
+      $form['format'][$format->format] = array(
         '#type' => 'radio',
         '#title' => $format->name,
         '#default_value' => $value,
@@ -782,9 +782,9 @@ function filter_form($value = FILTER_FORMAT_DEFAULT, $weight = -16) {
   else {
     // Only one format available: use a hidden form item and only show tips.
     $format = array_shift($formats);
-    $form[$format->name] = array('#type' => 'value', '#value' => $format->format);
+    $form['format'][$format->name] = array('#type' => 'value', '#value' => $format->format);
     $tips = _filter_tips(variable_get('filter_default_format', 1), false);
-    $form['guidelines'] = array(
+    $form['format']['guidelines'] = array(
       '#type' => 'markup',
       '#title' => t('Formatting guidelines'),
       '#value' => theme('filter_tips', $tips, false, $extra),
