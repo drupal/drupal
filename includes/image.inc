@@ -1,5 +1,5 @@
 <?php
-// $Id: image.inc,v 1.10 2005/10/22 15:14:46 dries Exp $
+// $Id: image.inc,v 1.11 2005/12/10 19:26:47 dries Exp $
 
 /**
  * Return a list of available toolkits.

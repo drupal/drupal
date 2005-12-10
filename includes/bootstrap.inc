@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.76 2005/11/30 10:27:13 dries Exp $
+// $Id: bootstrap.inc,v 1.77 2005/12/10 19:26:47 dries Exp $
 
 /**
  * @file

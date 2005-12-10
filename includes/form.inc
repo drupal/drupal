@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.29 2005/12/05 21:21:49 dries Exp $
+// $Id: form.inc,v 1.30 2005/12/10 19:26:47 dries Exp $
 
 /**
  * @defgroup form Form generation

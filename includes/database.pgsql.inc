@@ -1,5 +1,5 @@
 <?php
-// $Id: database.pgsql.inc,v 1.22 2005/12/07 15:17:27 dries Exp $
+// $Id: database.pgsql.inc,v 1.23 2005/12/10 19:26:47 dries Exp $
 
 /**
  * @file

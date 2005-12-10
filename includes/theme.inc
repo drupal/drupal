@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.266 2005/12/06 09:25:22 dries Exp $
+// $Id: theme.inc,v 1.267 2005/12/10 19:26:47 dries Exp $
 
 /**
  * @file

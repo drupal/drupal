@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.3 2005/12/09 16:14:26 dries Exp $
+// $Id: install.inc,v 1.4 2005/12/10 19:26:47 dries Exp $
 
 define('SCHEMA', 0);
 define('SCHEMA_MIN', 1);

@@ -1,5 +1,5 @@
 <?php
-// $Id: index.php,v 1.88 2005/10/08 12:38:20 dries Exp $
+// $Id: index.php,v 1.89 2005/12/10 19:26:47 dries Exp $
 
 /**
  * @file

@@ -1,4 +1,4 @@
-// $Id: INSTALL.txt,v 1.25 2005/11/25 10:11:59 dries Exp $
+// $Id: INSTALL.txt,v 1.26 2005/12/10 19:26:47 dries Exp $
 
 CONTENTS OF THIS FILE
 ---------------------

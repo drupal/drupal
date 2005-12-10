@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.59 2005/11/13 02:32:18 unconed Exp $
+// $Id: locale.inc,v 1.60 2005/12/10 19:26:47 dries Exp $
 
 /**
  * @file

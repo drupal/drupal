@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysqli.inc,v 1.9 2005/12/06 09:25:22 dries Exp $
+// $Id: database.mysqli.inc,v 1.10 2005/12/10 19:26:47 dries Exp $
 
 /**
  * @file

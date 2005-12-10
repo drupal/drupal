@@ -1,5 +1,5 @@
 <?php
-// $Id: session.inc,v 1.20 2005/10/28 13:35:49 dries Exp $
+// $Id: session.inc,v 1.21 2005/12/10 19:26:47 dries Exp $
 
 /**
  * @file
