@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.159 2005/12/10 08:13:40 dries Exp $
+// $Id: updates.inc,v 1.160 2005/12/10 08:14:57 dries Exp $
 
 function system_update_110() {
   $ret = array();
@@ -1214,7 +1214,7 @@ function system_update_159() {
   }
 
   // FIXME - wrong - allways will be true? (limit was 20)
-  if (db_num_rows($result) < 50) {
+  if (db_num_rows($result) < 20) {
     $ret[] = update_sql('ALTER TABLE {old_revisions} DROP done');
   }
   else {
