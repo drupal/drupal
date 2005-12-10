@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.158 2005/12/09 15:46:47 dries Exp $
+// $Id: updates.inc,v 1.159 2005/12/10 08:13:40 dries Exp $
 
 function system_update_110() {
   $ret = array();
@@ -1109,6 +1109,8 @@ function system_update_158() {
       break;
 
     case 'pgsql':
+      db_add_column($ret, 'old_revisions', 'done', 'smallint', array('not null' => TRUE, 'default' => 0));
+      $ret[] = update_sql('CREATE INDEX {old_revisions}_done_idx ON {old_revisions}(done)');
       break;
   }
 
@@ -1207,9 +1209,11 @@ function system_update_159() {
       break;
 
     case 'pgsql':
+      $ret[] = update_sql("SELECT setval('{node_revisions}_vid_seq', $vid)");
       break;
   }
 
+  // FIXME - wrong - allways will be true? (limit was 20)
   if (db_num_rows($result) < 50) {
     $ret[] = update_sql('ALTER TABLE {old_revisions} DROP done');
   }
