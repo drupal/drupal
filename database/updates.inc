@@ -1223,3 +1223,15 @@ function system_update_159() {
 
   return $ret;
 }
+
+function system_update_160() {
+  $types = module_invoke('node', 'get_types');
+  if (is_array($types)) {
+    foreach($types as $type) {
+      if (!is_array(variable_get("node_options_$type", array()))) {
+        variable_set("node_options_$type", array());
+      }
+    }
+  }
+  return array();
+}
