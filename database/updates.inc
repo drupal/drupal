@@ -1235,3 +1235,8 @@ function system_update_160() {
   }
   return array();
 }
+
+function system_update_161() {
+  variable_del('forum_icon_path');
+}
+
