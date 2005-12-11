@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.293 2005/12/10 19:58:40 dries Exp $
+// $Id: forum.module,v 1.294 2005/12/11 12:44:39 dries Exp $
 
 /**
  * @file
@@ -326,7 +326,6 @@ function _forum_get_vid() {
 function forum_admin_configure() {
 
   $form = array();
-  $form['forum_icon_path'] = array('#type' => 'textfield', '#title' => t('Forum icon path'), '#default_value' => variable_get('forum_icon_path', ''), '#size' => 30, '#maxlength' =>  255, '#description' => t('The path to the forum icons.  Leave blank to disable icons. Don\'t add a trailing slash.  Default icons are available in the "misc" directory. You may use images of whatever size you wish, but it is recommended to use 15x15 or 16x16. '));
   $number = drupal_map_assoc(array(5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 80, 100, 10000));
   $form['forum_hot_topic'] = array('#type' => 'select', '#title' => t('Hot topic threshold'), '#default_value' => variable_get('forum_hot_topic', 15), '#options' => $number, '#description' => t('The number of posts a topic must have to be considered hot.'));
   $number = drupal_map_assoc(array(10, 25, 50, 75, 100));
@@ -964,14 +963,14 @@ function theme_forum_topic_list($tid, $topics, $sortby, $forum_per_page) {
       // folder is new if topic is new or there are new comments since last visit
       if ($topic->tid != $tid) {
         $rows[] = array(
-          array('data' => _forum_icon($topic->new, $topic->num_comments, $topic->comment_mode, $topic->sticky), 'class' => 'icon'),
+          array('data' => theme('forum_icon', $topic->new, $topic->num_comments, $topic->comment_mode, $topic->sticky), 'class' => 'icon'),
           array('data' => check_plain($topic->title), 'class' => 'title'),
           array('data' => l(t('This topic has been moved'), "forum/$topic->tid"), 'colspan' => '3')
         );
       }
       else {
         $rows[] = array(
-          array('data' => _forum_icon($topic->new, $topic->num_comments, $topic->comment_mode, $topic->sticky), 'class' => 'icon'),
+          array('data' => theme('forum_icon', $topic->new, $topic->num_comments, $topic->comment_mode, $topic->sticky), 'class' => 'icon'),
           array('data' => l($topic->title, "node/$topic->nid"), 'class' => 'topic'),
           array('data' => $topic->num_comments . ($topic->new_replies ? '<br />'. l(t('%a new', array('%a' => $topic->new_replies)), "node/$topic->nid", NULL, NULL, 'new') : ''), 'class' => 'replies'),
           array('data' => _forum_format($topic), 'class' => 'created'),
@@ -987,33 +986,29 @@ function theme_forum_topic_list($tid, $topics, $sortby, $forum_per_page) {
   return $output;
 }
 
-function _forum_icon($new_posts, $num_posts = 0, $comment_mode = 0, $sticky = 0) {
+/**
+ * Format the icon for each individual topic.
+ *
+ * @ingroup themeable
+ */
+function theme_forum_icon($new_posts, $num_posts = 0, $comment_mode = 0, $sticky = 0) {
 
-  $base_path = variable_get('forum_icon_path', '');
-  if ($base_path) {
-    if ($num_posts > variable_get('forum_hot_topic', 15)) {
-      $icon = $new_posts ? 'hot-new' : 'hot';
-    }
-    else {
-      $icon = $new_posts ? 'new' : 'default';
-    }
-
-    if ($comment_mode == COMMENT_NODE_READ_ONLY || $comment_mode == COMMENT_NODE_DISABLED) {
-      $icon = 'closed';
-    }
-
-    if ($sticky == 1) {
-      $icon = 'sticky';
-    }
-
-    // default
-    $file = variable_get('forum_icon_path', 'misc') ."/forum-$icon.png";
-
-    $output = theme('image', $file);
+  if ($num_posts > variable_get('forum_hot_topic', 15)) {
+    $icon = $new_posts ? 'hot-new' : 'hot';
   }
   else {
-    $output = '&nbsp;';
+    $icon = $new_posts ? 'new' : 'default';
   }
+
+  if ($comment_mode == COMMENT_NODE_READ_ONLY || $comment_mode == COMMENT_NODE_DISABLED) {
+    $icon = 'closed';
+  }
+
+  if ($sticky == 1) {
+    $icon = 'sticky';
+  }
+
+  $output = theme('image', "misc/forum-$icon.png");
 
   if ($new_posts) {
     $output = "<a name=\"new\">$output</a>";
