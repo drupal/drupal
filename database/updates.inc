@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.160 2005/12/10 08:14:57 dries Exp $
+// $Id: updates.inc,v 1.161 2005/12/11 10:40:07 dries Exp $
 
 function system_update_110() {
   $ret = array();
@@ -1222,4 +1222,16 @@ function system_update_159() {
   }
 
   return $ret;
+}
+
+function system_update_160() {
+  $types = module_invoke('node', 'get_types');
+  if (is_array($types)) {
+    foreach($types as $type) {
+      if (!is_array(variable_get("node_options_$type", array()))) {
+        variable_set("node_options_$type", array());
+      }
+    }
+  }
+  return array();
 }
