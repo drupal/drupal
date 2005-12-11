@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.541 2005/12/10 08:08:44 dries Exp $
+// $Id: user.module,v 1.542 2005/12/11 12:53:09 dries Exp $
 
 /**
  * @file
@@ -838,15 +838,15 @@ function user_login($msg = '') {
   if ($msg) {
     $form['message'] = array('#value' => "<p>$msg</p>");
   }
-  $form['name'] = array('#type' => 'textfield', '#title' => t('Username'), '#size' => 30, '#maxlength' => 64, '#required' => TRUE);
+  $form['name'] = array('#type' => 'textfield', '#title' => t('Username'), '#size' => 30, '#maxlength' => 64, '#required' => TRUE, '#attributes' => array('tabindex' => '1'));
   if (count(user_auth_help_links()) > 0) {
     $form['name']['#description'] = t('Enter your %s username, or an ID from one of our affiliates: %a.', array('%s' => variable_get('site_name', 'local'), '%a' => implode(', ', user_auth_help_links())));
   }
   else {
     $form['name']['#description'] = t('Enter your %s username.', array('%s' => variable_get('site_name', 'local')));
   }
-  $form['pass'] = array('#type' => 'password', '#title' => t('Password'), '#description' => t('Enter the password that accompanies your username.'), '#required' => TRUE);
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Log in'), '#weight' => 2);
+  $form['pass'] = array('#type' => 'password', '#title' => t('Password'), '#description' => t('Enter the password that accompanies your username.'), '#required' => TRUE, '#attributes' => array('tabindex' => '2'));
+  $form['submit'] = array('#type' => 'submit', '#value' => t('Log in'), '#weight' => 2, '#attributes' => array('tabindex' => '3'));
   return drupal_get_form('user_login', $form);
 }
 
