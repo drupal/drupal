@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.497 2005/12/10 19:26:47 dries Exp $
+// $Id: common.inc,v 1.498 2005/12/11 12:31:17 dries Exp $
 
 /**
  * @file
@@ -332,12 +332,12 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
   $uri = parse_url($url);
   switch ($uri['scheme']) {
     case 'http':
-      $port = $uri['port'] ? $uri['port'] : 80;
+      $port = isset($uri['port']) ? $uri['port'] : 80;
       $fp = @fsockopen($uri['host'], $port, $errno, $errstr, 15);
       break;
     case 'https':
       // Note: Only works for PHP 4.3 compiled with OpenSSL.
-      $port = $uri['port'] ? $uri['port'] : 443;
+      $port = isset($uri['port']) ? $uri['port'] : 443;
       $fp = @fsockopen('ssl://'. $uri['host'], $port, $errno, $errstr, 20);
       break;
     default:
@@ -352,8 +352,8 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
   }
 
   // Construct the path to act on.
-  $path = $uri['path'] ? $uri['path'] : '/';
-  if ($uri['query']) {
+  $path = isset($uri['path']) ? $uri['path'] : '/';
+  if (isset($uri['query'])) {
     $path .= '?'. $uri['query'];
   }
 
