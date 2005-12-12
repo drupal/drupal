@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.52 2005/12/05 10:38:42 dries Exp $
+// $Id: menu.module,v 1.53 2005/12/12 11:39:41 dries Exp $
 
 /**
  * @file
@@ -403,7 +403,7 @@ function menu_edit_item_form($edit) {
       $form['path'] = array('#type' => 'textfield', '#title' => t('Path'), '#default_value' => $edit['path'], '#description' => $path_description, '#required' => TRUE);
     }
     else {
-      $form['_path'] = array('#type' => 'item', '#title' => t('Path'), '#title' => l($edit['path'], $edit['path']));
+      $form['_path'] = array('#type' => 'item', '#title' => t('Path'), '#description' => l($edit['path'], $edit['path']));
       $form['path'] = array('#type' => 'hidden', '#value' => $edit['path']);
     }
     $expanded = $edit['type'] & MENU_EXPANDED ? 1 : 0;
