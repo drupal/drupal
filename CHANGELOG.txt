@@ -1,3 +1,7 @@
+Drupal 4.5.7, 2005-12-12
+------------------------
+- fixed bugs: no critical bugs were identified.
+
 Drupal 4.5.6, 2005-11-30
 ------------------------
 - fixed bugs, including 3 security vulnerabilities.
