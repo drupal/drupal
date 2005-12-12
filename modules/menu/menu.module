@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.53 2005/12/12 11:39:41 dries Exp $
+// $Id: menu.module,v 1.54 2005/12/12 14:25:45 dries Exp $
 
 /**
  * @file
@@ -642,7 +642,7 @@ function menu_parent_options($mid, $pid = 0, $depth = 0) {
  * Add menu item fields to the node form.
  */
 function menu_form_alter($form_id, &$form) {
-  if (isset($form['type']) && $form['type']['#value'] .'_node_form' == $form_id) {
+  if (user_access('administer menu') && isset($form['type']) && $form['type']['#value'] .'_node_form' == $form_id) {
     $edit = isset($_POST['edit']) ? $_POST['edit'] : '';
     $edit['nid'] = $form['nid']['#value'];
 
