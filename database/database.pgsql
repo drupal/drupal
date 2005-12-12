@@ -20,10 +20,9 @@ CREATE TABLE access (
 CREATE TABLE accesslog (
   aid SERIAL,
   sid varchar(32) NOT NULL default '',
-  mask varchar(255) NOT NULL default '',
   title varchar(255) default NULL,
-  path varchar(255) default NULL,
-  url varchar(255) default NULL,
+  path text default NULL,
+  url text default NULL,
   hostname varchar(128) default NULL,
   uid integer default '0',
   timer integer NOT NULL default '0',
@@ -31,6 +30,7 @@ CREATE TABLE accesslog (
   PRIMARY KEY (aid)
 );
 CREATE INDEX accesslog_timestamp_idx ON accesslog (timestamp);
+
 --
 -- Table structure for table 'aggregator_category'
 --
@@ -142,7 +142,7 @@ CREATE TABLE book (
   PRIMARY KEY (vid)
 );
 CREATE INDEX book_nid_idx ON book(nid);
-CREATE INDEX book_parent ON book(parent);
+CREATE INDEX book_parent_idx ON book(parent);
 
 --
 -- Table structure for boxes
@@ -224,7 +224,7 @@ CREATE TABLE node_comment_statistics (
   comment_count integer NOT NULL default '0',
   PRIMARY KEY (nid)
 );
-CREATE INDEX node_comment_statistics_timestamp_idx ON node_comment_statistics(last_comment_timestamp);
+CREATE INDEX node_comment_statistics_last_comment_timestamp_idx ON node_comment_statistics(last_comment_timestamp);
 
 --
 -- Table structure for directory
@@ -277,10 +277,9 @@ CREATE TABLE filter_formats (
 CREATE TABLE filters (
   format integer NOT NULL DEFAULT '0',
   module varchar(64) NOT NULL DEFAULT '',
-  delta smallint NOT NULL DEFAULT 1,
+  delta smallint NOT NULL DEFAULT 0,
   weight smallint DEFAULT '0' NOT NULL
 );
-CREATE INDEX filters_module_idx ON filters(module);
 CREATE INDEX filters_weight_idx ON filters(weight);
 
 --
@@ -355,8 +354,7 @@ CREATE TABLE locales_target (
   plural int4 NOT NULL default '0',
   UNIQUE (lid)
 );
-CREATE INDEX locales_target_lid_idx ON locales_target(lid);
-CREATE INDEX locales_target_lang_idx ON locales_target(locale);
+CREATE INDEX locales_target_locale_idx ON locales_target(locale);
 CREATE INDEX locales_target_plid_idx ON locales_target(plid);
 CREATE INDEX locales_target_plural_idx ON locales_target(plural);
 
@@ -432,11 +430,11 @@ CREATE INDEX node_type_idx ON node(type);
 CREATE INDEX node_title_type_idx ON node(title,type);
 CREATE INDEX node_status_idx ON node(status);
 CREATE INDEX node_uid_idx ON node(uid);
+CREATE INDEX node_vid_idx ON node(vid);
 CREATE INDEX node_moderate_idx ON node (moderate);
 CREATE INDEX node_promote_status_idx ON node (promote, status);
-CREATE INDEX node_created ON node(created);
-CREATE INDEX node_changed ON node(changed);
-CREATE INDEX node_vid_idx ON node(vid);
+CREATE INDEX node_created_idx ON node(created);
+CREATE INDEX node_changed_idx ON node(changed);
 CREATE INDEX node_status_type_nid_idx ON node(status,type,nid);
 
 --
@@ -473,21 +471,6 @@ CREATE INDEX node_revisions_uid_idx ON node_revisions(uid);
 CREATE SEQUENCE node_revisions_vid_seq INCREMENT 1 START 1;
 
 --
--- Table structure for table 'node_counter'
---
-
-CREATE TABLE node_counter (
-  nid integer NOT NULL default '0',
-  totalcount integer NOT NULL default '0',
-  daycount integer NOT NULL default '0',
-  timestamp integer NOT NULL default '0',
-  PRIMARY KEY (nid)
-);
-CREATE INDEX node_counter_totalcount_idx ON node_counter(totalcount);
-CREATE INDEX node_counter_daycount_idx ON node_counter(daycount);
-CREATE INDEX node_counter_timestamp_idx ON node_counter(timestamp);
-
---
 -- Table structure for table 'url_alias'
 --
 
@@ -507,7 +490,7 @@ CREATE TABLE profile_fields (
   UNIQUE (name),
   PRIMARY KEY (fid)
 );
-CREATE INDEX profile_fields_category ON profile_fields (category);
+CREATE INDEX profile_fields_category_idx ON profile_fields (category);
 
 --
 -- Table structure for table 'profile_values'
@@ -527,8 +510,9 @@ CREATE TABLE url_alias (
   dst varchar(128) NOT NULL default '',
   PRIMARY KEY (pid)
 );
-CREATE INDEX url_alias_dst_idx ON url_alias(dst);
+CREATE UNIQUE INDEX url_alias_dst_idx ON url_alias(dst);
 CREATE INDEX url_alias_src_idx ON url_alias(src);
+
 --
 -- Table structure for permission
 --
@@ -626,6 +610,8 @@ CREATE TABLE sessions (
   session text,
   PRIMARY KEY (sid)
 );
+CREATE INDEX sessions_uid_idx ON sessions(uid);
+CREATE INDEX sessions_timestamp_idx ON sessions(timestamp);
 
 --
 -- Table structure for sequences
@@ -637,6 +623,21 @@ CREATE TABLE sessions (
 --   id integer NOT NULL,
 --   PRIMARY KEY (name)
 -- );
+
+--
+-- Table structure for table 'node_counter'
+--
+
+CREATE TABLE node_counter (
+  nid integer NOT NULL default '0',
+  totalcount integer NOT NULL default '0',
+  daycount integer NOT NULL default '0',
+  timestamp integer NOT NULL default '0',
+  PRIMARY KEY (nid)
+);
+CREATE INDEX node_counter_totalcount_idx ON node_counter(totalcount);
+CREATE INDEX node_counter_daycount_idx ON node_counter(daycount);
+CREATE INDEX node_counter_timestamp_idx ON node_counter(timestamp);
 
 --
 -- Table structure for system
@@ -802,9 +803,9 @@ CREATE TABLE watchdog (
   type varchar(16) NOT NULL default '',
   message text NOT NULL default '',
   severity smallint NOT NULL default '0',
-  link varchar(255) NOT NULL default '',
-  location varchar(128) NOT NULL default '',
-  referer varchar(128) NOT NULL default '',
+  link text NOT NULL default '',
+  location text NOT NULL default '',
+  referer text NOT NULL default '',
   hostname varchar(128) NOT NULL default '',
   timestamp integer NOT NULL default '0',
   PRIMARY KEY (wid)
@@ -829,7 +830,6 @@ INSERT INTO system (filename, name, type, description, status, throttle, bootstr
 INSERT INTO system (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES ('themes/engines/phptemplate/phptemplate.engine', 'phptemplate', 'theme_engine', '', 1, 0, 0, 0);
 INSERT INTO system (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES ('themes/bluemarine/page.tpl.php', 'bluemarine', 'theme', 'themes/engines/phptemplate/phptemplate.engine', 1, 0, 0, 0);
 
-INSERT INTO variable(name,value) VALUES('theme_default','s:10:"bluemarine";');
 INSERT INTO users(uid,name,mail) VALUES(0,'','');
 INSERT INTO users_roles(uid,rid) VALUES(0, 1);
 
@@ -838,6 +838,8 @@ INSERT INTO permission VALUES (1,'access content',0);
 
 INSERT INTO role (name) VALUES ('authenticated user');
 INSERT INTO permission VALUES (2,'access comments, access content, post comments, post comments without approval',0);
+
+INSERT INTO variable(name,value) VALUES('theme_default', 's:10:"bluemarine";');
 
 INSERT INTO blocks(module,delta,theme,status) VALUES('user', 0, 'bluemarine', 1);
 INSERT INTO blocks(module,delta,theme,status) VALUES('user', 1, 'bluemarine', 1);
