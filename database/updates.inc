@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.162 2005/12/11 12:44:39 dries Exp $
+// $Id: updates.inc,v 1.163 2005/12/12 22:08:35 dries Exp $
 
 function system_update_110() {
   $ret = array();
@@ -530,12 +530,7 @@ function system_update_133() {
 
 function system_update_134() {
   $ret = array();
-  if ($GLOBALS['db_type'] == 'mysql') {
-    $ret[] = update_sql('ALTER TABLE {blocks} DROP types');
-  }
-  else {
-    $ret[] = update_sql("ALTER TABLE {blocks} RENAME types TO types_old");
-  }
+  $ret[] = update_sql('ALTER TABLE {blocks} DROP types');
   return $ret;
 }
 
@@ -797,20 +792,11 @@ function system_update_146() {
     db_query("UPDATE {node_revisions} SET log = '%s' WHERE vid = %d", $row->log, $row->nid);
   }
 
-  if ($GLOBALS['db_type'] == 'mysql') {
-    $ret[] = update_sql("ALTER TABLE {book} DROP log");
-    $ret[] = update_sql("ALTER TABLE {node} DROP teaser");
-    $ret[] = update_sql("ALTER TABLE {node} DROP body");
-    $ret[] = update_sql("ALTER TABLE {node} DROP format");
-    $ret[] = update_sql("ALTER TABLE {node} DROP revisions");
-  }
-  else { // pgsql
-    $ret[] = update_sql("ALTER TABLE {book} RENAME log TO log_old");
-    $ret[] = update_sql("ALTER TABLE {node} RENAME teaser TO teaser_old");
-    $ret[] = update_sql("ALTER TABLE {node} RENAME body TO body_old");
-    $ret[] = update_sql("ALTER TABLE {node} RENAME format TO format_old");
-    $ret[] = update_sql("ALTER TABLE {node} RENAME revisions TO revisions_old");
-  }
+  $ret[] = update_sql("ALTER TABLE {book} DROP log");
+  $ret[] = update_sql("ALTER TABLE {node} DROP teaser");
+  $ret[] = update_sql("ALTER TABLE {node} DROP body");
+  $ret[] = update_sql("ALTER TABLE {node} DROP format");
+  $ret[] = update_sql("ALTER TABLE {node} DROP revisions");
 
   return $ret;
 }
@@ -1013,7 +999,7 @@ function system_update_152() {
   // Postgresql only update
   switch ($GLOBALS['db_type']) {
     case 'pgsql':
-      $ret[] = update_sql("ALTER TABLE {forum} RENAME shadow TO shadow_old");
+      $ret[] = update_sql("ALTER TABLE {forum} DROP shadow");
       break;
     case 'mysql':
     case 'mysqli':
@@ -1213,7 +1199,6 @@ function system_update_159() {
       break;
   }
 
-  // FIXME - wrong - allways will be true? (limit was 20)
   if (db_num_rows($result) < 20) {
     $ret[] = update_sql('ALTER TABLE {old_revisions} DROP done');
   }
@@ -1238,5 +1223,53 @@ function system_update_160() {
 
 function system_update_161() {
   variable_del('forum_icon_path');
+}
+
+function system_update_162() {
+  $ret = array();
+
+  // PostgreSQL only update
+  switch ($GLOBALS['db_type']) {
+    case 'pgsql':
+
+      $ret[] = update_sql('DROP INDEX {book}_parent');
+      $ret[] = update_sql('CREATE INDEX {book}_parent_idx ON {book}(parent)');
+
+      $ret[] = update_sql('DROP INDEX {node_comment_statistics}_timestamp_idx');
+      $ret[] = update_sql('CREATE INDEX {node_comment_statistics}_last_comment_timestamp_idx ON {node_comment_statistics}(last_comment_timestamp)');
+
+      $ret[] = update_sql('ALTER TABLE {filters} ALTER delta SET DEFAULT 0');
+      $ret[] = update_sql('DROP INDEX {filters}_module_idx');
+
+      $ret[] = update_sql('DROP INDEX {locales_target}_lid_idx');
+      $ret[] = update_sql('DROP INDEX {locales_target}_lang_idx');
+      $ret[] = update_sql('CREATE INDEX {locales_target}_locale_idx ON {locales_target}(locale)');
+
+      $ret[] = update_sql('DROP INDEX {node}_created');
+      $ret[] = update_sql('CREATE INDEX {node}_created_idx ON {node}(created)');
+      $ret[] = update_sql('DROP INDEX {node}_changed');
+      $ret[] = update_sql('CREATE INDEX {node}_changed_idx ON {node}(changed)');
+
+      $ret[] = update_sql('DROP INDEX {profile_fields}_category');
+      $ret[] = update_sql('CREATE INDEX {profile_fields}_category_idx ON {profile_fields}(category)');
+
+      $ret[] = update_sql('DROP INDEX {url_alias}_dst_idx');
+      $ret[] = update_sql('CREATE UNIQUE INDEX {url_alias}_dst_idx ON {url_alias}(dst)');
+
+      $ret[] = update_sql('CREATE INDEX {sessions}_uid_idx ON {sessions}(uid)');
+      $ret[] = update_sql('CREATE INDEX {sessions}_timestamp_idx ON {sessions}(timestamp)');
+
+      $ret[] = update_sql('ALTER TABLE {accesslog} DROP mask');
+
+      db_change_column($ret, 'accesslog', 'path', 'path', 'text');
+      db_change_column($ret, 'accesslog', 'url', 'url', 'text');
+      db_change_column($ret, 'watchdog', 'link', 'link', 'text', array('not null' => TRUE, 'default' => "''"));
+      db_change_column($ret, 'watchdog', 'location', 'location', 'text', array('not null' => TRUE, 'default' => "''"));
+      db_change_column($ret, 'watchdog', 'referer', 'referer', 'text', array('not null' => TRUE, 'default' => "''"));
+
+      break;
+  }
+
+  return $ret;
 }
 
