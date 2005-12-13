@@ -1273,3 +1273,10 @@ function system_update_162() {
   return $ret;
 }
 
+function system_update_163() {
+  $ret = array();
+  if ($GLOBALS['db_type'] == 'mysql') {
+    $ret[] = update_sql('ALTER TABLE {cache} CHANGE data data LONGBLOB');
+  }
+  return $ret;
+}
