@@ -1,13 +1,10 @@
 <?php
-// $Id: contact.module,v 1.35 2005/12/09 22:21:01 dries Exp $
+// $Id: contact.module,v 1.36 2005/12/13 18:49:47 dries Exp $
 
 /**
  * @file
  * Enables the use of personal contact forms.
  */
-
-// Users are not allowed to send more than x mails/hour:
-define('CONTACT_HOURLY_THRESHOLD', 3);
 
 /**
  * Implementation of hook_help().
@@ -74,6 +71,13 @@ function contact_settings() {
     '#default_value' => variable_get('contact_form_information', t('You can leave us a message using the contact form below.')),
     '#description' => t('Information to show on the <a href="%form">contact page</a>.  Can be anything from submission guidelines to your postal address or telephone number.', array('%form' => url('contact')))
   );
+  $form['contact_hourly_threshold'] = array(
+    '#type' => 'select',
+    '#title' => t('Hourly threshold'),
+    '#options' => drupal_map_assoc(array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50)),
+    '#default_value' => variable_get('contact_hourly_threshold', 3),
+    '#description' => t('The maximum number of contact form submissions a user can perform per hour.'),
+  );
   return $form;
 }
 
@@ -106,8 +110,8 @@ function contact_mail_user() {
     else if (!valid_email_address($user->mail)) {
       $output = t('You need to provide a valid e-mail address to contact other users. Please edit your <a href="%url">user information</a>.', array('%url' => url("user/$user->uid/edit")));
     }
-    else if (!flood_is_allowed('contact', CONTACT_HOURLY_THRESHOLD)) {
-      $output = t("You can't contact more than %number users per hour. Please try again later.", array('%number' => CONTACT_HOURLY_THRESHOLD));
+    else if (!flood_is_allowed('contact', variable_get('contact_hourly_threshold', 3))) {
+      $output = t("You can't contact more than %number users per hour. Please try again later.", array('%number' => variable_get('contact_hourly_threshold', 3)));
     }
     else {
       drupal_set_title($account->name);
@@ -242,8 +246,8 @@ function contact_admin() {
 function contact_mail_page() {
   global $user;
 
-  if (!flood_is_allowed('contact', CONTACT_HOURLY_THRESHOLD)) {
-    $output = t("You can't send more than %number messages per hour. Please try again later.", array('%number' => CONTACT_HOURLY_THRESHOLD));
+  if (!flood_is_allowed('contact', variable_get('contact_hourly_threshold', 3))) {
+    $output = t("You can't send more than %number messages per hour. Please try again later.", array('%number' => variable_get('contact_hourly_threshold', 3)));
   }
   else {
     if ($user->uid) {

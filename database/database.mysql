@@ -166,7 +166,7 @@ CREATE TABLE boxes (
 
 CREATE TABLE cache (
   cid varchar(255) NOT NULL default '',
-  data longtext,
+  data longblob,
   expire int(11) NOT NULL default '0',
   created int(11) NOT NULL default '0',
   headers text,

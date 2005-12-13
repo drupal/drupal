@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.163 2005/12/12 22:08:35 dries Exp $
+// $Id: updates.inc,v 1.164 2005/12/13 18:49:46 dries Exp $
 
 function system_update_110() {
   $ret = array();
@@ -1273,3 +1273,10 @@ function system_update_162() {
   return $ret;
 }
 
+function system_update_163() {
+  $ret = array();
+  if ($GLOBALS['db_type'] == 'mysql') {
+    $ret[] = update_sql('ALTER TABLE {cache} CHANGE data data LONGBLOB');
+  }
+  return $ret;
+}
