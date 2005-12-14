@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.71 2005/12/14 18:46:21 dries Exp $
+// $Id: module.inc,v 1.72 2005/12/14 20:06:41 dries Exp $
 
 /**
  * @file
@@ -190,7 +190,7 @@ function module_invoke_all() {
   foreach (module_implements($hook) as $module) {
     $function = $module .'_'. $hook;
     $result = call_user_func_array($function, $args);
-    if (is_array($result)) {
+    if (isset($result) && is_array($result)) {
       $return = array_merge($return, $result);
     }
     else if (isset($result)) {

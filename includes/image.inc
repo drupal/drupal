@@ -1,5 +1,5 @@
 <?php
-// $Id: image.inc,v 1.11 2005/12/10 19:26:47 dries Exp $
+// $Id: image.inc,v 1.12 2005/12/14 20:06:41 dries Exp $
 
 /**
  * Return a list of available toolkits.
@@ -89,7 +89,7 @@ function image_get_info($file) {
   $data = @getimagesize($file);
   $file_size = @filesize($file);
 
-  if (is_array($data)) {
+  if (isset($data) && is_array($data)) {
     $extensions = array('1' => 'gif', '2' => 'jpg', '3' => 'png');
     $extension = array_key_exists($data[2], $extensions) ?  $extensions[$data[2]] : '';
     $details = array('width'     => $data[0],

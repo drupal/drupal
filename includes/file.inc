@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.57 2005/12/12 11:36:56 dries Exp $
+// $Id: file.inc,v 1.58 2005/12/14 20:06:41 dries Exp $
 
 /**
  * @file
@@ -490,7 +490,7 @@ function file_download() {
       if ($headers === -1) {
         drupal_access_denied();
       }
-      elseif (is_array($headers)) {
+      elseif (isset($headers) && is_array($headers)) {
         file_transfer($file, $headers);
       }
     }

@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.403 2005/12/08 09:11:32 dries Exp $
+// $Id: comment.module,v 1.404 2005/12/14 20:08:30 dries Exp $
 
 /**
  * @file
@@ -1112,7 +1112,7 @@ function theme_comment_admin_overview($form) {
   $header = array(NULL, t('Subject'), t('Author'), t('Time'), t('Operations'));
 
   $output = form_render($form['options']);
-  if (is_array($form['subject'])) {
+  if (isset($form['subject']) && is_array($form['subject'])) {
     foreach (element_children($form['subject']) as $key) {
       $row = array();
       $row[] = form_render($form['comments'][$key]);
@@ -1657,7 +1657,7 @@ function comment_invoke_comment(&$comment, $op) {
   foreach (module_implements('comment') as $name) {
     $function = $name .'_comment';
     $result = $function($comment, $op);
-    if (is_array($result)) {
+    if (isset($result) && is_array($result)) {
       $return = array_merge($return, $result);
     }
     else if (isset($result)) {

@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.149 2005/12/07 15:32:11 unconed Exp $
+// $Id: search.module,v 1.150 2005/12/14 20:08:30 dries Exp $
 
 /**
  * @file
@@ -975,7 +975,7 @@ function search_form($action = '', $keys = '', $type = null, $prompt = null) {
   $form['basic']['inline']['submit'] = array('#type' => 'submit', '#value' => t('Search'));
 
   $form_module = module_invoke($type, 'search', 'form', $keys);
-  if (is_array($form_module)) {
+  if (isset($form_module) && is_array($form_module)) {
     $form = array_merge($form, $form_module);
   }
 
@@ -991,7 +991,7 @@ function search_data($keys = NULL, $type = 'node') {
   if (isset($keys)) {
     if (module_hook($type, 'search')) {
       $results = module_invoke($type, 'search', 'search', $keys);
-      if (is_array($results) && count($results)) {
+      if (isset($results) && is_array($results) && count($results)) {
         $output .= '<dl class="search-results">';
         foreach ($results as $entry) {
           $output .= theme('search_item', $entry, $type);

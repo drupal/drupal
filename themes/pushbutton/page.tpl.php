@@ -102,12 +102,12 @@
 <table id="footer-menu" summary="Navigation elements." border="0" cellpadding="0" cellspacing="0" width="100%">
   <tr>
     <td align="center" valign="middle">
-    <?php if (is_array($primary_links)) : ?>
+    <?php if (isset($primary_links)) : ?>
       <div class="primary-links">
         <?php print theme('links', $primary_links) ?>
       </div>
     <?php endif; ?>
-    <?php if (is_array($secondary_links)) : ?>
+    <?php if (isset($secondary_links)) : ?>
       <div class="secondary-links">
         <?php print theme('links', $secondary_links) ?>
       </div>

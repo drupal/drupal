@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.94 2005/12/14 13:56:54 dries Exp $
+// $Id: filter.module,v 1.95 2005/12/14 20:08:30 dries Exp $
 
 /**
  * @file
@@ -556,7 +556,7 @@ function filter_admin_configure() {
   $form = array();
   foreach ($list as $filter) {
     $form_module = module_invoke($filter->module, 'filter', 'settings', $filter->delta, $format);
-    if (is_array($form_module)) {
+    if (isset($form_module) && is_array($form_module)) {
       $form = array_merge($form, $form_module);
     }
   }
@@ -613,7 +613,7 @@ function filter_list_all() {
 
   foreach (module_list() as $module) {
     $list = module_invoke($module, 'filter', 'list');
-    if (is_array($list)) {
+    if (isset($list) && is_array($list)) {
       foreach ($list as $delta => $name) {
         $filters[$module .'/'. $delta] = (object)array('module' => $module, 'delta' => $delta, 'name' => $name);
       }
@@ -655,7 +655,7 @@ function filter_list_format($format) {
     $result = db_query("SELECT * FROM {filters} WHERE format = %d ORDER BY weight ASC", $format);
     while ($filter = db_fetch_object($result)) {
       $list = module_invoke($filter->module, 'filter', 'list');
-      if (is_array($list) && isset($list[$filter->delta])) {
+      if (isset($list) && is_array($list) && isset($list[$filter->delta])) {
         $filter->name = $list[$filter->delta];
         $filters[$format][$filter->module .'/'. $filter->delta] = $filter;
       }

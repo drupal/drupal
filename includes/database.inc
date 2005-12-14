@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.48 2005/12/10 19:26:47 dries Exp $
+// $Id: database.inc,v 1.49 2005/12/14 20:06:41 dries Exp $
 
 /**
  * @file
@@ -232,7 +232,7 @@ function _db_rewrite_sql($query = '', $primary_table = 'n', $primary_field = 'ni
   $distinct = FALSE;
   foreach (module_implements('db_rewrite_sql') as $module) {
     $result = module_invoke($module, 'db_rewrite_sql', $query, $primary_table, $primary_field, $args);
-    if (is_array($result)) {
+    if (isset($result) && is_array($result)) {
       if (isset($result['where'])) {
         $where[] .= $result['where'];
       }

@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.243 2005/12/06 12:20:24 dries Exp $
+// $Id: taxonomy.module,v 1.244 2005/12/14 20:08:30 dries Exp $
 
 /**
  * @file
@@ -596,7 +596,7 @@ function taxonomy_node_save($nid, $terms) {
 
   // Free tagging vocabularies do not send their tids in the form,
   // so we'll detect them here and process them independently.
-  if ($terms['tags']) {
+  if (isset($terms['tags'])) {
     $typed_input = $terms['tags'];
     unset($terms['tags']);
 

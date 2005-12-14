@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.191 2005/12/05 09:11:33 dries Exp $
+// $Id: block.module,v 1.192 2005/12/14 20:08:30 dries Exp $
 
 /**
  * @file
@@ -599,7 +599,8 @@ function block_list($region) {
         // Check the current throttle status and see if block should be displayed
         // based on server load.
         if (!($block->throttle && (module_invoke('throttle', 'status') > 0))) {
-          if (is_array($array = module_invoke($block->module, 'block', 'view', $block->delta))) {
+          $array = module_invoke($block->module, 'block', 'view', $block->delta);
+          if (isset($array) && is_array($array)) {
             foreach ($array as $k => $v) {
               $block->$k = $v;
             }

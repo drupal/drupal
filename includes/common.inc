@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.498 2005/12/11 12:31:17 dries Exp $
+// $Id: common.inc,v 1.499 2005/12/14 20:06:41 dries Exp $
 
 /**
  * @file
@@ -741,7 +741,7 @@ function format_rss_item($title, $link, $description, $args = array()) {
     if (is_array($value)) {
       if ($value['key']) {
         $output .= ' <'. $value['key'];
-        if (is_array($value['attributes'])) {
+        if (isset($value['attributes']) && is_array($value['attributes'])) {
           $output .= drupal_attributes($value['attributes']);
         }
 

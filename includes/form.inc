@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.31 2005/12/14 13:22:19 dries Exp $
+// $Id: form.inc,v 1.32 2005/12/14 20:06:41 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -318,10 +318,11 @@ function _form_builder($form_id, $form) {
  *   The rendered HTML form.
  */
 function form_render(&$elements) {
-  $content = '';
-  if (is_array($elements)) {
-    uasort($elements, "_form_sort");
+  if (!isset($elements)) {
+    return NULL;
   }
+  $content = '';
+  uasort($elements, "_form_sort");
 
   if (!$elements['#children']) {
     /* render all the children using a theme function */
@@ -380,11 +381,11 @@ function _element_info($type, $refresh = null) {
     '#tree' => FALSE,
     '#parents' => $parents
   );
-  if ($refresh || !is_array($cache)) {
+  if ($refresh || !isset($cache)) {
     $cache = array();
     foreach (module_implements('elements') as $module) {
       $elements = module_invoke($module, 'elements');
-      if (is_array($elements)) {
+      if (isset($elements) && is_array($elements)) {
         $cache = array_merge_recursive($cache, $elements);
       }
     }
