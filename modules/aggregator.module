@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.263 2005/12/02 15:21:01 dries Exp $
+// $Id: aggregator.module,v 1.264 2005/12/14 14:03:05 dries Exp $
 
 /**
  * @file
@@ -729,7 +729,7 @@ function aggregator_save_feed($edit) {
   if ($edit['title']) {
     // the feed is being saved, save the categories as well
     if ($edit['category']) {
-      foreach ($edit['category'] as $cid) {
+      foreach ($edit['category'] as $cid => $value) {
         db_query('INSERT INTO {aggregator_category_feed} (fid, cid) VALUES (%d, %d)', $edit['fid'], $cid);
       }
     }
