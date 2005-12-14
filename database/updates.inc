@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.164 2005/12/13 18:49:46 dries Exp $
+// $Id: updates.inc,v 1.165 2005/12/14 20:01:39 dries Exp $
 
 function system_update_110() {
   $ret = array();
@@ -943,13 +943,13 @@ function system_update_151() {
 
     // insert all entries from theme links into new menus
     $num_inserted = 0;
-    if (is_array($ts) && is_array($ts[$menus[$loop]['links_var']])) {
+    if (isset($ts) && is_array($ts) && is_array($ts[$menus[$loop]['links_var']])) {
       $links = $ts[$menus[$loop]['links_var']];
       for ($i = 0; $i < count($links['text']); $i++) {
         if ($links['text'][$i] != "" && $links['link'][$i] != "") {
           $num_inserted ++;
           $node_unalias = db_fetch_array(db_query("SELECT src FROM {url_alias} WHERE dst = '%s'", $links['link'][$i]));
-          if (is_array($node_unalias)) {
+          if (isset($node_unalias) && is_array($node_unalias)) {
       $link_path = $node_unalias['src'];
     }
     else {
@@ -984,7 +984,7 @@ function system_update_151() {
     unset($ts[$menus[$loop]['more_var']]);
   }
 
-  if (is_array($ts)) {
+  if (isset($ts) && is_array($ts)) {
     variable_set('theme_settings', $ts);
   }
 
@@ -1118,7 +1118,7 @@ function system_update_159() {
   $vid = db_next_id('{node_revisions}_vid');
   while ($node = db_fetch_object($result)) {
     $revisions = unserialize($node->revisions);
-    if (is_array($revisions) && count($revisions) > 0) {
+    if (!$revisions && is_array($revisions) && count($revisions) > 0) {
       $revisions_query = array();
       $revisions_args = array();
       $book_query = array();
