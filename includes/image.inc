@@ -89,7 +89,7 @@ function image_get_info($file) {
   $data = @getimagesize($file);
   $file_size = @filesize($file);
 
-  if (is_array($data)) {
+  if (isset($data) && is_array($data)) {
     $extensions = array('1' => 'gif', '2' => 'jpg', '3' => 'png');
     $extension = array_key_exists($data[2], $extensions) ?  $extensions[$data[2]] : '';
     $details = array('width'     => $data[0],

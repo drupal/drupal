@@ -490,7 +490,7 @@ function file_download() {
       if ($headers === -1) {
         drupal_access_denied();
       }
-      elseif (is_array($headers)) {
+      elseif (isset($headers) && is_array($headers)) {
         file_transfer($file, $headers);
       }
     }

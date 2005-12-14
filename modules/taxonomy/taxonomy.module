@@ -596,7 +596,7 @@ function taxonomy_node_save($nid, $terms) {
 
   // Free tagging vocabularies do not send their tids in the form,
   // so we'll detect them here and process them independently.
-  if ($terms['tags']) {
+  if (isset($terms['tags'])) {
     $typed_input = $terms['tags'];
     unset($terms['tags']);
 

@@ -741,7 +741,7 @@ function format_rss_item($title, $link, $description, $args = array()) {
     if (is_array($value)) {
       if ($value['key']) {
         $output .= ' <'. $value['key'];
-        if (is_array($value['attributes'])) {
+        if (isset($value['attributes']) && is_array($value['attributes'])) {
           $output .= drupal_attributes($value['attributes']);
         }
 

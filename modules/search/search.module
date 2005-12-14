@@ -975,7 +975,7 @@ function search_form($action = '', $keys = '', $type = null, $prompt = null) {
   $form['basic']['inline']['submit'] = array('#type' => 'submit', '#value' => t('Search'));
 
   $form_module = module_invoke($type, 'search', 'form', $keys);
-  if (is_array($form_module)) {
+  if (isset($form_module) && is_array($form_module)) {
     $form = array_merge($form, $form_module);
   }
 
@@ -991,7 +991,7 @@ function search_data($keys = NULL, $type = 'node') {
   if (isset($keys)) {
     if (module_hook($type, 'search')) {
       $results = module_invoke($type, 'search', 'search', $keys);
-      if (is_array($results) && count($results)) {
+      if (isset($results) && is_array($results) && count($results)) {
         $output .= '<dl class="search-results">';
         foreach ($results as $entry) {
           $output .= theme('search_item', $entry, $type);

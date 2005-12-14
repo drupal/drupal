@@ -232,7 +232,7 @@ function _db_rewrite_sql($query = '', $primary_table = 'n', $primary_field = 'ni
   $distinct = FALSE;
   foreach (module_implements('db_rewrite_sql') as $module) {
     $result = module_invoke($module, 'db_rewrite_sql', $query, $primary_table, $primary_field, $args);
-    if (is_array($result)) {
+    if (isset($result) && is_array($result)) {
       if (isset($result['where'])) {
         $where[] .= $result['where'];
       }

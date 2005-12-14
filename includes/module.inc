@@ -190,7 +190,7 @@ function module_invoke_all() {
   foreach (module_implements($hook) as $module) {
     $function = $module .'_'. $hook;
     $result = call_user_func_array($function, $args);
-    if (is_array($result)) {
+    if (isset($result) && is_array($result)) {
       $return = array_merge($return, $result);
     }
     else if (isset($result)) {
