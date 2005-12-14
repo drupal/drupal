@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.93 2005/12/10 19:35:13 dries Exp $
+// $Id: filter.module,v 1.94 2005/12/14 13:56:54 dries Exp $
 
 /**
  * @file
@@ -750,7 +750,7 @@ function check_markup($text, $format = FILTER_FORMAT_DEFAULT, $check = TRUE) {
  * @return
  *   HTML for the form element.
  */
-function filter_form($value = FILTER_FORMAT_DEFAULT, $weight = -16) {
+function filter_form($value = FILTER_FORMAT_DEFAULT, $weight = -16, $parents = array('format')) {
   if ($value == FILTER_FORMAT_DEFAULT) {
     $value = variable_get('filter_default_format', 1);
   }
@@ -759,7 +759,7 @@ function filter_form($value = FILTER_FORMAT_DEFAULT, $weight = -16) {
   $extra = l(t('More information about formatting options'), 'filter/tips');
 
   if (count($formats) > 1) {
-    $form['format'] = array(
+    $form = array(
       '#type' => 'fieldset',
       '#title' => t('Input format'),
       '#collapsible' => TRUE,
@@ -768,12 +768,12 @@ function filter_form($value = FILTER_FORMAT_DEFAULT, $weight = -16) {
     );
     // Multiple formats available: display radio buttons with tips.
     foreach ($formats as $format) {
-      $form['format'][$format->format] = array(
+      $form[$format->format] = array(
         '#type' => 'radio',
         '#title' => $format->name,
         '#default_value' => $value,
         '#return_value' => $format->format,
-        '#parents' => array('format'),
+        '#parents' => $parents,
         '#description' => theme('filter_tips', _filter_tips($format->format, false)),
         '#validate' => array('filter_form_validate' => array())
       );
