@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.563 2005/12/14 13:26:39 dries Exp $
+// $Id: node.module,v 1.564 2005/12/14 19:04:27 dries Exp $
 
 /**
  * @file
@@ -1462,7 +1462,6 @@ function node_feed($nodes = 0, $channel = array()) {
   $channel = array_merge($channel_defaults, $channel);
 
   $output = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
-  $output .= "<!DOCTYPE rss [<!ENTITY % HTMLlat1 PUBLIC \"-//W3C//ENTITIES Latin 1 for XHTML//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml-lat1.ent\">]>\n";
   $output .= "<rss version=\"". $channel["version"] . "\" xml:base=\"". $base_url ."\" ". implode(' ', $namespaces) .">\n";
   $output .= format_rss_channel($channel['title'], $channel['link'], $channel['description'], $items, $channel['language']);
   $output .= "</rss>\n";
