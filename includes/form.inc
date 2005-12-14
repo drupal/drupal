@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.30 2005/12/10 19:26:47 dries Exp $
+// $Id: form.inc,v 1.31 2005/12/14 13:22:19 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -539,7 +539,15 @@ function expand_date($element) {
         $options = drupal_map_assoc(range(1900, 2050));
         break;
     }
-    $element[$type] = array('#type' => 'select', '#value' => $element['#value'][$type], '#attributes' => $element['#attributes'], '#parents' => $element['#parents'], '#options' => $options,  '#tree' => TRUE);
+    $parents = $element['#parents'];
+    $parents[] = $type;
+    $element[$type] = array(
+      '#type' => 'select',
+      '#value' => $element['#value'][$type],
+      '#attributes' => $element['#attributes'],
+      '#parents' => $parents,
+      '#options' => $options,
+    );
   }
 
   return $element;
