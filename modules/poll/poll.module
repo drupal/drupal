@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.182 2005/12/02 15:21:01 dries Exp $
+// $Id: poll.module,v 1.183 2005/12/14 13:30:01 dries Exp $
 
 /**
  * @file
@@ -292,6 +292,7 @@ function poll_perm() {
  * Creates a simple teaser that lists all the choices.
  */
 function poll_teaser($node) {
+  $teaser = NULL;
   if (is_array($node->choice)) {
     foreach ($node->choice as $k => $choice) {
       $teaser .= '* '. $choice['chtext'] .'\n';
