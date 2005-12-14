@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.70 2005/12/10 19:26:47 dries Exp $
+// $Id: module.inc,v 1.71 2005/12/14 18:46:21 dries Exp $
 
 /**
  * @file
@@ -142,7 +142,13 @@ function module_implements($hook) {
     }
   }
 
-  return $implementations[$hook];
+  // The explicit cast forces a copy to be made.  This is needed because
+  // $implementations[$hook] is only a reference to an element of
+  // $implementations and if there are nested foreaches (due to nested node
+  // API calls, for example), they would both manipulate the same array's
+  // references, which causes some modules' hooks not to be called.
+  // See also http://www.zend.com/zend/art/ref-count.php.
+  return (array)$implementations[$hook];
 }
 
 /**
