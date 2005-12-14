@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.562 2005/12/10 08:12:59 dries Exp $
+// $Id: node.module,v 1.563 2005/12/14 13:26:39 dries Exp $
 
 /**
  * @file
@@ -196,9 +196,10 @@ function node_teaser($body, $format = NULL) {
 }
 
 function _node_names($op = '', $node = NULL) {
-  static $node_names, $node_list;
+  static $node_names = array();
+  static $node_list = array();
 
-  if (!isset($node_names)) {
+  if (empty($node_names)) {
     $node_names = module_invoke_all('node_info');
     foreach ($node_names as $type => $value) {
       $node_list[$type] = $value['name'];
