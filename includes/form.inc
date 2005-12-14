@@ -539,7 +539,15 @@ function expand_date($element) {
         $options = drupal_map_assoc(range(1900, 2050));
         break;
     }
-    $element[$type] = array('#type' => 'select', '#value' => $element['#value'][$type], '#attributes' => $element['#attributes'], '#parents' => $element['#parents'], '#options' => $options,  '#tree' => TRUE);
+    $parents = $element['#parents'];
+    $parents[] = $type;
+    $element[$type] = array(
+      '#type' => 'select',
+      '#value' => $element['#value'][$type],
+      '#attributes' => $element['#attributes'],
+      '#parents' => $parents,
+      '#options' => $options,
+    );
   }
 
   return $element;
