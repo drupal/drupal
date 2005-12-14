@@ -292,6 +292,7 @@ function poll_perm() {
  * Creates a simple teaser that lists all the choices.
  */
 function poll_teaser($node) {
+  $teaser = NULL;
   if (is_array($node->choice)) {
     foreach ($node->choice as $k => $choice) {
       $teaser .= '* '. $choice['chtext'] .'\n';
