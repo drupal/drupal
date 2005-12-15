@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.565 2005/12/14 20:08:30 dries Exp $
+// $Id: node.module,v 1.566 2005/12/15 15:57:55 dries Exp $
 
 /**
  * @file
@@ -1446,7 +1446,7 @@ function node_feed($nodes = 0, $channel = array()) {
     $extra = array_merge($extra, array(array('key' => 'pubDate', 'value' =>  date('r', $item->created)), array('key' => 'dc:creator', 'value' => $item->name), array('key' => 'guid', 'value' => $item->nid . ' at ' . $base_url, 'attributes' => array('isPermaLink' => 'false'))));
     foreach ($extra as $element) {
       if ($element['namespace']) {
-        $namespaces = array_merge($namespaces, array($element['namespace']));
+        $namespaces = array_merge($namespaces, $element['namespace']);
       }
     }
     $items .= format_rss_item($item->title, $link, $item_text, $extra);
