@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.406 2005/12/15 16:24:40 dries Exp $
+// $Id: comment.module,v 1.407 2005/12/15 16:31:01 dries Exp $
 
 /**
  * @file
@@ -1297,7 +1297,7 @@ function comment_form($edit, $title = NULL) {
   else if (variable_get('comment_anonymous', COMMENT_ANONYMOUS_MAYNOT_CONTACT) == COMMENT_ANONYMOUS_MUST_CONTACT) {
     $form['name'] = array('#type' => 'textfield', '#title' => t('Your name'), '#maxlength' => 60, '#size' => 30, '#default_value' => $edit['name'] ? $edit['name'] : variable_get('anonymous', 'Anonymous'), '#required' => TRUE);
 
-    $form['name'] = array('#type' => 'textfield', '#title' => t('E-mail'), '#maxlength' => 64, '#size' => 30, '#default_value' => $edit['mail'],'#description' => t('The content of this field is kept private and will not be shown publicly.'), '#required' => TRUE);
+    $form['mail'] = array('#type' => 'textfield', '#title' => t('E-mail'), '#maxlength' => 64, '#size' => 30, '#default_value' => $edit['mail'],'#description' => t('The content of this field is kept private and will not be shown publicly.'), '#required' => TRUE);
 
     $form['homepage'] = array('#type' => 'textfield', '#title' => t('Homepage'), '#maxlength' => 255, '#size' => 30, '#default_value' => $edit['homepage']);
   }
