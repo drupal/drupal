@@ -1,5 +1,5 @@
 <?php
-// $Id: page.module,v 1.147 2005/12/05 09:11:33 dries Exp $
+// $Id: page.module,v 1.148 2005/12/15 16:24:40 dries Exp $
 
 /**
  * @file
@@ -99,10 +99,7 @@ function page_form(&$node) {
   $form['format'] = filter_form($node->format);
 
   $form['log'] = array(
-    '#type' => 'fieldset', '#title' => t('Log message'), '#collapsible' => TRUE, '#collapsed' => TRUE
-  );
-  $form['log']['message'] = array(
-    '#type' => 'textarea', '#default_value' => $node->log,
+    '#type' => 'textarea', '#title' => t('Log message'), '#default_value' => $node->log, '#weight' => 5,
     '#description' => t('An explanation of the additions or updates being made to help other authors understand your motivations.')
   );
 

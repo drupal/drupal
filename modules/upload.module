@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.66 2005/12/10 19:43:12 dries Exp $
+// $Id: upload.module,v 1.67 2005/12/15 16:24:40 dries Exp $
 
 /**
  * @file
@@ -172,6 +172,7 @@ function upload_form_alter($form_id, &$form) {
         '#description' => t('Changes made to the attachments are not permanent until you save this post. The first "listed" file will be included in RSS feeds.'),
         '#prefix' => '<div class="attachments">',
         '#suffix' => '</div>',
+        '#weight' => 30,
       );
       $form['attachments'] += _upload_form($node);
       $form['#attributes'] = array('enctype' => 'multipart/form-data');

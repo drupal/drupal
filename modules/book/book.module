@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.337 2005/12/05 16:07:18 dries Exp $
+// $Id: book.module,v 1.338 2005/12/15 16:24:40 dries Exp $
 
 /**
  * @file
@@ -247,7 +247,7 @@ function book_validate($node) {
  */
 function book_form(&$node) {
   $form['parent'] = array(
-    '#type' => 'select', '#title' => t('Parent'), '#default_value' => ($node->parent ? $node->parent : arg(4)), '#options' => book_toc($node->nid), '#weight' => -15,
+    '#type' => 'select', '#title' => t('Parent'), '#default_value' => ($node->parent ? $node->parent : arg(4)), '#options' => book_toc($node->nid), '#weight' => -4,
     '#description' => t('The parent that this page belongs in. Note that pages whose parent is &lt;top-level&gt; are regarded as independent, top-level books.')
   );
 
@@ -258,16 +258,13 @@ function book_form(&$node) {
   $form['format'] = filter_form($node->format);
 
   $form['log'] = array(
-    '#type' => 'fieldset', '#title' => t('Log message'), '#collapsible' => TRUE, '#collapsed' => TRUE
-  );
-  $form['log']['message'] = array(
-    '#type' => 'textarea', '#default_value' => $node->log, '#weight' => 18,
+    '#type' => 'textarea', '#title' => t('Log message'), '#default_value' => $node->log, '#weight' => 5,
     '#description' => t('An explanation of the additions or updates being made to help other authors understand your motivations.')
   );
 
   if (user_access('administer nodes')) {
     $form['weight'] = array(
-        '#type' => 'weight', '#title' => t('Weight'),  '#default_value' => $node->weight, '#delta' => 15, '#weight' => -14,
+        '#type' => 'weight', '#title' => t('Weight'), '#default_value' => $node->weight, '#delta' => 15, '#weight' => 5,
         '#description' => t('Pages at a given level are ordered first by weight and then by title.')
     );
   }

@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.244 2005/12/14 20:08:30 dries Exp $
+// $Id: taxonomy.module,v 1.245 2005/12/15 16:24:40 dries Exp $
 
 /**
  * @file
@@ -131,7 +131,7 @@ function taxonomy_form_vocabulary($edit = array()) {
   $extra = module_invoke_all('taxonomy', 'form', 'vocabulary');
   if (is_array($extra)) {
     foreach ($extra as $key => $element) {
-      $extra[$key]['#weight'] = isset($extra[$key]['#weight']) ? $nodeapi[$key]['#weight'] : -18;
+      $extra[$key]['#weight'] = isset($extra[$key]['#weight']) ? $extra[$key]['#weight'] : -18;
     }
     $form = array_merge($form, $extra);
   }
@@ -242,7 +242,7 @@ function taxonomy_form_term($edit = array()) {
   $extra = module_invoke_all('taxonomy', 'term', 'vocabulary');
   if (is_array($extra)) {
     foreach ($extra as $key => $element) {
-      $extra[$key]['#weight'] = isset($extra[$key]['#weight']) ? $nodeapi[$key]['#weight'] : -18;
+      $extra[$key]['#weight'] = isset($extra[$key]['#weight']) ? $extra[$key]['#weight'] : -18;
     }
     $form = array_merge($form, $extra);
   }
@@ -532,13 +532,12 @@ function taxonomy_form_alter($form_id, &$form) {
       }
       else {
         $ntterms = isset($node->taxonomy) ? $terms : array_keys($terms);
-
         $form['taxonomy'][$vocabulary->vid] = taxonomy_form($vocabulary->vid, $ntterms, $help, 'taxonomy');
       }
     }
     if (isset($form['taxonomy'])) {
       $form['taxonomy']['#tree'] = TRUE;
-      $form['taxonomy']['#weight'] = -15;
+      $form['taxonomy']['#weight'] = $vocabulary->weight;
     }
   }
 }

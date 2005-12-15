@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.74 2005/12/12 14:25:45 dries Exp $
+// $Id: path.module,v 1.75 2005/12/15 16:24:40 dries Exp $
 
 /**
  * @file
@@ -225,7 +225,8 @@ function path_form_alter($form_id, &$form) {
       '#type' => 'fieldset',
       '#title' => t('URL path settings'),
       '#collapsible' => TRUE,
-      '#collapsed' => TRUE,
+      '#collapsed' => empty($path),
+      '#weight' => 30,
     );
     $form['path']['path'] = array(
       '#type' => 'textfield',
