@@ -241,9 +241,10 @@ function comment_form_alter($form_id, &$form) {
       $selected = isset($node->comment) ? $node->comment : variable_get("comment_$node->type", COMMENT_NODE_READ_WRITE);
       $form['user_comments'] = array(
         '#type' => 'fieldset',
-        '#title' => t('User Comments'),
+        '#title' => t('User comments'),
         '#collapsible' => TRUE,
         '#collapsed' => TRUE,
+        '#weight' => 30,
       );
       $form['user_comments']['comment'] = array(
         '#type' => 'radios',
