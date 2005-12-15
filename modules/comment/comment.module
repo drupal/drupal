@@ -517,7 +517,8 @@ function comment_validate(&$edit) {
   }
   else {
     $date = isset($edit['date']) ? $edit['date'] : 'now';
-    if (strtotime($date) != -1) {
+    // As of PHP 5.1.0, strtotime returns FALSE upon failure instead of -1.
+    if (strtotime($date) > 0) {
       $edit['timestamp'] = strtotime($date);
     }
     else {
