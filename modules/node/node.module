@@ -1446,7 +1446,7 @@ function node_feed($nodes = 0, $channel = array()) {
     $extra = array_merge($extra, array(array('key' => 'pubDate', 'value' =>  date('r', $item->created)), array('key' => 'dc:creator', 'value' => $item->name), array('key' => 'guid', 'value' => $item->nid . ' at ' . $base_url, 'attributes' => array('isPermaLink' => 'false'))));
     foreach ($extra as $element) {
       if ($element['namespace']) {
-        $namespaces = array_merge($namespaces, array($element['namespace']));
+        $namespaces = array_merge($namespaces, $element['namespace']);
       }
     }
     $items .= format_rss_item($item->title, $link, $item_text, $extra);
