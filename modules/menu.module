@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.55 2005/12/15 16:24:40 dries Exp $
+// $Id: menu.module,v 1.56 2005/12/15 21:53:49 dries Exp $
 
 /**
  * @file
@@ -237,6 +237,9 @@ function menu_reset() {
   switch ($op) {
     case t('Reset all'):
       db_query('DELETE FROM {menu}');
+      $mid = menu_edit_item_save(array('title' => t('Primary menu links'), 'pid' => 0, 'type' => MENU_CUSTOM_MENU));
+      variable_set('menu_primary_menu', $mid);
+      variable_set('menu_secondary_menu', $mid);
       drupal_set_message(t('The menu items have been reset to their default settings.'));
       drupal_goto('admin/menu');
       break;
@@ -447,6 +450,8 @@ function menu_edit_item_validate($edit) {
 
 /**
  * Save changes to a menu item into the database.
+ *
+ * @return mid
  */
 function menu_edit_item_save($edit) {
   $menu = menu_get_menu();
@@ -463,10 +468,11 @@ function menu_edit_item_save($edit) {
     drupal_set_message(t('The menu item %title has been updated.', array('%title' => theme('placeholder', $edit['title']))));
   }
   else {
-    $mid = db_next_id('{menu}_mid');
-    db_query("INSERT INTO {menu} (mid, pid, path, title, description, weight, type) VALUES (%d, %d, '%s', '%s', '%s', %d, %d)", $mid, $edit['pid'], $edit['path'], $edit['title'], $edit['description'], $edit['weight'], $edit['type'] | MENU_MODIFIED_BY_ADMIN);
+    $edit['mid'] = db_next_id('{menu}_mid');
+    db_query("INSERT INTO {menu} (mid, pid, path, title, description, weight, type) VALUES (%d, %d, '%s', '%s', '%s', %d, %d)", $edit['mid'], $edit['pid'], $edit['path'], $edit['title'], $edit['description'], $edit['weight'], $edit['type'] | MENU_MODIFIED_BY_ADMIN);
     drupal_set_message(t('The menu item %title has been created.', array('%title' => theme('placeholder', $edit['title']))));
   }
+  return $edit['mid'];
 }
 
 /**
