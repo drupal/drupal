@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.265 2005/12/14 19:04:27 dries Exp $
+// $Id: aggregator.module,v 1.266 2005/12/15 16:02:50 dries Exp $
 
 /**
  * @file
@@ -484,7 +484,7 @@ function aggregator_parse_w3cdtf($date_str) {
     return $epoch;
   }
   else {
-    return -1;
+    return FALSE;
   }
 }
 
@@ -580,10 +580,10 @@ function aggregator_parse_feed(&$data, $feed) {
     else if ($item['MODIFIED']) $date = $item['MODIFIED'];                 // Atom XML
     else $date = 'now';
 
-    $timestamp = strtotime($date); // strtotime() returns -1 on failure
-    if ($timestamp < 0) {
-      $timestamp = aggregator_parse_w3cdtf($date); // also returns -1 on failure
-      if ($timestamp < 0) {
+    $timestamp = strtotime($date); // As of PHP 5.1.0, strtotime returns FALSE on failure instead of -1.
+    if ($timestamp <= 0) {
+      $timestamp = aggregator_parse_w3cdtf($date); // Returns FALSE on failure
+      if (!$timestamp) {
         $timestamp = time(); // better than nothing
       }
     }

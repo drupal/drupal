@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.77 2005/12/10 19:26:47 dries Exp $
+// $Id: bootstrap.inc,v 1.78 2005/12/15 16:02:50 dries Exp $
 
 /**
  * @file
@@ -599,7 +599,7 @@ function drupal_page_header() {
 
       // Check http headers:
       $modified_since = isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) ? $_SERVER['HTTP_IF_MODIFIED_SINCE'] == $date : NULL;
-      if (!empty($_SERVER['HTTP_IF_MODIFIED_SINCE']) && ($timestamp = strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE'])) != -1) {
+      if (!empty($_SERVER['HTTP_IF_MODIFIED_SINCE']) && ($timestamp = strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE'])) > 0) {
         $modified_since = $cache->created <= $timestamp;
       }
       else {
