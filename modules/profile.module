@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.122 2005/12/03 17:12:56 dries Exp $
+// $Id: profile.module,v 1.123 2005/12/15 16:34:48 dries Exp $
 
 /**
  * @file
@@ -462,13 +462,11 @@ function profile_user($type, &$edit, &$user, $category = NULL) {
 function profile_validate_form($edit) {
 
   // Validate the title:
-
   if (!$edit['title']) {
     form_set_error('title', t('You must enter a title.'));
   }
 
   // Validate the 'form name':
-
   if (eregi('[^a-z0-9_-]', $edit['name'])) {
     form_set_error('name', t('The specified form name contains one or more illegal characters.  Spaces or any other special characters expect dash (-) and underscore (_) are not allowed.'));
   }
@@ -480,6 +478,10 @@ function profile_validate_form($edit) {
   // Validate the category:
   if (!$edit['category']) {
     form_set_error('category', t('You must enter a category.'));
+  }
+
+  if ($edit['category'] == 'account') {
+    form_set_error('category', t('The specified category name is reserved for use by Drupal.'));
   }
 }
 
