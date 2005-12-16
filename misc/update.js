@@ -11,7 +11,7 @@ if (isJsEnabled()) {
         }
       }
 
-      this.progress = new progressBar('updateprogress', updateCallback, HTTPPost);
+      this.progress = new progressBar('updateprogress', updateCallback, HTTPGet);
       this.progress.setProgress(-1, 'Starting updates...');
       $('progress').appendChild(this.progress.element);
       this.progress.startMonitoring('update.php?op=do_update', 0);
