@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.68 2005/12/16 06:36:00 dries Exp $
+// $Id: blogapi.module,v 1.69 2005/12/16 18:08:58 dries Exp $
 
 /**
  * @file
@@ -214,8 +214,7 @@ function blogapi_blogger_new_post($appkey, $blogid, $username, $password, $conte
     $edit['body'] = $content;
   }
 
-  $node = node_validate($edit);
-
+  node_validate($edit);
   if ($errors = form_get_errors()) {
     return blogapi_error(implode("\n", $errors));
   }
@@ -224,6 +223,7 @@ function blogapi_blogger_new_post($appkey, $blogid, $username, $password, $conte
     return blogapi_error(t('You do not have permission to create the type of post you wanted to create.'));
   }
 
+  $node = node_submit($edit);
   node_save($node);
   if ($node->nid) {
     watchdog('content', t('%type: added %title using blog API.', array('%type' => '<em>'. t($node->type) .'</em>', '%title' => theme('placeholder', $node->title))), WATCHDOG_NOTICE, l(t('view'), "node/$node->nid"));
@@ -269,8 +269,7 @@ function blogapi_blogger_edit_post($appkey, $postid, $username, $password, $cont
     $node->body = $content;
   }
 
-  $node = node_validate($node);
-
+  node_validate($node);
   if ($errors = form_get_errors()) {
     return blogapi_error(implode("\n", $errors));
   }
@@ -279,6 +278,8 @@ function blogapi_blogger_edit_post($appkey, $postid, $username, $password, $cont
   foreach ($terms as $term) {
     $node->taxonomy[] = $term->tid;
   }
+
+  $node = node_submit($node);
   node_save($node);
   if ($node->nid) {
     watchdog('content', t('%type: updated %title using blog API.', array('%type' => '<em>'. t($node->type) .'</em>', '%title' => theme('placeholder', $node->title))), WATCHDOG_NOTICE, l(t('view'), "node/$node->nid"));
