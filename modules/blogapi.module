@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.67 2005/12/03 09:59:25 dries Exp $
+// $Id: blogapi.module,v 1.68 2005/12/16 06:36:00 dries Exp $
 
 /**
  * @file
@@ -676,7 +676,7 @@ function _blogapi_mt_extra(&$node, $struct) {
 
   // dateCreated
   if ($struct['dateCreated']) {
-    $node->date = $struct['dateCreated']->iso8601;
+    $node->date = format_date(mktime($struct['dateCreated']->hour, $struct['dateCreated']->minute, $struct['dateCreated']->second, $struct['dateCreated']->month, $struct['dateCreated']->day, $struct['dateCreated']->year), 'custom', 'Y-m-d H:i:s O');
   }
 
   if ($was_array) {
