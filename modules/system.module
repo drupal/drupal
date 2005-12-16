@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.268 2005/12/09 15:40:15 dries Exp $
+// $Id: system.module,v 1.269 2005/12/16 19:57:41 dries Exp $
 
 /**
  * @file
@@ -1056,15 +1056,22 @@ function system_theme_settings($key = '') {
   if ((!$key) || in_array('logo', $features)) {
     $form['logo'] = array('#type' => 'fieldset', '#title' => t('Logo image settings'));
     $form['logo']["default_logo"] = array(
-      '#type' => 'checkbox', '#title' => t('Use the default logo'), '#default_value' => $settings['default_logo'], '#tree' => FALSE,
+      '#type' => 'checkbox',
+      '#title' => t('Use the default logo'),
+      '#default_value' => $settings['default_logo'],
+      '#tree' => FALSE,
       '#description' => t('Check here if you want the theme to use the logo supplied with it.')
     );
     $form['logo']['logo_path'] = array(
-      '#type' => 'textfield', '#title' => t('Path to custom logo'),
+      '#type' => 'textfield',
+      '#title' => t('Path to custom logo'),
+      '#default_value' => $settings['logo_path'],
       '#description' => t('The path to the file you would like to use as your logo file instead of the default logo.'));
 
     $form['logo']['logo_upload'] = array(
-      '#type' => 'file', '#title' => t('Upload logo image'), '#maxlength' => 40,
+      '#type' => 'file',
+      '#title' => t('Upload logo image'),
+      '#maxlength' => 40,
       '#description' => t("If you don't have direct file access to the server, use this field to upload your logo.")
     );
   }
@@ -1074,16 +1081,22 @@ function system_theme_settings($key = '') {
     $form['favicon'] = array('#type' => 'fieldset', '#title' => t('Shortcut icon settings'));
     $form['favicon']['text'] = array('#value' => t('Your shortcut icon or \'favicon\' is displayed in the address bar and bookmarks of most browsers.'));
     $form['favicon']['default_favicon'] = array(
-      '#type' => 'checkbox', '#title' => t('Use the default shortcut icon.'), '#default_value' => $settings['default_favicon'],
+      '#type' => 'checkbox',
+      '#title' => t('Use the default shortcut icon.'),
+      '#default_value' => $settings['default_favicon'],
       '#description' => t('Check here if you want the theme to use the default shortcut icon.')
     );
     $form['favicon']['favicon_path'] = array(
-      '#type' => 'textfield', '#title' => t('Path to custom icon'), '#default_value' =>  $settings['favicon_path'],
+      '#type' => 'textfield',
+      '#title' => t('Path to custom icon'),
+      '#default_value' =>  $settings['favicon_path'],
       '#description' => t('The path to the image file you would like to use as your custom shortcut icon.')
     );
 
     $form['favicon']['favicon_upload'] = array(
-      '#type' => 'file', '#title' => t('Upload icon image'), '#description' => t("If you don't have direct file access to the server, use this field to upload your shortcut icon.")
+      '#type' => 'file',
+      '#title' => t('Upload icon image'),
+      '#description' => t("If you don't have direct file access to the server, use this field to upload your shortcut icon.")
     );
   }
 
