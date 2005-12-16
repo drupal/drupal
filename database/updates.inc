@@ -1223,6 +1223,7 @@ function system_update_160() {
 
 function system_update_161() {
   variable_del('forum_icon_path');
+  return array();
 }
 
 function system_update_162() {
