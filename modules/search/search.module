@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.150 2005/12/14 20:08:30 dries Exp $
+// $Id: search.module,v 1.151 2005/12/16 16:42:37 unconed Exp $
 
 /**
  * @file
@@ -674,19 +674,17 @@ function search_parse_query($text) {
   }
 
   // Convert keywords into SQL statements.
-  $scorewords = array();
   $query = array();
   $query2 = array();
   $arguments = array();
   $arguments2 = array();
-  $matches = 0; // Counts the minimal number of words per item must match in the index.
   // Positive matches
   foreach ($keys['positive'] as $key) {
     // Group of ORed terms
     if (is_array($key) && count($key)) {
       $queryor = array();
       foreach ($key as $or) {
-        $q = _search_parse_query($or, $scorewords);
+        $q = _search_parse_query($or, $arguments2);
         if ($q) {
           $queryor[] = $q;
           $arguments[] = $or;
@@ -698,30 +696,25 @@ function search_parse_query($text) {
     }
     // Single ANDed term
     else {
-      $q = _search_parse_query($key, $scorewords);
+      $q = _search_parse_query($key, $arguments2);
       if ($q) {
         $query[] = $q;
         $arguments[] = $key;
       }
     }
-    $matches++;
   }
   foreach ($keys['negative'] as $key) {
-    $q = _search_parse_query($key, $scorewords, true);
+    $q = _search_parse_query($key, $arguments2, true);
     if ($q) {
       $query[] = $q;
       $arguments[] = $key;
     }
   }
-  // We separate word-index conditions because they are not needed in the
-  // counting query.
-  foreach ($scorewords as $word) {
-    $query2[] = "i.word = '%s'";
-    $arguments2[] = $word;
-  }
   $query = implode(' AND ', $query);
-  $query2 = implode(' OR ', $query2);
-  return array($query, $arguments, $query2, $arguments2, $matches);
+
+  // We build word-index conditions for the first pass
+  $query2 = substr(str_repeat("i.word = '%s' OR ", count($arguments2)), 0, -4);
+  return array($query, $arguments, $query2, $arguments2);
 }
 
 /**
@@ -815,7 +808,7 @@ function do_search($keywords, $type, $join1 = '', $where1 = '1', $arguments1 = a
   // First pass: select all possible matching sids, doing a simple index-based OR matching on the keywords.
   // 'matches' is used to reject those items that cannot possibly match the query.
   $conditions = $where1 .' AND ('. $query[2] .") AND i.type = '%s'";
-  $arguments = array_merge($arguments1, $query[3], array($type, $query[4]));
+  $arguments = array_merge($arguments1, $query[3], array($type, count($query[3])));
   $result = db_query_temporary("SELECT i.type, i.sid, SUM(i.score * t.count) AS relevance, COUNT(*) AS matches FROM {search_index} i INNER JOIN {search_total} t ON i.word = t.word $join1 WHERE $conditions GROUP BY i.type, i.sid HAVING COUNT(*) >= %d", $arguments, 'temp_search_sids');
 
   // Calculate maximum relevance, to normalize it
