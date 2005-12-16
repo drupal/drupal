@@ -12,7 +12,8 @@ function uploadAutoAttach() {
   for (i = 0; input = inputs[i]; i++) {
     if (input && hasClass(input, 'upload')) {
       var uri = input.value;
-      var button = input.id.substr(5);
+      // Extract the button ID based on a subtring of the input name: edit[foo][bar] -> foo-bar
+      var button = input.name.substr(5, input.name.length - 6).replace('][', '-');
       var wrapper = button + '-wrapper';
       var hide = button + '-hide';
       var upload = new jsUpload(uri, button, wrapper, hide);
