@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.245 2005/12/15 16:24:40 dries Exp $
+// $Id: taxonomy.module,v 1.246 2005/12/16 06:23:46 dries Exp $
 
 /**
  * @file
@@ -533,11 +533,11 @@ function taxonomy_form_alter($form_id, &$form) {
       else {
         $ntterms = isset($node->taxonomy) ? $terms : array_keys($terms);
         $form['taxonomy'][$vocabulary->vid] = taxonomy_form($vocabulary->vid, $ntterms, $help, 'taxonomy');
+        $form['taxonomy'][$vocabulary->vid]['#weight'] = $vocabulary->weight;
       }
     }
     if (isset($form['taxonomy'])) {
-      $form['taxonomy']['#tree'] = TRUE;
-      $form['taxonomy']['#weight'] = $vocabulary->weight;
+      $form['taxonomy'] = array_merge($form['taxonomy'], array('#type' => 'fieldset', '#title' => t('Categories'), '#collapsible' => TRUE, '#collapsed' => FALSE, '#tree' => TRUE, '#weight' => -3));
     }
   }
 }
@@ -914,7 +914,7 @@ function _taxonomy_term_select($title, $name, $value, $vocabulary_id, $descripti
       $value = $tree[0]->tid;
     }
   }
-  return array('#type' => 'select', '#title' => $title, '#default_value' => $value, '#options' => $options, '#description' => $description, '#multiple' => $multiple, '#size' => $multiple ? 'size="'. min(12, count($options)) .'"' : 0, '#weight' => -15, '#theme' => 'taxonomy_term_select');
+  return array('#type' => 'select', '#title' => $title, '#default_value' => $value, '#options' => $options, '#description' => $description, '#multiple' => $multiple, '#size' => $multiple ? min(9, count($options)) : 0, '#weight' => -15, '#theme' => 'taxonomy_term_select');
 }
 
 function theme_taxonomy_term_select($element) {

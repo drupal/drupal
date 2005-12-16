@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.33 2005/12/15 22:47:16 dries Exp $
+// $Id: form.inc,v 1.34 2005/12/16 06:23:46 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -414,6 +414,7 @@ function _element_info($type, $refresh = null) {
  */
 function theme_select($element) {
   $select = '';
+  $size = $element['#size'] ? ' size="' . $element['#size'] . '"' : '';
   foreach ($element['#options'] as $key => $choice) {
     if (is_array($choice)) {
       $select .= '<optgroup label="'. $key .'">';
@@ -426,7 +427,7 @@ function theme_select($element) {
       $select .= '<option value="'. $key .'"'. (is_array($element['#value']) ? (in_array($key, $element['#value']) ? ' selected="selected"' : '') : ($element['#value'] == $key ? ' selected="selected"' : '')) .'>'. check_plain($choice) .'</option>';
     }
   }
-  return theme('form_element', $element['#title'], '<select name="'. $element['#name'] .''. ($element['#multiple'] ? '[]' : '') .'"'. ($element['#multiple'] ? ' multiple="multiple" ' : '') . drupal_attributes($element['#attributes']) .' id="' . $element['#id'] .'">'. $select .'</select>', $element['#description'], $element['#id'], $element['#required'], form_get_error($element));
+  return theme('form_element', $element['#title'], '<select name="'. $element['#name'] .''. ($element['#multiple'] ? '[]' : '') .'"'. ($element['#multiple'] ? ' multiple="multiple" ' : '') . drupal_attributes($element['#attributes']) .' id="' . $element['#id'] .'" '. $size .'>'. $select .'</select>', $element['#description'], $element['#id'], $element['#required'], form_get_error($element));
 }
 
 /**
