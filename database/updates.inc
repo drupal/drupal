@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.165 2005/12/14 20:01:39 dries Exp $
+// $Id: updates.inc,v 1.166 2005/12/16 17:11:52 unconed Exp $
 
 function system_update_110() {
   $ret = array();
@@ -1223,6 +1223,7 @@ function system_update_160() {
 
 function system_update_161() {
   variable_del('forum_icon_path');
+  return array();
 }
 
 function system_update_162() {
