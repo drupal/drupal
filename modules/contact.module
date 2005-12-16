@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.36 2005/12/13 18:49:47 dries Exp $
+// $Id: contact.module,v 1.37 2005/12/16 12:59:22 dries Exp $
 
 /**
  * @file
@@ -188,6 +188,14 @@ function contact_admin_edit($cid = NULL) {
     if (empty($edit['recipients'])) {
       form_set_error('recipients', t('You must enter one or more recipients.'));
     }
+    else {
+      $recipients = split(',', $edit['recipients']);
+      foreach($recipients as $recipient) {
+        if (!valid_email_address(trim($recipient))) {
+          form_set_error('recipients',t('%recipient is an invalid e-mail address.', array('%recipient' => theme('placeholder', $recipient))));
+        }
+      }
+    }
 
     if (!form_get_errors()) {
       db_query("DELETE FROM {contact} WHERE cid = %d", $cid);
@@ -297,6 +305,10 @@ function contact_mail_page_validate($form_id, &$form) {
     }
     else {
       form_set_error('category', t('You must select a valid category.'));
+    }
+
+    if (!valid_email_address($form['mail'])) {
+      form_set_error('mail', t('You must enter a valid e-mail address.'));
     }
   }
 }
