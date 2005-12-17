@@ -131,7 +131,8 @@ function file_check_path(&$path) {
 }
 
 /**
- * Check if $source is a valid file upload.
+ * Check if $source is a valid file upload. If so, process $_FILES
+ * and return its contents as an object.
  *
  * @param $source
  */

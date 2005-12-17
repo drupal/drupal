@@ -190,6 +190,7 @@ function upload_nodeapi(&$node, $op, $arg) {
       // Double check existing files:
       if (is_array($node->list)) {
         foreach ($node->list as $key => $value) {
+          // Ensure file is valid and retrieve contents of $_FILES array
           if ($file = file_check_upload($key)) {
             $node->files[$file->source] = $file;
             $node->files[$key]->list = $node->list[$key];
