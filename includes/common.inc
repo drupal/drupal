@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.499 2005/12/14 20:06:41 dries Exp $
+// $Id: common.inc,v 1.500 2005/12/17 10:35:59 unconed Exp $
 
 /**
  * @file
@@ -55,13 +55,13 @@ function drupal_get_content($region = NULL, $delimiter = ' ') {
   $content = drupal_set_content();
   if (isset($region)) {
     if (isset($content[$region]) && is_array($content[$region])) {
-      return implode ($delimiter, $content[$region]);
+      return implode($delimiter, $content[$region]);
     }
   }
   else {
     foreach (array_keys($content) as $region) {
       if (is_array($content[$region])) {
-        $content[$region] = implode ($delimiter, $content[$region]);
+        $content[$region] = implode($delimiter, $content[$region]);
       }
     }
     return $content;
