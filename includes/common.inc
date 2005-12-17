@@ -55,13 +55,13 @@ function drupal_get_content($region = NULL, $delimiter = ' ') {
   $content = drupal_set_content();
   if (isset($region)) {
     if (isset($content[$region]) && is_array($content[$region])) {
-      return implode ($delimiter, $content[$region]);
+      return implode($delimiter, $content[$region]);
     }
   }
   else {
     foreach (array_keys($content) as $region) {
       if (is_array($content[$region])) {
-        $content[$region] = implode ($delimiter, $content[$region]);
+        $content[$region] = implode($delimiter, $content[$region]);
       }
     }
     return $content;
