@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.67 2005/12/15 16:24:40 dries Exp $
+// $Id: upload.module,v 1.68 2005/12/17 17:24:46 dries Exp $
 
 /**
  * @file
@@ -190,6 +190,7 @@ function upload_nodeapi(&$node, $op, $arg) {
       // Double check existing files:
       if (is_array($node->list)) {
         foreach ($node->list as $key => $value) {
+          // Ensure file is valid and retrieve contents of $_FILES array
           if ($file = file_check_upload($key)) {
             $node->files[$file->source] = $file;
             $node->files[$key]->list = $node->list[$key];

@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.58 2005/12/14 20:06:41 dries Exp $
+// $Id: file.inc,v 1.59 2005/12/17 17:24:46 dries Exp $
 
 /**
  * @file
@@ -131,7 +131,8 @@ function file_check_path(&$path) {
 }
 
 /**
- * Check if $source is a valid file upload.
+ * Check if $source is a valid file upload. If so, process $_FILES
+ * and return its contents as an object.
  *
  * @param $source
  */
