@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.151 2005/12/16 16:42:37 unconed Exp $
+// $Id: search.module,v 1.152 2005/12/18 12:28:26 unconed Exp $
 
 /**
  * @file
@@ -436,7 +436,7 @@ function search_preprocess(&$text) {
  * @ingroup search
  */
 function search_index($sid, $type, $text) {
-  $minimum_word_size = variable_get('minimum_word_size', 4);
+  $minimum_word_size = variable_get('minimum_word_size', 3);
 
   // Link matching
   global $base_url;
@@ -726,7 +726,7 @@ function _search_parse_query(&$word, &$scores, $not = false) {
     $split = explode(' ', $word);
     foreach ($split as $s) {
       $num = is_numeric($s);
-      if ($num || drupal_strlen($s) >= variable_get('minimum_word_size', 4)) {
+      if ($num || drupal_strlen($s) >= variable_get('minimum_word_size', 3)) {
         $scores[] = $num ? ((int)ltrim($word, '-0')) : $s;
       }
     }
