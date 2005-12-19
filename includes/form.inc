@@ -279,8 +279,6 @@ function _form_builder($form_id, $form) {
         $form_submitted = $form_submitted || $form['#form_submitted'];
       }
     }
-
-    $ref = $form['#value'];
   }
 
   // Allow for elements to expand to multiple elements. Radios, checkboxes and files for instance.
@@ -292,6 +290,13 @@ function _form_builder($form_id, $form) {
       }
     }
     $form['#processed'] = TRUE;
+  }
+
+  // Set the $form_values key that gets passed to validate and submit.
+  // We call this after #process gets called so that #process has a
+  // chance to update #value if desired.
+  if ($form['#input']) {
+    $ref = $form['#value'];
   }
 
   // Recurse through all child elements.
