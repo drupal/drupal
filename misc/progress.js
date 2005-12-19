@@ -69,7 +69,7 @@ progressBar.prototype.sendPing = function () {
   if (this.timer) {
     clearTimeout(this.timer);
   }
-  this.method(this.uri, this.receivePing, this);
+  this.method(this.uri, this.receivePing, this, '');
 }
 
 /**
