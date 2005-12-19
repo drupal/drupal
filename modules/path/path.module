@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.75 2005/12/15 16:24:40 dries Exp $
+// $Id: path.module,v 1.76 2005/12/19 14:51:38 dries Exp $
 
 /**
  * @file
@@ -58,7 +58,7 @@ function path_menu($may_cache) {
       'access' => user_access('administer url aliases'),
       'type' => MENU_CALLBACK);
     $items[] = array('path' => 'admin/path/delete', 'title' => t('delete alias'),
-      'callback' => 'path_admin_delete',
+      'callback' => 'path_admin_delete_confirm',
       'access' => user_access('administer url aliases'),
       'type' => MENU_CALLBACK);
     $items[] = array('path' => 'admin/path/list', 'title' => t('list'),
@@ -96,13 +96,40 @@ function path_admin_edit($pid = 0) {
 }
 
 /**
- * Menu callback; handles deletion of an URL alias.
+ * Menu callback; confirms deleting an URL alias
+ **/
+function path_admin_delete_confirm($pid) {
+  $path = path_load($pid);
+  if (user_access('administer path aliases')) {
+    $form['pid'] = array('#type' => 'value', '#value' => $pid);
+    $output = confirm_form('path_admin_delete_confirm', $form,
+  t('Are you sure you want to delete path alias %title?', array('%title' => theme('placeholder', $path['dst']))),
+   $_GET['destination'] ? $_GET['destination'] : 'admin/path', t('This action cannot be undone.'),
+  t('Delete'), t('Cancel') );
+  }
+
+  return $output;
+}
+
+/**
+ * Execute URL alias deletion
+ **/
+function path_admin_delete_confirm_submit($form_id, $form_values) {
+  if ($form_values['confirm']) {
+    path_admin_delete($form_values['pid']);
+    drupal_goto('admin/path');
+  }
+}
+
+/**
+ * Post-confirmation; delete an URL alias.
  */
 function path_admin_delete($pid = 0) {
   db_query('DELETE FROM {url_alias} WHERE pid = %d', $pid);
   drupal_set_message(t('The alias has been deleted.'));
-  drupal_goto('admin/path');
 }
+
+
 
 /**
  * Set an aliased path for a given Drupal path, preventing duplicates.
