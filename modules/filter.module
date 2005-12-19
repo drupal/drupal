@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.96 2005/12/15 16:24:40 dries Exp $
+// $Id: filter.module,v 1.97 2005/12/19 14:30:53 dries Exp $
 
 /**
  * @file
@@ -775,7 +775,6 @@ function filter_form($value = FILTER_FORMAT_DEFAULT, $weight = 0, $parents = arr
         '#return_value' => $format->format,
         '#parents' => $parents,
         '#description' => theme('filter_tips', _filter_tips($format->format, false)),
-        '#validate' => array('filter_form_validate' => array())
       );
     }
   }
@@ -791,18 +790,6 @@ function filter_form($value = FILTER_FORMAT_DEFAULT, $weight = 0, $parents = arr
     );
   }
   return $form;
-}
-
-function filter_form_validate($element) {
-  static $validated;
-  if ($validated) {
-    return;
-  }
-  $validated = 1;
-  $formats = filter_formats();
-  if (!isset($formats[$element['#value']])) {
-    form_set_error($element['#parents'][0], t('The supplied input format is invalid.'));
-  }
 }
 
 /**

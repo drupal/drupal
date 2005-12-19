@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.34 2005/12/16 06:23:46 dries Exp $
+// $Id: form.inc,v 1.35 2005/12/19 14:30:53 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -145,6 +145,24 @@ function _form_validate($elements, $form_id = NULL) {
     if ($elements['#required'] && empty($elements['#value']) && $elements['#value'] !== '0') {
       form_error($elements, t('%name field is required', array('%name' => $elements['#title'])));
     }
+
+    // Add legal choice check if element has #options.
+    if (isset($elements['#options']) && isset($elements['#value'])) {
+      $message = t('Illegal choice in %title.', array('%title' => theme('placeholder', $elements['#title'])));
+      if (is_array($elements['#value'])) {
+        $value = $elements['#type'] == 'checkboxes' ? array_keys(array_filter($elements['#value'])) : $elements['#value'];
+        foreach ($value as $v) {
+          if (!isset($elements['#options'][$v])) {
+            form_error($elements, $message);
+          }
+        }
+      }
+      elseif (!isset($elements['#options'][$elements['#value']])) {
+        form_error($elements, $message);
+      }
+    }
+
+    // User-applied checks.
     if (isset($elements['#validate'])) {
       foreach ($elements['#validate'] as $function => $args) {
         $args = array_merge(array($elements), $args);
