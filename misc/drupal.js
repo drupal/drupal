@@ -66,6 +66,9 @@ function HTTPGet(uri, callbackFunction, callbackParameter) {
 
 /**
  * Creates an HTTP POST request and sends the response to the callback function
+ *
+ * Note: passing null or undefined for 'object' makes the request fail in Opera.
+ *       Pass an empty string instead, if you must.
  */
 function HTTPPost(uri, callbackFunction, callbackParameter, object) {
   var xmlHttp = new XMLHttpRequest();
