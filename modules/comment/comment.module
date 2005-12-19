@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.407 2005/12/15 16:31:01 dries Exp $
+// $Id: comment.module,v 1.408 2005/12/19 10:12:52 dries Exp $
 
 /**
  * @file
@@ -767,7 +767,7 @@ function comment_links($comment, $return = 1) {
   }
 
   if (node_comment_mode($comment->nid) == COMMENT_NODE_READ_WRITE) {
-    if (user_access('administer comments') && user_access('access administration pages')) {
+    if (user_access('administer comments') && user_access('post comments')) {
       $links[] = l(t('delete'), "comment/delete/$comment->cid");
       $links[] = l(t('edit'), "comment/edit/$comment->cid");
       $links[] = l(t('reply'), "comment/reply/$comment->nid/$comment->cid");
