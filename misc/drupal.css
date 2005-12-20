@@ -103,9 +103,6 @@ br.clear {
 .container-inline div {
   display: inline;
 }
-.container-inline .form-submit {
-  margin: 0;
-}
 .error {
   color: red;
 }
@@ -155,9 +152,6 @@ tr.odd .form-item, tr.even .form-item {
 }
 .form-item label.option {
   font-weight: normal;
-}
-.form-submit {
-  margin: 0.5em 0;
 }
 .marker, .form-required {
   color: #f00;
