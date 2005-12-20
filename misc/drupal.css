@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.125 2005/11/23 08:19:46 dries Exp $ */
+/* $Id: drupal.css,v 1.126 2005/12/20 18:20:26 dries Exp $ */
 
 /*
 ** HTML elements
@@ -103,9 +103,6 @@ br.clear {
 .container-inline div {
   display: inline;
 }
-.container-inline .form-submit {
-  margin: 0;
-}
 .error {
   color: red;
 }
@@ -155,9 +152,6 @@ tr.odd .form-item, tr.even .form-item {
 }
 .form-item label.option {
   font-weight: normal;
-}
-.form-submit {
-  margin: 0.5em 0;
 }
 .marker, .form-required {
   color: #f00;
