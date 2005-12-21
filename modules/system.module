@@ -846,6 +846,7 @@ function system_themes_submit($form_id, $values) {
   }
   else {
     variable_del('theme_default');
+    db_query("UPDATE {system} SET status = 1 WHERE type = 'theme' AND name ='bluemarine'");
   }
 
   menu_rebuild();
