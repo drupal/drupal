@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.153 2005/12/19 10:11:14 dries Exp $
+// $Id: search.module,v 1.154 2005/12/21 13:35:55 unconed Exp $
 
 /**
  * @file
@@ -224,7 +224,6 @@ function search_settings() {
   $form['indexing_settings'] = array('#type' => 'fieldset', '#title' => t('Indexing settings'));
   $form['indexing_settings']['info'] = array('#type' => 'markup', '#value' => '<em>'. t('<p>Changing the settings below will cause the site index to be rebuilt. The search index is not cleared but systematically updated to reflect the new settings. Searching will continue to work but new content won\'t be indexed until all existing content has been re-indexed.</p><p>The default settings should be appropriate for the majority of sites.</p>') .'</em>');
   $form['indexing_settings']['minimum_word_size'] = array('#type' => 'textfield', '#title' => t('Minimum word length to index'), '#default_value' => variable_get('minimum_word_size', 3), '#size' => 5, '#maxlength' => 3, '#description' => t('The number of characters a word has to be to be indexed. A lower setting means better search result ranking, but also a larger database. Each search query must contain at least one keyword that is this size (or longer).'));
-  $form['indexing_settings']['remove_short'] = array('#type' => 'textfield', '#title' => t('Minimum word length to search for'), '#default_value' => variable_get('remove_short', 3), '#size' => 5, '#maxlength' => 3, '#description' => t('The number of characters a word has to be to be searched for, including wildcard characters.'));
   $form['indexing_settings']['overlap_cjk'] = array('#type' => 'checkbox', '#title' => t('Simple CJK handling'), '#default_value' => variable_get('overlap_cjk', true), '#description' => t('Whether to apply a simple Chinese/Japanese/Korean tokenizer based on overlapping sequences. Turn this off if you want to use an external preprocessor for this instead. Does not affect other languages.'));
 
   // Per module settings
@@ -364,7 +363,7 @@ function search_expand_cjk($matches) {
   $l = drupal_strlen($str);
   // Passthrough short words
   if ($l <= $min) {
-    return $str;
+    return ' '. $str .' ';
   }
   $tokens = ' ';
   // FIFO queue of characters
@@ -640,15 +639,15 @@ function search_parse_query($text) {
   $or = false;
   foreach ($matches as $match) {
     $phrase = false;
-    // Strip off quotes
+    // Strip off phrase quotes
     if ($match[2]{0} == '"') {
       $match[2] = substr($match[2], 1, -1);
       $phrase = true;
     }
-    // Simplify keyword according to indexing rules
+    // Simplify keyword according to indexing rules and external preprocessors
     $words = search_simplify($match[2]);
     // Re-explode in case simplification added more words, except when matching a phrase
-    $words = $phrase ? array($words) : explode(' ', $words);
+    $words = $phrase ? array($words) : preg_split('/ /', $words, -1, PREG_SPLIT_NO_EMPTY);
     // Negative matches
     if ($match[1] == '-') {
       $keys['negative'] = array_merge($keys['negative'], $words);
@@ -656,7 +655,12 @@ function search_parse_query($text) {
     // OR operator: instead of a single keyword, we store an array of all
     // OR'd keywords.
     elseif ($match[2] == 'OR' && count($keys['positive'])) {
-      $keys['positive'][] = array(array_pop($keys['positive']));
+      $last = array_pop($keys['positive']);
+      // Starting a new OR?
+      if (!is_array($last)) {
+        $last = array($last);
+      }
+      $keys['positive'][] = $last;
       $or = true;
       continue;
     }
@@ -678,13 +682,16 @@ function search_parse_query($text) {
   $query2 = array();
   $arguments = array();
   $arguments2 = array();
+  $matches = 0;
   // Positive matches
   foreach ($keys['positive'] as $key) {
     // Group of ORed terms
     if (is_array($key) && count($key)) {
       $queryor = array();
+      $any = false;
       foreach ($key as $or) {
-        $q = _search_parse_query($or, $arguments2);
+        list($q, $count) = _search_parse_query($or, $arguments2);
+        $any |= $count;
         if ($q) {
           $queryor[] = $q;
           $arguments[] = $or;
@@ -692,19 +699,24 @@ function search_parse_query($text) {
       }
       if (count($queryor)) {
         $query[] = '('. implode(' OR ', $queryor) .')';
+        // A group of OR keywords only needs to match once
+        $matches += ($any > 0);
       }
     }
     // Single ANDed term
     else {
-      $q = _search_parse_query($key, $arguments2);
+      list($q, $count) = _search_parse_query($key, $arguments2);
       if ($q) {
         $query[] = $q;
         $arguments[] = $key;
+        // Each AND keyword needs to match at least once
+        $matches += $count;
       }
     }
   }
+  // Negative matches
   foreach ($keys['negative'] as $key) {
-    $q = _search_parse_query($key, $arguments2, true);
+    list($q) = _search_parse_query($key, $arguments2, true);
     if ($q) {
       $query[] = $q;
       $arguments[] = $key;
@@ -712,27 +724,33 @@ function search_parse_query($text) {
   }
   $query = implode(' AND ', $query);
 
-  // We build word-index conditions for the first pass
+  // Build word-index conditions for the first pass
   $query2 = substr(str_repeat("i.word = '%s' OR ", count($arguments2)), 0, -4);
-  return array($query, $arguments, $query2, $arguments2);
+
+  return array($query, $arguments, $query2, $arguments2, $matches);
 }
 
 /**
  * Helper function for search_parse_query();
  */
 function _search_parse_query(&$word, &$scores, $not = false) {
+  $count = 0;
   // Determine the scorewords of this word/phrase
   if (!$not) {
     $split = explode(' ', $word);
     foreach ($split as $s) {
       $num = is_numeric($s);
       if ($num || drupal_strlen($s) >= variable_get('minimum_word_size', 3)) {
-        $scores[] = $num ? ((int)ltrim($word, '-0')) : $s;
+        $s = $num ? ((int)ltrim($s, '-0')) : $s;
+        if (!isset($scores[$s])) {
+          $scores[$s] = $s;
+          $count++;
+        }
       }
     }
   }
-  // Return matching snippet
-  return "d.data ". ($not ? 'NOT ' : '') ."LIKE '%% %s %%'";
+  // Return matching snippet and number of added words
+  return array("d.data ". ($not ? 'NOT ' : '') ."LIKE '%% %s %%'", $count);
 }
 
 /**
@@ -801,6 +819,9 @@ function _search_parse_query(&$word, &$scores, $not = false) {
 function do_search($keywords, $type, $join1 = '', $where1 = '1', $arguments1 = array(), $select2 = 'i.relevance AS score', $join2 = '', $arguments2 = array()) {
   $query = search_parse_query($keywords);
 
+  if ($query[2] == '') {
+    form_set_error('keys', t('You must include at least one positive keyword with %count characters or more.', array('%count' => variable_get('minimum_word_size', 3))));
+  }
   if ($query === NULL || $query[0] == '' || $query[2] == '') {
     return array();
   }
@@ -808,7 +829,7 @@ function do_search($keywords, $type, $join1 = '', $where1 = '1', $arguments1 = a
   // First pass: select all possible matching sids, doing a simple index-based OR matching on the keywords.
   // 'matches' is used to reject those items that cannot possibly match the query.
   $conditions = $where1 .' AND ('. $query[2] .") AND i.type = '%s'";
-  $arguments = array_merge($arguments1, $query[3], array($type, count($query[3])));
+  $arguments = array_merge($arguments1, $query[3], array($type, $query[4]));
   $result = db_query_temporary("SELECT i.type, i.sid, SUM(i.score * t.count) AS relevance, COUNT(*) AS matches FROM {search_index} i INNER JOIN {search_total} t ON i.word = t.word $join1 WHERE $conditions GROUP BY i.type, i.sid HAVING COUNT(*) >= %d", $arguments, 'temp_search_sids');
 
   // Calculate maximum relevance, to normalize it
@@ -1012,12 +1033,15 @@ function search_data($keys = NULL, $type = 'node') {
  *   A string containing HTML for the excerpt.
  */
 function search_excerpt($keys, $text) {
+  // We highlight around non-indexable or CJK characters.
+  $boundary = '(?:(?<=['. PREG_CLASS_SEARCH_EXCLUDE . PREG_CLASS_CJK .'])|(?=['. PREG_CLASS_SEARCH_EXCLUDE . PREG_CLASS_CJK .']))';
+
   // Extract positive keywords and phrases
   preg_match_all('/ ("([^"]+)"|(?!OR)([^" ]+))/', ' '. $keys, $matches);
   $keys = array_merge($matches[2], $matches[3]);
 
   // Prepare text
-  $text = strip_tags(str_replace(array('<', '>'), array(' <', '> '), $text));
+  $text = ' '. strip_tags(str_replace(array('<', '>'), array(' <', '> '), $text)) .' ';
   array_walk($keys, '_search_excerpt_replace');
   $workkeys = $keys;
 
@@ -1045,7 +1069,7 @@ function search_excerpt($keys, $text) {
       }
       // Locate a keyword (position $p), then locate a space in front (position
       // $q) and behind it (position $s)
-      if (preg_match('/\b'. $key .'\b/iu', $text, $match, PREG_OFFSET_CAPTURE, $included[$key])) {
+      if (preg_match('/'. $boundary . $key . $boundary .'/iu', $text, $match, PREG_OFFSET_CAPTURE, $included[$key])) {
         $p = $match[0][1];
         if (($q = strpos($text, ' ', max(0, $p - 60))) !== false) {
           $end = substr($text, $p, 80);
@@ -1103,7 +1127,7 @@ function search_excerpt($keys, $text) {
   $text = (isset($newranges[0]) ? '' : '... '). implode(' ... ', $out) .' ...';
 
   // Highlight keywords. Must be done at once to prevent conflicts ('strong' and '<strong>').
-  $text = preg_replace('/\b('. implode('|', $keys) .')\b/iu', '<strong>\0</strong>', $text);
+  $text = preg_replace('/'. $boundary .'('. implode('|', $keys) .')'. $boundary .'/iu', '<strong>\0</strong>', $text);
   return $text;
 }
 
