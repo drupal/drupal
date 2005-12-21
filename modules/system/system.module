@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.269 2005/12/16 19:57:41 dries Exp $
+// $Id: system.module,v 1.270 2005/12/21 22:15:02 dries Exp $
 
 /**
  * @file
@@ -846,6 +846,7 @@ function system_themes_submit($form_id, $values) {
   }
   else {
     variable_del('theme_default');
+    db_query("UPDATE {system} SET status = 1 WHERE type = 'theme' AND name ='bluemarine'");
   }
 
   menu_rebuild();
