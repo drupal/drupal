@@ -1,4 +1,4 @@
-// $Id: drupal.js,v 1.12 2005/12/19 14:27:28 dries Exp $
+// $Id: drupal.js,v 1.13 2005/12/21 15:03:32 unconed Exp $
 
 /**
  * Only enable Javascript functionality if all required features are supported.
@@ -66,9 +66,15 @@ function HTTPGet(uri, callbackFunction, callbackParameter) {
 
 /**
  * Creates an HTTP POST request and sends the response to the callback function
+<<<<<<< drupal.js
+ *
+ * Note: passing null or undefined for 'object' makes the request fail in Opera 8.
+ *       Pass an empty string instead.
+=======
  *
  * Note: passing null or undefined for 'object' makes the request fail in Opera.
  *       Pass an empty string instead, if you must.
+>>>>>>> 1.12
  */
 function HTTPPost(uri, callbackFunction, callbackParameter, object) {
   var xmlHttp = new XMLHttpRequest();
