@@ -42,7 +42,7 @@ progressBar.prototype.setProgress = function (percentage, status) {
     }
   }
   if (this.callback) {
-    this.callback(percentage, status);
+    this.callback(percentage, status, this);
   }
 }
 
@@ -82,8 +82,8 @@ progressBar.prototype.receivePing = function (string, xmlhttp, pb) {
   }
   // Split into values
   var matches = string.length > 0 ? string.split('|') : [];
+  pb.timer = setTimeout(function() { pb.sendPing(); }, pb.delay);
   if (matches.length >= 2) {
     pb.setProgress(matches[0], matches[1]);
   }
-  pb.timer = setTimeout(function() { pb.sendPing(); }, pb.delay);
 }

@@ -5,16 +5,17 @@ if (isJsEnabled()) {
     }
 
     if ($('progress')) {
-      updateCallback = function (progress, status) {
+      updateCallback = function (progress, status, pb) {
         if (progress == 100) {
+          pb.stopMonitoring();
           window.location = window.location.href.split('op=')[0] +'op=finished';
         }
       }
 
-      this.progress = new progressBar('updateprogress', updateCallback, HTTPPost);
-      this.progress.setProgress(-1, 'Starting updates...');
-      $('progress').appendChild(this.progress.element);
-      this.progress.startMonitoring('update.php?op=do_update', 0);
+      var progress = new progressBar('updateprogress', updateCallback, HTTPPost);
+      progress.setProgress(-1, 'Starting updates...');
+      $('progress').appendChild(progress.element);
+      progress.startMonitoring('update.php?op=do_update', 0);
     }
   });
 }
