@@ -1,4 +1,4 @@
-// $Id: drupal.js,v 1.14 2005/12/21 15:04:23 unconed Exp $
+// $Id: drupal.js,v 1.15 2005/12/21 17:29:08 unconed Exp $
 
 /**
  * Only enable Javascript functionality if all required features are supported.
@@ -111,7 +111,11 @@ function HTTPPost(uri, callbackFunction, callbackParameter, object) {
  */
 function redirectFormButton(uri, button, handler) {
   // Insert the iframe
-  var iframe = document.createElement('iframe');
+  // Note: some browsers require the literal name/id attributes on the tag,
+  // some want them set through JS. We do both.
+  var div = document.createElement('div');
+  div.innerHTML = '<iframe name="redirect-target" id="redirect-target" class="redirect"></iframe>';
+  var iframe = div.firstChild;
   with (iframe) {
     name = 'redirect-target';
     setAttribute('name', 'redirect-target');
@@ -126,7 +130,7 @@ function redirectFormButton(uri, button, handler) {
   document.body.appendChild(iframe);
 
   // Trap the button
-  button.onfocus = function() {
+  button.onmouseover = button.onfocus = function() {
     button.onclick = function() {
       // Prepare variables for use in anonymous function.
       var button = this;
@@ -150,7 +154,7 @@ function redirectFormButton(uri, button, handler) {
       return true;
     }
   }
-  button.onblur = function() {
+  button.onmouseout = button.onblur = function() {
     button.onclick = null;
   }
 }
