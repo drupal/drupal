@@ -422,14 +422,11 @@ function node_save(&$node) {
     if ($node->revision) {
       $node->old_vid = $node->vid;
       $node->vid = db_next_id('{node_revisions}_vid');
-      // We always update the timestamp for new revisions.
-      $node->changed = time();
     }
   }
 
-  if (!$node->changed) {
-    $node->changed = time();
-  }
+  // The changed timestamp is always updated for bookkeeping purposes (revisions, searching, ...)
+  $node->changed = time();
 
   // Split off revisions data to another structure
   $revisions_table_values = array('nid' => $node->nid, 'vid' => $node->vid,
