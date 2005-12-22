@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.569 2005/12/21 14:30:09 unconed Exp $
+// $Id: node.module,v 1.570 2005/12/22 00:22:19 unconed Exp $
 
 /**
  * @file
@@ -425,8 +425,11 @@ function node_save(&$node) {
     }
   }
 
+  // If node has never changed, set $node->changed to $node->created
+  // If we set $node->created to time(), then 'changed' and 'created' will be
+  // different for new nodes which were previewed before submission
   // The changed timestamp is always updated for bookkeeping purposes (revisions, searching, ...)
-  $node->changed = time();
+  $node->changed = $node->changed ? time() : $node->created;
 
   // Split off revisions data to another structure
   $revisions_table_values = array('nid' => $node->nid, 'vid' => $node->vid,
