@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.270 2005/12/21 22:15:02 dries Exp $
+// $Id: system.module,v 1.271 2005/12/22 12:37:52 dries Exp $
 
 /**
  * @file
@@ -893,7 +893,7 @@ function system_modules() {
 
     // Update the contents of the system table:
     if (isset($file->status)) {
-      db_query("UPDATE {system} SET description = '%s', filename = '%s', bootstrap = %d WHERE name = '%s'", $file->description, $file->filename, $bootstrap, $file->name);
+      db_query("UPDATE {system} SET description = '%s', name = '%s', bootstrap = %d WHERE filename = '%s'", $file->description, $file->name, $bootstrap, $file->filename);
     }
     else {
       // This is a new module.
