@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.60 2005/12/10 19:26:47 dries Exp $
+// $Id: locale.inc,v 1.61 2005/12/22 22:58:12 unconed Exp $
 
 /**
  * @file
@@ -74,7 +74,7 @@ function theme__locale_admin_manage_screen($form) {
   foreach ($form['name'] as $key => $element) {
     // Don't take form control structures
     if (is_array($element) && element_child($key)) {
-      $rows[] = array(check_plain($key), form_render($form['name'][$key]), form_render($form['enabled'][$key]), form_render($form['sitedefault'][$key]), ($key != 'en' ? form_render($form['translation'][$key]) : message_na()), ($key != 'en' ? l(t('delete'), 'admin/locale/language/delete/'. drupal_urlencode($key)) : ''));
+      $rows[] = array(check_plain($key), form_render($form['name'][$key]), form_render($form['enabled'][$key]), form_render($form['sitedefault'][$key]), ($key != 'en' ? form_render($form['translation'][$key]) : message_na()), ($key != 'en' ? l(t('delete'), 'admin/locale/language/delete/'. $key) : ''));
     }
   }
   $header = array(array('data' => t('Code')), array('data' => t('English name')), array('data' => t('Enabled')), array('data' => t('Default')), array('data' => t('Translated')), array('data' => t('Operations')));

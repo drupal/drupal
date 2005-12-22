@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.500 2005/12/17 10:35:59 unconed Exp $
+// $Id: common.inc,v 1.501 2005/12/22 22:58:12 unconed Exp $
 
 /**
  * @file
@@ -963,6 +963,7 @@ function url($path = NULL, $query = NULL, $fragment = NULL, $absolute = FALSE) {
   }
 
   $path = drupal_get_path_alias($path);
+  $path = drupal_urlencode($path);
 
   if (isset($fragment)) {
     $fragment = '#'. $fragment;
@@ -1251,13 +1252,15 @@ function drupal_implode_autocomplete($array) {
 /**
  * Wrapper around urlencode() which avoids Apache quirks.
  *
- * Should be used when placing arbitrary data inside the path of a clean URL.
+ * Should be used when placing arbitrary data in an URL. Note that Drupal paths
+ * are urlencoded() when passed through url() and do not require urlencoding()
+ * of individual components.
  *
  * @param $text
  *   String to encode
  */
 function drupal_urlencode($text) {
-  return variable_get('clean_url', '0') ? str_replace('%2F', '/', urlencode($text)) : urlencode($text);
+  return str_replace('%2F', '/', urlencode($text));
 }
 
 /**

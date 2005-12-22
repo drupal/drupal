@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.123 2005/12/15 16:34:48 dries Exp $
+// $Id: profile.module,v 1.124 2005/12/22 22:58:12 unconed Exp $
 
 /**
  * @file
@@ -146,7 +146,7 @@ function profile_menu($may_cache) {
 function profile_browse() {
 
   $name = arg(1);
-  $value = arg(2);
+  list(,,$value) = explode('/', $_GET['q'], 3);
 
   $field = db_fetch_object(db_query("SELECT DISTINCT(fid), type, title, page, visibility FROM {profile_fields} WHERE name = '%s'", $name));
 
@@ -276,9 +276,9 @@ function profile_view_field($user, $field) {
       case 'textarea':
         return check_markup($value);
       case 'selection':
-        return $browse ? l($value, 'profile/'. drupal_urlencode($field->name) .'/'. drupal_urlencode($value)) : check_plain($value);
+        return $browse ? l($value, 'profile/'. $field->name .'/'. $value) : check_plain($value);
       case 'checkbox':
-        return $browse ? l($field->title, 'profile/'. drupal_urlencode($field->name)) : check_plain($field->title);
+        return $browse ? l($field->title, 'profile/'. $field->name) : check_plain($field->title);
       case 'url':
         return '<a href="'. check_url($value) .'">'. check_plain($value) .'</a>';
       case 'date':

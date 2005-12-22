@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.155 2005/12/21 14:30:09 unconed Exp $
+// $Id: search.module,v 1.156 2005/12/22 22:58:12 unconed Exp $
 
 /**
  * @file
@@ -165,7 +165,7 @@ function search_menu($may_cache) {
     // To remember the user's search keywords when switching across tabs,
     // we dynamically add the keywords to the search tabs' paths.
     $keys = search_get_keys();
-    $keys = strlen($keys) ? '/'. drupal_urlencode($keys) : '';
+    $keys = strlen($keys) ? '/'. $keys : '';
     foreach (module_list() as $name) {
       if (module_hook($name, 'search') && $title = module_invoke($name, 'search', 'name')) {
         $items[] = array('path' => 'search/'. $name . $keys, 'title' => $title,
@@ -881,7 +881,7 @@ function search_view() {
       $type = 'node';
     }
     $keys = module_invoke($type, 'search', 'post', $_POST['edit']['keys']);
-    drupal_goto('search/'. drupal_urlencode($type) .'/'. drupal_urlencode(is_null($keys) ? $_POST['edit']['keys'] : $keys));
+    drupal_goto('search/'. $type .'/'. (is_null($keys) ? $_POST['edit']['keys'] : $keys));
   }
   else if ($type == '') {
     // Note: search/node can not be a default tab because it would take on the
@@ -898,7 +898,7 @@ function search_view() {
       watchdog('search',
         t('Search: %keys (%type).', array('%keys' => theme('placeholder', $keys), '%type' => module_invoke($type, 'search', 'name'))),
         WATCHDOG_NOTICE,
-        l(t('results'), 'search/'. drupal_urlencode($type) .'/'. drupal_urlencode($keys))
+        l(t('results'), 'search/'. $type .'/'. $keys)
         );
 
       // Collect the search results:
