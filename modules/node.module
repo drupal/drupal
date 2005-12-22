@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.570 2005/12/22 00:22:19 unconed Exp $
+// $Id: node.module,v 1.571 2005/12/22 10:57:02 dries Exp $
 
 /**
  * @file
@@ -581,7 +581,7 @@ function node_show($node, $cid) {
  * Implementation of hook_perm().
  */
 function node_perm() {
-  return array('administer nodes', 'access content');
+  return array('administer nodes', 'access content', 'view revisions', 'roll back revisions');
 }
 
 /**
@@ -912,13 +912,12 @@ function node_menu($may_cache) {
           'access' => node_access('delete', $node),
           'weight' => 1,
           'type' => MENU_CALLBACK);
-        if (user_access('administer nodes') && db_result(db_query('SELECT COUNT(vid) FROM {node_revisions} WHERE nid = %d', arg(1))) > 1) {
-          $items[] = array('path' => 'node/'. arg(1) .'/revisions', 'title' => t('revisions'),
-            'callback' => 'node_page',
-            'access' => user_access('administer nodes'),
-            'weight' => 2,
-            'type' => MENU_LOCAL_TASK);
-        }
+        $revisions_access = ((user_access('view revisions') || user_access('administer nodes')) && node_access('view', $node) && db_result(db_query('SELECT COUNT(vid) FROM {node_revisions} WHERE nid = %d', arg(1))) > 1);
+        $items[] = array('path' => 'node/'. arg(1) .'/revisions', 'title' => t('revisions'),
+          'callback' => 'node_revisions',
+          'access' => $revisions_access,
+          'weight' => 2,
+          'type' => MENU_LOCAL_TASK);
       }
     }
     else if (arg(0) == 'admin' && arg(1) == 'settings' && arg(2) == 'content-types' && is_string(arg(3))) {
@@ -1264,46 +1263,56 @@ function node_types_configure($type = NULL) {
 /**
  * Generate an overview table of older revisions of a node.
  */
-function node_revision_overview($nid) {
+function node_revision_overview($node) {
+  drupal_set_title(t('Revisions for %title', array('%title' => check_plain($node->title))));
+
+  $header = array('', t('Author'), t('Title'), t('Date'), array('colspan' => '3', 'data' => t('Operations')));
+
+  $revisions = node_revision_list($node);
+
+  $i = 0;
+  $rows = array();
+  $roll_back_permission = FALSE;
+  if ((user_access('roll back revisions') || user_access('administer nodes')) && node_access('update', $node)) {
+    $roll_back_permission = TRUE;
+  }
+  $delete_permission = FALSE;
   if (user_access('administer nodes')) {
-    $node = node_load($nid);
-
-    drupal_set_title(t('Revisions for %title', array('%title' => check_plain($node->title))));
-
-    if ($node->vid) {
-      $header = array('', t('Author'), t('Title'), t('Date'), array('colspan' => '3', 'data' => t('Operations')));
-
-      $revisions = node_revision_list($node);
-
-      $i = 0;
-      foreach ($revisions as $revision) {
-        $row = ++$i;
-        if ($revision->current_vid) {
-          $rows[] = array(
-            array('data' => $row .' '. t('(current)'), 'rowspan' => ($revision->log != '') ? 2 : 1),
-            theme('username', $revision),
-            $revision->title,
-            format_date($revision->timestamp, 'small'),
-            l(t('view'), "node/$node->nid"),
-            '', '');
-        }
-        else {
-          $rows[] = array(
-            array('data' => $row, 'rowspan' => ($revision->log != '') ? 2 : 1),
-            theme('username', $revision),
-            $revision->title,
-            format_date($revision->timestamp, 'small'),
-            l(t('view'), "node/$node->nid/revision/". $revision->vid),
-            l(t('set active'), "node/$node->nid/rollback-revision/". $revision->vid),
-            l(t('delete'), "node/$node->nid/delete-revision/". $revision->vid));
-        }
-        if ($revision->log != '') {
-          $rows[] = array(array('data' => $revision->log, 'colspan' => 6));
-        }
+    $delete_permission = TRUE;
+  }
+  foreach ($revisions as $revision) {
+    if ($revision->current_vid > 0) {
+      $current_row = array(
+                           array('data' => ++$i .' '. t('(current)'), 'rowspan' => ($revision->log != '') ? 2 : 1),
+                           theme('username', $revision),
+                           check_plain($revision->title),
+                           format_date($revision->timestamp, 'small'),
+                           l(t('view'), "node/$node->nid"));
+      if (node_access('update', $node)) {
+        $current_row[] = l(t('edit'), "node/$node->nid/edit");
       }
-      $output .= theme('table', $header, $rows);
+      $rows[] = array_pad($current_row, 7, '');
+    }
+    else {
+      $current_row = array(
+                           array('data' => ++$i, 'rowspan' => ($revision->log != '') ? 2 : 1),
+                           theme('username', $revision),
+                           check_plain($revision->title),
+                           format_date($revision->timestamp, 'small'),
+                           l(t('view'), "node/$node->nid/revisions/$revision->vid/view"));
+      if ($roll_back_permission) {
+        $current_row[] = l(t('set active'), "node/$node->nid/revisions/$revision->vid/rollback");
+      }
+      if ($delete_permission) {
+        $current_row[] = l(t('delete'), "node/$node->nid/revisions/$revision->vid/delete");
+      }
+      $rows[] = array_pad($current_row, 7, '');
+    }
+    if ($revision->log != '') {
+      $rows[] = array(array('data' => $revision->log, 'colspan' => 7));
     }
   }
+  $output .= theme('table', $header, $rows);
 
   return $output;
 }
@@ -1314,17 +1323,21 @@ function node_revision_overview($nid) {
 function node_revision_rollback($nid, $revision) {
   global $user;
 
-  if (user_access('administer nodes')) {
-    if ($title = db_fetch_object(db_query('SELECT title, timestamp FROM {node_revisions} WHERE nid = %d AND vid = %d', $nid, $revision))) {
-      db_query('UPDATE {node} SET vid = %d, changed = %d WHERE nid = %d', $revision, $title->timestamp, $nid);
+  $node = node_load($nid, $revision);
+  if ((user_access('roll back revisions') || user_access('administer nodes')) && node_access('update', $node)) {
+    if ($node->vid) {
+      $node->revision = 1;
+      $node->log = t('Copy of the revision from %date.', array('%date' => theme('placeholder', format_date($node->revision_timestamp))));
+      $new_node = node_save($node);
 
-      drupal_set_message(t('%title has been rolled back to the revision from %revision-date', array('%revision-date' => theme('placeholder', format_date($title->timestamp)), '%title' => theme('placeholder', check_plain($title->title)))));
+      drupal_set_message(t('%title has been rolled back to the revision from %revision-date', array('%revision-date' => theme('placeholder', format_date($node->revision_timestamp)), '%title' => theme('placeholder', check_plain($node->title)))));
     }
     else {
       drupal_set_message(t('You tried to roll back to an invalid revision.'), 'error');
     }
     drupal_goto('node/'. $nid .'/revisions');
   }
+  drupal_access_denied();
 }
 
 /**
@@ -1333,12 +1346,14 @@ function node_revision_rollback($nid, $revision) {
 function node_revision_delete($nid, $revision) {
 
   if (user_access('administer nodes')) {
-    $count_revisions = db_result(db_query('SELECT COUNT(vid) FROM {node_revisions} WHERE nid = %d', $nid));
-    // Don't delete the last revision of the node or the current revision
-    if ($count_revisions > 1) {
-      $node = node_load($nid, $revision);
+    $node = node_load($nid);
+    if (node_access('delete', $node)) {
+      $current_revision = db_result(db_query('SELECT vid FROM {node} WHERE nid = %d', $nid));
+      // Don't delete the current revision
+      if ($revision != $current_revision) {
+        $node = node_load($nid, $revision);
 
-      db_query("DELETE FROM {node_revisions} WHERE nid = %d AND vid = %d", $nid, $revision);
+        db_query("DELETE FROM {node_revisions} WHERE nid = %d AND vid = %d", $nid, $revision);
 
       node_invoke_nodeapi($node, 'delete revision');
       drupal_set_message(t('Deleted %title revision %revision.', array('%title' => theme('placeholder', $node->title), '%revision' => theme('placeholder', $revision))));
@@ -1349,7 +1364,9 @@ function node_revision_delete($nid, $revision) {
     }
 
     drupal_goto("node/$nid/revisions");
+    }
   }
+  drupal_access_denied();
 }
 
 /**
@@ -1910,6 +1927,52 @@ function node_delete($nid) {
 }
 
 /**
+ * Menu callback for revisions related activities.
+ */
+function node_revisions() {
+  if (is_numeric(arg(1)) && arg(2) == 'revisions') {
+    $op = arg(4) ? arg(4) : 'overview';
+    switch ($op) {
+      case 'overview':
+        $node = node_load(arg(1));
+        if ((user_access('view revisions') || user_access('administer nodes')) && node_access('view', $node)) {
+          return node_revision_overview($node);
+        }
+        else {
+          drupal_access_denied();
+        }
+        break;
+      case 'view':
+        if (is_numeric(arg(3))) {
+          $node = node_load(arg(1), arg(3));
+          if ($node->nid) {
+            if ((user_access('view revisions') || user_access('administer nodes')) && node_access('view', $node)) {
+              drupal_set_title(t('Revision of %title from %date', array('%title' => theme('placeholder', $node->title), '%date' => format_date($node->revision_timestamp))));
+              return node_show($node, arg(2));
+            }
+            else {
+              drupal_access_denied();
+            }
+          }
+        }
+        drupal_not_found();
+        break;
+      case 'rollback':
+        node_revision_rollback(arg(1), arg(3));
+        break;
+      case 'delete':
+        node_revision_delete(arg(1), arg(3));
+        break;
+      default:
+        drupal_not_found();
+        break;
+    }
+  }
+  drupal_not_found();
+}
+
+
+/**
  * Generate a listing of promoted nodes.
  */
 function node_page_default() {
@@ -1952,7 +2015,7 @@ function node_page() {
   switch ($op) {
     case 'view':
       if (is_numeric(arg(1))) {
-        $node = node_load(arg(1), $_GET['revision']);
+        $node = node_load(arg(1));
         if ($node->nid) {
           drupal_set_title(check_plain($node->title));
           return node_show($node, arg(2));
@@ -1967,20 +2030,6 @@ function node_page() {
       break;
     case 'add':
       return node_add(arg(2));
-      break;
-    case 'revisions':
-      if (user_access('administer nodes')) {
-        return node_revision_overview(arg(1));
-      }
-      else {
-        drupal_access_denied();
-      }
-      break;
-    case 'rollback-revision':
-      node_revision_rollback(arg(1), arg(3));
-      break;
-    case 'delete-revision':
-      node_revision_delete(arg(1), arg(3));
       break;
     case 'edit':
       if ($_POST['op'] == t('Delete')) {
@@ -2000,18 +2049,6 @@ function node_page() {
         }
         else if (db_result(db_query('SELECT nid FROM {node} WHERE nid = %d', arg(1)))) {
           drupal_access_denied();
-        }
-        else {
-          drupal_not_found();
-        }
-      }
-      break;
-    case 'revision':
-      if (is_numeric(arg(1)) && is_numeric(arg(3))) {
-        $node = node_load(arg(1), arg(3));
-        if ($node->nid) {
-          drupal_set_title(t('Revision of %title', array('%title' => theme('placeholder', $node->title))));
-          print theme('page', node_show($node, arg(2)));
         }
         else {
           drupal_not_found();
