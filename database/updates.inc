@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.166 2005/12/16 17:11:52 unconed Exp $
+// $Id: updates.inc,v 1.167 2005/12/24 13:07:25 dries Exp $
 
 function system_update_110() {
   $ret = array();
@@ -941,32 +941,40 @@ function system_update_151() {
     $ret[] = update_sql("INSERT INTO {menu} (mid, pid, path, title, description, weight, type) " .
                          "VALUES ({$menus[$loop]['pid']}, 0, '', '{$menus[$loop]['menu_name']}', '', 0, 115)");
 
-    // insert all entries from theme links into new menus
-    $num_inserted = 0;
+    // Gather links from various settings into a single array.
+    $phptemplate_links = variable_get("phptemplate_". $menus[$loop]['links_var'], array());
+    $phptemplate_links_more = variable_get("phptemplate_". $menus[$loop]['links_var'] ."_more", array());
     if (isset($ts) && is_array($ts) && is_array($ts[$menus[$loop]['links_var']])) {
-      $links = $ts[$menus[$loop]['links_var']];
-      for ($i = 0; $i < count($links['text']); $i++) {
-        if ($links['text'][$i] != "" && $links['link'][$i] != "") {
-          $num_inserted ++;
-          $node_unalias = db_fetch_array(db_query("SELECT src FROM {url_alias} WHERE dst = '%s'", $links['link'][$i]));
-          if (isset($node_unalias) && is_array($node_unalias)) {
-      $link_path = $node_unalias['src'];
+      $theme_links = $ts[$menus[$loop]['links_var']];
     }
     else {
-      $link_path = $links['link'][$i];
+      $theme_links = array();
     }
+    $links = array_merge($phptemplate_links, $phptemplate_links_more, $theme_links);
 
-          $mid = db_next_id('{menu}_mid');
-          $ret[] = update_sql("INSERT INTO {menu} (mid, pid, path, title, description, weight, type) " .
-                               "VALUES ($mid, {$menus[$loop]['pid']}, '" . db_escape_string($link_path) .
-                               "', '" . db_escape_string($links['text'][$i]) .
-                               "', '" . db_escape_string($links['description'][$i]) . "', 0, 118)");
+    // insert all entries from theme links into new menus
+    $num_inserted = 0;
+    for ($i = 0; $i < count($links['text']); $i++) {
+      if ($links['text'][$i] != "" && $links['link'][$i] != "") {
+        $num_inserted ++;
+        $node_unalias = db_fetch_array(db_query("SELECT src FROM {url_alias} WHERE dst = '%s'", $links['link'][$i]));
+        if (isset($node_unalias) && is_array($node_unalias)) {
+          $link_path = $node_unalias['src'];
         }
+        else {
+          $link_path = $links['link'][$i];
+        }
+
+        $mid = db_next_id('{menu}_mid');
+        $ret[] = update_sql("INSERT INTO {menu} (mid, pid, path, title, description, weight, type) " .
+                             "VALUES ($mid, {$menus[$loop]['pid']}, '" . db_escape_string($link_path) .
+                             "', '" . db_escape_string($links['text'][$i]) .
+                             "', '" . db_escape_string($links['description'][$i]) . "', 0, 118)");
       }
-      // delete Secondary links if not populated.
-      if ($loop == 1 && $num_inserted == 0) {
-        db_query("DELETE FROM {menu} WHERE mid={$menus[$loop]['pid']}");
-      }
+    }
+    // delete Secondary links if not populated.
+    if ($loop == 1 && $num_inserted == 0) {
+      db_query("DELETE FROM {menu} WHERE mid={$menus[$loop]['pid']}");
     }
 
     // set menu_primary_menu variable appropriately
@@ -976,12 +984,14 @@ function system_update_151() {
     else {
       variable_set($menus[$loop]['menu_var'], $menus[$loop]['pid']);
     }
+    variable_del('phptemplate_' .$menus[$loop]['links_var']);
+    variable_del('phptemplate_'. $menus[$loop]['links_var'] .'_more');
     variable_del($menus[$loop]['toggle_var']);
-    unset($ts[$menus[$loop]['toggle_var']]);
-    variable_del($menus[$loop]['links_var']);
-    unset($ts[$menus[$loop]['links_var']]);
     variable_del($menus[$loop]['more_var']);
-    unset($ts[$menus[$loop]['more_var']]);
+    // If user has old xtemplate links in a string, leave them in the var.
+    if (isset($ts) && is_array($ts) && is_array($ts[$menus[$loop]['links_var']])) {
+      variable_del($menus[$loop]['links_var']);
+    }
   }
 
   if (isset($ts) && is_array($ts)) {
