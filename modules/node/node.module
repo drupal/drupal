@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.571 2005/12/22 10:57:02 dries Exp $
+// $Id: node.module,v 1.572 2005/12/24 13:05:22 dries Exp $
 
 /**
  * @file
@@ -1344,28 +1344,27 @@ function node_revision_rollback($nid, $revision) {
  * Delete the revision with specified revision number.
  */
 function node_revision_delete($nid, $revision) {
-
   if (user_access('administer nodes')) {
     $node = node_load($nid);
     if (node_access('delete', $node)) {
-      $current_revision = db_result(db_query('SELECT vid FROM {node} WHERE nid = %d', $nid));
       // Don't delete the current revision
-      if ($revision != $current_revision) {
+      if ($revision != $node->vid) {
         $node = node_load($nid, $revision);
 
         db_query("DELETE FROM {node_revisions} WHERE nid = %d AND vid = %d", $nid, $revision);
+        node_invoke_nodeapi($node, 'delete revision');
+        drupal_set_message(t('Deleted %title revision %revision.', array('%title' => theme('placeholder', $node->title), '%revision' => theme('placeholder', $revision))));
+        watchdog('content', t('%type: deleted %title revision %revision.', array('%type' => theme('placeholder', t($node->type)), '%title' => theme('placeholder', $node->title), '%revision' => theme('placeholder', $revision))));
+      }
 
-      node_invoke_nodeapi($node, 'delete revision');
-      drupal_set_message(t('Deleted %title revision %revision.', array('%title' => theme('placeholder', $node->title), '%revision' => theme('placeholder', $revision))));
-      watchdog('content', t('%type: deleted %title revision %revision.', array('%type' => theme('placeholder', t($node->type)), '%title' => theme('placeholder', $node->title), '%revision' => theme('placeholder', $revision))));
-    }
-    else {
-      drupal_set_message(t('Deletion failed. You tried to delete the current revision.'));
-    }
+      else {
+        drupal_set_message(t('Deletion failed. You tried to delete the current revision.'));
+      }
 
-    drupal_goto("node/$nid/revisions");
+      drupal_goto("node/$nid/revisions");
     }
   }
+
   drupal_access_denied();
 }
 
