@@ -409,6 +409,7 @@ function theme_page($content) {
 function theme_maintenance_page($content) {
   drupal_set_header('Content-Type: text/html; charset=utf-8');
   theme('add_style', 'misc/maintenance.css');
+  drupal_set_html_head('<link rel="shortcut icon" href="misc/favicon.ico" type="image/x-icon" />');
   $output = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
   $output .= '<html xmlns="http://www.w3.org/1999/xhtml">';
   $output .= '<head>';
