@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.572 2005/12/24 13:05:22 dries Exp $
+// $Id: node.module,v 1.573 2005/12/26 11:21:19 dries Exp $
 
 /**
  * @file
@@ -744,7 +744,7 @@ function node_search($op = 'search', $keys = null) {
 
       // Node types
       $types = node_get_types();
-      $form['advanced']['type'] = array('#type' => 'checkboxes', '#title' => t('Only of the type'), '#prefix' => '<div class="criterium">', '#suffix' => '</div>', '#options' => $types, '#multiple' => true);
+      $form['advanced']['type'] = array('#type' => 'checkboxes', '#title' => t('Only of the type'), '#prefix' => '<div class="criterium">', '#suffix' => '</div>', '#options' => $types);
       $form['advanced']['submit'] = array('#type' => 'submit', '#value' => t('Advanced Search'), '#prefix' => '<div class="action">', '#suffix' => '</div>');
       return $form;
 
