@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.266 2005/12/15 16:02:50 dries Exp $
+// $Id: aggregator.module,v 1.267 2005/12/26 11:15:57 dries Exp $
 
 /**
  * @file
@@ -441,8 +441,8 @@ function aggregator_refresh($feed) {
 
         cache_clear_all();
 
-        watchdog('aggregator', t('There is new syndicated content from %site.', array('%site' => theme('placeholder', $feed['#title']))));
-        drupal_set_message(t('There is new syndicated content from %site.', array('%site' => theme('placeholder', $feed['#title']))));
+        watchdog('aggregator', t('There is new syndicated content from %site.', array('%site' => theme('placeholder', $feed['title']))));
+        drupal_set_message(t('There is new syndicated content from %site.', array('%site' => theme('placeholder', $feed['title']))));
       }
       break;
     default:
