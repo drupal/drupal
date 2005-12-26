@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.36 2005/12/19 14:43:42 dries Exp $
+// $Id: form.inc,v 1.37 2005/12/26 11:14:14 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -271,7 +271,13 @@ function _form_builder($form_id, $form) {
         }
       }
       if (!isset($form['#value'])) {
-        $form['#value'] = $form['#default_value'];
+        $function = $form['#type'] . '_value';
+        if (function_exists($function)) {
+          $function($form);
+        }
+        else {
+          $form['#value'] = $form['#default_value'];
+        }
       }
     }
     if (isset($form['#form_submitted'])) {
@@ -586,6 +592,17 @@ function map_month($month) {
 }
 
 /**
+ * Helper function to load value from default value for checkboxes
+ */
+function checkboxes_value(&$form) {
+  $value = array();
+  foreach ((array)$form['#default_value'] as $key) {
+    $value[$key] = 1;
+  }
+  $form['#value'] = $value;
+}
+
+/**
  * Roll out a single radios element
  * to a list of radios, using the options array as index.
  */
@@ -667,7 +684,7 @@ function expand_checkboxes($element) {
     }
     foreach ($element['#options'] as $key => $choice) {
       if (!isset($element[$key])) {
-        $element[$key] = array('#type' => 'checkbox', '#processed' => TRUE, '#title' => $choice, '#default_value' => in_array($key, $value), '#attributes' => $element['#attributes']);
+        $element[$key] = array('#type' => 'checkbox', '#processed' => TRUE, '#title' => $choice, '#default_value' => isset($value[$key]), '#attributes' => $element['#attributes']);
       }
     }
   }
