@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.37 2005/12/16 12:59:22 dries Exp $
+// $Id: contact.module,v 1.38 2005/12/26 11:19:49 dries Exp $
 
 /**
  * @file
@@ -121,7 +121,7 @@ function contact_mail_user() {
       $form['to'] = array('#type' => 'item', '#title' => t('To'), '#value' => $account->name);
       $form['subject'] = array('#type' => 'textfield', '#title' => t('Subject'), '#maxlength' => 50, '#required' => TRUE);
       $form['message'] = array('#type' => 'textarea', '#title' => t('Message'), '#rows' => 15, '#required' => TRUE);
-      $form['copy'] = array('#type' => 'checkbox', '#title' => ('Send me a copy.'));
+      $form['copy'] = array('#type' => 'checkbox', '#title' => t('Send me a copy.'));
       $form['submit'] = array('#type' => 'submit', '#value' => t('Send e-mail'));
       $output = drupal_get_form('contact_user_mail', $form);
     }
