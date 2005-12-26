@@ -121,7 +121,7 @@ function contact_mail_user() {
       $form['to'] = array('#type' => 'item', '#title' => t('To'), '#value' => $account->name);
       $form['subject'] = array('#type' => 'textfield', '#title' => t('Subject'), '#maxlength' => 50, '#required' => TRUE);
       $form['message'] = array('#type' => 'textarea', '#title' => t('Message'), '#rows' => 15, '#required' => TRUE);
-      $form['copy'] = array('#type' => 'checkbox', '#title' => ('Send me a copy.'));
+      $form['copy'] = array('#type' => 'checkbox', '#title' => t('Send me a copy.'));
       $form['submit'] = array('#type' => 'submit', '#value' => t('Send e-mail'));
       $output = drupal_get_form('contact_user_mail', $form);
     }
