@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.167 2005/12/24 13:07:25 dries Exp $
+// $Id: updates.inc,v 1.168 2005/12/26 17:20:23 dries Exp $
 
 function system_update_110() {
   $ret = array();
@@ -208,15 +208,10 @@ function system_update_114() {
 
 function system_update_115() {
   $ret = array();
-  if ($GLOBALS['db_type'] == 'mysql') {
-    $ret[] = update_sql("ALTER TABLE {watchdog} ADD severity tinyint(3) unsigned NOT NULL default '0'");
-  }
-  else if ($GLOBALS['db_type'] == 'pgsql') {
-    $ret[] = update_sql('ALTER TABLE {watchdog} ADD severity smallint');
-    $ret[] = update_sql('UPDATE {watchdog} SET severity = 0');
-    $ret[] = update_sql('ALTER TABLE {watchdog} ALTER COLUMN severity SET NOT NULL');
-    $ret[] = update_sql('ALTER TABLE {watchdog} ALTER COLUMN severity SET DEFAULT 0');
-  }
+
+  // This update has been moved to update_fix_watchdog_115 in update.php because it
+  // is needed for the basic functioning of the update script.
+
   return $ret;
 }
 
@@ -387,7 +382,7 @@ function system_update_124() {
   $result = db_query("SELECT c.nid, c.timestamp, c.name, c.uid, COUNT(c.nid) as comment_count FROM {node} n LEFT JOIN {comments} c ON c.nid = n.nid WHERE c.status = 0 GROUP BY c.nid, c.timestamp, c.name, c.uid");
   while ($comment_record = db_fetch_object($result)) {
     $count = db_result(db_query('SELECT COUNT(cid) FROM {comments} WHERE nid = %d AND status = 0', $comment_record->nid));
-    $ret[] = db_query("UPDATE {node_comment_statistics} SET comment_count = %d, last_comment_timestamp = %d, last_comment_name = '%s', last_comment_uid = %d WHERE nid = %d", $count, $comment_record->timestamp, $comment_record->name, $comment_record->uid, $comment_record->nid);
+    db_query("UPDATE {node_comment_statistics} SET comment_count = %d, last_comment_timestamp = %d, last_comment_name = '%s', last_comment_uid = %d WHERE nid = %d", $count, $comment_record->timestamp, $comment_record->name, $comment_record->uid, $comment_record->nid);
   }
 
   return $ret;
@@ -1128,7 +1123,7 @@ function system_update_159() {
   $vid = db_next_id('{node_revisions}_vid');
   while ($node = db_fetch_object($result)) {
     $revisions = unserialize($node->revisions);
-    if (!$revisions && is_array($revisions) && count($revisions) > 0) {
+    if (isset($revisions) && is_array($revisions) && count($revisions) > 0) {
       $revisions_query = array();
       $revisions_args = array();
       $book_query = array();

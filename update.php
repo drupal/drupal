@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.167 2005/12/19 14:27:28 dries Exp $
+// $Id: update.php,v 1.168 2005/12/26 17:20:23 dries Exp $
 
 /**
  * @file
@@ -215,6 +215,29 @@ function update_fix_sessions() {
 }
 
 /**
+ * System update 115 changes the watchdog table, which breaks the update
+ * script's ability to use logging. This changes the table appropriately.
+ *
+ * This code, including the 'update_watchdog_115_fixed' variable,  may be removed
+ * when update 115 is removed. It is part of the Drupal 4.5 to 4.7 migration.
+ */
+function update_fix_watchdog_115() {
+  if (drupal_get_installed_schema_version('system') < 115 && !variable_get('update_watchdog_115_fixed', FALSE)) {
+    if ($GLOBALS['db_type'] == 'mysql') {
+      $ret[] = update_sql("ALTER TABLE {watchdog} ADD severity tinyint(3) unsigned NOT NULL default '0'");
+    }
+    else if ($GLOBALS['db_type'] == 'pgsql') {
+      $ret[] = update_sql('ALTER TABLE {watchdog} ADD severity smallint');
+      $ret[] = update_sql('UPDATE {watchdog} SET severity = 0');
+      $ret[] = update_sql('ALTER TABLE {watchdog} ALTER COLUMN severity SET NOT NULL');
+      $ret[] = update_sql('ALTER TABLE {watchdog} ALTER COLUMN severity SET DEFAULT 0');
+    }
+
+    variable_set('update_watchdog_115_fixed', TRUE);
+  }
+}
+
+/**
  * System update 142 changes the watchdog table, which breaks the update
  * script's ability to use logging. This changes the table appropriately.
  *
@@ -280,8 +303,8 @@ function update_data($module, $number) {
 }
 
 function update_selection_page() {
-  $output = '<p>'. t('The version of Drupal you are updating from has been automatically detected. You can select a different version, but you should not need to.') .'</p>';
-  $output .= '<p>'. t('Click Update to start the update process.') .'</p>';
+  $output = '<p>The version of Drupal you are updating from has been automatically detected. You can select a different version, but you should not need to.</p>';
+  $output .= '<p>Click Update to start the update process.</p>';
 
   $form = array();
   $form['start'] = array(
@@ -299,7 +322,7 @@ function update_selection_page() {
 
       $form['start'][$module] = array(
         '#type' => 'select',
-        '#title' => t('%name module', array('%name' => $module)),
+        '#title' => $module . ' module',
         '#default_value' => array_search(drupal_get_installed_schema_version($module), $updates) + 1,
         '#options' => $updates,
       );
@@ -313,7 +336,7 @@ function update_selection_page() {
   );
   $form['submit'] = array(
     '#type' => 'submit',
-    '#value' => t('Update')
+    '#value' => 'Update'
   );
 
   drupal_set_title('Drupal database update');
@@ -496,8 +519,9 @@ if (($access_check == FALSE) || ($user->uid == 1)) {
   include_once './includes/install.inc';
 
   update_fix_schema_version();
-  update_fix_sessions();
+  update_fix_watchdog_115();
   update_fix_watchdog();
+  update_fix_sessions();
 
   $op = isset($_REQUEST['op']) ? $_REQUEST['op'] : '';
   switch ($op) {
