@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.294 2005/12/11 12:44:39 dries Exp $
+// $Id: forum.module,v 1.295 2005/12/26 11:26:21 dries Exp $
 
 /**
  * @file
@@ -195,7 +195,7 @@ function _forum_confirm_delete($tid) {
  */
 function forum_form_container($edit = array()) {
   $form['name'] = array('#title' => t('Container name'), '#type' => 'textfield', '#default_value' => $edit['name'], '#maxlength' =>  64, '#description' => t('The container name is used to identify related forums.'), '#required' => TRUE);
-  $form['description'] = array('#type' => 'textarea', '#title' => t('Description'), '#default_value' => $edit['description'], '#description' => ('The container description can give users more information about the forums it contains.'));
+  $form['description'] = array('#type' => 'textarea', '#title' => t('Description'), '#default_value' => $edit['description'], '#description' => t('The container description can give users more information about the forums it contains.'));
   $form['parent']['#tree'] = TRUE;
   $form['parent'][0] = _forum_parent_select($edit['tid'], t('Parent'), 'container');
   $form['weight'] = array('#type' => 'weight', '#title' => t('Weight'), '#default_value' => $edit['weight'], '#description' => t('When listing containers, those with with light (small) weights get listed before containers with heavier (larger) weights. Containers with equal weights are sorted alphabetically.'));
@@ -217,7 +217,7 @@ function forum_form_container($edit = array()) {
  */
 function forum_form_forum($edit = array()) {
   $form['name'] = array('#type' => 'textfield', '#title' => t('Forum name'), '#default_value' => $edit['name'], '#maxlength' =>  64, '#description' => t('The forum name is used to identify related discussions.'), '#required' => TRUE);
-  $form['description'] = array('#type' => 'textarea', '#title' => t('Description'), '#default_value' => $edit['description'], '#description' => ('The forum description can give users more information about the discussion topics it contains.'));
+  $form['description'] = array('#type' => 'textarea', '#title' => t('Description'), '#default_value' => $edit['description'], '#description' => t('The forum description can give users more information about the discussion topics it contains.'));
   $form['parent']['#tree'] = TRUE;
   $form['parent'][0] = _forum_parent_select($edit['tid'], t('Parent'), 'forum');
   $form['weight'] = array('#type' => 'weight', '#title' => t('Weight'), '#default_value' => $edit['weight'], '#description' => t('When listing forums, those with with light (small) weights get listed before containers with heavier (larger) weights. Forums with equal weights are sorted alphabetically.'));
