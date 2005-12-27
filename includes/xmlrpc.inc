@@ -82,7 +82,9 @@ function xmlrpc_value_get_xml($xmlrpc_value) {
       return '<double>'. $xmlrpc_value->data .'</double>';
       break;
     case 'string':
-      return '<string>'. check_plain($xmlrpc_value->data) .'</string>';
+      // Note: we don't escape apostrophes because of the many blogging clients
+      // that don't support numerical entities (and XML in general) properly.
+      return '<string>'. htmlspecialchars($xmlrpc_value->data) .'</string>';
       break;
     case 'array':
       $return = '<array><data>'."\n";
