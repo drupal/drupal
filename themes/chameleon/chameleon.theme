@@ -1,5 +1,5 @@
 <?php
-// $Id: chameleon.theme,v 1.36 2005/12/14 20:10:45 dries Exp $
+// $Id: chameleon.theme,v 1.37 2005/12/27 10:30:44 dries Exp $
 
 /**
  * @file
@@ -60,7 +60,7 @@ function chameleon_page($content) {
     if (isset($primary_links)) {
       $output .= '<div class="primary">'. $primary_links .'</div>';
     }
-    if (($secondary_links)) {
+    if (isset($secondary_links)) {
       $output .= '<div class="secondary">'. $secondary_links .'</div>';
     }
     $output .= " </div>\n";
