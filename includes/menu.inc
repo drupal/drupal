@@ -464,7 +464,7 @@ function menu_get_active_help() {
 function menu_get_active_breadcrumb() {
   $menu = menu_get_menu();
 
-  $links[] = l(t('Home'), '');
+  $links[] = l(t('Home'), '<front>');
 
   $trail = _menu_get_active_trail();
   foreach ($trail as $mid) {

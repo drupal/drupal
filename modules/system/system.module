@@ -752,6 +752,9 @@ function system_settings_form_submit($form_id, $values) {
   else {
     drupal_set_message(t('The configuration options have been saved.'));
   }
+  if ($form_id == 'system_settings_form') {
+    menu_rebuild();
+  }
 }
 
 /**
