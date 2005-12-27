@@ -531,10 +531,22 @@ CREATE INDEX permission_rid_idx ON permission(rid);
 CREATE TABLE poll (
   nid integer NOT NULL default '0',
   runtime integer NOT NULL default '0',
-  polled text NOT NULL default '',
   active integer NOT NULL default '0',
   PRIMARY KEY (nid)
 );
+
+--
+-- Table structure for poll_votes
+--
+
+CREATE TABLE poll_votes (
+  nid int(10) NOT NULL,
+  uid int(10) NOT NULL,
+  hostname varchar(128) NOT NULL
+);
+CREATE INDEX poll_voter_nid_idx ON poll_votes (nid);
+CREATE INDEX poll_votes_uid_idx ON poll_votes (uid);
+CREATE INDEX poll_votes_hostname_idx ON poll_votes (hostname);
 
 --
 -- Table structure for poll_choices

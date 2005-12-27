@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.183 2005/12/14 13:30:01 dries Exp $
+// $Id: poll.module,v 1.184 2005/12/27 14:34:21 dries Exp $
 
 /**
  * @file
@@ -175,7 +175,7 @@ function poll_insert($node) {
     $node->active = 1;
   }
 
-  db_query("INSERT INTO {poll} (nid, runtime, polled, active) VALUES (%d, %d, '', %d)", $node->nid, $node->runtime, $node->active);
+  db_query("INSERT INTO {poll} (nid, runtime, active) VALUES (%d, %d, %d)", $node->nid, $node->runtime, $node->active);
 
   foreach ($node->choice as $choice) {
     if ($choice['chtext'] != '') {
@@ -223,27 +223,13 @@ function poll_menu($may_cache) {
 }
 
 /**
- * Determine an adjusted user id, to allow for basic tracking of anonymous
- * users (IP-based).
- */
-function poll_uid() {
-  global $user;
-  if ($user->uid) {
-     // Pad the UID with underscores to allow a simple strstr() search
-    $id = '_'. $user->uid .'_';
-  }
-  else {
-    $id = $_SERVER['REMOTE_ADDR'];
-  }
-  return $id;
-}
-
-/**
  * Implementation of hook_load().
  */
 function poll_load($node) {
+  global $user;
+
   // Load the appropriate choices into the $node object
-  $poll = db_fetch_object(db_query("SELECT runtime, polled, active FROM {poll} WHERE nid = %d", $node->nid));
+  $poll = db_fetch_object(db_query("SELECT runtime, active FROM {poll} WHERE nid = %d", $node->nid));
 
   $result = db_query("SELECT chtext, chvotes, chorder FROM {poll_choices} WHERE nid = %d ORDER BY chorder", $node->nid);
   while ($choice = db_fetch_array($result)) {
@@ -251,10 +237,13 @@ function poll_load($node) {
   }
 
   // Determine whether or not this user is allowed to vote
-  $poll->allowvotes = false;
-  if (user_access('vote on polls')) {
-    if (!strstr($poll->polled, poll_uid())) {
-      $poll->allowvotes = $poll->active;
+  $poll->allowvotes = FALSE;
+  if (user_access('vote on polls') && $poll->active) {
+    if ($user->uid && db_num_rows(db_query('SELECT uid FROM {poll_votes} WHERE nid = %d AND uid = %d', $node->nid, $user->uid)) == 0) {
+      $poll->allowvotes = TRUE;
+    }
+    else if ($user->uid == 0 && db_num_rows(db_query("SELECT hostname FROM {poll_votes} WHERE nid = %d AND hostname = '%s'", $node->nid, $_SERVER['REMOTE_ADDR'])) == 0) {
+      $poll->allowvotes = TRUE;
     }
   }
   return $poll;
@@ -411,7 +400,9 @@ function poll_results() {
  * Callback for processing a vote
  */
 function poll_vote(&$node) {
+  global $user;
   $nid = arg(1);
+
   if ($node = node_load($nid)) {
     $edit = $_POST['edit'];
     $choice = $edit['choice'];
@@ -419,11 +410,18 @@ function poll_vote(&$node) {
 
     if (isset($choice) && isset($node->choice[$choice])) {
       if ($node->allowvotes) {
-        $id = poll_uid();
-        $node->polled = $node->polled ? ($node->polled .' '. $id) : $id;
-        db_query("UPDATE {poll} SET polled = '%s' WHERE nid = %d", $node->polled, $node->nid);
+        // Mark the user or host as having voted.
+        if ($user->uid) {
+          db_query('INSERT INTO {poll_votes} (nid, uid) VALUES (%d, %d)', $node->nid, $user->uid);
+        }
+        else {
+          db_query("INSERT INTO {poll_votes} (nid, hostname) VALUES (%d, '%s')", $node->nid, $_SERVER['REMOTE_ADDR']);
+        }
+
+        // Add one to the votes.
         db_query("UPDATE {poll_choices} SET chvotes = chvotes + 1 WHERE nid = %d AND chorder = %d", $node->nid, $choice);
-        $node->allowvotes = false;
+
+        $node->allowvotes = FALSE;
         $node->choice[$choice]['chvotes']++;
         drupal_set_message(t('Your vote was recorded.'));
       }

@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.168 2005/12/26 17:20:23 dries Exp $
+// $Id: updates.inc,v 1.169 2005/12/27 14:34:21 dries Exp $
 
 function system_update_110() {
   $ret = array();
@@ -1284,5 +1284,61 @@ function system_update_163() {
   if ($GLOBALS['db_type'] == 'mysql') {
     $ret[] = update_sql('ALTER TABLE {cache} CHANGE data data LONGBLOB');
   }
+  return $ret;
+}
+
+function system_update_164() {
+  $ret = array();
+
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql('CREATE TABLE {poll_votes} (
+          nid int(10) unsigned NOT NULL,
+          uid int(10) unsigned NOT NULL,
+          hostname varchar(128) NOT NULL,
+          INDEX (nid),
+          INDEX (uid),
+          INDEX (hostname)
+      )');
+      break;
+
+    case 'pgsql':
+      $ret[] = update_sql('CREATE TABLE {poll_votes} (
+          nid int(10) NOT NULL,
+          uid int(10) NOT NULL,
+          hostname varchar(128) NOT NULL
+      )');
+      $ret[] = update_sql('CREATE INDEX {poll_votes}_nid_idx ON {poll_votes} (nid)');
+      $ret[] = update_sql('CREATE INDEX {poll_votes}_uid_idx ON {poll_votes} (uid)');
+      $ret[] = update_sql('CREATE INDEX {poll_votes}_hostname_idx ON {poll_votes} (hostname)');
+      break;
+  }
+
+  $result = db_query('SELECT nid, polled FROM {poll}');
+  while ($poll = db_fetch_object($result)) {
+    foreach (explode(' ', $poll->polled) as $polled) {
+      if ($polled[0] == '_') {
+        // $polled is a user id
+        db_query('INSERT INTO {poll_votes} (nid, uid) VALUES (%d, %d)', $poll->nid, substr($polled, 1, -1));
+      }
+      else {
+        // $polled is a host
+        db_query("INSERT INTO {poll_votes} (nid, hostname) VALUES (%d, '%s')", $poll->nid, $polled);
+      }
+    }
+  }
+
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql('ALTER TABLE {poll} DROP polled');
+      break;
+
+    case 'pgsql':
+      $ret[] = update_sql('ALTER TABLE {poll} RENAME polled TO polled_old');
+      break;
+  }
+
   return $ret;
 }
