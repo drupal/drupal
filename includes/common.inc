@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.501 2005/12/22 22:58:12 unconed Exp $
+// $Id: common.inc,v 1.502 2005/12/27 10:36:16 dries Exp $
 
 /**
  * @file
@@ -954,6 +954,7 @@ function url($path = NULL, $query = NULL, $fragment = NULL, $absolute = FALSE) {
   global $base_url;
 
   static $script;
+  static $clean_url;
 
   if (empty($script)) {
     // On some web servers, such as IIS, we can't omit "index.php".  So, we
@@ -962,8 +963,10 @@ function url($path = NULL, $query = NULL, $fragment = NULL, $absolute = FALSE) {
     $script = (strpos($_SERVER['SERVER_SOFTWARE'], 'Apache') === false) ? 'index.php' : '';
   }
 
-  $path = drupal_get_path_alias($path);
-  $path = drupal_urlencode($path);
+  // Cache the clean_url variable to improve performance.
+  if ($clean_url === NULL) {
+    $clean_url = (variable_get('clean_url', '0') == '0') ? false : true;
+  }
 
   if (isset($fragment)) {
     $fragment = '#'. $fragment;
@@ -971,8 +974,11 @@ function url($path = NULL, $query = NULL, $fragment = NULL, $absolute = FALSE) {
 
   $base = ($absolute ? $base_url .'/' : '');
 
-  if (variable_get('clean_url', '0') == '0') {
-    if (isset($path)) {
+  // The special path '<front>' links to the default front page.
+  if (isset($path) && $path != '<front>') {
+    $path = drupal_get_path_alias($path);
+    $path = drupal_urlencode($path);
+    if (!$clean_url) {
       if (isset($query)) {
         return $base . $script .'?q='. $path .'&'. $query . $fragment;
       }
@@ -982,29 +988,19 @@ function url($path = NULL, $query = NULL, $fragment = NULL, $absolute = FALSE) {
     }
     else {
       if (isset($query)) {
-        return $base . $script .'?'. $query . $fragment;
-      }
-      else {
-        return $base . $fragment;
-      }
-    }
-  }
-  else {
-    if (isset($path)) {
-      if (isset($query)) {
         return $base . $path .'?'. $query . $fragment;
       }
       else {
         return $base . $path . $fragment;
       }
     }
+  }
+  else {
+    if (isset($query)) {
+      return $base . $script .'?'. $query . $fragment;
+    }
     else {
-      if (isset($query)) {
-        return $base . $script .'?'. $query . $fragment;
-      }
-      else {
-        return $base . $fragment;
-      }
+      return $base . $fragment;
     }
   }
 }

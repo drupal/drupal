@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.95 2005/12/22 22:58:12 unconed Exp $
+// $Id: menu.inc,v 1.96 2005/12/27 10:36:16 dries Exp $
 
 /**
  * @file
@@ -464,7 +464,7 @@ function menu_get_active_help() {
 function menu_get_active_breadcrumb() {
   $menu = menu_get_menu();
 
-  $links[] = l(t('Home'), '');
+  $links[] = l(t('Home'), '<front>');
 
   $trail = _menu_get_active_trail();
   foreach ($trail as $mid) {
