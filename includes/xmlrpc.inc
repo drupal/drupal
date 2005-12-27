@@ -1,5 +1,5 @@
 <?php
-// $Id: xmlrpc.inc,v 1.30 2005/12/10 19:26:47 dries Exp $
+// $Id: xmlrpc.inc,v 1.31 2005/12/27 18:42:49 unconed Exp $
 
 /*
   Drupal XML-RPC library. Based on the IXR - The Incutio XML-RPC Library - (c) Incutio Ltd 2002-2005
@@ -82,7 +82,9 @@ function xmlrpc_value_get_xml($xmlrpc_value) {
       return '<double>'. $xmlrpc_value->data .'</double>';
       break;
     case 'string':
-      return '<string>'. check_plain($xmlrpc_value->data) .'</string>';
+      // Note: we don't escape apostrophes because of the many blogging clients
+      // that don't support numerical entities (and XML in general) properly.
+      return '<string>'. htmlspecialchars($xmlrpc_value->data) .'</string>';
       break;
     case 'array':
       $return = '<array><data>'."\n";
