@@ -60,7 +60,7 @@ function chameleon_page($content) {
     if (isset($primary_links)) {
       $output .= '<div class="primary">'. $primary_links .'</div>';
     }
-    if (($secondary_links)) {
+    if (isset($secondary_links)) {
       $output .= '<div class="secondary">'. $secondary_links .'</div>';
     }
     $output .= " </div>\n";
