@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.38 2005/12/26 11:19:49 dries Exp $
+// $Id: contact.module,v 1.39 2005/12/27 18:11:27 dries Exp $
 
 /**
  * @file
@@ -37,7 +37,7 @@ function contact_menu($may_cache) {
   $items = array();
 
   if ($may_cache) {
-    $items[] = array('path' => 'contact', 'title' => t('contact us'),
+    $items[] = array('path' => 'contact', 'title' => t('contact'),
       'callback' => 'contact_mail_page', 'access' => user_access('access content'),
       'type' => MENU_SUGGESTED_ITEM);
     $items[] = array('path' => 'admin/contact', 'title' => t('contact form'),
@@ -68,7 +68,7 @@ function contact_menu($may_cache) {
 function contact_settings() {
   $form['contact_form_information'] = array(
     '#type' => 'textarea', '#title' => t('Additional information'),
-    '#default_value' => variable_get('contact_form_information', t('You can leave us a message using the contact form below.')),
+    '#default_value' => variable_get('contact_form_information', t('You can leave a message using the contact form below.')),
     '#description' => t('Information to show on the <a href="%form">contact page</a>.  Can be anything from submission guidelines to your postal address or telephone number.', array('%form' => url('contact')))
   );
   $form['contact_hourly_threshold'] = array(
