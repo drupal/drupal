@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.57 2005/12/27 10:36:16 dries Exp $
+// $Id: menu.module,v 1.58 2005/12/28 12:06:06 dries Exp $
 
 /**
  * @file
@@ -86,7 +86,7 @@ function menu_help($section) {
     case 'admin/menu':
       return t('<p>Select an operation from the list to move, change, or delete a menu item.</p>');
     case 'admin/menu/menu/add':
-      return t('<p>Enter the name for your new menu. Remember to enable the newly created block in the %blocks administration page.</p>', array('%blocks' => l(t('blocks'), 'admin/block')));
+      return t('<p>Enter the name for your new menu. Remember to enable the newly created block in the %blocks.</p>', array('%blocks' => l(t('blocks administration page'), 'admin/block')));
     case 'admin/menu/item/add':
       return t('<p>Enter the title, path, position and the weight for your new menu item.</p>');
     case 'admin/settings/menu':
