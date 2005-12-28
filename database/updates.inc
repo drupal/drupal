@@ -1293,22 +1293,22 @@ function system_update_164() {
   switch ($GLOBALS['db_type']) {
     case 'mysql':
     case 'mysqli':
-      $ret[] = update_sql('CREATE TABLE {poll_votes} (
+      $ret[] = update_sql("CREATE TABLE {poll_votes} (
           nid int(10) unsigned NOT NULL,
-          uid int(10) unsigned NOT NULL,
-          hostname varchar(128) NOT NULL,
+          uid int(10) unsigned NOT NULL default 0,
+          hostname varchar(128) NOT NULL default '',
           INDEX (nid),
           INDEX (uid),
           INDEX (hostname)
-      )');
+      )");
       break;
 
     case 'pgsql':
-      $ret[] = update_sql('CREATE TABLE {poll_votes} (
-          nid int(10) NOT NULL,
-          uid int(10) NOT NULL,
-          hostname varchar(128) NOT NULL
-      )');
+      $ret[] = update_sql("CREATE TABLE {poll_votes} (
+          nid int NOT NULL,
+          uid int NOT NULL default 0,
+          hostname varchar(128) NOT NULL default ''
+      )");
       $ret[] = update_sql('CREATE INDEX {poll_votes}_nid_idx ON {poll_votes} (nid)');
       $ret[] = update_sql('CREATE INDEX {poll_votes}_uid_idx ON {poll_votes} (uid)');
       $ret[] = update_sql('CREATE INDEX {poll_votes}_hostname_idx ON {poll_votes} (hostname)');
@@ -1329,16 +1329,7 @@ function system_update_164() {
     }
   }
 
-  switch ($GLOBALS['db_type']) {
-    case 'mysql':
-    case 'mysqli':
-      $ret[] = update_sql('ALTER TABLE {poll} DROP polled');
-      break;
-
-    case 'pgsql':
-      $ret[] = update_sql('ALTER TABLE {poll} RENAME polled TO polled_old');
-      break;
-  }
+  $ret[] = update_sql('ALTER TABLE {poll} DROP polled');
 
   return $ret;
 }
