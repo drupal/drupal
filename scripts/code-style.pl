@@ -1,5 +1,5 @@
 #!/usr/bin/perl -w
-# $Id: code-style.pl,v 1.9 2005/03/31 21:18:08 dries Exp $
+# $Id: code-style.pl,v 1.10 2005/12/28 12:04:14 dries Exp $
 
 # Author: Alexander Schwartz (alexander.schwartz@gmx.net)
 # Licence: GPL
@@ -9,7 +9,7 @@
 # code.  This program tries to show as many improvements as possible with
 # no false positives.
 
-# $Id: code-style.pl,v 1.9 2005/03/31 21:18:08 dries Exp $
+# $Id: code-style.pl,v 1.10 2005/12/28 12:04:14 dries Exp $
 
 $comment = 0;
 $program = 0;
@@ -134,7 +134,7 @@ while (<>) {
     $msg = "missing space after ','";
   }
   # spaces before and after, only foreach may use $foo=>bar
-  elsif (/[^ =|-|\+](\+|\-)[^ =>|-|\+]/ && $program && !/foreach/) {
+  elsif (/[^ =|\-|\+](\+|\-)[^ =>|\-|\+]/ && $program && !/foreach/) {
     $msg = "'$1' -> ' $1 '";
   }
   elsif (/[^ =](\*|==|\.=|=>|=|\|\|)[^ =>]/ && $program && !/foreach/) {
