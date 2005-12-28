@@ -546,8 +546,8 @@ CREATE TABLE poll (
 
 CREATE TABLE poll_votes (
   nid int(10) unsigned NOT NULL,
-  uid int(10) unsigned NOT NULL,
-  hostname varchar(128) NOT NULL,
+  uid int(10) unsigned NOT NULL default 0,
+  hostname varchar(128) NOT NULL default '',
   INDEX (nid),
   INDEX (uid),
   INDEX (hostname)

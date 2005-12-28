@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.184 2005/12/27 14:34:21 dries Exp $
+// $Id: poll.module,v 1.185 2005/12/28 12:02:29 dries Exp $
 
 /**
  * @file
@@ -87,6 +87,7 @@ function poll_cron() {
 function poll_delete($node) {
   db_query("DELETE FROM {poll} WHERE nid = %d", $node->nid);
   db_query("DELETE FROM {poll_choices} WHERE nid = %d", $node->nid);
+  db_query("DELETE FROM {poll_votes} WHERE nid = %d", $node->nid);
 }
 
 /**
@@ -482,6 +483,7 @@ function poll_update($node) {
   db_query('UPDATE {poll} SET runtime = %d, active = %d WHERE nid = %d', $node->runtime, $node->active, $node->nid);
 
   db_query('DELETE FROM {poll_choices} WHERE nid = %d', $node->nid);
+  db_query('DELETE FROM {poll_votes} WHERE nid = %d', $node->nid);
   foreach ($node->choice as $choice) {
     $chvotes = (int)$choice['chvotes'];
     $chtext = $choice['chtext'];
