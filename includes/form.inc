@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.37 2005/12/26 11:14:14 dries Exp $
+// $Id: form.inc,v 1.38 2005/12/29 03:59:30 unconed Exp $
 
 /**
  * @defgroup form Form generation
@@ -760,9 +760,15 @@ function theme_form($element) {
  *   A themed HTML string representing the textarea.
  */
 function theme_textarea($element) {
+  $class = 'textarea';
+  if ($element['#resizable'] !== false) {
+    drupal_add_js('misc/textarea.js');
+    $class .= ' resizable';
+  }
+
   $cols = $element['#cols'] ? ' cols="'. $element['#cols'] .'"' : '';
 
-  return theme('form_element', $element['#title'], '<textarea'. $cols .' rows="'. $element['#rows'] .'" name="'. $element['#name'] .'" id="' . $element['#id'] .'" class="'. _form_get_class('textarea', $element['#required'], form_get_error($element)) .'"'. drupal_attributes($element['#attributes']) .'>'. check_plain($element['#value']) .'</textarea>', $element['#description'], $element['#id'], $element['#required'], form_get_error($element));
+  return theme('form_element', $element['#title'], '<textarea'. $cols .' rows="'. $element['#rows'] .'" name="'. $element['#name'] .'" id="' . $element['#id'] .'" class="'. _form_get_class($class, $element['#required'], form_get_error($element)) .'"'. drupal_attributes($element['#attributes']) .'>'. check_plain($element['#value']) .'</textarea>', $element['#description'], $element['#id'], $element['#required'], form_get_error($element));
 }
 
 /**

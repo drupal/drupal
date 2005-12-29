@@ -1,4 +1,4 @@
-// $Id: drupal.js,v 1.15 2005/12/21 17:29:08 unconed Exp $
+// $Id: drupal.js,v 1.16 2005/12/29 03:59:30 unconed Exp $
 
 /**
  * Only enable Javascript functionality if all required features are supported.
@@ -211,6 +211,10 @@ function absolutePosition(el) {
   return r;
 };
 
+function dimensions(el) {
+  return { width: el.offsetWidth, height: el.offsetHeight };
+}
+
 /**
  * Returns true if an element has a specified class name
  */
@@ -277,6 +281,20 @@ function removeNode(node) {
   else {
     return false;
   }
+}
+
+/**
+ * Prevents an event from propagating.
+ */
+function stopEvent(event) {
+  if (event.preventDefault) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+  else {
+    event.returnValue = false;
+    event.cancelBubble = true;
+  }  
 }
 
 /**

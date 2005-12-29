@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.126 2005/12/20 18:20:26 dries Exp $ */
+/* $Id: drupal.css,v 1.127 2005/12/29 03:59:30 unconed Exp $ */
 
 /*
 ** HTML elements
@@ -617,4 +617,18 @@ html.js fieldset.collapsed legend a {
 /* Note: IE-only fix due to '* html' (breaks Konqueror otherwise). */
 * html.js fieldset.collapsible legend a {
   display: block;
+}
+
+/*
+** Resizable text areas
+*/
+.resizable-textarea {
+  width: 95%;
+}
+.resizable-textarea .grippie {
+  height: 14px;
+  background: #eee url('grippie.png') no-repeat 100% 100%;
+  border: 1px solid #ddd;
+  border-top-width: 0px;
+  cursor: ns-resize;
 }
