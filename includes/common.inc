@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.502 2005/12/27 10:36:16 dries Exp $
+// $Id: common.inc,v 1.503 2005/12/29 05:28:53 unconed Exp $
 
 /**
  * @file
@@ -933,17 +933,21 @@ function format_date($timestamp, $type = 'medium', $format = '', $timezone = NUL
  */
 
 /**
- * Generate an internal Drupal URL.
+ * Generate a URL from a Drupal menu path. Will also pass-through existing URLs.
  *
  * @param $path
- *   The Drupal path being linked to, such as "admin/node".
+ *   The Drupal path being linked to, such as "admin/node", or an existing URL
+ *   like "http://drupal.org/".
  * @param $query
- *   A query string to append to the link.
+ *   A query string to append to the link or URL.
  * @param $fragment
- *   A fragment identifier (named anchor) to append to the link.
+ *   A fragment identifier (named anchor) to append to the link. If an existing
+ *   URL with a fragment identifier is used, it will be replaced. Note, do not
+ *   include the '#'.
  * @param $absolute
  *   Whether to force the output to be an absolute link (beginning with http:).
- *   Useful for links that will be displayed outside the site, such as in an RSS feed.
+ *   Useful for links that will be displayed outside the site, such as in an
+ *   RSS feed.
  * @return
  *   an HTML string containing a link to the given path.
  *
@@ -951,8 +955,29 @@ function format_date($timestamp, $type = 'medium', $format = '', $timezone = NUL
  * alternative than url().
  */
 function url($path = NULL, $query = NULL, $fragment = NULL, $absolute = FALSE) {
-  global $base_url;
+  if (isset($fragment)) {
+    $fragment = '#'. $fragment;
+  }
 
+  // Return an external link if $path contains an allowed absolute URL.
+  // Only call the slow filter_xss_bad_protocol if $path contains a ':'.
+  if (strpos($path, ':') !== FALSE && filter_xss_bad_protocol($path) == $path) {
+    // Split off the fragment
+    if (strpos($path, '#')) {
+      list($path, $old_fragment) = explode('#', $path, 2);
+      if (isset($old_fragment) && !isset($fragment)) {
+        $fragment = '#'. $old_fragment;
+      }
+    }
+    // Append the query
+    if (isset($query)) {
+      $path .= (strpos($path, '?') ? '&' : '?') . $query;
+    }
+    // Reassemble
+    return $path . $fragment;
+  }
+
+  global $base_url;
   static $script;
   static $clean_url;
 
@@ -966,10 +991,6 @@ function url($path = NULL, $query = NULL, $fragment = NULL, $absolute = FALSE) {
   // Cache the clean_url variable to improve performance.
   if ($clean_url === NULL) {
     $clean_url = (variable_get('clean_url', '0') == '0') ? false : true;
-  }
-
-  if (isset($fragment)) {
-    $fragment = '#'. $fragment;
   }
 
   $base = ($absolute ? $base_url .'/' : '');
