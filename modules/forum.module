@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.295 2005/12/26 11:26:21 dries Exp $
+// $Id: forum.module,v 1.296 2005/12/29 04:46:40 unconed Exp $
 
 /**
  * @file
@@ -882,7 +882,7 @@ function theme_forum_display($forums, $topics, $parents, $tid, $sortby, $forum_p
                             'href' => url('taxonomy/term/'. $tid .'/0/feed')));
 
       $output .= theme('forum_topic_list', $tid, $topics, $sortby, $forum_per_page);
-      $output .= theme('xml_icon', url("taxonomy/term/$tid/0/feed"));
+      $output .= theme('feed_icon', url("taxonomy/term/$tid/0/feed"));
     }
     $output .= '</div>';
   }

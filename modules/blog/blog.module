@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.238 2005/12/05 09:11:33 dries Exp $
+// $Id: blog.module,v 1.239 2005/12/29 04:46:40 unconed Exp $
 
 /**
  * @file
@@ -159,7 +159,7 @@ function blog_page_user($uid) {
       $output .= node_view(node_load($node->nid), 1);
     }
     $output .= theme('pager', NULL, variable_get('default_nodes_main', 10));
-    $output .= theme('xml_icon', url("blog/$account->uid/feed"));
+    $output .= theme('feed_icon', url("blog/$account->uid/feed"));
 
     drupal_add_link(array('rel' => 'alternate',
                           'type' => 'application/rss+xml',
@@ -186,7 +186,7 @@ function blog_page_last() {
     $output .= node_view(node_load($node->nid), 1);
   }
   $output .= theme('pager', NULL, variable_get('default_nodes_main', 10));
-  $output .= theme('xml_icon', url('blog/feed'));
+  $output .= theme('feed_icon', url('blog/feed'));
 
   drupal_add_link(array('rel' => 'alternate',
                         'type' => 'application/rss+xml',

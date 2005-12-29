@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.574 2005/12/27 14:31:42 dries Exp $
+// $Id: node.module,v 1.575 2005/12/29 04:46:40 unconed Exp $
 
 /**
  * @file
@@ -1396,7 +1396,7 @@ function node_block($op = 'list', $delta = 0) {
   }
   else if ($op == 'view') {
     $block['subject'] = t('Syndicate');
-    $block['content'] = theme('xml_icon', url('rss.xml'));
+    $block['content'] = theme('feed_icon', url('rss.xml'));
 
     return $block;
   }
