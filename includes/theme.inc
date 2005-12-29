@@ -868,6 +868,15 @@ function theme_xml_icon($url) {
 }
 
 /**
+ * Return code that emits an feed icon.
+ */
+function theme_feed_icon($url) {
+  if ($image = theme('image', 'misc/feed.png', t('Syndicate content'), t('Syndicate content'))) {
+    return '<span class="feed-icon"><a href="'. check_url($url) .'">'. $image. '</a></span>';
+  }
+}
+
+/**
  * Execute hook_footer() which is run at the end of the page right before the
  * close of the body tag.
  *

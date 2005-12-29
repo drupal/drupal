@@ -1074,7 +1074,7 @@ function taxonomy_term_page($str_tids = '', $depth = 0, $op = 'page') {
                                 'href' => url('taxonomy/term/'. $str_tids .'/'. $depth .'/feed')));
 
           $output = taxonomy_render_nodes(taxonomy_select_nodes($tids, $operator, $depth, TRUE));
-          $output .= theme('xml_icon', url('taxonomy/term/'. $str_tids .'/'. $depth .'/feed'));
+          $output .= theme('feed_icon', url('taxonomy/term/'. $str_tids .'/'. $depth .'/feed'));
           return $output;
           break;
 
