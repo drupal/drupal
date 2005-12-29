@@ -618,3 +618,17 @@ html.js fieldset.collapsed legend a {
 * html.js fieldset.collapsible legend a {
   display: block;
 }
+
+/*
+** Resizable text areas
+*/
+.resizable-textarea {
+  width: 95%;
+}
+.resizable-textarea .grippie {
+  height: 14px;
+  background: #eee url('grippie.png') no-repeat 100% 100%;
+  border: 1px solid #ddd;
+  border-top-width: 0px;
+  cursor: ns-resize;
+}

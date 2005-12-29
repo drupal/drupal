@@ -211,6 +211,10 @@ function absolutePosition(el) {
   return r;
 };
 
+function dimensions(el) {
+  return { width: el.offsetWidth, height: el.offsetHeight };
+}
+
 /**
  * Returns true if an element has a specified class name
  */
@@ -277,6 +281,20 @@ function removeNode(node) {
   else {
     return false;
   }
+}
+
+/**
+ * Prevents an event from propagating.
+ */
+function stopEvent(event) {
+  if (event.preventDefault) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+  else {
+    event.returnValue = false;
+    event.cancelBubble = true;
+  }  
 }
 
 /**
