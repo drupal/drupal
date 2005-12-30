@@ -12,7 +12,8 @@ Drupal x.x.x, xxxx-xx-xx (development version)
     * made it easy to add nodes to the navigation menu.
     * added site 'offline for maintenance' feature.
     * added support for auto-complete forms (AJAX).
-    * added support for collapsible page sections (AJAX).
+    * added support for collapsible page sections (JS).
+    * added support for resizable text fields (JS).
     * improved file upload functionality (AJAX).
     * reorganized some settings pages.
     * added friendly database error screens.
@@ -48,11 +49,13 @@ Drupal x.x.x, xxxx-xx-xx (development version)
     * added support for PHP's multibyte string module.
 - added support for PHP5's 'mysqli' extension.
 - search module:
-    * made indexer smarter and more robust
-    * added advanced search operators (e.g. phrase, node type, ...)
-    * added customizable result ranking
+    * made indexer smarter and more robust.
+    * added advanced search operators (e.g. phrase, node type, ...).
+    * added customizable result ranking.
 - PostgreSQL support:
-    * removed dependency on PL/pgSQL procedural language
+    * removed dependency on PL/pgSQL procedural language.
+- menu system:
+		* added support for external URLs.
 
 Drupal 4.6.5, 2005-12-12
 ------------------------
