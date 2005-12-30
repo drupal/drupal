@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.127 2005/12/29 03:59:30 unconed Exp $ */
+/* $Id: drupal.css,v 1.128 2005/12/30 16:12:46 unconed Exp $ */
 
 /*
 ** HTML elements
@@ -600,7 +600,7 @@ html.js fieldset.collapsed {
   margin-bottom: 0;
 }
 html.js fieldset.collapsed * {
-   display: none;
+  display: none;
 }
 html.js fieldset.collapsed table *,
 html.js fieldset.collapsed legend,
