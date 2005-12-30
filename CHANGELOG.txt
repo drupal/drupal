@@ -55,7 +55,7 @@ Drupal x.x.x, xxxx-xx-xx (development version)
 - PostgreSQL support:
     * removed dependency on PL/pgSQL procedural language.
 - menu system:
-		* added support for external URLs.
+    * added support for external URLs.
 
 Drupal 4.6.5, 2005-12-12
 ------------------------
