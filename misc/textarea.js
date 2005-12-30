@@ -1,11 +1,13 @@
 if (isJsEnabled()) {
   addLoadEvent(function() {
-    // Attach to all textareas
+    // Attach to all visible textareas
     textareas = document.getElementsByTagName('textarea');
     var textarea;
     for (var i = 0; textarea = textareas[i]; ++i) {
       if (hasClass(textarea, 'resizable')) {
-        new textArea(textarea);        
+        if (typeof dimensions(textarea).width != 'undefined' && dimensions(textarea).width != 0) {
+          new textArea(textarea);          
+        }
       }
     }
   });

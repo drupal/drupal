@@ -600,7 +600,7 @@ html.js fieldset.collapsed {
   margin-bottom: 0;
 }
 html.js fieldset.collapsed * {
-   display: none;
+  display: none;
 }
 html.js fieldset.collapsed table *,
 html.js fieldset.collapsed legend,
