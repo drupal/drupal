@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.544 2005/12/31 10:48:56 dries Exp $
+// $Id: user.module,v 1.545 2005/12/31 11:50:47 dries Exp $
 
 /**
  * @file
@@ -44,24 +44,24 @@ function user_external_load($authname) {
  */
 function user_load($array = array()) {
   // Dynamically compose a SQL query:
-  $query = '';
-
+  $query = array();
   $params = array();
+
   foreach ($array as $key => $value) {
-    if ($key == 'pass') {
-      $query .= "u.pass = '%s' AND ";
-      $params[] = md5($value);
-    }
-    else if ($key == 'uid') {
-      $query .= "u.uid = %d AND ";
+    if ($key == 'uid' || $key == 'status') {
+      $query[] = "$key = %d";
       $params[] = $value;
     }
+    else if ($key == 'pass') {
+      $query[] = "pass = '%s'";
+      $params[] = md5($value);
+    }
     else {
-      $query .= "LOWER(u.$key) = LOWER('%s') AND ";
+      $query[]= "LOWER($key) = LOWER('%s')";
       $params[] = $value;
     }
   }
-  $result = db_query_range("SELECT u.* FROM {users} u WHERE $query u.status < 3", $params, 0, 1);
+  $result = db_query('SELECT * FROM {users} u WHERE ' . implode(' AND ', $query), $params);
 
   if (db_num_rows($result)) {
     $user = db_fetch_object($result);
