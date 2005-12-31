@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.298 2005/12/31 11:21:32 dries Exp $
+// $Id: forum.module,v 1.299 2005/12/31 13:04:40 dries Exp $
 
 /**
  * @file
@@ -76,7 +76,7 @@ function forum_perm() {
  */
 function forum_nodeapi(&$node, $op, $teaser, $page) {
   switch ($op) {
-    case 'revision delete':
+    case 'delete revision':
       db_query('DELETE FROM {forum} WHERE vid = %d', $node->vid);
       break;
   }
