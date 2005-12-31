@@ -1,5 +1,5 @@
 <?php
-// $Id: phptemplate.engine,v 1.22 2005/11/03 19:40:36 dries Exp $
+// $Id: phptemplate.engine,v 1.23 2005/12/31 10:48:56 dries Exp $
 
 /**
  * @file
@@ -244,7 +244,7 @@ function phptemplate_node($node, $teaser = 0, $page = 0) {
   );
 
   // Flatten the node object's member fields.
-  $variables = array_merge(object2array($node), $variables);
+  $variables = array_merge((array)$node, $variables);
 
   // Display info only on certain node types.
   if (theme_get_setting('toggle_node_info_' . $node->type)) {

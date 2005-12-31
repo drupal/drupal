@@ -6,7 +6,7 @@ if (isJsEnabled()) {
     for (var i = 0; textarea = textareas[i]; ++i) {
       if (hasClass(textarea, 'resizable')) {
         if (typeof dimensions(textarea).width != 'undefined' && dimensions(textarea).width != 0) {
-          new textArea(textarea);          
+          new textArea(textarea);
         }
       }
     }
@@ -18,7 +18,7 @@ function textArea(element) {
   this.element = element;
   this.parent = this.element.parentNode;
   this.dimensions = dimensions(element);
-  
+
   // Prepare wrapper
   this.wrapper = document.createElement('div');
   this.wrapper.className = 'resizable-textarea';
@@ -56,7 +56,7 @@ function textArea(element) {
     this.grippie.style.paddingLeft = '2px';
   }
   // Mozilla
-  this.element.style.MozBoxSizing = 'border-box';  
+  this.element.style.MozBoxSizing = 'border-box';
 
   this.heightOffset = absolutePosition(this.grippie).y - absolutePosition(this.element).y - this.dimensions.height;
 }

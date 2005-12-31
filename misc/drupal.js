@@ -1,4 +1,4 @@
-// $Id: drupal.js,v 1.16 2005/12/29 03:59:30 unconed Exp $
+// $Id: drupal.js,v 1.17 2005/12/31 10:48:56 dries Exp $
 
 /**
  * Only enable Javascript functionality if all required features are supported.
@@ -294,7 +294,7 @@ function stopEvent(event) {
   else {
     event.returnValue = false;
     event.cancelBubble = true;
-  }  
+  }
 }
 
 /**

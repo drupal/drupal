@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.408 2005/12/19 10:12:52 dries Exp $
+// $Id: comment.module,v 1.409 2005/12/31 10:48:56 dries Exp $
 
 /**
  * @file
@@ -444,7 +444,7 @@ function comment_edit($cid) {
   $comment = drupal_unpack($comment);
   $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
   if (comment_access('edit', $comment)) {
-    return comment_form(object2array($comment));
+    return comment_form((array)$comment);
   }
   else {
     drupal_access_denied();
@@ -1349,7 +1349,7 @@ function comment_form_add_preview($form, $edit) {
 
   $output = '';
 
-  $comment = array2object(comment_validate($edit));
+  $comment = (object)comment_validate($edit);
 
   // Attach the user and time information.
   if ($edit['author']) {

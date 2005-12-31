@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.248 2005/12/29 04:46:40 unconed Exp $
+// $Id: taxonomy.module,v 1.249 2005/12/31 10:48:56 dries Exp $
 
 /**
  * @file
@@ -1126,10 +1126,10 @@ function taxonomy_admin() {
       break;
     case 'edit':
       if (arg(3) == 'vocabulary') {
-        $output = taxonomy_form_vocabulary(object2array(taxonomy_get_vocabulary(arg(4))));
+        $output = taxonomy_form_vocabulary((array)taxonomy_get_vocabulary(arg(4)));
       }
       else if (arg(3) == 'term') {
-        $output = taxonomy_form_term(object2array(taxonomy_get_term(arg(4))));
+        $output = taxonomy_form_term((array)taxonomy_get_term(arg(4)));
       }
       break;
     case t('Delete'):

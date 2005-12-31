@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.68 2005/12/17 17:24:46 dries Exp $
+// $Id: upload.module,v 1.69 2005/12/31 10:48:56 dries Exp $
 
 /**
  * @file
@@ -536,7 +536,7 @@ function _upload_image($file) {
  */
 function upload_js() {
   // We only do the upload.module part of the node validation process.
-  $node = array2object($_POST['edit']);
+  $node = (object)$_POST['edit'];
   upload_nodeapi($node, 'validate', NULL);
   $form = _upload_form($node);
   $form = _form_builder('upload_js', $form);

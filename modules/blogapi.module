@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.69 2005/12/16 18:08:58 dries Exp $
+// $Id: blogapi.module,v 1.70 2005/12/31 10:48:56 dries Exp $
 
 /**
  * @file
@@ -629,7 +629,7 @@ __RSD__;
 function _blogapi_mt_extra(&$node, $struct) {
   if (is_array($node)) {
     $was_array = true;
-    $node = array2object($node);
+    $node = (object)$node;
   }
 
   // mt_allow_comments
@@ -681,7 +681,7 @@ function _blogapi_mt_extra(&$node, $struct) {
   }
 
   if ($was_array) {
-    $node = object2array($node);
+    $node = (array)$node;
   }
 }
 

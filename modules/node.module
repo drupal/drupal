@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.575 2005/12/29 04:46:40 unconed Exp $
+// $Id: node.module,v 1.576 2005/12/31 10:48:56 dries Exp $
 
 /**
  * @file
@@ -513,7 +513,7 @@ function node_save(&$node) {
  *   An HTML representation of the themed node.
  */
 function node_view($node, $teaser = FALSE, $page = FALSE, $links = TRUE) {
-  $node = array2object($node);
+  $node = (object)$node;
 
   // Remove the delimiter (if any) that separates the teaser from the body.
   // TODO: this strips legitimate uses of '<!--break-->' also.
@@ -1493,7 +1493,7 @@ function node_submit($node) {
   global $user;
 
   // Convert the node to an object, if necessary.
-  $node = array2object($node);
+  $node = (object)$node;
 
   // Auto-generate the teaser, but only if it hasn't been set (e.g. by a
   // module-provided 'teaser' form item).
@@ -1539,7 +1539,7 @@ function node_submit($node) {
  */
 function node_validate($node) {
   // Convert the node to an object, if necessary.
-  $node = array2object($node);
+  $node = (object)$node;
 
   // Make sure the body has the minimum number of words.
   // todo use a better word counting algorithm that will work in other languages
@@ -1609,7 +1609,7 @@ function node_object_prepare(&$node) {
 function node_form($node) {
   $op = isset($_POST['op']) ? $_POST['op'] : '';
 
-  $node = array2object($node);
+  $node = (object)$node;
   node_object_prepare($node);
 
   // Set the id of the top-level form tag
@@ -1693,7 +1693,7 @@ function node_form($node) {
 }
 
 function node_form_add_preview($form, $edit) {
-  $edit = array2object($edit);
+  $edit = (object)$edit;
   node_validate($edit);
   $form['node_preview'] = array('#value' => node_preview($edit), '#weight' => -100);
   return $form;
@@ -2167,7 +2167,7 @@ function node_form_alter($form_id, &$form) {
  */
 function node_access($op, $node = NULL, $uid = NULL) {
   // Convert the node to an object if necessary:
-  $node = array2object($node);
+  $node = (object)$node;
 
   // If the node is in a restricted format, disallow editing.
   if ($op == 'update' && !filter_access($node->format)) {

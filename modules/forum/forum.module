@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.296 2005/12/29 04:46:40 unconed Exp $
+// $Id: forum.module,v 1.297 2005/12/31 10:48:56 dries Exp $
 
 /**
  * @file
@@ -105,10 +105,10 @@ function forum_admin() {
       break;
     case 'edit':
       if (arg(3) == 'forum') {
-        $output = forum_form_forum(object2array(taxonomy_get_term(arg(4))));
+        $output = forum_form_forum((array)taxonomy_get_term(arg(4)));
       }
       else if (arg(3) == 'container') {
-         $output = forum_form_container(object2array(taxonomy_get_term(arg(4))));
+         $output = forum_form_container((array)taxonomy_get_term(arg(4)));
       }
       break;
     case t('Delete'):
