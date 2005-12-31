@@ -76,7 +76,7 @@ function forum_perm() {
  */
 function forum_nodeapi(&$node, $op, $teaser, $page) {
   switch ($op) {
-    case 'revision delete':
+    case 'delete revision':
       db_query('DELETE FROM {forum} WHERE vid = %d', $node->vid);
       break;
   }

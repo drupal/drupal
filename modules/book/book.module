@@ -470,7 +470,7 @@ function book_nodeapi(&$node, $op, $teaser, $page) {
         }
       }
       break;
-    case 'revision delete':
+    case 'delete revision':
       db_query('DELETE FROM {book} WHERE vid = %d', $node->vid);
       break;
   }
