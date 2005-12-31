@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.70 2005/12/31 10:48:56 dries Exp $
+// $Id: blogapi.module,v 1.71 2005/12/31 13:52:47 dries Exp $
 
 /**
  * @file
@@ -445,13 +445,13 @@ function blogapi_mt_set_post_categories($postid, $username, $password, $categori
     return blogapi_error($user);
   }
 
-  $nid = $postid;
-  $terms = array();
+  $node = node_load($postid);
+  $node->taxonomy = array();
   foreach ($categories as $category) {
-    $terms[] = $category['categoryId'];
+    $node->taxonomy[] = $category['categoryId'];
   }
-  module_invoke('taxonomy', 'node_save', $nid, $terms);
-  return true;
+  node_save($node);
+  return TRUE;
 }
 
 /**
