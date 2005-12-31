@@ -223,7 +223,7 @@ function system_update_117() {
   $ret = array();
   if ($GLOBALS['db_type'] == 'mysql') {
     $ret[] = update_sql("CREATE TABLE {vocabulary_node_types} (
-                         vid int(10) NOT NULL default '',
+                         vid int(10) NOT NULL default '0',
                          type varchar(16) NOT NULL default '',
                          PRIMARY KEY (vid, type))");
   }
