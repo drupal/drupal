@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.170 2005/12/28 12:02:28 dries Exp $
+// $Id: updates.inc,v 1.171 2005/12/31 10:52:46 dries Exp $
 
 function system_update_110() {
   $ret = array();
@@ -223,7 +223,7 @@ function system_update_117() {
   $ret = array();
   if ($GLOBALS['db_type'] == 'mysql') {
     $ret[] = update_sql("CREATE TABLE {vocabulary_node_types} (
-                         vid int(10) NOT NULL default '',
+                         vid int(10) NOT NULL default '0',
                          type varchar(16) NOT NULL default '',
                          PRIMARY KEY (vid, type))");
   }
