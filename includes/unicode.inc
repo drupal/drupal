@@ -1,5 +1,5 @@
 <?php
-// $Id: unicode.inc,v 1.11 2005/11/29 20:16:06 dries Exp $
+// $Id: unicode.inc,v 1.12 2005/12/31 14:32:23 unconed Exp $
 
 define('UNICODE_ERROR', -1);
 define('UNICODE_SINGLEBYTE', 0);
@@ -59,7 +59,7 @@ function _unicode_check($errors = false) {
       form_set_error('unicode', t('Multibyte string input conversion in PHP is active and must be disabled. Check the php.ini <em>mbstring.http_input</em> setting. Please refer to the <a href="%url">PHP mbstring documentation</a> for more information.', array('%url' => 'http://www.php.net/mbstring')));
     }
     return UNICODE_ERROR;
-  }  
+  }
   if (ini_get('mbstring.http_output') != 'pass') {
     if ($errors) {
       form_set_error('unicode', t('Multibyte string output conversion in PHP is active and must be disabled. Check the php.ini <em>mbstring.http_output</em> setting. Please refer to the <a href="%url">PHP mbstring documentation</a> for more information.', array('%url' => 'http://www.php.net/mbstring')));
@@ -81,7 +81,7 @@ function unicode_settings() {
   $options = array(UNICODE_SINGLEBYTE => t('Standard PHP: operations on Unicode strings are emulated on a best-effort basis. Install the <a href="%url">PHP mbstring extension</a> for improved Unicode support.', array('%url' => 'http://www.php.net/mbstring')),
                    UNICODE_MULTIBYTE => t('Multi-byte: operations on Unicode strings are supported through the <a href="%url">PHP mbstring extension</a>.', array('%url' => 'http://www.php.net/mbstring')),
                    UNICODE_ERROR => t('Invalid: the current configuration is incompatible with Drupal.'));
-  $form['settings'] = array('#type' => 'item', '#title' =>t('String handling method'), '#value' => $options[$status]); 
+  $form['settings'] = array('#type' => 'item', '#title' =>t('String handling method'), '#value' => $options[$status]);
   return $form;
 }
 
@@ -355,7 +355,7 @@ function drupal_strlen($text) {
  */
 function drupal_strtoupper($text) {
   global $multibyte;
-  if ($multibyte == UNICODE_MULTIBYTE) {  
+  if ($multibyte == UNICODE_MULTIBYTE) {
     return mb_strtoupper($text);
   }
   else {
@@ -364,7 +364,7 @@ function drupal_strtoupper($text) {
     // Case flip Latin-1 accented letters
     $text = preg_replace_callback('/\xC3[\xA0-\xB6\xB8-\xBE]/', '_unicode_caseflip', $text);
     return $text;
-  }  
+  }
 }
 
 /**
@@ -381,7 +381,7 @@ function drupal_strtolower($text) {
     // Case flip Latin-1 accented letters
     $text = preg_replace_callback('/\xC3[\x80-\x96\x98-\x9E]/', '_unicode_caseflip', $text);
     return $text;
-  }  
+  }
 }
 
 /**
@@ -476,7 +476,7 @@ function drupal_substr($text, $start, $length = NULL) {
     $iend = $bytes;
 
     return substr($text, $istart, max(0, $iend - $istart + 1));
-  }  
+  }
 }
 
 
