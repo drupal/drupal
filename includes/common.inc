@@ -490,50 +490,6 @@ function fix_gpc_magic() {
 }
 
 /**
- * @name Conversion
- * @{
- * Converts data structures to different types.
- */
-
-/**
- * Convert an associative array to an anonymous object.
- */
-function array2object($array) {
-  if (is_array($array)) {
-    $object = new StdClass();
-    foreach ($array as $key => $value) {
-      $object->$key = $value;
-    }
-  }
-  else {
-    $object = $array;
-  }
-
-  return $object;
-}
-
-/**
- * Convert an object to an associative array.
- */
-function object2array($object) {
-  if (is_object($object)) {
-    foreach ($object as $key => $value) {
-      $array[$key] = $value;
-    }
-  }
-  else {
-    $array = $object;
-  }
-
-  return $array;
-}
-
-
-/**
- * @} End of "Conversion".
- */
-
-/**
  * @name Messages
  * @{
  * Frequently used messages.

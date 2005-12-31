@@ -629,7 +629,7 @@ __RSD__;
 function _blogapi_mt_extra(&$node, $struct) {
   if (is_array($node)) {
     $was_array = true;
-    $node = array2object($node);
+    $node = (object)$node;
   }
 
   // mt_allow_comments
@@ -681,7 +681,7 @@ function _blogapi_mt_extra(&$node, $struct) {
   }
 
   if ($was_array) {
-    $node = object2array($node);
+    $node = (array)$node;
   }
 }
 

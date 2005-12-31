@@ -294,7 +294,7 @@ function stopEvent(event) {
   else {
     event.returnValue = false;
     event.cancelBubble = true;
-  }  
+  }
 }
 
 /**
