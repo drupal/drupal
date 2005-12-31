@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.297 2005/12/31 10:48:56 dries Exp $
+// $Id: forum.module,v 1.298 2005/12/31 11:21:32 dries Exp $
 
 /**
  * @file
@@ -937,7 +937,7 @@ function theme_forum_list($forums, $parents, $tid) {
 
         $rows[] = array(
           array('data' => $description, 'class' => 'forum'),
-          array('data' => $forum->num_topics . ($new_topics ? '<br />'. l(t('%a new', array('%a' => $new_topics)), "forum/$forum->tid", NULL, NULL, 'new') : ''), 'class' => 'topics'),
+          array('data' => $forum->num_topics . ($new_topics ? '<br />'. l(format_plural($new_topics, '1 new', '%count new'), "forum/$forum->tid", NULL, NULL, 'new') : ''), 'class' => 'topics'),
           array('data' => $forum->num_posts, 'class' => 'posts'),
           array('data' => _forum_format($forum->last_post), 'class' => 'last-reply'));
       }
@@ -972,7 +972,7 @@ function theme_forum_topic_list($tid, $topics, $sortby, $forum_per_page) {
         $rows[] = array(
           array('data' => theme('forum_icon', $topic->new, $topic->num_comments, $topic->comment_mode, $topic->sticky), 'class' => 'icon'),
           array('data' => l($topic->title, "node/$topic->nid"), 'class' => 'topic'),
-          array('data' => $topic->num_comments . ($topic->new_replies ? '<br />'. l(t('%a new', array('%a' => $topic->new_replies)), "node/$topic->nid", NULL, NULL, 'new') : ''), 'class' => 'replies'),
+          array('data' => $topic->num_comments . ($topic->new_replies ? '<br />'. l(format_plural($topic->new_replies, '1 new', '%count new'), "node/$topic->nid", NULL, NULL, 'new') : ''), 'class' => 'replies'),
           array('data' => _forum_format($topic), 'class' => 'created'),
           array('data' => _forum_format($topic->last_reply), 'class' => 'last-reply')
         );
