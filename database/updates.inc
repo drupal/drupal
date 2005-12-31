@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.171 2005/12/31 10:52:46 dries Exp $
+// $Id: updates.inc,v 1.172 2005/12/31 14:18:22 dries Exp $
 
 function system_update_110() {
   $ret = array();
@@ -1332,4 +1332,12 @@ function system_update_164() {
   $ret[] = update_sql('ALTER TABLE {poll} DROP polled');
 
   return $ret;
+}
+
+function system_update_165() {
+  $cron_last = max(variable_get('drupal_cron_last'), variable_get('ping_cron_last'));
+  variable_set('cron_last', $cron_last);
+  variable_del('drupal_cron_last');
+  variable_del('ping_cron_last');
+  return array();
 }

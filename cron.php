@@ -1,5 +1,5 @@
 <?php
-// $Id: cron.php,v 1.33 2005/12/10 19:26:47 dries Exp $
+// $Id: cron.php,v 1.34 2005/12/31 14:18:22 dries Exp $
 
 /**
  * @file
@@ -27,5 +27,5 @@ module_invoke_all('cron');
 
 // Clean up
 variable_set('cron_busy', false);
+variable_set('cron_last', time());
 watchdog('cron', t('Cron run completed'));
-

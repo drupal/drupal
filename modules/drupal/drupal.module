@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal.module,v 1.111 2005/11/12 11:26:16 dries Exp $
+// $Id: drupal.module,v 1.112 2005/12/31 14:18:22 dries Exp $
 
 /**
  * @file
@@ -74,8 +74,7 @@ function drupal_settings() {
  * Implementation of hook_cron(); handles pings to and from the site.
  */
 function drupal_cron() {
-  if (time() - variable_get('drupal_cron_last', 0) > 21600) {
-    variable_set('drupal_cron_last', time());
+  if (time() - variable_get('cron_last', 0) > 21600) {
 
     // If this site acts as a Drupal XML-RPC server, delete the sites that
     // stopped sending "ping" messages.

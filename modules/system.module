@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.272 2005/12/27 10:36:16 dries Exp $
+// $Id: system.module,v 1.273 2005/12/31 14:18:22 dries Exp $
 
 /**
  * @file
@@ -18,10 +18,10 @@ function system_help($section) {
       $output .= t('<p>You can</p>
 <ul>
 <li>activate your cron job on the cron page <a href="%file-cron">cron.php</a>.</li>
-<li>read how to <a href="%external-http-drupal-org-node-23714">configure cron jobs</a>.</li>
+<li>read how to <a href="%external-http-drupal-org-cron">configure cron jobs</a>.</li>
 <li>administer cache settings in <a href="%admin-settings">administer &gt;&gt; settings</a>.</li>
 </ul>
-', array('%file-cron' => 'cron.php', '%external-http-drupal-org-node-23714' => 'http://drupal.org/node/23714', '%admin-settings' => url('admin/settings')));
+', array('%file-cron' => 'cron.php', '%external-http-drupal-org-cron' => 'http://drupal.org/cron', '%admin-settings' => url('admin/settings')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%system">System page</a>.', array('%system' => 'http://www.drupal.org/handbook/modules/system/')) .'</p>';
       return $output;
     case 'admin/modules#description':
@@ -461,6 +461,10 @@ function system_view_general() {
   $form['strings'] = array('#type' => 'fieldset', '#title' => t('String handling'), '#collapsible' => TRUE, '#collapsed' => TRUE);
   $form['strings'] = array_merge($form['strings'], unicode_settings());
 
+  // Cron: report status and errors.
+  $form['cron'] = array('#type' => 'fieldset', '#title' => t('Cron jobs'), '#collapsible' => TRUE, '#collapsed' => TRUE);
+  $form['cron'] = array_merge($form['cron'], system_cron_settings());
+
   return $form;
 }
 
@@ -477,6 +481,25 @@ function system_view_general() {
 function system_check_directory($form_element) {
   file_check_directory($form_element['#value'], FILE_CREATE_DIRECTORY, $form_element['#parents'][0]);
   return $form_element;
+}
+
+/**
+ * Return the cron status and errors for admin/settings.
+ */
+function system_cron_settings() {
+  $cron_last = variable_get('cron_last', NULL);
+
+  if (is_numeric($cron_last)) {
+    $title = t('Cron properly configured');
+    $status = t('Cron is running. The last cron job ran %time ago.', array('%time' => format_interval(time() - $cron_last)));
+  }
+  else {
+    $title = t('Cron not configured');
+    $status = t('Cron has not run. It appears cron jobs have not been setup on your system. Please check the help pages for <a href="%url">configuring cron jobs</a>.', array('%url' => 'http://drupal.org/cron'));
+  }
+
+  $form['settings'] = array('#type' => 'item', '#title' => $title, '#value' => $status);
+  return $form;
 }
 
 /**
