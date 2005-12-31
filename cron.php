@@ -27,5 +27,5 @@ module_invoke_all('cron');
 
 // Clean up
 variable_set('cron_busy', false);
+variable_set('cron_last', time());
 watchdog('cron', t('Cron run completed'));
-
