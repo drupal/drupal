@@ -548,6 +548,8 @@ function expand_date($element) {
                             'year' => format_date(time(), 'custom', 'Y'));
   }
 
+  $element['#tree'] = TRUE;
+
   // Determine the order of day, month, year in the site's chosen date format.
   $format = variable_get('date_format_short', 'm/d/Y');
   $sort = array();
@@ -576,7 +578,6 @@ function expand_date($element) {
       '#type' => 'select',
       '#value' => $element['#value'][$type],
       '#attributes' => $element['#attributes'],
-      '#parents' => $parents,
       '#options' => $options,
     );
   }
