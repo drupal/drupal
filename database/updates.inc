@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.172 2005/12/31 14:18:22 dries Exp $
+// $Id: updates.inc,v 1.173 2006/01/02 08:05:18 dries Exp $
 
 function system_update_110() {
   $ret = array();
@@ -1335,7 +1335,7 @@ function system_update_164() {
 }
 
 function system_update_165() {
-  $cron_last = max(variable_get('drupal_cron_last'), variable_get('ping_cron_last'));
+  $cron_last = max(variable_get('drupal_cron_last', 0), variable_get('ping_cron_last', 0));
   variable_set('cron_last', $cron_last);
   variable_del('drupal_cron_last');
   variable_del('ping_cron_last');
