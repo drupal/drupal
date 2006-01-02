@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.99 2005/12/31 04:01:38 unconed Exp $
+// $Id: filter.module,v 1.100 2006/01/02 10:01:03 dries Exp $
 
 /**
  * @file
@@ -297,7 +297,7 @@ function filter_admin_overview() {
     $form[$format->name]['id'] = array('#type' => 'markup', '#value' => $id);
     $form[$format->name]['roles'] = array('#type' => 'markup', '#value' => $roles ? implode(', ',$roles) : t('No roles may use this format'));
     $form[$format->name]['configure'] = array('#type' => 'markup', '#value' => l(t('configure'), 'admin/filters/'. $id));
-    $form[$format->name]['delete'] = array('#type' => 'markup', '#value' => $default ? '' : l('delete', 'admin/filters/delete/'. $id));
+    $form[$format->name]['delete'] = array('#type' => 'markup', '#value' => $default ? '' : l(t('delete'), 'admin/filters/delete/'. $id));
   }
   $form['default'] = array('#type' => 'radios', '#options' => $options, '#default_value' => variable_get('filter_default_format', 1));
   $form['submit'] = array('#type' => 'submit', '#value' => t('Set default format'));
