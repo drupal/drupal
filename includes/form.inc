@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.38 2005/12/29 03:59:30 unconed Exp $
+// $Id: form.inc,v 1.39 2006/01/02 08:04:02 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -548,6 +548,8 @@ function expand_date($element) {
                             'year' => format_date(time(), 'custom', 'Y'));
   }
 
+  $element['#tree'] = TRUE;
+
   // Determine the order of day, month, year in the site's chosen date format.
   $format = variable_get('date_format_short', 'm/d/Y');
   $sort = array();
@@ -576,7 +578,6 @@ function expand_date($element) {
       '#type' => 'select',
       '#value' => $element['#value'][$type],
       '#attributes' => $element['#attributes'],
-      '#parents' => $parents,
       '#options' => $options,
     );
   }
