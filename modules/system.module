@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.273 2005/12/31 14:18:22 dries Exp $
+// $Id: system.module,v 1.274 2006/01/02 08:35:59 dries Exp $
 
 /**
  * @file
@@ -63,6 +63,13 @@ function system_elements() {
   $type['button'] = array('#input' => TRUE, '#name' => 'op', '#button_type' => 'submit', '#form_submitted' => FALSE);
   $type['textfield'] = array('#input' => TRUE, '#size' => 60, '#maxlength' => 128, '#autocomplete_path' => FALSE);
   $type['password'] = array('#input' => TRUE, '#size' => 30, '#maxlength' => 64);
+  $type['password_confirm'] = array(
+    '#input' => TRUE,
+    '#value' => 'pass',
+    'pass1' => array('#type' => 'password', '#size' => 12, '#maxlength' => 24),
+    'pass2' => array('#type' => 'password', '#size' => 12, '#maxlength' => 24),
+    '#after_build' => 'password_confirm_after_build',
+  );
   $type['textarea'] = array('#input' => TRUE, '#cols' => 60, '#rows' => 5);
   $type['radios'] = array('#input' => TRUE, '#process' => array('expand_radios' => array()));
   $type['radio'] = array('#input' => TRUE);

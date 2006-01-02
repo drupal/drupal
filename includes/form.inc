@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.39 2006/01/02 08:04:02 dries Exp $
+// $Id: form.inc,v 1.40 2006/01/02 08:35:59 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -143,7 +143,7 @@ function _form_validate($elements, $form_id = NULL) {
     // An empty checkbox returns 0, an empty textfield returns '' so we use empty().
     // Unfortunately, empty('0') returns TRUE so we need a special check for the '0' string.
     if ($elements['#required'] && empty($elements['#value']) && $elements['#value'] !== '0') {
-      form_error($elements, t('%name field is required', array('%name' => $elements['#title'])));
+      form_error($elements, t('%name field is required.', array('%name' => $elements['#title'])));
     }
 
     // Add legal choice check if element has #options.
@@ -328,7 +328,8 @@ function _form_builder($form_id, $form) {
   }
 
   if (function_exists($form['#after_build']) && !isset($form['#after_build_done'])) {
-    $form = call_user_func($form['#after_build'], $form, $form_values);
+    $function = $form['#after_build'];
+    $form = $function($form, $form_values, $ref);
     $form['#after_build_done'] = TRUE;
   }
 
@@ -521,6 +522,38 @@ function theme_radios($element) {
   else {
     return $element['#children'];
   }
+}
+
+/**
+ * Format a password_confirm item.
+ *
+ * @param $element
+ *   An associative array containing the properties of the element.
+ *   Properties used: title, value, id, required, error.
+ * @return
+ *   A themed HTML string representing the form item.
+ */
+function theme_password_confirm($element) {
+  return theme('form_element', $element['#title'], '<div class="container-inline">'. $element['#children']. '</div>', $element['#description'],  $element['#id'], $element['#required'], form_get_error($element));
+}
+
+/**
+ * Build password_confirm element.
+ */
+function password_confirm_after_build($form, $form_values, &$ref) {
+  if (isset($form_values['pass1'])) {
+    $pass1 = trim($form_values['pass1']);
+    $pass2 = trim($form_values['pass2']);
+    unset($form_values['pass1'], $form_values['pass2']);
+    if ($pass1 != $pass2) {
+      form_set_error('pass1', t('The specified passwords do not match.'));
+    }
+    elseif ($form['#required'] && !$pass1) {
+      form_set_error('pass1', t('Password field is required.'));
+    }
+    $ref = $pass1;
+  }
+  return $form;
 }
 
 /**

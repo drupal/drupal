@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.545 2005/12/31 11:50:47 dries Exp $
+// $Id: user.module,v 1.546 2006/01/02 08:35:59 dries Exp $
 
 /**
  * @file
@@ -102,11 +102,11 @@ function user_save($account, $array = array(), $category = 'account') {
 
     $data = unserialize(db_result(db_query('SELECT data FROM {users} WHERE uid = %d', $account->uid)));
     foreach ($array as $key => $value) {
-      if ($key == 'pass') {
+      if ($key == 'pass' && !empty($value)) {
         $query .= "$key = '%s', ";
         $v[] = md5($value);
       }
-      else if (substr($key, 0, 4) !== 'auth') {
+      else if ((substr($key, 0, 4) !== 'auth') && ($key != 'pass')) {
         if (in_array($key, $user_fields)) {
           // Save standard fields
           $query .= "$key = '%s', ";
@@ -238,8 +238,9 @@ function user_validate_mail($mail) {
 }
 
 function user_validate_picture($file, &$edit, $user) {
+  global $form_values;
   // Initialize the picture:
-  $edit['picture'] = $user->picture;
+  $form_values['picture'] = $user->picture;
 
   // Check that uploaded file is an image, with a maximum file size
   // and maximum height/width.
@@ -261,7 +262,7 @@ function user_validate_picture($file, &$edit, $user) {
 
   if (!form_get_errors()) {
     if ($file = file_save_upload('picture', variable_get('user_picture_path', 'pictures') .'/picture-'. $user->uid . '.' . $info['extension'], 1)) {
-      $edit['picture'] = $file->filepath;
+      $form_values['picture'] = $file->filepath;
     }
     else {
       form_set_error('picture', t("Failed to upload the picture image; the %directory directory doesn't exist.", array('%directory' => '<em>'. variable_get('user_picture_path', 'pictures') .'</em>')));
@@ -477,6 +478,10 @@ function user_user($type, &$edit, &$user, $category = NULL) {
 
   if ($type == 'validate' && $category == 'account') {
     return _user_edit_validate(arg(1), $edit);
+  }
+
+  if ($type == 'submit' && $category == 'account') {
+    return _user_edit_submit(arg(1), $edit);
   }
 
   if ($type == 'categories') {
@@ -1166,12 +1171,12 @@ function user_edit_form($uid, $edit) {
     $form['account']['name'] = array('#type' => 'textfield', '#title' => t('Username'), '#default_value' => $edit['name'], '#maxlength' => 55, '#description' => t('Your full name or your preferred username: only letters, numbers and spaces are allowed.'), '#required' => TRUE);
   }
   $form['account']['mail'] = array('#type' => 'textfield', '#title' => t('E-mail address'), '#default_value' => $edit['mail'], '#maxlength' => 55, '#description' => t('Insert a valid e-mail address.  All e-mails from the system will be sent to this address. The e-mail address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by e-mail.'), '#required' => TRUE);
-  $form['account']['pass'] = array('#type' => 'item', '#title' => t('Password'), '#value' => '<input type="password" class="form-password" name="edit[pass1]" size="12" maxlength="24" /> <input type="password" class="form-password" name="edit[pass2]" size="12" maxlength="24" />', '#required' => true);
+  $form['account']['pass'] = array('#type' => 'password_confirm', '#title' => t('Password'), '#description' => t('To change the current user password, enter the new password in both fields'));
   if (user_access('administer users')) {
     $form['account']['status'] = array('#type' => 'radios', '#title' => t('Status'), '#default_value' => $edit['status'], '#options' => array(t('Blocked'), t('Active')));
   }
   if (user_access('administer access control')) {
-    $form['account']['roles'] = array('#type' => 'checkboxes', '#title' => t('Roles'), '#default_value' => array_keys($edit['roles']), '#options' => user_roles(1), '#description' => t('Select at least one role.  The user receives the combined permissions of all of the selected roles.'), '#required' => TRUE);
+    $form['account']['roles'] = array('#type' => 'checkboxes', '#title' => t('Roles'), '#default_value' => array_keys((array)$edit['roles']), '#options' => user_roles(1), '#description' => t('Select at least one role.  The user receives the combined permissions of all of the selected roles.'), '#required' => TRUE);
   }
 
   // Picture/avatar:
@@ -1188,8 +1193,9 @@ function user_edit_form($uid, $edit) {
 }
 
 function _user_edit_validate($uid, &$edit) {
+  $user = user_load(array('uid' => $uid));
   // Validate the username:
-  if (user_access('change own username') || user_access('administer users')) {
+  if (user_access('change own username') || user_access('administer users') || arg(1) == 'register') {
     if ($error = user_validate_name($edit['name'])) {
       form_set_error('name', $error);
     }
@@ -1200,8 +1206,8 @@ function _user_edit_validate($uid, &$edit) {
       form_set_error('name', t('The name %name has been denied access.', array('%name' => theme('placeholder', $edit['name']))));
     }
   }
-  else {
-    unset($edit['name']);
+  elseif ($edit['name'] != $user->name) {
+    form_set_error('name', t('You are not allowed to change this username.'));
   }
 
   // Validate the e-mail address:
@@ -1219,38 +1225,25 @@ function _user_edit_validate($uid, &$edit) {
   if (user_access('administer access control') && $_GET['q'] != 'admin/user/create') {
     if (!$edit['roles']) {
       form_set_error('roles', t('You must select at least one role.'));
-      $edit['roles'] = array();
     }
   }
 
   // If required, validate the uploaded picture.
   if ($file = file_check_upload('picture')) {
-    $user = user_load(array('uid' => $uid));
     user_validate_picture($file, $edit, $user);
   }
+}
+
+function _user_edit_submit($uid, &$edit) {
+  $user = user_load(array('uid' => $uid));
   // Delete picture if requested, and if no replacement picture was given.
-  else if ($edit['picture_delete']) {
-    $user = user_load(array('uid' => $uid));
+  if ($edit['picture_delete']) {
     if ($user->picture && file_exists($user->picture)) {
       file_delete($user->picture);
     }
     $edit['picture'] = '';
   }
-
-  // If required, check that proposed passwords match.  If so, add the new password to $edit.
-  if ($edit['pass1']) {
-    $edit['pass1'] = trim($edit['pass1']);
-    $edit['pass2'] = trim($edit['pass2']);
-    if ($edit['pass1'] == $edit['pass2']) {
-      $edit['pass'] = $edit['pass1'];
-    }
-    else {
-      form_set_error('pass2', t('The specified passwords do not match.'));
-    }
-  }
-  unset($edit['pass1'], $edit['pass2']);
-
-  return $edit;
+  $edit['roles'] = array_filter($edit['roles']);
 }
 
 function user_edit($category = 'account') {
@@ -1304,7 +1297,10 @@ function user_edit_validate($form_id, $form_values) {
 
 function user_edit_submit($form_id, $form_values) {
   $account = $form_values['_account'];
-  user_save($account, $form_values, $form_values['_category']);
+  $category = $form_values['_category'];
+  unset($form_values['_account'], $form_values['submit'], $form_values['delete'], $form_values['form_id'], $form_values['_category']);
+  user_module_invoke('submit', $form_values, $form_values, $category);
+  user_save($account, $form_values, $category);
   // Delete that user's menu cache.
   cache_clear_all('menu:'. $account->uid, TRUE);
   drupal_set_message(t('The changes have been saved.'));
