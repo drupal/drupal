@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.576 2005/12/31 10:48:56 dries Exp $
+// $Id: node.module,v 1.577 2006/01/03 19:40:29 dries Exp $
 
 /**
  * @file
@@ -1657,7 +1657,7 @@ function node_form($node) {
   if (user_access('administer nodes')) {
     // Node author information
     $form['author'] = array('#type' => 'fieldset', '#title' => t('Authoring information'), '#collapsible' => TRUE, '#collapsed' => TRUE, '#weight' => 20);
-    $form['author']['name'] = array('#type' => 'textfield', '#title' => t('Authored by'), '#maxlength' => 60, '#autocomplete_path' => 'user/autocomplete', '#required' => TRUE, '#default_value' => $node->name, '#weight' => -1);
+    $form['author']['name'] = array('#type' => 'textfield', '#title' => t('Authored by'), '#maxlength' => 60, '#autocomplete_path' => 'user/autocomplete', '#required' => TRUE, '#default_value' => $node->name ? $node->name : variable_get('anonymous', 'Anonymous'), '#weight' => -1);
     $form['author']['date'] = array('#type' => 'textfield', '#title' => t('Authored on'), '#maxlength' => 25, '#required' => TRUE, '#default_value' => $node->date);
 
 
