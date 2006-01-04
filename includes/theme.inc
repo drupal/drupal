@@ -99,7 +99,7 @@ function list_themes($refresh = FALSE) {
 
   if (!$list) {
     $list = array();
-    $result = db_query("SELECT * FROM {system} WHERE type = 'theme' AND status = 1");
+    $result = db_query("SELECT * FROM {system} WHERE type = 'theme'");
     while ($theme = db_fetch_object($result)) {
       if (file_exists($theme->filename)) {
         $list[$theme->name] = $theme;
