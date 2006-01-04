@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.168 2005/12/26 17:20:23 dries Exp $
+// $Id: update.php,v 1.169 2006/01/04 09:27:51 dries Exp $
 
 /**
  * @file
@@ -387,11 +387,14 @@ function update_progress_page() {
  *   the overall percent finished. The second element is a status message.
  */
 function update_do_updates() {
-  while (($update = reset($_SESSION['update_remaining'])) && timer_read('page') < 1000) {
+  while (($update = reset($_SESSION['update_remaining']))) {
     $update_finished = update_data($update['module'], $update['version']);
     if ($update_finished) {
       // Dequeue the completed update.
       unset($_SESSION['update_remaining'][key($_SESSION['update_remaining'])]);
+    }
+    if (timer_read('page') > 1000) {
+      break;
     }
   }
 
