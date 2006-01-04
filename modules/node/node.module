@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.577 2006/01/03 19:40:29 dries Exp $
+// $Id: node.module,v 1.578 2006/01/04 09:04:27 dries Exp $
 
 /**
  * @file
@@ -1685,17 +1685,22 @@ function node_form($node) {
     $form['delete'] = array('#type' => 'button', '#value' => t('Delete'), '#weight' => 50);
   }
 
-  if ($op == t('Preview')) {
-    $form['#after_build'] = 'node_form_add_preview';
-  }
+  $form['#after_build'] = 'node_form_add_preview';
 
   return drupal_get_form($node->type . '_node_form', $form, 'node_form');
 }
 
 function node_form_add_preview($form, $edit) {
-  $edit = (object)$edit;
-  node_validate($edit);
-  $form['node_preview'] = array('#value' => node_preview($edit), '#weight' => -100);
+  $op = isset($_POST['op']) ? $_POST['op'] : '';
+  if ($op == t('Preview')) {
+    drupal_validate_form($form['form_id']['#value'], $form);
+    if (!form_get_errors()) {
+      $form['node_preview'] = array('#value' => node_preview((object)$edit), '#weight' => -100);
+    }
+  }
+  if (variable_get('node_preview', 0) && (form_get_errors() || $op != t('Preview'))) {
+    unset($form['submit']);
+  }
   return $form;
 }
 
