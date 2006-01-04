@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.59 2005/12/17 17:24:46 dries Exp $
+// $Id: file.inc,v 1.60 2006/01/04 09:23:44 dries Exp $
 
 /**
  * @file
@@ -488,7 +488,7 @@ function file_download() {
     $list = module_list();
     foreach ($list as $module) {
       $headers = module_invoke($module, 'file_download', $file);
-      if ($headers === -1) {
+      if (empty($headers)) {
         drupal_access_denied();
       }
       elseif (isset($headers) && is_array($headers)) {
