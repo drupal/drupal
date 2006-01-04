@@ -230,14 +230,30 @@ CREATE INDEX node_comment_statistics_last_comment_timestamp_idx ON node_comment_
 -- Table structure for directory
 --
 
-CREATE TABLE directory (
+CREATE TABLE client (
+  cid SERIAL,
   link varchar(255) NOT NULL default '',
   name varchar(128) NOT NULL default '',
   mail varchar(128) NOT NULL default '',
   slogan text NOT NULL default '',
   mission text NOT NULL default '',
-  timestamp integer NOT NULL default '0',
-  PRIMARY KEY (link)
+  users integer NOT NULL default '0',
+  nodes integer NOT NULL default '0',
+  version varchar(35) NOT NULL default'',
+  created integer NOT NULL default '0',
+  changed integer NOT NULL default '0',
+  PRIMARY KEY (cid)
+);
+
+--
+-- Table structure for table 'client_system'
+--
+
+CREATE TABLE client_system (
+  cid integer NOT NULL,
+  name varchar(255) NOT NULL default '',
+  type varchar(255) NOT NULL default '',
+  PRIMARY KEY (cid,name)
 );
 
 --

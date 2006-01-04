@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.173 2006/01/02 08:05:18 dries Exp $
+// $Id: updates.inc,v 1.174 2006/01/04 09:17:02 dries Exp $
 
 function system_update_110() {
   $ret = array();
@@ -1341,3 +1341,61 @@ function system_update_165() {
   variable_del('ping_cron_last');
   return array();
 }
+
+function system_update_166() {
+  $ret = array();
+
+  $ret[] = update_sql("DROP TABLE {directory}");
+  switch ($GLOBALS['db_type']) {
+    case 'mysqli':
+    case 'mysql':
+      update_sql("CREATE TABLE client (
+        cid int(10) unsigned NOT NULL auto_increment,
+        link varchar(255) NOT NULL default '',
+        name varchar(128) NOT NULL default '',
+        mail varchar(128) NOT NULL default '',
+        slogan longtext NOT NULL,
+        mission longtext NOT NULL,
+        users int(10) NOT NULL default '0',
+        nodes int(10) NOT NULL default '0',
+        version varchar(35) NOT NULL default'',
+        created int(11) NOT NULL default '0',
+        changed int(11) NOT NULL default '0',
+        PRIMARY KEY (cid)
+      ) TYPE=MyISAM");
+      update_sql("CREATE TABLE client_system (
+        cid int(10) NOT NULL default '0',
+        name varchar(255) NOT NULL default '',
+        type varchar(255) NOT NULL default '',
+        PRIMARY KEY (cid,name)
+      ) TYPE=MyISAM");
+      break;
+
+    case 'pgsql':
+      update_sql("CREATE TABLE client (
+        cid SERIAL,
+        link varchar(255) NOT NULL default '',
+        name varchar(128) NOT NULL default '',
+        mail varchar(128) NOT NULL default '',
+        slogan text NOT NULL default '',
+        mission text NOT NULL default '',
+        users integer NOT NULL default '0',
+        nodes integer NOT NULL default '0',
+        version varchar(35) NOT NULL default'',
+        created integer NOT NULL default '0',
+        changed integer NOT NULL default '0',
+        PRIMARY KEY (cid)
+      )");
+      update_sql("CREATE TABLE client_system (
+        cid integer NOT NULL,
+        name varchar(255) NOT NULL default '',
+        type varchar(255) NOT NULL default '',
+        PRIMARY KEY (cid,name)
+      )");
+      break;
+  }
+
+  return $ret;
+}
+
+

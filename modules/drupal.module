@@ -1,43 +1,59 @@
 <?php
-// $Id: drupal.module,v 1.112 2005/12/31 14:18:22 dries Exp $
+// $Id: drupal.module,v 1.113 2006/01/04 09:17:02 dries Exp $
 
 /**
  * @file
  * Lets users log in using a Drupal ID and can notify a central server about your site.
  */
 
+define(VERSION, '4.7.0');
+
 /**
  * Implementation of hook_help().
  */
 function drupal_help($section) {
+  global $base_url;
   switch ($section) {
     case 'admin/help#drupal':
-      $output = '<p>'. t('The Drupal module uses the XML-RPC network communication protocol to connect your site with a directory server that maintains a directory of sites.  Community leaders who have common interests may wish to be part of a larger community and showing sites in a common directory is a good way to do this.') .'</p>';
-      $output .= t('<p>Enabling the drupal module will:</p>
+      $output = '<p>'. t('The Drupal module uses the XML-RPC network communication protocol to connect your site with a central server that maintains a directory of client sites.') .'</p>';
+      $output .= t('<p>Enabling the Drupal module will allow you to:</p>
 <ul>
-<li>list your site in a site directory.</li>
-<li>allow members on all sites using the Drupal module to login to your site without registering using their distributed identification and vice versa.</li>
-<li>allow members to login to any other site which uses the Drupal module, using a login name which looks much like an email address for your site: <em>username@example.com</em></li>
+  <li>register your site with a server, including (optionally) posting information on your installed modules and themes and summary statistics on your number of posts and users, information that can help rank Drupal modules and themes</li>
+  <li>enable other sites to register with your site</li>
+  <li>allow members on all sites using the Drupal module to log in to your site without registering using their distributed identification</li>
+  <li>allow members to log in to any other site that uses the Drupal module, using a login name that looks much like an email address for your site: <em>username@%base_url</em></li>
 </ul>
-');
-      $output .= '<p>'. t('The Drupal module administration page allows you to set the xml-rpc server page.  The listing of your site in a site directory will occur shortly after your sites next cron run.') .'</p>';
+', array('%base_url' => $base_url));
+      $output .= '<p>'. t('The Drupal module administration page allows you to set the xml-rpc server page and other related options.') .'</p>';
       $output .= t('<p>You can</p>
 <ul>
-<li>run your cron job at your sites <a href="%file-cron">cron page</a>.</li>
-<li>browse to the <a href="%external-http-www-drupal-org-xmlrpc-php">XML-RPC site directory</a>.</li>
-<li>view your <a href="%file-xmlrpc">XML-RPC page</a>.</li>
-<li>administer Drupal <a href="%admin-settings-drupal">administer &gt;&gt; settings &gt;&gt; drupal</a>.</li>
+  <li>run your cron job at your site\'s <a href="%file-cron">cron page</a></li>
+  <li>view your <a href="%file-xmlrpc">XML-RPC page</a>.</li>
+  <li>administer Drupal <a href="%admin-settings-drupal">administer &gt;&gt; settings &gt;&gt; drupal</a>.</li>
 </ul>
-', array('%file-cron' => 'cron.php', '%external-http-www-drupal-org-xmlrpc-php' => 'http://www.drupal.org/xmlrpc.php', '%file-xmlrpc' => 'xmlrpc.php', '%admin-settings-drupal' => url('admin/settings/drupal')));
+', array('%file-cron' => 'cron.php', '%file-xmlrpc' => 'xmlrpc.php', '%admin-settings-drupal' => url('admin/settings/drupal')));
+      $output .= '<p>'. t('If you maintain a directory of sites, you can list them on a page using the <code>drupal_directory_page()</code> function. Sample instructions:
+<ul>
+  <li>Enable the page module. Select create content &gt;&gt; page.</li>
+  <li>For input format, select PHP code.</li>
+  <li>Give the page a title. For body, put:
+<pre>
+&lt;?php
+print drupal_directory_page();
+?&gt;
+</pre>
+  <li>Save the page.</li>
+</ul>') . '</p>';
+
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%drupal">Drupal page</a>.', array('%drupal' => 'http://www.drupal.org/handbook/modules/drupal/')) .'</p>';
       return $output;
     case 'admin/modules#description':
-      return t('Lets users log in using a Drupal ID and can notify a central server about your site.');
+      return t('Lets you register your site with a central server and improve ranking of Drupal projects by posting information on your installed modules and themes; also enables users to log in using a Drupal ID.');
     case 'admin/settings/drupal':
-      return t('<p>Using this your site can "call home" and add itself to the Drupal directory. If you want it to add itself to a different directory server you can change the <a href="%xml-rpc-setting">Drupal XML-RPC server</a> setting -- but the directory server has to be able to handle Drupal XML. To get all your site information listed, go to the <a href="%site-settings">settings page</a> and set the site name, the e-mail address, the slogan, and the mission statement.</p>', array('%xml-rpc-setting' => url('admin/settings/drupal'), '%site-settings' => url('admin/settings')));
+      return t('<p>Using this your site can "call home" to another Drupal server. By calling home to drupal.org and sending a list of your installed modules and themes, you help rank projects on drupal.org and so assist all Drupal administrators to find the best components for meeting their needs. If you want to register with a different server, you can change the Drupal XML-RPC server setting -- but the server has to be able to handle Drupal XML. Some XML-RPC servers may present directories of all registered sites. To get all your site information listed, go to the <a href="%site-settings">settings page</a> and set the site name, the e-mail address, the slogan, and the mission statement.</p>', array('%site-settings' => url('admin/settings')));
     case 'user/help#drupal':
-      return t("<p><a href=\"%Drupal\">Drupal</a> is the name of the software which powers %this-site. There are Drupal web sites all over the world, and many of them share their registration databases so that users may freely login to any Drupal site using a single <strong>Drupal ID</strong>.</p>
-<p>So please feel free to login to your account here at %this-site with a username from another Drupal site. The format of a Drupal ID is similar to an email address: <strong>username</strong>@<em>server</em>. An example of a valid Drupal ID is <strong>mwlily</strong>@<em>www.drupal.org</em>.</p>", array('%Drupal' => 'http://www.drupal.org', '%this-site' => '<em>'. variable_get('site_name', 'this web site') .'</em>'));
+      return variable_get('drupal_authentication_service', 0) ? t("<p><a href=\"%Drupal\">Drupal</a> is the name of the software that powers %this-site. There are Drupal web sites all over the world, and many of them share their registration databases so that users may freely log in to any Drupal site using a single <strong>Drupal ID</strong>.</p>
+<p>So please feel free to log in to your account here at %this-site with a username from another Drupal site. The format of a Drupal ID is similar to an email address: <strong>username</strong>@<em>server</em>. An example of a valid Drupal ID is <strong>mwlily</strong>@<em>www.drupal.org</em>.</p>", array('%Drupal' => 'http://www.drupal.org', '%this-site' => '<em>'. variable_get('site_name', 'this web site') .'</em>')) : NULL;
   }
 }
 
@@ -45,7 +61,7 @@ function drupal_help($section) {
  * Implementation of hook_settings().
  */
 function drupal_settings() {
-  // Check if all required fields are present for the Drupal directory
+  // Check if all required fields are present
   if ((variable_get('site_name', 'drupal') == 'drupal') || (variable_get('site_name', 'drupal') == '')) {
     form_set_error('drupal_directory', t('You must set the name of your site on the <a href="%url">administer &raquo; settings</a> page.', array('%url' => url('admin/settings'))));
   }
@@ -58,13 +74,65 @@ function drupal_settings() {
   else if (variable_get('site_mission', '') == '') {
     form_set_error('drupal_directory', t('You must set your site mission on the <a href="%url">administer &raquo; settings</a> page.' , array('%url' => url('admin/settings'))));
   }
+  $options = array('1' => t('Enabled'), '0' => t('Disabled'));
 
-  $form['drupal_server'] =  array('#type' => 'textfield', '#title' => t('Drupal XML-RPC server'), '#default_value' => variable_get('drupal_server', 'http://www.drupal.org/xmlrpc.php'), '#description' => t('The URL of your root Drupal XML-RPC server.'));
+  $form['drupal'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Post data to another site'),
+    '#tree' => FALSE
+  );
 
-  $form['drupal_directory'] = array(
-    '#type' => 'radios', '#title' => t('Drupal directory'), '#default_value' => variable_get('drupal_directory', 0),
-    '#options' => array(t('Disabled'), t('Enabled')),
-    '#description' => t("If enabled, your Drupal site will make itself known to the Drupal directory at the specified Drupal XML-RPC server. For this to work properly, you must set your site's name, e-mail address, slogan and mission statement. When the \"Drupal XML-RPC server\" field is set to \"%drupal-xml-rpc\", your web site will get listed on the <a href=\"%drupal-sites\">Drupal sites</a> page. Requires the cron feature to be enabled.", array("%drupal-xml-rpc" => "http://www.drupal.org/xmlrpc.php", "%drupal-sites" => "http://www.drupal.org/drupal-sites/"))
+  $form['drupal']['drupal_register'] = array(
+    '#type' => 'radios',
+    '#title' => t('Register with a Drupal server'),
+    '#default_value' => variable_get('drupal_register', 0),
+    '#options' => $options,
+    '#description' => t("If enabled, your Drupal site will register itself with the specified Drupal XML-RPC server. For this to work properly, you must set your site's name, e-mail address, slogan and mission statement. When the \"Drupal XML-RPC server\" field is set to \"%drupal-xml-rpc\", your web site will register itself with drupal.org. Requires the cron feature to be enabled.", array("%drupal-xml-rpc" => "http://www.drupal.org/xmlrpc.php", "%drupal-sites" => "http://www.drupal.org/drupal-sites/"))
+  );
+
+  $form['drupal']['drupal_server'] =  array(
+    '#type' => 'textfield',
+    '#title' => t('Drupal XML-RPC server'),
+    '#default_value' => variable_get('drupal_server', 'http://www.drupal.org/xmlrpc.php'),
+    '#description' => t('The URL of the Drupal XML-RPC server you wish to register with.')
+  );
+
+  $form['drupal']['drupal_system'] = array(
+    '#type' => 'radios',
+    '#title' => t('Send system information'),
+    '#default_value' => variable_get('drupal_system', 0),
+    '#options' => $options,
+    '#description' => t("If enabled, your site will send information on its installed components (modules, themes, and theme engines). This information can help in compiling statistics on usage of Drupal projects.")
+  );
+
+  $form['drupal']['drupal_statistics'] = array(
+    '#type' => 'radios',
+    '#title' => t('Send statistics'),
+    '#default_value' => variable_get('drupal_statistics', 0),
+    '#options' => $options,
+    '#description' => t("If enabled, your site will send summary statistics on the number of registered users and the total number of posts. No private information will be sent. These data help to improve the ranking statistics of Drupal projects.")
+  );
+
+  $form['services'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Receive data from other sites'),
+    '#tree' => FALSE
+  );
+
+  $form['services']['drupal_client_service'] = array(
+    '#type' => 'radios',
+    '#title' => t('Allow other Drupal sites to register'),
+    '#default_value' => variable_get('drupal_client_service', 0),
+    '#options' => $options,
+    '#description' => t('If enabled, your Drupal site will allow other sites to register with your site and send information to this site. This functionality can be used to maintain a list of related sites.')
+  );
+
+  $form['services']['drupal_authentication_service'] = array(
+    '#type' => 'radios',
+    '#title' => t('Authentication service'),
+    '#default_value' => variable_get('drupal_authentication_service', 0),
+    '#options' => $options,
+    '#description' => t('If enabled, your Drupal site will accept logins with the user names of other Drupal sites, and likewise provide authentication for users logging into other Drupal sites, based on their user accounts here.')
   );
 
   return $form;
@@ -78,11 +146,17 @@ function drupal_cron() {
 
     // If this site acts as a Drupal XML-RPC server, delete the sites that
     // stopped sending "ping" messages.
-    db_query("DELETE FROM {directory} WHERE timestamp < '". (time() - 259200) ."'");
+    if (variable_get('drupal_client_service', 0)) {
+      $result = db_query("SELECT cid FROM {client} WHERE changed < %d", time() - 259200);
+      while ($client = db_fetch_object($result)) {
+        db_query("DELETE FROM {client_system} WHERE cid = %d", $client->cid);
+        db_query("DELETE FROM {client} WHERE cid = %d", $client->cid);
+      }
+    }
 
     // If this site acts as a Drupal XML-RPC client, send a message to the
     // Drupal XML-RPC server.
-    if (variable_get('drupal_directory', 0) && variable_get('drupal_server', 0)) {
+    if (variable_get('drupal_register', 0) && variable_get('drupal_server', 0)) {
       drupal_notify(variable_get('drupal_server', ''));
     }
   }
@@ -91,27 +165,40 @@ function drupal_cron() {
 /**
  * Callback function from drupal_xmlrpc() called when another site pings this one.
  */
-function drupal_directory_ping($link, $name, $mail, $slogan, $mission) {
-
+function drupal_client_ping($client, $system) {
   /*
   ** Parse our parameters:
   */
 
   foreach (array('link', 'name', 'mail', 'slogan', 'mission') as $key) {
-    $$key = strip_tags($$key);
+    $client[$key] = strip_tags($client[$key]);
   }
 
   /*
   ** Update the data in our database and send back a reply:
   */
 
-  if ($link && $name && $mail && $slogan && $mission) {
-    db_query("DELETE FROM {directory} WHERE link = '%s' OR mail = '%s'", $link, $mail);
-    db_query("INSERT INTO {directory} (link, name, mail, slogan, mission, timestamp) VALUES ('%s', '%s', '%s', '%s', '%s', %d)", $link, $name, $mail, $slogan, $mission, time());
+  if ($client['link'] && $client['name'] && $client['mail'] && $client['slogan'] && $client['mission']) {
+    $result = db_query(db_rewrite_sql("SELECT cid FROM {client} WHERE link = '%s'"), $client['link']);
+    if (db_num_rows($result)) {
+      $record = db_fetch_object($result);
+      $client['cid'] = $record->cid;
+      // We have an existing record.
+      db_query("UPDATE {client} SET link = '%s', name = '%s', mail = '%s', slogan = '%s', mission = '%s', users = %d, nodes = %d, version = '%s', changed = '%s' WHERE cid = %d", $client['uid'], $client['link'], $client['name'], $client['mail'], $client['slogan'], $client['mission'], $client['users'], $client['nodes'], $client['version'], time(), $client['cid']);
+    }
+    else {
+      $client['cid'] = db_next_id('client');
+      db_query("INSERT INTO {client} (cid, link, name, mail, slogan, mission, users, nodes, version, created, changed) VALUES (%d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')", $client['cid'], $client['link'], $client['name'], $client['mail'], $client['slogan'], $client['mission'], $client['users'], $client['nodes'], $client['version'], time(), time());
+    }
+    if (is_array($system)) {
+      db_query("DELETE FROM {client_system} WHERE cid = %d", $client['cid']);
+      foreach ($system as $item) {
+        db_query("INSERT INTO {client_system} (cid, name, type) VALUES (%d, '%s', '%s')", $client['cid'], $item['name'], $item['type']);
+      }
+    }
+    watchdog('client ping', t('Ping from %name (%link).', array('%name' => theme('placeholder', $client['name']), '%link' => theme('placeholder', $client['link']))), WATCHDOG_NOTICE, '<a href="'. check_url($client['link']) .'">view</a>');
 
-    watchdog('directory ping', t('Ping from %name (%link).', array('%name' => theme('placeholder', $name), '%link' => theme('placeholder', $link))), WATCHDOG_NOTICE, '<a href="'. check_url($link) .'">view</a>');
-
-    return 1;
+    return TRUE;
   }
   else {
     return 0;
@@ -120,20 +207,34 @@ function drupal_directory_ping($link, $name, $mail, $slogan, $mission) {
 }
 
 /**
- * Formats a list of all sites indexed in the directory.
+ * Formats a list of all clients.
  *
  * This function may be called from a custom page on sites that are
  * Drupal directory servers.
  */
-function drupal_directory_page($sort = 'name') {
-  $result = db_query('SELECT * FROM {directory} ORDER BY '. $sort);
+function drupal_client_page($sort = 'name') {
+  $result = db_query('SELECT * FROM {client} ORDER BY %s', $sort);
 
-  // Note: All fields except the mission are treated as plain-text.
-  // The mission is stripped of any HTML tags to keep the output simple and consistent.
-  while ($site = db_fetch_object($result)) {
-    $output .= '<a href="'. check_url($site->link) .'">'. check_plain($site->name) .'</a> - '. check_plain($site->slogan) .'<div style="padding-left: 20px;">'. strip_tags($site->mission) .'</div><br />';
+  $clients = array();
+  while ($client = db_fetch_object($result)) {
+    $clients[] = $client;
   }
 
+  return theme('client_list', $clients);
+}
+
+/**
+ * Theme a client list.
+ */
+function theme_client_list($clients) {
+  // Note: All fields except the mission are treated as plain-text.
+  // The mission is stripped of any HTML tags to keep the output simple and consistent.
+  $output = "\n<dl>\n";
+  foreach ($clients as $client) {
+    $output .= '  <dt><a href="' . check_url($client->link) . '">' . check_plain($client->name) . '</a> - ' . check_plain($client->slogan) . "</dt>\n";
+    $output .= '  <dd>' . strip_tags($client->mission) . "</dd>\n";
+  }
+  $output .= "</dl>\n";
   return $output;
 }
 
@@ -141,17 +242,24 @@ function drupal_directory_page($sort = 'name') {
  * Implementation of hook_xmlrpc().
  */
 function drupal_xmlrpc() {
-  return array(
-    array(
-      'drupal.site.ping',
-      'drupal_directory_ping',
-      array('boolean', 'string', 'string', 'string', 'string', 'string'),
-      t('Handling ping request')),
-    array(
+  $xmlrpc = array();
+  if (variable_get('drupal_client_service', 0)) {
+    $xmlrpc[] = array(
+      'drupal.client.ping',
+      'drupal_client_ping',
+      array('array', 'array', 'array'),
+      t('Handling ping request')
+    );
+  }
+  if (variable_get('drupal_authentication_service', 0)) {
+    $xmlrpc[] = array(
       'drupal.login',
       'drupal_login',
       array('int', 'string', 'string'),
-      t('Logging into a drupal site')));
+      t('Logging into a Drupal site')
+    );
+  }
+  return $xmlrpc;
 }
 
 /**
@@ -159,13 +267,32 @@ function drupal_xmlrpc() {
  */
 function drupal_notify($server) {
   global $base_url;
-
-  $result = xmlrpc($server, 'drupal.site.ping', $base_url, variable_get('site_name', ''), variable_get('site_mail', ''), variable_get('site_slogan', ''), variable_get('site_mission', ''));
+  $client = array(
+    'link' => $base_url,
+    'name' => variable_get('site_name', ''),
+    'mail' => variable_get('site_mail', ''),
+    'slogan' => variable_get('site_slogan', ''),
+    'mission' => variable_get('site_mission', ''),
+    'version' => VERSION
+  );
+  if (variable_get('drupal_system', 0)) {
+    $system = array();
+    $result = db_query("SELECT name, type FROM {system} WHERE status = 1");
+    while ($item = db_fetch_array($result)) {
+      $system[] = $item;
+    }
+  }
+  if (variable_get('drupal_statistics', 0)) {
+    $users = db_fetch_object(db_query("SELECT COUNT(uid) AS count FROM {users}"));
+    $client['users'] = $users->count;
+    $nodes = db_fetch_object(db_query("SELECT COUNT(nid) AS count FROM {node}"));
+    $client['nodes'] = $nodes->count;
+  }
+  $result = xmlrpc($server, 'drupal.client.ping', $client, $system);
 
   if ($result === FALSE) {
-    watchdog('directory ping', t('Failed to notify %server, error code: %errno, error message: %error_msg.', array('%server' => theme('placeholder', $server), '%errno' => theme('placeholder', xmlrpc_errno()), '%error_msg' => theme('placeholder', xmlrpc_error_msg()))), WATCHDOG_WARNING);
+    watchdog('server ping', t('Failed to notify %server; error code: %errno; error message: %error_msg.', array('%server' => theme('placeholder', $server), '%errno' => theme('placeholder', xmlrpc_errno()), '%error_msg' => theme('placeholder', xmlrpc_error_msg()))), WATCHDOG_WARNING);
   }
-
 }
 
 /**
@@ -187,12 +314,14 @@ function drupal_info($field = 0) {
  * Implementation of hook_auth().
  */
 function drupal_auth($username, $password, $server) {
-  $result = xmlrpc('http://'. $server .'/xmlrpc.php', 'drupal.login', $username, $password);
-  if ($result === FALSE) {
-    drupal_set_message(t('Error %code : %message', array('%code' => theme('placeholder', xmlrpc_errno()), '%message' =>  theme('placeholder', xmlrpc_error_msg()))), 'error');
-  }
-  else {
-    return $result;
+  if (variable_get('drupal_authentication_service', 0)) {
+    $result = xmlrpc("http://$server/xmlrpc.php", 'drupal.login', $username, $password);
+    if ($result === FALSE) {
+      drupal_set_message(t('Error %code : %message', array('%code' => theme('placeholder', xmlrpc_errno()), '%message' =>  theme('placeholder', xmlrpc_error_msg()))), 'error');
+    }
+    else {
+      return $result;
+    }
   }
 }
 
@@ -204,7 +333,8 @@ function drupal_menu($may_cache) {
   if ($may_cache) {
     $items[] = array('path' => 'drupal', 'title' => t('Drupal'),
       'callback' => 'drupal_page_help', 'access' => TRUE,
-      'type' => MENU_SUGGESTED_ITEM);
+      'type' => MENU_SUGGESTED_ITEM
+    );
   }
   return $items;
 }
@@ -222,11 +352,13 @@ function drupal_page_help() {
  * Remote clients are usually other Drupal instances.
  */
 function drupal_login($username, $password) {
-  if ($user = user_load(array('name' => $username, 'pass' => $password, 'status' => 1))) {
-    return $user->uid;
-  }
-  else {
-    return 0;
+  if (variable_get('drupal_authentication_service', 0)) {
+    if ($user = user_load(array('name' => $username, 'pass' => $password, 'status' => 1))) {
+      return $user->uid;
+    }
+    else {
+      return 0;
+    }
   }
 }
 
