@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.128 2005/12/30 16:12:46 unconed Exp $ */
+/* $Id: drupal.css,v 1.129 2006/01/04 20:44:04 unconed Exp $ */
 
 /*
 ** HTML elements
@@ -630,5 +630,5 @@ html.js fieldset.collapsed legend a {
   background: #eee url('grippie.png') no-repeat 100% 100%;
   border: 1px solid #ddd;
   border-top-width: 0px;
-  cursor: ns-resize;
+  cursor: s-resize;
 }
