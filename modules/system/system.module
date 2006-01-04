@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.274 2006/01/02 08:35:59 dries Exp $
+// $Id: system.module,v 1.275 2006/01/04 09:32:28 dries Exp $
 
 /**
  * @file
@@ -167,7 +167,7 @@ function system_test() {
 function system_user($type, $edit, &$user, $category = NULL) {
   if ($type == 'form' && $category == 'account') {
     if (user_access('select different theme')) {
-      $themes = list_themes();
+      $themes = array_filter(list_themes(), create_function('$theme', 'return $theme->status;'));
 
       if (count($themes) > 1) {
         ksort($themes);

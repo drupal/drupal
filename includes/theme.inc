@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.269 2005/12/29 04:46:40 unconed Exp $
+// $Id: theme.inc,v 1.270 2006/01/04 09:32:28 dries Exp $
 
 /**
  * @file
@@ -99,7 +99,7 @@ function list_themes($refresh = FALSE) {
 
   if (!$list) {
     $list = array();
-    $result = db_query("SELECT * FROM {system} WHERE type = 'theme' AND status = 1");
+    $result = db_query("SELECT * FROM {system} WHERE type = 'theme'");
     while ($theme = db_fetch_object($result)) {
       if (file_exists($theme->filename)) {
         $list[$theme->name] = $theme;
