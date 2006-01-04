@@ -30,7 +30,6 @@ function textArea(element) {
   this.wrapper.appendChild(this.grippie);
   this.grippie.dimensions = dimensions(this.grippie);
   this.grippie.onmousedown = function (e) { ta.beginDrag(e); };
-  this.element.onmouseup = function (e) { ta.endDrag(e); };
 
   // Set wrapper and textarea dimensions
   this.wrapper.style.height = this.dimensions.height + this.grippie.dimensions.height + 1 +'px';
@@ -62,6 +61,11 @@ function textArea(element) {
 }
 
 textArea.prototype.beginDrag = function (event) {
+  if (document.isDragging) {
+    return;
+  }
+  document.isDragging = true;
+
   event = event || window.event;
   // Capture mouse
   var cp = this;
@@ -103,5 +107,6 @@ textArea.prototype.endDrag = function (event) {
 
   // Restore opacity
   this.element.style.opacity = 1.0;
+  document.isDragging = false;
 }
 
