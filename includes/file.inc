@@ -488,7 +488,7 @@ function file_download() {
     $list = module_list();
     foreach ($list as $module) {
       $headers = module_invoke($module, 'file_download', $file);
-      if ($headers === -1) {
+      if (empty($headers)) {
         drupal_access_denied();
       }
       elseif (isset($headers) && is_array($headers)) {
