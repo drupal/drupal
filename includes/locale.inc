@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.61 2005/12/22 22:58:12 unconed Exp $
+// $Id: locale.inc,v 1.62 2006/01/05 23:35:34 unconed Exp $
 
 /**
  * @file
@@ -984,7 +984,7 @@ function _locale_string_edit($lid) {
  : array('#type' => 'textfield', '#title' => $languages['name'][$translation->locale], '#default_value' => $translation->translation);
     unset($languages['name'][$translation->locale]);
   }
-  $form['item'] = array('#type' => 'item', '#title' => t('Original text'), '#value' => wordwrap(check_plain($orig, 0)));
+  $form['item'] = array('#type' => 'item', '#title' => t('Original text'), '#value' => check_plain(wordwrap($orig, 0)));
   foreach ($languages['name'] as $key => $lang) {
     $form[$key] = (strlen($orig) > 40) ?
 array('#type' => 'textarea', '#title' => $lang, '#rows' => 15) :
@@ -1047,27 +1047,33 @@ function _locale_string_seek() {
   if ($query = _locale_string_seek_query()) {
     $join = "SELECT s.source, s.location, s.lid, t.translation, t.locale FROM {locales_source} s INNER JOIN {locales_target} t ON s.lid = t.lid ";
 
+    $arguments = array();
     // Compute LIKE section
     switch ($query->searchin) {
       case 'translated':
-        $where = "WHERE (t.translation LIKE '%". db_escape_string($query->string) ."%' AND t.translation != '')";
+        $where = "WHERE (t.translation LIKE '%%%s%%' AND t.translation != '')";
         $orderby = "ORDER BY t.translation";
+        $arguments[] = $query->string;
         break;
       case 'untranslated':
-        $where = "WHERE (s.source LIKE '%". db_escape_string($query->string) ."%' AND t.translation = '')";
+        $where = "WHERE (s.source LIKE '%%%s%%' AND t.translation = '')";
         $orderby = "ORDER BY s.source";
+        $arguments[] = $query->string;
         break;
       case 'all' :
       default:
-        $where = "WHERE (s.source LIKE '%". db_escape_string($query->string) ."%' OR t.translation LIKE '%". db_escape_string($query->string) ."%')";
+        $where = "WHERE (s.source LIKE '%%%s%%' OR t.translation LIKE '%%%s%%')";
         $orderby = '';
+        $arguments[] = $query->string;
+        $arguments[] = $query->string;
         break;
     }
 
     switch ($query->language) {
       // Force search in source strings
       case "en":
-        $sql = $join ." WHERE s.source LIKE '%". db_escape_string($query->string) ."%' ORDER BY s.source";
+        $sql = $join ." WHERE s.source LIKE '%%%s%%' ORDER BY s.source";
+        $arguments = array($query->string); // $where is not used, discard its arguments
         break;
       // Search in all languages
       case "all":
@@ -1075,10 +1081,11 @@ function _locale_string_seek() {
         break;
       // Some different language
       default:
-        $sql = "$join $where AND t.locale = '". db_escape_string($query->language) ."' $orderby";
+        $sql = "$join $where AND t.locale = '%s' $orderby";
+        $arguments[] = $query->language;
     }
 
-    $result = pager_query($sql, 50);
+    $result = pager_query($sql, 50, 0, NULL, $arguments);
 
     $header = array(t('String'), t('Locales'), array('data' => t('Operations'), 'colspan' => '2'));
     $arr = array();

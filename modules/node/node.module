@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.578 2006/01/04 09:04:27 dries Exp $
+// $Id: node.module,v 1.579 2006/01/05 23:35:34 unconed Exp $
 
 /**
  * @file
@@ -345,27 +345,31 @@ function node_load($param = array(), $revision = NULL, $reset = NULL) {
     $nodes = array();
   }
 
+  $arguments = array();
   if (is_numeric($param)) {
     $cachable = $revision == NULL;
     if ($cachable && isset($nodes[$param])) {
       return $nodes[$param];
     }
-    $cond = 'n.nid = '. $param;
+    $cond = 'n.nid = %d';
+    $arguments[] = $param;
   }
   else {
     // Turn the conditions into a query.
     foreach ($param as $key => $value) {
-      $cond[] = 'n.'. db_escape_string($key) ." = '". db_escape_string($value) ."'";
+      $cond[] = 'n.'. db_escape_string($key) ." = '%s'";
+      $arguments[] = $value;
     }
     $cond = implode(' AND ', $cond);
   }
 
   // Retrieve the node.
   if ($revision) {
-    $node = db_fetch_object(db_query(db_rewrite_sql('SELECT n.nid, r.vid, n.type, n.status, n.created, n.changed, n.comment, n.promote, n.moderate, n.sticky, r.timestamp AS revision_timestamp, r.title, r.body, r.teaser, r.log, r.format, u.uid, u.name, u.picture, u.data FROM {node} n INNER JOIN {users} u ON u.uid = n.uid INNER JOIN {node_revisions} r ON r.nid = n.nid AND r.vid = %d WHERE '. $cond), $revision));
+    array_unshift($arguments, $revision);
+    $node = db_fetch_object(db_query(db_rewrite_sql('SELECT n.nid, r.vid, n.type, n.status, n.created, n.changed, n.comment, n.promote, n.moderate, n.sticky, r.timestamp AS revision_timestamp, r.title, r.body, r.teaser, r.log, r.format, u.uid, u.name, u.picture, u.data FROM {node} n INNER JOIN {users} u ON u.uid = n.uid INNER JOIN {node_revisions} r ON r.nid = n.nid AND r.vid = %d WHERE '. $cond), $arguments));
   }
   else {
-    $node = db_fetch_object(db_query(db_rewrite_sql('SELECT n.nid, n.vid, n.type, n.status, n.created, n.changed, n.comment, n.promote, n.moderate, n.sticky, r.timestamp AS revision_timestamp, r.title, r.body, r.teaser, r.log, r.format, u.uid, u.name, u.picture, u.data FROM {node} n INNER JOIN {users} u ON u.uid = n.uid INNER JOIN {node_revisions} r ON r.vid = n.vid WHERE '. $cond)));
+    $node = db_fetch_object(db_query(db_rewrite_sql('SELECT n.nid, n.vid, n.type, n.status, n.created, n.changed, n.comment, n.promote, n.moderate, n.sticky, r.timestamp AS revision_timestamp, r.title, r.body, r.teaser, r.log, r.format, u.uid, u.name, u.picture, u.data FROM {node} n INNER JOIN {users} u ON u.uid = n.uid INNER JOIN {node_revisions} r ON r.vid = n.vid WHERE '. $cond), $arguments));
   }
 
   if ($node->nid) {

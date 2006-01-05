@@ -1,5 +1,5 @@
 <?php
-// $Id: watchdog.module,v 1.135 2005/12/02 15:21:01 dries Exp $
+// $Id: watchdog.module,v 1.136 2006/01/05 23:35:34 unconed Exp $
 
 /**
  * @file
@@ -71,10 +71,8 @@ function watchdog_overview() {
   $classes = array(WATCHDOG_NOTICE => 'watchdog-notice', WATCHDOG_WARNING => 'watchdog-warning', WATCHDOG_ERROR => 'watchdog-error');
 
   $names['all'] = t('all messages');
-  $queries['all'] = '';
   foreach (_watchdog_get_message_types() as $type) {
     $names[$type] = t('%type messages', array('%type' => t($type)));
-    $queries[$type] = "WHERE type = '". db_escape_string($type) ."'";
   }
 
   if (empty($_SESSION['watchdog_overview_filter'])) {
@@ -104,8 +102,16 @@ function watchdog_overview() {
     array('data' => t('User'), 'field' => 'u.name'),
     array('data' => t('Operations'))
   );
-  $sql = 'SELECT w.*, u.name, u.uid FROM {watchdog} w INNER JOIN {users} u ON w.uid = u.uid '. $queries[$_SESSION['watchdog_overview_filter']] . tablesort_sql($header);
-  $result = pager_query($sql, 50);
+
+  $sql = "SELECT w.*, u.name, u.uid FROM {watchdog} w INNER JOIN {users} u ON w.uid = u.uid";
+  $tablesort = tablesort_sql($header);
+  $type = $_SESSION['watchdog_overview_filter'];
+  if ($type != 'all') {
+    $result = pager_query($sql ." WHERE w.type = '%s'". $tablesort, 50, 0, NULL, $type);
+  }
+  else {
+    $result = pager_query($sql . $tablesort, 50);
+  }
 
   while ($watchdog = db_fetch_object($result)) {
     $rows[] = array('data' =>
@@ -126,7 +132,6 @@ function watchdog_overview() {
   if (!$rows) {
     $rows[] = array(array('data' => t('No log messages available.'), 'colspan' => 6));
   }
-
 
   $output .= theme('table', $header, $rows);
   $output .= theme('pager', NULL, 50, 0, tablesort_pager());

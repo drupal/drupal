@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.129 2005/11/01 10:17:34 dries Exp $
+// $Id: locale.module,v 1.130 2006/01/05 23:35:34 unconed Exp $
 
 /**
  * @file
@@ -438,11 +438,11 @@ function locale_admin_string() {
 
   switch ($op) {
     case 'delete':
-      $output .= _locale_string_delete(db_escape_string(arg(4)));
+      $output .= _locale_string_delete(arg(4));
       $output .= _locale_string_seek();
       break;
     case 'edit':
-      $output .= _locale_string_edit(db_escape_string(arg(4)));
+      $output .= _locale_string_edit(arg(4));
       $output .= _locale_string_seek();
       break;
     case t('Search'):
@@ -451,7 +451,7 @@ function locale_admin_string() {
       $output .= _locale_string_seek_form();
       break;
     case t('Save translations'):
-      $output .= _locale_string_save(db_escape_string(arg(4)));
+      $output .= _locale_string_save(arg(4));
       drupal_goto('admin/locale/string/search');
       break;
     default:

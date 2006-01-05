@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.276 2006/01/05 09:42:09 dries Exp $
+// $Id: system.module,v 1.277 2006/01/05 23:35:34 unconed Exp $
 
 /**
  * @file
@@ -783,6 +783,7 @@ function system_settings_form_submit($form_id, $values) {
   if ($form_id == 'system_settings_form') {
     menu_rebuild();
   }
+  drupal_goto($_GET['q']);
 }
 
 /**
