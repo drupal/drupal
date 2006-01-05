@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.411 2006/01/05 10:53:47 dries Exp $
+// $Id: comment.module,v 1.412 2006/01/05 14:35:55 dries Exp $
 
 /**
  * @file
@@ -236,22 +236,29 @@ function comment_form_alter($form_id, &$form) {
     if ($form['type']['#value'] .'_node_settings' == $form_id) {
       $form['workflow']['comment_'. $form['type']['#value']] = array('#type' => 'radios', '#title' => t('Default comment setting'), '#default_value' => variable_get('comment_'. $form['type']['#value'], COMMENT_NODE_READ_WRITE), '#options' => array(t('Disabled'), t('Read only'), t('Read/Write')), '#description' => t('Users with the <em>administer comments</em> permission will be able to override this setting.'));
     }
-    if ($form['type']['#value'] .'_node_form' == $form_id && user_access('administer comments')) {
+    if ($form['type']['#value'] .'_node_form' == $form_id) {
       $node = $form['#node'];
-      $selected = isset($node->comment) ? $node->comment : variable_get("comment_$node->type", COMMENT_NODE_READ_WRITE);
-      $form['user_comments'] = array(
-        '#type' => 'fieldset',
-        '#title' => t('User comments'),
-        '#collapsible' => TRUE,
-        '#collapsed' => TRUE,
-        '#weight' => 30,
-      );
-      $form['user_comments']['comment'] = array(
-        '#type' => 'radios',
-        '#parents' => array('comment'),
-        '#default_value' => $selected,
-        '#options' => array(t('Disabled'), t('Read only'), t('Read/Write')),
-      );
+      if (user_access('administer comments')) {
+        $form['user_comments'] = array(
+          '#type' => 'fieldset',
+          '#title' => t('User comments'),
+          '#collapsible' => TRUE,
+          '#collapsed' => TRUE,
+          '#weight' => 30,
+        );
+        $form['user_comments']['comment'] = array(
+          '#type' => 'radios',
+          '#parents' => array('comment'),
+          '#default_value' => $node->comment,
+          '#options' => array(t('Disabled'), t('Read only'), t('Read/Write')),
+        );
+      }
+      else {
+        $form['user_comments']['comment'] = array(
+          '#type' => 'value',
+          '#value' => $node->comment,
+        );
+      }
     }
   }
 }
@@ -267,9 +274,10 @@ function comment_nodeapi(&$node, $op, $arg = 0) {
 
     case 'load':
       return db_fetch_array(db_query("SELECT last_comment_timestamp, last_comment_name, comment_count FROM {node_comment_statistics} WHERE nid = %d", $node->nid));
-    case 'validate':
-      if (!user_access('administer comments')) {
-        // Force default for normal users:
+      break;
+
+    case 'prepare':
+      if (!isset($node->comment)) {
         $node->comment = variable_get("comment_$node->type", COMMENT_NODE_READ_WRITE);
       }
       break;
