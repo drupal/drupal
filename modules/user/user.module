@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.546 2006/01/02 08:35:59 dries Exp $
+// $Id: user.module,v 1.547 2006/01/05 10:55:51 dries Exp $
 
 /**
  * @file
@@ -1118,7 +1118,8 @@ function user_register_submit($form_id, $form_values) {
     watchdog('security', t('Detected malicious attempt to alter protected user fields.'), WATCHDOG_WARNING);
     drupal_goto('user/register');
   }
-  $account = user_save('', array_merge($form_values, array('pass' => $pass, 'init' => $mail, 'roles' => array('authenticated user' => _user_authenticated_id()), 'status' => $admin || variable_get('user_register', 1))));
+
+  $account = user_save('', array_merge($form_values, array('pass' => $pass, 'init' => $mail, 'roles' => array('authenticated user' => _user_authenticated_id()), 'status' => ($admin || variable_get('user_register', 1) == 1))));
   watchdog('user', t('New user: %name %email.', array('%name' => theme('placeholder', $name), '%email' => theme('placeholder', '<'. $mail .'>'))), WATCHDOG_NOTICE, l(t('edit'), 'user/'. $account->uid .'/edit'));
 
   $variables = array('%username' => $name, '%site' => variable_get('site_name', 'drupal'), '%password' => $pass, '%uri' => $base_url, '%uri_brief' => substr($base_url, strlen('http://')), '%mailto' => $mail, '%date' => format_date(time()), '%login_uri' => url('user', NULL, NULL, TRUE), '%edit_uri' => url('user/'. $account->uid .'/edit', NULL, NULL, TRUE), '%login_url' => user_pass_reset_url($account));
