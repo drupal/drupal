@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.69 2005/12/31 10:48:56 dries Exp $
+// $Id: upload.module,v 1.70 2006/01/05 21:03:31 dries Exp $
 
 /**
  * @file
@@ -388,7 +388,7 @@ function upload_save($node) {
       if ($file = file_save_upload($file, $file->filename)) {
         $fid = db_next_id('{files}_fid');
         db_query("INSERT INTO {files} (fid, nid, vid, filename, filepath, filemime, filesize, list, description) VALUES (%d, %d, %d, '%s', '%s', '%s', %d, %d, '%s')",
-                 $fid, $node->nid, $node->vid, $file->filename, $file->filepath, $file->filemime, $file->filesize, $file->list, $node->description[$key]);
+                 $fid, $node->nid, $node->vid, $file->filename, $file->filepath, $file->filemime, $file->filesize, $node->list[$key], $node->description[$key]);
       }
     }
   }
@@ -410,7 +410,7 @@ function upload_save($node) {
       if (!$remove && is_numeric($key)) {
         $file = db_fetch_object(db_query('SELECT * FROM {files} WHERE vid = %d AND fid = %d', $node->old_vid, $key));
         db_query("INSERT INTO {files} (fid, nid, vid, filename, filepath, filemime, filesize, list, description) VALUES (%d, %d, %d, '%s', '%s', '%s', %d, %d, '%s')",
-                 $key, $node->nid, $node->vid, $file->filename, $file->filepath, $file->filemime, $file->filesize, $file->list, $node->description[$key]);
+                 $key, $node->nid, $node->vid, $file->filename, $file->filepath, $file->filemime, $file->filesize, $node->list[$key], $node->description[$key]);
       }
     }
   }
