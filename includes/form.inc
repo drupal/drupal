@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.40 2006/01/02 08:35:59 dries Exp $
+// $Id: form.inc,v 1.41 2006/01/05 11:05:14 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -682,7 +682,7 @@ function theme_checkbox($element) {
   $checkbox .= 'name="'. $element['#name'] .'" ';
   $checkbox .= 'id="'. $element['#id'].'" ' ;
   $checkbox .= 'value="'. $element['#return_value'] .'" ';
-  $checkbox .= ($element['#value'] == $element['#return_value']) ? ' checked="checked" ' : ' ';
+  $checkbox .= ($element['#return_value'] == $element['#value']) ? ' checked="checked" ' : ' ';
   $checkbox .= drupal_attributes($element['#attributes']) . ' />';
 
   if (!is_null($element['#title'])) {
