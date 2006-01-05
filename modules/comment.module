@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.410 2006/01/03 23:04:23 dries Exp $
+// $Id: comment.module,v 1.411 2006/01/05 10:53:47 dries Exp $
 
 /**
  * @file
@@ -346,7 +346,7 @@ function comment_configure() {
   $form['viewing_options']['comment_default_order'] = array(
     '#type' => 'radios',
     '#title' => t('Default display order'),
-    '#default_value' => variable_get('Default display order', COMMENT_ORDER_NEWEST_FIRST),
+    '#default_value' => variable_get('comment_default_order', COMMENT_ORDER_NEWEST_FIRST),
     '#options' => _comment_get_orders(),
     '#description' => t('The default sorting for new users and anonymous users while viewing comments. These users may change their view using the comment control panel. For registered users, this change is remembered as a persistent user preference.'),
   );
