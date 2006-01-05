@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.79 2005/12/22 22:58:12 unconed Exp $
+// $Id: bootstrap.inc,v 1.80 2006/01/05 10:51:47 dries Exp $
 
 /**
  * @file
@@ -445,13 +445,13 @@ function page_get_cache() {
 /**
  * Call all init or exit hooks without including all modules.
  *
- * @param $op
+ * @param $hook
  *   The name of the bootstrap hook we wish to invoke.
  */
-function bootstrap_invoke_all($op) {
+function bootstrap_invoke_all($hook) {
   foreach (module_list(FALSE, TRUE) as $module) {
     drupal_load('module', $module);
-    module_invoke($module, $op);
+    module_invoke($module, $hook);
  }
 }
 
