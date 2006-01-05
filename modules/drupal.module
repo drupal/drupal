@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal.module,v 1.113 2006/01/04 09:17:02 dries Exp $
+// $Id: drupal.module,v 1.114 2006/01/05 15:19:29 dries Exp $
 
 /**
  * @file
@@ -32,14 +32,14 @@ function drupal_help($section) {
   <li>administer Drupal <a href="%admin-settings-drupal">administer &gt;&gt; settings &gt;&gt; drupal</a>.</li>
 </ul>
 ', array('%file-cron' => 'cron.php', '%file-xmlrpc' => 'xmlrpc.php', '%admin-settings-drupal' => url('admin/settings/drupal')));
-      $output .= '<p>'. t('If you maintain a directory of sites, you can list them on a page using the <code>drupal_directory_page()</code> function. Sample instructions:
+      $output .= '<p>'. t('If you maintain a directory of sites, you can list them on a page using the <code>drupal_client_page()</code> function. Sample instructions:
 <ul>
   <li>Enable the page module. Select create content &gt;&gt; page.</li>
   <li>For input format, select PHP code.</li>
   <li>Give the page a title. For body, put:
 <pre>
 &lt;?php
-print drupal_directory_page();
+print drupal_client_page();
 ?&gt;
 </pre>
   <li>Save the page.</li>
@@ -187,7 +187,7 @@ function drupal_client_ping($client, $system) {
       db_query("UPDATE {client} SET link = '%s', name = '%s', mail = '%s', slogan = '%s', mission = '%s', users = %d, nodes = %d, version = '%s', changed = '%s' WHERE cid = %d", $client['uid'], $client['link'], $client['name'], $client['mail'], $client['slogan'], $client['mission'], $client['users'], $client['nodes'], $client['version'], time(), $client['cid']);
     }
     else {
-      $client['cid'] = db_next_id('client');
+      $client['cid'] = db_next_id('{client}_cid');
       db_query("INSERT INTO {client} (cid, link, name, mail, slogan, mission, users, nodes, version, created, changed) VALUES (%d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')", $client['cid'], $client['link'], $client['name'], $client['mail'], $client['slogan'], $client['mission'], $client['users'], $client['nodes'], $client['version'], time(), time());
     }
     if (is_array($system)) {
