@@ -445,13 +445,13 @@ function page_get_cache() {
 /**
  * Call all init or exit hooks without including all modules.
  *
- * @param $op
+ * @param $hook
  *   The name of the bootstrap hook we wish to invoke.
  */
-function bootstrap_invoke_all($op) {
+function bootstrap_invoke_all($hook) {
   foreach (module_list(FALSE, TRUE) as $module) {
     drupal_load('module', $module);
-    module_invoke($module, $op);
+    module_invoke($module, $hook);
  }
 }
 
