@@ -442,7 +442,7 @@ function search_index($sid, $type, $text) {
  * SELECT i.type, i.sid, i.word, SUM(i.score/t.count) AS score
  * FROM {search_index} i
  * $join INNER JOIN {search_total} t ON i.word = t.word
- * WHERE $where AND (i.word = '...' OR ...)
+ * WHERE $where AND i.type = '%s' AND (i.word = '...' OR ...)
  * GROUP BY i.type, i.sid
  * ORDER BY score DESC";
  *
@@ -477,7 +477,7 @@ function do_search($keywords, $type, $join = '', $where = '1', $variation = true
   $keys = search_keywords_split($keys);
 
   $words = array();
-  $arguments = array();
+  $arguments = array($type);
   $refused = array();
   // Build WHERE clause
   foreach ($keys as $word) {
@@ -508,7 +508,7 @@ function do_search($keywords, $type, $join = '', $where = '1', $variation = true
   if (count($words) == 0) {
     return array();
   }
-  $conditions = $where .' AND ('. implode(' OR ', $words) .')';
+  $conditions = $where .' AND i.type = \'%s\' AND ('. implode(' OR ', $words) .')';
 
   // Get result count (for pager)
   $count = db_num_rows(db_query("SELECT DISTINCT i.sid, i.type FROM {search_index} i $join WHERE $conditions", $arguments));
