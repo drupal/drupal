@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.275 2006/01/04 09:32:28 dries Exp $
+// $Id: system.module,v 1.276 2006/01/05 09:42:09 dries Exp $
 
 /**
  * @file
@@ -497,15 +497,13 @@ function system_cron_settings() {
   $cron_last = variable_get('cron_last', NULL);
 
   if (is_numeric($cron_last)) {
-    $title = t('Cron properly configured');
     $status = t('Cron is running. The last cron job ran %time ago.', array('%time' => format_interval(time() - $cron_last)));
   }
   else {
-    $title = t('Cron not configured');
     $status = t('Cron has not run. It appears cron jobs have not been setup on your system. Please check the help pages for <a href="%url">configuring cron jobs</a>.', array('%url' => 'http://drupal.org/cron'));
   }
 
-  $form['settings'] = array('#type' => 'item', '#title' => $title, '#value' => $status);
+  $form['settings'] = array('#type' => 'item', '#value' => $status);
   return $form;
 }
 
