@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.41 2006/01/05 11:05:14 dries Exp $
+// $Id: form.inc,v 1.42 2006/01/06 07:15:47 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -149,15 +149,21 @@ function _form_validate($elements, $form_id = NULL) {
     // Add legal choice check if element has #options.
     if (isset($elements['#options']) && isset($elements['#value'])) {
       $message = t('Illegal choice in %title.', array('%title' => theme('placeholder', $elements['#title'])));
+      if ($elements['#type'] == 'select') {
+        $options = form_options_flatten($elements['#options']);
+      }
+      else {
+        $options = $elements['#options'];
+      }
       if (is_array($elements['#value'])) {
         $value = $elements['#type'] == 'checkboxes' ? array_keys(array_filter($elements['#value'])) : $elements['#value'];
         foreach ($value as $v) {
-          if (!isset($elements['#options'][$v])) {
+          if (!isset($options[$v])) {
             form_error($elements, $message);
           }
         }
       }
-      elseif (!isset($elements['#options'][$elements['#value']])) {
+      elseif (!isset($options[$elements['#value']])) {
         form_error($elements, $message);
       }
     }
@@ -429,6 +435,25 @@ function _element_info($type, $refresh = null) {
   return $cache[$type];
 }
 
+function form_options_flatten($array, $reset = TRUE) {
+  static $return;
+
+  if ($reset) {
+    $return = array();
+  }
+
+  foreach ($array as $key => $value) {
+    if (is_array($value)) {
+      form_options_flatten($value, FALSE);
+    }
+    else {
+      $return[$key] = 1;
+    }
+  }
+
+  return $return;
+}
+
 /**
  * Format a dropdown menu or scrolling selection box.
  *
@@ -449,12 +474,24 @@ function theme_select($element) {
     if (is_array($choice)) {
       $select .= '<optgroup label="'. $key .'">';
       foreach ($choice as $key => $choice) {
-        $select .= '<option value="'. $key .'"'. (is_array($element['#value']) ? (in_array($key, $element['#value']) ? ' selected="selected"' : '') : ($element['#value'] == $key ? ' selected="selected"' : '')) .'>'. check_plain($choice) .'</option>';
+        if (isset($element['#value']) && ($element['#value'] == $key || (is_array($element['#value']) && in_array($key, $element['#value'])))) {
+          $selected = ' selected="selected"';
+        }
+        else {
+          $selected = '';
+        }
+        $select .= '<option value="'. $key .'"'. $selected .'>'. check_plain($choice) .'</option>';
       }
       $select .= '</optgroup>';
     }
     else {
-      $select .= '<option value="'. $key .'"'. (is_array($element['#value']) ? (in_array($key, $element['#value']) ? ' selected="selected"' : '') : ($element['#value'] == $key ? ' selected="selected"' : '')) .'>'. check_plain($choice) .'</option>';
+      if (isset($element['#value']) && ($element['#value'] == $key || (is_array($element['#value']) && in_array($key, $element['#value'])))) {
+        $selected = ' selected="selected"';
+      }
+      else {
+        $selected = '';
+      }
+      $select .= '<option value="'. $key .'"'. $selected .'>'. check_plain($choice) .'</option>';
     }
   }
   return theme('form_element', $element['#title'], '<select name="'. $element['#name'] .''. ($element['#multiple'] ? '[]' : '') .'"'. ($element['#multiple'] ? ' multiple="multiple" ' : '') . drupal_attributes($element['#attributes']) .' id="' . $element['#id'] .'" '. $size .'>'. $select .'</select>', $element['#description'], $element['#id'], $element['#required'], form_get_error($element));
