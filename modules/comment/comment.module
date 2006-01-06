@@ -1409,7 +1409,7 @@ function comment_form_submit($form_id, $form_values) {
   if ($op == t('Post comment')) {
     drupal_set_title(t('Post comment'));
     if ($cid = comment_save($form_values)) {
-      drupal_goto("node/$nid#comment-$cid");
+      drupal_goto("node/$nid", NULL, "comment-$cid");
     }
   }
   else if ($_POST['op'] == t('Preview comment')) {
