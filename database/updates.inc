@@ -1281,7 +1281,7 @@ function system_update_162() {
 
 function system_update_163() {
   $ret = array();
-  if ($GLOBALS['db_type'] == 'mysql') {
+  if ($GLOBALS['db_type'] == 'mysql' || $GLOBALS['db_type'] == 'mysqli') {
     $ret[] = update_sql('ALTER TABLE {cache} CHANGE data data LONGBLOB');
   }
   return $ret;
@@ -1397,5 +1397,3 @@ function system_update_166() {
 
   return $ret;
 }
-
-
