@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.579 2006/01/05 23:35:34 unconed Exp $
+// $Id: node.module,v 1.580 2006/01/06 16:21:34 dries Exp $
 
 /**
  * @file
@@ -2167,8 +2167,10 @@ function node_form_alter($form_id, &$form) {
  *   - "view"
  *   - "update"
  *   - "delete"
+ *   - "create"
  * @param $node
- *   The node object (or node array) on which the operation is to be performed.
+ *   The node object (or node array) on which the operation is to be performed, 
+ *   or node type (e.g. 'forum') for "create" operation.
  * @param $uid
  *   The user ID on which the operation is to be performed.
  * @return
@@ -2176,8 +2178,9 @@ function node_form_alter($form_id, &$form) {
  */
 function node_access($op, $node = NULL, $uid = NULL) {
   // Convert the node to an object if necessary:
-  $node = (object)$node;
-
+  if ($op != 'create') {
+    $node = (object)$node;
+  }
   // If the node is in a restricted format, disallow editing.
   if ($op == 'update' && !filter_access($node->format)) {
     return FALSE;
@@ -2200,7 +2203,7 @@ function node_access($op, $node = NULL, $uid = NULL) {
 
   // If the module did not override the access rights, use those set in the
   // node_access table.
-  if ($node->nid && $node->status) {
+  if ($op != 'create' && $node->nid && $node->status) {
     $grants = array();
     foreach (node_access_grants($op, $uid) as $realm => $gids) {
       foreach ($gids as $gid) {
