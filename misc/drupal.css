@@ -148,6 +148,7 @@ tr.odd .form-item, tr.even .form-item {
   font-size: 0.85em;
 }
 .form-item label {
+  display: block;
   font-weight: bold;
 }
 .form-item label.option {
