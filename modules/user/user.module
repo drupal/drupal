@@ -695,7 +695,7 @@ function user_menu($may_cache) {
       'callback' => 'user_admin', 'access' => $admin_access,
       'type' => MENU_LOCAL_TASK);
     $items[] = array('path' => 'admin/settings/user', 'title' => t('users'),
-      'callback' => 'user_configure', 'access' => $admin_access);
+      'callback' => 'user_configure');
 
     //admin access pages
     $items[] = array('path' => 'admin/access', 'title' => t('access control'),
