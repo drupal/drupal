@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.174 2006/01/04 09:17:02 dries Exp $
+// $Id: updates.inc,v 1.175 2006/01/06 03:08:52 unconed Exp $
 
 function system_update_110() {
   $ret = array();
@@ -1281,7 +1281,7 @@ function system_update_162() {
 
 function system_update_163() {
   $ret = array();
-  if ($GLOBALS['db_type'] == 'mysql') {
+  if ($GLOBALS['db_type'] == 'mysql' || $GLOBALS['db_type'] == 'mysqli') {
     $ret[] = update_sql('ALTER TABLE {cache} CHANGE data data LONGBLOB');
   }
   return $ret;
@@ -1397,5 +1397,3 @@ function system_update_166() {
 
   return $ret;
 }
-
-
