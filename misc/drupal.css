@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.129 2006/01/04 20:44:04 unconed Exp $ */
+/* $Id: drupal.css,v 1.130 2006/01/06 07:32:54 dries Exp $ */
 
 /*
 ** HTML elements
@@ -148,6 +148,7 @@ tr.odd .form-item, tr.even .form-item {
   font-size: 0.85em;
 }
 .form-item label {
+  display: block;
   font-weight: bold;
 }
 .form-item label.option {

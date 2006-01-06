@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.271 2006/01/06 07:25:44 dries Exp $
+// $Id: theme.inc,v 1.272 2006/01/06 07:32:54 dries Exp $
 
 /**
  * @file
@@ -595,10 +595,10 @@ function theme_form_element($title, $value, $description = NULL, $id = NULL, $re
 
   if ($title) {
     if ($id) {
-      $output .= ' <label for="'. form_clean_id($id) .'">'. $title .':</label>'. $required ."<br />\n";
+      $output .= ' <label for="'. form_clean_id($id) .'">'. $title .":$required</label>\n";
     }
     else {
-      $output .= ' <label>'. $title .':</label>'. $required ."<br />\n";
+      $output .= ' <label>'. $title .":$required</label>\n";
     }
   }
 
