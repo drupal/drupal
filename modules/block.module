@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.192 2005/12/14 20:08:30 dries Exp $
+// $Id: block.module,v 1.193 2006/01/06 07:25:44 dries Exp $
 
 /**
  * @file
@@ -154,9 +154,7 @@ function block_admin_save($edit) {
 function _block_rehash($order_by = array('weight')) {
   global $theme_key;
 
-  if (empty($theme_key)) {
-    init_theme();
-  }
+  init_theme();
 
   $result = db_query("SELECT * FROM {blocks} WHERE theme = '%s'", $theme_key);
   while ($old_block = db_fetch_object($result)) {

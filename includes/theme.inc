@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.270 2006/01/04 09:32:28 dries Exp $
+// $Id: theme.inc,v 1.271 2006/01/06 07:25:44 dries Exp $
 
 /**
  * @file
@@ -28,11 +28,14 @@ define('MARK_UPDATED', 2);
 /**
  * Initialize the theme system by loading the theme.
  *
- * @return
- *   The name of the currently selected theme.
  */
 function init_theme() {
-  global $user, $custom_theme, $theme_engine, $theme_key;
+  global $theme, $user, $custom_theme, $theme_engine, $theme_key;
+
+  // If $theme is already set, assume the others are set, too, and do nothing
+  if (isset($theme)) {
+    return;
+  }
 
   drupal_bootstrap(DRUPAL_BOOTSTRAP_DATABASE);
   $themes = list_themes();
@@ -78,8 +81,6 @@ function init_theme() {
       call_user_func($theme_engine .'_init', $themes[$theme]);
     }
   }
-
-  return $theme;
 }
 
 /**
@@ -160,9 +161,10 @@ function list_theme_engines($refresh = FALSE) {
 function theme() {
   global $theme, $theme_engine;
 
-  if ($theme === NULL) {
-    // Initialize the enabled theme.
-    $theme = init_theme();
+  // Because theme() is called a lot, calling init_theme() only to have it
+  // smartly return is a noticeable performance hit.   Don't do it.
+  if (!isset($theme)) {
+    init_theme();
   }
 
   $args = func_get_args();
@@ -314,11 +316,11 @@ function theme_get_setting($setting_name, $refresh = FALSE) {
  */
 function theme_add_style($path = '', $media = 'all') {
   static $styles = array();
-  if ($path) {
+  if ($path && !isset($styles["$media:$path"])) {
     $style = new stdClass();
     $style->path = $path;
     $style->media = $media;
-    $styles[] = $style;
+    $styles["$media:$path"] = $style;
   }
   return $styles;
 }
