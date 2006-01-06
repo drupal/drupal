@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.175 2006/01/06 03:08:52 unconed Exp $
+// $Id: updates.inc,v 1.176 2006/01/06 07:12:24 dries Exp $
 
 function system_update_110() {
   $ret = array();
@@ -1349,7 +1349,7 @@ function system_update_166() {
   switch ($GLOBALS['db_type']) {
     case 'mysqli':
     case 'mysql':
-      update_sql("CREATE TABLE client (
+      $ret[] = update_sql("CREATE TABLE {client} (
         cid int(10) unsigned NOT NULL auto_increment,
         link varchar(255) NOT NULL default '',
         name varchar(128) NOT NULL default '',
@@ -1363,7 +1363,7 @@ function system_update_166() {
         changed int(11) NOT NULL default '0',
         PRIMARY KEY (cid)
       ) TYPE=MyISAM");
-      update_sql("CREATE TABLE client_system (
+      $ret[] = update_sql("CREATE TABLE {client_system} (
         cid int(10) NOT NULL default '0',
         name varchar(255) NOT NULL default '',
         type varchar(255) NOT NULL default '',
@@ -1372,7 +1372,7 @@ function system_update_166() {
       break;
 
     case 'pgsql':
-      update_sql("CREATE TABLE client (
+      $ret[] = update_sql("CREATE TABLE {client} (
         cid SERIAL,
         link varchar(255) NOT NULL default '',
         name varchar(128) NOT NULL default '',
@@ -1386,7 +1386,7 @@ function system_update_166() {
         changed integer NOT NULL default '0',
         PRIMARY KEY (cid)
       )");
-      update_sql("CREATE TABLE client_system (
+      $ret[] = update_sql("CREATE TABLE {client_system} (
         cid integer NOT NULL,
         name varchar(255) NOT NULL default '',
         type varchar(255) NOT NULL default '',
