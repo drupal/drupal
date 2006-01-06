@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.547 2006/01/05 10:55:51 dries Exp $
+// $Id: user.module,v 1.548 2006/01/06 07:42:31 dries Exp $
 
 /**
  * @file
@@ -695,7 +695,7 @@ function user_menu($may_cache) {
       'callback' => 'user_admin', 'access' => $admin_access,
       'type' => MENU_LOCAL_TASK);
     $items[] = array('path' => 'admin/settings/user', 'title' => t('users'),
-      'callback' => 'user_configure', 'access' => $admin_access);
+      'callback' => 'user_configure');
 
     //admin access pages
     $items[] = array('path' => 'admin/access', 'title' => t('access control'),

@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.124 2005/12/22 22:58:12 unconed Exp $
+// $Id: profile.module,v 1.125 2006/01/06 07:42:31 dries Exp $
 
 /**
  * @file
@@ -121,19 +121,15 @@ function profile_menu($may_cache) {
       'access' => user_access('access user profiles'),
       'type' => MENU_SUGGESTED_ITEM);
     $items[] = array('path' => 'admin/settings/profile', 'title' => t('profiles'),
-      'callback' => 'profile_admin_overview',
-      'access' => user_access('administer users'));
+      'callback' => 'profile_admin_overview');
     $items[] = array('path' => 'admin/settings/profile/add', 'title' => t('add field'),
       'callback' => 'profile_admin_add',
-      'access' => user_access('administer users'),
       'type' => MENU_CALLBACK);
     $items[] = array('path' => 'admin/settings/profile/edit', 'title' => t('edit field'),
       'callback' => 'profile_admin_edit',
-      'access' => user_access('administer users'),
       'type' => MENU_CALLBACK);
     $items[] = array('path' => 'admin/settings/profile/delete', 'title' => t('delete field'),
       'callback' => 'profile_admin_delete',
-      'access' => user_access('administer users'),
       'type' => MENU_CALLBACK);
   }
 
