@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.412 2006/01/05 14:35:55 dries Exp $
+// $Id: comment.module,v 1.413 2006/01/06 01:14:17 unconed Exp $
 
 /**
  * @file
@@ -1409,7 +1409,7 @@ function comment_form_submit($form_id, $form_values) {
   if ($op == t('Post comment')) {
     drupal_set_title(t('Post comment'));
     if ($cid = comment_save($form_values)) {
-      drupal_goto("node/$nid#comment-$cid");
+      drupal_goto("node/$nid", NULL, "comment-$cid");
     }
   }
   else if ($_POST['op'] == t('Preview comment')) {
