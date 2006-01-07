@@ -1,5 +1,5 @@
 <?php
-// $Id: archive.module,v 1.84 2005/11/01 10:17:34 dries Exp $
+// $Id: archive.module,v 1.85 2006/01/07 19:50:28 dries Exp $
 
 /**
  * @file
@@ -240,7 +240,7 @@ function archive_page($year = 0, $month = 0, $day = 0) {
   $date_end = mktime(0, 0, 0, $month, $day + 1, $year) - $user->timezone;
 
   // Prepare the values of the form fields.
-  $years = drupal_map_assoc(range(2000, 2005));
+  $years = drupal_map_assoc(range(2000, 2010));
   $months = array(1 => t('January'), 2 => t('February'), 3 => t('March'), 4 => t('April'), 5 => t('May'), 6 => t('June'), 7 => t('July'), 8 => t('August'), 9 => t('September'), 10 => t('October'), 11 => t('November'), 12 => t('December'));
   $days = drupal_map_assoc(range(0, 31));
 
