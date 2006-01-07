@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.212 2005/11/13 02:40:18 unconed Exp $
+// $Id: statistics.module,v 1.213 2006/01/07 05:39:33 unconed Exp $
 
 /**
  * @file
@@ -29,7 +29,6 @@ function statistics_help($section) {
 <li>Enable access log allows you to turn the access log on and off. This log is used to store data about every page accessed, such as the remote host\'s IP address, where they came from (referrer), what node they\'ve viewed, and their user name. Enabling the log adds one database call per page displayed by Drupal.</li>
 <li>Discard access logs older than allows you to configure how long an access log entry is saved, after which time it is deleted from the database table. To use this you need to run <em>cron.php</em></li>
 <li>Enable node view counter allows you to turn on and off the node-counting functionality of this module. If it is turned on, an extra database query is added for each node displayed, which increments a counter.</li>
-<li>Display node view counters allows you to globally disable the displaying of node view counters.</li>
 </ul>
 ');
       $output .= t('<p>You can</p>
@@ -85,7 +84,7 @@ function statistics_exit() {
  * Implementation of hook_perm().
  */
 function statistics_perm() {
-  return array('access statistics');
+  return array('access statistics', 'view node access counter');
 }
 
 /**
@@ -93,15 +92,15 @@ function statistics_perm() {
  */
 function statistics_link($type, $node = 0, $main = 0) {
   global $id;
-
   $links = array();
 
-  if ($type != 'comment' && variable_get('statistics_display_counter', 0)) {
+  if ($type != 'comment' && user_access('view node access counter')) {
     $statistics = statistics_get($node->nid);
     if ($statistics) {
       $links[] = format_plural($statistics['totalcount'], '1 read', '%count reads');
     }
   }
+
   return $links;
 }
 
@@ -337,7 +336,6 @@ function statistics_settings() {
   // count content views settings
   $form['content'] = array('#type' => 'fieldset', '#title' => t('Content viewing counter settings'));
   $form['content']['statistics_count_content_views'] = array('#type' => 'radios', '#title' => t('Count content views'), '#default_value' =>  variable_get('statistics_count_content_views', 0), '#options' => $options, '#description' => t('Increment a counter each time content is viewed.'));
-  $form['content']['statistics_display_counter'] = array('#type' => 'radios', '#title' => t('Display counter values'), '#default_value' =>  variable_get('statistics_display_counter', 0), '#options' => $options, '#description' => t('Display how many times given content has been viewed.'));
 
   return $form;
 }
