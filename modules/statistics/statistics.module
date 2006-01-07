@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.213 2006/01/07 05:39:33 unconed Exp $
+// $Id: statistics.module,v 1.214 2006/01/07 10:12:32 dries Exp $
 
 /**
  * @file
@@ -84,7 +84,7 @@ function statistics_exit() {
  * Implementation of hook_perm().
  */
 function statistics_perm() {
-  return array('access statistics', 'view node access counter');
+  return array('access statistics', 'view post access counter');
 }
 
 /**
@@ -94,7 +94,7 @@ function statistics_link($type, $node = 0, $main = 0) {
   global $id;
   $links = array();
 
-  if ($type != 'comment' && user_access('view node access counter')) {
+  if ($type != 'comment' && user_access('view post access counter')) {
     $statistics = statistics_get($node->nid);
     if ($statistics) {
       $links[] = format_plural($statistics['totalcount'], '1 read', '%count reads');
