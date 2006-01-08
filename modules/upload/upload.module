@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.71 2006/01/08 12:12:20 dries Exp $
+// $Id: upload.module,v 1.72 2006/01/08 12:20:55 dries Exp $
 
 /**
  * @file
@@ -348,7 +348,7 @@ function upload_nodeapi(&$node, $op, $arg) {
                   'type' => $file->filemime)));
         }
       }
-      break;
+      return array();
   }
 
   return $output;
