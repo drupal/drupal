@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.176 2006/01/06 07:12:24 dries Exp $
+// $Id: updates.inc,v 1.177 2006/01/08 12:49:51 dries Exp $
 
 function system_update_110() {
   $ret = array();
@@ -1392,6 +1392,22 @@ function system_update_166() {
         type varchar(255) NOT NULL default '',
         PRIMARY KEY (cid,name)
       )");
+      break;
+  }
+
+  return $ret;
+}
+
+function system_update_167() {
+  $ret = array();
+  switch ($GLOBALS['db_type']) {
+    case 'pgsql':
+      db_add_column($ret, 'system', 'weight', 'smallint', array('not null' => TRUE, 'default' => 0));
+      $ret[] = update_sql('CREATE INDEX {system}_weight_idx ON {system} (weight)');
+      break;
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql("ALTER TABLE {system} ADD weight tinyint(3) unsigned default '0' NOT NULL, ADD KEY (weight)");
       break;
   }
 

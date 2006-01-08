@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.580 2006/01/06 16:21:34 dries Exp $
+// $Id: node.module,v 1.581 2006/01/08 12:49:51 dries Exp $
 
 /**
  * @file
@@ -2169,7 +2169,7 @@ function node_form_alter($form_id, &$form) {
  *   - "delete"
  *   - "create"
  * @param $node
- *   The node object (or node array) on which the operation is to be performed, 
+ *   The node object (or node array) on which the operation is to be performed,
  *   or node type (e.g. 'forum') for "create" operation.
  * @param $uid
  *   The user ID on which the operation is to be performed.
