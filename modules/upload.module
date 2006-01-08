@@ -348,7 +348,7 @@ function upload_nodeapi(&$node, $op, $arg) {
                   'type' => $file->filemime)));
         }
       }
-      break;
+      return array();
   }
 
   return $output;
