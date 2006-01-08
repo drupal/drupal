@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.548 2006/01/06 07:42:31 dries Exp $
+// $Id: user.module,v 1.549 2006/01/08 16:32:08 dries Exp $
 
 /**
  * @file
@@ -1363,58 +1363,65 @@ function user_configure_settings() {
  * Menu callback: check an access rule
  */
 function user_admin_access_check() {
-  $op = isset($_POST['op']) ? $_POST['op'] : '';
-  $edit = isset($_POST['edit']) ? $_POST['edit'] : '';
-
-  if (!empty($op)) {
-    if (!empty($edit['user']['test'])) {
-      if (drupal_is_denied('user', $edit['user']['test'])) {
-        drupal_set_message(t('The username %name is not allowed.', array('%name' => theme('placeholder', $edit['user']['test']))));
-      }
-      else {
-        drupal_set_message(t('The username %name is allowed.', array('%name' => theme('placeholder', $edit['user']['test']))));
-      }
-    }
-    if (!empty($edit['mail']['test'])) {
-      if (drupal_is_denied('mail', $edit['mail']['test'])) {
-        drupal_set_message(t('The e-mail address %mail is not allowed.', array('%mail' => theme('placeholder', $edit['mail']['test']))));
-      }
-      else {
-        drupal_set_message(t('The e-mail address %mail is allowed.', array('%mail' => theme('placeholder', $edit['mail']['test']))));
-      }
-    }
-    if (!empty($edit['host']['test'])) {
-      if (drupal_is_denied('host', $edit['host']['test'])) {
-        drupal_set_message(t('The hostname %host is not allowed.', array('%host' => theme('placeholder', $edit['host']['test']))));
-      }
-      else {
-        drupal_set_message(t('The hostname %host is allowed.', array('%host' => theme('placeholder', $edit['host']['test']))));
-      }
-    }
-  }
-
   $form['user'] = array('#type' => 'fieldset', '#title' => t('Username'));
   $form['user']['test'] = array('#type' => 'textfield', '#title' => '', '#description' => t('Enter a username to check if it will be denied or allowed.'), '#size' => 30, '#maxlength' => 64);
   $form['user']['type'] = array('#type' => 'hidden', '#value' => 'user');
   $form['user']['submit'] = array('#type' => 'submit', '#value' => t('Check username'));
-  $output .= drupal_get_form('check_user', $form);
+  $output .= drupal_get_form('check_user', $form, 'user_admin_access_check');
   unset($form); // prevent endless loop?
 
   $form['mail'] = array('#type' => 'fieldset', '#title' => t('E-mail'));
   $form['mail']['test'] = array('#type' => 'textfield', '#title' => '', '#description' => t('Enter an e-mail address to check if it will be denied or allowed.'), '#size' => 30, '#maxlength' => 64);
   $form['mail']['type'] = array('#type' => 'hidden', '#value' => 'mail');
   $form['mail']['submit'] = array('#type' => 'submit', '#value' => t('Check e-mail'));
-  $output .= drupal_get_form('check_mail', $form);
+  $output .= drupal_get_form('check_mail', $form, 'user_admin_access_check');
   unset($form); // prevent endless loop?
 
   $form['host'] = array('#type' => 'fieldset', '#title' => t('Hostname'));
   $form['host']['test'] = array('#type' => 'textfield', '#title' => '', '#description' => t('Enter a hostname or IP address to check if it will be denied or allowed.'), '#size' => 30, '#maxlength' => 64);
   $form['host']['type'] = array('#type' => 'hidden', '#value' => 'host');
   $form['host']['submit'] = array('#type' => 'submit', '#value' => t('Check hostname'));
-  $output .= drupal_get_form('check_host', $form);
+  $output .= drupal_get_form('check_host', $form, 'user_admin_access_check');
   unset($form); // prevent endless loop?
 
   return $output;
+}
+
+function user_admin_access_check_validate($form_id, $edit) {
+  if (empty($edit['test'])) {
+    form_set_error($edit['type'], t('No value entered. Please enter a test string and try again.'));
+  }
+}
+
+function user_admin_access_check_submit($form_id, $edit) {
+  switch ($edit['type']) {
+    case 'user':
+      if (drupal_is_denied('user', $edit['test'])) {
+        drupal_set_message(t('The username %name is not allowed.', array('%name' => theme('placeholder', $edit['test']))));
+      }
+      else {
+        drupal_set_message(t('The username %name is allowed.', array('%name' => theme('placeholder', $edit['test']))));
+      }
+      break;
+    case 'mail':
+      if (drupal_is_denied('mail', $edit['test'])) {
+        drupal_set_message(t('The e-mail address %mail is not allowed.', array('%mail' => theme('placeholder', $edit['test']))));
+      }
+      else {
+        drupal_set_message(t('The e-mail address %mail is allowed.', array('%mail' => theme('placeholder', $edit['test']))));
+      }
+      break;
+    case 'host':
+      if (drupal_is_denied('host', $edit['test'])) {
+        drupal_set_message(t('The hostname %host is not allowed.', array('%host' => theme('placeholder', $edit['test']))));
+      }
+      else {
+        drupal_set_message(t('The hostname %host is allowed.', array('%host' => theme('placeholder', $edit['test']))));
+      }
+      break;
+    default:
+      break;
+  }
 }
 
 /**
@@ -1772,7 +1779,7 @@ function user_configure() {
   $form['registration']['user_registration_help'] = array('#type' => 'textarea', '#title' => t('User registration guidelines'), '#default_value' => variable_get('user_registration_help', ''), '#description' => t('This text is displayed at the top of the user registration form.  It\'s useful for helping or instructing your users.'));
 
   // User e-mail settings.
-  $form['email'] = array('#type' => 'fieldset', '#title' => t('User email settings'));
+  $form['email'] = array('#type' => 'fieldset', '#title' => t('User e-mail settings'));
   $form['email']['user_mail_welcome_subject'] = array('#type' => 'textfield', '#title' => t('Subject of welcome e-mail'), '#default_value' => _user_mail_text('welcome_subject'), '#maxlength' => 180, '#description' => t('Customize the subject of your welcome e-mail, which is sent to new members upon registering.') .' '. t('Available variables are:') .' %username, %site, %password, %uri, %uri_brief, %mailto, %date, %login_uri, %edit_uri, %login_url.');
   $form['email']['user_mail_welcome_body'] = array('#type' => 'textarea', '#title' => t('Body of welcome e-mail'), '#default_value' => _user_mail_text('welcome_body'), '#rows' => 15, '#description' => t('Customize the body of the welcome e-mail, which is sent to new members upon registering.') .' '. t('Available variables are:') .' %username, %site, %password, %uri, %uri_brief, %mailto, %login_uri, %edit_uri, %login_url.');
   $form['email']['user_mail_approval_subject'] = array('#type' => 'textfield', '#title' => t('Subject of welcome e-mail (awaiting admin approval)'), '#default_value' => _user_mail_text('approval_subject'), '#maxlength' => 180, '#description' => t('Customize the subject of your awaiting approval welcome e-mail, which is sent to new members upon registering.') .' '. t('Available variables are:') .' %username, %site, %password, %uri, %uri_brief, %mailto, %date, %login_uri, %edit_uri, %login_url.');
@@ -1849,7 +1856,7 @@ function user_help($section) {
     case 'admin/user/account/create':
       return t('<p>This web page allows the administrators to register a new users by hand. Note that you cannot have a user where either the e-mail address or the username match another user in the system.</p>');
     case strstr($section, 'admin/access/rules'):
-      return t('<p>Set up username and e-mail address access rules for new accounts. If a username or email address for a new account matches any deny rule, but not an allow rule, then the new account will not be allowed to be created. A host rule is effective for every page view, not just registrations.</p>');
+      return t('<p>Set up username and e-mail address access rules for new <em>and</em> existing accounts (currently logged in accounts will not be logged out). If a username or e-mail address for an account matches any deny rule, but not an allow rule, then the account will not be allowed to be created or to log in. A host rule is effective for every page view, not just registrations.</p>');
     case 'admin/access':
       return t('<p>Permissions let you control what users can do on your site.  Each user role (defined on the <a href="%role">user roles page</a>) has its own set of permissions. For example, you could give users classified as "Administrators" permission to "administer nodes" but deny this power to ordinary, "authenticated" users. You can use permissions to reveal new features to privileged users (those with subscriptions, for example). Permissions also allow trusted users to share the administrative burden of running a busy site.</p>', array('%role' => url('admin/access/roles')));
     case 'admin/access/roles':
