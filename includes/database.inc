@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.49 2005/12/14 20:06:41 dries Exp $
+// $Id: database.inc,v 1.50 2006/01/08 12:51:37 dries Exp $
 
 /**
  * @file
@@ -255,7 +255,7 @@ function _db_rewrite_sql($query = '', $primary_table = 'n', $primary_field = 'ni
 }
 
 /**
- * Rewrites node queries.
+ * Rewrites node, taxonomy and comment queries. Use it for listing queries.
  *
  * @param $query
  *   Query to be rewritten.
@@ -278,7 +278,7 @@ function db_rewrite_sql($query, $primary_table = 'n', $primary_field = 'nid',  $
   }
 
   if (!empty($join)) {
-    $query = preg_replace('|FROM[^[:upper:]/,_]+|','\0 '. $join .' ', $query);
+    $query = preg_replace('/LEFT |RIGHT |INNER |WHERE|GROUP|ORDER|$/', $join .' \0', $query, 1);
   }
 
   if (!empty($where)) {
