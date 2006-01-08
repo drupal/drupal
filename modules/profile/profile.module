@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.125 2006/01/06 07:42:31 dries Exp $
+// $Id: profile.module,v 1.126 2006/01/08 12:06:13 dries Exp $
 
 /**
  * @file
@@ -551,14 +551,18 @@ function profile_admin_delete($fid) {
   $field = db_fetch_object(db_query("SELECT title FROM {profile_fields} WHERE fid = %d", $fid));
   if ($_POST['edit']['confirm']) {
     db_query('DELETE FROM {profile_fields} WHERE fid = %d', $fid);
+    db_query('DELETE FROM {profile_values} WHERE fid = %d', $fid);
     cache_clear_all();
     drupal_set_message(t('The field %field has been deleted.', array('%field' => theme('placeholder', $field->title))));
     drupal_goto('admin/settings/profile');
   }
   else {
-    return confirm_form('profile_confirm_delete', $form, t('Do you want to remove the field %field?',
-                    array('%field' => $field->title)),
-                  'admin/settings/profile', '', t('Delete'), t('Cancel'));
+    return confirm_form('profile_confirm_delete', $form,
+                        t('Are you sure you want to delete the field %field?', array('%field' => theme('placeholder', $field->title))),
+                        'admin/settings/profile',
+                        t('This action cannot be undone. If users have entered values into this field in their profile, these entries will also be deleted. If you want to keep the user-entered data, instead of deleting the field you may wish to <a href="%edit-field">edit this field</a> and change it to a \'hidden profile field\' so that it may only be accessed by administrators.', array('%edit-field' => url('admin/settings/profile/edit/' . $fid))),
+                        t('Delete'),
+                        t('Cancel'));
   }
 }
 
