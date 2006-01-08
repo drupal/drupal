@@ -861,12 +861,14 @@ INSERT INTO system (filename, name, type, description, status, throttle, bootstr
 INSERT INTO system (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES ('themes/bluemarine/page.tpl.php', 'bluemarine', 'theme', 'themes/engines/phptemplate/phptemplate.engine', 1, 0, 0, 0);
 
 INSERT INTO users(uid,name,mail) VALUES(0,'','');
-INSERT INTO users_roles(uid,rid) VALUES(0, 1);
 
 INSERT INTO role (name) VALUES ('anonymous user');
-INSERT INTO permission VALUES (1,'access content',0);
-
 INSERT INTO role (name) VALUES ('authenticated user');
+
+INSERT INTO users_roles(uid,rid) VALUES(0, 1);
+INSERT INTO users_roles(uid,rid) VALUES(1, 2);
+
+INSERT INTO permission VALUES (1,'access content',0);
 INSERT INTO permission VALUES (2,'access comments, access content, post comments, post comments without approval',0);
 
 INSERT INTO variable(name,value) VALUES('theme_default', 's:10:"bluemarine";');
