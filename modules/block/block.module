@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.193 2006/01/06 07:25:44 dries Exp $
+// $Id: block.module,v 1.194 2006/01/08 03:33:31 unconed Exp $
 
 /**
  * @file
@@ -53,7 +53,7 @@ function block_help($section) {
  * Implementation of hook_perm().
  */
 function block_perm() {
-  return array('administer blocks');
+  return array('administer blocks', 'use PHP for block visibility');
 }
 
 /**
@@ -357,18 +357,31 @@ function block_admin_configure($module = NULL, $delta = 0) {
     '#collapsible' => true,
     '#weight' => 0,
   );
-  $form['page_vis_settings']['visibility'] = array(
-    '#type' => 'radios',
-    '#title' => t('Show block on specific pages'),
-    '#options' => array(t('Show on every page except the listed pages.'), t('Show on only the listed pages.'), t('Show if the following PHP code returns <code>TRUE</code> (PHP-mode, experts only).')),
-    '#default_value' => $edit['visibility'],
-  );
-  $form['page_vis_settings']['pages'] = array(
-    '#type' => 'textarea',
-    '#title' => t('Pages'),
-    '#default_value' => $edit['pages'],
-    '#description' => t("Enter one page per line as Drupal paths. The '*' character is a wildcard. Example paths are '%blog' for the blog page and %blog-wildcard for every personal blog. %front is the front page. If the PHP-mode is chosen, enter PHP code between %php.  Note that executing incorrect PHP-code can break your Drupal site.", array('%blog' => theme('placeholder', 'blog'), '%blog-wildcard' =>  theme('placeholder', 'blog/*'), '%front' => theme('placeholder', '<front>'), '%php' => theme('placeholder', '<?php ?>'))),
-  );
+  $access = user_access('Use PHP for block visibility');
+
+  if ($edit['visibility'] == 2 && !$access) {
+    $form['page_vis_settings']['visibility'] = array('#type' => 'value', '#value' => 2);
+    $form['page_vis_settings']['pages'] = array('#type' => 'value', '#value' => $edit['pages']);
+  }
+  else {
+    $options = array(t('Show on every page except the listed pages.'), t('Show on only the listed pages.'));
+    if ($access) {
+      $options[] = t('Show if the following PHP code returns <code>TRUE</code> (PHP-mode, experts only).');
+    }
+    $form['page_vis_settings']['visibility'] = array(
+      '#type' => 'radios',
+      '#title' => t('Show block on specific pages'),
+      '#options' => $options,
+      '#default_value' => $edit['visibility'],
+    );
+    $form['page_vis_settings']['pages'] = array(
+      '#type' => 'textarea',
+      '#title' => t('Pages'),
+      '#default_value' => $edit['pages'],
+      '#description' => t("Enter one page per line as Drupal paths. The '*' character is a wildcard. Example paths are '%blog' for the blog page and %blog-wildcard for every personal blog. %front is the front page. If the PHP-mode is chosen, enter PHP code between %php.  Note that executing incorrect PHP-code can break your Drupal site.", array('%blog' => theme('placeholder', 'blog'), '%blog-wildcard' =>  theme('placeholder', 'blog/*'), '%front' => theme('placeholder', '<front>'), '%php' => theme('placeholder', '<?php ?>'))),
+    );
+  }
+
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save block'),
