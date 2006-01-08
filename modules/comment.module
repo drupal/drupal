@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.413 2006/01/06 01:14:17 unconed Exp $
+// $Id: comment.module,v 1.414 2006/01/08 00:29:37 unconed Exp $
 
 /**
  * @file
@@ -1062,7 +1062,14 @@ function comment_admin_overview($type = 'new') {
 
   // load the comments that we want to display
   $status = ($type == 'approval') ? COMMENT_NOT_PUBLISHED : COMMENT_PUBLISHED;
-  $result = pager_query('SELECT c.subject, c.nid, c.cid, c.comment, c.timestamp, c.status, c.name, c.homepage, u.name AS registered_name, u.uid FROM {comments} c INNER JOIN {users} u ON u.uid = c.uid WHERE c.status = '. $status);
+  $form['header'] = array('#type' => 'value', '#value' => array(
+    NULL,
+    array('data' => t('Subject'), 'field' => 'subject'),
+    array('data' => t('Author'), 'field' => 'name'),
+    array('data' => t('Time'), 'field' => 'timestamp', 'sort' => 'desc'),
+    array('data' => t('Operations'))
+  ));
+  $result = pager_query('SELECT c.subject, c.nid, c.cid, c.comment, c.timestamp, c.status, c.name, c.homepage, u.name AS registered_name, u.uid FROM {comments} c INNER JOIN {users} u ON u.uid = c.uid WHERE c.status = %d'. tablesort_sql($form['header']['#value']), 50, 0, NULL, $status);
 
   // build a table listing the appropriate comments
   $destination = drupal_get_destination();
@@ -1119,8 +1126,6 @@ function comment_admin_overview_submit($form_id, $edit) {
 }
 
 function theme_comment_admin_overview($form) {
-  $header = array(NULL, t('Subject'), t('Author'), t('Time'), t('Operations'));
-
   $output = form_render($form['options']);
   if (isset($form['subject']) && is_array($form['subject'])) {
     foreach (element_children($form['subject']) as $key) {
@@ -1137,7 +1142,7 @@ function theme_comment_admin_overview($form) {
     $rows[] = array(array('data' => t('No comments available.'), 'colspan' => '6'));
   }
 
-  $output .= theme('table', $header, $rows);
+  $output .= theme('table', $form['header']['#value'], $rows);
   if ($form['pager']['#value']) {
     $output .= form_render($form['pager']);
   }
