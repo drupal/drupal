@@ -101,7 +101,7 @@ function tracker_page($uid = 0) {
 
       if ($new = comment_num_new($node->nid)) {
         $comments .= '<br />';
-        $comments .= l(t('%num new', array('%num' => $new)), "node/$node->nid", NULL, NULL, 'new');
+        $comments .= l(format_plural($new, '1 new', '%num new'), "node/$node->nid", NULL, NULL, 'new');
       }
     }
 
