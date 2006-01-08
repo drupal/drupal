@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.70 2006/01/05 21:03:31 dries Exp $
+// $Id: upload.module,v 1.71 2006/01/08 12:12:20 dries Exp $
 
 /**
  * @file
@@ -153,8 +153,8 @@ function upload_form_alter($form_id, &$form) {
       );
     }
 
-    if ($form['type']['#value'] .'_node_form' == $form_id && variable_get("upload_$node->type", 1) == 1 && user_access('upload files')) {
-      $node = $form['#node'];
+    $node = $form['#node'];
+    if ($form['type']['#value'] .'_node_form' == $form_id && variable_get("upload_$node->type", TRUE) && user_access('upload files')) {
       drupal_add_js('misc/progress.js');
       drupal_add_js('misc/upload.js');
       // Clears our files in session when you enter the edit view the first time.
