@@ -680,8 +680,10 @@ CREATE TABLE system (
   throttle smallint NOT NULL default '0',
   bootstrap integer NOT NULL default '0',
   schema_version smallint NOT NULL default 0,
+  weight smallint NOT NULL default 0,
   PRIMARY KEY (filename)
 );
+CREATE INDEX system_weight_idx ON system(weight);
 
 --
 -- Table structure for term_data

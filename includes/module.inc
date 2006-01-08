@@ -50,10 +50,10 @@ function module_list($refresh = FALSE, $bootstrap = TRUE) {
   if (!$list) {
     $list = array('filter' => 'filter', 'system' => 'system', 'user' => 'user', 'watchdog' => 'watchdog');
     if ($bootstrap) {
-      $result = db_query("SELECT name, filename, throttle, bootstrap FROM {system} WHERE type = 'module' AND status = 1 AND bootstrap = 1");
+      $result = db_query("SELECT name, filename, throttle, bootstrap FROM {system} WHERE type = 'module' AND status = 1 AND bootstrap = 1 ORDER BY weight ASC, filename ASC");
     }
     else {
-      $result = db_query("SELECT name, filename, throttle, bootstrap FROM {system} WHERE type = 'module' AND status = 1");
+      $result = db_query("SELECT name, filename, throttle, bootstrap FROM {system} WHERE type = 'module' AND status = 1 ORDER BY weight ASC, filename ASC");
     }
     while ($module = db_fetch_object($result)) {
       if (file_exists($module->filename)) {
@@ -67,7 +67,6 @@ function module_list($refresh = FALSE, $bootstrap = TRUE) {
         }
       }
     }
-    asort($list);
   }
   return $list;
 }
