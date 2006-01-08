@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.169 2006/01/04 09:27:51 dries Exp $
+// $Id: update.php,v 1.170 2006/01/08 16:15:53 dries Exp $
 
 /**
  * @file
@@ -513,7 +513,27 @@ function update_access_denied_page() {
 </ol>';
 }
 
+// This code may be removed later.  It is part of the Drupal 4.5 to 4.7 migration.
+function update_fix_system_table() {
+  drupal_bootstrap(DRUPAL_BOOTSTRAP_DATABASE);
+  $row = db_fetch_object(db_query_range('SELECT * FROM {system}', 0, 1));
+  if (!isset($row->weight)) {
+    $ret = array();
+    switch ($GLOBALS['db_type']) {
+      case 'pgsql':
+        db_add_column($ret, 'system', 'weight', 'smallint', array('not null' => TRUE, 'default' => 0));
+        $ret[] = update_sql('CREATE INDEX {system}_weight_idx ON {system} (weight)');
+        break;
+      case 'mysql':
+      case 'mysqli':
+        $ret[] = update_sql("ALTER TABLE {system} ADD weight tinyint(3) unsigned default '0' NOT NULL, ADD KEY (weight)");
+        break;
+    }
+  }
+}
+
 include_once './includes/bootstrap.inc';
+update_fix_system_table();
 drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 drupal_maintenance_theme();
 
