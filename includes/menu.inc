@@ -337,7 +337,12 @@ function menu_execute_active_handler() {
   while ($path && !isset($menu['callbacks'][$path])) {
     $path = substr($path, 0, strrpos($path, '/'));
   }
+
   if (!isset($menu['callbacks'][$path])) {
+    return MENU_NOT_FOUND;
+  }
+
+  if (!function_exists($menu['callbacks'][$path]['callback'])) {
     return MENU_NOT_FOUND;
   }
 
@@ -352,7 +357,7 @@ function menu_execute_active_handler() {
     $arguments = array_merge($arguments, explode('/', $arg));
   }
 
-  return function_exists($menu['callbacks'][$path]['callback']) ? call_user_func_array($menu['callbacks'][$path]['callback'], $arguments) : '';
+  return call_user_func_array($menu['callbacks'][$path]['callback'], $arguments);
 }
 
 /**
