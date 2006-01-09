@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.549 2006/01/08 16:32:08 dries Exp $
+// $Id: user.module,v 1.550 2006/01/09 14:14:39 dries Exp $
 
 /**
  * @file
@@ -1206,9 +1206,6 @@ function _user_edit_validate($uid, &$edit) {
     else if (drupal_is_denied('user', $edit['name'])) {
       form_set_error('name', t('The name %name has been denied access.', array('%name' => theme('placeholder', $edit['name']))));
     }
-  }
-  elseif ($edit['name'] != $user->name) {
-    form_set_error('name', t('You are not allowed to change this username.'));
   }
 
   // Validate the e-mail address:
