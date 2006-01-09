@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.299 2005/12/31 13:04:40 dries Exp $
+// $Id: forum.module,v 1.300 2006/01/09 10:12:30 dries Exp $
 
 /**
  * @file
@@ -795,8 +795,6 @@ function _forum_new($tid) {
  * Menu callback; prints a forum listing.
  */
 function forum_page($tid = 0) {
-  global $user;
-
   if (module_exist('taxonomy') && module_exist('comment')) {
     $forum_per_page = variable_get('forum_per_page', 25);
     $sortby = variable_get('forum_order', 1);
