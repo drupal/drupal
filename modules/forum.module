@@ -795,8 +795,6 @@ function _forum_new($tid) {
  * Menu callback; prints a forum listing.
  */
 function forum_page($tid = 0) {
-  global $user;
-
   if (module_exist('taxonomy') && module_exist('comment')) {
     $forum_per_page = variable_get('forum_per_page', 25);
     $sortby = variable_get('forum_order', 1);
