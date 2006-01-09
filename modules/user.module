@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.551 2006/01/09 18:27:26 dries Exp $
+// $Id: user.module,v 1.552 2006/01/09 19:18:46 dries Exp $
 
 /**
  * @file
@@ -40,7 +40,7 @@ function user_external_load($authname) {
  *   user, such as user name or email address.
  *
  * @return
- *   A fully-loaded $user object.
+ *   A fully-loaded $user object upon successful user load or FALSE if user cannot be loaded.
  */
 function user_load($array = array()) {
   // Dynamically compose a SQL query:
@@ -75,7 +75,7 @@ function user_load($array = array()) {
     user_module_invoke('load', $array, $user);
   }
   else {
-    $user = new StdClass();
+    $user = FALSE;
   }
 
   return $user;
@@ -747,27 +747,32 @@ function user_menu($may_cache) {
   }
   else {
     if (arg(0) == 'user' && is_numeric(arg(1))) {
+      $user_exists = user_load(array('uid' => arg(1), 'status' => 1));
+
       $items[] = array('path' => 'user/'. arg(1), 'title' => t('user'),
         'type' => MENU_CALLBACK, 'callback' => 'user_view',
         'callback arguments' => arg(1), 'access' => $view_access);
-      $items[] = array('path' => 'user/'. arg(1) .'/view', 'title' => t('view'),
-        'access' => $view_access, 'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
-      $items[] = array('path' => 'user/'. arg(1) .'/edit', 'title' => t('edit'),
-        'callback' => 'user_edit', 'access' => $admin_access || $user->uid == arg(1),
-        'type' => MENU_LOCAL_TASK);
-      $items[] = array('path' => 'user/'. arg(1) .'/delete', 'title' => t('delete'),
-        'callback' => 'user_edit', 'access' => $admin_access,
-        'type' => MENU_CALLBACK);
 
-      if (arg(2) == 'edit') {
-        if (($categories = _user_categories()) && (count($categories) > 1)) {
-          foreach ($categories as $key => $category) {
-            $items[] = array(
-              'path' => 'user/'. arg(1) .'/edit/'. $category['name'],
-              'title' => $category['title'],
-              'type' => $category['name'] == 'account' ? MENU_DEFAULT_LOCAL_TASK : MENU_LOCAL_TASK,
-              'weight' => $category['weight'],
-              'access' => ($admin_access || $user->uid == arg(1)));
+      if ($user_exists !== FALSE) {
+        $items[] = array('path' => 'user/'. arg(1) .'/view', 'title' => t('view'),
+          'access' => $view_access, 'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
+        $items[] = array('path' => 'user/'. arg(1) .'/edit', 'title' => t('edit'),
+          'callback' => 'user_edit', 'access' => $admin_access || $user->uid == arg(1),
+          'type' => MENU_LOCAL_TASK);
+        $items[] = array('path' => 'user/'. arg(1) .'/delete', 'title' => t('delete'),
+          'callback' => 'user_edit', 'access' => $admin_access,
+          'type' => MENU_CALLBACK);
+
+        if (arg(2) == 'edit') {
+          if (($categories = _user_categories()) && (count($categories) > 1)) {
+            foreach ($categories as $key => $category) {
+              $items[] = array(
+                'path' => 'user/'. arg(1) .'/edit/'. $category['name'],
+                'title' => $category['title'],
+                'type' => $category['name'] == 'account' ? MENU_DEFAULT_LOCAL_TASK : MENU_LOCAL_TASK,
+                'weight' => $category['weight'],
+                'access' => ($admin_access || $user->uid == arg(1)));
+            }
           }
         }
       }
@@ -1258,6 +1263,7 @@ function user_edit($category = 'account') {
       db_query('DELETE FROM {sessions} WHERE uid = %d', $account->uid);
       db_query('DELETE FROM {users_roles} WHERE uid = %d', $account->uid);
       db_query('DELETE FROM {authmap} WHERE uid = %d', $account->uid);
+      watchdog('user', t('Deleted user: %name %email.', array('%name' => theme('placeholder', $account->name), '%email' => theme('placeholder', '<'. $account->mail .'>'))), WATCHDOG_NOTICE);
       drupal_set_message(t('The account has been deleted.'));
       module_invoke_all('user', 'delete', $edit, $account);
       drupal_goto('admin/user');
@@ -1267,8 +1273,12 @@ function user_edit($category = 'account') {
     }
   }
   else if ($_POST['op'] == t('Delete')) {
+    if ($_REQUEST['destination']) {
+      $destination = drupal_get_destination();
+      unset($_REQUEST['destination']);
+    }
     // Note: we redirect from user/uid/edit to user/uid/delete to make the tabs disappear.
-    drupal_goto("user/$account->uid/delete");
+    drupal_goto("user/$account->uid/delete", $destination);
   }
 
   $form = _user_forms($edit, $account, $category);
@@ -1757,13 +1767,12 @@ function user_admin_account() {
   $result = pager_query($sql, 50);
 
   $status = array(t('blocked'), t('active'));
-  $destination = drupal_get_destination();
   while ($account = db_fetch_object($result)) {
     $rows[] = array(theme('username', $account),
                     $status[$account->status],
                     format_interval(time() - $account->created),
                     $account->access ? t('%time ago', array('%time' => format_interval(time() - $account->access))) : t('never'),
-                    l(t('edit'), "user/$account->uid/edit", array(), $destination));
+                    l(t('edit'), "user/$account->uid/edit", array()));
   }
 
   $output = theme('table', $header, $rows);
