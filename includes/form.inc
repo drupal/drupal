@@ -916,7 +916,7 @@ function theme_weight($element) {
  * provided by file.inc.
  */
 function theme_file($element) {
-  return theme('form_element', $element['#title'], '<input type="file" class="'. _form_get_class('form-file', $element['#required'], form_get_error($element)) .'" name="'. $element['#name'] .'" id="'. form_clean_id($element['#id']) .'" size="'. $element['#size'] ."\" />\n", $element['#description'], $element['#id'], $element['#required'], form_get_error($element));
+  return theme('form_element', $element['#title'], '<input type="file" class="'. _form_get_class('form-file', $element['#required'], form_get_error($element)) .'" name="'. $element['#name'] .'"'. ($element['#attributes'] ? ' '. drupal_attributes($element['#attributes']) : '') .' id="'. form_clean_id($element['#id']) .'" size="'. $element['#size'] ."\" />\n", $element['#description'], $element['#id'], $element['#required'], form_get_error($element));
 }
 function _form_get_class($name, $required, $error) {
   return $name. ($required ? ' required' : '') . ($error ? ' error' : '');
