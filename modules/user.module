@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.550 2006/01/09 14:14:39 dries Exp $
+// $Id: user.module,v 1.551 2006/01/09 18:27:26 dries Exp $
 
 /**
  * @file
@@ -1241,7 +1241,9 @@ function _user_edit_submit($uid, &$edit) {
     }
     $edit['picture'] = '';
   }
-  $edit['roles'] = array_filter($edit['roles']);
+  if (isset($edit['roles'])) {
+    $edit['roles'] = array_filter($edit['roles']);
+  }
 }
 
 function user_edit($category = 'account') {
