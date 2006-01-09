@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.178 2006/01/08 16:15:53 dries Exp $
+// $Id: updates.inc,v 1.179 2006/01/09 06:40:11 dries Exp $
 
 function system_update_110() {
   $ret = array();
@@ -939,8 +939,16 @@ function system_update_151() {
     // Gather links from various settings into a single array.
     $phptemplate_links = variable_get("phptemplate_". $menus[$loop]['links_var'], array());
     $phptemplate_links_more = variable_get("phptemplate_". $menus[$loop]['links_var'] ."_more", array());
-    if (isset($ts) && is_array($ts) && is_array($ts[$menus[$loop]['links_var']])) {
-      $theme_links = $ts[$menus[$loop]['links_var']];
+    if (isset($ts) && is_array($ts)) {
+      if (is_array($ts[$menus[$loop]['links_var']])) {
+        $theme_links = $ts[$menus[$loop]['links_var']];
+      }
+      else {
+        // Convert old xtemplate style links.
+        preg_match_all('/<a\s+.*?href=[\"\'\s]?(.*?)[\"\'\s]?>(.*?)<\/a>/i', $ts[$menus[$loop]['links_var']], $urls);
+        $theme_links['text'] = $urls[2];
+        $theme_links['link'] = $urls[1];
+      }
     }
     else {
       $theme_links = array();
