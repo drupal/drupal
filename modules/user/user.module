@@ -1207,9 +1207,6 @@ function _user_edit_validate($uid, &$edit) {
       form_set_error('name', t('The name %name has been denied access.', array('%name' => theme('placeholder', $edit['name']))));
     }
   }
-  elseif ($edit['name'] != $user->name) {
-    form_set_error('name', t('You are not allowed to change this username.'));
-  }
 
   // Validate the e-mail address:
   if ($error = user_validate_mail($edit['mail'])) {
