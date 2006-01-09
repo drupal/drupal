@@ -1241,7 +1241,9 @@ function _user_edit_submit($uid, &$edit) {
     }
     $edit['picture'] = '';
   }
-  $edit['roles'] = array_filter($edit['roles']);
+  if (isset($edit['roles'])) {
+    $edit['roles'] = array_filter($edit['roles']);
+  }
 }
 
 function user_edit($category = 'account') {
