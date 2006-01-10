@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.414 2006/01/08 00:29:37 unconed Exp $
+// $Id: comment.module,v 1.415 2006/01/10 19:41:15 dries Exp $
 
 /**
  * @file
@@ -71,7 +71,7 @@ function comment_help($section) {
   switch ($section) {
     case 'admin/help#comment':
       $output = '<p>'. t('The comment module creates a discussion board for each post. Users can post comments to discuss a forum topic, weblog post, story, collaborative book page, etc. The ability to comment is an important part of involving members in a communtiy dialogue.') .'</p>';
-      $output .= '<p>'. t('An administrator can give comment permissions to user groups, and users can (optionally) edit their last comment, assuming no others have been posted since.  Attached to each comment board is a control panel for customizing the way that comments are displayed. Users can control the chronological ordering of posts (newest or oldest first) and the number of posts to display on each page.  Comments behave like other user submissions. Filters, smileys and HTML that work in nodes will also work with comments. The comment module provides specific features to inform site members when new comments have been posted. On sites with active commenting from users, the administrator can turn over comment moderation to the community.') .'</p>';
+      $output .= '<p>'. t('An administrator can give comment permissions to user groups, and users can (optionally) edit their last comment, assuming no others have been posted since.  Attached to each comment board is a control panel for customizing the way that comments are displayed. Users can control the chronological ordering of posts (newest or oldest first) and the number of posts to display on each page.  Comments behave like other user submissions. Filters, smileys and HTML that work in nodes will also work with comments. The comment module provides specific features to inform site members when new comments have been posted.') .'</p>';
       $output .= t('<p>You can</p>
 <ul>
 <li>control access for various comment module functions through access permissions <a href="%admin-access">administer &gt;&gt; access control</a>.</li>
