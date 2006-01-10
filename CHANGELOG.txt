@@ -22,6 +22,7 @@ Drupal x.x.x, xxxx-xx-xx (development version)
     * made it possible to alter, extend or theme forms.
 - comment system:
     * added support for "mass comment operations" to ease repetitive tasks.
+    * comment moderation has been removed.
 - node system:
     * reworked the revision functionality.
 - upgrade system:

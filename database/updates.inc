@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.181 2006/01/10 18:26:35 dries Exp $
+// $Id: updates.inc,v 1.182 2006/01/10 19:33:57 dries Exp $
 
 function system_update_110() {
   $ret = array();
@@ -1418,6 +1418,14 @@ function system_update_167() {
       db_change_column($ret, 'vocabulary_node_types', 'type', 'type', 'varchar(32)', array('not null' => TRUE, 'default' => "''"));
       break;
   }
+
+  return $ret;
+}
+
+function system_update_168() {
+  $ret = array();
+
+  $ret[] = update_sql("ALTER TABLE {term_hierarchy} ADD PRIMARY KEY (tid, parent)");
 
   return $ret;
 }
