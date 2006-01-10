@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.126 2006/01/08 12:06:13 dries Exp $
+// $Id: profile.module,v 1.127 2006/01/10 12:22:18 dries Exp $
 
 /**
  * @file
@@ -207,7 +207,7 @@ function profile_browse() {
   else {
     // Compile a list of fields to show
     $fields = array();
-    $result = db_query('SELECT name, title, type, weight FROM {profile_fields} WHERE visibility = %d ORDER BY weight', PROFILE_PUBLIC_LISTINGS);
+    $result = db_query('SELECT name, title, type, weight FROM {profile_fields} WHERE visibility = %d ORDER BY category, weight', PROFILE_PUBLIC_LISTINGS);
     while ($record = db_fetch_object($result)) {
       $fields[] = $record;
     }
@@ -260,10 +260,6 @@ function profile_save_profile(&$edit, &$user, $category) {
 function profile_view_field($user, $field) {
   // Only allow browsing of private fields for admins
   $browse = user_access('administer users') || $field->visibility != PROFILE_PRIVATE;
-
-  if ($field->fid == 18 || $field->fid == 19 || $field->fid == 20) {
-    return;
-  }
 
   if ($value = $user->{$field->name}) {
     switch ($field->type) {
