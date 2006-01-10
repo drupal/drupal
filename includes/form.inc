@@ -103,10 +103,10 @@ function drupal_get_form($form_id, &$form, $callback = NULL) {
     }
   }
 
-  if (function_exists('theme_' . $form_id)) {
+  if (theme_get_function($form_id)) {
     $form['#theme'] = $form_id;
   }
-  elseif (function_exists('theme_' . $callback)) {
+  elseif (theme_get_function($callback)) {
     $form['#theme'] = $callback;
   }
   return form_render($form);
