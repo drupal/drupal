@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.251 2006/01/10 12:35:20 dries Exp $
+// $Id: taxonomy.module,v 1.252 2006/01/10 19:56:19 dries Exp $
 
 /**
  * @file
@@ -522,7 +522,13 @@ function taxonomy_form_alter($form_id, &$form) {
         }
         $typed_string = implode(', ', $typed_terms) . (array_key_exists('tags', $terms) ? $terms['tags'][$vocabulary->vid] : NULL);
 
-        $form['taxonomy']['tags'][$vocabulary->vid] = array('#type' => 'textfield', '#default_value' => $typed_string, '#maxlength' => 100, '#autocomplete_path' => 'taxonomy/autocomplete/'. $vocabulary->vid, '#required' => $vocabulary->required, '#title' => $vocabulary->name, '#description' => t('A comma-separated list of terms describing this content (Example: funny, bungie jumping, "Company, Inc.").'));
+        if ($vocabulary->help) {
+          $help = $vocabulary->help;
+        }
+        else {
+          $help = t('A comma-separated list of terms describing this content.  Example: funny, bungie jumping, "Company, Inc.".');
+        }
+        $form['taxonomy']['tags'][$vocabulary->vid] = array('#type' => 'textfield', '#default_value' => $typed_string, '#maxlength' => 100, '#autocomplete_path' => 'taxonomy/autocomplete/'. $vocabulary->vid, '#required' => $vocabulary->required, '#title' => $vocabulary->name, '#description' => $help);
       }
       else {
         $ntterms = isset($node->taxonomy) ? $terms : array_keys($terms);
