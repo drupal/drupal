@@ -819,7 +819,7 @@ CREATE TABLE vocabulary (
 
 CREATE TABLE vocabulary_node_types (
   vid integer NOT NULL default '0',
-  type varchar(16) NOT NULL default '',
+  type varchar(32) NOT NULL default '',
   PRIMARY KEY (vid, type)
 );
 
