@@ -888,7 +888,7 @@ function user_login_submit($form_id, $form_values) {
     watchdog('user', t('Session opened for %name.', array('%name' => theme('placeholder', $user->name))));
 
     // Update the user table timestamp noting user has logged in.
-    db_query("UPDATE {users} SET login = %d WHERE uid = '%s'", time(), $user->uid);
+    db_query("UPDATE {users} SET login = %d WHERE uid = %d", time(), $user->uid);
 
     user_module_invoke('login', $form_values, $user);
 
