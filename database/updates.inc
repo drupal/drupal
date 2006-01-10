@@ -1406,3 +1406,18 @@ function system_update_166() {
   return $ret;
 }
 
+function system_update_167() {
+  $ret = array();
+
+  switch ($GLOBALS['db_type']) {
+    case 'mysqli':
+    case 'mysql':
+      $ret[] = update_sql("ALTER TABLE {vocabulary_node_types} CHANGE type varchar(32) NOT NULL default ''");
+      break;
+    case 'pgsql':
+      db_change_column($ret, 'vocabulary_node_types', 'type', 'type', 'varchar(32)', array('not null' => TRUE, 'default' => "''"));
+      break;
+  }
+
+  return $ret;
+}
