@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.180 2006/01/10 12:26:46 dries Exp $
+// $Id: updates.inc,v 1.181 2006/01/10 18:26:35 dries Exp $
 
 function system_update_110() {
   $ret = array();
@@ -1412,7 +1412,7 @@ function system_update_167() {
   switch ($GLOBALS['db_type']) {
     case 'mysqli':
     case 'mysql':
-      $ret[] = update_sql("ALTER TABLE {vocabulary_node_types} CHANGE type varchar(32) NOT NULL default ''");
+      $ret[] = update_sql("ALTER TABLE {vocabulary_node_types} CHANGE type type varchar(32) NOT NULL default ''");
       break;
     case 'pgsql':
       db_change_column($ret, 'vocabulary_node_types', 'type', 'type', 'varchar(32)', array('not null' => TRUE, 'default' => "''"));
