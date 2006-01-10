@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.250 2006/01/08 12:28:27 dries Exp $
+// $Id: taxonomy.module,v 1.251 2006/01/10 12:35:20 dries Exp $
 
 /**
  * @file
@@ -28,13 +28,7 @@ function taxonomy_link($type, $node = NULL) {
   if ($type == 'taxonomy terms' && $node != NULL) {
     $links = array();
     if (array_key_exists('taxonomy', $node)) {
-      foreach ($node->taxonomy as $tid) {
-        $term = taxonomy_get_term($tid);
-        $links[] = l($term->name, taxonomy_term_path($term), array('rel' => 'tag', 'title' => $term->description));
-      }
-    }
-    else {
-      foreach (taxonomy_node_get_terms($node->nid) as $term) {
+      foreach ($node->taxonomy as $term) {
         $links[] = l($term->name, taxonomy_term_path($term), array('rel' => 'tag', 'title' => $term->description));
       }
     }
@@ -1009,6 +1003,9 @@ function taxonomy_render_nodes($result) {
  */
 function taxonomy_nodeapi($node, $op, $arg = 0) {
   switch ($op) {
+    case 'load':
+     $output['taxonomy'] = taxonomy_node_get_terms($node->nid);
+     return $output;
     case 'insert':
       taxonomy_node_save($node->nid, $node->taxonomy);
       break;
@@ -1184,8 +1181,7 @@ function taxonomy_admin() {
  */
 function taxonomy_rss_item($node) {
   $output = array();
-  $terms = taxonomy_node_get_terms($node->nid);
-  foreach ($terms as $term) {
+  foreach ($node->taxonomy as $term) {
     $output[] = array('key'   => 'category',
                       'value' => check_plain($term->name),
                       'attributes' => array('domain' => url('taxonomy/term/'. $term->tid, NULL, NULL, TRUE)));

@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.71 2005/12/31 13:52:47 dries Exp $
+// $Id: blogapi.module,v 1.72 2006/01/10 12:35:20 dries Exp $
 
 /**
  * @file
@@ -272,11 +272,6 @@ function blogapi_blogger_edit_post($appkey, $postid, $username, $password, $cont
   node_validate($node);
   if ($errors = form_get_errors()) {
     return blogapi_error(implode("\n", $errors));
-  }
-
-  $terms = module_invoke('taxonomy', 'node_get_terms', $node->nid, 'tid');
-  foreach ($terms as $term) {
-    $node->taxonomy[] = $term->tid;
   }
 
   $node = node_submit($node);

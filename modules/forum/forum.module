@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.300 2006/01/09 10:12:30 dries Exp $
+// $Id: forum.module,v 1.301 2006/01/10 12:35:20 dries Exp $
 
 /**
  * @file
@@ -535,8 +535,7 @@ function forum_submit(&$node) {
       }
     }
     if ($node->tid && $node->shadow) {
-      $terms = array_keys(taxonomy_node_get_terms($node->nid));
-      if (!in_array($node->tid, $terms)) {
+      if (!in_array($node->tid, $node->taxonomy)) {
         $terms[] = $node->tid;
       }
       $node->taxonomy = $terms;
