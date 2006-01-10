@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.45 2006/01/09 10:22:12 dries Exp $
+// $Id: form.inc,v 1.46 2006/01/10 19:37:27 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -103,10 +103,10 @@ function drupal_get_form($form_id, &$form, $callback = NULL) {
     }
   }
 
-  if (function_exists('theme_' . $form_id)) {
+  if (theme_get_function($form_id)) {
     $form['#theme'] = $form_id;
   }
-  elseif (function_exists('theme_' . $callback)) {
+  elseif (theme_get_function($callback)) {
     $form['#theme'] = $callback;
   }
   return form_render($form);

@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.272 2006/01/06 07:32:54 dries Exp $
+// $Id: theme.inc,v 1.273 2006/01/10 19:37:27 dries Exp $
 
 /**
  * @file
@@ -159,6 +159,23 @@ function list_theme_engines($refresh = FALSE) {
  *   An HTML string that generates the themed output.
  */
 function theme() {
+  $args = func_get_args();
+  $function = array_shift($args);
+
+  if ($func = theme_get_function($function)) {
+    return call_user_func_array($func, $args);
+  }
+}
+
+/**
+ * Determine if a theme function exists, and if so return which one was found.
+ *
+ * @param $function
+ *   The name of the theme function to test.
+ * @return
+ *   The name of the theme function that should be used, or false if no function exists.
+ */
+function theme_get_function($function) {
   global $theme, $theme_engine;
 
   // Because theme() is called a lot, calling init_theme() only to have it
@@ -167,21 +184,19 @@ function theme() {
     init_theme();
   }
 
-  $args = func_get_args();
-  $function = array_shift($args);
-
   if (($theme != '') && function_exists($theme .'_'. $function)) {
     // call theme function
-    return call_user_func_array($theme .'_'. $function, $args);
+    return $theme .'_'. $function;
   }
   elseif (($theme != '') && isset($theme_engine) && function_exists($theme_engine .'_'. $function)) {
     // call engine function
-    return call_user_func_array($theme_engine .'_'. $function, $args);
+    return $theme_engine .'_'. $function;
   }
   elseif (function_exists('theme_'. $function)){
     // call Drupal function
-    return call_user_func_array('theme_'. $function, $args);
+    return 'theme_'. $function;
   }
+  return false;
 }
 
 /**
