@@ -1421,3 +1421,11 @@ function system_update_167() {
 
   return $ret;
 }
+
+function system_update_168() {
+  $ret = array();
+
+  $ret[] = update_sql("ALTER TABLE {term_hierarchy} ADD PRIMARY KEY (tid, parent)");
+
+  return $ret;
+}

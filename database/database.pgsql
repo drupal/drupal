@@ -705,7 +705,8 @@ CREATE INDEX term_data_vid_idx ON term_data(vid);
 
 CREATE TABLE term_hierarchy (
   tid integer NOT NULL default '0',
-  parent integer NOT NULL default '0'
+  parent integer NOT NULL default '0',
+  PRIMARY KEY (tid, parent)
 );
 CREATE INDEX term_hierarchy_tid_idx ON term_hierarchy(tid);
 CREATE INDEX term_hierarchy_parent_idx ON term_hierarchy(parent);

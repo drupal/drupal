@@ -712,7 +712,8 @@ CREATE TABLE term_hierarchy (
   tid int(10) unsigned NOT NULL default '0',
   parent int(10) unsigned NOT NULL default '0',
   KEY tid (tid),
-  KEY parent (parent)
+  KEY parent (parent),
+  PRIMARY KEY (tid, parent)
 ) TYPE=MyISAM;
 
 --
