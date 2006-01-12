@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.72 2006/01/10 12:35:20 dries Exp $
+// $Id: blogapi.module,v 1.73 2006/01/12 10:02:45 dries Exp $
 
 /**
  * @file
@@ -223,6 +223,9 @@ function blogapi_blogger_new_post($appkey, $blogid, $username, $password, $conte
     return blogapi_error(t('You do not have permission to create the type of post you wanted to create.'));
   }
 
+  if (user_access('administer nodes') && !isset($edit['date'])) {
+    $edit['date'] = format_date(time(), 'custom', 'Y-m-d H:i:s O');
+  }
   $node = node_submit($edit);
   node_save($node);
   if ($node->nid) {
@@ -274,6 +277,9 @@ function blogapi_blogger_edit_post($appkey, $postid, $username, $password, $cont
     return blogapi_error(implode("\n", $errors));
   }
 
+  if (user_access('administer nodes') && !isset($edit['date'])) {
+    $node->date = format_date($node->created, 'custom', 'Y-m-d H:i:s O');
+  }
   $node = node_submit($node);
   node_save($node);
   if ($node->nid) {
