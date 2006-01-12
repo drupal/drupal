@@ -43,15 +43,15 @@ td.active {
 /*
 ** Menu styles
 */
-.menu {
-  padding: 0 0 0 0.5em;
-}
-.menu ul {
+ul.menu {
   list-style: none;
   border: none;
   text-align:left;
 }
-.menu li a {
+ul.menu li {
+  margin: 0 0 0 0.5em;
+}
+ul.menu li a {
   width: 100%;
   text-decoration: none;
 }

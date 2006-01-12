@@ -179,7 +179,7 @@ function menu_block($op = 'list', $delta = 0) {
   }
   else if ($op == 'view') {
     $data['subject'] = $menu['items'][$delta]['title'];
-    $data['content'] = '<div class="menu">'. theme('menu_tree', $delta) .'</div>' ;
+    $data['content'] = theme('menu_tree', $delta);
     return $data;
   }
 }

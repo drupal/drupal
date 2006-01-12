@@ -543,7 +543,7 @@ function user_block($op = 'list', $delta = 0, $edit = array()) {
       case 1:
         if ($menu = theme('menu_tree')) {
            $block['subject'] = $user->uid ? $user->name : t('Navigation');
-           $block['content'] = '<div class="menu">'. $menu .'</div>';
+           $block['content'] = $menu;
         }
         return $block;
 
