@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.194 2006/01/08 03:33:31 unconed Exp $
+// $Id: block.module,v 1.195 2006/01/12 10:01:15 dries Exp $
 
 /**
  * @file
@@ -357,16 +357,20 @@ function block_admin_configure($module = NULL, $delta = 0) {
     '#collapsible' => true,
     '#weight' => 0,
   );
-  $access = user_access('Use PHP for block visibility');
+  $access = user_access('use PHP for block visibility');
 
   if ($edit['visibility'] == 2 && !$access) {
+    $form['page_vis_settings'] = array();
     $form['page_vis_settings']['visibility'] = array('#type' => 'value', '#value' => 2);
     $form['page_vis_settings']['pages'] = array('#type' => 'value', '#value' => $edit['pages']);
   }
   else {
     $options = array(t('Show on every page except the listed pages.'), t('Show on only the listed pages.'));
+    $description = t("Enter one page per line as Drupal paths. The '*' character is a wildcard. Example paths are '%blog' for the blog page and %blog-wildcard for every personal blog. %front is the front page.", array('%blog' => theme('placeholder', 'blog'), '%blog-wildcard' =>  theme('placeholder', 'blog/*'), '%front' => theme('placeholder', '<front>')));
+
     if ($access) {
       $options[] = t('Show if the following PHP code returns <code>TRUE</code> (PHP-mode, experts only).');
+      $description .= t('If the PHP-mode is chosen, enter PHP code between %php. Note that executing incorrect PHP-code can break your Drupal site.', array('%php' => theme('placeholder', '<?php ?>')));
     }
     $form['page_vis_settings']['visibility'] = array(
       '#type' => 'radios',
@@ -378,7 +382,7 @@ function block_admin_configure($module = NULL, $delta = 0) {
       '#type' => 'textarea',
       '#title' => t('Pages'),
       '#default_value' => $edit['pages'],
-      '#description' => t("Enter one page per line as Drupal paths. The '*' character is a wildcard. Example paths are '%blog' for the blog page and %blog-wildcard for every personal blog. %front is the front page. If the PHP-mode is chosen, enter PHP code between %php.  Note that executing incorrect PHP-code can break your Drupal site.", array('%blog' => theme('placeholder', 'blog'), '%blog-wildcard' =>  theme('placeholder', 'blog/*'), '%front' => theme('placeholder', '<front>'), '%php' => theme('placeholder', '<?php ?>'))),
+      '#description' => $description,
     );
   }
 
