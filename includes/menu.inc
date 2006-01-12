@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.97 2006/01/08 12:17:57 dries Exp $
+// $Id: menu.inc,v 1.98 2006/01/12 09:58:49 dries Exp $
 
 /**
  * @file
@@ -579,7 +579,7 @@ function menu_rebuild() {
  */
 function theme_menu_tree($pid = 1) {
   if ($tree = menu_tree($pid)) {
-    return "\n<ul>\n". $tree ."\n</ul>\n";
+    return "\n<ul class=\"menu\">\n". $tree ."\n</ul>\n";
   }
 }
 

@@ -57,6 +57,8 @@ Drupal x.x.x, xxxx-xx-xx (development version)
     * removed dependency on PL/pgSQL procedural language.
 - menu system:
     * added support for external URLs.
+- queue module:
+    * removed from core.
 
 Drupal 4.6.5, 2005-12-12
 ------------------------

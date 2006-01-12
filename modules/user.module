@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.553 2006/01/10 20:11:46 dries Exp $
+// $Id: user.module,v 1.554 2006/01/12 09:58:49 dries Exp $
 
 /**
  * @file
@@ -543,7 +543,7 @@ function user_block($op = 'list', $delta = 0, $edit = array()) {
       case 1:
         if ($menu = theme('menu_tree')) {
            $block['subject'] = $user->uid ? $user->name : t('Navigation');
-           $block['content'] = '<div class="menu">'. $menu .'</div>';
+           $block['content'] = $menu;
         }
         return $block;
 
