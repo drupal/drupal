@@ -60,6 +60,8 @@ progressBar.prototype.startMonitoring = function (uri, delay) {
  */
 progressBar.prototype.stopMonitoring = function () {
   clearTimeout(this.timer);
+  // This allows monitoring to be stopped from within the callback
+  this.uri = null;
 }
 
 /**
@@ -69,7 +71,9 @@ progressBar.prototype.sendPing = function () {
   if (this.timer) {
     clearTimeout(this.timer);
   }
-  this.method(this.uri, this.receivePing, this, '');
+  if (this.uri) {
+    this.method(this.uri, this.receivePing, this, '');
+  }
 }
 
 /**
@@ -82,8 +86,10 @@ progressBar.prototype.receivePing = function (string, xmlhttp, pb) {
   }
   // Split into values
   var matches = string.length > 0 ? string.split('|') : [];
-  pb.timer = setTimeout(function() { pb.sendPing(); }, pb.delay);
+  // Update progress
   if (matches.length >= 2) {
     pb.setProgress(matches[0], matches[1]);
   }
+  // Schedule next timer
+  pb.timer = setTimeout(function() { pb.sendPing(); }, pb.delay);
 }
