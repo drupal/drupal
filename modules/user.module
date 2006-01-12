@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.555 2006/01/12 19:15:31 dries Exp $
+// $Id: user.module,v 1.556 2006/01/12 19:29:36 dries Exp $
 
 /**
  * @file
@@ -1131,7 +1131,7 @@ function user_register_submit($form_id, $form_values) {
 
   // The first user may login immediately, and receives a customized welcome e-mail.
   if ($account->uid == 1) {
-    user_mail($mail, t('drupal user account details for %s', array('%s' => $name)), strtr(t("%username,\n\nYou may now login to %uri using the following username and password:\n\n  username: %username\n  password: %password\n\n%edit_uri\n\n--drupal"), $variables), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
+    user_mail($mail, t('Drupal user account details for %s', array('%s' => $name)), strtr(t("%username,\n\nYou may now login to %uri using the following username and password:\n\n  username: %username\n  password: %password\n\n%edit_uri\n\n--drupal"), $variables), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
     drupal_set_message(t('<p>Welcome to Drupal. You are user #1, which gives you full and immediate access.  All future registrants will receive their passwords via e-mail, so please make sure your website e-mail address is set properly under the general settings on the <a href="%settings">settings page</a>.</p><p> Your password is <strong>%pass</strong>. You may change your password below.</p>', array('%pass' => $pass, '%settings' => url('admin/settings'))));
     user_authenticate($account->name, trim($pass));
 
@@ -1884,7 +1884,7 @@ function user_help($section) {
     case 'admin/access':
       return t('<p>Permissions let you control what users can do on your site.  Each user role (defined on the <a href="%role">user roles page</a>) has its own set of permissions. For example, you could give users classified as "Administrators" permission to "administer nodes" but deny this power to ordinary, "authenticated" users. You can use permissions to reveal new features to privileged users (those with subscriptions, for example). Permissions also allow trusted users to share the administrative burden of running a busy site.</p>', array('%role' => url('admin/access/roles')));
     case 'admin/access/roles':
-      return t('<p>Roles allow you to fine tune the security and administration of drupal. A role defines a group of users that have certain privileges as defined in <a href="%permissions">user permissions</a>. Examples of roles include: anonymous user, authenticated user, moderator, administrator and so on. In this area you will define the <em>role names</em> of the various roles. To delete a role choose "edit".</p><p>By default, Drupal comes with two user roles:</p>
+      return t('<p>Roles allow you to fine tune the security and administration of Drupal. A role defines a group of users that have certain privileges as defined in <a href="%permissions">user permissions</a>. Examples of roles include: anonymous user, authenticated user, moderator, administrator and so on. In this area you will define the <em>role names</em> of the various roles. To delete a role choose "edit".</p><p>By default, Drupal comes with two user roles:</p>
       <ul>
       <li>Anonymous user: this role is used for users that don\'t have a user account or that are not authenticated.</li>
       <li>Authenticated user: this role is assigned automatically to authenticated users. Most registered users will belong to this user role unless specified otherwise.</li>
