@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.554 2006/01/12 09:58:49 dries Exp $
+// $Id: user.module,v 1.555 2006/01/12 19:15:31 dries Exp $
 
 /**
  * @file
@@ -1507,10 +1507,26 @@ function user_admin_access_edit($aid = 0) {
 }
 
 function _user_admin_access_form($edit) {
-  $form['status'] = array('#type' => 'radios', '#title' => t('Access type'), '#default_value' => $edit['status'], '#options' => array('1' => t('Allow'), '0' => t('Deny')));
-  $form['type'] = array('#type' => 'radios', '#title' => t('Rule type'), '#default_value' => $edit['type'], '#options' => array('user' => t('Username'), 'mail' => t('E-mail'), 'host' => t('Host'), '#default_value' => 'host'));
-  $form['mask'] = array('#type' => 'textfield', '#title' => t('Mask'), '#default_value' => $edit['mask'], '#size' => 30, '#maxlength' => 64, '#description' => '%: '. t('Matches any number of characters, even zero characters') .'.<br />_: '. t('Matches exactly one character.'), '#required' => TRUE);
-
+  $form['status'] = array(
+    '#type' => 'radios',
+    '#title' => t('Access type'),
+    '#default_value' => 0,
+    '#options' => array('1' => t('Allow'), '0' => t('Deny')),
+  );
+  $form['type'] = array(
+    '#type' => 'radios',
+    '#title' => t('Rule type'),
+    '#default_value' => 'user',
+    '#options' => array('user' => t('Username'), 'mail' => t('E-mail'), 'host' => t('Host')),
+  );
+  $form['mask'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Mask'),
+    '#size' => 30,
+    '#maxlength' => 64,
+    '#description' => '%: '. t('Matches any number of characters, even zero characters') .'.<br />_: '. t('Matches exactly one character.'),
+    '#required' => TRUE,
+  );
   return $form;
 }
 
