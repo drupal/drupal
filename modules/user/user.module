@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.558 2006/01/13 14:54:51 dries Exp $
+// $Id: user.module,v 1.559 2006/01/13 19:02:38 dries Exp $
 
 /**
  * @file
@@ -753,7 +753,7 @@ function user_menu($may_cache) {
         'type' => MENU_CALLBACK, 'callback' => 'user_view',
         'callback arguments' => arg(1), 'access' => $view_access);
 
-      if ($user_exists !== FALSE) {
+      if ($user_exists !== FALSE || $admin_access) {
         $items[] = array('path' => 'user/'. arg(1) .'/view', 'title' => t('view'),
           'access' => $view_access, 'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
         $items[] = array('path' => 'user/'. arg(1) .'/edit', 'title' => t('edit'),
