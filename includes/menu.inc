@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.98 2006/01/12 09:58:49 dries Exp $
+// $Id: menu.inc,v 1.99 2006/01/13 14:38:38 dries Exp $
 
 /**
  * @file
@@ -831,7 +831,7 @@ function theme_menu_links($links) {
   if (!count($links)) {
     return '';
   }
-  $level_tmp = split('-', key($links));
+  $level_tmp = explode('-', key($links));
   $level = $level_tmp[0];
   $output = "<ul class=\"links-$level\">\n";
   foreach ($links as $index => $link) {

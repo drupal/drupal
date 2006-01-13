@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.62 2006/01/05 23:35:34 unconed Exp $
+// $Id: locale.inc,v 1.63 2006/01/13 14:38:38 dries Exp $
 
 /**
  * @file
@@ -311,7 +311,7 @@ function _locale_import_read_po($file) {
   $plural = 0;          // Current plural form
 
   $po = strtr($po, array("\\\n" => ""));
-  $lines = split("\n", $po);
+  $lines = explode("\n", $po);
   $lineno = 0;
 
   foreach ($lines as $line) {
@@ -903,7 +903,7 @@ function _locale_export_print($str) {
  * @author Jacobo Tarrio
  */
 function _locale_export_wrap($str, $len) {
-  $words = split(" ", $str);
+  $words = explode(' ', $str);
   $ret = array();
 
   $cur = "";
