@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.61 2006/01/12 09:58:49 dries Exp $
+// $Id: menu.module,v 1.62 2006/01/13 07:34:46 dries Exp $
 
 /**
  * @file
@@ -686,7 +686,7 @@ function menu_form_alter($form_id, &$form) {
     $options = menu_parent_options($item['mid'], variable_get('menu_parent_items', 0));
 
     $form['menu']['pid'] = array(
-      '#type' => select,
+      '#type' => 'select',
       '#title' => t('Parent item'),
       '#default_value' => $item['pid'],
       '#options' => $options,
