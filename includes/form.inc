@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.46 2006/01/10 19:37:27 dries Exp $
+// $Id: form.inc,v 1.47 2006/01/13 07:44:59 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -470,11 +470,15 @@ function form_options_flatten($array, $reset = TRUE) {
 function theme_select($element) {
   $select = '';
   $size = $element['#size'] ? ' size="' . $element['#size'] . '"' : '';
+  // array_key_exists accomodates the rare event where $element['#value'] is NULL.
+  // isset() fails in this situation.
+  $value_valid = isset($element['#value']) || array_key_exists('#value', $element);
+  $value_is_array = is_array($element['#value']);
   foreach ($element['#options'] as $key => $choice) {
     if (is_array($choice)) {
       $select .= '<optgroup label="'. $key .'">';
       foreach ($choice as $key => $choice) {
-        if (isset($element['#value']) && ($element['#value'] == $key || (is_array($element['#value']) && in_array($key, $element['#value'])))) {
+        if ($value_valid && ($element['#value'] == $key || ($value_is_array && in_array($key, $element['#value'])))) {
           $selected = ' selected="selected"';
         }
         else {
@@ -485,7 +489,7 @@ function theme_select($element) {
       $select .= '</optgroup>';
     }
     else {
-      if (isset($element['#value']) && ($element['#value'] == $key || (is_array($element['#value']) && in_array($key, $element['#value'])))) {
+      if ($value_valid && ($element['#value'] == $key || ($value_is_array && in_array($key, $element['#value'])))) {
         $selected = ' selected="selected"';
       }
       else {
