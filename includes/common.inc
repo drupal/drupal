@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.505 2006/01/12 19:29:35 dries Exp $
+// $Id: common.inc,v 1.506 2006/01/13 07:33:13 dries Exp $
 
 /**
  * @file
@@ -583,7 +583,7 @@ function t($string, $args = 0) {
  * Empty e-mail addresses are allowed. See RFC 2822 for details.
  *
  * @param $mail
- *   A string containing an email address.
+ *   A string containing an e-mail address.
  * @return
  *   TRUE if the address is in a valid format.
  */

@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.556 2006/01/12 19:29:36 dries Exp $
+// $Id: user.module,v 1.557 2006/01/13 07:33:13 dries Exp $
 
 /**
  * @file
@@ -37,7 +37,7 @@ function user_external_load($authname) {
  *
  * @param $array
  *   An associative array of attributes to search for in selecting the
- *   user, such as user name or email address.
+ *   user, such as user name or e-mail address.
  *
  * @return
  *   A fully-loaded $user object upon successful user load or FALSE if user cannot be loaded.
@@ -386,7 +386,7 @@ function user_mail($mail, $subject, $message, $header) {
     ** According to RFC 2646, it's quite rude to not wrap your e-mails:
     **
     ** "The Text/Plain media type is the lowest common denominator of
-    ** Internet email, with lines of no more than 997 characters (by
+    ** Internet e-mail, with lines of no more than 997 characters (by
     ** convention usually no more than 80), and where the CRLF sequence
     ** represents a line break [MIME-IMT]."
     **

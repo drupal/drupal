@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal.module,v 1.114 2006/01/05 15:19:29 dries Exp $
+// $Id: drupal.module,v 1.115 2006/01/13 07:33:13 dries Exp $
 
 /**
  * @file
@@ -21,7 +21,7 @@ function drupal_help($section) {
   <li>register your site with a server, including (optionally) posting information on your installed modules and themes and summary statistics on your number of posts and users, information that can help rank Drupal modules and themes</li>
   <li>enable other sites to register with your site</li>
   <li>allow members on all sites using the Drupal module to log in to your site without registering using their distributed identification</li>
-  <li>allow members to log in to any other site that uses the Drupal module, using a login name that looks much like an email address for your site: <em>username@%base_url</em></li>
+  <li>allow members to log in to any other site that uses the Drupal module, using a login name that looks much like an e-mail address for your site: <em>username@%base_url</em></li>
 </ul>
 ', array('%base_url' => $base_url));
       $output .= '<p>'. t('The Drupal module administration page allows you to set the xml-rpc server page and other related options.') .'</p>';
@@ -53,7 +53,7 @@ print drupal_client_page();
       return t('<p>Using this your site can "call home" to another Drupal server. By calling home to drupal.org and sending a list of your installed modules and themes, you help rank projects on drupal.org and so assist all Drupal administrators to find the best components for meeting their needs. If you want to register with a different server, you can change the Drupal XML-RPC server setting -- but the server has to be able to handle Drupal XML. Some XML-RPC servers may present directories of all registered sites. To get all your site information listed, go to the <a href="%site-settings">settings page</a> and set the site name, the e-mail address, the slogan, and the mission statement.</p>', array('%site-settings' => url('admin/settings')));
     case 'user/help#drupal':
       return variable_get('drupal_authentication_service', 0) ? t("<p><a href=\"%Drupal\">Drupal</a> is the name of the software that powers %this-site. There are Drupal web sites all over the world, and many of them share their registration databases so that users may freely log in to any Drupal site using a single <strong>Drupal ID</strong>.</p>
-<p>So please feel free to log in to your account here at %this-site with a username from another Drupal site. The format of a Drupal ID is similar to an email address: <strong>username</strong>@<em>server</em>. An example of a valid Drupal ID is <strong>mwlily</strong>@<em>www.drupal.org</em>.</p>", array('%Drupal' => 'http://www.drupal.org', '%this-site' => '<em>'. variable_get('site_name', 'this web site') .'</em>')) : NULL;
+<p>So please feel free to log in to your account here at %this-site with a username from another Drupal site. The format of a Drupal ID is similar to an e-mail address: <strong>username</strong>@<em>server</em>. An example of a valid Drupal ID is <strong>mwlily</strong>@<em>www.drupal.org</em>.</p>", array('%Drupal' => 'http://www.drupal.org', '%this-site' => '<em>'. variable_get('site_name', 'this web site') .'</em>')) : NULL;
   }
 }
 
