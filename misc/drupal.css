@@ -51,10 +51,6 @@ ul.menu {
 ul.menu li {
   margin: 0 0 0 0.5em;
 }
-ul.menu li a {
-  width: 100%;
-  text-decoration: none;
-}
 li.expanded {
   list-style-type: circle;
   list-style-image: url(menu-expanded.png);
