@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.131 2006/01/12 09:58:49 dries Exp $ */
+/* $Id: drupal.css,v 1.132 2006/01/13 07:55:46 dries Exp $ */
 
 /*
 ** HTML elements
@@ -50,10 +50,6 @@ ul.menu {
 }
 ul.menu li {
   margin: 0 0 0 0.5em;
-}
-ul.menu li a {
-  width: 100%;
-  text-decoration: none;
 }
 li.expanded {
   list-style-type: circle;
