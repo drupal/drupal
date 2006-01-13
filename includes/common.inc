@@ -583,7 +583,7 @@ function t($string, $args = 0) {
  * Empty e-mail addresses are allowed. See RFC 2822 for details.
  *
  * @param $mail
- *   A string containing an email address.
+ *   A string containing an e-mail address.
  * @return
  *   TRUE if the address is in a valid format.
  */
