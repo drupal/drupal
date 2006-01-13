@@ -831,7 +831,7 @@ function theme_menu_links($links) {
   if (!count($links)) {
     return '';
   }
-  $level_tmp = split('-', key($links));
+  $level_tmp = explode('-', key($links));
   $level = $level_tmp[0];
   $output = "<ul class=\"links-$level\">\n";
   foreach ($links as $index => $link) {
