@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.581 2006/01/08 12:49:51 dries Exp $
+// $Id: node.module,v 1.582 2006/01/14 09:51:57 dries Exp $
 
 /**
  * @file
@@ -611,7 +611,7 @@ function node_search($op = 'search', $keys = null) {
       // Output form for defining rank factor weights.
       $form['content_ranking'] = array('#type' => 'fieldset', '#title' => t('Content ranking'));
       $form['content_ranking']['#theme'] = 'node_search_admin';
-      $form['content_ranking']['info'] = array('#type' => 'markup', '#value' => '<em>'. t('The following numbers control which properties the content search should favor when ordering the results. Higher numbers mean more influence. Zero means the property is ignored.') .'</em>');
+      $form['content_ranking']['info'] = array('#type' => 'markup', '#value' => '<em>'. t('The following numbers control which properties the content search should favor when ordering the results. Higher numbers mean more influence, zero means the property is ignored. Changing these numbers does not require the search index to be rebuilt.  Changes take effect immediately.') .'</em>');
 
       $ranking = array('node_rank_relevance' => t('Keyword relevance'),
                        'node_rank_recent' => t('Recently posted'));
