@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.182 2006/01/10 19:33:57 dries Exp $
+// $Id: updates.inc,v 1.183 2006/01/14 10:22:26 dries Exp $
 
 function system_update_110() {
   $ret = array();
@@ -938,7 +938,13 @@ function system_update_151() {
 
     // Gather links from various settings into a single array.
     $phptemplate_links = variable_get("phptemplate_". $menus[$loop]['links_var'], array());
+    if (!is_array($phptemplate_links)) {
+      $phptemplate_links = array();
+    }
     $phptemplate_links_more = variable_get("phptemplate_". $menus[$loop]['links_var'] ."_more", array());
+    if (!is_array($phptemplate_links_more)) {
+      $phptemplate_links_more = array();
+    }
     if (isset($ts) && is_array($ts)) {
       if (is_array($ts[$menus[$loop]['links_var']])) {
         $theme_links = $ts[$menus[$loop]['links_var']];
@@ -980,8 +986,10 @@ function system_update_151() {
       db_query("DELETE FROM {menu} WHERE mid={$menus[$loop]['pid']}");
     }
 
-    // set menu_primary_menu variable appropriately
-    if (!$ts[$menus[$loop]['toggle_var']] || $num_inserted == 0) {
+    // Set menu_primary_menu and menu_primary_menu variables if links were
+    // imported.  If the user had links but the toggle display was off, they
+    // will need to disable the new links manually in admins/settings/menu.
+    if ($num_inserted == 0) {
       variable_set($menus[$loop]['menu_var'], 0);
     }
     else {
