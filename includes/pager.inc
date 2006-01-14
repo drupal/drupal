@@ -1,5 +1,5 @@
 <?php
-// $Id: pager.inc,v 1.50 2005/12/10 19:26:47 dries Exp $
+// $Id: pager.inc,v 1.51 2006/01/14 09:40:22 dries Exp $
 
 /**
  * @file
@@ -95,24 +95,24 @@ function pager_query($query, $limit = 10, $element = 0, $count_query = NULL) {
  *   The number of query results to display per page.
  * @param $element
  *   An optional integer to distinguish between multiple pagers on one page.
- * @param $attributes
+ * @param $parameters
  *   An associative array of query string parameters to append to the pager links.
  * @return
  *   An HTML string that generates the query pager.
  *
  * @ingroup themeable
  */
-function theme_pager($tags = array(), $limit = 10, $element = 0, $attributes = array()) {
+function theme_pager($tags = array(), $limit = 10, $element = 0, $parameters = array()) {
   global $pager_total;
   $output = '';
 
   if ($pager_total[$element] > 1) {
-    $output .= '<div id="pager" class="container-inline">';
-    $output .= theme('pager_first', ($tags[0] ? $tags[0] : t('first page')), $limit, $element, $attributes);
-    $output .= theme('pager_previous', ($tags[1] ? $tags[1] : t('previous page')), $limit, $element, 1, $attributes);
-    $output .= theme('pager_list', $limit, $element, ($tags[2] ? $tags[2] : 9 ), '', $attributes);
-    $output .= theme('pager_next', ($tags[3] ? $tags[3] : t('next page')), $limit, $element, 1, $attributes);
-    $output .= theme('pager_last', ($tags[4] ? $tags[4] : t('last page')), $limit, $element, $attributes);
+    $output .= '<div id="pager">';
+    $output .= theme('pager_first', ($tags[0] ? $tags[0] : t('&#171; first')), $limit, $element, $parameters);
+    $output .= theme('pager_previous', ($tags[1] ? $tags[1] : t('&#8249; previous')), $limit, $element, 1, $parameters);
+    $output .= theme('pager_list', $limit, $element, ($tags[2] ? $tags[2] : 9 ), '', $parameters);
+    $output .= theme('pager_next', ($tags[3] ? $tags[3] : t('next &#8250;')), $limit, $element, 1, $parameters);
+    $output .= theme('pager_last', ($tags[4] ? $tags[4] : t('last &#187;')), $limit, $element, $parameters);
     $output .= '</div>';
 
     return $output;
@@ -135,25 +135,22 @@ function theme_pager($tags = array(), $limit = 10, $element = 0, $attributes = a
  *   The number of query results to display per page.
  * @param $element
  *   An optional integer to distinguish between multiple pagers on one page.
- * @param $attributes
+ * @param $parameters
  *   An associative array of query string parameters to append to the pager links.
  * @return
  *   An HTML string that generates this piece of the query pager.
  *
  * @ingroup themeable
  */
-function theme_pager_first($text, $limit, $element = 0, $attributes = array()) {
+function theme_pager_first($text, $limit, $element = 0, $parameters = array()) {
   global $pager_page_array;
-  $output = '<div class="pager-first">';
+  $output = '';
 
   // If we are anywhere but the first page
   if ($pager_page_array[$element] > 0) {
-    $output .= theme('pager_link', $text, pager_load_array(0, $element, $pager_page_array), $element, $attributes);
+    $output = theme('pager_link', $text, pager_load_array(0, $element, $pager_page_array), $element, $parameters, array('class' => 'pager-first'));
   }
-  else {
-    $output .= ' ';
-  }
-  $output .= '</div>';
+
   return $output;
 }
 
@@ -168,29 +165,30 @@ function theme_pager_first($text, $limit, $element = 0, $attributes = array()) {
  *   An optional integer to distinguish between multiple pagers on one page.
  * @param $interval
  *   The number of pages to move backward when the link is clicked.
- * @param $attributes
+ * @param $parameters
  *   An associative array of query string parameters to append to the pager links.
  * @return
  *   An HTML string that generates this piece of the query pager.
  *
  * @ingroup themeable
  */
-function theme_pager_previous($text, $limit, $element = 0, $interval = 1, $attributes = array()) {
+function theme_pager_previous($text, $limit, $element = 0, $interval = 1, $parameters = array()) {
   global $pager_page_array;
-  $output = '<div class="pager-previous">';
+  $output = '';
+
   // If we are anywhere but the first page
   if ($pager_page_array[$element] > 0) {
     $page_new = pager_load_array($pager_page_array[$element] - $interval, $element, $pager_page_array);
     // If the previous page is the first page, mark the link as such.
     if ($page_new[$element] == 0) {
-      $output .= theme('pager_first', $text, $limit, $element, $attributes);
+      $output = theme('pager_first', $text, $limit, $element, $parameters);
     }
     // The previous page is not the first page.
     else {
-      $output .= theme('pager_link', $text, $page_new, $element, $attributes);
+      $output = theme('pager_link', $text, $page_new, $element, $parameters, array('class' => 'pager-previous'));
     }
   }
-  $output .= '</div>';
+
   return $output;
 }
 
@@ -205,32 +203,30 @@ function theme_pager_previous($text, $limit, $element = 0, $interval = 1, $attri
  *   An optional integer to distinguish between multiple pagers on one page.
  * @param $interval
  *   The number of pages to move forward when the link is clicked.
- * @param $attributes
+ * @param $parameters
  *   An associative array of query string parameters to append to the pager links.
  * @return
  *   An HTML string that generates this piece of the query pager.
  *
  * @ingroup themeable
  */
-function theme_pager_next($text, $limit, $element = 0, $interval = 1, $attributes = array()) {
+function theme_pager_next($text, $limit, $element = 0, $interval = 1, $parameters = array()) {
   global $pager_page_array, $pager_total;
-  $output = '<div class="pager-next">';
+  $output = '';
+
   // If we are anywhere but the last page
   if ($pager_page_array[$element] < ($pager_total[$element] - 1)) {
     $page_new = pager_load_array($pager_page_array[$element] + $interval, $element, $pager_page_array);
     // If the next page is the last page, mark the link as such.
     if ($page_new[$element] == ($pager_total[$element] - 1)) {
-      $output .= theme('pager_last', $text, $limit, $element, $attributes);
+      $output = theme('pager_last', $text, $limit, $element, $parameters);
     }
     // The next page is not the last page.
     else {
-      $output .= theme('pager_link', $text, $page_new, $element, $attributes);
+      $output = theme('pager_link', $text, $page_new, $element, $parameters, array('class' => 'pager-next'));
     }
   }
-  else {
-    $output .= ' ';
-  }
-  $output .= '</div>';
+
   return $output;
 }
 
@@ -243,25 +239,22 @@ function theme_pager_next($text, $limit, $element = 0, $interval = 1, $attribute
  *   The number of query results to display per page.
  * @param $element
  *   An optional integer to distinguish between multiple pagers on one page.
- * @param $attributes
+ * @param $parameters
  *   An associative array of query string parameters to append to the pager links.
  * @return
  *   An HTML string that generates this piece of the query pager.
  *
  * @ingroup themeable
  */
-function theme_pager_last($text, $limit, $element = 0, $attributes = array()) {
+function theme_pager_last($text, $limit, $element = 0, $parameters = array()) {
   global $pager_page_array, $pager_total;
+  $output = '';
 
-  $output = '<div class="pager-last">';
   // If we are anywhere but the last page
   if ($pager_page_array[$element] < ($pager_total[$element] - 1)) {
-    $output .= theme('pager_link', $text, pager_load_array($pager_total[$element] - 1, $element, $pager_page_array), $element, $attributes);
+    $output = theme('pager_link', $text, pager_load_array($pager_total[$element] - 1, $element, $pager_page_array), $element, $parameters, array('class' => 'pager-last'));
   }
-  else {
-    $output .= ' ';
-  }
-  $output .= '</div>';
+
   return $output;
 }
 
@@ -276,17 +269,17 @@ function theme_pager_last($text, $limit, $element = 0, $attributes = array()) {
  *   The number of pages in the list.
  * @param $text
  *   A string of text to display before the page list.
- * @param $attributes
+ * @param $parameters
  *   An associative array of query string parameters to append to the pager links.
  * @return
  *   An HTML string that generates this piece of the query pager.
  *
  * @ingroup themeable
  */
-function theme_pager_list($limit, $element = 0, $quantity = 5, $text = '', $attributes = array()) {
+function theme_pager_list($limit, $element = 0, $quantity = 5, $text = '', $parameters = array()) {
   global $pager_page_array, $pager_total;
 
-  $output = '<div class="pager-list">';
+  $output = '<span class="pager-list">';
   // Calculate various markers within this pager piece:
   // Middle is used to "center" pages around the current page.
   $pager_middle = ceil($quantity / 2);
@@ -318,27 +311,27 @@ function theme_pager_list($limit, $element = 0, $quantity = 5, $text = '', $attr
   if ($i != $pager_max) {
     $output .= $text;
     if ($i > 1) {
-      $output .= '<div class="pager-list-dots-left">... </div>';
+      $output .= '<span class="pager-ellipses">&#8230;</span>';
     }
 
     // Now generate the actual pager piece.
     for (; $i <= $pager_last && $i <= $pager_max; $i++) {
       if ($i < $pager_current) {
-        $output .= theme('pager_previous', $i, $limit, $element, ($pager_current - $i), $attributes) ." ";
+        $output .= theme('pager_previous', $i, $limit, $element, ($pager_current - $i), $parameters);
       }
       if ($i == $pager_current) {
-        $output .= '<strong>'. $i .'</strong> ';
+        $output .= '<strong class="pager-current">'. $i .'</strong>';
       }
       if ($i > $pager_current) {
-        $output .= theme('pager_next', $i, $limit, $element, ($i - $pager_current), $attributes) ." ";
+        $output .= theme('pager_next', $i, $limit, $element, ($i - $pager_current), $parameters);
       }
     }
 
     if ($i < $pager_max) {
-      $output .= '<div class="pager-list-dots-right">...</div>';
+      $output .= '<span class="pager-ellipses">&#8230;</span>';
     }
   }
-  $output .= '</div>';
+  $output .= '</span>';
 
   return $output;
 }
@@ -350,23 +343,28 @@ function theme_pager_list($limit, $element = 0, $quantity = 5, $text = '', $attr
  *   The first result to display on the linked page.
  * @param $element
  *   An optional integer to distinguish between multiple pagers on one page.
- * @param $attributes
+ * @param $parameters
  *   An associative array of query string parameters to append to the pager link.
+ * @param $attributes
+ *   An associative array of HTML attributes to apply to a pager anchor tag.
  * @return
  *   An HTML string that generates the link.
  */
-function theme_pager_link($text, $page_new, $element, $attributes = array()) {
+function theme_pager_link($text, $page_new, $element, $parameters = array(), $attributes = array()) {
   $page = isset($_GET['page']) ? $_GET['page'] : '';
   if ($new_page = implode(',', pager_load_array($page_new[$element], $element, explode(',', $page)))) {
-    $attributes['page'] = $new_page;
+    $parameters['page'] = $new_page;
   }
 
   $query = array();
-  foreach ($attributes as $key => $value) {
+  foreach ($parameters as $key => $value) {
     $query[] = $key .'='. $value;
   }
 
-  return l($text, $_GET['q'], array(), count($query) ? implode('&', $query) : NULL);
+  // Set each pager link title with correct page number (clean out HTML entities, title doesn't like those)
+  $attributes['title'] = is_numeric($text) ? 'goto page ' . $text : 'goto ' . str_replace(array('&#171; ', '&#8249; ', ' &#8250;', ' &#187;'), '', $text) . ' page';
+
+  return l($text, $_GET['q'], $attributes, count($query) ? implode('&', $query) : NULL, NULL, FALSE, TRUE);
 }
 
 /**

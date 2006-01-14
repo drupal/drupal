@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.132 2006/01/13 07:55:46 dries Exp $ */
+/* $Id: drupal.css,v 1.133 2006/01/14 09:40:22 dries Exp $ */
 
 /*
 ** HTML elements
@@ -181,7 +181,7 @@ tr.odd .form-item, tr.even .form-item {
   clear: both;
   text-align: center;
 }
-#pager div {
+#pager a, #pager strong.pager-current {
   padding: 0.5em;
 }
 .path {
