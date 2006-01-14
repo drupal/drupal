@@ -1,9 +1,9 @@
 <?php
-// $Id: contact.module,v 1.39 2005/12/27 18:11:27 dries Exp $
+// $Id: contact.module,v 1.40 2006/01/14 10:33:22 dries Exp $
 
 /**
  * @file
- * Enables the use of personal contact forms.
+ * Enables the use of personal and site-wide contact forms.
  */
 
 /**
@@ -12,20 +12,14 @@
 function contact_help($section) {
   switch ($section) {
     case 'admin/help#contact':
-      $output = '<p>'. t('The contact module allows other users to contact you by e-mail via your personal contact form.   Users can send a subject and message in the contact form. The contact module is important in helping make connections among members of your community.') .'</p>';
-      $output .= '<p>'. t('Users can administer the contact settings in their account settings.  Note that a users e-mail address is not made public and that privileged users such as site administrators are able to contact you even if you choose not to enable this feature. If users activate the personal contact form, then a contact tab will appear in their user profile.') .'</p>';
-      $output .= t('<p>You can</p>
-<ul>
-<li>view user <a href="%profile">profiles</a>.</li>
-<li>enable the personal contact form in <a href="%admin-user">administer &gt;&gt; user &gt;&gt; edit tab &gt;&gt; account settings tab &gt;&gt; personal contact settings</a>.</li>
-</ul>
-', array('%profile' => url('profile'), '%admin-user' => url('admin/user')));
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%contact">Contact page</a>.', array('%contact' => 'http://www.drupal.org/handbook/modules/contact/')) .'</p>';
+      $output = sprintf('<p>%s</p><p>%s</p><p>%s</p>', t('The contact module enables the use of both personal and site-wide contact forms, thereby facilitating easy communication within the community. While personal contact forms allow users to contact each other by e-mail, site-wide forms allow community members to contact the site administration from a central location. Users can specify a subject and message in the contact form, and also request that a copy of the e-mail be sent to their own address.'), t("Users can activate/deactivate their personal contact forms in their account settings. Upon activation, a contact tab will appear in their user profiles. Privileged users such as site administrators are able to contact users even if they have chosen not to enable this feature."), t('Contact module links:'));
+      $output .= sprintf('<ul><li>%s</li><li>%s</li><li>%s</li></ul>', t('Default site-wide <a href="%contact-page">contact page</a>.', array('%contact-page' => url('contact'))), t('Site-wide contact form <a href="%configuration-page">category configuration</a>.', array('%configuration-page' => url('admin/contact'))), t('Site-wide contact form <a href="%additional-settings">general settings</a>.', array('%additional-settings' => url('admin/settings/contact'))));
+      $output .= t('For more information, please read the configuration and customization handbook page for the <a href="%contact">Contact module</a>.', array('%contact' => url('http://www.drupal.org/handbook/modules/contact/', NULL, NULL, TRUE)));
       return $output;
     case 'admin/modules#description':
       return t('Enables the use of both personal and site-wide contact forms.');
     case 'admin/contact':
-      return t('This page lets you setup <a href="%form">your site-wide contact form</a>.  To do so, add one or more subjects.  You can associate different recipients with each subject to route e-mails to different people.  For example, you can route website feedback to the webmaster and direct product information requests to the sales department.  On the <a href="%settings">settings page</a> you can customize the information shown above the contact form.  This can be useful to provide additional contact information such as your postal address and telephone number.', array('%settings' => url('admin/settings/contact'), '%form' => url('contact', NULL, NULL, TRUE)));
+      return t('This page lets you setup <a href="%form">your site-wide contact form</a>. To do so, add one or more categories. You can associate different recipients with each category to route e-mails to different people. For example, you can route website feedback to the webmaster and direct product information requests to the sales department. On the <a href="%settings">settings page</a> you can customize the information shown above the contact form.  This can be useful to provide additional contact information such as your postal address and telephone number.', array('%settings' => url('admin/settings/contact'), '%form' => url('contact')));
   }
 }
 
@@ -34,8 +28,8 @@ function contact_help($section) {
  */
 function contact_menu($may_cache) {
   global $user;
-  $items = array();
 
+  $items = array();
   if ($may_cache) {
     $items[] = array('path' => 'contact', 'title' => t('contact'),
       'callback' => 'contact_mail_page', 'access' => user_access('access content'),
@@ -45,9 +39,12 @@ function contact_menu($may_cache) {
     $items[] = array('path' => 'admin/contact/list', 'title' => t('list'),
       'callback' => 'contact_admin', 'access' => user_access('administer site configuration'),
       'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -1);
-    $items[] = array('path' => 'admin/contact/edit', 'title' => t('add category'),
+    $items[] = array('path' => 'admin/contact/add', 'title' => t('add category'),
       'callback' => 'contact_admin_edit', 'access' => user_access('administer site configuration'),
       'type' => MENU_LOCAL_TASK);
+    $items[] = array('path' => 'admin/contact/edit', 'title' => t('edit contact category'),
+      'callback' => 'contact_admin_edit', 'access' => user_access('administer site configuration'),
+      'type' => MENU_CALLBACK);
     $items[] = array('path' => 'admin/contact/delete', 'title' => t('delete contact'),
       'callback' => 'contact_admin_delete', 'access' => user_access('administer site configuration'),
       'type' => MENU_CALLBACK);
@@ -67,9 +64,10 @@ function contact_menu($may_cache) {
  */
 function contact_settings() {
   $form['contact_form_information'] = array(
-    '#type' => 'textarea', '#title' => t('Additional information'),
+    '#type' => 'textarea',
+    '#title' => t('Additional information'),
     '#default_value' => variable_get('contact_form_information', t('You can leave a message using the contact form below.')),
-    '#description' => t('Information to show on the <a href="%form">contact page</a>.  Can be anything from submission guidelines to your postal address or telephone number.', array('%form' => url('contact')))
+    '#description' => t('Information to show on the <a href="%form">contact page</a>. Can be anything from submission guidelines to your postal address or telephone number.', array('%form' => url('contact'))),
   );
   $form['contact_hourly_threshold'] = array(
     '#type' => 'select',
@@ -88,8 +86,16 @@ function contact_settings() {
  */
 function contact_user($type, $edit, &$user, $category = NULL) {
   if ($type == 'form' && $category == 'account') {
-    $form['contact'] = array('#type' => 'fieldset', '#title' => t('Contact settings'), '#weight' => 5, '#collapsible' => TRUE);
-    $form['contact']['contact'] = array('#type' => 'checkbox', '#title' => t('Personal contact form'), '#default_value' => $edit['contact'], '#description' => t('Allow other users to contact you by e-mail via <a href="%url">your personal contact form</a>. Note that your e-mail address is not made public and that privileged users such as site administrators are able to contact you even if you choose not to enable this feature.', array('%url' => url("user/$user->uid/contact"))));
+    $form['contact'] = array('#type' => 'fieldset',
+      '#title' => t('Contact settings'),
+      '#weight' => 5,
+      '#collapsible' => TRUE,
+    );
+    $form['contact']['contact'] = array('#type' => 'checkbox',
+      '#title' => t('Personal contact form'),
+      '#default_value' => $edit['contact'],
+      '#description' => t('Allow other users to contact you by e-mail via <a href="%url">your personal contact form</a>. Note that while your e-mail address is not made public to other members of the community, privileged users such as site administrators are able to contact you even if you choose not to enable this feature.', array('%url' => url("user/$user->uid/contact")))
+    );
     return $form;
   }
   if ($type == 'validate') {
@@ -108,22 +114,40 @@ function contact_mail_user() {
       $output = t('Please <a href="%login">login</a> or <a href="%register">register</a> to send %name a message.', array('%login' => url('user/login'), '%register' => url('user/register'), '%name' => $account->name));
     }
     else if (!valid_email_address($user->mail)) {
-      $output = t('You need to provide a valid e-mail address to contact other users. Please edit your <a href="%url">user information</a>.', array('%url' => url("user/$user->uid/edit")));
+      $output = t('You need to provide a valid e-mail address to contact other users. Please update your <a href="%url">user information</a> and try again.', array('%url' => url("user/$user->uid/edit")));
     }
     else if (!flood_is_allowed('contact', variable_get('contact_hourly_threshold', 3))) {
-      $output = t("You can't contact more than %number users per hour. Please try again later.", array('%number' => variable_get('contact_hourly_threshold', 3)));
+      $output = t('You cannot contact more than %number users per hour. Please try again later.', array('%number' => variable_get('contact_hourly_threshold', 3)));
     }
     else {
       drupal_set_title($account->name);
 
       $form['#token'] = $user->name . $user->mail;
-      $form['from'] = array('#type' => 'item', '#title' => t('From'), '#value' => $user->name .' &lt;'. $user->mail .'&gt;');
-      $form['to'] = array('#type' => 'item', '#title' => t('To'), '#value' => $account->name);
-      $form['subject'] = array('#type' => 'textfield', '#title' => t('Subject'), '#maxlength' => 50, '#required' => TRUE);
-      $form['message'] = array('#type' => 'textarea', '#title' => t('Message'), '#rows' => 15, '#required' => TRUE);
-      $form['copy'] = array('#type' => 'checkbox', '#title' => t('Send me a copy.'));
-      $form['submit'] = array('#type' => 'submit', '#value' => t('Send e-mail'));
-      $output = drupal_get_form('contact_user_mail', $form);
+      $form['from'] = array('#type' => 'item',
+        '#title' => t('From'),
+        '#value' => $user->name .' &lt;'. $user->mail .'&gt;',
+      );
+      $form['to'] = array('#type' => 'item',
+        '#title' => t('To'),
+        '#value' => $account->name,
+      );
+      $form['subject'] = array('#type' => 'textfield',
+        '#title' => t('Subject'),
+        '#maxlength' => 50,
+        '#required' => TRUE,
+      );
+      $form['message'] = array('#type' => 'textarea',
+        '#title' => t('Message'),
+        '#rows' => 15,
+        '#required' => TRUE,
+      );
+      $form['copy'] = array('#type' => 'checkbox',
+        '#title' => t('Send me a copy.'),
+      );
+      $form['submit'] = array('#type' => 'submit',
+        '#value' => t('Send e-mail')
+      );
+      $output = drupal_get_form('contact_mail_user', $form);
     }
 
     return $output;
@@ -133,7 +157,7 @@ function contact_mail_user() {
   }
 }
 
-function contact_user_mail_submit($form_id, $edit) {
+function contact_mail_user_submit($form_id, $edit) {
   global $user;
 
   $account = user_load(array('uid' => arg(1), 'status' => 1));
@@ -179,67 +203,108 @@ function contact_user_mail_submit($form_id, $edit) {
 }
 
 function contact_admin_edit($cid = NULL) {
-  if (isset($_POST['edit'])) {
-    $edit = $_POST['edit'];
-
-    if (empty($edit['category'])) {
-      form_set_error('category', t('You must enter a category.'));
-    }
-    if (empty($edit['recipients'])) {
-      form_set_error('recipients', t('You must enter one or more recipients.'));
-    }
-    else {
-      $recipients = split(',', $edit['recipients']);
-      foreach($recipients as $recipient) {
-        if (!valid_email_address(trim($recipient))) {
-          form_set_error('recipients',t('%recipient is an invalid e-mail address.', array('%recipient' => theme('placeholder', $recipient))));
-        }
-      }
-    }
-
-    if (!form_get_errors()) {
-      db_query("DELETE FROM {contact} WHERE cid = %d", $cid);
-      db_query("INSERT INTO {contact} (category, recipients, reply, weight, selected) VALUES ('%s', '%s', '%s', %d, %d)", $edit['category'], $edit['recipients'], $edit['reply'], $edit['weight'], $edit['selected']);
-      drupal_set_message(t('Category %category has been updated.', array('%category' => theme('placeholder', $edit['category']))));
-      drupal_goto('admin/contact');
-    }
-  }
-  else {
-    $category           = db_fetch_object(db_query("SELECT * FROM {contact} WHERE cid = %d", $cid));
-    $edit['cid']        = $category->cid;
-    $edit['category']   = $category->category;
+  if (arg(2) == "edit" && $cid > 0) {
+    $category = db_fetch_object(db_query("SELECT * FROM {contact} WHERE cid = %d", $cid));
+    $edit['cid'] = $category->cid;
+    $edit['category'] = $category->category;
     $edit['recipients'] = $category->recipients;
-    $edit['reply']      = $category->reply;
-    $edit['weight']     = $category->weight;
-    $edit['selected']   = $category->selected;
+    $edit['reply'] = $category->reply;
+    $edit['weight'] = $category->weight;
+    $edit['selected'] = $category->selected;
   }
-
-  $form['category'] = array('#type' => 'textfield', '#title' => t('Category'), '#maxlength' => 255, '#default_value' => $edit['category'], '#description' => t("Example: 'website feedback' or 'product information'."), '#required' => TRUE);
-  $form['recipients'] = array('#type' => 'textarea', '#title' => t('Recipients'), '#default_value' => $edit['recipients'], '#description' => t("Example: 'webmaster@yoursite.com' or 'sales@yoursite.com'.  To specify multiple repecients, separate each e-mail address with a comma."), '#required' => TRUE);
-  $form['reply'] = array('#type' => 'textarea', '#title' => t('Auto-reply'), '#default_value' => $edit['reply'], '#description' => t("Optional auto-reply.  Leave empty if you don't want to send the user an auto-reply message."));
-  $form['weight'] = array('#type' => 'weight', '#title' => t('Weight'), '#default_value' => $edit['weight'], '#description' => t('When listing categories, those with with light (small) weights get listed before categories with heavier (larger) weights. Categories with equal weights are sorted alphabetically.'));
-  $form['selected'] = array('#type' => 'select', '#title' => t('Selected'), '#options' => array('0' => t('No'), '1' => t('Yes')), '#default_value' => $edit['selected'], '#description' => t('Set this to <em>Yes</em> if you would like this category to be selected by default.'));
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Submit'));
+  $form['category'] = array('#type' => 'textfield',
+    '#title' => t('Category'),
+    '#maxlength' => 255,
+    '#default_value' => $edit['category'],
+    '#description' => t("Example: 'website feedback' or 'product information'."),
+    '#required' => TRUE,
+  );
+  $form['recipients'] = array('#type' => 'textarea',
+    '#title' => t('Recipients'),
+    '#default_value' => $edit['recipients'],
+    '#description' => t("Example: 'webmaster@yoursite.com' or 'sales@yoursite.com'. To specify multiple recipients, separate each e-mail address with a comma."),
+    '#required' => TRUE,
+  );
+  $form['reply'] = array('#type' => 'textarea',
+    '#title' => t('Auto-reply'),
+    '#default_value' => $edit['reply'],
+    '#description' => t('Optional auto-reply. Leave empty if you do not want to send the user an auto-reply message.'),
+  );
+  $form['weight'] = array('#type' => 'weight',
+    '#title' => t('Weight'),
+    '#default_value' => $edit['weight'],
+    '#description' => t('When listing categories, those with lighter (smaller) weights get listed before categories with heavier (larger) weights. Categories with equal weights are sorted alphabetically.'),
+  );
+  $form['selected'] = array('#type' => 'select',
+    '#title' => t('Selected'),
+    '#options' => array('0' => t('No'), '1' => t('Yes')),
+    '#default_value' => $edit['selected'],
+    '#description' => t('Set this to <em>Yes</em> if you would like this category to be selected by default.'),
+  );
+  $form['cid'] = array('#type' => 'hidden',
+    '#value' => $edit['cid'],
+  );
+  $form['submit'] = array('#type' => 'submit',
+    '#value' => t('Submit'),
+  );
 
   return drupal_get_form('contact_admin_edit', $form);
+}
+
+function contact_admin_edit_validate($form_id, $form_values) {
+  if (empty($form_values['category'])) {
+    form_set_error('category', t('You must enter a category.'));
+  }
+  if (empty($form_values['recipients'])) {
+    form_set_error('recipients', t('You must enter one or more recipients.'));
+  }
+  else {
+    $recipients = explode(',', $form_values['recipients']);
+    foreach($recipients as $recipient) {
+      if (!valid_email_address(trim($recipient))) {
+        form_set_error('recipients',t('%recipient is an invalid e-mail address.', array('%recipient' => theme('placeholder', $recipient))));
+      }
+    }
+  }
+}
+
+function contact_admin_edit_submit($form_id, $form_values) {
+  if ($form_values['selected']) {
+    //Unselect all other contact categories
+    db_query("UPDATE {contact} SET selected = 0");
+  }
+  $recipients = explode(',', $form_values['recipients']);
+  foreach($recipients as $key=>$recipient) {
+    $recipients[$key] = trim($recipient);
+  }
+  $form_values['recipients'] = implode(',', $recipients);
+  if (arg(2) == "add") {
+    db_query("INSERT INTO {contact} (category, recipients, reply, weight, selected) VALUES ('%s', '%s', '%s', %d, %d)", $form_values['category'], $form_values['recipients'], $form_values['reply'], $form_values['weight'], $form_values['selected']);
+  }
+  else {
+    db_query("UPDATE {contact} SET category = '%s', recipients = '%s', reply = '%s', weight = %d, selected = %d WHERE cid=%d", $form_values['category'], $form_values['recipients'], $form_values['reply'], $form_values['weight'], $form_values['selected'], $form_values['cid']);
+  }
+  drupal_set_message(t('Category %category has been updated.', array('%category' => theme('placeholder', $edit['category']))));
+  drupal_goto('admin/contact');
 }
 
 function contact_admin_delete($cid) {
   $info = db_fetch_object(db_query("SELECT cid, category FROM {contact} WHERE cid = %d", $cid));
   if ($_POST['op'] != t('Delete')) {
-    return confirm_form('contact_admin_delete', array(),
-                    t('Are you sure you want to delete %category?', array('%category' => theme('placeholder', $info->category))),
-                    'admin/contact',
-                    t('This action cannot be undone.'),
-                    t('Delete'),
-                    t('Cancel'));
+    return confirm_form('contact_admin_delete',
+      array(),
+      t('Are you sure you want to delete %category?', array('%category' => theme('placeholder', $info->category))),
+      'admin/contact',
+      t('This action cannot be undone.'),
+      t('Delete'),
+      t('Cancel')
+    );
   }
   else {
     db_query("DELETE FROM {contact} WHERE cid = %d", $cid);
     drupal_goto('admin/contact');
   }
 }
-
 
 function contact_admin() {
   $result = db_query('SELECT cid, category, recipients, selected FROM {contact} ORDER BY weight, category');
@@ -264,7 +329,7 @@ function contact_mail_page() {
     }
 
     $result = db_query('SELECT cid, category, selected FROM {contact} ORDER BY weight, category');
-    $categories[] = '--';
+    $categories[] = t('--');
     while ($category = db_fetch_object($result)) {
       $categories[$category->cid] = $category->category;
       if ($category->selected) {
@@ -274,16 +339,47 @@ function contact_mail_page() {
 
     if (count($categories) > 1) {
       $form['#token'] = $user->name . $user->mail;
-      $form['contact_information'] = array('#type' => 'markup', '#value' => variable_get('contact_form_information', t('You can leave us a message using the contact form below.')));
-      $form['name'] = array('#type' => 'textfield', '#title' => t('Your name'), '#maxlength' => 255, '#default_value' => $edit['name'], '#required' => TRUE);
-      $form['mail'] = array('#type' => 'textfield', '#title' => t('Your e-mail address'), '#maxlength' => 255, '#default_value' => $edit['mail'], '#required' => TRUE);
-      $form['subject'] = array('#type' => 'textfield', '#title' => t('Subject'), '#maxlength' => 255, '#default_value' => $edit['subject'], '#required' => TRUE);
+      $form['contact_information'] = array('#type' => 'markup',
+        '#value' => variable_get('contact_form_information', t('You can leave us a message using the contact form below.')),
+      );
+      $form['name'] = array('#type' => 'textfield',
+        '#title' => t('Your name'),
+        '#maxlength' => 255,
+        '#default_value' => $edit['name'],
+        '#required' => TRUE,
+      );
+      $form['mail'] = array('#type' => 'textfield',
+        '#title' => t('Your e-mail address'),
+        '#maxlength' => 255,
+        '#default_value' => $edit['mail'],
+        '#required' => TRUE,
+      );
+      $form['subject'] = array('#type' => 'textfield',
+        '#title' => t('Subject'),
+        '#maxlength' => 255,
+        '#default_value' => $edit['subject'],
+        '#required' => TRUE,
+      );
       if (count($categories) > 2) {
-        $form['cid'] = array('#type' => 'select', '#title' => t('Category'), '#default_value' => $default_category, '#options' => $categories, '#required' => TRUE);
+        $form['cid'] = array('#type' => 'select',
+          '#title' => t('Category'),
+          '#default_value' => $default_category,
+          '#options' => $categories,
+          '#required' => TRUE,
+        );
       }
-      $form['message'] = array('#type' => 'textarea', '#title' => t('Message'), '#default_value' => $edit['message'], '#required' => TRUE);
-      $form['copy'] = array('#type' => 'checkbox', '#title' => t('Send me a copy.'), '#default_value' => $edit['copy']);
-      $form['submit'] = array('#type' => 'submit', '#value' => t('Send e-mail'));
+      $form['message'] = array('#type' => 'textarea',
+        '#title' => t('Message'),
+        '#default_value' => $edit['message'],
+        '#required' => TRUE,
+      );
+      $form['copy'] = array('#type' => 'checkbox',
+        '#title' => t('Send me a copy.'),
+        '#default_value' => $edit['copy'],
+      );
+      $form['submit'] = array('#type' => 'submit',
+        '#value' => t('Send e-mail'),
+      );
       $output = drupal_get_form('contact_mail_page', $form);
     }
     else {
@@ -331,7 +427,7 @@ function contact_mail_page_submit($form_id, $edit) {
   $contact = db_fetch_object(db_query("SELECT * FROM {contact} WHERE cid = %d", $edit['cid']));
 
   // Format the category:
-  $subject = '['. $contact->category .'] '. $edit['subject'];
+  $subject = t('[%category] %subject', array('%category' => $contact->category, '%subject' => $edit['subject']));
 
   // Prepare the body:
   $body = implode("\n\n", $message);
