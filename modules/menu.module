@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.62 2006/01/13 07:34:46 dries Exp $
+// $Id: menu.module,v 1.63 2006/01/14 09:45:44 dries Exp $
 
 /**
  * @file
@@ -388,15 +388,15 @@ function menu_edit_item($mid = 0) {
 function menu_edit_item_form($edit) {
   $menu = menu_get_menu();
 
-  $form['title'] = array('#type' => 'textfield', '#title' => t('Title'), '#default_value' => $edit['title'], '#description' => t('The name of the menu.'), '#required' => TRUE);
-
   if ($edit['pid'] == 0) {
     // Display a limited set of fields for menus (not items).
+    $form['title'] = array('#type' => 'textfield', '#title' => t('Title'), '#default_value' => $edit['title'], '#description' => t('The name of the menu.'), '#required' => TRUE);
     $form['path'] = array('#type' => 'hidden', '#value' => '');
     $form['pid'] = array('#type' => 'hidden', '#value' => 0);
     $form['weight'] = array('#type' => 'hidden', '#value' => 0);
   }
   else {
+    $form['title'] = array('#type' => 'textfield', '#title' => t('Title'), '#default_value' => $edit['title'], '#description' => t('The name of the menu item.'), '#required' => TRUE);
     $form['description'] = array('#type' => 'textfield', '#title' => t('Description'), '#default_value' => $edit['description'], '#description' => t('The description displayed when hovering over a menu item.'));
 
     $path_description = t('The Drupal path this menu item links to. Enter %front to link to the front page.', array('%front' => theme('placeholder', '<front>')));
