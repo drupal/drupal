@@ -181,7 +181,7 @@ tr.odd .form-item, tr.even .form-item {
   clear: both;
   text-align: center;
 }
-#pager div {
+#pager a, #pager strong.pager-current {
   padding: 0.5em;
 }
 .path {
