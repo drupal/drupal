@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.268 2005/12/29 04:46:40 unconed Exp $
+// $Id: aggregator.module,v 1.269 2006/01/15 17:03:34 dries Exp $
 
 /**
  * @file
@@ -1021,7 +1021,7 @@ function aggregator_page_list_submit($form_id, $form) {
  * Menu callback; displays all the feeds used by the aggregator.
  */
 function aggregator_page_sources() {
-  $result = db_query('SELECT f.fid, f.title, f.description, f.image, MAX(i.timestamp) AS last FROM {aggregator_feed} f LEFT JOIN {aggregator_item} i ON f.fid = i.fid GROUP BY f.fid, f.title, f.description, f.image');
+  $result = db_query('SELECT f.fid, f.title, f.description, f.image, MAX(i.timestamp) AS last FROM {aggregator_feed} f LEFT JOIN {aggregator_item} i ON f.fid = i.fid GROUP BY f.fid, f.title, f.description, f.image ORDER BY last DESC, f.title');
   $output = "<div id=\"aggregator\">\n";
   while ($feed = db_fetch_object($result)) {
     $output .= '<h2>'. check_plain($feed->title) ."</h2>\n";
