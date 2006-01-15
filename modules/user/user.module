@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.559 2006/01/13 19:02:38 dries Exp $
+// $Id: user.module,v 1.560 2006/01/15 16:57:56 dries Exp $
 
 /**
  * @file
@@ -285,14 +285,11 @@ function user_password($length = 10) {
   // This variable contains the list of allowable characters for the
   // password.  Note that the number 0 and the letter 'O' have been
   // removed to avoid confusion between the two.  The same is true
-  // of 'I' and 1.
-  $allowable_characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  // of 'I', 1, and l.
+  $allowable_characters = 'abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 
-  // We see how many characters are in the allowable list:
-  $len = strlen($allowable_characters);
-
-  // Seed the random number generator with the microtime stamp.
-  mt_srand((double)microtime() * 1000000);
+  // Zero-based count of characters in the allowable list:
+  $len = strlen($allowable_characters) - 1;
 
   // Declare the password as a blank string.
   $pass = '';
@@ -302,7 +299,7 @@ function user_password($length = 10) {
 
     // Each iteration, pick a random character from the
     // allowable string and append it to the password:
-    $pass .= $allowable_characters[mt_rand(0, $len - 1)];
+    $pass .= $allowable_characters[mt_rand(0, $len)];
   }
 
   return $pass;
