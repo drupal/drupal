@@ -1,5 +1,5 @@
 <?php
-// $Id: pager.inc,v 1.52 2006/01/15 00:04:20 unconed Exp $
+// $Id: pager.inc,v 1.53 2006/01/15 16:55:35 dries Exp $
 
 /**
  * @file
@@ -361,7 +361,7 @@ function theme_pager_link($text, $page_new, $element, $parameters = array(), $at
     $query[] = $key .'='. $value;
   }
 
-  // Set each pager link title 
+  // Set each pager link title
   if (!isset($attributes['title'])) {
     static $titles = null;
     if (!isset($titles)) {

@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.48 2006/01/15 07:14:14 unconed Exp $
+// $Id: form.inc,v 1.49 2006/01/15 16:55:35 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -409,15 +409,14 @@ function _form_sort($a, $b) {
 function _element_info($type, $refresh = null) {
   static $cache;
 
-  $parents = array();
   $basic_defaults = array(
     '#description' => NULL,
     '#attributes' => array(),
     '#required' => FALSE,
     '#tree' => FALSE,
-    '#parents' => $parents
+    '#parents' => array()
   );
-  if ($refresh || !isset($cache)) {
+  if (!isset($cache) || $refresh) {
     $cache = array();
     foreach (module_implements('elements') as $module) {
       $elements = module_invoke($module, 'elements');
