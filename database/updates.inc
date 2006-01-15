@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.183 2006/01/14 10:22:26 dries Exp $
+// $Id: updates.inc,v 1.184 2006/01/15 17:13:30 dries Exp $
 
 function system_update_110() {
   $ret = array();
@@ -481,7 +481,7 @@ function system_update_132() {
    */
   $ret = array();
 
-  if (variable_get('update_132_done', FALSE)) {
+  if (!variable_get('update_132_done', FALSE)) {
     if ($GLOBALS['db_type'] == 'pgsql') {
       $ret[] = update_sql('DROP TABLE {search_total}');
       $ret[] = update_sql("CREATE TABLE {search_total} (
@@ -530,7 +530,7 @@ function system_update_134() {
 }
 
 function system_update_135() {
-  if (variable_get('update_135_done', FALSE)) {
+  if (!variable_get('update_135_done', FALSE)) {
     $result = db_query("SELECT delta FROM {blocks} WHERE module = 'aggregator'");
     while ($block = db_fetch_object($result)) {
       list($type, $id) = explode(':', $block->delta);
@@ -565,7 +565,7 @@ function system_update_136() {
 function system_update_137() {
   $ret = array();
 
-  if (variable_get('update_137_done', FALSE)) {
+  if (!variable_get('update_137_done', FALSE)) {
     if ($GLOBALS['db_type'] == 'mysql') {
       $ret[] = update_sql("ALTER TABLE {locales_source} CHANGE location location varchar(255) NOT NULL default ''");
     }
