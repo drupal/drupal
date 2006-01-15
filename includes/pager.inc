@@ -361,7 +361,7 @@ function theme_pager_link($text, $page_new, $element, $parameters = array(), $at
     $query[] = $key .'='. $value;
   }
 
-  // Set each pager link title 
+  // Set each pager link title
   if (!isset($attributes['title'])) {
     static $titles = null;
     if (!isset($titles)) {

@@ -409,15 +409,14 @@ function _form_sort($a, $b) {
 function _element_info($type, $refresh = null) {
   static $cache;
 
-  $parents = array();
   $basic_defaults = array(
     '#description' => NULL,
     '#attributes' => array(),
     '#required' => FALSE,
     '#tree' => FALSE,
-    '#parents' => $parents
+    '#parents' => array()
   );
-  if ($refresh || !isset($cache)) {
+  if (!isset($cache) || $refresh) {
     $cache = array();
     foreach (module_implements('elements') as $module) {
       $elements = module_invoke($module, 'elements');
