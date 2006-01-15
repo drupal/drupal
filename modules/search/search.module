@@ -482,7 +482,7 @@ function search_index($sid, $type, $text) {
       list($tagname) = explode(' ', $value, 2);
       $tagname = drupal_strtolower($tagname);
       // Closing or opening tag?
-      if ($tagname{0} == '/') {
+      if ($tagname[0] == '/') {
         $tagname = substr($tagname, 1);
         // If we encounter unexpected tags, reset score to avoid incorrect boosting.
         if (!count($tagstack) || $tagstack[0] != $tagname) {

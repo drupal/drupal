@@ -19,7 +19,7 @@
  * Check if the key is a property.
  */
 function element_property($key) {
-  return $key{0} == '#';
+  return $key[0] == '#';
 }
 
 function element_properties($element) {
@@ -30,7 +30,7 @@ function element_properties($element) {
  * Check if the key is a child.
  */
 function element_child($key) {
-  return $key{0} != '#';
+  return $key[0] != '#';
 }
 
 function element_children($element) {

@@ -606,29 +606,29 @@ function _locale_import_tokenize_formula($formula) {
   $formula = str_replace(" ", "", $formula);
   $tokens = array();
   for ($i = 0; $i < strlen($formula); $i++) {
-    if (is_numeric($formula{$i})) {
-      $num = $formula{$i};
+    if (is_numeric($formula[$i])) {
+      $num = $formula[$i];
       $j = $i + 1;
-      while($j < strlen($formula) && is_numeric($formula{$j})) {
-        $num .= $formula{$j};
+      while($j < strlen($formula) && is_numeric($formula[$j])) {
+        $num .= $formula[$j];
         $j++;
       }
       $i = $j - 1;
       $tokens[] = $num;
     }
-    elseif ($pos = strpos(" =<>!&|", $formula{$i})) { // We won't have a space
-      $next = $formula{($i+1)};
+    elseif ($pos = strpos(" =<>!&|", $formula[$i])) { // We won't have a space
+      $next = $formula[$i + 1];
       switch ($pos) {
         case 1:
         case 2:
         case 3:
         case 4:
           if ($next == '=') {
-            $tokens[] = $formula{$i} .'=';
+            $tokens[] = $formula[$i] .'=';
             $i++;
           }
           else {
-            $tokens[] = $formula{$i};
+            $tokens[] = $formula[$i];
           }
           break;
         case 5:
@@ -637,7 +637,7 @@ function _locale_import_tokenize_formula($formula) {
             $i++;
           }
           else {
-            $tokens[] = $formula{$i};
+            $tokens[] = $formula[$i];
           }
           break;
         case 6:
@@ -646,13 +646,13 @@ function _locale_import_tokenize_formula($formula) {
             $i++;
           }
           else {
-            $tokens[] = $formula{$i};
+            $tokens[] = $formula[$i];
           }
           break;
       }
     }
     else {
-      $tokens[] = $formula{$i};
+      $tokens[] = $formula[$i];
     }
   }
   return $tokens;
