@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.156 2005/12/22 22:58:12 unconed Exp $
+// $Id: search.module,v 1.157 2006/01/15 07:14:14 unconed Exp $
 
 /**
  * @file
@@ -482,7 +482,7 @@ function search_index($sid, $type, $text) {
       list($tagname) = explode(' ', $value, 2);
       $tagname = drupal_strtolower($tagname);
       // Closing or opening tag?
-      if ($tagname{0} == '/') {
+      if ($tagname[0] == '/') {
         $tagname = substr($tagname, 1);
         // If we encounter unexpected tags, reset score to avoid incorrect boosting.
         if (!count($tagstack) || $tagstack[0] != $tagname) {

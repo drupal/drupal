@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.506 2006/01/13 07:33:13 dries Exp $
+// $Id: common.inc,v 1.507 2006/01/15 07:14:14 unconed Exp $
 
 /**
  * @file
@@ -857,7 +857,7 @@ function format_date($timestamp, $type = 'medium', $format = '', $timezone = NUL
   $max = strlen($format);
   $date = '';
   for ($i = 0; $i < $max; $i++) {
-    $c = $format{$i};
+    $c = $format[$i];
     if (strpos('AaDFlM', $c) !== false) {
       $date .= t(gmdate($c, $timestamp));
     }

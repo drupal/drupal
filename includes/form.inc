@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.47 2006/01/13 07:44:59 dries Exp $
+// $Id: form.inc,v 1.48 2006/01/15 07:14:14 unconed Exp $
 
 /**
  * @defgroup form Form generation
@@ -19,7 +19,7 @@
  * Check if the key is a property.
  */
 function element_property($key) {
-  return $key{0} == '#';
+  return $key[0] == '#';
 }
 
 function element_properties($element) {
@@ -30,7 +30,7 @@ function element_properties($element) {
  * Check if the key is a child.
  */
 function element_child($key) {
-  return $key{0} != '#';
+  return $key[0] != '#';
 }
 
 function element_children($element) {

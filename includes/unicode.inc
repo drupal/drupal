@@ -1,5 +1,5 @@
 <?php
-// $Id: unicode.inc,v 1.12 2005/12/31 14:32:23 unconed Exp $
+// $Id: unicode.inc,v 1.13 2006/01/15 07:14:14 unconed Exp $
 
 define('UNICODE_ERROR', -1);
 define('UNICODE_SINGLEBYTE', 0);
@@ -193,12 +193,12 @@ function truncate_utf8($string, $len, $wordsafe = FALSE, $dots = FALSE) {
     return $string;
   }
   if ($wordsafe) {
-    while (($string{--$len} != ' ') && ($len > 0)) {};
+    while (($string[--$len] != ' ') && ($len > 0)) {};
   }
-  if ((ord($string{$len}) < 0x80) || (ord($string{$len}) >= 0xC0)) {
+  if ((ord($string[$len]) < 0x80) || (ord($string[$len]) >= 0xC0)) {
     return substr($string, 0, $len) . ($dots ? ' ...' : '');
   }
-  while (ord($string{--$len}) < 0xC0) {};
+  while (ord($string[--$len]) < 0xC0) {};
   return substr($string, 0, $len) . ($dots ? ' ...' : '');
 }
 
@@ -389,7 +389,7 @@ function drupal_strtolower($text) {
  * Used for flipping U+C0-U+DE to U+E0-U+FD and back.
  */
 function _unicode_caseflip($matches) {
-  return $matches[0]{0} . chr(ord($matches[0]{1}) ^ 32);
+  return $matches[0][0] . chr(ord($matches[0][1]) ^ 32);
 }
 
 /**
@@ -422,7 +422,7 @@ function drupal_substr($text, $start, $length = NULL) {
       $bytes = -1; $chars = -1;
       while ($bytes < $strlen && $chars < $start) {
         $bytes++;
-        $c = ord($text{$bytes});
+        $c = ord($text[$bytes]);
         if ($c < 0x80 || $c >= 0xC0) {
           $chars++;
         }
@@ -435,7 +435,7 @@ function drupal_substr($text, $start, $length = NULL) {
       $bytes = $strlen; $chars = 0;
       while ($bytes > 0 && $chars < $start) {
         $bytes--;
-        $c = ord($text{$bytes});
+        $c = ord($text[$bytes]);
         if ($c < 0x80 || $c >= 0xC0) {
           $chars++;
         }
@@ -453,7 +453,7 @@ function drupal_substr($text, $start, $length = NULL) {
       $bytes = $istart; $chars = 0;
       while ($bytes < $strlen && $chars < $length) {
         $bytes++;
-        $c = ord($text{$bytes});
+        $c = ord($text[$bytes]);
         if ($c < 0x80 || $c >= 0xC0) {
           $chars++;
         }
@@ -466,7 +466,7 @@ function drupal_substr($text, $start, $length = NULL) {
       $length = abs($length);
       $bytes = $strlen - 1; $chars = 0;
       while ($bytes >= 0 && $chars < $length) {
-        $c = ord($text{$bytes});
+        $c = ord($text[$bytes]);
         if ($c < 0x80 || $c >= 0xC0) {
           $chars++;
         }
