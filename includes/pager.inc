@@ -1,5 +1,5 @@
 <?php
-// $Id: pager.inc,v 1.51 2006/01/14 09:40:22 dries Exp $
+// $Id: pager.inc,v 1.52 2006/01/15 00:04:20 unconed Exp $
 
 /**
  * @file
@@ -108,11 +108,11 @@ function theme_pager($tags = array(), $limit = 10, $element = 0, $parameters = a
 
   if ($pager_total[$element] > 1) {
     $output .= '<div id="pager">';
-    $output .= theme('pager_first', ($tags[0] ? $tags[0] : t('&#171; first')), $limit, $element, $parameters);
-    $output .= theme('pager_previous', ($tags[1] ? $tags[1] : t('&#8249; previous')), $limit, $element, 1, $parameters);
+    $output .= theme('pager_first', ($tags[0] ? $tags[0] : t('« first')), $limit, $element, $parameters);
+    $output .= theme('pager_previous', ($tags[1] ? $tags[1] : t('‹ previous')), $limit, $element, 1, $parameters);
     $output .= theme('pager_list', $limit, $element, ($tags[2] ? $tags[2] : 9 ), '', $parameters);
-    $output .= theme('pager_next', ($tags[3] ? $tags[3] : t('next &#8250;')), $limit, $element, 1, $parameters);
-    $output .= theme('pager_last', ($tags[4] ? $tags[4] : t('last &#187;')), $limit, $element, $parameters);
+    $output .= theme('pager_next', ($tags[3] ? $tags[3] : t('next ›')), $limit, $element, 1, $parameters);
+    $output .= theme('pager_last', ($tags[4] ? $tags[4] : t('last »')), $limit, $element, $parameters);
     $output .= '</div>';
 
     return $output;
@@ -311,7 +311,7 @@ function theme_pager_list($limit, $element = 0, $quantity = 5, $text = '', $para
   if ($i != $pager_max) {
     $output .= $text;
     if ($i > 1) {
-      $output .= '<span class="pager-ellipses">&#8230;</span>';
+      $output .= '<span class="pager-ellipsis">…</span>';
     }
 
     // Now generate the actual pager piece.
@@ -328,7 +328,7 @@ function theme_pager_list($limit, $element = 0, $quantity = 5, $text = '', $para
     }
 
     if ($i < $pager_max) {
-      $output .= '<span class="pager-ellipses">&#8230;</span>';
+      $output .= '<span class="pager-ellipsis">…</span>';
     }
   }
   $output .= '</span>';
@@ -361,10 +361,26 @@ function theme_pager_link($text, $page_new, $element, $parameters = array(), $at
     $query[] = $key .'='. $value;
   }
 
-  // Set each pager link title with correct page number (clean out HTML entities, title doesn't like those)
-  $attributes['title'] = is_numeric($text) ? 'goto page ' . $text : 'goto ' . str_replace(array('&#171; ', '&#8249; ', ' &#8250;', ' &#187;'), '', $text) . ' page';
+  // Set each pager link title 
+  if (!isset($attributes['title'])) {
+    static $titles = null;
+    if (!isset($titles)) {
+      $titles = array(
+        t('« first') => t('Go to first page'),
+        t('‹ previous') => t('Go to previous page'),
+        t('next ›') => t('Go to next page'),
+        t('last »') => t('Go to last page'),
+      );
+    }
+    if (isset($titles[$text])) {
+      $attributes['title'] = $titles[$text];
+    }
+    else if (is_numeric($text)) {
+      $attributes['title'] = t('Go to page %number', array('%number' => $text));
+    }
+  }
 
-  return l($text, $_GET['q'], $attributes, count($query) ? implode('&', $query) : NULL, NULL, FALSE, TRUE);
+  return l($text, $_GET['q'], $attributes, count($query) ? implode('&', $query) : NULL);
 }
 
 /**
