@@ -389,39 +389,6 @@ CREATE TABLE menu (
   type smallint NOT NULL default '0',
   PRIMARY KEY (mid)
 );
---
--- Table structure for table 'moderation_filters'
---
-
-CREATE TABLE moderation_filters (
-  fid SERIAL,
-  filter varchar(255) NOT NULL default '',
-  minimum smallint NOT NULL default '0',
-  PRIMARY KEY (fid)
-);
-
---
--- Table structure for table 'moderation_roles'
---
-
-CREATE TABLE moderation_roles (
-  rid integer NOT NULL default '0',
-  mid integer NOT NULL default '0',
-  value smallint NOT NULL default '0'
-);
-CREATE INDEX moderation_roles_rid_idx ON moderation_roles(rid);
-CREATE INDEX moderation_roles_mid_idx ON moderation_roles(mid);
-
---
--- Table structure for table 'moderation_votes'
---
-
-CREATE TABLE moderation_votes (
-  mid SERIAL,
-  vote varchar(255) default NULL,
-  weight smallint NOT NULL default '0',
-  PRIMARY KEY (mid)
-);
 
 --
 -- Table structure for node
