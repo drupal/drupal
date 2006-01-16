@@ -249,7 +249,8 @@ ACDB.prototype.search = function(searchString) {
  * HTTP callback function. Passes suggestions to the autocomplete object
  */
 ACDB.prototype.receive = function(string, xmlhttp, acdb) {
-  if (xmlhttp.status != 200) {
+  // Note: Safari returns 'undefined' status if the request returns no data.
+  if (xmlhttp.status != 200 && typeof xmlhttp.status != 'undefined') {
     removeClass(acdb.owner.input, 'throbbing');
     return alert('An HTTP error '+ xmlhttp.status +' occured.\n'+ acdb.uri);
   }
