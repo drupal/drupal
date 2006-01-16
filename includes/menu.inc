@@ -1003,7 +1003,9 @@ function _menu_build() {
     $result = db_query('SELECT * FROM {menu} ORDER BY mid ASC');
     while ($item = db_fetch_object($result)) {
       // Handle URL aliases if entered in menu administration.
-      $item->path = drupal_get_normal_path($item->path);
+      if (!isset($_menu['path index'][$item->path])) {
+        $item->path = drupal_get_normal_path($item->path);
+      }
       if (isset($_menu['path index'][$item->path])) {
         // The path is already declared.
         $old_mid = $_menu['path index'][$item->path];
