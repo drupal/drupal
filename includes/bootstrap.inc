@@ -532,9 +532,6 @@ function drupal_lookup_path($action, $path = '') {
           $map[$src] = $path;
           return $src;
         }
-        else {
-          $map[$path] = $path;
-        }
       }
     }
   }
