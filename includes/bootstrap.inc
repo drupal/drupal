@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.80 2006/01/05 10:51:47 dries Exp $
+// $Id: bootstrap.inc,v 1.81 2006/01/16 08:34:45 dries Exp $
 
 /**
  * @file
@@ -531,9 +531,6 @@ function drupal_lookup_path($action, $path = '') {
         if ($src = db_result(db_query("SELECT src FROM {url_alias} WHERE dst = '%s'", $path))) {
           $map[$src] = $path;
           return $src;
-        }
-        else {
-          $map[$path] = $path;
         }
       }
     }
