@@ -1,4 +1,4 @@
-// $Id: autocomplete.js,v 1.5 2005/08/31 18:37:30 dries Exp $
+// $Id: autocomplete.js,v 1.6 2006/01/16 16:31:49 unconed Exp $
 
 // Global Killswitch
 if (isJsEnabled()) {
@@ -249,7 +249,8 @@ ACDB.prototype.search = function(searchString) {
  * HTTP callback function. Passes suggestions to the autocomplete object
  */
 ACDB.prototype.receive = function(string, xmlhttp, acdb) {
-  if (xmlhttp.status != 200) {
+  // Note: Safari returns 'undefined' status if the request returns no data.
+  if (xmlhttp.status != 200 && typeof xmlhttp.status != 'undefined') {
     removeClass(acdb.owner.input, 'throbbing');
     return alert('An HTTP error '+ xmlhttp.status +' occured.\n'+ acdb.uri);
   }
