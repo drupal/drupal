@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.273 2006/01/10 19:37:27 dries Exp $
+// $Id: theme.inc,v 1.274 2006/01/16 20:57:53 dries Exp $
 
 /**
  * @file
@@ -513,7 +513,7 @@ function theme_links($links, $delimiter = ' | ') {
 function theme_image($path, $alt = '', $title = '', $attributes = NULL, $getsize = TRUE) {
   if (!$getsize || (is_file($path) && (list($width, $height, $type, $image_attributes) = @getimagesize($path)))) {
     $attributes = drupal_attributes($attributes);
-    return '<img src="'. check_url($path) .'" alt="'. check_plain($alt) .'" title="'. check_plain($title) .'" '. $image_attributes . $attributes .'/>';
+    return '<img src="'. check_url($path) .'" alt="'. check_plain($alt) .'" title="'. check_plain($title) .'" '. $image_attributes . $attributes .' />';
   }
 }
 
@@ -880,7 +880,7 @@ function theme_more_help_link($url) {
  */
 function theme_xml_icon($url) {
   if ($image = theme('image', 'misc/xml.png', t('XML feed'), t('XML feed'))) {
-    return '<span class="xml-icon"><a href="'. check_url($url) .'">'. $image. '</a></span>';
+    return '<a href="'. check_url($url) .'" class="xml-icon">'. $image. '</a>';
   }
 }
 
@@ -889,7 +889,7 @@ function theme_xml_icon($url) {
  */
 function theme_feed_icon($url) {
   if ($image = theme('image', 'misc/feed.png', t('Syndicate content'), t('Syndicate content'))) {
-    return '<span class="feed-icon"><a href="'. check_url($url) .'">'. $image. '</a></span>';
+    return '<a href="'. check_url($url) .'" class="feed-icon">'. $image. '</a>';
   }
 }
 
