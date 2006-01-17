@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.252 2006/01/10 19:56:19 dries Exp $
+// $Id: taxonomy.module,v 1.253 2006/01/17 09:23:38 dries Exp $
 
 /**
  * @file
@@ -169,7 +169,7 @@ function taxonomy_save_vocabulary(&$edit) {
 }
 
 function taxonomy_del_vocabulary($vid) {
-  $vocabulary = taxonomy_get_vocabulary($vid);
+  $vocabulary = (array) taxonomy_get_vocabulary($vid);
 
   db_query('DELETE FROM {vocabulary} WHERE vid = %d', $vid);
   db_query('DELETE FROM {vocabulary_node_types} WHERE vid = %d', $vid);
@@ -331,7 +331,7 @@ function taxonomy_del_term($tid) {
         }
       }
 
-      $term = taxonomy_get_term($tid);
+      $term = (array) taxonomy_get_term($tid);
 
       db_query('DELETE FROM {term_data} WHERE tid = %d', $tid);
       db_query('DELETE FROM {term_hierarchy} WHERE tid = %d', $tid);
@@ -340,7 +340,7 @@ function taxonomy_del_term($tid) {
       db_query('DELETE FROM {term_node} WHERE tid = %d', $tid);
 
       module_invoke_all('taxonomy', 'delete', 'term', $term);
-      drupal_set_message(t('Deleted term %name.', array('%name' => theme('placeholder', $term->name))));
+      drupal_set_message(t('Deleted term %name.', array('%name' => theme('placeholder', $term['name']))));
     }
 
     $tids = $orphans;
