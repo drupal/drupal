@@ -1,5 +1,5 @@
 <?php
-// $Id: throttle.module,v 1.56 2005/11/01 10:17:34 dries Exp $
+// $Id: throttle.module,v 1.57 2006/01/17 18:32:33 dries Exp $
 
 /**
  * @file
@@ -31,18 +31,13 @@ function throttle_status() {
  */
 function throttle_exit() {
   // The following logic determines what the current throttle level should
-  //  be, and can be disabled by the admin.  If enabled, the rand() function
+  //  be, and can be disabled by the admin.  If enabled, the mt_rand() function
   //  returns a number between 0 and N, N being specified by the admin. If
   //  0 is returned, the throttle logic is run, adding two additional database
   //  queries.  Otherwise, the following logic is skipped.  This mechanism is
   //  referred to in the admin page as the 'probability limiter', roughly
   //  limiting throttle related database calls to 1 in N.
-  if (!rand(0, variable_get('throttle_probability_limiter', 9))) {
-    // Note:  The rand() function is supported by PHP 3+.  However, prior to
-    // PHP 4.2.0 it needs to be seeded with a call to srand().  It is important
-    // that this only happens once, so this should be managed by the Drupal
-    // engine, not this module.  The Drupal engine should use phpversion() to
-    // detect and automatically seed pre-4.2.0 systems.
+  if (!mt_rand(0, variable_get('throttle_probability_limiter', 9))) {
 
     // Count users with activity in the past n seconds, defined in user module
     $time_period = variable_get('user_block_seconds_online', 2700);
