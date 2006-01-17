@@ -839,7 +839,7 @@ function _drupal_bootstrap($phase) {
     case DRUPAL_BOOTSTRAP_DATABASE:
       global $db_url, $db_prefix, $base_url;
       $conf = array();
-      require_once conf_init() .'/settings.php';
+      require_once './' . conf_init() .'/settings.php';
       require_once './includes/database.inc';
       // Initialize the default database.
       db_set_active();
