@@ -749,7 +749,7 @@ function system_update_146() {
       timestamp integer NOT NULL default '0',
       format int NOT NULL default '0',
       PRIMARY KEY  (nid,vid))");
-    $ret[] = update_sql("INSERT INTO {node_revisions}
+    $ret[] = update_sql("INSERT INTO {node_revisions} (nid, vid, uid, title, body, teaser, timestamp, format)
       SELECT nid, nid AS vid, uid, title, body, teaser, changed AS timestamp, format
       FROM {node}");
     $ret[] = update_sql('CREATE INDEX {node_revisions}_uid_idx ON {node_revisions}(uid)');
