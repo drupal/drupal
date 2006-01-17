@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.507 2006/01/15 07:14:14 unconed Exp $
+// $Id: common.inc,v 1.508 2006/01/17 15:39:07 dries Exp $
 
 /**
  * @file
@@ -827,7 +827,7 @@ function format_interval($timestamp, $granularity = 2) {
  *   A translated date string in the requested format.
  */
 function format_date($timestamp, $type = 'medium', $format = '', $timezone = NULL) {
-  if ($timezone === NULL) {
+  if (!isset($timezone)) {
     global $user;
     if (variable_get('configurable_timezones', 1) && $user->uid && strlen($user->timezone)) {
       $timezone = $user->timezone;
@@ -945,8 +945,8 @@ function url($path = NULL, $query = NULL, $fragment = NULL, $absolute = FALSE) {
   }
 
   // Cache the clean_url variable to improve performance.
-  if ($clean_url === NULL) {
-    $clean_url = (variable_get('clean_url', '0') == '0') ? false : true;
+  if (!isset($clean_url)) {
+    $clean_url = (bool)variable_get('clean_url', '0');
   }
 
   $base = ($absolute ? $base_url .'/' : '');
