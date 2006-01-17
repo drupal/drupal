@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.582 2006/01/14 09:51:57 dries Exp $
+// $Id: node.module,v 1.583 2006/01/17 17:42:29 dries Exp $
 
 /**
  * @file
@@ -1611,6 +1611,14 @@ function node_object_prepare(&$node) {
  * Generate the node editing form.
  */
 function node_form($node) {
+  $form = node_form_array($node);
+  return drupal_get_form($node->type . '_node_form', $form, 'node_form');
+}
+
+/**
+* Generate the node editing form array.
+*/
+function node_form_array($node) {
   $op = isset($_POST['op']) ? $_POST['op'] : '';
 
   $node = (object)$node;
@@ -1691,7 +1699,7 @@ function node_form($node) {
 
   $form['#after_build'] = 'node_form_add_preview';
 
-  return drupal_get_form($node->type . '_node_form', $form, 'node_form');
+  return $form;
 }
 
 function node_form_add_preview($form, $edit) {
