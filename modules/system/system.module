@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.278 2006/01/12 19:29:36 dries Exp $
+// $Id: system.module,v 1.279 2006/01/17 17:35:47 dries Exp $
 
 /**
  * @file
@@ -198,8 +198,8 @@ function system_user($type, $edit, &$user, $category = NULL) {
 
     if (variable_get('configurable_timezones', 1)) {
       $zones = _system_zonelist();
-      $form['locale'] = array('#type'=>'item', '#title' => t('Locale settings'), '#weight' => 6);
-      $form['locale']['timezone'] = array(
+      $form['timezone'] = array('#type'=>'fieldset', '#title' => t('Locale settings'), '#weight' => 6);
+      $form['timezone']['timezone'] = array(
         '#type' => 'select', '#title' => t('Time zone'), '#default_value' => strlen($edit['timezone']) ? $edit['timezone'] : variable_get('date_default_timezone', 0),
         '#options' => $zones, '#description' => t('Select your current local time. Dates and times throughout this site will be displayed using this time zone.')
       );

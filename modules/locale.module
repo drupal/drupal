@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.130 2006/01/05 23:35:34 unconed Exp $
+// $Id: locale.module,v 1.131 2006/01/17 17:35:47 dries Exp $
 
 /**
  * @file
@@ -279,10 +279,10 @@ function locale_admin_manage() {
       }
       if ($key == 'en') {
         // Disallow name change for English locale
-        db_query("UPDATE {locales_meta} SET isdefault = %d, enabled = %d WHERE locale = 'en'", ($edit['sitedefault'] == $key), $edit['enabled'][$key]);
+        db_query("UPDATE {locales_meta} SET isdefault = %d, enabled = %d WHERE locale = 'en'", ($edit['sitedefault'] == $key), isset($edit['enabled'][$key]));
       }
       else {
-        db_query("UPDATE {locales_meta} SET name = '%s', isdefault = %d, enabled = %d WHERE locale = '%s'", $edit['name'][$key], ($edit['sitedefault'] == $key), $edit['enabled'][$key], $key);
+        db_query("UPDATE {locales_meta} SET name = '%s', isdefault = %d, enabled = %d WHERE locale = '%s'", $edit['name'][$key], ($edit['sitedefault'] == $key), isset($edit['enabled'][$key]), $key);
       }
     }
 
