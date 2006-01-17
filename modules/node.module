@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.584 2006/01/17 19:26:49 dries Exp $
+// $Id: node.module,v 1.585 2006/01/17 21:19:43 dries Exp $
 
 /**
  * @file
@@ -524,7 +524,7 @@ function node_view($node, $teaser = FALSE, $page = FALSE, $links = TRUE) {
   $node->body = str_replace('<!--break-->', '', $node->body);
 
   if ($node->log != '' && !$teaser && $node->moderate) {
-    $node->body .= '<div class="log"><div class="title">'. t('Log') .':</div>'. check_plain($node->log) .'</div>';
+    $node->body .= '<div class="log"><div class="title">'. t('Log') .':</div>'. filter_xss($node->log) .'</div>';
   }
 
   // The 'view' hook can be implemented to overwrite the default function
@@ -1290,13 +1290,13 @@ function node_revision_overview($node) {
 
     if ($revision->current_vid > 0) {
       $row[] = array('data' => t('%date by %username', array('%date' => l(format_date($revision->timestamp, 'small'), "node/$node->nid"), '%username' => theme('username', $revision)))
-                               . (($revision->log != '') ? '<p class="revision-log">'. check_plain($revision->log) .'</p>' : ''),
+                               . (($revision->log != '') ? '<p class="revision-log">'. filter_xss($revision->log) .'</p>' : ''),
                      'class' => 'revision-current');
       $operations[] = array('data' => theme('placeholder', t('current revision')), 'class' => 'revision-current', 'colspan' => 2);
     }
     else {
       $row[] = t('%date by %username', array('%date' => l(format_date($revision->timestamp, 'small'), "node/$node->nid/revisions/$revision->vid/view"), '%username' => theme('username', $revision)))
-               . (($revision->log != '') ? '<p class="revision-log">'. check_plain($revision->log) .'</p>' : '');
+               . (($revision->log != '') ? '<p class="revision-log">'. filter_xss($revision->log) .'</p>' : '');
       if ($revert_permission) {
         $operations[] = l(t('revert'), "node/$node->nid/revisions/$revision->vid/revert");
       }

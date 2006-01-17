@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.133 2006/01/14 09:40:22 dries Exp $ */
+/* $Id: drupal.css,v 1.134 2006/01/17 21:19:43 dries Exp $ */
 
 /*
 ** HTML elements
@@ -331,6 +331,9 @@ tr.odd .form-item, tr.even .form-item {
   float: left;
   margin-left: 0.5em;
   clear: right;
+}
+td.revision-current {
+  background: #ffc;
 }
 dl.multiselect dd.b, dl.multiselect dd.b .form-item, dl.multiselect dd.b select {
   font-family: inherit;
