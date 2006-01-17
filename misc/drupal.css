@@ -332,6 +332,9 @@ tr.odd .form-item, tr.even .form-item {
   margin-left: 0.5em;
   clear: right;
 }
+td.revision-current {
+  background: #ffc;
+}
 dl.multiselect dd.b, dl.multiselect dd.b .form-item, dl.multiselect dd.b select {
   font-family: inherit;
   font-size: inherit;
