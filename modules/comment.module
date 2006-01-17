@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.415 2006/01/10 19:41:15 dries Exp $
+// $Id: comment.module,v 1.416 2006/01/17 18:02:23 dries Exp $
 
 /**
  * @file
@@ -163,16 +163,19 @@ function comment_block($op = 'list', $delta = 0) {
     return $blocks;
   }
   else if ($op == 'view' && user_access('access comments')) {
-    $result = db_query_range(db_rewrite_sql('SELECT c.nid, c.* FROM {comments} c INNER JOIN {node} n ON n.nid = c.nid WHERE n.status = 1 AND c.status = %d ORDER BY c.timestamp DESC', 'c'), COMMENT_PUBLISHED, 0, 10);
-    $items = array();
-    while ($comment = db_fetch_object($result)) {
-      $items[] = l($comment->subject, 'node/'. $comment->nid, NULL, NULL, 'comment-'. $comment->cid) .'<br />'. t('%time ago', array('%time' => format_interval(time() - $comment->timestamp)));
-    }
-
     $block['subject'] = t('Recent comments');
-    $block['content'] = theme('item_list', $items);
+    $block['content'] = theme('comment_block');
     return $block;
   }
+}
+
+function theme_comment_block() {
+  $result = db_query_range(db_rewrite_sql('SELECT c.nid, c.* FROM {comments} c INNER JOIN {node} n ON n.nid = c.nid WHERE n.status = 1 AND c.status = %d ORDER BY c.timestamp DESC', 'c'), COMMENT_PUBLISHED, 0, 10);
+  $items = array();
+  while ($comment = db_fetch_object($result)) {
+    $items[] = l($comment->subject, 'node/'. $comment->nid, NULL, NULL, 'comment-'. $comment->cid) .'<br />'. t('%time ago', array('%time' => format_interval(time() - $comment->timestamp)));
+  }
+  return theme('item_list', $items);
 }
 
 /**
