@@ -477,7 +477,7 @@ function theme_select($element) {
     if (is_array($choice)) {
       $select .= '<optgroup label="'. $key .'">';
       foreach ($choice as $key => $choice) {
-        if ($value_valid && ($element['#value'] == $key || ($value_is_array && in_array($key, $element['#value'])))) {
+        if ($value_valid && ($element['#value'] == $key || ($value_is_array && isset($element['#value'][$key])))) {
           $selected = ' selected="selected"';
         }
         else {
@@ -488,7 +488,7 @@ function theme_select($element) {
       $select .= '</optgroup>';
     }
     else {
-      if ($value_valid && ($element['#value'] == $key || ($value_is_array && in_array($key, $element['#value'])))) {
+      if ($value_valid && ($element['#value'] == $key || ($value_is_array && isset($element['#value'][$key])))) {
         $selected = ' selected="selected"';
       }
       else {
