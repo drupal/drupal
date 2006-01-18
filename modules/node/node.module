@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.585 2006/01/17 21:19:43 dries Exp $
+// $Id: node.module,v 1.586 2006/01/18 14:30:42 dries Exp $
 
 /**
  * @file
@@ -1602,8 +1602,9 @@ function node_object_prepare(&$node) {
  * Generate the node editing form.
  */
 function node_form($node) {
+  $node = (object)$node;
   $form = node_form_array($node);
-  return drupal_get_form($node->type . '_node_form', $form, 'node_form');
+  return drupal_get_form($node->type .'_node_form', $form, 'node_form');
 }
 
 /**
@@ -1612,7 +1613,6 @@ function node_form($node) {
 function node_form_array($node) {
   $op = isset($_POST['op']) ? $_POST['op'] : '';
 
-  $node = (object)$node;
   node_object_prepare($node);
 
   // Set the id of the top-level form tag
