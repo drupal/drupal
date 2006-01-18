@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.50 2006/01/18 19:04:12 dries Exp $
+// $Id: form.inc,v 1.51 2006/01/18 19:46:57 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -477,7 +477,7 @@ function theme_select($element) {
     if (is_array($choice)) {
       $select .= '<optgroup label="'. $key .'">';
       foreach ($choice as $key => $choice) {
-        if ($value_valid && ($element['#value'] == $key || ($value_is_array && in_array($key, $element['#value'])))) {
+        if ($value_valid && ($element['#value'] == $key || ($value_is_array && isset($element['#value'][$key])))) {
           $selected = ' selected="selected"';
         }
         else {
@@ -488,7 +488,7 @@ function theme_select($element) {
       $select .= '</optgroup>';
     }
     else {
-      if ($value_valid && ($element['#value'] == $key || ($value_is_array && in_array($key, $element['#value'])))) {
+      if ($value_valid && ($element['#value'] == $key || ($value_is_array && isset($element['#value'][$key])))) {
         $selected = ' selected="selected"';
       }
       else {
