@@ -569,10 +569,10 @@ function theme_node($node, $teaser = FALSE, $page = FALSE) {
   }
 
   if ($page == 0) {
-    $output = '<h2 class="title">'. check_plain($node->title) .'</h2> by '. theme('username', $node);
+    $output = t('%title by %name', array('%title' => '<h2 class="title">'. check_plain($node->title) .'</h2>', '%name' => theme('username', $node)));
   }
   else {
-    $output = 'by '. theme('username', $node);
+    $output = t('by %name', array('%name' => theme('username', $node)));
   }
 
   if (count($terms)) {
