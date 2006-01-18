@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.275 2006/01/18 19:02:34 dries Exp $
+// $Id: theme.inc,v 1.276 2006/01/18 19:40:18 dries Exp $
 
 /**
  * @file
@@ -569,10 +569,10 @@ function theme_node($node, $teaser = FALSE, $page = FALSE) {
   }
 
   if ($page == 0) {
-    $output = '<h2 class="title">'. check_plain($node->title) .'</h2> by '. theme('username', $node);
+    $output = t('%title by %name', array('%title' => '<h2 class="title">'. check_plain($node->title) .'</h2>', '%name' => theme('username', $node)));
   }
   else {
-    $output = 'by '. theme('username', $node);
+    $output = t('by %name', array('%name' => theme('username', $node)));
   }
 
   if (count($terms)) {
