@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.586 2006/01/18 14:30:42 dries Exp $
+// $Id: node.module,v 1.587 2006/01/18 19:09:46 dries Exp $
 
 /**
  * @file
@@ -1051,13 +1051,13 @@ function theme_node_filters(&$form) {
     }
   }
 
-  $output .= '<li><dl class="multiselect">' . (sizeof($form['current']) ? '<dt><em>and</em> where</dt>' : '') . '<dd class="a">';
+  $output .= '<li><dl class="multiselect">' . (sizeof($form['current']) ? '<dt><em>'. t('and') .'</em> '. t('where') .'</dt>' : '') . '<dd class="a">';
   foreach(element_children($form['filter']) as $key) {
     $output .= form_render($form['filter'][$key]);
   }
   $output .= '</dd>';
 
-  $output .= '<dt>is</dt>' . '<dd class="b">';
+  $output .= '<dt>'. t('is') .'</dt>' . '<dd class="b">';
 
   foreach(element_children($form['status']) as $key) {
     $output .= form_render($form['status'][$key]);
