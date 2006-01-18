@@ -525,7 +525,9 @@ function theme_image($path, $alt = '', $title = '', $attributes = NULL, $getsize
  * @return a string containing the breadcrumb output.
  */
 function theme_breadcrumb($breadcrumb) {
-  return '<div class="breadcrumb">'. implode(' » ', $breadcrumb) .'</div>';
+  if (!empty($breadcrumb)) {
+    return '<div class="breadcrumb">'. implode(' » ', $breadcrumb) .'</div>';
+  }
 }
 
 /**
