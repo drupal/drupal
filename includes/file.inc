@@ -488,11 +488,11 @@ function file_download() {
     $list = module_list();
     foreach ($list as $module) {
       $headers = module_invoke($module, 'file_download', $file);
-      if (empty($headers)) {
-        drupal_access_denied();
-      }
-      elseif (is_array($headers)) {
+      if (is_array($headers)) {
         file_transfer($file, $headers);
+      }
+      elseif ($headers == -1) {
+        drupal_access_denied();
       }
     }
   }
