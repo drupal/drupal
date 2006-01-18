@@ -1,5 +1,5 @@
 <?php
-// $Id: page.module,v 1.148 2005/12/15 16:24:40 dries Exp $
+// $Id: page.module,v 1.149 2006/01/18 19:29:17 dries Exp $
 
 /**
  * @file
@@ -91,7 +91,7 @@ function page_validate($node) {
  */
 function page_form(&$node) {
 
-  $form['title'] = array('#type' => 'textfield', '#title' => t('Title'), '#required' => TRUE, '#default_value' => $node->title);
+  $form['title'] = array('#type' => 'textfield', '#title' => t('Title'), '#required' => TRUE, '#default_value' => $node->title, '#weight' => -5);
 
   $form['body'] = array(
     '#type' => 'textarea', '#title' => t('Body'), '#default_value' => $node->body, '#rows' => 20, '#required' => TRUE

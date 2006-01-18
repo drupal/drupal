@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.301 2006/01/10 12:35:20 dries Exp $
+// $Id: forum.module,v 1.302 2006/01/18 19:29:17 dries Exp $
 
 /**
  * @file
@@ -583,7 +583,7 @@ function forum_update($node) {
  * Implementation of hook_form().
  */
 function forum_form(&$node) {
-  $form['title'] = array('#type' => 'textfield', '#title' => t('Subject'), '#default_value' => $node->title, '#required' => TRUE);
+  $form['title'] = array('#type' => 'textfield', '#title' => t('Subject'), '#default_value' => $node->title, '#required' => TRUE, '#weight' => -5);
 
   if ($node->nid) {
     $forum_terms = taxonomy_node_get_terms_by_vocabulary(_forum_get_vid(), $node->nid);
@@ -592,8 +592,7 @@ function forum_form(&$node) {
     $form['shadow'] = array('#type' => 'checkbox', '#title' => t('Leave shadow copy'), '#default_value' => $shadow, '#description' => t('If you move this topic, you can leave a link in the old forum to the new forum.'));
   }
 
-  $form['body'] = array('#type' => 'textarea', '#title' => t('Body'), '#default_value' => $node->body, '#rows' => 20, '#required' => TRUE
-  );
+  $form['body'] = array('#type' => 'textarea', '#title' => t('Body'), '#default_value' => $node->body, '#rows' => 20, '#required' => TRUE);
   $form['format'] = filter_form($node->format);
 
   return $form;

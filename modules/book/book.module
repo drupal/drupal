@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.339 2005/12/31 13:04:40 dries Exp $
+// $Id: book.module,v 1.340 2006/01/18 19:29:17 dries Exp $
 
 /**
  * @file
@@ -251,10 +251,8 @@ function book_form(&$node) {
     '#description' => t('The parent that this page belongs in. Note that pages whose parent is &lt;top-level&gt; are regarded as independent, top-level books.')
   );
 
-  $form['title'] = array('#type' => 'textfield', '#title' => t('Title'), '#required' => TRUE, '#default_value' => $node->title);
-  $form['body'] = array(
-    '#type' => 'textarea', '#title' => t('Body'), '#default_value' => $node->body, '#rows' => 20, '#required' => TRUE
-  );
+  $form['title'] = array('#type' => 'textfield', '#title' => t('Title'), '#required' => TRUE, '#default_value' => $node->title, '#weight' => -5);
+  $form['body'] = array('#type' => 'textarea', '#title' => t('Body'), '#default_value' => $node->body, '#rows' => 20, '#required' => TRUE);
   $form['format'] = filter_form($node->format);
 
   $form['log'] = array(
