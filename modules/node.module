@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.587 2006/01/18 19:09:46 dries Exp $
+// $Id: node.module,v 1.588 2006/01/18 21:31:40 unconed Exp $
 
 /**
  * @file
@@ -598,12 +598,14 @@ function node_search($op = 'search', $keys = null) {
 
     case 'reset':
       variable_del('node_cron_last');
+      variable_del('node_cron_last_nid');
       return;
 
     case 'status':
       $last = variable_get('node_cron_last', 0);
+      $last_nid = variable_get('node_cron_last_nid', 0);
       $total = db_result(db_query('SELECT COUNT(*) FROM {node} WHERE status = 1 AND moderate = 0'));
-      $remaining = db_result(db_query('SELECT COUNT(*) FROM {node} n LEFT JOIN {node_comment_statistics} c ON n.nid = c.nid WHERE n.status = 1 AND n.moderate = 0 AND (n.created > %d OR n.changed > %d OR c.last_comment_timestamp > %d)', $last, $last, $last));
+      $remaining = db_result(db_query('SELECT COUNT(*) FROM {node} n LEFT JOIN {node_comment_statistics} c ON n.nid = c.nid WHERE n.status = 1 AND n.moderate = 0 AND ((GREATEST(n.created, n.changed, c.last_comment_timestamp) = %d AND n.nid > %d ) OR (n.created > %d OR n.changed > %d OR c.last_comment_timestamp > %d))', $last, $last_nid, $last, $last, $last));
       return array('remaining' => $remaining, 'total' => $total);
 
     case 'admin':
@@ -2069,27 +2071,39 @@ function node_page() {
 }
 
 /**
+ * shutdown function to make sure we always mark the last node processed.
+ */
+function node_update_shutdown() {
+  global $last_change, $last_nid;
+
+  if ($last_change && $last_nid) {
+    variable_set('node_cron_last', $last_change);
+    variable_set('node_cron_last_nid', $last_nid);
+  }
+}
+
+/**
  * Implementation of hook_update_index().
  */
 function node_update_index() {
+  global $last_change, $last_nid;
+
+  register_shutdown_function('node_update_shutdown');
+
   $last = variable_get('node_cron_last', 0);
+  $last_nid = variable_get('node_cron_last_nid', 0);
   $limit = (int)variable_get('search_cron_limit', 100);
 
   // Store the maximum possible comments per thread (used for ranking by reply count)
   variable_set('node_cron_comments_scale', 1.0 / max(1, db_result(db_query('SELECT MAX(comment_count) FROM {node_comment_statistics}'))));
   variable_set('node_cron_views_scale', 1.0 / max(1, db_result(db_query('SELECT MAX(totalcount) FROM {node_counter}'))));
 
-  $result = db_query_range('SELECT n.nid, c.last_comment_timestamp FROM {node} n LEFT JOIN {node_comment_statistics} c ON n.nid = c.nid WHERE n.status = 1 AND n.moderate = 0 AND (n.created > %d OR n.changed > %d OR c.last_comment_timestamp > %d) ORDER BY GREATEST(n.created, n.changed, c.last_comment_timestamp) ASC', $last, $last, $last, 0, $limit);
+  $result = db_query_range('SELECT GREATEST(c.last_comment_timestamp, n.changed, n.created) as last_change, n.nid FROM {node} n LEFT JOIN {node_comment_statistics} c ON n.nid = c.nid WHERE n.status = 1 AND n.moderate = 0 AND ((GREATEST(n.created, n.changed, c.last_comment_timestamp) = %d AND n.nid > %d) OR (n.created > %d OR n.changed > %d OR c.last_comment_timestamp > %d)) ORDER BY GREATEST(n.created, n.changed, c.last_comment_timestamp) ASC, n.nid ASC', $last, $last_nid, $last, $last, $last, 0, $limit);
 
   while ($node = db_fetch_object($result)) {
-    $last_comment = $node->last_comment_timestamp;
+    $last_change = $node->last_change;
+    $last_nid = $node->nid;
     $node = node_load($node->nid);
-
-    // We update this variable per node in case cron times out, or if the node
-    // cannot be indexed (PHP nodes which call drupal_goto, for example).
-    // In rare cases this can mean a node is only partially indexed, but the
-    // chances of this happening are very small.
-    variable_set('node_cron_last', max($last_comment, $node->changed, $node->created));
 
     // Get node output (filtered and with module-specific fields).
     if (node_hook($node, 'view')) {

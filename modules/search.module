@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.157 2006/01/15 07:14:14 unconed Exp $
+// $Id: search.module,v 1.158 2006/01/18 21:31:40 unconed Exp $
 
 /**
  * @file
@@ -292,10 +292,21 @@ function search_dirty($word = null) {
  * search_dirty).
  */
 function search_cron() {
+  // We register a shutdown function to ensure that search_total is always up
+  // to date.
+  register_shutdown_function('search_update_totals');
+
   // Update word index
   foreach (module_list() as $module) {
     module_invoke($module, 'update_index');
   }
+}
+
+/**
+ * This function is called on shutdown to ensure that search_total is always
+ * up to date (even if cron times out or otherwise fails).
+ */
+function search_update_totals() {
   // Update word IDF (Inverse Document Frequency) counts for new/changed words
   foreach (search_dirty() as $word => $dummy) {
     // Get total count
