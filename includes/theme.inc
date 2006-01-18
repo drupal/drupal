@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.274 2006/01/16 20:57:53 dries Exp $
+// $Id: theme.inc,v 1.275 2006/01/18 19:02:34 dries Exp $
 
 /**
  * @file
@@ -525,7 +525,9 @@ function theme_image($path, $alt = '', $title = '', $attributes = NULL, $getsize
  * @return a string containing the breadcrumb output.
  */
 function theme_breadcrumb($breadcrumb) {
-  return '<div class="breadcrumb">'. implode(' » ', $breadcrumb) .'</div>';
+  if (!empty($breadcrumb)) {
+    return '<div class="breadcrumb">'. implode(' » ', $breadcrumb) .'</div>';
+  }
 }
 
 /**
