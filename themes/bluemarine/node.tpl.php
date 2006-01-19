@@ -6,5 +6,5 @@
     <span class="submitted"><?php print $submitted?></span>
     <span class="taxonomy"><?php print $terms?></span>
     <div class="content"><?php print $content?></div>
-    <div class="links">&raquo; <?php print $links?></div>
+    <?php if ($links) { ?><div class="links">&raquo; <?php print $links?></div><?php }; ?>
   </div>
