@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.100 2006/01/16 08:45:30 dries Exp $
+// $Id: menu.inc,v 1.101 2006/01/19 08:58:00 dries Exp $
 
 /**
  * @file
@@ -251,6 +251,57 @@ function menu_get_local_tasks() {
 }
 
 /**
+ * Retrieves the menu item specified by $mid, or by $path if $mid is not given.
+ *
+ * @param $mid
+ *   The menu ID of the menu item to retrieve.
+ * @param $path
+ *   The internal path of the menu item to retrieve. Defaults to NULL. Only
+ *   used if no item can be found matching $mid.
+ * @param $reset
+ *   Optional flag that resets the static variable cache of the menu tree, if
+ *   set to TRUE. Default is FALSE.
+ *
+ * @return
+ *   The menu item found in the site menu, or an empty array if none could be
+ *   found.
+ */
+function menu_get_item($mid, $path = NULL, $reset = FALSE) {
+  static $menu;
+
+  if (!isset($menu) || $reset) {
+    $menu = menu_get_menu();
+  }
+
+  if (isset($mid)) {
+    return $menu['items'][$mid];
+  }
+
+  if (isset($path)) {
+    return $menu['items'][$menu['path index'][$path]];
+  }
+
+  return array();
+}
+
+/**
+ * Retrieves the menu ID and title of all root menus.
+ *
+ * @return
+ *   Array containing all menus (but not menu items), in the form mid => title.
+ */
+function menu_get_root_menus() {
+  $menu = menu_get_menu();
+  $root_menus = array();
+
+  foreach ($menu['items'][0]['children'] as $mid) {
+    $root_menus[$mid] = $menu['items'][$mid]['title'];
+  }
+
+  return $root_menus;
+}
+
+/**
  * Change the current menu location of the user.
  *
  * Frequently, modules may want to make a page or node act as if it were
@@ -410,16 +461,17 @@ function menu_set_active_item($path = NULL) {
  * local task, the menu item to which this task is attached.
  */
 function menu_get_active_nontask_item() {
-  $menu = menu_get_menu();
   $mid = menu_get_active_item();
 
   // Find the first non-task item:
-  while ($mid && ($menu['items'][$mid]['type'] & MENU_IS_LOCAL_TASK)) {
-    $mid = $menu['items'][$mid]['pid'];
-  }
+  while ($mid) {
+    $item = menu_get_item($mid);
 
-  if ($mid) {
-    return $mid;
+    if (!($item['type'] & MENU_IS_LOCAL_TASK)) {
+      return $mid;
+    }
+
+    $mid = $item['pid'];
   }
 }
 
@@ -427,10 +479,9 @@ function menu_get_active_nontask_item() {
  * Returns the title of the active menu item.
  */
 function menu_get_active_title() {
-  $menu = menu_get_menu();
-
   if ($mid = menu_get_active_nontask_item()) {
-    return $menu['items'][$mid]['title'];
+    $item = menu_get_item($mid);
+    return $item['title'];
   }
 }
 
@@ -467,13 +518,12 @@ function menu_get_active_help() {
  * Returns an array of rendered menu items in the active breadcrumb trail.
  */
 function menu_get_active_breadcrumb() {
-  $menu = menu_get_menu();
-
   $links[] = l(t('Home'), '<front>');
 
   $trail = _menu_get_active_trail();
   foreach ($trail as $mid) {
-    if ($menu['items'][$mid]['type'] & MENU_VISIBLE_IN_BREADCRUMB) {
+    $item = menu_get_item($mid);
+    if ($item['type'] & MENU_VISIBLE_IN_BREADCRUMB) {
       $links[] = menu_item_link($mid);
     }
   }
@@ -531,13 +581,6 @@ function menu_rebuild() {
     $new_items = array();
     foreach ($menu['items'] as $mid => $item) {
       if ($mid < 0 && ($item['type'] & MENU_MODIFIABLE_BY_ADMIN)) {
-        $new_mid = db_next_id('{menu}_mid');
-        // Check explicitly for mid 1. If the database was improperly prefixed,
-        // this would cause a nasty infinite loop.
-        // TODO: have automatic prefixing through an installer to prevent this.
-        if ($new_mid == 1) {
-          $new_mid = db_next_id('{menu}_mid');
-        }
         if (isset($new_items[$item['pid']])) {
           $new_pid = $new_items[$item['pid']]['mid'];
         }
@@ -545,28 +588,40 @@ function menu_rebuild() {
           $new_pid = $item['pid'];
         }
 
-        // Fix parent IDs for menu items already added.
-        if ($item['children']) {
-          foreach ($item['children'] as $child) {
-            if (isset($new_items[$child])) {
-              $new_items[$child]['pid'] = $new_mid;
-            }
-          }
-        }
-
-        $new_items[$mid] = array('mid' => $new_mid, 'pid' => $new_pid, 'path' => $item['path'], 'title' => $item['title'], 'description' => isset($item['description']) ? $item['description'] : '', 'weight' => $item['weight'], 'type' => $item['type']);
+        $new_items[$mid] = array(
+          'pid' => $new_pid,
+          'path' => $item['path'],
+          'title' => $item['title'],
+          'description' => isset($item['description']) ? $item['description'] : '',
+          'weight' => $item['weight'],
+          'type' => $item['type'],
+        );
       }
     }
 
     if (count($new_items)) {
       foreach ($new_items as $item) {
-        db_query('INSERT INTO {menu} (mid, pid, path, title, description, weight, type) VALUES (%d, %d, \'%s\', \'%s\', \'%s\', %d, %d)', $item['mid'], $item['pid'], $item['path'], $item['title'], $item['description'], $item['weight'], $item['type']);
+        // The new menu ID gets passed back by reference as $item['mid']
+        menu_save_item($item);
+
+        // Fix parent IDs for menu items just added.
+        if ($item['children']) {
+          foreach ($item['children'] as $child) {
+            if (isset($new_items[$child])) {
+              $new_items[$child]['pid'] = $item['mid'];
+            }
+          }
+        }
       }
 
       // Rebuild the menu to account for the changes.
       _menu_build();
     }
   }
+
+  // Reset the cached $menu in menu_get_item().
+  menu_get_item(NULL, NULL, TRUE);
+
 }
 
 /**
@@ -623,7 +678,7 @@ function theme_menu_item($mid, $children = '', $leaf = TRUE) {
  *
  * @param $item
  *   The menu item to render.
- * @param $link_mid
+ * @param $link_item
  *   The menu item which should be used to find the correct path.
  *
  * @ingroup themeable
@@ -639,14 +694,14 @@ function theme_menu_item_link($item, $link_item) {
  *   The menu item id to render.
  */
 function menu_item_link($mid) {
-  $menu = menu_get_menu();
+  $item = menu_get_item($mid);
+  $link_item = $item;
 
-  $link_mid = $mid;
-  while ($menu['items'][$link_mid]['type'] & MENU_LINKS_TO_PARENT) {
-    $link_mid = $menu['items'][$link_mid]['pid'];
+  while ($link_item['type'] & MENU_LINKS_TO_PARENT) {
+    $link_item = menu_get_item($link_item['pid']);
   }
 
-  return theme('menu_item_link', $menu['items'][$mid], $menu['items'][$link_mid]);
+  return theme('menu_item_link', $item, $link_item);
 }
 
 /**
@@ -857,16 +912,14 @@ function _menu_get_active_trail() {
   static $trail;
 
   if (!isset($trail)) {
-    $menu = menu_get_menu();
-
     $trail = array();
 
     $mid = menu_get_active_item();
 
     // Follow the parents up the chain to get the trail.
-    while ($mid && $menu['items'][$mid]) {
+    while ($mid && ($item = menu_get_item($mid))) {
       array_unshift($trail, $mid);
-      $mid = $menu['items'][$mid]['pid'];
+      $mid = $item['pid'];
     }
   }
   return $trail;

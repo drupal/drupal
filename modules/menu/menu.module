@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.63 2006/01/14 09:45:44 dries Exp $
+// $Id: menu.module,v 1.64 2006/01/19 08:58:00 dries Exp $
 
 /**
  * @file
@@ -29,7 +29,7 @@ function menu_menu($may_cache) {
       'access' => user_access('administer menu'),
       'type' => MENU_CALLBACK);
     $items[] = array('path' => 'admin/menu/item/delete', 'title' => t('delete menu item'),
-      'callback' => 'menu_delete_item',
+      'callback' => 'menu_edit_item_delete',
       'access' => user_access('administer menu'),
       'type' => MENU_CALLBACK);
 
@@ -99,11 +99,10 @@ function menu_help($section) {
  */
 function menu_configure() {
   $menu = menu_get_menu();
+  $root_menus = menu_get_root_menus();
 
+  $primary_options = $root_menus;
   $primary_options[0] = t('No primary links');
-  foreach ($menu['items'][0]['children'] as $mid) {
-    $primary_options[$mid] = $menu['items'][$mid]['title'];
-  }
 
   $form['settings_links'] = array(
     '#type' => 'fieldset',
@@ -122,10 +121,8 @@ function menu_configure() {
     '#options' => $primary_options,
   );
 
+  $secondary_options = $root_menus;
   $secondary_options[0] = t('No secondary links');
-  foreach ($menu['items'][0]['children'] as $mid) {
-    $secondary_options[$mid] = $menu['items'][$mid]['title'];
-  }
 
   $form['settings_links']['menu_secondary_menu'] = array(
     '#type' => 'select',
@@ -145,10 +142,8 @@ function menu_configure() {
     '#value' => t('On each post authoring form there is a menu settings pane. This setting allows you to limit what is displayed in the parent item drop-down menu of that pane. This can be used to force new menu items to be created in the primary links menu or to hide admin menu items.'),
   );
 
-  $authoring_options = array(0 => t('Show all menus'));
-  foreach ($menu['items'][0]['children'] as $mid) {
-    $authoring_options[$mid] = $menu['items'][$mid]['title'];
-  }
+  $authoring_options = $root_menus;
+  $authoring_options[0] = t('Show all menus');
 
   $form['settings_authoring']['menu_parent_items'] = array(
     '#type' => 'select',
@@ -165,20 +160,20 @@ function menu_configure() {
  * Implementation of hook_block().
  */
 function menu_block($op = 'list', $delta = 0) {
-  $menu = menu_get_menu();
-
   if ($op == 'list') {
     $blocks = array();
-    foreach ($menu['items'][0]['children'] as $mid) {
+    $root_menus = menu_get_root_menus();
+    foreach ($root_menus as $mid => $title) {
       // Default "Navigation" block is handled by user.module.
       if ($mid != 1) {
-        $blocks[$mid]['info'] = $menu['items'][$mid]['title'];
+        $blocks[$mid]['info'] = $title;
       }
     }
     return $blocks;
   }
   else if ($op == 'view') {
-    $data['subject'] = $menu['items'][$delta]['title'];
+    $item = menu_get_item($delta);
+    $data['subject'] = $item['title'];
     $data['content'] = theme('menu_tree', $delta);
     return $data;
   }
@@ -282,7 +277,7 @@ function menu_reset_item($mid) {
   $op = isset($_POST['op']) ? $_POST['op'] : '';
   switch ($op) {
     case t('Reset'):
-      db_query('DELETE FROM {menu} WHERE mid = %d', $mid);
+      menu_delete_item($mid);
       drupal_set_message(t("The menu item was reset to its default settings."));
       drupal_goto('admin/menu');
       break;
@@ -298,7 +293,7 @@ function menu_reset_item($mid) {
 /**
  * Menu callback; delete a single custom item.
  */
-function menu_delete_item($mid) {
+function menu_edit_item_delete($mid) {
   $op = isset($_POST['op']) ? $_POST['op'] : '';
   $result = db_query('SELECT type, title FROM {menu} WHERE mid = %d', $mid);
   $menu = db_fetch_object($result);
@@ -307,7 +302,7 @@ function menu_delete_item($mid) {
   }
   switch ($op) {
     case t('Delete'):
-      db_query('DELETE FROM {menu} WHERE mid = %d', $mid);
+      menu_delete_item($mid);
       if ($menu->type & MENU_IS_ROOT) {
         drupal_set_message(t('The menu has been removed.'));
       }
@@ -331,8 +326,8 @@ function menu_delete_item($mid) {
  * Menu callback; hide a menu item.
  */
 function menu_disable_item($mid) {
-  $menu = menu_get_menu();
-  $type = $menu['items'][$mid]['type'];
+  $item = menu_get_item($mid);
+  $type = $item['type'];
   $type &= ~MENU_VISIBLE_IN_TREE;
   $type &= ~MENU_VISIBLE_IN_BREADCRUMB;
   $type |= MENU_MODIFIED_BY_ADMIN;
@@ -386,8 +381,6 @@ function menu_edit_item($mid = 0) {
  * Present the menu item editing form.
  */
 function menu_edit_item_form($edit) {
-  $menu = menu_get_menu();
-
   if ($edit['pid'] == 0) {
     // Display a limited set of fields for menus (not items).
     $form['title'] = array('#type' => 'textfield', '#title' => t('Title'), '#default_value' => $edit['title'], '#description' => t('The name of the menu.'), '#required' => TRUE);
@@ -453,8 +446,6 @@ function menu_edit_item_validate($edit) {
  * @return mid
  */
 function menu_edit_item_save($edit) {
-  $menu = menu_get_menu();
-
   if ($edit['expanded']) {
     $edit['type'] |= MENU_EXPANDED;
   }
@@ -462,16 +453,75 @@ function menu_edit_item_save($edit) {
     $edit['type'] &= ~MENU_EXPANDED;
   }
 
-  if ($edit['mid']) {
-    db_query("UPDATE {menu} SET pid = %d, path = '%s', title = '%s', description = '%s', weight = %d, type = %d WHERE mid = %d", $edit['pid'], $edit['path'], $edit['title'], $edit['description'], $edit['weight'], $edit['type'] | MENU_MODIFIED_BY_ADMIN, $edit['mid']);
+  $edit['type'] = $edit['type'] | MENU_MODIFIED_BY_ADMIN;
+
+  $status = menu_save_item($edit);
+
+  if ($status == SAVED_UPDATED) {
     drupal_set_message(t('The menu item %title has been updated.', array('%title' => theme('placeholder', $edit['title']))));
   }
-  else {
-    $edit['mid'] = db_next_id('{menu}_mid');
-    db_query("INSERT INTO {menu} (mid, pid, path, title, description, weight, type) VALUES (%d, %d, '%s', '%s', '%s', %d, %d)", $edit['mid'], $edit['pid'], $edit['path'], $edit['title'], $edit['description'], $edit['weight'], $edit['type'] | MENU_MODIFIED_BY_ADMIN);
+  elseif ($status == SAVED_NEW) {
     drupal_set_message(t('The menu item %title has been created.', array('%title' => theme('placeholder', $edit['title']))));
   }
   return $edit['mid'];
+}
+
+/**
+ * Save a menu item to the database.
+ *
+ * @param $item
+ *   The menu item to be saved. This is passed by reference, so that the newly
+ *   generated $item['mid'] can be accessed after an insert takes place.
+ *
+ * @return $status
+ *   The operation that was performed in saving. Either SAVED_NEW (if a new
+ *   menu item was created), or SAVED_UPDATED (if an existing menu item was
+ *   updated).
+ */
+function menu_save_item(&$item) {
+  $existing_item = NULL;
+
+  // Check that the item already exists in the menu tree, if $item['mid'] is
+  // specified.
+  if (isset($item['mid'])) {
+    $existing_item = menu_get_item($item['mid']);
+  }
+
+  if ($item['mid'] && !empty($existing_item)) {
+    db_query("UPDATE {menu} SET pid = %d, path = '%s', title = '%s', description = '%s', weight = %d, type = %d WHERE mid = %d", $item['pid'], $item['path'], $item['title'], $item['description'], $item['weight'], $item['type'], $item['mid']);
+    return SAVED_UPDATED;
+  }
+  else {
+    $item['mid'] = db_next_id('{menu}_mid');
+    // Check explicitly for mid <= 2. If the database was improperly prefixed,
+    // this would cause a nasty infinite loop  or duplicate mid errors.
+    // TODO: have automatic prefixing through an installer to prevent this.
+    while ($item['mid'] <= 2) {
+      $item['mid'] = db_next_id('{menu}_mid');
+    }
+    db_query("INSERT INTO {menu} (mid, pid, path, title, description, weight, type) VALUES (%d, %d, '%s', '%s', '%s', %d, %d)", $item['mid'], $item['pid'], $item['path'], $item['title'], $item['description'], $item['weight'], $item['type']);
+    return SAVED_NEW;
+  }
+}
+
+/**
+ * Delete a menu item from the database. If $item['mid'] is specified, then
+ * this is used to find the existing item; otherwise, $item['path'] is used.
+ *
+ * @param $item
+ *   The menu item to be deleted.
+ */
+function menu_delete_item($item) {
+  if (!is_array($item)) {
+    $item = array('mid' => $item);
+  }
+
+  if ($item['mid']) {
+    db_query('DELETE FROM {menu} WHERE mid = %d', $item['mid']);
+  }
+  elseif ($item['path']) {
+    db_query("DELETE FROM {menu} WHERE path = '%s'", $item['path']);
+  }
 }
 
 /**
@@ -479,10 +529,11 @@ function menu_edit_item_save($edit) {
  */
 function menu_overview_tree() {
   $menu = menu_get_menu();
+  $root_menus = menu_get_root_menus();
   $header = array(t('Menu item'), t('Expanded'), array('data' => t('Operations'), 'colspan' => '3'));
   $output = '';
 
-  foreach ($menu['items'][0]['children'] as $mid) {
+  foreach ($root_menus as $mid => $title) {
     $operations = array();
     if ($menu['items'][$mid]['type'] & MENU_MODIFIABLE_BY_ADMIN) {
       $operations[] = l(t('edit'), 'admin/menu/item/edit/'. $mid);
@@ -492,28 +543,27 @@ function menu_overview_tree() {
     }
     $table = theme('item_list', $operations);
     $table .= theme('table', $header, menu_overview_tree_rows($mid));
-    $output .= theme('box', $menu['items'][$mid]['title'], $table);
+    $output .= theme('box', $title, $table);
   }
   return $output;
 }
 
 function menu_overview_tree_rows($pid = 0, $depth = 0) {
-  $menu = menu_get_menu();
-
+  $parent_item = menu_get_item($pid);
   $rows = array();
 
-  if (isset($menu['items'][$pid]) && isset($menu['items'][$pid]['children'])) {
-
-    usort($menu['items'][$pid]['children'], '_menu_sort');
-    foreach ($menu['items'][$pid]['children'] as $mid) {
+  if (isset($parent_item) && isset($parent_item['children'])) {
+    usort($parent_item['children'], '_menu_sort');
+    foreach ($parent_item['children'] as $mid) {
+      $item = menu_get_item($mid);
       // Populate the title field.
       $title = '';
       if ($pid == 0) {
         // Top-level items are menu names, and don't have an associated path.
-        $title .= $menu['items'][$mid]['title'];
+        $title .= $item['title'];
       }
       else {
-        $title .= l($menu['items'][$mid]['title'], $menu['items'][$mid]['path']);
+        $title .= l($item['title'], $item['path']);
       }
       if ($depth > 0) {
         $title = '-&nbsp;'. $title;
@@ -524,12 +574,12 @@ function menu_overview_tree_rows($pid = 0, $depth = 0) {
 
       // Populate the operations field.
       $operations = array();
-      if (!($menu['items'][$mid]['type'] & MENU_MODIFIABLE_BY_ADMIN)) {
+      if (!($item['type'] & MENU_MODIFIABLE_BY_ADMIN)) {
         $operations[] = array('data' => t('locked'), 'colspan' => '3', 'align' => 'center');
       }
       else {
         // Set the edit column.
-        if ($menu['items'][$mid]['type'] & (MENU_VISIBLE_IN_TREE | MENU_VISIBLE_IF_HAS_CHILDREN)) {
+        if ($item['type'] & (MENU_VISIBLE_IN_TREE | MENU_VISIBLE_IF_HAS_CHILDREN)) {
           $operations[] = array('data' => l(t('edit'), 'admin/menu/item/edit/'. $mid));
         }
         else {
@@ -537,12 +587,12 @@ function menu_overview_tree_rows($pid = 0, $depth = 0) {
         }
 
         // Set the disable column.
-        if ($menu['items'][$mid]['type'] & (MENU_IS_ROOT | MENU_VISIBLE_IF_HAS_CHILDREN)) {
+        if ($item['type'] & (MENU_IS_ROOT | MENU_VISIBLE_IF_HAS_CHILDREN)) {
           // Disabling entire menus is done from block admin page.
           // MENU_VISIBLE_IF_HAS_CHILDREN menus are always enabled so hide this operation.
           $operations[] = array('data' => '');
         }
-        else if ($menu['items'][$mid]['type'] & MENU_VISIBLE_IN_TREE) {
+        else if ($item['type'] & MENU_VISIBLE_IN_TREE) {
           $operations[] = array('data' => l(t('disable'), 'admin/menu/item/disable/'. $mid));
         }
         else {
@@ -550,10 +600,10 @@ function menu_overview_tree_rows($pid = 0, $depth = 0) {
         }
 
         // Set the reset column.
-        if ($menu['items'][$mid]['type'] & MENU_CREATED_BY_ADMIN) {
+        if ($item['type'] & MENU_CREATED_BY_ADMIN) {
           $operations[] = array('data' => l(t('delete'), 'admin/menu/item/delete/'. $mid));
         }
-        else if ($menu['items'][$mid]['type'] & MENU_MODIFIED_BY_ADMIN) {
+        else if ($item['type'] & MENU_MODIFIED_BY_ADMIN) {
           $operations[] = array('data' => l(t('reset'), 'admin/menu/item/reset/'. $mid));
         }
         else {
@@ -562,7 +612,7 @@ function menu_overview_tree_rows($pid = 0, $depth = 0) {
       }
 
       // Call out disabled items.
-      if ($menu['items'][$mid]['type'] & (MENU_VISIBLE_IN_TREE | MENU_VISIBLE_IF_HAS_CHILDREN)) {
+      if ($item['type'] & (MENU_VISIBLE_IN_TREE | MENU_VISIBLE_IF_HAS_CHILDREN)) {
         $class = 'menu-enabled';
       }
       else {
@@ -570,8 +620,8 @@ function menu_overview_tree_rows($pid = 0, $depth = 0) {
         $class = 'menu-disabled';
       }
 
-      if ($menu['items'][$mid]['type'] & (MENU_MODIFIABLE_BY_ADMIN | MENU_VISIBLE_IN_TREE)) {
-        $row = array(array('data' => $title, 'class' => $class), array('data' => ($menu['items'][$mid]['children'] ? (($menu['items'][$mid]['type'] & MENU_EXPANDED) ? t('Yes') : t('No')) : ''), 'class' => $class));
+      if ($item['type'] & (MENU_MODIFIABLE_BY_ADMIN | MENU_VISIBLE_IN_TREE)) {
+        $row = array(array('data' => $title, 'class' => $class), array('data' => ($item['children'] ? (($item['type'] & MENU_EXPANDED) ? t('Yes') : t('No')) : ''), 'class' => $class));
         foreach ($operations as $operation) {
           $operation['class'] = $class;
           $row[] = $operation;
@@ -584,7 +634,6 @@ function menu_overview_tree_rows($pid = 0, $depth = 0) {
         $rows = array_merge($rows, menu_overview_tree_rows($mid, $depth));
       }
     }
-
   }
 
   return $rows;
@@ -606,11 +655,9 @@ function menu_overview_tree_rows($pid = 0, $depth = 0) {
  *   An array of menu titles keyed on the mid.
  */
 function menu_parent_options($mid, $pid = 0, $depth = 0) {
-  $menu = menu_get_menu();
-
   $options = array();
 
-  if (!isset($menu['items'][$pid])) {
+  if (!($parent_item = menu_get_item($pid))) {
     return $options;
   }
 
@@ -620,12 +667,12 @@ function menu_parent_options($mid, $pid = 0, $depth = 0) {
   }
 
   // Add the current $pid to the list.
-  if ($pid > 0 && ($menu['items'][$pid]['type'] & (MENU_MODIFIABLE_BY_ADMIN | MENU_IS_ROOT))) {
-    $title = ' '. $menu['items'][$pid]['title'];
+  if ($pid > 0 && ($parent_item['type'] & (MENU_MODIFIABLE_BY_ADMIN | MENU_IS_ROOT))) {
+    $title = ' '. $parent_item['title'];
     for ($i = 0; $i < $depth; $i++) {
       $title = '--'. $title;
     }
-    if (!($menu['items'][$pid]['type'] & MENU_VISIBLE_IN_TREE)) {
+    if (!($parent_item['type'] & MENU_VISIBLE_IN_TREE)) {
       $title .= ' ('. t('disabled') .')';
     }
     $options[$pid] = $title;
@@ -633,9 +680,9 @@ function menu_parent_options($mid, $pid = 0, $depth = 0) {
   }
 
   // Add children of $pid to the list recursively.
-  if ($menu['items'][$pid]['children']) {
-    usort($menu['items'][$pid]['children'], '_menu_sort');
-    foreach ($menu['items'][$pid]['children'] as $child) {
+  if ($parent_item['children']) {
+    usort($parent_item['children'], '_menu_sort');
+    foreach ($parent_item['children'] as $child) {
       $options += menu_parent_options($mid, $child, $depth);
     }
   }
@@ -734,6 +781,6 @@ function menu_form_alter($form_id, &$form) {
  * Remove the menu item.
  */
 function menu_node_form_delete($node) {
-  db_query("DELETE FROM {menu} WHERE path = 'node/%s'", $node->nid);
+  menu_delete_item(array('path' => 'node/'. $node->nid));
 }
 
