@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.303 2006/01/19 08:54:41 dries Exp $
+// $Id: forum.module,v 1.304 2006/01/19 17:55:54 dries Exp $
 
 /**
  * @file
@@ -604,7 +604,7 @@ function forum_form(&$node) {
 function forum_prepare(&$node) {
   if (!$node->nid) {
     // new topic
-    $node->taxonomy[] = arg(3);
+    $node->taxonomy[arg(3)] = 1;
   }
 }
 
