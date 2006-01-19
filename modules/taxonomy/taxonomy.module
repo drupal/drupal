@@ -404,7 +404,7 @@ function taxonomy_overview() {
     foreach ($tree as $term) {
       $total_entries++; // we're counting all-totals, not displayed
       if (($start_from && ($start_from * $page_increment) >= $total_entries) || ($displayed_count == $page_increment)) { continue; }
-      $rows[] = array(_taxonomy_depth($term->depth) . ' ' . l(check_plain($term->name), "taxonomy/term/$term->tid"), l(t('edit'), "admin/taxonomy/edit/term/$term->tid", array(), $destination));
+      $rows[] = array(_taxonomy_depth($term->depth) . ' ' . l($term->name, "taxonomy/term/$term->tid"), l(t('edit'), "admin/taxonomy/edit/term/$term->tid", array(), $destination));
       $displayed_count++; // we're counting tids displayed
     }
 
