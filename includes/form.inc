@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.53 2006/01/19 09:22:16 dries Exp $
+// $Id: form.inc,v 1.54 2006/01/19 17:53:53 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -139,8 +139,9 @@ function drupal_submit_form($form_id, $form, $callback = NULL) {
 function _form_validate($elements, $form_id = NULL) {
   /* Validate the current input */
   if (!$elements['#validated'] && ($elements['#input'] || isset($form_id))) {
-    // An empty checkbox returns 0 and an empty textfield returns '' so we use empty().
-    // Unfortunately, empty('0') returns TRUE so we need a special check for the '0' string.
+    // An empty textfield returns '' so we use empty(). An empty checkbox
+    // and a textfield could return '0' and empty('0') returns TRUE so we
+    // need a special check for the '0' string.
     if ($elements['#required'] && empty($elements['#value']) && $elements['#value'] !== '0') {
       form_error($elements, t('%name field is required.', array('%name' => $elements['#title'])));
     }
@@ -273,7 +274,7 @@ function _form_builder($form_id, $form) {
           $form['#value'] = $edit; // normal element
         }
         elseif (isset($form['#return_value'])) {
-          $form['#value'] = 0; // checkbox unchecked
+          $form['#value'] = '0'; // checkbox unchecked
         }
       }
       if (!isset($form['#value'])) {
