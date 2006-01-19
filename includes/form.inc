@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.51 2006/01/18 19:46:57 dries Exp $
+// $Id: form.inc,v 1.52 2006/01/19 08:54:41 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -523,7 +523,6 @@ function theme_fieldset($element) {
 
 }
 
-
 /**
  * Format a radio button.
  *
@@ -691,7 +690,6 @@ function expand_radios($element) {
   return $element;
 }
 
-
 /**
  * Format a form item.
  *
@@ -704,7 +702,6 @@ function expand_radios($element) {
 function theme_item($element) {
   return theme('form_element', $element['#title'], $element['#value'] . $element['#children'], $element['#description'], $element['#id'], $element['#required'], $element['#error']);
 }
-
 
 /**
  * Format a checkbox.
@@ -765,7 +762,6 @@ function expand_checkboxes($element) {
   return $element;
 }
 
-
 function theme_submit($element) {
   return theme('button', $element);
 }
@@ -823,7 +819,6 @@ function theme_form($element) {
   return '<form '. $action . ' method="'. $element['#method'] .'" '. drupal_attributes($element['#attributes']) .">\n<div>". $element['#children'] ."\n</div></form>\n";
 }
 
-
 /**
  * Format a textarea.
  *
@@ -860,8 +855,6 @@ function theme_textarea($element) {
 function theme_markup($element) {
   return $element['#value'] . $element['#children'];
 }
-
-
 
 /**
 * Format a password field.

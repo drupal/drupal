@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.302 2006/01/18 19:29:17 dries Exp $
+// $Id: forum.module,v 1.303 2006/01/19 08:54:41 dries Exp $
 
 /**
  * @file
@@ -592,8 +592,8 @@ function forum_form(&$node) {
     $form['shadow'] = array('#type' => 'checkbox', '#title' => t('Leave shadow copy'), '#default_value' => $shadow, '#description' => t('If you move this topic, you can leave a link in the old forum to the new forum.'));
   }
 
-  $form['body'] = array('#type' => 'textarea', '#title' => t('Body'), '#default_value' => $node->body, '#rows' => 20, '#required' => TRUE);
-  $form['format'] = filter_form($node->format);
+  $form['body_filter']['body'] = array('#type' => 'textarea', '#title' => t('Body'), '#default_value' => $node->body, '#rows' => 20, '#required' => TRUE);
+  $form['body_filter']['format'] = filter_form($node->format, 1);
 
   return $form;
 }

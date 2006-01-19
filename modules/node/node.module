@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.588 2006/01/18 21:31:40 unconed Exp $
+// $Id: node.module,v 1.589 2006/01/19 08:54:41 dries Exp $
 
 /**
  * @file
@@ -1066,14 +1066,12 @@ function theme_node_filters(&$form) {
   }
   $output .= '</dd>';
 
-
   $output .= '</dl>';
   $output .= '<div class="container-inline" id="node-admin-buttons">'. form_render($form['buttons']) .'</div>';
   $output .= '</li></ul><br class="clear" />';
 
   return $output;
 }
-
 
 function node_filter_form_submit() {
   global $form_values;
@@ -1171,7 +1169,6 @@ function node_admin_nodes() {
   return $output;
 }
 
-
 function theme_node_admin_nodes($form) {
   // Overview table:
   $header = array(NULL, t('Title'), t('Type'), t('Author'), t('Status'), t('Operations'));
@@ -1220,7 +1217,6 @@ function node_multiple_delete_confirm() {
                       'admin/node', t('This action cannot be undone.'),
                       t('Delete all'), t('Cancel'));
 }
-
 
 function node_multiple_delete_confirm_submit($form_id, $edit) {
   if ($edit['confirm']) {
@@ -1568,7 +1564,6 @@ function node_validate($node) {
   node_invoke_nodeapi($node, 'validate');
 }
 
-
 /**
  * Validate the title of a node
  */
@@ -1664,7 +1659,6 @@ function node_form_array($node) {
     $form['author'] = array('#type' => 'fieldset', '#title' => t('Authoring information'), '#collapsible' => TRUE, '#collapsed' => TRUE, '#weight' => 20);
     $form['author']['name'] = array('#type' => 'textfield', '#title' => t('Authored by'), '#maxlength' => 60, '#autocomplete_path' => 'user/autocomplete', '#required' => TRUE, '#default_value' => $node->name ? $node->name : variable_get('anonymous', 'Anonymous'), '#weight' => -1);
     $form['author']['date'] = array('#type' => 'textfield', '#title' => t('Authored on'), '#maxlength' => 25, '#required' => TRUE, '#default_value' => $node->date);
-
 
     // Node options for administrators
     $form['options'] = array('#type' => 'fieldset', '#title' => t('Publishing options'), '#collapsible' => TRUE, '#collapsed' => TRUE, '#weight' => 25);
@@ -1979,7 +1973,6 @@ function node_revisions() {
   }
   drupal_not_found();
 }
-
 
 /**
  * Generate a listing of promoted nodes.

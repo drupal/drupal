@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.417 2006/01/18 15:09:39 dries Exp $
+// $Id: comment.module,v 1.418 2006/01/19 08:54:41 dries Exp $
 
 /**
  * @file
@@ -1332,10 +1332,8 @@ function comment_form($edit, $title = NULL) {
     $form['subject'] = array('#type' => 'textfield', '#title' => t('Subject'), '#maxlength' => 64, '#default_value' => $edit['subject']);
   }
 
-  $form['comment'] = array('#type' => 'textarea', '#title' => t('Comment'), '#rows' => 15, '#default_value' => $edit['comment'] ? $edit['comment'] : $user->signature, '#required' => TRUE
-  );
-
-  $form['format'] = filter_form($edit['format'], 18);
+  $form['comment_filter']['comment'] = array('#type' => 'textarea', '#title' => t('Comment'), '#rows' => 15, '#default_value' => $edit['comment'] ? $edit['comment'] : $user->signature, '#required' => TRUE);
+  $form['comment_filter']['format'] = filter_form($edit['format'], 1);
 
   $form['cid'] = array('#type' => 'value', '#value' => $edit['cid']);
   $form['pid'] = array('#type' => 'value', '#value' => $edit['pid']);
