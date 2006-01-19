@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.52 2006/01/19 08:54:41 dries Exp $
+// $Id: form.inc,v 1.53 2006/01/19 09:22:16 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -469,35 +469,36 @@ function form_options_flatten($array, $reset = TRUE) {
 function theme_select($element) {
   $select = '';
   $size = $element['#size'] ? ' size="' . $element['#size'] . '"' : '';
+  return theme('form_element', $element['#title'], '<select name="'. $element['#name'] .''. ($element['#multiple'] ? '[]' : '') .'"'. ($element['#multiple'] ? ' multiple="multiple" ' : '') . drupal_attributes($element['#attributes']) .' id="' . $element['#id'] .'" '. $size .'>'. form_select_options($element) .'</select>', $element['#description'], $element['#id'], $element['#required'], form_get_error($element));
+}
+
+function form_select_options($element, $choices = NULL) {
+  if (!isset($choices)) {
+    $choices = $element['#options'];
+  }
   // array_key_exists() accomodates the rare event where $element['#value'] is NULL.
   // isset() fails in this situation.
   $value_valid = isset($element['#value']) || array_key_exists('#value', $element);
   $value_is_array = is_array($element['#value']);
-  foreach ($element['#options'] as $key => $choice) {
+  $options = '';
+  foreach ($choices as $key => $choice) {
     if (is_array($choice)) {
-      $select .= '<optgroup label="'. $key .'">';
-      foreach ($choice as $key => $choice) {
-        if ($value_valid && ($element['#value'] == $key || ($value_is_array && isset($element['#value'][$key])))) {
-          $selected = ' selected="selected"';
-        }
-        else {
-          $selected = '';
-        }
-        $select .= '<option value="'. $key .'"'. $selected .'>'. check_plain($choice) .'</option>';
-      }
-      $select .= '</optgroup>';
+      $options .= '<optgroup label="'. $key .'">';
+      $options .= form_select_options($element, $choice);
+      $options .= '</optgroup>';
     }
     else {
-      if ($value_valid && ($element['#value'] == $key || ($value_is_array && isset($element['#value'][$key])))) {
+      $key = (string)$key;
+      if ($value_valid && ($element['#value'] == $key || ($value_is_array && in_array($key, $element['#value'])))) {
         $selected = ' selected="selected"';
       }
       else {
         $selected = '';
       }
-      $select .= '<option value="'. $key .'"'. $selected .'>'. check_plain($choice) .'</option>';
+      $options .= '<option value="'. $key .'"'. $selected .'>'. check_plain($choice) .'</option>';
     }
   }
-  return theme('form_element', $element['#title'], '<select name="'. $element['#name'] .''. ($element['#multiple'] ? '[]' : '') .'"'. ($element['#multiple'] ? ' multiple="multiple" ' : '') . drupal_attributes($element['#attributes']) .' id="' . $element['#id'] .'" '. $size .'>'. $select .'</select>', $element['#description'], $element['#id'], $element['#required'], form_get_error($element));
+  return $options;
 }
 
 /**
