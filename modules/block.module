@@ -458,7 +458,6 @@ function block_box_delete_confirm_submit($form_id, $form_values) {
   drupal_goto('admin/block');
 };
 
-
 function block_box_form($edit = array()) {
   $form['title'] = array(
     '#type' => 'textfield',
@@ -468,7 +467,8 @@ function block_box_form($edit = array()) {
     '#description' => t('The title of the block as shown to the user.'),
     '#weight' => -18,
   );
-  $form['body'] = array(
+  $form['body_filter']['#weight'] = -17;
+  $form['body_filter']['body'] = array(
     '#type' => 'textarea',
     '#title' => t('Block body'),
     '#default_value' => $edit['body'],
@@ -476,7 +476,7 @@ function block_box_form($edit = array()) {
     '#description' => t('The content of the block as shown to the user.'),
     '#weight' => -17,
   );
-  $form['format'] = filter_form($edit['format']);
+  $form['body_filter']['format'] = filter_form($edit['format'], -16);
   $form['info'] = array(
     '#type' => 'textfield',
     '#title' => t('Block description'),
