@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.419 2006/01/20 09:04:34 dries Exp $
+// $Id: comment.module,v 1.420 2006/01/20 09:33:03 dries Exp $
 
 /**
  * @file
@@ -390,14 +390,17 @@ function comment_configure() {
 
   $form['posting_settings']['comment_anonymous'] = array(
     '#type' => 'radios',
-    '#title' => t('Comment controls'),
+    '#title' => t('Anonymous commenting'),
     '#default_value' => variable_get('comment_anonymous', COMMENT_ANONYMOUS_MAYNOT_CONTACT),
     '#options' => array(
       COMMENT_ANONYMOUS_MAYNOT_CONTACT => t('Anonymous posters may not enter their contact information'),
       COMMENT_ANONYMOUS_MAY_CONTACT => t('Anonymous posters may leave their contact information'),
       COMMENT_ANONYMOUS_MUST_CONTACT => t('Anonymous posters must leave their contact information')),
-    '#description' => t('This feature is only useful if you allow anonymous users to post comments.  See the <a href="%url">permissions page</a>.', array('%url' => url('admin/access/permissions'))),
+    '#description' => t('This option is enabled when anonymous users have permission to post comments on the <a href="%url">permissions page</a>.', array('%url' => url('admin/access'))),
   );
+  if (!user_access('post comments', user_load(array('uid' => 0)))) {
+    $form['posting_settings']['comment_anonymous']['#attributes'] = array('disabled' => 'disabled');
+  }
 
   $form['posting_settings']['comment_subject_field'] = array(
     '#type' => 'radios',
