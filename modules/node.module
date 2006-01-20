@@ -1632,9 +1632,6 @@ function node_form_array($node) {
   if (!isset($form['title']['#weight'])) {
     $form['title']['#weight'] = -5;
   }
-  if (!isset($form['body']['#weight'])) {
-    $form['body']['#weight'] = 0;
-  }
 
   // If this is a new node, fill in the default values.
   $node_options = variable_get('node_options_'. $node->type, array('status', 'promote'));

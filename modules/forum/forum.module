@@ -593,7 +593,7 @@ function forum_form(&$node) {
   }
 
   $form['body_filter']['body'] = array('#type' => 'textarea', '#title' => t('Body'), '#default_value' => $node->body, '#rows' => 20, '#required' => TRUE);
-  $form['body_filter']['format'] = filter_form($node->format, 1);
+  $form['body_filter']['format'] = filter_form($node->format);
 
   return $form;
 }
