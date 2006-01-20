@@ -38,7 +38,7 @@ function chameleon_page($content) {
   $output .= " <link rel=\"stylesheet\" type=\"text/css\" href=\"themes/chameleon/common.css\" />\n";
   $output .= theme_get_styles();
   $output .= "</head>";
-  $output .= "<body". theme_onload_attribute() .">\n";
+  $output .= "<body>\n";
   $output .= " <div id=\"header\">";
 
   if ($logo = theme_get_setting('logo')) {

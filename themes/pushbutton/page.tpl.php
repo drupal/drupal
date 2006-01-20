@@ -7,7 +7,7 @@
   <?php print $styles ?>
 </head>
 
-<body bgcolor="#ffffff" <?php print theme("onload_attribute"); ?>>
+<body bgcolor="#ffffff">
 
 <div class="hide"><a href="#content" title="Skip navigation." accesskey="2">Skip navigation</a>.</div>
 
