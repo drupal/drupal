@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.563 2006/01/20 09:04:34 dries Exp $
+// $Id: user.module,v 1.564 2006/01/20 09:37:00 dries Exp $
 
 /**
  * @file
@@ -734,7 +734,7 @@ function user_menu($may_cache) {
     //Your personal page
     if ($user->uid) {
       $items[] = array('path' => 'user/'. $user->uid, 'title' => t('my account'),
-        'callback' => 'user_view', 'callback arguments' => arg(1), 'access' => TRUE,
+        'callback' => 'user_view', 'callback arguments' => array(arg(1)), 'access' => TRUE,
         'type' => MENU_DYNAMIC_ITEM);
     }
 
