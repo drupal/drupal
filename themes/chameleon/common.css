@@ -1,4 +1,4 @@
-/* $Id: common.css,v 1.8 2004/09/20 14:36:53 unconed Exp $ */
+/* $Id: common.css,v 1.9 2006/01/20 09:09:18 dries Exp $ */
 
 /*
 ** HTML elements
@@ -145,7 +145,7 @@ br {
 .form-item textarea {
   font-size: 1em;
 }
-#aggregator .feed {
+#aggregator .feed-source {
   border: 1px solid gray;
   padding: 1em;
 }

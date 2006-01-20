@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.12 2005/09/02 19:18:14 dries Exp $ */
+/* $Id: style.css,v 1.13 2006/01/20 09:09:18 dries Exp $ */
 
 /*
 ** HTML elements
@@ -482,7 +482,7 @@ table#footer-menu {
 .content .active {
   color: #369;
 }
-#aggregator .feed {
+#aggregator .feed-source {
   background-color: #eee;
   border: 1px solid #ccc;
   padding: 1em;

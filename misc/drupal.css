@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.134 2006/01/17 21:19:43 dries Exp $ */
+/* $Id: drupal.css,v 1.135 2006/01/20 09:09:18 dries Exp $ */
 
 /*
 ** HTML elements
@@ -192,8 +192,15 @@ tr.odd .form-item, tr.even .form-item {
 /*
 ** Module specific styles
 */
-#aggregator .feed img {
+#aggregator .feed-source .feed-title {
+  margin-top: 0;
+}
+#aggregator .feed-source .feed-image img {
+  margin-bottom: 0.75em;
+}
+#aggregator .feed-source .feed-icon {
   float: right;
+  display: block;
 }
 #aggregator .news-item {
   clear: both;
@@ -206,7 +213,7 @@ tr.odd .form-item, tr.even .form-item {
   margin-top: 1em;
   margin-left: 1em;
 }
-#aggregator .news-item .body .feed {
+#aggregator .news-item .body .feed-source {
   font-size: 0.9em;
 }
 #aggregator .news-item .title {
@@ -234,15 +241,15 @@ tr.odd .form-item, tr.even .form-item {
 .book .title {
   font-weight: bold;
   font-size: 1.3em;
-  margin-bottom:1em;
+  margin-bottom: 1em;
 }
 .book .tree {
-  padding-top:1em;
+  padding-top: 1em;
   border-top: 1px solid #888;
   padding-bottom: 1em;
 }
 .book .name {
-  padding-top:1em;
+  padding-top: 1em;
   font-weight: bold;
   font-size: 1em;
 }

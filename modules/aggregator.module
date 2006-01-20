@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.269 2006/01/15 17:03:34 dries Exp $
+// $Id: aggregator.module,v 1.270 2006/01/20 09:09:18 dries Exp $
 
 /**
  * @file
@@ -423,7 +423,8 @@ function aggregator_refresh($feed) {
         }
 
         if ($image['LINK'] && $image['URL'] && $image['TITLE']) {
-          $image = '<a href="'. $image['LINK'] .'"><img src="'. $image['URL'] .'" alt="'. $image['TITLE'] .'" /></a>';
+          // Note, we should really use theme_image() here but that only works with local images it won't work with images fetched with a URL unless PHP version > 5
+          $image = '<a href="'. check_url($image['LINK']) .'" class="feed-image"><img src="'. check_url($image['URL']) .'" alt="'. check_plain($image['TITLE']) .'" /></a>';
         }
         else {
           $image = NULL;
@@ -908,7 +909,7 @@ function aggregator_page_source() {
   $feed = db_fetch_object(db_query('SELECT * FROM {aggregator_feed} WHERE fid = %d', arg(2)));
   $info = theme('aggregator_feed', $feed);
 
-  return _aggregator_page_list('SELECT * FROM {aggregator_item} WHERE fid = '. $feed->fid .' ORDER BY timestamp DESC, iid DESC', arg(3), "<div class=\"feed\">$info</div>");
+  return _aggregator_page_list('SELECT * FROM {aggregator_item} WHERE fid = '. $feed->fid .' ORDER BY timestamp DESC, iid DESC', arg(3), $info);
 }
 
 /**
@@ -1148,25 +1149,18 @@ function aggregator_page_categories() {
  * @ingroup themeable
  */
 function theme_aggregator_feed($feed) {
-  $output  = '';
+  $output  = '<div class="feed-source">';
+  $output .= theme('feed_icon', $feed->url) ."\n";
+  $output .= $feed->image . ' <h3 class="feed-title"><a href="'. check_url($feed->link) .'">'. check_plain($feed->title) ."</a></h3>\n";
+  $output .= '<div class="feed-description"><em>'. t('Description:') .'</em> '. filter_xss($feed->description) ."</div>\n";
 
-  if ($feed->image) {
-    $output .= $feed->image;
-  }
-
-  $output .= $feed->description;
-  $output .= '<h3>'. t('URL') ."</h3>\n";
-  $output .= theme('xml_icon', $feed->url);
-  $output .= '<a href="'. check_url($feed->link) .'">'. check_plain($feed->link) ."</a>\n";
-  $output .= '<h3>'. t('Last update') ."</h3>\n";
   $updated = t('%time ago', array('%time' => format_interval(time() - $feed->checked)));
-
   if (user_access('administer news feeds')) {
-    $output .= l($updated, 'admin/aggregator');
+    $updated = l($updated, 'admin/aggregator');
   }
-  else {
-    $output .= $updated;
-  }
+
+  $output .= '<div class="feed-updated"><em>'. t('Updated:') . "</em> $updated</div>";
+  $output .= "</div>\n";
 
   return $output;
 }
@@ -1214,27 +1208,25 @@ function theme_aggregator_summary_item($item) {
  * @ingroup themeable
  */
 function theme_aggregator_page_item($item) {
-  static $last;
-
-  $date = format_date($item->timestamp, 'custom', 'Ymd');
-  if ($date != $last) {
-    $last = $date;
-    $output .= '<h3>'. format_date($item->timestamp, 'custom', 'F j, Y') ."</h3>\n";
-  }
-
-  $output .= "<div class=\"news-item\">\n";
-  $output .= ' <div class="date">'. format_date($item->timestamp, 'custom', 'H:i') ."</div>\n";
-  $output .= " <div class=\"body\">\n";
 
   $source = '';
   if ($item->ftitle && $item->fid) {
-    $source = '<span class="source">'. l($item->ftitle, "aggregator/sources/$item->fid") .":</span>\n";
+    $source = l($item->ftitle, "aggregator/sources/$item->fid", array('class' => 'feed-item-source')) . ' -';
   }
 
-  $output .= '  <div class="title">'. $source .'<a href="'. check_url($item->link) .'">'. check_plain($item->title) ."</a></div>\n";
+  if (date('Ymd', $item->timestamp) == date('Ymd')) {
+    $source_date = t('%ago ago', array('%ago' => format_interval(time() - $item->timestamp)));
+  }
+  else {
+    $source_date = format_date($item->timestamp, 'custom', variable_get('date_format_medium', 'D, Y-m-d H:i'));
+  }
+
+  $output .= "<div class=\"feed-item\">\n";
+  $output .= '<h3 class="feed-item-title"><a href="'. check_url($item->link) .'">'. check_plain($item->title) ."</a></h3>\n";
+  $output .= "<div class=\"feed-item-meta\">$source <span class=\"feed-item-date\">$source_date</span></div>\n";
 
   if ($item->description) {
-    $output .= '  <div class="description">'. $item->description ."</div>\n";
+    $output .= '<div class="feed-item-body">'. filter_xss($item->description) ."</div>\n";
   }
 
   $result = db_query('SELECT c.title, c.cid FROM {aggregator_category_item} ci LEFT JOIN {aggregator_category} c ON ci.cid = c.cid WHERE ci.iid = %d ORDER BY c.title', $item->iid);
@@ -1243,10 +1235,9 @@ function theme_aggregator_page_item($item) {
     $categories[] = l($category->title, 'aggregator/categories/'. $category->cid);
   }
   if ($categories) {
-    $output .= '  <div class="categories">'. t('Categories') .': '. implode(', ', $categories) ."</div>\n";
+    $output .= '<div class="feed-item-categories">'. t('Categories') .': '. implode(', ', $categories) ."</div>\n";
   }
 
-  $output .= " </div>\n";
   $output .= "</div>\n";
 
   return $output;
