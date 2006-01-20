@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.561 2006/01/17 09:04:20 dries Exp $
+// $Id: user.module,v 1.562 2006/01/20 08:58:09 dries Exp $
 
 /**
  * @file
@@ -584,9 +584,7 @@ function user_block($op = 'list', $delta = 0, $edit = array()) {
             $items[] = $account;
           }
 
-          if ($items) {
-            $output .= theme('user_list', $items, t('Online users'));
-          }
+          $output .= theme('user_list', $items, t('Online users'));
 
           $block['subject'] = t('Who\'s online');
           $block['content'] = $output;
@@ -646,8 +644,10 @@ function theme_user_profile($account, $fields) {
  * @ingroup themeable
  */
 function theme_user_list($users, $title = NULL) {
-  foreach ($users as $user) {
-    $items[] = theme('username', $user);
+  if (!empty($users)) {
+    foreach ($users as $user) {
+      $items[] = theme('username', $user);
+    }
   }
   return theme('item_list', $items, $title);
 }
