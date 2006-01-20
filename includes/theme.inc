@@ -608,7 +608,7 @@ function theme_node($node, $teaser = FALSE, $page = FALSE) {
 function theme_form_element($title, $value, $description = NULL, $id = NULL, $required = FALSE, $error = FALSE) {
 
   $output  = '<div class="form-item">'."\n";
-  $required = $required ? '<span class="form-required">*</span>' : '';
+  $required = $required ? '<span class="form-required" title="'. t('This field is required') .'">*</span>' : '';
 
   if ($title) {
     if ($id) {
