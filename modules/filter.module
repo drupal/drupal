@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.101 2006/01/15 07:14:14 unconed Exp $
+// $Id: filter.module,v 1.102 2006/01/20 09:04:34 dries Exp $
 
 /**
  * @file
@@ -750,7 +750,7 @@ function check_markup($text, $format = FILTER_FORMAT_DEFAULT, $check = TRUE) {
  * @return
  *   HTML for the form element.
  */
-function filter_form($value = FILTER_FORMAT_DEFAULT, $weight = 0, $parents = array('format')) {
+function filter_form($value = FILTER_FORMAT_DEFAULT, $weight = NULL, $parents = array('format')) {
   if ($value == FILTER_FORMAT_DEFAULT) {
     $value = variable_get('filter_default_format', 1);
   }

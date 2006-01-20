@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.304 2006/01/19 17:55:54 dries Exp $
+// $Id: forum.module,v 1.305 2006/01/20 09:04:34 dries Exp $
 
 /**
  * @file
@@ -593,7 +593,7 @@ function forum_form(&$node) {
   }
 
   $form['body_filter']['body'] = array('#type' => 'textarea', '#title' => t('Body'), '#default_value' => $node->body, '#rows' => 20, '#required' => TRUE);
-  $form['body_filter']['format'] = filter_form($node->format, 1);
+  $form['body_filter']['format'] = filter_form($node->format);
 
   return $form;
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.418 2006/01/19 08:54:41 dries Exp $
+// $Id: comment.module,v 1.419 2006/01/20 09:04:34 dries Exp $
 
 /**
  * @file
@@ -343,7 +343,6 @@ function comment_configure() {
     '#title' => t('Viewing options'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
-    '#weight' => 0,
   );
 
   $form['viewing_options']['comment_default_mode'] = array(
@@ -387,7 +386,6 @@ function comment_configure() {
     '#title' => t('Posting settings'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
-    '#weight' => 0,
   );
 
   $form['posting_settings']['comment_anonymous'] = array(
@@ -1333,7 +1331,7 @@ function comment_form($edit, $title = NULL) {
   }
 
   $form['comment_filter']['comment'] = array('#type' => 'textarea', '#title' => t('Comment'), '#rows' => 15, '#default_value' => $edit['comment'] ? $edit['comment'] : $user->signature, '#required' => TRUE);
-  $form['comment_filter']['format'] = filter_form($edit['format'], 1);
+  $form['comment_filter']['format'] = filter_form($edit['format']);
 
   $form['cid'] = array('#type' => 'value', '#value' => $edit['cid']);
   $form['pid'] = array('#type' => 'value', '#value' => $edit['pid']);

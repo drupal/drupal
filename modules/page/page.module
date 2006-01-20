@@ -1,5 +1,5 @@
 <?php
-// $Id: page.module,v 1.150 2006/01/19 08:54:41 dries Exp $
+// $Id: page.module,v 1.151 2006/01/20 09:04:34 dries Exp $
 
 /**
  * @file
@@ -94,7 +94,7 @@ function page_form(&$node) {
   $form['title'] = array('#type' => 'textfield', '#title' => t('Title'), '#required' => TRUE, '#default_value' => $node->title, '#weight' => -5);
 
   $form['body_filter']['body'] = array('#type' => 'textarea', '#title' => t('Body'), '#default_value' => $node->body, '#rows' => 20, '#required' => TRUE);
-  $form['body_filter']['format'] = filter_form($node->format, 1);
+  $form['body_filter']['format'] = filter_form($node->format);
 
   $form['log'] = array(
     '#type' => 'textarea', '#title' => t('Log message'), '#default_value' => $node->log, '#weight' => 5,

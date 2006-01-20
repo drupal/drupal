@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.589 2006/01/19 08:54:41 dries Exp $
+// $Id: node.module,v 1.590 2006/01/20 09:04:34 dries Exp $
 
 /**
  * @file
@@ -1631,9 +1631,6 @@ function node_form_array($node) {
   $form = array_merge($form, node_invoke($node, 'form'));
   if (!isset($form['title']['#weight'])) {
     $form['title']['#weight'] = -5;
-  }
-  if (!isset($form['body']['#weight'])) {
-    $form['body']['#weight'] = 0;
   }
 
   // If this is a new node, fill in the default values.

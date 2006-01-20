@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.196 2006/01/19 08:54:41 dries Exp $
+// $Id: block.module,v 1.197 2006/01/20 09:04:34 dries Exp $
 
 /**
  * @file
@@ -325,7 +325,6 @@ function block_admin_configure($module = NULL, $delta = 0) {
       '#type' => 'fieldset',
       '#title' => t('Block specific settings'),
       '#collapsible' => true,
-      '#weight' => 0,
     );
 
     foreach ($settings as $k => $v) {
@@ -343,7 +342,6 @@ function block_admin_configure($module = NULL, $delta = 0) {
     '#type' => 'fieldset',
     '#title' => t('User specific visibility settings'),
     '#collapsible' => true,
-    '#weight' => 0,
   );
   $form['user_vis_settings']['custom'] = array(
     '#type' => 'radios',
@@ -355,7 +353,6 @@ function block_admin_configure($module = NULL, $delta = 0) {
     '#type' => 'fieldset',
     '#title' => t('Page specific visibility settings'),
     '#collapsible' => true,
-    '#weight' => 0,
   );
   $access = user_access('use PHP for block visibility');
 
