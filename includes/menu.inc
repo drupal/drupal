@@ -650,7 +650,9 @@ function menu_tree($pid = 1) {
 
   if (isset($menu['visible'][$pid]) && $menu['visible'][$pid]['children']) {
     foreach ($menu['visible'][$pid]['children'] as $mid) {
-      $output .= theme('menu_item', $mid, menu_in_active_trail($mid) || ($menu['visible'][$mid]['type'] & MENU_EXPANDED) ? theme('menu_tree', $mid) : '', count($menu['visible'][$mid]['children']) == 0);
+      $type = isset($menu['visible'][$mid]['type']) ? $menu['visible'][$mid]['type'] : NULL;
+      $children = isset($menu['visible'][$mid]['children']) ? $menu['visible'][$mid]['children'] : NULL;
+      $output .= theme('menu_item', $mid, menu_in_active_trail($mid) || ($type & MENU_EXPANDED) ? theme('menu_tree', $mid) : '', count($children) == 0);
     }
   }
 
@@ -1118,7 +1120,7 @@ function _menu_item_is_accessible($mid) {
   $menu = menu_get_menu();
 
   // Follow the path up to find the first "access" attribute.
-  $path = $menu['items'][$mid]['path'];
+  $path = isset($menu['items'][$mid]['path']) ? $menu['items'][$mid]['path'] : NULL;
   while ($path && (!isset($menu['path index'][$path]) || !isset($menu['items'][$menu['path index'][$path]]['access']))) {
     $path = substr($path, 0, strrpos($path, '/'));
   }
