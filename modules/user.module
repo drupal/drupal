@@ -734,7 +734,7 @@ function user_menu($may_cache) {
     //Your personal page
     if ($user->uid) {
       $items[] = array('path' => 'user/'. $user->uid, 'title' => t('my account'),
-        'callback' => 'user_view', 'callback arguments' => arg(1), 'access' => TRUE,
+        'callback' => 'user_view', 'callback arguments' => array(arg(1)), 'access' => TRUE,
         'type' => MENU_DYNAMIC_ITEM);
     }
 
