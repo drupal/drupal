@@ -8,7 +8,7 @@
   <script type="text/javascript"><?php /* Needed to avoid Flash of Unstyle Content in IE */ ?> </script>
 </head>
 
-<body<?php print $onload_attributes ?>>
+<body>
 
 <table border="0" cellpadding="0" cellspacing="0" id="header">
   <tr>

@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.276 2006/01/18 19:40:18 dries Exp $
+// $Id: theme.inc,v 1.277 2006/01/20 08:54:06 dries Exp $
 
 /**
  * @file
@@ -395,7 +395,7 @@ function theme_page($content) {
   $output .= theme_get_styles();
 
   $output .= ' </head>';
-  $output .= ' <body style="background-color: #fff; color: #000;"'. theme('onload_attribute'). '">';
+  $output .= ' <body style="background-color: #fff; color: #000;">';
   $output .= '<table border="0" cellspacing="4" cellpadding="4"><tr><td style="vertical-align: top; width: 170px;">';
 
   $output .= theme('blocks', 'all');
@@ -907,28 +907,6 @@ function theme_feed_icon($url) {
 function theme_closure($main = 0) {
   $footer = module_invoke_all('footer', $main);
   return implode("\n", $footer);
-}
-
-/**
- * Call hook_onload() in all modules to enable modules to insert JavaScript that
- * will get run once the page has been loaded by the browser.
- *
- * @param $theme_onloads
- *   Additional onload directives.
- * @return
- *   A string containing the onload attributes.
- */
-function theme_onload_attribute($theme_onloads = array()) {
-  if (!is_array($theme_onloads)) {
-    $theme_onloads = array($theme_onloads);
-  }
-  // Merge theme onloads (javascript rollovers, image preloads, etc.)
-  // with module onloads (htmlarea, etc.)
-  $onloads = array_merge(module_invoke_all('onload'), $theme_onloads);
-  if (count($onloads)) {
-    return ' onload="' . implode('; ', $onloads) . '"';
-  }
-  return '';
 }
 
 /**
