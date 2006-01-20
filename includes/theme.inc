@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.278 2006/01/20 09:19:21 dries Exp $
+// $Id: theme.inc,v 1.279 2006/01/20 09:30:12 dries Exp $
 
 /**
  * @file
@@ -608,7 +608,7 @@ function theme_node($node, $teaser = FALSE, $page = FALSE) {
 function theme_form_element($title, $value, $description = NULL, $id = NULL, $required = FALSE, $error = FALSE) {
 
   $output  = '<div class="form-item">'."\n";
-  $required = $required ? '<span class="form-required" title="'. t('This field is required') .'">*</span>' : '';
+  $required = $required ? '<span class="form-required" title="'. t('This field is required.') .'">*</span>' : '';
 
   if ($title) {
     if ($id) {
