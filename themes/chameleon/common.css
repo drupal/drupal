@@ -145,7 +145,7 @@ br {
 .form-item textarea {
   font-size: 1em;
 }
-#aggregator .feed {
+#aggregator .feed-source {
   border: 1px solid gray;
   padding: 1em;
 }

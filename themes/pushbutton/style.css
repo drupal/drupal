@@ -482,7 +482,7 @@ table#footer-menu {
 .content .active {
   color: #369;
 }
-#aggregator .feed {
+#aggregator .feed-source {
   background-color: #eee;
   border: 1px solid #ccc;
   padding: 1em;
