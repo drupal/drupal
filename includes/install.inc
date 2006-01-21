@@ -1,8 +1,8 @@
 <?php
 // $Id$
 
-define('SCHEMA', 0);
-define('SCHEMA_MIN', 1);
+define('SCHEMA_UNINSTALLED', -1);
+define('SCHEMA_INSTALLED', 0);
 
 
 // The system module (Drupal core) is currently a special case

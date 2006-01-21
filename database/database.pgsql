@@ -646,7 +646,7 @@ CREATE TABLE system (
   status integer NOT NULL default '0',
   throttle smallint NOT NULL default '0',
   bootstrap integer NOT NULL default '0',
-  schema_version smallint NOT NULL default 0,
+  schema_version smallint NOT NULL default -1,
   weight smallint NOT NULL default 0,
   PRIMARY KEY (filename)
 );
