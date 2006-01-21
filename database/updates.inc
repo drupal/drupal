@@ -1470,7 +1470,7 @@ function system_update_169() {
 
 /**
  * Converts tables to UTF-8 encoding.
- * 
+ *
  * This update is designed to be re-usable by contrib modules and is
  * used by system_update_169().
  */
@@ -1578,4 +1578,10 @@ function system_update_170() {
     db_query('UPDATE {system} SET schema_version = -1 WHERE status = 0 AND schema_version = 0');
   }
   return array();
+}
+
+function system_update_171() {
+  $ret = array();
+  $ret[] = update_sql('DELETE FROM {users_roles} WHERE rid IN ('. DRUPAL_ANONYMOUS_RID. ', '. DRUPAL_AUTHENTICATED_RID. ')');
+  return $ret;
 }

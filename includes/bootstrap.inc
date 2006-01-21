@@ -21,6 +21,10 @@ define('DRUPAL_BOOTSTRAP_SESSION', 1);
 define('DRUPAL_BOOTSTRAP_PAGE_CACHE', 2);
 define('DRUPAL_BOOTSTRAP_FULL', 3);
 
+// these values should match the'role' table
+define('DRUPAL_ANONYMOUS_RID', 1);
+define('DRUPAL_AUTHENTICATED_RID', 2);
+
 /**
  * Start the timer with the specified name.  If you start and stop
  * the same timer multiple times, the measured intervals will be
