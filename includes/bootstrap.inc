@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.82 2006/01/17 06:17:29 unconed Exp $
+// $Id: bootstrap.inc,v 1.83 2006/01/21 08:28:54 dries Exp $
 
 /**
  * @file
@@ -20,6 +20,10 @@ define('DRUPAL_BOOTSTRAP_DATABASE', 0);
 define('DRUPAL_BOOTSTRAP_SESSION', 1);
 define('DRUPAL_BOOTSTRAP_PAGE_CACHE', 2);
 define('DRUPAL_BOOTSTRAP_FULL', 3);
+
+// these values should match the'role' table
+define('DRUPAL_ANONYMOUS_RID', 1);
+define('DRUPAL_AUTHENTICATED_RID', 2);
 
 /**
  * Start the timer with the specified name.  If you start and stop

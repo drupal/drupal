@@ -1,5 +1,5 @@
 <?php
-// $Id: session.inc,v 1.22 2005/12/31 11:50:47 dries Exp $
+// $Id: session.inc,v 1.23 2006/01/21 08:28:54 dries Exp $
 
 /**
  * @file
@@ -30,8 +30,13 @@ function sess_read($key) {
   $user = drupal_unpack($user);
   $user->roles = array();
 
+  if ($user->uid) {
+    $user->roles[DRUPAL_AUTHENTICATED_RID] = 'authenticated user';
+  }
+  else {
+    $user->roles[DRUPAL_ANONYMOUS_RID] = 'anonymous user';
+  }
   $result = db_query("SELECT r.rid, r.name FROM {role} r INNER JOIN {users_roles} ur ON ur.rid = r.rid WHERE ur.uid = %d", $user->uid);
-
   while ($role = db_fetch_object($result)) {
     $user->roles[$role->rid] = $role->name;
   }

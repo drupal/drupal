@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.564 2006/01/20 09:37:00 dries Exp $
+// $Id: user.module,v 1.565 2006/01/21 08:28:55 dries Exp $
 
 /**
  * @file
@@ -67,7 +67,7 @@ function user_load($array = array()) {
     $user = db_fetch_object($result);
     $user = drupal_unpack($user);
 
-    $user->roles = array();
+    $user->roles[DRUPAL_AUTHENTICATED_RID] = 'authenticated user';
     $result = db_query('SELECT r.rid, r.name FROM {role} r INNER JOIN {users_roles} ur ON ur.rid = r.rid WHERE ur.uid = %d', $user->uid);
     while ($role = db_fetch_object($result)) {
       $user->roles[$role->rid] = $role->name;
@@ -133,7 +133,9 @@ function user_save($account, $array = array(), $category = 'account') {
       db_query('DELETE FROM {users_roles} WHERE uid = %d', $account->uid);
 
       foreach (array_keys($array['roles']) as $rid) {
-        db_query('INSERT INTO {users_roles} (uid, rid) VALUES (%d, %d)', $account->uid, $rid);
+        if (!in_array($rid, array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID))) {
+          db_query('INSERT INTO {users_roles} (uid, rid) VALUES (%d, %d)', $account->uid, $rid);
+        }
       }
     }
 
@@ -170,7 +172,7 @@ function user_save($account, $array = array(), $category = 'account') {
 
     // Reload user roles (delete just to be safe).
     db_query('DELETE FROM {users_roles} WHERE uid = %d', $array['uid']);
-    foreach ($array['roles'] as $rid) {
+    foreach ((array)$array['roles'] as $rid) {
       db_query('INSERT INTO {users_roles} (uid, rid) VALUES (%d, %d)', $array['uid'], $rid);
     }
 
@@ -335,8 +337,8 @@ function user_access($string, $account = NULL) {
 
   // To reduce the number of SQL queries, we cache the user's permissions
   // in a static variable.
-  if (!isset($perm[$account->uid])) {
-    $result = db_query('SELECT DISTINCT(p.perm) FROM {role} r INNER JOIN {permission} p ON p.rid = r.rid INNER JOIN {users_roles} ur ON ur.rid = r.rid WHERE ur.uid = %d', $account->uid);
+  if (!isset($perm[$account->uid]) && count($user->roles)) {
+    $result = db_query("SELECT DISTINCT(p.perm) FROM {role} r INNER JOIN {permission} p ON p.rid = r.rid WHERE r.rid IN (%s)", implode(',', array_keys($account->roles)));
 
     $perm[$account->uid] = '';
     while ($row = db_fetch_object($result)) {
@@ -928,7 +930,7 @@ function user_authenticate($name, $pass) {
           if (variable_get('user_register', 1) == 1) {
             $account = user_load(array('name' => "$name@$server"));
             if (!$account->uid) { // Register this new user.
-              $user = user_save('', array('name' => "$name@$server", 'pass' => user_password(), 'init' => "$name@$server", 'status' => 1, "authname_$module" => "$name@$server", 'roles' => array(_user_authenticated_id())));
+              $user = user_save('', array('name' => "$name@$server", 'pass' => user_password(), 'init' => "$name@$server", 'status' => 1, "authname_$module" => "$name@$server"));
               watchdog('user', t('New external user: %user using module %module.', array('%user' => theme('placeholder', $name .'@'. $server), '%module' => theme('placeholder', $module))), WATCHDOG_NOTICE, l(t('edit'), 'user/'. $user->uid .'/edit'));
               break;
             }
@@ -938,10 +940,6 @@ function user_authenticate($name, $pass) {
     }
   }
   return $user;
-}
-
-function _user_authenticated_id() {
-  return db_result(db_query("SELECT rid FROM {role} WHERE name = 'authenticated user'"));
 }
 
 /**
@@ -1122,7 +1120,7 @@ function user_register_submit($form_id, $form_values) {
     drupal_goto('user/register');
   }
 
-  $account = user_save('', array_merge($form_values, array('pass' => $pass, 'init' => $mail, 'roles' => array('authenticated user' => _user_authenticated_id()), 'status' => ($admin || variable_get('user_register', 1) == 1))));
+  $account = user_save('', array_merge($form_values, array('pass' => $pass, 'init' => $mail, 'status' => ($admin || variable_get('user_register', 1) == 1))));
   watchdog('user', t('New user: %name %email.', array('%name' => theme('placeholder', $name), '%email' => theme('placeholder', '<'. $mail .'>'))), WATCHDOG_NOTICE, l(t('edit'), 'user/'. $account->uid .'/edit'));
 
   $variables = array('%username' => $name, '%site' => variable_get('site_name', 'drupal'), '%password' => $pass, '%uri' => $base_url, '%uri_brief' => substr($base_url, strlen('http://')), '%mailto' => $mail, '%date' => format_date(time()), '%login_uri' => url('user', NULL, NULL, TRUE), '%edit_uri' => url('user/'. $account->uid .'/edit', NULL, NULL, TRUE), '%login_url' => user_pass_reset_url($account));
@@ -1180,7 +1178,11 @@ function user_edit_form($uid, $edit) {
     $form['account']['status'] = array('#type' => 'radios', '#title' => t('Status'), '#default_value' => $edit['status'], '#options' => array(t('Blocked'), t('Active')));
   }
   if (user_access('administer access control')) {
-    $form['account']['roles'] = array('#type' => 'checkboxes', '#title' => t('Roles'), '#default_value' => array_keys((array)$edit['roles']), '#options' => user_roles(1), '#description' => t('Select at least one role.  The user receives the combined permissions of all of the selected roles.'), '#required' => TRUE);
+    $roles = user_roles(1);
+    unset($roles[DRUPAL_AUTHENTICATED_RID]);
+    if ($roles) {
+      $form['account']['roles'] = array('#type' => 'checkboxes', '#title' => t('Roles'), '#default_value' => array_keys((array)$edit['roles']), '#options' => $roles, '#description' => t('The user receives the combined permissions of the %au role, and all roles selected here.', array('%au' => theme('placeholder', t('authenticated user')))), '#required' => TRUE);
+    }
   }
 
   // Picture/avatar:
@@ -1220,13 +1222,6 @@ function _user_edit_validate($uid, &$edit) {
   }
   else if (drupal_is_denied('mail', $edit['mail'])) {
     form_set_error('mail', t('The e-mail address %email has been denied access.', array('%email' => theme('placeholder', $edit['mail']))));
-  }
-
-  // Validate the user roles:
-  if (user_access('administer access control') && $_GET['q'] != 'admin/user/create') {
-    if (!$edit['roles']) {
-      form_set_error('roles', t('You must select at least one role.'));
-    }
   }
 
   // If required, validate the uploaded picture.
@@ -1557,7 +1552,7 @@ function user_roles($membersonly = 0, $permission = 0) {
     $result = db_query('SELECT * FROM {role} ORDER BY name');
   }
   while ($role = db_fetch_object($result)) {
-    if (!$membersonly || ($membersonly && $role->name != 'anonymous user')) {
+    if (!$membersonly || ($membersonly && $role->rid != DRUPAL_ANONYMOUS_RID)) {
       $roles[$role->rid] = $role->name;
     }
   }
@@ -1642,7 +1637,7 @@ function theme_user_admin_perm($form) {
         $row[] = array('data' => form_render($form['permission'][$key]), 'class' => 'permission');
         foreach (element_children($form['checkboxes']) as $rid) {
           if (is_array($form['checkboxes'][$rid])) {
-            $row[] = array('data' => form_render($form['checkboxes'][$rid][$key]), 'align' => 'center');
+            $row[] = array('data' => form_render($form['checkboxes'][$rid][$key]), 'align' => 'center', 'title' => $key);
           }
         }
       }
@@ -1721,9 +1716,6 @@ function user_admin_role() {
       db_query('DELETE FROM {users_roles} WHERE rid = %d AND uid IN (%s)', $id, implode(', ', $uid));
     }
 
-    // Users with only the deleted role are put back in the authenticated users pool.
-    db_query('UPDATE {users_roles} SET rid = %d WHERE rid = %d', _user_authenticated_id(), $id);
-
     drupal_set_message(t('The role has been deleted.'));
     drupal_goto('admin/access/roles');
   }
@@ -1751,16 +1743,13 @@ function user_admin_role() {
 }
 
 function theme_user_admin_new_role($form) {
-  // Render the role overview.
-  $result = db_query('SELECT * FROM {role} ORDER BY name');
-
   $header = array(t('Name'), t('Operations'));
-  while ($role = db_fetch_object($result)) {
-    if ($role->name != 'anonymous user' && $role->name != 'authenticated user') {
-      $rows[] = array($role->name, l(t('edit'), 'admin/access/roles/edit/'. $role->rid));
+  foreach (user_roles() as $rid => $name) {
+    if (!in_array($rid, array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID))) {
+      $rows[] = array($name, l(t('edit'), 'admin/access/roles/edit/'. $rid));
     }
     else {
-      $rows[] = array($role->name, '<span class="disabled">'. t('locked') .'</span>');
+      $rows[] = array($name, '<span class="disabled">'. t('locked') .'</span>');
     }
   }
   $rows[] = array(form_render($form['name']), form_render($form['submit']));
@@ -1885,7 +1874,7 @@ function user_help($section) {
       return t('<p>Roles allow you to fine tune the security and administration of Drupal. A role defines a group of users that have certain privileges as defined in <a href="%permissions">user permissions</a>. Examples of roles include: anonymous user, authenticated user, moderator, administrator and so on. In this area you will define the <em>role names</em> of the various roles. To delete a role choose "edit".</p><p>By default, Drupal comes with two user roles:</p>
       <ul>
       <li>Anonymous user: this role is used for users that don\'t have a user account or that are not authenticated.</li>
-      <li>Authenticated user: this role is assigned automatically to authenticated users. Most registered users will belong to this user role unless specified otherwise.</li>
+      <li>Authenticated user: this role is automatically granted to all logged in users.</li>
       </ul>', array('%permissions' => url('admin/access/permissions')));
     case 'admin/user/search':
       return t('<p>Enter a simple pattern ("*" may be used as a wildcard match) to search for a username.  For example, one may search for "br" and Drupal might return "brian", "brad", and "brenda".</p>');
