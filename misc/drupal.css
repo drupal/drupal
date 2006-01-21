@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.135 2006/01/20 09:09:18 dries Exp $ */
+/* $Id: drupal.css,v 1.136 2006/01/21 08:29:28 dries Exp $ */
 
 /*
 ** HTML elements
@@ -202,25 +202,18 @@ tr.odd .form-item, tr.even .form-item {
   float: right;
   display: block;
 }
-#aggregator .news-item {
-  clear: both;
-  padding-bottom: 1em;
+#aggregator .feed-item {
+  margin-bottom: 1.5em;
 }
-#aggregator .news-item .date {
-  float: right;
+#aggregator .feed-item-title {
+  margin-bottom: 0;
+  font-size: 1.3em;
 }
-#aggregator .news-item .body {
-  margin-top: 1em;
-  margin-left: 1em;
+#aggregator .feed-item-meta, #aggregator .feed-item-body {
+  margin-bottom: 0.5em;
 }
-#aggregator .news-item .body .feed-source {
+#aggregator .feed-item-categories {
   font-size: 0.9em;
-}
-#aggregator .news-item .title {
-  float: left;
-}
-#aggregator .news-item .description {
-  clear: both;
 }
 #aggregator td {
   vertical-align: bottom;
