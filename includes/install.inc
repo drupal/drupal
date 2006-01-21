@@ -1,8 +1,8 @@
 <?php
-// $Id: install.inc,v 1.4 2005/12/10 19:26:47 dries Exp $
+// $Id: install.inc,v 1.5 2006/01/21 01:42:52 unconed Exp $
 
-define('SCHEMA', 0);
-define('SCHEMA_MIN', 1);
+define('SCHEMA_UNINSTALLED', -1);
+define('SCHEMA_INSTALLED', 0);
 
 
 // The system module (Drupal core) is currently a special case

@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysqli.inc,v 1.10 2005/12/10 19:26:47 dries Exp $
+// $Id: database.mysqli.inc,v 1.11 2006/01/21 01:42:52 unconed Exp $
 
 /**
  * @file
@@ -71,6 +71,14 @@ function db_connect($url) {
     exit;
   }
 
+  /* Force UTF-8 */
+  mysqli_query($connection, 'SET NAMES "utf8"');
+  mysqli_query($connection, 'SET collation_connection="utf8_general_ci"');
+  mysqli_query($connection, 'SET collation_server="utf8_general_ci"');
+  mysqli_query($connection, 'SET character_set_client="utf8"');
+  mysqli_query($connection, 'SET character_set_connection="utf8"');
+  mysqli_query($connection, 'SET character_set_results="utf8"');
+  mysqli_query($connection, 'SET character_set_server="utf8"');
 
   /**
    * from: http://bugs.php.net/bug.php?id=33772

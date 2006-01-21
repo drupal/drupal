@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysql.inc,v 1.47 2005/12/10 19:26:47 dries Exp $
+// $Id: database.mysql.inc,v 1.48 2006/01/21 01:42:52 unconed Exp $
 
 /**
  * @file
@@ -62,7 +62,7 @@ function db_connect($url) {
   if (!mysql_select_db(substr($url['path'], 1))) {
     drupal_maintenance_theme();
     drupal_set_title('Unable to select database');
-    print theme('maintenance_page', '<p>We were able to connect to the MySQL database server (which means your username and password is okay) but not able to select the database.</p>
+    print theme('maintenance_page', '<p>We were able to connect to the MySQL database server (which means your username and password are okay) but not able to select the database.</p>
 <p>The MySQL error was: '. theme('placeholder', mysql_error($connection)) .'.</p>
 <p>Currently, the database is '. theme('placeholder', substr($url['path'], 1)) .'. The username is '. theme('placeholder', $url['user']) .' and the database server is '. theme('placeholder', $url['host']) .'.</p>
 <ul>
@@ -74,6 +74,16 @@ function db_connect($url) {
     exit;
   }
 
+  /* On MySQL 4.1 and later, force UTF-8 */
+  if (version_compare(mysql_get_server_info(), '4.1.0', '>=')) {
+    mysql_query('SET NAMES "utf8"', $connection);
+    mysql_query('SET collation_connection="utf8_general_ci"', $connection);
+    mysql_query('SET collation_server="utf8_general_ci"', $connection);
+    mysql_query('SET character_set_client="utf8"', $connection);
+    mysql_query('SET character_set_connection="utf8"', $connection);
+    mysql_query('SET character_set_results="utf8"', $connection);
+    mysql_query('SET character_set_server="utf8"', $connection);
+  }
   return $connection;
 }
 

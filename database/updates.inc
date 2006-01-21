@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.185 2006/01/17 18:46:16 dries Exp $
+// $Id: updates.inc,v 1.186 2006/01/21 01:42:52 unconed Exp $
 
 function system_update_110() {
   $ret = array();
@@ -1436,4 +1436,146 @@ function system_update_168() {
   $ret[] = update_sql("ALTER TABLE {term_hierarchy} ADD PRIMARY KEY (tid, parent)");
 
   return $ret;
+}
+
+function system_update_169() {
+  // Warn PGSQL admins if their database is set up incorrectly
+  if ($GLOBALS['db_type'] == 'pgsql') {
+    $encoding = db_result(db_query('SHOW server_encoding'));
+    if (!in_array(strtolower($encoding), array('unicode', 'utf8'))) {
+      $msg = 'Your PostgreSQL database is set up with the wrong character encoding ('. $encoding .'). It is possible it will not work as expected. It is advised to recreate it with UTF-8/Unicode encoding. More information can be found in the <a href="http://www.postgresql.org/docs/7.4/interactive/multibyte.html">PostgreSQL documentation</a>.';
+      watchdog('php', $msg, WATCHDOG_WARNING);
+      drupal_set_message($msg, 'status');
+    }
+  }
+
+  return _system_update_utf8(array(
+    'access', 'accesslog', 'aggregator_category',
+    'aggregator_category_feed', 'aggregator_category_item',
+    'aggregator_feed', 'aggregator_item', 'authmap', 'blocks',
+    'book', 'boxes', 'cache', 'comments', 'contact',
+    'node_comment_statistics', 'client', 'client_system', 'files',
+    'filter_formats', 'filters', 'flood', 'forum', 'history',
+    'locales_meta', 'locales_source', 'locales_target', 'menu',
+    'moderation_filters', 'moderation_roles', 'moderation_votes',
+    'node', 'node_access', 'node_revisions', 'profile_fields',
+    'profile_values', 'url_alias', 'permission', 'poll', 'poll_votes',
+    'poll_choices', 'role', 'search_dataset', 'search_index',
+    'search_total', 'sessions', 'sequences', 'node_counter',
+    'system', 'term_data', 'term_hierarchy', 'term_node',
+    'term_relation', 'term_synonym', 'users', 'users_roles', 'variable',
+    'vocabulary', 'vocabulary_node_types', 'watchdog'
+  ));
+}
+
+/**
+ * Converts tables to UTF-8 encoding.
+ * 
+ * This update is designed to be re-usable by contrib modules and is
+ * used by system_update_169().
+ */
+function _system_update_utf8($tables) {
+  // Are we starting this update for the first time?
+  if (!isset($_SESSION['update_utf8'])) {
+    switch ($GLOBALS['db_type']) {
+      // Only for MySQL 4.1+
+      case 'mysqli':
+        break;
+      case 'mysql':
+        if (version_compare(mysql_get_server_info($GLOBALS['active_db']), '4.1.0', '<')) {
+          return array();
+        }
+        break;
+      case 'pgsql':
+        return array();
+    }
+
+    // See if database uses UTF-8 already
+    $url = parse_url($GLOBALS['db_url']);
+    $db_name = substr($url['path'], 1);
+    $create = array_pop(db_fetch_array(db_query('SHOW CREATE DATABASE `%s`', $db_name)));
+    if (preg_match('/utf8/i', $create)) {
+      return array();
+    }
+
+    // Make list of tables to convert
+    $_SESSION['update_utf8'] = $tables;
+    // Keep track of total for progress bar
+    $_SESSION['update_utf8_total'] = count($tables);
+  }
+
+  // Fetch remaining tables list
+  $list = &$_SESSION['update_utf8'];
+  $ret = array();
+
+  // Convert a table to UTF-8.
+  // We change all text columns to their correspending binary type,
+  // then back to text, but with a UTF-8 character set.
+  // See: http://dev.mysql.com/doc/refman/4.1/en/charset-conversion.html
+  $types = array('char' => 'binary',
+                 'varchar' => 'varbinary',
+                 'tinytext' => 'tinyblob',
+                 'text' => 'blob',
+                 'mediumtext' => 'mediumblob',
+                 'longtext' => 'longblob');
+
+  // Get next table in list
+  $table = array_shift($list);
+  $convert_to_binary = array();
+  $convert_to_utf8 = array();
+
+  // Set table default charset
+  $ret[] = update_sql("ALTER TABLE \{$table} DEFAULT CHARACTER SET utf8");
+
+  // Find out which columns need converting and build SQL statements
+  $result = db_query("SHOW FULL COLUMNS FROM \{$table}");
+  while ($column = db_fetch_array($result)) {
+    list($type) = explode('(', $column['Type']);
+    if (isset($types[$type])) {
+      $names = 'CHANGE `'. $column['Field'] .'` `'. $column['Field'] .'` ';
+      $attributes = ' DEFAULT '. ($column['Default'] == 'NULL' ? 'NULL ' :
+                     "'". db_escape_string($column['Default']) ."' ") .
+                    ($column['Null'] == 'YES' ? 'NULL' : 'NOT NULL');
+
+      $convert_to_binary[] = $names . preg_replace('/'. $type .'/i', $types[$type], $column['Type']) . $attributes;
+      $convert_to_utf8[] = $names . $column['Type'] .' CHARACTER SET utf8'. $attributes;
+    }
+  }
+
+  if (count($convert_to_binary)) {
+    // Convert text columns to binary
+    $ret[] = update_sql("ALTER TABLE \{$table} ". implode(', ', $convert_to_binary));
+    // Convert binary columns to UTF-8
+    $ret[] = update_sql("ALTER TABLE \{$table} ". implode(', ', $convert_to_utf8));
+  }
+
+  // Are we done?
+  if (count($list) == 0) {
+    unset($_SESSION['update_utf8']);
+    unset($_SESSION['update_utf8_total']);
+    return $ret;
+  }
+
+  // Progress percentage
+  $ret['#finished'] = 1 - (count($list) / $_SESSION['update_utf8_total']);
+  return $ret;
+}
+
+function system_update_170() {
+  if (!variable_get('update_170_done', false)) {
+    switch ($GLOBALS['db_type']) {
+      case 'pgsql':
+        $ret = array();
+        db_change_column($ret, 'system', 'schema_version', 'schema_version', 'smallint', array('not null' => TRUE, 'default' => -1));
+        break;
+
+      case 'mysql':
+      case 'mysqli':
+        db_query('ALTER TABLE {system} CHANGE schema_version schema_version smallint(3) not null default -1');
+        break;
+    }
+    // Set schema version -1 (uninstalled) for disabled modules (only affects contrib).
+    db_query('UPDATE {system} SET schema_version = -1 WHERE status = 0 AND schema_version = 0');
+  }
+  return array();
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.279 2006/01/17 17:35:47 dries Exp $
+// $Id: system.module,v 1.280 2006/01/21 01:42:52 unconed Exp $
 
 /**
  * @file
@@ -472,6 +472,10 @@ function system_view_general() {
   $form['cron'] = array('#type' => 'fieldset', '#title' => t('Cron jobs'), '#collapsible' => TRUE, '#collapsed' => TRUE);
   $form['cron'] = array_merge($form['cron'], system_cron_settings());
 
+  // Check database setup if necessary
+  if (function_exists('db_check_setup') && empty($_POST)) {
+    db_check_setup();
+  }
   return $form;
 }
 
@@ -1010,8 +1014,8 @@ function system_modules_submit($form_id, $edit) {
   foreach ($new_modules as $module) {
     // Set the installed schema version for newly-enabled modules
     $versions = drupal_get_schema_versions($module);
-    if ($versions !== FALSE && drupal_get_installed_schema_version($module) == 0) {
-      drupal_set_installed_schema_version($module, max($versions));
+    if (drupal_get_installed_schema_version($module) == SCHEMA_UNINSTALLED) {
+      drupal_set_installed_schema_version($module, $versions ? max($versions) : SCHEMA_INSTALLED);
     }
   }
 

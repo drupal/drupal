@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.171 2006/01/15 17:13:30 dries Exp $
+// $Id: update.php,v 1.172 2006/01/21 01:42:52 unconed Exp $
 
 /**
  * @file
@@ -132,7 +132,7 @@ function db_change_column(&$ret, $table, $column, $column_new, $type, $attribute
 function update_fix_schema_version() {
   if ($update_start = variable_get('update_start', FALSE)) {
     // Some updates were made to the 4.6 branch and 4.7 branch. This sets
-    // temporary variables to provent the updates from being executed twice and
+    // temporary variables to prevent the updates from being executed twice and
     // throwing errors.
     switch ($update_start) {
       case '2005-04-14':
@@ -151,6 +151,9 @@ function update_fix_schema_version() {
         break;
 
     }
+    // The schema_version column (added below) was changed during 4.7beta.
+    // Update_170 is only for those beta users.
+    variable_set('update_170_done', TRUE);
 
     $sql_updates = array(
       '2004-10-31: first update since Drupal 4.5.0 release' => 110,
@@ -174,18 +177,22 @@ function update_fix_schema_version() {
       '2005-11-14' => 154, '2005-11-27' => 155, '2005-12-03' => 156,
     );
 
+    // Add schema version column
     switch ($GLOBALS['db_type']) {
       case 'pgsql':
         $ret = array();
-        db_add_column($ret, 'system', 'schema_version', 'smallint', array('not null' => TRUE, 'default' => 0));
+        db_add_column($ret, 'system', 'schema_version', 'smallint', array('not null' => TRUE, 'default' => -1));
         break;
 
       case 'mysql':
       case 'mysqli':
-        db_query('ALTER TABLE {system} ADD schema_version smallint(2) unsigned not null default 0');
+        db_query('ALTER TABLE {system} ADD schema_version smallint(3) not null default -1');
         break;
     }
+    // Set all enabled (contrib) modules to schema version 0 (installed)
+    db_query('UPDATE {system} SET schema_version = 0 WHERE status = 1');
 
+    // Set schema version for core
     drupal_set_installed_schema_version('system', $sql_updates[$update_start]);
     variable_del('update_start');
   }
@@ -276,7 +283,7 @@ function update_fix_watchdog() {
 function update_data($module, $number) {
   $ret = module_invoke($module, 'update_'. $number);
   // Assume the update finished unless the update results indicate otherwise.
-  $finished = TRUE;
+  $finished = 1;
   if (isset($ret['#finished'])) {
     $finished = $ret['#finished'];
     unset($ret['#finished']);
@@ -294,7 +301,7 @@ function update_data($module, $number) {
   }
   $_SESSION['update_results'][$module][$number] = array_merge($_SESSION['update_results'][$module][$number], $ret);
 
-  if ($finished) {
+  if ($finished == 1) {
     // Update the installed version
     drupal_set_installed_schema_version($module, $number);
   }
@@ -332,11 +339,11 @@ function update_selection_page() {
   $form['has_js'] = array(
     '#type' => 'hidden',
     '#default_value' => FALSE,
-    '#attributes' => array('id' => 'edit-has_js')
+    '#attributes' => array('id' => 'edit-has_js'),
   );
   $form['submit'] = array(
     '#type' => 'submit',
-    '#value' => 'Update'
+    '#value' => 'Update',
   );
 
   drupal_set_title('Drupal database update');
@@ -375,7 +382,7 @@ function update_progress_page() {
 
   drupal_set_title('Updating');
   $output = '<div id="progress"></div>';
-  $output .= '<p>Updating your site will take a few seconds.</p>';
+  $output .= '<p>Please wait while your site is being updated.</p>';
   return $output;
 }
 
@@ -389,9 +396,10 @@ function update_progress_page() {
 function update_do_updates() {
   while (($update = reset($_SESSION['update_remaining']))) {
     $update_finished = update_data($update['module'], $update['version']);
-    if ($update_finished) {
+    if ($update_finished == 1) {
       // Dequeue the completed update.
       unset($_SESSION['update_remaining'][key($_SESSION['update_remaining'])]);
+      $update_finished = 0; // Make sure this step isn't counted double
     }
     if (timer_read('page') > 1000) {
       break;
@@ -399,12 +407,12 @@ function update_do_updates() {
   }
 
   if ($_SESSION['update_total']) {
-    $percent = floor(($_SESSION['update_total'] - count($_SESSION['update_remaining'])) / $_SESSION['update_total'] * 100);
+    $percent = floor(($_SESSION['update_total'] - count($_SESSION['update_remaining']) + $update_finished) / $_SESSION['update_total'] * 100);
   }
   else {
     $percent = 100;
   }
-  return array($percent, 'Updating '. $update['module'] .' module');
+  return array($percent, isset($update['module']) ? 'Updating '. $update['module'] .' module' : 'Updating complete');
 }
 
 function update_do_update_page() {
@@ -438,7 +446,7 @@ function update_progress_page_nojs() {
   else {
     // This is the first page so return some output immediately.
     $percent = 0;
-    $message = 'Starting updates...';
+    $message = 'Starting updates';
   }
 
   drupal_set_html_head('<meta http-equiv="Refresh" content="0; URL=update.php?op='. $new_op .'">');
