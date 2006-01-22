@@ -133,7 +133,6 @@ function search_perm() {
  * Implementation of hook_block().
  */
 function search_block($op = 'list', $delta = 0) {
-  global $user;
   if ($op == 'list') {
     $blocks[0]['info'] = t('Search form');
     return $blocks;
