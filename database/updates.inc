@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.189 2006/01/22 07:30:47 dries Exp $
+// $Id: updates.inc,v 1.190 2006/01/22 18:38:34 unconed Exp $
 
 function system_update_110() {
   $ret = array();
@@ -1458,7 +1458,6 @@ function system_update_169() {
     'node_comment_statistics', 'client', 'client_system', 'files',
     'filter_formats', 'filters', 'flood', 'forum', 'history',
     'locales_meta', 'locales_source', 'locales_target', 'menu',
-    'moderation_filters', 'moderation_roles', 'moderation_votes',
     'node', 'node_access', 'node_revisions', 'profile_fields',
     'profile_values', 'url_alias', 'permission', 'poll', 'poll_votes',
     'poll_choices', 'role', 'search_dataset', 'search_index',
