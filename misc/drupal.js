@@ -38,7 +38,9 @@ if (typeof XMLHttpRequest == 'undefined') {
 }
 
 /**
- * Creates an HTTP GET request and sends the response to the callback function
+ * Creates an HTTP GET request and sends the response to the callback function.
+ *
+ * Note that dynamic arguments in the URI should be escaped with encodeURIComponent().
  */
 function HTTPGet(uri, callbackFunction, callbackParameter) {
   var xmlHttp = new XMLHttpRequest();
@@ -81,8 +83,9 @@ function HTTPPost(uri, callbackFunction, callbackParameter, object) {
   var toSend = '';
   if (typeof object == 'object') {
     xmlHttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    for (var i in object)
-      toSend += (toSend ? '&' : '') + i + '=' + escape(object[i]);
+    for (var i in object) {
+      toSend += (toSend ? '&' : '') + i + '=' + encodeURIComponent(object[i]);
+    }
   }
   else {
     toSend = object;

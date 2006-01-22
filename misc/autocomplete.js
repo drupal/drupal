@@ -222,7 +222,6 @@ jsAC.prototype.found = function (matches) {
  */
 function ACDB(uri) {
   this.uri = uri;
-  this.max = 15;
   this.delay = 300;
   this.cache = {};
 }
@@ -241,7 +240,7 @@ ACDB.prototype.search = function(searchString) {
   var db = this;
   this.timer = setTimeout(function() {
     addClass(db.owner.input, 'throbbing');
-    HTTPGet(db.uri +'/'+ searchString +'/'+ db.max, db.receive, db);
+    HTTPGet(db.uri +'/'+ encodeURIComponent(searchString), db.receive, db);
   }, this.delay);
 }
 
