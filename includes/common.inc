@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.508 2006/01/17 15:39:07 dries Exp $
+// $Id: common.inc,v 1.509 2006/01/22 07:51:06 dries Exp $
 
 /**
  * @file
@@ -254,11 +254,11 @@ function drupal_goto($path = '', $query = NULL, $fragment = NULL) {
 
 
 /**
- * Generates a site offline message
+ * Generates a site off-line message
  */
 function drupal_site_offline() {
   drupal_set_header('HTTP/1.0 503 Service unavailable');
-  drupal_set_title(t('Site offline'));
+  drupal_set_title(t('Site off-line'));
   print theme('maintenance_page', variable_get('site_offline_message',
     t('%site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('%site' => variable_get('site_name', t('This Drupal site'))))));
 }

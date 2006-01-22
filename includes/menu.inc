@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.102 2006/01/20 09:12:26 dries Exp $
+// $Id: menu.inc,v 1.103 2006/01/22 07:51:06 dries Exp $
 
 /**
  * @file
@@ -1312,10 +1312,10 @@ function _menu_build_local_tasks($pid) {
 }
 
 /**
- * Returns TRUE if the is offline for maintenance.
+ * Returns TRUE if the is off-line for maintenance.
  */
 function _menu_site_is_offline() {
-  // Check if site is set to offline mode
+  // Check if site is set to off-line mode
   if (variable_get('site_offline', 0)) {
     // Check if the user has administration privileges
     if (!user_access('administer site configuration')) {
@@ -1323,6 +1323,9 @@ function _menu_site_is_offline() {
       if (drupal_get_normal_path($_GET['q']) != 'user') {
         return TRUE;
       }
+    }
+    else {
+      drupal_set_message(t('Operating in off-line mode.'));
     }
   }
   return FALSE;
