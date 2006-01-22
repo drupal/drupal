@@ -833,9 +833,6 @@ INSERT INTO users(uid,name,mail) VALUES(0,'','');
 INSERT INTO role (name) VALUES ('anonymous user');
 INSERT INTO role (name) VALUES ('authenticated user');
 
-INSERT INTO users_roles(uid,rid) VALUES(0, 1);
-INSERT INTO users_roles(uid,rid) VALUES(1, 2);
-
 INSERT INTO permission VALUES (1,'access content',0);
 INSERT INTO permission VALUES (2,'access comments, access content, post comments, post comments without approval',0);
 
