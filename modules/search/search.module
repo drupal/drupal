@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.158 2006/01/18 21:31:40 unconed Exp $
+// $Id: search.module,v 1.159 2006/01/22 07:43:19 dries Exp $
 
 /**
  * @file
@@ -133,7 +133,6 @@ function search_perm() {
  * Implementation of hook_block().
  */
 function search_block($op = 'list', $delta = 0) {
-  global $user;
   if ($op == 'list') {
     $blocks[0]['info'] = t('Search form');
     return $blocks;
