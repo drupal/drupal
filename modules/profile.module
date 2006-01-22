@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.128 2006/01/13 15:54:05 dries Exp $
+// $Id: profile.module,v 1.129 2006/01/22 07:37:17 dries Exp $
 
 /**
  * @file
@@ -282,7 +282,9 @@ function profile_view_field($user, $field) {
                          'j' => $value['day'],
                          'm' => sprintf('%02d', $value['month']),
                          'M' => map_month($value['month']),
-                         'Y' => $value['year']);
+                         'Y' => $value['year'],
+                         'H:i' => null,
+                         'g:ia' => null);
         return strtr($format, $replace);
       case 'list':
         $values = split("[,\n\r]", $value);
