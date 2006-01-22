@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.342 2006/01/20 09:04:34 dries Exp $
+// $Id: book.module,v 1.343 2006/01/22 07:32:55 dries Exp $
 
 /**
  * @file
@@ -614,7 +614,7 @@ function book_tree($parent = 0, $depth = 3, $unfold = array()) {
   }
 
   if ($tree = book_tree_recurse($parent, $depth, $children, $unfold)) {
-    return '<div class="menu"><ul>'. $tree .'</ul></div>';
+    return '<ul class="menu">'. $tree .'</ul>';
   }
 }
 
