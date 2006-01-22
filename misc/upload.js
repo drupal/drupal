@@ -39,7 +39,7 @@ jsUpload.prototype.onsubmit = function () {
   var hide = $(this.hide);
   // Insert progressbar and stretch to take the same space.
   this.progress = new progressBar('uploadprogress');
-  this.progress.setProgress(-1, 'Uploading file...');
+  this.progress.setProgress(-1, 'Uploading file');
   this.progress.element.style.width = '28em';
   this.progress.element.style.height = hide.offsetHeight +'px';
   hide.parentNode.insertBefore(this.progress.element, hide);

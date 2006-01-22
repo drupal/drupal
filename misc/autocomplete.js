@@ -1,4 +1,4 @@
-// $Id: autocomplete.js,v 1.6 2006/01/16 16:31:49 unconed Exp $
+// $Id: autocomplete.js,v 1.7 2006/01/22 17:37:41 unconed Exp $
 
 // Global Killswitch
 if (isJsEnabled()) {
@@ -222,7 +222,6 @@ jsAC.prototype.found = function (matches) {
  */
 function ACDB(uri) {
   this.uri = uri;
-  this.max = 15;
   this.delay = 300;
   this.cache = {};
 }
@@ -241,7 +240,7 @@ ACDB.prototype.search = function(searchString) {
   var db = this;
   this.timer = setTimeout(function() {
     addClass(db.owner.input, 'throbbing');
-    HTTPGet(db.uri +'/'+ searchString +'/'+ db.max, db.receive, db);
+    HTTPGet(db.uri +'/'+ encodeURIComponent(searchString), db.receive, db);
   }, this.delay);
 }
 
