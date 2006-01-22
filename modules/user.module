@@ -1181,7 +1181,7 @@ function user_edit_form($uid, $edit) {
     $roles = user_roles(1);
     unset($roles[DRUPAL_AUTHENTICATED_RID]);
     if ($roles) {
-      $form['account']['roles'] = array('#type' => 'checkboxes', '#title' => t('Roles'), '#default_value' => array_keys((array)$edit['roles']), '#options' => $roles, '#description' => t('The user receives the combined permissions of the %au role, and all roles selected here.', array('%au' => theme('placeholder', t('authenticated user')))), '#required' => TRUE);
+      $form['account']['roles'] = array('#type' => 'checkboxes', '#title' => t('Roles'), '#default_value' => array_keys((array)$edit['roles']), '#options' => $roles, '#description' => t('The user receives the combined permissions of the %au role, and all roles selected here.', array('%au' => theme('placeholder', t('authenticated user')))));
     }
   }
 
