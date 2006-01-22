@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.172 2006/01/21 01:42:52 unconed Exp $
+// $Id: update.php,v 1.173 2006/01/22 07:30:46 dries Exp $
 
 /**
  * @file
@@ -78,6 +78,11 @@ function db_add_column(&$ret, $table, $column, $type, $attributes = array()) {
  * Changes a column definition. Uses syntax appropriate for PostgreSQL.
  * Saves result of SQL commands in $ret array.
  *
+ * Please remember, that changing column definition involves adding new column
+ * and dropping old one. This means that any indexes, primary keys and
+ * sequences from the serial-type columns are dropped and might need to be
+ * recreated.
+ *
  * @param $ret
  *  Array to which results will be added.
  * @param $table
@@ -91,7 +96,7 @@ function db_add_column(&$ret, $table, $column, $type, $attributes = array()) {
  * @param $attributes
  *  Additional optional attributes. Recognized atributes:
  *    - not null    => TRUE/FALSE
- *    - default     => NULL/FALSE/value (with or without '', it wont' be added)
+ *    - default     => NULL/FALSE/value (with or without '', it won't be added)
  * @return
  *  nothing, but modifies $ret parametr.
  */

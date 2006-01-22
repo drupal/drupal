@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.188 2006/01/21 11:55:53 unconed Exp $
+// $Id: updates.inc,v 1.189 2006/01/22 07:30:47 dries Exp $
 
 function system_update_110() {
   $ret = array();
@@ -1424,6 +1424,7 @@ function system_update_167() {
       break;
     case 'pgsql':
       db_change_column($ret, 'vocabulary_node_types', 'type', 'type', 'varchar(32)', array('not null' => TRUE, 'default' => "''"));
+      $ret[] = update_sql("ALTER TABLE {vocabulary_node_types} ADD PRIMARY KEY (vid, type)");
       break;
   }
 
