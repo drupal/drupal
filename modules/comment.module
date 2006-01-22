@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.420 2006/01/20 09:33:03 dries Exp $
+// $Id: comment.module,v 1.421 2006/01/22 07:26:33 dries Exp $
 
 /**
  * @file
@@ -1676,12 +1676,12 @@ function _comment_update_node_statistics($nid) {
   // comments exist
   if ($count > 0) {
     $last_reply = db_fetch_object(db_query_range('SELECT cid, name, timestamp, uid FROM {comments} WHERE nid = %d AND status = %d ORDER BY cid DESC', $nid, COMMENT_PUBLISHED, 0, 1));
-    db_query("UPDATE {node_comment_statistics} SET comment_count = %d, last_comment_timestamp = %d, last_comment_name = '%s', last_comment_uid = %d WHERE nid = %d", $count, $last_reply->timestamp, $last_reply->uid ? NULL : $last_reply->name, $last_reply->uid, $nid);
+    db_query("UPDATE {node_comment_statistics} SET comment_count = %d, last_comment_timestamp = %d, last_comment_name = '%s', last_comment_uid = %d WHERE nid = %d", $count, $last_reply->timestamp, $last_reply->uid ? '' : $last_reply->name, $last_reply->uid, $nid);
   }
 
   // no comments
   else {
-    db_query("UPDATE {node_comment_statistics} SET comment_count = %d, last_comment_timestamp = %d, last_comment_name = '%s', last_comment_uid = %d WHERE nid = %d", 0, NULL, 0, 0, $nid);
+    db_query("UPDATE {node_comment_statistics} SET comment_count = 0, last_comment_timestamp = created, last_comment_name = '', last_comment_uid = uid FROM {node} WHERE {node_comment_statistics}.nid = {node}.nid AND {node}.nid = %d", $nid);
   }
 }
 
