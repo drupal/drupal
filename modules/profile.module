@@ -282,7 +282,9 @@ function profile_view_field($user, $field) {
                          'j' => $value['day'],
                          'm' => sprintf('%02d', $value['month']),
                          'M' => map_month($value['month']),
-                         'Y' => $value['year']);
+                         'Y' => $value['year'],
+                         'H:i' => null,
+                         'g:ia' => null);
         return strtr($format, $replace);
       case 'list':
         $values = split("[,\n\r]", $value);
