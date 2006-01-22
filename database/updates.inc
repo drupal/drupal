@@ -1424,6 +1424,7 @@ function system_update_167() {
       break;
     case 'pgsql':
       db_change_column($ret, 'vocabulary_node_types', 'type', 'type', 'varchar(32)', array('not null' => TRUE, 'default' => "''"));
+      $ret[] = update_sql("ALTER TABLE {vocabulary_node_types} ADD PRIMARY KEY (vid, type)");
       break;
   }
 
