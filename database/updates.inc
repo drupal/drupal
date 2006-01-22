@@ -1458,7 +1458,6 @@ function system_update_169() {
     'node_comment_statistics', 'client', 'client_system', 'files',
     'filter_formats', 'filters', 'flood', 'forum', 'history',
     'locales_meta', 'locales_source', 'locales_target', 'menu',
-    'moderation_filters', 'moderation_roles', 'moderation_votes',
     'node', 'node_access', 'node_revisions', 'profile_fields',
     'profile_values', 'url_alias', 'permission', 'poll', 'poll_votes',
     'poll_choices', 'role', 'search_dataset', 'search_index',
