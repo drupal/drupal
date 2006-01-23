@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.190 2006/01/22 18:38:34 unconed Exp $
+// $Id: updates.inc,v 1.191 2006/01/23 01:36:09 unconed Exp $
 
 function system_update_110() {
   $ret = array();
@@ -1525,10 +1525,10 @@ function _system_update_utf8($tables) {
   $convert_to_utf8 = array();
 
   // Set table default charset
-  $ret[] = update_sql("ALTER TABLE \{$table} DEFAULT CHARACTER SET utf8");
+  $ret[] = update_sql('ALTER TABLE {'. $table .'} DEFAULT CHARACTER SET utf8');
 
   // Find out which columns need converting and build SQL statements
-  $result = db_query("SHOW FULL COLUMNS FROM \{$table}");
+  $result = db_query('SHOW FULL COLUMNS FROM {'. $table .'}');
   while ($column = db_fetch_array($result)) {
     list($type) = explode('(', $column['Type']);
     if (isset($types[$type])) {
@@ -1544,9 +1544,9 @@ function _system_update_utf8($tables) {
 
   if (count($convert_to_binary)) {
     // Convert text columns to binary
-    $ret[] = update_sql("ALTER TABLE \{$table} ". implode(', ', $convert_to_binary));
+    $ret[] = update_sql('ALTER TABLE {'. $table .'} '. implode(', ', $convert_to_binary));
     // Convert binary columns to UTF-8
-    $ret[] = update_sql("ALTER TABLE \{$table} ". implode(', ', $convert_to_utf8));
+    $ret[] = update_sql('ALTER TABLE {'. $table .'} '. implode(', ', $convert_to_utf8));
   }
 
   // Are we done?
