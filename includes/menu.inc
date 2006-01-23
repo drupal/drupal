@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.103 2006/01/22 07:51:06 dries Exp $
+// $Id: menu.inc,v 1.104 2006/01/23 07:27:18 dries Exp $
 
 /**
  * @file
@@ -218,6 +218,9 @@ function menu_get_menu() {
 
     // Make sure items that cannot be cached are added.
     _menu_append_contextual_items();
+
+    // Reset the cached $menu in menu_get_item().
+    menu_get_item(NULL, NULL, TRUE);
   }
 
   return $_menu;
