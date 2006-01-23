@@ -149,8 +149,6 @@ function arg($index) {
   if (isset($arguments[$index])) {
     return $arguments[$index];
   }
-
-  return FALSE;
 }
 
 /**
