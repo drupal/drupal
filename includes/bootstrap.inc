@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.83 2006/01/21 08:28:54 dries Exp $
+// $Id: bootstrap.inc,v 1.84 2006/01/23 07:54:08 dries Exp $
 
 /**
  * @file
@@ -19,7 +19,8 @@ define('WATCHDOG_ERROR', 2);
 define('DRUPAL_BOOTSTRAP_DATABASE', 0);
 define('DRUPAL_BOOTSTRAP_SESSION', 1);
 define('DRUPAL_BOOTSTRAP_PAGE_CACHE', 2);
-define('DRUPAL_BOOTSTRAP_FULL', 3);
+define('DRUPAL_BOOTSTRAP_PATH', 3);
+define('DRUPAL_BOOTSTRAP_FULL', 4);
 
 // these values should match the'role' table
 define('DRUPAL_ANONYMOUS_RID', 1);
@@ -72,12 +73,7 @@ function timer_read($name) {
 function timer_stop($name) {
   global $timers;
 
-  list($usec, $sec) = explode(' ', microtime());
-  $stop = (float)$usec + (float)$sec;
-  $diff = round(($stop - $timers[$name]['start']) * 1000, 2);
-
-  $timers[$name]['time'] += $diff;
-
+  $timers[$name]['time'] = timer_read($name);
   unset($timers[$name]['start']);
 
   return $timers[$name];
@@ -383,46 +379,6 @@ function cache_clear_all($cid = NULL, $wildcard = false) {
 }
 
 /**
- * Store the current page in the cache.
- *
- * We try to store a gzipped version of the cache. This requires the
- * PHP zlib extension (http://php.net/manual/en/ref.zlib.php).
- * Presence of the extension is checked by testing for the function
- * gzencode. There are two compression algorithms: gzip and deflate.
- * The majority of all modern browsers support gzip or both of them.
- * We thus only deal with the gzip variant and unzip the cache in case
- * the browser does not accept gzip encoding.
- *
- * @see drupal_page_header
- */
-function page_set_cache() {
-  global $user, $base_url;
-
-  if (!$user->uid && $_SERVER['REQUEST_METHOD'] == 'GET') {
-    // This will fail in some cases, see page_get_cache() for the explanation.
-    if ($data = ob_get_contents()) {
-      $cache = TRUE;
-      if (function_exists('gzencode')) {
-        // We do not store the data in case the zlib mode is deflate.
-        // This should be rarely happening.
-        if (zlib_get_coding_type() == 'deflate') {
-          $cache = FALSE;
-        }
-        else if (zlib_get_coding_type() == FALSE) {
-          $data = gzencode($data, 9, FORCE_GZIP);
-        }
-        // The remaining case is 'gzip' which means the data is
-        // already compressed and nothing left to do but to store it.
-      }
-      ob_end_flush();
-      if ($cache && $data) {
-        cache_set($base_url . request_uri(), $data, CACHE_TEMPORARY, drupal_get_headers());
-      }
-    }
-  }
-}
-
-/**
  * Retrieve the current page from the cache.
  *
  * Note, we do not serve cached pages when status messages are waiting (from
@@ -488,101 +444,6 @@ function drupal_load($type, $name) {
   }
 
   return FALSE;
-}
-
-/**
- * Given an alias, return its Drupal system URL if one exists. Given a Drupal
- * system URL return its alias if one exists.
- *
- * @param $action
- *   One of the following values:
- *   - wipe: delete the alias cache.
- *   - alias: return an alias for a given Drupal system path (if one exists).
- *   - source: return the Drupal system URL for a path alias (if one exists).
- * @param $path
- *   The path to investigate for corresponding aliases or system URLs.
- */
-function drupal_lookup_path($action, $path = '') {
-  static $map = array();
-  static $count = NULL;
-
-
-  if ($count === NULL) {
-    $count = db_result(db_query('SELECT COUNT(pid) FROM {url_alias}'));
-  }
-
-  if ($action == 'wipe') {
-    $map = array();
-  }
-  elseif ($count > 0 && $path != '') {
-    if ($action == 'alias') {
-      if (isset($map[$path])) {
-        return $map[$path];
-      }
-      if ($alias = db_result(db_query("SELECT dst FROM {url_alias} WHERE src = '%s'", $path))) {
-        $map[$path] = $alias;
-        return $alias;
-      }
-      else {
-        $map[$path] = $path;
-      }
-    }
-    elseif ($action == 'source') {
-      if ($alias = array_search($path, $map)) {
-        return $alias;
-      }
-      if (!isset($map[$path])) {
-        if ($src = db_result(db_query("SELECT src FROM {url_alias} WHERE dst = '%s'", $path))) {
-          $map[$src] = $path;
-          return $src;
-        }
-      }
-    }
-  }
-
-  return FALSE;
-}
-
-/**
- * Given an internal Drupal path, return the alias set by the administrator.
- */
-function drupal_get_path_alias($path) {
-  $result = $path;
-  if ($alias = drupal_lookup_path('alias', $path)) {
-    $result = $alias;
-  }
-  if (function_exists('custom_url_rewrite')) {
-    $result = custom_url_rewrite('alias', $result, $path);
-  }
-  return $result;
-}
-
-/**
- * Get the title of the current page, for display on the page and in the title bar.
- */
-function drupal_get_title() {
-  $title = drupal_set_title();
-
-  if (!isset($title)) {
-    // during a bootstrap, menu.inc is not included and thus we cannot provide a title
-    if (function_exists('menu_get_active_title')) {
-      $title = check_plain(menu_get_active_title());
-    }
-  }
-
-  return $title;
-}
-
-/**
- * Set the title of the current page, for display on the page and in the title bar.
- */
-function drupal_set_title($title = NULL) {
-  static $stored_title;
-
-  if (isset($title)) {
-    $stored_title = $title;
-  }
-  return $stored_title;
 }
 
 /**
@@ -681,30 +542,6 @@ function drupal_unpack($obj, $field = 'data') {
 function referer_uri() {
   if (isset($_SERVER['HTTP_REFERER'])) {
     return $_SERVER['HTTP_REFERER'];
-  }
-}
-
-/**
- * Return a component of the current Drupal path.
- *
- * When viewing a page at the path "admin/node/configure", for example, arg(0)
- * would return "admin", arg(1) would return "node", and arg(2) would return
- * "configure".
- *
- * Avoid use of this function where possible, as resulting code is hard to read.
- * Instead, attempt to use named arguments in menu callback functions. See the
- * explanation in menu.inc for how to construct callbacks that take arguments.
- */
-function arg($index) {
-  static $arguments, $q;
-
-  if (empty($arguments) || $q != $_GET['q']) {
-    $arguments = explode('/', $_GET['q']);
-    $q = $_GET['q'];
-  }
-
-  if (isset($arguments[$index])) {
-    return $arguments[$index];
   }
 }
 
@@ -826,7 +663,7 @@ function drupal_is_denied($type, $mask) {
  *       data.
  */
 function drupal_bootstrap($phase) {
-  static $phases = array(DRUPAL_BOOTSTRAP_DATABASE, DRUPAL_BOOTSTRAP_SESSION, DRUPAL_BOOTSTRAP_PAGE_CACHE, DRUPAL_BOOTSTRAP_FULL);
+  static $phases = array(DRUPAL_BOOTSTRAP_DATABASE, DRUPAL_BOOTSTRAP_SESSION, DRUPAL_BOOTSTRAP_PAGE_CACHE, DRUPAL_BOOTSTRAP_PATH, DRUPAL_BOOTSTRAP_FULL);
 
   while (!is_null($current_phase = array_shift($phases))) {
     _drupal_bootstrap($current_phase);
@@ -872,6 +709,12 @@ function _drupal_bootstrap($phase) {
       drupal_page_header();
       break;
 
+    case DRUPAL_BOOTSTRAP_PATH:
+      require_once './includes/path.inc';
+      // Initialize $_GET['q'] prior to loading modules and invoking hook_init().
+      drupal_init_path();
+      break;
+
     case DRUPAL_BOOTSTRAP_FULL:
       require_once './includes/common.inc';
       _drupal_bootstrap_full();
@@ -894,4 +737,3 @@ function drupal_maintenance_theme() {
   unicode_check();
   $theme = '';
 }
-

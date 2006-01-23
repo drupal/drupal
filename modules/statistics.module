@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.214 2006/01/07 10:12:32 dries Exp $
+// $Id: statistics.module,v 1.215 2006/01/23 07:54:08 dries Exp $
 
 /**
  * @file
@@ -61,6 +61,8 @@ function statistics_help($section) {
  */
 function statistics_exit() {
   global $user, $recent_activity;
+
+  drupal_bootstrap(DRUPAL_BOOTSTRAP_PATH);
 
   if (variable_get('statistics_count_content_views', 0)) {
     // We are counting content views.
