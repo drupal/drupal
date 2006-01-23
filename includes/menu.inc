@@ -218,6 +218,9 @@ function menu_get_menu() {
 
     // Make sure items that cannot be cached are added.
     _menu_append_contextual_items();
+
+    // Reset the cached $menu in menu_get_item().
+    menu_get_item(NULL, NULL, TRUE);
   }
 
   return $_menu;
