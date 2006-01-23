@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.566 2006/01/22 07:23:58 dries Exp $
+// $Id: user.module,v 1.567 2006/01/23 08:06:43 dries Exp $
 
 /**
  * @file
@@ -337,7 +337,7 @@ function user_access($string, $account = NULL) {
 
   // To reduce the number of SQL queries, we cache the user's permissions
   // in a static variable.
-  if (!isset($perm[$account->uid]) && count($user->roles)) {
+  if (!isset($perm[$account->uid])) {
     $result = db_query("SELECT DISTINCT(p.perm) FROM {role} r INNER JOIN {permission} p ON p.rid = r.rid WHERE r.rid IN (%s)", implode(',', array_keys($account->roles)));
 
     $perm[$account->uid] = '';
