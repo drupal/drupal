@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysql.inc,v 1.48 2006/01/21 01:42:52 unconed Exp $
+// $Id: database.mysql.inc,v 1.49 2006/01/24 08:29:33 dries Exp $
 
 /**
  * @file
@@ -31,6 +31,12 @@ function db_connect($url) {
   }
 
   $url = parse_url($url);
+
+  // Decode url-encoded information in the db connection string
+  $url['user'] = urldecode($url['user']);
+  $url['pass'] = urldecode($url['pass']);
+  $url['host'] = urldecode($url['host']);
+  $url['path'] = urldecode($url['path']);
 
   // Allow for non-standard MySQL port.
   if (isset($url['port'])) {
