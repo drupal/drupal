@@ -459,6 +459,9 @@ img.screenshot {
   font-size: 0.85em;
   text-align: right;
 }
+table.watchdog-event th {
+  border-bottom: 1px solid #ccc;
+}
 tr.watchdog-user {
   background: #ffd;
 }
