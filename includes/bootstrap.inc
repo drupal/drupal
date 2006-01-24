@@ -731,6 +731,7 @@ function _drupal_bootstrap($phase) {
  */
 function drupal_maintenance_theme() {
   global $theme;
+  require_once './includes/path.inc';
   require_once './includes/theme.inc';
   require_once './includes/common.inc';
   require_once './includes/unicode.inc';
