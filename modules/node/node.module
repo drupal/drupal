@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.590 2006/01/20 09:04:34 dries Exp $
+// $Id: node.module,v 1.591 2006/01/24 08:26:21 dries Exp $
 
 /**
  * @file
@@ -1848,7 +1848,7 @@ function node_form_submit($form_id, $edit) {
     if (node_access('update', $node)) {
       node_save($node);
       watchdog('content', t('%type: updated %title.', array('%type' => theme('placeholder', t($node->type)), '%title' => theme('placeholder', $node->title))), WATCHDOG_NOTICE, l(t('view'), 'node/'. $node->nid));
-      $msg = t('The %post was updated.', array ('%post' => node_get_name($node)));
+      drupal_set_message(t('The %post was updated.', array ('%post' => node_get_name($node))));
     }
   }
   else {
@@ -1857,9 +1857,10 @@ function node_form_submit($form_id, $edit) {
     if (node_access('create', $node)) {
       node_save($node);
       watchdog('content', t('%type: added %title.', array('%type' => theme('placeholder', t($node->type)), '%title' => theme('placeholder', $node->title))), WATCHDOG_NOTICE, l(t('view'), "node/$node->nid"));
-      $msg = t('Your %post was created.', array ('%post' => node_get_name($node)));
+      drupal_set_message(t('Your %post was created.', array ('%post' => node_get_name($node))));
     }
   }
+
   if ($node->nid) {
     if (node_access('view', $node)) {
       drupal_goto('node/'. $node->nid);
