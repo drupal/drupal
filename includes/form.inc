@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.54 2006/01/19 17:53:53 dries Exp $
+// $Id: form.inc,v 1.55 2006/01/24 08:20:45 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -21,6 +21,9 @@ function element_property($key) {
   return $key[0] == '#';
 }
 
+/**
+ * Get properties of a form tree element. Properties begin with '#'.
+ */
 function element_properties($element) {
   return array_filter(array_keys((array) $element), 'element_property');
 }
@@ -32,6 +35,9 @@ function element_child($key) {
   return $key[0] != '#';
 }
 
+/**
+ * Get keys of a form tree element that are not properties (i.e., do not begin with '#').
+ */
 function element_children($element) {
   return array_filter(array_keys((array) $element), 'element_child');
 }
@@ -253,7 +259,7 @@ function _form_builder($form_id, $form) {
     $form += $info;
   }
 
-  if ($form['#input']) {
+  if (isset($form['#input']) && $form['#input']) {
     if (!isset($form['#name'])) {
       $form['#name'] = 'edit[' . implode('][', $form['#parents']) . ']';
     }
@@ -287,7 +293,7 @@ function _form_builder($form_id, $form) {
         }
       }
     }
-    if (isset($form['#form_submitted'])) {
+    if (isset($form['#form_submitted']) && isset($_POST[$form['#name']])) {
       if ($_POST[$form['#name']] == $form['#value']) {
         $form_submitted = $form_submitted || $form['#form_submitted'];
       }
@@ -308,7 +314,7 @@ function _form_builder($form_id, $form) {
   // Set the $form_values key that gets passed to validate and submit.
   // We call this after #process gets called so that #process has a
   // chance to update #value if desired.
-  if ($form['#input']) {
+  if (isset($form['#input']) && $form['#input']) {
     $ref = $form['#value'];
   }
 
@@ -334,7 +340,7 @@ function _form_builder($form_id, $form) {
     $count++;
   }
 
-  if (function_exists($form['#after_build']) && !isset($form['#after_build_done'])) {
+  if (isset($form['#after_build']) && function_exists($form['#after_build']) && !isset($form['#after_build_done'])) {
     $function = $form['#after_build'];
     $form = $function($form, $form_values, $ref);
     $form['#after_build_done'] = TRUE;
@@ -361,9 +367,9 @@ function form_render(&$elements) {
   $content = '';
   uasort($elements, "_form_sort");
 
-  if (!$elements['#children']) {
+  if (!isset($elements['#children'])) {
     /* render all the children using a theme function */
-    if ($elements['#theme'] && !$elements['#theme_used']) {
+    if (isset($elements['#theme']) && !$elements['#theme_used']) {
       $elements['#theme_used'] = TRUE;
       $previous_type = $elements['#type'];
       $elements['#type'] = 'markup';
@@ -382,13 +388,15 @@ function form_render(&$elements) {
   }
 
   /* Call the form element renderer */
-  if (!$elements['#printed']) {
+  if (!isset($elements['#printed'])) {
     $content = theme(($elements['#type']) ? $elements['#type']: 'markup', $elements);
     $elements['#printed'] = TRUE;
   }
 
   if ($content) {
-    return $elements['#prefix'] . $content . $elements['#suffix'];
+    $prefix = isset($elements['#prefix']) ? $elements['#prefix'] : '';
+    $suffix = isset($elements['#suffix']) ? $elements['#suffix'] : '';
+    return $prefix . $content . $suffix;
   }
 }
 
@@ -507,7 +515,7 @@ function form_select_options($element, $choices = NULL) {
  *
  * @param $element
  *   An associative array containing the properties of the element.
- *   Properties used: attributes, title, description, children, collapsible, collapsed
+ *   Properties used: attributes, title, value, description, children, collapsible, collapsed
  * @return
  *   A themed HTML string representing the form item group.
  */
@@ -796,6 +804,8 @@ function theme_hidden($element) {
  */
 function theme_textfield($element) {
   $size = $element['#size'] ? ' size="' . $element['#size'] . '"' : '';
+  $class = '';
+  $extra = '';
   if ($element['#autocomplete_path']) {
     drupal_add_js('misc/autocomplete.js');
     $class = ' form-autocomplete';
@@ -870,7 +880,7 @@ function theme_markup($element) {
 function theme_password($element) {
   $size = $element['#size'] ? ' size="'. $element['#size'] .'" ' : '';
 
-  $output = '<input type="password" maxlength="'. $element['#maxlength'] .'" class="'. _form_get_class("form-text $class", $element['#required'], form_get_error($element)) .'" name="'. $element['#name'] .'" id="'. $element['#id'] .'" '. $size . drupal_attributes($element['#attributes']) .' />';
+  $output = '<input type="password" maxlength="'. $element['#maxlength'] .'" class="'. _form_get_class('form-text', $element['#required'], form_get_error($element)) .'" name="'. $element['#name'] .'" id="'. $element['#id'] .'" '. $size . drupal_attributes($element['#attributes']) .' />';
 
   return theme('form_element', $element['#title'], $output, $element['#description'], $element['#id'], $element['#required'], form_get_error($element));
 }
