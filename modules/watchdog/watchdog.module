@@ -1,5 +1,5 @@
 <?php
-// $Id: watchdog.module,v 1.136 2006/01/05 23:35:34 unconed Exp $
+// $Id: watchdog.module,v 1.137 2006/01/24 08:18:26 dries Exp $
 
 /**
  * @file
@@ -156,17 +156,24 @@ function watchdog_event($id) {
   $output = '';
   $result = db_query('SELECT w.*, u.name, u.uid FROM {watchdog} w INNER JOIN {users} u ON w.uid = u.uid WHERE w.wid = %d', $id);
   if ($watchdog = db_fetch_object($result)) {
-    $output .= '<table border="1" cellpadding="2" cellspacing="2">';
-    $output .= ' <tr><th>'. t('Type') .'</th><td>' . t($watchdog->type) . '</td></tr>';
-    $output .= ' <tr><th>'. t('Date') .'</th><td>'. format_date($watchdog->timestamp, 'large') .'</td></tr>';
-    $output .= ' <tr><th>'. t('User') .'</th><td>'. theme('username', $watchdog) .'</td></tr>';
-    $output .= ' <tr><th>'. t('Location') ."</th><td>". l($watchdog->location, $watchdog->location) ."</td></tr>";
-    $output .= ' <tr><th>'. t('Referrer') ."</th><td>". l($watchdog->referer, $watchdog->referer) ."</td></tr>";
-    $output .= ' <tr><th>'. t('Message') ."</th><td>$watchdog->message</td></tr>";
-    $output .= ' <tr><th>'. t('Severity') .'</th><td>'. $severity[$watchdog->severity] .'</td></tr>';
-    $output .= ' <tr><th>'. t('Hostname') ."</th><td>$watchdog->hostname</td></tr>";
-    $output .= '</table>';
+    $header = array(t('Type'), t('Date'), t('User'), t('Location'), t('Referrer'), t('Message'), t('Severity'), t('Hostname'));
+    $data = array(t($watchdog->type), format_date($watchdog->timestamp, 'large'), theme('username', $watchdog), l($watchdog->location, $watchdog->location), l($watchdog->referer, $watchdog->referer), $watchdog->message, $severity[$watchdog->severity], $watchdog->hostname);
+    $output = theme('watchdog_event', $header, $data);
   }
+  return $output;
+}
+
+function theme_watchdog_event($header, $data) {
+  $output = '';
+  $output .= '<table class="watchdog-event">';
+
+  $n = count($header);
+  for ($i = 0; $i < $n; $i++) {
+    $output .= '<tr class="' . ($i % 2 == 0 ? 'even' : 'odd') . '"><th>' . $header[$i] . '</th><td>' . $data[$i] . '</td></tr>';
+  }
+
+  $output .= '</table>';
+
   return $output;
 }
 

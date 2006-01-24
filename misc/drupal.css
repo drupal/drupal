@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.136 2006/01/21 08:29:28 dries Exp $ */
+/* $Id: drupal.css,v 1.137 2006/01/24 08:18:26 dries Exp $ */
 
 /*
 ** HTML elements
@@ -458,6 +458,9 @@ img.screenshot {
 .more-help-link {
   font-size: 0.85em;
   text-align: right;
+}
+table.watchdog-event th {
+  border-bottom: 1px solid #ccc;
 }
 tr.watchdog-user {
   background: #ffd;
