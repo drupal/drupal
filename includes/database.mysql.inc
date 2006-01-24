@@ -32,6 +32,12 @@ function db_connect($url) {
 
   $url = parse_url($url);
 
+  // Decode url-encoded information in the db connection string
+  $url['user'] = urldecode($url['user']);
+  $url['pass'] = urldecode($url['pass']);
+  $url['host'] = urldecode($url['host']);
+  $url['path'] = urldecode($url['path']);
+
   // Allow for non-standard MySQL port.
   if (isset($url['port'])) {
      $url['host'] = $url['host'] .':'. $url['port'];

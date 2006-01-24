@@ -32,6 +32,12 @@ function db_connect($url) {
 
   $url = parse_url($url);
 
+  // Decode url-encoded information in the db connection string
+  $url['user'] = urldecode($url['user']);
+  $url['pass'] = urldecode($url['pass']);
+  $url['host'] = urldecode($url['host']);
+  $url['path'] = urldecode($url['path']);
+
   $conn_string = ' user='. $url['user'] .' dbname='. substr($url['path'], 1) .' password='. $url['pass'] . ' host=' . $url['host'];
   $conn_string .= isset($url['port']) ? ' port=' . $url['port'] : '';
 
