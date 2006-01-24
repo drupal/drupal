@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.56 2006/01/24 10:13:27 dries Exp $
+// $Id: form.inc,v 1.57 2006/01/24 10:15:03 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -203,11 +203,13 @@ function _form_validate($elements, $form_id = NULL) {
  * edit[foo][bar] then you may pass either foo or foo][bar as $name
  * foo will set an error for all its children.
  */
-function form_set_error($name = NULL, $message = NULL) {
+function form_set_error($name = NULL, $message = '') {
   static $form = array();
   if (isset($name) && !isset($form[$name])) {
     $form[$name] = $message;
-    drupal_set_message($message, 'error');
+    if ($message) {
+      drupal_set_message($message, 'error');
+    }
   }
   return $form;
 }
@@ -240,7 +242,7 @@ function form_get_error($element) {
 /**
  * Flag an element as having an error.
  */
-function form_error(&$element, $message) {
+function form_error(&$element, $message = '') {
   $element['#error'] = TRUE;
   form_set_error(implode('][', $element['#parents']), $message);
 }
@@ -274,6 +276,7 @@ function _form_builder($form_id, $form) {
       $edit = isset($edit[$parent]) ? $edit[$parent] : NULL;
       $ref =& $ref[$parent];
     }
+    $form['#ref'] = &$ref;
     if (!isset($form['#value'])) {
       if ($posted) {
         if (isset($edit)) {
@@ -342,7 +345,7 @@ function _form_builder($form_id, $form) {
 
   if (isset($form['#after_build']) && function_exists($form['#after_build']) && !isset($form['#after_build_done'])) {
     $function = $form['#after_build'];
-    $form = $function($form, $form_values, $ref);
+    $form = $function($form, $form_values);
     $form['#after_build_done'] = TRUE;
   }
 
@@ -587,20 +590,23 @@ function theme_password_confirm($element) {
 }
 
 /**
- * Build password_confirm element.
+ * Validate password_confirm element.
  */
-function password_confirm_after_build($form, $form_values, &$ref) {
-  if (isset($form_values['pass1'])) {
-    $pass1 = trim($form_values['pass1']);
-    $pass2 = trim($form_values['pass2']);
-    unset($form_values['pass1'], $form_values['pass2']);
+function password_confirm_validate($form) {
+  if (isset($form['pass1']['#value'])) {
+    $pass1 = trim($form['pass1']['#value']);
+    $pass2 = trim($form['pass2']['#value']);
+    $form['pass1']['#ref'] = NULL;
+    $form['pass2']['#ref'] = NULL;
     if ($pass1 != $pass2) {
-      form_set_error('pass1', t('The specified passwords do not match.'));
+      form_error($form, t('The specified passwords do not match.'));
+      form_error($form['pass1']);
+      form_error($form['pass2']);
     }
-    elseif ($form['#required'] && !$pass1) {
-      form_set_error('pass1', t('Password field is required.'));
-    }
-    $ref = $pass1;
+    $form['#ref'] = $pass1;
+  }
+  elseif ($form['#required'] && !empty($_POST['edit'])) {
+    form_set_error('pass1', t('Password field is required.'));
   }
   return $form;
 }
@@ -926,8 +932,9 @@ function theme_weight($element) {
 function theme_file($element) {
   return theme('form_element', $element['#title'], '<input type="file" class="'. _form_get_class('form-file', $element['#required'], form_get_error($element)) .'" name="'. $element['#name'] .'"'. ($element['#attributes'] ? ' '. drupal_attributes($element['#attributes']) : '') .' id="'. form_clean_id($element['#id']) .'" size="'. $element['#size'] ."\" />\n", $element['#description'], $element['#id'], $element['#required'], form_get_error($element));
 }
+
 function _form_get_class($name, $required, $error) {
-  return $name. ($required ? ' required' : '') . ($error ? ' error' : '');
+  return $name. ($required ? ' required' : '') . (isset($error) ? ' error' : '');
 }
 
 /**
