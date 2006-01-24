@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.197 2006/01/20 09:04:34 dries Exp $
+// $Id: block.module,v 1.198 2006/01/24 08:38:29 dries Exp $
 
 /**
  * @file
@@ -456,6 +456,15 @@ function block_box_delete_confirm_submit($form_id, $form_values) {
 };
 
 function block_box_form($edit = array()) {
+  $form['info'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Block description'),
+    '#default_value' => $edit['info'],
+    '#maxlength' => 64,
+    '#description' => t('A brief description of your block. Used on the <a href="%overview">block overview page</a>.', array('%overview' => url('admin/block'))),
+    '#required' => TRUE,
+    '#weight' => -19,
+  );
   $form['title'] = array(
     '#type' => 'textfield',
     '#title' => t('Block title'),
@@ -474,15 +483,6 @@ function block_box_form($edit = array()) {
     '#weight' => -17,
   );
   $form['body_filter']['format'] = filter_form($edit['format'], -16);
-  $form['info'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Block description'),
-    '#default_value' => $edit['info'],
-    '#maxlength' => 64,
-    '#description' => t('A brief description of your block. Used on the <a href="%overview">block overview page</a>.', array('%overview' => url('admin/block'))),
-    '#required' => TRUE,
-    '#weight' => -15,
-  );
 
   return $form;
 }
