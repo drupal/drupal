@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.84 2006/01/23 07:54:08 dries Exp $
+// $Id: bootstrap.inc,v 1.85 2006/01/24 18:18:41 dries Exp $
 
 /**
  * @file
@@ -731,6 +731,7 @@ function _drupal_bootstrap($phase) {
  */
 function drupal_maintenance_theme() {
   global $theme;
+  require_once './includes/path.inc';
   require_once './includes/theme.inc';
   require_once './includes/common.inc';
   require_once './includes/unicode.inc';
