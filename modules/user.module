@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.567 2006/01/23 08:06:43 dries Exp $
+// $Id: user.module,v 1.568 2006/01/24 18:32:20 dries Exp $
 
 /**
  * @file
@@ -269,14 +269,6 @@ function user_validate_picture($file, &$edit, $user) {
     else {
       form_set_error('picture', t("Failed to upload the picture image; the %directory directory doesn't exist.", array('%directory' => '<em>'. variable_get('user_picture_path', 'pictures') .'</em>')));
     }
-  }
-}
-
-function user_validate_authmap($account, $authname, $module) {
-  $result = db_query("SELECT COUNT(*) from {authmap} WHERE uid != %d AND authname = '%s'", $account->uid, $authname);
-  if (db_result($result) > 0) {
-    $name = module_invoke($module, 'info', 'name');
-    return t('The %u ID %s is already taken.', array('%u' => $name, '%s' => theme('placeholder', $authname)));
   }
 }
 
@@ -780,14 +772,6 @@ function user_menu($may_cache) {
   }
 
   return $items;
-}
-
-/**
- * Called by authentication modules in order to edit/view their authmap information.
- */
-function user_get_authname($account, $module) {
-  $result = db_query("SELECT authname FROM {authmap} WHERE uid = %d AND module = '%s'", $account->uid, $module);
-  return db_result($result);
 }
 
 /**
