@@ -272,14 +272,6 @@ function user_validate_picture($file, &$edit, $user) {
   }
 }
 
-function user_validate_authmap($account, $authname, $module) {
-  $result = db_query("SELECT COUNT(*) from {authmap} WHERE uid != %d AND authname = '%s'", $account->uid, $authname);
-  if (db_result($result) > 0) {
-    $name = module_invoke($module, 'info', 'name');
-    return t('The %u ID %s is already taken.', array('%u' => $name, '%s' => theme('placeholder', $authname)));
-  }
-}
-
 /**
  * Generate a random alphanumeric password.
  */
@@ -780,14 +772,6 @@ function user_menu($may_cache) {
   }
 
   return $items;
-}
-
-/**
- * Called by authentication modules in order to edit/view their authmap information.
- */
-function user_get_authname($account, $module) {
-  $result = db_query("SELECT authname FROM {authmap} WHERE uid = %d AND module = '%s'", $account->uid, $module);
-  return db_result($result);
 }
 
 /**
