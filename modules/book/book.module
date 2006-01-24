@@ -578,7 +578,7 @@ function book_tree_recurse($nid, $depth, $children, $unfold = array()) {
           if ($tree = book_tree_recurse($node->nid, $depth - 1, $children, $unfold)) {
             $output .= '<li class="expanded">';
             $output .= l($node->title, 'node/'. $node->nid);
-            $output .= '<ul>'. $tree .'</ul>';
+            $output .= '<ul class="menu">'. $tree .'</ul>';
             $output .= '</li>';
           }
           else {
