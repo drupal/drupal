@@ -1,3 +1,5 @@
+-- $Id: database.pgsql,v 1.166 2006/01/24 18:23:41 dries Exp $
+
 -- Do not show NOTICE: messages, it's hard to spot errors.
 set client_min_messages = 'warning';
 

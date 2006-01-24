@@ -1,3 +1,5 @@
+-- $Id: database.mysql,v 1.222 2006/01/24 18:23:41 dries Exp $
+
 --
 -- Table structure for table 'access'
 --
