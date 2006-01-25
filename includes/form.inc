@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.58 2006/01/25 08:40:53 dries Exp $
+// $Id: form.inc,v 1.59 2006/01/25 13:59:05 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -68,9 +68,9 @@ function drupal_get_form($form_id, &$form, $callback = NULL) {
       variable_set('drupal_private_key', mt_rand());
     }
 
-    $form['form_token'] = array('#type' => 'hidden', '#value' => md5(session_id() . $form['#token'] . variable_get('drupal_private_key', '')));
+    $form['form_token'] = array('#type' => 'hidden', '#default_value' => md5(session_id() . $form['#token'] . variable_get('drupal_private_key', '')));
   }
-  $form['form_id'] = array('#type' => 'hidden', '#default_value' => $form_id);
+  $form['form_id'] = array('#type' => 'hidden', '#value' => $form_id);
 
   $form = array_merge(_element_info('form'), $form);
 
