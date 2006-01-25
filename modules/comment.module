@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.421 2006/01/22 07:26:33 dries Exp $
+// $Id: comment.module,v 1.422 2006/01/25 08:54:40 dries Exp $
 
 /**
  * @file
@@ -1456,6 +1456,10 @@ function comment_form_submit($form_id, $form_values) {
 */
 
 function theme_comment_form($form) {
+  if (!isset($form['#prefix'])) {
+    $form['#prefix'] = '';
+  }
+  $form['#prefix'] .= "<a id=\"comment-form\"></a>\n";
   return form_render($form);
 }
 
