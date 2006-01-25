@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.57 2006/01/24 10:15:03 dries Exp $
+// $Id: form.inc,v 1.58 2006/01/25 08:40:53 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -121,7 +121,7 @@ function drupal_validate_form($form_id, &$form, $callback = NULL) {
   global $form_values;
 
   if (isset($form['#token'])) {
-    if ($form_values['form_token'] != md5($_SERVER['REMOTE_ADDR'] . $form['#token'] . variable_get('drupal_private_key', ''))) {
+    if ($form_values['form_token'] != md5(session_id() . $form['#token'] . variable_get('drupal_private_key', ''))) {
       // setting this error will cause the form to fail validation
       form_set_error('form_token', t('Validation error, please try again.  If this error persists, please contact the site administrator.'));
     }
