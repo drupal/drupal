@@ -406,6 +406,13 @@ dl.multiselect .form-item {
   float: right;
   margin: 0 1em 1em 0;
 }
+.profile dt {
+  margin: 1em 0 0.2em 0;
+  font-weight: bold;
+}
+.profile dd {
+  margin:0;
+}
 .node-form .poll-form fieldset {
   display: block;
 }
