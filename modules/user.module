@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.568 2006/01/24 18:32:20 dries Exp $
+// $Id: user.module,v 1.569 2006/01/26 08:43:28 dries Exp $
 
 /**
  * @file
@@ -860,7 +860,7 @@ function user_login_validate($form_id, $form_values) {
 
       if (!$user->uid) {
         form_set_error('login', t('Sorry. Unrecognized username or password.') .' '. l(t('Have you forgotten your password?'), 'user/password'));
-        watchdog('user', t('Login attempt failed for %user: %error.', array('%user' => theme('placeholder', $form_values['name']), '%error' => theme('placeholder', $error))));
+        watchdog('user', t('Login attempt failed for %user.', array('%user' => theme('placeholder', $form_values['name']))));
       }
     }
   }
