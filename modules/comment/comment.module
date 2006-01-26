@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.422 2006/01/25 08:54:40 dries Exp $
+// $Id: comment.module,v 1.423 2006/01/26 08:27:58 dries Exp $
 
 /**
  * @file
@@ -206,7 +206,7 @@ function comment_link($type, $node = 0, $main = 0) {
               $links[] = l(t('add new comment'), "comment/reply/$node->nid", array('title' => t('Add a new comment to this page.')));
             }
             else {
-              $links[] = theme('comment_post_forbidden');
+              $links[] = theme('comment_post_forbidden', $node->nid);
             }
           }
         }
@@ -216,12 +216,14 @@ function comment_link($type, $node = 0, $main = 0) {
       // Node page: add a "post comment" link if the user is allowed to
       // post comments, if this node is not read-only, and if the comment form isn't already shown
 
-      if ($node->comment == COMMENT_NODE_READ_WRITE && variable_get('comment_form_location', COMMENT_FORM_SEPARATE_PAGE) == COMMENT_FORM_SEPARATE_PAGE) {
+      if ($node->comment == COMMENT_NODE_READ_WRITE) {
         if (user_access('post comments')) {
-          $links[] = l(t('add new comment'), "comment/reply/$node->nid", array('title' => t('Share your thoughts and opinions related to this posting.')), NULL, 'comment');
+          if (variable_get('comment_form_location', COMMENT_FORM_SEPARATE_PAGE) == COMMENT_FORM_SEPARATE_PAGE) {
+            $links[] = l(t('add new comment'), "comment/reply/$node->nid", array('title' => t('Share your thoughts and opinions related to this posting.')), NULL, 'comment');
+          }
         }
         else {
-          $links[] = theme('comment_post_forbidden');
+          $links[] = theme('comment_post_forbidden', $node->nid);
         }
       }
     }
@@ -697,7 +699,7 @@ function comment_links($comment, $return = 1) {
       $links[] = l(t('reply'), "comment/reply/$comment->nid/$comment->cid");
     }
     else {
-      $links[] = theme('comment_post_forbidden');
+      $links[] = theme('comment_post_forbidden', $comment->nid);
     }
   }
 
@@ -1598,17 +1600,25 @@ function theme_comment_thread_expanded($comment) {
   return $output;
 }
 
-function theme_comment_post_forbidden() {
+function theme_comment_post_forbidden($nid) {
   global $user;
   if ($user->uid) {
     return t("you can't post comments");
   }
   else {
-    if (variable_get('user_register', 1)) {
-      return t('<a href="%login">login</a> or <a href="%register">register</a> to post comments', array('%login' => url('user/login'), '%register' => url('user/register')));
+    // we cannot use drupal_get_destination() because these links sometimes appear on /node and taxo listing pages
+    if (variable_get('comment_form_location', COMMENT_FORM_SEPARATE_PAGE) == COMMENT_FORM_SEPARATE_PAGE) {
+      $destination = "destination=comment/reply/$nid";
     }
     else {
-      return t('<a href="%login">login</a> to post comments', array('%login' => url('user/login')));
+      $destination = "node/$nid";
+    }
+
+    if (variable_get('user_register', 1)) {
+      return t('<a href="%login">login</a> or <a href="%register">register</a> to post comments', array('%login' => url('user/login', $destination, 'comment-form'), '%register' => url('user/register', $destination, 'comment-form')));
+    }
+    else {
+      return t('<a href="%login">login</a> to post comments', array('%login' => url('user/login', $destination, 'comment-form')));
     }
   }
 }
