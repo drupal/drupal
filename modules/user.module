@@ -941,7 +941,7 @@ function user_logout() {
   module_invoke_all('user', 'logout', NULL, $user);
 
   // We have to use $GLOBALS to unset a global variable:
-  unset($GLOBALS['user']);
+  $user = user_load(array('uid' => 0));
 
   drupal_goto();
 }
