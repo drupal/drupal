@@ -884,8 +884,10 @@ function user_login_submit($form_id, $form_values) {
 function user_authenticate($name, $pass) {
   global $user;
 
-  // Try to log in the user locally:
-  $user = user_load(array('name' => $name, 'pass' => $pass, 'status' => 1));
+  // Try to log in the user locally. Don't set $user unless successful.
+  if ($account = user_load(array('name' => $name, 'pass' => $pass, 'status' => 1))) {
+    $user = $account;
+  };
 
   // Strip name and server from ID:
   if ($server = strrchr($name, '@')) {
