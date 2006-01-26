@@ -692,6 +692,18 @@ function checkboxes_value(&$form) {
 }
 
 /**
+ * If no default value is set for weight select boxes, use 0.
+ */
+function weight_value(&$form) {
+  if (isset($form['#default_value'])) {
+    $form['#value'] = $form['#default_value'];
+  }
+  else {
+    $form['#value'] = 0;
+  }
+}
+
+/**
  * Roll out a single radios element to a list of radios,
  * using the options array as index.
  */
