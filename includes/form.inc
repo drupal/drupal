@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.59 2006/01/25 13:59:05 dries Exp $
+// $Id: form.inc,v 1.60 2006/01/26 13:39:48 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -689,6 +689,18 @@ function checkboxes_value(&$form) {
     $value[$key] = 1;
   }
   $form['#value'] = $value;
+}
+
+/**
+ * If no default value is set for weight select boxes, use 0.
+ */
+function weight_value(&$form) {
+  if (isset($form['#default_value'])) {
+    $form['#value'] = $form['#default_value'];
+  }
+  else {
+    $form['#value'] = 0;
+  }
 }
 
 /**
