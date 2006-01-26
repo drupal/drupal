@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.423 2006/01/26 08:27:58 dries Exp $
+// $Id: comment.module,v 1.424 2006/01/26 08:48:57 dries Exp $
 
 /**
  * @file
@@ -1166,10 +1166,11 @@ function comment_validate($edit) {
   // Invoke other validation handlers
   comment_invoke_comment($edit, 'validate');
 
-  $check_date = strtotime($date);
-  // As of PHP 5.1.0, strtotime returns FALSE upon failure instead of -1.
-  if ($check_date === FALSE || $check_date === -1) {
-    form_set_error('date', t('You have to specify a valid date.'));
+  if (isset($edit['date'])) {
+    // As of PHP 5.1.0, strtotime returns FALSE upon failure instead of -1.
+    if (strtotime($edit['date']) <= 0) {
+      form_set_error('date', t('You have to specify a valid date.'));
+    }
   }
   if (isset($edit['author']) && !$account = user_load(array('name' => $edit['author']))) {
     form_set_error('author', t('You have to specify a valid author.'));
