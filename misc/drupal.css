@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.137 2006/01/24 08:18:26 dries Exp $ */
+/* $Id: drupal.css,v 1.138 2006/01/26 13:43:03 dries Exp $ */
 
 /*
 ** HTML elements
@@ -405,6 +405,13 @@ dl.multiselect .form-item {
 .profile .picture {
   float: right;
   margin: 0 1em 1em 0;
+}
+.profile dt {
+  margin: 1em 0 0.2em 0;
+  font-weight: bold;
+}
+.profile dd {
+  margin:0;
 }
 .node-form .poll-form fieldset {
   display: block;

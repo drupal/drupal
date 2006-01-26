@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.571 2006/01/26 08:52:24 dries Exp $
+// $Id: user.module,v 1.572 2006/01/26 13:43:04 dries Exp $
 
 /**
  * @file
@@ -459,8 +459,12 @@ function user_search($op = 'search', $keys = null) {
  */
 function user_user($type, &$edit, &$user, $category = NULL) {
   if ($type == 'view') {
-    $form['member'] = array('#type' => 'item', '#title' => t('Member for'), '#value' => format_interval(time() - $user->created));
-    return array(t('History') => array('history'=> drupal_get_form('member', $form)));
+    $items[] = array('title' => t('Member for'),
+      'value' => format_interval(time() - $user->created),
+      'class' => 'member',
+    );
+
+    return array(t('History') => $items);
   }
 
   if ($type == 'form' && $category == 'account') {
@@ -612,19 +616,24 @@ function theme_user_picture($account) {
 /**
  * Theme a user page
  * @param $account the user object
- * @param $fields an mulidimensional array for the fields, in the form of
- *                array('category1'=> array('name1' => field1, 'name2' => field2),
- *                      'category2'=> array('name3' => field3, 'name4' => field4, 'name5' => field5),
- *                      .. etc);
+ * @param $fields a multidimensional array for the fields, in the form of array (
+ *   'category1' => array(item_array1, item_array2), 'category2' => array(item_array3,
+ *    .. etc.). Item arrays are formatted as array(array('title' => 'item title',
+ * 'value' => 'item value', 'class' => 'class-name'), ... etc.). Module names are incorporated
+ * into the CSS class.
  *
  * @ingroup themeable
  */
 function theme_user_profile($account, $fields) {
   $output = "<div class=\"profile\">\n";
   $output .= theme('user_picture', $account);
-  foreach ($fields as $category => $value) {
-    $value = implode('', $value);
-    $output .= theme('box', $category, $value);
+  foreach ($fields as $category => $items) {
+    $output .= "<h2 class=\"title\">$category</h2>\n";
+    $output .= '<dl>';
+    foreach ($items as $item) {
+      $output .= sprintf('<dt class="%s">%s:</dt><dd class="%s">%s</dd>', $item['class'], $item['title'], $item['class'], $item['value']);
+    }
+    $output .= '</dl>';
   }
   $output .= "</div>\n";
 
@@ -1304,8 +1313,11 @@ function user_view($uid = 0) {
     $fields = array();
     foreach (module_list() as $module) {
       if ($data = module_invoke($module, 'user', 'view', '', $account)) {
-        foreach ($data as $category => $content) {
-          $fields[$category] = $content;
+        foreach ($data as $category => $items) {
+          foreach ($items as $item) {
+            $item['class'] = "$module-". $item['class'];
+            $fields[$category][] = $item;
+          }
         }
       }
     }
@@ -1942,5 +1954,3 @@ function user_autocomplete($string) {
   print drupal_implode_autocomplete($matches);
   exit();
 }
-
-
