@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.138 2006/01/26 13:43:03 dries Exp $ */
+/* $Id: drupal.css,v 1.139 2006/01/27 18:57:13 dries Exp $ */
 
 /*
 ** HTML elements
@@ -228,49 +228,24 @@ tr.odd .form-item, tr.even .form-item {
   margin-bottom: 1em;
   margin-top: 0;
 }
-.book {
-  margin: 1em 0 1em 0;
-}
-.book .title {
-  font-weight: bold;
-  font-size: 1.3em;
-  margin-bottom: 1em;
-}
-.book .tree {
-  padding-top: 1em;
+.book-navigation .menu {
   border-top: 1px solid #888;
-  padding-bottom: 1em;
+  padding: 1em 0 0 3em;
 }
-.book .name {
-  padding-top: 1em;
-  font-weight: bold;
-  font-size: 1em;
-}
-.book .nav {
+.book-navigation .page-links {
   border-top: 1px solid #888;
   border-bottom: 1px solid #888;
-  padding-bottom: 3em;
-  padding-top: 1em;
-  clear: both;
-}
-.book .nav .links {
-  clear: both;
-}
-.book .nav .titles {
-  clear: both;
-}
-.book .nav .prev {
-  float: left;
-  text-align: left;
-  width: 45%;
-}
-.book .nav .next {
-  float: right;
-  text-align: right;
-  width: 45%;
-}
-.book .nav .up {
   text-align: center;
+  padding: 0.5em;
+}
+.book-navigation .page-previous {
+  text-align: right;
+}
+.book-navigation .page-up {
+  margin: 0 4em;
+}
+.book-navigation .page-next {
+  text-align: left;
 }
 .calendar .row-week td a {
   display: block;

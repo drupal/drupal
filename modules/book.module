@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.344 2006/01/24 08:22:12 dries Exp $
+// $Id: book.module,v 1.345 2006/01/27 18:57:13 dries Exp $
 
 /**
  * @file
@@ -481,44 +481,29 @@ function book_nodeapi(&$node, $op, $teaser, $page) {
  * @ingroup themeable
  */
 function theme_book_navigation($node) {
+  $output = '';
+
   if ($node->nid) {
-    $output .= '<div class="book">';
+    $output .= '<div class="book-navigation">';
 
     if ($tree = book_tree($node->nid)) {
-      $output .= '<div class="tree">'. $tree .'</div>';
+      $output .= $tree;
     }
 
     if ($prev = book_prev($node)) {
       drupal_add_link(array('rel' => 'prev', 'href' => url('node/'. $prev->nid)));
-      $links .= '<div class="prev">';
-      $links .= l(t('previous'), 'node/'. $prev->nid, array('title' => t('View the previous page.')));
-      $links .= '</div>';
-      $titles .= '<div class="prev">'. check_plain($prev->title) .'</div>';
-    }
-    else {
-      $links .= '<div class="prev">&nbsp;</div>'; // Make an empty div to fill the space.
-    }
-    if ($next = book_next($node)) {
-      drupal_add_link(array('rel' => 'next', 'href' => url('node/'. $next->nid)));
-      $links .= '<div class="next">';
-      $links .= l(t('next'), 'node/'. $next->nid, array('title' => t('View the next page.')));
-      $links .= '</div>';
-      $titles .= '<div class="next">'. check_plain($next->title) .'</div>';
-    }
-    else {
-      $links .= '<div class="next">&nbsp;</div>'; // Make an empty div to fill the space.
+      $links .= l(t('‹ ') . check_plain($prev->title), 'node/'. $prev->nid, array('class' => 'page-previous', 'title' => t('Go to previous page')));
     }
     if ($node->parent) {
       drupal_add_link(array('rel' => 'index', 'href' => url('node/'. $node->parent)));
-      $links .= '<div class="up">';
-      $links .= l(t('up'), 'node/'. $node->parent, array('title' => t('View this page\'s parent section.')));
-      $links .= '</div>';
+      $links .= l(t('up'), 'node/'. $node->parent, array('class' => 'page-up', 'title' => t('Go to parent page')));
+    }
+    if ($next = book_next($node)) {
+      drupal_add_link(array('rel' => 'next', 'href' => url('node/'. $next->nid)));
+      $links .= l(check_plain($next->title) . t(' ›'), 'node/'. $next->nid, array('class' => 'page-next', 'title' => t('Go to next page')));
     }
 
-    $output .= '<div class="nav">';
-    $output .= ' <div class="links">'. $links .'</div>';
-    $output .= ' <div class="titles">'. $titles .'</div>';
-    $output .= '</div>';
+    $output .= '<div class="page-links">'. $links .'</div>';
     $output .= '</div>';
   }
 
