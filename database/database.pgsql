@@ -318,10 +318,10 @@ CREATE TABLE forum (
   nid integer NOT NULL default '0',
   vid integer NOT NULL default '0',
   tid integer NOT NULL default '0',
-  PRIMARY KEY (nid)
+  PRIMARY KEY (vid)
 );
 CREATE INDEX forum_tid_idx ON forum(tid);
-CREATE INDEX forum_vid_idx ON forum(vid);
+CREATE INDEX forum_vid_idx ON forum(nid);
 
 --
 -- Table structure for history

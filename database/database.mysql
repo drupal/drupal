@@ -335,8 +335,8 @@ CREATE TABLE forum (
   nid int(10) unsigned NOT NULL default '0',
   vid int(10) unsigned NOT NULL default '0',
   tid int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY (nid),
-  KEY vid (vid),
+  PRIMARY KEY (vid),
+  KEY nid (nid),
   KEY tid (tid)
 ) TYPE=MyISAM
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
