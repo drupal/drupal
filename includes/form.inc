@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.60 2006/01/26 13:39:48 dries Exp $
+// $Id: form.inc,v 1.61 2006/01/27 15:57:43 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -133,6 +133,7 @@ function drupal_validate_form($form_id, &$form, $callback = NULL) {
 function drupal_submit_form($form_id, $form, $callback = NULL) {
   global $form_values;
 
+  unset($GLOBALS['form_values']['submit'], $GLOBALS['form_values']['form_id']);
   if (isset($form['#submit'])) {
     foreach ($form['#submit'] as $function => $args) {
       if (function_exists($function)) {
