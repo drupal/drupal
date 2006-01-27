@@ -1,4 +1,4 @@
--- $Id: database.pgsql,v 1.166 2006/01/24 18:23:41 dries Exp $
+-- $Id: database.pgsql,v 1.167 2006/01/27 15:52:44 dries Exp $
 
 -- Do not show NOTICE: messages, it's hard to spot errors.
 set client_min_messages = 'warning';
@@ -318,10 +318,10 @@ CREATE TABLE forum (
   nid integer NOT NULL default '0',
   vid integer NOT NULL default '0',
   tid integer NOT NULL default '0',
-  PRIMARY KEY (nid)
+  PRIMARY KEY (vid)
 );
 CREATE INDEX forum_tid_idx ON forum(tid);
-CREATE INDEX forum_vid_idx ON forum(vid);
+CREATE INDEX forum_vid_idx ON forum(nid);
 
 --
 -- Table structure for history
