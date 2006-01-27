@@ -24,7 +24,8 @@ switch ($return) {
     drupal_site_offline();
     break;
   default:
-    if (!empty($return)) {
+    // Print any value (including an empty string) except NULL or undefined:
+    if (isset($return)) {
       print theme('page', $return);
     }
     break;
