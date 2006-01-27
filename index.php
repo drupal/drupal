@@ -1,5 +1,5 @@
 <?php
-// $Id: index.php,v 1.89 2005/12/10 19:26:47 dries Exp $
+// $Id: index.php,v 1.90 2006/01/27 18:51:51 dries Exp $
 
 /**
  * @file
@@ -24,7 +24,8 @@ switch ($return) {
     drupal_site_offline();
     break;
   default:
-    if (!empty($return)) {
+    // Print any value (including an empty string) except NULL or undefined:
+    if (isset($return)) {
       print theme('page', $return);
     }
     break;
