@@ -133,6 +133,7 @@ function drupal_validate_form($form_id, &$form, $callback = NULL) {
 function drupal_submit_form($form_id, $form, $callback = NULL) {
   global $form_values;
 
+  unset($GLOBALS['form_values']['submit'], $GLOBALS['form_values']['form_id']);
   if (isset($form['#submit'])) {
     foreach ($form['#submit'] as $function => $args) {
       if (function_exists($function)) {
