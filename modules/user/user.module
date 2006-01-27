@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.572 2006/01/26 13:43:04 dries Exp $
+// $Id: user.module,v 1.573 2006/01/27 18:49:48 dries Exp $
 
 /**
  * @file
@@ -683,7 +683,7 @@ function user_menu($may_cache) {
     $items[] = array('path' => 'user/password', 'title' => t('request new password'),
       'callback' => 'user_pass', 'access' => $user->uid == 0, 'type' => MENU_LOCAL_TASK);
     $items[] = array('path' => 'user/reset', 'title' => t('reset password'),
-      'callback' => 'user_pass_reset', 'access' => $user->uid == 0, 'type' => MENU_CALLBACK);
+      'callback' => 'user_pass_reset', 'access' => TRUE, 'type' => MENU_CALLBACK);
     $items[] = array('path' => 'user/help', 'title' => t('help'),
       'callback' => 'user_help_page', 'type' => MENU_CALLBACK);
 
@@ -1011,38 +1011,50 @@ function theme_user_pass($form) {
 }
 
 /**
- * Menu callback; process one time login URL, and redirects to the user page on success.
+ * Menu callback; process one time login link and redirects to the user page on success.
  */
 function user_pass_reset($uid, $timestamp, $hashed_pass) {
   global $user;
-  // Time out, in seconds, until login URL expires. 24 hours = 86400 seconds.
-  $timeout = 86400;
-  $current = time();
-  // Some redundant checks for extra security ?
-  if ($timestamp < $current && is_numeric($uid) && $account = user_load(array('uid' => $uid, 'status' => 1)) ) {
-    // No time out for first time login.
-    if ($account->login && $current - $timestamp > $timeout) {
-      drupal_set_message(t('You have tried to use a one time login URL which has expired. Please request a new one using the form below.'));
-      drupal_goto('user/password');
+
+  // Check if the user is already logged in. The back button is often the culprit here.
+  if ($user->uid) {
+    drupal_set_message(t('You have already used this one-time login link. It is not necessary to use this link to login anymore. You are already logged in.'));
+    drupal_goto(variable_get('site_frontpage', 'node'));
+  }
+  else {
+    // Time out, in seconds, until login URL expires. 24 hours = 86400 seconds.
+    $timeout = 86400;
+    $current = time();
+    // Some redundant checks for extra security ?
+    if ($timestamp < $current && $account = user_load(array('uid' => $uid, 'status' => 1)) ) {
+      // No time out for first time login.
+      if ($account->login && $current - $timestamp > $timeout) {
+        drupal_set_message(t('You have tried to use a one-time login link that has expired. Please request a new one using the form below.'));
+        drupal_goto('user/password');
+      }
+      else if ($account->uid && $timestamp > $account->login && $timestamp < $current && $hashed_pass == user_pass_rehash($account->pass, $timestamp, $account->login)) {
+        watchdog('user', t('User %name used one-time login link at time %timestamp.', array('%name' => "<em>$account->name</em>", '%timestamp' => $timestamp)));
+        // Update the user table noting user has logged in.
+        // And this also makes this hashed password a one-time-only login.
+        db_query("UPDATE {users} SET login = %d WHERE uid = %d", time(), $account->uid);
+        // Now we can set the new user.
+        $user = $account;
+        // And proceed with normal login, going to user page.
+        user_module_invoke('login', $edit, $user);
+        drupal_set_message(t('You have just used your one-time login link. It is no longer necessary to use this link to login. Please change your password.'));
+        drupal_goto('user/'. $user->uid .'/edit');
+      }
+      else {
+        drupal_set_message(t('You have tried to use a one-time login link which has either been used or is no longer valid. Please request a new one using the form below.'));
+        drupal_goto('user/password');
+      }
     }
-    if ($account->uid && !$user->uid && !empty($account) && $timestamp > $account->login && $timestamp < $current &&
-        $hashed_pass == user_pass_rehash($account->pass, $timestamp, $account->login)) {
-      watchdog('user', t('One time login URL used for %name with timestamp %timestamp.', array('%name' => "<em>$account->name</em>", '%timestamp' => $timestamp)));
-      // Update the user table noting user has logged in.
-      // And this also makes this hashed password a one-time-only login.
-      db_query("UPDATE {users} SET login = %d WHERE uid = %d", time(), $account->uid);
-      // Now we can set the new user.
-      $user = $account;
-      // And proceed with normal login, going to user page.
-      user_module_invoke('login', $edit, $user);
-      drupal_set_message(t("You have used a one-time login, which won't be valid anymore."));
-      drupal_set_message(t('Please change your password.'));
-      drupal_goto('user/'. $user->uid .'/edit');
+    else {
+      // Deny access, no more clues.
+      // Everything will be in the watchdog's URL for the administrator to check.
+      drupal_access_denied();
     }
   }
-  // Deny access, no more clues.
-  // Everything will be in the watchdog's URL for the administrator to check.
-  drupal_access_denied();
 }
 
 function user_pass_reset_url($account) {
