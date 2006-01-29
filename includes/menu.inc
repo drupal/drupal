@@ -454,6 +454,9 @@ function menu_set_active_item($path = NULL) {
         }
       }
     }
+
+    // Reset the cached $menu in menu_get_item().
+    menu_get_item(NULL, NULL, TRUE);
   }
 
   return $stored_mid;
