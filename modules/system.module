@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.283 2006/01/24 18:27:29 dries Exp $
+// $Id: system.module,v 1.284 2006/01/29 07:28:52 dries Exp $
 
 /**
  * @file
@@ -68,7 +68,7 @@ function system_elements() {
     '#value' => 'pass',
     'pass1' => array('#type' => 'password', '#size' => 12, '#maxlength' => 24),
     'pass2' => array('#type' => 'password', '#size' => 12, '#maxlength' => 24),
-    '#validate' => array('password_confirm_validate' => ''),
+    '#validate' => array('password_confirm_validate' => array()),
   );
   $type['textarea'] = array('#input' => TRUE, '#cols' => 60, '#rows' => 5);
   $type['radios'] = array('#input' => TRUE, '#process' => array('expand_radios' => array()));
