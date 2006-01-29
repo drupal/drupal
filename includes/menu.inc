@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.104 2006/01/23 07:27:18 dries Exp $
+// $Id: menu.inc,v 1.105 2006/01/29 07:43:22 dries Exp $
 
 /**
  * @file
@@ -454,6 +454,9 @@ function menu_set_active_item($path = NULL) {
         }
       }
     }
+
+    // Reset the cached $menu in menu_get_item().
+    menu_get_item(NULL, NULL, TRUE);
   }
 
   return $stored_mid;
