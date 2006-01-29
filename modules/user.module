@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.574 2006/01/29 07:50:45 dries Exp $
+// $Id: user.module,v 1.575 2006/01/29 08:01:55 dries Exp $
 
 /**
  * @file
@@ -628,10 +628,15 @@ function theme_user_profile($account, $fields) {
   $output = "<div class=\"profile\">\n";
   $output .= theme('user_picture', $account);
   foreach ($fields as $category => $items) {
-    $output .= "<h2 class=\"title\">$category</h2>\n";
+    if (strlen($category) > 0) {
+      $output .= '<h2 class="title">'. $category ."</h2>\n";
+    }
     $output .= '<dl>';
     foreach ($items as $item) {
-      $output .= sprintf('<dt class="%s">%s:</dt><dd class="%s">%s</dd>', $item['class'], $item['title'], $item['class'], $item['value']);
+      if (isset($item['title'])) {
+        $output .= '<dt class="'. $item['class'] .'">'. $item['title'] .':</dt>';
+      }
+      $output .= '<dd class="'. $item['class'] .'">'. $item['value'] .'</dd>';
     }
     $output .= '</dl>';
   }
