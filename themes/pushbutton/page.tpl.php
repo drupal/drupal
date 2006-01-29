@@ -14,25 +14,19 @@
 <table id="primary-menu" summary="Navigation elements." border="0" cellpadding="0" cellspacing="0" width="100%">
   <tr>
     <td id="home" width="10%">
-
       <?php if ($logo) : ?>
-        <a href="<?php print url() ?>" title="Home"><img src="<?php print($logo) ?>" alt="Home" width="144" height="63" border="0" /></a>
+        <a href="<?php print $base_path ?>" title="Home"><img src="<?php print($logo) ?>" alt="Home" width="144" height="63" border="0" /></a>
       <?php endif; ?>
-
     </td>
 
     <td id="site-info" width="20%">
-
       <?php if ($site_name) : ?>
-        <div class='site-name'><a href="<?php print url() ?>" title="Home"><?php print($site_name) ?></a></div>
+        <div class='site-name'><a href="<?php print $base_path ?>" title="Home"><?php print($site_name) ?></a></div>
       <?php endif;?>
-
       <?php if ($site_slogan) : ?>
         <div class='site-slogan'><?php print($site_slogan) ?></div>
       <?php endif;?>
-
     </td>
-
     <td class="primary-links" width="70%" align="center" valign="middle">
       <?php print theme('links', $primary_links) ?>
     </td>

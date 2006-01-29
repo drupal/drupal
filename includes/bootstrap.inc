@@ -678,11 +678,13 @@ function _drupal_bootstrap($phase) {
 
   switch ($phase) {
     case DRUPAL_BOOTSTRAP_DATABASE:
-      global $db_url, $db_prefix, $base_url;
+      global $db_url, $db_prefix, $base_url, $base_path;
       $conf = array();
       require_once './' . conf_init() .'/settings.php';
       require_once './includes/database.inc';
       // Initialize the default database.
+      $parts = parse_url($base_url);
+      $base_path = (isset($parts['path']) ? $parts['path'] . '/' : '/');
       db_set_active();
       break;
 
