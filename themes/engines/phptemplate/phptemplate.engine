@@ -1,5 +1,5 @@
 <?php
-// $Id: phptemplate.engine,v 1.24 2006/01/20 08:54:06 dries Exp $
+// $Id: phptemplate.engine,v 1.25 2006/01/29 07:36:29 dries Exp $
 
 /**
  * @file
@@ -140,6 +140,7 @@ function phptemplate_features() {
  * into a pluggable template engine.
  */
 function phptemplate_page($content) {
+  global $base_path;
   /* Set title and breadcrumb to declared values */
 
   if ($_GET['q'] == variable_get('site_frontpage', 'node')) {
@@ -185,6 +186,7 @@ function phptemplate_page($content) {
   }
 
   $variables = array(
+    'base_path'           => $base_path,
     'breadcrumb'          => theme('breadcrumb', drupal_get_breadcrumb()),
     'closure'             => theme('closure'),
     'content'             => '<!-- begin content -->' . $content . '<!-- end content -->',

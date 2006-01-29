@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.511 2006/01/26 08:59:00 dries Exp $
+// $Id: common.inc,v 1.512 2006/01/29 07:36:29 dries Exp $
 
 /**
  * @file
@@ -114,11 +114,10 @@ function drupal_set_html_head($data = NULL) {
  * Retrieve output to be displayed in the head tag of the HTML page.
  */
 function drupal_get_html_head() {
-  global $base_url;
+  global $base_path;
 
   $output = "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n";
-  $output .= "<base href=\"$base_url/\" />\n";
-  $output .= theme('stylesheet_import', 'misc/drupal.css');
+  $output .= theme('stylesheet_import', $base_path .'misc/drupal.css');
 
   return $output . drupal_set_html_head();
 }
@@ -919,7 +918,7 @@ function url($path = NULL, $query = NULL, $fragment = NULL, $absolute = FALSE) {
     return $path . $fragment;
   }
 
-  global $base_url;
+  global $base_url, $base_path;
   static $script;
   static $clean_url;
 
@@ -935,7 +934,7 @@ function url($path = NULL, $query = NULL, $fragment = NULL, $absolute = FALSE) {
     $clean_url = (bool)variable_get('clean_url', '0');
   }
 
-  $base = ($absolute ? $base_url .'/' : '');
+  $base = ($absolute ? $base_url . '/' : $base_path);
 
   // The special path '<front>' links to the default front page.
   if (isset($path) && $path != '<front>') {
@@ -1134,13 +1133,15 @@ function drupal_add_link($attributes) {
  * depends on the 'killswitch' inside it.
  */
 function drupal_add_js($file) {
+  global $base_path;
   static $sent = array();
+
   if (!isset($sent['misc/drupal.js'])) {
-    drupal_set_html_head('<script type="text/javascript" src="misc/drupal.js"></script>');
+    drupal_set_html_head('<script type="text/javascript" src="'. $base_path .'misc/drupal.js"></script>');
     $sent['misc/drupal.js'] = true;
   }
   if (!isset($sent[$file])) {
-    drupal_set_html_head('<script type="text/javascript" src="'. check_url($file) .'"></script>');
+    drupal_set_html_head('<script type="text/javascript" src="'. check_url($base_path . $file) .'"></script>');
     $sent[$file] = true;
   }
 }

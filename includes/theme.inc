@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.279 2006/01/20 09:30:12 dries Exp $
+// $Id: theme.inc,v 1.280 2006/01/29 07:36:29 dries Exp $
 
 /**
  * @file
@@ -280,7 +280,7 @@ function theme_get_settings($key = NULL) {
  *   The value of the requested setting, NULL if the setting does not exist.
  */
 function theme_get_setting($setting_name, $refresh = FALSE) {
-  global $theme_key;
+  global $theme_key, $base_path;
   static $settings;
 
   if (empty($settings) || $refresh) {
@@ -298,11 +298,12 @@ function theme_get_setting($setting_name, $refresh = FALSE) {
     }
 
     if ($settings['toggle_logo']) {
+      $settings['logo'] = $base_path;
       if ($settings['default_logo']) {
-        $settings['logo'] = dirname($theme_object->filename) .'/logo.png';
+        $settings['logo'] .= dirname($theme_object->filename) .'/logo.png';
       }
       elseif ($settings['logo_path']) {
-        $settings['logo'] = $settings['logo_path'];
+        $settings['logo'] .= $settings['logo_path'];
       }
     }
 
@@ -330,10 +331,12 @@ function theme_get_setting($setting_name, $refresh = FALSE) {
  * drupal_set_html_head() to enforce the correct CSS cascading order.
  */
 function theme_add_style($path = '', $media = 'all') {
+  global $base_path;
   static $styles = array();
+
   if ($path && !isset($styles["$media:$path"])) {
     $style = new stdClass();
-    $style->path = $path;
+    $style->path = $base_path. $path;
     $style->media = $media;
     $styles["$media:$path"] = $style;
   }
@@ -511,9 +514,10 @@ function theme_links($links, $delimiter = ' | ') {
  *   A string containing the image tag.
  */
 function theme_image($path, $alt = '', $title = '', $attributes = NULL, $getsize = TRUE) {
+  global $base_path;
   if (!$getsize || (is_file($path) && (list($width, $height, $type, $image_attributes) = @getimagesize($path)))) {
     $attributes = drupal_attributes($attributes);
-    return '<img src="'. check_url($path) .'" alt="'. check_plain($alt) .'" title="'. check_plain($title) .'" '. $image_attributes . $attributes .' />';
+    return '<img src="'. check_url($base_path. $path) .'" alt="'. check_plain($alt) .'" title="'. check_plain($title) .'" '. $image_attributes . $attributes .' />';
   }
 }
 
