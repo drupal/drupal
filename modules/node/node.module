@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.592 2006/01/29 07:46:57 dries Exp $
+// $Id: node.module,v 1.593 2006/01/29 07:50:45 dries Exp $
 
 /**
  * @file
@@ -27,9 +27,9 @@ function node_help($section) {
       $output .= t('<p>You can</p>
 <ul>
 <li>search for content at <a href="%search">search</a>.</li>
-<li>administer nodes at <a href="%admin-node-configure-types">administer &gt;&gt; content &gt;&gt; configure &gt;&gt; content types</a>.</li>
+<li>administer nodes at <a href="%admin-settings-content-types">administer &gt;&gt; settings &gt;&gt; content types</a>.</li>
 </ul>
-', array('%search' => url('search'), '%admin-node-configure-types' => url('admin/node/configure/types')));
+', array('%search' => url('search'), '%admin-settings-content-types' => url('admin/settings/content-types')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%node">Node page</a>.', array('%node' => 'http://www.drupal.org/handbook/modules/node/')) .'</p>';
       return $output;
     case 'admin/modules#description':

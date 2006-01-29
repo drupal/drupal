@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.256 2006/01/26 08:33:20 dries Exp $
+// $Id: taxonomy.module,v 1.257 2006/01/29 07:50:45 dries Exp $
 
 /**
  * @file
@@ -1206,8 +1206,8 @@ function taxonomy_help($section) {
       $output .= '<p>'. t('A controlled vocabulary is a set of terms to use for describing content (known as descriptors in indexing lingo). Drupal allows you to describe each piece of content (blog, story, etc.) using one or many of these terms. For simple implementations, you might create a set of categories without subcategories, similar to Slashdot\'s sections. For more complex implementations, you might create a hierarchical list of categories.  ') .'</p>';
       $output .= t('<p>You can</p>
 <ul>
-<li>add a vocabulary at <a href="%admin-taxonomy-add-vocabulary">administer &gt;&gt;  taxonomy &gt;&gt;  add vocabulary</a>.</li>
-<li>administer taxonomy at <a href="%admin-taxonomy">administer &gt;&gt;  taxonomy</a>.</li>
+<li>add a vocabulary at <a href="%admin-taxonomy-add-vocabulary">administer &gt;&gt; categories &gt;&gt;  add vocabulary</a>.</li>
+<li>administer taxonomy at <a href="%admin-taxonomy">administer &gt;&gt; categories</a>.</li>
 <li>restrict content access by category for specific users roles using the <a href="%external-http-drupal-org-project-taxonomy_access">taxonomy access module</a>.</li>
 <li>build a custom view of your categories using the <a href="%external-http-drupal-org-project-taxonomy_browser">taxonomy browser</a>.</li>
 </ul>

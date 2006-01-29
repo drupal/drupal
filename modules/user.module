@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.573 2006/01/27 18:49:48 dries Exp $
+// $Id: user.module,v 1.574 2006/01/29 07:50:45 dries Exp $
 
 /**
  * @file
@@ -1861,7 +1861,7 @@ function user_help($section) {
       $output .= t('<p>You can</p>
 <ul>
 <li>view your <a href="%user">user page</a>.</li>
-<li>administer user at <a href="%admin-user">administer &gt;&gt; user</a>.</li>
+<li>administer users at <a href="%admin-user">administer &gt;&gt; user</a>.</li>
 <li>allow users who have the "select different theme" permission to select themes from their user account by enabling themes in <a href="%admin-themes">administer &gt;&gt; themes</a>.</li>
 <li>read user profile help at <a href="%admin-help-profile">administer &gt;&gt; help &gt;&gt; profile</a>.</li>
 <li>read about distributed authentication in the system module help at <a href="%admin-help-system">administer &gt;&gt; help &gt;&gt; system</a>.</li>

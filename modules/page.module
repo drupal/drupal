@@ -1,5 +1,5 @@
 <?php
-// $Id: page.module,v 1.151 2006/01/20 09:04:34 dries Exp $
+// $Id: page.module,v 1.152 2006/01/29 07:50:45 dries Exp $
 
 /**
  * @file
@@ -22,9 +22,9 @@ function page_help($section) {
 <li>read the page administration help at <a href="%admin-help-page">administer &gt;&gt; help &gt;&gt; page</a>.</li>
 <li>read the story administration help at <a href="%admin-help-story">administer &gt;&gt; help &gt;&gt; story</a>.</li>
 <li>create a page at <a href="%node-add-page">create content &gt;&gt; page</a>.</li>
-<li>administer page content type at <a href="%admin-node-configure-types-page">administer &gt;&gt; content &gt;&gt; configure &gt;&gt; content types &gt;&gt; configure page</a>.</li>
+<li>administer page content type at <a href="%admin-settings-content-types-page">administer &gt;&gt; settings &gt;&gt; content types &gt;&gt; configure page</a>.</li>
 </ul>
-', array('%admin-help-node' => url('admin/help/node'), '%admin-help-page' => url('admin/help/page'), '%admin-help-story' => url('admin/help/story'), '%node-add-page' => url('node/add/page'), '%admin-node-configure-types-page' => url('admin/node/configure/types/page')));
+', array('%admin-help-node' => url('admin/help/node'), '%admin-help-page' => url('admin/help/page'), '%admin-help-story' => url('admin/help/story'), '%node-add-page' => url('node/add/page'), '%admin-settings-content-types-page' => url('admin/settings/content-types/page')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%page">Page page</a>.', array('%page' => 'http://www.drupal.org/handbook/modules/page/')) .'</p>';
       return $output;
     case 'admin/modules#description':

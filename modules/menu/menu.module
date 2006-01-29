@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.64 2006/01/19 08:58:00 dries Exp $
+// $Id: menu.module,v 1.65 2006/01/29 07:50:45 dries Exp $
 
 /**
  * @file
@@ -72,8 +72,8 @@ function menu_help($section) {
 ');
       $output .= t('<p>You can</p>
 <ul>
-<li>administer menus at <a href="%admin-menu"> administer &gt;&gt; menus</a>.</li>
-<li>turn menus blocks on and off in the <a href="%admin-block">administration &gt;&gt; block</a>.</li>
+<li>administer menus at <a href="%admin-menu">administer &gt;&gt; menus</a>.</li>
+<li>turn menus blocks on and off in the <a href="%admin-block">administer &gt;&gt; blocks</a>.</li>
 <li>add a menu at <a href="%admin-menu-menu-add">administer &gt;&gt; menus &gt;&gt; add menu</a>.</li>
 <li>add a menu item at <a href="%admin-menu-item-add">administer &gt;&gt; menus &gt;&gt; add menu item</a>.</li>
 </ul>

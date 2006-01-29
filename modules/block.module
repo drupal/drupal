@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.199 2006/01/26 09:06:23 dries Exp $
+// $Id: block.module,v 1.200 2006/01/29 07:50:45 dries Exp $
 
 /**
  * @file
@@ -30,8 +30,8 @@ function block_help($section) {
       $output .= '<p>'. t('An administrator defined block contains content supplied by the administrator. Each admin-defined block consists of a title, a description, and a body which can be as long as you wish. The Drupal engine will render the content of the block.') .'</p>';
       $output .= t('<p>You can</p>
 <ul>
-<li>enable throttle and configure blocks at <a href="%admin-block">administer &gt;&gt; block</a>.</li>
-<li>add a block at <a href="%admin-block-add">administer &gt;&gt; block &gt;&gt; add block</a>.</li>
+<li>enable throttle and configure blocks at <a href="%admin-block">administer &gt;&gt; blocks</a>.</li>
+<li>add a block at <a href="%admin-block-add">administer &gt;&gt; blocks &gt;&gt; add block</a>.</li>
 </ul>
 ', array('%admin-block' => url('admin/block'), '%admin-block-add' => url('admin/block/add')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%block">Block page</a>.', array('%block' => 'http://www.drupal.org/handbook/modules/block/')) .'</p>';

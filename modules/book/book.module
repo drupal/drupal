@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.345 2006/01/27 18:57:13 dries Exp $
+// $Id: book.module,v 1.346 2006/01/29 07:50:45 dries Exp $
 
 /**
  * @file
@@ -1017,11 +1017,11 @@ function book_help($section) {
 <ul>
 <li>create new book pages: <a href="%node-add-book">create content &gt;&gt; book page</a>.</li>
 <li>administer individual books (choose a book from list): <a href="%admin-node-book">administer &gt;&gt; content &gt;&gt; books</a>.</li>
-<li>set workflow and other global book settings on the book configuration page: <a href="%admin-node-configure-types-book" title="book page content type">administer &gt;&gt; content &gt;&gt; configure &gt;&gt; content types &gt;&gt; book page</a>.</li>
-<li>enable the book navigation block: <a href="%admin-block">administer &gt;&gt; block</a>.</li>
+<li>set workflow and other global book settings on the book configuration page: <a href="%admin-settings-content-types-book-page" title="book page content type">administer &gt;&gt; settings &gt;&gt; content types &gt;&gt; configure book page</a>.</li>
+<li>enable the book navigation block: <a href="%admin-block">administer &gt;&gt; blocks</a>.</li>
 <li>control who can create, edit, and maintain book pages by setting access permissions: <a href="%admin-access">administer &gt;&gt; access control</a>.</li>
 </ul>
-', array('%node-add-book' => url('node/add/book'), '%admin-node-book' => url('admin/node/book'), '%admin-node-configure-types-book' => url('admin/node/configure/types/book'), '%admin-block' => url('admin/block'), '%admin-access' => url('admin/access')));
+', array('%node-add-book' => url('node/add/book'), '%admin-node-book' => url('admin/node/book'), '%admin-settings-content-types-book-page' => url('admin/settings/content-types/book'), '%admin-block' => url('admin/block'), '%admin-access' => url('admin/access')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%book">Book page</a>.', array('%book' => 'http://www.drupal.org/handbook/modules/book/')) .'</p>';
       return $output;
     case 'admin/modules#description':
