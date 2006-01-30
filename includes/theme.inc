@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.280 2006/01/29 07:36:29 dries Exp $
+// $Id: theme.inc,v 1.281 2006/01/30 21:32:09 dries Exp $
 
 /**
  * @file
@@ -308,19 +308,19 @@ function theme_get_setting($setting_name, $refresh = FALSE) {
     }
 
     if ($settings['toggle_favicon']) {
+      $settings['favicon'] = $base_path;
       if ($settings['default_favicon']) {
         if (file_exists($favicon = dirname($theme_object->filename) .'/favicon.ico')) {
-          $settings['favicon'] = $favicon;
+          $settings['favicon'] .= $favicon;
         }
         else {
-          $settings['favicon'] = 'misc/favicon.ico';
+          $settings['favicon'] .= 'misc/favicon.ico';
         }
       }
       elseif ($settings['favicon_path']) {
-        $settings['favicon'] = $settings['favicon_path'];
+        $settings['favicon'] .= $settings['favicon_path'];
       }
     }
-
   }
 
   return isset($settings[$setting_name]) ? $settings[$setting_name] : NULL;
@@ -427,9 +427,10 @@ function theme_page($content) {
 }
 
 function theme_maintenance_page($content) {
+  global $base_path;
   drupal_set_header('Content-Type: text/html; charset=utf-8');
   theme('add_style', 'misc/maintenance.css');
-  drupal_set_html_head('<link rel="shortcut icon" href="misc/favicon.ico" type="image/x-icon" />');
+  drupal_set_html_head('<link rel="shortcut icon" href="'. $base_path .'misc/favicon.ico" type="image/x-icon" />');
   $output = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
   $output .= '<html xmlns="http://www.w3.org/1999/xhtml">';
   $output .= '<head>';
@@ -633,7 +634,6 @@ function theme_form_element($title, $value, $description = NULL, $id = NULL, $re
 
   return $output;
 }
-
 
 /**
  * Return a themed submenu, typically displayed under the tabs.

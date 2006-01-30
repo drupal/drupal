@@ -1,5 +1,5 @@
 <?php
-// $Id: chameleon.theme,v 1.38 2006/01/20 08:54:06 dries Exp $
+// $Id: chameleon.theme,v 1.39 2006/01/30 21:32:09 dries Exp $
 
 /**
  * @file
@@ -22,6 +22,7 @@ function chameleon_regions() {
 }
 
 function chameleon_page($content) {
+  global $base_path;
   $language = $GLOBALS['locale'];
 
   if (theme_get_setting('toggle_favicon')) {
@@ -35,14 +36,14 @@ function chameleon_page($content) {
   $output .= "<head>\n";
   $output .= " <title>". ($title ? strip_tags($title) ." | ". variable_get("site_name", "drupal") : variable_get("site_name", "drupal") ." | ". variable_get("site_slogan", "")) ."</title>\n";
   $output .= drupal_get_html_head();
-  $output .= " <link rel=\"stylesheet\" type=\"text/css\" href=\"themes/chameleon/common.css\" />\n";
+  theme('add_style', 'themes/chameleon/common.css');
   $output .= theme_get_styles();
   $output .= "</head>";
   $output .= "<body>\n";
   $output .= " <div id=\"header\">";
 
   if ($logo = theme_get_setting('logo')) {
-    $output .= "  <a href=\"./\" title=\"Home\"><img src=\"$logo\" alt=\"Home\" /></a>";
+    $output .= "  <a href=\"$base_path\" title=\"Home\"><img src=\"$logo\" alt=\"Home\" /></a>";
   }
   if (theme_get_setting('toggle_name')) {
     $output .= "  <h1 class=\"site-name title\">". l(variable_get('site_name', 'drupal'), ""). "</h1>";
