@@ -771,12 +771,12 @@ function system_update_146() {
     $ret[] = update_sql("UPDATE {files} SET vid = nid");
 
     $ret[] = update_sql("ALTER TABLE {book} ADD PRIMARY KEY (vid)");
-    $ret[] = update_sql("ALTER TABLE {forum} ADD PRIMARY KEY (nid)"); // We, The Postgres, will do it database.* way, not update() way.
+    $ret[] = update_sql("ALTER TABLE {forum} ADD PRIMARY KEY (vid)");
 
     $ret[] = update_sql("CREATE TABLE {old_revisions} AS SELECT nid, type, revisions FROM {node} WHERE revisions != ''");
 
     $ret[] = update_sql('CREATE INDEX {node}_vid_idx ON {node}(vid)');
-    $ret[] = update_sql('CREATE INDEX {forum}_vid_idx ON {forum}(vid)');
+    $ret[] = update_sql('CREATE INDEX {forum}_nid_idx ON {forum}(nid)');
     $ret[] = update_sql('CREATE INDEX {files}_fid_idx ON {files}(fid)');
     $ret[] = update_sql('CREATE INDEX {files}_vid_idx ON {files}(vid)');
   }

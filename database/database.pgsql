@@ -321,7 +321,7 @@ CREATE TABLE forum (
   PRIMARY KEY (vid)
 );
 CREATE INDEX forum_tid_idx ON forum(tid);
-CREATE INDEX forum_vid_idx ON forum(nid);
+CREATE INDEX forum_nid_idx ON forum(nid);
 
 --
 -- Table structure for history
