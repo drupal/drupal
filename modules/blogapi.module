@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.73 2006/01/12 10:02:45 dries Exp $
+// $Id: blogapi.module,v 1.74 2006/01/30 18:30:44 dries Exp $
 
 /**
  * @file
@@ -564,7 +564,7 @@ function blogapi_settings() {
   $defaults = isset($node_types['blog']) ? array('blog' => 1) : array();
   $form['blogapi_node_types'] = array(
     '#type' => 'checkboxes', '#title' => t('Blog types'), '#required' => TRUE,
-    '#default_value' => array_keys(variable_get('blogapi_node_types', $defaults), 1), '#options' => $node_types,
+    '#default_value' => variable_get('blogapi_node_types', $defaults), '#options' => $node_types,
     '#description' => t('Select the content types for which you wish to enable posting via blogapi. Each type will appear as a different "blog" in the client application (if supported).')
   );
 
