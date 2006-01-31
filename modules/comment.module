@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.424 2006/01/26 08:48:57 dries Exp $
+// $Id: comment.module,v 1.425 2006/01/31 15:26:39 dries Exp $
 
 /**
  * @file
@@ -496,7 +496,6 @@ function comment_reply($nid, $pid = NULL) {
       }
       else if (user_access('access content')) {
         $output .= node_view($node);
-        $pid = 0;
       }
 
       // should we show the reply box?
@@ -1350,7 +1349,7 @@ function comment_form($edit, $title = NULL) {
   // Only show post button if preview is optional or if we are in preview mode.
   // We show the post button in preview mode even if there are form errors so that
   // optional form elements (e.g., captcha) can be updated in preview mode.
-  if ((variable_get('comment_preview', COMMENT_PREVIEW_REQUIRED) == COMMENT_PREVIEW_OPTIONAL) || ($op == t('Preview comment')) || ($op == t('Post comment'))) {
+  if (!form_get_errors() && ((variable_get('comment_preview', COMMENT_PREVIEW_REQUIRED) == COMMENT_PREVIEW_OPTIONAL) || ($op == t('Preview comment')) || ($op == t('Post comment')))) {
     $form['submit'] = array('#type' => 'submit', '#value' => t('Post comment'), '#weight' => 20);
   }
 
