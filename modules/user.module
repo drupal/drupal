@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.576 2006/02/01 14:08:26 dries Exp $
+// $Id: user.module,v 1.577 2006/02/01 15:43:11 dries Exp $
 
 /**
  * @file
@@ -67,6 +67,7 @@ function user_load($array = array()) {
     $user = db_fetch_object($result);
     $user = drupal_unpack($user);
 
+    $user->roles = array();
     if ($user->uid) {
       $user->roles[DRUPAL_AUTHENTICATED_RID] = 'authenticated user';
     }
