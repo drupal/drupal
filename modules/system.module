@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.284 2006/01/29 07:28:52 dries Exp $
+// $Id: system.module,v 1.285 2006/02/01 14:14:04 dries Exp $
 
 /**
  * @file
@@ -131,9 +131,11 @@ function system_menu($may_cache) {
       'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -1);
 
     foreach (list_themes() as $theme) {
-       $items[] = array('path' => 'admin/themes/settings/'. $theme->name, 'title' => $theme->name,
-       'callback' => 'system_theme_settings', 'callback arguments' => array($theme->name), 'access' => $access,
-       'type' => MENU_LOCAL_TASK);
+      if ($theme->status) {
+        $items[] = array('path' => 'admin/themes/settings/'. $theme->name, 'title' => $theme->name,
+        'callback' => 'system_theme_settings', 'callback arguments' => array($theme->name), 'access' => $access,
+        'type' => MENU_LOCAL_TASK);
+      }
     }
 
     // Modules:
