@@ -9,19 +9,19 @@
 
 <body bgcolor="#ffffff">
 
-<div class="hide"><a href="#content" title="Skip navigation." accesskey="2">Skip navigation</a>.</div>
+<div class="hide"><a href="#content" title="<?php print t('Skip navigation') ?>." accesskey="2"><?php print t('Skip navigation') ?></a>.</div>
 
 <table id="primary-menu" summary="Navigation elements." border="0" cellpadding="0" cellspacing="0" width="100%">
   <tr>
     <td id="home" width="10%">
       <?php if ($logo) : ?>
-        <a href="<?php print $base_path ?>" title="Home"><img src="<?php print($logo) ?>" alt="Home" width="144" height="63" border="0" /></a>
+        <a href="<?php print $base_path ?>" title="<?php print t('Home') ?>"><img src="<?php print($logo) ?>" alt="<?php print t('Home') ?>" border="0" /></a>
       <?php endif; ?>
     </td>
 
     <td id="site-info" width="20%">
       <?php if ($site_name) : ?>
-        <div class='site-name'><a href="<?php print $base_path ?>" title="Home"><?php print($site_name) ?></a></div>
+        <div class='site-name'><a href="<?php print $base_path ?>" title="<?php print t('Home') ?>"><?php print($site_name) ?></a></div>
       <?php endif;?>
       <?php if ($site_slogan) : ?>
         <div class='site-slogan'><?php print($site_slogan) ?></div>
