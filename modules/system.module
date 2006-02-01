@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.285 2006/02/01 14:14:04 dries Exp $
+// $Id: system.module,v 1.286 2006/02/01 15:34:55 dries Exp $
 
 /**
  * @file
@@ -786,9 +786,7 @@ function system_settings_form_submit($form_id, $values) {
   else {
     drupal_set_message(t('The configuration options have been saved.'));
   }
-  if ($form_id == 'system_settings_form') {
-    menu_rebuild();
-  }
+  menu_rebuild();
   drupal_goto($_GET['q']);
 }
 
