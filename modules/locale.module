@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.131 2006/01/17 17:35:47 dries Exp $
+// $Id: locale.module,v 1.132 2006/02/01 14:28:48 dries Exp $
 
 /**
  * @file
@@ -196,6 +196,7 @@ function locale_refresh_cache() {
 
   foreach (array_keys($languages['name']) as $locale) {
     $result = db_query("SELECT s.source, t.translation, t.locale FROM {locales_source} s INNER JOIN {locales_target} t ON s.lid = t.lid WHERE t.locale = '%s' AND LENGTH(s.source) < 75", $locale);
+    $t = array();
     while ($data = db_fetch_object($result)) {
       $t[$data->source] = (empty($data->translation) ? TRUE : $data->translation);
     }
