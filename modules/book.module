@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.346 2006/01/29 07:50:45 dries Exp $
+// $Id: book.module,v 1.347 2006/02/01 14:40:20 dries Exp $
 
 /**
  * @file
@@ -415,12 +415,8 @@ function book_next($node) {
  * page in the context of the moderation queue.
  */
 function book_content($node, $teaser = FALSE) {
-  $op = $_POST['op'];
-
-  // Extract the page body.
-  $node = node_prepare($node, $teaser);
-
-  return $node;
+  // Return the page body.
+  return node_prepare($node, $teaser);
 }
 
 /**
@@ -430,7 +426,7 @@ function book_content($node, $teaser = FALSE) {
  * book with extra links to the previous and next pages.
  */
 function book_view(&$node, $teaser = FALSE, $page = FALSE) {
-  $node = book_content($node, $teaser);
+  $node = node_prepare($node, $teaser);
 }
 
 /**
