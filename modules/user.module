@@ -67,6 +67,7 @@ function user_load($array = array()) {
     $user = db_fetch_object($result);
     $user = drupal_unpack($user);
 
+    $user->roles = array();
     if ($user->uid) {
       $user->roles[DRUPAL_AUTHENTICATED_RID] = 'authenticated user';
     }
