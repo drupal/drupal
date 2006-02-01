@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.215 2006/01/23 07:54:08 dries Exp $
+// $Id: statistics.module,v 1.216 2006/02/01 15:50:01 dries Exp $
 
 /**
  * @file
@@ -149,8 +149,8 @@ function statistics_access_log($aid) {
   $result = db_query('SELECT a.*, u.name FROM {accesslog} a LEFT JOIN {users} u ON a.uid = u.uid WHERE aid = %d', $aid);
   if ($access = db_fetch_object($result)) {
     $output  = '<table border="1" cellpadding="2" cellspacing="2">';
-    $output .= ' <tr><th>'. t('Page URL') ."</th><td>". l(url($access->path, NULL, NULL, TRUE), $access->url) ."</td></tr>";
-    $output .= ' <tr><th>'. t('Page title') .'</th><td>'. check_plain($access->title) .'</td></tr>';
+    $output .= ' <tr><th>'. t('URL') ."</th><td>". l(url($access->path, NULL, NULL, TRUE), $access->path) ."</td></tr>";
+    $output .= ' <tr><th>'. t('Title') .'</th><td>'. check_plain($access->title) .'</td></tr>';
     $output .= ' <tr><th>'. t('Referrer') ."</th><td>". ($access->url ? l($access->url, $access->url) : '') ."</td></tr>";
     $output .= ' <tr><th>'. t('Date') .'</th><td>'. format_date($access->timestamp, 'large') .'</td></tr>';
     $output .= ' <tr><th>'. t('User') .'</th><td>'. theme('username', $access) .'</td></tr>';
