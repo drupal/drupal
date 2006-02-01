@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.159 2006/01/22 07:43:19 dries Exp $
+// $Id: search.module,v 1.160 2006/02/01 14:42:02 dries Exp $
 
 /**
  * @file
@@ -235,7 +235,7 @@ function search_settings() {
  */
 function search_wipe_confirm() {
   return confirm_form('search_wipe_confirm', $form, t('Are you sure you want to re-index the site?'),
-                  'admin/forums', t(' The search index is not cleared but systematically updated to reflect the new settings. Searching will continue to work but new content won\'t be indexed until all existing content has been re-indexed. This action cannot be undone.'), t('Re-index site'), t('Cancel'));
+                  'admin/settings/search', t(' The search index is not cleared but systematically updated to reflect the new settings. Searching will continue to work but new content won\'t be indexed until all existing content has been re-indexed. This action cannot be undone.'), t('Re-index site'), t('Cancel'));
 }
 
 /**
