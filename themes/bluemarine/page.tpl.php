@@ -13,8 +13,8 @@
 <table border="0" cellpadding="0" cellspacing="0" id="header">
   <tr>
     <td id="logo">
-      <?php if ($logo) { ?><a href="<?php print $base_path ?>" title="Home"><img src="<?php print $logo ?>" alt="Home" /></a><?php } ?>
-      <?php if ($site_name) { ?><h1 class='site-name'><a href="<?php print $base_path ?>" title="Home"><?php print $site_name ?></a></h1><?php } ?>
+      <?php if ($logo) { ?><a href="<?php print $base_path ?>" title="<?php print t('Home') ?>"><img src="<?php print $logo ?>" alt="<?php print t('Home') ?>" /></a><?php } ?>
+      <?php if ($site_name) { ?><h1 class='site-name'><a href="<?php print $base_path ?>" title="<?php print t('Home') ?>"><?php print $site_name ?></a></h1><?php } ?>
       <?php if ($site_slogan) { ?><div class='site-slogan'><?php print $site_slogan ?></div><?php } ?>
     </td>
     <td id="menu">
