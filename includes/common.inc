@@ -206,7 +206,7 @@ function drupal_not_found() {
 
   $path = drupal_get_normal_path(variable_get('site_404', ''));
   $status = MENU_NOT_FOUND;
-  if ($path) {
+  if ($path  && $path != $_GET['q']) {
     menu_set_active_item($path);
     $status = menu_execute_active_handler();
   }
@@ -226,7 +226,7 @@ function drupal_access_denied() {
 
   $path = drupal_get_normal_path(variable_get('site_403', ''));
   $status = MENU_NOT_FOUND;
-  if ($path) {
+  if ($path  && $path != $_GET['q']) {
     menu_set_active_item($path);
     $status = menu_execute_active_handler();
   }
