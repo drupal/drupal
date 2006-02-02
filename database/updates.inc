@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.192 2006/01/30 10:48:37 dries Exp $
+// $Id: updates.inc,v 1.193 2006/02/02 01:27:57 unconed Exp $
 
 function system_update_110() {
   $ret = array();
@@ -1491,10 +1491,11 @@ function _system_update_utf8($tables) {
     }
 
     // See if database uses UTF-8 already
-    $url = parse_url($GLOBALS['db_url']);
+    global $db_url;
+    $url = parse_url(is_array($db_url) ? $db_url['default'] : $db_url);
     $db_name = substr($url['path'], 1);
-    list(, $create) = db_fetch_array(db_query('SHOW CREATE DATABASE `%s`', $db_name));
-    if (preg_match('/utf8/i', $create)) {
+    $result = db_fetch_array(db_query('SHOW CREATE DATABASE `%s`', $db_name));
+    if (preg_match('/utf8/i', array_pop($result))) {
       return array();
     }
 

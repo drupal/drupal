@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysql.inc,v 1.49 2006/01/24 08:29:33 dries Exp $
+// $Id: database.mysql.inc,v 1.50 2006/02/02 01:27:57 unconed Exp $
 
 /**
  * @file
@@ -83,12 +83,6 @@ function db_connect($url) {
   /* On MySQL 4.1 and later, force UTF-8 */
   if (version_compare(mysql_get_server_info(), '4.1.0', '>=')) {
     mysql_query('SET NAMES "utf8"', $connection);
-    mysql_query('SET collation_connection="utf8_general_ci"', $connection);
-    mysql_query('SET collation_server="utf8_general_ci"', $connection);
-    mysql_query('SET character_set_client="utf8"', $connection);
-    mysql_query('SET character_set_connection="utf8"', $connection);
-    mysql_query('SET character_set_results="utf8"', $connection);
-    mysql_query('SET character_set_server="utf8"', $connection);
   }
   return $connection;
 }
