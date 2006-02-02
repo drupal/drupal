@@ -1,5 +1,5 @@
 <?php
-// $Id: throttle.module,v 1.57 2006/01/17 18:32:33 dries Exp $
+// $Id: throttle.module,v 1.58 2006/02/02 18:38:50 dries Exp $
 
 /**
  * @file
@@ -105,7 +105,7 @@ function throttle_help($section) {
   switch ($section) {
     case 'admin/help#throttle':
       $output = '<p>'. t('The throttle module provides a congestion control throttling mechanism for automatically detecting a surge in incoming traffic. If the site gets linked to by a popular website, or otherwise comes under a "Denial of Service" (DoS) attack, your webserver might become overwhelmed. This mechanism is utilized by other modules to automatically optimize their performance by temporarily disabling CPU-intensive functionality.  For example, in the site theme, you might choose to disable pictures when the site is too busy (reducing bandwidth), or in modules, you might choose to disable some complicated logic (reducing CPU utilization).') .'</p>';
-      $output .= '<p>'. t('The congestion control throttle can be automatically enabled when the number of anonymous users currently visiting the site exceeds the specified threshold.  The congestion control throttle can be automatically enabled when the number of authenticated users currently visiting the site exceeds the specified threshold. ') .'</p>';
+      $output .= '<p>'. t('The congestion control throttle can be automatically enabled when the number of anonymous or authenticated users currently visiting the site exceeds the specified threshold. ') .'</p>';
       $output .= t('<p>You can</p>
 <ul>
 <li>enable throttle for modules at <a href="%admin-modules">administer &gt;&gt; module</a>.</li>
