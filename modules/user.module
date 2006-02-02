@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.577 2006/02/01 15:43:11 dries Exp $
+// $Id: user.module,v 1.578 2006/02/02 01:51:54 unconed Exp $
 
 /**
  * @file
@@ -528,13 +528,14 @@ function user_block($op = 'list', $delta = 0, $edit = array()) {
           $form['name'] = array('#type' => 'textfield', '#title' => t('Username'), '#maxlength' => 64, '#size' => 15);
           $form['pass'] = array('#type' => 'password', '#title' => t('Password'), '#maxlength' => 64, '#size' => 15);
           $form['submit'] = array('#type' => 'submit', '#value' => t('Log in'));
-          $output .= drupal_get_form('user_login_block', $form, 'user_login');
+
           if (variable_get('user_register', 1)) {
             $items[] = l(t('Create new account'), 'user/register', array('title' => t('Create a new user account.')));
           }
           $items[] = l(t('Request new password'), 'user/password', array('title' => t('Request new password via e-mail.')));
+          $form['links'] = array('#value' => theme('item_list', $items));
 
-          $output .= theme('item_list', $items);
+          $output .= drupal_get_form('user_login_block', $form, 'user_login');
 
           $block['subject'] = t('User login');
           $block['content'] = $output;
