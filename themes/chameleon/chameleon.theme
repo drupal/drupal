@@ -1,5 +1,5 @@
 <?php
-// $Id: chameleon.theme,v 1.40 2006/02/01 16:04:03 dries Exp $
+// $Id: chameleon.theme,v 1.41 2006/02/02 12:44:57 dries Exp $
 
 /**
  * @file
@@ -22,7 +22,6 @@ function chameleon_regions() {
 }
 
 function chameleon_page($content) {
-  global $base_path;
   $language = $GLOBALS['locale'];
 
   if (theme_get_setting('toggle_favicon')) {
@@ -43,7 +42,7 @@ function chameleon_page($content) {
   $output .= " <div id=\"header\">";
 
   if ($logo = theme_get_setting('logo')) {
-    $output .= "  <a href=\"$base_path\" title=\"". t('Home') ."\"><img src=\"$logo\" alt=\"". t('Home') ."\" /></a>";
+    $output .= "  <a href=\"". base_path() ."\" title=\"". t('Home') ."\"><img src=\"$logo\" alt=\"". t('Home') ."\" /></a>";
   }
   if (theme_get_setting('toggle_name')) {
     $output .= "  <h1 class=\"site-name title\">". l(variable_get('site_name', 'drupal'), ""). "</h1>";

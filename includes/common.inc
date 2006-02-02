@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.512 2006/01/29 07:36:29 dries Exp $
+// $Id: common.inc,v 1.513 2006/02/02 12:44:57 dries Exp $
 
 /**
  * @file
@@ -114,11 +114,8 @@ function drupal_set_html_head($data = NULL) {
  * Retrieve output to be displayed in the head tag of the HTML page.
  */
 function drupal_get_html_head() {
-  global $base_path;
-
   $output = "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n";
-  $output .= theme('stylesheet_import', $base_path .'misc/drupal.css');
-
+  $output .= theme('stylesheet_import', base_path() .'misc/drupal.css');
   return $output . drupal_set_html_head();
 }
 
@@ -236,7 +233,6 @@ function drupal_goto($path = '', $query = NULL, $fragment = NULL) {
   // of the code below the drupal_goto() call gets executed when we redirect.
   exit();
 }
-
 
 /**
  * Generates a site off-line message
@@ -918,7 +914,7 @@ function url($path = NULL, $query = NULL, $fragment = NULL, $absolute = FALSE) {
     return $path . $fragment;
   }
 
-  global $base_url, $base_path;
+  global $base_url;
   static $script;
   static $clean_url;
 
@@ -934,7 +930,7 @@ function url($path = NULL, $query = NULL, $fragment = NULL, $absolute = FALSE) {
     $clean_url = (bool)variable_get('clean_url', '0');
   }
 
-  $base = ($absolute ? $base_url . '/' : $base_path);
+  $base = ($absolute ? $base_url . '/' : base_path());
 
   // The special path '<front>' links to the default front page.
   if (isset($path) && $path != '<front>') {
@@ -1111,6 +1107,14 @@ function drupal_get_path($type, $name) {
 }
 
 /**
+ * Returns the base URL path of the Drupal installation.
+ * At the very least, this will always default to /.
+ */
+function base_path() {
+  return $GLOBALS['base_path'];
+}
+
+/**
  * Provide a substitute clone() function for PHP4.
  */
 function drupal_clone($object) {
@@ -1124,7 +1128,6 @@ function drupal_add_link($attributes) {
   drupal_set_html_head('<link'. drupal_attributes($attributes) ." />\n");
 }
 
-
 /**
  * Add a JavaScript file to the output.
  *
@@ -1133,15 +1136,14 @@ function drupal_add_link($attributes) {
  * depends on the 'killswitch' inside it.
  */
 function drupal_add_js($file) {
-  global $base_path;
   static $sent = array();
 
   if (!isset($sent['misc/drupal.js'])) {
-    drupal_set_html_head('<script type="text/javascript" src="'. $base_path .'misc/drupal.js"></script>');
+    drupal_set_html_head('<script type="text/javascript" src="'. base_path() .'misc/drupal.js"></script>');
     $sent['misc/drupal.js'] = true;
   }
   if (!isset($sent[$file])) {
-    drupal_set_html_head('<script type="text/javascript" src="'. check_url($base_path . $file) .'"></script>');
+    drupal_set_html_head('<script type="text/javascript" src="'. check_url(base_path() . $file) .'"></script>');
     $sent[$file] = true;
   }
 }

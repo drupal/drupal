@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.281 2006/01/30 21:32:09 dries Exp $
+// $Id: theme.inc,v 1.282 2006/02/02 12:44:57 dries Exp $
 
 /**
  * @file
@@ -280,7 +280,7 @@ function theme_get_settings($key = NULL) {
  *   The value of the requested setting, NULL if the setting does not exist.
  */
 function theme_get_setting($setting_name, $refresh = FALSE) {
-  global $theme_key, $base_path;
+  global $theme_key;
   static $settings;
 
   if (empty($settings) || $refresh) {
@@ -298,7 +298,7 @@ function theme_get_setting($setting_name, $refresh = FALSE) {
     }
 
     if ($settings['toggle_logo']) {
-      $settings['logo'] = $base_path;
+      $settings['logo'] = base_path();
       if ($settings['default_logo']) {
         $settings['logo'] .= dirname($theme_object->filename) .'/logo.png';
       }
@@ -308,7 +308,7 @@ function theme_get_setting($setting_name, $refresh = FALSE) {
     }
 
     if ($settings['toggle_favicon']) {
-      $settings['favicon'] = $base_path;
+      $settings['favicon'] = base_path();
       if ($settings['default_favicon']) {
         if (file_exists($favicon = dirname($theme_object->filename) .'/favicon.ico')) {
           $settings['favicon'] .= $favicon;
@@ -331,12 +331,11 @@ function theme_get_setting($setting_name, $refresh = FALSE) {
  * drupal_set_html_head() to enforce the correct CSS cascading order.
  */
 function theme_add_style($path = '', $media = 'all') {
-  global $base_path;
   static $styles = array();
 
   if ($path && !isset($styles["$media:$path"])) {
     $style = new stdClass();
-    $style->path = $base_path. $path;
+    $style->path = base_path() . $path;
     $style->media = $media;
     $styles["$media:$path"] = $style;
   }
@@ -427,10 +426,9 @@ function theme_page($content) {
 }
 
 function theme_maintenance_page($content) {
-  global $base_path;
   drupal_set_header('Content-Type: text/html; charset=utf-8');
   theme('add_style', 'misc/maintenance.css');
-  drupal_set_html_head('<link rel="shortcut icon" href="'. $base_path .'misc/favicon.ico" type="image/x-icon" />');
+  drupal_set_html_head('<link rel="shortcut icon" href="'. base_path() .'misc/favicon.ico" type="image/x-icon" />');
   $output = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
   $output .= '<html xmlns="http://www.w3.org/1999/xhtml">';
   $output .= '<head>';
@@ -515,10 +513,9 @@ function theme_links($links, $delimiter = ' | ') {
  *   A string containing the image tag.
  */
 function theme_image($path, $alt = '', $title = '', $attributes = NULL, $getsize = TRUE) {
-  global $base_path;
   if (!$getsize || (is_file($path) && (list($width, $height, $type, $image_attributes) = @getimagesize($path)))) {
     $attributes = drupal_attributes($attributes);
-    return '<img src="'. check_url($base_path. $path) .'" alt="'. check_plain($alt) .'" title="'. check_plain($title) .'" '. $image_attributes . $attributes .' />';
+    return '<img src="'. check_url(base_path() . $path) .'" alt="'. check_plain($alt) .'" title="'. check_plain($title) .'" '. $image_attributes . $attributes .' />';
   }
 }
 
