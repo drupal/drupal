@@ -140,9 +140,8 @@ function phptemplate_features() {
  * into a pluggable template engine.
  */
 function phptemplate_page($content) {
-  global $base_path;
-  /* Set title and breadcrumb to declared values */
 
+  /* Set title and breadcrumb to declared values */
   if ($_GET['q'] == variable_get('site_frontpage', 'node')) {
     $mission = theme_get_setting('mission');
     $frontpage = true;
@@ -186,7 +185,7 @@ function phptemplate_page($content) {
   }
 
   $variables = array(
-    'base_path'           => $base_path,
+    'base_path'           => base_path(),
     'breadcrumb'          => theme('breadcrumb', drupal_get_breadcrumb()),
     'closure'             => theme('closure'),
     'content'             => '<!-- begin content -->' . $content . '<!-- end content -->',
