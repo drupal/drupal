@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.61 2006/01/27 15:57:43 dries Exp $
+// $Id: form.inc,v 1.62 2006/02/02 01:35:32 unconed Exp $
 
 /**
  * @defgroup form Form generation
@@ -153,8 +153,8 @@ function _form_validate($elements, $form_id = NULL) {
       form_error($elements, t('%name field is required.', array('%name' => $elements['#title'])));
     }
 
-    // Add legal choice check if element has #options.
-    if (isset($elements['#options']) && isset($elements['#value'])) {
+    // Add legal choice check if element has #options. Can be skipped, but then you must validate your own element.
+    if (isset($elements['#options']) && isset($elements['#value']) && !isset($elements['#DANGEROUS_SKIP_CHECK'])) {
       $message = t('Illegal choice in %title.', array('%title' => theme('placeholder', $elements['#title'])));
       if ($elements['#type'] == 'select') {
         $options = form_options_flatten($elements['#options']);
