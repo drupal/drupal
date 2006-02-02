@@ -153,8 +153,8 @@ function _form_validate($elements, $form_id = NULL) {
       form_error($elements, t('%name field is required.', array('%name' => $elements['#title'])));
     }
 
-    // Add legal choice check if element has #options.
-    if (isset($elements['#options']) && isset($elements['#value'])) {
+    // Add legal choice check if element has #options. Can be skipped, but then you must validate your own element.
+    if (isset($elements['#options']) && isset($elements['#value']) && !isset($elements['#DANGEROUS_SKIP_CHECK'])) {
       $message = t('Illegal choice in %title.', array('%title' => theme('placeholder', $elements['#title'])));
       if ($elements['#type'] == 'select') {
         $options = form_options_flatten($elements['#options']);
