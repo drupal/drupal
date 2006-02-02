@@ -1491,10 +1491,11 @@ function _system_update_utf8($tables) {
     }
 
     // See if database uses UTF-8 already
-    $url = parse_url($GLOBALS['db_url']);
+    global $db_url;
+    $url = parse_url(is_array($db_url) ? $db_url['default'] : $db_url);
     $db_name = substr($url['path'], 1);
-    list(, $create) = db_fetch_array(db_query('SHOW CREATE DATABASE `%s`', $db_name));
-    if (preg_match('/utf8/i', $create)) {
+    $result = db_fetch_array(db_query('SHOW CREATE DATABASE `%s`', $db_name));
+    if (preg_match('/utf8/i', array_pop($result))) {
       return array();
     }
 
