@@ -71,6 +71,9 @@ function drupal_get_form($form_id, &$form, $callback = NULL) {
     $form['form_token'] = array('#type' => 'hidden', '#default_value' => md5(session_id() . $form['#token'] . variable_get('drupal_private_key', '')));
   }
   $form['form_id'] = array('#type' => 'hidden', '#value' => $form_id);
+  if (!isset($form['#id'])) {
+    $form['#id'] = $form_id;
+  }
 
   $form = array_merge(_element_info('form'), $form);
 
@@ -847,7 +850,7 @@ function theme_textfield($element) {
 function theme_form($element) {
   // Anonymous div to satisfy XHTML compliancy.
   $action = $element['#action'] ? 'action="' . check_url($element['#action']) . '" ' : '';
-  return '<form '. $action . ' method="'. $element['#method'] .'" '. drupal_attributes($element['#attributes']) .">\n<div>". $element['#children'] ."\n</div></form>\n";
+  return '<form '. $action . ' method="'. $element['#method'] .'" '. 'id="'. $element['#id'] .'"'.  drupal_attributes($element['#attributes']) .">\n<div>". $element['#children'] ."\n</div></form>\n";
 }
 
 /**
