@@ -559,7 +559,7 @@ function theme_radio($element) {
   if (!is_null($element['#title'])) {
     $output = '<label class="option">'. $output .' '. $element['#title'] .'</label>';
   }
-  return theme('form_element', NULL, $output, $element['#description'], $element['#name'], $element['#required'], form_get_error($element));
+  return theme('form_element', NULL, $output, $element['#description'], $element['#id'], $element['#required'], form_get_error($element));
 }
 
 /**
@@ -758,7 +758,7 @@ function theme_checkbox($element) {
     $checkbox = '<label class="option">'. $checkbox .' '. $element['#title'] .'</label>';
   }
 
-  return theme('form_element', NULL, $checkbox, $element['#description'], $element['#name'], $element['#required'], form_get_error($element));
+  return theme('form_element', NULL, $checkbox, $element['#description'], $element['#id'], $element['#required'], form_get_error($element));
 }
 
 /**
@@ -771,7 +771,7 @@ function theme_checkbox($element) {
  */
 function theme_checkboxes($element) {
   if ($element['#title'] || $element['#description']) {
-    return theme('form_element', $element['#title'], $element['#children'], $element['#description'], 'edit-'. $element['#name'], $element['#required'], form_get_error($element));
+    return theme('form_element', $element['#title'], $element['#children'], $element['#description'], $element['#id'], $element['#required'], form_get_error($element));
   }
   else {
     return $element['#children'];
