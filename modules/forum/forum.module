@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.306 2006/02/01 14:19:44 dries Exp $
+// $Id: forum.module,v 1.307 2006/02/04 09:56:04 dries Exp $
 
 /**
  * @file
@@ -371,7 +371,7 @@ function forum_block($op = 'list', $delta = 0, $edit = array()) {
         switch ($delta) {
           case 0:
             $title = t('Active forum topics');
-            $sql = db_rewrite_sql("SELECT n.nid, n.title, l.last_comment_timestamp, l.comment_count FROM {node} n INNER JOIN {node_comment_statistics} l ON n.nid = l.nid WHERE n.status = 1 AND n.type = 'forum' ORDER BY l.last_comment_timestamp DESC");
+            $sql = db_rewrite_sql("SELECT n.nid, n.title, l.comment_count FROM {node} n INNER JOIN {node_comment_statistics} l ON n.nid = l.nid WHERE n.status = 1 AND n.type = 'forum' ORDER BY l.last_comment_timestamp DESC");
             $result = db_query_range($sql, 0, variable_get('forum_block_num_0', '5'));
             if (db_num_rows($result)) {
               $content = node_title_list($result);
