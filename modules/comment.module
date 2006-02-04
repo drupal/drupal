@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.426 2006/02/01 14:04:50 dries Exp $
+// $Id: comment.module,v 1.427 2006/02/04 09:54:16 dries Exp $
 
 /**
  * @file
@@ -952,7 +952,6 @@ function comment_operations($action = NULL) {
  * Menu callback; present an administrative comment listing.
  */
 function comment_admin_overview($type = 'new') {
-  global $form_values;
   $edit = $_POST['edit'];
 
   if ($edit['operation'] == 'delete') {
@@ -993,13 +992,7 @@ function comment_admin_overview($type = 'new') {
   }
   $form['comments'] = array('#type' => 'checkboxes', '#options' => $comments);
   $form['pager'] = array('#value' => theme('pager', NULL, 50, 0));
-
-  $form['#method'] = 'post';
-  $form['#action'] = url('admin/comment/action');
-
-  $output = drupal_get_form('comment_admin_overview', $form);
-
-  return $output;
+  return drupal_get_form('comment_admin_overview', $form);
 }
 
 /**
