@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.139 2006/01/27 18:57:13 dries Exp $ */
+/* $Id: drupal.css,v 1.140 2006/02/04 19:42:45 dries Exp $ */
 
 /*
 ** HTML elements
@@ -547,7 +547,7 @@ ul.secondary a.active {
 }
 /* Animated throbber */
 html.js input.form-autocomplete {
-  background: url('throbber.gif') no-repeat 100% 2px;
+  background: url(throbber.gif) no-repeat 100% 2px;
 }
 html.js input.throbbing {
   background-position: 100% -18px;
@@ -560,7 +560,7 @@ html.js input.throbbing {
   font-weight: bold;
 }
 .progress .bar {
-  background: #fff url('progress.gif');
+  background: #fff url(progress.gif);
   border: 1px solid #00375a;
   height: 1.5em;
   margin-top: 0.2em;
@@ -594,10 +594,10 @@ html.js fieldset.collapsed legend * {
 }
 html.js fieldset.collapsible legend a {
   padding-left: 15px;
-  background: url('menu-expanded.png') 5px 50% no-repeat;
+  background: url(menu-expanded.png) 5px 50% no-repeat;
 }
 html.js fieldset.collapsed legend a {
-  background-image: url('menu-collapsed.png');
+  background-image: url(menu-collapsed.png);
 }
 /* Note: IE-only fix due to '* html' (breaks Konqueror otherwise). */
 * html.js fieldset.collapsible legend a {
@@ -612,7 +612,7 @@ html.js fieldset.collapsed legend a {
 }
 .resizable-textarea .grippie {
   height: 14px;
-  background: #eee url('grippie.png') no-repeat 100% 100%;
+  background: #eee url(grippie.png) no-repeat 100% 100%;
   border: 1px solid #ddd;
   border-top-width: 0px;
   cursor: s-resize;
