@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.513 2006/02/02 12:44:57 dries Exp $
+// $Id: common.inc,v 1.514 2006/02/05 19:04:58 unconed Exp $
 
 /**
  * @file
@@ -1171,6 +1171,8 @@ function drupal_call_js($function) {
 
 /**
  * Converts a PHP variable into its Javascript equivalent.
+ *
+ * We use HTML-safe strings, i.e. with <, > and & escaped.
  */
 function drupal_to_js($var) {
   switch (gettype($var)) {
@@ -1180,8 +1182,18 @@ function drupal_to_js($var) {
       return $var;
     case 'resource':
     case 'string':
-      return '"'. str_replace(array("\r", "\n"), array('\r', '\n'), addslashes($var)) .'"';
+      return '"'. str_replace(array("\r", "\n", "<", ">", "&"),
+                              array('\r', '\n', '\x3c', '\x3e', '\x26'),
+                              addslashes($var)) .'"';
     case 'array':
+      if (array_keys($var) === range(0, sizeof($var) - 1)) {
+        $output = array();
+        foreach($var as $v) {
+          $output[] = drupal_to_js($v);
+        }
+        return '[ '. implode(', ', $output) .' ]';
+      }
+      // Fall through  
     case 'object':
       $output = array();
       foreach ($var as $k => $v) {

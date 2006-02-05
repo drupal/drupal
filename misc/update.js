@@ -13,7 +13,7 @@ if (isJsEnabled()) {
       }
 
       var progress = new progressBar('updateprogress', updateCallback, HTTPPost);
-      progress.setProgress(-1, 'Starting updates...');
+      progress.setProgress(-1, 'Starting updates');
       $('progress').appendChild(progress.element);
       progress.startMonitoring('update.php?op=do_update', 0);
     }

@@ -54,9 +54,22 @@ jsUpload.prototype.onsubmit = function () {
  */
 jsUpload.prototype.oncomplete = function (data) {
   // Remove progressbar
-  removeNode(this.progress);
+  removeNode(this.progress.element);
   this.progress = null;
   // Replace form and re-attach behaviour
   $(this.wrapper).innerHTML = data;
   uploadAutoAttach();
+}
+
+/**
+ * Handler for the form redirection error.
+ */
+jsUpload.prototype.onerror = function (error) {
+  alert('An error occurred:\n\n'+ error);
+  // Remove progressbar
+  removeNode(this.progress.element);
+  this.progress = null;
+  // Undo hide
+  $(this.hide).style.position = 'static';
+  $(this.hide).style.left = '0px';
 }

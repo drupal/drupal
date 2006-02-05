@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.173 2006/01/22 07:30:46 dries Exp $
+// $Id: update.php,v 1.174 2006/02/05 19:04:58 unconed Exp $
 
 /**
  * @file
@@ -396,7 +396,7 @@ function update_progress_page() {
  *
  * @return
  *   An array indicating the status after doing updates. The first element is
- *   the overall percent finished. The second element is a status message.
+ *   the overall percentage finished. The second element is a status message.
  */
 function update_do_updates() {
   while (($update = reset($_SESSION['update_remaining']))) {
@@ -412,12 +412,12 @@ function update_do_updates() {
   }
 
   if ($_SESSION['update_total']) {
-    $percent = floor(($_SESSION['update_total'] - count($_SESSION['update_remaining']) + $update_finished) / $_SESSION['update_total'] * 100);
+    $percentage = floor(($_SESSION['update_total'] - count($_SESSION['update_remaining']) + $update_finished) / $_SESSION['update_total'] * 100);
   }
   else {
-    $percent = 100;
+    $percentage = 100;
   }
-  return array($percent, isset($update['module']) ? 'Updating '. $update['module'] .' module' : 'Updating complete');
+  return array($percentage, isset($update['module']) ? 'Updating '. $update['module'] .' module' : 'Updating complete');
 }
 
 function update_do_update_page() {
@@ -437,26 +437,27 @@ function update_do_update_page() {
   }
   ini_set('display_errors', FALSE);
 
-  print implode('|', update_do_updates());
+  list($percentage, $message) = update_do_updates();
+  print drupal_to_js(array('status' => TRUE, 'percentage' => $percentage, 'message' => $message));
 }
 
 function update_progress_page_nojs() {
   $new_op = 'do_update_nojs';
   if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    list($percent, $message) = update_do_updates();
-    if ($percent == 100) {
+    list($percentage, $message) = update_do_updates();
+    if ($percentage == 100) {
       $new_op = 'finished';
     }
   }
   else {
     // This is the first page so return some output immediately.
-    $percent = 0;
+    $percentage = 0;
     $message = 'Starting updates';
   }
 
   drupal_set_html_head('<meta http-equiv="Refresh" content="0; URL=update.php?op='. $new_op .'">');
   drupal_set_title('Updating');
-  $output = theme('progress_bar', $percent, $message);
+  $output = theme('progress_bar', $percentage, $message);
   $output .= '<p>Updating your site will take a few seconds.</p>';
 
   return $output;

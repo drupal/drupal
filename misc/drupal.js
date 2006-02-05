@@ -1,4 +1,4 @@
-// $Id: drupal.js,v 1.18 2006/01/22 17:37:41 unconed Exp $
+// $Id: drupal.js,v 1.19 2006/02/05 19:04:58 unconed Exp $
 
 /**
  * Only enable Javascript functionality if all required features are supported.
@@ -113,24 +113,8 @@ function HTTPPost(uri, callbackFunction, callbackParameter, object) {
  * window.parent.iframeHandler() after submission.
  */
 function redirectFormButton(uri, button, handler) {
-  // Insert the iframe
-  // Note: some browsers require the literal name/id attributes on the tag,
-  // some want them set through JS. We do both.
-  var div = document.createElement('div');
-  div.innerHTML = '<iframe name="redirect-target" id="redirect-target" class="redirect"></iframe>';
-  var iframe = div.firstChild;
-  with (iframe) {
-    name = 'redirect-target';
-    setAttribute('name', 'redirect-target');
-    id = 'redirect-target';
-  }
-  with (iframe.style) {
-    position = 'absolute';
-    height = '1px';
-    width = '1px';
-    visibility = 'hidden';
-  }
-  document.body.appendChild(iframe);
+  // Make sure we have an iframe to target
+  createIframe();
 
   // Trap the button
   button.onmouseover = button.onfocus = function() {
@@ -147,11 +131,34 @@ function redirectFormButton(uri, button, handler) {
       handler.onsubmit();
 
       // Set iframe handler for later
-      window.iframeHandler = function (data) {
+      window.iframeHandler = function () {
+        var iframe = $('redirect-target');
         // Restore form submission
         button.form.action = action;
         button.form.target = target;
-        handler.oncomplete(data);
+
+        // Get response from iframe body
+        try {
+          response = (iframe.contentWindow || iframe.contentDocument || iframe).document.body.innerHTML;
+          if (window.opera) {
+            // Opera-hack: it returns innerHTML sanitized.
+            response = response.replace(/&quot;/g, '"');
+          }
+        }
+        catch (e) {
+          response = null;
+        }
+
+        // Recreate the iframe: re-using an old iframe can sometimes cause browser bugs.
+        createIframe();
+
+        response = parseJson(response);
+        // Check response code
+        if (response.status == 0) {
+          handler.onerror(response.data);
+          return;
+        }
+        handler.oncomplete(response.data);
       }
 
       return true;
@@ -297,6 +304,55 @@ function stopEvent(event) {
   else {
     event.returnValue = false;
     event.cancelBubble = true;
+  }
+}
+
+/**
+ * Parse a JSON response.
+ *
+ * The result is either the JSON object, or an object with 'status' 0 and 'data' an error message.
+ */
+function parseJson(data) {
+  if (data.substring(0,1) != '{') {
+    return { status: 0, data: data.length ? data : 'Unspecified error' };
+  }
+  return eval('(' + data + ');');
+}
+
+/**
+ * Create an invisible iframe for form submissions.
+ */
+function createIframe() {
+  // Delete any previous iframe
+  deleteIframe();
+  // Note: some browsers require the literal name/id attributes on the tag,
+  // some want them set through JS. We do both.
+  window.iframeHandler = function () {};
+  var div = document.createElement('div');
+  div.id = 'redirect-holder';
+  div.innerHTML = '<iframe name="redirect-target" id="redirect-target" class="redirect" onload="window.iframeHandler();"></iframe>';
+  var iframe = div.firstChild;
+  with (iframe) {
+    name = 'redirect-target';
+    setAttribute('name', 'redirect-target');
+    id = 'redirect-target';
+  }
+  with (iframe.style) {
+    position = 'absolute';
+    height = '1px';
+    width = '1px';
+    visibility = 'hidden';
+  }
+  document.body.appendChild(div);
+}
+
+/**
+ * Delete the invisible iframe for form submissions.
+ */
+function deleteIframe() {
+  var holder = $('redirect-holder');
+  if (typeof holder != 'undefined') {
+    removeNode(holder);
   }
 }
 
