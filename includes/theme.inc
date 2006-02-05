@@ -256,7 +256,7 @@ function theme_get_settings($key = NULL) {
   }
 
   // Only offer search box if search.module is enabled.
-  if (!module_exist('search')) {
+  if (!module_exist('search') || !user_access('search content')) {
     $settings['toggle_search'] = 0;
   }
 
