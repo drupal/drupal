@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.64 2006/02/04 09:50:28 dries Exp $
+// $Id: form.inc,v 1.65 2006/02/05 15:45:09 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -536,7 +536,7 @@ function theme_fieldset($element) {
     }
   }
 
-  return '<fieldset' . drupal_attributes($element['#attributes']) .'>' . ($element['#title'] ? '<legend>'. $element['#title'] .'</legend>' : '') . $element['#children'] . $element['#value'] . ($element['#description'] ? '<div class="description">'. $element['#description'] .'</div>' : '') . "</fieldset>\n";
+  return '<fieldset' . drupal_attributes($element['#attributes']) .'>' . ($element['#title'] ? '<legend>'. $element['#title'] .'</legend>' : '') . ($element['#description'] ? '<div class="description">'. $element['#description'] .'</div>' : '') . $element['#children'] . $element['#value'] . "</fieldset>\n";
 
 }
 
