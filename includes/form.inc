@@ -536,7 +536,7 @@ function theme_fieldset($element) {
     }
   }
 
-  return '<fieldset' . drupal_attributes($element['#attributes']) .'>' . ($element['#title'] ? '<legend>'. $element['#title'] .'</legend>' : '') . $element['#children'] . $element['#value'] . ($element['#description'] ? '<div class="description">'. $element['#description'] .'</div>' : '') . "</fieldset>\n";
+  return '<fieldset' . drupal_attributes($element['#attributes']) .'>' . ($element['#title'] ? '<legend>'. $element['#title'] .'</legend>' : '') . ($element['#description'] ? '<div class="description">'. $element['#description'] .'</div>' : '') . $element['#children'] . $element['#value'] . "</fieldset>\n";
 
 }
 
