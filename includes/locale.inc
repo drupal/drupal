@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.64 2006/01/15 07:14:14 unconed Exp $
+// $Id: locale.inc,v 1.65 2006/02/05 15:42:56 dries Exp $
 
 /**
  * @file
@@ -156,19 +156,184 @@ function _locale_import_po($file, $lang, $mode) {
     return FALSE;
   }
 
-  // Check if we can get the strings from the file
-  if (!($strings = _locale_import_read_po($file))) {
-    drupal_set_message(t('The translation file %filename appears to contain errors and could not be read.', array('%filename' => theme('placeholder', $file->filename))), 'error');
+  // Get strings from file (returns on failure after a partial import, or on success)
+  _locale_import_read_po($file, $lang);
+
+  // Get status information on import process
+  list($headerdone, $additions, $updates) = _locale_import_one_string('report');
+
+  if (!$headerdone) {
+    drupal_set_message(t('The translation file %filename appears to have a missing or malformed header.', array('%filename' => theme('placeholder', $file->filename))), 'error');
+  }
+
+  // rebuild locale cache
+  cache_clear_all("locale:$lang");
+
+  // rebuild the menu, strings may have changed
+  menu_rebuild();
+
+  drupal_set_message(t('The translation was successfully imported. There are %number newly created translated strings and %update strings were updated.', array('%number' => $additions, '%update' => $updates)));
+  watchdog('locale', t('Imported %file into %locale: %number new strings added and %update updated.', array('%file' => theme('placeholder', $file->filename), '%locale' => theme('placeholder', $lang), '%number' => $additions, '%update' => $updates)));
+  return TRUE;
+}
+
+/**
+ * Parses Gettext Portable Object file into an array
+ *
+ * @param $file Object with properties of local file to parse
+ * @author Jacobo Tarrio
+ */
+function _locale_import_read_po($file, $lang) {
+
+  $message = theme('placeholder', $file->filename);
+  $fd = fopen($file->filepath, "rb"); // File will get closed by PHP on return
+  if (!$fd) {
+    drupal_set_message(t('The translation import failed, because the file %filename could not be read.', array('%filename' => $message)), 'error');
     return FALSE;
   }
 
-  // Strip out header from the string pairs
-  $header = $strings[""]["msgstr"];
-  unset($strings[""]);
+  $context = "COMMENT"; // Parser context: COMMENT, MSGID, MSGID_PLURAL, MSGSTR and MSGSTR_ARR
+  $current = array();   // Current entry being read
+  $plural = 0;          // Current plural form
+  $lineno = 0;          // Current line
 
-  // Get information from the header into the database
-  if ($header) {
-    $hdr = _locale_import_parse_header($header);
+  while (!feof($fd)) {
+    $line = fgets($fd, 10*1024); // A line should not be this long
+    $lineno++;
+    $line = trim(strtr($line, array("\\\n" => "")));
+
+    if (!strncmp("#", $line, 1)) { // A comment
+      if ($context == "COMMENT") { // Already in comment context: add
+        $current["#"][] = substr($line, 1);
+      }
+      elseif (($context == "MSGSTR") || ($context == "MSGSTR_ARR")) { // End current entry, start a new one
+        _locale_import_one_string($current, $lang);
+        $current = array();
+        $current["#"][] = substr($line, 1);
+        $context = "COMMENT";
+      }
+      else { // Parse error
+        drupal_set_message(t('The translation file %filename contains an error: "msgstr" was expected but not found on line %line.', array('%filename' => $message, '%line' => $lineno)), 'error');
+        return FALSE;
+      }
+    }
+    elseif (!strncmp("msgid_plural", $line, 12)) {
+      if ($context != "MSGID") { // Must be plural form for current entry
+        drupal_set_message(t('The translation file %filename contains an error: "msgid_plural" was expected but not found on line %line.', array('%filename' => $message, '%line' => $lineno)), 'error');
+        return FALSE;
+      }
+      $line = trim(substr($line, 12));
+      $quoted = _locale_import_parse_quoted($line);
+      if ($quoted === false) {
+        drupal_set_message(t('The translation file %filename contains a syntax error on line %line.', array('%filename' => $message, '%line' => $lineno)), 'error');
+        return FALSE;
+      }
+      $current["msgid"] = $current["msgid"] ."\0". $quoted;
+      $context = "MSGID_PLURAL";
+    }
+    elseif (!strncmp("msgid", $line, 5)) {
+      if ($context == "MSGSTR") {   // End current entry, start a new one
+        _locale_import_one_string($current, $lang);
+        $current = array();
+      }
+      elseif ($context == "MSGID") { // Already in this context? Parse error
+        drupal_set_message(t('The translation file %filename contains an error: "msgid" is unexpected on line %line.', array('%filename' => $message, '%line' => $lineno)), 'error');
+        return FALSE;
+      }
+      $line = trim(substr($line, 5));
+      $quoted = _locale_import_parse_quoted($line);
+      if ($quoted === false) {
+        drupal_set_message(t('The translation file %filename contains a syntax error on line %line.', array('%filename' => $message, '%line' => $lineno)), 'error');
+        return FALSE;
+      }
+      $current["msgid"] = $quoted;
+      $context = "MSGID";
+    }
+    elseif (!strncmp("msgstr[", $line, 7)) {
+      if (($context != "MSGID") && ($context != "MSGID_PLURAL") && ($context != "MSGSTR_ARR")) { // Must come after msgid, msgid_plural, or msgstr[]
+        drupal_set_message(t('The translation file %filename contains an error: "msgstr[]" is unexpected on line %line.', array('%filename' => $message, '%line' => $lineno)), 'error');
+        return FALSE;
+      }
+      if (strpos($line, "]") === false) {
+        drupal_set_message(t('The translation file %filename contains a syntax error on line %line.', array('%filename' => $message, '%line' => $lineno)), 'error');
+        return FALSE;
+      }
+      $frombracket = strstr($line, "[");
+      $plural = substr($frombracket, 1, strpos($frombracket, "]") - 1);
+      $line = trim(strstr($line, " "));
+      $quoted = _locale_import_parse_quoted($line);
+      if ($quoted === false) {
+        drupal_set_message(t('The translation file %filename contains a syntax error on line %line.', array('%filename' => $message, '%line' => $lineno)), 'error');
+        return FALSE;
+      }
+      $current["msgstr"][$plural] = $quoted;
+      $context = "MSGSTR_ARR";
+    }
+    elseif (!strncmp("msgstr", $line, 6)) {
+      if ($context != "MSGID") {   // Should come just after a msgid block
+        drupal_set_message(t('The translation file %filename contains an error: "msgstr" is unexpected on line %line.', array('%filename' => $message, '%line' => $lineno)), 'error');
+        return FALSE;
+      }
+      $line = trim(substr($line, 6));
+      $quoted = _locale_import_parse_quoted($line);
+      if ($quoted === false) {
+        drupal_set_message(t('The translation file %filename contains a syntax error on line %line.', array('%filename' => $message, '%line' => $lineno)), 'error');
+        return FALSE;
+      }
+      $current["msgstr"] = $quoted;
+      $context = "MSGSTR";
+    }
+    elseif ($line != "") {
+      $quoted = _locale_import_parse_quoted($line);
+      if ($quoted === false) {
+        drupal_set_message(t('The translation file %filename contains a syntax error on line %line.', array('%filename' => $message, '%line' => $lineno)), 'error');
+        return FALSE;
+      }
+      if (($context == "MSGID") || ($context == "MSGID_PLURAL")) {
+        $current["msgid"] .= $quoted;
+      }
+      elseif ($context == "MSGSTR") {
+        $current["msgstr"] .= $quoted;
+      }
+      elseif ($context == "MSGSTR_ARR") {
+        $current["msgstr"][$plural] .= $quoted;
+      }
+      else {
+        drupal_set_message(t('The translation file %filename contains an error: there is an unexpected string on line %line.', array('%filename' => $message, '%line' => $lineno)), 'error');
+        return FALSE;
+      }
+    }
+  }
+
+  // End of PO file, flush last entry
+  if (($context == "MSGSTR") || ($context == "MSGSTR_ARR")) {
+    _locale_import_one_string($current, $lang);
+  }
+  elseif ($context != "COMMENT") {
+    drupal_set_message(t('The translation file %filename ended unexpectedly at line %line.', array('%filename' => $message, '%line' => $lineno)), 'error');
+    return FALSE;
+  }
+
+}
+
+/**
+ * Imports a string into the database
+ *
+ * @param $value Information about the string
+ * @author Jacobo Tarrio
+ */
+function _locale_import_one_string($value, $lang = NULL) {
+  static $additions = 0;
+  static $updates = 0;
+  static $headerdone = FALSE;
+
+  // Report the changes made (called at end of import)
+  if ($value == 'report') {
+    return array($headerdone, $additions, $updates);
+  }
+  // Current string is the header information
+  elseif ($value['msgid'] == '') {
+    $hdr = _locale_import_parse_header($value);
 
     // Get the plural formula
     if ($hdr["Plural-Forms"] && $p = _locale_import_parse_plural_forms($hdr["Plural-Forms"], $file->filename)) {
@@ -178,15 +343,10 @@ function _locale_import_po($file, $lang, $mode) {
     else {
       db_query("UPDATE {locales_meta} SET plurals = %d, formula = '%s' WHERE locale = '%s'", 0, '', $lang);
     }
+    $headerdone = TRUE;
   }
+  // Some real string to import
   else {
-    drupal_set_message(t('The translation file %filename appears to have a missing or malformed header.', array('%filename' => theme('placeholder', $file->filename))), 'error');
-    return FALSE;
-  }
-
-  $additions = 0;
-  $updates = 0;
-  foreach ($strings as $value) {
     $comments = _locale_import_shorten_comments($value['#']);
 
     // Handle a translation for some plural string
@@ -274,163 +434,6 @@ function _locale_import_po($file, $lang, $mode) {
       }
     }
   }
-
-  // rebuild locale cache
-  cache_clear_all("locale:$lang");
-
-  // rebuild the menu, strings may have changed
-  menu_rebuild();
-
-  drupal_set_message(t('The translation was successfully imported. There are %number newly created translated strings and %update strings were updated.', array('%number' => $additions, '%update' => $updates)));
-  watchdog('locale', t('Imported %file into %locale: %number new strings added and %update updated.', array('%file' => theme('placeholder', $file->filename), '%locale' => theme('placeholder', $lang), '%number' => $additions, '%update' => $updates)));
-  return TRUE;
-}
-
-/**
- * Parses Gettext Portable Object file into an array
- *
- * @param $file Object with properties of local file to parse
- * @author Jacobo Tarrio
- */
-function _locale_import_read_po($file) {
-
-  $message = theme('placeholder', $file->filename);
-  $fd = fopen($file->filepath, "rb");
-  if (!$fd) {
-    drupal_set_message(t('The translation import failed, because the file %filename could not be read.', array('%filename' => $message)), 'error');
-    return FALSE;
-  }
-  $info = fstat($fd);
-  $len = $info["size"];
-  $po = fread($fd, $len);
-  fclose($fd);
-
-  $context = "COMMENT"; // Parser context: COMMENT, MSGID, MSGID_PLURAL, MSGSTR and MSGSTR_ARR
-  $current = array();   // Current entry being read
-  $strings = array();   // List of entries read
-  $plural = 0;          // Current plural form
-
-  $po = strtr($po, array("\\\n" => ""));
-  $lines = explode("\n", $po);
-  $lineno = 0;
-
-  foreach ($lines as $line) {
-    $lineno++;
-    $line = trim($line);
-
-    if (!strncmp("#", $line, 1)) { // A comment
-      if ($context == "COMMENT") { // Already in comment context: add
-        $current["#"][] = substr($line, 1);
-      }
-      elseif (($context == "MSGSTR") || ($context == "MSGSTR_ARR")) { // End current entry, start a new one
-        $strings[$current["msgid"]] = $current;
-        $current = array();
-        $current["#"][] = substr($line, 1);
-        $context = "COMMENT";
-      }
-      else { // Parse error
-        drupal_set_message(t('The translation file %filename contains an error: "msgstr" was expected but not found on line %line.', array('%filename' => $message, '%line' => $lineno)), 'error');
-        return FALSE;
-      }
-    }
-    elseif (!strncmp("msgid_plural", $line, 12)) {
-      if ($context != "MSGID") { // Must be plural form for current entry
-        drupal_set_message(t('The translation file %filename contains an error: "msgid_plural" was expected but not found on line %line.', array('%filename' => $message, '%line' => $lineno)), 'error');
-        return FALSE;
-      }
-      $line = trim(substr($line, 12));
-      $quoted = _locale_import_parse_quoted($line);
-      if ($quoted === false) {
-        drupal_set_message(t('The translation file %filename contains a syntax error on line %line.', array('%filename' => $message, '%line' => $lineno)), 'error');
-        return FALSE;
-      }
-      $current["msgid"] = $current["msgid"] ."\0". $quoted;
-      $context = "MSGID_PLURAL";
-    }
-    elseif (!strncmp("msgid", $line, 5)) {
-      if ($context == "MSGSTR") {   // End current entry, start a new one
-        $strings[$current["msgid"]] = $current;
-        $current = array();
-      }
-      elseif ($context == "MSGID") { // Already in this context? Parse error
-        drupal_set_message(t('The translation file %filename contains an error: "msgid" is unexpected on line %line.', array('%filename' => $message, '%line' => $lineno)), 'error');
-        return FALSE;
-      }
-      $line = trim(substr($line, 5));
-      $quoted = _locale_import_parse_quoted($line);
-      if ($quoted === false) {
-        drupal_set_message(t('The translation file %filename contains a syntax error on line %line.', array('%filename' => $message, '%line' => $lineno)), 'error');
-        return FALSE;
-      }
-      $current["msgid"] = $quoted;
-      $context = "MSGID";
-    }
-    elseif (!strncmp("msgstr[", $line, 7)) {
-      if (($context != "MSGID") && ($context != "MSGID_PLURAL") && ($context != "MSGSTR_ARR")) { // Must come after msgid, msgid_plural, or msgstr[]
-        drupal_set_message(t('The translation file %filename contains an error: "msgstr[]" is unexpected on line %line.', array('%filename' => $message, '%line' => $lineno)), 'error');
-        return FALSE;
-      }
-      if (strpos($line, "]") === false) {
-        drupal_set_message(t('The translation file %filename contains a syntax error on line %line.', array('%filename' => $message, '%line' => $lineno)), 'error');
-        return FALSE;
-      }
-      $frombracket = strstr($line, "[");
-      $plural = substr($frombracket, 1, strpos($frombracket, "]") - 1);
-      $line = trim(strstr($line, " "));
-      $quoted = _locale_import_parse_quoted($line);
-      if ($quoted === false) {
-        drupal_set_message(t('The translation file %filename contains a syntax error on line %line.', array('%filename' => $message, '%line' => $lineno)), 'error');
-        return FALSE;
-      }
-      $current["msgstr"][$plural] = $quoted;
-      $context = "MSGSTR_ARR";
-    }
-    elseif (!strncmp("msgstr", $line, 6)) {
-      if ($context != "MSGID") {   // Should come just after a msgid block
-        drupal_set_message(t('The translation file %filename contains an error: "msgstr" is unexpected on line %line.', array('%filename' => $message, '%line' => $lineno)), 'error');
-        return FALSE;
-      }
-      $line = trim(substr($line, 6));
-      $quoted = _locale_import_parse_quoted($line);
-      if ($quoted === false) {
-        drupal_set_message(t('The translation file %filename contains a syntax error on line %line.', array('%filename' => $message, '%line' => $lineno)), 'error');
-        return FALSE;
-      }
-      $current["msgstr"] = $quoted;
-      $context = "MSGSTR";
-    }
-    elseif ($line != "") {
-      $quoted = _locale_import_parse_quoted($line);
-      if ($quoted === false) {
-        drupal_set_message(t('The translation file %filename contains a syntax error on line %line.', array('%filename' => $message, '%line' => $lineno)), 'error');
-        return FALSE;
-      }
-      if (($context == "MSGID") || ($context == "MSGID_PLURAL")) {
-        $current["msgid"] .= $quoted;
-      }
-      elseif ($context == "MSGSTR") {
-        $current["msgstr"] .= $quoted;
-      }
-      elseif ($context == "MSGSTR_ARR") {
-        $current["msgstr"][$plural] .= $quoted;
-      }
-      else {
-        drupal_set_message(t('The translation file %filename contains an error: there is an unexpected string on line %line.', array('%filename' => $message, '%line' => $lineno)), 'error');
-        return FALSE;
-      }
-    }
-  }
-
-  // End of PO file, flush last entry
-  if (($context == "MSGSTR") || ($context == "MSGSTR_ARR")) {
-    $strings[$current["msgid"]] = $current;
-  }
-  elseif ($context != "COMMENT") {
-    drupal_set_message(t('The translation file %filename ended unexpectedly at line %line.', array('%filename' => $message, '%line' => $lineno)), 'error');
-    return FALSE;
-  }
-
-  return $strings;
 }
 
 /**
