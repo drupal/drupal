@@ -3,7 +3,7 @@
  * the DOM afterwards through progressBar.element.
  *
  * method is the function which will perform the HTTP request to get the
- * progress bar status. Either HTTPGet or HTTPPost.
+ * progress bar state. Either HTTPGet or HTTPPost.
  *
  * e.g. pb = new progressBar('myProgressBar');
  *      some_element.appendChild(pb.element);
@@ -18,14 +18,14 @@ function progressBar(id, callback, method) {
   this.element.id = id;
   this.element.className = 'progress';
   this.element.innerHTML = '<div class="percentage"></div>'+
-                           '<div class="status">&nbsp;</div>'+
+                           '<div class="message">&nbsp;</div>'+
                            '<div class="bar"><div class="filled"></div></div>';
 }
 
 /**
  * Set the percentage and status message for the progressbar.
  */
-progressBar.prototype.setProgress = function (percentage, status) {
+progressBar.prototype.setProgress = function (percentage, message) {
   var divs = this.element.getElementsByTagName('div');
   var div;
   for (var i = 0; div = divs[i]; ++i) {
@@ -37,12 +37,12 @@ progressBar.prototype.setProgress = function (percentage, status) {
         divs[i].innerHTML = percentage + '%';
       }
     }
-    if (hasClass(divs[i], 'status')) {
-      divs[i].innerHTML = status;
+    if (hasClass(divs[i], 'message')) {
+      divs[i].innerHTML = message;
     }
   }
   if (this.callback) {
-    this.callback(percentage, status, this);
+    this.callback(percentage, message, this);
   }
 }
 
@@ -84,12 +84,16 @@ progressBar.prototype.receivePing = function (string, xmlhttp, pb) {
   if (xmlhttp.status != 200) {
     return alert('An HTTP error '+ xmlhttp.status +' occured.\n'+ pb.uri);
   }
-  // Split into values
-  var matches = string.length > 0 ? string.split('|') : [];
-  // Update progress
-  if (matches.length >= 2) {
-    pb.setProgress(matches[0], matches[1]);
+  // Parse response
+  var progress = parseJson(string);
+  // Display errors
+  if (progress.status == 0) {
+    alert(progress.data);
+    return;
   }
+
+  // Update display
+  pb.setProgress(progress.percentage, progress.message);
   // Schedule next timer
   pb.timer = setTimeout(function() { pb.sendPing(); }, pb.delay);
 }
