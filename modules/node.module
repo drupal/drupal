@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.594 2006/02/01 14:11:53 dries Exp $
+// $Id: node.module,v 1.595 2006/02/06 05:54:17 dries Exp $
 
 /**
  * @file
@@ -1310,7 +1310,8 @@ function node_revision_overview($node) {
 }
 
 /**
- * Revert to the revision with the specified revision number.
+ * Revert to the revision with the specified revision number. A node and nodeapi "update" event is triggered
+ * (via the node_save() call) when a revision is reverted.
  */
 function node_revision_revert($nid, $revision) {
   global $user;
@@ -1320,7 +1321,8 @@ function node_revision_revert($nid, $revision) {
     if ($node->vid) {
       $node->revision = 1;
       $node->log = t('Copy of the revision from %date.', array('%date' => theme('placeholder', format_date($node->revision_timestamp))));
-      $new_node = node_save($node);
+
+      node_save($node);
 
       drupal_set_message(t('%title has been reverted back to the revision from %revision-date', array('%revision-date' => theme('placeholder', format_date($node->revision_timestamp)), '%title' => theme('placeholder', check_plain($node->title)))));
       watchdog('content', t('%type: reverted %title revision %revision.', array('%type' => theme('placeholder', t($node->type)), '%title' => theme('placeholder', $node->title), '%revision' => theme('placeholder', $revision))));
@@ -1334,7 +1336,8 @@ function node_revision_revert($nid, $revision) {
 }
 
 /**
- * Delete the revision with specified revision number.
+ * Delete the revision with specified revision number. A "delete revision" nodeapi event is invoked when a
+ * revision is deleted.
  */
 function node_revision_delete($nid, $revision) {
   if (user_access('administer nodes')) {
