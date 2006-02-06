@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.module,v 1.125 2006/01/12 16:22:46 dries Exp $
+// $Id: tracker.module,v 1.126 2006/02/06 05:51:10 dries Exp $
 
 /**
  * @file
@@ -74,10 +74,6 @@ function tracker_track_user() {
  * Menu callback. Prints a listing of active nodes on the site.
  */
 function tracker_page($uid = 0) {
-  global $user;
-
-  $output .= '';
-
   if ($uid) {
     $sql = 'SELECT DISTINCT(n.nid), n.title, n.type, n.changed, n.uid, u.name, l.last_comment_timestamp AS last_post, l.comment_count FROM {node} n INNER JOIN {node_comment_statistics} l ON n.nid = l.nid INNER JOIN {users} u ON n.uid = u.uid LEFT JOIN {comments} c ON n.nid = c.nid AND (c.status = %d OR c.status IS NULL) WHERE n.status = 1 AND (n.uid = %d OR c.uid = %d) ORDER BY last_post DESC';
     $sql = db_rewrite_sql($sql);
@@ -116,12 +112,10 @@ function tracker_page($uid = 0) {
 
   $header = array(t('Type'), t('Post'), t('Author'), t('Replies'), t('Last post'));
 
-  $output .= '<div id="tracker">';
+  $output = '<div id="tracker">';
   $output .= theme('table', $header, $rows);
   $output .= theme('pager', NULL, 25, 0);
   $output .= '</div>';
 
   return $output;
 }
-
-
