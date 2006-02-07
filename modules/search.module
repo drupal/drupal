@@ -886,7 +886,7 @@ function search_view() {
   // Search form submits with POST but redirects to GET. This way we can keep
   // the search query URL clean as a whistle:
   // search/type/keyword+keyword
-  if (isset($_POST['op'])) {
+  if (isset($_POST['edit']['keys'])) {
     if ($type == '') {
       $type = 'node';
     }
