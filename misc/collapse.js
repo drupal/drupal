@@ -1,4 +1,4 @@
-// $Id: collapse.js,v 1.2 2005/08/11 13:00:17 dries Exp $
+// $Id: collapse.js,v 1.3 2006/02/07 02:29:06 unconed Exp $
 
 if (isJsEnabled()) {
   addLoadEvent(collapseAutoAttach);
@@ -20,6 +20,9 @@ function collapseAutoAttach() {
     a.href = '#';
     a.onclick = function() {
       toggleClass(this.parentNode.parentNode, 'collapsed');
+      if (!hasClass(this.parentNode.parentNode, 'collapsed')) {
+        collapseScrollIntoView(this.parentNode.parentNode);
+      }
       this.blur();
       return false;
     };
@@ -45,6 +48,19 @@ function collapseEnsureErrorsVisible(fieldset) {
       if (hasClass(inputs[j][i], 'error')) {
         return removeClass(fieldset, 'collapsed');
       }
+    }
+  }
+}
+
+function collapseScrollIntoView(node) {
+  var h = self.innerHeight || document.documentElement.clientHeight || document.body.clientHeight || 0;
+  var offset = self.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+  var pos = absolutePosition(node);
+  if (pos.y + node.scrollHeight > h + offset) {
+    if (node.scrollHeight > h) {
+      window.scrollTo(0, pos.y);
+    } else {
+      window.scrollTo(0, pos.y + node.scrollHeight - h);
     }
   }
 }
