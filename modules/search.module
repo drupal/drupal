@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.160 2006/02/01 14:42:02 dries Exp $
+// $Id: search.module,v 1.161 2006/02/07 06:33:04 unconed Exp $
 
 /**
  * @file
@@ -886,7 +886,7 @@ function search_view() {
   // Search form submits with POST but redirects to GET. This way we can keep
   // the search query URL clean as a whistle:
   // search/type/keyword+keyword
-  if (isset($_POST['op'])) {
+  if (isset($_POST['edit']['keys'])) {
     if ($type == '') {
       $type = 'node';
     }
