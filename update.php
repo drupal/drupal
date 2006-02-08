@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.174 2006/02/05 19:04:58 unconed Exp $
+// $Id: update.php,v 1.175 2006/02/08 00:32:18 unconed Exp $
 
 /**
  * @file
@@ -466,9 +466,9 @@ function update_progress_page_nojs() {
 function update_finished_page() {
   drupal_set_title('Drupal database update');
   // NOTE: we can't use l() here because the URL would point to 'update.php?q=admin'.
-  $links[] = '<a href="">main page</a>';
-  $links[] = '<a href="?q=admin">administration pages</a>';
-  $output = '<p>Updates were attempted. If you see no failures below, you may proceed happily to the <a href="?q=admin">administration pages</a>. Otherwise, you may need to update your database manually. All errors have been <a href="?q=admin/logs">logged</a>.</p>';
+  $links[] = '<a href="'. base_path() .'">main page</a>';
+  $links[] = '<a href="'. base_path() .'?q=admin">administration pages</a>';
+  $output = '<p>Updates were attempted. If you see no failures below, you may proceed happily to the <a href="index.php?q=admin">administration pages</a>. Otherwise, you may need to update your database manually. All errors have been <a href="index.php?q=admin/logs">logged</a>.</p>';
   if ($GLOBALS['access_check'] == FALSE) {
     $output .= "<p><strong>Reminder: don't forget to set the <code>\$access_check</code> value at the top of <code>update.php</code> back to <code>TRUE</code>.</strong>";
   }
