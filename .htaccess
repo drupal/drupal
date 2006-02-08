@@ -18,16 +18,25 @@ ErrorDocument 404 /index.php
 # Set the default handler.
 DirectoryIndex index.php
 
-# Override PHP settings. More exist in sites/default/settings.php, but
-# the following cannot be changed at runtime. The first IfModule is
-# for Apache 1.3, the second for Apache 2.
+# Override PHP settings. More in sites/default/settings.php
+# but the following cannot be changed at runtime.
+
+# PHP 4, Apache 1
 <IfModule mod_php4.c>
   php_value magic_quotes_gpc                0
   php_value register_globals                0
   php_value session.auto_start              0
 </IfModule>
 
+# PHP 4, Apache 2
 <IfModule sapi_apache2.c>
+  php_value magic_quotes_gpc                0
+  php_value register_globals                0
+  php_value session.auto_start              0
+</IfModule>
+
+# PHP 5, Apache 1 and 2
+<IfModule mod_php5.c>
   php_value magic_quotes_gpc                0
   php_value register_globals                0
   php_value session.auto_start              0
@@ -64,4 +73,4 @@ DirectoryIndex index.php
   RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]
 </IfModule>
 
-# $Id: .htaccess,v 1.68 2005/12/10 19:26:47 dries Exp $
+# $Id: .htaccess,v 1.69 2006/02/08 20:42:29 unconed Exp $
