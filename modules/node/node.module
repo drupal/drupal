@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.595 2006/02/06 05:54:17 dries Exp $
+// $Id: node.module,v 1.596 2006/02/08 00:47:14 unconed Exp $
 
 /**
  * @file
@@ -1942,10 +1942,8 @@ function node_revisions() {
         if ((user_access('view revisions') || user_access('administer nodes')) && node_access('view', $node)) {
           return node_revision_overview($node);
         }
-        else {
-          drupal_access_denied();
-        }
-        break;
+        drupal_access_denied();
+        return;
       case 'view':
         if (is_numeric(arg(3))) {
           $node = node_load(arg(1), arg(3));
@@ -1954,21 +1952,16 @@ function node_revisions() {
               drupal_set_title(t('Revision of %title from %date', array('%title' => theme('placeholder', $node->title), '%date' => format_date($node->revision_timestamp))));
               return node_show($node, arg(2));
             }
-            else {
-              drupal_access_denied();
-            }
+            drupal_access_denied();
+            return;
           }
         }
-        drupal_not_found();
         break;
       case 'revert':
         node_revision_revert(arg(1), arg(3));
         break;
       case 'delete':
         node_revision_delete(arg(1), arg(3));
-        break;
-      default:
-        drupal_not_found();
         break;
     }
   }
