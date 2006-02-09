@@ -1,5 +1,5 @@
 <?php
-// $Id: unicode.inc,v 1.14 2006/01/17 05:42:21 unconed Exp $
+// $Id: unicode.inc,v 1.15 2006/02/09 08:56:11 unconed Exp $
 
 define('UNICODE_ERROR', -1);
 define('UNICODE_SINGLEBYTE', 0);
@@ -193,12 +193,16 @@ function truncate_utf8($string, $len, $wordsafe = FALSE, $dots = FALSE) {
     return $string;
   }
   if ($wordsafe) {
+    $end = $len;
     while (($string[--$len] != ' ') && ($len > 0)) {};
+    if ($len == 0) {
+      $len = $end;
+    }
   }
   if ((ord($string[$len]) < 0x80) || (ord($string[$len]) >= 0xC0)) {
     return substr($string, 0, $len) . ($dots ? ' ...' : '');
   }
-  while (ord($string[--$len]) < 0xC0) {};
+  while (--$len >= 0 && ord($string[$len]) >= 0x80 && ord($string[$len]) < 0xC0) {};
   return substr($string, 0, $len) . ($dots ? ' ...' : '');
 }
 
