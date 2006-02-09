@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.287 2006/02/05 19:17:00 unconed Exp $
+// $Id: system.module,v 1.288 2006/02/09 08:13:08 dries Exp $
 
 /**
  * @file
@@ -1016,6 +1016,7 @@ function system_modules_submit($form_id, $edit) {
     $versions = drupal_get_schema_versions($module);
     if (drupal_get_installed_schema_version($module) == SCHEMA_UNINSTALLED) {
       drupal_set_installed_schema_version($module, $versions ? max($versions) : SCHEMA_INSTALLED);
+      module_invoke($module, 'install');
     }
   }
 
