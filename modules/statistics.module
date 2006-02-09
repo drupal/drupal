@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.216 2006/02/01 15:50:01 dries Exp $
+// $Id: statistics.module,v 1.217 2006/02/09 07:05:49 dries Exp $
 
 /**
  * @file
@@ -220,7 +220,7 @@ function statistics_user_tracker() {
 /**
  * Menu callback; presents the "recent hits" page.
  */
-function statistics_recent_hits($type = 'all', $id = 0) {
+function statistics_recent_hits() {
   $header = array(
     array('data' => t('Timestamp'), 'field' => 'a.timestamp', 'sort' => 'desc'),
     array('data' => t('Page'), 'field' => 'a.path'),
