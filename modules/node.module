@@ -1544,7 +1544,7 @@ function node_validate($node) {
   }
 
   if (isset($node->nid) && (node_last_changed($node->nid) > $node->changed)) {
-    form_set_error('changed', t('This content has been modified by another user, unable to save changes.'));
+    form_set_error('changed', t('This content has been modified by another user; changes cannot be saved.'));
   }
 
   if (user_access('administer nodes')) {
