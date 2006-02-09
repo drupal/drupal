@@ -220,7 +220,7 @@ function statistics_user_tracker() {
 /**
  * Menu callback; presents the "recent hits" page.
  */
-function statistics_recent_hits($type = 'all', $id = 0) {
+function statistics_recent_hits() {
   $header = array(
     array('data' => t('Timestamp'), 'field' => 'a.timestamp', 'sort' => 'desc'),
     array('data' => t('Page'), 'field' => 'a.path'),
