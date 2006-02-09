@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.597 2006/02/09 07:16:47 dries Exp $
+// $Id: node.module,v 1.598 2006/02/09 07:46:04 dries Exp $
 
 /**
  * @file
@@ -866,9 +866,6 @@ function node_menu($may_cache) {
       'access' => user_access('administer nodes'));
     $items[] = array('path' => 'admin/node/overview', 'title' => t('list'),
       'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
-    $items[] = array('path' => 'admin/node/action', 'title' => t('content'),
-      'callback' => 'node_admin_nodes',
-      'type' => MENU_CALLBACK);
 
     if (module_exist('search')) {
       $items[] = array('path' => 'admin/node/search', 'title' => t('search'),
@@ -1121,7 +1118,12 @@ function node_admin_nodes_submit($form_id, $edit) {
 function node_admin_nodes_validate($form_id, $edit) {
   $edit['nodes'] = array_diff($edit['nodes'], array(0));
   if (count($edit['nodes']) == 0) {
-    form_set_error('', t('Please select some items to perform the update on.'));
+    if ($edit['operation'] == 'delete') {
+      form_set_error('', t('Please select some items to perform the delete operation.'));
+    }
+    else {
+      form_set_error('', t('Please select some items to perform the update on.'));
+    }
   }
 }
 
@@ -1129,7 +1131,7 @@ function node_admin_nodes() {
   global $form_values;
   $output = node_filter_form();
 
-  if ($_POST['edit']['operation'] == 'delete') {
+  if ($_POST['edit']['operation'] == 'delete' && $_POST['edit']['nodes']) {
     return node_multiple_delete_confirm();
   }
 
@@ -1161,7 +1163,7 @@ function node_admin_nodes() {
   $form['pager'] = array('#value' => theme('pager', NULL, 50, 0));
 
   $form['#method'] = 'post';
-  $form['#action'] =  url('admin/node/action');
+  $form['#action'] =  url('admin/node');
 
   // Call the form first, to allow for the form_values array to be populated.
   $output .= drupal_get_form('node_admin_nodes', $form);
