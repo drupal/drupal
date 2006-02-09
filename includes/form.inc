@@ -158,7 +158,6 @@ function _form_validate($elements, $form_id = NULL) {
 
     // Add legal choice check if element has #options. Can be skipped, but then you must validate your own element.
     if (isset($elements['#options']) && isset($elements['#value']) && !isset($elements['#DANGEROUS_SKIP_CHECK'])) {
-      $message = t('Illegal choice in %title.', array('%title' => theme('placeholder', $elements['#title'])));
       if ($elements['#type'] == 'select') {
         $options = form_options_flatten($elements['#options']);
       }
@@ -169,12 +168,14 @@ function _form_validate($elements, $form_id = NULL) {
         $value = $elements['#type'] == 'checkboxes' ? array_keys(array_filter($elements['#value'])) : $elements['#value'];
         foreach ($value as $v) {
           if (!isset($options[$v])) {
-            form_error($elements, $message);
+            form_error($elements, t('An illegal choice has been detected. Please contact the site administrator.'));
+            watchdog('form', t('Illegal choice %choice in %name element.', array('%choice' => theme('placeholder', check_plain($v)), '%name' => theme_placeholder(empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title'])), WATCHDOG_ERROR));
           }
         }
       }
       elseif (!isset($options[$elements['#value']])) {
-        form_error($elements, $message);
+        form_error($elements, t('An illegal choice has been detected. Please contact the site administrator.'));
+        watchdog('form', t('Illegal choice %choice in %name element.', array('%choice' => theme_placeholder(check_plain($v)), '%name' => theme('placeholder', empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title'])), WATCHDOG_ERROR));
       }
     }
 
