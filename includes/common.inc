@@ -1666,15 +1666,18 @@ function truncate_utf8($string, $len, $wordsafe = FALSE) {
     return $string;
   }
   if ($wordsafe) {
+    $end = $len;
     while (($string[--$len] != ' ') && ($len > 0)) {};
+    if ($len == 0) {
+      $len = $end;
+    }
   }
   if ((ord($string[$len]) < 0x80) || (ord($string[$len]) >= 0xC0)) {
     return substr($string, 0, $len);
   }
-  while (ord($string[--$len]) < 0xC0) {};
+  while (--$len >= 0 && ord($string[$len]) >= 0x80 && ord($string[$len]) < 0xC0) {};
   return substr($string, 0, $len);
 }
-
 /**
  * Encodes MIME/HTTP header values that contain non-ASCII, UTF-8 encoded
  * characters.
