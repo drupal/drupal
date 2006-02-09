@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.308 2006/02/09 08:09:55 dries Exp $
+// $Id: forum.module,v 1.309 2006/02/09 08:52:03 dries Exp $
 
 /**
  * @file
@@ -708,7 +708,7 @@ function forum_get_forums($tid = 0) {
  * than NODE_NEW_LIMIT.
  */
 function _forum_topics_unread($term, $uid) {
-  $sql = 'SELECT COUNT(n.nid) FROM {node} n INNER JOIN {term_node} tn ON n.nid = tn.nid AND tn.tid = %d LEFT JOIN {history} h ON n.nid = h.nid AND h.uid = %d WHERE n.status = 1 AND n.type = "forum" AND n.created > %d AND h.nid IS NULL';
+  $sql = "SELECT COUNT(n.nid) FROM {node} n INNER JOIN {term_node} tn ON n.nid = tn.nid AND tn.tid = %d LEFT JOIN {history} h ON n.nid = h.nid AND h.uid = %d WHERE n.status = 1 AND n.type = 'forum' AND n.created > %d AND h.nid IS NULL";
   $sql = db_rewrite_sql($sql);
   return db_result(db_query($sql, $term, $uid, NODE_NEW_LIMIT));
 }
