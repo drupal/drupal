@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.347 2006/02/01 14:40:20 dries Exp $
+// $Id: book.module,v 1.348 2006/02/09 07:27:11 dries Exp $
 
 /**
  * @file
@@ -480,15 +480,11 @@ function theme_book_navigation($node) {
   $output = '';
 
   if ($node->nid) {
-    $output .= '<div class="book-navigation">';
-
-    if ($tree = book_tree($node->nid)) {
-      $output .= $tree;
-    }
+    $tree = book_tree($node->nid);
 
     if ($prev = book_prev($node)) {
       drupal_add_link(array('rel' => 'prev', 'href' => url('node/'. $prev->nid)));
-      $links .= l(t('‹ ') . check_plain($prev->title), 'node/'. $prev->nid, array('class' => 'page-previous', 'title' => t('Go to previous page')));
+      $links .= l(t('‹ ') . $prev->title, 'node/'. $prev->nid, array('class' => 'page-previous', 'title' => t('Go to previous page')));
     }
     if ($node->parent) {
       drupal_add_link(array('rel' => 'index', 'href' => url('node/'. $node->parent)));
@@ -496,11 +492,19 @@ function theme_book_navigation($node) {
     }
     if ($next = book_next($node)) {
       drupal_add_link(array('rel' => 'next', 'href' => url('node/'. $next->nid)));
-      $links .= l(check_plain($next->title) . t(' ›'), 'node/'. $next->nid, array('class' => 'page-next', 'title' => t('Go to next page')));
+      $links .= l($next->title . t(' ›'), 'node/'. $next->nid, array('class' => 'page-next', 'title' => t('Go to next page')));
     }
 
-    $output .= '<div class="page-links">'. $links .'</div>';
-    $output .= '</div>';
+    if (isset($tree) || isset($links)) {
+      $output = '<div class="book-navigation">';
+      if (isset($tree)) {
+        $output .= $tree;
+      }
+      if (isset($links)) {
+        $output .= '<div class="page-links">'. $links .'</div>';
+      }
+      $output .= '</div>';
+    }
   }
 
   return $output;
