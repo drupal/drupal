@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.596 2006/02/08 00:47:14 unconed Exp $
+// $Id: node.module,v 1.597 2006/02/09 07:16:47 dries Exp $
 
 /**
  * @file
@@ -1544,7 +1544,7 @@ function node_validate($node) {
   }
 
   if (isset($node->nid) && (node_last_changed($node->nid) > $node->changed)) {
-    form_set_error('changed', t('This content has been modified by another user, unable to save changes.'));
+    form_set_error('changed', t('This content has been modified by another user; changes cannot be saved.'));
   }
 
   if (user_access('administer nodes')) {
