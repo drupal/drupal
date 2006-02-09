@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.193 2006/02/02 01:27:57 unconed Exp $
+// $Id: updates.inc,v 1.194 2006/02/09 08:33:36 unconed Exp $
 
 function system_update_110() {
   $ret = array();
@@ -1585,4 +1585,34 @@ function system_update_171() {
   $ret = array();
   $ret[] = update_sql('DELETE FROM {users_roles} WHERE rid IN ('. DRUPAL_ANONYMOUS_RID. ', '. DRUPAL_AUTHENTICATED_RID. ')');
   return $ret;
+}
+
+function system_update_172() {
+  // Multi-part update
+  if (!isset($_SESSION['system_update_172'])) {
+    $_SESSION['system_update_172'] = 0;
+    $_SESSION['system_update_172_max'] = db_result(db_query('SELECT MAX(cid) FROM comments'));
+  }
+
+  include_once './modules/comment.module';
+
+  $limit = 20;
+  $result = db_query_range("SELECT cid, thread FROM {comments} WHERE cid > %d", $_SESSION['system_update_172'], 0, $limit);
+  while ($comment = db_fetch_object($result)) {
+    $_SESSION['system_update_172'] = $comment->cid;
+    $thread = explode('.', rtrim($comment->thread, '/'));
+    foreach ($thread as $i => $offset) {
+      // Decode old-style comment codes: 1,2,...,9,90,91,92,...,99,990,991,...
+      $thread[$i] = int2vancode((strlen($offset) - 1) * 10 + substr($offset, -1, 1));
+    }
+    $thread = implode('.', $thread) .'/';
+    db_query("UPDATE comments SET thread = '%s' WHERE cid = %d", $thread, $comment->cid);
+  }
+
+  if ($_SESSION['system_update_172'] == $_SESSION['system_update_172_max']) {
+    unset($_SESSION['system_update_172']);
+    unset($_SESSION['system_update_172_max']);
+    return array();
+  }
+  return array('#finished' => $_SESSION['system_update_172'] / $_SESSION['system_update_172_max']);
 }

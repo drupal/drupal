@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.427 2006/02/04 09:54:16 dries Exp $
+// $Id: comment.module,v 1.428 2006/02/09 08:33:36 unconed Exp $
 
 /**
  * @file
@@ -573,25 +573,8 @@ function comment_save($edit) {
           // Strip the "/" from the end of the thread.
           $max = rtrim($max, '/');
 
-          // Next, we increase this value by one.  Note that we can't
-          // use 1, 2, 3, ... 9, 10, 11 because we order by string and
-          // 10 would be right after 1.  We use 1, 2, 3, ..., 9, 91,
-          // 92, 93, ... instead.  Ugly but fast.
-          $decimals = (string) substr($max, 0, strlen($max) - 1);
-          $units = substr($max, -1, 1);
-          if ($units) {
-            $units++;
-          }
-          else {
-            $units = 1;
-          }
-
-          if ($units == 10) {
-            $units = '90';
-          }
-
           // Finally, build the thread field for this new comment.
-          $thread = $decimals . $units .'/';
+          $thread = int2vancode(vancode2int($max) + 1) .'/';
         }
         else {
           // This is comment with a parent comment: we increase
@@ -608,7 +591,7 @@ function comment_save($edit) {
 
           if ($max == '') {
             // First child of this parent.
-            $thread = $parent->thread .'.1/';
+            $thread = $parent->thread .'.'. int2vancode(0) .'/';
           }
           else {
             // Strip the "/" at the end of the thread.
@@ -619,19 +602,8 @@ function comment_save($edit) {
             $parent_depth = count(explode('.', $parent->thread));
             $last = $parts[$parent_depth];
 
-            // Next, we increase this value by one.  Note that we can't
-            // use 1, 2, 3, ... 9, 10, 11 because we order by string and
-            // 10 would be right after 1.  We use 1, 2, 3, ..., 9, 91,
-            // 92, 93, ... instead.  Ugly but fast.
-            $decimals = (string)substr($last, 0, strlen($last) - 1);
-            $units = substr($last, -1, 1);
-            $units++;
-            if ($units == 10) {
-              $units = '90';
-            }
-
             // Finally, build the thread field for this new comment.
-            $thread = $parent->thread .'.'. $decimals . $units .'/';
+            $thread = $parent->thread .'.'. int2vancode(vancode2int($last) + 1) .'/';
           }
         }
 
@@ -1716,4 +1688,30 @@ function comment_invoke_comment(&$comment, $op) {
     }
   }
   return $return;
+}
+
+/**
+ * Generate vancode.
+ *
+ * Consists of a leading character indicating length, followed by N digits
+ * with a numerical value in base 36. Vancodes can be sorted as strings
+ * without messing up numerical order.
+ *
+ * It goes:
+ * 00, 01, 02, ..., 0y, 0z,
+ * 110, 111, ... , 1zy, 1zz,
+ * 2100, 2101, ..., 2zzy, 2zzz,
+ * 31000, 31001, ...
+ */
+function int2vancode($i = 0) {
+  $num = base_convert((int)$i, 10, 36);
+  $length = strlen($num);
+  return chr($length + ord('0') - 1) . $num;
+}
+
+/**
+ * Decode vancode back to an integer.
+ */
+function vancode2int($c = '00') {
+  return base_convert(substr($c, 1), 36, 10);
 }
