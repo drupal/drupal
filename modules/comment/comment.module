@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.428 2006/02/09 08:33:36 unconed Exp $
+// $Id: comment.module,v 1.429 2006/02/09 09:09:03 unconed Exp $
 
 /**
  * @file
@@ -540,7 +540,7 @@ function comment_save($edit) {
 
       if ($edit['cid']) {
         // Update the comment in the database.
-        db_query("UPDATE {comments} SET status = '%s', timestamp = %d, subject = '%s', comment = '%s', format = '%s', uid = %d, name = '%s', mail = '%s', homepage = '%s' WHERE cid = %d", $edit['status'], $edit['timestamp'], $edit['subject'], $edit['comment'], $edit['format'], $edit['uid'], $edit['name'], $edit['mail'], $edit['homepage'], $edit['cid']);
+        db_query("UPDATE {comments} SET status = %d, timestamp = %d, subject = '%s', comment = '%s', format = %d, uid = %d, name = '%s', mail = '%s', homepage = '%s' WHERE cid = %d", $edit['status'], $edit['timestamp'], $edit['subject'], $edit['comment'], $edit['format'], $edit['uid'], $edit['name'], $edit['mail'], $edit['homepage'], $edit['cid']);
 
         _comment_update_node_statistics($edit['nid']);
 
