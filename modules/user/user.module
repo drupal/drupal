@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.579 2006/02/09 07:43:43 dries Exp $
+// $Id: user.module,v 1.580 2006/02/09 08:20:49 dries Exp $
 
 /**
  * @file
@@ -1530,17 +1530,19 @@ function _user_admin_access_form($edit) {
     '#default_value' => 0,
     '#options' => array('1' => t('Allow'), '0' => t('Deny')),
   );
+  $type_options = array('user' => t('Username'), 'mail' => t('E-mail'), 'host' => t('Host'));
   $form['type'] = array(
     '#type' => 'radios',
     '#title' => t('Rule type'),
-    '#default_value' => 'user',
-    '#options' => array('user' => t('Username'), 'mail' => t('E-mail'), 'host' => t('Host')),
+    '#default_value' => (isset($type_options[$edit['type']]) ? $edit['type'] : 'user'),
+    '#options' => $type_options,
   );
   $form['mask'] = array(
     '#type' => 'textfield',
     '#title' => t('Mask'),
     '#size' => 30,
     '#maxlength' => 64,
+    '#default_value' => $edit['mask'],
     '#description' => '%: '. t('Matches any number of characters, even zero characters') .'.<br />_: '. t('Matches exactly one character.'),
     '#required' => TRUE,
   );
