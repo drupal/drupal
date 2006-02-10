@@ -1193,7 +1193,7 @@ function drupal_to_js($var) {
         }
         return '[ '. implode(', ', $output) .' ]';
       }
-      // Fall through  
+      // Fall through
     case 'object':
       $output = array();
       foreach ($var as $k => $v) {

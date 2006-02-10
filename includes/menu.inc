@@ -998,8 +998,8 @@ function _menu_sort($a, $b) {
   elseif ($a['weight'] > $b['weight']) {
     return 1;
   }
-  elseif (isset($a['title']) && isset($b['title']) && ($a['title'] < $b['title'])) {
-    return -1;
+  elseif (isset($a['title']) && isset($b['title'])) {
+    return strnatcasecmp($a['title'], $b['title']);
   }
   else {
     return 1;

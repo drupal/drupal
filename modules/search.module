@@ -245,7 +245,7 @@ function search_wipe_confirm_submit($form_id, &$form) {
   if ($form['confirm']) {
     search_wipe();
     drupal_set_message(t('The index will be rebuilt.'));
-    drupal_goto('admin/settings/search');
+    return 'admin/settings/search';
   }
 }
 
