@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.161 2006/02/07 06:33:04 unconed Exp $
+// $Id: search.module,v 1.162 2006/02/10 05:25:57 dries Exp $
 
 /**
  * @file
@@ -245,7 +245,7 @@ function search_wipe_confirm_submit($form_id, &$form) {
   if ($form['confirm']) {
     search_wipe();
     drupal_set_message(t('The index will be rebuilt.'));
-    drupal_goto('admin/settings/search');
+    return 'admin/settings/search';
   }
 }
 

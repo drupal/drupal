@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.599 2006/02/09 08:36:54 dries Exp $
+// $Id: node.module,v 1.600 2006/02/10 05:25:57 dries Exp $
 
 /**
  * @file
@@ -1093,7 +1093,7 @@ function node_filter_form_submit() {
       return;
   }
   if ($op != '') {
-    drupal_goto('admin/node');
+    return 'admin/node';
   }
 }
 
@@ -1111,7 +1111,7 @@ function node_admin_nodes_submit($form_id, $edit) {
       }
     }
     drupal_set_message(t('The update has been performed.'));
-    drupal_goto('admin/node');
+    return 'admin/node';
   }
 }
 
@@ -1227,7 +1227,7 @@ function node_multiple_delete_confirm_submit($form_id, $edit) {
     }
     drupal_set_message(t('The items have been deleted.'));
   }
-  drupal_goto('admin/node');
+  return 'admin/node';
 }
 
 /**
@@ -1865,14 +1865,8 @@ function node_form_submit($form_id, $edit) {
       drupal_set_message(t('Your %post was created.', array ('%post' => node_get_name($node))));
     }
   }
-
-  if ($node->nid) {
-    if (node_access('view', $node)) {
-      drupal_goto('node/'. $node->nid);
-    }
-    else {
-      drupal_goto();
-    }
+  if ($node->nid && node_access('view', $node)) {
+    return 'node/'. $node->nid;
   }
 }
 
@@ -1901,7 +1895,6 @@ function node_delete_confirm() {
 function node_delete_confirm_submit($form_id, $form_values) {
   if ($form_values['confirm']) {
     node_delete($form_values['nid']);
-    drupal_goto();
   }
 }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.514 2006/02/05 19:04:58 unconed Exp $
+// $Id: common.inc,v 1.515 2006/02/10 05:25:57 dries Exp $
 
 /**
  * @file
@@ -1193,7 +1193,7 @@ function drupal_to_js($var) {
         }
         return '[ '. implode(', ', $output) .' ]';
       }
-      // Fall through  
+      // Fall through
     case 'object':
       $output = array();
       foreach ($var as $k => $v) {

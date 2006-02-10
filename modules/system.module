@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.288 2006/02/09 08:13:08 dries Exp $
+// $Id: system.module,v 1.289 2006/02/10 05:25:57 dries Exp $
 
 /**
  * @file
@@ -55,7 +55,7 @@ function system_perm() {
  */
 function system_elements() {
   // Top level form
-  $type['form'] = array('#method' => 'post', '#action' => request_uri());
+  $type['form'] = array('#method' => 'post', '#action' => request_uri(), '#redirect' => '');
 
   // Inputs
   $type['checkbox'] = array('#input' => TRUE, '#return_value' => 1);
@@ -787,7 +787,6 @@ function system_settings_form_submit($form_id, $values) {
     drupal_set_message(t('The configuration options have been saved.'));
   }
   menu_rebuild();
-  drupal_goto($_GET['q']);
 }
 
 /**
@@ -887,7 +886,7 @@ function system_themes_submit($form_id, $values) {
 
   menu_rebuild();
   drupal_set_message(t('The configuration options have been saved.'));
-  drupal_goto('admin/themes');
+  return 'admin/themes';
 }
 
 /**
@@ -1021,7 +1020,7 @@ function system_modules_submit($form_id, $edit) {
   }
 
   drupal_set_message(t('The configuration options have been saved.'));
-  drupal_goto('admin/modules');
+  return 'admin/modules';
 }
 
 

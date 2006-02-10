@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.40 2006/01/14 10:33:22 dries Exp $
+// $Id: contact.module,v 1.41 2006/02/10 05:25:57 dries Exp $
 
 /**
  * @file
@@ -199,7 +199,7 @@ function contact_mail_user_submit($form_id, $edit) {
   drupal_set_message(t('The message has been sent.'));
 
   // Jump to the user's profile page:
-  drupal_goto("user/$account->uid");
+  return "user/$account->uid";
 }
 
 function contact_admin_edit($cid = NULL) {
@@ -285,7 +285,7 @@ function contact_admin_edit_submit($form_id, $form_values) {
     db_query("UPDATE {contact} SET category = '%s', recipients = '%s', reply = '%s', weight = %d, selected = %d WHERE cid=%d", $form_values['category'], $form_values['recipients'], $form_values['reply'], $form_values['weight'], $form_values['selected'], $form_values['cid']);
   }
   drupal_set_message(t('Category %category has been updated.', array('%category' => theme('placeholder', $edit['category']))));
-  drupal_goto('admin/contact');
+  return 'admin/contact';
 }
 
 function contact_admin_delete($cid) {
@@ -453,5 +453,5 @@ function contact_mail_page_submit($form_id, $edit) {
   drupal_set_message(t('Your message has been sent.'));
 
   // Jump to contact page:
-  drupal_goto('contact');
+  return 'contact';
 }

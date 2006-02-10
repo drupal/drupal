@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.429 2006/02/09 09:09:03 unconed Exp $
+// $Id: comment.module,v 1.430 2006/02/10 05:25:57 dries Exp $
 
 /**
  * @file
@@ -1413,7 +1413,7 @@ function _comment_form_submit($form_values) {
 function comment_form_submit($form_id, $form_values) {
   $form_values = _comment_form_submit($form_values);
   if ($cid = comment_save($form_values)) {
-    drupal_goto('node/'. $form_values['nid'], NULL, "comment-$cid");
+    return array('node/'. $form_values['nid'], NULL, "comment-$cid");
   }
 }
 

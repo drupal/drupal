@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.580 2006/02/09 08:20:49 dries Exp $
+// $Id: user.module,v 1.581 2006/02/10 05:25:57 dries Exp $
 
 /**
  * @file
@@ -895,9 +895,6 @@ function user_login_submit($form_id, $form_values) {
     db_query("UPDATE {users} SET login = %d WHERE uid = %d", time(), $user->uid);
 
     user_module_invoke('login', $form_values, $user);
-
-    // Redirect the user to the page he logged on from.
-    drupal_goto();
   }
 }
 
@@ -1012,7 +1009,7 @@ function user_pass_submit($form_id, $form_values) {
     watchdog('user', t('Error mailing password reset instructions to %name at %email.', array('%name' => theme('placeholder', $account->name), '%email' => theme('placeholder', $account->mail))), WATCHDOG_ERROR);
     drupal_set_message(t('Unable to send mail. Please contact the site admin.'));
   }
-  drupal_goto('user');
+  return 'user';
 }
 
 function theme_user_pass($form) {
@@ -1135,7 +1132,7 @@ function user_register_submit($form_id, $form_values) {
 
   if (!$admin && array_intersect(array_keys($form_values), array('uid', 'roles', 'init', 'session', 'status'))) {
     watchdog('security', t('Detected malicious attempt to alter protected user fields.'), WATCHDOG_WARNING);
-    drupal_goto('user/register');
+    return 'user/register';
   }
 
   $account = user_save('', array_merge($form_values, array('pass' => $pass, 'init' => $mail, 'status' => ($admin || variable_get('user_register', 1) == 1))));
@@ -1153,13 +1150,13 @@ function user_register_submit($form_id, $form_values) {
     include_once './includes/install.inc';
     drupal_set_installed_schema_version('system', max(drupal_get_schema_versions('system')));
 
-    drupal_goto('user/1/edit');
+    return 'user/1/edit';
   }
   else {
     if ($admin) {
       drupal_set_message(t('Created a new user account. No e-mail has been sent.'));
 
-      drupal_goto('admin/user');
+      return 'admin/user';
     }
     else if ($account->status) {
       // Create new user account, no administrator approval required.
@@ -1168,7 +1165,6 @@ function user_register_submit($form_id, $form_values) {
       user_mail($mail, $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
       drupal_set_message(t('Your password and further instructions have been sent to your e-mail address.'));
 
-      drupal_goto();
     }
     else {
       // Create new user account, administrator approval required.
@@ -1179,7 +1175,6 @@ function user_register_submit($form_id, $form_values) {
       user_mail(variable_get('site_mail', ini_get('sendmail_from')), $subject, t("%u has applied for an account.\n\n%uri", array('%u' => $account->name, '%uri' => url("user/$account->uid/edit", NULL, NULL, TRUE))), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
       drupal_set_message(t('Thank you for applying for an account. Your account is currently pending approval by the site administrator.<br />In the meantime, your password and further instructions have been sent to your e-mail address.'));
 
-      drupal_goto();
     }
   }
 }
@@ -1328,7 +1323,7 @@ function user_edit_submit($form_id, $form_values) {
   // Delete that user's menu cache.
   cache_clear_all('menu:'. $account->uid, TRUE);
   drupal_set_message(t('The changes have been saved.'));
-  drupal_goto('user/'. $account->uid);
+  return 'user/'. $account->uid;
 }
 
 function user_view($uid = 0) {
@@ -1497,7 +1492,7 @@ function user_admin_access_delete($aid = 0) {
 function user_admin_access_delete_confirm_submit($form_id, $edit) {
   db_query('DELETE FROM {access} WHERE aid = %d', $edit['aid']);
   drupal_set_message(t('The access rule has been deleted.'));
-  drupal_goto('admin/access/rules');
+  return 'admin/access/rules';
 }
 
 /**
@@ -1705,7 +1700,6 @@ function user_admin_perm_submit($form_id, $edit) {
   // Clear the cached pages and menus:
   menu_rebuild();
 
-  drupal_goto($_GET['q']);
 }
 
 /**

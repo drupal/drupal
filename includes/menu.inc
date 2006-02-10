@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.105 2006/01/29 07:43:22 dries Exp $
+// $Id: menu.inc,v 1.106 2006/02/10 05:25:57 dries Exp $
 
 /**
  * @file
@@ -998,8 +998,8 @@ function _menu_sort($a, $b) {
   elseif ($a['weight'] > $b['weight']) {
     return 1;
   }
-  elseif (isset($a['title']) && isset($b['title']) && ($a['title'] < $b['title'])) {
-    return -1;
+  elseif (isset($a['title']) && isset($b['title'])) {
+    return strnatcasecmp($a['title'], $b['title']);
   }
   else {
     return 1;

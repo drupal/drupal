@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.270 2006/01/20 09:09:18 dries Exp $
+// $Id: aggregator.module,v 1.271 2006/02/10 05:25:57 dries Exp $
 
 /**
  * @file
@@ -1013,7 +1013,6 @@ function aggregator_page_list_submit($form_id, $form) {
     }
   }
   drupal_set_message(t('The categories have been saved.'));
-  drupal_goto($_GET['q']);
 }
 
 

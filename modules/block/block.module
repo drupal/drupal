@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.200 2006/01/29 07:50:45 dries Exp $
+// $Id: block.module,v 1.201 2006/02/10 05:25:57 dries Exp $
 
 /**
  * @file
@@ -406,7 +406,7 @@ function block_admin_configure_submit($form_id, $form_values) {
     module_invoke($form_values['module'], 'block', 'save', $form_values['delta'], $form_values);
     drupal_set_message(t('The block configuration has been saved.'));
     cache_clear_all();
-    drupal_goto('admin/block');
+    return 'admin/block';
   }
 }
 
@@ -430,7 +430,7 @@ function block_box_add_submit($form_id, $form_values) {
   if (!form_get_errors()) {
     if (block_box_save($form_values)) {
       drupal_set_message(t('The block has been created.'));
-      drupal_goto('admin/block');
+      return 'admin/block';
     }
   }
 }
@@ -453,7 +453,7 @@ function block_box_delete_confirm_submit($form_id, $form_values) {
   db_query('DELETE FROM {boxes} WHERE bid = %d', $form_values['bid']);
   drupal_set_message(t('The block %name has been removed.', array('%name' => theme('placeholder', $form_values['info']))));
   cache_clear_all();
-  drupal_goto('admin/block');
+  return 'admin/block';
 };
 
 function block_box_form($edit = array()) {

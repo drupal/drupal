@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.140 2006/02/04 19:42:45 dries Exp $ */
+/* $Id: drupal.css,v 1.141 2006/02/10 05:25:57 dries Exp $ */
 
 /*
 ** HTML elements
@@ -291,7 +291,20 @@ tr.odd .form-item, tr.even .form-item {
 #forum td.posts, #forum td.topics, #forum td.replies, #forum td.pager {
   text-align: center;
 }
-
+.forum-topic-navigation {
+  padding: 1em 0 0 3em;
+  border-top: 1px solid #888;
+  border-bottom: 1px solid #888;
+  text-align: center;
+  padding: 0.5em;
+}
+.forum-topic-navigation .topic-previous {
+  margin-right: 4em;
+  text-align: right;
+}
+.forum-topic-navigation .topic-next {
+  text-align: left;
+}
 .locale-untranslated {
   font-style: normal;
   text-decoration: line-through;

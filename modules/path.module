@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.76 2005/12/19 14:51:38 dries Exp $
+// $Id: path.module,v 1.77 2006/02/10 05:25:57 dries Exp $
 
 /**
  * @file
@@ -117,7 +117,7 @@ function path_admin_delete_confirm($pid) {
 function path_admin_delete_confirm_submit($form_id, $form_values) {
   if ($form_values['confirm']) {
     path_admin_delete($form_values['pid']);
-    drupal_goto('admin/path');
+    return 'admin/path';
   }
 }
 
@@ -342,7 +342,7 @@ function path_form_submit() {
     path_set_alias($src, $dst, $pid);
 
     drupal_set_message(t('The alias has been saved.'));
-    drupal_goto('admin/path');
+    return 'admin/path';
   }
 }
 
