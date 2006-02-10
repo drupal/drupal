@@ -608,7 +608,7 @@ function watchdog($type, $message, $severity = WATCHDOG_NOTICE, $link = NULL) {
  *   - 'error'
  */
 function drupal_set_message($message = NULL, $type = 'status') {
-  if (isset($message)) {
+  if ($message) {
     if (!isset($_SESSION['messages'])) {
       $_SESSION['messages'] = array();
     }
@@ -631,7 +631,7 @@ function drupal_set_message($message = NULL, $type = 'status') {
  */
 function drupal_get_messages() {
   $messages = drupal_set_message();
-  $_SESSION['messages'] = array();
+  unset($_SESSION['messages']);
 
   return $messages;
 }
