@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.309 2006/02/09 08:52:03 dries Exp $
+// $Id: forum.module,v 1.310 2006/02/10 05:05:44 dries Exp $
 
 /**
  * @file
@@ -400,50 +400,6 @@ function forum_block($op = 'list', $delta = 0, $edit = array()) {
   }
 }
 
-/**
- * Implementation of hook_link().
- */
-function forum_link($type, $node = 0, $main = 0) {
-  global $user;
-
-  $links = array();
-
-  if (!$main && $type == 'node' && $node->type == 'forum') {
-    // get previous and next topic
-
-    $sql = "SELECT n.nid, n.title, n.sticky, l.comment_count, l.last_comment_timestamp FROM {node} n INNER JOIN {node_comment_statistics} l ON n.nid = l.nid INNER JOIN {term_node} r ON n.nid = r.nid AND r.tid = %d WHERE n.status = 1 AND n.type = 'forum' ORDER BY n.sticky DESC, ". _forum_get_topic_order_sql(variable_get('forum_order', 1));
-    $sql = db_rewrite_sql($sql);
-    $result = db_query($sql, $node->tid);
-
-    while ($topic = db_fetch_object($result)) {
-      if ($stop == 1) {
-        $next = new StdClass();
-        $next->nid = $topic->nid;
-        $next->title = $topic->title;
-        break;
-      }
-      if ($topic->nid == $node->nid) {
-        $stop = 1;
-      }
-      else {
-        $prev = new StdClass();
-        $prev->nid = $topic->nid;
-        $prev->title = $topic->title;
-      }
-    }
-
-    if ($prev) {
-      $links[] = l(t('previous forum topic'), "node/$prev->nid", array('title' => check_plain($prev->title)));
-    }
-
-    if ($next) {
-      $links[] = l(t('next forum topic'), "node/$next->nid", array('title' => check_plain($next->title)));
-    }
-  }
-
-  return $links;
-}
-
 function forum_term_path($term) {
   return 'forum/'. $term->tid;
 }
@@ -497,7 +453,6 @@ function forum_menu($may_cache) {
  * Implementation of hook_view().
  */
 function forum_view(&$node, $teaser = FALSE, $page = FALSE) {
-
   if ($page) {
     $vocabulary = taxonomy_get_vocabulary(variable_get('forum_nav_vocabulary', ''));
     // Breadcrumb navigation
@@ -514,6 +469,8 @@ function forum_view(&$node, $teaser = FALSE, $page = FALSE) {
   }
 
   $node = node_prepare($node, $teaser);
+
+  $node->body .= theme('forum_topic_navigation', $node);
 }
 
 /**
@@ -1002,6 +959,51 @@ function theme_forum_icon($new_posts, $num_posts = 0, $comment_mode = 0, $sticky
 
   if ($new_posts) {
     $output = "<a name=\"new\">$output</a>";
+  }
+
+  return $output;
+}
+
+/**
+ * Format the next/previous forum topic navigation links.
+ *
+ * @ingroup themeable
+ */
+function theme_forum_topic_navigation($node) {
+  $output = '';
+
+  // get previous and next topic
+  $sql = "SELECT n.nid, n.title, n.sticky, l.comment_count, l.last_comment_timestamp FROM {node} n INNER JOIN {node_comment_statistics} l ON n.nid = l.nid INNER JOIN {term_node} r ON n.nid = r.nid AND r.tid = %d WHERE n.status = 1 AND n.type = 'forum' ORDER BY n.sticky DESC, ". _forum_get_topic_order_sql(variable_get('forum_order', 1));
+  $result = db_query(db_rewrite_sql($sql), $node->tid);
+
+  while ($topic = db_fetch_object($result)) {
+    if ($stop == 1) {
+      $next = new StdClass();
+      $next->nid = $topic->nid;
+      $next->title = $topic->title;
+      break;
+    }
+    if ($topic->nid == $node->nid) {
+      $stop = 1;
+    }
+    else {
+      $prev = new StdClass();
+      $prev->nid = $topic->nid;
+      $prev->title = $topic->title;
+    }
+  }
+
+  if ($prev || $next) {
+    $output .= '<div class="forum-topic-navigation">';
+
+    if ($prev) {
+      $output .= l(t('‹ ') . check_plain($prev->title), 'node/'. $prev->nid, array('class' => 'topic-previous', 'title' => t('Go to previous forum topic')));
+    }
+    if ($next) {
+      $output .= l(check_plain($next->title) . t(' ›'), 'node/'. $next->nid, array('class' => 'topic-next', 'title' => t('Go to next forum topic')));
+    }
+
+    $output .= '</div>';
   }
 
   return $output;
