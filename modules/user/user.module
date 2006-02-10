@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.581 2006/02/10 05:25:57 dries Exp $
+// $Id: user.module,v 1.582 2006/02/10 05:46:39 dries Exp $
 
 /**
  * @file
@@ -524,9 +524,20 @@ function user_block($op = 'list', $delta = 0, $edit = array()) {
         if (!$user->uid && !(arg(0) == 'user' && !is_numeric(arg(1)))) {
           $form['#action'] = url($_GET['q'], drupal_get_destination());
           $form['#attributes'] = array('id' => 'user-login-form');
-          $form['name'] = array('#type' => 'textfield', '#title' => t('Username'), '#maxlength' => 64, '#size' => 15);
-          $form['pass'] = array('#type' => 'password', '#title' => t('Password'), '#maxlength' => 64, '#size' => 15);
-          $form['submit'] = array('#type' => 'submit', '#value' => t('Log in'));
+          $form['name'] = array('#type' => 'textfield',
+            '#title' => t('Username'),
+            '#maxlength' => 60,
+            '#size' => 15,
+            '#required' => TRUE,
+          );
+          $form['pass'] = array('#type' => 'password',
+            '#title' => t('Password'),
+            '#size' => 15,
+            '#required' => TRUE,
+          );
+          $form['submit'] = array('#type' => 'submit',
+            '#value' => t('Log in'),
+          );
 
           if (variable_get('user_register', 1)) {
             $items[] = l(t('Create new account'), 'user/register', array('title' => t('Create a new user account.')));
@@ -852,20 +863,31 @@ function user_login($msg = '') {
   if ($msg) {
     $form['message'] = array('#value' => "<p>$msg</p>");
   }
-  $form['name'] = array('#type' => 'textfield', '#title' => t('Username'), '#size' => 30, '#maxlength' => 64, '#required' => TRUE, '#attributes' => array('tabindex' => '1'));
+  $form['name'] = array('#type' => 'textfield',
+    '#title' => t('Username'),
+    '#size' => 30,
+    '#maxlength' => 60,
+    '#required' => TRUE,
+    '#attributes' => array('tabindex' => '1'),
+  );
   if (count(user_auth_help_links()) > 0) {
     $form['name']['#description'] = t('Enter your %s username, or an ID from one of our affiliates: %a.', array('%s' => variable_get('site_name', 'local'), '%a' => implode(', ', user_auth_help_links())));
   }
   else {
     $form['name']['#description'] = t('Enter your %s username.', array('%s' => variable_get('site_name', 'local')));
   }
-  $form['pass'] = array('#type' => 'password', '#title' => t('Password'), '#description' => t('Enter the password that accompanies your username.'), '#required' => TRUE, '#attributes' => array('tabindex' => '2'));
+  $form['pass'] = array('#type' => 'password',
+    '#title' => t('Password'),
+    '#description' => t('Enter the password that accompanies your username.'),
+    '#required' => TRUE,
+    '#attributes' => array('tabindex' => '2'),
+  );
   $form['submit'] = array('#type' => 'submit', '#value' => t('Log in'), '#weight' => 2, '#attributes' => array('tabindex' => '3'));
   return drupal_get_form('user_login', $form);
 }
 
 function user_login_validate($form_id, $form_values) {
-  if (isset($form_values['name'])) {
+  if ($form_values['name']) {
     if (user_is_blocked($form_values['name'])) {
       // blocked in user administration
       form_set_error('login', t('The username %name has been blocked.', array('%name' => theme('placeholder', $form_values['name']))));
@@ -875,7 +897,6 @@ function user_login_validate($form_id, $form_values) {
       form_set_error('login', t('The name %name is a reserved username.', array('%name' => theme('placeholder', $form_values['name']))));
     }
     else if ($form_values['pass']) {
-
       $user = user_authenticate($form_values['name'], trim($form_values['pass']));
 
       if (!$user->uid) {
@@ -966,9 +987,20 @@ function user_logout() {
 function user_pass() {
 
   // Display form:
-  $form['name'] = array('#type' => 'textfield', '#title' => t('Username'), '#size' => 30, '#maxlength' => 64);
-  $form['mail'] = array('#type' => 'textfield', '#title' => t('E-mail address'), '#size' => 30, '#maxlength' => 64);
-  $form['submit'] = array('#type' => 'submit', '#value' => t('E-mail new password'), '#weight' => 2);
+  $form['name'] = array('#type' => 'textfield',
+    '#title' => t('Username'),
+    '#size' => 30,
+    '#maxlength' => 60,
+  );
+  $form['mail'] = array('#type' => 'textfield',
+    '#title' => t('E-mail address'),
+    '#size' => 30,
+    '#maxlength' => 64,
+  );
+  $form['submit'] = array('#type' => 'submit',
+    '#value' => t('E-mail new password'),
+    '#weight' => 2,
+  );
   return drupal_get_form('user_pass', $form);
 }
 
@@ -1093,10 +1125,26 @@ function user_register() {
     $affiliates = implode(', ', $affiliates);
     $form['affiliates'] = array('#type' => 'markup', '#value' => '<p>'. t('Note: if you have an account with one of our affiliates (%s), you may <a href="%login_uri">login now</a> instead of registering.', array('%s' => $affiliates, '%login_uri' => url('user'))) .'</p>');
   }
-  $form['name'] = array('#type' => 'textfield', '#title' => t('Username'), '#size' => 30, '#maxlength' => 64, '#description' => t('Your full name or your preferred username; only letters, numbers and spaces are allowed.'), '#required' => TRUE);
-  $form['mail'] = array('#type' => 'textfield', '#title' => t('E-mail address'), '#size' => 30, '#maxlength' => 64, '#description' => t('A password and instructions will be sent to this e-mail address, so make sure it is accurate.'), '#required' => TRUE);
+  $form['name'] = array('#type' => 'textfield',
+    '#title' => t('Username'),
+    '#size' => 30,
+    '#maxlength' => 60,
+    '#description' => t('Your full name or your preferred username; only letters, numbers and spaces are allowed.'),
+    '#required' => TRUE);
+  $form['mail'] = array('#type' => 'textfield',
+    '#title' => t('E-mail address'),
+    '#size' => 30,
+    '#maxlength' => 64,
+    '#description' => t('A password and instructions will be sent to this e-mail address, so make sure it is accurate.'),
+    '#required' => TRUE,
+  );
   if ($admin) {
-    $form['pass'] = array('#type' => 'password', '#title' => t('Password'), '#size' => 30, '#maxlength' => 55, '#description' => t('Provide a password for the new account.'), '#required' => TRUE);
+    $form['pass'] = array('#type' => 'password',
+      '#title' => t('Password'),
+      '#size' => 30,
+      '#description' => t('Provide a password for the new account.'),
+      '#required' => TRUE,
+    );
   }
   $extra = _user_forms($null, $null, $null, 'register');
   // Only display form_group around default fields if there are other groups.
@@ -1106,9 +1154,7 @@ function user_register() {
     $form['account']['name'] = $form['name'];
     $form['account']['mail'] = $form['mail'];
     $form['account']['pass'] = $form['pass'];
-    unset($form['name']);
-    unset($form['mail']);
-    unset($form['pass']);
+    unset($form['name'], $form['mail'], $form['pass']);
     $form = array_merge($form, $extra);
   }
   $form['submit'] = array('#type' => 'submit', '#value' => t('Create new account'), '#weight' => 30);
@@ -1181,12 +1227,29 @@ function user_register_submit($form_id, $form_values) {
 
 function user_edit_form($uid, $edit) {
   // Account information:
-  $form['account'] = array('#type' => 'fieldset', '#title' => t('Account information'));
+  $form['account'] = array('#type' => 'fieldset',
+    '#title' => t('Account information'),
+  );
   if (user_access('change own username') || user_access('administer users')) {
-    $form['account']['name'] = array('#type' => 'textfield', '#title' => t('Username'), '#default_value' => $edit['name'], '#maxlength' => 55, '#description' => t('Your full name or your preferred username: only letters, numbers and spaces are allowed.'), '#required' => TRUE);
+    $form['account']['name'] = array('#type' => 'textfield',
+      '#title' => t('Username'),
+      '#default_value' => $edit['name'],
+      '#maxlength' => 60,
+      '#description' => t('Your full name or your preferred username: only letters, numbers and spaces are allowed.'),
+      '#required' => TRUE,
+    );
   }
-  $form['account']['mail'] = array('#type' => 'textfield', '#title' => t('E-mail address'), '#default_value' => $edit['mail'], '#maxlength' => 55, '#description' => t('Insert a valid e-mail address.  All e-mails from the system will be sent to this address. The e-mail address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by e-mail.'), '#required' => TRUE);
-  $form['account']['pass'] = array('#type' => 'password_confirm', '#title' => t('Password'), '#description' => t('To change the current user password, enter the new password in both fields.'));
+  $form['account']['mail'] = array('#type' => 'textfield',
+    '#title' => t('E-mail address'),
+    '#default_value' => $edit['mail'],
+    '#maxlength' => 64,
+    '#description' => t('Insert a valid e-mail address. All e-mails from the system will be sent to this address. The e-mail address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by e-mail.'),
+    '#required' => TRUE,
+  );
+  $form['account']['pass'] = array('#type' => 'password_confirm',
+    '#title' => t('Password'),
+    '#description' => t('To change the current user password, enter the new password in both fields.'),
+  );
   if (user_access('administer users')) {
     $form['account']['status'] = array('#type' => 'radios', '#title' => t('Status'), '#default_value' => $edit['status'], '#options' => array(t('Blocked'), t('Active')));
   }
