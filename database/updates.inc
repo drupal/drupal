@@ -1591,7 +1591,7 @@ function system_update_172() {
   // Multi-part update
   if (!isset($_SESSION['system_update_172'])) {
     $_SESSION['system_update_172'] = 0;
-    $_SESSION['system_update_172_max'] = db_result(db_query('SELECT MAX(cid) FROM comments'));
+    $_SESSION['system_update_172_max'] = db_result(db_query('SELECT MAX(cid) FROM {comments}'));
   }
 
   include_once './modules/comment.module';
@@ -1606,7 +1606,7 @@ function system_update_172() {
       $thread[$i] = int2vancode((strlen($offset) - 1) * 10 + substr($offset, -1, 1));
     }
     $thread = implode('.', $thread) .'/';
-    db_query("UPDATE comments SET thread = '%s' WHERE cid = %d", $thread, $comment->cid);
+    db_query("UPDATE {comments} SET thread = '%s' WHERE cid = %d", $thread, $comment->cid);
   }
 
   if ($_SESSION['system_update_172'] == $_SESSION['system_update_172_max']) {
