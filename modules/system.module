@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.289 2006/02/10 05:25:57 dries Exp $
+// $Id: system.module,v 1.290 2006/02/12 05:34:34 dries Exp $
 
 /**
  * @file
@@ -62,12 +62,11 @@ function system_elements() {
   $type['submit'] = array('#input' => TRUE, '#name' => 'op', '#button_type' => 'submit', '#form_submitted' => TRUE);
   $type['button'] = array('#input' => TRUE, '#name' => 'op', '#button_type' => 'submit', '#form_submitted' => FALSE);
   $type['textfield'] = array('#input' => TRUE, '#size' => 60, '#maxlength' => 128, '#autocomplete_path' => FALSE);
-  $type['password'] = array('#input' => TRUE, '#size' => 30, '#maxlength' => 64);
-  $type['password_confirm'] = array(
-    '#input' => TRUE,
+  $type['password'] = array('#input' => TRUE, '#size' => 30);
+  $type['password_confirm'] = array('#input' => TRUE,
     '#value' => 'pass',
-    'pass1' => array('#type' => 'password', '#size' => 12, '#maxlength' => 24),
-    'pass2' => array('#type' => 'password', '#size' => 12, '#maxlength' => 24),
+    'pass1' => array('#type' => 'password', '#size' => 12),
+    'pass2' => array('#type' => 'password', '#size' => 12),
     '#validate' => array('password_confirm_validate' => array()),
   );
   $type['textarea'] = array('#input' => TRUE, '#cols' => 60, '#rows' => 5);
