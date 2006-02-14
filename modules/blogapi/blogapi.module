@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.74 2006/01/30 18:30:44 dries Exp $
+// $Id: blogapi.module,v 1.75 2006/02/14 19:14:23 dries Exp $
 
 /**
  * @file
@@ -723,7 +723,7 @@ function _blogapi_blogid($id) {
 }
 
 function _blogapi_get_node_types() {
-  $available_types = array_keys(variable_get('blogapi_node_types', array('blog' => 1)), 1);
+  $available_types = array_keys(array_filter(variable_get('blogapi_node_types', array('blog' => 1))));
   $types = array();
   foreach (node_get_types() as $type => $name) {
     if (node_access('create', $type) && in_array($type, $available_types)) {
