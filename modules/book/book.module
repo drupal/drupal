@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.348 2006/02/09 07:27:11 dries Exp $
+// $Id: book.module,v 1.349 2006/02/14 19:25:02 dries Exp $
 
 /**
  * @file
@@ -17,7 +17,7 @@ function book_node_info() {
  * Implementation of hook_perm().
  */
 function book_perm() {
-    return array('create book pages', 'maintain books', 'edit own book pages', 'see printer-friendly version');
+    return array('outline posts in books', 'create book pages', 'create new books', 'edit book pages', 'edit own book pages', 'see printer-friendly version');
 }
 
 /**
@@ -39,7 +39,7 @@ function book_access($op, $node) {
     // of that page waiting for approval.  That is, only updates that
     // don't overwrite the current or pending information are allowed.
 
-    if ((user_access('maintain books') && !$node->moderate) || ($node->uid == $user->uid && user_access('edit own book pages'))) {
+    if ((user_access('edit book pages') && !$node->moderate) || ($node->uid == $user->uid && user_access('edit own book pages'))) {
       return TRUE;
     }
     else {
@@ -119,8 +119,8 @@ function book_menu($may_cache) {
   }
   else {
     // To avoid SQL overhead, check whether we are on a node page and whether the
-    // user is allowed to maintain books.
-    if (arg(0) == 'node' && is_numeric(arg(1)) && user_access('maintain books')) {
+    // user is allowed to outline posts in books.
+    if (arg(0) == 'node' && is_numeric(arg(1)) && user_access('outline posts in books')) {
       // Only add the outline-tab for non-book pages:
       $result = db_query(db_rewrite_sql("SELECT n.nid FROM {node} n WHERE n.nid = %d AND n.type != 'book'"), arg(1));
       if (db_num_rows($result) > 0) {
@@ -128,7 +128,7 @@ function book_menu($may_cache) {
           'path' => 'node/'. arg(1) .'/outline',
           'title' => t('outline'),
           'callback' => 'book_outline',
-          'access' => user_access('maintain books'),
+          'access' => user_access('outline posts in books'),
           'type' => MENU_LOCAL_TASK,
           'weight' => 2);
       }
@@ -246,10 +246,18 @@ function book_validate($node) {
  * Implementation of hook_form().
  */
 function book_form(&$node) {
-  $form['parent'] = array(
-    '#type' => 'select', '#title' => t('Parent'), '#default_value' => ($node->parent ? $node->parent : arg(4)), '#options' => book_toc($node->nid), '#weight' => -4,
-    '#description' => t('The parent that this page belongs in. Note that pages whose parent is &lt;top-level&gt; are regarded as independent, top-level books.')
-  );
+  $form['parent'] =
+    array(
+          '#type' => 'select',
+          '#title' => t('Parent'),
+          '#default_value' => ($node->parent ? $node->parent : arg(4)),
+          '#options' => book_toc($node->nid),
+          '#weight' => -4,
+          '#description' =>
+            user_access('create new books') ?
+              t('The parent section in which to place this page.  Note that each page whose parent is &lt;top-level&gt; is an independent, top-level book.') :
+              t('The parent that this page belongs in.')
+          );
 
   $form['title'] = array('#type' => 'textfield', '#title' => t('Title'), '#required' => TRUE, '#default_value' => $node->title, '#weight' => -5);
   $form['body_filter']['body'] = array('#type' => 'textarea', '#title' => t('Body'), '#default_value' => $node->body, '#rows' => 20, '#required' => TRUE);
@@ -540,10 +548,8 @@ function book_toc($exclude = 0) {
   }
 
   $toc = array();
-
-  // If the user is an administrator, add the top-level book page;
-  // only administrators can start new books.
-  if (user_access('administer nodes')) {
+  // If the user has permission to create new books, add the top-level book page to the menu;
+  if (user_access('create new books')) {
     $toc[0] = '<'. t('top-level') .'>';
   }
 
@@ -1019,7 +1025,7 @@ function book_help($section) {
 <li>administer individual books (choose a book from list): <a href="%admin-node-book">administer &gt;&gt; content &gt;&gt; books</a>.</li>
 <li>set workflow and other global book settings on the book configuration page: <a href="%admin-settings-content-types-book-page" title="book page content type">administer &gt;&gt; settings &gt;&gt; content types &gt;&gt; configure book page</a>.</li>
 <li>enable the book navigation block: <a href="%admin-block">administer &gt;&gt; blocks</a>.</li>
-<li>control who can create, edit, and maintain book pages by setting access permissions: <a href="%admin-access">administer &gt;&gt; access control</a>.</li>
+<li>control who can create, edit, and outline posts in books by setting access permissions: <a href="%admin-access">administer &gt;&gt; access control</a>.</li>
 </ul>
 ', array('%node-add-book' => url('node/add/book'), '%admin-node-book' => url('admin/node/book'), '%admin-settings-content-types-book-page' => url('admin/settings/content-types/book'), '%admin-block' => url('admin/block'), '%admin-access' => url('admin/access')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%book">Book page</a>.', array('%book' => 'http://www.drupal.org/handbook/modules/book/')) .'</p>';
