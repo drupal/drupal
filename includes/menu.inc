@@ -849,7 +849,7 @@ function menu_primary_links($start_level = 1, $pid = 0) {
   }
 
   // Special case - provide link to admin/menu if primary links is empty.
-  if (is_null($links) && $start_level == 1 && $pid == variable_get('menu_primary_menu', 0)) {
+  if (empty($links) && $start_level == 1 && $pid == variable_get('menu_primary_menu', 0)) {
     $links['1-1'] = l(t('edit primary links'),'admin/menu');
   }
 
