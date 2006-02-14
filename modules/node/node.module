@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.600 2006/02/10 05:25:57 dries Exp $
+// $Id: node.module,v 1.601 2006/02/14 21:12:09 unconed Exp $
 
 /**
  * @file
@@ -744,7 +744,7 @@ function node_search($op = 'search', $keys = null) {
       $form['advanced']['keywords']['negative'] = array('#type' => 'textfield', '#title' => t('Containing none of the words'), '#size' => 30, '#maxlength' => 255);
 
       // Taxonomy box
-      if ($taxonomy = module_invoke('taxonomy', 'form_all')) {
+      if ($taxonomy = module_invoke('taxonomy', 'form_all', 1)) {
         $form['advanced']['category'] = array('#type' => 'select', '#title' => t('Only in the category'), '#prefix' => '<div class="criterium">', '#suffix' => '</div>', '#options' => $taxonomy, '#extra' => 'size="10"', '#multiple' => true);
       }
 
@@ -938,9 +938,9 @@ function node_last_changed($nid) {
   return ($node->changed);
 }
 
-/*
-** Node operations
-*/
+/**
+ * List node administration operations that can be performed.
+ */
 function node_operations() {
   $operations = array(
     'approve' =>   array(t('Approve the selected posts'), 'UPDATE {node} SET status = 1, moderate = 0 WHERE nid = %d'),
@@ -953,70 +953,82 @@ function node_operations() {
   return $operations;
 }
 
-/*
-** Filters
-*/
+/**
+ * List node administration filters that can be applied.
+ */
 function node_filters() {
   // Regular filters
-  $filters = array(
-    'status'   => array('title' => t('status'),
-                        'options' => array('status-1'   => t('published'),     'status-0' => t('not published'),
-                                           'moderate-1' => t('in moderation'), 'moderate-0' => t('not in moderation'),
-                                           'promote-1'  => t('promoted'),      'promote-0' => t('not promoted'),
-                                           'sticky-1'   => t('sticky'),        'sticky-0' => t('not sticky'))),
-    'type'     => array('title' => t('type'), 'where' => "n.type = '%s'",
-                        'options' => node_get_types()));
-  // Merge all vocabularies into one for retrieving $value below
-  if ($taxonomy = module_invoke('taxonomy', 'form_all')) {
-    $terms = array();
-    foreach ($taxonomy as $value) {
-      $terms = $terms + $value;
-    }
-    $filters['category'] = array('title' => t('category'), 'where' => 'tn.tid = %d',
-                                 'options' => $terms, 'join' => 'INNER JOIN {term_node} tn ON n.nid = tn.nid');
-  }
-  if (isset($filters['category'])) {
-    $filters['category']['options'] = $taxonomy;
+  $filters['status'] = array('title' => t('status'),
+    'options' => array('status-1'   => t('published'),     'status-0' => t('not published'),
+                       'moderate-1' => t('in moderation'), 'moderate-0' => t('not in moderation'),
+                       'promote-1'  => t('promoted'),      'promote-0' => t('not promoted'),
+                       'sticky-1'   => t('sticky'),        'sticky-0' => t('not sticky')));
+  $filters['type'] = array('title' => t('type'), 'options' => node_get_types());
+  // The taxonomy filter
+  if ($taxonomy = module_invoke('taxonomy', 'form_all', 1)) {
+    $filters['category'] = array('title' => t('category'), 'options' => $taxonomy);
   }
 
   return $filters;
 }
 
+/**
+ * Build query for node administration filters based on session.
+ */
 function node_build_filter_query() {
   $filters = node_filters();
 
   // Build query
   $where = $args = array();
   $join = '';
-  foreach ($_SESSION['node_overview_filter'] as $filter) {
+  foreach ($_SESSION['node_overview_filter'] as $index => $filter) {
     list($key, $value) = $filter;
-    if ($key == 'status') {
-      // Note: no exploit hole as $value has already been checked
-      list($key, $value) = explode('-', $value, 2);
-      $where[] = 'n.'. $key .' = %d';
-    }
-    else {
-      $where[] = $filters[$key]['where'];
+    switch($key) {
+      case 'status':
+        // Note: no exploitable hole as $key/$value have already been checked when submitted
+        list($key, $value) = explode('-', $value, 2);
+        $where[] = 'n.'. $key .' = %d';
+        break;
+      case 'category':
+        $table = "tn$index";
+        $where[] = "$table.tid = %d";
+        $join .= "INNER JOIN {term_node} $table ON n.nid = $table.nid ";
+        break;
+      case 'type':
+        $where[] = "n.type = '%s'";
     }
     $args[] = $value;
-    $join .= $filters[$key]['join'];
   }
   $where = count($where) ? 'WHERE '. implode(' AND ', $where) : '';
 
   return array('where' => $where, 'join' => $join, 'args' => $args);
 }
 
+/**
+ * Return form for node administration filters.
+ */
 function node_filter_form() {
   $session = &$_SESSION['node_overview_filter'];
   $session = is_array($session) ? $session : array();
   $filters = node_filters();
 
   $i = 0;
-  $form['filters'] = array('#type' => 'fieldset', '#title' => t('Show only items where'), '#theme' => 'node_filters');
+  $form['filters'] = array('#type' => 'fieldset',
+    '#title' => t('Show only items where'),
+    '#theme' => 'node_filters',
+  );
   foreach ($session as $filter) {
     list($type, $value) = $filter;
+    if ($type == 'category') {
+      // Load term name from DB rather than search and parse options array.
+      $value = module_invoke('taxonomy', 'get_term', $value);
+      $value = $value->name;
+    }
+    else {
+      $value = $filters[$type]['options'][$value];
+    }
     $string = ($i++ ? '<em>and</em> where <strong>%a</strong> is <strong>%b</strong>' : '<strong>%a</strong> is <strong>%b</strong>');
-    $form['filters']['current'][] = array('#value' => t($string, array('%a' => $filters[$type]['title'] , '%b' => $filters[$type]['options'][$value])));
+    $form['filters']['current'][] = array('#value' => t($string, array('%a' => $filters[$type]['title'] , '%b' => $value)));
   }
 
   foreach ($filters as $key => $filter) {
@@ -1034,6 +1046,9 @@ function node_filter_form() {
   return drupal_get_form('node_filter_form', $form);
 }
 
+/**
+ * Theme node administration filter form.
+ */
 function theme_node_filter_form(&$form) {
   $output .= '<div id="node-admin-filter">';
   $output .= form_render($form['filters']);
@@ -1042,6 +1057,9 @@ function theme_node_filter_form(&$form) {
   return $output;
 }
 
+/**
+ * Theme node administraton filter selector.
+ */
 function theme_node_filters(&$form) {
   $output .= '<ul>';
   if (sizeof($form['current'])) {
@@ -1051,14 +1069,14 @@ function theme_node_filters(&$form) {
   }
 
   $output .= '<li><dl class="multiselect">' . (sizeof($form['current']) ? '<dt><em>'. t('and') .'</em> '. t('where') .'</dt>' : '') . '<dd class="a">';
-  foreach(element_children($form['filter']) as $key) {
+  foreach (element_children($form['filter']) as $key) {
     $output .= form_render($form['filter'][$key]);
   }
   $output .= '</dd>';
 
   $output .= '<dt>'. t('is') .'</dt>' . '<dd class="b">';
 
-  foreach(element_children($form['status']) as $key) {
+  foreach (element_children($form['status']) as $key) {
     $output .= form_render($form['status'][$key]);
   }
   $output .= '</dd>';
@@ -1070,15 +1088,23 @@ function theme_node_filters(&$form) {
   return $output;
 }
 
+/**
+ * Process result from node administration filter form.
+ */
 function node_filter_form_submit() {
   global $form_values;
   $op = $_POST['op'];
   $filters = node_filters();
   switch ($op) {
-    case t('Filter'): case t('Refine'):
+    case t('Filter'):
+    case t('Refine'):
       if (isset($form_values['filter'])) {
         $filter = $form_values['filter'];
-        if (isset($filters[$filter]['options'][$form_values[$filter]])) {
+
+        // Flatten the options array to accomodate hierarchical/nested options.
+        $flat_options = form_options_flatten($filters[$filter]['options']);
+
+        if (isset($flat_options[$form_values[$filter]])) {
           $_SESSION['node_overview_filter'][] = array($filter, $form_values[$filter]);
         }
       }
@@ -1127,6 +1153,9 @@ function node_admin_nodes_validate($form_id, $edit) {
   }
 }
 
+/**
+ * Menu callback: content administration.
+ */
 function node_admin_nodes() {
   global $form_values;
   $output = node_filter_form();
@@ -1139,9 +1168,10 @@ function node_admin_nodes() {
 
   $result = pager_query('SELECT n.*, u.name, u.uid FROM {node} n '. $filter['join'] .' INNER JOIN {users} u ON n.uid = u.uid '. $filter['where'] .' ORDER BY n.changed DESC', 50, 0, NULL, $filter['args']);
 
-  $form['options'] = array(
-    '#type' => 'fieldset', '#title' => t('Update options'),
-    '#prefix' => "<div class=\"container-inline\">" , '#suffix' => "</div>"
+  $form['options'] = array('#type' => 'fieldset',
+    '#title' => t('Update options'),
+    '#prefix' => '<div class="container-inline">',
+    '#suffix' => '</div>',
   );
   $options = array();
   foreach (node_operations() as $key => $value) {
@@ -1171,6 +1201,9 @@ function node_admin_nodes() {
   return $output;
 }
 
+/**
+ * Theme node administration overview.
+ */
 function theme_node_admin_nodes($form) {
   // Overview table:
   $header = array(NULL, t('Title'), t('Type'), t('Author'), t('Status'), t('Operations'));
@@ -1207,7 +1240,7 @@ function node_multiple_delete_confirm() {
   $edit = $_POST['edit'];
 
   $form['nodes'] = array('#prefix' => '<ul>', '#suffix' => '</ul>', '#tree' => TRUE);
-  // array filter returns only elements with true values
+  // array_filter returns only elements with true values
   foreach (array_filter($edit['nodes']) as $nid => $value) {
     $title = db_result(db_query('SELECT title FROM {node} WHERE nid = %d', $nid));
     $form['nodes'][$nid] = array('#type' => 'hidden', '#value' => $nid, '#prefix' => '<li>', '#suffix' => check_plain($title) ."</li>\n");
@@ -1274,7 +1307,6 @@ function node_revision_overview($node) {
 
   $revisions = node_revision_list($node);
 
-  $i = 0;
   $rows = array();
   $revert_permission = FALSE;
   if ((user_access('revert revisions') || user_access('administer nodes')) && node_access('update', $node)) {
