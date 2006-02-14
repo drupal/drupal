@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.430 2006/02/10 05:25:57 dries Exp $
+// $Id: comment.module,v 1.431 2006/02/14 19:17:00 dries Exp $
 
 /**
  * @file
@@ -1141,7 +1141,7 @@ function comment_validate($edit) {
   }
 
   // Validate the comment's body.
-  if ($edit['comment'] == '') {
+  if (trim($edit['comment']) == '') {
     form_set_error('comment', t('The body of your comment is empty.'));
   }
 
