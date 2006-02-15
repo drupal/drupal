@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysqli.inc,v 1.13 2006/02/02 01:27:57 unconed Exp $
+// $Id: database.mysqli.inc,v 1.14 2006/02/15 21:39:51 dries Exp $
 
 /**
  * @file
@@ -38,18 +38,13 @@ function db_connect($url) {
   $url['host'] = urldecode($url['host']);
   $url['path'] = urldecode($url['path']);
 
-  // Allow for non-standard MySQL port.
-  if (isset($url['port'])) {
-     $url['host'] = $url['host'] .':'. $url['port'];
-  }
-
   $connection = mysqli_init();
-  @mysqli_real_connect($connection, $url['host'], $url['user'], $url['pass'], substr($url['path'], 1), NULL, NULL, MYSQLI_CLIENT_FOUND_ROWS);
+  @mysqli_real_connect($connection, $url['host'], $url['user'], $url['pass'], substr($url['path'], 1), $url['port'], NULL, MYSQLI_CLIENT_FOUND_ROWS);
 
-  if (!$connection) {
+  if (mysqli_connect_errno() == 2003) {
     drupal_maintenance_theme();
     drupal_set_title('Unable to connect to database server');
-    print theme('maintenance_page', '<p>This either means that the username and password information in your <code>settings.php</code> file is incorrect or we can\'t contact the MySQL database server through the mysqli libraries. This could mean your hosting provider\'s database server is down, or your PHP is not compiled with mysqli.</p>
+    print theme('maintenance_page', '<p>This either means that the username and password information in your <code>settings.php</code> file is incorrect or we can\'t contact the MySQL database server through the mysqli libraries. This could also mean your hosting provider\'s database server is down.</p>
 <p>The MySQL error was: '. theme('placeholder', mysqli_error($connection)) .'.</p>
 <p>Currently, the username is '. theme('placeholder', $url['user']) .' and the database server is '. theme('placeholder', $url['host']) .'.</p>
 <ul>
@@ -61,8 +56,7 @@ function db_connect($url) {
 <p>For more help, see the <a href="http://drupal.org/node/258">Installation and upgrading handbook</a>. If you are unsure what these terms mean you should probably contact your hosting provider.</p>');
     exit;
   }
-
-  if (!mysqli_select_db($connection, substr($url['path'], 1))) {
+  else if (mysqli_connect_errno() == 1044) {
     drupal_maintenance_theme();
     drupal_set_title('Unable to select database');
     print theme('maintenance_page', '<p>We were able to connect to the MySQL database server (which means your username and password are okay) but not able to select the database.</p>
