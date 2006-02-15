@@ -1,5 +1,5 @@
 <?php
-// $Id: phptemplate.engine,v 1.26 2006/02/02 12:44:57 dries Exp $
+// $Id: phptemplate.engine,v 1.27 2006/02/15 21:32:19 dries Exp $
 
 /**
  * @file
@@ -142,7 +142,7 @@ function phptemplate_features() {
 function phptemplate_page($content) {
 
   /* Set title and breadcrumb to declared values */
-  if ($_GET['q'] == variable_get('site_frontpage', 'node')) {
+  if (drupal_get_path_alias($_GET['q']) == variable_get('site_frontpage', 'node')) {
     $mission = theme_get_setting('mission');
     $frontpage = true;
   }
