@@ -142,7 +142,7 @@ function phptemplate_features() {
 function phptemplate_page($content) {
 
   /* Set title and breadcrumb to declared values */
-  if ($_GET['q'] == variable_get('site_frontpage', 'node')) {
+  if (drupal_get_path_alias($_GET['q']) == variable_get('site_frontpage', 'node')) {
     $mission = theme_get_setting('mission');
     $frontpage = true;
   }
