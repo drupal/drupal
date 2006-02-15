@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.75 2006/02/14 19:14:23 dries Exp $
+// $Id: blogapi.module,v 1.76 2006/02/15 21:27:58 dries Exp $
 
 /**
  * @file
@@ -574,7 +574,7 @@ function blogapi_settings() {
 function blogapi_menu($may_cache) {
   $items = array();
 
-  if ($_GET['q'] == variable_get('site_frontpage', 'node')) {
+  if (drupal_get_path_alias($_GET['q']) == variable_get('site_frontpage', 'node')) {
     drupal_add_link(array('rel' => 'EditURI',
                           'type' => 'application/rsd+xml',
                           'title' => t('RSD'),
