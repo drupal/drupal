@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.582 2006/02/10 05:46:39 dries Exp $
+// $Id: user.module,v 1.583 2006/02/15 21:03:20 dries Exp $
 
 /**
  * @file
@@ -523,7 +523,7 @@ function user_block($op = 'list', $delta = 0, $edit = array()) {
         // For usability's sake, avoid showing two login forms on one page.
         if (!$user->uid && !(arg(0) == 'user' && !is_numeric(arg(1)))) {
           $form['#action'] = url($_GET['q'], drupal_get_destination());
-          $form['#attributes'] = array('id' => 'user-login-form');
+          $form['#id'] = 'user-login-form';
           $form['name'] = array('#type' => 'textfield',
             '#title' => t('Username'),
             '#maxlength' => 60,
