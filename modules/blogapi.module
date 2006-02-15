@@ -574,7 +574,7 @@ function blogapi_settings() {
 function blogapi_menu($may_cache) {
   $items = array();
 
-  if ($_GET['q'] == variable_get('site_frontpage', 'node')) {
+  if (drupal_get_path_alias($_GET['q']) == variable_get('site_frontpage', 'node')) {
     drupal_add_link(array('rel' => 'EditURI',
                           'type' => 'application/rsd+xml',
                           'title' => t('RSD'),
