@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.310 2006/02/10 05:05:44 dries Exp $
+// $Id: forum.module,v 1.311 2006/02/15 20:47:35 dries Exp $
 
 /**
  * @file
@@ -997,10 +997,10 @@ function theme_forum_topic_navigation($node) {
     $output .= '<div class="forum-topic-navigation">';
 
     if ($prev) {
-      $output .= l(t('‹ ') . check_plain($prev->title), 'node/'. $prev->nid, array('class' => 'topic-previous', 'title' => t('Go to previous forum topic')));
+      $output .= l(t('‹ ') . $prev->title, 'node/'. $prev->nid, array('class' => 'topic-previous', 'title' => t('Go to previous forum topic')));
     }
     if ($next) {
-      $output .= l(check_plain($next->title) . t(' ›'), 'node/'. $next->nid, array('class' => 'topic-next', 'title' => t('Go to next forum topic')));
+      $output .= l($next->title . t(' ›'), 'node/'. $next->nid, array('class' => 'topic-next', 'title' => t('Go to next forum topic')));
     }
 
     $output .= '</div>';
