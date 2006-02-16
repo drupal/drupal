@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.515 2006/02/10 05:25:57 dries Exp $
+// $Id: common.inc,v 1.516 2006/02/16 13:00:18 dries Exp $
 
 /**
  * @file
@@ -314,11 +314,13 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
   switch ($uri['scheme']) {
     case 'http':
       $port = isset($uri['port']) ? $uri['port'] : 80;
+      $host = $uri['host'] . ($port != 80 ? ':'. $port : '');
       $fp = @fsockopen($uri['host'], $port, $errno, $errstr, 15);
       break;
     case 'https':
       // Note: Only works for PHP 4.3 compiled with OpenSSL.
       $port = isset($uri['port']) ? $uri['port'] : 443;
+      $host = $uri['host'] . ($port != 443 ? ':'. $port : '');
       $fp = @fsockopen('ssl://'. $uri['host'], $port, $errno, $errstr, 20);
       break;
     default:
@@ -340,8 +342,10 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
 
   // Create HTTP request.
   $defaults = array(
-    // RFC 2616: "non-standard ports MUST, default ports MAY be included". We always add it.
-    'Host' => "Host: $uri[host]:$port",
+    // RFC 2616: "non-standard ports MUST, default ports MAY be included".
+    // We don't add the port to prevent from breaking rewrite rules checking
+    // the host that do not take into account the port number.
+    'Host' => "Host: $host",
     'User-Agent' => 'User-Agent: Drupal (+http://www.drupal.org/)',
     'Content-Length' => 'Content-Length: '. strlen($data)
   );
