@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.583 2006/02/15 21:03:20 dries Exp $
+// $Id: user.module,v 1.584 2006/02/16 15:29:46 dries Exp $
 
 /**
  * @file
@@ -642,22 +642,22 @@ function theme_user_picture($account) {
  * @ingroup themeable
  */
 function theme_user_profile($account, $fields) {
-  $output = "<div class=\"profile\">\n";
+  $output = '<div class="profile">';
   $output .= theme('user_picture', $account);
   foreach ($fields as $category => $items) {
     if (strlen($category) > 0) {
-      $output .= '<h2 class="title">'. $category ."</h2>\n";
+      $output .= '<h2 class="title">'. $category .'</h2>';
     }
     $output .= '<dl>';
     foreach ($items as $item) {
       if (isset($item['title'])) {
-        $output .= '<dt class="'. $item['class'] .'">'. $item['title'] .':</dt>';
+        $output .= '<dt class="'. $item['class'] .'">'. $item['title'] .'</dt>';
       }
       $output .= '<dd class="'. $item['class'] .'">'. $item['value'] .'</dd>';
     }
     $output .= '</dl>';
   }
-  $output .= "</div>\n";
+  $output .= '</div>';
 
   return $output;
 }

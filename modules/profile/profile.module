@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.132 2006/01/30 18:32:24 dries Exp $
+// $Id: profile.module,v 1.133 2006/02/16 15:29:46 dries Exp $
 
 /**
  * @file
@@ -314,7 +314,7 @@ function profile_view_profile($user) {
   while ($field = db_fetch_object($result)) {
     if ($value = profile_view_field($user, $field)) {
       $description = ($field->visibility == PROFILE_PRIVATE) ? t('The content of this field is private and only visible to yourself.') : '';
-      $title = ($field->type != 'checkbox') ? check_plain($field->title) : '';
+      $title = ($field->type != 'checkbox') ? check_plain($field->title) : NULL;
       $item = array('title' => $title,
         'value' => $value,
         'class' => $field->name,
