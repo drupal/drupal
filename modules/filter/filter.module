@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.104 2006/01/25 22:29:57 unconed Exp $
+// $Id: filter.module,v 1.105 2006/02/16 15:36:31 dries Exp $
 
 /**
  * @file
@@ -413,7 +413,7 @@ function filter_admin_format_form($format) {
   $form['name']['name'] = array('#type' => 'textfield', '#default_value' => $format->name, '#description' => t('Give the name of this filter format'), '#required' => TRUE);
 
   //Add a row of checkboxes for form group
-  $form['roles'] = array('#type' => 'fieldset', '#title' => t('Roles'), '#description' => $default ? $help : t('Choose which roles may use this filter format.'), '#tree' => TRUE);
+  $form['roles'] = array('#type' => 'fieldset', '#title' => t('Roles'), '#description' => $default ? $help : t('Choose which roles may use this filter format. Note that people who have the "administer filters" permission always get to use all the filter formats.'), '#tree' => TRUE);
   $form['roles']['hidden'] = array();
   foreach (user_roles() as $rid => $name) {
     $checked = strstr($format->roles, ",$rid,");
