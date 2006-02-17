@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.185 2005/12/28 12:02:29 dries Exp $
+// $Id: poll.module,v 1.186 2006/02/17 10:51:57 dries Exp $
 
 /**
  * @file
@@ -137,22 +137,23 @@ function poll_form(&$node) {
     $node->choices = max(2, count($node->choice) ? count($node->choice) : 5);
   }
 
-  // User ticked 'need more choices'.
-  if ($_POST['edit']['morechoices']) {
-    $node->choices *= 2;
+  $form['choice']['choices'] = array('#type' => 'hidden', '#default_value' => $node->choices);
+  $form['choice']['morechoices'] = array('#type' => 'checkbox', '#title' => t('Need more choices'), '#default_value' => 0, '#description' => t("If the amount of boxes above isn't enough, check this box and click the Preview button below to add some more."), '#weight' => 1);
+  $form['choice'] = form_builder('poll_node_form', $form['choice']);
+  if ($form['choice']['morechoices']['#value']) {
+    $form['choice']['morechoices']['#value'] = 0;
+    $form['choice']['choices']['#value'] *= 2;
+    $node->choices = $form['choice']['choices']['#value'];
   }
 
   // Poll choices
-  $opts = drupal_map_assoc(range(2, $node->choices * 2 + 5));
-  $form['choice'] = array('#type' => 'fieldset', '#title' => t('Choices'), '#prefix' => '<div class="poll-form">', '#suffix' => '</div>', '#tree' => TRUE);
+  $form['choice'] += array('#type' => 'fieldset', '#title' => t('Choices'), '#prefix' => '<div class="poll-form">', '#suffix' => '</div>', '#tree' => TRUE);
   for ($a = 0; $a < $node->choices; $a++) {
     $form['choice'][$a]['chtext'] = array('#type' => 'textfield', '#title' => t('Choice %n', array('%n' => ($a + 1))), '#default_value' => $node->choice[$a]['chtext']);
     if ($admin) {
       $form['choice'][$a]['chvotes'] = array('#type' => 'textfield', '#title' => t('Votes for choice %n', array('%n' => ($a + 1))), '#default_value' => (int)$node->choice[$a]['chvotes'], '#size' => 5, '#maxlength' => 7);
     }
   }
-  $form['choices'] = array('#type' => 'hidden', '#value' => $node->choices);
-  $form['morechoices'] = array('#type' => 'checkbox', '#title' => t('Need more choices'), '#default_value' => 0, '#description' => t("If the amount of boxes above isn't enough, check this box and click the Preview button below to add some more."));
 
   // Poll attributes
   $_duration = array(0 => t('Unlimited')) + drupal_map_assoc(array(86400, 172800, 345600, 604800, 1209600, 2419200, 4838400, 9676800, 31536000), "format_interval");

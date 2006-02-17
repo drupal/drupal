@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.67 2006/02/10 05:25:57 dries Exp $
+// $Id: form.inc,v 1.68 2006/02/17 10:51:57 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -102,7 +102,7 @@ function drupal_get_form($form_id, &$form, $callback = NULL) {
     $function($form_id, $form);
   }
 
-  $form = _form_builder($form_id, $form);
+  $form = form_builder($form_id, $form);
   $goto = $_GET['q'];
   if (!empty($_POST['edit']) && (($_POST['edit']['form_id'] == $form_id) || ($_POST['edit']['form_id'] == $callback))) {
     drupal_validate_form($form_id, $form, $callback);
@@ -270,11 +270,17 @@ function form_error(&$element, $message = '') {
 }
 
 /**
- * Adds some required properties to each form element, which are used internally in the form api.
- * This function also automatically assigns the value property from the $edit array, provided the
- * element doesn't already have an assigned value.
+ * Adds some required properties to each form element, which are used
+ * internally in the form api. This function also automatically assigns
+ * the value property from the $edit array, provided the element doesn't
+ * already have an assigned value.
+ *
+ * @param $form_id
+ *   A unique string identifying the form. Allows each form to be themed.
+ * @param $form
+ *   An associative array containing the structure of the form.
  */
-function _form_builder($form_id, $form) {
+function form_builder($form_id, $form) {
   global $form_values;
   global $form_submitted;
   /* Use element defaults */
@@ -361,7 +367,7 @@ function _form_builder($form_id, $form) {
     if (!isset($form[$key]['#weight'])) {
       $form[$key]['#weight'] = $count/1000;
     }
-    $form[$key] = _form_builder($form_id, $form[$key]);
+    $form[$key] = form_builder($form_id, $form[$key]);
     $count++;
   }
 
