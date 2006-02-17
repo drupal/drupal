@@ -1,5 +1,5 @@
 <?php
-// $Id: session.inc,v 1.24 2006/02/10 05:42:11 dries Exp $
+// $Id: session.inc,v 1.25 2006/02/17 11:10:49 dries Exp $
 
 /**
  * @file
@@ -53,8 +53,12 @@ function sess_write($key, $value) {
   $result = db_query("SELECT sid FROM {sessions} WHERE sid = '%s'", $key);
 
   if (!db_num_rows($result)) {
-    // Only save session data when there is session data available.
-    if ($user->uid || $value) {
+    // Only save session data when when the browser sends a cookie.  This keeps 
+    // crawlers out of session table. This improves speed up queries, reduces 
+    // memory, and gives more useful statistics. We can't eliminate anonymous
+    // session table rows without breaking throttle modulee and "Who's Online"
+    // block.
+    if ($user->uid || $value || count($_COOKIE)) {
       db_query("INSERT INTO {sessions} (sid, uid, cache, hostname, session, timestamp) VALUES ('%s', %d, %d, '%s', '%s', %d)", $key, $user->uid, $user->cache, $_SERVER["REMOTE_ADDR"], $value, time());
     }
   }
