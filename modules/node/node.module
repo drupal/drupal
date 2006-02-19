@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.601 2006/02/14 21:12:09 unconed Exp $
+// $Id: node.module,v 1.602 2006/02/19 21:46:04 dries Exp $
 
 /**
  * @file
@@ -1784,7 +1784,7 @@ function node_add($type) {
   else {
     // If no (valid) node type has been provided, display a node type overview.
     foreach (node_get_types() as $type => $name) {
-      if (node_access('create', $type)) {
+      if (module_invoke(node_get_base($type), 'access', 'create', $type)) {
         $out = '<dt>'. l($name, "node/add/$type", array('title' => t('Add a new %s.', array('%s' => $name)))) .'</dt>';
         $out .= '<dd>'. implode("\n", module_invoke_all('help', 'node/add#'. $type)) .'</dd>';
         $item[$name] = $out;
