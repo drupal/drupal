@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.602 2006/02/19 21:46:04 dries Exp $
+// $Id: node.module,v 1.603 2006/02/19 21:47:50 dries Exp $
 
 /**
  * @file
@@ -1650,19 +1650,15 @@ function node_form_array($node) {
   node_object_prepare($node);
 
   // Set the id of the top-level form tag
-  $form['#attributes']['id'] = 'node-form';
+  $form['#id'] = 'node-form';
 
   /**
    * Basic node information.
    * These elements are just values so they are not even sent to the client.
    */
-  $form['nid']     = array('#type' => 'value', '#value' => $node->nid);
-  $form['vid']     = array('#type' => 'value', '#value' => $node->vid);
-  $form['uid']     = array('#type' => 'value', '#value' => $node->uid);
-  $form['created'] = array('#type' => 'value', '#value' => $node->created);
-  $form['changed'] = array('#type' => 'value', '#value' => $node->changed);
-  $form['type']    = array('#type' => 'value', '#value' => $node->type);
-  $form['#node']   = $node;
+  foreach (array('nid', 'vid', 'uid', 'created', 'changed', 'type') as $key) {
+    $form[$key] = array('#type' => 'value', '#value' => $node->$key);
+  }
 
   // Get the node-specific bits.
   $form = array_merge_recursive($form, node_invoke($node, 'form'));
@@ -1670,23 +1666,16 @@ function node_form_array($node) {
     $form['title']['#weight'] = -5;
   }
 
-  // If this is a new node, fill in the default values.
   $node_options = variable_get('node_options_'. $node->type, array('status', 'promote'));
-  if (!isset($node->status)) {
-    $node->status = in_array('status', $node_options);
+  // If this is a new node, fill in the default values.
+  if (!isset($node->nid)) {
+    foreach (array('status', 'moderate', 'promote', 'sticky', 'revision') as $key) {
+      $node->$key = in_array($key, $node_options);
+      // Don't show node options if the user doesn't have admin access.
+      $form['options'][$key] = array('#type' => 'value', '#value' => $node->$key);
+    }
   }
-  if (!isset($node->moderate)) {
-    $node->moderate = in_array('moderate', $node_options);
-  }
-  if (!isset($node->promote)) {
-    $node->promote = in_array('promote', $node_options);
-  }
-  if (!isset($node->sticky)) {
-    $node->sticky = in_array('sticky', $node_options);
-  }
-  if (!isset($node->revision)) {
-    $node->revision = in_array('revision', $node_options);
-  }
+  $form['#node']   = $node;
 
   if (user_access('administer nodes')) {
     // Node author information
@@ -1701,14 +1690,6 @@ function node_form_array($node) {
     $form['options']['promote']  = array('#type' => 'checkbox', '#title' => t('Promoted to front page'), '#default_value' => $node->promote);
     $form['options']['sticky']   = array('#type' => 'checkbox', '#title' => t('Sticky at top of lists'), '#default_value' => $node->sticky);
     $form['options']['revision'] = array('#type' => 'checkbox', '#title' => t('Create new revision'), '#default_value' => $node->revision);
-  }
-  else {
-    // Don't show node options because the user doesn't have admin access.
-    $form['status']   = array('#type' => 'value', '#value' => $node->status);
-    $form['moderate'] = array('#type' => 'value', '#value' => $node->moderate);
-    $form['promote']  = array('#type' => 'value', '#value' => $node->promote);
-    $form['sticky']   = array('#type' => 'value', '#value' => $node->sticky);
-    $form['revision'] = array('#type' => 'value', '#value' => $node->revision);
   }
 
   // Add the buttons.
