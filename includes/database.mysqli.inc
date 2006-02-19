@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysqli.inc,v 1.14 2006/02/15 21:39:51 dries Exp $
+// $Id: database.mysqli.inc,v 1.15 2006/02/19 21:43:18 dries Exp $
 
 /**
  * @file
@@ -41,7 +41,8 @@ function db_connect($url) {
   $connection = mysqli_init();
   @mysqli_real_connect($connection, $url['host'], $url['user'], $url['pass'], substr($url['path'], 1), $url['port'], NULL, MYSQLI_CLIENT_FOUND_ROWS);
 
-  if (mysqli_connect_errno() == 2003) {
+  // Find all database connection errors and error 1045 for access denied for user account
+  if (mysqli_connect_errno() >= 2000 || mysqli_connect_errno() == 1045) {
     drupal_maintenance_theme();
     drupal_set_title('Unable to connect to database server');
     print theme('maintenance_page', '<p>This either means that the username and password information in your <code>settings.php</code> file is incorrect or we can\'t contact the MySQL database server through the mysqli libraries. This could also mean your hosting provider\'s database server is down.</p>
@@ -56,7 +57,7 @@ function db_connect($url) {
 <p>For more help, see the <a href="http://drupal.org/node/258">Installation and upgrading handbook</a>. If you are unsure what these terms mean you should probably contact your hosting provider.</p>');
     exit;
   }
-  else if (mysqli_connect_errno() == 1044) {
+  else if (mysqli_connect_errno() > 0) {
     drupal_maintenance_theme();
     drupal_set_title('Unable to select database');
     print theme('maintenance_page', '<p>We were able to connect to the MySQL database server (which means your username and password are okay) but not able to select the database.</p>
