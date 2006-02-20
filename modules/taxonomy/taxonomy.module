@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.259 2006/02/20 16:39:23 dries Exp $
+// $Id: taxonomy.module,v 1.260 2006/02/20 16:48:46 dries Exp $
 
 /**
  * @file
@@ -539,7 +539,7 @@ function taxonomy_form_alter($form_id, &$form) {
         );
       }
       else {
-        $form['taxonomy'][$vocabulary->vid] = taxonomy_form($vocabulary->vid, array_keys($terms), $help);
+        $form['taxonomy'][$vocabulary->vid] = taxonomy_form($vocabulary->vid, array_keys($terms), $vocabulary->help);
         $form['taxonomy'][$vocabulary->vid]['#weight'] = $vocabulary->weight;
         $form['taxonomy'][$vocabulary->vid]['#required'] = $vocabulary->required;
       }
