@@ -84,6 +84,8 @@ function _db_query($query, $debug = 0) {
   $last_result = pg_query($active_db, $query);
 
   if (variable_get('dev_query', 0)) {
+    $bt = debug_backtrace();
+    $query = $bt[2]['function'] . "\n" . $query;
     list($usec, $sec) = explode(' ', microtime());
     $stop = (float)$usec + (float)$sec;
     $diff = $stop - $timer;

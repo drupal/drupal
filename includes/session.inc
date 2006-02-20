@@ -53,8 +53,8 @@ function sess_write($key, $value) {
   $result = db_query("SELECT sid FROM {sessions} WHERE sid = '%s'", $key);
 
   if (!db_num_rows($result)) {
-    // Only save session data when when the browser sends a cookie.  This keeps 
-    // crawlers out of session table. This improves speed up queries, reduces 
+    // Only save session data when when the browser sends a cookie.  This keeps
+    // crawlers out of session table. This improves speed up queries, reduces
     // memory, and gives more useful statistics. We can't eliminate anonymous
     // session table rows without breaking throttle modulee and "Who's Online"
     // block.

@@ -101,6 +101,8 @@ function _db_query($query, $debug = 0) {
   $result = mysql_query($query, $active_db);
 
   if (variable_get('dev_query', 0)) {
+    $bt = debug_backtrace();
+    $query = $bt[2]['function'] . "\n" . $query;
     list($usec, $sec) = explode(' ', microtime());
     $stop = (float)$usec + (float)$sec;
     $diff = $stop - $timer;
