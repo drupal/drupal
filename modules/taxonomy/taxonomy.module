@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.258 2006/02/09 08:28:28 dries Exp $
+// $Id: taxonomy.module,v 1.259 2006/02/20 16:39:23 dries Exp $
 
 /**
  * @file
@@ -545,7 +545,7 @@ function taxonomy_form_alter($form_id, &$form) {
       }
     }
     if (isset($form['taxonomy'])) {
-      $form['taxonomy'] = array_merge($form['taxonomy'], array('#type' => 'fieldset', '#title' => t('Categories'), '#collapsible' => TRUE, '#collapsed' => FALSE, '#tree' => TRUE, '#weight' => -3));
+      $form['taxonomy'] += array('#type' => 'fieldset', '#title' => t('Categories'), '#collapsible' => TRUE, '#collapsed' => FALSE, '#tree' => TRUE, '#weight' => -3);
     }
   }
 }
