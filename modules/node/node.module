@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.603 2006/02/19 21:47:50 dries Exp $
+// $Id: node.module,v 1.604 2006/02/20 16:41:25 dries Exp $
 
 /**
  * @file
@@ -1645,8 +1645,6 @@ function node_form($node) {
 * Generate the node editing form array.
 */
 function node_form_array($node) {
-  $op = isset($_POST['op']) ? $_POST['op'] : '';
-
   node_object_prepare($node);
 
   // Set the id of the top-level form tag
