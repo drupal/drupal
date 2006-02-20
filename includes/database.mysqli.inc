@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysqli.inc,v 1.15 2006/02/19 21:43:18 dries Exp $
+// $Id: database.mysqli.inc,v 1.16 2006/02/20 16:46:59 dries Exp $
 
 /**
  * @file
@@ -102,6 +102,8 @@ function _db_query($query, $debug = 0) {
   $result = mysqli_query($active_db, $query);
 
   if (variable_get('dev_query', 0)) {
+    $bt = debug_backtrace();
+    $query = $bt[2]['function'] . "\n" . $query;
     list($usec, $sec) = explode(' ', microtime());
     $stop = (float)$usec + (float)$sec;
     $diff = $stop - $timer;
