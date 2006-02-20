@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.73 2006/02/05 19:04:58 unconed Exp $
+// $Id: upload.module,v 1.74 2006/02/20 16:44:54 dries Exp $
 
 /**
  * @file
@@ -131,15 +131,18 @@ function upload_download() {
 function upload_file_download($file) {
   if (user_access('view uploaded files')) {
     $file = file_create_path($file);
-    $result = db_query(db_rewrite_sql("SELECT f.nid, f.* FROM {files} f WHERE filepath = '%s'", 'f'), $file);
+    $result = db_query("SELECT f.* FROM {files} f WHERE filepath = '%s'", $file);
     if ($file = db_fetch_object($result)) {
-      $name = mime_header_encode($file->filename);
-      $type = mime_header_encode($file->filemime);
-      // Serve images and text inline for the browser to display rather than download.
-      $disposition = ereg('^(text/|image/)', $file->filemime) ? 'inline' : 'attachment';
-      return array('Content-Type: '. $type .'; name='. $name,
-                   'Content-Length: '. $file->filesize,
-                   'Content-Disposition: '. $disposition .'; filename='. $name);
+      $node = node_load($file->nid);
+      if (node_access('view', $node)) {
+        $name = mime_header_encode($file->filename);
+        $type = mime_header_encode($file->filemime);
+        // Serve images and text inline for the browser to display rather than download.
+        $disposition = ereg('^(text/|image/)', $file->filemime) ? 'inline' : 'attachment';
+        return array('Content-Type: '. $type .'; name='. $name,
+                     'Content-Length: '. $file->filesize,
+                     'Content-Disposition: '. $disposition .'; filename='. $name);
+      }
     }
   }
 }
