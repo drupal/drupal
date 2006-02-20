@@ -545,7 +545,7 @@ function taxonomy_form_alter($form_id, &$form) {
       }
     }
     if (isset($form['taxonomy'])) {
-      $form['taxonomy'] = array_merge($form['taxonomy'], array('#type' => 'fieldset', '#title' => t('Categories'), '#collapsible' => TRUE, '#collapsed' => FALSE, '#tree' => TRUE, '#weight' => -3));
+      $form['taxonomy'] += array('#type' => 'fieldset', '#title' => t('Categories'), '#collapsible' => TRUE, '#collapsed' => FALSE, '#tree' => TRUE, '#weight' => -3);
     }
   }
 }
