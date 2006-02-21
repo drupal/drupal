@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.585 2006/02/21 14:45:46 dries Exp $
+// $Id: user.module,v 1.586 2006/02/21 16:00:55 dries Exp $
 
 /**
  * @file
@@ -1053,7 +1053,7 @@ function theme_user_pass($form) {
 /**
  * Menu callback; process one time login link and redirects to the user page on success.
  */
-function user_pass_reset($uid, $timestamp, $hashed_pass) {
+function user_pass_reset($uid, $timestamp, $hashed_pass, $action = NULL) {
   global $user;
 
   // Check if the user is already logged in. The back button is often the culprit here.
@@ -1073,16 +1073,26 @@ function user_pass_reset($uid, $timestamp, $hashed_pass) {
         drupal_goto('user/password');
       }
       else if ($account->uid && $timestamp > $account->login && $timestamp < $current && $hashed_pass == user_pass_rehash($account->pass, $timestamp, $account->login)) {
-        watchdog('user', t('User %name used one-time login link at time %timestamp.', array('%name' => "<em>$account->name</em>", '%timestamp' => $timestamp)));
-        // Update the user table noting user has logged in.
-        // And this also makes this hashed password a one-time-only login.
-        db_query("UPDATE {users} SET login = %d WHERE uid = %d", time(), $account->uid);
-        // Now we can set the new user.
-        $user = $account;
-        // And proceed with normal login, going to user page.
-        user_module_invoke('login', $edit, $user);
-        drupal_set_message(t('You have just used your one-time login link. It is no longer necessary to use this link to login. Please change your password.'));
-        drupal_goto('user/'. $user->uid .'/edit');
+        // First stage is a confirmation form, then login
+        if ($action == 'login') {
+          watchdog('user', t('User %name used one-time login link at time %timestamp.', array('%name' => "<em>$account->name</em>", '%timestamp' => $timestamp)));
+          // Update the user table noting user has logged in.
+          // And this also makes this hashed password a one-time-only login.
+          db_query("UPDATE {users} SET login = %d WHERE uid = %d", time(), $account->uid);
+          // Now we can set the new user.
+          $user = $account;
+          // And proceed with normal login, going to user page.
+          user_module_invoke('login', $edit, $user);
+          drupal_set_message(t('You have just used your one-time login link. It is no longer necessary to use this link to login. Please change your password.'));
+          drupal_goto('user/'. $user->uid .'/edit');
+        }
+        else {
+          $form['message'] = array('#value' => t('<p>This is a one-time login for %user_name and will expire on %expiration_date</p><p>Click on this button to login to the site and change your password.</p>', array('%user_name' => theme('placeholder',$account->name), '%expiration_date' => format_date($timestamp + $timeout))));
+          $form['help'] = array('#value' => t('<p>This login can be used only once.</p>'));
+          $form['submit'] = array('#type' => 'submit', '#value' => t('Log in'));
+          $form['#action'] = url("user/reset/$uid/$timestamp/$hashed_pass/login");
+          return drupal_get_form('user_pass_reset', $form);
+        }
       }
       else {
         drupal_set_message(t('You have tried to use a one-time login link which has either been used or is no longer valid. Please request a new one using the form below.'));
