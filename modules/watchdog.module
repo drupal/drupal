@@ -1,5 +1,5 @@
 <?php
-// $Id: watchdog.module,v 1.138 2006/01/26 08:42:18 dries Exp $
+// $Id: watchdog.module,v 1.139 2006/02/21 16:06:02 dries Exp $
 
 /**
  * @file
@@ -73,10 +73,6 @@ function watchdog_overview() {
   $names['all'] = t('all messages');
   foreach (_watchdog_get_message_types() as $type) {
     $names[$type] = t('%type messages', array('%type' => t($type)));
-  }
-
-  if (empty($_SESSION['watchdog_overview_filter'])) {
-    $_SESSION['watchdog_overview_filter'] = 'all';
   }
 
   if (empty($_SESSION['watchdog_overview_filter'])) {
@@ -187,5 +183,3 @@ function _watchdog_get_message_types() {
 
   return $types;
 }
-
-
