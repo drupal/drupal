@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.68 2006/02/17 10:51:57 dries Exp $
+// $Id: form.inc,v 1.69 2006/02/21 16:08:54 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -823,7 +823,7 @@ function theme_submit($element) {
 }
 
 function theme_button($element) {
-  return '<input type="submit" class="form-'. $element['#button_type'] .'" name="'. $element['#name'] .'" value="'. check_plain($element['#value']) .'" '. drupal_attributes($element['#attributes']) ." />\n";
+  return '<input type="submit" class="form-'. $element['#button_type'] .'" '. (empty($element['#name']) ? '' : 'name="'. $element['#name'] .'" ') .'value="'. check_plain($element['#value']) .'" '. drupal_attributes($element['#attributes']) ." />\n";
 }
 
 /**
