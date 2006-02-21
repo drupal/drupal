@@ -774,7 +774,7 @@ function user_menu($may_cache) {
 
       $items[] = array('path' => 'user/'. arg(1), 'title' => t('user'),
         'type' => MENU_CALLBACK, 'callback' => 'user_view',
-        'callback arguments' => arg(1), 'access' => $view_access);
+        'callback arguments' => array(arg(1)), 'access' => $view_access);
 
       if ($user_exists !== FALSE || $admin_access) {
         $items[] = array('path' => 'user/'. arg(1) .'/view', 'title' => t('view'),
