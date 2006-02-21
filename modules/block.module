@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.201 2006/02/10 05:25:57 dries Exp $
+// $Id: block.module,v 1.202 2006/02/21 18:46:54 dries Exp $
 
 /**
  * @file
@@ -34,7 +34,7 @@ function block_help($section) {
 <li>add a block at <a href="%admin-block-add">administer &gt;&gt; blocks &gt;&gt; add block</a>.</li>
 </ul>
 ', array('%admin-block' => url('admin/block'), '%admin-block-add' => url('admin/block/add')));
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%block">Block page</a>.', array('%block' => 'http://www.drupal.org/handbook/modules/block/')) .'</p>';
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%block">Block page</a>.', array('%block' => 'http://drupal.org/handbook/modules/block/')) .'</p>';
       return $output;
     case 'admin/modules#description':
       return t('Controls the boxes that are displayed around the main content.');

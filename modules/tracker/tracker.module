@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.module,v 1.126 2006/02/06 05:51:10 dries Exp $
+// $Id: tracker.module,v 1.127 2006/02/21 18:46:54 dries Exp $
 
 /**
  * @file
@@ -21,7 +21,7 @@ function tracker_help($section) {
 <li>not administer this module.</li>
 </ul>
 ', array('%tracker' => url('tracker'), '%profile' => url('profile')));
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%tracker">Tracker page</a>.', array('%tracker' => 'http://www.drupal.org/handbook/modules/tracker/')) .'</p>';
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%tracker">Tracker page</a>.', array('%tracker' => 'http://drupal.org/handbook/modules/tracker/')) .'</p>';
       return $output;
     case 'admin/modules#description':
       return t('Enables tracking of recent posts for users.');

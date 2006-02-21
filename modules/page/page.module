@@ -1,5 +1,5 @@
 <?php
-// $Id: page.module,v 1.152 2006/01/29 07:50:45 dries Exp $
+// $Id: page.module,v 1.153 2006/02/21 18:46:54 dries Exp $
 
 /**
  * @file
@@ -25,7 +25,7 @@ function page_help($section) {
 <li>administer page content type at <a href="%admin-settings-content-types-page">administer &gt;&gt; settings &gt;&gt; content types &gt;&gt; configure page</a>.</li>
 </ul>
 ', array('%admin-help-node' => url('admin/help/node'), '%admin-help-page' => url('admin/help/page'), '%admin-help-story' => url('admin/help/story'), '%node-add-page' => url('node/add/page'), '%admin-settings-content-types-page' => url('admin/settings/content-types/page')));
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%page">Page page</a>.', array('%page' => 'http://www.drupal.org/handbook/modules/page/')) .'</p>';
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%page">Page page</a>.', array('%page' => 'http://drupal.org/handbook/modules/page/')) .'</p>';
       return $output;
     case 'admin/modules#description':
       return t('Enables the creation of pages that can be added to the navigation system.');

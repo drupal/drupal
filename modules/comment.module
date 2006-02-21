@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.431 2006/02/14 19:17:00 dries Exp $
+// $Id: comment.module,v 1.432 2006/02/21 18:46:54 dries Exp $
 
 /**
  * @file
@@ -78,7 +78,7 @@ function comment_help($section) {
 <li>administer comments <a href="%admin-comment-configure"> administer &gt;&gt; comments &gt;&gt; configure</a>.</li>
 </ul>
 ', array('%admin-access' => url('admin/access'), '%admin-comment-configure' => url('admin/comment/configure')));
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%comment">Comment page</a>.', array('%comment' => 'http://www.drupal.org/handbook/modules/comment/')) .'</p>';
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%comment">Comment page</a>.', array('%comment' => 'http://drupal.org/handbook/modules/comment/')) .'</p>';
       return $output;
     case 'admin/modules#description':
       return t('Allows users to comment on and discuss published content.');

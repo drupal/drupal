@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.76 2006/02/15 21:27:58 dries Exp $
+// $Id: blogapi.module,v 1.77 2006/02/21 18:46:54 dries Exp $
 
 /**
  * @file
@@ -21,7 +21,7 @@ function blogapi_help($section) {
 <li><a href="%admin-settings-blogapi">administer &gt;&gt; settings &gt;&gt; blog api</a>.</li>
 </ul>
 ', array('%file-xmlrpc' => 'xmlrpc.php', '%admin-settings-blogapi' => url('admin/settings/blogapi')));
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%blogapi">BlogApi page</a>.', array('%blogapi' => 'http://www.drupal.org/handbook/modules/blogapi/')) .'</p>';
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%blogapi">BlogApi page</a>.', array('%blogapi' => 'http://drupal.org/handbook/modules/blogapi/')) .'</p>';
       return $output;
     case 'admin/modules#description':
       return t('Allows users to post content using applications that support XML-RPC blog APIs.');
@@ -612,7 +612,7 @@ function blogapi_rsd() {
 <rsd version="1.0" xmlns="http://archipelago.phrasewise.com/rsd">
   <service>
     <engineName>Drupal</engineName>
-    <engineLink>http://www.drupal.org/</engineLink>
+    <engineLink>http://drupal.org/</engineLink>
     <homePageLink>$base</homePageLink>
     <apis>
       <api name="MetaWeblog" preferred="false" apiLink="$xmlrpc" blogID="$blogid" />

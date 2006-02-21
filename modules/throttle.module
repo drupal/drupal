@@ -1,5 +1,5 @@
 <?php
-// $Id: throttle.module,v 1.58 2006/02/02 18:38:50 dries Exp $
+// $Id: throttle.module,v 1.59 2006/02/21 18:46:54 dries Exp $
 
 /**
  * @file
@@ -113,7 +113,7 @@ function throttle_help($section) {
 <li>administer throttle at <a href="%admin-settings-throttle">administer &gt;&gt; settings &gt;&gt; throttle</a>.</li>
 </ul>
 ', array('%admin-modules' => url('admin/modules'), '%admin-block' => url('admin/block'), '%admin-settings-throttle' => url('admin/settings/throttle')));
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%throttle">Throttle page</a>.', array('%throttle' => 'http://www.drupal.org/handbook/modules/throttle/')) .'</p>';
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%throttle">Throttle page</a>.', array('%throttle' => 'http://drupal.org/handbook/modules/throttle/')) .'</p>';
       return $output;
     case 'admin/modules#description':
       return t('Handles the auto-throttling mechanism, to control site congestion.');

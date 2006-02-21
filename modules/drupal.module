@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal.module,v 1.116 2006/01/22 07:31:38 dries Exp $
+// $Id: drupal.module,v 1.117 2006/02/21 18:46:54 dries Exp $
 
 /**
  * @file
@@ -45,7 +45,7 @@ print drupal_client_page();
   <li>Save the page.</li>
 </ul>') . '</p>';
 
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%drupal">Drupal page</a>.', array('%drupal' => 'http://www.drupal.org/handbook/modules/drupal/')) .'</p>';
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%drupal">Drupal page</a>.', array('%drupal' => 'http://drupal.org/handbook/modules/drupal/')) .'</p>';
       return $output;
     case 'admin/modules#description':
       return t('Lets you register your site with a central server and improve ranking of Drupal projects by posting information on your installed modules and themes; also enables users to log in using a Drupal ID.');
@@ -53,7 +53,7 @@ print drupal_client_page();
       return t('<p>Using this your site can "call home" to another Drupal server. By calling home to drupal.org and sending a list of your installed modules and themes, you help rank projects on drupal.org and so assist all Drupal administrators to find the best components for meeting their needs. If you want to register with a different server, you can change the Drupal XML-RPC server setting -- but the server has to be able to handle Drupal XML. Some XML-RPC servers may present directories of all registered sites. To get all your site information listed, go to the <a href="%site-settings">settings page</a> and set the site name, the e-mail address, the slogan, and the mission statement.</p>', array('%site-settings' => url('admin/settings')));
     case 'user/help#drupal':
       return variable_get('drupal_authentication_service', 0) ? t("<p><a href=\"%Drupal\">Drupal</a> is the name of the software that powers %this-site. There are Drupal web sites all over the world, and many of them share their registration databases so that users may freely log in to any Drupal site using a single <strong>Drupal ID</strong>.</p>
-<p>So please feel free to log in to your account here at %this-site with a username from another Drupal site. The format of a Drupal ID is similar to an e-mail address: <strong>username</strong>@<em>server</em>. An example of a valid Drupal ID is <strong>mwlily</strong>@<em>www.drupal.org</em>.</p>", array('%Drupal' => 'http://www.drupal.org', '%this-site' => '<em>'. variable_get('site_name', 'this web site') .'</em>')) : NULL;
+<p>So please feel free to log in to your account here at %this-site with a username from another Drupal site. The format of a Drupal ID is similar to an e-mail address: <strong>username</strong>@<em>server</em>. An example of a valid Drupal ID is <strong>mwlily</strong>@<em>drupal.org</em>.</p>", array('%Drupal' => 'http://drupal.org', '%this-site' => '<em>'. variable_get('site_name', 'this web site') .'</em>')) : NULL;
   }
 }
 
@@ -87,13 +87,13 @@ function drupal_settings() {
     '#title' => t('Register with a Drupal server'),
     '#default_value' => variable_get('drupal_register', 0),
     '#options' => $options,
-    '#description' => t("If enabled, your Drupal site will register itself with the specified Drupal XML-RPC server. For this to work properly, you must set your site's name, e-mail address, slogan and mission statement. When the \"Drupal XML-RPC server\" field is set to \"%drupal-xml-rpc\", your web site will register itself with drupal.org. Requires the cron feature to be enabled.", array("%drupal-xml-rpc" => "http://www.drupal.org/xmlrpc.php", "%drupal-sites" => "http://www.drupal.org/drupal-sites/"))
+    '#description' => t("If enabled, your Drupal site will register itself with the specified Drupal XML-RPC server. For this to work properly, you must set your site's name, e-mail address, slogan and mission statement. When the \"Drupal XML-RPC server\" field is set to \"%drupal-xml-rpc\", your web site will register itself with drupal.org. Requires the cron feature to be enabled.", array("%drupal-xml-rpc" => "http://drupal.org/xmlrpc.php", "%drupal-sites" => "http://drupal.org/drupal-sites/"))
   );
 
   $form['drupal']['drupal_server'] =  array(
     '#type' => 'textfield',
     '#title' => t('Drupal XML-RPC server'),
-    '#default_value' => variable_get('drupal_server', 'http://www.drupal.org/xmlrpc.php'),
+    '#default_value' => variable_get('drupal_server', 'http://drupal.org/xmlrpc.php'),
     '#description' => t('The URL of the Drupal XML-RPC server you wish to register with.')
   );
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.132 2006/02/01 14:28:48 dries Exp $
+// $Id: locale.module,v 1.133 2006/02/21 18:46:54 dries Exp $
 
 /**
  * @file
@@ -31,7 +31,7 @@ function locale_help($section) {
 </li>
 </ul>
 ', array('%admin-locale' => url('admin/locale'), '%admin-locale-string-search' => url('admin/locale/string/search'), '%admin-locale-language-add' => url('admin/locale/language/add'), '%external-http-drupal-org-project-Translations' => 'http://drupal.org/project/Translations'));
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%locale">Locale page</a>.', array('%locale' => 'http://www.drupal.org/handbook/modules/locale/')) .'</p>';
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%locale">Locale page</a>.', array('%locale' => 'http://drupal.org/handbook/modules/locale/')) .'</p>';
       return $output;
     case 'admin/modules#description':
       return t('Enables the translation of the user interface to languages other than English.');

@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.271 2006/02/10 05:25:57 dries Exp $
+// $Id: aggregator.module,v 1.272 2006/02/21 18:46:54 dries Exp $
 
 /**
  * @file
@@ -25,7 +25,7 @@ function aggregator_help($section) {
 <li>view the <a href="%aggregator">aggregator page</a>.</li>
 </ul>
 ', array('%admin-aggregator' => url('admin/aggregator'), '%admin-aggregator-add-feed' => url('admin/aggregator/add/feed'), '%admin-aggregator-add-category' => url('admin/aggregator/add/category'), '%admin-settings-aggregator' => url('admin/settings/aggregator'), '%admin-access' => url('admin/access'), '%aggregator' => url('aggregator')));
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%aggregator">Aggregator page</a>.', array('%aggregator' => 'http://www.drupal.org/handbook/modules/aggregator/')) .'</p>';
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%aggregator">Aggregator page</a>.', array('%aggregator' => 'http://drupal.org/handbook/modules/aggregator/')) .'</p>';
       return $output;
     case 'admin/modules#description':
       return t('Aggregates syndicated content (RSS and RDF feeds).');

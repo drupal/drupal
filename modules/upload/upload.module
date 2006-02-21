@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.75 2006/02/21 08:36:10 dries Exp $
+// $Id: upload.module,v 1.76 2006/02/21 18:46:54 dries Exp $
 
 /**
  * @file
@@ -21,7 +21,7 @@ function upload_help($section) {
 <li>administer upload at <a href="%admin-settings">administer &gt;&gt; settings</a>.</li>
 </ul>
 ', array('%admin-user-configure' => url('admin/user/configure'), '%admin-node-configure' => url('admin/node/configure'), '%admin-settings' => url('admin/settings')));
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%upload">Upload page</a>.', array('%upload' => 'http://www.drupal.org/handbook/modules/upload/')) .'</p>';
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%upload">Upload page</a>.', array('%upload' => 'http://drupal.org/handbook/modules/upload/')) .'</p>';
       return $output;
     case 'admin/modules#description':
       return t('Allows users to upload and attach files to content.');

@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.260 2006/02/20 16:48:46 dries Exp $
+// $Id: taxonomy.module,v 1.261 2006/02/21 18:46:54 dries Exp $
 
 /**
  * @file
@@ -1220,7 +1220,7 @@ function taxonomy_help($section) {
 <li>build a custom view of your categories using the <a href="%external-http-drupal-org-project-taxonomy_browser">taxonomy browser</a>.</li>
 </ul>
 ', array('%admin-taxonomy-add-vocabulary' => url('admin/taxonomy/add/vocabulary'), '%admin-taxonomy' => url('admin/taxonomy'), '%external-http-drupal-org-project-taxonomy_access' => 'http://drupal.org/project/taxonomy_access', '%external-http-drupal-org-project-taxonomy_browser' => 'http://drupal.org/project/taxonomy_browser'));
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%taxonomy">Taxonomy page</a>.', array('%taxonomy' => 'http://www.drupal.org/handbook/modules/taxonomy/')) .'</p>';
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%taxonomy">Taxonomy page</a>.', array('%taxonomy' => 'http://drupal.org/handbook/modules/taxonomy/')) .'</p>';
       return $output;
     case 'admin/modules#description':
       return t('Enables the categorization of content.');

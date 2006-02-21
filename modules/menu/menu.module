@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.66 2006/02/01 14:09:53 dries Exp $
+// $Id: menu.module,v 1.67 2006/02/21 18:46:54 dries Exp $
 
 /**
  * @file
@@ -78,7 +78,7 @@ function menu_help($section) {
 <li>add a menu item at <a href="%admin-menu-item-add">administer &gt;&gt; menus &gt;&gt; add menu item</a>.</li>
 </ul>
 ', array('%admin-menu' => url('admin/menu'), '%admin-block' => url('admin/block'), '%admin-menu-menu-add' => url('admin/menu/menu/add'), '%admin-menu-item-add' => url('admin/menu/item/add')));
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%menu">Menu page</a>.', array('%menu' => 'http://www.drupal.org/handbook/modules/menu/')) .'</p>';
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%menu">Menu page</a>.', array('%menu' => 'http://drupal.org/handbook/modules/menu/')) .'</p>';
       return $output;
     case 'admin/modules#description':
       return t('Allows administrators to customize the site navigation menu.');

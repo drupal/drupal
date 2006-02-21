@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.290 2006/02/12 05:34:34 dries Exp $
+// $Id: system.module,v 1.291 2006/02/21 18:46:54 dries Exp $
 
 /**
  * @file
@@ -22,7 +22,7 @@ function system_help($section) {
 <li>administer cache settings in <a href="%admin-settings">administer &gt;&gt; settings</a>.</li>
 </ul>
 ', array('%file-cron' => 'cron.php', '%external-http-drupal-org-cron' => 'http://drupal.org/cron', '%admin-settings' => url('admin/settings')));
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%system">System page</a>.', array('%system' => 'http://www.drupal.org/handbook/modules/system/')) .'</p>';
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%system">System page</a>.', array('%system' => 'http://drupal.org/handbook/modules/system/')) .'</p>';
       return $output;
     case 'admin/modules#description':
       return t('Handles general site configuration for administrators.');

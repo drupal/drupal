@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.349 2006/02/14 19:25:02 dries Exp $
+// $Id: book.module,v 1.350 2006/02/21 18:46:54 dries Exp $
 
 /**
  * @file
@@ -1028,7 +1028,7 @@ function book_help($section) {
 <li>control who can create, edit, and outline posts in books by setting access permissions: <a href="%admin-access">administer &gt;&gt; access control</a>.</li>
 </ul>
 ', array('%node-add-book' => url('node/add/book'), '%admin-node-book' => url('admin/node/book'), '%admin-settings-content-types-book-page' => url('admin/settings/content-types/book'), '%admin-block' => url('admin/block'), '%admin-access' => url('admin/access')));
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%book">Book page</a>.', array('%book' => 'http://www.drupal.org/handbook/modules/book/')) .'</p>';
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%book">Book page</a>.', array('%book' => 'http://drupal.org/handbook/modules/book/')) .'</p>';
       return $output;
     case 'admin/modules#description':
       return t('Allows users to collaboratively author a book.');

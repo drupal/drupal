@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.311 2006/02/15 20:47:35 dries Exp $
+// $Id: forum.module,v 1.312 2006/02/21 18:46:54 dries Exp $
 
 /**
  * @file
@@ -23,7 +23,7 @@ function forum_help($section) {
 <li>read about the taxonomy module at <a href="%admin-help-taxonomy">administer &gt;&gt; help &gt;&gt; taxonomy</a>.</li>
 </ul>
 ', array('%admin-forum' => url('admin/forum'), '%admin-modules' => url('admin/modules'), '%admin-help-comment' => url('admin/help/comment'), '%admin-help-taxonomy' => url('admin/help/taxonomy')));
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%forum">Forum page</a>.', array('%forum' => 'http://www.drupal.org/handbook/modules/forum/')) .'</p>';
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%forum">Forum page</a>.', array('%forum' => 'http://drupal.org/handbook/modules/forum/')) .'</p>';
       return $output;
     case 'admin/modules#description':
       return t('Enables threaded discussions about general topics.');

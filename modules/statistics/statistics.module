@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.218 2006/02/09 08:28:53 unconed Exp $
+// $Id: statistics.module,v 1.219 2006/02/21 18:46:54 dries Exp $
 
 /**
  * @file
@@ -39,7 +39,7 @@ function statistics_help($section) {
 <li>enable \'popular content\' block in block administration <a href="%admin-block">administer &gt;&gt; blocks </a> but only after you have enabled \'Count content views\' in settings.</li>
 </ul>
 ', array('%admin-settings-statistics' => url('admin/settings/statistics'), '%admin-logs' => url('admin/logs'), '%admin-logs-hits' => url('admin/logs/hits'), '%admin-block' => url('admin/block')));
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%statistics">Statistics page</a>.', array('%statistics' => 'http://www.drupal.org/handbook/modules/statistics/')) .'</p>';
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%statistics">Statistics page</a>.', array('%statistics' => 'http://drupal.org/handbook/modules/statistics/')) .'</p>';
       return $output;
     case 'admin/modules#description':
       return t('Logs access statistics for your site.');

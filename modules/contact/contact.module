@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.41 2006/02/10 05:25:57 dries Exp $
+// $Id: contact.module,v 1.42 2006/02/21 18:46:54 dries Exp $
 
 /**
  * @file
@@ -14,7 +14,7 @@ function contact_help($section) {
     case 'admin/help#contact':
       $output = sprintf('<p>%s</p><p>%s</p><p>%s</p>', t('The contact module enables the use of both personal and site-wide contact forms, thereby facilitating easy communication within the community. While personal contact forms allow users to contact each other by e-mail, site-wide forms allow community members to contact the site administration from a central location. Users can specify a subject and message in the contact form, and also request that a copy of the e-mail be sent to their own address.'), t("Users can activate/deactivate their personal contact forms in their account settings. Upon activation, a contact tab will appear in their user profiles. Privileged users such as site administrators are able to contact users even if they have chosen not to enable this feature."), t('Contact module links:'));
       $output .= sprintf('<ul><li>%s</li><li>%s</li><li>%s</li></ul>', t('Default site-wide <a href="%contact-page">contact page</a>.', array('%contact-page' => url('contact'))), t('Site-wide contact form <a href="%configuration-page">category configuration</a>.', array('%configuration-page' => url('admin/contact'))), t('Site-wide contact form <a href="%additional-settings">general settings</a>.', array('%additional-settings' => url('admin/settings/contact'))));
-      $output .= t('For more information, please read the configuration and customization handbook page for the <a href="%contact">Contact module</a>.', array('%contact' => url('http://www.drupal.org/handbook/modules/contact/', NULL, NULL, TRUE)));
+      $output .= t('For more information, please read the configuration and customization handbook page for the <a href="%contact">Contact module</a>.', array('%contact' => url('http://drupal.org/handbook/modules/contact/', NULL, NULL, TRUE)));
       return $output;
     case 'admin/modules#description':
       return t('Enables the use of both personal and site-wide contact forms.');

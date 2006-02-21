@@ -1,5 +1,5 @@
 <?php
-// $Id: story.module,v 1.184 2006/01/29 07:50:45 dries Exp $
+// $Id: story.module,v 1.185 2006/02/21 18:46:54 dries Exp $
 
 /**
  * @file
@@ -20,7 +20,7 @@ function story_help($section) {
 <li>configure story at <a href="%admin-settings-content-types-story">administer &gt;&gt; settings &gt;&gt; content types &gt;&gt; configure story</a>.</li>
 </ul>
 ', array('%node-add-story' => url('node/add/story'), '%admin-settings-content-types-story' => url('admin/settings/content-types/story')));
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%story">Story page</a>.', array('%story' => 'http://www.drupal.org/handbook/modules/story/')) .'</p>';
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%story">Story page</a>.', array('%story' => 'http://drupal.org/handbook/modules/story/')) .'</p>';
       return $output;
     case 'admin/modules#description':
       return t('Allows users to submit stories, articles or similar content.');

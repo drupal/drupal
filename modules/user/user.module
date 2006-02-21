@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.586 2006/02/21 16:00:55 dries Exp $
+// $Id: user.module,v 1.587 2006/02/21 18:46:54 dries Exp $
 
 /**
  * @file
@@ -1437,7 +1437,7 @@ function _user_mail_text($messageid, $variables = array()) {
       case 'welcome_subject':
         return t('Account details for %username at %site', $variables);
       case 'welcome_body':
-        return t("%username,\n\nThank you for registering at %site. You may now log in to %login_uri using the following username and password:\n\nusername: %username\npassword: %password\n\nYou may also log in by clicking on this link or copying and pasting it in your browser:\n\n%login_url\n\nThis is a one-time login, so it can be used only once.\n\nAfter logging in, you will be redirected to %edit_uri so you can change your password.\n\nYour new %site membership also enables to you to login to other Drupal powered websites (e.g. http://www.drupal.org/) without registering. Just use the following Drupal ID and password:\n\nDrupal ID: %username@%uri_brief\npassword: %password\n\n\n--  %site team", $variables);
+        return t("%username,\n\nThank you for registering at %site. You may now log in to %login_uri using the following username and password:\n\nusername: %username\npassword: %password\n\nYou may also log in by clicking on this link or copying and pasting it in your browser:\n\n%login_url\n\nThis is a one-time login, so it can be used only once.\n\nAfter logging in, you will be redirected to %edit_uri so you can change your password.\n\nYour new %site membership also enables to you to login to other Drupal powered websites (e.g. http://drupal.org/) without registering. Just use the following Drupal ID and password:\n\nDrupal ID: %username@%uri_brief\npassword: %password\n\n\n--  %site team", $variables);
       case 'approval_subject':
         return t('Account details for %username at %site (pending admin approval)', $variables);
       case 'approval_body':
@@ -1950,7 +1950,7 @@ function user_help($section) {
 <li>read about distributed authentication in the system module help at <a href="%admin-help-system">administer &gt;&gt; help &gt;&gt; system</a>.</li>
 </ul>
 ', array('%user' => url('user'), '%admin-user' => url('admin/user'), '%admin-themes' => url('admin/themes'), '%admin-help-profile' => url('admin/help/profile'), '%admin-help-system' => url('admin/help/system')));
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%user">User page</a>.', array('%user' => 'http://www.drupal.org/handbook/modules/user/')) .'</p>';
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%user">User page</a>.', array('%user' => 'http://drupal.org/handbook/modules/user/')) .'</p>';
       return $output;
     case 'admin/modules#description':
       return t('Manages the user registration and login system.');
@@ -1980,7 +1980,7 @@ function user_help($section) {
       $output = t("
       <h3>Distributed authentication<a id=\"da\"></a></h3>
       <p>One of the more tedious moments in visiting a new website is filling out the registration form. Here at %site, you do not have to fill out a registration form if you are already a member of %help-links. This capability is called <em>distributed authentication</em>, and is unique to <a href=\"%drupal\">Drupal</a>, the software which powers %site.</p>
-      <p>Distributed authentication enables a new user to input a username and password into the login box, and immediately be recognized, even if that user never registered at %site. This works because Drupal knows how to communicate with external registration databases. For example, lets say that new user 'Joe' is already a registered member of <a href=\"%delphi-forums\">Delphi Forums</a>. Drupal informs Joe on registration and login screens that he may login with his Delphi ID instead of registering with %site. Joe likes that idea, and logs in with a username of joe@remote.delphiforums.com and his usual Delphi password. Drupal then contacts the <em>remote.delphiforums.com</em> server behind the scenes (usually using <a href=\"%xml\">XML-RPC</a>, <a href=\"%http-post\">HTTP POST</a>, or <a href=\"%soap\">SOAP</a>) and asks: \"Is the password for user Joe correct?\".  If Delphi replies yes, then we create a new %site account for Joe and log him into it.  Joe may keep on logging into %site in the same manner, and he will always be logged into the same account.</p>", array('%help-links' => (implode(', ', user_auth_help_links())), '%site' => "<em>$site</em>", '%drupal' => 'http://www.drupal.org', '%delphi-forums' => 'http://www.delphiforums.com', '%xml' => 'http://www.xmlrpc.com', '%http-post' => 'http://www.w3.org/Protocols/', '%soap' => 'http://www.soapware.org'));
+      <p>Distributed authentication enables a new user to input a username and password into the login box, and immediately be recognized, even if that user never registered at %site. This works because Drupal knows how to communicate with external registration databases. For example, lets say that new user 'Joe' is already a registered member of <a href=\"%delphi-forums\">Delphi Forums</a>. Drupal informs Joe on registration and login screens that he may login with his Delphi ID instead of registering with %site. Joe likes that idea, and logs in with a username of joe@remote.delphiforums.com and his usual Delphi password. Drupal then contacts the <em>remote.delphiforums.com</em> server behind the scenes (usually using <a href=\"%xml\">XML-RPC</a>, <a href=\"%http-post\">HTTP POST</a>, or <a href=\"%soap\">SOAP</a>) and asks: \"Is the password for user Joe correct?\".  If Delphi replies yes, then we create a new %site account for Joe and log him into it.  Joe may keep on logging into %site in the same manner, and he will always be logged into the same account.</p>", array('%help-links' => (implode(', ', user_auth_help_links())), '%site' => "<em>$site</em>", '%drupal' => 'http://drupal.org', '%delphi-forums' => 'http://www.delphiforums.com', '%xml' => 'http://www.xmlrpc.com', '%http-post' => 'http://www.w3.org/Protocols/', '%soap' => 'http://www.soapware.org'));
 
         foreach (module_list() as $module) {
           if (module_hook($module, 'auth')) {

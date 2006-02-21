@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.77 2006/02/10 05:25:57 dries Exp $
+// $Id: path.module,v 1.78 2006/02/21 18:46:54 dries Exp $
 
 /**
  * @file
@@ -32,7 +32,7 @@ function path_help($section) {
 <li>enable clean url\'s to remove the =? at <a href="%admin-settings">administer &gt;&gt; settings</a>.</li>
 </ul>
 ', array('%admin-path-add' => url('admin/path/add'), '%admin-path' => url('admin/path'), '%external-http-drupal-org-node-15365' => 'http://drupal.org/node/15365', '%admin-settings' => url('admin/settings')));
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%path">Path page</a>.', array('%path' => 'http://www.drupal.org/handbook/modules/path/')) .'</p>';
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%path">Path page</a>.', array('%path' => 'http://drupal.org/handbook/modules/path/')) .'</p>';
       return $output;
     case 'admin/modules#description':
       return t('Allows users to rename URLs.');

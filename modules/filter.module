@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.105 2006/02/16 15:36:31 dries Exp $
+// $Id: filter.module,v 1.106 2006/02/21 18:46:54 dries Exp $
 
 /**
  * @file
@@ -28,7 +28,7 @@ function filter_help($section) {
 <li>configure the filters for each input format at <a href="%admin-filters">administer &gt;&gt; input formats &gt;&gt; configure</a>.</li>
 </ul>
 ', array('%admin-filters' => url('admin/filters')));
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%filter">Filter page</a>.', array('%filter' => 'http://www.drupal.org/handbook/modules/filter/')) .'</p>';
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%filter">Filter page</a>.', array('%filter' => 'http://drupal.org/handbook/modules/filter/')) .'</p>';
       return $output;
     case 'admin/modules#description':
       return t('Handles the filtering of content in preparation for display.');
