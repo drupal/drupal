@@ -1743,8 +1743,6 @@ function theme_node_form($form) {
 function node_add($type) {
   global $user;
 
-  $edit = isset($_POST['edit']) ? $_POST['edit'] : '';
-
   // If a node type has been specified, validate its existence.
   if (array_key_exists($type, node_get_types()) && node_access('create', $type)) {
     // Initialize settings:
