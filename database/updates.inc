@@ -667,6 +667,13 @@ function system_update_144() {
 
 function system_update_145() {
   $default_theme = variable_get('theme_default', 'bluemarine');
+
+  $themes = list_themes();
+  if (!array_key_exists($default_theme, $themes)) {
+      variable_set('theme_default', 'bluemarine');
+      $default_theme = 'bluemarine';
+   }
+
   $ret = array();
 
   switch ($GLOBALS['db_type']) {
