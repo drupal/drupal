@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.604 2006/02/20 16:41:25 dries Exp $
+// $Id: node.module,v 1.605 2006/02/21 08:37:41 dries Exp $
 
 /**
  * @file
@@ -1742,8 +1742,6 @@ function theme_node_form($form) {
  */
 function node_add($type) {
   global $user;
-
-  $edit = isset($_POST['edit']) ? $_POST['edit'] : '';
 
   // If a node type has been specified, validate its existence.
   if (array_key_exists($type, node_get_types()) && node_access('create', $type)) {
