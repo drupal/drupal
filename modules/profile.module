@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.133 2006/02/16 15:29:46 dries Exp $
+// $Id: profile.module,v 1.134 2006/02/21 08:41:42 dries Exp $
 
 /**
  * @file
@@ -340,14 +340,19 @@ function _profile_form_explanation($field) {
 }
 
 function profile_form_profile($edit, $user, $category) {
-
-  if ($_GET['q'] == 'user/register' || $_GET['q'] == 'admin/user/create') {
-    $result = db_query('SELECT * FROM {profile_fields} WHERE register = 1 ORDER BY category, weight');
+  if ($_GET['q'] == 'user/register') {
+    $result = db_query('SELECT * FROM {profile_fields} WHERE visibility != %d AND register = 1 ORDER BY category, weight', PROFILE_HIDDEN);
+  }
+  elseif ($_GET['q'] == 'admin/user/create') {
+     $result = db_query('SELECT * FROM {profile_fields} WHERE register = 1 ORDER BY category, weight');
+   }
+  elseif (user_access('administer users')) {
+     $result = db_query("SELECT * FROM {profile_fields} WHERE LOWER(category) = LOWER('%s') ORDER BY weight", $category);
   }
   else {
-    $result = db_query("SELECT * FROM {profile_fields} WHERE LOWER(category) = LOWER('%s') ORDER BY weight", $category);
-    // We use LOWER('%s') instead of PHP's strtolower() to avoid UTF-8 conversion issues.
-  }
+    $result = db_query("SELECT * FROM {profile_fields} WHERE visibility != %d AND LOWER(category) = LOWER('%s') ORDER BY weight", PROFILE_HIDDEN, $category);
+     // We use LOWER('%s') instead of PHP's strtolower() to avoid UTF-8 conversion issues.
+   }
 
   while ($field = db_fetch_object($result)) {
     $category = $field->category;
@@ -357,16 +362,41 @@ function profile_form_profile($edit, $user, $category) {
     switch ($field->type) {
       case 'textfield':
       case 'url':
-        $fields[$category][$field->name] = array('#type' => 'textfield', '#title' => check_plain($field->title), '#default_value' => $edit[$field->name], '#maxlength' => 255, '#description' => _profile_form_explanation($field), '#required' => $field->required);
+        $fields[$category][$field->name] = array(
+          '#type' => 'textfield',
+          '#title' => check_plain($field->title),
+          '#default_value' => $edit[$field->name],
+          '#maxlength' => 255,
+          '#description' => _profile_form_explanation($field),
+          '#required' => $field->required
+        );
         break;
       case 'textarea':
-        $fields[$category][$field->name] = array('#type' => 'textarea', '#title' => check_plain($field->title), '#default_value' => $edit[$field->name], '#description' => _profile_form_explanation($field), '#required' => $field->required);
+        $fields[$category][$field->name] = array(
+          '#type' => 'textarea',
+          '#title' => check_plain($field->title),
+          '#default_value' => $edit[$field->name],
+          '#description' => _profile_form_explanation($field),
+          '#required' => $field->required
+        );
         break;
       case 'list':
-        $fields[$category][$field->name] = array('#type' => 'textarea', '#title' => check_plain($field->title), '#default_value' => $edit[$field->name], '#description' => _profile_form_explanation($field), '#required' => $field->required);
+        $fields[$category][$field->name] = array(
+          '#type' => 'textarea',
+          '#title' => check_plain($field->title),
+          '#default_value' => $edit[$field->name],
+          '#description' => _profile_form_explanation($field),
+          '#required' => $field->required
+        );
         break;
       case 'checkbox':
-        $fields[$category][$field->name] = array('#type' => 'checkbox', '#title' => check_plain($field->title), '#default_value' => $edit[$field->name], '#description' => _profile_form_explanation($field), '#required' => $field->required);
+        $fields[$category][$field->name] = array(
+          '#type' => 'checkbox',
+          '#title' => check_plain($field->title),
+          '#default_value' => $edit[$field->name],
+          '#description' => _profile_form_explanation($field),
+          '#required' => $field->required
+        );
         break;
       case 'selection':
         $options = array('--');
@@ -376,10 +406,23 @@ function profile_form_profile($edit, $user, $category) {
             $options[$line] = $line;
           }
         }
-        $fields[$category][$field->name] = array('#type' => 'select', '#title' => check_plain($field->title), '#default_value' => $edit[$field->name], '#options' => $options, '#description' => _profile_form_explanation($field), '#required' => $field->required);
+        $fields[$category][$field->name] = array(
+          '#type' => 'select',
+          '#title' => check_plain($field->title),
+          '#default_value' => $edit[$field->name],
+          '#options' => $options,
+          '#description' => _profile_form_explanation($field),
+          '#required' => $field->required
+        );
         break;
       case 'date':
-        $fields[$category][$field->name] = array('#type' => 'date', '#title' => check_plain($field->title), '#default_value' => $edit[$field->name], '#description' => _profile_form_explanation($field), '#required' => $field->required);
+        $fields[$category][$field->name] = array(
+          '#type' => 'date',
+          '#title' => check_plain($field->title),
+          '#default_value' => $edit[$field->name],
+          '#description' => _profile_form_explanation($field),
+          '#required' => $field->required
+        );
         break;
     }
   }
@@ -399,14 +442,19 @@ function _profile_update_user_fields($fields, $account) {
 }
 
 function profile_validate_profile($edit, $category) {
-
-  if ($_GET['q'] == 'user/register' || $_GET['q'] == 'admin/user/create') {
-    $result = db_query('SELECT * FROM {profile_fields} WHERE register = 1 ORDER BY category, weight');
+  if ($_GET['q'] == 'user/register') {
+    $result = db_query('SELECT * FROM {profile_fields} WHERE visibility != %d AND register = 1 ORDER BY category, weight', PROFILE_HIDDEN);
+  }
+  elseif ($_GET['q'] == 'admin/user/create') {
+     $result = db_query('SELECT * FROM {profile_fields} WHERE register = 1 ORDER BY category, weight');
+   }
+  elseif (user_access('administer users')) {
+     $result = db_query("SELECT * FROM {profile_fields} WHERE LOWER(category) = LOWER('%s') ORDER BY weight", $category);
   }
   else {
-    $result = db_query("SELECT * FROM {profile_fields} WHERE LOWER(category) = LOWER('%s') ORDER BY weight", $category);
-    // We use LOWER('%s') instead of PHP's strtolower() to avoid UTF-8 conversion issues.
-  }
+    $result = db_query("SELECT * FROM {profile_fields} WHERE visibility != %d AND LOWER(category) = LOWER('%s') ORDER BY weight", PROFILE_HIDDEN, $category);
+     // We use LOWER('%s') instead of PHP's strtolower() to avoid UTF-8 conversion issues.
+   }
 
   while ($field = db_fetch_object($result)) {
     if ($edit[$field->name]) {
