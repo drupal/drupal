@@ -79,10 +79,6 @@ function watchdog_overview() {
     $_SESSION['watchdog_overview_filter'] = 'all';
   }
 
-  if (empty($_SESSION['watchdog_overview_filter'])) {
-    $_SESSION['watchdog_overview_filter'] = 'all';
-  }
-
   $form['filter'] = array(
     '#type' => 'select',
     '#title' => t('Filter by message type'),
@@ -187,5 +183,3 @@ function _watchdog_get_message_types() {
 
   return $types;
 }
-
-
