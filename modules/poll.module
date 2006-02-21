@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.186 2006/02/17 10:51:57 dries Exp $
+// $Id: poll.module,v 1.187 2006/02/21 08:44:15 dries Exp $
 
 /**
  * @file
@@ -133,18 +133,16 @@ function poll_form(&$node) {
 
   $form['title'] = array('#type' => 'textfield', '#title' => t('Question'), '#required' => TRUE, '#default_value' => $node->title, '#weight' => -1);
 
-  if (!isset($node->choices)) {
-    $node->choices = max(2, count($node->choice) ? count($node->choice) : 5);
-  }
-
-  $form['choice']['choices'] = array('#type' => 'hidden', '#default_value' => $node->choices);
+  $form['choice']['choices'] = array('#type' => 'hidden', '#default_value' => max(2, count($node->choice) ? count($node->choice) : 5));
   $form['choice']['morechoices'] = array('#type' => 'checkbox', '#title' => t('Need more choices'), '#default_value' => 0, '#description' => t("If the amount of boxes above isn't enough, check this box and click the Preview button below to add some more."), '#weight' => 1);
   $form['choice'] = form_builder('poll_node_form', $form['choice']);
   if ($form['choice']['morechoices']['#value']) {
     $form['choice']['morechoices']['#value'] = 0;
     $form['choice']['choices']['#value'] *= 2;
-    $node->choices = $form['choice']['choices']['#value'];
   }
+
+  // if the value was changed in a previous iteration, retain it.
+  $node->choices = $form['choice']['choices']['#value'];
 
   // Poll choices
   $form['choice'] += array('#type' => 'fieldset', '#title' => t('Choices'), '#prefix' => '<div class="poll-form">', '#suffix' => '</div>', '#tree' => TRUE);
