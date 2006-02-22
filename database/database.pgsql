@@ -1,4 +1,4 @@
--- $Id: database.pgsql,v 1.168 2006/01/30 10:48:37 dries Exp $
+-- $Id: database.pgsql,v 1.169 2006/02/22 10:06:46 dries Exp $
 
 -- Do not show NOTICE: messages, it's hard to spot errors.
 set client_min_messages = 'warning';
@@ -264,17 +264,25 @@ CREATE TABLE client_system (
 
 CREATE TABLE files (
   fid SERIAL,
-  nid integer NOT NULL default '0',
-  vid integer NOT NULL default '0',
-  description varchar(255) NOT NULL default '',
+  nid integer NOT NULL default 0,
   filename varchar(255) NOT NULL default '',
   filepath varchar(255) NOT NULL default '',
   filemime varchar(255) NOT NULL default '',
-  filesize integer NOT NULL default '0',
-  list smallint NOT NULL default '0'
+  filesize integer NOT NULL default 0,
+  PRIMARY KEY (fid)
 );
-CREATE INDEX files_fid_idx ON files(fid);
-CREATE INDEX files_vid_idx ON files(vid);
+
+--
+-- Table structure for table 'file_revisions'
+--
+
+CREATE TABLE file_revisions (
+  fid integer NOT NULL default 0,
+  vid integer NOT NULL default 0,
+  description varchar(255) NOT NULL default '',
+  list smallint NOT NULL default 0,
+  PRIMARY KEY (fid, vid)
+);
 
 --
 -- Table structure for table 'filter_formats'

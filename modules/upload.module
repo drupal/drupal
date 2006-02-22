@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.76 2006/02/21 18:46:54 dries Exp $
+// $Id: upload.module,v 1.77 2006/02/22 10:06:46 dries Exp $
 
 /**
  * @file
@@ -210,6 +210,7 @@ function upload_nodeapi(&$node, $op, $arg) {
           $node->list[$key] = $file->list;
         }
       }
+
       if (($file = file_check_upload('upload')) && user_access('upload files')) {
         global $user;
 
@@ -319,18 +320,11 @@ function upload_nodeapi(&$node, $op, $arg) {
         upload_save($node);
       }
       break;
-    case 'delete revision':
-      $node->files = upload_load($node);
-      foreach ($node->files as $file) {
-        // Check any other revisions pointing to file first.
-        if( db_result(db_query("SELECT COUNT(fid) FROM {files} WHERE fid = %d", $file->fid)) == 1 ) {
-          file_delete($file->filepath);
-        }
-      }
-      db_query("DELETE FROM {files} WHERE vid = %d", $node->vid);
-      break;
     case 'delete':
       upload_delete($node);
+      break;
+    case 'delete revision':
+      upload_delete_revision($node);
       break;
     case 'search result':
       return $node->files ? format_plural(count($node->files), '1 attachment', '%count attachments') : null;
@@ -363,65 +357,74 @@ function upload_nodeapi(&$node, $op, $arg) {
  * @param $uid
  *   The integer user id of a user.
  * @return
- *   The ammount of disk space used by the user in bytes.
+ *   The amount of disk space used by the user in bytes.
  */
 function upload_space_used($uid) {
-  return db_result(db_query('SELECT SUM(f.filesize) FROM {files} f INNER JOIN {node_revisions} n ON f.vid = n.vid WHERE uid = %d', $uid));
+  return db_result(db_query('SELECT SUM(filesize) FROM {files} f INNER JOIN {node} n ON f.nid = n.nid WHERE n.uid = %d', $uid));
 }
 
 /**
  * Determine how much disk space is occupied by uploaded files.
  *
  * @return
- *   The ammount of disk space used by uploaded files in bytes.
+ *   The amount of disk space used by uploaded files in bytes.
  */
 function upload_total_space_used() {
-  return db_result(db_query('SELECT SUM(f.filesize) FROM {files} f INNER JOIN {node_revisions} n ON f.vid = n.vid'));
+  return db_result(db_query('SELECT SUM(filesize) FROM {files}'));
 }
 
 function upload_save($node) {
-  $node->files = upload_load($node);
+  $node->old_files = isset($node->files) ? $node->files : array();
   upload_nodeapi($node, 'validate', NULL);
-  foreach ((array)$node->files as $key => $file) {
-    if ($file->source && !$file->remove) {
-      // Clean up the session:
-      unset($_SESSION['file_uploads'][$file->source]);
+  $node->files = $node->old_files + $node->files;
 
-      // Insert new files:
-      if ($file = file_save_upload($file, $file->filename)) {
-        $fid = db_next_id('{files}_fid');
-        db_query("INSERT INTO {files} (fid, nid, vid, filename, filepath, filemime, filesize, list, description) VALUES (%d, %d, %d, '%s', '%s', '%s', %d, %d, '%s')",
-                 $fid, $node->nid, $node->vid, $file->filename, $file->filepath, $file->filemime, $file->filesize, $node->list[$key], $node->description[$key]);
-      }
-    }
-  }
-  // Remove existing files, as needed
-  foreach ((array)$node->remove as $key => $value) {
-    if ($node->remove[$key]) {
-      $file = db_fetch_object(db_query('SELECT * FROM {files} WHERE vid = %d AND fid = %d', $node->vid, $key));
-      db_query('DELETE FROM {files} WHERE fid = %d AND vid = %d', $key, $node->vid);
-      // We only delete a file if it isn't used anymore by any revision.
-      $count = db_result(db_query('SELECT COUNT(fid) FROM {files} WHERE fid = %d', $key));
-      if (!($count > 0)) {
-        file_delete($file->filepath);
-      }
-    }
-  }
-  // Create a new revision, as needed
-  if ($node->old_vid) {
-    foreach ((array)$node->remove as $key => $remove) {
-      if (!$remove && is_numeric($key)) {
-        $file = db_fetch_object(db_query('SELECT * FROM {files} WHERE vid = %d AND fid = %d', $node->old_vid, $key));
-        db_query("INSERT INTO {files} (fid, nid, vid, filename, filepath, filemime, filesize, list, description) VALUES (%d, %d, %d, '%s', '%s', '%s', %d, %d, '%s')",
-                 $key, $node->nid, $node->vid, $file->filename, $file->filepath, $file->filemime, $file->filesize, $node->list[$key], $node->description[$key]);
-      }
-    }
-  }
-  // Update existing files, as needed
-  else {
-    foreach ((array)$node->list as $key => $value) {
+  foreach ((array)$node->files as $key => $file) {
+    // New file upload
+    if ($file->source) {
+      // Only add a file if it's not marked for removal
       if (!$node->remove[$key]) {
-        db_query('UPDATE {files} SET list = %d, description = \'%s\' WHERE fid = %d AND vid = %d', $node->list[$key], $node->description[$key], $key, $node->vid);
+        if ($file = file_save_upload($file, $file->filename)) {
+          $fid = db_next_id('{files}_fid');
+          db_query("INSERT INTO {files} (fid, nid, filename, filepath, filemime, filesize) VALUES (%d, %d, '%s', '%s', '%s', %d)", $fid, $node->nid, $file->filename, $file->filepath, $file->filemime, $file->filesize);
+          db_query("INSERT INTO {file_revisions} (fid, vid, list, description) VALUES (%d, %d, %d, '%s')", $fid, $node->vid, $node->list[$key], $node->description[$key]);
+        }
+      }
+
+      // Clean up the session
+      unset($_SESSION['file_uploads'][$file->source]);
+    }
+
+    // Update existing file
+    else {
+      // Remove existing file, as needed
+      if ($node->remove[$key]) {
+        db_query('DELETE FROM {file_revisions} WHERE fid = %d AND vid = %d', $key, $node->vid);
+        // Only delete a file if it isn't used by any revision
+        $count = db_result(db_query('SELECT COUNT(fid) FROM {file_revisions} WHERE fid = %d', $key));
+        if ($count < 1) {
+          db_query('DELETE FROM {files} WHERE fid = %d', $key);
+          file_delete($file->filepath);
+        }
+      }
+
+      else {
+        // Create a new revision, as needed
+        if ($node->old_vid && is_numeric($key)) {
+          // new revision
+          if (isset($node->list)) {
+            db_query("INSERT INTO {file_revisions} (fid, vid, list, description) VALUES (%d, %d, %d, '%s')", $key, $node->vid, $node->list[$key], $node->description[$key]);
+          }
+
+          // copy of old revision
+          else {
+            db_query("INSERT INTO {file_revisions} (fid, vid, list, description) VALUES (%d, %d, %d, '%s')", $key, $node->vid, $file->list, $file->description);
+          }
+        }
+
+        // Update existing revision
+        else {
+          db_query("UPDATE {file_revisions} SET list = %d, description = '%s' WHERE fid = %d AND vid = %d", $node->list[$key], $node->description[$key], $key, $node->vid);
+        }
       }
     }
   }
@@ -430,11 +433,38 @@ function upload_save($node) {
 }
 
 function upload_delete($node) {
-  $node->files = upload_load($node);
-  foreach ($node->files as $file) {
+  $files = array();
+  $result = db_query('SELECT * FROM {files} WHERE nid = %d', $node->nid);
+  while ($file = db_fetch_object($result)) {
+    $files[$file->fid] = $file;
+  }
+
+  foreach ($files as $fid => $file) {
+    // delete all file revision information associated with the node
+    db_query('DELETE FROM {file_revisions} WHERE fid = %d', $fid);
     file_delete($file->filepath);
   }
-  db_query("DELETE FROM {files} WHERE nid = %d", $node->nid);
+
+  // delete all files associated with the node
+  db_query('DELETE FROM {files} WHERE nid = %d', $node->nid);
+}
+
+function upload_delete_revision($node) {
+  $files = upload_load($node);
+
+  foreach ($files as $file) {
+    // check if the file will be used after this revision is deleted
+    $count = db_result(db_query('SELECT COUNT(fid) FROM {file_revisions} WHERE fid = %d', $file->fid));
+
+    // if the file won't be used, delete it
+    if ($count < 2) {
+      db_query('DELETE FROM {files} WHERE fid = %d', $file->fid);
+      file_delete($file->filepath);
+    }
+  }
+
+  // delete the revision
+  db_query('DELETE FROM {file_revisions} WHERE vid = %d', $node->vid);
 }
 
 function _upload_form($node) {
@@ -504,7 +534,7 @@ function upload_load($node) {
   $files = array();
 
   if ($node->vid) {
-    $result = db_query("SELECT * FROM {files} WHERE vid = %d", $node->vid);
+    $result = db_query('SELECT * FROM {files} f INNER JOIN {file_revisions} r ON f.fid = r.fid WHERE r.vid = %d', $node->vid);
     while ($file = db_fetch_object($result)) {
       $files[$file->fid] = $file;
     }

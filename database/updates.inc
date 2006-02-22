@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.196 2006/02/21 08:47:15 dries Exp $
+// $Id: updates.inc,v 1.197 2006/02/22 10:06:46 dries Exp $
 
 function system_update_110() {
   $ret = array();
@@ -1622,4 +1622,66 @@ function system_update_172() {
     return array();
   }
   return array('#finished' => $_SESSION['system_update_172'] / $_SESSION['system_update_172_max']);
+}
+
+function system_update_173() {
+  $ret = array();
+
+  switch ($GLOBALS['db_type']) {
+    case 'pgsql':
+      // create file_revisions table
+      $ret[] = update_sql("CREATE TABLE {file_revisions} (
+        fid integer NOT NULL default 0,
+        vid integer NOT NULL default 0,
+        description varchar(255) NOT NULL default '',
+        list smallint NOT NULL default 0,
+        PRIMARY KEY (fid, vid))");
+      $ret[] = update_sql("INSERT INTO {file_revisions} SELECT fid, vid, description, list FROM {files}");
+
+      // alter files table
+      $ret[] = update_sql("CREATE TABLE {files_copy} AS SELECT * FROM {files}");
+      $ret[] = update_sql("DROP TABLE {files}");
+      $ret[] = update_sql("CREATE TABLE {files} (
+        fid SERIAL,
+        nid integer NOT NULL default 0,
+        filename varchar(255) NOT NULL default '',
+        filepath varchar(255) NOT NULL default '',
+        filemime varchar(255) NOT NULL default '',
+        filesize integer NOT NULL default 0,
+        PRIMARY KEY (fid))");
+      $ret[] = update_sql("INSERT INTO {files} SELECT DISTINCT ON (fid) fid, nid, filename, filepath, filemime, filesize FROM {files_copy}");
+      $ret[] = update_sql("SELECT setval('{files}_fid_seq', max(fid)) FROM {files}");
+      $ret[] = update_sql("DROP TABLE {files_copy}");
+      break;
+    case 'mysqli':
+    case 'mysql':
+      // create file_revisions table
+      $ret[] = update_sql("CREATE TABLE {file_revisions} (
+        fid int(10) unsigned NOT NULL default 0,
+        vid int(10) unsigned NOT NULL default 0,
+        description varchar(255) NOT NULL default '',
+        list tinyint(1) unsigned NOT NULL default 0,
+        PRIMARY KEY (fid, vid)
+        ) TYPE=MyISAM");
+      $ret[] = update_sql('INSERT INTO {file_revisions} SELECT fid, vid, description, list FROM {files}');
+
+      // alter files table
+      $ret[] = update_sql("CREATE TABLE {files_copy} AS SELECT * FROM {files}");
+      $ret[] = update_sql("DROP TABLE {files}");
+      $ret[] = update_sql("CREATE TABLE {files} (
+        fid int(10) unsigned NOT NULL default 0,
+        nid int(10) unsigned NOT NULL default 0,
+        filename varchar(255) NOT NULL default '',
+        filepath varchar(255) NOT NULL default '',
+        filemime varchar(255) NOT NULL default '',
+        filesize int(10) unsigned NOT NULL default 0,
+        PRIMARY KEY (fid)
+        ) TYPE=MyISAM
+        /*!40100 DEFAULT CHARACTER SET utf8 */");
+      $ret[] = update_sql("INSERT IGNORE INTO {files} SELECT fid, nid, filename, filepath, filemime, filesize FROM {files_copy}");
+      $ret[] = update_sql("DROP TABLE {files_copy}");
+      break;
+  }
+
+  return $ret;
 }
