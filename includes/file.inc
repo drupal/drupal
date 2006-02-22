@@ -388,7 +388,7 @@ function file_save_upload($source, $dest = 0, $replace = FILE_EXISTS_RENAME) {
       $temporary = 1;
       if (is_file($file->filepath)) {
         // If this file was uploaded by this user before replace the temporary copy.
-        $replace = 1;
+        $replace = FILE_EXISTS_REPLACE;
       }
     }
 
