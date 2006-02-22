@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.62 2006/01/18 19:18:30 dries Exp $
+// $Id: file.inc,v 1.63 2006/02/22 19:16:37 dries Exp $
 
 /**
  * @file
@@ -388,7 +388,7 @@ function file_save_upload($source, $dest = 0, $replace = FILE_EXISTS_RENAME) {
       $temporary = 1;
       if (is_file($file->filepath)) {
         // If this file was uploaded by this user before replace the temporary copy.
-        $replace = 1;
+        $replace = FILE_EXISTS_REPLACE;
       }
     }
 
