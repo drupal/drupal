@@ -264,17 +264,25 @@ CREATE TABLE client_system (
 
 CREATE TABLE files (
   fid SERIAL,
-  nid integer NOT NULL default '0',
-  vid integer NOT NULL default '0',
-  description varchar(255) NOT NULL default '',
+  nid integer NOT NULL default 0,
   filename varchar(255) NOT NULL default '',
   filepath varchar(255) NOT NULL default '',
   filemime varchar(255) NOT NULL default '',
-  filesize integer NOT NULL default '0',
-  list smallint NOT NULL default '0'
+  filesize integer NOT NULL default 0,
+  PRIMARY KEY (fid)
 );
-CREATE INDEX files_fid_idx ON files(fid);
-CREATE INDEX files_vid_idx ON files(vid);
+
+--
+-- Table structure for table 'file_revisions'
+--
+
+CREATE TABLE file_revisions (
+  fid integer NOT NULL default 0,
+  vid integer NOT NULL default 0,
+  description varchar(255) NOT NULL default '',
+  list smallint NOT NULL default 0,
+  PRIMARY KEY (fid, vid)
+);
 
 --
 -- Table structure for table 'filter_formats'

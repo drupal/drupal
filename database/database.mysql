@@ -276,17 +276,26 @@ CREATE TABLE client_system (
 --
 
 CREATE TABLE files (
-  fid int(10) unsigned NOT NULL default '0',
-  nid int(10) unsigned NOT NULL default '0',
-  vid int(10) unsigned NOT NULL default '0',
+  fid int(10) unsigned NOT NULL default 0,
+  nid int(10) unsigned NOT NULL default 0,
   filename varchar(255) NOT NULL default '',
-  description varchar(255) NOT NULL default '',
   filepath varchar(255) NOT NULL default '',
   filemime varchar(255) NOT NULL default '',
-  filesize int(10) unsigned NOT NULL default '0',
-  list tinyint(1) unsigned NOT NULL default '0',
-  KEY vid (vid),
-  KEY fid (fid)
+  filesize int(10) unsigned NOT NULL default 0,
+  PRIMARY KEY (fid)
+) TYPE=MyISAM
+/*!40100 DEFAULT CHARACTER SET utf8 */ ;
+
+--
+-- Table structure for table 'file_revisions'
+--
+
+CREATE TABLE file_revisions (
+  fid int(10) unsigned NOT NULL default 0,
+  vid int(10) unsigned NOT NULL default 0,
+  description varchar(255) NOT NULL default '',
+  list tinyint(1) unsigned NOT NULL default 0,
+  PRIMARY KEY (fid, vid)
 ) TYPE=MyISAM
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
