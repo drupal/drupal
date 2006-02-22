@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.272 2006/02/21 18:46:54 dries Exp $
+// $Id: aggregator.module,v 1.273 2006/02/22 10:13:42 dries Exp $
 
 /**
  * @file
@@ -411,7 +411,7 @@ function aggregator_refresh($feed) {
         */
 
         foreach ($channel as $key => $value) {
-          $channel[$key] = trim(strip_tags($value));
+          $channel[$key] = trim($value);
         }
 
         /*
@@ -523,10 +523,7 @@ function aggregator_parse_feed(&$data, $feed) {
 
     // Prepare the item:
     foreach ($item as $key => $value) {
-      $value = decode_entities(trim($value));
-      $value = strip_tags($value, variable_get('aggregator_allowed_html_tags', '<a> <b> <br> <dd> <dl> <dt> <em> <i> <li> <ol> <p> <strong> <u> <ul>'));
-      $value = filter_xss($value);
-      $item[$key] = $value;
+      $item[$key] = trim($value);
     }
 
     /*
@@ -1151,7 +1148,7 @@ function theme_aggregator_feed($feed) {
   $output  = '<div class="feed-source">';
   $output .= theme('feed_icon', $feed->url) ."\n";
   $output .= $feed->image . ' <h3 class="feed-title"><a href="'. check_url($feed->link) .'">'. check_plain($feed->title) ."</a></h3>\n";
-  $output .= '<div class="feed-description"><em>'. t('Description:') .'</em> '. filter_xss($feed->description) ."</div>\n";
+  $output .= '<div class="feed-description"><em>'. t('Description:') .'</em> '. aggregator_filter_xss($feed->description) ."</div>\n";
 
   $updated = t('%time ago', array('%time' => format_interval(time() - $feed->checked)));
   if (user_access('administer news feeds')) {
@@ -1196,7 +1193,7 @@ function theme_aggregator_block_item($item, $feed = 0) {
 function theme_aggregator_summary_item($item) {
   $output = '<a href="'. check_url($item->link) .'">'. check_plain($item->title) .'</a> <span class="age">'. t('%age old', array('%age' => format_interval(time() - $item->timestamp))) .'</span>';
   if ($item->feed_link) {
-    $output .= ', <span class="source"><a href="'. $item->feed_link .'">'. $item->feed_title .'</a></span>';
+    $output .= ', <span class="source"><a href="'. check_url($item->feed_link) .'">'. check_plain($item->feed_title) .'</a></span>';
   }
   return $output ."\n";
 }
@@ -1225,7 +1222,7 @@ function theme_aggregator_page_item($item) {
   $output .= "<div class=\"feed-item-meta\">$source <span class=\"feed-item-date\">$source_date</span></div>\n";
 
   if ($item->description) {
-    $output .= '<div class="feed-item-body">'. filter_xss($item->description) ."</div>\n";
+    $output .= '<div class="feed-item-body">'. aggregator_filter_xss($item->description) ."</div>\n";
   }
 
   $result = db_query('SELECT c.title, c.cid FROM {aggregator_category_item} ci LEFT JOIN {aggregator_category} c ON ci.cid = c.cid WHERE ci.iid = %d ORDER BY c.title', $item->iid);
@@ -1242,4 +1239,9 @@ function theme_aggregator_page_item($item) {
   return $output;
 }
 
-
+/**
+ * Safely render HTML content, as allowed.
+ */
+function aggregator_filter_xss($value) {
+  return filter_xss($value, preg_split('/\s+|<|>/', variable_get("aggregator_allowed_html_tags", '<a> <b> <br> <dd> <dl> <dt> <em> <i> <li> <ol> <p> <strong> <u> <ul>'), -1, PREG_SPLIT_NO_EMPTY));
+}
