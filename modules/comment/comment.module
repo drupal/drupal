@@ -610,7 +610,7 @@ function comment_save($edit) {
         $edit['cid'] = db_next_id('{comments}_cid');
         $edit['timestamp'] = time();
 
-        if ($edit['uid'] = $user->uid) {
+        if ($edit['uid'] == $user->uid) {
           $edit['name'] = $user->name;
         }
 
