@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.433 2006/02/22 10:05:06 dries Exp $
+// $Id: comment.module,v 1.434 2006/02/22 19:02:58 dries Exp $
 
 /**
  * @file
@@ -610,7 +610,7 @@ function comment_save($edit) {
         $edit['cid'] = db_next_id('{comments}_cid');
         $edit['timestamp'] = time();
 
-        if ($edit['uid'] = $user->uid) {
+        if ($edit['uid'] == $user->uid) {
           $edit['name'] = $user->name;
         }
 
