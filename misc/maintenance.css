@@ -1,4 +1,4 @@
-/* $Id: maintenance.css,v 1.4 2005/12/06 09:25:22 dries Exp $ */
+/* $Id: maintenance.css,v 1.5 2006/02/23 19:49:42 dries Exp $ */
 
 body {
   background: url(druplicon.png) 4.2em 4em no-repeat #fff;
@@ -12,9 +12,6 @@ h1 {
 }
 h1, h2, h3, h4, h5, h6 {
   font-family: sans-serif;
-}
-ul {
-  margin: 0;
 }
 :link {
   color: #0073ba;
