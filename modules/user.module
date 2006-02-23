@@ -1731,7 +1731,7 @@ function theme_user_admin_perm($form) {
         $row[] = array('data' => form_render($form['permission'][$key]), 'class' => 'permission');
         foreach (element_children($form['checkboxes']) as $rid) {
           if (is_array($form['checkboxes'][$rid])) {
-            $row[] = array('data' => form_render($form['checkboxes'][$rid][$key]), 'align' => 'center', 'title' => $key);
+            $row[] = array('data' => form_render($form['checkboxes'][$rid][$key]), 'align' => 'center', 'title' => t($key));
           }
         }
       }
