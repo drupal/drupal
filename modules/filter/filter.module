@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.106 2006/02/21 18:46:54 dries Exp $
+// $Id: filter.module,v 1.107 2006/02/23 04:01:14 unconed Exp $
 
 /**
  * @file
@@ -650,7 +650,7 @@ function filter_format_allowcache($format) {
 function filter_list_format($format) {
   static $filters = array();
 
-  if (!is_array($filters[$format])) {
+  if (!isset($filters[$format])) {
     $filters[$format] = array();
     $result = db_query("SELECT * FROM {filters} WHERE format = %d ORDER BY weight ASC", $format);
     while ($filter = db_fetch_object($result)) {
