@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.517 2006/02/21 18:46:53 dries Exp $
+// $Id: common.inc,v 1.518 2006/02/23 15:19:10 dries Exp $
 
 /**
  * @file
@@ -366,20 +366,20 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
 
   // Fetch response.
   $response = '';
-  while (!feof($fp) && $data = fread($fp, 1024)) {
-    $response .= $data;
+  while (!feof($fp) && $chunk = fread($fp, 1024)) {
+    $response .= $chunk;
   }
   fclose($fp);
 
   // Parse response.
-  list($headers, $result->data) = explode("\r\n\r\n", $response, 2);
-  $headers = preg_split("/\r\n|\n|\r/", $headers);
+  list($split, $result->data) = explode("\r\n\r\n", $response, 2);
+  $split = preg_split("/\r\n|\n|\r/", $split);
 
-  list($protocol, $code, $text) = explode(' ', trim(array_shift($headers)), 3);
+  list($protocol, $code, $text) = explode(' ', trim(array_shift($split)), 3);
   $result->headers = array();
 
   // Parse headers.
-  while ($line = trim(array_shift($headers))) {
+  while ($line = trim(array_shift($split))) {
     list($header, $value) = explode(':', $line, 2);
     if (isset($result->headers[$header]) && $header == 'Set-Cookie') {
       // RFC 2109: the Set-Cookie response header comprises the token Set-
