@@ -650,7 +650,7 @@ function filter_format_allowcache($format) {
 function filter_list_format($format) {
   static $filters = array();
 
-  if (!is_array($filters[$format])) {
+  if (!isset($filters[$format])) {
     $filters[$format] = array();
     $result = db_query("SELECT * FROM {filters} WHERE format = %d ORDER BY weight ASC", $format);
     while ($filter = db_fetch_object($result)) {
