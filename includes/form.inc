@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.69 2006/02/21 16:08:54 dries Exp $
+// $Id: form.inc,v 1.70 2006/02/23 10:30:03 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -103,23 +103,23 @@ function drupal_get_form($form_id, &$form, $callback = NULL) {
   }
 
   $form = form_builder($form_id, $form);
-  $goto = $_GET['q'];
   if (!empty($_POST['edit']) && (($_POST['edit']['form_id'] == $form_id) || ($_POST['edit']['form_id'] == $callback))) {
     drupal_validate_form($form_id, $form, $callback);
     if ($form_submitted && !form_get_errors()) {
       $redirect = drupal_submit_form($form_id, $form, $callback);
-      if (!is_null($redirect)) {
+      if (isset($redirect)) {
         $goto = $redirect;
       }
-      else if ($form['#redirect']) {
+      elseif (isset($form['#redirect'])) {
         $goto = $form['#redirect'];
       }
-
-      if (is_array($goto)) {
-        call_user_func_array('drupal_goto', $redirect);
-      }
-      else {
-        drupal_goto(drupal_get_path_alias($goto));
+      if ($goto !== FALSE) {
+        if (is_array($goto)) {
+          call_user_func_array('drupal_goto', $redirect);
+        }
+        else {
+          drupal_goto($goto);
+        }
       }
     }
   }
@@ -149,14 +149,15 @@ function drupal_validate_form($form_id, &$form, $callback = NULL) {
 function drupal_submit_form($form_id, $form, $callback = NULL) {
   global $form_values;
 
-  $goto = null;
   unset($GLOBALS['form_values']['submit'], $GLOBALS['form_values']['form_id']);
   if (isset($form['#submit'])) {
     foreach ($form['#submit'] as $function => $args) {
       if (function_exists($function)) {
         // Since we can only redirect to one page, only the last redirect will work
         $redirect = call_user_func_array($function, $args);
-        $goto = (!is_null($redirect)) ? $redirect : $goto;
+        if (isset($redirect)) {
+          $goto = $redirect;
+        }
       }
     }
   }

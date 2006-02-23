@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.65 2006/02/05 15:42:56 dries Exp $
+// $Id: locale.inc,v 1.66 2006/02/23 10:30:03 dries Exp $
 
 /**
  * @file
@@ -39,7 +39,6 @@ function _locale_admin_manage_screen() {
   $languages = locale_supported_languages(TRUE, TRUE);
 
   $options = array();
-  $form['#action'] = url('admin/locale');
   $form['name'] = array('#tree' => TRUE);
   foreach ($languages['name'] as $key => $lang) {
     $options[$key] = '';
@@ -67,10 +66,10 @@ function _locale_admin_manage_screen() {
   $form['sitedefault'] = array('#type' => 'radios', '#options' => $options, '#default_value' => $isdefault, '#return_value' => 1);
   $form['submit'] = array('#type' => 'submit', '#value' => t('Save configuration'));
 
-  return drupal_get_form('_locale_admin_manage_screen', $form);
+  return drupal_get_form('_locale_admin_manage_screen', $form, 'locale_admin_manage_screen');
 }
 
-function theme__locale_admin_manage_screen($form) {
+function theme_locale_admin_manage_screen($form) {
   foreach ($form['name'] as $key => $element) {
     // Don't take form control structures
     if (is_array($element) && element_child($key)) {
@@ -1137,7 +1136,7 @@ function _locale_string_seek_form() {
   $form['search']['language'] = array('#type' => 'radios', '#title' => t('Language'), '#default_value' => ($query->language ? $query->language : 'all'), '#options' => array_merge(array('all' => t('All languages'), 'en' => t('English (provided by Drupal)')), $languages['name']));
   $form['search']['searchin'] = array('#type' => 'radios', '#title' => t('Search in'), '#default_value' => ($query->searchin ? $query->searchin : 'all'), '#options' => array('all' => t('All strings in that language'), 'translated' => t('Only translated strings'), 'untranslated' => t('Only untranslated strings')));
   $form['search']['submit'] = array('#type' => 'submit', '#value' => t('Search'));
-  $form['#action'] = url('admin/locale/string/search');
+  $form['#redirect'] = FALSE;
 
   return drupal_get_form('_locale_string_seek', $form);
 }

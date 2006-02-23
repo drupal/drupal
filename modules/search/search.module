@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.163 2006/02/21 18:46:54 dries Exp $
+// $Id: search.module,v 1.164 2006/02/23 10:30:03 dries Exp $
 
 /**
  * @file
@@ -990,9 +990,7 @@ function search_form($action = '', $keys = '', $type = null, $prompt = null) {
     $prompt = t('Enter your keywords');
   }
 
-  $form = array();
-  $form['#action'] = $action;
-  $form['#attributes'] = array('class' => 'search-form');
+  $form = array('#action' => $action, '#attributes' => array('class' => 'search-form'), '#redirect' => FALSE);
   $form['basic'] = array('#type' => 'item', '#title' => $prompt);
   $form['basic']['inline'] = array('#type' => 'markup', '#prefix' => '<div class="container-inline">', '#suffix' => '</div>');
   $form['basic']['inline']['keys'] = array('#type' => 'textfield', '#title' => '', '#default_value' => $keys, '#size' => $prompt ? 40 : 20, '#maxlength' => 255);
