@@ -47,7 +47,7 @@ function textArea(element) {
   // Make the grippie line up in various browsers
   if (window.opera) {
     // Opera
-    this.grippie.style.marginRight = this.widthOffset +'px';
+    this.grippie.style.marginRight = '4px';
   }
   if (document.all && !window.opera) {
     // IE
