@@ -1685,3 +1685,16 @@ function system_update_173() {
 
   return $ret;
 }
+
+function system_update_173() {
+  // update comments system variables on upgrade.
+  $mode = variable_get('comment_default_mode', 4);
+  if ($mode > 0) {
+    variable_set('comment_default_mode', $mode - 1);
+  }
+  $order = variable_get('comment_default_order', 1);
+  if ($order > 0) {
+    variable_set('comment_default_order', $order - 1);
+  }
+  return array();
+}
