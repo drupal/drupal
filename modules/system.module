@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.291 2006/02/21 18:46:54 dries Exp $
+// $Id: system.module,v 1.292 2006/02/26 19:37:18 dries Exp $
 
 /**
  * @file
@@ -354,22 +354,15 @@ function system_view_general() {
     '#description' => t('If you want any sort of access control on the downloading of files, this needs to be set to <em>private</em>. You can change this at any time, however all download URLs will change and there may be unexpected problems so it is not recommended.')
   );
 
-  /*
   // Image handling:
-  $group = array();
   $toolkits_available = image_get_available_toolkits();
   if (count($toolkits_available) > 1) {
-    $group['image_toolkit'] = array(
+    $form['image'] = array('#type' => 'fieldset', '#title' => t('Image handling'), '#collapsible' => TRUE, '#collapsed' => true);
+    $form['image']['image_toolkit'] = array(
       '#type' => 'radios', '#title' => t('Select an image processing toolkit'),
       '#default_value' => variable_get('image_toolkit', image_get_toolkit()), '#options' => $toolkits_available
     );
   }
-  $group['toolkit'] = image_toolkit_invoke('settings');
-  if (is_array($group)) {
-    $form['image'] = array('#type' => 'fieldset', '#title' => t('Image handling'), '#collapsible' => TRUE, '#collapsed' => true);
-    $form['image'] = array_merge($form['image'], $group);
-  }
-  */
 
   // Feed settings
   $form['feed'] = array('#type' => 'fieldset', '#title' => t('RSS feed settings'), '#collapsible' => TRUE, '#collapsed' => TRUE);
