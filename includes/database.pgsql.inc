@@ -1,5 +1,5 @@
 <?php
-// $Id: database.pgsql.inc,v 1.26 2006/02/20 16:46:59 dries Exp $
+// $Id: database.pgsql.inc,v 1.27 2006/02/26 19:48:43 dries Exp $
 
 /**
  * @file
@@ -348,7 +348,7 @@ function db_unlock_tables() {
 function db_check_setup() {
   $encoding = db_result(db_query('SHOW server_encoding'));
   if (!in_array(strtolower($encoding), array('unicode', 'utf8'))) {
-    drupal_set_message(t('Your PostgreSQL database is set up with the wrong character encoding (%encoding). It is possibile it will not work as expected. It is advised to recreate it with UTF-8/Unicode encoding. More information can be found in the <a href="%url">PostgreSQL documentation</a>.', array('%encoding' => $encoding, '%url' => 'http://www.postgresql.org/docs/7.4/interactive/multibyte.html')), 'status');
+    drupal_set_message(t('Your PostgreSQL database is set up with the wrong character encoding (%encoding). It is possible it will not work as expected. It is advised to recreate it with UTF-8/Unicode encoding. More information can be found in the <a href="%url">PostgreSQL documentation</a>.', array('%encoding' => $encoding, '%url' => 'http://www.postgresql.org/docs/7.4/interactive/multibyte.html')), 'status');
   }
 }
 
