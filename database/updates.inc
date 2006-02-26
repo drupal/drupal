@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.199 2006/02/26 19:35:29 dries Exp $
+// $Id: updates.inc,v 1.200 2006/02/26 19:40:23 dries Exp $
 
 function system_update_110() {
   $ret = array();
@@ -1697,4 +1697,14 @@ function system_update_174() {
     variable_set('comment_default_order', $order - 1);
   }
   return array();
+}
+
+function system_update_175() {
+  $ret = array();
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql("ALTER TABLE {locales_target} ALTER COLUMN translation SET DEFAULT ''");
+  }
+  return $ret;
 }

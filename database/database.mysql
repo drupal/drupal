@@ -1,4 +1,4 @@
--- $Id: database.mysql,v 1.224 2006/02/22 10:06:46 dries Exp $
+-- $Id: database.mysql,v 1.225 2006/02/26 19:40:23 dries Exp $
 
 --
 -- Table structure for table 'access'
@@ -395,7 +395,7 @@ CREATE TABLE locales_source (
 
 CREATE TABLE locales_target (
   lid int(11) NOT NULL default '0',
-  translation blob NOT NULL,
+  translation blob NOT NULL default '',
   locale varchar(12) NOT NULL default '',
   plid int(11) NOT NULL default '0',
   plural int(1) NOT NULL default '0',
