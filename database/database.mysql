@@ -395,7 +395,7 @@ CREATE TABLE locales_source (
 
 CREATE TABLE locales_target (
   lid int(11) NOT NULL default '0',
-  translation blob NOT NULL,
+  translation blob NOT NULL default '',
   locale varchar(12) NOT NULL default '',
   plid int(11) NOT NULL default '0',
   plural int(1) NOT NULL default '0',
