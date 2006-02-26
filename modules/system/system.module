@@ -55,7 +55,7 @@ function system_perm() {
  */
 function system_elements() {
   // Top level form
-  $type['form'] = array('#method' => 'post', '#action' => request_uri(), '#redirect' => '');
+  $type['form'] = array('#method' => 'post', '#action' => request_uri(), '#redirect' => $_GET['q']);
 
   // Inputs
   $type['checkbox'] = array('#input' => TRUE, '#return_value' => 1);
