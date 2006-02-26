@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.588 2006/02/23 12:52:02 dries Exp $
+// $Id: user.module,v 1.589 2006/02/26 19:44:45 dries Exp $
 
 /**
  * @file
@@ -1034,7 +1034,7 @@ function user_pass_submit($form_id, $form_values) {
   $mail_success = user_mail($account->mail, $subject, $body, $headers);
 
   if ($mail_success) {
-      watchdog('user', t('Password reset instructions mailed to %name at %email.', array('%name' => '<em>'. $account->name .'</em>', '%email' => '<em>'. $account->mail .'</em>')));
+    watchdog('user', t('Password reset instructions mailed to %name at %email.', array('%name' => '<em>'. $account->name .'</em>', '%email' => '<em>'. $account->mail .'</em>')));
     drupal_set_message(t('Further instructions have been sent to your e-mail address.'));
   }
   else {
@@ -1220,7 +1220,7 @@ function user_register_submit($form_id, $form_values) {
       $body = _user_mail_text('welcome_body', $variables);
       user_mail($mail, $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
       drupal_set_message(t('Your password and further instructions have been sent to your e-mail address.'));
-
+      return '';
     }
     else {
       // Create new user account, administrator approval required.

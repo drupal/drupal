@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.606 2006/02/21 18:46:54 dries Exp $
+// $Id: node.module,v 1.607 2006/02/26 19:44:45 dries Exp $
 
 /**
  * @file
@@ -1115,11 +1115,6 @@ function node_filter_form_submit() {
     case t('Reset'):
       $_SESSION['node_overview_filter'] = array();
       break;
-    case t('Update'):
-      return;
-  }
-  if ($op != '') {
-    return 'admin/node';
   }
 }
 
@@ -1137,7 +1132,6 @@ function node_admin_nodes_submit($form_id, $edit) {
       }
     }
     drupal_set_message(t('The update has been performed.'));
-    return 'admin/node';
   }
 }
 
@@ -1874,9 +1868,16 @@ function node_form_submit($form_id, $edit) {
       drupal_set_message(t('Your %post was created.', array ('%post' => node_get_name($node))));
     }
   }
-  if ($node->nid && node_access('view', $node)) {
-    return 'node/'. $node->nid;
+  if ($node->nid) {
+    if (node_access('view', $node)) {
+      return 'node/'. $node->nid;
+    }
+    else {
+      return '';
+    }
   }
+  // it is very unlikely we get here
+  return FALSE;
 }
 
 /**
