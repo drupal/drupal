@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.434 2006/02/22 19:02:58 dries Exp $
+// $Id: comment.module,v 1.435 2006/02/26 19:47:55 dries Exp $
 
 /**
  * @file
@@ -244,14 +244,14 @@ function comment_form_alter($form_id, &$form) {
     if ($form['type']['#value'] .'_node_form' == $form_id) {
       $node = $form['#node'];
       if (user_access('administer comments')) {
-        $form['user_comments'] = array(
+        $form['comment_settings'] = array(
           '#type' => 'fieldset',
-          '#title' => t('User comments'),
+          '#title' => t('Comment settings'),
           '#collapsible' => TRUE,
           '#collapsed' => TRUE,
           '#weight' => 30,
         );
-        $form['user_comments']['comment'] = array(
+        $form['comment_settings']['comment'] = array(
           '#type' => 'radios',
           '#parents' => array('comment'),
           '#default_value' => $node->comment,
@@ -259,7 +259,7 @@ function comment_form_alter($form_id, &$form) {
         );
       }
       else {
-        $form['user_comments']['comment'] = array(
+        $form['comment_settings']['comment'] = array(
           '#type' => 'value',
           '#value' => $node->comment,
         );
