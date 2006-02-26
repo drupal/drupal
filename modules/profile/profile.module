@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.135 2006/02/21 18:46:54 dries Exp $
+// $Id: profile.module,v 1.136 2006/02/26 19:46:13 dries Exp $
 
 /**
  * @file
@@ -201,7 +201,7 @@ function profile_browse() {
     drupal_set_title($title);
     return $output;
   }
-  else if ($name && !$field->id) {
+  else if ($name && !$field->fid) {
     drupal_not_found();
   }
   else {
