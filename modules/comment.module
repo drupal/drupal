@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.435 2006/02/26 19:47:55 dries Exp $
+// $Id: comment.module,v 1.436 2006/02/26 19:52:09 dries Exp $
 
 /**
  * @file
@@ -529,7 +529,7 @@ function comment_reply($nid, $pid = NULL) {
  */
 function comment_save($edit) {
   global $user;
-  if (user_access('post comments') && (user_access('administer coments') || node_comment_mode($edit['nid']) == COMMENT_NODE_READ_WRITE)) {
+  if (user_access('post comments') && (user_access('administer comments') || node_comment_mode($edit['nid']) == COMMENT_NODE_READ_WRITE)) {
     if (!form_get_errors()) {
       // Check for duplicate comments.  Note that we have to use the
       // validated/filtered data to perform such check.
