@@ -1686,7 +1686,7 @@ function system_update_173() {
   return $ret;
 }
 
-function system_update_173() {
+function system_update_174() {
   // update comments system variables on upgrade.
   $mode = variable_get('comment_default_mode', 4);
   if ($mode > 0) {
