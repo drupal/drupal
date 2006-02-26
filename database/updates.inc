@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.198 2006/02/25 07:54:33 dries Exp $
+// $Id: updates.inc,v 1.199 2006/02/26 19:35:29 dries Exp $
 
 function system_update_110() {
   $ret = array();
@@ -1686,7 +1686,7 @@ function system_update_173() {
   return $ret;
 }
 
-function system_update_173() {
+function system_update_174() {
   // update comments system variables on upgrade.
   $mode = variable_get('comment_default_mode', 4);
   if ($mode > 0) {
