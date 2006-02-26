@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.518 2006/02/23 15:19:10 dries Exp $
+// $Id: common.inc,v 1.519 2006/02/26 19:53:00 dries Exp $
 
 /**
  * @file
@@ -252,7 +252,6 @@ function drupal_not_found() {
   watchdog('page not found', t('%page not found.', array('%page' => theme('placeholder', $_GET['q']))), WATCHDOG_WARNING);
 
   $path = drupal_get_normal_path(variable_get('site_404', ''));
-  $status = MENU_NOT_FOUND;
   if ($path && $path != $_GET['q']) {
     menu_set_active_item($path);
     $return = menu_execute_active_handler();
@@ -272,7 +271,6 @@ function drupal_access_denied() {
   watchdog('access denied', t('%page denied access.', array('%page' => theme('placeholder', $_GET['q']))), WATCHDOG_WARNING, l(t('view'), $_GET['q']));
 
   $path = drupal_get_normal_path(variable_get('site_403', ''));
-  $status = MENU_NOT_FOUND;
   if ($path && $path != $_GET['q']) {
     menu_set_active_item($path);
     $return = menu_execute_active_handler();
