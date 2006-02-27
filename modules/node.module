@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.607 2006/02/26 19:44:45 dries Exp $
+// $Id: node.module,v 1.608 2006/02/27 13:33:48 killes Exp $
 
 /**
  * @file
@@ -1349,6 +1349,7 @@ function node_revision_revert($nid, $revision) {
     if ($node->vid) {
       $node->revision = 1;
       $node->log = t('Copy of the revision from %date.', array('%date' => theme('placeholder', format_date($node->revision_timestamp))));
+      $node->taxonomy = array_keys($node->taxonomy);
 
       node_save($node);
 
