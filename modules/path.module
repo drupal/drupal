@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.78 2006/02/21 18:46:54 dries Exp $
+// $Id: path.module,v 1.79 2006/02/27 19:27:20 killes Exp $
 
 /**
  * @file
@@ -100,7 +100,7 @@ function path_admin_edit($pid = 0) {
  **/
 function path_admin_delete_confirm($pid) {
   $path = path_load($pid);
-  if (user_access('administer path aliases')) {
+  if (user_access('administer url aliases')) {
     $form['pid'] = array('#type' => 'value', '#value' => $pid);
     $output = confirm_form('path_admin_delete_confirm', $form,
   t('Are you sure you want to delete path alias %title?', array('%title' => theme('placeholder', $path['dst']))),
