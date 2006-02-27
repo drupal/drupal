@@ -151,9 +151,9 @@ function drupal_validate_form($form_id, &$form, $callback = NULL) {
 }
 
 function drupal_submit_form($form_id, $form, $callback = NULL) {
-  global $form_values;
+  // Prevent system module forms (system/theme settings) from saving certain form fields to the variables table.
+  unset($GLOBALS['form_values']['submit'], $GLOBALS['form_values']['reset'], $GLOBALS['form_values']['form_id']);
 
-  unset($GLOBALS['form_values']['submit'], $GLOBALS['form_values']['form_id']);
   if (isset($form['#submit'])) {
     foreach ($form['#submit'] as $function => $args) {
       if (function_exists($function)) {
