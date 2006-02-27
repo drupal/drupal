@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.73 2006/01/08 12:49:51 dries Exp $
+// $Id: module.inc,v 1.74 2006/02/27 14:41:05 killes Exp $
 
 /**
  * @file
@@ -48,7 +48,7 @@ function module_list($refresh = FALSE, $bootstrap = TRUE) {
   }
 
   if (!$list) {
-    $list = array('filter' => 'filter', 'system' => 'system', 'user' => 'user', 'watchdog' => 'watchdog');
+    $list = array('filter' => 'filter', 'node' => 'node', 'system' => 'system', 'user' => 'user', 'watchdog' => 'watchdog');
     if ($bootstrap) {
       $result = db_query("SELECT name, filename, throttle, bootstrap FROM {system} WHERE type = 'module' AND status = 1 AND bootstrap = 1 ORDER BY weight ASC, filename ASC");
     }

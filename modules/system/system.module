@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.294 2006/02/27 14:32:38 killes Exp $
+// $Id: system.module,v 1.295 2006/02/27 14:41:05 killes Exp $
 
 /**
  * @file
@@ -933,7 +933,7 @@ function system_modules() {
   // Handle status checkboxes, including overriding the generated
   // checkboxes for required modules.
   $form['status'] = array('#type' => 'checkboxes', '#default_value' => $status, '#options' => $options);
-  $required = array('block', 'filter', 'system', 'user', 'watchdog');
+  $required = array('block', 'filter', 'node', 'system', 'user', 'watchdog');
   foreach ($required as $require) {
     $form['status'][$require] = array('#type' => 'hidden', '#value' => 1, '#suffix' => t('required'));
   }
