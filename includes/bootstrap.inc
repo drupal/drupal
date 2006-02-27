@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.87 2006/02/10 05:42:11 dries Exp $
+// $Id: bootstrap.inc,v 1.88 2006/02/27 13:46:01 killes Exp $
 
 /**
  * @file
@@ -39,7 +39,7 @@ function timer_start($name) {
 
   list($usec, $sec) = explode(' ', microtime());
   $timers[$name]['start'] = (float)$usec + (float)$sec;
-  $timers[$name]['count'] = isset($timers[$name]['count']) ? $timers[$name]['count']++ : 1;
+  $timers[$name]['count'] = isset($timers[$name]['count']) ? ++$timers[$name]['count'] : 1;
 }
 
 /**
