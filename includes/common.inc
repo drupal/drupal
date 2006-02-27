@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.519 2006/02/26 19:53:00 dries Exp $
+// $Id: common.inc,v 1.520 2006/02/27 14:06:09 killes Exp $
 
 /**
  * @file
@@ -170,14 +170,18 @@ function drupal_get_destination() {
     return 'destination='. urlencode($_REQUEST['destination']);
   }
   else {
-    $destination[] = $_GET['q'];
-    $params = array('page', 'sort', 'order');
-    foreach ($params as $param) {
-      if (isset($_GET[$param])) {
-        $destination[] = "$param=". $_GET[$param];
+    $path = $_GET['q'];
+    $params = array();
+    foreach ($_GET as $key => $value) {
+      if ($key == 'q') {
+        continue;
       }
+      $params[] = urlencode($key) .'='. urlencode($value);
     }
-    return 'destination='. urlencode(implode('&', $destination));
+    if (count($params)) {
+      $path .= '?';
+    }
+    return 'destination='. urlencode($path . implode('&', $params));
   }
 }
 
