@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.589 2006/02/26 19:44:45 dries Exp $
+// $Id: user.module,v 1.590 2006/02/27 14:15:41 killes Exp $
 
 /**
  * @file
@@ -2029,7 +2029,7 @@ function _user_forms(&$edit, $account, $category, $hook = 'form') {
   $groups = array();
   foreach (module_list() as $module) {
     if ($data = module_invoke($module, 'user', $hook, $edit, $account, $category)) {
-      $groups = array_merge($data, $groups);
+      $groups = array_merge_recursive($data, $groups);
     }
   }
   uasort($groups, '_user_sort');
