@@ -16,7 +16,7 @@ function _locale_add_language($code, $name, $onlylanguage = TRUE) {
   db_query("INSERT INTO {locales_meta} (locale, name) VALUES ('%s','%s')", $code, $name);
   $result = db_query("SELECT lid FROM {locales_source}");
   while ($string = db_fetch_object($result)) {
-    db_query("INSERT INTO {locales_target} (lid, locale) VALUES (%d,'%s')", $string->lid, $code);
+    db_query("INSERT INTO {locales_target} (lid, locale, translation) VALUES (%d,'%s', '')", $string->lid, $code);
   }
 
   // If only the language was added, and not a PO file import triggered

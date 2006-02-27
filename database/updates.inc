@@ -1698,13 +1698,3 @@ function system_update_174() {
   }
   return array();
 }
-
-function system_update_175() {
-  $ret = array();
-  switch ($GLOBALS['db_type']) {
-    case 'mysql':
-    case 'mysqli':
-      $ret[] = update_sql("ALTER TABLE {locales_target} ALTER COLUMN translation SET DEFAULT ''");
-  }
-  return $ret;
-}
