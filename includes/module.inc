@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.74 2006/02/27 14:41:05 killes Exp $
+// $Id: module.inc,v 1.75 2006/02/27 15:04:45 killes Exp $
 
 /**
  * @file
@@ -36,15 +36,19 @@ function module_iterate($function, $argument = '') {
  * @param $bootstrap
  *   Whether to return the reduced set of modules loaded in "bootstrap mode"
  *   for cached pages. See bootstrap.inc.
+ * @param $sort
+ *   By default, modules are ordered by weight and filename, settings this option
+ *   to TRUE, module list will be ordered by module name.
  * @return
  *   An associative array whose keys and values are the names of all loaded
  *   modules.
  */
-function module_list($refresh = FALSE, $bootstrap = TRUE) {
-  static $list;
+function module_list($refresh = FALSE, $bootstrap = TRUE, $sort = FALSE) {
+  static $list, $sorted_list;
 
   if ($refresh) {
     $list = array();
+    $sorted_list = NULL;
   }
 
   if (!$list) {
@@ -67,6 +71,13 @@ function module_list($refresh = FALSE, $bootstrap = TRUE) {
         }
       }
     }
+  }
+  if ($sort) {
+    if (!isset($sorted_list)) {
+      $sorted_list = $list;
+      ksort($sorted_list);
+    }
+    return $sorted_list;
   }
   return $list;
 }
@@ -125,15 +136,18 @@ function module_hook($module, $hook) {
  *
  * @param $hook
  *   The name of the hook (e.g. "help" or "menu").
+ * @param $sort
+ *   By default, modules are ordered by weight and filename, settings this option
+ *   to TRUE, module list will be ordered by module name.
  * @return
  *   An array with the names of the modules which are implementing this hook.
  */
-function module_implements($hook) {
+function module_implements($hook, $sort = FALSE) {
   static $implementations;
 
   if (!isset($implementations[$hook])) {
     $implementations[$hook] = array();
-    $list = module_list();
+    $list = module_list(FALSE, TRUE, $sort);
     foreach ($list as $module) {
       if (module_hook($module, $hook)) {
         $implementations[$hook][] = $module;

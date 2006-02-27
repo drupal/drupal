@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.590 2006/02/27 14:15:41 killes Exp $
+// $Id: user.module,v 1.591 2006/02/27 15:04:45 killes Exp $
 
 /**
  * @file
@@ -1691,7 +1691,7 @@ function user_admin_perm($str_rids = NULL) {
 
   // Render role/permission overview:
   $options = array();
-  foreach (module_list() as $module) {
+  foreach (module_list(FALSE, FALSE, TRUE) as $module) {
     if ($permissions = module_invoke($module, 'perm')) {
       $form['permission'][] = array('#type' => 'markup', '#value' => t('%module module', array('%module' => $module)));
       asort($permissions);
