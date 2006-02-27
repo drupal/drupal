@@ -218,10 +218,10 @@ function drupal_get_destination() {
  * @see drupal_get_destination()
  */
 function drupal_goto($path = '', $query = NULL, $fragment = NULL) {
-  if ($_REQUEST['destination']) {
+  if (isset($_REQUEST['destination'])) {
     extract(parse_url($_REQUEST['destination']));
   }
-  else if ($_REQUEST['edit']['destination']) {
+  else if (isset($_REQUEST['edit']['destination'])) {
     extract(parse_url($_REQUEST['edit']['destination']));
   }
 
