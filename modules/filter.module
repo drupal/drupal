@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.107 2006/02/23 04:01:14 unconed Exp $
+// $Id: filter.module,v 1.108 2006/02/27 14:24:54 killes Exp $
 
 /**
  * @file
@@ -37,7 +37,8 @@ function filter_help($section) {
       return t('
 <p><em>Input formats</em> define a way of processing user-supplied text in Drupal. Every input format has its own settings of which <em>filters</em> to apply. Possible filters include stripping out malicious HTML and making URLs clickable.</p>
 <p>Users can choose between the available input formats when submitting content.</p>
-<p>Below you can configure which input formats are available to which roles, as well as choose a default input format (used for imported content, for example).</p>');
+<p>Below you can configure which input formats are available to which roles, as well as choose a default input format (used for imported content, for example).</p>
+<p>Note that (1) the default format is always available to all roles, and (2) all filter formats can always be used by roles with the "administer filters" permission even if they are not explicitly listed in the Roles column of this table.</p>');
 
     case 'admin/filters/'. arg(2):
       return t('
@@ -295,7 +296,7 @@ function filter_admin_overview() {
     $default = ($id == variable_get('filter_default_format', 1));
     $options[$id] = '';
     $form[$format->name]['id'] = array('#type' => 'markup', '#value' => $id);
-    $form[$format->name]['roles'] = array('#type' => 'markup', '#value' => $roles ? implode(', ',$roles) : t('No roles may use this format'));
+    $form[$format->name]['roles'] = array('#type' => 'markup', '#value' => $default ? t('All roles may use default format') : ($roles ? implode(', ',$roles) : t('No roles may use this format')));
     $form[$format->name]['configure'] = array('#type' => 'markup', '#value' => l(t('configure'), 'admin/filters/'. $id));
     $form[$format->name]['delete'] = array('#type' => 'markup', '#value' => $default ? '' : l(t('delete'), 'admin/filters/delete/'. $id));
   }
@@ -413,7 +414,7 @@ function filter_admin_format_form($format) {
   $form['name']['name'] = array('#type' => 'textfield', '#default_value' => $format->name, '#description' => t('Give the name of this filter format'), '#required' => TRUE);
 
   //Add a row of checkboxes for form group
-  $form['roles'] = array('#type' => 'fieldset', '#title' => t('Roles'), '#description' => $default ? $help : t('Choose which roles may use this filter format. Note that people who have the "administer filters" permission always get to use all the filter formats.'), '#tree' => TRUE);
+  $form['roles'] = array('#type' => 'fieldset', '#title' => t('Roles'), '#description' => $default ? $help : t('Choose which roles may use this filter format. Note that roles with the "administer filters" permission can always use all the filter formats.'), '#tree' => TRUE);
   $form['roles']['hidden'] = array();
   foreach (user_roles() as $rid => $name) {
     $checked = strstr($format->roles, ",$rid,");
