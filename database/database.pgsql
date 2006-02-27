@@ -1,4 +1,4 @@
--- $Id: database.pgsql,v 1.169 2006/02/22 10:06:46 dries Exp $
+-- $Id: database.pgsql,v 1.170 2006/02/27 13:31:09 killes Exp $
 
 -- Do not show NOTICE: messages, it's hard to spot errors.
 set client_min_messages = 'warning';
@@ -458,8 +458,9 @@ CREATE TABLE node_revisions (
   log text NOT NULL default '',
   timestamp integer NOT NULL default '0',
   format int NOT NULL default '0',
-  PRIMARY KEY  (nid,vid)
+  PRIMARY KEY  (vid)
 );
+CREATE INDEX node_revisions_nid_idx ON node_revisions(nid);
 CREATE INDEX node_revisions_uid_idx ON node_revisions(uid);
 CREATE SEQUENCE node_revisions_vid_seq INCREMENT 1 START 1;
 

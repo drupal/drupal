@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.201 2006/02/27 13:22:29 dries Exp $
+// $Id: updates.inc,v 1.202 2006/02/27 13:31:09 killes Exp $
 
 function system_update_110() {
   $ret = array();
@@ -755,10 +755,11 @@ function system_update_146() {
       log text NOT NULL default '',
       timestamp integer NOT NULL default '0',
       format int NOT NULL default '0',
-      PRIMARY KEY  (nid,vid))");
+      PRIMARY KEY (vid))");
     $ret[] = update_sql("INSERT INTO {node_revisions} (nid, vid, uid, title, body, teaser, timestamp, format)
       SELECT nid, nid AS vid, uid, title, body, teaser, changed AS timestamp, format
       FROM {node}");
+    $ret[] = update_sql('CREATE INDEX {node_revisions}_nid_idx ON {node_revisions}(nid)');
     $ret[] = update_sql('CREATE INDEX {node_revisions}_uid_idx ON {node_revisions}(uid)');
     $vid = db_next_id('{node}_nid');
     $ret[] = update_sql("CREATE SEQUENCE {node_revisions}_vid_seq INCREMENT 1 START $vid");
