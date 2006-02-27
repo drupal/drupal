@@ -933,7 +933,7 @@ function system_modules() {
   // Handle status checkboxes, including overriding the generated
   // checkboxes for required modules.
   $form['status'] = array('#type' => 'checkboxes', '#default_value' => $status, '#options' => $options);
-  $required = array('block', 'filter', 'system', 'user', 'watchdog');
+  $required = array('block', 'filter', 'node', 'system', 'user', 'watchdog');
   foreach ($required as $require) {
     $form['status'][$require] = array('#type' => 'hidden', '#value' => 1, '#suffix' => t('required'));
   }
