@@ -1691,7 +1691,7 @@ function user_admin_perm($str_rids = NULL) {
 
   // Render role/permission overview:
   $options = array();
-  foreach (module_list() as $module) {
+  foreach (module_list(FALSE, FALSE, TRUE) as $module) {
     if ($permissions = module_invoke($module, 'perm')) {
       $form['permission'][] = array('#type' => 'markup', '#value' => t('%module module', array('%module' => $module)));
       asort($permissions);
