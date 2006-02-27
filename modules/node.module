@@ -1349,6 +1349,7 @@ function node_revision_revert($nid, $revision) {
     if ($node->vid) {
       $node->revision = 1;
       $node->log = t('Copy of the revision from %date.', array('%date' => theme('placeholder', format_date($node->revision_timestamp))));
+      $node->taxonomy = array_keys($node->taxonomy);
 
       node_save($node);
 
