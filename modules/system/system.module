@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.293 2006/02/26 19:44:45 dries Exp $
+// $Id: system.module,v 1.294 2006/02/27 14:32:38 killes Exp $
 
 /**
  * @file
@@ -510,9 +510,10 @@ function system_cron_settings() {
  */
 function system_get_files_database(&$files, $type) {
   // Extract current files from database.
-  $result = db_query("SELECT name, type, status, throttle, schema_version FROM {system} WHERE type = '%s'", $type);
+  $result = db_query("SELECT filename, name, type, status, throttle, schema_version FROM {system} WHERE type = '%s'", $type);
   while ($file = db_fetch_object($result)) {
     if (isset($files[$file->name]) && is_object($files[$file->name])) {
+      $file->old_filename = $file->filename;
       foreach ($file as $key => $value) {
         if (!isset($files[$file->name]) || !isset($files[$file->name]->$key)) {
           $files[$file->name]->$key = $value;
@@ -919,8 +920,8 @@ function system_modules() {
     }
 
     // Update the contents of the system table:
-    if (isset($file->status)) {
-      db_query("UPDATE {system} SET description = '%s', name = '%s', bootstrap = %d WHERE filename = '%s'", $file->description, $file->name, $bootstrap, $file->filename);
+    if (isset($file->status) || $file->old_filename != $file->filename) {
+      db_query("UPDATE {system} SET description = '%s', name = '%s', bootstrap = %d, filename = '%s' WHERE filename = '%s'", $file->description, $file->name, $bootstrap, $file->filename, $file->old_filename);
     }
     else {
       // This is a new module.
