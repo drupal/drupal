@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.70 2006/02/23 10:30:03 dries Exp $
+// $Id: form.inc,v 1.71 2006/02/27 14:46:49 killes Exp $
 
 /**
  * @defgroup form Form generation
@@ -49,7 +49,9 @@ function element_children($element) {
  * and then submit the form using drupal_submit_form().
  *
  * @param $form_id
- *   A unique string identifying the form. Allows each form to be themed.
+ *   A unique string identifying the form. Allows each form to be
+ *   themed.  Pass NULL to suppress the form_id parameter (produces
+ *   a shorter URL with method=get)
  * @param $form
  *   An associative array containing the structure of the form.
  * @param $callback
@@ -70,7 +72,9 @@ function drupal_get_form($form_id, &$form, $callback = NULL) {
 
     $form['form_token'] = array('#type' => 'hidden', '#default_value' => md5(session_id() . $form['#token'] . variable_get('drupal_private_key', '')));
   }
-  $form['form_id'] = array('#type' => 'hidden', '#value' => $form_id);
+  if (isset($form_id)) {
+    $form['form_id'] = array('#type' => 'hidden', '#value' => $form_id);
+  }
   if (!isset($form['#id'])) {
     $form['#id'] = $form_id;
   }
