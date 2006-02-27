@@ -458,8 +458,9 @@ CREATE TABLE node_revisions (
   log text NOT NULL default '',
   timestamp integer NOT NULL default '0',
   format int NOT NULL default '0',
-  PRIMARY KEY  (nid,vid)
+  PRIMARY KEY  (vid)
 );
+CREATE INDEX node_revisions_nid_idx ON node_revisions(nid);
 CREATE INDEX node_revisions_uid_idx ON node_revisions(uid);
 CREATE SEQUENCE node_revisions_vid_seq INCREMENT 1 START 1;
 

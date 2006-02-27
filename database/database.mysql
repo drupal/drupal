@@ -482,7 +482,8 @@ CREATE TABLE node_revisions (
   log longtext NOT NULL default '',
   timestamp int(11) NOT NULL default '0',
   format int(4) NOT NULL default '0',
-  PRIMARY KEY  (nid,vid),
+  PRIMARY KEY  (vid),
+  KEY nid (nid),
   KEY uid (uid)
 ) TYPE=MyISAM
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
