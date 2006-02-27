@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.66 2006/02/23 10:30:03 dries Exp $
+// $Id: locale.inc,v 1.67 2006/02/27 13:22:29 dries Exp $
 
 /**
  * @file
@@ -16,7 +16,7 @@ function _locale_add_language($code, $name, $onlylanguage = TRUE) {
   db_query("INSERT INTO {locales_meta} (locale, name) VALUES ('%s','%s')", $code, $name);
   $result = db_query("SELECT lid FROM {locales_source}");
   while ($string = db_fetch_object($result)) {
-    db_query("INSERT INTO {locales_target} (lid, locale) VALUES (%d,'%s')", $string->lid, $code);
+    db_query("INSERT INTO {locales_target} (lid, locale, translation) VALUES (%d,'%s', '')", $string->lid, $code);
   }
 
   // If only the language was added, and not a PO file import triggered
