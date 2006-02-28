@@ -1,4 +1,4 @@
--- $Id: database.mysql,v 1.227 2006/02/27 13:31:09 killes Exp $
+-- $Id: database.mysql,v 1.228 2006/02/28 15:27:45 killes Exp $
 
 --
 -- Table structure for table 'access'
@@ -9,7 +9,7 @@ CREATE TABLE access (
   type varchar(255) NOT NULL default '',
   status tinyint(2) NOT NULL default '0',
   PRIMARY KEY (aid)
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -28,7 +28,7 @@ CREATE TABLE accesslog (
   timestamp int(11) unsigned NOT NULL default '0',
   KEY accesslog_timestamp (timestamp),
   PRIMARY KEY (aid)
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -42,7 +42,7 @@ CREATE TABLE aggregator_category (
   block tinyint(2) NOT NULL default '0',
   PRIMARY KEY (cid),
   UNIQUE KEY title (title)
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -53,7 +53,7 @@ CREATE TABLE aggregator_category_feed (
   fid int(10) NOT NULL default '0',
   cid int(10) NOT NULL default '0',
   PRIMARY KEY (fid,cid)
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -64,7 +64,7 @@ CREATE TABLE aggregator_category_item (
   iid int(10) NOT NULL default '0',
   cid int(10) NOT NULL default '0',
   PRIMARY KEY (iid,cid)
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -86,7 +86,7 @@ CREATE TABLE aggregator_feed (
   PRIMARY KEY (fid),
   UNIQUE KEY link (url),
   UNIQUE KEY title (title)
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -102,7 +102,7 @@ CREATE TABLE aggregator_item (
   description longtext NOT NULL,
   timestamp int(11) default NULL,
   PRIMARY KEY (iid)
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -116,7 +116,7 @@ CREATE TABLE authmap (
   module varchar(128) NOT NULL default '',
   PRIMARY KEY (aid),
   UNIQUE KEY authname (authname)
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -134,7 +134,7 @@ CREATE TABLE blocks (
   throttle tinyint(1) DEFAULT '0' NOT NULL,
   visibility tinyint(1) DEFAULT '0' NOT NULL,
   pages text DEFAULT '' NOT NULL
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -149,7 +149,7 @@ CREATE TABLE book (
   PRIMARY KEY (vid),
   KEY nid (nid),
   KEY parent (parent)
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -164,7 +164,7 @@ CREATE TABLE boxes (
   format int(4) NOT NULL default '0',
   PRIMARY KEY (bid),
   UNIQUE KEY info (info)
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -179,7 +179,7 @@ CREATE TABLE cache (
   headers text,
   PRIMARY KEY (cid),
   INDEX expire (expire)
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -205,7 +205,7 @@ CREATE TABLE comments (
   homepage varchar(255) default NULL,
   PRIMARY KEY (cid),
   KEY lid (nid)
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -221,7 +221,7 @@ CREATE TABLE contact (
   selected tinyint(1) NOT NULL default '0',
   PRIMARY KEY (cid),
   UNIQUE KEY category (category)
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -236,7 +236,7 @@ CREATE TABLE node_comment_statistics (
   comment_count int(10) unsigned NOT NULL default '0',
   PRIMARY KEY (nid),
   KEY node_comment_timestamp (last_comment_timestamp)
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -256,7 +256,7 @@ CREATE TABLE client (
   created int(11) NOT NULL default '0',
   changed int(11) NOT NULL default '0',
   PRIMARY KEY (cid)
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -268,7 +268,7 @@ CREATE TABLE client_system (
   name varchar(255) NOT NULL default '',
   type varchar(255) NOT NULL default '',
   PRIMARY KEY (cid,name)
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -283,7 +283,7 @@ CREATE TABLE files (
   filemime varchar(255) NOT NULL default '',
   filesize int(10) unsigned NOT NULL default 0,
   PRIMARY KEY (fid)
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -296,7 +296,7 @@ CREATE TABLE file_revisions (
   description varchar(255) NOT NULL default '',
   list tinyint(1) unsigned NOT NULL default 0,
   PRIMARY KEY (fid, vid)
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -309,7 +309,7 @@ CREATE TABLE filter_formats (
   roles varchar(255) NOT NULL default '',
   cache tinyint(2) NOT NULL default '0',
   PRIMARY KEY (format)
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -322,7 +322,7 @@ CREATE TABLE filters (
   delta tinyint(2) DEFAULT '0' NOT NULL,
   weight tinyint(2) DEFAULT '0' NOT NULL,
   INDEX (weight)
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -333,7 +333,7 @@ CREATE TABLE flood (
   event varchar(64) NOT NULL default '',
   hostname varchar(128) NOT NULL default '',
   timestamp int(11) NOT NULL default '0'
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -347,7 +347,7 @@ CREATE TABLE forum (
   PRIMARY KEY (vid),
   KEY nid (nid),
   KEY tid (tid)
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -359,7 +359,7 @@ CREATE TABLE history (
   nid int(10) NOT NULL default '0',
   timestamp int(11) NOT NULL default '0',
   PRIMARY KEY (uid,nid)
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -374,7 +374,7 @@ CREATE TABLE locales_meta (
   plurals int(1) NOT NULL default '0',
   formula varchar(128) NOT NULL default '',
   PRIMARY KEY (locale)
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -386,7 +386,7 @@ CREATE TABLE locales_source (
   location varchar(255) NOT NULL default '',
   source blob NOT NULL,
   PRIMARY KEY (lid)
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -403,7 +403,7 @@ CREATE TABLE locales_target (
   KEY lang (locale),
   KEY plid (plid),
   KEY plural (plural)
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -419,7 +419,7 @@ CREATE TABLE menu (
   weight tinyint(4) NOT NULL default '0',
   type int(2) unsigned NOT NULL default '0',
   PRIMARY KEY (mid)
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -450,7 +450,7 @@ CREATE TABLE node (
   KEY node_created (created),
   KEY node_changed (changed),
   KEY node_status_type (status, type, nid)
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -465,7 +465,7 @@ CREATE TABLE node_access (
   grant_update tinyint(1) unsigned NOT NULL default '0',
   grant_delete tinyint(1) unsigned NOT NULL default '0',
   PRIMARY KEY (nid,gid,realm)
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -485,7 +485,7 @@ CREATE TABLE node_revisions (
   PRIMARY KEY  (vid),
   KEY nid (nid),
   KEY uid (uid)
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -508,7 +508,7 @@ CREATE TABLE profile_fields (
   KEY category (category),
   UNIQUE KEY name (name),
   PRIMARY KEY (fid)
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -521,7 +521,7 @@ CREATE TABLE profile_values (
   value text,
   KEY uid (uid),
   KEY fid (fid)
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 
@@ -536,7 +536,7 @@ CREATE TABLE url_alias (
   PRIMARY KEY (pid),
   UNIQUE KEY dst (dst),
   KEY src (src)
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -548,7 +548,7 @@ CREATE TABLE permission (
   perm longtext,
   tid int(10) unsigned NOT NULL default '0',
   KEY rid (rid)
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -560,7 +560,7 @@ CREATE TABLE poll (
   runtime int(10) NOT NULL default '0',
   active int(2) unsigned NOT NULL default '0',
   PRIMARY KEY (nid)
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -574,7 +574,7 @@ CREATE TABLE poll_votes (
   INDEX (nid),
   INDEX (uid),
   INDEX (hostname)
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -589,7 +589,7 @@ CREATE TABLE poll_choices (
   chorder int(2) NOT NULL default '0',
   PRIMARY KEY (chid),
   KEY nid (nid)
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -601,7 +601,7 @@ CREATE TABLE role (
   name varchar(32) NOT NULL default '',
   PRIMARY KEY (rid),
   UNIQUE KEY name (name)
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -612,7 +612,7 @@ CREATE TABLE search_dataset (
   type varchar(16) default NULL,
   data longtext NOT NULL,
   KEY sid_type (sid, type)
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -629,7 +629,7 @@ CREATE TABLE search_index (
   KEY sid_type (sid, type),
   KEY from_sid_type (fromsid, fromtype),
   KEY word (word)
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -640,7 +640,7 @@ CREATE TABLE search_total (
   word varchar(50) NOT NULL default '',
   count float default NULL,
   PRIMARY KEY (word)
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -658,7 +658,7 @@ CREATE TABLE sessions (
   KEY uid (uid),
   PRIMARY KEY (sid),
   KEY timestamp (timestamp)
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -669,7 +669,7 @@ CREATE TABLE sequences (
   name varchar(255) NOT NULL default '',
   id int(10) unsigned NOT NULL default '0',
   PRIMARY KEY (name)
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -685,7 +685,7 @@ CREATE TABLE node_counter (
   KEY totalcount (totalcount),
   KEY daycount (daycount),
   KEY timestamp (timestamp)
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -704,7 +704,7 @@ CREATE TABLE system (
   weight int(2) NOT NULL default '0',
   PRIMARY KEY (filename),
   KEY (weight)
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -719,7 +719,7 @@ CREATE TABLE term_data (
   weight tinyint(4) NOT NULL default '0',
   PRIMARY KEY (tid),
   KEY vid (vid)
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -732,7 +732,7 @@ CREATE TABLE term_hierarchy (
   KEY tid (tid),
   KEY parent (parent),
   PRIMARY KEY (tid, parent)
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -745,7 +745,7 @@ CREATE TABLE term_node (
   KEY nid (nid),
   KEY tid (tid),
   PRIMARY KEY (tid,nid)
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -757,7 +757,7 @@ CREATE TABLE term_relation (
   tid2 int(10) unsigned NOT NULL default '0',
   KEY tid1 (tid1),
   KEY tid2 (tid2)
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -769,7 +769,7 @@ CREATE TABLE term_synonym (
   name varchar(255) NOT NULL default '',
   KEY tid (tid),
   KEY name (name(3))
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -798,7 +798,7 @@ CREATE TABLE users (
   PRIMARY KEY (uid),
   UNIQUE KEY name (name),
   KEY access (access)
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -809,7 +809,7 @@ CREATE TABLE users_roles (
   uid int(10) unsigned NOT NULL default '0',
   rid int(10) unsigned NOT NULL default '0',
   PRIMARY KEY (uid, rid)
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -820,7 +820,7 @@ CREATE TABLE variable (
   name varchar(48) NOT NULL default '',
   value longtext NOT NULL,
   PRIMARY KEY (name)
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -840,7 +840,7 @@ CREATE TABLE vocabulary (
   module varchar(255) NOT NULL default '',
   weight tinyint(4) NOT NULL default '0',
   PRIMARY KEY (vid)
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -851,7 +851,7 @@ CREATE TABLE vocabulary_node_types (
   vid int(10) unsigned NOT NULL DEFAULT '0',
   type varchar(32) NOT NULL DEFAULT '',
   PRIMARY KEY (vid, type)
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
@@ -870,7 +870,7 @@ CREATE TABLE watchdog (
   hostname varchar(128) NOT NULL default '',
   timestamp int(11) NOT NULL default '0',
   PRIMARY KEY (wid)
-) TYPE=MyISAM
+)
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 
 --
