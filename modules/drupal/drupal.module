@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal.module,v 1.117 2006/02/21 18:46:54 dries Exp $
+// $Id: drupal.module,v 1.118 2006/02/28 21:32:51 dries Exp $
 
 /**
  * @file
@@ -12,7 +12,6 @@ define('VERSION', '4.7.0');
  * Implementation of hook_help().
  */
 function drupal_help($section) {
-  global $base_url;
   switch ($section) {
     case 'admin/help#drupal':
       $output = '<p>'. t('The Drupal module uses the XML-RPC network communication protocol to connect your site with a central server that maintains a directory of client sites.') .'</p>';
@@ -21,9 +20,9 @@ function drupal_help($section) {
   <li>register your site with a server, including (optionally) posting information on your installed modules and themes and summary statistics on your number of posts and users, information that can help rank Drupal modules and themes</li>
   <li>enable other sites to register with your site</li>
   <li>allow members on all sites using the Drupal module to log in to your site without registering using their distributed identification</li>
-  <li>allow members to log in to any other site that uses the Drupal module, using a login name that looks much like an e-mail address for your site: <em>username@%base_url</em></li>
+  <li>allow members to log in to any other site that uses the Drupal module, using a login name that looks much like an e-mail address: <em>username@example.com</em></li>
 </ul>
-', array('%base_url' => $base_url));
+');
       $output .= '<p>'. t('The Drupal module administration page allows you to set the xml-rpc server page and other related options.') .'</p>';
       $output .= t('<p>You can</p>
 <ul>
