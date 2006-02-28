@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.313 2006/02/23 12:21:15 dries Exp $
+// $Id: forum.module,v 1.314 2006/02/28 13:36:59 killes Exp $
 
 /**
  * @file
@@ -86,72 +86,31 @@ function forum_nodeapi(&$node, $op, $teaser, $page) {
 /**
  * Administration page which allows maintaining forums
  */
-function forum_admin() {
+function forum_admin($arg = NULL, $type = NULL, $tid = NULL) {
   $op = $_POST['op'];
   $edit = $_POST['edit'];
 
-  if (empty($op)) {
-    $op = arg(2);
+  if ($op == t('Delete') || $edit['confirm']) {
+    return _forum_confirm_delete($tid);
   }
 
-  switch ($op) {
+  switch ($arg) {
     case 'add':
-      if (arg(3) == 'forum') {
+      if ($type == 'forum') {
         $output = forum_form_forum();
       }
-      else if (arg(3) == 'container') {
+      else if ($type == 'container') {
         $output = forum_form_container();
       }
       break;
     case 'edit':
-      if (arg(3) == 'forum') {
-        $output = forum_form_forum((array)taxonomy_get_term(arg(4)));
+      if ($type == 'forum') {
+        $output = forum_form_forum((array)taxonomy_get_term($tid));
       }
-      else if (arg(3) == 'container') {
-         $output = forum_form_container((array)taxonomy_get_term(arg(4)));
+      else if ($type == 'container') {
+         $output = forum_form_container((array)taxonomy_get_term($tid));
       }
       break;
-    case t('Delete'):
-      if (!$edit['confirm']) {
-        $output = _forum_confirm_delete($edit['tid']);
-        break;
-      }
-      else {
-        $name = $edit['name'];
-        $edit['name'] = 0;
-      }
-    case t('Submit'):
-      $status = taxonomy_save_term($edit);
-      if (arg(3) == 'container') {
-        switch ($status) {
-          case SAVED_NEW:
-            $containers = variable_get('forum_containers', array());
-            $containers[] = $edit['tid'];
-            variable_set('forum_containers', $containers);
-            drupal_set_message(t('Created new forum container %term.', array('%term' => theme('placeholder', $edit['name']))));
-            break;
-          case SAVED_UPDATED:
-            drupal_set_message(t('The forum container %term has been updated.', array('%term' => theme('placeholder', $edit['name']))));
-            break;
-          case SAVED_DELETED:
-            drupal_set_message(t('The forum container %term has been deleted.', array('%term' => theme('placeholder', $name))));
-            break;
-        }
-      }
-      else {
-        switch ($status) {
-          case SAVED_NEW:
-            drupal_set_message(t('Created new forum %term.', array('%term' => theme('placeholder', $edit['name']))));
-            break;
-          case SAVED_UPDATED:
-            drupal_set_message(t('The forum %term has been updated.', array('%term' => theme('placeholder', $edit['name']))));
-            break;
-          case SAVED_DELETED:
-            drupal_set_message(t('The forum %term has been deleted.', array('%term' => theme('placeholder', $name))));
-            break;
-        }
-      }
-      drupal_goto('admin/forum');
     default:
       $output = forum_overview();
   }
@@ -182,10 +141,22 @@ function forum_taxonomy($op, $type, $object = NULL) {
 function _forum_confirm_delete($tid) {
   $term = taxonomy_get_term($tid);
 
-  $form['tid'] = array('#type' => 'hidden', '#value' => $tid);
+  $form['tid'] = array('#type' => 'value', '#value' => $tid);
+  $form['name'] = array('#type' => 'value', '#value' => $term->name);
 
   return confirm_form('forum_confirm_delete', $form, t('Are you sure you want to delete the forum %name?', array('%name' => theme('placeholder', $term->name))),
                   'admin/forums', t('Deleting a forum or container will delete all sub-forums as well. This action cannot be undone.'), t('Delete'), t('Cancel'));
+}
+
+/**
+ * Implementation of forms api _submit call. Deletes a forum after
+ * confirmation.
+ */
+function forum_confirm_delete_submit($form_id, $form_values) {
+  taxonomy_del_term($form_values['tid']);
+  drupal_set_message(t('The forum %term has been deleted.', array('%term' => theme('placeholder', $form_values['name']))));
+
+  return 'admin/forum';
 }
 
 /**
@@ -194,21 +165,72 @@ function _forum_confirm_delete($tid) {
  * @param $edit Associative array containing a container term to be added or edited.
  */
 function forum_form_container($edit = array()) {
-  $form['name'] = array('#title' => t('Container name'), '#type' => 'textfield', '#default_value' => $edit['name'], '#maxlength' =>  64, '#description' => t('The container name is used to identify related forums.'), '#required' => TRUE);
-  $form['description'] = array('#type' => 'textarea', '#title' => t('Description'), '#default_value' => $edit['description'], '#description' => t('The container description can give users more information about the forums it contains.'));
+  $form['name'] = array(
+    '#title' => t('Container name'), 
+    '#type' => 'textfield', 
+    '#default_value' => $edit['name'], 
+    '#maxlength' =>  64, 
+    '#description' => t('The container name is used to identify related forums.'), 
+    '#required' => TRUE
+  );
+
+  $form['description'] = array(
+    '#type' => 'textarea', 
+    '#title' => t('Description'), 
+    '#default_value' => $edit['description'], 
+    '#description' => t('The container description can give users more information about the forums it contains.')
+  );
   $form['parent']['#tree'] = TRUE;
   $form['parent'][0] = _forum_parent_select($edit['tid'], t('Parent'), 'container');
-  $form['weight'] = array('#type' => 'weight', '#title' => t('Weight'), '#default_value' => $edit['weight'], '#description' => t('When listing containers, those with with light (small) weights get listed before containers with heavier (larger) weights. Containers with equal weights are sorted alphabetically.'));
+  $form['weight'] = array(
+    '#type' => 'weight', 
+    '#title' => t('Weight'), 
+    '#default_value' => $edit['weight'], 
+    '#description' => t('When listing containers, those with with light (small) weights get listed before containers with heavier (larger) weights. Containers with equal weights are sorted alphabetically.')
+  );
 
-  $form['vid'] = array('#type' => 'hidden', '#value' => _forum_get_vid());
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Submit'));
+  $form['vid'] = array(
+    '#type' => 'hidden', 
+    '#value' => _forum_get_vid());
+  $form['submit'] = array(
+    '#type' => 'submit', 
+    '#value' => t('Submit')
+  );
   if ($edit['tid']) {
     $form['delete'] = array('#type' => 'submit', '#value' => t('Delete'));
-    $form['tid'] = array('#type' => 'hidden', '#value' => $edit['tid']);
+    $form['tid'] = array('#type' => 'value', '#value' => $edit['tid']);
   }
 
-  return drupal_get_form('forum_form_container', $form);
+  return drupal_get_form('forum_form_container', $form, 'forum_form');
 }
+
+function forum_form_submit($form_id, $form_values) {
+  if ($form_id == 'forum_form_container') {
+    $container = TRUE;
+    $type = t('forum container');
+  }
+  else {
+    $container = false;
+    $type = t('forum');
+  }
+
+  $status = taxonomy_save_term($form_values);
+  switch ($status) {
+    case SAVED_NEW:
+      if ($container) {
+        $containers = variable_get('forum_containers', array());
+        $containers[] = $form_values['tid'];
+        variable_set('forum_containers', $containers);
+      }
+      drupal_set_message(t('Created new %type %term.', array('%term' => theme('placeholder', $form_values['name']), '%type' => $type)));
+      break;
+    case SAVED_UPDATED:
+      drupal_set_message(t('The %type %term has been updated.', array('%term' => theme('placeholder', $form_values['name']), '%type' => $type)));
+      break;
+  }
+  return 'admin/forum';
+}
+
 
 /**
  * Returns a form for adding a forum to the forum vocabulary
@@ -229,7 +251,7 @@ function forum_form_forum($edit = array()) {
     $form['tid'] = array('#type' => 'hidden', '#value' => $edit['tid']);
   }
 
-  return drupal_get_form('forum_form_forum', $form);
+  return drupal_get_form('forum_form_forum', $form, 'forum_form');
 }
 
 /**
