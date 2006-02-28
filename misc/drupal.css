@@ -434,11 +434,12 @@ img.screenshot {
 .search-results .search-info {
   font-size: 0.85em;
 }
-.search-advanced .criterium {
+.search-advanced .criterion {
   float: left;
   margin-right: 2em;
 }
 .search-advanced .action {
+  float: left;
   clear: left;
 }
 #tracker td.replies {
