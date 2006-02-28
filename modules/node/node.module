@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.609 2006/02/28 13:32:33 unconed Exp $
+// $Id: node.module,v 1.610 2006/02/28 21:10:04 unconed Exp $
 
 /**
  * @file
@@ -736,22 +736,64 @@ function node_search($op = 'search', $keys = null) {
       $form = array();
 
       // Keyword boxes
-      $form['advanced'] = array('#type' => 'fieldset', '#title' => t('Advanced search'), '#collapsible' => TRUE, '#collapsed' => TRUE, '#attributes' => array('class' => 'search-advanced'));
-
-      $form['advanced']['keywords'] = array('#type' => 'markup', '#prefix' => '<div class="criterium">', '#suffix' => '</div>');
-      $form['advanced']['keywords']['or'] = array('#type' => 'textfield', '#title' => t('Containing any of the words'), '#size' => 30, '#maxlength' => 255);
-      $form['advanced']['keywords']['phrase'] = array('#type' => 'textfield', '#title' => t('Containing the phrase'), '#size' => 30, '#maxlength' => 255);
-      $form['advanced']['keywords']['negative'] = array('#type' => 'textfield', '#title' => t('Containing none of the words'), '#size' => 30, '#maxlength' => 255);
+      $form['advanced'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Advanced search'),
+        '#collapsible' => TRUE,
+        '#collapsed' => TRUE,
+        '#attributes' => array('class' => 'search-advanced'),
+      );
+      $form['advanced']['keywords'] = array(
+        '#prefix' => '<div class="criterion">',
+        '#suffix' => '</div>',
+      );
+      $form['advanced']['keywords']['or'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Containing any of the words'),
+        '#size' => 30,
+        '#maxlength' => 255,
+      );
+      $form['advanced']['keywords']['phrase'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Containing the phrase'),
+        '#size' => 30,
+        '#maxlength' => 255,
+      );
+      $form['advanced']['keywords']['negative'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Containing none of the words'),
+        '#size' => 30,
+        '#maxlength' => 255,
+      );
 
       // Taxonomy box
       if ($taxonomy = module_invoke('taxonomy', 'form_all', 1)) {
-        $form['advanced']['category'] = array('#type' => 'select', '#title' => t('Only in the category'), '#prefix' => '<div class="criterium">', '#suffix' => '</div>', '#options' => $taxonomy, '#extra' => 'size="10"', '#multiple' => true);
+        $form['advanced']['category'] = array(
+          '#type' => 'select',
+          '#title' => t('Only in the category(s)'),
+          '#prefix' => '<div class="criterion">',
+          '#size' => 10,
+          '#suffix' => '</div>',
+          '#options' => $taxonomy,
+          '#multiple' => TRUE,
+        );
       }
 
       // Node types
       $types = node_get_types();
-      $form['advanced']['type'] = array('#type' => 'checkboxes', '#title' => t('Only of the type'), '#prefix' => '<div class="criterium">', '#suffix' => '</div>', '#options' => $types);
-      $form['advanced']['submit'] = array('#type' => 'submit', '#value' => t('Advanced Search'), '#prefix' => '<div class="action">', '#suffix' => '</div>');
+      $form['advanced']['type'] = array(
+        '#type' => 'checkboxes',
+        '#title' => t('Only of the type(s)'),
+        '#prefix' => '<div class="criterion">',
+        '#suffix' => '</div>',
+        '#options' => $types,
+      );
+      $form['advanced']['submit'] = array(
+        '#type' => 'submit',
+        '#value' => t('Advanced search'),
+        '#prefix' => '<div class="action">',
+        '#suffix' => '</div><br clear="all" />',
+      );
       return $form;
 
     case 'post':
