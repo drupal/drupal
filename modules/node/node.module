@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.608 2006/02/27 13:33:48 killes Exp $
+// $Id: node.module,v 1.609 2006/02/28 13:32:33 unconed Exp $
 
 /**
  * @file
@@ -705,7 +705,7 @@ function node_search($op = 'search', $keys = null) {
       // Load results
       $results = array();
       foreach ($find as $item) {
-        $node = node_load($item);
+        $node = node_load($item->sid);
 
         // Get node output (filtered and with module-specific fields).
         if (node_hook($node, 'view')) {
@@ -721,7 +721,7 @@ function node_search($op = 'search', $keys = null) {
         $node->body .= module_invoke('comment', 'nodeapi', $node, 'update index');
 
         $extra = node_invoke_nodeapi($node, 'search result');
-        $results[] = array('link' => url('node/'. $item),
+        $results[] = array('link' => url('node/'. $item->sid),
                            'type' => node_get_name($node),
                            'title' => $node->title,
                            'user' => theme('username', $node),

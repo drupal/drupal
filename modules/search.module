@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.164 2006/02/23 10:30:03 dries Exp $
+// $Id: search.module,v 1.165 2006/02/28 13:32:33 unconed Exp $
 
 /**
  * @file
@@ -821,12 +821,16 @@ function _search_parse_query(&$word, &$scores, $not = false) {
  * @param $arguments2
  *   (optional) Extra SQL arguments belonging to the second query parameter.
  *
+ * @param $sort_parameters
+ *   (optional) SQL arguments for sorting the final results. 
+ *              Default: 'ORDER BY score DESC'
+ *
  * @return
  *   An array of SIDs for the search results.
  *
  * @ingroup search
  */
-function do_search($keywords, $type, $join1 = '', $where1 = '1', $arguments1 = array(), $select2 = 'i.relevance AS score', $join2 = '', $arguments2 = array()) {
+function do_search($keywords, $type, $join1 = '', $where1 = '1', $arguments1 = array(), $select2 = 'i.relevance AS score', $join2 = '', $arguments2 = array(), $sort_parameters = 'ORDER BY score DESC') {
   $query = search_parse_query($keywords);
 
   if ($query[2] == '') {
@@ -852,7 +856,7 @@ function do_search($keywords, $type, $join1 = '', $where1 = '1', $arguments1 = a
   // Second pass: only keep items that match the complicated keywords conditions (phrase search, negative keywords, ...)
   $conditions = '('. $query[0] .')';
   $arguments = array_merge($arguments2, $query[1]);
-  $result = db_query_temporary("SELECT i.type, i.sid, $select2 FROM temp_search_sids i INNER JOIN {search_dataset} d ON i.sid = d.sid AND i.type = d.type $join2 WHERE $conditions ORDER BY score DESC", $arguments, 'temp_search_results');
+  $result = db_query_temporary("SELECT i.type, i.sid, $select2 FROM temp_search_sids i INNER JOIN {search_dataset} d ON i.sid = d.sid AND i.type = d.type $join2 WHERE $conditions $sort_parameters", $arguments, 'temp_search_results');
   if (($count = db_result(db_query('SELECT COUNT(*) FROM temp_search_results'))) == 0) {
     return array();
   }
@@ -862,7 +866,7 @@ function do_search($keywords, $type, $join1 = '', $where1 = '1', $arguments1 = a
   $result = pager_query("SELECT * FROM temp_search_results", 10, 0, $count_query, $arguments);
   $results = array();
   while ($item = db_fetch_object($result)) {
-    $results[] = $item->sid;
+    $results[] = $item;
   }
   return $results;
 }
@@ -1008,23 +1012,19 @@ function search_form($action = '', $keys = '', $type = null, $prompt = null) {
  * Perform a standard search on the given keys, and return the formatted results.
  */
 function search_data($keys = NULL, $type = 'node') {
-  $output = '';
-
   if (isset($keys)) {
     if (module_hook($type, 'search')) {
       $results = module_invoke($type, 'search', 'search', $keys);
       if (isset($results) && is_array($results) && count($results)) {
-        $output .= '<dl class="search-results">';
-        foreach ($results as $entry) {
-          $output .= theme('search_item', $entry, $type);
+        if (module_hook($type, 'search_page')) {
+          return module_invoke($type, 'search_page', $results);
         }
-        $output .= '</dl>';
-        $output .= theme('pager', NULL, 15, 0);
+        else {
+          return theme('search_page', $results, $type);
+        }
       }
     }
   }
-
-  return $output;
 }
 
 /**
@@ -1151,10 +1151,8 @@ function _search_excerpt_replace(&$text) {
 }
 
 /**
- * Format a single result entry of a search query.
- *
- * Modules may implement hook_search_item() in order to override this default
- * function to display search results.
+ * Format a single result entry of a search query. This function is normally
+ * called by theme_search_page() or hook_search_page().
  *
  * @param $item
  *   A single search result as returned by hook_search(). The result should be
@@ -1167,26 +1165,46 @@ function _search_excerpt_replace(&$text) {
  * @ingroup themeable
  */
 function theme_search_item($item, $type) {
-  if (module_hook($type, 'search_item')) {
-    $output = module_invoke($type, 'search_item', $item);
+  $output = ' <dt class="title"><a href="'. check_url($item['link']) .'">'. check_plain($item['title']) .'</a></dt>';
+  $info = array();
+  if ($item['type']) {
+    $info[] = $item['type'];
   }
-  else {
-    $output = ' <dt class="title"><a href="'. check_url($item['link']) .'">'. check_plain($item['title']) .'</a></dt>';
-    $info = array();
-    if ($item['type']) {
-      $info[] = $item['type'];
-    }
-    if ($item['user']) {
-      $info[] = $item['user'];
-    }
-    if ($item['date']) {
-      $info[] = format_date($item['date'], 'small');
-    }
-    if (is_array($item['extra'])) {
-      $info = array_merge($info, $item['extra']);
-    }
-    $output .= ' <dd>'. ($item['snippet'] ? '<p>'. $item['snippet'] . '</p>' : '') . '<p class="search-info">' . implode(' - ', $info) .'</p></dd>';
+  if ($item['user']) {
+    $info[] = $item['user'];
   }
+  if ($item['date']) {
+    $info[] = format_date($item['date'], 'small');
+  }
+  if (is_array($item['extra'])) {
+    $info = array_merge($info, $item['extra']);
+  }
+  $output .= ' <dd>'. ($item['snippet'] ? '<p>'. $item['snippet'] . '</p>' : '') . '<p class="search-info">' . implode(' - ', $info) .'</p></dd>';
+  return $output;
+}
+
+/**
+ * Format the result page of a search query.
+ *
+ * Modules may implement hook_search_page() in order to override this default
+ * function to display search results. In that case it is expected they provide
+ * their own themable functions.
+ *
+ * @param $results
+ *   All search result as returned by hook_search().
+ * @param $type
+ *   The type of item found, such as "user" or "node".
+ *
+ * @ingroup themeable
+ */
+function theme_search_page($results, $type) {
+  $output = '<dl class="search-results">';
+  
+  foreach ($results as $entry) {
+    $output .= theme('search_item', $entry, $type);
+  }
+  $output .= '</dl>';
+  $output .= theme('pager', NULL, 15, 0);
 
   return $output;
 }
