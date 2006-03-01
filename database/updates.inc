@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.204 2006/03/01 09:20:19 killes Exp $
+// $Id: updates.inc,v 1.205 2006/03/01 22:19:23 unconed Exp $
 
 function system_update_110() {
   $ret = array();
@@ -1458,8 +1458,9 @@ function system_update_169() {
     }
   }
 
+  // Note: 'access' table manually updated in update.php
   return _system_update_utf8(array(
-    'access', 'accesslog', 'aggregator_category',
+    'accesslog', 'aggregator_category',
     'aggregator_category_feed', 'aggregator_category_item',
     'aggregator_feed', 'aggregator_item', 'authmap', 'blocks',
     'book', 'boxes', 'cache', 'comments', 'contact',
@@ -1477,7 +1478,7 @@ function system_update_169() {
 }
 
 /**
- * Converts tables to UTF-8 encoding.
+ * Converts a set of tables to UTF-8 encoding.
  *
  * This update is designed to be re-usable by contrib modules and is
  * used by system_update_169().
@@ -1513,51 +1514,11 @@ function _system_update_utf8($tables) {
     $_SESSION['update_utf8_total'] = count($tables);
   }
 
-  // Fetch remaining tables list
+  // Fetch remaining tables list and convert next table
   $list = &$_SESSION['update_utf8'];
-  $ret = array();
 
-  // Convert a table to UTF-8.
-  // We change all text columns to their correspending binary type,
-  // then back to text, but with a UTF-8 character set.
-  // See: http://dev.mysql.com/doc/refman/4.1/en/charset-conversion.html
-  $types = array('char' => 'binary',
-                 'varchar' => 'varbinary',
-                 'tinytext' => 'tinyblob',
-                 'text' => 'blob',
-                 'mediumtext' => 'mediumblob',
-                 'longtext' => 'longblob');
-
-  // Get next table in list
-  $table = array_shift($list);
-  $convert_to_binary = array();
-  $convert_to_utf8 = array();
-
-  // Set table default charset
-  $ret[] = update_sql('ALTER TABLE {'. $table .'} DEFAULT CHARACTER SET utf8');
-
-  // Find out which columns need converting and build SQL statements
-  $result = db_query('SHOW FULL COLUMNS FROM {'. $table .'}');
-  while ($column = db_fetch_array($result)) {
-    list($type) = explode('(', $column['Type']);
-    if (isset($types[$type])) {
-      $names = 'CHANGE `'. $column['Field'] .'` `'. $column['Field'] .'` ';
-      $attributes = ' DEFAULT '. ($column['Default'] == 'NULL' ? 'NULL ' :
-                     "'". db_escape_string($column['Default']) ."' ") .
-                    ($column['Null'] == 'YES' ? 'NULL' : 'NOT NULL');
-
-      $convert_to_binary[] = $names . preg_replace('/'. $type .'/i', $types[$type], $column['Type']) . $attributes;
-      $convert_to_utf8[] = $names . $column['Type'] .' CHARACTER SET utf8'. $attributes;
-    }
-  }
-
-  if (count($convert_to_binary)) {
-    // Convert text columns to binary
-    $ret[] = update_sql('ALTER TABLE {'. $table .'} '. implode(', ', $convert_to_binary));
-    // Convert binary columns to UTF-8
-    $ret[] = update_sql('ALTER TABLE {'. $table .'} '. implode(', ', $convert_to_utf8));
-  }
-
+  $ret = update_convert_table_utf8(array_shift($list));
+  
   // Are we done?
   if (count($list) == 0) {
     unset($_SESSION['update_utf8']);

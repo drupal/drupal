@@ -8,11 +8,12 @@
  * e.g. pb = new progressBar('myProgressBar');
  *      some_element.appendChild(pb.element);
  */
-function progressBar(id, callback, method) {
+function progressBar(id, updateCallback, method, errorCallback) {
   var pb = this;
   this.id = id;
   this.method = method ? method : HTTPGet;
-  this.callback = callback;
+  this.updateCallback = updateCallback;
+  this.errorCallback = errorCallback;
 
   this.element = document.createElement('div');
   this.element.id = id;
@@ -41,8 +42,8 @@ progressBar.prototype.setProgress = function (percentage, message) {
       divs[i].innerHTML = message;
     }
   }
-  if (this.callback) {
-    this.callback(percentage, message, this);
+  if (this.updateCallback) {
+    this.updateCallback(percentage, message, this);
   }
 }
 
@@ -82,13 +83,13 @@ progressBar.prototype.sendPing = function () {
  */
 progressBar.prototype.receivePing = function (string, xmlhttp, pb) {
   if (xmlhttp.status != 200) {
-    return alert('An HTTP error '+ xmlhttp.status +' occured.\n'+ pb.uri);
+    return pb.displayError('An HTTP error '+ xmlhttp.status +' occured.\n'+ pb.uri);
   }
   // Parse response
   var progress = parseJson(string);
   // Display errors
   if (progress.status == 0) {
-    alert(progress.data);
+    pb.displayError(progress.data);
     return;
   }
 
@@ -96,4 +97,20 @@ progressBar.prototype.receivePing = function (string, xmlhttp, pb) {
   pb.setProgress(progress.percentage, progress.message);
   // Schedule next timer
   pb.timer = setTimeout(function() { pb.sendPing(); }, pb.delay);
+}
+
+/**
+ * Display errors on the page.
+ */
+progressBar.prototype.displayError = function (string) {
+  var error = document.createElement('div');
+  error.className = 'error';
+  error.appendChild(document.createTextNode(string));
+
+  this.element.style.display = 'none';
+  this.element.parentNode.insertBefore(error, this.element);
+
+  if (this.errorCallback) {
+    this.errorCallback(this);
+  }
 }

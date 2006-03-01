@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.175 2006/02/08 00:32:18 unconed Exp $
+// $Id: update.php,v 1.176 2006/03/01 22:19:23 unconed Exp $
 
 /**
  * @file
@@ -420,6 +420,9 @@ function update_do_updates() {
   return array($percentage, isset($update['module']) ? 'Updating '. $update['module'] .' module' : 'Updating complete');
 }
 
+/**
+ * Perform updates for the JS version and return progress.
+ */
 function update_do_update_page() {
   global $conf;
 
@@ -430,24 +433,27 @@ function update_do_update_page() {
     return '';
   }
 
-  // Any errors which happen would cause the result to not be parsed properly,
-  // so we need to supporess them. All errors are still logged.
-  if (!isset($conf['error_level'])) {
-    $conf['error_level'] = 0;
-  }
-  ini_set('display_errors', FALSE);
-
   list($percentage, $message) = update_do_updates();
   print drupal_to_js(array('status' => TRUE, 'percentage' => $percentage, 'message' => $message));
 }
 
+/**
+ * Perform updates for the non-JS version and return the status page.
+ */
 function update_progress_page_nojs() {
   $new_op = 'do_update_nojs';
   if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+    // Store a fallback redirect in case of a fatal PHP error
+    ob_start();
+    print '<html><head><meta http-equiv="Refresh" content="0; URL=update.php?op=error"></head></html>';
+
     list($percentage, $message) = update_do_updates();
     if ($percentage == 100) {
       $new_op = 'finished';
     }
+
+    // Updates succesful, remove fallback
+    ob_end_clean();
   }
   else {
     // This is the first page so return some output immediately.
@@ -463,15 +469,23 @@ function update_progress_page_nojs() {
   return $output;
 }
 
-function update_finished_page() {
+function update_finished_page($success) {
   drupal_set_title('Drupal database update');
   // NOTE: we can't use l() here because the URL would point to 'update.php?q=admin'.
   $links[] = '<a href="'. base_path() .'">main page</a>';
   $links[] = '<a href="'. base_path() .'?q=admin">administration pages</a>';
-  $output = '<p>Updates were attempted. If you see no failures below, you may proceed happily to the <a href="index.php?q=admin">administration pages</a>. Otherwise, you may need to update your database manually. All errors have been <a href="index.php?q=admin/logs">logged</a>.</p>';
+
+  if ($success) {
+    $output = '<p>Updates were attempted. If you see no failures below, you may proceed happily to the <a href="index.php?q=admin">administration pages</a>. Otherwise, you may need to update your database manually. All errors have been <a href="index.php?q=admin/logs">logged</a>.</p>';    
+  }
+  else {
+    $output = '<p class="error">The update process did not complete. All errors have been <a href="index.php?q=admin/logs">logged</a>. You may need to check the <code>watchdog</code> table manually.';
+  }
+
   if ($GLOBALS['access_check'] == FALSE) {
     $output .= "<p><strong>Reminder: don't forget to set the <code>\$access_check</code> value at the top of <code>update.php</code> back to <code>TRUE</code>.</strong>";
   }
+
   $output .= theme('item_list', $links);
 
   // Output a list of queries executed
@@ -546,8 +560,89 @@ function update_fix_system_table() {
   }
 }
 
+// This code may be removed later.  It is part of the Drupal 4.6 to 4.7 migration.
+function update_fix_access_table() {
+  if (variable_get('update_access_fixed', FALSE)) {
+    return;
+  }
+
+  switch ($GLOBALS['db_type']) {
+    // Only for MySQL 4.1+
+    case 'mysqli':
+      break;
+    case 'mysql':
+      if (version_compare(mysql_get_server_info($GLOBALS['active_db']), '4.1.0', '<')) {
+        return;
+      }
+      break;
+    case 'pgsql':
+      return;
+  }
+
+  // Convert access table to UTF-8 if needed.
+  $result = db_fetch_array(db_query('SHOW CREATE TABLE `access`'));
+  if (!preg_match('/utf8/i', array_pop($result))) {
+    update_convert_table_utf8('access');    
+  }
+
+  // Don't run again
+  variable_set('update_access_fixed', TRUE);
+}
+
+/**
+ * Convert a single MySQL table to UTF-8.
+ *
+ * We change all text columns to their correspending binary type,
+ * then back to text, but with a UTF-8 character set.
+ * See: http://dev.mysql.com/doc/refman/4.1/en/charset-conversion.html
+ */
+function update_convert_table_utf8($table) {
+  $ret = array();
+  $types = array('char' => 'binary',
+                 'varchar' => 'varbinary',
+                 'tinytext' => 'tinyblob',
+                 'text' => 'blob',
+                 'mediumtext' => 'mediumblob',
+                 'longtext' => 'longblob');
+
+  // Get next table in list
+  $convert_to_binary = array();
+  $convert_to_utf8 = array();
+
+  // Set table default charset
+  $ret[] = update_sql('ALTER TABLE {'. $table .'} DEFAULT CHARACTER SET utf8');
+
+  // Find out which columns need converting and build SQL statements
+  $result = db_query('SHOW FULL COLUMNS FROM {'. $table .'}');
+  while ($column = db_fetch_array($result)) {
+    list($type) = explode('(', $column['Type']);
+    if (isset($types[$type])) {
+      $names = 'CHANGE `'. $column['Field'] .'` `'. $column['Field'] .'` ';
+      $attributes = ' DEFAULT '. ($column['Default'] == 'NULL' ? 'NULL ' :
+                     "'". db_escape_string($column['Default']) ."' ") .
+                    ($column['Null'] == 'YES' ? 'NULL' : 'NOT NULL');
+
+      $convert_to_binary[] = $names . preg_replace('/'. $type .'/i', $types[$type], $column['Type']) . $attributes;
+      $convert_to_utf8[] = $names . $column['Type'] .' CHARACTER SET utf8'. $attributes;
+    }
+  }
+
+  if (count($convert_to_binary)) {
+    // Convert text columns to binary
+    $ret[] = update_sql('ALTER TABLE {'. $table .'} '. implode(', ', $convert_to_binary));
+    // Convert binary columns to UTF-8
+    $ret[] = update_sql('ALTER TABLE {'. $table .'} '. implode(', ', $convert_to_utf8));
+  }
+  return $ret;  
+}
+
+// Some unavoidable errors happen because the database is not yet up to date.
+// We suppress them to avoid confusion. All errors are still logged.
+ini_set('display_errors', FALSE);
+
 include_once './includes/bootstrap.inc';
 update_fix_system_table();
+update_fix_access_table();
 drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 drupal_maintenance_theme();
 
@@ -567,7 +662,11 @@ if (($access_check == FALSE) || ($user->uid == 1)) {
       break;
 
     case 'finished':
-      $output = update_finished_page();
+      $output = update_finished_page(true);
+      break;
+
+    case 'error':
+      $output = update_finished_page(false);
       break;
 
     case 'do_update':
