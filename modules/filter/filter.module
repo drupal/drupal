@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.108 2006/02/27 14:24:54 killes Exp $
+// $Id: filter.module,v 1.109 2006/03/01 09:01:34 dries Exp $
 
 /**
  * @file
@@ -271,14 +271,6 @@ function filter_perm() {
  */
 function filter_admin_overview() {
 
-  $edit = isset($_POST['edit']) ? $_POST['edit'] : '';
-
-  // Process form submission to set the default format
-  if (is_numeric($edit['default'])) {
-    drupal_set_message(t('Default format updated.'));
-    variable_set('filter_default_format', $edit['default']);
-  }
-
   // Overview of all formats.
   $formats = filter_formats();
   $error = false;
@@ -303,6 +295,14 @@ function filter_admin_overview() {
   $form['default'] = array('#type' => 'radios', '#options' => $options, '#default_value' => variable_get('filter_default_format', 1));
   $form['submit'] = array('#type' => 'submit', '#value' => t('Set default format'));
   return drupal_get_form('filter_admin_overview', $form);
+}
+
+function filter_admin_overview_submit($form_id, $form_values) {
+  // Process form submission to set the default format
+  if (is_numeric($form_values['default'])) {
+    drupal_set_message(t('Default format updated.'));
+    variable_set('filter_default_format', $form_values['default']);
+  }
 }
 
 function theme_filter_admin_overview($form) {
