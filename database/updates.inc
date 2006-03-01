@@ -1663,7 +1663,7 @@ function system_update_173() {
         description varchar(255) NOT NULL default '',
         list tinyint(1) unsigned NOT NULL default 0,
         PRIMARY KEY (fid, vid)
-        ) TYPE=MyISAM");
+        ) TYPE=MyISAM /*!40100 DEFAULT CHARACTER SET utf8 */");
       $ret[] = update_sql('INSERT INTO {file_revisions} SELECT fid, vid, description, list FROM {files}');
 
       // alter files table
@@ -1677,8 +1677,7 @@ function system_update_173() {
         filemime varchar(255) NOT NULL default '',
         filesize int(10) unsigned NOT NULL default 0,
         PRIMARY KEY (fid)
-        ) TYPE=MyISAM
-        /*!40100 DEFAULT CHARACTER SET utf8 */");
+        ) TYPE=MyISAM /*!40100 DEFAULT CHARACTER SET utf8 */");
       $ret[] = update_sql("INSERT IGNORE INTO {files} SELECT fid, nid, filename, filepath, filemime, filesize FROM {files_copy}");
       $ret[] = update_sql("DROP TABLE {files_copy}");
       break;
