@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.521 2006/02/27 14:19:07 killes Exp $
+// $Id: common.inc,v 1.522 2006/03/01 21:30:17 unconed Exp $
 
 /**
  * @file
@@ -659,7 +659,11 @@ function format_rss_channel($title, $link, $description, $items, $language = 'en
   $output = "<channel>\n";
   $output .= ' <title>'. check_plain($title) ."</title>\n";
   $output .= ' <link>'. check_url($link) ."</link>\n";
-  $output .= ' <description>'. check_plain($description) ."</description>\n";
+
+  // The RSS 2.0 "spec" doesn't indicate HTML can be used in the description.
+  // We strip all HTML tags, but need to prevent double encoding from properly
+  // escaped source data (such as &amp becoming &amp;amp;).
+  $output .= ' <description>'. check_plain(decode_entities(strip_tags($description))) ."</description>\n";
   $output .= ' <language>'. check_plain($language) ."</language>\n";
   foreach ($args as $key => $value) {
     $output .= ' <'. $key .'>'. check_plain($value) ."</$key>\n";
