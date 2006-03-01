@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.203 2006/03/01 05:48:03 dries Exp $
+// $Id: updates.inc,v 1.204 2006/03/01 09:20:19 killes Exp $
 
 function system_update_110() {
   $ret = array();
@@ -21,13 +21,13 @@ function system_update_110() {
       KEY sid (sid),
       KEY fromsid (fromsid),
       KEY word (word)
-      ) TYPE=MyISAM");
+      )");
 
     $ret[] = update_sql("CREATE TABLE {search_total} (
       word varchar(50) NOT NULL default '',
       count int(10) unsigned default NULL,
       PRIMARY KEY word (word)
-      ) TYPE=MyISAM");
+      )");
 
 
     /*
@@ -355,7 +355,7 @@ function system_update_124() {
       comment_count int(10) unsigned NOT NULL default '0',
       PRIMARY KEY (nid),
       KEY node_comment_timestamp (last_comment_timestamp)
-      ) TYPE=MyISAM");
+      )");
   }
 
   else {
@@ -1386,13 +1386,13 @@ function system_update_166() {
         created int(11) NOT NULL default '0',
         changed int(11) NOT NULL default '0',
         PRIMARY KEY (cid)
-      ) TYPE=MyISAM");
+      )");
       $ret[] = update_sql("CREATE TABLE {client_system} (
         cid int(10) NOT NULL default '0',
         name varchar(255) NOT NULL default '',
         type varchar(255) NOT NULL default '',
         PRIMARY KEY (cid,name)
-      ) TYPE=MyISAM");
+      )");
       break;
 
     case 'pgsql':
@@ -1663,7 +1663,7 @@ function system_update_173() {
         description varchar(255) NOT NULL default '',
         list tinyint(1) unsigned NOT NULL default 0,
         PRIMARY KEY (fid, vid)
-        ) TYPE=MyISAM /*!40100 DEFAULT CHARACTER SET utf8 */");
+        ) /*!40100 DEFAULT CHARACTER SET utf8 */");
       $ret[] = update_sql('INSERT INTO {file_revisions} SELECT fid, vid, description, list FROM {files}');
 
       // alter files table
@@ -1677,7 +1677,7 @@ function system_update_173() {
         filemime varchar(255) NOT NULL default '',
         filesize int(10) unsigned NOT NULL default 0,
         PRIMARY KEY (fid)
-        ) TYPE=MyISAM /*!40100 DEFAULT CHARACTER SET utf8 */");
+        ) /*!40100 DEFAULT CHARACTER SET utf8 */");
       $ret[] = update_sql("INSERT IGNORE INTO {files} SELECT fid, nid, filename, filepath, filemime, filesize FROM {files_copy}");
       $ret[] = update_sql("DROP TABLE {files_copy}");
       break;
