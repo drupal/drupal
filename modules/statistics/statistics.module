@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.220 2006/03/01 08:47:17 dries Exp $
+// $Id: statistics.module,v 1.221 2006/03/01 15:20:43 dries Exp $
 
 /**
  * @file
@@ -78,7 +78,7 @@ function statistics_exit() {
   }
   if ((variable_get('statistics_enable_access_log', 0)) && (module_invoke('throttle', 'status') == 0)) {
     // Log this page access.
-    db_query("INSERT INTO {accesslog} (title, path, url, hostname, uid, sid, timer, timestamp) values('%s', '%s', '%s', '%s', %d, '%s', %d, %d)", decode_entities(strip_tags(drupal_get_title())), $_GET['q'], referer_uri(), $_SERVER['REMOTE_ADDR'], $user->uid, session_id(), timer_read('page'), time());
+    db_query("INSERT INTO {accesslog} (title, path, url, hostname, uid, sid, timer, timestamp) values('%s', '%s', '%s', '%s', %d, '%s', %d, %d)", strip_tags(drupal_get_title()), $_GET['q'], referer_uri(), $_SERVER['REMOTE_ADDR'], $user->uid, session_id(), timer_read('page'), time());
   }
 }
 
@@ -150,7 +150,7 @@ function statistics_access_log($aid) {
   if ($access = db_fetch_object($result)) {
     $output  = '<table border="1" cellpadding="2" cellspacing="2">';
     $output .= ' <tr><th>'. t('URL') ."</th><td>". l(url($access->path, NULL, NULL, TRUE), $access->path) ."</td></tr>";
-    $output .= ' <tr><th>'. t('Title') .'</th><td>'. check_plain($access->title) .'</td></tr>';
+    $output .= ' <tr><th>'. t('Title') .'</th><td>'. $access->title .'</td></tr>'; // safe because it comes from drupal_get_title()
     $output .= ' <tr><th>'. t('Referrer') ."</th><td>". ($access->url ? l($access->url, $access->url) : '') ."</td></tr>";
     $output .= ' <tr><th>'. t('Date') .'</th><td>'. format_date($access->timestamp, 'large') .'</td></tr>';
     $output .= ' <tr><th>'. t('User') .'</th><td>'. theme('username', $access) .'</td></tr>';
