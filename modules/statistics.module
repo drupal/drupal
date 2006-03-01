@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.219 2006/02/21 18:46:54 dries Exp $
+// $Id: statistics.module,v 1.220 2006/03/01 08:47:17 dries Exp $
 
 /**
  * @file
@@ -375,7 +375,7 @@ function statistics_cron() {
  *   or FALSE if the query could not be executed correctly.
  */
 function statistics_title_list($dbfield, $dbrows) {
-  return db_query_range(db_rewrite_sql("SELECT n.nid, n.title, u.uid, u.name FROM {node_counter} s INNER JOIN {node} n ON s.nid = n.nid INNER JOIN {users} u ON n.uid = u.uid WHERE %s <> '0' AND n.status = 1 ORDER BY %s DESC"), 's.'. $dbfield, 's.'. $dbfield, 0, $dbrows);
+  return db_query_range(db_rewrite_sql("SELECT n.nid, n.title, u.uid, u.name FROM {node} n INNER JOIN {node_counter} s ON n.nid = s.nid INNER JOIN {users} u ON n.uid = u.uid WHERE %s <> '0' AND n.status = 1 ORDER BY %s DESC"), 's.'. $dbfield, 's.'. $dbfield, 0, $dbrows);
 }
 
 
