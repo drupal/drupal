@@ -250,6 +250,9 @@ function phptemplate_node($node, $teaser = 0, $page = 0) {
     $variables['submitted'] =  t('Submitted by %a on %b.', array('%a' => theme('username', $node), '%b' => format_date($node->created)));
     $variables['picture'] = theme_get_setting('toggle_node_user_picture') ? theme('user_picture', $node) : '';
   }
+  else {
+    $variables['picture'] = '';
+  }
 
   return _phptemplate_callback('node', $variables, 'node-' . $node->type);
 }
