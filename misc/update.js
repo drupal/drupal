@@ -12,7 +12,11 @@ if (isJsEnabled()) {
         }
       }
 
-      var progress = new progressBar('updateprogress', updateCallback, HTTPPost);
+      errorCallback = function (pb) {
+        window.location = window.location.href.split('op=')[0] +'op=error';
+      }
+
+      var progress = new progressBar('updateprogress', updateCallback, HTTPPost, errorCallback);
       progress.setProgress(-1, 'Starting updates');
       $('progress').appendChild(progress.element);
       progress.startMonitoring('update.php?op=do_update', 0);
