@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.273 2006/02/22 10:13:42 dries Exp $
+// $Id: aggregator.module,v 1.274 2006/03/02 19:16:41 dries Exp $
 
 /**
  * @file
@@ -62,7 +62,7 @@ function aggregator_settings() {
 
   $form['aggregator_category_selector'] = array(
     '#type' => 'radios', '#title' => t('Category selection type'), '#default_value' => variable_get('aggregator_category_selector', 'check'),
-    '#options' => array('check' => t('checkboxes'), 'select' => t('multiple selector')),
+    '#options' => array('checkboxes' => t('checkboxes'), 'select' => t('multiple selector')),
     '#description' => t('The type of category selection widget which is shown on categorization pages. Checkboxes are easier to use; a multiple selector is good for working with large numbers of categories.')
   );
   return $form;
@@ -999,9 +999,8 @@ function aggregator_page_list_validate($form_id, &$form) {
   }
 }
 
-function aggregator_page_list_submit($form_id, $form) {
-  global $form_values;
-  foreach ($form_values['categories'] as $iid => $selection) {
+function aggregator_page_list_submit($form_id, $form_values) {
+  foreach ($form_values as $iid => $selection) {
     db_query('DELETE FROM {aggregator_category_item} WHERE iid = %d', $iid);
     foreach ($selection as $cid) {
       if ($cid) {
