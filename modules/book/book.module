@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.351 2006/03/01 19:19:05 unconed Exp $
+// $Id: book.module,v 1.352 2006/03/02 08:44:52 dries Exp $
 
 /**
  * @file
@@ -128,6 +128,7 @@ function book_menu($may_cache) {
           'path' => 'node/'. arg(1) .'/outline',
           'title' => t('outline'),
           'callback' => 'book_outline',
+          'callback arguments' => array(arg(1)),
           'access' => user_access('outline posts in books'),
           'type' => MENU_LOCAL_TASK,
           'weight' => 2);
@@ -246,32 +247,43 @@ function book_validate($node) {
  * Implementation of hook_form().
  */
 function book_form(&$node) {
-  $form['parent'] =
-    array(
-          '#type' => 'select',
-          '#title' => t('Parent'),
-          '#default_value' => ($node->parent ? $node->parent : arg(4)),
-          '#options' => book_toc($node->nid),
-          '#weight' => -4,
-          '#description' =>
-            user_access('create new books') ?
-              t('The parent section in which to place this page.  Note that each page whose parent is &lt;top-level&gt; is an independent, top-level book.') :
-              t('The parent that this page belongs in.')
-          );
+  $form['parent'] = array('#type' => 'select',
+    '#title' => t('Parent'),
+    '#default_value' => ($node->parent ? $node->parent : arg(4)),
+    '#options' => book_toc($node->nid),
+    '#weight' => -4,
+    '#description' => user_access('create new books') ? t('The parent section in which to place this page.  Note that each page whose parent is &lt;top-level&gt; is an independent, top-level book.') : t('The parent that this page belongs in.'),
+  );
 
-  $form['title'] = array('#type' => 'textfield', '#title' => t('Title'), '#required' => TRUE, '#default_value' => $node->title, '#weight' => -5);
-  $form['body_filter']['body'] = array('#type' => 'textarea', '#title' => t('Body'), '#default_value' => $node->body, '#rows' => 20, '#required' => TRUE);
+  $form['title'] = array('#type' => 'textfield',
+    '#title' => t('Title'),
+    '#required' => TRUE,
+    '#default_value' => $node->title,
+    '#weight' => -5,
+  );
+  $form['body_filter']['body'] = array('#type' => 'textarea',
+    '#title' => t('Body'),
+    '#default_value' => $node->body,
+    '#rows' => 20,
+    '#required' => TRUE,
+  );
   $form['body_filter']['format'] = filter_form($node->format);
 
   $form['log'] = array(
-    '#type' => 'textarea', '#title' => t('Log message'), '#default_value' => $node->log, '#weight' => 5,
-    '#description' => t('An explanation of the additions or updates being made to help other authors understand your motivations.')
+    '#type' => 'textarea',
+    '#title' => t('Log message'),
+    '#default_value' => $node->log,
+    '#weight' => 5,
+    '#description' => t('An explanation of the additions or updates being made to help other authors understand your motivations.'),
   );
 
   if (user_access('administer nodes')) {
-    $form['weight'] = array(
-        '#type' => 'weight', '#title' => t('Weight'), '#default_value' => $node->weight, '#delta' => 15, '#weight' => 5,
-        '#description' => t('Pages at a given level are ordered first by weight and then by title.')
+    $form['weight'] = array('#type' => 'weight',
+      '#title' => t('Weight'),
+      '#default_value' => $node->weight,
+      '#delta' => 15,
+      '#weight' => 5,
+      '#description' => t('Pages at a given level are ordered first by weight and then by title.'),
     );
   }
   else {
@@ -287,64 +299,69 @@ function book_form(&$node) {
  * Implementation of function book_outline()
  * Handles all book outline operations.
  */
-function book_outline() {
+function book_outline($nid) {
+  $node = node_load($nid);
+  $page = db_fetch_object(db_query('SELECT * FROM {book} WHERE vid = %d', $node->vid));
 
-  $op = $_POST['op'];
-  $edit = $_POST['edit'];
-  $node = node_load(arg(1));
+  $form['parent'] = array('#type' => 'select',
+    '#title' => t('Parent'),
+    '#default_value' => $page->parent,
+    '#options' => book_toc($node->nid),
+    '#description' => t('The parent page in the book.'),
+  );
+  $form['weight'] = array('#type' => 'weight',
+    '#title' => t('Weight'),
+    '#default_value' => $page->weight,
+    '#delta' => 15,
+    '#description' => t('Pages at a given level are ordered first by weight and then by title.'),
+  );
+  $form['log'] = array('#type' => 'textarea',
+    '#title' => t('Log message'),
+    '#default_value' => $node->log,
+    '#description' => t('An explanation to help other authors understand your motivations to put this post into the book.'),
+  );
 
-  if ($node->nid) {
-    switch ($op) {
-      case t('Add to book outline'):
-        db_query('INSERT INTO {book} (nid, vid, parent, weight) VALUES (%d, %d, %d, %d)', $node->nid, $node->vid, $edit['parent'], $edit['weight']);
-        db_query("UPDATE {node_revisions} SET log = '%s' WHERE vid = %d", $edit['log'], $node->vid);
-        drupal_set_message(t('The post has been added to the book.'));
-        drupal_goto("node/$node->nid");
-        break;
-
-      case t('Update book outline'):
-        db_query('UPDATE {book} SET parent = %d, weight = %d WHERE vid = %d', $edit['parent'], $edit['weight'], $node->vid);
-        db_query("UPDATE {node_revisions} SET log = '%s' WHERE vid = %d", $edit['log'], $node->vid);
-        drupal_set_message(t('The book outline has been updated.'));
-        drupal_goto("node/$node->nid");
-        break;
-
-      case t('Remove from book outline'):
-        db_query('DELETE FROM {book} WHERE nid = %d', $node->nid);
-        drupal_set_message(t('The post has been removed from the book.'));
-        drupal_goto("node/$node->nid");
-        break;
-
-      default:
-        $page = db_fetch_object(db_query('SELECT * FROM {book} WHERE vid = %d', $node->vid));
-
-        $form['parent'] = array(
-          '#type' => 'select', '#title' => t('Parent'), '#default_value' => $page->parent,
-          '#options' => book_toc($node->nid), '#description' => t('The parent page in the book.')
-        );
-
-        $form['weight'] = array(
-          '#type' => 'weight', '#title' => t('Weight'), '#default_value' => $page->weight, '#delta' => 15,
-          '#description' => t('Pages at a given level are ordered first by weight and then by title.')
-        );
-
-        $form['log'] = array(
-          '#type' => 'textarea', '#title' => t('Log message'),
-          '#default_value' => $node->log, '#description' => t('An explanation to help other authors understand your motivations to put this post into the book.')
-        );
-
-        if ($page->nid) {
-          $form['update'] = array('#type' => 'submit', '#value' => t('Update book outline'));
-          $form['remove'] = array('#type' => 'submit', '#value' => t('Remove from book outline'));
-        }
-        else {
-          $form['add'] = array('#type' => 'submit', '#value' => t('Add to book outline'));
-        }
-
-        drupal_set_title(check_plain($node->title));
-        return drupal_get_form('book_outline', $form);
-    }
+  $form['nid'] = array('#type' => 'value', '#value' => $nid);
+  if ($page->nid) {
+    $form['update'] = array('#type' => 'submit',
+      '#value' => t('Update book outline'),
+    );
+    $form['remove'] = array('#type' => 'submit',
+      '#value' => t('Remove from book outline'),
+    );
   }
+  else {
+    $form['add'] = array('#type' => 'submit', '#value' => t('Add to book outline'));
+  }
+
+  drupal_set_title(check_plain($node->title));
+  return drupal_get_form('book_outline', $form);
+}
+
+/**
+ * Handles book outline form submissions.
+ */
+function book_outline_submit($form_id, $form_values) {
+  $op = $_POST['op'];
+  $node = node_load($form_values['nid']);
+
+  switch ($op) {
+    case t('Add to book outline'):
+      db_query('INSERT INTO {book} (nid, vid, parent, weight) VALUES (%d, %d, %d, %d)', $node->nid, $node->vid, $form_values['parent'], $form_values['weight']);
+      db_query("UPDATE {node_revisions} SET log = '%s' WHERE vid = %d", $form_values['log'], $node->vid);
+      drupal_set_message(t('The post has been added to the book.'));
+      break;
+    case t('Update book outline'):
+      db_query('UPDATE {book} SET parent = %d, weight = %d WHERE vid = %d', $form_values['parent'], $form_values['weight'], $node->vid);
+      db_query("UPDATE {node_revisions} SET log = '%s' WHERE vid = %d", $form_values['log'], $node->vid);
+      drupal_set_message(t('The book outline has been updated.'));
+      break;
+    case t('Remove from book outline'):
+      db_query('DELETE FROM {book} WHERE nid = %d', $node->nid);
+      drupal_set_message(t('The post has been removed from the book.'));
+      break;
+  }
+  return "node/$node->nid";
 }
 
 /**
@@ -988,9 +1005,6 @@ function book_admin_edit_submit($form_id, $form_values) {
  * Menu callback; displays the book administration page.
  */
 function book_admin($nid = 0) {
-  $op = $_POST['op'];
-  $edit = $_POST['edit'];
-
   if ($nid) {
     return book_admin_edit($nid);
   }
