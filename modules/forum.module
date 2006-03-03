@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.314 2006/02/28 13:36:59 killes Exp $
+// $Id: forum.module,v 1.315 2006/03/03 08:37:47 dries Exp $
 
 /**
  * @file
@@ -166,34 +166,34 @@ function forum_confirm_delete_submit($form_id, $form_values) {
  */
 function forum_form_container($edit = array()) {
   $form['name'] = array(
-    '#title' => t('Container name'), 
-    '#type' => 'textfield', 
-    '#default_value' => $edit['name'], 
-    '#maxlength' =>  64, 
-    '#description' => t('The container name is used to identify related forums.'), 
+    '#title' => t('Container name'),
+    '#type' => 'textfield',
+    '#default_value' => $edit['name'],
+    '#maxlength' =>  64,
+    '#description' => t('The container name is used to identify related forums.'),
     '#required' => TRUE
   );
 
   $form['description'] = array(
-    '#type' => 'textarea', 
-    '#title' => t('Description'), 
-    '#default_value' => $edit['description'], 
+    '#type' => 'textarea',
+    '#title' => t('Description'),
+    '#default_value' => $edit['description'],
     '#description' => t('The container description can give users more information about the forums it contains.')
   );
   $form['parent']['#tree'] = TRUE;
   $form['parent'][0] = _forum_parent_select($edit['tid'], t('Parent'), 'container');
   $form['weight'] = array(
-    '#type' => 'weight', 
-    '#title' => t('Weight'), 
-    '#default_value' => $edit['weight'], 
+    '#type' => 'weight',
+    '#title' => t('Weight'),
+    '#default_value' => $edit['weight'],
     '#description' => t('When listing containers, those with with light (small) weights get listed before containers with heavier (larger) weights. Containers with equal weights are sorted alphabetically.')
   );
 
   $form['vid'] = array(
-    '#type' => 'hidden', 
+    '#type' => 'hidden',
     '#value' => _forum_get_vid());
   $form['submit'] = array(
-    '#type' => 'submit', 
+    '#type' => 'submit',
     '#value' => t('Submit')
   );
   if ($edit['tid']) {

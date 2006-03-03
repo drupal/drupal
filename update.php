@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.176 2006/03/01 22:19:23 unconed Exp $
+// $Id: update.php,v 1.177 2006/03/03 08:37:47 dries Exp $
 
 /**
  * @file
@@ -476,7 +476,7 @@ function update_finished_page($success) {
   $links[] = '<a href="'. base_path() .'?q=admin">administration pages</a>';
 
   if ($success) {
-    $output = '<p>Updates were attempted. If you see no failures below, you may proceed happily to the <a href="index.php?q=admin">administration pages</a>. Otherwise, you may need to update your database manually. All errors have been <a href="index.php?q=admin/logs">logged</a>.</p>';    
+    $output = '<p>Updates were attempted. If you see no failures below, you may proceed happily to the <a href="index.php?q=admin">administration pages</a>. Otherwise, you may need to update your database manually. All errors have been <a href="index.php?q=admin/logs">logged</a>.</p>';
   }
   else {
     $output = '<p class="error">The update process did not complete. All errors have been <a href="index.php?q=admin/logs">logged</a>. You may need to check the <code>watchdog</code> table manually.';
@@ -582,7 +582,7 @@ function update_fix_access_table() {
   // Convert access table to UTF-8 if needed.
   $result = db_fetch_array(db_query('SHOW CREATE TABLE `access`'));
   if (!preg_match('/utf8/i', array_pop($result))) {
-    update_convert_table_utf8('access');    
+    update_convert_table_utf8('access');
   }
 
   // Don't run again
@@ -633,7 +633,7 @@ function update_convert_table_utf8($table) {
     // Convert binary columns to UTF-8
     $ret[] = update_sql('ALTER TABLE {'. $table .'} '. implode(', ', $convert_to_utf8));
   }
-  return $ret;  
+  return $ret;
 }
 
 // Some unavoidable errors happen because the database is not yet up to date.

@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.205 2006/03/01 22:19:23 unconed Exp $
+// $Id: updates.inc,v 1.206 2006/03/03 08:37:47 dries Exp $
 
 function system_update_110() {
   $ret = array();
@@ -1518,7 +1518,7 @@ function _system_update_utf8($tables) {
   $list = &$_SESSION['update_utf8'];
 
   $ret = update_convert_table_utf8(array_shift($list));
-  
+
   // Are we done?
   if (count($list) == 0) {
     unset($_SESSION['update_utf8']);

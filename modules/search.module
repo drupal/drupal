@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.165 2006/02/28 13:32:33 unconed Exp $
+// $Id: search.module,v 1.166 2006/03/03 08:37:47 dries Exp $
 
 /**
  * @file
@@ -822,7 +822,7 @@ function _search_parse_query(&$word, &$scores, $not = false) {
  *   (optional) Extra SQL arguments belonging to the second query parameter.
  *
  * @param $sort_parameters
- *   (optional) SQL arguments for sorting the final results. 
+ *   (optional) SQL arguments for sorting the final results.
  *              Default: 'ORDER BY score DESC'
  *
  * @return
@@ -1199,7 +1199,7 @@ function theme_search_item($item, $type) {
  */
 function theme_search_page($results, $type) {
   $output = '<dl class="search-results">';
-  
+
   foreach ($results as $entry) {
     $output .= theme('search_item', $entry, $type);
   }
