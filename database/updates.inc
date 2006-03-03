@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.206 2006/03/03 08:37:47 dries Exp $
+// $Id: updates.inc,v 1.207 2006/03/03 08:46:09 dries Exp $
 
 function system_update_110() {
   $ret = array();
@@ -1658,4 +1658,13 @@ function system_update_174() {
     variable_set('comment_default_order', $order - 1);
   }
   return array();
+}
+
+function system_update_175() {
+  $result = db_query('SELECT * FROM {url_alias}');
+  while ($path = db_fetch_object($result)) {
+    $path->src = urldecode($path->src);
+    $path->dst = urldecode($path->dst);
+    db_query("UPDATE {url_alias} SET dst = '%s', src = '%s' WHERE pid = %d", $path->dst, $path->src, $path->pid);
+  }
 }

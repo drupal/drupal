@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.79 2006/02/27 19:27:20 killes Exp $
+// $Id: path.module,v 1.80 2006/03/03 08:46:09 dries Exp $
 
 /**
  * @file
@@ -144,7 +144,9 @@ function path_set_alias($path = NULL, $alias = NULL, $pid = NULL) {
     drupal_clear_path_cache();
   }
   else if ($path && $alias) {
+    $path = urldecode($path);
     $path_count = db_result(db_query("SELECT COUNT(src) FROM {url_alias} WHERE src = '%s'", $path));
+    $alias = urldecode($alias);
     $alias_count = db_result(db_query("SELECT COUNT(dst) FROM {url_alias} WHERE dst = '%s'", $alias));
 
     // We have an insert:

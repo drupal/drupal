@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.136 2006/02/26 19:46:13 dries Exp $
+// $Id: profile.module,v 1.137 2006/03/03 08:46:09 dries Exp $
 
 /**
  * @file
@@ -665,7 +665,7 @@ Unless you know what you are doing, it is highly recommended that you prefix the
     $form['fields']['page'] = array('#type' => 'textfield',
       '#title' => t('Page title'),
       '#default_value' => $edit['page'],
-      '#description' => t('The title of the page showing all users with the specified field. The word <code>%value</code> will be substituted with the corresponding value. An example page title is "People whose favorite color is %value". Only applicable if the field is configured to be shown on member list pages.'),
+      '#description' => t('The title of the page showing all users with the specified field. The word <code>%value</code> will be substituted with the corresponding value. An example page title is "People whose favorite color is %value". This is only applicable for a public field.'),
     );
   }
   else {
