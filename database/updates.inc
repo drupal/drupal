@@ -1659,3 +1659,12 @@ function system_update_174() {
   }
   return array();
 }
+
+function system_update_175() {
+  $result = db_query('SELECT * FROM {url_alias}');
+  while ($path = db_fetch_object($result)) {
+    $path->src = urldecode($path->src);
+    $path->dst = urldecode($path->dst);
+    db_query("UPDATE {url_alias} SET dst = '%s', src = '%s' WHERE pid = %d", $path->dst, $path->src, $path->pid);
+  }
+}
