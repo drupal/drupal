@@ -1518,7 +1518,7 @@ function _system_update_utf8($tables) {
   $list = &$_SESSION['update_utf8'];
 
   $ret = update_convert_table_utf8(array_shift($list));
-  
+
   // Are we done?
   if (count($list) == 0) {
     unset($_SESSION['update_utf8']);
