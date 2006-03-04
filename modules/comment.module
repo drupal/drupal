@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.437 2006/02/27 14:54:24 killes Exp $
+// $Id: comment.module,v 1.438 2006/03/04 18:01:54 dries Exp $
 
 /**
  * @file
@@ -483,16 +483,22 @@ function comment_reply($nid, $pid = NULL) {
       }
       else {
         drupal_set_message(t('You are not authorized to post comments.'), 'error');
+        drupal_goto("node/$nid");
       }
     }
     else {
       // if this is a reply to another comment, show that comment first
       // else, we'll just show the user the node they're commenting on.
       if ($pid) {
-        $comment = db_fetch_object(db_query('SELECT c.*, u.uid, u.name AS registered_name, u.picture, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = %d', $pid, COMMENT_PUBLISHED));
-        $comment = drupal_unpack($comment);
-        $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
-        $output .= theme('comment_view', $comment);
+        if ($comment = db_fetch_object(db_query('SELECT c.*, u.uid, u.name AS registered_name, u.picture, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = %d', $pid, COMMENT_PUBLISHED))) {
+          $comment = drupal_unpack($comment);
+          $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
+          $output .= theme('comment_view', $comment);
+        }
+        else {
+          drupal_set_message(t('The comment you are replying to does not exist.'), 'error');
+          drupal_goto("node/$nid");
+        }
       }
       else if (user_access('access content')) {
         $output .= node_view($node);
@@ -501,17 +507,20 @@ function comment_reply($nid, $pid = NULL) {
       // should we show the reply box?
       if (node_comment_mode($nid) != COMMENT_NODE_READ_WRITE) {
         drupal_set_message(t("This discussion is closed: you can't post new comments."), 'error');
+        drupal_goto("node/$nid");
       }
       else if (user_access('post comments')) {
         $output .= comment_form(array('pid' => $pid, 'nid' => $nid), t('Reply'));
       }
       else {
         drupal_set_message(t('You are not authorized to post comments.'), 'error');
+        drupal_goto("node/$nid");
       }
     }
   }
   else {
     drupal_set_message(t('You are not authorized to view comments.'), 'error');
+    drupal_goto("node/$nid");
   }
 
   return $output;
