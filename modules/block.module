@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.202 2006/02/21 18:46:54 dries Exp $
+// $Id: block.module,v 1.203 2006/03/04 17:54:58 dries Exp $
 
 /**
  * @file
@@ -65,7 +65,7 @@ function block_menu($may_cache) {
   if ($may_cache) {
     $items[] = array('path' => 'admin/block', 'title' => t('blocks'),
       'access' => user_access('administer blocks'),
-      'callback' => 'block_admin');
+      'callback' => 'block_admin_display');
     $items[] = array('path' => 'admin/block/list', 'title' => t('list'),
       'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
     $items[] = array('path' => 'admin/block/configure', 'title' => t('configure block'),
@@ -129,15 +129,6 @@ function block_block($op = 'list', $delta = 0, $edit = array()) {
       $data['subject'] = check_plain($block->title);
       $data['content'] = check_markup($block->body, $block->format, FALSE);
       return $data;
-  }
-}
-
-function block_admin_save($edit) {
-  foreach ($edit as $module => $blocks) {
-    foreach ($blocks as $delta => $block) {
-      db_query("UPDATE {blocks} SET status = %d, weight = %d, region = '%s', throttle = %d WHERE module = '%s' AND delta = '%s' AND theme = '%s'",
-                $block['status'], $block['weight'], $block['region'], $block['throttle'], $module, $delta, $block['theme']);
-    }
   }
 }
 
@@ -207,11 +198,10 @@ function _block_rehash($order_by = array('weight')) {
 }
 
 /**
- * Prepare the main block administration form.
+ * Generate main block administration form.
  */
 function block_admin_display() {
   global $theme_key, $custom_theme;
-  $throttle = module_exist('throttle');
 
   // If non-default theme configuration has been selected, set the custom theme.
   if (arg(3)) {
@@ -222,24 +212,28 @@ function block_admin_display() {
   }
   init_theme();
 
+  $throttle = module_exist('throttle');
   $blocks = _block_rehash();
   $block_regions = system_region_list($theme_key);
 
   $form['#action'] = arg(3) ? url('admin/block/list/' . $theme_key) : url('admin/block');
   $form['#tree'] = TRUE;
   foreach ($blocks as $block) {
-    $form[$block['module']][$block['delta']]['info'] = array('#type' => 'markup', '#value' => $block['info']);
+    $form[$block['module']][$block['delta']]['info'] = array('#value' => $block['info']);
     $form[$block['module']][$block['delta']]['status'] = array('#type' => 'checkbox', '#default_value' => $block['status']);
     $form[$block['module']][$block['delta']]['theme'] = array('#type' => 'hidden', '#value' => $theme_key);
     $form[$block['module']][$block['delta']]['weight'] = array('#type' => 'weight', '#default_value' => $block['weight']);
-    $form[$block['module']][$block['delta']]['region'] = array('#type' => 'select', '#default_value' => isset($block['region']) ? $block['region'] : system_default_region(), '#options' => $block_regions);
+    $form[$block['module']][$block['delta']]['region'] = array('#type' => 'select',
+      '#default_value' => isset($block['region']) ? $block['region'] : system_default_region(),
+      '#options' => $block_regions,
+    );
 
     if ($throttle) {
       $form[$block['module']][$block['delta']]['throttle'] = array('#type' => 'checkbox', '#default_value' => $block['throttle']);
     }
-    $form[$block['module']][$block['delta']]['configure'] = array('#type' => 'markup', '#value' => l(t('configure'), 'admin/block/configure/'. $block['module'] .'/'. $block['delta']));
+    $form[$block['module']][$block['delta']]['configure'] = array('#value' => l(t('configure'), 'admin/block/configure/'. $block['module'] .'/'. $block['delta']));
     if ($block['module'] == 'block') {
-      $form[$block['module']][$block['delta']]['delete'] = array('#type' => 'markup', '#value' => l(t('delete'), 'admin/block/delete/'. $block['delta']));
+      $form[$block['module']][$block['delta']]['delete'] = array('#value' => l(t('delete'), 'admin/block/delete/'. $block['delta']));
     }
   }
   $form['submit'] = array('#type' => 'submit', '#value' => t('Save blocks'));
@@ -247,23 +241,39 @@ function block_admin_display() {
   return drupal_get_form('block_admin_display', $form);
 }
 
+/**
+ * Process main block administration form submission.
+ */
+function block_admin_display_submit($form_id, $form_values) {
+  foreach ($form_values as $module => $blocks) {
+    foreach ($blocks as $delta => $block) {
+      db_query("UPDATE {blocks} SET status = %d, weight = %d, region = '%s', throttle = %d WHERE module = '%s' AND delta = '%s' AND theme = '%s'", $block['status'], $block['weight'], $block['region'], $block['throttle'], $module, $delta, $block['theme']);
+    }
+  }
+  drupal_set_message(t('The block settings have been updated.'));
+  cache_clear_all();
+}
+
+/**
+ * Theme main block administration form submission.
+ */
 function theme_block_admin_display($form) {
   global $theme_key;
-  $throttle = module_exist('throttle');
 
+  $throttle = module_exist('throttle');
   $block_regions = system_region_list($theme_key);
 
-  // Highlight regions on page, to provide visual reference.
+  // Highlight regions on page to provide visual reference.
   foreach ($block_regions as $key => $value) {
     drupal_set_content($key, '<div class="block-region">' . $value . '</div>');
   }
   $regions = array();
   $disabled = array();
   foreach (element_children($form) as $module) {
-    // Don't take form control structures
+    // Do not take form control structures.
     if (is_array($form[$module])) {
       foreach ($form[$module] as $delta => $element) {
-        // Only take form elements that are blocks
+        // Only take form elements that are blocks.
         if (is_array($form[$module][$delta]['info'])) {
           $block = $form[$module][$delta];
           $row = array(array('data' => form_render($block['info']), 'class' => 'block'), form_render($block['status']) . form_render($block['theme']), form_render($block['weight']), form_render($block['region']));
@@ -302,6 +312,10 @@ function theme_block_admin_display($form) {
   $header[] = array('data' => t('Operations'), 'colspan' => 2);
   $output = theme('table', $header, $rows, array('id' => 'blocks'));
   $output .= form_render($form['submit']);
+  // Also render the form_id as there is no form_render($form) call (as form_render does not appear to handle the
+  // multi-dimensional block form array very well).
+  $output .= form_render($form['form_id']);
+
   return $output;
 }
 
@@ -500,22 +514,6 @@ function block_box_save($edit, $delta = NULL) {
     db_query("INSERT INTO {boxes} (title, body, info, format) VALUES  ('%s', '%s', '%s', %d)", $edit['title'], $edit['body'], $edit['info'], $edit['format']);
   }
   return true;
-}
-
-/**
- * Menu callback; displays the block overview page.
- */
-function block_admin() {
-  $edit = isset($_POST['edit']) ? $_POST['edit'] : '';
-  $op = isset($_POST['op']) ? $_POST['op'] : '';
-
-  if ($op == t('Save blocks')) {
-    block_admin_save($edit);
-    drupal_set_message(t('The blocks have been saved.'));
-    cache_clear_all();
-    drupal_goto($_GET['q']);
-  }
-  return block_admin_display();
 }
 
 /**
