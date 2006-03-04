@@ -1667,4 +1667,5 @@ function system_update_175() {
     $path->dst = urldecode($path->dst);
     db_query("UPDATE {url_alias} SET dst = '%s', src = '%s' WHERE pid = %d", $path->dst, $path->src, $path->pid);
   }
+  return array();
 }
