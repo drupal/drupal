@@ -293,7 +293,8 @@ CREATE TABLE filter_formats (
   name varchar(255) NOT NULL default '',
   roles varchar(255) NOT NULL default '',
   cache smallint NOT NULL default '0',
-  PRIMARY KEY (format)
+  PRIMARY KEY (format),
+  UNIQUE (name)
 );
 
 --

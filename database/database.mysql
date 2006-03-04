@@ -308,7 +308,8 @@ CREATE TABLE filter_formats (
   name varchar(255) NOT NULL default '',
   roles varchar(255) NOT NULL default '',
   cache tinyint(2) NOT NULL default '0',
-  PRIMARY KEY (format)
+  PRIMARY KEY (format),
+  UNIQUE KEY (name)
 )
 /*!40100 DEFAULT CHARACTER SET utf8 */ ;
 

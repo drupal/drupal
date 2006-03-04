@@ -1669,3 +1669,8 @@ function system_update_175() {
   }
   return array();
 }
+
+function system_update_176() {
+  $ret[] = update_sql('ALTER TABLE {filter_formats} ADD UNIQUE KEY (name)');
+  return $ret;
+}
