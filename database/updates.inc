@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.207 2006/03/03 08:46:09 dries Exp $
+// $Id: updates.inc,v 1.208 2006/03/04 18:09:12 dries Exp $
 
 function system_update_110() {
   $ret = array();
@@ -1667,4 +1667,5 @@ function system_update_175() {
     $path->dst = urldecode($path->dst);
     db_query("UPDATE {url_alias} SET dst = '%s', src = '%s' WHERE pid = %d", $path->dst, $path->src, $path->pid);
   }
+  return array();
 }
