@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.209 2006/03/04 18:12:10 dries Exp $
+// $Id: updates.inc,v 1.210 2006/03/04 22:38:51 unconed Exp $
 
 function system_update_110() {
   $ret = array();
@@ -1566,7 +1566,7 @@ function system_update_172() {
   include_once './modules/comment.module';
 
   $limit = 20;
-  $result = db_query_range("SELECT cid, thread FROM {comments} WHERE cid > %d", $_SESSION['system_update_172'], 0, $limit);
+  $result = db_query_range("SELECT cid, thread FROM {comments} WHERE cid > %d ORDER BY cid ASC", $_SESSION['system_update_172'], 0, $limit);
   while ($comment = db_fetch_object($result)) {
     $_SESSION['system_update_172'] = $comment->cid;
     $thread = explode('.', rtrim($comment->thread, '/'));
