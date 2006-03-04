@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.109 2006/03/01 09:01:34 dries Exp $
+// $Id: filter.module,v 1.110 2006/03/04 17:51:34 dries Exp $
 
 /**
  * @file
@@ -744,10 +744,12 @@ function check_markup($text, $format = FILTER_FORMAT_DEFAULT, $check = TRUE) {
 /**
  * Generate a selector for choosing a format in a form.
  *
- * @param $name
- *   The internal name used to refer to the form element.
  * @param $value
  *   The ID of the format that is currently selected.
+ * @param $weight
+ *   The weight of the input format.
+ * @param $parents
+ *   Required when defining multiple input formats on a single node or having a different parent than 'format'.
  * @return
  *   HTML for the form element.
  */
