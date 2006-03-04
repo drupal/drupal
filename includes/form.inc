@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.72 2006/02/27 14:57:54 killes Exp $
+// $Id: form.inc,v 1.73 2006/03/04 18:03:57 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -514,7 +514,7 @@ function form_options_flatten($array, $reset = TRUE) {
 function theme_select($element) {
   $select = '';
   $size = $element['#size'] ? ' size="' . $element['#size'] . '"' : '';
-  return theme('form_element', $element['#title'], '<select name="'. $element['#name'] .''. ($element['#multiple'] ? '[]' : '') .'"'. ($element['#multiple'] ? ' multiple="multiple" ' : '') . drupal_attributes($element['#attributes']) .' id="' . $element['#id'] .'" '. $size .'>'. form_select_options($element) .'</select>', $element['#description'], $element['#id'], $element['#required'], form_get_error($element));
+  return theme('form_element', $element['#title'], '<select class="' . _form_get_class('', $element['#required'], form_get_error($element)). '" name="'. $element['#name'] .''. ($element['#multiple'] ? '[]' : '') .'"'. ($element['#multiple'] ? ' multiple="multiple" ' : '') . drupal_attributes($element['#attributes']) .' id="' . $element['#id'] .'" '. $size .'>'. form_select_options($element) .'</select>', $element['#description'], $element['#id'], $element['#required'], form_get_error($element));
 }
 
 function form_select_options($element, $choices = NULL) {
