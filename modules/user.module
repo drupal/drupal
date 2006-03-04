@@ -162,7 +162,7 @@ function user_save($account, $array = array(), $category = 'account') {
     // because we don't have a fully initialized user object yet.
     foreach ($array as $key => $value) {
       if ($key == 'pass') {
-        $fields[] = db_escape_string($key);
+        $fields[] = $key;
         $values[] = md5($value);
         $s[] = "'%s'";
       }
