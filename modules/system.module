@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.296 2006/02/27 19:01:42 killes Exp $
+// $Id: system.module,v 1.297 2006/03/04 17:49:21 dries Exp $
 
 /**
  * @file
@@ -740,14 +740,10 @@ function system_theme_settings_submit($form_id, $values) {
 
   if ($op == t('Reset to defaults')) {
     variable_del($key);
-  }
-  else {
-    variable_set($key, $values);
-  }
-  if ($op == t('Reset to defaults')) {
     drupal_set_message(t('The configuration options have been reset to their default values.'));
   }
   else {
+    variable_set($key, $values);
     drupal_set_message(t('The configuration options have been saved.'));
   }
 }
@@ -874,7 +870,7 @@ function system_themes_submit($form_id, $values) {
   }
   else {
     variable_del('theme_default');
-    db_query("UPDATE {system} SET status = 1 WHERE type = 'theme' AND name ='bluemarine'");
+    db_query("UPDATE {system} SET status = 1 WHERE type = 'theme' AND name = 'bluemarine'");
   }
 
   menu_rebuild();
