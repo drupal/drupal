@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.110 2006/03/04 17:51:34 dries Exp $
+// $Id: filter.module,v 1.111 2006/03/04 18:12:10 dries Exp $
 
 /**
  * @file
@@ -54,6 +54,93 @@ function filter_help($section) {
 <p>Because of the flexible filtering system, you might encounter a situation where one filter prevents another from doing its job. For example: a word in an URL gets converted into a glossary term, before the URL can be converted in a clickable link. When this happens, you will need to rearrange the order in which filters get executed.</p>
 <p>Filters are executed from top-to-bottom. You can use the weight column to rearrange them: heavier filters \'sink\' to the bottom.</p>');
   }
+}
+
+/**
+ * Implementation of hook_menu().
+ */
+function filter_menu($may_cache) {
+  $items = array();
+
+  if ($may_cache) {
+    $items[] = array('path' => 'admin/filters',
+      'title' => t('input formats'),
+      'callback' => 'filter_admin_overview',
+      'access' => user_access('administer filters'),
+    );
+    $items[] = array('path' => 'admin/filters/list',
+      'title' => t('list'),
+      'callback' => 'filter_admin_overview',
+      'type' => MENU_DEFAULT_LOCAL_TASK,
+      'access' => user_access('administer filters'),
+    );
+    $items[] = array('path' => 'admin/filters/add',
+      'title' => t('add input format'),
+      'callback' => 'filter_admin_format_form',
+      'type' => MENU_LOCAL_TASK,
+      'weight' => 1,
+      'access' => user_access('administer filters'),
+    );
+    $items[] = array('path' => 'admin/filters/delete',
+      'title' => t('delete input format'),
+      'callback' => 'filter_admin_delete',
+      'type' => MENU_CALLBACK,
+      'access' => user_access('administer filters'),
+    );
+    $items[] = array('path' => 'filter/tips',
+      'title' => t('compose tips'),
+      'callback' => 'filter_tips_long',
+      'access' => TRUE,
+      'type' => MENU_SUGGESTED_ITEM,
+    );
+  }
+  else {
+    if (arg(0) == 'admin' && arg(1) == 'filters' && is_numeric(arg(2))) {
+      $formats = filter_formats();
+
+      if (isset($formats[arg(2)])) {
+        $items[] = array('path' => 'admin/filters/'. arg(2),
+          'title' => t("'%format' input format", array('%format' => $formats[arg(2)]->name)),
+          'callback' => 'filter_admin_format_form',
+          'callback arguments' => array('format' => $formats[arg(2)]),
+          'type' => MENU_CALLBACK,
+          'access' => user_access('administer filters'),
+        );
+        $items[] = array('path' => 'admin/filters/'. arg(2) .'/list',
+          'title' => t('view'),
+          'callback' => 'filter_admin_format_form',
+          'callback arguments' => array('format' => $formats[arg(2)]),
+          'type' => MENU_DEFAULT_LOCAL_TASK,
+          'weight' => 0,
+          'access' => user_access('administer filters'),
+        );
+        $items[] = array('path' => 'admin/filters/'. arg(2) .'/configure',
+          'title' => t('configure'),
+          'callback' => 'filter_admin_configure',
+          'type' => MENU_LOCAL_TASK,
+          'weight' => 1,
+          'access' => user_access('administer filters'),
+        );
+        $items[] = array('path' => 'admin/filters/'. arg(2) .'/order',
+          'title' => t('rearrange'),
+          'callback' => 'filter_admin_order',
+          'callback arguments' => array('format' => $formats[arg(2)]),
+          'type' => MENU_LOCAL_TASK,
+          'weight' => 2,
+          'access' => user_access('administer filters'),
+        );
+      }
+    }
+  }
+
+  return $items;
+}
+
+/**
+ * Implementation of hook_perm().
+ */
+function filter_perm() {
+  return array('administer filters');
 }
 
 /**
@@ -198,74 +285,6 @@ function filter_filter_tips($delta, $format, $long = false) {
   }
 }
 
-
-/**
- * Implementation of hook_menu().
- */
-function filter_menu($may_cache) {
-  $items = array();
-
-  if ($may_cache) {
-    $items[] = array('path' => 'admin/filters', 'title' => t('input formats'),
-      'callback' => 'filter_admin_overview',
-      'access' => user_access('administer filters'));
-    $items[] = array('path' => 'admin/filters/list', 'title' => t('list'),
-      'callback' => 'filter_admin_overview',
-      'type' => MENU_DEFAULT_LOCAL_TASK,
-      'access' => user_access('administer filters'));
-    $items[] = array('path' => 'admin/filters/add', 'title' => t('add input format'),
-      'callback' => 'filter_admin_add',
-      'type' => MENU_LOCAL_TASK,
-      'weight' => 1,
-      'access' => user_access('administer filters'));
-    $items[] = array('path' => 'admin/filters/delete', 'title' => t('delete input format'),
-      'callback' => 'filter_admin_delete',
-      'type' => MENU_CALLBACK,
-      'access' => user_access('administer filters'));
-    $items[] = array('path' => 'filter/tips', 'title' => t('compose tips'),
-      'callback' => 'filter_tips_long', 'access' => TRUE,
-      'type' => MENU_SUGGESTED_ITEM);
-  }
-  else {
-    if (arg(0) == 'admin' && arg(1) == 'filters' && is_numeric(arg(2))) {
-      $formats = filter_formats();
-
-      if (isset($formats[arg(2)])) {
-        $items[] = array('path' => 'admin/filters/'. arg(2), 'title' => t("'%format' input format", array('%format' => $formats[arg(2)]->name)),
-          'callback' => 'filter_admin_format',
-          'callback arguments' => array('format' => $formats[arg(2)]),
-          'type' => MENU_CALLBACK,
-          'access' => user_access('administer filters'));
-        $items[] = array('path' => 'admin/filters/'. arg(2) .'/list', 'title' => t('view'),
-          'callback' => 'filter_admin_format',
-          'callback arguments' => array('format' => $formats[arg(2)]),
-          'type' => MENU_DEFAULT_LOCAL_TASK,
-          'weight' => 0,
-          'access' => user_access('administer filters'));
-        $items[] = array('path' => 'admin/filters/'. arg(2) .'/configure', 'title' => t('configure'),
-          'callback' => 'filter_admin_configure',
-          'type' => MENU_LOCAL_TASK,
-          'weight' => 1,
-          'access' => user_access('administer filters'));
-        $items[] = array('path' => 'admin/filters/'. arg(2) .'/order', 'title' => t('rearrange'),
-          'callback' => 'filter_admin_order',
-          'type' => MENU_LOCAL_TASK,
-          'weight' => 2,
-          'access' => user_access('administer filters'));
-      }
-    }
-  }
-
-  return $items;
-}
-
-/**
- * Implementation of hook_perm().
- */
-function filter_perm() {
-  return array('administer filters');
-}
-
 /**
  * Displays a list of all input formats and which one is the default
  */
@@ -279,7 +298,7 @@ function filter_admin_overview() {
   foreach ($formats as $id => $format) {
     $roles = array();
     foreach (user_roles() as $rid => $name) {
-      //prepare a roles array with roles that may access the filter
+      // Prepare a roles array with roles that may access the filter
       if (strstr($format->roles, ",$rid,")) {
         $roles[] = $name;
       }
@@ -287,10 +306,10 @@ function filter_admin_overview() {
     $row = array();
     $default = ($id == variable_get('filter_default_format', 1));
     $options[$id] = '';
-    $form[$format->name]['id'] = array('#type' => 'markup', '#value' => $id);
-    $form[$format->name]['roles'] = array('#type' => 'markup', '#value' => $default ? t('All roles may use default format') : ($roles ? implode(', ',$roles) : t('No roles may use this format')));
-    $form[$format->name]['configure'] = array('#type' => 'markup', '#value' => l(t('configure'), 'admin/filters/'. $id));
-    $form[$format->name]['delete'] = array('#type' => 'markup', '#value' => $default ? '' : l(t('delete'), 'admin/filters/delete/'. $id));
+    $form[$format->name]['id'] = array('#value' => $id);
+    $form[$format->name]['roles'] = array('#value' => $default ? t('All roles may use default format') : ($roles ? implode(', ',$roles) : t('No roles may use this format')));
+    $form[$format->name]['configure'] = array('#value' => l(t('configure'), 'admin/filters/'. $id));
+    $form[$format->name]['delete'] = array('#value' => $default ? '' : l(t('delete'), 'admin/filters/delete/'. $id));
   }
   $form['default'] = array('#type' => 'radios', '#options' => $options, '#default_value' => variable_get('filter_default_format', 1));
   $form['submit'] = array('#type' => 'submit', '#value' => t('Set default format'));
@@ -310,7 +329,7 @@ function theme_filter_admin_overview($form) {
     if (isset($element['roles']) && is_array($element['roles'])) {
       $rows[] = array(
         form_render($form['default'][$element['id']['#value']]),
-        $name,
+        check_plain($name),
         form_render($element['roles']),
         form_render($element['configure']),
         form_render($element['delete'])
@@ -326,99 +345,78 @@ function theme_filter_admin_overview($form) {
 }
 
 /**
- * Add a new input format.
- */
-function filter_admin_add() {
-  if ($_POST['op']) {
-    $edit = $_POST['edit'];
-
-    filter_admin_filters_save($format->format, $edit);
-  }
-
-  $output = filter_admin_format_form($format);
-  return $output;
-}
-
-/**
  * Menu callback; confirm deletion of a format.
  */
 function filter_admin_delete() {
-  $edit = $_POST['edit'];
-  if ($edit['confirm']) {
-    if ($edit['format'] != variable_get('filter_default_format', 1)) {
-      db_query("DELETE FROM {filter_formats} WHERE format = %d", $edit['format']);
-      db_query("DELETE FROM {filters} WHERE format = %d", $edit['format']);
-
-      $default = variable_get('filter_default_format', 1);
-      db_query("UPDATE {node_revisions} SET format = %d WHERE format = %d", $default, $edit['format']);
-      db_query("UPDATE {comments} SET format = %d WHERE format = %d", $default, $edit['format']);
-      db_query("UPDATE {boxes} SET format = %d WHERE format = %d", $default, $edit['format']);
-
-      cache_clear_all('filter:'. $edit['format'], true);
-
-      drupal_set_message(t('Deleted input format %format.', array('%format' => theme('placeholder', $edit['name']))));
-    }
-    drupal_goto('admin/filters');
-  }
-
   $format = arg(3);
   $format = db_fetch_object(db_query('SELECT * FROM {filter_formats} WHERE format = %d', $format));
 
-  $form['format'] = array('#type' => 'hidden', '#value' => $format->format);
-  $form['name'] = array('#type' => 'hidden', '#value' => $format->name);
+  if ($format) {
+    if ($format->format != variable_get('filter_default_format', 1)) {
+      $form['format'] = array('#type' => 'hidden', '#value' => $format->format);
+      $form['name'] = array('#type' => 'hidden', '#value' => $format->name);
 
-  return confirm_form('filter_admin_delete', $form, t('Are you sure you want to delete the input format %format?', array('%format' => theme('placeholder', $format->name))), 'admin/filters', t('If you have any content left in this input format, it will be switched to the default input format. This action cannot be undone.'), t('Delete'), t('Cancel'));
-
-
+      return confirm_form('filter_admin_delete', $form, t('Are you sure you want to delete the input format %format?', array('%format' => theme('placeholder', $format->name))), 'admin/filters', t('If you have any content left in this input format, it will be switched to the default input format. This action cannot be undone.'), t('Delete'), t('Cancel'));
+    }
+    else {
+      drupal_set_message('The default format cannot be deleted.');
+      drupal_goto('admin/filters');
+    }
+  }
+  else {
+    drupal_not_found();
+  }
 }
 
 /**
- * Menu callback; configure the filters for a format.
+ * Process filter delete form submission.
  */
-function filter_admin_format($format) {
-  if ($_POST['op']) {
-    $edit = $_POST['edit'];
-    filter_admin_filters_save($format->format, $edit);
-  }
+function filter_admin_delete_submit($form_id, $form_values) {
+  db_query("DELETE FROM {filter_formats} WHERE format = %d", $form_values['format']);
+  db_query("DELETE FROM {filters} WHERE format = %d", $form_values['format']);
 
-  $output = filter_admin_format_form($format);
+  $default = variable_get('filter_default_format', 1);
+  // Replace existing instances of the deleted format with the default format.
+  db_query("UPDATE {node_revisions} SET format = %d WHERE format = %d", $default, $form_values['format']);
+  db_query("UPDATE {comments} SET format = %d WHERE format = %d", $default, $form_values['format']);
+  db_query("UPDATE {boxes} SET format = %d WHERE format = %d", $default, $form_values['format']);
 
-  // Composition tips (guidelines)
-  $tips = _filter_tips($format->format, false);
-  $extra = l(t('More information about formatting options'), 'filter/tips');
-  $tiplist = theme('filter_tips', $tips, false, $extra);
-  if (!$tiplist) {
-    $tiplist = t('<p>No guidelines available.</p>');
-  }
-  $group = t('<p>These are the guidelines that users will see for posting in this input format. They are automatically generated from the filter settings.</p>');
-  $group .= $tiplist;
-  $output .= '<h2>'. t('Formatting guidelines') .'</h2>'. $group;
+  cache_clear_all('filter:'. $form_values['format'], true);
+  drupal_set_message(t('Deleted input format %format.', array('%format' => theme('placeholder', $form_values['name']))));
 
-  return $output;
+  return 'admin/filters';
 }
 
 /**
- * Renders a form for a format
+ * Generate a filter format form.
  */
-function filter_admin_format_form($format) {
-  $edit = $_POST['edit'];
-
+function filter_admin_format_form($format = NULL) {
   $default = ($format->format == variable_get('filter_default_format', 1));
   if ($default) {
     $help = t('All roles for the default format must be enabled and cannot be changed.');
     $form['default_format'] = array('#type' => 'hidden', '#value' => 1);
   }
 
-  //Add the name of the object
-  $form['name'] = array('#type' => 'fieldset', '#title' => t('Name'));
-  $form['name']['name'] = array('#type' => 'textfield', '#default_value' => $format->name, '#description' => t('Give the name of this filter format'), '#required' => TRUE);
+  $form['name'] = array('#type' => 'textfield',
+    '#title' => 'Name',
+    '#default_value' => $format->name,
+    '#description' => t('Specify a unique name for this filter format.'),
+    '#required' => TRUE,
+  );
 
-  //Add a row of checkboxes for form group
-  $form['roles'] = array('#type' => 'fieldset', '#title' => t('Roles'), '#description' => $default ? $help : t('Choose which roles may use this filter format. Note that roles with the "administer filters" permission can always use all the filter formats.'), '#tree' => TRUE);
-  $form['roles']['hidden'] = array();
+  // Add a row of checkboxes for form group.
+  $form['roles'] = array('#type' => 'fieldset',
+    '#title' => t('Roles'),
+    '#description' => $default ? $help : t('Choose which roles may use this filter format. Note that roles with the "administer filters" permission can always use all the filter formats.'),
+    '#tree' => TRUE,
+  );
+
   foreach (user_roles() as $rid => $name) {
     $checked = strstr($format->roles, ",$rid,");
-    $form['roles'][$rid] = array('#type' => 'checkbox', '#title' => $name, '#default_value' => ($default || $checked));
+    $form['roles'][$rid] = array('#type' => 'checkbox',
+      '#title' => $name,
+      '#default_value' => ($default || $checked),
+    );
     if ($default) {
       $form['roles'][$rid]['#attributes'] = array('disabled' => 'disabled');
     }
@@ -427,124 +425,160 @@ function filter_admin_format_form($format) {
   $all = filter_list_all();
   $enabled = filter_list_format($format->format);
 
-  $form['filters'] = array('#type' => 'fieldset', '#title' => t('Filters'), '#description' => t('Choose the filters that will be used in this filter format'));
+  $form['filters'] = array('#type' => 'fieldset',
+    '#title' => t('Filters'),
+    '#description' => t('Choose the filters that will be used in this filter format.'),
+    '#tree' => TRUE,
+  );
   foreach ($all as $id => $filter) {
-    $form['filters'][$id] = array('#type' => 'checkbox', '#title' => $filter->name, '#default_value' => isset($enabled[$id]), '#description' => module_invoke($filter->module, 'filter', 'description', $filter->delta));
+    $form['filters'][$id] = array('#type' => 'checkbox',
+      '#title' => $filter->name,
+      '#default_value' => isset($enabled[$id]),
+      '#description' => module_invoke($filter->module, 'filter', 'description', $filter->delta),
+    );
   }
-
   $form['submit'] = array('#type' => 'submit', '#value' => t('Save configuration'));
 
-  return drupal_get_form('filter_admin_format_form', $form);
+  if (isset($format)) {
+    $form['format'] = array('#type' => 'hidden', '#value' => $format->format);
+
+    // Composition tips (guidelines)
+    $tips = _filter_tips($format->format, false);
+    $extra = l(t('More information about formatting options'), 'filter/tips');
+    $tiplist = theme('filter_tips', $tips, false, $extra);
+    if (!$tiplist) {
+      $tiplist = t('<p>No guidelines available.</p>');
+    }
+    $group = t('<p>These are the guidelines that users will see for posting in this input format. They are automatically generated from the filter settings.</p>');
+    $group .= $tiplist;
+    $output = '<h2>'. t('Formatting guidelines') .'</h2>'. $group;
+  }
+  $output = drupal_get_form('filter_admin_format_form', $form) . $output;
+
+  return $output;
 }
 
 /**
- * Save enabled/disabled status for filters in a format.
+ * Validate filter format form submissions.
  */
-function filter_admin_filters_save($format, $toggles) {
-  $current = filter_list_format($format);
-  $edit = $_POST['edit'];
-  $name = trim($edit['name']);
-  $cache = true;
-
-  //make sure a title is specified
-  if (strlen($name) == 0) {
-    form_set_error('name', t('You must enter a name for this input format.'));
-   return;
+function filter_admin_format_form_validate($form_id, $form_values) {
+  if (!isset($form_values['format'])) {
+    $name = trim($form_values['name']);
+    $result = db_fetch_object(db_query("SELECT format FROM {filter_formats} WHERE name='%s'", $name));
+    if ($result) {
+      form_set_error('name', t('Filter format names need to be unique. A format named %name already exists.', array('%name' => theme('placeholder', $name))));
+    }
   }
+}
 
-  if (!$format) { //add a new filter format.
-    $new = true;
+/**
+ * Process filter format form submissions.
+ */
+function filter_admin_format_form_submit($form_id, $form_values) {
+  $format = isset($form_values['format']) ? $form_values['format'] : NULL;
+  $current = filter_list_format($format);
+  $name = trim($form_values['name']);
+  $cache = TRUE;
+
+  // Add a new filter format.
+  if (!$format) {
+    $new = TRUE;
     db_query("INSERT INTO {filter_formats} (name) VALUES ('%s')", $name);
     $result = db_fetch_object(db_query("SELECT MAX(format) AS format FROM {filter_formats}"));
     $format = $result->format;
-   drupal_set_message(t('Added input format %format.', array('%format' => theme('placeholder', $edit['name']))));
+    drupal_set_message(t('Added input format %format.', array('%format' => theme('placeholder', $name))));
   }
   else {
     drupal_set_message(t('The input format settings have been updated.'));
   }
 
   db_query("DELETE FROM {filters} WHERE format = %d", $format);
-  foreach ($toggles as $id => $checked) {
+  foreach ($form_values['filters'] as $id => $checked) {
     if ($checked) {
       list($module, $delta) = explode('/', $id);
-      // Add new filters to the bottom
+      // Add new filters to the bottom.
       $weight = isset($current[$id]->weight) ? $current[$id]->weight : 10;
       db_query("INSERT INTO {filters} (format, module, delta, weight) VALUES (%d, '%s', %d, %d)", $format, $module, $delta, $weight);
 
-      // Check if there are any 'no cache' filters
+      // Check if there are any 'no cache' filters.
       $cache &= !module_invoke($module, 'filter', 'no cache', $delta);
     }
   }
 
   // We store the roles as a string for ease of use.
-  // we should always set all roles to true when saving a default role.
+  // We should always set all roles to true when saving a default role.
   // We use leading and trailing comma's to allow easy substring matching.
-  $roles = isset($edit['roles']) ? array_keys($edit['roles']) : array();
-  $roles = ','. implode(',', ($edit['default_format'] ? user_roles() : $roles)) .',';
+  $roles = array();
+  if (isset($form_values['roles'])) {
+    foreach ($form_values['roles'] as $id => $checked) {
+      if ($checked) {
+        $roles[] = $id;
+      }
+    }
+  }
+  $roles = ','. implode(',', ($form_values['default_format'] ? user_roles() : $roles)) .',';
 
   db_query("UPDATE {filter_formats} SET cache = %d, name='%s', roles = '%s' WHERE format = %d", $cache, $name, $roles, $format);
 
   cache_clear_all('filter:'. $format, true);
 
-  // if a new filter was added, return to the main list of filters, otherwise stay on edit filter page to show new changes
+  // If a new filter was added, return to the main list of filters. Otherwise, stay on edit filter page to show new changes.
   if ($new) {
-    drupal_goto('admin/filters/');
+    return 'admin/filters/';
   }
   else {
-    drupal_goto('admin/filters/' . arg(2)) ;
+    return 'admin/filters/'. $format;
   }
 }
 
 /**
  * Menu callback; display form for ordering filters for a format.
  */
-function filter_admin_order() {
-  $format = arg(2);
-  if ($_POST['op']) {
-    filter_admin_order_save($format, $_POST['edit']);
-  }
-
+function filter_admin_order($format = NULL) {
   // Get list (with forced refresh)
-  $filters = filter_list_format($format);
+  $filters = filter_list_format($format->format);
 
+  $form['weights'] = array('#tree' => TRUE);
   foreach ($filters as $id => $filter) {
-    $form['name'][$id] = array('#type' => 'markup', '#value' => $filter->name);
-    $form['weight'][$id] = array('#type' => 'weight', '#default_value' => $filter->weight);
+    $form['names'][$id] = array('#value' => $filter->name);
+    $form['weights'][$id] = array('#type' => 'weight', '#default_value' => $filter->weight);
   }
+  $form['format'] = array('#type' => 'hidden', '#value' => $format->format);
   $form['submit'] = array('#type' => 'submit', '#value' => t('Save configuration'));
 
   return drupal_get_form('filter_admin_order', $form);
 }
 
+/**
+ * Theme filter order configuration form.
+ */
 function theme_filter_admin_order($form) {
   $header = array(t('Name'), t('Weight'));
   $rows = array();
-  foreach (element_children($form['name']) as $id) {
+  foreach (element_children($form['names']) as $id) {
     // Don't take form control structures
-    if (is_array($form['name'][$id])) {
-      $rows[] = array(
-        form_render($form['name'][$id]),
-        form_render($form['weight'][$id]));
+    if (is_array($form['names'][$id])) {
+      $rows[] = array(form_render($form['names'][$id]), form_render($form['weights'][$id]));
     }
   }
 
   $output = theme('table', $header, $rows);
   $output .= form_render($form);
+
   return $output;
 }
 
 /**
- * Save the weights of filters in a format.
+ * Process filter order configuration form submission.
  */
-function filter_admin_order_save($format, $weights) {
-  foreach ($weights as $id => $weight) {
+function filter_admin_order_submit($form_id, $form_values) {
+  foreach ($form_values['weights'] as $id => $weight) {
     list($module, $delta) = explode('/', $id);
-    db_query("UPDATE {filters} SET weight = %d WHERE format = %d AND module = '%s' AND delta = %d", $weight, $format, $module, $delta);
+    db_query("UPDATE {filters} SET weight = %d WHERE format = %d AND module = '%s' AND delta = %d", $weight, $form_values['format'], $module, $delta);
   }
   drupal_set_message(t('The filter ordering has been saved.'));
 
-  cache_clear_all('filter:'. $format, true);
-  drupal_goto($_GET['q']);
+  cache_clear_all('filter:'. $form_values['format'], true);
 }
 
 /**

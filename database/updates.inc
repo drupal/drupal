@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.208 2006/03/04 18:09:12 dries Exp $
+// $Id: updates.inc,v 1.209 2006/03/04 18:12:10 dries Exp $
 
 function system_update_110() {
   $ret = array();
@@ -1668,4 +1668,9 @@ function system_update_175() {
     db_query("UPDATE {url_alias} SET dst = '%s', src = '%s' WHERE pid = %d", $path->dst, $path->src, $path->pid);
   }
   return array();
+}
+
+function system_update_176() {
+  $ret[] = update_sql('ALTER TABLE {filter_formats} ADD UNIQUE KEY (name)');
+  return $ret;
 }

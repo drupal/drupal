@@ -1,4 +1,4 @@
--- $Id: database.pgsql,v 1.170 2006/02/27 13:31:09 killes Exp $
+-- $Id: database.pgsql,v 1.171 2006/03/04 18:12:10 dries Exp $
 
 -- Do not show NOTICE: messages, it's hard to spot errors.
 set client_min_messages = 'warning';
@@ -293,7 +293,8 @@ CREATE TABLE filter_formats (
   name varchar(255) NOT NULL default '',
   roles varchar(255) NOT NULL default '',
   cache smallint NOT NULL default '0',
-  PRIMARY KEY (format)
+  PRIMARY KEY (format),
+  UNIQUE (name)
 );
 
 --
