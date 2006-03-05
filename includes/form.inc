@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.73 2006/03/04 18:03:57 dries Exp $
+// $Id: form.inc,v 1.74 2006/03/05 02:46:55 drumm Exp $
 
 /**
  * @defgroup form Form generation
@@ -170,34 +170,36 @@ function drupal_submit_form($form_id, $form, $callback = NULL) {
 
 function _form_validate($elements, $form_id = NULL) {
   /* Validate the current input */
-  if (!$elements['#validated'] && ($elements['#input'] || isset($form_id))) {
-    // An empty textfield returns '' so we use empty(). An empty checkbox
-    // and a textfield could return '0' and empty('0') returns TRUE so we
-    // need a special check for the '0' string.
-    if ($elements['#required'] && empty($elements['#value']) && $elements['#value'] !== '0') {
-      form_error($elements, t('%name field is required.', array('%name' => $elements['#title'])));
-    }
+  if (!$elements['#validated']) {
+    if ($elements['#input'] || isset($form_id)) {
+      // An empty textfield returns '' so we use empty(). An empty checkbox
+      // and a textfield could return '0' and empty('0') returns TRUE so we
+      // need a special check for the '0' string.
+      if ($elements['#required'] && empty($elements['#value']) && $elements['#value'] !== '0') {
+        form_error($elements, t('%name field is required.', array('%name' => $elements['#title'])));
+      }
 
-    // Add legal choice check if element has #options. Can be skipped, but then you must validate your own element.
-    if (isset($elements['#options']) && isset($elements['#value']) && !isset($elements['#DANGEROUS_SKIP_CHECK'])) {
-      if ($elements['#type'] == 'select') {
-        $options = form_options_flatten($elements['#options']);
-      }
-      else {
-        $options = $elements['#options'];
-      }
-      if (is_array($elements['#value'])) {
-        $value = $elements['#type'] == 'checkboxes' ? array_keys(array_filter($elements['#value'])) : $elements['#value'];
-        foreach ($value as $v) {
-          if (!isset($options[$v])) {
-            form_error($elements, t('An illegal choice has been detected. Please contact the site administrator.'));
-            watchdog('form', t('Illegal choice %choice in %name element.', array('%choice' => theme('placeholder', check_plain($v)), '%name' => theme_placeholder(empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title'])), WATCHDOG_ERROR));
+      // Add legal choice check if element has #options. Can be skipped, but then you must validate your own element.
+      if (isset($elements['#options']) && isset($elements['#value']) && !isset($elements['#DANGEROUS_SKIP_CHECK'])) {
+        if ($elements['#type'] == 'select') {
+          $options = form_options_flatten($elements['#options']);
+        }
+        else {
+          $options = $elements['#options'];
+        }
+        if (is_array($elements['#value'])) {
+          $value = $elements['#type'] == 'checkboxes' ? array_keys(array_filter($elements['#value'])) : $elements['#value'];
+          foreach ($value as $v) {
+            if (!isset($options[$v])) {
+              form_error($elements, t('An illegal choice has been detected. Please contact the site administrator.'));
+              watchdog('form', t('Illegal choice %choice in %name element.', array('%choice' => theme('placeholder', check_plain($v)), '%name' => theme_placeholder(empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title'])), WATCHDOG_ERROR));
+            }
           }
         }
-      }
-      elseif (!isset($options[$elements['#value']])) {
-        form_error($elements, t('An illegal choice has been detected. Please contact the site administrator.'));
-        watchdog('form', t('Illegal choice %choice in %name element.', array('%choice' => theme_placeholder(check_plain($v)), '%name' => theme('placeholder', empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title'])), WATCHDOG_ERROR));
+        elseif (!isset($options[$elements['#value']])) {
+          form_error($elements, t('An illegal choice has been detected. Please contact the site administrator.'));
+          watchdog('form', t('Illegal choice %choice in %name element.', array('%choice' => theme_placeholder(check_plain($v)), '%name' => theme('placeholder', empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title'])), WATCHDOG_ERROR));
+        }
       }
     }
 

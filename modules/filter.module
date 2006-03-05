@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.111 2006/03/04 18:12:10 dries Exp $
+// $Id: filter.module,v 1.112 2006/03/05 02:46:55 drumm Exp $
 
 /**
  * @file
@@ -802,6 +802,7 @@ function filter_form($value = FILTER_FORMAT_DEFAULT, $weight = NULL, $parents = 
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
       '#weight' => $weight,
+      '#validate' => array('filter_form_validate' => array()),
     );
     // Multiple formats available: display radio buttons with tips.
     foreach ($formats as $format) {
@@ -827,6 +828,16 @@ function filter_form($value = FILTER_FORMAT_DEFAULT, $weight = NULL, $parents = 
     );
   }
   return $form;
+}
+
+function filter_form_validate($form) {
+  foreach (element_children($form) as $key) {
+    if ($form[$key]['#value'] == $form[$key]['#return_value']) {
+      return;
+    }
+  }
+  form_error($form, t('An illegal choice has been detected. Please contact the site administrator.'));
+  watchdog('form', t('Illegal choice %choice in %name element.', array('%choice' => theme('placeholder', check_plain($v)), '%name' => theme_placeholder(empty($form['#title']) ? $form['#parents'][0] : $form['#title'])), WATCHDOG_ERROR));
 }
 
 /**
