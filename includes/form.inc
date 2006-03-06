@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.74 2006/03/05 02:46:55 drumm Exp $
+// $Id: form.inc,v 1.75 2006/03/06 14:46:51 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -171,7 +171,7 @@ function drupal_submit_form($form_id, $form, $callback = NULL) {
 function _form_validate($elements, $form_id = NULL) {
   /* Validate the current input */
   if (!$elements['#validated']) {
-    if ($elements['#input'] || isset($form_id)) {
+    if (isset($elements['#needs_validation'])) {
       // An empty textfield returns '' so we use empty(). An empty checkbox
       // and a textfield could return '0' and empty('0') returns TRUE so we
       // need a special check for the '0' string.
@@ -316,9 +316,11 @@ function form_builder($form_id, $form) {
       if ($posted) {
         if (isset($edit)) {
           $form['#value'] = $edit; // normal element
+          $form['#needs_validation'] = TRUE;
         }
         elseif (isset($form['#return_value'])) {
           $form['#value'] = '0'; // checkbox unchecked
+          $form['#needs_validation'] = TRUE;
         }
       }
       if (!isset($form['#value'])) {
