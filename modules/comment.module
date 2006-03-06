@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.438 2006/03/04 18:01:54 dries Exp $
+// $Id: comment.module,v 1.439 2006/03/06 18:09:17 dries Exp $
 
 /**
  * @file
@@ -203,7 +203,7 @@ function comment_link($type, $node = 0, $main = 0) {
         else {
           if ($node->comment == COMMENT_NODE_READ_WRITE) {
             if (user_access('post comments')) {
-              $links[] = l(t('add new comment'), "comment/reply/$node->nid", array('title' => t('Add a new comment to this page.')));
+              $links[] = l(t('add new comment'), "comment/reply/$node->nid", array('title' => t('Add a new comment to this page.')), NULL, 'comment-form');
             }
             else {
               $links[] = theme('comment_post_forbidden', $node->nid);
