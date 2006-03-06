@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.133 2006/02/21 18:46:54 dries Exp $
+// $Id: locale.module,v 1.134 2006/03/06 20:50:39 dries Exp $
 
 /**
  * @file
@@ -167,7 +167,7 @@ function locale($string) {
       // We have no such translation
       if ($obj = db_fetch_object($result)) {
         if ($locale) {
-          db_query("INSERT INTO {locales_target} (lid, locale) VALUES (%d, '%s')", $obj->lid, $locale);
+          db_query("INSERT INTO {locales_target} (lid, locale, translation) VALUES (%d, '%s', '')", $obj->lid, $locale);
         }
       }
       // We have no such source string
@@ -175,7 +175,7 @@ function locale($string) {
         db_query("INSERT INTO {locales_source} (location, source) VALUES ('%s', '%s')", request_uri(), $string);
         if ($locale) {
           $lid = db_fetch_object(db_query("SELECT lid FROM {locales_source} WHERE source = '%s'", $string));
-          db_query("INSERT INTO {locales_target} (lid, locale) VALUES (%d, '%s')", $lid->lid, $locale);
+          db_query("INSERT INTO {locales_target} (lid, locale, translation) VALUES (%d, '%s', '')", $lid->lid, $locale);
         }
       }
       // Clear locale cache in DB
