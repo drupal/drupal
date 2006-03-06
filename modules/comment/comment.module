@@ -1003,6 +1003,10 @@ function comment_admin_overview_submit($form_id, $edit) {
         db_query($query, $cid);
         $comment = _comment_load($cid);
         _comment_update_node_statistics($comment->nid);
+        // Allow modules to respond to the updating of a comment.
+        comment_invoke_comment($comment, $edit['operation']);
+        // Add an entry to the watchdog log.
+        watchdog('content', t('Comment: updated %subject.', array('%subject' => theme('placeholder', $comment->subject))), WATCHDOG_NOTICE, l(t('view'), 'node/'. $comment->nid, NULL, NULL, 'comment-'. $comment->cid));
       }
     }
     cache_clear_all();
