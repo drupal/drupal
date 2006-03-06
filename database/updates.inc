@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.210 2006/03/04 22:38:51 unconed Exp $
+// $Id: updates.inc,v 1.211 2006/03/06 14:43:11 dries Exp $
 
 function system_update_110() {
   $ret = array();
@@ -1671,6 +1671,6 @@ function system_update_175() {
 }
 
 function system_update_176() {
-  $ret[] = update_sql('ALTER TABLE {filter_formats} ADD UNIQUE KEY (name)');
+  $ret[] = update_sql('ALTER TABLE {filter_formats} ADD UNIQUE (name)');
   return $ret;
 }
