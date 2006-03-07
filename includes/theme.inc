@@ -53,7 +53,7 @@ function init_theme() {
 
   // If we're using a style, load its appropriate theme,
   // which is stored in the style's description field.
-  // Also load the stylesheet using drupal_set_html_head().
+  // Also load the stylesheet using theme_add_style().
   // Otherwise, load the theme.
   if (strpos($themes[$theme]->filename, '.css')) {
     // File is a style; loads its CSS.
@@ -70,12 +70,12 @@ function init_theme() {
   }
 
   if (strpos($themes[$theme]->filename, '.theme')) {
-    // file is a theme; include it
+   // file is a theme; include it
    include_once './' . $themes[$theme]->filename;
   }
   elseif (strpos($themes[$theme]->description, '.engine')) {
     // file is a template; include its engine
-   include_once './' . $themes[$theme]->description;
+    include_once './' . $themes[$theme]->description;
     $theme_engine = basename($themes[$theme]->description, '.engine');
     if (function_exists($theme_engine .'_init')) {
       call_user_func($theme_engine .'_init', $themes[$theme]);
