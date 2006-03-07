@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.297 2006/03/04 17:49:21 dries Exp $
+// $Id: system.module,v 1.298 2006/03/07 11:28:22 dries Exp $
 
 /**
  * @file
@@ -173,27 +173,22 @@ function system_user($type, $edit, &$user, $category = NULL) {
       if (count($themes) > 1) {
         ksort($themes);
 
-        // Reset to follow site default theme if user selects the site default
-        if ($key == variable_get('theme_default', 'bluemarine')) {
-          $key = '';
-          if ($edit['theme'] == variable_get('theme_default', 'bluemarine')) {
-            $edit['theme'] = '';
-          }
-        }
-
         $form['themes'] = array(
           '#type' => 'fieldset', '#title' => t('Theme configuration'), '#description' => t('Selecting a different theme will change the look and feel of the site.'), '#weight' => 2, '#collapsible' => TRUE, '#theme' => 'system_user');
 
         foreach ($themes as $info) {
+          // For the default theme, revert to an empty string so the user's theme updates when the site theme is changed.
+          $info->key = $info->name == variable_get('theme_default', 'bluemarine') ? '' : $info->name;
+
           $info->screenshot = dirname($info->filename) . '/screenshot.png';
           $screenshot = file_exists($info->screenshot) ? theme('image', $info->screenshot, t('Screenshot for %theme theme', array('%theme' => $info->name)), '', array('class' => 'screenshot'), false) : t('no screenshot');
 
-         $form['themes'][$info->name]['screenshot'] = array('#type' => 'markup', '#value' => $screenshot);
-          $form['themes'][$info->name]['description'] = array('#type' => 'item', '#title' => $info->name,  '#value' => dirname($info->filename));
-          $options[$info->name] = '';
+          $form['themes'][$info->key]['screenshot'] = array('#type' => 'markup', '#value' => $screenshot);
+          $form['themes'][$info->key]['description'] = array('#type' => 'item', '#title' => $info->name,  '#value' => dirname($info->filename) . ($info->name == variable_get('theme_default', 'bluemarine') ? t('<br /> <em>(site default theme)</em>') : ''));
+          $options[$info->key] = '';
         }
 
-        $form['themes']['theme'] = array('#type' => 'radios', '#options' => $options, '#default_value' => $edit['theme'] ? $edit['theme'] : variable_get('theme_default', 'bluemarine'));
+        $form['themes']['theme'] = array('#type' => 'radios', '#options' => $options, '#default_value' => $edit['theme'] ? $edit['theme'] : '');
       }
     }
 
