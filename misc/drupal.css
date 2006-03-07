@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.142 2006/02/28 21:10:04 unconed Exp $ */
+/* $Id: drupal.css,v 1.143 2006/03/07 11:36:49 dries Exp $ */
 
 /*
 ** HTML elements
@@ -246,6 +246,9 @@ tr.odd .form-item, tr.even .form-item {
 }
 .book-navigation .page-next {
   text-align: left;
+}
+.archive {
+  margin: 1em 0 1em 0;
 }
 .calendar .row-week td a {
   display: block;

@@ -1,5 +1,5 @@
 <?php
-// $Id: archive.module,v 1.86 2006/02/21 18:46:54 dries Exp $
+// $Id: archive.module,v 1.87 2006/03/07 11:36:49 dries Exp $
 
 /**
  * @file
@@ -28,25 +28,51 @@ function archive_help($section) {
 }
 
 /**
+ * Implementation of hook_menu().
+ */
+function archive_menu($may_cache) {
+  $items = array();
+
+  if ($may_cache) {
+    $items[] = array('path' => 'archive',
+      'title' => t('archives'),
+      'access' => user_access('access content'),
+      'callback' => 'archive_page',
+      'type' => MENU_SUGGESTED_ITEM);
+  }
+  return $items;
+}
+
+/**
+ * Implementation of hook_block().
+ *
+ * Generates a calendar for the current month, with links to the archives
+ * for each day.
+ */
+function archive_block($op = 'list', $delta = 0) {
+  if ($op == 'list') {
+    $blocks[0]['info'] = t('Calendar to browse archives');
+    return $blocks;
+  }
+  else if ($op == 'view' && user_access('access content')) {
+    $block['subject'] = t('Browse archives');
+    $block['content'] = archive_calendar();
+    return $block;
+  }
+}
+
+/**
  * Generates a monthly calendar, for display in the archive block.
  */
-function archive_calendar($original = 0) {
+function archive_calendar() {
   global $user;
-  $edit = $_POST['edit'];
 
   // Extract today's date:
   $start_of_today = mktime(0, 0, 0, date('n', time()), date('d', time()), date('Y', time())) + $user->timezone;
   $end_of_today = mktime(23, 59, 59, date('n', time()), date('d', time()), date('Y', time())) + $user->timezone;
 
   // Extract the requested date:
-  if ($edit['year'] && $edit['month'] && $edit['day']) {
-    $year = $edit['year'];
-    $month = $edit['month'];
-    $day = $edit['day'];
-
-    $requested = mktime(0, 0, 0, $month, $day, $year) + $user->timezone;
-  }
-  else if (arg(0) == 'archive' && arg(3)) {
+  if (arg(0) == 'archive' && arg(3)) {
     $year = arg(1);
     $month = arg(2);
     $day = arg(3);
@@ -189,86 +215,77 @@ function archive_calendar($original = 0) {
 }
 
 /**
- * Implementation of hook_block().
- *
- * Generates a calendar for the current month, with links to the archives
- * for each day.
- */
-function archive_block($op = 'list', $delta = 0) {
-  if ($op == 'list') {
-    $blocks[0]['info'] = t('Calendar to browse archives');
-    return $blocks;
-  }
-  else if ($op == 'view' && user_access('access content')) {
-    $block['subject'] = t('Browse archives');
-    $block['content'] = archive_calendar();
-    return $block;
-  }
-}
-
-/**
- * Implementation of hook_menu().
- */
-function archive_menu($may_cache) {
-  $items = array();
-
-  if ($may_cache) {
-    $items[] = array('path' => 'archive', 'title' => t('archives'),
-      'access' => user_access('access content'),
-      'callback' => 'archive_page',
-      'type' => MENU_SUGGESTED_ITEM);
-  }
-  return $items;
-}
-
-/**
  * Menu callback; lists all nodes posted on a given date.
  */
 function archive_page($year = 0, $month = 0, $day = 0) {
   global $user;
 
-  $op = $_POST['op'];
-  $edit = $_POST['edit'];
-
-  if ($op == t('Show')) {
-    $year = $edit['year'];
-    $month = $edit['month'];
-    $day = $edit['day'];
-  }
-
   $date = mktime(0, 0, 0, $month, $day, $year) - $user->timezone;
   $date_end = mktime(0, 0, 0, $month, $day + 1, $year) - $user->timezone;
 
-  // Prepare the values of the form fields.
-  $years = drupal_map_assoc(range(2000, 2010));
-  $months = array(1 => t('January'), 2 => t('February'), 3 => t('March'), 4 => t('April'), 5 => t('May'), 6 => t('June'), 7 => t('July'), 8 => t('August'), 9 => t('September'), 10 => t('October'), 11 => t('November'), 12 => t('December'));
-  $days = drupal_map_assoc(range(0, 31));
-
-  $form['year']  = array('#type' => 'select', '#default_value' => ($year ? $year : date('Y')), '#options' => $years);
-  $form['month'] = array('#type' => 'select', '#default_value' => ($month ? $month : date('m')), '#options' => $months);
-  $form['day']   = array('#type' => 'select', '#default_value' => ($day ? $day : date('d')), '#options' => $days);
-  $form['show']  = array('#type' => 'submit', '#value' => t('Show'));
-
-  $output = drupal_get_form('archive_dates', $form);
+  // Display form.
+  $output = archive_browse_form($year, $month, $day);
 
   if ($year && $month && $day) {
     // Fetch nodes for the selected date, if one was specified.
     $sql = 'SELECT n.nid, n.created FROM {node} n WHERE n.status = 1 AND n.created > %d AND n.created < %d ORDER BY n.created';
     $sql = db_rewrite_sql($sql);
     $result = db_query_range($sql, $date, $date_end, 0, 20);
-
-    while ($nid = db_fetch_object($result)) {
-      $output .= node_view(node_load($nid->nid), 1);
+    if (db_num_rows($result) > 0) {
+      while ($nid = db_fetch_object($result)) {
+        $output .= node_view(node_load($nid->nid), 1);
+      }
+    }
+    else {
+      $output .= theme('box', t('No posts found.'), '');
     }
   }
+  else {
+    $output .= theme('box', t('No posts found.'), '');
+  }
+
   return $output;
+}
+
+/**
+ * Generate a form that retrieves archives for a certain date.
+ */
+function archive_browse_form($year, $month, $day) {
+  // Prepare the values of the form fields.
+  $years = drupal_map_assoc(range(2000, 2010));
+  $months = array(1 => t('January'), 2 => t('February'), 3 => t('March'), 4 => t('April'), 5 => t('May'), 6 => t('June'), 7 => t('July'), 8 => t('August'), 9 => t('September'), 10 => t('October'), 11 => t('November'), 12 => t('December'));
+  $days = drupal_map_assoc(range(1, 31));
+
+  $form['year']  = array('#type' => 'select',
+    '#default_value' => ($year ? $year : date('Y')),
+    '#options' => $years,
+  );
+  $form['month'] = array('#type' => 'select',
+    '#default_value' => ($month ? $month : date('m')),
+    '#options' => $months,
+  );
+  $form['day']   = array('#type' => 'select',
+    '#default_value' => ($day ? $day : date('d')),
+    '#options' => $days,
+  );
+  $form['show']  = array('#type' => 'submit',
+    '#value' => t('Show'),
+  );
+
+  return drupal_get_form('archive_browse_form', $form);
+}
+
+/**
+ * Process archive browse form submission.
+ */
+function archive_browse_form_submit($form_id, $form_values) {
+  return('archive/'. $form_values['year'] .'/'. $form_values['month'] .'/'. $form_values['day']);
 }
 
 /**
  * Form theme function; displays the archive date navigation form inline.
  */
-function theme_archive_dates($form) {
-  $output = '<div class="container-inline">' . form_render($form) . '</div>';
+function theme_archive_browse_form($form) {
+  $output = '<div class="container-inline archive">' . form_render($form) . '</div>';
   return $output;
 }
-
