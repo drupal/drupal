@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.64 2006/03/02 08:46:50 dries Exp $
+// $Id: file.inc,v 1.65 2006/03/07 19:14:30 dries Exp $
 
 /**
  * @file
@@ -130,42 +130,120 @@ function file_check_path(&$path) {
   return false;
 }
 
+
 /**
- * Check if $source is a valid file upload. If so, process $_FILES
- * and return its contents as an object.
+ * Check if $source is a valid file upload. If so, move the file to Drupal's tmp dir
+ * and return it as an object.
+ *
+ * The use of SESSION['file_uploads'] should probably be externalized to upload.module
+ *
+ * @todo Rename file_check_upload to file_prepare upload.
+ * @todo Refactor or merge file_save_upload.
+ * @todo Extenalize SESSION['file_uploads'] to modules.
  *
  * @param $source
+ * @return false for an invalid file or upload. A file object for valid uploads/files.
+ *
  */
-function file_check_upload($source) {
+
+function file_check_upload($source = 'upload') {
+  // Cache for uploaded files. Since the data in _FILES is modified
+  // by this function, we cache the result.
+  static $upload_cache;
+
+  // Test source to see if it is an object.
   if (is_object($source)) {
+
+    // Validate the file path if an object was passed in instead of
+    // an upload key.
     if (is_file($source->filepath)) {
       return $source;
     }
+    else {
+      return false;
+    }
   }
-  elseif ($_FILES["edit"]["name"][$source] && is_uploaded_file($_FILES["edit"]["tmp_name"][$source])) {
+
+  // Return cached objects without processing since the file will have
+  // already been processed and the paths in _FILES will be invalid.
+  if (isset($upload_cache[$source])) {
+    return $upload_cache[$source];
+  }
+
+  // If a file was uploaded, process it.
+  if ($_FILES["edit"]["name"][$source] && is_uploaded_file($_FILES["edit"]["tmp_name"][$source])) {
+
+    // Check for file upload errors and return false if a
+    // lower level system error occurred.
+    switch ($_FILES["edit"]["error"][$source]) {
+
+      // We are not actually using the constants since they weren't introduced
+      // until php 4.3.0.
+
+      // UPLOAD_ERR_OK: File uploaded successfully
+      case 0:
+        break;
+
+       // UPLOAD_ERR_INI_SIZE: File size exceeded php.ini value
+      case 1:
+      // UPLOAD_ERR_FORM_SIZE: File size exceeded MAX_FILE_SIZE form value
+      case 2:
+        drupal_set_message(t('The file %file could not be saved, because it exceeds the maximum allowed size for uploads.', array('%file' => theme('placeholder', $source))), 'error');
+        return 0;
+
+      // UPLOAD_ERR_PARTIAL: File was only partially uploaded
+      case 3:
+      // UPLOAD_ERR_NO_FILE: No file was uploaded
+      case 4:
+        drupal_set_message(t('The file %file could not be saved, because the upload did not complete.', array('%file' => theme('placeholder', $source))), 'error');
+        return 0;
+
+      // Unknown error
+      default:
+        drupal_set_message(t('The file %file could not be saved. An unknown error has occurred.', array('%file' => theme('placeholder', $source))),'error');
+        return 0;
+    }
+
+    // Begin building file object.
     $file = new StdClass();
     $file->filename = trim(basename($_FILES["edit"]["name"][$source]), '.');
-    $file->filepath = $_FILES["edit"]["tmp_name"][$source];
+
+    // Create temporary name/path for newly uploaded files.
+    $file->filepath = tempnam(file_directory_temp(), 'tmp_');
+
     $file->filemime = $_FILES["edit"]["type"][$source];
 
+    // Rename potentially executable files, to help prevent exploits.
     if (((substr($file->filemime, 0, 5) == 'text/' || strpos($file->filemime, 'javascript')) && (substr($file->filename, -4) != '.txt')) || preg_match('/\.(php|pl|py|cgi|asp)$/i', $file->filename)) {
       $file->filemime = 'text/plain';
-      rename($file->filepath, $file->filepath .'.txt');
       $file->filepath .= '.txt';
       $file->filename .= '.txt';
     }
 
-    $file->error = $_FILES["edit"]["error"][$source];
+    // Move uploaded files from php's upload_tmp_dir to Drupal's file temp.
+    // This overcomes open_basedir restrictions for future file operations.
+    if (!move_uploaded_file($_FILES["edit"]["tmp_name"][$source], $file->filepath)) {
+      drupal_set_message(t('File upload error. Could not move uploaded file.'));
+      watchdog('file', t('Upload Error. Could not move uploaded file(%file) to destination(%destination).', array('%file' => theme('placeholder', $_FILES["edit"]["tmp_name"][$source]), '%destination' => theme('placeholder', $file->filepath))));
+      return false;
+    }
+
     $file->filesize = $_FILES["edit"]["size"][$source];
     $file->source = $source;
+
+    // Add processed file to the cache.
+    $upload_cache[$source] = $file;
     return $file;
   }
+
   else {
     // In case of previews return previous file object.
     if (file_exists($_SESSION['file_uploads'][$source]->filepath)) {
       return $_SESSION['file_uploads'][$source];
     }
   }
+  // If nothing was done, return false.
+  return false;
 }
 
 /**
@@ -372,9 +450,12 @@ function file_delete($path) {
  *   when in use, but when false append a _X to the filename.
  * @return An object containing file info or 0 in case of error.
  */
-function file_save_upload($source, $dest = 0, $replace = FILE_EXISTS_RENAME) {
-  // Make sure $source exists in $_FILES.
+function file_save_upload($source, $dest = false, $replace = FILE_EXISTS_RENAME) {
+  // Make sure $source exists && is valid.
   if ($file = file_check_upload($source)) {
+
+    // This should be refactored, file_check_upload has already
+    // moved the file to the temprary folder.
     if (!$dest) {
       $dest = file_directory_temp();
       $temporary = 1;
@@ -382,23 +463,6 @@ function file_save_upload($source, $dest = 0, $replace = FILE_EXISTS_RENAME) {
         // If this file was uploaded by this user before replace the temporary copy.
         $replace = FILE_EXISTS_REPLACE;
       }
-    }
-
-    // Check for file upload errors.
-    switch ($file->error) {
-      case 0: // UPLOAD_ERR_OK: File uploaded successfully
-        break;
-      case 1: // UPLOAD_ERR_INI_SIZE: File size exceeded php.ini value
-      case 2: // UPLOAD_ERR_FORM_SIZE: File size exceeded MAX_FILE_SIZE form value
-        drupal_set_message(t('The file %file could not be saved, because it exceeds the maximum allowed size for uploads.', array('%file' => theme('placeholder', $source))), 'error');
-        return 0;
-      case 3: // UPLOAD_ERR_PARTIAL: File was only partially uploaded
-      case 4: // UPLOAD_ERR_NO_FILE: No file was uploaded
-        drupal_set_message(t('The file %file could not be saved, because the upload did not complete.', array('%file' => theme('placeholder', $source))), 'error');
-        return 0;
-      default: // Unknown error
-        drupal_set_message(t('The file %file could not be saved. An unknown error has occurred.', array('%file' => theme('placeholder', $source))),'error');
-        return 0;
     }
 
     unset($_SESSION['file_uploads'][is_object($source) ? $source->source : $source]);
