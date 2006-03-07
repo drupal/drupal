@@ -247,6 +247,9 @@ tr.odd .form-item, tr.even .form-item {
 .book-navigation .page-next {
   text-align: left;
 }
+.archive {
+  margin: 1em 0 1em 0;
+}
 .calendar .row-week td a {
   display: block;
 }
