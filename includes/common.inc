@@ -983,11 +983,11 @@ function url($path = NULL, $query = NULL, $fragment = NULL, $absolute = FALSE) {
  */
 function drupal_attributes($attributes = array()) {
   if (is_array($attributes)) {
-    $t = array();
+    $t = '';
     foreach ($attributes as $key => $value) {
-      $t[] = $key .'="'. check_plain($value) .'"';
+      $t .= " $key=".'"'. check_plain($value) .'"';
     }
-    return ' '. implode(' ', $t);
+    return $t;
   }
 }
 
