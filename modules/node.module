@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.610 2006/02/28 21:10:04 unconed Exp $
+// $Id: node.module,v 1.611 2006/03/07 19:38:19 dries Exp $
 
 /**
  * @file
@@ -156,7 +156,7 @@ function node_teaser($body, $format = NULL) {
   $delimiter = strpos($body, '<!--break-->');
 
   // If the size is zero, and there is no delimiter, the entire body is the teaser.
-  if ($size == 0 && $delimiter == 0) {
+  if ($size == 0 && $delimiter === false) {
     return $body;
   }
 
@@ -171,7 +171,7 @@ function node_teaser($body, $format = NULL) {
   }
 
   // If a valid delimiter has been specified, use it to chop of the teaser.
-  if ($delimiter > 0) {
+  if ($delimiter >= 0) {
     return substr($body, 0, $delimiter);
   }
 
