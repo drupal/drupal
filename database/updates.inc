@@ -1688,7 +1688,7 @@ function system_update_177() {
     if ($admin_setting = variable_get('user_mail_' . $message_id, FALSE)) {
       $admin_setting = '<pre>'. $admin_setting .'</pre>'; //else it renders horrible
       watchdog('legacy', $admin_setting);
-      $last = db_fetch_object(db_query('SELECT max(wid) wid FROM {watchdog}'));
+      $last = db_fetch_object(db_query('SELECT max(wid) AS wid FROM {watchdog}'));
       variable_del('user_mail_'. $message_id); //deleting is requird, because _user_mail_text() checks for existance.
       $i++;
       $ret[$i]['query'] = l(t('The mail template %message_id is reset to the default, and the old one is saved.', array('%message_id' => 'user_mail_'. $message_id)),'admin/logs/event/'. $last->wid);
