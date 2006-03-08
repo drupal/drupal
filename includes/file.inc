@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.65 2006/03/07 19:14:30 dries Exp $
+// $Id: file.inc,v 1.66 2006/03/08 23:42:55 killes Exp $
 
 /**
  * @file
@@ -23,8 +23,8 @@ define('FILE_EXISTS_ERROR', 2);
 /**
  * Create the download path to a file.
  *
- * @param $path Path to the file to generate URL for
- * @return URL pointing to the file
+ * @param $path A string containing the path of the file to generate URL for.
+ * @return A string containing a URL that can be used to download the file.
  */
 function file_create_url($path) {
   if (strpos($path, file_directory_path()) !== false) {
@@ -39,13 +39,14 @@ function file_create_url($path) {
 }
 
 /**
- * Make sure the destination is a complete path and resides in the
- * file system directory, if it is not prepend the
- * file system directory.
+ * Make sure the destination is a complete path and resides in the file system
+ * directory, if it is not prepend the file system directory.
  *
- * @param $dest Path to verify
- * @return Path to file with file system directory appended if necessary.
- *         Returns FALSE if the path is invalid (i.e. outside the configured 'files'-directory).
+ * @param $dest A string containing the path to verify. If this value is
+ *   omitted, Drupal's 'files' directory will be used.
+ * @return A string containing the path to file, with file system directory
+ *   appended if necessary, or FALSE if the path is invalid (i.e. outside the
+ *   configured 'files' or temp directories).
  */
 function file_create_path($dest = 0) {
   $file_path = file_directory_path();
@@ -72,9 +73,13 @@ function file_create_path($dest = 0) {
  * Check that the directory exists and is writable. Directories need to
  * have execute permissions to be considered a directory by FTP servers, etc.
  *
- * @param $directory Path to extract and verify directory for.
- * @param $mode Try to create the directory if it does not exist.
- * @param $form_item Optional name for a field item to attach potential errors to.
+ * @param $directory A string containing the name of a directory path.
+ * @param $mode A Boolean value to indicate if the directory should be created
+ *   if it does not exist or made writable if it is read-only.
+ * @param $form_item An optional string containing the name of a form item that
+ *   any errors will be attached to. This is useful for settings forms that
+ *   require the user to specify a writeable directory. If it can't be made to
+ *   work, a form error will be set preventing them from saving the settings.
  * @return False when directory not found, or true when directory exists.
  */
 function file_check_directory(&$directory, $mode = 0, $form_item = NULL) {
@@ -112,7 +117,10 @@ function file_check_directory(&$directory, $mode = 0, $form_item = NULL) {
 /**
  * Checks path to see if it is a directory, or a dir/file.
  *
- * @param $path
+ * @param $path A string containing a file path. This will be set to the
+ *   directory's path.
+ * @return If the directory is not in a Drupal writeable directory, FALSE is
+ *   returned. Otherwise, the base name of the path is returned.
  */
 function file_check_path(&$path) {
   // Check if path is a directory.
@@ -141,7 +149,7 @@ function file_check_path(&$path) {
  * @todo Refactor or merge file_save_upload.
  * @todo Extenalize SESSION['file_uploads'] to modules.
  *
- * @param $source
+ * @param $source An upload source (the name of the upload form item), or a file
  * @return false for an invalid file or upload. A file object for valid uploads/files.
  *
  */
@@ -288,6 +296,7 @@ function file_check_location($source, $directory = 0) {
  *   This parameter will contain the resulting destination filename in case of
  *   success.
  * @param $dest A string containing the directory $source should be copied to.
+ *   If this value is omitted, Drupal's 'files' directory will be used.
  * @param $replace Replace behavior when the destination file already exists.
  *   - FILE_EXISTS_REPLACE - Replace the existing file
  *   - FILE_EXISTS_RENAME - Append _{incrementing number} until the filename is unique
@@ -388,6 +397,7 @@ function file_copy(&$source, $dest = 0, $replace = FILE_EXISTS_RENAME) {
  *   This parameter will contain the resulting destination filename in case of
  *   success.
  * @param $dest A string containing the directory $source should be copied to.
+ *   If this value is omitted, Drupal's 'files' directory will be used.
  * @param $replace Replace behavior when the destination file already exists.
  *   - FILE_EXISTS_REPLACE - Replace the existing file
  *   - FILE_EXISTS_RENAME - Append _{incrementing number} until the filename is unique
@@ -409,6 +419,14 @@ function file_move(&$source, $dest = 0, $replace = FILE_EXISTS_RENAME) {
   return 0;
 }
 
+/**
+ * Create a full file path from a directory and filename. If a file with the
+ * specified name already exists, an alternative will be used.
+ *
+ * @param $basename string filename
+ * @param $directory string directory
+ * @return
+ */
 function file_create_filename($basename, $directory) {
   $dest = $directory .'/'. $basename;
 
@@ -431,6 +449,12 @@ function file_create_filename($basename, $directory) {
   return $dest;
 }
 
+/**
+ * Delete a file.
+ *
+ * @param $path A string containing a file path.
+ * @return True for success, false for failure.
+ */
 function file_delete($path) {
   if (is_file($path)) {
     return unlink($path);
@@ -478,10 +502,14 @@ function file_save_upload($source, $dest = false, $replace = FILE_EXISTS_RENAME)
 }
 
 /**
- * Save a string to the specified destination
+ * Save a string to the specified destination.
  *
- * @param $data A string containing the contents of the file
- * @param $dest A string containing the destination location
+ * @param $data A string containing the contents of the file.
+ * @param $dest A string containing the destination location.
+ * @param $replace Replace behavior when the destination file already exists.
+ *   - FILE_EXISTS_REPLACE - Replace the existing file
+ *   - FILE_EXISTS_RENAME - Append _{incrementing number} until the filename is unique
+ *   - FILE_EXISTS_ERROR - Do nothing and return false.
  *
  * @return A string containing the resulting filename or 0 on error
  */
@@ -536,7 +564,10 @@ function file_transfer($source, $headers) {
 }
 
 /**
- * Call modules to find out if a file is accessible for a given user.
+ * Call modules that implement hook_file_download() to find out if a file is
+ * accessible for a given user. If a module returns an array of headers, the
+ * download will start. If a module denies it, drupal_access_denied() will be
+ * called. If no module responds then drupal_not_found() will be called.
  */
 function file_download() {
   $file = $_GET['file'];
@@ -618,6 +649,8 @@ function file_scan_directory($dir, $mask, $nomask = array('.', '..', 'CVS'), $ca
 
 /**
  * Determine the default temporary directory.
+ *
+ * @return A string containing a temp directory.
  */
 function file_directory_temp() {
   $temporary_directory = variable_get('file_directory_temp', NULL);
@@ -657,6 +690,8 @@ function file_directory_temp() {
 
 /**
  * Determine the default 'files' directory.
+ *
+ * @return A string containing the path to Drupal's 'files' directory.
  */
 function file_directory_path() {
   return variable_get('file_directory_path', 'files');
