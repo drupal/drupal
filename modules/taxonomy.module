@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.263 2006/03/02 08:27:59 dries Exp $
+// $Id: taxonomy.module,v 1.264 2006/03/08 15:13:20 dries Exp $
 
 /**
  * @file
@@ -655,7 +655,7 @@ function taxonomy_form_alter($form_id, &$form) {
  * Find all terms associated to the given node, within one vocabulary.
  */
 function taxonomy_node_get_terms_by_vocabulary($nid, $vid, $key = 'tid') {
-  $result = db_query(db_rewrite_sql('SELECT t.tid, t.* FROM {term_data} t, {term_node} r WHERE t.tid = r.tid AND t.vid = %d AND r.nid = %d ORDER BY weight', 't', 'tid'), $vid, $nid);
+  $result = db_query(db_rewrite_sql('SELECT t.tid, t.* FROM {term_data} t INNER JOIN {term_node} r ON r.tid = t.tid WHERE t.vid = %d AND r.nid = %d ORDER BY weight', 't', 'tid'), $vid, $nid);
   $terms = array();
   while ($term = db_fetch_object($result)) {
     $terms[$term->$key] = $term;
@@ -789,7 +789,7 @@ function taxonomy_get_related($tid, $key = 'tid') {
  */
 function taxonomy_get_parents($tid, $key = 'tid') {
   if ($tid) {
-    $result = db_query(db_rewrite_sql('SELECT t.tid, t.* FROM {term_hierarchy} h, {term_data} t WHERE h.parent = t.tid AND h.tid = %d ORDER BY weight, name', 't', 'tid'), $tid);
+    $result = db_query(db_rewrite_sql('SELECT t.tid, t.* FROM {term_data} t INNER JOIN {term_hierarchy} h ON h.parent = t.tid WHERE h.tid = %d ORDER BY weight, name', 't', 'tid'), $tid);
     $parents = array();
     while ($parent = db_fetch_object($result)) {
       $parents[$parent->$key] = $parent;
@@ -822,10 +822,10 @@ function taxonomy_get_parents_all($tid) {
  */
 function taxonomy_get_children($tid, $vid = 0, $key = 'tid') {
   if ($vid) {
-    $result = db_query(db_rewrite_sql('SELECT t.* FROM {term_hierarchy} h, {term_data} t WHERE t.vid = %d AND h.tid = t.tid AND h.parent = %d ORDER BY weight, name', 't', 'tid'), $vid, $tid);
+    $result = db_query(db_rewrite_sql('SELECT t.* FROM {term_data} t INNER JOIN {term_hierarchy} h ON h.tid = t.tid WHERE t.vid = %d AND h.parent = %d ORDER BY weight, name', 't', 'tid'), $vid, $tid);
   }
   else {
-    $result = db_query(db_rewrite_sql('SELECT t.* FROM {term_hierarchy} h, {term_data} t WHERE h.tid = t.tid AND parent = %d ORDER BY weight, name', 't', 'tid'), $tid);
+    $result = db_query(db_rewrite_sql('SELECT t.* FROM {term_data} t INNER JOIN {term_hierarchy} h ON h.tid = t.tid WHERE parent = %d ORDER BY weight, name', 't', 'tid'), $tid);
   }
   $children = array();
   while ($term = db_fetch_object($result)) {
@@ -864,7 +864,7 @@ function taxonomy_get_tree($vid, $parent = 0, $depth = -1, $max_depth = NULL) {
   if (!isset($children[$vid])) {
     $children[$vid] = array();
 
-    $result = db_query(db_rewrite_sql('SELECT t.tid, t.*, parent FROM {term_data} t, {term_hierarchy} h WHERE t.tid = h.tid AND t.vid = %d ORDER BY weight, name', 't', 'tid'), $vid);
+    $result = db_query(db_rewrite_sql('SELECT t.tid, t.*, parent FROM {term_data} t INNER JOIN  {term_hierarchy} h ON t.tid = h.tid WHERE t.vid = %d ORDER BY weight, name', 't', 'tid'), $vid);
     while ($term = db_fetch_object($result)) {
       $children[$vid][$term->parent][] = $term->tid;
       $parents[$vid][$term->tid][] = $term->parent;
@@ -927,7 +927,7 @@ function taxonomy_term_count_nodes($tid, $type = 0) {
       $result = db_query(db_rewrite_sql('SELECT t.tid, COUNT(n.nid) AS c FROM {term_node} t INNER JOIN {node} n ON t.nid = n.nid WHERE n.status = 1 GROUP BY t.tid'));
     }
     else {
-      $result = db_query(db_rewrite_sql("SELECT t.tid, COUNT(n.nid) AS c FROM {term_node} t, {node} n WHERE t.nid = n.nid AND n.status = 1 AND n.type = '%s' GROUP BY t.tid"), $type);
+      $result = db_query(db_rewrite_sql("SELECT t.tid, COUNT(n.nid) AS c FROM {term_node} t INNER JOIN {node} n ON t.nid = n.nid WHERE n.status = 1 AND n.type = '%s' GROUP BY t.tid"), $type);
     }
     while ($term = db_fetch_object($result)) {
       $count[$type][$term->tid] = $term->c;

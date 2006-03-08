@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.316 2006/03/07 19:03:02 dries Exp $
+// $Id: forum.module,v 1.317 2006/03/08 15:13:20 dries Exp $
 
 /**
  * @file
@@ -686,7 +686,7 @@ function forum_get_forums($tid = 0) {
     // This query does not use full ANSI syntax since MySQL 3.x does not support
     // table1 INNER JOIN table2 INNER JOIN table3 ON table2_criteria ON table3_criteria
     // used to join node_comment_statistics to users.
-    $sql = "SELECT n.nid, l.last_comment_timestamp, IF(l.last_comment_uid != 0, cu.name, l.last_comment_name) as last_comment_name, l.last_comment_uid FROM {node} n, {node_comment_statistics} l, {users} cu, {term_node} r WHERE  n.nid = r.nid AND r.tid = %d AND n.status = 1 AND n.type = 'forum' AND l.last_comment_uid = cu.uid AND n.nid = l.nid ORDER BY l.last_comment_timestamp DESC";
+    $sql = "SELECT n.nid, f.tid, n.title, n.sticky, u.name, u.uid, n.created AS timestamp, n.comment AS comment_mode, l.last_comment_timestamp, IF(l.last_comment_uid != 0, cu.name, l.last_comment_name) AS last_comment_name, l.last_comment_uid, l.comment_count AS num_comments FROM {node} n INNER JOIN {users} u ON n.uid = u.uid INNER JOIN {term_node} r ON n.nid = r.nid INNER JOIN {forum} f ON n.vid = f.vid INNER JOIN {node_comment_statistics} l ON n.nid = l.nid INNER JOIN {users} cu ON l.last_comment_uid = cu.uid WHERE n.status = 1 AND r.tid = %d";
     $sql = db_rewrite_sql($sql);
     $topic = db_fetch_object(db_query_range($sql, $forum->tid, 0, 1));
 

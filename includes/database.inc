@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.50 2006/01/08 12:51:37 dries Exp $
+// $Id: database.inc,v 1.51 2006/03/08 15:13:20 dries Exp $
 
 /**
  * @file
@@ -234,17 +234,17 @@ function _db_rewrite_sql($query = '', $primary_table = 'n', $primary_field = 'ni
     $result = module_invoke($module, 'db_rewrite_sql', $query, $primary_table, $primary_field, $args);
     if (isset($result) && is_array($result)) {
       if (isset($result['where'])) {
-        $where[] .= $result['where'];
+        $where[] = $result['where'];
       }
       if (isset($result['join'])) {
-        $join[] .= $result['join'];
+        $join[] = $result['join'];
       }
       if (isset($result['distinct']) && $result['distinct']) {
         $distinct = TRUE;
       }
     }
     elseif (isset($result)) {
-      $where[] .= $result;
+      $where[] = $result;
     }
   }
 
@@ -255,7 +255,8 @@ function _db_rewrite_sql($query = '', $primary_table = 'n', $primary_field = 'ni
 }
 
 /**
- * Rewrites node, taxonomy and comment queries. Use it for listing queries.
+ * Rewrites node, taxonomy and comment queries. Use it for listing queries. Do not
+ * use FROM table1, table2 syntax, use JOIN instead.
  *
  * @param $query
  *   Query to be rewritten.
@@ -277,11 +278,11 @@ function db_rewrite_sql($query, $primary_table = 'n', $primary_field = 'nid',  $
     $query = preg_replace('/(SELECT.*)('. $primary_table .'\.)?(?<!DISTINCT\()(?<!DISTINCT\('. $primary_table .'\.)'. $primary_field .'(.*FROM)/AUsi', '\1'. $field_to_select .'\3', $query);
   }
 
-  if (!empty($join)) {
-    $query = preg_replace('/LEFT |RIGHT |INNER |WHERE|GROUP|ORDER|$/', $join .' \0', $query, 1);
-  }
-
-  if (!empty($where)) {
+  if (!empty($where) || !empty($join)) {
+    if (!empty($where)) {
+      $new = " WHERE $where ";
+    }
+    $new = " $join $new";
     if (strpos($query, 'WHERE')) {
       $replace = 'WHERE';
       $add = 'AND';
@@ -299,10 +300,10 @@ function db_rewrite_sql($query, $primary_table = 'n', $primary_field = 'nid',  $
       $add = 'LIMIT';
     }
     else {
-      $query .= ' WHERE '. $where;
+      $query .= $new;
     }
     if (isset($replace)) {
-      $query = str_replace($replace, 'WHERE  '. $where .' '. $add .' ', $query);
+      $query = str_replace($replace, "$new $add ", $query);
     }
   }
 
