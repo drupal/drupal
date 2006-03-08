@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.317 2006/03/08 15:13:20 dries Exp $
+// $Id: forum.module,v 1.318 2006/03/08 22:11:54 killes Exp $
 
 /**
  * @file
@@ -298,8 +298,9 @@ function forum_submit(&$node) {
       }
     }
     if ($node->tid && $node->shadow) {
+      // A shadow copy needs to be created. Retain existing term and add new term.
       $terms = array_keys(taxonomy_node_get_terms($node->nid));
-      if (!in_array($node->tid, $node->terms)) {
+      if (!in_array($node->tid, $terms)) {
         $terms[] = $node->tid;
       }
       $node->taxonomy = $terms;
