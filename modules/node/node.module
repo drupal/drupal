@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.611 2006/03/07 19:38:19 dries Exp $
+// $Id: node.module,v 1.612 2006/03/08 19:07:41 killes Exp $
 
 /**
  * @file
@@ -1584,11 +1584,9 @@ function node_submit($node) {
     $node->uid = $user->uid ? $user->uid : 0;
     // Force defaults in case people modify the form:
     $node_options = variable_get('node_options_'. $node->type, array('status', 'promote'));
-    $node->status = in_array('status', $node_options);
-    $node->moderate = in_array('moderate', $node_options);
-    $node->promote = in_array('promote', $node_options);
-    $node->sticky = in_array('sticky', $node_options);
-    $node->revision = in_array('revision', $node_options);
+    foreach (array('status', 'moderate', 'promote', 'sticky', 'revision') as $key) {
+      $node->$key = in_array($key, $node_options);
+    }
     unset($node->created);
   }
 
@@ -1710,7 +1708,11 @@ function node_form_array($node) {
       $form['options'][$key] = array('#type' => 'value', '#value' => $node->$key);
     }
   }
-  $form['#node']   = $node;
+  else {
+    // Nodes being edited should always be preset with the default revision setting.
+    $node->revision = in_array('revision', $node_options);
+  }
+  $form['#node'] = $node;
 
   if (user_access('administer nodes')) {
     // Node author information
