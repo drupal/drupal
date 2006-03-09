@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.613 2006/03/09 21:59:43 killes Exp $
+// $Id: node.module,v 1.614 2006/03/09 22:10:57 killes Exp $
 
 /**
  * @file
@@ -1717,7 +1717,7 @@ function node_form_array($node) {
   if (user_access('administer nodes')) {
     // Node author information
     $form['author'] = array('#type' => 'fieldset', '#title' => t('Authoring information'), '#collapsible' => TRUE, '#collapsed' => TRUE, '#weight' => 20);
-    $form['author']['name'] = array('#type' => 'textfield', '#title' => t('Authored by'), '#maxlength' => 60, '#autocomplete_path' => 'user/autocomplete', '#required' => TRUE, '#default_value' => $node->name ? $node->name : variable_get('anonymous', 'Anonymous'), '#weight' => -1);
+    $form['author']['name'] = array('#type' => 'textfield', '#title' => t('Authored by'), '#maxlength' => 60, '#autocomplete_path' => 'user/autocomplete', '#default_value' => $node->name ? $node->name : '', '#weight' => -1, '#description' => t('Leave blank for %anonymous.', array('%anonymous' => theme('placeholder', variable_get('anonymous', 'Anonymous')))));
     $form['author']['date'] = array('#type' => 'textfield', '#title' => t('Authored on'), '#maxlength' => 25, '#required' => TRUE, '#default_value' => $node->date);
 
     // Node options for administrators
