@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.612 2006/03/08 19:07:41 killes Exp $
+// $Id: node.module,v 1.613 2006/03/09 21:59:43 killes Exp $
 
 /**
  * @file
@@ -1876,7 +1876,7 @@ function theme_node_preview($node) {
   if ($node->teaser && $node->teaser != $node->body) {
     drupal_set_message(t('The trimmed version of your post shows what your post looks like when promoted to the main page or when exported for syndication. You can insert the delimiter "&lt;!--break--&gt;" (without the quotes) to fine-tune where your post gets split.'));
     $output .= '<h3>'. t('Preview trimmed version') .'</h3>';
-    $output .= node_view($node, 1, FALSE, 0);
+    $output .= node_view(drupal_clone($node), 1, FALSE, 0);
     $output .= '<h3>'. t('Preview full version') .'</h3>';
     $output .= node_view($node, 0, FALSE, 0);
   }
