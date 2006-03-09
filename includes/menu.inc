@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.107 2006/02/14 19:19:34 dries Exp $
+// $Id: menu.inc,v 1.108 2006/03/09 22:12:53 killes Exp $
 
 /**
  * @file
@@ -584,29 +584,23 @@ function menu_rebuild() {
   if (module_exist('menu')) {
     $menu = menu_get_menu();
 
+    // Fill a queue of new menu items which are modifiable.
     $new_items = array();
     foreach ($menu['items'] as $mid => $item) {
       if ($mid < 0 && ($item['type'] & MENU_MODIFIABLE_BY_ADMIN)) {
-        if (isset($new_items[$item['pid']])) {
-          $new_pid = $new_items[$item['pid']]['mid'];
-        }
-        else {
-          $new_pid = $item['pid'];
-        }
-
-        $new_items[$mid] = array(
-          'pid' => $new_pid,
-          'path' => $item['path'],
-          'title' => $item['title'],
-          'description' => isset($item['description']) ? $item['description'] : '',
-          'weight' => $item['weight'],
-          'type' => $item['type'],
-        );
+        $new_items[$mid] = $item;
       }
     }
 
-    if (count($new_items)) {
-      foreach ($new_items as $item) {
+    reset($new_items);
+    while (list($old_mid, $item) = each($new_items)) {
+      if ($item['pid'] < 0 && isset($new_items[$item['pid']])) {
+        // The item's parent has a temporary ID and is still in the queue. Put
+        // the item at the back of the queue so it may be saved after the
+        // parent item has recieved a new ID.
+        $new_items[$old_mid] = $item;
+      }
+      else {
         // The new menu ID gets passed back by reference as $item['mid']
         menu_save_item($item);
 
