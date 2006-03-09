@@ -134,6 +134,15 @@ function drupal_get_form($form_id, &$form, $callback = NULL) {
   elseif (theme_get_function($callback)) {
     $form['#theme'] = $callback;
   }
+
+  if (isset($form['#pre_render'])) {
+    foreach ($form['#pre_render'] as $function) {
+      if (function_exists($function)) {
+        $function($form_id, $form);
+      }
+    }
+  }
+
   return form_render($form);
 }
 
