@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.213 2006/03/08 11:04:03 killes Exp $
+// $Id: updates.inc,v 1.214 2006/03/09 22:35:24 killes Exp $
 
 function system_update_110() {
   $ret = array();
@@ -1671,11 +1671,13 @@ function system_update_175() {
 }
 
 function system_update_176() {
+  $ret = array();
   $ret[] = update_sql('ALTER TABLE {filter_formats} ADD UNIQUE (name)');
   return $ret;
 }
 
 function system_update_177() {
+  $ret = array();
   $message_ids = array(
     'welcome_subject',
     'welcome_body',
