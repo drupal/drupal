@@ -1,3 +1,5 @@
+// $Id$
+
 if (isJsEnabled()) {
   addLoadEvent(function() {
     // Attach to all visible textareas

@@ -1,3 +1,5 @@
+// $Id$
+
 // Global killswitch
 if (isJsEnabled()) {
   addLoadEvent(uploadAutoAttach);

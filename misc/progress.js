@@ -1,3 +1,5 @@
+// $Id$
+
 /**
  * A progressbar object. Initialized with the given id. Must be inserted into
  * the DOM afterwards through progressBar.element.
