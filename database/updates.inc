@@ -1671,11 +1671,13 @@ function system_update_175() {
 }
 
 function system_update_176() {
+  $ret = array();
   $ret[] = update_sql('ALTER TABLE {filter_formats} ADD UNIQUE (name)');
   return $ret;
 }
 
 function system_update_177() {
+  $ret = array();
   $message_ids = array(
     'welcome_subject',
     'welcome_body',
