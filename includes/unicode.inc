@@ -1,5 +1,5 @@
 <?php
-// $Id: unicode.inc,v 1.15 2006/02/09 08:56:11 unconed Exp $
+// $Id: unicode.inc,v 1.16 2006/03/09 14:46:33 dries Exp $
 
 define('UNICODE_ERROR', -1);
 define('UNICODE_SINGLEBYTE', 0);
@@ -90,12 +90,13 @@ function unicode_settings() {
  *
  * This is a wrapper around xml_parser_create() which extracts the encoding from
  * the XML data first and sets the output encoding to UTF-8. This function should
- * be used instead of xml_parser_create(), because PHP's XML parser doesn't check
- * the input encoding itself.
+ * be used instead of xml_parser_create(), because PHP 4's XML parser doesn't
+ * check the input encoding itself. "Starting from PHP 5, the input encoding is
+ * automatically detected, so that the encoding parameter specifies only the
+ * output encoding."
  *
- * This is also where unsupported encodings will be converted.
- * Callers should take this into account: $data might have been changed after
- * the call.
+ * This is also where unsupported encodings will be converted. Callers should
+ * take this into account: $data might have been changed after the call.
  *
  * @param &$data
  *   The XML data which will be parsed later.
@@ -123,8 +124,8 @@ function drupal_xml_parser_create(&$data) {
   if (!in_array(strtolower($encoding), $php_supported)) {
     $out = drupal_convert_to_utf8($data, $encoding);
     if ($out !== false) {
-      $data = $out;
       $encoding = 'utf-8';
+      $data = ereg_replace('^(<\?xml[^>]+encoding)="([^"]+)"', '\\1="utf-8"', $out);
     }
     else {
       watchdog('php', t("Could not convert XML encoding '%s' to UTF-8.", array('%s' => $encoding)), WATCHDOG_WARNING);
