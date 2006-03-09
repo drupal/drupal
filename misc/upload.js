@@ -1,3 +1,5 @@
+// $Id: upload.js,v 1.7 2006/03/09 23:20:24 unconed Exp $
+
 // Global killswitch
 if (isJsEnabled()) {
   addLoadEvent(uploadAutoAttach);

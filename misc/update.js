@@ -1,3 +1,5 @@
+// $Id: update.js,v 1.7 2006/03/09 23:20:24 unconed Exp $
+
 if (isJsEnabled()) {
   addLoadEvent(function() {
     if ($('edit-has_js')) {

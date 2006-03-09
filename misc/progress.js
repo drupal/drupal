@@ -1,3 +1,5 @@
+// $Id: progress.js,v 1.9 2006/03/09 23:20:24 unconed Exp $
+
 /**
  * A progressbar object. Initialized with the given id. Must be inserted into
  * the DOM afterwards through progressBar.element.
