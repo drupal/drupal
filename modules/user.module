@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.593 2006/03/04 18:00:55 dries Exp $
+// $Id: user.module,v 1.594 2006/03/10 15:11:07 unconed Exp $
 
 /**
  * @file
@@ -508,7 +508,6 @@ function user_block($op = 'list', $delta = 0, $edit = array()) {
     $form['user_block_seconds_online'] = array('#type' => 'select', '#title' => t('User activity'), '#default_value' => variable_get('user_block_seconds_online', 900), '#options' => $period, '#description' => t('A user is considered online for this long after they have last viewed a page.'));
     $form['user_block_max_list_count'] = array('#type' => 'select', '#title' => t('User list length'), '#default_value' => variable_get('user_block_max_list_count', 10), '#options' => drupal_map_assoc(array(0, 5, 10, 15, 20, 25, 30, 40, 50, 75, 100)), '#description' => t('Maximum number of currently online users to display.'));
 
-    //return drupal_get_form('user_block', $form);
     return $form;
   }
   else if ($op == 'save' && $delta == 3) {
@@ -561,7 +560,7 @@ function user_block($op = 'list', $delta = 0, $edit = array()) {
 
       case 2:
         if (user_access('access content')) {
-          //Retrieve a list of new users who have subsequently accessed the site successfully.
+          // Retrieve a list of new users who have subsequently accessed the site successfully.
           $result = db_query_range('SELECT uid, name FROM {users} WHERE status != 0 AND access != 0 ORDER BY created DESC', 0, 5);
           while ($account = db_fetch_object($result)) {
             $items[] = $account;
@@ -687,7 +686,7 @@ function user_menu($may_cache) {
 
   $admin_access = user_access('administer users');
   $access_access = user_access('administer access control');
-  // users should always be allowed to see their own user page
+  // Users should always be allowed to see their own user page
   $view_access = (user_access('access user profiles') || ($user->uid == arg(1)));
 
   if ($may_cache) {
@@ -697,7 +696,7 @@ function user_menu($may_cache) {
     $items[] = array('path' => 'user/autocomplete', 'title' => t('user autocomplete'),
       'callback' => 'user_autocomplete', 'access' => $view_access, 'type' => MENU_CALLBACK);
 
-    //registration and login pages.
+    // Registration and login pages.
     $items[] = array('path' => 'user/login', 'title' => t('log in'),
       'callback' => 'user_login', 'type' => MENU_DEFAULT_LOCAL_TASK);
     $items[] = array('path' => 'user/register', 'title' => t('register'),
@@ -709,7 +708,7 @@ function user_menu($may_cache) {
     $items[] = array('path' => 'user/help', 'title' => t('help'),
       'callback' => 'user_help_page', 'type' => MENU_CALLBACK);
 
-    //admin user pages
+    // Admin user pages
     $items[] = array('path' => 'admin/user', 'title' => t('users'),
       'callback' => 'user_admin', 'access' => $admin_access);
     $items[] = array('path' => 'admin/user/list', 'title' => t('list'),
@@ -720,7 +719,7 @@ function user_menu($may_cache) {
     $items[] = array('path' => 'admin/settings/user', 'title' => t('users'),
       'callback' => 'user_configure');
 
-    //admin access pages
+    // Admin access pages
     $items[] = array('path' => 'admin/access', 'title' => t('access control'),
       'callback' => 'user_admin_perm', 'access' => $access_access);
     $items[] = array('path' => 'admin/access/permissions', 'title' => t('permissions'),
@@ -756,7 +755,7 @@ function user_menu($may_cache) {
         'type' => MENU_LOCAL_TASK);
     }
 
-    //Your personal page
+    // Your personal page
     if ($user->uid) {
       $items[] = array('path' => 'user/'. $user->uid, 'title' => t('my account'),
         'callback' => 'user_view', 'callback arguments' => array(arg(1)), 'access' => TRUE,

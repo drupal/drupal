@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.137 2006/03/03 08:46:09 dries Exp $
+// $Id: profile.module,v 1.138 2006/03/10 15:11:07 unconed Exp $
 
 /**
  * @file
@@ -611,6 +611,45 @@ function profile_admin_delete($fid) {
                         t('This action cannot be undone. If users have entered values into this field in their profile, these entries will also be deleted. If you want to keep the user-entered data, instead of deleting the field you may wish to <a href="%edit-field">edit this field</a> and change it to a \'hidden profile field\' so that it may only be accessed by administrators.', array('%edit-field' => url('admin/settings/profile/edit/' . $fid))),
                         t('Delete'),
                         t('Cancel'));
+  }
+}
+
+function profile_search($op = 'search', $keys = null) {
+  switch ($op) {
+    case 'name':
+      if (user_access('access user profiles')) {
+        return t('users');
+      }
+    case 'search':
+      if (user_access('access user profiles')) {
+        $find = array();
+        // Replace wildcards with MySQL/PostgreSQL wildcards.
+        $keys = preg_replace('!\*+!', '%', $keys);
+        if (user_access('administer users')) {
+          // administrators don't have restrictions
+          $result = pager_query("SELECT u.* FROM {users} u INNER JOIN {profile_values} pv ON u.uid = pv.uid WHERE LOWER(pv.value) LIKE LOWER('%%%s%%') OR LOWER(u.name) LIKE LOWER('%%%s%%')", 15, 0, NULL, $keys, $keys);
+        }
+        else {
+          // non-administrators can only search public fields and active users
+          $result = pager_query("SELECT u.* FROM {users} u INNER JOIN {profile_values} pv ON u.uid = pv.uid INNER JOIN {profile_fields} pf ON pv.fid = pf.fid WHERE ((LOWER(pv.value) LIKE LOWER('%%%s%%') AND pf.visibility IN (%d, %d)) OR LOWER(u.name) LIKE LOWER('%%%s%%')) AND u.status = 1", 15, 0, NULL, $keys, PROFILE_PUBLIC, PROFILE_PUBLIC_LISTINGS, $keys);
+        }
+
+        while ($account = db_fetch_object($result)) {
+          $user = user_load(array('uid' => $account->uid));
+          $profile_fields = profile_view_profile($user);
+
+          $entry = array();
+          foreach ($profile_fields as $category => $fields) {
+            foreach ($fields as $field) {
+              $entry[] = $field['value'];
+            }
+          }
+
+          $view = implode(' | ', $entry);
+          $find[] = array('title' => $account->name, 'link' => url("user/$account->uid/view"), 'snippet' => search_excerpt($keys, $view));
+        }
+        return $find;
+      }
   }
 }
 
