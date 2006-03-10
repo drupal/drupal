@@ -1208,7 +1208,7 @@ function drupal_to_js($var) {
     case 'object':
       $output = array();
       foreach ($var as $k => $v) {
-        $output[] = $k .': '. drupal_to_js($v);
+        $output[] = drupal_to_js(strval($k)) .': '. drupal_to_js($v);
       }
       return '{ '. implode(', ', $output) .' }';
     default:
