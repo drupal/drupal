@@ -143,7 +143,13 @@ function upload_file_download($file) {
                      'Content-Length: '. $file->filesize,
                      'Content-Disposition: '. $disposition .'; filename='. $name);
       }
+      else {
+        return -1;
+      }
     }
+  }
+  else {
+    return -1;
   }
 }
 
