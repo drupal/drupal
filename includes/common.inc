@@ -1187,6 +1187,7 @@ function drupal_call_js($function) {
 function drupal_to_js($var) {
   switch (gettype($var)) {
     case 'boolean':
+      return $var ? 'true' : 'false'; // Lowercase necessary!
     case 'integer':
     case 'double':
       return $var;
