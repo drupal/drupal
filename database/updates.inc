@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.214 2006/03/09 22:35:24 killes Exp $
+// $Id: updates.inc,v 1.215 2006/03/10 18:59:05 dries Exp $
 
 function system_update_110() {
   $ret = array();
@@ -1700,3 +1700,71 @@ function system_update_177() {
   return $ret;
 }
 
+function _update_178_url_fix($text) {
+  //key is attribute to replace.
+  $urlpatterns['href'] = "/<a[^>]+href=\"([^\"]+)/i";
+  $urlpatterns['src']  = "/<img[^>]+src=\"([^\"]+)/i";
+
+  foreach ($urlpatterns as $type => $pattern) {
+    preg_match_all($pattern, $text, $matches);
+    foreach($matches[1] as $url) {
+      if ($url != '' && !strstr($url, 'mailto:') && !strstr($url, '://') && !strstr($url, '../') && !strstr($url, './') && $url[0] != '/' && $url[0] != '#') {
+        $text = preg_replace('|'. $type .'\s*=\s*"'. preg_quote($url) .'\s*"|', $type. '="'.base_path(). $url  .'"', $text);
+      }
+    }
+  }
+  return $text;
+}
+
+/**
+ * Update base paths for relative URLs in node and comment content.
+ */
+function system_update_178() {
+
+  if(variable_get('clean_url', 0) == 1) {
+    // Multi-part update
+    if (!isset($_SESSION['system_update_178_comment'])) {
+      $_SESSION['system_update_178_comment'] = 0;
+      $_SESSION['system_update_178_node'] = 0;
+      $_SESSION['system_update_178_comment_max'] = db_result(db_query('SELECT MAX(cid) FROM {comments}'));
+      $_SESSION['system_update_178_node_max'] = db_result(db_query('SELECT MAX(nid) FROM {node_revisions}'));
+    }
+
+    $limit = 20;
+    $result = db_query_range("SELECT cid, comment FROM {comments} WHERE cid > %d", $_SESSION['system_update_178_comment'], 0, $limit);
+    while ($comment = db_fetch_object($result)) {
+      $_SESSION['system_update_178_comment'] = $comment->cid;
+      $comment->comment = _update_178_url_fix($comment->comment);
+      db_query("UPDATE {comments} SET comment = '%s' WHERE cid = %d", $comment->comment, $comment->cid);
+    }
+
+    $result = db_query_range("SELECT nid, vid, teaser, body FROM {node_revisions} WHERE nid > %d", $_SESSION['system_update_178_node'], 0, $limit);
+    while ($node = db_fetch_object($result)) {
+      // Catch the infinite loop for node revisions. We ignore updating
+      // content past the 20th revision.
+      if ($_SESSION['system_update_178_node'] == $node->nid) {
+        $_SESSION['system_update_178_node']++;
+      }
+      else {
+        $_SESSION['system_update_178_node'] = $node->nid;
+      }
+      $node->teaser = _update_178_url_fix($node->teaser);
+      $node->body = _update_178_url_fix($node->body);
+      db_query('UPDATE {node_revisions} SET body = "%s", teaser = "%s" WHERE nid = %d AND vid = %d', $node->body, $node->teaser, $node->nid, $node->vid);
+    }
+
+    if ($_SESSION['system_update_178_comment'] == $_SESSION['system_update_178_comment_max'] &&
+        $_SESSION['system_update_178_node'] == $_SESSION['system_update_178_node_max']) {
+      unset($_SESSION['system_update_178_comment']);
+      unset($_SESSION['system_update_178_comment_max']);
+      unset($_SESSION['system_update_178_node']);
+      unset($_SESSION['system_update_178_node_max']);
+      return array();
+    }
+    else {
+      return array('#finished' => FALSE);
+    }
+  }
+
+  return array();
+}
