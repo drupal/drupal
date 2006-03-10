@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.66 2006/03/08 23:42:55 killes Exp $
+// $Id: file.inc,v 1.67 2006/03/10 19:02:06 dries Exp $
 
 /**
  * @file
@@ -565,26 +565,27 @@ function file_transfer($source, $headers) {
 
 /**
  * Call modules that implement hook_file_download() to find out if a file is
- * accessible for a given user. If a module returns an array of headers, the
- * download will start. If a module denies it, drupal_access_denied() will be
- * called. If no module responds then drupal_not_found() will be called.
+ * accessible and what headers it should be transferred with. If a module
+ * returns -1 drupal_access_denied() will be returned. If one or more modules
+ * returned headers the download will start with the returned headers. If no
+ * modules respond drupal_not_found() will be returned.
  */
+
 function file_download() {
-  $file = $_GET['file'];
-  if (file_exists(file_create_path($file))) {
-    $list = module_list();
-    foreach ($list as $module) {
-      $headers = module_invoke($module, 'file_download', $file);
-      if (is_array($headers)) {
-        file_transfer($file, $headers);
-      }
-      elseif ($headers == -1) {
-        drupal_access_denied();
-      }
+  $filepath = $_GET['file'];
+
+  if (file_exists(file_create_path($filepath))) {
+    $headers = module_invoke_all('file_download', $filepath);
+    if (in_array(-1, $headers)) {
+        return drupal_access_denied();
+    }
+    if (count($headers)) {
+        file_transfer($filepath, $headers);
     }
   }
-  drupal_not_found();
+  return drupal_not_found();
 }
+
 
 /**
  * Finds all files that match a given mask in a given
