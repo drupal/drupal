@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.525 2006/03/10 16:53:09 unconed Exp $
+// $Id: common.inc,v 1.526 2006/03/10 17:06:48 unconed Exp $
 
 /**
  * @file
@@ -1208,7 +1208,7 @@ function drupal_to_js($var) {
     case 'object':
       $output = array();
       foreach ($var as $k => $v) {
-        $output[] = $k .': '. drupal_to_js($v);
+        $output[] = drupal_to_js(strval($k)) .': '. drupal_to_js($v);
       }
       return '{ '. implode(', ', $output) .' }';
     default:
