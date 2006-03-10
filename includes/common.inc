@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.523 2006/03/07 14:57:05 dries Exp $
+// $Id: common.inc,v 1.524 2006/03/10 13:08:05 unconed Exp $
 
 /**
  * @file
@@ -1187,6 +1187,7 @@ function drupal_call_js($function) {
 function drupal_to_js($var) {
   switch (gettype($var)) {
     case 'boolean':
+      return $var ? 'true' : 'false'; // Lowercase necessary!
     case 'integer':
     case 'double':
       return $var;
