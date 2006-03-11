@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.216 2006/03/11 15:07:47 unconed Exp $
+// $Id: updates.inc,v 1.217 2006/03/11 20:50:30 unconed Exp $
 
 function system_update_110() {
   $ret = array();
@@ -1704,19 +1704,21 @@ function system_update_177() {
 }
 
 function _update_178_url_fix($text) {
-  //key is attribute to replace.
+  // Key is the attribute to replace.
   $urlpatterns['href'] = "/<a[^>]+href=\"([^\"]+)/i";
   $urlpatterns['src']  = "/<img[^>]+src=\"([^\"]+)/i";
 
+  $old = $text;
   foreach ($urlpatterns as $type => $pattern) {
-    preg_match_all($pattern, $text, $matches);
-    foreach($matches[1] as $url) {
-      if ($url != '' && !strstr($url, 'mailto:') && !strstr($url, '://') && !strstr($url, '../') && !strstr($url, './') && $url[0] != '/' && $url[0] != '#') {
-        $text = preg_replace('|'. $type .'\s*=\s*"'. preg_quote($url) .'\s*"|', $type. '="'.base_path(). $url  .'"', $text);
+    if (preg_match_all($pattern, $text, $matches)) {
+      foreach ($matches[1] as $url) {
+        if ($url != '' && !strstr($url, 'mailto:') && !strstr($url, '://') && !strstr($url, '../') && !strstr($url, './') && $url[0] != '/' && $url[0] != '#') {
+          $text = preg_replace('|'. $type .'\s*=\s*"'. preg_quote($url) .'\s*"|', $type. '="'.base_path(). $url  .'"', $text);
+        }
       }
     }
   }
-  return $text;
+  return $text != $old ? $text : FALSE;
 }
 
 /**
@@ -1724,36 +1726,81 @@ function _update_178_url_fix($text) {
  */
 function system_update_178() {
 
-  if(variable_get('clean_url', 0) == 1) {
+  if (variable_get('clean_url', 0) == 1) {
     // Multi-part update
     if (!isset($_SESSION['system_update_178_comment'])) {
+      // Check which formats need to be converted
+      $formats = array();
+
+      // Any format with the HTML filter in it
+      $result = db_query("SELECT format FROM {filters} WHERE module = 'filter' AND delta = 0");
+      while ($format = db_fetch_object($result)) {
+        $formats[$format->format] = true;
+      }
+
+      // Any format with only the linebreak filter in it
+      $result = db_query("SELECT format FROM {filters} WHERE module = 'filter' AND delta = 2");
+      while ($format = db_fetch_object($result)) {
+        if (db_result(db_query('SELECT COUNT(*) FROM {filters} WHERE format = %d', $format->format)) == 1) {
+          $formats[$format->format] = true;
+        }
+      }
+
+      if (count($formats) == 0) {
+        return array();
+      }
+
+      // Build format query string
+      $_SESSION['formats'] = array_keys($formats);
+      $_SESSION['format_string'] = '('. substr(str_repeat('%d, ', count($formats)), 0, -2) .')';
+
+      // Begin update
       $_SESSION['system_update_178_comment'] = 0;
       $_SESSION['system_update_178_node'] = 0;
-      $_SESSION['system_update_178_comment_max'] = db_result(db_query('SELECT MAX(cid) FROM {comments}'));
-      $_SESSION['system_update_178_node_max'] = db_result(db_query('SELECT MAX(nid) FROM {node_revisions}'));
+      $_SESSION['system_update_178_comment_max'] = db_result(db_query('SELECT MAX(cid) FROM {comments} WHERE format IN '. $_SESSION['format_string'], $_SESSION['formats']));
+      $_SESSION['system_update_178_node_max'] = db_result(db_query('SELECT MAX(vid) FROM {node_revisions} WHERE format IN '. $_SESSION['format_string'], $_SESSION['formats']));
     }
 
     $limit = 20;
-    $result = db_query_range("SELECT cid, comment FROM {comments} WHERE cid > %d", $_SESSION['system_update_178_comment'], 0, $limit);
-    while ($comment = db_fetch_object($result)) {
-      $_SESSION['system_update_178_comment'] = $comment->cid;
-      $comment->comment = _update_178_url_fix($comment->comment);
-      db_query("UPDATE {comments} SET comment = '%s' WHERE cid = %d", $comment->comment, $comment->cid);
+
+    // Comments
+    if ($_SESSION['system_update_178_comment'] != $_SESSION['system_update_178_comment_max']) {
+      $args = array_merge(array($_SESSION['system_update_178_comment']), $_SESSION['formats']);
+      $result = db_query_range("SELECT cid, comment FROM {comments} WHERE cid > %d AND format IN ". $_SESSION['format_string'] .' ORDER BY cid ASC', $args, 0, $limit);
+      while ($comment = db_fetch_object($result)) {
+        $_SESSION['system_update_178_comment'] = $comment->cid;
+        $comment->comment = _update_178_url_fix($comment->comment);
+        if ($comment->comment !== FALSE) {
+          db_query("UPDATE {comments} SET comment = '%s' WHERE cid = %d", $comment->comment, $comment->cid);
+        }
+      }
     }
 
-    $result = db_query_range("SELECT nid, vid, teaser, body FROM {node_revisions} WHERE nid > %d", $_SESSION['system_update_178_node'], 0, $limit);
+    // Node revisions
+    $args = array_merge(array($_SESSION['system_update_178_node']), $_SESSION['formats']);
+    $result = db_query_range("SELECT vid, teaser, body FROM {node_revisions} WHERE vid > %d AND format IN ". $_SESSION['format_string'] .' ORDER BY vid ASC', $args, 0, $limit);
     while ($node = db_fetch_object($result)) {
-      // Catch the infinite loop for node revisions. We ignore updating
-      // content past the 20th revision.
-      if ($_SESSION['system_update_178_node'] == $node->nid) {
-        $_SESSION['system_update_178_node']++;
-      }
-      else {
-        $_SESSION['system_update_178_node'] = $node->nid;
-      }
+      $_SESSION['system_update_178_node'] = $node->vid;
+      $set = array();
+      $args = array();
+
       $node->teaser = _update_178_url_fix($node->teaser);
+      if ($node->teaser !== FALSE) {
+        $set[] = "teaser = '%s'";
+        $args[] = $node->teaser;
+      }
+
       $node->body = _update_178_url_fix($node->body);
-      db_query('UPDATE {node_revisions} SET body = "%s", teaser = "%s" WHERE nid = %d AND vid = %d', $node->body, $node->teaser, $node->nid, $node->vid);
+      if ($node->body !== FALSE) {
+        $set[] = "body = '%s'";
+        $args[] = $node->body;
+      }
+
+      if (count($set)) {
+        $args[] = $node->vid;
+        db_query('UPDATE {node_revisions} SET '. implode(', ', $set) .' WHERE vid = %d', $args);
+      }
+      
     }
 
     if ($_SESSION['system_update_178_comment'] == $_SESSION['system_update_178_comment_max'] &&
@@ -1765,7 +1812,11 @@ function system_update_178() {
       return array();
     }
     else {
-      return array('#finished' => FALSE);
+      // Report percentage finished
+      return array('#finished' =>
+        ($_SESSION['system_update_178_comment'] + $_SESSION['system_update_178_node']) /
+        ($_SESSION['system_update_178_comment_max'] + $_SESSION['system_update_178_node_max'])
+      );
     }
   }
 
