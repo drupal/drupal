@@ -1,17 +1,17 @@
 <?php
-// $Id: update.php,v 1.177 2006/03/03 08:37:47 dries Exp $
+// $Id: update.php,v 1.178 2006/03/11 13:45:41 dries Exp $
 
 /**
  * @file
  * Administrative page for handling updates from one Drupal version to another.
  *
- * Point your browser to "http://www.site.com/update.php" and follow the
+ * Point your browser to "http://www.example.com/update.php" and follow the
  * instructions.
  *
  * If you are not logged in as administrator, you will need to modify the access
- * check statement below. Change the TRUE into a FALSE to disable the access
+ * check statement below. Change the TRUE to a FALSE to disable the access
  * check. After finishing the upgrade, be sure to open this file and change the
- * FALSE back into a TRUE!
+ * FALSE back to a TRUE!
  */
 
 // Enforce access checking?
@@ -24,29 +24,29 @@ function update_sql($sql) {
 }
 
 /**
- * Adds a column to a database. Uses syntax appropriate for PostgreSQL.
- * Saves result of SQL commands in $ret array.
+ * Add a column to a database using syntax appropriate for PostgreSQL.
+ * Save result of SQL commands in $ret array.
  *
  * Note: when you add a column with NOT NULL and you are not sure if there are
- * rows in table already, you MUST also add DEFAULT. Otherwise PostgreSQL won't
- * work if the table is not empty. If NOT NULL and DEFAULT is set the
+ * already rows in the table, you MUST also add DEFAULT. Otherwise PostgreSQL won't
+ * work when the table is not empty. If NOT NULL and DEFAULT are set the
  * PostgreSQL version will set values of the added column in old rows to the
  * DEFAULT value.
  *
  * @param $ret
- *  Array to which results will be added.
+ *   Array to which results will be added.
  * @param $table
- *  Name of the table, without {}
+ *   Name of the table, without {}
  * @param $column
- *  Name of the column
+ *   Name of the column
  * @param $type
- *  Type of column
+ *   Type of column
  * @param $attributes
- *  Additional optional attributes. Recognized atributes:
- *    - not null    => TRUE/FALSE
- *    - default     => NULL/FALSE/value (with or without '', it wont' be added)
+ *   Additional optional attributes. Recognized attributes:
+ *     not null => TRUE|FALSE
+ *     default  => NULL|FALSE|value (with or without '', it won't be added)
  * @return
- *  nothing, but modifies $ret parametr.
+ *   nothing, but modifies $ret parameter.
  */
 function db_add_column(&$ret, $table, $column, $type, $attributes = array()) {
   if (array_key_exists('not null', $attributes) and $attributes['not null']) {
@@ -75,30 +75,30 @@ function db_add_column(&$ret, $table, $column, $type, $attributes = array()) {
 }
 
 /**
- * Changes a column definition. Uses syntax appropriate for PostgreSQL.
- * Saves result of SQL commands in $ret array.
+ * Change a column definition using syntax appropriate for PostgreSQL.
+ * Save result of SQL commands in $ret array.
  *
- * Please remember, that changing column definition involves adding new column
- * and dropping old one. This means that any indexes, primary keys and
- * sequences from the serial-type columns are dropped and might need to be
+ * Remember that changing a column definition involves adding a new column
+ * and dropping an old one. This means that any indices, primary keys and
+ * sequences from serial-type columns are dropped and might need to be
  * recreated.
  *
  * @param $ret
- *  Array to which results will be added.
+ *   Array to which results will be added.
  * @param $table
- *  Name of the table, without {}
+ *   Name of the table, without {}
  * @param $column
- *  Name of the column to change
+ *   Name of the column to change
  * @param $column_new
- *  New name for the column (set to the same as $column if you don't want to change the name)
+ *   New name for the column (set to the same as $column if you don't want to change the name)
  * @param $type
- *  Type of column
+ *   Type of column
  * @param $attributes
- *  Additional optional attributes. Recognized atributes:
- *    - not null    => TRUE/FALSE
- *    - default     => NULL/FALSE/value (with or without '', it won't be added)
+ *   Additional optional attributes. Recognized attributes:
+ *     not null => TRUE|FALSE
+ *     default  => NULL|FALSE|value (with or without '', it won't be added)
  * @return
- *  nothing, but modifies $ret parametr.
+ *   nothing, but modifies $ret parameter.
  */
 function db_change_column(&$ret, $table, $column, $column_new, $type, $attributes = array()) {
   if (array_key_exists('not null', $attributes) and $attributes['not null']) {
@@ -127,7 +127,7 @@ function db_change_column(&$ret, $table, $column, $column_new, $type, $attribute
 }
 
 /**
- * If the schema version for Drupal core is stored in the the variables table
+ * If the schema version for Drupal core is stored in the variables table
  * (4.6.x and earlier) move it to the schema_version column of the system
  * table.
  *
@@ -230,7 +230,7 @@ function update_fix_sessions() {
  * System update 115 changes the watchdog table, which breaks the update
  * script's ability to use logging. This changes the table appropriately.
  *
- * This code, including the 'update_watchdog_115_fixed' variable,  may be removed
+ * This code, including the 'update_watchdog_115_fixed' variable, may be removed
  * when update 115 is removed. It is part of the Drupal 4.5 to 4.7 migration.
  */
 function update_fix_watchdog_115() {
@@ -253,7 +253,7 @@ function update_fix_watchdog_115() {
  * System update 142 changes the watchdog table, which breaks the update
  * script's ability to use logging. This changes the table appropriately.
  *
- * This code, including the 'update_watchdog_fixed' variable,  may be removed
+ * This code, including the 'update_watchdog_fixed' variable, may be removed
  * when update 142 is removed. It is part of the Drupal 4.6 to 4.7 migration.
  */
 function update_fix_watchdog() {
@@ -283,7 +283,7 @@ function update_fix_watchdog() {
  *   The update number to run.
  *
  * @return
- *   TRUE if the update was finished. Otherwise, false.
+ *   TRUE if the update was finished. Otherwise, FALSE.
  */
 function update_data($module, $number) {
   $ret = module_invoke($module, 'update_'. $number);
@@ -452,7 +452,7 @@ function update_progress_page_nojs() {
       $new_op = 'finished';
     }
 
-    // Updates succesful, remove fallback
+    // Updates succesful; remove fallback
     ob_end_clean();
   }
   else {
@@ -636,7 +636,7 @@ function update_convert_table_utf8($table) {
   return $ret;
 }
 
-// Some unavoidable errors happen because the database is not yet up to date.
+// Some unavoidable errors happen because the database is not yet up-to-date.
 // We suppress them to avoid confusion. All errors are still logged.
 ini_set('display_errors', FALSE);
 
