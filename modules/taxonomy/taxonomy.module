@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.264 2006/03/08 15:13:20 dries Exp $
+// $Id: taxonomy.module,v 1.265 2006/03/11 13:47:51 dries Exp $
 
 /**
  * @file
@@ -611,6 +611,7 @@ function taxonomy_form_alter($form_id, &$form) {
       if ($vocabulary->tags) {
         $typed_terms = array();
         foreach ($terms as $term) {
+          // Extract terms belonging to the vocabulary in question.
           if ($term->vid == $vocabulary->vid) {
 
             // Commas and quotes in terms are special cases, so encode 'em.
@@ -640,7 +641,14 @@ function taxonomy_form_alter($form_id, &$form) {
         );
       }
       else {
-        $form['taxonomy'][$vocabulary->vid] = taxonomy_form($vocabulary->vid, array_keys($terms), $vocabulary->help);
+        // Extract terms belonging to the vocabulary in question.
+        $default_terms = array();
+        foreach ($terms as $term) {
+          if ($term->vid == $vocabulary->vid) {
+            $default_terms[$term->tid] = $term;
+          }
+        }
+        $form['taxonomy'][$vocabulary->vid] = taxonomy_form($vocabulary->vid, array_keys($default_terms), $vocabulary->help);
         $form['taxonomy'][$vocabulary->vid]['#weight'] = $vocabulary->weight;
         $form['taxonomy'][$vocabulary->vid]['#required'] = $vocabulary->required;
       }
@@ -1011,6 +1019,9 @@ function _taxonomy_term_select($title, $name, $value, $vocabulary_id, $descripti
 
   if ($blank) {
     $options[0] = $blank;
+    if (count($value) == 0) {
+      $value[] = 0;
+    }
   }
   if ($tree) {
     foreach ($tree as $term) {
@@ -1023,7 +1034,17 @@ function _taxonomy_term_select($title, $name, $value, $vocabulary_id, $descripti
       $value = $tree[0]->tid;
     }
   }
-  return array('#type' => 'select', '#title' => $title, '#default_value' => $value, '#options' => $options, '#description' => $description, '#multiple' => $multiple, '#size' => $multiple ? min(9, count($options)) : 0, '#weight' => -15, '#theme' => 'taxonomy_term_select');
+
+  return array('#type' => 'select',
+    '#title' => $title,
+    '#default_value' => $value,
+    '#options' => $options,
+    '#description' => $description,
+    '#multiple' => $multiple,
+    '#size' => $multiple ? min(9, count($options)) : 0,
+    '#weight' => -15,
+    '#theme' => 'taxonomy_term_select',
+  );
 }
 
 function theme_taxonomy_term_select($element) {
