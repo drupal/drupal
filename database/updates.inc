@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.215 2006/03/10 18:59:05 dries Exp $
+// $Id: updates.inc,v 1.216 2006/03/11 15:07:47 unconed Exp $
 
 function system_update_110() {
   $ret = array();
@@ -1679,22 +1679,25 @@ function system_update_176() {
 function system_update_177() {
   $ret = array();
   $message_ids = array(
-    'welcome_subject',
-    'welcome_body',
-    'approval_subject',
-    'approval_body',
-    'pass_subject',
-    'pass_body',
+    'welcome_subject' => 'Welcome subject',
+    'welcome_body' => 'Welcome body text',
+    'approval_subject' => 'Approval subject',
+    'approval_body' => 'Approval body text',
+    'pass_subject' => 'Password reset subject',
+    'pass_body' => 'Password reset body text',
   );
-  foreach ($message_ids as $message_id) {
-    if ($admin_setting = variable_get('user_mail_' . $message_id, FALSE)) {
-      $admin_setting = '<pre>'. $admin_setting .'</pre>'; //else it renders horrible
+  foreach ($message_ids as $message_id => $message_text) {
+    if ($admin_setting = variable_get('user_mail_'. $message_id, FALSE)) {
+      // Insert newlines and escape for display as HTML
+      $admin_setting = nl2br(check_plain($message_text ."\n\n". $admin_setting));
       watchdog('legacy', $admin_setting);
       $last = db_fetch_object(db_query('SELECT max(wid) AS wid FROM {watchdog}'));
-      variable_del('user_mail_'. $message_id); //deleting is requird, because _user_mail_text() checks for existance.
-      $i++;
-      $ret[$i]['query'] = l(t('The mail template %message_id is reset to the default, and the old one is saved.', array('%message_id' => 'user_mail_'. $message_id)),'admin/logs/event/'. $last->wid);
-      $ret[$i]['success'] = TRUE;
+      // Deleting is required, because _user_mail_text() checks for the existance of the variable.
+      variable_del('user_mail_'. $message_id);
+      $ret[] = array(
+        'query' => strtr('The mail template %message_id has been reset to the default. The old template <a href="%url">has been saved</a>.', array('%message_id' => 'user_mail_'. $message_id, '%url' => url('admin/logs/event/'. $last->wid))),
+        'success' => TRUE
+      );
     }
   }
   return $ret;
