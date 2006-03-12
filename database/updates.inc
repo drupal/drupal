@@ -1746,6 +1746,12 @@ function system_update_178() {
         }
       }
 
+      // Any format with 'HTML' in its name
+      $result = db_query("SELECT format FROM {filter_formats} WHERE name LIKE '%HTML%'");
+      while ($format = db_fetch_object($result)) {
+        $formats[$format->format] = true;
+      }
+
       if (count($formats) == 0) {
         return array();
       }
