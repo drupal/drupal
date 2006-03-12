@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.217 2006/03/11 20:50:30 unconed Exp $
+// $Id: updates.inc,v 1.218 2006/03/12 22:25:00 unconed Exp $
 
 function system_update_110() {
   $ret = array();
@@ -1744,6 +1744,12 @@ function system_update_178() {
         if (db_result(db_query('SELECT COUNT(*) FROM {filters} WHERE format = %d', $format->format)) == 1) {
           $formats[$format->format] = true;
         }
+      }
+
+      // Any format with 'HTML' in its name
+      $result = db_query("SELECT format FROM {filter_formats} WHERE name LIKE '%HTML%'");
+      while ($format = db_fetch_object($result)) {
+        $formats[$format->format] = true;
       }
 
       if (count($formats) == 0) {
