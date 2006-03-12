@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.67 2006/02/21 18:46:54 dries Exp $
+// $Id: menu.module,v 1.68 2006/03/12 16:21:40 killes Exp $
 
 /**
  * @file
@@ -41,10 +41,6 @@ function menu_menu($may_cache) {
       'type' => MENU_LOCAL_TASK);
     $items[] = array('path' => 'admin/menu/item/add', 'title' => t('add menu item'),
       'callback' => 'menu_edit_item',
-      'access' => user_access('administer menu'),
-      'type' => MENU_LOCAL_TASK);
-    $items[] = array('path' => 'admin/menu/reset', 'title' => t('reset menus'),
-      'callback' => 'menu_reset',
       'access' => user_access('administer menu'),
       'type' => MENU_LOCAL_TASK);
 
@@ -221,28 +217,6 @@ function menu_overview() {
   menu_rebuild();
 
   return menu_overview_tree();
-}
-
-/**
- * Menu callback; clear the database, resetting the menu to factory defaults.
- */
-function menu_reset() {
-  $op = isset($_POST['op']) ? $_POST['op'] : '';
-  switch ($op) {
-    case t('Reset all'):
-      db_query('DELETE FROM {menu}');
-      $mid = menu_edit_item_save(array('title' => t('Primary menu links'), 'pid' => 0, 'type' => MENU_CUSTOM_MENU));
-      variable_set('menu_primary_menu', $mid);
-      variable_set('menu_secondary_menu', $mid);
-      drupal_set_message(t('The menu items have been reset to their default settings.'));
-      drupal_goto('admin/menu');
-      break;
-    default:
-      return confirm_form('menu_confirm_reset', array(),
-        t('Are you sure you want to reset all menu items to their default settings?'),
-        'admin/menu', t('Any custom additions or changes to the menu will be lost.'),
-        t('Reset all'));
-  }
 }
 
 /**
