@@ -539,6 +539,18 @@ ul.secondary a.active {
 }
 
 /*
+** Help module
+*/
+.help-items {
+  float: left;
+  width: 22%;
+  padding-right: 3%;
+}
+.help-items-last {
+  padding-right: 0;
+}
+
+/*
 ** Autocomplete styles
 */
 /* Suggestion list */
