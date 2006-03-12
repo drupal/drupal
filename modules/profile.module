@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.139 2006/03/10 15:13:21 unconed Exp $
+// $Id: profile.module,v 1.140 2006/03/12 14:08:55 killes Exp $
 
 /**
  * @file
@@ -48,6 +48,38 @@ function profile_help($section) {
 }
 
 /**
+ * Implementation of hook_menu().
+ */
+function profile_menu($may_cache) {
+  $items = array();
+
+  if ($may_cache) {
+    $items[] = array('path' => 'profile',
+      'title' => t('user list'),
+      'callback' => 'profile_browse',
+      'access' => user_access('access user profiles'),
+      'type' => MENU_SUGGESTED_ITEM);
+    $items[] = array('path' => 'admin/settings/profile',
+      'title' => t('profiles'),
+      'callback' => 'profile_admin_overview');
+    $items[] = array('path' => 'admin/settings/profile/add',
+      'title' => t('add field'),
+      'callback' => 'profile_admin_add',
+      'type' => MENU_CALLBACK);
+    $items[] = array('path' => 'admin/settings/profile/edit',
+      'title' => t('edit field'),
+      'callback' => 'profile_admin_edit',
+      'type' => MENU_CALLBACK);
+    $items[] = array('path' => 'admin/settings/profile/delete',
+      'title' => t('delete field'),
+      'callback' => 'profile_admin_delete',
+      'type' => MENU_CALLBACK);
+  }
+
+  return $items;
+}
+
+/**
  * Implementation of hook_block().
  */
 function profile_block($op = 'list', $delta = 0, $edit = array()) {
@@ -65,7 +97,12 @@ function profile_block($op = 'list', $delta = 0, $edit = array()) {
       $fields[$record->name] = $record->title;
     }
     $fields['user_profile'] = t('Link to full user profile');
-    $form['profile_block_author_fields'] = array('#type' => 'checkboxes', '#title' => t('Profile fields to display'), '#default_value' => variable_get('profile_block_author_fields', NULL), '#options' => $fields, '#description' => t('Select which profile fields you wish to display in the block. Only fields designated as public in the <a href="%profile-admin">profile field configuration</a> are available.', array('%profile-admin' => url('admin/settings/profile'))));
+    $form['profile_block_author_fields'] = array('#type' => 'checkboxes',
+      '#title' => t('Profile fields to display'),
+      '#default_value' => variable_get('profile_block_author_fields', NULL),
+      '#options' => $fields,
+      '#description' => t('Select which profile fields you wish to display in the block. Only fields designated as public in the <a href="%profile-admin">profile field configuration</a> are available.', array('%profile-admin' => url('admin/settings/profile'))),
+    );
     return $form;
   }
   else if ($op == 'save' && $delta == 0) {
@@ -78,7 +115,7 @@ function profile_block($op = 'list', $delta = 0, $edit = array()) {
         $account = user_load(array('uid' => $node->uid));
 
         if ($use_fields = variable_get('profile_block_author_fields', array())) {
-          // Compile a list of fields to show
+          // Compile a list of fields to show.
           $fields = array();
           $result = db_query('SELECT name, title, type, visibility, weight FROM {profile_fields} WHERE visibility IN (%d, %d) ORDER BY weight', PROFILE_PUBLIC, PROFILE_PUBLIC_LISTINGS);
           while ($record = db_fetch_object($result)) {
@@ -109,31 +146,235 @@ function profile_block($op = 'list', $delta = 0, $edit = array()) {
 }
 
 /**
- * Implementation of hook_menu().
+ * Implementation of hook_user().
  */
-function profile_menu($may_cache) {
-  global $user;
-  $items = array();
+function profile_user($type, &$edit, &$user, $category = NULL) {
+  switch ($type) {
+    case 'load':
+      return profile_load_profile($user);
+    case 'register':
+      return profile_form_profile($edit, $user, $category);
+    case 'update':
+    case 'insert':
+      return profile_save_profile($edit, $user, $category);
+    case 'view':
+      return profile_view_profile($user);
+    case 'form':
+      return profile_form_profile($edit, $user, $category);
+    case 'validate':
+      return profile_validate_profile($edit, $category);
+    case 'categories':
+      return profile_categories();
+  }
+}
 
-  if ($may_cache) {
-    $items[] = array('path' => 'profile', 'title' => t('user list'),
-      'callback' => 'profile_browse',
-      'access' => user_access('access user profiles'),
-      'type' => MENU_SUGGESTED_ITEM);
-    $items[] = array('path' => 'admin/settings/profile', 'title' => t('profiles'),
-      'callback' => 'profile_admin_overview');
-    $items[] = array('path' => 'admin/settings/profile/add', 'title' => t('add field'),
-      'callback' => 'profile_admin_add',
-      'type' => MENU_CALLBACK);
-    $items[] = array('path' => 'admin/settings/profile/edit', 'title' => t('edit field'),
-      'callback' => 'profile_admin_edit',
-      'type' => MENU_CALLBACK);
-    $items[] = array('path' => 'admin/settings/profile/delete', 'title' => t('delete field'),
-      'callback' => 'profile_admin_delete',
-      'type' => MENU_CALLBACK);
+/**
+ * Menu callback; adds a new field to all user profiles.
+ */
+function profile_admin_add($type) {
+  if ($_POST['op']) {
+    $data = $_POST['edit'];
+
+    // Validate the form:
+    profile_validate_form($data);
+
+    if (db_result(db_query("SELECT fid FROM {profile_fields} WHERE title = '%s' AND category = '%s'", $data['title'], $data['category']))) {
+      form_set_error('title', t('The specified title is already in use.'));
+    }
+
+    if (db_result(db_query("SELECT fid FROM {profile_fields} WHERE name = '%s'", $data['name']))) {
+      form_set_error('name', t('The specified name is already in use.'));
+    }
+
+    if (!form_get_errors()) {
+      db_query("INSERT INTO {profile_fields} (title, name, explanation, category, type, weight, required, register, visibility, options, page) VALUES ('%s', '%s', '%s', '%s', '%s', %d, %d, %d, %d, '%s', '%s')", $data['title'], $data['name'], $data['explanation'], $data['category'], $type, $data['weight'], $data['required'], $data['register'], $data['visibility'], $data['options'], $data['page']);
+
+      cache_clear_all();
+
+      drupal_set_message(t('The field has been created.'));
+      drupal_goto('admin/settings/profile');
+    }
+  }
+  else {
+    $data = array('name' => 'profile_');
   }
 
-  return $items;
+  drupal_set_title(t('Add new %type', array('%type' => _profile_field_types($type))));
+  return _profile_field_form($type, $data);
+}
+
+/**
+ * Menu callback; displays the profile field editing form.
+ */
+function profile_admin_edit($fid) {
+
+  if ($_POST['op']) {
+    $data = $_POST['edit'];
+
+    // Validate form:
+    profile_validate_form($data);
+
+    if (!form_get_errors()) {
+      db_query("UPDATE {profile_fields} SET title = '%s', name = '%s', explanation = '%s', category = '%s', weight = %d, required = %d, register = %d, visibility = %d, options = '%s', page = '%s' WHERE fid = %d", $data['title'], $data['name'], $data['explanation'], $data['category'], $data['weight'], $data['required'], $data['register'], $data['visibility'], $data['options'], $data['page'], $fid);
+
+      cache_clear_all();
+
+      drupal_set_message(t('The field has been updated.'));
+      drupal_goto('admin/settings/profile');
+    }
+  }
+  else {
+    $data = db_fetch_array(db_query('SELECT * FROM {profile_fields} WHERE fid = %d', $fid));
+  }
+
+  drupal_set_title(t('Edit %type', array('%type' => $data['type'])));
+  return _profile_field_form($data['type'], $data);
+}
+
+function _profile_field_form($type, $edit = array()) {
+
+  $form['fields'] = array('#type' => 'fieldset',
+    '#title' => t('Field settings'),
+  );
+  $form['fields']['category'] = array('#type' => 'textfield',
+    '#title' => t('Category'),
+    '#default_value' => $edit['category'],
+    '#description' => t('The category the new field should be part of. Categories are used to group fields logically. An example category is "Personal information".'),
+    '#required' => TRUE,
+  );
+  $form['fields']['title'] = array('#type' => 'textfield',
+    '#title' => t('Title'),
+    '#default_value' => $edit['title'],
+    '#description' => t('The title of the new field. The title will be shown to the user. An example title is "Favorite color".'),
+    '#required' => TRUE,
+  );
+  $form['fields']['name'] = array('#type' => 'textfield',
+    '#title' => t('Form name'),
+    '#default_value' => $edit['name'],
+    '#description' => t('The name of the field. The form name is not shown to the user but used internally in the HTML code and URLs.
+Unless you know what you are doing, it is highly recommended that you prefix the form name with <code>profile_</code> to avoid name clashes with other fields. Spaces or any other special characters except dash (-) and underscore (_) are not allowed. An example name is "profile_favorite_color" or perhaps just "profile_color".'),
+    '#required' => TRUE,
+  );
+  $form['fields']['explanation'] = array('#type' => 'textarea',
+    '#title' => t('Explanation'),
+    '#default_value' => $edit['explanation'],
+    '#description' => t('An optional explanation to go with the new field. The explanation will be shown to the user.'),
+  );
+  if ($type == 'selection') {
+    $form['fields']['options'] = array('#type' => 'textarea',
+      '#title' => t('Selection options'),
+      '#default_value' => $edit['options'],
+      '#description' => t('A list of all options. Put each option on a separate line. Example options are "red", "blue", "green", etc.'),
+    );
+  }
+  $form['fields']['weight'] = array('#type' => 'weight',
+    '#title' => t('Weight'),
+    '#default_value' => $edit['weight'],
+    '#delta' => 5,
+    '#description' => t('The weights define the order in which the form fields are shown. Lighter fields "float up" towards the top of the category.'),
+  );
+  $form['fields']['visibility'] = array('#type' => 'radios',
+    '#title' => t('Visibility'),
+    '#default_value' => isset($edit['visibility']) ? $edit['visibility'] : PROFILE_PUBLIC,
+    '#options' => array(PROFILE_HIDDEN => t('Hidden profile field, only accessible by administrators, modules and themes.'), PROFILE_PRIVATE => t('Private field, content only available to privileged users.'), PROFILE_PUBLIC => t('Public field, content shown on profile page but not used on member list pages.'), PROFILE_PUBLIC_LISTINGS => t('Public field, content shown on profile page and on member list pages.')),
+  );
+  if ($type == 'selection' || $type == 'list') {
+    $form['fields']['page'] = array('#type' => 'textfield',
+      '#title' => t('Page title'),
+      '#default_value' => $edit['page'],
+      '#description' => t('The title of the page showing all users with the specified field. The word <code>%value</code> will be substituted with the corresponding value. An example page title is "People whose favorite color is %value". This is only applicable for a public field.'),
+    );
+  }
+  else {
+    $form['fields']['page'] = array('#type' => 'textfield',
+      '#title' => t('Page title'),
+      '#default_value' => $edit['page'],
+      '#description' => t('The title of the page showing all users with the specified field. Only applicable if the field is configured to be shown on member listings.'),
+    );
+  }
+  $form['fields']['required'] = array('#type' => 'checkbox',
+    '#title' => t('The user must enter a value.'),
+    '#default_value' => $edit['required'],
+  );
+  $form['fields']['register'] = array('#type' => 'checkbox',
+    '#title' => t('Visible in user registration form.'),
+    '#default_value' => $edit['register'],
+  );
+  $form['submit'] = array('#type' => 'submit',
+    '#value' => t('Save field'),
+  );
+
+  return drupal_get_form('_profile_field_form', $form);
+}
+
+function profile_validate_form($edit) {
+
+  // Validate the title:
+  if (!$edit['title']) {
+    form_set_error('title', t('You must enter a title.'));
+  }
+
+  // Validate the 'form name':
+  if (eregi('[^a-z0-9_-]', $edit['name'])) {
+    form_set_error('name', t('The specified form name contains one or more illegal characters. Spaces or any other special characters expect dash (-) and underscore (_) are not allowed.'));
+  }
+
+  if (in_array($edit['name'], user_fields())) {
+    form_set_error('name', t('The specified form name is reserved for use by Drupal.'));
+  }
+
+  // Validate the category:
+  if (!$edit['category']) {
+    form_set_error('category', t('You must enter a category.'));
+  }
+
+  if ($edit['category'] == 'account') {
+    form_set_error('category', t('The specified category name is reserved for use by Drupal.'));
+  }
+}
+
+/**
+ * Menu callback; deletes a field from all user profiles.
+ */
+function profile_admin_delete($fid) {
+  $field = db_fetch_object(db_query("SELECT title FROM {profile_fields} WHERE fid = %d", $fid));
+  if ($_POST['edit']['confirm']) {
+    db_query('DELETE FROM {profile_fields} WHERE fid = %d', $fid);
+    db_query('DELETE FROM {profile_values} WHERE fid = %d', $fid);
+    cache_clear_all();
+    drupal_set_message(t('The field %field has been deleted.', array('%field' => theme('placeholder', $field->title))));
+    drupal_goto('admin/settings/profile');
+  }
+  else {
+    return confirm_form('profile_confirm_delete', $form, t('Are you sure you want to delete the field %field?', array('%field' => theme('placeholder', $field->title))), 'admin/settings/profile', t('This action cannot be undone. If users have entered values into this field in their profile, these entries will also be deleted. If you want to keep the user-entered data, instead of deleting the field you may wish to <a href="%edit-field">edit this field</a> and change it to a \'hidden profile field\' so that it may only be accessed by administrators.', array('%edit-field' => url('admin/settings/profile/edit/' . $fid))), t('Delete'), t('Cancel'));
+  }
+}
+
+/**
+ * Menu callback; display a listing of all editable profile fields.
+ */
+function profile_admin_overview() {
+
+  $result = db_query('SELECT * FROM {profile_fields} ORDER BY category, weight');
+  $rows = array();
+  while ($field = db_fetch_object($result)) {
+    $rows[] = array(check_plain($field->title), $field->name, _profile_field_types($field->type), $field->category, l(t('edit'), "admin/settings/profile/edit/$field->fid"), l(t('delete'), "admin/settings/profile/delete/$field->fid"));
+  }
+  if (count($rows) == 0) {
+    $rows[] = array(array('data' => t('No fields defined.'), 'colspan' => '6'));
+  }
+
+  $header = array(t('Title'), t('Name'), t('Type'), t('Category'), array('data' => t('Operations'), 'colspan' => '2'));
+
+  $output  = theme('table', $header, $rows);
+  $output .= '<h2>'. t('Add new field') .'</h2>';
+  $output .= '<ul>';
+  foreach (_profile_field_types() as $key => $value) {
+    $output .= '<li>'. l($value, "admin/settings/profile/add/$key") .'</li>';
+  }
+  $output .= '</ul>';
+
+  return $output;
 }
 
 /**
@@ -147,13 +388,13 @@ function profile_browse() {
   $field = db_fetch_object(db_query("SELECT DISTINCT(fid), type, title, page, visibility FROM {profile_fields} WHERE name = '%s'", $name));
 
   if ($name && $field->fid) {
-    // Do not allow browsing of private fields by non-admins
+    // Do not allow browsing of private fields by non-admins.
     if (!user_access('administer users') && $field->visibility == PROFILE_PRIVATE) {
        drupal_access_denied();
        return;
     }
 
-    // Compile a list of fields to show
+    // Compile a list of fields to show.
     $fields = array();
     $result = db_query('SELECT name, title, type, weight FROM {profile_fields} WHERE fid != %d AND visibility = %d ORDER BY weight', $field->fid, PROFILE_PUBLIC_LISTINGS);
     while ($record = db_fetch_object($result)) {
@@ -205,7 +446,7 @@ function profile_browse() {
     drupal_not_found();
   }
   else {
-    // Compile a list of fields to show
+    // Compile a list of fields to show.
     $fields = array();
     $result = db_query('SELECT name, title, type, weight FROM {profile_fields} WHERE visibility = %d ORDER BY category, weight', PROFILE_PUBLIC_LISTINGS);
     while ($record = db_fetch_object($result)) {
@@ -244,7 +485,7 @@ function profile_save_profile(&$edit, &$user, $category) {
   }
   else {
     $result = db_query("SELECT fid, name, type FROM {profile_fields} WHERE LOWER(category) = LOWER('%s') AND visibility != %d", $category, PROFILE_HIDDEN);
-    // We use LOWER('%s') instead of PHP's strtolower() to avoid UTF-8 conversion issues.
+    // Use LOWER('%s') instead of PHP's strtolower() to avoid UTF-8 conversion issues.
   }
   while ($field = db_fetch_object($result)) {
     if (_profile_field_serialize($field->type)) {
@@ -258,7 +499,7 @@ function profile_save_profile(&$edit, &$user, $category) {
 }
 
 function profile_view_field($user, $field) {
-  // Only allow browsing of private fields for admins
+  // Only allow browsing of private fields for admins.
   $browse = user_access('administer users') || $field->visibility != PROFILE_PRIVATE;
 
   if ($value = $user->{$field->name}) {
@@ -275,7 +516,7 @@ function profile_view_field($user, $field) {
         return '<a href="'. check_url($value) .'">'. check_plain($value) .'</a>';
       case 'date':
         list($format) = explode(' - ', variable_get('date_format_short', 'm/d/Y - H:i'), 2);
-        // Note: we avoid PHP's date() because it does not handle dates before
+        // Note: Avoid PHP's date() because it does not handle dates before
         // 1970 on Windows. This would make the date field useless for e.g.
         // birthdays.
         $replace = array('d' => sprintf('%02d', $value['day']),
@@ -344,15 +585,15 @@ function profile_form_profile($edit, $user, $category) {
     $result = db_query('SELECT * FROM {profile_fields} WHERE visibility != %d AND register = 1 ORDER BY category, weight', PROFILE_HIDDEN);
   }
   elseif ($_GET['q'] == 'admin/user/create') {
-     $result = db_query('SELECT * FROM {profile_fields} WHERE register = 1 ORDER BY category, weight');
-   }
+    $result = db_query('SELECT * FROM {profile_fields} WHERE register = 1 ORDER BY category, weight');
+  }
   elseif (user_access('administer users')) {
-     $result = db_query("SELECT * FROM {profile_fields} WHERE LOWER(category) = LOWER('%s') ORDER BY weight", $category);
+    $result = db_query("SELECT * FROM {profile_fields} WHERE LOWER(category) = LOWER('%s') ORDER BY weight", $category);
   }
   else {
     $result = db_query("SELECT * FROM {profile_fields} WHERE visibility != %d AND LOWER(category) = LOWER('%s') ORDER BY weight", PROFILE_HIDDEN, $category);
-     // We use LOWER('%s') instead of PHP's strtolower() to avoid UTF-8 conversion issues.
-   }
+    // Use LOWER('%s') instead of PHP's strtolower() to avoid UTF-8 conversion issues.
+  }
 
   while ($field = db_fetch_object($result)) {
     $category = $field->category;
@@ -362,40 +603,36 @@ function profile_form_profile($edit, $user, $category) {
     switch ($field->type) {
       case 'textfield':
       case 'url':
-        $fields[$category][$field->name] = array(
-          '#type' => 'textfield',
+        $fields[$category][$field->name] = array('#type' => 'textfield',
           '#title' => check_plain($field->title),
           '#default_value' => $edit[$field->name],
           '#maxlength' => 255,
           '#description' => _profile_form_explanation($field),
-          '#required' => $field->required
+          '#required' => $field->required,
         );
         break;
       case 'textarea':
-        $fields[$category][$field->name] = array(
-          '#type' => 'textarea',
+        $fields[$category][$field->name] = array('#type' => 'textarea',
           '#title' => check_plain($field->title),
           '#default_value' => $edit[$field->name],
           '#description' => _profile_form_explanation($field),
-          '#required' => $field->required
+          '#required' => $field->required,
         );
         break;
       case 'list':
-        $fields[$category][$field->name] = array(
-          '#type' => 'textarea',
+        $fields[$category][$field->name] = array('#type' => 'textarea',
           '#title' => check_plain($field->title),
           '#default_value' => $edit[$field->name],
           '#description' => _profile_form_explanation($field),
-          '#required' => $field->required
+          '#required' => $field->required,
         );
         break;
       case 'checkbox':
-        $fields[$category][$field->name] = array(
-          '#type' => 'checkbox',
+        $fields[$category][$field->name] = array('#type' => 'checkbox',
           '#title' => check_plain($field->title),
           '#default_value' => $edit[$field->name],
           '#description' => _profile_form_explanation($field),
-          '#required' => $field->required
+          '#required' => $field->required,
         );
         break;
       case 'selection':
@@ -406,22 +643,20 @@ function profile_form_profile($edit, $user, $category) {
             $options[$line] = $line;
           }
         }
-        $fields[$category][$field->name] = array(
-          '#type' => 'select',
+        $fields[$category][$field->name] = array('#type' => 'select',
           '#title' => check_plain($field->title),
           '#default_value' => $edit[$field->name],
           '#options' => $options,
           '#description' => _profile_form_explanation($field),
-          '#required' => $field->required
+          '#required' => $field->required,
         );
         break;
       case 'date':
-        $fields[$category][$field->name] = array(
-          '#type' => 'date',
+        $fields[$category][$field->name] = array('#type' => 'date',
           '#title' => check_plain($field->title),
           '#default_value' => $edit[$field->name],
           '#description' => _profile_form_explanation($field),
-          '#required' => $field->required
+          '#required' => $field->required,
         );
         break;
     }
@@ -446,15 +681,15 @@ function profile_validate_profile($edit, $category) {
     $result = db_query('SELECT * FROM {profile_fields} WHERE visibility != %d AND register = 1 ORDER BY category, weight', PROFILE_HIDDEN);
   }
   elseif ($_GET['q'] == 'admin/user/create') {
-     $result = db_query('SELECT * FROM {profile_fields} WHERE register = 1 ORDER BY category, weight');
-   }
+    $result = db_query('SELECT * FROM {profile_fields} WHERE register = 1 ORDER BY category, weight');
+  }
   elseif (user_access('administer users')) {
-     $result = db_query("SELECT * FROM {profile_fields} WHERE LOWER(category) = LOWER('%s') ORDER BY weight", $category);
+    $result = db_query("SELECT * FROM {profile_fields} WHERE LOWER(category) = LOWER('%s') ORDER BY weight", $category);
   }
   else {
     $result = db_query("SELECT * FROM {profile_fields} WHERE visibility != %d AND LOWER(category) = LOWER('%s') ORDER BY weight", PROFILE_HIDDEN, $category);
-     // We use LOWER('%s') instead of PHP's strtolower() to avoid UTF-8 conversion issues.
-   }
+    // Use LOWER('%s') instead of PHP's strtolower() to avoid UTF-8 conversion issues.
+  }
 
   while ($field = db_fetch_object($result)) {
     if ($edit[$field->name]) {
@@ -478,243 +713,6 @@ function profile_categories() {
     $data[] = array('name' => check_plain($category->category), 'title' => $category->category, 'weight' => 3);
   }
   return $data;
-}
-
-/**
- * Implementation of hook_user().
- */
-function profile_user($type, &$edit, &$user, $category = NULL) {
-  switch ($type) {
-    case 'load':
-      return profile_load_profile($user);
-    case 'register':
-      return profile_form_profile($edit, $user, $category);
-    case 'update':
-    case 'insert':
-      return profile_save_profile($edit, $user, $category);
-    case 'view':
-      return profile_view_profile($user);
-    case 'form':
-      return profile_form_profile($edit, $user, $category);
-    case 'validate':
-      return profile_validate_profile($edit, $category);
-    case 'categories':
-      return profile_categories();
-  }
-}
-
-function profile_validate_form($edit) {
-
-  // Validate the title:
-  if (!$edit['title']) {
-    form_set_error('title', t('You must enter a title.'));
-  }
-
-  // Validate the 'form name':
-  if (eregi('[^a-z0-9_-]', $edit['name'])) {
-    form_set_error('name', t('The specified form name contains one or more illegal characters. Spaces or any other special characters expect dash (-) and underscore (_) are not allowed.'));
-  }
-
-  if (in_array($edit['name'], user_fields())) {
-    form_set_error('name', t('The specified form name is reserved for use by Drupal.'));
-  }
-
-  // Validate the category:
-  if (!$edit['category']) {
-    form_set_error('category', t('You must enter a category.'));
-  }
-
-  if ($edit['category'] == 'account') {
-    form_set_error('category', t('The specified category name is reserved for use by Drupal.'));
-  }
-}
-
-/**
- * Menu callback; adds a new field to all user profiles.
- */
-function profile_admin_add($type) {
-  if ($_POST['op']) {
-    $data = $_POST['edit'];
-
-    // Validate the form:
-    profile_validate_form($data);
-
-    if (db_result(db_query("SELECT fid FROM {profile_fields} WHERE title = '%s' AND category = '%s'", $data['title'], $data['category']))) {
-      form_set_error('title', t('The specified title is already in use.'));
-    }
-
-    if (db_result(db_query("SELECT fid FROM {profile_fields} WHERE name = '%s'", $data['name']))) {
-      form_set_error('name', t('The specified name is already in use.'));
-    }
-
-    if (!form_get_errors()) {
-      db_query("INSERT INTO {profile_fields} (title, name, explanation, category, type, weight, required, register, visibility, options, page) VALUES ('%s', '%s', '%s', '%s', '%s', %d, %d, %d, %d, '%s', '%s')", $data['title'], $data['name'], $data['explanation'], $data['category'], $type, $data['weight'], $data['required'], $data['register'], $data['visibility'], $data['options'], $data['page']);
-
-      cache_clear_all();
-
-      drupal_set_message(t('The field has been created.'));
-      drupal_goto('admin/settings/profile');
-    }
-  }
-  else {
-    $data = array('name' => 'profile_');
-  }
-
-  drupal_set_title(t('Add new %type', array('%type' => _profile_field_types($type))));
-  return _profile_field_form($type, $data);
-}
-
-/**
- * Menu callback; displays the profile field editing form.
- */
-function profile_admin_edit($fid) {
-
-  if ($_POST['op']) {
-    $data = $_POST['edit'];
-
-    // Validate form:
-    profile_validate_form($data);
-
-    if (!form_get_errors()) {
-      db_query("UPDATE {profile_fields} SET title = '%s', name = '%s', explanation = '%s', category = '%s', weight = %d, required = %d, register = %d, visibility = %d, options = '%s', page = '%s' WHERE fid = %d", $data['title'], $data['name'], $data['explanation'], $data['category'], $data['weight'], $data['required'], $data['register'], $data['visibility'], $data['options'], $data['page'], $fid);
-
-      cache_clear_all();
-
-      drupal_set_message(t('The field has been updated.'));
-      drupal_goto('admin/settings/profile');
-    }
-  }
-  else {
-    $data = db_fetch_array(db_query('SELECT * FROM {profile_fields} WHERE fid = %d', $fid));
-  }
-
-  drupal_set_title(t('Edit %type', array('%type' => $data['type'])));
-  return _profile_field_form($data['type'], $data);
-}
-
-/**
- * Menu callback; deletes a field from all user profiles.
- */
-function profile_admin_delete($fid) {
-  $field = db_fetch_object(db_query("SELECT title FROM {profile_fields} WHERE fid = %d", $fid));
-  if ($_POST['edit']['confirm']) {
-    db_query('DELETE FROM {profile_fields} WHERE fid = %d', $fid);
-    db_query('DELETE FROM {profile_values} WHERE fid = %d', $fid);
-    cache_clear_all();
-    drupal_set_message(t('The field %field has been deleted.', array('%field' => theme('placeholder', $field->title))));
-    drupal_goto('admin/settings/profile');
-  }
-  else {
-    return confirm_form('profile_confirm_delete', $form,
-                        t('Are you sure you want to delete the field %field?', array('%field' => theme('placeholder', $field->title))),
-                        'admin/settings/profile',
-                        t('This action cannot be undone. If users have entered values into this field in their profile, these entries will also be deleted. If you want to keep the user-entered data, instead of deleting the field you may wish to <a href="%edit-field">edit this field</a> and change it to a \'hidden profile field\' so that it may only be accessed by administrators.', array('%edit-field' => url('admin/settings/profile/edit/' . $fid))),
-                        t('Delete'),
-                        t('Cancel'));
-  }
-}
-
-function _profile_field_form($type, $edit = array()) {
-
-  $form['fields'] = array('#type' => 'fieldset',
-    '#title' => t('Field settings'),
-  );
-  $form['fields']['category'] = array('#type' => 'textfield',
-    '#title' => t('Category'),
-    '#default_value' => $edit['category'],
-    '#description' => t('The category the new field should be part of. Categories are used to group fields logically. An example category is "Personal information".'),
-    '#required' => TRUE,
-  );
-  $form['fields']['title'] = array('#type' => 'textfield',
-    '#title' => t('Title'),
-    '#default_value' => $edit['title'],
-    '#description' => t('The title of the new field. The title will be shown to the user. An example title is "Favorite color".'),
-    '#required' => TRUE,
-  );
-  $form['fields']['name'] = array('#type' => 'textfield',
-    '#title' => t('Form name'),
-    '#default_value' => $edit['name'],
-    '#description' => t('The name of the field. The form name is not shown to the user but used internally in the HTML code and URLs.
-Unless you know what you are doing, it is highly recommended that you prefix the form name with <code>profile_</code> to avoid name clashes with other fields. Spaces or any other special characters except dash (-) and underscore (_) are not allowed. An example name is "profile_favorite_color" or perhaps just "profile_color".'),
-    '#required' => TRUE,
-  );
-  $form['fields']['explanation'] = array('#type' => 'textarea',
-    '#title' => t('Explanation'),
-    '#default_value' => $edit['explanation'],
-    '#description' => t('An optional explanation to go with the new field. The explanation will be shown to the user.'),
-  );
-  if ($type == 'selection') {
-    $form['fields']['options'] = array('#type' => 'textarea',
-      '#title' => t('Selection options'),
-      '#default_value' => $edit['options'],
-      '#description' => t('A list of all options. Put each option on a separate line. Example options are "red", "blue", "green", etc.'),
-    );
-  }
-  $form['fields']['weight'] = array('#type' => 'weight',
-    '#title' => t('Weight'),
-    '#default_value' => $edit['weight'],
-    '#delta' => 5,
-    '#description' =>  t('The weights define the order in which the form fields are shown. Lighter fields "float up" towards the top of the category.'),
-  );
-  $form['fields']['visibility'] = array('#type' => 'radios',
-    '#title' => t('Visibility'),
-    '#default_value' => isset($edit['visibility']) ? $edit['visibility'] : PROFILE_PUBLIC,
-    '#options' => array(PROFILE_HIDDEN => t('Hidden profile field, only accessible by administrators, modules and themes.'), PROFILE_PRIVATE => t('Private field, content only available to privileged users.'), PROFILE_PUBLIC => t('Public field, content shown on profile page but not used on member list pages.'), PROFILE_PUBLIC_LISTINGS => t('Public field, content shown on profile page and on member list pages.')),
-  );
-  if ($type == 'selection' || $type == 'list') {
-    $form['fields']['page'] = array('#type' => 'textfield',
-      '#title' => t('Page title'),
-      '#default_value' => $edit['page'],
-      '#description' => t('The title of the page showing all users with the specified field. The word <code>%value</code> will be substituted with the corresponding value. An example page title is "People whose favorite color is %value". This is only applicable for a public field.'),
-    );
-  }
-  else {
-    $form['fields']['page'] = array('#type' => 'textfield',
-      '#title' => t('Page title'),
-      '#default_value' => $edit['page'],
-      '#description' => t('The title of the page showing all users with the specified field. Only applicable if the field is configured to be shown on member listings.'),
-    );
-  }
-  $form['fields']['required'] = array('#type' => 'checkbox',
-    '#title' => t('The user must enter a value.'),
-    '#default_value' => $edit['required'],
-  );
-  $form['fields']['register'] = array('#type' => 'checkbox',
-    '#title' => t('Visible in user registration form.'),
-    '#default_value' => $edit['register'],
-  );
-  $form['submit'] = array('#type' => 'submit',
-    '#value' => t('Save field'),
-  );
-
-  return drupal_get_form('_profile_field_form', $form);
-}
-
-/**
- * Menu callback; display a listing of all editable profile fields.
- */
-function profile_admin_overview() {
-
-  $result = db_query('SELECT * FROM {profile_fields} ORDER BY category, weight');
-  $rows = array();
-  while ($field = db_fetch_object($result)) {
-    $rows[] = array(check_plain($field->title), $field->name, _profile_field_types($field->type), $field->category, l(t('edit'), "admin/settings/profile/edit/$field->fid"), l(t('delete'), "admin/settings/profile/delete/$field->fid"));
-  }
-  if (count($rows) == 0) {
-    $rows[] = array(array('data' => t('No fields defined.'), 'colspan' => '6'));
-  }
-
-  $header = array(t('Title'), t('Name'), t('Type'), t('Category'), array('data' => t('Operations'), 'colspan' => '2'));
-
-  $output  = theme('table', $header, $rows);
-  $output .= '<h2>'. t('Add new field') .'</h2>';
-  $output .= '<ul>';
-  foreach (_profile_field_types() as $key => $value) {
-    $output .= '<li>'. l($value, "admin/settings/profile/add/$key") .'</li>';
-  }
-  $output .= '</ul>';
-
-  return $output;
 }
 
 function theme_profile_block($account, $fields = array()) {
