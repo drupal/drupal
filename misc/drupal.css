@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.143 2006/03/07 11:36:49 dries Exp $ */
+/* $Id: drupal.css,v 1.144 2006/03/12 01:56:11 unconed Exp $ */
 
 /*
 ** HTML elements
@@ -536,6 +536,18 @@ ul.secondary a {
 }
 ul.secondary a.active {
   border-bottom: 4px solid #999;
+}
+
+/*
+** Help module
+*/
+.help-items {
+  float: left;
+  width: 22%;
+  padding-right: 3%;
+}
+.help-items-last {
+  padding-right: 0;
 }
 
 /*

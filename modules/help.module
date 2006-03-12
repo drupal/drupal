@@ -1,5 +1,5 @@
 <?php
-// $Id: help.module,v 1.49 2006/02/21 18:46:54 dries Exp $
+// $Id: help.module,v 1.50 2006/03/12 01:56:11 unconed Exp $
 
 /**
  * @file
@@ -13,19 +13,19 @@ function help_menu($may_cache) {
   $items = array();
 
   if ($may_cache) {
+    $admin_access = user_access('access administration pages');
+
     $items[] = array('path' => 'admin/help', 'title' => t('help'),
       'callback' => 'help_main',
-      'access' => user_access('access administration pages'),
+      'access' => $admin_access,
       'weight' => 9);
 
-    foreach (module_list() as $name) {
-      if (module_hook($name, 'help')) {
-        $items[] = array('path' => 'admin/help/' . $name,
-          'title' => t($name),
-          'callback' => 'help_page',
-    'type' => MENU_CALLBACK,
-          'access' => user_access('access administration pages'));
-      }
+    foreach (module_implements('help', TRUE) as $module) {
+      $items[] = array('path' => 'admin/help/' . $module,
+        'title' => t($module),
+        'callback' => 'help_page',
+        'type' => MENU_CALLBACK,
+        'access' => $admin_access);
     }
   }
 
@@ -37,8 +37,6 @@ function help_menu($may_cache) {
  */
 function help_main() {
   $output = t("
-  <p>This guide explains what the various modules in <a href=\"%Drupal\">Drupal</a> do and how to configure them.</p>
-  <p>It is not a substitute for the <a href=\"%handbook\">Drupal handbook</a> available online and should be used in conjunction with it. The online reference handbook might be more up-to-date and has helpful user-contributed comments. It is your definitive reference point for all Drupal documentation.</p>
   <h2>Help topics</h2>
   <p>Help is available on the following items:</p>
   %help_pages
@@ -61,21 +59,31 @@ function help_main() {
    <dt>Unpublished</dt><dd>A node that is only viewable by administrators and moderators.</dd>
    <dt>User</dt><dd>A person who has an account at your Drupal site, and is logged in with that account.</dd>
    <dt>Visitor</dt><dd>A person who does not have an account at your Drupal site or a person who has an account at your Drupal site but is <strong>not</strong> logged in with that account. Also termed \"anonymous user\".</dd>
-  </dl>", array('%Drupal' => 'http://drupal.org', '%handbook' => 'http://drupal.org/handbook', '%help_pages' => help_links_as_list(), '%taxonomy' => url('admin/help/taxonomy')));
+  </dl>", array('%help_pages' => help_links_as_list(), '%taxonomy' => url('admin/help/taxonomy')));
 
   return $output;
 }
 
 function help_links_as_list() {
-  $output = '<ul>';
-  foreach (module_list() as $name) {
-    if (module_hook($name, 'help')) {
-      if (module_invoke($name, 'help', "admin/help#$name")) {
-        $output .= '<li><a href="' . url("admin/help/$name") . '">' . t($name) . '</a></li>';
-      }
+  $modules = array();
+  foreach (module_implements('help', TRUE) as $module) {
+    if (module_invoke($module, 'help', "admin/help#$module")) {
+      $modules[] = $module;
     }
   }
-  $output .= '</ul>';
+  sort($modules);
+
+  // Output pretty four-column list
+  $break = ceil(count($modules) / 4);
+  $output = '<div class="help-items"><ul>';
+  foreach ($modules as $i => $module) {
+    $output .= '<li>'. l(t($module), 'admin/help/'. $module) .'</li>';
+    if (($i + 1) % $break == 0) {
+      $output .= '</ul></div><div class="help-items'. ($i + 1 == $break * 3 ? ' help-items-last' : '') .'"><ul>';
+    }
+  }
+  $output .= '</ul></div><br class="clear" />';
+
   return $output;
 }
 
@@ -84,6 +92,11 @@ function help_links_as_list() {
  */
 function help_help($section) {
   switch ($section) {
+    case 'admin/help':
+      $output = t('<p>This guide explains what the various modules in <a href="%Drupal">Drupal</a> do and how to configure them.</p>
+<p>It is not a substitute for the <a href="%handbook">Drupal handbook</a> available online and should be used in conjunction with it. The online reference handbook might be more up-to-date and has helpful user-contributed comments. It is your definitive reference point for all Drupal documentation.</p>
+', array('%Drupal' => 'http://drupal.org', '%handbook' => 'http://drupal.org/handbook'));
+      return $output;
     case 'admin/help#help':
       $output = '<p>'. t('The help module displays context sensitive help information. Users can learn how to use modules and accomplish tasks quicker with less errors by clicking on links in provided by the help module.') .'</p>';
       $output .= t('<p>Modules can make documentation available to other modules with this module. All user help should be presented using this module.  Some examples of help: </p>
@@ -108,6 +121,7 @@ function help_help($section) {
  */
 function help_page() {
   $name = arg(2);
+  $output = '';
   if (module_hook($name, 'help')) {
     $temp = module_invoke($name, 'help', "admin/help#$name");
     if (empty($temp)) {
@@ -119,5 +133,3 @@ function help_page() {
   }
   return $output;
 }
-
-
