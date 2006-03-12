@@ -323,12 +323,24 @@ function form_builder($form_id, $form) {
     $form['#ref'] = &$ref;
     if (!isset($form['#value'])) {
       if ($posted) {
-        if (isset($edit)) {
-          $form['#value'] = $edit; // normal element
-          $form['#needs_validation'] = TRUE;
+        switch ($form['#type']) {
+          case 'checkbox':
+            $form['#value'] = isset($edit) ? $form['#return_value'] : 0;
+            break;
+          case 'select':
+            $form['#value'] = isset($edit) ? $edit : array();
+            break;
+          case 'textfield':
+            if (isset($edit)) {
+              $form['#value'] = str_replace(array("\r", "\n"), '', $edit);
+            }
+            break;
+          default:
+            if (isset($edit)) {
+              $form['#value'] = $edit;
+            }
         }
-        elseif (isset($form['#return_value'])) {
-          $form['#value'] = '0'; // checkbox unchecked
+        if (isset($form['#value'])) {
           $form['#needs_validation'] = TRUE;
         }
       }
