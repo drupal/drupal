@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.284 2006/03/07 11:28:22 dries Exp $
+// $Id: theme.inc,v 1.285 2006/03/13 21:42:35 unconed Exp $
 
 /**
  * @file
@@ -958,7 +958,7 @@ function theme_username($object) {
       $output = l($name, 'user/'. $object->uid, array('title' => t('View user profile.')));
     }
     else {
-      $output = $name;
+      $output = check_plain($name);
     }
   }
   else if ($object->name) {
@@ -967,10 +967,10 @@ function theme_username($object) {
     // aggregator modules). This clause enables modules to display
     // the true author of the content.
     if ($object->homepage) {
-      $output = '<a href="'. $object->homepage .'">'. $object->name .'</a>';
+      $output = l($object->name, $object->homepage);
     }
     else {
-      $output = $object->name;
+      $output = check_plain($object->name);
     }
 
     $output .= ' ('. t('not verified') .')';

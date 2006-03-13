@@ -1,5 +1,5 @@
 <?php
-// $Id: phptemplate.engine,v 1.29 2006/03/01 14:33:18 dries Exp $
+// $Id: phptemplate.engine,v 1.30 2006/03/13 21:42:35 unconed Exp $
 
 /**
  * @file
@@ -143,7 +143,7 @@ function phptemplate_page($content) {
 
   /* Set title and breadcrumb to declared values */
   if (drupal_get_path_alias($_GET['q']) == variable_get('site_frontpage', 'node')) {
-    $mission = theme_get_setting('mission');
+    $mission = filter_xss(theme_get_setting('mission'));
   }
 
   /* Add favicon */
