@@ -412,7 +412,7 @@ function book_view(&$node, $teaser = FALSE, $page = FALSE) {
   $node = book_content($node, $teaser);
 
   if (!$teaser && $node->moderate) {
-    $node->body .= '<div class="log"><div class="title">'. t('Log') .':</div>'. $node->log .'</div>';
+    $node->body .= '<div class="log"><div class="title">'. t('Log') .':</div>'. check_output($node->log, $node->format) .'</div>';
   }
 }
 
