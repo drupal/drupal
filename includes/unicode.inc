@@ -223,7 +223,7 @@ function truncate_utf8($string, $len, $wordsafe = FALSE, $dots = FALSE) {
  *   have to be changed to \r\n or \r.
  */
 function mime_header_encode($string) {
-  if (!preg_match('/^[\x20-\x7E]*$/', $string)) {
+  if (preg_match('/[^\x20-\x7E]/', $string)) {
     $chunk_size = 47; // floor((75 - strlen("=?UTF-8?B??=")) * 0.75);
     $len = strlen($string);
     $output = '';
