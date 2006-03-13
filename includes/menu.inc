@@ -803,7 +803,7 @@ function _menu_build() {
         else {
           // It has a permanent ID. Only replace with non-custom menu items.
           if ($item->type & MENU_CREATED_BY_ADMIN) {
-            $_menu['items'][$item->mid] = array('path' => $item->path, 'access' => TRUE, 'callback' => '');
+            $_menu['items'][$item->mid] = array('path' => $item->path, 'callback' => '');
           }
           else {
             // Leave the old item around as a shortcut to this one.
@@ -815,7 +815,7 @@ function _menu_build() {
       else {
         // The path was not declared, so this is a custom item or an orphaned one.
         if ($item->type & MENU_CREATED_BY_ADMIN) {
-          $_menu['items'][$item->mid] = array('path' => $item->path, 'access' => TRUE, 'callback' => '');
+          $_menu['items'][$item->mid] = array('path' => $item->path, 'callback' => '');
           if (!empty($item->path)) {
             $_menu['path index'][$item->path] = $item->mid;
           }
