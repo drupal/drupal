@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.79 2006/03/10 19:03:25 dries Exp $
+// $Id: upload.module,v 1.80 2006/03/13 22:23:09 killes Exp $
 
 /**
  * @file
@@ -45,7 +45,7 @@ function upload_link($type, $node = 0, $main = 0) {
   $links = array();
 
   // Display a link with the number of attachments
-  if ($main && $type == 'node' && $node->files && user_access('view uploaded files')) {
+  if ($main && $type == 'node' && is_array($node->files) && user_access('view uploaded files')) {
     $num_files = 0;
     foreach ($node->files as $file) {
       if ($file->list) {
@@ -101,10 +101,10 @@ function upload_settings() {
   );
 
   $form['settings_general']['upload_list_default'] = array('#type' => 'select', '#title' => t('List files by default'),
-                                        '#default_value' => variable_get('upload_list_default',1),
-                                        '#options' => array( 0 => t('No'), 1 => t('Yes') ),
-                                        '#description' => t('Set whether files attached to nodes are listed or not in the node view by default.'),
-                                  );
+    '#default_value' => variable_get('upload_list_default',1),
+    '#options' => array( 0 => t('No'), 1 => t('Yes') ),
+    '#description' => t('Set whether files attached to nodes are listed or not in the node view by default.'),
+  );
 
   $roles = user_roles(0, 'upload files');
 
@@ -160,14 +160,10 @@ function upload_file_download($file) {
   }
 }
 
-
-
-
-/*
+/**
  * Save new uploads and attach them to the node object.
  * append file_previews to the node object as well.
  */
-
 function _upload_prepare(&$node) {
 
   // Clean up old file previews if a post didn't get the user to this page.
@@ -249,9 +245,8 @@ function _upload_validate(&$node) {
   // Accumulator for disk space quotas.
   $filesize = 0;
 
-
   // Check if node->files exists, and if it contains something.
-  if (count($node->files) && is_array($node->files)) {
+  if (is_array($node->files)) {
     // Update existing files with form data.
     foreach($node->files as $fid => $file) {
 
@@ -302,7 +297,6 @@ function _upload_validate(&$node) {
   }
 }
 
-
 /**
  * Implementation of hook_nodeapi().
  */
@@ -325,7 +319,7 @@ function upload_nodeapi(&$node, $op, $arg) {
       break;
 
     case 'view':
-      if ($node->files && user_access('view uploaded files')) {
+      if (is_array($node->files) && user_access('view uploaded files')) {
         $header = array(t('Attachment'), t('Size'));
         $rows = array();
         $previews = array();
@@ -382,10 +376,10 @@ function upload_nodeapi(&$node, $op, $arg) {
       break;
 
     case 'search result':
-      return $node->files ? format_plural(count($node->files), '1 attachment', '%count attachments') : null;
+      return is_array($node->files) ? format_plural(count($node->files), '1 attachment', '%count attachments') : null;
 
     case 'rss item':
-      if ($node->files) {
+      if (is_array($node->files)) {
         $files = array();
         foreach ($node->files as $file) {
           if ($file->list) {
@@ -429,6 +423,10 @@ function upload_total_space_used() {
 }
 
 function upload_save($node) {
+  if (!is_array($node->files)) {
+    return;
+  }
+
   foreach ($node->files as $fid => $file) {
     // Convert file to object for compatability
     $file = (object)$file;
@@ -479,8 +477,6 @@ function upload_save($node) {
       db_query("UPDATE {file_revisions} SET list = %d, description = '%s' WHERE fid = %d AND vid = %d", $file->list, $file->description, $file->fid, $node->vid);
     }
   }
-
-  return;
 }
 
 function upload_delete($node) {
@@ -501,21 +497,22 @@ function upload_delete($node) {
 }
 
 function upload_delete_revision($node) {
-  foreach ($node->files as $file) {
-    // Check if the file will be used after this revision is deleted
-    $count = db_result(db_query('SELECT COUNT(fid) FROM {file_revisions} WHERE fid = %d', $file->fid));
+  if (is_array($node->files)) {
+    foreach ($node->files as $file) {
+      // Check if the file will be used after this revision is deleted
+      $count = db_result(db_query('SELECT COUNT(fid) FROM {file_revisions} WHERE fid = %d', $file->fid));
 
-    // if the file won't be used, delete it
-    if ($count < 2) {
-      db_query('DELETE FROM {files} WHERE fid = %d', $file->fid);
-      file_delete($file->filepath);
+      // if the file won't be used, delete it
+      if ($count < 2) {
+        db_query('DELETE FROM {files} WHERE fid = %d', $file->fid);
+        file_delete($file->filepath);
+      }
     }
   }
 
   // delete the revision
   db_query('DELETE FROM {file_revisions} WHERE vid = %d', $node->vid);
 }
-
 
 function _upload_form($node) {
   $header = array(t('Delete'), t('List'), t('Description'), t('Size'));
