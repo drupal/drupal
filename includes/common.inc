@@ -1766,7 +1766,7 @@ function truncate_utf8($string, $len) {
  *   have to be changed to \r\n or \r.
  */
 function mime_header_encode($string, $charset = 'UTF-8') {
-  if (!preg_match('/^[\x20-\x7E]*$/', $string)) {
+  if (preg_match('/[^\x20-\x7E]/', $string)) {
     $chunk_size = 75 - 7 - strlen($charset);
     $chunk_size -= $chunk_size % 4;
     $string = trim(chunk_split(base64_encode($string), $chunk_size, "\n"));
