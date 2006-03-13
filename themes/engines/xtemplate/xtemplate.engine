@@ -183,7 +183,7 @@ function xtemplate_page($content) {
 
   // only parse the mission block if we are on the frontpage ...
   if ($_GET["q"] == variable_get("site_frontpage", "node") && theme_get_setting('toggle_mission') && ($mission = theme_get_setting('mission'))) {
-    $xtemplate->template->assign("mission", $mission);
+    $xtemplate->template->assign("mission", filter_xss($mission));
     $xtemplate->template->parse("header.mission");
   }
 

@@ -884,7 +884,7 @@ function format_name($object) {
       $output = l($name, 'user/'. $object->uid, array('title' => t('View user profile.')));
     }
     else {
-      $output = $name;
+      $output = check_plain($name);
     }
   }
   else if ($object->name) {
@@ -893,10 +893,10 @@ function format_name($object) {
     // aggregator modules). This clause enables modules to display
     // the true author of the content.
     if ($object->homepage) {
-      $output = '<a href="'. $object->homepage .'">'. $object->name .'</a>';
+      $output = '<a href="'. check_url($object->homepage) .'">'. check_plain($object->name) .'</a>';
     }
     else {
-      $output = $object->name;
+      $output = check_plain($object->name);
     }
 
     $output .= ' ('. t('not verified') .')';
