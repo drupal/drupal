@@ -1,5 +1,5 @@
 <?php
-// $Id: unicode.inc,v 1.16 2006/03/09 14:46:33 dries Exp $
+// $Id: unicode.inc,v 1.17 2006/03/13 21:44:49 unconed Exp $
 
 define('UNICODE_ERROR', -1);
 define('UNICODE_SINGLEBYTE', 0);
@@ -223,7 +223,7 @@ function truncate_utf8($string, $len, $wordsafe = FALSE, $dots = FALSE) {
  *   have to be changed to \r\n or \r.
  */
 function mime_header_encode($string) {
-  if (!preg_match('/^[\x20-\x7E]*$/', $string)) {
+  if (preg_match('/[^\x20-\x7E]/', $string)) {
     $chunk_size = 47; // floor((75 - strlen("=?UTF-8?B??=")) * 0.75);
     $len = strlen($string);
     $output = '';
