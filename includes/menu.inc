@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.108 2006/03/09 22:12:53 killes Exp $
+// $Id: menu.inc,v 1.109 2006/03/13 21:33:18 unconed Exp $
 
 /**
  * @file
@@ -1073,7 +1073,7 @@ function _menu_build() {
         else {
           // It has a permanent ID. Only replace with non-custom menu items.
           if ($item->type & MENU_CREATED_BY_ADMIN) {
-            $_menu['items'][$item->mid] = array('path' => $item->path, 'access' => TRUE);
+            $_menu['items'][$item->mid] = array('path' => $item->path);
           }
           else {
             // Leave the old item around as a shortcut to this one.
@@ -1085,7 +1085,7 @@ function _menu_build() {
       else {
         // The path was not declared, so this is a custom item or an orphaned one.
         if ($item->type & MENU_CREATED_BY_ADMIN) {
-          $_menu['items'][$item->mid] = array('path' => $item->path, 'access' => TRUE);
+          $_menu['items'][$item->mid] = array('path' => $item->path);
           if (!empty($item->path)) {
             $_menu['path index'][$item->path] = $item->mid;
           }
