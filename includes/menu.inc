@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.109 2006/03/13 21:33:18 unconed Exp $
+// $Id: menu.inc,v 1.110 2006/03/14 15:20:41 unconed Exp $
 
 /**
  * @file
@@ -1125,7 +1125,10 @@ function _menu_item_is_accessible($mid) {
     $path = substr($path, 0, strrpos($path, '/'));
   }
   if (empty($path)) {
-    return FALSE;
+    // Items without any access attribute up the chain are denied, unless they
+    // were created by the admin. They most likely point to non-Drupal directories
+    // or to an external URL and should be allowed.
+    return $menu['items'][$mid]['type'] & MENU_CREATED_BY_ADMIN;
   }
   return $menu['items'][$menu['path index'][$path]]['access'];
 }
