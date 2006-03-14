@@ -792,6 +792,12 @@ function user_login($edit = array(), $msg = '') {
 
       user_module_invoke('login', $edit, $user);
 
+      if (function_exists('session_regenerate_id')) {
+        $old_session_id = session_id();
+        session_regenerate_id();
+        db_query("UPDATE {sessions} SET sid = '%s' WHERE sid = '%s'", session_id(), $old_session_id);      
+      }
+
       // Redirect the user to the page he logged on from.
       drupal_goto($edit['destination']);
     }
