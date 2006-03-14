@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.354 2006/03/14 15:36:25 unconed Exp $
+// $Id: book.module,v 1.355 2006/03/14 15:43:49 unconed Exp $
 
 /**
  * @file
@@ -376,7 +376,7 @@ function book_location($node, $nodes = array()) {
   $parent = db_fetch_object(db_query(db_rewrite_sql('SELECT n.nid, n.title, b.parent, b.weight FROM {node} n INNER JOIN {book} b ON n.vid = b.vid WHERE n.nid = %d'), $node->parent));
   if ($parent->title) {
     $nodes = book_location($parent, $nodes);
-    array_push($nodes, $parent);
+    $nodes[] = $parent;
   }
   return $nodes;
 }
@@ -387,7 +387,7 @@ function book_location($node, $nodes = array()) {
 function book_location_down($node, $nodes = array()) {
   $last_direct_child = db_fetch_object(db_query(db_rewrite_sql('SELECT n.nid, n.title, b.parent, b.weight FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE n.status = 1 AND b.parent = %d ORDER BY b.weight DESC, n.title DESC'), $node->nid));
   if ($last_direct_child) {
-    array_push($nodes, $last_direct_child);
+    $nodes[] = $last_direct_child;
     $nodes = book_location_down($last_direct_child, $nodes);
   }
   return $nodes;
@@ -428,7 +428,8 @@ function book_next($node) {
   }
 
   // No direct child: get next for this level or any parent in this book.
-  array_push($path = book_location($node), $node); // Path to top-level node including this one.
+  $path[] = book_location($node); // Path to top-level node including this one.
+  $path[] = $node;
 
   while (($leaf = array_pop($path)) && count($path)) {
     $next = db_fetch_object(db_query(db_rewrite_sql("SELECT n.nid, n.title, b.weight FROM {node} n INNER JOIN {book} b ON n.vid = b.vid WHERE b.parent = %d AND n.status = 1 AND n.moderate = 0 AND (b.weight > %d OR (b.weight = %d AND n.title > '%s')) ORDER BY b.weight ASC, n.title ASC"), $leaf->parent, $leaf->weight, $leaf->weight, $leaf->title));
@@ -569,7 +570,7 @@ function book_toc($exclude = 0) {
     if (!$children[$node->parent]) {
       $children[$node->parent] = array();
     }
-    array_push($children[$node->parent], $node);
+    $children[$node->parent][] = $node;
   }
 
   $toc = array();
@@ -625,7 +626,7 @@ function book_tree($parent = 0, $depth = 3, $unfold = array()) {
 
   while ($node = db_fetch_object($result)) {
     $list = $children[$node->parent] ? $children[$node->parent] : array();
-    array_push($list, $node);
+    $list[] = $node;
     $children[$node->parent] = $list;
   }
 
