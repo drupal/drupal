@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.178 2006/03/11 13:45:41 dries Exp $
+// $Id: update.php,v 1.179 2006/03/14 21:19:41 killes Exp $
 
 /**
  * @file
@@ -352,7 +352,9 @@ function update_selection_page() {
   );
 
   drupal_set_title('Drupal database update');
-  drupal_add_js('misc/update.js');
+  // Prevent browser from using cached drupal.js or update.js
+  drupal_add_js('misc/update.js?'.time());
+  drupal_add_js('misc/drupal.js?'.time());
   $output .= drupal_get_form('update_script_selection_form', $form);
 
   return $output;
