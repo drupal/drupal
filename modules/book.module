@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.352 2006/03/02 08:44:52 dries Exp $
+// $Id: book.module,v 1.353 2006/03/14 09:21:49 killes Exp $
 
 /**
  * @file
@@ -250,7 +250,7 @@ function book_form(&$node) {
   $form['parent'] = array('#type' => 'select',
     '#title' => t('Parent'),
     '#default_value' => ($node->parent ? $node->parent : arg(4)),
-    '#options' => book_toc($node->nid),
+    '#options' => book_toc($node->nid, $node->parent),
     '#weight' => -4,
     '#description' => user_access('create new books') ? t('The parent section in which to place this page.  Note that each page whose parent is &lt;top-level&gt; is an independent, top-level book.') : t('The parent that this page belongs in.'),
   );
@@ -301,12 +301,12 @@ function book_form(&$node) {
  */
 function book_outline($nid) {
   $node = node_load($nid);
-  $page = db_fetch_object(db_query('SELECT * FROM {book} WHERE vid = %d', $node->vid));
+  $page = book_load($node);
 
   $form['parent'] = array('#type' => 'select',
     '#title' => t('Parent'),
     '#default_value' => $page->parent,
-    '#options' => book_toc($node->nid),
+    '#options' => book_toc($node->nid, $page->parent),
     '#description' => t('The parent page in the book.'),
   );
   $form['weight'] = array('#type' => 'weight',
@@ -557,7 +557,7 @@ function book_toc_recurse($nid, $indent, $toc, $children, $exclude) {
 /**
  * Returns an array of titles and nid entries of book pages in table of contents order.
  */
-function book_toc($exclude = 0) {
+function book_toc($exclude, $parent) {
   $result = db_query(db_rewrite_sql('SELECT n.nid, n.title, b.parent, b.weight FROM {node} n INNER JOIN {book} b ON n.vid = b.vid WHERE n.status = 1 ORDER BY b.weight, n.title'));
 
   while ($node = db_fetch_object($result)) {
@@ -569,7 +569,7 @@ function book_toc($exclude = 0) {
 
   $toc = array();
   // If the user has permission to create new books, add the top-level book page to the menu;
-  if (user_access('create new books')) {
+  if (user_access('create new books') || ($exclude && !$parent)) {
     $toc[0] = '<'. t('top-level') .'>';
   }
 
