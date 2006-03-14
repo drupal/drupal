@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.353 2006/03/14 09:21:49 killes Exp $
+// $Id: book.module,v 1.354 2006/03/14 15:36:25 unconed Exp $
 
 /**
  * @file
@@ -247,13 +247,18 @@ function book_validate($node) {
  * Implementation of hook_form().
  */
 function book_form(&$node) {
-  $form['parent'] = array('#type' => 'select',
-    '#title' => t('Parent'),
-    '#default_value' => ($node->parent ? $node->parent : arg(4)),
-    '#options' => book_toc($node->nid, $node->parent),
-    '#weight' => -4,
-    '#description' => user_access('create new books') ? t('The parent section in which to place this page.  Note that each page whose parent is &lt;top-level&gt; is an independent, top-level book.') : t('The parent that this page belongs in.'),
-  );
+  if ($node->nid && !$node->parent && !user_access('create new books')) {
+    $form['parent'] = array('#type' => 'value', $node->parent);
+  }
+  else {
+    $form['parent'] = array('#type' => 'select',
+      '#title' => t('Parent'),
+      '#default_value' => ($node->parent ? $node->parent : arg(4)),
+      '#options' => book_toc($node->nid),
+      '#weight' => -4,
+      '#description' => user_access('create new books') ? t('The parent section in which to place this page.  Note that each page whose parent is &lt;top-level&gt; is an independent, top-level book.') : t('The parent that this page belongs in.'),
+    );
+  }
 
   $form['title'] = array('#type' => 'textfield',
     '#title' => t('Title'),
@@ -306,7 +311,7 @@ function book_outline($nid) {
   $form['parent'] = array('#type' => 'select',
     '#title' => t('Parent'),
     '#default_value' => $page->parent,
-    '#options' => book_toc($node->nid, $page->parent),
+    '#options' => book_toc($node->nid),
     '#description' => t('The parent page in the book.'),
   );
   $form['weight'] = array('#type' => 'weight',
@@ -557,7 +562,7 @@ function book_toc_recurse($nid, $indent, $toc, $children, $exclude) {
 /**
  * Returns an array of titles and nid entries of book pages in table of contents order.
  */
-function book_toc($exclude, $parent) {
+function book_toc($exclude = 0) {
   $result = db_query(db_rewrite_sql('SELECT n.nid, n.title, b.parent, b.weight FROM {node} n INNER JOIN {book} b ON n.vid = b.vid WHERE n.status = 1 ORDER BY b.weight, n.title'));
 
   while ($node = db_fetch_object($result)) {
@@ -569,7 +574,7 @@ function book_toc($exclude, $parent) {
 
   $toc = array();
   // If the user has permission to create new books, add the top-level book page to the menu;
-  if (user_access('create new books') || ($exclude && !$parent)) {
+  if (user_access('create new books')) {
     $toc[0] = '<'. t('top-level') .'>';
   }
 
