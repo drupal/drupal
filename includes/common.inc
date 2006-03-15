@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.526 2006/03/10 17:06:48 unconed Exp $
+// $Id: common.inc,v 1.527 2006/03/15 08:46:57 killes Exp $
 
 /**
  * @file
@@ -1145,15 +1145,16 @@ function drupal_add_link($attributes) {
  * it adds "misc/drupal.js" to the output. Other scripts
  * depends on the 'killswitch' inside it.
  */
-function drupal_add_js($file) {
+function drupal_add_js($file, $nocache = FALSE) {
   static $sent = array();
 
+  $postfix = $nocache ? '?'. time() : '';
   if (!isset($sent['misc/drupal.js'])) {
-    drupal_set_html_head('<script type="text/javascript" src="'. base_path() .'misc/drupal.js"></script>');
+    drupal_set_html_head('<script type="text/javascript" src="'. base_path() .'misc/drupal.js'. $postfix .'"></script>');
     $sent['misc/drupal.js'] = true;
   }
   if (!isset($sent[$file])) {
-    drupal_set_html_head('<script type="text/javascript" src="'. check_url(base_path() . $file) .'"></script>');
+    drupal_set_html_head('<script type="text/javascript" src="'. check_url(base_path() . $file) . $postfix .'"></script>');
     $sent[$file] = true;
   }
 }
