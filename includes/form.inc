@@ -325,14 +325,16 @@ function form_builder($form_id, $form) {
       if ($posted) {
         switch ($form['#type']) {
           case 'checkbox':
-            $form['#value'] = isset($edit) ? $form['#return_value'] : 0;
+            $form['#value'] = !empty($edit) ? $form['#return_value'] : 0;
             break;
           case 'select':
             $form['#value'] = isset($edit) ? $edit : array();
             break;
           case 'textfield':
             if (isset($edit)) {
-              $form['#value'] = str_replace(array("\r", "\n"), '', $edit);
+              // Equate $edit to the form value to ensure it's marked for validation
+              $edit = str_replace(array("\r", "\n"), '', $edit);
+              $form['#value'] = $edit;
             }
             break;
           default:
@@ -340,7 +342,8 @@ function form_builder($form_id, $form) {
               $form['#value'] = $edit;
             }
         }
-        if (isset($form['#value'])) {
+        // Mark all posted values for validation
+        if (isset($form['#value']) && $form['#value'] === $edit) {
           $form['#needs_validation'] = TRUE;
         }
       }
