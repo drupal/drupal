@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.110 2006/03/14 15:20:41 unconed Exp $
+// $Id: menu.inc,v 1.111 2006/03/15 08:49:24 killes Exp $
 
 /**
  * @file
@@ -592,31 +592,28 @@ function menu_rebuild() {
       }
     }
 
-    reset($new_items);
-    while (list($old_mid, $item) = each($new_items)) {
-      if ($item['pid'] < 0 && isset($new_items[$item['pid']])) {
-        // The item's parent has a temporary ID and is still in the queue. Put
-        // the item at the back of the queue so it may be saved after the
-        // parent item has recieved a new ID.
-        $new_items[$old_mid] = $item;
-      }
-      else {
-        // The new menu ID gets passed back by reference as $item['mid']
-        menu_save_item($item);
-
-        // Fix parent IDs for menu items just added.
-        if ($item['children']) {
-          foreach ($item['children'] as $child) {
-            if (isset($new_items[$child])) {
-              $new_items[$child]['pid'] = $item['mid'];
+    // Save the new items updating the pids in each iteration
+    while (count($new_items)) {
+      foreach($new_items as $mid => $item) {
+        // If the item has a valid parent, save it
+        if ($item['pid'] >= 0) {
+          // The new menu ID gets passed back by reference as $item['mid']
+          menu_save_item($item);
+          // Fix parent IDs for the children of the menu item just saved
+          if ($item['children']) {
+            foreach ($item['children'] as $child) {
+              if (isset($new_items[$child])) {
+                $new_items[$child]['pid'] = $item['mid'];
+              }
             }
           }
+          // remove the item
+          unset($new_items[$mid]);
         }
       }
-
-      // Rebuild the menu to account for the changes.
-      _menu_build();
     }
+    // Rebuild the menu to account for the changes.
+    _menu_build();
   }
 
   // Reset the cached $menu in menu_get_item().
