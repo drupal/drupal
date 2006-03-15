@@ -353,8 +353,7 @@ function update_selection_page() {
 
   drupal_set_title('Drupal database update');
   // Prevent browser from using cached drupal.js or update.js
-  drupal_add_js('misc/update.js?'.time());
-  drupal_add_js('misc/drupal.js?'.time());
+  drupal_add_js('misc/update.js', TRUE);
   $output .= drupal_get_form('update_script_selection_form', $form);
 
   return $output;
