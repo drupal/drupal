@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.67 2006/02/27 13:22:29 dries Exp $
+// $Id: locale.inc,v 1.68 2006/03/16 14:03:58 killes Exp $
 
 /**
  * @file
@@ -156,10 +156,10 @@ function _locale_import_po($file, $lang, $mode) {
   }
 
   // Get strings from file (returns on failure after a partial import, or on success)
-  _locale_import_read_po($file, $lang);
+  _locale_import_read_po($file, $mode, $lang);
 
   // Get status information on import process
-  list($headerdone, $additions, $updates) = _locale_import_one_string('report');
+  list($headerdone, $additions, $updates) = _locale_import_one_string('report', $mode);
 
   if (!$headerdone) {
     drupal_set_message(t('The translation file %filename appears to have a missing or malformed header.', array('%filename' => theme('placeholder', $file->filename))), 'error');
@@ -182,7 +182,7 @@ function _locale_import_po($file, $lang, $mode) {
  * @param $file Object with properties of local file to parse
  * @author Jacobo Tarrio
  */
-function _locale_import_read_po($file, $lang) {
+function _locale_import_read_po($file, $mode, $lang) {
 
   $message = theme('placeholder', $file->filename);
   $fd = fopen($file->filepath, "rb"); // File will get closed by PHP on return
@@ -206,7 +206,7 @@ function _locale_import_read_po($file, $lang) {
         $current["#"][] = substr($line, 1);
       }
       elseif (($context == "MSGSTR") || ($context == "MSGSTR_ARR")) { // End current entry, start a new one
-        _locale_import_one_string($current, $lang);
+        _locale_import_one_string($current, $mode, $lang);
         $current = array();
         $current["#"][] = substr($line, 1);
         $context = "COMMENT";
@@ -232,7 +232,7 @@ function _locale_import_read_po($file, $lang) {
     }
     elseif (!strncmp("msgid", $line, 5)) {
       if ($context == "MSGSTR") {   // End current entry, start a new one
-        _locale_import_one_string($current, $lang);
+        _locale_import_one_string($current, $mode, $lang);
         $current = array();
       }
       elseif ($context == "MSGID") { // Already in this context? Parse error
@@ -306,7 +306,7 @@ function _locale_import_read_po($file, $lang) {
 
   // End of PO file, flush last entry
   if (($context == "MSGSTR") || ($context == "MSGSTR_ARR")) {
-    _locale_import_one_string($current, $lang);
+    _locale_import_one_string($current, $mode, $lang);
   }
   elseif ($context != "COMMENT") {
     drupal_set_message(t('The translation file %filename ended unexpectedly at line %line.', array('%filename' => $message, '%line' => $lineno)), 'error');
@@ -321,7 +321,7 @@ function _locale_import_read_po($file, $lang) {
  * @param $value Information about the string
  * @author Jacobo Tarrio
  */
-function _locale_import_one_string($value, $lang = NULL) {
+function _locale_import_one_string($value, $mode, $lang = NULL) {
   static $additions = 0;
   static $updates = 0;
   static $headerdone = FALSE;
