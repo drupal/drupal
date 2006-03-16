@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.80 2006/03/13 22:23:09 killes Exp $
+// $Id: upload.module,v 1.81 2006/03/16 15:27:45 killes Exp $
 
 /**
  * @file
@@ -263,6 +263,7 @@ function _upload_validate(&$node) {
           // Only denies an upload when all roles prevent it.
 
           $total_usersize = upload_space_used($user->uid) + $filesize;
+          $error = array();
           foreach ($user->roles as $rid => $name) {
             $extensions = variable_get("upload_extensions_$rid", 'jpg jpeg gif png txt html doc xls pdf ppt pps');
             $uploadsize = variable_get("upload_uploadsize_$rid", 1) * 1024 * 1024;
@@ -290,6 +291,10 @@ function _upload_validate(&$node) {
           }
           elseif ($error['usersize'] == count($user->roles) && $user->uid != 1) {
             form_set_error('upload', t('The selected file %name can not be attached to this post, because the disk quota of %quota has been reached.', array('%name' => theme('placeholder', $file->filename), '%quota' => theme('placeholder', format_size($usersize)))));
+          }
+          if (count($error)) {
+            unset($node->files[$fid], $_SESSION['file_previews'][$fid]);
+            file_delete($file->filepath);
           }
         }
       }
