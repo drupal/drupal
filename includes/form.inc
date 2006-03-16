@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.78 2006/03/15 08:57:37 killes Exp $
+// $Id: form.inc,v 1.79 2006/03/16 15:32:44 killes Exp $
 
 /**
  * @defgroup form Form generation
@@ -856,7 +856,15 @@ function theme_submit($element) {
 }
 
 function theme_button($element) {
-  return '<input type="submit" class="form-'. $element['#button_type'] .'" '. (empty($element['#name']) ? '' : 'name="'. $element['#name'] .'" ') .'value="'. check_plain($element['#value']) .'" '. drupal_attributes($element['#attributes']) ." />\n";
+  //Make sure not to overwrite classes
+  if (isset($element['#attributes']['class'])) {
+    $element['#attributes']['class'] = 'form-'. $element['#button_type'] .' '. $element['#attributes']['class'];
+  }
+  else {
+    $element['#attributes']['class'] = 'form-'. $element['#button_type'];
+  }
+  
+  return '<input type="submit" '. (empty($element['#name']) ? '' : 'name="'. $element['#name'] .'" ') .'value="'. check_plain($element['#value']) .'" '. drupal_attributes($element['#attributes']) ." />\n";
 }
 
 /**
