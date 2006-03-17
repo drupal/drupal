@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.188 2006/02/21 18:46:54 dries Exp $
+// $Id: poll.module,v 1.189 2006/03/17 18:37:46 killes Exp $
 
 /**
  * @file
@@ -158,7 +158,7 @@ function poll_form(&$node) {
   $_active = array(0 => t('Closed'), 1 => t('Active'));
 
   if ($admin) {
-    $form['settings'] = array('#type' => 'fieldset', '#title' => t('Settings'), '#suffix' => '</div>');
+    $form['settings'] = array('#type' => 'fieldset', '#title' => t('Settings'));
     $form['settings']['active'] = array('#type' => 'radios', '#title' => t('Poll status'), '#default_value' => isset($node->active) ? $node->active : 1, '#options' => $_active, '#description' => t('When a poll is closed, visitors can no longer vote for it.'));
   }
   $form['settings']['runtime'] = array('#type' => 'select', '#title' => t('Poll duration'), '#default_value' => $node->runtime ? $node->runtime : 0, '#options' => $_duration, '#description' => t('After this period, the poll will be closed automatically.'));
