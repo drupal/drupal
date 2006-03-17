@@ -65,8 +65,16 @@ function tracker_menu($may_cache) {
  */
 function tracker_track_user() {
   if ($account = user_load(array('uid' => arg(1)))) {
-    drupal_set_title($account->name);
-    return tracker_page($account->uid);
+    if ($account->status || user_access('administer users')) {
+      drupal_set_title($account->name);
+      return tracker_page($account->uid);      
+    }
+    else {
+      drupal_access_denied();
+    }
+  }
+  else {
+    drupal_not_found();
   }
 }
 
