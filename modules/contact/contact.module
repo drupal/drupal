@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.43 2006/02/27 17:02:53 dries Exp $
+// $Id: contact.module,v 1.44 2006/03/17 18:56:25 killes Exp $
 
 /**
  * @file
@@ -320,8 +320,12 @@ function contact_admin_settings_submit($form_id, $form_values) {
 function contact_mail_user() {
   global $user;
 
-  if ($account = user_load(array('uid' => arg(1), 'status' => 1))) {
-    if (!$account->contact && !user_access('administer users')) {
+  if ($account = user_load(array('uid' => arg(1)))) {
+    $admin_access = user_access('administer users');
+    if (!$account->status && !$admin_access) {
+      drupal_access_denied();
+    }
+    else if (!$account->contact && !$admin_access) {
       $output = t('%name is not accepting e-mails.', array('%name' => $account->name));
     }
     else if (!$user->uid) {

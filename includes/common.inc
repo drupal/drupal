@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.527 2006/03/15 08:46:57 killes Exp $
+// $Id: common.inc,v 1.528 2006/03/17 18:56:25 killes Exp $
 
 /**
  * @file
@@ -260,6 +260,10 @@ function drupal_not_found() {
     menu_set_active_item($path);
     $return = menu_execute_active_handler();
   }
+  else {
+    // Redirect to a non-existant menu item to make possible tabs disappear.
+    menu_set_active_item('#');
+  }
 
   if (empty($return)) {
     drupal_set_title(t('Page not found'));
@@ -278,6 +282,10 @@ function drupal_access_denied() {
   if ($path && $path != $_GET['q']) {
     menu_set_active_item($path);
     $return = menu_execute_active_handler();
+  }
+  else {
+    // Redirect to a non-existant menu item to make possible tabs disappear.
+    menu_set_active_item('#');
   }
 
   if (empty($return)) {
