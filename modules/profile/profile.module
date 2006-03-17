@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.140 2006/03/12 14:08:55 killes Exp $
+// $Id: profile.module,v 1.141 2006/03/17 18:39:29 killes Exp $
 
 /**
  * @file
@@ -64,15 +64,15 @@ function profile_menu($may_cache) {
       'callback' => 'profile_admin_overview');
     $items[] = array('path' => 'admin/settings/profile/add',
       'title' => t('add field'),
-      'callback' => 'profile_admin_add',
+      'callback' => 'profile_field_form',
       'type' => MENU_CALLBACK);
     $items[] = array('path' => 'admin/settings/profile/edit',
       'title' => t('edit field'),
-      'callback' => 'profile_admin_edit',
+      'callback' => 'profile_field_form',
       'type' => MENU_CALLBACK);
     $items[] = array('path' => 'admin/settings/profile/delete',
       'title' => t('delete field'),
-      'callback' => 'profile_admin_delete',
+      'callback' => 'profile_field_delete',
       'type' => MENU_CALLBACK);
   }
 
@@ -169,70 +169,40 @@ function profile_user($type, &$edit, &$user, $category = NULL) {
 }
 
 /**
- * Menu callback; adds a new field to all user profiles.
+ * Menu callback: Generate a form to add/edit a user profile field.
  */
-function profile_admin_add($type) {
-  if ($_POST['op']) {
-    $data = $_POST['edit'];
+function profile_field_form($arg = NULL) {
+  if (arg(3) == 'edit') {
+    if (is_numeric($arg)) {
+      $fid = $arg;
 
-    // Validate the form:
-    profile_validate_form($data);
+      $edit = db_fetch_array(db_query('SELECT * FROM {profile_fields} WHERE fid = %d', $fid));
 
-    if (db_result(db_query("SELECT fid FROM {profile_fields} WHERE title = '%s' AND category = '%s'", $data['title'], $data['category']))) {
-      form_set_error('title', t('The specified title is already in use.'));
+      if (!$edit) {
+        drupal_not_found();
+        return;
+      }
+      drupal_set_title(t('edit %title', array('%title' => $edit['title'])));
+      $form['fid'] = array('#type' => 'value',
+        '#value' => $fid,
+      );
     }
-
-    if (db_result(db_query("SELECT fid FROM {profile_fields} WHERE name = '%s'", $data['name']))) {
-      form_set_error('name', t('The specified name is already in use.'));
-    }
-
-    if (!form_get_errors()) {
-      db_query("INSERT INTO {profile_fields} (title, name, explanation, category, type, weight, required, register, visibility, options, page) VALUES ('%s', '%s', '%s', '%s', '%s', %d, %d, %d, %d, '%s', '%s')", $data['title'], $data['name'], $data['explanation'], $data['category'], $type, $data['weight'], $data['required'], $data['register'], $data['visibility'], $data['options'], $data['page']);
-
-      cache_clear_all();
-
-      drupal_set_message(t('The field has been created.'));
-      drupal_goto('admin/settings/profile');
+    else {
+      drupal_not_found();
+      return;
     }
   }
   else {
-    $data = array('name' => 'profile_');
-  }
-
-  drupal_set_title(t('Add new %type', array('%type' => _profile_field_types($type))));
-  return _profile_field_form($type, $data);
-}
-
-/**
- * Menu callback; displays the profile field editing form.
- */
-function profile_admin_edit($fid) {
-
-  if ($_POST['op']) {
-    $data = $_POST['edit'];
-
-    // Validate form:
-    profile_validate_form($data);
-
-    if (!form_get_errors()) {
-      db_query("UPDATE {profile_fields} SET title = '%s', name = '%s', explanation = '%s', category = '%s', weight = %d, required = %d, register = %d, visibility = %d, options = '%s', page = '%s' WHERE fid = %d", $data['title'], $data['name'], $data['explanation'], $data['category'], $data['weight'], $data['required'], $data['register'], $data['visibility'], $data['options'], $data['page'], $fid);
-
-      cache_clear_all();
-
-      drupal_set_message(t('The field has been updated.'));
-      drupal_goto('admin/settings/profile');
+    $types = _profile_field_types();
+    if (!isset($types[$arg])) {
+      drupal_not_found();
+      return;
     }
+    $type = $arg;
+    drupal_set_title(t('add new %type', array('%type' => $types[$type])));
+    $edit = array('name' => 'profile_');
+    $form['type'] = array('#type' => 'value', '#value' => $type);
   }
-  else {
-    $data = db_fetch_array(db_query('SELECT * FROM {profile_fields} WHERE fid = %d', $fid));
-  }
-
-  drupal_set_title(t('Edit %type', array('%type' => $data['type'])));
-  return _profile_field_form($data['type'], $data);
-}
-
-function _profile_field_form($type, $edit = array()) {
-
   $form['fields'] = array('#type' => 'fieldset',
     '#title' => t('Field settings'),
   );
@@ -303,51 +273,93 @@ Unless you know what you are doing, it is highly recommended that you prefix the
   $form['submit'] = array('#type' => 'submit',
     '#value' => t('Save field'),
   );
-
-  return drupal_get_form('_profile_field_form', $form);
+  return drupal_get_form('profile_field_form', $form);
 }
 
-function profile_validate_form($edit) {
-
-  // Validate the title:
-  if (!$edit['title']) {
-    form_set_error('title', t('You must enter a title.'));
-  }
-
-  // Validate the 'form name':
-  if (eregi('[^a-z0-9_-]', $edit['name'])) {
+/**
+ * Validate profile_field_form submissions.
+ */
+function profile_field_form_validate($form_id, $form_values) {
+  // Validate the 'field name':
+  if (eregi('[^a-z0-9_-]', $form_values['name'])) {
     form_set_error('name', t('The specified form name contains one or more illegal characters. Spaces or any other special characters expect dash (-) and underscore (_) are not allowed.'));
   }
 
-  if (in_array($edit['name'], user_fields())) {
+  if (in_array($form_values['name'], user_fields())) {
     form_set_error('name', t('The specified form name is reserved for use by Drupal.'));
   }
-
   // Validate the category:
-  if (!$edit['category']) {
+  if (!$form_values['category']) {
     form_set_error('category', t('You must enter a category.'));
   }
-
-  if ($edit['category'] == 'account') {
+  if ($form_values['category'] == 'account') {
     form_set_error('category', t('The specified category name is reserved for use by Drupal.'));
   }
+  $args1 = array($form_values['title'], $form_values['category']);
+  $args2 = array($form_values['name']);
+  $query_suffix = '';
+  
+  if (isset($form_values['fid'])) {
+    $args1[] = $args2[] = $form_values['fid'];
+    $query_suffix = ' AND fid != %d';
+  }
+
+  if (db_result(db_query("SELECT fid FROM {profile_fields} WHERE title = '%s' AND category = '%s'". $query_suffix, $args1))) {
+    form_set_error('title', t('The specified title is already in use.'));
+  }
+  if (db_result(db_query("SELECT fid FROM {profile_fields} WHERE name = '%s'". $query_suffix, $args2))) {
+    form_set_error('name', t('The specified name is already in use.'));
+  }
+}
+
+/**
+ * Process profile_field_form submissions.
+ */
+function profile_field_form_submit($form_id, $form_values) {
+  if (!isset($form_values['fid'])) {
+    db_query("INSERT INTO {profile_fields} (title, name, explanation, category, type, weight, required, register, visibility, options, page) VALUES ('%s', '%s', '%s', '%s', '%s', %d, %d, %d, %d, '%s', '%s')", $form_values['title'], $form_values['name'], $form_values['explanation'], $form_values['category'], $form_values['type'], $form_values['weight'], $form_values['required'], $form_values['register'], $form_values['visibility'], $form_values['options'], $form_values['page']);
+    
+    drupal_set_message(t('The field has been created.'));
+    watchdog('profile', t('Profile field %field added under category %category.', array('%field' => theme('placeholder', $form_values['title']), '%category' => theme('placeholder', $form_values['category']))), WATCHDOG_NOTICE, l(t('view'), 'admin/settings/profile'));
+  }
+  else {
+    db_query("UPDATE {profile_fields} SET title = '%s', name = '%s', explanation = '%s', category = '%s', weight = %d, required = %d, register = %d, visibility = %d, options = '%s', page = '%s' WHERE fid = %d", $form_values['title'], $form_values['name'], $form_values['explanation'], $form_values['category'], $form_values['weight'], $form_values['required'], $form_values['register'], $form_values['visibility'], $form_values['options'], $form_values['page'], $form_values['fid']);
+
+    drupal_set_message(t('The field has been updated.'));
+  }
+  cache_clear_all();
+  
+  return 'admin/settings/profile';
 }
 
 /**
  * Menu callback; deletes a field from all user profiles.
  */
-function profile_admin_delete($fid) {
+function profile_field_delete($fid) {
   $field = db_fetch_object(db_query("SELECT title FROM {profile_fields} WHERE fid = %d", $fid));
-  if ($_POST['edit']['confirm']) {
-    db_query('DELETE FROM {profile_fields} WHERE fid = %d', $fid);
-    db_query('DELETE FROM {profile_values} WHERE fid = %d', $fid);
-    cache_clear_all();
-    drupal_set_message(t('The field %field has been deleted.', array('%field' => theme('placeholder', $field->title))));
-    drupal_goto('admin/settings/profile');
+  if (!$field) {
+    drupal_not_found();
+    return;
   }
-  else {
-    return confirm_form('profile_confirm_delete', $form, t('Are you sure you want to delete the field %field?', array('%field' => theme('placeholder', $field->title))), 'admin/settings/profile', t('This action cannot be undone. If users have entered values into this field in their profile, these entries will also be deleted. If you want to keep the user-entered data, instead of deleting the field you may wish to <a href="%edit-field">edit this field</a> and change it to a \'hidden profile field\' so that it may only be accessed by administrators.', array('%edit-field' => url('admin/settings/profile/edit/' . $fid))), t('Delete'), t('Cancel'));
-  }
+  $form['fid'] = array('#type' => 'value', '#value' => $fid);
+  $form['title'] = array('#type' => 'value', '#value' => $field->title);
+  
+  return confirm_form('profile_field_delete', $form, t('Are you sure you want to delete the field %field?', array('%field' => theme('placeholder', $field->title))), 'admin/settings/profile', t('This action cannot be undone. If users have entered values into this field in their profile, these entries will also be deleted. If you want to keep the user-entered data, instead of deleting the field you may wish to <a href="%edit-field">edit this field</a> and change it to a %hidden-field so that it may only be accessed by administrators.', array('%edit-field' => url('admin/settings/profile/edit/' . $fid), '%hidden-field' => theme('placeholder', 'hidden profile field')), t('Delete'), t('Cancel')));
+}
+
+/**
+ * Process a field delete form submission.
+ */
+function profile_field_delete_submit($form_id, $form_values) {
+  db_query('DELETE FROM {profile_fields} WHERE fid = %d', $form_values['fid']);
+  db_query('DELETE FROM {profile_values} WHERE fid = %d', $form_values['fid']);
+  
+  cache_clear_all();
+  
+  drupal_set_message(t('The field %field has been deleted.', array('%field' => theme('placeholder', $form_values['title']))));
+  watchdog('profile', t('Profile field %field deleted.', array('%field' => theme('placeholder', $form_values['title']))), WATCHDOG_NOTICE, l(t('view'), 'admin/settings/profile'));
+  
+  return 'admin/settings/profile';
 }
 
 /**
