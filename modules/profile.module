@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.141 2006/03/17 18:39:29 killes Exp $
+// $Id: profile.module,v 1.142 2006/03/18 01:38:29 killes Exp $
 
 /**
  * @file
@@ -186,6 +186,7 @@ function profile_field_form($arg = NULL) {
       $form['fid'] = array('#type' => 'value',
         '#value' => $fid,
       );
+      $type = $edit['type'];
     }
     else {
       drupal_not_found();
