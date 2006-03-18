@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.44 2006/03/17 18:56:25 killes Exp $
+// $Id: contact.module,v 1.45 2006/03/18 01:00:16 killes Exp $
 
 /**
  * @file
@@ -146,13 +146,7 @@ function contact_admin_categories() {
  */
 function contact_admin_edit($cid = NULL) {
   if (arg(3) == "edit" && $cid > 0) {
-    $category = db_fetch_object(db_query("SELECT * FROM {contact} WHERE cid = %d", $cid));
-    $edit['cid'] = $category->cid;
-    $edit['category'] = $category->category;
-    $edit['recipients'] = $category->recipients;
-    $edit['reply'] = $category->reply;
-    $edit['weight'] = $category->weight;
-    $edit['selected'] = $category->selected;
+    $edit = db_fetch_array(db_query("SELECT * FROM {contact} WHERE cid = %d", $cid));
   }
   $form['category'] = array('#type' => 'textfield',
     '#title' => t('Category'),
@@ -183,7 +177,7 @@ function contact_admin_edit($cid = NULL) {
     '#default_value' => $edit['selected'],
     '#description' => t('Set this to <em>Yes</em> if you would like this category to be selected by default.'),
   );
-  $form['cid'] = array('#type' => 'hidden',
+  $form['cid'] = array('#type' => 'value',
     '#value' => $edit['cid'],
   );
   $form['submit'] = array('#type' => 'submit',
@@ -247,7 +241,7 @@ function contact_admin_edit_submit($form_id, $form_values) {
  */
 function contact_admin_delete($cid = NULL) {
   if ($info = db_fetch_object(db_query("SELECT category FROM {contact} WHERE cid = %d", $cid))) {
-    $form['category'] = array('#type' => 'hidden',
+    $form['category'] = array('#type' => 'value',
       '#value' => $info->category,
     );
 
@@ -442,7 +436,6 @@ function contact_mail_page() {
     }
 
     $result = db_query('SELECT cid, category, selected FROM {contact} ORDER BY weight, category');
-    $categories[] = t('--');
     while ($category = db_fetch_object($result)) {
       $categories[$category->cid] = $category->category;
       if ($category->selected) {
@@ -450,11 +443,9 @@ function contact_mail_page() {
       }
     }
 
-    if (count($categories) > 1) {
+    if (count($categories) > 0) {
       $form['#token'] = $user->name . $user->mail;
-      $form['contact_information'] = array('#type' => 'markup',
-        '#value' => variable_get('contact_form_information', t('You can leave us a message using the contact form below.')),
-      );
+      $form['contact_information'] = array('#value' => variable_get('contact_form_information', t('You can leave us a message using the contact form below.')));
       $form['name'] = array('#type' => 'textfield',
         '#title' => t('Your name'),
         '#maxlength' => 255,
@@ -470,10 +461,14 @@ function contact_mail_page() {
       $form['subject'] = array('#type' => 'textfield',
         '#title' => t('Subject'),
         '#maxlength' => 255,
-        '#default_value' => $edit['subject'],
         '#required' => TRUE,
       );
-      if (count($categories) > 2) {
+      if (count($categories) > 1) {
+        // If there is more than one category available and no default category has been selected,
+        // prepend a default placeholder value.
+        if (!isset($default_category)) {
+          $categories = array(t('--')) + $categories;
+        }
         $form['cid'] = array('#type' => 'select',
           '#title' => t('Category'),
           '#default_value' => $default_category,
@@ -481,14 +476,18 @@ function contact_mail_page() {
           '#required' => TRUE,
         );
       }
+      else {
+        // If there is only one category, store its cid.
+        $form['cid'] = array('#type' => 'value',
+          '#value' => array_shift(array_keys($categories)),
+        );
+      }
       $form['message'] = array('#type' => 'textarea',
         '#title' => t('Message'),
-        '#default_value' => $edit['message'],
         '#required' => TRUE,
       );
       $form['copy'] = array('#type' => 'checkbox',
         '#title' => t('Send me a copy.'),
-        '#default_value' => $edit['copy'],
       );
       $form['submit'] = array('#type' => 'submit',
         '#value' => t('Send e-mail'),
@@ -506,22 +505,12 @@ function contact_mail_page() {
 /**
  * Validate the site-wide contact page form submission.
  */
-function contact_mail_page_validate($form_id, &$form) {
-  global $form_values;
-  if (!$form['cid']) {
-    // Look if there is only one category
-    $result = db_query('SELECT cid FROM {contact}');
-    if (db_num_rows($result) == 1) {
-      $category = db_fetch_object($result);
-      $form_values['cid'] = $category->cid;
-    }
-    else {
-      form_set_error('category', t('You must select a valid category.'));
-    }
-
-    if (!valid_email_address($form['mail'])) {
-      form_set_error('mail', t('You must enter a valid e-mail address.'));
-    }
+function contact_mail_page_validate($form_id, $form_values) {
+  if (!$form_values['cid']) {
+    form_set_error('category', t('You must select a valid category.'));
+  }
+  if (!valid_email_address($form_values['mail'])) {
+    form_set_error('mail', t('You must enter a valid e-mail address.'));
   }
 }
 
@@ -530,7 +519,8 @@ function contact_mail_page_validate($form_id, &$form) {
  */
 function contact_mail_page_submit($form_id, $edit) {
 
-  // Prepare the sender:
+  // E-mail address of the sender: as the form field is a text field, 
+  // all instances of \r and \n have been automatically stripped from it.
   $from = $edit['mail'];
 
   // Compose the body:
