@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.355 2006/03/14 15:43:49 unconed Exp $
+// $Id: book.module,v 1.356 2006/03/18 13:09:56 killes Exp $
 
 /**
  * @file
@@ -181,7 +181,7 @@ function book_block($op = 'list', $delta = 0) {
 function book_load($node) {
   global $user;
 
-  $book = db_fetch_object(db_query('SELECT parent, weight FROM {book} WHERE vid = %d', $node->vid));
+  $book = db_fetch_object(db_query('SELECT * FROM {book} WHERE vid = %d', $node->vid));
 
   if (arg(2) == 'edit' && !user_access('administer nodes')) {
     // If a user is about to update a book page, we overload some
