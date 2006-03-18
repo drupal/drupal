@@ -186,6 +186,7 @@ function profile_field_form($arg = NULL) {
       $form['fid'] = array('#type' => 'value',
         '#value' => $fid,
       );
+      $type = $edit['type'];
     }
     else {
       drupal_not_found();
