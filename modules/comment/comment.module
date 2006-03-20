@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.440 2006/03/06 20:52:55 dries Exp $
+// $Id: comment.module,v 1.441 2006/03/20 16:40:06 killes Exp $
 
 /**
  * @file
@@ -1590,7 +1590,7 @@ function theme_comment_post_forbidden($nid) {
       $destination = "destination=comment/reply/$nid";
     }
     else {
-      $destination = "node/$nid";
+      $destination = "destination=node/$nid";
     }
 
     if (variable_get('user_register', 1)) {
