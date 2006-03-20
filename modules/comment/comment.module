@@ -1590,7 +1590,7 @@ function theme_comment_post_forbidden($nid) {
       $destination = "destination=comment/reply/$nid";
     }
     else {
-      $destination = "node/$nid";
+      $destination = "destination=node/$nid";
     }
 
     if (variable_get('user_register', 1)) {
