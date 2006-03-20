@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.79 2006/03/16 15:32:44 killes Exp $
+// $Id: form.inc,v 1.80 2006/03/20 16:28:10 killes Exp $
 
 /**
  * @defgroup form Form generation
@@ -59,18 +59,23 @@ function element_children($element) {
  *
  */
 function drupal_get_form($form_id, &$form, $callback = NULL) {
-  global $form_values, $form_submitted;
+  global $form_values, $form_submitted, $user;
   $form_values = array();
   $form_submitted = FALSE;
 
   $form['#type'] = 'form';
   if (isset($form['#token'])) {
-    // Make sure that a private key is set:
-    if (!variable_get('drupal_private_key', '')) {
-      variable_set('drupal_private_key', mt_rand());
+    if (variable_get('cache', 0) && !$user->uid && $_SERVER['REQUEST_METHOD'] == 'GET') {
+      unset($form['#token']);
     }
+    else {
+      // Make sure that a private key is set:
+      if (!variable_get('drupal_private_key', '')) {
+        variable_set('drupal_private_key', mt_rand());
+      }
 
-    $form['form_token'] = array('#type' => 'hidden', '#default_value' => md5(session_id() . $form['#token'] . variable_get('drupal_private_key', '')));
+      $form['form_token'] = array('#type' => 'hidden', '#default_value' => md5(session_id() . $form['#token'] . variable_get('drupal_private_key', '')));
+    }
   }
   if (isset($form_id)) {
     $form['form_id'] = array('#type' => 'hidden', '#value' => $form_id);
