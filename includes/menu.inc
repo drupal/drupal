@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.111 2006/03/15 08:49:24 killes Exp $
+// $Id: menu.inc,v 1.112 2006/03/20 20:48:19 killes Exp $
 
 /**
  * @file
@@ -1209,6 +1209,16 @@ function _menu_append_contextual_items() {
       $_menu['path index'][$item['path']] = $temp_mid;
       $new_items[$temp_mid] = $item;
       $temp_mid--;
+    }
+    else {
+      $mid = $_menu['path index'][$item['path']];
+      if ($_menu['items'][$mid]['type'] & MENU_CREATED_BY_ADMIN) {
+        $_menu['items'][$mid]['access'] = $item['access'];
+        $_menu['items'][$mid]['callback'] = $item['callback'];
+        if (isset($_menu['items'][$mid]['callback arguments'])) {
+          $_menu['items'][$mid]['callback arguments'] = $item['callback arguments'];
+        }
+      }
     }
   }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.616 2006/03/20 16:29:55 killes Exp $
+// $Id: node.module,v 1.617 2006/03/20 20:48:19 killes Exp $
 
 /**
  * @file
@@ -946,7 +946,7 @@ function node_menu($may_cache) {
           'access' => node_access('view', $node),
           'type' => MENU_CALLBACK);
         $items[] = array('path' => 'node/'. arg(1) .'/view', 'title' => t('view'),
-            'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10, 'access' => node_access('view', $node));
+            'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
         $items[] = array('path' => 'node/'. arg(1) .'/edit', 'title' => t('edit'),
           'callback' => 'node_page',
           'access' => node_access('update', $node),
