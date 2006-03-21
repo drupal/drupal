@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.45 2006/03/18 01:00:16 killes Exp $
+// $Id: contact.module,v 1.46 2006/03/21 07:31:50 killes Exp $
 
 /**
  * @file
@@ -95,8 +95,12 @@ function contact_menu($may_cache) {
   }
   else {
     if (arg(0) == 'user' && is_numeric(arg(1))) {
-      $items[] = array('path' => "user/". arg(1) ."/contact", 'title' => t('contact'),
-        'callback' => 'contact_mail_user', 'type' => MENU_LOCAL_TASK, 'weight' => 2);
+      $items[] = array('path' => "user/". arg(1) ."/contact",
+        'title' => t('contact'),
+        'callback' => 'contact_mail_user',
+        'type' => MENU_LOCAL_TASK,
+        'weight' => 2,
+      );
     }
   }
 
@@ -201,7 +205,7 @@ function contact_admin_edit_validate($form_id, $form_values) {
     $recipients = explode(',', $form_values['recipients']);
     foreach($recipients as $recipient) {
       if (!valid_email_address(trim($recipient))) {
-        form_set_error('recipients',t('%recipient is an invalid e-mail address.', array('%recipient' => theme('placeholder', $recipient))));
+        form_set_error('recipients', t('%recipient is an invalid e-mail address.', array('%recipient' => theme('placeholder', $recipient))));
       }
     }
   }
