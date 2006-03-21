@@ -249,6 +249,8 @@ function _upload_validate(&$node) {
   if (is_array($node->files)) {
     // Update existing files with form data.
     foreach($node->files as $fid => $file) {
+      // Convert file to object for compatability
+      $file = (object)$file;
 
       // Validate new uploads.
       if (strpos($fid, 'upload') !== false && !$file->remove) {
