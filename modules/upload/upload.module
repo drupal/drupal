@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.81 2006/03/16 15:27:45 killes Exp $
+// $Id: upload.module,v 1.82 2006/03/21 11:44:46 killes Exp $
 
 /**
  * @file
@@ -249,6 +249,8 @@ function _upload_validate(&$node) {
   if (is_array($node->files)) {
     // Update existing files with form data.
     foreach($node->files as $fid => $file) {
+      // Convert file to object for compatability
+      $file = (object)$file;
 
       // Validate new uploads.
       if (strpos($fid, 'upload') !== false && !$file->remove) {
