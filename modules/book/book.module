@@ -248,7 +248,7 @@ function book_validate($node) {
  */
 function book_form(&$node) {
   if ($node->nid && !$node->parent && !user_access('create new books')) {
-    $form['parent'] = array('#type' => 'value', $node->parent);
+    $form['parent'] = array('#type' => 'value', '#value' => $node->parent);
   }
   else {
     $form['parent'] = array('#type' => 'select',
