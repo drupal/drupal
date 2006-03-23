@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.356 2006/03/18 13:09:56 killes Exp $
+// $Id: book.module,v 1.357 2006/03/23 21:20:59 killes Exp $
 
 /**
  * @file
@@ -248,7 +248,7 @@ function book_validate($node) {
  */
 function book_form(&$node) {
   if ($node->nid && !$node->parent && !user_access('create new books')) {
-    $form['parent'] = array('#type' => 'value', $node->parent);
+    $form['parent'] = array('#type' => 'value', '#value' => $node->parent);
   }
   else {
     $form['parent'] = array('#type' => 'select',
