@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.318 2006/03/08 22:11:54 killes Exp $
+// $Id: forum.module,v 1.319 2006/03/23 21:46:35 killes Exp $
 
 /**
  * @file
@@ -148,15 +148,26 @@ function forum_nodeapi(&$node, $op, $teaser, $page) {
 /**
  * Implementation of hook_taxonomy().
  */
-function forum_taxonomy($op, $type, $object = NULL) {
-  if ($op == 'delete' && $type == 'term' && $object->vid == _forum_get_vid())  {
-    $results = db_query('SELECT f.nid FROM {forum} f WHERE f.tid = %d', $object->tid);
-    while ($node = db_fetch_object($results)) {
-      node_delete($node->nid);
+function forum_taxonomy($op, $type, $term = NULL) {
+  if ($op == 'delete' && $term->vid == _forum_get_vid()) {
+    switch ($type) {
+      case 'term':
+        $results = db_query('SELECT f.nid FROM {forum} f WHERE f.tid = %d', $term->tid);
+        while ($node = db_fetch_object($results)) {
+          // node_delete will also remove any association with non-forum vocabularies.
+          node_delete($node->nid);
+        }
+
+        // For containers, remove the tid from the forum_containers variable.
+        $containers = variable_get('forum_containers', array());
+        if ($key = array_search($term->tid, $containers)) {
+          unset($containers[$key]);
+        }
+        variable_set('forum_containers', $containers);
+        break;
+      case 'vocabulary':
+        variable_del('forum_nav_vocabulary');
     }
-  }
-  elseif ($op == 'delete' && $type == 'vocabulary' && $object->vid == _forum_get_vid())  {
-    variable_del('forum_nav_vocabulary');
   }
 }
 
@@ -517,7 +528,7 @@ function _forum_confirm_delete($tid) {
   $form['tid'] = array('#type' => 'value', '#value' => $tid);
   $form['name'] = array('#type' => 'value', '#value' => $term->name);
 
-  return confirm_form('forum_confirm_delete', $form, t('Are you sure you want to delete the forum %name?', array('%name' => theme('placeholder', $term->name))), 'admin/forums', t('Deleting a forum or container will delete all sub-forums as well. This action cannot be undone.'), t('Delete'), t('Cancel'));
+  return confirm_form('forum_confirm_delete', $form, t('Are you sure you want to delete the forum %name?', array('%name' => theme('placeholder', $term->name))), 'admin/forums', t('Deleting a forum or container will delete all sub-forums and associated posts as well. This action cannot be undone.'), t('Delete'), t('Cancel'));
 }
 
 /**
@@ -525,7 +536,8 @@ function _forum_confirm_delete($tid) {
  */
 function forum_confirm_delete_submit($form_id, $form_values) {
   taxonomy_del_term($form_values['tid']);
-  drupal_set_message(t('The forum %term has been deleted.', array('%term' => theme('placeholder', $form_values['name']))));
+  drupal_set_message(t('The forum %term and all sub-forums and associated posts have been deleted.', array('%term' => theme('placeholder', $form_values['name']))));
+  watchdog('content', t('forum: deleted %term and all its sub-forums and associated posts.', array('%term' => theme('placeholder', $form_values['name']))));
 
   return 'admin/forum';
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.265 2006/03/11 13:47:51 dries Exp $
+// $Id: taxonomy.module,v 1.266 2006/03/23 21:46:35 killes Exp $
 
 /**
  * @file
@@ -485,7 +485,7 @@ function taxonomy_del_term($tid) {
         }
       }
 
-      $term = (array) taxonomy_get_term($tid);
+      $term = taxonomy_get_term($tid);
 
       db_query('DELETE FROM {term_data} WHERE tid = %d', $tid);
       db_query('DELETE FROM {term_hierarchy} WHERE tid = %d', $tid);
@@ -494,13 +494,14 @@ function taxonomy_del_term($tid) {
       db_query('DELETE FROM {term_node} WHERE tid = %d', $tid);
 
       module_invoke_all('taxonomy', 'delete', 'term', $term);
-      return SAVED_DELETED;
     }
 
     $tids = $orphans;
   }
 
   cache_clear_all();
+
+  return SAVED_DELETED;
 }
 
 function _taxonomy_confirm_del_term($tid) {
