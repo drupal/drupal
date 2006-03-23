@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.46 2006/03/21 07:31:50 killes Exp $
+// $Id: contact.module,v 1.47 2006/03/23 09:29:35 killes Exp $
 
 /**
  * @file
@@ -289,27 +289,8 @@ function contact_admin_settings() {
   $form['reset'] = array('#type' => 'submit',
     '#value' => t('Reset to defaults'),
   );
-  return drupal_get_form('contact_admin_settings', $form);
-}
-
-/**
- * Process settings form submission.
- */
-function contact_admin_settings_submit($form_id, $form_values) {
-  $op = isset($_POST['op']) ? $_POST['op'] : '';
-
-  if ($op == t('Reset to defaults')) {
-    foreach ($form_values as $key => $value) {
-      variable_del($key);
-    }
-    drupal_set_message(t('The configuration options have been reset to their default values.'));
-  }
-  else {
-    foreach ($form_values as $key => $value) {
-      variable_set($key, $value);
-    }
-    drupal_set_message(t('The configuration options have been saved.'));
-  }
+  // Use system_settings_form for the callback.
+  return drupal_get_form('contact_admin_settings', $form, 'system_settings_form');
 }
 
 /**
