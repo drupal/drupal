@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.298 2006/03/07 11:28:22 dries Exp $
+// $Id: system.module,v 1.299 2006/03/23 21:24:02 killes Exp $
 
 /**
  * @file
@@ -239,7 +239,7 @@ function system_view_general() {
   );
   $form['general']['site_name'] = array(
     '#type' => 'textfield', '#title' => t('Name'), '#default_value' => variable_get('site_name', 'drupal'),
-    '#description' => t('The name of this web site.')
+    '#description' => t('The name of this web site.'), '#required' => TRUE
   );
   $form['general']['site_mail'] = array(
     '#type' => 'textfield', '#title' => t('E-mail address'), '#default_value' => variable_get('site_mail', ini_get('sendmail_from')),
