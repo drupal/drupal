@@ -1,4 +1,4 @@
-// $Id: INSTALL.mysql.txt,v 1.3 2005/12/10 19:26:47 dries Exp $
+// $Id: INSTALL.mysql.txt,v 1.4 2006/03/24 18:09:57 killes Exp $
 
 CONTENTS OF THIS FILE
 ---------------------
@@ -41,14 +41,19 @@ INSTALLATION AND CONFIGURATION
    Again, you will be asked for the 'dba_user' database password.
    At the MySQL prompt, enter following command:
 
-     GRANT ALL PRIVILEGES ON databasename.*
-        TO username@localhost IDENTIFIED BY 'password';
+     GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, 
+     ALTER, CREATE TEMPORARY TABLES, LOCK TABLES 
+     ON databasename.* 
+     TO 'username'@'localhost' IDENTIFIED BY 'password';
 
    where
 
     'databasename' is the name of your database
     'username@localhost' is the username of your MySQL account
     'password' is the password required for that username
+
+   Note: Unless your database user has all of the privileges listed
+   above, you will not be able to run Drupal.
 
    If successful, MySQL will reply with:
 
