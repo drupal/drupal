@@ -1,4 +1,4 @@
-// $Id: drupal.js,v 1.19 2006/02/05 19:04:58 unconed Exp $
+// $Id: drupal.js,v 1.20 2006/03/24 13:17:17 killes Exp $
 
 /**
  * Only enable Javascript functionality if all required features are supported.
@@ -140,6 +140,8 @@ function redirectFormButton(uri, button, handler) {
         // Get response from iframe body
         try {
           response = (iframe.contentWindow || iframe.contentDocument || iframe).document.body.innerHTML;
+          // Firefox 1.0.x hack: Replace control characters
+          response = response.replace(/[\f\n\r\t\v]/g, ' ');
           if (window.opera) {
             // Opera-hack: it returns innerHTML sanitized.
             response = response.replace(/&quot;/g, '"');
