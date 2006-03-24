@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.441 2006/03/20 16:40:06 killes Exp $
+// $Id: comment.module,v 1.442 2006/03/24 11:38:00 killes Exp $
 
 /**
  * @file
@@ -120,12 +120,13 @@ function comment_menu($may_cache) {
 
     $items[] = array('path' => 'admin/comment/configure/settings', 'title' => t('settings'),
       'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
+      
+    $items[] = array('path' => 'comment/delete', 'title' => t('delete comment'),
+      'callback' => 'comment_delete', 'access' => $access, 'type' => MENU_CALLBACK);
 
     $access = user_access('post comments');
     $items[] = array('path' => 'comment/edit', 'title' => t('edit comment'),
       'callback' => 'comment_edit', 'access' => $access, 'type' => MENU_CALLBACK);
-    $items[] = array('path' => 'comment/delete', 'title' => t('delete comment'),
-      'callback' => 'comment_delete', 'access' => $access, 'type' => MENU_CALLBACK);
   }
   else {
     if (arg(0) == 'comment' && arg(1) == 'reply' && is_numeric(arg(2))) {
