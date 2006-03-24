@@ -1020,9 +1020,6 @@ function _taxonomy_term_select($title, $name, $value, $vocabulary_id, $descripti
 
   if ($blank) {
     $options[0] = $blank;
-    if (count($value) == 0) {
-      $value[] = 0;
-    }
   }
   if ($tree) {
     foreach ($tree as $term) {
