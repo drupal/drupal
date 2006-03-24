@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.143 2006/03/24 13:12:44 killes Exp $
+// $Id: profile.module,v 1.144 2006/03/24 14:43:35 killes Exp $
 
 /**
  * @file
@@ -120,7 +120,7 @@ function profile_block($op = 'list', $delta = 0, $edit = array()) {
           $result = db_query('SELECT name, title, type, visibility, weight FROM {profile_fields} WHERE visibility IN (%d, %d) ORDER BY weight', PROFILE_PUBLIC, PROFILE_PUBLIC_LISTINGS);
           while ($record = db_fetch_object($result)) {
             // Ensure that field is displayed only if it is among the defined block fields and, if it is private, the user has appropriate permissions.
-            if (in_array($record->name, $use_fields)) {
+            if (isset($use_fields[$record->name]) && $use_fields[$record->name]) {
               $fields[] = $record;
             }
           }
@@ -131,7 +131,7 @@ function profile_block($op = 'list', $delta = 0, $edit = array()) {
           $output .= theme('profile_block', $account, $fields, true);
         }
 
-        if (in_array('user_profile', $use_fields)) {
+        if (isset($use_fields['user_profile']) && $use_fields['user_profile']) {
           $output .= '<div>' . l(t('View full user profile'), 'user/' . $account->uid) . '</div>';
         }
       }
