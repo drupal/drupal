@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.617 2006/03/20 20:48:19 killes Exp $
+// $Id: node.module,v 1.618 2006/03/24 14:59:06 killes Exp $
 
 /**
  * @file
@@ -1787,13 +1787,6 @@ function node_add($type) {
     // Initialize settings:
     $node = array('uid' => $user->uid, 'name' => $user->name, 'type' => $type);
 
-    // Allow the following fields to be initialized via $_GET (e.g. for use
-    // with a "blog it" bookmarklet):
-    foreach (array('title', 'teaser', 'body') as $field) {
-      if ($_GET['edit'][$field]) {
-        $node[$field] = $_GET['edit'][$field];
-      }
-    }
     $output = node_form($node);
     drupal_set_title(t('Submit %name', array('%name' => node_get_name($node))));
   }
