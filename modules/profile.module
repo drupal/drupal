@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.142 2006/03/18 01:38:29 killes Exp $
+// $Id: profile.module,v 1.143 2006/03/24 13:12:44 killes Exp $
 
 /**
  * @file
@@ -493,7 +493,7 @@ function profile_load_profile(&$user) {
 }
 
 function profile_save_profile(&$edit, &$user, $category) {
-  if ($_GET['q'] == 'user/register' || $_GET['q'] == 'admin/user/create') {
+  if ((arg(0) == 'user' && arg(1) == 'register') || (arg(0) == 'admin' && arg(1) == 'user' && arg(2) == 'create')) {
     $result = db_query('SELECT fid, name, type FROM {profile_fields} WHERE register = 1 AND visibility != %d ORDER BY category, weight', PROFILE_HIDDEN);
   }
   else {
@@ -594,10 +594,10 @@ function _profile_form_explanation($field) {
 }
 
 function profile_form_profile($edit, $user, $category) {
-  if ($_GET['q'] == 'user/register') {
+  if (arg(0) == 'user' && arg(1) == 'register') {
     $result = db_query('SELECT * FROM {profile_fields} WHERE visibility != %d AND register = 1 ORDER BY category, weight', PROFILE_HIDDEN);
   }
-  elseif ($_GET['q'] == 'admin/user/create') {
+  elseif (arg(0) == 'admin' && arg(1) == 'user' && arg(2) == 'create') {
     $result = db_query('SELECT * FROM {profile_fields} WHERE register = 1 ORDER BY category, weight');
   }
   elseif (user_access('administer users')) {
@@ -690,10 +690,10 @@ function _profile_update_user_fields($fields, $account) {
 }
 
 function profile_validate_profile($edit, $category) {
-  if ($_GET['q'] == 'user/register') {
+  if (arg(0) == 'user' && arg(1) == 'register') {
     $result = db_query('SELECT * FROM {profile_fields} WHERE visibility != %d AND register = 1 ORDER BY category, weight', PROFILE_HIDDEN);
   }
-  elseif ($_GET['q'] == 'admin/user/create') {
+  elseif (arg(0) == 'admin' && arg(1) == 'user' && arg(2) == 'create') {
     $result = db_query('SELECT * FROM {profile_fields} WHERE register = 1 ORDER BY category, weight');
   }
   elseif (user_access('administer users')) {
