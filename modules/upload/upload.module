@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.82 2006/03/21 11:44:46 killes Exp $
+// $Id: upload.module,v 1.83 2006/03/24 17:45:04 killes Exp $
 
 /**
  * @file
@@ -285,16 +285,22 @@ function _upload_validate(&$node) {
               $error['usersize']++;
             }
           }
-          if ($error['extension'] == count($user->roles) && $user->uid != 1) {
+
+          $user_roles = count($user->roles);
+          $valid = TRUE;
+          if ($error['extension'] == $user_roles) {
             form_set_error('upload', t('The selected file %name can not be attached to this post, because it is only possible to attach files with the following extensions: %files-allowed.', array('%name' => theme('placeholder', $file->filename), '%files-allowed' => theme('placeholder', $extensions))));
+            $valid = FALSE;
           }
-          elseif ($error['uploadsize'] == count($user->roles) && $user->uid != 1) {
+          elseif ($error['uploadsize'] == $user_roles) {
             form_set_error('upload', t('The selected file %name can not be attached to this post, because it exceeded the maximum filesize of %maxsize.', array('%name' => theme('placeholder', $file->filename), '%maxsize' => theme('placeholder', format_size($uploadsize)))));
+            $valid = FALSE;
           }
-          elseif ($error['usersize'] == count($user->roles) && $user->uid != 1) {
+          elseif ($error['usersize'] == $user_roles) {
             form_set_error('upload', t('The selected file %name can not be attached to this post, because the disk quota of %quota has been reached.', array('%name' => theme('placeholder', $file->filename), '%quota' => theme('placeholder', format_size($usersize)))));
+            $valid = FALSE;
           }
-          if (count($error)) {
+          if (!$valid) {
             unset($node->files[$fid], $_SESSION['file_previews'][$fid]);
             file_delete($file->filepath);
           }
