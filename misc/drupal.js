@@ -140,6 +140,8 @@ function redirectFormButton(uri, button, handler) {
         // Get response from iframe body
         try {
           response = (iframe.contentWindow || iframe.contentDocument || iframe).document.body.innerHTML;
+          // Firefox 1.0.x hack: Replace control characters
+          response = response.replace(/[\f\n\r\t\v]/g, ' ');
           if (window.opera) {
             // Opera-hack: it returns innerHTML sanitized.
             response = response.replace(/&quot;/g, '"');
