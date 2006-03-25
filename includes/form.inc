@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.80 2006/03/20 16:28:10 killes Exp $
+// $Id: form.inc,v 1.81 2006/03/25 18:02:52 killes Exp $
 
 /**
  * @defgroup form Form generation
@@ -326,7 +326,7 @@ function form_builder($form_id, $form) {
       $ref =& $ref[$parent];
     }
     $form['#ref'] = &$ref;
-    if (!isset($form['#value'])) {
+    if (!isset($form['#value']) && !array_key_exists('#value', $form)) {
       if ($posted) {
         switch ($form['#type']) {
           case 'checkbox':
