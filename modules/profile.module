@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.144 2006/03/24 14:43:35 killes Exp $
+// $Id: profile.module,v 1.145 2006/03/25 11:07:54 killes Exp $
 
 /**
  * @file
@@ -92,7 +92,7 @@ function profile_block($op = 'list', $delta = 0, $edit = array()) {
   else if ($op == 'configure' && $delta == 0) {
     // Compile a list of fields to show
     $fields = array();
-    $result = db_query('SELECT name, title, weight FROM {profile_fields} ORDER BY weight');
+    $result = db_query('SELECT name, title, weight, visibility FROM {profile_fields} WHERE visibility IN (%d, %d) ORDER BY weight', PROFILE_PUBLIC, PROFILE_PUBLIC_LISTINGS);
     while ($record = db_fetch_object($result)) {
       $fields[$record->name] = $record->title;
     }
