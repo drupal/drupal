@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.598 2006/03/17 18:56:25 killes Exp $
+// $Id: user.module,v 1.599 2006/03/25 19:50:48 killes Exp $
 
 /**
  * @file
@@ -161,17 +161,26 @@ function user_save($account, $array = array(), $category = 'account') {
     // fields from being saved there. We cannot invoke hook_user('insert') here
     // because we don't have a fully initialized user object yet.
     foreach ($array as $key => $value) {
-      if ($key == 'pass') {
-        $fields[] = $key;
-        $values[] = md5($value);
-        $s[] = "'%s'";
-      }
-      else if (substr($key, 0, 4) !== 'auth') {
-        if (in_array($key, $user_fields)) {
-          $fields[] = db_escape_string($key);
-          $values[] = $value;
+      switch($key) {
+        case 'pass':
+          $fields[] = $key;
+          $values[] = md5($value);
           $s[] = "'%s'";
-        }
+          break;          
+        case 'uid':        case 'mode':     case 'sort':
+        case 'threshold':  case 'created':  case 'access':
+        case 'login':      case 'status':
+          $fields[] = $key;
+          $values[] = $value;
+          $s[] = "%d";
+          break;
+        default:
+          if (substr($key, 0, 4) !== 'auth' && in_array($key, $user_fields)) {
+            $fields[] = $key;
+            $values[] = $value;
+            $s[] = "'%s'";
+          }
+          break;
       }
     }
     db_query('INSERT INTO {users} ('. implode(', ', $fields) .') VALUES ('. implode(', ', $s) .')', $values);
