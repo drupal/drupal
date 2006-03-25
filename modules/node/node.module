@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.618 2006/03/24 14:59:06 killes Exp $
+// $Id: node.module,v 1.619 2006/03/25 19:32:14 killes Exp $
 
 /**
  * @file
@@ -1580,14 +1580,11 @@ function node_submit($node) {
     $node->created = strtotime($node->date);
   }
   else {
-    // Validate for normal users:
-    $node->uid = $user->uid ? $user->uid : 0;
     // Force defaults in case people modify the form:
     $node_options = variable_get('node_options_'. $node->type, array('status', 'promote'));
     foreach (array('status', 'moderate', 'promote', 'sticky', 'revision') as $key) {
       $node->$key = in_array($key, $node_options);
     }
-    unset($node->created);
   }
 
   // Do node-type-specific validation checks.
@@ -1704,9 +1701,8 @@ function node_form_array($node) {
   if (!isset($node->nid)) {
     foreach (array('status', 'moderate', 'promote', 'sticky', 'revision') as $key) {
       $node->$key = in_array($key, $node_options);
-      // Don't show node options if the user doesn't have admin access.
-      $form['options'][$key] = array('#type' => 'value', '#value' => $node->$key);
     }
+    $node->uid = $user->uid;
   }
   else {
     // Nodes being edited should always be preset with the default revision setting.
@@ -1727,6 +1723,12 @@ function node_form_array($node) {
     $form['options']['promote']  = array('#type' => 'checkbox', '#title' => t('Promoted to front page'), '#default_value' => $node->promote);
     $form['options']['sticky']   = array('#type' => 'checkbox', '#title' => t('Sticky at top of lists'), '#default_value' => $node->sticky);
     $form['options']['revision'] = array('#type' => 'checkbox', '#title' => t('Create new revision'), '#default_value' => $node->revision);
+  }
+  else {
+    // Put all of these through as values if the user doesn't have access to them.
+    foreach (array('uid', 'created') as $key) {
+      $form[$key] = array('#type' => 'value', '#value' => $node->$key);
+    }
   }
 
   // Add the buttons.
