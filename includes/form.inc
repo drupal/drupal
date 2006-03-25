@@ -326,7 +326,7 @@ function form_builder($form_id, $form) {
       $ref =& $ref[$parent];
     }
     $form['#ref'] = &$ref;
-    if (!isset($form['#value'])) {
+    if (!isset($form['#value']) && !array_key_exists('#value', $form)) {
       if ($posted) {
         switch ($form['#type']) {
           case 'checkbox':
