@@ -145,6 +145,15 @@ function statistics_menu($may_cache) {
   return $items;
 }
 
+/**
+ * Implementation of hook_user().
+ */
+function statistics_user($op, &$edit, &$user) {
+  if ($op == 'delete') {
+    db_query('UPDATE {accesslog} SET uid = 0 WHERE uid = %d', $user->uid);
+  }
+}
+
 function statistics_access_log($aid) {
   $result = db_query('SELECT a.*, u.name FROM {accesslog} a LEFT JOIN {users} u ON a.uid = u.uid WHERE aid = %d', $aid);
   if ($access = db_fetch_object($result)) {

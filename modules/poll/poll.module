@@ -492,3 +492,12 @@ function poll_update($node) {
     }
   }
 }
+
+/**
+ * Implementation of hook_user().
+ */
+function poll_user($op, &$edit, &$user) {
+  if ($op == 'delete') {
+    db_query('UPDATE {poll_votes} SET uid = 0 WHERE uid = %d', $user->uid);
+  }
+}

@@ -335,6 +335,10 @@ function comment_user($type, $edit, &$user, $category = NULL) {
 
     return $form;
   }
+  elseif ($type == 'delete') {
+    db_query('UPDATE {comments} SET uid = 0 WHERE uid = %d', $user->uid);
+    db_query('UPDATE {node_comment_statistics} SET last_comment_uid = 0 WHERE last_comment_uid = %d', $user->uid);
+  }
 }
 
 /**

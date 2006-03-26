@@ -62,6 +62,15 @@ function watchdog_cron() {
 }
 
 /**
+ * Implementation of hook_user().
+ */
+function watchdog_user($op, &$edit, &$user) {
+  if ($op == 'delete') {
+    db_query('UPDATE {watchdog} SET uid=0 WHERE uid=%d', $user->uid);
+  }
+}
+
+/**
  * Menu callback; displays a listing of log messages.
  */
 function watchdog_overview() {

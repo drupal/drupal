@@ -822,6 +822,16 @@ function node_search($op = 'search', $keys = null) {
   }
 }
 
+/**
+ * Implementation of hook_user().
+ */
+function node_user($op, &$edit, &$user) {
+  if ($op == 'delete') {
+    db_query('UPDATE {node} SET uid = 0 WHERE uid = %d', $user->uid);
+    db_query('UPDATE {node_revisions} SET uid = 0 WHERE uid = %d', $user->uid);
+  }
+}
+
 function theme_node_search_admin($form) {
   $output = form_render($form['info']);
 
