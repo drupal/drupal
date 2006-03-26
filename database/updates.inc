@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.219 2006/03/26 01:00:07 killes Exp $
+// $Id: updates.inc,v 1.220 2006/03/26 14:06:06 killes Exp $
 
 function system_update_110() {
   $ret = array();
@@ -1142,7 +1142,7 @@ function system_update_158() {
 function system_update_159() {
   $ret = array();
 
-  $result = db_query_range("SELECT * FROM {old_revisions} WHERE done = 0 AND type IN ('page', 'story', 'poll', 'book', 'forum')", 0, 20);
+  $result = db_query_range("SELECT * FROM {old_revisions} WHERE done = 0 AND type IN ('page', 'story', 'poll', 'book', 'forum', 'blog')", 0, 20);
 
   $vid = db_next_id('{node_revisions}_vid');
   while ($node = db_fetch_object($result)) {
