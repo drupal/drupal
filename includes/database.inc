@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.52 2006/03/26 14:11:38 killes Exp $
+// $Id: database.inc,v 1.53 2006/03/26 14:46:51 killes Exp $
 
 /**
  * @file
@@ -96,7 +96,7 @@ function db_prefix_tables($sql) {
  *   The name assigned to the newly active database connection. If omitted, the
  *   default connection will be made active.
  *
- * @return the name of the 
+ * @return the name of the previously active database or FALSE if non was found.
  */
 function db_set_active($name = 'default') {
   global $db_url, $db_type, $active_db;
