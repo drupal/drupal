@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.81 2006/03/25 18:02:52 killes Exp $
+// $Id: form.inc,v 1.82 2006/03/26 17:41:06 killes Exp $
 
 /**
  * @defgroup form Form generation
@@ -84,7 +84,7 @@ function drupal_get_form($form_id, &$form, $callback = NULL) {
     $form['#id'] = $form_id;
   }
 
-  $form = array_merge(_element_info('form'), $form);
+  $form += _element_info('form');
 
   if (!isset($form['#validate'])) {
     if (function_exists($form_id .'_validate')) {
