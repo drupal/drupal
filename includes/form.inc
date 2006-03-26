@@ -84,7 +84,7 @@ function drupal_get_form($form_id, &$form, $callback = NULL) {
     $form['#id'] = $form_id;
   }
 
-  $form = array_merge(_element_info('form'), $form);
+  $form += _element_info('form');
 
   if (!isset($form['#validate'])) {
     if (function_exists($form_id .'_validate')) {
