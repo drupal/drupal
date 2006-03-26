@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.218 2006/03/12 22:25:00 unconed Exp $
+// $Id: updates.inc,v 1.219 2006/03/26 01:00:07 killes Exp $
 
 function system_update_110() {
   $ret = array();
@@ -1588,6 +1588,22 @@ function system_update_172() {
 
 function system_update_173() {
   $ret = array();
+  // State tracker to determine whether we keep a backup of the files table or not.
+  $safe = TRUE;
+
+  // PostgreSQL needs CREATE TABLE foobar _AS_ SELECT ...
+  $AS = ($GLOBALS['db_type'] == 'pgsql') ? 'AS' : '';
+  
+  // Backup the files table.
+  $ret[] = update_sql("CREATE TABLE {files_backup} $AS SELECT * FROM {files}");
+
+  // Do some files table sanity checking and cleanup.
+  $ret[] = update_sql('DELETE FROM {files} WHERE fid = 0');
+  $ret[] = update_sql('UPDATE {files} SET vid = nid WHERE vid = 0');
+
+  // Create a temporary table to build the new file_revisions and files tables from.
+  $ret[] = update_sql("CREATE TABLE {files_tmp} $AS SELECT * FROM {files}");
+  $ret[] = update_sql('DROP TABLE {files}');
 
   switch ($GLOBALS['db_type']) {
     case 'pgsql':
@@ -1598,11 +1614,13 @@ function system_update_173() {
         description varchar(255) NOT NULL default '',
         list smallint NOT NULL default 0,
         PRIMARY KEY (fid, vid))");
-      $ret[] = update_sql("INSERT INTO {file_revisions} SELECT fid, vid, description, list FROM {files}");
+      $result = update_sql("INSERT INTO {file_revisions} SELECT DISTINCT ON (fid,vid) fid, vid, description, list FROM {files_tmp}");
+      $ret[] = $result;
+      if ($result['success'] === FALSE) {
+        $safe = FALSE;
+      }
 
-      // alter files table
-      $ret[] = update_sql("CREATE TABLE {files_copy} AS SELECT * FROM {files}");
-      $ret[] = update_sql("DROP TABLE {files}");
+      // Create normalized files table
       $ret[] = update_sql("CREATE TABLE {files} (
         fid SERIAL,
         nid integer NOT NULL default 0,
@@ -1611,10 +1629,16 @@ function system_update_173() {
         filemime varchar(255) NOT NULL default '',
         filesize integer NOT NULL default 0,
         PRIMARY KEY (fid))");
-      $ret[] = update_sql("INSERT INTO {files} SELECT DISTINCT ON (fid) fid, nid, filename, filepath, filemime, filesize FROM {files_copy}");
+      $result = update_sql("INSERT INTO {files} SELECT DISTINCT ON (fid) fid, nid, filename, filepath, filemime, filesize FROM {files_tmp}");
+      $ret[] = $result;
+      if ($result['success'] === FALSE) {
+        $safe = FALSE;
+      }
+
       $ret[] = update_sql("SELECT setval('{files}_fid_seq', max(fid)) FROM {files}");
-      $ret[] = update_sql("DROP TABLE {files_copy}");
+
       break;
+
     case 'mysqli':
     case 'mysql':
       // create file_revisions table
@@ -1625,11 +1649,14 @@ function system_update_173() {
         list tinyint(1) unsigned NOT NULL default 0,
         PRIMARY KEY (fid, vid)
         ) /*!40100 DEFAULT CHARACTER SET utf8 */");
-      $ret[] = update_sql('INSERT INTO {file_revisions} SELECT fid, vid, description, list FROM {files}');
 
-      // alter files table
-      $ret[] = update_sql("CREATE TABLE {files_copy} AS SELECT * FROM {files}");
-      $ret[] = update_sql("DROP TABLE {files}");
+      // Try as you might mysql only does distinct row if you are selecting more than 1 column.
+      $result = update_sql('INSERT INTO {file_revisions} SELECT DISTINCT fid , vid, description, list FROM {files_tmp}');
+      $ret[] = $result;
+      if ($result['success'] === FALSE) {
+        $safe = FALSE;
+      }
+
       $ret[] = update_sql("CREATE TABLE {files} (
         fid int(10) unsigned NOT NULL default 0,
         nid int(10) unsigned NOT NULL default 0,
@@ -1639,9 +1666,23 @@ function system_update_173() {
         filesize int(10) unsigned NOT NULL default 0,
         PRIMARY KEY (fid)
         ) /*!40100 DEFAULT CHARACTER SET utf8 */");
-      $ret[] = update_sql("INSERT IGNORE INTO {files} SELECT fid, nid, filename, filepath, filemime, filesize FROM {files_copy}");
-      $ret[] = update_sql("DROP TABLE {files_copy}");
+      $result = update_sql("INSERT INTO {files} SELECT DISTINCT fid, nid, filename, filepath, filemime, filesize FROM {files_tmp}");
+      $ret[] = $result;
+      if ($result['success'] === FALSE) {
+        $safe = FALSE;
+      }
+
       break;
+  }
+
+  $ret[] = update_sql("DROP TABLE {files_tmp}");
+
+  // Remove original files table if all went well. Otherwise preserve it and notify user.
+  if ($safe) {
+    $ret[] = update_sql("DROP TABLE {files_backup}");
+  }
+  else {
+    drupal_set_message(t('Normalizing files table failed. A backup of the original table called {files_backup} remains in your database.'));
   }
 
   return $ret;
