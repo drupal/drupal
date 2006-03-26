@@ -1706,6 +1706,7 @@ function node_form_array($node) {
     foreach (array('status', 'moderate', 'promote', 'sticky', 'revision') as $key) {
       $node->$key = in_array($key, $node_options);
     }
+    global $user;
     $node->uid = $user->uid;
   }
   else {
