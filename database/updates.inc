@@ -1142,7 +1142,7 @@ function system_update_158() {
 function system_update_159() {
   $ret = array();
 
-  $result = db_query_range("SELECT * FROM {old_revisions} WHERE done = 0 AND type IN ('page', 'story', 'poll', 'book', 'forum')", 0, 20);
+  $result = db_query_range("SELECT * FROM {old_revisions} WHERE done = 0 AND type IN ('page', 'story', 'poll', 'book', 'forum', 'blog')", 0, 20);
 
   $vid = db_next_id('{node_revisions}_vid');
   while ($node = db_fetch_object($result)) {
