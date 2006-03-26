@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.357 2006/03/23 21:20:59 killes Exp $
+// $Id: book.module,v 1.358 2006/03/26 19:35:05 killes Exp $
 
 /**
  * @file
@@ -370,7 +370,16 @@ function book_outline_submit($form_id, $form_values) {
 }
 
 /**
- * Return the path (call stack) to a certain book page.
+ * Given a node, this function returns an array of 'book node' objects 
+ * representing the path in the book tree from the root to the 
+ * parent of the given node.
+ * 
+ * @param node - a book node object for which to compute the path
+ *
+ * @return - an array of book node objects representing the path of
+ * nodes root to parent of the given node. Returns an empty array if
+ * the node does not exist or is not part of a book hierarchy.
+ *
  */
 function book_location($node, $nodes = array()) {
   $parent = db_fetch_object(db_query(db_rewrite_sql('SELECT n.nid, n.title, b.parent, b.weight FROM {node} n INNER JOIN {book} b ON n.vid = b.vid WHERE n.nid = %d'), $node->parent));
@@ -505,7 +514,7 @@ function book_nodeapi(&$node, $op, $teaser, $page) {
 }
 
 /**
- * Prepares both the custom breadcrumb trail and the forward/backward
+ * Prepares the links to children (TOC) and forward/backward
  * navigation for a node presented as a book page.
  *
  * @ingroup themeable
@@ -669,7 +678,11 @@ function book_render() {
  */
 function book_export($type = 'html', $nid = 0) {
   $type = drupal_strtolower($type);
-  $depth = _book_get_depth($nid);
+  $node_result = db_query(db_rewrite_sql('SELECT n.nid, n.title, b.parent FROM {node} n INNER JOIN {book} b ON n.vid = b.vid WHERE n.nid = %d'), $nid);
+  if (db_num_rows($node_result) > 0) {
+      $node = db_fetch_object($node_result);
+  }
+  $depth = count(book_location($node)) + 1;
   $export_function = 'book_export_' . $type;
 
   if (function_exists($export_function)) {
@@ -741,38 +754,6 @@ function theme_book_export_html($title, $content) {
   $html .= "<style type=\"text/css\">\n@import url(misc/print.css);\n</style>\n";
   $html .= "</head>\n<body>\n". $content . "\n</body>\n</html>\n";
   return $html;
-}
-
-/**
- * Given a node, this function returns the depth of the node in its hierarchy.
- * A root node has depth 1, and children of a node of depth n have depth (n+1).
- *
- * @param nid
- *   - the nid of the node whose depth to compute.
- * @return
- *   - the depth of the given node in its hierarchy.  Returns 0 if the node
- *  does not exist or is not part of a book hierarchy.
- */
-function _book_get_depth($nid) {
-  $depth = 0;
-  if ($nid) {
-    while ($nid) {
-      $result = db_query(db_rewrite_sql('SELECT b.parent FROM {book} b WHERE b.nid = %d'), $nid);
-      $obj =  db_fetch_object($result);
-      $parent = $obj->parent;
-      if ($nid == $parent->parent) {
-        $nid = 0;
-      }
-      else {
-        $nid = $parent;
-      }
-      $depth++;
-    }
-    return $depth;
-  }
-  else {
-    return 0;
-  }
 }
 
 /**
