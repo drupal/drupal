@@ -132,7 +132,7 @@ function db_set_active($name = 'default') {
   // Set the active connection.
   $active_db = $db_conns[$name];
 
-  return array_search($previousdb, $db_conns);
+  return array_search($previous_db, $db_conns);
 }
 
 /**
