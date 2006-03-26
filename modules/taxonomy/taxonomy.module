@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.267 2006/03/24 14:49:45 killes Exp $
+// $Id: taxonomy.module,v 1.268 2006/03/26 16:59:17 killes Exp $
 
 /**
  * @file
@@ -121,21 +121,45 @@ function taxonomy_menu($may_cache) {
  * List and manage vocabularies.
  */
 function taxonomy_overview_vocabularies() {
-  $header = array(t('Name'), t('Type'), array('data' => t('Operations'), 'colspan' => '2'));
-  $vocabularies = taxonomy_get_vocabularies();
+  $vocabularies = taxonomy_get_vocabularies();  
   foreach ($vocabularies as $vocabulary) {
     $types = array();
     foreach ($vocabulary->nodes as $type) {
       $node_type = node_get_name($type);
       $types[] = $node_type ? $node_type : $type;
     }
-    $rows[] = array(check_plain($vocabulary->name), implode(', ', $types), l(t('edit vocabulary'), "admin/taxonomy/edit/vocabulary/$vocabulary->vid"), l(t('list terms'), "admin/taxonomy/$vocabulary->vid"));
+    $form[$vocabulary->vid]['name'] = array('#value' => check_plain($vocabulary->name));
+    $form[$vocabulary->vid]['type'] = array('#value' => implode(', ', $types));
+    $form[$vocabulary->vid]['edit'] = array('#value' => l(t('edit vocabulary'), "admin/taxonomy/edit/vocabulary/$vocabulary->vid"));
+    $form[$vocabulary->vid]['list'] = array('#value' => l(t('list terms'), "admin/taxonomy/$vocabulary->vid"));
   }
+  
+  return drupal_get_form('taxonomy_overview_vocabularies', $form);
+}
 
+/**
+ * Theme overview vocabularies.
+ */
+function theme_taxonomy_overview_vocabularies($form) {
+  $rows = array();
+  foreach (element_children($form) as $key) {
+    if (isset($form[$key]['name'])) {
+      $row = array();
+      $row[] = form_render($form[$key]['name']);
+      $row[] = form_render($form[$key]['type']);
+      $row[] = form_render($form[$key]['edit']);
+      $row[] = form_render($form[$key]['list']);
+      $rows[] = $row;
+    }
+  }
   if (!$rows) {
     $rows[] = array(array('data' => t('No categories available.'), 'colspan' => '4', 'class' => 'message'));
   }
-  return theme('table', $header, $rows, array('id' => 'taxonomy'));
+  $header = array(t('Name'), t('Type'), array('data' => t('Operations'), 'colspan' => '2'));
+  
+  $output = theme('table', $header, $rows, array('id' => 'taxonomy'));
+  $output .= form_render($form);
+  return $output;
 }
 
 /**
