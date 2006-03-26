@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.621 2006/03/26 16:56:08 killes Exp $
+// $Id: node.module,v 1.622 2006/03/26 19:31:00 killes Exp $
 
 /**
  * @file
@@ -819,6 +819,16 @@ function node_search($op = 'search', $keys = null) {
         $keys .= ' "'. str_replace('"', ' ', $edit['phrase']) .'"';
       }
       return trim($keys);
+  }
+}
+
+/**
+ * Implementation of hook_user().
+ */
+function node_user($op, &$edit, &$user) {
+  if ($op == 'delete') {
+    db_query('UPDATE {node} SET uid = 0 WHERE uid = %d', $user->uid);
+    db_query('UPDATE {node_revisions} SET uid = 0 WHERE uid = %d', $user->uid);
   }
 }
 

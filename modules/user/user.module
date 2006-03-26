@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.599 2006/03/25 19:50:48 killes Exp $
+// $Id: user.module,v 1.600 2006/03/26 19:31:00 killes Exp $
 
 /**
  * @file
@@ -1369,7 +1369,7 @@ function user_edit($category = 'account') {
       drupal_goto('admin/user');
     }
     else {
-      return confirm_form('user_confirm_delete', $form, t('Are you sure you want to delete the account %name?', array('%name' => theme('placeholder', $account->name))), 'user/'. $account->uid, t('Deleting a user will remove all their submissions as well. This action cannot be undone.'), t('Delete'));
+      return confirm_form('user_confirm_delete', array(), t('Are you sure you want to delete the account %name?', array('%name' => theme('placeholder', $account->name))), 'user/'. $account->uid, t('All submissions made by this user will be attributed to the anonymous account. This action cannot be undone.'), t('Delete'), t('Cancel'));
     }
   }
   else if ($_POST['op'] == t('Delete')) {

@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.145 2006/03/25 11:07:54 killes Exp $
+// $Id: profile.module,v 1.146 2006/03/26 19:31:00 killes Exp $
 
 /**
  * @file
@@ -165,6 +165,8 @@ function profile_user($type, &$edit, &$user, $category = NULL) {
       return profile_validate_profile($edit, $category);
     case 'categories':
       return profile_categories();
+    case 'delete':
+      db_query('DELETE FROM {profile_values} WHERE uid = %d', $user->uid);
   }
 }
 

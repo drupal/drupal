@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.221 2006/03/01 15:20:43 dries Exp $
+// $Id: statistics.module,v 1.222 2006/03/26 19:31:00 killes Exp $
 
 /**
  * @file
@@ -143,6 +143,15 @@ function statistics_menu($may_cache) {
   }
 
   return $items;
+}
+
+/**
+ * Implementation of hook_user().
+ */
+function statistics_user($op, &$edit, &$user) {
+  if ($op == 'delete') {
+    db_query('UPDATE {accesslog} SET uid = 0 WHERE uid = %d', $user->uid);
+  }
 }
 
 function statistics_access_log($aid) {

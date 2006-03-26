@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.442 2006/03/24 11:38:00 killes Exp $
+// $Id: comment.module,v 1.443 2006/03/26 19:31:00 killes Exp $
 
 /**
  * @file
@@ -334,6 +334,10 @@ function comment_user($type, $edit, &$user, $category = NULL) {
       '#description' => t('Your signature will be publicly displayed at the end of your comments.'));
 
     return $form;
+  }
+  elseif ($type == 'delete') {
+    db_query('UPDATE {comments} SET uid = 0 WHERE uid = %d', $user->uid);
+    db_query('UPDATE {node_comment_statistics} SET last_comment_uid = 0 WHERE last_comment_uid = %d', $user->uid);
   }
 }
 

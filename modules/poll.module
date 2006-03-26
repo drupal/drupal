@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.189 2006/03/17 18:37:46 killes Exp $
+// $Id: poll.module,v 1.190 2006/03/26 19:31:00 killes Exp $
 
 /**
  * @file
@@ -490,5 +490,14 @@ function poll_update($node) {
     if ($chtext != '') {
       db_query("INSERT INTO {poll_choices} (nid, chtext, chvotes, chorder) VALUES (%d, '%s', %d, %d)", $node->nid, $chtext, $chvotes, $i++);
     }
+  }
+}
+
+/**
+ * Implementation of hook_user().
+ */
+function poll_user($op, &$edit, &$user) {
+  if ($op == 'delete') {
+    db_query('UPDATE {poll_votes} SET uid = 0 WHERE uid = %d', $user->uid);
   }
 }
