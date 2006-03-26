@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.53 2006/03/26 14:46:51 killes Exp $
+// $Id: database.inc,v 1.54 2006/03/26 18:19:04 killes Exp $
 
 /**
  * @file
@@ -132,7 +132,7 @@ function db_set_active($name = 'default') {
   // Set the active connection.
   $active_db = $db_conns[$name];
 
-  return array_search($previousdb, $db_conns);
+  return array_search($previous_db, $db_conns);
 }
 
 /**
