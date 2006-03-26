@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.51 2006/03/08 15:13:20 dries Exp $
+// $Id: database.inc,v 1.52 2006/03/26 14:11:38 killes Exp $
 
 /**
  * @file
@@ -95,6 +95,8 @@ function db_prefix_tables($sql) {
  * @param $name
  *   The name assigned to the newly active database connection. If omitted, the
  *   default connection will be made active.
+ *
+ * @return the name of the 
  */
 function db_set_active($name = 'default') {
   global $db_url, $db_type, $active_db;
@@ -110,7 +112,7 @@ function db_set_active($name = 'default') {
     }
 
     $db_type = substr($connect_url, 0, strpos($connect_url, '://'));
-   $handler = "./includes/database.$db_type.inc";
+    $handler = "./includes/database.$db_type.inc";
 
     if (is_file($handler)) {
       include_once $handler;
@@ -124,10 +126,13 @@ function db_set_active($name = 'default') {
     }
 
     $db_conns[$name] = db_connect($connect_url);
-
   }
+
+  $previous_db = $active_db;
   // Set the active connection.
   $active_db = $db_conns[$name];
+
+  return array_search($previousdb, $db_conns);
 }
 
 /**

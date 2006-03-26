@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.88 2006/02/27 13:46:01 killes Exp $
+// $Id: bootstrap.inc,v 1.89 2006/03/26 14:11:38 killes Exp $
 
 /**
  * @file
@@ -590,7 +590,14 @@ function request_uri() {
  */
 function watchdog($type, $message, $severity = WATCHDOG_NOTICE, $link = NULL) {
   global $user;
+
+  $current_db = db_set_active();
+
   db_query("INSERT INTO {watchdog} (uid, type, message, severity, link, location, referer, hostname, timestamp) VALUES (%d, '%s', '%s', %d, '%s', '%s', '%s', '%s', %d)", $user->uid, $type, $message, $severity, $link, request_uri(), referer_uri(), $_SERVER['REMOTE_ADDR'], time());
+
+  if ($current_db) {
+    db_set_active($current_db);
+  }
 }
 
 /**
