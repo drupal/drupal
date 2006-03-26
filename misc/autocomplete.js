@@ -1,4 +1,4 @@
-// $Id: autocomplete.js,v 1.7 2006/01/22 17:37:41 unconed Exp $
+// $Id: autocomplete.js,v 1.8 2006/03/26 15:07:54 killes Exp $
 
 // Global Killswitch
 if (isJsEnabled()) {
@@ -198,7 +198,7 @@ jsAC.prototype.found = function (matches) {
   var ul = document.createElement('ul');
   var ac = this;
   if (matches.length > 0) {
-    for (i in matches) {
+    for (var i = 0; i < matches.length; i++) {
       li = document.createElement('li');
       div = document.createElement('div');
       div.innerHTML = matches[i][1];
@@ -255,7 +255,7 @@ ACDB.prototype.receive = function(string, xmlhttp, acdb) {
   }
   // Split into array of key->value pairs
   var matches = string.length > 0 ? string.split('||') : [];
-  for (i in matches) {
+  for (var i = 0; i < matches.length; i++) {
     matches[i] = matches[i].length > 0 ? matches[i].split('|') : [];
     // Decode textfield pipes back to plain-text
     matches[i][0] = eregReplace('&#124;', '|', matches[i][0]);
