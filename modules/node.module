@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.619 2006/03/25 19:32:14 killes Exp $
+// $Id: node.module,v 1.620 2006/03/26 01:03:29 killes Exp $
 
 /**
  * @file
@@ -1427,8 +1427,12 @@ function node_revision_delete($nid, $revision) {
       else {
         drupal_set_message(t('Deletion failed. You tried to delete the current revision.'));
       }
-
-      drupal_goto("node/$nid/revisions");
+      if (db_result(db_query('SELECT COUNT(vid) FROM {node_revisions} WHERE nid = %d', $nid)) > 1) {
+        drupal_goto("node/$nid/revisions");
+      }
+      else {
+        drupal_goto("node/$nid");
+      }
     }
   }
 
