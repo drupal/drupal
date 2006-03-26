@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.67 2006/03/10 19:02:06 dries Exp $
+// $Id: file.inc,v 1.68 2006/03/26 15:02:51 killes Exp $
 
 /**
  * @file
@@ -311,6 +311,7 @@ function file_copy(&$source, $dest = 0, $replace = FILE_EXISTS_RENAME) {
 
   // Make sure we at least have a valid directory.
   if ($basename === false) {
+    $source = is_object($source) ? $source->filepath : $source;
     drupal_set_message(t('The selected file %file could not be uploaded, because the destination %directory is not properly configured.', array('%file' => theme('placeholder', $source), '%directory' => theme('placeholder', $dest))), 'error');
     watchdog('file system', t('The selected file %file could not not be uploaded, because the destination %directory could not be found, or because its permissions do not allow the file to be written.', array('%file' => theme('placeholder', $source), '%directory' => theme('placeholder', $dest))), WATCHDOG_ERROR);
     return 0;
@@ -414,7 +415,7 @@ function file_move(&$source, $dest = 0, $replace = FILE_EXISTS_RENAME) {
     if ($path_original == $path_current || file_delete($path_original)) {
       return 1;
     }
-    drupal_set_message(t('The removal of the original file %file has failed.', array('%file' => theme('placeholder', $source))), 'error');
+    drupal_set_message(t('The removal of the original file %file has failed.', array('%file' => theme('placeholder', $path_original))), 'error');
   }
   return 0;
 }
