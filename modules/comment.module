@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.443 2006/03/26 19:31:00 killes Exp $
+// $Id: comment.module,v 1.444 2006/03/27 08:08:31 unconed Exp $
 
 /**
  * @file
@@ -204,7 +204,7 @@ function comment_link($type, $node = 0, $main = 0) {
         else {
           if ($node->comment == COMMENT_NODE_READ_WRITE) {
             if (user_access('post comments')) {
-              $links[] = l(t('add new comment'), "comment/reply/$node->nid", array('title' => t('Add a new comment to this page.')), NULL, 'comment-form');
+              $links[] = l(t('add new comment'), "comment/reply/$node->nid", array('title' => t('Add a new comment to this page.')), NULL, 'comment_form');
             }
             else {
               $links[] = theme('comment_post_forbidden', $node->nid);
@@ -220,7 +220,7 @@ function comment_link($type, $node = 0, $main = 0) {
       if ($node->comment == COMMENT_NODE_READ_WRITE) {
         if (user_access('post comments')) {
           if (variable_get('comment_form_location', COMMENT_FORM_SEPARATE_PAGE) == COMMENT_FORM_SEPARATE_PAGE) {
-            $links[] = l(t('add new comment'), "comment/reply/$node->nid", array('title' => t('Share your thoughts and opinions related to this posting.')), NULL, 'comment');
+            $links[] = l(t('add new comment'), "comment/reply/$node->nid", array('title' => t('Share your thoughts and opinions related to this posting.')), NULL, 'comment_form');
           }
         }
         else {
@@ -1441,14 +1441,6 @@ function comment_form_submit($form_id, $form_values) {
 ** overridden by themes.
 */
 
-function theme_comment_form($form) {
-  if (!isset($form['#prefix'])) {
-    $form['#prefix'] = '';
-  }
-  $form['#prefix'] .= "<a id=\"comment-form\"></a>\n";
-  return form_render($form);
-}
-
 function theme_comment_preview($comment, $links = array(), $visible = 1) {
   $output = '<div class="preview">';
   $output .= theme('comment_view', $comment, $links, $visible);
@@ -1592,17 +1584,17 @@ function theme_comment_post_forbidden($nid) {
   else {
     // we cannot use drupal_get_destination() because these links sometimes appear on /node and taxo listing pages
     if (variable_get('comment_form_location', COMMENT_FORM_SEPARATE_PAGE) == COMMENT_FORM_SEPARATE_PAGE) {
-      $destination = "destination=comment/reply/$nid";
+      $destination = "destination=". urlencode("comment/reply/$nid#comment_form");
     }
     else {
-      $destination = "destination=node/$nid";
+      $destination = "destination=". urlencode("node/$nid#comment_form");
     }
 
     if (variable_get('user_register', 1)) {
-      return t('<a href="%login">login</a> or <a href="%register">register</a> to post comments', array('%login' => url('user/login', $destination, 'comment-form'), '%register' => url('user/register', $destination, 'comment-form')));
+      return t('<a href="%login">login</a> or <a href="%register">register</a> to post comments', array('%login' => url('user/login', $destination), '%register' => url('user/register', $destination)));
     }
     else {
-      return t('<a href="%login">login</a> to post comments', array('%login' => url('user/login', $destination, 'comment-form')));
+      return t('<a href="%login">login</a> to post comments', array('%login' => url('user/login', $destination)));
     }
   }
 }
