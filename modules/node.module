@@ -1647,18 +1647,6 @@ function node_validate($node) {
   node_invoke_nodeapi($node, 'validate');
 }
 
-/**
- * Validate the title of a node
- */
-function node_validate_title($node, $message = NULL) {
-  // Validate the title field.
-  if (isset($node->title)) {
-    if (trim($node->title) == '') {
-      form_set_error('title', isset($message) ? $message : t('You have to specify a title.'));
-    }
-  }
-}
-
 function node_form_validate($form_id, $edit) {
   node_validate($edit);
 }

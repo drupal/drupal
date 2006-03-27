@@ -326,8 +326,6 @@ function forum_submit(&$node) {
  * vocabulary is selected, not a "container" term.
  */
 function forum_validate($node) {
-  node_validate_title($node,t('You have to specify a subject.'));
-
   if ($node->taxonomy) {
     // Extract the node's proper topic ID.
     $vocabulary = variable_get('forum_nav_vocabulary', '');

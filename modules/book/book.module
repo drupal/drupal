@@ -237,13 +237,6 @@ function book_submit(&$node) {
 }
 
 /**
- * Implementation of hook_validate().
- */
-function book_validate($node) {
-  node_validate_title($node);
-}
-
-/**
  * Implementation of hook_form().
  */
 function book_form(&$node) {
