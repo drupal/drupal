@@ -119,7 +119,7 @@ function drupal_get_form($form_id, &$form, $callback = NULL) {
       if (isset($redirect)) {
         $goto = $redirect;
       }
-      elseif (isset($form['#redirect'])) {
+      if (isset($form['#redirect'])) {
         $goto = $form['#redirect'];
       }
       if ($goto !== FALSE) {
