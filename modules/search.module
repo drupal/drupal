@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.166 2006/03/03 08:37:47 dries Exp $
+// $Id: search.module,v 1.167 2006/03/27 21:52:27 unconed Exp $
 
 /**
  * @file
@@ -863,7 +863,7 @@ function do_search($keywords, $type, $join1 = '', $where1 = '1', $arguments1 = a
   $count_query = "SELECT $count";
 
   // Do actual search query
-  $result = pager_query("SELECT * FROM temp_search_results", 10, 0, $count_query, $arguments);
+  $result = pager_query("SELECT * FROM temp_search_results", 10, 0, $count_query);
   $results = array();
   while ($item = db_fetch_object($result)) {
     $results[] = $item;
@@ -1204,7 +1204,7 @@ function theme_search_page($results, $type) {
     $output .= theme('search_item', $entry, $type);
   }
   $output .= '</dl>';
-  $output .= theme('pager', NULL, 15, 0);
+  $output .= theme('pager', NULL, 10, 0);
 
   return $output;
 }
