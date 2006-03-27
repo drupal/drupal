@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.600 2006/03/26 19:31:00 killes Exp $
+// $Id: user.module,v 1.601 2006/03/27 20:28:10 killes Exp $
 
 /**
  * @file
@@ -1173,16 +1173,21 @@ function user_register() {
       '#description' => t('Provide a password for the new account.'),
       '#required' => TRUE,
     );
+    $form['notify'] = array(
+     '#type' => 'checkbox', 
+     '#title' => t('Notify user of new account')
+    );
   }
   $extra = _user_forms($null, $null, $null, 'register');
+  
   // Only display form_group around default fields if there are other groups.
   if ($extra) {
-
     $form['account'] = array('#type' => 'fieldset', '#title' => t('Account information'));
     $form['account']['name'] = $form['name'];
     $form['account']['mail'] = $form['mail'];
     $form['account']['pass'] = $form['pass'];
-    unset($form['name'], $form['mail'], $form['pass']);
+    $form['account']['notify'] = $form['notify'];
+    unset($form['name'], $form['mail'], $form['pass'], $form['notify']);
     $form = array_merge($form, $extra);
   }
   $form['submit'] = array('#type' => 'submit', '#value' => t('Create new account'), '#weight' => 30);
@@ -1202,6 +1207,7 @@ function user_register_submit($form_id, $form_values) {
   $mail = $form_values['mail'];
   $name = $form_values['name'];
   $pass = $admin ? $form_values['pass'] : user_password();
+  $notify = $form_values['notify'];
   $from = variable_get('site_mail', ini_get('sendmail_from'));
 
   if (!$admin && array_intersect(array_keys($form_values), array('uid', 'roles', 'init', 'session', 'status'))) {
@@ -1227,18 +1233,26 @@ function user_register_submit($form_id, $form_values) {
     return 'user/1/edit';
   }
   else {
-    if ($admin) {
+    if ($admin && !$notify) {
       drupal_set_message(t('Created a new user account. No e-mail has been sent.'));
 
       return 'admin/user';
     }
-    else if ($account->status) {
+    else if ($account->status || $notify) {
       // Create new user account, no administrator approval required.
-      $subject = _user_mail_text('welcome_subject', $variables);
-      $body = _user_mail_text('welcome_body', $variables);
+      $subject = $notify ? _user_mail_text('admin_subject', $variables) : _user_mail_text('welcome_subject', $variables);
+      $body = $notify ? _user_mail_text('admin_body', $variables) : _user_mail_text('welcome_body', $variables);
+
       user_mail($mail, $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
-      drupal_set_message(t('Your password and further instructions have been sent to your e-mail address.'));
-      return '';
+      
+      if ($notify) {
+        drupal_set_message(t('Password and further instructions have been e-mailed to the new user %user.', array('%user' => theme('placeholder', $name))));
+        return 'admin/user';
+      }
+      else {
+        drupal_set_message(t('Your password and further instructions have been sent to your e-mail address.'));
+        return '';
+      }
     }
     else {
       // Create new user account, administrator approval required.
@@ -1455,6 +1469,10 @@ function _user_mail_text($messageid, $variables = array()) {
         return t('Account details for %username at %site', $variables);
       case 'welcome_body':
         return t("%username,\n\nThank you for registering at %site. You may now log in to %login_uri using the following username and password:\n\nusername: %username\npassword: %password\n\nYou may also log in by clicking on this link or copying and pasting it in your browser:\n\n%login_url\n\nThis is a one-time login, so it can be used only once.\n\nAfter logging in, you will be redirected to %edit_uri so you can change your password.\n\nYour new %site membership also enables to you to login to other Drupal powered websites (e.g. http://drupal.org/) without registering. Just use the following Drupal ID and password:\n\nDrupal ID: %username@%uri_brief\npassword: %password\n\n\n--  %site team", $variables);
+      case 'admin_subject':
+        return t('An administrator created an account for you at %site', $variables);
+      case 'admin_body':
+        return t("%username,\n\nA site administrator at %site has created an account for you. You may now log in to %login_uri using the following username and password:\n\nusername: %username\npassword: %password\n\nYou may also log in by clicking on this link or copying and pasting it in your browser:\n\n%login_url\n\nThis is a one-time login, so it can be used only once.\n\nAfter logging in, you will be redirected to %edit_uri so you can change your password.\n\nYour new %site membership also enables to you to login to other Drupal powered websites (e.g. http://www.drupal.org/) without registering. Just use the following Drupal ID and password:\n\nDrupal ID: %username@%uri_brief\npassword: %password\n\n\n--  %site team", $variables);  
       case 'approval_subject':
         return t('Account details for %username at %site (pending admin approval)', $variables);
       case 'approval_body':
@@ -1903,6 +1921,8 @@ function user_configure() {
   $form['email'] = array('#type' => 'fieldset', '#title' => t('User e-mail settings'));
   $form['email']['user_mail_welcome_subject'] = array('#type' => 'textfield', '#title' => t('Subject of welcome e-mail'), '#default_value' => _user_mail_text('welcome_subject'), '#maxlength' => 180, '#description' => t('Customize the subject of your welcome e-mail, which is sent to new members upon registering.') .' '. t('Available variables are:') .' %username, %site, %password, %uri, %uri_brief, %mailto, %date, %login_uri, %edit_uri, %login_url.');
   $form['email']['user_mail_welcome_body'] = array('#type' => 'textarea', '#title' => t('Body of welcome e-mail'), '#default_value' => _user_mail_text('welcome_body'), '#rows' => 15, '#description' => t('Customize the body of the welcome e-mail, which is sent to new members upon registering.') .' '. t('Available variables are:') .' %username, %site, %password, %uri, %uri_brief, %mailto, %login_uri, %edit_uri, %login_url.');
+  $form['email']['user_mail_admin_subject'] = array('#type' => 'textfield', '#title' => t('Subject of welcome e-mail (user created by administrator)'), '#default_value' => _user_mail_text('admin_subject'), '#maxlength' => 180, '#description' => t('Customize the subject of your welcome e-mail, which is sent to new member accounts created by an administrator.') .' '. t('Available variables are:') .' %username, %site, %password, %uri, %uri_brief, %mailto, %date, %login_uri, %edit_uri, %login_url.');
+  $form['email']['user_mail_admin_body'] = array('#type' => 'textarea', '#title' => t('Body of welcome e-mail (user created by administrator)'), '#default_value' => _user_mail_text('admin_body'), '#rows' => 15, '#description' => t('Customize the body of the welcome e-mail, which is sent to new member accounts created by an administrator.') .' '. t('Available variables are:') .' %username, %site, %password, %uri, %uri_brief, %mailto, %login_uri, %edit_uri, %login_url.');
   $form['email']['user_mail_approval_subject'] = array('#type' => 'textfield', '#title' => t('Subject of welcome e-mail (awaiting admin approval)'), '#default_value' => _user_mail_text('approval_subject'), '#maxlength' => 180, '#description' => t('Customize the subject of your awaiting approval welcome e-mail, which is sent to new members upon registering.') .' '. t('Available variables are:') .' %username, %site, %password, %uri, %uri_brief, %mailto, %date, %login_uri, %edit_uri, %login_url.');
   $form['email']['user_mail_approval_body'] = array('#type' => 'textarea', '#title' => t('Body of welcome e-mail (awaiting admin approval)'), '#default_value' => _user_mail_text('approval_body'), '#rows' => 15, '#description' => t('Customize the body of the awaiting approval welcome e-mail, which is sent to new members upon registering.') .' '. t('Available variables are:') .' %username, %site, %password, %uri, %uri_brief, %mailto, %login_uri, %edit_uri, %login_url.');
   $form['email']['user_mail_pass_subject'] = array('#type' => 'textfield', '#title' => t('Subject of password recovery e-mail'), '#default_value' => _user_mail_text('pass_subject'), '#maxlength' => 180, '#description' => t('Customize the Subject of your forgotten password e-mail.') .' '. t('Available variables are:') .' %username, %site, %login_url, %uri, %uri_brief, %mailto, %date, %login_uri, %edit_uri.');
