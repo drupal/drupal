@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.321 2006/03/25 10:52:40 killes Exp $
+// $Id: forum.module,v 1.322 2006/03/27 18:02:48 killes Exp $
 
 /**
  * @file
@@ -326,8 +326,6 @@ function forum_submit(&$node) {
  * vocabulary is selected, not a "container" term.
  */
 function forum_validate($node) {
-  node_validate_title($node,t('You have to specify a subject.'));
-
   if ($node->taxonomy) {
     // Extract the node's proper topic ID.
     $vocabulary = variable_get('forum_nav_vocabulary', '');

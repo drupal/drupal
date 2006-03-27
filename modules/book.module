@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.358 2006/03/26 19:35:05 killes Exp $
+// $Id: book.module,v 1.359 2006/03/27 18:02:48 killes Exp $
 
 /**
  * @file
@@ -234,13 +234,6 @@ function book_submit(&$node) {
     $node->weight = 0;
     $node->revision = 1;
   }
-}
-
-/**
- * Implementation of hook_validate().
- */
-function book_validate($node) {
-  node_validate_title($node);
 }
 
 /**

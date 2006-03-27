@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.622 2006/03/26 19:31:00 killes Exp $
+// $Id: node.module,v 1.623 2006/03/27 18:02:48 killes Exp $
 
 /**
  * @file
@@ -1645,18 +1645,6 @@ function node_validate($node) {
   // Do node-type-specific validation checks.
   node_invoke($node, 'validate');
   node_invoke_nodeapi($node, 'validate');
-}
-
-/**
- * Validate the title of a node
- */
-function node_validate_title($node, $message = NULL) {
-  // Validate the title field.
-  if (isset($node->title)) {
-    if (trim($node->title) == '') {
-      form_set_error('title', isset($message) ? $message : t('You have to specify a title.'));
-    }
-  }
 }
 
 function node_form_validate($form_id, $edit) {

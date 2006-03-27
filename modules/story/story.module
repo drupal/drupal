@@ -1,5 +1,5 @@
 <?php
-// $Id: story.module,v 1.185 2006/02/21 18:46:54 dries Exp $
+// $Id: story.module,v 1.186 2006/03/27 18:02:48 killes Exp $
 
 /**
  * @file
@@ -72,13 +72,6 @@ function story_menu($may_cache) {
   }
 
   return $items;
-}
-
-/**
- * Implementation of hook_validate().
- */
-function story_validate($node) {
-  node_validate_title($node);
 }
 
 /**

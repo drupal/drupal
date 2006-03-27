@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.244 2006/02/21 18:46:54 dries Exp $
+// $Id: blog.module,v 1.245 2006/03/27 18:02:48 killes Exp $
 
 /**
  * @file
@@ -193,13 +193,6 @@ function blog_page_last() {
                         'title' => t('RSS - blogs'),
                         'href' => url("blog/feed")));
   return $output;
-}
-
-/**
- * Implementation of hook_validate().
- */
-function blog_validate($node) {
-  node_validate_title($node);
 }
 
 /**

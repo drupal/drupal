@@ -1,5 +1,5 @@
 <?php
-// $Id: page.module,v 1.153 2006/02/21 18:46:54 dries Exp $
+// $Id: page.module,v 1.154 2006/03/27 18:02:48 killes Exp $
 
 /**
  * @file
@@ -77,13 +77,6 @@ function page_menu($may_cache) {
   }
 
   return $items;
-}
-
-/**
- * Implementation of hook_validate().
- */
-function page_validate($node) {
-  node_validate_title($node);
 }
 
 /**
