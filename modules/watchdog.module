@@ -1,5 +1,5 @@
 <?php
-// $Id: watchdog.module,v 1.141 2006/03/26 19:31:00 killes Exp $
+// $Id: watchdog.module,v 1.142 2006/03/27 07:29:34 unconed Exp $
 
 /**
  * @file
@@ -66,7 +66,7 @@ function watchdog_cron() {
  */
 function watchdog_user($op, &$edit, &$user) {
   if ($op == 'delete') {
-    db_query('UPDATE {watchdog} SET uid=0 WHERE uid=%d', $user->uid);
+    db_query('UPDATE {watchdog} SET uid = 0 WHERE uid = %d', $user->uid);
   }
 }
 
