@@ -1,5 +1,5 @@
 #!/bin/sh
-# $Id: prefix.sh,v 1.6 2005/12/12 22:08:35 dries Exp $
+# $Id: prefix.sh,v 1.7 2006/03/27 10:28:34 killes Exp $
 
 if [ $# != 2 ]; then
   cat >&2 << EOH
@@ -23,5 +23,7 @@ sed "s/^CREATE TABLE /CREATE TABLE $PREFIX/;
      s/^ALTER SEQUENCE /ALTER SEQUENCE $PREFIX/;
      s/^CREATE INDEX \(.*\) ON /CREATE INDEX $PREFIX\\1 ON $PREFIX/;
      s/^CREATE UNIQUE INDEX \(.*\) ON /CREATE UNIQUE INDEX $PREFIX\\1 ON $PREFIX/;
+     s/^UPDATE \(.*\) SET /UPDATE $PREFIX\\1 SET /;
+     s/^DROP TABLE IF EXISTS /DROP TABLE IF EXISTS $PREFIX/;
      " $2
 
