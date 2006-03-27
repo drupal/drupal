@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.83 2006/03/27 18:04:29 killes Exp $
+// $Id: form.inc,v 1.84 2006/03/27 18:07:32 killes Exp $
 
 /**
  * @defgroup form Form generation
@@ -99,10 +99,10 @@ function drupal_get_form($form_id, &$form, $callback = NULL) {
     if (function_exists($form_id .'_submit')) {
       // we set submit here so that it can be altered but use reference for
       // $form_values because it will change later
-      $form['#submit'] = array($form_id .'_submit' => array($form_id, &$form_values));
+      $form['#submit'] = array($form_id .'_submit' => array());
     }
     elseif (function_exists($callback .'_submit')) {
-      $form['#submit'] = array($callback .'_submit' => array($form_id, &$form_values));
+      $form['#submit'] = array($callback .'_submit' => array());
     }
   }
 
@@ -165,12 +165,15 @@ function drupal_validate_form($form_id, &$form, $callback = NULL) {
 }
 
 function drupal_submit_form($form_id, $form, $callback = NULL) {
+  global $form_values;
+  $default_args = array($form_id, &$form_values);
   // Prevent system module forms (system/theme settings) from saving certain form fields to the variables table.
   unset($GLOBALS['form_values']['submit'], $GLOBALS['form_values']['reset'], $GLOBALS['form_values']['form_id']);
 
   if (isset($form['#submit'])) {
     foreach ($form['#submit'] as $function => $args) {
       if (function_exists($function)) {
+        $args = array_merge($default_args, (array) $args);
         // Since we can only redirect to one page, only the last redirect will work
         $redirect = call_user_func_array($function, $args);
         if (isset($redirect)) {
