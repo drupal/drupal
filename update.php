@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.180 2006/03/15 08:46:57 killes Exp $
+// $Id: update.php,v 1.181 2006/03/28 09:29:23 killes Exp $
 
 /**
  * @file
@@ -383,12 +383,13 @@ function update_update_page() {
 }
 
 function update_progress_page() {
-  drupal_add_js('misc/progress.js');
-  drupal_add_js('misc/update.js');
+  // Prevent browser from using cached drupal.js or update.js
+  drupal_add_js('misc/progress.js', TRUE);
+  drupal_add_js('misc/update.js', TRUE);
 
   drupal_set_title('Updating');
   $output = '<div id="progress"></div>';
-  $output .= '<p>Please wait while your site is being updated.</p>';
+  $output .= '<p id="wait">Please wait while your site is being updated.</p>';
   return $output;
 }
 
@@ -434,6 +435,8 @@ function update_do_update_page() {
     return '';
   }
 
+  // Error handling: if PHP dies, the output will fail to parse as JSON, and
+  // the Javascript will tell the user to continue to the op=error page.
   list($percentage, $message) = update_do_updates();
   print drupal_to_js(array('status' => TRUE, 'percentage' => $percentage, 'message' => $message));
 }
@@ -442,11 +445,15 @@ function update_do_update_page() {
  * Perform updates for the non-JS version and return the status page.
  */
 function update_progress_page_nojs() {
+  drupal_set_title('Updating');
+
   $new_op = 'do_update_nojs';
   if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    // Store a fallback redirect in case of a fatal PHP error
+    // Error handling: if PHP dies, it will output whatever is in the output
+    // buffer, followed by the error message.
     ob_start();
-    print '<html><head><meta http-equiv="Refresh" content="0; URL=update.php?op=error"></head></html>';
+    $fallback = '<p class="error">An unrecoverable error has occured. You can find the error message below. It is advised to copy it to the clipboard for reference. Please continue to the <a href="update.php?op=error">update summary</a>.</p><p class="error">';
+    print theme('maintenance_page', $fallback, FALSE, TRUE);
 
     list($percentage, $message) = update_do_updates();
     if ($percentage == 100) {
@@ -463,11 +470,12 @@ function update_progress_page_nojs() {
   }
 
   drupal_set_html_head('<meta http-equiv="Refresh" content="0; URL=update.php?op='. $new_op .'">');
-  drupal_set_title('Updating');
   $output = theme('progress_bar', $percentage, $message);
   $output .= '<p>Updating your site will take a few seconds.</p>';
 
-  return $output;
+  // Note: do not output drupal_set_message()s until the summary page.
+  print theme('maintenance_page', $output, FALSE);
+  return NULL;
 }
 
 function update_finished_page($success) {
@@ -476,15 +484,17 @@ function update_finished_page($success) {
   $links[] = '<a href="'. base_path() .'">main page</a>';
   $links[] = '<a href="'. base_path() .'?q=admin">administration pages</a>';
 
+  // Report end result
   if ($success) {
     $output = '<p>Updates were attempted. If you see no failures below, you may proceed happily to the <a href="index.php?q=admin">administration pages</a>. Otherwise, you may need to update your database manually. All errors have been <a href="index.php?q=admin/logs">logged</a>.</p>';
   }
   else {
-    $output = '<p class="error">The update process did not complete. All errors have been <a href="index.php?q=admin/logs">logged</a>. You may need to check the <code>watchdog</code> table manually.';
+    $update = reset($_SESSION['update_remaining']);
+    $output = '<p class="error">The update process was aborted prematurely while running <strong>update #'. $update['version'] .' in '. $update['module'] .'.module</strong>. All other errors have been <a href="index.php?q=admin/logs">logged</a>. You may need to check the <code>watchdog</code> database table manually.</p>';
   }
 
   if ($GLOBALS['access_check'] == FALSE) {
-    $output .= "<p><strong>Reminder: don't forget to set the <code>\$access_check</code> value at the top of <code>update.php</code> back to <code>TRUE</code>.</strong>";
+    $output .= "<p><strong>Reminder: don't forget to set the <code>\$access_check</code> value at the top of <code>update.php</code> back to <code>TRUE</code>.</strong></p>";
   }
 
   $output .= theme('item_list', $links);
@@ -638,17 +648,23 @@ function update_convert_table_utf8($table) {
 }
 
 // Some unavoidable errors happen because the database is not yet up-to-date.
-// We suppress them to avoid confusion. All errors are still logged.
+// Our custom error handler is not yet installed, so we just surpress them.
 ini_set('display_errors', FALSE);
 
 include_once './includes/bootstrap.inc';
 update_fix_system_table();
 update_fix_access_table();
+
 drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 drupal_maintenance_theme();
 
+// Turn error reporting back on. From now on, only fatal errors (which are
+// not passed through the error handler) will cause a message to be printed.
+ini_set('display_errors', TRUE);
+
 // Access check:
 if (($access_check == FALSE) || ($user->uid == 1)) {
+
   include_once './includes/install.inc';
 
   update_fix_schema_version();

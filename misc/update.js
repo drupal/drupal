@@ -1,4 +1,4 @@
-// $Id: update.js,v 1.7 2006/03/09 23:20:24 unconed Exp $
+// $Id: update.js,v 1.8 2006/03/28 09:29:23 killes Exp $
 
 if (isJsEnabled()) {
   addLoadEvent(function() {
@@ -7,15 +7,21 @@ if (isJsEnabled()) {
     }
 
     if ($('progress')) {
-      updateCallback = function (progress, status, pb) {
+      // Success: redirect to the summary.
+      var updateCallback = function (progress, status, pb) {
         if (progress == 100) {
           pb.stopMonitoring();
           window.location = window.location.href.split('op=')[0] +'op=finished';
         }
       }
 
-      errorCallback = function (pb) {
-        window.location = window.location.href.split('op=')[0] +'op=error';
+      // Failure: point out error message and provide link to the summary.
+      var errorCallback = function (pb) {
+        var div = document.createElement('p');
+        div.className = 'error';
+        div.innerHTML = 'An unrecoverable error has occured. You can find the error message below. It is advised to copy it to the clipboard for reference. Please continue to the <a href="update.php?op=error">update summary</a>';
+        $('progress').insertBefore(div, $('progress').firstChild);
+        $('wait').style.display = 'none';
       }
 
       var progress = new progressBar('updateprogress', updateCallback, HTTPPost, errorCallback);

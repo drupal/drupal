@@ -1,4 +1,4 @@
-// $Id: progress.js,v 1.9 2006/03/09 23:20:24 unconed Exp $
+// $Id: progress.js,v 1.10 2006/03/28 09:29:23 killes Exp $
 
 /**
  * A progressbar object. Initialized with the given id. Must be inserted into
@@ -107,7 +107,7 @@ progressBar.prototype.receivePing = function (string, xmlhttp, pb) {
 progressBar.prototype.displayError = function (string) {
   var error = document.createElement('div');
   error.className = 'error';
-  error.appendChild(document.createTextNode(string));
+  error.innerHTML = string;
 
   this.element.style.display = 'none';
   this.element.parentNode.insertBefore(error, this.element);

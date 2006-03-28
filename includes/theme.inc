@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.285 2006/03/13 21:42:35 unconed Exp $
+// $Id: theme.inc,v 1.286 2006/03/28 09:29:23 killes Exp $
 
 /**
  * @file
@@ -425,10 +425,11 @@ function theme_page($content) {
   return $output;
 }
 
-function theme_maintenance_page($content) {
+function theme_maintenance_page($content, $messages = TRUE, $partial = FALSE) {
   drupal_set_header('Content-Type: text/html; charset=utf-8');
   theme('add_style', 'misc/maintenance.css');
   drupal_set_html_head('<link rel="shortcut icon" href="'. base_path() .'misc/favicon.ico" type="image/x-icon" />');
+
   $output = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
   $output .= '<html xmlns="http://www.w3.org/1999/xhtml">';
   $output .= '<head>';
@@ -439,13 +440,17 @@ function theme_maintenance_page($content) {
   $output .= '<body>';
   $output .= '<h1>' . drupal_get_title() . '</h1>';
 
-  $output .= theme('status_messages');
+  if ($messages) {
+    $output .= theme('status_messages');    
+  }
 
   $output .= "\n<!-- begin content -->\n";
   $output .= $content;
   $output .= "\n<!-- end content -->\n";
 
-  $output .= '</body></html>';
+  if (!$partial) {
+    $output .= '</body></html>';  
+  }
 
   return $output;
 }
