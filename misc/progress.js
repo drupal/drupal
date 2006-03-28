@@ -107,7 +107,7 @@ progressBar.prototype.receivePing = function (string, xmlhttp, pb) {
 progressBar.prototype.displayError = function (string) {
   var error = document.createElement('div');
   error.className = 'error';
-  error.appendChild(document.createTextNode(string));
+  error.innerHTML = string;
 
   this.element.style.display = 'none';
   this.element.parentNode.insertBefore(error, this.element);
