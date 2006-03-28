@@ -124,7 +124,7 @@ function drupal_get_form($form_id, &$form, $callback = NULL) {
       }
       if ($goto !== FALSE) {
         if (is_array($goto)) {
-          call_user_func_array('drupal_goto', $redirect);
+          call_user_func_array('drupal_goto', $goto);
         }
         elseif (!isset($goto)) {
           drupal_goto($_GET['q']);
