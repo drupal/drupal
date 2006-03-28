@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.85 2006/03/28 01:45:41 killes Exp $
+// $Id: form.inc,v 1.86 2006/03/28 06:03:14 killes Exp $
 
 /**
  * @defgroup form Form generation
@@ -124,7 +124,7 @@ function drupal_get_form($form_id, &$form, $callback = NULL) {
       }
       if ($goto !== FALSE) {
         if (is_array($goto)) {
-          call_user_func_array('drupal_goto', $redirect);
+          call_user_func_array('drupal_goto', $goto);
         }
         elseif (!isset($goto)) {
           drupal_goto($_GET['q']);
