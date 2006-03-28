@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.444 2006/03/27 08:08:31 unconed Exp $
+// $Id: comment.module,v 1.445 2006/03/28 06:12:15 killes Exp $
 
 /**
  * @file
@@ -275,9 +275,6 @@ function comment_form_alter($form_id, &$form) {
  */
 function comment_nodeapi(&$node, $op, $arg = 0) {
   switch ($op) {
-    case 'fields':
-      return array('comment');
-
     case 'load':
       return db_fetch_array(db_query("SELECT last_comment_timestamp, last_comment_name, comment_count FROM {node_comment_statistics} WHERE nid = %d", $node->nid));
       break;
