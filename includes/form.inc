@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.86 2006/03/28 06:03:14 killes Exp $
+// $Id: form.inc,v 1.87 2006/03/29 23:29:41 drumm Exp $
 
 /**
  * @defgroup form Form generation
@@ -339,7 +339,12 @@ function form_builder($form_id, $form) {
             $form['#value'] = !empty($edit) ? $form['#return_value'] : 0;
             break;
           case 'select':
-            $form['#value'] = isset($edit) ? $edit : array();
+            if (isset($edit)) {
+              $form['#value'] = $edit;
+            }
+            elseif (isset($form['#multiple']) && $form['#multiple']) {
+              $form['#value'] = array();
+            }
             break;
           case 'textfield':
             if (isset($edit)) {
@@ -874,7 +879,7 @@ function theme_button($element) {
   else {
     $element['#attributes']['class'] = 'form-'. $element['#button_type'];
   }
-  
+
   return '<input type="submit" '. (empty($element['#name']) ? '' : 'name="'. $element['#name'] .'" ') .'value="'. check_plain($element['#value']) .'" '. drupal_attributes($element['#attributes']) ." />\n";
 }
 
