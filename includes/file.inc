@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.68 2006/03/26 15:02:51 killes Exp $
+// $Id: file.inc,v 1.69 2006/03/29 06:49:25 killes Exp $
 
 /**
  * @file
@@ -27,6 +27,11 @@ define('FILE_EXISTS_ERROR', 2);
  * @return A string containing a URL that can be used to download the file.
  */
 function file_create_url($path) {
+  // strip file_directory_paths from url if present. Prevent ugly and filesystem revealing 
+  // urls like http://example.com/system/files/../../../home/gatsby/private/files
+  // I think it also keep absolute file_directory_paths working since they would get broken if
+  // we tried to pass them in the url.
+
   if (strpos($path, file_directory_path()) !== false) {
     $path = trim(substr($path, strlen(file_directory_path())), '\\/');
   }
@@ -34,7 +39,7 @@ function file_create_url($path) {
     case FILE_DOWNLOADS_PUBLIC:
       return $GLOBALS['base_url'] .'/'. file_directory_path() .'/'. str_replace('\\', '/', $path);
     case FILE_DOWNLOADS_PRIVATE:
-      return url('system/files', 'file='. $path, NULL, TRUE);
+      return url('system/files/'. $path, NULL, NULL, TRUE);
   }
 }
 
@@ -573,7 +578,17 @@ function file_transfer($source, $headers) {
  */
 
 function file_download() {
-  $filepath = $_GET['file'];
+  //use the remainder of the path to get the file.
+  //enables 4.7 clean private files paths.
+  $args = func_get_args();
+  $filepath = implode('/', $args);
+
+  // add the ?file= if it is present. Otherwise we 
+  // break all old nodes with private files displayed 
+  // inline.
+  if (isset($_GET['file'])) {
+    $filepath =  $_GET['file'];
+  }
 
   if (file_exists(file_create_path($filepath))) {
     $headers = module_invoke_all('file_download', $filepath);
