@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.167 2006/03/27 21:52:27 unconed Exp $
+// $Id: search.module,v 1.168 2006/03/30 20:23:39 unconed Exp $
 
 /**
  * @file
@@ -890,30 +890,19 @@ function search_view() {
   // Search form submits with POST but redirects to GET. This way we can keep
   // the search query URL clean as a whistle:
   // search/type/keyword+keyword
-  if (isset($_POST['edit']['keys'])) {
+  if (!isset($_POST['edit']['keys'])) {
     if ($type == '') {
-      $type = 'node';
+      // Note: search/node can not be a default tab because it would take on the
+      // path of its parent (search). It would prevent remembering keywords when
+      // switching tabs. This is why we drupal_goto to it from the parent instead.
+      drupal_goto('search/node');
     }
-    $keys = module_invoke($type, 'search', 'post', $_POST['edit']['keys']);
-    drupal_goto('search/'. $type .'/'. (is_null($keys) ? $_POST['edit']['keys'] : $keys));
-  }
-  else if ($type == '') {
-    // Note: search/node can not be a default tab because it would take on the
-    // path of its parent (search). It would prevent remembering keywords when
-    // switching tabs. This is why we drupal_goto to it from the parent instead.
-    drupal_goto('search/node');
-  }
-  $keys = search_get_keys();
 
-  if (user_access('search content')) {
+    $keys = search_get_keys();
     // Only perform search if there is non-whitespace search term:
     if (trim($keys)) {
       // Log the search keys:
-      watchdog('search',
-        t('Search: %keys (%type).', array('%keys' => theme('placeholder', $keys), '%type' => module_invoke($type, 'search', 'name'))),
-        WATCHDOG_NOTICE,
-        l(t('results'), 'search/'. $type .'/'. $keys)
-        );
+      watchdog('search', t('Search: %keys (%type).', array('%keys' => theme('placeholder', $keys), '%type' => module_invoke($type, 'search', 'name'))), WATCHDOG_NOTICE, l(t('results'), 'search/'. $type .'/'. $keys));
 
       // Collect the search results:
       $results = search_data($keys, $type);
@@ -925,21 +914,15 @@ function search_view() {
         $results = theme('box', t('Your search yielded no results'), search_help('search#noresults'));
       }
     }
-    else if (isset($_POST['edit'])) {
-      form_set_error('keys', t('Please enter some keywords.'));
-    }
 
     // Construct the search form.
-    // Note, we do this last because of the form_set_error() above.
     $output = search_form(NULL, $keys, $type);
-
     $output .= $results;
 
     return $output;
   }
-  else {
-    drupal_access_denied();
-  }
+
+  return search_form(NULL, $keys, $type);
 }
 
 /**
@@ -985,7 +968,7 @@ function search_view() {
  * @return
  *   An HTML string containing the search form.
  */
-function search_form($action = '', $keys = '', $type = null, $prompt = null) {
+function search_form($action = '', $keys = '', $type = NULL, $prompt = NULL) {
 
   if (!$action) {
     $action = url('search/'. $type);
@@ -994,18 +977,51 @@ function search_form($action = '', $keys = '', $type = null, $prompt = null) {
     $prompt = t('Enter your keywords');
   }
 
-  $form = array('#action' => $action, '#attributes' => array('class' => 'search-form'), '#redirect' => FALSE);
+  $form = array(
+    '#action' => $action,
+    '#attributes' => array('class' => 'search-form'),
+    '#redirect' => FALSE,
+  );
+  $form['module'] = array('#type' => 'value', '#value' => $type);
   $form['basic'] = array('#type' => 'item', '#title' => $prompt);
-  $form['basic']['inline'] = array('#type' => 'markup', '#prefix' => '<div class="container-inline">', '#suffix' => '</div>');
-  $form['basic']['inline']['keys'] = array('#type' => 'textfield', '#title' => '', '#default_value' => $keys, '#size' => $prompt ? 40 : 20, '#maxlength' => 255);
+  $form['basic']['inline'] = array('#prefix' => '<div class="container-inline">', '#suffix' => '</div>');
+  $form['basic']['inline']['keys'] = array(
+    '#type' => 'textfield',
+    '#title' => '',
+    '#default_value' => $keys,
+    '#size' => $prompt ? 40 : 20,
+    '#maxlength' => 255,
+  );
+  // processed_keys is used to coordinate keyword passing between other forms that hook into the basic search form.
+  $form['basic']['inline']['processed_keys'] = array('#type' => 'value', '#value' => array());
   $form['basic']['inline']['submit'] = array('#type' => 'submit', '#value' => t('Search'));
 
-  $form_module = module_invoke($type, 'search', 'form', $keys);
-  if (isset($form_module) && is_array($form_module)) {
-    $form = array_merge($form, $form_module);
+  return drupal_get_form('search_form', $form);
+}
+
+/**
+ * As the search form collates keys from other modules hooked in via hook_form_alter, the validation 
+ * takes place in _submit. search_form_validate() is used solely to set the #ref property for the basic 
+ * search form.
+ */
+function search_form_validate($form_id, $form_values) {
+  $form_values['processed_keys']['#ref'] = trim($form_values['keys']);
+}
+
+/**
+ * Process a search form submission. Uses a forms API #ref to accept processed search keys
+ * from forms that hook into the default search form.
+ */
+function search_form_submit($form_id, $form_values) {
+  $keys = $form_values['processed_keys']['#ref'];
+  if (trim($keys) == '') {
+    form_set_error('keys', t('Please enter some keywords.'));
+    // Fall through to the drupal_goto() call.
+    $keys = '';
   }
 
-  return drupal_get_form('search_form', $form);
+  $type = $form_values['module'] ? $form_values['module'] : 'node';
+  drupal_goto('search/'. $type .'/'. $keys);
 }
 
 /**

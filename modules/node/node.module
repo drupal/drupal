@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.623 2006/03/27 18:02:48 killes Exp $
+// $Id: node.module,v 1.624 2006/03/30 20:23:39 unconed Exp $
 
 /**
  * @file
@@ -731,94 +731,6 @@ function node_search($op = 'search', $keys = null) {
                            'snippet' => search_excerpt($keys, $node->body));
       }
       return $results;
-
-    case 'form':
-      $form = array();
-
-      // Keyword boxes
-      $form['advanced'] = array(
-        '#type' => 'fieldset',
-        '#title' => t('Advanced search'),
-        '#collapsible' => TRUE,
-        '#collapsed' => TRUE,
-        '#attributes' => array('class' => 'search-advanced'),
-      );
-      $form['advanced']['keywords'] = array(
-        '#prefix' => '<div class="criterion">',
-        '#suffix' => '</div>',
-      );
-      $form['advanced']['keywords']['or'] = array(
-        '#type' => 'textfield',
-        '#title' => t('Containing any of the words'),
-        '#size' => 30,
-        '#maxlength' => 255,
-      );
-      $form['advanced']['keywords']['phrase'] = array(
-        '#type' => 'textfield',
-        '#title' => t('Containing the phrase'),
-        '#size' => 30,
-        '#maxlength' => 255,
-      );
-      $form['advanced']['keywords']['negative'] = array(
-        '#type' => 'textfield',
-        '#title' => t('Containing none of the words'),
-        '#size' => 30,
-        '#maxlength' => 255,
-      );
-
-      // Taxonomy box
-      if ($taxonomy = module_invoke('taxonomy', 'form_all', 1)) {
-        $form['advanced']['category'] = array(
-          '#type' => 'select',
-          '#title' => t('Only in the category(s)'),
-          '#prefix' => '<div class="criterion">',
-          '#size' => 10,
-          '#suffix' => '</div>',
-          '#options' => $taxonomy,
-          '#multiple' => TRUE,
-        );
-      }
-
-      // Node types
-      $types = node_get_types();
-      $form['advanced']['type'] = array(
-        '#type' => 'checkboxes',
-        '#title' => t('Only of the type(s)'),
-        '#prefix' => '<div class="criterion">',
-        '#suffix' => '</div>',
-        '#options' => $types,
-      );
-      $form['advanced']['submit'] = array(
-        '#type' => 'submit',
-        '#value' => t('Advanced search'),
-        '#prefix' => '<div class="action">',
-        '#suffix' => '</div><br clear="all" />',
-      );
-      return $form;
-
-    case 'post':
-      // Insert extra restrictions into the search keywords string.
-      $edit = &$_POST['edit'];
-      if (isset($edit['type']) && is_array($edit['type'])) {
-        $keys = search_query_insert($keys, 'type', implode(',', array_keys($edit['type'])));
-      }
-      if (isset($edit['category']) && is_array($edit['category'])) {
-        $keys = search_query_insert($keys, 'category', implode(',', $edit['category']));
-      }
-      if ($edit['or'] != '') {
-        if (preg_match_all('/ ("[^"]+"|[^" ]+)/i', ' '. $edit['or'], $matches)) {
-          $keys = $keys .' '. implode(' OR ', $matches[1]);
-        }
-      }
-      if ($edit['negative'] != '') {
-        if (preg_match_all('/ ("[^"]+"|[^" ]+)/i', ' '. $edit['negative'], $matches)) {
-          $keys = $keys .' -'. implode(' -', $matches[1]);
-        }
-      }
-      if ($edit['phrase'] != '') {
-        $keys .= ' "'. str_replace('"', ' ', $edit['phrase']) .'"';
-      }
-      return trim($keys);
   }
 }
 
@@ -2163,13 +2075,125 @@ function node_update_index() {
   }
 }
 
+/**
+ * Implementation of hook_form_alter().
+ */
 function node_form_alter($form_id, &$form) {
+  // Node publishing options
   if (isset($form['type']) && $form['type']['#value'] .'_node_settings' == $form_id) {
-    $form['workflow']['node_options_'. $form['type']['#value']] = array(
-      '#type' => 'checkboxes', '#title' => t('Default options'), '#default_value' => variable_get('node_options_'. $form['type']['#value'], array('status', 'promote')),
-      '#options' => array('status' => t('Published'), 'moderate' => t('In moderation queue'), 'promote' => t('Promoted to front page'), 'sticky' => t('Sticky at top of lists'), 'revision' => t('Create new revision')),
+    $form['workflow']['node_options_'. $form['type']['#value']] = array('#type' => 'checkboxes',
+      '#title' => t('Default options'),
+      '#default_value' => variable_get('node_options_'. $form['type']['#value'], array('status', 'promote')),
+      '#options' => array(
+        'status' => t('Published'),
+        'moderate' => t('In moderation queue'),
+        'promote' => t('Promoted to front page'),
+        'sticky' => t('Sticky at top of lists'),
+        'revision' => t('Create new revision'),
+      ),
       '#description' => t('Users with the <em>administer nodes</em> permission will be able to override these options.'),
     );
+  }
+
+  // Advanced node search form
+  elseif ($form_id == 'search_form' && arg(1) == 'node') {
+    // Keyword boxes:
+    $form['advanced'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Advanced search'),
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+      '#attributes' => array('class' => 'search-advanced'),
+    );
+    $form['advanced']['keywords'] = array(
+      '#prefix' => '<div class="criterion">',
+      '#suffix' => '</div>',
+    );
+    $form['advanced']['keywords']['or'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Containing any of the words'),
+      '#size' => 30,
+      '#maxlength' => 255,
+    );
+    $form['advanced']['keywords']['phrase'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Containing the phrase'),
+      '#size' => 30,
+      '#maxlength' => 255,
+    );
+    $form['advanced']['keywords']['negative'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Containing none of the words'),
+      '#size' => 30,
+      '#maxlength' => 255,
+    );
+
+    // Taxonomy box:
+    if ($taxonomy = module_invoke('taxonomy', 'form_all', 1)) {
+      $form['advanced']['category'] = array(
+        '#type' => 'select',
+        '#title' => t('Only in the category(s)'),
+        '#prefix' => '<div class="criterion">',
+        '#size' => 10,
+        '#suffix' => '</div>',
+        '#options' => $taxonomy,
+        '#multiple' => TRUE,
+      );
+    }
+
+    // Node types:
+    $types = node_get_types();
+    $form['advanced']['type'] = array(
+      '#type' => 'checkboxes',
+      '#title' => t('Only of the type(s)'),
+      '#prefix' => '<div class="criterion">',
+      '#suffix' => '</div>',
+      '#options' => $types,
+    );
+    $form['advanced']['submit'] = array(
+      '#type' => 'submit',
+      '#value' => t('Advanced search'),
+      '#prefix' => '<div class="action">',
+      '#suffix' => '</div><br clear="all" />',
+    );
+
+    $form['#validate']['node_search_validate'] = array();
+  }
+}
+
+/**
+ * Form API callback for the search form. Registered in node_form_alter().
+ */
+function node_search_validate($form_id, $form_values) {
+  // Initialise using any existing basic search keywords.
+  $keys = $form_values['processed_keys']['#ref'];
+
+  // Insert extra restrictions into the search keywords string.
+  if (isset($form_values['type']) && is_array($form_values['type'])) {
+    // Retrieve selected types - Forms API sets the value of unselected checkboxes to 0.
+    $form_values['type'] = array_filter($form_values['type']);
+    if (count($form_values['type'])) {
+      $keys = search_query_insert($keys, 'type', implode(',', array_keys($form_values['type'])));
+    }
+  }
+  if (isset($form_values['category']) && is_array($form_values['category'])) {
+    $keys = search_query_insert($keys, 'category', implode(',', $form_values['category']));
+  }
+  if ($form_values['or'] != '') {
+    if (preg_match_all('/ ("[^"]+"|[^" ]+)/i', ' '. $form_values['or'], $matches)) {
+      $keys .= ' '. implode(' OR ', $matches[1]);
+    }
+  }
+  if ($form_values['negative'] != '') {
+    if (preg_match_all('/ ("[^"]+"|[^" ]+)/i', ' '. $form_values['negative'], $matches)) {
+      $keys .= ' -'. implode(' -', $matches[1]);
+    }
+  }
+  if ($form_values['phrase'] != '') {
+    $keys .= ' "'. str_replace('"', ' ', $form_values['phrase']) .'"';
+  }
+  if (!empty($keys)) {
+    $form_values['processed_keys']['#ref'] = trim($keys);
   }
 }
 
