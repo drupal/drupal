@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.84 2006/03/29 06:49:25 killes Exp $
+// $Id: upload.module,v 1.85 2006/03/30 14:31:16 killes Exp $
 
 /**
  * @file
@@ -537,10 +537,6 @@ function upload_delete_revision($node) {
 }
 
 function _upload_form($node) {
-  $header = array(t('Delete'), t('List'), t('Description'), t('Size'));
-  $rows = array();
-  $output = '';
-
   $form['#theme'] = 'upload_form_new';
   if (is_array($node->files) && count($node->files)) {
     $form['files']['#theme'] = 'upload_form_current';
