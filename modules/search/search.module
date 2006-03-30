@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.168 2006/03/30 20:23:39 unconed Exp $
+// $Id: search.module,v 1.169 2006/03/30 22:12:10 killes Exp $
 
 /**
  * @file
@@ -1014,10 +1014,9 @@ function search_form_validate($form_id, $form_values) {
  */
 function search_form_submit($form_id, $form_values) {
   $keys = $form_values['processed_keys']['#ref'];
-  if (trim($keys) == '') {
+  if ($keys == '') {
     form_set_error('keys', t('Please enter some keywords.'));
     // Fall through to the drupal_goto() call.
-    $keys = '';
   }
 
   $type = $form_values['module'] ? $form_values['module'] : 'node';
