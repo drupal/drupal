@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.79 2006/03/30 14:24:52 killes Exp $
+// $Id: blogapi.module,v 1.80 2006/03/30 21:30:25 killes Exp $
 
 /**
  * @file
@@ -214,7 +214,7 @@ function blogapi_blogger_new_post($appkey, $blogid, $username, $password, $conte
     $edit['body'] = $content;
   }
 
-  if (!node_access('create', $node)) {
+  if (!node_access('create', $edit['type'])) {
     return blogapi_error(t('You do not have permission to create the type of post you wanted to create.'));
   }
 
