@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.69 2006/03/29 06:49:25 killes Exp $
+// $Id: file.inc,v 1.70 2006/03/30 17:45:32 killes Exp $
 
 /**
  * @file
@@ -27,11 +27,7 @@ define('FILE_EXISTS_ERROR', 2);
  * @return A string containing a URL that can be used to download the file.
  */
 function file_create_url($path) {
-  // strip file_directory_paths from url if present. Prevent ugly and filesystem revealing 
-  // urls like http://example.com/system/files/../../../home/gatsby/private/files
-  // I think it also keep absolute file_directory_paths working since they would get broken if
-  // we tried to pass them in the url.
-
+  // Strip file_directory_path from $path. We only include relative paths in urls. 
   if (strpos($path, file_directory_path()) !== false) {
     $path = trim(substr($path, strlen(file_directory_path())), '\\/');
   }
@@ -578,14 +574,11 @@ function file_transfer($source, $headers) {
  */
 
 function file_download() {
-  //use the remainder of the path to get the file.
-  //enables 4.7 clean private files paths.
+  // Merge remainder of arguments from GET['q'], into relative file path.
   $args = func_get_args();
   $filepath = implode('/', $args);
 
-  // add the ?file= if it is present. Otherwise we 
-  // break all old nodes with private files displayed 
-  // inline.
+  // Maintain compatability with old ?file=paths saved in node bodies.
   if (isset($_GET['file'])) {
     $filepath =  $_GET['file'];
   }

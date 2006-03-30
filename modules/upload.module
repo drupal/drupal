@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.85 2006/03/30 14:31:16 killes Exp $
+// $Id: upload.module,v 1.86 2006/03/30 17:45:32 killes Exp $
 
 /**
  * @file
@@ -80,8 +80,7 @@ function upload_menu($may_cache) {
       foreach ($_SESSION['file_previews'] as $fid => $file) {
         $filename = file_create_filename($file->filename, file_create_path());
         if (variable_get('file_downloads', FILE_DOWNLOADS_PUBLIC) ==  FILE_DOWNLOADS_PRIVATE) {
-            // strip file_directory_path() from filepath 
-            // to hide relative paths in url.  see file_create_url
+            // strip file_directory_path() from filename. @see file_create_url 
             if (strpos($filename, file_directory_path()) !== false) {
               $filename = trim(substr($filename, strlen(file_directory_path())), '\\/');
             }
