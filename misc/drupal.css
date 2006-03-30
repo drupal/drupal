@@ -148,6 +148,7 @@ tr.odd .form-item, tr.even .form-item {
   font-weight: bold;
 }
 .form-item label.option {
+  display: inline;
   font-weight: normal;
 }
 .marker, .form-required {
