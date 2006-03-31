@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.322 2006/03/27 18:02:48 killes Exp $
+// $Id: forum.module,v 1.323 2006/03/31 06:43:46 killes Exp $
 
 /**
  * @file
@@ -200,6 +200,30 @@ function forum_admin_configure() {
   );
 
   return system_settings_form('forum_admin_configure', $form);
+}
+
+/**
+ * Implementation of hook_form_alter().
+ */
+function forum_form_alter($form_id, &$form) {
+  // hide critical options from forum vocabulary
+  if ($form_id == 'taxonomy_form_vocabulary') {
+    if ($form['vid']['#value'] == _forum_get_vid()) {
+      $form['help_forum_vocab'] = array(
+        '#value' => t('This is the designated forum vocabulary. Some of the normal vocabulary options have been removed.'),
+        '#weight' => -1,
+      );
+      $form['nodes']['forum'] = array('#type' => 'checkbox', '#value' => 1, '#title' => t('forum topic'), '#attributes' => array('disabled' => '' ), '#description' => t('forum topic is affixed to the forum vocabulary.'));
+      $form['hierarchy'] = array('#type' => 'value', '#value' => 1);
+      unset($form['relations']);
+      unset($form['tags']);
+      unset($form['multiple']);
+      $form['required'] = array('#type' => 'value', '#value' => 1);
+    }
+    else {
+      unset($form['nodes']['forum']);
+    }
+  }
 }
 
 /**
