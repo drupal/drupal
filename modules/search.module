@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.169 2006/03/30 22:12:10 killes Exp $
+// $Id: search.module,v 1.170 2006/03/31 04:57:49 drumm Exp $
 
 /**
  * @file
@@ -969,7 +969,6 @@ function search_view() {
  *   An HTML string containing the search form.
  */
 function search_form($action = '', $keys = '', $type = NULL, $prompt = NULL) {
-
   if (!$action) {
     $action = url('search/'. $type);
   }
@@ -980,7 +979,6 @@ function search_form($action = '', $keys = '', $type = NULL, $prompt = NULL) {
   $form = array(
     '#action' => $action,
     '#attributes' => array('class' => 'search-form'),
-    '#redirect' => FALSE,
   );
   $form['module'] = array('#type' => 'value', '#value' => $type);
   $form['basic'] = array('#type' => 'item', '#title' => $prompt);
@@ -992,7 +990,8 @@ function search_form($action = '', $keys = '', $type = NULL, $prompt = NULL) {
     '#size' => $prompt ? 40 : 20,
     '#maxlength' => 255,
   );
-  // processed_keys is used to coordinate keyword passing between other forms that hook into the basic search form.
+  // processed_keys is used to coordinate keyword passing between other forms
+  // that hook into the basic search form.
   $form['basic']['inline']['processed_keys'] = array('#type' => 'value', '#value' => array());
   $form['basic']['inline']['submit'] = array('#type' => 'submit', '#value' => t('Search'));
 
@@ -1000,27 +999,31 @@ function search_form($action = '', $keys = '', $type = NULL, $prompt = NULL) {
 }
 
 /**
- * As the search form collates keys from other modules hooked in via hook_form_alter, the validation 
- * takes place in _submit. search_form_validate() is used solely to set the #ref property for the basic 
+ * As the search form collates keys from other modules hooked in via
+ * hook_form_alter, the validation takes place in _submit.
+ * search_form_validate() is used solely to set the #ref property for the basic
  * search form.
  */
-function search_form_validate($form_id, $form_values) {
-  $form_values['processed_keys']['#ref'] = trim($form_values['keys']);
+function search_form_validate($form_id, $form_values, $form) {
+  $form['basic']['inline']['processed_keys']['#ref'] = trim($form_values['keys']);
 }
 
 /**
- * Process a search form submission. Uses a forms API #ref to accept processed search keys
- * from forms that hook into the default search form.
+ * Process a search form submission.
  */
 function search_form_submit($form_id, $form_values) {
-  $keys = $form_values['processed_keys']['#ref'];
+  $keys = $form_values['processed_keys'];
   if ($keys == '') {
     form_set_error('keys', t('Please enter some keywords.'));
     // Fall through to the drupal_goto() call.
   }
 
   $type = $form_values['module'] ? $form_values['module'] : 'node';
-  drupal_goto('search/'. $type .'/'. $keys);
+  return 'search/'. $type .'/'. $keys;
+}
+
+function search_box_submit($form_id, $form_values) {
+  return 'search/node/'. trim($form_values['keys']);
 }
 
 /**
