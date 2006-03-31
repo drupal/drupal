@@ -1194,8 +1194,7 @@ function system_theme_settings($key = '') {
  * Output a search form.
  */
 function search_box($path = NULL) {
-  $form['#action'] = is_null($path) ? url('search') : url($path);
-  $form['keys'] = array('#type' => 'textfield', '#size'=> 15, '#value' => '', '#attributes' => array('alt' => t('Enter the terms you wish to search for.')));
+  $form['keys'] = array('#type' => 'textfield', '#size'=> 15, '#default_value' => '', '#attributes' => array('alt' => t('Enter the terms you wish to search for.')));
   $form['submit'] = array('#type' => 'submit', '#value' => t('Search'));
   return drupal_get_form('search_box', $form);
 }
