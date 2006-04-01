@@ -103,8 +103,6 @@ function poll_submit(&$node) {
  * Implementation of hook_validate().
  */
 function poll_validate($node) {
-  node_validate_title($node, t('You have to specify a question.'));
-
   if (isset($node->title)) {
     // Check for at least two options and validate amount of votes:
     $realchoices = 0;
