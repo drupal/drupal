@@ -463,8 +463,9 @@ function contact_mail_page() {
       }
       else {
         // If there is only one category, store its cid.
+        $category_keys = array_keys($categories);
         $form['cid'] = array('#type' => 'value',
-          '#value' => array_shift(array_keys($categories)),
+          '#value' => array_shift($category_keys),
         );
       }
       $form['message'] = array('#type' => 'textarea',
