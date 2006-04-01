@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.89 2006/03/26 14:11:38 killes Exp $
+// $Id: bootstrap.inc,v 1.90 2006/04/01 14:53:03 killes Exp $
 
 /**
  * @file
@@ -637,8 +637,9 @@ function drupal_set_message($message = NULL, $type = 'status') {
  * As a side effect, this function clears the message queue.
  */
 function drupal_get_messages() {
-  $messages = drupal_set_message();
-  unset($_SESSION['messages']);
+  if ($messages = drupal_set_message()) {
+    unset($_SESSION['messages']);
+  }
 
   return $messages;
 }
