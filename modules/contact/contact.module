@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.47 2006/03/23 09:29:35 killes Exp $
+// $Id: contact.module,v 1.48 2006/04/01 23:54:57 killes Exp $
 
 /**
  * @file
@@ -463,8 +463,9 @@ function contact_mail_page() {
       }
       else {
         // If there is only one category, store its cid.
+        $category_keys = array_keys($categories);
         $form['cid'] = array('#type' => 'value',
-          '#value' => array_shift(array_keys($categories)),
+          '#value' => array_shift($category_keys),
         );
       }
       $form['message'] = array('#type' => 'textarea',
