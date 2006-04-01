@@ -637,8 +637,9 @@ function drupal_set_message($message = NULL, $type = 'status') {
  * As a side effect, this function clears the message queue.
  */
 function drupal_get_messages() {
-  $messages = drupal_set_message();
-  unset($_SESSION['messages']);
+  if ($messages = drupal_set_message()) {
+    unset($_SESSION['messages']);
+  }
 
   return $messages;
 }
