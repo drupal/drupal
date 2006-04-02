@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.624 2006/03/30 20:23:39 unconed Exp $
+// $Id: node.module,v 1.625 2006/04/02 13:13:46 killes Exp $
 
 /**
  * @file
@@ -2164,9 +2164,9 @@ function node_form_alter($form_id, &$form) {
 /**
  * Form API callback for the search form. Registered in node_form_alter().
  */
-function node_search_validate($form_id, $form_values) {
+function node_search_validate($form_id, $form_values, $form) {
   // Initialise using any existing basic search keywords.
-  $keys = $form_values['processed_keys']['#ref'];
+  $keys = $form['basic']['inline']['processed_keys']['#ref'];
 
   // Insert extra restrictions into the search keywords string.
   if (isset($form_values['type']) && is_array($form_values['type'])) {
@@ -2193,7 +2193,7 @@ function node_search_validate($form_id, $form_values) {
     $keys .= ' "'. str_replace('"', ' ', $form_values['phrase']) .'"';
   }
   if (!empty($keys)) {
-    $form_values['processed_keys']['#ref'] = trim($keys);
+    $form['basic']['inline']['processed_keys']['#ref'] = trim($keys);
   }
 }
 
