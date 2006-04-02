@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.87 2006/03/29 23:29:41 drumm Exp $
+// $Id: form.inc,v 1.88 2006/04/02 13:07:00 killes Exp $
 
 /**
  * @defgroup form Form generation
@@ -156,6 +156,15 @@ function drupal_get_form($form_id, &$form, $callback = NULL) {
 
 function drupal_validate_form($form_id, &$form, $callback = NULL) {
   global $form_values;
+
+  // we need a copy of form_values otherwise foreach falls into an infite loop
+  $copy = (array)$form_values;
+  // this loop breaks the references in form_values thus makes it impossible for 
+  // validate functions to modify the $form_values array
+  foreach ($copy as $k => $v) {
+    unset($form_values[$k]);
+    $form_values[$k] = $v;
+  }
 
   if (isset($form['#token'])) {
     if ($form_values['form_token'] != md5(session_id() . $form['#token'] . variable_get('drupal_private_key', ''))) {
