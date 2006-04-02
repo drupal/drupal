@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.113 2006/03/14 15:15:46 unconed Exp $
+// $Id: filter.module,v 1.114 2006/04/02 10:12:47 drumm Exp $
 
 /**
  * @file
@@ -178,6 +178,8 @@ function filter_filter_tips($delta, $format, $long = false) {
                 'sup' => array( t('Superscripted'), t('<sup>Super</sup>scripted')),
                 'sub' => array( t('Subscripted'), t('<sub>Sub</sub>scripted')),
                 'pre' => array( t('Preformatted'), '<pre>'. t('Preformatted') .'</pre>'),
+                'abbr' => array( t('Abbreviation'), t('<abbr title="Abbreviation">Abbrev.</abbr>')),
+                'acronym' => array( t('Acronym'), t('<acronym title="Three-Letter Acronym">TLA</acronym>')),
                 'blockquote' => array( t('Block quoted'), '<blockquote>'. t('Block quoted') .'</blockquote>'),
                 'q' => array( t('Quoted inline'), '<q>'. t('Quoted inline') .'</q>'),
                 // Assumes and describes tr, td, th.
