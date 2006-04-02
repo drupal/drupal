@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.301 2006/03/31 04:57:49 drumm Exp $
+// $Id: system.module,v 1.302 2006/04/02 09:19:56 drumm Exp $
 
 /**
  * @file
@@ -377,15 +377,15 @@ function system_view_general() {
 
   // Date settings: possible date formats
   $dateshort = array('Y-m-d H:i','m/d/Y - H:i', 'd/m/Y - H:i', 'Y/m/d - H:i',
-           'm/d/Y - g:ia', 'd/m/Y - g:ia', 'Y/m/d - g:ia',
+           'j.m.Y - G:i', 'm/d/Y - g:ia', 'd/m/Y - g:ia', 'Y/m/d - g:ia',
            'M j Y - H:i', 'j M Y - H:i', 'Y M j - H:i',
            'M j Y - g:ia', 'j M Y - g:ia', 'Y M j - g:ia');
   $datemedium = array('D, Y-m-d H:i', 'D, m/d/Y - H:i', 'D, d/m/Y - H:i',
           'D, Y/m/d - H:i', 'F j, Y - H:i', 'j F, Y - H:i', 'Y, F j - H:i',
           'D, m/d/Y - g:ia', 'D, d/m/Y - g:ia', 'D, Y/m/d - g:ia',
-          'F j, Y - g:ia', 'j F Y - g:ia', 'Y, F j - g:ia');
+          'F j, Y - g:ia', 'j F Y - g:ia', 'Y, F j - g:ia', 'j. F Y - G:i');
   $datelong = array('l, F j, Y - H:i', 'l, j F, Y - H:i', 'l, Y,  F j - H:i',
-        'l, F j, Y - g:ia', 'l, j F Y - g:ia', 'l, Y,  F j - g:ia');
+        'l, F j, Y - g:ia', 'l, j F Y - g:ia', 'l, Y,  F j - g:ia', 'l, j. F Y - G:i');
 
   // Date settings: construct choices for user
   foreach ($dateshort as $f) {
