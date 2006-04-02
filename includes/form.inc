@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.88 2006/04/02 13:07:00 killes Exp $
+// $Id: form.inc,v 1.89 2006/04/02 23:14:50 drumm Exp $
 
 /**
  * @defgroup form Form generation
@@ -111,7 +111,8 @@ function drupal_get_form($form_id, &$form, $callback = NULL) {
     $function($form_id, $form);
   }
 
-  $form = form_builder($form_id, $form);
+  form_builder($form_id, $form);
+
   if (!empty($_POST['edit']) && (($_POST['edit']['form_id'] == $form_id) || ($_POST['edit']['form_id'] == $callback))) {
     drupal_validate_form($form_id, $form, $callback);
     if ($form_submitted && !form_get_errors()) {
@@ -156,15 +157,6 @@ function drupal_get_form($form_id, &$form, $callback = NULL) {
 
 function drupal_validate_form($form_id, &$form, $callback = NULL) {
   global $form_values;
-
-  // we need a copy of form_values otherwise foreach falls into an infite loop
-  $copy = (array)$form_values;
-  // this loop breaks the references in form_values thus makes it impossible for 
-  // validate functions to modify the $form_values array
-  foreach ($copy as $k => $v) {
-    unset($form_values[$k]);
-    $form_values[$k] = $v;
-  }
 
   if (isset($form['#token'])) {
     if ($form_values['form_token'] != md5(session_id() . $form['#token'] . variable_get('drupal_private_key', ''))) {
@@ -316,7 +308,7 @@ function form_error(&$element, $message = '') {
  * @param $form
  *   An associative array containing the structure of the form.
  */
-function form_builder($form_id, $form) {
+function form_builder($form_id, &$form) {
   global $form_values;
   global $form_submitted;
   /* Use element defaults */
@@ -425,7 +417,7 @@ function form_builder($form_id, $form) {
     if (!isset($form[$key]['#weight'])) {
       $form[$key]['#weight'] = $count/1000;
     }
-    $form[$key] = form_builder($form_id, $form[$key]);
+    form_builder($form_id, $form[$key]);
     $count++;
   }
 
@@ -434,8 +426,6 @@ function form_builder($form_id, $form) {
     $form = $function($form, $form_values);
     $form['#after_build_done'] = TRUE;
   }
-
-  return $form;
 }
 
 /**

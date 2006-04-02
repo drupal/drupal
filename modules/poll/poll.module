@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.191 2006/04/01 14:29:53 killes Exp $
+// $Id: poll.module,v 1.192 2006/04/02 23:14:50 drumm Exp $
 
 /**
  * @file
@@ -133,7 +133,7 @@ function poll_form(&$node) {
 
   $form['choice']['choices'] = array('#type' => 'hidden', '#default_value' => max(2, count($node->choice) ? count($node->choice) : 5));
   $form['choice']['morechoices'] = array('#type' => 'checkbox', '#title' => t('Need more choices'), '#default_value' => 0, '#description' => t("If the amount of boxes above isn't enough, check this box and click the Preview button below to add some more."), '#weight' => 1);
-  $form['choice'] = form_builder('poll_node_form', $form['choice']);
+  form_builder('poll_node_form', $form['choice']);
   if ($form['choice']['morechoices']['#value']) {
     $form['choice']['morechoices']['#value'] = 0;
     $form['choice']['choices']['#value'] *= 2;

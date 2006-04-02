@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.86 2006/03/30 17:45:32 killes Exp $
+// $Id: upload.module,v 1.87 2006/04/02 23:14:51 drumm Exp $
 
 /**
  * @file
@@ -640,7 +640,7 @@ function upload_js() {
   _upload_validate($node);
 
   $form = _upload_form($node);
-  $form = form_builder('upload_js', $form);
+  form_builder('upload_js', $form);
   $output = theme('status_messages') . form_render($form);
 
   // We send the updated file attachments form.
