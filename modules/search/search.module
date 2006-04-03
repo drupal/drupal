@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.170 2006/03/31 04:57:49 drumm Exp $
+// $Id: search.module,v 1.171 2006/04/03 22:56:10 unconed Exp $
 
 /**
  * @file
@@ -258,14 +258,15 @@ function search_wipe_confirm_submit($form_id, &$form) {
  * @param $type
  *  (optional) The type of item to wipe.
  */
-function search_wipe($sid = NULL, $type = NULL) {
+function search_wipe($sid = NULL, $type = NULL, $reindex = FALSE) {
   if ($type == NULL && $sid == NULL) {
     module_invoke_all('search', 'reset');
   }
   else {
     db_query("DELETE FROM {search_dataset} WHERE sid = %d AND type = '%s'", $sid, $type);
-    db_query("DELETE FROM {search_index} WHERE sid = %d AND type = '%s'", $sid, $type);
     db_query("DELETE FROM {search_index} WHERE fromsid = %d AND fromtype = '%s'", $sid, $type);
+    // When re-indexing, keep link references
+    db_query("DELETE FROM {search_index} WHERE sid = %d AND type = '%s'". ($reindex ? " AND fromsid = 0" ; ''), $sid, $type);
   }
 }
 
@@ -449,7 +450,7 @@ function search_index($sid, $type, $text) {
 
   // Link matching
   global $base_url;
-  $node_regexp = '@href=[\'"]?(?:'. preg_quote($base_url, '@') .'/)?(?:\?q=)?/?((?![a-z]+:)[^\'">]+)[\'">]@i';
+  $node_regexp = '@href=[\'"]?(?:'. preg_quote($base_url, '@') .'/|'. preg_quote(base_path(), '@') .')(?:\?q=)?/?((?![a-z]+:)[^\'">]+)[\'">]@i';
 
   // Multipliers for scores of words inside certain HTML tags.
   // Note: 'a' must be included for link ranking to work.
@@ -586,7 +587,7 @@ function search_index($sid, $type, $text) {
     $tag = !$tag;
   }
 
-  search_wipe($sid, $type);
+  search_wipe($sid, $type, TRUE);
 
   // Insert cleaned up data into dataset
   db_query("INSERT INTO {search_dataset} (sid, type, data) VALUES (%d, '%s', '%s')", $sid, $type, $accum);
