@@ -115,15 +115,12 @@ table {
 #search .form-text, #search .form-submit {
   border: 1px solid #369;
   font-size: 1.1em;
+  height: 1.5em;
+  vertical-align: middle;
 }
 #search .form-text {
   width: 8em;
-  height: 1.4em;
   padding: 0 0.5em 0 0.5em;
-  margin: 0 0 0.5em 0;
-}
-#search .form-submit {
-  height: 1.5em;
 }
 #mission {
   background-color: #369;
