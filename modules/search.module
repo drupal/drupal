@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.171 2006/04/03 22:56:10 unconed Exp $
+// $Id: search.module,v 1.172 2006/04/03 22:56:53 unconed Exp $
 
 /**
  * @file
@@ -266,7 +266,7 @@ function search_wipe($sid = NULL, $type = NULL, $reindex = FALSE) {
     db_query("DELETE FROM {search_dataset} WHERE sid = %d AND type = '%s'", $sid, $type);
     db_query("DELETE FROM {search_index} WHERE fromsid = %d AND fromtype = '%s'", $sid, $type);
     // When re-indexing, keep link references
-    db_query("DELETE FROM {search_index} WHERE sid = %d AND type = '%s'". ($reindex ? " AND fromsid = 0" ; ''), $sid, $type);
+    db_query("DELETE FROM {search_index} WHERE sid = %d AND type = '%s'". ($reindex ? " AND fromsid = 0" : ''), $sid, $type);
   }
 }
 
