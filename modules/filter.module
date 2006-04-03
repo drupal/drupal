@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.114 2006/04/02 10:12:47 drumm Exp $
+// $Id: filter.module,v 1.115 2006/04/03 23:59:48 unconed Exp $
 
 /**
  * @file
@@ -670,11 +670,17 @@ function _filter_list_cmp($a, $b) {
 }
 
 /**
+ * Resolve a format id, including the default format.
+ */
+function filter_resolve_format($format) {
+  return $format == FILTER_FORMAT_DEFAULT ? variable_get('filter_default_format', 1) : $format;
+}
+/**
  * Check if text in a certain input format is allowed to be cached.
  */
 function filter_format_allowcache($format) {
   static $cache = array();
-
+  $format = filter_resolve_format($format);
   if (!isset($cache[$format])) {
     $cache[$format] = db_result(db_query('SELECT cache FROM {filter_formats} WHERE format = %d', $format));
   }
@@ -735,9 +741,7 @@ function filter_list_format($format) {
 function check_markup($text, $format = FILTER_FORMAT_DEFAULT, $check = TRUE) {
   // When $check = true, do an access check on $format.
   if (isset($text) && (!$check || filter_access($format))) {
-    if ($format == FILTER_FORMAT_DEFAULT) {
-      $format = variable_get('filter_default_format', 1);
-    }
+    $format = filter_resolve_format($format);
 
     // Check for a cached version of this piece of text.
     $id = 'filter:'. $format .':'. md5($text);
@@ -790,9 +794,7 @@ function check_markup($text, $format = FILTER_FORMAT_DEFAULT, $check = TRUE) {
  *   HTML for the form element.
  */
 function filter_form($value = FILTER_FORMAT_DEFAULT, $weight = NULL, $parents = array('format')) {
-  if ($value == FILTER_FORMAT_DEFAULT) {
-    $value = variable_get('filter_default_format', 1);
-  }
+  $format = filter_resolve_format($format);
   $formats = filter_formats();
 
   $extra = l(t('More information about formatting options'), 'filter/tips');
@@ -821,10 +823,9 @@ function filter_form($value = FILTER_FORMAT_DEFAULT, $weight = NULL, $parents = 
   else {
     // Only one format available: use a hidden form item and only show tips.
     $format = array_shift($formats);
-    $form['format'][$format->name] = array('#type' => 'value', '#value' => $format->format);
+    $form[$format->format] = array('#type' => 'value', '#value' => $format->format, '#parents' => $parents);
     $tips = _filter_tips(variable_get('filter_default_format', 1), false);
     $form['format']['guidelines'] = array(
-      '#type' => 'markup',
       '#title' => t('Formatting guidelines'),
       '#value' => theme('filter_tips', $tips, false, $extra),
     );
@@ -846,7 +847,8 @@ function filter_form_validate($form) {
  * Returns true if the user is allowed to access this format.
  */
 function filter_access($format) {
-  if (user_access('administer filters') || ($format == FILTER_FORMAT_DEFAULT) || ($format == variable_get('filter_default_format', 1))) {
+  $format = filter_resolve_format($format);
+  if (user_access('administer filters') || ($format == variable_get('filter_default_format', 1))) {
     return true;
   }
   else {
