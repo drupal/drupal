@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.12 2006/01/20 09:09:18 dries Exp $ */
+/* $Id: style.css,v 1.13 2006/04/03 22:20:48 unconed Exp $ */
 
 /*
 ** HTML elements
@@ -115,15 +115,12 @@ table {
 #search .form-text, #search .form-submit {
   border: 1px solid #369;
   font-size: 1.1em;
+  height: 1.5em;
+  vertical-align: middle;
 }
 #search .form-text {
   width: 8em;
-  height: 1.4em;
   padding: 0 0.5em 0 0.5em;
-  margin: 0 0 0.5em 0;
-}
-#search .form-submit {
-  height: 1.5em;
 }
 #mission {
   background-color: #369;

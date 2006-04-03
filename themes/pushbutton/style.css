@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.13 2006/01/20 09:09:18 dries Exp $ */
+/* $Id: style.css,v 1.14 2006/04/03 22:20:48 unconed Exp $ */
 
 /*
 ** HTML elements
@@ -208,12 +208,10 @@ td#home a:hover img {
 #search .form-text, #search .form-submit {
   border: 1px solid #369;
   font-size: 0.85em;
+  margin: 0.2em;
 }
 #search .form-text {
-  width: 8em;
-  height: 1.4em;
-  padding: 0 0.5em 0 0.5em;
-  margin: 0 0 0.5em 0;
+  width: 9em;
 }
 #search .form-submit {
   height: 1.5em;
