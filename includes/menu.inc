@@ -428,8 +428,8 @@ function menu_set_active_item($path = NULL) {
   static $stored_mid;
   $menu = menu_get_menu();
 
-  if (is_null($stored_mid) || !empty($path)) {
-    if (empty($path)) {
+  if (!isset($stored_mid) || isset($path)) {
+    if (!isset($path)) {
       $path = $_GET['q'];
     }
     else {
