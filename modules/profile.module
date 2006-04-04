@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.147 2006/03/31 11:49:16 killes Exp $
+// $Id: profile.module,v 1.148 2006/04/04 06:52:59 unconed Exp $
 
 /**
  * @file
@@ -530,7 +530,7 @@ function profile_view_field($user, $field) {
       case 'url':
         return '<a href="'. check_url($value) .'">'. check_plain($value) .'</a>';
       case 'date':
-        list($format) = explode(' - ', variable_get('date_format_short', 'm/d/Y - H:i'), 2);
+        $format = substr(variable_get('date_format_short', 'm/d/Y - H:i'), 0, 5);
         // Note: Avoid PHP's date() because it does not handle dates before
         // 1970 on Windows. This would make the date field useless for e.g.
         // birthdays.
