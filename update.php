@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.182 2006/04/04 17:33:20 drumm Exp $
+// $Id: update.php,v 1.183 2006/04/04 22:00:51 unconed Exp $
 
 /**
  * @file
@@ -420,8 +420,7 @@ function update_do_updates() {
     $percentage = 100;
   }
 
-  // $update['module'] will be unset (the while loop above wasn't entered) when
-  // we are finished with all updates. Clear the cache.
+  // When no updates remain, clear the cache.
   if (!isset($update['module'])) {
     db_query('DELETE FROM {cache}');
   }
