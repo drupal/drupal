@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.529 2006/03/28 09:29:23 killes Exp $
+// $Id: common.inc,v 1.530 2006/04/04 07:46:02 unconed Exp $
 
 /**
  * @file
@@ -255,6 +255,11 @@ function drupal_not_found() {
   drupal_set_header('HTTP/1.0 404 Not Found');
   watchdog('page not found', t('%page not found.', array('%page' => theme('placeholder', $_GET['q']))), WATCHDOG_WARNING);
 
+  // Keep old path for reference
+  if (!isset($_REQUEST['destination'])) {
+    $_REQUEST['destination'] = $_GET['q'];
+  }
+
   $path = drupal_get_normal_path(variable_get('site_404', ''));
   if ($path && $path != $_GET['q']) {
     menu_set_active_item($path);
@@ -262,7 +267,7 @@ function drupal_not_found() {
   }
   else {
     // Redirect to a non-existant menu item to make possible tabs disappear.
-    menu_set_active_item('#');
+    menu_set_active_item('');
   }
 
   if (empty($return)) {
@@ -278,6 +283,11 @@ function drupal_access_denied() {
   drupal_set_header('HTTP/1.0 403 Forbidden');
   watchdog('access denied', t('%page denied access.', array('%page' => theme('placeholder', $_GET['q']))), WATCHDOG_WARNING, l(t('view'), $_GET['q']));
 
+  // Keep old path for reference
+  if (!isset($_REQUEST['destination'])) {
+    $_REQUEST['destination'] = $_GET['q'];
+  }
+
   $path = drupal_get_normal_path(variable_get('site_403', ''));
   if ($path && $path != $_GET['q']) {
     menu_set_active_item($path);
@@ -285,7 +295,7 @@ function drupal_access_denied() {
   }
   else {
     // Redirect to a non-existant menu item to make possible tabs disappear.
-    menu_set_active_item('#');
+    menu_set_active_item('');
   }
 
   if (empty($return)) {

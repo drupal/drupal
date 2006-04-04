@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.113 2006/04/04 06:17:52 unconed Exp $
+// $Id: menu.inc,v 1.114 2006/04/04 07:46:02 unconed Exp $
 
 /**
  * @file
@@ -428,8 +428,8 @@ function menu_set_active_item($path = NULL) {
   static $stored_mid;
   $menu = menu_get_menu();
 
-  if (is_null($stored_mid) || !empty($path)) {
-    if (empty($path)) {
+  if (!isset($stored_mid) || isset($path)) {
+    if (!isset($path)) {
       $path = $_GET['q'];
     }
     else {
