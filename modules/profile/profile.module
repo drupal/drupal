@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.148 2006/04/04 06:52:59 unconed Exp $
+// $Id: profile.module,v 1.149 2006/04/04 06:56:34 unconed Exp $
 
 /**
  * @file
@@ -251,18 +251,18 @@ Unless you know what you are doing, it is highly recommended that you prefix the
     '#default_value' => isset($edit['visibility']) ? $edit['visibility'] : PROFILE_PUBLIC,
     '#options' => array(PROFILE_HIDDEN => t('Hidden profile field, only accessible by administrators, modules and themes.'), PROFILE_PRIVATE => t('Private field, content only available to privileged users.'), PROFILE_PUBLIC => t('Public field, content shown on profile page but not used on member list pages.'), PROFILE_PUBLIC_LISTINGS => t('Public field, content shown on profile page and on member list pages.')),
   );
-  if ($type == 'selection' || $type == 'list') {
+  if ($type == 'selection' || $type == 'list' || $type == 'textfield') {
     $form['fields']['page'] = array('#type' => 'textfield',
       '#title' => t('Page title'),
       '#default_value' => $edit['page'],
-      '#description' => t('The title of the page showing all users with the specified field. The word <code>%value</code> will be substituted with the corresponding value. An example page title is "People whose favorite color is %value". This is only applicable for a public field.'),
+      '#description' => t('To enable browsing this field by value, enter a title for the resulting page. The word <code>%value</code> will be substituted with the corresponding value. An example page title is "People whose favorite color is %value". This is only applicable for a public field.'),
     );
   }
-  else {
+  else if ($type == 'checkbox') {
     $form['fields']['page'] = array('#type' => 'textfield',
       '#title' => t('Page title'),
       '#default_value' => $edit['page'],
-      '#description' => t('The title of the page showing all users with the specified field. Only applicable if the field is configured to be shown on member listings.'),
+      '#description' => t('To enable browsing this field by value, enter a title for the resulting page. An example page title is "People who are employed". This is only applicable for a public field.'),
     );
   }
   $form['fields']['required'] = array('#type' => 'checkbox',
@@ -403,6 +403,11 @@ function profile_browse() {
   $field = db_fetch_object(db_query("SELECT DISTINCT(fid), type, title, page, visibility FROM {profile_fields} WHERE name = '%s'", $name));
 
   if ($name && $field->fid) {
+    // Only allow browsing of fields that have a page title set.
+    if (empty($field->page)) {
+      drupal_not_found();
+      return;
+    }
     // Do not allow browsing of private fields by non-admins.
     if (!user_access('administer users') && $field->visibility == PROFILE_PRIVATE) {
        drupal_access_denied();
@@ -422,6 +427,7 @@ function profile_browse() {
       case 'checkbox':
         $query = 'v.value = 1';
         break;
+      case 'textfield':
       case 'selection':
         $query = "v.value = '%s'";
         $arguments[] = $value;
@@ -446,7 +452,7 @@ function profile_browse() {
     }
     $output .= theme('pager', NULL, 20);
 
-    if ($field->type == 'selection' || $field->type == 'list') {
+    if ($field->type == 'selection' || $field->type == 'list' || $field->type == 'textfield') {
       $title = strtr($field->page, array('%value' => theme('placeholder', $value)));
     }
     else {
@@ -514,15 +520,18 @@ function profile_save_profile(&$edit, &$user, $category) {
 }
 
 function profile_view_field($user, $field) {
-  // Only allow browsing of private fields for admins.
-  $browse = user_access('administer users') || $field->visibility != PROFILE_PRIVATE;
+  // Only allow browsing of private fields for admins, if browsing is enabled,
+  // and if a user has permission to view profiles. Note that this check is
+  // necessary because a user may always see their own profile.
+  $browse = user_access('access user profiles')
+         && (user_access('administer users') || $field->visibility != PROFILE_PRIVATE)
+         && !empty($field->page);
 
   if ($value = $user->{$field->name}) {
     switch ($field->type) {
-      case 'textfield':
-        return check_plain($value);
       case 'textarea':
         return check_markup($value);
+      case 'textfield':
       case 'selection':
         return $browse ? l($value, 'profile/'. $field->name .'/'. $value) : check_plain($value);
       case 'checkbox':
@@ -547,7 +556,7 @@ function profile_view_field($user, $field) {
         $fields = array();
         foreach ($values as $value) {
           if ($value = trim($value)) {
-            $fields[] = $browse ? l($value, "profile/". drupal_urlencode($field->name) ."/". drupal_urlencode($value)) : check_plain($value);
+            $fields[] = $browse ? l($value, 'profile/'. $field->name .'/'. $value) : check_plain($value);
           }
         }
         return implode(', ', $fields);
