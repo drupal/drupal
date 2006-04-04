@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.87 2006/04/02 23:14:51 drumm Exp $
+// $Id: upload.module,v 1.88 2006/04/04 23:40:42 unconed Exp $
 
 /**
  * @file
@@ -244,7 +244,7 @@ function upload_form_alter($form_id, &$form) {
         '#weight' => 30,
       );
       $form['attachments'] += _upload_form($node);
-      $form['#attributes'] = array('enctype' => 'multipart/form-data');
+      $form['#attributes']['enctype'] = 'multipart/form-data';
     }
   }
 }
