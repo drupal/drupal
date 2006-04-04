@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.150 2006/04/04 07:03:07 killes Exp $
+// $Id: profile.module,v 1.151 2006/04/04 23:04:58 unconed Exp $
 
 /**
  * @file
@@ -447,8 +447,8 @@ function profile_browse() {
     $output = '<div id="profile">';
     while ($account = db_fetch_object($result)) {
       $account = user_load(array('uid' => $account->uid));
-      $fields = _profile_update_user_fields($fields, $account);
-      $output .= theme('profile_listing', $account, $fields);
+      $profile = _profile_update_user_fields($fields, $account);
+      $output .= theme('profile_listing', $account, $profile);
     }
     $output .= theme('pager', NULL, 20);
 
@@ -693,9 +693,7 @@ function profile_form_profile($edit, $user, $category) {
  */
 function _profile_update_user_fields($fields, $account) {
   foreach ($fields as $key => $field) {
-    if ($value = profile_view_field($account, $field)) {
-      $fields[$key]->value = $value;
-    }
+    $fields[$key]->value = profile_view_field($account, $field);
   }
   return $fields;
 }
