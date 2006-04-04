@@ -244,7 +244,7 @@ function comment_nodeapi(&$node, $op, $arg = 0) {
     case 'fields':
       return array('comment');
 
-    case 'form admin':
+    case 'form pre':
       if (user_access('administer comments')) {
         $selected = isset($node->comment) ? $node->comment : variable_get("comment_$node->type", 2);
         $output = form_radios('', 'comment', $selected, array(t('Disabled'), t('Read only'), t('Read/write')));
