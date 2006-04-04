@@ -745,7 +745,12 @@ function theme_profile_block($account, $fields = array()) {
 
   foreach ($fields as $field) {
     if ($field->value) {
-      $output .= "<p><strong>$field->title:</strong><br />$field->value</p>\n";
+      if ($field->type == 'checkbox') {
+        $output .= "<p>$field->value</p>\n";
+      }
+      else {
+        $output .= "<p><strong>$field->title</strong><br />$field->value</p>\n";
+      }
     }
   }
 
