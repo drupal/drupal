@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.112 2006/03/20 20:48:19 killes Exp $
+// $Id: menu.inc,v 1.113 2006/04/04 06:17:52 unconed Exp $
 
 /**
  * @file
@@ -1335,7 +1335,12 @@ function _menu_site_is_offline() {
       }
     }
     else {
-      drupal_set_message(t('Operating in off-line mode.'));
+      $offline_message = t('Operating in off-line mode.');
+      $messages = drupal_set_message();
+      // Ensure that the off-line message is displayed only once [allowing for page redirects].
+      if (!isset($messages) || !isset($messages['status']) || !in_array($offline_message, $messages['status'])) {
+        drupal_set_message($offline_message);
+      }
     }
   }
   return FALSE;
