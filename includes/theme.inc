@@ -298,12 +298,11 @@ function theme_get_setting($setting_name, $refresh = FALSE) {
     }
 
     if ($settings['toggle_logo']) {
-      $settings['logo'] = base_path();
       if ($settings['default_logo']) {
-        $settings['logo'] .= dirname($theme_object->filename) .'/logo.png';
+        $settings['logo'] = base_path() . dirname($theme_object->filename) .'/logo.png';
       }
       elseif ($settings['logo_path']) {
-        $settings['logo'] .= $settings['logo_path'];
+        $settings['logo'] = base_path() . $settings['logo_path'];
       }
     }
 
