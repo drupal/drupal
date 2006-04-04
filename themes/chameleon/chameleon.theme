@@ -1,5 +1,5 @@
 <?php
-// $Id: chameleon.theme,v 1.42 2006/03/07 11:28:22 dries Exp $
+// $Id: chameleon.theme,v 1.43 2006/04/04 23:36:18 unconed Exp $
 
 /**
  * @file
@@ -8,7 +8,7 @@
 
 function chameleon_features() {
   return array(
-       'logo',
+       'toggle_logo',
        'toggle_favicon',
        'toggle_name',
        'toggle_slogan');

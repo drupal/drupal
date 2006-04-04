@@ -1,5 +1,5 @@
 <?php
-// $Id: phptemplate.engine,v 1.30 2006/03/13 21:42:35 unconed Exp $
+// $Id: phptemplate.engine,v 1.31 2006/04/04 23:36:18 unconed Exp $
 
 /**
  * @file
@@ -124,7 +124,7 @@ function _phptemplate_default_variables($hook, $variables) {
  */
 function phptemplate_features() {
   return array(
-    'logo',
+    'toggle_logo',
     'toggle_comment_user_picture',
     'toggle_favicon',
     'toggle_mission',

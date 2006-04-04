@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.145 2006/03/30 17:56:46 unconed Exp $ */
+/* $Id: drupal.css,v 1.146 2006/04/04 23:36:18 unconed Exp $ */
 
 /*
 ** HTML elements
@@ -451,6 +451,17 @@ img.screenshot {
 }
 #tracker table {
   width: 100%;
+}
+.theme-settings-left {
+  float: left;
+  width: 49%;
+}
+.theme-settings-right {
+  float: right;
+  width: 49%;
+}
+.theme-settings-bottom {
+  clear: both;
 }
 #user-login-form {
   text-align: center;

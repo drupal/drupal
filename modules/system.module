@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.305 2006/04/04 01:40:41 killes Exp $
+// $Id: system.module,v 1.306 2006/04/04 23:36:18 unconed Exp $
 
 /**
  * @file
@@ -1054,6 +1054,7 @@ function system_theme_settings($key = '') {
       if ($file = file_save_upload('logo_upload', $filename, 1)) {
         $_POST['edit']['default_logo'] = 0;
         $_POST['edit']['logo_path'] = $file->filepath;
+        $_POST['edit']['toggle_logo'] = 1;
       }
     }
     else {
@@ -1069,13 +1070,79 @@ function system_theme_settings($key = '') {
     if ($file = file_save_upload('favicon_upload', $filename, 1)) {
       $_POST['edit']['default_favicon'] = 0;
       $_POST['edit']['favicon_path'] = $file->filepath;
+      $_POST['edit']['toggle_favicon'] = 1;
     }
   }
 
+  // Toggle settings
+  $toggles = array(
+    'toggle_logo'                 => t('Logo'),
+    'toggle_name'                 => t('Site name'),
+    'toggle_slogan'               => t('Site slogan'),
+    'toggle_mission'              => t('Mission statement'),
+    'toggle_node_user_picture'    => t('User pictures in posts'),
+    'toggle_comment_user_picture' => t('User pictures in comments'),
+    'toggle_search'               => t('Search box'),
+    'toggle_favicon'              => t('Shortcut icon')
+  );
+
+  // Some features are not always available
+  $disabled = array();
+  if (!variable_get('user_pictures', 0)) {
+    $disabled['toggle_node_user_picture'] = true;
+    $disabled['toggle_comment_user_picture'] = true;
+  }
+  if (!module_exist('search')) {
+    $disabled['toggle_search'] = true;
+  }
+
+  $form['theme_settings'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Toggle display'),
+    '#description' => t('Enable or disable the display of certain page elements.'),
+  );
+  foreach ($toggles as $name => $title) {
+    if ((!$key) || in_array($name, $features)) {
+      // disable search box if search.module is disabled
+      $form['theme_settings'][$name] = array('#type' => 'checkbox', '#title' => $title, '#default_value' => $settings[$name]);
+      if (isset($disabled[$name])) {
+        $form['theme_settings'][$name]['#attributes'] = array('disabled' => 'disabled');
+      }
+    }
+  }
+
+  // System wide only settings.
+  if (!$key) {
+    // Create neat 2-column layout for the toggles
+    $form['theme_settings'] += array(
+      '#prefix' => '<div class="theme-settings-left">',
+      '#suffix' => '</div>',
+    );
+
+    // Toggle node display.
+    $node_types = module_invoke('node', 'get_types');
+    if ($node_types) {
+      $form['node_info'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Display post information on'),
+        '#description' =>  t('Enable or disable the <em>submitted by Username on date</em> text when displaying posts of the following type.'),
+        '#prefix' => '<div class="theme-settings-right">',
+        '#suffix' => '</div>',
+      );
+      foreach ($node_types as $type => $name) {
+        $form['node_info']["toggle_node_info_$type"] = array('#type' => 'checkbox', '#title' => $name, '#default_value' => $settings["toggle_node_info_$type"]);
+      }
+    }
+  }
 
   // Logo settings
-  if ((!$key) || in_array('logo', $features)) {
-    $form['logo'] = array('#type' => 'fieldset', '#title' => t('Logo image settings'));
+  if ((!$key) || in_array('toggle_logo', $features)) {
+    $form['logo'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Logo image settings'),
+      '#description' => t('If toggled on, the following logo will be displayed.'),
+      '#attributes' => array('class' => 'theme-settings-bottom'),
+    );
     $form['logo']["default_logo"] = array(
       '#type' => 'checkbox',
       '#title' => t('Use the default logo'),
@@ -1119,53 +1186,6 @@ function system_theme_settings($key = '') {
       '#title' => t('Upload icon image'),
       '#description' => t("If you don't have direct file access to the server, use this field to upload your shortcut icon.")
     );
-  }
-
-  // System wide only settings.
-  if (!$key) {
-    // Toggle node display.
-    $node_types = module_invoke('node', 'get_types');
-    if ($node_types) {
-      $group = '';
-      $form['node_info'] = array('#type' => 'fieldset', '#title' => t('Display post information on'), '#description' =>  t('Enable or disable the "submitted by Username on date" text when displaying posts of the above type'));
-      foreach ($node_types as $type => $name) {
-        $form['node_info']["toggle_node_info_$type"] = array('#type' => 'checkbox', '#title' => $name, '#default_value' => $settings["toggle_node_info_$type"]);
-      }
-    }
-  }
-
-  $group = '';
-
-  // Toggle settings
-  $toggles = array(
-    'toggle_name'                 => t('Site name'),
-    'toggle_slogan'               => t('Site slogan'),
-    'toggle_mission'              => t('Mission statement'),
-    'toggle_node_user_picture'    => t('User pictures in posts'),
-    'toggle_comment_user_picture' => t('User pictures in comments'),
-    'toggle_search'               => t('Search box'),
-    'toggle_favicon'              => t('Shortcut icon')
-  );
-
-  // Some features are not always available
-  $disabled = array();
-  if (!variable_get('user_pictures', 0)) {
-    $disabled['toggle_node_user_picture'] = true;
-    $disabled['toggle_comment_user_picture'] = true;
-  }
-  if (!module_exist('search')) {
-    $disabled['toggle_search'] = true;
-  }
-
-  $form['theme_settings'] = array('#type' => 'fieldset', '#title' => t('Toggle display'), '#description' => t('Enable or disable the display of certain page elements.'));
-  foreach ($toggles as $name => $title) {
-    if ((!$key) || in_array($name, $features)) {
-      // disable search box if search.module is disabled
-      $form['theme_settings'][$name] = array('#type' => 'checkbox', '#title' => $title, '#default_value' => $settings[$name]);
-      if (isset($disabled[$name])) {
-        $form['theme_settings'][$name]['#attributes'] = array('disabled' => 'disabled');
-      }
-    }
   }
 
   if ($key) {
