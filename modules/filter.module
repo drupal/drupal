@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.116 2006/04/04 00:32:52 unconed Exp $
+// $Id: filter.module,v 1.117 2006/04/04 01:07:42 unconed Exp $
 
 /**
  * @file
@@ -819,6 +819,10 @@ function filter_form($value = FILTER_FORMAT_DEFAULT, $weight = NULL, $parents = 
         '#description' => theme('filter_tips', _filter_tips($format->format, false)),
       );
     }
+    $form[] = array(
+      '#type' => 'markup',
+      '#value' => $extra,
+    );
   }
   else {
     // Only one format available: use a hidden form item and only show tips.
