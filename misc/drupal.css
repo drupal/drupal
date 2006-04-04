@@ -452,6 +452,17 @@ img.screenshot {
 #tracker table {
   width: 100%;
 }
+.theme-settings-left {
+  float: left;
+  width: 49%;
+}
+.theme-settings-right {
+  float: right;
+  width: 49%;
+}
+.theme-settings-bottom {
+  clear: both;
+}
 #user-login-form {
   text-align: center;
 }

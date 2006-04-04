@@ -8,7 +8,7 @@
 
 function chameleon_features() {
   return array(
-       'logo',
+       'toggle_logo',
        'toggle_favicon',
        'toggle_name',
        'toggle_slogan');

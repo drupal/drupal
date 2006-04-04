@@ -124,7 +124,7 @@ function _phptemplate_default_variables($hook, $variables) {
  */
 function phptemplate_features() {
   return array(
-    'logo',
+    'toggle_logo',
     'toggle_comment_user_picture',
     'toggle_favicon',
     'toggle_mission',
