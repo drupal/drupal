@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.447 2006/04/04 01:26:05 unconed Exp $
+// $Id: comment.module,v 1.448 2006/04/04 07:07:45 unconed Exp $
 
 /**
  * @file
@@ -493,6 +493,11 @@ function comment_reply($nid, $pid = NULL) {
       // else, we'll just show the user the node they're commenting on.
       if ($pid) {
         if ($comment = db_fetch_object(db_query('SELECT c.*, u.uid, u.name AS registered_name, u.picture, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = %d', $pid, COMMENT_PUBLISHED))) {
+          if ($comment->nid != $nid) {
+            // Attempting to reply to a comment not belonging to the current nid.
+            drupal_set_message(t('The comment you are replying to does not exist.'), 'error');
+            drupal_goto("node/$nid");
+          }
           $comment = drupal_unpack($comment);
           $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
           $output .= theme('comment_view', $comment);
