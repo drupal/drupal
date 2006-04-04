@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.203 2006/03/04 17:54:58 dries Exp $
+// $Id: block.module,v 1.204 2006/04/04 23:32:40 unconed Exp $
 
 /**
  * @file
@@ -135,14 +135,10 @@ function block_block($op = 'list', $delta = 0, $edit = array()) {
 /**
  * Update the 'blocks' DB table with the blocks currently exported by modules.
  *
- * @param $order_by php <a
- *   href="http://www.php.net/manual/en/function.array-multisort.php">array_multisort()</a>
- *   style sort ordering, eg. "weight", SORT_ASC, SORT_STRING.
- *
  * @return
- *   Blocks currently exported by modules, sorted by $order_by.
+ *   Blocks currently exported by modules.
  */
-function _block_rehash($order_by = array('weight')) {
+function _block_rehash() {
   global $theme_key;
 
   init_theme();
@@ -172,27 +168,21 @@ function _block_rehash($order_by = array('weight')) {
         }
         // Otherwise, use any set values, or else substitute defaults.
         else {
-          $properties = array ('status' => 0, 'weight' => 0, 'region' => 'left', 'pages' => '', 'custom' => 0);
+          $properties = array('status' => 0, 'weight' => 0, 'region' => 'left', 'pages' => '', 'custom' => 0);
           foreach ($properties as $property => $default) {
-            if (!isset ($block[$property])) {
+            if (!isset($block[$property])) {
               $block[$property] = $default;
             }
           }
         }
 
-        // reinsert blocks into table
+        // Reinsert blocks into table
         db_query("INSERT INTO {blocks} (module, delta, theme, status, weight, region, visibility, pages, custom, throttle) VALUES ('%s', '%s', '%s', %d, %d, '%s', %d, '%s', %d, %d)",
           $block['module'], $block['delta'], $theme_key, $block['status'], $block['weight'], $block['region'], $block['visibility'], $block['pages'], $block['custom'], $block['throttle']);
         $blocks[] = $block;
-
-        // build array to sort on
-        $order[$order_by[0]][] = $block[$order_by[0]];
       }
     }
   }
-
-  // sort
-  array_multisort($order[$order_by[0]], $order_by[1] ? $order_by[1] : SORT_ASC, $order_by[2] ? $order_by[2] : SORT_REGULAR, $blocks);
 
   return $blocks;
 }
@@ -212,28 +202,34 @@ function block_admin_display() {
   }
   init_theme();
 
-  $throttle = module_exist('throttle');
+  // Fetch and sort blocks 
   $blocks = _block_rehash();
+  usort($blocks, '_block_compare');
+
+  $throttle = module_exist('throttle');
   $block_regions = system_region_list($theme_key);
 
+  // Build form tree
   $form['#action'] = arg(3) ? url('admin/block/list/' . $theme_key) : url('admin/block');
   $form['#tree'] = TRUE;
-  foreach ($blocks as $block) {
-    $form[$block['module']][$block['delta']]['info'] = array('#value' => $block['info']);
-    $form[$block['module']][$block['delta']]['status'] = array('#type' => 'checkbox', '#default_value' => $block['status']);
-    $form[$block['module']][$block['delta']]['theme'] = array('#type' => 'hidden', '#value' => $theme_key);
-    $form[$block['module']][$block['delta']]['weight'] = array('#type' => 'weight', '#default_value' => $block['weight']);
-    $form[$block['module']][$block['delta']]['region'] = array('#type' => 'select',
+  foreach ($blocks as $i => $block) {
+    $form[$i]['module'] = array('#type' => 'value', '#value' => $block['module']);
+    $form[$i]['delta'] = array('#type' => 'value', '#value' => $block['delta']);
+    $form[$i]['info'] = array('#value' => $block['info']);
+    $form[$i]['status'] = array('#type' => 'checkbox', '#default_value' => $block['status']);
+    $form[$i]['theme'] = array('#type' => 'hidden', '#value' => $theme_key);
+    $form[$i]['weight'] = array('#type' => 'weight', '#default_value' => $block['weight']);
+    $form[$i]['region'] = array('#type' => 'select',
       '#default_value' => isset($block['region']) ? $block['region'] : system_default_region(),
       '#options' => $block_regions,
     );
 
     if ($throttle) {
-      $form[$block['module']][$block['delta']]['throttle'] = array('#type' => 'checkbox', '#default_value' => $block['throttle']);
+      $form[$i]['throttle'] = array('#type' => 'checkbox', '#default_value' => $block['throttle']);
     }
-    $form[$block['module']][$block['delta']]['configure'] = array('#value' => l(t('configure'), 'admin/block/configure/'. $block['module'] .'/'. $block['delta']));
+    $form[$i]['configure'] = array('#value' => l(t('configure'), 'admin/block/configure/'. $block['module'] .'/'. $block['delta']));
     if ($block['module'] == 'block') {
-      $form[$block['module']][$block['delta']]['delete'] = array('#value' => l(t('delete'), 'admin/block/delete/'. $block['delta']));
+      $form[$i]['delete'] = array('#value' => l(t('delete'), 'admin/block/delete/'. $block['delta']));
     }
   }
   $form['submit'] = array('#type' => 'submit', '#value' => t('Save blocks'));
@@ -242,13 +238,34 @@ function block_admin_display() {
 }
 
 /**
+ * Helper function for sorting blocks on admin/block.
+ *
+ * Active blocks are sorted by region, then by weight.
+ * Disabled blocks are sorted by name.
+ */
+function _block_compare($a, $b) {
+  $status = $b['status'] - $a['status'];
+  // Separate enabled from disabled.
+  if ($status) {
+    return $status;
+  }
+  // Enabled blocks
+  if ($a['status']) {
+    $place = strcmp($a['region'], $b['region']);
+    return $place ? $place : ($a['weight'] - $b['weight']);
+  }
+  // Disabled blocks
+  else {
+    return strcmp($a['info'], $b['info']);
+  }
+}
+
+/**
  * Process main block administration form submission.
  */
 function block_admin_display_submit($form_id, $form_values) {
-  foreach ($form_values as $module => $blocks) {
-    foreach ($blocks as $delta => $block) {
-      db_query("UPDATE {blocks} SET status = %d, weight = %d, region = '%s', throttle = %d WHERE module = '%s' AND delta = '%s' AND theme = '%s'", $block['status'], $block['weight'], $block['region'], $block['throttle'], $module, $delta, $block['theme']);
-    }
+  foreach ($form_values as $block) {
+    db_query("UPDATE {blocks} SET status = %d, weight = %d, region = '%s', throttle = %d WHERE module = '%s' AND delta = '%s' AND theme = '%s'", $block['status'], $block['weight'], $block['region'], $block['throttle'], $block['module'], $block['delta'], $block['theme']);
   }
   drupal_set_message(t('The block settings have been updated.'));
   cache_clear_all();
@@ -256,6 +273,9 @@ function block_admin_display_submit($form_id, $form_values) {
 
 /**
  * Theme main block administration form submission.
+ *
+ * Note: the blocks are already sorted in the right order,
+ * grouped by status, region and weight.
  */
 function theme_block_admin_display($form) {
   global $theme_key;
@@ -267,49 +287,54 @@ function theme_block_admin_display($form) {
   foreach ($block_regions as $key => $value) {
     drupal_set_content($key, '<div class="block-region">' . $value . '</div>');
   }
-  $regions = array();
-  $disabled = array();
-  foreach (element_children($form) as $module) {
-    // Do not take form control structures.
-    if (is_array($form[$module])) {
-      foreach ($form[$module] as $delta => $element) {
-        // Only take form elements that are blocks.
-        if (is_array($form[$module][$delta]['info'])) {
-          $block = $form[$module][$delta];
-          $row = array(array('data' => form_render($block['info']), 'class' => 'block'), form_render($block['status']) . form_render($block['theme']), form_render($block['weight']), form_render($block['region']));
-          if ($throttle) {
-            $row[] = form_render($block['throttle']);
-          }
-          $row[] = form_render($block['configure']);
-          $row[] = $block['delete'] ? form_render($block['delete']) : '';
-          if ($block['status']['#default_value']) {
-            $regions[$block['region']['#default_value']][] = $row;
-          }
-          else if ($block['region']['#default_value'] <= 1) {
-            $disabled[] = $row;
-          }
-        }
+
+  // Build rows
+  $rows = array();
+  $last_region = '';
+  $last_status = 1;
+  foreach (element_children($form) as $i) {
+    $block = $form[$i];
+    // Only take form elements that are blocks.
+    if (is_array($block['info'])) {
+      // Fetch values
+      $region = $block['region']['#default_value'];
+      $status = $block['status']['#default_value'];
+
+      // Output region header
+      if ($status && $region != $last_region) {
+        $region_title = t('%region', array('%region' => drupal_ucfirst($block_regions[$region])));
+        $rows[] = array(array('data' => $region_title, 'class' => 'region', 'colspan' => ($throttle ? 7 : 6)));
+        $last_region = $region;        
       }
+      // Output disabled header
+      elseif ($status != $last_status) {
+        $rows[] = array(array('data' => t('Disabled'), 'class' => 'region', 'colspan' => ($throttle ? 7 : 6)));
+        $last_status = $status;        
+      }
+
+      // Generate block row
+      $row = array(
+        array('data' => form_render($block['info']), 'class' => 'block'),
+        form_render($block['status']) . form_render($block['theme']),
+        form_render($block['weight']),
+        form_render($block['region'])
+      );
+      if ($throttle) {
+        $row[] = form_render($block['throttle']);
+      }
+      $row[] = form_render($block['configure']);
+      $row[] = $block['delete'] ? form_render($block['delete']) : '';
+      $rows[] = $row;
     }
   }
 
-  $rows = array();
-  if (count($regions)) {
-    foreach ($regions as $region => $row) {
-      $region_title = t('%region', array ('%region' => ucfirst($block_regions[$region])));
-      $rows[] = array(array('data' => $region_title, 'class' => 'region', 'colspan' => ($throttle ? 7 : 6)));
-      $rows = array_merge($rows, $row);
-    }
-  }
-  if (count($disabled)) {
-    $rows[] = array(array('data' => t('Disabled'), 'class' => 'region', 'colspan' => ($throttle ? 7 : 6)));
-    $rows = array_merge($rows, $disabled);
-  }
+  // Finish table
   $header = array(t('Block'), t('Enabled'), t('Weight'), t('Placement'));
   if ($throttle) {
     $header[] = t('Throttle');
   }
   $header[] = array('data' => t('Operations'), 'colspan' => 2);
+
   $output = theme('table', $header, $rows, array('id' => 'blocks'));
   $output .= form_render($form['submit']);
   // Also render the form_id as there is no form_render($form) call (as form_render does not appear to handle the
