@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.446 2006/03/30 17:23:29 unconed Exp $
+// $Id: comment.module,v 1.447 2006/04/04 01:26:05 unconed Exp $
 
 /**
  * @file
@@ -975,7 +975,7 @@ function comment_admin_overview($type = 'new') {
     $form['operations'][$comment->cid] = array('#value' => l(t('edit'), 'comment/edit/'. $comment->cid, array(), $destination));
   }
   $form['comments'] = array('#type' => 'checkboxes', '#options' => $comments);
-  $form['pager'] = array('#value' => theme('pager', NULL, 50, 0));
+  $form['pager'] = array('#value' => theme('pager', NULL, 50, 0, tablesort_pager()));
   return drupal_get_form('comment_admin_overview', $form);
 }
 
