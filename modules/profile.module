@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.149 2006/04/04 06:56:34 unconed Exp $
+// $Id: profile.module,v 1.150 2006/04/04 07:03:07 killes Exp $
 
 /**
  * @file
@@ -745,7 +745,12 @@ function theme_profile_block($account, $fields = array()) {
 
   foreach ($fields as $field) {
     if ($field->value) {
-      $output .= "<p><strong>$field->title:</strong><br />$field->value</p>\n";
+      if ($field->type == 'checkbox') {
+        $output .= "<p>$field->value</p>\n";
+      }
+      else {
+        $output .= "<p><strong>$field->title</strong><br />$field->value</p>\n";
+      }
     }
   }
 
