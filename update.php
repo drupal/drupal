@@ -419,6 +419,13 @@ function update_do_updates() {
   else {
     $percentage = 100;
   }
+
+  // $update['module'] will be unset (the while loop above wasn't entered) when
+  // we are finished with all updates. Clear the cache.
+  if (!isset($update['module'])) {
+    db_query('DELETE FROM {cache}');
+  }
+
   return array($percentage, isset($update['module']) ? 'Updating '. $update['module'] .' module' : 'Updating complete');
 }
 
