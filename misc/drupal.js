@@ -1,4 +1,4 @@
-// $Id: drupal.js,v 1.20 2006/03/24 13:17:17 killes Exp $
+// $Id: drupal.js,v 1.21 2006/04/05 00:53:16 unconed Exp $
 
 /**
  * Only enable Javascript functionality if all required features are supported.
@@ -59,7 +59,7 @@ function HTTPGet(uri, callbackFunction, callbackParameter) {
         }
       }
     }
-    return true;
+    return xmlHttp;
   }
   else {
     return xmlHttp.responseText;
@@ -100,7 +100,7 @@ function HTTPPost(uri, callbackFunction, callbackParameter, object) {
         }
       }
     }
-    return true;
+    return xmlHttp;
   }
   else {
     return xmlHttp.responseText;

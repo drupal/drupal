@@ -1,4 +1,4 @@
-// $Id: autocomplete.js,v 1.8 2006/03/26 15:07:54 killes Exp $
+// $Id: autocomplete.js,v 1.9 2006/04/05 00:53:16 unconed Exp $
 
 // Global Killswitch
 if (isJsEnabled()) {
@@ -47,7 +47,7 @@ function jsAC(input, db) {
   this.db = db;
   this.input.onkeydown = function (event) { return ac.onkeydown(this, event); };
   this.input.onkeyup = function (event) { ac.onkeyup(this, event) };
-  this.input.onblur = function () { ac.hidePopup() };
+  this.input.onblur = function () { ac.hidePopup(); ac.db.cancel(); };
   this.popup = document.createElement('div');
   this.popup.id = 'autocomplete';
   this.popup.owner = this;
@@ -240,7 +240,7 @@ ACDB.prototype.search = function(searchString) {
   var db = this;
   this.timer = setTimeout(function() {
     addClass(db.owner.input, 'throbbing');
-    HTTPGet(db.uri +'/'+ encodeURIComponent(searchString), db.receive, db);
+    db.transport = HTTPGet(db.uri +'/'+ encodeURIComponent(searchString), db.receive, db);
   }, this.delay);
 }
 
@@ -262,4 +262,16 @@ ACDB.prototype.receive = function(string, xmlhttp, acdb) {
   }
   acdb.cache[acdb.searchString] = matches;
   acdb.owner.found(matches);
+}
+
+/**
+ * Cancels the current autocomplete request
+ */
+ACDB.prototype.cancel = function() {
+  if (this.owner) removeClass(this.owner.input, 'throbbing');
+  if (this.timer) clearTimeout(this.timer);
+  if (this.transport) {
+    this.transport.onreadystatechange = function() {};
+    this.transport.abort();
+  }
 }
