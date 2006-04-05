@@ -59,7 +59,7 @@ function HTTPGet(uri, callbackFunction, callbackParameter) {
         }
       }
     }
-    return true;
+    return xmlHttp;
   }
   else {
     return xmlHttp.responseText;
@@ -100,7 +100,7 @@ function HTTPPost(uri, callbackFunction, callbackParameter, object) {
         }
       }
     }
-    return true;
+    return xmlHttp;
   }
   else {
     return xmlHttp.responseText;
