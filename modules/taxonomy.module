@@ -1360,7 +1360,7 @@ function taxonomy_autocomplete($vid, $string = '') {
       }
       $matches[$prefix . $n] = check_plain($tag->name);
     }
-    print drupal_implode_autocomplete($matches);
+    print drupal_to_js($matches);
     exit();
   }
 }

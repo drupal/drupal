@@ -1237,24 +1237,6 @@ function drupal_to_js($var) {
 }
 
 /**
- * Implode a PHP array into a string that can be decoded by the autocomplete JS routines.
- *
- * Items are separated by double pipes. Each item consists of a key-value pair
- * separated by single pipes. Entities are used to ensure pipes in the strings
- * pass unharmed.
- *
- * The key is what is filled in in the text-box (plain-text), the value is what
- * is displayed in the suggestion list (HTML).
- */
-function drupal_implode_autocomplete($array) {
-  $output = array();
-  foreach ($array as $k => $v) {
-    $output[] = str_replace('|', '&#124;', $k) .'|'. str_replace('|', '&#124;', $v);
-  }
-  return implode('||', $output);
-}
-
-/**
  * Wrapper around urlencode() which avoids Apache quirks.
  *
  * Should be used when placing arbitrary data in an URL. Note that Drupal paths
