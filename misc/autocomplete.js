@@ -1,4 +1,4 @@
-// $Id: autocomplete.js,v 1.9 2006/04/05 00:53:16 unconed Exp $
+// $Id: autocomplete.js,v 1.10 2006/04/06 02:41:48 unconed Exp $
 
 // Global Killswitch
 if (isJsEnabled()) {
@@ -197,18 +197,20 @@ jsAC.prototype.found = function (matches) {
   }
   var ul = document.createElement('ul');
   var ac = this;
-  if (matches.length > 0) {
-    for (var i = 0; i < matches.length; i++) {
-      li = document.createElement('li');
-      div = document.createElement('div');
-      div.innerHTML = matches[i][1];
-      li.appendChild(div);
-      li.autocompleteValue = matches[i][0];
-      li.onmousedown = function() { ac.select(this); };
-      li.onmouseover = function() { ac.highlight(this); };
-      li.onmouseout  = function() { ac.unhighlight(this); };
-      ul.appendChild(li);
-    }
+
+  for (key in matches) {
+    var li = document.createElement('li');
+    var div = document.createElement('div');
+    div.innerHTML = matches[key];
+    li.appendChild(div);
+    li.autocompleteValue = key;
+    li.onmousedown = function() { ac.select(this); };
+    li.onmouseover = function() { ac.highlight(this); };
+    li.onmouseout  = function() { ac.unhighlight(this); };
+    ul.appendChild(li);
+  }
+
+  if (ul.childNodes.length > 0) {
     this.popup.appendChild(ul);
   }
   else {
@@ -253,15 +255,12 @@ ACDB.prototype.receive = function(string, xmlhttp, acdb) {
     removeClass(acdb.owner.input, 'throbbing');
     return alert('An HTTP error '+ xmlhttp.status +' occured.\n'+ acdb.uri);
   }
-  // Split into array of key->value pairs
-  var matches = string.length > 0 ? string.split('||') : [];
-  for (var i = 0; i < matches.length; i++) {
-    matches[i] = matches[i].length > 0 ? matches[i].split('|') : [];
-    // Decode textfield pipes back to plain-text
-    matches[i][0] = eregReplace('&#124;', '|', matches[i][0]);
+  // Parse back result
+  var matches = parseJson(string);
+  if (typeof matches['status'] == 'undefined' || matches['status'] != 0) {
+    acdb.cache[acdb.searchString] = matches;
+    acdb.owner.found(matches);    
   }
-  acdb.cache[acdb.searchString] = matches;
-  acdb.owner.found(matches);
 }
 
 /**

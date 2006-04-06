@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.602 2006/03/28 12:40:13 killes Exp $
+// $Id: user.module,v 1.603 2006/04/06 02:41:48 unconed Exp $
 
 /**
  * @file
@@ -2083,6 +2083,6 @@ function user_autocomplete($string) {
   while ($user = db_fetch_object($result)) {
     $matches[$user->name] = check_plain($user->name);
   }
-  print drupal_implode_autocomplete($matches);
+  print drupal_to_js($matches);
   exit();
 }

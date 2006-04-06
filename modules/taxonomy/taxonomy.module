@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.268 2006/03/26 16:59:17 killes Exp $
+// $Id: taxonomy.module,v 1.269 2006/04/06 02:41:48 unconed Exp $
 
 /**
  * @file
@@ -1360,7 +1360,7 @@ function taxonomy_autocomplete($vid, $string = '') {
       }
       $matches[$prefix . $n] = check_plain($tag->name);
     }
-    print drupal_implode_autocomplete($matches);
+    print drupal_to_js($matches);
     exit();
   }
 }
