@@ -1211,25 +1211,6 @@ function system_theme_settings($key = '') {
 }
 
 /**
- * Output a search form.
- */
-function search_box($path = NULL) {
-  $form['keys'] = array('#type' => 'textfield', '#size'=> 15, '#default_value' => '', '#attributes' => array('alt' => t('Enter the terms you wish to search for.')));
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Search'));
-  return drupal_get_form('search_box', $form);
-}
-
-/**
- * Theme a search form.
- */
-function theme_search_box($form) {
-  $output = '<div id="search" class="container-inline">';
-  $output .= form_render($form);
-  $output .= '</div>';
-  return $output;
-}
-
-/**
  * Output a confirmation form
  *
  * This function outputs a complete form for confirming an action. A link is
