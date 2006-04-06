@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.324 2006/04/06 04:18:30 unconed Exp $
+// $Id: forum.module,v 1.325 2006/04/06 04:21:12 unconed Exp $
 
 /**
  * @file
@@ -149,10 +149,10 @@ function forum_nodeapi(&$node, $op, $teaser, $page) {
  * Implementation of hook_taxonomy().
  */
 function forum_taxonomy($op, $type, $term = NULL) {
-  if ($op == 'delete' && $term->vid == _forum_get_vid()) {
+  if ($op == 'delete' && $term['vid'] == _forum_get_vid()) {
     switch ($type) {
       case 'term':
-        $results = db_query('SELECT f.nid FROM {forum} f WHERE f.tid = %d', $term->tid);
+        $results = db_query('SELECT f.nid FROM {forum} f WHERE f.tid = %d', $term['tid']);
         while ($node = db_fetch_object($results)) {
           // node_delete will also remove any association with non-forum vocabularies.
           node_delete($node->nid);
@@ -160,7 +160,7 @@ function forum_taxonomy($op, $type, $term = NULL) {
 
         // For containers, remove the tid from the forum_containers variable.
         $containers = variable_get('forum_containers', array());
-        if ($key = array_search($term->tid, $containers)) {
+        if ($key = array_search($term['tid'], $containers)) {
           unset($containers[$key]);
         }
         variable_set('forum_containers', $containers);
