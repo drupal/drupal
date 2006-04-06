@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.90 2006/04/05 18:12:48 killes Exp $
+// $Id: form.inc,v 1.91 2006/04/06 15:30:19 killes Exp $
 
 /**
  * @defgroup form Form generation
@@ -111,8 +111,7 @@ function drupal_get_form($form_id, &$form, $callback = NULL) {
     $function($form_id, $form);
   }
 
-  form_builder($form_id, $form);
-
+  $form = form_builder($form_id, $form);
   if (!empty($_POST['edit']) && (($_POST['edit']['form_id'] == $form_id) || ($_POST['edit']['form_id'] == $callback))) {
     drupal_validate_form($form_id, $form, $callback);
     if ($form_submitted && !form_get_errors()) {
@@ -308,9 +307,10 @@ function form_error(&$element, $message = '') {
  * @param $form
  *   An associative array containing the structure of the form.
  */
-function form_builder($form_id, &$form) {
+function form_builder($form_id, $form) {
   global $form_values;
   global $form_submitted;
+
   /* Use element defaults */
   if ((!empty($form['#type'])) && ($info = _element_info($form['#type']))) {
     // overlay $info onto $form, retaining preexisting keys in $form
@@ -417,7 +417,7 @@ function form_builder($form_id, &$form) {
     if (!isset($form[$key]['#weight'])) {
       $form[$key]['#weight'] = $count/1000;
     }
-    form_builder($form_id, $form[$key]);
+    $form[$key] = form_builder($form_id, $form[$key]);
     $count++;
   }
 
@@ -426,6 +426,8 @@ function form_builder($form_id, &$form) {
     $form = $function($form, $form_values);
     $form['#after_build_done'] = TRUE;
   }
+
+  return $form;
 }
 
 /**
