@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.307 2006/04/06 13:07:22 unconed Exp $
+// $Id: system.module,v 1.308 2006/04/06 18:07:22 killes Exp $
 
 /**
  * @file
@@ -1028,6 +1028,7 @@ function system_site_settings($module = NULL) {
  * Menu callback; display theme configuration for entire site and individual themes.
  */
 function system_theme_settings($key = '') {
+  init_theme();
   $directory_path = file_directory_path();
   file_check_directory($directory_path, FILE_CREATE_DIRECTORY, 'file_directory_path');
 
