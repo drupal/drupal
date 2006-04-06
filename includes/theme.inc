@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.287 2006/04/04 23:31:04 unconed Exp $
+// $Id: theme.inc,v 1.288 2006/04/06 02:35:57 unconed Exp $
 
 /**
  * @file
@@ -307,17 +307,16 @@ function theme_get_setting($setting_name, $refresh = FALSE) {
     }
 
     if ($settings['toggle_favicon']) {
-      $settings['favicon'] = base_path();
       if ($settings['default_favicon']) {
         if (file_exists($favicon = dirname($theme_object->filename) .'/favicon.ico')) {
-          $settings['favicon'] .= $favicon;
+          $settings['favicon'] = base_path() . $favicon;
         }
         else {
-          $settings['favicon'] .= 'misc/favicon.ico';
+          $settings['favicon'] = base_path() . 'misc/favicon.ico';
         }
       }
       elseif ($settings['favicon_path']) {
-        $settings['favicon'] .= $settings['favicon_path'];
+        $settings['favicon'] = base_path() . $settings['favicon_path'];
       }
     }
   }
