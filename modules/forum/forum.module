@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.325 2006/04/06 04:21:12 unconed Exp $
+// $Id: forum.module,v 1.326 2006/04/06 18:36:57 killes Exp $
 
 /**
  * @file
@@ -402,7 +402,8 @@ function forum_form(&$node) {
 function forum_prepare(&$node) {
   if (!$node->nid) {
     // new topic
-    $node->taxonomy[arg(3)] = 1;
+    $node->taxonomy[arg(3)]->vid = _forum_get_vid();
+    $node->taxonomy[arg(3)]->tid = arg(3);
   }
 }
 
