@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.172 2006/04/03 22:56:53 unconed Exp $
+// $Id: search.module,v 1.173 2006/04/06 13:07:22 unconed Exp $
 
 /**
  * @file
@@ -137,8 +137,8 @@ function search_block($op = 'list', $delta = 0) {
     $blocks[0]['info'] = t('Search form');
     return $blocks;
   }
-  else if ($op == 'view' && user_access('search content') && arg(0) != 'search') {
-    $block['content'] = search_form('', '', null, '');
+  else if ($op == 'view' && user_access('search content')) {
+    $block['content'] = search_box('search_block_form');
     $block['subject'] = t('Search');
     return $block;
   }
@@ -1023,8 +1023,44 @@ function search_form_submit($form_id, $form_values) {
   return 'search/'. $type .'/'. $keys;
 }
 
-function search_box_submit($form_id, $form_values) {
-  return 'search/node/'. trim($form_values['keys']);
+/**
+ * Output a search form for the search block and the theme's search box.
+ */
+function search_box($form_id = 'search_theme_form') {
+  // Use search_keys instead of keys to avoid ID conflicts with the search block.
+  $form[$form_id .'_keys'] = array(
+    '#type' => 'textfield',
+    '#size' => 15,
+    '#default_value' => '',
+    '#attributes' => array('title' => t('Enter the terms you wish to search for.')),
+  );
+  if ($form_id == 'search_theme_form') {
+    $form['#theme']['theme_search_theme_form'] = array();
+  }
+  $form['submit'] = array('#type' => 'submit', '#value' => t('Search'));
+
+  return drupal_get_form($form_id, $form, 'search_box_form');
+}
+
+/**
+ * Process a block search form submission.
+ */
+function search_box_form_submit($form_id, $form_values) {
+  return 'search/node/'. trim($form_values[$form_id .'_keys']);
+}
+
+/**
+ * Theme the theme search form.
+ */
+function theme_search_theme_form($form) {
+  return '<div id="search" class="container-inline">'. form_render($form) .'</div>';
+}
+
+/**
+ * Theme the block search form.
+ */
+function theme_search_block_form($form) {
+  return '<div class="container-inline">'. form_render($form) .'</div>';
 }
 
 /**

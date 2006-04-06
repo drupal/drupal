@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.306 2006/04/04 23:36:18 unconed Exp $
+// $Id: system.module,v 1.307 2006/04/06 13:07:22 unconed Exp $
 
 /**
  * @file
@@ -1208,25 +1208,6 @@ function system_theme_settings($key = '') {
 
   return system_settings_form('system_theme_settings', $form);
 
-}
-
-/**
- * Output a search form.
- */
-function search_box($path = NULL) {
-  $form['keys'] = array('#type' => 'textfield', '#size'=> 15, '#default_value' => '', '#attributes' => array('alt' => t('Enter the terms you wish to search for.')));
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Search'));
-  return drupal_get_form('search_box', $form);
-}
-
-/**
- * Theme a search form.
- */
-function theme_search_box($form) {
-  $output = '<div id="search" class="container-inline">';
-  $output .= form_render($form);
-  $output .= '</div>';
-  return $output;
 }
 
 /**
