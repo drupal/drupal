@@ -640,6 +640,10 @@ function upload_js() {
   _upload_validate($node);
 
   $form = _upload_form($node);
+  foreach (module_implements('form_alter') as $module) {
+    $function = $module .'_form_alter';
+    $function('upload_js', $form);
+  }
   $form = form_builder('upload_js', $form);
   $output = theme('status_messages') . form_render($form);
 
