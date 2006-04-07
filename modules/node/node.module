@@ -48,7 +48,7 @@ function node_help($section) {
   }
 
   if (arg(0) == 'node' && arg(1) == 'add' && $type = arg(2)) {
-    return variable_get($type .'_help', '');
+    return filter_xss_admin(variable_get($type .'_help', ''));
   }
 }
 

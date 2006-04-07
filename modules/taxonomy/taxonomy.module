@@ -29,7 +29,7 @@ function taxonomy_link($type, $node = NULL) {
     $links = array();
     if (array_key_exists('taxonomy', $node)) {
       foreach ($node->taxonomy as $term) {
-        $links[] = l($term->name, taxonomy_term_path($term), array('rel' => 'tag', 'title' => $term->description));
+        $links[] = l($term->name, taxonomy_term_path($term), array('rel' => 'tag', 'title' => strip_tags($term->description)));
       }
     }
     return $links;

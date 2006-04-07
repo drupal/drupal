@@ -935,7 +935,7 @@ function theme_forum_list($forums, $parents, $tid) {
         $description .= ' <div class="name">'. l($forum->name, "forum/$forum->tid") ."</div>\n";
 
         if ($forum->description) {
-          $description .= ' <div class="description">'. check_plain($forum->description) ."</div>\n";
+          $description .= ' <div class="description">'. filter_xss_admin($forum->description) ."</div>\n";
         }
         $description .= "</div>\n";
 
@@ -952,7 +952,7 @@ function theme_forum_list($forums, $parents, $tid) {
         $description .= ' <div class="name">'. l($forum->name, "forum/$forum->tid") ."</div>\n";
 
         if ($forum->description) {
-          $description .= ' <div class="description">'. check_plain($forum->description) ."</div>\n";
+          $description .= ' <div class="description">'. filter_xss_admin($forum->description) ."</div>\n";
         }
         $description .= "</div>\n";
 
