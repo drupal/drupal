@@ -156,6 +156,11 @@ function drupal_get_form($form_id, &$form, $callback = NULL) {
 
 function drupal_validate_form($form_id, &$form, $callback = NULL) {
   global $form_values;
+  static $validated_forms = array();
+
+  if (isset($validated_forms[$form_id])) {
+    return;
+  }
 
   if (isset($form['#token'])) {
     if ($form_values['form_token'] != md5(session_id() . $form['#token'] . variable_get('drupal_private_key', ''))) {
@@ -165,6 +170,7 @@ function drupal_validate_form($form_id, &$form, $callback = NULL) {
   }
 
   _form_validate($form, $form_id);
+  $validated_forms[$form_id] = TRUE;
 }
 
 function drupal_submit_form($form_id, $form, $callback = NULL) {
