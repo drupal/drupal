@@ -1052,7 +1052,7 @@ function _menu_build() {
 
   // Now fetch items from the DB, reassigning menu IDs as needed.
   if (module_exist('menu')) {
-    $result = db_query('SELECT * FROM {menu} ORDER BY mid ASC');
+    $result = db_query(db_rewrite_sql('SELECT m.mid, m.* FROM {menu} m ORDER BY m.mid ASC', 'm', 'mid'));
     while ($item = db_fetch_object($result)) {
       // Handle URL aliases if entered in menu administration.
       if (!isset($_menu['path index'][$item->path])) {

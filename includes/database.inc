@@ -223,7 +223,7 @@ function db_queryd($query) {
  * @param $query
  *   Query to be rewritten.
  * @param $primary_table
- *   Name or alias of the table which has the primary key field for this query. Possible values are: comments, forum, node, term_data, vocabulary.
+ *   Name or alias of the table which has the primary key field for this query. Possible values are: comments, forum, node, menu, term_data, vocabulary.
  * @param $primary_field
  *   Name of the primary field.
  * @param $args
@@ -266,7 +266,7 @@ function _db_rewrite_sql($query = '', $primary_table = 'n', $primary_field = 'ni
  * @param $query
  *   Query to be rewritten.
  * @param $primary_table
- *   Name or alias of the table which has the primary key field for this query. Possible values are: comments, forum, node, term_data, vocabulary.
+ *   Name or alias of the table which has the primary key field for this query. Possible values are: comments, forum, node, menu, term_data, vocabulary.
  * @param $primary_field
  *   Name of the primary field.
  * @param $args
