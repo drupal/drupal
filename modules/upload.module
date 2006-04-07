@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.89 2006/04/06 15:30:19 killes Exp $
+// $Id: upload.module,v 1.90 2006/04/07 10:08:15 unconed Exp $
 
 /**
  * @file
@@ -640,6 +640,10 @@ function upload_js() {
   _upload_validate($node);
 
   $form = _upload_form($node);
+  foreach (module_implements('form_alter') as $module) {
+    $function = $module .'_form_alter';
+    $function('upload_js', $form);
+  }
   $form = form_builder('upload_js', $form);
   $output = theme('status_messages') . form_render($form);
 
