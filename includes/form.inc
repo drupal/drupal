@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.92 2006/04/07 13:00:37 killes Exp $
+// $Id: form.inc,v 1.93 2006/04/07 13:22:12 killes Exp $
 
 /**
  * @defgroup form Form generation
@@ -565,7 +565,7 @@ function form_options_flatten($array, $reset = TRUE) {
 function theme_select($element) {
   $select = '';
   $size = $element['#size'] ? ' size="' . $element['#size'] . '"' : '';
-  _form_set_class($element);
+  _form_set_class($element, array('form-select'));
   return theme('form_element', $element['#title'], '<select name="'. $element['#name'] .''. ($element['#multiple'] ? '[]' : '') .'"'. ($element['#multiple'] ? ' multiple="multiple" ' : '') . drupal_attributes($element['#attributes']) .' id="' . $element['#id'] .'" '. $size .'>'. form_select_options($element) .'</select>', $element['#description'], $element['#id'], $element['#required'], form_get_error($element));
 }
 
@@ -952,7 +952,7 @@ function theme_form($element) {
  *   A themed HTML string representing the textarea.
  */
 function theme_textarea($element) {
-  $class = array('textarea');
+  $class = array('form-textarea');
   if ($element['#resizable'] !== false) {
     drupal_add_js('misc/textarea.js');
     $class[] = 'resizable';
