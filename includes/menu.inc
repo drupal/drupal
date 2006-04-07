@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.115 2006/04/07 11:28:20 killes Exp $
+// $Id: menu.inc,v 1.116 2006/04/07 15:18:40 killes Exp $
 
 /**
  * @file
@@ -327,6 +327,10 @@ function menu_set_location($location) {
   global $_menu;
   $temp_id = min(array_keys($_menu['items'])) - 1;
   $prev_id = 0;
+
+  // Don't allow this function to change the actual current path, just the
+  // position in the menu tree.
+  $location[count($location) - 1]['path'] = $_GET['q'];
 
   foreach (array_reverse($location) as $item) {
     if (isset($_menu['path index'][$item['path']])) {
