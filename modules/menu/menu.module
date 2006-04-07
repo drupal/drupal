@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.70 2006/03/23 21:48:36 killes Exp $
+// $Id: menu.module,v 1.71 2006/04/07 09:47:15 killes Exp $
 
 /**
  * @file
@@ -343,7 +343,10 @@ function menu_edit_item_form($mid = 0) {
   }
   else {
     // This is an add form.
-    $item = array('mid' => 0, 'pid' => 1, 'weight' => 0, 'type' => MENU_CUSTOM_ITEM);
+    // The mid argument (if set) will be the default pid to use.
+    // Otherwise, we default to the "Navigation" menu (pid #1).
+    $default_pid = $mid ? $mid : 1;
+    $item = array('mid' => 0, 'pid' => $default_pid, 'weight' => 0, 'type' => MENU_CUSTOM_ITEM);
   }
 
   $form['title'] = array('#type' => 'textfield',
@@ -382,7 +385,6 @@ function menu_edit_item_form($mid = 0) {
   );
 
   // Generate a list of possible parents (not including this item or descendants).
-  // Default to "Navigation" menu for new items.
   $options = menu_parent_options($item['mid']);
   $form['pid'] = array('#type' => 'select',
     '#title' => t('Parent item'),
@@ -606,6 +608,7 @@ function menu_overview_tree() {
     if ($menu['items'][$mid]['type'] & MENU_CREATED_BY_ADMIN) {
       $operations[] = l(t('delete'), 'admin/menu/menu/delete/'. $mid);
     }
+    $operations[] = l(t('add item'), 'admin/menu/item/add/'. $mid);
     $table = theme('item_list', $operations);
     $table .= theme('table', $header, menu_overview_tree_rows($mid));
     $output .= theme('box', $title, $table);
