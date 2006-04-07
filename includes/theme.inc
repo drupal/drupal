@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.288 2006/04/06 02:35:57 unconed Exp $
+// $Id: theme.inc,v 1.289 2006/04/07 10:40:55 unconed Exp $
 
 /**
  * @file
@@ -439,7 +439,7 @@ function theme_maintenance_page($content, $messages = TRUE, $partial = FALSE) {
   $output .= '<h1>' . drupal_get_title() . '</h1>';
 
   if ($messages) {
-    $output .= theme('status_messages');    
+    $output .= theme('status_messages');
   }
 
   $output .= "\n<!-- begin content -->\n";
@@ -447,7 +447,7 @@ function theme_maintenance_page($content, $messages = TRUE, $partial = FALSE) {
   $output .= "\n<!-- end content -->\n";
 
   if (!$partial) {
-    $output .= '</body></html>';  
+    $output .= '</body></html>';
   }
 
   return $output;
