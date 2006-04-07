@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.117 2006/04/04 01:07:42 unconed Exp $
+// $Id: filter.module,v 1.118 2006/04/07 15:32:17 unconed Exp $
 
 /**
  * @file
@@ -1095,6 +1095,20 @@ function _filter_autop($text) {
     $output .= $chunk;
   }
   return $output;
+}
+
+/**
+ * Very permissive XSS/HTML filter for admin-only use.
+ *
+ * Use only for fields where it is impractical to use the 
+ * whole filter system, but where some (mainly inline) mark-up
+ * is desired (so check_plain() is not acceptable).
+ *
+ * Allows all tags that can be used inside an HTML body, save
+ * for scripts and styles. 
+ */
+function filter_xss_admin($string) {
+  return filter_xss($string, array('a', 'abbr', 'acronym', 'address', 'b', 'bdo', 'big', 'blockquote', 'br', 'caption', 'cite', 'code', 'col', 'colgroup', 'dd', 'del', 'dfn', 'div', 'dl', 'dt', 'em', 'h', 'h', 'h', 'h', 'h', 'h', 'hr', 'i', 'img', 'ins', 'kbd', 'li', 'object', 'ol', 'p', 'param', 'pre', 'q', 'samp', 'small', 'span', 'strong', 'sub', 'sup', 'table', 'tbody', 'td', 'tfoot', 'th', 'thead', 'tr', 'tt', 'ul', 'var'));
 }
 
 /**

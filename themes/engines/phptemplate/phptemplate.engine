@@ -1,5 +1,5 @@
 <?php
-// $Id: phptemplate.engine,v 1.31 2006/04/04 23:36:18 unconed Exp $
+// $Id: phptemplate.engine,v 1.32 2006/04/07 15:32:17 unconed Exp $
 
 /**
  * @file
@@ -143,7 +143,7 @@ function phptemplate_page($content) {
 
   /* Set title and breadcrumb to declared values */
   if (drupal_get_path_alias($_GET['q']) == variable_get('site_frontpage', 'node')) {
-    $mission = filter_xss(theme_get_setting('mission'));
+    $mission = filter_xss_admin(theme_get_setting('mission'));
   }
 
   /* Add favicon */
@@ -188,7 +188,7 @@ function phptemplate_page($content) {
     'breadcrumb'          => theme('breadcrumb', drupal_get_breadcrumb()),
     'closure'             => theme('closure'),
     'content'             => '<!-- begin content -->' . $content . '<!-- end content -->',
-    'footer_message'      => variable_get('site_footer', FALSE) . "\n" . theme('blocks', 'footer'),
+    'footer_message'      => filter_xss_admin(variable_get('site_footer', FALSE)) . "\n" . theme('blocks', 'footer'),
     'head'                => drupal_get_html_head(),
     'head_title'          => implode(' | ', $head_title),
     'help'                => theme('help'),

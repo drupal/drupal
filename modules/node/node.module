@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.625 2006/04/02 13:13:46 killes Exp $
+// $Id: node.module,v 1.626 2006/04/07 15:32:17 unconed Exp $
 
 /**
  * @file
@@ -48,7 +48,7 @@ function node_help($section) {
   }
 
   if (arg(0) == 'node' && arg(1) == 'add' && $type = arg(2)) {
-    return variable_get($type .'_help', '');
+    return filter_xss_admin(variable_get($type .'_help', ''));
   }
 }
 
