@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.71 2006/04/07 09:47:15 killes Exp $
+// $Id: menu.module,v 1.72 2006/04/07 11:34:09 unconed Exp $
 
 /**
  * @file
@@ -120,14 +120,14 @@ function menu_block($op = 'list', $delta = 0) {
     foreach ($root_menus as $mid => $title) {
       // Default "Navigation" block is handled by user.module.
       if ($mid != 1) {
-        $blocks[$mid]['info'] = $title;
+        $blocks[$mid]['info'] = check_plain($title);
       }
     }
     return $blocks;
   }
   else if ($op == 'view') {
     $item = menu_get_item($delta);
-    $data['subject'] = $item['title'];
+    $data['subject'] = check_plain($item['title']);
     $data['content'] = theme('menu_tree', $delta);
     return $data;
   }
@@ -611,7 +611,7 @@ function menu_overview_tree() {
     $operations[] = l(t('add item'), 'admin/menu/item/add/'. $mid);
     $table = theme('item_list', $operations);
     $table .= theme('table', $header, menu_overview_tree_rows($mid));
-    $output .= theme('box', $title, $table);
+    $output .= theme('box', check_plain($title), $table);
   }
   return $output;
 }
@@ -628,7 +628,7 @@ function menu_overview_tree_rows($pid = 0, $depth = 0) {
       $title = '';
       if ($pid == 0) {
         // Top-level items are menu names, and don't have an associated path.
-        $title .= $item['title'];
+        $title .= check_plain($item['title']);
       }
       else {
         $title .= l($item['title'], $item['path']);
