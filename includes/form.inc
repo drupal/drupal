@@ -154,7 +154,7 @@ function drupal_get_form($form_id, &$form, $callback = NULL) {
   return form_render($form);
 }
 
-function drupal_validate_form($form_id, &$form, $callback = NULL) {
+function drupal_validate_form($form_id, $form, $callback = NULL) {
   global $form_values;
   static $validated_forms = array();
 
