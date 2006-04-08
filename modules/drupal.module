@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal.module,v 1.118 2006/02/28 21:32:51 dries Exp $
+// $Id: drupal.module,v 1.119 2006/04/08 18:29:49 killes Exp $
 
 /**
  * @file
@@ -52,7 +52,7 @@ print drupal_client_page();
       return t('<p>Using this your site can "call home" to another Drupal server. By calling home to drupal.org and sending a list of your installed modules and themes, you help rank projects on drupal.org and so assist all Drupal administrators to find the best components for meeting their needs. If you want to register with a different server, you can change the Drupal XML-RPC server setting -- but the server has to be able to handle Drupal XML. Some XML-RPC servers may present directories of all registered sites. To get all your site information listed, go to the <a href="%site-settings">settings page</a> and set the site name, the e-mail address, the slogan, and the mission statement.</p>', array('%site-settings' => url('admin/settings')));
     case 'user/help#drupal':
       return variable_get('drupal_authentication_service', 0) ? t("<p><a href=\"%Drupal\">Drupal</a> is the name of the software that powers %this-site. There are Drupal web sites all over the world, and many of them share their registration databases so that users may freely log in to any Drupal site using a single <strong>Drupal ID</strong>.</p>
-<p>So please feel free to log in to your account here at %this-site with a username from another Drupal site. The format of a Drupal ID is similar to an e-mail address: <strong>username</strong>@<em>server</em>. An example of a valid Drupal ID is <strong>mwlily</strong>@<em>drupal.org</em>.</p>", array('%Drupal' => 'http://drupal.org', '%this-site' => '<em>'. variable_get('site_name', 'this web site') .'</em>')) : NULL;
+<p>So please feel free to log in to your account here at %this-site with a username from another Drupal site. The format of a Drupal ID is similar to an e-mail address: <strong>username</strong>@<em>server</em>. An example of a valid Drupal ID is <strong>mwlily</strong>@<em>drupal.org</em>.</p>", array('%Drupal' => 'http://drupal.org', '%this-site' => '<em>'. variable_get('site_name', 'this web site') .'</em>')) : '';
   }
 }
 
@@ -330,10 +330,12 @@ function drupal_auth($username, $password, $server) {
 function drupal_menu($may_cache) {
   $items = array();
   if ($may_cache) {
-    $items[] = array('path' => 'drupal', 'title' => t('Drupal'),
-      'callback' => 'drupal_page_help', 'access' => TRUE,
-      'type' => MENU_SUGGESTED_ITEM
-    );
+    if (variable_get('drupal_authentication_service', 0)) {
+      $items[] = array('path' => 'drupal', 'title' => t('Drupal'),
+        'callback' => 'drupal_page_help', 'access' => TRUE,
+        'type' => MENU_SUGGESTED_ITEM
+      );
+    }
   }
   return $items;
 }
