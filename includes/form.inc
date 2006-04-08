@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.94 2006/04/08 17:16:10 killes Exp $
+// $Id: form.inc,v 1.95 2006/04/08 17:18:25 killes Exp $
 
 /**
  * @defgroup form Form generation
@@ -154,7 +154,7 @@ function drupal_get_form($form_id, &$form, $callback = NULL) {
   return form_render($form);
 }
 
-function drupal_validate_form($form_id, &$form, $callback = NULL) {
+function drupal_validate_form($form_id, $form, $callback = NULL) {
   global $form_values;
   static $validated_forms = array();
 
