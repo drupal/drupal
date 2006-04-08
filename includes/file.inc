@@ -269,7 +269,7 @@ function file_check_upload($source = 'upload') {
  * @param $directory A string where the file should be located.
  * @return 0 for invalid path or the real path of the source.
  */
-function file_check_location($source, $directory = 0) {
+function file_check_location($source, $directory = '') {
   $check = realpath($source);
   if ($check) {
     $source = $check;
