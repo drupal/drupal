@@ -936,7 +936,7 @@ function system_modules() {
     $form['throttle'] = array('#type' => 'checkboxes', '#default_value' => $throttle, '#options' => $options);
     $throttle_required = array_merge($required, array('throttle'));
     foreach ($throttle_required as $require) {
-      $form['throttle'][$require] = array('#type' => 'hidden', '#value' => 1, '#suffix' => t('required'));
+      $form['throttle'][$require] = array('#type' => 'hidden', '#value' => 0, '#suffix' => t('required'));
     }
   }
 
