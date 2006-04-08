@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.70 2006/03/30 17:45:32 killes Exp $
+// $Id: file.inc,v 1.71 2006/04/08 18:39:26 killes Exp $
 
 /**
  * @file
@@ -269,7 +269,7 @@ function file_check_upload($source = 'upload') {
  * @param $directory A string where the file should be located.
  * @return 0 for invalid path or the real path of the source.
  */
-function file_check_location($source, $directory = 0) {
+function file_check_location($source, $directory = '') {
   $check = realpath($source);
   if ($check) {
     $source = $check;
