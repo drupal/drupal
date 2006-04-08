@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.222 2006/03/26 19:31:00 killes Exp $
+// $Id: statistics.module,v 1.223 2006/04/08 17:08:45 killes Exp $
 
 /**
  * @file
@@ -130,12 +130,12 @@ function statistics_menu($may_cache) {
       'type' => MENU_CALLBACK);
   }
   else {
-    if (arg(0) == 'user' && is_numeric(arg(1))) {
+    if (arg(0) == 'user' && is_numeric(arg(1)) && variable_get('statistics_enable_access_log', 0)) {
       $items[] = array('path' => 'user/'. arg(1) .'/track/navigation', 'title' => t('track page visits'),
         'callback' => 'statistics_user_tracker', 'access' => $access,
         'type' => MENU_LOCAL_TASK, 'weight' => 2);
     }
-    if (arg(0) == 'node' && is_numeric(arg(1))) {
+    if (arg(0) == 'node' && is_numeric(arg(1)) && variable_get('statistics_enable_access_log', 0)) {
       $items[] = array('path' => 'node/'. arg(1) .'/track', 'title' => t('track'),
         'callback' => 'statistics_node_tracker', 'access' => $access,
         'type' => MENU_LOCAL_TASK, 'weight' => 2);
