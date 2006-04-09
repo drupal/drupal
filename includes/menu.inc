@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.116 2006/04/07 15:18:40 killes Exp $
+// $Id: menu.inc,v 1.117 2006/04/09 21:44:42 killes Exp $
 
 /**
  * @file
@@ -596,8 +596,10 @@ function menu_rebuild() {
       }
     }
 
+    $old_count = -1;
     // Save the new items updating the pids in each iteration
-    while (count($new_items)) {
+    while (($c = count($new_items)) && ($c != $old_count)) {
+      $old_count = count($new_items);
       foreach($new_items as $mid => $item) {
         // If the item has a valid parent, save it
         if ($item['pid'] >= 0) {
