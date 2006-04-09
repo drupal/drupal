@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.603 2006/04/06 02:41:48 unconed Exp $
+// $Id: user.module,v 1.604 2006/04/09 08:48:50 killes Exp $
 
 /**
  * @file
@@ -883,7 +883,7 @@ function user_login($msg = '') {
     '#required' => TRUE,
     '#attributes' => array('tabindex' => '1'),
   );
-  if (count(user_auth_help_links()) > 0) {
+  if (variable_get('drupal_authentication_service', FALSE) && count(user_auth_help_links()) > 0) {
     $form['name']['#description'] = t('Enter your %s username, or an ID from one of our affiliates: %a.', array('%s' => variable_get('site_name', 'local'), '%a' => implode(', ', user_auth_help_links())));
   }
   else {
