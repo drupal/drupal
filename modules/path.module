@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.81 2006/03/08 15:43:36 dries Exp $
+// $Id: path.module,v 1.82 2006/04/09 22:17:40 unconed Exp $
 
 /**
  * @file
@@ -216,9 +216,11 @@ function path_nodeapi(&$node, $op, $arg) {
 
       case 'load':
         $path = "node/$node->nid";
-        $alias = drupal_get_path_alias($path);
-        if ($alias != $path) {
-          $node->path = $alias;
+        // We don't use drupal_get_path_alias() to avoid custom rewrite functions.
+        // We only care about exact aliases.
+        $result = db_query("SELECT dst FROM {url_alias} WHERE src = '%s'", $path);
+        if (db_num_rows($result)) {
+          $node->path = db_result($result);
         }
         break;
 
