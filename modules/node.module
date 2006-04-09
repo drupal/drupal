@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.627 2006/04/08 13:13:17 killes Exp $
+// $Id: node.module,v 1.628 2006/04/09 21:36:23 unconed Exp $
 
 /**
  * @file
@@ -1870,6 +1870,8 @@ function node_delete_confirm_submit($form_id, $form_values) {
   if ($form_values['confirm']) {
     node_delete($form_values['nid']);
   }
+
+  return '';
 }
 
 /**
