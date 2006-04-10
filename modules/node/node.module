@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.628 2006/04/09 21:36:23 unconed Exp $
+// $Id: node.module,v 1.629 2006/04/10 21:36:40 unconed Exp $
 
 /**
  * @file
@@ -408,10 +408,6 @@ function node_save(&$node) {
     // Insert a new node.
     $node->is_new = true;
 
-    // Set some required fields:
-    if (!$node->created) {
-      $node->created = time();
-    }
     $node->nid = db_next_id('{node}_nid');
     $node->vid = db_next_id('{node_revisions}_vid');;
   }
@@ -429,11 +425,12 @@ function node_save(&$node) {
     }
   }
 
-  // If node has never changed, set $node->changed to $node->created
-  // If we set $node->created to time(), then 'changed' and 'created' will be
-  // different for new nodes which were previewed before submission
+  // Set some required fields:
+  if (empty($node->created)) {
+    $node->created = time();
+  }
   // The changed timestamp is always updated for bookkeeping purposes (revisions, searching, ...)
-  $node->changed = $node->changed ? time() : $node->created;
+  $node->changed = time();
 
   // Split off revisions data to another structure
   $revisions_table_values = array('nid' => $node->nid, 'vid' => $node->vid,
@@ -1548,8 +1545,8 @@ function node_validate($node) {
       form_set_error('name', t('The username %name does not exist.', array ('%name' => theme('placeholder', $node->name))));
     }
 
-    // Validate the "authored on" field. As of PHP 5.1.O, strtotime returns FALSE instead of -1 upon failure.
-    if (strtotime($node->date) <= 0) {
+    // Validate the "authored on" field. As of PHP 5.1.0, strtotime returns FALSE instead of -1 upon failure.
+    if (!empty($node->date) && strtotime($node->date) <= 0) {
       form_set_error('date', t('You have to specify a valid date.'));
     }
   }
@@ -1629,15 +1626,9 @@ function node_form_array($node) {
     // Node author information
     $form['author'] = array('#type' => 'fieldset', '#title' => t('Authoring information'), '#collapsible' => TRUE, '#collapsed' => TRUE, '#weight' => 20);
     $form['author']['name'] = array('#type' => 'textfield', '#title' => t('Authored by'), '#maxlength' => 60, '#autocomplete_path' => 'user/autocomplete', '#default_value' => $node->name ? $node->name : '', '#weight' => -1, '#description' => t('Leave blank for %anonymous.', array('%anonymous' => theme('placeholder', variable_get('anonymous', 'Anonymous')))));
-    $form['author']['date'] = array('#type' => 'textfield', '#title' => t('Authored on'), '#maxlength' => 25);
-    // For new node creations only display a reference to the time of creation,
-    // so node creation time defaults to form submission time.
-    if (!isset($node->nid)) {
-      $form['author']['date']['#description'] = t('Format: %time (defaults to time of form submission)', array('%time' => $node->date));
-    }
-    else {
+    $form['author']['date'] = array('#type' => 'textfield', '#title' => t('Authored on'), '#maxlength' => 25, '#description' => t('Format: %time (leave blank to use the time of form submission)', array('%time' => $node->date)));
+    if (isset($node->nid)) {
       $form['author']['date']['#default_value'] = $node->date;
-      $form['author']['date']['#required'] = TRUE;
     }
 
     // Node options for administrators
@@ -2056,7 +2047,7 @@ function node_update_index() {
   variable_set('node_cron_comments_scale', 1.0 / max(1, db_result(db_query('SELECT MAX(comment_count) FROM {node_comment_statistics}'))));
   variable_set('node_cron_views_scale', 1.0 / max(1, db_result(db_query('SELECT MAX(totalcount) FROM {node_counter}'))));
 
-  $result = db_query_range('SELECT GREATEST(c.last_comment_timestamp, n.changed, n.created) as last_change, n.nid FROM {node} n LEFT JOIN {node_comment_statistics} c ON n.nid = c.nid WHERE n.status = 1 AND ((GREATEST(n.created, n.changed, c.last_comment_timestamp) = %d AND n.nid > %d) OR (n.created > %d OR n.changed > %d OR c.last_comment_timestamp > %d)) ORDER BY GREATEST(n.created, n.changed, c.last_comment_timestamp) ASC, n.nid ASC', $last, $last_nid, $last, $last, $last, 0, $limit);
+  $result = db_query_range('SELECT GREATEST(c.last_comment_timestamp, n.changed) as last_change, n.nid FROM {node} n LEFT JOIN {node_comment_statistics} c ON n.nid = c.nid WHERE n.status = 1 AND ((GREATEST(n.changed, c.last_comment_timestamp) = %d AND n.nid > %d) OR (n.changed > %d OR c.last_comment_timestamp > %d)) ORDER BY GREATEST(n.changed, c.last_comment_timestamp) ASC, n.nid ASC', $last, $last_nid, $last, $last, $last, 0, $limit);
 
   while ($node = db_fetch_object($result)) {
     $last_change = $node->last_change;
