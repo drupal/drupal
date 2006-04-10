@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.604 2006/04/09 08:48:50 killes Exp $
+// $Id: user.module,v 1.605 2006/04/10 19:11:25 unconed Exp $
 
 /**
  * @file
@@ -1146,7 +1146,7 @@ function user_register() {
 
   // Display the registration form.
   if (!$admin) {
-    $form['user_registration_help'] = array('#type' => 'markup', '#value' => variable_get('user_registration_help', ''));
+    $form['user_registration_help'] = array('#type' => 'markup', '#value' => filter_xss_admin(variable_get('user_registration_help', '')));
   }
   $affiliates = user_auth_help_links();
   if (!$admin && count($affiliates) > 0) {
