@@ -1,4 +1,4 @@
-// $Id: INSTALL.mysql.txt,v 1.4 2006/03/24 18:09:57 killes Exp $
+// $Id: INSTALL.mysql.txt,v 1.5 2006/04/10 13:45:28 unconed Exp $
 
 CONTENTS OF THIS FILE
 ---------------------
@@ -66,13 +66,20 @@ INSTALLATION AND CONFIGURATION
 2. LOAD THE DRUPAL DATABASE SCHEMA
 
    Once you have a database, you must load the required tables into it.
+   Depending on the version of MySQL you are using, you must use the
+   file 'database.4.0.mysql' (for MySQL 4.0 or lower) or
+   'database.4.1.mysql' (for MySQL 4.1 or higher). Both files are
+   located in Drupal's database directory.
 
    If you use a web-based control panel, you should be able to upload
-   the file 'database.mysql' from Drupal's 'database' directory and
-   run it directly as SQL commands.
+   the appropriate file and run it directly as SQL commands.
 
    From the command line, use (again, replacing 'username' and
    'databasename' with your MySQL username and database name):
 
-     mysql -u username -p databasename < database/database.mysql
+   for MySQL 4.0 or lower:
+     mysql -u username -p databasename < database/database.4.0.mysql
 
+   for MySQL 4.1 or higher:
+     mysql -u username -p databasename < database/database.4.1.mysql
+     
