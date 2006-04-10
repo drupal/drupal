@@ -25,6 +25,8 @@ Drupal x.x.x, xxxx-xx-xx (development version)
     * comment moderation has been removed.
 - node system:
     * reworked the revision functionality.
+    * removed the bookmarklet code. Third-party modules can now handle
+      this.
 - upgrade system:
     * allows contributed modules to plug into the upgrade system.
 - profiles:
