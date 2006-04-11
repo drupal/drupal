@@ -365,7 +365,7 @@ function theme_get_styles() {
  */
 
 /**
- * Format a dynamic text string for emphasised display in a placeholder.
+ * Format a dynamic text string for emphasized display in a placeholder.
  *
  * E.g. t('Added term %term', array('%term' => theme('placeholder', $term)))
  *

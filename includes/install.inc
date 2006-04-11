@@ -18,7 +18,7 @@ foreach (module_list() as $module) {
 
 
 /**
- * Returns an array of availiable schema versions for a module.
+ * Returns an array of available schema versions for a module.
  *
  * @param $module
  *   A module name.

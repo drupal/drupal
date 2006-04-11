@@ -336,7 +336,7 @@ function db_lock_table($table) {
 
 /**
  * Unlock all locked tables.
- * This function automatically commits a transation.
+ * This function automatically commits a transaction.
  */
 function db_unlock_tables() {
   db_query('COMMIT');

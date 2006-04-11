@@ -257,7 +257,7 @@ function xmlrpc_message_tag_close($parser, $tag) {
       }
     }
     else {
-      // Just add as a paramater
+      // Just add as a parameter
       $xmlrpc_message->params[] = $value;
     }
   }

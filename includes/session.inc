@@ -56,7 +56,7 @@ function sess_write($key, $value) {
     // Only save session data when when the browser sends a cookie.  This keeps
     // crawlers out of session table. This improves speed up queries, reduces
     // memory, and gives more useful statistics. We can't eliminate anonymous
-    // session table rows without breaking throttle modulee and "Who's Online"
+    // session table rows without breaking throttle module and "Who's Online"
     // block.
     if ($user->uid || $value || count($_COOKIE)) {
       db_query("INSERT INTO {sessions} (sid, uid, cache, hostname, session, timestamp) VALUES ('%s', %d, %d, '%s', '%s', %d)", $key, $user->uid, $user->cache, $_SERVER["REMOTE_ADDR"], $value, time());

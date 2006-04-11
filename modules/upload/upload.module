@@ -257,7 +257,7 @@ function _upload_validate(&$node) {
   if (is_array($node->files)) {
     // Update existing files with form data.
     foreach($node->files as $fid => $file) {
-      // Convert file to object for compatability
+      // Convert file to object for compatibility
       $file = (object)$file;
 
       // Validate new uploads.
@@ -449,7 +449,7 @@ function upload_save($node) {
   }
 
   foreach ($node->files as $fid => $file) {
-    // Convert file to object for compatability
+    // Convert file to object for compatibility
     $file = (object)$file;
 
     // Remove file. Process removals first since no further processing
