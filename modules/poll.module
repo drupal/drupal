@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.193 2006/04/06 15:30:19 killes Exp $
+// $Id: poll.module,v 1.194 2006/04/11 11:33:15 killes Exp $
 
 /**
  * @file
@@ -13,7 +13,7 @@
 function poll_help($section) {
   switch ($section) {
     case 'admin/help#poll':
-      $output = '<p>'. t('The poll module can be used to create simple polls for site users.  A poll is a simple multiple choice questionnaire which displays the cummulative results of the answers to the poll.  Having polls on the site is a good way to get instant feedback from community members.') .'</p>';
+      $output = '<p>'. t('The poll module can be used to create simple polls for site users.  A poll is a simple multiple choice questionnaire which displays the cumulative results of the answers to the poll.  Having polls on the site is a good way to get instant feedback from community members.') .'</p>';
       $output .= '<p>'. t('Users can create a poll. The title of the poll should be the question, then enter the answers and the "base" vote counts. You can also choose the time period over which the vote will run.The <a href="%poll">poll</a> item in the navigation menu will take you to a page where you can see all the current polls, vote on them (if you haven\'t already) and view the results.', array('%poll' => url('poll'))) .'</p>';
       $output .= t('<p>You can</p>
 <ul>

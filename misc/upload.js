@@ -1,4 +1,4 @@
-// $Id: upload.js,v 1.7 2006/03/09 23:20:24 unconed Exp $
+// $Id: upload.js,v 1.8 2006/04/11 11:33:15 killes Exp $
 
 // Global killswitch
 if (isJsEnabled()) {
@@ -14,7 +14,7 @@ function uploadAutoAttach() {
   for (i = 0; input = inputs[i]; i++) {
     if (input && hasClass(input, 'upload')) {
       var uri = input.value;
-      // Extract the button ID based on a subtring of the input name: edit[foo][bar] -> foo-bar
+      // Extract the button ID based on a substring of the input name: edit[foo][bar] -> foo-bar
       var button = input.name.substr(5, input.name.length - 6).replace('][', '-');
       var wrapper = button + '-wrapper';
       var hide = button + '-hide';

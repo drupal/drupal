@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.71 2006/04/08 18:39:26 killes Exp $
+// $Id: file.inc,v 1.72 2006/04/11 11:33:14 killes Exp $
 
 /**
  * @file
@@ -79,7 +79,7 @@ function file_create_path($dest = 0) {
  *   if it does not exist or made writable if it is read-only.
  * @param $form_item An optional string containing the name of a form item that
  *   any errors will be attached to. This is useful for settings forms that
- *   require the user to specify a writeable directory. If it can't be made to
+ *   require the user to specify a writable directory. If it can't be made to
  *   work, a form error will be set preventing them from saving the settings.
  * @return False when directory not found, or true when directory exists.
  */
@@ -120,7 +120,7 @@ function file_check_directory(&$directory, $mode = 0, $form_item = NULL) {
  *
  * @param $path A string containing a file path. This will be set to the
  *   directory's path.
- * @return If the directory is not in a Drupal writeable directory, FALSE is
+ * @return If the directory is not in a Drupal writable directory, FALSE is
  *   returned. Otherwise, the base name of the path is returned.
  */
 function file_check_path(&$path) {
@@ -481,7 +481,7 @@ function file_save_upload($source, $dest = false, $replace = FILE_EXISTS_RENAME)
   if ($file = file_check_upload($source)) {
 
     // This should be refactored, file_check_upload has already
-    // moved the file to the temprary folder.
+    // moved the file to the temporary folder.
     if (!$dest) {
       $dest = file_directory_temp();
       $temporary = 1;
@@ -578,7 +578,7 @@ function file_download() {
   $args = func_get_args();
   $filepath = implode('/', $args);
 
-  // Maintain compatability with old ?file=paths saved in node bodies.
+  // Maintain compatibility with old ?file=paths saved in node bodies.
   if (isset($_GET['file'])) {
     $filepath =  $_GET['file'];
   }

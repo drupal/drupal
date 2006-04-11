@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.95 2006/04/08 17:18:25 killes Exp $
+// $Id: form.inc,v 1.96 2006/04/11 11:33:14 killes Exp $
 
 /**
  * @defgroup form Form generation
@@ -573,7 +573,7 @@ function form_select_options($element, $choices = NULL) {
   if (!isset($choices)) {
     $choices = $element['#options'];
   }
-  // array_key_exists() accomodates the rare event where $element['#value'] is NULL.
+  // array_key_exists() accommodates the rare event where $element['#value'] is NULL.
   // isset() fails in this situation.
   $value_valid = isset($element['#value']) || array_key_exists('#value', $element);
   $value_is_array = is_array($element['#value']);
@@ -937,7 +937,7 @@ function theme_textfield($element) {
  *   A themed HTML string representing the form.
  */
 function theme_form($element) {
-  // Anonymous div to satisfy XHTML compliancy.
+  // Anonymous div to satisfy XHTML compliance.
   $action = $element['#action'] ? 'action="' . check_url($element['#action']) . '" ' : '';
   return '<form '. $action . ' method="'. $element['#method'] .'" '. 'id="'. $element['#id'] .'"'.  drupal_attributes($element['#attributes']) .">\n<div>". $element['#children'] ."\n</div></form>\n";
 }

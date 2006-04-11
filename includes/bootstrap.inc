@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.90 2006/04/01 14:53:03 killes Exp $
+// $Id: bootstrap.inc,v 1.91 2006/04/11 11:33:14 killes Exp $
 
 /**
  * @file
@@ -284,7 +284,7 @@ function cache_get($key) {
       $cache->data = db_decode_blob($cache->data);
     }
     // If enforcing a minimum cache lifetime, validate that the data is
-    // currenly valid for this user before we return it by making sure the
+    // currently valid for this user before we return it by making sure the
     // cache entry was created before the timestamp in the current session's
     // cache timer.  The cache variable is loaded into the $user object by
     // sess_read() in session.inc.
@@ -735,7 +735,7 @@ function _drupal_bootstrap($phase) {
 /**
  * Enables use of the theme system without requiring database access. Since
  * there is not database access no theme will be enabled and the default
- * themable fuctions will be called. Some themable functions can not be used
+ * themeable functions will be called. Some themeable functions can not be used
  * without the full Drupal API loaded. For example, theme_page() is
  * unavailable and theme_maintenance_page() must be used in its place.
  */

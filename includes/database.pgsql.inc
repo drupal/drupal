@@ -1,5 +1,5 @@
 <?php
-// $Id: database.pgsql.inc,v 1.27 2006/02/26 19:48:43 dries Exp $
+// $Id: database.pgsql.inc,v 1.28 2006/04/11 11:33:14 killes Exp $
 
 /**
  * @file
@@ -336,7 +336,7 @@ function db_lock_table($table) {
 
 /**
  * Unlock all locked tables.
- * This function automatically commits a transation.
+ * This function automatically commits a transaction.
  */
 function db_unlock_tables() {
   db_query('COMMIT');

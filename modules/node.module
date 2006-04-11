@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.629 2006/04/10 21:36:40 unconed Exp $
+// $Id: node.module,v 1.630 2006/04/11 11:33:15 killes Exp $
 
 /**
  * @file
@@ -1062,7 +1062,7 @@ function node_filter_form_submit() {
       if (isset($form_values['filter'])) {
         $filter = $form_values['filter'];
 
-        // Flatten the options array to accomodate hierarchical/nested options.
+        // Flatten the options array to accommodate hierarchical/nested options.
         $flat_options = form_options_flatten($filters[$filter]['options']);
 
         if (isset($flat_options[$form_values[$filter]])) {

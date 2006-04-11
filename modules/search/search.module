@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.173 2006/04/06 13:07:22 unconed Exp $
+// $Id: search.module,v 1.174 2006/04/11 11:33:15 killes Exp $
 
 /**
  * @file
@@ -1243,7 +1243,7 @@ function theme_search_item($item, $type) {
  *
  * Modules may implement hook_search_page() in order to override this default
  * function to display search results. In that case it is expected they provide
- * their own themable functions.
+ * their own themeable functions.
  *
  * @param $results
  *   All search result as returned by hook_search().

@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.289 2006/04/07 10:40:55 unconed Exp $
+// $Id: theme.inc,v 1.290 2006/04/11 11:33:14 killes Exp $
 
 /**
  * @file
@@ -365,7 +365,7 @@ function theme_get_styles() {
  */
 
 /**
- * Format a dynamic text string for emphasised display in a placeholder.
+ * Format a dynamic text string for emphasized display in a placeholder.
  *
  * E.g. t('Added term %term', array('%term' => theme('placeholder', $term)))
  *

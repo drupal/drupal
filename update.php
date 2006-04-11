@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.183 2006/04/04 22:00:51 unconed Exp $
+// $Id: update.php,v 1.184 2006/04/11 11:33:14 killes Exp $
 
 /**
  * @file
@@ -458,7 +458,7 @@ function update_progress_page_nojs() {
     // Error handling: if PHP dies, it will output whatever is in the output
     // buffer, followed by the error message.
     ob_start();
-    $fallback = '<p class="error">An unrecoverable error has occured. You can find the error message below. It is advised to copy it to the clipboard for reference. Please continue to the <a href="update.php?op=error">update summary</a>.</p><p class="error">';
+    $fallback = '<p class="error">An unrecoverable error has occurred. You can find the error message below. It is advised to copy it to the clipboard for reference. Please continue to the <a href="update.php?op=error">update summary</a>.</p><p class="error">';
     print theme('maintenance_page', $fallback, FALSE, TRUE);
 
     list($percentage, $message) = update_do_updates();
@@ -466,7 +466,7 @@ function update_progress_page_nojs() {
       $new_op = 'finished';
     }
 
-    // Updates succesful; remove fallback
+    // Updates successful; remove fallback
     ob_end_clean();
   }
   else {
@@ -609,7 +609,7 @@ function update_fix_access_table() {
 /**
  * Convert a single MySQL table to UTF-8.
  *
- * We change all text columns to their correspending binary type,
+ * We change all text columns to their corresponding binary type,
  * then back to text, but with a UTF-8 character set.
  * See: http://dev.mysql.com/doc/refman/4.1/en/charset-conversion.html
  */
@@ -654,7 +654,7 @@ function update_convert_table_utf8($table) {
 }
 
 // Some unavoidable errors happen because the database is not yet up-to-date.
-// Our custom error handler is not yet installed, so we just surpress them.
+// Our custom error handler is not yet installed, so we just suppress them.
 ini_set('display_errors', FALSE);
 
 include_once './includes/bootstrap.inc';

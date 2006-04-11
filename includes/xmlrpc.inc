@@ -1,5 +1,5 @@
 <?php
-// $Id: xmlrpc.inc,v 1.31 2005/12/27 18:42:49 unconed Exp $
+// $Id: xmlrpc.inc,v 1.32 2006/04/11 11:33:14 killes Exp $
 
 /*
   Drupal XML-RPC library. Based on the IXR - The Incutio XML-RPC Library - (c) Incutio Ltd 2002-2005
@@ -257,7 +257,7 @@ function xmlrpc_message_tag_close($parser, $tag) {
       }
     }
     else {
-      // Just add as a paramater
+      // Just add as a parameter
       $xmlrpc_message->params[] = $value;
     }
   }

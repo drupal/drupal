@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.5 2006/01/21 01:42:52 unconed Exp $
+// $Id: install.inc,v 1.6 2006/04/11 11:33:14 killes Exp $
 
 define('SCHEMA_UNINSTALLED', -1);
 define('SCHEMA_INSTALLED', 0);
@@ -18,7 +18,7 @@ foreach (module_list() as $module) {
 
 
 /**
- * Returns an array of availiable schema versions for a module.
+ * Returns an array of available schema versions for a module.
  *
  * @param $module
  *   A module name.

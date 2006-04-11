@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.532 2006/04/07 15:32:17 unconed Exp $
+// $Id: common.inc,v 1.533 2006/04/11 11:33:14 killes Exp $
 
 /**
  * @file
@@ -266,7 +266,7 @@ function drupal_not_found() {
     $return = menu_execute_active_handler();
   }
   else {
-    // Redirect to a non-existant menu item to make possible tabs disappear.
+    // Redirect to a non-existent menu item to make possible tabs disappear.
     menu_set_active_item('');
   }
 
@@ -294,7 +294,7 @@ function drupal_access_denied() {
     $return = menu_execute_active_handler();
   }
   else {
-    // Redirect to a non-existant menu item to make possible tabs disappear.
+    // Redirect to a non-existent menu item to make possible tabs disappear.
     menu_set_active_item('');
   }
 

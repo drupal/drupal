@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.223 2006/04/08 17:08:45 killes Exp $
+// $Id: statistics.module,v 1.224 2006/04/11 11:33:15 killes Exp $
 
 /**
  * @file
@@ -33,7 +33,7 @@ function statistics_help($section) {
 ');
       $output .= t('<p>You can</p>
 <ul>
-<li>administer statistics <a href="%admin-settings-statistics">administer &gt;&gt; setttings &gt;&gt; statistics</a>.</li>
+<li>administer statistics <a href="%admin-settings-statistics">administer &gt;&gt; settings &gt;&gt; statistics</a>.</li>
 <li>access statistics logs <a href="%admin-logs">administer &gt;&gt; logs</a>.</li>
 <li>view recent hits <a href="%admin-logs-hits">administer &gt;&gt; logs &gt;&gt; recent hits</a>.</li>
 <li>enable \'popular content\' block in block administration <a href="%admin-block">administer &gt;&gt; blocks </a> but only after you have enabled \'Count content views\' in settings.</li>

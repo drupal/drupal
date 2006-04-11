@@ -1,5 +1,5 @@
 <?php
-// $Id: xmlrpcs.inc,v 1.18 2005/12/10 19:26:47 dries Exp $
+// $Id: xmlrpcs.inc,v 1.19 2006/04/11 11:33:14 killes Exp $
 
 function xmlrpc_server($callbacks) {
   $xmlrpc_server = new stdClass();
@@ -231,7 +231,7 @@ function xmlrpc_server_call($xmlrpc_server, $methodname, $args) {
   // Perform the callback and send the response
 /*
   if (count($args) == 1) {
-    // If only one paramater just send that instead of the whole array
+    // If only one parameter just send that instead of the whole array
     $args = $args[0];
   }
 */
