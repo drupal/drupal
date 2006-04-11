@@ -1028,7 +1028,6 @@ function system_site_settings($module = NULL) {
  * Menu callback; display theme configuration for entire site and individual themes.
  */
 function system_theme_settings($key = '') {
-  init_theme();
   $directory_path = file_directory_path();
   file_check_directory($directory_path, FILE_CREATE_DIRECTORY, 'file_directory_path');
 
