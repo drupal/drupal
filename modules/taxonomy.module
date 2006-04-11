@@ -786,6 +786,9 @@ function taxonomy_node_save($nid, $terms) {
           }
         }
       }
+      else if (is_object($term)) {
+        db_query('INSERT INTO {term_node} (nid, tid) VALUES (%d, %d)', $nid, $term->tid);
+      }
       else if ($term) {
         db_query('INSERT INTO {term_node} (nid, tid) VALUES (%d, %d)', $nid, $term);
       }
