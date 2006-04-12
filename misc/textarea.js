@@ -1,18 +1,26 @@
 // $Id$
 
 if (isJsEnabled()) {
-  addLoadEvent(function() {
-    // Attach to all visible textareas
+  addLoadEvent(textAreaInit);
+}
+
+function textAreaInit(parent) {
+  if (typeof parent == 'undefined') {
+    // Attach to all visible textareas.
     textareas = document.getElementsByTagName('textarea');
-    var textarea;
-    for (var i = 0; textarea = textareas[i]; ++i) {
-      if (hasClass(textarea, 'resizable')) {
-        if (typeof dimensions(textarea).width != 'undefined' && dimensions(textarea).width != 0) {
-          new textArea(textarea);
-        }
+  }
+  else {
+    // Attach to all visible textareas inside parent.
+    textareas = parent.getElementsByTagName('textarea');
+  }
+  var textarea;
+  for (var i = 0; textarea = textareas[i]; ++i) {
+    if (hasClass(textarea, 'resizable') && !hasClass(textarea.nextSibling, 'grippie')) {
+      if (typeof dimensions(textarea).width != 'undefined' && dimensions(textarea).width != 0) {
+        new textArea(textarea);
       }
     }
-  });
+  }
 }
 
 function textArea(element) {
