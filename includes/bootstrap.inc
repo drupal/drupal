@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.92 2006/04/12 08:42:47 unconed Exp $
+// $Id: bootstrap.inc,v 1.93 2006/04/12 20:58:09 unconed Exp $
 
 /**
  * @file
@@ -195,7 +195,7 @@ function drupal_get_filename($type, $name, $filename = NULL) {
     $files[$type][$name] = $file;
   }
   else {
-    $config = conf_init();
+    $config = conf_path();
     $dir = (($type == 'theme_engine') ? 'themes/engines' : "${type}s");
     $file = (($type == 'theme_engine') ? "$name.engine" : "$name.$type");
 
