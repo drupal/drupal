@@ -195,7 +195,7 @@ function drupal_get_filename($type, $name, $filename = NULL) {
     $files[$type][$name] = $file;
   }
   else {
-    $config = conf_init();
+    $config = conf_path();
     $dir = (($type == 'theme_engine') ? 'themes/engines' : "${type}s");
     $file = (($type == 'theme_engine') ? "$name.engine" : "$name.$type");
 
