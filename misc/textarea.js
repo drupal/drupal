@@ -1,18 +1,26 @@
-// $Id: textarea.js,v 1.6 2006/03/09 23:20:24 unconed Exp $
+// $Id: textarea.js,v 1.7 2006/04/12 16:07:39 unconed Exp $
 
 if (isJsEnabled()) {
-  addLoadEvent(function() {
-    // Attach to all visible textareas
+  addLoadEvent(textAreaInit);
+}
+
+function textAreaInit(parent) {
+  if (typeof parent == 'undefined') {
+    // Attach to all visible textareas.
     textareas = document.getElementsByTagName('textarea');
-    var textarea;
-    for (var i = 0; textarea = textareas[i]; ++i) {
-      if (hasClass(textarea, 'resizable')) {
-        if (typeof dimensions(textarea).width != 'undefined' && dimensions(textarea).width != 0) {
-          new textArea(textarea);
-        }
+  }
+  else {
+    // Attach to all visible textareas inside parent.
+    textareas = parent.getElementsByTagName('textarea');
+  }
+  var textarea;
+  for (var i = 0; textarea = textareas[i]; ++i) {
+    if (hasClass(textarea, 'resizable') && !hasClass(textarea.nextSibling, 'grippie')) {
+      if (typeof dimensions(textarea).width != 'undefined' && dimensions(textarea).width != 0) {
+        new textArea(textarea);
       }
     }
-  });
+  }
 }
 
 function textArea(element) {
