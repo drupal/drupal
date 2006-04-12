@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.93 2006/04/12 20:58:09 unconed Exp $
+// $Id: bootstrap.inc,v 1.94 2006/04/12 21:39:15 unconed Exp $
 
 /**
  * @file
@@ -135,7 +135,7 @@ function conf_path() {
  * Loads the configuration and sets the base URL correctly.
  */
 function conf_init() {
-  global $db_url, $db_prefix, $base_url, $base_path, $base_root;
+  global $db_url, $db_prefix, $base_url, $base_path, $base_root, $conf;
 
   $conf = array();
   require_once './'. conf_path() .'/settings.php';
