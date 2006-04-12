@@ -1,5 +1,5 @@
 <?php
-// $Id: settings.php,v 1.24 2006/01/08 12:10:12 dries Exp $
+// $Id: settings.php,v 1.25 2006/04/12 08:42:47 unconed Exp $
 
 /**
  * @file
@@ -87,9 +87,14 @@ $db_url = 'mysql://username:password@localhost/databasename';
 $db_prefix = '';
 
 /**
- * Base URL:
+ * Base URL (optional).
  *
- * The URL to your Drupal installation.
+ * If you are experiencing issues with different site domains,
+ * uncomment the Base URL statement below (remove the leading hash sign)
+ * and fill in the URL to your Drupal installation.
+ *
+ * You might also want to force users to use a given domain.
+ * See the .htaccess file for more information.
  *
  * Examples:
  *   $base_url = 'http://www.example.com';
@@ -100,7 +105,7 @@ $db_prefix = '';
  * It is not allowed to have a trailing slash; Drupal will add it
  * for you.
  */
-$base_url = 'http://www.example.com';  // NO trailing slash!
+# $base_url = 'http://www.example.com';  // NO trailing slash!
 
 /**
  * PHP settings:
@@ -132,10 +137,12 @@ ini_set('url_rewriter.tags',        '');
  * useful in a configuration file for a vhost or directory, rather than
  * the default settings.php. Any configuration setting from the 'variable'
  * table can be given a new value.
+ *
+ * Remove the leading hash signs to enable.
  */
-//$conf = array(
-//  'site_name' => 'My Drupal site',
-//  'theme_default' => 'pushbutton',
-//  'anonymous' => 'Visitor'
-//);
+# $conf = array(
+#   'site_name' => 'My Drupal site',
+#   'theme_default' => 'pushbutton',
+#   'anonymous' => 'Visitor'
+# );
 

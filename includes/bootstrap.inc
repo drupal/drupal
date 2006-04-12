@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.91 2006/04/11 11:33:14 killes Exp $
+// $Id: bootstrap.inc,v 1.92 2006/04/12 08:42:47 unconed Exp $
 
 /**
  * @file
@@ -80,7 +80,7 @@ function timer_stop($name) {
 }
 
 /**
- * Locate the appropriate configuration file.
+ * Find the appropriate configuration directory.
  *
  * Try finding a matching configuration directory by stripping the website's
  * hostname from left to right and pathname from right to left. The first
@@ -108,7 +108,7 @@ function timer_stop($name) {
  *
  * 13. $confdir/default
  */
-function conf_init() {
+function conf_path() {
   static $conf = '';
 
   if ($conf) {
@@ -129,6 +129,37 @@ function conf_init() {
   }
   $conf = "$confdir/default";
   return $conf;
+}
+
+/**
+ * Loads the configuration and sets the base URL correctly.
+ */
+function conf_init() {
+  global $db_url, $db_prefix, $base_url, $base_path, $base_root;
+
+  $conf = array();
+  require_once './'. conf_path() .'/settings.php';
+
+  if (isset($base_url)) {
+    // Parse fixed base URL from settings.php.
+    $parts = parse_url($base_url);
+    $base_path = isset($parts['path']) ? $parts['path'] . '/' : '/';
+    // Build $base_root (everything until first slash after "scheme://").
+    $base_root = substr($base_url, 0, strlen($base_url) - strlen($parts['path']));
+  }
+  else {
+    // Create base URL
+    $base_root = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http';
+    $base_url = $base_root .= '://'. $_SERVER['HTTP_HOST'];
+    if ($dir = trim(dirname($_SERVER['SCRIPT_NAME']), '\,/')) {
+      $base_path = "/$dir";
+      $base_url .= $base_path;
+      $base_path .= '/';
+    }
+    else {
+      $base_path = '/';
+    }
+  }
 }
 
 /**
@@ -387,12 +418,12 @@ function cache_clear_all($cid = NULL, $wildcard = false) {
  * get cached either.
  */
 function page_get_cache() {
-  global $user, $base_url;
+  global $user, $base_root;
 
   $cache = NULL;
 
   if (!$user->uid && $_SERVER['REQUEST_METHOD'] == 'GET' && count(drupal_set_message()) == 0) {
-    $cache = cache_get($base_url . request_uri());
+    $cache = cache_get($base_root . request_uri());
 
     if (empty($cache)) {
       ob_start();
@@ -589,11 +620,14 @@ function request_uri() {
  *   A link to associate with the message.
  */
 function watchdog($type, $message, $severity = WATCHDOG_NOTICE, $link = NULL) {
-  global $user;
+  global $user, $base_root;
 
   $current_db = db_set_active();
 
-  db_query("INSERT INTO {watchdog} (uid, type, message, severity, link, location, referer, hostname, timestamp) VALUES (%d, '%s', '%s', %d, '%s', '%s', '%s', '%s', %d)", $user->uid, $type, $message, $severity, $link, request_uri(), referer_uri(), $_SERVER['REMOTE_ADDR'], time());
+  // Note: log the exact, entire absolute URL.
+  $request_uri = $base_root . request_uri();
+
+  db_query("INSERT INTO {watchdog} (uid, type, message, severity, link, location, referer, hostname, timestamp) VALUES (%d, '%s', '%s', %d, '%s', '%s', '%s', '%s', %d)", $user->uid, $type, $message, $severity, $link, $request_uri, referer_uri(), $_SERVER['REMOTE_ADDR'], time());
 
   if ($current_db) {
     db_set_active($current_db);
@@ -686,13 +720,10 @@ function _drupal_bootstrap($phase) {
 
   switch ($phase) {
     case DRUPAL_BOOTSTRAP_DATABASE:
-      global $db_url, $db_prefix, $base_url, $base_path;
-      $conf = array();
-      require_once './' . conf_init() .'/settings.php';
-      require_once './includes/database.inc';
+      // Initialize the configuration
+      conf_init();
       // Initialize the default database.
-      $parts = parse_url($base_url);
-      $base_path = (isset($parts['path']) ? $parts['path'] . '/' : '/');
+      require_once './includes/database.inc';
       db_set_active();
       break;
 

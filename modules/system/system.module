@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.310 2006/04/11 17:18:55 killes Exp $
+// $Id: system.module,v 1.311 2006/04/12 08:42:47 unconed Exp $
 
 /**
  * @file
@@ -673,7 +673,7 @@ function system_default_region($theme) {
  *   An array of file objects of the specified type.
  */
 function system_listing($mask, $directory, $key = 'name', $min_depth = 1) {
-  $config = conf_init();
+  $config = conf_path();
   $searchdir = array($directory);
   $files = array();
 

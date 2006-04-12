@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.533 2006/04/11 11:33:14 killes Exp $
+// $Id: common.inc,v 1.534 2006/04/12 08:42:47 unconed Exp $
 
 /**
  * @file
@@ -1322,7 +1322,7 @@ function _drupal_bootstrap_full() {
  * @see drupal_page_header
  */
 function page_set_cache() {
-  global $user, $base_url;
+  global $user, $base_root;
 
   if (!$user->uid && $_SERVER['REQUEST_METHOD'] == 'GET') {
     // This will fail in some cases, see page_get_cache() for the explanation.
@@ -1342,7 +1342,7 @@ function page_set_cache() {
       }
       ob_end_flush();
       if ($cache && $data) {
-        cache_set($base_url . request_uri(), $data, CACHE_TEMPORARY, drupal_get_headers());
+        cache_set($base_root . request_uri(), $data, CACHE_TEMPORARY, drupal_get_headers());
       }
     }
   }

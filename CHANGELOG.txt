@@ -61,6 +61,9 @@ Drupal x.x.x, xxxx-xx-xx (development version)
     * added support for external URLs.
 - queue module:
     * removed from core.
+- HTTP handling:
+    * added support for a tolerant Base URL.
+    * output URIs relative to the root, without a base tag.
 
 Drupal 4.6.6, 2006-03-13
 ------------------------
