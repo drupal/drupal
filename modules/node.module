@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.630 2006/04/11 11:33:15 killes Exp $
+// $Id: node.module,v 1.631 2006/04/12 17:06:57 unconed Exp $
 
 /**
  * @file
@@ -1750,10 +1750,11 @@ function node_preview($node) {
       $node->name = $user->name;
     }
 
-    // Set the created time when needed:
-    if (empty($node->created)) {
-      $node->created = time();
+    // Set the timestamps when needed:
+    if ($node->date) {
+      $node->created = strtotime($node->date);
     }
+    $node->changed = time();
 
     // Extract a teaser, if it hasn't been set (e.g. by a module-provided
     // 'teaser' form item).
