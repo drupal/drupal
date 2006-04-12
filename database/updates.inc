@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.220 2006/03/26 14:06:06 killes Exp $
+// $Id: updates.inc,v 1.221 2006/04/12 14:08:43 unconed Exp $
 
 function system_update_110() {
   $ret = array();
@@ -1762,6 +1762,32 @@ function _update_178_url_fix($text) {
   return $text != $old ? $text : FALSE;
 }
 
+function _update_178_url_formats() {
+  $formats = array();
+
+  // Any format with the HTML filter in it
+  $result = db_query("SELECT format FROM {filters} WHERE module = 'filter' AND delta = 0");
+  while ($format = db_fetch_object($result)) {
+    $formats[$format->format] = true;
+  }
+
+  // Any format with only the linebreak filter in it
+  $result = db_query("SELECT format FROM {filters} WHERE module = 'filter' AND delta = 2");
+  while ($format = db_fetch_object($result)) {
+    if (db_result(db_query('SELECT COUNT(*) FROM {filters} WHERE format = %d', $format->format)) == 1) {
+      $formats[$format->format] = true;
+    }
+  }
+
+  // Any format with 'HTML' in its name
+  $result = db_query("SELECT format FROM {filter_formats} WHERE name LIKE '%HTML%'");
+  while ($format = db_fetch_object($result)) {
+    $formats[$format->format] = true;
+  }
+
+  return $formats;
+}
+
 /**
  * Update base paths for relative URLs in node and comment content.
  */
@@ -1771,28 +1797,7 @@ function system_update_178() {
     // Multi-part update
     if (!isset($_SESSION['system_update_178_comment'])) {
       // Check which formats need to be converted
-      $formats = array();
-
-      // Any format with the HTML filter in it
-      $result = db_query("SELECT format FROM {filters} WHERE module = 'filter' AND delta = 0");
-      while ($format = db_fetch_object($result)) {
-        $formats[$format->format] = true;
-      }
-
-      // Any format with only the linebreak filter in it
-      $result = db_query("SELECT format FROM {filters} WHERE module = 'filter' AND delta = 2");
-      while ($format = db_fetch_object($result)) {
-        if (db_result(db_query('SELECT COUNT(*) FROM {filters} WHERE format = %d', $format->format)) == 1) {
-          $formats[$format->format] = true;
-        }
-      }
-
-      // Any format with 'HTML' in its name
-      $result = db_query("SELECT format FROM {filter_formats} WHERE name LIKE '%HTML%'");
-      while ($format = db_fetch_object($result)) {
-        $formats[$format->format] = true;
-      }
-
+      $formats = _update_178_url_formats();
       if (count($formats) == 0) {
         return array();
       }
@@ -1864,6 +1869,97 @@ function system_update_178() {
         ($_SESSION['system_update_178_comment'] + $_SESSION['system_update_178_node']) /
         ($_SESSION['system_update_178_comment_max'] + $_SESSION['system_update_178_node_max'])
       );
+    }
+  }
+
+  return array();
+}
+
+/**
+ * Update base paths for relative URLs in custom blocks, profiles and various variables.
+ */
+function system_update_179() {
+
+  if (variable_get('clean_url', 0) == 1) {
+    // Multi-part update
+    if (!isset($_SESSION['system_update_179_uid'])) {
+      // Check which formats need to be converted
+      $formats = _update_178_url_formats();
+      if (count($formats) == 0) {
+        return array();
+      }
+
+      // Custom Blocks (too small for multipart)
+      $format_string = '('. substr(str_repeat('%d, ', count($formats)), 0, -2) .')';
+      $result = db_query("SELECT bid, body FROM {boxes} WHERE format IN ". $format_string, array_keys($formats));
+      while ($block = db_fetch_object($result)) {
+        $block->body = _update_178_url_fix($block->body);
+        if ($block->body !== FALSE) {
+          db_query("UPDATE {boxes} SET body = '%s' WHERE bid = %d", $block->body, $block->bid);
+        }
+      }
+
+      // Variables (too small for multipart)
+      $vars = array('site_mission', 'site_footer', 'user_registration_help');
+      foreach (node_get_types() as $type => $name) {
+        $vars[] = $type .'_help';
+      }
+      foreach ($vars as $var) {
+        $value = variable_get($var, NULL);
+        if (!is_null($value)) {
+          $value = _update_178_url_fix($value);
+          if ($value !== FALSE) {
+            variable_set($var, $value);
+          }
+        }
+      }
+
+      // See if profiles need to be updated: is the default format HTML?
+      if (!isset($formats[variable_get('filter_default_format', 1)])) {
+        return array();
+      }
+      $result = db_query("SELECT fid FROM {profile_fields} WHERE type = 'textarea'");
+      $fields = array();
+      while ($field = db_fetch_object($result)) {
+        $fields[] = $field->fid;
+      }
+      if (count($fields) == 0) {
+        return array();
+      }
+
+      // Begin multi-part update for profiles
+      $_SESSION['system_update_179_fields'] = $fields;
+      $_SESSION['system_update_179_field_string'] = '('. substr(str_repeat('%d, ', count($fields)), 0, -2) .')';
+      $_SESSION['system_update_179_uid'] = 0;
+      $_SESSION['system_update_179_fid'] = 0;
+      $_SESSION['system_update_179_max'] = db_result(db_query('SELECT MAX(uid) FROM {profile_values} WHERE fid IN '. $_SESSION['system_update_179_field_string'], $_SESSION['system_update_179_fields']));
+    }
+
+    // Fetch next 20 profile values to convert
+    $limit = 20;
+    $args = array_merge(array($_SESSION['system_update_179_uid'], $_SESSION['system_update_179_fid'], $_SESSION['system_update_179_uid']), $_SESSION['system_update_179_fields']);
+    $result = db_query_range("SELECT fid, uid, value FROM {profile_values} WHERE ((uid = %d AND fid > %d) OR uid > %d) AND fid IN ". $_SESSION['system_update_179_field_string'] .' ORDER BY uid ASC, fid ASC', $args, 0, $limit);
+    while ($field = db_fetch_object($result)) {
+      $_SESSION['system_update_179_uid'] = $field->uid;
+      $_SESSION['system_update_179_fid'] = $field->fid;
+      $field->value = _update_178_url_fix($field->value);
+      if ($field->value !== FALSE) {
+        db_query("UPDATE {profile_values} SET value = '%s' WHERE uid = %d AND fid = %d", $field->value, $field->uid, $field->fid);
+      }
+      
+    }
+
+    // Done?
+    if (db_num_rows($result) == 0) {
+      unset($_SESSION['system_update_179_uid']);
+      unset($_SESSION['system_update_179_fid']);
+      unset($_SESSION['system_update_179_max']);
+      return array();
+    }
+    else {
+      // Report percentage finished
+      // (Note: make sure we complete all fields for the last user by not reporting 100% too early)
+      return array('#finished' => $_SESSION['system_update_179_uid'] / ($_SESSION['system_update_179_max'] + 1));
     }
   }
 
