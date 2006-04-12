@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.311 2006/04/12 08:42:47 unconed Exp $
+// $Id: system.module,v 1.312 2006/04/12 19:36:51 unconed Exp $
 
 /**
  * @file
@@ -100,8 +100,8 @@ function system_menu($may_cache) {
       'type' => MENU_CALLBACK);
 
     // Clean URL tester
-    $items[] = array('path' => 'system/test',
-      'callback' => 'system_test',
+    $items[] = array('path' => 'system/test-clean-url',
+      'callback' => 'system_test_clean_url',
       'access' => TRUE,
       'type' => MENU_CALLBACK);
 
@@ -153,11 +153,12 @@ function system_menu($may_cache) {
 }
 
 /**
- * Menu callback: dummy clean URL tester.
+ * Menu callback: dummy clean URL tester and reset.
+ *
+ * When used as form #pre_render, it will reset the test variable.
  */
-function system_test() {
-  variable_set('clean_url_ok', 1);
-  exit;
+function system_test_clean_url($form_id) {
+  variable_set('clean_url_ok', $form_id != 'system_settings_form');
 }
 
 /**
@@ -273,10 +274,10 @@ function system_view_general() {
     '#description' => t('This option makes Drupal emit clean URLs (i.e. without <code>?q=</code> in the URL). You\'ll need <code>ModRewrite</code> support for this to work. See the <code>.htaccess</code> file in Drupal\'s top-level directory for more information.')
   );
 
-  variable_set('clean_url_ok', 0);
   global $base_url;
   // We will use a random URL so there is no way a proxy or a browser could cache the "no such image" answer.
-  $form['general']['clean_url_test'] = array('#type' => 'markup', '#value' => '<img style="position: relative; left: -1000em;" src="'. $base_url. '/system/test/'. user_password(20) .'.png" alt="" />');
+  $form['general']['clean_url_test'] = array('#type' => 'markup', '#value' => '<img style="position: relative; left: -1000em;" src="'. $base_url. '/system/test-clean-url/'. user_password(20) .'.png" alt="" />');
+  $form['#pre_render'] = array('system_test_clean_url');
 
   // Error handling:
 
@@ -753,6 +754,12 @@ function system_theme_settings_submit($form_id, $values) {
 function system_settings_form_submit($form_id, $values) {
   $op = isset($_POST['op']) ? $_POST['op'] : '';
 
+  // Do the clean url validation, changing the form property if it doesn't work.
+  if ($values['clean_url'] && !variable_get('clean_url_ok', 0)) {
+    drupal_set_message(t('It appears your host is not configured correctly for Clean URLs. Please check for <code>ModRewrite</code> support with your administrator.'), 'error');
+    $values['clean_url'] = 0;
+  }
+
   foreach ($values as $key => $value) {
     if ($op == t('Reset to defaults')) {
       variable_del($key);
@@ -772,21 +779,6 @@ function system_settings_form_submit($form_id, $values) {
   }
   menu_rebuild();
 }
-
-/**
- * Do the clean url validation, changing the form property if it doesn't work.
- */
-function system_settings_validate($form_id, &$form) {
- #TODO .. fix here.
- if ($edit['clean_url'] && !variable_get('clean_url_ok', 0)) {
-   drupal_set_message(t('It appears your host is not configured correctly for Clean URLs. Please check for <code>ModRewrite</code> support with your administrator.'), 'error');
-   $edit['clean_url'] = 0;
- }
-
-}
-
-
-
 
 /**
  * Menu callback; displays a listing of all themes.
