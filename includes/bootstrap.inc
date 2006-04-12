@@ -135,7 +135,7 @@ function conf_path() {
  * Loads the configuration and sets the base URL correctly.
  */
 function conf_init() {
-  global $db_url, $db_prefix, $base_url, $base_path, $base_root;
+  global $db_url, $db_prefix, $base_url, $base_path, $base_root, $conf;
 
   $conf = array();
   require_once './'. conf_path() .'/settings.php';
