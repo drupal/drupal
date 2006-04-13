@@ -79,12 +79,6 @@ function book_menu($may_cache) {
 
   if ($may_cache) {
     $items[] = array(
-      'path' => 'book',
-      'title' => t('books'),
-      'access' => user_access('access content'),
-      'type' => MENU_NORMAL_ITEM,
-      'weight' => 5);
-    $items[] = array(
       'path' => 'node/add/book',
       'title' => t('book page'),
       'access' => user_access('create book pages'));
