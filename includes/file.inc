@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.72 2006/04/11 11:33:14 killes Exp $
+// $Id: file.inc,v 1.73 2006/04/13 14:47:11 killes Exp $
 
 /**
  * @file
@@ -186,24 +186,17 @@ function file_check_upload($source = 'upload') {
     // lower level system error occurred.
     switch ($_FILES["edit"]["error"][$source]) {
 
-      // We are not actually using the constants since they weren't introduced
-      // until php 4.3.0.
-
-      // UPLOAD_ERR_OK: File uploaded successfully
-      case 0:
+      // @see http://php.net/manual/en/features.file-upload.errors.php
+      case UPLOAD_ERR_OK:
         break;
 
-       // UPLOAD_ERR_INI_SIZE: File size exceeded php.ini value
-      case 1:
-      // UPLOAD_ERR_FORM_SIZE: File size exceeded MAX_FILE_SIZE form value
-      case 2:
+      case UPLOAD_ERR_INI_SIZE:
+      case UPLOAD_ERR_FORM_SIZE:
         drupal_set_message(t('The file %file could not be saved, because it exceeds the maximum allowed size for uploads.', array('%file' => theme('placeholder', $source))), 'error');
         return 0;
 
-      // UPLOAD_ERR_PARTIAL: File was only partially uploaded
-      case 3:
-      // UPLOAD_ERR_NO_FILE: No file was uploaded
-      case 4:
+      case UPLOAD_ERR_PARTIAL:
+      case UPLOAD_ERR_NO_FILE:
         drupal_set_message(t('The file %file could not be saved, because the upload did not complete.', array('%file' => theme('placeholder', $source))), 'error');
         return 0;
 
