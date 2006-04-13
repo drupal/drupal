@@ -1,4 +1,4 @@
--- $Id: database.pgsql,v 1.171 2006/03/04 18:12:10 dries Exp $
+-- $Id: database.pgsql,v 1.172 2006/04/13 10:42:01 killes Exp $
 
 -- Do not show NOTICE: messages, it's hard to spot errors.
 set client_min_messages = 'warning';
@@ -390,8 +390,9 @@ CREATE INDEX locales_target_plural_idx ON locales_target(plural);
 --
 
 
+CREATE SEQUENCE menu_mid_seq START 2; 
 CREATE TABLE menu (
-  mid serial,
+  mid integer NOT NULL DEFAULT nextval('menu_mid_seq'),
   pid integer NOT NULL default '0',
   path varchar(255) NOT NULL default '',
   title varchar(255) NOT NULL default '',
@@ -868,14 +869,9 @@ INSERT INTO locales_meta (locale, name, enabled, isdefault) VALUES ('en', 'Engli
 
 INSERT INTO variable (name, value) VALUES ('node_options_forum', 'a:1:{i:0;s:6:"status";}');
 
-INSERT INTO menu VALUES (2, 0, '', 'Primary links', '', 0, 115);
+INSERT INTO menu(pid, path, title, description, weight, type) VALUES (0, '', 'Primary links', '', 0, 115);
 INSERT INTO variable VALUES ('menu_primary_menu', 'i:2;');
 INSERT INTO variable VALUES ('menu_secondary_menu', 'i:2;');
-
----
---- Alter some sequences
----
-ALTER SEQUENCE menu_mid_seq RESTART 3;
 
 ---
 --- Functions
@@ -900,7 +896,11 @@ CREATE OR REPLACE FUNCTION "concat"(text, text) RETURNS text AS '
   SELECT $1 || $2;
 ' LANGUAGE 'sql';
 
-CREATE OR REPLACE FUNCTION "if"(boolean, anyelement, anyelement) RETURNS anyelement AS '
+CREATE OR REPLACE FUNCTION "if"(boolean, text, text) RETURNS text AS '
+  SELECT CASE WHEN $1 THEN $2 ELSE $3 END;
+' LANGUAGE 'sql';
+
+CREATE OR REPLACE FUNCTION "if"(boolean, integer, integer) RETURNS integer AS '
   SELECT CASE WHEN $1 THEN $2 ELSE $3 END;
 ' LANGUAGE 'sql';
 
