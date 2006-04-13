@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.535 2006/04/13 08:25:27 killes Exp $
+// $Id: common.inc,v 1.536 2006/04/13 13:15:29 unconed Exp $
 
 /**
  * @file
@@ -173,14 +173,12 @@ function drupal_query_string_encode($query, $exclude = array(), $parent = '') {
   $params = array();
 
   foreach ($query as $key => $value) {
+    $key = urlencode($key);
     if ($parent) {
-      $key = $parent .'['. urlencode($key) .']';
-    }
-    else {
-      $key = urlencode($key);
+      $key = $parent .'['. $key .']';
     }
 
-    if (in_array(urldecode($key), $exclude)) {
+    if (in_array($key, $exclude)) {
       continue;
     }
 
