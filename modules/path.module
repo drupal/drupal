@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.82 2006/04/09 22:17:40 unconed Exp $
+// $Id: path.module,v 1.83 2006/04/13 08:25:27 killes Exp $
 
 /**
  * @file
@@ -307,7 +307,7 @@ function path_overview() {
   }
 
   $output = theme('table', $header, $rows);
-  $output .= theme('pager', NULL, 50, 0, tablesort_pager());
+  $output .= theme('pager', NULL, 50, 0);
   return $output;
 }
 

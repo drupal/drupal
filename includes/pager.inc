@@ -1,5 +1,5 @@
 <?php
-// $Id: pager.inc,v 1.53 2006/01/15 16:55:35 dries Exp $
+// $Id: pager.inc,v 1.54 2006/04/13 08:25:27 killes Exp $
 
 /**
  * @file
@@ -81,6 +81,21 @@ function pager_query($query, $limit = 10, $element = 0, $count_query = NULL) {
     $pager_page_array[$element] = max(0, min((int)$pager_page_array[$element], ((int)$pager_total[$element]) - 1));
     return db_query_range($query, $pager_page_array[$element] * $limit, $limit);
   }
+}
+
+/**
+ * Compose a query string to append to pager requests.
+ *
+ * @return
+ *   A query string that consists of all components of the current page request
+ *   except for those pertaining to paging.
+ */
+function pager_get_querystring() {
+  static $string = NULL;
+  if (!isset($string)) {
+    $string = drupal_query_string_encode($_REQUEST, array_merge(array('q', 'page'), array_keys($_COOKIE)));
+  }
+  return $string;
 }
 
 /**
@@ -179,6 +194,7 @@ function theme_pager_previous($text, $limit, $element = 0, $interval = 1, $param
   // If we are anywhere but the first page
   if ($pager_page_array[$element] > 0) {
     $page_new = pager_load_array($pager_page_array[$element] - $interval, $element, $pager_page_array);
+
     // If the previous page is the first page, mark the link as such.
     if ($page_new[$element] == 0) {
       $output = theme('pager_first', $text, $limit, $element, $parameters);
@@ -357,8 +373,12 @@ function theme_pager_link($text, $page_new, $element, $parameters = array(), $at
   }
 
   $query = array();
-  foreach ($parameters as $key => $value) {
-    $query[] = $key .'='. $value;
+  if (count($parameters)) {
+    $query[] = drupal_query_string_encode($parameters, array());
+  }
+  $querystring = pager_get_querystring();
+  if ($querystring != '') {
+    $query[] = $querystring;
   }
 
   // Set each pager link title

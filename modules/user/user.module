@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.605 2006/04/10 19:11:25 unconed Exp $
+// $Id: user.module,v 1.606 2006/04/13 08:25:27 killes Exp $
 
 /**
  * @file
@@ -1907,7 +1907,7 @@ function user_admin_account() {
   }
 
   $output = theme('table', $header, $rows);
-  $output .= theme('pager', NULL, 50, 0, tablesort_pager());
+  $output .= theme('pager', NULL, 50, 0);
   return $output;
 }
 

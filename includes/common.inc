@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.534 2006/04/12 08:42:47 unconed Exp $
+// $Id: common.inc,v 1.535 2006/04/13 08:25:27 killes Exp $
 
 /**
  * @file
@@ -156,6 +156,46 @@ function drupal_get_headers() {
  */
 
 /**
+ * Parse an array into a valid urlencoded query string.
+ *
+ * @param $query
+ *   The array to be processed e.g. $_GET
+ * @param $exclude
+ *   The array filled with keys to be excluded. Use parent[child] to exclude nested items.
+ * @param $urlencode
+ *   If TRUE, the keys and values are both urlencoded.
+ * @param $parent
+ *   Should not be passed, only used in recursive calls
+ * @return
+ *   urlencoded string which can be appended to/as the URL query string
+ */
+function drupal_query_string_encode($query, $exclude = array(), $parent = '') {
+  $params = array();
+
+  foreach ($query as $key => $value) {
+    if ($parent) {
+      $key = $parent .'['. urlencode($key) .']';
+    }
+    else {
+      $key = urlencode($key);
+    }
+
+    if (in_array(urldecode($key), $exclude)) {
+      continue;
+    }
+
+    if (is_array($value)) {
+      $params[] = drupal_query_string_encode($value, $exclude, $key);
+    }
+    else {
+      $params[] = $key .'='. urlencode($value);
+    }
+  }
+
+  return implode('&', $params);
+}
+
+/**
  * Prepare a destination query string for use in combination with
  * drupal_goto(). Used to direct the user back to the referring page
  * after completing a form. By default the current URL is returned.
@@ -171,17 +211,11 @@ function drupal_get_destination() {
   }
   else {
     $path = $_GET['q'];
-    $params = array();
-    foreach ($_GET as $key => $value) {
-      if ($key == 'q') {
-        continue;
-      }
-      $params[] = urlencode($key) .'='. urlencode($value);
+    $query = drupal_query_string_encode($_GET, array('q'));
+    if ($query != '') {
+      $path .= '?'. $query;
     }
-    if (count($params)) {
-      $path .= '?';
-    }
-    return 'destination='. urlencode($path . implode('&', $params));
+    return 'destination='. urlencode($path);
   }
 }
 

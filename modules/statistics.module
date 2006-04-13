@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.224 2006/04/11 11:33:15 killes Exp $
+// $Id: statistics.module,v 1.225 2006/04/13 08:25:27 killes Exp $
 
 /**
  * @file
@@ -192,7 +192,7 @@ function statistics_node_tracker() {
 
     drupal_set_title(check_plain($node->title));
     $output = theme('table', $header, $rows);
-    $output .= theme('pager', NULL, 30, 0, tablesort_pager());
+    $output .= theme('pager', NULL, 30, 0);
     return $output;
   }
   else {
@@ -218,7 +218,7 @@ function statistics_user_tracker() {
 
     drupal_set_title($account->name);
     $output = theme('table', $header, $rows);
-    $output .= theme('pager', NULL, 30, 0, tablesort_pager());
+    $output .= theme('pager', NULL, 30, 0);
     return $output;
   }
   else {
@@ -249,7 +249,7 @@ function statistics_recent_hits() {
   }
 
   $output = theme('table', $header, $rows);
-  $output .= theme('pager', NULL, 30, 0, tablesort_pager());
+  $output .= theme('pager', NULL, 30, 0);
   return $output;
 }
 
@@ -275,7 +275,7 @@ function statistics_top_pages() {
 
   drupal_set_title(t('Top pages in the past %interval', array('%interval' => format_interval(variable_get('statistics_flush_accesslog_timer', 259200)))));
   $output = theme('table', $header, $rows);
-  $output .= theme('pager', NULL, 30, 0, tablesort_pager());
+  $output .= theme('pager', NULL, 30, 0);
   return $output;
 }
 
@@ -303,7 +303,7 @@ function statistics_top_visitors() {
 
   drupal_set_title(t('Top visitors in the past %interval', array('%interval' => format_interval(variable_get('statistics_flush_accesslog_timer', 259200)))));
   $output = theme('table', $header, $rows);
-  $output .= theme('pager', NULL, 30, 0, tablesort_pager());
+  $output .= theme('pager', NULL, 30, 0);
   return $output;
 }
 
@@ -329,7 +329,7 @@ function statistics_top_referrers() {
   }
 
   $output = theme('table', $header, $rows);
-  $output .= theme('pager', NULL, 30, 0, tablesort_pager());
+  $output .= theme('pager', NULL, 30, 0);
   return $output;
 }
 

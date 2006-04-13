@@ -1,5 +1,5 @@
 <?php
-// $Id: watchdog.module,v 1.142 2006/03/27 07:29:34 unconed Exp $
+// $Id: watchdog.module,v 1.143 2006/04/13 08:25:27 killes Exp $
 
 /**
  * @file
@@ -139,7 +139,7 @@ function watchdog_overview() {
   }
 
   $output .= theme('table', $header, $rows);
-  $output .= theme('pager', NULL, 50, 0, tablesort_pager());
+  $output .= theme('pager', NULL, 50, 0);
 
   return $output;
 }

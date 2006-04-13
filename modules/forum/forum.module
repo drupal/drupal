@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.327 2006/04/07 15:32:17 unconed Exp $
+// $Id: forum.module,v 1.328 2006/04/13 08:25:27 killes Exp $
 
 /**
  * @file
@@ -1002,7 +1002,7 @@ function theme_forum_topic_list($tid, $topics, $sortby, $forum_per_page) {
   }
 
   $output .= theme('table', $forum_topic_list_header, $rows);
-  $output .= theme('pager', NULL, $forum_per_page, 0, tablesort_pager());
+  $output .= theme('pager', NULL, $forum_per_page, 0);
 
   return $output;
 }
