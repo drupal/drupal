@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.152 2006/04/11 13:02:04 killes Exp $
+// $Id: profile.module,v 1.153 2006/04/13 13:21:15 unconed Exp $
 
 /**
  * @file
@@ -660,9 +660,7 @@ function profile_form_profile($edit, $user, $category) {
         );
         break;
       case 'selection':
-        if (!$field->required) {
-          $options = array('--');
-        }
+        $options = $field->required ? array() : array('--');
         $lines = split("[,\n\r]", $field->options);
         foreach ($lines as $line) {
           if ($line = trim($line)) {
