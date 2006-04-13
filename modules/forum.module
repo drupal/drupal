@@ -1002,7 +1002,7 @@ function theme_forum_topic_list($tid, $topics, $sortby, $forum_per_page) {
   }
 
   $output .= theme('table', $forum_topic_list_header, $rows);
-  $output .= theme('pager', NULL, $forum_per_page, 0, tablesort_pager());
+  $output .= theme('pager', NULL, $forum_per_page, 0);
 
   return $output;
 }

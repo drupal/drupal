@@ -20,18 +20,6 @@ function tablesort_init($header) {
 }
 
 /**
- * Fetch pager link arguments.
- *
- * When producing a sortable table that presents paged data, pass the output
- * of this function into theme('pager') to preserve the current sort order.
- */
-function tablesort_pager() {
-  $cgi = $_SERVER['REQUEST_METHOD'] == 'GET' ? $_GET : $_POST;
-  unset($cgi['q'], $cgi['page']);
-  return $cgi;
-}
-
-/**
  * Create an SQL sort clause.
  *
  * This function produces the ORDER BY clause to insert in your SQL queries,
@@ -86,7 +74,7 @@ function tablesort_header($cell, $header, $ts) {
       $ts['sort'] = 'asc';
       $image = '';
     }
-    $cell['data'] = l($cell['data'] . $image, $_GET['q'], array('title' => $title), 'sort='. $ts['sort'] .'&order='. urlencode($cell['data']). $ts['query_string'], NULL, FALSE, TRUE);
+    $cell['data'] = l($cell['data'] . $image, $_GET['q'], array('title' => $title), 'sort='. $ts['sort'] .'&order='. urlencode($cell['data']) .'&'. $ts['query_string'], NULL, FALSE, TRUE);
 
     unset($cell['field'], $cell['sort']);
   }
@@ -134,14 +122,7 @@ function tablesort_cell($cell, $header, $ts, $i) {
  *   except for those pertaining to table sorting.
  */
 function tablesort_get_querystring() {
-  $cgi = $_SERVER['REQUEST_METHOD'] == 'GET' ? $_GET : $_POST;
-  $query_string = '';
-  foreach ($cgi as $key => $val) {
-    if ($key != 'order' && $key != 'sort' && $key != 'q') {
-      $query_string .= '&'. $key .'='. $val;
-    }
-  }
-  return $query_string;
+  return drupal_query_string_encode($_REQUEST, array_merge(array('q', 'sort', 'order'), array_keys($_COOKIE)));
 }
 
 /**
