@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.117 2006/04/09 21:44:42 killes Exp $
+// $Id: menu.inc,v 1.118 2006/04/13 15:02:35 killes Exp $
 
 /**
  * @file
@@ -430,9 +430,9 @@ function menu_get_active_item() {
  */
 function menu_set_active_item($path = NULL) {
   static $stored_mid;
-  $menu = menu_get_menu();
 
   if (!isset($stored_mid) || isset($path)) {
+    $menu = menu_get_menu();
     if (!isset($path)) {
       $path = $_GET['q'];
     }
