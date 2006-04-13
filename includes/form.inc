@@ -366,7 +366,7 @@ function form_builder($form_id, $form) {
             }
         }
         // Mark all posted values for validation
-        if (isset($form['#value']) && $form['#value'] === $edit) {
+        if ((isset($form['#value']) && $form['#value'] === $edit) || (isset($form['#required']) && $form['#required'])) {
           $form['#needs_validation'] = TRUE;
         }
       }
