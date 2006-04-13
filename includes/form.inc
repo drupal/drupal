@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.96 2006/04/11 11:33:14 killes Exp $
+// $Id: form.inc,v 1.97 2006/04/13 14:56:13 killes Exp $
 
 /**
  * @defgroup form Form generation
@@ -366,7 +366,7 @@ function form_builder($form_id, $form) {
             }
         }
         // Mark all posted values for validation
-        if (isset($form['#value']) && $form['#value'] === $edit) {
+        if ((isset($form['#value']) && $form['#value'] === $edit) || (isset($form['#required']) && $form['#required'])) {
           $form['#needs_validation'] = TRUE;
         }
       }
