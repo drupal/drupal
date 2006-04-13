@@ -173,14 +173,12 @@ function drupal_query_string_encode($query, $exclude = array(), $parent = '') {
   $params = array();
 
   foreach ($query as $key => $value) {
+    $key = urlencode($key);
     if ($parent) {
-      $key = $parent .'['. urlencode($key) .']';
-    }
-    else {
-      $key = urlencode($key);
+      $key = $parent .'['. $key .']';
     }
 
-    if (in_array(urldecode($key), $exclude)) {
+    if (in_array($key, $exclude)) {
       continue;
     }
 
