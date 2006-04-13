@@ -54,11 +54,11 @@ DirectoryIndex index.php
   # If your site can be accessed both with and without the prefix www.
   # you can use one of the following settings to force user to use only one option:
   #
-  # If you want the site to be accessed WITH the www. only, adapt and comment out the following:
+  # If you want the site to be accessed WITH the www. only, adapt and uncomment the following:
   # RewriteCond %{HTTP_HOST} !^www\.example\.com$ [NC]
   # RewriteRule .* http://www.example.com/ [L,R=301]
   #
-  # If you want the site to be accessed only WITHOUT the www. , adapt and comment out the following:
+  # If you want the site to be accessed only WITHOUT the www. , adapt and uncomment the following:
   # RewriteCond %{HTTP_HOST} !^example\.com$ [NC]
   # RewriteRule .* http://example.com/ [L,R=301]
 
@@ -85,4 +85,4 @@ DirectoryIndex index.php
   RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]
 </IfModule>
 
-# $Id: .htaccess,v 1.71 2006/04/12 08:42:47 unconed Exp $
+# $Id: .htaccess,v 1.72 2006/04/13 08:49:45 killes Exp $
