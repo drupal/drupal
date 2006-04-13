@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.359 2006/03/27 18:02:48 killes Exp $
+// $Id: book.module,v 1.360 2006/04/13 15:10:23 killes Exp $
 
 /**
  * @file
@@ -78,12 +78,6 @@ function book_menu($may_cache) {
   $items = array();
 
   if ($may_cache) {
-    $items[] = array(
-      'path' => 'book',
-      'title' => t('books'),
-      'access' => user_access('access content'),
-      'type' => MENU_NORMAL_ITEM,
-      'weight' => 5);
     $items[] = array(
       'path' => 'node/add/book',
       'title' => t('book page'),
