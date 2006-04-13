@@ -832,7 +832,7 @@ function theme_checkbox($element) {
   $checkbox .= 'name="'. $element['#name'] .'" ';
   $checkbox .= 'id="'. $element['#id'].'" ' ;
   $checkbox .= 'value="'. $element['#return_value'] .'" ';
-  $checkbox .= ($element['#value'] || (string)$element['#return_value'] == (string)$element['#value']) ? ' checked="checked" ' : ' ';
+  $checkbox .= $element['#value'] ? ' checked="checked" ' : ' ';
   $checkbox .= drupal_attributes($element['#attributes']) . ' />';
 
   if (!is_null($element['#title'])) {
