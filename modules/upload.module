@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.92 2006/04/11 11:33:15 killes Exp $
+// $Id: upload.module,v 1.93 2006/04/14 19:20:46 drumm Exp $
 
 /**
  * @file
@@ -80,11 +80,11 @@ function upload_menu($may_cache) {
       foreach ($_SESSION['file_previews'] as $fid => $file) {
         $filename = file_create_filename($file->filename, file_create_path());
         if (variable_get('file_downloads', FILE_DOWNLOADS_PUBLIC) ==  FILE_DOWNLOADS_PRIVATE) {
-            // strip file_directory_path() from filename. @see file_create_url 
-            if (strpos($filename, file_directory_path()) !== false) {
-              $filename = trim(substr($filename, strlen(file_directory_path())), '\\/');
-            }
-            $filename = 'system/files/' . $filename;
+          // strip file_directory_path() from filename. @see file_create_url 
+          if (strpos($filename, file_directory_path()) !== false) {
+            $filename = trim(substr($filename, strlen(file_directory_path())), '\\/');
+          }
+          $filename = 'system/files/' . $filename;
         }
 
         $items[] = array(
@@ -154,9 +154,11 @@ function upload_file_download($file) {
         $type = mime_header_encode($file->filemime);
         // Serve images and text inline for the browser to display rather than download.
         $disposition = ereg('^(text/|image/)', $file->filemime) ? 'inline' : 'attachment';
-        return array('Content-Type: '. $type .'; name='. $name,
-                     'Content-Length: '. $file->filesize,
-                     'Content-Disposition: '. $disposition .'; filename='. $name);
+        return array(
+          'Content-Type: '. $type .'; name='. $name,
+          'Content-Length: '. $file->filesize,
+          'Content-Disposition: '. $disposition .'; filename='. $name
+        );
       }
       else {
         return -1;
@@ -179,7 +181,7 @@ function _upload_prepare(&$node) {
   if(count($_POST) == 0) {
     if (is_array($_SESSION['file_previews']) && count($_SESSION['file_previews'])) {
       foreach($_SESSION['file_previews'] as $fid => $file) {
-         file_delete($file->filepath);
+        file_delete($file->filepath);
       }
       unset($_SESSION['file_previews']);
     }
@@ -410,10 +412,16 @@ function upload_nodeapi(&$node, $op, $arg) {
         if (count($files) > 0) {
           // RSS only allows one enclosure per item
           $file = array_shift($files);
-          return array(array('key' => 'enclosure',
-                'attributes' => array('url' => file_create_url($file->filepath),
-                  'length' => $file->filesize,
-                  'type' => $file->filemime)));
+          return array(
+            array(
+              'key' => 'enclosure',
+              'attributes' => array(
+                'url' => file_create_url($file->filepath),
+                'length' => $file->filesize,
+                'type' => $file->filemime
+              )
+            )
+          );
         }
       }
       return array();
@@ -457,7 +465,7 @@ function upload_save($node) {
     if ($file->remove) {
       // Remove file previews...
       if (strpos($file->fid, 'upload') !== false) {
-          file_delete($file->filepath);
+        file_delete($file->filepath);
       }
 
       // Remove managed files.
