@@ -597,7 +597,7 @@ function update_fix_access_table() {
   }
 
   // Convert access table to UTF-8 if needed.
-  $result = db_fetch_array(db_query('SHOW CREATE TABLE `access`'));
+  $result = db_fetch_array(db_query('SHOW CREATE TABLE {access}'));
   if (!preg_match('/utf8/i', array_pop($result))) {
     update_convert_table_utf8('access');
   }
