@@ -24,7 +24,7 @@ function collapseAutoAttach() {
         collapseScrollIntoView(this.parentNode.parentNode);
         if (typeof textAreaInit != 'undefined') {
           // Add the grippie to a textarea in a collapsed fieldset.
-          textAreaInit(this.parentNode.parentNode);
+          textAreaAutoAttach(null, this.parentNode.parentNode);
         }
       }
       this.blur();
