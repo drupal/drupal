@@ -1,10 +1,10 @@
-// $Id: textarea.js,v 1.7 2006/04/12 16:07:39 unconed Exp $
+// $Id: textarea.js,v 1.8 2006/04/14 02:01:02 unconed Exp $
 
 if (isJsEnabled()) {
   addLoadEvent(textAreaInit);
 }
 
-function textAreaInit(parent) {
+function textAreaAutoAttach(event, parent) {
   if (typeof parent == 'undefined') {
     // Attach to all visible textareas.
     textareas = document.getElementsByTagName('textarea');
