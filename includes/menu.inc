@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.118 2006/04/13 15:02:35 killes Exp $
+// $Id: menu.inc,v 1.119 2006/04/14 22:16:02 killes Exp $
 
 /**
  * @file
@@ -125,7 +125,7 @@ define('MENU_DYNAMIC_ITEM', MENU_VISIBLE_IN_TREE | MENU_VISIBLE_IN_BREADCRUMB);
  * Modules may "suggest" menu items that the administrator may enable. They act
  * just as callbacks do until enabled, at which time they act like normal items.
  */
-define('MENU_SUGGESTED_ITEM', MENU_MODIFIABLE_BY_ADMIN);
+define('MENU_SUGGESTED_ITEM', MENU_MODIFIABLE_BY_ADMIN | MENU_VISIBLE_IN_BREADCRUMB);
 
 /**
  * Local tasks are rendered as tabs by default. Use this for menu items that

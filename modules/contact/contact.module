@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.49 2006/04/07 15:32:17 unconed Exp $
+// $Id: contact.module,v 1.50 2006/04/14 22:16:02 killes Exp $
 
 /**
  * @file
@@ -407,9 +407,6 @@ function contact_mail_user_submit($form_id, $edit) {
  */
 function contact_mail_page() {
   global $user;
-
-  $breadcrumb[] = array('path' => 'contact', 'title' => t('contact'));
-  menu_set_location($breadcrumb);
 
   if (!flood_is_allowed('contact', variable_get('contact_hourly_threshold', 3))) {
     $output = t("You cannot send more than %number messages per hour. Please try again later.", array('%number' => variable_get('contact_hourly_threshold', 3)));
