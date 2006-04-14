@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.93 2006/04/14 19:20:46 drumm Exp $
+// $Id: upload.module,v 1.94 2006/04/14 20:57:03 killes Exp $
 
 /**
  * @file
@@ -323,7 +323,7 @@ function _upload_validate(&$node) {
 /**
  * Implementation of hook_nodeapi().
  */
-function upload_nodeapi(&$node, $op, $arg) {
+function upload_nodeapi(&$node, $op, $teaser) {
   switch ($op) {
 
     case 'load':
@@ -343,30 +343,20 @@ function upload_nodeapi(&$node, $op, $arg) {
 
     case 'view':
       if (is_array($node->files) && user_access('view uploaded files')) {
-        $header = array(t('Attachment'), t('Size'));
-        $rows = array();
-        $previews = array();
-
-        // Build list of attached files
-        foreach ($node->files as $key => $file) {
-          if ($file->list) {
-            $rows[] = array(
-              '<a href="'. check_url(($file->fid ? file_create_url($file->filepath) : url(file_create_filename($file->filename, file_create_path())))) .'">'. check_plain($file->description ? $file->description : $file->filename) .'</a>',
-              format_size($file->filesize)
-            );
-            // We save the list of files still in preview for later
+        // Manipulate so that inline references work in preview
+        if (!variable_get('clean_url', 0)) {
+          $previews = array();
+          foreach ($node->files as $file) {
             if (strpos($file->fid, 'upload') !== false) {
               $previews[] = $file;
             }
           }
-        }
 
-        // URLs to files being previewed are actually Drupal paths. When Clean
-        // URLs are disabled, the two do not match. We perform an automatic
-        // replacement from temporary to permanent URLs. That way, the author
-        // can use the final URL in the body before having actually saved (to
-        // place inline images for example).
-        if (!variable_get('clean_url', 0)) {
+          // URLs to files being previewed are actually Drupal paths. When Clean
+          // URLs are disabled, the two do not match. We perform an automatic
+          // replacement from temporary to permanent URLs. That way, the author
+          // can use the final URL in the body before having actually saved (to
+          // place inline images for example).
           foreach ($previews as $file) {
             $old = file_create_filename($file->filename, file_create_path());
             $new = url($old);
@@ -375,10 +365,9 @@ function upload_nodeapi(&$node, $op, $arg) {
           }
         }
 
-        $teaser = $arg;
-        // Add the attachments list
-        if (count($rows) && !$teaser) {
-          $node->body .= theme('table', $header, $rows, array('id' => 'attachments'));
+        // Add the attachments list to node body
+        if (count($node->files) && !$teaser) {
+          $node->body .= theme('upload_attachments', $node->files);
         }
       }
       break;
@@ -425,7 +414,24 @@ function upload_nodeapi(&$node, $op, $arg) {
         }
       }
       return array();
+  }
+}
 
+/**
+ * Displays file attachments in table
+ */
+function theme_upload_attachments($files) {
+  $header = array(t('Attachment'), t('Size'));
+  $rows = array();
+  foreach ($files as $file) {
+    if ($file->list) {
+      $href = check_url(($file->fid ? file_create_url($file->filepath) : url(file_create_filename($file->filename, file_create_path()))));
+      $text = check_plain($file->description ? $file->description : $file->filename);
+      $rows[] = array(l($text, $href), format_size($file->filesize));
+    }
+  }
+  if (count($rows)) {
+    return theme('table', $header, $rows, array('id' => 'attachments'));
   }
 }
 
