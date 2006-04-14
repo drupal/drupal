@@ -1,7 +1,7 @@
 // $Id$
 
 if (isJsEnabled()) {
-  addLoadEvent(textAreaInit);
+  addLoadEvent(textAreaAutoAttach);
 }
 
 function textAreaAutoAttach(event, parent) {
