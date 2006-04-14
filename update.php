@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.184 2006/04/11 11:33:14 killes Exp $
+// $Id: update.php,v 1.185 2006/04/14 14:06:40 killes Exp $
 
 /**
  * @file
@@ -597,7 +597,7 @@ function update_fix_access_table() {
   }
 
   // Convert access table to UTF-8 if needed.
-  $result = db_fetch_array(db_query('SHOW CREATE TABLE `access`'));
+  $result = db_fetch_array(db_query('SHOW CREATE TABLE {access}'));
   if (!preg_match('/utf8/i', array_pop($result))) {
     update_convert_table_utf8('access');
   }
