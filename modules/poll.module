@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.194 2006/04/11 11:33:15 killes Exp $
+// $Id: poll.module,v 1.195 2006/04/14 09:05:19 killes Exp $
 
 /**
  * @file
@@ -18,9 +18,9 @@ function poll_help($section) {
       $output .= t('<p>You can</p>
 <ul>
 <li>view the <a href="%poll">polls page</a>.</li>
-<li><a href="%admin-node-configure-types-poll">administer &gt;&gt; content &gt;&gt; configure &gt;&gt; poll</a>.</li>
+<li><a href="%admin-node-configure-types-poll">administer &gt;&gt; settings &gt;&gt; content types &gt;&gt; configure poll</a>.</li>
 </ul>
-', array('%poll' => url('poll'), '%admin-node-configure-types-poll' => url('admin/node/configure/types/poll')));
+', array('%poll' => url('poll'), '%admin-node-configure-types-poll' => url('admin/settings/content-types/poll')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%poll">Poll page</a>.', array('%poll' => 'http://drupal.org/handbook/modules/poll/')) .'</p>';
       return $output;
     case 'admin/modules#description':
