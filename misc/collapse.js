@@ -1,4 +1,4 @@
-// $Id: collapse.js,v 1.5 2006/04/14 02:01:01 unconed Exp $
+// $Id: collapse.js,v 1.6 2006/04/14 13:48:56 killes Exp $
 
 if (isJsEnabled()) {
   addLoadEvent(collapseAutoAttach);
@@ -22,7 +22,7 @@ function collapseAutoAttach() {
       toggleClass(this.parentNode.parentNode, 'collapsed');
       if (!hasClass(this.parentNode.parentNode, 'collapsed')) {
         collapseScrollIntoView(this.parentNode.parentNode);
-        if (typeof textAreaInit != 'undefined') {
+        if (typeof textAreaAutoAttach != 'undefined') {
           // Add the grippie to a textarea in a collapsed fieldset.
           textAreaAutoAttach(null, this.parentNode.parentNode);
         }
