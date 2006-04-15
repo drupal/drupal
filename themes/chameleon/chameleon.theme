@@ -1,5 +1,5 @@
 <?php
-// $Id: chameleon.theme,v 1.43 2006/04/04 23:36:18 unconed Exp $
+// $Id: chameleon.theme,v 1.44 2006/04/15 04:07:18 unconed Exp $
 
 /**
  * @file
@@ -114,7 +114,7 @@ function chameleon_page($content) {
 
 function chameleon_node($node, $teaser = 0, $page = 0) {
 
-  $output  = "<div class=\"node\">\n";
+  $output  = "<div class=\"node". ((!$node->status) ? ' node-unpublished' : '') ."\">\n";
 
   if (!$page) {
     $output .= " <h2 class=\"title\">". ($teaser ? l($node->title, "node/$node->nid") : check_plain($node->title)) ."</h2>\n";
@@ -154,7 +154,7 @@ function chameleon_node($node, $teaser = 0, $page = 0) {
 function chameleon_comment($comment, $links = "") {
   $submitted = array(t('By %author at %date', array('%author' => theme('username', $comment), '%date' => format_date($comment->timestamp. 'small'))));
 
-  $output  = "<div class=\"comment\">\n";
+  $output  = "<div class=\"comment". ($comment->status == COMMENT_NOT_PUBLISHED ? ' comment-unpublished' : '') ."\">\n";
   $output .= " <h3 class=\"title\">". l($comment->subject, $_GET['q'], NULL, NULL, "comment-$comment->cid") ."</h3>\n";
   $output .= " <div class=\"content\">". $comment->comment ."</div>\n";
   $output .= " <div class=\"links\">". theme('links', array_merge($submitted, $links)) ."</div>\n";

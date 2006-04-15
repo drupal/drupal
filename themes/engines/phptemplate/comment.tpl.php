@@ -1,4 +1,4 @@
-<div class="comment <?php print ($comment->new) ? 'comment-new' : '' ?>">
+<div class="comment<?php print ($comment->new) ? ' comment-new' : ''; print ($comment->status == COMMENT_NOT_PUBLISHED) ? ' comment-unpublished' : ''; ?>">
 <?php if ($comment->new) : ?>
   <a id="new"></a>
   <span class="new"><?php print $new ?></span>

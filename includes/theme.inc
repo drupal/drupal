@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.290 2006/04/11 11:33:14 killes Exp $
+// $Id: theme.inc,v 1.291 2006/04/15 04:07:17 unconed Exp $
 
 /**
  * @file
@@ -569,15 +569,19 @@ function theme_help() {
  *   A string containing the node output.
  */
 function theme_node($node, $teaser = FALSE, $page = FALSE) {
+  if (!$node->status) {
+    $output  = '<div class="node-unpublished">';    
+  }
+
   if (module_exist('taxonomy')) {
     $terms = taxonomy_link('taxonomy terms', $node);
   }
 
   if ($page == 0) {
-    $output = t('%title by %name', array('%title' => '<h2 class="title">'. check_plain($node->title) .'</h2>', '%name' => theme('username', $node)));
+    $output .= t('%title by %name', array('%title' => '<h2 class="title">'. check_plain($node->title) .'</h2>', '%name' => theme('username', $node)));
   }
   else {
-    $output = t('by %name', array('%name' => theme('username', $node)));
+    $output .= t('by %name', array('%name' => theme('username', $node)));
   }
 
   if (count($terms)) {
@@ -593,6 +597,10 @@ function theme_node($node, $teaser = FALSE, $page = FALSE) {
 
   if ($node->links) {
     $output .= '<div class="links">'. theme('links', $node->links) .'</div>';
+  }
+
+  if (!$node->status) {
+    $output .= '</div>';
   }
 
   return $output;

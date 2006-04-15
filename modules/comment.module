@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.450 2006/04/13 08:25:27 killes Exp $
+// $Id: comment.module,v 1.451 2006/04/15 04:07:17 unconed Exp $
 
 /**
  * @file
@@ -726,7 +726,14 @@ function comment_render($node, $cid = 0) {
 
     if ($cid) {
       // Single comment view.
-      $result = db_query('SELECT c.cid, c.pid, c.nid, c.subject, c.comment, c.format, c.timestamp, c.name, c.mail, c.homepage, u.uid, u.name AS registered_name, u.picture, u.data, c.score, c.users FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = %d GROUP BY c.cid, c.pid, c.nid, c.subject, c.comment, c.format, c.timestamp, c.name, c.mail, u.picture, c.homepage, u.uid, u.name, u.picture, u.data, c.score, c.users', $cid, COMMENT_PUBLISHED);
+      $query = 'SELECT c.cid, c.pid, c.nid, c.subject, c.comment, c.format, c.timestamp, c.name, c.mail, c.homepage, u.uid, u.name AS registered_name, u.picture, u.data, c.score, c.users, c.status FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d';
+      $query_args = array($cid);
+      if (!user_access('administer comments')) {
+        $query .= ' AND c.status = %d';
+        $query_args[] = COMMENT_PUBLISHED;
+      }
+      $query .= ' GROUP BY c.cid, c.pid, c.nid, c.subject, c.comment, c.format, c.timestamp, c.name, c.mail, u.picture, c.homepage, u.uid, u.name, u.picture, u.data, c.score, c.users';
+      $result = db_query($query, $query_args);
 
       if ($comment = db_fetch_object($result)) {
         $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
@@ -735,7 +742,15 @@ function comment_render($node, $cid = 0) {
     }
     else {
       // Multiple comment view
-      $query .= "SELECT c.cid as cid, c.pid, c.nid, c.subject, c.comment, c.format, c.timestamp, c.name, c.mail, c.homepage, u.uid, u.name AS registered_name, u.picture, u.data, c.score, c.users, c.thread FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.nid = %d AND c.status = %d";
+      $query_count = 'SELECT COUNT(*) FROM {comments} WHERE nid = %d';
+      $query = 'SELECT c.cid as cid, c.pid, c.nid, c.subject, c.comment, c.format, c.timestamp, c.name, c.mail, c.homepage, u.uid, u.name AS registered_name, u.picture, u.data, c.score, c.users, c.thread, c.status FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.nid = %d';
+
+      $query_args = array($nid);
+      if (!user_access('administer comments')) {
+        $query .= ' AND c.status = %d';
+        $query_count .= ' AND status = %d';
+        $query_args[] = COMMENT_PUBLISHED;
+      }
 
       $query .= ' GROUP BY c.cid, c.pid, c.nid, c.subject, c.comment, c.format, c.timestamp, c.name, c.mail, u.picture, c.homepage, u.uid, u.name, u.picture, u.data, c.score, c.users, c.thread';
 
@@ -827,7 +842,7 @@ function comment_render($node, $cid = 0) {
       }
 
       // Start a form, for use with comment control.
-      $result = pager_query($query, $comments_per_page, 0, "SELECT COUNT(*) FROM {comments} WHERE nid = %d AND status = %d", $nid, COMMENT_PUBLISHED);
+      $result = pager_query($query, $comments_per_page, 0, $query_count, $query_args);
       if (db_num_rows($result) && (variable_get('comment_controls', COMMENT_CONTROLS_HIDDEN) == COMMENT_CONTROLS_ABOVE || variable_get('comment_controls', COMMENT_CONTROLS_HIDDEN) == COMMENT_CONTROLS_ABOVE_BELOW)) {
         $output .= comment_controls($mode, $order, $comments_per_page);
       }
@@ -1384,7 +1399,12 @@ function comment_form_add_preview($form, $edit) {
   if (!form_get_errors()) {
     $output .= theme('comment_view', $comment);
   }
-  $form['comment_preview'] = array('#value' => $output, '#weight' => -100);
+  $form['comment_preview'] = array(
+    '#value' => $output,
+    '#weight' => -100,
+    '#prefix' => '<div class="preview">',
+    '#suffix' => '</div>',
+  );
 
   $output = '';
 
@@ -1531,7 +1551,7 @@ function comment_controls_submit($form_id, $form_values) {
 }
 
 function theme_comment($comment, $links = array()) {
-  $output  = '<div class="comment">';
+  $output  = '<div class="comment'. ($comment->status == COMMENT_NOT_PUBLISHED ? ' comment-unpublished' : '') .'">';
   $output .= '<div class="subject">'. l($comment->subject, $_GET['q'], NULL, NULL, "comment-$comment->cid") . ' ' . theme('mark', $comment->new) ."</div>\n";
   $output .= '<div class="credit">'. t('by %a on %b', array('%a' => theme('username', $comment), '%b' => format_date($comment->timestamp))) ."</div>\n";
   $output .= '<div class="body">'. $comment->comment .'</div>';
