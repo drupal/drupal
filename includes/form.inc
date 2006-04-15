@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.99 2006/04/13 19:50:13 killes Exp $
+// $Id: form.inc,v 1.100 2006/04/15 21:52:43 unconed Exp $
 
 /**
  * @defgroup form Form generation
@@ -333,12 +333,9 @@ function form_builder($form_id, $form) {
 
     $posted = (isset($_POST['edit']) && ($_POST['edit']['form_id'] == $form_id));
     $edit = $posted ? $_POST['edit'] : array();
-    $ref =& $form_values;
     foreach ($form['#parents'] as $parent) {
       $edit = isset($edit[$parent]) ? $edit[$parent] : NULL;
-      $ref =& $ref[$parent];
     }
-    $form['#ref'] = &$ref;
     if (!isset($form['#value']) && !array_key_exists('#value', $form)) {
       if ($posted) {
         switch ($form['#type']) {
@@ -402,7 +399,7 @@ function form_builder($form_id, $form) {
   // We call this after #process gets called so that #process has a
   // chance to update #value if desired.
   if (isset($form['#input']) && $form['#input']) {
-    $ref = $form['#value'];
+    form_set_value($form, $form['#value']);
   }
 
   // Recurse through all child elements.
@@ -433,6 +430,45 @@ function form_builder($form_id, $form) {
     $form['#after_build_done'] = TRUE;
   }
 
+  return $form;
+}
+
+/**
+ * Use this function to make changes to form values in the form validate 
+ * phase, so they will be available in the submit phase in $form_values.
+ *
+ * Specifically, if $form['#parents'] is array('foo', 'bar')
+ * and $value is 'baz' then this function will make
+ * $form_values['foo']['bar'] to be 'baz'. 
+ *
+ * @param $form
+ *   The form item. Keys used: #parents, #value
+ * @param $value
+ *   The value for the form item.
+ */
+function form_set_value($form, $value) {
+  global $form_values;
+  _form_set_value($form_values, $form, $form['#parents'], $value);
+}
+
+/**
+ * Helper function for form_set_value().
+ *
+ * We iterate of $parents and create nested arrays for them
+ * in $form_values if needed. Then we insert the value in
+ * the right array.
+ */
+function _form_set_value(&$form_values, $form, $parents, $value) {
+  $parent = array_shift($parents);
+  if (empty($parents)) {
+    $form_values[$parent] = $value;
+  }
+  else {
+    if (!isset($form_values[$parent])) {
+      $form_values[$parent] = array();
+    }
+    _form_set_value($form_values[$parent], $form, $parents, $value);
+  }
   return $form;
 }
 
@@ -681,14 +717,14 @@ function password_confirm_validate($form) {
   if (isset($form['pass1']['#value'])) {
     $pass1 = trim($form['pass1']['#value']);
     $pass2 = trim($form['pass2']['#value']);
-    $form['pass1']['#ref'] = NULL;
-    $form['pass2']['#ref'] = NULL;
+    form_set_value($form['pass1'], NULL);
+    form_set_value($form['pass2'], NULL);
+    form_set_value($form, $pass1);
     if ($pass1 != $pass2) {
       form_error($form, t('The specified passwords do not match.'));
       form_error($form['pass1']);
       form_error($form['pass2']);
     }
-    $form['#ref'] = $pass1;
   }
   elseif ($form['#required'] && !empty($_POST['edit'])) {
     form_set_error('pass1', t('Password field is required.'));

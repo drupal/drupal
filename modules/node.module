@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.632 2006/04/14 14:32:59 dries Exp $
+// $Id: node.module,v 1.633 2006/04/15 21:52:44 unconed Exp $
 
 /**
  * @file
@@ -2170,7 +2170,7 @@ function node_form_alter($form_id, &$form) {
  */
 function node_search_validate($form_id, $form_values, $form) {
   // Initialise using any existing basic search keywords.
-  $keys = $form['basic']['inline']['processed_keys']['#ref'];
+  $keys = $form_values['processed_keys'];
 
   // Insert extra restrictions into the search keywords string.
   if (isset($form_values['type']) && is_array($form_values['type'])) {
@@ -2180,6 +2180,7 @@ function node_search_validate($form_id, $form_values, $form) {
       $keys = search_query_insert($keys, 'type', implode(',', array_keys($form_values['type'])));
     }
   }
+
   if (isset($form_values['category']) && is_array($form_values['category'])) {
     $keys = search_query_insert($keys, 'category', implode(',', $form_values['category']));
   }
@@ -2197,7 +2198,7 @@ function node_search_validate($form_id, $form_values, $form) {
     $keys .= ' "'. str_replace('"', ' ', $form_values['phrase']) .'"';
   }
   if (!empty($keys)) {
-    $form['basic']['inline']['processed_keys']['#ref'] = trim($keys);
+    form_set_value($form['basic']['inline']['processed_keys'], trim($keys));
   }
 }
 
