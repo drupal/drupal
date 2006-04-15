@@ -248,6 +248,12 @@ tr.odd .form-item, tr.even .form-item {
 .book-navigation .page-next {
   text-align: left;
 }
+.node-unpublished, .comment-unpublished {
+  background-color: #fff4f4;
+}
+.preview .node, .preview .comment {
+  background-color: #ffffea;
+}
 .archive {
   margin: 1em 0 1em 0;
 }

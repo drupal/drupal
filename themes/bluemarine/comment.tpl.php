@@ -1,4 +1,4 @@
-  <div class="comment">
+  <div class="comment<?php if ($comment->status == COMMENT_NOT_PUBLISHED) print ' comment-unpublished'; ?>">
     <?php if ($picture) {
     print $picture;
   } ?>
