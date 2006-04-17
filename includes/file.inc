@@ -27,7 +27,7 @@ define('FILE_EXISTS_ERROR', 2);
  * @return A string containing a URL that can be used to download the file.
  */
 function file_create_url($path) {
-  // Strip file_directory_path from $path. We only include relative paths in urls. 
+  // Strip file_directory_path from $path. We only include relative paths in urls.
   if (strpos($path, file_directory_path()) !== false) {
     $path = trim(substr($path, strlen(file_directory_path())), '\\/');
   }

@@ -357,10 +357,10 @@ function book_outline_submit($form_id, $form_values) {
 }
 
 /**
- * Given a node, this function returns an array of 'book node' objects 
- * representing the path in the book tree from the root to the 
+ * Given a node, this function returns an array of 'book node' objects
+ * representing the path in the book tree from the root to the
  * parent of the given node.
- * 
+ *
  * @param node - a book node object for which to compute the path
  *
  * @return - an array of book node objects representing the path of

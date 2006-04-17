@@ -259,7 +259,7 @@ ACDB.prototype.receive = function(string, xmlhttp, acdb) {
   var matches = parseJson(string);
   if (typeof matches['status'] == 'undefined' || matches['status'] != 0) {
     acdb.cache[acdb.searchString] = matches;
-    acdb.owner.found(matches);    
+    acdb.owner.found(matches);
   }
 }
 

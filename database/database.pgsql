@@ -390,7 +390,7 @@ CREATE INDEX locales_target_plural_idx ON locales_target(plural);
 --
 
 
-CREATE SEQUENCE menu_mid_seq START 2; 
+CREATE SEQUENCE menu_mid_seq START 2;
 CREATE TABLE menu (
   mid integer NOT NULL DEFAULT nextval('menu_mid_seq'),
   pid integer NOT NULL default '0',

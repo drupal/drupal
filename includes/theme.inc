@@ -570,7 +570,7 @@ function theme_help() {
  */
 function theme_node($node, $teaser = FALSE, $page = FALSE) {
   if (!$node->status) {
-    $output  = '<div class="node-unpublished">';    
+    $output  = '<div class="node-unpublished">';
   }
 
   if (module_exist('taxonomy')) {

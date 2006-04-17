@@ -16,7 +16,7 @@ REQUIREMENTS
 Drupal requires a web server, PHP4 (4.3.3 or greater) or PHP5
 (http://www.php.net/) and either MySQL (http://www.mysql.com/)
 or PostgreSQL (http://www.postgresql.org/). Your database user
-will also need sufficient privileges to run Drupal. Please 
+will also need sufficient privileges to run Drupal. Please
 check the INSTALL.mysql.txt and INSTALL.pgsql.txt for more
 detailed information.
 

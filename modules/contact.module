@@ -502,7 +502,7 @@ function contact_mail_page_validate($form_id, $form_values) {
  */
 function contact_mail_page_submit($form_id, $edit) {
 
-  // E-mail address of the sender: as the form field is a text field, 
+  // E-mail address of the sender: as the form field is a text field,
   // all instances of \r and \n have been automatically stripped from it.
   $from = $edit['mail'];
 
