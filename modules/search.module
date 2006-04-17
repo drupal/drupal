@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.175 2006/04/15 21:52:44 unconed Exp $
+// $Id: search.module,v 1.176 2006/04/17 16:06:00 unconed Exp $
 
 /**
  * @file
@@ -1002,8 +1002,8 @@ function search_form($action = '', $keys = '', $type = NULL, $prompt = NULL) {
 /**
  * As the search form collates keys from other modules hooked in via
  * hook_form_alter, the validation takes place in _submit.
- * search_form_validate() is used solely to set the #ref property for the basic
- * search form.
+ * search_form_validate() is used solely to set the 'processed_keys' form
+ * value for the basic search form.
  */
 function search_form_validate($form_id, $form_values, $form) {
   form_set_value($form['basic']['inline']['processed_keys'], trim($form_values['keys']));
