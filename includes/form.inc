@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.100 2006/04/15 21:52:43 unconed Exp $
+// $Id: form.inc,v 1.101 2006/04/17 20:48:25 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -434,12 +434,12 @@ function form_builder($form_id, $form) {
 }
 
 /**
- * Use this function to make changes to form values in the form validate 
+ * Use this function to make changes to form values in the form validate
  * phase, so they will be available in the submit phase in $form_values.
  *
  * Specifically, if $form['#parents'] is array('foo', 'bar')
  * and $value is 'baz' then this function will make
- * $form_values['foo']['bar'] to be 'baz'. 
+ * $form_values['foo']['bar'] to be 'baz'.
  *
  * @param $form
  *   The form item. Keys used: #parents, #value

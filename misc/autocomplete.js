@@ -1,4 +1,4 @@
-// $Id: autocomplete.js,v 1.10 2006/04/06 02:41:48 unconed Exp $
+// $Id: autocomplete.js,v 1.11 2006/04/17 20:48:25 dries Exp $
 
 // Global Killswitch
 if (isJsEnabled()) {
@@ -259,7 +259,7 @@ ACDB.prototype.receive = function(string, xmlhttp, acdb) {
   var matches = parseJson(string);
   if (typeof matches['status'] == 'undefined' || matches['status'] != 0) {
     acdb.cache[acdb.searchString] = matches;
-    acdb.owner.found(matches);    
+    acdb.owner.found(matches);
   }
 }
 

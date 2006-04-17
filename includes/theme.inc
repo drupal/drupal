@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.291 2006/04/15 04:07:17 unconed Exp $
+// $Id: theme.inc,v 1.292 2006/04/17 20:48:25 dries Exp $
 
 /**
  * @file
@@ -570,7 +570,7 @@ function theme_help() {
  */
 function theme_node($node, $teaser = FALSE, $page = FALSE) {
   if (!$node->status) {
-    $output  = '<div class="node-unpublished">';    
+    $output  = '<div class="node-unpublished">';
   }
 
   if (module_exist('taxonomy')) {

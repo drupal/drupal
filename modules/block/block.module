@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.204 2006/04/04 23:32:40 unconed Exp $
+// $Id: block.module,v 1.205 2006/04/17 20:48:26 dries Exp $
 
 /**
  * @file
@@ -202,7 +202,7 @@ function block_admin_display() {
   }
   init_theme();
 
-  // Fetch and sort blocks 
+  // Fetch and sort blocks
   $blocks = _block_rehash();
   usort($blocks, '_block_compare');
 
@@ -304,12 +304,12 @@ function theme_block_admin_display($form) {
       if ($status && $region != $last_region) {
         $region_title = t('%region', array('%region' => drupal_ucfirst($block_regions[$region])));
         $rows[] = array(array('data' => $region_title, 'class' => 'region', 'colspan' => ($throttle ? 7 : 6)));
-        $last_region = $region;        
+        $last_region = $region;
       }
       // Output disabled header
       elseif ($status != $last_status) {
         $rows[] = array(array('data' => t('Disabled'), 'class' => 'region', 'colspan' => ($throttle ? 7 : 6)));
-        $last_status = $status;        
+        $last_status = $status;
       }
 
       // Generate block row

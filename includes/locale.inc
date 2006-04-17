@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.70 2006/04/14 13:43:18 killes Exp $
+// $Id: locale.inc,v 1.71 2006/04/17 20:48:25 dries Exp $
 
 /**
  * @file
@@ -92,7 +92,7 @@ function theme_locale_admin_manage_screen($form) {
   $header = array(array('data' => t('Code')), array('data' => t('English name')), array('data' => t('Enabled')), array('data' => t('Default')), array('data' => t('Translated')), array('data' => t('Operations')));
   $output = theme('table', $header, $rows);
   $output .= form_render($form);
-  
+
   return $output;
 }
 
@@ -116,7 +116,7 @@ function _locale_admin_manage_screen_submit($form_id, $form_values) {
     }
   }
   drupal_set_message(t('Configuration saved.'));
-  
+
   // Changing the locale settings impacts the interface:
   cache_clear_all();
 
@@ -141,7 +141,7 @@ function _locale_admin_manage_add_screen() {
     '#description' => t('Select your language here, or add it below, if you are unable to find it.'),
   );
   $form['language list']['submit'] = array('#type' => 'submit', '#value' => t('Add language'));
-  
+
   $output = drupal_get_form('locale_add_language_form', $form);
 
   $form = array();
@@ -198,7 +198,7 @@ function locale_add_language_form_submit($form_id, $form_values) {
     $isocodes = _locale_get_iso639_list();
     _locale_add_language($form_values['langcode'], $isocodes[$form_values['langcode']][0]);
   }
-  
+
   return 'admin/locale';
 }
 
@@ -363,7 +363,7 @@ function _locale_string_edit($lid) {
 
     // Approximate the number of rows in a textfield with a maximum of 10.
     $rows = min(ceil(str_word_count($orig) / 12), 10);
-    
+
     $form[$translation->locale] = array('#type' => 'textarea',
       '#title' => $languages['name'][$translation->locale],
       '#default_value' => $translation->translation,
@@ -432,8 +432,8 @@ function _locale_string_delete($lid) {
   db_query('DELETE FROM {locales_target} WHERE lid = %d', $lid);
   locale_refresh_cache();
   drupal_set_message(t('The string has been removed.'));
-  
-  drupal_goto('admin/locale/string/search');  
+
+  drupal_goto('admin/locale/string/search');
 }
 
 /**

@@ -1,4 +1,4 @@
--- $Id: database.pgsql,v 1.172 2006/04/13 10:42:01 killes Exp $
+-- $Id: database.pgsql,v 1.173 2006/04/17 20:48:25 dries Exp $
 
 -- Do not show NOTICE: messages, it's hard to spot errors.
 set client_min_messages = 'warning';
@@ -390,7 +390,7 @@ CREATE INDEX locales_target_plural_idx ON locales_target(plural);
 --
 
 
-CREATE SEQUENCE menu_mid_seq START 2; 
+CREATE SEQUENCE menu_mid_seq START 2;
 CREATE TABLE menu (
   mid integer NOT NULL DEFAULT nextval('menu_mid_seq'),
   pid integer NOT NULL default '0',

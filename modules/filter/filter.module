@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.121 2006/04/14 13:45:50 killes Exp $
+// $Id: filter.module,v 1.122 2006/04/17 20:48:26 dries Exp $
 
 /**
  * @file
@@ -1049,7 +1049,7 @@ function _filter_html($text, $format) {
 function _filter_autop($text) {
   // All block level tags
   $block = '(?:table|thead|tfoot|caption|colgroup|tbody|tr|td|th|div|dl|dd|dt|ul|ol|li|pre|select|form|blockquote|address|p|h[1-6])';
-  
+
   // Split at <pre>, <script>, <style> and </pre>, </script>, </style> tags.
   // We don't apply any processing to the contents of these tags to avoid messing
   // up code. We look for matched pairs and allow basic nesting. For example:
@@ -1103,12 +1103,12 @@ function _filter_autop($text) {
 /**
  * Very permissive XSS/HTML filter for admin-only use.
  *
- * Use only for fields where it is impractical to use the 
+ * Use only for fields where it is impractical to use the
  * whole filter system, but where some (mainly inline) mark-up
  * is desired (so check_plain() is not acceptable).
  *
  * Allows all tags that can be used inside an HTML body, save
- * for scripts and styles. 
+ * for scripts and styles.
  */
 function filter_xss_admin($string) {
   return filter_xss($string, array('a', 'abbr', 'acronym', 'address', 'b', 'bdo', 'big', 'blockquote', 'br', 'caption', 'cite', 'code', 'col', 'colgroup', 'dd', 'del', 'dfn', 'div', 'dl', 'dt', 'em', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr', 'i', 'img', 'ins', 'kbd', 'li', 'object', 'ol', 'p', 'param', 'pre', 'q', 'samp', 'small', 'span', 'strong', 'sub', 'sup', 'table', 'tbody', 'td', 'tfoot', 'th', 'thead', 'tr', 'tt', 'ul', 'var'));

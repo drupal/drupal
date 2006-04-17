@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.module,v 1.128 2006/03/17 18:56:25 killes Exp $
+// $Id: tracker.module,v 1.129 2006/04/17 20:48:26 dries Exp $
 
 /**
  * @file
@@ -67,7 +67,7 @@ function tracker_track_user() {
   if ($account = user_load(array('uid' => arg(1)))) {
     if ($account->status || user_access('administer users')) {
       drupal_set_title($account->name);
-      return tracker_page($account->uid);      
+      return tracker_page($account->uid);
     }
     else {
       drupal_access_denied();

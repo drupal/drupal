@@ -1,4 +1,4 @@
-// $Id: INSTALL.mysql.txt,v 1.5 2006/04/10 13:45:28 unconed Exp $
+// $Id: INSTALL.mysql.txt,v 1.6 2006/04/17 20:48:25 dries Exp $
 
 CONTENTS OF THIS FILE
 ---------------------
@@ -41,9 +41,9 @@ INSTALLATION AND CONFIGURATION
    Again, you will be asked for the 'dba_user' database password.
    At the MySQL prompt, enter following command:
 
-     GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, 
-     ALTER, CREATE TEMPORARY TABLES, LOCK TABLES 
-     ON databasename.* 
+     GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX,
+     ALTER, CREATE TEMPORARY TABLES, LOCK TABLES
+     ON databasename.*
      TO 'username'@'localhost' IDENTIFIED BY 'password';
 
    where
@@ -82,4 +82,4 @@ INSTALLATION AND CONFIGURATION
 
    for MySQL 4.1 or higher:
      mysql -u username -p databasename < database/database.4.1.mysql
-     
+

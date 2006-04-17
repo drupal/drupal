@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.607 2006/04/13 18:17:07 killes Exp $
+// $Id: user.module,v 1.608 2006/04/17 20:48:26 dries Exp $
 
 /**
  * @file
@@ -166,7 +166,7 @@ function user_save($account, $array = array(), $category = 'account') {
           $fields[] = $key;
           $values[] = md5($value);
           $s[] = "'%s'";
-          break;          
+          break;
         case 'uid':        case 'mode':     case 'sort':
         case 'threshold':  case 'created':  case 'access':
         case 'login':      case 'status':
@@ -785,11 +785,11 @@ function user_menu($may_cache) {
         // Always let a user view their own account
         $view_access |= $user->uid == arg(1);
         // Only admins can view blocked accounts
-        $view_access &= $account->status || $admin_access; 
+        $view_access &= $account->status || $admin_access;
 
         $items[] = array('path' => 'user/'. arg(1), 'title' => t('user'),
           'type' => MENU_CALLBACK, 'callback' => 'user_view',
-          'callback arguments' => array(arg(1)), 'access' => $view_access);        
+          'callback arguments' => array(arg(1)), 'access' => $view_access);
 
         $items[] = array('path' => 'user/'. arg(1) .'/view', 'title' => t('view'),
           'access' => $view_access, 'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
@@ -1176,12 +1176,12 @@ function user_register() {
       '#required' => TRUE,
     );
     $form['notify'] = array(
-     '#type' => 'checkbox', 
+     '#type' => 'checkbox',
      '#title' => t('Notify user of new account')
     );
   }
   $extra = _user_forms($null, $null, $null, 'register');
-  
+
   // Only display form_group around default fields if there are other groups.
   if ($extra) {
     $form['account'] = array('#type' => 'fieldset', '#title' => t('Account information'));
@@ -1246,7 +1246,7 @@ function user_register_submit($form_id, $form_values) {
       $body = $notify ? _user_mail_text('admin_body', $variables) : _user_mail_text('welcome_body', $variables);
 
       user_mail($mail, $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
-      
+
       if ($notify) {
         drupal_set_message(t('Password and further instructions have been e-mailed to the new user %user.', array('%user' => theme('placeholder', $name))));
         return 'admin/user';
@@ -1474,7 +1474,7 @@ function _user_mail_text($messageid, $variables = array()) {
       case 'admin_subject':
         return t('An administrator created an account for you at %site', $variables);
       case 'admin_body':
-        return t("%username,\n\nA site administrator at %site has created an account for you. You may now log in to %login_uri using the following username and password:\n\nusername: %username\npassword: %password\n\nYou may also log in by clicking on this link or copying and pasting it in your browser:\n\n%login_url\n\nThis is a one-time login, so it can be used only once.\n\nAfter logging in, you will be redirected to %edit_uri so you can change your password.\n\nYour new %site membership also enables to you to login to other Drupal powered websites (e.g. http://www.drupal.org/) without registering. Just use the following Drupal ID and password:\n\nDrupal ID: %username@%uri_brief\npassword: %password\n\n\n--  %site team", $variables);  
+        return t("%username,\n\nA site administrator at %site has created an account for you. You may now log in to %login_uri using the following username and password:\n\nusername: %username\npassword: %password\n\nYou may also log in by clicking on this link or copying and pasting it in your browser:\n\n%login_url\n\nThis is a one-time login, so it can be used only once.\n\nAfter logging in, you will be redirected to %edit_uri so you can change your password.\n\nYour new %site membership also enables to you to login to other Drupal powered websites (e.g. http://www.drupal.org/) without registering. Just use the following Drupal ID and password:\n\nDrupal ID: %username@%uri_brief\npassword: %password\n\n\n--  %site team", $variables);
       case 'approval_subject':
         return t('Account details for %username at %site (pending admin approval)', $variables);
       case 'approval_body':

@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.153 2006/04/13 13:21:15 unconed Exp $
+// $Id: profile.module,v 1.154 2006/04/17 20:48:26 dries Exp $
 
 /**
  * @file
@@ -301,7 +301,7 @@ function profile_field_form_validate($form_id, $form_values) {
   $args1 = array($form_values['title'], $form_values['category']);
   $args2 = array($form_values['name']);
   $query_suffix = '';
-  
+
   if (isset($form_values['fid'])) {
     $args1[] = $args2[] = $form_values['fid'];
     $query_suffix = ' AND fid != %d';
@@ -321,7 +321,7 @@ function profile_field_form_validate($form_id, $form_values) {
 function profile_field_form_submit($form_id, $form_values) {
   if (!isset($form_values['fid'])) {
     db_query("INSERT INTO {profile_fields} (title, name, explanation, category, type, weight, required, register, visibility, options, page) VALUES ('%s', '%s', '%s', '%s', '%s', %d, %d, %d, %d, '%s', '%s')", $form_values['title'], $form_values['name'], $form_values['explanation'], $form_values['category'], $form_values['type'], $form_values['weight'], $form_values['required'], $form_values['register'], $form_values['visibility'], $form_values['options'], $form_values['page']);
-    
+
     drupal_set_message(t('The field has been created.'));
     watchdog('profile', t('Profile field %field added under category %category.', array('%field' => theme('placeholder', $form_values['title']), '%category' => theme('placeholder', $form_values['category']))), WATCHDOG_NOTICE, l(t('view'), 'admin/settings/profile'));
   }
@@ -331,7 +331,7 @@ function profile_field_form_submit($form_id, $form_values) {
     drupal_set_message(t('The field has been updated.'));
   }
   cache_clear_all();
-  
+
   return 'admin/settings/profile';
 }
 
@@ -346,7 +346,7 @@ function profile_field_delete($fid) {
   }
   $form['fid'] = array('#type' => 'value', '#value' => $fid);
   $form['title'] = array('#type' => 'value', '#value' => $field->title);
-  
+
   return confirm_form('profile_field_delete', $form, t('Are you sure you want to delete the field %field?', array('%field' => theme('placeholder', $field->title))), 'admin/settings/profile', t('This action cannot be undone. If users have entered values into this field in their profile, these entries will also be deleted. If you want to keep the user-entered data, instead of deleting the field you may wish to <a href="%edit-field">edit this field</a> and change it to a %hidden-field so that it may only be accessed by administrators.', array('%edit-field' => url('admin/settings/profile/edit/' . $fid), '%hidden-field' => theme('placeholder', t('hidden profile field'))), t('Delete'), t('Cancel')));
 }
 
@@ -356,12 +356,12 @@ function profile_field_delete($fid) {
 function profile_field_delete_submit($form_id, $form_values) {
   db_query('DELETE FROM {profile_fields} WHERE fid = %d', $form_values['fid']);
   db_query('DELETE FROM {profile_values} WHERE fid = %d', $form_values['fid']);
-  
+
   cache_clear_all();
-  
+
   drupal_set_message(t('The field %field has been deleted.', array('%field' => theme('placeholder', $form_values['title']))));
   watchdog('profile', t('Profile field %field deleted.', array('%field' => theme('placeholder', $form_values['title']))), WATCHDOG_NOTICE, l(t('view'), 'admin/settings/profile'));
-  
+
   return 'admin/settings/profile';
 }
 

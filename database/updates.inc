@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.221 2006/04/12 14:08:43 unconed Exp $
+// $Id: updates.inc,v 1.222 2006/04/17 20:48:25 dries Exp $
 
 function system_update_110() {
   $ret = array();
@@ -1593,7 +1593,7 @@ function system_update_173() {
 
   // PostgreSQL needs CREATE TABLE foobar _AS_ SELECT ...
   $AS = ($GLOBALS['db_type'] == 'pgsql') ? 'AS' : '';
-  
+
   // Backup the files table.
   $ret[] = update_sql("CREATE TABLE {files_backup} $AS SELECT * FROM {files}");
 
@@ -1852,7 +1852,7 @@ function system_update_178() {
         $args[] = $node->vid;
         db_query('UPDATE {node_revisions} SET '. implode(', ', $set) .' WHERE vid = %d', $args);
       }
-      
+
     }
 
     if ($_SESSION['system_update_178_comment'] == $_SESSION['system_update_178_comment_max'] &&
@@ -1946,7 +1946,7 @@ function system_update_179() {
       if ($field->value !== FALSE) {
         db_query("UPDATE {profile_values} SET value = '%s' WHERE uid = %d AND fid = %d", $field->value, $field->uid, $field->fid);
       }
-      
+
     }
 
     // Done?

@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.313 2006/04/14 20:30:08 unconed Exp $
+// $Id: system.module,v 1.314 2006/04/17 20:48:26 dries Exp $
 
 /**
  * @file
@@ -167,9 +167,9 @@ function system_test_clean_url($form_id) {
  * Allows users to individually set their theme and time zone.
  */
 function system_user($type, $edit, &$user, $category = NULL) {
-  if ($type == 'form' && $category == 'account') {    
+  if ($type == 'form' && $category == 'account') {
     $form['theme_select'] = system_theme_select_form(t('Selecting a different theme will change the look and feel of the site.'), $edit['theme'], 2);
-    
+
     if (variable_get('configurable_timezones', 1)) {
       $zones = _system_zonelist();
       $form['timezone'] = array('#type'=>'fieldset', '#title' => t('Locale settings'), '#weight' => 6);
@@ -178,7 +178,7 @@ function system_user($type, $edit, &$user, $category = NULL) {
         '#options' => $zones, '#description' => t('Select your current local time. Dates and times throughout this site will be displayed using this time zone.')
       );
     }
-    
+
     return $form;
   }
 }
@@ -207,10 +207,10 @@ function system_theme_select_form($description = '', $default_value = '', $weigh
       ksort($enabled);
 
       $form['themes'] = array(
-        '#type' => 'fieldset', 
-        '#title' => t('Theme configuration'), 
-        '#description' => $description, 
-        '#collapsible' => TRUE, 
+        '#type' => 'fieldset',
+        '#title' => t('Theme configuration'),
+        '#description' => $description,
+        '#collapsible' => TRUE,
         '#theme' => 'system_theme_select_form'
       );
 
