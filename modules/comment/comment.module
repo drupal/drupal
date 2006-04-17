@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.451 2006/04/15 04:07:17 unconed Exp $
+// $Id: comment.module,v 1.452 2006/04/17 20:45:00 dries Exp $
 
 /**
  * @file
@@ -120,7 +120,7 @@ function comment_menu($may_cache) {
 
     $items[] = array('path' => 'admin/comment/configure/settings', 'title' => t('settings'),
       'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
-      
+
     $items[] = array('path' => 'comment/delete', 'title' => t('delete comment'),
       'callback' => 'comment_delete', 'access' => $access, 'type' => MENU_CALLBACK);
 
@@ -732,7 +732,7 @@ function comment_render($node, $cid = 0) {
         $query .= ' AND c.status = %d';
         $query_args[] = COMMENT_PUBLISHED;
       }
-      $query .= ' GROUP BY c.cid, c.pid, c.nid, c.subject, c.comment, c.format, c.timestamp, c.name, c.mail, u.picture, c.homepage, u.uid, u.name, u.picture, u.data, c.score, c.users';
+      $query .= ' GROUP BY c.cid, c.pid, c.nid, c.subject, c.comment, c.format, c.timestamp, c.name, c.mail, u.picture, c.homepage, u.uid, u.name, u.picture, u.data, c.score, c.users, c.status';
       $result = db_query($query, $query_args);
 
       if ($comment = db_fetch_object($result)) {
@@ -752,7 +752,7 @@ function comment_render($node, $cid = 0) {
         $query_args[] = COMMENT_PUBLISHED;
       }
 
-      $query .= ' GROUP BY c.cid, c.pid, c.nid, c.subject, c.comment, c.format, c.timestamp, c.name, c.mail, u.picture, c.homepage, u.uid, u.name, u.picture, u.data, c.score, c.users, c.thread';
+      $query .= ' GROUP BY c.cid, c.pid, c.nid, c.subject, c.comment, c.format, c.timestamp, c.name, c.mail, u.picture, c.homepage, u.uid, u.name, u.picture, u.data, c.score, c.users, c.thread, c.status';
 
       /*
       ** We want to use the standard pager, but threads would need every
