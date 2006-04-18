@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.95 2006/04/17 20:48:26 dries Exp $
+// $Id: upload.module,v 1.96 2006/04/18 08:32:04 killes Exp $
 
 /**
  * @file
@@ -187,13 +187,13 @@ function _upload_prepare(&$node) {
     }
   }
 
-  // $_SESSION['file_submitted'] tracks the fid of the file submitted this page request.
+  // $_SESSION['file_current_upload'] tracks the fid of the file submitted this page request.
   // form_builder sets the value of file->list to 0 for checkboxes added to a form after
   // it has been submitted. Since unchecked checkboxes have no return value and do not
   // get a key in _POST form_builder has no way of knowing the difference between a check
   // box that wasn't present on the last form build, and a checkbox that is unchecked.
 
-  unset($_SESSION['file_submitted']);
+  unset($_SESSION['file_current_upload']);
 
   // Save new file uploads to tmp dir.
   if (($file = file_check_upload()) && user_access('upload files')) {
@@ -210,7 +210,7 @@ function _upload_prepare(&$node) {
 
     // Store the uploaded fid for this page request in case of submit without
     // preview or attach. See earlier notes.
-    $_SESSION['file_submitted'] = $key;
+    $_SESSION['file_current_upload'] = $key;
   }
 
   // Attach file previews to node object.
@@ -489,12 +489,6 @@ function upload_save($node) {
     // New file upload
     elseif (strpos($file->fid, 'upload') !== false) {
       if ($file = file_save_upload($file, $file->filename)) {
-        // Track the file which was submitted last, in case of a direct submission
-        // without preview or attach. See notes in upload_prepare.
-        if ($_SESSION['file_submitted'] == $file->fid) {
-          $file->list = variable_get('upload_list_default',1);
-        }
-
         $file->fid = db_next_id('{files}_fid');
         db_query("INSERT INTO {files} (fid, nid, filename, filepath, filemime, filesize) VALUES (%d, %d, '%s', '%s', '%s', %d)", $file->fid, $node->nid, $file->filename, $file->filepath, $file->filemime, $file->filesize);
         db_query("INSERT INTO {file_revisions} (fid, vid, list, description) VALUES (%d, %d, %d, '%s')", $file->fid, $node->vid, $file->list, $file->description);
@@ -560,6 +554,11 @@ function _upload_form($node) {
       $form['files'][$key]['size'] = array('#type' => 'markup', '#value' => format_size($file->filesize));
       $form['files'][$key]['remove'] = array('#type' => 'checkbox', '#default_value' => $file->remove);
       $form['files'][$key]['list'] = array('#type' => 'checkbox',  '#default_value' => $file->list);
+      // if the file was uploaded this page request, set value. this fixes the problem
+      // formapi has recognizing new checkboxes. see comments in _upload_prepare.
+      if ($_SESSION['file_current_upload'] == $file->fid) {
+        $form['files'][$key]['list']['#value'] = variable_get('upload_list_default',1);
+      }
       $form['files'][$key]['filename'] = array('#type' => 'value',  '#value' => $file->filename);
       $form['files'][$key]['filepath'] = array('#type' => 'value',  '#value' => $file->filepath);
       $form['files'][$key]['filemime'] = array('#type' => 'value',  '#value' => $file->filemime);
