@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.634 2006/04/17 20:48:26 dries Exp $
+// $Id: node.module,v 1.635 2006/04/18 09:12:40 killes Exp $
 
 /**
  * @file
@@ -1146,9 +1146,6 @@ function node_admin_nodes() {
   }
   $form['nodes'] = array('#type' => 'checkboxes', '#options' => $nodes);
   $form['pager'] = array('#value' => theme('pager', NULL, 50, 0));
-
-  $form['#method'] = 'post';
-  $form['#action'] =  url('admin/node');
 
   // Call the form first, to allow for the form_values array to be populated.
   $output .= drupal_get_form('node_admin_nodes', $form);
