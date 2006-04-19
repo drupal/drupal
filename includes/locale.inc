@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.71 2006/04/17 20:48:25 dries Exp $
+// $Id: locale.inc,v 1.72 2006/04/19 08:35:08 killes Exp $
 
 /**
  * @file
@@ -296,7 +296,7 @@ function _locale_admin_export_screen() {
   $form['export'] = array('#type' => 'fieldset',
     '#title' => 'Export template',
     '#collapsible' => TRUE,
-    '#description' => 'Generate a gettext Portable Object Template (.pot) file with all the interface strings from the Drupal locale database.',
+    '#description' => t('Generate a gettext Portable Object Template (.pot) file with all the interface strings from the Drupal locale database.'),
   );
   $form['export']['submit'] = array('#type' => 'submit', '#value' => t('Export'));
   $output .= drupal_get_form('_locale_export_pot', $form, '_locale_export_po');
