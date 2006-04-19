@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.73 2006/04/19 13:22:12 killes Exp $
+// $Id: locale.inc,v 1.74 2006/04/19 13:38:46 killes Exp $
 
 /**
  * @file
@@ -1529,7 +1529,6 @@ function _locale_get_iso639_list() {
     "uz" => array("Uzbek", "o'zbek"),
     "ve" => array("Venda"),
     "vi" => array("Vietnamese", "Tiếng Việt"),
-    "vo" => array("Volapük"),
     "wo" => array("Wolof"),
     "xh" => array("Xhosa", "isiXhosa"),
     "yi" => array("Yiddish"),
