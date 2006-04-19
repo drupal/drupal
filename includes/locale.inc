@@ -1529,7 +1529,6 @@ function _locale_get_iso639_list() {
     "uz" => array("Uzbek", "o'zbek"),
     "ve" => array("Venda"),
     "vi" => array("Vietnamese", "Tiếng Việt"),
-    "vo" => array("Volapük"),
     "wo" => array("Wolof"),
     "xh" => array("Xhosa", "isiXhosa"),
     "yi" => array("Yiddish"),
