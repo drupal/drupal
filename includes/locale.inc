@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.72 2006/04/19 08:35:08 killes Exp $
+// $Id: locale.inc,v 1.73 2006/04/19 13:22:12 killes Exp $
 
 /**
  * @file
@@ -1391,7 +1391,7 @@ function _locale_get_iso639_list() {
     "cu" => array("Old Slavonic"),
     "cv" => array("Welsh", "Cymraeg"),
     "cy" => array("Welch"),
-    "da" => array("Danish"),
+    "da" => array("Danish", "Dansk"),
     "de" => array("German", "Deutsch"),
     "dv" => array("Maldivian"),
     "dz" => array("Bhutani"),
