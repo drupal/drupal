@@ -1391,7 +1391,7 @@ function _locale_get_iso639_list() {
     "cu" => array("Old Slavonic"),
     "cv" => array("Welsh", "Cymraeg"),
     "cy" => array("Welch"),
-    "da" => array("Danish"),
+    "da" => array("Danish", "Dansk"),
     "de" => array("German", "Deutsch"),
     "dv" => array("Maldivian"),
     "dz" => array("Bhutani"),
