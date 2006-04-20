@@ -213,11 +213,8 @@ function xmlrpc_message_tag_close($parser, $tag) {
       $value_flag = TRUE;
       break;
     case 'value':
-      // "If no type is indicated, the type is string."
-      if (trim($xmlrpc_message->current_tag_contents) != '') {
-        $value = (string)$xmlrpc_message->current_tag_contents;
-        $value_flag = TRUE;
-      }
+      $value = (string)$xmlrpc_message->current_tag_contents;
+      $value_flag = TRUE;
       break;
     case 'boolean':
       $value = (boolean)trim($xmlrpc_message->current_tag_contents);
