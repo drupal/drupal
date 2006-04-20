@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.185 2006/04/14 14:06:40 killes Exp $
+// $Id: update.php,v 1.186 2006/04/20 16:34:31 killes Exp $
 
 /**
  * @file
@@ -571,7 +571,7 @@ function update_fix_system_table() {
         break;
       case 'mysql':
       case 'mysqli':
-        $ret[] = update_sql("ALTER TABLE {system} ADD weight tinyint(3) unsigned default '0' NOT NULL, ADD KEY (weight)");
+        $ret[] = update_sql("ALTER TABLE {system} ADD weight tinyint(2) default '0' NOT NULL, ADD KEY (weight)");
         break;
     }
   }
