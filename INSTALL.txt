@@ -1,4 +1,4 @@
-// $Id: INSTALL.txt,v 1.28 2006/04/17 20:48:25 dries Exp $
+// $Id: INSTALL.txt,v 1.29 2006/04/20 09:07:39 dries Exp $
 
 CONTENTS OF THIS FILE
 ---------------------
@@ -75,10 +75,6 @@ INSTALLATION
      $db_url = "mysql://username:password@localhost/databasename";
 
    If you use PostgreSQL, change "mysql" to "pgsql" in the above line.
-
-   Set $base_url to match the address to your Drupal site:
-
-     $base_url = "http://www.example.com";
 
    In addition, a single Drupal installation can host several
    Drupal-powered sites, each with its own individual configuration.
