@@ -76,10 +76,6 @@ INSTALLATION
 
    If you use PostgreSQL, change "mysql" to "pgsql" in the above line.
 
-   Set $base_url to match the address to your Drupal site:
-
-     $base_url = "http://www.example.com";
-
    In addition, a single Drupal installation can host several
    Drupal-powered sites, each with its own individual configuration.
    If you don't need multiple Drupal sites, skip to the next section.
