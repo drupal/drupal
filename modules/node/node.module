@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.636 2006/04/20 07:11:37 killes Exp $
+// $Id: node.module,v 1.637 2006/04/20 16:38:22 killes Exp $
 
 /**
  * @file
@@ -1488,7 +1488,8 @@ function node_submit($node) {
     $node->teaser = isset($node->body) ? node_teaser($node->body, isset($node->format) ? $node->format : NULL) : '';
   }
 
-  if (user_access('administer nodes')) {
+  $access = user_access('administer nodes');
+  if ($access) {
     // Populate the "authored by" field.
     if ($account = user_load(array('name' => $node->name))) {
       $node->uid = $account->uid;
@@ -1499,10 +1500,10 @@ function node_submit($node) {
 
     $node->created = $node->date ? strtotime($node->date) : NULL;
   }
-  else {
-    // Force defaults in case people modify the form:
-    $node_options = variable_get('node_options_'. $node->type, array('status', 'promote'));
-    foreach (array('status', 'moderate', 'promote', 'sticky', 'revision') as $key) {
+  // Force defaults in case people modify the form:
+  $node_options = variable_get('node_options_'. $node->type, array('status', 'promote'));
+  foreach (array('status', 'moderate', 'promote', 'sticky', 'revision') as $key) {
+    if (!$access || !isset($node->$key)) {
       $node->$key = in_array($key, $node_options);
     }
   }
