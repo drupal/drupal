@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.635 2006/04/18 09:12:40 killes Exp $
+// $Id: node.module,v 1.636 2006/04/20 07:11:37 killes Exp $
 
 /**
  * @file
@@ -1651,7 +1651,7 @@ function node_form_array($node) {
     $form['delete'] = array('#type' => 'button', '#value' => t('Delete'), '#weight' => 50);
   }
 
-  $form['#after_build'] = 'node_form_add_preview';
+  $form['#after_build'] = array('node_form_add_preview');
 
   return $form;
 }
