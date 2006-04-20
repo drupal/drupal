@@ -1651,7 +1651,7 @@ function node_form_array($node) {
     $form['delete'] = array('#type' => 'button', '#value' => t('Delete'), '#weight' => 50);
   }
 
-  $form['#after_build'] = 'node_form_add_preview';
+  $form['#after_build'] = array('node_form_add_preview');
 
   return $form;
 }

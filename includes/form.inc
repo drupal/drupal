@@ -424,9 +424,12 @@ function form_builder($form_id, $form) {
     $count++;
   }
 
-  if (isset($form['#after_build']) && function_exists($form['#after_build']) && !isset($form['#after_build_done'])) {
-    $function = $form['#after_build'];
-    $form = $function($form, $form_values);
+  if (isset($form['#after_build']) && !isset($form['#after_build_done'])) {
+    foreach ($form['#after_build'] as $function) {
+      if (function_exists($function)) {
+        $form = $function($form, $form_values);
+      }
+    }
     $form['#after_build_done'] = TRUE;
   }
 

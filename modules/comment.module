@@ -1355,7 +1355,7 @@ function comment_form($edit, $title = NULL) {
   }
 
   if ($op == t('Preview comment')) {
-    $form['#after_build'] = 'comment_form_add_preview';
+    $form['#after_build'] = array('comment_form_add_preview');
   }
 
   if ($_REQUEST['destination']) {
