@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.102 2006/04/20 07:11:37 killes Exp $
+// $Id: form.inc,v 1.103 2006/04/20 16:35:29 killes Exp $
 
 /**
  * @defgroup form Form generation
@@ -713,6 +713,18 @@ function theme_password_confirm($element) {
   return theme('form_element', $element['#title'], '<div class="container-inline">'. $element['#children']. '</div>', $element['#description'],  $element['#id'], $element['#required'], form_get_error($element));
 }
 
+/*
+ * Expand a password_confirm field into two text boxes.
+ */
+function expand_password_confirm($element) {
+  $element['pass1'] =  array('#type' => 'password', '#size' => 12, '#value' => $element['#value']['pass1']);
+  $element['pass2'] =  array('#type' => 'password', '#size' => 12, '#value' => $element['#value']['pass2']);
+  $element['#validate'] = array('password_confirm_validate' => array());
+  $element['#tree'] = TRUE;
+
+  return $element;
+}
+
 /**
  * Validate password_confirm element.
  */
@@ -725,13 +737,12 @@ function password_confirm_validate($form) {
     form_set_value($form, $pass1);
     if ($pass1 != $pass2) {
       form_error($form, t('The specified passwords do not match.'));
-      form_error($form['pass1']);
-      form_error($form['pass2']);
     }
   }
   elseif ($form['#required'] && !empty($_POST['edit'])) {
-    form_set_error('pass1', t('Password field is required.'));
+    form_error($form, t('Password field is required.'));
   }
+
   return $form;
 }
 
