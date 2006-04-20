@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.316 2006/04/20 16:35:29 killes Exp $
+// $Id: system.module,v 1.317 2006/04/20 16:43:28 killes Exp $
 
 /**
  * @file
@@ -1006,7 +1006,6 @@ function system_modules_submit($form_id, $edit) {
   }
 
   module_list(TRUE, FALSE);
-  menu_rebuild();
 
   include './includes/install.inc';
   foreach ($new_modules as $module) {
@@ -1017,6 +1016,8 @@ function system_modules_submit($form_id, $edit) {
       module_invoke($module, 'install');
     }
   }
+
+  menu_rebuild();
 
   drupal_set_message(t('The configuration options have been saved.'));
   return 'admin/modules';
