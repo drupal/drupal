@@ -693,7 +693,7 @@ function theme_radio($element) {
  */
 function theme_radios($element) {
   if ($element['#title'] || $element['#description']) {
-    return theme('form_element', $element['#title'], $element['#children'], $element['#description'], $element['#id'], $element['#required'], form_get_error($element));
+    return theme('form_element', $element['#title'], $element['#children'], $element['#description'], NULL, $element['#required'], form_get_error($element));
   }
   else {
     return $element['#children'];
@@ -902,7 +902,7 @@ function theme_checkbox($element) {
  */
 function theme_checkboxes($element) {
   if ($element['#title'] || $element['#description']) {
-    return theme('form_element', $element['#title'], $element['#children'], $element['#description'], $element['#id'], $element['#required'], form_get_error($element));
+    return theme('form_element', $element['#title'], $element['#children'], $element['#description'], NULL, $element['#required'], form_get_error($element));
   }
   else {
     return $element['#children'];
