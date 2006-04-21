@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.94 2006/04/12 21:39:15 unconed Exp $
+// $Id: bootstrap.inc,v 1.95 2006/04/21 06:39:00 killes Exp $
 
 /**
  * @file
@@ -132,11 +132,24 @@ function conf_path() {
 }
 
 /**
+ * Unsets all disallowed global variables. See $allowed for what's allowed.
+ */
+function drupal_unset_globals() {
+  if (ini_get('register_globals')) {
+    $allowed = array('_ENV' => 1, '_GET' => 1, '_POST' => 1, '_COOKIE' => 1, '_FILES' => 1, '_SERVER' => 1, '_REQUEST' => 1, 'access_check' => 1);
+    foreach ($GLOBALS as $key => $value) {
+      if (!isset($allowed[$key])) {
+        unset($GLOBALS[$key]);
+      }
+    }
+  }
+}
+
+/**
  * Loads the configuration and sets the base URL correctly.
  */
 function conf_init() {
   global $db_url, $db_prefix, $base_url, $base_path, $base_root, $conf;
-
   $conf = array();
   require_once './'. conf_path() .'/settings.php';
 
@@ -720,6 +733,7 @@ function _drupal_bootstrap($phase) {
 
   switch ($phase) {
     case DRUPAL_BOOTSTRAP_DATABASE:
+      drupal_unset_globals();
       // Initialize the configuration
       conf_init();
       // Initialize the default database.
