@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.637 2006/04/20 16:38:22 killes Exp $
+// $Id: node.module,v 1.638 2006/04/21 10:26:53 unconed Exp $
 
 /**
  * @file
@@ -692,7 +692,7 @@ function node_search($op = 'search', $keys = null) {
         $ranking[] = '%d * (2.0 - 2.0 / (1.0 + nc.totalcount * %f))';
         $arguments2[] = $weight;
         $arguments2[] = $scale;
-        $join2 .= ' LEFT JOIN {node_counter} nc ON n.nid = nc.nid';
+        $join2 .= ' LEFT JOIN {node_counter} nc ON nc.nid = i.sid';
       }
       $select2 = (count($ranking) ? implode(' + ', $ranking) : 'i.relevance') . ' AS score';
 
@@ -2156,7 +2156,7 @@ function node_form_alter($form_id, &$form) {
       '#type' => 'submit',
       '#value' => t('Advanced search'),
       '#prefix' => '<div class="action">',
-      '#suffix' => '</div><br clear="all" />',
+      '#suffix' => '</div><br class="clear" />',
     );
 
     $form['#validate']['node_search_validate'] = array();
