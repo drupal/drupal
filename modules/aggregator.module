@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.276 2006/04/13 08:52:42 killes Exp $
+// $Id: aggregator.module,v 1.277 2006/04/21 15:07:40 killes Exp $
 
 /**
  * @file
@@ -861,8 +861,8 @@ function aggregator_parse_feed(&$data, $feed) {
     /**
      * Atom feeds have a CONTENT and/or SUMMARY tag instead of a DESCRIPTION tag
      */
-    if ($item['CONTENT']) {
-      $item['DESCRIPTION'] = $item['CONTENT'];
+    if ($item['CONTENT:ENCODED']) {
+      $item['DESCRIPTION'] = $item['CONTENT:ENCODED'];
     }
     else if ($item['SUMMARY']) {
       $item['DESCRIPTION'] = $item['SUMMARY'];
