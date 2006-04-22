@@ -1,5 +1,5 @@
 <?php
-// $Id: settings.php,v 1.25 2006/04/12 08:42:47 unconed Exp $
+// $Id: settings.php,v 1.26 2006/04/22 11:04:19 unconed Exp $
 
 /**
  * @file
@@ -31,9 +31,10 @@
  *
  * 10. sites/default
  *
- * If you are installing on a non-standard port number, the ':' is
- * replaced by a '.'. For example, http://www.drupal.org:8080/mysite/test/
- * could be loaded from sites/www.drupal.org.8080.mysite.test/.
+ * If you are installing on a non-standard port number, prefix the
+ * hostname with that number.  For example, 
+ * http://www.drupal.org:8080/mysite/test/ could be loaded from 
+ * sites/8080.www.drupal.org.mysite.test/.
  */
 
 /**
