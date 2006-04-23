@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.317 2006/04/20 16:43:28 killes Exp $
+// $Id: system.module,v 1.318 2006/04/23 06:07:59 drumm Exp $
 
 /**
  * @file
@@ -10,6 +10,8 @@
  * Implementation of hook_help().
  */
 function system_help($section) {
+  global $base_url;
+
   switch ($section) {
     case 'admin/help#system':
       $output = '<p>'. t('The system module provides system-wide defaults such as running jobs at a particular time, and storing web pages to improve efficiency.   The ability to run scheduled jobs makes administering the web site more usable, as administrators do not have to manually start jobs.   The storing of web pages, or caching, allows the site to efficiently re-use web pages and improve web site performance.  The settings module provides control over preferences, behaviours including visual and operational settings.') .'</p>';
@@ -39,7 +41,8 @@ function system_help($section) {
       $theme = array_pop($reference);
       return t('<p>These options control the display settings for the <code>%template</code> theme. When your site is displayed using this theme, these settings will be used. By clicking "Reset to defaults," you can choose to use the <a href="%global">global settings</a> for this theme.</p>', array('%template' => $theme, '%global' => url('admin/themes/settings')));
     case 'admin/modules':
-      return t('<p>Modules are plugins for Drupal that extend its core functionality. Here you can select which modules are enabled. Click on the name of the module in the navigation menu for their individual configuration pages. Once a module is enabled, new <a href="%permissions">permissions</a> might be made available. Modules can automatically be temporarily disabled to reduce server load when your site becomes extremely busy by enabling the throttle.module and checking throttle. The auto-throttle functionality must be enabled on the <a href="%throttle">throttle configuration page</a> after having enabled the throttle module.</p>', array('%permissions' => url('admin/access/permissions'), '%throttle' => url('admin/settings/throttle')));
+      return t('<p>Modules are plugins for Drupal that extend its core functionality. Here you can select which modules are enabled. Click on the name of the module in the navigation menu for their individual configuration pages. Once a module is enabled, new <a href="%permissions">permissions</a> might be made available. Modules can automatically be temporarily disabled to reduce server load when your site becomes extremely busy by enabling the throttle.module and checking throttle. The auto-throttle functionality must be enabled on the <a href="%throttle">throttle configuration page</a> after having enabled the throttle module.</p>
+<p>It is important that <a href="%update-php">update.php</a> is run every time a module is updated to a newer version.</p>', array('%permissions' => url('admin/access/permissions'), '%throttle' => url('admin/settings/throttle'), '%update-php' => $base_url .'/update.php'));
   }
 }
 
