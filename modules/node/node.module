@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.639 2006/04/21 19:16:12 unconed Exp $
+// $Id: node.module,v 1.640 2006/04/23 05:22:05 drumm Exp $
 
 /**
  * @file
@@ -1520,7 +1520,7 @@ function node_submit($node) {
 /**
  * Perform validation checks on the given node.
  */
-function node_validate($node) {
+function node_validate($node, $form = array()) {
   // Convert the node to an object, if necessary.
   $node = (object)$node;
 
@@ -1550,12 +1550,12 @@ function node_validate($node) {
   }
 
   // Do node-type-specific validation checks.
-  node_invoke($node, 'validate');
-  node_invoke_nodeapi($node, 'validate');
+  node_invoke($node, 'validate', $form);
+  node_invoke_nodeapi($node, 'validate', $form);
 }
 
-function node_form_validate($form_id, $edit) {
-  node_validate($edit);
+function node_form_validate($form_id, $form_values, $form) {
+  node_validate($form_values, $form);
 }
 
 function node_object_prepare(&$node) {
