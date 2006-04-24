@@ -165,6 +165,7 @@ function xmlrpc_message_get() {
 function xmlrpc_message_tag_open($parser, $tag, $attr) {
   $xmlrpc_message = xmlrpc_message_get();
   $xmlrpc_message->current_tag_contents = '';
+  $xmlrpc_message->last_open = $tag;
   switch($tag) {
     case 'methodCall':
     case 'methodResponse':
@@ -213,8 +214,13 @@ function xmlrpc_message_tag_close($parser, $tag) {
       $value_flag = TRUE;
       break;
     case 'value':
-      $value = (string)$xmlrpc_message->current_tag_contents;
-      $value_flag = TRUE;
+      // If no type is indicated, the type is string.
+      // We take special care for empty values
+      if (trim($xmlrpc_message->current_tag_contents) != '' || $xmlrpc_message->last_open == 'value') {
+        $value = (string)$xmlrpc_message->current_tag_contents;
+        $value_flag = TRUE;
+      }
+      unset($xmlrpc_message->last_open);
       break;
     case 'boolean':
       $value = (boolean)trim($xmlrpc_message->current_tag_contents);
