@@ -1,5 +1,5 @@
 <?php
-// $Id: path.inc,v 1.3 2006/01/24 08:18:26 dries Exp $
+// $Id: path.inc,v 1.4 2006/04/24 19:25:37 dries Exp $
 
 /**
  * @file
@@ -186,4 +186,16 @@ function drupal_set_title($title = NULL) {
     $stored_title = $title;
   }
   return $stored_title;
+}
+
+/**
+ * Check if the current page is the front page.
+ *
+ * @return
+ *   Boolean value: TRUE if the current page is the front page; FALSE if otherwise.
+ */
+function drupal_is_front_page() {
+  // As drupal_init_path updates $_GET['q'] with the 'site_frontpage' path,
+  // rely on $_REQUEST to verify the original value of 'q'.
+  return !isset($_REQUEST['q']);
 }

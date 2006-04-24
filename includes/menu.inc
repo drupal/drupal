@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.119 2006/04/14 22:16:02 killes Exp $
+// $Id: menu.inc,v 1.120 2006/04/24 19:25:37 dries Exp $
 
 /**
  * @file
@@ -528,6 +528,12 @@ function menu_get_active_help() {
  * Returns an array of rendered menu items in the active breadcrumb trail.
  */
 function menu_get_active_breadcrumb() {
+
+  // No breadcrumb for the front page.
+  if (drupal_is_front_page()) {
+    return array();
+  }
+
   $links[] = l(t('Home'), '<front>');
 
   $trail = _menu_get_active_trail();

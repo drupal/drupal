@@ -1,5 +1,5 @@
 <?php
-// $Id: phptemplate.engine,v 1.32 2006/04/07 15:32:17 unconed Exp $
+// $Id: phptemplate.engine,v 1.33 2006/04/24 19:25:37 dries Exp $
 
 /**
  * @file
@@ -84,13 +84,13 @@ function _phptemplate_callback($hook, $variables = array(), $file = NULL) {
  *   A sequential array of variables passed to the theme function.
  */
 function _phptemplate_default_variables($hook, $variables) {
-  global $theme;
+  global $theme, $sidebar_indicator;
   static $count = array();
+
   $count[$hook] = isset($count[$hook]) && is_int($count[$hook]) ? $count[$hook] : 1;
   $variables['zebra'] = ($count[$hook] % 2) ? 'odd' : 'even';
   $variables['id'] = $count[$hook]++;
 
-  global $sidebar_indicator;
   if ($hook == 'block') {
     $count['block_counter'][$sidebar_indicator] = isset($count['block_counter'][$sidebar_indicator]) && is_int($count['block_counter'][$sidebar_indicator]) ? $count['block_counter'][$sidebar_indicator] : 1;
     $variables['block_zebra'] = ($count['block_counter'][$sidebar_indicator] % 2) ? 'odd' : 'even';
@@ -110,10 +110,7 @@ function _phptemplate_default_variables($hook, $variables) {
   }
   // Tell all templates where they are located.
   $variables['directory'] = path_to_theme();
-
-  if (drupal_get_path_alias($_GET['q']) == variable_get('site_frontpage', 'node')) {
-    $variables['is_front'] = true;
-  }
+  $variables['is_front'] = drupal_is_front_page();
 
   return $variables;
 }
@@ -142,7 +139,7 @@ function phptemplate_features() {
 function phptemplate_page($content) {
 
   /* Set title and breadcrumb to declared values */
-  if (drupal_get_path_alias($_GET['q']) == variable_get('site_frontpage', 'node')) {
+  if (drupal_is_front_page()) {
     $mission = filter_xss_admin(theme_get_setting('mission'));
   }
 
