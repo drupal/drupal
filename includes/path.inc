@@ -187,3 +187,15 @@ function drupal_set_title($title = NULL) {
   }
   return $stored_title;
 }
+
+/**
+ * Check if the current page is the front page.
+ *
+ * @return
+ *   Boolean value: TRUE if the current page is the front page; FALSE if otherwise.
+ */
+function drupal_is_front_page() {
+  // As drupal_init_path updates $_GET['q'] with the 'site_frontpage' path,
+  // rely on $_REQUEST to verify the original value of 'q'.
+  return !isset($_REQUEST['q']);
+}
