@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.453 2006/04/20 07:11:37 killes Exp $
+// $Id: comment.module,v 1.454 2006/04/24 18:42:53 dries Exp $
 
 /**
  * @file
@@ -710,12 +710,12 @@ function comment_render($node, $cid = 0) {
       $nid = 0;
     }
 
-    if (empty($mode)) {
-      $mode = $user->mode ? $user->mode : ($_SESSION['comment_mode'] ? $_SESSION['comment_mode'] : variable_get('comment_default_mode', COMMENT_MODE_THREADED_EXPANDED));
+    if (!isset($mode)) {
+      $mode = isset($user->mode) ? $user->mode : (isset($_SESSION['comment_mode']) ? $_SESSION['comment_mode'] : variable_get('comment_default_mode', COMMENT_MODE_THREADED_EXPANDED));
     }
 
-    if (empty($order)) {
-      $order = $user->sort ? $user->sort : ($_SESSION['comment_sort'] ? $_SESSION['comment_sort'] : variable_get('comment_default_order', COMMENT_ORDER_NEWEST_FIRST));
+    if (!isset($order)) {
+      $order = isset($user->sort) ? $user->sort : (isset($_SESSION['comment_sort']) ? $_SESSION['comment_sort'] : variable_get('comment_default_order', COMMENT_ORDER_NEWEST_FIRST));
     }
 
     if (empty($comments_per_page)) {
