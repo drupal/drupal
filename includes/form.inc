@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.105 2006/04/22 08:24:55 killes Exp $
+// $Id: form.inc,v 1.106 2006/04/24 19:34:50 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -951,7 +951,7 @@ function theme_button($element) {
  *   A themed HTML string representing the hidden form field.
  */
 function theme_hidden($element) {
-  return '<input type="hidden" name="'. $element['#name'] . '" value="'. check_plain($element['#value']) ."\" " . drupal_attributes($element['#attributes']) ." />\n";
+  return '<input type="hidden" name="'. $element['#name'] . '" id="'. $element['#id'] . '" value="'. check_plain($element['#value']) ."\" " . drupal_attributes($element['#attributes']) ." />\n";
 }
 
 /**
