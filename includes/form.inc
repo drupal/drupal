@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.107 2006/04/25 10:00:57 killes Exp $
+// $Id: form.inc,v 1.108 2006/04/25 20:44:00 killes Exp $
 
 /**
  * @defgroup form Form generation
@@ -727,12 +727,9 @@ function expand_password_confirm($element) {
  * Validate password_confirm element.
  */
 function password_confirm_validate($form) {
-  if (!empty($form['pass1']['#value'])) {
-    $pass1 = trim($form['pass1']['#value']);
+  $pass1 = trim($form['pass1']['#value']);
+  if (!empty($pass1)) {
     $pass2 = trim($form['pass2']['#value']);
-    form_set_value($form['pass1'], NULL);
-    form_set_value($form['pass2'], NULL);
-    form_set_value($form, $pass1);
     if ($pass1 != $pass2) {
       form_error($form, t('The specified passwords do not match.'));
     }
@@ -740,6 +737,12 @@ function password_confirm_validate($form) {
   elseif ($form['#required'] && !empty($_POST['edit'])) {
     form_error($form, t('Password field is required.'));
   }
+
+  // Password field must be converted from a two-element array into a single
+  // string regardless of validation results.
+  form_set_value($form['pass1'], NULL);
+  form_set_value($form['pass2'], NULL);
+  form_set_value($form, $pass1);
 
   return $form;
 }
