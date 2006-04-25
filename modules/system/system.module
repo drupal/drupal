@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.318 2006/04/23 06:07:59 drumm Exp $
+// $Id: system.module,v 1.319 2006/04/25 10:00:57 killes Exp $
 
 /**
  * @file
@@ -760,6 +760,9 @@ function system_theme_settings_submit($form_id, $values) {
   $op = isset($_POST['op']) ? $_POST['op'] : '';
   $key = $values['var'];
 
+  // Exclude unnecessary elements.
+  unset($values['var'], $values['submit'], $values['reset'], $values['form_id']);
+
   if ($op == t('Reset to defaults')) {
     variable_del($key);
     drupal_set_message(t('The configuration options have been reset to their default values.'));
@@ -785,6 +788,9 @@ function system_settings_form_submit($form_id, $values) {
     drupal_set_message(t('It appears your host is not configured correctly for Clean URLs. Please check for <code>ModRewrite</code> support with your administrator.'), 'error');
     $values['clean_url'] = 0;
   }
+
+  // Exclude unnecessary elements.
+  unset($values['submit'], $values['reset'], $values['form_id']);
 
   foreach ($values as $key => $value) {
     if ($op == t('Reset to defaults')) {

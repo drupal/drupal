@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.106 2006/04/24 19:34:50 dries Exp $
+// $Id: form.inc,v 1.107 2006/04/25 10:00:57 killes Exp $
 
 /**
  * @defgroup form Form generation
@@ -176,8 +176,6 @@ function drupal_validate_form($form_id, $form, $callback = NULL) {
 function drupal_submit_form($form_id, $form, $callback = NULL) {
   global $form_values;
   $default_args = array($form_id, &$form_values);
-  // Prevent system module forms (system/theme settings) from saving certain form fields to the variables table.
-  unset($GLOBALS['form_values']['submit'], $GLOBALS['form_values']['reset'], $GLOBALS['form_values']['form_id']);
 
   if (isset($form['#submit'])) {
     foreach ($form['#submit'] as $function => $args) {
