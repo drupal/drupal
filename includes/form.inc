@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.108 2006/04/25 20:44:00 killes Exp $
+// $Id: form.inc,v 1.109 2006/04/25 20:46:57 killes Exp $
 
 /**
  * @defgroup form Form generation
@@ -375,9 +375,9 @@ function form_builder($form_id, $form) {
         }
       }
     }
-    if (isset($form['#form_submitted']) && isset($_POST[$form['#name']])) {
+    if (isset($form['#executes_submit_callback']) && isset($_POST[$form['#name']])) {
       if ($_POST[$form['#name']] == $form['#value']) {
-        $form_submitted = $form_submitted || $form['#form_submitted'];
+        $form_submitted = $form_submitted || $form['#executes_submit_callback'];
       }
     }
   }
