@@ -375,9 +375,9 @@ function form_builder($form_id, $form) {
         }
       }
     }
-    if (isset($form['#form_submitted']) && isset($_POST[$form['#name']])) {
+    if (isset($form['#executes_submit_callback']) && isset($_POST[$form['#name']])) {
       if ($_POST[$form['#name']] == $form['#value']) {
-        $form_submitted = $form_submitted || $form['#form_submitted'];
+        $form_submitted = $form_submitted || $form['#executes_submit_callback'];
       }
     }
   }
