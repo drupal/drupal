@@ -274,6 +274,7 @@ function taxonomy_form_vocabulary($edit = array()) {
   if ($edit['vid']) {
     $form['delete'] = array('#type' => 'submit', '#value' => t('Delete'));
     $form['vid'] = array('#type' => 'value', '#value' => $edit['vid']);
+    $form['module'] = array('#type' => 'value', '#value' => $edit['module']);
   }
   return drupal_get_form('taxonomy_form_vocabulary', $form);
 }
