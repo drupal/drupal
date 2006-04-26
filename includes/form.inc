@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.110 2006/04/26 18:12:24 unconed Exp $
+// $Id: form.inc,v 1.111 2006/04/26 18:21:07 unconed Exp $
 
 /**
  * @defgroup form Form generation
@@ -498,13 +498,21 @@ function form_render(&$elements) {
   uasort($elements, "_form_sort");
 
   if (!isset($elements['#children'])) {
-    /* render all the children using a theme function */
+    /* Render all the children that use a theme function */
     if (isset($elements['#theme']) && !$elements['#theme_used']) {
       $elements['#theme_used'] = TRUE;
+
+      $previous_value = $elements['#value'];
       $previous_type = $elements['#type'];
+      $elements['#value'] = '';
       $elements['#type'] = 'markup';
+
       $content = theme($elements['#theme'], $elements);
+
+      $elements['#value'] = $previous_value;
       $elements['#type'] = $previous_type;
+
+      unset($elements['#prefix'], $elements['#suffix']);
     }
     /* render each of the children using form_render and concatenate them */
     if (!$content) {
