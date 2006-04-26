@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.109 2006/04/25 20:46:57 killes Exp $
+// $Id: form.inc,v 1.110 2006/04/26 18:12:24 unconed Exp $
 
 /**
  * @defgroup form Form generation
@@ -59,9 +59,10 @@ function element_children($element) {
  *
  */
 function drupal_get_form($form_id, &$form, $callback = NULL) {
-  global $form_values, $form_submitted, $user;
+  global $form_values, $form_submitted, $user, $form_button_counter;
   $form_values = array();
   $form_submitted = FALSE;
+  $form_button_counter = array(0, 0);
 
   $form['#type'] = 'form';
   if (isset($form['#token'])) {
@@ -114,7 +115,10 @@ function drupal_get_form($form_id, &$form, $callback = NULL) {
   $form = form_builder($form_id, $form);
   if (!empty($_POST['edit']) && (($_POST['edit']['form_id'] == $form_id) || ($_POST['edit']['form_id'] == $callback))) {
     drupal_validate_form($form_id, $form, $callback);
-    if ($form_submitted && !form_get_errors()) {
+    // IE does not send a button value when there is only one submit button (and no non-submit buttons)
+    // and you submit by pressing enter.
+    // In that case we accept a submission without button values.
+    if (($form_submitted || (!$form_button_counter[0] && $form_button_counter[1])) && !form_get_errors()) {
       $redirect = drupal_submit_form($form_id, $form, $callback);
       if (isset($redirect)) {
         $goto = $redirect;
@@ -312,8 +316,7 @@ function form_error(&$element, $message = '') {
  *   An associative array containing the structure of the form.
  */
 function form_builder($form_id, $form) {
-  global $form_values;
-  global $form_submitted;
+  global $form_values, $form_submitted, $form_button_counter;
 
   /* Use element defaults */
   if ((!empty($form['#type'])) && ($info = _element_info($form['#type']))) {
@@ -375,8 +378,11 @@ function form_builder($form_id, $form) {
         }
       }
     }
-    if (isset($form['#executes_submit_callback']) && isset($_POST[$form['#name']])) {
-      if ($_POST[$form['#name']] == $form['#value']) {
+    if (isset($form['#executes_submit_callback'])) {
+      // Count submit and non-submit buttons
+      $form_button_counter[$form['#executes_submit_callback']]++;
+      // See if a submit button was pressed
+      if (isset($_POST[$form['#name']]) && $_POST[$form['#name']] == $form['#value']) {
         $form_submitted = $form_submitted || $form['#executes_submit_callback'];
       }
     }
