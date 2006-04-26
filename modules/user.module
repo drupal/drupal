@@ -553,10 +553,8 @@ function user_block($op = 'list', $delta = 0, $edit = array()) {
           $items[] = l(t('Request new password'), 'user/password', array('title' => t('Request new password via e-mail.')));
           $form['links'] = array('#value' => theme('item_list', $items));
 
-          $output .= drupal_get_form('user_login_block', $form, 'user_login');
-
           $block['subject'] = t('User login');
-          $block['content'] = $output;
+          $block['content'] = drupal_get_form('user_login_block', $form, 'user_login');
         }
         return $block;
 
