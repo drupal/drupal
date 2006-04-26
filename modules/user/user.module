@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.610 2006/04/26 11:07:25 killes Exp $
+// $Id: user.module,v 1.611 2006/04/26 15:07:12 killes Exp $
 
 /**
  * @file
@@ -1077,7 +1077,7 @@ function user_pass_reset($uid, $timestamp, $hashed_pass, $action = NULL) {
   // Check if the user is already logged in. The back button is often the culprit here.
   if ($user->uid) {
     drupal_set_message(t('You have already used this one-time login link. It is not necessary to use this link to login anymore. You are already logged in.'));
-    drupal_goto(variable_get('site_frontpage', 'node'));
+    drupal_goto();
   }
   else {
     // Time out, in seconds, until login URL expires. 24 hours = 86400 seconds.
