@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.96 2006/04/18 08:32:04 killes Exp $
+// $Id: upload.module,v 1.97 2006/04/26 17:41:09 killes Exp $
 
 /**
  * @file
@@ -17,11 +17,11 @@ function upload_help($section) {
       $output .= '<p>'. t('Users with the upload files permission can upload attachments. You can choose which post types can take attachments on the content types settings page.  Each user role can be customized for the file size of uploads, and the dimension of image files.') .'</p>';
       $output .= t('<p>You can</p>
 <ul>
-<li>administer user permissions at <a href="%admin-user-configure">administer &gt;&gt; user &gt;&gt; configure &gt;&gt; permissions</a>.</li>
-<li>administer content at <a href="%admin-node-configure">administer &gt;&gt; content types</a>.</li>
-<li>administer upload at <a href="%admin-settings">administer &gt;&gt; settings</a>.</li>
+<li>administer user permissions at <a href="%admin-access">administer &gt;&gt; access control</a>.</li>
+<li>administer content at <a href="%admin-content-types">administer &gt;&gt; settings &gt;&gt; content types</a>.</li>
+<li>administer upload at <a href="%admin-upload">administer &gt;&gt; settings &gt;&gt; upload</a>.</li>
 </ul>
-', array('%admin-user-configure' => url('admin/user/configure'), '%admin-node-configure' => url('admin/node/configure'), '%admin-settings' => url('admin/settings')));
+', array('%admin-access' => url('admin/access'), '%admin-content-types' => url('admin/settings/content-types'), '%admin-upload' => url('admin/settings/upload')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%upload">Upload page</a>.', array('%upload' => 'http://drupal.org/handbook/modules/upload/')) .'</p>';
       return $output;
     case 'admin/modules#description':
