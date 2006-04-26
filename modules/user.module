@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.609 2006/04/26 10:36:22 killes Exp $
+// $Id: user.module,v 1.610 2006/04/26 11:07:25 killes Exp $
 
 /**
  * @file
@@ -1671,6 +1671,12 @@ function user_admin_access() {
   return $output;
 }
 
+/**
+ * Use this API to retreive an array of all available roles
+ * @param $membersonly Set this to TRUE to omit the special role 'anonymous'.
+ * @param $permission A string containing a permission. If set, only roles that have that permission are returned.
+ * @return An associative array, with the role id as key and the role name as value.
+ **/
 function user_roles($membersonly = 0, $permission = 0) {
   $roles = array();
 
