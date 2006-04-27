@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.98 2006/04/27 09:38:34 killes Exp $
+// $Id: upload.module,v 1.99 2006/04/27 18:12:25 unconed Exp $
 
 /**
  * @file
@@ -235,6 +235,7 @@ function upload_form_alter($form_id, &$form) {
       drupal_add_js('misc/progress.js');
       drupal_add_js('misc/upload.js');
 
+      // Attachments fieldset
       $form['attachments'] = array(
         '#type' => 'fieldset',
         '#title' => t('File attachments'),
@@ -245,7 +246,13 @@ function upload_form_alter($form_id, &$form) {
         '#suffix' => '</div>',
         '#weight' => 30,
       );
-      $form['attachments'] += _upload_form($node);
+
+      // Wrapper for fieldset contents (used by upload JS).
+      $form['attachments']['wrapper'] = array(
+        '#prefix' => '<div id="attach-wrapper">',
+        '#suffix' => '</div>',
+      );
+      $form['attachments']['wrapper'] += _upload_form($node);
       $form['#attributes']['enctype'] = 'multipart/form-data';
     }
   }
@@ -268,7 +275,7 @@ function _upload_validate(&$node) {
 
         // Bypass validation for uid  = 1.
         if ($user->uid != 1) {
-          //Update filesize accumulator.
+          // Update filesize accumulator.
           $filesize += $file->filesize;
 
           // Validate file against all users roles.
@@ -545,6 +552,7 @@ function upload_delete_revision($node) {
 
 function _upload_form($node) {
   $form['#theme'] = 'upload_form_new';
+
   if (is_array($node->files) && count($node->files)) {
     $form['files']['#theme'] = 'upload_form_current';
     $form['files']['#tree'] = TRUE;
@@ -568,24 +576,20 @@ function _upload_form($node) {
   }
 
   if (user_access('upload files')) {
+    // This div is hidden when the user uploads through JS.
+    $form['new'] = array(
+      '#prefix' => '<div id="attach-hide">',
+      '#suffix' => '</div>',
+    );
     $form['new']['upload'] = array('#type' => 'file', '#title' => t('Attach new file'), '#size' => 40);
-    $form['new']['fileop'] = array('#type' => 'button', '#value' => t('Attach'), '#name'=> 'fileop', '#attributes' => array('id' => 'fileop'));
+    $form['new']['attach'] = array('#type' => 'button', '#value' => t('Attach'), '#name'=> 'attach', '#attributes' => array('id' => 'attach'));
     // The class triggers the js upload behaviour.
-    $form['fileop'] = array('#type' => 'hidden', '#value' => url('upload/js', NULL, NULL, TRUE), '#attributes' => array('class' => 'upload'));
+    $form['attach'] = array('#type' => 'hidden', '#value' => url('upload/js', NULL, NULL, TRUE), '#attributes' => array('class' => 'upload'));
   }
 
   // Needed for JS
   $form['current']['vid'] = array('#type' => 'hidden', '#value' => $node->vid);
   return $form;
-}
-
-function theme_upload_form_new($form) {
-  $output .= '<div id="fileop-wrapper">' . "\n";
-  $output .= '<div id="fileop-hide">' . "\n";
-  $output .= form_render($form) . "\n";
-  $output .= "</div>\n";
-  $output .= "</div>\n";
-  return $output;
 }
 
 function theme_upload_form_current(&$form) {
@@ -659,7 +663,6 @@ function upload_js() {
   }
   $form = form_builder('upload_js', $form);
   $output = theme('status_messages') . form_render($form);
-
   // We send the updated file attachments form.
   print drupal_to_js(array('status' => TRUE, 'data' => $output));
   exit;

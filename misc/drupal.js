@@ -1,4 +1,4 @@
-// $Id: drupal.js,v 1.21 2006/04/05 00:53:16 unconed Exp $
+// $Id: drupal.js,v 1.22 2006/04/27 18:12:25 unconed Exp $
 
 /**
  * Only enable Javascript functionality if all required features are supported.
@@ -113,7 +113,7 @@ function HTTPPost(uri, callbackFunction, callbackParameter, object) {
  * window.parent.iframeHandler() after submission.
  */
 function redirectFormButton(uri, button, handler) {
-  // Make sure we have an iframe to target
+  // (Re)create an iframe to target.
   createIframe();
 
   // Trap the button
@@ -140,8 +140,8 @@ function redirectFormButton(uri, button, handler) {
         // Get response from iframe body
         try {
           response = (iframe.contentWindow || iframe.contentDocument || iframe).document.body.innerHTML;
-          // Firefox 1.0.x hack: Replace control characters
-          response = response.replace(/[\f\n\r\t\v]/g, ' ');
+          // Firefox 1.0.x hack: Remove (corrupted) control characters
+          response = response.replace(/[\f\n\r\t]/g, ' ');
           if (window.opera) {
             // Opera-hack: it returns innerHTML sanitized.
             response = response.replace(/&quot;/g, '"');
@@ -151,8 +151,8 @@ function redirectFormButton(uri, button, handler) {
           response = null;
         }
 
-        // Recreate the iframe: re-using an old iframe can sometimes cause browser bugs.
-        createIframe();
+        $('redirect-target').onload = null;
+        $('redirect-target').src = 'about:blank';
 
         response = parseJson(response);
         // Check response code
@@ -353,7 +353,7 @@ function createIframe() {
  */
 function deleteIframe() {
   var holder = $('redirect-holder');
-  if (typeof holder != 'undefined') {
+  if (holder != null) {
     removeNode(holder);
   }
 }
