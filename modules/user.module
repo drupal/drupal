@@ -776,7 +776,7 @@ function user_menu($may_cache) {
       'weight' => 10);
   }
   else {
-    if (arg(0) == 'user' && is_numeric(arg(1))) {
+    if (arg(0) == 'user' && is_numeric(arg(1)) && arg(1) > 0) {
       $account = user_load(array('uid' => arg(1)));
 
       if ($user !== FALSE) {
