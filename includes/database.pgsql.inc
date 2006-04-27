@@ -1,5 +1,5 @@
 <?php
-// $Id: database.pgsql.inc,v 1.28 2006/04/11 11:33:14 killes Exp $
+// $Id: database.pgsql.inc,v 1.29 2006/04/27 20:38:49 unconed Exp $
 
 /**
  * @file
@@ -331,7 +331,7 @@ function db_escape_string($text) {
  * This function automatically starts a transaction.
  */
 function db_lock_table($table) {
-  db_query('BEGIN; LOCK TABLE {%s} IN EXCLUSIVE MODE', $table);
+  db_query('BEGIN; LOCK TABLE {'. db_escape_table($table) .'} IN EXCLUSIVE MODE');
 }
 
 /**

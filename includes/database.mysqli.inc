@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysqli.inc,v 1.16 2006/02/20 16:46:59 dries Exp $
+// $Id: database.mysqli.inc,v 1.17 2006/04/27 20:38:49 unconed Exp $
 
 /**
  * @file
@@ -355,7 +355,7 @@ function db_escape_string($text) {
  * Lock a table.
  */
 function db_lock_table($table) {
-  db_query('LOCK TABLES {%s} WRITE', $table);
+  db_query('LOCK TABLES {'. db_escape_table($table) .'} WRITE');
 }
 
 /**

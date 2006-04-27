@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.55 2006/04/07 11:28:20 killes Exp $
+// $Id: database.inc,v 1.56 2006/04/27 20:38:49 unconed Exp $
 
 /**
  * @file
@@ -313,6 +313,15 @@ function db_rewrite_sql($query, $primary_table = 'n', $primary_field = 'nid',  $
   }
 
   return $query;
+}
+
+/**
+ * Restrict a dynamic tablename to safe characters.
+ *
+ * Only keeps alphanumeric and underscores.
+ */
+function db_escape_table($string) {
+  return preg_replace('/[^A-Za-z0-9_]+/', '', $string);
 }
 
 /**
