@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.640 2006/04/23 05:22:05 drumm Exp $
+// $Id: node.module,v 1.641 2006/04/27 22:20:51 unconed Exp $
 
 /**
  * @file
@@ -716,6 +716,8 @@ function node_search($op = 'search', $keys = null) {
 
         // Fetch comments for snippet
         $node->body .= module_invoke('comment', 'nodeapi', $node, 'update index');
+        // Fetch terms for snippet
+        $node->body .= module_invoke('taxonomy', 'nodeapi', $node, 'update index');
 
         $extra = node_invoke_nodeapi($node, 'search result');
         $results[] = array('link' => url('node/'. $item->sid),
