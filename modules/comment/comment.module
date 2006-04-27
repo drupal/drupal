@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.454 2006/04/24 18:42:53 dries Exp $
+// $Id: comment.module,v 1.455 2006/04/27 22:03:20 unconed Exp $
 
 /**
  * @file
@@ -19,16 +19,16 @@ define('COMMENT_NOT_PUBLISHED', 1);
 /**
  * Constants to define the viewing modes for comment listings
  */
-define('COMMENT_MODE_FLAT_COLLAPSED', 0);
-define('COMMENT_MODE_FLAT_EXPANDED', 1);
-define('COMMENT_MODE_THREADED_COLLAPSED', 2);
-define('COMMENT_MODE_THREADED_EXPANDED', 3);
+define('COMMENT_MODE_FLAT_COLLAPSED', 1);
+define('COMMENT_MODE_FLAT_EXPANDED', 2);
+define('COMMENT_MODE_THREADED_COLLAPSED', 3);
+define('COMMENT_MODE_THREADED_EXPANDED', 4);
 
 /**
  * Constants to define the viewing orders for comment listings
  */
-define('COMMENT_ORDER_NEWEST_FIRST', 0);
-define('COMMENT_ORDER_OLDEST_FIRST', 1);
+define('COMMENT_ORDER_NEWEST_FIRST', 1);
+define('COMMENT_ORDER_OLDEST_FIRST', 2);
 
 /**
  * Constants to define the position of the comment controls
@@ -696,11 +696,6 @@ function comment_links($comment, $return = 1) {
 function comment_render($node, $cid = 0) {
   global $user;
 
-  $mode = $_GET['mode'];
-  $order = $_GET['order'];
-  $comments_per_page = $_GET['comments_per_page'];
-  $comment_page = $_GET['comment_page'];
-
   $output = '';
 
   if (user_access('access comments')) {
@@ -710,17 +705,9 @@ function comment_render($node, $cid = 0) {
       $nid = 0;
     }
 
-    if (!isset($mode)) {
-      $mode = isset($user->mode) ? $user->mode : (isset($_SESSION['comment_mode']) ? $_SESSION['comment_mode'] : variable_get('comment_default_mode', COMMENT_MODE_THREADED_EXPANDED));
-    }
-
-    if (!isset($order)) {
-      $order = isset($user->sort) ? $user->sort : (isset($_SESSION['comment_sort']) ? $_SESSION['comment_sort'] : variable_get('comment_default_order', COMMENT_ORDER_NEWEST_FIRST));
-    }
-
-    if (empty($comments_per_page)) {
-      $comments_per_page = $user->comments_per_page ? $user->comments_per_page : ($_SESSION['comment_comments_per_page'] ? $_SESSION['comment_comments_per_page'] : variable_get('comment_default_per_page', '50'));
-    }
+    $mode = _comment_get_display_setting('mode');
+    $order = _comment_get_display_setting('sort');
+    $comments_per_page = _comment_get_display_setting('comments_per_page');
 
     $output .= "<a id=\"comment\"></a>\n";
 
@@ -866,9 +853,7 @@ function comment_render($node, $cid = 0) {
         }
       }
 
-      // Use the standard pager; $pager_total is the number of returned rows,
-      // is global and defined in pager.inc.
-      $output .= theme('pager', NULL, $comments_per_page, 0, array('comments_per_page' => $comments_per_page));
+      $output .= theme('pager', NULL, $comments_per_page, 0);
 
       if (db_num_rows($result) && (variable_get('comment_controls', COMMENT_CONTROLS_HIDDEN) == COMMENT_CONTROLS_BELOW || variable_get('comment_controls', COMMENT_CONTROLS_HIDDEN) == COMMENT_CONTROLS_ABOVE_BELOW)) {
         $output .= comment_controls($mode, $order, $comments_per_page);
@@ -1670,6 +1655,49 @@ function _comment_get_orders() {
  */
 function _comment_per_page() {
   return drupal_map_assoc(array(10, 30, 50, 70, 90, 150, 200, 250, 300));
+}
+
+/**
+ * Return a current comment display setting
+ *
+ * $setting can be one of these: 'mode', 'sort', 'comments_per_page'
+ */
+function _comment_get_display_setting($setting) {
+  global $user;
+  
+  if ($_GET[$setting]) {
+    $value = $_GET[$setting];
+  }
+  else {
+    // get the setting's site default
+    switch ($setting) {
+      case 'mode':
+        $default = variable_get('comment_default_mode', COMMENT_MODE_THREADED_EXPANDED);
+        break;
+      case 'sort':
+        $default = variable_get('comment_default_order', COMMENT_ORDER_NEWEST_FIRST);
+        break;
+      case 'comments_per_page':
+        $default = variable_get('comment_default_per_page', '50');
+    }
+    if (variable_get('comment_controls', COMMENT_CONTROLS_HIDDEN) == COMMENT_CONTROLS_HIDDEN) {
+      // if comment controls are disabled use site default
+      $value = $default;
+    }
+    else {
+      // otherwise use the user's setting if set
+      if ($user->$setting) {
+        $value = $user->$setting;
+      }
+      else if ($_SESSION['comment_'. $setting]) {
+        $value = $_SESSION['comment_'. $setting];
+      }
+      else {
+        $value = $default;
+      }
+    }
+  }
+  return $value;
 }
 
 /**
