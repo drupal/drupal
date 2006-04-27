@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.536 2006/04/13 13:15:29 unconed Exp $
+// $Id: common.inc,v 1.537 2006/04/27 08:44:45 dries Exp $
 
 /**
  * @file
@@ -204,11 +204,12 @@ function drupal_query_string_encode($query, $exclude = array(), $parent = '') {
  * @see drupal_goto()
  */
 function drupal_get_destination() {
-  if ($_REQUEST['destination']) {
+  if (isset($_REQUEST['destination'])) {
     return 'destination='. urlencode($_REQUEST['destination']);
   }
   else {
-    $path = $_GET['q'];
+    // Use $_REQUEST here to retrieve the original path.
+    $path = isset($_REQUEST['q']) ? $_REQUEST['q'] : '';
     $query = drupal_query_string_encode($_GET, array('q'));
     if ($query != '') {
       $path .= '?'. $query;
@@ -994,7 +995,7 @@ function url($path = NULL, $query = NULL, $fragment = NULL, $absolute = FALSE) {
   $base = ($absolute ? $base_url . '/' : base_path());
 
   // The special path '<front>' links to the default front page.
-  if (isset($path) && $path != '<front>') {
+  if (!empty($path) && $path != '<front>') {
     $path = drupal_get_path_alias($path);
     $path = drupal_urlencode($path);
     if (!$clean_url) {
