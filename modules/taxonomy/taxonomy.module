@@ -1182,7 +1182,21 @@ function taxonomy_nodeapi($node, $op, $arg = 0) {
       break;
     case 'rss item':
       return taxonomy_rss_item($node);
-      break;
+    case 'update index':
+      return taxonomy_node_update_index($node);
+  }
+}
+
+/**
+ * Implementation of hook_nodeapi('update_index').
+ */
+function taxonomy_node_update_index(&$node) {
+  $output = array();
+  foreach ($node->taxonomy as $term) {
+    $output[] = $term->name;
+  }
+  if (count($output)) {
+    return '<strong>('. implode(', ', $output) .')</strong>';
   }
 }
 
