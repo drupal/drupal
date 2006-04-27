@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.99 2006/04/27 18:12:25 unconed Exp $
+// $Id: upload.module,v 1.100 2006/04/27 19:32:54 unconed Exp $
 
 /**
  * @file
@@ -592,6 +592,9 @@ function _upload_form($node) {
   return $form;
 }
 
+/**
+ * Theme the attachments list.
+ */
 function theme_upload_form_current(&$form) {
   $header = array(t('Delete'), t('List'), t('Description'), t('Size'));
 
@@ -605,6 +608,15 @@ function theme_upload_form_current(&$form) {
   }
   $output = theme('table', $header, $rows);
   $output .= form_render($form);
+  return $output;
+}
+
+/**
+ * Theme the attachment form.
+ * Note: required to output prefix/suffix.
+ */
+function theme_upload_form_new($form) {
+  $output = form_render($form);
   return $output;
 }
 
