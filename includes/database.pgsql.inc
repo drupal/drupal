@@ -331,7 +331,7 @@ function db_escape_string($text) {
  * This function automatically starts a transaction.
  */
 function db_lock_table($table) {
-  db_query('BEGIN; LOCK TABLE {%s} IN EXCLUSIVE MODE', $table);
+  db_query('BEGIN; LOCK TABLE {'. db_escape_table($table) .'} IN EXCLUSIVE MODE');
 }
 
 /**

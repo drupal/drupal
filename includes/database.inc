@@ -316,6 +316,15 @@ function db_rewrite_sql($query, $primary_table = 'n', $primary_field = 'nid',  $
 }
 
 /**
+ * Restrict a dynamic tablename to safe characters.
+ *
+ * Only keeps alphanumeric and underscores.
+ */
+function db_escape_table($string) {
+  return preg_replace('/[^A-Za-z0-9_]+/', '', $string);
+}
+
+/**
  * @} End of "defgroup database".
  */
 

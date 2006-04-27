@@ -353,7 +353,7 @@ function db_escape_string($text) {
  * Lock a table.
  */
 function db_lock_table($table) {
-  db_query('LOCK TABLES {%s} WRITE', $table);
+  db_query('LOCK TABLES {'. db_escape_table($table) .'} WRITE');
 }
 
 /**
