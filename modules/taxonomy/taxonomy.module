@@ -723,7 +723,9 @@ function taxonomy_node_validate(&$node) {
       foreach ($terms['tags'] as $vid => $vid_value) {
         $vocabulary = taxonomy_get_vocabulary($vid);
         if (!$vocabulary->tags) {
-          form_set_error("taxonomy[tags][$vid", t('The %name vocabulary can not be modified in this way.', array('%name' => theme('placeholder', $vocabulary->name))));
+          // see form_get_error $key = implode('][', $element['#parents']);
+          // on why this is the key
+          form_set_error("taxonomy][tags][$vid", t('The %name vocabulary can not be modified in this way.', array('%name' => theme('placeholder', $vocabulary->name))));
         }
       }
     }
