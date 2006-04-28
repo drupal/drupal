@@ -116,7 +116,7 @@ function conf_path() {
   }
 
   $confdir = 'sites';
-  $uri = explode('/', $_SERVER['PHP_SELF']);
+  $uri = explode('/', $_SERVER['PHP_SELF'] ? $_SERVER['PHP_SELF'] : $_SERVER['SCRIPT_FILENAME']);
   $server = explode('.', implode('.', array_reverse(explode(':', rtrim($_SERVER['HTTP_HOST'], '.')))));
   for ($i = count($uri) - 1; $i > 0; $i--) {
     for ($j = count($server); $j > 0; $j--) {
