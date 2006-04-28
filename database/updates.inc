@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.223 2006/04/27 22:03:20 unconed Exp $
+// $Id: updates.inc,v 1.224 2006/04/28 13:00:23 killes Exp $
 
 function system_update_110() {
   $ret = array();
@@ -946,12 +946,8 @@ function system_update_151() {
 
     // Gather links from various settings into a single array.
     $phptemplate_links = variable_get("phptemplate_". $menus[$loop]['links_var'], array());
-    if (!is_array($phptemplate_links)) {
-      $phptemplate_links = array();
-    }
-    $phptemplate_links_more = variable_get("phptemplate_". $menus[$loop]['links_var'] ."_more", array());
-    if (!is_array($phptemplate_links_more)) {
-      $phptemplate_links_more = array();
+    if (empty($phptemplate_links)) {
+      $phptemplate_links = array('text' => array(), 'link' => array());
     }
     if (isset($ts) && is_array($ts)) {
       if (is_array($ts[$menus[$loop]['links_var']])) {
@@ -965,9 +961,10 @@ function system_update_151() {
       }
     }
     else {
-      $theme_links = array();
+      $theme_links = array('text' => array(), 'link' => array());
     }
-    $links = array_merge($phptemplate_links, $phptemplate_links_more, $theme_links);
+    $links['text'] = array_merge($phptemplate_links['text'], $theme_links['text']);
+    $links['link'] = array_merge($phptemplate_links['link'], $theme_links['link']);
 
     // insert all entries from theme links into new menus
     $num_inserted = 0;
