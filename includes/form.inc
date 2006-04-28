@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.111 2006/04/26 18:21:07 unconed Exp $
+// $Id: form.inc,v 1.112 2006/04/28 12:40:54 killes Exp $
 
 /**
  * @defgroup form Form generation
@@ -496,8 +496,8 @@ function form_render(&$elements) {
   }
   $content = '';
   uasort($elements, "_form_sort");
-
   if (!isset($elements['#children'])) {
+    $children = element_children($elements);
     /* Render all the children that use a theme function */
     if (isset($elements['#theme']) && !$elements['#theme_used']) {
       $elements['#theme_used'] = TRUE;
@@ -511,12 +511,15 @@ function form_render(&$elements) {
 
       $elements['#value'] = $previous_value;
       $elements['#type'] = $previous_type;
-
+      // if we rendered a single element, then we will skip the renderer
+      if (empty($children)) {
+        $elements['#printed'] = TRUE;
+      }
       unset($elements['#prefix'], $elements['#suffix']);
     }
     /* render each of the children using form_render and concatenate them */
     if (!$content) {
-      foreach (element_children($elements) as $key) {
+      foreach ($children as $key) {
         $content .= form_render($elements[$key]);
       }
     }
@@ -525,7 +528,7 @@ function form_render(&$elements) {
     $elements['#children'] = $content;
   }
 
-  /* Call the form element renderer */
+  // Until now, we rendered the children, here we render the element itself
   if (!isset($elements['#printed'])) {
     $content = theme(($elements['#type']) ? $elements['#type']: 'markup', $elements);
     $elements['#printed'] = TRUE;
