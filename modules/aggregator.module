@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.277 2006/04/21 15:07:40 killes Exp $
+// $Id: aggregator.module,v 1.278 2006/04/28 09:52:57 killes Exp $
 
 /**
  * @file
@@ -75,6 +75,7 @@ function aggregator_menu($may_cache) {
       'title' => t('list'),
       'type' => MENU_DEFAULT_LOCAL_TASK,
       'weight' => -10);
+      
     $items[] = array('path' => 'aggregator',
       'title' => t('news aggregator'),
       'callback' => 'aggregator_page_last',
@@ -99,6 +100,14 @@ function aggregator_menu($may_cache) {
       'callback' => 'aggregator_page_opml',
       'access' => $view,
       'type' => MENU_CALLBACK);
+      
+    $result = db_query('SELECT title, cid FROM {aggregator_category} ORDER BY title');
+    while ($category = db_fetch_array($result)) {
+      $items[] = array('path' => 'aggregator/categories/'. $category['cid'],
+        'title' => $category['title'],
+        'callback' => 'aggregator_page_category',
+        'access' => $view);
+    }
   }
   else {
     if (arg(0) == 'aggregator' && is_numeric(arg(2))) {
@@ -106,9 +115,10 @@ function aggregator_menu($may_cache) {
         $feed = aggregator_get_feed(arg(2));
         if ($feed) {
           $items[] = array('path' => 'aggregator/sources/'. $feed['fid'],
-            'title' => $feed->title,
+            'title' => $feed['title'],
             'callback' => 'aggregator_page_source',
-            'access' => $view);
+            'access' => $view,
+            'type' => MENU_CALLBACK);
           $items[] = array('path' => 'aggregator/sources/'. $feed['fid'] .'/view',
             'title' => t('view'),
             'type' => MENU_DEFAULT_LOCAL_TASK,
@@ -130,10 +140,6 @@ function aggregator_menu($may_cache) {
       else if (arg(1) == 'categories') {
         $category = aggregator_get_category(arg(2));
         if ($category) {
-          $items[] = array('path' => 'aggregator/categories/'. $category['cid'],
-            'title' => $category->title,
-            'callback' => 'aggregator_page_category',
-            'access' => $view);
           $items[] = array('path' => 'aggregator/categories/'. $category['cid'] .'/view',
             'title' => t('view'),
             'type' => MENU_DEFAULT_LOCAL_TASK,
@@ -1254,8 +1260,9 @@ function aggregator_page_categories() {
 function theme_aggregator_feed($feed) {
   $output  = '<div class="feed-source">';
   $output .= theme('feed_icon', $feed->url) ."\n";
-  $output .= $feed->image . ' <h3 class="feed-title"><a href="'. check_url($feed->link) .'">'. check_plain($feed->title) ."</a></h3>\n";
-  $output .= '<div class="feed-description"><em>'. t('Description:') .'</em> '. aggregator_filter_xss($feed->description) ."</div>\n";
+  $output .= $feed->image;
+  $output .= '<div class="feed-description">'. aggregator_filter_xss($feed->description) ."</div>\n";
+  $output .= '<div class="feed-url"><em>'. t('URL:') .'</em> '. l($feed->link, $feed->link, array(), NULL, NULL, TRUE) ."</div>\n";
 
   $updated = t('%time ago', array('%time' => format_interval(time() - $feed->checked)));
   if (user_access('administer news feeds')) {
