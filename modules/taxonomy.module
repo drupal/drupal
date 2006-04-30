@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.275 2006/04/28 12:02:18 killes Exp $
+// $Id: taxonomy.module,v 1.276 2006/04/30 00:39:11 drumm Exp $
 
 /**
  * @file
@@ -132,6 +132,7 @@ function taxonomy_overview_vocabularies() {
     $form[$vocabulary->vid]['type'] = array('#value' => implode(', ', $types));
     $form[$vocabulary->vid]['edit'] = array('#value' => l(t('edit vocabulary'), "admin/taxonomy/edit/vocabulary/$vocabulary->vid"));
     $form[$vocabulary->vid]['list'] = array('#value' => l(t('list terms'), "admin/taxonomy/$vocabulary->vid"));
+    $form[$vocabulary->vid]['add'] = array('#value' => l(t('add terms'), "admin/taxonomy/$vocabulary->vid/add/term"));
   }
 
   return drupal_get_form('taxonomy_overview_vocabularies', $form);
@@ -149,13 +150,14 @@ function theme_taxonomy_overview_vocabularies($form) {
       $row[] = form_render($form[$key]['type']);
       $row[] = form_render($form[$key]['edit']);
       $row[] = form_render($form[$key]['list']);
+      $row[] = form_render($form[$key]['add']);
       $rows[] = $row;
     }
   }
   if (!$rows) {
-    $rows[] = array(array('data' => t('No categories available.'), 'colspan' => '4', 'class' => 'message'));
+    $rows[] = array(array('data' => t('No categories available.'), 'colspan' => '5', 'class' => 'message'));
   }
-  $header = array(t('Name'), t('Type'), array('data' => t('Operations'), 'colspan' => '2'));
+  $header = array(t('Name'), t('Type'), array('data' => t('Operations'), 'colspan' => '3'));
 
   $output = theme('table', $header, $rows, array('id' => 'taxonomy'));
   $output .= form_render($form);
