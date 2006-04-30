@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.74 2006/04/19 13:38:46 killes Exp $
+// $Id: locale.inc,v 1.75 2006/04/30 00:28:53 drumm Exp $
 
 /**
  * @file
@@ -222,7 +222,7 @@ function _locale_admin_import_screen() {
 
   $form = array();
   $form['import'] = array('#type' => 'fieldset',
-    '#title' => 'Import translation',
+    '#title' => t('Import translation'),
   );
   $form['import']['file'] = array('#type' => 'file',
     '#title' => t('Language file'),
@@ -279,7 +279,7 @@ function _locale_admin_export_screen() {
   if (count($languages)) {
     $form = array();
     $form['export'] = array('#type' => 'fieldset',
-      '#title' => 'Export translation',
+      '#title' => t('Export translation'),
       '#collapsible' => TRUE,
     );
     $form['export']['langcode'] = array('#type' => 'select',
@@ -294,7 +294,7 @@ function _locale_admin_export_screen() {
   // Complete template export of the strings
   $form = array();
   $form['export'] = array('#type' => 'fieldset',
-    '#title' => 'Export template',
+    '#title' => t('Export template'),
     '#collapsible' => TRUE,
     '#description' => t('Generate a gettext Portable Object Template (.pot) file with all the interface strings from the Drupal locale database.'),
   );
