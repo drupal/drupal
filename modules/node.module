@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.641 2006/04/27 22:20:51 unconed Exp $
+// $Id: node.module,v 1.642 2006/04/30 00:43:53 drumm Exp $
 
 /**
  * @file
@@ -1659,12 +1659,15 @@ function node_form_array($node) {
   return $form;
 }
 
-function node_form_add_preview($form, $edit) {
+function node_form_add_preview($form) {
+  global $form_values;
+  
   $op = isset($_POST['op']) ? $_POST['op'] : '';
   if ($op == t('Preview')) {
     drupal_validate_form($form['form_id']['#value'], $form);
     if (!form_get_errors()) {
-      $form['node_preview'] = array('#value' => node_preview((object)$edit), '#weight' => -100);
+      // We pass the global $form_values here to preserve changes made during form validation
+      $form['node_preview'] = array('#value' => node_preview((object)$form_values), '#weight' => -100);
     }
   }
   if (variable_get('node_preview', 0) && (form_get_errors() || $op != t('Preview'))) {
