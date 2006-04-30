@@ -504,6 +504,7 @@ function form_render(&$elements) {
 
       $previous_value = $elements['#value'];
       $previous_type = $elements['#type'];
+      // If we rendered a single element, then we will skip the renderer.
       if (empty($children)) {
         $elements['#printed'] = TRUE;
       }
@@ -516,7 +517,6 @@ function form_render(&$elements) {
 
       $elements['#value'] = $previous_value;
       $elements['#type'] = $previous_type;
-      // if we rendered a single element, then we will skip the renderer
       unset($elements['#prefix'], $elements['#suffix']);
     }
     /* render each of the children using form_render and concatenate them */
