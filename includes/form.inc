@@ -504,7 +504,12 @@ function form_render(&$elements) {
 
       $previous_value = $elements['#value'];
       $previous_type = $elements['#type'];
-      $elements['#value'] = '';
+      if (empty($children)) {
+        $elements['#printed'] = TRUE;
+      }
+      else {
+        $elements['#value'] = '';
+      }
       $elements['#type'] = 'markup';
 
       $content = theme($elements['#theme'], $elements);
@@ -512,9 +517,6 @@ function form_render(&$elements) {
       $elements['#value'] = $previous_value;
       $elements['#type'] = $previous_type;
       // if we rendered a single element, then we will skip the renderer
-      if (empty($children)) {
-        $elements['#printed'] = TRUE;
-      }
       unset($elements['#prefix'], $elements['#suffix']);
     }
     /* render each of the children using form_render and concatenate them */
