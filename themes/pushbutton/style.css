@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.14 2006/04/03 22:20:48 unconed Exp $ */
+/* $Id: style.css,v 1.15 2006/04/30 00:42:32 drumm Exp $ */
 
 /*
 ** HTML elements
@@ -19,10 +19,6 @@ h1, h2, h3, h4, h5, h6 {
 h1 {
   color: #369;
   font-size: 1.6em;
-}
-img {
-  display: block;
-  border: 0;
 }
 tr.odd td, tr.even td {
   padding: 0.3em;
@@ -80,7 +76,9 @@ pre {
 ** Page layout blocks / IDs
 */
 #primary-menu  {
+  border-collapse: separate;
   background-color: #e0edfb;
+  border-bottom: 3px solid #69c;
 }
 #primary-menu tr {
   background: transparent url(header-a.jpg) left bottom repeat;
@@ -113,8 +111,8 @@ td#home a:hover img {
   color: #369;
 }
 #secondary-menu {
+  border-collapse: separate;
   background-color: #369;
-  border-top: 3px solid #69c;
   border-bottom: 3px solid #69c;
 }
 .secondary-links, .secondary-links a:link, .secondary-links a:visited  {
@@ -168,6 +166,7 @@ td#home a:hover img {
   padding: 10px 0 10px 0px;
   margin: 0 0 0 0;
   white-space: nowrap;
+  width: 100%;
   list-style: none;
   height: auto;
   line-height: normal;
@@ -250,6 +249,8 @@ td#home a:hover img {
   /* padding in px not ex because IE messes up 100% width tables otherwise */
   padding: 30px 35px 50px 35px;
   background: transparent url(background.png) center center no-repeat;
+  /* fix background overlapping text in IE (aka Peekaboo Bug) */
+  position: relative;
 }
 #mission, .node .content, .comment .content {
   line-height: 1.4;
@@ -450,27 +451,39 @@ table#footer-menu {
   display: none
 }
 .nav .links .next a:link {
-  padding: 15px 15px 17px 0;
+  padding: 17px 17px 17px 0;
   background: transparent url(arrow-next.png) right center no-repeat;
 }
+.nav .links .next a:visited {
+  padding: 17px 17px 17px 0;
+  background: transparent url(arrow-next-visited.png) right center no-repeat;
+}
 .nav .links .next a:hover {
-  padding: 15px 15px 17px 0;
+  padding: 17px 17px 17px 0;
   background: transparent url(arrow-next-hover.png) right center no-repeat;
 }
 .nav .links .prev a:link {
-  padding: 15px 0 17px 15px;
+  padding: 17px 0 17px 17px;
   background: transparent url(arrow-prev.png) left center no-repeat;
 }
+.nav .links .prev a:visited {
+  padding: 17px 0 17px 17px;
+  background: transparent url(arrow-prev-visited.png) left center no-repeat;
+}
 .nav .links .prev a:hover {
-  padding: 15px 0 17px 15px;
+  padding: 17px 0 17px 17px;
   background: transparent url(arrow-prev-hover.png) left center no-repeat;
 }
 .nav .links .up a:link {
-  padding: 11px 0 15px 0;
+  padding: 11px 0 17px 0;
   background: transparent url(arrow-up.png) center top no-repeat;
 }
+.nav .links .up a:visited {
+  padding: 11px 0 17px 0;
+  background: transparent url(arrow-up-visited.png) center top no-repeat;
+}
 .nav .links .up a:hover {
-  padding: 11px 0 15px 0;
+  padding: 11px 0 17px 0;
   background: transparent url(arrow-up-hover.png) center top no-repeat;
 }
 
@@ -485,6 +498,11 @@ table#footer-menu {
   border: 1px solid #ccc;
   padding: 1em;
   margin: 1em 0 1em 0;
+}
+#aggregator .news-item .source {
+  color: #999;
+  font-style: italic;
+  font-size: 0.85em;
 }
 #aggregator .title {
   font-size: 1em;
