@@ -8,8 +8,10 @@
   Deny from all
 </FilesMatch>
 
-# Set some options.
+# Don't show directory listings for URLs which map to a directory.
 Options -Indexes
+
+# Follow symbolic links in this directory.
 Options +FollowSymLinks
 
 # Customized error messages.
@@ -21,21 +23,21 @@ DirectoryIndex index.php
 # Override PHP settings. More in sites/default/settings.php
 # but the following cannot be changed at runtime.
 
-# PHP 4, Apache 1
+# PHP 4, Apache 1.
 <IfModule mod_php4.c>
   php_value magic_quotes_gpc                0
   php_value register_globals                0
   php_value session.auto_start              0
 </IfModule>
 
-# PHP 4, Apache 2
+# PHP 4, Apache 2.
 <IfModule sapi_apache2.c>
   php_value magic_quotes_gpc                0
   php_value register_globals                0
   php_value session.auto_start              0
 </IfModule>
 
-# PHP 5, Apache 1 and 2
+# PHP 5, Apache 1 and 2.
 <IfModule mod_php5.c>
   php_value magic_quotes_gpc                0
   php_value register_globals                0
@@ -51,17 +53,18 @@ DirectoryIndex index.php
 <IfModule mod_rewrite.c>
   RewriteEngine on
 
-  # If your site can be accessed both with and without the prefix www.
-  # you can use one of the following settings to force user to use only one option:
+  # If your site can be accessed both with and without the prefix www. you
+  # can use one of the following settings to force user to use only one option:
   #
-  # If you want the site to be accessed WITH the www. only, adapt and uncomment the following:
+  # If you want the site to be accessed WITH the www. only, adapt and
+  # uncomment the following:
   # RewriteCond %{HTTP_HOST} !^www\.example\.com$ [NC]
   # RewriteRule .* http://www.example.com/ [L,R=301]
   #
-  # If you want the site to be accessed only WITHOUT the www. , adapt and uncomment the following:
+  # If you want the site to be accessed only WITHOUT the www. prefix, adapt
+  # and uncomment the following:
   # RewriteCond %{HTTP_HOST} !^example\.com$ [NC]
   # RewriteRule .* http://example.com/ [L,R=301]
-
 
   # Modify the RewriteBase if you are using Drupal in a subdirectory and
   # the rewrite rules are not working properly.
@@ -85,4 +88,4 @@ DirectoryIndex index.php
   RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]
 </IfModule>
 
-# $Id: .htaccess,v 1.73 2006/04/14 09:08:26 killes Exp $
+# $Id: .htaccess,v 1.74 2006/05/01 08:32:56 drumm Exp $
