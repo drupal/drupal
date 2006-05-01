@@ -1,4 +1,4 @@
-// $Id: INSTALL.txt,v 1.29 2006/04/20 09:07:39 dries Exp $
+// $Id: INSTALL.txt,v 1.30 2006/05/01 09:34:19 dries Exp $
 
 CONTENTS OF THIS FILE
 ---------------------
@@ -20,7 +20,7 @@ will also need sufficient privileges to run Drupal. Please
 check the INSTALL.mysql.txt and INSTALL.pgsql.txt for more
 detailed information.
 
-NOTE: the Apache web server and MySQL database are strongly recommended;
+NOTE: the Apache web server and MySQL database are recommended;
 other web server and database combinations such as IIS and PostgreSQL
 are possible but tested to a lesser extent.
 
@@ -29,7 +29,7 @@ OPTIONAL REQUIREMENTS
 
 - To use XML-based services such as the Blogger API, Jabber, and RSS
   syndication, you will need PHP's XML extension. This extension is
-  enabled by default in standard PHP4 installations.
+  enabled by default.
 
 - If you want support for clean URLs, you'll need mod_rewrite and
   the ability to use local .htaccess files. (More information can
@@ -68,9 +68,9 @@ INSTALLATION
 
    The default configuration can be found in the
    'sites/default/settings.php' file within your Drupal installation.
-   Before you can run Drupal, you must set the database URL and the
-   base URL to the web site. Open the configuration file and edit the
-   $db_url line to match the database defined in the previous step:
+   Before you can run Drupal, you must set the database URL. Open the
+   configuration file and edit the $db_url line to match the database
+   defined in the previous step:
 
      $db_url = "mysql://username:password@localhost/databasename";
 
@@ -171,15 +171,15 @@ DRUPAL ADMINISTRATION
 ---------------------
 
 Upon a new installation, your Drupal website defaults to a very basic
-configuration with only a few active modules, one theme, and no user
-access rights.
+configuration with only a few active modules, one theme, and minimal
+user access rights.
 
 Use your administration panel to enable and configure services. For
 example, set some general settings for your site with "Administer >
 Settings". Enable modules via "Administer > Modules". User permissions
 can be set with "Administer > Users > Configure > Permissions".
 
-For more information on configuration options, read through the
+For more information on configuration options, read the
 instructions which accompany the different configuration settings and
 consult the various help pages available in the administration panel.
 
@@ -192,18 +192,15 @@ Now that your server is running, you will want to customize the look
 of your site. Several sample themes are included in the Drupal
 installation and more can be downloaded from drupal.org.
 
-Customizing each theme depends on the theme engine. In general, each theme
-contains a PHP file themename.theme which defines a function header()
-that can be changed to reference your own logos.
+Simple customization of your theme can be done using only CSS. Further
+changes require understanding the phptemplate engine that is now part
+of Drupal. See http://drupal.org/handbook/customization to find out more.
 
-Most themes also contain stylesheets to tune the colors and layouts;
-check the themes/ directory for READMEs describing each alternate theme.
 
 MORE INFORMATION
 ----------------
 
 For platform specific configuration issues and other installation and
 administration assistance, please consult the Drupal handbook at
-http://drupal.org/. You can also find support at the Drupal support
-forum or through the Drupal mailing lists.
-
+http://drupal.org/handbook. You can view the wide range of other
+support options available at http://drupal.org/support.
