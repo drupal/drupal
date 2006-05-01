@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.642 2006/04/30 00:43:53 drumm Exp $
+// $Id: node.module,v 1.643 2006/05/01 08:38:11 dries Exp $
 
 /**
  * @file
@@ -1661,7 +1661,7 @@ function node_form_array($node) {
 
 function node_form_add_preview($form) {
   global $form_values;
-  
+
   $op = isset($_POST['op']) ? $_POST['op'] : '';
   if ($op == t('Preview')) {
     drupal_validate_form($form['form_id']['#value'], $form);
@@ -1954,12 +1954,35 @@ function node_page_default() {
     $output .= theme('pager', NULL, variable_get('default_nodes_main', 10));
   }
   else {
-    $output = t("
-      <p>Welcome to your new <a href=\"%drupal\">Drupal</a>-powered website. This message will guide you through your first steps with Drupal, and will disappear once you have posted your first piece of content.</p>
-      <p>The first thing you will need to do is <a href=\"%register\">create the first account</a>. This account will have full administration rights and will allow you to configure your website. Once logged in, you can visit the <a href=\"%admin\">administration section</a> and <a href=\"%config\">set up your site's configuration</a>.</p>
-      <p>Drupal comes with various modules, each of which contains a specific piece of functionality. You should visit the <a href=\"%modules\">module list</a> and enable those modules which suit your website's needs.</p>
-      <p><a href=\"%themes\">Themes</a> handle the presentation of your website. You can use one of the existing themes, modify them or create your own from scratch.</p>
-      <p>We suggest you look around the administration section and explore the various options Drupal offers you. For more information, you can refer to the <a href=\"%handbook\">Drupal handbooks online</a>.</p>", array('%drupal' => 'http://drupal.org/', '%register' => url('user/register'), '%admin' => url('admin'), '%config' => url('admin/settings'), '%modules' => url('admin/modules'), '%themes' => url('admin/themes'), '%handbook' => 'http://drupal.org/handbooks'));
+    $output = t('
+      <h1 class="title">Welcome to your new Drupal website!</h1>
+      <p>Please follow these steps to set up and start using your website:</p>
+      <ol>
+        <li>
+          <strong>Create your administrator account</strong>
+          To begin, <a href="%register">create the first account</a>. This account will have full administration rights and will allow you to configure your website.
+        </li>
+        <li>
+          <strong>Configure your website</strong>
+          Once logged in, visit the <a href="%admin">administration section</a>, where you can <a href="%config">customize and configure</a> all aspects of your website.
+        </li>
+        <li>
+          <strong>Enable additional functionality</strong>
+          Next, visit the <a href="%modules">module list</a> and enable features which suit your specific needs. You can find additional modules in the <a href="%download_modules">Drupal modules download section</a>.
+        </li>
+        <li>
+          <strong>Customize your website design</strong>
+          To change the "look and feel" of your website, visit the <a href="%themes">themes section</a>. You may choose from one of the included themes or download additional themes from the <a href="%download_themes">Drupal themes download section</a>.
+        </li>
+        <li>
+          <strong>Start posting content</strong>
+          Finally, you can <a href="%content">create content</a> for your website. This message will disappear once you have published your first post.
+        </li>
+      </ol>
+      <p>For more information, please refer to the <a href="%help">Help section</a>, or the <a href="%handbook">online Drupal handbooks</a>. You may also post at the <a href="%forum">Drupal forum</a>, or view the wide range of <a href="%support">other support options</a> available.</p>',
+      array('%drupal' => 'http://drupal.org/', '%register' => url('user/register'), '%admin' => url('admin'), '%config' => url('admin/settings'), '%modules' => url('admin/modules'), '%download_modules' => 'http://drupal.org/project/modules', '%themes' => url('admin/themes'), '%download_themes' => 'http://drupal.org/project/themes', '%content' => url('node/add'), '%help' => url('admin/help'), '%handbook' => 'http://drupal.org/handbooks', '%forum' => 'http://drupal.org/forum', '%support' => 'http://drupal.org/support')
+    );
+    $output = '<div id="first-time">'. $output .'</div>';
   }
 
   return $output;
