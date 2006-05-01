@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.613 2006/04/30 00:37:44 drumm Exp $
+// $Id: user.module,v 1.614 2006/05/01 08:04:08 drumm Exp $
 
 /**
  * @file
@@ -923,8 +923,15 @@ function user_login_validate($form_id, $form_values) {
 function user_login_submit($form_id, $form_values) {
   global $user;
   if ($user->uid) {
-    // sometimes modules call this function during a bootstrap so we don't use t() here
-    watchdog('user', "Session opened for ". check_plain($user->name));
+    // To handle the edge case where this function is called during a
+    // bootstrap, check for the existence of t().
+    if (function_exists('t')) {
+      $message = t('Session opened for %name.', array('%name' => theme('placeholder', $user->name)));
+    }
+    else {
+       $message = "Session opened for ". check_plain($user->name);
+    }
+    watchdog('user', $message);
 
     // Update the user table timestamp noting user has logged in.
     db_query("UPDATE {users} SET login = %d WHERE uid = %d", time(), $user->uid);
