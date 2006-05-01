@@ -1,4 +1,4 @@
-Drupal 4.7.0, xxxx-xx-xx
+Drupal 4.7.0, 2006-05-01
 ------------------------
 - added free tagging support.
 - added a site-wide contact form.
