@@ -664,3 +664,11 @@ html.js fieldset.collapsed legend a {
   border-top-width: 0px;
   cursor: s-resize;
 }
+
+/*
+** Formatting for welcome page
+*/
+#first-time strong {
+  display: block;
+  padding: 1.5em 0 .5em;
+}
