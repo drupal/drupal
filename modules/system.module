@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.321 2006/05/01 08:45:29 dries Exp $
+// $Id: system.module,v 1.322 2006/05/01 09:30:13 dries Exp $
 
 /**
  * @file
@@ -280,15 +280,22 @@ function system_view_general() {
   );
 
   // We check for clean URL support using an image on the client side.
-  $form['general']['clean_url'] = array('#type' => 'radios', '#title' => t('Clean URLs'), '#default_value' => variable_get('clean_url', 0), '#options' => array(t('Disabled'), t('Enabled')));
+  $form['general']['clean_url'] = array(
+    '#type' => 'radios',
+    '#title' => t('Clean URLs'),
+    '#default_value' => variable_get('clean_url', 0),
+    '#options' => array(t('Disabled'), t('Enabled')),
+    '#description' => t('This option makes Drupal emit "clean" URLs (i.e. without <code>?q=</code> in the URL.)'),
+  );
 
   if (!variable_get('clean_url', 0)) {
     if (strpos(request_uri(), '?q=') !== FALSE) {
-      $form['general']['clean_url']['#description'] = t('Before enabling clean URLs, you must demonstrate that your server is properly configured. Click %here to issue a request using a clean url syntax. If you see this page again, you have succeeded and the radio buttons above will be available. If you get an error such as 404 Page Not Found, you need to change the configuration of your server. See http://drupal.org/node/15365 for more.', array('%here' => '<a href ="'. str_replace('?q=', '', url('admin/settings')) .'">'. t('here') .'</a>'));
+      $form['general']['clean_url']['#description'] .= t(' Before enabling clean URLs, you must perform a test to determine if your server is properly configured. If you are able to see this page again after clicking the "Run Clean URL Test" button, the test has succeeded and the radio buttons above will be available. If instead you are directed to a "Page not found" error, you will need to change the configuration of your server. The <a href="%handbook">handbook page on Clean URLs</a> has additional troubleshooting information. %run-test', array('%handbook' => 'http://drupal.org/node/15365', '%run-test' => '<a href ="'. str_replace('?q=', '', url('admin/settings', '', 'clean_url')) .'">'. t('Run Clean URL Test') .'</a>'));
       $form['general']['clean_url']['#attributes'] = array('disabled' => 'disabled');
     }
     else {
-      $form['general']['clean_url']['#description'] = t('You have successfully demonstrated that clean urls work on your server. You are welcome to enable/disable them as you wish.');
+      $form['general']['clean_url']['#description'] .= t(' You have successfully demonstrated that clean URLs work on your server. You are welcome to enable/disable them as you wish.');
+      $form['general']['#collapsed'] = FALSE;
     }
   }
 
