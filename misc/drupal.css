@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.147 2006/04/15 04:07:17 unconed Exp $ */
+/* $Id: drupal.css,v 1.148 2006/05/01 10:43:38 dries Exp $ */
 
 /*
 ** HTML elements
@@ -663,4 +663,12 @@ html.js fieldset.collapsed legend a {
   border: 1px solid #ddd;
   border-top-width: 0px;
   cursor: s-resize;
+}
+
+/*
+** Formatting for welcome page
+*/
+#first-time strong {
+  display: block;
+  padding: 1.5em 0 .5em;
 }
