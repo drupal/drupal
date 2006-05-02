@@ -1177,7 +1177,7 @@ function aggregator_page_rss() {
     switch (variable_get('feed_item_length', 'teaser')) {
       case 'teaser':
         $teaser = node_teaser($item->description);
-        if ($teaser != $item_description) {
+        if ($teaser != $item->description) {
           $teaser .= '<p><a href="'. check_url($item->link) .'">'. t('read more') ."</a></p>\n";
         }
         $item->description = $teaser;
