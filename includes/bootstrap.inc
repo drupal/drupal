@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.96 2006/04/28 11:52:31 killes Exp $
+// $Id: bootstrap.inc,v 1.97 2006/05/02 08:37:42 drumm Exp $
 
 /**
  * @file
@@ -156,7 +156,10 @@ function conf_init() {
   if (isset($base_url)) {
     // Parse fixed base URL from settings.php.
     $parts = parse_url($base_url);
-    $base_path = isset($parts['path']) ? $parts['path'] . '/' : '/';
+    if (!isset($parts['path'])) {
+      $parts['path'] = '';
+    }
+    $base_path = $parts['path'] . '/';
     // Build $base_root (everything until first slash after "scheme://").
     $base_root = substr($base_url, 0, strlen($base_url) - strlen($parts['path']));
   }
