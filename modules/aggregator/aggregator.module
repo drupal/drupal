@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.278 2006/04/28 09:52:57 killes Exp $
+// $Id: aggregator.module,v 1.279 2006/05/02 13:28:04 dries Exp $
 
 /**
  * @file
@@ -75,7 +75,7 @@ function aggregator_menu($may_cache) {
       'title' => t('list'),
       'type' => MENU_DEFAULT_LOCAL_TASK,
       'weight' => -10);
-      
+
     $items[] = array('path' => 'aggregator',
       'title' => t('news aggregator'),
       'callback' => 'aggregator_page_last',
@@ -100,7 +100,7 @@ function aggregator_menu($may_cache) {
       'callback' => 'aggregator_page_opml',
       'access' => $view,
       'type' => MENU_CALLBACK);
-      
+
     $result = db_query('SELECT title, cid FROM {aggregator_category} ORDER BY title');
     while ($category = db_fetch_array($result)) {
       $items[] = array('path' => 'aggregator/categories/'. $category['cid'],
@@ -1177,7 +1177,7 @@ function aggregator_page_rss() {
     switch (variable_get('feed_item_length', 'teaser')) {
       case 'teaser':
         $teaser = node_teaser($item->description);
-        if ($teaser != $item_description) {
+        if ($teaser != $item->description) {
           $teaser .= '<p><a href="'. check_url($item->link) .'">'. t('read more') ."</a></p>\n";
         }
         $item->description = $teaser;
