@@ -625,10 +625,10 @@ function theme_form_element($title, $value, $description = NULL, $id = NULL, $re
 
   if ($title) {
     if ($id) {
-      $output .= ' <label for="'. form_clean_id($id) .'">'. $title .":$required</label>\n";
+      $output .= ' <label for="'. form_clean_id($id) .'">'. t('%title: %required', array('%title' => $title, '%required' => $required)) . "</label>\n";
     }
     else {
-      $output .= ' <label>'. $title .":$required</label>\n";
+      $output .= ' <label>'. t('%title: %required', array('%title' => $title, '%required' => $required)) . "</label>\n";
     }
   }
 
