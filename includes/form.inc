@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.114 2006/04/30 00:40:57 drumm Exp $
+// $Id: form.inc,v 1.115 2006/05/02 09:26:33 drumm Exp $
 
 /**
  * @defgroup form Form generation
@@ -622,7 +622,8 @@ function theme_select($element) {
   $select = '';
   $size = $element['#size'] ? ' size="' . $element['#size'] . '"' : '';
   _form_set_class($element, array('form-select'));
-  return theme('form_element', $element['#title'], '<select name="'. $element['#name'] .''. ($element['#multiple'] ? '[]' : '') .'"'. ($element['#multiple'] ? ' multiple="multiple" ' : '') . drupal_attributes($element['#attributes']) .' id="' . $element['#id'] .'" '. $size .'>'. form_select_options($element) .'</select>', $element['#description'], $element['#id'], $element['#required'], form_get_error($element));
+  $multiple = isset($element['#multiple']) && $element['#multiple'];
+  return theme('form_element', $element, '<select name="'. $element['#name'] .''. ($multiple ? '[]' : '') .'"'. ($multiple ? ' multiple="multiple" ' : '') . drupal_attributes($element['#attributes']) .' id="'. $element['#id'] .'" '. $size .'>'. form_select_options($element) .'</select>');
 }
 
 function form_select_options($element, $choices = NULL) {
@@ -674,7 +675,6 @@ function theme_fieldset($element) {
   }
 
   return '<fieldset' . drupal_attributes($element['#attributes']) .'>' . ($element['#title'] ? '<legend>'. $element['#title'] .'</legend>' : '') . ($element['#description'] ? '<div class="description">'. $element['#description'] .'</div>' : '') . $element['#children'] . $element['#value'] . "</fieldset>\n";
-
 }
 
 /**
@@ -696,7 +696,9 @@ function theme_radio($element) {
   if (!is_null($element['#title'])) {
     $output = '<label class="option">'. $output .' '. $element['#title'] .'</label>';
   }
-  return theme('form_element', NULL, $output, $element['#description'], $element['#id'], $element['#required'], form_get_error($element));
+
+  unset($element['#title']);
+  return theme('form_element', $element, $output);
 }
 
 /**
@@ -710,7 +712,8 @@ function theme_radio($element) {
  */
 function theme_radios($element) {
   if ($element['#title'] || $element['#description']) {
-    return theme('form_element', $element['#title'], $element['#children'], $element['#description'], NULL, $element['#required'], form_get_error($element));
+    unset($element['#id']);
+    return theme('form_element', $element, $element['#children']);
   }
   else {
     return $element['#children'];
@@ -727,7 +730,7 @@ function theme_radios($element) {
  *   A themed HTML string representing the form item.
  */
 function theme_password_confirm($element) {
-  return theme('form_element', $element['#title'], '<div class="container-inline">'. $element['#children']. '</div>', $element['#description'],  $element['#id'], $element['#required'], form_get_error($element));
+  return theme('form_element', $element, '<div class="container-inline">'. $element['#children'] .'</div>');
 }
 
 /*
@@ -776,8 +779,7 @@ function password_confirm_validate($form) {
  *   A themed HTML string representing the date selection boxes.
  */
 function theme_date($element) {
-  $output = '<div class="container-inline">' . $element['#children'] . '</div>';
-  return theme('form_element', $element['#title'], $output, $element['#description'], $element['#id'], $element['#required'], form_get_error($element));
+  return theme('form_element', $element, '<div class="container-inline">'. $element['#children'] .'</div>');
 }
 
 /**
@@ -883,7 +885,7 @@ function expand_radios($element) {
  *   A themed HTML string representing the form item.
  */
 function theme_item($element) {
-  return theme('form_element', $element['#title'], $element['#value'] . $element['#children'], $element['#description'], $element['#id'], $element['#required'], $element['#error']);
+  return theme('form_element', $element, $element['#value'] . $element['#children']);
 }
 
 /**
@@ -909,7 +911,8 @@ function theme_checkbox($element) {
     $checkbox = '<label class="option">'. $checkbox .' '. $element['#title'] .'</label>';
   }
 
-  return theme('form_element', NULL, $checkbox, $element['#description'], $element['#id'], $element['#required'], form_get_error($element));
+  unset($element['#title']);
+  return theme('form_element', $element, $checkbox);
 }
 
 /**
@@ -922,7 +925,8 @@ function theme_checkbox($element) {
  */
 function theme_checkboxes($element) {
   if ($element['#title'] || $element['#description']) {
-    return theme('form_element', $element['#title'], $element['#children'], $element['#description'], NULL, $element['#required'], form_get_error($element));
+    unset($element['#id']);
+    return theme('form_element', $element, $element['#children']);
   }
   else {
     return $element['#children'];
@@ -994,7 +998,7 @@ function theme_textfield($element) {
   }
   _form_set_class($element, $class);
   $output = '<input type="text" maxlength="'. $element['#maxlength'] .'" name="'. $element['#name'] .'" id="'. $element['#id'] .'" '. $size .' value="'. check_plain($element['#value']) .'"'. drupal_attributes($element['#attributes']) .' />';
-  return theme('form_element', $element['#title'], $output, $element['#description'], $element['#id'], $element['#required'], form_get_error($element)). $extra;
+  return theme('form_element', $element, $output). $extra;
 }
 
 /**
@@ -1030,7 +1034,7 @@ function theme_textarea($element) {
 
   $cols = $element['#cols'] ? ' cols="'. $element['#cols'] .'"' : '';
   _form_set_class($element, $class);
-  return theme('form_element', $element['#title'], '<textarea'. $cols .' rows="'. $element['#rows'] .'" name="'. $element['#name'] .'" id="' . $element['#id'] .'" '. drupal_attributes($element['#attributes']) .'>'. check_plain($element['#value']) .'</textarea>', $element['#description'], $element['#id'], $element['#required'], form_get_error($element));
+  return theme('form_element', $element, '<textarea'. $cols .' rows="'. $element['#rows'] .'" name="'. $element['#name'] .'" id="'. $element['#id'] .'" '. drupal_attributes($element['#attributes']) .'>'. check_plain($element['#value']) .'</textarea>');
 }
 
 /**
@@ -1040,7 +1044,7 @@ function theme_textarea($element) {
  *
  * @param $element
  *   An associative array containing the properties of the element.
- *   Properties used: prefix, value, children and suffix.
+ *   Properties used: value, children.
  * @return
  *   A themed HTML string representing the HTML markup.
  */
@@ -1063,8 +1067,7 @@ function theme_password($element) {
 
   _form_set_class($element, array('form-text'));
   $output = '<input type="password" maxlength="'. $element['#maxlength'] .'" name="'. $element['#name'] .'" id="'. $element['#id'] .'" '. $size . drupal_attributes($element['#attributes']) .' />';
-
-  return theme('form_element', $element['#title'], $output, $element['#description'], $element['#id'], $element['#required'], form_get_error($element));
+  return theme('form_element', $element, $output);
 }
 
 /**
@@ -1107,7 +1110,43 @@ function theme_weight($element) {
  */
 function theme_file($element) {
   _form_set_class($element, array('form-file'));
-  return theme('form_element', $element['#title'], '<input type="file" name="'. $element['#name'] .'"'. ($element['#attributes'] ? ' '. drupal_attributes($element['#attributes']) : '') .' id="'. form_clean_id($element['#id']) .'" size="'. $element['#size'] ."\" />\n", $element['#description'], $element['#id'], $element['#required'], form_get_error($element));
+  return theme('form_element', $element, '<input type="file" name="'. $element['#name'] .'"'. ($element['#attributes'] ? ' '. drupal_attributes($element['#attributes']) : '') .' id="'. form_clean_id($element['#id']) .'" size="'. $element['#size'] ."\" />\n");
+}
+
+/**
+ * Return a themed form element.
+ *
+ * @param element
+ *   An associative array containing the properties of the element.
+ *   Properties used: title, description, id, required
+ * @param $value
+ *   the form element's data
+ * @return
+ *   a string representing the form element
+ */
+function theme_form_element($element, $value) {
+  $output  = '<div class="form-item">'."\n";
+  $required = !empty($element['#required']) ? '<span class="form-required" title="'. t('This field is required.') .'">*</span>' : '';
+
+  if (!empty($element['#title'])) {
+    $title = $element['#title'];
+    if (!empty($element['#id'])) {
+      $output .= ' <label for="'. form_clean_id($element['#id']) .'">'. t('%title: %required', array('%title' => $title, '%required' => $required)) ."</label>\n";
+    }
+    else {
+      $output .= ' <label>'. t('%title: %required', array('%title' => $title, '%required' => $required)) ."</label>\n";
+    }
+  }
+
+  $output .= " $value\n";
+
+  if (!empty($element['#description'])) {
+    $output .= ' <div class="description">'. $element['#description'] ."</div>\n";
+  }
+
+  $output .= "</div>\n";
+
+  return $output;
 }
 
 /**

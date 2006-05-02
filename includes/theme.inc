@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.293 2006/05/02 09:01:23 drumm Exp $
+// $Id: theme.inc,v 1.294 2006/05/02 09:26:33 drumm Exp $
 
 /**
  * @file
@@ -602,43 +602,6 @@ function theme_node($node, $teaser = FALSE, $page = FALSE) {
   if (!$node->status) {
     $output .= '</div>';
   }
-
-  return $output;
-}
-
-/**
- * Return a themed form element.
- *
- * @param $title the form element's title
- * @param $value the form element's data
- * @param $description the form element's description or explanation
- * @param $id the form element's ID used by the &lt;label&gt; tag
- * @param $required a boolean to indicate whether this is a required field or not
- * @param $error a string with an error message filed against this form element
- *
- * @return a string representing the form element
- */
-function theme_form_element($title, $value, $description = NULL, $id = NULL, $required = FALSE, $error = FALSE) {
-
-  $output  = '<div class="form-item">'."\n";
-  $required = $required ? '<span class="form-required" title="'. t('This field is required.') .'">*</span>' : '';
-
-  if ($title) {
-    if ($id) {
-      $output .= ' <label for="'. form_clean_id($id) .'">'. t('%title: %required', array('%title' => $title, '%required' => $required)) . "</label>\n";
-    }
-    else {
-      $output .= ' <label>'. t('%title: %required', array('%title' => $title, '%required' => $required)) . "</label>\n";
-    }
-  }
-
-  $output .= " $value\n";
-
-  if ($description) {
-    $output .= ' <div class="description">'. $description ."</div>\n";
-  }
-
-  $output .= "</div>\n";
 
   return $output;
 }
