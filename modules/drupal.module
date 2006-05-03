@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal.module,v 1.119 2006/04/08 18:29:49 killes Exp $
+// $Id: drupal.module,v 1.120 2006/05/03 09:43:53 drumm Exp $
 
 /**
  * @file
@@ -362,5 +362,3 @@ function drupal_login($username, $password) {
     }
   }
 }
-
-
