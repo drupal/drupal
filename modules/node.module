@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.643 2006/05/01 08:38:11 dries Exp $
+// $Id: node.module,v 1.644 2006/05/03 07:59:01 drumm Exp $
 
 /**
  * @file
@@ -1979,7 +1979,7 @@ function node_page_default() {
           Finally, you can <a href="%content">create content</a> for your website. This message will disappear once you have published your first post.
         </li>
       </ol>
-      <p>For more information, please refer to the <a href="%help">Help section</a>, or the <a href="%handbook">online Drupal handbooks</a>. You may also post at the <a href="%forum">Drupal forum</a>, or view the wide range of <a href="%support">other support options</a> available.</p>',
+      <p>For more information, please refer to the <a href="%help">help section</a>, or the <a href="%handbook">online Drupal handbooks</a>. You may also post at the <a href="%forum">Drupal forum</a>, or view the wide range of <a href="%support">other support options</a> available.</p>',
       array('%drupal' => 'http://drupal.org/', '%register' => url('user/register'), '%admin' => url('admin'), '%config' => url('admin/settings'), '%modules' => url('admin/modules'), '%download_modules' => 'http://drupal.org/project/modules', '%themes' => url('admin/themes'), '%download_themes' => 'http://drupal.org/project/themes', '%content' => url('node/add'), '%help' => url('admin/help'), '%handbook' => 'http://drupal.org/handbooks', '%forum' => 'http://drupal.org/forum', '%support' => 'http://drupal.org/support')
     );
     $output = '<div id="first-time">'. $output .'</div>';
