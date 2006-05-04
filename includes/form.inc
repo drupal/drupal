@@ -1071,22 +1071,16 @@ function theme_password($element) {
 }
 
 /**
- * Format a weight selection menu.
- *
- * @param $element
- *   An associative array containing the properties of the element.
- *   Properties used:  title, delta, description
- * @return
- *   A themed HTML string representing the form.
+ * Expand weight elements into selects.
  */
-function theme_weight($element) {
+function process_weight($element) {
   for ($n = (-1 * $element['#delta']); $n <= $element['#delta']; $n++) {
     $weights[$n] = $n;
   }
   $element['#options'] = $weights;
   $element['#type'] = 'select';
-
-  return form_render($element);
+  $element['#is_weight'] = TRUE;
+  return $element;
 }
 
 /**
