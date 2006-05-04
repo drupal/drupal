@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.616 2006/05/03 09:22:05 drumm Exp $
+// $Id: user.module,v 1.617 2006/05/04 18:57:21 dries Exp $
 
 /**
  * @file
@@ -582,7 +582,7 @@ function user_block($op = 'list', $delta = 0, $edit = array()) {
       case 3:
         if (user_access('access content')) {
           // Count users with activity in the past defined period.
-          $time_period = variable_get('user_block_seconds_online', 2700);
+          $time_period = variable_get('user_block_seconds_online', 900);
 
           // Perform database queries to gather online user lists.
           $guests = db_fetch_object(db_query('SELECT COUNT(sid) AS count FROM {sessions} WHERE timestamp >= %d AND uid = 0', time() - $time_period));
