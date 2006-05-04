@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.100 2006/04/27 19:32:54 unconed Exp $
+// $Id: upload.module,v 1.101 2006/05/04 10:25:01 drumm Exp $
 
 /**
  * @file
@@ -102,33 +102,86 @@ function upload_menu($may_cache) {
 }
 
 function upload_settings() {
-  $form['settings_general'] = array('#type' => 'fieldset', '#title' => t('General settings'));
+  $upload_extensions_default = variable_get('upload_extensions_default', 'jpg jpeg gif png txt html doc xls pdf ppt pps');
+  $upload_uploadsize_default = variable_get('upload_uploadsize_default', 1);
+  $upload_usersize_default = variable_get('upload_usersize_default', 10);
+
+  $form['settings_general'] = array(
+    '#type' => 'fieldset', 
+    '#title' => t('General settings'), 
+    '#collapsible' => TRUE,
+  );
   $form['settings_general']['upload_max_resolution'] = array(
-    '#type' => 'textfield', '#title' => t('Maximum resolution for uploaded images'), '#default_value' => variable_get('upload_max_resolution', 0),
-    '#size' => 15, '#maxlength' => 10, '#description' => t('The maximum allowed image size expressed as WIDTHxHEIGHT (e.g. 640x480). Set to 0 for no restriction.')
+    '#type' => 'textfield', 
+    '#title' => t('Maximum resolution for uploaded images'), 
+    '#default_value' => variable_get('upload_max_resolution', 0),
+    '#size' => 15, 
+    '#maxlength' => 10, 
+    '#description' => t('The maximum allowed image size expressed as WIDTHxHEIGHT (e.g. 640x480). Set to 0 for no restriction.'),
+  );
+  $form['settings_general']['upload_list_default'] = array(
+    '#type' => 'select', 
+    '#title' => t('List files by default'),
+    '#default_value' => variable_get('upload_list_default', 1),
+    '#options' => array(0 => t('No'), 1 => t('Yes')),
+    '#description' => t('Set whether files attached to nodes are listed or not in the node view by default.'),
   );
 
-  $form['settings_general']['upload_list_default'] = array('#type' => 'select', '#title' => t('List files by default'),
-    '#default_value' => variable_get('upload_list_default',1),
-    '#options' => array( 0 => t('No'), 1 => t('Yes') ),
-    '#description' => t('Set whether files attached to nodes are listed or not in the node view by default.'),
+  $form['settings_general']['upload_extensions_default'] = array(
+    '#type' => 'textfield', 
+    '#title' => t('Default permitted file extensions'), 
+    '#default_value' => $upload_extensions_default,
+    '#maxlength' => 255, 
+    '#description' => t('Default extensions that users can upload. Separate extensions with a space and do not include the leading dot.'),
+  );
+  $form['settings_general']['upload_uploadsize_default'] = array(
+    '#type' => 'textfield', 
+    '#title' => t('Default maximum file size per upload'), 
+    '#default_value' => $upload_uploadsize_default,
+    '#size' => 5, 
+    '#maxlength' => 5, 
+    '#description' => t('The default maximum file size a user can upload (in megabytes).'),
+  );
+  $form['settings_general']['upload_usersize_default'] = array(
+    '#type' => 'textfield', 
+    '#title' => t('Default total file size per user'), 
+    '#default_value' => $upload_usersize_default,
+    '#size' => 5, 
+    '#maxlength' => 5, 
+    '#description' => t('The default maximum size of all files a user can have on the site (in megabytes).'),
   );
 
   $roles = user_roles(0, 'upload files');
 
   foreach ($roles as $rid => $role) {
-    $form["settings_role_$rid"] = array('#type' => 'fieldset', '#title' => t('Settings for %role', array('%role' => theme('placeholder', $role))), '#collapsible' => TRUE, '#collapsed' => TRUE);
+    $form["settings_role_$rid"] = array(
+      '#type' => 'fieldset', 
+      '#title' => t('Settings for %role', array('%role' => theme('placeholder', $role))), 
+      '#collapsible' => TRUE, 
+      '#collapsed' => TRUE,
+    );
     $form["settings_role_$rid"]["upload_extensions_$rid"] = array(
-      '#type' => 'textfield', '#title' => t('Permitted file extensions'), '#default_value' => variable_get("upload_extensions_$rid", "jpg jpeg gif png txt html doc xls pdf ppt pps"),
-      '#maxlength' => 255, '#description' => t('Extensions that users in this role can upload. Separate extensions with a space and do not include the leading dot.')
+      '#type' => 'textfield', 
+      '#title' => t('Permitted file extensions'), 
+      '#default_value' => variable_get("upload_extensions_$rid", $upload_extensions_default),
+      '#maxlength' => 255, 
+      '#description' => t('Extensions that users in this role can upload. Separate extensions with a space and do not include the leading dot.'),
     );
     $form["settings_role_$rid"]["upload_uploadsize_$rid"] = array(
-      '#type' => 'textfield', '#title' => t('Maximum file size per upload'), '#default_value' => variable_get("upload_uploadsize_$rid", 1),
-      '#size' => 5, '#maxlength' => 5, '#description' => t('The maximum size of a file a user can upload (in megabytes).')
+      '#type' => 'textfield', 
+      '#title' => t('Maximum file size per upload'), 
+      '#default_value' => variable_get("upload_uploadsize_$rid", $upload_uploadsize_default),
+      '#size' => 5, 
+      '#maxlength' => 5, 
+      '#description' => t('The maximum size of a file a user can upload (in megabytes).'),
     );
     $form["settings_role_$rid"]["upload_usersize_$rid"] = array(
-      '#type' => 'textfield', '#title' => t('Total file size per user'), '#default_value' => variable_get("upload_usersize_$rid", 10),
-      '#size' => 5, '#maxlength' => 5, '#description' => t('The maximum size of all files a user can have on the site (in megabytes).')
+      '#type' => 'textfield', 
+      '#title' => t('Total file size per user'), 
+      '#default_value' => variable_get("upload_usersize_$rid", $upload_usersize_default),
+      '#size' => 5, 
+      '#maxlength' => 5, 
+      '#description' => t('The maximum size of all files a user can have on the site (in megabytes).'),
     );
   }
 
@@ -284,9 +337,9 @@ function _upload_validate(&$node) {
           $total_usersize = upload_space_used($user->uid) + $filesize;
           $error = array();
           foreach ($user->roles as $rid => $name) {
-            $extensions = variable_get("upload_extensions_$rid", 'jpg jpeg gif png txt html doc xls pdf ppt pps');
-            $uploadsize = variable_get("upload_uploadsize_$rid", 1) * 1024 * 1024;
-            $usersize = variable_get("upload_usersize_$rid", 1) * 1024 * 1024;
+            $extensions = variable_get("upload_extensions_$rid", variable_get('upload_extensions_default', 'jpg jpeg gif png txt html doc xls pdf ppt pps'));
+            $uploadsize = variable_get("upload_uploadsize_$rid", variable_get('upload_uploadsize_default', 1)) * 1024 * 1024;
+            $usersize = variable_get("upload_usersize_$rid", variable_get('upload_usersize_default', 10)) * 1024 * 1024;
 
             $regex = '/\.('. ereg_replace(' +', '|', preg_quote($extensions)) .')$/i';
 
