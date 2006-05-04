@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.361 2006/04/17 20:48:26 dries Exp $
+// $Id: book.module,v 1.362 2006/05/04 09:11:43 drumm Exp $
 
 /**
  * @file
@@ -676,7 +676,7 @@ function book_export($type = 'html', $nid = 0) {
     print call_user_func($export_function, $nid, $depth);
   }
   else {
-    drupal_set_message('Unknown export format');
+    drupal_set_message(t('Unknown export format.'));
     drupal_not_found();
   }
 }
