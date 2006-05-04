@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.644 2006/05/03 07:59:01 drumm Exp $
+// $Id: node.module,v 1.645 2006/05/04 18:44:10 dries Exp $
 
 /**
  * @file
@@ -2126,7 +2126,7 @@ function node_form_alter($form_id, &$form) {
   }
 
   // Advanced node search form
-  elseif ($form_id == 'search_form' && arg(1) == 'node') {
+  elseif ($form_id == 'search_form' && arg(1) == 'node' && user_access('use advanced search')) {
     // Keyword boxes:
     $form['advanced'] = array(
       '#type' => 'fieldset',

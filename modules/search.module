@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.177 2006/05/04 09:31:41 drumm Exp $
+// $Id: search.module,v 1.178 2006/05/04 18:44:10 dries Exp $
 
 /**
  * @file
@@ -126,7 +126,7 @@ function search_help($section) {
  * Implementation of hook_perm().
  */
 function search_perm() {
-  return array('search content', 'administer search');
+  return array('search content', 'use advanced search', 'administer search');
 }
 
 /**
