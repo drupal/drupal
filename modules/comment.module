@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.455 2006/04/27 22:03:20 unconed Exp $
+// $Id: comment.module,v 1.456 2006/05/04 09:34:56 drumm Exp $
 
 /**
  * @file
@@ -1159,11 +1159,6 @@ function comment_validate($edit) {
   }
   if (isset($edit['author']) && !$account = user_load(array('name' => $edit['author']))) {
     form_set_error('author', t('You have to specify a valid author.'));
-  }
-
-  // Validate the comment's body.
-  if (trim($edit['comment']) == '') {
-    form_set_error('comment', t('The body of your comment is empty.'));
   }
 
   // Check validity of name, mail and homepage (if given)
