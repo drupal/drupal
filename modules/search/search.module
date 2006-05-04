@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.176 2006/04/17 16:06:00 unconed Exp $
+// $Id: search.module,v 1.177 2006/05/04 09:31:41 drumm Exp $
 
 /**
  * @file
@@ -114,11 +114,11 @@ function search_help($section) {
 <p>The search engine works by maintaining an index of the words in your site\'s content. You can adjust the settings below to tweak the indexing behaviour. Note that the search requires cron to be set up correctly.</p>
 ');
     case 'search#noresults':
-      return t('<p><ul>
+      return t('<ul>
 <li>Check if your spelling is correct.</li>
 <li>Remove quotes around phrases to match each word individually: <em>"blue smurf"</em> will match less than <em>blue smurf</em>.</li>
 <li>Consider loosening your query with <em>OR</em>: <em>blue smurf</em> will match less than <em>blue OR smurf</em>.</li>
-</ul></p>');
+</ul>');
   }
 }
 
