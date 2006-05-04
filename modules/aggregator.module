@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.279 2006/05/02 13:28:04 dries Exp $
+// $Id: aggregator.module,v 1.280 2006/05/04 18:39:54 dries Exp $
 
 /**
  * @file
@@ -1264,7 +1264,13 @@ function theme_aggregator_feed($feed) {
   $output .= '<div class="feed-description">'. aggregator_filter_xss($feed->description) ."</div>\n";
   $output .= '<div class="feed-url"><em>'. t('URL:') .'</em> '. l($feed->link, $feed->link, array(), NULL, NULL, TRUE) ."</div>\n";
 
-  $updated = t('%time ago', array('%time' => format_interval(time() - $feed->checked)));
+  if ($feed->checked) {
+    $updated = t('%time ago', array('%time' => format_interval(time() - $feed->checked)));
+  }
+  else {
+    $updated = t('never');
+  }
+
   if (user_access('administer news feeds')) {
     $updated = l($updated, 'admin/aggregator');
   }
