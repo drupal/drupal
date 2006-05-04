@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.122 2006/04/17 20:48:26 dries Exp $
+// $Id: filter.module,v 1.123 2006/05/04 09:50:35 drumm Exp $
 
 /**
  * @file
@@ -361,7 +361,7 @@ function filter_admin_delete() {
       return confirm_form('filter_admin_delete', $form, t('Are you sure you want to delete the input format %format?', array('%format' => theme('placeholder', $format->name))), 'admin/filters', t('If you have any content left in this input format, it will be switched to the default input format. This action cannot be undone.'), t('Delete'), t('Cancel'));
     }
     else {
-      drupal_set_message('The default format cannot be deleted.');
+      drupal_set_message(t('The default format cannot be deleted.'));
       drupal_goto('admin/filters');
     }
   }
