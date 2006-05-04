@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.115 2006/05/02 09:26:33 drumm Exp $
+// $Id: form.inc,v 1.116 2006/05/04 09:57:13 drumm Exp $
 
 /**
  * @defgroup form Form generation
@@ -1071,22 +1071,16 @@ function theme_password($element) {
 }
 
 /**
- * Format a weight selection menu.
- *
- * @param $element
- *   An associative array containing the properties of the element.
- *   Properties used:  title, delta, description
- * @return
- *   A themed HTML string representing the form.
+ * Expand weight elements into selects.
  */
-function theme_weight($element) {
+function process_weight($element) {
   for ($n = (-1 * $element['#delta']); $n <= $element['#delta']; $n++) {
     $weights[$n] = $n;
   }
   $element['#options'] = $weights;
   $element['#type'] = 'select';
-
-  return form_render($element);
+  $element['#is_weight'] = TRUE;
+  return $element;
 }
 
 /**

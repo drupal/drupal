@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.322 2006/05/01 09:30:13 dries Exp $
+// $Id: system.module,v 1.323 2006/05/04 09:57:14 drumm Exp $
 
 /**
  * @file
@@ -72,7 +72,7 @@ function system_elements() {
   $type['radio'] = array('#input' => TRUE);
   $type['checkboxes'] = array('#input' => TRUE, '#process' => array('expand_checkboxes' => array()), '#tree' => TRUE);
   $type['select'] = array('#input' => TRUE);
-  $type['weight'] = array('#input' => TRUE, '#delta' => 10, '#default_value' => 0);
+  $type['weight'] = array('#input' => TRUE, '#delta' => 10, '#default_value' => 0, '#process' => array('process_weight' => array()));
   $type['date'] = array('#input' => TRUE, '#process' => array('expand_date' => array()));
   $type['file'] = array('#input' => TRUE, '#size' => 60);
 
