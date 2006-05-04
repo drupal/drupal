@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.245 2006/03/27 18:02:48 killes Exp $
+// $Id: blog.module,v 1.246 2006/05/04 18:48:46 dries Exp $
 
 /**
  * @file
@@ -63,11 +63,11 @@ function blog_help($section) {
 <ul>
 <li>read your blog via your user profile at <a href="%user">my account</a>.</li>
 <li>post a blog at <a href="%node-add-blog">create content &gt;&gt; personal blog entry</a>.</li>
-<li>administer blog at <a href="%admin-node-configure-types-blog">administer &gt;&gt; content &gt;&gt; configure &gt;&gt; content types &gt;&gt; personal blog entry</a>.</li>
+<li>administer blog at <a href="%admin-node-configure-types-blog">administer &gt;&gt; settings &gt;&gt; content types &gt;&gt; configure blog entry</a>.</li>
 <li>administer blog api at <a href="%admin-settings-blogapi">administer &gt;&gt; settings &gt;&gt; blogapi</a>.</li>
 <li>enable the "recent blog posts" block at <a href="%admin-block">administer &gt;&gt; blocks</a> to show the 10 most recent blog posts.</li>
 </ul>
-', array('%user' => url('user'), '%node-add-blog' => url('node/add/blog'), '%admin-node-configure-types-blog' => url('admin/node/configure/types/blog'), '%admin-settings-blogapi' => url('admin/settings/blogapi'), '%admin-block' => url('admin/block')));
+', array('%user' => url('user'), '%node-add-blog' => url('node/add/blog'), '%admin-node-configure-types-blog' => url('admin/settings/content-types/blog'), '%admin-settings-blogapi' => url('admin/settings/blogapi'), '%admin-block' => url('admin/block')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%blog">Blog page</a>.', array('%blog' => 'http://drupal.org/handbook/modules/blog/')) .'</p>';
       return $output;
     case 'admin/modules#description':
