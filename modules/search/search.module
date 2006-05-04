@@ -126,7 +126,7 @@ function search_help($section) {
  * Implementation of hook_perm().
  */
 function search_perm() {
-  return array('search content', 'administer search');
+  return array('search content', 'use advanced search', 'administer search');
 }
 
 /**

@@ -2126,7 +2126,7 @@ function node_form_alter($form_id, &$form) {
   }
 
   // Advanced node search form
-  elseif ($form_id == 'search_form' && arg(1) == 'node') {
+  elseif ($form_id == 'search_form' && arg(1) == 'node' && user_access('use advanced search')) {
     // Keyword boxes:
     $form['advanced'] = array(
       '#type' => 'fieldset',
