@@ -9,7 +9,6 @@ if (isJsEnabled()) {
  * Attaches the upload behaviour to the upload form.
  */
 function uploadAutoAttach() {
-  var acdb = [];
   var inputs = document.getElementsByTagName('input');
   for (i = 0; input = inputs[i]; i++) {
     if (input && hasClass(input, 'upload')) {
@@ -27,7 +26,6 @@ function uploadAutoAttach() {
  * JS upload object.
  */
 function jsUpload(uri, button, wrapper, hide) {
-  var upload = this;
   this.button = button;
   this.wrapper = wrapper;
   this.hide = hide;
