@@ -1,4 +1,4 @@
-// $Id: upload.js,v 1.8 2006/04/11 11:33:15 killes Exp $
+// $Id: upload.js,v 1.9 2006/05/05 10:47:20 drumm Exp $
 
 // Global killswitch
 if (isJsEnabled()) {
@@ -9,7 +9,6 @@ if (isJsEnabled()) {
  * Attaches the upload behaviour to the upload form.
  */
 function uploadAutoAttach() {
-  var acdb = [];
   var inputs = document.getElementsByTagName('input');
   for (i = 0; input = inputs[i]; i++) {
     if (input && hasClass(input, 'upload')) {
@@ -27,7 +26,6 @@ function uploadAutoAttach() {
  * JS upload object.
  */
 function jsUpload(uri, button, wrapper, hide) {
-  var upload = this;
   this.button = button;
   this.wrapper = wrapper;
   this.hide = hide;
