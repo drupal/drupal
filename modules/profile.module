@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.154 2006/04/17 20:48:26 dries Exp $
+// $Id: profile.module,v 1.155 2006/05/05 09:25:21 dries Exp $
 
 /**
  * @file
@@ -65,6 +65,11 @@ function profile_menu($may_cache) {
     $items[] = array('path' => 'admin/settings/profile/add',
       'title' => t('add field'),
       'callback' => 'profile_field_form',
+      'type' => MENU_CALLBACK);
+    $items[] = array('path' => 'admin/settings/profile/autocomplete',
+      'title' => t('profile category autocomplete'),
+      'callback' => 'profile_admin_settings_autocomplete',
+      'access' => user_access('administer users'),
       'type' => MENU_CALLBACK);
     $items[] = array('path' => 'admin/settings/profile/edit',
       'title' => t('edit field'),
@@ -212,6 +217,7 @@ function profile_field_form($arg = NULL) {
   $form['fields']['category'] = array('#type' => 'textfield',
     '#title' => t('Category'),
     '#default_value' => $edit['category'],
+    '#autocomplete_path' => 'admin/settings/profile/autocomplete',
     '#description' => t('The category the new field should be part of. Categories are used to group fields logically. An example category is "Personal information".'),
     '#required' => TRUE,
   );
@@ -785,4 +791,17 @@ function _profile_field_types($type = NULL) {
 
 function _profile_field_serialize($type = NULL) {
   return $type == 'date';
+}
+
+/**
+ * Retrieve a pipe delimited string of autocomplete suggestions for profile categories
+ */
+function profile_admin_settings_autocomplete($string) {
+  $matches = array();
+  $result = db_query_range("SELECT category FROM {profile_fields} WHERE LOWER(category) LIKE LOWER('%s%%')", $string, 0, 10);
+  while ($data = db_fetch_object($result)) {
+    $matches[$data->category] = check_plain($data->category);
+  }
+  print drupal_to_js($matches);
+  exit();
 }
