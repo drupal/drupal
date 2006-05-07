@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.148 2006/05/01 10:43:38 dries Exp $ */
+/* $Id: drupal.css,v 1.149 2006/05/07 04:18:02 drumm Exp $ */
 
 /*
 ** HTML elements
@@ -94,7 +94,7 @@ td.menu-disabled {
 }
 br.clear {
   clear: both;
-  height: 0px;
+  height: 0;
 }
 .container-inline div {
   display: inline;
@@ -321,8 +321,8 @@ tr.odd .form-item, tr.even .form-item {
 }
 #node-admin-filter ul {
   list-style-type: none;
-  padding: 0px;
-  margin: 0px;
+  padding: 0;
+  margin: 0;
   width: 100%;
 }
 #node-admin-buttons {
@@ -344,12 +344,12 @@ dl.multiselect dd.a, dl.multiselect dd.a .form-item {
 dl.multiselect dt, dl.multiselect dd {
   float: left;
   line-height: 1.75em;
-  padding: 0px;
-  margin: 0px 1em 0px 0px;
+  padding: 0;
+  margin: 0 1em 0 0;
 }
 dl.multiselect .form-item {
   height: 1.75em;
-  margin: 0px;
+  margin: 0;
 }
 #permissions td.module, #blocks td.region {
   font-weight: bold;
@@ -661,7 +661,7 @@ html.js fieldset.collapsed legend a {
   height: 14px;
   background: #eee url(grippie.png) no-repeat 100% 100%;
   border: 1px solid #ddd;
-  border-top-width: 0px;
+  border-top-width: 0;
   cursor: s-resize;
 }
 
