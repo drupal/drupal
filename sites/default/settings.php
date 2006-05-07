@@ -32,7 +32,7 @@
  * 10. sites/default
  *
  * If you are installing on a non-standard port number, prefix the
- * hostname with that number.  For example,
+ * hostname with that number. For example,
  * http://www.drupal.org:8080/mysite/test/ could be loaded from
  * sites/8080.www.drupal.org.mysite.test/.
  */

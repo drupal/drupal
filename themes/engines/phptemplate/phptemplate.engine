@@ -21,7 +21,7 @@ function phptemplate_templates($directory = 'themes') {
  * Declare the available regions implemented by this engine.
  *
  * @return
- *  An array of regions.  The first array element will be used as the default region for themes.
+ *  An array of regions. The first array element will be used as the default region for themes.
  */
 function phptemplate_regions() {
   return array(
