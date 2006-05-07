@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.618 2006/05/07 00:08:36 drumm Exp $
+// $Id: user.module,v 1.619 2006/05/07 03:08:34 drumm Exp $
 
 /**
  * @file
@@ -152,6 +152,7 @@ function user_save($account, $array = array(), $category = 'account') {
 
     // Refresh user object
     $user = user_load(array('uid' => $account->uid));
+    user_module_invoke('after_update', $array, $user, $category);
   }
   else {
     $array['created'] = time();
