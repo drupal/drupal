@@ -152,6 +152,7 @@ function user_save($account, $array = array(), $category = 'account') {
 
     // Refresh user object
     $user = user_load(array('uid' => $account->uid));
+    user_module_invoke('after_update', $array, $user, $category);
   }
   else {
     $array['created'] = time();
