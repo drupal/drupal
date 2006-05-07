@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.646 2006/05/07 00:08:36 drumm Exp $
+// $Id: node.module,v 1.647 2006/05/07 01:00:15 drumm Exp $
 
 /**
  * @file
@@ -847,7 +847,7 @@ function node_menu($may_cache) {
     $items[] = array('path' => 'node', 'title' => t('content'),
       'callback' => 'node_page',
       'access' => user_access('access content'),
-      'type' => MENU_SUGGESTED_ITEM);
+      'type' => MENU_MODIFIABLE_BY_ADMIN);
     $items[] = array('path' => 'node/add', 'title' => t('create content'),
       'callback' => 'node_page',
       'access' => user_access('access content'),
