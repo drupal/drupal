@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.116 2006/05/04 09:57:13 drumm Exp $
+// $Id: form.inc,v 1.117 2006/05/07 00:08:36 drumm Exp $
 
 /**
  * @defgroup form Form generation
@@ -50,7 +50,7 @@ function element_children($element) {
  *
  * @param $form_id
  *   A unique string identifying the form. Allows each form to be
- *   themed.  Pass NULL to suppress the form_id parameter (produces
+ *   themed. Pass NULL to suppress the form_id parameter (produces
  *   a shorter URL with method=get)
  * @param $form
  *   An associative array containing the structure of the form.
@@ -169,7 +169,7 @@ function drupal_validate_form($form_id, $form, $callback = NULL) {
   if (isset($form['#token'])) {
     if ($form_values['form_token'] != md5(session_id() . $form['#token'] . variable_get('drupal_private_key', ''))) {
       // setting this error will cause the form to fail validation
-      form_set_error('form_token', t('Validation error, please try again.  If this error persists, please contact the site administrator.'));
+      form_set_error('form_token', t('Validation error, please try again. If this error persists, please contact the site administrator.'));
     }
   }
 
@@ -482,7 +482,7 @@ function _form_set_value(&$form_values, $form, $parents, $value) {
 /**
  * Renders a HTML form given a form tree. Recursively iterates over each of
  * the form elements, generating HTML code. This function is usually
- * called from within a theme.  To render a form from within a module, use
+ * called from within a theme. To render a form from within a module, use
  * drupal_get_form().
  *
  * @param $elements
@@ -1013,7 +1013,7 @@ function theme_textfield($element) {
 function theme_form($element) {
   // Anonymous div to satisfy XHTML compliance.
   $action = $element['#action'] ? 'action="' . check_url($element['#action']) . '" ' : '';
-  return '<form '. $action . ' method="'. $element['#method'] .'" '. 'id="'. $element['#id'] .'"'.  drupal_attributes($element['#attributes']) .">\n<div>". $element['#children'] ."\n</div></form>\n";
+  return '<form '. $action . ' method="'. $element['#method'] .'" '. 'id="'. $element['#id'] .'"'. drupal_attributes($element['#attributes']) .">\n<div>". $element['#children'] ."\n</div></form>\n";
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: page.module,v 1.154 2006/03/27 18:02:48 killes Exp $
+// $Id: page.module,v 1.155 2006/05/07 00:08:36 drumm Exp $
 
 /**
  * @file
@@ -12,10 +12,10 @@
 function page_help($section) {
   switch ($section) {
     case 'admin/help#page':
-      $output = '<p>'. t('The page module allows users to create static pages, which are the most basic type of content.  Pages are commonly collected in books via the book module.  Users should create a page if the information on the page is static.  An example would be an "about" page. ') .'</p>';
-      $output .= '<p>'. t('When a  page is created, a user can set authoring information, configure publishing options, whether readers will be able to post comments.  They can also select the content type of the page (e.g., full HTML, filtered HTML). ') .'</p>';
-      $output .= '<p>'. t('As an administrator, you can set the publishing default for a page (in its workflow): you can specify whether a page is by default published, sent to moderation, promoted to the front page, sticky at the top of lists, and whether revisions are enabled by default.    You can set the permissions that different user roles have to view, create, and edit pages.') .'</p>';
-      $output .= '<p>'. t('If the location module is enabled, then location specific information can be added.  If the trackback module is enabled trackbacks can be configured.') .'</p>';
+      $output = '<p>'. t('The page module allows users to create static pages, which are the most basic type of content. Pages are commonly collected in books via the book module. Users should create a page if the information on the page is static. An example would be an "about" page. ') .'</p>';
+      $output .= '<p>'. t('When a  page is created, a user can set authoring information, configure publishing options, whether readers will be able to post comments. They can also select the content type of the page (e.g., full HTML, filtered HTML). ') .'</p>';
+      $output .= '<p>'. t('As an administrator, you can set the publishing default for a page (in its workflow): you can specify whether a page is by default published, sent to moderation, promoted to the front page, sticky at the top of lists, and whether revisions are enabled by default. You can set the permissions that different user roles have to view, create, and edit pages.') .'</p>';
+      $output .= '<p>'. t('If the location module is enabled, then location specific information can be added. If the trackback module is enabled trackbacks can be configured.') .'</p>';
       $output .= t('<p>You can</p>
 <ul>
 <li>read the node administration help at <a href="%admin-help-node">administer &gt;&gt; help &gt;&gt; node</a>.</li>

@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.74 2006/04/17 20:48:25 dries Exp $
+// $Id: file.inc,v 1.75 2006/05/07 00:08:36 drumm Exp $
 
 /**
  * @file
@@ -322,7 +322,7 @@ function file_copy(&$source, $dest = 0, $replace = FILE_EXISTS_RENAME) {
 
   $source = realpath($source);
   if (!file_exists($source)) {
-    drupal_set_message(t('The selected file %file could not be copied, because no file by that name exists.  Please check that you supplied the correct filename.', array('%file' => theme('placeholder', $source))), 'error');
+    drupal_set_message(t('The selected file %file could not be copied, because no file by that name exists. Please check that you supplied the correct filename.', array('%file' => theme('placeholder', $source))), 'error');
     return 0;
   }
 
@@ -605,7 +605,7 @@ function file_download() {
  *   When TRUE, the directory scan will recurse the entire tree
  *   starting at the provided directory.
  * @param $key
- *   The key to be used for the returned array of files.  Possible
+ *   The key to be used for the returned array of files. Possible
  *   values are "filename", for the path starting with $dir,
  *   "basename", for the basename of the file, and "name" for the name
  *   of the file without an extension.

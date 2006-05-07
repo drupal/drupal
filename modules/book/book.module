@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.362 2006/05/04 09:11:43 drumm Exp $
+// $Id: book.module,v 1.363 2006/05/07 00:08:36 drumm Exp $
 
 /**
  * @file
@@ -27,16 +27,16 @@ function book_access($op, $node) {
   global $user;
 
   if ($op == 'create') {
-    // Only registered users can create book pages.  Given the nature
+    // Only registered users can create book pages. Given the nature
     // of the book module this is considered to be a good/safe idea.
     return user_access('create book pages');
   }
 
   if ($op == 'update') {
-    // Only registered users can update book pages.  Given the nature
+    // Only registered users can update book pages. Given the nature
     // of the book module this is considered to be a good/safe idea.
     // One can only update a book page if there are no suggested updates
-    // of that page waiting for approval.  That is, only updates that
+    // of that page waiting for approval. That is, only updates that
     // don't overwrite the current or pending information are allowed.
 
     if ((user_access('edit book pages') && !$node->moderate) || ($node->uid == $user->uid && user_access('edit own book pages'))) {
@@ -243,7 +243,7 @@ function book_form(&$node) {
       '#default_value' => ($node->parent ? $node->parent : arg(4)),
       '#options' => book_toc($node->nid),
       '#weight' => -4,
-      '#description' => user_access('create new books') ? t('The parent section in which to place this page.  Note that each page whose parent is &lt;top-level&gt; is an independent, top-level book.') : t('The parent that this page belongs in.'),
+      '#description' => user_access('create new books') ? t('The parent section in which to place this page. Note that each page whose parent is &lt;top-level&gt; is an independent, top-level book.') : t('The parent that this page belongs in.'),
     );
   }
 
@@ -436,8 +436,8 @@ function book_next($node) {
 }
 
 /**
- * Returns the content of a given node.  If $teaser if true, returns
- * the teaser rather than full content.  Displays the most recently
+ * Returns the content of a given node. If $teaser if true, returns
+ * the teaser rather than full content. Displays the most recently
  * approved revision of a node (if any) unless we have to display this
  * page in the context of the moderation queue.
  */
@@ -651,7 +651,7 @@ function book_render() {
  *
  * The function delegates the generation of output to helper functions.
  * The function name is derived by prepending 'book_export_' to the
- * given output type.  So, e.g., a type of 'html' results in a call to
+ * given output type. So, e.g., a type of 'html' results in a call to
  * the function book_export_html().
  *
  * @param type
@@ -685,9 +685,9 @@ function book_export($type = 'html', $nid = 0) {
  * This function is called by book_export() to generate HTML for export.
  *
  * The given node is /embedded to its absolute depth in a top level
- * section/.  For example, a child node with depth 2 in the hierarchy
+ * section/. For example, a child node with depth 2 in the hierarchy
  * is contained in (otherwise empty) &lt;div&gt; elements
- * corresponding to depth 0 and depth 1.  This is intended to support
+ * corresponding to depth 0 and depth 1. This is intended to support
  * WYSIWYG output - e.g., level 3 sections always look like level 3
  * sections, no matter their depth relative to the node selected to be
  * exported as printer-friendly HTML.
@@ -744,9 +744,9 @@ function theme_book_export_html($title, $content) {
 }
 
 /**
- * Traverses the book tree.  Applies the $visit_pre() callback to each
+ * Traverses the book tree. Applies the $visit_pre() callback to each
  * node, is called recursively for each child of the node (in weight,
- * title order).  Finally appends the output of the $visit_post()
+ * title order). Finally appends the output of the $visit_post()
  * callback to the output before returning the generated output.
  *
  * @param nid
@@ -796,7 +796,7 @@ function book_recurse($nid = 0, $depth = 1, $visit_pre, $visit_post) {
 }
 
 /**
- * Generates printer-friendly HTML for a node.  This function
+ * Generates printer-friendly HTML for a node. This function
  * is a 'pre-node' visitor function for book_recurse().
  *
  * @param $node
@@ -1006,10 +1006,10 @@ function book_admin_overview() {
 function book_help($section) {
   switch ($section) {
     case 'admin/help#book':
-      $output = '<p>'. t('The <em>book</em> content type is suited for creating structured, multi-page hypertexts such as site resource guides, manuals, and Frequently Asked Questions (FAQs).  It permits a document to have chapters, sections, subsections, etc.  Authors with suitable permissions can add pages to a collaborative book,  placing them into the existing document by adding them to a table of contents menu. ') .'</p>';
-      $output .= '<p>'. t('Books have additional <em>previous</em>, <em>up</em>, and <em>next</em> navigation elements at the bottom of each page for moving through the text.  Additional navigation may be provided by enabling the <em>book navigation block</em> on the <a href="%admin-block">block administration page</a>.', array('%admin-block' => url('admin/block'))) .'</p>';
+      $output = '<p>'. t('The <em>book</em> content type is suited for creating structured, multi-page hypertexts such as site resource guides, manuals, and Frequently Asked Questions (FAQs). It permits a document to have chapters, sections, subsections, etc. Authors with suitable permissions can add pages to a collaborative book,  placing them into the existing document by adding them to a table of contents menu. ') .'</p>';
+      $output .= '<p>'. t('Books have additional <em>previous</em>, <em>up</em>, and <em>next</em> navigation elements at the bottom of each page for moving through the text. Additional navigation may be provided by enabling the <em>book navigation block</em> on the <a href="%admin-block">block administration page</a>.', array('%admin-block' => url('admin/block'))) .'</p>';
       $output .= '<p>'. t('Users can select the <em>printer-friendly version</em> link visible at the bottom of a book page to generate a printer-friendly display of the page and all of its subsections. ') .'</p>';
-      $output .= '<p>'. t('Administrators can view a book outline, from which is it possible to change the titles of sections, and their <i>weight</i> (thus reordering sections).   From this outline, it is also possible to edit and/or delete book pages.   Many content types besides pages (for example, blog entries, stories, and polls) can be added to a collaborative book by choosing the <em>outline</em> tab when viewing the post.') .'</p>';
+      $output .= '<p>'. t('Administrators can view a book outline, from which is it possible to change the titles of sections, and their <i>weight</i> (thus reordering sections). From this outline, it is also possible to edit and/or delete book pages. Many content types besides pages (for example, blog entries, stories, and polls) can be added to a collaborative book by choosing the <em>outline</em> tab when viewing the post.') .'</p>';
       $output .= t('<p>You can</p>
 <ul>
 <li>create new book pages: <a href="%node-add-book">create content &gt;&gt; book page</a>.</li>
@@ -1026,9 +1026,9 @@ function book_help($section) {
     case 'admin/node/book':
       return t('<p>The book module offers a means to organize content, authored by many users, in an online manual, outline or FAQ.</p>');
     case 'admin/node/book/orphan':
-      return t('<p>Pages in a book are like a tree. As pages are edited, reorganized and removed, child pages might be left with no link to the rest of the book.  Such pages are referred to as "orphan pages".  On this page, administrators can review their books for orphans and reattach those pages as desired.</p>');
+      return t('<p>Pages in a book are like a tree. As pages are edited, reorganized and removed, child pages might be left with no link to the rest of the book. Such pages are referred to as "orphan pages". On this page, administrators can review their books for orphans and reattach those pages as desired.</p>');
     case 'node/add#book':
-      return t("A book is a collaborative writing effort: users can collaborate writing the pages of the book, positioning the pages in the right order, and reviewing or modifying pages previously written.  So when you have some information to share or when you read a page of the book and you didn't like it, or if you think a certain page could have been written better, you can do something about it.");
+      return t("A book is a collaborative writing effort: users can collaborate writing the pages of the book, positioning the pages in the right order, and reviewing or modifying pages previously written. So when you have some information to share or when you read a page of the book and you didn't like it, or if you think a certain page could have been written better, you can do something about it.");
   }
 
   if (arg(0) == 'node' && is_numeric(arg(1)) && arg(2) == 'outline') {

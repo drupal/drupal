@@ -1,5 +1,5 @@
 <?php
-// $Id: help.module,v 1.50 2006/03/12 01:56:11 unconed Exp $
+// $Id: help.module,v 1.51 2006/05/07 00:08:36 drumm Exp $
 
 /**
  * @file
@@ -99,7 +99,7 @@ function help_help($section) {
       return $output;
     case 'admin/help#help':
       $output = '<p>'. t('The help module displays context sensitive help information. Users can learn how to use modules and accomplish tasks quicker with less errors by clicking on links in provided by the help module.') .'</p>';
-      $output .= t('<p>Modules can make documentation available to other modules with this module. All user help should be presented using this module.  Some examples of help: </p>
+      $output .= t('<p>Modules can make documentation available to other modules with this module. All user help should be presented using this module. Some examples of help: </p>
 <ul>
 <li>The name of a module (unused, but there).</li>
 <li>The description found on the admin/system/modules page.</li>

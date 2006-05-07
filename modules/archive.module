@@ -1,5 +1,5 @@
 <?php
-// $Id: archive.module,v 1.87 2006/03/07 11:36:49 dries Exp $
+// $Id: archive.module,v 1.88 2006/05/07 00:08:36 drumm Exp $
 
 /**
  * @file
@@ -12,8 +12,8 @@
 function archive_help($section) {
   switch ($section) {
     case 'admin/help#archive':
-      $output = '<p>'. t('The archive page allows content to be viewed by date.  It also provides a monthly calendar view that users can use to navigate through content.') .'</p>';
-      $output .= '<p>'. t('To view the archive by date, select the date in the calendar.  Administrators can enable the <em>browse archives</em> block in block administration to allow users to browse by calendar.  Clicking on a date in the monthly calendar view shows the content for that date.  Users can navigate to different months using arrows beside the month\'s name in the calendar display.   The current date will be highlighted in the calendar.') .'</p>';
+      $output = '<p>'. t('The archive page allows content to be viewed by date. It also provides a monthly calendar view that users can use to navigate through content.') .'</p>';
+      $output .= '<p>'. t('To view the archive by date, select the date in the calendar. Administrators can enable the <em>browse archives</em> block in block administration to allow users to browse by calendar. Clicking on a date in the monthly calendar view shows the content for that date. Users can navigate to different months using arrows beside the month\'s name in the calendar display. The current date will be highlighted in the calendar.') .'</p>';
       $output .= t('<p>You can</p>
 <ul>
 <li>view your <a href="%archive">archive by day</a>.</li>

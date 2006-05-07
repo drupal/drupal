@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.206 2006/04/26 21:53:24 killes Exp $
+// $Id: block.module,v 1.207 2006/05/07 00:08:36 drumm Exp $
 
 /**
  * @file
@@ -25,7 +25,7 @@ function block_help($section) {
 </ul>
 ');
       $output .= '<h3>'. t('Module blocks') .'</h3>';
-      $output .= '<p>'. t('Module blocks are available when modules are enabled.  These blocks can be administered in block administration.') .'</p>';
+      $output .= '<p>'. t('Module blocks are available when modules are enabled. These blocks can be administered in block administration.') .'</p>';
       $output .= '<h3>'. t('Administrator defined blocks') .'</h3>';
       $output .= '<p>'. t('An administrator defined block contains content supplied by the administrator. Each admin-defined block consists of a title, a description, and a body which can be as long as you wish. The Drupal engine will render the content of the block.') .'</p>';
       $output .= t('<p>You can</p>
@@ -41,7 +41,7 @@ function block_help($section) {
     case 'admin/block':
       return t("
 <p>Blocks are content rendered into regions, often boxes in the left and right side bars of the web site. They are made available by modules or created manually.</p>
-<p>Only enabled blocks are shown. You can position the blocks by deciding which area of the page they will show up on (e.g., a sidebar) and in which order they appear (weight).  Highlighting on this page shows the regions where content will be rendered.</p>
+<p>Only enabled blocks are shown. You can position the blocks by deciding which area of the page they will show up on (e.g., a sidebar) and in which order they appear (weight). Highlighting on this page shows the regions where content will be rendered.</p>
 <p>If you want certain blocks to disable themselves temporarily during high server loads, check the 'Throttle' box. You can configure the auto-throttle on the <a href=\"%throttle\">throttle configuration page</a> after having enabled the throttle module.</p>
 ", array('%throttle' => url('admin/settings/throttle')));
     case 'admin/block/add':

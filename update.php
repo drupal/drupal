@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.186 2006/04/20 16:34:31 killes Exp $
+// $Id: update.php,v 1.187 2006/05/07 00:08:35 drumm Exp $
 
 /**
  * @file
@@ -558,7 +558,7 @@ function update_access_denied_page() {
 </ol>';
 }
 
-// This code may be removed later.  It is part of the Drupal 4.5 to 4.7 migration.
+// This code may be removed later. It is part of the Drupal 4.5 to 4.7 migration.
 function update_fix_system_table() {
   drupal_bootstrap(DRUPAL_BOOTSTRAP_DATABASE);
   $row = db_fetch_object(db_query_range('SELECT * FROM {system}', 0, 1));
@@ -577,7 +577,7 @@ function update_fix_system_table() {
   }
 }
 
-// This code may be removed later.  It is part of the Drupal 4.6 to 4.7 migration.
+// This code may be removed later. It is part of the Drupal 4.6 to 4.7 migration.
 function update_fix_access_table() {
   if (variable_get('update_access_fixed', FALSE)) {
     return;

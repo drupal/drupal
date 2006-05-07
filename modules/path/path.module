@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.83 2006/04/13 08:25:27 killes Exp $
+// $Id: path.module,v 1.84 2006/05/07 00:08:36 drumm Exp $
 
 /**
  * @file
@@ -12,7 +12,7 @@
 function path_help($section) {
   switch ($section) {
     case 'admin/help#path':
-      $output = '<p>'. t('The path module allows you to specify aliases for Drupal URLs.  Such aliases improve readability of URLs for your users and may help internet search engines to index your content more effectively.  More than one alias may be created for a given page.') .'</p>';
+      $output = '<p>'. t('The path module allows you to specify aliases for Drupal URLs. Such aliases improve readability of URLs for your users and may help internet search engines to index your content more effectively. More than one alias may be created for a given page.') .'</p>';
       $output .= t('<p>Some examples of URL aliases are:</p>
 <ul>
 <li>user/login =&gt; login</li>
@@ -21,8 +21,8 @@ function path_help($section) {
 <li>node/3 =&gt; contact</li>
 </ul>
 ');
-      $output .= '<p>'. t('The path module enables an extra field for aliases in all node input and editing forms (when users have the appropriate permissions).  It also provides an interface to view and edit all URL aliases.  The two permissions are related to URL aliasing are "administer a list of URL aliases" and "add url aliases".  ') .'</p>';
-      $output .= '<p>'. t('This module also comes with user-defined mass URL aliasing capabilities, which is useful if you wish to uniformly use URLs different from the default.  For example, you may want to have your URLs presented in a different language. Access to the Drupal source code on the web server is required to set up these kinds of aliases. ') .'</p>';
+      $output .= '<p>'. t('The path module enables an extra field for aliases in all node input and editing forms (when users have the appropriate permissions). It also provides an interface to view and edit all URL aliases. The two permissions are related to URL aliasing are "administer a list of URL aliases" and "add url aliases". ') .'</p>';
+      $output .= '<p>'. t('This module also comes with user-defined mass URL aliasing capabilities, which is useful if you wish to uniformly use URLs different from the default. For example, you may want to have your URLs presented in a different language. Access to the Drupal source code on the web server is required to set up these kinds of aliases. ') .'</p>';
       $output .= t('<p>You can</p>
 <ul>
 <li>set the path for a post with the path module.</li>
@@ -37,7 +37,7 @@ function path_help($section) {
     case 'admin/modules#description':
       return t('Allows users to rename URLs.');
     case 'admin/path':
-      return t("<p>Drupal provides users complete control over URLs through aliasing.  This feature is typically used to make URLs human-readable or easy to remember.  For example, one could map the relative URL 'node/1' onto 'about'. Each system path can have multiple aliases.</p>");
+      return t("<p>Drupal provides users complete control over URLs through aliasing. This feature is typically used to make URLs human-readable or easy to remember. For example, one could map the relative URL 'node/1' onto 'about'. Each system path can have multiple aliases.</p>");
     case 'admin/path/add':
       return t('<p>Enter the path you wish to create the alias for, followed by the name of the new alias.</p>');
   }
@@ -182,7 +182,7 @@ function path_set_alias($path = NULL, $alias = NULL, $pid = NULL) {
 function path_form($edit = '') {
 
   $form['src'] = array('#type' => 'textfield', '#title' => t('Existing system path'), '#default_value' => $edit['src'], '#maxlength' => 64, '#description' => t('Specify the existing path you wish to alias. For example: node/28, forum/1, taxonomy/term/1+2.'));
-  $form['dst'] = array('#type' => 'textfield', '#default_value' => $edit['dst'], '#maxlength' => 64, '#description' => t('Specify an alternative path by which this data can be accessed.  For example, type "about" when writing an about page.  Use a relative path and don\'t add a trailing slash or the URL alias won\'t work.'));
+  $form['dst'] = array('#type' => 'textfield', '#default_value' => $edit['dst'], '#maxlength' => 64, '#description' => t('Specify an alternative path by which this data can be accessed. For example, type "about" when writing an about page. Use a relative path and don\'t add a trailing slash or the URL alias won\'t work.'));
 
   if ($edit['pid']) {
     $form['pid'] = array('#type' => 'hidden', '#value' => $edit['pid']);
@@ -225,7 +225,7 @@ function path_nodeapi(&$node, $op, $arg) {
         break;
 
       case 'insert':
-        // Don't try to insert if path is NULL.  We may have already set
+        // Don't try to insert if path is NULL. We may have already set
         // the alias ahead of time.
         if ($node->path) {
           path_set_alias("node/$node->nid", $node->path);
@@ -265,7 +265,7 @@ function path_form_alter($form_id, &$form) {
       '#maxlength' => 250,
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
-      '#description' => t('Optionally specify an alternative URL by which this node can be accessed.  For example, type "about" when writing an about page.  Use a relative path and don\'t add a trailing slash or the URL alias won\'t work.'),
+      '#description' => t('Optionally specify an alternative URL by which this node can be accessed. For example, type "about" when writing an about page. Use a relative path and don\'t add a trailing slash or the URL alias won\'t work.'),
     );
     if ($path) {
       $form['path']['pid'] = array(

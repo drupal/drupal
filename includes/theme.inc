@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.294 2006/05/02 09:26:33 drumm Exp $
+// $Id: theme.inc,v 1.295 2006/05/07 00:08:36 drumm Exp $
 
 /**
  * @file
@@ -179,7 +179,7 @@ function theme_get_function($function) {
   global $theme, $theme_engine;
 
   // Because theme() is called a lot, calling init_theme() only to have it
-  // smartly return is a noticeable performance hit.   Don't do it.
+  // smartly return is a noticeable performance hit. Don't do it.
   if (!isset($theme)) {
     init_theme();
   }
@@ -454,7 +454,7 @@ function theme_maintenance_page($content, $messages = TRUE, $partial = FALSE) {
 }
 
 /**
- * Returns themed set of status and/or error messages.  The messages are grouped
+ * Returns themed set of status and/or error messages. The messages are grouped
  * by type.
  *
  * @return
@@ -725,7 +725,7 @@ function theme_table($header, $rows, $attributes = array(), $caption = NULL) {
  * Return a themed sort icon.
  *
  * @param $style
- *   Set to either asc or desc.  This sets which icon to show.
+ *   Set to either asc or desc. This sets which icon to show.
  * @return
  *   A themed sort icon.
  */

@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.75 2006/02/27 15:04:45 killes Exp $
+// $Id: module.inc,v 1.76 2006/05/07 00:08:36 drumm Exp $
 
 /**
  * @file
@@ -155,7 +155,7 @@ function module_implements($hook, $sort = FALSE) {
     }
   }
 
-  // The explicit cast forces a copy to be made.  This is needed because
+  // The explicit cast forces a copy to be made. This is needed because
   // $implementations[$hook] is only a reference to an element of
   // $implementations and if there are nested foreaches (due to nested node
   // API calls, for example), they would both manipulate the same array's

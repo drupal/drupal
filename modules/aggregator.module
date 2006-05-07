@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.280 2006/05/04 18:39:54 dries Exp $
+// $Id: aggregator.module,v 1.281 2006/05/07 00:08:36 drumm Exp $
 
 /**
  * @file
@@ -210,7 +210,7 @@ function aggregator_settings() {
   $form['aggregator_clear'] = array(
     '#type' => 'select', '#title' => t('Discard news items older than'),
     '#default_value' => variable_get('aggregator_clear', 9676800), '#options' => $period,
-    '#description' => t('Older news items will be automatically discarded.  Requires crontab.')
+    '#description' => t('Older news items will be automatically discarded. Requires crontab.')
   );
 
   $form['aggregator_category_selector'] = array(
@@ -823,7 +823,7 @@ function aggregator_parse_feed(&$data, $feed) {
 
   /*
   ** We reverse the array such that we store the first item last,
-  ** and the last item first.  In the database, the newest item
+  ** and the last item first. In the database, the newest item
   ** should be at the top.
   */
 
@@ -838,7 +838,7 @@ function aggregator_parse_feed(&$data, $feed) {
     }
 
     /*
-    ** Resolve the item's title.  If no title is found, we use
+    ** Resolve the item's title. If no title is found, we use
     ** up to 40 characters of the description ending at a word
     ** boundary but not splitting potential entities.
     */
@@ -875,7 +875,7 @@ function aggregator_parse_feed(&$data, $feed) {
     }
 
     /*
-    ** Try to resolve and parse the item's publication date.  If no
+    ** Try to resolve and parse the item's publication date. If no
     ** date is found, we use the current date instead.
     */
 
@@ -898,8 +898,8 @@ function aggregator_parse_feed(&$data, $feed) {
     }
 
     /*
-    ** Save this item.  Try to avoid duplicate entries as much as
-    ** possible.  If we find a duplicate entry, we resolve it and
+    ** Save this item. Try to avoid duplicate entries as much as
+    ** possible. If we find a duplicate entry, we resolve it and
     ** pass along it's ID such that we can update it if needed.
     */
 

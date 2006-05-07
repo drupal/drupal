@@ -1,5 +1,5 @@
 <?php
-// $Id: watchdog.module,v 1.143 2006/04/13 08:25:27 killes Exp $
+// $Id: watchdog.module,v 1.144 2006/05/07 00:08:36 drumm Exp $
 
 /**
  * @file
@@ -18,7 +18,7 @@
 function watchdog_help($section) {
   switch ($section) {
     case 'admin/help#watchdog':
-      $output = '<p>'. t('The watchdog module monitors your system, capturing system events in a log to be reviewed by an authorized individual at a later time.  This is useful for site administrators who want a quick overview of activities on their site. The logs also record the sequence of events, so it can be useful for debugging site errors.') .'</p>';
+      $output = '<p>'. t('The watchdog module monitors your system, capturing system events in a log to be reviewed by an authorized individual at a later time. This is useful for site administrators who want a quick overview of activities on their site. The logs also record the sequence of events, so it can be useful for debugging site errors.') .'</p>';
       $output .= '<p>'. t('The watchdog log is simply a list of recorded events containing usage data, performance data, errors, warnings and operational information. Administrators should check the watchdog report on a regular basis to ensure their site is working properly.') .'</p>';
       $output .= t('<p>You can</p>
 <ul>
@@ -31,7 +31,7 @@ function watchdog_help($section) {
     case 'admin/modules#description':
       return t('Logs and records system events.');
     case 'admin/logs':
-      return t('<p>The watchdog module monitors your web site, capturing system events in a log to be reviewed by an authorized individual at a later time.  The watchdog log is simply a list of recorded events containing usage data, performance data, errors, warnings and operational information.  It is vital to check the watchdog report on a regular basis as it is often the only way to tell what is going on.</p>');
+      return t('<p>The watchdog module monitors your web site, capturing system events in a log to be reviewed by an authorized individual at a later time. The watchdog log is simply a list of recorded events containing usage data, performance data, errors, warnings and operational information. It is vital to check the watchdog report on a regular basis as it is often the only way to tell what is going on.</p>');
   }
 }
 

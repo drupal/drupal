@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.73 2006/04/07 13:10:17 killes Exp $
+// $Id: menu.module,v 1.74 2006/05/07 00:08:36 drumm Exp $
 
 /**
  * @file
@@ -12,7 +12,7 @@
 function menu_help($section) {
   switch ($section) {
     case 'admin/help#menu':
-      $output = t('<p>Menus are a collection of links (menu items) used to navigate a website. The menu module provides an interface to control and customize the powerful menu system that comes with Drupal.  Menus are primarily displayed as a hierarchical list of links using Drupal\'s highly flexible <a href="%admin-block">blocks</a> feature. Each menu automatically creates a block of the same name. By default, new menu items are placed inside a built-in menu labelled %navigation, but administrators can also create custom menus.</p>
+      $output = t('<p>Menus are a collection of links (menu items) used to navigate a website. The menu module provides an interface to control and customize the powerful menu system that comes with Drupal. Menus are primarily displayed as a hierarchical list of links using Drupal\'s highly flexible <a href="%admin-block">blocks</a> feature. Each menu automatically creates a block of the same name. By default, new menu items are placed inside a built-in menu labelled %navigation, but administrators can also create custom menus.</p>
 <p>Drupal themes generally provide out-of-the-box support for two menus commonly labelled %primary-links and %secondary-links. These are sets of links which are usually displayed in the header or footer of each page (depending on the currently active theme). Any menu can be designated as the primary or secondary links menu via the <a href="%menu-settings">menu settings page</a>.</p>
 Menu administration tabs:
 <ul>

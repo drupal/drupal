@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.224 2006/04/28 13:00:23 killes Exp $
+// $Id: updates.inc,v 1.225 2006/05/07 00:08:36 drumm Exp $
 
 function system_update_110() {
   $ret = array();
@@ -288,7 +288,7 @@ function system_update_119() {
 function system_update_120() {
   $ret = array();
 
-  // Rewrite old URL aliases.  Works for both PostgreSQL and MySQL
+  // Rewrite old URL aliases. Works for both PostgreSQL and MySQL
   $result = db_query("SELECT pid, src FROM {url_alias} WHERE src LIKE 'blog/%%'");
   while ($alias = db_fetch_object($result)) {
     list(, $page, $op, $uid) = explode('/', $alias->src);
@@ -992,7 +992,7 @@ function system_update_151() {
     }
 
     // Set menu_primary_menu and menu_primary_menu variables if links were
-    // imported.  If the user had links but the toggle display was off, they
+    // imported. If the user had links but the toggle display was off, they
     // will need to disable the new links manually in admins/settings/menu.
     if ($num_inserted == 0) {
       variable_set($menus[$loop]['menu_var'], 0);

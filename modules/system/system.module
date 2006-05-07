@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.324 2006/05/05 14:50:22 dries Exp $
+// $Id: system.module,v 1.325 2006/05/07 00:08:36 drumm Exp $
 
 /**
  * @file
@@ -14,8 +14,8 @@ function system_help($section) {
 
   switch ($section) {
     case 'admin/help#system':
-      $output = '<p>'. t('The system module provides system-wide defaults such as running jobs at a particular time, and storing web pages to improve efficiency.   The ability to run scheduled jobs makes administering the web site more usable, as administrators do not have to manually start jobs.   The storing of web pages, or caching, allows the site to efficiently re-use web pages and improve web site performance.  The settings module provides control over preferences, behaviours including visual and operational settings.') .'</p>';
-      $output .= '<p>'. t('Some modules require regularly scheduled actions, such as cleaning up logfiles. Cron, which stands for chronograph, is a periodic command scheduler executing commands at intervals specified in seconds. It can be used to control the execution of daily, weekly and monthly jobs (or anything with a period measured in seconds). The aggregator module periodically updates feeds using cron.  Ping periodically notifies services of new content on your site.  Search periodically indexes the content on your site.   Automating tasks is one of the best ways to keep a system running smoothly, and if most of your administration does not require your direct involvement, cron is an ideal solution.') .'</p>';
+      $output = '<p>'. t('The system module provides system-wide defaults such as running jobs at a particular time, and storing web pages to improve efficiency. The ability to run scheduled jobs makes administering the web site more usable, as administrators do not have to manually start jobs. The storing of web pages, or caching, allows the site to efficiently re-use web pages and improve web site performance. The settings module provides control over preferences, behaviours including visual and operational settings.') .'</p>';
+      $output .= '<p>'. t('Some modules require regularly scheduled actions, such as cleaning up logfiles. Cron, which stands for chronograph, is a periodic command scheduler executing commands at intervals specified in seconds. It can be used to control the execution of daily, weekly and monthly jobs (or anything with a period measured in seconds). The aggregator module periodically updates feeds using cron. Ping periodically notifies services of new content on your site. Search periodically indexes the content on your site. Automating tasks is one of the best ways to keep a system running smoothly, and if most of your administration does not require your direct involvement, cron is an ideal solution.') .'</p>';
       $output .= '<p>'. t('There is a caching mechanism which stores dynamically generated web pages in a database. By caching a web page, the system module does not have to create the page each time someone wants to view it, instead it takes only one SQL query to display it, reducing response time and the server\'s load. Only pages requested by <em>anonymous</em> users are cached. In order to reduce server load and save bandwidth, the system module stores and sends cached pages compressed.') .'</p>';
       $output .= t('<p>You can</p>
 <ul>
@@ -33,7 +33,7 @@ function system_help($section) {
     case 'admin/settings':
       return t('<p>General configuration options for your site. Set up the name of the site, e-mail address used in mail-outs, clean URL options, caching, etc.</p>');
     case 'admin/themes':
-      return t('<p>Select which themes are available to your users and specify the default theme. To configure site-wide display settings, click the "configure" task above. Alternately, to override these settings in a specific theme, click the "configure" link for the corresponding theme.  Note that different themes may have different regions available for rendering content like blocks.  If you want consistency in what your users see, you may wish to enable only one theme.</p>');
+      return t('<p>Select which themes are available to your users and specify the default theme. To configure site-wide display settings, click the "configure" task above. Alternately, to override these settings in a specific theme, click the "configure" link for the corresponding theme. Note that different themes may have different regions available for rendering content like blocks. If you want consistency in what your users see, you may wish to enable only one theme.</p>');
     case 'admin/themes/settings':
       return t('<p>These options control the default display settings for your entire site, across all themes. Unless they have been overridden by a specific theme, these settings will be used.</p>');
     case 'admin/themes/settings/'. arg(3):
@@ -268,7 +268,7 @@ function system_view_general() {
   );
   $form['general']['site_footer'] = array(
     '#type' => 'textarea', '#title' => t('Footer message'), '#default_value' => variable_get('site_footer', ''),
-    '#description' => t('This text will be displayed at the bottom of each page.  Useful for adding a copyright notice to your pages.')
+    '#description' => t('This text will be displayed at the bottom of each page. Useful for adding a copyright notice to your pages.')
   );
   $form['general']['anonymous'] = array(
     '#type' => 'textfield', '#title' => t('Anonymous user'), '#default_value' => variable_get('anonymous', 'Anonymous'),
@@ -276,7 +276,7 @@ function system_view_general() {
   );
   $form['general']['site_frontpage'] = array(
     '#type' => 'textfield', '#title' => t('Default front page'), '#default_value' => variable_get('site_frontpage', 'node'),
-    '#description' => t('The home page displays content from this relative URL.  If you are not using clean URLs, specify the part after "?q=".  If unsure, specify "node".')
+    '#description' => t('The home page displays content from this relative URL. If you are not using clean URLs, specify the part after "?q=". If unsure, specify "node".')
   );
 
   // We check for clean URL support using an image on the client side.
@@ -304,12 +304,12 @@ function system_view_general() {
   $form['errors'] = array( '#type' => 'fieldset', '#title' =>t('Error handling'), '#collapsible' => TRUE, '#collapsed' => TRUE );
   $form['errors']['site_403'] = array(
     '#type' => 'textfield', '#title' => t('Default 403 (access denied) page'), '#default_value' => variable_get('site_403', ''),
-    '#description' => t('This page is displayed when the requested document is denied to the current user.  If you are not using clean URLs, specify the part after "?q=". If unsure, specify nothing.')
+    '#description' => t('This page is displayed when the requested document is denied to the current user. If you are not using clean URLs, specify the part after "?q=". If unsure, specify nothing.')
   );
 
   $form['errors']['site_404'] = array(
     '#type' => 'textfield', '#title' => t('Default 404 (not found) page'), '#default_value' =>  variable_get('site_404', ''),
-    '#description' => t('This page is displayed when no other content matches the requested document.  If you are not using clean URLs, specify the part after "?q=". If unsure, specify nothing.')
+    '#description' => t('This page is displayed when no other content matches the requested document. If you are not using clean URLs, specify the part after "?q=". If unsure, specify nothing.')
   );
 
   $form['errors']['error_level'] = array(
@@ -322,7 +322,7 @@ function system_view_general() {
   $period['1000000000'] = t('Never');
   $form['errors']['watchdog_clear'] = array(
     '#type' => 'select', '#title' => t('Discard log entries older than'), '#default_value' => variable_get('watchdog_clear', 604800), '#options' => $period,
-    '#description' => t('The time log entries should be kept.  Older entries will be automatically discarded.  Requires crontab.')
+    '#description' => t('The time log entries should be kept. Older entries will be automatically discarded. Requires crontab.')
   );
 
 
@@ -332,14 +332,14 @@ function system_view_general() {
   $form['cache']['cache']  = array(
     '#type' => 'radios',  '#title' => t('Page cache'), '#default_value' => variable_get('cache', CACHE_DISABLED),
     '#options' => array(CACHE_DISABLED => t('Disabled'), CACHE_ENABLED => t('Enabled')),
-    '#description' => t("Drupal has a caching mechanism which stores dynamically generated web pages in a database.  By caching a web page, Drupal does not have to create the page each time someone wants to view it, instead it takes only one SQL query to display it, reducing response time and the server's load.  Only pages requested by \"anonymous\" users are cached.  In order to reduce server load and save bandwidth, Drupal stores and sends compressed cached pages.")
+    '#description' => t("Drupal has a caching mechanism which stores dynamically generated web pages in a database. By caching a web page, Drupal does not have to create the page each time someone wants to view it, instead it takes only one SQL query to display it, reducing response time and the server's load. Only pages requested by \"anonymous\" users are cached. In order to reduce server load and save bandwidth, Drupal stores and sends compressed cached pages.")
   );
 
   $period = drupal_map_assoc(array(0, 60, 180, 300, 600, 900, 1800, 2700, 3600, 10800, 21600, 32400, 43200, 86400), 'format_interval');
   $period[0] = t('none');
   $form['cache']['cache_lifetime'] = array(
     '#type' => 'select', '#title' => t('Minimum cache lifetime'), '#default_value' => variable_get('cache_lifetime', 0), '#options' => $period,
-    '#description' => t('Enabling the cache will offer a sufficient performance boost for most low-traffic and medium-traffic sites.  On high-traffic sites it can become necessary to enforce a minimum cache lifetime.  The minimum cache lifetime is the minimum amount of time that will go by before the cache is emptied and recreated.  A larger minimum cache lifetime offers better performance, but users will not see new content for a longer period of time.')
+    '#description' => t('Enabling the cache will offer a sufficient performance boost for most low-traffic and medium-traffic sites. On high-traffic sites it can become necessary to enforce a minimum cache lifetime. The minimum cache lifetime is the minimum amount of time that will go by before the cache is emptied and recreated. A larger minimum cache lifetime offers better performance, but users will not see new content for a longer period of time.')
   );
 
 
@@ -427,7 +427,7 @@ function system_view_general() {
 
   $form['dates']['configurable_timezones'] = array(
     '#type' => 'radios', '#title' => t('Configurable time zones'), '#default_value' => variable_get('configurable_timezones', 1), '#options' => array(t('Disabled'), t('Enabled')),
-    '#description' => t('Enable or disable user-configurable time zones.  When enabled, users can set their own time zone and dates will be updated accordingly.')
+    '#description' => t('Enable or disable user-configurable time zones. When enabled, users can set their own time zone and dates will be updated accordingly.')
   );
 
   $form['dates']['date_format_short'] = array(
@@ -673,16 +673,16 @@ function system_default_region($theme) {
 /**
  * Returns an array of files objects of the given type from both the
  * site-wide directory (i.e. modules/) and site-specific directory
- * (i.e. sites/somesite/modules/).  The returned array will be keyed
- * using the key specified (name, basename, filename).  Using name or
+ * (i.e. sites/somesite/modules/). The returned array will be keyed
+ * using the key specified (name, basename, filename). Using name or
  * basename will cause site-specific files to shadow files in the
- * default directories.  That is, if a file with the same name appears
+ * default directories. That is, if a file with the same name appears
  * in both location, only the site-specific version will be included.
  *
  * @param $mask
  *   The regular expression of the files to find.
  * @param $directory
- *   The subdirectory name in which the files are found.  For example,
+ *   The subdirectory name in which the files are found. For example,
  *   'modules' will search in both modules/ and
  *   sites/somesite/modules/.
  * @param $key
@@ -713,7 +713,7 @@ function system_listing($mask, $directory, $key = 'name', $min_depth = 1) {
 /**
  * Assign an initial, default set of blocks for a theme.
  *
- * This function is called the first time a new theme is enabled.  The new theme
+ * This function is called the first time a new theme is enabled. The new theme
  * gets a copy of the default theme's blocks, with the difference that if a
  * particular region isn't available in the new theme, the block is assigned
  * to the new theme's default region.

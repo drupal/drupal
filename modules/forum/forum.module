@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.328 2006/04/13 08:25:27 killes Exp $
+// $Id: forum.module,v 1.329 2006/05/07 00:08:36 drumm Exp $
 
 /**
  * @file
@@ -13,7 +13,7 @@ function forum_help($section) {
   switch ($section) {
     case 'admin/help#forum':
       $output = '<p>'. t('The forum module lets you create threaded discussion forums for a particular topic on your site. This is similar to a message board system such as phpBB. Forums are very useful because they allow community members to discuss topics with one another, and they are archived for future reference.') .'</p>';
-      $output .= '<p>'. t('Forums can be organized under what are called <em>containers</em>. Containers hold forums and, in turn, forums hold threaded discussions. Both containers and forums can be placed inside other containers and forums. By planning the structure of your containers and forums well, you make it easier for users to find a topic area of interest to them.  Forum topics can be moved by selecting a different forum and can be left in the existing forum by selecting <em>leave a shadow copy</em>.  Forum topics can also have their own URL.') .'</p>';
+      $output .= '<p>'. t('Forums can be organized under what are called <em>containers</em>. Containers hold forums and, in turn, forums hold threaded discussions. Both containers and forums can be placed inside other containers and forums. By planning the structure of your containers and forums well, you make it easier for users to find a topic area of interest to them. Forum topics can be moved by selecting a different forum and can be left in the existing forum by selecting <em>leave a shadow copy</em>. Forum topics can also have their own URL.') .'</p>';
       $output .= '<p>'. t('Forums module <strong>requires Taxonomy and Comments module</strong> be enabled.') .'</p>';
       $output .= t('<p>You can</p>
 <ul>

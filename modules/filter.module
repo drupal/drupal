@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.123 2006/05/04 09:50:35 drumm Exp $
+// $Id: filter.module,v 1.124 2006/05/07 00:08:36 drumm Exp $
 
 /**
  * @file
@@ -20,8 +20,8 @@ define('FILTER_HTML_ESCAPE', 2);
 function filter_help($section) {
   switch ($section) {
     case 'admin/help#filter':
-      $output = '<p>'. t('The filter module allows administrators to configure  text input formats for the site.  For example, an administrator may want a filter to strip out malicious HTML from user\'s comments.  Administrators may also want to make URLs linkable even if they are only entered in an unlinked format.') .'</p>';
-      $output .= '<p>'. t('Users can choose between the available input formats when creating or editing content.  Administrators can configure which input formats are available to which user roles, as well as choose a default input format.  Administrators can also create new input formats.  Each input format can be configured to use a selection of filters.') .'</p>';
+      $output = '<p>'. t('The filter module allows administrators to configure  text input formats for the site. For example, an administrator may want a filter to strip out malicious HTML from user\'s comments. Administrators may also want to make URLs linkable even if they are only entered in an unlinked format.') .'</p>';
+      $output .= '<p>'. t('Users can choose between the available input formats when creating or editing content. Administrators can configure which input formats are available to which user roles, as well as choose a default input format. Administrators can also create new input formats. Each input format can be configured to use a selection of filters.') .'</p>';
       $output .= t('<p>You can</p>
 <ul>
 <li>administer input format permissions and settings  at <a href="%admin-filters">administer &gt;&gt; input formats</a>.</li>
@@ -734,7 +734,7 @@ function filter_list_format($format) {
  * @param $check
  *    Whether to check the $format with filter_access() first. Defaults to TRUE.
  *    Note that this will check the permissions of the current user, so you
- *    should specify $check = FALSE when viewing other people's content.  When
+ *    should specify $check = FALSE when viewing other people's content. When
  *    showing content that is not (yet) stored in the database (eg. upon preview),
  *    set to TRUE so the user's permissions are checked.
  */

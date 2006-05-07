@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.98 2006/05/04 09:28:32 drumm Exp $
+// $Id: bootstrap.inc,v 1.99 2006/05/07 00:08:36 drumm Exp $
 
 /**
  * @file
@@ -27,7 +27,7 @@ define('DRUPAL_ANONYMOUS_RID', 1);
 define('DRUPAL_AUTHENTICATED_RID', 2);
 
 /**
- * Start the timer with the specified name.  If you start and stop
+ * Start the timer with the specified name. If you start and stop
  * the same timer multiple times, the measured intervals will be
  * accumulated.
  *
@@ -66,7 +66,7 @@ function timer_read($name) {
  * @param name
  *   The name of the timer.
  * @return
- *   A timer array.  The array contains the number of times the
+ *   A timer array. The array contains the number of times the
  *   timer has been started and stopped (count) and the accumulated
  *   timer value in ms (time).
  */
@@ -180,7 +180,7 @@ function conf_init() {
 
 /**
  * Returns and optionally sets the filename for a system item (module,
- * theme, etc.).  The filename, whether provided, cached, or retrieved
+ * theme, etc.). The filename, whether provided, cached, or retrieved
  * from the database, is only returned if the file exists.
  *
  * @param $type
@@ -333,7 +333,7 @@ function cache_get($key) {
     // If enforcing a minimum cache lifetime, validate that the data is
     // currently valid for this user before we return it by making sure the
     // cache entry was created before the timestamp in the current session's
-    // cache timer.  The cache variable is loaded into the $user object by
+    // cache timer. The cache variable is loaded into the $user object by
     // sess_read() in session.inc.
     else {
       if ($user->cache > $cache->created) {
@@ -393,7 +393,7 @@ function cache_clear_all($cid = NULL, $wildcard = false) {
   if (empty($cid)) {
     if (variable_get('cache_lifetime', 0)) {
       // We store the time in the current user's $user->cache variable which
-      // will be saved into the sessions table by sess_write().  We then
+      // will be saved into the sessions table by sess_write(). We then
       // simulate that the cache was flushed for this user by not returning
       // cached data that was cached before the timestamp.
       $user->cache = time();
@@ -463,7 +463,7 @@ function bootstrap_invoke_all($hook) {
 }
 
 /**
- * Includes a file with the provided type and name.  This prevents
+ * Includes a file with the provided type and name. This prevents
  * including a theme, engine, module, etc., more than once.
  *
  * @param $type
@@ -535,7 +535,7 @@ function drupal_page_header() {
         header('Content-Encoding: gzip');
       }
 
-      // Send the original request's headers.  We send them one after
+      // Send the original request's headers. We send them one after
       // another so PHP's header() function can deal with duplicate
       // headers.
       $headers = explode("\n", $cache->headers);

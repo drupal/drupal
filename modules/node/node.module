@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.645 2006/05/04 18:44:10 dries Exp $
+// $Id: node.module,v 1.646 2006/05/07 00:08:36 drumm Exp $
 
 /**
  * @file
@@ -63,7 +63,7 @@ function node_cron() {
  * Gather a listing of links to nodes.
  *
  * @param $result
- *   A DB result object from a query to fetch node objects.  If your query joins the <code>node_comment_statistics</code> table so that the <code>comment_count</code> field is available, a title attribute will be added to show the number of comments.
+ *   A DB result object from a query to fetch node objects. If your query joins the <code>node_comment_statistics</code> table so that the <code>comment_count</code> field is available, a title attribute will be added to show the number of comments.
  * @param $title
  *   A heading for the resulting list.
  *
@@ -610,7 +610,7 @@ function node_search($op = 'search', $keys = null) {
       // Output form for defining rank factor weights.
       $form['content_ranking'] = array('#type' => 'fieldset', '#title' => t('Content ranking'));
       $form['content_ranking']['#theme'] = 'node_search_admin';
-      $form['content_ranking']['info'] = array('#type' => 'markup', '#value' => '<em>'. t('The following numbers control which properties the content search should favor when ordering the results. Higher numbers mean more influence, zero means the property is ignored. Changing these numbers does not require the search index to be rebuilt.  Changes take effect immediately.') .'</em>');
+      $form['content_ranking']['info'] = array('#type' => 'markup', '#value' => '<em>'. t('The following numbers control which properties the content search should favor when ordering the results. Higher numbers mean more influence, zero means the property is ignored. Changing these numbers does not require the search index to be rebuilt. Changes take effect immediately.') .'</em>');
 
       $ranking = array('node_rank_relevance' => t('Keyword relevance'),
                        'node_rank_recent' => t('Recently posted'));
@@ -776,7 +776,7 @@ function node_configure() {
     '#options' => array(0 => t('Unlimited'), 200 => t('200 characters'), 400 => t('400 characters'), 600 => t('600 characters'),
       800 => t('800 characters'), 1000 => t('1000 characters'), 1200 => t('1200 characters'), 1400 => t('1400 characters'),
       1600 => t('1600 characters'), 1800 => t('1800 characters'), 2000 => t('2000 characters')),
-    '#description' => t("The maximum number of characters used in the trimmed version of a post.  Drupal will use this setting to determine at which offset long posts should be trimmed.  The trimmed version of a post is typically used as a teaser when displaying the post on the main page, in XML feeds, etc.  To disable teasers, set to 'Unlimited'. Note that this setting will only affect new or updated content and will not affect existing teasers.")
+    '#description' => t("The maximum number of characters used in the trimmed version of a post. Drupal will use this setting to determine at which offset long posts should be trimmed. The trimmed version of a post is typically used as a teaser when displaying the post on the main page, in XML feeds, etc. To disable teasers, set to 'Unlimited'. Note that this setting will only affect new or updated content and will not affect existing teasers.")
   );
 
   $form['node_preview'] = array(
@@ -1540,7 +1540,7 @@ function node_validate($node, $form = array()) {
     // Validate the "authored by" field.
     if (!empty($node->name) && !($account = user_load(array('name' => $node->name)))) {
       // The use of empty() is mandatory in the context of usernames
-      // as the empty string denotes the anonymous user.  In case we
+      // as the empty string denotes the anonymous user. In case we
       // are dealing with an anonymous user we set the user ID to 0.
       form_set_error('name', t('The username %name does not exist.', array ('%name' => theme('placeholder', $node->name))));
     }

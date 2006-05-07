@@ -1,5 +1,5 @@
 <?php
-// $Id: session.inc,v 1.27 2006/04/11 11:33:14 killes Exp $
+// $Id: session.inc,v 1.28 2006/05/07 00:08:36 drumm Exp $
 
 /**
  * @file
@@ -53,7 +53,7 @@ function sess_write($key, $value) {
   $result = db_query("SELECT sid FROM {sessions} WHERE sid = '%s'", $key);
 
   if (!db_num_rows($result)) {
-    // Only save session data when when the browser sends a cookie.  This keeps
+    // Only save session data when when the browser sends a cookie. This keeps
     // crawlers out of session table. This improves speed up queries, reduces
     // memory, and gives more useful statistics. We can't eliminate anonymous
     // session table rows without breaking throttle module and "Who's Online"
@@ -80,9 +80,9 @@ function sess_destroy($key) {
 
 function sess_gc($lifetime) {
   // Be sure to adjust 'php_value session.gc_maxlifetime' to a large enough
-  // value.  For example, if you want user sessions to stay in your database
+  // value. For example, if you want user sessions to stay in your database
   // for three weeks before deleting them, you need to set gc_maxlifetime
-  // to '1814400'.  At that value, only after a user doesn't log in after
+  // to '1814400'. At that value, only after a user doesn't log in after
   // three weeks (1814400 seconds) will his/her session be removed.
   db_query("DELETE FROM {sessions} WHERE timestamp < %d", time() - $lifetime);
 

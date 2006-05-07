@@ -431,9 +431,9 @@ Drupal 3.0.0, 2001-09-15
 - rewrote headline code and renamed it to import.module and export.module:
     * added various improvements, including a better parser, bundles and better control over individual feeds.
 - rewrote section code and renamed it to meta.module:
-    * supports unlimited amount of nested topics.  Topics can be nested to create a multi-level hierarchy.
+    * supports unlimited amount of nested topics. Topics can be nested to create a multi-level hierarchy.
 - rewrote configuration file resolving:
-    * Drupal tries to locate a configuration file that matches your domain name or uses conf.php if the former failed.  Note also that the configuration files got renamed from .conf to .php for security's sake on mal-configured Drupal sites.
+    * Drupal tries to locate a configuration file that matches your domain name or uses conf.php if the former failed. Note also that the configuration files got renamed from .conf to .php for security's sake on mal-configured Drupal sites.
 - added caching support which makes Drupal extremely scalable.
 - added access.module:
     * allows you to setup 'roles' (groups) and to bind a set of permissions to each group.
@@ -499,7 +499,7 @@ Drupal 2.0.0, 2001-03-15
 - added translation / localization / internationalization support:
     * because many people would love to see their website showing a lot less of English, and far more of their own language, Drupal provides a framework to setup a multi-lingual website or to overwrite the default English text in English.
 - added fine-grained user permission (or group) system:
-    * users can be granted access to specific administration sections.  Example: a FAQ maintainer can be given access to maintain the FAQ and translators can be given access to the translation pages.
+    * users can be granted access to specific administration sections. Example: a FAQ maintainer can be given access to maintain the FAQ and translators can be given access to the translation pages.
 - added FAQ module
 - changed the "open submission queue" into a (optional) module.
 - various updates:

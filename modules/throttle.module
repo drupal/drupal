@@ -1,5 +1,5 @@
 <?php
-// $Id: throttle.module,v 1.59 2006/02/21 18:46:54 dries Exp $
+// $Id: throttle.module,v 1.60 2006/05/07 00:08:36 drumm Exp $
 
 /**
  * @file
@@ -16,8 +16,8 @@
  * logic when your site is too busy (reducing CPU utilization).
  *
  * @return
- *   0 or 1.  0 means that the throttle is currently disabled.  1 means that
- *   the throttle is currently enabled.  When the throttle is enabled, CPU
+ *   0 or 1. 0 means that the throttle is currently disabled. 1 means that
+ *   the throttle is currently enabled. When the throttle is enabled, CPU
  *   and bandwidth intensive functionality should be disabled.
  */
 function throttle_status() {
@@ -31,10 +31,10 @@ function throttle_status() {
  */
 function throttle_exit() {
   // The following logic determines what the current throttle level should
-  //  be, and can be disabled by the admin.  If enabled, the mt_rand() function
+  //  be, and can be disabled by the admin. If enabled, the mt_rand() function
   //  returns a number between 0 and N, N being specified by the admin. If
   //  0 is returned, the throttle logic is run, adding two additional database
-  //  queries.  Otherwise, the following logic is skipped.  This mechanism is
+  //  queries. Otherwise, the following logic is skipped. This mechanism is
   //  referred to in the admin page as the 'probability limiter', roughly
   //  limiting throttle related database calls to 1 in N.
   if (!mt_rand(0, variable_get('throttle_probability_limiter', 9))) {
@@ -93,7 +93,7 @@ function throttle_exit() {
 function _throttle_validate($value, $form) {
   if ($value != NULL) {
     if (!is_numeric($value) || $value < 0) {
-      form_set_error($form, t("'%value' is not a valid auto-throttle setting.  Please enter a positive numeric value.", array('%value' => theme('placeholder', $value))));
+      form_set_error($form, t("'%value' is not a valid auto-throttle setting. Please enter a positive numeric value.", array('%value' => theme('placeholder', $value))));
     }
   }
 }
@@ -104,7 +104,7 @@ function _throttle_validate($value, $form) {
 function throttle_help($section) {
   switch ($section) {
     case 'admin/help#throttle':
-      $output = '<p>'. t('The throttle module provides a congestion control throttling mechanism for automatically detecting a surge in incoming traffic. If the site gets linked to by a popular website, or otherwise comes under a "Denial of Service" (DoS) attack, your webserver might become overwhelmed. This mechanism is utilized by other modules to automatically optimize their performance by temporarily disabling CPU-intensive functionality.  For example, in the site theme, you might choose to disable pictures when the site is too busy (reducing bandwidth), or in modules, you might choose to disable some complicated logic (reducing CPU utilization).') .'</p>';
+      $output = '<p>'. t('The throttle module provides a congestion control throttling mechanism for automatically detecting a surge in incoming traffic. If the site gets linked to by a popular website, or otherwise comes under a "Denial of Service" (DoS) attack, your webserver might become overwhelmed. This mechanism is utilized by other modules to automatically optimize their performance by temporarily disabling CPU-intensive functionality. For example, in the site theme, you might choose to disable pictures when the site is too busy (reducing bandwidth), or in modules, you might choose to disable some complicated logic (reducing CPU utilization).') .'</p>';
       $output .= '<p>'. t('The congestion control throttle can be automatically enabled when the number of anonymous or authenticated users currently visiting the site exceeds the specified threshold. ') .'</p>';
       $output .= t('<p>You can</p>
 <ul>
@@ -118,7 +118,7 @@ function throttle_help($section) {
     case 'admin/modules#description':
       return t('Handles the auto-throttling mechanism, to control site congestion.');
     case 'admin/settings/throttle':
-      return t('If your site gets linked to by a popular website, or otherwise comes under a "Denial of Service" (DoS) attack, your webserver might become overwhelmed.  This module provides a congestion control throttling mechanism for automatically detecting a surge in incoming traffic.  This mechanism is utilized by other Drupal modules to automatically optimize their performance by temporarily disabling CPU-intensive functionality.');
+      return t('If your site gets linked to by a popular website, or otherwise comes under a "Denial of Service" (DoS) attack, your webserver might become overwhelmed. This module provides a congestion control throttling mechanism for automatically detecting a surge in incoming traffic. This mechanism is utilized by other Drupal modules to automatically optimize their performance by temporarily disabling CPU-intensive functionality.');
   }
 }
 
@@ -136,7 +136,7 @@ function throttle_settings() {
     '#default_value' => variable_get('throttle_anonymous', 0),
     '#size' => 5,
     '#maxlength' => 6,
-    '#description' => t('The congestion control throttle can be automatically enabled when the number of anonymous users currently visiting your site exceeds the specified threshold.  For example, to start the throttle when your site has 250 anonymous users online at once, enter \'250\' in this field. Leave this value blank or set to "0" if you do not wish to auto-throttle on anonymous users.  You can inspect the current number of anonymous users using the "Who\'s online" block.')
+    '#description' => t('The congestion control throttle can be automatically enabled when the number of anonymous users currently visiting your site exceeds the specified threshold. For example, to start the throttle when your site has 250 anonymous users online at once, enter \'250\' in this field. Leave this value blank or set to "0" if you do not wish to auto-throttle on anonymous users. You can inspect the current number of anonymous users using the "Who\'s online" block.')
   );
   $form['throttle_user'] = array(
     '#type' => 'textfield',
@@ -144,14 +144,14 @@ function throttle_settings() {
     '#default_value' => variable_get('throttle_user', 0),
     '#size' => 5,
     '#maxlength' => 6,
-    '#description' => t('The congestion control throttle can be automatically enabled when the number of authenticated users currently visiting your site exceeds the specified threshold.  For example, to start the throttle when your site has 50 registered users online at once, enter \'50\' in this field. Leave this value blank or set to "0" if you do not wish to auto-throttle on authenticated users.  You can inspect the current number of authenticated users using the "Who\'s online" block.')
+    '#description' => t('The congestion control throttle can be automatically enabled when the number of authenticated users currently visiting your site exceeds the specified threshold. For example, to start the throttle when your site has 50 registered users online at once, enter \'50\' in this field. Leave this value blank or set to "0" if you do not wish to auto-throttle on authenticated users. You can inspect the current number of authenticated users using the "Who\'s online" block.')
   );
   $form['throttle_probability_limiter'] = array(
     '#type' => 'select',
     '#title' => t('Auto-throttle probability limiter'),
     '#default_value' => variable_get('throttle_probability_limiter', 9),
     '#options' => $probabilities,
-    '#description' => t('The auto-throttle probability limiter is an efficiency mechanism to statistically reduce the overhead of the auto-throttle.  The limiter is expressed as a percentage of page views, so for example if set to the default of 10% we only perform the extra database queries to update the throttle status 1 out of every 10 page views.  The busier your site, the lower you should set the limiter value.')
+    '#description' => t('The auto-throttle probability limiter is an efficiency mechanism to statistically reduce the overhead of the auto-throttle. The limiter is expressed as a percentage of page views, so for example if set to the default of 10% we only perform the extra database queries to update the throttle status 1 out of every 10 page views. The busier your site, the lower you should set the limiter value.')
   );
 
   return $form;

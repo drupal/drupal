@@ -1,5 +1,5 @@
 <?php
-// $Id: legacy.module,v 1.8 2006/02/21 18:46:54 dries Exp $
+// $Id: legacy.module,v 1.9 2006/05/07 00:08:36 drumm Exp $
 
 /**
  * @file
@@ -12,8 +12,8 @@
 function legacy_help($section) {
   switch ($section) {
     case 'admin/help#legacy':
-      $output = '<p>'. t('The legacy module provides legacy handlers for upgrades from older installations.  These handlers help automatically redirect references to pages from old installations and prevent <em>page not found</em> errors for your site.') .'</p>';
-      $output .= '<p>'. t('The legacy module handles legacy style taxonomy page, taxonomy feed, and blog feed paths.  It also handles URL upgrades from Drupal 4.1.   It rewrites old-style URLs to new-style URLs (clean URLs). ') .'</p>';
+      $output = '<p>'. t('The legacy module provides legacy handlers for upgrades from older installations. These handlers help automatically redirect references to pages from old installations and prevent <em>page not found</em> errors for your site.') .'</p>';
+      $output .= '<p>'. t('The legacy module handles legacy style taxonomy page, taxonomy feed, and blog feed paths. It also handles URL upgrades from Drupal 4.1. It rewrites old-style URLs to new-style URLs (clean URLs). ') .'</p>';
       $output .= t('<p>Example Mappings:</p>
 <ul>
 <li><em>taxonomy/page/or/52,97</em> to <em>taxonomy/term/52+97</em>.</li>
@@ -139,7 +139,7 @@ function legacy_filter($op, $delta = 0, $format = -1, $text = '') {
  * Rewrite legacy URLs.
  *
  * This is a *temporary* filter to rewrite old-style URLs to new-style
- * URLs (clean URLs).  Currently, URLs are being rewritten dynamically
+ * URLs (clean URLs). Currently, URLs are being rewritten dynamically
  * (ie. "on output"), however when these rewrite rules have been tested
  * enough, we will use them to permanently rewrite the links in node
  * and comment bodies.

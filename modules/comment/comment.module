@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.456 2006/05/04 09:34:56 drumm Exp $
+// $Id: comment.module,v 1.457 2006/05/07 00:08:36 drumm Exp $
 
 /**
  * @file
@@ -71,7 +71,7 @@ function comment_help($section) {
   switch ($section) {
     case 'admin/help#comment':
       $output = '<p>'. t('The comment module creates a discussion board for each post. Users can post comments to discuss a forum topic, weblog post, story, collaborative book page, etc. The ability to comment is an important part of involving members in a community dialogue.') .'</p>';
-      $output .= '<p>'. t('An administrator can give comment permissions to user groups, and users can (optionally) edit their last comment, assuming no others have been posted since.  Attached to each comment board is a control panel for customizing the way that comments are displayed. Users can control the chronological ordering of posts (newest or oldest first) and the number of posts to display on each page.  Comments behave like other user submissions. Filters, smileys and HTML that work in nodes will also work with comments. The comment module provides specific features to inform site members when new comments have been posted.') .'</p>';
+      $output .= '<p>'. t('An administrator can give comment permissions to user groups, and users can (optionally) edit their last comment, assuming no others have been posted since. Attached to each comment board is a control panel for customizing the way that comments are displayed. Users can control the chronological ordering of posts (newest or oldest first) and the number of posts to display on each page. Comments behave like other user submissions. Filters, smileys and HTML that work in nodes will also work with comments. The comment module provides specific features to inform site members when new comments have been posted.') .'</p>';
       $output .= t('<p>You can</p>
 <ul>
 <li>control access for various comment module functions through access permissions <a href="%admin-access">administer &gt;&gt; access control</a>.</li>
@@ -382,7 +382,7 @@ function comment_configure() {
       t('Display below the comments'),
       t('Display above and below the comments'),
       t('Do not display')),
-    '#description' => t('Position of the comment controls box.  The comment controls let the user change the default display mode and display order of comments.'),
+    '#description' => t('Position of the comment controls box. The comment controls let the user change the default display mode and display order of comments.'),
   );
 
   $form['posting_settings'] = array(
@@ -540,14 +540,14 @@ function comment_reply($nid, $pid = NULL) {
  *   A comment array.
  *
  * @return
- *   If the comment is successfully saved the comment ID is returned.  If the comment
+ *   If the comment is successfully saved the comment ID is returned. If the comment
  *   is not saved, FALSE is returned.
  */
 function comment_save($edit) {
   global $user;
   if (user_access('post comments') && (user_access('administer comments') || node_comment_mode($edit['nid']) == COMMENT_NODE_READ_WRITE)) {
     if (!form_get_errors()) {
-      // Check for duplicate comments.  Note that we have to use the
+      // Check for duplicate comments. Note that we have to use the
       // validated/filtered data to perform such check.
       $duplicate = db_result(db_query("SELECT COUNT(cid) FROM {comments} WHERE pid = %d AND nid = %d AND subject = '%s' AND comment = '%s'", $edit['pid'], $edit['nid'], $edit['subject'], $edit['comment']), 0);
       if ($duplicate != 0) {
@@ -579,7 +579,7 @@ function comment_save($edit) {
 
         $users = serialize(array(0 => $score));
 
-        // Here we are building the thread field.  See the comment
+        // Here we are building the thread field. See the comment
         // in comment_render().
         if ($edit['pid'] == 0) {
           // This is a comment with no parent comment (depth 0): we start
@@ -768,7 +768,7 @@ function comment_render($node, $cid = 0) {
       ** 2
       **
       ** If we "ORDER BY thread ASC" we get the above result, and this is
-      ** the natural order sorted by time.  However, if we "ORDER BY thread
+      ** the natural order sorted by time. However, if we "ORDER BY thread
       ** DESC" we get:
       **
       ** 2
@@ -798,8 +798,8 @@ function comment_render($node, $cid = 0) {
       ** 2/
       **
       ** we add "/" since this char is, in ASCII, higher than every number,
-      ** so if now we "ORDER BY thread DESC" we get the correct order.  Try
-      ** it, it works ;).  However this would spoil the "ORDER BY thread ASC"
+      ** so if now we "ORDER BY thread DESC" we get the correct order. Try
+      ** it, it works ;). However this would spoil the "ORDER BY thread ASC"
       ** Here, we do not need to consider the trailing "/" so we use a
       ** substring only.
       */
@@ -819,8 +819,8 @@ function comment_render($node, $cid = 0) {
         else {
 
           /*
-          ** See comment above.  Analysis learns that this doesn't cost
-          ** too much.  It scales much much better than having the whole
+          ** See comment above. Analysis learns that this doesn't cost
+          ** too much. It scales much much better than having the whole
           ** comment structure.
           */
 
@@ -910,7 +910,7 @@ function comment_delete($cid) {
 }
 
 /**
- * Comment operations.  We offer different update operations depending on
+ * Comment operations. We offer different update operations depending on
  * which comment administration page we're on.
  */
 function comment_operations($action = NULL) {
@@ -1187,7 +1187,7 @@ function comment_validate($edit) {
 
       if ($edit['homepage']) {
         if (!valid_url($edit['homepage'], TRUE)) {
-          form_set_error('homepage', t('The URL of your homepage is not valid.  Remember that it must be fully qualified, i.e. of the form <code>http://example.com/directory</code>.'));
+          form_set_error('homepage', t('The URL of your homepage is not valid. Remember that it must be fully qualified, i.e. of the form <code>http://example.com/directory</code>.'));
         }
       }
     }
@@ -1418,7 +1418,7 @@ function _comment_form_submit($form_values) {
     $form_values['uid'] = $account->uid;
     $form_values['name'] = $form_values['author'];
   }
-  // Validate the comment's subject.  If not specified, extract
+  // Validate the comment's subject. If not specified, extract
   // one from the comment's body.
   if (trim($form_values['subject']) == '') {
     // The body may be in any format, so we:
@@ -1659,7 +1659,7 @@ function _comment_per_page() {
  */
 function _comment_get_display_setting($setting) {
   global $user;
-  
+
   if ($_GET[$setting]) {
     $value = $_GET[$setting];
   }
@@ -1696,7 +1696,7 @@ function _comment_get_display_setting($setting) {
 }
 
 /**
- * Updates the comment statistics for a given node.  This should be called any
+ * Updates the comment statistics for a given node. This should be called any
  * time a comment is added, deleted, or updated.
  *
  * The following fields are contained in the node_comment_statistics table.

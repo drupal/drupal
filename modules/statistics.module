@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.226 2006/05/05 11:38:37 dries Exp $
+// $Id: statistics.module,v 1.227 2006/05/07 00:08:36 drumm Exp $
 
 /**
  * @file
@@ -340,9 +340,9 @@ function statistics_settings() {
   // access log settings:
   $options = array('1' => t('Enabled'), '0' => t('Disabled'));
   $form['access'] = array('#type' => 'fieldset', '#title' => t('Access log settings'));
-  $form['access']['statistics_enable_access_log'] = array('#type' => 'radios', '#title' => t('Enable access log'), '#default_value' =>  variable_get('statistics_enable_access_log', 0), '#options' => $options, '#description' => t('Log each page access.  Required for referrer statistics.'));
+  $form['access']['statistics_enable_access_log'] = array('#type' => 'radios', '#title' => t('Enable access log'), '#default_value' =>  variable_get('statistics_enable_access_log', 0), '#options' => $options, '#description' => t('Log each page access. Required for referrer statistics.'));
   $period = drupal_map_assoc(array(3600, 10800, 21600, 32400, 43200, 86400, 172800, 259200, 604800, 1209600, 2419200, 4838400, 9676800), 'format_interval');
-  $form['access']['statistics_flush_accesslog_timer'] = array('#type' => 'select', '#title' => t('Discard access logs older than'), '#default_value'   => variable_get('statistics_flush_accesslog_timer', 259200), '#options' => $period, '#description' => t('Older access log entries (including referrer statistics) will be automatically discarded.  Requires crontab.'));
+  $form['access']['statistics_flush_accesslog_timer'] = array('#type' => 'select', '#title' => t('Discard access logs older than'), '#default_value'   => variable_get('statistics_flush_accesslog_timer', 259200), '#options' => $period, '#description' => t('Older access log entries (including referrer statistics) will be automatically discarded. Requires crontab.'));
 
   // count content views settings
   $form['content'] = array('#type' => 'fieldset', '#title' => t('Content viewing counter settings'));

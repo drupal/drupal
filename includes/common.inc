@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.537 2006/04/27 08:44:45 dries Exp $
+// $Id: common.inc,v 1.538 2006/05/07 00:08:36 drumm Exp $
 
 /**
  * @file
@@ -46,7 +46,7 @@ function drupal_set_content($region = null, $data = null) {
  * Get assigned content.
  *
  * @param $region
- *   A specified region to fetch content for.  If null, all regions will be returned.
+ *   A specified region to fetch content for. If null, all regions will be returned.
  *
  * @param $delimiter
  *   Content to be inserted between exploded array elements.
@@ -198,7 +198,7 @@ function drupal_query_string_encode($query, $exclude = array(), $parent = '') {
  * drupal_goto(). Used to direct the user back to the referring page
  * after completing a form. By default the current URL is returned.
  * If a destination exists in the previous request, that destination
- * is returned.  As such, a destination can persist across multiple
+ * is returned. As such, a destination can persist across multiple
  * pages.
  *
  * @see drupal_goto()
@@ -225,13 +225,13 @@ function drupal_get_destination() {
  * URL is formatted correctly.
  *
  * Usually the redirected URL is constructed from this function's input
- * parameters.  However you may override that behavior by setting a
+ * parameters. However you may override that behavior by setting a
  * <em>destination</em> in either the $_REQUEST-array (i.e. by using
  * the query string of an URI) or the $_REQUEST['edit']-array (i.e. by
- * using a hidden form field).  This is used to direct the user back to
- * the proper page after completing a form.  For example, after editing
+ * using a hidden form field). This is used to direct the user back to
+ * the proper page after completing a form. For example, after editing
  * a post on the 'admin/node'-page or after having logged on using the
- * 'user login'-block in a sidebar.  The function drupal_get_destination()
+ * 'user login'-block in a sidebar. The function drupal_get_destination()
  * can be used to help set the destination URL.
  *
  * It is advised to use drupal_goto() instead of PHP's header(), because
@@ -675,7 +675,7 @@ function flood_register_event($name) {
  * @param $number
  *   The maximum number of the specified event per hour (per visitor).
  * @return
- *   True if the user did not exceed the hourly threshold.  False otherwise.
+ *   True if the user did not exceed the hourly threshold. False otherwise.
  */
 function flood_is_allowed($name, $threshold) {
   $number = db_num_rows(db_query("SELECT event FROM {flood} WHERE event = '%s' AND hostname = '%s' AND timestamp > %d", $name, $_SERVER['REMOTE_ADDR'], time() - 3600));
@@ -981,7 +981,7 @@ function url($path = NULL, $query = NULL, $fragment = NULL, $absolute = FALSE) {
   static $clean_url;
 
   if (empty($script)) {
-    // On some web servers, such as IIS, we can't omit "index.php".  So, we
+    // On some web servers, such as IIS, we can't omit "index.php". So, we
     // generate "index.php?q=foo" instead of "?q=foo" on anything that is not
     // Apache.
     $script = (strpos($_SERVER['SERVER_SOFTWARE'], 'Apache') === false) ? 'index.php' : '';

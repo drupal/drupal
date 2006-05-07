@@ -1,5 +1,5 @@
 <?php
-// $Id: story.module,v 1.186 2006/03/27 18:02:48 killes Exp $
+// $Id: story.module,v 1.187 2006/05/07 00:08:36 drumm Exp $
 
 /**
  * @file
@@ -13,7 +13,7 @@ function story_help($section) {
   switch ($section) {
     case 'admin/help#story':
       $output = '<p>'. t('The story module is used to create a content post type called <em>stories.</em> Stories are articles in their simplest form: they have a title, a teaser and a body. Stories are typically used to post news articles or as a group blog. ') .'</p>';
-      $output .= '<p>'. t('The story administration interface allows for complex configuration. It provides a submission form, workflow, default view permission, default edit permission, permissions for permission, and attachments.  Trackbacks can also be enabled.') .'</p>';
+      $output .= '<p>'. t('The story administration interface allows for complex configuration. It provides a submission form, workflow, default view permission, default edit permission, permissions for permission, and attachments. Trackbacks can also be enabled.') .'</p>';
       $output .= t('<p>You can</p>
 <ul>
 <li>post a story at <a href="%node-add-story">create content &gt;&gt; story</a>.</li>
