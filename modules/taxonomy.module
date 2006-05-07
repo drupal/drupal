@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.277 2006/05/07 00:08:36 drumm Exp $
+// $Id: taxonomy.module,v 1.278 2006/05/07 03:33:03 drumm Exp $
 
 /**
  * @file
@@ -1205,24 +1205,42 @@ function taxonomy_node_update_index(&$node) {
 }
 
 /**
+ * Parses a comma or plus separated string of term ids.
+ *
+ * @param $str_tids
+ *   An string of term ids, separated by plus or comma.
+ *   comma (,) means AND
+ *   plus (+) means OR
+ * 
+ * @return an associative array with an <code>operator</code> key (either 'and'
+ *   or 'or') and an array, <code>tids</code>, containing the term ids.
+ */
+function taxonomy_terms_parse_string($str_tids) {
+  $terms = array();
+  if (preg_match('/^([0-9]+[+ ])+[0-9]+$/', $str_tids)) {
+    $terms['operator'] = 'or';
+    // The '+' character in a query string may be parsed as ' '.
+    $terms['tids'] = preg_split('/[+ ]/', $str_tids);
+  }
+  else if (preg_match('/^([0-9]+,)*[0-9]+$/', $str_tids)) {
+    $terms['operator'] = 'and';
+    $terms['tids'] = explode(',', $str_tids);
+  }
+  return $terms;
+}
+
+
+/**
  * Menu callback; displays all nodes associated with a term.
  */
 function taxonomy_term_page($str_tids = '', $depth = 0, $op = 'page') {
-  if (preg_match('/^([0-9]+[+ ])+[0-9]+$/', $str_tids)) {
-    $operator = 'or';
-    // The '+' character in a query string may be parsed as ' '.
-    $tids = preg_split('/[+ ]/', $str_tids);
-  }
-  else if (preg_match('/^([0-9]+,)*[0-9]+$/', $str_tids)) {
-    $operator = 'and';
-    $tids = explode(',', $str_tids);
-  }
-  else {
+  $terms = taxonomy_terms_parse_string($str_tids);
+  if ($terms['operator'] != 'and' && $terms['operator'] != 'or') {
     drupal_not_found();
   }
 
-  if ($tids) {
-    $result = db_query(db_rewrite_sql('SELECT t.tid, t.name FROM {term_data} t WHERE t.tid IN (%s)', 't', 'tid'), implode(',', $tids));
+  if ($terms['tids']) {
+    $result = db_query(db_rewrite_sql('SELECT t.tid, t.name FROM {term_data} t WHERE t.tid IN (%s)', 't', 'tid'), implode(',', $terms['tids']));
     $tids = array(); // we rebuild the $tids-array so it only contains terms the user has access to.
     $names = array();
     while ($term = db_fetch_object($result)) {
@@ -1250,7 +1268,7 @@ function taxonomy_term_page($str_tids = '', $depth = 0, $op = 'page') {
                                 'title' => 'RSS - '. $title,
                                 'href' => url('taxonomy/term/'. $str_tids .'/'. $depth .'/feed')));
 
-          $output = taxonomy_render_nodes(taxonomy_select_nodes($tids, $operator, $depth, TRUE));
+          $output = taxonomy_render_nodes(taxonomy_select_nodes($tids, $terms['operator'], $depth, TRUE));
           $output .= theme('feed_icon', url('taxonomy/term/'. $str_tids .'/'. $depth .'/feed'));
           return $output;
           break;
@@ -1261,7 +1279,7 @@ function taxonomy_term_page($str_tids = '', $depth = 0, $op = 'page') {
           $channel['title'] = variable_get('site_name', 'drupal') .' - '. $title;
           $channel['description'] = $term->description;
 
-          $result = taxonomy_select_nodes($tids, $operator, $depth, FALSE);
+          $result = taxonomy_select_nodes($tids, $terms['operator'], $depth, FALSE);
           node_feed($result, $channel);
           break;
         default:
