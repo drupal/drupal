@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.329 2006/05/07 00:08:36 drumm Exp $
+// $Id: forum.module,v 1.330 2006/05/08 15:16:16 dries Exp $
 
 /**
  * @file
@@ -160,7 +160,8 @@ function forum_taxonomy($op, $type, $term = NULL) {
 
         // For containers, remove the tid from the forum_containers variable.
         $containers = variable_get('forum_containers', array());
-        if ($key = array_search($term['tid'], $containers)) {
+        $key = array_search($term['tid'], $containers);
+        if ($key !== FALSE) {
           unset($containers[$key]);
         }
         variable_set('forum_containers', $containers);
