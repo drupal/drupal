@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.278 2006/05/07 03:33:03 drumm Exp $
+// $Id: taxonomy.module,v 1.279 2006/05/08 15:12:25 dries Exp $
 
 /**
  * @file
@@ -122,46 +122,26 @@ function taxonomy_menu($may_cache) {
  */
 function taxonomy_overview_vocabularies() {
   $vocabularies = taxonomy_get_vocabularies();
+  $rows = array();
   foreach ($vocabularies as $vocabulary) {
     $types = array();
     foreach ($vocabulary->nodes as $type) {
       $node_type = node_get_name($type);
       $types[] = $node_type ? $node_type : $type;
     }
-    $form[$vocabulary->vid]['name'] = array('#value' => check_plain($vocabulary->name));
-    $form[$vocabulary->vid]['type'] = array('#value' => implode(', ', $types));
-    $form[$vocabulary->vid]['edit'] = array('#value' => l(t('edit vocabulary'), "admin/taxonomy/edit/vocabulary/$vocabulary->vid"));
-    $form[$vocabulary->vid]['list'] = array('#value' => l(t('list terms'), "admin/taxonomy/$vocabulary->vid"));
-    $form[$vocabulary->vid]['add'] = array('#value' => l(t('add terms'), "admin/taxonomy/$vocabulary->vid/add/term"));
+    $rows[] = array('name' => check_plain($vocabulary->name),
+      'type' => implode(', ', $types),
+      'edit' => l(t('edit vocabulary'), "admin/taxonomy/edit/vocabulary/$vocabulary->vid"),
+      'list' => l(t('list terms'), "admin/taxonomy/$vocabulary->vid"),
+      'add' => l(t('add terms'), "admin/taxonomy/$vocabulary->vid/add/term")
+    );
   }
-
-  return drupal_get_form('taxonomy_overview_vocabularies', $form);
-}
-
-/**
- * Theme overview vocabularies.
- */
-function theme_taxonomy_overview_vocabularies($form) {
-  $rows = array();
-  foreach (element_children($form) as $key) {
-    if (isset($form[$key]['name'])) {
-      $row = array();
-      $row[] = form_render($form[$key]['name']);
-      $row[] = form_render($form[$key]['type']);
-      $row[] = form_render($form[$key]['edit']);
-      $row[] = form_render($form[$key]['list']);
-      $row[] = form_render($form[$key]['add']);
-      $rows[] = $row;
-    }
-  }
-  if (!$rows) {
+  if (empty($rows)) {
     $rows[] = array(array('data' => t('No categories available.'), 'colspan' => '5', 'class' => 'message'));
   }
   $header = array(t('Name'), t('Type'), array('data' => t('Operations'), 'colspan' => '3'));
 
-  $output = theme('table', $header, $rows, array('id' => 'taxonomy'));
-  $output .= form_render($form);
-  return $output;
+  return theme('table', $header, $rows, array('id' => 'taxonomy'));
 }
 
 /**
@@ -1211,7 +1191,7 @@ function taxonomy_node_update_index(&$node) {
  *   An string of term ids, separated by plus or comma.
  *   comma (,) means AND
  *   plus (+) means OR
- * 
+ *
  * @return an associative array with an <code>operator</code> key (either 'and'
  *   or 'or') and an array, <code>tids</code>, containing the term ids.
  */
