@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.279 2006/05/08 15:12:25 dries Exp $
+// $Id: taxonomy.module,v 1.280 2006/05/09 14:16:49 dries Exp $
 
 /**
  * @file
@@ -107,8 +107,8 @@ function taxonomy_menu($may_cache) {
 
       $items[] = array('path' => 'admin/taxonomy/' . arg(2) . '/add/term',
         'title' => t('add term'),
-        'callback' => 'taxonomy_admin_term_add',
-        'callback arguments' => array(arg(2)),
+        'callback' => 'taxonomy_form_term',
+        'callback arguments' => array(array('vid' => arg(2))),
         'access' => user_access('administer taxonomy'),
         'type' => MENU_LOCAL_TASK);
     }
@@ -1296,13 +1296,6 @@ function taxonomy_admin_term_edit($tid = NULL) {
     $term = (array)taxonomy_get_term($tid);
   }
   return taxonomy_form_term($term);
-}
-
-/**
- * Page to add a term to a specific vocabulary.
- */
-function taxonomy_admin_term_add($vid = NULL) {
-  return taxonomy_form_term(array('vid' => arg(2)));
 }
 
 /**
