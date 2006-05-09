@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.538 2006/05/07 00:08:36 drumm Exp $
+// $Id: common.inc,v 1.539 2006/05/09 14:19:03 dries Exp $
 
 /**
  * @file
@@ -1053,8 +1053,13 @@ function drupal_attributes($attributes = array()) {
  * @param $text
  *   The text to be enclosed with the anchor tag.
  * @param $path
- *   The Drupal path being linked to, such as "admin/node". Note, this must be a
- *   system URL as the url() function will generate the alias.
+ *   The Drupal path being linked to, such as "admin/node". Can be an external
+ *   or internal URL.
+ *     - If you provide the full URL, it will be considered an
+ *   external URL.
+ *     - If you provide only the path (e.g. "admin/node"), it is considered an
+ *   internal link. In this case, it must be a system URL as the url() function
+ *   will generate the alias.
  * @param $attributes
  *   An associative array of HTML attributes to apply to the anchor tag.
  * @param $query
@@ -1063,9 +1068,12 @@ function drupal_attributes($attributes = array()) {
  *   A fragment identifier (named anchor) to append to the link.
  * @param $absolute
  *   Whether to force the output to be an absolute link (beginning with http:).
- *   Useful for links that will be displayed outside the site, such as in an RSS feed.
+ *   Useful for links that will be displayed outside the site, such as in an RSS
+ *   feed.
  * @param $html
- *   Whether the title is HTML, or just plain-text.
+ *   Whether the title is HTML, or just plain-text. For example for making an
+ *   image a link, this must be set to TRUE, or else you will see the encoded
+ *   HTML.
  * @return
  *   an HTML string containing a link to the given path.
  */
