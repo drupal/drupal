@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.225 2006/05/07 00:08:36 drumm Exp $
+// $Id: updates.inc,v 1.226 2006/05/09 14:42:08 dries Exp $
 
 function system_update_110() {
   $ret = array();
@@ -1953,4 +1953,23 @@ function system_update_179() {
   }
 
   return array();
+}
+
+function system_update_180() {
+  $ret = array();
+
+  if ($GLOBALS['db_type'] == 'mysql') {
+    $ret[] = update_sql("ALTER TABLE {node} DROP PRIMARY KEY");
+    $ret[] = update_sql("ALTER TABLE {node} ADD PRIMARY KEY (nid, vid)");
+    $ret[] = update_sql("ALTER TABLE {node} DROP INDEX vid");
+    $ret[] = update_sql("ALTER TABLE {node} ADD UNIQUE (vid)");
+    $ret[] = update_sql("ALTER TABLE {node} ADD INDEX (nid)");
+
+    $ret[] = update_sql("ALTER TABLE {node_counter} CHANGE nid nid INT(10) NOT NULL DEFAULT '0'");
+  }
+  else { // pgsql
+    // Insert queries here.
+  }
+
+  return $ret;
 }

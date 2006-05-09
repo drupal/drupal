@@ -1,4 +1,4 @@
--- $Id: database.4.0.mysql,v 1.1 2006/04/10 13:45:28 unconed Exp $
+-- $Id: database.4.0.mysql,v 1.2 2006/05/09 14:42:08 dries Exp $
 
 --
 -- Table structure for table 'access'
@@ -412,17 +412,18 @@ CREATE TABLE node (
   promote int(2) NOT NULL default '0',
   moderate int(2) NOT NULL default '0',
   sticky int(2) NOT NULL default '0',
-  PRIMARY KEY (nid),
+  PRIMARY KEY  (nid, vid),
+  UNIQUE KEY vid (vid),
   KEY node_type (type(4)),
-  KEY node_title_type (title,type(4)),
+  KEY node_title_type (title, type(4)),
   KEY status (status),
   KEY uid (uid),
-  KEY vid (vid),
   KEY node_moderate (moderate),
   KEY node_promote_status (promote, status),
   KEY node_created (created),
   KEY node_changed (changed),
-  KEY node_status_type (status, type, nid)
+  KEY node_status_type (status, type, nid),
+  KEY nid (nid)
 );
 
 --
@@ -634,7 +635,7 @@ CREATE TABLE sequences (
 --
 
 CREATE TABLE node_counter (
-  nid int(11) NOT NULL default '0',
+  nid int(10) NOT NULL default '0',
   totalcount bigint(20) unsigned NOT NULL default '0',
   daycount mediumint(8) unsigned NOT NULL default '0',
   timestamp int(11) unsigned NOT NULL default '0',
