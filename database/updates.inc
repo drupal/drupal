@@ -1954,3 +1954,22 @@ function system_update_179() {
 
   return array();
 }
+
+function system_update_180() {
+  $ret = array();
+
+  if ($GLOBALS['db_type'] == 'mysql') {
+    $ret[] = update_sql("ALTER TABLE {node} DROP PRIMARY KEY");
+    $ret[] = update_sql("ALTER TABLE {node} ADD PRIMARY KEY (nid, vid)");
+    $ret[] = update_sql("ALTER TABLE {node} DROP INDEX vid");
+    $ret[] = update_sql("ALTER TABLE {node} ADD UNIQUE (vid)");
+    $ret[] = update_sql("ALTER TABLE {node} ADD INDEX (nid)");
+
+    $ret[] = update_sql("ALTER TABLE {node_counter} CHANGE nid nid INT(10) NOT NULL DEFAULT '0'");
+  }
+  else { // pgsql
+    // Insert queries here.
+  }
+
+  return $ret;
+}
