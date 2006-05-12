@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.226 2006/05/09 14:42:08 dries Exp $
+// $Id: updates.inc,v 1.227 2006/05/12 08:50:22 dries Exp $
 
 function system_update_110() {
   $ret = array();
@@ -1971,5 +1971,19 @@ function system_update_180() {
     // Insert queries here.
   }
 
+  return $ret;
+}
+
+function system_update_181() {
+  $ret = array();
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql("ALTER TABLE {profile_fields} ADD autocomplete TINYINT(1) NOT NULL AFTER visibility ;");
+      break;
+    case 'pgsql':
+      db_add_column($ret, 'profile_fields', 'autocomplete', 'smallint');
+      break;
+  }
   return $ret;
 }

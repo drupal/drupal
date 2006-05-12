@@ -1,5 +1,7 @@
 Drupal x.x.x, xxxx-xx-xx (development version)
 ------------------------
+- usability:
+    * added support for auto-complete forms (AJAX) to user profiles.
 
 Drupal 4.7.0, 2006-05-01
 ------------------------

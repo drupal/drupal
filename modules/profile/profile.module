@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.155 2006/05/05 09:25:21 dries Exp $
+// $Id: profile.module,v 1.156 2006/05/12 08:50:22 dries Exp $
 
 /**
  * @file
@@ -78,6 +78,10 @@ function profile_menu($may_cache) {
     $items[] = array('path' => 'admin/settings/profile/delete',
       'title' => t('delete field'),
       'callback' => 'profile_field_delete',
+      'type' => MENU_CALLBACK);
+    $items[] = array('path' => 'profile/autocomplete', 'title' => t('profile autocomplete'),
+      'callback' => 'profile_autocomplete',
+      'access' => 1,
       'type' => MENU_CALLBACK);
   }
 
@@ -271,6 +275,10 @@ Unless you know what you are doing, it is highly recommended that you prefix the
       '#description' => t('To enable browsing this field by value, enter a title for the resulting page. An example page title is "People who are employed". This is only applicable for a public field.'),
     );
   }
+  $form['fields']['autocomplete'] = array('#type' => 'checkbox',
+    '#title' => t('Form will auto-complete while user is typing.'),
+    '#default_value' => $edit['autocomplete'],
+  );
   $form['fields']['required'] = array('#type' => 'checkbox',
     '#title' => t('The user must enter a value.'),
     '#default_value' => $edit['required'],
@@ -326,13 +334,13 @@ function profile_field_form_validate($form_id, $form_values) {
  */
 function profile_field_form_submit($form_id, $form_values) {
   if (!isset($form_values['fid'])) {
-    db_query("INSERT INTO {profile_fields} (title, name, explanation, category, type, weight, required, register, visibility, options, page) VALUES ('%s', '%s', '%s', '%s', '%s', %d, %d, %d, %d, '%s', '%s')", $form_values['title'], $form_values['name'], $form_values['explanation'], $form_values['category'], $form_values['type'], $form_values['weight'], $form_values['required'], $form_values['register'], $form_values['visibility'], $form_values['options'], $form_values['page']);
+    db_query("INSERT INTO {profile_fields} (title, name, explanation, category, type, weight, required, register, visibility, autocomplete, options, page) VALUES ('%s', '%s', '%s', '%s', '%s', %d, %d, %d, %d, %d, '%s', '%s')", $form_values['title'], $form_values['name'], $form_values['explanation'], $form_values['category'], $form_values['type'], $form_values['weight'], $form_values['required'], $form_values['register'], $form_values['visibility'], $form_values['autocomplete'], $form_values['options'], $form_values['page']);
 
     drupal_set_message(t('The field has been created.'));
     watchdog('profile', t('Profile field %field added under category %category.', array('%field' => theme('placeholder', $form_values['title']), '%category' => theme('placeholder', $form_values['category']))), WATCHDOG_NOTICE, l(t('view'), 'admin/settings/profile'));
   }
   else {
-    db_query("UPDATE {profile_fields} SET title = '%s', name = '%s', explanation = '%s', category = '%s', weight = %d, required = %d, register = %d, visibility = %d, options = '%s', page = '%s' WHERE fid = %d", $form_values['title'], $form_values['name'], $form_values['explanation'], $form_values['category'], $form_values['weight'], $form_values['required'], $form_values['register'], $form_values['visibility'], $form_values['options'], $form_values['page'], $form_values['fid']);
+    db_query("UPDATE {profile_fields} SET title = '%s', name = '%s', explanation = '%s', category = '%s', weight = %d, required = %d, register = %d, visibility = %d, autocomplete = %d, options = '%s', page = '%s' WHERE fid = %d", $form_values['title'], $form_values['name'], $form_values['explanation'], $form_values['category'], $form_values['weight'], $form_values['required'], $form_values['register'], $form_values['visibility'], $form_values['autocomplete'], $form_values['options'], $form_values['page'], $form_values['fid']);
 
     drupal_set_message(t('The field has been updated.'));
   }
@@ -640,6 +648,9 @@ function profile_form_profile($edit, $user, $category) {
           '#description' => _profile_form_explanation($field),
           '#required' => $field->required,
         );
+        if ($field->autocomplete) {
+          $fields[$category][$field->name]['#autocomplete_path'] = "profile/autocomplete/". $field->fid;
+        }
         break;
       case 'textarea':
         $fields[$category][$field->name] = array('#type' => 'textarea',
@@ -692,6 +703,22 @@ function profile_form_profile($edit, $user, $category) {
     }
   }
   return $fields;
+}
+
+/**
+ * Callback to allow autocomplete of profile text fields.
+ */
+function profile_autocomplete($field, $string) {
+  if (db_result(db_query("SELECT COUNT(*) FROM {profile_fields} WHERE fid = %d AND autocomplete = 1", $field))) {
+    $matches = array();
+    $result = db_query_range("SELECT value FROM {profile_values} WHERE fid = %d AND LOWER(value) LIKE LOWER('%s%%') GROUP BY value ORDER BY value ASC", $field, $string, 0, 10);
+    while ($data = db_fetch_object($result)) {
+      $matches[$data->value] = check_plain($data->value);
+    }
+
+    print drupal_to_js($matches);
+  }
+  exit();
 }
 
 /**

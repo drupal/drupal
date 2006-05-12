@@ -1,4 +1,4 @@
--- $Id: database.pgsql,v 1.173 2006/04/17 20:48:25 dries Exp $
+-- $Id: database.pgsql,v 1.174 2006/05/12 08:50:22 dries Exp $
 
 -- Do not show NOTICE: messages, it's hard to spot errors.
 set client_min_messages = 'warning';
@@ -482,6 +482,7 @@ CREATE TABLE profile_fields (
   required smallint DEFAULT '0' NOT NULL,
   register smallint DEFAULT '0' NOT NULL,
   visibility smallint DEFAULT '0' NOT NULL,
+  autocomplete smallint DEFAULT '0' NOT NULL,
   options text,
   UNIQUE (name),
   PRIMARY KEY (fid)
