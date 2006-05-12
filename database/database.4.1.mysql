@@ -506,6 +506,7 @@ CREATE TABLE profile_fields (
   required tinyint(1) DEFAULT '0' NOT NULL,
   register tinyint(1) DEFAULT '0' NOT NULL,
   visibility tinyint(1) DEFAULT '0' NOT NULL,
+  autocomplete tinyint(1) DEFAULT '0' NOT NULL,
   options text,
   KEY category (category),
   UNIQUE KEY name (name),

@@ -1973,3 +1973,17 @@ function system_update_180() {
 
   return $ret;
 }
+
+function system_update_181() {
+  $ret = array();
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql("ALTER TABLE {profile_fields} ADD autocomplete TINYINT(1) NOT NULL AFTER visibility ;");
+      break;
+    case 'pgsql':
+      db_add_column($ret, 'profile_fields', 'autocomplete', 'smallint');
+      break;
+  }
+  return $ret;
+}
