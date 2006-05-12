@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.620 2006/05/07 03:52:34 drumm Exp $
+// $Id: user.module,v 1.621 2006/05/12 18:14:50 dries Exp $
 
 /**
  * @file
@@ -904,7 +904,7 @@ function user_login_validate($form_id, $form_values) {
   if ($form_values['name']) {
     if (user_is_blocked($form_values['name'])) {
       // blocked in user administration
-      form_set_error('login', t('The username %name has been blocked.', array('%name' => theme('placeholder', $form_values['name']))));
+      form_set_error('login', t('The username %name has not been activated or is blocked.', array('%name' => theme('placeholder', $form_values['name']))));
     }
     else if (drupal_is_denied('user', $form_values['name'])) {
       // denied by access controls
