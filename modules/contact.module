@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.51 2006/04/17 20:48:26 dries Exp $
+// $Id: contact.module,v 1.52 2006/05/12 18:12:21 dries Exp $
 
 /**
  * @file
@@ -37,6 +37,12 @@ function contact_help($section) {
   }
 }
 
+/**
+ * Implementation of hook_perm
+ */
+function contact_perm() {
+  return array('access site-wide contact form', 'access personal contact forms');
+}
 /**
  * Implementation of hook_menu().
  */
@@ -89,16 +95,18 @@ function contact_menu($may_cache) {
     $items[] = array('path' => 'contact',
       'title' => t('contact'),
       'callback' => 'contact_mail_page',
-      'access' => user_access('access content'),
+      'access' => user_access('access site-wide contact form'),
       'type' => MENU_SUGGESTED_ITEM,
     );
   }
   else {
     if (arg(0) == 'user' && is_numeric(arg(1))) {
-      $items[] = array('path' => "user/". arg(1) ."/contact",
+      global $user;
+      $items[] = array('path' => 'user/'. arg(1) .'/contact',
         'title' => t('contact'),
         'callback' => 'contact_mail_user',
         'type' => MENU_LOCAL_TASK,
+        'access' => ($user->uid && user_access('access personal contact forms')),
         'weight' => 2,
       );
     }
