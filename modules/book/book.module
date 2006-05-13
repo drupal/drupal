@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.363 2006/05/07 00:08:36 drumm Exp $
+// $Id: book.module,v 1.364 2006/05/13 10:02:54 dries Exp $
 
 /**
  * @file
@@ -424,7 +424,7 @@ function book_next($node) {
   }
 
   // No direct child: get next for this level or any parent in this book.
-  $path[] = book_location($node); // Path to top-level node including this one.
+  $path = book_location($node); // Path to top-level node including this one.
   $path[] = $node;
 
   while (($leaf = array_pop($path)) && count($path)) {
