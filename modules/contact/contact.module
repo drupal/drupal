@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.52 2006/05/12 18:12:21 dries Exp $
+// $Id: contact.module,v 1.53 2006/05/13 10:18:25 dries Exp $
 
 /**
  * @file
@@ -120,7 +120,7 @@ function contact_menu($may_cache) {
  *
  * Allows the user the option of enabling/disabling his personal contact form.
  */
-function contact_user($type, $edit, &$user, $category = NULL) {
+function contact_user($type, &$edit, &$user, $category = NULL) {
   if ($type == 'form' && $category == 'account') {
     $form['contact'] = array('#type' => 'fieldset',
       '#title' => t('Contact settings'),
@@ -134,8 +134,11 @@ function contact_user($type, $edit, &$user, $category = NULL) {
     );
     return $form;
   }
-  if ($type == 'validate') {
+  elseif ($type == 'validate') {
     return array('contact' => $edit['contact']);
+  }
+  elseif ($type == 'insert') {
+    $edit['contact'] = variable_get('contact_default_status', 1);
   }
 }
 
@@ -290,6 +293,12 @@ function contact_admin_settings() {
     '#options' => drupal_map_assoc(array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50)),
     '#default_value' => variable_get('contact_hourly_threshold', 3),
     '#description' => t('The maximum number of contact form submissions a user can perform per hour.'),
+  );
+  $form['contact_default_status'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Enable personal contact form by default'),
+    '#default_value' => variable_get('contact_default_status', 1),
+    '#description' => t('Default status of the personal contact form for new users.'),
   );
   $form['submit'] = array('#type' => 'submit',
     '#value' => t('Save configuration'),
