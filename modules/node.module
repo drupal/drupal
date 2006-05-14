@@ -1742,7 +1742,7 @@ function node_add($type) {
     }
 
     if (isset($item)) {
-      uasort($item, 'strnatcasecmp');
+      uksort($item, 'strnatcasecmp');
       $output = t('Choose the appropriate item from the list:') .'<dl>'. implode('', $item) .'</dl>';
     }
     else {
