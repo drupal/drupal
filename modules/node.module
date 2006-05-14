@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.647 2006/05/07 01:00:15 drumm Exp $
+// $Id: node.module,v 1.648 2006/05/14 12:56:44 dries Exp $
 
 /**
  * @file
@@ -1677,23 +1677,43 @@ function node_form_add_preview($form) {
 }
 
 function theme_node_form($form) {
-  $output = '<div class="node-form">';
+  $output = "\n<div class=\"node-form\">\n";
   if (isset($form['node_preview'])) {
     $output .= form_render($form['node_preview']);
   }
 
-  $output .= '  <div class="standard">';
+  // Admin form fields and submit buttons must be rendered first, because
+  // they need to go to the bottom of the form, and so should not be part of
+  // the catch-all call to form_render().
+  $admin = '';
+  if (isset($form['author'])) {
+    $admin .= "    <div class=\"authored\">\n";
+    $admin .= form_render($form['author']);
+    $admin .= "    </div>\n";
+  }
+  if (isset($form['options'])) {
+    $admin .= "    <div class=\"options\">\n";
+    $admin .= form_render($form['options']);
+    $admin .= "    </div>\n";
+  }
+  $buttons = form_render($form['preview']);
+  $buttons .= form_render($form['submit']);
+  $buttons .= isset($form['delete']) ? form_render($form['delete']) : '';
+
+  // Everything else gets rendered here, and is displayed before the admin form
+  // field and the submit buttons.
+  $output .= "  <div class=\"standard\">\n";
   $output .= form_render($form);
-  $output .= '  </div>';
-  $output .= '  <div class="admin">';
-  $output .= '    <div class="authored">';
-  $output .= form_render($form['author']);
-  $output .= '    </div>';
-  $output .= '    <div class="options">';
-  $output .= form_render($form['options']);
-  $output .= '    </div>';
-  $output .= '  </div>';
-  $output .= '</div>';
+  $output .= "  </div>\n";
+
+  if (!empty($admin)) {
+    $output .= "  <div class=\"admin\">\n";
+    $output .= $admin;
+    $output .= "  </div>\n";
+  }
+  $output .= $buttons;
+  $output .= "</div>\n";
+
   return $output;
 }
 
