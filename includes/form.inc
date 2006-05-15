@@ -831,6 +831,15 @@ function expand_date($element) {
 }
 
 /**
+ * Validates the date type to stop dates like February 30, 2006.
+ */
+function date_validate($form) {
+  if (!checkdate($form['#value']['month'], $form['#value']['day'], $form['#value']['year'])) {
+    form_error($form, t('The specified date is invalid.'));
+  }
+}
+
+/**
  * Helper function for usage with drupal_map_assoc to display month names.
  */
 function map_month($month) {
