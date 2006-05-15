@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.227 2006/05/12 08:50:22 dries Exp $
+// $Id: updates.inc,v 1.228 2006/05/15 20:51:10 dries Exp $
 
 function system_update_110() {
   $ret = array();
@@ -928,13 +928,13 @@ function system_update_151() {
   $menus = array(0 => array('links_var' => 'primary_links',
                             'toggle_var' => 'toggle_primary_links',
                             'more_var' => 'primary_links_more',
-                            'menu_name' => t('Primary links'),
+                            'menu_name' => 'Primary links',
                             'menu_var' => 'menu_primary_menu',
                             'pid' => 0),
                  1 => array('links_var' => 'secondary_links',
                             'toggle_var' => 'toggle_secondary_links',
                             'more_var' => 'secondary_links_more',
-                            'menu_name' => t('Secondary links'),
+                            'menu_name' => 'Secondary links',
                             'menu_var' => 'menu_secondary_menu',
                             'pid' => 0));
 
@@ -1679,7 +1679,7 @@ function system_update_173() {
     $ret[] = update_sql("DROP TABLE {files_backup}");
   }
   else {
-    drupal_set_message(t('Normalizing files table failed. A backup of the original table called {files_backup} remains in your database.'));
+    drupal_set_message('Normalizing files table failed. A backup of the original table called {files_backup} remains in your database.');
   }
 
   return $ret;
