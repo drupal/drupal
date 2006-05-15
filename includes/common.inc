@@ -948,7 +948,7 @@ function format_date($timestamp, $type = 'medium', $format = '', $timezone = NUL
  *   Useful for links that will be displayed outside the site, such as in an
  *   RSS feed.
  * @return
- *   an HTML string containing a link to the given path.
+ *   a string containing a URL to the given path.
  *
  * When creating links in modules, consider whether l() could be a better
  * alternative than url().
