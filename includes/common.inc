@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.539 2006/05/09 14:19:03 dries Exp $
+// $Id: common.inc,v 1.540 2006/05/15 20:52:47 dries Exp $
 
 /**
  * @file
@@ -948,7 +948,7 @@ function format_date($timestamp, $type = 'medium', $format = '', $timezone = NUL
  *   Useful for links that will be displayed outside the site, such as in an
  *   RSS feed.
  * @return
- *   an HTML string containing a link to the given path.
+ *   a string containing a URL to the given path.
  *
  * When creating links in modules, consider whether l() could be a better
  * alternative than url().
