@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.247 2006/05/07 00:08:36 drumm Exp $
+// $Id: blog.module,v 1.248 2006/05/15 06:11:00 dries Exp $
 
 /**
  * @file
@@ -238,7 +238,7 @@ function blog_view(&$node, $teaser = FALSE, $page = FALSE) {
     $breadcrumb[] = array('path' => 'node/'. $node->nid);
     menu_set_location($breadcrumb);
   }
-  $node = node_prepare($node, $teaser);;
+  $node = node_prepare($node, $teaser);
 }
 
 /**
