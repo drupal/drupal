@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.117 2006/05/07 00:08:36 drumm Exp $
+// $Id: form.inc,v 1.118 2006/05/15 06:27:32 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -828,6 +828,15 @@ function expand_date($element) {
   }
 
   return $element;
+}
+
+/**
+ * Validates the date type to stop dates like February 30, 2006.
+ */
+function date_validate($form) {
+  if (!checkdate($form['#value']['month'], $form['#value']['day'], $form['#value']['year'])) {
+    form_error($form, t('The specified date is invalid.'));
+  }
 }
 
 /**
