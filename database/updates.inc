@@ -1218,7 +1218,7 @@ function system_update_159() {
           case 'mysql':
             $ret[] = update_sql("UPDATE {sequences} SET id = $vid WHERE name = '{node_revisions}_vid'");
             break;
-            
+
           case 'pgsql':
             $ret[] = update_sql("SELECT setval('{node_revisions}_vid_seq', $vid)");
             break;
@@ -1991,5 +1991,19 @@ function system_update_181() {
       db_add_column($ret, 'profile_fields', 'autocomplete', 'smallint');
       break;
   }
+  return $ret;
+}
+
+/**
+ * The lid field in pgSQL should not be UNIQUE, but an INDEX.
+ */
+function system_update_182() {
+  $ret = array();
+
+  if ($GLOBALS['db_type'] == 'pgsql') {
+    $ret[] = update_sql('ALTER TABLE {locales_target} DROP CONSTRAINT {locales_target}_lid_idx');
+    $ret[] = update_sql('CREATE INDEX {locales_target}_lid_idx ON {locales_target} (lid)');
+  }
+
   return $ret;
 }

@@ -378,9 +378,9 @@ CREATE TABLE locales_target (
   translation text DEFAULT '' NOT NULL,
   locale varchar(12) NOT NULL default '',
   plid int4 NOT NULL default '0',
-  plural int4 NOT NULL default '0',
-  UNIQUE (lid)
+  plural int4 NOT NULL default '0'
 );
+CREATE INDEX locales_target_lid_idx ON locales_target(lid);
 CREATE INDEX locales_target_locale_idx ON locales_target(locale);
 CREATE INDEX locales_target_plid_idx ON locales_target(plid);
 CREATE INDEX locales_target_plural_idx ON locales_target(plural);

@@ -73,7 +73,7 @@ function system_elements() {
   $type['checkboxes'] = array('#input' => TRUE, '#process' => array('expand_checkboxes' => array()), '#tree' => TRUE);
   $type['select'] = array('#input' => TRUE);
   $type['weight'] = array('#input' => TRUE, '#delta' => 10, '#default_value' => 0, '#process' => array('process_weight' => array()));
-  $type['date'] = array('#input' => TRUE, '#process' => array('expand_date' => array()));
+  $type['date'] = array('#input' => TRUE, '#process' => array('expand_date' => array()), '#validate' => array('date_validate' => array()));
   $type['file'] = array('#input' => TRUE, '#size' => 60);
 
   // Form structure
