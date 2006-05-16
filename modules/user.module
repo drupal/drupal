@@ -88,10 +88,11 @@ function user_load($array = array()) {
 }
 
 /**
- * Save changes to a user account.
+ * Save changes to a user account or add a new user.
  *
  * @param $account
- *   The $user object for the user to modify.
+ *   The $user object for the user to modify or add. If $user->uid is
+ *   omitted, a new user will be added.
  *
  * @param $array
  *   An array of fields and values to save. For example array('name' => 'My name');
