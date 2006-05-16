@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.281 2006/05/16 02:22:58 drumm Exp $
+// $Id: taxonomy.module,v 1.282 2006/05/16 06:50:21 drumm Exp $
 
 /**
  * @file
@@ -546,6 +546,26 @@ function taxonomy_form($vid, $value = 0, $help = NULL, $name = 'taxonomy') {
   }
 
   return _taxonomy_term_select(check_plain($vocabulary->name), $name, $value, $vid, $help, intval($vocabulary->multiple), $blank);
+}
+
+/**
+ * Generate a set of options for selecting a term from all vocabularies. Can be
+ * passed to form_select.
+ */
+function taxonomy_form_all($free_tags = 0) {
+  $vocabularies = taxonomy_get_vocabularies();
+  $options = array();
+  foreach ($vocabularies as $vid => $vocabulary) {
+    if ($vocabulary->tags && !$free_tags) { continue; }
+    $tree = taxonomy_get_tree($vid);
+    $options[$vocabulary->name] = array();
+    if ($tree) {
+      foreach ($tree as $term) {
+        $options[$vocabulary->name][$term->tid] = _taxonomy_depth($term->depth, '-') . $term->name;
+      }
+    }
+  }
+  return $options;
 }
 
 /**
