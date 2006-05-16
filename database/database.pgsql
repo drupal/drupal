@@ -1,4 +1,4 @@
--- $Id: database.pgsql,v 1.174 2006/05/12 08:50:22 dries Exp $
+-- $Id: database.pgsql,v 1.175 2006/05/16 09:22:36 dries Exp $
 
 -- Do not show NOTICE: messages, it's hard to spot errors.
 set client_min_messages = 'warning';
@@ -378,9 +378,9 @@ CREATE TABLE locales_target (
   translation text DEFAULT '' NOT NULL,
   locale varchar(12) NOT NULL default '',
   plid int4 NOT NULL default '0',
-  plural int4 NOT NULL default '0',
-  UNIQUE (lid)
+  plural int4 NOT NULL default '0'
 );
+CREATE INDEX locales_target_lid_idx ON locales_target(lid);
 CREATE INDEX locales_target_locale_idx ON locales_target(locale);
 CREATE INDEX locales_target_plid_idx ON locales_target(plid);
 CREATE INDEX locales_target_plural_idx ON locales_target(plural);

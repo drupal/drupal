@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.75 2006/04/30 00:28:53 drumm Exp $
+// $Id: locale.inc,v 1.76 2006/05/16 09:22:36 dries Exp $
 
 /**
  * @file
@@ -358,13 +358,15 @@ function _locale_string_edit($lid) {
 
   $result = db_query('SELECT DISTINCT s.source, t.translation, t.locale FROM {locales_source} s INNER JOIN {locales_target} t ON s.lid = t.lid WHERE s.lid = %d', $lid);
   $form = array();
+  $form['translations'] = array('#tree' => TRUE);
   while ($translation = db_fetch_object($result)) {
     $orig = $translation->source;
 
     // Approximate the number of rows in a textfield with a maximum of 10.
     $rows = min(ceil(str_word_count($orig) / 12), 10);
 
-    $form[$translation->locale] = array('#type' => 'textarea',
+    $form['translations'][$translation->locale] = array(
+      '#type' => 'textarea',
       '#title' => $languages['name'][$translation->locale],
       '#default_value' => $translation->translation,
       '#rows' => $rows,
@@ -386,7 +388,8 @@ function _locale_string_edit($lid) {
   );
 
   foreach ($languages['name'] as $key => $lang) {
-    $form[$key] = array('#type' => 'textarea',
+    $form['translations'][$key] = array(
+      '#type' => 'textarea',
       '#title' => $lang,
       '#rows' => $rows,
     );
@@ -404,14 +407,14 @@ function _locale_string_edit($lid) {
  */
 function _locale_string_edit_submit($form_id, $form_values) {
   $lid = $form_values['lid'];
-  foreach ($form_values as $key => $value) {
+  foreach ($form_values['translations'] as $key => $value) {
     $value = filter_xss_admin($value);
     $trans = db_fetch_object(db_query("SELECT translation FROM {locales_target} WHERE lid = %d AND locale = '%s'", $lid, $key));
     if (isset($trans->translation)) {
       db_query("UPDATE {locales_target} SET translation = '%s' WHERE lid = %d AND locale = '%s'", $value, $lid, $key);
     }
     else {
-      db_query("INSERT INTO {locales_target}  (lid, translation, locale) VALUES (%d, '%s', '%s')", $lid, $value, $key);
+      db_query("INSERT INTO {locales_target} (lid, translation, locale) VALUES (%d, '%s', '%s')", $lid, $value, $key);
     }
   }
   drupal_set_message(t('The string has been saved.'));
