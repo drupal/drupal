@@ -197,6 +197,12 @@ function drupal_submit_form($form_id, $form, $callback = NULL) {
 }
 
 function _form_validate($elements, $form_id = NULL) {
+  // Recurse through all children.
+  foreach (element_children($elements) as $key) {
+    if (isset($elements[$key]) && $elements[$key]) {
+      _form_validate($elements[$key]);
+    }
+  }
   /* Validate the current input */
   if (!$elements['#validated']) {
     if (isset($elements['#needs_validation'])) {
@@ -245,13 +251,6 @@ function _form_validate($elements, $form_id = NULL) {
       }
     }
     $elements['#validated'] = TRUE;
-  }
-
-  // Recurse through all children.
-  foreach (element_children($elements) as $key) {
-    if (isset($elements[$key]) && $elements[$key]) {
-      _form_validate($elements[$key]);
-    }
   }
 }
 
