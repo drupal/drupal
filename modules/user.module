@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.622 2006/05/16 02:13:44 drumm Exp $
+// $Id: user.module,v 1.623 2006/05/16 07:17:40 drumm Exp $
 
 /**
  * @file
@@ -802,7 +802,7 @@ function user_menu($may_cache) {
           'type' => MENU_CALLBACK);
 
         if (arg(2) == 'edit') {
-          if (($categories = _user_categories()) && (count($categories) > 1)) {
+          if (($categories = _user_categories($account)) && (count($categories) > 1)) {
             foreach ($categories as $key => $category) {
               $items[] = array(
                 'path' => 'user/'. arg(1) .'/edit/'. $category['name'],
@@ -2062,11 +2062,11 @@ function user_help_page() {
 /**
  * Retrieve a list of all user setting/information categories and sort them by weight.
  */
-function _user_categories() {
+function _user_categories($account) {
   $categories = array();
 
   foreach (module_list() as $module) {
-    if ($data = module_invoke($module, 'user', 'categories', NULL, NULL, '')) {
+    if ($data = module_invoke($module, 'user', 'categories', NULL, $account, '')) {
       $categories = array_merge($data, $categories);
     }
   }
