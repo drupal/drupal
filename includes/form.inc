@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.118 2006/05/15 06:27:32 dries Exp $
+// $Id: form.inc,v 1.119 2006/05/16 01:55:57 drumm Exp $
 
 /**
  * @defgroup form Form generation
@@ -344,11 +344,16 @@ function form_builder($form_id, $form) {
             $form['#value'] = !empty($edit) ? $form['#return_value'] : 0;
             break;
           case 'select':
-            if (isset($edit)) {
-              $form['#value'] = $edit;
+            if (isset($form['#multiple']) && $form['#multiple']) {
+              if (isset($edit) && is_array($edit)) {
+                $form['#value'] = drupal_map_assoc($edit);
+              }
+              else {
+                $form['#value'] = array();
+              }
             }
-            elseif (isset($form['#multiple']) && $form['#multiple']) {
-              $form['#value'] = array();
+            elseif (isset($edit)) {
+              $form['#value'] = $edit;
             }
             break;
           case 'textfield':
