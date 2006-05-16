@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.119 2006/05/16 01:55:57 drumm Exp $
+// $Id: form.inc,v 1.120 2006/05/16 10:11:19 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -197,6 +197,12 @@ function drupal_submit_form($form_id, $form, $callback = NULL) {
 }
 
 function _form_validate($elements, $form_id = NULL) {
+  // Recurse through all children.
+  foreach (element_children($elements) as $key) {
+    if (isset($elements[$key]) && $elements[$key]) {
+      _form_validate($elements[$key]);
+    }
+  }
   /* Validate the current input */
   if (!$elements['#validated']) {
     if (isset($elements['#needs_validation'])) {
@@ -245,13 +251,6 @@ function _form_validate($elements, $form_id = NULL) {
       }
     }
     $elements['#validated'] = TRUE;
-  }
-
-  // Recurse through all children.
-  foreach (element_children($elements) as $key) {
-    if (isset($elements[$key]) && $elements[$key]) {
-      _form_validate($elements[$key]);
-    }
   }
 }
 
