@@ -379,7 +379,7 @@ function taxonomy_form_term($edit = array()) {
   $form['weight'] = array('#type' => 'weight', '#title' => t('Weight'), '#default_value' => $edit['weight'], '#description' => t('In listings, the heavier terms will sink and the lighter terms will be positioned nearer the top.'));
 
   // Add extra term form elements.
-  $extra = module_invoke_all('taxonomy', 'term', 'vocabulary');
+  $extra = module_invoke_all('taxonomy', 'form', 'term');
   if (is_array($extra)) {
     foreach ($extra as $key => $element) {
       $extra[$key]['#weight'] = isset($extra[$key]['#weight']) ? $extra[$key]['#weight'] : -18;
