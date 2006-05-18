@@ -53,7 +53,12 @@ function upload_link($type, $node = 0, $main = 0) {
       }
     }
     if ($num_files) {
-      $links[] = l(format_plural($num_files, '1 attachment', '%count attachments'), "node/$node->nid", array('title' => t('Read full article to view attachments.')), NULL, 'attachments');
+      $links['upload_attachments'] = array(
+        '#title' => format_plural($num_files, '1 attachment', '%count attachments'),
+        '#href' => "node/$node->nid",
+        '#attributes' => array('title' => t('Read full article to view attachments.')),
+        '#fragment' => 'attachments'
+      );
     }
   }
 
