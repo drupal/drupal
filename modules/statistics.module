@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.227 2006/05/07 00:08:36 drumm Exp $
+// $Id: statistics.module,v 1.228 2006/05/18 14:58:57 dries Exp $
 
 /**
  * @file
@@ -99,7 +99,7 @@ function statistics_link($type, $node = 0, $main = 0) {
   if ($type != 'comment' && user_access('view post access counter')) {
     $statistics = statistics_get($node->nid);
     if ($statistics) {
-      $links[] = format_plural($statistics['totalcount'], '1 read', '%count reads');
+      $links['statistics_counter']['#title'] = format_plural($statistics['totalcount'], '1 read', '%count reads');
     }
   }
 

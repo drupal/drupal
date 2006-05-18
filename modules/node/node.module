@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.649 2006/05/15 06:18:01 dries Exp $
+// $Id: node.module,v 1.650 2006/05/18 14:58:57 dries Exp $
 
 /**
  * @file
@@ -536,6 +536,11 @@ function node_view($node, $teaser = FALSE, $page = FALSE, $links = TRUE) {
   node_invoke_nodeapi($node, 'view', $teaser, $page);
   if ($links) {
     $node->links = module_invoke_all('link', 'node', $node, !$page);
+
+    foreach (module_implements('link_alter') AS $module) {
+      $function = $module .'_link_alter';
+      $function($node, $node->links);
+    }
   }
   // unset unused $node part so that a bad theme can not open a security hole
   if ($teaser) {
@@ -810,7 +815,11 @@ function node_link($type, $node = 0, $main = 0) {
     }
 
     if ($main == 1 && $node->teaser && $node->readmore) {
-      $links[] = l(t('read more'), "node/$node->nid", array('title' => t('Read the rest of this posting.'), 'class' => 'read-more'));
+      $links['node_read_more'] = array(
+        '#title' => t('read more'),
+        '#href' => "node/$node->nid",
+        '#attributes' => array('title' => t('Read the rest of this posting.'))
+      );
     }
   }
 

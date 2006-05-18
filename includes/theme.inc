@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.295 2006/05/07 00:08:36 drumm Exp $
+// $Id: theme.inc,v 1.296 2006/05/18 14:58:56 dries Exp $
 
 /**
  * @file
@@ -486,17 +486,36 @@ function theme_status_messages() {
  * Return a themed set of links.
  *
  * @param $links
- *   An array of links to be themed.
+ *   A keyed array of links to be themed.
  * @param $delimiter
  *   A string used to separate the links.
  * @return
  *   A string containing the themed links.
  */
 function theme_links($links, $delimiter = ' | ') {
-  if (!is_array($links)) {
-    return '';
+  $output = array();
+
+  if (is_array($links)) {
+    foreach ($links as $key => $link) {
+      //Automatically add a class to each link and convert all _ to - for XHTML compliance
+      if (isset($link['#attributes']) && isset($link['#attributes']['class'])) {
+        $link['#attributes']['class'] .= ' '. str_replace('_', '-', $key);
+      }
+      else {
+        $link['#attributes']['class'] = str_replace('_', '-', $key);
+      }
+
+      if ($link['#href']) {
+        $output[] = l($link['#title'], $link['#href'], $link['#attributes'], $link['#query'], $link['#fragment']);
+      }
+      else if ($link['#title']) {
+        //Some links are actually not links, but we wrap these in <span> for adding title and class attributes
+        $output[] = '<span'. drupal_attributes($link['#attributes']) .'>'. $link['#title'] .'</span>';
+      }
+    }
   }
-  return implode($delimiter, $links);
+
+  return implode($delimiter, $output);
 }
 
 /**

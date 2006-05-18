@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.282 2006/05/16 06:50:21 drumm Exp $
+// $Id: taxonomy.module,v 1.283 2006/05/18 14:58:57 dries Exp $
 
 /**
  * @file
@@ -29,19 +29,22 @@ function taxonomy_link($type, $node = NULL) {
     $links = array();
     if (array_key_exists('taxonomy', $node)) {
       foreach ($node->taxonomy as $term) {
-        $links[] = l($term->name, taxonomy_term_path($term), array('rel' => 'tag', 'title' => strip_tags($term->description)));
+        $links['taxonomy_term_'. $term->tid] = array(
+          '#title' => $term->name,
+          '#href' => 'taxonomy/term/'. $term->tid,
+          '#attributes' => array('rel' => 'tag', 'title' => strip_tags($term->description))
+        );
       }
     }
+
+    // We call this hook again because some modules and themes call taxonomy_link('taxonomy terms') directly
+    foreach (module_implements('link_alter') AS $module) {
+      $function = $module .'_link_alter';
+      $function($node, $links);
+    }
+
     return $links;
   }
-}
-
-function taxonomy_term_path($term) {
-  $vocabulary = taxonomy_get_vocabulary($term->vid);
-  if ($vocabulary->module != 'taxonomy' && $path = module_invoke($vocabulary->module, 'term_path', $term)) {
-    return $path;
-  }
-  return 'taxonomy/term/'. $term->tid;
 }
 
 /**

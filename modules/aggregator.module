@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.281 2006/05/07 00:08:36 drumm Exp $
+// $Id: aggregator.module,v 1.282 2006/05/18 14:58:56 dries Exp $
 
 /**
  * @file
@@ -1145,7 +1145,13 @@ function aggregator_page_sources() {
       }
     }
     $output .= theme('item_list', $list);
-    $output .= '<div class="links">'. theme('links', array(l(t('more'), 'aggregator/sources/'. $feed->fid))) ."</div>\n";
+
+    $link['sources'] = array(
+      '#title' => t('more'),
+      '#href' => 'aggregator/sources/'. $feed->fid
+    );
+
+    $output .= '<div class="links">'. theme('links', $link) ."</div>\n";
   }
   $output .= theme('xml_icon', url('aggregator/opml'));
   $output .= '</div>';
@@ -1245,8 +1251,15 @@ function aggregator_page_categories() {
       }
       $output .= theme('item_list', $list);
     }
-    $output .= '<div class="links">'. theme('links', array(l(t('more'), 'aggregator/categories/'. $category->cid))) ."</div>\n";
+
+    $link['categories'] = array(
+      '#title' => t('more'),
+      '#href' => 'aggregator/categories/'. $category->cid
+    );
+
+    $output .= '<div class="links">'. theme('links', $link) ."</div>\n";
   }
+
   $output .= '</div>';
 
   return $output;

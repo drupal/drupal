@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.330 2006/05/08 15:16:16 dries Exp $
+// $Id: forum.module,v 1.331 2006/05/18 14:58:57 dries Exp $
 
 /**
  * @file
@@ -635,8 +635,13 @@ function _forum_parent_select($tid, $title, $child_type) {
   return array('#type' => 'select', '#title' => $title, '#default_value' => $parent, '#options' => $options, '#description' => $description, '#required' => TRUE);
 }
 
-function forum_term_path($term) {
-  return 'forum/'. $term->tid;
+function forum_link_alter(&$node, &$links) {
+  foreach ($links AS $module => $link) {
+    if (strstr($module, 'taxonomy_term')) {
+      // Link back to the forum and not the taxonomy term page
+      $links[$module]['#href'] = str_replace('taxonomy/term', 'forum', $link['#href']);
+    }
+  }
 }
 
 /**

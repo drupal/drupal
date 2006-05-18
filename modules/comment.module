@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.457 2006/05/07 00:08:36 drumm Exp $
+// $Id: comment.module,v 1.458 2006/05/18 14:58:56 dries Exp $
 
 /**
  * @file
@@ -195,19 +195,34 @@ function comment_link($type, $node = 0, $main = 0) {
         $new = comment_num_new($node->nid);
 
         if ($all) {
-          $links[] = l(format_plural($all, '1 comment', '%count comments'), "node/$node->nid", array('title' => t('Jump to the first comment of this posting.')), NULL, 'comment');
+          $links['comment_comments'] = array(
+            '#title' => format_plural($all, '1 comment', '%count comments'),
+            '#href' => "node/$node->nid",
+            '#attributes' => array('title' => t('Jump to the first comment of this posting.')),
+            '#fragment' => 'comment'
+          );
 
           if ($new) {
-            $links[] = l(format_plural($new, '1 new comment', '%count new comments'), "node/$node->nid", array('title' => t('Jump to the first new comment of this posting.')), NULL, 'new');
+            $links['comment_new_comments'] = array(
+              '#title' => format_plural($new, '1 new comment', '%count new comments'),
+              '#href' => "node/$node->nid",
+              '#attributes' => array('title' => t('Jump to the first new comment of this posting.')),
+              '#fragment' => 'new'
+            );
           }
         }
         else {
           if ($node->comment == COMMENT_NODE_READ_WRITE) {
             if (user_access('post comments')) {
-              $links[] = l(t('add new comment'), "comment/reply/$node->nid", array('title' => t('Add a new comment to this page.')), NULL, 'comment_form');
+              $links['comment_add'] = array(
+                '#title' => t('add new comment'),
+                '#href' => "comment/reply/$node->nid",
+                '#attributes' => array('title' => t('Add a new comment to this page.')),
+                '#fragment' => 'comment_form'
+              );
             }
             else {
-              $links[] = theme('comment_post_forbidden', $node->nid);
+              $links['comment_forbidden']['#title'] = theme('comment_post_forbidden', $node->nid);
             }
           }
         }
@@ -220,11 +235,16 @@ function comment_link($type, $node = 0, $main = 0) {
       if ($node->comment == COMMENT_NODE_READ_WRITE) {
         if (user_access('post comments')) {
           if (variable_get('comment_form_location', COMMENT_FORM_SEPARATE_PAGE) == COMMENT_FORM_SEPARATE_PAGE) {
-            $links[] = l(t('add new comment'), "comment/reply/$node->nid", array('title' => t('Share your thoughts and opinions related to this posting.')), NULL, 'comment_form');
+            $links['comment_add'] = array(
+              '#title' => t('add new comment'),
+              '#href' => "comment/reply/$node->nid",
+              '#attributes' => array('title' => t('Share your thoughts and opinions related to this posting.')),
+              '#fragment' => 'comment_form'
+            );
           }
         }
         else {
-          $links[] = theme('comment_post_forbidden', $node->nid);
+          $links['comment_forbidden']['#title'] = theme('comment_post_forbidden', $node->nid);
         }
       }
     }
@@ -670,23 +690,42 @@ function comment_links($comment, $return = 1) {
 
   // If we are viewing just this comment, we link back to the node.
   if ($return) {
-    $links[] = l(t('parent'), comment_node_url(), NULL, NULL, "comment-$comment->cid");
+    $links['comment_parent'] = array(
+      '#title' => t('parent'),
+      '#href' => comment_node_url(),
+      '#fragment' => "comment-$comment->cid"
+    );
   }
 
   if (node_comment_mode($comment->nid) == COMMENT_NODE_READ_WRITE) {
     if (user_access('administer comments') && user_access('post comments')) {
-      $links[] = l(t('delete'), "comment/delete/$comment->cid");
-      $links[] = l(t('edit'), "comment/edit/$comment->cid");
-      $links[] = l(t('reply'), "comment/reply/$comment->nid/$comment->cid");
+      $links['comment_delete'] = array(
+        '#title' => t('delete'),
+        '#href' => "comment/delete/$comment->cid"
+      );
+      $links['comment_edit'] = array(
+        '#title' => t('edit'),
+        '#href' => "comment/edit/$comment->cid"
+      );
+      $links['comment_reply'] = array(
+        '#title' => t('reply'),
+        '#href' => "comment/reply/$comment->nid/$comment->cid"
+      );
     }
     else if (user_access('post comments')) {
       if (comment_access('edit', $comment)) {
-        $links[] = l(t('edit'), "comment/edit/$comment->cid");
+        $links['comment_edit'] = array(
+          '#title' => t('edit'),
+          '#href' => "comment/edit/$comment->cid"
+        );
       }
-      $links[] = l(t('reply'), "comment/reply/$comment->nid/$comment->cid");
+      $links['comment_reply'] = array(
+        '#title' => t('reply'),
+        '#href' => "comment/reply/$comment->nid/$comment->cid"
+      );
     }
     else {
-      $links[] = theme('comment_post_forbidden', $comment->nid);
+      $links['comment_forbidden']['#title'] = theme('comment_post_forbidden', $comment->nid);
     }
   }
 
@@ -724,7 +763,14 @@ function comment_render($node, $cid = 0) {
 
       if ($comment = db_fetch_object($result)) {
         $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
-        $output .= theme('comment_view', $comment, module_invoke_all('link', 'comment', $comment, 1));
+        $links = module_invoke_all('link', 'comment', $comment, 1);
+
+        foreach (module_implements('link_alter') as $module) {
+          $function = $module .'_link_alter';
+          $function($node, $links);
+        }
+
+        $output .= theme('comment_view', $comment, $links);
       }
     }
     else {

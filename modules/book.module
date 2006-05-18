@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.364 2006/05/13 10:02:54 dries Exp $
+// $Id: book.module,v 1.365 2006/05/18 14:58:56 dries Exp $
 
 /**
  * @file
@@ -58,12 +58,17 @@ function book_link($type, $node = 0, $main = 0) {
   if ($type == 'node' && isset($node->parent)) {
     if (!$main) {
       if (book_access('create', $node)) {
-        $links[] = l(t('add child page'), "node/add/book/parent/$node->nid");
+        $links['book_add_child'] = array(
+          '#title' => t('add child page'),
+          '#href' => "node/add/book/parent/$node->nid"
+        );
       }
       if (user_access('see printer-friendly version')) {
-        $links[] = l(t('printer-friendly version'),
-                     'book/export/html/'. $node->nid,
-                     array('title' => t('Show a printer-friendly version of this book page and its sub-pages.')));
+        $links['book_printer'] = array(
+          '#title' => t('printer-friendly version'),
+          '#href' => 'book/export/html/'. $node->nid,
+          '#attributes' => array('title' => t('Show a printer-friendly version of this book page and its sub-pages.'))
+        );
       }
     }
   }

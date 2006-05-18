@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.120 2006/04/24 19:25:37 dries Exp $
+// $Id: menu.inc,v 1.121 2006/05/18 14:58:56 dries Exp $
 
 /**
  * @file
@@ -703,16 +703,30 @@ function theme_menu_item_link($item, $link_item) {
  *
  * @param $mid
  *   The menu item id to render.
+ * @param $theme
+ *   Whether to return a themed link or the link as an array
  */
-function menu_item_link($mid) {
+function menu_item_link($mid, $theme = TRUE) {
   $item = menu_get_item($mid);
   $link_item = $item;
+  $link = '';
 
   while ($link_item['type'] & MENU_LINKS_TO_PARENT) {
     $link_item = menu_get_item($link_item['pid']);
   }
 
-  return theme('menu_item_link', $item, $link_item);
+  if ($theme) {
+    $link = theme('menu_item_link', $item, $link_item);
+  }
+  else {
+    $link = array(
+      '#title' => $item['title'],
+      '#href' => $link_item['path'],
+      '#attributes' => isset($item['description']) ? array('title' => $item['description']) : array()
+    );
+  }
+
+  return $link;
 }
 
 /**
@@ -806,7 +820,7 @@ function theme_menu_local_task($mid, $active, $primary) {
  * @param $pid
  *   The parent menu ID from which to search for children. Defaults to the
  *   menu_primary_menu setting.
- * @return An array containing the themed links as the values. The keys of
+ * @return A nested array of links and their properties. The keys of
  *   the array contain some extra encoded information about the results.
  *   The format of the key is {level}-{num}{-active}.
  *   level is the depth within the menu tree of this list.
@@ -842,18 +856,21 @@ function menu_primary_links($start_level = 1, $pid = 0) {
   if ($pid && is_array($menu['visible'][$pid]) && isset($menu['visible'][$pid]['children'])) {
     $count = 1;
     foreach ($menu['visible'][$pid]['children'] as $cid) {
-      $index = "$start_level-$count";
+      $index = "$start_level-$count-$pid";
       if (menu_in_active_trail_in_submenu($cid, $pid)) {
         $index .= "-active";
       }
-      $links[$index] = menu_item_link($cid);
+      $links[$index] = menu_item_link($cid, FALSE);
       $count++;
     }
   }
 
   // Special case - provide link to admin/menu if primary links is empty.
   if (empty($links) && $start_level == 1 && $pid == variable_get('menu_primary_menu', 0)) {
-    $links['1-1'] = l(t('edit primary links'),'admin/menu');
+    $links['1-1'] = array(
+      '#title' => t('edit primary links'),
+      '#href' => 'admin/menu'
+    );
   }
 
   return $links;
