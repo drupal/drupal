@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.15 2006/04/30 00:42:32 drumm Exp $ */
+/* $Id: style.css,v 1.16 2006/05/20 02:24:55 drumm Exp $ */
 
 /*
 ** HTML elements
@@ -163,7 +163,7 @@ td#home a:hover img {
 }
 .tabs ul.secondary {
   border-collapse: collapse;
-  padding: 10px 0 10px 0px;
+  padding: 10px 0 10px 0;
   margin: 0 0 0 0;
   white-space: nowrap;
   width: 100%;
@@ -221,7 +221,7 @@ td#home a:hover img {
   border-top: 2px solid #dcdcdc;
   border-bottom: 2px solid #dcdcdc;
   padding: 10px 10px 10px 10px;
-  margin: 20px 35px 0px 35px;
+  margin: 20px 35px 0 35px;
   font-family: "Trebuchet MS", Geneva, Arial, Helvetica, SunSans-Regular, Verdana, sans-serif;
   font-size: 1.1em;
   font-weight: normal;
@@ -272,8 +272,8 @@ td#home a:hover img {
   border-color: red;
 }
 .nav {
-  padding: 0px 0px 0px 0px;
-  margin: 0px 0px 0px 0px;
+  padding: 0;
+  margin: 0;
 }
 #sidebar-left, #sidebar-right {
   font-size: 0.75em;
@@ -365,8 +365,8 @@ table#footer-menu {
 .links {
   color: #ff8c00;
   font-size: 0.8em;
-  padding: 0px 0px 0px 0px;
-  margin: 0px 0px 0px 0px;
+  padding: 0;
+  margin: 0;
 }
 .links a {
   font-weight: bold;
@@ -375,8 +375,8 @@ table#footer-menu {
   padding: 0 0 1.5em 0;
 }
 .box {
-  padding: 0px 0px 0px 0px;
-  margin: 0px 0px 0px 0px;
+  padding: 0;
+  margin: 0;
 }
 .box h2 {
   font-size: 9px;
@@ -422,7 +422,7 @@ table#footer-menu {
 }
 .comment .title {
   font-size: 1em;
-  padding: 10px 0px 12px 19px;
+  padding: 10px 0 12px 19px;
   background: transparent url(icon-comment.png) left center no-repeat;
 }
 .comment .new {
