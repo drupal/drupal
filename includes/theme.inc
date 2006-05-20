@@ -842,19 +842,21 @@ function theme_stylesheet_import($path, $media = 'all') {
  *   An array of items to be displayed in the list.
  * @param $title
  *   The title of the list.
+ * @param $attributes
+ *   The attributes applied to the list element.
  * @param $type
  *   The type of list to return (e.g. "ul", "ol")
  * @return
  *   A string containing the list output.
  */
-function theme_item_list($items = array(), $title = NULL, $type = 'ul') {
+function theme_item_list($items = array(), $title = NULL, $type = 'ul', $attributes = NULL) {
   $output = '<div class="item-list">';
   if (isset($title)) {
     $output .= '<h3>'. $title .'</h3>';
   }
 
   if (!empty($items)) {
-    $output .= "<$type>";
+    $output .= "<$type" . drupal_attributes($attributes) . '>';
     foreach ($items as $item) {
       $output .= '<li>'. $item .'</li>';
     }
