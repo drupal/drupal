@@ -457,9 +457,7 @@ function comment_configure() {
  *
  * Authenticated users can edit their comments as long they have not been
  * replied to. This prevents people from changing or revising their
- * statements based on the replies their posts got. Furthermore, users
- * can't reply to their own comments and are encouraged instead to extend
- * their original comment.
+ * statements based on the replies to their posts.
  */
 function comment_access($op, $comment) {
   global $user;
