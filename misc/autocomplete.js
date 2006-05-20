@@ -1,4 +1,4 @@
-// $Id: autocomplete.js,v 1.11 2006/04/17 20:48:25 dries Exp $
+// $Id: autocomplete.js,v 1.12 2006/05/20 07:23:47 drumm Exp $
 
 // Global Killswitch
 if (isJsEnabled()) {
@@ -216,7 +216,19 @@ jsAC.prototype.found = function (matches) {
   else {
     this.hidePopup();
   }
-  removeClass(this.input, 'throbbing');
+}
+
+jsAC.prototype.setStatus = function (status) {
+  switch (status) {
+    case 'begin':
+      addClass(this.input, 'throbbing');
+      break;
+    case 'cancel':
+    case 'error':
+    case 'found':
+      removeClass(this.input, 'throbbing');
+      break;
+  }
 }
 
 /**
@@ -241,7 +253,7 @@ ACDB.prototype.search = function(searchString) {
   }
   var db = this;
   this.timer = setTimeout(function() {
-    addClass(db.owner.input, 'throbbing');
+    db.owner.setStatus('begin');
     db.transport = HTTPGet(db.uri +'/'+ encodeURIComponent(searchString), db.receive, db);
   }, this.delay);
 }
@@ -252,7 +264,7 @@ ACDB.prototype.search = function(searchString) {
 ACDB.prototype.receive = function(string, xmlhttp, acdb) {
   // Note: Safari returns 'undefined' status if the request returns no data.
   if (xmlhttp.status != 200 && typeof xmlhttp.status != 'undefined') {
-    removeClass(acdb.owner.input, 'throbbing');
+    acdb.owner.setStatus('error');
     return alert('An HTTP error '+ xmlhttp.status +' occured.\n'+ acdb.uri);
   }
   // Parse back result
@@ -260,6 +272,7 @@ ACDB.prototype.receive = function(string, xmlhttp, acdb) {
   if (typeof matches['status'] == 'undefined' || matches['status'] != 0) {
     acdb.cache[acdb.searchString] = matches;
     acdb.owner.found(matches);
+    acdb.owner.setStatus('found');
   }
 }
 
@@ -267,7 +280,7 @@ ACDB.prototype.receive = function(string, xmlhttp, acdb) {
  * Cancels the current autocomplete request
  */
 ACDB.prototype.cancel = function() {
-  if (this.owner) removeClass(this.owner.input, 'throbbing');
+  if (this.owner) this.owner.setStatus('cancel');
   if (this.timer) clearTimeout(this.timer);
   if (this.transport) {
     this.transport.onreadystatechange = function() {};
