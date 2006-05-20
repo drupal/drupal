@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.283 2006/05/18 14:58:57 dries Exp $
+// $Id: taxonomy.module,v 1.284 2006/05/20 02:05:35 drumm Exp $
 
 /**
  * @file
@@ -648,7 +648,7 @@ function taxonomy_form_alter($form_id, &$form) {
           '#default_value' => $typed_string,
           '#autocomplete_path' => 'taxonomy/autocomplete/'. $vocabulary->vid,
           '#weight' => $vocabulary->weight,
-          '#maxlength' => 100,
+          '#maxlength' => 255,
         );
       }
       else {
