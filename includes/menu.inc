@@ -922,7 +922,7 @@ function theme_menu_links($links) {
     if (stristr($index, 'active')) {
       $output .= ' class="active"';
     }
-    $output .= ">$link</li>\n";
+    $output .= ">". l($link['#title'], $link['#href'], $link['#attributes'], $link['#query'], $link['#fragment']) ."</li>\n";
   }
   $output .= '</ul>';
 
