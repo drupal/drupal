@@ -1129,7 +1129,7 @@ function drupal_map_assoc($array, $function = NULL) {
   }
   elseif (function_exists($function)) {
     $result = array();
-    foreach($array as $value) {
+    foreach ($array as $value) {
       $result[$value] = $function($value);
     }
     return $result;
@@ -1260,7 +1260,7 @@ function drupal_to_js($var) {
     case 'array':
       if (array_keys($var) === range(0, sizeof($var) - 1)) {
         $output = array();
-        foreach($var as $v) {
+        foreach ($var as $v) {
           $output[] = drupal_to_js($v);
         }
         return '[ '. implode(', ', $output) .' ]';
