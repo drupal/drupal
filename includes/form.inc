@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.121 2006/05/23 02:16:58 drumm Exp $
+// $Id: form.inc,v 1.122 2006/05/23 03:18:55 drumm Exp $
 
 /**
  * @defgroup form Form generation
@@ -79,7 +79,7 @@ function drupal_get_form($form_id, &$form, $callback = NULL) {
     }
   }
   if (isset($form_id)) {
-    $form['form_id'] = array('#type' => 'hidden', '#value' => $form_id);
+    $form['form_id'] = array('#type' => 'hidden', '#value' => $form_id, '#id' => str_replace('_', '-', "edit-$form_id"));
   }
   if (!isset($form['#id'])) {
     $form['#id'] = $form_id;
