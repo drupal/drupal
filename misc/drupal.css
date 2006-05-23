@@ -83,7 +83,7 @@ td.menu-disabled {
   padding-bottom: .5em
 }
 .block-region {
-  background-color: #ffff66;
+  background-color: #ff6;
   margin-top: 4px;
   margin-bottom: 4px;
   padding: 3px;
@@ -398,7 +398,7 @@ dl.multiselect .form-item {
 }
 .profile {
   clear: both;
-  margin: 1em 0 1em 0;
+  margin: 1em 0;
 }
 .profile .picture {
   float: right;
@@ -540,7 +540,7 @@ ul.primary li a:hover {
 }
 ul.secondary {
   border-bottom: 1px solid #bbb;
-  padding: 0.5em 1em 0.5em 1em;
+  padding: 0.5em 1em;
   margin: 5px;
 }
 ul.secondary li {
