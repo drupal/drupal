@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.16 2006/05/20 02:24:55 drumm Exp $ */
+/* $Id: style.css,v 1.17 2006/05/23 02:11:17 drumm Exp $ */
 
 /*
 ** HTML elements
@@ -47,7 +47,7 @@ p {
 }
 blockquote {
   border-left: 4px solid #69c;
-  padding: 0 15px 0 15px;
+  padding: 0 15px;
   margin: 25px 100px 25px 50px;
   color: #696969;
   text-align: left;
@@ -126,25 +126,25 @@ td#home a:hover img {
   font-size: 0.85em;
 }
 .tabs {
-  margin: 15px 0 15px 0;
+  margin: 15px 0;
 }
 .tabs ul.primary {
   border-collapse: collapse;
   padding: 0 0 3px 10px;
   white-space: nowrap;
   list-style: none;
-  margin: 0 0 0 0;
+  margin: 0;
   height: auto;
   line-height: normal;
-  border-bottom: 2px solid #336699;
+  border-bottom: 2px solid #369;
 }
 .tabs ul.primary li {
   display: inline;
 }
 .tabs ul.primary li a {
-  padding: 3px 10px 3px 10px;
+  padding: 3px 10px;
   background: #fff url(tabs-off.png) left top no-repeat;
-  border-color: #6699CC;
+  border-color: #69C;
   border-width: 2px;
   border-style: none solid none none;
   height: auto;
@@ -153,8 +153,8 @@ td#home a:hover img {
   text-transform: lowercase;
 }
 .tabs ul.primary li.active a {
-  background: #336699 url(tabs-on.png) left top no-repeat;
-  border-right: 2px solid #336699;
+  background: #369 url(tabs-on.png) left top no-repeat;
+  border-right: 2px solid #369;
   color: #fff;
 }
 .tabs ul.primary li a:hover {
@@ -163,8 +163,8 @@ td#home a:hover img {
 }
 .tabs ul.secondary {
   border-collapse: collapse;
-  padding: 10px 0 10px 0;
-  margin: 0 0 0 0;
+  padding: 10px 0;
+  margin: 0;
   white-space: nowrap;
   width: 100%;
   list-style: none;
@@ -182,7 +182,7 @@ td#home a:hover img {
 .tabs ul.secondary li a {
   background: #fff url(tabs-option-off.png) left center no-repeat;
   padding: 10px 0 10px 25px;
-  margin: 0 0 0 0;
+  margin: 0;
 }
 .tabs ul.secondary li a.active {
   background: #fff url(tabs-option-on.png) left center no-repeat;
@@ -220,7 +220,7 @@ td#home a:hover img {
   color: #696969;
   border-top: 2px solid #dcdcdc;
   border-bottom: 2px solid #dcdcdc;
-  padding: 10px 10px 10px 10px;
+  padding: 10px;
   margin: 20px 35px 0 35px;
   font-family: "Trebuchet MS", Geneva, Arial, Helvetica, SunSans-Regular, Verdana, sans-serif;
   font-size: 1.1em;
@@ -309,8 +309,8 @@ td#home a:hover img {
   color: #aaa;
 }
 table#footer-menu {
-  border-top: 3px solid #6699cc;
-  border-bottom: 3px solid #6699cc;
+  border-top: 3px solid #69c;
+  border-bottom: 3px solid #69c;
   background-color: #369;
   color: #e4e9eb;
 }
@@ -382,7 +382,7 @@ table#footer-menu {
   font-size: 9px;
 }
 .block .title h3 {
-  border-bottom: 2px solid #6699cc;
+  border-bottom: 2px solid #69c;
   color: #369;
   font-size: 18px;
   font-weight: bold;
@@ -391,7 +391,7 @@ table#footer-menu {
   background: transparent url(icon-block.png) left center no-repeat;
 }
 .block .content {
-  padding: 5px 5px 5px 5px;
+  padding: 5px;
 }
 .block {
   margin-bottom: 1.5em;
@@ -557,7 +557,7 @@ table#footer-menu {
   background: #fff;
 }
 #forum td {
-  padding: 0.5em 0.5em 0.5em 0.5em;
+  padding: 0.5em;
 }
 #forum td.container {
   color: #000;

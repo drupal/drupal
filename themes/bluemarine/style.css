@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.13 2006/04/03 22:20:48 unconed Exp $ */
+/* $Id: style.css,v 1.14 2006/05/23 02:11:17 drumm Exp $ */
 
 /*
 ** HTML elements
@@ -65,10 +65,10 @@ table {
   color: #222;
 }
 .links {
-  margin-bottom: 0em;
+  margin-bottom: 0;
 }
 .comment .links {
-  margin-bottom: 0em;
+  margin-bottom: 0;
 }
 
 /*
@@ -86,7 +86,7 @@ table {
 }
 #logo img {
   float: left;
-  padding: 0em 1.0em 0em 1em;
+  padding: 0 1em;
   border: 0;
 }
 #menu {
@@ -120,7 +120,7 @@ table {
 }
 #search .form-text {
   width: 8em;
-  padding: 0 0.5em 0 0.5em;
+  padding: 0 0.5em;
 }
 #mission {
   background-color: #369;
@@ -132,8 +132,8 @@ table {
   font-weight: bold;
 }
 .site-name {
-  margin: 0.6em 0em 0em 0em;
-  padding: 0em;
+  margin: 0.6em 0 0 0;
+  padding: 0;
   font-size: 2em;
 }
 .site-name a:link, .site-name a:visited {
@@ -147,7 +147,7 @@ table {
   font-size: 1em;
   color: #eee;
   display: block;
-  margin: 0em 0em 0em 0em;
+  margin: 0;
   font-style: italic;
   font-weight: bold;
 }
@@ -156,7 +156,7 @@ table {
   padding: 10px;
 }
 #mission, .node .content, .comment .content {
-  line-height: 1.4;
+  line-height: 1.4em;
 }
 #help {
   font-size: 0.9em;
@@ -197,7 +197,7 @@ table {
   font-weight: bold;
   font-size: 1.3em;
   color: #777;
-  margin: 0 auto 0 auto;  /* decrease default margins for h<x>.title */
+  margin: 0 auto;  /* decrease default margins for h<x>.title */
 }
 .submitted {
   color: #999;
@@ -273,7 +273,7 @@ table {
   background-color: #eee;
   border: 1px solid #ccc;
   padding: 1em;
-  margin: 1em 0 1em 0;
+  margin: 1em 0;
 }
 #aggregator .news-item .categories, #aggregator .source, #aggregator .age {
   color: #999;
@@ -291,7 +291,7 @@ table {
   width: 100%;
 }
 #forum td {
-  padding: 0.5em 0.5em 0.5em 0.5em;
+  padding: 0.5em;
 }
 #forum td.forum, #forum td.posts {
   background-color: #eee;
@@ -320,7 +320,7 @@ table {
   clear: both;
   border: 1px solid #abc;
   padding: .5em;
-  margin: 1em 0em 1em 0em;
+  margin: 1em 0em;
 }
 #profile .profile .name {
   padding-bottom: 0.5em;
@@ -352,5 +352,6 @@ table {
   background-color: #ccc;
 }
 .calendar .row-week td a:hover {
-  background-color: #fff; color: #000;
+  background-color: #fff;
+  color: #000;
 }
