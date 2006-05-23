@@ -524,13 +524,13 @@ function form_render(&$elements) {
       unset($elements['#prefix'], $elements['#suffix']);
     }
     /* render each of the children using form_render and concatenate them */
-    if (!$content) {
+    if (!isset($content) || $content === '') {
       foreach ($children as $key) {
         $content .= form_render($elements[$key]);
       }
     }
   }
-  if ($content) {
+  if (isset($content) && $content !== '') {
     $elements['#children'] = $content;
   }
 
@@ -540,7 +540,7 @@ function form_render(&$elements) {
     $elements['#printed'] = TRUE;
   }
 
-  if ($content) {
+  if (isset($content) && $content !== '') {
     $prefix = isset($elements['#prefix']) ? $elements['#prefix'] : '';
     $suffix = isset($elements['#suffix']) ? $elements['#suffix'] : '';
     return $prefix . $content . $suffix;
