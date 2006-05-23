@@ -79,7 +79,7 @@ function drupal_get_form($form_id, &$form, $callback = NULL) {
     }
   }
   if (isset($form_id)) {
-    $form['form_id'] = array('#type' => 'hidden', '#value' => $form_id);
+    $form['form_id'] = array('#type' => 'hidden', '#value' => $form_id, '#id' => str_replace('_', '-', "edit-$form_id"));
   }
   if (!isset($form['#id'])) {
     $form['#id'] = $form_id;
