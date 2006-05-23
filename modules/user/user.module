@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.623 2006/05/16 07:17:40 drumm Exp $
+// $Id: user.module,v 1.624 2006/05/23 02:37:48 drumm Exp $
 
 /**
  * @file
@@ -156,8 +156,11 @@ function user_save($account, $array = array(), $category = 'account') {
     user_module_invoke('after_update', $array, $user, $category);
   }
   else {
-    $array['created'] = time();
     $array['uid'] = db_next_id('{users}_uid');
+
+    if (!isset($array['created'])) {    // Allow 'created' to be set by hook_auth
+      $array['created'] = time();
+    }
 
     // Note, we wait with saving the data column to prevent module-handled
     // fields from being saved there. We cannot invoke hook_user('insert') here
@@ -953,6 +956,7 @@ function user_authenticate($name, $pass) {
   // Try to log in the user locally. Don't set $user unless successful.
   if ($account = user_load(array('name' => $name, 'pass' => $pass, 'status' => 1))) {
     $user = $account;
+    return $user;
   }
 
   // Strip name and server from ID:
@@ -963,30 +967,30 @@ function user_authenticate($name, $pass) {
 
   // When possible, determine corresponding external auth source. Invoke
   // source, and log in user if successful:
-  if (!$user->uid && $server && $result = user_get_authmaps("$name@$server")) {
+  if ($server && ($result = user_get_authmaps("$name@$server"))) {
     if (module_invoke(key($result), 'auth', $name, $pass, $server)) {
       $user = user_external_load("$name@$server");
       watchdog('user', t('External load by %user using module %module.', array('%user' => theme('placeholder', $name .'@'. $server), '%module' => theme('placeholder', key($result)))));
-    }
-    else {
-      $error = t('Invalid password for %s.', array('%s' => theme('placeholder', $name .'@'. $server)));
     }
   }
 
   // Try each external authentication source in series. Register user if
   // successful.
-  else if (!$user->uid && $server) {
-    foreach (module_list() as $module) {
-      if (module_hook($module, 'auth')) {
-        if (module_invoke($module, 'auth', $name, $pass, $server)) {
-          if (variable_get('user_register', 1) == 1) {
-            $account = user_load(array('name' => "$name@$server"));
-            if (!$account->uid) { // Register this new user.
-              $user = user_save('', array('name' => "$name@$server", 'pass' => user_password(), 'init' => "$name@$server", 'status' => 1, "authname_$module" => "$name@$server"));
-              watchdog('user', t('New external user: %user using module %module.', array('%user' => theme('placeholder', $name .'@'. $server), '%module' => theme('placeholder', $module))), WATCHDOG_NOTICE, l(t('edit'), 'user/'. $user->uid .'/edit'));
-              break;
-            }
+  else {
+    foreach (module_implements('auth') as $module) {
+      if (module_invoke($module, 'auth', $name, $pass, $server)) {
+        if ($server) {
+          $name .= '@'. $server;
+        }
+        $user = user_load(array('name' => $name));
+        if (!$user->uid) { // Register this new user.
+          $userinfo = array('name' => $name, 'pass' => user_password(), 'init' => $name, 'status' => 1);
+          if ($server) {
+            $userinfo["authname_$module"] = $name;
           }
+          $user = user_save('', $userinfo);
+          watchdog('user', t('New external user: %user using module %module.', array('%user' => theme('placeholder', $name), '%module' => theme('placeholder', $module))), WATCHDOG_NOTICE, l(t('edit'), 'user/'. $user->uid .'/edit'));
+          break;
         }
       }
     }

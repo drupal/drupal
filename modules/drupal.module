@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal.module,v 1.120 2006/05/03 09:43:53 drumm Exp $
+// $Id: drupal.module,v 1.121 2006/05/23 02:37:47 drumm Exp $
 
 /**
  * @file
@@ -126,12 +126,33 @@ function drupal_settings() {
     '#description' => t('If enabled, your Drupal site will allow other sites to register with your site and send information to this site. This functionality can be used to maintain a list of related sites.')
   );
 
-  $form['services']['drupal_authentication_service'] = array(
+  $form['distauth'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Distributed authentication'),
+    '#tree' => FALSE
+  );
+
+  $form['distauth']['drupal_authentication_service'] = array(
     '#type' => 'radios',
     '#title' => t('Authentication service'),
     '#default_value' => variable_get('drupal_authentication_service', 0),
     '#options' => $options,
     '#description' => t('If enabled, your Drupal site will accept logins with the user names of other Drupal sites, and likewise provide authentication for users logging into other Drupal sites, based on their user accounts here.')
+  );
+
+  $form['distauth']['drupal_default_da_server'] =  array(
+    '#type' => 'textfield',
+    '#title' => t('Default authentication server'),
+    '#default_value' => variable_get('drupal_default_da_server', ''),
+    '#description' => t('The URL of the default Drupal authentication server. Omit the %http prefix (e.g. drupal.org, www.example.com, etc.). If the authentication service has been enabled, users registered at the server specified here, will not need to append the server to their user name when logging into your site. This enables users to provide a briefer, more familiar username in the login form.', array('%http' => theme('placeholder', 'http')))
+  );
+
+  $form['distauth']['drupal_default_da_server_only'] = array(
+    '#type' => 'radios',
+    '#title' => t('Only allow authentication from default server'),
+    '#default_value' => variable_get('drupal_default_da_server_only', 0),
+    '#options' => $options,
+    '#description' => t('Only accept remote logins from the above specified default authentication server and not from any other server. Useful when an external system is the solitary authority on user accounts for this site. A common usage is to enable this setting and also enable an authentication module which talks to your company\'s directory server.')
   );
 
   return $form;
@@ -312,14 +333,24 @@ function drupal_info($field = 0) {
 /**
  * Implementation of hook_auth().
  */
-function drupal_auth($username, $password, $server) {
+function drupal_auth($username, $password, $server = FALSE) {
   if (variable_get('drupal_authentication_service', 0)) {
-    $result = xmlrpc("http://$server/xmlrpc.php", 'drupal.login', $username, $password);
-    if ($result === FALSE) {
-      drupal_set_message(t('Error %code : %message', array('%code' => theme('placeholder', xmlrpc_errno()), '%message' =>  theme('placeholder', xmlrpc_error_msg()))), 'error');
+    if (!$server) {
+      $server = variable_get('drupal_default_da_server', '');
     }
-    else {
-      return $result;
+    else if (variable_get('drupal_default_da_server_only', 0)) {
+      if (variable_get('drupal_default_da_server', '') != $server) {
+        return;
+      }
+    }
+    if (!empty($server)) {
+      $result = xmlrpc("http://$server/xmlrpc.php", 'drupal.login', $username, $password);
+      if ($result === FALSE) {
+        drupal_set_message(t('Error %code : %message', array('%code' => theme('placeholder', xmlrpc_errno()), '%message' =>  theme('placeholder', xmlrpc_error_msg()))), 'error');
+      }
+      else {
+        return $result;
+      }
     }
   }
 }
