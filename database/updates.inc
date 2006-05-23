@@ -288,7 +288,7 @@ function system_update_119() {
 function system_update_120() {
   $ret = array();
 
-  // Rewrite old URL aliases.  Works for both PostgreSQL and MySQL
+  // Rewrite old URL aliases. Works for both PostgreSQL and MySQL
   $result = db_query("SELECT pid, src FROM {url_alias} WHERE src LIKE 'blog/%%'");
   while ($alias = db_fetch_object($result)) {
     list(, $page, $op, $uid) = explode('/', $alias->src);
@@ -992,7 +992,7 @@ function system_update_151() {
     }
 
     // Set menu_primary_menu and menu_primary_menu variables if links were
-    // imported.  If the user had links but the toggle display was off, they
+    // imported. If the user had links but the toggle display was off, they
     // will need to disable the new links manually in admins/settings/menu.
     if ($num_inserted == 0) {
       variable_set($menus[$loop]['menu_var'], 0);
@@ -1218,7 +1218,7 @@ function system_update_159() {
           case 'mysql':
             $ret[] = update_sql("UPDATE {sequences} SET id = $vid WHERE name = '{node_revisions}_vid'");
             break;
-            
+
           case 'pgsql':
             $ret[] = update_sql("SELECT setval('{node_revisions}_vid_seq', $vid)");
             break;
@@ -1959,4 +1959,51 @@ function system_update_179() {
   }
 
   return array();
+}
+
+function system_update_180() {
+  $ret = array();
+
+  if ($GLOBALS['db_type'] == 'mysql') {
+    $ret[] = update_sql("ALTER TABLE {node} DROP PRIMARY KEY");
+    $ret[] = update_sql("ALTER TABLE {node} ADD PRIMARY KEY (nid, vid)");
+    $ret[] = update_sql("ALTER TABLE {node} DROP INDEX vid");
+    $ret[] = update_sql("ALTER TABLE {node} ADD UNIQUE (vid)");
+    $ret[] = update_sql("ALTER TABLE {node} ADD INDEX (nid)");
+
+    $ret[] = update_sql("ALTER TABLE {node_counter} CHANGE nid nid INT(10) NOT NULL DEFAULT '0'");
+  }
+  else { // pgsql
+    // Insert queries here.
+  }
+
+  return $ret;
+}
+
+function system_update_181() {
+  $ret = array();
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql("ALTER TABLE {profile_fields} ADD autocomplete TINYINT(1) NOT NULL AFTER visibility ;");
+      break;
+    case 'pgsql':
+      db_add_column($ret, 'profile_fields', 'autocomplete', 'smallint');
+      break;
+  }
+  return $ret;
+}
+
+/**
+ * The lid field in pgSQL should not be UNIQUE, but an INDEX.
+ */
+function system_update_182() {
+  $ret = array();
+
+  if ($GLOBALS['db_type'] == 'pgsql') {
+    $ret[] = update_sql('ALTER TABLE {locales_target} DROP CONSTRAINT {locales_target}_lid_idx');
+    $ret[] = update_sql('CREATE INDEX {locales_target}_lid_idx ON {locales_target} (lid)');
+  }
+
+  return $ret;
 }
