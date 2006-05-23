@@ -1,4 +1,4 @@
--- $Id: database.pgsql,v 1.175 2006/05/16 09:22:36 dries Exp $
+-- $Id: database.pgsql,v 1.176 2006/05/23 19:03:50 dries Exp $
 
 -- Do not show NOTICE: messages, it's hard to spot errors.
 set client_min_messages = 'warning';
@@ -419,13 +419,14 @@ CREATE TABLE node (
   promote integer NOT NULL default '0',
   moderate integer NOT NULL default '0',
   sticky integer NOT NULL default '0',
-  PRIMARY KEY (nid)
+  PRIMARY KEY (nid, vid)
 );
+CREATE INDEX node_nid_idx ON node(nid);
 CREATE INDEX node_type_idx ON node(type);
 CREATE INDEX node_title_type_idx ON node(title,type);
 CREATE INDEX node_status_idx ON node(status);
 CREATE INDEX node_uid_idx ON node(uid);
-CREATE INDEX node_vid_idx ON node(vid);
+CREATE UNIQUE INDEX node_vid_idx ON node(vid);
 CREATE INDEX node_moderate_idx ON node (moderate);
 CREATE INDEX node_promote_status_idx ON node (promote, status);
 CREATE INDEX node_created_idx ON node(created);

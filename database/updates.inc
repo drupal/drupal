@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.230 2006/05/16 09:22:36 dries Exp $
+// $Id: updates.inc,v 1.231 2006/05/23 19:03:50 dries Exp $
 
 function system_update_110() {
   $ret = array();
@@ -1964,17 +1964,24 @@ function system_update_179() {
 function system_update_180() {
   $ret = array();
 
-  if ($GLOBALS['db_type'] == 'mysql') {
-    $ret[] = update_sql("ALTER TABLE {node} DROP PRIMARY KEY");
-    $ret[] = update_sql("ALTER TABLE {node} ADD PRIMARY KEY (nid, vid)");
-    $ret[] = update_sql("ALTER TABLE {node} DROP INDEX vid");
-    $ret[] = update_sql("ALTER TABLE {node} ADD UNIQUE (vid)");
-    $ret[] = update_sql("ALTER TABLE {node} ADD INDEX (nid)");
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql("ALTER TABLE {node} DROP PRIMARY KEY");
+      $ret[] = update_sql("ALTER TABLE {node} ADD PRIMARY KEY (nid, vid)");
+      $ret[] = update_sql("ALTER TABLE {node} DROP INDEX vid");
+      $ret[] = update_sql("ALTER TABLE {node} ADD UNIQUE (vid)");
+      $ret[] = update_sql("ALTER TABLE {node} ADD INDEX (nid)");
 
-    $ret[] = update_sql("ALTER TABLE {node_counter} CHANGE nid nid INT(10) NOT NULL DEFAULT '0'");
-  }
-  else { // pgsql
-    // Insert queries here.
+      $ret[] = update_sql("ALTER TABLE {node_counter} CHANGE nid nid INT(10) NOT NULL DEFAULT '0'");
+      break;
+    case 'pgsql':
+      $ret[] = update_sql("ALTER TABLE {node} DROP CONSTRAINT {node}_pkey"); // Change PK
+      $ret[] = update_sql("ALTER TABLE {node} ADD PRIMARY KEY (nid, vid)");
+      $ret[] = update_sql('DROP INDEX {node}_vid_idx'); // Change normal index to UNIQUE index
+      $ret[] = update_sql('CREATE UNIQUE INDEX {node}_vid_idx ON {node}(vid)');
+      $ret[] = update_sql('CREATE INDEX {node}_nid_idx ON {node}(nid)'); // Add index on nid
+      break;
   }
 
   return $ret;
@@ -1988,7 +1995,7 @@ function system_update_181() {
       $ret[] = update_sql("ALTER TABLE {profile_fields} ADD autocomplete TINYINT(1) NOT NULL AFTER visibility ;");
       break;
     case 'pgsql':
-      db_add_column($ret, 'profile_fields', 'autocomplete', 'smallint');
+      db_add_column($ret, 'profile_fields', 'autocomplete', 'smallint', array('not null' => TRUE, 'default' => 0));
       break;
   }
   return $ret;
@@ -2001,7 +2008,7 @@ function system_update_182() {
   $ret = array();
 
   if ($GLOBALS['db_type'] == 'pgsql') {
-    $ret[] = update_sql('ALTER TABLE {locales_target} DROP CONSTRAINT {locales_target}_lid_idx');
+    $ret[] = update_sql('ALTER TABLE {locales_target} DROP CONSTRAINT {locales_target}_lid_key');
     $ret[] = update_sql('CREATE INDEX {locales_target}_lid_idx ON {locales_target} (lid)');
   }
 
