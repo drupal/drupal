@@ -3,6 +3,8 @@ Drupal x.x.x, xxxx-xx-xx (development version)
 - usability:
     * added support for auto-complete forms (AJAX) to user profiles.
     * improved configurability of the contact forms.
+- distributed authentication:
+    * added default server option.
 
 Drupal 4.7.0, 2006-05-01
 ------------------------
