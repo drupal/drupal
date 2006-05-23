@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.284 2006/05/20 02:05:35 drumm Exp $
+// $Id: taxonomy.module,v 1.285 2006/05/23 02:21:26 drumm Exp $
 
 /**
  * @file
@@ -734,8 +734,9 @@ function taxonomy_node_save($nid, $terms) {
       // this, "somecmpany, llc", "and ""this"" w,o.rks", foo bar
       $regexp = '%(?:^|,\ *)("(?>[^"]*)(?>""[^"]* )*"|(?: [^",]*))%x';
       preg_match_all($regexp, $vid_value, $matches);
-      $typed_terms = $matches[1];
+      $typed_terms = array_unique($matches[1]);
 
+      $inserted = array();
       foreach ($typed_terms as $typed_term) {
         // If a user has escaped a term (to demonstrate that it is a group,
         // or includes a comma or quote character), we remove the escape
@@ -760,7 +761,11 @@ function taxonomy_node_save($nid, $terms) {
           $typed_term_tid = $edit['tid'];
         }
 
-        db_query('INSERT INTO {term_node} (nid, tid) VALUES (%d, %d)', $nid, $typed_term_tid);
+        // Defend against duplicate, different cased tags
+        if (!isset($inserted[$typed_term_tid])) {
+          db_query('INSERT INTO {term_node} (nid, tid) VALUES (%d, %d)', $nid, $typed_term_tid);
+          $inserted[$typed_term_tid] = TRUE;
+        }
       }
     }
   }
