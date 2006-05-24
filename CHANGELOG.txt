@@ -1,3 +1,9 @@
+Drupal 4.7.1, 2006-05-24
+------------------------
+- fixed critical SQL issue, see SA-2006-005
+- fixed a serious upgrade related bug.
+- fixed a variety of small bugs.
+
 Drupal 4.7.0, 2006-05-01
 ------------------------
 - added free tagging support.
