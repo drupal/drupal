@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.365 2006/05/18 14:58:56 dries Exp $
+// $Id: book.module,v 1.366 2006/05/24 11:19:00 dries Exp $
 
 /**
  * @file
@@ -886,12 +886,13 @@ function theme_book_admin_table($form) {
   $rows = array();
   foreach (element_children($form) as $key) {
     $nid = $form[$key]['nid']['#value'];
+    $pid = $form[0]['nid']['#value'];
     $rows[] = array(
       '<div style="padding-left: '. (25 * $form[$key]['depth']['#value']) .'px;">'. form_render($form[$key]['title']) .'</div>',
       form_render($form[$key]['weight']),
       l(t('view'), 'node/'. $nid),
       l(t('edit'), 'node/'. $nid .'/edit'),
-      l(t('delete'), 'node/'. $nid .'/delete')
+      l(t('delete'), 'node/'. $nid .'/delete', NULL, 'destination=admin/node/book'. (arg(3) == 'orphan' ? '/orphan' : '') . ($pid != $nid ? '/'.$pid : ''))
     );
   }
 
