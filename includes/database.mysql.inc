@@ -265,7 +265,7 @@ function db_query_range($query) {
   }
   _db_query_callback($args, TRUE);
   $query = preg_replace_callback(DB_QUERY_REGEXP, '_db_query_callback', $query);
-  $query .= ' LIMIT '. $from .', '. $count;
+  $query .= ' LIMIT '. (int)$from .', '. (int)$count;
   return _db_query($query);
 }
 
