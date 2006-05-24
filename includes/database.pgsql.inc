@@ -196,7 +196,7 @@ function db_query_range($query) {
     $args[0] = $query;
     $query = call_user_func_array('sprintf', $args);
   }
-  $query .= ' LIMIT '. $count .' OFFSET '. $from;
+  $query .= ' LIMIT '. (int)$count .' OFFSET '. (int)$from;
   return _db_query($query);
 }
 

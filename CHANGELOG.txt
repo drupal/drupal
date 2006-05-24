@@ -1,3 +1,7 @@
+Drupal 4.6.7, 2006-05-24
+------------------------
+- fixed critical SQL issue, see SA-2006-005
+
 Drupal 4.6.6, 2006-03-13
 ------------------------
 - fixed bugs, including 4 security vulnerabilities.

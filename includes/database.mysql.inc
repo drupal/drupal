@@ -203,7 +203,7 @@ function db_query_range($query) {
     $args[0] = $query;
     $query = call_user_func_array('sprintf', $args);
   }
-  $query .= ' LIMIT '. $from .', '. $count;
+  $query .= ' LIMIT '. (int)$from .', '. (int)$count;
   return _db_query($query);
 }
 
