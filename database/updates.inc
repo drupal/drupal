@@ -1969,7 +1969,6 @@ function system_update_180() {
     case 'mysqli':
       $ret[] = update_sql("ALTER TABLE {node} DROP PRIMARY KEY");
       $ret[] = update_sql("ALTER TABLE {node} ADD PRIMARY KEY (nid, vid)");
-      $ret[] = update_sql("ALTER TABLE {node} DROP INDEX vid");
       $ret[] = update_sql("ALTER TABLE {node} ADD UNIQUE (vid)");
       $ret[] = update_sql("ALTER TABLE {node} ADD INDEX (nid)");
 
