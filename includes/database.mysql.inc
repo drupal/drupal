@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysql.inc,v 1.52 2006/04/27 20:38:49 unconed Exp $
+// $Id: database.mysql.inc,v 1.53 2006/05/24 20:46:56 killes Exp $
 
 /**
  * @file
@@ -265,7 +265,7 @@ function db_query_range($query) {
   }
   _db_query_callback($args, TRUE);
   $query = preg_replace_callback(DB_QUERY_REGEXP, '_db_query_callback', $query);
-  $query .= ' LIMIT '. $from .', '. $count;
+  $query .= ' LIMIT '. (int)$from .', '. (int)$count;
   return _db_query($query);
 }
 

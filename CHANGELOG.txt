@@ -5,6 +5,7 @@ Drupal x.x.x, xxxx-xx-xx (development version)
     * improved configurability of the contact forms.
 - distributed authentication:
     * added default server option.
+- fixed critical SQL issue, see SA-2006-005
 
 Drupal 4.7.0, 2006-05-01
 ------------------------

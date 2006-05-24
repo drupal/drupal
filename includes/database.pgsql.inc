@@ -1,5 +1,5 @@
 <?php
-// $Id: database.pgsql.inc,v 1.29 2006/04/27 20:38:49 unconed Exp $
+// $Id: database.pgsql.inc,v 1.30 2006/05/24 20:46:56 killes Exp $
 
 /**
  * @file
@@ -241,7 +241,7 @@ function db_query_range($query) {
   }
   _db_query_callback($args, TRUE);
   $query = preg_replace_callback(DB_QUERY_REGEXP, '_db_query_callback', $query);
-  $query .= ' LIMIT '. $count .' OFFSET '. $from;
+  $query .= ' LIMIT '. (int)$count .' OFFSET '. (int)$from;
   return _db_query($query);
 }
 
