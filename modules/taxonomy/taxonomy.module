@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.285 2006/05/23 02:21:26 drumm Exp $
+// $Id: taxonomy.module,v 1.286 2006/05/24 04:54:52 drumm Exp $
 
 /**
  * @file
@@ -997,7 +997,7 @@ function _taxonomy_term_children($tid) {
  *   An array of matching term objects.
  */
 function taxonomy_get_term_by_name($name) {
-  $db_result = db_query(db_rewrite_sql("SELECT t.tid, t.* FROM {term_data} t WHERE LOWER('%s') LIKE LOWER(name)", 't', 'tid'), trim($name));
+  $db_result = db_query(db_rewrite_sql("SELECT t.tid, t.* FROM {term_data} t WHERE LOWER('%s') LIKE LOWER(t.name)", 't', 'tid'), trim($name));
   $result = array();
   while ($term = db_fetch_object($db_result)) {
     $result[] = $term;
