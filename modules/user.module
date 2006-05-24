@@ -1449,7 +1449,7 @@ function user_view($uid = 0) {
   global $user;
 
   $account = user_load(array('uid' => $uid));
-  if ($account === FALSE) {
+  if ($account === FALSE || ($account->access == 0 && !user_access('administer users'))) {
     return drupal_not_found();
   }
   // Retrieve and merge all profile fields:
