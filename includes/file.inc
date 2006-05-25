@@ -105,6 +105,17 @@ function file_check_directory(&$directory, $mode = 0, $form_item = NULL) {
     }
   }
 
+  if ((variable_get('file_directory_temp', FILE_DIRECTORY_TEMP) == $directory || variable_get('file_directory_path', 'files') == $directory) && !is_file("$directory/.htaccess")) {
+    if (($fp = fopen("$directory/.htaccess", 'w')) && fputs($fp, 'SetHandler This_is_a_Drupal_security_line_do_not_remove')) {
+      fclose($fp);
+    }
+    else {
+      $message = t("Security warning: Couldn't write .htaccess. Please create a .htaccess file in your %directory directory which contains the following line: <code>SetHandler This_is_a_Drupal_security_line_do_not_remove</code>", array('%directory' => $directory));
+      form_set_error($form_item, $message);
+      watchdog('file system', $message, WATCHDOG_ERROR);
+    }
+  }
+
   return true;
 }
 
