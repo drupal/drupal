@@ -1,4 +1,4 @@
-// $Id: INSTALL.txt,v 1.30 2006/05/01 09:34:19 dries Exp $
+// $Id: INSTALL.txt,v 1.31 2006/05/25 01:33:52 killes Exp $
 
 CONTENTS OF THIS FILE
 ---------------------
@@ -143,6 +143,13 @@ INSTALLATION
    new site. The sub-directory requires "read and write" permission
    by the Drupal server process. You can change the name of this
    subdirectory at "Administer > Settings > File system settings".
+
+   SECURITY NOTICE: Certain Apache configurations can be vulnerable 
+   to a security exploit allowing arbitrary code execution. Drupal 
+   will attempt to automatically create a .htaccess file in your 
+   "files" directory to protect you. If you already have a .htaccess 
+   file in that location, please add the following line: 
+   SetHandler This_is_a_Drupal_security_line_do_not_remove
 
    You can now launch your browser and point it to your Drupal site.
 
