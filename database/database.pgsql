@@ -572,6 +572,17 @@ CREATE TABLE role (
 );
 
 --
+-- Table structure for table 'blocks_roles'
+--
+
+CREATE TABLE blocks_roles (
+  module varchar(64) NOT NULL,
+  delta varchar(32) NOT NULL,
+  rid integer NOT NULL,
+  PRIMARY KEY (module, delta, rid)
+);
+
+--
 -- Table structure for table 'search_dataset'
 --
 CREATE TABLE search_dataset (

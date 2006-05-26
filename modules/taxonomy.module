@@ -1147,7 +1147,7 @@ function taxonomy_render_nodes($result) {
     $output .= theme('pager', NULL, variable_get('default_nodes_main', 10), 0);
   }
   else {
-    $output .= t('There are currently no posts in this category.');
+    $output .= '<p>'. t('There are currently no posts in this category.') .'</p>';
   }
   return $output;
 }

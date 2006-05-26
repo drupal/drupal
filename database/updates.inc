@@ -2014,3 +2014,29 @@ function system_update_182() {
 
   return $ret;
 }
+
+function system_update_183() {
+  $ret = array();
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+    $ret[] = update_sql("CREATE TABLE blocks_roles (
+      module varchar(64) NOT NULL,
+      delta varchar(32) NOT NULL,
+      rid int(10) unsigned NOT NULL,
+      PRIMARY KEY (module, delta, rid)
+      ) /*!40100 DEFAULT CHARACTER SET utf8 */;");
+    break;
+
+    case 'pgsql':
+    $ret[] = update_sql("CREATE TABLE blocks_roles (
+      module varchar(64) NOT NULL,
+      delta varchar(32) NOT NULL,
+      rid integer NOT NULL,
+      PRIMARY KEY (module, delta, rid)
+      );");
+    break;
+
+  }
+  return $ret;
+}
