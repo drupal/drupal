@@ -2020,7 +2020,7 @@ function system_update_183() {
   switch ($GLOBALS['db_type']) {
     case 'mysql':
     case 'mysqli':
-    $ret[] = update_sql("CREATE TABLE blocks_roles (
+    $ret[] = update_sql("CREATE TABLE {blocks_roles} (
       module varchar(64) NOT NULL,
       delta varchar(32) NOT NULL,
       rid int(10) unsigned NOT NULL,
@@ -2029,7 +2029,7 @@ function system_update_183() {
     break;
 
     case 'pgsql':
-    $ret[] = update_sql("CREATE TABLE blocks_roles (
+    $ret[] = update_sql("CREATE TABLE {blocks_roles} (
       module varchar(64) NOT NULL,
       delta varchar(32) NOT NULL,
       rid integer NOT NULL,
