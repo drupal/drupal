@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.287 2006/05/26 09:21:10 dries Exp $
+// $Id: taxonomy.module,v 1.288 2006/05/26 21:34:12 dries Exp $
 
 /**
  * @file
@@ -639,7 +639,7 @@ function taxonomy_form_alter($form_id, &$form) {
           $help = $vocabulary->help;
         }
         else {
-          $help = t('A comma-separated list of terms describing this content. Example: funny, bungie jumping, "Company, Inc.".');
+          $help = t('A comma-separated list of terms describing this content. Example: funny, bungee jumping, "Company, Inc.".');
         }
         $form['taxonomy']['tags'][$vocabulary->vid] = array('#type' => 'textfield',
           '#title' => $vocabulary->name,
