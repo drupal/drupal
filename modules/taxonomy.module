@@ -639,7 +639,7 @@ function taxonomy_form_alter($form_id, &$form) {
           $help = $vocabulary->help;
         }
         else {
-          $help = t('A comma-separated list of terms describing this content. Example: funny, bungie jumping, "Company, Inc.".');
+          $help = t('A comma-separated list of terms describing this content. Example: funny, bungee jumping, "Company, Inc.".');
         }
         $form['taxonomy']['tags'][$vocabulary->vid] = array('#type' => 'textfield',
           '#title' => $vocabulary->name,
