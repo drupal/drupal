@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.232 2006/05/26 09:21:10 dries Exp $
+// $Id: updates.inc,v 1.233 2006/05/26 18:48:00 dries Exp $
 
 function system_update_110() {
   $ret = array();
@@ -2020,7 +2020,7 @@ function system_update_183() {
   switch ($GLOBALS['db_type']) {
     case 'mysql':
     case 'mysqli':
-    $ret[] = update_sql("CREATE TABLE blocks_roles (
+    $ret[] = update_sql("CREATE TABLE {blocks_roles} (
       module varchar(64) NOT NULL,
       delta varchar(32) NOT NULL,
       rid int(10) unsigned NOT NULL,
@@ -2029,7 +2029,7 @@ function system_update_183() {
     break;
 
     case 'pgsql':
-    $ret[] = update_sql("CREATE TABLE blocks_roles (
+    $ret[] = update_sql("CREATE TABLE {blocks_roles} (
       module varchar(64) NOT NULL,
       delta varchar(32) NOT NULL,
       rid integer NOT NULL,
