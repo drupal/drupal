@@ -1,4 +1,4 @@
--- $Id: database.pgsql,v 1.176 2006/05/23 19:03:50 dries Exp $
+-- $Id: database.pgsql,v 1.177 2006/05/26 09:21:10 dries Exp $
 
 -- Do not show NOTICE: messages, it's hard to spot errors.
 set client_min_messages = 'warning';
@@ -569,6 +569,17 @@ CREATE TABLE role (
   name varchar(32) NOT NULL default '',
   PRIMARY KEY (rid),
   UNIQUE (name)
+);
+
+--
+-- Table structure for table 'blocks_roles'
+--
+
+CREATE TABLE blocks_roles (
+  module varchar(64) NOT NULL,
+  delta varchar(32) NOT NULL,
+  rid integer NOT NULL,
+  PRIMARY KEY (module, delta, rid)
 );
 
 --
