@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.196 2006/05/07 00:08:36 drumm Exp $
+// $Id: poll.module,v 1.197 2006/05/29 16:04:41 dries Exp $
 
 /**
  * @file
@@ -201,11 +201,24 @@ function poll_menu($may_cache) {
       'callback' => 'poll_vote',
       'access' => user_access('vote on polls'),
       'type' => MENU_CALLBACK);
+
+    $items[] = array('path' => 'poll/cancel',
+      'title' => t('cancel'),
+      'callback' => 'poll_cancel',
+      'access' => user_access('cancel own vote'),
+      'type' => MENU_CALLBACK);
   }
   else {
     if (arg(0) == 'node' && is_numeric(arg(1))) {
       $node = node_load(arg(1));
-
+      if ($node->type == 'poll') {
+        $items[] = array('path' => 'node/'. arg(1) .'/votes',
+          'title' => t('votes'),
+          'callback' => 'poll_votes',
+          'access' => user_access('inspect all votes'),
+          'weight' => 3,
+          'type' => MENU_LOCAL_TASK);
+      }
       if ($node->type == 'poll' && $node->allowvotes) {
         $items[] = array('path' => 'node/'. arg(1) .'/results',
           'title' => t('results'),
@@ -237,10 +250,17 @@ function poll_load($node) {
   // Determine whether or not this user is allowed to vote
   $poll->allowvotes = FALSE;
   if (user_access('vote on polls') && $poll->active) {
-    if ($user->uid && db_num_rows(db_query('SELECT uid FROM {poll_votes} WHERE nid = %d AND uid = %d', $node->nid, $user->uid)) == 0) {
-      $poll->allowvotes = TRUE;
+    if ($user->uid) {
+      $result = db_fetch_object(db_query('SELECT chorder FROM {poll_votes} WHERE nid = %d AND uid = %d', $node->nid, $user->uid));
     }
-    else if ($user->uid == 0 && db_num_rows(db_query("SELECT hostname FROM {poll_votes} WHERE nid = %d AND hostname = '%s'", $node->nid, $_SERVER['REMOTE_ADDR'])) == 0) {
+    else {
+      $result = db_fetch_object(db_query("SELECT chorder FROM {poll_votes} WHERE nid = %d AND hostname = '%s'", $node->nid, $_SERVER['REMOTE_ADDR']));
+    }
+    if (isset($result->chorder)) {
+      $poll->vote = $result->chorder;
+    }
+    else {
+      $poll->vote = -1;
       $poll->allowvotes = TRUE;
     }
   }
@@ -272,7 +292,7 @@ function poll_page() {
  * Implementation of hook_perm().
  */
 function poll_perm() {
-  return array('create polls', 'vote on polls');
+  return array('create polls', 'vote on polls', 'cancel own vote', 'inspect all votes');
 }
 
 /**
@@ -342,12 +362,12 @@ function poll_view_results(&$node, $teaser, $page, $block) {
     }
   }
 
-  $output .= theme('poll_results', check_plain($node->title), $poll_results, $total_votes, $node->links, $block);
+  $output .= theme('poll_results', check_plain($node->title), $poll_results, $total_votes, $node->links, $block, $node->nid, $node->vote);
 
   return $output;
 }
 
-function theme_poll_results($title, $results, $votes, $links, $block) {
+function theme_poll_results($title, $results, $votes, $links, $block, $nid, $vote) {
   if ($block) {
     $output .= '<div class="poll">';
     $output .= '<div class="title">'. $title .'</div>';
@@ -360,6 +380,15 @@ function theme_poll_results($title, $results, $votes, $links, $block) {
     $output .= '<div class="poll">';
     $output .= $results;
     $output .= '<div class="total">'. t('Total votes: %votes', array('%votes' => $votes)) .'</div>';
+    if (isset($vote) && $vote > -1) {
+      if (user_access('cancel own vote')) {
+        $form['#action'] = url("poll/cancel/$nid");
+        $form['choice'] = array('#type' => 'hidden', '#value' => $vote);
+        $form['submit'] = array('#type' => 'submit', '#value' => t('Cancel your vote'));
+        $output .= drupal_get_form('poll_cancel_form', $form);
+      }
+      $output .= '</div>';
+    }
     $output .= '</div>';
   }
 
@@ -395,6 +424,33 @@ function poll_results() {
 }
 
 /**
+ * Callback for the 'votes' tab for polls you can see other votes on
+ */
+function poll_votes() {
+  if ($node = node_load(arg(1))) {
+    drupal_set_title(check_plain($node->title));
+    $output = t('This table lists all the recorded votes for this poll.  If anonymous users are allowed to vote, they will be identified by the IP address of the computer they used when they voted.');
+
+    $header[] = array('data' => t('Visitor'), 'field' => 'u.name');
+    $header[] = array('data' => t('Vote'), 'field' => 'pv.chorder');
+
+    $result = pager_query("SELECT pv.chorder, pv.uid, pv.hostname, u.name FROM {poll_votes} pv LEFT JOIN {users} u ON pv.uid = u.uid WHERE pv.nid = %d" . tablesort_sql($header), 20, 0, NULL, $node->nid);
+    $rows = array();
+    while ($vote = db_fetch_object($result)) {
+      $rows[] = array(
+        $vote->name ? theme('username', $vote) : check_plain($vote->hostname),
+        check_plain($node->choice[$vote->chorder]['chtext']));
+    }
+    $output .= theme('table', $header, $rows);
+    $output .= theme('pager', NULL, 20, 0);
+    print theme('page', $output);
+  }
+  else {
+    drupal_not_found();
+  }
+}
+
+/**
  * Callback for processing a vote
  */
 function poll_vote(&$node) {
@@ -408,12 +464,12 @@ function poll_vote(&$node) {
 
     if (isset($choice) && isset($node->choice[$choice])) {
       if ($node->allowvotes) {
-        // Mark the user or host as having voted.
+        // Record the vote by this user or host.
         if ($user->uid) {
-          db_query('INSERT INTO {poll_votes} (nid, uid) VALUES (%d, %d)', $node->nid, $user->uid);
+          db_query('INSERT INTO {poll_votes} (nid, chorder, uid) VALUES (%d, %d, %d)', $node->nid, $choice, $user->uid);
         }
         else {
-          db_query("INSERT INTO {poll_votes} (nid, hostname) VALUES (%d, '%s')", $node->nid, $_SERVER['REMOTE_ADDR']);
+          db_query("INSERT INTO {poll_votes} (nid, chorder, hostname) VALUES (%d, %d, '%s')", $node->nid, $choice, $_SERVER['REMOTE_ADDR']);
         }
 
         // Add one to the votes.
@@ -424,13 +480,49 @@ function poll_vote(&$node) {
         drupal_set_message(t('Your vote was recorded.'));
       }
       else {
-        drupal_set_message(t("You're not allowed to vote on this poll."), 'error');
+        drupal_set_message(t("You are not allowed to vote on this poll."), 'error');
       }
     }
     else {
-      drupal_set_message(t("You didn't specify a valid poll choice."), 'error');
+      drupal_set_message(t("You did not specify a valid poll choice."), 'error');
     }
+    drupal_goto('node/'. $nid);
+  }
+  else {
+    drupal_not_found();
+  }
+}
 
+
+/**
+ * Callback for canceling a vote
+ */
+function poll_cancel(&$node) {
+  global $user;
+
+  $nid = arg(2);
+  if ($node = node_load(array('nid' => $nid))) {
+    $edit = $_POST['edit'];
+    $choice = $edit['choice'];
+    $cancel = $_POST['cancel'];
+
+    if (isset($choice) && isset($node->choice[$choice])) {
+      if ($user->uid) {
+        db_query('DELETE FROM {poll_votes} WHERE nid = %d and uid = %d', $node->nid, $user->uid);
+      }
+      else {
+        db_query("DELETE FROM {poll_votes} WHERE nid = %d and hostname = '%s'", $node->nid, $_SERVER['REMOTE_ADDR']);
+      }
+
+      // Subtract from the votes.
+      db_query("UPDATE {poll_choices} SET chvotes = chvotes - 1 WHERE nid = %d AND chorder = %d", $node->nid, $choice);
+      $node->allowvotes = true;
+      $node->choice[$choice]['chvotes']--;
+      drupal_set_message(t('Your vote was canceled.'));
+    }
+    else {
+      drupal_set_message(t("You are not allowed to cancel an invalid poll choice."), 'error');
+    }
     drupal_goto('node/'. $nid);
   }
   else {

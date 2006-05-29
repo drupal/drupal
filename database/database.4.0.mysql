@@ -1,4 +1,4 @@
--- $Id: database.4.0.mysql,v 1.4 2006/05/26 09:21:10 dries Exp $
+-- $Id: database.4.0.mysql,v 1.5 2006/05/29 16:04:41 dries Exp $
 
 --
 -- Table structure for table 'access'
@@ -537,6 +537,7 @@ CREATE TABLE poll (
 CREATE TABLE poll_votes (
   nid int(10) unsigned NOT NULL,
   uid int(10) unsigned NOT NULL default 0,
+  chorder int(10) NOT NULL default -1,
   hostname varchar(128) NOT NULL default '',
   INDEX (nid),
   INDEX (uid),

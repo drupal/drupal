@@ -1,4 +1,4 @@
--- $Id: database.pgsql,v 1.177 2006/05/26 09:21:10 dries Exp $
+-- $Id: database.pgsql,v 1.178 2006/05/29 16:04:41 dries Exp $
 
 -- Do not show NOTICE: messages, it's hard to spot errors.
 set client_min_messages = 'warning';
@@ -540,6 +540,7 @@ CREATE TABLE poll (
 CREATE TABLE poll_votes (
   nid int NOT NULL,
   uid int NOT NULL default 0,
+  chorder int NOT NULL default -1,
   hostname varchar(128) NOT NULL default ''
 );
 CREATE INDEX poll_votes_nid_idx ON poll_votes (nid);
