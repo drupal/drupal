@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.53 2006/05/13 10:18:25 dries Exp $
+// $Id: contact.module,v 1.54 2006/05/29 13:26:41 dries Exp $
 
 /**
  * @file
@@ -101,14 +101,17 @@ function contact_menu($may_cache) {
   }
   else {
     if (arg(0) == 'user' && is_numeric(arg(1))) {
-      global $user;
-      $items[] = array('path' => 'user/'. arg(1) .'/contact',
-        'title' => t('contact'),
-        'callback' => 'contact_mail_user',
-        'type' => MENU_LOCAL_TASK,
-        'access' => ($user->uid && user_access('access personal contact forms')),
-        'weight' => 2,
-      );
+      $account = user_load(array('uid' => arg(1)));
+      if ($account->contact || user_access('administer users')) {
+        global $user;
+        $items[] = array('path' => 'user/'. arg(1) .'/contact',
+          'title' => t('contact'),
+          'callback' => 'contact_mail_user',
+          'type' => MENU_LOCAL_TASK,
+          'access' => ($user->uid && user_access('access personal contact forms')),
+          'weight' => 2,
+        );
+      }
     }
   }
 
@@ -317,17 +320,7 @@ function contact_mail_user() {
   global $user;
 
   if ($account = user_load(array('uid' => arg(1)))) {
-    $admin_access = user_access('administer users');
-    if (!$account->status && !$admin_access) {
-      drupal_access_denied();
-    }
-    else if (!$account->contact && !$admin_access) {
-      $output = t('%name is not accepting e-mails.', array('%name' => $account->name));
-    }
-    else if (!$user->uid) {
-      $output = t('Please <a href="%login">login</a> or <a href="%register">register</a> to send %name a message.', array('%login' => url('user/login'), '%register' => url('user/register'), '%name' => $account->name));
-    }
-    else if (!valid_email_address($user->mail)) {
+    if (!valid_email_address($user->mail)) {
       $output = t('You need to provide a valid e-mail address to contact other users. Please update your <a href="%url">user information</a> and try again.', array('%url' => url("user/$user->uid/edit")));
     }
     else if (!flood_is_allowed('contact', variable_get('contact_hourly_threshold', 3))) {
