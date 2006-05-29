@@ -259,7 +259,8 @@ function removeClass(node, className) {
   if (!hasClass(node, className)) {
     return false;
   }
-  node.className = eregReplace('(^| )'+ className +'($| )', '', node.className);
+  // Replaces words surrounded with whitespace or at a string border with a space. Prevents multiple class names from being glued together.
+  node.className = eregReplace('(^|\\s+)'+ className +'($|\\s+)', ' ', node.className);
   return true;
 }
 
