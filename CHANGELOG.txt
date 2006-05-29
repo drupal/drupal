@@ -5,6 +5,9 @@ Drupal x.x.x, xxxx-xx-xx (development version)
     * improved configurability of the contact forms.
 - block system:
     * extended the block visibility settings with a role specific settings..
+- poll module:
+    * optionally allow people to inspect all votes.
+    * optionally allow people to cancel their vote.
 - distributed authentication:
     * added default server option.
 - fixed critical SQL issue, see SA-2006-005

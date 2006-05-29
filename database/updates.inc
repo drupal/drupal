@@ -2040,3 +2040,23 @@ function system_update_183() {
   }
   return $ret;
 }
+
+function system_update_184() {
+  // change DB schema for better poll support
+  $ret = array();
+
+  switch ($GLOBALS['db_type']) {
+    case 'mysqli':
+    case 'mysql':
+      // alter poll_votes table
+      $ret[] = update_sql("ALTER TABLE {poll_votes} ADD COLUMN chorder int(10) NOT NULL default -1 AFTER uid");
+      break;
+
+    case 'pgsql':
+      db_add_column($ret, 'poll_votes', 'chorder', 'int', array('not null' => TRUE, 'default' => "'-1'"));
+      break;
+  }
+
+  return $ret;
+}
+

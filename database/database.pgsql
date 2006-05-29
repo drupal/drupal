@@ -540,6 +540,7 @@ CREATE TABLE poll (
 CREATE TABLE poll_votes (
   nid int NOT NULL,
   uid int NOT NULL default 0,
+  chorder int NOT NULL default -1,
   hostname varchar(128) NOT NULL default ''
 );
 CREATE INDEX poll_votes_nid_idx ON poll_votes (nid);
