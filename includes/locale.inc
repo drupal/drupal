@@ -635,7 +635,7 @@ function _locale_import_one_string($value, $mode, $lang = NULL) {
   }
   // Current string is the header information
   elseif ($value['msgid'] == '') {
-    $hdr = _locale_import_parse_header($value);
+    $hdr = _locale_import_parse_header($value['msgstr']);
 
     // Get the plural formula
     if ($hdr["Plural-Forms"] && $p = _locale_import_parse_plural_forms($hdr["Plural-Forms"], $file->filename)) {
