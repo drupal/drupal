@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.625 2006/05/24 05:51:10 drumm Exp $
+// $Id: user.module,v 1.626 2006/05/29 13:02:14 dries Exp $
 
 /**
  * @file
@@ -1191,6 +1191,8 @@ function user_register() {
      '#type' => 'checkbox',
      '#title' => t('Notify user of new account')
     );
+    // Redirect back to page which initiated the create request; usually admin/user/create
+    $form['destination'] = array('#type' => 'hidden', '#value' => $_GET['q']);
   }
   $extra = _user_forms($null, $null, $null, 'register');
 
@@ -1249,8 +1251,6 @@ function user_register_submit($form_id, $form_values) {
   else {
     if ($admin && !$notify) {
       drupal_set_message(t('Created a new user account. No e-mail has been sent.'));
-
-      return 'admin/user';
     }
     else if ($account->status || $notify) {
       // Create new user account, no administrator approval required.
@@ -1261,7 +1261,6 @@ function user_register_submit($form_id, $form_values) {
 
       if ($notify) {
         drupal_set_message(t('Password and further instructions have been e-mailed to the new user %user.', array('%user' => theme('placeholder', $name))));
-        return 'admin/user';
       }
       else {
         drupal_set_message(t('Your password and further instructions have been sent to your e-mail address.'));
