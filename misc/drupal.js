@@ -1,4 +1,4 @@
-// $Id: drupal.js,v 1.22 2006/04/27 18:12:25 unconed Exp $
+// $Id: drupal.js,v 1.23 2006/05/29 14:22:31 dries Exp $
 
 /**
  * Only enable Javascript functionality if all required features are supported.
@@ -259,7 +259,8 @@ function removeClass(node, className) {
   if (!hasClass(node, className)) {
     return false;
   }
-  node.className = eregReplace('(^| )'+ className +'($| )', '', node.className);
+  // Replaces words surrounded with whitespace or at a string border with a space. Prevents multiple class names from being glued together.
+  node.className = eregReplace('(^|\\s+)'+ className +'($|\\s+)', ' ', node.className);
   return true;
 }
 
