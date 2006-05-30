@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.197 2006/05/29 16:04:41 dries Exp $
+// $Id: poll.module,v 1.198 2006/05/30 11:02:26 dries Exp $
 
 /**
  * @file
@@ -380,14 +380,11 @@ function theme_poll_results($title, $results, $votes, $links, $block, $nid, $vot
     $output .= '<div class="poll">';
     $output .= $results;
     $output .= '<div class="total">'. t('Total votes: %votes', array('%votes' => $votes)) .'</div>';
-    if (isset($vote) && $vote > -1) {
-      if (user_access('cancel own vote')) {
-        $form['#action'] = url("poll/cancel/$nid");
-        $form['choice'] = array('#type' => 'hidden', '#value' => $vote);
-        $form['submit'] = array('#type' => 'submit', '#value' => t('Cancel your vote'));
-        $output .= drupal_get_form('poll_cancel_form', $form);
-      }
-      $output .= '</div>';
+    if (isset($vote) && $vote > -1 && user_access('cancel own vote')) {
+      $form['#action'] = url("poll/cancel/$nid");
+      $form['choice'] = array('#type' => 'hidden', '#value' => $vote);
+      $form['submit'] = array('#type' => 'submit', '#value' => t('Cancel your vote'));
+      $output .= drupal_get_form('poll_cancel_form', $form);
     }
     $output .= '</div>';
   }
