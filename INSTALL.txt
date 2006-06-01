@@ -1,4 +1,4 @@
-// $Id: INSTALL.txt,v 1.32 2006/05/26 09:21:10 dries Exp $
+// $Id: INSTALL.txt,v 1.33 2006/06/01 21:54:47 killes Exp $
 
 CONTENTS OF THIS FILE
 ---------------------
@@ -68,8 +68,8 @@ INSTALLATION
 
    The default configuration can be found in the
    'sites/default/settings.php' file within your Drupal installation.
-   Before you can run Drupal, you must set the database URL. Open the
-   configuration file and edit the $db_url line to match the database
+   Before you can run Drupal, you must set the database URL. Open the 
+   configuration file and edit the $db_url line to match the database 
    defined in the previous step:
 
      $db_url = "mysql://username:password@localhost/databasename";
@@ -144,12 +144,17 @@ INSTALLATION
    by the Drupal server process. You can change the name of this
    subdirectory at "Administer > Settings > File system settings".
 
-   SECURITY NOTICE: Certain Apache configurations can be vulnerable
-   to a security exploit allowing arbitrary code execution. Drupal
-   will attempt to automatically create a .htaccess file in your
+   SECURITY NOTICE: Certain Apache configurations can be vulnerable 
+   to a security exploit allowing arbitrary code execution. Drupal 
+   will attempt to automatically create a .htaccess file in your 
    "files" directory to protect you. If you already have a .htaccess
-   file in that location, please add the following line:
-   SetHandler This_is_a_Drupal_security_line_do_not_remove
+   file in that location, please add the following lines:
+
+     SetHandler Drupal_Security_Do_Not_Remove_See_SA_2006_006
+     Options None
+     <IfModule mod_rewrite.c>
+       RewriteEngine off
+     </IfModule>
 
    You can now launch your browser and point it to your Drupal site.
 
@@ -186,7 +191,7 @@ example, set some general settings for your site with "Administer >
 Settings". Enable modules via "Administer > Modules". User permissions
 can be set with "Administer > Users > Configure > Permissions".
 
-For more information on configuration options, read the
+For more information on configuration options, read the 
 instructions which accompany the different configuration settings and
 consult the various help pages available in the administration panel.
 

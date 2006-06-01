@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.76 2006/05/25 01:33:53 killes Exp $
+// $Id: file.inc,v 1.77 2006/06/01 21:54:48 killes Exp $
 
 /**
  * @file
@@ -113,16 +113,16 @@ function file_check_directory(&$directory, $mode = 0, $form_item = NULL) {
   }
 
   if ((file_directory_path() == $directory || file_directory_temp() == $directory) && !is_file("$directory/.htaccess")) {
-    if (($fp = fopen("$directory/.htaccess", 'w')) && fputs($fp, 'SetHandler This_is_a_Drupal_security_line_do_not_remove')) {
+    $htaccess_lines = "SetHandler Drupal_Security_Do_Not_Remove_See_SA_2006_006\nOptions None\n<IfModule mod_rewrite.c>\n  RewriteEngine off\n</IfModule>";
+    if (($fp = fopen("$directory/.htaccess", 'w')) && fputs($fp, $htaccess_lines)) {
       fclose($fp);
     }
     else {
-      $message = t("Security warning: Couldn't write .htaccess. Please create a .htaccess file in your %directory directory which contains the following line: <code>SetHandler This_is_a_Drupal_security_line_do_not_remove</code>", array('%directory' => $directory));
+      $message = t("Security warning: Couldn't write .htaccess file. Please create a .htaccess file in your %directory directory which contains the following lines: <code>%htaccess</code>", array('%directory' => theme('placeholder', $directory), '%htaccess' => '<br />'. str_replace("\n", '<br />', check_plain($htaccess_lines))));
       form_set_error($form_item, $message);
-      watchdog('file system', $message, WATCHDOG_ERROR);
+      watchdog('security', $message, WATCHDOG_ERROR);
     }
   }
-
 
   return true;
 }
