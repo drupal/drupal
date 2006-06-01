@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.122 2006/05/21 09:18:47 dries Exp $
+// $Id: menu.inc,v 1.123 2006/06/01 12:31:43 dries Exp $
 
 /**
  * @file
@@ -856,7 +856,7 @@ function menu_primary_links($start_level = 1, $pid = 0) {
   if ($pid && is_array($menu['visible'][$pid]) && isset($menu['visible'][$pid]['children'])) {
     $count = 1;
     foreach ($menu['visible'][$pid]['children'] as $cid) {
-      $index = "$start_level-$count-$pid";
+      $index = "menu-$start_level-$count-$pid";
       if (menu_in_active_trail_in_submenu($cid, $pid)) {
         $index .= "-active";
       }
