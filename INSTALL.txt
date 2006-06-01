@@ -147,9 +147,14 @@ INSTALLATION
    SECURITY NOTICE: Certain Apache configurations can be vulnerable 
    to a security exploit allowing arbitrary code execution. Drupal 
    will attempt to automatically create a .htaccess file in your 
-   "files" directory to protect you. If you already have a .htaccess 
-   file in that location, please add the following line: 
-   SetHandler This_is_a_Drupal_security_line_do_not_remove
+   "files" directory to protect you. If you already have a .htaccess
+   file in that location, please add the following lines:
+
+     SetHandler Drupal_Security_Do_Not_Remove_See_SA_2006_006
+     Options None
+     <IfModule mod_rewrite.c>
+       RewriteEngine off
+     </IfModule>
 
    You can now launch your browser and point it to your Drupal site.
 
