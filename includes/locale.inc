@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.77 2006/05/29 13:58:25 dries Exp $
+// $Id: locale.inc,v 1.78 2006/06/01 12:32:52 dries Exp $
 
 /**
  * @file
@@ -1084,7 +1084,7 @@ function _locale_export_po($language) {
 
   // Generating Portable Object Template
   else {
-    $filename = variable_get('site_name', 'drupal') .'.pot';
+    $filename = 'drupal.pot';
     $header .= "# LANGUAGE translation of PROJECT\n";
     $header .= "# Copyright (c) YEAR NAME <EMAIL@ADDRESS>\n";
     $header .= "#\n";
