@@ -6,8 +6,6 @@
  * Lets users log in using a Drupal ID and can notify a central server about your site.
  */
 
-define('VERSION', '4.7.0');
-
 /**
  * Implementation of hook_help().
  */
