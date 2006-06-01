@@ -179,6 +179,11 @@ function upload_nodeapi(&$node, $op, $arg) {
 
         // Don't do any checks for uid #1.
         if ($user->uid != 1) {
+          // here, something.php.pps becomes something.php_.pps
+          $munged_filename = upload_munge_filename($file->filename, NULL, 0);
+          $file->filename = $munged_filename;
+          $file->description = $munged_filename;
+
           // Validate file against all users roles. Only denies an upload when
           // all roles prevent it.
           foreach ($user->roles as $rid => $name) {
@@ -210,6 +215,9 @@ function upload_nodeapi(&$node, $op, $arg) {
         }
         elseif ($error['usersize'] == count($user->roles) && $user->uid != 1) {
           form_set_error('upload', t('Error attaching file %name: exceeds maximum file size', array('%name' => theme('placeholder', $file->filename))));
+        }
+        elseif (strlen($munged_filename) > 255) {
+          form_set_error('upload', t('The selected file %name can not be attached to this post, because the filename is to long.', array('%name' => theme('placeholder', $munged_filename))));
         }
         else {
           $key = 'upload_'. count($_SESSION['file_uploads']);
@@ -319,6 +327,69 @@ function upload_count_size($uid = 0) {
   }
 
   return db_result($result);
+}
+
+/**
+ * Munge the filename as needed for security purposes.
+ *
+ * @param $filename
+ *   The name of a file to modify.
+ * @param $extensions
+ *   A space separated list of valid extensions. If this is blank, we'll use
+ *   the admin-defined defaults for the user role from upload_extensions_$rid.
+ * @param $alerts
+ *   Whether alerts (watchdog, drupal_set_message()) should be displayed.
+ * @return $filename
+ *   The potentially modified $filename.
+ */
+function upload_munge_filename($filename, $extensions = NULL, $alerts = 1) {
+
+  $original = $filename;
+
+  // Allow potentially insecure uploads for very savvy users
+  if (!variable_get('allow_insecure_uploads', 0)) {
+
+    global $user;
+
+    if (!isset($extensions)) {
+      $extensions = '';
+      foreach ($user->roles as $rid => $name) {
+        $extensions .= ' '. variable_get("upload_extensions_$rid", variable_get('upload_extensions_default', 'jpg jpeg gif png txt html doc xls pdf ppt pps'));
+      }
+
+    }
+
+    $whitelist = array_unique(explode(' ', trim($extensions)));
+
+    $filename_parts = explode('.', $filename);
+
+    $new_filename = array_shift($filename_parts); // Remove file basename.
+    $final_extension = array_pop($filename_parts); // Remove final extension.
+
+    foreach($filename_parts as $filename_part) {
+      $new_filename .= '.'. $filename_part;
+      // if the extension is not allowed and contains 2-5 characters followed
+      // by an optional digit, then it's potentially harmful, so we add an _
+      if (!in_array($filename_part, $whitelist) && preg_match("/^[a-zA-Z]{2,5}\d?$/", $filename_part)) {
+        $new_filename .= '_';
+      }
+    }
+    $filename = "$new_filename.$final_extension";
+  }
+
+  if ($alerts && $original != $filename) {
+    $message = t('Your filename has been renamed to conform to site policy.');
+    drupal_set_message($message);
+  }
+
+  return $filename;
+}
+
+/**
+ * Undo the effect of upload_munge_filename().
+ */
+function upload_unmunge_filename($filename) {
+  return str_replace('_.', '.', $filename);
 }
 
 function upload_save($node) {
