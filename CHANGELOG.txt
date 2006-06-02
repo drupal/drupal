@@ -1,3 +1,9 @@
+Drupal 4.7.2, 2006-06-01
+------------------------
+- fixed critical upload issue, see SA-2006-007
+- fixed taxonomy XSS issue, see SA-2006-008
+- fixed a variety of small bugs.
+
 Drupal 4.7.1, 2006-05-24
 ------------------------
 - fixed critical SQL issue, see SA-2006-005
