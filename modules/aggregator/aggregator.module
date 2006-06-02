@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.282 2006/05/18 14:58:56 dries Exp $
+// $Id: aggregator.module,v 1.283 2006/06/02 13:07:58 dries Exp $
 
 /**
  * @file
@@ -1162,8 +1162,6 @@ function aggregator_page_sources() {
  * Menu callback; generate an RSS 0.92 feed of aggregator items or categories.
  */
 function aggregator_page_rss() {
-  global $base_url;
-
   // arg(2) is the passed cid, only select for that category
   $result = NULL;
   if (arg(2)) {
@@ -1197,7 +1195,7 @@ function aggregator_page_rss() {
 
   $output .= "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
   $output .= "<rss version=\"2.0\">\n";
-  $output .= format_rss_channel(variable_get('site_name', t('Drupal')) . ' ' . t('aggregator'), $base_url . '/' . url('aggregator' . $url), variable_get('site_name', t('Drupal')) . ' - ' . t('aggregated feeds') . $title, $items, 'en');
+  $output .= format_rss_channel(variable_get('site_name', t('Drupal')) . ' ' . t('aggregator'), url('aggregator' . $url, NULL, NULL, TRUE), variable_get('site_name', t('Drupal')) . ' - ' . t('aggregated feeds') . $title, $items, 'en');
   $output .= "</rss>\n";
 
   drupal_set_header('Content-Type: text/xml; charset=utf-8');
