@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.105 2006/06/01 21:54:48 killes Exp $
+// $Id: upload.module,v 1.106 2006/06/02 14:21:45 dries Exp $
 
 /**
  * @file
@@ -381,8 +381,8 @@ function _upload_validate(&$node) {
             form_set_error('upload', t('The selected file %name can not be attached to this post, because the disk quota of %quota has been reached.', array('%name' => theme('placeholder', $file->filename), '%quota' => theme('placeholder', format_size($usersize)))));
             $valid = FALSE;
           }
-          elseif (strlen($node->files[$fid]->filename) > 255) {
-            form_set_error('upload', t('The selected file %name can not be attached to this post, because the filename is too long.', array('%name' => theme('placeholder', $munged_filename))));
+          elseif (strlen($file->filename) > 255) {
+            form_set_error('upload', t('The selected file %name can not be attached to this post, because the filename is too long.', array('%name' => theme('placeholder', $file->filename))));
             $valid = FALSE;
           }
 
