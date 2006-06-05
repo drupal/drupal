@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.367 2006/06/05 08:57:29 dries Exp $
+// $Id: book.module,v 1.368 2006/06/05 09:00:22 dries Exp $
 
 /**
  * @file
@@ -178,24 +178,7 @@ function book_block($op = 'list', $delta = 0) {
  * Implementation of hook_load().
  */
 function book_load($node) {
-  global $user;
-
-  $book = db_fetch_object(db_query('SELECT * FROM {book} WHERE vid = %d', $node->vid));
-
-  if (arg(2) == 'edit' && !user_access('administer nodes')) {
-    // If a user is about to update a book page, we overload some
-    // fields to reflect the changes.
-    if ($user->uid) {
-      $book->uid = $user->uid;
-      $book->name = $user->name;
-    }
-    else {
-      $book->uid = 0;
-      $book->name = '';
-    }
-  }
-
-  return $book;
+  return db_fetch_object(db_query('SELECT * FROM {book} WHERE vid = %d', $node->vid));
 }
 
 /**
@@ -228,10 +211,13 @@ function book_delete(&$node) {
  * Implementation of hook_submit().
  */
 function book_submit(&$node) {
+  global $user;
   // Set default values for non-administrators.
   if (!user_access('administer nodes')) {
     $node->weight = 0;
     $node->revision = 1;
+    $book->uid = $user->uid;
+    $book->name = $user->uid ? $user->name : '';
   }
 }
 
