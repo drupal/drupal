@@ -1,12 +1,10 @@
 <?php
-// $Id: drupal.module,v 1.121 2006/05/23 02:37:47 drumm Exp $
+// $Id: drupal.module,v 1.122 2006/06/05 08:53:05 dries Exp $
 
 /**
  * @file
  * Lets users log in using a Drupal ID and can notify a central server about your site.
  */
-
-define('VERSION', '4.7.0');
 
 /**
  * Implementation of hook_help().

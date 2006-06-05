@@ -1,10 +1,12 @@
 <?php
-// $Id: system.module,v 1.327 2006/05/16 09:22:36 dries Exp $
+// $Id: system.module,v 1.328 2006/06/05 08:53:05 dries Exp $
 
 /**
  * @file
  * Configuration system that lets administrators modify the workings of the site.
  */
+
+define('VERSION', '4.8.0 dev');
 
 /**
  * Implementation of hook_help().
