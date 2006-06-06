@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.332 2006/05/29 12:58:19 dries Exp $
+// $Id: forum.module,v 1.333 2006/06/06 15:35:39 dries Exp $
 
 /**
  * @file
@@ -658,7 +658,9 @@ function _forum_get_vid() {
     // Check to see if a forum vocabulary exists
     $vid = db_result(db_query("SELECT vid FROM {vocabulary} WHERE module = '%s'", 'forum'));
     if (!$vid) {
-      $edit = array('name' => 'Forums', 'multiple' => 0, 'required' => 1, 'hierarchy' => 1, 'relations' => 0, 'module' => 'forum', 'nodes' => array('forum' => 1));
+      // Create the forum vocabulary. Assign the vocabulary a low weight so
+      // it will appear first in forum topic create and edit forms.
+      $edit = array('name' => 'Forums', 'multiple' => 0, 'required' => 1, 'hierarchy' => 1, 'relations' => 0, 'module' => 'forum', 'weight' => -10, 'nodes' => array('forum' => 1));
       taxonomy_save_vocabulary($edit);
       $vid = $edit['vid'];
     }
