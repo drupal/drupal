@@ -316,7 +316,7 @@ function stopEvent(event) {
  * The result is either the JSON object, or an object with 'status' 0 and 'data' an error message.
  */
 function parseJson(data) {
-  if (data.substring(0,1) != '{') {
+  if ((data.substring(0, 1) != '{') && (data.substring(0, 1) != '[')) {
     return { status: 0, data: data.length ? data : 'Unspecified error' };
   }
   return eval('(' + data + ');');
