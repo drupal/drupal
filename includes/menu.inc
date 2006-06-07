@@ -1069,10 +1069,10 @@ function _menu_build() {
       $_menu['callbacks'][$item['path']] = array('callback' => $item['callback']);
       if (isset($item['callback arguments'])) {
         $_menu['callbacks'][$item['path']]['callback arguments'] = $item['callback arguments'];
+        unset($item['callback arguments']);
       }
+      unset($item['callback']);
     }
-    unset($item['callback']);
-    unset($item['callback arguments']);
     $_menu['items'][$mid] = $item;
     $_menu['path index'][$item['path']] = $mid;
 
@@ -1220,10 +1220,10 @@ function _menu_append_contextual_items() {
       $_menu['callbacks'][$item['path']] = array('callback' => $item['callback']);
       if (isset($item['callback arguments'])) {
         $_menu['callbacks'][$item['path']]['callback arguments'] = $item['callback arguments'];
+        unset($item['callback arguments']);
       }
+      unset($item['callback']);
     }
-    unset($item['callback']);
-    unset($item['callback arguments']);
     if (!isset($_menu['path index'][$item['path']])) {
       if (!isset($item['path'])) {
         $item['path'] = '';
