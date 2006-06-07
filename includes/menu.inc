@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.123 2006/06/01 12:31:43 dries Exp $
+// $Id: menu.inc,v 1.124 2006/06/07 07:40:34 dries Exp $
 
 /**
  * @file
@@ -1069,10 +1069,10 @@ function _menu_build() {
       $_menu['callbacks'][$item['path']] = array('callback' => $item['callback']);
       if (isset($item['callback arguments'])) {
         $_menu['callbacks'][$item['path']]['callback arguments'] = $item['callback arguments'];
+        unset($item['callback arguments']);
       }
+      unset($item['callback']);
     }
-    unset($item['callback']);
-    unset($item['callback arguments']);
     $_menu['items'][$mid] = $item;
     $_menu['path index'][$item['path']] = $mid;
 
@@ -1220,10 +1220,10 @@ function _menu_append_contextual_items() {
       $_menu['callbacks'][$item['path']] = array('callback' => $item['callback']);
       if (isset($item['callback arguments'])) {
         $_menu['callbacks'][$item['path']]['callback arguments'] = $item['callback arguments'];
+        unset($item['callback arguments']);
       }
+      unset($item['callback']);
     }
-    unset($item['callback']);
-    unset($item['callback arguments']);
     if (!isset($_menu['path index'][$item['path']])) {
       if (!isset($item['path'])) {
         $item['path'] = '';
