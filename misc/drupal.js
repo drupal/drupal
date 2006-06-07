@@ -1,4 +1,4 @@
-// $Id: drupal.js,v 1.23 2006/05/29 14:22:31 dries Exp $
+// $Id: drupal.js,v 1.24 2006/06/07 09:34:11 dries Exp $
 
 /**
  * Only enable Javascript functionality if all required features are supported.
@@ -316,7 +316,7 @@ function stopEvent(event) {
  * The result is either the JSON object, or an object with 'status' 0 and 'data' an error message.
  */
 function parseJson(data) {
-  if (data.substring(0,1) != '{') {
+  if ((data.substring(0, 1) != '{') && (data.substring(0, 1) != '[')) {
     return { status: 0, data: data.length ? data : 'Unspecified error' };
   }
   return eval('(' + data + ');');
