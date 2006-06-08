@@ -75,7 +75,7 @@ function aggregator_menu($may_cache) {
       'title' => t('list'),
       'type' => MENU_DEFAULT_LOCAL_TASK,
       'weight' => -10);
-      
+
     $items[] = array('path' => 'aggregator',
       'title' => t('news aggregator'),
       'callback' => 'aggregator_page_last',
@@ -100,7 +100,7 @@ function aggregator_menu($may_cache) {
       'callback' => 'aggregator_page_opml',
       'access' => $view,
       'type' => MENU_CALLBACK);
-      
+
     $result = db_query('SELECT title, cid FROM {aggregator_category} ORDER BY title');
     while ($category = db_fetch_array($result)) {
       $items[] = array('path' => 'aggregator/categories/'. $category['cid'],

@@ -7,14 +7,12 @@
  */
 
 /**
- * Initialize all modules.
+ * Load all the modules that have been enabled in the system table.
  */
-function module_init() {
-  // Load all the modules that have been enabled in the system table.
+function module_load_all() {
   foreach (module_list(TRUE, FALSE) as $module) {
     drupal_load('module', $module);
   }
-  module_invoke_all('init');
 }
 
 /**

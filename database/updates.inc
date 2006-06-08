@@ -1976,10 +1976,10 @@ function system_update_180() {
       break;
     case 'pgsql':
       $ret[] = update_sql("ALTER TABLE {node} DROP CONSTRAINT {node}_pkey"); // Change PK
-      $ret[] = update_sql("ALTER TABLE {node} ADD PRIMARY KEY (nid, vid)");      
+      $ret[] = update_sql("ALTER TABLE {node} ADD PRIMARY KEY (nid, vid)");
       $ret[] = update_sql('DROP INDEX {node}_vid_idx'); // Change normal index to UNIQUE index
       $ret[] = update_sql('CREATE UNIQUE INDEX {node}_vid_idx ON {node}(vid)');
-      $ret[] = update_sql('CREATE INDEX {node}_nid_idx ON {node}(nid)'); // Add index on nid      
+      $ret[] = update_sql('CREATE INDEX {node}_nid_idx ON {node}(nid)'); // Add index on nid
       break;
   }
 
