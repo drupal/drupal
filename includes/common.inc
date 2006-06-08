@@ -1341,12 +1341,15 @@ function _drupal_bootstrap_full() {
   drupal_set_header('Content-Type: text/html; charset=utf-8');
   // Detect string handling method
   unicode_check();
-  // Initialize all enabled modules.
-  module_init();
   // Undo magic quotes
   fix_gpc_magic();
-  // Initialize the localization system.
+  // Load all enabled modules
+  module_load_all();
+  // Initialize the localization system.  Depends on i18n.module being loaded already.
   $locale = locale_initialize();
+  // Let all modules take action before menu system handles the reqest
+  module_invoke_all('init');
+
 }
 
 /**
