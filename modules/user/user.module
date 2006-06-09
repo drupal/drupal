@@ -712,7 +712,7 @@ function user_menu($may_cache) {
     // Registration and login pages.
     $items[] = array('path' => 'user/login', 'title' => t('log in'),
       'callback' => 'user_login', 'type' => MENU_DEFAULT_LOCAL_TASK);
-    $items[] = array('path' => 'user/register', 'title' => t('register'),
+    $items[] = array('path' => 'user/register', 'title' => t('create new account'),
       'callback' => 'user_register', 'access' => $user->uid == 0 && variable_get('user_register', 1), 'type' => MENU_LOCAL_TASK);
     $items[] = array('path' => 'user/password', 'title' => t('request new password'),
       'callback' => 'user_pass', 'access' => $user->uid == 0, 'type' => MENU_LOCAL_TASK);
