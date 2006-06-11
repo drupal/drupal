@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.289 2006/06/01 18:40:24 dries Exp $
+// $Id: taxonomy.module,v 1.290 2006/06/11 22:46:20 drumm Exp $
 
 /**
  * @file
@@ -1369,7 +1369,7 @@ function taxonomy_autocomplete($vid, $string = '') {
   // Fetch last tag
   $last_string = trim(array_pop($array));
   if ($last_string != '') {
-    $result = db_query_range("SELECT name FROM {term_data} WHERE vid = %d AND LOWER(name) LIKE LOWER('%%%s%%')", $vid, $last_string, 0, 10);
+    $result = db_query_range(db_rewrite_sql("SELECT t.tid, t.name FROM {term_data} t WHERE t.vid = %d AND LOWER(t.name) LIKE LOWER('%%%s%%')", 't', 'tid'), $vid, $last_string, 0, 10);
 
     $prefix = count($array) ? implode(', ', $array) .', ' : '';
 
