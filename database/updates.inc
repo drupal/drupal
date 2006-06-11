@@ -2064,8 +2064,8 @@ function system_update_185() {
   // Make the forum's vocabulary the highest in list, if present
   $ret = array();
 
-  if ($vid = variable_get('forum_nav_vocabulary', 0)) {
-    db_query('UPDATE {vocabulary} SET weight = %d WHERE vid = %d', -10, $vid);
+  if ($vid = (int) variable_get('forum_nav_vocabulary', 0)) {
+    $ret[] = update_sql('UPDATE {vocabulary} SET weight = -10 WHERE vid = '. $vid);
   }
 
   return $ret;
