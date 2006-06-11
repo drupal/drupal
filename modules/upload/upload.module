@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.106 2006/06/02 14:21:45 dries Exp $
+// $Id: upload.module,v 1.107 2006/06/11 22:38:04 drumm Exp $
 
 /**
  * @file
@@ -756,7 +756,7 @@ function upload_load($node) {
   $files = array();
 
   if ($node->vid) {
-    $result = db_query('SELECT * FROM {files} f INNER JOIN {file_revisions} r ON f.fid = r.fid WHERE r.vid = %d ORDER BY f.fid DESC', $node->vid);
+    $result = db_query('SELECT * FROM {files} f INNER JOIN {file_revisions} r ON f.fid = r.fid WHERE r.vid = %d ORDER BY f.fid', $node->vid);
     while ($file = db_fetch_object($result)) {
       $files[$file->fid] = $file;
     }
