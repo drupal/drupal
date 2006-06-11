@@ -1369,7 +1369,7 @@ function taxonomy_autocomplete($vid, $string = '') {
   // Fetch last tag
   $last_string = trim(array_pop($array));
   if ($last_string != '') {
-    $result = db_query_range("SELECT name FROM {term_data} WHERE vid = %d AND LOWER(name) LIKE LOWER('%%%s%%')", $vid, $last_string, 0, 10);
+    $result = db_query_range(db_rewrite_sql("SELECT t.tid, t.name FROM {term_data} t WHERE t.vid = %d AND LOWER(t.name) LIKE LOWER('%%%s%%')", 't', 'tid'), $vid, $last_string, 0, 10);
 
     $prefix = count($array) ? implode(', ', $array) .', ' : '';
 
