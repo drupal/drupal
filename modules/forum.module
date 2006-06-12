@@ -370,7 +370,7 @@ function forum_validate($node) {
  * Implementation of hook_update().
  */
 function forum_update($node) {
-  if ($node->is_new || $node->revision) {
+  if ($node->revision) {
     db_query("INSERT INTO {forum} (nid, vid, tid) VALUES (%d, %d, %d)", $node->nid, $node->vid, $node->tid);
   }
   else {
