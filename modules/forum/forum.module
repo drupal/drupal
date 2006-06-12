@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.333 2006/06/06 15:35:39 dries Exp $
+// $Id: forum.module,v 1.334 2006/06/12 03:44:54 drumm Exp $
 
 /**
  * @file
@@ -370,7 +370,7 @@ function forum_validate($node) {
  * Implementation of hook_update().
  */
 function forum_update($node) {
-  if ($node->is_new || $node->revision) {
+  if ($node->revision) {
     db_query("INSERT INTO {forum} (nid, vid, tid) VALUES (%d, %d, %d)", $node->nid, $node->vid, $node->tid);
   }
   else {
