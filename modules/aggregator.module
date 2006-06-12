@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.283 2006/06/02 13:07:58 dries Exp $
+// $Id: aggregator.module,v 1.284 2006/06/12 02:30:24 drumm Exp $
 
 /**
  * @file
@@ -705,7 +705,6 @@ function aggregator_refresh($feed) {
     case 301:
       $feed['url'] = $result->redirect_url;
       watchdog('aggregator', t('Updated URL for feed %title to %url.', array('%title' => theme('placeholder', $feed['title']), '%url' => theme('placeholder', $feed['url']))));
-      break;
 
     case 200:
     case 302:
