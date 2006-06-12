@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.629 2006/06/11 19:22:30 dries Exp $
+// $Id: user.module,v 1.630 2006/06/12 11:02:44 dries Exp $
 
 /**
  * @file
@@ -285,7 +285,7 @@ function user_validate_picture($file, &$edit, $user) {
   }
 
   if (!form_get_errors()) {
-    if ($file = file_save_upload('picture_upload', variable_get('user_picture_path', 'pictures') .'/picture-'. $user->uid . '.' . $info['extension'], 1)) {
+    if ($file = file_save_upload('picture_upload', variable_get('user_picture_path', 'pictures') .'/picture-'. $user->uid .'.'. $info['extension'], 1)) {
       $form_values['picture'] = $file->filepath;
     }
     else {
@@ -2014,8 +2014,8 @@ function user_help($section) {
 
   switch ($section) {
     case 'admin/help#user':
-      $output = '<p>'. t('The user module allows users to register, login, and logout. Users benefit from being able to sign on because it associates content they create with their account and allows various permissions to be set for their roles. The user module supports user roles which can setup fine grained permissions allowing each role to do only what the administrator wants them to. Each user is assigned to one or more roles. By default there are two roles <em>anonymous</em> - a user who has not logged in, and <em>authenticated</em> a user who has signed up and who has been authorized. ') .'</p>';
-      $output .= '<p>'. t('Users can use their own name or handle and can fine tune some personal configuration settings through their individual my account page. Registered users need to authenticate by supplying either a local username and password, or a remote username and password such as DelphiForums ID, or one from a Drupal powered website. A visitor accessing your website is assigned an unique ID, the so-called session ID, which is stored in a cookie. For security\'s sake, the cookie does not contain personal information but acts as a key to retrieve the information stored on your server. ') .'</p>';
+      $output = '<p>'. t('The user module allows users to register, login, and log out. Users benefit from being able to sign on because it associates content they create with their account and allows various permissions to be set for their roles. The user module supports user roles which can setup fine grained permissions allowing each role to do only what the administrator wants them to. Each user is assigned to one or more roles. By default there are two roles <em>anonymous</em> - a user who has not logged in, and <em>authenticated</em> a user who has signed up and who has been authorized.') .'</p>';
+      $output .= '<p>'. t('Users can use their own name or handle and can fine tune some personal configuration settings through their individual my account page. Registered users need to authenticate by supplying either a local username and password, or a remote username and password such as DelphiForums ID, or one from a Drupal powered website. A visitor accessing your website is assigned an unique ID, the so-called session ID, which is stored in a cookie. For security\'s sake, the cookie does not contain personal information but acts as a key to retrieve the information stored on your server.') .'</p>';
       $output .= t('<p>You can</p>
 <ul>
 <li>view your <a href="%user">user page</a>.</li>
@@ -2030,7 +2030,7 @@ function user_help($section) {
     case 'admin/modules#description':
       return t('Manages the user registration and login system.');
     case 'admin/user':
-      return t('<p>Drupal allows users to register, login, logout, maintain user profiles, etc. No participant can use his own name to post content until he signs up for a user account.</p>');
+      return t('<p>Drupal allows users to register, login, log out, maintain user profiles, etc. No participant can use his own name to post content until he signs up for a user account.</p>');
     case 'admin/user/create':
     case 'admin/user/account/create':
       return t('<p>This web page allows the administrators to register a new users by hand. Note that you cannot have a user where either the e-mail address or the username match another user in the system.</p>');
