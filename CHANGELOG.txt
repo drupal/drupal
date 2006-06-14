@@ -1,5 +1,6 @@
 Drupal x.x.x, xxxx-xx-xx (development version)
 ------------------------
+- added support for different cache backends
 - usability:
     * added support for auto-complete forms (AJAX) to user profiles.
     * improved configurability of the contact forms.
