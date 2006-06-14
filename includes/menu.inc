@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.124 2006/06/07 07:40:34 dries Exp $
+// $Id: menu.inc,v 1.125 2006/06/14 13:33:20 dries Exp $
 
 /**
  * @file
@@ -260,7 +260,7 @@ function menu_get_local_tasks() {
  *   The menu ID of the menu item to retrieve.
  * @param $path
  *   The internal path of the menu item to retrieve. Defaults to NULL. Only
- *   used if no item can be found matching $mid.
+ *   used if $mid is not set.
  * @param $reset
  *   Optional flag that resets the static variable cache of the menu tree, if
  *   set to TRUE. Default is FALSE.
@@ -335,7 +335,7 @@ function menu_set_location($location) {
   foreach (array_reverse($location) as $item) {
     if (isset($_menu['path index'][$item['path']])) {
       $mid = $_menu['path index'][$item['path']];
-      if (isset ($_menu['visible'][$mid])) {
+      if (isset($_menu['visible'][$mid])) {
         // Splice in the breadcrumb at this location.
         if ($prev_id) {
           $_menu['items'][$prev_id]['pid'] = $mid;
@@ -1351,7 +1351,7 @@ function _menu_build_local_tasks($pid) {
 }
 
 /**
- * Returns TRUE if the is off-line for maintenance.
+ * Returns TRUE if the site is off-line for maintenance.
  */
 function _menu_site_is_offline() {
   // Check if site is set to off-line mode
