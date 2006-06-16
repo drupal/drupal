@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.630 2006/06/12 11:02:44 dries Exp $
+// $Id: user.module,v 1.631 2006/06/16 07:23:39 dries Exp $
 
 /**
  * @file
@@ -205,10 +205,12 @@ function user_save($account, $array = array(), $category = 'account') {
     db_query("UPDATE {users} SET data = '%s' WHERE uid = %d", serialize($data), $user->uid);
 
     // Save user roles (delete just to be safe).
-    db_query('DELETE FROM {users_roles} WHERE uid = %d', $array['uid']);
-    foreach (array_keys($array['roles']) as $rid) {
-      if (!in_array($rid, array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID))) {
-        db_query('INSERT INTO {users_roles} (uid, rid) VALUES (%d, %d)', $array['uid'], $rid);
+    if (is_array($array['roles'])) {
+      db_query('DELETE FROM {users_roles} WHERE uid = %d', $array['uid']);
+      foreach (array_keys($array['roles']) as $rid) {
+        if (!in_array($rid, array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID))) {
+          db_query('INSERT INTO {users_roles} (uid, rid) VALUES (%d, %d)', $array['uid'], $rid);
+        }
       }
     }
 
@@ -1236,9 +1238,11 @@ function user_register_submit($form_id, $form_values) {
   $mail = $form_values['mail'];
   $name = $form_values['name'];
   $pass = $admin ? $form_values['pass'] : user_password();
-  $roles = array_filter($form_values['roles']);  // Remove unset roles
   $notify = $form_values['notify'];
   $from = variable_get('site_mail', ini_get('sendmail_from'));
+  if (isset($form_values['roles'])) {
+    $roles = array_filter($form_values['roles']);     // Remove unset roles
+  }
 
   if (!$admin && array_intersect(array_keys($form_values), array('uid', 'roles', 'init', 'session', 'status'))) {
     watchdog('security', t('Detected malicious attempt to alter protected user fields.'), WATCHDOG_WARNING);
