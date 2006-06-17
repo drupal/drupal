@@ -695,7 +695,7 @@ function theme_menu_item($mid, $children = '', $leaf = TRUE) {
  * @ingroup themeable
  */
 function theme_menu_item_link($item, $link_item) {
-  return l($item['title'], $link_item['path'], isset($item['description']) ? array('title' => $item['description']) : array());
+  return l($item['title'], $link_item['path'], isset($item['description']) ? array('title' => $item['description']) : array(), isset($item['query']) ? $item['query'] : NULL);
 }
 
 /**
