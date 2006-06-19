@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.187 2006/05/07 00:08:35 drumm Exp $
+// $Id: update.php,v 1.188 2006/06/19 06:12:08 dries Exp $
 
 /**
  * @file
@@ -28,9 +28,11 @@ function update_sql($sql) {
  * Save result of SQL commands in $ret array.
  *
  * Note: when you add a column with NOT NULL and you are not sure if there are
- * already rows in the table, you MUST also add DEFAULT. Otherwise PostgreSQL won't
- * work when the table is not empty. If NOT NULL and DEFAULT are set the
- * PostgreSQL version will set values of the added column in old rows to the
+ * already rows in the table, you MUST also add DEFAULT. Otherwise PostgreSQL
+ * won't work when the table is not empty, and db_add_column() will fail.
+ * To have an empty string as the default, you must use: 'default' => "''"
+ * in the $attributes array. If NOT NULL and DEFAULT are set the PostgreSQL
+ * version will set values of the added column in old rows to the
  * DEFAULT value.
  *
  * @param $ret
@@ -44,7 +46,7 @@ function update_sql($sql) {
  * @param $attributes
  *   Additional optional attributes. Recognized attributes:
  *     not null => TRUE|FALSE
- *     default  => NULL|FALSE|value (with or without '', it won't be added)
+ *     default  => NULL|FALSE|value (the value must be enclosed in '' marks)
  * @return
  *   nothing, but modifies $ret parameter.
  */
