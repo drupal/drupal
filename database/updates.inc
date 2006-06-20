@@ -2071,3 +2071,19 @@ function system_update_185() {
   return $ret;
 }
 
+function system_update_186() {
+  // Make use of guid in feed items
+  $ret = array();
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql("ALTER TABLE {aggregator_item} ADD guid varchar(255) AFTER timestamp ;");
+      break;
+    case 'pgsql':
+      db_add_column($ret, 'aggregator_item', 'guid', 'varchar(255)');
+      break;
+  }
+  return $ret;
+}
+
+
