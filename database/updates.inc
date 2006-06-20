@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.237 2006/06/11 23:10:13 drumm Exp $
+// $Id: updates.inc,v 1.238 2006/06/20 09:44:52 dries Exp $
 
 function system_update_110() {
   $ret = array();
@@ -2070,4 +2070,20 @@ function system_update_185() {
 
   return $ret;
 }
+
+function system_update_186() {
+  // Make use of guid in feed items
+  $ret = array();
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql("ALTER TABLE {aggregator_item} ADD guid varchar(255) AFTER timestamp ;");
+      break;
+    case 'pgsql':
+      db_add_column($ret, 'aggregator_item', 'guid', 'varchar(255)');
+      break;
+  }
+  return $ret;
+}
+
 

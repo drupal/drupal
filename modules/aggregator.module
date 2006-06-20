@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.284 2006/06/12 02:30:24 drumm Exp $
+// $Id: aggregator.module,v 1.285 2006/06/20 09:44:36 dries Exp $
 
 /**
  * @file
@@ -829,7 +829,7 @@ function aggregator_parse_feed(&$data, $feed) {
   $items = array_reverse($items);
 
   foreach ($items as $item) {
-    unset($title, $link, $author, $description);
+    unset($title, $link, $author, $description, $guid);
 
     // Prepare the item:
     foreach ($item as $key => $value) {
@@ -856,8 +856,8 @@ function aggregator_parse_feed(&$data, $feed) {
     if ($item['LINK']) {
       $link = $item['LINK'];
     }
-    elseif ($item['GUID'] && (strncmp($item['GUID'], 'http://', 7) == 0)) {
-      $link = $item['GUID'];
+    if ($item['GUID']) {
+      $guid = $item['GUID'];
     }
     else {
       $link = $feed['link'];
@@ -902,14 +902,17 @@ function aggregator_parse_feed(&$data, $feed) {
     ** pass along it's ID such that we can update it if needed.
     */
 
-    if ($link && $link != $feed['link'] && $link != $feed['url']) {
+    if ($guid) {
+      $entry = db_fetch_object(db_query("SELECT iid FROM {aggregator_item} WHERE fid = %d AND guid = '%s'", $feed['fid'], $guid));
+    }
+    else if ($link && $link != $feed['link'] && $link != $feed['url']) {
       $entry = db_fetch_object(db_query("SELECT iid FROM {aggregator_item} WHERE fid = %d AND link = '%s'", $feed['fid'], $link));
     }
     else {
       $entry = db_fetch_object(db_query("SELECT iid FROM {aggregator_item} WHERE fid = %d AND title = '%s'", $feed['fid'], $title));
     }
 
-    aggregator_save_item(array('iid' => $entry->iid, 'fid' => $feed['fid'], 'timestamp' => $timestamp, 'title' => $title, 'link' => $link, 'author' => $item['AUTHOR'], 'description' => $item['DESCRIPTION']));
+    aggregator_save_item(array('iid' => $entry->iid, 'fid' => $feed['fid'], 'timestamp' => $timestamp, 'title' => $title, 'link' => $link, 'author' => $item['AUTHOR'], 'description' => $item['DESCRIPTION'], 'guid' => $guid));
   }
 
   /*
@@ -933,7 +936,7 @@ function aggregator_parse_feed(&$data, $feed) {
 
 function aggregator_save_item($edit) {
   if ($edit['iid'] && $edit['title']) {
-    db_query("UPDATE {aggregator_item} SET title = '%s', link = '%s', author = '%s', description = '%s' WHERE iid = %d", $edit['title'], $edit['link'], $edit['author'], $edit['description'], $edit['iid']);
+    db_query("UPDATE {aggregator_item} SET title = '%s', link = '%s', author = '%s', description = '%s', guid = '%s' WHERE iid = %d", $edit['title'], $edit['link'], $edit['author'], $edit['description'], $edit['iid'], $edit['gid']);
   }
   else if ($edit['iid']) {
     db_query('DELETE FROM {aggregator_item} WHERE iid = %d', $edit['iid']);
@@ -941,7 +944,7 @@ function aggregator_save_item($edit) {
   }
   else if ($edit['title'] && $edit['link']) {
     $edit['iid'] = db_next_id('{aggregator_item}_iid');
-    db_query("INSERT INTO {aggregator_item} (iid, fid, title, link, author, description, timestamp) VALUES (%d, %d, '%s', '%s', '%s', '%s', %d)", $edit['iid'], $edit['fid'], $edit['title'], $edit['link'], $edit['author'], $edit['description'], $edit['timestamp']);
+    db_query("INSERT INTO {aggregator_item} (iid, fid, title, link, author, description, timestamp, guid) VALUES (%d, %d, '%s', '%s', '%s', '%s', %d, '%s')", $edit['iid'], $edit['fid'], $edit['title'], $edit['link'], $edit['author'], $edit['description'], $edit['timestamp'], $edit['guid']);
     // file the items in the categories indicated by the feed
     $categories = db_query('SELECT cid FROM {aggregator_category_feed} WHERE fid = %d', $edit['fid']);
     while ($category = db_fetch_object($categories)) {
