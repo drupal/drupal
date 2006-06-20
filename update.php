@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.188 2006/06/19 06:12:08 dries Exp $
+// $Id: update.php,v 1.189 2006/06/20 21:15:44 dries Exp $
 
 /**
  * @file
@@ -661,10 +661,13 @@ ini_set('display_errors', FALSE);
 
 include_once './includes/bootstrap.inc';
 update_fix_system_table();
-update_fix_access_table();
 
 drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 drupal_maintenance_theme();
+
+// This must happen *after* drupal_bootstrap(), since it calls
+// variable_(get|set), which only works after a full bootstrap.
+update_fix_access_table();
 
 // Turn error reporting back on. From now on, only fatal errors (which are
 // not passed through the error handler) will cause a message to be printed.
