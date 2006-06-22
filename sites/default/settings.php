@@ -1,5 +1,5 @@
 <?php
-// $Id: settings.php,v 1.28 2006/05/07 00:08:36 drumm Exp $
+// $Id: settings.php,v 1.29 2006/06/22 09:54:48 drumm Exp $
 
 /**
  * @file
@@ -144,6 +144,6 @@ ini_set('url_rewriter.tags',        '');
 # $conf = array(
 #   'site_name' => 'My Drupal site',
 #   'theme_default' => 'pushbutton',
-#   'anonymous' => 'Visitor'
+#   'anonymous' => 'Visitor',
 # );
 
