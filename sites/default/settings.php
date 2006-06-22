@@ -144,6 +144,6 @@ ini_set('url_rewriter.tags',        '');
 # $conf = array(
 #   'site_name' => 'My Drupal site',
 #   'theme_default' => 'pushbutton',
-#   'anonymous' => 'Visitor'
+#   'anonymous' => 'Visitor',
 # );
 
