@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.78 2006/06/01 12:32:52 dries Exp $
+// $Id: locale.inc,v 1.79 2006/06/22 12:23:39 dries Exp $
 
 /**
  * @file
@@ -459,7 +459,11 @@ function _locale_import_po($file, $lang, $mode) {
   }
 
   // Get strings from file (returns on failure after a partial import, or on success)
-  _locale_import_read_po($file, $mode, $lang);
+  $status = _locale_import_read_po($file, $mode, $lang);
+  if ($status === FALSE) {
+    // error messages are set in _locale_import_read_po
+    return FALSE;
+  }
 
   // Get status information on import process
   list($headerdone, $additions, $updates) = _locale_import_one_string('report', $mode);
