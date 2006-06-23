@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.122 2006/05/23 03:18:55 drumm Exp $
+// $Id: form.inc,v 1.123 2006/06/23 08:31:23 drumm Exp $
 
 /**
  * @defgroup form Form generation
@@ -316,6 +316,9 @@ function form_error(&$element, $message = '') {
  */
 function form_builder($form_id, $form) {
   global $form_values, $form_submitted, $form_button_counter;
+
+  // Initialize as unprocessed.
+  $form['#processed'] = FALSE;
 
   /* Use element defaults */
   if ((!empty($form['#type'])) && ($info = _element_info($form['#type']))) {
