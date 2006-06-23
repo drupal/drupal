@@ -317,6 +317,9 @@ function form_error(&$element, $message = '') {
 function form_builder($form_id, $form) {
   global $form_values, $form_submitted, $form_button_counter;
 
+  // Initialize as unprocessed.
+  $form['#processed'] = FALSE;
+
   /* Use element defaults */
   if ((!empty($form['#type'])) && ($info = _element_info($form['#type']))) {
     // overlay $info onto $form, retaining preexisting keys in $form
