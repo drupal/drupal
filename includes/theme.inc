@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.297 2006/05/20 01:24:30 drumm Exp $
+// $Id: theme.inc,v 1.298 2006/06/23 07:54:00 drumm Exp $
 
 /**
  * @file
@@ -245,7 +245,7 @@ function theme_get_settings($key = NULL) {
   );
 
   if (module_exist('node')) {
-    foreach (node_get_types() as $type) {
+    foreach (node_get_types() as $type => $name) {
       $defaults['toggle_node_info_' . $type] = 1;
     }
   }
