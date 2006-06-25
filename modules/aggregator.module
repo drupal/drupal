@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.285 2006/06/20 09:44:36 dries Exp $
+// $Id: aggregator.module,v 1.286 2006/06/25 15:26:41 dries Exp $
 
 /**
  * @file
@@ -886,6 +886,8 @@ function aggregator_parse_feed(&$data, $feed) {
     else if ($item['ISSUED']) $date = $item['ISSUED'];                     // Atom XML
     else if ($item['CREATED']) $date = $item['CREATED'];                   // Atom XML
     else if ($item['MODIFIED']) $date = $item['MODIFIED'];                 // Atom XML
+    else if ($item['PUBLISHED']) $date = $item['PUBLISHED'];               // Atom XML
+    else if ($item['UPDATED']) $date = $item['UPDATED'];                   // Atom XML
     else $date = 'now';
 
     $timestamp = strtotime($date); // As of PHP 5.1.0, strtotime returns FALSE on failure instead of -1.
