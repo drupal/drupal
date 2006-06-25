@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.368 2006/06/05 09:00:22 dries Exp $
+// $Id: book.module,v 1.369 2006/06/25 14:27:12 dries Exp $
 
 /**
  * @file
@@ -686,31 +686,24 @@ function book_export($type = 'html', $nid = 0) {
  * @param nid
  *   - an integer representing the node id (nid) of the node to export
  * @param depth
- * - an integer giving the depth in the book hierarchy of the node
-       which is to be exported
+ *   - an integer giving the depth in the book hierarchy of the node
+ *     which is to be exported
+ *
  * @return
- * - string containing HTML representing the node and its children in
-       the book hierarchy
+ *   - string containing HTML representing the node and its children in
+ *     the book hierarchy
 */
 function book_export_html($nid, $depth) {
   if (user_access('see printer-friendly version')) {
-    global $base_url;
+    $node = node_load($nid);
     for ($i = 1; $i < $depth; $i++) {
-      $output .= "<div class=\"section-$i\">\n";
+      $content .= "<div class=\"section-$i\">\n";
     }
-    $output .= book_recurse($nid, $depth, 'book_node_visitor_html_pre', 'book_node_visitor_html_post');
+    $content .= book_recurse($nid, $depth, 'book_node_visitor_html_pre', 'book_node_visitor_html_post');
     for ($i = 1; $i < $depth; $i++) {
-      $output .= "</div>\n";
-
+      $content .= "</div>\n";
     }
-    $html = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
-    $html .= '<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">';
-    $html .= "<head>\n<title>". check_plain($node->title) ."</title>\n";
-    $html .= '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />';
-    $html .= '<base href="'. $base_url .'/" />' . "\n";
-    $html .= "<style type=\"text/css\">\n@import url(misc/print.css);\n</style>\n";
-    $html .= "</head>\n<body>\n". $output . "\n</body>\n</html>\n";
-    return $html;
+    return theme('book_export_html', check_plain($node->title), $content);
   }
   else {
     drupal_access_denied();
