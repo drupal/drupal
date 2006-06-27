@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.328 2006/06/05 08:53:05 dries Exp $
+// $Id: system.module,v 1.329 2006/06/27 13:48:09 dries Exp $
 
 /**
  * @file
@@ -673,13 +673,14 @@ function system_default_region($theme) {
 }
 
 /**
- * Returns an array of files objects of the given type from both the
- * site-wide directory (i.e. modules/) and site-specific directory
- * (i.e. sites/somesite/modules/). The returned array will be keyed
- * using the key specified (name, basename, filename). Using name or
- * basename will cause site-specific files to shadow files in the
- * default directories. That is, if a file with the same name appears
- * in both location, only the site-specific version will be included.
+ * Returns an array of files objects of the given type from the site-wide
+ * directory (i.e. modules/), the all-sites directory (i.e. sites/all/modules/)
+ * and site-specific directory (i. e. sites/somesite/modules/). The returned
+ * array will be keyed using the key specified (name, basename, filename). Using
+ * name or basename will cause site- specific files to shadow files in the
+ * default directories. That is, if a file with the same name appears in both
+ * the site-wide directory and site-specific directory, only the site-specific
+ * version will be included.
  *
  * @param $mask
  *   The regular expression of the files to find.
@@ -700,6 +701,8 @@ function system_listing($mask, $directory, $key = 'name', $min_depth = 1) {
   $searchdir = array($directory);
   $files = array();
 
+  // Always search sites/all/* as well as the global directories
+  $searchdir[] = 'sites/all';
   if (file_exists("$config/$directory")) {
     $searchdir[] = "$config/$directory";
   }
