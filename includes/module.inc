@@ -45,12 +45,8 @@ function module_list($refresh = FALSE, $bootstrap = TRUE, $sort = FALSE) {
   static $list, $sorted_list;
 
   if ($refresh) {
+    unset($sorted_list);
     $list = array();
-    $sorted_list = NULL;
-  }
-
-  if (!$list) {
-    $list = array('filter' => 'filter', 'node' => 'node', 'system' => 'system', 'user' => 'user', 'watchdog' => 'watchdog');
     if ($bootstrap) {
       $result = db_query("SELECT name, filename, throttle, bootstrap FROM {system} WHERE type = 'module' AND status = 1 AND bootstrap = 1 ORDER BY weight ASC, filename ASC");
     }
