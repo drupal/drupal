@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.54 2006/05/29 13:26:41 dries Exp $
+// $Id: contact.module,v 1.55 2006/06/28 21:47:03 dries Exp $
 
 /**
  * @file
@@ -14,6 +14,7 @@ function contact_help($section) {
     case 'admin/help#contact':
       $output = '<p>'. t('The contact module enables the use of both personal and site-wide contact forms, thereby facilitating easy communication within the community. While personal contact forms allow users to contact each other by e-mail, site-wide forms allow community members to contact the site administration from a central location. Users can specify a subject and message in the contact form, and also request that a copy of the e-mail be sent to their own address.') .'</p>';
       $output .= '<p>'. t("Users can activate/deactivate their personal contact forms in their account settings. Upon activation, a contact tab will appear in their user profiles. Privileged users such as site administrators are able to contact users even if they have chosen not to enable this feature.") .'</p>';
+      $output .= '<p>'. t("Note that the contact tab will not appear when a user views his or her own profile; only when viewing another user's profile, if that user's contact form is enabled.") .'</p>';
       $output .= '<p>'. t('If the menu module is enabled, a menu item linking to the site-wide contact page is added to the navigation block. It is disabled by default, but can be enabled via the <a href="%menu-module">menu management</a> page. Links to the contact page may also be added to the primary and secondary links using the same page.', array('%menu-module' => url('admin/menu'))) .'</p>';
       $output .= t('Contact module links:') .'<ul>';
       $output .= '<li>'. t('Default site-wide <a href="%contact-page">contact page</a>.', array('%contact-page' => url('contact'))) .'</li>';
@@ -101,8 +102,9 @@ function contact_menu($may_cache) {
   }
   else {
     if (arg(0) == 'user' && is_numeric(arg(1))) {
+      global $user;
       $account = user_load(array('uid' => arg(1)));
-      if ($account->contact || user_access('administer users')) {
+      if (($user->uid != $account->uid && $account->contact) || user_access('administer users')) {
         global $user;
         $items[] = array('path' => 'user/'. arg(1) .'/contact',
           'title' => t('contact'),
