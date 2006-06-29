@@ -916,7 +916,7 @@ function theme_closure($main = 0) {
 function theme_blocks($region) {
   $output = '';
 
-  if ($list = module_invoke('block', 'list', $region)) {
+  if ($list = block_list($region)) {
     foreach ($list as $key => $block) {
       // $key == <i>module</i>_<i>delta</i>
       $output .= theme('block', $block);
