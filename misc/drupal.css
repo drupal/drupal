@@ -594,7 +594,9 @@ ul.secondary a.active {
 }
 /* Animated throbber */
 html.js input.form-autocomplete {
-  background: url(throbber.gif) no-repeat 100% 2px;
+  background-image: url(throbber.gif);
+  background-repeat: no-repeat;
+  background-position: 100% 2px;
 }
 html.js input.throbbing {
   background-position: 100% -18px;
