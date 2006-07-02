@@ -883,7 +883,7 @@ function weight_value(&$form) {
 function expand_radios($element) {
   if (count($element['#options']) > 0) {
     foreach ($element['#options'] as $key => $choice) {
-      if (!$element[$key]) {
+      if (!isset($element[$key])) {
         $element[$key] = array('#type' => 'radio', '#title' => $choice, '#return_value' => $key, '#default_value' => $element['#default_value'], '#attributes' => $element['#attributes'], '#parents' => $element['#parents'], '#spawned' => TRUE);
       }
     }
