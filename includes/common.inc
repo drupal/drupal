@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.542 2006/06/08 21:23:40 dries Exp $
+// $Id: common.inc,v 1.543 2006/07/02 01:20:19 drumm Exp $
 
 /**
  * @file
@@ -1284,11 +1284,25 @@ function drupal_to_js($var) {
  * are urlencoded() when passed through url() and do not require urlencoding()
  * of individual components.
  *
+ * Notes:
+ * - For esthetic reasons, we do not escape slashes. This also avoids a 'feature'
+ *   in Apache where it 404s on any path containing '%2F'.
+ * - mod_rewrite's unescapes %-encoded ampersands and hashes when clean URLs
+ *   are used, which are interpreted as delimiters by PHP. These characters are
+ *   double escaped so PHP will still see the encoded version.
+ *
  * @param $text
  *   String to encode
  */
 function drupal_urlencode($text) {
-  return str_replace('%2F', '/', urlencode($text));
+  if (variable_get('clean_url', '0')) {
+    return str_replace(array('%2F', '%26', '%23'),
+                       array('/', '%2526', '%2523'),
+                       urlencode($text));
+  }
+  else {
+    return str_replace('%2F', '/', urlencode($text));    
+  }
 }
 
 /**
