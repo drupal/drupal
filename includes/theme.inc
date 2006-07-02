@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.299 2006/06/29 20:40:26 dries Exp $
+// $Id: theme.inc,v 1.300 2006/07/02 00:25:40 drumm Exp $
 
 /**
  * @file
@@ -839,7 +839,10 @@ function theme_stylesheet_import($path, $media = 'all') {
  * Return a themed list of items.
  *
  * @param $items
- *   An array of items to be displayed in the list.
+ *   An array of items to be displayed in the list. If an item is a string,
+ *   then it is used as is. If an item is an array, then the "data" element of
+ *   the array is used as the contents of the list item and all other elements
+ *   are treated as attributes of the list item element.
  * @param $title
  *   The title of the list.
  * @param $attributes
@@ -858,7 +861,21 @@ function theme_item_list($items = array(), $title = NULL, $type = 'ul', $attribu
   if (!empty($items)) {
     $output .= "<$type" . drupal_attributes($attributes) . '>';
     foreach ($items as $item) {
-      $output .= '<li>'. $item .'</li>';
+      $attributes = array();
+      if (is_array($item)) {
+        foreach ($item as $key => $value) {
+          if ($key == 'data') {
+            $data = $value;
+          }
+          else {
+            $attributes[$key] = $value;
+          }
+        }
+      }
+      else {
+        $data = $item;
+      }
+      $output .= '<li' . drupal_attributes($attributes) . '>'. $data .'</li>';
     }
     $output .= "</$type>";
   }
