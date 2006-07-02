@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.290 2006/06/11 22:46:20 drumm Exp $
+// $Id: taxonomy.module,v 1.291 2006/07/02 01:13:45 drumm Exp $
 
 /**
  * @file
@@ -31,7 +31,7 @@ function taxonomy_link($type, $node = NULL) {
       foreach ($node->taxonomy as $term) {
         $links['taxonomy_term_'. $term->tid] = array(
           '#title' => $term->name,
-          '#href' => 'taxonomy/term/'. $term->tid,
+          '#href' => taxonomy_term_path($term),
           '#attributes' => array('rel' => 'tag', 'title' => strip_tags($term->description))
         );
       }
@@ -45,6 +45,14 @@ function taxonomy_link($type, $node = NULL) {
 
     return $links;
   }
+}
+
+function taxonomy_term_path($term) {
+  $vocabulary = taxonomy_get_vocabulary($term->vid);
+  if ($vocabulary->module != 'taxonomy' && $path = module_invoke($vocabulary->module, 'term_path', $term)) {
+    return $path;
+  }
+  return 'taxonomy/term/'. $term->tid;
 }
 
 /**
