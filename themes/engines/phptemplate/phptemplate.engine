@@ -1,5 +1,5 @@
 <?php
-// $Id: phptemplate.engine,v 1.35 2006/05/07 00:08:36 drumm Exp $
+// $Id: phptemplate.engine,v 1.36 2006/07/02 19:00:21 drumm Exp $
 
 /**
  * @file
@@ -248,10 +248,11 @@ function phptemplate_node($node, $teaser = 0, $page = 0) {
 
   // Display info only on certain node types.
   if (theme_get_setting('toggle_node_info_' . $node->type)) {
-    $variables['submitted'] =  t('Submitted by %a on %b.', array('%a' => theme('username', $node), '%b' => format_date($node->created)));
+    $variables['submitted'] = t('Submitted by %a on %b.', array('%a' => theme('username', $node), '%b' => format_date($node->created)));
     $variables['picture'] = theme_get_setting('toggle_node_user_picture') ? theme('user_picture', $node) : '';
   }
   else {
+    $variables['submitted'] = '';
     $variables['picture'] = '';
   }
 
