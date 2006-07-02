@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.101 2006/06/28 21:18:30 dries Exp $
+// $Id: bootstrap.inc,v 1.102 2006/07/02 19:25:34 drumm Exp $
 
 /**
  * @file
@@ -382,61 +382,59 @@ function drupal_load($type, $name) {
  * @see page_set_cache
  */
 function drupal_page_header() {
-  if (variable_get('cache', 0)) {
-    if ($cache = page_get_cache()) {
-      bootstrap_invoke_all('init');
-      // Set default values:
-      $date = gmdate('D, d M Y H:i:s', $cache->created) .' GMT';
-      $etag = '"'. md5($date) .'"';
+  if (variable_get('cache', 0) && $cache = page_get_cache()) {
+    bootstrap_invoke_all('init');
+    // Set default values:
+    $date = gmdate('D, d M Y H:i:s', $cache->created) .' GMT';
+    $etag = '"'. md5($date) .'"';
 
-      // Check http headers:
-      $modified_since = isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) ? $_SERVER['HTTP_IF_MODIFIED_SINCE'] == $date : NULL;
-      if (!empty($_SERVER['HTTP_IF_MODIFIED_SINCE']) && ($timestamp = strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE'])) > 0) {
-        $modified_since = $cache->created <= $timestamp;
-      }
-      else {
-        $modified_since = NULL;
-      }
-      $none_match = !empty($_SERVER['HTTP_IF_NONE_MATCH']) ? $_SERVER['HTTP_IF_NONE_MATCH'] == $etag : NULL;
-
-      // The type checking here is very important, be careful when changing entries.
-      if (($modified_since !== NULL || $none_match !== NULL) && $modified_since !== false && $none_match !== false) {
-        header('HTTP/1.0 304 Not Modified');
-        exit();
-      }
-
-      // Send appropriate response:
-      header("Last-Modified: $date");
-      header("ETag: $etag");
-
-      // Determine if the browser accepts gzipped data.
-      if (@strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') === false && function_exists('gzencode')) {
-        // Strip the gzip header and run uncompress.
-        $cache->data = gzinflate(substr(substr($cache->data, 10), 0, -8));
-      }
-      elseif (function_exists('gzencode')) {
-        header('Content-Encoding: gzip');
-      }
-
-      // Send the original request's headers. We send them one after
-      // another so PHP's header() function can deal with duplicate
-      // headers.
-      $headers = explode("\n", $cache->headers);
-      foreach ($headers as $header) {
-        header($header);
-      }
-
-      print $cache->data;
-      bootstrap_invoke_all('exit');
-      exit();
+    // Check http headers:
+    $modified_since = isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) ? $_SERVER['HTTP_IF_MODIFIED_SINCE'] == $date : NULL;
+    if (!empty($_SERVER['HTTP_IF_MODIFIED_SINCE']) && ($timestamp = strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE'])) > 0) {
+      $modified_since = $cache->created <= $timestamp;
     }
     else {
-      header("Expires: Sun, 19 Nov 1978 05:00:00 GMT");
-      header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-      header("Cache-Control: no-store, no-cache, must-revalidate");
-      header("Cache-Control: post-check=0, pre-check=0", false);
-      header("Pragma: no-cache");
+      $modified_since = NULL;
     }
+    $none_match = !empty($_SERVER['HTTP_IF_NONE_MATCH']) ? $_SERVER['HTTP_IF_NONE_MATCH'] == $etag : NULL;
+
+    // The type checking here is very important, be careful when changing entries.
+    if (($modified_since !== NULL || $none_match !== NULL) && $modified_since !== false && $none_match !== false) {
+      header('HTTP/1.0 304 Not Modified');
+      exit();
+    }
+
+    // Send appropriate response:
+    header("Last-Modified: $date");
+    header("ETag: $etag");
+
+    // Determine if the browser accepts gzipped data.
+    if (@strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') === false && function_exists('gzencode')) {
+      // Strip the gzip header and run uncompress.
+      $cache->data = gzinflate(substr(substr($cache->data, 10), 0, -8));
+    }
+    elseif (function_exists('gzencode')) {
+      header('Content-Encoding: gzip');
+    }
+
+    // Send the original request's headers. We send them one after
+    // another so PHP's header() function can deal with duplicate
+    // headers.
+    $headers = explode("\n", $cache->headers);
+    foreach ($headers as $header) {
+      header($header);
+    }
+
+    print $cache->data;
+    bootstrap_invoke_all('exit');
+    exit();
+  }
+  else {
+    header("Expires: Sun, 19 Nov 1978 05:00:00 GMT");
+    header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+    header("Cache-Control: no-store, no-cache, must-revalidate");
+    header("Cache-Control: post-check=0, pre-check=0", false);
+    header("Pragma: no-cache");
   }
 }
 
