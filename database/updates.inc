@@ -2087,3 +2087,18 @@ function system_update_186() {
 }
 
 
+function system_update_187() {
+  // Increase the size of bid in boxes and aid in access
+  $ret = array();
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+    $ret[] = update_sql("ALTER TABLE {access} CHANGE `aid` `aid` INT( 10 ) NOT NULL AUTO_INCREMENT ");
+    $ret[] = update_sql("ALTER TABLE {boxes} CHANGE `bid` `bid` INT( 10 ) NOT NULL AUTO_INCREMENT ");
+      break;
+    case 'pgsql':
+      // No database update required for PostgreSQL because it already uses big SERIAL numbers.
+      break;
+  }
+  return $ret;
+}

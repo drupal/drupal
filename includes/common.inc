@@ -1301,7 +1301,7 @@ function drupal_urlencode($text) {
                        urlencode($text));
   }
   else {
-    return str_replace('%2F', '/', urlencode($text));    
+    return str_replace('%2F', '/', urlencode($text));
   }
 }
 
