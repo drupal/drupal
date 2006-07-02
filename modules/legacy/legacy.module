@@ -1,5 +1,5 @@
 <?php
-// $Id: legacy.module,v 1.9 2006/05/07 00:08:36 drumm Exp $
+// $Id: legacy.module,v 1.10 2006/07/02 20:06:31 drumm Exp $
 
 /**
  * @file
@@ -125,7 +125,7 @@ function legacy_filter($op, $delta = 0, $format = -1, $text = '') {
       return t('Replaces URLs from Drupal 4.1 (and lower) with updated equivalents.');
 
     case 'process':
-      return _legacy_filter_old_urls($text, $format);
+      return _legacy_filter_old_urls($text);
 
     case 'settings':
       return;

@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.156 2006/05/12 08:50:22 dries Exp $
+// $Id: profile.module,v 1.157 2006/07/02 20:06:31 drumm Exp $
 
 /**
  * @file
@@ -361,7 +361,7 @@ function profile_field_delete($fid) {
   $form['fid'] = array('#type' => 'value', '#value' => $fid);
   $form['title'] = array('#type' => 'value', '#value' => $field->title);
 
-  return confirm_form('profile_field_delete', $form, t('Are you sure you want to delete the field %field?', array('%field' => theme('placeholder', $field->title))), 'admin/settings/profile', t('This action cannot be undone. If users have entered values into this field in their profile, these entries will also be deleted. If you want to keep the user-entered data, instead of deleting the field you may wish to <a href="%edit-field">edit this field</a> and change it to a %hidden-field so that it may only be accessed by administrators.', array('%edit-field' => url('admin/settings/profile/edit/' . $fid), '%hidden-field' => theme('placeholder', t('hidden profile field'))), t('Delete'), t('Cancel')));
+  return confirm_form('profile_field_delete', $form, t('Are you sure you want to delete the field %field?', array('%field' => theme('placeholder', $field->title))), 'admin/settings/profile', t('This action cannot be undone. If users have entered values into this field in their profile, these entries will also be deleted. If you want to keep the user-entered data, instead of deleting the field you may wish to <a href="%edit-field">edit this field</a> and change it to a %hidden-field so that it may only be accessed by administrators.', array('%edit-field' => url('admin/settings/profile/edit/' . $fid), '%hidden-field' => theme('placeholder', t('hidden profile field')))), t('Delete'), t('Cancel'));
 }
 
 /**

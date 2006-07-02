@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.209 2006/05/26 09:21:10 dries Exp $
+// $Id: block.module,v 1.210 2006/07/02 20:06:31 drumm Exp $
 
 /**
  * @file
@@ -223,7 +223,7 @@ function block_admin_display() {
     $form[$i]['theme'] = array('#type' => 'hidden', '#value' => $theme_key);
     $form[$i]['weight'] = array('#type' => 'weight', '#default_value' => $block['weight']);
     $form[$i]['region'] = array('#type' => 'select',
-      '#default_value' => isset($block['region']) ? $block['region'] : system_default_region(),
+      '#default_value' => isset($block['region']) ? $block['region'] : system_default_region($theme_key),
       '#options' => $block_regions,
     );
 

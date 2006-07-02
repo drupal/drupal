@@ -1,5 +1,5 @@
 <?php
-// $Id: ping.module,v 1.36 2006/05/07 00:08:36 drumm Exp $
+// $Id: ping.module,v 1.37 2006/07/02 20:06:31 drumm Exp $
 
 /**
  * @file
@@ -37,7 +37,7 @@ function ping_cron() {
   global $base_url;
 
   if (variable_get('site_name', 0) && variable_get('site_slogan', 0)) {
-    if (db_num_rows(db_query("SELECT nid FROM {node} WHERE status = 1 AND moderate = 0 AND (created > '". variable_get('cron_last', time()) ."' OR changed > '". variable_get('cron_last', time()) ."')"), 1)) {
+    if (db_num_rows(db_query("SELECT nid FROM {node} WHERE status = 1 AND moderate = 0 AND (created > '". variable_get('cron_last', time()) ."' OR changed > '". variable_get('cron_last', time()) ."')"))) {
       _ping_notify(variable_get('site_name', '') .' - '. variable_get('site_slogan', ''), $base_url);
     }
   }
