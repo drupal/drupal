@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.124 2006/07/02 20:06:31 drumm Exp $
+// $Id: form.inc,v 1.125 2006/07/02 20:10:20 drumm Exp $
 
 /**
  * @defgroup form Form generation
@@ -883,7 +883,7 @@ function weight_value(&$form) {
 function expand_radios($element) {
   if (count($element['#options']) > 0) {
     foreach ($element['#options'] as $key => $choice) {
-      if (!$element[$key]) {
+      if (!isset($element[$key])) {
         $element[$key] = array('#type' => 'radio', '#title' => $choice, '#return_value' => $key, '#default_value' => $element['#default_value'], '#attributes' => $element['#attributes'], '#parents' => $element['#parents'], '#spawned' => TRUE);
       }
     }
