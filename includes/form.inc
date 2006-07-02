@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.125 2006/07/02 20:10:20 drumm Exp $
+// $Id: form.inc,v 1.126 2006/07/02 20:24:17 drumm Exp $
 
 /**
  * @defgroup form Form generation
@@ -60,6 +60,11 @@ function element_children($element) {
  */
 function drupal_get_form($form_id, &$form, $callback = NULL) {
   global $form_values, $form_submitted, $user, $form_button_counter;
+  static $saved_globals = array();
+
+  // Save globals in case of indirect recursive call
+  array_push($saved_globals, array($form_values, $form_submitted, $form_button_counter));
+
   $form_values = array();
   $form_submitted = FALSE;
   $form_button_counter = array(0, 0);
@@ -155,7 +160,10 @@ function drupal_get_form($form_id, &$form, $callback = NULL) {
     }
   }
 
-  return form_render($form);
+  $output = form_render($form);
+  // Restore globals
+  list($form_values, $form_submitted, $form_button_counter) = array_pop($saved_globals);
+  return $output;
 }
 
 function drupal_validate_form($form_id, $form, $callback = NULL) {

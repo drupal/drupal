@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.460 2006/07/02 02:59:21 drumm Exp $
+// $Id: comment.module,v 1.461 2006/07/02 20:24:17 drumm Exp $
 
 /**
  * @file
@@ -1450,7 +1450,7 @@ function comment_form_add_preview($form, $edit) {
     $output .= theme('comment_view', $comment);
   }
   else {
-    $output .= node_view(node_load($edit['nid']));
+    $form['#suffix'] = node_view(node_load($edit['nid']));
     $edit['pid'] = 0;
   }
 
