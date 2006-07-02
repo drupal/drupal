@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.369 2006/06/25 14:27:12 dries Exp $
+// $Id: book.module,v 1.370 2006/07/02 20:36:57 drumm Exp $
 
 /**
  * @file
@@ -361,7 +361,7 @@ function book_outline_submit($form_id, $form_values) {
  */
 function book_location($node, $nodes = array()) {
   $parent = db_fetch_object(db_query(db_rewrite_sql('SELECT n.nid, n.title, b.parent, b.weight FROM {node} n INNER JOIN {book} b ON n.vid = b.vid WHERE n.nid = %d'), $node->parent));
-  if ($parent->title) {
+  if (isset($parent->title)) {
     $nodes = book_location($parent, $nodes);
     $nodes[] = $parent;
   }
@@ -499,6 +499,7 @@ function book_nodeapi(&$node, $op, $teaser, $page) {
  */
 function theme_book_navigation($node) {
   $output = '';
+  $links = '';
 
   if ($node->nid) {
     $tree = book_tree($node->nid);
@@ -575,8 +576,9 @@ function book_toc($exclude = 0) {
  * This is a helper function for book_tree()
  */
 function book_tree_recurse($nid, $depth, $children, $unfold = array()) {
+  $output = '';
   if ($depth > 0) {
-    if ($children[$nid]) {
+    if (isset($children[$nid])) {
       foreach ($children[$nid] as $foo => $node) {
         if (in_array($node->nid, $unfold)) {
           if ($tree = book_tree_recurse($node->nid, $depth - 1, $children, $unfold)) {
@@ -612,7 +614,7 @@ function book_tree($parent = 0, $depth = 3, $unfold = array()) {
   $result = db_query(db_rewrite_sql('SELECT n.nid, n.title, b.parent, b.weight FROM {node} n INNER JOIN {book} b ON n.vid = b.vid WHERE n.status = 1 AND n.moderate = 0 ORDER BY b.weight, n.title'));
 
   while ($node = db_fetch_object($result)) {
-    $list = $children[$node->parent] ? $children[$node->parent] : array();
+    $list = isset($children[$node->parent]) ? $children[$node->parent] : array();
     $list[] = $node;
     $children[$node->parent] = $list;
   }
