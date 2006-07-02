@@ -1,4 +1,5 @@
 <?php
+// $Id: cache.inc,v 1.2 2006/07/02 00:34:36 drumm Exp $
 
 /**
  * Return data from the persistent cache.
