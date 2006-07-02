@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.543 2006/07/02 01:20:19 drumm Exp $
+// $Id: common.inc,v 1.544 2006/07/02 19:53:39 dries Exp $
 
 /**
  * @file
@@ -1301,7 +1301,7 @@ function drupal_urlencode($text) {
                        urlencode($text));
   }
   else {
-    return str_replace('%2F', '/', urlencode($text));    
+    return str_replace('%2F', '/', urlencode($text));
   }
 }
 

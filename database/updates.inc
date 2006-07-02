@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.238 2006/06/20 09:44:52 dries Exp $
+// $Id: updates.inc,v 1.239 2006/07/02 19:53:39 dries Exp $
 
 function system_update_110() {
   $ret = array();
@@ -2087,3 +2087,18 @@ function system_update_186() {
 }
 
 
+function system_update_187() {
+  // Increase the size of bid in boxes and aid in access
+  $ret = array();
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+    $ret[] = update_sql("ALTER TABLE {access} CHANGE `aid` `aid` INT( 10 ) NOT NULL AUTO_INCREMENT ");
+    $ret[] = update_sql("ALTER TABLE {boxes} CHANGE `bid` `bid` INT( 10 ) NOT NULL AUTO_INCREMENT ");
+      break;
+    case 'pgsql':
+      // No database update required for PostgreSQL because it already uses big SERIAL numbers.
+      break;
+  }
+  return $ret;
+}

@@ -1,10 +1,10 @@
--- $Id: database.4.0.mysql,v 1.5 2006/05/29 16:04:41 dries Exp $
+-- $Id: database.4.0.mysql,v 1.6 2006/07/02 19:53:39 dries Exp $
 
 --
 -- Table structure for table 'access'
 --
 CREATE TABLE access (
-  aid tinyint(10) NOT NULL auto_increment,
+  aid int(10) NOT NULL auto_increment,
   mask varchar(255) NOT NULL default '',
   type varchar(255) NOT NULL default '',
   status tinyint(2) NOT NULL default '0',
@@ -147,7 +147,7 @@ CREATE TABLE book (
 --
 
 CREATE TABLE boxes (
-  bid tinyint(4) NOT NULL auto_increment,
+  bid int(4) NOT NULL auto_increment,
   title varchar(64) NOT NULL default '',
   body longtext,
   info varchar(128) NOT NULL default '',
