@@ -1450,7 +1450,7 @@ function comment_form_add_preview($form, $edit) {
     $output .= theme('comment_view', $comment);
   }
   else {
-    $output .= node_view(node_load($edit['nid']));
+    $form['#suffix'] = node_view(node_load($edit['nid']));
     $edit['pid'] = 0;
   }
 
