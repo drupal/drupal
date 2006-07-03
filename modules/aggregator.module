@@ -1202,7 +1202,7 @@ function aggregator_page_rss() {
   $output .= format_rss_channel(variable_get('site_name', t('Drupal')) . ' ' . t('aggregator'), url('aggregator' . $url, NULL, NULL, TRUE), variable_get('site_name', t('Drupal')) . ' - ' . t('aggregated feeds') . $title, $items, 'en');
   $output .= "</rss>\n";
 
-  drupal_set_header('Content-Type: text/xml; charset=utf-8');
+  drupal_set_header('Content-Type: application/rss+xml; charset=utf-8');
   print $output;
 }
 
