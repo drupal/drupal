@@ -509,7 +509,7 @@ function theme_book_navigation($node) {
       $links .= l(t('‹ ') . $prev->title, 'node/'. $prev->nid, array('class' => 'page-previous', 'title' => t('Go to previous page')));
     }
     if ($node->parent) {
-      drupal_add_link(array('rel' => 'index', 'href' => url('node/'. $node->parent)));
+      drupal_add_link(array('rel' => 'up', 'href' => url('node/'. $node->parent)));
       $links .= l(t('up'), 'node/'. $node->parent, array('class' => 'page-up', 'title' => t('Go to parent page')));
     }
     if ($next = book_next($node)) {
