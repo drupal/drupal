@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.126 2006/07/02 20:24:17 drumm Exp $
+// $Id: form.inc,v 1.127 2006/07/04 08:52:55 drumm Exp $
 
 /**
  * @defgroup form Form generation
@@ -145,11 +145,14 @@ function drupal_get_form($form_id, &$form, $callback = NULL) {
     }
   }
 
-  if (theme_get_function($form_id)) {
-    $form['#theme'] = $form_id;
-  }
-  elseif (theme_get_function($callback)) {
-    $form['#theme'] = $callback;
+  // Don't override #theme if someone already set it.
+  if (!isset($form['#theme'])) {
+    if (theme_get_function($form_id)) {
+      $form['#theme'] = $form_id;
+    }
+    elseif (theme_get_function($callback)) {
+      $form['#theme'] = $callback;
+    }
   }
 
   if (isset($form['#pre_render'])) {
