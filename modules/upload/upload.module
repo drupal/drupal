@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.108 2006/06/11 23:58:55 drumm Exp $
+// $Id: upload.module,v 1.109 2006/07/04 08:48:05 drumm Exp $
 
 /**
  * @file
@@ -403,6 +403,7 @@ function upload_nodeapi(&$node, $op, $teaser) {
   switch ($op) {
 
     case 'load':
+      $output = '';
       if (variable_get("upload_$node->type", 1) == 1) {
         $output['files'] = upload_load($node);
         return $output;
