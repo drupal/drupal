@@ -403,6 +403,7 @@ function upload_nodeapi(&$node, $op, $teaser) {
   switch ($op) {
 
     case 'load':
+      $output = '';
       if (variable_get("upload_$node->type", 1) == 1) {
         $output['files'] = upload_load($node);
         return $output;
