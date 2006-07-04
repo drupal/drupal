@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.300 2006/07/02 00:25:40 drumm Exp $
+// $Id: theme.inc,v 1.301 2006/07/04 08:59:04 drumm Exp $
 
 /**
  * @file
@@ -497,20 +497,20 @@ function theme_links($links, $delimiter = ' | ') {
 
   if (is_array($links)) {
     foreach ($links as $key => $link) {
-      //Automatically add a class to each link and convert all _ to - for XHTML compliance
-      if (isset($link['#attributes']) && isset($link['#attributes']['class'])) {
-        $link['#attributes']['class'] .= ' '. str_replace('_', '-', $key);
+      // Automatically add a class to each link and convert all _ to - for XHTML compliance
+      if (isset($link['attributes']) && isset($link['attributes']['class'])) {
+        $link['attributes']['class'] .= ' '. str_replace('_', '-', $key);
       }
       else {
-        $link['#attributes']['class'] = str_replace('_', '-', $key);
+        $link['attributes']['class'] = str_replace('_', '-', $key);
       }
 
-      if ($link['#href']) {
-        $output[] = l($link['#title'], $link['#href'], $link['#attributes'], $link['#query'], $link['#fragment']);
+      if ($link['href']) {
+        $output[] = l($link['title'], $link['href'], $link['attributes'], $link['query'], $link['fragment']);
       }
-      else if ($link['#title']) {
+      else if ($link['title']) {
         //Some links are actually not links, but we wrap these in <span> for adding title and class attributes
-        $output[] = '<span'. drupal_attributes($link['#attributes']) .'>'. $link['#title'] .'</span>';
+        $output[] = '<span'. drupal_attributes($link['attributes']) .'>'. check_plain($link['title']) .'</span>';
       }
     }
   }

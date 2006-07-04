@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.287 2006/07/03 08:04:33 dries Exp $
+// $Id: aggregator.module,v 1.288 2006/07/04 08:59:04 drumm Exp $
 
 /**
  * @file
@@ -1151,8 +1151,8 @@ function aggregator_page_sources() {
     $output .= theme('item_list', $list);
 
     $link['sources'] = array(
-      '#title' => t('more'),
-      '#href' => 'aggregator/sources/'. $feed->fid
+      'title' => t('more'),
+      'href' => 'aggregator/sources/'. $feed->fid
     );
 
     $output .= '<div class="links">'. theme('links', $link) ."</div>\n";
@@ -1255,8 +1255,8 @@ function aggregator_page_categories() {
     }
 
     $link['categories'] = array(
-      '#title' => t('more'),
-      '#href' => 'aggregator/categories/'. $category->cid
+      'title' => t('more'),
+      'href' => 'aggregator/categories/'. $category->cid
     );
 
     $output .= '<div class="links">'. theme('links', $link) ."</div>\n";

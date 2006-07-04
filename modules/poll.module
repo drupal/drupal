@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.199 2006/06/27 13:48:09 dries Exp $
+// $Id: poll.module,v 1.200 2006/07/04 08:59:05 drumm Exp $
 
 /**
  * @file
@@ -544,9 +544,9 @@ function poll_view(&$node, $teaser = FALSE, $page = FALSE, $block = FALSE) {
     $node->body = $node->teaser = '';
 
     $links = module_invoke_all('link', 'node', $node, 1);
-    $links[] = array('#title' => t('older polls'), '#href' => 'poll', '#attributes' => array('title' => t('View the list of polls on this site.')));
+    $links[] = array('title' => t('older polls'), 'href' => 'poll', 'attributes' => array('title' => t('View the list of polls on this site.')));
     if ($node->allowvotes && $block) {
-      $links[] = array('#title' => t('results'), '#href' => 'node/'. $node->nid .'/results', '#attributes' => array('title' => t('View the current poll results.')));
+      $links[] = array('title' => t('results'), 'href' => 'node/'. $node->nid .'/results', 'attributes' => array('title' => t('View the current poll results.')));
     }
 
     $node->links = $links;

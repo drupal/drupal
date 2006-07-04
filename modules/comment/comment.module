@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.461 2006/07/02 20:24:17 drumm Exp $
+// $Id: comment.module,v 1.462 2006/07/04 08:59:05 drumm Exp $
 
 /**
  * @file
@@ -196,18 +196,18 @@ function comment_link($type, $node = 0, $main = 0) {
 
         if ($all) {
           $links['comment_comments'] = array(
-            '#title' => format_plural($all, '1 comment', '%count comments'),
-            '#href' => "node/$node->nid",
-            '#attributes' => array('title' => t('Jump to the first comment of this posting.')),
-            '#fragment' => 'comment'
+            'title' => format_plural($all, '1 comment', '%count comments'),
+            'href' => "node/$node->nid",
+            'attributes' => array('title' => t('Jump to the first comment of this posting.')),
+            'fragment' => 'comment'
           );
 
           if ($new) {
             $links['comment_new_comments'] = array(
-              '#title' => format_plural($new, '1 new comment', '%count new comments'),
-              '#href' => "node/$node->nid",
-              '#attributes' => array('title' => t('Jump to the first new comment of this posting.')),
-              '#fragment' => 'new'
+              'title' => format_plural($new, '1 new comment', '%count new comments'),
+              'href' => "node/$node->nid",
+              'attributes' => array('title' => t('Jump to the first new comment of this posting.')),
+              'fragment' => 'new'
             );
           }
         }
@@ -215,10 +215,10 @@ function comment_link($type, $node = 0, $main = 0) {
           if ($node->comment == COMMENT_NODE_READ_WRITE) {
             if (user_access('post comments')) {
               $links['comment_add'] = array(
-                '#title' => t('add new comment'),
-                '#href' => "comment/reply/$node->nid",
-                '#attributes' => array('title' => t('Add a new comment to this page.')),
-                '#fragment' => 'comment_form'
+                'title' => t('add new comment'),
+                'href' => "comment/reply/$node->nid",
+                'attributes' => array('title' => t('Add a new comment to this page.')),
+                'fragment' => 'comment_form'
               );
             }
             else {
@@ -236,10 +236,10 @@ function comment_link($type, $node = 0, $main = 0) {
         if (user_access('post comments')) {
           if (variable_get('comment_form_location', COMMENT_FORM_SEPARATE_PAGE) == COMMENT_FORM_SEPARATE_PAGE) {
             $links['comment_add'] = array(
-              '#title' => t('add new comment'),
-              '#href' => "comment/reply/$node->nid",
-              '#attributes' => array('title' => t('Share your thoughts and opinions related to this posting.')),
-              '#fragment' => 'comment_form'
+              'title' => t('add new comment'),
+              'href' => "comment/reply/$node->nid",
+              'attributes' => array('title' => t('Share your thoughts and opinions related to this posting.')),
+              'fragment' => 'comment_form'
             );
           }
         }
@@ -689,37 +689,37 @@ function comment_links($comment, $return = 1) {
   // If we are viewing just this comment, we link back to the node.
   if ($return) {
     $links['comment_parent'] = array(
-      '#title' => t('parent'),
-      '#href' => comment_node_url(),
-      '#fragment' => "comment-$comment->cid"
+      'title' => t('parent'),
+      'href' => comment_node_url(),
+      'fragment' => "comment-$comment->cid"
     );
   }
 
   if (node_comment_mode($comment->nid) == COMMENT_NODE_READ_WRITE) {
     if (user_access('administer comments') && user_access('post comments')) {
       $links['comment_delete'] = array(
-        '#title' => t('delete'),
-        '#href' => "comment/delete/$comment->cid"
+        'title' => t('delete'),
+        'href' => "comment/delete/$comment->cid"
       );
       $links['comment_edit'] = array(
-        '#title' => t('edit'),
-        '#href' => "comment/edit/$comment->cid"
+        'title' => t('edit'),
+        'href' => "comment/edit/$comment->cid"
       );
       $links['comment_reply'] = array(
-        '#title' => t('reply'),
-        '#href' => "comment/reply/$comment->nid/$comment->cid"
+        'title' => t('reply'),
+        'href' => "comment/reply/$comment->nid/$comment->cid"
       );
     }
     else if (user_access('post comments')) {
       if (comment_access('edit', $comment)) {
         $links['comment_edit'] = array(
-          '#title' => t('edit'),
-          '#href' => "comment/edit/$comment->cid"
+          'title' => t('edit'),
+          'href' => "comment/edit/$comment->cid"
         );
       }
       $links['comment_reply'] = array(
-        '#title' => t('reply'),
-        '#href' => "comment/reply/$comment->nid/$comment->cid"
+        'title' => t('reply'),
+        'href' => "comment/reply/$comment->nid/$comment->cid"
       );
     }
     else {

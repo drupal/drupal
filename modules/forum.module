@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.334 2006/06/12 03:44:54 drumm Exp $
+// $Id: forum.module,v 1.335 2006/07/04 08:59:05 drumm Exp $
 
 /**
  * @file
@@ -636,14 +636,14 @@ function _forum_parent_select($tid, $title, $child_type) {
 }
 
 function forum_link_alter(&$node, &$links) {
-  foreach ($links AS $module => $link) {
+  foreach ($links as $module => $link) {
     if (strstr($module, 'taxonomy_term')) {
       // Link back to the forum and not the taxonomy term page. We'll only
       // do this if the taxonomy term in question belongs to forums.
-      $tid = str_replace('taxonomy/term/', '', $link['#href']);
+      $tid = str_replace('taxonomy/term/', '', $link['href']);
       $term = taxonomy_get_term($tid);
       if ($term->vid == _forum_get_vid()) {
-        $links[$module]['#href'] = str_replace('taxonomy/term', 'forum', $link['#href']);
+        $links[$module]['href'] = str_replace('taxonomy/term', 'forum', $link['href']);
       }
     }
   }

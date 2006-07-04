@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.109 2006/07/04 08:48:05 drumm Exp $
+// $Id: upload.module,v 1.110 2006/07/04 08:59:05 drumm Exp $
 
 /**
  * @file
@@ -54,10 +54,10 @@ function upload_link($type, $node = 0, $main = 0) {
     }
     if ($num_files) {
       $links['upload_attachments'] = array(
-        '#title' => format_plural($num_files, '1 attachment', '%count attachments'),
-        '#href' => "node/$node->nid",
-        '#attributes' => array('title' => t('Read full article to view attachments.')),
-        '#fragment' => 'attachments'
+        'title' => format_plural($num_files, '1 attachment', '%count attachments'),
+        'href' => "node/$node->nid",
+        'attributes' => array('title' => t('Read full article to view attachments.')),
+        'fragment' => 'attachments'
       );
     }
   }

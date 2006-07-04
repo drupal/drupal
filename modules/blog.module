@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.249 2006/05/18 14:58:56 dries Exp $
+// $Id: blog.module,v 1.250 2006/07/04 08:59:04 drumm Exp $
 
 /**
  * @file
@@ -250,9 +250,9 @@ function blog_link($type, $node = 0, $main = 0) {
   if ($type == 'node' && $node->type == 'blog') {
     if (arg(0) != 'blog' || arg(1) != $node->uid) {
       $links['blog_usernames_blog'] = array(
-        '#title' => t("%username's blog", array('%username' => $node->name)),
-        '#href' => "blog/$node->uid",
-        '#attributes' => array('title' => t("Read %username's latest blog entries.", array('%username' => $node->name)))
+        'title' => t("%username's blog", array('%username' => $node->name)),
+        'href' => "blog/$node->uid",
+        'attributes' => array('title' => t("Read %username's latest blog entries.", array('%username' => $node->name)))
       );
     }
   }
