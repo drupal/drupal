@@ -30,9 +30,9 @@ function taxonomy_link($type, $node = NULL) {
     if (array_key_exists('taxonomy', $node)) {
       foreach ($node->taxonomy as $term) {
         $links['taxonomy_term_'. $term->tid] = array(
-          '#title' => $term->name,
-          '#href' => taxonomy_term_path($term),
-          '#attributes' => array('rel' => 'tag', 'title' => strip_tags($term->description))
+          'title' => $term->name,
+          'href' => taxonomy_term_path($term),
+          'attributes' => array('rel' => 'tag', 'title' => strip_tags($term->description))
         );
       }
     }
