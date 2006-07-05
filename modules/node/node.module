@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.653 2006/07/04 08:59:05 drumm Exp $
+// $Id: node.module,v 1.654 2006/07/05 11:45:51 dries Exp $
 
 /**
  * @file
@@ -401,12 +401,12 @@ function node_load($param = array(), $revision = NULL, $reset = NULL) {
 function node_save(&$node) {
   global $user;
 
-  $node->is_new = false;
+  $node->is_new = FALSE;
 
   // Apply filters to some default node fields:
   if (empty($node->nid)) {
     // Insert a new node.
-    $node->is_new = true;
+    $node->is_new = TRUE;
 
     $node->nid = db_next_id('{node}_nid');
     $node->vid = db_next_id('{node_revisions}_vid');;
@@ -593,7 +593,7 @@ function node_perm() {
 /**
  * Implementation of hook_search().
  */
-function node_search($op = 'search', $keys = null) {
+function node_search($op = 'search', $keys = NULL) {
   switch ($op) {
     case 'name':
       return t('content');
@@ -666,7 +666,7 @@ function node_search($op = 'search', $keys = null) {
       $arguments2 = array();
       $join2 = '';
       // Used to avoid joining on node_comment_statistics twice
-      $stats_join = false;
+      $stats_join = FALSE;
       if ($weight = (int)variable_get('node_rank_relevance', 5)) {
         // Average relevance values hover around 0.15
         $ranking[] = '%d * i.relevance';
@@ -678,7 +678,7 @@ function node_search($op = 'search', $keys = null) {
         $arguments2[] = $weight;
         $arguments2[] = (int)variable_get('node_cron_last', 0);
         $join2 .= ' INNER JOIN {node} n ON n.nid = i.sid LEFT JOIN {node_comment_statistics} c ON c.nid = i.sid';
-        $stats_join = true;
+        $stats_join = TRUE;
       }
       if (module_exist('comment') && $weight = (int)variable_get('node_rank_comments', 5)) {
         // Inverse law that maps the highest reply count on the site to 1 and 0 to 0.
@@ -711,13 +711,13 @@ function node_search($op = 'search', $keys = null) {
 
         // Get node output (filtered and with module-specific fields).
         if (node_hook($node, 'view')) {
-          node_invoke($node, 'view', false, false);
+          node_invoke($node, 'view', FALSE, FALSE);
         }
         else {
-          $node = node_prepare($node, false);
+          $node = node_prepare($node, FALSE);
         }
         // Allow modules to change $node->body before viewing.
-        node_invoke_nodeapi($node, 'view', false, false);
+        node_invoke_nodeapi($node, 'view', FALSE, FALSE);
 
         // Fetch comments for snippet
         $node->body .= module_invoke('comment', 'nodeapi', $node, 'update index');
@@ -1203,7 +1203,7 @@ function node_multiple_delete_confirm() {
   $edit = $_POST['edit'];
 
   $form['nodes'] = array('#prefix' => '<ul>', '#suffix' => '</ul>', '#tree' => TRUE);
-  // array_filter returns only elements with true values
+  // array_filter returns only elements with TRUE values
   foreach (array_filter($edit['nodes']) as $nid => $value) {
     $title = db_result(db_query('SELECT title FROM {node} WHERE nid = %d', $nid));
     $form['nodes'][$nid] = array('#type' => 'hidden', '#value' => $nid, '#prefix' => '<li>', '#suffix' => check_plain($title) ."</li>\n");
@@ -1457,7 +1457,7 @@ function node_feed($nodes = 0, $channel = array()) {
 
     // Allow modules to add additional item fields
     $extra = node_invoke_nodeapi($item, 'rss item');
-    $extra = array_merge($extra, array(array('key' => 'pubDate', 'value' =>  date('r', $item->created)), array('key' => 'dc:creator', 'value' => $item->name), array('key' => 'guid', 'value' => $item->nid . ' at ' . $base_url, 'attributes' => array('isPermaLink' => 'false'))));
+    $extra = array_merge($extra, array(array('key' => 'pubDate', 'value' =>  date('r', $item->created)), array('key' => 'dc:creator', 'value' => $item->name), array('key' => 'guid', 'value' => $item->nid . ' at ' . $base_url, 'attributes' => array('isPermaLink' => 'FALSE'))));
     foreach ($extra as $element) {
       if ($element['namespace']) {
         $namespaces = array_merge($namespaces, $element['namespace']);
@@ -2113,13 +2113,13 @@ function node_update_index() {
 
     // Get node output (filtered and with module-specific fields).
     if (node_hook($node, 'view')) {
-      node_invoke($node, 'view', false, false);
+      node_invoke($node, 'view', FALSE, FALSE);
     }
     else {
-      $node = node_prepare($node, false);
+      $node = node_prepare($node, FALSE);
     }
     // Allow modules to change $node->body before viewing.
-    node_invoke_nodeapi($node, 'view', false, false);
+    node_invoke_nodeapi($node, 'view', FALSE, FALSE);
 
     $text = '<h1>'. check_plain($node->title) .'</h1>'. $node->body;
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.102 2006/07/02 19:25:34 drumm Exp $
+// $Id: bootstrap.inc,v 1.103 2006/07/05 11:45:51 dries Exp $
 
 /**
  * @file
@@ -399,7 +399,7 @@ function drupal_page_header() {
     $none_match = !empty($_SERVER['HTTP_IF_NONE_MATCH']) ? $_SERVER['HTTP_IF_NONE_MATCH'] == $etag : NULL;
 
     // The type checking here is very important, be careful when changing entries.
-    if (($modified_since !== NULL || $none_match !== NULL) && $modified_since !== false && $none_match !== false) {
+    if (($modified_since !== NULL || $none_match !== NULL) && $modified_since !== FALSE && $none_match !== FALSE) {
       header('HTTP/1.0 304 Not Modified');
       exit();
     }
@@ -409,7 +409,7 @@ function drupal_page_header() {
     header("ETag: $etag");
 
     // Determine if the browser accepts gzipped data.
-    if (@strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') === false && function_exists('gzencode')) {
+    if (@strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') === FALSE && function_exists('gzencode')) {
       // Strip the gzip header and run uncompress.
       $cache->data = gzinflate(substr(substr($cache->data, 10), 0, -8));
     }
@@ -433,7 +433,7 @@ function drupal_page_header() {
     header("Expires: Sun, 19 Nov 1978 05:00:00 GMT");
     header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
     header("Cache-Control: no-store, no-cache, must-revalidate");
-    header("Cache-Control: post-check=0, pre-check=0", false);
+    header("Cache-Control: post-check=0, pre-check=0", FALSE);
     header("Pragma: no-cache");
   }
 }

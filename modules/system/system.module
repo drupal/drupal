@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.329 2006/06/27 13:48:09 dries Exp $
+// $Id: system.module,v 1.330 2006/07/05 11:45:51 dries Exp $
 
 /**
  * @file
@@ -204,7 +204,7 @@ function system_theme_select_form($description = '', $default_value = '', $weigh
         $info->key = $info->name == variable_get('theme_default', 'bluemarine') ? '' : $info->name;
 
         $info->screenshot = dirname($info->filename) . '/screenshot.png';
-        $screenshot = file_exists($info->screenshot) ? theme('image', $info->screenshot, t('Screenshot for %theme theme', array('%theme' => $info->name)), '', array('class' => 'screenshot'), false) : t('no screenshot');
+        $screenshot = file_exists($info->screenshot) ? theme('image', $info->screenshot, t('Screenshot for %theme theme', array('%theme' => $info->name)), '', array('class' => 'screenshot'), FALSE) : t('no screenshot');
 
         $form['themes'][$info->key]['screenshot'] = array('#type' => 'markup', '#value' => $screenshot);
         $form['themes'][$info->key]['description'] = array('#type' => 'item', '#title' => $info->name,  '#value' => dirname($info->filename) . ($info->name == variable_get('theme_default', 'bluemarine') ? t('<br /> <em>(site default theme)</em>') : ''));
@@ -375,7 +375,7 @@ function system_view_general() {
   // Image handling:
   $toolkits_available = image_get_available_toolkits();
   if (count($toolkits_available) > 1) {
-    $form['image'] = array('#type' => 'fieldset', '#title' => t('Image handling'), '#collapsible' => TRUE, '#collapsed' => true);
+    $form['image'] = array('#type' => 'fieldset', '#title' => t('Image handling'), '#collapsible' => TRUE, '#collapsed' => TRUE);
     $form['image']['image_toolkit'] = array(
       '#type' => 'radios', '#title' => t('Select an image processing toolkit'),
       '#default_value' => variable_get('image_toolkit', image_get_toolkit()), '#options' => $toolkits_available
@@ -814,7 +814,7 @@ function system_themes() {
 
   foreach ($themes as $info) {
     $info->screenshot = dirname($info->filename) . '/screenshot.png';
-    $screenshot = file_exists($info->screenshot) ? theme('image', $info->screenshot, t('Screenshot for %theme theme', array('%theme' => $info->name)), '', array('class' => 'screenshot'), false) : t('no screenshot');
+    $screenshot = file_exists($info->screenshot) ? theme('image', $info->screenshot, t('Screenshot for %theme theme', array('%theme' => $info->name)), '', array('class' => 'screenshot'), FALSE) : t('no screenshot');
 
     $form[$info->name]['screenshot'] = array('#type' => 'markup', '#value' => $screenshot);
     $form[$info->name]['description'] = array('#type' => 'item', '#title' => $info->name,  '#value' => dirname($info->filename));
@@ -1107,11 +1107,11 @@ function system_theme_settings($key = '') {
   // Some features are not always available
   $disabled = array();
   if (!variable_get('user_pictures', 0)) {
-    $disabled['toggle_node_user_picture'] = true;
-    $disabled['toggle_comment_user_picture'] = true;
+    $disabled['toggle_node_user_picture'] = TRUE;
+    $disabled['toggle_comment_user_picture'] = TRUE;
   }
   if (!module_exist('search')) {
-    $disabled['toggle_search'] = true;
+    $disabled['toggle_search'] = TRUE;
   }
 
   $form['theme_settings'] = array(

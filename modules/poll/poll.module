@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.200 2006/07/04 08:59:05 drumm Exp $
+// $Id: poll.module,v 1.201 2006/07/05 11:45:51 dries Exp $
 
 /**
  * @file
@@ -513,7 +513,7 @@ function poll_cancel(&$node) {
 
       // Subtract from the votes.
       db_query("UPDATE {poll_choices} SET chvotes = chvotes - 1 WHERE nid = %d AND chorder = %d", $node->nid, $choice);
-      $node->allowvotes = true;
+      $node->allowvotes = TRUE;
       $node->choice[$choice]['chvotes']--;
       drupal_set_message(t('Your vote was canceled.'));
     }

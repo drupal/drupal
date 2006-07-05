@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.189 2006/06/20 21:15:44 dries Exp $
+// $Id: update.php,v 1.190 2006/07/05 11:45:50 dries Exp $
 
 /**
  * @file
@@ -690,11 +690,11 @@ if (($access_check == FALSE) || ($user->uid == 1)) {
       break;
 
     case 'finished':
-      $output = update_finished_page(true);
+      $output = update_finished_page(TRUE);
       break;
 
     case 'error':
-      $output = update_finished_page(false);
+      $output = update_finished_page(FALSE);
       break;
 
     case 'do_update':

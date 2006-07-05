@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.83 2006/05/07 00:08:36 drumm Exp $
+// $Id: blogapi.module,v 1.84 2006/07/05 11:45:51 dries Exp $
 
 /**
  * @file
@@ -151,7 +151,7 @@ function blogapi_blogger_get_users_blogs($appid, $username, $password) {
     $types = _blogapi_get_node_types();
     $structs = array();
     foreach ($types as $type) {
-      $structs[] = array('url' => url('blog/' . $user->uid, NULL, NULL, true), 'blogid' => $type, 'blogName' => $user->name . ": " . $type);
+      $structs[] = array('url' => url('blog/' . $user->uid, NULL, NULL, TRUE), 'blogid' => $type, 'blogName' => $user->name . ": " . $type);
     }
     return $structs;
   }
@@ -174,7 +174,7 @@ function blogapi_blogger_get_user_info($appkey, $username, $password) {
       'firstname' => $name[0],
       'nickname' => $user->name,
       'email' => $user->mail,
-      'url' => url('blog/' . $user->uid, NULL, NULL, true));
+      'url' => url('blog/' . $user->uid, NULL, NULL, TRUE));
   }
   else {
     return blogapi_error($user);
@@ -285,7 +285,7 @@ function blogapi_blogger_edit_post($appkey, $postid, $username, $password, $cont
   node_save($node);
   if ($node->nid) {
     watchdog('content', t('%type: updated %title using blog API.', array('%type' => '<em>'. t($node->type) .'</em>', '%title' => theme('placeholder', $node->title))), WATCHDOG_NOTICE, l(t('view'), "node/$node->nid"));
-    return true;
+    return TRUE;
   }
 
   return blogapi_error(t('Error storing post.'));
@@ -302,7 +302,7 @@ function blogapi_blogger_get_post($appkey, $postid, $username, $password) {
 
   $node = node_load($postid);
 
-  return _blogapi_get_post($node, true);
+  return _blogapi_get_post($node, TRUE);
 }
 
 /**
@@ -315,7 +315,7 @@ function blogapi_blogger_delete_post($appkey, $postid, $username, $password, $pu
   }
 
   node_delete($postid);
-  return true;
+  return TRUE;
 }
 
 /**
@@ -433,7 +433,7 @@ function blogapi_mt_get_post_categories($postid, $username, $password) {
     foreach (module_invoke('taxonomy', 'get_parents', $term->tid, 'tid') as $parent) {
       $term_name = $parent->name . '/' . $term_name;
     }
-    $categories[] = array('categoryName' => $term_name, 'categoryId' => $term->tid, 'isPrimary' => true);
+    $categories[] = array('categoryName' => $term_name, 'categoryId' => $term->tid, 'isPrimary' => TRUE);
   }
   return $categories;
 }
@@ -502,7 +502,7 @@ function blogap_mti_publish_post($postid, $username, $password) {
 
   node_save($node);
 
-  return true;
+  return TRUE;
 }
 
 /**
@@ -630,7 +630,7 @@ __RSD__;
  */
 function _blogapi_mt_extra(&$node, $struct) {
   if (is_array($node)) {
-    $was_array = true;
+    $was_array = TRUE;
     $node = (object)$node;
   }
 
@@ -687,14 +687,14 @@ function _blogapi_mt_extra(&$node, $struct) {
   }
 }
 
-function _blogapi_get_post($node, $bodies = true) {
+function _blogapi_get_post($node, $bodies = TRUE) {
   $xmlrpcval = array (
     'userid' => $node->name,
     'dateCreated' => xmlrpc_date($node->created),
     'title' => $node->title,
     'postid' => $node->nid,
-    'link' => url('node/'.$node->nid, NULL, NULL, true),
-    'permaLink' => url('node/'.$node->nid, NULL, NULL, true),
+    'link' => url('node/'.$node->nid, NULL, NULL, TRUE),
+    'permaLink' => url('node/'.$node->nid, NULL, NULL, TRUE),
   );
   if ($bodies) {
     if ($node->comment = 1) {

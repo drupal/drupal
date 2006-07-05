@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.128 2006/07/02 18:56:42 drumm Exp $
+// $Id: menu.inc,v 1.129 2006/07/05 11:45:51 dries Exp $
 
 /**
  * @file
@@ -551,7 +551,7 @@ function menu_get_active_breadcrumb() {
 }
 
 /**
- * Returns true when the menu item is in the active trail.
+ * Returns TRUE when the menu item is in the active trail.
  */
 function menu_in_active_trail($mid) {
   $trail = _menu_get_active_trail();
@@ -560,7 +560,7 @@ function menu_in_active_trail($mid) {
 }
 
 /**
- * Returns true when the menu item is in the active trail within a
+ * Returns TRUE when the menu item is in the active trail within a
  * specific subsection of the menu tree.
  *
  * @param $mid

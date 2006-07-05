@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.544 2006/07/02 19:53:39 dries Exp $
+// $Id: common.inc,v 1.545 2006/07/05 11:45:51 dries Exp $
 
 /**
  * @file
@@ -33,7 +33,7 @@ define('SAVED_DELETED', 3);
  * @param $data
  *   Content to be set.
  */
-function drupal_set_content($region = null, $data = null) {
+function drupal_set_content($region = NULL, $data = NULL) {
   static $content = array();
 
   if (!is_null($region) && !is_null($data)) {
@@ -46,7 +46,7 @@ function drupal_set_content($region = null, $data = null) {
  * Get assigned content.
  *
  * @param $region
- *   A specified region to fetch content for. If null, all regions will be returned.
+ *   A specified region to fetch content for. If NULL, all regions will be returned.
  *
  * @param $delimiter
  *   Content to be inserted between exploded array elements.
@@ -518,13 +518,13 @@ function _fix_gpc_magic(&$item) {
  * installations.
  */
 function fix_gpc_magic() {
-  static $fixed = false;
+  static $fixed = FALSE;
   if (!$fixed && ini_get('magic_quotes_gpc')) {
     array_walk($_GET, '_fix_gpc_magic');
     array_walk($_POST, '_fix_gpc_magic');
     array_walk($_COOKIE, '_fix_gpc_magic');
     array_walk($_REQUEST, '_fix_gpc_magic');
-    $fixed = true;
+    $fixed = TRUE;
   }
 }
 
@@ -901,10 +901,10 @@ function format_date($timestamp, $type = 'medium', $format = '', $timezone = NUL
   $date = '';
   for ($i = 0; $i < $max; $i++) {
     $c = $format[$i];
-    if (strpos('AaDFlM', $c) !== false) {
+    if (strpos('AaDFlM', $c) !== FALSE) {
       $date .= t(gmdate($c, $timestamp));
     }
-    else if (strpos('BdgGhHiIjLmnsStTUwWYyz', $c) !== false) {
+    else if (strpos('BdgGhHiIjLmnsStTUwWYyz', $c) !== FALSE) {
       $date .= gmdate($c, $timestamp);
     }
     else if ($c == 'r') {
@@ -984,7 +984,7 @@ function url($path = NULL, $query = NULL, $fragment = NULL, $absolute = FALSE) {
     // On some web servers, such as IIS, we can't omit "index.php". So, we
     // generate "index.php?q=foo" instead of "?q=foo" on anything that is not
     // Apache.
-    $script = (strpos($_SERVER['SERVER_SOFTWARE'], 'Apache') === false) ? 'index.php' : '';
+    $script = (strpos($_SERVER['SERVER_SOFTWARE'], 'Apache') === FALSE) ? 'index.php' : '';
   }
 
   // Cache the clean_url variable to improve performance.
@@ -1211,11 +1211,11 @@ function drupal_add_js($file, $nocache = FALSE) {
   $postfix = $nocache ? '?'. time() : '';
   if (!isset($sent['misc/drupal.js'])) {
     drupal_set_html_head('<script type="text/javascript" src="'. base_path() .'misc/drupal.js'. $postfix .'"></script>');
-    $sent['misc/drupal.js'] = true;
+    $sent['misc/drupal.js'] = TRUE;
   }
   if (!isset($sent[$file])) {
     drupal_set_html_head('<script type="text/javascript" src="'. check_url(base_path() . $file) . $postfix .'"></script>');
-    $sent[$file] = true;
+    $sent[$file] = TRUE;
   }
 }
 

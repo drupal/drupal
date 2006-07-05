@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.157 2006/07/02 20:06:31 drumm Exp $
+// $Id: profile.module,v 1.158 2006/07/05 11:45:51 dries Exp $
 
 /**
  * @file
@@ -137,7 +137,7 @@ function profile_block($op = 'list', $delta = 0, $edit = array()) {
 
         if ($fields) {
           $fields = _profile_update_user_fields($fields, $account);
-          $output .= theme('profile_block', $account, $fields, true);
+          $output .= theme('profile_block', $account, $fields, TRUE);
         }
 
         if (isset($use_fields['user_profile']) && $use_fields['user_profile']) {
@@ -562,8 +562,8 @@ function profile_view_field($user, $field) {
                          'm' => sprintf('%02d', $value['month']),
                          'M' => map_month($value['month']),
                          'Y' => $value['year'],
-                         'H:i' => null,
-                         'g:ia' => null);
+                         'H:i' => NULL,
+                         'g:ia' => NULL);
         return strtr($format, $replace);
       case 'list':
         $values = split("[,\n\r]", $value);
@@ -749,7 +749,7 @@ function profile_validate_profile($edit, $category) {
   while ($field = db_fetch_object($result)) {
     if ($edit[$field->name]) {
       if ($field->type == 'url') {
-        if (!valid_url($edit[$field->name], true)) {
+        if (!valid_url($edit[$field->name], TRUE)) {
           form_set_error($field->name, t('The value provided for %field is not a valid URL.', array('%field' => theme('placeholder', $field->title))));
         }
       }

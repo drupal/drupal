@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.301 2006/07/04 08:59:04 drumm Exp $
+// $Id: theme.inc,v 1.302 2006/07/05 11:45:51 dries Exp $
 
 /**
  * @file
@@ -173,7 +173,7 @@ function theme() {
  * @param $function
  *   The name of the theme function to test.
  * @return
- *   The name of the theme function that should be used, or false if no function exists.
+ *   The name of the theme function that should be used, or FALSE if no function exists.
  */
 function theme_get_function($function) {
   global $theme, $theme_engine;
@@ -196,7 +196,7 @@ function theme_get_function($function) {
     // call Drupal function
     return 'theme_'. $function;
   }
-  return false;
+  return FALSE;
 }
 
 /**
@@ -530,7 +530,7 @@ function theme_links($links, $delimiter = ' | ') {
  * @param $attributes
  *   Associative array of attributes to be placed in the img tag.
  * @param $getsize
- *   If set to true, the image's dimension are fetched and added as width/height attributes.
+ *   If set to TRUE, the image's dimension are fetched and added as width/height attributes.
  * @return
  *   A string containing the image tag.
  */

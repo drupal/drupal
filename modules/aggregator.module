@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.288 2006/07/04 08:59:04 drumm Exp $
+// $Id: aggregator.module,v 1.289 2006/07/05 11:45:51 dries Exp $
 
 /**
  * @file
@@ -1069,11 +1069,11 @@ function _aggregator_page_list($sql, $op, $header = '') {
           $selected[] = $category->cid;
         }
       }
-      $done = true;
+      $done = TRUE;
       $form['categories'][$item->iid] = array(
         '#type' => variable_get('aggregator_category_selector', 'checkboxes'),
         '#default_value' => $selected, '#options' => $categories,
-        '#size' => 10, '#multiple' => true
+        '#size' => 10, '#multiple' => TRUE
       );
     }
   }

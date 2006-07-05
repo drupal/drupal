@@ -1,5 +1,5 @@
 <?php
-// $Id: pager.inc,v 1.54 2006/04/13 08:25:27 killes Exp $
+// $Id: pager.inc,v 1.55 2006/07/05 11:45:51 dries Exp $
 
 /**
  * @file
@@ -383,7 +383,7 @@ function theme_pager_link($text, $page_new, $element, $parameters = array(), $at
 
   // Set each pager link title
   if (!isset($attributes['title'])) {
-    static $titles = null;
+    static $titles = NULL;
     if (!isset($titles)) {
       $titles = array(
         t('« first') => t('Go to first page'),

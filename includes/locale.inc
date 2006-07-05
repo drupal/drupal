@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.79 2006/06/22 12:23:39 dries Exp $
+// $Id: locale.inc,v 1.80 2006/07/05 11:45:51 dries Exp $
 
 /**
  * @file
@@ -530,7 +530,7 @@ function _locale_import_read_po($file, $mode, $lang) {
       }
       $line = trim(substr($line, 12));
       $quoted = _locale_import_parse_quoted($line);
-      if ($quoted === false) {
+      if ($quoted === FALSE) {
         drupal_set_message(t('The translation file %filename contains a syntax error on line %line.', array('%filename' => $message, '%line' => $lineno)), 'error');
         return FALSE;
       }
@@ -548,7 +548,7 @@ function _locale_import_read_po($file, $mode, $lang) {
       }
       $line = trim(substr($line, 5));
       $quoted = _locale_import_parse_quoted($line);
-      if ($quoted === false) {
+      if ($quoted === FALSE) {
         drupal_set_message(t('The translation file %filename contains a syntax error on line %line.', array('%filename' => $message, '%line' => $lineno)), 'error');
         return FALSE;
       }
@@ -560,7 +560,7 @@ function _locale_import_read_po($file, $mode, $lang) {
         drupal_set_message(t('The translation file %filename contains an error: "msgstr[]" is unexpected on line %line.', array('%filename' => $message, '%line' => $lineno)), 'error');
         return FALSE;
       }
-      if (strpos($line, "]") === false) {
+      if (strpos($line, "]") === FALSE) {
         drupal_set_message(t('The translation file %filename contains a syntax error on line %line.', array('%filename' => $message, '%line' => $lineno)), 'error');
         return FALSE;
       }
@@ -568,7 +568,7 @@ function _locale_import_read_po($file, $mode, $lang) {
       $plural = substr($frombracket, 1, strpos($frombracket, "]") - 1);
       $line = trim(strstr($line, " "));
       $quoted = _locale_import_parse_quoted($line);
-      if ($quoted === false) {
+      if ($quoted === FALSE) {
         drupal_set_message(t('The translation file %filename contains a syntax error on line %line.', array('%filename' => $message, '%line' => $lineno)), 'error');
         return FALSE;
       }
@@ -582,7 +582,7 @@ function _locale_import_read_po($file, $mode, $lang) {
       }
       $line = trim(substr($line, 6));
       $quoted = _locale_import_parse_quoted($line);
-      if ($quoted === false) {
+      if ($quoted === FALSE) {
         drupal_set_message(t('The translation file %filename contains a syntax error on line %line.', array('%filename' => $message, '%line' => $lineno)), 'error');
         return FALSE;
       }
@@ -591,7 +591,7 @@ function _locale_import_read_po($file, $mode, $lang) {
     }
     elseif ($line != "") {
       $quoted = _locale_import_parse_quoted($line);
-      if ($quoted === false) {
+      if ($quoted === FALSE) {
         drupal_set_message(t('The translation file %filename contains a syntax error on line %line.', array('%filename' => $message, '%line' => $lineno)), 'error');
         return FALSE;
       }
@@ -861,7 +861,7 @@ function _locale_import_parse_arithmetic($string) {
       $opstk[] = $ctok;      // Parentheses are not needed
     }
     else {
-      return false;
+      return FALSE;
     }
   }
 

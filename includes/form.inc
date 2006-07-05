@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.127 2006/07/04 08:52:55 drumm Exp $
+// $Id: form.inc,v 1.128 2006/07/05 11:45:51 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -576,7 +576,7 @@ function _form_sort($a, $b) {
 /**
  * Retrieve the default properties for the defined element type.
  */
-function _element_info($type, $refresh = null) {
+function _element_info($type, $refresh = NULL) {
   static $cache;
 
   $basic_defaults = array(
@@ -1054,7 +1054,7 @@ function theme_form($element) {
  */
 function theme_textarea($element) {
   $class = array('form-textarea');
-  if ($element['#resizable'] !== false) {
+  if ($element['#resizable'] !== FALSE) {
     drupal_add_js('misc/textarea.js');
     $class[] = 'resizable';
   }

@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.180 2006/05/07 04:39:31 drumm Exp $
+// $Id: search.module,v 1.181 2006/07/05 11:45:51 dries Exp $
 
 /**
  * @file
@@ -187,7 +187,7 @@ function search_settings_form_validate($form_id, &$form) {
   }
   // If these settings change, the index needs to be rebuilt.
   if ((variable_get('minimum_word_size', 3) != $form['minimum_word_size']) ||
-      (variable_get('overlap_cjk', true) != $form['overlap_cjk'])) {
+      (variable_get('overlap_cjk', TRUE) != $form['overlap_cjk'])) {
     drupal_set_message(t('The index will be rebuilt.'));
     search_wipe();
   }
@@ -223,7 +223,7 @@ function search_settings() {
   $form['indexing_settings'] = array('#type' => 'fieldset', '#title' => t('Indexing settings'));
   $form['indexing_settings']['info'] = array('#type' => 'markup', '#value' => '<em>'. t('<p>Changing the settings below will cause the site index to be rebuilt. The search index is not cleared but systematically updated to reflect the new settings. Searching will continue to work but new content won\'t be indexed until all existing content has been re-indexed.</p><p>The default settings should be appropriate for the majority of sites.</p>') .'</em>');
   $form['indexing_settings']['minimum_word_size'] = array('#type' => 'textfield', '#title' => t('Minimum word length to index'), '#default_value' => variable_get('minimum_word_size', 3), '#size' => 5, '#maxlength' => 3, '#description' => t('The number of characters a word has to be to be indexed. A lower setting means better search result ranking, but also a larger database. Each search query must contain at least one keyword that is this size (or longer).'));
-  $form['indexing_settings']['overlap_cjk'] = array('#type' => 'checkbox', '#title' => t('Simple CJK handling'), '#default_value' => variable_get('overlap_cjk', true), '#description' => t('Whether to apply a simple Chinese/Japanese/Korean tokenizer based on overlapping sequences. Turn this off if you want to use an external preprocessor for this instead. Does not affect other languages.'));
+  $form['indexing_settings']['overlap_cjk'] = array('#type' => 'checkbox', '#title' => t('Simple CJK handling'), '#default_value' => variable_get('overlap_cjk', TRUE), '#description' => t('Whether to apply a simple Chinese/Japanese/Korean tokenizer based on overlapping sequences. Turn this off if you want to use an external preprocessor for this instead. Does not affect other languages.'));
 
   // Per module settings
   $form = array_merge($form, module_invoke_all('search', 'admin'));
@@ -275,10 +275,10 @@ function search_wipe($sid = NULL, $type = NULL, $reindex = FALSE) {
  * during indexing (cron). Words which are dirty have outdated total counts in
  * the search_total table, and need to be recounted.
  */
-function search_dirty($word = null) {
+function search_dirty($word = NULL) {
   static $dirty = array();
-  if ($word !== null) {
-    $dirty[$word] = true;
+  if ($word !== NULL) {
+    $dirty[$word] = TRUE;
   }
   else {
     return $dirty;
@@ -341,7 +341,7 @@ function search_simplify($text) {
   search_preprocess($text);
 
   // Simple CJK handling
-  if (variable_get('overlap_cjk', true)) {
+  if (variable_get('overlap_cjk', TRUE)) {
     $text = preg_replace_callback('/['. PREG_CLASS_CJK .']+/u', 'search_expand_cjk', $text);
   }
 
@@ -397,8 +397,8 @@ function search_expand_cjk($matches) {
  * Splits a string into tokens for indexing.
  */
 function search_index_split($text) {
-  static $last = null;
-  static $lastsplit = null;
+  static $last = NULL;
+  static $lastsplit = NULL;
 
   if ($last == $text) {
     return $lastsplit;
@@ -477,8 +477,8 @@ function search_index($sid, $type, $text) {
   // Note: PHP ensures the array consists of alternating delimiters and literals
   // and begins and ends with a literal (inserting $null as required).
 
-  $tag = false; // Odd/even counter. Tag or no tag.
-  $link = false; // State variable for link analyser
+  $tag = FALSE; // Odd/even counter. Tag or no tag.
+  $link = FALSE; // State variable for link analyser
   $score = 1; // Starting score per word
   $accum = ' '; // Accumulator for cleaned up data
   $tagstack = array(); // Stack with open tags
@@ -505,7 +505,7 @@ function search_index($sid, $type, $text) {
           $score = max(1, $score - $tags[array_shift($tagstack)]);
         }
         if ($tagname == 'a') {
-          $link = false;
+          $link = FALSE;
         }
       }
       else {
@@ -530,7 +530,7 @@ function search_index($sid, $type, $text) {
                 // Note: ignore links to uncachable nodes to avoid redirect bugs.
                 $node = db_fetch_object(db_query('SELECT n.title, n.nid, n.vid, r.format FROM {node} n INNER JOIN {node_revisions} r ON n.vid = r.vid WHERE n.nid = %d', $linknid));
                 if (filter_format_allowcache($node->format)) {
-                  $link = true;
+                  $link = TRUE;
                   $linktitle = $node->title;
                 }
               }
@@ -647,13 +647,13 @@ function search_parse_query($text) {
   }
 
   // Classify tokens
-  $or = false;
+  $or = FALSE;
   foreach ($matches as $match) {
-    $phrase = false;
+    $phrase = FALSE;
     // Strip off phrase quotes
     if ($match[2]{0} == '"') {
       $match[2] = substr($match[2], 1, -1);
-      $phrase = true;
+      $phrase = TRUE;
     }
     // Simplify keyword according to indexing rules and external preprocessors
     $words = search_simplify($match[2]);
@@ -672,7 +672,7 @@ function search_parse_query($text) {
         $last = array($last);
       }
       $keys['positive'][] = $last;
-      $or = true;
+      $or = TRUE;
       continue;
     }
     // Plain keyword
@@ -685,7 +685,7 @@ function search_parse_query($text) {
         $keys['positive'] = array_merge($keys['positive'], $words);
       }
     }
-    $or = false;
+    $or = FALSE;
   }
 
   // Convert keywords into SQL statements.
@@ -699,7 +699,7 @@ function search_parse_query($text) {
     // Group of ORed terms
     if (is_array($key) && count($key)) {
       $queryor = array();
-      $any = false;
+      $any = FALSE;
       foreach ($key as $or) {
         list($q, $count) = _search_parse_query($or, $arguments2);
         $any |= $count;
@@ -727,7 +727,7 @@ function search_parse_query($text) {
   }
   // Negative matches
   foreach ($keys['negative'] as $key) {
-    list($q) = _search_parse_query($key, $arguments2, true);
+    list($q) = _search_parse_query($key, $arguments2, TRUE);
     if ($q) {
       $query[] = $q;
       $arguments[] = $key;
@@ -744,7 +744,7 @@ function search_parse_query($text) {
 /**
  * Helper function for search_parse_query();
  */
-function _search_parse_query(&$word, &$scores, $not = false) {
+function _search_parse_query(&$word, &$scores, $not = FALSE) {
   $count = 0;
   // Determine the scorewords of this word/phrase
   if (!$not) {
@@ -1134,9 +1134,9 @@ function search_excerpt($keys, $text) {
       // $q) and behind it (position $s)
       if (preg_match('/'. $boundary . $key . $boundary .'/iu', $text, $match, PREG_OFFSET_CAPTURE, $included[$key])) {
         $p = $match[0][1];
-        if (($q = strpos($text, ' ', max(0, $p - 60))) !== false) {
+        if (($q = strpos($text, ' ', max(0, $p - 60))) !== FALSE) {
           $end = substr($text, $p, 80);
-          if (($s = strrpos($end, ' ')) !== false) {
+          if (($s = strrpos($end, ' ')) !== FALSE) {
             $ranges[$q] = $p + $s;
             $length += $p + $s - $q;
             $included[$key] = $p + 1;

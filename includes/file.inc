@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.78 2006/06/09 05:41:25 dries Exp $
+// $Id: file.inc,v 1.79 2006/07/05 11:45:51 dries Exp $
 
 /**
  * @file
@@ -81,7 +81,7 @@ function file_create_path($dest = 0) {
  *   any errors will be attached to. This is useful for settings forms that
  *   require the user to specify a writable directory. If it can't be made to
  *   work, a form error will be set preventing them from saving the settings.
- * @return False when directory not found, or true when directory exists.
+ * @return FALSE when directory not found, or TRUE when directory exists.
  */
 function file_check_directory(&$directory, $mode = 0, $form_item = NULL) {
   $directory = rtrim($directory, '/\\');
@@ -96,7 +96,7 @@ function file_check_directory(&$directory, $mode = 0, $form_item = NULL) {
       if ($form_item) {
         form_set_error($form_item, t('The directory %directory does not exist.', array('%directory' => theme('placeholder', $directory))));
       }
-      return false;
+      return FALSE;
     }
   }
 
@@ -108,7 +108,7 @@ function file_check_directory(&$directory, $mode = 0, $form_item = NULL) {
     else {
       form_set_error($form_item, t('The directory %directory is not writable', array('%directory' => theme('placeholder', $directory))));
       watchdog('file system', t('The directory %directory is not writable, because it does not have the correct permissions set.', array('%directory' => theme('placeholder', $directory))), WATCHDOG_ERROR);
-      return false;
+      return FALSE;
     }
   }
 
@@ -124,7 +124,7 @@ function file_check_directory(&$directory, $mode = 0, $form_item = NULL) {
     }
   }
 
-  return true;
+  return TRUE;
 }
 
 /**
@@ -148,7 +148,7 @@ function file_check_path(&$path) {
     return $filename;
   }
 
-  return false;
+  return FALSE;
 }
 
 
@@ -163,7 +163,7 @@ function file_check_path(&$path) {
  * @todo Extenalize SESSION['file_uploads'] to modules.
  *
  * @param $source An upload source (the name of the upload form item), or a file
- * @return false for an invalid file or upload. A file object for valid uploads/files.
+ * @return FALSE for an invalid file or upload. A file object for valid uploads/files.
  *
  */
 
@@ -181,7 +181,7 @@ function file_check_upload($source = 'upload') {
       return $source;
     }
     else {
-      return false;
+      return FALSE;
     }
   }
 
@@ -194,7 +194,7 @@ function file_check_upload($source = 'upload') {
   // If a file was uploaded, process it.
   if ($_FILES["edit"]["name"][$source] && is_uploaded_file($_FILES["edit"]["tmp_name"][$source])) {
 
-    // Check for file upload errors and return false if a
+    // Check for file upload errors and return FALSE if a
     // lower level system error occurred.
     switch ($_FILES["edit"]["error"][$source]) {
 
@@ -239,7 +239,7 @@ function file_check_upload($source = 'upload') {
     if (!move_uploaded_file($_FILES["edit"]["tmp_name"][$source], $file->filepath)) {
       drupal_set_message(t('File upload error. Could not move uploaded file.'));
       watchdog('file', t('Upload Error. Could not move uploaded file(%file) to destination(%destination).', array('%file' => theme('placeholder', $_FILES["edit"]["tmp_name"][$source]), '%destination' => theme('placeholder', $file->filepath))));
-      return false;
+      return FALSE;
     }
 
     $file->filesize = $_FILES["edit"]["size"][$source];
@@ -256,8 +256,8 @@ function file_check_upload($source = 'upload') {
       return $_SESSION['file_uploads'][$source];
     }
   }
-  // If nothing was done, return false.
-  return false;
+  // If nothing was done, return FALSE.
+  return FALSE;
 }
 
 /**
@@ -266,7 +266,7 @@ function file_check_upload($source = 'upload') {
  * exploits.
  *
  * @code
- *   // Returns false:
+ *   // Returns FALSE:
  *   file_check_location('/www/example.com/files/../../../etc/passwd', '/www/example.com/files');
  * @endcode
  *
@@ -306,8 +306,8 @@ function file_check_location($source, $directory = '') {
  * @param $replace Replace behavior when the destination file already exists.
  *   - FILE_EXISTS_REPLACE - Replace the existing file
  *   - FILE_EXISTS_RENAME - Append _{incrementing number} until the filename is unique
- *   - FILE_EXISTS_ERROR - Do nothing and return false.
- * @return True for success, false for failure.
+ *   - FILE_EXISTS_ERROR - Do nothing and return FALSE.
+ * @return True for success, FALSE for failure.
  */
 function file_copy(&$source, $dest = 0, $replace = FILE_EXISTS_RENAME) {
   $dest = file_create_path($dest);
@@ -316,7 +316,7 @@ function file_copy(&$source, $dest = 0, $replace = FILE_EXISTS_RENAME) {
   $basename = file_check_path($directory);
 
   // Make sure we at least have a valid directory.
-  if ($basename === false) {
+  if ($basename === FALSE) {
     $source = is_object($source) ? $source->filepath : $source;
     drupal_set_message(t('The selected file %file could not be uploaded, because the destination %directory is not properly configured.', array('%file' => theme('placeholder', $source), '%directory' => theme('placeholder', $dest))), 'error');
     watchdog('file system', t('The selected file %file could not not be uploaded, because the destination %directory could not be found, or because its permissions do not allow the file to be written.', array('%file' => theme('placeholder', $source), '%directory' => theme('placeholder', $dest))), WATCHDOG_ERROR);
@@ -408,8 +408,8 @@ function file_copy(&$source, $dest = 0, $replace = FILE_EXISTS_RENAME) {
  * @param $replace Replace behavior when the destination file already exists.
  *   - FILE_EXISTS_REPLACE - Replace the existing file
  *   - FILE_EXISTS_RENAME - Append _{incrementing number} until the filename is unique
- *   - FILE_EXISTS_ERROR - Do nothing and return false.
- * @return True for success, false for failure.
+ *   - FILE_EXISTS_ERROR - Do nothing and return FALSE.
+ * @return True for success, FALSE for failure.
  */
 function file_move(&$source, $dest = 0, $replace = FILE_EXISTS_RENAME) {
 
@@ -460,7 +460,7 @@ function file_create_filename($basename, $directory) {
  * Delete a file.
  *
  * @param $path A string containing a file path.
- * @return True for success, false for failure.
+ * @return True for success, FALSE for failure.
  */
 function file_delete($path) {
   if (is_file($path)) {
@@ -477,11 +477,11 @@ function file_delete($path) {
  *   success.
  * @param $dest A string containing the directory $source should be copied to,
  *   will use the temporary directory in case no other value is set.
- * @param $replace A boolean, set to true if the destination should be replaced
- *   when in use, but when false append a _X to the filename.
+ * @param $replace A boolean, set to TRUE if the destination should be replaced
+ *   when in use, but when FALSE append a _X to the filename.
  * @return An object containing file info or 0 in case of error.
  */
-function file_save_upload($source, $dest = false, $replace = FILE_EXISTS_RENAME) {
+function file_save_upload($source, $dest = FALSE, $replace = FILE_EXISTS_RENAME) {
   // Make sure $source exists && is valid.
   if ($file = file_check_upload($source)) {
 
@@ -516,7 +516,7 @@ function file_save_upload($source, $dest = false, $replace = FILE_EXISTS_RENAME)
  * @param $replace Replace behavior when the destination file already exists.
  *   - FILE_EXISTS_REPLACE - Replace the existing file
  *   - FILE_EXISTS_RENAME - Append _{incrementing number} until the filename is unique
- *   - FILE_EXISTS_ERROR - Do nothing and return false.
+ *   - FILE_EXISTS_ERROR - Do nothing and return FALSE.
  *
  * @return A string containing the resulting filename or 0 on error
  */

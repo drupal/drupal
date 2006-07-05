@@ -1,5 +1,5 @@
 <?php
-// $Id: updates.inc,v 1.239 2006/07/02 19:53:39 dries Exp $
+// $Id: updates.inc,v 1.240 2006/07/05 11:45:50 dries Exp $
 
 function system_update_110() {
   $ret = array();
@@ -922,7 +922,7 @@ function system_update_150() {
 function system_update_151() {
   $ret = array();
 
-  $ts = variable_get('theme_settings', null);
+  $ts = variable_get('theme_settings', NULL);
 
   // set up data array so we can loop over both sets of links
   $menus = array(0 => array('links_var' => 'primary_links',
@@ -1535,7 +1535,7 @@ function _system_update_utf8($tables) {
 }
 
 function system_update_170() {
-  if (!variable_get('update_170_done', false)) {
+  if (!variable_get('update_170_done', FALSE)) {
     switch ($GLOBALS['db_type']) {
       case 'pgsql':
         $ret = array();
@@ -1763,21 +1763,21 @@ function _update_178_url_formats() {
   // Any format with the HTML filter in it
   $result = db_query("SELECT format FROM {filters} WHERE module = 'filter' AND delta = 0");
   while ($format = db_fetch_object($result)) {
-    $formats[$format->format] = true;
+    $formats[$format->format] = TRUE;
   }
 
   // Any format with only the linebreak filter in it
   $result = db_query("SELECT format FROM {filters} WHERE module = 'filter' AND delta = 2");
   while ($format = db_fetch_object($result)) {
     if (db_result(db_query('SELECT COUNT(*) FROM {filters} WHERE format = %d', $format->format)) == 1) {
-      $formats[$format->format] = true;
+      $formats[$format->format] = TRUE;
     }
   }
 
   // Any format with 'HTML' in its name
   $result = db_query("SELECT format FROM {filter_formats} WHERE name LIKE '%HTML%'");
   while ($format = db_fetch_object($result)) {
-    $formats[$format->format] = true;
+    $formats[$format->format] = TRUE;
   }
 
   return $formats;

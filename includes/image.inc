@@ -1,5 +1,5 @@
 <?php
-// $Id: image.inc,v 1.12 2005/12/14 20:06:41 dries Exp $
+// $Id: image.inc,v 1.13 2006/07/05 11:45:51 dries Exp $
 
 /**
  * Return a list of available toolkits.
@@ -36,7 +36,7 @@ function image_get_toolkit() {
       include_once $toolkit_file;
     }
     elseif (!image_gd_check_settings()) {
-      $toolkit = false;
+      $toolkit = FALSE;
     }
   }
 
@@ -59,7 +59,7 @@ function image_toolkit_invoke($method, $params = array()) {
     }
     else {
       watchdog('php', t("The selected image handling toolkit '%toolkit' can not correctly process '%function'.", array('%toolkit' => "<em>$toolkit</em>", '%function' => "<em>$function</em>")), WATCHDOG_ERROR);
-      return false;
+      return FALSE;
     }
   }
   else {
@@ -82,10 +82,10 @@ function image_toolkit_invoke($method, $params = array()) {
  */
 function image_get_info($file) {
   if (!is_file($file)) {
-    return false;
+    return FALSE;
   }
 
-  $details = false;
+  $details = FALSE;
   $data = @getimagesize($file);
   $file_size = @filesize($file);
 
@@ -111,14 +111,14 @@ function image_get_info($file) {
  * @param $width          The target width
  * @param $height         The target height
  *
- * @return True or false, based on success
+ * @return True or FALSE, based on success
  */
 function image_scale($source, $destination, $width, $height) {
   $info = image_get_info($source);
 
   // don't scale up
   if ($width > $info['width'] && $height > $info['height']) {
-    return false;
+    return FALSE;
   }
 
   $aspect = $info['height'] / $info['width'];
@@ -185,7 +185,7 @@ function image_gd_settings() {
   }
   else {
     form_set_error('image_toolkit', t("The built-in GD image toolkit requires that the GD module for PHP be installed and configured properly. For more information see %url.", array('%url' => '<a href="http://php.net/image">http://php.net/image</a>')));
-    return false;
+    return FALSE;
   }
 }
 
@@ -198,10 +198,10 @@ function image_gd_check_settings() {
   if ($check = get_extension_funcs('gd')) {
     if (in_array('imagegd2', $check)) {
       // GD2 support is available.
-      return true;
+      return TRUE;
     }
   }
-  return false;
+  return FALSE;
 }
 
 /**
@@ -209,17 +209,17 @@ function image_gd_check_settings() {
  */
 function image_gd_resize($source, $destination, $width, $height) {
   if (!file_exists($source)) {
-    return false;
+    return FALSE;
   }
 
   $info = image_get_info($source);
   if (!$info) {
-    return false;
+    return FALSE;
   }
 
   $im = image_gd_open($source, $info['extension']);
   if (!$im) {
-    return false;
+    return FALSE;
   }
 
   $res = imageCreateTrueColor($width, $height);
@@ -237,17 +237,17 @@ function image_gd_resize($source, $destination, $width, $height) {
  */
 function image_gd_rotate($source, $destination, $degrees, $bg_color = 0) {
   if (!function_exists('imageRotate')) {
-    return false;
+    return FALSE;
   }
 
   $info = image_get_info($source);
   if (!$info) {
-    return false;
+    return FALSE;
   }
 
   $im = image_gd_open($source, $info['extension']);
   if (!$im) {
-    return false;
+    return FALSE;
   }
 
   $res = imageRotate($im, $degrees, $bg_color);
@@ -262,7 +262,7 @@ function image_gd_rotate($source, $destination, $degrees, $bg_color = 0) {
 function image_gd_crop($source, $destination, $x, $y, $width, $height) {
   $info = image_get_info($source);
   if (!$info) {
-    return false;
+    return FALSE;
   }
 
   $im = image_gd_open($source, $info['extension']);
@@ -283,7 +283,7 @@ function image_gd_open($file, $extension) {
   $extension = str_replace('jpg', 'jpeg', $extension);
   $open_func = 'imageCreateFrom'. $extension;
   if (!function_exists($open_func)) {
-    return false;
+    return FALSE;
   }
   return $open_func($file);
 }
@@ -295,7 +295,7 @@ function image_gd_close($res, $destination, $extension) {
   $extension = str_replace('jpg', 'jpeg', $extension);
   $close_func = 'image'. $extension;
   if (!function_exists($close_func)) {
-    return false;
+    return FALSE;
   }
   return $close_func($res, $destination);
 }

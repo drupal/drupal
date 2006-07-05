@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.335 2006/07/04 08:59:05 drumm Exp $
+// $Id: forum.module,v 1.336 2006/07/05 11:45:51 dries Exp $
 
 /**
  * @file
@@ -520,7 +520,7 @@ function forum_form_submit($form_id, $form_values) {
     $type = t('forum container');
   }
   else {
-    $container = false;
+    $container = FALSE;
     $type = t('forum');
   }
 

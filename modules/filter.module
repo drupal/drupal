@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.125 2006/07/02 20:06:31 drumm Exp $
+// $Id: filter.module,v 1.126 2006/07/05 11:45:51 dries Exp $
 
 /**
  * @file
@@ -146,7 +146,7 @@ function filter_perm() {
 /**
  * Implementation of hook_filter_tips().
  */
-function filter_filter_tips($delta, $format, $long = false) {
+function filter_filter_tips($delta, $format, $long = FALSE) {
   global $base_url;
   switch ($delta) {
     case 0:
@@ -294,7 +294,7 @@ function filter_admin_overview() {
 
   // Overview of all formats.
   $formats = filter_formats();
-  $error = false;
+  $error = FALSE;
 
   $rows = array();
   foreach ($formats as $id => $format) {
@@ -383,7 +383,7 @@ function filter_admin_delete_submit($form_id, $form_values) {
   db_query("UPDATE {comments} SET format = %d WHERE format = %d", $default, $form_values['format']);
   db_query("UPDATE {boxes} SET format = %d WHERE format = %d", $default, $form_values['format']);
 
-  cache_clear_all('filter:'. $form_values['format'], true);
+  cache_clear_all('filter:'. $form_values['format'], TRUE);
   drupal_set_message(t('Deleted input format %format.', array('%format' => theme('placeholder', $form_values['name']))));
 
   return 'admin/filters';
@@ -445,9 +445,9 @@ function filter_admin_format_form($format = NULL) {
     $form['format'] = array('#type' => 'hidden', '#value' => $format->format);
 
     // Composition tips (guidelines)
-    $tips = _filter_tips($format->format, false);
+    $tips = _filter_tips($format->format, FALSE);
     $extra = l(t('More information about formatting options'), 'filter/tips');
-    $tiplist = theme('filter_tips', $tips, false, $extra);
+    $tiplist = theme('filter_tips', $tips, FALSE, $extra);
     if (!$tiplist) {
       $tiplist = t('<p>No guidelines available.</p>');
     }
@@ -508,7 +508,7 @@ function filter_admin_format_form_submit($form_id, $form_values) {
   }
 
   // We store the roles as a string for ease of use.
-  // We should always set all roles to true when saving a default role.
+  // We should always set all roles to TRUE when saving a default role.
   // We use leading and trailing comma's to allow easy substring matching.
   $roles = array();
   if (isset($form_values['roles'])) {
@@ -522,7 +522,7 @@ function filter_admin_format_form_submit($form_id, $form_values) {
 
   db_query("UPDATE {filter_formats} SET cache = %d, name='%s', roles = '%s' WHERE format = %d", $cache, $name, $roles, $format);
 
-  cache_clear_all('filter:'. $format, true);
+  cache_clear_all('filter:'. $format, TRUE);
 
   // If a new filter was added, return to the main list of filters. Otherwise, stay on edit filter page to show new changes.
   if ($new) {
@@ -580,7 +580,7 @@ function filter_admin_order_submit($form_id, $form_values) {
   }
   drupal_set_message(t('The filter ordering has been saved.'));
 
-  cache_clear_all('filter:'. $form_values['format'], true);
+  cache_clear_all('filter:'. $form_values['format'], TRUE);
 }
 
 /**
@@ -739,7 +739,7 @@ function filter_list_format($format) {
  *    set to TRUE so the user's permissions are checked.
  */
 function check_markup($text, $format = FILTER_FORMAT_DEFAULT, $check = TRUE) {
-  // When $check = true, do an access check on $format.
+  // When $check = TRUE, do an access check on $format.
   if (isset($text) && (!$check || filter_access($format))) {
     $format = filter_resolve_format($format);
 
@@ -816,7 +816,7 @@ function filter_form($value = FILTER_FORMAT_DEFAULT, $weight = NULL, $parents = 
         '#default_value' => $value,
         '#return_value' => $format->format,
         '#parents' => $parents,
-        '#description' => theme('filter_tips', _filter_tips($format->format, false)),
+        '#description' => theme('filter_tips', _filter_tips($format->format, FALSE)),
       );
     }
   }
@@ -824,10 +824,10 @@ function filter_form($value = FILTER_FORMAT_DEFAULT, $weight = NULL, $parents = 
     // Only one format available: use a hidden form item and only show tips.
     $format = array_shift($formats);
     $form[$format->format] = array('#type' => 'value', '#value' => $format->format, '#parents' => $parents);
-    $tips = _filter_tips(variable_get('filter_default_format', 1), false);
+    $tips = _filter_tips(variable_get('filter_default_format', 1), FALSE);
     $form['format']['guidelines'] = array(
       '#title' => t('Formatting guidelines'),
-      '#value' => theme('filter_tips', $tips, false, $extra),
+      '#value' => theme('filter_tips', $tips, FALSE, $extra),
     );
   }
   $form[] = array(
@@ -848,12 +848,12 @@ function filter_form_validate($form) {
 }
 
 /**
- * Returns true if the user is allowed to access this format.
+ * Returns TRUE if the user is allowed to access this format.
  */
 function filter_access($format) {
   $format = filter_resolve_format($format);
   if (user_access('administer filters') || ($format == variable_get('filter_default_format', 1))) {
-    return true;
+    return TRUE;
   }
   else {
     $formats = filter_formats();
@@ -870,10 +870,10 @@ function filter_access($format) {
 function filter_tips_long() {
   $format = arg(2);
   if ($format) {
-    $output = theme('filter_tips', _filter_tips($format, true), true);
+    $output = theme('filter_tips', _filter_tips($format, TRUE), TRUE);
   }
   else {
-    $output = theme('filter_tips', _filter_tips(-1, true), true);
+    $output = theme('filter_tips', _filter_tips(-1, TRUE), TRUE);
   }
   return $output;
 }
@@ -881,7 +881,7 @@ function filter_tips_long() {
 /**
  * Helper function for fetching filter tips.
  */
-function _filter_tips($format, $long = false) {
+function _filter_tips($format, $long = FALSE) {
   if ($format == -1) {
     $formats = filter_formats();
   }
@@ -910,7 +910,7 @@ function _filter_tips($format, $long = false) {
  *
  * @ingroup themeable
  */
-function theme_filter_tips($tips, $long = false, $extra = '') {
+function theme_filter_tips($tips, $long = FALSE, $extra = '') {
   $output = '';
 
   $multiple = count($tips) > 1;
@@ -1057,7 +1057,7 @@ function _filter_autop($text) {
   $chunks = preg_split('@(</?(?:pre|script|style)[^>]*>)@i', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
   // Note: PHP ensures the array consists of alternating delimiters and literals
   // and begins and ends with a literal (inserting NULL as required).
-  $ignore = false;
+  $ignore = FALSE;
   $ignoretag = '';
   $output = '';
   foreach ($chunks as $i => $chunk) {
@@ -1067,13 +1067,13 @@ function _filter_autop($text) {
       list($tag) = split('[ >]', substr($chunk, 2 - $open), 2);
       if (!$ignore) {
         if ($open) {
-          $ignore = true;
+          $ignore = TRUE;
           $ignoretag = $tag;
         }
       }
       // Only allow a matching tag to close it.
       else if (!$open && $ignoretag == $tag) {
-        $ignore = false;
+        $ignore = FALSE;
         $ignoretag = '';
       }
     }

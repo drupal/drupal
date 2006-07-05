@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.110 2006/07/04 08:59:05 drumm Exp $
+// $Id: upload.module,v 1.111 2006/07/05 11:45:51 dries Exp $
 
 /**
  * @file
@@ -86,7 +86,7 @@ function upload_menu($may_cache) {
         $filename = file_create_filename($file->filename, file_create_path());
         if (variable_get('file_downloads', FILE_DOWNLOADS_PUBLIC) ==  FILE_DOWNLOADS_PRIVATE) {
           // strip file_directory_path() from filename. @see file_create_url
-          if (strpos($filename, file_directory_path()) !== false) {
+          if (strpos($filename, file_directory_path()) !== FALSE) {
             $filename = trim(substr($filename, strlen(file_directory_path())), '\\/');
           }
           $filename = 'system/files/' . $filename;
@@ -334,7 +334,7 @@ function _upload_validate(&$node) {
       $file = (object)$file;
 
       // Validate new uploads.
-      if (strpos($fid, 'upload') !== false && !$file->remove) {
+      if (strpos($fid, 'upload') !== FALSE && !$file->remove) {
         global $user;
 
         // Bypass validation for uid  = 1.
@@ -424,7 +424,7 @@ function upload_nodeapi(&$node, $op, $teaser) {
         if (!variable_get('clean_url', 0)) {
           $previews = array();
           foreach ($node->files as $file) {
-            if (strpos($file->fid, 'upload') !== false) {
+            if (strpos($file->fid, 'upload') !== FALSE) {
               $previews[] = $file;
             }
           }
@@ -465,7 +465,7 @@ function upload_nodeapi(&$node, $op, $teaser) {
       break;
 
     case 'search result':
-      return is_array($node->files) ? format_plural(count($node->files), '1 attachment', '%count attachments') : null;
+      return is_array($node->files) ? format_plural(count($node->files), '1 attachment', '%count attachments') : NULL;
 
     case 'rss item':
       if (is_array($node->files)) {
@@ -607,7 +607,7 @@ function upload_save($node) {
     // will be required.
     if ($file->remove) {
       // Remove file previews...
-      if (strpos($file->fid, 'upload') !== false) {
+      if (strpos($file->fid, 'upload') !== FALSE) {
         file_delete($file->filepath);
       }
 
@@ -624,7 +624,7 @@ function upload_save($node) {
     }
 
     // New file upload
-    elseif (strpos($file->fid, 'upload') !== false) {
+    elseif (strpos($file->fid, 'upload') !== FALSE) {
       if ($file = file_save_upload($file, $file->filename)) {
         $file->fid = db_next_id('{files}_fid');
         db_query("INSERT INTO {files} (fid, nid, filename, filepath, filemime, filesize) VALUES (%d, %d, '%s', '%s', '%s', %d)", $file->fid, $node->nid, $file->filename, $file->filepath, $file->filemime, $file->filesize);
@@ -688,7 +688,7 @@ function _upload_form($node) {
     $form['files']['#theme'] = 'upload_form_current';
     $form['files']['#tree'] = TRUE;
     foreach ($node->files as $key => $file) {
-      $description = file_create_url((strpos($file->fid, 'upload') === false ? $file->filepath : file_create_filename($file->filename, file_create_path())));
+      $description = file_create_url((strpos($file->fid, 'upload') === FALSE ? $file->filepath : file_create_filename($file->filename, file_create_path())));
       $description = "<small>". check_plain($description) ."</small>";
       $form['files'][$key]['description'] = array('#type' => 'textfield', '#default_value' => (strlen($file->description)) ? $file->description : $file->filename, '#maxlength' => 256, '#description' => $description );
 

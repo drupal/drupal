@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.372 2006/07/04 08:59:04 drumm Exp $
+// $Id: book.module,v 1.373 2006/07/05 11:45:51 dries Exp $
 
 /**
  * @file
@@ -427,7 +427,7 @@ function book_next($node) {
 }
 
 /**
- * Returns the content of a given node. If $teaser if true, returns
+ * Returns the content of a given node. If $teaser if TRUE, returns
  * the teaser rather than full content. Displays the most recently
  * approved revision of a node (if any) unless we have to display this
  * page in the context of the moderation queue.
@@ -802,7 +802,7 @@ function book_node_visitor_html_pre($node, $depth, $nid) {
     $node = node_invoke($node, 'content');
   }
   // Allow modules to change $node->body before viewing.
-  node_invoke_nodeapi($node, 'print', $node->body, false);
+  node_invoke_nodeapi($node, 'print', $node->body, FALSE);
 
   $output .= "<div id=\"node-". $node->nid ."\" class=\"section-$depth\">\n";
   $output .= "<h1 class=\"book-heading\">". check_plain($node->title) ."</h1>\n";

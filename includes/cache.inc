@@ -1,5 +1,5 @@
 <?php
-// $Id: cache.inc,v 1.2 2006/07/02 00:34:36 drumm Exp $
+// $Id: cache.inc,v 1.3 2006/07/05 11:45:51 dries Exp $
 
 /**
  * Return data from the persistent cache.
@@ -79,10 +79,10 @@ function cache_set($cid, $data, $expire = CACHE_PERMANENT, $headers = NULL) {
  *   expire are deleted.
  *
  * @param $wildcard
- *   If set to true, the $cid is treated as a substring to match rather than a
+ *   If set to TRUE, the $cid is treated as a substring to match rather than a
  *   complete ID.
  */
-function cache_clear_all($cid = NULL, $wildcard = false) {
+function cache_clear_all($cid = NULL, $wildcard = FALSE) {
   global $user;
 
   if (empty($cid)) {

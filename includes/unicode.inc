@@ -1,5 +1,5 @@
 <?php
-// $Id: unicode.inc,v 1.17 2006/03/13 21:44:49 unconed Exp $
+// $Id: unicode.inc,v 1.18 2006/07/05 11:45:51 dries Exp $
 
 define('UNICODE_ERROR', -1);
 define('UNICODE_SINGLEBYTE', 0);
@@ -23,7 +23,7 @@ function unicode_check() {
  * @param $errors
  *   Whether to report any fatal errors with form_set_error().
  */
-function _unicode_check($errors = false) {
+function _unicode_check($errors = FALSE) {
   // Set the standard C locale to ensure consistent, ASCII-only string handling.
   setlocale(LC_CTYPE, 'C');
 
@@ -77,7 +77,7 @@ function _unicode_check($errors = false) {
  * Return the required Unicode status and errors for admin/settings.
  */
 function unicode_settings() {
-  $status = _unicode_check(true);
+  $status = _unicode_check(TRUE);
   $options = array(UNICODE_SINGLEBYTE => t('Standard PHP: operations on Unicode strings are emulated on a best-effort basis. Install the <a href="%url">PHP mbstring extension</a> for improved Unicode support.', array('%url' => 'http://www.php.net/mbstring')),
                    UNICODE_MULTIBYTE => t('Multi-byte: operations on Unicode strings are supported through the <a href="%url">PHP mbstring extension</a>.', array('%url' => 'http://www.php.net/mbstring')),
                    UNICODE_ERROR => t('Invalid: the current configuration is incompatible with Drupal.'));
@@ -106,11 +106,11 @@ function unicode_settings() {
 function drupal_xml_parser_create(&$data) {
   // Default XML encoding is UTF-8
   $encoding = 'utf-8';
-  $bom = false;
+  $bom = FALSE;
 
   // Check for UTF-8 byte order mark (PHP5's XML parser doesn't handle it).
   if (!strncmp($data, "\xEF\xBB\xBF", 3)) {
-    $bom = true;
+    $bom = TRUE;
     $data = substr($data, 3);
   }
 
@@ -123,7 +123,7 @@ function drupal_xml_parser_create(&$data) {
   $php_supported = array('utf-8', 'iso-8859-1', 'us-ascii');
   if (!in_array(strtolower($encoding), $php_supported)) {
     $out = drupal_convert_to_utf8($data, $encoding);
-    if ($out !== false) {
+    if ($out !== FALSE) {
       $encoding = 'utf-8';
       $data = ereg_replace('^(<\?xml[^>]+encoding)="([^"]+)"', '\\1="utf-8"', $out);
     }
