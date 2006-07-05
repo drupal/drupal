@@ -520,7 +520,7 @@ function forum_form_submit($form_id, $form_values) {
     $type = t('forum container');
   }
   else {
-    $container = false;
+    $container = FALSE;
     $type = t('forum');
   }
 

@@ -146,7 +146,7 @@ function _db_query_callback($match, $init = FALSE) {
   }
 
   switch ($match[1]) {
-    case '%d': // We must use type casting to int to convert false/null/(true?)
+    case '%d': // We must use type casting to int to convert FALSE/NULL/(TRUE?)
       return (int) array_shift($args); // We don't need db_escape_string as numbers are db-safe
     case '%s':
       return db_escape_string(array_shift($args));

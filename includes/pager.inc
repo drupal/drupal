@@ -383,7 +383,7 @@ function theme_pager_link($text, $page_new, $element, $parameters = array(), $at
 
   // Set each pager link title
   if (!isset($attributes['title'])) {
-    static $titles = null;
+    static $titles = NULL;
     if (!isset($titles)) {
       $titles = array(
         t('« first') => t('Go to first page'),

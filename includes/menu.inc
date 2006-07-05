@@ -551,7 +551,7 @@ function menu_get_active_breadcrumb() {
 }
 
 /**
- * Returns true when the menu item is in the active trail.
+ * Returns TRUE when the menu item is in the active trail.
  */
 function menu_in_active_trail($mid) {
   $trail = _menu_get_active_trail();
@@ -560,7 +560,7 @@ function menu_in_active_trail($mid) {
 }
 
 /**
- * Returns true when the menu item is in the active trail within a
+ * Returns TRUE when the menu item is in the active trail within a
  * specific subsection of the menu tree.
  *
  * @param $mid

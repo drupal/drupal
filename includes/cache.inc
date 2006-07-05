@@ -79,10 +79,10 @@ function cache_set($cid, $data, $expire = CACHE_PERMANENT, $headers = NULL) {
  *   expire are deleted.
  *
  * @param $wildcard
- *   If set to true, the $cid is treated as a substring to match rather than a
+ *   If set to TRUE, the $cid is treated as a substring to match rather than a
  *   complete ID.
  */
-function cache_clear_all($cid = NULL, $wildcard = false) {
+function cache_clear_all($cid = NULL, $wildcard = FALSE) {
   global $user;
 
   if (empty($cid)) {

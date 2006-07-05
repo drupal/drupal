@@ -690,11 +690,11 @@ if (($access_check == FALSE) || ($user->uid == 1)) {
       break;
 
     case 'finished':
-      $output = update_finished_page(true);
+      $output = update_finished_page(TRUE);
       break;
 
     case 'error':
-      $output = update_finished_page(false);
+      $output = update_finished_page(FALSE);
       break;
 
     case 'do_update':

@@ -959,7 +959,7 @@ function taxonomy_term_count_nodes($tid, $type = 0) {
   static $count;
 
   if (!isset($count[$type])) {
-    // $type == 0 always evaluates true is $type is a string
+    // $type == 0 always evaluates TRUE is $type is a string
     if (is_numeric($type)) {
       $result = db_query(db_rewrite_sql('SELECT t.tid, COUNT(n.nid) AS c FROM {term_node} t INNER JOIN {node} n ON t.nid = n.nid WHERE n.status = 1 GROUP BY t.tid'));
     }
