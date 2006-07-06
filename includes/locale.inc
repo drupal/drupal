@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.80 2006/07/05 11:45:51 dries Exp $
+// $Id: locale.inc,v 1.81 2006/07/06 14:41:37 dries Exp $
 
 /**
  * @file
@@ -796,7 +796,7 @@ function _locale_import_parse_plural_forms($pluralforms, $filename) {
   // Get PHP version of the plural formula
   $plural = _locale_import_parse_arithmetic($plural);
 
-  if ($plural) {
+  if ($plural !== FALSE) {
     return array($nplurals, $plural);
   }
   else {
