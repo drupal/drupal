@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.129 2006/07/05 11:45:51 dries Exp $
+// $Id: menu.inc,v 1.130 2006/07/07 07:57:30 drumm Exp $
 
 /**
  * @file
@@ -534,7 +534,7 @@ function menu_get_active_breadcrumb() {
     return array();
   }
 
-  $links[] = l(t('Home'), '<front>');
+  $links[] = l(t('Home'), variable_get('site_frontpage', 'node'));
 
   $trail = _menu_get_active_trail();
   foreach ($trail as $mid) {
