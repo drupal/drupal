@@ -534,7 +534,7 @@ function menu_get_active_breadcrumb() {
     return array();
   }
 
-  $links[] = l(t('Home'), '<front>');
+  $links[] = l(t('Home'), variable_get('site_frontpage', 'node'));
 
   $trail = _menu_get_active_trail();
   foreach ($trail as $mid) {
