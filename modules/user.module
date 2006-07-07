@@ -531,6 +531,10 @@ function user_block($op = 'list', $delta = 0, $edit = array()) {
       case 0:
         // For usability's sake, avoid showing two login forms on one page.
         if (!$user->uid && !(arg(0) == 'user' && !is_numeric(arg(1)))) {
+          // Unset the time, if any. This prevents a 404 if a user relogs in
+          // on the page they were sent to when they logged out. See
+          // user_login_submit() for explanation of the time parameter.
+          unset($_GET['time']);
           $form['#action'] = url($_GET['q'], drupal_get_destination());
           $form['#id'] = 'user-login-form';
           $form['name'] = array('#type' => 'textfield',
@@ -868,15 +872,18 @@ function user_auth_help_links() {
 function user_login($msg = '') {
   global $user, $base_url;
 
-  // If we are already logged on, go to the user page instead.
+  // If we are already logged on, go to the user
+  // page instead. The added time prevents caching.
   if ($user->uid) {
-    drupal_goto('user/'. $user->uid);
+    drupal_goto('user/'. $user->uid, 'time='. time());
   }
 
   // Display login form:
   if ($msg) {
     $form['message'] = array('#value' => "<p>$msg</p>");
   }
+  unset($_GET['time']);
+  $form['#action'] = url($_GET['q'], drupal_get_destination());
   $form['name'] = array('#type' => 'textfield',
     '#title' => t('Username'),
     '#size' => 30,
@@ -943,6 +950,9 @@ function user_login_submit($form_id, $form_values) {
     session_regenerate_id();
     db_query("UPDATE {sessions} SET sid = '%s' WHERE sid = '%s'", session_id(), $old_session_id);
 
+    // Create a timestamped final URL so that browsers don't return the user to
+    // a cached page (where it would appear as if they never logged in or out).
+    return array($_REQUEST['destination'], 'time='. time());
   }
 }
 
@@ -1008,7 +1018,8 @@ function user_logout() {
   // We have to use $GLOBALS to unset a global variable:
   $user = user_load(array('uid' => 0));
 
-  drupal_goto();
+  // The time prevents caching.
+  drupal_goto(NULL, 'time='. time());
 }
 
 function user_pass() {
@@ -1148,9 +1159,10 @@ function user_register() {
 
   $admin = user_access('administer users');
 
-  // If we aren't admin but already logged on, go to the user page instead.
+  // If we aren't admin but already logged on, go to the
+  // user page instead. The added time prevents caching.
   if (!$admin && $user->uid) {
-    drupal_goto('user/'. $user->uid);
+    drupal_goto('user/'. $user->uid, 'time='. time());
   }
 
   // Display the registration form.
