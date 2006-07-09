@@ -48,10 +48,6 @@ PATH MODULE
 M: Matt Westgate <drupal@asitis.org>
 S: maintained
 
-POSTGRESQL PORT
-M: Piotr Krukowiecki <pgsql@cvbge.org>
-S: maintained
-
 SECURITY COORDINATOR
 M: Károly Négyesi <chx@mail.tvnet.hu>
 S: maintained
