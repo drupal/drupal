@@ -1,3 +1,5 @@
+// $Id: LICENSE.txt,v 1.5 2006/07/09 11:33:06 dries Exp $
+
         GNU GENERAL PUBLIC LICENSE
            Version 2, June 1991
 

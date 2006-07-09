@@ -1,3 +1,5 @@
+// $Id: CHANGELOG.txt,v 1.130 2006/07/09 11:33:06 dries Exp $
+
 Drupal x.x.x, xxxx-xx-xx (development version)
 ------------------------
 - added support for different cache backends
