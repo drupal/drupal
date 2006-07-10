@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.330 2006/07/05 11:45:51 dries Exp $
+// $Id: system.module,v 1.331 2006/07/10 19:27:52 dries Exp $
 
 /**
  * @file
@@ -23,17 +23,15 @@ function system_help($section) {
 <ul>
 <li>activate your cron job on the cron page <a href="%file-cron">cron.php</a>.</li>
 <li>read how to <a href="%external-http-drupal-org-cron">configure cron jobs</a>.</li>
-<li>administer cache settings in <a href="%admin-settings">administer &gt;&gt; settings</a>.</li>
+<li>administer cache settings in <a href="%admin-settings">administer &gt;&gt; settings &gt;&gt; caching</a>.</li>
 </ul>
-', array('%file-cron' => 'cron.php', '%external-http-drupal-org-cron' => 'http://drupal.org/cron', '%admin-settings' => url('admin/settings')));
+', array('%file-cron' => 'cron.php', '%external-http-drupal-org-cron' => 'http://drupal.org/cron', '%admin-settings' => url('admin/settings/caching')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%system">System page</a>.', array('%system' => 'http://drupal.org/handbook/modules/system/')) .'</p>';
       return $output;
     case 'admin/modules#description':
       return t('Handles general site configuration for administrators.');
     case 'admin':
       return t('<p>Welcome to the administration section. Below are the most recent system events.</p>');
-    case 'admin/settings':
-      return t('<p>General configuration options for your site. Set up the name of the site, e-mail address used in mail-outs, clean URL options, caching, etc.</p>');
     case 'admin/themes':
       return t('<p>Select which themes are available to your users and specify the default theme. To configure site-wide display settings, click the "configure" task above. Alternately, to override these settings in a specific theme, click the "configure" link for the corresponding theme. Note that different themes may have different regions available for rendering content like blocks. If you want consistency in what your users see, you may wish to enable only one theme.</p>');
     case 'admin/themes/settings':
@@ -132,15 +130,59 @@ function system_menu($may_cache) {
     }
 
     // Modules:
-    $items[] = array('path' => 'admin/settings', 'title' => t('settings'),
-      'callback' => 'system_site_settings', 'access' => $access);
-    foreach (module_list() as $name) {
-      if (module_hook($name, 'settings')) {
-        $items[] = array('path' => 'admin/settings/'. $name, 'title' => t($name));
-      }
-    }
     $items[] = array('path' => 'admin/modules', 'title' => t('modules'),
       'callback' => 'system_modules', 'access' => $access);
+
+    // Settings:
+    $items[] = array(
+      'path' => 'admin/settings',
+      'title' => t('settings'),
+      'callback' => 'system_settings_overview',
+      'access' => $access);
+    $items[] = array(
+      'path' => 'admin/settings/site-information',
+      'title' => t('site information'),
+      'callback' => 'system_site_information_settings');
+    $items[] = array(
+      'path' => 'admin/settings/error-reporting',
+      'title' => t('error reporting'),
+      'callback' => 'system_error_reporting_settings');
+    $items[] = array(
+      'path' => 'admin/settings/page-caching',
+      'title' => t('page caching'),
+      'callback' => 'system_page_caching_settings');
+    $items[] = array(
+      'path' => 'admin/settings/file-system',
+      'title' => t('file system'),
+      'callback' => 'system_file_system_settings');
+    $items[] = array(
+      'path' => 'admin/settings/image-toolkit',
+      'title' => t('image toolkit'),
+      'callback' => 'system_image_toolkit_settings');
+    $items[] = array(
+      'path' => 'admin/settings/rss-feed',
+      'title' => t('RSS feeds'),
+      'callback' => 'system_rss_feeds_settings');
+    $items[] = array(
+      'path' => 'admin/settings/date-time',
+      'title' => t('date and time'),
+      'callback' => 'system_date_time_settings');
+    $items[] = array(
+      'path' => 'admin/settings/site-status',
+      'title' => t('site status'),
+      'callback' => 'system_site_status_settings');
+    $items[] = array(
+      'path' => 'admin/settings/unicode',
+      'title' => t('unicode'),
+      'callback' => 'system_unicode_settings');
+    $items[] = array(
+      'path' => 'admin/settings/cron-status',
+      'title' => t('cron status'),
+      'callback' => 'system_cron_status');
+    $items[] = array(
+      'path' => 'admin/settings/clean-urls',
+      'title' => t('clean URLs'),
+      'callback' => 'system_clean_url_settings');
   }
 
   return $items;
@@ -245,44 +287,58 @@ function _system_zonelist() {
   return $zones;
 }
 
-function system_view_general() {
-  // General settings:
-  $form['general'] = array(
-    '#type' => 'fieldset', '#title' => t('General settings'),
-    '#collapsible' => TRUE, '#collapsed' => TRUE
+function system_site_information_settings() {
+  $form['site_name'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Name'),
+    '#default_value' => variable_get('site_name', 'drupal'),
+    '#description' => t('The name of this web site.'),
+    '#required' => TRUE
   );
-  $form['general']['site_name'] = array(
-    '#type' => 'textfield', '#title' => t('Name'), '#default_value' => variable_get('site_name', 'drupal'),
-    '#description' => t('The name of this web site.'), '#required' => TRUE
-  );
-  $form['general']['site_mail'] = array(
-    '#type' => 'textfield', '#title' => t('E-mail address'), '#default_value' => variable_get('site_mail', ini_get('sendmail_from')),
+  $form['site_mail'] = array(
+    '#type' => 'textfield',
+    '#title' => t('E-mail address'),
+    '#default_value' => variable_get('site_mail', ini_get('sendmail_from')),
     '#description' => t('A valid e-mail address for this website, used by the auto-mailer during registration, new password requests, notifications, etc.')
   );
-  $form['general']['site_slogan'] = array(
-    '#type' => 'textfield', '#title' => t('Slogan'), '#default_value' => variable_get('site_slogan', ''),
+  $form['site_slogan'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Slogan'),
+    '#default_value' => variable_get('site_slogan', ''),
     '#description' => t('The slogan of this website. Some themes display a slogan when available.')
   );
 
-  $form['general']['site_mission'] = array(
-    '#type' => 'textarea', '#title' => t('Mission'), '#default_value' => variable_get('site_mission', ''),
+  $form['site_mission'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Mission'),
+    '#default_value' => variable_get('site_mission', ''),
     '#description' => t('Your site\'s mission statement or focus.')
   );
-  $form['general']['site_footer'] = array(
-    '#type' => 'textarea', '#title' => t('Footer message'), '#default_value' => variable_get('site_footer', ''),
+  $form['site_footer'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Footer message'),
+    '#default_value' => variable_get('site_footer', ''),
     '#description' => t('This text will be displayed at the bottom of each page. Useful for adding a copyright notice to your pages.')
   );
-  $form['general']['anonymous'] = array(
-    '#type' => 'textfield', '#title' => t('Anonymous user'), '#default_value' => variable_get('anonymous', 'Anonymous'),
+  $form['anonymous'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Anonymous user'),
+    '#default_value' => variable_get('anonymous', 'Anonymous'),
     '#description' => t('The name used to indicate anonymous users.')
   );
-  $form['general']['site_frontpage'] = array(
-    '#type' => 'textfield', '#title' => t('Default front page'), '#default_value' => variable_get('site_frontpage', 'node'),
+  $form['site_frontpage'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Default front page'),
+    '#default_value' => variable_get('site_frontpage', 'node'),
     '#description' => t('The home page displays content from this relative URL. If you are not using clean URLs, specify the part after "?q=". If unsure, specify "node".')
   );
 
+  return system_settings_form('system_site_information_settings', $form);
+}
+
+function system_clean_url_settings() {
   // We check for clean URL support using an image on the client side.
-  $form['general']['clean_url'] = array(
+  $form['clean_url'] = array(
     '#type' => 'radios',
     '#title' => t('Clean URLs'),
     '#default_value' => variable_get('clean_url', 0),
@@ -292,29 +348,35 @@ function system_view_general() {
 
   if (!variable_get('clean_url', 0)) {
     if (strpos(request_uri(), '?q=') !== FALSE) {
-      $form['general']['clean_url']['#description'] .= t(' Before enabling clean URLs, you must perform a test to determine if your server is properly configured. If you are able to see this page again after clicking the "Run the clean URL test" link, the test has succeeded and the radio buttons above will be available. If instead you are directed to a "Page not found" error, you will need to change the configuration of your server. The <a href="%handbook">handbook page on Clean URLs</a> has additional troubleshooting information. %run-test', array('%handbook' => 'http://drupal.org/node/15365', '%run-test' => '<a href ="'. base_path() . 'admin/settings">'. t('Run the clean URL test') .'</a>'));
-      $form['general']['clean_url']['#attributes'] = array('disabled' => 'disabled');
+      $form['clean_url']['#description'] .= t(' Before enabling clean URLs, you must perform a test to determine if your server is properly configured. If you are able to see this page again after clicking the "Run the clean URL test" link, the test has succeeded and the radio buttons above will be available. If instead you are directed to a "Page not found" error, you will need to change the configuration of your server. The <a href="%handbook">handbook page on Clean URLs</a> has additional troubleshooting information. %run-test', array('%handbook' => 'http://drupal.org/node/15365', '%run-test' => '<a href ="'. base_path() . 'admin/settings">'. t('Run the clean URL test') .'</a>'));
+      $form['clean_url']['#attributes'] = array('disabled' => 'disabled');
     }
     else {
-      $form['general']['clean_url']['#description'] .= t(' You have successfully demonstrated that clean URLs work on your server. You are welcome to enable/disable them as you wish.');
-      $form['general']['#collapsed'] = FALSE;
+      $form['clean_url']['#description'] .= t(' You have successfully demonstrated that clean URLs work on your server. You are welcome to enable/disable them as you wish.');
+      $form['#collapsed'] = FALSE;
     }
   }
 
-  // Error handling:
+  return system_settings_form('system_clean_url_settings', $form);
+}
 
-  $form['errors'] = array( '#type' => 'fieldset', '#title' =>t('Error handling'), '#collapsible' => TRUE, '#collapsed' => TRUE );
-  $form['errors']['site_403'] = array(
-    '#type' => 'textfield', '#title' => t('Default 403 (access denied) page'), '#default_value' => variable_get('site_403', ''),
+function system_error_reporting_settings() {
+
+  $form['site_403'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Default 403 (access denied) page'),
+    '#default_value' => variable_get('site_403', ''),
     '#description' => t('This page is displayed when the requested document is denied to the current user. If you are not using clean URLs, specify the part after "?q=". If unsure, specify nothing.')
   );
 
-  $form['errors']['site_404'] = array(
-    '#type' => 'textfield', '#title' => t('Default 404 (not found) page'), '#default_value' =>  variable_get('site_404', ''),
+  $form['site_404'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Default 404 (not found) page'),
+    '#default_value' =>  variable_get('site_404', ''),
     '#description' => t('This page is displayed when no other content matches the requested document. If you are not using clean URLs, specify the part after "?q=". If unsure, specify nothing.')
   );
 
-  $form['errors']['error_level'] = array(
+  $form['error_level'] = array(
     '#type' => 'select', '#title' => t('Error reporting'), '#default_value' => variable_get('error_level', 1),
     '#options' => array(t('Write errors to the log'), t('Write errors to the log and to the screen')),
     '#description' =>  t('Where Drupal, PHP and SQL errors are logged. On a production server it is recommended that errors are only written to the error log. On a test server it can be helpful to write logs to the screen.')
@@ -322,33 +384,43 @@ function system_view_general() {
 
   $period = drupal_map_assoc(array(3600, 10800, 21600, 32400, 43200, 86400, 172800, 259200, 604800, 1209600, 2419200), 'format_interval');
   $period['1000000000'] = t('Never');
-  $form['errors']['watchdog_clear'] = array(
-    '#type' => 'select', '#title' => t('Discard log entries older than'), '#default_value' => variable_get('watchdog_clear', 604800), '#options' => $period,
+  $form['watchdog_clear'] = array(
+    '#type' => 'select',
+    '#title' => t('Discard log entries older than'),
+    '#default_value' => variable_get('watchdog_clear', 604800),
+    '#options' => $period,
     '#description' => t('The time log entries should be kept. Older entries will be automatically discarded. Requires crontab.')
   );
 
+  return system_settings_form('system_error_reporting_settings', $form);
+}
 
-  // Caching:
-  $form['cache'] = array('#type' => 'fieldset', '#title' => t('Cache settings'), '#collapsible' => TRUE, '#collapsed' => TRUE);
+function system_page_caching_settings() {
 
-  $form['cache']['cache']  = array(
-    '#type' => 'radios',  '#title' => t('Page cache'), '#default_value' => variable_get('cache', CACHE_DISABLED),
+  $form['cache'] = array(
+    '#type' => 'radios',
+    '#title' => t('Page cache'),
+    '#default_value' => variable_get('cache', CACHE_DISABLED),
     '#options' => array(CACHE_DISABLED => t('Disabled'), CACHE_ENABLED => t('Enabled')),
     '#description' => t("Drupal has a caching mechanism which stores dynamically generated web pages in a database. By caching a web page, Drupal does not have to create the page each time someone wants to view it, instead it takes only one SQL query to display it, reducing response time and the server's load. Only pages requested by \"anonymous\" users are cached. In order to reduce server load and save bandwidth, Drupal stores and sends compressed cached pages.")
   );
 
   $period = drupal_map_assoc(array(0, 60, 180, 300, 600, 900, 1800, 2700, 3600, 10800, 21600, 32400, 43200, 86400), 'format_interval');
   $period[0] = t('none');
-  $form['cache']['cache_lifetime'] = array(
-    '#type' => 'select', '#title' => t('Minimum cache lifetime'), '#default_value' => variable_get('cache_lifetime', 0), '#options' => $period,
+  $form['cache_lifetime'] = array(
+    '#type' => 'select',
+    '#title' => t('Minimum cache lifetime'),
+    '#default_value' => variable_get('cache_lifetime', 0),
+    '#options' => $period,
     '#description' => t('Enabling the cache will offer a sufficient performance boost for most low-traffic and medium-traffic sites. On high-traffic sites it can become necessary to enforce a minimum cache lifetime. The minimum cache lifetime is the minimum amount of time that will go by before the cache is emptied and recreated. A larger minimum cache lifetime offers better performance, but users will not see new content for a longer period of time.')
   );
 
+  return system_settings_form('system_page_caching_settings', $form);
+}
 
-  // File system:
-  $form['files'] = array('#type' => 'fieldset', '#title' => t('File system settings'), '#collapsible' => TRUE, '#collapsed' => TRUE);
+function system_file_system_settings() {
 
-  $form['files']['file_directory_path'] = array(
+  $form['file_directory_path'] = array(
     '#type' => 'textfield',
     '#title' => t('File system path'),
     '#default_value' => file_directory_path(),
@@ -357,7 +429,7 @@ function system_view_general() {
     '#after_build' => array('system_check_directory'),
   );
 
-  $form['files']['file_directory_temp'] = array(
+  $form['file_directory_temp'] = array(
     '#type' => 'textfield',
     '#title' => t('Temporary directory'),
     '#default_value' => file_directory_temp(),
@@ -366,35 +438,55 @@ function system_view_general() {
     '#after_build' => array('system_check_directory'),
   );
 
-  $form['files']['file_downloads'] = array(
-    '#type' => 'radios', '#title' => t('Download method'), '#default_value' => variable_get('file_downloads', FILE_DOWNLOADS_PUBLIC),
+  $form['file_downloads'] = array(
+    '#type' => 'radios',
+    '#title' => t('Download method'),
+    '#default_value' => variable_get('file_downloads', FILE_DOWNLOADS_PUBLIC),
     '#options' => array(FILE_DOWNLOADS_PUBLIC => t('Public - files are available using http directly.'), FILE_DOWNLOADS_PRIVATE => t('Private - files are transferred by Drupal.')),
     '#description' => t('If you want any sort of access control on the downloading of files, this needs to be set to <em>private</em>. You can change this at any time, however all download URLs will change and there may be unexpected problems so it is not recommended.')
   );
 
-  // Image handling:
+  return system_settings_form('system_file_system_settings', $form);
+}
+
+function system_image_toolkit_settings() {
   $toolkits_available = image_get_available_toolkits();
   if (count($toolkits_available) > 1) {
-    $form['image'] = array('#type' => 'fieldset', '#title' => t('Image handling'), '#collapsible' => TRUE, '#collapsed' => TRUE);
-    $form['image']['image_toolkit'] = array(
-      '#type' => 'radios', '#title' => t('Select an image processing toolkit'),
-      '#default_value' => variable_get('image_toolkit', image_get_toolkit()), '#options' => $toolkits_available
+    $form['image_toolkit'] = array(
+      '#type' => 'radios',
+      '#title' => t('Select an image processing toolkit'),
+      '#default_value' => variable_get('image_toolkit', image_get_toolkit()),
+      '#options' => $toolkits_available
     );
-  }
 
-  // Feed settings
-  $form['feed'] = array('#type' => 'fieldset', '#title' => t('RSS feed settings'), '#collapsible' => TRUE, '#collapsed' => TRUE);
-  $form['feed']['feed_default_items'] = array(
-    '#type' => 'select', '#title' => t('Number of items per feed'), '#default_value' => variable_get('feed_default_items', 10),
+    return system_settings_form('system_image_toolkit_settings', $form);
+  }
+  else {
+    return '<p>'. t("No image toolkits found.  Drupal will use PHP's built-in GD library for image handling.") .'</p>';
+  }
+}
+
+function system_rss_feeds_settings() {
+
+  $form['feed_default_items'] = array(
+    '#type' => 'select',
+    '#title' => t('Number of items per feed'),
+    '#default_value' => variable_get('feed_default_items', 10),
     '#options' => drupal_map_assoc(array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30)),
     '#description' => t('The default number of items to include in a feed.')
   );
-  $form['feed']['feed_item_length'] = array(
-    '#type' => 'select', '#title' => t('Display of XML feed items'), '#default_value' => variable_get('feed_item_length','teaser'),
+  $form['feed_item_length'] = array(
+    '#type' => 'select',
+    '#title' => t('Display of XML feed items'),
+    '#default_value' => variable_get('feed_item_length','teaser'),
     '#options' => array('title' => t('Titles only'), 'teaser' => t('Titles plus teaser'), 'fulltext' => t('Full text')),
     '#description' => t('Global setting for the length of XML feed items that are output by default.')
   );
 
+  return system_settings_form('system_rss_feeds_settings', $form);
+}
+
+function system_date_time_settings() {
   // Date settings:
   $zones = _system_zonelist();
 
@@ -421,47 +513,60 @@ function system_view_general() {
     $datelongchoices[$f] = format_date(time(), 'custom', $f);
   }
 
-  $form['dates'] = array('#type' => 'fieldset', '#title' => t('Date settings'), '#collapsible' => TRUE, '#collapsed' => TRUE);
-  $form['dates']['date_default_timezone'] = array(
-    '#type' => 'select', '#title' => t('Default time zone'), '#default_value' => variable_get('date_default_timezone', 0),
-    '#options' => $zones, '#description' => t('Select the default site time zone.')
+  $form['date_default_timezone'] = array(
+    '#type' => 'select',
+    '#title' => t('Default time zone'),
+    '#default_value' => variable_get('date_default_timezone', 0),
+    '#options' => $zones,
+    '#description' => t('Select the default site time zone.')
   );
 
-  $form['dates']['configurable_timezones'] = array(
-    '#type' => 'radios', '#title' => t('Configurable time zones'), '#default_value' => variable_get('configurable_timezones', 1), '#options' => array(t('Disabled'), t('Enabled')),
+  $form['configurable_timezones'] = array(
+    '#type' => 'radios',
+    '#title' => t('Configurable time zones'),
+    '#default_value' => variable_get('configurable_timezones', 1),
+    '#options' => array(t('Disabled'), t('Enabled')),
     '#description' => t('Enable or disable user-configurable time zones. When enabled, users can set their own time zone and dates will be updated accordingly.')
   );
 
-  $form['dates']['date_format_short'] = array(
-    '#type' => 'select', '#title' => t('Short date format'), '#default_value' => variable_get('date_format_short', $dateshort[0]),
-    '#options' => $dateshortchoices,  '#description' => t('The short format of date display.')
+  $form['date_format_short'] = array(
+    '#type' => 'select',
+    '#title' => t('Short date format'),
+    '#default_value' => variable_get('date_format_short', $dateshort[0]),
+    '#options' => $dateshortchoices,
+    '#description' => t('The short format of date display.')
   );
 
-  $form['dates']['date_format_medium'] = array(
-    '#type' => 'select', '#title' => t('Medium date format'), '#default_value' => variable_get('date_format_medium', $datemedium[0]),
-    '#options' => $datemediumchoices, '#description' => t('The medium sized date display.')
+  $form['date_format_medium'] = array(
+    '#type' => 'select',
+    '#title' => t('Medium date format'),
+    '#default_value' => variable_get('date_format_medium', $datemedium[0]),
+    '#options' => $datemediumchoices,
+    '#description' => t('The medium sized date display.')
   );
 
-  $form['dates']['date_format_long'] = array(
-    '#type' => 'select', '#title' => t('Long date format'), '#default_value' => variable_get('date_format_long', $datelong[0]),
-    '#options' => $datelongchoices, '#description' => t('Longer date format used for detailed display.')
+  $form['date_format_long'] = array(
+    '#type' => 'select',
+    '#title' => t('Long date format'),
+    '#default_value' => variable_get('date_format_long', $datelong[0]),
+    '#options' => $datelongchoices,
+    '#description' => t('Longer date format used for detailed display.')
   );
 
-  $form['dates']['date_first_day'] = array(
-    '#type' => 'select', '#title' => t('First day of week'), '#default_value' => variable_get('date_first_day', 0),
+  $form['date_first_day'] = array(
+    '#type' => 'select',
+    '#title' => t('First day of week'),
+    '#default_value' => variable_get('date_first_day', 0),
     '#options' => array(0 => t('Sunday'), 1 => t('Monday'), 2 => t('Tuesday'), 3 => t('Wednesday'), 4 => t('Thursday'), 5 => t('Friday'), 6 => t('Saturday')),
     '#description' => t('The first day of the week for calendar views.')
   );
 
+  return system_settings_form('system_date_time_settings', $form);
+}
 
-  // Site off-line/maintenance settings
-  $form['site_status'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Site maintenance'),
-    '#collapsible' => TRUE,
-    '#collapsed' => TRUE);
+function system_site_status_settings() {
 
-  $form['site_status']['site_offline'] = array(
+  $form['site_offline'] = array(
     '#type' => 'radios',
     '#title' => t('Site status'),
     '#default_value' => variable_get('site_offline', 0),
@@ -469,31 +574,36 @@ function system_view_general() {
     '#description' => t('When set to "Online", all visitors will be able to browse your site normally. When set to "Off-line", only users with the "administer site configuration" permission will be able to access your site to perform maintenance; all other visitors will see the site off-line message configured below. Authorized users can log in during "Off-line" mode directly via the <a href="%user-login">user login</a> page.', array('%user-login' => url('user'))),
   );
 
-  $form['site_status']['site_offline_message'] = array(
+  $form['site_offline_message'] = array(
     '#type' => 'textarea',
     '#title' => t('Site off-line message'),
     '#default_value' => variable_get('site_offline_message', t('%site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('%site' => variable_get('site_name', t('This Drupal site'))))),
     '#description' => t('Message to show visitors when the site is in off-line mode.')
   );
 
-  // String handling: report status and errors.
-  $form['strings'] = array('#type' => 'fieldset', '#title' => t('String handling'), '#collapsible' => TRUE, '#collapsed' => TRUE);
-  $form['strings'] = array_merge($form['strings'], unicode_settings());
+  return system_settings_form('system_site_status_settings', $form);
+}
 
-  // Cron: report status and errors.
-  $form['cron'] = array('#type' => 'fieldset', '#title' => t('Cron jobs'), '#collapsible' => TRUE, '#collapsed' => TRUE);
-  $form['cron'] = array_merge($form['cron'], system_cron_settings());
+function system_unicode_settings() {
+  return system_settings_form('system_unicode_settings', unicode_settings());
+}
 
-  // Check database setup if necessary
-  if (function_exists('db_check_setup') && empty($_POST)) {
-    db_check_setup();
+function system_cron_status() {
+  $cron_last = variable_get('cron_last', NULL);
+
+  if (is_numeric($cron_last)) {
+    $status = t('Cron is running. The last cron job ran %time ago.', array('%time' => format_interval(time() - $cron_last)));
   }
-  return $form;
+  else {
+    $status = t('Cron has not run. It appears cron jobs have not been setup on your system. Please check the help pages for <a href="%url">configuring cron jobs</a>.', array('%url' => 'http://drupal.org/cron'));
+  }
+
+  return $status;
 }
 
 /**
  * Checks the existence of the directory specified in $form_element. This
- * function is called from the system_view_general form to check both the
+ * function is called from the system_settings form to check both the
  * file_directory_path and file_directory_temp directories. If validation
  * fails, the form element is flagged with an error from within the
  * file_check_directory function.
@@ -504,23 +614,6 @@ function system_view_general() {
 function system_check_directory($form_element) {
   file_check_directory($form_element['#value'], FILE_CREATE_DIRECTORY, $form_element['#parents'][0]);
   return $form_element;
-}
-
-/**
- * Return the cron status and errors for admin/settings.
- */
-function system_cron_settings() {
-  $cron_last = variable_get('cron_last', NULL);
-
-  if (is_numeric($cron_last)) {
-    $status = t('Cron is running. The last cron job ran %time ago.', array('%time' => format_interval(time() - $cron_last)));
-  }
-  else {
-    $status = t('Cron has not run. It appears cron jobs have not been setup on your system. Please check the help pages for <a href="%url">configuring cron jobs</a>.', array('%url' => 'http://drupal.org/cron'));
-  }
-
-  $form['settings'] = array('#type' => 'item', '#value' => $status);
-  return $form;
 }
 
 /**
@@ -1029,17 +1122,27 @@ function system_modules_submit($form_id, $edit) {
 /**
  * Menu callback; displays a module's settings page.
  */
-function system_site_settings($module = NULL) {
+function system_settings_overview() {
 
-  if ($module) {
-    $form = module_invoke($module, 'settings');
-  }
-  else {
-    $form = system_view_general();
-    $module = 'system';
-  }
+    // Check database setup if necessary
+    if (function_exists('db_check_setup') && empty($_POST)) {
+      db_check_setup();
+    }
 
-  return system_settings_form($module . '_settings_form', $form);
+    $output = '<ul>';
+    $menu = menu_get_item(NULL, 'admin/settings');
+    usort($menu['children'], '_menu_sort');
+    foreach ($menu['children'] as $mid) {
+      $output .= ' <li>'. menu_item_link($mid) .'</li>';
+    }
+    $output .= '</ul>';
+
+    // TODO: remove this:
+    foreach (module_implements('settings') as $module) {
+      drupal_set_message("$module settings inaccessible: module needs updating because the _settings hook has been deprecated.");
+    }
+
+    return $output;
 }
 
 /**

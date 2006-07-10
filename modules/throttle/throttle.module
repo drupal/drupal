@@ -1,10 +1,26 @@
 <?php
-// $Id: throttle.module,v 1.60 2006/05/07 00:08:36 drumm Exp $
+// $Id: throttle.module,v 1.61 2006/07/10 19:27:52 dries Exp $
 
 /**
  * @file
  * Allows configuration of congestion control auto-throttle mechanism.
  */
+
+function throttle_menu($may_cache) {
+  $items = array();
+
+  if ($may_cache) {
+    $items[] = array(
+      'path' => 'admin/settings/throttle',
+      'title' => t('throttle'),
+      'callback' => 'throttle_admin_settings',
+      'access' => user_access('administer site configuration'),
+      'type' => MENU_NORMAL_ITEM
+    );
+  }
+
+  return $items;
+}
 
 /**
  * Determine the current load on the site.
@@ -122,10 +138,7 @@ function throttle_help($section) {
   }
 }
 
-/**
- * Implementation of hook_settings().
- */
-function throttle_settings() {
+function throttle_admin_settings() {
   _throttle_validate(variable_get('throttle_anonymous', ''), 'throttle_anonymous');
   _throttle_validate(variable_get('throttle_user', ''), 'throttle_user');
   $probabilities = array(0 => '100%', 1 => '50%', 2 => '33.3%', 3 => '25%', 4 => '20%', 5 => '16.6%', 7 => '12.5%', 9 => '10%', 19 => '5%', 99 => '1%', 199 => '.5%', 399 => '.25%', 989 => '.1%');
@@ -154,5 +167,5 @@ function throttle_settings() {
     '#description' => t('The auto-throttle probability limiter is an efficiency mechanism to statistically reduce the overhead of the auto-throttle. The limiter is expressed as a percentage of page views, so for example if set to the default of 10% we only perform the extra database queries to update the throttle status 1 out of every 10 page views. The busier your site, the lower you should set the limiter value.')
   );
 
-  return $form;
+  return system_settings_form('throttle_admin_settings', $form);
 }

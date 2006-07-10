@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.182 2006/07/06 14:27:56 dries Exp $
+// $Id: search.module,v 1.183 2006/07/10 19:27:52 dries Exp $
 
 /**
  * @file
@@ -151,11 +151,18 @@ function search_menu($may_cache) {
   $items = array();
 
   if ($may_cache) {
-    $items[] = array('path' => 'search', 'title' => t('search'),
+    $items[] = array('path' => 'search',
+      'title' => t('search'),
       'callback' => 'search_view',
       'access' => user_access('search content'),
       'type' => MENU_SUGGESTED_ITEM);
-    $items[] = array('path' => 'admin/settings/search/wipe', 'title' => t('Clear index'),
+    $items[] = array('path' => 'admin/settings/search',
+      'title' => t('search'),
+      'callback' => 'search_admin_settings',
+      'access' => user_access('administer search'),
+      'type' => MENU_CALLBACK);
+    $items[] = array('path' => 'admin/settings/search/wipe',
+      'title' => t('clear index'),
       'callback' => 'search_wipe_confirm',
       'access' => user_access('administer search'),
       'type' => MENU_CALLBACK);
@@ -181,7 +188,7 @@ function search_menu($may_cache) {
 /**
  * Implementation of hook_validate().
  */
-function search_settings_form_validate($form_id, &$form) {
+function search_admin_settings_validate($form_id, &$form) {
   if ($_POST['op'] == t('Re-index site')) {
     drupal_goto('admin/settings/search/wipe');
   }
@@ -196,7 +203,7 @@ function search_settings_form_validate($form_id, &$form) {
 /**
  * Menu callback; displays the search module settings page.
  */
-function search_settings() {
+function search_admin_settings() {
   // Collect some stats
   $remaining = 0;
   $total = 0;
@@ -227,7 +234,8 @@ function search_settings() {
 
   // Per module settings
   $form = array_merge($form, module_invoke_all('search', 'admin'));
-  return $form;
+
+  return system_settings_form('search_admin_settings', $form);
 }
 
 /**

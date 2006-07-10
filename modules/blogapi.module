@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.85 2006/07/10 08:05:15 dries Exp $
+// $Id: blogapi.module,v 1.86 2006/07/10 19:27:52 dries Exp $
 
 /**
  * @file
@@ -553,9 +553,11 @@ function blogapi_blogger_title(&$contents) {
   return $title;
 }
 
-function blogapi_settings() {
+function blogapi_admin_settings() {
   $form['blogapi_engine'] = array(
-    '#type' => 'select', '#title' => t('XML-RPC Engine'), '#default_value' => variable_get('blogapi_engine', 0),
+    '#type' => 'select',
+    '#title' => t('XML-RPC Engine'),
+    '#default_value' => variable_get('blogapi_engine', 0),
     '#options' => array(0 => 'Blogger', 1 => 'MetaWeblog', 2 => 'Movabletype'),
     '#description' => t('RSD or Really-Simple-Discovery is a mechanism which allows external blogger tools to discover the APIs they can use to interact with Drupal. Here you can set the preferred method for blogger tools to interact with your site. The common XML-RPC engines are Blogger, MetaWeblog and Movabletype. If you are not sure which is the correct setting, choose Blogger.')
   );
@@ -563,12 +565,15 @@ function blogapi_settings() {
   $node_types = node_get_types();
   $defaults = isset($node_types['blog']) ? array('blog' => 1) : array();
   $form['blogapi_node_types'] = array(
-    '#type' => 'checkboxes', '#title' => t('Blog types'), '#required' => TRUE,
-    '#default_value' => variable_get('blogapi_node_types', $defaults), '#options' => $node_types,
+    '#type' => 'checkboxes',
+    '#title' => t('Blog types'),
+    '#required' => TRUE,
+    '#default_value' => variable_get('blogapi_node_types', $defaults),
+    '#options' => $node_types,
     '#description' => t('Select the content types for which you wish to enable posting via blogapi. Each type will appear as a different "blog" in the client application (if supported).')
   );
 
-  return $form;
+  return system_settings_form('blogapi_admin_settings', $form);
 }
 
 function blogapi_menu($may_cache) {
@@ -582,7 +587,19 @@ function blogapi_menu($may_cache) {
   }
 
   if ($may_cache) {
-    $items[] = array('path' => 'blogapi', 'title' => t('RSD'), 'callback' => 'blogapi_blogapi', 'access' => user_access('access content'), 'type' => MENU_CALLBACK);
+   $items[] = array(
+      'path' => 'blogapi',
+      'title' => t('RSD'),
+      'callback' => 'blogapi_blogapi',
+      'access' => user_access('access content'),
+      'type' => MENU_CALLBACK);
+    $items[] = array(
+      'path' => 'admin/settings/blogapi',
+      'title' => t('blog APIs'),
+      'callback' => 'blogapi_admin_settings',
+      'access' => user_access('administer site configuration'),
+      'type' => MENU_NORMAL_ITEM
+    );
   }
 
   return $items;

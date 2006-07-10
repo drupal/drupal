@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.463 2006/07/10 18:00:37 drumm Exp $
+// $Id: comment.module,v 1.464 2006/07/10 19:27:52 dries Exp $
 
 /**
  * @file
@@ -77,7 +77,7 @@ function comment_help($section) {
 <li>control access for various comment module functions through access permissions <a href="%admin-access">administer &gt;&gt; access control</a>.</li>
 <li>administer comments <a href="%admin-comment-configure"> administer &gt;&gt; comments &gt;&gt; configure</a>.</li>
 </ul>
-', array('%admin-access' => url('admin/access'), '%admin-comment-configure' => url('admin/comment/configure')));
+', array('%admin-access' => url('admin/access'), '%admin-settings-comment' => url('admin/settings/comment')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%comment">Comment page</a>.', array('%comment' => 'http://drupal.org/handbook/modules/comment/')) .'</p>';
       return $output;
     case 'admin/modules#description':
@@ -87,8 +87,7 @@ function comment_help($section) {
       return t("<p>Below is a list of the latest comments posted to your site. Click on a subject to see the comment, the author's name to edit the author's user information , \"edit\" to modify the text, and \"delete\" to remove their submission.</p>");
     case 'admin/comment/approval':
       return t("<p>Below is a list of the comments posted to your site that need approval. To approve a comment, click on \"edit\" and then change its \"moderation status\" to Approved. Click on a subject to see the comment, the author's name to edit the author's user information, \"edit\" to modify the text, and \"delete\" to remove their submission.</p>");
-    case 'admin/comment/configure':
-    case 'admin/comment/configure/settings':
+    case 'admin/settings/comment':
       return t("<p>Comments can be attached to any node, and their settings are below. The display comes in two types: a \"flat list\" where everything is flush to the left side, and comments come in chronological order, and a \"threaded list\" where replies to other comments are placed immediately below and slightly indented, forming an outline. They also come in two styles: \"expanded\", where you see both the title and the contents, and \"collapsed\" where you only see the title. Preview comment forces a user to look at their comment by clicking on a \"Preview\" button before they can actually add the comment.</p>");
    }
 }
@@ -107,8 +106,6 @@ function comment_menu($may_cache) {
     // Tabs:
     $items[] = array('path' => 'admin/comment/list', 'title' => t('list'),
       'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
-    $items[] = array('path' => 'admin/comment/configure', 'title' => t('configure'),
-      'callback' => 'comment_configure', 'access' => $access, 'type' => MENU_LOCAL_TASK);
 
     // Subtabs:
     $items[] = array('path' => 'admin/comment/list/new', 'title' => t('published comments'),
@@ -118,8 +115,12 @@ function comment_menu($may_cache) {
       'callback arguments' => array('approval'),
       'type' => MENU_LOCAL_TASK);
 
-    $items[] = array('path' => 'admin/comment/configure/settings', 'title' => t('settings'),
-      'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
+    $items[] = array(
+      'path' => 'admin/settings/comments',
+      'title' => t('comments'),
+      'callback' => 'comment_admin_settings',
+      'access' => $access,
+      'type' => MENU_NORMAL_ITEM);
 
     $items[] = array('path' => 'comment/delete', 'title' => t('delete comment'),
       'callback' => 'comment_delete', 'access' => $access, 'type' => MENU_CALLBACK);
@@ -361,7 +362,7 @@ function comment_user($type, $edit, &$user, $category = NULL) {
 /**
  * Menu callback; presents the comment settings page.
  */
-function comment_configure() {
+function comment_admin_settings() {
   $form['viewing_options'] = array(
     '#type' => 'fieldset',
     '#title' => t('Viewing options'),
@@ -448,7 +449,7 @@ function comment_configure() {
     '#options' => array(t('Display on separate page'), t('Display below post or comments')),
   );
 
-  return system_settings_form('comment_settings_form', $form);
+  return system_settings_form('comment_admin_settings', $form);
 }
 
 /**

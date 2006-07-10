@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.655 2006/07/10 08:05:15 dries Exp $
+// $Id: node.module,v 1.656 2006/07/10 19:27:52 dries Exp $
 
 /**
  * @file
@@ -34,9 +34,6 @@ function node_help($section) {
       return $output;
     case 'admin/modules#description':
       return t('Allows content to be submitted to the site and displayed on pages.');
-    case 'admin/node/configure':
-    case 'admin/node/configure/settings':
-      return t('<p>Settings for the core of Drupal. Almost everything is a node so these settings will affect most of the site.</p>');
     case 'admin/node':
       return t('<p>Below is a list of all of the posts on your site. Other forms of content are listed elsewhere (e.g. <a href="%comments">comments</a>).</p><p>Clicking a title views the post, while clicking an author\'s name views their user information.</p>', array('%comments' => url('admin/comment')));
     case 'admin/node/search':

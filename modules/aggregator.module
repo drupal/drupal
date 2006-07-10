@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.289 2006/07/05 11:45:51 dries Exp $
+// $Id: aggregator.module,v 1.290 2006/07/10 19:27:52 dries Exp $
 
 /**
  * @file
@@ -75,6 +75,11 @@ function aggregator_menu($may_cache) {
       'title' => t('list'),
       'type' => MENU_DEFAULT_LOCAL_TASK,
       'weight' => -10);
+    $items[] = array('path' => 'admin/settings/aggregator',
+      'title' => t('RSS aggregator'),
+      'callback' => 'aggregator_admin_settings',
+      'type' => MENU_NORMAL_ITEM,
+      'access' => $edit);
 
     $items[] = array('path' => 'aggregator',
       'title' => t('news aggregator'),
@@ -188,10 +193,7 @@ function aggregator_menu($may_cache) {
   return $items;
 }
 
-/**
- * Implementation of hook_settings().
- */
-function aggregator_settings() {
+function aggregator_admin_settings() {
   $items = array(0 => t('none')) + drupal_map_assoc(array(3, 5, 10, 15, 20, 25), '_aggregator_items');
   $period = drupal_map_assoc(array(3600, 10800, 21600, 32400, 43200, 86400, 172800, 259200, 604800, 1209600, 2419200, 4838400, 9676800), 'format_interval');
 
@@ -218,7 +220,8 @@ function aggregator_settings() {
     '#options' => array('checkboxes' => t('checkboxes'), 'select' => t('multiple selector')),
     '#description' => t('The type of category selection widget which is shown on categorization pages. Checkboxes are easier to use; a multiple selector is good for working with large numbers of categories.')
   );
-  return $form;
+
+  return system_settings_form('aggregator_admin_settings', $form);
 }
 
 /**

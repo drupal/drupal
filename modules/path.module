@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.84 2006/05/07 00:08:36 drumm Exp $
+// $Id: path.module,v 1.85 2006/07/10 19:27:52 dries Exp $
 
 /**
  * @file
@@ -29,9 +29,9 @@ function path_help($section) {
 <li>add a URL alias: <a href="%admin-path-add">administer &gt;&gt; url aliases &gt;&gt; add alias</a>.</li>
 <li>administer the list of URL aliases: <a href="%admin-path">administer &gt;&gt; url aliases</a>.</li>
 <li>read how to <a href="%external-http-drupal-org-node-15365">configure clean URLs</a> for your webserver.
-<li>enable clean url\'s to remove the =? at <a href="%admin-settings">administer &gt;&gt; settings</a>.</li>
+<li>enable clean url\'s to remove the =? at <a href="%admin-clean-url-settings">administer &gt;&gt; settings &gt;&gt; clean URLs</a>.</li>
 </ul>
-', array('%admin-path-add' => url('admin/path/add'), '%admin-path' => url('admin/path'), '%external-http-drupal-org-node-15365' => 'http://drupal.org/node/15365', '%admin-settings' => url('admin/settings')));
+', array('%admin-path-add' => url('admin/path/add'), '%admin-path' => url('admin/path'), '%external-http-drupal-org-node-15365' => 'http://drupal.org/node/15365', '%admin-clean-url-settings' => url('admin/settings/clean-urls')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%path">Path page</a>.', array('%path' => 'http://drupal.org/handbook/modules/path/')) .'</p>';
       return $output;
     case 'admin/modules#description':

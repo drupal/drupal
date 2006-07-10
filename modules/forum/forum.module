@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.336 2006/07/05 11:45:51 dries Exp $
+// $Id: forum.module,v 1.337 2006/07/10 19:27:52 dries Exp $
 
 /**
  * @file
@@ -33,8 +33,6 @@ function forum_help($section) {
       return t('<p>Containers help you organize your forums. The job of a container is to hold, or contain, other forums that are related. For example, a container named "Food" might hold two forums named "Fruit" and "Vegetables".</p>');
     case 'admin/forum/add/forum':
       return t('<p>A forum holds discussion topics that are related. For example, a forum named "Fruit" might contain topics titled "Apples" and "Bananas".</p>');
-    case 'admin/forum/configure':
-      return t('This is where you can configure system-wide options for how your forums act and display.');
     case 'node/add#forum':
       return t('Create a new topic for discussion in the forums.');
   }
@@ -75,11 +73,11 @@ function forum_menu($may_cache) {
       'callback' => 'forum_form_forum',
       'access' => user_access('administer forums'),
       'type' => MENU_LOCAL_TASK);
-    $items[] = array('path' => 'admin/forum/configure',
-      'title' => t('configure'),
-      'callback' => 'forum_admin_configure',
+    $items[] = array('path' => 'admin/settings/forum',
+      'title' => t('forums'),
+      'callback' => 'forum_admin_settings',
       'access' => user_access('administer forums'),
-      'type' => MENU_LOCAL_TASK);
+      'type' => MENU_NORMAL_ITEM);
   }
   elseif (is_numeric(arg(4))) {
     $term = taxonomy_get_term(arg(4));
@@ -172,10 +170,7 @@ function forum_taxonomy($op, $type, $term = NULL) {
   }
 }
 
-/**
- * Implementation of hook_settings
- */
-function forum_admin_configure() {
+function forum_admin_settings() {
 
   $form = array();
   $number = drupal_map_assoc(array(5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 80, 100, 150, 200, 250, 300, 350, 400, 500));

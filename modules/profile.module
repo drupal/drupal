@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.158 2006/07/05 11:45:51 dries Exp $
+// $Id: profile.module,v 1.159 2006/07/10 19:27:52 dries Exp $
 
 /**
  * @file
@@ -60,7 +60,7 @@ function profile_menu($may_cache) {
       'access' => user_access('access user profiles'),
       'type' => MENU_SUGGESTED_ITEM);
     $items[] = array('path' => 'admin/settings/profile',
-      'title' => t('profiles'),
+      'title' => t('user profiles'),
       'callback' => 'profile_admin_overview');
     $items[] = array('path' => 'admin/settings/profile/add',
       'title' => t('add field'),

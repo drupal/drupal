@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal.module,v 1.122 2006/06/05 08:53:05 dries Exp $
+// $Id: drupal.module,v 1.123 2006/07/10 19:27:52 dries Exp $
 
 /**
  * @file
@@ -47,39 +47,31 @@ print drupal_client_page();
     case 'admin/modules#description':
       return t('Lets you register your site with a central server and improve ranking of Drupal projects by posting information on your installed modules and themes; also enables users to log in using a Drupal ID.');
     case 'admin/settings/drupal':
-      return t('<p>Using this your site can "call home" to another Drupal server. By calling home to drupal.org and sending a list of your installed modules and themes, you help rank projects on drupal.org and so assist all Drupal administrators to find the best components for meeting their needs. If you want to register with a different server, you can change the Drupal XML-RPC server setting -- but the server has to be able to handle Drupal XML. Some XML-RPC servers may present directories of all registered sites. To get all your site information listed, go to the <a href="%site-settings">settings page</a> and set the site name, the e-mail address, the slogan, and the mission statement.</p>', array('%site-settings' => url('admin/settings')));
+      return t('<p>Using this your site can "call home" to another Drupal server. By calling home to drupal.org and sending a list of your installed modules and themes, you help rank projects on drupal.org and so assist all Drupal administrators to find the best components for meeting their needs. If you want to register with a different server, you can change the Drupal XML-RPC server setting -- but the server has to be able to handle Drupal XML. Some XML-RPC servers may present directories of all registered sites. To get all your site information listed, go to the <a href="%site-settings">site information settings page</a> and set the site name, the e-mail address, the slogan, and the mission statement.</p>', array('%site-settings' => url('admin/settings/site-informationl')));
     case 'user/help#drupal':
       return variable_get('drupal_authentication_service', 0) ? t("<p><a href=\"%Drupal\">Drupal</a> is the name of the software that powers %this-site. There are Drupal web sites all over the world, and many of them share their registration databases so that users may freely log in to any Drupal site using a single <strong>Drupal ID</strong>.</p>
 <p>So please feel free to log in to your account here at %this-site with a username from another Drupal site. The format of a Drupal ID is similar to an e-mail address: <strong>username</strong>@<em>server</em>. An example of a valid Drupal ID is <strong>mwlily</strong>@<em>drupal.org</em>.</p>", array('%Drupal' => 'http://drupal.org', '%this-site' => '<em>'. variable_get('site_name', 'this web site') .'</em>')) : '';
   }
 }
 
-/**
- * Implementation of hook_settings().
- */
-function drupal_settings() {
+function drupal_sites_registry_settings() {
   // Check if all required fields are present
   if ((variable_get('site_name', 'drupal') == 'drupal') || (variable_get('site_name', 'drupal') == '')) {
-    form_set_error('drupal_directory', t('You must set the name of your site on the <a href="%url">administer &raquo; settings</a> page.', array('%url' => url('admin/settings'))));
+    form_set_error('drupal_directory', t('You must set the name of your site on the <a href="%url">administer &raquo; settings</a> page.', array('%url' => url('admin/settings/site-information'))));
   }
   else if (variable_get('site_mail', ini_get('sendmail_from')) == '') {
-    form_set_error('drupal_directory', t('You must set an e-mail address for your site on the <a href="%url">administer &raquo; settings</a> page.', array('%url' => url('admin/settings'))));
+    form_set_error('drupal_directory', t('You must set an e-mail address for your site on the <a href="%url">site information settings page</a>.', array('%url' => url('admin/settings/site-information'))));
   }
   else if (variable_get('site_slogan', '') == '') {
-    form_set_error('drupal_directory', t('You must set your site slogan on the <a href="%url">administer &raquo; settings</a> page.', array('%url' => url('admin/settings'))));
+    form_set_error('drupal_directory', t('You must set your site slogan on the <a href="%url">site information settings page</a>.', array('%url' => url('admin/settings/site-information'))));
   }
   else if (variable_get('site_mission', '') == '') {
-    form_set_error('drupal_directory', t('You must set your site mission on the <a href="%url">administer &raquo; settings</a> page.' , array('%url' => url('admin/settings'))));
+    form_set_error('drupal_directory', t('You must set your site mission on the <a href="%url">site information settings page</a>.' , array('%url' => url('admin/settings/site-information'))));
   }
+
   $options = array('1' => t('Enabled'), '0' => t('Disabled'));
 
-  $form['drupal'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Post data to another site'),
-    '#tree' => FALSE
-  );
-
-  $form['drupal']['drupal_register'] = array(
+  $form['drupal_register'] = array(
     '#type' => 'radios',
     '#title' => t('Register with a Drupal server'),
     '#default_value' => variable_get('drupal_register', 0),
@@ -87,14 +79,14 @@ function drupal_settings() {
     '#description' => t("If enabled, your Drupal site will register itself with the specified Drupal XML-RPC server. For this to work properly, you must set your site's name, e-mail address, slogan and mission statement. When the \"Drupal XML-RPC server\" field is set to \"%drupal-xml-rpc\", your web site will register itself with drupal.org. Requires the cron feature to be enabled.", array("%drupal-xml-rpc" => "http://drupal.org/xmlrpc.php", "%drupal-sites" => "http://drupal.org/drupal-sites/"))
   );
 
-  $form['drupal']['drupal_server'] =  array(
+  $form['drupal_server'] =  array(
     '#type' => 'textfield',
     '#title' => t('Drupal XML-RPC server'),
     '#default_value' => variable_get('drupal_server', 'http://drupal.org/xmlrpc.php'),
     '#description' => t('The URL of the Drupal XML-RPC server you wish to register with.')
   );
 
-  $form['drupal']['drupal_system'] = array(
+  $form['drupal_system'] = array(
     '#type' => 'radios',
     '#title' => t('Send system information'),
     '#default_value' => variable_get('drupal_system', 0),
@@ -102,21 +94,16 @@ function drupal_settings() {
     '#description' => t("If enabled, your site will send information on its installed components (modules, themes, and theme engines). This information can help in compiling statistics on usage of Drupal projects.")
   );
 
-  $form['drupal']['drupal_statistics'] = array(
+  $form['drupal_statistics'] = array(
     '#type' => 'radios',
     '#title' => t('Send statistics'),
     '#default_value' => variable_get('drupal_statistics', 0),
     '#options' => $options,
     '#description' => t("If enabled, your site will send summary statistics on the number of registered users and the total number of posts. No private information will be sent. These data help to improve the ranking statistics of Drupal projects.")
   );
+;
 
-  $form['services'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Receive data from other sites'),
-    '#tree' => FALSE
-  );
-
-  $form['services']['drupal_client_service'] = array(
+  $form['drupal_client_service'] = array(
     '#type' => 'radios',
     '#title' => t('Allow other Drupal sites to register'),
     '#default_value' => variable_get('drupal_client_service', 0),
@@ -124,13 +111,14 @@ function drupal_settings() {
     '#description' => t('If enabled, your Drupal site will allow other sites to register with your site and send information to this site. This functionality can be used to maintain a list of related sites.')
   );
 
-  $form['distauth'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Distributed authentication'),
-    '#tree' => FALSE
-  );
+  return system_settings_form('drupal_sites_registry_settings', $form);
+}
 
-  $form['distauth']['drupal_authentication_service'] = array(
+function drupal_distributed_authentication_settings() {
+
+  $options = array('1' => t('Enabled'), '0' => t('Disabled'));
+
+  $form['drupal_authentication_service'] = array(
     '#type' => 'radios',
     '#title' => t('Authentication service'),
     '#default_value' => variable_get('drupal_authentication_service', 0),
@@ -138,14 +126,14 @@ function drupal_settings() {
     '#description' => t('If enabled, your Drupal site will accept logins with the user names of other Drupal sites, and likewise provide authentication for users logging into other Drupal sites, based on their user accounts here.')
   );
 
-  $form['distauth']['drupal_default_da_server'] =  array(
+  $form['drupal_default_da_server'] =  array(
     '#type' => 'textfield',
     '#title' => t('Default authentication server'),
     '#default_value' => variable_get('drupal_default_da_server', ''),
     '#description' => t('The URL of the default Drupal authentication server. Omit the %http prefix (e.g. drupal.org, www.example.com, etc.). If the authentication service has been enabled, users registered at the server specified here, will not need to append the server to their user name when logging into your site. This enables users to provide a briefer, more familiar username in the login form.', array('%http' => theme('placeholder', 'http')))
   );
 
-  $form['distauth']['drupal_default_da_server_only'] = array(
+  $form['drupal_default_da_server_only'] = array(
     '#type' => 'radios',
     '#title' => t('Only allow authentication from default server'),
     '#default_value' => variable_get('drupal_default_da_server_only', 0),
@@ -153,7 +141,7 @@ function drupal_settings() {
     '#description' => t('Only accept remote logins from the above specified default authentication server and not from any other server. Useful when an external system is the solitary authority on user accounts for this site. A common usage is to enable this setting and also enable an authentication module which talks to your company\'s directory server.')
   );
 
-  return $form;
+  return system_settings_form('drupal_distributed_authentication_settings', $form);
 }
 
 /**
@@ -359,6 +347,15 @@ function drupal_auth($username, $password, $server = FALSE) {
 function drupal_menu($may_cache) {
   $items = array();
   if ($may_cache) {
+    $items[] = array('path' => 'admin/settings/sites-registry',
+      'title' => t('sites registry'),
+      'callback' => 'drupal_sites_registry_settings',
+      'access' => user_access('administer site configuration'));
+    $items[] = array('path' => 'admin/settings/distributed-authentication',
+      'title' => t('distributed authentication'),
+      'callback' => 'drupal_distributed_authentication_settings',
+      'access' => user_access('administer site configuration'));;
+
     if (variable_get('drupal_authentication_service', 0)) {
       $items[] = array('path' => 'drupal', 'title' => t('Drupal'),
         'callback' => 'drupal_page_help', 'access' => TRUE,

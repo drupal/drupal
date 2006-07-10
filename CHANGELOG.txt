@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.130 2006/07/09 11:33:06 dries Exp $
+// $Id: CHANGELOG.txt,v 1.131 2006/07/10 19:27:52 dries Exp $
 
 Drupal x.x.x, xxxx-xx-xx (development version)
 ------------------------
@@ -6,14 +6,14 @@ Drupal x.x.x, xxxx-xx-xx (development version)
 - added support for a generic "sites/all" directory.
 - usability:
     * added support for auto-complete forms (AJAX) to user profiles.
+    * made it possible to instantly assign roles to newly created user accounts.
     * improved configurability of the contact forms.
+    * reorganized the settings pages.
 - block system:
-    * extended the block visibility settings with a role specific settings..
+    * extended the block visibility settings with a role specific settings.
 - poll module:
     * optionally allow people to inspect all votes.
     * optionally allow people to cancel their vote.
-- user module:
-    * made it possible to instantly assign roles to newly created user accounts.
 - distributed authentication:
     * added default server option.
 - fixed critical SQL issue, see SA-2006-005

@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.56 2006/07/10 08:12:31 dries Exp $
+// $Id: contact.module,v 1.57 2006/07/10 19:27:52 dries Exp $
 
 /**
  * @file
@@ -26,7 +26,7 @@ function contact_help($section) {
     case 'admin/modules#description':
       return t('Enables the use of both personal and site-wide contact forms.');
     case 'admin/contact':
-      $output = t('This page lets you setup <a href="%form">your site-wide contact form</a>. To do so, add one or more categories. You can associate different recipients with each category to route e-mails to different people. For example, you can route website feedback to the webmaster and direct product information requests to the sales department. On the <a href="%settings">settings page</a>, you can customize the information shown above the contact form. This can be useful to provide additional contact information such as your postal address and telephone number.', array('%settings' => url('admin/contact/settings'), '%form' => url('contact')));
+      $output = t('This page lets you setup <a href="%form">your site-wide contact form</a>. To do so, add one or more categories. You can associate different recipients with each category to route e-mails to different people. For example, you can route website feedback to the webmaster and direct product information requests to the sales department. On the <a href="%settings">settings page</a>, you can customize the information shown above the contact form. This can be useful to provide additional contact information such as your postal address and telephone number.', array('%settings' => url('admin/settings/contact'), '%form' => url('contact')));
       if (!module_exist('menu')) {
         $menu_note = t('The menu item can be customized and configured only once the menu module has been <a href="%modules-page">enabled</a>.', array('%modules-page' => url('admin/modules')));
       }
@@ -55,43 +55,36 @@ function contact_menu($may_cache) {
       'callback' => 'contact_admin_categories',
       'access' => user_access('administer site configuration'),
     );
-    $items[] = array('path' => 'admin/contact/category',
-      'title' => t('categories'),
-      'callback' => 'contact_admin_categories',
-      'access' => user_access('administer site configuration'),
-      'type' => MENU_DEFAULT_LOCAL_TASK,
-    );
-    $items[] = array('path' => 'admin/contact/category/list',
+    $items[] = array('path' => 'admin/contact/list',
       'title' => t('list'),
       'callback' => 'contact_admin_categories',
       'access' => user_access('administer site configuration'),
       'type' => MENU_DEFAULT_LOCAL_TASK,
     );
-    $items[] = array('path' => 'admin/contact/category/add',
+    $items[] = array('path' => 'admin/contact/add',
       'title' => t('add category'),
       'callback' => 'contact_admin_edit',
       'access' => user_access('administer site configuration'),
       'type' => MENU_LOCAL_TASK,
       'weight' => 1,
     );
-    $items[] = array('path' => 'admin/contact/category/edit',
+    $items[] = array('path' => 'admin/contact/edit',
       'title' => t('edit contact category'),
       'callback' => 'contact_admin_edit',
       'access' => user_access('administer site configuration'),
       'type' => MENU_CALLBACK,
     );
-    $items[] = array('path' => 'admin/contact/category/delete',
+    $items[] = array('path' => 'admin/contact/delete',
       'title' => t('delete contact'),
       'callback' => 'contact_admin_delete',
       'access' => user_access('administer site configuration'),
       'type' => MENU_CALLBACK,
     );
-    $items[] = array('path' => 'admin/contact/settings',
-      'title' => t('settings'),
+    $items[] = array('path' => 'admin/settings/contact',
+      'title' => t('contact form'),
       'callback' => 'contact_admin_settings',
       'access' => user_access('administer site configuration'),
-      'type' => MENU_LOCAL_TASK,
-      'weight' => 1,
+      'type' => MENU_NORMAL_ITEM,
     );
     $items[] = array('path' => 'contact',
       'title' => t('contact'),
@@ -154,7 +147,7 @@ function contact_admin_categories() {
   $result = db_query('SELECT cid, category, recipients, selected FROM {contact} ORDER BY weight, category');
   $rows = array();
   while ($category = db_fetch_object($result)) {
-    $rows[] = array($category->category, $category->recipients, ($category->selected ? t('Yes') : t('No')), l(t('edit'), 'admin/contact/category/edit/'. $category->cid), l(t('delete'), 'admin/contact/category/delete/'. $category->cid));
+    $rows[] = array($category->category, $category->recipients, ($category->selected ? t('Yes') : t('No')), l(t('edit'), 'admin/contact/edit/'. $category->cid), l(t('delete'), 'admin/contact/delete/'. $category->cid));
   }
   $header = array(t('Category'), t('Recipients'), t('Selected'), array('data' => t('Operations'), 'colspan' => 2));
 
@@ -165,7 +158,7 @@ function contact_admin_categories() {
  * Category edit page.
  */
 function contact_admin_edit($cid = NULL) {
-  if (arg(3) == "edit" && $cid > 0) {
+  if (arg(2) == "edit" && $cid > 0) {
     $edit = db_fetch_array(db_query("SELECT * FROM {contact} WHERE cid = %d", $cid));
   }
   $form['category'] = array('#type' => 'textfield',
@@ -241,7 +234,7 @@ function contact_admin_edit_submit($form_id, $form_values) {
     $recipients[$key] = trim($recipient);
   }
   $form_values['recipients'] = implode(',', $recipients);
-  if (arg(3) == 'add') {
+  if (arg(2) == 'add') {
     db_query("INSERT INTO {contact} (category, recipients, reply, weight, selected) VALUES ('%s', '%s', '%s', %d, %d)", $form_values['category'], $form_values['recipients'], $form_values['reply'], $form_values['weight'], $form_values['selected']);
     drupal_set_message(t('Category %category has been added.', array('%category' => theme('placeholder', $form_values['category']))));
     watchdog('mail', t('Contact form: category %category added.', array('%category' => theme('placeholder', $form_values['category']))), WATCHDOG_NOTICE, l(t('view'), 'admin/contact'));
@@ -277,16 +270,13 @@ function contact_admin_delete($cid = NULL) {
  * Process category delete form submission.
  */
 function contact_admin_delete_submit($form_id, $form_values) {
-  db_query("DELETE FROM {contact} WHERE cid = %d", arg(4));
+  db_query("DELETE FROM {contact} WHERE cid = %d", arg(3));
   drupal_set_message(t('Category %category has been deleted.', array('%category' => theme('placeholder', $form_values['category']))));
   watchdog('mail', t('Contact form: category %category deleted.', array('%category' => theme('placeholder', $form_values['category']))), WATCHDOG_NOTICE);
 
   return 'admin/contact';
 }
 
-/**
- * Settings tab. Using a form rather than hook_settings().
- */
 function contact_admin_settings() {
   $form['contact_form_information'] = array('#type' => 'textarea',
     '#title' => t('Additional information'),
@@ -311,7 +301,7 @@ function contact_admin_settings() {
   $form['reset'] = array('#type' => 'submit',
     '#value' => t('Reset to defaults'),
   );
-  // Use system_settings_form for the callback.
+
   return drupal_get_form('contact_admin_settings', $form, 'system_settings_form');
 }
 

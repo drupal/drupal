@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.111 2006/07/05 11:45:51 dries Exp $
+// $Id: upload.module,v 1.112 2006/07/10 19:27:52 dries Exp $
 
 /**
  * @file
@@ -78,6 +78,11 @@ function upload_menu($may_cache) {
       'access' => user_access('upload files'),
       'type' => MENU_CALLBACK
     );
+    $items[] = array('path' => 'admin/settings/uploads',
+      'title' => t('file uploads'),
+      'callback' => 'upload_admin_settings',
+      'access' => user_access('administer site configuration'),
+      'type' => MENU_NORMAL_ITEM);
   }
   else {
     // Add handlers for previewing new uploads.
@@ -106,7 +111,7 @@ function upload_menu($may_cache) {
   return $items;
 }
 
-function upload_settings() {
+function upload_admin_settings() {
   $upload_extensions_default = variable_get('upload_extensions_default', 'jpg jpeg gif png txt html doc xls pdf ppt pps');
   $upload_uploadsize_default = variable_get('upload_uploadsize_default', 1);
   $upload_usersize_default = variable_get('upload_usersize_default', 10);
@@ -190,7 +195,7 @@ function upload_settings() {
     );
   }
 
-  return $form;
+  return system_settings_form('upload_admin_settings', $form);
 }
 
 function upload_download() {

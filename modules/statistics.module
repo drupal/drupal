@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.229 2006/07/04 08:59:05 drumm Exp $
+// $Id: statistics.module,v 1.230 2006/07/10 19:27:52 dries Exp $
 
 /**
  * @file
@@ -114,31 +114,61 @@ function statistics_menu($may_cache) {
 
   $access = user_access('access statistics');
   if ($may_cache) {
-    $items[] = array('path' => 'admin/logs/hits', 'title' => t('recent hits'),
-      'callback' => 'statistics_recent_hits', 'access' => $access,
+    $items[] = array(
+      'path' => 'admin/logs/hits',
+      'title' => t('recent hits'),
+      'callback' => 'statistics_recent_hits',
+      'access' => $access,
       'weight' => 3);
-    $items[] = array('path' => 'admin/logs/pages', 'title' => t('top pages'),
-      'callback' => 'statistics_top_pages', 'access' => $access,
+    $items[] = array(
+      'path' => 'admin/logs/pages',
+      'title' => t('top pages'),
+      'callback' => 'statistics_top_pages',
+      'access' => $access,
       'weight' => 1);
-    $items[] = array('path' => 'admin/logs/visitors', 'title' => t('top visitors'),
-      'callback' => 'statistics_top_visitors', 'access' => $access,
+    $items[] = array(
+      'path' => 'admin/logs/visitors',
+      'title' => t('top visitors'),
+      'callback' => 'statistics_top_visitors',
+      'access' => $access,
       'weight' => 2);
-    $items[] = array('path' => 'admin/logs/referrers', 'title' => t('referrers'),
-      'callback' => 'statistics_top_referrers', 'access' => $access);
-    $items[] = array('path' => 'admin/logs/access', 'title' => t('details'),
-      'callback' => 'statistics_access_log', 'access' => $access,
+    $items[] = array(
+      'path' => 'admin/logs/referrers',
+      'title' => t('referrers'),
+      'callback' => 'statistics_top_referrers',
+      'access' => $access);
+    $items[] = array(
+      'path' => 'admin/logs/access',
+      'title' => t('details'),
+      'callback' => 'statistics_access_log',
+      'access' => $access,
       'type' => MENU_CALLBACK);
+    $items[] = array(
+      'path' => 'admin/settings/access-logging',
+      'title' => t('access logging'),
+      'callback' => 'statistics_access_logging_settings',
+      'access' => user_access('administer site configuration'),
+      'type' => MENU_NORMAL_ITEM
+    );
   }
   else {
     if (arg(0) == 'user' && is_numeric(arg(1)) && variable_get('statistics_enable_access_log', 0)) {
-      $items[] = array('path' => 'user/'. arg(1) .'/track/navigation', 'title' => t('track page visits'),
-        'callback' => 'statistics_user_tracker', 'access' => $access,
-        'type' => MENU_LOCAL_TASK, 'weight' => 2);
+      $items[] = array(
+        'path' => 'user/'. arg(1) .'/track/navigation',
+        'title' => t('track page visits'),
+        'callback' => 'statistics_user_tracker',
+        'access' => $access,
+        'type' => MENU_LOCAL_TASK,
+        'weight' => 2);
     }
     if (arg(0) == 'node' && is_numeric(arg(1)) && variable_get('statistics_enable_access_log', 0)) {
-      $items[] = array('path' => 'node/'. arg(1) .'/track', 'title' => t('track'),
-        'callback' => 'statistics_node_tracker', 'access' => $access,
-        'type' => MENU_LOCAL_TASK, 'weight' => 2);
+      $items[] = array(
+        'path' => 'node/'. arg(1) .'/track',
+        'title' => t('track'),
+        'callback' => 'statistics_node_tracker',
+        'access' => $access,
+        'type' => MENU_LOCAL_TASK,
+        'weight' => 2);
     }
   }
 
@@ -333,22 +363,38 @@ function statistics_top_referrers() {
   return $output;
 }
 
-/**
- * Implementation of hook_settings().
- */
-function statistics_settings() {
-  // access log settings:
+function statistics_access_logging_settings() {
+  // Access log settings:
   $options = array('1' => t('Enabled'), '0' => t('Disabled'));
-  $form['access'] = array('#type' => 'fieldset', '#title' => t('Access log settings'));
-  $form['access']['statistics_enable_access_log'] = array('#type' => 'radios', '#title' => t('Enable access log'), '#default_value' =>  variable_get('statistics_enable_access_log', 0), '#options' => $options, '#description' => t('Log each page access. Required for referrer statistics.'));
+  $form['access'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Access log settings'));
+  $form['access']['statistics_enable_access_log'] = array(
+    '#type' => 'radios',
+    '#title' => t('Enable access log'),
+    '#default_value' =>  variable_get('statistics_enable_access_log', 0),
+    '#options' => $options,
+    '#description' => t('Log each page access. Required for referrer statistics.'));
   $period = drupal_map_assoc(array(3600, 10800, 21600, 32400, 43200, 86400, 172800, 259200, 604800, 1209600, 2419200, 4838400, 9676800), 'format_interval');
-  $form['access']['statistics_flush_accesslog_timer'] = array('#type' => 'select', '#title' => t('Discard access logs older than'), '#default_value'   => variable_get('statistics_flush_accesslog_timer', 259200), '#options' => $period, '#description' => t('Older access log entries (including referrer statistics) will be automatically discarded. Requires crontab.'));
+  $form['access']['statistics_flush_accesslog_timer'] = array(
+    '#type' => 'select',
+    '#title' => t('Discard access logs older than'),
+    '#default_value'   => variable_get('statistics_flush_accesslog_timer', 259200),
+    '#options' => $period,
+    '#description' => t('Older access log entries (including referrer statistics) will be automatically discarded. Requires crontab.'));
 
   // count content views settings
-  $form['content'] = array('#type' => 'fieldset', '#title' => t('Content viewing counter settings'));
-  $form['content']['statistics_count_content_views'] = array('#type' => 'radios', '#title' => t('Count content views'), '#default_value' =>  variable_get('statistics_count_content_views', 0), '#options' => $options, '#description' => t('Increment a counter each time content is viewed.'));
+  $form['content'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Content viewing counter settings'));
+  $form['content']['statistics_count_content_views'] = array(
+    '#type' => 'radios',
+    '#title' => t('Count content views'),
+    '#default_value' => variable_get('statistics_count_content_views', 0),
+    '#options' => $options,
+    '#description' => t('Increment a counter each time content is viewed.'));
 
-  return $form;
+  return system_settings_form('statistics_access_logging_settings', $form);
 }
 
 /**

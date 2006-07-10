@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.635 2006/07/10 08:12:31 dries Exp $
+// $Id: user.module,v 1.636 2006/07/10 19:27:52 dries Exp $
 
 /**
  * @file
@@ -696,7 +696,7 @@ function user_menu($may_cache) {
       'callback' => 'user_admin', 'access' => $admin_access,
       'type' => MENU_LOCAL_TASK);
     $items[] = array('path' => 'admin/settings/user', 'title' => t('users'),
-      'callback' => 'user_configure');
+      'callback' => 'user_admin_settings');
 
     // Admin access pages
     $items[] = array('path' => 'admin/access', 'title' => t('access control'),
@@ -1218,7 +1218,7 @@ function user_register_submit($form_id, $form_values) {
   // The first user may login immediately, and receives a customized welcome e-mail.
   if ($account->uid == 1) {
     drupal_mail('user-register-admin', $mail, t('Drupal user account details for %s', array('%s' => $name)), strtr(t("%username,\n\nYou may now login to %uri using the following username and password:\n\n  username: %username\n  password: %password\n\n%edit_uri\n\n--drupal"), $variables), $from);
-    drupal_set_message(t('<p>Welcome to Drupal. You are user #1, which gives you full and immediate access. All future registrants will receive their passwords via e-mail, so please make sure your website e-mail address is set properly under the general settings on the <a href="%settings">settings page</a>.</p><p> Your password is <strong>%pass</strong>. You may change your password below.</p>', array('%pass' => $pass, '%settings' => url('admin/settings'))));
+    drupal_set_message(t('<p>Welcome to Drupal. You are user #1, which gives you full and immediate access. All future registrants will receive their passwords via e-mail, so please make sure your website e-mail address is set properly under the general settings on the <a href="%settings">site information settings page</a>.</p><p> Your password is <strong>%pass</strong>. You may change your password below.</p>', array('%pass' => $pass, '%settings' => url('admin/settings/site-information'))));
     user_authenticate($account->name, trim($pass));
 
     // Set the installed schema version of the system module to the most recent version.
@@ -1479,9 +1479,6 @@ function _user_mail_text($messageid, $variables = array()) {
         return t("%username,\n\nA request to reset the password for your account has been made at %site.\n\nYou may now log in to %uri_brief clicking on this link or copying and pasting it in your browser:\n\n%login_url\n\nThis is a one-time login, so it can be used only once. It expires after one day and nothing will happen if it's not used.\n\nAfter logging in, you will be redirected to %edit_uri so you can change your password.", $variables);
     }
   }
-}
-
-function user_configure_settings() {
 }
 
 /**
@@ -1918,7 +1915,7 @@ function user_admin_account() {
   return $output;
 }
 
-function user_configure() {
+function user_admin_settings() {
   // User registration settings.
   $form['registration'] = array('#type' => 'fieldset', '#title' => t('User registration settings'));
   $form['registration']['user_register'] = array('#type' => 'radios', '#title' => t('Public registrations'), '#default_value' => variable_get('user_register', 1), '#options' => array(t('Only site administrators can create new user accounts.'), t('Visitors can create accounts and no administrator approval is required.'), t('Visitors can create accounts but administrator approval is required.')));
@@ -1949,7 +1946,7 @@ function user_configure() {
   $form['pictures']['user_picture_file_size'] = array('#type' => 'textfield', '#title' => t('Picture maximum file size'), '#default_value' => variable_get('user_picture_file_size', '30'), '#size' => 15, '#maxlength' => 10, '#description' => t('Maximum file size for pictures, in kB.'));
   $form['pictures']['user_picture_guidelines'] = array('#type' => 'textarea', '#title' => t('Picture guidelines'), '#default_value' => variable_get('user_picture_guidelines', ''), '#description' => t('This text is displayed at the picture upload form in addition to the default guidelines. It\'s useful for helping or instructing your users.'));
 
-  return system_settings_form('user_configure_settings', $form);
+  return system_settings_form('user_admin_settings', $form);
 }
 
 function user_admin() {
@@ -2015,9 +2012,6 @@ function user_help($section) {
       </ul>', array('%permissions' => url('admin/access/permissions')));
     case 'admin/user/search':
       return t('<p>Enter a simple pattern ("*" may be used as a wildcard match) to search for a username. For example, one may search for "br" and Drupal might return "brian", "brad", and "brenda".</p>');
-    case 'admin/user/configure':
-    case 'admin/user/configure/settings':
-      return t('<p>In order to use the full power of Drupal a visitor must sign up for an account. This page lets you setup how a user signs up, logs out, the guidelines from the system about user subscriptions, and the e-mails the system will send to the user.</p>');
     case 'user/help#user':
       $site = variable_get('site_name', 'this website');
 
