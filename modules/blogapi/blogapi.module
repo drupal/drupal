@@ -198,7 +198,6 @@ function blogapi_blogger_new_post($appkey, $blogid, $username, $password, $conte
   $edit['name'] = $user->name;
   $edit['promote'] = in_array('promote', $node_type_default);
   $edit['comment'] = variable_get('comment_'. $edit['type'], 2);
-  $edit['moderate'] = in_array('moderate', $node_type_default);
   $edit['revision'] = in_array('revision', $node_type_default);
   $edit['format'] = FILTER_FORMAT_DEFAULT;
   $edit['status'] = $publish;
