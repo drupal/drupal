@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.104 2006/07/10 15:37:10 dries Exp $
+// $Id: bootstrap.inc,v 1.105 2006/07/10 18:41:10 dries Exp $
 
 /**
  * @file
@@ -151,7 +151,7 @@ function drupal_unset_globals() {
  * Loads the configuration and sets the base URL correctly.
  */
 function conf_init() {
-  global $base_url, $base_path, $base_root, $conf;
+  global $db_url, $db_prefix, $base_url, $base_path, $base_root, $conf;
   $conf = array();
   require_once './'. conf_path() .'/settings.php';
 
