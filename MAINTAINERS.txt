@@ -1,4 +1,4 @@
-// $Id: MAINTAINERS.txt,v 1.12 2006/07/09 11:33:06 dries Exp $
+// $Id: MAINTAINERS.txt,v 1.13 2006/07/10 21:14:22 dries Exp $
 
 List of maintainers
 --------------------------------------------------------------------------------
@@ -27,7 +27,7 @@ M: Moshe Weitzman <weitzman@tejasa.com>
 S: maintained
 
 DOCUMENTATION COORDINATOR
-M: Charlie Lowe <cel4145@cyberdash.com>
+M: Steven Peck <speck@blkmtn.org>
 S: maintained
 
 FILTER SYSTEM
@@ -48,6 +48,10 @@ S: maintained
 
 PATH MODULE
 M: Matt Westgate <drupal@asitis.org>
+S: maintained
+
+POSTGRESQL
+M: Sammy Spets <sammys-drupal@synerger.com>
 S: maintained
 
 SECURITY COORDINATOR
