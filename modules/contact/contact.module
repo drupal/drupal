@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.55 2006/06/28 21:47:03 dries Exp $
+// $Id: contact.module,v 1.56 2006/07/10 08:12:31 dries Exp $
 
 /**
  * @file
@@ -396,11 +396,11 @@ function contact_mail_user_submit($form_id, $edit) {
   $body = implode("\n\n", $message);
 
   // Send the e-mail:
-  user_mail($to, $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
+  drupal_mail('contact-user-mail', $to, $subject, $body, $from);
 
   // Send a copy if requested:
   if ($edit['copy']) {
-    user_mail($from, $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
+    drupal_mail('contact-user-copy', $from, $subject, $body, $from);
   }
 
   // Log the operation:
@@ -537,16 +537,16 @@ function contact_mail_page_submit($form_id, $edit) {
   $body = implode("\n\n", $message);
 
   // Send the e-mail to the recipients:
-  user_mail($contact->recipients, $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
+  drupal_mail('contact-page-mail', $contact->recipients, $subject, $body, $from);
 
   // If the user requests it, send a copy.
   if ($edit['copy']) {
-    user_mail($from, $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
+    drupal_mail('contact-page-copy', $from, $subject, $body, $from);
   }
 
   // Send an auto-reply if necessary:
   if ($contact->reply) {
-    user_mail($from, $subject, wordwrap($contact->reply), "From: $contact->recipients\nReply-to: $contact->recipients\nX-Mailer: Drupal\nReturn-path: $contact->recipients\nErrors-to: $contact->recipients");
+    drupal_mail('contact-page-autoreply', $from, $subject, wordwrap($contact->reply), $contact->recipients);
   }
 
   // Log the operation:

@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.634 2006/07/07 18:49:13 dries Exp $
+// $Id: user.module,v 1.635 2006/07/10 08:12:31 dries Exp $
 
 /**
  * @file
@@ -379,65 +379,6 @@ function user_is_blocked($name) {
   $deny  = db_fetch_object(db_query("SELECT * FROM {users} WHERE status = 0 AND name = LOWER('%s')", $name));
 
   return $deny && !$allow;
-}
-
-/**
- * Send an e-mail message, using Drupal variables and default settings.
- * More information in the <a href="http://php.net/manual/en/function.mail.php">
- * PHP function reference for mail()</a>
- * @param $mail
- *  The mail address or addresses where the message will be send to. The
- *  formatting of this string must comply with RFC 2822. Some examples are:
- *    user@example.com
- *    user@example.com, anotheruser@example.com
- *    User <user@example.com>
- *    User <user@example.com>, Another User <anotheruser@example.com>
- *  @param $subject
- *    Subject of the e-mail to be sent. This must not contain any newline
- *    characters, or the mail may not be sent properly.
- *  @param $message
- *    Message to be sent. Drupal will format the correct line endings for you.
- *  @param $header
- *    String to be inserted at the end of the e-mail header. This is typically
- *    used to add extra headers (From, Cc, and Bcc). Multiple extra headers
- *    should be separated with a CRLF (\r\n).
- *    <em>When sending mail, the mail must contain a From header.</em>
- * @return Returns TRUE if the mail was successfully accepted for delivery,
- *    FALSE otherwise.
- */
-function user_mail($mail, $subject, $message, $header) {
-  if (variable_get('smtp_library', '') && file_exists(variable_get('smtp_library', ''))) {
-   include_once './' . variable_get('smtp_library', '');
-    return user_mail_wrapper($mail, $subject, $message, $header);
-  }
-  else {
-    /*
-    ** Note: if you are having problems with sending mail, or mails look wrong
-    ** when they are received you may have to modify the str_replace to suit
-    ** your systems.
-    **  - \r\n will work under dos and windows.
-    **  - \n will work for linux, unix and BSDs.
-    **  - \r will work for macs.
-    **
-    ** According to RFC 2646, it's quite rude to not wrap your e-mails:
-    **
-    ** "The Text/Plain media type is the lowest common denominator of
-    ** Internet e-mail, with lines of no more than 997 characters (by
-    ** convention usually no more than 80), and where the CRLF sequence
-    ** represents a line break [MIME-IMT]."
-    **
-    ** CRLF === \r\n
-    **
-    ** http://www.rfc-editor.org/rfc/rfc2646.txt
-    **
-    */
-    return mail(
-      $mail,
-      mime_header_encode($subject),
-      str_replace("\r", '', $message),
-      "MIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8; format=flowed\nContent-transfer-encoding: 8Bit\n" . $header
-    );
-  }
 }
 
 function user_fields() {
@@ -1087,8 +1028,7 @@ function user_pass_submit($form_id, $form_values) {
   $variables = array('%username' => $account->name, '%site' => variable_get('site_name', 'drupal'), '%login_url' => user_pass_reset_url($account), '%uri' => $base_url, '%uri_brief' => substr($base_url, strlen('http://')), '%mailto' => $account->mail, '%date' => format_date(time()), '%login_uri' => url('user', NULL, NULL, TRUE), '%edit_uri' => url('user/'. $account->uid .'/edit', NULL, NULL, TRUE));
   $subject = _user_mail_text('pass_subject', $variables);
   $body = _user_mail_text('pass_body', $variables);
-  $headers = "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from";
-  $mail_success = user_mail($account->mail, $subject, $body, $headers);
+  $mail_success = drupal_mail('user-pass', $account->mail, $subject, $body, $from);
 
   if ($mail_success) {
     watchdog('user', t('Password reset instructions mailed to %name at %email.', array('%name' => '<em>'. $account->name .'</em>', '%email' => '<em>'. $account->mail .'</em>')));
@@ -1277,7 +1217,7 @@ function user_register_submit($form_id, $form_values) {
 
   // The first user may login immediately, and receives a customized welcome e-mail.
   if ($account->uid == 1) {
-    user_mail($mail, t('Drupal user account details for %s', array('%s' => $name)), strtr(t("%username,\n\nYou may now login to %uri using the following username and password:\n\n  username: %username\n  password: %password\n\n%edit_uri\n\n--drupal"), $variables), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
+    drupal_mail('user-register-admin', $mail, t('Drupal user account details for %s', array('%s' => $name)), strtr(t("%username,\n\nYou may now login to %uri using the following username and password:\n\n  username: %username\n  password: %password\n\n%edit_uri\n\n--drupal"), $variables), $from);
     drupal_set_message(t('<p>Welcome to Drupal. You are user #1, which gives you full and immediate access. All future registrants will receive their passwords via e-mail, so please make sure your website e-mail address is set properly under the general settings on the <a href="%settings">settings page</a>.</p><p> Your password is <strong>%pass</strong>. You may change your password below.</p>', array('%pass' => $pass, '%settings' => url('admin/settings'))));
     user_authenticate($account->name, trim($pass));
 
@@ -1296,7 +1236,7 @@ function user_register_submit($form_id, $form_values) {
       $subject = $notify ? _user_mail_text('admin_subject', $variables) : _user_mail_text('welcome_subject', $variables);
       $body = $notify ? _user_mail_text('admin_body', $variables) : _user_mail_text('welcome_body', $variables);
 
-      user_mail($mail, $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
+      drupal_mail(($notify ? 'user-register-notify' : 'user-register-welcome'), $mail,$subject, $body, $from);
 
       if ($notify) {
         drupal_set_message(t('Password and further instructions have been e-mailed to the new user %user.', array('%user' => theme('placeholder', $name))));
@@ -1311,8 +1251,8 @@ function user_register_submit($form_id, $form_values) {
       $subject = _user_mail_text('approval_subject', $variables);
       $body = _user_mail_text('approval_body', $variables);
 
-      user_mail($mail, $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
-      user_mail(variable_get('site_mail', ini_get('sendmail_from')), $subject, t("%u has applied for an account.\n\n%uri", array('%u' => $account->name, '%uri' => url("user/$account->uid/edit", NULL, NULL, TRUE))), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
+      drupal_mail('user-register-approval-user', $mail, $subject, $body, $from);
+      drupal_mail('user-register-approval-admin', $from, $subject, t("%u has applied for an account.\n\n%uri", array('%u' => $account->name, '%uri' => url("user/$account->uid/edit", NULL, NULL, TRUE))), $from);
       drupal_set_message(t('Thank you for applying for an account. Your account is currently pending approval by the site administrator.<br />In the meantime, your password and further instructions have been sent to your e-mail address.'));
 
     }

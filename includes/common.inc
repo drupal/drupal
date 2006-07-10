@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.545 2006/07/05 11:45:51 dries Exp $
+// $Id: common.inc,v 1.546 2006/07/10 08:12:31 dries Exp $
 
 /**
  * @file
@@ -1403,5 +1403,87 @@ function page_set_cache() {
         cache_set($base_root . request_uri(), $data, CACHE_TEMPORARY, drupal_get_headers());
       }
     }
+  }
+}
+
+/**
+ * Send an e-mail message, using Drupal variables and default settings.
+ * More information in the <a href="http://php.net/manual/en/function.mail.php">
+ * PHP function reference for mail()</a>
+ * @param $mailkey
+ *   A key to indetify the mail sent, for altering
+ * @param $to
+ *   The mail address or addresses where the message will be send to. The
+ *   formatting of this string must comply with RFC 2822. Some examples are:
+ *    user@example.com
+ *    user@example.com, anotheruser@example.com
+ *    User <user@example.com>
+ *    User <user@example.com>, Another User <anotheruser@example.com>
+ * @param $subject
+ *   Subject of the e-mail to be sent. This must not contain any newline
+ *   characters, or the mail may not be sent properly.
+ * @param $body
+ *   Message to be sent. Drupal will format the correct line endings for you.
+ * @param $from
+ *   Sets From, Reply-To, Return-Path and Error-To to this value, if given.
+ * @param $headers
+ *   Associative array containing the headers to add. This is typically
+ *   used to add extra headers (From, Cc, and Bcc).
+ *   <em>When sending mail, the mail must contain a From header.</em>
+ * @return Returns TRUE if the mail was successfully accepted for delivery,
+ *   FALSE otherwise.
+ */
+function drupal_mail($mailkey, $to, $subject, $body, $from = NULL, $headers = array()) {
+  $defaults = array(
+    'MIME-Version' => '1.0',
+    'Content-Type' => 'text/plain; charset=UTF-8; format=flowed',
+    'Content-Transfer-Encoding' => '8Bit',
+    'X-Mailer' => 'Drupal'
+  );
+  if (isset($from)) {
+    $defaults['From'] = $defaults['Reply-To'] = $defaults['Return-Path'] = $defaults['Errors-To'] = $from;
+  }
+  $headers = array_merge($defaults, $headers);
+  // Custom hook traversal to allow pass by reference
+  foreach (module_implements('mail_alter') AS $module) {
+    $function = $module .'_mail_alter';
+    $function($mailkey, $to, $subject, $body, $from, $headers);
+  }
+  // Allow for custom mail backend
+  if (variable_get('smtp_library', '') && file_exists(variable_get('smtp_library', ''))) {
+    include_once './' . variable_get('smtp_library', '');
+    return drupal_mail_wrapper($mailkey, $to, $subject, $body, $from, $headers);
+  }
+  else {
+    /*
+    ** Note: if you are having problems with sending mail, or mails look wrong
+    ** when they are received you may have to modify the str_replace to suit
+    ** your systems.
+    **  - \r\n will work under dos and windows.
+    **  - \n will work for linux, unix and BSDs.
+    **  - \r will work for macs.
+    **
+    ** According to RFC 2646, it's quite rude to not wrap your e-mails:
+    **
+    ** "The Text/Plain media type is the lowest common denominator of
+    ** Internet e-mail, with lines of no more than 997 characters (by
+    ** convention usually no more than 80), and where the CRLF sequence
+    ** represents a line break [MIME-IMT]."
+    **
+    ** CRLF === \r\n
+    **
+    ** http://www.rfc-editor.org/rfc/rfc2646.txt
+    **
+    */
+    $mimeheaders = array();
+    foreach ($headers as $name => $value) {
+      $mimeheaders[] = $name .': '. mime_header_encode($value);
+    }
+    return mail(
+      $to,
+      mime_header_encode($subject),
+      str_replace("\r", '', $body),
+      join("\n", $mimeheaders)
+    );
   }
 }
