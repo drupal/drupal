@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.373 2006/07/05 11:45:51 dries Exp $
+// $Id: book.module,v 1.374 2006/07/10 08:05:15 dries Exp $
 
 /**
  * @file
@@ -39,7 +39,7 @@ function book_access($op, $node) {
     // of that page waiting for approval. That is, only updates that
     // don't overwrite the current or pending information are allowed.
 
-    if ((user_access('edit book pages') && !$node->moderate) || ($node->uid == $user->uid && user_access('edit own book pages'))) {
+    if (user_access('edit book pages') || ($node->uid == $user->uid && user_access('edit own book pages'))) {
       return TRUE;
     }
     else {
@@ -390,7 +390,7 @@ function book_prev($node) {
   }
 
   // Previous on the same level:
-  $direct_above = db_fetch_object(db_query(db_rewrite_sql("SELECT n.nid, n.title, b.weight FROM {node} n INNER JOIN {book} b ON n.vid = b.vid WHERE b.parent = %d AND n.status = 1 AND n.moderate = 0 AND (b.weight < %d OR (b.weight = %d AND n.title < '%s')) ORDER BY b.weight DESC, n.title DESC"), $node->parent, $node->weight, $node->weight, $node->title));
+  $direct_above = db_fetch_object(db_query(db_rewrite_sql("SELECT n.nid, n.title, b.weight FROM {node} n INNER JOIN {book} b ON n.vid = b.vid WHERE b.parent = %d AND n.status = 1 AND (b.weight < %d OR (b.weight = %d AND n.title < '%s')) ORDER BY b.weight DESC, n.title DESC"), $node->parent, $node->weight, $node->weight, $node->title));
   if ($direct_above) {
     // Get last leaf of $above.
     $path = book_location_down($direct_above);
@@ -399,7 +399,7 @@ function book_prev($node) {
   }
   else {
     // Direct parent:
-    $prev = db_fetch_object(db_query(db_rewrite_sql('SELECT n.nid, n.title FROM {node} n INNER JOIN {book} b ON n.vid = b.vid WHERE n.nid = %d AND n.status = 1 AND n.moderate = 0'), $node->parent));
+    $prev = db_fetch_object(db_query(db_rewrite_sql('SELECT n.nid, n.title FROM {node} n INNER JOIN {book} b ON n.vid = b.vid WHERE n.nid = %d AND n.status = 1'), $node->parent));
     return $prev;
   }
 }
@@ -409,7 +409,7 @@ function book_prev($node) {
  */
 function book_next($node) {
   // get first direct child
-  $child = db_fetch_object(db_query(db_rewrite_sql('SELECT n.nid, n.title, b.weight FROM {node} n INNER JOIN {book} b ON n.vid = b.vid WHERE b.parent = %d AND n.status = 1 AND n.moderate = 0 ORDER BY b.weight ASC, n.title ASC'), $node->nid));
+  $child = db_fetch_object(db_query(db_rewrite_sql('SELECT n.nid, n.title, b.weight FROM {node} n INNER JOIN {book} b ON n.vid = b.vid WHERE b.parent = %d AND n.status = 1 ORDER BY b.weight ASC, n.title ASC'), $node->nid));
   if ($child) {
     return $child;
   }
@@ -419,7 +419,7 @@ function book_next($node) {
   $path[] = $node;
 
   while (($leaf = array_pop($path)) && count($path)) {
-    $next = db_fetch_object(db_query(db_rewrite_sql("SELECT n.nid, n.title, b.weight FROM {node} n INNER JOIN {book} b ON n.vid = b.vid WHERE b.parent = %d AND n.status = 1 AND n.moderate = 0 AND (b.weight > %d OR (b.weight = %d AND n.title > '%s')) ORDER BY b.weight ASC, n.title ASC"), $leaf->parent, $leaf->weight, $leaf->weight, $leaf->title));
+    $next = db_fetch_object(db_query(db_rewrite_sql("SELECT n.nid, n.title, b.weight FROM {node} n INNER JOIN {book} b ON n.vid = b.vid WHERE b.parent = %d AND n.status = 1 AND (b.weight > %d OR (b.weight = %d AND n.title > '%s')) ORDER BY b.weight ASC, n.title ASC"), $leaf->parent, $leaf->weight, $leaf->weight, $leaf->title));
     if ($next) {
       return $next;
     }
@@ -458,7 +458,7 @@ function book_nodeapi(&$node, $op, $teaser, $page) {
       if (!$teaser) {
         $book = db_fetch_array(db_query('SELECT * FROM {book} WHERE vid = %d', $node->vid));
         if ($book) {
-          if ($node->moderate && user_access('administer nodes')) {
+          if (user_access('administer nodes')) {
             drupal_set_message(t("The post has been submitted for moderation and won't be accessible until it has been approved."));
           }
 
@@ -611,7 +611,7 @@ function book_tree_recurse($nid, $depth, $children, $unfold = array()) {
  * as a tree.
  */
 function book_tree($parent = 0, $depth = 3, $unfold = array()) {
-  $result = db_query(db_rewrite_sql('SELECT n.nid, n.title, b.parent, b.weight FROM {node} n INNER JOIN {book} b ON n.vid = b.vid WHERE n.status = 1 AND n.moderate = 0 ORDER BY b.weight, n.title'));
+  $result = db_query(db_rewrite_sql('SELECT n.nid, n.title, b.parent, b.weight FROM {node} n INNER JOIN {book} b ON n.vid = b.vid WHERE n.status = 1 ORDER BY b.weight, n.title'));
 
   while ($node = db_fetch_object($result)) {
     $list = isset($children[$node->parent]) ? $children[$node->parent] : array();
@@ -628,7 +628,7 @@ function book_tree($parent = 0, $depth = 3, $unfold = array()) {
  * Menu callback; prints a listing of all books.
  */
 function book_render() {
-  $result = db_query(db_rewrite_sql('SELECT n.nid, n.title, b.weight FROM {node} n INNER JOIN {book} b ON n.vid = b.vid WHERE b.parent = 0 AND n.status = 1 AND n.moderate = 0 ORDER BY b.weight, n.title'));
+  $result = db_query(db_rewrite_sql('SELECT n.nid, n.title, b.weight FROM {node} n INNER JOIN {book} b ON n.vid = b.vid WHERE b.parent = 0 AND n.status = 1 ORDER BY b.weight, n.title'));
 
   $books = array();
   while ($node = db_fetch_object($result)) {
@@ -748,7 +748,7 @@ function theme_book_export_html($title, $content) {
  *  - the output generated in visiting each node
  */
 function book_recurse($nid = 0, $depth = 1, $visit_pre, $visit_post) {
-  $result = db_query(db_rewrite_sql('SELECT n.nid, n.title, b.weight FROM {node} n INNER JOIN {book} b ON n.vid = b.vid WHERE n.status = 1 AND n.nid = %d AND n.moderate = 0 ORDER BY b.weight, n.title'), $nid);
+  $result = db_query(db_rewrite_sql('SELECT n.nid, n.title, b.weight FROM {node} n INNER JOIN {book} b ON n.vid = b.vid WHERE n.status = 1 AND n.nid = %d ORDER BY b.weight, n.title'), $nid);
   while ($page = db_fetch_object($result)) {
     // Load the node:
     $node = node_load($page->nid);
@@ -761,7 +761,7 @@ function book_recurse($nid = 0, $depth = 1, $visit_pre, $visit_post) {
         $output .= book_node_visitor_html_pre($node, $depth, $nid);
       }
 
-      $children = db_query(db_rewrite_sql('SELECT n.nid, n.title, b.weight FROM {node} n INNER JOIN {book} b ON n.vid = b.vid WHERE n.status = 1 AND b.parent = %d AND n.moderate = 0 ORDER BY b.weight, n.title'), $node->nid);
+      $children = db_query(db_rewrite_sql('SELECT n.nid, n.title, b.weight FROM {node} n INNER JOIN {book} b ON n.vid = b.vid WHERE n.status = 1 AND b.parent = %d ORDER BY b.weight, n.title'), $node->nid);
       while ($childpage = db_fetch_object($children)) {
           $childnode = node_load($childpage->nid);
           if ($childnode->nid != $node->nid) {

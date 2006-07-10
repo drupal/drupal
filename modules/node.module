@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.654 2006/07/05 11:45:51 dries Exp $
+// $Id: node.module,v 1.655 2006/07/10 08:05:15 dries Exp $
 
 /**
  * @file
@@ -366,10 +366,10 @@ function node_load($param = array(), $revision = NULL, $reset = NULL) {
   // Retrieve the node.
   if ($revision) {
     array_unshift($arguments, $revision);
-    $node = db_fetch_object(db_query(db_rewrite_sql('SELECT n.nid, r.vid, n.type, n.status, n.created, n.changed, n.comment, n.promote, n.moderate, n.sticky, r.timestamp AS revision_timestamp, r.title, r.body, r.teaser, r.log, r.format, u.uid, u.name, u.picture, u.data FROM {node} n INNER JOIN {users} u ON u.uid = n.uid INNER JOIN {node_revisions} r ON r.nid = n.nid AND r.vid = %d WHERE '. $cond), $arguments));
+    $node = db_fetch_object(db_query(db_rewrite_sql('SELECT n.nid, r.vid, n.type, n.status, n.created, n.changed, n.comment, n.promote, n.sticky, r.timestamp AS revision_timestamp, r.title, r.body, r.teaser, r.log, r.format, u.uid, u.name, u.picture, u.data FROM {node} n INNER JOIN {users} u ON u.uid = n.uid INNER JOIN {node_revisions} r ON r.nid = n.nid AND r.vid = %d WHERE '. $cond), $arguments));
   }
   else {
-    $node = db_fetch_object(db_query(db_rewrite_sql('SELECT n.nid, n.vid, n.type, n.status, n.created, n.changed, n.comment, n.promote, n.moderate, n.sticky, r.timestamp AS revision_timestamp, r.title, r.body, r.teaser, r.log, r.format, u.uid, u.name, u.picture, u.data FROM {node} n INNER JOIN {users} u ON u.uid = n.uid INNER JOIN {node_revisions} r ON r.vid = n.vid WHERE '. $cond), $arguments));
+    $node = db_fetch_object(db_query(db_rewrite_sql('SELECT n.nid, n.vid, n.type, n.status, n.created, n.changed, n.comment, n.promote, n.sticky, r.timestamp AS revision_timestamp, r.title, r.body, r.teaser, r.log, r.format, u.uid, u.name, u.picture, u.data FROM {node} n INNER JOIN {users} u ON u.uid = n.uid INNER JOIN {node_revisions} r ON r.vid = n.vid WHERE '. $cond), $arguments));
   }
 
   if ($node->nid) {
@@ -445,14 +445,12 @@ function node_save(&$node) {
                     'title' => $node->title, 'type' => $node->type, 'uid' => $node->uid,
                     'status' => $node->status, 'created' => $node->created,
                     'changed' => $node->changed, 'comment' => $node->comment,
-                    'promote' => $node->promote, 'moderate' => $node->moderate,
-                    'sticky' => $node->sticky);
+                    'promote' => $node->promote, 'sticky' => $node->sticky);
   $node_table_types = array('nid' => '%d', 'vid' => '%d',
                     'title' => "'%s'", 'type' => "'%s'", 'uid' => '%d',
                     'status' => '%d', 'created' => '%d',
                     'changed' => '%d', 'comment' => '%d',
-                    'promote' => '%d', 'moderate' => '%d',
-                    'sticky' => '%d');
+                    'promote' => '%d', 'sticky' => '%d');
 
   //Generate the node table query and the
   //the node_revisions table query
@@ -520,7 +518,7 @@ function node_view($node, $teaser = FALSE, $page = FALSE, $links = TRUE) {
   // TODO: this strips legitimate uses of '<!--break-->' also.
   $node->body = str_replace('<!--break-->', '', $node->body);
 
-  if ($node->log != '' && !$teaser && $node->moderate) {
+  if ($node->log != '' && !$teaser) {
     $node->body .= '<div class="log"><div class="title">'. t('Log') .':</div>'. filter_xss($node->log) .'</div>';
   }
 
@@ -915,7 +913,7 @@ function node_last_changed($nid) {
  */
 function node_operations() {
   $operations = array(
-    'approve' =>   array(t('Approve the selected posts'), 'UPDATE {node} SET status = 1, moderate = 0 WHERE nid = %d'),
+    'approve' =>   array(t('Approve the selected posts'), 'UPDATE {node} SET status = 1 WHERE nid = %d'),
     'promote' =>   array(t('Promote the selected posts'), 'UPDATE {node} SET status = 1, promote = 1 WHERE nid = %d'),
     'sticky' =>    array(t('Make the selected posts sticky'), 'UPDATE {node} SET status = 1, sticky = 1 WHERE nid = %d'),
     'demote' =>    array(t('Demote the selected posts'), 'UPDATE {node} SET promote = 0 WHERE nid = %d'),
@@ -932,7 +930,6 @@ function node_filters() {
   // Regular filters
   $filters['status'] = array('title' => t('status'),
     'options' => array('status-1'   => t('published'),     'status-0' => t('not published'),
-                       'moderate-1' => t('in moderation'), 'moderate-0' => t('not in moderation'),
                        'promote-1'  => t('promoted'),      'promote-0' => t('not promoted'),
                        'sticky-1'   => t('sticky'),        'sticky-0' => t('not sticky')));
   $filters['type'] = array('title' => t('type'), 'options' => node_get_types());
@@ -1513,7 +1510,7 @@ function node_submit($node) {
   }
   // Force defaults in case people modify the form:
   $node_options = variable_get('node_options_'. $node->type, array('status', 'promote'));
-  foreach (array('status', 'moderate', 'promote', 'sticky', 'revision') as $key) {
+  foreach (array('status', 'promote', 'sticky', 'revision') as $key) {
     if (!$access || !isset($node->$key)) {
       $node->$key = in_array($key, $node_options);
     }
@@ -1619,7 +1616,7 @@ function node_form_array($node) {
   $node_options = variable_get('node_options_'. $node->type, array('status', 'promote'));
   // If this is a new node, fill in the default values.
   if (!isset($node->nid)) {
-    foreach (array('status', 'moderate', 'promote', 'sticky', 'revision') as $key) {
+    foreach (array('status', 'promote', 'sticky', 'revision') as $key) {
       $node->$key = in_array($key, $node_options);
     }
     global $user;
@@ -1644,7 +1641,6 @@ function node_form_array($node) {
     // Node options for administrators
     $form['options'] = array('#type' => 'fieldset', '#title' => t('Publishing options'), '#collapsible' => TRUE, '#collapsed' => TRUE, '#weight' => 25);
     $form['options']['status']   = array('#type' => 'checkbox', '#title' => t('Published'), '#default_value' => $node->status);
-    $form['options']['moderate'] = array('#type' => 'checkbox', '#title' => t('In moderation queue'), '#default_value' => $node->moderate);
     $form['options']['promote']  = array('#type' => 'checkbox', '#title' => t('Promoted to front page'), '#default_value' => $node->promote);
     $form['options']['sticky']   = array('#type' => 'checkbox', '#title' => t('Sticky at top of lists'), '#default_value' => $node->sticky);
     $form['options']['revision'] = array('#type' => 'checkbox', '#title' => t('Create new revision'), '#default_value' => $node->revision);
@@ -2145,7 +2141,6 @@ function node_form_alter($form_id, &$form) {
       '#default_value' => variable_get('node_options_'. $form['type']['#value'], array('status', 'promote')),
       '#options' => array(
         'status' => t('Published'),
-        'moderate' => t('In moderation queue'),
         'promote' => t('Promoted to front page'),
         'sticky' => t('Sticky at top of lists'),
         'revision' => t('Create new revision'),

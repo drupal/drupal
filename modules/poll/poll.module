@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.201 2006/07/05 11:45:51 dries Exp $
+// $Id: poll.module,v 1.202 2006/07/10 08:05:15 dries Exp $
 
 /**
  * @file
@@ -52,10 +52,10 @@ function poll_block($op = 'list', $delta = 0) {
     }
     else if ($op == 'view') {
       // Retrieve the latest poll.
-      $sql = db_rewrite_sql("SELECT MAX(n.created) FROM {node} n INNER JOIN {poll} p ON p.nid = n.nid WHERE n.status = 1 AND p.active = 1 AND n.moderate = 0");
+      $sql = db_rewrite_sql("SELECT MAX(n.created) FROM {node} n INNER JOIN {poll} p ON p.nid = n.nid WHERE n.status = 1 AND p.active = 1");
       $timestamp = db_result(db_query($sql));
       if ($timestamp) {
-        $poll = node_load(array('type' => 'poll', 'created' => $timestamp, 'moderate' => 0, 'status' => 1));
+        $poll = node_load(array('type' => 'poll', 'created' => $timestamp, 'status' => 1));
 
         if ($poll->nid) {
           // poll_view() dumps the output into $poll->body.
@@ -276,7 +276,7 @@ function poll_node_info() {
 
 function poll_page() {
   // List all polls
-  $sql = "SELECT n.nid, n.title, p.active, n.created, SUM(c.chvotes) AS votes FROM {node} n INNER JOIN {poll} p ON n.nid = p.nid INNER JOIN {poll_choices} c ON n.nid = c.nid WHERE n.status = 1 AND n.moderate = 0 GROUP BY n.nid, n.title, p.active, n.created ORDER BY n.created DESC";
+  $sql = "SELECT n.nid, n.title, p.active, n.created, SUM(c.chvotes) AS votes FROM {node} n INNER JOIN {poll} p ON n.nid = p.nid INNER JOIN {poll_choices} c ON n.nid = c.nid WHERE n.status = 1 GROUP BY n.nid, n.title, p.active, n.created ORDER BY n.created DESC";
   $sql = db_rewrite_sql($sql);
   $result = pager_query($sql, 15);
   $output = '<ul>';
