@@ -4,7 +4,8 @@ UPGRADING
 ---------
 
 1. Backup your database and Drupal directory - especially your
-   configuration file in 'sites/default/settings.php'.
+   sites-directory which contains your configuration file and
+   any added modules and themes.
 
 2. Log on as the user with user ID 1.
 
