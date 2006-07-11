@@ -1081,6 +1081,10 @@ function theme_forum_topic_navigation($node) {
     if ($prev) {
       $output .= l(t('‹ ') . $prev->title, 'node/'. $prev->nid, array('class' => 'topic-previous', 'title' => t('Go to previous forum topic')));
     }
+    if ($prev && $next) {
+      // Word break (a is an inline element)
+      $output .= ' ';
+    }
     if ($next) {
       $output .= l($next->title . t(' ›'), 'node/'. $next->nid, array('class' => 'topic-next', 'title' => t('Go to next forum topic')));
     }
