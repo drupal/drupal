@@ -840,18 +840,18 @@ CREATE TABLE watchdog (
 -- Insert some default values
 --
 
-INSERT INTO system (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES ('modules/block.module', 'block', 'module', '', 1, 0, 0, 0);
-INSERT INTO system (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES ('modules/comment.module', 'comment', 'module', '', 1, 0, 0, 0);
-INSERT INTO system (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES ('modules/filter.module', 'filter', 'module', '', 1, 0, 0, 0);
-INSERT INTO system (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES ('modules/help.module', 'help', 'module', '', 1, 0, 0, 0);
-INSERT INTO system (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES ('modules/menu.module', 'menu', 'module', '', 1, 0, 0, 0);
-INSERT INTO system (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES ('modules/node.module', 'node', 'module', '', 1, 0, 0, 0);
-INSERT INTO system (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES ('modules/page.module', 'page', 'module', '', 1, 0, 0, 0);
-INSERT INTO system (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES ('modules/story.module', 'story', 'module', '', 1, 0, 0, 0);
-INSERT INTO system (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES ('modules/system.module', 'system', 'module', '', 1, 0, 0, 0);
-INSERT INTO system (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES ('modules/taxonomy.module', 'taxonomy', 'module', '', 1, 0, 0, 0);
-INSERT INTO system (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES ('modules/user.module', 'user', 'module', '', 1, 0, 0, 0);
-INSERT INTO system (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES ('modules/watchdog.module', 'watchdog', 'module', '', 1, 0, 0, 0);
+INSERT INTO system (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES ('modules/block/block.module', 'block', 'module', '', 1, 0, 0, 0);
+INSERT INTO system (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES ('modules/comment/comment.module', 'comment', 'module', '', 1, 0, 0, 0);
+INSERT INTO system (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES ('modules/filter/filter.module', 'filter', 'module', '', 1, 0, 0, 0);
+INSERT INTO system (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES ('modules/help/help.module', 'help', 'module', '', 1, 0, 0, 0);
+INSERT INTO system (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES ('modules/menu/menu.module', 'menu', 'module', '', 1, 0, 0, 0);
+INSERT INTO system (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES ('modules/node/node.module', 'node', 'module', '', 1, 0, 0, 0);
+INSERT INTO system (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES ('modules/page/page.module', 'page', 'module', '', 1, 0, 0, 0);
+INSERT INTO system (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES ('modules/story/story.module', 'story', 'module', '', 1, 0, 0, 0);
+INSERT INTO system (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES ('modules/system/system.module', 'system', 'module', '', 1, 0, 0, 0);
+INSERT INTO system (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES ('modules/taxonomy/taxonomy.module', 'taxonomy', 'module', '', 1, 0, 0, 0);
+INSERT INTO system (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES ('modules/user/user.module', 'user', 'module', '', 1, 0, 0, 0);
+INSERT INTO system (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES ('modules/watchdog/watchdog.module', 'watchdog', 'module', '', 1, 0, 0, 0);
 INSERT INTO system (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES ('themes/engines/phptemplate/phptemplate.engine', 'phptemplate', 'theme_engine', '', 1, 0, 0, 0);
 INSERT INTO system (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES ('themes/bluemarine/page.tpl.php', 'bluemarine', 'theme', 'themes/engines/phptemplate/phptemplate.engine', 1, 0, 0, 0);
 
