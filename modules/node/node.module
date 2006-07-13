@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.656 2006/07/10 19:27:52 dries Exp $
+// $Id: node.module,v 1.657 2006/07/13 12:06:45 dries Exp $
 
 /**
  * @file
@@ -1433,6 +1433,15 @@ function node_feed($nodes = 0, $channel = array()) {
       node_invoke_nodeapi($item, 'view', $teaser, FALSE);
     }
 
+    // Allow modules to add additional item fields and/or modify $item
+    $extra = node_invoke_nodeapi($item, 'rss item');
+    $extra = array_merge($extra, array(array('key' => 'pubDate', 'value' =>  date('r', $item->created)), array('key' => 'dc:creator', 'value' => $item->name), array('key' => 'guid', 'value' => $item->nid . ' at ' . $base_url, 'attributes' => array('isPermaLink' => 'FALSE'))));
+    foreach ($extra as $element) {
+      if ($element['namespace']) {
+        $namespaces = array_merge($namespaces, $element['namespace']);
+      }
+    }
+
     // Prepare the item description
     switch ($item_length) {
       case 'fulltext':
@@ -1449,14 +1458,6 @@ function node_feed($nodes = 0, $channel = array()) {
         break;
     }
 
-    // Allow modules to add additional item fields
-    $extra = node_invoke_nodeapi($item, 'rss item');
-    $extra = array_merge($extra, array(array('key' => 'pubDate', 'value' =>  date('r', $item->created)), array('key' => 'dc:creator', 'value' => $item->name), array('key' => 'guid', 'value' => $item->nid . ' at ' . $base_url, 'attributes' => array('isPermaLink' => 'FALSE'))));
-    foreach ($extra as $element) {
-      if ($element['namespace']) {
-        $namespaces = array_merge($namespaces, $element['namespace']);
-      }
-    }
     $items .= format_rss_item($item->title, $link, $item_text, $extra);
   }
 
