@@ -212,7 +212,6 @@ function taxonomy_form_vocabulary($edit = array()) {
   $form['help'] = array('#type' => 'textfield',
     '#title' => t('Help text'),
     '#default_value' => $edit['help'],
-    '#maxlength' => 255,
     '#description' => t('Instructions to present to the user when choosing a term.'),
   );
   $form['nodes'] = array('#type' => 'checkboxes',
