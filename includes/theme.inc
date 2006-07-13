@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.302 2006/07/05 11:45:51 dries Exp $
+// $Id: theme.inc,v 1.303 2006/07/13 13:11:36 dries Exp $
 
 /**
  * @file
@@ -431,7 +431,7 @@ function theme_maintenance_page($content, $messages = TRUE, $partial = FALSE) {
   $output = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
   $output .= '<html xmlns="http://www.w3.org/1999/xhtml">';
   $output .= '<head>';
-  $output .= ' <title>'. drupal_get_title() .'</title>';
+  $output .= ' <title>'. strip_tags(drupal_get_title()) .'</title>';
   $output .= drupal_get_html_head();
   $output .= theme_get_styles();
   $output .= '</head>';
@@ -453,33 +453,69 @@ function theme_maintenance_page($content, $messages = TRUE, $partial = FALSE) {
   return $output;
 }
 
+function theme_install_page($content) {
+  drupal_set_header('Content-Type: text/html; charset=utf-8');
+  theme('add_style', 'misc/maintenance.css');
+  drupal_set_html_head('<link rel="shortcut icon" href="'. base_path() .'misc/favicon.ico" type="image/x-icon" />');
+  $output = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
+  $output .= '<html xmlns="http://www.w3.org/1999/xhtml">';
+  $output .= '<head>';
+  $output .= ' <title>'. strip_tags(drupal_get_title()) .'</title>';
+  $output .= drupal_get_html_head();
+  $output .= theme_get_styles();
+  $output .= '</head>';
+  $output .= '<body>';
+  $output .= '<h1>' . drupal_get_title() . '</h1>';
+
+  $messages = drupal_set_message();
+  if (isset($messages['error'])) {
+    $errors = count($messages['error']) > 1 ? 'errors' : 'error';
+    $output .= "<h3>The following $errors must be resolved before you can continue the installation process:</h3>";
+    $output .= theme('status_messages', 'error');
+  }
+
+  $output .= "\n<!-- begin content -->\n";
+  $output .= $content;
+  $output .= "\n<!-- end content -->\n";
+
+  if (isset($messages['status'])) {
+    $warnings = count($messages['status']) > 1 ? 'warnings' : 'warning';
+    $output .= "<h4>The following installation $warnings should be carefully reviewed, but in most cases may be safely ignored:</h4>";
+    $output .= theme('status_messages', 'status');
+  }
+
+  $output .= '</body></html>';
+
+  return $output;
+}
+
 /**
- * Returns themed set of status and/or error messages. The messages are grouped
+ * Return a themed set of status and/or error messages. The messages are grouped
  * by type.
+ *
+ * @param $display
+ *   (optional) Set to 'status' or 'error' to display only messages of that type.
  *
  * @return
  *   A string containing the messages.
  */
-function theme_status_messages() {
-  if ($data = drupal_get_messages()) {
-    $output = '';
-    foreach ($data as $type => $messages) {
-      $output .= "<div class=\"messages $type\">\n";
-      if (count($messages) > 1) {
-        $output .= " <ul>\n";
-        foreach($messages as $message) {
-          $output .= '  <li>'. $message ."</li>\n";
-        }
-        $output .= " </ul>\n";
+function theme_status_messages($display = NULL) {
+  $output = '';
+  foreach (drupal_get_messages($display) as $type => $messages) {
+    $output .= "<div class=\"messages $type\">\n";
+    if (count($messages) > 1) {
+      $output .= " <ul>\n";
+      foreach($messages as $message) {
+        $output .= '  <li>'. $message ."</li>\n";
       }
-      else {
-        $output .= $messages[0];
-      }
-      $output .= "</div>\n";
+      $output .= " </ul>\n";
     }
-
-    return $output;
+    else {
+      $output .= $messages[0];
+    }
+    $output .= "</div>\n";
   }
+  return $output;
 }
 
 /**

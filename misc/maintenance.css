@@ -1,4 +1,4 @@
-/* $Id: maintenance.css,v 1.5 2006/02/23 19:49:42 dries Exp $ */
+/* $Id: maintenance.css,v 1.6 2006/07/13 13:11:36 dries Exp $ */
 
 body {
   background: url(druplicon.png) 4.2em 4em no-repeat #fff;
@@ -6,6 +6,7 @@ body {
   border: 1px solid #bbb;
   margin: 3em;
   padding: 1em 1em 1em 128px;
+  line-height: 1.2;
 }
 h1 {
   margin: 1.6em 0 1.1em 0;
@@ -28,8 +29,15 @@ div.messages {
   margin-top: 1em;
 }
 
+div.messages li {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
 div.error {
+  background: #fdd;
   border: 1px solid #daa;
+  color: #400;
 }
 
 /* Update styles */

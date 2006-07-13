@@ -1,0 +1,37 @@
+<?php
+
+function locale_install() {
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      db_query("CREATE TABLE {locales_meta} (
+        locale varchar(12) NOT NULL default '',
+        name varchar(64) NOT NULL default '',
+        enabled int(2) NOT NULL default '0',
+        isdefault int(2) NOT NULL default '0',
+        plurals int(1) NOT NULL default '0',
+        formula varchar(128) NOT NULL default '',
+        PRIMARY KEY (locale)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+
+      db_query("CREATE TABLE {locales_source} (
+        lid int(11) NOT NULL auto_increment,
+        location varchar(255) NOT NULL default '',
+        source blob NOT NULL,
+        PRIMARY KEY (lid)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+
+      db_query("CREATE TABLE {locales_target} (
+        lid int(11) NOT NULL default '0',
+        translation blob NOT NULL,
+        locale varchar(12) NOT NULL default '',
+        plid int(11) NOT NULL default '0',
+        plural int(1) NOT NULL default '0',
+        KEY lid (lid),
+        KEY lang (locale),
+        KEY plid (plid),
+        KEY plural (plural)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+  }
+  db_query("INSERT INTO {locales_meta} (locale, name, enabled, isdefault) VALUES ('en', 'English', '1', '1')");
+}

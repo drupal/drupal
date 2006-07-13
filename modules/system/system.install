@@ -1,5 +1,426 @@
 <?php
-// $Id: updates.inc,v 1.240 2006/07/05 11:45:50 dries Exp $
+
+function system_install() {
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      db_query("CREATE TABLE {access} (
+        aid tinyint(10) NOT NULL auto_increment,
+        mask varchar(255) NOT NULL default '',
+        type varchar(255) NOT NULL default '',
+        status tinyint(2) NOT NULL default '0',
+        PRIMARY KEY (aid)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+
+      db_query("CREATE TABLE {authmap} (
+        aid int(10) unsigned NOT NULL auto_increment,
+        uid int(10) NOT NULL default '0',
+        authname varchar(128) NOT NULL default '',
+        module varchar(128) NOT NULL default '',
+        PRIMARY KEY (aid),
+        UNIQUE KEY authname (authname)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+
+      db_query("CREATE TABLE {blocks} (
+        module varchar(64) DEFAULT '' NOT NULL,
+        delta varchar(32) NOT NULL default '0',
+        theme varchar(255) NOT NULL default '',
+        status tinyint(2) DEFAULT '0' NOT NULL,
+        weight tinyint(1) DEFAULT '0' NOT NULL,
+        region varchar(64) DEFAULT 'left' NOT NULL,
+        custom tinyint(2) DEFAULT '0' NOT NULL,
+        throttle tinyint(1) DEFAULT '0' NOT NULL,
+        visibility tinyint(1) DEFAULT '0' NOT NULL,
+        pages text DEFAULT '' NOT NULL
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+
+      db_query("CREATE TABLE {boxes} (
+        bid tinyint(4) NOT NULL auto_increment,
+        title varchar(64) NOT NULL default '',
+        body longtext,
+        info varchar(128) NOT NULL default '',
+        format int(4) NOT NULL default '0',
+        PRIMARY KEY (bid),
+        UNIQUE KEY info (info)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+
+      db_query("CREATE TABLE {cache} (
+        cid varchar(255) NOT NULL default '',
+        data longblob,
+        expire int(11) NOT NULL default '0',
+        created int(11) NOT NULL default '0',
+        headers text,
+        PRIMARY KEY (cid),
+        INDEX expire (expire)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+
+      db_query("CREATE TABLE {comments} (
+        cid int(10) NOT NULL auto_increment,
+        pid int(10) NOT NULL default '0',
+        nid int(10) NOT NULL default '0',
+        uid int(10) NOT NULL default '0',
+        subject varchar(64) NOT NULL default '',
+        comment longtext NOT NULL,
+        hostname varchar(128) NOT NULL default '',
+        timestamp int(11) NOT NULL default '0',
+        score mediumint(9) NOT NULL default '0',
+        status tinyint(3) unsigned NOT NULL default '0',
+        format int(4) NOT NULL default '0',
+        thread varchar(255) NOT NULL,
+        users longtext,
+        name varchar(60) default NULL,
+        mail varchar(64) default NULL,
+        homepage varchar(255) default NULL,
+        PRIMARY KEY (cid),
+        KEY lid (nid)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+
+      db_query("CREATE TABLE {node_comment_statistics} (
+        nid int(10) unsigned NOT NULL auto_increment,
+        last_comment_timestamp int(11) NOT NULL default '0',
+        last_comment_name varchar(60) default NULL,
+        last_comment_uid int(10) NOT NULL default '0',
+        comment_count int(10) unsigned NOT NULL default '0',
+        PRIMARY KEY (nid),
+        KEY node_comment_timestamp (last_comment_timestamp)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+
+      db_query("CREATE TABLE {files} (
+        fid int(10) unsigned NOT NULL default 0,
+        nid int(10) unsigned NOT NULL default 0,
+        filename varchar(255) NOT NULL default '',
+        filepath varchar(255) NOT NULL default '',
+        filemime varchar(255) NOT NULL default '',
+        filesize int(10) unsigned NOT NULL default 0,
+        PRIMARY KEY (fid)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+
+      db_query("CREATE TABLE {file_revisions} (
+        fid int(10) unsigned NOT NULL default 0,
+        vid int(10) unsigned NOT NULL default 0,
+        description varchar(255) NOT NULL default '',
+        list tinyint(1) unsigned NOT NULL default 0,
+        PRIMARY KEY (fid, vid)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+
+      db_query("CREATE TABLE {filter_formats} (
+        format int(4) NOT NULL auto_increment,
+        name varchar(255) NOT NULL default '',
+        roles varchar(255) NOT NULL default '',
+        cache tinyint(2) NOT NULL default '0',
+        PRIMARY KEY (format),
+        UNIQUE KEY (name)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+
+      db_query("CREATE TABLE {filters} (
+        format int(4) NOT NULL default '0',
+        module varchar(64) NOT NULL default '',
+        delta tinyint(2) DEFAULT '0' NOT NULL,
+        weight tinyint(2) DEFAULT '0' NOT NULL,
+        INDEX (weight)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+
+      db_query("CREATE TABLE {flood} (
+        event varchar(64) NOT NULL default '',
+        hostname varchar(128) NOT NULL default '',
+        timestamp int(11) NOT NULL default '0'
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+
+      db_query("CREATE TABLE {history} (
+        uid int(10) NOT NULL default '0',
+        nid int(10) NOT NULL default '0',
+        timestamp int(11) NOT NULL default '0',
+        PRIMARY KEY (uid,nid)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+
+      db_query("CREATE TABLE {menu} (
+        mid int(10) unsigned NOT NULL default '0',
+        pid int(10) unsigned NOT NULL default '0',
+        path varchar(255) NOT NULL default '',
+        title varchar(255) NOT NULL default '',
+        description varchar(255) NOT NULL default '',
+        weight tinyint(4) NOT NULL default '0',
+        type int(2) unsigned NOT NULL default '0',
+        PRIMARY KEY (mid)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+
+
+      db_query("CREATE TABLE {node} (
+        nid int(10) unsigned NOT NULL auto_increment,
+        vid int(10) unsigned NOT NULL default '0',
+        type varchar(32) NOT NULL default '',
+        title varchar(128) NOT NULL default '',
+        uid int(10) NOT NULL default '0',
+        status int(4) NOT NULL default '1',
+        created int(11) NOT NULL default '0',
+        changed int(11) NOT NULL default '0',
+        comment int(2) NOT NULL default '0',
+        promote int(2) NOT NULL default '0',
+        moderate int(2) NOT NULL default '0',
+        sticky int(2) NOT NULL default '0',
+        PRIMARY KEY  (nid, vid),
+        UNIQUE KEY vid (vid),
+        KEY node_type (type(4)),
+        KEY node_title_type (title, type(4)),
+        KEY status (status),
+        KEY uid (uid),
+        KEY node_moderate (moderate),
+        KEY node_promote_status (promote, status),
+        KEY node_created (created),
+        KEY node_changed (changed),
+        KEY node_status_type (status, type, nid),
+        KEY nid (nid)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+
+      db_query("CREATE TABLE {node_access} (
+        nid int(10) unsigned NOT NULL default '0',
+        gid int(10) unsigned NOT NULL default '0',
+        realm varchar(255) NOT NULL default '',
+        grant_view tinyint(1) unsigned NOT NULL default '0',
+        grant_update tinyint(1) unsigned NOT NULL default '0',
+        grant_delete tinyint(1) unsigned NOT NULL default '0',
+        PRIMARY KEY (nid,gid,realm)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+
+      db_query("CREATE TABLE {node_revisions} (
+        nid int(10) unsigned NOT NULL,
+        vid int(10) unsigned NOT NULL,
+        uid int(10) NOT NULL default '0',
+        title varchar(128) NOT NULL default '',
+        body longtext NOT NULL default '',
+        teaser longtext NOT NULL default '',
+        log longtext NOT NULL default '',
+        timestamp int(11) NOT NULL default '0',
+        format int(4) NOT NULL default '0',
+        PRIMARY KEY  (vid),
+        KEY nid (nid),
+        KEY uid (uid)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+
+      db_query("CREATE TABLE {url_alias} (
+        pid int(10) unsigned NOT NULL auto_increment,
+        src varchar(128) NOT NULL default '',
+        dst varchar(128) NOT NULL default '',
+        PRIMARY KEY (pid),
+        UNIQUE KEY dst (dst),
+        KEY src (src)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+
+      db_query("CREATE TABLE {permission} (
+        rid int(10) unsigned NOT NULL default '0',
+        perm longtext,
+        tid int(10) unsigned NOT NULL default '0',
+        KEY rid (rid)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+
+      db_query("CREATE TABLE {role} (
+        rid int(10) unsigned NOT NULL auto_increment,
+        name varchar(32) NOT NULL default '',
+        PRIMARY KEY (rid),
+        UNIQUE KEY name (name)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+
+      db_query("CREATE TABLE {blocks_roles} (
+        module varchar(64) NOT NULL,
+        delta varchar(32) NOT NULL,
+        rid int(10) unsigned NOT NULL,
+        PRIMARY KEY (module, delta, rid)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+
+      db_query("CREATE TABLE {sessions} (
+        uid int(10) unsigned NOT NULL,
+        sid varchar(32) NOT NULL default '',
+        hostname varchar(128) NOT NULL default '',
+        timestamp int(11) NOT NULL default '0',
+        cache int(11) NOT NULL default '0',
+        session longtext,
+        KEY uid (uid),
+        PRIMARY KEY (sid),
+        KEY timestamp (timestamp)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+
+      db_query("CREATE TABLE {sequences} (
+        name varchar(255) NOT NULL default '',
+        id int(10) unsigned NOT NULL default '0',
+        PRIMARY KEY (name)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+
+      db_query("CREATE TABLE {node_counter} (
+        nid int(10) NOT NULL default '0',
+        totalcount bigint(20) unsigned NOT NULL default '0',
+        daycount mediumint(8) unsigned NOT NULL default '0',
+        timestamp int(11) unsigned NOT NULL default '0',
+        PRIMARY KEY (nid),
+        KEY totalcount (totalcount),
+        KEY daycount (daycount),
+        KEY timestamp (timestamp)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+
+      db_query("CREATE TABLE {system} (
+        filename varchar(255) NOT NULL default '',
+        name varchar(255) NOT NULL default '',
+        type varchar(255) NOT NULL default '',
+        description varchar(255) NOT NULL default '',
+        status int(2) NOT NULL default '0',
+        throttle tinyint(1) DEFAULT '0' NOT NULL,
+        bootstrap int(2) NOT NULL default '0',
+        schema_version smallint(3) NOT NULL default -1,
+        weight int(2) NOT NULL default '0',
+        PRIMARY KEY (filename),
+        KEY (weight)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+
+      db_query("CREATE TABLE {term_data} (
+        tid int(10) unsigned NOT NULL auto_increment,
+        vid int(10) unsigned NOT NULL default '0',
+        name varchar(255) NOT NULL default '',
+        description longtext,
+        weight tinyint(4) NOT NULL default '0',
+        PRIMARY KEY (tid),
+        KEY vid (vid)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+
+      db_query("CREATE TABLE {term_hierarchy} (
+        tid int(10) unsigned NOT NULL default '0',
+        parent int(10) unsigned NOT NULL default '0',
+        KEY tid (tid),
+        KEY parent (parent),
+        PRIMARY KEY (tid, parent)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+
+      db_query("CREATE TABLE {term_node} (
+        nid int(10) unsigned NOT NULL default '0',
+        tid int(10) unsigned NOT NULL default '0',
+        KEY nid (nid),
+        KEY tid (tid),
+        PRIMARY KEY (tid,nid)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+
+      db_query("CREATE TABLE {term_relation} (
+        tid1 int(10) unsigned NOT NULL default '0',
+        tid2 int(10) unsigned NOT NULL default '0',
+        KEY tid1 (tid1),
+        KEY tid2 (tid2)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+
+      db_query("CREATE TABLE {term_synonym} (
+        tid int(10) unsigned NOT NULL default '0',
+        name varchar(255) NOT NULL default '',
+        KEY tid (tid),
+        KEY name (name(3))
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+
+      db_query("CREATE TABLE {users} (
+        uid int(10) unsigned NOT NULL default '0',
+        name varchar(60) NOT NULL default '',
+        pass varchar(32) NOT NULL default '',
+        mail varchar(64) default '',
+        mode tinyint(1) NOT NULL default '0',
+        sort tinyint(1) default '0',
+        threshold tinyint(1) default '0',
+        theme varchar(255) NOT NULL default '',
+        signature varchar(255) NOT NULL default '',
+        created int(11) NOT NULL default '0',
+        access int(11) NOT NULL default '0',
+        login int(11) NOT NULL default '0',
+        status tinyint(4) NOT NULL default '0',
+        timezone varchar(8) default NULL,
+        language varchar(12) NOT NULL default '',
+        picture varchar(255) NOT NULL DEFAULT '',
+        init varchar(64) default '',
+        data longtext,
+        PRIMARY KEY (uid),
+        UNIQUE KEY name (name),
+        KEY access (access)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+
+      db_query("CREATE TABLE {users_roles} (
+        uid int(10) unsigned NOT NULL default '0',
+        rid int(10) unsigned NOT NULL default '0',
+        PRIMARY KEY (uid, rid)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+
+      db_query("CREATE TABLE {variable} (
+        name varchar(48) NOT NULL default '',
+        value longtext NOT NULL,
+        PRIMARY KEY (name)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+
+      db_query("CREATE TABLE {vocabulary} (
+        vid int(10) unsigned NOT NULL auto_increment,
+        name varchar(255) NOT NULL default '',
+        description longtext,
+        help varchar(255) NOT NULL default '',
+        relations tinyint(3) unsigned NOT NULL default '0',
+        hierarchy tinyint(3) unsigned NOT NULL default '0',
+        multiple tinyint(3) unsigned NOT NULL default '0',
+        required tinyint(3) unsigned NOT NULL default '0',
+        tags tinyint(3) unsigned NOT NULL default '0',
+        module varchar(255) NOT NULL default '',
+        weight tinyint(4) NOT NULL default '0',
+        PRIMARY KEY (vid)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+
+      db_query("CREATE TABLE {vocabulary_node_types} (
+        vid int(10) unsigned NOT NULL DEFAULT '0',
+        type varchar(32) NOT NULL DEFAULT '',
+        PRIMARY KEY (vid, type)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+
+      db_query("CREATE TABLE {watchdog} (
+        wid int(5) NOT NULL auto_increment,
+        uid int(10) NOT NULL default '0',
+        type varchar(16) NOT NULL default '',
+        message longtext NOT NULL,
+        severity tinyint(3) unsigned NOT NULL default '0',
+        link varchar(255) NOT NULL default '',
+        location varchar(128) NOT NULL default '',
+        referer varchar(128) NOT NULL default '',
+        hostname varchar(128) NOT NULL default '',
+        timestamp int(11) NOT NULL default '0',
+        PRIMARY KEY (wid)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+
+      break;
+    case 'pgsql':
+      break;
+
+  }
+  db_query("INSERT INTO {system} (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES ('themes/engines/phptemplate/phptemplate.engine', 'phptemplate', 'theme_engine', '', 1, 0, 0, 0)");
+  db_query("INSERT INTO {system} (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES ('themes/bluemarine/page.tpl.php', 'bluemarine', 'theme', 'themes/engines/phptemplate/phptemplate.engine', 1, 0, 0, 0)");
+
+  db_query("INSERT INTO {users} (uid,name,mail) VALUES(0,'','')");
+
+  db_query("INSERT INTO {role} (name) VALUES ('anonymous user')");
+  db_query("INSERT INTO {role} (name) VALUES ('authenticated user')");
+
+  db_query("INSERT INTO {permission} VALUES (1,'access content',0)");
+  db_query("INSERT INTO {permission} VALUES (2,'access comments, access content, post comments, post comments without approval',0)");
+
+  db_query("INSERT INTO {variable} (name,value) VALUES('theme_default', 's:10:\"bluemarine\";')");
+
+  db_query("INSERT INTO {blocks} (module,delta,theme,status) VALUES('user', 0, 'bluemarine', 1)");
+  db_query("INSERT INTO {blocks} (module,delta,theme,status) VALUES('user', 1, 'bluemarine', 1)");
+
+  db_query("INSERT INTO {node_access} VALUES (0, 0, 'all', 1, 0, 0)");
+
+  db_query("INSERT INTO {filter_formats} (name, roles, cache) VALUES ('Filtered HTML',',1,2,',1)");
+  db_query("INSERT INTO {filter_formats} (name, roles, cache) VALUES ('PHP code','',0)");
+  db_query("INSERT INTO {filter_formats} (name, roles, cache) VALUES ('Full HTML','',1)");
+  db_query("INSERT INTO {filters} VALUES (1,'filter',0,0)");
+  db_query("INSERT INTO {filters} VALUES (1,'filter',2,1)");
+  db_query("INSERT INTO {filters} VALUES (2,'filter',1,0)");
+  db_query("INSERT INTO {filters} VALUES (3,'filter',2,0)");
+  db_query("INSERT INTO {variable} (name,value) VALUES ('filter_html_1','i:1;')");
+
+  db_query("INSERT INTO {variable} (name, value) VALUES ('node_options_forum', 'a:1:{i:0;s:6:\"status\";}')");
+
+  db_query("INSERT INTO {menu} (pid, path, title, description, weight, type) VALUES (0, '', 'Primary links', '', 0, 115)");
+  db_query("INSERT INTO {variable} VALUES ('menu_primary_menu', 'i:2;')");
+  db_query("INSERT INTO {variable} VALUES ('menu_secondary_menu', 'i:2;')");
+}
+
+// Updates for core
 
 function system_update_110() {
   $ret = array();

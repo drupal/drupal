@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysqli.inc,v 1.18 2006/05/24 20:46:56 killes Exp $
+// $Id: database.mysqli.inc,v 1.19 2006/07/13 13:11:36 dries Exp $
 
 /**
  * @file
@@ -45,7 +45,8 @@ function db_connect($url) {
   if (mysqli_connect_errno() >= 2000 || mysqli_connect_errno() == 1045) {
     drupal_maintenance_theme();
     drupal_set_title('Unable to connect to database server');
-    print theme('maintenance_page', '<p>This either means that the username and password information in your <code>settings.php</code> file is incorrect or we can\'t contact the MySQL database server through the mysqli libraries. This could also mean your hosting provider\'s database server is down.</p>
+    print theme('maintenance_page', '<p>If you still have to install Drupal, proceed to the <a href="'. base_path() .'install.php">installation page</a>.</p>
+<p>If you have already finished installed Drupal, this either means that the username and password information in your <code>settings.php</code> file is incorrect or that we can\'t connect to the MySQL database server. This could mean your hosting provider\'s database server is down.</p>
 <p>The MySQL error was: '. theme('placeholder', mysqli_error($connection)) .'.</p>
 <p>Currently, the username is '. theme('placeholder', $url['user']) .' and the database server is '. theme('placeholder', $url['host']) .'.</p>
 <ul>

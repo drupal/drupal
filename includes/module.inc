@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.78 2006/06/28 21:18:30 dries Exp $
+// $Id: module.inc,v 1.79 2006/07/13 13:11:36 dries Exp $
 
 /**
  * @file
@@ -37,31 +37,42 @@ function module_iterate($function, $argument = '') {
  * @param $sort
  *   By default, modules are ordered by weight and filename, settings this option
  *   to TRUE, module list will be ordered by module name.
+ * @param $fixed_list
+ *   (Optional) Override the module list with the given modules. Stays until the
+ *   next call with $refresh = TRUE.
  * @return
  *   An associative array whose keys and values are the names of all loaded
  *   modules.
  */
-function module_list($refresh = FALSE, $bootstrap = TRUE, $sort = FALSE) {
+function module_list($refresh = FALSE, $bootstrap = TRUE, $sort = FALSE, $fixed_list = NULL) {
   static $list, $sorted_list;
 
-  if ($refresh) {
+  if ($refresh || $fixed_list) {
     unset($sorted_list);
     $list = array();
-    if ($bootstrap) {
-      $result = db_query("SELECT name, filename, throttle, bootstrap FROM {system} WHERE type = 'module' AND status = 1 AND bootstrap = 1 ORDER BY weight ASC, filename ASC");
+    if ($fixed_list) {
+      foreach ($fixed_list as $name => $module) {
+        drupal_get_filename('module', $name, $module['filename']);
+        $list[$name] = $name;
+      }
     }
     else {
-      $result = db_query("SELECT name, filename, throttle, bootstrap FROM {system} WHERE type = 'module' AND status = 1 ORDER BY weight ASC, filename ASC");
-    }
-    while ($module = db_fetch_object($result)) {
-      if (file_exists($module->filename)) {
-        // Determine the current throttle status and see if the module should be
-        // loaded based on server load. We have to directly access the throttle
-        // variables, since throttle.module may not be loaded yet.
-        $throttle = ($module->throttle && variable_get('throttle_level', 0) > 0);
-        if (!$throttle) {
-          drupal_get_filename('module', $module->name, $module->filename);
-          $list[$module->name] = $module->name;
+      if ($bootstrap) {
+        $result = db_query("SELECT name, filename, throttle, bootstrap FROM {system} WHERE type = 'module' AND status = 1 AND bootstrap = 1 ORDER BY weight ASC, filename ASC");
+      }
+      else {
+        $result = db_query("SELECT name, filename, throttle, bootstrap FROM {system} WHERE type = 'module' AND status = 1 ORDER BY weight ASC, filename ASC");
+      }
+      while ($module = db_fetch_object($result)) {
+        if (file_exists($module->filename)) {
+          // Determine the current throttle status and see if the module should be
+          // loaded based on server load. We have to directly access the throttle
+          // variables, since throttle.module may not be loaded yet.
+          $throttle = ($module->throttle && variable_get('throttle_level', 0) > 0);
+          if (!$throttle) {
+            drupal_get_filename('module', $module->name, $module->filename);
+            $list[$module->name] = $module->name;
+          }
         }
       }
     }

@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.190 2006/07/05 11:45:50 dries Exp $
+// $Id: update.php,v 1.191 2006/07/13 13:11:36 dries Exp $
 
 /**
  * @file
@@ -363,13 +363,14 @@ function update_selection_page() {
 
 function update_update_page() {
   // Set the installed version so updates start at the correct place.
-  $_SESSION['update_remaining'] = array();
+  // Ensure system.module's updates are run first by making it the first element.
+  $_SESSION['update_remaining'] = array('system' => '');
   foreach ($_POST['edit']['start'] as $module => $version) {
     drupal_set_installed_schema_version($module, $version - 1);
     $max_version = max(drupal_get_schema_versions($module));
     if ($version <= $max_version) {
       foreach (range($version, $max_version) as $update) {
-        $_SESSION['update_remaining'][] = array('module' => $module, 'version' => $update);
+        $_SESSION['update_remaining'][$module] = array('module' => $module, 'version' => $update);
       }
     }
   }
@@ -676,6 +677,7 @@ ini_set('display_errors', TRUE);
 // Access check:
 if (($access_check == FALSE) || ($user->uid == 1)) {
 
+  $install = FALSE;
   include_once './includes/install.inc';
 
   update_fix_schema_version();

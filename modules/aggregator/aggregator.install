@@ -1,0 +1,58 @@
+<?php
+
+function aggregator_install() {
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      db_query("CREATE TABLE {aggregator_category} (
+        cid int(10) NOT NULL auto_increment,
+        title varchar(255) NOT NULL default '',
+        description longtext NOT NULL,
+        block tinyint(2) NOT NULL default '0',
+        PRIMARY KEY (cid),
+        UNIQUE KEY title (title)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+
+      db_query("CREATE TABLE {aggregator_category_feed} (
+        fid int(10) NOT NULL default '0',
+        cid int(10) NOT NULL default '0',
+        PRIMARY KEY (fid,cid)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+
+      db_query("CREATE TABLE {aggregator_category_item} (
+        iid int(10) NOT NULL default '0',
+        cid int(10) NOT NULL default '0',
+        PRIMARY KEY (iid,cid)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+
+      db_query("CREATE TABLE {aggregator_feed} (
+        fid int(10) NOT NULL auto_increment,
+        title varchar(255) NOT NULL default '',
+        url varchar(255) NOT NULL default '',
+        refresh int(10) NOT NULL default '0',
+        checked int(10) NOT NULL default '0',
+        link varchar(255) NOT NULL default '',
+        description longtext NOT NULL,
+        image longtext NOT NULL,
+        etag varchar(255) NOT NULL default '',
+        modified int(10) NOT NULL default '0',
+        block tinyint(2) NOT NULL default '0',
+        PRIMARY KEY (fid),
+        UNIQUE KEY link (url),
+        UNIQUE KEY title (title)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+
+      db_query("CREATE TABLE {aggregator_item} (
+        iid int(10) NOT NULL auto_increment,
+        fid int(10) NOT NULL default '0',
+        title varchar(255) NOT NULL default '',
+        link varchar(255) NOT NULL default '',
+        author varchar(255) NOT NULL default '',
+        description longtext NOT NULL,
+        timestamp int(11) default NULL,
+        PRIMARY KEY (iid)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+
+      break;
+  }
+}
