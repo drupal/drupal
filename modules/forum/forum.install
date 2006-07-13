@@ -1,0 +1,16 @@
+<?php
+
+function forum_install() {
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      db_query("CREATE TABLE {forum} (
+        nid int(10) unsigned NOT NULL default '0',
+        vid int(10) unsigned NOT NULL default '0',
+        tid int(10) unsigned NOT NULL default '0',
+        PRIMARY KEY (vid),
+        KEY nid (nid),
+        KEY tid (tid)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+  }
+}

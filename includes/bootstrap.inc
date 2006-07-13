@@ -151,9 +151,9 @@ function drupal_unset_globals() {
  * Loads the configuration and sets the base URL correctly.
  */
 function conf_init() {
-  global $db_url, $db_prefix, $base_url, $base_path, $base_root, $conf;
+  global $db_url, $db_prefix, $base_url, $base_path, $base_root, $conf, $installed_profile;
   $conf = array();
-  require_once './'. conf_path() .'/settings.php';
+  include_once './'. conf_path() .'/settings.php';
 
   if (isset($base_url)) {
     // Parse fixed base URL from settings.php.
@@ -565,14 +565,21 @@ function drupal_set_message($message = NULL, $type = 'status') {
 /**
  * Return all messages that have been set.
  *
- * As a side effect, this function clears the message queue.
+ * @param $type
+ *   (optional) Only return messages of this type.
  */
-function drupal_get_messages() {
+function drupal_get_messages($type = NULL) {
   if ($messages = drupal_set_message()) {
-    unset($_SESSION['messages']);
+    if ($type) {
+      unset($_SESSION['messages'][$type]);
+      return array($type => $messages[$type]);
+    }
+    else {
+      unset($_SESSION['messages']);
+      return $messages;
+    }
   }
-
-  return $messages;
+  return array();
 }
 
 /**

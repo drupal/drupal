@@ -1,0 +1,32 @@
+<?php
+
+function search_install() {
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      db_query("CREATE TABLE {search_dataset} (
+        sid int(10) unsigned NOT NULL default '0',
+        type varchar(16) default NULL,
+        data longtext NOT NULL,
+        KEY sid_type (sid, type)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+
+      db_query("CREATE TABLE {search_index} (
+        word varchar(50) NOT NULL default '',
+        sid int(10) unsigned NOT NULL default '0',
+        type varchar(16) default NULL,
+        fromsid int(10) unsigned NOT NULL default '0',
+        fromtype varchar(16) default NULL,
+        score float default NULL,
+        KEY sid_type (sid, type),
+        KEY from_sid_type (fromsid, fromtype),
+        KEY word (word)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+
+      db_query("CREATE TABLE {search_total} (
+        word varchar(50) NOT NULL default '',
+        count float default NULL,
+        PRIMARY KEY (word)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+  }
+}

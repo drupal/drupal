@@ -1,0 +1,29 @@
+<?php
+
+function drupal_install() {
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      db_query("CREATE TABLE {client} (
+        cid int(10) unsigned NOT NULL auto_increment,
+        link varchar(255) NOT NULL default '',
+        name varchar(128) NOT NULL default '',
+        mail varchar(128) NOT NULL default '',
+        slogan longtext NOT NULL,
+        mission longtext NOT NULL,
+        users int(10) NOT NULL default '0',
+        nodes int(10) NOT NULL default '0',
+        version varchar(35) NOT NULL default'',
+        created int(11) NOT NULL default '0',
+        changed int(11) NOT NULL default '0',
+        PRIMARY KEY (cid)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+
+      db_query("CREATE TABLE {client_system} (
+        cid int(10) NOT NULL default '0',
+        name varchar(255) NOT NULL default '',
+        type varchar(255) NOT NULL default '',
+        PRIMARY KEY (cid,name)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+  }
+}

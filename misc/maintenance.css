@@ -6,6 +6,7 @@ body {
   border: 1px solid #bbb;
   margin: 3em;
   padding: 1em 1em 1em 128px;
+  line-height: 1.2;
 }
 h1 {
   margin: 1.6em 0 1.1em 0;
@@ -28,8 +29,15 @@ div.messages {
   margin-top: 1em;
 }
 
+div.messages li {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
 div.error {
+  background: #fdd;
   border: 1px solid #daa;
+  color: #400;
 }
 
 /* Update styles */
