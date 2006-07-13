@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.191 2006/07/13 13:11:36 dries Exp $
+// $Id: update.php,v 1.192 2006/07/13 14:42:54 dries Exp $
 
 /**
  * @file
@@ -561,9 +561,15 @@ function update_access_denied_page() {
 </ol>';
 }
 
-// This code may be removed later. It is part of the Drupal 4.5 to 4.7 migration.
+// This code may be removed later. It is part of the Drupal 4.5 to 4.8 migration.
 function update_fix_system_table() {
   drupal_bootstrap(DRUPAL_BOOTSTRAP_DATABASE);
+  $core_modules = array('aggregator', 'archive', 'block', 'blog', 'blogapi', 'book', 'comment', 'contact', 'drupal', 'filter', 'forum', 'help', 'legacy', 'locale', 'menu', 'node', 'page', 'path', 'ping', 'poll', 'profile', 'search', 'statistics', 'story', 'system', 'taxonomy', 'throttle', 'tracker', 'upload', 'user', 'watchdog');
+  foreach ($core_modules as $module) {
+    $old_path = "modules/$module.module";
+    $new_path = "modules/$module/$module.module";
+    db_query("UPDATE {system} SET filename = '%s' WHERE filename = '%s'", $new_path, $old_path);
+  }
   $row = db_fetch_object(db_query_range('SELECT * FROM {system}', 0, 1));
   if (!isset($row->weight)) {
     $ret = array();
