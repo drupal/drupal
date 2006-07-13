@@ -720,9 +720,9 @@ function menu_item_link($mid, $theme = TRUE) {
   }
   else {
     $link = array(
-      '#title' => $item['title'],
-      '#href' => $link_item['path'],
-      '#attributes' => isset($item['description']) ? array('title' => $item['description']) : array()
+      'title' => $item['title'],
+      'href' => $link_item['path'],
+      'attributes' => isset($item['description']) ? array('title' => $item['description']) : array()
     );
   }
 
@@ -869,8 +869,8 @@ function menu_primary_links($start_level = 1, $pid = 0) {
   // Special case - provide link to admin/menu if primary links is empty.
   if (empty($links) && $start_level == 1 && $pid == variable_get('menu_primary_menu', 0)) {
     $links['1-1'] = array(
-      '#title' => t('edit primary links'),
-      '#href' => 'admin/menu'
+      'title' => t('edit primary links'),
+      'href' => 'admin/menu'
     );
   }
 
@@ -923,7 +923,7 @@ function theme_menu_links($links) {
     if (stristr($index, 'active')) {
       $output .= ' class="active"';
     }
-    $output .= ">". l($link['#title'], $link['#href'], $link['#attributes'], $link['#query'], $link['#fragment']) ."</li>\n";
+    $output .= ">". l($link['title'], $link['href'], $link['attributes'], $link['query'], $link['fragment']) ."</li>\n";
   }
   $output .= '</ul>';
 
