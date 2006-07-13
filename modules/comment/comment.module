@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.464 2006/07/10 19:27:52 dries Exp $
+// $Id: comment.module,v 1.465 2006/07/13 12:29:15 dries Exp $
 
 /**
  * @file
@@ -328,7 +328,12 @@ function comment_nodeapi(&$node, $op, $arg = 0) {
       return format_plural($comments, '1 comment', '%count comments');
 
     case 'rss item':
-      return array(array('key' => 'comments', 'value' => url('node/'. $node->nid, NULL, 'comment', TRUE)));
+      if ($node->comment != COMMENT_NODE_DISABLED) {
+        return array(array('key' => 'comments', 'value' => url('node/'. $node->nid, NULL, 'comment', TRUE)));
+      }
+      else {
+        return array();
+      }
   }
 }
 
