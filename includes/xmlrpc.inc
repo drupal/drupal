@@ -345,7 +345,7 @@ EOD;
 
 function xmlrpc_error($code = NULL, $message = NULL) {
   static $xmlrpc_error;
-  if ($code) {
+  if (isset($code)) {
     $xmlrpc_error = new stdClass();
     $xmlrpc_error->is_error = TRUE;
     $xmlrpc_error->code = $code;
