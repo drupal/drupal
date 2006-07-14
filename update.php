@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.192 2006/07/13 14:42:54 dries Exp $
+// $Id: update.php,v 1.193 2006/07/14 07:53:39 unconed Exp $
 
 /**
  * @file
@@ -373,6 +373,9 @@ function update_update_page() {
         $_SESSION['update_remaining'][$module] = array('module' => $module, 'version' => $update);
       }
     }
+  }
+  if (!$_SESSION['update_remaining']['system']) {
+    unset($_SESSION['update_remaining']['system']);
   }
   // Keep track of total number of updates
   $_SESSION['update_total'] = count($_SESSION['update_remaining']);
