@@ -1,4 +1,5 @@
 <?php
+// $Id$
 
 function book_install() {
   switch ($GLOBALS['db_type']) {

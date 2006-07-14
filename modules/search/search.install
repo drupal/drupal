@@ -1,4 +1,5 @@
 <?php
+// $Id$
 
 function search_install() {
   switch ($GLOBALS['db_type']) {
