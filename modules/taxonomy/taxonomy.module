@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.294 2006/07/13 11:53:33 dries Exp $
+// $Id: taxonomy.module,v 1.295 2006/07/14 01:01:15 drumm Exp $
 
 /**
  * @file
@@ -1251,7 +1251,7 @@ function taxonomy_term_page($str_tids = '', $depth = 0, $op = 'page') {
         case 'page':
           // Build breadcrumb based on first hierarchy of first term:
           $current->tid = $tids[0];
-          $breadcrumbs = array(array('path' => $_GET['q']));
+          $breadcrumbs = array(array('path' => $_GET['q'], 'title' => $names[0]));
           while ($parents = taxonomy_get_parents($current->tid)) {
             $current = array_shift($parents);
             $breadcrumbs[] = array('path' => 'taxonomy/term/'. $current->tid, 'title' => $current->name);
