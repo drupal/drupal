@@ -374,6 +374,9 @@ function update_update_page() {
       }
     }
   }
+  if (!$_SESSION['update_remaining']['system']) {
+    unset($_SESSION['update_remaining']['system']);
+  }
   // Keep track of total number of updates
   $_SESSION['update_total'] = count($_SESSION['update_remaining']);
 
