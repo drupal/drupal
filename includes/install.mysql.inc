@@ -1,4 +1,5 @@
 <?php
+// $Id: install.mysql.inc,v 1.2 2006/07/14 01:05:09 drumm Exp $
 
 // MySQL specific install functions
 
