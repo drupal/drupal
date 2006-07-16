@@ -189,7 +189,9 @@ function user_save($account, $array = array(), $category = 'account') {
     // Reload user roles (delete just to be safe).
     db_query('DELETE FROM {users_roles} WHERE uid = %d', $array['uid']);
     foreach ((array)$array['roles'] as $rid) {
-      db_query('INSERT INTO {users_roles} (uid, rid) VALUES (%d, %d)', $array['uid'], $rid);
+      if (!in_array($rid, array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID))) {
+        db_query('INSERT INTO {users_roles} (uid, rid) VALUES (%d, %d)', $array['uid'], $rid);
+      }
     }
 
     // Build the initial user object.
