@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.183 2006/07/10 19:27:52 dries Exp $
+// $Id: search.module,v 1.184 2006/07/17 13:15:22 unconed Exp $
 
 /**
  * @file
@@ -1042,9 +1042,6 @@ function search_box($form_id = 'search_theme_form') {
     '#default_value' => '',
     '#attributes' => array('title' => t('Enter the terms you wish to search for.')),
   );
-  if ($form_id == 'search_theme_form') {
-    $form['#theme']['theme_search_theme_form'] = array();
-  }
   $form['submit'] = array('#type' => 'submit', '#value' => t('Search'));
 
   return drupal_get_form($form_id, $form, 'search_box_form');
