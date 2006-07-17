@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.546 2006/07/10 08:12:31 dries Exp $
+// $Id: common.inc,v 1.547 2006/07/17 15:42:55 unconed Exp $
 
 /**
  * @file
@@ -717,9 +717,7 @@ function format_rss_channel($title, $link, $description, $items, $language = 'en
   // escaped source data (such as &amp becoming &amp;amp;).
   $output .= ' <description>'. check_plain(decode_entities(strip_tags($description))) ."</description>\n";
   $output .= ' <language>'. check_plain($language) ."</language>\n";
-  foreach ($args as $key => $value) {
-    $output .= ' <'. $key .'>'. check_plain($value) ."</$key>\n";
-  }
+  $output .= format_xml_elements($args);
   $output .= $items;
   $output .= "</channel>\n";
 
@@ -736,16 +734,37 @@ function format_rss_item($title, $link, $description, $args = array()) {
   $output .= ' <title>'. check_plain($title) ."</title>\n";
   $output .= ' <link>'. check_url($link) ."</link>\n";
   $output .= ' <description>'. check_plain($description) ."</description>\n";
-  foreach ($args as $key => $value) {
-    if (is_array($value)) {
+  $output .= format_xml_elements($args);
+  $output .= "</item>\n";
+
+  return $output;
+}
+
+/**
+ * Format XML elements.
+ *
+ * @param $array
+ *   An array where each item represent an element and is either a:
+ *   - (key => value) pair (<key>value</key>)
+ *   - Associative array with fields:
+ *     - 'key': element name
+ *     - 'value': element contents
+ *     - 'attributes': associative array of element attributes
+ *
+ * In both cases, 'value' can be a simple string, or it can be another array
+ * with the same format as $array itself for nesting.
+ */
+function format_xml_elements($array) {
+  foreach ($array as $key => $value) {
+    if (is_numeric($key)) {
       if ($value['key']) {
         $output .= ' <'. $value['key'];
         if (isset($value['attributes']) && is_array($value['attributes'])) {
           $output .= drupal_attributes($value['attributes']);
         }
 
-        if ($value['value']) {
-          $output .= '>'. $value['value'] .'</'. $value['key'] .">\n";
+        if ($value['value'] != '') {
+          $output .= '>'. (is_array($value['value']) ? format_xml_tags($value['value']) : check_plain($value['value'])) .'</'. $value['key'] .">\n";
         }
         else {
           $output .= " />\n";
@@ -753,11 +772,9 @@ function format_rss_item($title, $link, $description, $args = array()) {
       }
     }
     else {
-      $output .= ' <'. $key .'>'. check_plain($value) ."</$key>\n";
+      $output .= ' <'. $key .'>'. (is_array($value) ? format_xml_tags($value) : check_plain($value)) ."</$key>\n";
     }
   }
-  $output .= "</item>\n";
-
   return $output;
 }
 
