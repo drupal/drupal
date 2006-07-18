@@ -173,7 +173,7 @@ function drupal_query_string_encode($query, $exclude = array(), $parent = '') {
   $params = array();
 
   foreach ($query as $key => $value) {
-    $key = urlencode($key);
+    $key = drupal_urlencode($key);
     if ($parent) {
       $key = $parent .'['. $key .']';
     }
@@ -186,7 +186,7 @@ function drupal_query_string_encode($query, $exclude = array(), $parent = '') {
       $params[] = drupal_query_string_encode($value, $exclude, $key);
     }
     else {
-      $params[] = $key .'='. urlencode($value);
+      $params[] = $key .'='. drupal_urlencode($value);
     }
   }
 
