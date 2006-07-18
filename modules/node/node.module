@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.658 2006/07/14 11:49:45 dries Exp $
+// $Id: node.module,v 1.659 2006/07/18 07:51:39 drumm Exp $
 
 /**
  * @file
@@ -1536,8 +1536,8 @@ function node_validate($node, $form = array()) {
     form_set_error('body', t('The body of your %type is too short. You need at least %words words.', array('%words' => variable_get('minimum_'. $node->type .'_size', 0), '%type' => node_get_name($node))));
   }
 
-  if (isset($node->nid) && (node_last_changed($node->nid) > $node->changed)) {
-    form_set_error('changed', t('This content has been modified by another user; changes cannot be saved.'));
+  if (isset($node->nid) && (node_last_changed($node->nid) > $_POST['edit']['changed'])) {
+    form_set_error('changed', t('This content has been modified by another user, changes cannot be saved.'));
   }
 
   if (user_access('administer nodes')) {
@@ -1601,9 +1601,12 @@ function node_form_array($node) {
    * Basic node information.
    * These elements are just values so they are not even sent to the client.
    */
-  foreach (array('nid', 'vid', 'uid', 'created', 'changed', 'type') as $key) {
+  foreach (array('nid', 'vid', 'uid', 'created', 'type') as $key) {
     $form[$key] = array('#type' => 'value', '#value' => $node->$key);
   }
+
+  // Changed must be sent to the client, for later overwrite error checking.
+  $form['changed'] = array('#type' => 'hidden', '#value' => $node->changed);
 
   // Get the node-specific bits.
   $form = array_merge_recursive($form, node_invoke($node, 'form'));
