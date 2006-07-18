@@ -51,6 +51,7 @@ function aggregator_install() {
         author varchar(255) NOT NULL default '',
         description longtext NOT NULL,
         timestamp int(11) default NULL,
+        guid varchar(255),
         PRIMARY KEY (iid)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
