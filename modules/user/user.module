@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.637 2006/07/18 07:43:09 drumm Exp $
+// $Id: user.module,v 1.638 2006/07/18 07:46:30 drumm Exp $
 
 /**
  * @file
@@ -1824,18 +1824,8 @@ function user_admin_role() {
   else if ($op == t('Delete role')) {
     db_query('DELETE FROM {role} WHERE rid = %d', $id);
     db_query('DELETE FROM {permission} WHERE rid = %d', $id);
-
     // Update the users who have this role set:
-    $result = db_query('SELECT DISTINCT(ur1.uid) FROM {users_roles} ur1 LEFT JOIN {users_roles} ur2 ON ur2.uid = ur1.uid WHERE ur1.rid = %d AND ur2.rid != ur1.rid', $id);
-    $uid = array();
-
-    while ($u = db_fetch_object($result)) {
-      $uid[] = $u->uid;
-    }
-
-    if ($uid) {
-      db_query('DELETE FROM {users_roles} WHERE rid = %d AND uid IN (%s)', $id, implode(', ', $uid));
-    }
+    db_query('DELETE FROM {users_roles} WHERE rid = %d', $id);
 
     drupal_set_message(t('The role has been deleted.'));
     drupal_goto('admin/access/roles');
