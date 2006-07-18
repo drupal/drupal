@@ -1,5 +1,5 @@
 <?php
-// $Id: path.inc,v 1.4 2006/04/24 19:25:37 dries Exp $
+// $Id: path.inc,v 1.5 2006/07/18 07:59:51 drumm Exp $
 
 /**
  * @file
@@ -196,6 +196,6 @@ function drupal_set_title($title = NULL) {
  */
 function drupal_is_front_page() {
   // As drupal_init_path updates $_GET['q'] with the 'site_frontpage' path,
-  // rely on $_REQUEST to verify the original value of 'q'.
-  return !isset($_REQUEST['q']);
+  // we can check it against the 'site_frontpage' variable.
+  return $_GET['q'] == variable_get('site_frontpage', 'node');
 }
