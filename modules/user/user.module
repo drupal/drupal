@@ -1243,7 +1243,7 @@ function user_edit_form($uid, $edit, $register = FALSE) {
   $form['account'] = array('#type' => 'fieldset',
     '#title' => t('Account information'),
   );
-  if (user_access('change own username') || $admin) {
+  if (user_access('change own username') || $admin || $register) {
     $form['account']['name'] = array('#type' => 'textfield',
       '#title' => t('Username'),
       '#default_value' => $edit['name'],
