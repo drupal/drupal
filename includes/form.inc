@@ -71,6 +71,9 @@ function drupal_get_form($form_id, &$form, $callback = NULL) {
 
   $form['#type'] = 'form';
   if (isset($form['#token'])) {
+    // If the page cache is on and an anonymous user issues a GET request,
+    // unset the token because the token in the cached page would not match,
+    // because the token is based on the session ID.
     if (variable_get('cache', 0) && !$user->uid && $_SERVER['REQUEST_METHOD'] == 'GET') {
       unset($form['#token']);
     }
