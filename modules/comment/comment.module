@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.466 2006/07/18 10:44:45 unconed Exp $
+// $Id: comment.module,v 1.467 2006/07/19 06:19:17 drumm Exp $
 
 /**
  * @file
@@ -200,7 +200,7 @@ function comment_link($type, $node = 0, $main = 0) {
             'title' => format_plural($all, '1 comment', '%count comments'),
             'href' => "node/$node->nid",
             'attributes' => array('title' => t('Jump to the first comment of this posting.')),
-            'fragment' => 'comment'
+            'fragment' => 'comments'
           );
 
           if ($new) {
@@ -329,7 +329,7 @@ function comment_nodeapi(&$node, $op, $arg = 0) {
 
     case 'rss item':
       if ($node->comment != COMMENT_NODE_DISABLED) {
-        return array(array('key' => 'comments', 'value' => url('node/'. $node->nid, NULL, 'comment', TRUE)));
+        return array(array('key' => 'comments', 'value' => url('node/'. $node->nid, NULL, 'comments', TRUE)));
       }
       else {
         return array();
@@ -752,8 +752,6 @@ function comment_render($node, $cid = 0) {
     $order = _comment_get_display_setting('sort');
     $comments_per_page = _comment_get_display_setting('comments_per_page');
 
-    $output .= "<a id=\"comment\"></a>\n";
-
     if ($cid) {
       // Single comment view.
       $query = 'SELECT c.cid, c.pid, c.nid, c.subject, c.comment, c.format, c.timestamp, c.name, c.mail, c.homepage, u.uid, u.name AS registered_name, u.picture, u.data, c.score, c.users, c.status FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d';
@@ -914,10 +912,12 @@ function comment_render($node, $cid = 0) {
     if (user_access('post comments') && node_comment_mode($nid) == COMMENT_NODE_READ_WRITE && (variable_get('comment_form_location', COMMENT_FORM_SEPARATE_PAGE) == COMMENT_FORM_BELOW)) {
       $output .= comment_form(array('nid' => $nid), t('Post new comment'));
     }
+
+    $output = theme('comment_wrapper', $output);
   }
+
   return $output;
 }
-
 
 /**
  * Menu callback; delete a comment.
@@ -1660,6 +1660,13 @@ function theme_comment_post_forbidden($nid) {
       return t('<a href="%login">login</a> to post comments', array('%login' => check_url(url('user/login', $destination))));
     }
   }
+}
+
+/**
+ * Allow themable wrapping of all comments.
+ */
+function theme_comment_wrapper($content) {
+  return '<div id="comments">' . $content . '</div>';
 }
 
 function _comment_delete_thread($comment) {
