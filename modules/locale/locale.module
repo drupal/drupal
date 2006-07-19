@@ -178,7 +178,7 @@ function locale($string) {
   if (!isset($locale_t)) {
     $cache = cache_get("locale:$locale");
 
-    if ($cache == 0) {
+    if (!$cache) {
       locale_refresh_cache();
       $cache = cache_get("locale:$locale");
     }
