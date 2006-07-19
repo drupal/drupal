@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.467 2006/07/19 06:19:17 drumm Exp $
+// $Id: comment.module,v 1.468 2006/07/19 07:15:34 drumm Exp $
 
 /**
  * @file
@@ -183,12 +183,12 @@ function theme_comment_block() {
 /**
  * Implementation of hook_link().
  */
-function comment_link($type, $node = 0, $main = 0) {
+function comment_link($type, $node = NULL, $teaser = FALSE) {
   $links = array();
 
   if ($type == 'node' && $node->comment) {
 
-    if ($main) {
+    if ($teaser) {
       // Main page: display the number of comments that have been posted.
 
       if (user_access('access comments')) {
@@ -252,7 +252,7 @@ function comment_link($type, $node = 0, $main = 0) {
   }
 
   if ($type == 'comment') {
-    $links = comment_links($node, $main);
+    $links = comment_links($node, $teaser);
   }
 
   return $links;

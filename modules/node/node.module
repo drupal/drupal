@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.659 2006/07/18 07:51:39 drumm Exp $
+// $Id: node.module,v 1.660 2006/07/19 07:15:35 drumm Exp $
 
 /**
  * @file
@@ -801,7 +801,7 @@ function node_comment_mode($nid) {
 /**
  * Implementation of hook_link().
  */
-function node_link($type, $node = 0, $main = 0) {
+function node_link($type, $node = NULL, $teaser = FALSE) {
   $links = array();
 
   if ($type == 'node') {
@@ -809,7 +809,7 @@ function node_link($type, $node = 0, $main = 0) {
       $links = $node->links;
     }
 
-    if ($main == 1 && $node->teaser && $node->readmore) {
+    if ($teaser == 1 && $node->teaser && $node->readmore) {
       $links['node_read_more'] = array(
         'title' => t('read more'),
         'href' => "node/$node->nid",

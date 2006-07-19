@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.112 2006/07/10 19:27:52 dries Exp $
+// $Id: upload.module,v 1.113 2006/07/19 07:15:35 drumm Exp $
 
 /**
  * @file
@@ -41,11 +41,11 @@ function upload_perm() {
 /**
  * Implementation of hook_link().
  */
-function upload_link($type, $node = 0, $main = 0) {
+function upload_link($type, $node = NULL, $teaser = FALSE) {
   $links = array();
 
   // Display a link with the number of attachments
-  if ($main && $type == 'node' && isset($node->files) && user_access('view uploaded files')) {
+  if ($teaser && $type == 'node' && isset($node->files) && user_access('view uploaded files')) {
     $num_files = 0;
     foreach ($node->files as $file) {
       if ($file->list) {

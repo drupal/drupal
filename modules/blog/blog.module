@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.250 2006/07/04 08:59:04 drumm Exp $
+// $Id: blog.module,v 1.251 2006/07/19 07:15:34 drumm Exp $
 
 /**
  * @file
@@ -244,7 +244,7 @@ function blog_view(&$node, $teaser = FALSE, $page = FALSE) {
 /**
  * Implementation of hook_link().
  */
-function blog_link($type, $node = 0, $main = 0) {
+function blog_link($type, $node = NULL, $teaser = FALSE) {
   $links = array();
 
   if ($type == 'node' && $node->type == 'blog') {

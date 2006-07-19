@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.230 2006/07/10 19:27:52 dries Exp $
+// $Id: statistics.module,v 1.231 2006/07/19 07:15:35 drumm Exp $
 
 /**
  * @file
@@ -92,7 +92,7 @@ function statistics_perm() {
 /**
  * Implementation of hook_link().
  */
-function statistics_link($type, $node = 0, $main = 0) {
+function statistics_link($type, $node = NULL, $teaser = FALSE) {
   global $id;
   $links = array();
 

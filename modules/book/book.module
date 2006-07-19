@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.374 2006/07/10 08:05:15 dries Exp $
+// $Id: book.module,v 1.375 2006/07/19 07:15:34 drumm Exp $
 
 /**
  * @file
@@ -51,12 +51,12 @@ function book_access($op, $node) {
 /**
  * Implementation of hook_link().
  */
-function book_link($type, $node = 0, $main = 0) {
+function book_link($type, $node = NULL, $teaser = FALSE) {
 
   $links = array();
 
   if ($type == 'node' && isset($node->parent)) {
-    if (!$main) {
+    if (!$teaser) {
       if (book_access('create', $node)) {
         $links['book_add_child'] = array(
           'title' => t('add child page'),
