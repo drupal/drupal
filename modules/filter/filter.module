@@ -624,6 +624,7 @@ function filter_formats() {
     $query = 'SELECT * FROM {filter_formats}';
 
     // Build query for selecting the format(s) based on the user's roles.
+    $args = array();
     if (!$all) {
       $where = array();
       foreach ($user->roles as $rid => $role) {
