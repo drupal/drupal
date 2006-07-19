@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.136 2006/05/07 00:08:36 drumm Exp $
+// $Id: locale.module,v 1.137 2006/07/19 06:23:44 drumm Exp $
 
 /**
  * @file
@@ -178,7 +178,7 @@ function locale($string) {
   if (!isset($locale_t)) {
     $cache = cache_get("locale:$locale");
 
-    if ($cache == 0) {
+    if (!$cache) {
       locale_refresh_cache();
       $cache = cache_get("locale:$locale");
     }
