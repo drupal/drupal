@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.548 2006/07/18 10:44:45 unconed Exp $
+// $Id: common.inc,v 1.549 2006/07/19 07:45:35 drumm Exp $
 
 /**
  * @file
@@ -491,11 +491,16 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
  *  1 = Log errors to database and to screen.
  */
 function error_handler($errno, $message, $filename, $line) {
+  // If the @ error suppression operator was used, error_reporting is temporarily set to 0
+  if (error_reporting() == 0) {
+    return;
+  }
+
   if ($errno & (E_ALL ^ E_NOTICE)) {
     $types = array(1 => 'error', 2 => 'warning', 4 => 'parse error', 8 => 'notice', 16 => 'core error', 32 => 'core warning', 64 => 'compile error', 128 => 'compile warning', 256 => 'user error', 512 => 'user warning', 1024 => 'user notice', 2048 => 'strict warning');
     $entry = $types[$errno] .': '. $message .' in '. $filename .' on line '. $line .'.';
 
-    // Note: force display of error messages in update.php
+    // Force display of error messages in update.php
     if (variable_get('error_level', 1) == 1 || strstr($_SERVER['PHP_SELF'], 'update.php')) {
       drupal_set_message($entry, 'error');
     }

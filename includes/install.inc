@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.7 2006/07/13 13:11:36 dries Exp $
+// $Id: install.inc,v 1.8 2006/07/19 07:45:35 drumm Exp $
 
 define('SCHEMA_UNINSTALLED', -1);
 define('SCHEMA_INSTALLED', 0);
@@ -270,11 +270,50 @@ function drupal_install_profile($profile) {
 
   require_once($profile_file);
 
+  // Get a list of modules absolutely required by Drupal.
+  $bootstrap_list = array('system');
+
   // Get a list of modules required by this profile.
   $function = $profile .'_profile_modules';
   $module_list = $function();
+  
+  // If anyone has added modules that we automatically install, filter them out.
+  $module_list = array_diff($module_list, $bootstrap_list);
 
   // Verify that all required modules exist.
+  $bootstrap_modules = drupal_find_modules($bootstrap_list);
+  $profile_modules = drupal_find_modules($module_list);
+  
+  // Install the essential system modules and bootstrap Drupal.
+  drupal_install_modules($bootstrap_list);
+  drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
+
+  // Install schemas for profile and all its modules.
+  $function = $profile .'_install';
+  if (function_exists($function)) {
+    $function();
+  }
+
+  drupal_install_modules($module_list);
+
+  // Enable the modules required by the profile.
+  db_query("DELETE FROM {system} WHERE type = 'module'");
+  $modules = array_merge($bootstrap_modules, $profile_modules);
+  foreach ($modules as $module) {
+    db_query("INSERT INTO {system} (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES('%s', '%s', 'module', '', 1, 0, 0, 0)", $module->filename, $module->name);
+  }
+}
+
+
+/**
+ * Finds the file paths for a set of modules.
+ *
+ * @param module_list
+ *   The modules to locate.
+ * @return
+ *   An array containing file information for the modules.
+ */
+function drupal_find_modules($module_list = array()) {
   $modules = array();
   foreach ($module_list as $current) {
     $module = file_scan_directory('./modules', "^$current.module$", array('.', '..', 'CVS'), 0, TRUE, 'name', 0);
@@ -285,25 +324,21 @@ function drupal_install_profile($profile) {
       $modules = array_merge($modules, $module);
     }
   }
+  return $modules;
+}
 
+/**
+ * Execute the install scripts for a set of modules.
+ *
+ * @param module_list
+ *   The modules to install.
+ */
+function drupal_install_modules($module_list = array()) {
   // Get a list of all .install files.
   $installs = drupal_get_install_files($module_list);
-
-  // Install schemas for profile and all its modules.
-  $function = $profile .'_install';
-  if (function_exists($function)) {
-    $function();
-  }
-
   foreach ($installs as $install) {
     require_once $install->filename;
     module_invoke($install->name, 'install');
-  }
-
-  // Enable the modules required by the profile.
-  db_query("DELETE FROM {system} WHERE type = 'module'");
-  foreach ($modules as $module) {
-    db_query("INSERT INTO {system} (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES('%s', '%s', 'module', '', 1, 0, 0, 0)", $module->filename, $module->name);
   }
 }
 
