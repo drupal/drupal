@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.129 2006/07/19 07:25:49 drumm Exp $
+// $Id: form.inc,v 1.130 2006/07/22 19:26:58 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -69,6 +69,39 @@ function drupal_get_form($form_id, &$form, $callback = NULL) {
   $form_submitted = FALSE;
   $form_button_counter = array(0, 0);
 
+  $form = drupal_build_form($form_id, $form, $callback);
+
+  if (!empty($_POST['edit']) && (($_POST['edit']['form_id'] == $form_id) || ($_POST['edit']['form_id'] == $callback))) {
+    drupal_validate_form($form_id, $form, $callback);
+    // IE does not send a button value when there is only one submit button (and no non-submit buttons)
+    // and you submit by pressing enter.
+    // In that case we accept a submission without button values.
+    if (($form_submitted || (!$form_button_counter[0] && $form_button_counter[1])) && !form_get_errors()) {
+      $redirect = drupal_submit_form($form_id, $form, $callback);
+      drupal_redirect_form($form, $redirect);
+    }
+  }
+
+  $output = drupal_render_form($form_id, $form, $callback);
+  list($form_values, $form_submitted, $form_button_counter) = array_pop($saved_globals);
+  return $output;
+}
+
+/**
+ * Prepares a structured form array by adding required elements,
+ * executing any hook_form_alter functions, and optionally inserting
+ * a validation token to prevent tampering.
+ *
+ * @param $form_id
+ *   A unique string identifying the form for validation, submission,
+ *   theming, and hook_form_alter functions.
+ * @param $form
+ *   An associative array containing the structure of the form.
+ * @param $callback
+ *   An optional callback that will be used in addition to the form_id.
+ *
+ */
+function drupal_build_form($form_id, &$form, $callback = NULL) {
   $form['#type'] = 'form';
   if (isset($form['#token'])) {
     // If the page cache is on and an anonymous user issues a GET request,
@@ -86,6 +119,7 @@ function drupal_get_form($form_id, &$form, $callback = NULL) {
       $form['form_token'] = array('#type' => 'hidden', '#default_value' => md5(session_id() . $form['#token'] . variable_get('drupal_private_key', '')));
     }
   }
+
   if (isset($form_id)) {
     $form['form_id'] = array('#type' => 'hidden', '#value' => $form_id, '#id' => str_replace('_', '-', "edit-$form_id"));
   }
@@ -121,33 +155,96 @@ function drupal_get_form($form_id, &$form, $callback = NULL) {
   }
 
   $form = form_builder($form_id, $form);
-  if (!empty($_POST['edit']) && (($_POST['edit']['form_id'] == $form_id) || ($_POST['edit']['form_id'] == $callback))) {
-    drupal_validate_form($form_id, $form, $callback);
-    // IE does not send a button value when there is only one submit button (and no non-submit buttons)
-    // and you submit by pressing enter.
-    // In that case we accept a submission without button values.
-    if (($form_submitted || (!$form_button_counter[0] && $form_button_counter[1])) && !form_get_errors()) {
-      $redirect = drupal_submit_form($form_id, $form, $callback);
-      if (isset($redirect)) {
-        $goto = $redirect;
-      }
-      if (isset($form['#redirect'])) {
-        $goto = $form['#redirect'];
-      }
-      if ($goto !== FALSE) {
-        if (is_array($goto)) {
-          call_user_func_array('drupal_goto', $goto);
-        }
-        elseif (!isset($goto)) {
-          drupal_goto($_GET['q']);
-        }
-        else {
-          drupal_goto($goto);
+
+  return $form;
+}
+
+
+/**
+ * Validates user-submitted form data from a global variable using
+ * the validate functions defined in a structured form array.
+ *
+ * @param $form_id
+ *   A unique string identifying the form for validation, submission,
+ *   theming, and hook_form_alter functions.
+ * @param $form
+ *   An associative array containing the structure of the form.
+ * @param $callback
+ *   An optional callback that will be used in addition to the form_id.
+ *
+ */
+function drupal_validate_form($form_id, $form, $callback = NULL) {
+  global $form_values;
+  static $validated_forms = array();
+
+  if (isset($validated_forms[$form_id])) {
+    return;
+  }
+
+  // If the session token was set by drupal_build_form(), ensure that it
+  // matches the current user's session
+  if (isset($form['#token'])) {
+    if ($form_values['form_token'] != md5(session_id() . $form['#token'] . variable_get('drupal_private_key', ''))) {
+      // setting this error will cause the form to fail validation
+      form_set_error('form_token', t('Validation error, please try again. If this error persists, please contact the site administrator.'));
+    }
+  }
+
+  _form_validate($form, $form_id);
+  $validated_forms[$form_id] = TRUE;
+}
+
+/**
+ * Processes user-submitted form data from a global variable using
+ * the submit functions defined in a structured form array.
+ *
+ * @param $form_id
+ *   A unique string identifying the form for validation, submission,
+ *   theming, and hook_form_alter functions.
+ * @param $form
+ *   An associative array containing the structure of the form.
+ * @param $callback
+ *   An optional callback that will be used in addition to the form_id.
+ * @return
+ *   A string containing the path of the page to display when processing
+ *   is complete.
+ *
+ */
+function drupal_submit_form($form_id, $form, $callback = NULL) {
+  global $form_values;
+  $default_args = array($form_id, &$form_values);
+
+  if (isset($form['#submit'])) {
+    foreach ($form['#submit'] as $function => $args) {
+      if (function_exists($function)) {
+        $args = array_merge($default_args, (array) $args);
+        // Since we can only redirect to one page, only the last redirect will work
+        $redirect = call_user_func_array($function, $args);
+        if (isset($redirect)) {
+          $goto = $redirect;
         }
       }
     }
   }
+  return $goto;
+}
 
+/**
+ * Renders a structured form array into themed HTML.
+ *
+ * @param $form_id
+ *   A unique string identifying the form for validation, submission,
+ *   theming, and hook_form_alter functions.
+ * @param $form
+ *   An associative array containing the structure of the form.
+ * @param $callback
+ *   An optional callback that will be used in addition to the form_id.
+ * @return
+ *   A string containing the path of the page to display when processing
+ *   is complete.
+ *
+ */
+function drupal_render_form($form_id, &$form, $callback = NULL) {
   // Don't override #theme if someone already set it.
   if (!isset($form['#theme'])) {
     if (theme_get_function($form_id)) {
@@ -167,47 +264,37 @@ function drupal_get_form($form_id, &$form, $callback = NULL) {
   }
 
   $output = form_render($form);
-  // Restore globals
-  list($form_values, $form_submitted, $form_button_counter) = array_pop($saved_globals);
   return $output;
 }
 
-function drupal_validate_form($form_id, $form, $callback = NULL) {
-  global $form_values;
-  static $validated_forms = array();
-
-  if (isset($validated_forms[$form_id])) {
-    return;
+/**
+ * Redirect the user to a URL after a form has been processed.
+ *
+ * @param $form
+ *   An associative array containing the structure of the form.
+ * @param $redirect
+ *   An optional string containing the destination path to redirect
+ *   to if none is specified by the form.
+ *
+ */
+function drupal_redirect_form($form, $redirect = NULL) {
+  if (isset($redirect)) {
+    $goto = $redirect;
   }
-
-  if (isset($form['#token'])) {
-    if ($form_values['form_token'] != md5(session_id() . $form['#token'] . variable_get('drupal_private_key', ''))) {
-      // setting this error will cause the form to fail validation
-      form_set_error('form_token', t('Validation error, please try again. If this error persists, please contact the site administrator.'));
+  if (isset($form['#redirect'])) {
+    $goto = $form['#redirect'];
+  }
+  if ($goto !== FALSE) {
+    if (is_array($goto)) {
+      call_user_func_array('drupal_goto', $goto);
+    }
+    elseif (!isset($goto)) {
+      drupal_goto($_GET['q']);
+    }
+    else {
+      drupal_goto($goto);
     }
   }
-
-  _form_validate($form, $form_id);
-  $validated_forms[$form_id] = TRUE;
-}
-
-function drupal_submit_form($form_id, $form, $callback = NULL) {
-  global $form_values;
-  $default_args = array($form_id, &$form_values);
-
-  if (isset($form['#submit'])) {
-    foreach ($form['#submit'] as $function => $args) {
-      if (function_exists($function)) {
-        $args = array_merge($default_args, (array) $args);
-        // Since we can only redirect to one page, only the last redirect will work
-        $redirect = call_user_func_array($function, $args);
-        if (isset($redirect)) {
-          $goto = $redirect;
-        }
-      }
-    }
-  }
-  return $goto;
 }
 
 function _form_validate($elements, $form_id = NULL) {
@@ -324,7 +411,8 @@ function form_error(&$element, $message = '') {
  * already have an assigned value.
  *
  * @param $form_id
- *   A unique string identifying the form. Allows each form to be themed.
+ *   A unique string identifying the form for validation, submission,
+ *   theming, and hook_form_alter functions.
  * @param $form
  *   An associative array containing the structure of the form.
  */
