@@ -1,7 +1,11 @@
-// $Id: CHANGELOG.txt,v 1.132 2006/07/13 07:23:59 dries Exp $
+// $Id: CHANGELOG.txt,v 1.133 2006/07/25 15:02:19 unconed Exp $
 
 Drupal x.x.x, xxxx-xx-xx (development version)
 ------------------------
+- added web-based installer which can:
+    * automatically generate the database configuration file
+    * install pre-made 'install profiles' or distributions
+    * import the database structure with automatic table prefixing
 - introduced the ability to alter mail sent from system
 - moved core modules to their own directories to allow additional flexibility
 - added support for different cache backends
