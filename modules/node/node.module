@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.661 2006/07/26 07:04:19 drumm Exp $
+// $Id: node.module,v 1.662 2006/07/26 08:25:25 drumm Exp $
 
 /**
  * @file
@@ -1098,6 +1098,7 @@ function node_admin_nodes_submit($form_id, $edit) {
         db_query($operation, $nid);
       }
     }
+    cache_clear_all();
     drupal_set_message(t('The update has been performed.'));
   }
 }
