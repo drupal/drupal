@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.133 2006/07/25 15:02:19 unconed Exp $
+// $Id: CHANGELOG.txt,v 1.134 2006/07/26 07:27:19 drumm Exp $
 
 Drupal x.x.x, xxxx-xx-xx (development version)
 ------------------------
@@ -23,6 +23,10 @@ Drupal x.x.x, xxxx-xx-xx (development version)
 - distributed authentication:
     * added default server option.
 - fixed critical SQL issue, see SA-2006-005
+- database API:
+    * added db_table_exists().
+- blogapi module:
+    * 'blogapi new' and 'blogapi edit' nodeapi operations.
 
 Drupal 4.7.0, 2006-05-01
 ------------------------
