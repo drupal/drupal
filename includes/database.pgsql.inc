@@ -344,6 +344,13 @@ function db_unlock_tables() {
 }
 
 /**
+ * Check if a table exists.
+ */
+function db_table_exists($table) {
+  return db_num_rows(db_query("SELECT relname FROM pg_class WHERE relname = '{" . db_escape_table($table) . "}'"));
+}
+
+/**
  * Verify if the database is set up correctly.
  */
 function db_check_setup() {

@@ -367,6 +367,13 @@ function db_unlock_tables() {
 }
 
 /**
+ * Check if a table exists.
+ */
+function db_table_exists($table) {
+  return db_num_rows(db_query("SHOW TABLES LIKE '{" . db_escape_table($table) . "}'"));
+}
+
+/**
  * @} End of "ingroup database".
  */
 
