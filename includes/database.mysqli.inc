@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysqli.inc,v 1.19 2006/07/13 13:11:36 dries Exp $
+// $Id: database.mysqli.inc,v 1.20 2006/07/26 07:16:08 drumm Exp $
 
 /**
  * @file
@@ -364,6 +364,13 @@ function db_lock_table($table) {
  */
 function db_unlock_tables() {
   db_query('UNLOCK TABLES');
+}
+
+/**
+ * Check if a table exists.
+ */
+function db_table_exists($table) {
+  return db_num_rows(db_query("SHOW TABLES LIKE '{" . db_escape_table($table) . "}'"));
 }
 
 /**

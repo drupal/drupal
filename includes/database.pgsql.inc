@@ -1,5 +1,5 @@
 <?php
-// $Id: database.pgsql.inc,v 1.31 2006/07/13 13:11:36 dries Exp $
+// $Id: database.pgsql.inc,v 1.32 2006/07/26 07:16:08 drumm Exp $
 
 /**
  * @file
@@ -341,6 +341,13 @@ function db_lock_table($table) {
  */
 function db_unlock_tables() {
   db_query('COMMIT');
+}
+
+/**
+ * Check if a table exists.
+ */
+function db_table_exists($table) {
+  return db_num_rows(db_query("SELECT relname FROM pg_class WHERE relname = '{" . db_escape_table($table) . "}'"));
 }
 
 /**
