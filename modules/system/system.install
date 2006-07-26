@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.2 2006/07/14 01:05:09 drumm Exp $
+// $Id: system.install,v 1.3 2006/07/26 07:19:41 drumm Exp $
 
 function system_install() {
   switch ($GLOBALS['db_type']) {
@@ -414,7 +414,7 @@ function system_install() {
   db_query("INSERT INTO {filters} VALUES (3,'filter',2,0)");
   db_query("INSERT INTO {variable} (name,value) VALUES ('filter_html_1','i:1;')");
 
-  db_query("INSERT INTO {variable} (name, value) VALUES ('node_options_forum', 'a:1:{i:0;s:6:\"status\";}')");
+  db_query("INSERT INTO {variable} (name, value) VALUES ('node_options_forum', '%s')", 'a:1:{i:0;s:6:"status";}');
 
   db_query("INSERT INTO {menu} (pid, path, title, description, weight, type) VALUES (0, '', 'Primary links', '', 0, 115)");
   db_query("INSERT INTO {variable} VALUES ('menu_primary_menu', 'i:2;')");
