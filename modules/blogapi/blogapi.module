@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.86 2006/07/10 19:27:52 dries Exp $
+// $Id: blogapi.module,v 1.87 2006/07/26 07:24:19 drumm Exp $
 
 /**
  * @file
@@ -129,11 +129,6 @@ function blogapi_xmlrpc() {
       array('array'),
       t('Retrieve information about the text formatting plugins supported by the server.')),
     array(
-      'mt.getTrackbackPings',
-      'blogapi_mt_get_trackback_pings',
-      array('array', 'string'),
-      t('Retrieve the list of TrackBack pings posted to a particular entry. This could be used to programmatically retrieve the list of pings for a particular entry, then iterate through each of those pings doing the same, until one has built up a graph of the web of entries referencing one another on a particular topic.')),
-    array(
       'mt.publishPost',
       'blogap_mti_publish_post',
       array('boolean', 'string', 'string', 'string'),
@@ -220,6 +215,8 @@ function blogapi_blogger_new_post($appkey, $blogid, $username, $password, $conte
   if (user_access('administer nodes') && !isset($edit['date'])) {
     $edit['date'] = format_date(time(), 'custom', 'Y-m-d H:i:s O');
   }
+  
+  node_invoke_nodeapi($edit, 'blogapi new');
 
   node_validate($edit);
   if ($errors = form_get_errors()) {
@@ -271,6 +268,8 @@ function blogapi_blogger_edit_post($appkey, $postid, $username, $password, $cont
     $node->title = blogapi_blogger_title($content);
     $node->body = $content;
   }
+
+  node_invoke_nodeapi($node, 'blogapi edit');
 
   node_validate($node);
   if ($errors = form_get_errors()) {
@@ -474,14 +473,6 @@ function blogapi_mt_supported_text_filters() {
 }
 
 /**
- * Blogging API callback. Can not be implemented without support from
- * trackback module.
- */
-function blogapi_mt_get_trackback_pings() {
-  return blogapi_error(t('Not implemented.'));
-}
-
-/**
  * Blogging API callback. Publishes the given node
  */
 function blogap_mti_publish_post($postid, $username, $password) {
@@ -672,20 +663,6 @@ function _blogapi_mt_extra(&$node, $struct) {
   }
   if ($struct['mt_text_more']) {
     $node->body = $node->body . '<!--extended-->' . $struct['mt_text_more'];
-  }
-
-  // mt_tb_ping_urls
-  if (function_exists('trackback_send')) {
-    if (is_array($struct['mt_tb_ping_urls'])) {
-      foreach ($struct['mt_tb_ping_urls'] as $tb_ping_url) {
-        $node->tb_url = $tb_ping_url->getVal();
-        trackback_send($node);
-        unset($node->tb_url); // make sure we don't ping twice
-      }
-    }
-    else {
-      $node->tb_url = $struct['mt_tb_ping_urls'];
-    }
   }
 
   // mt_convert_breaks
