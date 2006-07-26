@@ -1098,6 +1098,7 @@ function node_admin_nodes_submit($form_id, $edit) {
         db_query($operation, $nid);
       }
     }
+    cache_clear_all();
     drupal_set_message(t('The update has been performed.'));
   }
 }
