@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.290 2006/07/10 19:27:52 dries Exp $
+// $Id: aggregator.module,v 1.291 2006/07/27 08:17:21 drumm Exp $
 
 /**
  * @file
@@ -859,11 +859,11 @@ function aggregator_parse_feed(&$data, $feed) {
     if ($item['LINK']) {
       $link = $item['LINK'];
     }
-    if ($item['GUID']) {
-      $guid = $item['GUID'];
-    }
     else {
       $link = $feed['link'];
+    }
+    if ($item['GUID']) {
+      $guid = $item['GUID'];
     }
 
     /**
