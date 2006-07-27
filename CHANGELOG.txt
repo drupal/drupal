@@ -27,6 +27,8 @@ Drupal x.x.x, xxxx-xx-xx (development version)
     * added db_table_exists().
 - blogapi module:
     * 'blogapi new' and 'blogapi edit' nodeapi operations.
+- user module:
+    * added hook_profile_alter().
 
 Drupal 4.7.0, 2006-05-01
 ------------------------
