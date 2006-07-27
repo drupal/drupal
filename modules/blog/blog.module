@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.251 2006/07/19 07:15:34 drumm Exp $
+// $Id: blog.module,v 1.252 2006/07/27 08:07:04 drumm Exp $
 
 /**
  * @file
@@ -73,7 +73,7 @@ function blog_help($section) {
     case 'admin/modules#description':
       return t('Enables keeping an easily and regularly updated web page or a blog.');
     case 'node/add#blog':
-      return t("A blog is a regularly updated journal or diary made up of individual posts shown in reversed chronological order. A blog is tightly coupled to the author so each user will have his 'own' blog.");
+      return t("A blog is a regularly updated journal or diary made up of individual posts shown in reversed chronological order. Each member of the site may create and maintain a blog.");
   }
 }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.640 2006/07/27 07:46:31 drumm Exp $
+// $Id: user.module,v 1.641 2006/07/27 08:07:04 drumm Exp $
 
 /**
  * @file
@@ -1984,7 +1984,7 @@ function user_help($section) {
     case 'admin/modules#description':
       return t('Manages the user registration and login system.');
     case 'admin/user':
-      return t('<p>Drupal allows users to register, login, log out, maintain user profiles, etc. No participant can use his own name to post content until he signs up for a user account.</p>');
+      return t('<p>Drupal allows users to register, login, log out, maintain user profiles, etc. Users of the site may not use their own names to post content until they have signed up for a user account.</p>');
     case 'admin/user/create':
     case 'admin/user/account/create':
       return t('<p>This web page allows the administrators to register a new users by hand. Note that you cannot have a user where either the e-mail address or the username match another user in the system.</p>');
