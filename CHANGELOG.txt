@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.135 2006/07/27 07:46:31 drumm Exp $
+// $Id: CHANGELOG.txt,v 1.136 2006/07/27 08:01:57 drumm Exp $
 
 Drupal x.x.x, xxxx-xx-xx (development version)
 ------------------------
@@ -29,6 +29,9 @@ Drupal x.x.x, xxxx-xx-xx (development version)
     * 'blogapi new' and 'blogapi edit' nodeapi operations.
 - user module:
     * added hook_profile_alter().
+- PHP Template engine:
+    * add the ability to look for a series of suggested templates.
+    * look for page templates based upon the path.
 
 Drupal 4.7.0, 2006-05-01
 ------------------------
