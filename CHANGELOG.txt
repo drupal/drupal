@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.134 2006/07/26 07:27:19 drumm Exp $
+// $Id: CHANGELOG.txt,v 1.135 2006/07/27 07:46:31 drumm Exp $
 
 Drupal x.x.x, xxxx-xx-xx (development version)
 ------------------------
@@ -27,6 +27,8 @@ Drupal x.x.x, xxxx-xx-xx (development version)
     * added db_table_exists().
 - blogapi module:
     * 'blogapi new' and 'blogapi edit' nodeapi operations.
+- user module:
+    * added hook_profile_alter().
 
 Drupal 4.7.0, 2006-05-01
 ------------------------

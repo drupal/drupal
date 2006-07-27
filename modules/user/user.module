@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.639 2006/07/18 10:14:26 unconed Exp $
+// $Id: user.module,v 1.640 2006/07/27 07:46:31 drumm Exp $
 
 /**
  * @file
@@ -445,7 +445,7 @@ function user_search($op = 'search', $keys = NULL) {
  */
 function user_user($type, &$edit, &$user, $category = NULL) {
   if ($type == 'view') {
-    $items[] = array('title' => t('Member for'),
+    $items['history'] = array('title' => t('Member for'),
       'value' => format_interval(time() - $user->created),
       'class' => 'member',
     );
@@ -1428,13 +1428,22 @@ function user_view($uid = 0) {
   foreach (module_list() as $module) {
     if ($data = module_invoke($module, 'user', 'view', '', $account)) {
       foreach ($data as $category => $items) {
-        foreach ($items as $item) {
+        foreach ($items as $key => $item) {
           $item['class'] = "$module-". $item['class'];
-          $fields[$category][] = $item;
+          $fields[$category][$key] = $item;
         }
       }
     }
   }
+
+  // Let modules change the returned fields - useful for personal privacy
+  // controls. Since modules communicate changes by reference, we cannot use
+  // module_invoke_all().
+  foreach (module_implements('profile_alter') as $module) {
+    $function = $module .'_profile_alter';
+    $function($account, $fields); 
+  }
+
   drupal_set_title($account->name);
   return theme('user_profile', $account, $fields);
 }
