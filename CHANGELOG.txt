@@ -1,3 +1,5 @@
+// $Id$
+
 Drupal 4.7.2, 2006-06-01
 ------------------------
 - fixed critical upload issue, see SA-2006-007
