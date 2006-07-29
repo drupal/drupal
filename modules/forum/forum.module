@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.338 2006/07/11 07:04:34 drumm Exp $
+// $Id: forum.module,v 1.339 2006/07/29 17:56:41 dries Exp $
 
 /**
  * @file
@@ -675,7 +675,7 @@ function _forum_format($topic) {
     return t('%time ago<br />by %author', array('%time' => format_interval(time() - $topic->timestamp), '%author' => theme('username', $topic)));
   }
   else {
-    return message_na();
+    return t('n/a');
   }
 }
 

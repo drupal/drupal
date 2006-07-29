@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.641 2006/07/27 08:07:04 drumm Exp $
+// $Id: user.module,v 1.642 2006/07/29 17:56:41 dries Exp $
 
 /**
  * @file
@@ -1441,7 +1441,7 @@ function user_view($uid = 0) {
   // module_invoke_all().
   foreach (module_implements('profile_alter') as $module) {
     $function = $module .'_profile_alter';
-    $function($account, $fields); 
+    $function($account, $fields);
   }
 
   drupal_set_title($account->name);

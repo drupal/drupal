@@ -1,5 +1,5 @@
 <?php
-// $Id: phptemplate.engine,v 1.37 2006/07/27 08:01:58 drumm Exp $
+// $Id: phptemplate.engine,v 1.38 2006/07/29 17:56:41 dries Exp $
 
 /**
  * @file
@@ -231,7 +231,7 @@ function phptemplate_page($content) {
   if (drupal_is_front_page()) {
     $suggestions[] = 'page-front';
   }
-  
+
   return _phptemplate_callback('page', $variables, $suggestions);
 }
 

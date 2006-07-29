@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.87 2006/07/26 07:24:19 drumm Exp $
+// $Id: blogapi.module,v 1.88 2006/07/29 17:56:41 dries Exp $
 
 /**
  * @file
@@ -215,7 +215,7 @@ function blogapi_blogger_new_post($appkey, $blogid, $username, $password, $conte
   if (user_access('administer nodes') && !isset($edit['date'])) {
     $edit['date'] = format_date(time(), 'custom', 'Y-m-d H:i:s O');
   }
-  
+
   node_invoke_nodeapi($edit, 'blogapi new');
 
   node_validate($edit);
@@ -247,7 +247,7 @@ function blogapi_blogger_edit_post($appkey, $postid, $username, $password, $cont
 
   $node = node_load($postid);
   if (!$node) {
-    return blogapi_error(message_na());
+    return blogapi_error(t('n/a'));
   }
   // Let the teaser be re-generated.
   unset($node->teaser);

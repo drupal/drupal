@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.549 2006/07/19 07:45:35 drumm Exp $
+// $Id: common.inc,v 1.550 2006/07/29 17:56:41 dries Exp $
 
 /**
  * @file
@@ -532,23 +532,6 @@ function fix_gpc_magic() {
     $fixed = TRUE;
   }
 }
-
-/**
- * @name Messages
- * @{
- * Frequently used messages.
- */
-
-/**
- * Return a string with a "not applicable" message.
- */
-function message_na() {
-  return t('n/a');
-}
-
-/**
- * @} End of "Messages".
- */
 
 /**
  * Initialize the localization system.
