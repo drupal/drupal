@@ -276,14 +276,14 @@ function drupal_install_profile($profile) {
   // Get a list of modules required by this profile.
   $function = $profile .'_profile_modules';
   $module_list = $function();
-  
+
   // If anyone has added modules that we automatically install, filter them out.
   $module_list = array_diff($module_list, $bootstrap_list);
 
   // Verify that all required modules exist.
   $bootstrap_modules = drupal_find_modules($bootstrap_list);
   $profile_modules = drupal_find_modules($module_list);
-  
+
   // Install the essential system modules and bootstrap Drupal.
   drupal_install_modules($bootstrap_list);
   drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);

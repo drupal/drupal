@@ -776,7 +776,7 @@ function check_markup($text, $format = FILTER_FORMAT_DEFAULT, $check = TRUE) {
     }
   }
   else {
-    $text = message_na();
+    $text = t('n/a');
   }
 
   return $text;

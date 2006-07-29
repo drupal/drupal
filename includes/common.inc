@@ -534,23 +534,6 @@ function fix_gpc_magic() {
 }
 
 /**
- * @name Messages
- * @{
- * Frequently used messages.
- */
-
-/**
- * Return a string with a "not applicable" message.
- */
-function message_na() {
-  return t('n/a');
-}
-
-/**
- * @} End of "Messages".
- */
-
-/**
  * Initialize the localization system.
  */
 function locale_initialize() {
