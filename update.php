@@ -686,8 +686,8 @@ ini_set('display_errors', TRUE);
 // Access check:
 if (($access_check == FALSE) || ($user->uid == 1)) {
 
-  $install = FALSE;
   include_once './includes/install.inc';
+  drupal_load_updates();
 
   update_fix_schema_version();
   update_fix_watchdog_115();
