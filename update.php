@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.193 2006/07/14 07:53:39 unconed Exp $
+// $Id: update.php,v 1.194 2006/07/31 16:23:52 unconed Exp $
 
 /**
  * @file
@@ -15,7 +15,7 @@
  */
 
 // Enforce access checking?
-$access_check = TRUE;
+$access_check = FALSE;TRUE;
 
 
 function update_sql($sql) {
@@ -328,6 +328,10 @@ function update_selection_page() {
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
   );
+
+  // Ensure system.module's updates appear first
+  $form['start']['system'] = array();
+
   foreach (module_list() as $module) {
     $updates = drupal_get_schema_versions($module);
     if ($updates !== FALSE) {
@@ -363,20 +367,16 @@ function update_selection_page() {
 
 function update_update_page() {
   // Set the installed version so updates start at the correct place.
-  // Ensure system.module's updates are run first by making it the first element.
-  $_SESSION['update_remaining'] = array('system' => '');
   foreach ($_POST['edit']['start'] as $module => $version) {
     drupal_set_installed_schema_version($module, $version - 1);
     $max_version = max(drupal_get_schema_versions($module));
     if ($version <= $max_version) {
       foreach (range($version, $max_version) as $update) {
-        $_SESSION['update_remaining'][$module] = array('module' => $module, 'version' => $update);
+        $_SESSION['update_remaining'][] = array('module' => $module, 'version' => $update);
       }
     }
   }
-  if (!$_SESSION['update_remaining']['system']) {
-    unset($_SESSION['update_remaining']['system']);
-  }
+
   // Keep track of total number of updates
   $_SESSION['update_total'] = count($_SESSION['update_remaining']);
 
