@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.291 2006/07/27 08:17:21 drumm Exp $
+// $Id: aggregator.module,v 1.292 2006/07/31 11:25:52 dries Exp $
 
 /**
  * @file
@@ -13,7 +13,7 @@ function aggregator_help($section) {
   switch ($section) {
     case 'admin/help#aggregator':
       $output = '<p>'. t('The news aggregator is a powerful on-site RSS syndicator/news reader that can gather fresh content from news sites and weblogs around the web.') .'</p>';
-      $output .= '<p>'. t('Users can view the latest news chronologically in the <a href="%aggregator">main news aggregator display</a> or by <a href="%aggregator-sources">source</a>. Administrators can add, edit and delete feeds and choose how often to check for newly updated news for each individual feed. Administrators can also tag individual feeds with categories, offering selective grouping of some feeds into separate displays. Listings of the latest news for individual sources or categorized sources can be enabled as blocks for display in the sidebar through the <a href="%admin-block">block administration page</a>. The news aggregator requires cron to check for the latest news from the sites to which you have subscribed. Drupal also provides a <a href="%aggregator-opml">machine-readable OPML file</a> of all of your subscribed feeds.', array('%aggregator' => url('aggregator'), '%aggregator-sources' => url('aggregator/sources'), '%admin-block' => url('admin/block'), '%aggregator-opml' => url('aggregator/opml'))) .'</p>';
+      $output .= '<p>'. t('Users can view the latest news chronologically in the <a href="%aggregator">main news aggregator display</a> or by <a href="%aggregator-sources">source</a>. Administrators can add, edit and delete feeds and choose how often to check for newly updated news for each individual feed. Administrators can also tag individual feeds with categories, offering selective grouping of some feeds into separate displays. Listings of the latest news for individual sources or categorized sources can be enabled as blocks for display in the sidebar through the <a href="%admin-block">block administration page</a>. The news aggregator requires cron to check for the latest news from the sites to which you have subscribed. Drupal also provides a <a href="%aggregator-opml">machine-readable OPML file</a> of all of your subscribed feeds.', array('%aggregator' => url('aggregator'), '%aggregator-sources' => url('aggregator/sources'), '%admin-block' => url('admin/build/block'), '%aggregator-opml' => url('aggregator/opml'))) .'</p>';
       $output .= t('<p>You can</p>
 <ul>
 <li>administer your list of news feeds <a href="%admin-aggregator">administer &gt;&gt;  aggregator</a>.</li>
@@ -24,16 +24,16 @@ function aggregator_help($section) {
 <li>set permissions to access new feeds for user roles such as anonymous users at <a href="%admin-access">administer &gt;&gt; access control</a>.</li>
 <li>view the <a href="%aggregator">aggregator page</a>.</li>
 </ul>
-', array('%admin-aggregator' => url('admin/aggregator'), '%admin-aggregator-add-feed' => url('admin/aggregator/add/feed'), '%admin-aggregator-add-category' => url('admin/aggregator/add/category'), '%admin-settings-aggregator' => url('admin/settings/aggregator'), '%admin-access' => url('admin/access'), '%aggregator' => url('aggregator')));
+', array('%admin-aggregator' => url('admin/content/aggregator'), '%admin-aggregator-add-feed' => url('admin/content/aggregator/add/feed'), '%admin-aggregator-add-category' => url('admin/content/aggregator/add/category'), '%admin-settings-aggregator' => url('admin/settings/aggregator'), '%admin-access' => url('admin/access'), '%aggregator' => url('aggregator')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%aggregator">Aggregator page</a>.', array('%aggregator' => 'http://drupal.org/handbook/modules/aggregator/')) .'</p>';
       return $output;
-    case 'admin/modules#description':
+    case 'admin/settings/modules#description':
       return t('Aggregates syndicated content (RSS, RDF, and Atom feeds).');
-    case 'admin/aggregator':
-      return t('<p>Thousands of sites (particularly news sites and weblogs) publish their latest headlines and/or stories in a machine-readable format so that other sites can easily link to them. This content is usually in the form of an <a href="http://blogs.law.harvard.edu/tech/rss">RSS</a> feed (which is an XML-based syndication standard). To display the feed or category in a block you must decide how many items to show by editing the feed or block and turning on the <a href="%block">feed\'s block</a>.</p>', array('%block' => url('admin/block')));
-    case 'admin/aggregator/add/feed':
+    case 'admin/content/aggregator':
+      return t('<p>Thousands of sites (particularly news sites and weblogs) publish their latest headlines and/or stories in a machine-readable format so that other sites can easily link to them. This content is usually in the form of an <a href="http://blogs.law.harvard.edu/tech/rss">RSS</a> feed (which is an XML-based syndication standard). To display the feed or category in a block you must decide how many items to show by editing the feed or block and turning on the <a href="%block">feed\'s block</a>.</p>', array('%block' => url('admin/build/block')));
+    case 'admin/content/aggregator/add/feed':
       return t('<p>Add a site that has an RSS/RDF/Atom feed. The URL is the full path to the feed file. For the feed to update automatically you must run "cron.php" on a regular basis. If you already have a feed with the URL you are planning to use, the system will not accept another feed with the same URL.</p>');
-    case 'admin/aggregator/add/category':
+    case 'admin/content/aggregator/add/category':
       return t('<p>Categories provide a way to group items from different news feeds together. Each news category has its own feed page and block. For example, you could tag various sport-related feeds as belonging to a category called <em>Sports</em>. News items can be added to a category automatically by setting a feed to automatically place its item into that category, or by using the categorize items link in any listing of news items.</p>');
   }
 }
@@ -47,38 +47,40 @@ function aggregator_menu($may_cache) {
   $view = user_access('access news feeds');
 
   if ($may_cache) {
-    $items[] = array('path' => 'admin/aggregator',
-      'title' => t('aggregator'),
+    $items[] = array('path' => 'admin/content/aggregator',
+      'title' => t('RSS aggregator'),
+      'description' => t('Configure which content your site aggregates from other sites, how often it polls them, and how they\'re categorized.'),
       'callback' => 'aggregator_admin_overview',
       'access' => $edit);
-    $items[] = array('path' => 'admin/aggregator/add/feed',
+    $items[] = array('path' => 'admin/content/aggregator/add/feed',
       'title' => t('add feed'),
       'callback' => 'aggregator_form_feed',
       'access' => $edit,
       'type' => MENU_LOCAL_TASK);
-    $items[] = array('path' => 'admin/aggregator/add/category',
+    $items[] = array('path' => 'admin/content/aggregator/add/category',
       'title' => t('add category'),
       'callback' => 'aggregator_form_category',
       'access' => $edit,
       'type' => MENU_LOCAL_TASK);
-    $items[] = array('path' => 'admin/aggregator/remove',
+    $items[] = array('path' => 'admin/content/aggregator/remove',
       'title' => t('remove items'),
       'callback' => 'aggregator_admin_remove_feed',
       'access' => $edit,
       'type' => MENU_CALLBACK);
-    $items[] = array('path' => 'admin/aggregator/update',
+    $items[] = array('path' => 'admin/content/aggregator/update',
       'title' => t('update items'),
       'callback' => 'aggregator_admin_refresh_feed',
       'access' => $edit,
       'type' => MENU_CALLBACK);
-    $items[] = array('path' => 'admin/aggregator/list',
+    $items[] = array('path' => 'admin/content/aggregator/list',
       'title' => t('list'),
       'type' => MENU_DEFAULT_LOCAL_TASK,
       'weight' => -10);
-    $items[] = array('path' => 'admin/settings/aggregator',
-      'title' => t('RSS aggregator'),
+    $items[] = array('path' => 'admin/content/aggregator/settings',
+      'title' => t('settings'),
       'callback' => 'aggregator_admin_settings',
-      'type' => MENU_NORMAL_ITEM,
+      'type' => MENU_LOCAL_TASK,
+      'weight' => 10,
       'access' => $edit);
 
     $items[] = array('path' => 'aggregator',
@@ -168,7 +170,7 @@ function aggregator_menu($may_cache) {
       if (arg(3) == 'feed') {
         $feed = aggregator_get_feed(arg(4));
         if ($feed) {
-          $items[] = array('path' => 'admin/aggregator/edit/feed/'. $feed['fid'],
+          $items[] = array('path' => 'admin/content/aggregator/edit/feed/'. $feed['fid'],
             'title' => t('edit feed'),
             'callback' => 'aggregator_form_feed',
             'callback arguments' => array($feed),
@@ -179,7 +181,7 @@ function aggregator_menu($may_cache) {
       else {
         $category = aggregator_get_category(arg(4));
         if ($category) {
-          $items[] = array('path' => 'admin/aggregator/edit/category/'. $category['cid'],
+          $items[] = array('path' => 'admin/content/aggregator/edit/category/'. $category['cid'],
             'title' => t('edit category'),
             'callback' => 'aggregator_form_category',
             'callback arguments' => array($category),
@@ -367,7 +369,7 @@ function aggregator_form_category_submit($form_id, $form_values) {
     if (isset($form_values['title'])) {
       drupal_set_message(t('The category %category has been updated.', array('%category' => theme('placeholder', $form_values['title']))));
       if (arg(0) == 'admin') {
-        return 'admin/aggregator/';
+        return 'admin/content/aggregator/';
       }
       else {
         return 'aggregator/categories/'. $form_values['cid'];
@@ -377,7 +379,7 @@ function aggregator_form_category_submit($form_id, $form_values) {
       watchdog('aggregator', t('Category %category deleted.', array('%category' => theme('placeholder', $title))));
       drupal_set_message(t('The category %category has been deleted.', array('%category' => theme('placeholder', $title))));
       if (arg(0) == 'admin') {
-        return 'admin/aggregator/';
+        return 'admin/content/aggregator/';
       }
       else {
         return 'aggregator/categories/';
@@ -385,7 +387,7 @@ function aggregator_form_category_submit($form_id, $form_values) {
     }
   }
   else {
-    watchdog('aggregator', t('Category %category added.', array('%category' => theme('placeholder', $form_values['title']))), WATCHDOG_NOTICE, l(t('view'), 'admin/aggregator'));
+    watchdog('aggregator', t('Category %category added.', array('%category' => theme('placeholder', $form_values['title']))), WATCHDOG_NOTICE, l(t('view'), 'admin/content/aggregator'));
     drupal_set_message(t('The category %category has been added.', array('%category' => theme('placeholder', $form_values['title']))));
   }
 }
@@ -500,7 +502,7 @@ function aggregator_form_feed_submit($form_id, $form_values) {
     if (isset($form_values['title'])) {
       drupal_set_message(t('The feed %feed has been updated.', array('%feed' => theme('placeholder', $form_values['title']))));
       if (arg(0) == 'admin') {
-        return 'admin/aggregator/';
+        return 'admin/content/aggregator/';
       }
       else {
         return 'aggregator/sources/'. $form_values['fid'];
@@ -510,7 +512,7 @@ function aggregator_form_feed_submit($form_id, $form_values) {
       watchdog('aggregator', t('Feed %feed deleted.', array('%feed' => theme('placeholder', $title))));
       drupal_set_message(t('The feed %feed has been deleted.', array('%feed' => theme('placeholder', $title))));
       if (arg(0) == 'admin') {
-        return 'admin/aggregator/';
+        return 'admin/content/aggregator/';
       }
       else {
         return 'aggregator/sources/';
@@ -518,7 +520,7 @@ function aggregator_form_feed_submit($form_id, $form_values) {
     }
   }
   else {
-    watchdog('aggregator', t('Feed %feed added.', array('%feed' => theme('placeholder', $form_values['title']))), WATCHDOG_NOTICE, l(t('view'), 'admin/aggregator'));
+    watchdog('aggregator', t('Feed %feed added.', array('%feed' => theme('placeholder', $form_values['title']))), WATCHDOG_NOTICE, l(t('view'), 'admin/content/aggregator'));
     drupal_set_message(t('The feed %feed has been added.', array('%feed' => theme('placeholder', $form_values['title']))));
   }
 }
@@ -974,7 +976,7 @@ function aggregator_view() {
   $header = array(t('Title'), t('Items'), t('Last update'), t('Next update'), array('data' => t('Operations'), 'colspan' => '3'));
   $rows = array();
   while ($feed = db_fetch_object($result)) {
-    $rows[] = array(l($feed->title, "aggregator/sources/$feed->fid"), format_plural($feed->items, '1 item', '%count items'), ($feed->checked ? t('%time ago', array('%time' => format_interval(time() - $feed->checked))) : t('never')), ($feed->checked ? t('%time left', array('%time' => format_interval($feed->checked + $feed->refresh - time()))) : t('never')), l(t('edit'), "admin/aggregator/edit/feed/$feed->fid"), l(t('remove items'), "admin/aggregator/remove/$feed->fid"), l(t('update items'), "admin/aggregator/update/$feed->fid"));
+    $rows[] = array(l($feed->title, "aggregator/sources/$feed->fid"), format_plural($feed->items, '1 item', '%count items'), ($feed->checked ? t('%time ago', array('%time' => format_interval(time() - $feed->checked))) : t('never')), ($feed->checked ? t('%time left', array('%time' => format_interval($feed->checked + $feed->refresh - time()))) : t('never')), l(t('edit'), "admin/content/aggregator/edit/feed/$feed->fid"), l(t('remove items'), "admin/content/aggregator/remove/$feed->fid"), l(t('update items'), "admin/content/aggregator/update/$feed->fid"));
   }
   $output .= theme('table', $header, $rows);
 
@@ -985,7 +987,7 @@ function aggregator_view() {
   $header = array(t('Title'), t('Items'), t('Operations'));
   $rows = array();
   while ($category = db_fetch_object($result)) {
-    $rows[] = array(l($category->title, "aggregator/categories/$category->cid"), format_plural($category->items, '1 item', '%count items'), l(t('edit'), "admin/aggregator/edit/category/$category->cid"));
+    $rows[] = array(l($category->title, "aggregator/categories/$category->cid"), format_plural($category->items, '1 item', '%count items'), l(t('edit'), "admin/content/aggregator/edit/category/$category->cid"));
   }
   $output .= theme('table', $header, $rows);
 
@@ -997,7 +999,7 @@ function aggregator_view() {
  */
 function aggregator_admin_remove_feed($feed) {
   aggregator_remove(aggregator_get_feed($feed));
-  drupal_goto('admin/aggregator');
+  drupal_goto('admin/content/aggregator');
 }
 
 /**
@@ -1005,7 +1007,7 @@ function aggregator_admin_remove_feed($feed) {
  */
 function aggregator_admin_refresh_feed($feed) {
   aggregator_refresh(aggregator_get_feed($feed));
-  drupal_goto('admin/aggregator');
+  drupal_goto('admin/content/aggregator');
 }
 
 /**
@@ -1290,7 +1292,7 @@ function theme_aggregator_feed($feed) {
   }
 
   if (user_access('administer news feeds')) {
-    $updated = l($updated, 'admin/aggregator');
+    $updated = l($updated, 'admin/content/aggregator');
   }
 
   $output .= '<div class="feed-updated"><em>'. t('Updated:') . "</em> $updated</div>";

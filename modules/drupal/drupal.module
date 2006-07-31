@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal.module,v 1.123 2006/07/10 19:27:52 dries Exp $
+// $Id: drupal.module,v 1.124 2006/07/31 11:25:53 dries Exp $
 
 /**
  * @file
@@ -28,7 +28,7 @@ function drupal_help($section) {
   <li>view your <a href="%file-xmlrpc">XML-RPC page</a>.</li>
   <li>administer Drupal <a href="%admin-settings-drupal">administer &gt;&gt; settings &gt;&gt; drupal</a>.</li>
 </ul>
-', array('%file-cron' => 'cron.php', '%file-xmlrpc' => 'xmlrpc.php', '%admin-settings-drupal' => url('admin/settings/drupal')));
+', array('%file-cron' => 'cron.php', '%file-xmlrpc' => 'xmlrpc.php', '%admin-settings-drupal' => url('admin/settings/distributed-authentication')));
       $output .= '<p>'. t('If you maintain a directory of sites, you can list them on a page using the <code>drupal_client_page()</code> function. Sample instructions:
 <ul>
   <li>Enable the page module. Select create content &gt;&gt; page.</li>
@@ -44,10 +44,10 @@ print drupal_client_page();
 
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%drupal">Drupal page</a>.', array('%drupal' => 'http://drupal.org/handbook/modules/drupal/')) .'</p>';
       return $output;
-    case 'admin/modules#description':
+    case 'admin/settings/modules#description':
       return t('Lets you register your site with a central server and improve ranking of Drupal projects by posting information on your installed modules and themes; also enables users to log in using a Drupal ID.');
-    case 'admin/settings/drupal':
-      return t('<p>Using this your site can "call home" to another Drupal server. By calling home to drupal.org and sending a list of your installed modules and themes, you help rank projects on drupal.org and so assist all Drupal administrators to find the best components for meeting their needs. If you want to register with a different server, you can change the Drupal XML-RPC server setting -- but the server has to be able to handle Drupal XML. Some XML-RPC servers may present directories of all registered sites. To get all your site information listed, go to the <a href="%site-settings">site information settings page</a> and set the site name, the e-mail address, the slogan, and the mission statement.</p>', array('%site-settings' => url('admin/settings/site-informationl')));
+    case 'admin/settings/distributed-authentication':
+      return t('<p>Using this your site can "call home" to another Drupal server. By calling home to drupal.org and sending a list of your installed modules and themes, you help rank projects on drupal.org and so assist all Drupal administrators to find the best components for meeting their needs. If you want to register with a different server, you can change the Drupal XML-RPC server setting -- but the server has to be able to handle Drupal XML. Some XML-RPC servers may present directories of all registered sites. To get all your site information listed, go to the <a href="%site-settings">site information settings page</a> and set the site name, the e-mail address, the slogan, and the mission statement.</p>', array('%site-settings' => url('admin/settings/site-information')));
     case 'user/help#drupal':
       return variable_get('drupal_authentication_service', 0) ? t("<p><a href=\"%Drupal\">Drupal</a> is the name of the software that powers %this-site. There are Drupal web sites all over the world, and many of them share their registration databases so that users may freely log in to any Drupal site using a single <strong>Drupal ID</strong>.</p>
 <p>So please feel free to log in to your account here at %this-site with a username from another Drupal site. The format of a Drupal ID is similar to an e-mail address: <strong>username</strong>@<em>server</em>. An example of a valid Drupal ID is <strong>mwlily</strong>@<em>drupal.org</em>.</p>", array('%Drupal' => 'http://drupal.org', '%this-site' => '<em>'. variable_get('site_name', 'this web site') .'</em>')) : '';
@@ -57,7 +57,7 @@ print drupal_client_page();
 function drupal_sites_registry_settings() {
   // Check if all required fields are present
   if ((variable_get('site_name', 'drupal') == 'drupal') || (variable_get('site_name', 'drupal') == '')) {
-    form_set_error('drupal_directory', t('You must set the name of your site on the <a href="%url">administer &raquo; settings</a> page.', array('%url' => url('admin/settings/site-information'))));
+    form_set_error('drupal_directory', t('You must set the name of your site on the <a href="%url">administer &raquo; settings &raquo; site information</a> page.', array('%url' => url('admin/settings/site-information'))));
   }
   else if (variable_get('site_mail', ini_get('sendmail_from')) == '') {
     form_set_error('drupal_directory', t('You must set an e-mail address for your site on the <a href="%url">site information settings page</a>.', array('%url' => url('admin/settings/site-information'))));
@@ -349,10 +349,12 @@ function drupal_menu($may_cache) {
   if ($may_cache) {
     $items[] = array('path' => 'admin/settings/sites-registry',
       'title' => t('sites registry'),
+      'description' => t('Register with another Drupal site (drupal.org by default) for statistics sharing, or set up your server to be a central server for registrations.'),
       'callback' => 'drupal_sites_registry_settings',
       'access' => user_access('administer site configuration'));
     $items[] = array('path' => 'admin/settings/distributed-authentication',
       'title' => t('distributed authentication'),
+      'description' => t('Allow your site to accept logins from other Drupal sites such as drupal.org.'),
       'callback' => 'drupal_distributed_authentication_settings',
       'access' => user_access('administer site configuration'));;
 

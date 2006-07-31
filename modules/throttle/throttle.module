@@ -1,5 +1,5 @@
 <?php
-// $Id: throttle.module,v 1.61 2006/07/10 19:27:52 dries Exp $
+// $Id: throttle.module,v 1.62 2006/07/31 11:25:55 dries Exp $
 
 /**
  * @file
@@ -12,6 +12,7 @@ function throttle_menu($may_cache) {
   if ($may_cache) {
     $items[] = array(
       'path' => 'admin/settings/throttle',
+      'description' => t('Control how your site cuts out content during heavy load.'),
       'title' => t('throttle'),
       'callback' => 'throttle_admin_settings',
       'access' => user_access('administer site configuration'),
@@ -128,10 +129,10 @@ function throttle_help($section) {
 <li>enable throttle for blocks at <a href="%admin-block">administer &gt;&gt; block</a>.</li>
 <li>administer throttle at <a href="%admin-settings-throttle">administer &gt;&gt; settings &gt;&gt; throttle</a>.</li>
 </ul>
-', array('%admin-modules' => url('admin/modules'), '%admin-block' => url('admin/block'), '%admin-settings-throttle' => url('admin/settings/throttle')));
+', array('%admin-modules' => url('admin/settings/modules'), '%admin-block' => url('admin/build/block'), '%admin-settings-throttle' => url('admin/settings/throttle')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%throttle">Throttle page</a>.', array('%throttle' => 'http://drupal.org/handbook/modules/throttle/')) .'</p>';
       return $output;
-    case 'admin/modules#description':
+    case 'admin/settings/modules#description':
       return t('Handles the auto-throttling mechanism, to control site congestion.');
     case 'admin/settings/throttle':
       return t('If your site gets linked to by a popular website, or otherwise comes under a "Denial of Service" (DoS) attack, your webserver might become overwhelmed. This module provides a congestion control throttling mechanism for automatically detecting a surge in incoming traffic. This mechanism is utilized by other Drupal modules to automatically optimize their performance by temporarily disabling CPU-intensive functionality.');

@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.159 2006/07/10 19:27:52 dries Exp $
+// $Id: profile.module,v 1.160 2006/07/31 11:25:54 dries Exp $
 
 /**
  * @file
@@ -37,12 +37,12 @@ function profile_help($section) {
 <li>view user <a href="%profile">profiles</a>.</li>
 <li>administer profile settings: <a href="%admin-settings-profile">administer &gt;&gt; settings &gt;&gt; profiles</a>.</li>
 </ul>
-', array('%profile' => url('profile'), '%admin-settings-profile' => url('admin/settings/profile')));
+', array('%profile' => url('profile'), '%admin-settings-profile' => url('admin/user/profile')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%profile">Profile page</a>.', array('%profile' => 'http://drupal.org/handbook/modules/profile/')) .'</p>';
       return $output;
-    case 'admin/modules#description':
+    case 'admin/settings/modules#description':
       return t('Supports configurable user profiles.');
-    case 'admin/settings/profile':
+    case 'admin/user/profile':
       return t('<p>Here you can define custom fields that users can fill in in their user profile (such as <em>country</em>, <em>real name</em>, <em>age</em>, ...).</p>');
   }
 }
@@ -59,23 +59,24 @@ function profile_menu($may_cache) {
       'callback' => 'profile_browse',
       'access' => user_access('access user profiles'),
       'type' => MENU_SUGGESTED_ITEM);
-    $items[] = array('path' => 'admin/settings/profile',
-      'title' => t('user profiles'),
+    $items[] = array('path' => 'admin/user/profile',
+      'title' => t('profiles'),
+      'description' => t('Create customizable fields for your users.'),
       'callback' => 'profile_admin_overview');
-    $items[] = array('path' => 'admin/settings/profile/add',
+    $items[] = array('path' => 'admin/user/profile/add',
       'title' => t('add field'),
       'callback' => 'profile_field_form',
       'type' => MENU_CALLBACK);
-    $items[] = array('path' => 'admin/settings/profile/autocomplete',
+    $items[] = array('path' => 'admin/user/profile/autocomplete',
       'title' => t('profile category autocomplete'),
       'callback' => 'profile_admin_settings_autocomplete',
       'access' => user_access('administer users'),
       'type' => MENU_CALLBACK);
-    $items[] = array('path' => 'admin/settings/profile/edit',
+    $items[] = array('path' => 'admin/user/profile/edit',
       'title' => t('edit field'),
       'callback' => 'profile_field_form',
       'type' => MENU_CALLBACK);
-    $items[] = array('path' => 'admin/settings/profile/delete',
+    $items[] = array('path' => 'admin/user/profile/delete',
       'title' => t('delete field'),
       'callback' => 'profile_field_delete',
       'type' => MENU_CALLBACK);
@@ -110,7 +111,7 @@ function profile_block($op = 'list', $delta = 0, $edit = array()) {
       '#title' => t('Profile fields to display'),
       '#default_value' => variable_get('profile_block_author_fields', NULL),
       '#options' => $fields,
-      '#description' => t('Select which profile fields you wish to display in the block. Only fields designated as public in the <a href="%profile-admin">profile field configuration</a> are available.', array('%profile-admin' => url('admin/settings/profile'))),
+      '#description' => t('Select which profile fields you wish to display in the block. Only fields designated as public in the <a href="%profile-admin">profile field configuration</a> are available.', array('%profile-admin' => url('admin/user/profile'))),
     );
     return $form;
   }
@@ -221,7 +222,7 @@ function profile_field_form($arg = NULL) {
   $form['fields']['category'] = array('#type' => 'textfield',
     '#title' => t('Category'),
     '#default_value' => $edit['category'],
-    '#autocomplete_path' => 'admin/settings/profile/autocomplete',
+    '#autocomplete_path' => 'admin/user/profile/autocomplete',
     '#description' => t('The category the new field should be part of. Categories are used to group fields logically. An example category is "Personal information".'),
     '#required' => TRUE,
   );
@@ -337,7 +338,7 @@ function profile_field_form_submit($form_id, $form_values) {
     db_query("INSERT INTO {profile_fields} (title, name, explanation, category, type, weight, required, register, visibility, autocomplete, options, page) VALUES ('%s', '%s', '%s', '%s', '%s', %d, %d, %d, %d, %d, '%s', '%s')", $form_values['title'], $form_values['name'], $form_values['explanation'], $form_values['category'], $form_values['type'], $form_values['weight'], $form_values['required'], $form_values['register'], $form_values['visibility'], $form_values['autocomplete'], $form_values['options'], $form_values['page']);
 
     drupal_set_message(t('The field has been created.'));
-    watchdog('profile', t('Profile field %field added under category %category.', array('%field' => theme('placeholder', $form_values['title']), '%category' => theme('placeholder', $form_values['category']))), WATCHDOG_NOTICE, l(t('view'), 'admin/settings/profile'));
+    watchdog('profile', t('Profile field %field added under category %category.', array('%field' => theme('placeholder', $form_values['title']), '%category' => theme('placeholder', $form_values['category']))), WATCHDOG_NOTICE, l(t('view'), 'admin/user/profile'));
   }
   else {
     db_query("UPDATE {profile_fields} SET title = '%s', name = '%s', explanation = '%s', category = '%s', weight = %d, required = %d, register = %d, visibility = %d, autocomplete = %d, options = '%s', page = '%s' WHERE fid = %d", $form_values['title'], $form_values['name'], $form_values['explanation'], $form_values['category'], $form_values['weight'], $form_values['required'], $form_values['register'], $form_values['visibility'], $form_values['autocomplete'], $form_values['options'], $form_values['page'], $form_values['fid']);
@@ -346,7 +347,7 @@ function profile_field_form_submit($form_id, $form_values) {
   }
   cache_clear_all();
 
-  return 'admin/settings/profile';
+  return 'admin/user/profile';
 }
 
 /**
@@ -361,7 +362,7 @@ function profile_field_delete($fid) {
   $form['fid'] = array('#type' => 'value', '#value' => $fid);
   $form['title'] = array('#type' => 'value', '#value' => $field->title);
 
-  return confirm_form('profile_field_delete', $form, t('Are you sure you want to delete the field %field?', array('%field' => theme('placeholder', $field->title))), 'admin/settings/profile', t('This action cannot be undone. If users have entered values into this field in their profile, these entries will also be deleted. If you want to keep the user-entered data, instead of deleting the field you may wish to <a href="%edit-field">edit this field</a> and change it to a %hidden-field so that it may only be accessed by administrators.', array('%edit-field' => url('admin/settings/profile/edit/' . $fid), '%hidden-field' => theme('placeholder', t('hidden profile field')))), t('Delete'), t('Cancel'));
+  return confirm_form('profile_field_delete', $form, t('Are you sure you want to delete the field %field?', array('%field' => theme('placeholder', $field->title))), 'admin/user/profile', t('This action cannot be undone. If users have entered values into this field in their profile, these entries will also be deleted. If you want to keep the user-entered data, instead of deleting the field you may wish to <a href="%edit-field">edit this field</a> and change it to a %hidden-field so that it may only be accessed by administrators.', array('%edit-field' => url('admin/user/profile/edit/' . $fid), '%hidden-field' => theme('placeholder', t('hidden profile field')))), t('Delete'), t('Cancel'));
 }
 
 /**
@@ -374,9 +375,9 @@ function profile_field_delete_submit($form_id, $form_values) {
   cache_clear_all();
 
   drupal_set_message(t('The field %field has been deleted.', array('%field' => theme('placeholder', $form_values['title']))));
-  watchdog('profile', t('Profile field %field deleted.', array('%field' => theme('placeholder', $form_values['title']))), WATCHDOG_NOTICE, l(t('view'), 'admin/settings/profile'));
+  watchdog('profile', t('Profile field %field deleted.', array('%field' => theme('placeholder', $form_values['title']))), WATCHDOG_NOTICE, l(t('view'), 'admin/user/profile'));
 
-  return 'admin/settings/profile';
+  return 'admin/user/profile';
 }
 
 /**
@@ -387,7 +388,7 @@ function profile_admin_overview() {
   $result = db_query('SELECT * FROM {profile_fields} ORDER BY category, weight');
   $rows = array();
   while ($field = db_fetch_object($result)) {
-    $rows[] = array(check_plain($field->title), $field->name, _profile_field_types($field->type), $field->category, l(t('edit'), "admin/settings/profile/edit/$field->fid"), l(t('delete'), "admin/settings/profile/delete/$field->fid"));
+    $rows[] = array(check_plain($field->title), $field->name, _profile_field_types($field->type), $field->category, l(t('edit'), "admin/user/profile/edit/$field->fid"), l(t('delete'), "admin/user/profile/delete/$field->fid"));
   }
   if (count($rows) == 0) {
     $rows[] = array(array('data' => t('No fields defined.'), 'colspan' => '6'));
@@ -399,7 +400,7 @@ function profile_admin_overview() {
   $output .= '<h2>'. t('Add new field') .'</h2>';
   $output .= '<ul>';
   foreach (_profile_field_types() as $key => $value) {
-    $output .= '<li>'. l($value, "admin/settings/profile/add/$key") .'</li>';
+    $output .= '<li>'. l($value, "admin/user/profile/add/$key") .'</li>';
   }
   $output .= '</ul>';
 

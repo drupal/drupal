@@ -1,5 +1,5 @@
 <?php
-// $Id: help.module,v 1.51 2006/05/07 00:08:36 drumm Exp $
+// $Id: help.module,v 1.52 2006/07/31 11:25:53 dries Exp $
 
 /**
  * @file
@@ -111,7 +111,7 @@ function help_help($section) {
       $output .= '<p>'. t('You can not administer the help system.') .'</p>';
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%help">Help page</a>.', array('%help' => 'http://drupal.org/handbook/modules/help/')) .'</p>';
       return $output;
-    case 'admin/modules#description':
+    case 'admin/settings/modules#description':
       return t('Manages the display of online help.');
   }
 }

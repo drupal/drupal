@@ -1,5 +1,5 @@
 <?php
-// $Id: archive.module,v 1.89 2006/06/05 09:32:46 dries Exp $
+// $Id: archive.module,v 1.90 2006/07/31 11:25:52 dries Exp $
 
 /**
  * @file
@@ -19,10 +19,10 @@ function archive_help($section) {
 <li>view your <a href="%archive">archive by day</a>.</li>
 <li>enable the <em>browse archives</em> block at <a href="%admin-block">administer &gt;&gt; block</a>.</li>
 </ul>
-', array('%archive' => url('archive'), '%admin-block' => url('admin/block')));
+', array('%archive' => url('archive'), '%admin-block' => url('admin/build/block')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%archive">Archive page</a>.', array('%archive' => 'http://drupal.org/handbook/modules/archive/')) .'</p>';
       return $output;
-    case 'admin/modules#description':
+    case 'admin/settings/modules#description':
       return t('Displays a calendar for navigating older content.');
   }
 }

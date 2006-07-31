@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.332 2006/07/10 21:12:09 dries Exp $
+// $Id: system.module,v 1.333 2006/07/31 11:25:54 dries Exp $
 
 /**
  * @file
@@ -28,19 +28,19 @@ function system_help($section) {
 ', array('%file-cron' => 'cron.php', '%external-http-drupal-org-cron' => 'http://drupal.org/cron', '%admin-settings' => url('admin/settings/caching')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%system">System page</a>.', array('%system' => 'http://drupal.org/handbook/modules/system/')) .'</p>';
       return $output;
-    case 'admin/modules#description':
+    case 'admin/settings/modules#description':
       return t('Handles general site configuration for administrators.');
     case 'admin':
-      return t('<p>Welcome to the administration section. Below are the most recent system events.</p>');
-    case 'admin/themes':
+      return t('<p>Welcome to the administration section. Here you may control how your site functions.</p>');
+    case 'admin/build/themes':
       return t('<p>Select which themes are available to your users and specify the default theme. To configure site-wide display settings, click the "configure" task above. Alternately, to override these settings in a specific theme, click the "configure" link for the corresponding theme. Note that different themes may have different regions available for rendering content like blocks. If you want consistency in what your users see, you may wish to enable only one theme.</p>');
-    case 'admin/themes/settings':
+    case 'admin/build/themes/settings':
       return t('<p>These options control the default display settings for your entire site, across all themes. Unless they have been overridden by a specific theme, these settings will be used.</p>');
-    case 'admin/themes/settings/'. arg(3):
+    case 'admin/build/themes/settings/'. arg(3):
       $reference = explode('.', arg(3), 2);
       $theme = array_pop($reference);
-      return t('<p>These options control the display settings for the <code>%template</code> theme. When your site is displayed using this theme, these settings will be used. By clicking "Reset to defaults," you can choose to use the <a href="%global">global settings</a> for this theme.</p>', array('%template' => $theme, '%global' => url('admin/themes/settings')));
-    case 'admin/modules':
+      return t('<p>These options control the display settings for the <code>%template</code> theme. When your site is displayed using this theme, these settings will be used. By clicking "Reset to defaults," you can choose to use the <a href="%global">global settings</a> for this theme.</p>', array('%template' => $theme, '%global' => url('admin/build/themes/settings')));
+    case 'admin/settings/modules':
       return t('<p>Modules are plugins for Drupal that extend its core functionality. Here you can select which modules are enabled. Click on the name of the module in the navigation menu for their individual configuration pages. Once a module is enabled, new <a href="%permissions">permissions</a> might be made available. Modules can automatically be temporarily disabled to reduce server load when your site becomes extremely busy by enabling the throttle.module and checking throttle. The auto-throttle functionality must be enabled on the <a href="%throttle">throttle configuration page</a> after having enabled the throttle module.</p>
 <p>It is important that <a href="%update-php">update.php</a> is run every time a module is updated to a newer version.</p>', array('%permissions' => url('admin/access/permissions'), '%throttle' => url('admin/settings/throttle'), '%update-php' => $base_url .'/update.php'));
   }
@@ -101,87 +101,138 @@ function system_menu($may_cache) {
 
     $items[] = array('path' => 'admin', 'title' => t('administer'),
       'access' => user_access('access administration pages'),
-      'callback' => 'watchdog_overview',
+      'callback' => 'system_main_admin_page',
       'weight' => 9);
+    $items[] = array('path' => 'admin/compact', 'title' => t('compact mode'),
+      'access' => user_access('access administration pages'),
+      'callback' => 'system_admin_compact_page',
+      'type' => MENU_CALLBACK);
+
+    // menu items that are basically just menu blocks
+    $items[] = array(
+      'path' => 'admin/settings',
+      'title' => t('site configuration'),
+      'description' => t('Adjust basic site configuration options.'),
+      'position' => 'right',
+      'weight' => -5,
+      'callback' => 'system_settings_overview',
+      'access' => $access);
+
+    $items[] = array('path' => 'admin/build',
+      'title' => t('site building'),
+      'description' => t('Control how your site looks and feels.'),
+      'position' => 'right',
+      'weight' => -10,
+      'callback' => 'system_admin_menu_block_page',
+      'access' => $access);
+
+    $items[] = array(
+      'path' => 'admin/settings/admin',
+      'title' => t('administration page'),
+      'description' => t('Settings for how your administrative pages should look.'),
+      'position' => 'left',
+      'callback' => 'system_admin_page_settings',
+      'block callback' => 'system_admin_page_settings',
+      'access' => $access);
 
     // Themes:
-    $items[] = array('path' => 'admin/themes', 'title' => t('themes'),
+    $items[] = array(
+      'path' => 'admin/build/themes',
+      'title' => t('themes'),
+      'description' => t('Change which theme your site uses or allows users to set.'),
       'callback' => 'system_themes', 'access' => $access);
 
-    $items[] = array('path' => 'admin/themes/select', 'title' => t('list'),
-      'callback' => 'system_themes', 'access' => $access,
-      'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -1);
+    $items[] = array(
+      'path' => 'admin/build/themes/select',
+      'title' => t('list'),
+      'description' => t('Select the default theme.'),
+      'callback' => 'system_themes',
+      'access' => $access,
+      'type' => MENU_DEFAULT_LOCAL_TASK,
+      'weight' => -1);
 
-    $items[] = array('path' => 'admin/themes/settings', 'title' => t('configure'),
-      'callback' => 'system_theme_settings', 'access' => $access,
+    $items[] = array('path' => 'admin/build/themes/settings',
+      'title' => t('configure'),
+      'callback' => 'system_theme_settings',
+      'access' => $access,
       'type' => MENU_LOCAL_TASK);
 
     // Theme configuration subtabs
-    $items[] = array('path' => 'admin/themes/settings/global', 'title' => t('global settings'),
+    $items[] = array('path' => 'admin/build/themes/settings/global', 'title' => t('global settings'),
       'callback' => 'system_theme_settings', 'access' => $access,
       'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -1);
 
     foreach (list_themes() as $theme) {
       if ($theme->status) {
-        $items[] = array('path' => 'admin/themes/settings/'. $theme->name, 'title' => $theme->name,
+        $items[] = array('path' => 'admin/build/themes/settings/'. $theme->name, 'title' => $theme->name,
         'callback' => 'system_theme_settings', 'callback arguments' => array($theme->name), 'access' => $access,
         'type' => MENU_LOCAL_TASK);
       }
     }
 
     // Modules:
-    $items[] = array('path' => 'admin/modules', 'title' => t('modules'),
-      'callback' => 'system_modules', 'access' => $access);
+    $items[] = array('path' => 'admin/settings/modules',
+      'title' => t('modules'),
+      'description' => t('Enable or disable add-on modules for your site.'),
+      'weight' => -10,
+      'callback' => 'system_modules',
+      'access' => $access);
 
     // Settings:
     $items[] = array(
-      'path' => 'admin/settings',
-      'title' => t('settings'),
-      'callback' => 'system_settings_overview',
-      'access' => $access);
-    $items[] = array(
       'path' => 'admin/settings/site-information',
       'title' => t('site information'),
+      'description' => t('Change basic site information, such as the site name, slogan, e-mail address, mission, front page and more.'),
       'callback' => 'system_site_information_settings');
     $items[] = array(
       'path' => 'admin/settings/error-reporting',
       'title' => t('error reporting'),
+      'description' => t('Control how Drupal deals with errors including 403/404 erros as well as PHP error reporting.'),
       'callback' => 'system_error_reporting_settings');
     $items[] = array(
       'path' => 'admin/settings/page-caching',
       'title' => t('page caching'),
+      'description' => t('Enable or disable page caching for anonymous users.'),
       'callback' => 'system_page_caching_settings');
     $items[] = array(
       'path' => 'admin/settings/file-system',
       'title' => t('file system'),
+      'description' => t('Tell Drupal where to store uploaded files and how they are accessed.'),
       'callback' => 'system_file_system_settings');
     $items[] = array(
       'path' => 'admin/settings/image-toolkit',
       'title' => t('image toolkit'),
+      'description' => t('Choose which image toolkit to use if you have installed optional toolkits.'),
       'callback' => 'system_image_toolkit_settings');
     $items[] = array(
-      'path' => 'admin/settings/rss-feed',
+      'path' => 'admin/content/rss-feed',
       'title' => t('RSS feeds'),
+      'description' => t('Configure the number of items per feed and whether feeds should be titles/teasers/full-text.'),
       'callback' => 'system_rss_feeds_settings');
     $items[] = array(
       'path' => 'admin/settings/date-time',
       'title' => t('date and time'),
+      'description' => t('Settings for how Drupal displays date and time, as well as the system\'s default timezone.'),
       'callback' => 'system_date_time_settings');
     $items[] = array(
       'path' => 'admin/settings/site-status',
       'title' => t('site status'),
+      'description' => t('Take the site off-line for maintenance or bring it back online.'),
       'callback' => 'system_site_status_settings');
     $items[] = array(
       'path' => 'admin/settings/unicode',
       'title' => t('unicode'),
+      'description' => t('Unicode string handling settings.'),
       'callback' => 'system_unicode_settings');
     $items[] = array(
       'path' => 'admin/settings/cron-status',
       'title' => t('cron status'),
+      'description' => t('View whether or not cron is running on your site.'),
       'callback' => 'system_cron_status');
     $items[] = array(
       'path' => 'admin/settings/clean-urls',
       'title' => t('clean URLs'),
+      'description' => t('Enable or disable clean URLs for your site.'),
       'callback' => 'system_clean_url_settings');
   }
 
@@ -207,6 +258,121 @@ function system_user($type, $edit, &$user, $category = NULL) {
     }
 
     return $form;
+  }
+}
+
+/**
+ * Provide the administration overview page.
+ */
+function system_main_admin_page($arg = NULL) {
+  // If we received an argument, they probably meant some other page.
+  // Let's 404 them since the menu system cannot be told we do not
+  // accept arguments.
+  if ($arg !== NULL) {
+    return drupal_not_found();
+  }
+
+  $menu = menu_get_item(NULL, 'admin');
+  usort($menu['children'], '_menu_sort');
+  foreach ($menu['children'] as $mid) {
+    $block = menu_get_item($mid);
+    if ($block['block callback'] && function_exists($block['block callback'])) {
+      $arguments = isset($block['block arguments']) ? $block['block arguments'] : array();
+      $block['content'] .= call_user_func_array($block['block callback'], $arguments);
+    }
+    $block['content'] .= theme('admin_block_content', system_admin_menu_block($block));
+    $blocks[] = $block;
+  }
+
+  return theme('admin_page', $blocks);
+}
+
+/**
+ * Provide a single block on the administration overview page.
+ */
+function system_admin_menu_block($block) {
+  $content = array();
+  if (is_array($block['children'])) {
+    usort($block['children'], '_menu_sort');
+    foreach ($block['children'] as $mid) {
+      $item = menu_get_item($mid);
+      if ($item['type'] & MENU_VISIBLE_IN_TREE) {
+        $content[] = $item;
+      }
+    }
+  }
+  return $content;
+}
+
+/**
+ * Provide a single block from the administration menu as a page.
+ * This function is often a destination for these blocks.
+ * For example, 'admin/page' needs to have a destination to be valid
+ * in the Drupal menu system, but too much information there might be
+ * hidden, so we supply the contents of the block.
+ */
+function system_admin_menu_block_page() {
+  $menu = menu_get_item(NULL, $_GET['q']);
+  $content = system_admin_menu_block($menu);
+
+  $output = theme('admin_block_content', $content);
+  return $output;
+}
+
+function system_admin_compact_page($mode = 'off') {
+  global $user;
+  user_save($user, array('admin_compact_mode' => ($mode == 'on')));
+  drupal_goto('admin');
+}
+/**
+ * This function provides a form to control the settings of the
+ * administration page.
+ */
+function system_admin_page_settings() {
+  $themes = system_theme_data();
+  ksort($themes);
+  $options[0] = t('System default');
+  foreach ($themes as $theme) {
+    $options[$theme->name] = $theme->name;
+  }
+
+  $form['admin_theme'] = array(
+    '#type' => 'select',
+    '#options' => $options,
+    '#title' => t('Administration theme'),
+    '#description' => t('Choose which theme the administration pages should display in. If you choose "System default" the administration pages theme will display in the same theme the rest of the site uses.'),
+    '#default_value' => variable_get('admin_theme', 'bluemarine'),
+  );
+
+  // In order to give it our own submit, we have to give it the default submit
+  // too because the presence of a #submit will prevent the default #submit
+  // from being used. Also we want ours first.
+  $form['#submit']['system_admin_page_submit'] = array();
+  $form['#submit']['system_settings_form_submit'] = array();
+
+  return system_settings_form('system_admin_page_form', $form);
+}
+
+
+function system_admin_page_submit($form_id, $form_values) {
+  // If we're changing themes, make sure the theme has its blocks initialized.
+  if ($form_values['admin_theme'] != variable_get('admin_theme', 'bluemarine')) {
+    $result = db_query("SELECT status FROM {blocks} WHERE theme = '%s'", $form_values['admin_theme']);
+    if (!db_num_rows($result)) {
+      system_initialize_theme_blocks($form_values['admin_theme']);
+    }
+  }
+}
+
+/**
+ * Implementation of hook_init. This hook will set the theme to the
+ * administrative theme if the user is looking at a page in the
+ * admin/* tree.
+ */
+function system_init() {
+  if (arg(0) == 'admin') {
+    global $custom_theme;
+    $custom_theme = variable_get('admin_theme', 'bluemarine');
   }
 }
 
@@ -916,7 +1082,7 @@ function system_themes() {
       $status[] = $info->name;
     }
     if ($info->status && (function_exists($info->prefix . '_settings') || function_exists($info->prefix . '_features'))) {
-      $form[$info->name]['operations'] = array('#type' => 'markup', '#value' => l(t('configure'), 'admin/themes/settings/' . $info->name) );
+      $form[$info->name]['operations'] = array('#type' => 'markup', '#value' => l(t('configure'), 'admin/build/themes/settings/' . $info->name) );
     }
     else {
       // Dummy element for form_render. Cleaner than adding a check in the theme function.
@@ -980,7 +1146,7 @@ function system_themes_submit($form_id, $values) {
 
   menu_rebuild();
   drupal_set_message(t('The configuration options have been saved.'));
-  return 'admin/themes';
+  return 'admin/build/themes';
 }
 
 /**
@@ -999,7 +1165,7 @@ function system_modules() {
     drupal_get_filename('module', $file->name, $file->filename);
     drupal_load('module', $file->name);
 
-    $file->description = module_invoke($file->name, 'help', 'admin/modules#description');
+    $file->description = module_invoke($file->name, 'help', 'admin/settings/modules#description');
 
     $form['name'][$file->name] = array('#value' => $file->name);
     $form['description'][$file->name] = array('#value' => $file->description);
@@ -1115,7 +1281,7 @@ function system_modules_submit($form_id, $edit) {
   menu_rebuild();
 
   drupal_set_message(t('The configuration options have been saved.'));
-  return 'admin/modules';
+  return 'admin/settings/modules';
 }
 
 
@@ -1124,25 +1290,21 @@ function system_modules_submit($form_id, $edit) {
  */
 function system_settings_overview() {
 
-    // Check database setup if necessary
-    if (function_exists('db_check_setup') && empty($_POST)) {
-      db_check_setup();
-    }
+  // Check database setup if necessary
+  if (function_exists('db_check_setup') && empty($_POST)) {
+    db_check_setup();
+  }
 
-    $output = '<ul>';
-    $menu = menu_get_item(NULL, 'admin/settings');
-    usort($menu['children'], '_menu_sort');
-    foreach ($menu['children'] as $mid) {
-      $output .= ' <li>'. menu_item_link($mid) .'</li>';
-    }
-    $output .= '</ul>';
+  $menu = menu_get_item(NULL, 'admin/settings');
+  $content = system_admin_menu_block($menu);
 
-    // TODO: remove this:
-    foreach (module_implements('settings') as $module) {
-      drupal_set_message("$module settings inaccessible: module needs updating because the _settings hook has been deprecated.");
-    }
+  $output = theme('admin_block_content', $content);
+  // TODO: remove this:
+  foreach (module_implements('settings') as $module) {
+    drupal_set_message("$module settings inaccessible: module needs updating because the _settings hook has been deprecated.");
+  }
 
-    return $output;
+  return $output;
 }
 
 /**
@@ -1375,4 +1537,115 @@ function confirm_form($form_id, $form, $question, $path, $description = NULL, $y
   $form['actions']['submit'] = array('#type' => 'submit', '#value' => $yes ? $yes : t('Confirm'));
   $form['actions']['cancel'] = array('#value' => l($no ? $no : t('Cancel'), $path));
   return drupal_get_form($form_id, $form, 'confirm_form');
+}
+
+/**
+ * Determine if a user is in compact mode.
+ */
+function system_admin_compact_mode() {
+  global $user;
+  return (isset($user->admin_compact_mode)) ? $user->admin_compact_mode : variable_get('admin_compact_mode', FALSE);
+}
+
+/**
+ * This function formats an administrative page for viewing.
+ *
+ * @param $blocks
+ *   An array of blocks to display. Each array should include a
+ *   'title', a 'description', a formatted 'content' and a
+ *   'position' which will control which container it will be
+ *   in. This is usually 'left' or 'right'.
+ * @themeable
+ */
+function theme_admin_page($blocks) {
+  foreach ($blocks as $block) {
+    if ($block_output = theme('admin_block', $block)) {
+      if (!$block['position']) {
+        // perform automatic striping.
+        $block['position'] = $stripe++ % 2 ? 'left' : 'right';
+      }
+      $container[$block['position']] .= $block_output;
+    }
+  }
+
+  $output = '<div class="admin">';
+  $output .= '<div class="compact-link">';
+  if (system_admin_compact_mode()) {
+    $alt = t('Produce a less compact layout that includes descriptions.');
+    $output .= l(t('Show descriptions'), 'admin/compact/off', array('alt' => $alt, 'title' => $alt));
+  }
+  else {
+    $alt = t('Produce a more compact layout that doesn\'t include descriptions.');
+    $output .= l(t('Hide descriptions'), 'admin/compact/on', array('alt' => $alt, 'title' => $alt));
+  }
+  $output .= '</div>';
+
+  foreach ($container as $id => $data) {
+    $output .= '<div class="'. $id .'">';
+    $output .= $data;
+    $output .= '</div>';
+  }
+  $output .= '</div>';
+  return $output;
+}
+
+/**
+ * This function formats an administrative block for display.
+ *
+ * @param $block
+ *   An array containing information about the block. It should
+ *   include a 'title', a 'description' and a formatted 'content'.
+ * @themeable
+ */
+function theme_admin_block($block) {
+  // Don't display the block if it has no content to display.
+  if (!$block['content']) {
+    return '';
+  }
+
+  $output = <<< EOT
+  <div class="admin-panel collapsible">
+    <div class="head">
+      $block[title]
+    </div>
+    <div class="body">
+      <div class="description">
+        $block[description]
+      </div>
+      $block[content]
+    </div>
+  </div>
+EOT;
+  return $output;
+}
+
+/**
+ * This function formats the content of an administrative block.
+ *
+ * @param $block
+ *   An array containing information about the block. It should
+ *   include a 'title', a 'description' and a formatted 'content'.
+ * @themeable
+ */
+function theme_admin_block_content($content) {
+  if (!$content) {
+    return '';
+  }
+
+  if (system_admin_compact_mode()) {
+    $output = '<ul class="menu">';
+    foreach ($content as $item) {
+      $output .= '<li class="leaf">'. l($item['title'], $item['path'], array('alt' => $item['description'], 'title' => $item['description'])) .'</li>';
+    }
+    $output .= '</ul>';
+  }
+  else {
+    $output = '<dl class="admin-list">';
+    foreach ($content as $item) {
+      $output .= '<dt>'. l($item['title'], $item['path']) .'</dt>';
+      $output .= '<dd>'. $item['description'] .'</dd>';
+    }
+    $output .= '</dl>';
+  }
+  return $output;
 }

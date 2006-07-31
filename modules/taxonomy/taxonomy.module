@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.295 2006/07/14 01:01:15 drumm Exp $
+// $Id: taxonomy.module,v 1.296 2006/07/31 11:25:54 dries Exp $
 
 /**
  * @file
@@ -62,29 +62,30 @@ function taxonomy_menu($may_cache) {
   $items = array();
 
   if ($may_cache) {
-    $items[] = array('path' => 'admin/taxonomy',
+    $items[] = array('path' => 'admin/content/taxonomy',
       'title' => t('categories'),
+      'description' => t('Create vocabularies and terms to categorize your content.'),
       'callback' => 'taxonomy_overview_vocabularies',
       'access' => user_access('administer taxonomy'));
 
-    $items[] = array('path' => 'admin/taxonomy/list',
+    $items[] = array('path' => 'admin/content/taxonomy/list',
       'title' => t('list'),
       'type' => MENU_DEFAULT_LOCAL_TASK,
       'weight' => -10);
 
-    $items[] = array('path' => 'admin/taxonomy/add/vocabulary',
+    $items[] = array('path' => 'admin/content/taxonomy/add/vocabulary',
       'title' => t('add vocabulary'),
       'callback' => 'taxonomy_admin_vocabulary_edit',
       'access' => user_access('administer taxonomy'),
       'type' => MENU_LOCAL_TASK);
 
-    $items[] = array('path' => 'admin/taxonomy/edit/vocabulary',
+    $items[] = array('path' => 'admin/content/taxonomy/edit/vocabulary',
       'title' => t('edit vocabulary'),
       'callback' => 'taxonomy_admin_vocabulary_edit',
       'access' => user_access('administer taxonomy'),
       'type' => MENU_CALLBACK);
 
-    $items[] = array('path' => 'admin/taxonomy/edit/term',
+    $items[] = array('path' => 'admin/content/taxonomy/edit/term',
       'title' => t('edit term'),
       'callback' => 'taxonomy_admin_term_edit',
       'access' => user_access('administer taxonomy'),
@@ -104,19 +105,19 @@ function taxonomy_menu($may_cache) {
   }
   else {
     if (is_numeric(arg(2))) {
-      $items[] = array('path' => 'admin/taxonomy/' . arg(2),
+      $items[] = array('path' => 'admin/content/taxonomy/' . arg(2),
         'title' => t('list terms'),
         'callback' => 'taxonomy_overview_terms',
         'callback arguments' => array(arg(2)),
         'access' => user_access('administer taxonomy'),
         'type' => MENU_CALLBACK);
 
-      $items[] = array('path' => 'admin/taxonomy/' . arg(2) . '/list',
+      $items[] = array('path' => 'admin/content/taxonomy/' . arg(2) . '/list',
         'title' => t('list'),
         'type' => MENU_DEFAULT_LOCAL_TASK,
         'weight' => -10);
 
-      $items[] = array('path' => 'admin/taxonomy/' . arg(2) . '/add/term',
+      $items[] = array('path' => 'admin/content/taxonomy/' . arg(2) . '/add/term',
         'title' => t('add term'),
         'callback' => 'taxonomy_form_term',
         'callback arguments' => array(array('vid' => arg(2))),
@@ -142,9 +143,9 @@ function taxonomy_overview_vocabularies() {
     }
     $rows[] = array('name' => check_plain($vocabulary->name),
       'type' => implode(', ', $types),
-      'edit' => l(t('edit vocabulary'), "admin/taxonomy/edit/vocabulary/$vocabulary->vid"),
-      'list' => l(t('list terms'), "admin/taxonomy/$vocabulary->vid"),
-      'add' => l(t('add terms'), "admin/taxonomy/$vocabulary->vid/add/term")
+      'edit' => l(t('edit vocabulary'), "admin/content/taxonomy/edit/vocabulary/$vocabulary->vid"),
+      'list' => l(t('list terms'), "admin/content/taxonomy/$vocabulary->vid"),
+      'add' => l(t('add terms'), "admin/content/taxonomy/$vocabulary->vid/add/term")
     );
   }
   if (empty($rows)) {
@@ -175,7 +176,7 @@ function taxonomy_overview_terms($vid) {
   foreach ($tree as $term) {
     $total_entries++; // we're counting all-totals, not displayed
     if (($start_from && ($start_from * $page_increment) >= $total_entries) || ($displayed_count == $page_increment)) { continue; }
-    $rows[] = array(_taxonomy_depth($term->depth) . ' ' . l($term->name, "taxonomy/term/$term->tid"), l(t('edit'), "admin/taxonomy/edit/term/$term->tid", array(), $destination));
+    $rows[] = array(_taxonomy_depth($term->depth) . ' ' . l($term->name, "taxonomy/term/$term->tid"), l(t('edit'), "admin/content/taxonomy/edit/term/$term->tid", array(), $destination));
     $displayed_count++; // we're counting tids displayed
   }
 
@@ -285,7 +286,7 @@ function taxonomy_form_vocabulary_submit($form_id, $form_values) {
     drupal_set_message(t('Updated vocabulary %name.', array('%name' => theme('placeholder', $form_values['name']))));
     break;
   }
-  return 'admin/taxonomy';
+  return 'admin/content/taxonomy';
 }
 
 function taxonomy_save_vocabulary(&$edit) {
@@ -344,7 +345,7 @@ function _taxonomy_confirm_del_vocabulary($vid) {
   return confirm_form('taxonomy_vocabulary_confirm_delete', $form,
                   t('Are you sure you want to delete the vocabulary %title?',
                   array('%title' => theme('placeholder', $vocabulary->name))),
-                  'admin/taxonomy', t('Deleting a vocabulary will delete all the terms in it. This action cannot be undone.'),
+                  'admin/content/taxonomy', t('Deleting a vocabulary will delete all the terms in it. This action cannot be undone.'),
                   t('Delete'),
                   t('Cancel'));
 }
@@ -352,7 +353,7 @@ function _taxonomy_confirm_del_vocabulary($vid) {
 function taxonomy_vocabulary_confirm_delete_submit($form_id, $form_values) {
   $status = taxonomy_del_vocabulary($form_values['vid']);
   drupal_set_message(t('Deleted vocabulary %name.', array('%name' => theme('placeholder', $form_values['name']))));
-  return 'admin/taxonomy';
+  return 'admin/content/taxonomy';
 }
 
 function taxonomy_form_term($edit = array()) {
@@ -424,7 +425,7 @@ function taxonomy_form_term_submit($form_id, $form_values) {
       drupal_set_message(t('The term %term has been updated.', array('%term' => theme('placeholder', $form_values['name']))));
       break;
   }
-  return 'admin/taxonomy';
+  return 'admin/content/taxonomy';
 }
 
 function taxonomy_save_term(&$edit) {
@@ -530,7 +531,7 @@ function _taxonomy_confirm_del_term($tid) {
   return confirm_form('taxonomy_term_confirm_delete', $form,
                   t('Are you sure you want to delete the term %title?',
                   array('%title' => theme('placeholder', $term->name))),
-                  'admin/taxonomy',
+                  'admin/content/taxonomy',
                   t('Deleting a term will delete all its children if there are any. This action cannot be undone.'),
                   t('Delete'),
                   t('Cancel'));
@@ -539,7 +540,7 @@ function _taxonomy_confirm_del_term($tid) {
 function taxonomy_term_confirm_delete_submit($form_id, $form_values) {
   taxonomy_del_term($form_values['tid']);
   drupal_set_message(t('Deleted term %name.', array('%name' => theme('placeholder', $form_values['name']))));
-  return 'admin/taxonomy';
+  return 'admin/content/taxonomy';
 }
 
 /**
@@ -1343,14 +1344,14 @@ function taxonomy_help($section) {
 <li>restrict content access by category for specific users roles using the <a href="%external-http-drupal-org-project-taxonomy_access">taxonomy access module</a>.</li>
 <li>build a custom view of your categories using the <a href="%external-http-drupal-org-project-taxonomy_browser">taxonomy browser</a>.</li>
 </ul>
-', array('%admin-taxonomy-add-vocabulary' => url('admin/taxonomy/add/vocabulary'), '%admin-taxonomy' => url('admin/taxonomy'), '%external-http-drupal-org-project-taxonomy_access' => 'http://drupal.org/project/taxonomy_access', '%external-http-drupal-org-project-taxonomy_browser' => 'http://drupal.org/project/taxonomy_browser'));
+', array('%admin-taxonomy-add-vocabulary' => url('admin/content/taxonomy/add/vocabulary'), '%admin-taxonomy' => url('admin/content/taxonomy'), '%external-http-drupal-org-project-taxonomy_access' => 'http://drupal.org/project/taxonomy_access', '%external-http-drupal-org-project-taxonomy_browser' => 'http://drupal.org/project/taxonomy_browser'));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%taxonomy">Taxonomy page</a>.', array('%taxonomy' => 'http://drupal.org/handbook/modules/taxonomy/')) .'</p>';
       return $output;
-    case 'admin/modules#description':
+    case 'admin/settings/modules#description':
       return t('Enables the categorization of content.');
-    case 'admin/taxonomy':
+    case 'admin/content/taxonomy':
       return t('<p>The taxonomy module allows you to classify content into categories and subcategories; it allows multiple lists of categories for classification (controlled vocabularies) and offers the possibility of creating thesauri (controlled vocabularies that indicate the relationship of terms), taxonomies (controlled vocabularies where relationships are indicated hierarchically), and free vocabularies where terms, or tags, are defined during content creation. To view and manage the terms of each vocabulary, click on the associated <em>list terms</em> link. To delete a vocabulary and all its terms, choose "edit vocabulary".</p>');
-    case 'admin/taxonomy/add/vocabulary':
+    case 'admin/content/taxonomy/add/vocabulary':
       return t("<p>When you create a controlled vocabulary you are creating a set of terms to use for describing content (known as descriptors in indexing lingo). Drupal allows you to describe each piece of content (blog, story, etc.) using one or many of these terms. For simple implementations, you might create a set of categories without subcategories, similar to Slashdot.org's or Kuro5hin.org's sections. For more complex implementations, you might create a hierarchical list of categories.</p>");
   }
 }

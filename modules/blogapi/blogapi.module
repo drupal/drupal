@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.88 2006/07/29 17:56:41 dries Exp $
+// $Id: blogapi.module,v 1.89 2006/07/31 11:25:53 dries Exp $
 
 /**
  * @file
@@ -23,7 +23,7 @@ function blogapi_help($section) {
 ', array('%file-xmlrpc' => 'xmlrpc.php', '%admin-settings-blogapi' => url('admin/settings/blogapi')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%blogapi">BlogApi page</a>.', array('%blogapi' => 'http://drupal.org/handbook/modules/blogapi/')) .'</p>';
       return $output;
-    case 'admin/modules#description':
+    case 'admin/settings/modules#description':
       return t('Allows users to post content using applications that support XML-RPC blog APIs.');
   }
 }
@@ -587,6 +587,7 @@ function blogapi_menu($may_cache) {
     $items[] = array(
       'path' => 'admin/settings/blogapi',
       'title' => t('blog APIs'),
+      'description' => t('Configure which content types and engines external blog clients can use.'),
       'callback' => 'blogapi_admin_settings',
       'access' => user_access('administer site configuration'),
       'type' => MENU_NORMAL_ITEM

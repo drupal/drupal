@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.232 2006/07/27 08:07:04 drumm Exp $
+// $Id: statistics.module,v 1.233 2006/07/31 11:25:54 dries Exp $
 
 /**
  * @file
@@ -38,12 +38,12 @@ function statistics_help($section) {
 <li>view recent hits <a href="%admin-logs-hits">administer &gt;&gt; logs &gt;&gt; recent hits</a>.</li>
 <li>enable \'popular content\' block in block administration <a href="%admin-block">administer &gt;&gt; blocks </a> but only after you have enabled \'Count content views\' in settings.</li>
 </ul>
-', array('%admin-settings-statistics' => url('admin/settings/statistics'), '%admin-logs' => url('admin/logs'), '%admin-logs-hits' => url('admin/logs/hits'), '%admin-block' => url('admin/block')));
+', array('%admin-settings-statistics' => url('admin/logs/settings'), '%admin-logs' => url('admin/logs'), '%admin-logs-hits' => url('admin/logs/hits'), '%admin-block' => url('admin/build/block')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%statistics">Statistics page</a>.', array('%statistics' => 'http://drupal.org/handbook/modules/statistics/')) .'</p>';
       return $output;
-    case 'admin/modules#description':
+    case 'admin/settings/modules#description':
       return t('Logs access statistics for your site.');
-    case 'admin/settings/statistics':
+    case 'admin/logs/settings':
       return t('<p>Settings for the statistical information that Drupal will keep about the site. See <a href="%statistics">site statistics</a> for the actual information.</p>', array('%statistics' => url('admin/logs/hits')));
     case 'admin/logs/hits':
       return t('<p>This page shows you the most recent hits.</p>');
@@ -117,35 +117,41 @@ function statistics_menu($may_cache) {
     $items[] = array(
       'path' => 'admin/logs/hits',
       'title' => t('recent hits'),
+      'description' => t('View pages that have recently been hit.'),
       'callback' => 'statistics_recent_hits',
       'access' => $access,
       'weight' => 3);
     $items[] = array(
       'path' => 'admin/logs/pages',
       'title' => t('top pages'),
+      'description' => t('View pages that have been hit frequently.'),
       'callback' => 'statistics_top_pages',
       'access' => $access,
       'weight' => 1);
     $items[] = array(
       'path' => 'admin/logs/visitors',
       'title' => t('top visitors'),
+      'description' => t('View visitors that hit many pages.'),
       'callback' => 'statistics_top_visitors',
       'access' => $access,
       'weight' => 2);
     $items[] = array(
       'path' => 'admin/logs/referrers',
       'title' => t('referrers'),
+      'description' => t('View top referrers.'),
       'callback' => 'statistics_top_referrers',
       'access' => $access);
     $items[] = array(
       'path' => 'admin/logs/access',
       'title' => t('details'),
+      'description' => t('View access log.'),
       'callback' => 'statistics_access_log',
       'access' => $access,
       'type' => MENU_CALLBACK);
     $items[] = array(
-      'path' => 'admin/settings/access-logging',
-      'title' => t('access logging'),
+      'path' => 'admin/logs/settings',
+      'title' => t('access log settings'),
+      'description' => t('Control details about what and how your site logs.'),
       'callback' => 'statistics_access_logging_settings',
       'access' => user_access('administer site configuration'),
       'type' => MENU_NORMAL_ITEM

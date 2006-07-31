@@ -1,5 +1,5 @@
 <?php
-// $Id: page.module,v 1.155 2006/05/07 00:08:36 drumm Exp $
+// $Id: page.module,v 1.156 2006/07/31 11:25:54 dries Exp $
 
 /**
  * @file
@@ -24,10 +24,10 @@ function page_help($section) {
 <li>create a page at <a href="%node-add-page">create content &gt;&gt; page</a>.</li>
 <li>administer page content type at <a href="%admin-settings-content-types-page">administer &gt;&gt; settings &gt;&gt; content types &gt;&gt; configure page</a>.</li>
 </ul>
-', array('%admin-help-node' => url('admin/help/node'), '%admin-help-page' => url('admin/help/page'), '%admin-help-story' => url('admin/help/story'), '%node-add-page' => url('node/add/page'), '%admin-settings-content-types-page' => url('admin/settings/content-types/page')));
+', array('%admin-help-node' => url('admin/help/node'), '%admin-help-page' => url('admin/help/page'), '%admin-help-story' => url('admin/help/story'), '%node-add-page' => url('node/add/page'), '%admin-settings-content-types-page' => url('admin/content/types/page')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%page">Page page</a>.', array('%page' => 'http://drupal.org/handbook/modules/page/')) .'</p>';
       return $output;
-    case 'admin/modules#description':
+    case 'admin/settings/modules#description':
       return t('Enables the creation of pages that can be added to the navigation system.');
     case 'node/add#page':
       return t('If you want to add a static page, like a contact page or an about page, use a page.');

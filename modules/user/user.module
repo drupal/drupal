@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.642 2006/07/29 17:56:41 dries Exp $
+// $Id: user.module,v 1.643 2006/07/31 11:25:55 dries Exp $
 
 /**
  * @file
@@ -688,50 +688,59 @@ function user_menu($may_cache) {
       'callback' => 'user_help_page', 'type' => MENU_CALLBACK);
 
     // Admin user pages
-    $items[] = array('path' => 'admin/user', 'title' => t('users'),
+    $items[] = array('path' => 'admin/user',
+      'title' => t('user management'),
+      'description' => t('Manage your site\'s users, groups and access to site features.'),
+      'position' => 'left',
+      'callback' => 'system_admin_menu_block_page',
+      'access' => user_access('access configuration pages'),
+    );
+    $items[] = array('path' => 'admin/user/user', 'title' => t('users'),
+      'description' => t('List, add, and edit users.'),
       'callback' => 'user_admin', 'access' => $admin_access);
-    $items[] = array('path' => 'admin/user/list', 'title' => t('list'),
+    $items[] = array('path' => 'admin/user/user/list', 'title' => t('list'),
       'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
-    $items[] = array('path' => 'admin/user/create', 'title' => t('add user'),
+    $items[] = array('path' => 'admin/user/user/create', 'title' => t('add user'),
       'callback' => 'user_admin', 'access' => $admin_access,
       'type' => MENU_LOCAL_TASK);
-    $items[] = array('path' => 'admin/settings/user', 'title' => t('users'),
+    $items[] = array('path' => 'admin/user/settings', 'title' => t('user settings'),
+      'description' => t('Configure default behavior of users, including registration requirements, e-mails, and user pictures.'),
       'callback' => 'user_admin_settings');
 
     // Admin access pages
-    $items[] = array('path' => 'admin/access', 'title' => t('access control'),
+    $items[] = array('path' => 'admin/user/access', 'title' => t('access control'),
+      'description' => t('Determine access to features by selecting permissions for roles.'),
       'callback' => 'user_admin_perm', 'access' => $access_access);
-    $items[] = array('path' => 'admin/access/permissions', 'title' => t('permissions'),
-      'callback' => 'user_admin_perm', 'access' => $access_access,
-      'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
-    $items[] = array('path' => 'admin/access/roles', 'title' => t('roles'),
+    $items[] = array('path' => 'admin/user/roles', 'title' => t('roles'),
+      'description' => t('List, edit, or add user roles.'),
       'callback' => 'user_admin_role', 'access' => $access_access,
-      'type' => MENU_LOCAL_TASK);
-    $items[] = array('path' => 'admin/access/roles/edit', 'title' => t('edit role'),
+      'type' => MENU_NORMAL_ITEM);
+    $items[] = array('path' => 'admin/user/roles/edit', 'title' => t('edit role'),
       'callback' => 'user_admin_role', 'access' => $access_access,
       'type' => MENU_CALLBACK);
-    $items[] = array('path' => 'admin/access/rules', 'title' => t('access rules'),
-      'callback' => 'user_admin_access', 'access' => $access_access,
-      'type' => MENU_LOCAL_TASK, 'weight' => 10);
-    $items[] = array('path' => 'admin/access/rules/list', 'title' => t('list'),
+    $items[] = array('path' => 'admin/user/rules', 'title' => t('access rules'),
+      'description' => t('List and create rules to disallow usernames, e-mail addresses, and IP addresses.'),
+      'callback' => 'user_admin_access', 'access' => $access_access);
+    $items[] = array('path' => 'admin/user/rules/list', 'title' => t('list'),
       'access' => $access_access, 'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
-    $items[] = array('path' => 'admin/access/rules/add', 'title' => t('add rule'),
+    $items[] = array('path' => 'admin/user/rules/add', 'title' => t('add rule'),
       'callback' => 'user_admin_access_add', 'access' => $access_access,
       'type' => MENU_LOCAL_TASK);
-    $items[] = array('path' => 'admin/access/rules/check', 'title' => t('check rules'),
+    $items[] = array('path' => 'admin/user/rules/check', 'title' => t('check rules'),
       'callback' => 'user_admin_access_check', 'access' => $access_access,
       'type' => MENU_LOCAL_TASK);
-    $items[] = array('path' => 'admin/access/rules/edit', 'title' => t('edit rule'),
+    $items[] = array('path' => 'admin/user/rules/edit', 'title' => t('edit rule'),
       'callback' => 'user_admin_access_edit', 'access' => $access_access,
       'type' => MENU_CALLBACK);
-    $items[] = array('path' => 'admin/access/rules/delete', 'title' => t('delete rule'),
+    $items[] = array('path' => 'admin/user/rules/delete', 'title' => t('delete rule'),
       'callback' => 'user_admin_access_delete', 'access' => $access_access,
       'type' => MENU_CALLBACK);
 
     if (module_exist('search')) {
-      $items[] = array('path' => 'admin/user/search', 'title' => t('search'),
+      $items[] = array('path' => 'admin/user/search', 'title' => t('search users'),
+        'description' => t('Search users by name.'),
         'callback' => 'user_admin', 'access' => $admin_access,
-        'type' => MENU_LOCAL_TASK);
+        'type' => MENU_NORMAL_ITEM);
     }
 
     // Your personal page
@@ -1141,7 +1150,7 @@ function user_register() {
      '#type' => 'checkbox',
      '#title' => t('Notify user of new account')
     );
-    // Redirect back to page which initiated the create request; usually admin/user/create
+    // Redirect back to page which initiated the create request; usually admin/user/user/create
     $form['destination'] = array('#type' => 'hidden', '#value' => $_GET['q']);
   }
   $extra = _user_forms($null, $null, $null, 'register');
@@ -1352,7 +1361,7 @@ function user_edit($category = 'account') {
   $account = user_load(array('uid' => arg(1)));
   if ($account === FALSE) {
     drupal_set_message(t('The account does not exist or has already been deleted.'));
-    drupal_goto('admin/user');
+    drupal_goto('admin/user/user');
   }
   $edit = $_POST['op'] ? $_POST['edit'] : (array)$account;
 
@@ -1365,7 +1374,7 @@ function user_edit($category = 'account') {
       watchdog('user', t('Deleted user: %name %email.', array('%name' => theme('placeholder', $account->name), '%email' => theme('placeholder', '<'. $account->mail .'>'))), WATCHDOG_NOTICE);
       drupal_set_message(t('The account has been deleted.'));
       module_invoke_all('user', 'delete', $edit, $account);
-      drupal_goto('admin/user');
+      drupal_goto('admin/user/user');
     }
     else {
       return confirm_form('user_confirm_delete', array(), t('Are you sure you want to delete the account %name?', array('%name' => theme('placeholder', $account->name))), 'user/'. $account->uid, t('All submissions made by this user will be attributed to the anonymous account. This action cannot be undone.'), t('Delete'), t('Cancel'));
@@ -1556,7 +1565,7 @@ function user_admin_access_add($mask = NULL, $type = NULL) {
       $aid = db_next_id('{access}_aid');
       db_query("INSERT INTO {access} (aid, mask, type, status) VALUES ('%s', '%s', '%s', %d)", $aid, $edit['mask'], $edit['type'], $edit['status']);
       drupal_set_message(t('The access rule has been added.'));
-      drupal_goto('admin/access/rules');
+      drupal_goto('admin/user/rules');
     }
   }
   else {
@@ -1581,7 +1590,7 @@ function user_admin_access_delete($aid = 0) {
   $form['aid'] = array('#type' => 'hidden', '#value' => $aid);
   $output = confirm_form('user_admin_access_delete_confirm', $form,
                   t('Are you sure you want to delete the %type rule for %rule?', array('%type' => $access_types[$edit->type], '%rule' => theme('placeholder', $edit->mask))),
-                  'admin/access/rules',
+                  'admin/user/rules',
                   t('This action cannot be undone.'),
                   t('Delete'),
                   t('Cancel'));
@@ -1591,7 +1600,7 @@ function user_admin_access_delete($aid = 0) {
 function user_admin_access_delete_confirm_submit($form_id, $edit) {
   db_query('DELETE FROM {access} WHERE aid = %d', $edit['aid']);
   drupal_set_message(t('The access rule has been deleted.'));
-  return 'admin/access/rules';
+  return 'admin/user/rules';
 }
 
 /**
@@ -1605,7 +1614,7 @@ function user_admin_access_edit($aid = 0) {
     else {
       db_query("UPDATE {access} SET mask = '%s', type = '%s', status = '%s' WHERE aid = %d", $edit['mask'], $edit['type'], $edit['status'], $aid);
       drupal_set_message(t('The access rule has been saved.'));
-      drupal_goto('admin/access/rules');
+      drupal_goto('admin/user/rules');
     }
   }
   else {
@@ -1652,7 +1661,7 @@ function user_admin_access() {
   $access_types = array('user' => t('username'), 'mail' => t('e-mail'), 'host' => t('host'));
   $rows = array();
   while ($rule = db_fetch_object($result)) {
-    $rows[] = array($rule->status ? t('allow') : t('deny'), $access_types[$rule->type], $rule->mask, l(t('edit'), 'admin/access/rules/edit/'. $rule->aid), l(t('delete'), 'admin/access/rules/delete/'. $rule->aid));
+    $rows[] = array($rule->status ? t('allow') : t('deny'), $access_types[$rule->type], $rule->mask, l(t('edit'), 'admin/user/rules/edit/'. $rule->aid), l(t('delete'), 'admin/user/rules/delete/'. $rule->aid));
   }
   if (count($rows) == 0) {
     $rows[] = array(array('data' => '<em>'. t('There are currently no access rules.') .'</em>', 'colspan' => 5));
@@ -1701,7 +1710,7 @@ function user_admin_perm($str_rids = NULL) {
 
   if($rids) {
     $breadcrumbs = drupal_get_breadcrumb();
-    $breadcrumbs[] = l(t('all roles'), 'admin/access');
+    $breadcrumbs[] = l(t('all roles'), 'admin/user/access');
     drupal_set_breadcrumb($breadcrumbs);
     $result = db_query('SELECT r.rid, p.perm FROM {role} r LEFT JOIN {permission} p ON r.rid = p.rid WHERE r.rid IN (%s) ORDER BY name', implode(', ', $rids));
   }
@@ -1747,7 +1756,7 @@ function user_admin_perm($str_rids = NULL) {
   // Have to build checkboxes here after checkbox arrays are built
   foreach ($role_names as $rid => $name) {
     $form['checkboxes'][$rid] = array('#type' => 'checkboxes', '#options' => $options, '#default_value' => $status[$rid]);
-    $form['role_names'][$rid] = array('#type' => 'markup', '#value' => l($name, 'admin/access/'. $rid), '#tree' => TRUE);
+    $form['role_names'][$rid] = array('#type' => 'markup', '#value' => l($name, 'admin/user/access/'. $rid), '#tree' => TRUE);
   }
   $form['submit'] = array('#type' => 'submit', '#value' => t('Save permissions'));
 
@@ -1824,7 +1833,7 @@ function user_admin_role() {
     if ($edit['name']) {
       db_query("UPDATE {role} SET name = '%s' WHERE rid = %d", $edit['name'], $id);
       drupal_set_message(t('The changes have been saved.'));
-      drupal_goto('admin/access/roles');
+      drupal_goto('admin/user/roles');
     }
     else {
       form_set_error('name', t('You must specify a valid role name.'));
@@ -1837,13 +1846,13 @@ function user_admin_role() {
     db_query('DELETE FROM {users_roles} WHERE rid = %d', $id);
 
     drupal_set_message(t('The role has been deleted.'));
-    drupal_goto('admin/access/roles');
+    drupal_goto('admin/user/roles');
   }
   else if ($op == t('Add role')) {
     if ($edit['name']) {
       db_query("INSERT INTO {role} (name) VALUES ('%s')", $edit['name']);
       drupal_set_message(t('The role has been added.'));
-      drupal_goto('admin/access/roles');
+      drupal_goto('admin/user/roles');
     }
     else {
       form_set_error('name', t('You must specify a valid role name.'));
@@ -1866,7 +1875,7 @@ function theme_user_admin_new_role($form) {
   $header = array(t('Name'), t('Operations'));
   foreach (user_roles() as $rid => $name) {
     if (!in_array($rid, array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID))) {
-      $rows[] = array($name, l(t('edit'), 'admin/access/roles/edit/'. $rid));
+      $rows[] = array($name, l(t('edit'), 'admin/user/roles/edit/'. $rid));
     }
     else {
       $rows[] = array($name, '<span class="disabled">'. t('locked') .'</span>');
@@ -1948,7 +1957,7 @@ function user_admin() {
   switch ($op) {
     case 'search':
     case t('Search'):
-      $output = search_form(url('admin/user/search'), $_POST['edit']['keys'], 'user') . search_data($_POST['edit']['keys'], 'user');
+      $output = search_form(url('admin/user/user/search'), $_POST['edit']['keys'], 'user') . search_data($_POST['edit']['keys'], 'user');
       break;
     case t('Create new account'):
     case 'create':
@@ -1978,27 +1987,27 @@ function user_help($section) {
 <li>read user profile help at <a href="%admin-help-profile">administer &gt;&gt; help &gt;&gt; profile</a>.</li>
 <li>read about distributed authentication in the system module help at <a href="%admin-help-system">administer &gt;&gt; help &gt;&gt; system</a>.</li>
 </ul>
-', array('%user' => url('user'), '%admin-user' => url('admin/user'), '%admin-themes' => url('admin/themes'), '%admin-help-profile' => url('admin/help/profile'), '%admin-help-system' => url('admin/help/system')));
+', array('%user' => url('user'), '%admin-user' => url('admin/user/user'), '%admin-themes' => url('admin/themes'), '%admin-help-profile' => url('admin/help/profile'), '%admin-help-system' => url('admin/help/system')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%user">User page</a>.', array('%user' => 'http://drupal.org/handbook/modules/user/')) .'</p>';
       return $output;
-    case 'admin/modules#description':
+    case 'admin/settings/modules#description':
       return t('Manages the user registration and login system.');
-    case 'admin/user':
+    case 'admin/user/user':
       return t('<p>Drupal allows users to register, login, log out, maintain user profiles, etc. Users of the site may not use their own names to post content until they have signed up for a user account.</p>');
-    case 'admin/user/create':
-    case 'admin/user/account/create':
+    case 'admin/user/user/create':
+    case 'admin/user/user/account/create':
       return t('<p>This web page allows the administrators to register a new users by hand. Note that you cannot have a user where either the e-mail address or the username match another user in the system.</p>');
-    case strstr($section, 'admin/access/rules'):
+    case strstr($section, 'admin/user/rules'):
       return t('<p>Set up username and e-mail address access rules for new <em>and</em> existing accounts (currently logged in accounts will not be logged out). If a username or e-mail address for an account matches any deny rule, but not an allow rule, then the account will not be allowed to be created or to log in. A host rule is effective for every page view, not just registrations.</p>');
-    case 'admin/access':
-      return t('<p>Permissions let you control what users can do on your site. Each user role (defined on the <a href="%role">user roles page</a>) has its own set of permissions. For example, you could give users classified as "Administrators" permission to "administer nodes" but deny this power to ordinary, "authenticated" users. You can use permissions to reveal new features to privileged users (those with subscriptions, for example). Permissions also allow trusted users to share the administrative burden of running a busy site.</p>', array('%role' => url('admin/access/roles')));
-    case 'admin/access/roles':
+    case 'admin/user/access':
+      return t('<p>Permissions let you control what users can do on your site. Each user role (defined on the <a href="%role">user roles page</a>) has its own set of permissions. For example, you could give users classified as "Administrators" permission to "administer nodes" but deny this power to ordinary, "authenticated" users. You can use permissions to reveal new features to privileged users (those with subscriptions, for example). Permissions also allow trusted users to share the administrative burden of running a busy site.</p>', array('%role' => url('admin/user/roles')));
+    case 'admin/user/roles':
       return t('<p>Roles allow you to fine tune the security and administration of Drupal. A role defines a group of users that have certain privileges as defined in <a href="%permissions">user permissions</a>. Examples of roles include: anonymous user, authenticated user, moderator, administrator and so on. In this area you will define the <em>role names</em> of the various roles. To delete a role choose "edit".</p><p>By default, Drupal comes with two user roles:</p>
       <ul>
       <li>Anonymous user: this role is used for users that don\'t have a user account or that are not authenticated.</li>
       <li>Authenticated user: this role is automatically granted to all logged in users.</li>
-      </ul>', array('%permissions' => url('admin/access/permissions')));
-    case 'admin/user/search':
+      </ul>', array('%permissions' => url('admin/user/access/permissions')));
+    case 'admin/user/user/search':
       return t('<p>Enter a simple pattern ("*" may be used as a wildcard match) to search for a username. For example, one may search for "br" and Drupal might return "brian", "brad", and "brenda".</p>');
     case 'user/help#user':
       $site = variable_get('site_name', 'this website');

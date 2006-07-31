@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.128 2006/07/29 17:56:41 dries Exp $
+// $Id: filter.module,v 1.129 2006/07/31 11:25:53 dries Exp $
 
 /**
  * @file
@@ -27,29 +27,29 @@ function filter_help($section) {
 <li>administer input format permissions and settings  at <a href="%admin-filters">administer &gt;&gt; input formats</a>.</li>
 <li>configure the filters for each input format at <a href="%admin-filters">administer &gt;&gt; input formats &gt;&gt; configure</a>.</li>
 </ul>
-', array('%admin-filters' => url('admin/filters')));
+', array('%admin-filters' => url('admin/settings/filters')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%filter">Filter page</a>.', array('%filter' => 'http://drupal.org/handbook/modules/filter/')) .'</p>';
       return $output;
-    case 'admin/modules#description':
+    case 'admin/settings/modules#description':
       return t('Handles the filtering of content in preparation for display.');
 
-    case 'admin/filters':
+    case 'admin/settings/filters':
       return t('
 <p><em>Input formats</em> define a way of processing user-supplied text in Drupal. Every input format has its own settings of which <em>filters</em> to apply. Possible filters include stripping out malicious HTML and making URLs clickable.</p>
 <p>Users can choose between the available input formats when submitting content.</p>
 <p>Below you can configure which input formats are available to which roles, as well as choose a default input format (used for imported content, for example).</p>
 <p>Note that (1) the default format is always available to all roles, and (2) all filter formats can always be used by roles with the "administer filters" permission even if they are not explicitly listed in the Roles column of this table.</p>');
 
-    case 'admin/filters/'. arg(2):
+    case 'admin/settings/filters/'. arg(2):
       return t('
 <p>Every <em>filter</em> performs one particular change on the user input, for example stripping out malicious HTML or making URLs clickable. Choose which filters you want to apply to text in this input format.</p>
-<p>If you notice some filters are causing conflicts in the output, you can <a href="%rearrange">rearrange them</a>.</p>', array('%rearrange' => url('admin/filters/'. arg(2) .'/order')));
+<p>If you notice some filters are causing conflicts in the output, you can <a href="%rearrange">rearrange them</a>.</p>', array('%rearrange' => url('admin/settings/filters/'. arg(2) .'/order')));
 
-    case 'admin/filters/'. arg(2) .'/configure':
+    case 'admin/settings/filters/'. arg(2) .'/configure':
       return t('
-<p>If you cannot find the settings for a certain filter, make sure you\'ve enabled it on the <a href="%url">view tab</a> first.</p>', array('%url' => url('admin/filters/'. arg(2))));
+<p>If you cannot find the settings for a certain filter, make sure you\'ve enabled it on the <a href="%url">view tab</a> first.</p>', array('%url' => url('admin/settings/filters/'. arg(2))));
 
-    case 'admin/filters/'. arg(2) .'/order':
+    case 'admin/settings/filters/'. arg(2) .'/order':
       return t('
 <p>Because of the flexible filtering system, you might encounter a situation where one filter prevents another from doing its job. For example: a word in an URL gets converted into a glossary term, before the URL can be converted in a clickable link. When this happens, you will need to rearrange the order in which filters get executed.</p>
 <p>Filters are executed from top-to-bottom. You can use the weight column to rearrange them: heavier filters \'sink\' to the bottom.</p>');
@@ -63,25 +63,26 @@ function filter_menu($may_cache) {
   $items = array();
 
   if ($may_cache) {
-    $items[] = array('path' => 'admin/filters',
+    $items[] = array('path' => 'admin/settings/filters',
       'title' => t('input formats'),
+      'description' => t('Configure how content input by users is filtering, including allowed HTML tags, PHP code tags. Also allows enabling of module-provided filters.'),
       'callback' => 'filter_admin_overview',
       'access' => user_access('administer filters'),
     );
-    $items[] = array('path' => 'admin/filters/list',
+    $items[] = array('path' => 'admin/settings/filters/list',
       'title' => t('list'),
       'callback' => 'filter_admin_overview',
       'type' => MENU_DEFAULT_LOCAL_TASK,
       'access' => user_access('administer filters'),
     );
-    $items[] = array('path' => 'admin/filters/add',
+    $items[] = array('path' => 'admin/settings/filters/add',
       'title' => t('add input format'),
       'callback' => 'filter_admin_format_form',
       'type' => MENU_LOCAL_TASK,
       'weight' => 1,
       'access' => user_access('administer filters'),
     );
-    $items[] = array('path' => 'admin/filters/delete',
+    $items[] = array('path' => 'admin/settings/filters/delete',
       'title' => t('delete input format'),
       'callback' => 'filter_admin_delete',
       'type' => MENU_CALLBACK,
@@ -99,14 +100,14 @@ function filter_menu($may_cache) {
       $formats = filter_formats();
 
       if (isset($formats[arg(2)])) {
-        $items[] = array('path' => 'admin/filters/'. arg(2),
+        $items[] = array('path' => 'admin/settings/filters/'. arg(2),
           'title' => t("'%format' input format", array('%format' => $formats[arg(2)]->name)),
           'callback' => 'filter_admin_format_form',
           'callback arguments' => array('format' => $formats[arg(2)]),
           'type' => MENU_CALLBACK,
           'access' => user_access('administer filters'),
         );
-        $items[] = array('path' => 'admin/filters/'. arg(2) .'/list',
+        $items[] = array('path' => 'admin/settings/filters/'. arg(2) .'/list',
           'title' => t('view'),
           'callback' => 'filter_admin_format_form',
           'callback arguments' => array('format' => $formats[arg(2)]),
@@ -114,14 +115,14 @@ function filter_menu($may_cache) {
           'weight' => 0,
           'access' => user_access('administer filters'),
         );
-        $items[] = array('path' => 'admin/filters/'. arg(2) .'/configure',
+        $items[] = array('path' => 'admin/settings/filters/'. arg(2) .'/configure',
           'title' => t('configure'),
           'callback' => 'filter_admin_configure',
           'type' => MENU_LOCAL_TASK,
           'weight' => 1,
           'access' => user_access('administer filters'),
         );
-        $items[] = array('path' => 'admin/filters/'. arg(2) .'/order',
+        $items[] = array('path' => 'admin/settings/filters/'. arg(2) .'/order',
           'title' => t('rearrange'),
           'callback' => 'filter_admin_order',
           'callback arguments' => array('format' => $formats[arg(2)]),
@@ -310,8 +311,8 @@ function filter_admin_overview() {
     $options[$id] = '';
     $form[$format->name]['id'] = array('#value' => $id);
     $form[$format->name]['roles'] = array('#value' => $default ? t('All roles may use default format') : ($roles ? implode(', ',$roles) : t('No roles may use this format')));
-    $form[$format->name]['configure'] = array('#value' => l(t('configure'), 'admin/filters/'. $id));
-    $form[$format->name]['delete'] = array('#value' => $default ? '' : l(t('delete'), 'admin/filters/delete/'. $id));
+    $form[$format->name]['configure'] = array('#value' => l(t('configure'), 'admin/settings/filters/'. $id));
+    $form[$format->name]['delete'] = array('#value' => $default ? '' : l(t('delete'), 'admin/settings/filters/delete/'. $id));
   }
   $form['default'] = array('#type' => 'radios', '#options' => $options, '#default_value' => variable_get('filter_default_format', 1));
   $form['submit'] = array('#type' => 'submit', '#value' => t('Set default format'));
@@ -358,11 +359,11 @@ function filter_admin_delete() {
       $form['format'] = array('#type' => 'hidden', '#value' => $format->format);
       $form['name'] = array('#type' => 'hidden', '#value' => $format->name);
 
-      return confirm_form('filter_admin_delete', $form, t('Are you sure you want to delete the input format %format?', array('%format' => theme('placeholder', $format->name))), 'admin/filters', t('If you have any content left in this input format, it will be switched to the default input format. This action cannot be undone.'), t('Delete'), t('Cancel'));
+      return confirm_form('filter_admin_delete', $form, t('Are you sure you want to delete the input format %format?', array('%format' => theme('placeholder', $format->name))), 'admin/settings/filters', t('If you have any content left in this input format, it will be switched to the default input format. This action cannot be undone.'), t('Delete'), t('Cancel'));
     }
     else {
       drupal_set_message(t('The default format cannot be deleted.'));
-      drupal_goto('admin/filters');
+      drupal_goto('admin/settings/filters');
     }
   }
   else {
@@ -386,7 +387,7 @@ function filter_admin_delete_submit($form_id, $form_values) {
   cache_clear_all('filter:'. $form_values['format'], TRUE);
   drupal_set_message(t('Deleted input format %format.', array('%format' => theme('placeholder', $form_values['name']))));
 
-  return 'admin/filters';
+  return 'admin/settings/filters';
 }
 
 /**
@@ -526,10 +527,10 @@ function filter_admin_format_form_submit($form_id, $form_values) {
 
   // If a new filter was added, return to the main list of filters. Otherwise, stay on edit filter page to show new changes.
   if ($new) {
-    return 'admin/filters/';
+    return 'admin/settings/filters/';
   }
   else {
-    return 'admin/filters/'. $format;
+    return 'admin/settings/filters/'. $format;
   }
 }
 

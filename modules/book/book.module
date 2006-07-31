@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.375 2006/07/19 07:15:34 drumm Exp $
+// $Id: book.module,v 1.376 2006/07/31 11:25:53 dries Exp $
 
 /**
  * @file
@@ -88,18 +88,17 @@ function book_menu($may_cache) {
       'title' => t('book page'),
       'access' => user_access('create book pages'));
     $items[] = array(
-      'path' => 'admin/node/book',
+      'path' => 'admin/content/book',
       'title' => t('books'),
+      'description' => t('Manage site\'s books and orphaned book pages.'),
       'callback' => 'book_admin',
-      'access' => user_access('administer nodes'),
-      'type' => MENU_LOCAL_TASK,
-      'weight' => -1);
+      'access' => user_access('administer nodes'));
     $items[] = array(
-      'path' => 'admin/node/book/list',
+      'path' => 'admin/content/book/list',
       'title' => t('list'),
       'type' => MENU_DEFAULT_LOCAL_TASK);
     $items[] = array(
-      'path' => 'admin/node/book/orphan',
+      'path' => 'admin/content/book/orphan',
       'title' => t('orphan pages'),
       'callback' => 'book_admin_orphan',
       'type' => MENU_LOCAL_TASK,
@@ -873,7 +872,7 @@ function theme_book_admin_table($form) {
       form_render($form[$key]['weight']),
       l(t('view'), 'node/'. $nid),
       l(t('edit'), 'node/'. $nid .'/edit'),
-      l(t('delete'), 'node/'. $nid .'/delete', NULL, 'destination=admin/node/book'. (arg(3) == 'orphan' ? '/orphan' : '') . ($pid != $nid ? '/'.$pid : ''))
+      l(t('delete'), 'node/'. $nid .'/delete', NULL, 'destination=admin/content/book'. (arg(3) == 'orphan' ? '/orphan' : '') . ($pid != $nid ? '/'.$pid : ''))
     );
   }
 
@@ -980,7 +979,7 @@ function book_admin($nid = 0) {
 function book_admin_overview() {
   $result = db_query(db_rewrite_sql('SELECT n.nid, n.title, b.weight FROM {node} n INNER JOIN {book} b ON n.vid = b.vid WHERE b.parent = 0 ORDER BY b.weight, n.title'));
   while ($book = db_fetch_object($result)) {
-    $rows[] = array(l($book->title, "node/$book->nid"), l(t('outline'), "admin/node/book/$book->nid"));
+    $rows[] = array(l($book->title, "node/$book->nid"), l(t('outline'), "admin/content/book/$book->nid"));
   }
   $headers = array(t('Book'), t('Operations'));
 
@@ -994,7 +993,7 @@ function book_help($section) {
   switch ($section) {
     case 'admin/help#book':
       $output = '<p>'. t('The <em>book</em> content type is suited for creating structured, multi-page hypertexts such as site resource guides, manuals, and Frequently Asked Questions (FAQs). It permits a document to have chapters, sections, subsections, etc. Authors with suitable permissions can add pages to a collaborative book,  placing them into the existing document by adding them to a table of contents menu. ') .'</p>';
-      $output .= '<p>'. t('Books have additional <em>previous</em>, <em>up</em>, and <em>next</em> navigation elements at the bottom of each page for moving through the text. Additional navigation may be provided by enabling the <em>book navigation block</em> on the <a href="%admin-block">block administration page</a>.', array('%admin-block' => url('admin/block'))) .'</p>';
+      $output .= '<p>'. t('Books have additional <em>previous</em>, <em>up</em>, and <em>next</em> navigation elements at the bottom of each page for moving through the text. Additional navigation may be provided by enabling the <em>book navigation block</em> on the <a href="%admin-block">block administration page</a>.', array('%admin-block' => url('admin/build/block'))) .'</p>';
       $output .= '<p>'. t('Users can select the <em>printer-friendly version</em> link visible at the bottom of a book page to generate a printer-friendly display of the page and all of its subsections. ') .'</p>';
       $output .= '<p>'. t('Administrators can view a book outline, from which is it possible to change the titles of sections, and their <i>weight</i> (thus reordering sections). From this outline, it is also possible to edit and/or delete book pages. Many content types besides pages (for example, blog entries, stories, and polls) can be added to a collaborative book by choosing the <em>outline</em> tab when viewing the post.') .'</p>';
       $output .= t('<p>You can</p>
@@ -1005,14 +1004,14 @@ function book_help($section) {
 <li>enable the book navigation block: <a href="%admin-block">administer &gt;&gt; blocks</a>.</li>
 <li>control who can create, edit, and outline posts in books by setting access permissions: <a href="%admin-access">administer &gt;&gt; access control</a>.</li>
 </ul>
-', array('%node-add-book' => url('node/add/book'), '%admin-node-book' => url('admin/node/book'), '%admin-settings-content-types-book-page' => url('admin/settings/content-types/book'), '%admin-block' => url('admin/block'), '%admin-access' => url('admin/access')));
+', array('%node-add-book' => url('node/add/book'), '%admin-node-book' => url('admin/content/book'), '%admin-settings-content-types-book-page' => url('admin/content/types/book'), '%admin-block' => url('admin/build/block'), '%admin-access' => url('admin/access')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%book">Book page</a>.', array('%book' => 'http://drupal.org/handbook/modules/book/')) .'</p>';
       return $output;
-    case 'admin/modules#description':
+    case 'admin/settings/modules#description':
       return t('Allows users to collaboratively author a book.');
-    case 'admin/node/book':
+    case 'admin/content/book':
       return t('<p>The book module offers a means to organize content, authored by many users, in an online manual, outline or FAQ.</p>');
-    case 'admin/node/book/orphan':
+    case 'admin/content/book/orphan':
       return t('<p>Pages in a book are like a tree. As pages are edited, reorganized and removed, child pages might be left with no link to the rest of the book. Such pages are referred to as "orphan pages". On this page, administrators can review their books for orphans and reattach those pages as desired.</p>');
     case 'node/add#book':
       return t("A book is a collaborative writing effort: users can collaborate writing the pages of the book, positioning the pages in the right order, and reviewing or modifying pages previously written. So when you have some information to share or when you read a page of the book and you didn't like it, or if you think a certain page could have been written better, you can do something about it.");

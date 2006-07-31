@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.210 2006/07/02 20:06:31 drumm Exp $
+// $Id: block.module,v 1.211 2006/07/31 11:25:52 dries Exp $
 
 /**
  * @file
@@ -27,7 +27,7 @@ function block_help($section) {
 </ul>
 ');
       $output .= '<h3>'. t('Module blocks') .'</h3>';
-      $output .= '<p>'. t('Some modules generate blocks that become available when the modules are enabled. These blocks can be administered via the <a href="%admin-block">blocks administration page</a>.</p>', array('%admin-block' => url('admin/block'))) .'</p>';
+      $output .= '<p>'. t('Some modules generate blocks that become available when the modules are enabled. These blocks can be administered via the <a href="%admin-block">blocks administration page</a>.</p>', array('%admin-block' => url('admin/build/block'))) .'</p>';
       $output .= '<h3>'. t('Administrator defined blocks') .'</h3>';
       $output .= '<p>'. t('Administrators can also define custom blocks. These blocks consist of a title, a description, and a body which can be as long as you wish. Block content can be in any of the input formats supported for other content.') .'</p>';
       $output .= t('<p>You can</p>
@@ -35,20 +35,20 @@ function block_help($section) {
 <li>enable, throttle and configure blocks at <a href="%admin-block">administer &gt;&gt; blocks</a>.</li>
 <li>add an administrator-defined block at <a href="%admin-block-add">administer &gt;&gt; blocks &gt;&gt; add block</a>.</li>
 </ul>
-', array('%admin-block' => url('admin/block'), '%admin-block-add' => url('admin/block/add')));
+', array('%admin-block' => url('admin/build/block'), '%admin-block-add' => url('admin/build/block/add')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%block">Block page</a>.', array('%block' => 'http://drupal.org/handbook/modules/block/')) .'</p>';
       return $output;
-    case 'admin/modules#description':
+    case 'admin/settings/modules#description':
       return t('Controls the boxes that are displayed around the main content.');
-    case 'admin/block':
+    case 'admin/build/block':
       return t("
 <p>Blocks are boxes of content that may be rendered into certain regions of your web pages, for example, into sidebars. They are usually generated automatically by modules, but administrators can create blocks manually.</p>
 <p>Only enabled blocks are shown. You can position blocks by specifying which area of the page they should appear in (e.g., a sidebar).  Highlighted labels on this page show the regions into which blocks can be rendered. You can specify where within a region a block will appear by adjusting its weight.</p>
 <p>If you want certain blocks to disable themselves temporarily during high server loads, check the 'Throttle' box. You can configure the auto-throttle on the <a href=\"%throttle\">throttle configuration page</a> after having enabled the throttle module.</p>
 <p>You can configure the behaviour of each block (for example, specifying on which pages and for what users it will appear) by clicking the 'configure' link for each block.</p>
 ", array('%throttle' => url('admin/settings/throttle')));
-    case 'admin/block/add':
-      return t('<p>Here you can create a new block. Once you have created this block you must make it active and give it a place on the page using <a href="%overview">blocks</a>. The title is used when displaying the block. The description is used in the "block" column on the <a href="%overview">blocks</a> page.</p>', array('%overview' => url('admin/block')));
+    case 'admin/build/block/add':
+      return t('<p>Here you can create a new block. Once you have created this block you must make it active and give it a place on the page using <a href="%overview">blocks</a>. The title is used when displaying the block. The description is used in the "block" column on the <a href="%overview">blocks</a> page.</p>', array('%overview' => url('admin/build/block')));
   }
 }
 
@@ -66,31 +66,34 @@ function block_menu($may_cache) {
   $items = array();
 
   if ($may_cache) {
-    $items[] = array('path' => 'admin/block', 'title' => t('blocks'),
+    $items[] = array(
+      'path' => 'admin/build/block',
+      'title' => t('blocks'),
       'access' => user_access('administer blocks'),
+      'description' => t('Configure what block content appears in your site\'s sidebars and other regions.'),
       'callback' => 'block_admin_display');
-    $items[] = array('path' => 'admin/block/list', 'title' => t('list'),
+    $items[] = array('path' => 'admin/build/block/list', 'title' => t('list'),
       'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
-    $items[] = array('path' => 'admin/block/configure', 'title' => t('configure block'),
+    $items[] = array('path' => 'admin/build/block/configure', 'title' => t('configure block'),
       'access' => user_access('administer blocks'),
       'callback' => 'block_admin_configure',
       'type' => MENU_CALLBACK);
-    $items[] = array('path' => 'admin/block/delete', 'title' => t('delete block'),
+    $items[] = array('path' => 'admin/build/block/delete', 'title' => t('delete block'),
       'access' => user_access('administer blocks'),
       'callback' => 'block_box_delete',
       'type' => MENU_CALLBACK);
-    $items[] = array('path' => 'admin/block/add', 'title' => t('add block'),
+    $items[] = array('path' => 'admin/build/block/add', 'title' => t('add block'),
       'access' => user_access('administer blocks'),
       'callback' => 'block_box_add',
       'type' => MENU_LOCAL_TASK);
     foreach (list_themes() as $key => $theme) {
       if ($theme->status) {
         if ($key == variable_get('theme_default', 'bluemarine')) {
-          $items[] = array('path' => 'admin/block/list/' . $key, 'title' => t('%key settings', array('%key' => $key)),
+          $items[] = array('path' => 'admin/build/block/list/' . $key, 'title' => t('%key settings', array('%key' => $key)),
             'access' => user_access('administer blocks'), 'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
         }
         else {
-          $items[] = array('path' => 'admin/block/list/' . $key, 'title' => t('%key settings', array('%key' => $key)),
+          $items[] = array('path' => 'admin/build/block/list/' . $key, 'title' => t('%key settings', array('%key' => $key)),
             'access' => user_access('administer blocks'), 'type' => MENU_LOCAL_TASK);
         }
       }
@@ -193,12 +196,12 @@ function _block_rehash() {
 /**
  * Generate main block administration form.
  */
-function block_admin_display() {
+function block_admin_display($theme = NULL) {
   global $theme_key, $custom_theme;
 
   // If non-default theme configuration has been selected, set the custom theme.
-  if (arg(3)) {
-    $custom_theme = arg(3);
+  if ($theme) {
+    $custom_theme = $theme;
   }
   else {
     $custom_theme = variable_get('theme_default', 'bluemarine');
@@ -213,7 +216,7 @@ function block_admin_display() {
   $block_regions = system_region_list($theme_key);
 
   // Build form tree
-  $form['#action'] = arg(3) ? url('admin/block/list/' . $theme_key) : url('admin/block');
+  $form['#action'] = arg(3) ? url('admin/build/block/list/' . $theme_key) : url('admin/build/block');
   $form['#tree'] = TRUE;
   foreach ($blocks as $i => $block) {
     $form[$i]['module'] = array('#type' => 'value', '#value' => $block['module']);
@@ -230,9 +233,9 @@ function block_admin_display() {
     if ($throttle) {
       $form[$i]['throttle'] = array('#type' => 'checkbox', '#default_value' => $block['throttle']);
     }
-    $form[$i]['configure'] = array('#value' => l(t('configure'), 'admin/block/configure/'. $block['module'] .'/'. $block['delta']));
+    $form[$i]['configure'] = array('#value' => l(t('configure'), 'admin/build/block/configure/'. $block['module'] .'/'. $block['delta']));
     if ($block['module'] == 'block') {
-      $form[$i]['delete'] = array('#value' => l(t('delete'), 'admin/block/delete/'. $block['delta']));
+      $form[$i]['delete'] = array('#value' => l(t('delete'), 'admin/build/block/delete/'. $block['delta']));
     }
   }
   $form['submit'] = array('#type' => 'submit', '#value' => t('Save blocks'));
@@ -241,7 +244,7 @@ function block_admin_display() {
 }
 
 /**
- * Helper function for sorting blocks on admin/block.
+ * Helper function for sorting blocks on admin/build/block.
  *
  * Active blocks are sorted by region, then by weight.
  * Disabled blocks are sorted by name.
@@ -481,7 +484,7 @@ function block_admin_configure_submit($form_id, $form_values) {
     module_invoke($form_values['module'], 'block', 'save', $form_values['delta'], $form_values);
     drupal_set_message(t('The block configuration has been saved.'));
     cache_clear_all();
-    return 'admin/block';
+    return 'admin/build/block';
   }
 }
 
@@ -505,7 +508,7 @@ function block_box_add_submit($form_id, $form_values) {
   if (!form_get_errors()) {
     if (block_box_save($form_values)) {
       drupal_set_message(t('The block has been created.'));
-      return 'admin/block';
+      return 'admin/build/block';
     }
   }
 }
@@ -518,7 +521,7 @@ function block_box_delete($bid = 0) {
   $form['info'] = array('#type' => 'hidden', '#value' => $box['info'] ? $box['info'] : $box['title']);
   $form['bid'] = array('#type' => 'hidden', '#value' => $bid);
 
-  return confirm_form('block_box_delete_confirm', $form, t('Are you sure you want to delete the block %name?', array('%name' => theme('placeholder', $box['info']))), 'admin/block', '', t('Delete'), t('Cancel'));
+  return confirm_form('block_box_delete_confirm', $form, t('Are you sure you want to delete the block %name?', array('%name' => theme('placeholder', $box['info']))), 'admin/build/block', '', t('Delete'), t('Cancel'));
 }
 
 /**
@@ -528,7 +531,7 @@ function block_box_delete_confirm_submit($form_id, $form_values) {
   db_query('DELETE FROM {boxes} WHERE bid = %d', $form_values['bid']);
   drupal_set_message(t('The block %name has been removed.', array('%name' => theme('placeholder', $form_values['info']))));
   cache_clear_all();
-  return 'admin/block';
+  return 'admin/build/block';
 };
 
 function block_box_form($edit = array()) {
@@ -537,7 +540,7 @@ function block_box_form($edit = array()) {
     '#title' => t('Block description'),
     '#default_value' => $edit['info'],
     '#maxlength' => 64,
-    '#description' => t('A brief description of your block. Used on the <a href="%overview">block overview page</a>.', array('%overview' => url('admin/block'))),
+    '#description' => t('A brief description of your block. Used on the <a href="%overview">block overview page</a>.', array('%overview' => url('admin/build/block'))),
     '#required' => TRUE,
     '#weight' => -19,
   );

@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.85 2006/07/10 19:27:52 dries Exp $
+// $Id: path.module,v 1.86 2006/07/31 11:25:54 dries Exp $
 
 /**
  * @file
@@ -31,14 +31,14 @@ function path_help($section) {
 <li>read how to <a href="%external-http-drupal-org-node-15365">configure clean URLs</a> for your webserver.
 <li>enable clean url\'s to remove the =? at <a href="%admin-clean-url-settings">administer &gt;&gt; settings &gt;&gt; clean URLs</a>.</li>
 </ul>
-', array('%admin-path-add' => url('admin/path/add'), '%admin-path' => url('admin/path'), '%external-http-drupal-org-node-15365' => 'http://drupal.org/node/15365', '%admin-clean-url-settings' => url('admin/settings/clean-urls')));
+', array('%admin-path-add' => url('admin/build/path/add'), '%admin-path' => url('admin/build/path'), '%external-http-drupal-org-node-15365' => 'http://drupal.org/node/15365', '%admin-clean-url-settings' => url('admin/settings/clean-urls')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%path">Path page</a>.', array('%path' => 'http://drupal.org/handbook/modules/path/')) .'</p>';
       return $output;
-    case 'admin/modules#description':
+    case 'admin/settings/modules#description':
       return t('Allows users to rename URLs.');
-    case 'admin/path':
+    case 'admin/build/path':
       return t("<p>Drupal provides users complete control over URLs through aliasing. This feature is typically used to make URLs human-readable or easy to remember. For example, one could map the relative URL 'node/1' onto 'about'. Each system path can have multiple aliases.</p>");
-    case 'admin/path/add':
+    case 'admin/build/path/add':
       return t('<p>Enter the path you wish to create the alias for, followed by the name of the new alias.</p>');
   }
 }
@@ -50,20 +50,21 @@ function path_menu($may_cache) {
   $items = array();
 
   if ($may_cache) {
-    $items[] = array('path' => 'admin/path', 'title' => t('url aliases'),
+    $items[] = array('path' => 'admin/build/path', 'title' => t('url aliases'),
+      'description' => t('Change your site\'s URL paths by aliasing them.'),
       'callback' => 'path_admin',
       'access' => user_access('administer url aliases'));
-    $items[] = array('path' => 'admin/path/edit', 'title' => t('edit alias'),
+    $items[] = array('path' => 'admin/build/path/edit', 'title' => t('edit alias'),
       'callback' => 'path_admin_edit',
       'access' => user_access('administer url aliases'),
       'type' => MENU_CALLBACK);
-    $items[] = array('path' => 'admin/path/delete', 'title' => t('delete alias'),
+    $items[] = array('path' => 'admin/build/path/delete', 'title' => t('delete alias'),
       'callback' => 'path_admin_delete_confirm',
       'access' => user_access('administer url aliases'),
       'type' => MENU_CALLBACK);
-    $items[] = array('path' => 'admin/path/list', 'title' => t('list'),
+    $items[] = array('path' => 'admin/build/path/list', 'title' => t('list'),
       'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
-    $items[] = array('path' => 'admin/path/add', 'title' => t('add alias'),
+    $items[] = array('path' => 'admin/build/path/add', 'title' => t('add alias'),
       'callback' => 'path_admin_edit',
       'access' => user_access('administer url aliases'),
       'type' => MENU_LOCAL_TASK);
@@ -104,7 +105,7 @@ function path_admin_delete_confirm($pid) {
     $form['pid'] = array('#type' => 'value', '#value' => $pid);
     $output = confirm_form('path_admin_delete_confirm', $form,
   t('Are you sure you want to delete path alias %title?', array('%title' => theme('placeholder', $path['dst']))),
-   $_GET['destination'] ? $_GET['destination'] : 'admin/path', t('This action cannot be undone.'),
+   $_GET['destination'] ? $_GET['destination'] : 'admin/build/path', t('This action cannot be undone.'),
   t('Delete'), t('Cancel') );
   }
 
@@ -117,7 +118,7 @@ function path_admin_delete_confirm($pid) {
 function path_admin_delete_confirm_submit($form_id, $form_values) {
   if ($form_values['confirm']) {
     path_admin_delete($form_values['pid']);
-    return 'admin/path';
+    return 'admin/build/path';
   }
 }
 
@@ -299,7 +300,7 @@ function path_overview() {
 
   $destination = drupal_get_destination();
   while ($data = db_fetch_object($result)) {
-    $rows[] = array($data->dst, $data->src, l(t('edit'), "admin/path/edit/$data->pid", array(), $destination), l(t('delete'), "admin/path/delete/$data->pid", array(), $destination));
+    $rows[] = array($data->dst, $data->src, l(t('edit'), "admin/build/path/edit/$data->pid", array(), $destination), l(t('delete'), "admin/build/path/delete/$data->pid", array(), $destination));
   }
 
   if (!$rows) {
@@ -346,7 +347,7 @@ function path_form_submit() {
     path_set_alias($src, $dst, $pid);
 
     drupal_set_message(t('The alias has been saved.'));
-    return 'admin/path';
+    return 'admin/build/path';
   }
 }
 

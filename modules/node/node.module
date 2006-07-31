@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.662 2006/07/26 08:25:25 drumm Exp $
+// $Id: node.module,v 1.663 2006/07/31 11:25:54 dries Exp $
 
 /**
  * @file
@@ -29,14 +29,14 @@ function node_help($section) {
 <li>search for content at <a href="%search">search</a>.</li>
 <li>administer nodes at <a href="%admin-settings-content-types">administer &gt;&gt; settings &gt;&gt; content types</a>.</li>
 </ul>
-', array('%search' => url('search'), '%admin-settings-content-types' => url('admin/settings/content-types')));
+', array('%search' => url('search'), '%admin-settings-content-types' => url('admin/content/types')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%node">Node page</a>.', array('%node' => 'http://drupal.org/handbook/modules/node/')) .'</p>';
       return $output;
-    case 'admin/modules#description':
+    case 'admin/settings/modules#description':
       return t('Allows content to be submitted to the site and displayed on pages.');
-    case 'admin/node':
+    case 'admin/content/node':
       return t('<p>Below is a list of all of the posts on your site. Other forms of content are listed elsewhere (e.g. <a href="%comments">comments</a>).</p><p>Clicking a title views the post, while clicking an author\'s name views their user information.</p>', array('%comments' => url('admin/comment')));
-    case 'admin/node/search':
+    case 'admin/content/search':
       return t('<p>Enter a simple pattern to search for a post. This can include the wildcard character *.<br />For example, a search for "br*" might return "bread bakers", "our daily bread" and "brenda".</p>');
   }
 
@@ -827,27 +827,49 @@ function node_link($type, $node = NULL, $teaser = FALSE) {
  */
 function node_menu($may_cache) {
   $items = array();
-
   if ($may_cache) {
-    $items[] = array('path' => 'admin/node', 'title' => t('content'),
+    $items[] = array('path' => 'admin/content',
+      'title' => t('content management'),
+      'description' => t('Manage your site\'s content.'),
+      'position' => 'left',
+      'weight' => -10,
+      'callback' => 'system_admin_menu_block_page',
+      'access' => user_access('access configuration pages'),
+    );
+
+    $items[] = array(
+      'path' => 'admin/content/node',
+      'title' => t('posts'),
+      'description' => t('View, edit, and delete your site\'s content.'),
       'callback' => 'node_admin_nodes',
-      'access' => user_access('administer nodes'));
-    $items[] = array('path' => 'admin/node/overview', 'title' => t('list'),
+      'access' => user_access('administer nodes')
+    );
+
+    $items[] = array('path' => 'admin/content/node/overview', 'title' => t('list'),
       'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
 
     if (module_exist('search')) {
-      $items[] = array('path' => 'admin/node/search', 'title' => t('search'),
+      $items[] = array('path' => 'admin/content/search', 'title' => t('search posts'),
+        'description' => t('Search posts by keyword.'),
         'callback' => 'node_admin_search',
         'access' => user_access('administer nodes'),
-        'type' => MENU_LOCAL_TASK);
+        'type' => MENU_NORMAL_ITEM);
     }
 
-    $items[] = array('path' => 'admin/settings/node', 'title' => t('posts'),
+    $items[] = array(
+      'path' => 'admin/content/node-settings',
+      'title' => t('post settings'),
+      'description' => t('Control posting behavior, such as teaser length, requiring previews before posting, and the number of posts on the front page.'),
       'callback' => 'node_configure',
-      'access' => user_access('administer nodes'));
-    $items[] = array('path' => 'admin/settings/content-types', 'title' => t('content types'),
+      'access' => user_access('administer nodes')
+    );
+    $items[] = array(
+      'path' => 'admin/content/types',
+      'title' => t('content types'),
+      'description' => t('Manage posts by content type, including default status, front page promotion, etc.'),
       'callback' => 'node_types_configure',
-      'access' => user_access('administer nodes'));
+      'access' => user_access('administer nodes')
+    );
 
     $items[] = array('path' => 'node', 'title' => t('content'),
       'callback' => 'node_page',
@@ -892,7 +914,7 @@ function node_menu($may_cache) {
       }
     }
     else if (arg(0) == 'admin' && arg(1) == 'settings' && arg(2) == 'content-types' && is_string(arg(3))) {
-      $items[] = array('path' => 'admin/settings/content-types/'. arg(3),
+      $items[] = array('path' => 'admin/content/types/'. arg(3),
         'title' => t("'%name' content type", array('%name' => node_get_name(arg(3)))),
         'type' => MENU_CALLBACK);
     }
@@ -1208,7 +1230,7 @@ function node_multiple_delete_confirm() {
 
   return confirm_form('node_multiple_delete_confirm', $form,
                       t('Are you sure you want to delete these items?'),
-                      'admin/node', t('This action cannot be undone.'),
+                      'admin/content/node', t('This action cannot be undone.'),
                       t('Delete all'), t('Cancel'));
 }
 
@@ -1219,7 +1241,7 @@ function node_multiple_delete_confirm_submit($form_id, $edit) {
     }
     drupal_set_message(t('The items have been deleted.'));
   }
-  return 'admin/node';
+  return 'admin/content/node';
 }
 
 /**
@@ -1249,7 +1271,7 @@ function node_types_configure($type = NULL) {
 
     $rows = array();
     foreach (node_get_types() as $type => $name) {
-      $rows[] = array($name, l(t('configure'), 'admin/settings/content-types/'. $type));
+      $rows[] = array($name, l(t('configure'), 'admin/content/types/'. $type));
     }
 
     return theme('table', $header, $rows);
@@ -1376,7 +1398,7 @@ function node_revision_list($node) {
 }
 
 function node_admin_search() {
-  $output = search_form(url('admin/node/search'), $_POST['edit']['keys'], 'node') . search_data($_POST['edit']['keys'], 'node');
+  $output = search_form(url('admin/content/search'), $_POST['edit']['keys'], 'node') . search_data($_POST['edit']['keys'], 'node');
   return $output;
 }
 
@@ -2008,7 +2030,7 @@ function node_page_default() {
         </li>
       </ol>
       <p>For more information, please refer to the <a href="%help">help section</a>, or the <a href="%handbook">online Drupal handbooks</a>. You may also post at the <a href="%forum">Drupal forum</a>, or view the wide range of <a href="%support">other support options</a> available.</p>',
-      array('%drupal' => 'http://drupal.org/', '%register' => url('user/register'), '%admin' => url('admin'), '%config' => url('admin/settings'), '%modules' => url('admin/modules'), '%download_modules' => 'http://drupal.org/project/modules', '%themes' => url('admin/themes'), '%download_themes' => 'http://drupal.org/project/themes', '%content' => url('node/add'), '%help' => url('admin/help'), '%handbook' => 'http://drupal.org/handbooks', '%forum' => 'http://drupal.org/forum', '%support' => 'http://drupal.org/support')
+      array('%drupal' => 'http://drupal.org/', '%register' => url('user/register'), '%admin' => url('admin'), '%config' => url('admin/settings'), '%modules' => url('admin/settings/modules'), '%download_modules' => 'http://drupal.org/project/modules', '%themes' => url('admin/themes'), '%download_themes' => 'http://drupal.org/project/themes', '%content' => url('node/add'), '%help' => url('admin/help'), '%handbook' => 'http://drupal.org/handbooks', '%forum' => 'http://drupal.org/forum', '%support' => 'http://drupal.org/support')
     );
     $output = '<div id="first-time">'. $output .'</div>';
   }

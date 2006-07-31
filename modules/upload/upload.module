@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.113 2006/07/19 07:15:35 drumm Exp $
+// $Id: upload.module,v 1.114 2006/07/31 11:25:55 dries Exp $
 
 /**
  * @file
@@ -21,13 +21,13 @@ function upload_help($section) {
 <li>administer content at <a href="%admin-content-types">administer &gt;&gt; settings &gt;&gt; content types</a>.</li>
 <li>administer upload at <a href="%admin-upload">administer &gt;&gt; settings &gt;&gt; upload</a>.</li>
 </ul>
-', array('%admin-access' => url('admin/access'), '%admin-content-types' => url('admin/settings/content-types'), '%admin-upload' => url('admin/settings/upload')));
+', array('%admin-access' => url('admin/access'), '%admin-content-types' => url('admin/settings/types'), '%admin-upload' => url('admin/settings/upload')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%upload">Upload page</a>.', array('%upload' => 'http://drupal.org/handbook/modules/upload/')) .'</p>';
       return $output;
-    case 'admin/modules#description':
+    case 'admin/settings/modules#description':
       return t('Allows users to upload and attach files to content.');
     case 'admin/settings/upload':
-      return t('<p>Users with the <a href="%permissions">upload files permission</a> can upload attachments. Users with the <a href="%permissions">view uploaded files permission</a> can view uploaded attachments. You can choose which post types can take attachments on the <a href="%types">content types settings</a> page.</p>', array('%permissions' => url('admin/access'), '%types' => url('admin/settings/content-types')));
+      return t('<p>Users with the <a href="%permissions">upload files permission</a> can upload attachments. Users with the <a href="%permissions">view uploaded files permission</a> can view uploaded attachments. You can choose which post types can take attachments on the <a href="%types">content types settings</a> page.</p>', array('%permissions' => url('admin/access'), '%types' => url('admin/settings/types')));
   }
 }
 
@@ -80,6 +80,7 @@ function upload_menu($may_cache) {
     );
     $items[] = array('path' => 'admin/settings/uploads',
       'title' => t('file uploads'),
+      'description' => t('Control how files may be attached to content.'),
       'callback' => 'upload_admin_settings',
       'access' => user_access('administer site configuration'),
       'type' => MENU_NORMAL_ITEM);

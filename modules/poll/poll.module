@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.202 2006/07/10 08:05:15 dries Exp $
+// $Id: poll.module,v 1.203 2006/07/31 11:25:54 dries Exp $
 
 /**
  * @file
@@ -20,10 +20,10 @@ function poll_help($section) {
 <li>view the <a href="%poll">polls page</a>.</li>
 <li><a href="%admin-node-configure-types-poll">administer &gt;&gt; settings &gt;&gt; content types &gt;&gt; configure poll</a>.</li>
 </ul>
-', array('%poll' => url('poll'), '%admin-node-configure-types-poll' => url('admin/settings/content-types/poll')));
+', array('%poll' => url('poll'), '%admin-node-configure-types-poll' => url('admin/content/types/poll')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%poll">Poll page</a>.', array('%poll' => 'http://drupal.org/handbook/modules/poll/')) .'</p>';
       return $output;
-    case 'admin/modules#description':
+    case 'admin/settings/modules#description':
       return t("Allows your site to capture votes on different topics in the form of multiple choice questions.");
     case 'node/add#poll':
       return t("A poll is a multiple-choice question which visitors can vote on.");

@@ -1,5 +1,5 @@
 <?php
-// $Id: story.module,v 1.187 2006/05/07 00:08:36 drumm Exp $
+// $Id: story.module,v 1.188 2006/07/31 11:25:54 dries Exp $
 
 /**
  * @file
@@ -19,10 +19,10 @@ function story_help($section) {
 <li>post a story at <a href="%node-add-story">create content &gt;&gt; story</a>.</li>
 <li>configure story at <a href="%admin-settings-content-types-story">administer &gt;&gt; settings &gt;&gt; content types &gt;&gt; configure story</a>.</li>
 </ul>
-', array('%node-add-story' => url('node/add/story'), '%admin-settings-content-types-story' => url('admin/settings/content-types/story')));
+', array('%node-add-story' => url('node/add/story'), '%admin-settings-content-types-story' => url('admin/content/types/story')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%story">Story page</a>.', array('%story' => 'http://drupal.org/handbook/modules/story/')) .'</p>';
       return $output;
-    case 'admin/modules#description':
+    case 'admin/settings/modules#description':
       return t('Allows users to submit stories, articles or similar content.');
     case 'node/add#story':
       return t('Stories are articles in their simplest form: they have a title, a teaser and a body, but can be extended by other modules. The teaser is part of the body too. Stories may be used as a personal blog or for news articles.');

@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.468 2006/07/19 07:15:34 drumm Exp $
+// $Id: comment.module,v 1.469 2006/07/31 11:25:53 dries Exp $
 
 /**
  * @file
@@ -77,17 +77,17 @@ function comment_help($section) {
 <li>control access for various comment module functions through access permissions <a href="%admin-access">administer &gt;&gt; access control</a>.</li>
 <li>administer comments <a href="%admin-comment-configure"> administer &gt;&gt; comments &gt;&gt; configure</a>.</li>
 </ul>
-', array('%admin-access' => url('admin/access'), '%admin-settings-comment' => url('admin/settings/comment')));
+', array('%admin-access' => url('admin/access'), '%admin-settings-comment' => url('admin/content/comment/settings')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%comment">Comment page</a>.', array('%comment' => 'http://drupal.org/handbook/modules/comment/')) .'</p>';
       return $output;
-    case 'admin/modules#description':
+    case 'admin/settings/modules#description':
       return t('Allows users to comment on and discuss published content.');
-    case 'admin/comment':
-    case 'admin/comment/new':
+    case 'admin/content/comment':
+    case 'admin/content/comment/new':
       return t("<p>Below is a list of the latest comments posted to your site. Click on a subject to see the comment, the author's name to edit the author's user information , \"edit\" to modify the text, and \"delete\" to remove their submission.</p>");
-    case 'admin/comment/approval':
+    case 'admin/content/comment/approval':
       return t("<p>Below is a list of the comments posted to your site that need approval. To approve a comment, click on \"edit\" and then change its \"moderation status\" to Approved. Click on a subject to see the comment, the author's name to edit the author's user information, \"edit\" to modify the text, and \"delete\" to remove their submission.</p>");
-    case 'admin/settings/comment':
+    case 'admin/content/comment/settings':
       return t("<p>Comments can be attached to any node, and their settings are below. The display comes in two types: a \"flat list\" where everything is flush to the left side, and comments come in chronological order, and a \"threaded list\" where replies to other comments are placed immediately below and slightly indented, forming an outline. They also come in two styles: \"expanded\", where you see both the title and the contents, and \"collapsed\" where you only see the title. Preview comment forces a user to look at their comment by clicking on a \"Preview\" button before they can actually add the comment.</p>");
    }
 }
@@ -100,27 +100,33 @@ function comment_menu($may_cache) {
 
   if ($may_cache) {
     $access = user_access('administer comments');
-    $items[] = array('path' => 'admin/comment', 'title' => t('comments'),
-      'callback' => 'comment_admin_overview', 'access' => $access);
+    $items[] = array(
+      'path' => 'admin/content/comment',
+      'title' => t('comments'),
+      'description' => t('List and edit site comments and the comment moderation queue.'),
+      'callback' => 'comment_admin_overview',
+      'access' => $access
+    );
 
     // Tabs:
-    $items[] = array('path' => 'admin/comment/list', 'title' => t('list'),
+    $items[] = array('path' => 'admin/content/comment/list', 'title' => t('list'),
       'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
 
     // Subtabs:
-    $items[] = array('path' => 'admin/comment/list/new', 'title' => t('published comments'),
+    $items[] = array('path' => 'admin/content/comment/list/new', 'title' => t('published comments'),
       'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
-    $items[] = array('path' => 'admin/comment/list/approval', 'title' => t('approval queue'),
+    $items[] = array('path' => 'admin/content/comment/list/approval', 'title' => t('approval queue'),
       'callback' => 'comment_admin_overview', 'access' => $access,
       'callback arguments' => array('approval'),
       'type' => MENU_LOCAL_TASK);
 
     $items[] = array(
-      'path' => 'admin/settings/comments',
-      'title' => t('comments'),
+      'path' => 'admin/content/comment/settings',
+      'title' => t('settings'),
       'callback' => 'comment_admin_settings',
       'access' => $access,
-      'type' => MENU_NORMAL_ITEM);
+      'weight' => 10,
+      'type' => MENU_LOCAL_TASK);
 
     $items[] = array('path' => 'comment/delete', 'title' => t('delete comment'),
       'callback' => 'comment_delete', 'access' => $access, 'type' => MENU_CALLBACK);
@@ -1041,7 +1047,7 @@ function comment_admin_overview_validate($form_id, $edit) {
   $edit['comments'] = array_diff($edit['comments'], array(0));
   if (count($edit['comments']) == 0) {
     form_set_error('', t('Please select one or more comments to perform the update on.'));
-    drupal_goto('admin/comment');
+    drupal_goto('admin/content/comment');
   }
 }
 
@@ -1068,7 +1074,7 @@ function comment_admin_overview_submit($form_id, $edit) {
     }
     cache_clear_all();
     drupal_set_message(t('The update has been performed.'));
-    drupal_goto('admin/comment');
+    drupal_goto('admin/content/comment');
   }
 }
 
@@ -1121,12 +1127,12 @@ function comment_multiple_delete_confirm() {
 
   if (!$comment_counter) {
     drupal_set_message(t('There do not appear to be any comments to delete or your selected comment was deleted by another administrator.'));
-    drupal_goto('admin/comment');
+    drupal_goto('admin/content/comment');
   }
   else {
     return confirm_form('comment_multiple_delete_confirm', $form,
                         t('Are you sure you want to delete these comments and all their children?'),
-                        'admin/comment', t('This action cannot be undone.'),
+                        'admin/content/comment', t('This action cannot be undone.'),
                         t('Delete comments'), t('Cancel'));
   }
 }
@@ -1144,7 +1150,7 @@ function comment_multiple_delete_confirm_submit($form_id, $edit) {
     }
     drupal_set_message(t('The comments have been deleted.'));
   }
-  drupal_goto('admin/comment');
+  drupal_goto('admin/content/comment');
 }
 
 /**

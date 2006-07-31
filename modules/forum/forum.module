@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.339 2006/07/29 17:56:41 dries Exp $
+// $Id: forum.module,v 1.340 2006/07/31 11:25:53 dries Exp $
 
 /**
  * @file
@@ -22,16 +22,16 @@ function forum_help($section) {
 <li>read about the comment module at <a href="%admin-help-comment">administer &gt;&gt; help &gt;&gt; comment</a>.</li>
 <li>read about the taxonomy module at <a href="%admin-help-taxonomy">administer &gt;&gt; help &gt;&gt; taxonomy</a>.</li>
 </ul>
-', array('%admin-forum' => url('admin/forum'), '%admin-modules' => url('admin/modules'), '%admin-help-comment' => url('admin/help/comment'), '%admin-help-taxonomy' => url('admin/help/taxonomy')));
+', array('%admin-forum' => url('admin/content/forum'), '%admin-modules' => url('admin/settings/modules'), '%admin-help-comment' => url('admin/help/comment'), '%admin-help-taxonomy' => url('admin/help/taxonomy')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%forum">Forum page</a>.', array('%forum' => 'http://drupal.org/handbook/modules/forum/')) .'</p>';
       return $output;
-    case 'admin/modules#description':
+    case 'admin/settings/modules#description':
       return t('Enables threaded discussions about general topics.');
-    case 'admin/forum':
+    case 'admin/content/forum':
       return t('<p>This is a list of existing containers and forums that you can edit. Containers hold forums and, in turn, forums hold threaded discussions. Both containers and forums can be placed inside other containers and forums. By planning the structure of your containers and forums well, you make it easier for users to find a topic area of interest to them.</p>');
-    case 'admin/forum/add/container':
+    case 'admin/content/forum/add/container':
       return t('<p>Containers help you organize your forums. The job of a container is to hold, or contain, other forums that are related. For example, a container named "Food" might hold two forums named "Fruit" and "Vegetables".</p>');
-    case 'admin/forum/add/forum':
+    case 'admin/content/forum/add/forum':
       return t('<p>A forum holds discussion topics that are related. For example, a forum named "Fruit" might contain topics titled "Apples" and "Bananas".</p>');
     case 'node/add#forum':
       return t('Create a new topic for discussion in the forums.');
@@ -53,43 +53,45 @@ function forum_menu($may_cache) {
       'callback' => 'forum_page',
       'access' => user_access('access content'),
       'type' => MENU_SUGGESTED_ITEM);
-    $items[] = array('path' => 'admin/forum',
+    $items[] = array('path' => 'admin/content/forum',
       'title' => t('forums'),
+      'description' => t('Control forums and their hierarchy and change forum settings.'),
       'callback' => 'forum_overview',
       'access' => user_access('administer forums'),
       'type' => MENU_NORMAL_ITEM);
-    $items[] = array('path' => 'admin/forum/list',
+    $items[] = array('path' => 'admin/content/forum/list',
       'title' => t('list'),
       'access' => user_access('administer forums'),
       'type' => MENU_DEFAULT_LOCAL_TASK,
       'weight' => -10);
-    $items[] = array('path' => 'admin/forum/add/container',
+    $items[] = array('path' => 'admin/content/forum/add/container',
       'title' => t('add container'),
       'callback' => 'forum_form_container',
       'access' => user_access('administer forums'),
       'type' => MENU_LOCAL_TASK);
-    $items[] = array('path' => 'admin/forum/add/forum',
+    $items[] = array('path' => 'admin/content/forum/add/forum',
       'title' => t('add forum'),
       'callback' => 'forum_form_forum',
       'access' => user_access('administer forums'),
       'type' => MENU_LOCAL_TASK);
-    $items[] = array('path' => 'admin/settings/forum',
-      'title' => t('forums'),
+    $items[] = array('path' => 'admin/content/forum/settings',
+      'title' => t('settings'),
       'callback' => 'forum_admin_settings',
+      'weight' => 5,
       'access' => user_access('administer forums'),
-      'type' => MENU_NORMAL_ITEM);
+      'type' => MENU_LOCAL_TASK);
   }
   elseif (is_numeric(arg(4))) {
     $term = taxonomy_get_term(arg(4));
     // Check if this is a valid term.
     if ($term) {
-      $items[] = array('path' => 'admin/forum/edit/container',
+      $items[] = array('path' => 'admin/content/forum/edit/container',
         'title' => t('edit container'),
         'callback' => 'forum_form_container',
         'callback arguments' => array((array)$term),
         'access' => user_access('administer forums'),
         'type' => MENU_CALLBACK);
-      $items[] = array('path' => 'admin/forum/edit/forum',
+      $items[] = array('path' => 'admin/content/forum/edit/forum',
         'title' => t('edit forum'),
         'callback' => 'forum_form_forum',
         'callback arguments' => array((array)$term),
@@ -533,7 +535,7 @@ function forum_form_submit($form_id, $form_values) {
       drupal_set_message(t('The %type %term has been updated.', array('%term' => theme('placeholder', $form_values['name']), '%type' => $type)));
       break;
   }
-  return 'admin/forum';
+  return 'admin/content/forum';
 }
 
 /**
@@ -547,7 +549,7 @@ function _forum_confirm_delete($tid) {
   $form['tid'] = array('#type' => 'value', '#value' => $tid);
   $form['name'] = array('#type' => 'value', '#value' => $term->name);
 
-  return confirm_form('forum_confirm_delete', $form, t('Are you sure you want to delete the forum %name?', array('%name' => theme('placeholder', $term->name))), 'admin/forums', t('Deleting a forum or container will delete all sub-forums and associated posts as well. This action cannot be undone.'), t('Delete'), t('Cancel'));
+  return confirm_form('forum_confirm_delete', $form, t('Are you sure you want to delete the forum %name?', array('%name' => theme('placeholder', $term->name))), 'admin/content/forums', t('Deleting a forum or container will delete all sub-forums and associated posts as well. This action cannot be undone.'), t('Delete'), t('Cancel'));
 }
 
 /**
@@ -558,7 +560,7 @@ function forum_confirm_delete_submit($form_id, $form_values) {
   drupal_set_message(t('The forum %term and all sub-forums and associated posts have been deleted.', array('%term' => theme('placeholder', $form_values['name']))));
   watchdog('content', t('forum: deleted %term and all its sub-forums and associated posts.', array('%term' => theme('placeholder', $form_values['name']))));
 
-  return 'admin/forum';
+  return 'admin/content/forum';
 }
 
 /**
@@ -571,16 +573,16 @@ function forum_overview() {
   if ($tree) {
     foreach ($tree as $term) {
       if (in_array($term->tid, variable_get('forum_containers', array()))) {
-        $rows[] = array(_taxonomy_depth($term->depth) .' '. check_plain($term->name), l(t('edit container'), "admin/forum/edit/container/$term->tid"));
+        $rows[] = array(_taxonomy_depth($term->depth) .' '. check_plain($term->name), l(t('edit container'), "admin/content/forum/edit/container/$term->tid"));
       }
       else {
-        $rows[] = array(_taxonomy_depth($term->depth) .' '. check_plain($term->name), l(t('edit forum'), "admin/forum/edit/forum/$term->tid"));
+        $rows[] = array(_taxonomy_depth($term->depth) .' '. check_plain($term->name), l(t('edit forum'), "admin/content/forum/edit/forum/$term->tid"));
        }
 
     }
   }
   else {
-    $rows[] = array(array('data' => '<em>' . t('There are no existing containers or forums. You may add some on the <a href="%container">add container</a> or <a href="%forum">add forum</a> pages.', array('%container' => url('admin/forum/add/container'), '%forum' => url('admin/forum/add/forum'))) . '</em>', 'colspan' => 2));
+    $rows[] = array(array('data' => '<em>' . t('There are no existing containers or forums. You may add some on the <a href="%container">add container</a> or <a href="%forum">add forum</a> pages.', array('%container' => url('admin/content/forum/add/container'), '%forum' => url('admin/content/forum/add/forum'))) . '</em>', 'colspan' => 2));
   }
   return theme('table', $header, $rows);
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.252 2006/07/27 08:07:04 drumm Exp $
+// $Id: blog.module,v 1.253 2006/07/31 11:25:52 dries Exp $
 
 /**
  * @file
@@ -67,10 +67,10 @@ function blog_help($section) {
 <li>administer blog api at <a href="%admin-settings-blogapi">administer &gt;&gt; settings &gt;&gt; blogapi</a>.</li>
 <li>enable the "recent blog posts" block at <a href="%admin-block">administer &gt;&gt; blocks</a> to show the 10 most recent blog posts.</li>
 </ul>
-', array('%user' => url('user'), '%node-add-blog' => url('node/add/blog'), '%admin-node-configure-types-blog' => url('admin/settings/content-types/blog'), '%admin-settings-blogapi' => url('admin/settings/blogapi'), '%admin-block' => url('admin/block')));
+', array('%user' => url('user'), '%node-add-blog' => url('node/add/blog'), '%admin-node-configure-types-blog' => url('admin/content/types/blog'), '%admin-settings-blogapi' => url('admin/settings/blogapi'), '%admin-block' => url('admin/build/block')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%blog">Blog page</a>.', array('%blog' => 'http://drupal.org/handbook/modules/blog/')) .'</p>';
       return $output;
-    case 'admin/modules#description':
+    case 'admin/settings/modules#description':
       return t('Enables keeping an easily and regularly updated web page or a blog.');
     case 'node/add#blog':
       return t("A blog is a regularly updated journal or diary made up of individual posts shown in reversed chronological order. Each member of the site may create and maintain a blog.");
