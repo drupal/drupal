@@ -2,6 +2,8 @@
 
 Drupal x.x.x, xxxx-xx-xx (development version)
 ------------------------
+- completely retooled the administration page
+    * /admin now contains an administration page which may be themed
 - added web-based installer which can:
     * automatically generate the database configuration file
     * install pre-made 'install profiles' or distributions

@@ -866,11 +866,11 @@ function menu_primary_links($start_level = 1, $pid = 0) {
     }
   }
 
-  // Special case - provide link to admin/menu if primary links is empty.
+  // Special case - provide link to admin/build/menu if primary links is empty.
   if (empty($links) && $start_level == 1 && $pid == variable_get('menu_primary_menu', 0)) {
     $links['1-1'] = array(
       'title' => t('edit primary links'),
-      'href' => 'admin/menu'
+      'href' => 'admin/build/menu'
     );
   }
 
