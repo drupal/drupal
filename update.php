@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.195 2006/07/31 16:29:15 unconed Exp $
+// $Id: update.php,v 1.196 2006/07/31 19:24:16 unconed Exp $
 
 /**
  * @file
@@ -686,8 +686,8 @@ ini_set('display_errors', TRUE);
 // Access check:
 if (($access_check == FALSE) || ($user->uid == 1)) {
 
-  $install = FALSE;
   include_once './includes/install.inc';
+  drupal_load_updates();
 
   update_fix_schema_version();
   update_fix_watchdog_115();

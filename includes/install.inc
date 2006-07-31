@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.9 2006/07/29 17:56:41 dries Exp $
+// $Id: install.inc,v 1.10 2006/07/31 19:24:16 unconed Exp $
 
 define('SCHEMA_UNINSTALLED', -1);
 define('SCHEMA_INSTALLED', 0);
@@ -19,9 +19,10 @@ define('FILE_NOT_READABLE',   32);
 define('FILE_NOT_WRITABLE',   64);
 define('FILE_NOT_EXECUTABLE', 128);
 
-// Initialize the update system if necessary
-if (!$install) {
-  // Include install files for each installed module.
+/**
+ * Initialize the update system by loading all installed module's .install files.
+ */
+function drupal_load_updates() {
   foreach (module_list() as $module) {
     $install_file = './'. drupal_get_path('module', $module) .'/'. $module .'.install';
     if (is_file($install_file)) {
@@ -29,7 +30,6 @@ if (!$install) {
     }
   }
 }
-
 
 /**
  * Returns an array of available schema versions for a module.
@@ -525,6 +525,20 @@ function drupal_install_fix_file($file, $mask, $message = TRUE) {
   else {
     return FALSE;
   }
+}
+
+
+/**
+ * Send the user to a different installer page. This issues an on-site HTTP
+ * redirect. Messages (and errors) are erased.
+ *
+ * @param $path
+ *   An installer path.
+ */
+function install_goto($path) {
+  global $base_path;
+  header('Location: '. $base_path . $path);
+  exit();
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysql.inc,v 1.55 2006/07/26 07:16:08 drumm Exp $
+// $Id: database.mysql.inc,v 1.56 2006/07/31 19:24:16 unconed Exp $
 
 /**
  * @file
@@ -51,6 +51,13 @@ function db_connect($url) {
   //   (matched) rows, not the number of affected rows.
   $connection = @mysql_connect($url['host'], $url['user'], $url['pass'], TRUE, 2);
   if (!$connection) {
+    // Redirect to installer if using default DB credentials
+    if ($url['user'] == 'username' && $url['pass'] == 'password') {
+      include_once 'includes/install.inc';
+      install_goto('install.php');
+    }
+
+    // Show error screen otherwise
     drupal_maintenance_theme();
     drupal_set_title('Unable to connect to database server');
     print theme('maintenance_page', '<p>If you still have to install Drupal, proceed to the <a href="'. base_path() .'install.php">installation page</a>.</p>

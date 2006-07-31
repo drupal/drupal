@@ -1,7 +1,6 @@
 <?php
-// $Id: install.php,v 1.1 2006/07/13 13:11:36 dries Exp $
+// $Id: install.php,v 1.2 2006/07/31 19:24:16 unconed Exp $
 
-$install = TRUE;
 require_once './includes/install.inc';
 
 /**
@@ -49,7 +48,7 @@ function install_main() {
     $profile = preg_replace('/[^a-zA-Z_0-9]/', '', $_GET['profile']);
   }
   elseif ($profile = install_select_profile()) {
-    _install_goto("install.php?profile=$profile");
+    install_goto("install.php?profile=$profile");
   }
   else {
     _install_no_profile_error();
@@ -291,7 +290,7 @@ function install_settings_submit($form_id, $form_values) {
   drupal_rewrite_settings($settings);
 
   // Continue to install profile step
-  _install_goto("install.php?profile=$profile");
+  install_goto("install.php?profile=$profile");
 }
 
 /**
@@ -399,19 +398,6 @@ function install_complete($profile) {
 
   // Output page.
   print theme('maintenance_page', $output);
-}
-
-/**
- * Send the user to a different installer page. This issues an on-site HTTP
- * redirect. Messages (and errors) are erased.
- *
- * @param $path
- *   An installer path.
- */
-function _install_goto($path) {
-  global $base_path;
-  header('Location: '. $base_path . $path);
-  exit();
 }
 
 install_main();
