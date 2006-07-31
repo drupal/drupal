@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.194 2006/07/31 16:23:52 unconed Exp $
+// $Id: update.php,v 1.195 2006/07/31 16:29:15 unconed Exp $
 
 /**
  * @file
@@ -15,7 +15,7 @@
  */
 
 // Enforce access checking?
-$access_check = FALSE;TRUE;
+$access_check = TRUE;
 
 
 function update_sql($sql) {
