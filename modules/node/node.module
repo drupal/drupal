@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.663 2006/07/31 11:25:54 dries Exp $
+// $Id: node.module,v 1.664 2006/07/31 19:12:44 dries Exp $
 
 /**
  * @file
@@ -34,8 +34,6 @@ function node_help($section) {
       return $output;
     case 'admin/settings/modules#description':
       return t('Allows content to be submitted to the site and displayed on pages.');
-    case 'admin/content/node':
-      return t('<p>Below is a list of all of the posts on your site. Other forms of content are listed elsewhere (e.g. <a href="%comments">comments</a>).</p><p>Clicking a title views the post, while clicking an author\'s name views their user information.</p>', array('%comments' => url('admin/comment')));
     case 'admin/content/search':
       return t('<p>Enter a simple pattern to search for a post. This can include the wildcard character *.<br />For example, a search for "br*" might return "bread bakers", "our daily bread" and "brenda".</p>');
   }
@@ -929,18 +927,53 @@ function node_last_changed($nid) {
 }
 
 /**
- * List node administration operations that can be performed.
+ * Implementation of hook_node_operations().
  */
-function node_operations() {
+function node_node_operations() {
   $operations = array(
-    'approve' =>   array(t('Approve the selected posts'), 'UPDATE {node} SET status = 1 WHERE nid = %d'),
-    'promote' =>   array(t('Promote the selected posts'), 'UPDATE {node} SET status = 1, promote = 1 WHERE nid = %d'),
-    'sticky' =>    array(t('Make the selected posts sticky'), 'UPDATE {node} SET status = 1, sticky = 1 WHERE nid = %d'),
-    'demote' =>    array(t('Demote the selected posts'), 'UPDATE {node} SET promote = 0 WHERE nid = %d'),
-    'unpublish' => array(t('Unpublish the selected posts'), 'UPDATE {node} SET status = 0 WHERE nid = %d'),
-    'delete' =>    array(t('Delete the selected posts'), '')
+    'approve' =>   array(t('Approve the selected posts'), 'node_operations_approve'),
+    'promote' =>   array(t('Promote the selected posts'), 'node_operations_promote'),
+    'sticky' =>    array(t('Make the selected posts sticky'), 'node_operations_sticky'),
+    'demote' =>    array(t('Demote the selected posts'), 'node_operations_demote'),
+    'unpublish' => array(t('Unpublish the selected posts'), 'node_operations_unpublish'),
+    'delete' =>    array(t('Delete the selected posts'), ''),
   );
   return $operations;
+}
+
+/**
+ * Callback function for admin mass approving nodes.
+ */
+function node_operations_approve($nodes) {
+  db_query('UPDATE {node} SET status = 1 WHERE nid IN(%s)', implode(',', $nodes));
+}
+
+/**
+ * Callback function for admin mass promoting nodes.
+ */
+function node_operations_promote($nodes) {
+  db_query('UPDATE {node} SET status = 1, promote = 1 WHERE nid IN(%s)', implode(',', $nodes));
+}
+
+/**
+ * Callback function for admin mass editing nodes to be sticky.
+ */
+function node_operations_sticky($nodes) {
+  db_query('UPDATE {node} SET status = 1, sticky = 1 WHERE nid IN(%s)', implode(',', $nodes));
+}
+
+/**
+ * Callback function for admin mass demoting nodes.
+ */
+function node_operations_demote($nodes) {
+  db_query('UPDATE {node} SET promote = 0 WHERE nid IN(%s)', implode(',', $nodes));
+}
+
+/**
+ * Callback function for admin mass unpublishing nodes.
+ */
+function node_operations_unpublish($nodes) {
+  db_query('UPDATE {node} SET status = 0 WHERE nid IN(%s)', implode(',', $nodes));
 }
 
 /**
@@ -1108,18 +1141,15 @@ function node_filter_form_submit() {
 }
 
 /**
- * Generate the content administration overview.
+ * Submit the node administration update form.
  */
 function node_admin_nodes_submit($form_id, $edit) {
-  $operations = node_operations();
-  if ($operations[$edit['operation']][1]) {
-    // Flag changes
-    $operation = $operations[$edit['operation']][1];
-    foreach ($edit['nodes'] as $nid => $value) {
-      if ($value) {
-        db_query($operation, $nid);
-      }
-    }
+  $operations = module_invoke_all('node_operations');
+  $operation = $operations[$edit['operation']];
+  // Filter out unchecked nodes
+  $nodes = array_diff($edit['nodes'], array(0));
+  if ($function = $operation[1]) {
+    call_user_func($function, $nodes);
     cache_clear_all();
     drupal_set_message(t('The update has been performed.'));
   }
@@ -1158,7 +1188,7 @@ function node_admin_nodes() {
     '#suffix' => '</div>',
   );
   $options = array();
-  foreach (node_operations() as $key => $value) {
+  foreach (module_invoke_all('node_operations') as $key => $value) {
     $options[$key] = $value[0];
   }
   $form['options']['operation'] = array('#type' => 'select', '#options' => $options,  '#default_value' => 'approve');
