@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.2 2006/07/31 19:24:16 unconed Exp $
+// $Id: install.php,v 1.3 2006/08/01 14:59:21 dries Exp $
 
 require_once './includes/install.inc';
 
@@ -130,7 +130,7 @@ function install_change_settings() {
     drupal_maintenance_theme();
     drupal_set_message(st('The Drupal installer requires write permissions to %file during the installation process.', array('%file' => $settings_file)), 'error');
 
-    drupal_set_title('Drupal installation');
+    drupal_set_title('Drupal database setup');
     print theme('install_page', '');
     exit;
   }
@@ -140,83 +140,121 @@ function install_change_settings() {
     $db_user = $db_pass = $db_path = '';
   }
 
-  // Database type
-  $form['db_type'] = array(
-    '#type' => 'select',
-    '#title' => 'Database type',
-    '#required' => TRUE,
-    '#options' => drupal_detect_database_types(),
-    '#default_value' => $db_type,
-    '#description' => st('Select the type of database you would like to use with your %drupal installation. If you do not find your preferred database type listed here, verify that the database type is <a href="http://drupal.org/node/270#database">supported by Drupal</a> then confirm that it is properly installed and accessible from PHP. Only properly installed databases that are accessible from PHP and recognized by %drupal are displayed in this menu.', array('%drupal' => drupal_install_profile_name())),
-  );
-  // Database username
-  $form['db_user'] = array(
-    '#type' => 'textfield',
-    '#title' => 'Database username',
-    '#default_value' => $db_user,
-    '#size' => 45,
-    '#maxlength' => 45,
-    '#required' => TRUE,
-    '#description' => st('The database username that your %drupal installation will use to connect to your database server.', array('%drupal' => drupal_install_profile_name())),
-  );
 
-  // Database username
-  $form['db_pass'] = array(
-    '#type' => 'password',
-    '#title' => 'Database password',
-    '#default_value' => $db_pass,
-    '#size' => 45,
-    '#maxlength' => 45,
-    '#required' => TRUE,
-    '#description' => st('The database password that your %drupal installation will use to connect to your database server.', array('%drupal' => drupal_install_profile_name())),
-  );
 
-  // Database name
-  $form['db_path'] = array(
-    '#type' => 'textfield',
-    '#title' => 'Database name',
-    '#default_value' => $db_path,
-    '#size' => 45,
-    '#maxlength' => 45,
-    '#required' => TRUE,
-    '#description' => st('The name of the database where %drupal can install its database tables.', array('%drupal' => drupal_install_profile_name())),
-  );
+  $db_types = drupal_detect_database_types();
+  if (count($db_types) == 0) {
+    $form['no_db_types'] = array(
+      '#type' => 'markup',
+      '#value' => 'Your web server does not appear to support any common database types. Check with your hosting provider to see if they offer any databases that <a href="http://drupal.org/node/270#database">Drupal supports</a>.',
+    );
+  }
+  else {
+    $form['basic_options'] = array(
+      '#type' => 'fieldset',
+      '#title' => 'Basic options',
+      '#description' => st('<p>To set up your %drupal database, enter the following information.</p>', array('%drupal' => drupal_install_profile_name())),
+    );
 
-  // Database host
-  $form['db_host'] = array(
-    '#type' => 'textfield',
-    '#title' => 'Database host',
-    '#default_value' => $db_host,
-    '#size' => 45,
-    '#maxlength' => 45,
-    '#required' => TRUE,
-    '#description' => st('The hostname or IP address of your database server. If your database server is on the same machine as you are installing %drupal, you should probably enter %localhost.', array('%drupal' => drupal_install_profile_name(), '%localhost' => 'localhost')),
-  );
+    if (count($db_types) > 1) {
+      // Database type
+      $form['basic_options']['db_type'] = array(
+        '#type' => 'radios',
+        '#title' => 'Database type',
+        '#required' => TRUE,
+        '#options' => drupal_detect_database_types(),
+        '#default_value' => $db_type,
+        '#description' => st('The type of database your %drupal data will be stored in.', array('%drupal' => drupal_install_profile_name())),
+      );
+      $db_path_description = st('The name of the database your %drupal data will be stored in. It must exist on your server before %drupal can be installed.', array('%drupal' => drupal_install_profile_name()));
+    }
+    else {
+      if (count($db_types) == 1) {
+        $db_types = array_values($db_types);
+        $form['basic_options']['db_type'] = array(
+          '#type' => 'hidden',
+          '#value' => $db_types[0],
+        );
+        $db_path_description = st('The name of the %db_type database your %drupal data will be stored in. It must exist on your server before %drupal can be installed.', array('%db_type' => $db_types[0], '%drupal' => drupal_install_profile_name()));
+      }
+    }
 
-  // Database prefix
-  $form['db_prefix'] = array(
-    '#type' => 'textfield',
-    '#title' => 'Database prefix',
-    '#default_value' => $db_prefix,
-    '#size' => 45,
-    '#maxlength' => 45,
-    '#required' => FALSE,
-    '#description' => 'Optionally set a prefix for all database table names. If a prefix is specified, all table names will be prepended with this value. Only alphanumeric characters and the underscore are allowed. If you do not wish to use a prefix, leave this field empty. If you wish to only prefix specific tables, you will need to manually edit your <em>settings.php</em> configuration file.',
-  );
+    // Database name
+    $form['basic_options']['db_path'] = array(
+      '#type' => 'textfield',
+      '#title' => 'Database name',
+      '#default_value' => $db_path,
+      '#size' => 45,
+      '#maxlength' => 45,
+      '#required' => TRUE,
+      '#description' => $db_path_description
+    );
 
-  $form['save'] = array(
-    '#type' => 'submit',
-    '#value' => 'Save configuration',
-  );
-  $form['errors'] = array();
-  $form['settings_file'] = array('#type' => 'value', '#value' => $settings_file);
-  $form['_db_url'] = array('#type' => 'value');
-  $form['#action'] = "install.php?profile=$profile";
-  $form['#redirect'] = NULL;
-  drupal_maintenance_theme();
+    // Database username
+    $form['basic_options']['db_user'] = array(
+      '#type' => 'textfield',
+      '#title' => 'Database username',
+      '#default_value' => $db_user,
+      '#size' => 45,
+      '#maxlength' => 45,
+      '#required' => TRUE,
+    );
+
+    // Database username
+    $form['basic_options']['db_pass'] = array(
+      '#type' => 'password',
+      '#title' => 'Database password',
+      '#default_value' => $db_pass,
+      '#size' => 45,
+      '#maxlength' => 45,
+      '#required' => TRUE,
+    );
+
+    $form['advanced_options'] = array(
+      '#type' => 'fieldset',
+      '#title' => 'Advanced options',
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+      '#description' => st('These options are only necessary for some sites. If you\'re not sure what you should enter here, leave the default settings or check with your hosting provider.')
+    );
+
+    // Database host
+    $form['advanced_options']['db_host'] = array(
+      '#type' => 'textfield',
+      '#title' => 'Database host',
+      '#default_value' => $db_host,
+      '#size' => 45,
+      '#maxlength' => 45,
+      '#required' => TRUE,
+      '#description' => st('If your database is located on a different server, change this.', array('%drupal' => drupal_install_profile_name())),
+    );
+
+    // Database prefix
+    $form['advanced_options']['db_prefix'] = array(
+      '#type' => 'textfield',
+      '#title' => 'Database prefix',
+      '#default_value' => $db_prefix,
+      '#size' => 45,
+      '#maxlength' => 45,
+      '#required' => FALSE,
+      '#description' => st('If more than one %drupal web site will be sharing this database, enter a table prefix for your %drupal site here.', array('%drupal' => drupal_install_profile_name())),
+    );
+
+    $form['save'] = array(
+      '#type' => 'submit',
+      '#value' => 'Save configuration',
+    );
+
+    $form['errors'] = array();
+    $form['settings_file'] = array('#type' => 'value', '#value' => $settings_file);
+    $form['_db_url'] = array('#type' => 'value');
+    $form['#action'] = "install.php?profile=$profile";
+    $form['#redirect'] = NULL;
+    drupal_maintenance_theme();
+  }
   $output = drupal_get_form('install_settings', $form);
   drupal_set_title('Database configuration');
-  print theme('install_page', st('<p>Please fill out the following information to configure your %drupal site.</p>', array('%drupal' => drupal_install_profile_name())). $output);
+  print theme('install_page', $output);
   exit;
 }
 
