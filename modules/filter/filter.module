@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.129 2006/07/31 11:25:53 dries Exp $
+// $Id: filter.module,v 1.130 2006/08/01 20:31:39 unconed Exp $
 
 /**
  * @file
@@ -40,16 +40,16 @@ function filter_help($section) {
 <p>Below you can configure which input formats are available to which roles, as well as choose a default input format (used for imported content, for example).</p>
 <p>Note that (1) the default format is always available to all roles, and (2) all filter formats can always be used by roles with the "administer filters" permission even if they are not explicitly listed in the Roles column of this table.</p>');
 
-    case 'admin/settings/filters/'. arg(2):
+    case 'admin/settings/filters/'. arg(3):
       return t('
 <p>Every <em>filter</em> performs one particular change on the user input, for example stripping out malicious HTML or making URLs clickable. Choose which filters you want to apply to text in this input format.</p>
-<p>If you notice some filters are causing conflicts in the output, you can <a href="%rearrange">rearrange them</a>.</p>', array('%rearrange' => url('admin/settings/filters/'. arg(2) .'/order')));
+<p>If you notice some filters are causing conflicts in the output, you can <a href="%rearrange">rearrange them</a>.</p>', array('%rearrange' => url('admin/settings/filters/'. arg(3) .'/order')));
 
-    case 'admin/settings/filters/'. arg(2) .'/configure':
+    case 'admin/settings/filters/'. arg(3) .'/configure':
       return t('
-<p>If you cannot find the settings for a certain filter, make sure you\'ve enabled it on the <a href="%url">view tab</a> first.</p>', array('%url' => url('admin/settings/filters/'. arg(2))));
+<p>If you cannot find the settings for a certain filter, make sure you\'ve enabled it on the <a href="%url">view tab</a> first.</p>', array('%url' => url('admin/settings/filters/'. arg(3))));
 
-    case 'admin/settings/filters/'. arg(2) .'/order':
+    case 'admin/settings/filters/'. arg(3) .'/order':
       return t('
 <p>Because of the flexible filtering system, you might encounter a situation where one filter prevents another from doing its job. For example: a word in an URL gets converted into a glossary term, before the URL can be converted in a clickable link. When this happens, you will need to rearrange the order in which filters get executed.</p>
 <p>Filters are executed from top-to-bottom. You can use the weight column to rearrange them: heavier filters \'sink\' to the bottom.</p>');
@@ -96,36 +96,36 @@ function filter_menu($may_cache) {
     );
   }
   else {
-    if (arg(0) == 'admin' && arg(1) == 'filters' && is_numeric(arg(2))) {
+    if (arg(0) == 'admin' && arg(1) == 'settings' && arg(2) == 'filters' && is_numeric(arg(3))) {
       $formats = filter_formats();
 
-      if (isset($formats[arg(2)])) {
-        $items[] = array('path' => 'admin/settings/filters/'. arg(2),
-          'title' => t("'%format' input format", array('%format' => $formats[arg(2)]->name)),
+      if (isset($formats[arg(3)])) {
+        $items[] = array('path' => 'admin/settings/filters/'. arg(3),
+          'title' => t("'%format' input format", array('%format' => $formats[arg(3)]->name)),
           'callback' => 'filter_admin_format_form',
-          'callback arguments' => array('format' => $formats[arg(2)]),
+          'callback arguments' => array('format' => $formats[arg(3)]),
           'type' => MENU_CALLBACK,
           'access' => user_access('administer filters'),
         );
-        $items[] = array('path' => 'admin/settings/filters/'. arg(2) .'/list',
+        $items[] = array('path' => 'admin/settings/filters/'. arg(3) .'/list',
           'title' => t('view'),
           'callback' => 'filter_admin_format_form',
-          'callback arguments' => array('format' => $formats[arg(2)]),
+          'callback arguments' => array('format' => $formats[arg(3)]),
           'type' => MENU_DEFAULT_LOCAL_TASK,
           'weight' => 0,
           'access' => user_access('administer filters'),
         );
-        $items[] = array('path' => 'admin/settings/filters/'. arg(2) .'/configure',
+        $items[] = array('path' => 'admin/settings/filters/'. arg(3) .'/configure',
           'title' => t('configure'),
           'callback' => 'filter_admin_configure',
           'type' => MENU_LOCAL_TASK,
           'weight' => 1,
           'access' => user_access('administer filters'),
         );
-        $items[] = array('path' => 'admin/settings/filters/'. arg(2) .'/order',
+        $items[] = array('path' => 'admin/settings/filters/'. arg(3) .'/order',
           'title' => t('rearrange'),
           'callback' => 'filter_admin_order',
-          'callback arguments' => array('format' => $formats[arg(2)]),
+          'callback arguments' => array('format' => $formats[arg(3)]),
           'type' => MENU_LOCAL_TASK,
           'weight' => 2,
           'access' => user_access('administer filters'),
@@ -351,7 +351,7 @@ function theme_filter_admin_overview($form) {
  * Menu callback; confirm deletion of a format.
  */
 function filter_admin_delete() {
-  $format = arg(3);
+  $format = arg(4);
   $format = db_fetch_object(db_query('SELECT * FROM {filter_formats} WHERE format = %d', $format));
 
   if ($format) {
@@ -588,7 +588,7 @@ function filter_admin_order_submit($form_id, $form_values) {
  * Menu callback; display settings defined by filters.
  */
 function filter_admin_configure() {
-  $format = arg(2);
+  $format = arg(3);
 
   $list = filter_list_format($format);
   $form = array();
