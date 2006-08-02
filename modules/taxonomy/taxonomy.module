@@ -104,23 +104,23 @@ function taxonomy_menu($may_cache) {
       'type' => MENU_CALLBACK);
   }
   else {
-    if (is_numeric(arg(2))) {
-      $items[] = array('path' => 'admin/content/taxonomy/' . arg(2),
+    if (is_numeric(arg(3))) {
+      $items[] = array('path' => 'admin/content/taxonomy/' . arg(3),
         'title' => t('list terms'),
         'callback' => 'taxonomy_overview_terms',
-        'callback arguments' => array(arg(2)),
+        'callback arguments' => array(arg(3)),
         'access' => user_access('administer taxonomy'),
         'type' => MENU_CALLBACK);
 
-      $items[] = array('path' => 'admin/content/taxonomy/' . arg(2) . '/list',
+      $items[] = array('path' => 'admin/content/taxonomy/' . arg(3) . '/list',
         'title' => t('list'),
         'type' => MENU_DEFAULT_LOCAL_TASK,
         'weight' => -10);
 
-      $items[] = array('path' => 'admin/content/taxonomy/' . arg(2) . '/add/term',
+      $items[] = array('path' => 'admin/content/taxonomy/' . arg(3) . '/add/term',
         'title' => t('add term'),
         'callback' => 'taxonomy_form_term',
-        'callback arguments' => array(array('vid' => arg(2))),
+        'callback arguments' => array(array('vid' => arg(3))),
         'access' => user_access('administer taxonomy'),
         'type' => MENU_LOCAL_TASK);
     }
