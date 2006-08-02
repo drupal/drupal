@@ -835,7 +835,7 @@ function user_login($edit = array(), $msg = '') {
 
   // Display login form:
   if ($msg) {
-    $output .= "<p>$msg</p>";
+    $output .= '<p>'. check_plain($msg) .'</p>';
   }
   if (count(user_auth_help_links()) > 0) {
     $output .= form_textfield(t('Username'), 'name', $edit['name'], 30, 64, t('Enter your %s username, or an ID from one of our affiliates: %a.', array('%s' => variable_get('site_name', 'local'), '%a' => implode(', ', user_auth_help_links()))));

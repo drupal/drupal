@@ -1,3 +1,7 @@
+Drupal 4.6.9, 2006-08-02
+------------------------
+- fixed security issue (XSS), see SA-2006-011
+
 Drupal 4.6.8, 2006-06-01
 ------------------------
 - fixed critical upload issue, see SA-2006-007
