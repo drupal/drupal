@@ -400,9 +400,11 @@ function install_no_profile_error() {
  * Show an error page when Drupal has already been installed.
  */
 function install_already_done_error() {
+  global $base_url;
+
   drupal_maintenance_theme();
   drupal_set_title('Drupal already installed');
-  print theme('install_page', '<p>Drupal has already been installed on this site. To start over, you must empty your existing database. To install to a different database, edit the appropriate <em>settings.php</em> file in the <em>sites</em> folder.</p>');
+  print theme('install_page', '<ul><li>To start over, you must empty your existing database.</li><li>To install to a different database, edit the appropriate <em>settings.php</em> file in the <em>sites</em> folder.</li><li>To upgrade an existing installation, proceed to the <a href="'. $base_url .'/update.php">update script</a>.</li></ul>');
   exit;
 }
 
