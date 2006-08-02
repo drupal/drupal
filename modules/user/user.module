@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.644 2006/08/02 10:29:26 dries Exp $
+// $Id: user.module,v 1.645 2006/08/02 18:13:40 killes Exp $
 
 /**
  * @file
@@ -854,7 +854,7 @@ function user_login($msg = '') {
 
   // Display login form:
   if ($msg) {
-    $form['message'] = array('#value' => "<p>$msg</p>");
+    $form['message'] = array('#value' => '<p>'. check_plain($msg) .'</p>');
   }
   $form['name'] = array('#type' => 'textfield',
     '#title' => t('Username'),
