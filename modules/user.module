@@ -900,7 +900,7 @@ function user_login($msg = '') {
 
   // Display login form:
   if ($msg) {
-    $form['message'] = array('#value' => "<p>$msg</p>");
+    $form['message'] = array('#value' => '<p>'. check_plain($msg) .'</p>');
   }
   unset($_GET['time']);
   $form['#action'] = url($_GET['q'], drupal_get_destination());
