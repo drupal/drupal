@@ -854,7 +854,7 @@ function user_login($msg = '') {
 
   // Display login form:
   if ($msg) {
-    $form['message'] = array('#value' => "<p>$msg</p>");
+    $form['message'] = array('#value' => '<p>'. check_plain($msg) .'</p>');
   }
   $form['name'] = array('#type' => 'textfield',
     '#title' => t('Username'),
