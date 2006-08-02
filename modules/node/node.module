@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.664 2006/07/31 19:12:44 dries Exp $
+// $Id: node.module,v 1.665 2006/08/02 13:44:07 dries Exp $
 
 /**
  * @file
@@ -911,7 +911,7 @@ function node_menu($may_cache) {
           'type' => MENU_LOCAL_TASK);
       }
     }
-    else if (arg(0) == 'admin' && arg(1) == 'settings' && arg(2) == 'content-types' && is_string(arg(3))) {
+    else if (arg(0) == 'admin' && arg(1) == 'content' && arg(2) == 'types' && is_string(arg(3))) {
       $items[] = array('path' => 'admin/content/types/'. arg(3),
         'title' => t("'%name' content type", array('%name' => node_get_name(arg(3)))),
         'type' => MENU_CALLBACK);
