@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.109 2006/08/03 07:06:36 dries Exp $
+// $Id: bootstrap.inc,v 1.110 2006/08/03 13:42:34 dries Exp $
 
 /**
  * @file
@@ -382,6 +382,15 @@ function drupal_load($type, $name) {
 /**
  * Set HTTP headers in preparation for a page response.
  *
+ * The general approach here is that anonymous users can keep a local
+ * cache of the page, but must revalidate it on every request.  Then,
+ * they are given a '304 Not Modified' response as long as they stay
+ * logged out and the page has not been modified.
+ *
+ * Authenticated users are always given a 'no-cache' header, and will
+ * fetch a fresh page on every request.  This prevents authenticated
+ * users seeing locally cached pages that show them as logged out.
+ *
  * @see page_set_cache
  */
 function drupal_page_header() {
@@ -412,6 +421,10 @@ function drupal_page_header() {
     // Send appropriate response:
     header("Last-Modified: $date");
     header("ETag: $etag");
+
+    // The following headers force validation of cache:
+    header("Expires: Sun, 19 Nov 1978 05:00:00 GMT");
+    header("Cache-Control: must-revalidate");
 
     // Determine if the browser accepts gzipped data.
     if (@strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') === FALSE && function_exists('gzencode')) {
