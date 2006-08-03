@@ -194,7 +194,7 @@ function conf_init() {
  *   than by consulting the database.
  * @param $check_db
  *   Allows the database search to be skipped (useful for pre-bootstrap
- *   checks where configuration paths must still be respected). 
+ *   checks where configuration paths must still be respected).
  *
  * @return
  *   The filename of the requested item.

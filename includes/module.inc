@@ -89,7 +89,7 @@ function module_list($refresh = FALSE, $bootstrap = TRUE, $sort = FALSE, $fixed_
 
 /**
  * Rebuild the database cache of module files.
- * 
+ *
  * @return
  *   The array of filesystem objects used to rebuild the cache.
  */
