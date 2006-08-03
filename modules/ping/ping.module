@@ -1,5 +1,5 @@
 <?php
-// $Id: ping.module,v 1.39 2006/07/31 11:25:54 dries Exp $
+// $Id: ping.module,v 1.40 2006/08/03 13:46:21 dries Exp $
 
 /**
  * @file
@@ -36,9 +36,9 @@ function ping_help($section) {
 function ping_cron() {
   global $base_url;
 
-  if (variable_get('site_name', 0) && variable_get('site_slogan', 0)) {
+  if (variable_get('site_name', 0)) {
     if (db_num_rows(db_query("SELECT nid FROM {node} WHERE status = 1 AND (created > '". variable_get('cron_last', time()) ."' OR changed > '". variable_get('cron_last', time()) ."')"))) {
-      _ping_notify(variable_get('site_name', '') .' - '. variable_get('site_slogan', ''), $base_url);
+      _ping_notify(variable_get('site_name', ''), $site_title, $base_url);
     }
   }
 }
