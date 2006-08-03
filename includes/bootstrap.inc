@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.108 2006/08/03 01:02:50 unconed Exp $
+// $Id: bootstrap.inc,v 1.109 2006/08/03 07:06:36 dries Exp $
 
 /**
  * @file
@@ -194,7 +194,7 @@ function conf_init() {
  *   than by consulting the database.
  * @param $check_db
  *   Allows the database search to be skipped (useful for pre-bootstrap
- *   checks where configuration paths must still be respected). 
+ *   checks where configuration paths must still be respected).
  *
  * @return
  *   The filename of the requested item.

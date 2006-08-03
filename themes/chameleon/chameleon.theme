@@ -1,5 +1,5 @@
 <?php
-// $Id: chameleon.theme,v 1.45 2006/05/23 02:07:36 drumm Exp $
+// $Id: chameleon.theme,v 1.46 2006/08/03 07:06:36 dries Exp $
 
 /**
  * @file
@@ -28,6 +28,8 @@ function chameleon_page($content) {
     drupal_set_html_head('<link rel="shortcut icon" href="'. check_url(theme_get_setting('favicon')) .'" type="image/x-icon" />');
   }
 
+  drupal_add_css(path_to_theme() .'/common.css', 'theme');
+
   $title = drupal_get_title();
 
   $output  = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n";
@@ -35,8 +37,7 @@ function chameleon_page($content) {
   $output .= "<head>\n";
   $output .= " <title>". ($title ? strip_tags($title) ." | ". variable_get("site_name", "drupal") : variable_get("site_name", "drupal") ." | ". variable_get("site_slogan", "")) ."</title>\n";
   $output .= drupal_get_html_head();
-  $output .= theme('stylesheet_import', base_path() . path_to_theme() ."/common.css");
-  $output .= theme_get_styles();
+  $output .= drupal_get_css();
   $output .= "</head>";
   $output .= "<body>\n";
   $output .= " <div id=\"header\">";

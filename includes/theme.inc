@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.303 2006/07/13 13:11:36 dries Exp $
+// $Id: theme.inc,v 1.304 2006/08/03 07:06:36 dries Exp $
 
 /**
  * @file
@@ -53,19 +53,19 @@ function init_theme() {
 
   // If we're using a style, load its appropriate theme,
   // which is stored in the style's description field.
-  // Also load the stylesheet using theme_add_style().
+  // Also add the stylesheet using drupal_add_css().
   // Otherwise, load the theme.
   if (strpos($themes[$theme]->filename, '.css')) {
     // File is a style; loads its CSS.
     // Set theme to its template/theme
-    theme_add_style($themes[$theme]->filename);
+    drupal_add_css($themes[$theme]->filename, 'theme');
     $theme = basename(dirname($themes[$theme]->description));
   }
   else {
     // File is a template/theme
     // Load its CSS, if it exists
     if (file_exists($stylesheet = dirname($themes[$theme]->filename) .'/style.css')) {
-      theme_add_style($stylesheet);
+      drupal_add_css($stylesheet, 'theme');
     }
   }
 
@@ -325,33 +325,6 @@ function theme_get_setting($setting_name, $refresh = FALSE) {
 }
 
 /**
- * Add a theme stylesheet to be included later. This is handled separately from
- * drupal_set_html_head() to enforce the correct CSS cascading order.
- */
-function theme_add_style($path = '', $media = 'all') {
-  static $styles = array();
-
-  if ($path && !isset($styles["$media:$path"])) {
-    $style = new stdClass();
-    $style->path = base_path() . $path;
-    $style->media = $media;
-    $styles["$media:$path"] = $style;
-  }
-  return $styles;
-}
-
-/**
- * Return the HTML for a theme's stylesheets.
- */
-function theme_get_styles() {
-  $output = '';
-  foreach (theme_add_style() as $style) {
-    $output .= theme('stylesheet_import', $style->path, $style->media);
-  }
-  return $output;
-}
-
-/**
  * @defgroup themeable Themeable functions
  * @{
  * Functions that display HTML, and which can be customized by themes.
@@ -392,7 +365,7 @@ function theme_page($content) {
   $output .= '<head>';
   $output .= ' <title>'. (drupal_get_title() ? strip_tags(drupal_get_title()) : variable_get('site_name', 'drupal')) .'</title>';
   $output .= drupal_get_html_head();
-  $output .= theme_get_styles();
+  $output .= drupal_get_css();
 
   $output .= ' </head>';
   $output .= ' <body style="background-color: #fff; color: #000;">';
@@ -433,7 +406,7 @@ function theme_maintenance_page($content, $messages = TRUE, $partial = FALSE) {
   $output .= '<head>';
   $output .= ' <title>'. strip_tags(drupal_get_title()) .'</title>';
   $output .= drupal_get_html_head();
-  $output .= theme_get_styles();
+  $output .= drupal_get_css();
   $output .= '</head>';
   $output .= '<body>';
   $output .= '<h1>' . drupal_get_title() . '</h1>';
@@ -462,7 +435,7 @@ function theme_install_page($content) {
   $output .= '<head>';
   $output .= ' <title>'. strip_tags(drupal_get_title()) .'</title>';
   $output .= drupal_get_html_head();
-  $output .= theme_get_styles();
+  $output .= drupal_get_css();
   $output .= '</head>';
   $output .= '<body>';
   $output .= '<h1>' . drupal_get_title() . '</h1>';
@@ -853,22 +826,6 @@ function theme_mark($type = MARK_NEW) {
       return ' <span class="marker">'. t('updated') .'</span>';
     }
   }
-}
-
-/**
- * Import a stylesheet using @import.
- *
- * @param $path
- *  The path to the stylesheet.
- *
- * @param $media
- *  The media type to specify for the stylesheet
- *
- * @return
- *  A string containing the HTML for the stylesheet import.
- */
-function theme_stylesheet_import($path, $media = 'all') {
-  return '<style type="text/css" media="'. $media .'">@import "'. $path .'";</style>';
 }
 
 /**

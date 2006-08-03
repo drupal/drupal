@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.11 2006/08/03 01:02:50 unconed Exp $
+// $Id: install.inc,v 1.12 2006/08/03 07:06:36 dries Exp $
 
 define('SCHEMA_UNINSTALLED', -1);
 define('SCHEMA_INSTALLED', 0);
@@ -270,7 +270,7 @@ function drupal_verify_profile($profile) {
   // Get a list of modules required by this profile.
   $function = $profile .'_profile_modules';
   $module_list = array_merge(array('system'), $function());
-  
+
   // Verify that all required modules exist.
   $modules_present = TRUE;
   foreach ($module_list as $module) {
@@ -311,7 +311,7 @@ function drupal_install_profile($profile, $module_list) {
   // Install schemas for profile and all its modules.
   module_rebuild_cache();
   drupal_install_modules($module_list);
-  
+
   // And now, run the profile's install function.
   $function = $profile .'_install';
   if (function_exists($function)) {

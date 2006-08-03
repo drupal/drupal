@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.80 2006/08/03 01:02:50 unconed Exp $
+// $Id: module.inc,v 1.81 2006/08/03 07:06:36 dries Exp $
 
 /**
  * @file
@@ -89,7 +89,7 @@ function module_list($refresh = FALSE, $bootstrap = TRUE, $sort = FALSE, $fixed_
 
 /**
  * Rebuild the database cache of module files.
- * 
+ *
  * @return
  *   The array of filesystem objects used to rebuild the cache.
  */

@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.550 2006/07/29 17:56:41 dries Exp $
+// $Id: common.inc,v 1.551 2006/08/03 07:06:36 dries Exp $
 
 /**
  * @file
@@ -115,7 +115,7 @@ function drupal_set_html_head($data = NULL) {
  */
 function drupal_get_html_head() {
   $output = "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n";
-  $output .= theme('stylesheet_import', base_path() .'misc/drupal.css');
+  drupal_add_css('misc/drupal.css', 'core');
   return $output . drupal_set_html_head();
 }
 
@@ -1201,6 +1201,53 @@ function drupal_clone($object) {
  */
 function drupal_add_link($attributes) {
   drupal_set_html_head('<link'. drupal_attributes($attributes) ." />\n");
+}
+
+/**
+ * Adds a CSS file to the stylesheet queue.
+ *
+ * @param $path
+ *   The path to the CSS file relative to the base_path(), e.g., /modules/devel/devel.css.
+ * @param $type
+ *   The type of stylesheet that is being added. Types are: core, module, and theme.
+ * @param $media
+ *   (optional) The media type for the stylesheet, e.g., all, print, screen.
+ * @return
+ *   An array of CSS files.
+ */
+function drupal_add_css($path = NULL, $type = 'module', $media = 'all') {
+  static $css = array('core' => array(), 'module' => array(), 'theme' => array());
+
+  if (!is_null($path)) {
+    $css[$type][$path] = array('path' => $path, 'media' => $media);
+  }
+
+  return $css;
+}
+
+/**
+ * Returns a themed representation of all stylesheets that should be attached to the page.
+ * It loads the CSS in order, with 'core' CSS first, then 'module' CSS, then 'theme' CSS files.
+ * This ensures proper cascading of styles for easy overriding in modules and themes.
+ *
+ * @param $css
+ *   (optional) An array of CSS files. If no array is provided, the default stylesheets array is used instead.
+ * @return
+ *   A string of XHTML CSS tags.
+ */
+function drupal_get_css($css = NULL) {
+  $output = '';
+  if (is_null($css)) {
+    $css = drupal_add_css();
+  }
+
+  foreach ($css as $type) {
+    foreach ($type as $file) {
+      $output .= '<style type="text/css" media="'. $file['media'] .'">@import "'. base_path() . $file['path'] ."\";</style>\n";
+    }
+  }
+
+  return $output;
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: phptemplate.engine,v 1.38 2006/07/29 17:56:41 dries Exp $
+// $Id: phptemplate.engine,v 1.39 2006/08/03 07:06:36 dries Exp $
 
 /**
  * @file
@@ -210,7 +210,8 @@ function phptemplate_page($content) {
     'sidebar_right'       => $sidebar_right,
     'site_name'           => (theme_get_setting('toggle_name') ? variable_get('site_name', 'Drupal') : ''),
     'site_slogan'         => (theme_get_setting('toggle_slogan') ? variable_get('site_slogan', '') : ''),
-    'styles'              => theme_get_styles(),
+    'css'                 => drupal_add_css(),
+    'styles'              => drupal_get_css(),
     'tabs'                => theme('menu_local_tasks'),
     'title'               => drupal_get_title()
   );
