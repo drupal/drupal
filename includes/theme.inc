@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.304 2006/08/03 07:06:36 dries Exp $
+// $Id: theme.inc,v 1.305 2006/08/03 20:37:52 unconed Exp $
 
 /**
  * @file
@@ -663,6 +663,7 @@ function theme_submenu($links) {
  *
  *   Each cell can be either a string or an associative array with the following keys:
  *   - "data": The string to display in the table cell.
+ *   - "header": Indicates this cell is a header.
  *   - Any HTML attributes, such as "colspan", to apply to the table cell.
  *
  *   Here's an example for $rows:
@@ -699,7 +700,7 @@ function theme_table($header, $rows, $attributes = array(), $caption = NULL) {
     $output .= ' <thead><tr>';
     foreach ($header as $cell) {
       $cell = tablesort_header($cell, $header, $ts);
-      $output .= _theme_table_cell($cell, 1);
+      $output .= _theme_table_cell($cell, TRUE);
     }
     $output .= " </tr></thead>\n";
   }
@@ -739,7 +740,7 @@ function theme_table($header, $rows, $attributes = array(), $caption = NULL) {
       $i = 0;
       foreach ($cells as $cell) {
         $cell = tablesort_cell($cell, $header, $ts, $i++);
-        $output .= _theme_table_cell($cell, 0);
+        $output .= _theme_table_cell($cell);
       }
       $output .= " </tr>\n";
     }
@@ -1001,16 +1002,15 @@ function theme_progress_bar($percent, $message) {
  * @} End of "defgroup themeable".
  */
 
-function _theme_table_cell($cell, $header = 0) {
+function _theme_table_cell($cell, $header = FALSE) {
   $attributes = '';
 
   if (is_array($cell)) {
     $data = $cell['data'];
-    foreach ($cell as $key => $value) {
-      if ($key != 'data')  {
-        $attributes .= " $key=\"$value\"";
-      }
-    }
+    $header |= isset($cell['header']);
+    unset($cell['data']);
+    unset($cell['header']);
+    $attributes = drupal_attributes($cell);
   }
   else {
     $data = $cell;
