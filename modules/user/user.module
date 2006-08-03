@@ -1207,10 +1207,6 @@ function user_register_submit($form_id, $form_values) {
     drupal_set_message(t('<p>Welcome to Drupal. You are user #1, which gives you full and immediate access. All future registrants will receive their passwords via e-mail, so please make sure your website e-mail address is set properly under the general settings on the <a href="%settings">site information settings page</a>.</p><p> Your password is <strong>%pass</strong>. You may change your password below.</p>', array('%pass' => $pass, '%settings' => url('admin/settings/site-information'))));
     user_authenticate($account->name, trim($pass));
 
-    // Set the installed schema version of the system module to the most recent version.
-    include_once './includes/install.inc';
-    drupal_set_installed_schema_version('system', max(drupal_get_schema_versions('system')));
-
     return 'user/1/edit';
   }
   else {

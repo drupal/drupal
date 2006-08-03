@@ -62,7 +62,8 @@ function install_main() {
   }
 
   // Perform actual installation defined in the profile.
-  drupal_install_profile($profile);
+  $modules = drupal_verify_profile($profile);
+  drupal_install_profile($profile, $modules);
 
   // Warn about settings.php permissions risk
   $settings_file = './'. conf_path() .'/settings.php';
