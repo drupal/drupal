@@ -1,5 +1,5 @@
 <?php
-// $Id: settings.php,v 1.31 2006/07/14 02:21:52 drumm Exp $
+// $Id: settings.php,v 1.32 2006/08/03 01:02:51 unconed Exp $
 
 /**
  * @file
@@ -84,7 +84,7 @@
  *   $db_url = 'mysqli://username:password@localhost/databasename';
  *   $db_url = 'pgsql://username:password@localhost/databasename';
  */
-$db_url = 'mysql://username:password@localhost/databasename';
+$db_url = 'mysql://bonsai_tree:leafy@localhost/bonsai_install';
 $db_prefix = '';
 
 /**

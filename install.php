@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.4 2006/08/02 10:26:42 dries Exp $
+// $Id: install.php,v 1.5 2006/08/03 01:02:50 unconed Exp $
 
 require_once './includes/install.inc';
 
@@ -62,7 +62,8 @@ function install_main() {
   }
 
   // Perform actual installation defined in the profile.
-  drupal_install_profile($profile);
+  $modules = drupal_verify_profile($profile);
+  drupal_install_profile($profile, $modules);
 
   // Warn about settings.php permissions risk
   $settings_file = './'. conf_path() .'/settings.php';

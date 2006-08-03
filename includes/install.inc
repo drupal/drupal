@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.10 2006/07/31 19:24:16 unconed Exp $
+// $Id: install.inc,v 1.11 2006/08/03 01:02:50 unconed Exp $
 
 define('SCHEMA_UNINSTALLED', -1);
 define('SCHEMA_INSTALLED', 0);
@@ -24,10 +24,7 @@ define('FILE_NOT_EXECUTABLE', 128);
  */
 function drupal_load_updates() {
   foreach (module_list() as $module) {
-    $install_file = './'. drupal_get_path('module', $module) .'/'. $module .'.install';
-    if (is_file($install_file)) {
-      include_once $install_file;
-    }
+    module_load_install($module);
   }
 }
 
@@ -252,14 +249,14 @@ function drupal_get_install_files($module_list = array()) {
 }
 
 /**
- * Install a profile.
+ * Verify a profile for installation.
  *
  * @param profile
- *   Name of profile to install.
+ *   Name of profile to verify.
+ * @return
+ *   The list of modules to install.
  */
-function drupal_install_profile($profile) {
-  global $db_type;
-
+function drupal_verify_profile($profile) {
   include_once './includes/file.inc';
 
   $profile_file = "./profiles/$profile.profile";
@@ -270,62 +267,58 @@ function drupal_install_profile($profile) {
 
   require_once($profile_file);
 
-  // Get a list of modules absolutely required by Drupal.
-  $bootstrap_list = array('system');
-
   // Get a list of modules required by this profile.
   $function = $profile .'_profile_modules';
-  $module_list = $function();
-
-  // If anyone has added modules that we automatically install, filter them out.
-  $module_list = array_diff($module_list, $bootstrap_list);
-
+  $module_list = array_merge(array('system'), $function());
+  
   // Verify that all required modules exist.
-  $bootstrap_modules = drupal_find_modules($bootstrap_list);
-  $profile_modules = drupal_find_modules($module_list);
+  $modules_present = TRUE;
+  foreach ($module_list as $module) {
+    $module_path = dirname(drupal_get_filename('module', $module, NULL, FALSE));
+    if (!$module_path) {
+      drupal_set_message(st('The %module module is required but was not found. Please move it into the <em>modules</em> subdirectory.', array('%module' => $module)), 'error');
+      $modules_present = FALSE;
+    }
+  }
 
-  // Install the essential system modules and bootstrap Drupal.
-  drupal_install_modules($bootstrap_list);
+  return $modules_present ? $module_list : NULL;
+}
+
+/**
+ * Install a profile (i.e. a set of modules) from scratch.
+ * The profile must be verified first using drupal_verify_profile().
+ *
+ * @param profile
+ *   The name of the profile to install.
+ * @param module_list
+ *   An array of modules to install.
+ */
+function drupal_install_profile($profile, $module_list) {
+  // The system module is a special case; we can't bootstrap until it's
+  // installed, so we can't use the normal installation function.
+  $module_list = array_diff($module_list, array('system'));
+
+  $system_path = dirname(drupal_get_filename('module', 'system', NULL, FALSE));
+  require_once './' . $system_path . '/system.install';
+  module_invoke('system', 'install');
+  $system_versions = drupal_get_schema_versions('system');
+  $system_version = $system_versions ? max($system_versions) : SCHEMA_INSTALLED;
+  db_query("INSERT INTO {system} (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES('%s', '%s', 'module', '', 1, 0, 0, %d)", $system_path . '/system.module', 'system', $system_version);
+
+  // Now that we've installed things properly, bootstrap the full Drupal environment
   drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 
   // Install schemas for profile and all its modules.
+  module_rebuild_cache();
+  drupal_install_modules($module_list);
+  
+  // And now, run the profile's install function.
   $function = $profile .'_install';
   if (function_exists($function)) {
     $function();
   }
-
-  drupal_install_modules($module_list);
-
-  // Enable the modules required by the profile.
-  db_query("DELETE FROM {system} WHERE type = 'module'");
-  $modules = array_merge($bootstrap_modules, $profile_modules);
-  foreach ($modules as $module) {
-    db_query("INSERT INTO {system} (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES('%s', '%s', 'module', '', 1, 0, 0, 0)", $module->filename, $module->name);
-  }
 }
 
-
-/**
- * Finds the file paths for a set of modules.
- *
- * @param module_list
- *   The modules to locate.
- * @return
- *   An array containing file information for the modules.
- */
-function drupal_find_modules($module_list = array()) {
-  $modules = array();
-  foreach ($module_list as $current) {
-    $module = file_scan_directory('./modules', "^$current.module$", array('.', '..', 'CVS'), 0, TRUE, 'name', 0);
-    if (empty($module)) {
-      drupal_set_message(st('The %module module is required but was not found. Please move the file %file into the <em>modules</em> subdirectory.', array('%module' => $current, '%file' => $current .'.module')), 'error');
-    }
-    else {
-      $modules = array_merge($modules, $module);
-    }
-  }
-  return $modules;
-}
 
 /**
  * Execute the install scripts for a set of modules.
@@ -334,11 +327,24 @@ function drupal_find_modules($module_list = array()) {
  *   The modules to install.
  */
 function drupal_install_modules($module_list = array()) {
-  // Get a list of all .install files.
-  $installs = drupal_get_install_files($module_list);
-  foreach ($installs as $install) {
-    require_once $install->filename;
-    module_invoke($install->name, 'install');
+  foreach ($module_list as $module) {
+    drupal_install_module($module);
+  }
+}
+
+/**
+ * Calls the install function and updates the system table for a given module.
+ *
+ * @param module
+ *   The module to install.
+ */
+function drupal_install_module($module) {
+  if (drupal_get_installed_schema_version($module, TRUE) == SCHEMA_UNINSTALLED) {
+    module_load_install($module);
+    module_invoke($module, 'install');
+    $versions = drupal_get_schema_versions($module);
+    drupal_set_installed_schema_version($module, $versions ? max($versions) : SCHEMA_INSTALLED);
+    module_enable($module);
   }
 }
 
@@ -349,9 +355,6 @@ function drupal_install_modules($module_list = array()) {
  *   The file to check for.
  * @param $mask
  *   An optional bitmask created from various FILE_* constants.
- * @param $message_type
- *   The type of message to create, can be error or status. Passed on to drupal_set_message as second parameter.
- *   Set to NULL to not output any messages at all.
  * @param $type
  *   The type of file. Can be file (default), dir, or link.
  * @return

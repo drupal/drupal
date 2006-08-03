@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.79 2006/07/13 13:11:36 dries Exp $
+// $Id: module.inc,v 1.80 2006/08/03 01:02:50 unconed Exp $
 
 /**
  * @file
@@ -88,6 +88,47 @@ function module_list($refresh = FALSE, $bootstrap = TRUE, $sort = FALSE, $fixed_
 }
 
 /**
+ * Rebuild the database cache of module files.
+ * 
+ * @return
+ *   The array of filesystem objects used to rebuild the cache.
+ */
+function module_rebuild_cache() {
+  // Get current list of modules
+  $files = system_listing('\.module$', 'modules', 'name', 0);
+
+  // Extract current files from database.
+  system_get_files_database($files, 'module');
+
+  ksort($files);
+
+  foreach ($files as $filename => $file) {
+    drupal_get_filename('module', $file->name, $file->filename);
+    drupal_load('module', $file->name);
+
+    // log the critical hooks implemented by this module
+    $bootstrap = 0;
+    foreach (bootstrap_hooks() as $hook) {
+      if (module_hook($file->name, $hook)) {
+        $bootstrap = 1;
+        break;
+      }
+    }
+
+    // Update the contents of the system table:
+    if (isset($file->status) || (isset($file->old_filename) && $file->old_filename != $file->filename)) {
+      db_query("UPDATE {system} SET description = '%s', name = '%s', filename = '%s', bootstrap = %d WHERE filename = '%s'", $file->description, $file->name, $file->filename, $bootstrap, $file->old_filename);
+    }
+    else {
+      // This is a new module.
+      db_query("INSERT INTO {system} (name, description, type, filename, status, throttle, bootstrap) VALUES ('%s', '%s', '%s', '%s', %d, %d, %d)", $file->name, $file->description, 'module', $file->filename, $file->status, $file->throttle, $bootstrap);
+    }
+  }
+
+  return $files;
+}
+
+/**
  * Determine whether a given module exists.
  *
  * @param $module
@@ -98,6 +139,57 @@ function module_list($refresh = FALSE, $bootstrap = TRUE, $sort = FALSE, $fixed_
 function module_exist($module) {
   $list = module_list();
   return array_key_exists($module, $list);
+}
+
+/**
+ * Load a module's installation hooks.
+ */
+function module_load_install($module) {
+  // Make sure the installation API is available
+  include_once './includes/install.inc';
+
+  $install_file = './'. drupal_get_path('module', $module) .'/'. $module .'.install';
+  if (is_file($install_file)) {
+    include_once $install_file;
+  }
+}
+
+/**
+ * Enable a given module.
+ *
+ * @param $module
+ * Enable a given module and call its enable hook.
+ */
+function module_enable($module) {
+  $existing = db_fetch_object(db_query("SELECT name, status FROM {system} WHERE type = 'module' AND name = '%s'", $module));
+  if ($existing->status === '0') {
+    module_load_install($module);
+    db_query("UPDATE {system} SET status = 1, throttle = 0 WHERE type = 'module' AND name = '%s'", $module);
+    drupal_load('module', $module);
+    module_invoke($module, 'enable');
+    return TRUE;
+  }
+  else {
+    return FALSE;
+  }
+}
+
+/**
+ * Disable a given module and call its disable hook.
+ *
+ * @param $module
+ *   The name of the module (without the .module extension).
+ */
+function module_disable($module) {
+  if (module_exist($module)) {
+    module_load_install($module);
+    module_invoke($module, 'disable');
+    db_query("UPDATE {system} SET status = 0, throttle = 0 WHERE type = 'module' AND name = '%s'", $module);
+    return TRUE;
+  }
+  else {
+    return FALSE;
+  }
 }
 
 /**

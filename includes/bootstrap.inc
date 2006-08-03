@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.107 2006/07/22 07:00:30 dries Exp $
+// $Id: bootstrap.inc,v 1.108 2006/08/03 01:02:50 unconed Exp $
 
 /**
  * @file
@@ -192,11 +192,14 @@ function conf_init() {
  * @param $filename
  *   The filename of the item if it is to be set explicitly rather
  *   than by consulting the database.
+ * @param $check_db
+ *   Allows the database search to be skipped (useful for pre-bootstrap
+ *   checks where configuration paths must still be respected). 
  *
  * @return
  *   The filename of the requested item.
  */
-function drupal_get_filename($type, $name, $filename = NULL) {
+function drupal_get_filename($type, $name, $filename = NULL, $check_db = TRUE) {
   static $files = array();
 
   if (!isset($files[$type])) {
@@ -209,7 +212,7 @@ function drupal_get_filename($type, $name, $filename = NULL) {
   elseif (isset($files[$type][$name])) {
     // nothing
   }
-  elseif (($file = db_result(db_query("SELECT filename FROM {system} WHERE name = '%s' AND type = '%s'", $name, $type))) && file_exists($file)) {
+  elseif ($check_db && (($file = db_result(db_query("SELECT filename FROM {system} WHERE name = '%s' AND type = '%s'", $name, $type))) && file_exists($file))) {
     $files[$type][$name] = $file;
   }
   else {

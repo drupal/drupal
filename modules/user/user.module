@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.645 2006/08/02 18:13:40 killes Exp $
+// $Id: user.module,v 1.646 2006/08/03 01:02:51 unconed Exp $
 
 /**
  * @file
@@ -1206,10 +1206,6 @@ function user_register_submit($form_id, $form_values) {
     drupal_mail('user-register-admin', $mail, t('Drupal user account details for %s', array('%s' => $name)), strtr(t("%username,\n\nYou may now login to %uri using the following username and password:\n\n  username: %username\n  password: %password\n\n%edit_uri\n\n--drupal"), $variables), $from);
     drupal_set_message(t('<p>Welcome to Drupal. You are user #1, which gives you full and immediate access. All future registrants will receive their passwords via e-mail, so please make sure your website e-mail address is set properly under the general settings on the <a href="%settings">site information settings page</a>.</p><p> Your password is <strong>%pass</strong>. You may change your password below.</p>', array('%pass' => $pass, '%settings' => url('admin/settings/site-information'))));
     user_authenticate($account->name, trim($pass));
-
-    // Set the installed schema version of the system module to the most recent version.
-    include_once './includes/install.inc';
-    drupal_set_installed_schema_version('system', max(drupal_get_schema_versions('system')));
 
     return 'user/1/edit';
   }

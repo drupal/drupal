@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.333 2006/07/31 11:25:54 dries Exp $
+// $Id: system.module,v 1.334 2006/08/03 01:02:50 unconed Exp $
 
 /**
  * @file
@@ -1154,12 +1154,7 @@ function system_themes_submit($form_id, $values) {
  */
 function system_modules() {
   // Get current list of modules
-  $files = system_listing('\.module$', 'modules', 'name', 0);
-
-  // Extract current files from database.
-  system_get_files_database($files, 'module');
-
-  ksort($files);
+  $files = module_rebuild_cache();
 
   foreach ($files as $filename => $file) {
     drupal_get_filename('module', $file->name, $file->filename);
@@ -1176,26 +1171,7 @@ function system_modules() {
     if ($file->throttle) {
       $throttle[] = $file->name;
     }
-
-    // log the critical hooks implemented by this module
-    $bootstrap = 0;
-    foreach (bootstrap_hooks() as $hook) {
-      if (module_hook($file->name, $hook)) {
-        $bootstrap = 1;
-        break;
-      }
-    }
-
-    // Update the contents of the system table:
-    if (isset($file->status) || (isset($file->old_filename) && $file->old_filename != $file->filename)) {
-      db_query("UPDATE {system} SET description = '%s', name = '%s', bootstrap = %d, filename = '%s' WHERE filename = '%s'", $file->description, $file->name, $bootstrap, $file->filename, $file->old_filename);
-    }
-    else {
-      // This is a new module.
-      db_query("INSERT INTO {system} (name, description, type, filename, status, throttle, bootstrap) VALUES ('%s', '%s', '%s', '%s', %d, %d, %d)", $file->name, $file->description, 'module', $file->filename, $file->status, $file->throttle, $bootstrap);
-    }
   }
-
 
   // Handle status checkboxes, including overriding the generated
   // checkboxes for required modules.
@@ -1246,16 +1222,26 @@ function theme_system_modules($form) {
 
 
 function system_modules_submit($form_id, $edit) {
-  db_query("UPDATE {system} SET status = 0, throttle = 0 WHERE type = 'module'");
-
+  include_once './includes/install.inc';
   $new_modules = array();
   foreach ($edit['status'] as $key => $choice) {
     if ($choice) {
-      db_query("UPDATE {system} SET status = 1 WHERE type = 'module' AND name = '%s'", $key);
-      if (!module_exist($key)) {
+      if (drupal_get_installed_schema_version($key) == SCHEMA_UNINSTALLED) {
         $new_modules[] = $key;
       }
+      else {
+        module_enable($key);
+      }
     }
+    else {
+      module_disable($key);
+    }
+  }
+
+  module_list(TRUE, FALSE);
+
+  foreach ($new_modules as $module) {
+    drupal_install_module($module);
   }
 
   if (is_array($edit['throttle'])) {
@@ -1263,18 +1249,6 @@ function system_modules_submit($form_id, $edit) {
       if ($choice) {
         db_query("UPDATE {system} SET throttle = 1 WHERE type = 'module' and name = '%s'", $key);
       }
-    }
-  }
-
-  module_list(TRUE, FALSE);
-
-  include './includes/install.inc';
-  foreach ($new_modules as $module) {
-    // Set the installed schema version for newly-enabled modules
-    $versions = drupal_get_schema_versions($module);
-    if (drupal_get_installed_schema_version($module) == SCHEMA_UNINSTALLED) {
-      drupal_set_installed_schema_version($module, $versions ? max($versions) : SCHEMA_INSTALLED);
-      module_invoke($module, 'install');
     }
   }
 
