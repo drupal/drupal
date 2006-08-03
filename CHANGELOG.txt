@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.137 2006/07/31 11:25:52 dries Exp $
+// $Id: CHANGELOG.txt,v 1.138 2006/08/03 13:50:52 dries Exp $
 
 Drupal x.x.x, xxxx-xx-xx (development version)
 ------------------------
@@ -31,6 +31,7 @@ Drupal x.x.x, xxxx-xx-xx (development version)
     * 'blogapi new' and 'blogapi edit' nodeapi operations.
 - user module:
     * added hook_profile_alter().
+    * e-mail verification is made optional.
 - PHP Template engine:
     * add the ability to look for a series of suggested templates.
     * look for page templates based upon the path.
