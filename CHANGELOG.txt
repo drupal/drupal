@@ -31,6 +31,7 @@ Drupal x.x.x, xxxx-xx-xx (development version)
     * 'blogapi new' and 'blogapi edit' nodeapi operations.
 - user module:
     * added hook_profile_alter().
+    * e-mail verification is made optional.
 - PHP Template engine:
     * add the ability to look for a series of suggested templates.
     * look for page templates based upon the path.
