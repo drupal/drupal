@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.130 2006/07/22 19:26:58 dries Exp $
+// $Id: form.inc,v 1.131 2006/08/03 14:08:30 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -839,15 +839,23 @@ function theme_radios($element) {
  *   A themed HTML string representing the form item.
  */
 function theme_password_confirm($element) {
-  return theme('form_element', $element, '<div class="container-inline">'. $element['#children'] .'</div>');
+  return theme('form_element', $element, $element['#children']);
 }
 
 /*
  * Expand a password_confirm field into two text boxes.
  */
 function expand_password_confirm($element) {
-  $element['pass1'] =  array('#type' => 'password', '#size' => 12, '#value' => $element['#value']['pass1']);
-  $element['pass2'] =  array('#type' => 'password', '#size' => 12, '#value' => $element['#value']['pass2']);
+  $element['pass1'] =  array(
+    '#type' => 'password',
+    '#title' => t('Password'),
+    '#value' => $element['#value']['pass1'],
+  );
+  $element['pass2'] =  array(
+    '#type' => 'password',
+    '#title' => t('Confirm password'),
+    '#value' => $element['#value']['pass2'],
+  );
   $element['#validate'] = array('password_confirm_validate' => array());
   $element['#tree'] = TRUE;
 
