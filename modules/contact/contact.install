@@ -15,5 +15,18 @@ function contact_install() {
         PRIMARY KEY (cid),
         UNIQUE KEY category (category)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+      break;
+    case 'pgsql':
+      db_query("CREATE TABLE {contact} (
+        cid serial CHECK (cid >= 0),
+        category varchar(255) NOT NULL default '',
+        recipients text NOT NULL default '',
+        reply text NOT NULL default '',
+        weight smallint NOT NULL default '0',
+        selected smallint NOT NULL default '0',
+        PRIMARY KEY (cid),
+        UNIQUE (category)
+      )");
+      break;
   }
 }
