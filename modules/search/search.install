@@ -1,5 +1,5 @@
 <?php
-// $Id: search.install,v 1.2 2006/07/14 01:05:09 drumm Exp $
+// $Id: search.install,v 1.3 2006/08/04 06:58:44 dries Exp $
 
 function search_install() {
   switch ($GLOBALS['db_type']) {
@@ -29,5 +29,32 @@ function search_install() {
         count float default NULL,
         PRIMARY KEY (word)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+      break;
+    case 'pgsql':
+      db_query("CREATE TABLE {search_dataset} (
+        sid uint NOT NULL default '0',
+        type varchar(16) default NULL,
+        data text NOT NULL
+      )");
+      db_query("CREATE INDEX {search_dataset}_sid_type_idx ON {search_dataset} (sid, type)");
+
+      db_query("CREATE TABLE {search_index} (
+        word varchar(50) NOT NULL default '',
+        sid uint NOT NULL default '0',
+        type varchar(16) default NULL,
+        fromsid uint NOT NULL default '0',
+        fromtype varchar(16) default NULL,
+        score float default NULL
+      )");
+      db_query("CREATE INDEX {search_index}_sid_type_idx ON {search_index} (sid, type)");
+      db_query("CREATE INDEX {search_index}_from_sid_type_idx ON {search_index} (fromsid, fromtype)");
+      db_query("CREATE INDEX {search_index}_word_idx ON {search_index} (word)");
+
+      db_query("CREATE TABLE {search_total} (
+        word varchar(50) NOT NULL default '',
+        count float default NULL,
+        PRIMARY KEY (word)
+      )");
+      break;
   }
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.install,v 1.2 2006/07/14 01:05:09 drumm Exp $
+// $Id: forum.install,v 1.3 2006/08/04 06:58:44 dries Exp $
 
 function forum_install() {
   switch ($GLOBALS['db_type']) {
@@ -13,5 +13,16 @@ function forum_install() {
         KEY nid (nid),
         KEY tid (tid)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+      break;
+    case 'pgsql':
+      db_query("CREATE TABLE {forum} (
+        nid uint NOT NULL default '0',
+        vid uint NOT NULL default '0',
+        tid uint NOT NULL default '0',
+        PRIMARY KEY (vid)
+      )");
+      db_query("CREATE INDEX {forum}_nid_idx ON {forum} (nid)");
+      db_query("CREATE INDEX {forum}_tid_idx ON {forum} (tid)");
+      break;
   }
 }

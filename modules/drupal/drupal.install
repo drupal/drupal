@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal.install,v 1.2 2006/07/14 01:05:09 drumm Exp $
+// $Id: drupal.install,v 1.3 2006/08/04 06:58:44 dries Exp $
 
 function drupal_install() {
   switch ($GLOBALS['db_type']) {
@@ -26,5 +26,29 @@ function drupal_install() {
         type varchar(255) NOT NULL default '',
         PRIMARY KEY (cid,name)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+      break;
+    case 'pgsql':
+      db_query("CREATE TABLE {client} (
+        cid serial CHECK (cid >= 0),
+        link varchar(255) NOT NULL default '',
+        name varchar(128) NOT NULL default '',
+        mail varchar(128) NOT NULL default '',
+        slogan text NOT NULL,
+        mission text NOT NULL,
+        users int NOT NULL default '0',
+        nodes int NOT NULL default '0',
+        version varchar(35) NOT NULL default'',
+        created int NOT NULL default '0',
+        changed int NOT NULL default '0',
+        PRIMARY KEY (cid)
+      )");
+
+      db_query("CREATE TABLE {client_system} (
+        cid int NOT NULL default '0',
+        name varchar(255) NOT NULL default '',
+        type varchar(255) NOT NULL default '',
+        PRIMARY KEY (cid,name)
+      )");
+      break;
   }
 }

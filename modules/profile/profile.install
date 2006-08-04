@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.install,v 1.2 2006/07/14 01:05:09 drumm Exp $
+// $Id: profile.install,v 1.3 2006/08/04 06:58:44 dries Exp $
 
 function profile_install() {
   switch ($GLOBALS['db_type']) {
@@ -31,5 +31,33 @@ function profile_install() {
         KEY uid (uid),
         KEY fid (fid)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+    case 'pgsql':
+      db_query("CREATE TABLE {profile_fields} (
+        fid serial,
+        title varchar(255) default NULL,
+        name varchar(128) default NULL,
+        explanation TEXT default NULL,
+        category varchar(255) default NULL,
+        page varchar(255) default NULL,
+        type varchar(128) default NULL,
+        weight smallint DEFAULT '0' NOT NULL,
+        required smallint DEFAULT '0' NOT NULL,
+        register smallint DEFAULT '0' NOT NULL,
+        visibility smallint DEFAULT '0' NOT NULL,
+        autocomplete smallint DEFAULT '0' NOT NULL,
+        options text,
+        UNIQUE (name),
+        PRIMARY KEY (fid)
+      )");
+      db_query("CREATE INDEX {profile_fields}_category_idx ON {profile_fields} (category)");
+
+      db_query("CREATE TABLE {profile_values} (
+        fid uint default '0',
+        uid uint default '0',
+        value text
+      )");
+      db_query("CREATE INDEX {profile_values}_uid_idx ON {profile_values} (uid)");
+      db_query("CREATE INDEX {profile_values}_fid_idx ON {profile_values} (fid)");
+      break;
   }
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.install,v 1.3 2006/07/18 07:32:22 drumm Exp $
+// $Id: aggregator.install,v 1.4 2006/08/04 06:58:44 dries Exp $
 
 function aggregator_install() {
   switch ($GLOBALS['db_type']) {
@@ -54,6 +54,58 @@ function aggregator_install() {
         guid varchar(255),
         PRIMARY KEY (iid)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+
+      break;
+    case 'pgsql':
+      db_query("CREATE TABLE {aggregator_category} (
+        cid serial,
+        title varchar(255) NOT NULL default '',
+        description text NOT NULL,
+        block smallint NOT NULL default '0',
+        PRIMARY KEY (cid),
+        UNIQUE (title)
+      )");
+
+      db_query("CREATE TABLE {aggregator_category_feed} (
+        fid int NOT NULL default '0',
+        cid int NOT NULL default '0',
+        PRIMARY KEY (fid,cid)
+      )");
+
+      db_query("CREATE TABLE {aggregator_category_item} (
+        iid int NOT NULL default '0',
+        cid int NOT NULL default '0',
+        PRIMARY KEY (iid,cid)
+      )");
+
+      db_query("CREATE TABLE {aggregator_feed} (
+        fid serial,
+        title varchar(255) NOT NULL default '',
+        url varchar(255) NOT NULL default '',
+        refresh int NOT NULL default '0',
+        checked int NOT NULL default '0',
+        link varchar(255) NOT NULL default '',
+        description text NOT NULL,
+        image text NOT NULL,
+        etag varchar(255) NOT NULL default '',
+        modified int NOT NULL default '0',
+        block smallint NOT NULL default '0',
+        PRIMARY KEY (fid),
+        UNIQUE (url),
+        UNIQUE (title)
+      )");
+
+      db_query("CREATE TABLE {aggregator_item} (
+        iid serial,
+        fid int NOT NULL default '0',
+        title varchar(255) NOT NULL default '',
+        link varchar(255) NOT NULL default '',
+        author varchar(255) NOT NULL default '',
+        description text NOT NULL,
+        timestamp int default NULL,
+        guid varchar(255),
+        PRIMARY KEY (iid)
+      )");
 
       break;
   }

@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.install,v 1.2 2006/07/14 01:05:09 drumm Exp $
+// $Id: contact.install,v 1.3 2006/08/04 06:58:44 dries Exp $
 
 function contact_install() {
   switch ($GLOBALS['db_type']) {
@@ -15,5 +15,18 @@ function contact_install() {
         PRIMARY KEY (cid),
         UNIQUE KEY category (category)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+      break;
+    case 'pgsql':
+      db_query("CREATE TABLE {contact} (
+        cid serial CHECK (cid >= 0),
+        category varchar(255) NOT NULL default '',
+        recipients text NOT NULL default '',
+        reply text NOT NULL default '',
+        weight smallint NOT NULL default '0',
+        selected smallint NOT NULL default '0',
+        PRIMARY KEY (cid),
+        UNIQUE (category)
+      )");
+      break;
   }
 }

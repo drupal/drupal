@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.install,v 1.2 2006/07/14 01:05:09 drumm Exp $
+// $Id: poll.install,v 1.3 2006/08/04 06:58:44 dries Exp $
 
 function poll_install() {
   switch ($GLOBALS['db_type']) {
@@ -31,5 +31,33 @@ function poll_install() {
         PRIMARY KEY (chid),
         KEY nid (nid)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+    case 'pgsql':
+      db_query("CREATE TABLE {poll} (
+        nid uint NOT NULL default '0',
+        runtime int NOT NULL default '0',
+        active uint NOT NULL default '0',
+        PRIMARY KEY (nid)
+      )");
+
+      db_query("CREATE TABLE {poll_votes} (
+        nid uint NOT NULL,
+        uid uint NOT NULL default 0,
+        chorder int NOT NULL default -1,
+        hostname varchar(128) NOT NULL default ''
+      )");
+      db_query("CREATE INDEX {poll_votes}_nid_idx ON {poll_votes} (nid)");
+      db_query("CREATE INDEX {poll_votes}_uid_idx ON {poll_votes} (uid)");
+      db_query("CREATE INDEX {poll_votes}_hostname_idx ON {poll_votes} (hostname)");
+
+      db_query("CREATE TABLE {poll_choices} (
+        chid serial CHECK (chid >= 0),
+        nid uint NOT NULL default '0',
+        chtext varchar(128) NOT NULL default '',
+        chvotes int NOT NULL default '0',
+        chorder int NOT NULL default '0',
+        PRIMARY KEY (chid)
+      )");
+      db_query("CREATE INDEX {poll_choices}_nid_idx ON {poll_choices} (nid)");
+      break;
   }
 }

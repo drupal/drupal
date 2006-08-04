@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.3 2006/07/26 07:19:41 drumm Exp $
+// $Id: system.install,v 1.4 2006/08/04 06:58:44 dries Exp $
 
 function system_install() {
   switch ($GLOBALS['db_type']) {
@@ -384,9 +384,393 @@ function system_install() {
 
       break;
     case 'pgsql':
-      break;
+      /* create unsigned types */
+      db_query("CREATE DOMAIN uint integer CHECK (VALUE >= 0)");
+      db_query("CREATE DOMAIN smalluint smallint CHECK (VALUE >= 0)");
+      db_query("CREATE DOMAIN biguint bigint CHECK (VALUE >= 0)");
 
+      db_query("CREATE TABLE {access} (
+        aid serial,
+        mask varchar(255) NOT NULL default '',
+        type varchar(255) NOT NULL default '',
+        status smallint NOT NULL default '0',
+        PRIMARY KEY (aid)
+      )");
+
+      db_query("CREATE TABLE {authmap} (
+        aid serial CHECK (aid >= 0),
+        uid int NOT NULL default '0',
+        authname varchar(128) NOT NULL default '',
+        module varchar(128) NOT NULL default '',
+        PRIMARY KEY (aid),
+        UNIQUE (authname)
+      )");
+
+      db_query("CREATE TABLE {blocks} (
+        module varchar(64) DEFAULT '' NOT NULL,
+        delta varchar(32) NOT NULL default '0',
+        theme varchar(255) NOT NULL default '',
+        status smallint DEFAULT '0' NOT NULL,
+        weight smallint DEFAULT '0' NOT NULL,
+        region varchar(64) DEFAULT 'left' NOT NULL,
+        custom smallint DEFAULT '0' NOT NULL,
+        throttle smallint DEFAULT '0' NOT NULL,
+        visibility smallint DEFAULT '0' NOT NULL,
+        pages text DEFAULT '' NOT NULL
+      )");
+
+      db_query("CREATE TABLE {boxes} (
+        bid serial,
+        title varchar(64) NOT NULL default '',
+        body text,
+        info varchar(128) NOT NULL default '',
+        format smallint NOT NULL default '0',
+        PRIMARY KEY (bid),
+        UNIQUE (info)
+      )");
+
+      db_query("CREATE TABLE {cache} (
+        cid varchar(255) NOT NULL default '',
+        data bytea,
+        expire int NOT NULL default '0',
+        created int NOT NULL default '0',
+        headers text,
+        PRIMARY KEY (cid)
+      )");
+      db_query("CREATE INDEX {cache}_expire_idx ON {cache} (expire)");
+
+      db_query("CREATE TABLE {comments} (
+        cid serial,
+        pid int NOT NULL default '0',
+        nid int NOT NULL default '0',
+        uid int NOT NULL default '0',
+        subject varchar(64) NOT NULL default '',
+        comment text NOT NULL,
+        hostname varchar(128) NOT NULL default '',
+        timestamp int NOT NULL default '0',
+        score int NOT NULL default '0',
+        status smalluint NOT NULL default '0',
+        format smallint NOT NULL default '0',
+        thread varchar(255) NOT NULL,
+        users text,
+        name varchar(60) default NULL,
+        mail varchar(64) default NULL,
+        homepage varchar(255) default NULL,
+        PRIMARY KEY (cid)
+      )");
+      db_query("CREATE INDEX {comments}_nid_idx ON {comments} (nid)");
+
+      db_query("CREATE TABLE {node_comment_statistics} (
+        nid serial CHECK (nid >= 0),
+        last_comment_timestamp int NOT NULL default '0',
+        last_comment_name varchar(60) default NULL,
+        last_comment_uid int NOT NULL default '0',
+        comment_count uint NOT NULL default '0',
+        PRIMARY KEY (nid)
+      )");
+      db_query("CREATE INDEX {node_comment_statistics}_node_comment_timestamp_idx ON {node_comment_statistics} (last_comment_timestamp)");
+
+      db_query("CREATE TABLE {files} (
+        fid uint NOT NULL default 0,
+        nid uint NOT NULL default 0,
+        filename varchar(255) NOT NULL default '',
+        filepath varchar(255) NOT NULL default '',
+        filemime varchar(255) NOT NULL default '',
+        filesize uint NOT NULL default 0,
+        PRIMARY KEY (fid)
+      )");
+
+      db_query("CREATE TABLE {file_revisions} (
+        fid uint NOT NULL default 0,
+        vid uint NOT NULL default 0,
+        description varchar(255) NOT NULL default '',
+        list smalluint NOT NULL default 0,
+        PRIMARY KEY (fid, vid)
+      )");
+
+      db_query("CREATE TABLE {filter_formats} (
+        format serial,
+        name varchar(255) NOT NULL default '',
+        roles varchar(255) NOT NULL default '',
+        cache smallint NOT NULL default '0',
+        PRIMARY KEY (format),
+        UNIQUE (name)
+      )");
+
+      db_query("CREATE TABLE {filters} (
+        format int NOT NULL default '0',
+        module varchar(64) NOT NULL default '',
+        delta smallint DEFAULT '0' NOT NULL,
+        weight smallint DEFAULT '0' NOT NULL
+      )");
+      db_query("CREATE INDEX {filters}_weight_idx ON {filters} (weight)");
+
+      db_query("CREATE TABLE {flood} (
+        event varchar(64) NOT NULL default '',
+        hostname varchar(128) NOT NULL default '',
+        timestamp int NOT NULL default '0'
+      )");
+
+      db_query("CREATE TABLE {history} (
+        uid int NOT NULL default '0',
+        nid int NOT NULL default '0',
+        timestamp int NOT NULL default '0',
+        PRIMARY KEY (uid,nid)
+      )");
+
+      db_query("CREATE TABLE {menu} (
+        mid serial CHECK (mid >= 0),
+        pid uint NOT NULL default '0',
+        path varchar(255) NOT NULL default '',
+        title varchar(255) NOT NULL default '',
+        description varchar(255) NOT NULL default '',
+        weight smallint NOT NULL default '0',
+        type uint NOT NULL default '0',
+        PRIMARY KEY (mid)
+      )");
+      db_query("ALTER SEQUENCE {menu}_mid_seq MINVALUE 2 RESTART 2");
+
+      db_query("CREATE TABLE {node} (
+        nid serial CHECK (nid >= 0),
+        vid uint NOT NULL default '0',
+        type varchar(32) NOT NULL default '',
+        title varchar(128) NOT NULL default '',
+        uid int NOT NULL default '0',
+        status int NOT NULL default '1',
+        created int NOT NULL default '0',
+        changed int NOT NULL default '0',
+        comment int NOT NULL default '0',
+        promote int NOT NULL default '0',
+        moderate int NOT NULL default '0',
+        sticky int NOT NULL default '0',
+        PRIMARY KEY (nid, vid),
+        UNIQUE (vid)
+      )");
+      db_query("CREATE INDEX {node}_node_type_idx ON {node} (substr (type, 1, 4))");
+      db_query("CREATE INDEX {node}_node_title_type_idx ON {node} (title, substr(type, 1, 4))");
+      db_query("CREATE INDEX {node}_status_idx ON {node} (status)");
+      db_query("CREATE INDEX {node}_uid_idx ON {node} (uid)");
+      db_query("CREATE INDEX {node}_node_moderate_idx ON {node} (moderate)");
+      db_query("CREATE INDEX {node}_node_promote_status_idx ON {node} (promote, status)");
+      db_query("CREATE INDEX {node}_node_created_idx ON {node} (created)");
+      db_query("CREATE INDEX {node}_node_changed_idx ON {node} (changed)");
+      db_query("CREATE INDEX {node}_node_status_type_idx ON {node} (status, type, nid)");
+      db_query("CREATE INDEX {node}_nid_idx ON {node} (nid)");
+
+      db_query("CREATE TABLE {node_access} (
+        nid uint NOT NULL default '0',
+        gid uint NOT NULL default '0',
+        realm varchar(255) NOT NULL default '',
+        grant_view smalluint NOT NULL default '0',
+        grant_update smalluint NOT NULL default '0',
+        grant_delete smalluint NOT NULL default '0',
+        PRIMARY KEY (nid,gid,realm)
+      )");
+
+      db_query("CREATE TABLE {node_revisions} (
+        nid uint NOT NULL,
+        vid uint NOT NULL,
+        uid int NOT NULL default '0',
+        title varchar(128) NOT NULL default '',
+        body text NOT NULL default '',
+        teaser text NOT NULL default '',
+        log text NOT NULL default '',
+        timestamp int NOT NULL default '0',
+        format int NOT NULL default '0',
+        PRIMARY KEY (vid)
+      )");
+      db_query("CREATE INDEX {node_revisions}_nid_idx ON {node_revisions} (nid)");
+      db_query("CREATE INDEX {node_revisions}_uid_idx ON {node_revisions} (uid)");
+      db_query("CREATE SEQUENCE {node_revisions}_vid_seq INCREMENT 1 START 1");
+
+      db_query("CREATE TABLE {url_alias} (
+        pid serial CHECK (pid >= 0),
+        src varchar(128) NOT NULL default '',
+        dst varchar(128) NOT NULL default '',
+        PRIMARY KEY (pid),
+        UNIQUE (dst)
+      )");
+      db_query("CREATE INDEX {url_alias}_src_idx ON {url_alias} (src)");
+
+      db_query("CREATE TABLE {permission} (
+        rid uint NOT NULL default '0',
+        perm text,
+        tid uint NOT NULL default '0'
+      )");
+      db_query("CREATE INDEX {permission}_rid_idx ON {permission} (rid)");
+
+      db_query("CREATE TABLE {role} (
+        rid serial CHECK (rid >= 0),
+        name varchar(32) NOT NULL default '',
+        PRIMARY KEY (rid),
+        UNIQUE (name)
+      )");
+
+      db_query("CREATE TABLE {blocks_roles} (
+        module varchar(64) NOT NULL,
+        delta varchar(32) NOT NULL,
+        rid uint NOT NULL,
+        PRIMARY KEY (module, delta, rid)
+      )");
+
+      db_query("CREATE TABLE {sessions} (
+        uid uint NOT NULL,
+        sid varchar(32) NOT NULL default '',
+        hostname varchar(128) NOT NULL default '',
+        timestamp int NOT NULL default '0',
+        cache int NOT NULL default '0',
+        session text,
+        PRIMARY KEY (sid)
+      )");
+      db_query("CREATE INDEX {sessions}_uid_idx ON {sessions} (uid)");
+      db_query("CREATE INDEX {sessions}_timestamp_idx ON {sessions} (timestamp)");
+
+/* Only used for MySQL
+      db_query("CREATE TABLE {sequences} (
+        name varchar(255) NOT NULL default '',
+        id uint NOT NULL default '0',
+        PRIMARY KEY (name)
+      )"); */
+
+      db_query("CREATE TABLE {node_counter} (
+        nid int NOT NULL default '0',
+        totalcount biguint NOT NULL default '0',
+        daycount uint NOT NULL default '0',
+        timestamp uint NOT NULL default '0',
+        PRIMARY KEY (nid)
+      )");
+      db_query("CREATE INDEX {node_counter}_totalcount_idx ON {node_counter} (totalcount)");
+      db_query("CREATE INDEX {node_counter}_daycount_idx ON {node_counter} (daycount)");
+      db_query("CREATE INDEX {node_counter}_timestamp_idx ON {node_counter} (timestamp)");
+
+      db_query("CREATE TABLE {system} (
+        filename varchar(255) NOT NULL default '',
+        name varchar(255) NOT NULL default '',
+        type varchar(255) NOT NULL default '',
+        description varchar(255) NOT NULL default '',
+        status int NOT NULL default '0',
+        throttle smallint DEFAULT '0' NOT NULL,
+        bootstrap int NOT NULL default '0',
+        schema_version smallint NOT NULL default -1,
+        weight int NOT NULL default '0',
+        PRIMARY KEY (filename)
+      )");
+      db_query("CREATE INDEX {system}_weight_idx ON {system} (weight)");
+
+      db_query("CREATE TABLE {term_data} (
+        tid serial CHECK (tid >= 0),
+        vid uint NOT NULL default '0',
+        name varchar(255) NOT NULL default '',
+        description text,
+        weight smallint NOT NULL default '0',
+        PRIMARY KEY (tid)
+      )");
+      db_query("CREATE INDEX {term_data}_vid_idx ON {term_data} (vid)");
+
+      db_query("CREATE TABLE {term_hierarchy} (
+        tid uint NOT NULL default '0',
+        parent uint NOT NULL default '0',
+        PRIMARY KEY (tid, parent)
+      )");
+      db_query("CREATE INDEX {term_hierarchy}_tid_idx ON {term_hierarchy} (tid)");
+      db_query("CREATE INDEX {term_hierarchy}_parent_idx ON {term_hierarchy} (parent)");
+
+      db_query("CREATE TABLE {term_node} (
+        nid uint NOT NULL default '0',
+        tid uint NOT NULL default '0',
+        PRIMARY KEY (tid,nid)
+      )");
+      db_query("CREATE INDEX {term_node}_nid_idx ON {term_node} (nid)");
+      db_query("CREATE INDEX {term_node}_tid_idx ON {term_node} (tid)");
+
+      db_query("CREATE TABLE {term_relation} (
+        tid1 uint NOT NULL default '0',
+        tid2 uint NOT NULL default '0'
+      )");
+      db_query("CREATE INDEX {term_relation}_tid1_idx ON {term_relation} (tid1)");
+      db_query("CREATE INDEX {term_relation}_tid2_idx ON {term_relation} (tid2)");
+
+      db_query("CREATE TABLE {term_synonym} (
+        tid uint NOT NULL default '0',
+        name varchar(255) NOT NULL default ''
+      )");
+      db_query("CREATE INDEX {term_synonym}_tid_idx ON {term_synonym} (tid)");
+      db_query("CREATE INDEX {term_synonym}_name_idx ON {term_synonym} (substr(name, 1, 3))");
+
+      db_query("CREATE TABLE {users} (
+        uid uint NOT NULL default '0',
+        name varchar(60) NOT NULL default '',
+        pass varchar(32) NOT NULL default '',
+        mail varchar(64) default '',
+        mode smallint NOT NULL default '0',
+        sort smallint default '0',
+        threshold smallint default '0',
+        theme varchar(255) NOT NULL default '',
+        signature varchar(255) NOT NULL default '',
+        created int NOT NULL default '0',
+        access int NOT NULL default '0',
+        login int NOT NULL default '0',
+        status smallint NOT NULL default '0',
+        timezone varchar(8) default NULL,
+        language varchar(12) NOT NULL default '',
+        picture varchar(255) NOT NULL DEFAULT '',
+        init varchar(64) default '',
+        data text,
+        PRIMARY KEY (uid),
+        UNIQUE (name)
+      )");
+      db_query("CREATE INDEX {users}_access_idx ON {users} (access)");
+      db_query("CREATE SEQUENCE {users}_uid_seq INCREMENT 1 START 1");
+
+      db_query("CREATE TABLE {users_roles} (
+        uid uint NOT NULL default '0',
+        rid uint NOT NULL default '0',
+        PRIMARY KEY (uid, rid)
+      )");
+
+      db_query("CREATE TABLE {variable} (
+        name varchar(48) NOT NULL default '',
+        value text NOT NULL,
+        PRIMARY KEY (name)
+      )");
+
+      db_query("CREATE TABLE {vocabulary} (
+        vid serial CHECK (vid >= 0),
+        name varchar(255) NOT NULL default '',
+        description text,
+        help varchar(255) NOT NULL default '',
+        relations smalluint NOT NULL default '0',
+        hierarchy smalluint NOT NULL default '0',
+        multiple smalluint NOT NULL default '0',
+        required smalluint NOT NULL default '0',
+        tags smalluint NOT NULL default '0',
+        module varchar(255) NOT NULL default '',
+        weight smallint NOT NULL default '0',
+        PRIMARY KEY (vid)
+      )");
+
+      db_query("CREATE TABLE {vocabulary_node_types} (
+        vid uint NOT NULL DEFAULT '0',
+        type varchar(32) NOT NULL DEFAULT '',
+        PRIMARY KEY (vid, type)
+      )");
+
+      db_query("CREATE TABLE {watchdog} (
+        wid serial,
+        uid int NOT NULL default '0',
+        type varchar(16) NOT NULL default '',
+        message text NOT NULL,
+        severity smalluint NOT NULL default '0',
+        link varchar(255) NOT NULL default '',
+        location varchar(128) NOT NULL default '',
+        referer varchar(128) NOT NULL default '',
+        hostname varchar(128) NOT NULL default '',
+        timestamp int NOT NULL default '0',
+        PRIMARY KEY (wid)
+      )");
+      break;
   }
+
   db_query("INSERT INTO {system} (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES ('themes/engines/phptemplate/phptemplate.engine', 'phptemplate', 'theme_engine', '', 1, 0, 0, 0)");
   db_query("INSERT INTO {system} (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES ('themes/bluemarine/page.tpl.php', 'bluemarine', 'theme', 'themes/engines/phptemplate/phptemplate.engine', 1, 0, 0, 0)");
 

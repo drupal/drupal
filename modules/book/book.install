@@ -1,5 +1,5 @@
 <?php
-// $Id: book.install,v 1.2 2006/07/14 01:05:09 drumm Exp $
+// $Id: book.install,v 1.3 2006/08/04 06:58:44 dries Exp $
 
 function book_install() {
   switch ($GLOBALS['db_type']) {
@@ -14,5 +14,17 @@ function book_install() {
         KEY nid (nid),
         KEY parent (parent)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+      break;
+    case 'pgsql':
+      db_query("CREATE TABLE {book} (
+        vid uint NOT NULL default '0',
+        nid uint NOT NULL default '0',
+        parent int NOT NULL default '0',
+        weight smallint NOT NULL default '0',
+        PRIMARY KEY (vid)
+      )");
+      db_query("CREATE INDEX {book}_nid_idx ON {book} (nid)");
+      db_query("CREATE INDEX {book}_parent_idx ON {book} (parent)");
+      break;
   }
 }
