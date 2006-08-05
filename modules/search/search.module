@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.186 2006/08/05 00:26:36 drumm Exp $
+// $Id: search.module,v 1.187 2006/08/05 01:21:40 drumm Exp $
 
 /**
  * @file
@@ -1044,6 +1044,9 @@ function search_box($form_id = 'search_theme_form') {
     '#attributes' => array('title' => t('Enter the terms you wish to search for.')),
   );
   $form['submit'] = array('#type' => 'submit', '#value' => t('Search'));
+  // Always go to the search page since the search form is not guaranteed to be
+  // on every page.
+  $form['#action'] = url('search/node');
 
   return drupal_get_form($form_id, $form, 'search_box_form');
 }
