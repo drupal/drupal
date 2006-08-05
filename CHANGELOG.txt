@@ -35,6 +35,8 @@ Drupal x.x.x, xxxx-xx-xx (development version)
 - PHP Template engine:
     * add the ability to look for a series of suggested templates.
     * look for page templates based upon the path.
+- content system:
+    * made it easier for node access modules to work well with each other.
 
 Drupal 4.7.0, 2006-05-01
 ------------------------
