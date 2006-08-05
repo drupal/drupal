@@ -161,7 +161,7 @@ function search_menu($may_cache) {
       'description' => t('Configure relevance settings for search and other indexing options'),
       'callback' => 'search_admin_settings',
       'access' => user_access('administer search'),
-      'type' => MENU_CALLBACK);
+      'type' => MENU_NORMAL_ITEM);
     $items[] = array('path' => 'admin/settings/search/wipe',
       'title' => t('clear index'),
       'callback' => 'search_wipe_confirm',
