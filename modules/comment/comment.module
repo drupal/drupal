@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.469 2006/07/31 11:25:53 dries Exp $
+// $Id: comment.module,v 1.470 2006/08/05 00:26:35 drumm Exp $
 
 /**
  * @file
@@ -1617,7 +1617,6 @@ function theme_comment_folded($comment) {
 
 function theme_comment_flat_collapsed($comment) {
   return theme('comment_view', $comment, '', 0);
-  return '';
 }
 
 function theme_comment_flat_expanded($comment) {

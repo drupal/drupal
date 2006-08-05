@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.292 2006/07/31 11:25:52 dries Exp $
+// $Id: aggregator.module,v 1.293 2006/08/05 00:26:35 drumm Exp $
 
 /**
  * @file
@@ -833,6 +833,8 @@ function aggregator_parse_feed(&$data, $feed) {
 
   $items = array_reverse($items);
 
+  // Initialize variables
+  $title = $link = $author = $description = $guid = NULL;
   foreach ($items as $item) {
     unset($title, $link, $author, $description, $guid);
 
@@ -1057,6 +1059,7 @@ function _aggregator_page_list($sql, $op, $header = '') {
 
   $result = pager_query($sql, 20);
   $categories = array();
+  $done = FALSE;
   while ($item = db_fetch_object($result)) {
     $form['items'][$item->iid] = array('#value' => theme('aggregator_page_item', $item));
     $output .= $form['items'][$item->iid]['#value'];

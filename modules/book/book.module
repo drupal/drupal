@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.376 2006/07/31 11:25:53 dries Exp $
+// $Id: book.module,v 1.377 2006/08/05 00:26:35 drumm Exp $
 
 /**
  * @file
@@ -553,6 +553,7 @@ function book_toc_recurse($nid, $indent, $toc, $children, $exclude) {
 function book_toc($exclude = 0) {
   $result = db_query(db_rewrite_sql('SELECT n.nid, n.title, b.parent, b.weight FROM {node} n INNER JOIN {book} b ON n.vid = b.vid WHERE n.status = 1 ORDER BY b.weight, n.title'));
 
+  $children = array();
   while ($node = db_fetch_object($result)) {
     if (!$children[$node->parent]) {
       $children[$node->parent] = array();

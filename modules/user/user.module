@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.647 2006/08/03 13:50:53 dries Exp $
+// $Id: user.module,v 1.648 2006/08/05 00:26:36 drumm Exp $
 
 /**
  * @file
@@ -1088,6 +1088,7 @@ function user_pass_reset($uid, $timestamp, $hashed_pass, $action = NULL) {
           // Now we can set the new user.
           $user = $account;
           // And proceed with normal login, going to user page.
+          $edit = array();
           user_module_invoke('login', $edit, $user);
           drupal_set_message(t('You have just used your one-time login link. It is no longer necessary to use this link to login. Please change your password.'));
           drupal_goto('user/'. $user->uid .'/edit');
@@ -1153,7 +1154,10 @@ function user_register() {
     // Redirect back to page which initiated the create request; usually admin/user/user/create
     $form['destination'] = array('#type' => 'hidden', '#value' => $_GET['q']);
   }
-  $extra = _user_forms($null, $null, $null, 'register');
+
+  // Create a dummy variable for pass-by-reference parameters.
+  $null = NULL;
+  $extra = _user_forms($null, NULL, NULL, 'register');
 
   // Remove form_group around default fields if there are no other groups.
   if (!$extra) {

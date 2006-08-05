@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.203 2006/07/31 11:25:54 dries Exp $
+// $Id: poll.module,v 1.204 2006/08/05 00:26:36 drumm Exp $
 
 /**
  * @file
@@ -570,6 +570,8 @@ function poll_update($node) {
 
   db_query('DELETE FROM {poll_choices} WHERE nid = %d', $node->nid);
   db_query('DELETE FROM {poll_votes} WHERE nid = %d', $node->nid);
+
+  $i = 0;
   foreach ($node->choice as $choice) {
     $chvotes = (int)$choice['chvotes'];
     $chtext = $choice['chtext'];

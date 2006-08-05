@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.138 2006/07/31 11:25:53 dries Exp $
+// $Id: locale.module,v 1.139 2006/08/05 00:26:36 drumm Exp $
 
 /**
  * @file
@@ -54,10 +54,9 @@ function locale_help($section) {
  */
 function locale_menu($may_cache) {
   $items = array();
+  $access = user_access('administer locales');
 
   if ($may_cache) {
-    $access = user_access('administer locales');
-
     // Main admin menu item
     $items[] = array('path' => 'admin/settings/locale',
       'title' => t('localization'),

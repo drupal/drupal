@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.160 2006/07/31 11:25:54 dries Exp $
+// $Id: profile.module,v 1.161 2006/08/05 00:26:36 drumm Exp $
 
 /**
  * @file
@@ -634,6 +634,7 @@ function profile_form_profile($edit, $user, $category) {
     // Use LOWER('%s') instead of PHP's strtolower() to avoid UTF-8 conversion issues.
   }
 
+  $w = 0;
   while ($field = db_fetch_object($result)) {
     $category = $field->category;
     if (!isset($fields[$category])) {
