@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.340 2006/07/31 11:25:53 dries Exp $
+// $Id: forum.module,v 1.341 2006/08/05 00:13:06 drumm Exp $
 
 /**
  * @file
@@ -81,8 +81,8 @@ function forum_menu($may_cache) {
       'access' => user_access('administer forums'),
       'type' => MENU_LOCAL_TASK);
   }
-  elseif (is_numeric(arg(4))) {
-    $term = taxonomy_get_term(arg(4));
+  elseif (is_numeric(arg(5))) {
+    $term = taxonomy_get_term(arg(5));
     // Check if this is a valid term.
     if ($term) {
       $items[] = array('path' => 'admin/content/forum/edit/container',
