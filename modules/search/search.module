@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.187 2006/08/05 01:21:40 drumm Exp $
+// $Id: search.module,v 1.188 2006/08/05 22:30:59 drumm Exp $
 
 /**
  * @file
@@ -161,7 +161,7 @@ function search_menu($may_cache) {
       'description' => t('Configure relevance settings for search and other indexing options'),
       'callback' => 'search_admin_settings',
       'access' => user_access('administer search'),
-      'type' => MENU_CALLBACK);
+      'type' => MENU_NORMAL_ITEM);
     $items[] = array('path' => 'admin/settings/search/wipe',
       'title' => t('clear index'),
       'callback' => 'search_wipe_confirm',
