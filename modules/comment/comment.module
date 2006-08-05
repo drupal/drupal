@@ -1617,7 +1617,6 @@ function theme_comment_folded($comment) {
 
 function theme_comment_flat_collapsed($comment) {
   return theme('comment_view', $comment, '', 0);
-  return '';
 }
 
 function theme_comment_flat_expanded($comment) {
