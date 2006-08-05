@@ -1044,6 +1044,9 @@ function search_box($form_id = 'search_theme_form') {
     '#attributes' => array('title' => t('Enter the terms you wish to search for.')),
   );
   $form['submit'] = array('#type' => 'submit', '#value' => t('Search'));
+  // Always go to the search page since the search form is not guaranteed to be
+  // on every page.
+  $form['#action'] = url('search/node');
 
   return drupal_get_form($form_id, $form, 'search_box_form');
 }
