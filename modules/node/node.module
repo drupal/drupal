@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.665 2006/08/02 13:44:07 dries Exp $
+// $Id: node.module,v 1.666 2006/08/05 02:12:46 drumm Exp $
 
 /**
  * @file
@@ -488,6 +488,9 @@ function node_save(&$node) {
     node_invoke_nodeapi($node, 'update');
   }
 
+  // Update the node access table for this node.
+  node_access_acquire_grants($node);
+
   // Clear the cache so an anonymous poster can see the node being added or updated.
   cache_clear_all();
 }
@@ -915,6 +918,13 @@ function node_menu($may_cache) {
       $items[] = array('path' => 'admin/content/types/'. arg(3),
         'title' => t("'%name' content type", array('%name' => node_get_name(arg(3)))),
         'type' => MENU_CALLBACK);
+    }
+
+    // There is no need to rebuild node_access if there is only 1 record in the table (the default configuration).
+    if (db_result(db_query('SELECT COUNT(*) FROM {node_access}')) > 1) {
+      $items[] = array('path' => 'admin/settings/node-access', 'title' => t('node access'),
+        'callback' => 'node_access_rebuild_page',
+        'access' => user_access('administer nodes'));
     }
   }
 
@@ -2524,6 +2534,136 @@ function node_db_rewrite_sql($query, $primary_table, $primary_field) {
   }
 }
 
+/**
+ * This function will call module invoke to get a list of grants and then
+ * write them to the database. It is called at node save, and should be
+ * called by modules whenever something other than a node_save causes
+ * the permissions on a node to change.
+ *
+ * This function is the only function that should write to the node_access
+ * table.
+ *
+ * @param $node
+ *   The $node to acquire grants for.
+ */
+function node_access_acquire_grants($node) {
+  $grants = module_invoke_all('node_access_records', $node);
+  if (!$grants) {
+    $grants[] = array('realm' => 'all', 'gid' => 0, 'grant_view' => 1, 'grant_update' => 0, 'grant_delete' => 0);
+  }
+  else {
+    // retain grants by highest priority
+    $grant_by_priority = array();
+    foreach ($grants as $g) {
+      $grant_by_priority[intval($g['priority'])][] = $g;
+    }
+    krsort($grant_by_priority);
+    $grants = array_shift($grant_by_priority);
+  }
+
+  node_access_write_grants($node, $grants);
+}
+
+/**
+ * This function will write a list of grants to the database, deleting
+ * any pre-existing grants. If a realm is provided, it will only
+ * delete grants from that realm, but it will always delete a grant
+ * from the 'all' realm. Modules which utilize node_access can
+ * use this function when doing mass updates due to widespread permission
+ * changes.
+ *
+ * @param $node
+ *   The $node being written to. All that is necessary is that it contain a nid.
+ * @param $grants
+ *   A list of grants to write. Each grant is an array that must contain the
+ *   following keys: realm, gid, grant_view, grant_update, grant_delete.
+ *   The realm is specified by a particular module; the gid is as well, and
+ *   is a module-defined id to define grant privileges. each grant_* field
+ *   is a boolean value.
+ * @param $realm
+ *   If provided, only read/write grants for that realm.
+ * @param $delete
+ *   If false, do not delete records. This is only for optimization purposes,
+ *   and assumes the caller has already performed a mass delete of some form.
+ */
+function node_access_write_grants($node, $grants, $realm = NULL, $delete = TRUE) {
+  if ($delete) {
+    $query = 'DELETE FROM {node_access} WHERE nid = %d';
+    if ($realm) {
+      $query .= " AND realm in ('%s', 'all')";
+    }
+    db_query($query, $node->nid, $realm);
+  }
+
+  // only perform work when node_access modules are active
+  if (count(module_implements('node_grants'))) {
+    // This optimization reduces the number of db inserts a little bit. We could
+    // optimize further for mass updates if we wanted.
+    $values = array();
+    $query = '';
+    foreach ($grants as $grant) {
+      if ($realm && $realm != $grant['realm']) {
+        continue;
+      }
+      // Only write grants; denies are implicit.
+      if ($grant['grant_view'] || $grant['grant_update'] || $grant['grant_delete']) {
+        $query .= ($query ? ', ' : '') . "(%d, '%s', %d, %d, %d, %d)";
+
+        $values[] = $node->nid;
+        $values[] = $grant['realm'];
+        $values[] = $grant['gid'];
+        $values[] = $grant['grant_view'];
+        $values[] = $grant['grant_update'];
+        $values[] = $grant['grant_delete'];
+      }
+    }
+
+    if ($values) {
+     $query = "INSERT INTO {node_access} (nid, realm, gid, grant_view, grant_update, grant_delete) VALUES " . $query;
+     db_query($query, $values);
+    }
+  }
+}
+
+function node_access_rebuild_page() {
+  $form['markup'] = array(
+    '#prefix' => '<p>',
+    '#value' => t('Rebuilding the node_access table is necessary immediately after uninstalling a module that utilizes the node_access system. Each node will have its access control recalculated. This may take a while if your site has many nodes.'),
+    '#suffix' => '</p>',
+  );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Rebuild node access'),
+  );
+  return drupal_get_form('node_access_rebuild', $form);
+}
+
+/**
+ * rebuild the node access database
+ */
+function node_access_rebuild_submit() {
+  node_access_rebuild();
+  drupal_set_message(t('The node access table has been rebuilt.'));
+}
+
+function node_access_rebuild() {
+  db_query("DELETE FROM {node_access}");
+  // only recalculate if site is using a node_access module
+  if (count(module_implements('node_grants'))) {
+    // If not in 'safe mode', increase the maximum execution time:
+    if (!ini_get('safe_mode')) {
+      set_time_limit(240);
+    }
+    $result = db_query("SELECT nid FROM {node}");
+    while ($node = db_fetch_object($result)) {
+      node_access_acquire_grants(node_load($node->nid));
+    }
+  }
+  else {
+    // not using any node_access modules. add the default grant.
+    db_query("INSERT INTO {node_access} VALUES (0, 0, 'all', 1, 0, 0)");
+  }
+}
 /**
  * @} End of "defgroup node_access".
  */
