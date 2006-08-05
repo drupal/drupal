@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.139 2006/08/05 02:12:45 drumm Exp $
+// $Id: CHANGELOG.txt,v 1.140 2006/08/05 18:56:35 drumm Exp $
 
 Drupal x.x.x, xxxx-xx-xx (development version)
 ------------------------
@@ -32,6 +32,7 @@ Drupal x.x.x, xxxx-xx-xx (development version)
 - user module:
     * added hook_profile_alter().
     * e-mail verification is made optional.
+    * added mass editing on admin/user/user.
 - PHP Template engine:
     * add the ability to look for a series of suggested templates.
     * look for page templates based upon the path.
