@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.342 2006/08/05 00:26:36 drumm Exp $
+// $Id: forum.module,v 1.343 2006/08/05 01:42:56 drumm Exp $
 
 /**
  * @file
@@ -323,20 +323,24 @@ function forum_submit(&$node) {
   $node->icon = $node->icon ? $node->icon : '';
 
   if ($node->taxonomy) {
-    // Extract the node's proper topic ID.
-    $vocabulary = variable_get('forum_nav_vocabulary', '');
+    // Get the forum terms from the (cached) tree
+    $tree = taxonomy_get_tree(_forum_get_vid());
+    if ($tree) {
+      foreach ($tree as $term) {
+        $forum_terms[] = $term->tid;
+      }
+    }
     foreach ($node->taxonomy as $term) {
-      if (db_result(db_query('SELECT COUNT(*) FROM {term_data} WHERE tid = %d AND vid = %d', $term, $vocabulary))) {
+      if (in_array($term, $forum_terms)) {
         $node->tid = $term;
       }
     }
-    if ($node->tid && $node->shadow) {
-      // A shadow copy needs to be created. Retain existing term and add new term.
-      $terms = array_keys(taxonomy_node_get_terms($node->nid));
-      if (!in_array($node->tid, $terms)) {
-        $terms[] = $node->tid;
+    $old_tid = db_result(db_query_range("SELECT tid FROM {forum} WHERE nid = %d ORDER BY vid DESC", $node->nid, 0,1));
+    if ($old_tid) { 
+      if (($node->tid != $old_tid) && $node->shadow) {
+        // A shadow copy needs to be created. Retain new term and add old term.
+        $node->taxonomy[] = $old_tid;
       }
-      $node->taxonomy = $terms;
     }
   }
 }
