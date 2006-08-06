@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.install,v 1.3 2006/08/04 06:58:44 dries Exp $
+// $Id: poll.install,v 1.4 2006/08/06 23:13:45 drumm Exp $
 
 function poll_install() {
   switch ($GLOBALS['db_type']) {
@@ -31,6 +31,8 @@ function poll_install() {
         PRIMARY KEY (chid),
         KEY nid (nid)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+      break;
+
     case 'pgsql':
       db_query("CREATE TABLE {poll} (
         nid uint NOT NULL default '0',
