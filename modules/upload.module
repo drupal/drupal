@@ -101,6 +101,41 @@ function upload_menu($may_cache) {
   return $items;
 }
 
+/**
+* Form API callback to validate the upload settings form.
+*/
+function upload_settings_form_validate($form_id, $form_values) {
+
+  if (($form_values['upload_max_resolution'] != '0')) {
+    if (!preg_match('/^[0-9]+x[0-9]+$/', $form_values['upload_max_resolution'])) {
+      form_set_error('upload_max_resolution', t('The maximum allowed image size expressed as WIDTHxHEIGHT (e.g. 640x480). Set to 0 for no restriction.'));
+    }
+  }
+ 
+  $exceed_max_msg = t('Your PHP settings limit the maximum file size per upload to %size MB.', array('%size' => file_upload_max_size())).'<br/>';
+  $more_info = t("Depending on your sever environment, these settings may be changed in the system-wide php.ini file, a php.ini file in your Drupal root directory, in your Drupal site's settings.php file, or in the .htaccess file in your Drupal root directory.");
+
+
+  foreach ($form_values['roles'] as $rid => $role) {
+    $uploadsize = $form_values['upload_uploadsize_'. $rid];
+    $usersize = $form_values['upload_usersize_'. $rid];
+
+    if (!is_numeric($uploadsize) || ($uploadsize <= 0)) {
+      form_set_error('upload_uploadsize_'. $rid, t('The %role file size limit must be a number and greater than zero.', array('%role' => theme('placeholder', $role))));
+    }
+    if (!is_numeric($usersize) || ($usersize <= 0)) {
+      form_set_error('upload_usersize_'. $rid, t('The %role file size limit must be a number and greater than zero.', array('%role' => theme('placeholder', $role))));
+    }
+    if ($uploadsize > file_upload_max_size()) {
+     form_set_error('upload_uploadsize_'. $rid, $exceed_max_msg . $more_info);
+     $more_info = '';     
+    }
+    if ($uploadsize > $usersize) {
+     form_set_error('upload_uploadsize_'. $rid, t('The %role maximum file size per upload is greater than the total file size allowed per user', array('%role' => theme('placeholder', $role))));
+    }
+  }
+}
+
 function upload_settings() {
   $form['settings_general'] = array('#type' => 'fieldset', '#title' => t('General settings'));
   $form['settings_general']['upload_max_resolution'] = array(
@@ -114,7 +149,10 @@ function upload_settings() {
     '#description' => t('Set whether files attached to nodes are listed or not in the node view by default.'),
   );
 
-  $roles = user_roles(0, 'upload files');
+  $form['upload_max_size'] = array('#value' => '<p>'. t('Your PHP settings limit the maximum file size per upload to %size MB.', array('%size' => file_upload_max_size())).'</p>');
+
+  $roles = user_roles(0, 'upload files');  
+  $form['roles'] = array('#type' => 'value', '#value' => $roles);
 
   foreach ($roles as $rid => $role) {
     $form["settings_role_$rid"] = array('#type' => 'fieldset', '#title' => t('Settings for %role', array('%role' => theme('placeholder', $role))), '#collapsible' => TRUE, '#collapsed' => TRUE);
@@ -131,7 +169,7 @@ function upload_settings() {
       '#size' => 5, '#maxlength' => 5, '#description' => t('The maximum size of all files a user can have on the site (in megabytes).')
     );
   }
-
+  // Note: form_id constructed in system_site_settings() is 'upload_settings_form'
   return $form;
 }
 
