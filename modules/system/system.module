@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.334 2006/08/03 01:02:50 unconed Exp $
+// $Id: system.module,v 1.335 2006/08/06 23:00:42 drumm Exp $
 
 /**
  * @file
@@ -1253,6 +1253,7 @@ function system_modules_submit($form_id, $edit) {
   }
 
   menu_rebuild();
+  node_types_rebuild();
 
   drupal_set_message(t('The configuration options have been saved.'));
   return 'admin/settings/modules';
@@ -1377,7 +1378,7 @@ function system_theme_settings($key = '') {
     );
 
     // Toggle node display.
-    $node_types = module_invoke('node', 'get_types');
+    $node_types = node_get_types('names');
     if ($node_types) {
       $form['node_info'] = array(
         '#type' => 'fieldset',

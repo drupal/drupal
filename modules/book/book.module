@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.377 2006/08/05 00:26:35 drumm Exp $
+// $Id: book.module,v 1.378 2006/08/06 23:00:41 drumm Exp $
 
 /**
  * @file
@@ -10,7 +10,13 @@
  * Implementation of hook_node_info().
  */
 function book_node_info() {
-  return array('book' => array('name' => t('book page'), 'base' => 'book'));
+  return array(
+    'book' => array(
+      'name' => t('book page'),
+      'module' => 'book',
+      'description' => t("A book is a collaborative writing effort: users can collaborate writing the pages of the book, positioning the pages in the right order, and reviewing or modifying pages previously written. So when you have some information to share or when you read a page of the book and you didn't like it, or if you think a certain page could have been written better, you can do something about it."),
+    )
+  );
 }
 
 /**
@@ -83,10 +89,6 @@ function book_menu($may_cache) {
   $items = array();
 
   if ($may_cache) {
-    $items[] = array(
-      'path' => 'node/add/book',
-      'title' => t('book page'),
-      'access' => user_access('create book pages'));
     $items[] = array(
       'path' => 'admin/content/book',
       'title' => t('books'),
@@ -224,6 +226,7 @@ function book_submit(&$node) {
  * Implementation of hook_form().
  */
 function book_form(&$node) {
+  $type = node_get_types('type', $node);
   if ($node->nid && !$node->parent && !user_access('create new books')) {
     $form['parent'] = array('#type' => 'value', '#value' => $node->parent);
   }
@@ -238,13 +241,13 @@ function book_form(&$node) {
   }
 
   $form['title'] = array('#type' => 'textfield',
-    '#title' => t('Title'),
+    '#title' => check_plain($type->title_label),
     '#required' => TRUE,
     '#default_value' => $node->title,
     '#weight' => -5,
   );
   $form['body_filter']['body'] = array('#type' => 'textarea',
-    '#title' => t('Body'),
+    '#title' => check_plain($type->body_label),
     '#default_value' => $node->body,
     '#rows' => 20,
     '#required' => TRUE,
@@ -1014,8 +1017,6 @@ function book_help($section) {
       return t('<p>The book module offers a means to organize content, authored by many users, in an online manual, outline or FAQ.</p>');
     case 'admin/content/book/orphan':
       return t('<p>Pages in a book are like a tree. As pages are edited, reorganized and removed, child pages might be left with no link to the rest of the book. Such pages are referred to as "orphan pages". On this page, administrators can review their books for orphans and reattach those pages as desired.</p>');
-    case 'node/add#book':
-      return t("A book is a collaborative writing effort: users can collaborate writing the pages of the book, positioning the pages in the right order, and reviewing or modifying pages previously written. So when you have some information to share or when you read a page of the book and you didn't like it, or if you think a certain page could have been written better, you can do something about it.");
   }
 
   if (arg(0) == 'node' && is_numeric(arg(1)) && arg(2) == 'outline') {

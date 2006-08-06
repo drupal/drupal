@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.343 2006/08/05 01:42:56 drumm Exp $
+// $Id: forum.module,v 1.344 2006/08/06 23:00:42 drumm Exp $
 
 /**
  * @file
@@ -33,8 +33,6 @@ function forum_help($section) {
       return t('<p>Containers help you organize your forums. The job of a container is to hold, or contain, other forums that are related. For example, a container named "Food" might hold two forums named "Fruit" and "Vegetables".</p>');
     case 'admin/content/forum/add/forum':
       return t('<p>A forum holds discussion topics that are related. For example, a forum named "Fruit" might contain topics titled "Apples" and "Bananas".</p>');
-    case 'node/add#forum':
-      return t('Create a new topic for discussion in the forums.');
   }
 }
 
@@ -107,7 +105,14 @@ function forum_menu($may_cache) {
  * Implementation of hook_node_info().
  */
 function forum_node_info() {
-  return array('forum' => array('name' => t('forum topic'), 'base' => 'forum'));
+  return array(
+    'forum' => array(
+      'name' => t('forum topic'),
+      'module' => 'forum',
+      'description' => t('Create a new topic for discussion in the forums.'),
+      'title_label' => t('Subject'),
+    )
+  );
 }
 
 /**
@@ -383,7 +388,8 @@ function forum_update($node) {
  * Implementation of hook_form().
  */
 function forum_form(&$node) {
-  $form['title'] = array('#type' => 'textfield', '#title' => t('Subject'), '#default_value' => $node->title, '#required' => TRUE, '#weight' => -5);
+  $type = node_get_types('type', $node);
+  $form['title'] = array('#type' => 'textfield', '#title' => check_plain($type->title_label), '#default_value' => $node->title, '#required' => TRUE, '#weight' => -5);
 
   if ($node->nid) {
     $forum_terms = taxonomy_node_get_terms_by_vocabulary(_forum_get_vid(), $node->nid);
@@ -392,7 +398,7 @@ function forum_form(&$node) {
     $form['shadow'] = array('#type' => 'checkbox', '#title' => t('Leave shadow copy'), '#default_value' => $shadow, '#description' => t('If you move this topic, you can leave a link in the old forum to the new forum.'));
   }
 
-  $form['body_filter']['body'] = array('#type' => 'textarea', '#title' => t('Body'), '#default_value' => $node->body, '#rows' => 20, '#required' => TRUE);
+  $form['body_filter']['body'] = array('#type' => 'textarea', '#title' => check_plain($type->body_label), '#default_value' => $node->body, '#rows' => 20, '#required' => TRUE);
   $form['body_filter']['format'] = filter_form($node->format);
 
   return $form;

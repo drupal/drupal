@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.115 2006/08/06 22:49:27 drumm Exp $
+// $Id: upload.module,v 1.116 2006/08/06 23:00:42 drumm Exp $
 
 /**
  * @file
@@ -348,14 +348,16 @@ function _upload_prepare(&$node) {
 }
 
 function upload_form_alter($form_id, &$form) {
-  if (isset($form['type'])) {
-    if ($form['type']['#value'] .'_node_settings' == $form_id) {
-      $form['workflow']['upload_'. $form['type']['#value']] = array(
-        '#type' => 'radios', '#title' => t('Attachments'), '#default_value' => variable_get('upload_'. $form['type']['#value'], 1),
-        '#options' => array(t('Disabled'), t('Enabled')),
-      );
-    }
+  if ($form_id == 'node_type_form' && isset($form['identity']['type'])) {
+    $form['workflow']['upload'] = array(
+      '#type' => 'radios',
+      '#title' => t('Attachments'),
+      '#default_value' => variable_get('upload_'. $form['identity']['type']['#default_value'], 1),
+      '#options' => array(t('Disabled'), t('Enabled')),
+    );
+  }
 
+  if (isset($form['type'])) {
     $node = $form['#node'];
     if ($form['type']['#value'] .'_node_form' == $form_id && variable_get("upload_$node->type", TRUE) && user_access('upload files')) {
       drupal_add_js('misc/progress.js');

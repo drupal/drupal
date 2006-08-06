@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.253 2006/07/31 11:25:52 dries Exp $
+// $Id: blog.module,v 1.254 2006/08/06 23:00:41 drumm Exp $
 
 /**
  * @file
@@ -10,7 +10,13 @@
  * Implementation of hook_node_info().
  */
 function blog_node_info() {
-  return array('blog' => array('name' => t('blog entry'), 'base' => 'blog'));
+  return array(
+    'blog' => array(
+      'name' => t('blog entry'),
+      'module' => 'blog',
+      'description' => t('A blog is a regularly updated journal or diary made up of individual posts shown in reversed chronological order. Each member of the site may create and maintain a blog.'),
+    )
+  );
 }
 
 /**
@@ -72,8 +78,6 @@ function blog_help($section) {
       return $output;
     case 'admin/settings/modules#description':
       return t('Enables keeping an easily and regularly updated web page or a blog.');
-    case 'node/add#blog':
-      return t("A blog is a regularly updated journal or diary made up of individual posts shown in reversed chronological order. Each member of the site may create and maintain a blog.");
   }
 }
 
@@ -201,6 +205,7 @@ function blog_page_last() {
 function blog_form(&$node) {
   global $nid;
   $iid = $_GET['iid'];
+  $type = node_get_types('type', $node);
 
 
   if (empty($node->body)) {
@@ -221,8 +226,8 @@ function blog_form(&$node) {
 
   }
 
-  $form['title'] = array('#type' => 'textfield', '#title' => t('Title'), '#required' => TRUE, '#default_value' => $node->title, '#weight' => -5);
-  $form['body_filter']['body'] = array('#type' => 'textarea', '#title' => t('Body'), '#default_value' => $node->body, '#rows' => 20, '#required' => TRUE);
+  $form['title'] = array('#type' => 'textfield', '#title' => check_plain($type->title_label), '#required' => TRUE, '#default_value' => $node->title, '#weight' => -5);
+  $form['body_filter']['body'] = array('#type' => 'textarea', '#title' => check_plain($type->body_label), '#default_value' => $node->body, '#rows' => 20, '#required' => TRUE);
   $form['body_filter']['filter'] = filter_form($node->format);
   return $form;
 }

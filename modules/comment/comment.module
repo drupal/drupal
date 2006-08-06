@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.470 2006/08/05 00:26:35 drumm Exp $
+// $Id: comment.module,v 1.471 2006/08/06 23:00:42 drumm Exp $
 
 /**
  * @file
@@ -265,10 +265,16 @@ function comment_link($type, $node = NULL, $teaser = FALSE) {
 }
 
 function comment_form_alter($form_id, &$form) {
-  if (isset($form['type'])) {
-    if ($form['type']['#value'] .'_node_settings' == $form_id) {
-      $form['workflow']['comment_'. $form['type']['#value']] = array('#type' => 'radios', '#title' => t('Default comment setting'), '#default_value' => variable_get('comment_'. $form['type']['#value'], COMMENT_NODE_READ_WRITE), '#options' => array(t('Disabled'), t('Read only'), t('Read/Write')), '#description' => t('Users with the <em>administer comments</em> permission will be able to override this setting.'));
-    }
+  if ($form_id == 'node_type_form' && isset($form['identity']['type'])) {
+    $form['workflow']['comment'] = array(
+      '#type' => 'radios',
+      '#title' => t('Default comment setting'),
+      '#default_value' => variable_get('comment_'. $form['identity']['type']['#default_value'], COMMENT_NODE_READ_WRITE),
+      '#options' => array(t('Disabled'), t('Read only'), t('Read/Write')),
+      '#description' => t('Users with the <em>administer comments</em> permission will be able to override this setting.'),
+    );
+  }
+  elseif (isset($form['type'])) {
     if ($form['type']['#value'] .'_node_form' == $form_id) {
       $node = $form['#node'];
       if (user_access('administer comments')) {
