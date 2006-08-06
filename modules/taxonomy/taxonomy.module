@@ -138,7 +138,7 @@ function taxonomy_overview_vocabularies() {
   foreach ($vocabularies as $vocabulary) {
     $types = array();
     foreach ($vocabulary->nodes as $type) {
-      $node_type = node_get_name($type);
+      $node_type = node_get_types('name', $type);
       $types[] = $node_type ? $node_type : $type;
     }
     $rows[] = array('name' => check_plain($vocabulary->name),
