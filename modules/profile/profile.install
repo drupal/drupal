@@ -31,6 +31,8 @@ function profile_install() {
         KEY uid (uid),
         KEY fid (fid)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+      break;
+
     case 'pgsql':
       db_query("CREATE TABLE {profile_fields} (
         fid serial,

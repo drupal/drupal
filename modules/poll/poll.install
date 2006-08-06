@@ -31,6 +31,8 @@ function poll_install() {
         PRIMARY KEY (chid),
         KEY nid (nid)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+      break;
+
     case 'pgsql':
       db_query("CREATE TABLE {poll} (
         nid uint NOT NULL default '0',
