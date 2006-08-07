@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.337 2006/08/07 15:04:15 dries Exp $
+// $Id: system.module,v 1.338 2006/08/07 19:35:41 dries Exp $
 
 /**
  * @file
@@ -128,11 +128,11 @@ function system_menu($may_cache) {
 
     $items[] = array(
       'path' => 'admin/settings/admin',
-      'title' => t('administration page'),
+      'title' => t('administration theme'),
       'description' => t('Settings for how your administrative pages should look.'),
       'position' => 'left',
-      'callback' => 'system_admin_page_settings',
-      'block callback' => 'system_admin_page_settings',
+      'callback' => 'system_admin_theme_settings',
+      'block callback' => 'system_admin_theme_settings',
       'access' => $access);
 
     // Themes:
@@ -333,11 +333,11 @@ function system_admin_compact_page($mode = 'off') {
   user_save($user, array('admin_compact_mode' => ($mode == 'on')));
   drupal_goto('admin');
 }
+
 /**
- * This function provides a form to control the settings of the
- * administration page.
+ * This function allows selection of the theme to show in administration sections.
  */
-function system_admin_page_settings() {
+function system_admin_theme_settings() {
   $themes = system_theme_data();
   ksort($themes);
   $options[0] = t('System default');
@@ -356,14 +356,14 @@ function system_admin_page_settings() {
   // In order to give it our own submit, we have to give it the default submit
   // too because the presence of a #submit will prevent the default #submit
   // from being used. Also we want ours first.
-  $form['#submit']['system_admin_page_submit'] = array();
+  $form['#submit']['system_admin_theme_submit'] = array();
   $form['#submit']['system_settings_form_submit'] = array();
 
-  return system_settings_form('system_admin_page_form', $form);
+  return system_settings_form('system_admin_theme_form', $form);
 }
 
 
-function system_admin_page_submit($form_id, $form_values) {
+function system_admin_theme_submit($form_id, $form_values) {
   // If we're changing themes, make sure the theme has its blocks initialized.
   if ($form_values['admin_theme'] != variable_get('admin_theme', 'bluemarine')) {
     $result = db_query("SELECT status FROM {blocks} WHERE theme = '%s'", $form_values['admin_theme']);
