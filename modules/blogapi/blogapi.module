@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.90 2006/08/07 15:04:14 dries Exp $
+// $Id: blogapi.module,v 1.91 2006/08/07 21:00:26 dries Exp $
 
 /**
  * @file
@@ -553,7 +553,7 @@ function blogapi_admin_settings() {
     '#description' => t('RSD or Really-Simple-Discovery is a mechanism which allows external blogger tools to discover the APIs they can use to interact with Drupal. Here you can set the preferred method for blogger tools to interact with your site. The common XML-RPC engines are Blogger, MetaWeblog and Movabletype. If you are not sure which is the correct setting, choose Blogger.')
   );
 
-  $node_types = node_get_types();
+  $node_types = node_get_types('names');
   $defaults = isset($node_types['blog']) ? array('blog' => 1) : array();
   $form['blogapi_node_types'] = array(
     '#type' => 'checkboxes',
