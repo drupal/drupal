@@ -199,7 +199,7 @@ function locale_add_language_form_submit($form_id, $form_values) {
     _locale_add_language($form_values['langcode'], $isocodes[$form_values['langcode']][0]);
   }
 
-  return 'admin/locale';
+  return 'admin/settings/locale';
 }
 
 /**
@@ -264,7 +264,7 @@ function _locale_admin_import_submit($form_id, $form_values) {
     watchdog('locale', $message, WATCHDOG_ERROR);
   }
 
-  return 'admin/locale';
+  return 'admin/settings/locale';
 }
 
 /**

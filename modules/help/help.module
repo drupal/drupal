@@ -102,7 +102,7 @@ function help_help($section) {
       $output .= t('<p>Modules can make documentation available to other modules with this module. All user help should be presented using this module. Some examples of help: </p>
 <ul>
 <li>The name of a module (unused, but there).</li>
-<li>The description found on the admin/system/modules page.</li>
+<li>The description found on the admin/settings/modules page.</li>
 <li>The module\'s help text, displayed on the admin/help page and through the module\'s individual help link.</li>
 <li>The help for a distributed authorization module (if applicable).</li>
 <li>The description of a post type (if applicable).</li>
