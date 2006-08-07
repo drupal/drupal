@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.379 2006/08/07 15:04:14 dries Exp $
+// $Id: book.module,v 1.380 2006/08/07 19:29:38 dries Exp $
 
 /**
  * @file
@@ -460,10 +460,6 @@ function book_nodeapi(&$node, $op, $teaser, $page) {
       if (!$teaser) {
         $book = db_fetch_array(db_query('SELECT * FROM {book} WHERE vid = %d', $node->vid));
         if ($book) {
-          if (user_access('administer nodes')) {
-            drupal_set_message(t("The post has been submitted for moderation and won't be accessible until it has been approved."));
-          }
-
           foreach ($book as $key => $value) {
             $node->$key = $value;
           }
