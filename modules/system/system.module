@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.336 2006/08/07 14:25:37 dries Exp $
+// $Id: system.module,v 1.337 2006/08/07 15:04:15 dries Exp $
 
 /**
  * @file
@@ -23,9 +23,9 @@ function system_help($section) {
 <ul>
 <li>activate your cron job on the cron page <a href="%file-cron">cron.php</a>.</li>
 <li>read how to <a href="%external-http-drupal-org-cron">configure cron jobs</a>.</li>
-<li>administer cache settings in <a href="%admin-settings">administer &gt;&gt; settings &gt;&gt; caching</a>.</li>
+<li>administer cache settings in <a href="%admin-settings">administer &gt;&gt; site configuration &gt;&gt; page caching</a>.</li>
 </ul>
-', array('%file-cron' => 'cron.php', '%external-http-drupal-org-cron' => 'http://drupal.org/cron', '%admin-settings' => url('admin/settings/caching')));
+', array('%file-cron' => 'cron.php', '%external-http-drupal-org-cron' => 'http://drupal.org/cron', '%admin-settings' => url('admin/settings/page-caching')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%system">System page</a>.', array('%system' => 'http://drupal.org/handbook/modules/system/')) .'</p>';
       return $output;
     case 'admin/settings/modules#description':
@@ -42,7 +42,7 @@ function system_help($section) {
       return t('<p>These options control the display settings for the <code>%template</code> theme. When your site is displayed using this theme, these settings will be used. By clicking "Reset to defaults," you can choose to use the <a href="%global">global settings</a> for this theme.</p>', array('%template' => $theme, '%global' => url('admin/build/themes/settings')));
     case 'admin/settings/modules':
       return t('<p>Modules are plugins for Drupal that extend its core functionality. Here you can select which modules are enabled. Click on the name of the module in the navigation menu for their individual configuration pages. Once a module is enabled, new <a href="%permissions">permissions</a> might be made available. Modules can automatically be temporarily disabled to reduce server load when your site becomes extremely busy by enabling the throttle.module and checking throttle. The auto-throttle functionality must be enabled on the <a href="%throttle">throttle configuration page</a> after having enabled the throttle module.</p>
-<p>It is important that <a href="%update-php">update.php</a> is run every time a module is updated to a newer version.</p>', array('%permissions' => url('admin/access/permissions'), '%throttle' => url('admin/settings/throttle'), '%update-php' => $base_url .'/update.php'));
+<p>It is important that <a href="%update-php">update.php</a> is run every time a module is updated to a newer version.</p>', array('%permissions' => url('admin/user/access'), '%throttle' => url('admin/settings/throttle'), '%update-php' => $base_url .'/update.php'));
   }
 }
 
@@ -316,7 +316,7 @@ function system_admin_menu_block($block) {
 /**
  * Provide a single block from the administration menu as a page.
  * This function is often a destination for these blocks.
- * For example, 'admin/page' needs to have a destination to be valid
+ * For example, 'admin/content/types' needs to have a destination to be valid
  * in the Drupal menu system, but too much information there might be
  * hidden, so we supply the contents of the block.
  */

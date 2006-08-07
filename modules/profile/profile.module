@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.161 2006/08/05 00:26:36 drumm Exp $
+// $Id: profile.module,v 1.162 2006/08/07 15:04:15 dries Exp $
 
 /**
  * @file
@@ -35,7 +35,7 @@ function profile_help($section) {
       $output .= t('<p>You can</p>
 <ul>
 <li>view user <a href="%profile">profiles</a>.</li>
-<li>administer profile settings: <a href="%admin-settings-profile">administer &gt;&gt; settings &gt;&gt; profiles</a>.</li>
+<li>administer profile settings: <a href="%admin-settings-profile">administer &gt;&gt; user management &gt;&gt; profiles</a>.</li>
 </ul>
 ', array('%profile' => url('profile'), '%admin-settings-profile' => url('admin/user/profile')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%profile">Profile page</a>.', array('%profile' => 'http://drupal.org/handbook/modules/profile/')) .'</p>';

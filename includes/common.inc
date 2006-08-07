@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.551 2006/08/03 07:06:36 dries Exp $
+// $Id: common.inc,v 1.552 2006/08/07 15:04:13 dries Exp $
 
 /**
  * @file
@@ -230,7 +230,7 @@ function drupal_get_destination() {
  * the query string of an URI) or the $_REQUEST['edit']-array (i.e. by
  * using a hidden form field). This is used to direct the user back to
  * the proper page after completing a form. For example, after editing
- * a post on the 'admin/node'-page or after having logged on using the
+ * a post on the 'admin/content/node'-page or after having logged on using the
  * 'user login'-block in a sidebar. The function drupal_get_destination()
  * can be used to help set the destination URL.
  *
@@ -940,7 +940,7 @@ function format_date($timestamp, $type = 'medium', $format = '', $timezone = NUL
  * Generate a URL from a Drupal menu path. Will also pass-through existing URLs.
  *
  * @param $path
- *   The Drupal path being linked to, such as "admin/node", or an existing URL
+ *   The Drupal path being linked to, such as "admin/content/node", or an existing URL
  *   like "http://drupal.org/".
  * @param $query
  *   A query string to append to the link or URL.
@@ -1058,11 +1058,11 @@ function drupal_attributes($attributes = array()) {
  * @param $text
  *   The text to be enclosed with the anchor tag.
  * @param $path
- *   The Drupal path being linked to, such as "admin/node". Can be an external
+ *   The Drupal path being linked to, such as "admin/content/node". Can be an external
  *   or internal URL.
  *     - If you provide the full URL, it will be considered an
  *   external URL.
- *     - If you provide only the path (e.g. "admin/node"), it is considered an
+ *     - If you provide only the path (e.g. "admin/content/node"), it is considered an
  *   internal link. In this case, it must be a system URL as the url() function
  *   will generate the alias.
  * @param $attributes

@@ -1,4 +1,4 @@
-/* $Id: common.css,v 1.9 2006/01/20 09:09:18 dries Exp $ */
+/* $Id: common.css,v 1.10 2006/08/07 15:04:16 dries Exp $ */
 
 /*
 ** HTML elements
@@ -114,7 +114,7 @@ br {
 }
 
 /*
-** Common navigation links added on the admin/themes/settings page
+** Common navigation links added on the admin/build/themes/settings page
 */
 .navlinks {
   padding: 0em 0.5em 1.5em 0em;

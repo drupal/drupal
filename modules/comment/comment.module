@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.471 2006/08/06 23:00:42 drumm Exp $
+// $Id: comment.module,v 1.472 2006/08/07 15:04:14 dries Exp $
 
 /**
  * @file
@@ -74,10 +74,10 @@ function comment_help($section) {
       $output .= '<p>'. t('An administrator can give comment permissions to user groups, and users can (optionally) edit their last comment, assuming no others have been posted since. Attached to each comment board is a control panel for customizing the way that comments are displayed. Users can control the chronological ordering of posts (newest or oldest first) and the number of posts to display on each page. Comments behave like other user submissions. Filters, smileys and HTML that work in nodes will also work with comments. The comment module provides specific features to inform site members when new comments have been posted.') .'</p>';
       $output .= t('<p>You can</p>
 <ul>
-<li>control access for various comment module functions through access permissions <a href="%admin-access">administer &gt;&gt; access control</a>.</li>
-<li>administer comments <a href="%admin-comment-configure"> administer &gt;&gt; comments &gt;&gt; configure</a>.</li>
+<li>control access for various comment module functions through access permissions <a href="%admin-access">administer &gt;&gt; user management &gt;&gt; access control</a>.</li>
+<li>administer comments <a href="%admin-comment-configure"> administer &gt;&gt; content management &gt;&gt; comments &gt;&gt; settings</a>.</li>
 </ul>
-', array('%admin-access' => url('admin/access'), '%admin-settings-comment' => url('admin/content/comment/settings')));
+', array('%admin-access' => url('admin/user/access'), '%admin-settings-comment' => url('admin/content/comment/settings')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%comment">Comment page</a>.', array('%comment' => 'http://drupal.org/handbook/modules/comment/')) .'</p>';
       return $output;
     case 'admin/settings/modules#description':
@@ -438,7 +438,7 @@ function comment_admin_settings() {
       COMMENT_ANONYMOUS_MAYNOT_CONTACT => t('Anonymous posters may not enter their contact information'),
       COMMENT_ANONYMOUS_MAY_CONTACT => t('Anonymous posters may leave their contact information'),
       COMMENT_ANONYMOUS_MUST_CONTACT => t('Anonymous posters must leave their contact information')),
-    '#description' => t('This option is enabled when anonymous users have permission to post comments on the <a href="%url">permissions page</a>.', array('%url' => url('admin/access'))),
+    '#description' => t('This option is enabled when anonymous users have permission to post comments on the <a href="%url">permissions page</a>.', array('%url' => url('admin/user/access'))),
   );
   if (!user_access('post comments', user_load(array('uid' => 0)))) {
     $form['posting_settings']['comment_anonymous']['#attributes'] = array('disabled' => 'disabled');

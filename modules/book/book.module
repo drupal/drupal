@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.378 2006/08/06 23:00:41 drumm Exp $
+// $Id: book.module,v 1.379 2006/08/07 15:04:14 dries Exp $
 
 /**
  * @file
@@ -1003,12 +1003,12 @@ function book_help($section) {
       $output .= t('<p>You can</p>
 <ul>
 <li>create new book pages: <a href="%node-add-book">create content &gt;&gt; book page</a>.</li>
-<li>administer individual books (choose a book from list): <a href="%admin-node-book">administer &gt;&gt; content &gt;&gt; books</a>.</li>
-<li>set workflow and other global book settings on the book configuration page: <a href="%admin-settings-content-types-book-page" title="book page content type">administer &gt;&gt; settings &gt;&gt; content types &gt;&gt; configure book page</a>.</li>
-<li>enable the book navigation block: <a href="%admin-block">administer &gt;&gt; blocks</a>.</li>
-<li>control who can create, edit, and outline posts in books by setting access permissions: <a href="%admin-access">administer &gt;&gt; access control</a>.</li>
+<li>administer individual books (choose a book from list): <a href="%admin-node-book">administer &gt;&gt; content management &gt;&gt; books</a>.</li>
+<li>set workflow and other global book settings on the book configuration page: <a href="%admin-settings-content-types-book-page" title="book page content type">administer &gt;&gt; content management &gt;&gt; content types &gt;&gt; book page</a>.</li>
+<li>enable the book navigation block: <a href="%admin-block">administer &gt;&gt; site building &gt;&gt; blocks</a>.</li>
+<li>control who can create, edit, and outline posts in books by setting access permissions: <a href="%admin-access">administer &gt;&gt; user management &gt;&gt; access control</a>.</li>
 </ul>
-', array('%node-add-book' => url('node/add/book'), '%admin-node-book' => url('admin/content/book'), '%admin-settings-content-types-book-page' => url('admin/content/types/book'), '%admin-block' => url('admin/build/block'), '%admin-access' => url('admin/access')));
+', array('%node-add-book' => url('node/add/book'), '%admin-node-book' => url('admin/content/book'), '%admin-settings-content-types-book-page' => url('admin/content/types/book'), '%admin-block' => url('admin/build/block'), '%admin-access' => url('admin/user/access')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%book">Book page</a>.', array('%book' => 'http://drupal.org/handbook/modules/book/')) .'</p>';
       return $output;
     case 'admin/settings/modules#description':

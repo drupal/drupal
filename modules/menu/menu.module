@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.77 2006/07/31 11:25:53 dries Exp $
+// $Id: menu.module,v 1.78 2006/08/07 15:04:15 dries Exp $
 
 /**
  * @file
@@ -22,11 +22,11 @@ Menu administration tabs:
 </ul>', array('%navigation' => theme('placeholder', 'Navigation'), '%primary-links' => theme('placeholder', 'primary links'), '%secondary-links' => theme('placeholder', 'secondary links'), '%admin-block' => url('admin/build/block'), '%menu-settings' => url('admin/build/menu/settings')));
       $output .= t('<p>You can</p>
 <ul>
-  <li>administer menus at <a href="%admin-menu">administer &gt;&gt; menus</a>.</li>
-  <li>add a menu at <a href="%admin-menu-menu-add">administer &gt;&gt; menus &gt;&gt; add menu</a>.</li>
-  <li>add a menu item at <a href="%admin-menu-item-add">administer &gt;&gt; menus &gt;&gt; add menu item</a>.</li>
-  <li>modify menu settings (in particular, to specify a menu to use for primary or secondary links) at <a href="%admin-settings-menus">administer &gt;&gt; settings &gt;&gt; menus</a>.</li>
-  <li>manage menu blocks at <a href="%admin-block">administer &gt;&gt; blocks</a>.</li>
+  <li>administer menus at <a href="%admin-menu">administer &gt;&gt; site building &gt;&gt; menus</a>.</li>
+  <li>add a menu at <a href="%admin-menu-menu-add">administer &gt;&gt; site building &gt;&gt; menus &gt;&gt; add menu</a>.</li>
+  <li>add a menu item at <a href="%admin-menu-item-add">administer &gt;&gt; site building &gt;&gt; menus &gt;&gt; add menu item</a>.</li>
+  <li>modify menu settings (in particular, to specify a menu to use for primary or secondary links) at <a href="%admin-settings-menus">administer &gt;&gt; site building &gt;&gt; menus &gt;&gt; settings</a>.</li>
+  <li>manage menu blocks at <a href="%admin-block">administer &gt;&gt; site building &gt;&gt; blocks</a>.</li>
 </ul>
 ', array('%admin-menu' => url('admin/build/menu'), '%admin-block' => url('admin/build/block'), '%admin-menu-menu-add' => url('admin/build/menu/menu/add'), '%admin-menu-item-add' => url('admin/build/menu/item/add'), '%admin-settings-menus' => url('admin/build/menu/settings')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%menu">Menu page</a>.', array('%menu' => 'http://drupal.org/handbook/modules/menu/')) .'</p>';

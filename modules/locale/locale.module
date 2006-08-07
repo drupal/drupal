@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.139 2006/08/05 00:26:36 drumm Exp $
+// $Id: locale.module,v 1.140 2006/08/07 15:04:14 dries Exp $
 
 /**
  * @file
@@ -24,9 +24,9 @@ function locale_help($section) {
       $output .= '<p>'. t('If an existing translation does not meet your needs, the <em>.po</em> files are easily edited with special editing tools. The locale module\'s import feature allows you to add strings from such files into your site\'s database. The export functionality enables you to share your translations with others, generating Portable Object files from your site strings.') .'</p>';
       $output .= t('<p>You can</p>
 <ul>
-<li>administer localization at <a href="%admin-locale">administer &gt;&gt; localization</a>.</li>
-<li>manage strings for the localization: <a href="%admin-locale-string-search">administer &gt;&gt; localization &gt;&gt; manage strings</a>.</li>
-<li>add a locale language: <a href="%admin-locale-language-add">administer &gt;&gt; localization &gt;&gt; add language</a>.</li>
+<li>administer localization at <a href="%admin-locale">administer &gt;&gt; site configuration &gt;&gt; localization</a>.</li>
+<li>manage strings for the localization: <a href="%admin-locale-string-search">administer &gt;&gt; site configuration &gt;&gt; localization &gt;&gt; manage strings</a>.</li>
+<li>add a locale language: <a href="%admin-locale-language-add">administer &gt;&gt; site configuration &gt;&gt; localization &gt;&gt; add language</a>.</li>
 <li>download translation files from the <a href="%external-http-drupal-org-project-Translations">Drupal translations page</a>.
 </li>
 </ul>

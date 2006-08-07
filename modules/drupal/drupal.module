@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal.module,v 1.124 2006/07/31 11:25:53 dries Exp $
+// $Id: drupal.module,v 1.125 2006/08/07 15:04:14 dries Exp $
 
 /**
  * @file
@@ -26,7 +26,7 @@ function drupal_help($section) {
 <ul>
   <li>run your cron job at your site\'s <a href="%file-cron">cron page</a></li>
   <li>view your <a href="%file-xmlrpc">XML-RPC page</a>.</li>
-  <li>administer Drupal <a href="%admin-settings-drupal">administer &gt;&gt; settings &gt;&gt; drupal</a>.</li>
+  <li>administer Drupal <a href="%admin-settings-drupal">administer &gt;&gt; site configuration &gt;&gt; distributed authentication</a>.</li>
 </ul>
 ', array('%file-cron' => 'cron.php', '%file-xmlrpc' => 'xmlrpc.php', '%admin-settings-drupal' => url('admin/settings/distributed-authentication')));
       $output .= '<p>'. t('If you maintain a directory of sites, you can list them on a page using the <code>drupal_client_page()</code> function. Sample instructions:

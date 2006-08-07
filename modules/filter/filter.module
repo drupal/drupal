@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.131 2006/08/05 00:26:35 drumm Exp $
+// $Id: filter.module,v 1.132 2006/08/07 15:04:14 dries Exp $
 
 /**
  * @file
@@ -24,8 +24,8 @@ function filter_help($section) {
       $output .= '<p>'. t('Users can choose between the available input formats when creating or editing content. Administrators can configure which input formats are available to which user roles, as well as choose a default input format. Administrators can also create new input formats. Each input format can be configured to use a selection of filters.') .'</p>';
       $output .= t('<p>You can</p>
 <ul>
-<li>administer input format permissions and settings  at <a href="%admin-filters">administer &gt;&gt; input formats</a>.</li>
-<li>configure the filters for each input format at <a href="%admin-filters">administer &gt;&gt; input formats &gt;&gt; configure</a>.</li>
+<li>administer input format permissions and settings  at <a href="%admin-filters">administer &gt;&gt; site configuration &gt;&gt; input formats</a>.</li>
+<li>configure the filters for each input format at <a href="%admin-filters">administer &gt;&gt; site configuration &gt;&gt; input formats</a>.</li>
 </ul>
 ', array('%admin-filters' => url('admin/settings/filters')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%filter">Filter page</a>.', array('%filter' => 'http://drupal.org/handbook/modules/filter/')) .'</p>';

@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.667 2006/08/06 23:00:42 drumm Exp $
+// $Id: node.module,v 1.668 2006/08/07 15:04:15 dries Exp $
 
 /**
  * @file
@@ -27,7 +27,7 @@ function node_help($section) {
       $output .= t('<p>You can</p>
 <ul>
 <li>search for content at <a href="%search">search</a>.</li>
-<li>administer nodes at <a href="%admin-settings-content-types">administer &gt;&gt; settings &gt;&gt; content types</a>.</li>
+<li>administer nodes at <a href="%admin-settings-content-types">administer &gt;&gt; content management &gt;&gt; content types</a>.</li>
 </ul>
 ', array('%search' => url('search'), '%admin-settings-content-types' => url('admin/content/types')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%node">Node page</a>.', array('%node' => 'http://drupal.org/handbook/modules/node/')) .'</p>';
@@ -2226,7 +2226,7 @@ function node_page_default() {
         </li>
       </ol>
       <p>For more information, please refer to the <a href="%help">help section</a>, or the <a href="%handbook">online Drupal handbooks</a>. You may also post at the <a href="%forum">Drupal forum</a>, or view the wide range of <a href="%support">other support options</a> available.</p>',
-      array('%drupal' => 'http://drupal.org/', '%register' => url('user/register'), '%admin' => url('admin'), '%config' => url('admin/settings'), '%modules' => url('admin/settings/modules'), '%download_modules' => 'http://drupal.org/project/modules', '%themes' => url('admin/themes'), '%download_themes' => 'http://drupal.org/project/themes', '%content' => url('node/add'), '%help' => url('admin/help'), '%handbook' => 'http://drupal.org/handbooks', '%forum' => 'http://drupal.org/forum', '%support' => 'http://drupal.org/support')
+      array('%drupal' => 'http://drupal.org/', '%register' => url('user/register'), '%admin' => url('admin'), '%config' => url('admin/settings'), '%modules' => url('admin/settings/modules'), '%download_modules' => 'http://drupal.org/project/modules', '%themes' => url('admin/build/themes'), '%download_themes' => 'http://drupal.org/project/themes', '%content' => url('node/add'), '%help' => url('admin/help'), '%handbook' => 'http://drupal.org/handbooks', '%forum' => 'http://drupal.org/forum', '%support' => 'http://drupal.org/support')
     );
     $output = '<div id="first-time">'. $output .'</div>';
   }

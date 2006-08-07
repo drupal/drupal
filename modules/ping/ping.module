@@ -1,5 +1,5 @@
 <?php
-// $Id: ping.module,v 1.40 2006/08/03 13:46:21 dries Exp $
+// $Id: ping.module,v 1.41 2006/08/07 15:04:15 dries Exp $
 
 /**
  * @file
@@ -16,7 +16,7 @@ function ping_help($section) {
       $output .= '<p>'. t('The ping module requires <code>cron</code> or a similar periodic job scheduler to be enabled.') .'</p>';
       $output .= t('<p>You can:</p>
 <ul>
-<li> enable or disable the ping module at <a href="%admin-modules">administer &gt;&gt; modules</a>.</li>
+<li> enable or disable the ping module at <a href="%admin-modules">administer &gt;&gt; site configuration &gt;&gt; modules</a>.</li>
 <li>run your cron job at your sites <a href="%file-cron">cron page</a>.</li>
 <li>read about <a href="%external-http-drupal-org-node-23714">configuring cron jobs</a>.</li>
 </ul></p>

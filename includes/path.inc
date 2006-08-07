@@ -1,5 +1,5 @@
 <?php
-// $Id: path.inc,v 1.5 2006/07/18 07:59:51 drumm Exp $
+// $Id: path.inc,v 1.6 2006/08/07 15:04:13 dries Exp $
 
 /**
  * @file
@@ -123,9 +123,9 @@ function drupal_get_normal_path($path) {
 /**
  * Return a component of the current Drupal path.
  *
- * When viewing a page at the path "admin/node/configure", for example, arg(0)
- * would return "admin", arg(1) would return "node", and arg(2) would return
- * "configure".
+ * When viewing a page at the path "admin/content/types", for example, arg(0)
+ * would return "admin", arg(1) would return "content", and arg(2) would return
+ * "types".
  *
  * Avoid use of this function where possible, as resulting code is hard to read.
  * Instead, attempt to use named arguments in menu callback functions. See the

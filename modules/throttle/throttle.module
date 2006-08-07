@@ -1,5 +1,5 @@
 <?php
-// $Id: throttle.module,v 1.62 2006/07/31 11:25:55 dries Exp $
+// $Id: throttle.module,v 1.63 2006/08/07 15:04:15 dries Exp $
 
 /**
  * @file
@@ -125,9 +125,9 @@ function throttle_help($section) {
       $output .= '<p>'. t('The congestion control throttle can be automatically enabled when the number of anonymous or authenticated users currently visiting the site exceeds the specified threshold. ') .'</p>';
       $output .= t('<p>You can</p>
 <ul>
-<li>enable throttle for modules at <a href="%admin-modules">administer &gt;&gt; module</a>.</li>
-<li>enable throttle for blocks at <a href="%admin-block">administer &gt;&gt; block</a>.</li>
-<li>administer throttle at <a href="%admin-settings-throttle">administer &gt;&gt; settings &gt;&gt; throttle</a>.</li>
+<li>enable throttle for modules at <a href="%admin-modules">administer &gt;&gt; site configuration &gt;&gt; modules</a>.</li>
+<li>enable throttle for blocks at <a href="%admin-block">administer &gt;&gt; site building &gt;&gt; blocks</a>.</li>
+<li>administer throttle at <a href="%admin-settings-throttle">administer &gt;&gt; site configuration &gt;&gt; throttle</a>.</li>
 </ul>
 ', array('%admin-modules' => url('admin/settings/modules'), '%admin-block' => url('admin/build/block'), '%admin-settings-throttle' => url('admin/settings/throttle')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%throttle">Throttle page</a>.', array('%throttle' => 'http://drupal.org/handbook/modules/throttle/')) .'</p>';

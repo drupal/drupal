@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.83 2006/07/31 11:25:52 dries Exp $
+// $Id: locale.inc,v 1.84 2006/08/07 15:04:13 dries Exp $
 
 /**
  * @file
@@ -199,7 +199,7 @@ function locale_add_language_form_submit($form_id, $form_values) {
     _locale_add_language($form_values['langcode'], $isocodes[$form_values['langcode']][0]);
   }
 
-  return 'admin/locale';
+  return 'admin/settings/locale';
 }
 
 /**
@@ -264,7 +264,7 @@ function _locale_admin_import_submit($form_id, $form_values) {
     watchdog('locale', $message, WATCHDOG_ERROR);
   }
 
-  return 'admin/locale';
+  return 'admin/settings/locale';
 }
 
 /**

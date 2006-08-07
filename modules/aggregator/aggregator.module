@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.293 2006/08/05 00:26:35 drumm Exp $
+// $Id: aggregator.module,v 1.294 2006/08/07 15:04:13 dries Exp $
 
 /**
  * @file
@@ -16,15 +16,15 @@ function aggregator_help($section) {
       $output .= '<p>'. t('Users can view the latest news chronologically in the <a href="%aggregator">main news aggregator display</a> or by <a href="%aggregator-sources">source</a>. Administrators can add, edit and delete feeds and choose how often to check for newly updated news for each individual feed. Administrators can also tag individual feeds with categories, offering selective grouping of some feeds into separate displays. Listings of the latest news for individual sources or categorized sources can be enabled as blocks for display in the sidebar through the <a href="%admin-block">block administration page</a>. The news aggregator requires cron to check for the latest news from the sites to which you have subscribed. Drupal also provides a <a href="%aggregator-opml">machine-readable OPML file</a> of all of your subscribed feeds.', array('%aggregator' => url('aggregator'), '%aggregator-sources' => url('aggregator/sources'), '%admin-block' => url('admin/build/block'), '%aggregator-opml' => url('aggregator/opml'))) .'</p>';
       $output .= t('<p>You can</p>
 <ul>
-<li>administer your list of news feeds <a href="%admin-aggregator">administer &gt;&gt;  aggregator</a>.</li>
-<li>add a new feed <a href="%admin-aggregator-add-feed">administer &gt;&gt; aggregator &gt;&gt; add feed</a>.</li>
-<li>add a new category <a href="%admin-aggregator-add-category">administer &gt;&gt; aggregator &gt;&gt; add category</a>.</li>
-<li>configure global settings for the news aggregator <a href="%admin-settings-aggregator">administer &gt;&gt; settings &gt;&gt; aggregator</a>.</li>
-<li>control access to the aggregator module through access permissions <a href="%admin-access">administer &gt;&gt; access control &gt;&gt; permissions</a>.</li>
-<li>set permissions to access new feeds for user roles such as anonymous users at <a href="%admin-access">administer &gt;&gt; access control</a>.</li>
+<li>administer your list of news feeds <a href="%admin-aggregator">administer &gt;&gt; content management &gt;&gt; RSS aggregator</a>.</li>
+<li>add a new feed <a href="%admin-aggregator-add-feed">administer &gt;&gt; content management &gt;&gt; RSS aggregator &gt;&gt; add feed</a>.</li>
+<li>add a new category <a href="%admin-aggregator-add-category">administer &gt;&gt; content management &gt;&gt; RSS aggregator &gt;&gt; add category</a>.</li>
+<li>configure global settings for the news aggregator <a href="%admin-settings-aggregator">administer &gt;&gt; content management &gt;&gt; RSS aggregator &gt;&gt; settings</a>.</li>
+<li>control access to the aggregator module through access permissions <a href="%admin-access">administer &gt;&gt; user management &gt;&gt; access control</a>.</li>
+<li>set permissions to access new feeds for user roles such as anonymous users at <a href="%admin-access">administer &gt;&gt; user management &gt;&gt; access control</a>.</li>
 <li>view the <a href="%aggregator">aggregator page</a>.</li>
 </ul>
-', array('%admin-aggregator' => url('admin/content/aggregator'), '%admin-aggregator-add-feed' => url('admin/content/aggregator/add/feed'), '%admin-aggregator-add-category' => url('admin/content/aggregator/add/category'), '%admin-settings-aggregator' => url('admin/settings/aggregator'), '%admin-access' => url('admin/access'), '%aggregator' => url('aggregator')));
+', array('%admin-aggregator' => url('admin/content/aggregator'), '%admin-aggregator-add-feed' => url('admin/content/aggregator/add/feed'), '%admin-aggregator-add-category' => url('admin/content/aggregator/add/category'), '%admin-settings-aggregator' => url('admin/settings/aggregator'), '%admin-access' => url('admin/user/access'), '%aggregator' => url('aggregator')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%aggregator">Aggregator page</a>.', array('%aggregator' => 'http://drupal.org/handbook/modules/aggregator/')) .'</p>';
       return $output;
     case 'admin/settings/modules#description':

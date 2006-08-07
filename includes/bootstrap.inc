@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.110 2006/08/03 13:42:34 dries Exp $
+// $Id: bootstrap.inc,v 1.111 2006/08/07 15:04:13 dries Exp $
 
 /**
  * @file
@@ -601,7 +601,7 @@ function drupal_get_messages($type = NULL) {
 }
 
 /**
- * Perform an access check for a given mask and rule type. Rules are usually created via admin/access/rules page.
+ * Perform an access check for a given mask and rule type. Rules are usually created via admin/user/rules page.
  */
 function drupal_is_denied($type, $mask) {
   $allow = db_fetch_object(db_query("SELECT * FROM {access} WHERE status = 1 AND type = '%s' AND LOWER('%s') LIKE LOWER(mask)", $type, $mask));

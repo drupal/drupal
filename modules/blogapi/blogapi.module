@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.89 2006/07/31 11:25:53 dries Exp $
+// $Id: blogapi.module,v 1.90 2006/08/07 15:04:14 dries Exp $
 
 /**
  * @file
@@ -18,7 +18,7 @@ function blogapi_help($section) {
       $output .= t('<p>You can</p>
 <ul>
 <li>view the XML-RPC page on your site at &gt;&gt; <a href="%file-xmlrpc">xmlrpc.php</a>.</li>
-<li><a href="%admin-settings-blogapi">administer &gt;&gt; settings &gt;&gt; blog api</a>.</li>
+<li><a href="%admin-settings-blogapi">administer &gt;&gt; site configuration &gt;&gt; blog APIs</a>.</li>
 </ul>
 ', array('%file-xmlrpc' => 'xmlrpc.php', '%admin-settings-blogapi' => url('admin/settings/blogapi')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%blogapi">BlogApi page</a>.', array('%blogapi' => 'http://drupal.org/handbook/modules/blogapi/')) .'</p>';

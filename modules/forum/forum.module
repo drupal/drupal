@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.344 2006/08/06 23:00:42 drumm Exp $
+// $Id: forum.module,v 1.345 2006/08/07 15:04:14 dries Exp $
 
 /**
  * @file
@@ -17,8 +17,8 @@ function forum_help($section) {
       $output .= '<p>'. t('Forums module <strong>requires Taxonomy and Comments module</strong> be enabled.') .'</p>';
       $output .= t('<p>You can</p>
 <ul>
-<li>administer forums at <a href="%admin-forum">administer &gt;&gt; forums</a>.</li>
-<li>enable the required comment and taxonomy modules at <a href="%admin-modules">administer &gt;&gt; modules</a>.</li>
+<li>administer forums at <a href="%admin-forum">administer &gt;&gt; content management &gt;&gt; forums</a>.</li>
+<li>enable the required comment and taxonomy modules at <a href="%admin-modules">administer &gt;&gt; site configuration &gt;&gt; modules</a>.</li>
 <li>read about the comment module at <a href="%admin-help-comment">administer &gt;&gt; help &gt;&gt; comment</a>.</li>
 <li>read about the taxonomy module at <a href="%admin-help-taxonomy">administer &gt;&gt; help &gt;&gt; taxonomy</a>.</li>
 </ul>
@@ -341,7 +341,7 @@ function forum_submit(&$node) {
       }
     }
     $old_tid = db_result(db_query_range("SELECT tid FROM {forum} WHERE nid = %d ORDER BY vid DESC", $node->nid, 0,1));
-    if ($old_tid) { 
+    if ($old_tid) {
       if (($node->tid != $old_tid) && $node->shadow) {
         // A shadow copy needs to be created. Retain new term and add old term.
         $node->taxonomy[] = $old_tid;
