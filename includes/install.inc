@@ -259,7 +259,7 @@ function drupal_get_install_files($module_list = array()) {
 function drupal_verify_profile($profile) {
   include_once './includes/file.inc';
 
-  $profile_file = "./profiles/$profile.profile";
+  $profile_file = "./profiles/$profile/$profile.profile";
 
   if (!isset($profile) || !file_exists($profile_file)) {
     _install_no_profile_error();
