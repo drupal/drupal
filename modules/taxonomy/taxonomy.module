@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.299 2006/08/07 15:04:15 dries Exp $
+// $Id: taxonomy.module,v 1.300 2006/08/08 18:55:53 dries Exp $
 
 /**
  * @file
@@ -253,15 +253,6 @@ function taxonomy_form_vocabulary($edit = array()) {
     '#default_value' => $edit['weight'],
     '#description' => t('In listings, the heavier vocabularies will sink and the lighter vocabularies will be positioned nearer the top.'),
   );
-
-  // Add extra vocabulary form elements.
-  $extra = module_invoke_all('taxonomy', 'form', 'vocabulary');
-  if (is_array($extra)) {
-    foreach ($extra as $key => $element) {
-      $extra[$key]['#weight'] = isset($extra[$key]['#weight']) ? $extra[$key]['#weight'] : -18;
-    }
-    $form = array_merge($form, $extra);
-  }
 
   $form['submit'] = array('#type' => 'submit', '#value' => t('Submit'));
   if ($edit['vid']) {
