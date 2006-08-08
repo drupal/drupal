@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.152 2006/07/31 11:25:52 dries Exp $ */
+/* $Id: drupal.css,v 1.153 2006/08/08 20:31:29 dries Exp $ */
 
 /*
 ** HTML elements
@@ -253,36 +253,6 @@ tr.odd .form-item, tr.even .form-item {
 }
 .preview .node, .preview .comment {
   background-color: #ffffea;
-}
-.archive {
-  margin: 1em 0 1em 0;
-}
-.calendar .row-week td a {
-  display: block;
-}
-.calendar .row-week td a:hover {
-  background-color: #888; color: #fff;
-}
-.calendar a {
-  text-decoration: none;
-}
-.calendar a:hover {
-  text-decoration: none;
-}
-.calendar table {
-  border-collapse: collapse;
-  width: 100%;
-  border: 1px solid #000;
-}
-.calendar td, .calendar th {
-  text-align: center;
-  border: 1px solid #000;
-  padding: 1px;
-  margin: 0;
-  font-size: 0.8em;
-}
-.calendar td.day-blank {
-  border: 0;
 }
 .tips {
   margin-top: 0;
