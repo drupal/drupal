@@ -1,5 +1,5 @@
 <?php
-// $Id: default.profile,v 1.3 2006/08/06 23:00:42 drumm Exp $
+// $Id: default.profile,v 1.1 2006/08/08 21:18:04 dries Exp $
 
 /**
  * Return an array of the modules to be enabled when this profile is installed.

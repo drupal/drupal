@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.5 2006/08/03 01:02:50 unconed Exp $
+// $Id: install.php,v 1.6 2006/08/08 21:18:02 dries Exp $
 
 require_once './includes/install.inc';
 
@@ -54,7 +54,7 @@ function install_main() {
     _install_no_profile_error();
   }
   // Load the profile.
-  require_once "./profiles/$profile.profile";
+  require_once "./profiles/$profile/$profile.profile";
 
   // Change the settings.php information if verification failed earlier.
   if (!$verify) {
@@ -414,6 +414,8 @@ function install_already_done_error() {
  */
 function install_complete($profile) {
   global $base_url;
+  // Store install profile for later use.
+  variable_set('install_profile', $profile);
 
   // Bootstrap newly installed Drupal, while preserving existing messages.
   $messages = $_SESSION['messages'];
@@ -436,7 +438,6 @@ function install_complete($profile) {
     $msg = drupal_set_message() ? 'Please review the messages above before continuing on to <a href="%url">your new site</a>.' : 'You may now visit <a href="%url">your new site</a>.';
     $output .= strtr('<p>'. $msg .'</p>', array('%url' => url('')));
   }
-
   // Output page.
   print theme('maintenance_page', $output);
 }
