@@ -254,15 +254,6 @@ function taxonomy_form_vocabulary($edit = array()) {
     '#description' => t('In listings, the heavier vocabularies will sink and the lighter vocabularies will be positioned nearer the top.'),
   );
 
-  // Add extra vocabulary form elements.
-  $extra = module_invoke_all('taxonomy', 'form', 'vocabulary');
-  if (is_array($extra)) {
-    foreach ($extra as $key => $element) {
-      $extra[$key]['#weight'] = isset($extra[$key]['#weight']) ? $extra[$key]['#weight'] : -18;
-    }
-    $form = array_merge($form, $extra);
-  }
-
   $form['submit'] = array('#type' => 'submit', '#value' => t('Submit'));
   if ($edit['vid']) {
     $form['delete'] = array('#type' => 'submit', '#value' => t('Delete'));
