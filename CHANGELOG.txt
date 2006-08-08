@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.141 2006/08/06 23:14:15 drumm Exp $
+// $Id: CHANGELOG.txt,v 1.142 2006/08/08 15:44:00 dries Exp $
 
 Drupal x.x.x, xxxx-xx-xx (development version)
 ------------------------
@@ -39,6 +39,7 @@ Drupal x.x.x, xxxx-xx-xx (development version)
 - content system:
     * made it easier for node access modules to work well with each other.
     * added configurable content types.
+- removed the archive module
 
 Drupal 4.7.0, 2006-05-01
 ------------------------
