@@ -1539,3 +1539,34 @@ function drupal_mail($mailkey, $to, $subject, $body, $from = NULL, $headers = ar
     );
   }
 }
+
+/**
+ * Executs a cron run when called
+ * @return
+ * Returns TRUE if ran successfully
+ */
+function drupal_cron_run() {
+  // If not in 'safe mode', increase the maximum execution time:
+  if (!ini_get('safe_mode')) {
+    set_time_limit(240);
+  }
+
+  // Check if the last cron run completed
+  if (variable_get('cron_busy', FALSE)) {
+    watchdog('cron', t('Last cron run did not complete.'), WATCHDOG_WARNING);
+  }
+  else {
+    variable_set('cron_busy', TRUE);
+  }
+
+  // Iterate through the modules calling their cron handlers (if any):
+  module_invoke_all('cron');
+
+  // Clean up
+  variable_set('cron_busy', FALSE);
+  variable_set('cron_last', time());
+  watchdog('cron', t('Cron run completed.'), WATCHDOG_NOTICE);
+
+  // Return TRUE so other functions can check if it did run successfully
+  return TRUE;
+}
