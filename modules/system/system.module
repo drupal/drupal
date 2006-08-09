@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.339 2006/08/08 21:18:04 dries Exp $
+// $Id: system.module,v 1.340 2006/08/09 07:42:55 dries Exp $
 
 /**
  * @file
@@ -17,15 +17,17 @@ function system_help($section) {
   switch ($section) {
     case 'admin/help#system':
       $output = '<p>'. t('The system module provides system-wide defaults such as running jobs at a particular time, and storing web pages to improve efficiency. The ability to run scheduled jobs makes administering the web site more usable, as administrators do not have to manually start jobs. The storing of web pages, or caching, allows the site to efficiently re-use web pages and improve web site performance. The settings module provides control over preferences, behaviours including visual and operational settings.') .'</p>';
-      $output .= '<p>'. t('Some modules require regularly scheduled actions, such as cleaning up logfiles. Cron, which stands for chronograph, is a periodic command scheduler executing commands at intervals specified in seconds. It can be used to control the execution of daily, weekly and monthly jobs (or anything with a period measured in seconds). The aggregator module periodically updates feeds using cron. Ping periodically notifies services of new content on your site. Search periodically indexes the content on your site. Automating tasks is one of the best ways to keep a system running smoothly, and if most of your administration does not require your direct involvement, cron is an ideal solution.') .'</p>';
+      $output .= '<p>'. t('Some modules require regularly scheduled actions, such as cleaning up logfiles. Cron, which stands for chronograph, is a periodic command scheduler executing commands at intervals specified in seconds. It can be used to control the execution of daily, weekly and monthly jobs (or anything with a period measured in seconds). The aggregator module periodically updates feeds using cron. Ping periodically notifies services of new content on your site. Search periodically indexes the content on your site. Automating tasks is one of the best ways to keep a system running smoothly, and if most of your administration does not require your direct involvement, cron is an ideal solution. Cron can, if necessary, also be run manually.') .'</p>';
       $output .= '<p>'. t('There is a caching mechanism which stores dynamically generated web pages in a database. By caching a web page, the system module does not have to create the page each time someone wants to view it, instead it takes only one SQL query to display it, reducing response time and the server\'s load. Only pages requested by <em>anonymous</em> users are cached. In order to reduce server load and save bandwidth, the system module stores and sends cached pages compressed.') .'</p>';
       $output .= t('<p>You can</p>
 <ul>
 <li>activate your cron job on the cron page <a href="%file-cron">cron.php</a>.</li>
 <li>read how to <a href="%external-http-drupal-org-cron">configure cron jobs</a>.</li>
 <li>administer cache settings in <a href="%admin-settings">administer &gt;&gt; site configuration &gt;&gt; page caching</a>.</li>
+<li><a href="%cron-status">view</a> whether or not cron is running on your site.</li>
+<li>run cron <a href="%cron-manually">manually</a>.</li>
 </ul>
-', array('%file-cron' => 'cron.php', '%external-http-drupal-org-cron' => 'http://drupal.org/cron', '%admin-settings' => url('admin/settings/page-caching')));
+', array('%file-cron' => 'cron.php', '%external-http-drupal-org-cron' => 'http://drupal.org/cron', '%cron-status' => url('admin/settings/cron-status'), '%cron-manually' => url('admin/settings/cron-status/cron'), '%admin-settings' => url('admin/settings/page-caching')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%system">System page</a>.', array('%system' => 'http://drupal.org/handbook/modules/system/')) .'</p>';
       return $output;
     case 'admin/settings/modules#description':
@@ -227,7 +229,7 @@ function system_menu($may_cache) {
     $items[] = array(
       'path' => 'admin/settings/cron-status',
       'title' => t('cron status'),
-      'description' => t('View whether or not cron is running on your site.'),
+      'description' => t('Check cron status or run cron manually.'),
       'callback' => 'system_cron_status');
     $items[] = array(
       'path' => 'admin/settings/clean-urls',
@@ -751,15 +753,26 @@ function system_unicode_settings() {
   return system_settings_form('system_unicode_settings', unicode_settings());
 }
 
-function system_cron_status() {
-  $cron_last = variable_get('cron_last', NULL);
+function system_cron_status($cron = '') {
+  if ($cron == 'cron') {
+    // Run cron manually
+    if (drupal_cron_run()) {
+      drupal_set_message(t('Cron ran successfully'));
+    }
+    else {
+      drupal_set_message(t('Cron run failed'));
+    }
+    drupal_goto('admin/settings/cron-status');
+  }
 
+  $cron_last = variable_get('cron_last', NULL);
   if (is_numeric($cron_last)) {
     $status = t('Cron is running. The last cron job ran %time ago.', array('%time' => format_interval(time() - $cron_last)));
   }
   else {
     $status = t('Cron has not run. It appears cron jobs have not been setup on your system. Please check the help pages for <a href="%url">configuring cron jobs</a>.', array('%url' => 'http://drupal.org/cron'));
   }
+  $status .= ' '. t('Cron can, if necessary, also be run <a href="%cron">manually</a>.', array('%cron' => url('admin/settings/cron-status/cron')));
 
   return $status;
 }

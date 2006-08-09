@@ -1,5 +1,5 @@
 <?php
-// $Id: cron.php,v 1.35 2006/07/05 11:45:50 dries Exp $
+// $Id: cron.php,v 1.36 2006/08/09 07:42:55 dries Exp $
 
 /**
  * @file
@@ -8,24 +8,4 @@
 
 include_once './includes/bootstrap.inc';
 drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
-
-// If not in 'safe mode', increase the maximum execution time:
-if (!ini_get('safe_mode')) {
-  set_time_limit(240);
-}
-
-// Check if the last cron run completed
-if (variable_get('cron_busy', FALSE)) {
-  watchdog('cron', t('Last cron run did not complete.'), WATCHDOG_WARNING);
-}
-else {
-  variable_set('cron_busy', TRUE);
-}
-
-// Iterate through the modules calling their cron handlers (if any):
-module_invoke_all('cron');
-
-// Clean up
-variable_set('cron_busy', FALSE);
-variable_set('cron_last', time());
-watchdog('cron', t('Cron run completed'));
+drupal_cron_run();
