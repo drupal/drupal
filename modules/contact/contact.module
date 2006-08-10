@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.58 2006/07/31 11:25:53 dries Exp $
+// $Id: contact.module,v 1.59 2006/08/10 15:36:55 dries Exp $
 
 /**
  * @file
@@ -160,7 +160,7 @@ function contact_admin_categories() {
  * Category edit page.
  */
 function contact_admin_edit($cid = NULL) {
-  if (arg(2) == "edit" && $cid > 0) {
+  if (arg(3) == "edit" && $cid > 0) {
     $edit = db_fetch_array(db_query("SELECT * FROM {contact} WHERE cid = %d", $cid));
   }
   $form['category'] = array('#type' => 'textfield',
@@ -236,7 +236,7 @@ function contact_admin_edit_submit($form_id, $form_values) {
     $recipients[$key] = trim($recipient);
   }
   $form_values['recipients'] = implode(',', $recipients);
-  if (arg(2) == 'add') {
+  if (arg(3) == 'add') {
     db_query("INSERT INTO {contact} (category, recipients, reply, weight, selected) VALUES ('%s', '%s', '%s', %d, %d)", $form_values['category'], $form_values['recipients'], $form_values['reply'], $form_values['weight'], $form_values['selected']);
     drupal_set_message(t('Category %category has been added.', array('%category' => theme('placeholder', $form_values['category']))));
     watchdog('mail', t('Contact form: category %category added.', array('%category' => theme('placeholder', $form_values['category']))), WATCHDOG_NOTICE, l(t('view'), 'admin/build/contact'));
@@ -272,7 +272,7 @@ function contact_admin_delete($cid = NULL) {
  * Process category delete form submission.
  */
 function contact_admin_delete_submit($form_id, $form_values) {
-  db_query("DELETE FROM {contact} WHERE cid = %d", arg(3));
+  db_query("DELETE FROM {contact} WHERE cid = %d", arg(4));
   drupal_set_message(t('Category %category has been deleted.', array('%category' => theme('placeholder', $form_values['category']))));
   watchdog('mail', t('Contact form: category %category deleted.', array('%category' => theme('placeholder', $form_values['category']))), WATCHDOG_NOTICE);
 
