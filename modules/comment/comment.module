@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.473 2006/08/10 05:47:37 dries Exp $
+// $Id: comment.module,v 1.474 2006/08/10 15:42:32 dries Exp $
 
 /**
  * @file
@@ -1085,15 +1085,15 @@ function comment_admin_overview_submit($form_id, $edit) {
 }
 
 function theme_comment_admin_overview($form) {
-  $output = form_render($form['options']);
+  $output = drupal_render($form['options']);
   if (isset($form['subject']) && is_array($form['subject'])) {
     foreach (element_children($form['subject']) as $key) {
       $row = array();
-      $row[] = form_render($form['comments'][$key]);
-      $row[] = form_render($form['subject'][$key]);
-      $row[] = form_render($form['username'][$key]);
-      $row[] = form_render($form['timestamp'][$key]);
-      $row[] = form_render($form['operations'][$key]);
+      $row[] = drupal_render($form['comments'][$key]);
+      $row[] = drupal_render($form['subject'][$key]);
+      $row[] = drupal_render($form['username'][$key]);
+      $row[] = drupal_render($form['timestamp'][$key]);
+      $row[] = drupal_render($form['operations'][$key]);
       $rows[] = $row;
     }
   }
@@ -1103,10 +1103,10 @@ function theme_comment_admin_overview($form) {
 
   $output .= theme('table', $form['header']['#value'], $rows);
   if ($form['pager']['#value']) {
-    $output .= form_render($form['pager']);
+    $output .= drupal_render($form['pager']);
   }
 
-  $output .= form_render($form);
+  $output .= drupal_render($form);
 
   return $output;
 }
@@ -1580,7 +1580,7 @@ function comment_controls($mode = COMMENT_MODE_THREADED_EXPANDED, $order = COMME
 
 function theme_comment_controls($form) {
   $output .= '<div class="container-inline">';
-  $output .=  form_render($form);
+  $output .=  drupal_render($form);
   $output .= '</div>';
   $output .= '<div class="description">'. t('Select your preferred way to display the comments and click "Save settings" to activate your changes.') .'</div>';
   return theme('box', t('Comment viewing options'), $output);

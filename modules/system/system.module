@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.340 2006/08/09 07:42:55 dries Exp $
+// $Id: system.module,v 1.341 2006/08/10 15:42:33 dries Exp $
 
 /**
  * @file
@@ -429,9 +429,9 @@ function theme_system_theme_select_form($form) {
   foreach (element_children($form) as $key) {
     $row = array();
     if (is_array($form[$key]['description'])) {
-      $row[] = form_render($form[$key]['screenshot']);
-      $row[] = form_render($form[$key]['description']);
-      $row[] = form_render($form['theme'][$key]);
+      $row[] = drupal_render($form[$key]['screenshot']);
+      $row[] = drupal_render($form[$key]['description']);
+      $row[] = drupal_render($form['theme'][$key]);
     }
     $rows[] = $row;
   }
@@ -1101,7 +1101,7 @@ function system_themes() {
       $form[$info->name]['operations'] = array('#type' => 'markup', '#value' => l(t('configure'), 'admin/build/themes/settings/' . $info->name) );
     }
     else {
-      // Dummy element for form_render. Cleaner than adding a check in the theme function.
+      // Dummy element for drupal_render. Cleaner than adding a check in the theme function.
       $form[$info->name]['operations'] = array();
     }
   }
@@ -1118,12 +1118,12 @@ function theme_system_themes($form) {
   foreach (element_children($form) as $key) {
     $row = array();
     if (is_array($form[$key]['description'])) {
-      $row[] = form_render($form[$key]['screenshot']);
-      $row[] = form_render($form[$key]['description']);
-      $row[] = array('data' => form_render($form['status'][$key]), 'align' => 'center');
+      $row[] = drupal_render($form[$key]['screenshot']);
+      $row[] = drupal_render($form[$key]['description']);
+      $row[] = array('data' => drupal_render($form['status'][$key]), 'align' => 'center');
       if ($form['theme_default']) {
-        $row[] = array('data' => form_render($form['theme_default'][$key]), 'align' => 'center');
-        $row[] = array('data' => form_render($form[$key]['operations']), 'align' => 'center');
+        $row[] = array('data' => drupal_render($form['theme_default'][$key]), 'align' => 'center');
+        $row[] = array('data' => drupal_render($form[$key]['operations']), 'align' => 'center');
       }
     }
     $rows[] = $row;
@@ -1131,7 +1131,7 @@ function theme_system_themes($form) {
 
   $header = array(t('Screenshot'), t('Name'), t('Enabled'), t('Default'), t('Operations'));
   $output = theme('table', $header, $rows);
-  $output .= form_render($form);
+  $output .= drupal_render($form);
   return $output;
 }
 
@@ -1216,12 +1216,12 @@ function system_modules() {
 function theme_system_modules($form) {
   foreach (element_children($form['name']) as $key) {
     $row = array();
-    $row[] = form_render($form['name'][$key]);
-    $row[] = form_render($form['description'][$key]);
-    $row[] = array('data' => form_render($form['status'][$key]), 'align' => 'center');
+    $row[] = drupal_render($form['name'][$key]);
+    $row[] = drupal_render($form['description'][$key]);
+    $row[] = array('data' => drupal_render($form['status'][$key]), 'align' => 'center');
 
     if (module_exist('throttle')) {
-      $row[] = array('data' => form_render($form['throttle'][$key]), 'align' => 'center');
+      $row[] = array('data' => drupal_render($form['throttle'][$key]), 'align' => 'center');
     }
     $rows[] = $row;
   }
@@ -1232,7 +1232,7 @@ function theme_system_modules($form) {
   }
 
   $output = theme('table', $header, $rows);
-  $output .= form_render($form);
+  $output .= drupal_render($form);
   return $output;
 }
 

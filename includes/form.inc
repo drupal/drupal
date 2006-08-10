@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.132 2006/08/05 00:26:35 drumm Exp $
+// $Id: form.inc,v 1.133 2006/08/10 15:42:32 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -13,34 +13,6 @@
  * and the quickstart guide at
  * http://api.drupal.org/api/HEAD/file/developer/topics/forms_api.html
  */
-
-/**
- * Check if the key is a property.
- */
-function element_property($key) {
-  return $key[0] == '#';
-}
-
-/**
- * Get properties of a form tree element. Properties begin with '#'.
- */
-function element_properties($element) {
-  return array_filter(array_keys((array) $element), 'element_property');
-}
-
-/**
- * Check if the key is a child.
- */
-function element_child($key) {
-  return $key[0] != '#';
-}
-
-/**
- * Get keys of a form tree element that are not properties (i.e., do not begin with '#').
- */
-function element_children($element) {
-  return array_filter(array_keys((array) $element), 'element_child');
-}
 
 /**
  * Processes a form array and produces the HTML output of a form.
@@ -263,7 +235,7 @@ function drupal_render_form($form_id, &$form, $callback = NULL) {
     }
   }
 
-  $output = form_render($form);
+  $output = drupal_render($form);
   return $output;
 }
 
@@ -586,82 +558,6 @@ function _form_set_value(&$form_values, $form, $parents, $value) {
     _form_set_value($form_values[$parent], $form, $parents, $value);
   }
   return $form;
-}
-
-/**
- * Renders a HTML form given a form tree. Recursively iterates over each of
- * the form elements, generating HTML code. This function is usually
- * called from within a theme. To render a form from within a module, use
- * drupal_get_form().
- *
- * @param $elements
- *   The form tree describing the form.
- * @return
- *   The rendered HTML form.
- */
-function form_render(&$elements) {
-  if (!isset($elements)) {
-    return NULL;
-  }
-  $content = '';
-  uasort($elements, "_form_sort");
-  if (!isset($elements['#children'])) {
-    $children = element_children($elements);
-    /* Render all the children that use a theme function */
-    if (isset($elements['#theme']) && !$elements['#theme_used']) {
-      $elements['#theme_used'] = TRUE;
-
-      $previous_value = $elements['#value'];
-      $previous_type = $elements['#type'];
-      // If we rendered a single element, then we will skip the renderer.
-      if (empty($children)) {
-        $elements['#printed'] = TRUE;
-      }
-      else {
-        $elements['#value'] = '';
-      }
-      $elements['#type'] = 'markup';
-
-      $content = theme($elements['#theme'], $elements);
-
-      $elements['#value'] = $previous_value;
-      $elements['#type'] = $previous_type;
-      unset($elements['#prefix'], $elements['#suffix']);
-    }
-    /* render each of the children using form_render and concatenate them */
-    if (!isset($content) || $content === '') {
-      foreach ($children as $key) {
-        $content .= form_render($elements[$key]);
-      }
-    }
-  }
-  if (isset($content) && $content !== '') {
-    $elements['#children'] = $content;
-  }
-
-  // Until now, we rendered the children, here we render the element itself
-  if (!isset($elements['#printed'])) {
-    $content = theme(($elements['#type']) ? $elements['#type']: 'markup', $elements);
-    $elements['#printed'] = TRUE;
-  }
-
-  if (isset($content) && $content !== '') {
-    $prefix = isset($elements['#prefix']) ? $elements['#prefix'] : '';
-    $suffix = isset($elements['#suffix']) ? $elements['#suffix'] : '';
-    return $prefix . $content . $suffix;
-  }
-}
-
-/**
- * Function used by uasort in form_render() to sort form by weight.
- */
-function _form_sort($a, $b) {
-  $a_weight = (is_array($a) && isset($a['#weight'])) ? $a['#weight'] : 0;
-  $b_weight = (is_array($b) && isset($b['#weight'])) ? $b['#weight'] : 0;
-  if ($a_weight == $b_weight) {
-    return 0;
-  }
-  return ($a_weight < $b_weight) ? -1 : 1;
 }
 
 /**

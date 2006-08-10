@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.294 2006/08/07 15:04:13 dries Exp $
+// $Id: aggregator.module,v 1.295 2006/08/10 15:42:32 dries Exp $
 
 /**
  * @file
@@ -1105,19 +1105,19 @@ function _aggregator_page_list($sql, $op, $header = '') {
 
 function theme_aggregator_page_list($form) {
   $output = '<div id="aggregator">';
-  $output .= form_render($form['header']);
+  $output .= drupal_render($form['header']);
   $rows = array();
   if ($form['items']) {
     foreach (element_children($form['items']) as $key) {
       if (is_array($form['items'][$key])) {
-        $rows[] = array(form_render($form['items'][$key]), array('data' => form_render($form['categories'][$key]), 'class' => 'categorize-item'));
+        $rows[] = array(drupal_render($form['items'][$key]), array('data' => drupal_render($form['categories'][$key]), 'class' => 'categorize-item'));
       }
     }
   }
   $output .= theme('table', array('', t('Categorize')), $rows);
-  $output .= form_render($form['submit']);
+  $output .= drupal_render($form['submit']);
   $output .= '</div>';
-  $output .= form_render($form);
+  $output .= drupal_render($form);
   return $output;
 }
 

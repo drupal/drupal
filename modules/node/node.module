@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.668 2006/08/07 15:04:15 dries Exp $
+// $Id: node.module,v 1.669 2006/08/10 15:42:33 dries Exp $
 
 /**
  * @file
@@ -636,24 +636,6 @@ function node_save(&$node) {
 function node_view($node, $teaser = FALSE, $page = FALSE, $links = TRUE) {
   $node = (object)$node;
 
-  // Remove the delimiter (if any) that separates the teaser from the body.
-  // TODO: this strips legitimate uses of '<!--break-->' also.
-  $node->body = str_replace('<!--break-->', '', $node->body);
-
-  if ($node->log != '' && !$teaser) {
-    $node->body .= '<div class="log"><div class="title">'. t('Log') .':</div>'. filter_xss($node->log) .'</div>';
-  }
-
-  // The 'view' hook can be implemented to overwrite the default function
-  // to display nodes.
-  if (node_hook($node, 'view')) {
-    node_invoke($node, 'view', $teaser, $page);
-  }
-  else {
-    $node = node_prepare($node, $teaser);
-  }
-  // Allow modules to change $node->body before viewing.
-  node_invoke_nodeapi($node, 'view', $teaser, $page);
   if ($links) {
     $node->links = module_invoke_all('link', 'node', $node, !$page);
 
@@ -662,11 +644,18 @@ function node_view($node, $teaser = FALSE, $page = FALSE, $links = TRUE) {
       $function($node, $node->links);
     }
   }
-  // unset unused $node part so that a bad theme can not open a security hole
+
+  $node = node_build_content($node, $teaser, $page);
+
+  // Set the proper node part, then unset unused $node part so that a bad
+  // theme can not open a security hole.
+  $content = drupal_render($node->content);
   if ($teaser) {
+    $node->teaser = $content;
     unset($node->body);
   }
   else {
+    $node->body = $content;
     unset($node->teaser);
   }
 
@@ -674,16 +663,62 @@ function node_view($node, $teaser = FALSE, $page = FALSE, $links = TRUE) {
 }
 
 /**
- * Apply filters to a node in preparation for theming.
+ * Apply filters and build the node's standard elements.
  */
 function node_prepare($node, $teaser = FALSE) {
-  $node->readmore = (strlen($node->teaser) < strlen($node->body));
-  if ($teaser == FALSE) {
-    $node->body = check_markup($node->body, $node->format, FALSE);
+  $node->content['body'] = array(
+    '#value' => check_markup($teaser ? $node->teaser : $node->body, $node->format, FALSE),
+    '#weight' => 0,
+  );
+
+  if ($node->log != '' && !$teaser) {
+    $node->content['log_message'] = array(
+      '#value' => theme('node_log_message', filter_xss($node->log)),
+      '#weight' => 20,
+    );
+  }
+
+  if (strlen($node->teaser) < strlen($node->body)) {
+    $node->readmore = TRUE;
+  }
+
+  return $node;
+}
+
+/**
+ * Builds a structured array representing the node's content.
+ *
+ * @param $node
+ *   A node object.
+ * @param $teaser
+ *   Whether to display the teaser only, as on the main page.
+ * @param $page
+ *   Whether the node is being displayed by itself as a page.
+ *
+ * @return
+ *   An structured array containing the individual elements
+ *   of the node's body.
+ */
+function node_build_content($node, $teaser = FALSE, $page = FALSE) {
+  // Remove the delimiter (if any) that separates the teaser from the body.
+  // TODO: this strips legitimate uses of '<!--break-->' also.
+  $node->body = str_replace('<!--break-->', '', $node->body);
+
+  // The 'view' hook can be implemented to overwrite the default function
+  // to display nodes.
+  if (node_hook($node, 'view')) {
+    $node = node_invoke($node, 'view', $teaser, $page);
   }
   else {
-    $node->teaser = check_markup($node->teaser, $node->format, FALSE);
+    $node = node_prepare($node, $teaser);
   }
+
+  // Allow modules to make their own additions to the node.
+  node_invoke_nodeapi($node, 'view', $teaser, $page);
+
+  // Allow modules to modify the fully-built node.
+  node_invoke_nodeapi($node, 'alter', $teaser, $page);
+
   return $node;
 }
 
@@ -838,17 +873,10 @@ function node_search($op = 'search', $keys = NULL) {
       // Load results
       $results = array();
       foreach ($find as $item) {
+        // Build the node body.
         $node = node_load($item->sid);
-
-        // Get node output (filtered and with module-specific fields).
-        if (node_hook($node, 'view')) {
-          node_invoke($node, 'view', FALSE, FALSE);
-        }
-        else {
-          $node = node_prepare($node, FALSE);
-        }
-        // Allow modules to change $node->body before viewing.
-        node_invoke_nodeapi($node, 'view', FALSE, FALSE);
+        $node = node_build_content($node, FALSE, FALSE);
+        $node->body = drupal_render($node->content);
 
         // Fetch comments for snippet
         $node->body .= module_invoke('comment', 'nodeapi', $node, 'update index');
@@ -880,19 +908,19 @@ function node_user($op, &$edit, &$user) {
 }
 
 function theme_node_search_admin($form) {
-  $output = form_render($form['info']);
+  $output = drupal_render($form['info']);
 
   $header = array(t('Factor'), t('Weight'));
   foreach (element_children($form['factors']) as $key) {
     $row = array();
     $row[] = $form['factors'][$key]['#title'];
     unset($form['factors'][$key]['#title']);
-    $row[] = form_render($form['factors'][$key]);
+    $row[] = drupal_render($form['factors'][$key]);
     $rows[] = $row;
   }
   $output .= theme('table', $header, $rows);
 
-  $output .= form_render($form);
+  $output .= drupal_render($form);
   return $output;
 }
 
@@ -1268,9 +1296,9 @@ function node_filter_form() {
  */
 function theme_node_filter_form(&$form) {
   $output .= '<div id="node-admin-filter">';
-  $output .= form_render($form['filters']);
+  $output .= drupal_render($form['filters']);
   $output .= '</div>';
-  $output .= form_render($form);
+  $output .= drupal_render($form);
   return $output;
 }
 
@@ -1281,25 +1309,25 @@ function theme_node_filters(&$form) {
   $output .= '<ul>';
   if (sizeof($form['current'])) {
     foreach (element_children($form['current']) as $key) {
-      $output .= '<li>' . form_render($form['current'][$key]) . '</li>';
+      $output .= '<li>' . drupal_render($form['current'][$key]) . '</li>';
     }
   }
 
   $output .= '<li><dl class="multiselect">' . (sizeof($form['current']) ? '<dt><em>'. t('and') .'</em> '. t('where') .'</dt>' : '') . '<dd class="a">';
   foreach (element_children($form['filter']) as $key) {
-    $output .= form_render($form['filter'][$key]);
+    $output .= drupal_render($form['filter'][$key]);
   }
   $output .= '</dd>';
 
   $output .= '<dt>'. t('is') .'</dt>' . '<dd class="b">';
 
   foreach (element_children($form['status']) as $key) {
-    $output .= form_render($form['status'][$key]);
+    $output .= drupal_render($form['status'][$key]);
   }
   $output .= '</dd>';
 
   $output .= '</dl>';
-  $output .= '<div class="container-inline" id="node-admin-buttons">'. form_render($form['buttons']) .'</div>';
+  $output .= '<div class="container-inline" id="node-admin-buttons">'. drupal_render($form['buttons']) .'</div>';
   $output .= '</li></ul><br class="clear" />';
 
   return $output;
@@ -1414,16 +1442,16 @@ function theme_node_admin_nodes($form) {
   // Overview table:
   $header = array(NULL, t('Title'), t('Type'), t('Author'), t('Status'), t('Operations'));
 
-  $output .= form_render($form['options']);
+  $output .= drupal_render($form['options']);
   if (isset($form['title']) && is_array($form['title'])) {
     foreach (element_children($form['title']) as $key) {
       $row = array();
-      $row[] = form_render($form['nodes'][$key]);
-      $row[] = form_render($form['title'][$key]);
-      $row[] = form_render($form['name'][$key]);
-      $row[] = form_render($form['username'][$key]);
-      $row[] = form_render($form['status'][$key]);
-      $row[] = form_render($form['operations'][$key]);
+      $row[] = drupal_render($form['nodes'][$key]);
+      $row[] = drupal_render($form['title'][$key]);
+      $row[] = drupal_render($form['name'][$key]);
+      $row[] = drupal_render($form['username'][$key]);
+      $row[] = drupal_render($form['status'][$key]);
+      $row[] = drupal_render($form['operations'][$key]);
       $rows[] = $row;
     }
 
@@ -1434,10 +1462,10 @@ function theme_node_admin_nodes($form) {
 
   $output .= theme('table', $header, $rows);
   if ($form['pager']['#value']) {
-    $output .= form_render($form['pager']);
+    $output .= drupal_render($form['pager']);
   }
 
-  $output .= form_render($form);
+  $output .= drupal_render($form);
 
   return $output;
 }
@@ -1901,31 +1929,31 @@ function node_form_add_preview($form) {
 function theme_node_form($form) {
   $output = "\n<div class=\"node-form\">\n";
   if (isset($form['node_preview'])) {
-    $output .= form_render($form['node_preview']);
+    $output .= drupal_render($form['node_preview']);
   }
 
   // Admin form fields and submit buttons must be rendered first, because
   // they need to go to the bottom of the form, and so should not be part of
-  // the catch-all call to form_render().
+  // the catch-all call to drupal_render().
   $admin = '';
   if (isset($form['author'])) {
     $admin .= "    <div class=\"authored\">\n";
-    $admin .= form_render($form['author']);
+    $admin .= drupal_render($form['author']);
     $admin .= "    </div>\n";
   }
   if (isset($form['options'])) {
     $admin .= "    <div class=\"options\">\n";
-    $admin .= form_render($form['options']);
+    $admin .= drupal_render($form['options']);
     $admin .= "    </div>\n";
   }
-  $buttons = form_render($form['preview']);
-  $buttons .= form_render($form['submit']);
-  $buttons .= isset($form['delete']) ? form_render($form['delete']) : '';
+  $buttons = drupal_render($form['preview']);
+  $buttons .= drupal_render($form['submit']);
+  $buttons .= isset($form['delete']) ? drupal_render($form['delete']) : '';
 
   // Everything else gets rendered here, and is displayed before the admin form
   // field and the submit buttons.
   $output .= "  <div class=\"standard\">\n";
-  $output .= form_render($form);
+  $output .= drupal_render($form);
   $output .= "  </div>\n";
 
   if (!empty($admin)) {
@@ -2047,6 +2075,10 @@ function theme_node_preview($node) {
   $output .= "</div>\n";
 
   return $output;
+}
+
+function theme_node_log_message($log) {
+  return '<div class="log"><div class="title">'. t('Log') .':</div>'. $log .'</div>';
 }
 
 function node_form_submit($form_id, $edit) {
@@ -2328,15 +2360,10 @@ function node_update_index() {
     $last_nid = $node->nid;
     $node = node_load($node->nid);
 
-    // Get node output (filtered and with module-specific fields).
-    if (node_hook($node, 'view')) {
-      node_invoke($node, 'view', FALSE, FALSE);
-    }
-    else {
-      $node = node_prepare($node, FALSE);
-    }
-    // Allow modules to change $node->body before viewing.
-    node_invoke_nodeapi($node, 'view', FALSE, FALSE);
+    // Build the node body.
+    $node = node_load($item->sid);
+    $node = node_build_content($node, FALSE, FALSE);
+    $node->body = drupal_render($node->content);
 
     $text = '<h1>'. check_plain($node->title) .'</h1>'. $node->body;
 

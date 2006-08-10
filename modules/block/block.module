@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.212 2006/08/07 15:04:14 dries Exp $
+// $Id: block.module,v 1.213 2006/08/10 15:42:32 dries Exp $
 
 /**
  * @file
@@ -320,16 +320,16 @@ function theme_block_admin_display($form) {
 
       // Generate block row
       $row = array(
-        array('data' => form_render($block['info']), 'class' => 'block'),
-        form_render($block['status']) . form_render($block['theme']),
-        form_render($block['weight']),
-        form_render($block['region'])
+        array('data' => drupal_render($block['info']), 'class' => 'block'),
+        drupal_render($block['status']) . drupal_render($block['theme']),
+        drupal_render($block['weight']),
+        drupal_render($block['region'])
       );
       if ($throttle) {
-        $row[] = form_render($block['throttle']);
+        $row[] = drupal_render($block['throttle']);
       }
-      $row[] = form_render($block['configure']);
-      $row[] = $block['delete'] ? form_render($block['delete']) : '';
+      $row[] = drupal_render($block['configure']);
+      $row[] = $block['delete'] ? drupal_render($block['delete']) : '';
       $rows[] = $row;
     }
   }
@@ -342,10 +342,10 @@ function theme_block_admin_display($form) {
   $header[] = array('data' => t('Operations'), 'colspan' => 2);
 
   $output = theme('table', $header, $rows, array('id' => 'blocks'));
-  $output .= form_render($form['submit']);
-  // Also render the form_id as there is no form_render($form) call (as form_render does not appear to handle the
+  $output .= drupal_render($form['submit']);
+  // Also render the form_id as there is no drupal_render($form) call (as drupal_render does not appear to handle the
   // multi-dimensional block form array very well).
-  $output .= form_render($form['form_id']);
+  $output .= drupal_render($form['form_id']);
 
   return $output;
 }

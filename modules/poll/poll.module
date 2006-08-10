@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.206 2006/08/07 15:04:15 dries Exp $
+// $Id: poll.module,v 1.207 2006/08/10 15:42:33 dries Exp $
 
 /**
  * @file
@@ -56,12 +56,11 @@ function poll_block($op = 'list', $delta = 0) {
         $poll = node_load(array('type' => 'poll', 'created' => $timestamp, 'status' => 1));
 
         if ($poll->nid) {
-          // poll_view() dumps the output into $poll->body.
-          poll_view($poll, 1, 0, 1);
+          $poll = poll_view($poll, TRUE, FALSE, TRUE);
         }
       }
       $block['subject'] = t('Poll');
-      $block['content'] = $poll->body;
+      $block['content'] = drupal_render($poll->content);
       return $block;
     }
   }
@@ -343,12 +342,12 @@ function theme_poll_view_voting($form) {
   $output .= '<div class="poll">';
   $output .= '  <div class="vote-form">';
   $output .= '    <div class="choices">';
-  $output .= form_render($form['choice']);
+  $output .= drupal_render($form['choice']);
   $output .= '    </div>';
-  $output .= form_render($form['nid']);
-  $output .= form_render($form['vote']);
+  $output .= drupal_render($form['nid']);
+  $output .= drupal_render($form['vote']);
   $output .= '  </div>';
-  $output .= form_render($form);
+  $output .= drupal_render($form);
   $output .= '</div>';
   return $output;
 }
@@ -541,14 +540,14 @@ function poll_cancel(&$node) {
  *   An extra parameter that adapts the hook to display a block-ready
  *   rendering of the poll.
  */
-function poll_view(&$node, $teaser = FALSE, $page = FALSE, $block = FALSE) {
+function poll_view($node, $teaser = FALSE, $page = FALSE, $block = FALSE) {
   global $user;
   $output = '';
 
   // Special display for side-block
   if ($block) {
     // No 'read more' link
-    $node->body = $node->teaser = '';
+    $node->readmore = FALSE;
 
     $links = module_invoke_all('link', 'node', $node, 1);
     $links[] = array('title' => t('older polls'), 'href' => 'poll', 'attributes' => array('title' => t('View the list of polls on this site.')));
@@ -560,13 +559,16 @@ function poll_view(&$node, $teaser = FALSE, $page = FALSE, $block = FALSE) {
   }
 
   if ($node->allowvotes && ($block || arg(2) != 'results')) {
-    $output .= poll_view_voting($node, $teaser, $page, $block);
+    $node->content['body'] = array(
+      '#value' => poll_view_voting($node, $teaser, $page, $block),
+    );
   }
   else {
-    $output .= poll_view_results($node, $teaser, $page, $block);
+    $node->content['body'] = array(
+      '#value' => poll_view_results($node, $teaser, $page, $block),
+    );
   }
-
-  $node->body = $node->teaser = $output;
+  return $node;
 }
 
 /**

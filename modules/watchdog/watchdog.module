@@ -1,5 +1,5 @@
 <?php
-// $Id: watchdog.module,v 1.146 2006/08/07 15:04:16 dries Exp $
+// $Id: watchdog.module,v 1.147 2006/08/10 15:42:33 dries Exp $
 
 /**
  * @file
@@ -152,7 +152,7 @@ function watchdog_overview() {
 }
 
 function theme_watchdog_form_overview($form) {
-  return '<div class="container-inline">'. form_render($form) .'</div>';
+  return '<div class="container-inline">'. drupal_render($form) .'</div>';
 }
 
 function watchdog_form_overview_submit($form_id, $form) {

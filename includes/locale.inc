@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.84 2006/08/07 15:04:13 dries Exp $
+// $Id: locale.inc,v 1.85 2006/08/10 15:42:32 dries Exp $
 
 /**
  * @file
@@ -86,12 +86,12 @@ function theme_locale_admin_manage_screen($form) {
   foreach ($form['name'] as $key => $element) {
     // Do not take form control structures.
     if (is_array($element) && element_child($key)) {
-      $rows[] = array(check_plain($key), form_render($form['name'][$key]), form_render($form['enabled'][$key]), form_render($form['site_default'][$key]), ($key != 'en' ? form_render($form['translation'][$key]) : t('n/a')), ($key != 'en' ? l(t('delete'), 'admin/settings/locale/language/delete/'. $key) : ''));
+      $rows[] = array(check_plain($key), drupal_render($form['name'][$key]), drupal_render($form['enabled'][$key]), drupal_render($form['site_default'][$key]), ($key != 'en' ? drupal_render($form['translation'][$key]) : t('n/a')), ($key != 'en' ? l(t('delete'), 'admin/settings/locale/language/delete/'. $key) : ''));
     }
   }
   $header = array(array('data' => t('Code')), array('data' => t('English name')), array('data' => t('Enabled')), array('data' => t('Default')), array('data' => t('Translated')), array('data' => t('Operations')));
   $output = theme('table', $header, $rows);
-  $output .= form_render($form);
+  $output .= drupal_render($form);
 
   return $output;
 }

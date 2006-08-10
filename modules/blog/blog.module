@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.255 2006/08/07 15:04:14 dries Exp $
+// $Id: blog.module,v 1.256 2006/08/10 15:42:32 dries Exp $
 
 /**
  * @file
@@ -235,7 +235,7 @@ function blog_form(&$node) {
 /**
  * Implementation of hook_view().
  */
-function blog_view(&$node, $teaser = FALSE, $page = FALSE) {
+function blog_view($node, $teaser = FALSE, $page = FALSE) {
   if ($page) {
     // Breadcrumb navigation
     $breadcrumb[] = array('path' => 'blog', 'title' => t('blogs'));
@@ -243,7 +243,7 @@ function blog_view(&$node, $teaser = FALSE, $page = FALSE) {
     $breadcrumb[] = array('path' => 'node/'. $node->nid);
     menu_set_location($breadcrumb);
   }
-  $node = node_prepare($node, $teaser);
+  return node_prepare($node, $teaser);
 }
 
 /**

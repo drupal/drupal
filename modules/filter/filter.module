@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.132 2006/08/07 15:04:14 dries Exp $
+// $Id: filter.module,v 1.133 2006/08/10 15:42:32 dries Exp $
 
 /**
  * @file
@@ -331,18 +331,18 @@ function theme_filter_admin_overview($form) {
   foreach ($form as $name => $element) {
     if (isset($element['roles']) && is_array($element['roles'])) {
       $rows[] = array(
-        form_render($form['default'][$element['id']['#value']]),
+        drupal_render($form['default'][$element['id']['#value']]),
         check_plain($name),
-        form_render($element['roles']),
-        form_render($element['configure']),
-        form_render($element['delete'])
+        drupal_render($element['roles']),
+        drupal_render($element['configure']),
+        drupal_render($element['delete'])
       );
       unset($form[$name]);
     }
   }
   $header = array(t('Default'), t('Name'), t('Roles'), array('data' => t('Operations'), 'colspan' => 2));
   $output = theme('table', $header, $rows);
-  $output .= form_render($form);
+  $output .= drupal_render($form);
 
   return $output;
 }
@@ -561,12 +561,12 @@ function theme_filter_admin_order($form) {
   foreach (element_children($form['names']) as $id) {
     // Don't take form control structures
     if (is_array($form['names'][$id])) {
-      $rows[] = array(form_render($form['names'][$id]), form_render($form['weights'][$id]));
+      $rows[] = array(drupal_render($form['names'][$id]), drupal_render($form['weights'][$id]));
     }
   }
 
   $output = theme('table', $header, $rows);
-  $output .= form_render($form);
+  $output .= drupal_render($form);
 
   return $output;
 }

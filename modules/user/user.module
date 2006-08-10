@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.650 2006/08/07 15:04:16 dries Exp $
+// $Id: user.module,v 1.651 2006/08/10 15:42:33 dries Exp $
 
 /**
  * @file
@@ -1052,7 +1052,7 @@ function user_pass_submit($form_id, $form_values) {
 
 function theme_user_pass($form) {
   $output = '<p>'. t('Enter your username <strong><em>or</em></strong> your e-mail address.') .'</p>';
-  $output .= form_render($form);
+  $output .= drupal_render($form);
   return $output;
 }
 
@@ -1793,14 +1793,14 @@ function theme_user_admin_perm($form) {
       $row = array();
       // Module name
       if (is_numeric($key)) {
-        $row[] = array('data' => form_render($form['permission'][$key]), 'class' => 'module', 'colspan' => count($form['role_names']) + 1);
+        $row[] = array('data' => drupal_render($form['permission'][$key]), 'class' => 'module', 'colspan' => count($form['role_names']) + 1);
       // Permissions
       }
       else {
-        $row[] = array('data' => form_render($form['permission'][$key]), 'class' => 'permission');
+        $row[] = array('data' => drupal_render($form['permission'][$key]), 'class' => 'permission');
         foreach (element_children($form['checkboxes']) as $rid) {
           if (is_array($form['checkboxes'][$rid])) {
-            $row[] = array('data' => form_render($form['checkboxes'][$rid][$key]), 'align' => 'center', 'title' => t($key));
+            $row[] = array('data' => drupal_render($form['checkboxes'][$rid][$key]), 'align' => 'center', 'title' => t($key));
           }
         }
       }
@@ -1810,11 +1810,11 @@ function theme_user_admin_perm($form) {
   $header[] = (t('Permission'));
   foreach (element_children($form['role_names']) as $rid) {
     if (is_array($form['role_names'][$rid])) {
-      $header[] = form_render($form['role_names'][$rid]);
+      $header[] = drupal_render($form['role_names'][$rid]);
     }
   }
   $output = theme('table', $header, $rows, array('id' => 'permissions'));
-  $output .= form_render($form);
+  $output .= drupal_render($form);
   return $output;
 }
 
@@ -1904,7 +1904,7 @@ function theme_user_admin_new_role($form) {
       $rows[] = array($name, '<span class="disabled">'. t('locked') .'</span>');
     }
   }
-  $rows[] = array(form_render($form['name']), form_render($form['submit']));
+  $rows[] = array(drupal_render($form['name']), drupal_render($form['submit']));
 
   return theme('table', $header, $rows);
 }
@@ -1995,17 +1995,17 @@ function theme_user_admin_account($form) {
     t('Operations')
   );
 
-  $output .= form_render($form['options']);
+  $output .= drupal_render($form['options']);
   if (isset($form['name']) && is_array($form['name'])) {
     foreach (element_children($form['name']) as $key) {
       $rows[] = array(
-        form_render($form['accounts'][$key]),
-        form_render($form['name'][$key]),
-        form_render($form['status'][$key]),
-        form_render($form['roles'][$key]),
-        form_render($form['member_for'][$key]),
-        form_render($form['last_access'][$key]),
-        form_render($form['operations'][$key]),
+        drupal_render($form['accounts'][$key]),
+        drupal_render($form['name'][$key]),
+        drupal_render($form['status'][$key]),
+        drupal_render($form['roles'][$key]),
+        drupal_render($form['member_for'][$key]),
+        drupal_render($form['last_access'][$key]),
+        drupal_render($form['operations'][$key]),
       );
     }
   }
@@ -2015,10 +2015,10 @@ function theme_user_admin_account($form) {
 
   $output .= theme('table', $header, $rows);
   if ($form['pager']['#value']) {
-    $output .= form_render($form['pager']);
+    $output .= drupal_render($form['pager']);
   }
 
-  $output .= form_render($form);
+  $output .= drupal_render($form);
 
   return $output;
 }

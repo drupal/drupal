@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.380 2006/08/07 19:29:38 dries Exp $
+// $Id: book.module,v 1.381 2006/08/10 15:42:32 dries Exp $
 
 /**
  * @file
@@ -440,16 +440,6 @@ function book_content($node, $teaser = FALSE) {
 }
 
 /**
- * Implementation of hook_view().
- *
- * If not displayed on the main page, we render the node as a page in the
- * book with extra links to the previous and next pages.
- */
-function book_view(&$node, $teaser = FALSE, $page = FALSE) {
-  $node = node_prepare($node, $teaser);
-}
-
-/**
  * Implementation of hook_nodeapi().
  *
  * Appends book navigation to all nodes in the book.
@@ -472,7 +462,10 @@ function book_nodeapi(&$node, $op, $teaser, $page) {
           }
           $node->breadcrumb[] = array('path' => 'node/'. $node->nid);
 
-          $node->body .= theme('book_navigation', $node);
+          $node->content['book_navigation'] = array(
+            '#value' => theme('book_navigation', $node),
+            '#weight' => 100,
+          );
 
           if ($page) {
             menu_set_location($node->breadcrumb);
@@ -807,7 +800,7 @@ function book_node_visitor_html_pre($node, $depth, $nid) {
   $output .= "<h1 class=\"book-heading\">". check_plain($node->title) ."</h1>\n";
 
   if ($node->body) {
-    $output .= $node->body;
+    $output .= drupal_render($node->content);
   }
   return $output;
 }
@@ -868,8 +861,8 @@ function theme_book_admin_table($form) {
     $nid = $form[$key]['nid']['#value'];
     $pid = $form[0]['nid']['#value'];
     $rows[] = array(
-      '<div style="padding-left: '. (25 * $form[$key]['depth']['#value']) .'px;">'. form_render($form[$key]['title']) .'</div>',
-      form_render($form[$key]['weight']),
+      '<div style="padding-left: '. (25 * $form[$key]['depth']['#value']) .'px;">'. drupal_render($form[$key]['title']) .'</div>',
+      drupal_render($form[$key]['weight']),
       l(t('view'), 'node/'. $nid),
       l(t('edit'), 'node/'. $nid .'/edit'),
       l(t('delete'), 'node/'. $nid .'/delete', NULL, 'destination=admin/content/book'. (arg(3) == 'orphan' ? '/orphan' : '') . ($pid != $nid ? '/'.$pid : ''))

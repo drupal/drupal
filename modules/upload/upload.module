@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.117 2006/08/07 15:04:15 dries Exp $
+// $Id: upload.module,v 1.118 2006/08/10 15:42:33 dries Exp $
 
 /**
  * @file
@@ -484,31 +484,35 @@ function upload_nodeapi(&$node, $op, $teaser) {
 
     case 'view':
       if (isset($node->files) && user_access('view uploaded files')) {
-        // Manipulate so that inline references work in preview
-        if (!variable_get('clean_url', 0)) {
-          $previews = array();
-          foreach ($node->files as $file) {
-            if (strpos($file->fid, 'upload') !== FALSE) {
-              $previews[] = $file;
+        // Add the attachments list to node body with a heavy
+        // weight to ensure they're below other elements
+        if (count($node->files)) {
+          if (!$teaser && user_access('view uploaded files')) {
+            $node->content['files'] = array(
+              '#value' => theme('upload_attachments', $node->files),
+              '#weight' => 50,
+            );
+          }
+          // Manipulate so that inline references work in preview
+          if (!variable_get('clean_url', 0)) {
+            $previews = array();
+            foreach ($node->files as $file) {
+              $file = (object)$file;
+              if (strpos($file->fid, 'upload') !== FALSE) {
+                $previews[] = $file;
+              }
             }
+            // URLs to files being previewed are actually Drupal paths. When Clean
+            // URLs are disabled, the two do not match. We perform an automatic
+            // replacement from temporary to permanent URLs. That way, the author
+            // can use the final URL in the body before having actually saved (to
+            // place inline images for example).
+            foreach ($previews as $file) {
+              $old = file_create_filename($file->filename, file_create_path());
+              $node->content['#upload_urls'][$old] = url($old);
+            }
+            $node->content['#after_render'][] = 'upload_fix_preview_urls';
           }
-
-          // URLs to files being previewed are actually Drupal paths. When Clean
-          // URLs are disabled, the two do not match. We perform an automatic
-          // replacement from temporary to permanent URLs. That way, the author
-          // can use the final URL in the body before having actually saved (to
-          // place inline images for example).
-          foreach ($previews as $file) {
-            $old = file_create_filename($file->filename, file_create_path());
-            $new = url($old);
-            $node->body = str_replace($old, $new, $node->body);
-            $node->teaser = str_replace($old, $new, $node->teaser);
-          }
-        }
-
-        // Add the attachments list to node body
-        if (count($node->files) && !$teaser) {
-          $node->body .= theme('upload_attachments', $node->files);
         }
       }
       break;
@@ -555,6 +559,18 @@ function upload_nodeapi(&$node, $op, $teaser) {
         }
       }
       return array();
+  }
+}
+
+function upload_fix_preview_urls($elements, &$content) {
+  if (is_array($elements['#upload_urls'])) {
+    $old_list = array();
+    $new_list = array();
+    foreach ($elements['#upload_urls'] as $old => $new) {
+      $old_list[] = $old;
+      $new_list[] = $new;
+    }
+    $content = str_replace($old_list, $new_list, $content);
   }
 }
 
@@ -797,14 +813,14 @@ function theme_upload_form_current(&$form) {
 
   foreach (element_children($form) as $key) {
     $row = array();
-    $row[] = form_render($form[$key]['remove']);
-    $row[] = form_render($form[$key]['list']);
-    $row[] = form_render($form[$key]['description']);
-    $row[] = form_render($form[$key]['size']);
+    $row[] = drupal_render($form[$key]['remove']);
+    $row[] = drupal_render($form[$key]['list']);
+    $row[] = drupal_render($form[$key]['description']);
+    $row[] = drupal_render($form[$key]['size']);
     $rows[] = $row;
   }
   $output = theme('table', $header, $rows);
-  $output .= form_render($form);
+  $output .= drupal_render($form);
   return $output;
 }
 
@@ -813,7 +829,7 @@ function theme_upload_form_current(&$form) {
  * Note: required to output prefix/suffix.
  */
 function theme_upload_form_new($form) {
-  $output = form_render($form);
+  $output = drupal_render($form);
   return $output;
 }
 
@@ -871,7 +887,7 @@ function upload_js() {
     $function('upload_js', $form);
   }
   $form = form_builder('upload_js', $form);
-  $output = theme('status_messages') . form_render($form);
+  $output = theme('status_messages') . drupal_render($form);
   // We send the updated file attachments form.
   print drupal_to_js(array('status' => TRUE, 'data' => $output));
   exit;

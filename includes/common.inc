@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.553 2006/08/09 07:42:55 dries Exp $
+// $Id: common.inc,v 1.554 2006/08/10 15:42:32 dries Exp $
 
 /**
  * @file
@@ -1569,4 +1569,117 @@ function drupal_cron_run() {
 
   // Return TRUE so other functions can check if it did run successfully
   return TRUE;
+}
+
+/**
+ * Renders HTML given a structured array tree. Recursively iterates over each
+ * of the array elements, generating HTML code. This function is usually
+ * called from within a another function, like drupal_get_form() or node_view().
+ *
+ * @param $elements
+ *   The structured array describing the data to be rendered.
+ * @return
+ *   The rendered HTML.
+ */
+function drupal_render(&$elements) {
+  if (!isset($elements)) {
+    return NULL;
+  }
+  $content = '';
+  uasort($elements, "_element_sort");
+  if (!isset($elements['#children'])) {
+    $children = element_children($elements);
+    /* Render all the children that use a theme function */
+    if (isset($elements['#theme']) && !$elements['#theme_used']) {
+      $elements['#theme_used'] = TRUE;
+
+      $previous_value = $elements['#value'];
+      $previous_type = $elements['#type'];
+      // If we rendered a single element, then we will skip the renderer.
+      if (empty($children)) {
+        $elements['#printed'] = TRUE;
+      }
+      else {
+        $elements['#value'] = '';
+      }
+      $elements['#type'] = 'markup';
+
+      $content = theme($elements['#theme'], $elements);
+
+      $elements['#value'] = $previous_value;
+      $elements['#type'] = $previous_type;
+      unset($elements['#prefix'], $elements['#suffix']);
+    }
+    /* render each of the children using drupal_render and concatenate them */
+    if (!isset($content) || $content === '') {
+      foreach ($children as $key) {
+        $content .= drupal_render($elements[$key]);
+      }
+    }
+  }
+  if (isset($content) && $content !== '') {
+    $elements['#children'] = $content;
+  }
+
+  // Until now, we rendered the children, here we render the element itself
+  if (!isset($elements['#printed'])) {
+    $content = theme(($elements['#type']) ? $elements['#type']: 'markup', $elements);
+    $elements['#printed'] = TRUE;
+  }
+
+  if (isset($content) && $content !== '') {
+    $prefix = isset($elements['#prefix']) ? $elements['#prefix'] : '';
+    $suffix = isset($elements['#suffix']) ? $elements['#suffix'] : '';
+    $content = $prefix . $content . $suffix;
+
+    if (isset($elements['#after_render'])) {
+      foreach ($elements['#after_render'] as $function) {
+        $function($elements, $content);
+      }
+    }
+
+    return $content;
+  }
+}
+
+/**
+ * Function used by uasort in drupal_render() to sort structured arrays
+ * by weight.
+ */
+function _element_sort($a, $b) {
+  $a_weight = (is_array($a) && isset($a['#weight'])) ? $a['#weight'] : 0;
+  $b_weight = (is_array($b) && isset($b['#weight'])) ? $b['#weight'] : 0;
+  if ($a_weight == $b_weight) {
+    return 0;
+  }
+  return ($a_weight < $b_weight) ? -1 : 1;
+}
+
+/**
+ * Check if the key is a property.
+ */
+function element_property($key) {
+  return $key[0] == '#';
+}
+
+/**
+ * Get properties of a structured array element. Properties begin with '#'.
+ */
+function element_properties($element) {
+  return array_filter(array_keys((array) $element), 'element_property');
+}
+
+/**
+ * Check if the key is a child.
+ */
+function element_child($key) {
+  return $key[0] != '#';
+}
+
+/**
+ * Get keys of a structured array tree element that are not properties
+ * (i.e., do not begin with '#').
+ */
+function element_children($element) {
+  return array_filter(array_keys((array) $element), 'element_child');
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.345 2006/08/07 15:04:14 dries Exp $
+// $Id: forum.module,v 1.346 2006/08/10 15:42:32 dries Exp $
 
 /**
  * @file
@@ -313,8 +313,11 @@ function forum_view(&$node, $teaser = FALSE, $page = FALSE) {
   }
 
   $node = node_prepare($node, $teaser);
-
-  $node->body .= theme('forum_topic_navigation', $node);
+  $node->content['forum_navigation'] = array(
+    '#value' => theme('forum_topic_navigation', $node),
+    '#weight' => 100,
+  );
+  return $node;
 }
 
 /**
