@@ -1062,14 +1062,14 @@ function search_box_form_submit($form_id, $form_values) {
  * Theme the theme search form.
  */
 function theme_search_theme_form($form) {
-  return '<div id="search" class="container-inline">'. form_render($form) .'</div>';
+  return '<div id="search" class="container-inline">'. drupal_render($form) .'</div>';
 }
 
 /**
  * Theme the block search form.
  */
 function theme_search_block_form($form) {
-  return '<div class="container-inline">'. form_render($form) .'</div>';
+  return '<div class="container-inline">'. drupal_render($form) .'</div>';
 }
 
 /**

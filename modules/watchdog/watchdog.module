@@ -152,7 +152,7 @@ function watchdog_overview() {
 }
 
 function theme_watchdog_form_overview($form) {
-  return '<div class="container-inline">'. form_render($form) .'</div>';
+  return '<div class="container-inline">'. drupal_render($form) .'</div>';
 }
 
 function watchdog_form_overview_submit($form_id, $form) {
