@@ -39,6 +39,7 @@ Drupal x.x.x, xxxx-xx-xx (development version)
 - content system:
     * made it easier for node access modules to work well with each other.
     * added configurable content types.
+    * changed node rendering to work with structured arrays.
 - removed the archive module
 
 Drupal 4.7.0, 2006-05-01
