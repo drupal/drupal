@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.111 2006/08/07 15:04:13 dries Exp $
+// $Id: bootstrap.inc,v 1.112 2006/08/12 11:47:24 dries Exp $
 
 /**
  * @file
@@ -414,7 +414,7 @@ function drupal_page_header() {
     if (($modified_since !== NULL || $none_match !== NULL) && $modified_since !== FALSE && $none_match !== FALSE) {
       header('HTTP/1.1 304 Not Modified');
       // All 304 responses must send an etag if the 200 response for the same object contained an etag
-      header('Etag: $etag');
+      header("Etag: $etag");
       exit();
     }
 
