@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.1 2006/08/06 23:06:56 drumm Exp $
+// $Id: content_types.inc,v 1.2 2006/08/14 06:09:03 drumm Exp $
 
 /**
  * @file
@@ -272,7 +272,7 @@ function node_type_form_submit($form_id, $form_values) {
     node_type_reset($type);
   }
   elseif ($op == t('Delete content type')) {
-    return 'admin/content/types/'. $type->old_type .'/delete';
+    return 'admin/content/types/'. str_replace('_', '-', $type->old_type) .'/delete';
   }
 
   if (!empty($form_values['old_type'])) {
