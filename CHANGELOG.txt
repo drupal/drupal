@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.144 2006/08/14 05:47:36 drumm Exp $
+// $Id: CHANGELOG.txt,v 1.145 2006/08/14 07:17:37 drumm Exp $
 
 Drupal x.x.x, xxxx-xx-xx (development version)
 ------------------------
@@ -43,6 +43,7 @@ Drupal x.x.x, xxxx-xx-xx (development version)
 - removed the archive module.
 - upgrade system:
     * created space for update branches.
+- split up and removed drupal.css.
 
 Drupal 4.7.0, 2006-05-01
 ------------------------
