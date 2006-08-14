@@ -43,6 +43,7 @@ Drupal x.x.x, xxxx-xx-xx (development version)
 - removed the archive module.
 - upgrade system:
     * created space for update branches.
+- split up and removed drupal.css.
 
 Drupal 4.7.0, 2006-05-01
 ------------------------
