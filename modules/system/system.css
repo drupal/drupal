@@ -1,4 +1,4 @@
-/* $Id: system.css,v 1.1 2006/08/14 07:14:49 drumm Exp $ */
+/* $Id: system.css,v 1.2 2006/08/14 20:35:10 dries Exp $ */
 
 /*
 ** HTML elements
@@ -123,4 +123,89 @@ dl.multiselect dt, dl.multiselect dd {
 dl.multiselect .form-item {
   height: 1.75em;
   margin: 0;
+}
+
+/*
+** Autocomplete styles
+*/
+/* Suggestion list */
+#autocomplete {
+  position: absolute;
+  border: 1px solid;
+  overflow: hidden;
+}
+#autocomplete ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+#autocomplete li {
+  background: #fff;
+  color: #000;
+  white-space: pre;
+  cursor: default;
+}
+#autocomplete li.selected {
+  background: #0072b9;
+  color: #fff;
+}
+/* Animated throbber */
+html.js input.form-autocomplete {
+  background-image: url(../../misc/throbber.gif);
+  background-repeat: no-repeat;
+  background-position: 100% 2px;
+}
+html.js input.throbbing {
+  background-position: 100% -18px;
+}
+
+/*
+** Collapsing fieldsets
+*/
+html.js fieldset.collapsed {
+  border-bottom-width: 0;
+  border-left-width: 0;
+  border-right-width: 0;
+  margin-bottom: 0;
+}
+html.js fieldset.collapsed * {
+  display: none;
+}
+html.js fieldset.collapsed table *,
+html.js fieldset.collapsed legend,
+html.js fieldset.collapsed legend * {
+  display: inline;
+}
+html.js fieldset.collapsible legend a {
+  padding-left: 15px;
+  background: url(../../misc/menu-expanded.png) 5px 50% no-repeat;
+}
+html.js fieldset.collapsed legend a {
+  background-image: url(../../misc/menu-collapsed.png);
+}
+/* Note: IE-only fix due to '* html' (breaks Konqueror otherwise). */
+* html.js fieldset.collapsible legend a {
+  display: block;
+}
+
+/*
+** Resizable text areas
+*/
+.resizable-textarea {
+  width: 95%;
+}
+.resizable-textarea .grippie {
+  height: 14px;
+  background: #eee url(../../misc/grippie.png) no-repeat 100% 100%;
+  border: 1px solid #ddd;
+  border-top-width: 0;
+  cursor: s-resize;
+}
+
+/*
+** Formatting for welcome page
+*/
+#first-time strong {
+  display: block;
+  padding: 1.5em 0 .5em;
 }

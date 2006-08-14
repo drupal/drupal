@@ -1,4 +1,4 @@
-/* $Id: menu.css,v 1.1 2006/08/14 07:14:49 drumm Exp $ */
+/* $Id: menu.css,v 1.2 2006/08/14 20:35:10 dries Exp $ */
 
 ul.menu {
   list-style: none;
@@ -10,19 +10,19 @@ ul.menu li {
 }
 li.expanded {
   list-style-type: circle;
-  list-style-image: url(menu-expanded.png);
+  list-style-image: url(../../misc/menu-expanded.png);
   padding: 0.2em 0.5em 0 0;
   margin: 0;
 }
 li.collapsed {
   list-style-type: disc;
-  list-style-image: url(menu-collapsed.png);
+  list-style-image: url(../../misc/menu-collapsed.png);
   padding: 0.2em 0.5em 0 0;
   margin: 0;
 }
 li.leaf {
   list-style-type: square;
-  list-style-image: url(menu-leaf.png);
+  list-style-image: url(../../misc/menu-leaf.png);
   padding: 0.2em 0.5em 0 0;
   margin: 0;
 }

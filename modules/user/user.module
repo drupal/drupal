@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.652 2006/08/14 06:53:57 drumm Exp $
+// $Id: user.module,v 1.653 2006/08/14 20:35:11 dries Exp $
 
 /**
  * @file
@@ -756,6 +756,10 @@ function user_menu($may_cache) {
       'weight' => 10);
   }
   else {
+    // Add the CSS for this module. We put this in !$may_cache so it is only
+    // added once per request.
+    drupal_add_css(drupal_get_path('module', 'user') .'/user.css', 'core');
+
     if (arg(0) == 'user' && is_numeric(arg(1)) && arg(1) > 0) {
       $account = user_load(array('uid' => arg(1)));
 
