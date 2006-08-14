@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.669 2006/08/10 15:42:33 dries Exp $
+// $Id: node.module,v 1.670 2006/08/14 05:11:02 drumm Exp $
 
 /**
  * @file
@@ -2361,7 +2361,6 @@ function node_update_index() {
     $node = node_load($node->nid);
 
     // Build the node body.
-    $node = node_load($item->sid);
     $node = node_build_content($node, FALSE, FALSE);
     $node->body = drupal_render($node->content);
 
