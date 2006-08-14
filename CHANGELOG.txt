@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.145 2006/08/14 07:17:37 drumm Exp $
+// $Id: CHANGELOG.txt,v 1.146 2006/08/14 10:41:52 dries Exp $
 
 Drupal x.x.x, xxxx-xx-xx (development version)
 ------------------------
@@ -24,7 +24,7 @@ Drupal x.x.x, xxxx-xx-xx (development version)
     * optionally allow people to cancel their vote.
 - distributed authentication:
     * added default server option.
-- fixed critical SQL issue, see SA-2006-005
+- added default robots.txt to control crawlers.
 - database API:
     * added db_table_exists().
 - blogapi module:
