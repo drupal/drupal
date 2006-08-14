@@ -1,0 +1,18 @@
+/* $Id$ */
+
+#blocks td.region {
+  font-weight: bold;
+}
+#blocks td.block {
+  padding-left: 1.5em;
+}
+.block-region {
+  background-color: #ff6;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  padding: 3px;
+}
+.block ul {
+  margin: 0;
+  padding: 0 0 0.25em 1em;
+}

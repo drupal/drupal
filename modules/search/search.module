@@ -182,6 +182,11 @@ function search_menu($may_cache) {
       }
     }
   }
+  else {
+    // Add the CSS for this module
+    // We put this in !$may_cache so it's only added once per request
+    drupal_add_css(drupal_get_path('module', 'search') .'/search.css');
+  }
 
   return $items;
 }

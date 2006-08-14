@@ -115,7 +115,6 @@ function drupal_set_html_head($data = NULL) {
  */
 function drupal_get_html_head() {
   $output = "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n";
-  drupal_add_css('misc/drupal.css', 'core');
   return $output . drupal_set_html_head();
 }
 

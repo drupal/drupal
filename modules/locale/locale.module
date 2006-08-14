@@ -111,6 +111,10 @@ function locale_menu($may_cache) {
       'type' => MENU_CALLBACK);
   }
   else {
+    // Add the CSS for this module
+    // We put this in !$may_cache so it's only added once per request
+    drupal_add_css(drupal_get_path('module', 'locale') .'/locale.css');
+
     if (is_numeric(arg(4))) {
       // String related callbacks
       $items[] = array('path' => 'admin/settings/locale/string/edit/'. arg(4),
