@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.381 2006/08/10 15:42:32 dries Exp $
+// $Id: book.module,v 1.382 2006/08/14 07:14:49 drumm Exp $
 
 /**
  * @file
@@ -118,6 +118,10 @@ function book_menu($may_cache) {
       'type' => MENU_CALLBACK);
   }
   else {
+    // Add the CSS for this module
+    // We put this in !$may_cache so it's only added once per request
+    drupal_add_css(drupal_get_path('module', 'book') .'/book.css');
+
     // To avoid SQL overhead, check whether we are on a node page and whether the
     // user is allowed to outline posts in books.
     if (arg(0) == 'node' && is_numeric(arg(1)) && user_access('outline posts in books')) {

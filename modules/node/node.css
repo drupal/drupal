@@ -1,0 +1,37 @@
+/* $Id: node.css,v 1.1 2006/08/14 07:14:49 drumm Exp $ */
+
+.node-unpublished, .comment-unpublished {
+  background-color: #fff4f4;
+}
+.preview .node, .preview .comment {
+  background-color: #ffffea;
+}
+#node-admin-filter ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+#node-admin-buttons {
+  float: left;
+  margin-left: 0.5em;
+  clear: right;
+}
+td.revision-current {
+  background: #ffc;
+}
+.node-form .form-text {
+  display: block;
+  width: 95%;
+}
+.node-form .standard {
+  clear: both;
+}
+.node-form textarea {
+  display: block;
+  width: 95%;
+}
+.node-form .attachments fieldset {
+  float: none;
+  display: block;
+}

@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.module,v 1.132 2006/08/06 23:00:42 drumm Exp $
+// $Id: tracker.module,v 1.133 2006/08/14 07:14:50 drumm Exp $
 
 /**
  * @file
@@ -48,6 +48,10 @@ function tracker_menu($may_cache) {
     }
   }
   else {
+    // Add the CSS for this module
+    // We put this in !$may_cache so it's only added once per request
+    drupal_add_css(drupal_get_path('module', 'tracker') .'/tracker.css');
+
     if (arg(0) == 'user' && is_numeric(arg(1))) {
       $items[] = array('path' => 'user/'. arg(1) .'/track', 'title' => t('track'),
           'callback' => 'tracker_track_user', 'access' => user_access('access content'),

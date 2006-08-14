@@ -1,0 +1,5 @@
+/* $Id: taxonomy.css,v 1.1 2006/08/14 07:14:50 drumm Exp $ */
+
+#taxonomy td.term, #taxonomy td.message {
+  padding-left: 1.5em;
+}

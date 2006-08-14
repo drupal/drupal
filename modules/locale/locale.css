@@ -1,0 +1,6 @@
+/* $Id: locale.css,v 1.1 2006/08/14 07:14:49 drumm Exp $ */
+
+.locale-untranslated {
+  font-style: normal;
+  text-decoration: line-through;
+}

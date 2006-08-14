@@ -1,0 +1,33 @@
+/* $Id: poll.css,v 1.1 2006/08/14 07:14:49 drumm Exp $ */
+
+.poll .bar {
+  height: 1em;
+  margin: 1px 0;
+  background-color: #ddd;
+}
+.poll .bar .foreground {
+  background-color: #000;
+  height: 1em;
+  clear: left;
+  float: left;
+}
+.poll .links {
+  text-align: center;
+}
+.poll .percent {
+  text-align: right;
+}
+.poll .total {
+  text-align: center;
+}
+.poll .vote-form {
+  text-align: center;
+}
+.poll .vote-form .choices {
+  text-align: left;
+  margin: 0 auto;
+  display: table;
+}
+.node-form .poll-form fieldset {
+  display: block;
+}

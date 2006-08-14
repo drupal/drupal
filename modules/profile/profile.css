@@ -1,0 +1,17 @@
+/* $Id: profile.css,v 1.1 2006/08/14 07:14:49 drumm Exp $ */
+
+.profile {
+  clear: both;
+  margin: 1em 0;
+}
+.profile .picture {
+  float: right;
+  margin: 0 1em 1em 0;
+}
+.profile dt {
+  margin: 1em 0 0.2em 0;
+  font-weight: bold;
+}
+.profile dd {
+  margin:0;
+}

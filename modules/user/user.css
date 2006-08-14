@@ -1,0 +1,21 @@
+/* $Id: user.css,v 1.1 2006/08/14 07:14:50 drumm Exp $ */
+
+#permissions td.module {
+  font-weight: bold;
+}
+#permissions td.permission {
+  padding-left: 1.5em;
+}
+#access-rules .access-type, #access-rules .rule-type {
+  margin-right: 1em;
+  float: left;
+}
+#access-rules .access-type .form-item, #access-rules .rule-type .form-item {
+  margin-top: 0;
+}
+#access-rules .mask {
+  clear: both;
+}
+#user-login-form {
+  text-align: center;
+}

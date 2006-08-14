@@ -1,0 +1,26 @@
+/* $Id: forum.css,v 1.1 2006/08/14 07:14:49 drumm Exp $ */
+
+#forum .description {
+  font-size: 0.9em;
+  margin: 0.5em;
+}
+#forum td.created, #forum td.posts, #forum td.topics, #forum td.last-reply, #forum td.replies, #forum td.pager {
+  white-space: nowrap;
+}
+#forum td.posts, #forum td.topics, #forum td.replies, #forum td.pager {
+  text-align: center;
+}
+.forum-topic-navigation {
+  padding: 1em 0 0 3em;
+  border-top: 1px solid #888;
+  border-bottom: 1px solid #888;
+  text-align: center;
+  padding: 0.5em;
+}
+.forum-topic-navigation .topic-previous {
+  margin-right: 4em;
+  text-align: right;
+}
+.forum-topic-navigation .topic-next {
+  text-align: left;
+}

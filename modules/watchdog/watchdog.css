@@ -1,0 +1,29 @@
+/* $Id: watchdog.css,v 1.1 2006/08/14 07:14:50 drumm Exp $ */
+
+table.watchdog-event th {
+  border-bottom: 1px solid #ccc;
+}
+tr.watchdog-user {
+  background: #ffd;
+}
+tr.watchdog-user .active {
+  background: #eed;
+}
+tr.watchdog-content {
+  background: #ddf;
+}
+tr.watchdog-content .active {
+  background: #cce;
+}
+tr.watchdog-page-not-found, tr.watchdog-access-denied {
+  background: #dfd;
+}
+tr.watchdog-page-not-found .active, tr.watchdog-access-denied .active {
+  background: #cec;
+}
+tr.watchdog-error {
+  background: #ffc9c9;
+}
+tr.watchdog-error .active {
+  background: #eeb9b9;
+}

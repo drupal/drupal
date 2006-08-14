@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.346 2006/08/10 15:42:32 dries Exp $
+// $Id: forum.module,v 1.347 2006/08/14 07:14:49 drumm Exp $
 
 /**
  * @file
@@ -96,6 +96,11 @@ function forum_menu($may_cache) {
         'access' => user_access('administer forums'),
         'type' => MENU_CALLBACK);
     }
+  }
+  else {
+    // Add the CSS for this module
+    // We put this in !$may_cache so it's only added once per request
+    drupal_add_css(drupal_get_path('module', 'forum') .'/forum.css');
   }
 
   return $items;

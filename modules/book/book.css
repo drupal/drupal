@@ -1,0 +1,21 @@
+/* $Id: book.css,v 1.1 2006/08/14 07:14:49 drumm Exp $ */
+
+.book-navigation .menu {
+  border-top: 1px solid #888;
+  padding: 1em 0 0 3em;
+}
+.book-navigation .page-links {
+  border-top: 1px solid #888;
+  border-bottom: 1px solid #888;
+  text-align: center;
+  padding: 0.5em;
+}
+.book-navigation .page-previous {
+  text-align: right;
+}
+.book-navigation .page-up {
+  margin: 0 4em;
+}
+.book-navigation .page-next {
+  text-align: left;
+}

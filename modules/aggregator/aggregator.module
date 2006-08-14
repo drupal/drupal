@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.295 2006/08/10 15:42:32 dries Exp $
+// $Id: aggregator.module,v 1.296 2006/08/14 07:14:48 drumm Exp $
 
 /**
  * @file
@@ -117,6 +117,10 @@ function aggregator_menu($may_cache) {
     }
   }
   else {
+    // Add the CSS for this module
+    // We put this in !$may_cache so it's only added once per request
+    drupal_add_css(drupal_get_path('module', 'aggregator') .'/aggregator.css');
+
     if (arg(0) == 'aggregator' && is_numeric(arg(2))) {
       if (arg(1) == 'sources') {
         $feed = aggregator_get_feed(arg(2));

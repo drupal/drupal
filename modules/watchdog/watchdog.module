@@ -1,5 +1,5 @@
 <?php
-// $Id: watchdog.module,v 1.147 2006/08/10 15:42:33 dries Exp $
+// $Id: watchdog.module,v 1.148 2006/08/14 07:14:50 drumm Exp $
 
 /**
  * @file
@@ -55,6 +55,12 @@ function watchdog_menu($may_cache) {
       'callback' => 'watchdog_event',
       'type' => MENU_CALLBACK);
   }
+  else {
+    // Add the CSS for this module
+    // We put this in !$may_cache so it's only added once per request
+    drupal_add_css(drupal_get_path('module', 'watchdog') .'/watchdog.css');
+  }
+
   return $items;
 }
 

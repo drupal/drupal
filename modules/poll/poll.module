@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.207 2006/08/10 15:42:33 dries Exp $
+// $Id: poll.module,v 1.208 2006/08/14 07:14:49 drumm Exp $
 
 /**
  * @file
@@ -207,6 +207,10 @@ function poll_menu($may_cache) {
       'type' => MENU_CALLBACK);
   }
   else {
+    // Add the CSS for this module
+    // We put this in !$may_cache so it's only added once per request
+    drupal_add_css(drupal_get_path('module', 'poll') .'/poll.css');
+
     if (arg(0) == 'node' && is_numeric(arg(1))) {
       $node = node_load(arg(1));
       if ($node->type == 'poll') {

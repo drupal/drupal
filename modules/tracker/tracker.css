@@ -1,0 +1,8 @@
+/* $Id: tracker.css,v 1.1 2006/08/14 07:14:50 drumm Exp $ */
+
+#tracker td.replies {
+  text-align: center;
+}
+#tracker table {
+  width: 100%;
+}

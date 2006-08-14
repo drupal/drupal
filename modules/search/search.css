@@ -1,0 +1,35 @@
+/* $Id: search.css,v 1.1 2006/08/14 07:14:49 drumm Exp $ */
+
+.search-form {
+  margin-bottom: 1em;
+}
+.search-form p {
+  margin-top: 0;
+  margin-bottom: 0.2em;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.search-form input {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.search-results p {
+  margin-top: 0;
+}
+.search-results dt {
+  font-size: 1.1em;
+}
+.search-results dd {
+  margin-bottom: 1em;
+}
+.search-results .search-info {
+  font-size: 0.85em;
+}
+.search-advanced .criterion {
+  float: left;
+  margin-right: 2em;
+}
+.search-advanced .action {
+  float: left;
+  clear: left;
+}

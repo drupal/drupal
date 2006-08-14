@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.554 2006/08/10 15:42:32 dries Exp $
+// $Id: common.inc,v 1.555 2006/08/14 07:14:48 drumm Exp $
 
 /**
  * @file
@@ -115,7 +115,6 @@ function drupal_set_html_head($data = NULL) {
  */
 function drupal_get_html_head() {
   $output = "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n";
-  drupal_add_css('misc/drupal.css', 'core');
   return $output . drupal_set_html_head();
 }
 

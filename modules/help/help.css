@@ -1,0 +1,10 @@
+/* $Id: help.css,v 1.1 2006/08/14 07:14:49 drumm Exp $ */
+
+.help-items {
+  float: left;
+  width: 22%;
+  padding-right: 3%;
+}
+.help-items-last {
+  padding-right: 0;
+}
