@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.196 2006/07/31 19:24:16 unconed Exp $
+// $Id: update.php,v 1.197 2006/08/14 05:47:36 drumm Exp $
 
 /**
  * @file
@@ -337,11 +337,18 @@ function update_selection_page() {
     if ($updates !== FALSE) {
       $updates = drupal_map_assoc($updates);
       $updates[] = 'No updates available';
+      $default = drupal_get_installed_schema_version($module);
+      foreach (array_keys($updates) as $update) {
+        if ($update > $default) {
+          $default = $update;
+          break;
+        }
+      }
 
       $form['start'][$module] = array(
         '#type' => 'select',
         '#title' => $module . ' module',
-        '#default_value' => array_search(drupal_get_installed_schema_version($module), $updates) + 1,
+        '#default_value' => $default,
         '#options' => $updates,
       );
     }
@@ -369,10 +376,13 @@ function update_update_page() {
   // Set the installed version so updates start at the correct place.
   foreach ($_POST['edit']['start'] as $module => $version) {
     drupal_set_installed_schema_version($module, $version - 1);
-    $max_version = max(drupal_get_schema_versions($module));
+    $updates = drupal_get_schema_versions($module);
+    $max_version = max($updates);
     if ($version <= $max_version) {
-      foreach (range($version, $max_version) as $update) {
-        $_SESSION['update_remaining'][] = array('module' => $module, 'version' => $update);
+      foreach ($updates as $update) {
+        if ($update >= $version) {
+          $_SESSION['update_remaining'][] = array('module' => $module, 'version' => $update);
+        }
       }
     }
   }

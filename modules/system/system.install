@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.5 2006/08/06 23:00:42 drumm Exp $
+// $Id: system.install,v 1.6 2006/08/14 05:47:36 drumm Exp $
 
 function system_install() {
   switch ($GLOBALS['db_type']) {
@@ -2842,7 +2842,12 @@ function system_update_182() {
   return $ret;
 }
 
-function system_update_183() {
+/**
+ * @defgroup updates-4.7-to-x.x System updates from 4.7 to x.x
+ * @{
+ */
+
+function system_update_1000() {
   $ret = array();
   switch ($GLOBALS['db_type']) {
     case 'mysql':
@@ -2868,7 +2873,7 @@ function system_update_183() {
   return $ret;
 }
 
-function system_update_184() {
+function system_update_1001() {
   // change DB schema for better poll support
   $ret = array();
 
@@ -2887,7 +2892,7 @@ function system_update_184() {
   return $ret;
 }
 
-function system_update_185() {
+function system_update_1002() {
   // Make the forum's vocabulary the highest in list, if present
   $ret = array();
 
@@ -2898,7 +2903,7 @@ function system_update_185() {
   return $ret;
 }
 
-function system_update_186() {
+function system_update_1003() {
   // Make use of guid in feed items
   $ret = array();
   switch ($GLOBALS['db_type']) {
@@ -2914,7 +2919,7 @@ function system_update_186() {
 }
 
 
-function system_update_187() {
+function system_update_1004() {
   // Increase the size of bid in boxes and aid in access
   $ret = array();
   switch ($GLOBALS['db_type']) {
@@ -2930,7 +2935,7 @@ function system_update_187() {
   return $ret;
 }
 
-function system_update_188() {
+function system_update_1005() {
   // Add ability to create dynamic node types like the CCK module
   $ret = array();
 
@@ -3025,3 +3030,8 @@ function system_update_188() {
 
   return $ret;
 }
+
+/**
+ * @} End of "defgroup updates-4.7-to-x.x"
+ * The next series of updates should start at 2000.
+ */
