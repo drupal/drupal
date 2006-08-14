@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.651 2006/08/10 15:42:33 dries Exp $
+// $Id: user.module,v 1.652 2006/08/14 06:53:57 drumm Exp $
 
 /**
  * @file
@@ -1935,8 +1935,8 @@ function user_admin_account() {
     '#suffix' => '</div>',
   );
   $options = array();
-  foreach (module_invoke_all('user_operations') as $key => $value) {
-    $options[$key] = $value[0];
+  foreach (module_invoke_all('user_operations') as $operation => $array) {
+    $options[$operation] = $array['label'];
   }
   $form['options']['operation'] = array(
     '#type' => 'select',
@@ -2031,8 +2031,16 @@ function user_admin_account_submit($form_id, $edit) {
   $operation = $operations[$edit['operation']];
   // Filter out unchecked accounts.
   $accounts = array_filter($edit['accounts']);
-  if ($function = $operation[1]) {
-    call_user_func($function, $accounts);
+  if ($function = $operation['callback']) {
+    // Add in callback arguments if present.
+    if (isset($operation['callback arguments'])) {
+      $args = array_merge(array($accounts), $operation['callback arguments']);
+    }
+    else {
+      $args = array($accounts);
+    }
+    call_user_func_array($function, $args);
+
     cache_clear_all();
     drupal_set_message(t('The update has been performed.'));
   }
@@ -2052,7 +2060,7 @@ function user_user_operations() {
   global $form_values;
 
   $roles = user_roles(1);
-  unset($roles[2]);  // Can't edit authenticated role.
+  unset($roles[DRUPAL_AUTHENTICATED_RID]);  // Can't edit authenticated role.
 
   $add_roles = array();
   foreach ($roles as $key => $value) {
@@ -2065,18 +2073,35 @@ function user_user_operations() {
   }
 
   $operations = array(
-    'unblock' => array(t('Unblock the selected users'), 'user_user_operations_unblock'),
-    'block' => array(t('Block the selected users'), 'user_user_operations_block'),
-    t('Add a role to the selected users') => array($add_roles),
-    t('Remove a role from the selected users') => array($remove_roles),
-    'delete' => array(t('Delete the selected users'), ''),
+    'unblock' => array(
+      'label' => t('Unblock the selected users'),
+      'callback' => 'user_user_operations_unblock',
+    ),
+    'block' => array(
+      'label' => t('Block the selected users'),
+      'callback' => 'user_user_operations_block',
+    ),
+    t('Add a role to the selected users') => array(
+      'label' => $add_roles,
+    ),
+    t('Remove a role from the selected users') => array(
+      'label' => $remove_roles,
+    ),
+    'delete' => array(
+      'label' => t('Delete the selected users'),
+    ),
   );
 
   // If the form has been posted, we need to insert the proper data for role editing if necessary.
   if ($form_values) {
-    $operation = explode('-', $form_values['operation']);
-    if ($operation[0] == 'add_role' || $operation[0] == 'remove_role') {
-      $operations[$form_values['operation']] =  array(NULL, 'user_multiple_role_edit');
+    $operation_rid = explode('-', $form_values['operation']);
+    $operation = $operation_rid[0];
+    $rid = $operation_rid[1];
+    if ($operation == 'add_role' || $operation == 'remove_role') {
+      $operations[$form_values['operation']] = array(
+        'callback' => 'user_multiple_role_edit',
+        'callback arguments' => array($operation, $rid),
+      );
     }
   }
 
@@ -2100,14 +2125,7 @@ function user_user_operations_block($accounts) {
 /**
  * Callback function for admin mass adding/deleting a user role.
  */
-function user_multiple_role_edit($accounts) {
-  global $form_values;
-
-  // Get the operation and role from the posted form.
-  $operation_rid = explode('-', $form_values['operation']);
-  $operation = $operation_rid[0];
-  $rid = $operation_rid[1];
-
+function user_multiple_role_edit($accounts, $operation, $rid) {
   switch ($operation) {
     case 'add_role':
       foreach ($accounts as $uid) {

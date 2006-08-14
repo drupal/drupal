@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.670 2006/08/14 05:11:02 drumm Exp $
+// $Id: node.module,v 1.671 2006/08/14 06:53:57 drumm Exp $
 
 /**
  * @file
@@ -1154,12 +1154,29 @@ function node_last_changed($nid) {
  */
 function node_node_operations() {
   $operations = array(
-    'approve' =>   array(t('Approve the selected posts'), 'node_operations_approve'),
-    'promote' =>   array(t('Promote the selected posts'), 'node_operations_promote'),
-    'sticky' =>    array(t('Make the selected posts sticky'), 'node_operations_sticky'),
-    'demote' =>    array(t('Demote the selected posts'), 'node_operations_demote'),
-    'unpublish' => array(t('Unpublish the selected posts'), 'node_operations_unpublish'),
-    'delete' =>    array(t('Delete the selected posts'), ''),
+    'approve' => array(
+      'label' => t('Approve the selected posts'),
+      'callback' => 'node_operations_approve',
+    ),
+    'promote' => array(
+      'label' => t('Promote the selected posts'),
+      'callback' => 'node_operations_promote',
+    ),
+    'sticky' => array(
+      'label' => t('Make the selected posts sticky'),
+      'callback' => 'node_operations_sticky',
+    ),
+    'demote' => array(
+      'label' => t('Demote the selected posts'),
+      'callback' => 'node_operations_demote',
+    ),
+    'unpublish' => array(
+      'label' => t('Unpublish the selected posts'),
+      'callback' => 'node_operations_unpublish',
+    ),
+    'delete' => array(
+      'label' => t('Delete the selected posts'),
+    ),
   );
   return $operations;
 }
@@ -1370,23 +1387,26 @@ function node_admin_nodes_submit($form_id, $edit) {
   $operations = module_invoke_all('node_operations');
   $operation = $operations[$edit['operation']];
   // Filter out unchecked nodes
-  $nodes = array_diff($edit['nodes'], array(0));
-  if ($function = $operation[1]) {
-    call_user_func($function, $nodes);
+  $nodes = array_filter($edit['nodes']);
+  if ($function = $operation['callback']) {
+    // Add in callback arguments if present.
+    if (isset($operation['callback arguments'])) {
+      $args = array_merge(array($nodes), $operation['callback arguments']);
+    }
+    else {
+      $args = array($nodes);
+    }
+    call_user_func_array($function, $args);
+
     cache_clear_all();
     drupal_set_message(t('The update has been performed.'));
   }
 }
 
 function node_admin_nodes_validate($form_id, $edit) {
-  $edit['nodes'] = array_diff($edit['nodes'], array(0));
-  if (count($edit['nodes']) == 0) {
-    if ($edit['operation'] == 'delete') {
-      form_set_error('', t('Please select some items to perform the delete operation.'));
-    }
-    else {
-      form_set_error('', t('Please select some items to perform the update on.'));
-    }
+  $nodes = array_filter($edit['nodes']);
+  if (count($nodes) == 0) {
+    form_set_error('', t('No items selected.'));
   }
 }
 
@@ -1411,8 +1431,8 @@ function node_admin_nodes() {
     '#suffix' => '</div>',
   );
   $options = array();
-  foreach (module_invoke_all('node_operations') as $key => $value) {
-    $options[$key] = $value[0];
+  foreach (module_invoke_all('node_operations') as $operation => $array) {
+    $options[$operation] = $array['label'];
   }
   $form['options']['operation'] = array('#type' => 'select', '#options' => $options,  '#default_value' => 'approve');
   $form['options']['submit'] = array('#type' => 'submit', '#value' => t('Update'));
