@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.6 2006/08/14 05:47:36 drumm Exp $
+// $Id: system.install,v 1.7 2006/08/15 05:25:20 drumm Exp $
 
 function system_install() {
   switch ($GLOBALS['db_type']) {
@@ -403,9 +403,9 @@ function system_install() {
       break;
     case 'pgsql':
       /* create unsigned types */
-      db_query("CREATE DOMAIN uint integer CHECK (VALUE >= 0)");
-      db_query("CREATE DOMAIN smalluint smallint CHECK (VALUE >= 0)");
-      db_query("CREATE DOMAIN biguint bigint CHECK (VALUE >= 0)");
+      db_query("CREATE DOMAIN int_unsigned integer CHECK (VALUE >= 0)");
+      db_query("CREATE DOMAIN smallint_unsigned smallint CHECK (VALUE >= 0)");
+      db_query("CREATE DOMAIN bigint_unsigned bigint CHECK (VALUE >= 0)");
 
       db_query("CREATE TABLE {access} (
         aid serial,
@@ -467,7 +467,7 @@ function system_install() {
         hostname varchar(128) NOT NULL default '',
         timestamp int NOT NULL default '0',
         score int NOT NULL default '0',
-        status smalluint NOT NULL default '0',
+        status smallint_unsigned NOT NULL default '0',
         format smallint NOT NULL default '0',
         thread varchar(255) NOT NULL,
         users text,
@@ -483,26 +483,26 @@ function system_install() {
         last_comment_timestamp int NOT NULL default '0',
         last_comment_name varchar(60) default NULL,
         last_comment_uid int NOT NULL default '0',
-        comment_count uint NOT NULL default '0',
+        comment_count int_unsigned NOT NULL default '0',
         PRIMARY KEY (nid)
       )");
       db_query("CREATE INDEX {node_comment_statistics}_node_comment_timestamp_idx ON {node_comment_statistics} (last_comment_timestamp)");
 
       db_query("CREATE TABLE {files} (
-        fid uint NOT NULL default 0,
-        nid uint NOT NULL default 0,
+        fid int_unsigned NOT NULL default 0,
+        nid int_unsigned NOT NULL default 0,
         filename varchar(255) NOT NULL default '',
         filepath varchar(255) NOT NULL default '',
         filemime varchar(255) NOT NULL default '',
-        filesize uint NOT NULL default 0,
+        filesize int_unsigned NOT NULL default 0,
         PRIMARY KEY (fid)
       )");
 
       db_query("CREATE TABLE {file_revisions} (
-        fid uint NOT NULL default 0,
-        vid uint NOT NULL default 0,
+        fid int_unsigned NOT NULL default 0,
+        vid int_unsigned NOT NULL default 0,
         description varchar(255) NOT NULL default '',
-        list smalluint NOT NULL default 0,
+        list smallint_unsigned NOT NULL default 0,
         PRIMARY KEY (fid, vid)
       )");
 
@@ -538,19 +538,19 @@ function system_install() {
 
       db_query("CREATE TABLE {menu} (
         mid serial CHECK (mid >= 0),
-        pid uint NOT NULL default '0',
+        pid int_unsigned NOT NULL default '0',
         path varchar(255) NOT NULL default '',
         title varchar(255) NOT NULL default '',
         description varchar(255) NOT NULL default '',
         weight smallint NOT NULL default '0',
-        type uint NOT NULL default '0',
+        type int_unsigned NOT NULL default '0',
         PRIMARY KEY (mid)
       )");
       db_query("ALTER SEQUENCE {menu}_mid_seq MINVALUE 2 RESTART 2");
 
       db_query("CREATE TABLE {node} (
         nid serial CHECK (nid >= 0),
-        vid uint NOT NULL default '0',
+        vid int_unsigned NOT NULL default '0',
         type varchar(32) NOT NULL default '',
         title varchar(128) NOT NULL default '',
         uid int NOT NULL default '0',
@@ -576,18 +576,18 @@ function system_install() {
       db_query("CREATE INDEX {node}_nid_idx ON {node} (nid)");
 
       db_query("CREATE TABLE {node_access} (
-        nid uint NOT NULL default '0',
-        gid uint NOT NULL default '0',
+        nid int_unsigned NOT NULL default '0',
+        gid int_unsigned NOT NULL default '0',
         realm varchar(255) NOT NULL default '',
-        grant_view smalluint NOT NULL default '0',
-        grant_update smalluint NOT NULL default '0',
-        grant_delete smalluint NOT NULL default '0',
+        grant_view smallint_unsigned NOT NULL default '0',
+        grant_update smallint_unsigned NOT NULL default '0',
+        grant_delete smallint_unsigned NOT NULL default '0',
         PRIMARY KEY (nid,gid,realm)
       )");
 
       db_query("CREATE TABLE {node_revisions} (
-        nid uint NOT NULL,
-        vid uint NOT NULL,
+        nid int_unsigned NOT NULL,
+        vid int_unsigned NOT NULL,
         uid int NOT NULL default '0',
         title varchar(128) NOT NULL default '',
         body text NOT NULL default '',
@@ -601,6 +601,24 @@ function system_install() {
       db_query("CREATE INDEX {node_revisions}_uid_idx ON {node_revisions} (uid)");
       db_query("CREATE SEQUENCE {node_revisions}_vid_seq INCREMENT 1 START 1");
 
+      db_query("CREATE TABLE {node_type} (
+        type varchar(32) NOT NULL,
+        name varchar(255) NOT NULL default '',
+        module varchar(255) NOT NULL,
+        description text NOT NULL,
+        help text NOT NULL,
+        has_title smallint_unsigned NOT NULL,
+        title_label varchar(255) NOT NULL default '',
+        has_body smallint_unsigned NOT NULL,
+        body_label varchar(255) NOT NULL default '',
+        min_word_count smallint_unsigned NOT NULL,
+        custom smallint NOT NULL DEFAULT '0',
+        modified smallint NOT NULL DEFAULT '0',
+        locked smallint NOT NULL DEFAULT '0',
+        orig_type varchar(255) NOT NULL default '',
+        PRIMARY KEY (type)
+      )");
+
       db_query("CREATE TABLE {url_alias} (
         pid serial CHECK (pid >= 0),
         src varchar(128) NOT NULL default '',
@@ -611,9 +629,9 @@ function system_install() {
       db_query("CREATE INDEX {url_alias}_src_idx ON {url_alias} (src)");
 
       db_query("CREATE TABLE {permission} (
-        rid uint NOT NULL default '0',
+        rid int_unsigned NOT NULL default '0',
         perm text,
-        tid uint NOT NULL default '0'
+        tid int_unsigned NOT NULL default '0'
       )");
       db_query("CREATE INDEX {permission}_rid_idx ON {permission} (rid)");
 
@@ -627,12 +645,12 @@ function system_install() {
       db_query("CREATE TABLE {blocks_roles} (
         module varchar(64) NOT NULL,
         delta varchar(32) NOT NULL,
-        rid uint NOT NULL,
+        rid int_unsigned NOT NULL,
         PRIMARY KEY (module, delta, rid)
       )");
 
       db_query("CREATE TABLE {sessions} (
-        uid uint NOT NULL,
+        uid int_unsigned NOT NULL,
         sid varchar(32) NOT NULL default '',
         hostname varchar(128) NOT NULL default '',
         timestamp int NOT NULL default '0',
@@ -646,15 +664,15 @@ function system_install() {
 /* Only used for MySQL
       db_query("CREATE TABLE {sequences} (
         name varchar(255) NOT NULL default '',
-        id uint NOT NULL default '0',
+        id int_unsigned NOT NULL default '0',
         PRIMARY KEY (name)
       )"); */
 
       db_query("CREATE TABLE {node_counter} (
         nid int NOT NULL default '0',
-        totalcount biguint NOT NULL default '0',
-        daycount uint NOT NULL default '0',
-        timestamp uint NOT NULL default '0',
+        totalcount bigint_unsigned NOT NULL default '0',
+        daycount int_unsigned NOT NULL default '0',
+        timestamp int_unsigned NOT NULL default '0',
         PRIMARY KEY (nid)
       )");
       db_query("CREATE INDEX {node_counter}_totalcount_idx ON {node_counter} (totalcount)");
@@ -677,7 +695,7 @@ function system_install() {
 
       db_query("CREATE TABLE {term_data} (
         tid serial CHECK (tid >= 0),
-        vid uint NOT NULL default '0',
+        vid int_unsigned NOT NULL default '0',
         name varchar(255) NOT NULL default '',
         description text,
         weight smallint NOT NULL default '0',
@@ -686,37 +704,37 @@ function system_install() {
       db_query("CREATE INDEX {term_data}_vid_idx ON {term_data} (vid)");
 
       db_query("CREATE TABLE {term_hierarchy} (
-        tid uint NOT NULL default '0',
-        parent uint NOT NULL default '0',
+        tid int_unsigned NOT NULL default '0',
+        parent int_unsigned NOT NULL default '0',
         PRIMARY KEY (tid, parent)
       )");
       db_query("CREATE INDEX {term_hierarchy}_tid_idx ON {term_hierarchy} (tid)");
       db_query("CREATE INDEX {term_hierarchy}_parent_idx ON {term_hierarchy} (parent)");
 
       db_query("CREATE TABLE {term_node} (
-        nid uint NOT NULL default '0',
-        tid uint NOT NULL default '0',
+        nid int_unsigned NOT NULL default '0',
+        tid int_unsigned NOT NULL default '0',
         PRIMARY KEY (tid,nid)
       )");
       db_query("CREATE INDEX {term_node}_nid_idx ON {term_node} (nid)");
       db_query("CREATE INDEX {term_node}_tid_idx ON {term_node} (tid)");
 
       db_query("CREATE TABLE {term_relation} (
-        tid1 uint NOT NULL default '0',
-        tid2 uint NOT NULL default '0'
+        tid1 int_unsigned NOT NULL default '0',
+        tid2 int_unsigned NOT NULL default '0'
       )");
       db_query("CREATE INDEX {term_relation}_tid1_idx ON {term_relation} (tid1)");
       db_query("CREATE INDEX {term_relation}_tid2_idx ON {term_relation} (tid2)");
 
       db_query("CREATE TABLE {term_synonym} (
-        tid uint NOT NULL default '0',
+        tid int_unsigned NOT NULL default '0',
         name varchar(255) NOT NULL default ''
       )");
       db_query("CREATE INDEX {term_synonym}_tid_idx ON {term_synonym} (tid)");
       db_query("CREATE INDEX {term_synonym}_name_idx ON {term_synonym} (substr(name, 1, 3))");
 
       db_query("CREATE TABLE {users} (
-        uid uint NOT NULL default '0',
+        uid int_unsigned NOT NULL default '0',
         name varchar(60) NOT NULL default '',
         pass varchar(32) NOT NULL default '',
         mail varchar(64) default '',
@@ -741,8 +759,8 @@ function system_install() {
       db_query("CREATE SEQUENCE {users}_uid_seq INCREMENT 1 START 1");
 
       db_query("CREATE TABLE {users_roles} (
-        uid uint NOT NULL default '0',
-        rid uint NOT NULL default '0',
+        uid int_unsigned NOT NULL default '0',
+        rid int_unsigned NOT NULL default '0',
         PRIMARY KEY (uid, rid)
       )");
 
@@ -757,18 +775,18 @@ function system_install() {
         name varchar(255) NOT NULL default '',
         description text,
         help varchar(255) NOT NULL default '',
-        relations smalluint NOT NULL default '0',
-        hierarchy smalluint NOT NULL default '0',
-        multiple smalluint NOT NULL default '0',
-        required smalluint NOT NULL default '0',
-        tags smalluint NOT NULL default '0',
+        relations smallint_unsigned NOT NULL default '0',
+        hierarchy smallint_unsigned NOT NULL default '0',
+        multiple smallint_unsigned NOT NULL default '0',
+        required smallint_unsigned NOT NULL default '0',
+        tags smallint_unsigned NOT NULL default '0',
         module varchar(255) NOT NULL default '',
         weight smallint NOT NULL default '0',
         PRIMARY KEY (vid)
       )");
 
       db_query("CREATE TABLE {vocabulary_node_types} (
-        vid uint NOT NULL DEFAULT '0',
+        vid int_unsigned NOT NULL DEFAULT '0',
         type varchar(32) NOT NULL DEFAULT '',
         PRIMARY KEY (vid, type)
       )");
@@ -778,7 +796,7 @@ function system_install() {
         uid int NOT NULL default '0',
         type varchar(16) NOT NULL default '',
         message text NOT NULL,
-        severity smalluint NOT NULL default '0',
+        severity smallint_unsigned NOT NULL default '0',
         link varchar(255) NOT NULL default '',
         location varchar(128) NOT NULL default '',
         referer varchar(128) NOT NULL default '',

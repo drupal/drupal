@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.install,v 1.4 2006/08/06 23:13:46 drumm Exp $
+// $Id: profile.install,v 1.5 2006/08/15 05:25:20 drumm Exp $
 
 function profile_install() {
   switch ($GLOBALS['db_type']) {
@@ -54,8 +54,8 @@ function profile_install() {
       db_query("CREATE INDEX {profile_fields}_category_idx ON {profile_fields} (category)");
 
       db_query("CREATE TABLE {profile_values} (
-        fid uint default '0',
-        uid uint default '0',
+        fid int_unsigned default '0',
+        uid int_unsigned default '0',
         value text
       )");
       db_query("CREATE INDEX {profile_values}_uid_idx ON {profile_values} (uid)");

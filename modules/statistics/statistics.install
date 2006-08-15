@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.install,v 1.3 2006/08/04 06:58:44 dries Exp $
+// $Id: statistics.install,v 1.4 2006/08/15 05:25:20 drumm Exp $
 
 function statistics_install() {
   switch ($GLOBALS['db_type']) {
@@ -27,9 +27,9 @@ function statistics_install() {
         path varchar(255) default NULL,
         url varchar(255) default NULL,
         hostname varchar(128) default NULL,
-        uid uint default '0',
-        timer uint NOT NULL default '0',
-        timestamp uint NOT NULL default '0',
+        uid int_unsigned default '0',
+        timer int_unsigned NOT NULL default '0',
+        timestamp int_unsigned NOT NULL default '0',
         PRIMARY KEY (aid)
       )");
       db_query("CREATE INDEX {accesslog}_accesslog_timestamp_idx ON {accesslog} (timestamp)");
