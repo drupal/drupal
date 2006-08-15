@@ -1,5 +1,5 @@
 <?php
-// $Id: phptemplate.engine,v 1.39 2006/08/03 07:06:36 dries Exp $
+// $Id: phptemplate.engine,v 1.40 2006/08/15 05:32:46 drumm Exp $
 
 /**
  * @file
@@ -143,7 +143,9 @@ function phptemplate_features() {
 
 /**
  * Prepare the values passed to the theme_page function to be passed
- * into a pluggable template engine.
+ * into a pluggable template engine. Uses the arg() function to
+ * generate a series of page template files suggestions based on the
+ * current path. If none are found, the default page.tpl.php is used.
  */
 function phptemplate_page($content) {
 
@@ -220,6 +222,16 @@ function phptemplate_page($content) {
     $variables['node'] = node_load(arg(1));
   }
 
+  // Build a list of suggested template files in order of specificity. One
+  // suggestion is made for every element of the current path, though
+  // numeric elements are not carried to subsequent suggestions. For example,
+  // http://www.example.com/node/1/edit would result in the following
+  // suggestions:
+  //
+  // page-node-edit.tpl.php
+  // page-node-1.tpl.php
+  // page-node.tpl.php
+  // page.tpl.php
   $i = 0;
   $suggestion = 'page';
   $suggestions = array($suggestion);
@@ -300,10 +312,17 @@ function phptemplate_comment($comment, $links = 0) {
 
 /**
  * Prepare the values passed to the theme_block function to be passed
- * into a pluggable template engine.
+ * into a pluggable template engine. Uses block properties to generate a
+ * series of template file suggestions. If none are found, the default
+ * block.tpl.php is used.
  */
 function phptemplate_block($block) {
-  return _phptemplate_callback('block', array('block' => $block));
+  $suggestions[] = 'block';
+  $suggestions[] = 'block-' . $block->region;
+  $suggestions[] = 'block-' . $block->module;
+  $suggestions[] = 'block-' . $block->module . '-' . $block->delta;
+
+  return _phptemplate_callback('block', array('block' => $block), $suggestions);
 }
 
 /**
