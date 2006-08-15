@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.672 2006/08/14 07:14:49 drumm Exp $
+// $Id: node.module,v 1.673 2006/08/15 05:09:49 drumm Exp $
 
 /**
  * @file
@@ -1062,7 +1062,7 @@ function node_menu($may_cache) {
       'type' => MENU_CALLBACK);
 
     foreach (node_get_types() as $type) {
-      if (module_exist($type->module)) {
+      if (function_exists($type->module .'_form')) {
         $name = check_plain($type->name);
         $type_url_str = str_replace('_', '-', $type->type);
         $items[] = array(
@@ -2010,7 +2010,7 @@ function node_add($type) {
   else {
     // If no (valid) node type has been provided, display a node type overview.
     foreach ($types as $type) {
-      if (module_exist($type->module) && node_access('create', $type->type)) {
+      if (function_exists($type->module .'_form') && node_access('create', $type->type)) {
         $type_url_str = str_replace('_', '-', $type->type);
         $title = t('Add a new %s.', array('%s' => check_plain($type->name)));
         $out = '<dt>'. l($type->name, "node/add/$type_url_str", array('title' => $title)) .'</dt>';
