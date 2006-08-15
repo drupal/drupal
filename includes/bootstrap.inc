@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.112 2006/08/12 11:47:24 dries Exp $
+// $Id: bootstrap.inc,v 1.113 2006/08/15 05:16:23 drumm Exp $
 
 /**
  * @file
@@ -712,5 +712,7 @@ function drupal_maintenance_theme() {
   require_once './includes/common.inc';
   require_once './includes/unicode.inc';
   unicode_check();
+  drupal_add_css(drupal_get_path('module', 'system') .'/defaults.css', 'core');
+  drupal_add_css(drupal_get_path('module', 'system') .'/system.css', 'core');
   $theme = '';
 }
