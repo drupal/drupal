@@ -32,7 +32,7 @@ function search_install() {
       break;
     case 'pgsql':
       db_query("CREATE TABLE {search_dataset} (
-        sid uint NOT NULL default '0',
+        sid int_unsigned NOT NULL default '0',
         type varchar(16) default NULL,
         data text NOT NULL
       )");
@@ -40,9 +40,9 @@ function search_install() {
 
       db_query("CREATE TABLE {search_index} (
         word varchar(50) NOT NULL default '',
-        sid uint NOT NULL default '0',
+        sid int_unsigned NOT NULL default '0',
         type varchar(16) default NULL,
-        fromsid uint NOT NULL default '0',
+        fromsid int_unsigned NOT NULL default '0',
         fromtype varchar(16) default NULL,
         score float default NULL
       )");

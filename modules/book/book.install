@@ -17,8 +17,8 @@ function book_install() {
       break;
     case 'pgsql':
       db_query("CREATE TABLE {book} (
-        vid uint NOT NULL default '0',
-        nid uint NOT NULL default '0',
+        vid int_unsigned NOT NULL default '0',
+        nid int_unsigned NOT NULL default '0',
         parent int NOT NULL default '0',
         weight smallint NOT NULL default '0',
         PRIMARY KEY (vid)
