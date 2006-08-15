@@ -1,3 +1,5 @@
+# $Id: robots.txt,v 1.5 2006/08/15 05:18:16 drumm Exp $
+#
 # robots.txt
 #
 # This file aims to prevent the crawling and idexing of certain parts
