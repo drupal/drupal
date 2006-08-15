@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.91 2006/08/07 21:00:26 dries Exp $
+// $Id: blogapi.module,v 1.92 2006/08/15 21:26:12 dries Exp $
 
 /**
  * @file
@@ -545,14 +545,6 @@ function blogapi_blogger_title(&$contents) {
 }
 
 function blogapi_admin_settings() {
-  $form['blogapi_engine'] = array(
-    '#type' => 'select',
-    '#title' => t('XML-RPC Engine'),
-    '#default_value' => variable_get('blogapi_engine', 0),
-    '#options' => array(0 => 'Blogger', 1 => 'MetaWeblog', 2 => 'Movabletype'),
-    '#description' => t('RSD or Really-Simple-Discovery is a mechanism which allows external blogger tools to discover the APIs they can use to interact with Drupal. Here you can set the preferred method for blogger tools to interact with your site. The common XML-RPC engines are Blogger, MetaWeblog and Movabletype. If you are not sure which is the correct setting, choose Blogger.')
-  );
-
   $node_types = node_get_types('names');
   $defaults = isset($node_types['blog']) ? array('blog' => 1) : array();
   $form['blogapi_node_types'] = array(
@@ -625,8 +617,8 @@ function blogapi_rsd() {
     <homePageLink>$base</homePageLink>
     <apis>
       <api name="MetaWeblog" preferred="false" apiLink="$xmlrpc" blogID="$blogid" />
-      <api name="Blogger" preferred="true" apiLink="$xmlrpc" blogID="$blogid" />
-      <api name="MovableType" preferred="false" apiLink="$xmlrpc" blogID="$blogid" />
+      <api name="Blogger" preferred="false" apiLink="$xmlrpc" blogID="$blogid" />
+      <api name="MovableType" preferred="true" apiLink="$xmlrpc" blogID="$blogid" />
     </apis>
   </service>
 </rsd>
