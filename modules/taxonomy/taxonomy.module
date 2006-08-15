@@ -218,7 +218,7 @@ function taxonomy_form_vocabulary($edit = array()) {
   $form['nodes'] = array('#type' => 'checkboxes',
     '#title' => t('Types'),
     '#default_value' => $edit['nodes'],
-    '#options' => node_get_types(),
+    '#options' => node_get_types('names'),
     '#description' => t('A list of node types you want to associate with this vocabulary.'),
     '#required' => TRUE,
   );
