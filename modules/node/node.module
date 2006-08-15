@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.673 2006/08/15 05:09:49 drumm Exp $
+// $Id: node.module,v 1.674 2006/08/15 07:30:17 drumm Exp $
 
 /**
  * @file
@@ -1048,11 +1048,11 @@ function node_menu($may_cache) {
     );
 
     $items[] = array('path' => 'node', 'title' => t('content'),
-      'callback' => 'node_page',
+      'callback' => 'node_page_default',
       'access' => user_access('access content'),
       'type' => MENU_MODIFIABLE_BY_ADMIN);
     $items[] = array('path' => 'node/add', 'title' => t('create content'),
-      'callback' => 'node_page',
+      'callback' => 'node_add',
       'access' => user_access('access content'),
       'type' => MENU_ITEM_GROUPING,
       'weight' => 1);
@@ -1082,13 +1082,16 @@ function node_menu($may_cache) {
       $node = node_load(arg(1));
       if ($node->nid) {
         $items[] = array('path' => 'node/'. arg(1), 'title' => t('view'),
-          'callback' => 'node_page',
+          'callback' => 'node_page_view',
+          'callback arguments' => array($node),
           'access' => node_access('view', $node),
           'type' => MENU_CALLBACK);
         $items[] = array('path' => 'node/'. arg(1) .'/view', 'title' => t('view'),
-            'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
+          'type' => MENU_DEFAULT_LOCAL_TASK,
+          'weight' => -10);
         $items[] = array('path' => 'node/'. arg(1) .'/edit', 'title' => t('edit'),
-          'callback' => 'node_page',
+          'callback' => 'node_page_edit',
+          'callback arguments' => array($node),
           'access' => node_access('update', $node),
           'weight' => 1,
           'type' => MENU_LOCAL_TASK);
@@ -1994,7 +1997,7 @@ function theme_node_form($form) {
 /**
  * Present a node submission form or a set of links to such forms.
  */
-function node_add($type) {
+function node_add($type = NULL) {
   global $user;
 
   $types = node_get_types();
@@ -2238,7 +2241,7 @@ function node_revisions() {
 }
 
 /**
- * Generate a listing of promoted nodes.
+ * Menu callback; Generate a listing of promoted nodes.
  */
 function node_page_default() {
   $result = pager_query(db_rewrite_sql('SELECT n.nid, n.sticky, n.created FROM {node} n WHERE n.promote = 1 AND n.status = 1 ORDER BY n.sticky DESC, n.created DESC'), variable_get('default_nodes_main', 10));
@@ -2286,67 +2289,34 @@ function node_page_default() {
     );
     $output = '<div id="first-time">'. $output .'</div>';
   }
+  drupal_set_title('');
 
   return $output;
 }
 
 /**
- * Menu callback; dispatches control to the appropriate operation handler.
+ * Menu callback; view a single node.
  */
-function node_page() {
-  $op = arg(1);
+function node_page_view($node, $cid = NULL) {
+  drupal_set_title(check_plain($node->title));
+  return node_show($node, $cid);
+}
 
-  if (is_numeric($op)) {
-    $op = (arg(2) && !is_numeric(arg(2))) ? arg(2) : 'view';
+/**
+ * Menu callback; presents the node editing form, or redirects to delete confirmation.
+ */
+function node_page_edit($node) {
+  if ($_POST['op'] == t('Delete')) {
+    // Note: we redirect from node/nid/edit to node/nid/delete to make the tabs disappear.
+    if ($_REQUEST['destination']) {
+      $destination = drupal_get_destination();
+      unset($_REQUEST['destination']);
+    }
+    drupal_goto('node/'. $node->nid .'/delete', $destination);
   }
 
-  switch ($op) {
-    case 'view':
-      if (is_numeric(arg(1))) {
-        $node = node_load(arg(1));
-        if ($node->nid) {
-          drupal_set_title(check_plain($node->title));
-          return node_show($node, arg(2));
-        }
-        else if (db_result(db_query('SELECT nid FROM {node} WHERE nid = %d', arg(1)))) {
-          drupal_access_denied();
-        }
-        else {
-          drupal_not_found();
-        }
-      }
-      break;
-    case 'add':
-      return node_add(arg(2));
-      break;
-    case 'edit':
-      if ($_POST['op'] == t('Delete')) {
-        // Note: we redirect from node/uid/edit to node/uid/delete to make the tabs disappear.
-        if ($_REQUEST['destination']) {
-          $destination = drupal_get_destination();
-          unset($_REQUEST['destination']);
-        }
-        drupal_goto('node/'. arg(1) .'/delete', $destination);
-      }
-
-      if (is_numeric(arg(1))) {
-        $node = node_load(arg(1));
-        if ($node->nid) {
-          drupal_set_title(check_plain($node->title));
-          return node_form($node);
-        }
-        else if (db_result(db_query('SELECT nid FROM {node} WHERE nid = %d', arg(1)))) {
-          drupal_access_denied();
-        }
-        else {
-          drupal_not_found();
-        }
-      }
-      break;
-    default:
-      drupal_set_title('');
-      return node_page_default();
-  }
+  drupal_set_title(check_plain($node->title));
+  return node_form($node);
 }
 
 /**
