@@ -1,5 +1,5 @@
 <?php
-// $Id: session.inc,v 1.28 2006/05/07 00:08:36 drumm Exp $
+// $Id: session.inc,v 1.29 2006/08/16 13:13:34 dries Exp $
 
 /**
  * @file
@@ -17,38 +17,43 @@ function sess_close() {
 function sess_read($key) {
   global $user;
 
-  // retrieve data for a $user object
-  $result = db_query("SELECT sid FROM {sessions} WHERE sid = '%s'", $key);
-  if (!db_num_rows($result)) {
-    $result = db_query("SELECT u.* FROM {users} u WHERE u.uid = 0");
-  }
-  else {
-    $result = db_query("SELECT u.*, s.* FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.sid = '%s'", $key);
+  // Handle the case of first time visitors and clients that don't store cookies (eg. web crawlers).
+  if (!isset($_COOKIE[session_name()])) {
+    $user = drupal_anonymous_user();
+    return '';
   }
 
-  // Build $user object:
-  $user = db_fetch_object($result);
-  $user = drupal_unpack($user);
+  // Otherwise, if the session is still active, we have a record of the client's session in the database.
+  $user = db_fetch_object(db_query("SELECT u.*, s.* FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.sid = '%s'", $key));
 
-  // Add roles element to $user:
-  $user->roles = array();
-  if ($user->uid) {
+  // We found the client's session record and they are an authenticated user
+  if ($user->uid > 0) {
+    // This is done to unserialize the data member of $user
+    $user = drupal_unpack($user);
+
+    // Add roles element to $user
+    $user->roles = array();
     $user->roles[DRUPAL_AUTHENTICATED_RID] = 'authenticated user';
-
     $result = db_query("SELECT r.rid, r.name FROM {role} r INNER JOIN {users_roles} ur ON ur.rid = r.rid WHERE ur.uid = %d", $user->uid);
     while ($role = db_fetch_object($result)) {
       $user->roles[$role->rid] = $role->name;
     }
   }
-  else {
-    $user->roles[DRUPAL_ANONYMOUS_RID] = 'anonymous user';
+  // We didn't find the client's record (session has expired), or they are an anonymous user.
+  else  {
+    $user = drupal_anonymous_user();
   }
 
-  return !empty($user->session) ? $user->session : '';
+  return $user->session;
 }
 
 function sess_write($key, $value) {
   global $user;
+
+  // If the client doesn't have a session, and one isn't being created ($value), do nothing.
+  if (empty($_COOKIE[session_name()]) && empty($value)) {
+    return TRUE;
+  }
 
   $result = db_query("SELECT sid FROM {sessions} WHERE sid = '%s'", $key);
 
@@ -88,4 +93,3 @@ function sess_gc($lifetime) {
 
   return TRUE;
 }
-

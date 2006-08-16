@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.113 2006/08/15 05:16:23 drumm Exp $
+// $Id: bootstrap.inc,v 1.114 2006/08/16 13:13:34 dries Exp $
 
 /**
  * @file
@@ -608,6 +608,20 @@ function drupal_is_denied($type, $mask) {
   $deny = db_fetch_object(db_query("SELECT * FROM {access} WHERE status = 0 AND type = '%s' AND LOWER('%s') LIKE LOWER(mask)", $type, $mask));
 
   return $deny && !$allow;
+}
+
+/**
+ * Generates a default annonymous $user object.
+ *
+ * @return Object - the user object.
+ */
+function drupal_anonymous_user() {
+  $user = new stdClass();
+  $user->uid = 0;
+  $user->hostname = $_SERVER['REMOTE_ADDR'];
+  $user->roles = array();
+  $user->roles[DRUPAL_ANONYMOUS_RID] = 'anonymous user';
+  return $user;
 }
 
 /**
