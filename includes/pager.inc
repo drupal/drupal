@@ -69,18 +69,10 @@ function pager_query($query, $limit = 10, $element = 0, $count_query = NULL) {
   $pager_page_array = explode(',', $page);
 
   // We calculate the total of pages as ceil(items / limit).
-  if (count($args)) {
-    $pager_total_items[$element] = db_result(db_query($count_query, $args));
-    $pager_total[$element] = ceil($pager_total_items[$element] / $limit);
-    $pager_page_array[$element] = max(0, min((int)$pager_page_array[$element], ((int)$pager_total[$element]) - 1));
-    return db_query_range($query, $args, $pager_page_array[$element] * $limit, $limit);
-  }
-  else {
-    $pager_total_items[$element] = db_result(db_query($count_query));
-    $pager_total[$element] = ceil($pager_total_items[$element] / $limit);
-    $pager_page_array[$element] = max(0, min((int)$pager_page_array[$element], ((int)$pager_total[$element]) - 1));
-    return db_query_range($query, $pager_page_array[$element] * $limit, $limit);
-  }
+  $pager_total_items[$element] = db_result(db_query($count_query, $args));
+  $pager_total[$element] = ceil($pager_total_items[$element] / $limit);
+  $pager_page_array[$element] = max(0, min((int)$pager_page_array[$element], ((int)$pager_total[$element]) - 1));
+  return db_query_range($query, $args, $pager_page_array[$element] * $limit, $limit);
 }
 
 /**
