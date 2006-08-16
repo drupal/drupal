@@ -611,6 +611,20 @@ function drupal_is_denied($type, $mask) {
 }
 
 /**
+ * Generates a default annonymous $user object.
+ *
+ * @return Object - the user object.
+ */
+function drupal_anonymous_user() {
+  $user = new stdClass();
+  $user->uid = 0;
+  $user->hostname = $_SERVER['REMOTE_ADDR'];
+  $user->roles = array();
+  $user->roles[DRUPAL_ANONYMOUS_RID] = 'anonymous user';
+  return $user;
+}
+
+/**
  * A string describing a phase of Drupal to load. Each phase adds to the
  * previous one, so invoking a later phase automatically runs the earlier
  * phases too. The most important usage is that if you want to access
