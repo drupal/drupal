@@ -1,22 +1,25 @@
-# $Id: robots.txt,v 1.5 2006/08/15 05:18:16 drumm Exp $
+# $Id: robots.txt,v 1.6 2006/08/16 22:03:56 dries Exp $
 #
 # robots.txt
 #
-# This file aims to prevent the crawling and idexing of certain parts
+# This file is to prevent the crawling and indexing of certain parts
 # of your site by web crawlers and spiders run by sites like Yahoo!
 # and Google. By telling these "robots" where not to go on your site,
 # you save bandwidth and server resources.
 #
+# This file will be ignored unless it is at the root of your host:
+# Used:    http://example.com/robots.txt
+# Ignored: http://example.com/site/robots.txt
+#
 # For more information about the robots.txt standard, see:
 # http://www.robotstxt.org/wc/robots.html
 #
-# See this site for syntax checking:
+# For syntax checking, see:
 # http://www.sxw.org.uk/computing/robots/check.html
 
 User-agent: *
 Crawl-delay: 10
 # Directories
-Disallow: /files/
 Disallow: /database/
 Disallow: /includes/
 Disallow: /misc/
