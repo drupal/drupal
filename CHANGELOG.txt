@@ -45,6 +45,7 @@ Drupal x.x.x, xxxx-xx-xx (development version)
 - upgrade system:
     * created space for update branches.
 - split up and removed drupal.css.
+- added nested lists generation.
 
 Drupal 4.7.0, 2006-05-01
 ------------------------
