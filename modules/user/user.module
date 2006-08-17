@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.653 2006/08/14 20:35:11 dries Exp $
+// $Id: user.module,v 1.654 2006/08/17 19:19:15 unconed Exp $
 
 /**
  * @file
@@ -1918,6 +1918,10 @@ function user_admin_account() {
     return user_multiple_delete_confirm();
   }
 
+  $output = user_filter_form();
+
+  $filter = user_build_filter_query();
+
   $header = array(
     array(),
     array('data' => t('Username'), 'field' => 'u.name'),
@@ -1928,9 +1932,9 @@ function user_admin_account() {
     t('Operations')
   );
 
-  $sql = 'SELECT u.uid, u.name, u.status, u.created, u.access FROM {users} u WHERE uid != 0';
+  $sql = 'SELECT DISTINCT u.uid, u.name, u.status, u.created, u.access FROM {users} u LEFT JOIN {users_roles} ur ON u.uid = ur.uid '. $filter['join'] .' WHERE u.uid != 0 '. $filter['where'];
   $sql .= tablesort_sql($header);
-  $result = pager_query($sql, 50);
+  $result = pager_query($sql, 50, 0, NULL, $filter['args']);
 
   $form['options'] = array(
     '#type' => 'fieldset',
@@ -2343,3 +2347,193 @@ function user_autocomplete($string) {
   print drupal_to_js($matches);
   exit();
 }
+
+/**
+ * List user administration filters that can be applied.
+ */
+function user_filters() {
+  // Regular filters
+  $filters = array();
+  $roles = user_roles(1);
+  unset($roles[DRUPAL_AUTHENTICATED_RID]); // Don't list authorized role.
+  if (count($roles)) {
+    $filters['role'] = array('title' => t('role'),
+                         'where' => "ur.rid = %d",
+                         'options' => $roles,
+                       );
+  }
+
+  $options = array();
+  $t_module = t('module');
+  foreach (module_list() as $module) {
+    if ($permissions = module_invoke($module, 'perm')) {
+      asort($permissions);
+      foreach ($permissions as $permission) {
+        $options["$module $t_module"][$permission] = $permission;
+      }
+    }
+  }
+  ksort($options);
+  $filters['permission'] = array('title' => t('permission'),
+                             'join' => 'LEFT JOIN {permission} p ON ur.rid = p.rid',
+                             'where' => " ((p.perm IS NOT NULL AND p.perm LIKE '%%%s%%') OR u.uid = 1) ",
+                             'options' => $options,
+                           );
+
+  $filters['status'] = array('title' => t('status'),
+                         'where' => 'u.status = %d',
+                         'options' => array(1 => t('active'), 0 => t('blocked')),
+                       );
+  return $filters;
+}
+
+/**
+ * Build query for user administration filters based on session.
+ */
+function user_build_filter_query() {
+  $filters = user_filters();
+
+  // Build query
+  $where = $args = $join = array();
+  foreach ($_SESSION['user_overview_filter'] as $filter) {
+    list ($key, $value) = $filter;
+    // This checks to see if this permission filter is an enabled permission for the authenticated role.
+    // If so, then all users would be listed, and we can skip adding it to the filter query.
+    if ($key == 'permission') {
+      $account->uid = 'user_filter';
+      $account->roles = array(DRUPAL_AUTHENTICATED_RID => 1);
+      if (user_access($value, $account)) {
+        continue;
+      }
+    }
+    $where[] = $filters[$key]['where'];
+    $args[] = $value;
+    $join[] = $filters[$key]['join'];
+  }
+  $where = count($where) ? 'AND '. implode(' AND ', $where) : '';
+  $join = count($join) ? ' '. implode(' ', array_unique($join)) : '';
+
+  return array('where' => $where,
+           'join' => $join,
+           'args' => $args,
+         );
+}
+
+/**
+ * Return form for user administration filters.
+ */
+function user_filter_form() {
+  $session = &$_SESSION['user_overview_filter'];
+  $session = is_array($session) ? $session : array();
+  $filters = user_filters();
+
+  $i = 0;
+  $form['filters'] = array('#type' => 'fieldset',
+                       '#title' => t('Show only users where'),
+                       '#theme' => 'user_filters',
+                     );
+  foreach ($session as $filter) {
+    list ($type, $value) = $filter;
+    $string = ($i++ ? '<em>and</em> where <strong>%a</strong> is <strong>%b</strong>' : '<strong>%a</strong> is <strong>%b</strong>');
+    // Merge an array of arrays into one if necessary.
+    $options = $type == 'permission' ? call_user_func_array('array_merge', $filters[$type]['options']) : $filters[$type]['options'];
+    $form['filters']['current'][] = array('#value' => t($string, array('%a' => $filters[$type]['title'] , '%b' => $options[$value])));
+  }
+
+  foreach ($filters as $key => $filter) {
+    $names[$key] = $filter['title'];
+    $form['filters']['status'][$key] = array('#type' => 'select',
+                                         '#options' => $filter['options'],
+                                       );
+  }
+
+  $form['filters']['filter'] = array('#type' => 'radios',
+                                 '#options' => $names,
+                               );
+  $form['filters']['buttons']['submit'] = array('#type' => 'submit',
+                                            '#value' => (count($session) ? t('Refine') : t('Filter'))
+                                          );
+  if (count($session)) {
+    $form['filters']['buttons']['undo'] = array('#type' => 'submit',
+                                            '#value' => t('Undo')
+                                          );
+    $form['filters']['buttons']['reset'] = array('#type' => 'submit',
+                                             '#value' => t('Reset')
+                                           );
+  }
+
+  return drupal_get_form('user_filter_form', $form);
+}
+
+/**
+ * Theme user administration filter form.
+ */
+function theme_user_filter_form($form) {
+  $output .= '<div id="user-admin-filter">';
+  $output .= drupal_render($form['filters']);
+  $output .= '</div>';
+  $output .= drupal_render($form);
+  return $output;
+}
+
+/**
+ * Theme user administraton filter selector.
+ */
+function theme_user_filters($form) {
+  $output .= '<ul>';
+  if (sizeof($form['current'])) {
+    foreach (element_children($form['current']) as $key) {
+      $output .= '<li>'. drupal_render($form['current'][$key]) .'</li>';
+    }
+  }
+
+  $output .= '<li><dl class="multiselect">' . (sizeof($form['current']) ? '<dt><em>'. t('and') .'</em> '. t('where') .'</dt>' : '') . '<dd class="a">';
+  foreach(element_children($form['filter']) as $key) {
+    $output .= drupal_render($form['filter'][$key]);
+  }
+  $output .= '</dd>';
+
+  $output .= '<dt>'. t('is') .'</dt>' . '<dd class="b">';
+
+  foreach (element_children($form['status']) as $key) {
+    $output .= drupal_render($form['status'][$key]);
+  }
+  $output .= '</dd>';
+
+  $output .= '</dl>';
+  $output .= '<div class="container-inline" id="user-admin-buttons">'. drupal_render($form['buttons']) .'</div>';
+  $output .= '</li></ul><br class="clear" />';
+
+  return $output;
+}
+
+/**
+ * Process result from user administration filter form.
+ */
+function user_filter_form_submit($form_id, $form_values) {
+  $op = $_POST['op'];
+  $filters = user_filters();
+  switch ($op) {
+    case t('Filter'): case t('Refine'):
+      if (isset($form_values['filter'])) {
+        $filter = $form_values['filter'];
+        // Merge an array of arrays into one if necessary.
+        $options = $filter == 'permission' ? call_user_func_array('array_merge', $filters[$filter]['options']) : $filters[$filter]['options'];
+        if (isset($options[$form_values[$filter]])) {
+          $_SESSION['user_overview_filter'][] = array($filter, $form_values[$filter]);
+        }
+      }
+      break;
+    case t('Undo'):
+      array_pop($_SESSION['user_overview_filter']);
+      break;
+    case t('Reset'):
+      $_SESSION['user_overview_filter'] = array();
+      break;
+    case t('Update'):
+      return;
+  }
+
+  return 'admin/user/user';
+}
+

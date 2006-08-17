@@ -1,4 +1,4 @@
-/* $Id: user.css,v 1.1 2006/08/14 07:14:50 drumm Exp $ */
+/* $Id: user.css,v 1.2 2006/08/17 19:19:15 unconed Exp $ */
 
 #permissions td.module {
   font-weight: bold;
@@ -19,3 +19,15 @@
 #user-login-form {
   text-align: center;
 }
+#user-admin-filter ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+#user-admin-buttons {
+  float: left;
+  margin-left: 0.5em;
+  clear: right;
+}
+
