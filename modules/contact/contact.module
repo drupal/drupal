@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.59 2006/08/10 15:36:55 dries Exp $
+// $Id: contact.module,v 1.60 2006/08/17 09:04:09 drumm Exp $
 
 /**
  * @file
@@ -343,7 +343,7 @@ function contact_mail_user() {
         '#required' => TRUE,
       );
       $form['copy'] = array('#type' => 'checkbox',
-        '#title' => t('Send me a copy.'),
+        '#title' => t('Send yourself a copy.'),
       );
       $form['submit'] = array('#type' => 'submit',
         '#value' => t('Send e-mail'),
@@ -474,7 +474,7 @@ function contact_mail_page() {
         '#required' => TRUE,
       );
       $form['copy'] = array('#type' => 'checkbox',
-        '#title' => t('Send me a copy.'),
+        '#title' => t('Send yourself a copy.'),
       );
       $form['submit'] = array('#type' => 'submit',
         '#value' => t('Send e-mail'),
