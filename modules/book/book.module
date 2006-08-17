@@ -261,7 +261,6 @@ function book_form(&$node) {
   $form['log'] = array(
     '#type' => 'textarea',
     '#title' => t('Log message'),
-    '#default_value' => $node->log,
     '#weight' => 5,
     '#description' => t('An explanation of the additions or updates being made to help other authors understand your motivations.'),
   );
@@ -306,7 +305,6 @@ function book_outline($nid) {
   );
   $form['log'] = array('#type' => 'textarea',
     '#title' => t('Log message'),
-    '#default_value' => $node->log,
     '#description' => t('An explanation to help other authors understand your motivations to put this post into the book.'),
   );
 
