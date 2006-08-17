@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.198 2006/08/14 20:35:10 dries Exp $
+// $Id: update.php,v 1.199 2006/08/17 21:39:47 unconed Exp $
 
 /**
  * @file
@@ -402,7 +402,6 @@ function update_progress_page() {
   // Prevent browser from using cached drupal.js or update.js
   drupal_add_js('misc/progress.js', TRUE);
   drupal_add_js('misc/update.js', TRUE);
-  drupal_add_css(drupal_get_path('module', 'system') .'/admin.css', 'core');
 
   drupal_set_title('Updating');
   $output = '<div id="progress"></div>';

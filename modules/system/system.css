@@ -1,4 +1,4 @@
-/* $Id: system.css,v 1.3 2006/08/16 07:32:16 dries Exp $ */
+/* $Id: system.css,v 1.4 2006/08/17 21:39:47 unconed Exp $ */
 
 /*
 ** HTML elements
@@ -254,6 +254,28 @@ html.js fieldset.collapsed legend a {
   border: 1px solid #ddd;
   border-top-width: 0;
   cursor: s-resize;
+}
+
+/*
+** Progressbar styles
+*/
+.progress {
+  font-weight: bold;
+}
+.progress .bar {
+  background: #fff url(../../misc/progress.gif);
+  border: 1px solid #00375a;
+  height: 1.5em;
+  margin-top: 0.2em;
+}
+.progress .filled {
+  background: #0072b9;
+  height: 1em;
+  border-bottom: 0.5em solid #004a73;
+  width: 0%;
+}
+.progress .percentage {
+  float: right;
 }
 
 /*
