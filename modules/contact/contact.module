@@ -343,7 +343,7 @@ function contact_mail_user() {
         '#required' => TRUE,
       );
       $form['copy'] = array('#type' => 'checkbox',
-        '#title' => t('Send me a copy.'),
+        '#title' => t('Send yourself a copy.'),
       );
       $form['submit'] = array('#type' => 'submit',
         '#value' => t('Send e-mail'),
@@ -474,7 +474,7 @@ function contact_mail_page() {
         '#required' => TRUE,
       );
       $form['copy'] = array('#type' => 'checkbox',
-        '#title' => t('Send me a copy.'),
+        '#title' => t('Send yourself a copy.'),
       );
       $form['submit'] = array('#type' => 'submit',
         '#value' => t('Send e-mail'),
