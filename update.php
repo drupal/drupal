@@ -402,7 +402,6 @@ function update_progress_page() {
   // Prevent browser from using cached drupal.js or update.js
   drupal_add_js('misc/progress.js', TRUE);
   drupal_add_js('misc/update.js', TRUE);
-  drupal_add_css(drupal_get_path('module', 'system') .'/admin.css', 'core');
 
   drupal_set_title('Updating');
   $output = '<div id="progress"></div>';
