@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.147 2006/08/15 05:33:26 drumm Exp $
+// $Id: CHANGELOG.txt,v 1.148 2006/08/17 06:55:25 drumm Exp $
 
 Drupal x.x.x, xxxx-xx-xx (development version)
 ------------------------
@@ -45,6 +45,7 @@ Drupal x.x.x, xxxx-xx-xx (development version)
 - upgrade system:
     * created space for update branches.
 - split up and removed drupal.css.
+- added nested lists generation.
 
 Drupal 4.7.0, 2006-05-01
 ------------------------
