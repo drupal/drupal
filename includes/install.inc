@@ -558,7 +558,7 @@ function st($string, $args = array()) {
 
 /**
  * Helper function: apply the appropriate transformation to st() and t() placeholders.
- */ 
+ */
 function _st(&$value, $key) {
   switch ($key[0]) {
     // Escaped only

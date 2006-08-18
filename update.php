@@ -320,6 +320,15 @@ function update_selection_page() {
   $output = '<p>The version of Drupal you are updating from has been automatically detected. You can select a different version, but you should not need to.</p>';
   $output .= '<p>Click Update to start the update process.</p>';
 
+  drupal_set_title('Drupal database update');
+  // Prevent browser from using cached drupal.js or update.js
+  drupal_add_js('misc/update.js', TRUE);
+  $output .= drupal_get_form('update_script_selection_form');
+
+  return $output;
+}
+
+function update_script_selection_form() {
   $form = array();
   $form['start'] = array(
     '#tree' => TRUE,
@@ -363,13 +372,7 @@ function update_selection_page() {
     '#type' => 'submit',
     '#value' => 'Update',
   );
-
-  drupal_set_title('Drupal database update');
-  // Prevent browser from using cached drupal.js or update.js
-  drupal_add_js('misc/update.js', TRUE);
-  $output .= drupal_get_form('update_script_selection_form', $form);
-
-  return $output;
+  return $form;
 }
 
 function update_update_page() {

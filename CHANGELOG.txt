@@ -44,6 +44,8 @@ Drupal x.x.x, xxxx-xx-xx (development version)
 - removed the archive module.
 - upgrade system:
     * created space for update branches.
+- forms API:
+    * made it possible to programmatically submit forms.
 - split up and removed drupal.css.
 - added nested lists generation.
 

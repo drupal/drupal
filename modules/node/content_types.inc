@@ -207,7 +207,7 @@ function node_type_form($type = NULL) {
     );
   }
 
-  return drupal_get_form('node_type_form', $form);
+  return $form;
 }
 
 /**
