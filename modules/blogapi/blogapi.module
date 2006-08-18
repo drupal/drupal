@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.93 2006/08/18 12:16:57 unconed Exp $
+// $Id: blogapi.module,v 1.94 2006/08/18 18:58:44 dries Exp $
 
 /**
  * @file
@@ -556,7 +556,7 @@ function blogapi_admin_settings() {
     '#description' => t('Select the content types for which you wish to enable posting via blogapi. Each type will appear as a different "blog" in the client application (if supported).')
   );
 
-  return system_settings_form('blogapi_admin_settings', $form);
+  return system_settings_form($form);
 }
 
 function blogapi_menu($may_cache) {
@@ -580,7 +580,8 @@ function blogapi_menu($may_cache) {
       'path' => 'admin/settings/blogapi',
       'title' => t('blog APIs'),
       'description' => t('Configure which content types and engines external blog clients can use.'),
-      'callback' => 'blogapi_admin_settings',
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('blogapi_admin_settings'),
       'access' => user_access('administer site configuration'),
       'type' => MENU_NORMAL_ITEM
     );

@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.346 2006/08/18 12:16:59 unconed Exp $
+// $Id: system.module,v 1.347 2006/08/18 18:58:46 dries Exp $
 
 /**
  * @file
@@ -133,7 +133,8 @@ function system_menu($may_cache) {
       'title' => t('administration theme'),
       'description' => t('Settings for how your administrative pages should look.'),
       'position' => 'left',
-      'callback' => 'system_admin_theme_settings',
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('system_admin_theme_settings'),
       'block callback' => 'system_admin_theme_settings',
       'access' => $access);
 
@@ -142,33 +143,40 @@ function system_menu($may_cache) {
       'path' => 'admin/build/themes',
       'title' => t('themes'),
       'description' => t('Change which theme your site uses or allows users to set.'),
-      'callback' => 'system_themes', 'access' => $access);
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('system_themes'),
+      'access' => $access);
 
     $items[] = array(
       'path' => 'admin/build/themes/select',
       'title' => t('list'),
       'description' => t('Select the default theme.'),
-      'callback' => 'system_themes',
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('system_themes'),
       'access' => $access,
       'type' => MENU_DEFAULT_LOCAL_TASK,
       'weight' => -1);
 
     $items[] = array('path' => 'admin/build/themes/settings',
       'title' => t('configure'),
-      'callback' => 'system_theme_settings',
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('system_theme_settings'),
       'access' => $access,
       'type' => MENU_LOCAL_TASK);
 
     // Theme configuration subtabs
     $items[] = array('path' => 'admin/build/themes/settings/global', 'title' => t('global settings'),
-      'callback' => 'system_theme_settings', 'access' => $access,
-      'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -1);
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('system_theme_settings'),
+      'access' => $access,
+      'type' => MENU_DEFAULT_LOCAL_TASK,
+      'weight' => -1);
 
     foreach (list_themes() as $theme) {
       if ($theme->status) {
         $items[] = array('path' => 'admin/build/themes/settings/'. $theme->name, 'title' => $theme->name,
-        'callback' => 'system_theme_settings', 'callback arguments' => array($theme->name), 'access' => $access,
-        'type' => MENU_LOCAL_TASK);
+        'callback' => 'drupal_get_form', 'callback arguments' => array('system_theme_settings', $theme->name),
+        'access' => $access, 'type' => MENU_LOCAL_TASK);
       }
     }
 
@@ -177,7 +185,8 @@ function system_menu($may_cache) {
       'title' => t('modules'),
       'description' => t('Enable or disable add-on modules for your site.'),
       'weight' => -10,
-      'callback' => 'system_modules',
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('system_modules'),
       'access' => $access);
 
     // Settings:
@@ -185,47 +194,56 @@ function system_menu($may_cache) {
       'path' => 'admin/settings/site-information',
       'title' => t('site information'),
       'description' => t('Change basic site information, such as the site name, slogan, e-mail address, mission, front page and more.'),
-      'callback' => 'system_site_information_settings');
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('system_site_information_settings'));
     $items[] = array(
       'path' => 'admin/settings/error-reporting',
       'title' => t('error reporting'),
       'description' => t('Control how Drupal deals with errors including 403/404 erros as well as PHP error reporting.'),
-      'callback' => 'system_error_reporting_settings');
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('system_error_reporting_settings'));
     $items[] = array(
       'path' => 'admin/settings/page-caching',
       'title' => t('page caching'),
       'description' => t('Enable or disable page caching for anonymous users.'),
-      'callback' => 'system_page_caching_settings');
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('system_page_caching_settings'));
     $items[] = array(
       'path' => 'admin/settings/file-system',
       'title' => t('file system'),
       'description' => t('Tell Drupal where to store uploaded files and how they are accessed.'),
-      'callback' => 'system_file_system_settings');
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('system_file_system_settings'));
     $items[] = array(
       'path' => 'admin/settings/image-toolkit',
       'title' => t('image toolkit'),
       'description' => t('Choose which image toolkit to use if you have installed optional toolkits.'),
-      'callback' => 'system_image_toolkit_settings');
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('system_image_toolkit_settings'));
     $items[] = array(
       'path' => 'admin/content/rss-feed',
       'title' => t('RSS feeds'),
       'description' => t('Configure the number of items per feed and whether feeds should be titles/teasers/full-text.'),
-      'callback' => 'system_rss_feeds_settings');
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('system_rss_feeds_settings'));
     $items[] = array(
       'path' => 'admin/settings/date-time',
       'title' => t('date and time'),
       'description' => t('Settings for how Drupal displays date and time, as well as the system\'s default timezone.'),
-      'callback' => 'system_date_time_settings');
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('system_date_time_settings'));
     $items[] = array(
       'path' => 'admin/settings/site-status',
       'title' => t('site status'),
       'description' => t('Take the site off-line for maintenance or bring it back online.'),
-      'callback' => 'system_site_status_settings');
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('system_site_status_settings'));
     $items[] = array(
       'path' => 'admin/settings/unicode',
       'title' => t('unicode'),
       'description' => t('Unicode string handling settings.'),
-      'callback' => 'system_unicode_settings');
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('system_unicode_settings'));
     $items[] = array(
       'path' => 'admin/settings/cron-status',
       'title' => t('cron status'),
@@ -235,7 +253,8 @@ function system_menu($may_cache) {
       'path' => 'admin/settings/clean-urls',
       'title' => t('clean URLs'),
       'description' => t('Enable or disable clean URLs for your site.'),
-      'callback' => 'system_clean_url_settings');
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('system_clean_url_settings'));
   }
   else {
     /**
@@ -366,8 +385,7 @@ function system_admin_theme_settings() {
   // from being used. Also we want ours first.
   $form['#submit']['system_admin_theme_submit'] = array();
   $form['#submit']['system_settings_form_submit'] = array();
-
-  return system_settings_form('system_admin_theme_form', $form);
+  return system_settings_form($form);
 }
 
 
@@ -504,7 +522,7 @@ function system_site_information_settings() {
     '#description' => t('The home page displays content from this relative URL. If you are not using clean URLs, specify the part after "?q=". If unsure, specify "node".')
   );
 
-  return system_settings_form('system_site_information_settings', $form);
+  return system_settings_form($form);
 }
 
 function system_clean_url_settings() {
@@ -528,7 +546,7 @@ function system_clean_url_settings() {
     }
   }
 
-  return system_settings_form('system_clean_url_settings', $form);
+  return system_settings_form($form);
 }
 
 function system_error_reporting_settings() {
@@ -563,7 +581,7 @@ function system_error_reporting_settings() {
     '#description' => t('The time log entries should be kept. Older entries will be automatically discarded. Requires crontab.')
   );
 
-  return system_settings_form('system_error_reporting_settings', $form);
+  return system_settings_form($form);
 }
 
 function system_page_caching_settings() {
@@ -586,7 +604,7 @@ function system_page_caching_settings() {
     '#description' => t('Enabling the cache will offer a sufficient performance boost for most low-traffic and medium-traffic sites. On high-traffic sites it can become necessary to enforce a minimum cache lifetime. The minimum cache lifetime is the minimum amount of time that will go by before the cache is emptied and recreated. A larger minimum cache lifetime offers better performance, but users will not see new content for a longer period of time.')
   );
 
-  return system_settings_form('system_page_caching_settings', $form);
+  return system_settings_form($form);
 }
 
 function system_file_system_settings() {
@@ -617,7 +635,7 @@ function system_file_system_settings() {
     '#description' => t('If you want any sort of access control on the downloading of files, this needs to be set to <em>private</em>. You can change this at any time, however all download URLs will change and there may be unexpected problems so it is not recommended.')
   );
 
-  return system_settings_form('system_file_system_settings', $form);
+  return system_settings_form($form);
 }
 
 function system_image_toolkit_settings() {
@@ -630,10 +648,11 @@ function system_image_toolkit_settings() {
       '#options' => $toolkits_available
     );
 
-    return system_settings_form('system_image_toolkit_settings', $form);
+    return system_settings_form($form);
   }
   else {
-    return '<p>'. t("No image toolkits found.  Drupal will use PHP's built-in GD library for image handling.") .'</p>';
+    $form['error'] = array('#value' => '<p>'. t("No image toolkits found.  Drupal will use PHP's built-in GD library for image handling.") .'</p>');
+    return $form;
   }
 }
 
@@ -654,7 +673,7 @@ function system_rss_feeds_settings() {
     '#description' => t('Global setting for the length of XML feed items that are output by default.')
   );
 
-  return system_settings_form('system_rss_feeds_settings', $form);
+  return system_settings_form($form);
 }
 
 function system_date_time_settings() {
@@ -732,7 +751,7 @@ function system_date_time_settings() {
     '#description' => t('The first day of the week for calendar views.')
   );
 
-  return system_settings_form('system_date_time_settings', $form);
+  return system_settings_form($form);
 }
 
 function system_site_status_settings() {
@@ -752,11 +771,12 @@ function system_site_status_settings() {
     '#description' => t('Message to show visitors when the site is in off-line mode.')
   );
 
-  return system_settings_form('system_site_status_settings', $form);
+  return system_settings_form($form);
 }
 
 function system_unicode_settings() {
-  return system_settings_form('system_unicode_settings', unicode_settings());
+  $form = unicode_settings();
+  return system_settings_form($form);
 }
 
 function system_cron_status($cron = '') {
@@ -1029,16 +1049,18 @@ function system_initialize_theme_blocks($theme) {
   }
 }
 
-// Add the submit / reset buttons and run drupal_get_form()
-function system_settings_form($form_id, $form) {
+/**
+ * Add default buttons to a form and set its prefix
+ */
+function system_settings_form($form) {
   $form['buttons']['submit'] = array('#type' => 'submit', '#value' => t('Save configuration') );
   $form['buttons']['reset'] = array('#type' => 'submit', '#value' => t('Reset to defaults') );
 
   if (!empty($_POST) && form_get_errors()) {
     drupal_set_message(t('The settings have not been saved because of the errors.'), 'error');
   }
-
-  return drupal_get_form($form_id, $form, 'system_settings_form');
+  $form['#base'] = 'system_settings_form';
+  return $form;
 }
 
 function system_theme_settings_submit($form_id, $values) {
@@ -1122,7 +1144,7 @@ function system_themes() {
   $form['buttons']['submit'] = array('#type' => 'submit', '#value' => t('Save configuration') );
   $form['buttons']['reset'] = array('#type' => 'submit', '#value' => t('Reset to defaults') );
 
-  return drupal_get_form('system_themes', $form);
+  return $form;
 }
 
 function theme_system_themes($form) {
@@ -1221,7 +1243,7 @@ function system_modules() {
 
   $form['buttons']['submit'] = array('#type' => 'submit', '#value' => t('Save configuration'));
 
-  return drupal_get_form('system_modules', $form);
+  return $form;
 }
 
 function theme_system_modules($form) {
@@ -1491,22 +1513,20 @@ function system_theme_settings($key = '') {
   }
   $form['#attributes'] = array('enctype' => 'multipart/form-data');
 
-  return system_settings_form('system_theme_settings', $form);
-
+  return system_settings_form($form);
 }
 
 /**
  * Output a confirmation form
  *
- * This function outputs a complete form for confirming an action. A link is
+ * This function returns a complete form for confirming an action. A link is
  * offered to go back to the item that is being changed in case the user changes
  * his/her mind.
  *
- * You should use $GLOBALS['values']['edit'][$name] (where $name is usually 'confirm') to
- * check if the confirmation was successful.
+ * You can check for the existence of $_POST['edit'][$name] (where $name
+ * is usually 'confirm') to check if the confirmation was successful or
+ * use the regular submit model.
  *
- * @param $form_id
- *   The unique form identifier. Used by the form API to construct the theme.
  * @param $form
  *   Additional elements to inject into the form, for example hidden elements.
  * @param $question
@@ -1524,11 +1544,9 @@ function system_theme_settings($key = '') {
  * @param $name
  *   The internal name used to refer to the confirmation item.
  * @return
- *   A themed HTML string representing the form.
+ *   The form.
  */
-
-function confirm_form($form_id, $form, $question, $path, $description = NULL, $yes = NULL, $no = NULL, $name = 'confirm') {
-
+function confirm_form($form, $question, $path, $description = NULL, $yes = NULL, $no = NULL, $name = 'confirm') {
   $description = ($description) ? $description : t('This action cannot be undone.');
   drupal_set_title($question);
   $form['#attributes'] = array('class' => 'confirmation');
@@ -1538,7 +1556,8 @@ function confirm_form($form_id, $form, $question, $path, $description = NULL, $y
   $form['actions'] = array('#prefix' => '<div class="container-inline">', '#suffix' => '</div>');
   $form['actions']['submit'] = array('#type' => 'submit', '#value' => $yes ? $yes : t('Confirm'));
   $form['actions']['cancel'] = array('#value' => l($no ? $no : t('Cancel'), $path));
-  return drupal_get_form($form_id, $form, 'confirm_form');
+  $form['#base'] = 'confirm_form';
+  return $form;
 }
 
 /**

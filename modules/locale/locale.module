@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.142 2006/08/18 12:16:58 unconed Exp $
+// $Id: locale.module,v 1.143 2006/08/18 18:58:46 dries Exp $
 
 /**
  * @file
@@ -106,7 +106,8 @@ function locale_menu($may_cache) {
     // Language related callbacks
     $items[] = array('path' => 'admin/settings/locale/language/delete',
       'title' => t('confirm'),
-      'callback' => 'locale_admin_manage_delete_form',
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('locale_admin_manage_delete_form'),
       'access' => $access,
       'type' => MENU_CALLBACK);
   }
@@ -314,7 +315,7 @@ function locale_get_plural($count) {
  */
 function locale_admin_manage() {
   include_once './includes/locale.inc';
-  return _locale_admin_manage_screen();
+  return drupal_get_form('_locale_admin_manage_screen');
 }
 
 /**
@@ -338,7 +339,7 @@ function locale_admin_manage_delete_form() {
   }
   else {
     $form['langcode'] = array('#type' => 'value', '#value' => $langcode);
-    return confirm_form('locale_admin_manage_delete_form', $form, t('Are you sure you want to delete the language %name?', array('%name' => t($languages['name'][$langcode]))), 'admin/settings/locale/language/overview', t('Deleting a language will remove all data associated with it. This action cannot be undone.'), t('Delete'), t('Cancel'));
+    return confirm_form($form, t('Are you sure you want to delete the language %name?', array('%name' => t($languages['name'][$langcode]))), 'admin/settings/locale/language/overview', t('Deleting a language will remove all data associated with it. This action cannot be undone.'), t('Delete'), t('Cancel'));
   }
 }
 
@@ -377,7 +378,7 @@ function locale_admin_manage_add() {
  */
 function locale_admin_import() {
   include_once './includes/locale.inc';
-  return _locale_admin_import_screen();
+  return drupal_get_form('_locale_admin_import');
 }
 
 // ---------------------------------------------------------------------------------
@@ -400,7 +401,7 @@ function locale_admin_export() {
 function locale_string_search() {
   include_once './includes/locale.inc';
   $output = _locale_string_seek();
-  $output .= _locale_string_seek_form();
+  $output .= drupal_get_form('_locale_string_seek_form');
   return $output;
 }
 

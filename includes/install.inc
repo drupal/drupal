@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.14 2006/08/18 12:16:57 unconed Exp $
+// $Id: install.inc,v 1.15 2006/08/18 18:58:44 dries Exp $
 
 define('SCHEMA_UNINSTALLED', -1);
 define('SCHEMA_INSTALLED', 0);
@@ -558,7 +558,7 @@ function st($string, $args = array()) {
 
 /**
  * Helper function: apply the appropriate transformation to st() and t() placeholders.
- */ 
+ */
 function _st(&$value, $key) {
   switch ($key[0]) {
     // Escaped only

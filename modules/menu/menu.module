@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.80 2006/08/18 12:16:58 unconed Exp $
+// $Id: menu.module,v 1.81 2006/08/18 18:58:46 dries Exp $
 
 /**
  * @file
@@ -61,14 +61,14 @@ function menu_menu($may_cache) {
 
     $items[] = array('path' => 'admin/build/menu/item/add',
       'title' => t('add menu item'),
-      'callback' => 'menu_edit_item_form',
-      'callback arguments' => array('add'),
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('menu_edit_item_form', 'add'),
       'access' => user_access('administer menu'),
       'type' => MENU_LOCAL_TASK);
     $items[] = array('path' => 'admin/build/menu/item/edit',
       'title' => t('edit menu item'),
-      'callback' => 'menu_edit_item_form',
-      'callback arguments' => array('edit'),
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('menu_edit_item_form', 'edit'),
       'access' => user_access('administer menu'),
       'type' => MENU_CALLBACK);
     $items[] = array('path' => 'admin/build/menu/item/reset',
@@ -83,31 +83,34 @@ function menu_menu($may_cache) {
       'type' => MENU_CALLBACK);
     $items[] = array('path' => 'admin/build/menu/item/delete',
       'title' => t('delete menu item'),
-      'callback' => 'menu_item_delete_form',
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('menu_item_delete_form'),
       'access' => user_access('administer menu'),
       'type' => MENU_CALLBACK);
 
     $items[] = array('path' => 'admin/build/menu/menu/add',
       'title' => t('add menu'),
-      'callback' => 'menu_edit_menu_form',
-      'callback arguments' => array('add'),
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('menu_edit_menu_form', 'add'),
       'access' => user_access('administer menu'),
       'type' => MENU_LOCAL_TASK);
     $items[] = array('path' => 'admin/build/menu/menu/edit',
       'title' => t('edit menu'),
-      'callback' => 'menu_edit_menu_form',
-      'callback arguments' => array('edit'),
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('menu_edit_menu_form', 'edit'),
       'access' => user_access('administer menu'),
       'type' => MENU_CALLBACK);
     $items[] = array('path' => 'admin/build/menu/menu/delete',
       'title' => t('delete menu'),
-      'callback' => 'menu_item_delete_form',
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('menu_item_delete_form'),
       'access' => user_access('administer menu'),
       'type' => MENU_CALLBACK);
 
     $items[] = array('path' => 'admin/build/menu/settings',
       'title' => t('settings'),
-      'callback' => 'menu_configure',
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('menu_configure'),
       'type' => MENU_LOCAL_TASK,
       'weight' => 5,
     );
@@ -308,7 +311,7 @@ function menu_configure() {
     '#description' => t('Choose the menu to be made available in the content authoring form. Only this menu item and its children will be shown.'),
    );
 
-  return system_settings_form('menu_configure', $form);
+  return system_settings_form($form);
 }
 
 /**
@@ -336,9 +339,10 @@ function menu_edit_menu_form($type, $mid = 0) {
   $form['weight'] = array('#type' => 'value', '#value' => $item['weight']);
   $form['type'] = array('#type' => 'value', '#value' => $item['type']);
   $form['submit'] = array('#type' => 'submit', '#value' => t('Submit'));
-
   // Reuse the submit function of menu_edit_item_form.
-  return drupal_get_form('menu_edit_menu_form', $form, 'menu_edit_item_form');
+  $form['#base'] = 'menu_edit_item_form';
+
+  return $form;
 }
 
 /**
@@ -416,7 +420,7 @@ function menu_edit_item_form($type, $mid = 0) {
   $form['mid'] = array('#type' => 'value', '#value' => $item['mid']);
   $form['submit'] = array('#type' => 'submit', '#value' => t('Submit'));
 
-  return drupal_get_form('menu_edit_item_form', $form);
+  return $form;
 }
 
 /**
@@ -447,13 +451,13 @@ function menu_item_delete_form($mid) {
     $message = t('Are you sure you want to delete the custom menu item %item?', array('%item' => $menu->title));
   }
 
-  return confirm_form('menu_confirm_delete_form', $form, $message, 'admin/build/menu', t('This action cannot be undone.'), t('Delete'));
+  return confirm_form($form, $message, 'admin/build/menu', t('This action cannot be undone.'), t('Delete'));
 }
 
 /**
  * Process menu delete form submissions.
  */
-function menu_confirm_delete_form_submit($form_id, $form_values) {
+function menu_item_delete_form_submit($form_id, $form_values) {
   menu_delete_item($form_values['mid']);
 
   $t_args = array('%title' => theme('placeholder', $form_values['title']));
@@ -475,7 +479,7 @@ function menu_confirm_delete_form_submit($form_id, $form_values) {
 function menu_reset_item($mid) {
   if (isset($mid) && $title = db_result(db_query('SELECT title FROM {menu} WHERE mid = %d', $mid))) {
     $form['mid'] = array('#type' => 'value', '#value' => $mid);
-    return confirm_form('menu_reset_item_form', $form, t('Are you sure you want to reset the item %item to its default values?', array('%item' => $title)), 'admin/build/menu', t('Any customizations will be lost. This action cannot be undone.'), t('Reset'));
+    return confirm_form($form, t('Are you sure you want to reset the item %item to its default values?', array('%item' => $title)), 'admin/build/menu', t('Any customizations will be lost. This action cannot be undone.'), t('Reset'));
   }
   else {
     drupal_not_found();
@@ -485,7 +489,7 @@ function menu_reset_item($mid) {
 /**
  * Process menu reset item form submissions.
  */
-function menu_reset_item_form_submit($form_id, $form_values) {
+function menu_reset_item_submit($form_id, $form_values) {
   menu_delete_item($form_values['mid']);
   drupal_set_message(t('The menu item was reset to its default settings.'));
 

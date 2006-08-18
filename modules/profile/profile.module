@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.165 2006/08/18 12:16:58 unconed Exp $
+// $Id: profile.module,v 1.166 2006/08/18 18:58:46 dries Exp $
 
 /**
  * @file
@@ -65,7 +65,8 @@ function profile_menu($may_cache) {
       'callback' => 'profile_admin_overview');
     $items[] = array('path' => 'admin/user/profile/add',
       'title' => t('add field'),
-      'callback' => 'profile_field_form',
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('profile_field_form'),
       'type' => MENU_CALLBACK);
     $items[] = array('path' => 'admin/user/profile/autocomplete',
       'title' => t('profile category autocomplete'),
@@ -74,11 +75,13 @@ function profile_menu($may_cache) {
       'type' => MENU_CALLBACK);
     $items[] = array('path' => 'admin/user/profile/edit',
       'title' => t('edit field'),
-      'callback' => 'profile_field_form',
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('profile_field_form'),
       'type' => MENU_CALLBACK);
     $items[] = array('path' => 'admin/user/profile/delete',
       'title' => t('delete field'),
-      'callback' => 'profile_field_delete',
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('profile_field_delete'),
       'type' => MENU_CALLBACK);
     $items[] = array('path' => 'profile/autocomplete', 'title' => t('profile autocomplete'),
       'callback' => 'profile_autocomplete',
@@ -296,7 +299,7 @@ Unless you know what you are doing, it is highly recommended that you prefix the
   $form['submit'] = array('#type' => 'submit',
     '#value' => t('Save field'),
   );
-  return drupal_get_form('profile_field_form', $form);
+  return $form;
 }
 
 /**
@@ -367,7 +370,10 @@ function profile_field_delete($fid) {
   $form['fid'] = array('#type' => 'value', '#value' => $fid);
   $form['title'] = array('#type' => 'value', '#value' => $field->title);
 
-  return confirm_form('profile_field_delete', $form, t('Are you sure you want to delete the field %field?', array('%field' => $field->title)), 'admin/user/profile', t('This action cannot be undone. If users have entered values into this field in their profile, these entries will also be deleted. If you want to keep the user-entered data, instead of deleting the field you may wish to <a href="@edit-field">edit this field</a> and change it to a hidden profile field so that it may only be accessed by administrators.', array('@edit-field' => url('admin/user/profile/edit/' . $fid))), t('Delete'), t('Cancel'));
+  return confirm_form($form,
+    t('Are you sure you want to delete the field %field?', array('%field' => $field->title)), 'admin/user/profile',
+    t('This action cannot be undone. If users have entered values into this field in their profile, these entries will also be deleted. If you want to keep the user-entered data, instead of deleting the field you may wish to <a href="@edit-field">edit this field</a> and change it to a hidden profile field so that it may only be accessed by administrators.', array('@edit-field' => url('admin/user/profile/edit/' . $fid))),
+    t('Delete'), t('Cancel'));
 }
 
 /**

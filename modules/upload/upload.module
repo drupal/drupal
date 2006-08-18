@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.119 2006/08/18 12:16:59 unconed Exp $
+// $Id: upload.module,v 1.120 2006/08/18 18:58:47 dries Exp $
 
 /**
  * @file
@@ -81,7 +81,8 @@ function upload_menu($may_cache) {
     $items[] = array('path' => 'admin/settings/uploads',
       'title' => t('file uploads'),
       'description' => t('Control how files may be attached to content.'),
-      'callback' => 'upload_admin_settings',
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('upload_admin_settings'),
       'access' => user_access('administer site configuration'),
       'type' => MENU_NORMAL_ITEM);
   }
@@ -252,7 +253,7 @@ function upload_admin_settings() {
     );
   }
 
-  return system_settings_form('upload_admin_settings', $form);
+  return system_settings_form($form);
 }
 
 function upload_download() {

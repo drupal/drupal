@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.298 2006/08/18 12:16:57 unconed Exp $
+// $Id: aggregator.module,v 1.299 2006/08/18 18:58:44 dries Exp $
 
 /**
  * @file
@@ -54,12 +54,14 @@ function aggregator_menu($may_cache) {
       'access' => $edit);
     $items[] = array('path' => 'admin/content/aggregator/add/feed',
       'title' => t('add feed'),
-      'callback' => 'aggregator_form_feed',
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('aggregator_form_feed'),
       'access' => $edit,
       'type' => MENU_LOCAL_TASK);
     $items[] = array('path' => 'admin/content/aggregator/add/category',
       'title' => t('add category'),
-      'callback' => 'aggregator_form_category',
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('aggregator_form_category'),
       'access' => $edit,
       'type' => MENU_LOCAL_TASK);
     $items[] = array('path' => 'admin/content/aggregator/remove',
@@ -78,7 +80,8 @@ function aggregator_menu($may_cache) {
       'weight' => -10);
     $items[] = array('path' => 'admin/content/aggregator/settings',
       'title' => t('settings'),
-      'callback' => 'aggregator_admin_settings',
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('aggregator_admin_settings'),
       'type' => MENU_LOCAL_TASK,
       'weight' => 10,
       'access' => $edit);
@@ -170,25 +173,25 @@ function aggregator_menu($may_cache) {
         }
       }
     }
-    else if (arg(1) == 'aggregator' && is_numeric(arg(4))) {
-      if (arg(3) == 'feed') {
-        $feed = aggregator_get_feed(arg(4));
+    else if (arg(2) == 'aggregator' && is_numeric(arg(5))) {
+      if (arg(4) == 'feed') {
+        $feed = aggregator_get_feed(arg(5));
         if ($feed) {
           $items[] = array('path' => 'admin/content/aggregator/edit/feed/'. $feed['fid'],
             'title' => t('edit feed'),
-            'callback' => 'aggregator_form_feed',
-            'callback arguments' => array($feed),
+            'callback' => 'drupal_get_form',
+            'callback arguments' => array('aggregator_form_feed', $feed),
             'access' => $edit,
             'type' => MENU_CALLBACK);
         }
       }
       else {
-        $category = aggregator_get_category(arg(4));
+        $category = aggregator_get_category(arg(5));
         if ($category) {
           $items[] = array('path' => 'admin/content/aggregator/edit/category/'. $category['cid'],
             'title' => t('edit category'),
-            'callback' => 'aggregator_form_category',
-            'callback arguments' => array($category),
+            'callback' => 'drupal_get_form',
+            'callback arguments' => array('aggregator_form_category', $category),
             'access' => $edit,
             'type' => MENU_CALLBACK);
         }
@@ -227,7 +230,7 @@ function aggregator_admin_settings() {
     '#description' => t('The type of category selection widget which is shown on categorization pages. Checkboxes are easier to use; a multiple selector is good for working with large numbers of categories.')
   );
 
-  return system_settings_form('aggregator_admin_settings', $form);
+  return system_settings_form($form);
 }
 
 /**
@@ -336,7 +339,7 @@ function aggregator_block($op, $delta = 0, $edit = array()) {
     $form['cid'] = array('#type' => 'hidden', '#value' => $edit['cid']);
   }
 
-  return drupal_get_form('aggregator_form_category', $form);
+  return $form;
 }
 
 /**
@@ -467,7 +470,7 @@ function aggregator_form_feed($edit = array()) {
     $form['fid'] = array('#type' => 'hidden', '#value' => $edit['fid']);
   }
 
-  return drupal_get_form('aggregator_form_feed', $form);
+  return $form;
 }
 
 /**
@@ -1049,28 +1052,16 @@ function aggregator_page_category() {
   return _aggregator_page_list('SELECT i.*, f.title AS ftitle, f.link AS flink FROM {aggregator_category_item} c LEFT JOIN {aggregator_item} i ON c.iid = i.iid LEFT JOIN {aggregator_feed} f ON i.fid = f.fid WHERE cid = '. $category->cid .' ORDER BY timestamp DESC, iid DESC', arg(3));
 }
 
-/**
- * Prints an aggregator page listing a number of feed items. Various
- * menu callbacks use this function to print their feeds.
- */
-function _aggregator_page_list($sql, $op, $header = '') {
-  $categorize = (user_access('administer news feeds') && ($op == 'categorize'));
-
-  $output = '<div id="aggregator">';
-
+function aggregator_page_list($sql, $header, $categorize) {
   $form['header'] = array('#value' => $header);
-  $output .= $form['header']['#value'];
-
   $result = pager_query($sql, 20);
   $categories = array();
   $done = FALSE;
+  $form['items'] = array();
   while ($item = db_fetch_object($result)) {
     $form['items'][$item->iid] = array('#value' => theme('aggregator_page_item', $item));
-    $output .= $form['items'][$item->iid]['#value'];
     $form['categories'][$item->iid] = array();
-
     if ($categorize) {
-
       $categories_result = db_query('SELECT c.cid, c.title, ci.iid FROM {aggregator_category} c LEFT JOIN {aggregator_category_item} ci ON c.cid = ci.cid AND ci.iid = %d', $item->iid);
       $selected = array();
       while ($category = db_fetch_object($categories_result)) {
@@ -1089,11 +1080,8 @@ function _aggregator_page_list($sql, $op, $header = '') {
       );
     }
   }
-  $output .= '</div>';
   $form['submit'] = array('#type' => 'submit', '#value' => t('Save categories'));
   $form['pager'] = array('#value' => theme('pager', NULL, 20, 0));
-  $output .= $form['pager']['#value'];
-
   // arg(1) is undefined if we are at the top aggregator URL
   // is there a better way to do this?
   if (!arg(1)) {
@@ -1102,9 +1090,30 @@ function _aggregator_page_list($sql, $op, $header = '') {
   elseif (arg(1) == 'categories' && arg(2) && !arg(3)) {
     $form['feed_icon'] = array('#value' => theme('feed_icon', url('aggregator/rss/' . arg(2))));
   }
-  $output .= $form['feed_icon']['#value'];
+  return $form;
+}
 
-  return ($categorize) ? drupal_get_form('aggregator_page_list', $form) : $output;
+/**
+ * Prints an aggregator page listing a number of feed items. Various
+ * menu callbacks use this function to print their feeds.
+ */
+function _aggregator_page_list($sql, $op, $header = '') {
+  $categorize = (user_access('administer news feeds') && ($op == 'categorize'));
+  $form = drupal_retrieve_form('aggregator_page_list', $sql, $header, $categorize);
+  if ($categorize) {
+    return $form;
+  }
+  else {
+    $output = '<div id="aggregator">';
+    $output .= $header;
+    foreach ($form['items'] as $item) {
+      $output .= $item['#value'];
+    }
+    $output .= '</div>';
+    $output .= $form['pager']['#value'];
+    $output .= $form['feed_icon']['#value'];
+    return $output;
+  }
 }
 
 function theme_aggregator_page_list($form) {

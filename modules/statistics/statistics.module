@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.236 2006/08/18 12:16:59 unconed Exp $
+// $Id: statistics.module,v 1.237 2006/08/18 18:58:46 dries Exp $
 
 /**
  * @file
@@ -152,7 +152,8 @@ function statistics_menu($may_cache) {
       'path' => 'admin/logs/settings',
       'title' => t('access log settings'),
       'description' => t('Control details about what and how your site logs.'),
-      'callback' => 'statistics_access_logging_settings',
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('statistics_access_logging_settings'),
       'access' => user_access('administer site configuration'),
       'type' => MENU_NORMAL_ITEM
     );
@@ -400,7 +401,7 @@ function statistics_access_logging_settings() {
     '#options' => $options,
     '#description' => t('Increment a counter each time content is viewed.'));
 
-  return system_settings_form('statistics_access_logging_settings', $form);
+  return system_settings_form($form);
 }
 
 /**

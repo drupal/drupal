@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.348 2006/08/18 12:16:58 unconed Exp $
+// $Id: forum.module,v 1.349 2006/08/18 18:58:45 dries Exp $
 
 /**
  * @file
@@ -64,17 +64,20 @@ function forum_menu($may_cache) {
       'weight' => -10);
     $items[] = array('path' => 'admin/content/forum/add/container',
       'title' => t('add container'),
-      'callback' => 'forum_form_container',
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('forum_form_container'),
       'access' => user_access('administer forums'),
       'type' => MENU_LOCAL_TASK);
     $items[] = array('path' => 'admin/content/forum/add/forum',
       'title' => t('add forum'),
-      'callback' => 'forum_form_forum',
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('forum_form_forum'),
       'access' => user_access('administer forums'),
       'type' => MENU_LOCAL_TASK);
     $items[] = array('path' => 'admin/content/forum/settings',
       'title' => t('settings'),
-      'callback' => 'forum_admin_settings',
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('forum_admin_settings'),
       'weight' => 5,
       'access' => user_access('administer forums'),
       'type' => MENU_LOCAL_TASK);
@@ -183,7 +186,6 @@ function forum_taxonomy($op, $type, $term = NULL) {
 }
 
 function forum_admin_settings() {
-
   $form = array();
   $number = drupal_map_assoc(array(5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 80, 100, 150, 200, 250, 300, 350, 400, 500));
   $form['forum_hot_topic'] = array('#type' => 'select',
@@ -206,8 +208,7 @@ function forum_admin_settings() {
     '#options' => $forder,
     '#description' => t('The default display order for topics.'),
   );
-
-  return system_settings_form('forum_admin_configure', $form);
+  return system_settings_form($form);
 }
 
 /**
@@ -445,7 +446,7 @@ function forum_delete(&$node) {
 function forum_form_container($edit = array()) {
   // Handle a delete operation.
   if ($_POST['op'] == t('Delete') || $_POST['edit']['confirm']) {
-    return _forum_confirm_delete($edit['tid']);
+    return forum_confirm_delete($edit['tid']);
   }
 
   $form['name'] = array(
@@ -481,8 +482,9 @@ function forum_form_container($edit = array()) {
     $form['delete'] = array('#type' => 'submit', '#value' => t('Delete'));
     $form['tid'] = array('#type' => 'value', '#value' => $edit['tid']);
   }
+  $form['#base'] = 'forum_form';
 
-  return drupal_get_form('forum_form_container', $form, 'forum_form');
+  return $form;
 }
 
 /**
@@ -493,7 +495,7 @@ function forum_form_container($edit = array()) {
 function forum_form_forum($edit = array()) {
   // Handle a delete operation.
   if ($_POST['op'] == t('Delete') || $_POST['edit']['confirm']) {
-    return _forum_confirm_delete($edit['tid']);
+    return forum_confirm_delete($edit['tid']);
   }
 
   $form['name'] = array('#type' => 'textfield',
@@ -522,8 +524,9 @@ function forum_form_forum($edit = array()) {
     $form['delete'] = array('#type' => 'submit', '#value' => t('Delete'));
     $form['tid'] = array('#type' => 'hidden', '#value' => $edit['tid']);
   }
+  $form['#base'] = 'forum_form';
 
-  return drupal_get_form('forum_form_forum', $form, 'forum_form');
+  return $form;
 }
 
 /**
@@ -561,13 +564,13 @@ function forum_form_submit($form_id, $form_values) {
  *
  * @param $tid ID of the term to be deleted
  */
-function _forum_confirm_delete($tid) {
+function forum_confirm_delete($tid) {
   $term = taxonomy_get_term($tid);
 
   $form['tid'] = array('#type' => 'value', '#value' => $tid);
   $form['name'] = array('#type' => 'value', '#value' => $term->name);
 
-  return confirm_form('forum_confirm_delete', $form, t('Are you sure you want to delete the forum %name?', array('%name' => $term->name)), 'admin/content/forums', t('Deleting a forum or container will delete all sub-forums and associated posts as well. This action cannot be undone.'), t('Delete'), t('Cancel'));
+  return confirm_form($form, t('Are you sure you want to delete the forum %name?', array('%name' => $term->name)), 'admin/content/forums', t('Deleting a forum or container will delete all sub-forums and associated posts as well. This action cannot be undone.'), t('Delete'), t('Cancel'));
 }
 
 /**

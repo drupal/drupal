@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.88 2006/08/18 12:16:58 unconed Exp $
+// $Id: path.module,v 1.89 2006/08/18 18:58:46 dries Exp $
 
 /**
  * @file
@@ -55,17 +55,20 @@ function path_menu($may_cache) {
       'callback' => 'path_admin',
       'access' => user_access('administer url aliases'));
     $items[] = array('path' => 'admin/build/path/edit', 'title' => t('edit alias'),
-      'callback' => 'path_admin_edit',
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('path_admin_edit'),
       'access' => user_access('administer url aliases'),
       'type' => MENU_CALLBACK);
     $items[] = array('path' => 'admin/build/path/delete', 'title' => t('delete alias'),
-      'callback' => 'path_admin_delete_confirm',
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('path_admin_delete_confirm'),
       'access' => user_access('administer url aliases'),
       'type' => MENU_CALLBACK);
     $items[] = array('path' => 'admin/build/path/list', 'title' => t('list'),
       'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
     $items[] = array('path' => 'admin/build/path/add', 'title' => t('add alias'),
-      'callback' => 'path_admin_edit',
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('path_admin_edit'),
       'access' => user_access('administer url aliases'),
       'type' => MENU_LOCAL_TASK);
   }
@@ -103,7 +106,7 @@ function path_admin_delete_confirm($pid) {
   $path = path_load($pid);
   if (user_access('administer url aliases')) {
     $form['pid'] = array('#type' => 'value', '#value' => $pid);
-    $output = confirm_form('path_admin_delete_confirm', $form,
+    $output = confirm_form($form,
   t('Are you sure you want to delete path alias %title?', array('%title' => $path['dst'])),
    $_GET['destination'] ? $_GET['destination'] : 'admin/build/path', t('This action cannot be undone.'),
   t('Delete'), t('Cancel') );
@@ -193,7 +196,7 @@ function path_form($edit = '') {
     $form['submit'] = array('#type' => 'submit', '#value' => t('Create new alias'));
   }
 
-  return drupal_get_form('path_form', $form);
+  return $form;
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.475 2006/08/18 12:16:57 unconed Exp $
+// $Id: comment.module,v 1.476 2006/08/18 18:58:45 dries Exp $
 
 /**
  * @file
@@ -104,7 +104,8 @@ function comment_menu($may_cache) {
       'path' => 'admin/content/comment',
       'title' => t('comments'),
       'description' => t('List and edit site comments and the comment moderation queue.'),
-      'callback' => 'comment_admin_overview',
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('comment_admin_overview'),
       'access' => $access
     );
 
@@ -116,14 +117,16 @@ function comment_menu($may_cache) {
     $items[] = array('path' => 'admin/content/comment/list/new', 'title' => t('published comments'),
       'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
     $items[] = array('path' => 'admin/content/comment/list/approval', 'title' => t('approval queue'),
-      'callback' => 'comment_admin_overview', 'access' => $access,
-      'callback arguments' => array('approval'),
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('comment_admin_overview', 'approval'),
+      'access' => $access,
       'type' => MENU_LOCAL_TASK);
 
     $items[] = array(
       'path' => 'admin/content/comment/settings',
       'title' => t('settings'),
-      'callback' => 'comment_admin_settings',
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('comment_admin_settings'),
       'access' => $access,
       'weight' => 10,
       'type' => MENU_LOCAL_TASK);
@@ -133,7 +136,8 @@ function comment_menu($may_cache) {
 
     $access = user_access('post comments');
     $items[] = array('path' => 'comment/edit', 'title' => t('edit comment'),
-      'callback' => 'comment_edit', 'access' => $access, 'type' => MENU_CALLBACK);
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('comment_edit'), 'access' => $access, 'type' => MENU_CALLBACK);
   }
   else {
     if (arg(0) == 'comment' && arg(1) == 'reply' && is_numeric(arg(2))) {
@@ -466,7 +470,7 @@ function comment_admin_settings() {
     '#options' => array(t('Display on separate page'), t('Display below post or comments')),
   );
 
-  return system_settings_form('comment_admin_settings', $form);
+  return system_settings_form($form);
 }
 
 /**
@@ -496,7 +500,7 @@ function comment_edit($cid) {
   $comment = drupal_unpack($comment);
   $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
   if (comment_access('edit', $comment)) {
-    return comment_form((array)$comment);
+    return comment_form_box((array)$comment);
   }
   else {
     drupal_access_denied();
@@ -517,7 +521,7 @@ function comment_reply($nid, $pid = NULL) {
 
     if ($op == t('Preview comment')) {
       if (user_access('post comments')) {
-        $output .= comment_form(array('pid' => $pid, 'nid' => $nid), NULL);
+        $output .= comment_form_box(array('pid' => $pid, 'nid' => $nid), NULL);
       }
       else {
         drupal_set_message(t('You are not authorized to post comments.'), 'error');
@@ -553,7 +557,7 @@ function comment_reply($nid, $pid = NULL) {
         drupal_goto("node/$nid");
       }
       else if (user_access('post comments')) {
-        $output .= comment_form(array('pid' => $pid, 'nid' => $nid), t('Reply'));
+        $output .= comment_form_box(array('pid' => $pid, 'nid' => $nid), t('Reply'));
       }
       else {
         drupal_set_message(t('You are not authorized to post comments.'), 'error');
@@ -891,7 +895,7 @@ function comment_render($node, $cid = 0) {
       // Start a form, for use with comment control.
       $result = pager_query($query, $comments_per_page, 0, $query_count, $query_args);
       if (db_num_rows($result) && (variable_get('comment_controls', COMMENT_CONTROLS_HIDDEN) == COMMENT_CONTROLS_ABOVE || variable_get('comment_controls', COMMENT_CONTROLS_HIDDEN) == COMMENT_CONTROLS_ABOVE_BELOW)) {
-        $output .= comment_controls($mode, $order, $comments_per_page);
+        $output .= drupal_get_form('comment_controls', $mode, $order, $comments_per_page);
       }
 
       while ($comment = db_fetch_object($result)) {
@@ -916,13 +920,13 @@ function comment_render($node, $cid = 0) {
       $output .= theme('pager', NULL, $comments_per_page, 0);
 
       if (db_num_rows($result) && (variable_get('comment_controls', COMMENT_CONTROLS_HIDDEN) == COMMENT_CONTROLS_BELOW || variable_get('comment_controls', COMMENT_CONTROLS_HIDDEN) == COMMENT_CONTROLS_ABOVE_BELOW)) {
-        $output .= comment_controls($mode, $order, $comments_per_page);
+        $output .= drupal_get_form('comment_controls', $mode, $order, $comments_per_page);
       }
     }
 
     // If enabled, show new comment form.
     if (user_access('post comments') && node_comment_mode($nid) == COMMENT_NODE_READ_WRITE && (variable_get('comment_form_location', COMMENT_FORM_SEPARATE_PAGE) == COMMENT_FORM_BELOW)) {
-      $output .= comment_form(array('nid' => $nid), t('Post new comment'));
+      $output .= comment_form_box(array('nid' => $nid), t('Post new comment'));
     }
 
     $output = theme('comment_wrapper', $output);
@@ -956,19 +960,23 @@ function comment_delete($cid) {
     drupal_goto("node/$comment->nid");
   }
   else if (is_object($comment) && is_numeric($comment->cid)) {
-    $output = confirm_form('comment_confirm_delete',
-                    array(),
-                    t('Are you sure you want to delete the comment %title?', array('%title' => $comment->subject)),
-                    'node/'. $comment->nid,
-                    t('Any replies to this comment will be lost. This action cannot be undone.'),
-                    t('Delete'),
-                    t('Cancel'));
+    $output = drupal_get_form('comment_confirm_delete', $subject, $nid);
   }
   else {
     drupal_set_message(t('The comment no longer exists.'));
   }
 
   return $output;
+}
+
+function comment_confirm_delete($subject, $nid) {
+  return confirm_form(
+    array(),
+    t('Are you sure you want to delete the comment %title?', array('%title' => $comment->subject)),
+    'node/'. $nid,
+    t('Any replies to this comment will be lost. This action cannot be undone.'),
+    t('Delete'),
+    t('Cancel'));
 }
 
 /**
@@ -1014,7 +1022,7 @@ function comment_admin_overview($type = 'new') {
     '#prefix' => '<div class="container-inline">', '#suffix' => '</div>'
   );
   $options = array();
-  foreach (comment_operations(arg(3) == 'approval' ? 'publish' : 'unpublish') as $key => $value) {
+  foreach (comment_operations(arg(4) == 'approval' ? 'publish' : 'unpublish') as $key => $value) {
     $options[$key] = $value[0];
   }
   $form['options']['operation'] = array('#type' => 'select', '#options' => $options, '#default_value' => 'publish');
@@ -1043,7 +1051,7 @@ function comment_admin_overview($type = 'new') {
   }
   $form['comments'] = array('#type' => 'checkboxes', '#options' => $comments);
   $form['pager'] = array('#value' => theme('pager', NULL, 50, 0));
-  return drupal_get_form('comment_admin_overview', $form);
+  return $form;
 }
 
 /**
@@ -1136,7 +1144,7 @@ function comment_multiple_delete_confirm() {
     drupal_goto('admin/content/comment');
   }
   else {
-    return confirm_form('comment_multiple_delete_confirm', $form,
+    return confirm_form($form,
                         t('Are you sure you want to delete these comments and all their children?'),
                         'admin/content/comment', t('This action cannot be undone.'),
                         t('Delete comments'), t('Cancel'));
@@ -1421,8 +1429,11 @@ function comment_form($edit, $title = NULL) {
 
   // Graft in extra form additions
   $form = array_merge($form, comment_invoke_comment($form, 'form'));
+  return $form;
+}
 
-  return theme('box', $title, drupal_get_form('comment_form', $form));
+function comment_form_box($edit, $title = NULL) {
+  return theme('box', $title, drupal_get_form('comment_form', $edit, $title));
 }
 
 function comment_form_add_preview($form, $edit) {
@@ -1575,7 +1586,7 @@ function comment_controls($mode = COMMENT_MODE_THREADED_EXPANDED, $order = COMME
     '#weight' => 20,
   );
 
-  return drupal_get_form('comment_controls', $form);
+  return $form;
 }
 
 function theme_comment_controls($form) {
@@ -1855,3 +1866,4 @@ function int2vancode($i = 0) {
 function vancode2int($c = '00') {
   return base_convert(substr($c, 1), 36, 10);
 }
+

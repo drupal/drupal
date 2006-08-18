@@ -1,5 +1,5 @@
 <?php
-// $Id: throttle.module,v 1.64 2006/08/18 12:16:59 unconed Exp $
+// $Id: throttle.module,v 1.65 2006/08/18 18:58:46 dries Exp $
 
 /**
  * @file
@@ -14,7 +14,8 @@ function throttle_menu($may_cache) {
       'path' => 'admin/settings/throttle',
       'description' => t('Control how your site cuts out content during heavy load.'),
       'title' => t('throttle'),
-      'callback' => 'throttle_admin_settings',
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('throttle_admin_settings'),
       'access' => user_access('administer site configuration'),
       'type' => MENU_NORMAL_ITEM
     );
@@ -168,5 +169,5 @@ function throttle_admin_settings() {
     '#description' => t('The auto-throttle probability limiter is an efficiency mechanism to statistically reduce the overhead of the auto-throttle. The limiter is expressed as a percentage of page views, so for example if set to the default of 10% we only perform the extra database queries to update the throttle status 1 out of every 10 page views. The busier your site, the lower you should set the limiter value.')
   );
 
-  return system_settings_form('throttle_admin_settings', $form);
+  return system_settings_form($form);
 }

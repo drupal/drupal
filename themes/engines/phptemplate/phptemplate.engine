@@ -1,5 +1,5 @@
 <?php
-// $Id: phptemplate.engine,v 1.40 2006/08/15 05:32:46 drumm Exp $
+// $Id: phptemplate.engine,v 1.41 2006/08/18 18:58:47 dries Exp $
 
 /**
  * @file
@@ -206,7 +206,7 @@ function phptemplate_page($content) {
     'messages'            => theme('status_messages'),
     'mission'             => isset($mission) ? $mission : '',
     'primary_links'       => menu_primary_links(),
-    'search_box'          => (theme_get_setting('toggle_search') ? search_box() : ''),
+    'search_box'          => (theme_get_setting('toggle_search') ? drupal_get_form('search_theme_form') : ''),
     'secondary_links'     => menu_secondary_links(),
     'sidebar_left'        => $sidebar_left,
     'sidebar_right'       => $sidebar_right,

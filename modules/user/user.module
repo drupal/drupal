@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.655 2006/08/18 12:16:59 unconed Exp $
+// $Id: user.module,v 1.656 2006/08/18 18:58:47 dries Exp $
 
 /**
  * @file
@@ -469,6 +469,35 @@ function user_user($type, &$edit, &$user, $category = NULL) {
   }
 }
 
+function user_login_block() {
+  $form = array(
+    '#action' => url($_GET['q'], drupal_get_destination()),
+    '#id' => 'user-login-form',
+    '#base' => 'user_login',
+  );
+  $form['name'] = array('#type' => 'textfield',
+    '#title' => t('Username'),
+    '#maxlength' => 60,
+    '#size' => 15,
+    '#required' => TRUE,
+  );
+  $form['pass'] = array('#type' => 'password',
+    '#title' => t('Password'),
+    '#size' => 15,
+    '#required' => TRUE,
+  );
+  $form['submit'] = array('#type' => 'submit',
+    '#value' => t('Log in'),
+  );
+  $items = array();
+  if (variable_get('user_register', 1)) {
+    $items[] = l(t('Create new account'), 'user/register', array('title' => t('Create a new user account.')));
+  }
+  $items[] = l(t('Request new password'), 'user/password', array('title' => t('Request new password via e-mail.')));
+  $form['links'] = array('#value' => theme('item_list', $items));
+  return $form;
+}
+
 /**
  * Implementation of hook_block().
  */
@@ -501,31 +530,9 @@ function user_block($op = 'list', $delta = 0, $edit = array()) {
       case 0:
         // For usability's sake, avoid showing two login forms on one page.
         if (!$user->uid && !(arg(0) == 'user' && !is_numeric(arg(1)))) {
-          $form['#action'] = url($_GET['q'], drupal_get_destination());
-          $form['#id'] = 'user-login-form';
-          $form['name'] = array('#type' => 'textfield',
-            '#title' => t('Username'),
-            '#maxlength' => 60,
-            '#size' => 15,
-            '#required' => TRUE,
-          );
-          $form['pass'] = array('#type' => 'password',
-            '#title' => t('Password'),
-            '#size' => 15,
-            '#required' => TRUE,
-          );
-          $form['submit'] = array('#type' => 'submit',
-            '#value' => t('Log in'),
-          );
-
-          if (variable_get('user_register', 1)) {
-            $items[] = l(t('Create new account'), 'user/register', array('title' => t('Create a new user account.')));
-          }
-          $items[] = l(t('Request new password'), 'user/password', array('title' => t('Request new password via e-mail.')));
-          $form['links'] = array('#value' => theme('item_list', $items));
 
           $block['subject'] = t('User login');
-          $block['content'] = drupal_get_form('user_login_block', $form, 'user_login');
+          $block['content'] = drupal_get_form('user_login_block');
         }
         return $block;
 
@@ -670,20 +677,20 @@ function user_menu($may_cache) {
 
   if ($may_cache) {
     $items[] = array('path' => 'user', 'title' => t('user account'),
-      'callback' => 'user_login', 'access' => TRUE, 'type' => MENU_CALLBACK);
+      'callback' => 'drupal_get_form', 'callback arguments' => array('user_login'), 'access' => TRUE, 'type' => MENU_CALLBACK);
 
     $items[] = array('path' => 'user/autocomplete', 'title' => t('user autocomplete'),
       'callback' => 'user_autocomplete', 'access' => $view_access, 'type' => MENU_CALLBACK);
 
     // Registration and login pages.
     $items[] = array('path' => 'user/login', 'title' => t('log in'),
-      'callback' => 'user_login', 'type' => MENU_DEFAULT_LOCAL_TASK);
+      'callback' => 'drupal_get_form', 'callback arguments' => array('user_login'), 'type' => MENU_DEFAULT_LOCAL_TASK);
     $items[] = array('path' => 'user/register', 'title' => t('create new account'),
-      'callback' => 'user_register', 'access' => $user->uid == 0 && variable_get('user_register', 1), 'type' => MENU_LOCAL_TASK);
+      'callback' => 'drupal_get_form', 'callback arguments' => array('user_register'), 'access' => $user->uid == 0 && variable_get('user_register', 1), 'type' => MENU_LOCAL_TASK);
     $items[] = array('path' => 'user/password', 'title' => t('request new password'),
-      'callback' => 'user_pass', 'access' => $user->uid == 0, 'type' => MENU_LOCAL_TASK);
+      'callback' => 'drupal_get_form', 'callback arguments' => array('user_pass'), 'access' => $user->uid == 0, 'type' => MENU_LOCAL_TASK);
     $items[] = array('path' => 'user/reset', 'title' => t('reset password'),
-      'callback' => 'user_pass_reset', 'access' => TRUE, 'type' => MENU_CALLBACK);
+      'callback' => 'drupal_get_form', 'callback arguments' => array('user_pass_reset'), 'access' => TRUE, 'type' => MENU_CALLBACK);
     $items[] = array('path' => 'user/help', 'title' => t('help'),
       'callback' => 'user_help_page', 'type' => MENU_CALLBACK);
 
@@ -705,18 +712,18 @@ function user_menu($may_cache) {
       'type' => MENU_LOCAL_TASK);
     $items[] = array('path' => 'admin/user/settings', 'title' => t('user settings'),
       'description' => t('Configure default behavior of users, including registration requirements, e-mails, and user pictures.'),
-      'callback' => 'user_admin_settings');
+      'callback' => 'drupal_get_form', 'callback arguments' => array('user_admin_settings'));
 
     // Admin access pages
     $items[] = array('path' => 'admin/user/access', 'title' => t('access control'),
       'description' => t('Determine access to features by selecting permissions for roles.'),
-      'callback' => 'user_admin_perm', 'access' => $access_access);
+      'callback' => 'drupal_get_form', 'callback arguments' => array('user_admin_perm'), 'access' => $access_access);
     $items[] = array('path' => 'admin/user/roles', 'title' => t('roles'),
       'description' => t('List, edit, or add user roles.'),
-      'callback' => 'user_admin_role', 'access' => $access_access,
+      'callback' => 'drupal_get_form', 'callback arguments' => array('user_admin_role'), 'access' => $access_access,
       'type' => MENU_NORMAL_ITEM);
     $items[] = array('path' => 'admin/user/roles/edit', 'title' => t('edit role'),
-      'callback' => 'user_admin_role', 'access' => $access_access,
+       'callback' => 'drupal_get_form', 'callback arguments' => array('user_admin_role'), 'access' => $access_access,
       'type' => MENU_CALLBACK);
     $items[] = array('path' => 'admin/user/rules', 'title' => t('access rules'),
       'description' => t('List and create rules to disallow usernames, e-mail addresses, and IP addresses.'),
@@ -733,8 +740,8 @@ function user_menu($may_cache) {
       'callback' => 'user_admin_access_edit', 'access' => $access_access,
       'type' => MENU_CALLBACK);
     $items[] = array('path' => 'admin/user/rules/delete', 'title' => t('delete rule'),
-      'callback' => 'user_admin_access_delete', 'access' => $access_access,
-      'type' => MENU_CALLBACK);
+      'callback' => 'drupal_get_form', 'callback arguments' => array('user_admin_access_delete_confirm'),
+      'access' => $access_access, 'type' => MENU_CALLBACK);
 
     if (module_exist('search')) {
       $items[] = array('path' => 'admin/user/search', 'title' => t('search users'),
@@ -777,8 +784,8 @@ function user_menu($may_cache) {
           'access' => $view_access, 'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
 
         $items[] = array('path' => 'user/'. arg(1) .'/edit', 'title' => t('edit'),
-          'callback' => 'user_edit', 'access' => $admin_access || $user->uid == arg(1),
-          'type' => MENU_LOCAL_TASK);
+          'callback' => 'drupal_get_form', 'callback arguments' => array('user_edit'),
+          'access' => $admin_access || $user->uid == arg(1), 'type' => MENU_LOCAL_TASK);
         $items[] = array('path' => 'user/'. arg(1) .'/delete', 'title' => t('delete'),
           'callback' => 'user_edit', 'access' => $admin_access,
           'type' => MENU_CALLBACK);
@@ -880,7 +887,7 @@ function user_login($msg = '') {
     '#attributes' => array('tabindex' => '2'),
   );
   $form['submit'] = array('#type' => 'submit', '#value' => t('Log in'), '#weight' => 2, '#attributes' => array('tabindex' => '3'));
-  return drupal_get_form('user_login', $form);
+  return $form;
 }
 
 function user_login_validate($form_id, $form_values) {
@@ -1012,7 +1019,7 @@ function user_pass() {
     '#value' => t('E-mail new password'),
     '#weight' => 2,
   );
-  return drupal_get_form('user_pass', $form);
+  return $form;
 }
 
 function user_pass_validate() {
@@ -1102,7 +1109,7 @@ function user_pass_reset($uid, $timestamp, $hashed_pass, $action = NULL) {
           $form['help'] = array('#value' => t('<p>This login can be used only once.</p>'));
           $form['submit'] = array('#type' => 'submit', '#value' => t('Log in'));
           $form['#action'] = url("user/reset/$uid/$timestamp/$hashed_pass/login");
-          return drupal_get_form('user_pass_reset', $form);
+          return $form;
         }
       }
       else {
@@ -1178,7 +1185,7 @@ function user_register() {
   }
   $form['submit'] = array('#type' => 'submit', '#value' => t('Create new account'), '#weight' => 30);
 
-  return drupal_get_form('user_register', $form);
+  return $form;
 }
 
 function user_register_validate($form_id, $form_values) {
@@ -1187,7 +1194,6 @@ function user_register_validate($form_id, $form_values) {
 
 function user_register_submit($form_id, $form_values) {
   global $base_url;
-
   $admin = user_access('administer users');
 
   $mail = $form_values['mail'];
@@ -1386,7 +1392,7 @@ function user_edit($category = 'account') {
       drupal_goto('admin/user/user');
     }
     else {
-      return confirm_form('user_confirm_delete', array(), t('Are you sure you want to delete the account %name?', array('%name' => $account->name)), 'user/'. $account->uid, t('All submissions made by this user will be attributed to the anonymous account. This action cannot be undone.'), t('Delete'), t('Cancel'));
+      return drupal_get_form('user_confirm_delete', $name, $uid);
     }
   }
   else if ($_POST['op'] == t('Delete')) {
@@ -1408,7 +1414,15 @@ function user_edit($category = 'account') {
   $form['#attributes']['enctype'] = 'multipart/form-data';
 
   drupal_set_title($account->name);
-  return drupal_get_form('user_edit', $form);
+  return $form;
+}
+
+function user_confirm_delete($name, $uid) {
+  return confirm_form(array(),
+    t('Are you sure you want to delete the account %name?', array('%name' => $name)),
+    'user/'. $uid,
+    t('All submissions made by this user will be attributed to the anonymous account. This action cannot be undone.'),
+    t('Delete'), t('Cancel'));
 }
 
 /**
@@ -1515,31 +1529,40 @@ function _user_mail_text($messageid, $variables = array()) {
   }
 }
 
-/**
- * Menu callback: check an access rule
- */
-function user_admin_access_check() {
+function user_admin_check_user() {
   $form['user'] = array('#type' => 'fieldset', '#title' => t('Username'));
   $form['user']['test'] = array('#type' => 'textfield', '#title' => '', '#description' => t('Enter a username to check if it will be denied or allowed.'), '#size' => 30, '#maxlength' => 64);
   $form['user']['type'] = array('#type' => 'hidden', '#value' => 'user');
   $form['user']['submit'] = array('#type' => 'submit', '#value' => t('Check username'));
-  $output .= drupal_get_form('check_user', $form, 'user_admin_access_check');
-  unset($form); // prevent endless loop?
+  $form['#base'] = 'user_admin_access_check';
+  return $form;
+}
 
+function user_admin_check_mail() {
   $form['mail'] = array('#type' => 'fieldset', '#title' => t('E-mail'));
   $form['mail']['test'] = array('#type' => 'textfield', '#title' => '', '#description' => t('Enter an e-mail address to check if it will be denied or allowed.'), '#size' => 30, '#maxlength' => 64);
   $form['mail']['type'] = array('#type' => 'hidden', '#value' => 'mail');
   $form['mail']['submit'] = array('#type' => 'submit', '#value' => t('Check e-mail'));
-  $output .= drupal_get_form('check_mail', $form, 'user_admin_access_check');
-  unset($form); // prevent endless loop?
+  $form['#base'] = 'user_admin_access_check';
+  return $form;
+}
 
+function user_admin_check_host() {
   $form['host'] = array('#type' => 'fieldset', '#title' => t('Hostname'));
   $form['host']['test'] = array('#type' => 'textfield', '#title' => '', '#description' => t('Enter a hostname or IP address to check if it will be denied or allowed.'), '#size' => 30, '#maxlength' => 64);
   $form['host']['type'] = array('#type' => 'hidden', '#value' => 'host');
   $form['host']['submit'] = array('#type' => 'submit', '#value' => t('Check hostname'));
-  $output .= drupal_get_form('check_host', $form, 'user_admin_access_check');
-  unset($form); // prevent endless loop?
+  $form['#base'] = 'user_admin_access_check';
+  return $form;
+}
 
+/**
+ * Menu callback: check an access rule
+ */
+function user_admin_access_check() {
+  $output = drupal_get_form('user_admin_check_user');
+  $output .= drupal_get_form('user_admin_check_mail');
+  $output .= drupal_get_form('user_admin_check_host');
   return $output;
 }
 
@@ -1599,23 +1622,19 @@ function user_admin_access_add($mask = NULL, $type = NULL) {
     $edit['mask'] = $mask;
     $edit['type'] = $type;
   }
-
-  $form = _user_admin_access_form($edit);
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Add rule'));
-
-  return drupal_get_form('access_rule', $form);
+  return drupal_get_form('user_admin_access_add_form', $edit, t('Add rule'));
 }
 
 /**
  * Menu callback: delete an access rule
  */
-function user_admin_access_delete($aid = 0) {
+function user_admin_access_delete_confirm($aid = 0) {
   $access_types = array('user' => t('username'), 'mail' => t('e-mail'));
   $edit = db_fetch_object(db_query('SELECT aid, type, status, mask FROM {access} WHERE aid = %d', $aid));
 
   $form = array();
   $form['aid'] = array('#type' => 'hidden', '#value' => $aid);
-  $output = confirm_form('user_admin_access_delete_confirm', $form,
+  $output = confirm_form($form,
                   t('Are you sure you want to delete the @type rule for %rule?', array('@type' => $access_types[$edit->type], '%rule' => $edit->mask)),
                   'admin/user/rules',
                   t('This action cannot be undone.'),
@@ -1647,13 +1666,10 @@ function user_admin_access_edit($aid = 0) {
   else {
     $edit = db_fetch_array(db_query('SELECT aid, type, status, mask FROM {access} WHERE aid = %d', $aid));
   }
-  $form = _user_admin_access_form($edit);
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Save rule'));
-
-  return drupal_get_form('access_rule', $form);
+  return drupal_get_form('user_admin_access_edit_form', $edit, t('Save rule'));
 }
 
-function _user_admin_access_form($edit) {
+function user_admin_access_form($edit, $submit) {
   $form['status'] = array(
     '#type' => 'radios',
     '#title' => t('Access type'),
@@ -1676,6 +1692,8 @@ function _user_admin_access_form($edit) {
     '#description' => '%: '. t('Matches any number of characters, even zero characters') .'.<br />_: '. t('Matches exactly one character.'),
     '#required' => TRUE,
   );
+  $form['submit'] = array('#type' => 'submit', '#value' => $submit);
+
   return $form;
 }
 
@@ -1787,7 +1805,7 @@ function user_admin_perm($str_rids = NULL) {
   }
   $form['submit'] = array('#type' => 'submit', '#value' => t('Save permissions'));
 
-  return drupal_get_form('user_admin_perm', $form);
+  return $form;
 }
 
 function theme_user_admin_perm($form) {
@@ -1891,11 +1909,12 @@ function user_admin_role() {
     $form['name'] = array('#type' => 'textfield', '#title' => t('Role name'), '#default_value' => $role->name, '#size' => 30, '#maxlength' => 64, '#description' => t('The name for this role. Example: "moderator", "editorial board", "site architect".'));
     $form['submit'] = array('#type' => 'submit', '#value' => t('Save role'));
     $form['delete'] = array('#type' => 'submit', '#value' => t('Delete role'));
-    return drupal_get_form('user_admin_role', $form);
+
+    return $form;
   }
   $form['name'] = array('#type' => 'textfield', '#size' => 32, '#maxlength' => 64);
   $form['submit'] = array('#type' => 'submit', '#value' => t('Add role'));
-  return drupal_get_form('user_admin_new_role', $form);
+  return $form;
 }
 
 function theme_user_admin_new_role($form) {
@@ -1982,10 +2001,7 @@ function user_admin_account() {
   );
   $form['pager'] = array('#value' => theme('pager', NULL, 50, 0));
 
-  // Call the form first, to allow for the form_values array to be populated.
-  $output .= drupal_get_form('user_admin_account', $form);
-
-  return $output;
+  return $form;
 }
 
 /**
@@ -2162,7 +2178,7 @@ function user_multiple_delete_confirm() {
   }
   $form['operation'] = array('#type' => 'hidden', '#value' => 'delete');
 
-  return confirm_form('user_multiple_delete_confirm', $form,
+  return confirm_form($form,
                       t('Are you sure you want to delete these users?'),
                       'admin/user/user', t('This action cannot be undone.'),
                       t('Delete all'), t('Cancel'));
@@ -2210,7 +2226,7 @@ function user_admin_settings() {
   $form['pictures']['user_picture_file_size'] = array('#type' => 'textfield', '#title' => t('Picture maximum file size'), '#default_value' => variable_get('user_picture_file_size', '30'), '#size' => 15, '#maxlength' => 10, '#description' => t('Maximum file size for pictures, in kB.'));
   $form['pictures']['user_picture_guidelines'] = array('#type' => 'textarea', '#title' => t('Picture guidelines'), '#default_value' => variable_get('user_picture_guidelines', ''), '#description' => t('This text is displayed at the picture upload form in addition to the default guidelines. It\'s useful for helping or instructing your users.'));
 
-  return system_settings_form('user_admin_settings', $form);
+  return system_settings_form($form);
 }
 
 function user_admin($callback_arg = '') {
@@ -2220,14 +2236,14 @@ function user_admin($callback_arg = '') {
   switch ($op) {
     case 'search':
     case t('Search'):
-      $output = search_form(url('admin/user/search'), $_POST['edit']['keys'], 'user') . search_data($_POST['edit']['keys'], 'user');
+      $output = drupal_get_form('search_form', url('admin/user/search'), $_POST['edit']['keys'], 'user') . search_data($_POST['edit']['keys'], 'user');
       break;
     case t('Create new account'):
     case 'create':
-      $output = user_register();
+      $output = drupal_get_form('user_register');
       break;
     default:
-      $output = user_admin_account();
+      $output = drupal_get_form('user_admin_account');
   }
   return $output;
 }
@@ -2462,7 +2478,7 @@ function user_filter_form() {
                                            );
   }
 
-  return drupal_get_form('user_filter_form', $form);
+  return $form;
 }
 
 /**
@@ -2535,5 +2551,13 @@ function user_filter_form_submit($form_id, $form_values) {
   }
 
   return 'admin/user/user';
+}
+
+
+function user_forms() {
+  $forms['user_admin_access_add_form']['callback'] = 'user_admin_access_form';+
+  $forms['user_admin_access_edit_form']['callback'] = 'user_admin_access_form';
+  $forms['user_admin_new_role']['callback'] = 'user_admin_role';
+  return $forms;
 }
 

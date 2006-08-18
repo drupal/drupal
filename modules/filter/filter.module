@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.134 2006/08/18 12:16:58 unconed Exp $
+// $Id: filter.module,v 1.135 2006/08/18 18:58:45 dries Exp $
 
 /**
  * @file
@@ -66,7 +66,8 @@ function filter_menu($may_cache) {
     $items[] = array('path' => 'admin/settings/filters',
       'title' => t('input formats'),
       'description' => t('Configure how content input by users is filtering, including allowed HTML tags, PHP code tags. Also allows enabling of module-provided filters.'),
-      'callback' => 'filter_admin_overview',
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('filter_admin_overview'),
       'access' => user_access('administer filters'),
     );
     $items[] = array('path' => 'admin/settings/filters/list',
@@ -77,14 +78,16 @@ function filter_menu($may_cache) {
     );
     $items[] = array('path' => 'admin/settings/filters/add',
       'title' => t('add input format'),
-      'callback' => 'filter_admin_format_form',
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('filter_admin_format_form'),
       'type' => MENU_LOCAL_TASK,
       'weight' => 1,
       'access' => user_access('administer filters'),
     );
     $items[] = array('path' => 'admin/settings/filters/delete',
       'title' => t('delete input format'),
-      'callback' => 'filter_admin_delete',
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('filter_admin_delete'),
       'type' => MENU_CALLBACK,
       'access' => user_access('administer filters'),
     );
@@ -102,30 +105,31 @@ function filter_menu($may_cache) {
       if (isset($formats[arg(3)])) {
         $items[] = array('path' => 'admin/settings/filters/'. arg(3),
           'title' => t("!format input format", array('!format' => $formats[arg(3)]->name)),
-          'callback' => 'filter_admin_format_form',
-          'callback arguments' => array('format' => $formats[arg(3)]),
+          'callback' => 'drupal_get_form',
+          'callback arguments' => array('filter_admin_format_form', $formats[arg(3)]),
           'type' => MENU_CALLBACK,
           'access' => user_access('administer filters'),
         );
         $items[] = array('path' => 'admin/settings/filters/'. arg(3) .'/list',
           'title' => t('view'),
-          'callback' => 'filter_admin_format_form',
-          'callback arguments' => array('format' => $formats[arg(3)]),
+          'callback' => 'drupal_get_form',
+          'callback arguments' => array('filter_admin_format_form', $formats[arg(3)]),
           'type' => MENU_DEFAULT_LOCAL_TASK,
           'weight' => 0,
           'access' => user_access('administer filters'),
         );
         $items[] = array('path' => 'admin/settings/filters/'. arg(3) .'/configure',
           'title' => t('configure'),
-          'callback' => 'filter_admin_configure',
+          'callback' => 'drupal_get_form',
+          'callback arguments' => array('filter_admin_configure'),
           'type' => MENU_LOCAL_TASK,
           'weight' => 1,
           'access' => user_access('administer filters'),
         );
         $items[] = array('path' => 'admin/settings/filters/'. arg(3) .'/order',
           'title' => t('rearrange'),
-          'callback' => 'filter_admin_order',
-          'callback arguments' => array('format' => $formats[arg(3)]),
+          'callback' => 'drupal_get_form',
+          'callback arguments' => array('filter_admin_order', 'format' => $formats[arg(3)]),
           'type' => MENU_LOCAL_TASK,
           'weight' => 2,
           'access' => user_access('administer filters'),
@@ -316,7 +320,7 @@ function filter_admin_overview() {
   }
   $form['default'] = array('#type' => 'radios', '#options' => $options, '#default_value' => variable_get('filter_default_format', 1));
   $form['submit'] = array('#type' => 'submit', '#value' => t('Set default format'));
-  return drupal_get_form('filter_admin_overview', $form);
+  return $form;
 }
 
 function filter_admin_overview_submit($form_id, $form_values) {
@@ -359,7 +363,7 @@ function filter_admin_delete() {
       $form['format'] = array('#type' => 'hidden', '#value' => $format->format);
       $form['name'] = array('#type' => 'hidden', '#value' => $format->name);
 
-      return confirm_form('filter_admin_delete', $form, t('Are you sure you want to delete the input format %format?', array('%format' => $format->name)), 'admin/settings/filters', t('If you have any content left in this input format, it will be switched to the default input format. This action cannot be undone.'), t('Delete'), t('Cancel'));
+      return confirm_form($form, t('Are you sure you want to delete the input format %format?', array('%format' => $format->name)), 'admin/settings/filters', t('If you have any content left in this input format, it will be switched to the default input format. This action cannot be undone.'), t('Delete'), t('Cancel'));
     }
     else {
       drupal_set_message(t('The default format cannot be deleted.'));
@@ -440,8 +444,6 @@ function filter_admin_format_form($format = NULL) {
       '#description' => module_invoke($filter->module, 'filter', 'description', $filter->delta),
     );
   }
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Save configuration'));
-
   if (isset($format)) {
     $form['format'] = array('#type' => 'hidden', '#value' => $format->format);
 
@@ -454,11 +456,11 @@ function filter_admin_format_form($format = NULL) {
     }
     $group = t('<p>These are the guidelines that users will see for posting in this input format. They are automatically generated from the filter settings.</p>');
     $group .= $tiplist;
-    $output = '<h2>'. t('Formatting guidelines') .'</h2>'. $group;
+    $form['tips'] = array('#value' => '<h2>'. t('Formatting guidelines') .'</h2>'. $group);
   }
-  $output = drupal_get_form('filter_admin_format_form', $form) . $output;
+  $form['submit'] = array('#type' => 'submit', '#value' => t('Save configuration'));
 
-  return $output;
+  return $form;
 }
 
 /**
@@ -549,7 +551,7 @@ function filter_admin_order($format = NULL) {
   $form['format'] = array('#type' => 'hidden', '#value' => $format->format);
   $form['submit'] = array('#type' => 'submit', '#value' => t('Save configuration'));
 
-  return drupal_get_form('filter_admin_order', $form);
+  return $form;
 }
 
 /**
@@ -600,13 +602,13 @@ function filter_admin_configure() {
   }
 
   if (!empty($form)) {
-    $output = system_settings_form('filter_admin_configure', $form);
+    $form = system_settings_form($form);
   }
   else {
-    $output = t('No settings are available.');
+    $form['error'] = array('#value' => t('No settings are available.'));
   }
 
-  return $output;
+  return $form;
 }
 
 /**

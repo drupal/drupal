@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.7 2006/08/18 12:16:57 unconed Exp $
+// $Id: install.php,v 1.8 2006/08/18 18:58:44 dries Exp $
 
 require_once './includes/install.inc';
 
@@ -101,7 +101,7 @@ function install_verify_settings() {
     $db_path = ltrim(urldecode($url['path']), '/');
     $settings_file = './'. conf_path() .'/settings.php';
 
-    _install_settings_validate($db_prefix, $db_type, $db_user, $db_pass, $db_host, $db_path, $settings_file);
+    _install_settings_form_validate($db_prefix, $db_type, $db_user, $db_pass, $db_host, $db_path, $settings_file);
     if (!form_get_errors()) {
       return TRUE;
     }
@@ -124,11 +124,11 @@ function install_change_settings() {
 
   // We always need this because we want to run form_get_errors.
   include_once './includes/form.inc';
+  drupal_maintenance_theme();
 
   // The existing database settings are not working, so we need write access
   // to settings.php to change them.
   if (!drupal_verify_install_file($settings_file, FILE_EXIST|FILE_READABLE|FILE_WRITABLE)) {
-    drupal_maintenance_theme();
     drupal_set_message(st('The @drupal installer requires write permissions to %file during the installation process.', array('@drupal' => drupal_install_profile_name(), '%file' => $settings_file)), 'error');
 
     drupal_set_title('Drupal database setup');
@@ -140,8 +140,17 @@ function install_change_settings() {
   if ($db_url == 'mysql://username:password@localhost/databasename') {
     $db_user = $db_pass = $db_path = '';
   }
+  $output = drupal_get_form('install_settings_form', $profile, $settings_file, $db_url, $db_type, $db_prefix, $db_user, $db_pass, $db_host);
+  drupal_set_title('Database configuration');
+  print theme('install_page', $output);
+  exit;
+}
 
 
+/**
+ * Form API array definition for install_settings.
+ */
+function install_settings_form($profile, $settings_file, $db_url, $db_type, $db_prefix, $db_user, $db_pass, $db_host) {
   $db_types = drupal_detect_database_types();
   if (count($db_types) == 0) {
     $form['no_db_types'] = array(
@@ -170,7 +179,7 @@ function install_change_settings() {
     }
     else {
       if (count($db_types) == 1) {
-        $db_types = array_values($db_types);      
+        $db_types = array_values($db_types);
         $form['basic_options']['db_type'] = array(
           '#type' => 'hidden',
           '#value' => $db_types[0],
@@ -250,26 +259,21 @@ function install_change_settings() {
     $form['_db_url'] = array('#type' => 'value');
     $form['#action'] = "install.php?profile=$profile";
     $form['#redirect'] = NULL;
-    drupal_maintenance_theme();
   }
-  $output = drupal_get_form('install_settings', $form);
-  drupal_set_title('Database configuration');
-  print theme('install_page', $output);
-  exit;
+  return $form;
 }
-
 /**
  * Form API validate for install_settings form.
  */
-function install_settings_validate($form_id, $form_values, $form) {
+function install_settings_form_validate($form_id, $form_values, $form) {
   global $db_url;
-  _install_settings_validate($form_values['db_prefix'], $form_values['db_type'], $form_values['db_user'], $form_values['db_pass'], $form_values['db_host'], $form_values['db_path'], $form_values['settings_file'], $form);
+  _install_settings_form_validate($form_values['db_prefix'], $form_values['db_type'], $form_values['db_user'], $form_values['db_pass'], $form_values['db_host'], $form_values['db_path'], $form_values['settings_file'], $form);
 }
 
 /**
  * Helper function for install_settings_validate.
  */
-function _install_settings_validate($db_prefix, $db_type, $db_user, $db_pass, $db_host, $db_path, $settings_file, $form = NULL) {
+function _install_settings_form_validate($db_prefix, $db_type, $db_user, $db_pass, $db_host, $db_path, $settings_file, $form = NULL) {
   global $db_url;
 
   // Check for default username/password
@@ -313,7 +317,7 @@ function _install_settings_validate($db_prefix, $db_type, $db_user, $db_pass, $d
 /**
  * Form API submit for install_settings form.
  */
-function install_settings_submit($form_id, $form_values) {
+function install_settings_form_submit($form_id, $form_values) {
   global $profile;
 
   // Update global settings array and save
@@ -349,40 +353,44 @@ function install_select_profile() {
     return $profile->name;
   }
   elseif (sizeof($profiles) > 1) {
-    drupal_maintenance_theme();
-    $form = '';
     foreach ($profiles as $profile) {
-      include_once($profile->filename);
       if ($_POST['edit']['profile'] == $profile->name) {
         return $profile->name;
       }
-      // Load profile details.
-      $function = $profile->name .'_profile_details';
-      if (function_exists($function)) {
-        $details = $function();
-      }
-
-      // If set, used defined name. Otherwise use file name.
-      $name = isset($details['name']) ? $details['name'] : $profile->name;
-
-      $form['profile'][$name] = array(
-        '#type' => 'radio',
-        '#value' => 'default',
-        '#return_value' => $profile->name,
-        '#title' => $name,
-        '#description' => isset($details['description']) ? $details['description'] : '',
-        '#parents' => array('profile'),
-      );
     }
-    $form['submit'] =  array(
-      '#type' => 'submit',
-      '#value' => 'Save configuration',
-    );
+
+    drupal_maintenance_theme();
 
     drupal_set_title('Select an installation profile');
-    print theme('install_page', drupal_get_form('install_select_profile', $form));
+    print theme('install_page', drupal_get_form('install_select_profile_form', $profiles));
     exit;
   }
+}
+
+function install_select_profile_form($profiles) {
+  foreach ($profiles as $profile) {
+    include_once($profile->filename);
+    // Load profile details.
+    $function = $profile->name .'_profile_details';
+    if (function_exists($function)) {
+      $details = $function();
+    }
+    // If set, used defined name. Otherwise use file name.
+    $name = isset($details['name']) ? $details['name'] : $profile->name;
+    $form['profile'][$name] = array(
+      '#type' => 'radio',
+      '#value' => 'default',
+      '#return_value' => $profile->name,
+      '#title' => $name,
+      '#description' => isset($details['description']) ? $details['description'] : '',
+      '#parents' => array('profile'),
+    );
+  }
+  $form['submit'] =  array(
+    '#type' => 'submit',
+    '#value' => 'Save configuration',
+  );
+  return $form;
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.87 2006/08/18 12:16:57 unconed Exp $
+// $Id: locale.inc,v 1.88 2006/08/18 18:58:44 dries Exp $
 
 /**
  * @file
@@ -75,8 +75,9 @@ function _locale_admin_manage_screen() {
     '#default_value' => $isdefault,
   );
   $form['submit'] = array('#type' => 'submit', '#value' => t('Save configuration'));
+  $form['#base'] = 'locale_admin_manage_screen';
 
-  return drupal_get_form('_locale_admin_manage_screen', $form, 'locale_admin_manage_screen');
+  return $form;
 }
 
 /**
@@ -123,12 +124,8 @@ function _locale_admin_manage_screen_submit($form_id, $form_values) {
   return 'admin/settings/locale/language/overview';
 }
 
-/**
- * User interface for the language addition screen.
- */
-function _locale_admin_manage_add_screen() {
+function locale_add_language_form() {
   $isocodes = _locale_prepare_iso_list();
-
   $form = array();
   $form['language list'] = array('#type' => 'fieldset',
     '#title' => t('Language list'),
@@ -141,9 +138,10 @@ function _locale_admin_manage_add_screen() {
     '#description' => t('Select your language here, or add it below, if you are unable to find it.'),
   );
   $form['language list']['submit'] = array('#type' => 'submit', '#value' => t('Add language'));
+  return $form;
+}
 
-  $output = drupal_get_form('locale_add_language_form', $form);
-
+function locale_custom_language_form() {
   $form = array();
   $form['custom language'] = array('#type' => 'fieldset',
     '#title' => t('Custom language'),
@@ -163,10 +161,17 @@ function _locale_admin_manage_add_screen() {
     '#description' => t('Name of the language. Will be available for translation in all languages.'),
   );
   $form['custom language']['submit'] = array('#type' => 'submit', '#value' => t('Add custom language'));
-
   // Use the validation and submit functions of the add language form.
-  $output .= drupal_get_form('locale_custom_language_form', $form, 'locale_add_language_form');
+  $form['#base'] = 'locale_add_language_form';
+  return $form;
+}
 
+/**
+ * User interface for the language addition screen.
+ */
+function _locale_admin_manage_add_screen() {
+  $output = drupal_get_form('locale_add_language_form');
+  $output .= drupal_get_form('locale_custom_language_form');
   return $output;
 }
 
@@ -205,7 +210,7 @@ function locale_add_language_form_submit($form_id, $form_values) {
 /**
  * User interface for the translation import screen.
  */
-function _locale_admin_import_screen() {
+function _locale_admin_import() {
   $languages = locale_supported_languages(FALSE, TRUE);
   $languages = array_map('t', $languages['name']);
   unset($languages['en']);
@@ -242,7 +247,7 @@ function _locale_admin_import_screen() {
   $form['import']['submit'] = array('#type' => 'submit', '#value' => t('Import'));
   $form['#attributes']['enctype'] = 'multipart/form-data';
 
-  return drupal_get_form('_locale_admin_import', $form);
+  return $form;
 }
 
 /**
@@ -267,6 +272,32 @@ function _locale_admin_import_submit($form_id, $form_values) {
   return 'admin/settings/locale';
 }
 
+function _locale_export_po_form() {
+  $form['export'] = array('#type' => 'fieldset',
+    '#title' => t('Export translation'),
+    '#collapsible' => TRUE,
+  );
+  $form['export']['langcode'] = array('#type' => 'select',
+    '#title' => t('Language name'),
+    '#options' => $languages,
+    '#description' => t('Select the language you would like to export in gettext Portable Object (.po) format.'),
+  );
+  $form['export']['submit'] = array('#type' => 'submit', '#value' => t('Export'));
+  return $form;
+}
+
+function _locale_export_pot_form() {
+  // Complete template export of the strings
+  $form['export'] = array('#type' => 'fieldset',
+    '#title' => t('Export template'),
+    '#collapsible' => TRUE,
+    '#description' => t('Generate a gettext Portable Object Template (.pot) file with all the interface strings from the Drupal locale database.'),
+  );
+  $form['export']['submit'] = array('#type' => 'submit', '#value' => t('Export'));
+  $form['#base'] = '_locale_export_po_form';
+  return $form;
+}
+
 /**
  * User interface for the translation export screen
  */
@@ -275,31 +306,13 @@ function _locale_admin_export_screen() {
   $languages = array_map('t', $languages['name']);
   unset($languages['en']);
 
+  $output = '';
   // Offer language specific export if any language is set up
   if (count($languages)) {
-    $form = array();
-    $form['export'] = array('#type' => 'fieldset',
-      '#title' => t('Export translation'),
-      '#collapsible' => TRUE,
-    );
-    $form['export']['langcode'] = array('#type' => 'select',
-      '#title' => t('Language name'),
-      '#options' => $languages,
-      '#description' => t('Select the language you would like to export in gettext Portable Object (.po) format.'),
-    );
-    $form['export']['submit'] = array('#type' => 'submit', '#value' => t('Export'));
-    $output = drupal_get_form('_locale_export_po', $form);
+    $output = drupal_get_form('_locale_export_po_form');
   }
 
-  // Complete template export of the strings
-  $form = array();
-  $form['export'] = array('#type' => 'fieldset',
-    '#title' => t('Export template'),
-    '#collapsible' => TRUE,
-    '#description' => t('Generate a gettext Portable Object Template (.pot) file with all the interface strings from the Drupal locale database.'),
-  );
-  $form['export']['submit'] = array('#type' => 'submit', '#value' => t('Export'));
-  $output .= drupal_get_form('_locale_export_pot', $form, '_locale_export_po');
+  $output .= drupal_get_form('_locale_export_pot_form');
 
   return $output;
 }
@@ -307,7 +320,7 @@ function _locale_admin_export_screen() {
 /**
  * Process a locale export form submissions.
  */
-function _locale_export_po_submit($form_id, $form_values) {
+function _locale_export_po_form_submit($form_id, $form_values) {
   _locale_export_po($form_values['langcode']);
 }
 
@@ -346,7 +359,7 @@ function _locale_string_seek_form() {
   $form['search']['submit'] = array('#type' => 'submit', '#value' => t('Search'));
   $form['#redirect'] = FALSE;
 
-  return drupal_get_form('_locale_string_seek', $form);
+  return $form;
 }
 
 /**
@@ -398,7 +411,7 @@ function _locale_string_edit($lid) {
   $form['lid'] = array('#type' => 'value', '#value' => $lid);
   $form['submit'] = array('#type' => 'submit', '#value' => t('Save translations'));
 
-  return drupal_get_form('_locale_string_edit', $form);
+  return $form;
 }
 
 /**
@@ -1235,9 +1248,9 @@ function _locale_string_language_list($translation) {
  * Build object out of search criteria specified in request variables
  */
 function _locale_string_seek_query() {
-  static $query = NULL;
+  static $query;
 
-  if (is_null($query)) {
+  if (!isset($query)) {
     $fields = array('string', 'language', 'searchin');
     $query = new StdClass;
     if (is_array($_REQUEST['edit'])) {

@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.149 2006/08/18 00:32:33 unconed Exp $
+// $Id: CHANGELOG.txt,v 1.150 2006/08/18 18:58:44 dries Exp $
 
 Drupal x.x.x, xxxx-xx-xx (development version)
 ------------------------
@@ -44,6 +44,8 @@ Drupal x.x.x, xxxx-xx-xx (development version)
 - removed the archive module.
 - upgrade system:
     * created space for update branches.
+- forms API:
+    * made it possible to programmatically submit forms.
 - split up and removed drupal.css.
 - added nested lists generation.
 

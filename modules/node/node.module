@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.675 2006/08/18 12:16:58 unconed Exp $
+// $Id: node.module,v 1.676 2006/08/18 18:58:46 dries Exp $
 
 /**
  * @file
@@ -948,7 +948,7 @@ function node_configure() {
     '#options' => array(t('Optional'), t('Required')), '#description' => t('Must users preview posts before submitting?')
   );
 
-  return system_settings_form('node_configure', $form);
+  return system_settings_form($form);
 }
 
 /**
@@ -1004,7 +1004,7 @@ function node_menu($may_cache) {
       'path' => 'admin/content/node',
       'title' => t('posts'),
       'description' => t('View, edit, and delete your site\'s content.'),
-      'callback' => 'node_admin_nodes',
+      'callback' => 'node_admin_content',
       'access' => user_access('administer nodes')
     );
 
@@ -1023,7 +1023,8 @@ function node_menu($may_cache) {
       'path' => 'admin/content/node-settings',
       'title' => t('post settings'),
       'description' => t('Control posting behavior, such as teaser length, requiring previews before posting, and the number of posts on the front page.'),
-      'callback' => 'node_configure',
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('node_configure'),
       'access' => user_access('administer nodes')
     );
 
@@ -1043,7 +1044,8 @@ function node_menu($may_cache) {
     $items[] = array(
       'path' => 'admin/content/types/add',
       'title' => t('add content type'),
-      'callback' => 'node_type_form',
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('node_type_form'),
       'type' => MENU_LOCAL_TASK,
     );
 
@@ -1090,13 +1092,14 @@ function node_menu($may_cache) {
           'type' => MENU_DEFAULT_LOCAL_TASK,
           'weight' => -10);
         $items[] = array('path' => 'node/'. arg(1) .'/edit', 'title' => t('edit'),
-          'callback' => 'node_page_edit',
-          'callback arguments' => array($node),
+          'callback' => 'drupal_get_form',
+          'callback arguments' => array('node_page_edit', $node),
           'access' => node_access('update', $node),
           'weight' => 1,
           'type' => MENU_LOCAL_TASK);
         $items[] = array('path' => 'node/'. arg(1) .'/delete', 'title' => t('delete'),
-          'callback' => 'node_delete_confirm',
+          'callback' => 'drupal_get_form',
+          'callback arguments' => array('node_delete_confirm'),
           'access' => node_access('delete', $node),
           'weight' => 1,
           'type' => MENU_CALLBACK);
@@ -1125,15 +1128,15 @@ function node_menu($may_cache) {
           $items[] = array(
             'path' => 'admin/content/types/'. $type_url_str,
             'title' => t($type->name),
-            'callback' => 'node_type_form',
-            'callback arguments' => array($type),
+            'callback' => 'drupal_get_form',
+            'callback arguments' => array('node_type_form', $type),
             'type' => MENU_CALLBACK,
           );
           $items[] = array(
             'path' => 'admin/content/types/'. $type_url_str .'/delete',
             'title' => t('delete'),
-            'callback' => 'node_type_delete',
-            'callback arguments' => array($type),
+            'callback' => 'drupal_get_form',
+            'callback arguments' => array('node_type_delete', $type),
             'type' => MENU_CALLBACK,
           );
         }
@@ -1143,7 +1146,7 @@ function node_menu($may_cache) {
     // There is no need to rebuild node_access if there is only 1 record in the table (the default configuration).
     if (db_result(db_query('SELECT COUNT(*) FROM {node_access}')) > 1) {
       $items[] = array('path' => 'admin/settings/node-access', 'title' => t('node access'),
-        'callback' => 'node_access_rebuild_page',
+        'callback' => 'node_access_rebuild',
         'access' => user_access('administer nodes'));
     }
   }
@@ -1312,13 +1315,13 @@ function node_filter_form() {
     $form['filters']['buttons']['reset'] = array('#type' => 'submit', '#value' => t('Reset'));
   }
 
-  return drupal_get_form('node_filter_form', $form);
+  return $form;
 }
 
 /**
  * Theme node administration filter form.
  */
-function theme_node_filter_form(&$form) {
+function theme_node_filter_form($form) {
   $output .= '<div id="node-admin-filter">';
   $output .= drupal_render($form['filters']);
   $output .= '</div>';
@@ -1329,7 +1332,7 @@ function theme_node_filter_form(&$form) {
 /**
  * Theme node administraton filter selector.
  */
-function theme_node_filters(&$form) {
+function theme_node_filters($form) {
   $output .= '<ul>';
   if (sizeof($form['current'])) {
     foreach (element_children($form['current']) as $key) {
@@ -1420,14 +1423,20 @@ function node_admin_nodes_validate($form_id, $edit) {
 /**
  * Menu callback: content administration.
  */
-function node_admin_nodes() {
-  global $form_values;
-  $output = node_filter_form();
+function node_admin_content() {
+  $output = drupal_get_form('node_filter_form');
 
   if ($_POST['edit']['operation'] == 'delete' && $_POST['edit']['nodes']) {
     return node_multiple_delete_confirm();
   }
+  // Call the form first, to allow for the form_values array to be populated.
+  $output .= drupal_get_form('node_admin_nodes');
 
+  return $output;
+}
+
+function node_admin_nodes() {
+  global $form_values;
   $filter = node_build_filter_query();
 
   $result = pager_query('SELECT n.*, u.name, u.uid FROM {node} n '. $filter['join'] .' INNER JOIN {users} u ON n.uid = u.uid '. $filter['where'] .' ORDER BY n.changed DESC', 50, 0, NULL, $filter['args']);
@@ -1455,11 +1464,7 @@ function node_admin_nodes() {
   }
   $form['nodes'] = array('#type' => 'checkboxes', '#options' => $nodes);
   $form['pager'] = array('#value' => theme('pager', NULL, 50, 0));
-
-  // Call the form first, to allow for the form_values array to be populated.
-  $output .= drupal_get_form('node_admin_nodes', $form);
-
-  return $output;
+  return $form;
 }
 
 /**
@@ -1508,7 +1513,7 @@ function node_multiple_delete_confirm() {
   }
   $form['operation'] = array('#type' => 'hidden', '#value' => 'delete');
 
-  return confirm_form('node_multiple_delete_confirm', $form,
+  return confirm_form($form,
                       t('Are you sure you want to delete these items?'),
                       'admin/content/node', t('This action cannot be undone.'),
                       t('Delete all'), t('Cancel'));
@@ -1644,8 +1649,7 @@ function node_revision_list($node) {
 }
 
 function node_admin_search() {
-  $output = search_form(url('admin/content/search'), $_POST['edit']['keys'], 'node') . search_data($_POST['edit']['keys'], 'node');
-  return $output;
+  return drupal_get_form('search_form', url('admin/content/search'), $_POST['edit']['keys'], 'node') . search_data($_POST['edit']['keys'], 'node');
 }
 
 /**
@@ -1851,18 +1855,10 @@ function node_object_prepare(&$node) {
 }
 
 /**
- * Generate the node editing form.
+ * Generate the node editing form array
  */
 function node_form($node) {
   $node = (object)$node;
-  $form = node_form_array($node);
-  return drupal_get_form($node->type .'_node_form', $form, 'node_form');
-}
-
-/**
- * Generate the node editing form array.
- */
-function node_form_array($node) {
   node_object_prepare($node);
 
   // Set the id of the top-level form tag
@@ -1930,9 +1926,8 @@ function node_form_array($node) {
   if ($node->nid && node_access('delete', $node)) {
     $form['delete'] = array('#type' => 'button', '#value' => t('Delete'), '#weight' => 50);
   }
-
   $form['#after_build'] = array('node_form_add_preview');
-
+  $form['#base'] = 'node_form';
   return $form;
 }
 
@@ -2007,7 +2002,7 @@ function node_add($type = NULL) {
     // Initialize settings:
     $node = array('uid' => $user->uid, 'name' => $user->name, 'type' => $type);
 
-    $output = node_form($node);
+    $output = drupal_get_form($type .'_node_form', $node);
     drupal_set_title(t('Submit @name', array('%name' => $types[$type]->name)));
   }
   else {
@@ -2155,7 +2150,7 @@ function node_delete_confirm() {
 
   if (node_access('delete', $node)) {
     $form['nid'] = array('#type' => 'value', '#value' => $node->nid);
-    $output = confirm_form('node_delete_confirm', $form,
+    $output = confirm_form($form,
                    t('Are you sure you want to delete %title?', array('%title' => $node->title)),
                    $_GET['destination'] ? $_GET['destination'] : 'node/'. $node->nid, t('This action cannot be undone.'),
                    t('Delete'), t('Cancel')  );
@@ -2317,7 +2312,7 @@ function node_page_edit($node) {
   }
 
   drupal_set_title(check_plain($node->title));
-  return node_form($node);
+  return drupal_get_form($node->type . '_node_form', $node);
 }
 
 /**
@@ -2791,7 +2786,7 @@ function node_access_write_grants($node, $grants, $realm = NULL, $delete = TRUE)
   }
 }
 
-function node_access_rebuild_page() {
+function node_access_rebuild() {
   $form['markup'] = array(
     '#prefix' => '<p>',
     '#value' => t('Rebuilding the node_access table is necessary immediately after uninstalling a module that utilizes the node_access system. Each node will have its access control recalculated. This may take a while if your site has many nodes.'),
@@ -2801,18 +2796,18 @@ function node_access_rebuild_page() {
     '#type' => 'submit',
     '#value' => t('Rebuild node access'),
   );
-  return drupal_get_form('node_access_rebuild', $form);
+  return $form;
 }
 
 /**
  * rebuild the node access database
  */
 function node_access_rebuild_submit() {
-  node_access_rebuild();
+  _node_access_rebuild();
   drupal_set_message(t('The node access table has been rebuilt.'));
 }
 
-function node_access_rebuild() {
+function _node_access_rebuild() {
   db_query("DELETE FROM {node_access}");
   // only recalculate if site is using a node_access module
   if (count(module_implements('node_grants'))) {
@@ -2891,3 +2886,12 @@ function node_content_form($node) {
  * @} End of "defgroup node_content".
  */
 
+/**
+ * Implementation of hook_forms(). All node forms share the same form handler
+ */
+function node_forms() {
+  foreach (array_keys(node_get_types()) as $type) {
+    $forms[$type .'_node_form']['callback'] = 'node_form';
+  }
+  return $forms;
+}

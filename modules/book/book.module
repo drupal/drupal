@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.384 2006/08/18 12:16:57 unconed Exp $
+// $Id: book.module,v 1.385 2006/08/18 18:58:44 dries Exp $
 
 /**
  * @file
@@ -102,7 +102,8 @@ function book_menu($may_cache) {
     $items[] = array(
       'path' => 'admin/content/book/orphan',
       'title' => t('orphan pages'),
-      'callback' => 'book_admin_orphan',
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('book_admin_orphan'),
       'type' => MENU_LOCAL_TASK,
       'weight' => 8);
     $items[] = array(
@@ -131,8 +132,8 @@ function book_menu($may_cache) {
         $items[] = array(
           'path' => 'node/'. arg(1) .'/outline',
           'title' => t('outline'),
-          'callback' => 'book_outline',
-          'callback arguments' => array(arg(1)),
+          'callback' => 'drupal_get_form',
+          'callback arguments' => array('book_outline', arg(1)),
           'access' => user_access('outline posts in books'),
           'type' => MENU_LOCAL_TASK,
           'weight' => 2);
@@ -322,7 +323,7 @@ function book_outline($nid) {
   }
 
   drupal_set_title(check_plain($node->title));
-  return drupal_get_form('book_outline', $form);
+  return $form;
 }
 
 /**
@@ -889,7 +890,7 @@ function book_admin_edit($nid) {
       '#value' => t('Save book pages'),
     );
 
-    return drupal_get_form('book_admin_edit', $form);
+    return $form;
   }
   else {
     drupal_not_found();
@@ -917,19 +918,18 @@ function book_admin_orphan() {
   }
 
   if (count($orphans)) {
-    $form = array();
-
     $form['table'] = _book_admin_table($orphans);
     $form['save'] = array(
       '#type' => 'submit',
       '#value' => t('Save book pages'),
     );
 
-    return drupal_get_form('book_admin_edit', $form);
   }
   else {
-    return '<p>'. t('There are no orphan pages.') .'</p>';
+    $form['error'] = array('#value' => '<p>'. t('There are no orphan pages.') .'</p>');
   }
+  $form['#base'] = 'book_admin_edit';
+  return $form;
 }
 
 function book_admin_edit_submit($form_id, $form_values) {

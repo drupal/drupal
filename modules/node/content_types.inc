@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.3 2006/08/15 05:09:49 drumm Exp $
+// $Id: content_types.inc,v 1.4 2006/08/18 18:58:46 dries Exp $
 
 /**
  * @file
@@ -207,7 +207,7 @@ function node_type_form($type = NULL) {
     );
   }
 
-  return drupal_get_form('node_type_form', $form);
+  return $form;
 }
 
 /**

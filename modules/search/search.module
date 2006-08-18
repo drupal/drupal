@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.192 2006/08/18 12:16:59 unconed Exp $
+// $Id: search.module,v 1.193 2006/08/18 18:58:46 dries Exp $
 
 /**
  * @file
@@ -138,7 +138,7 @@ function search_block($op = 'list', $delta = 0) {
     return $blocks;
   }
   else if ($op == 'view' && user_access('search content')) {
-    $block['content'] = search_box('search_block_form');
+    $block['content'] = drupal_get_form('search_block_form');
     $block['subject'] = t('Search');
     return $block;
   }
@@ -153,18 +153,21 @@ function search_menu($may_cache) {
   if ($may_cache) {
     $items[] = array('path' => 'search',
       'title' => t('search settings'),
-      'callback' => 'search_view',
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('search_view'),
       'access' => user_access('search content'),
       'type' => MENU_SUGGESTED_ITEM);
     $items[] = array('path' => 'admin/settings/search',
       'title' => t('search'),
       'description' => t('Configure relevance settings for search and other indexing options'),
-      'callback' => 'search_admin_settings',
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('search_admin_settings'),
       'access' => user_access('administer search'),
       'type' => MENU_NORMAL_ITEM);
     $items[] = array('path' => 'admin/settings/search/wipe',
       'title' => t('clear index'),
-      'callback' => 'search_wipe_confirm',
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('search_wipe_confirm'),
       'access' => user_access('administer search'),
       'type' => MENU_CALLBACK);
   }
@@ -241,14 +244,14 @@ function search_admin_settings() {
   // Per module settings
   $form = array_merge($form, module_invoke_all('search', 'admin'));
 
-  return system_settings_form('search_admin_settings', $form);
+  return system_settings_form($form);
 }
 
 /**
  * Menu callback: confirm wiping of the index.
  */
 function search_wipe_confirm() {
-  return confirm_form('search_wipe_confirm', array(), t('Are you sure you want to re-index the site?'),
+  return confirm_form(array(), t('Are you sure you want to re-index the site?'),
                   'admin/settings/search', t(' The search index is not cleared but systematically updated to reflect the new settings. Searching will continue to work but new content won\'t be indexed until all existing content has been re-indexed. This action cannot be undone.'), t('Re-index site'), t('Cancel'));
 }
 
@@ -931,13 +934,13 @@ function search_view() {
     }
 
     // Construct the search form.
-    $output = search_form(NULL, $keys, $type);
+    $output = drupal_get_form('search_form', NULL, $keys, $type);
     $output .= $results;
 
     return $output;
   }
 
-  return search_form(NULL, $keys, $type);
+  return drupal_get_form('search_form', NULL, $keys, $type);
 }
 
 /**
@@ -1010,7 +1013,7 @@ function search_form($action = '', $keys = '', $type = NULL, $prompt = NULL) {
   $form['basic']['inline']['processed_keys'] = array('#type' => 'value', '#value' => array());
   $form['basic']['inline']['submit'] = array('#type' => 'submit', '#value' => t('Search'));
 
-  return drupal_get_form('search_form', $form);
+  return $form;
 }
 
 /**
@@ -1040,7 +1043,7 @@ function search_form_submit($form_id, $form_values) {
 /**
  * Output a search form for the search block and the theme's search box.
  */
-function search_box($form_id = 'search_theme_form') {
+function search_box() {
   // Use search_keys instead of keys to avoid ID conflicts with the search block.
   $form[$form_id .'_keys'] = array(
     '#type' => 'textfield',
@@ -1052,8 +1055,9 @@ function search_box($form_id = 'search_theme_form') {
   // Always go to the search page since the search form is not guaranteed to be
   // on every page.
   $form['#action'] = url('search/node');
+  $form['#base'] = 'search_box_form';
 
-  return drupal_get_form($form_id, $form, 'search_box_form');
+  return $form;
 }
 
 /**
@@ -1276,4 +1280,10 @@ function theme_search_page($results, $type) {
   $output .= theme('pager', NULL, 10, 0);
 
   return $output;
+}
+
+function search_forms() {
+  $forms['search_theme_form']['callback'] = 'search_box';
+  $forms['search_block_form']['callback'] = 'search_box';
+  return $forms;
 }

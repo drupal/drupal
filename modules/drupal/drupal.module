@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal.module,v 1.126 2006/08/18 12:16:58 unconed Exp $
+// $Id: drupal.module,v 1.127 2006/08/18 18:58:45 dries Exp $
 
 /**
  * @file
@@ -111,7 +111,7 @@ function drupal_sites_registry_settings() {
     '#description' => t('If enabled, your Drupal site will allow other sites to register with your site and send information to this site. This functionality can be used to maintain a list of related sites.')
   );
 
-  return system_settings_form('drupal_sites_registry_settings', $form);
+  return system_settings_form($form);
 }
 
 function drupal_distributed_authentication_settings() {
@@ -141,7 +141,7 @@ function drupal_distributed_authentication_settings() {
     '#description' => t('Only accept remote logins from the above specified default authentication server and not from any other server. Useful when an external system is the solitary authority on user accounts for this site. A common usage is to enable this setting and also enable an authentication module which talks to your company\'s directory server.')
   );
 
-  return system_settings_form('drupal_distributed_authentication_settings', $form);
+  return system_settings_form($form);
 }
 
 /**
@@ -350,12 +350,14 @@ function drupal_menu($may_cache) {
     $items[] = array('path' => 'admin/settings/sites-registry',
       'title' => t('sites registry'),
       'description' => t('Register with another Drupal site (drupal.org by default) for statistics sharing, or set up your server to be a central server for registrations.'),
-      'callback' => 'drupal_sites_registry_settings',
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('drupal_sites_registry_settings'),
       'access' => user_access('administer site configuration'));
     $items[] = array('path' => 'admin/settings/distributed-authentication',
       'title' => t('distributed authentication'),
       'description' => t('Allow your site to accept logins from other Drupal sites such as drupal.org.'),
-      'callback' => 'drupal_distributed_authentication_settings',
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('drupal_distributed_authentication_settings'),
       'access' => user_access('administer site configuration'));;
 
     if (variable_get('drupal_authentication_service', 0)) {

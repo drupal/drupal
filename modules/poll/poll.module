@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.209 2006/08/18 12:16:58 unconed Exp $
+// $Id: poll.module,v 1.210 2006/08/18 18:58:46 dries Exp $
 
 /**
  * @file
@@ -131,6 +131,9 @@ function poll_form(&$node) {
 
   $form['choice']['choices'] = array('#type' => 'hidden', '#default_value' => max(2, count($node->choice) ? count($node->choice) : 5));
   $form['choice']['morechoices'] = array('#type' => 'checkbox', '#title' => t('Need more choices'), '#default_value' => 0, '#description' => t("If the amount of boxes above isn't enough, check this box and click the Preview button below to add some more."), '#weight' => 1);
+  // when building the whole form, #post is overwritten unconditionally,
+  // so no problems from setting by hand here for the local build
+  $form['choice']['#post'] = $_POST;
   $form['choice'] = form_builder('poll_node_form', $form['choice']);
   if ($form['choice']['morechoices']['#value']) {
     $form['choice']['morechoices']['#value'] = 0;
@@ -321,11 +324,7 @@ function poll_teaser($node) {
 /**
  * Generates the voting form for a poll.
  */
-function poll_view_voting(&$node, $teaser, $page, $block) {
-  if ($_POST['op'] == t('Vote')) {
-    poll_vote($node);
-  }
-
+function poll_view_voting($node, $page) {
   if ($node->choice) {
     $list = array();
     foreach ($node->choice as $i => $choice) {
@@ -336,7 +335,7 @@ function poll_view_voting(&$node, $teaser, $page, $block) {
   $form['nid'] = array('#type' => 'hidden', '#value' => $node->nid);
   $form['vote'] = array('#type' => 'submit', '#value' => t('Vote'));
   $form['#action'] = url('node/'. $node->nid);
-  return drupal_get_form('poll_view_voting', $form);
+  return $form;
 }
 
 /**
@@ -391,15 +390,19 @@ function theme_poll_results($title, $results, $votes, $links, $block, $nid, $vot
     $output .= $results;
     $output .= '<div class="total">'. t('Total votes: %votes', array('%votes' => $votes)) .'</div>';
     if (isset($vote) && $vote > -1 && user_access('cancel own vote')) {
-      $form['#action'] = url("poll/cancel/$nid");
-      $form['choice'] = array('#type' => 'hidden', '#value' => $vote);
-      $form['submit'] = array('#type' => 'submit', '#value' => t('Cancel your vote'));
-      $output .= drupal_get_form('poll_cancel_form', $form);
+      $output .= drupal_get_form('poll_cancel_form', $nid, $vote);
     }
     $output .= '</div>';
   }
 
   return $output;
+}
+
+function poll_cancel_form($nid, $vote) {
+  $form['#action'] = url("poll/cancel/$nid");
+  $form['choice'] = array('#type' => 'hidden', '#value' => $vote);
+  $form['submit'] = array('#type' => 'submit', '#value' => t('Cancel your vote'));
+  return $form;
 }
 
 function theme_poll_bar($title, $percentage, $votes, $block) {
@@ -563,8 +566,11 @@ function poll_view($node, $teaser = FALSE, $page = FALSE, $block = FALSE) {
   }
 
   if ($node->allowvotes && ($block || arg(2) != 'results')) {
+    if ($_POST['op'] == t('Vote')) {
+      poll_vote($node);
+    }
     $node->content['body'] = array(
-      '#value' => poll_view_voting($node, $teaser, $page, $block),
+      '#value' => drupal_get_form('poll_view_voting', $node, $page),
     );
   }
   else {

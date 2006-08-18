@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.61 2006/08/18 12:16:57 unconed Exp $
+// $Id: contact.module,v 1.62 2006/08/18 18:58:45 dries Exp $
 
 /**
  * @file
@@ -64,33 +64,37 @@ function contact_menu($may_cache) {
     );
     $items[] = array('path' => 'admin/build/contact/add',
       'title' => t('add category'),
-      'callback' => 'contact_admin_edit',
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('contact_admin_edit'),
       'access' => user_access('administer site configuration'),
       'type' => MENU_LOCAL_TASK,
       'weight' => 1,
     );
     $items[] = array('path' => 'admin/build/contact/edit',
       'title' => t('edit contact category'),
-      'callback' => 'contact_admin_edit',
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('contact_admin_edit'),
       'access' => user_access('administer site configuration'),
       'type' => MENU_CALLBACK,
     );
     $items[] = array('path' => 'admin/build/contact/delete',
       'title' => t('delete contact'),
-      'callback' => 'contact_admin_delete',
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('contact_admin_delete'),
       'access' => user_access('administer site configuration'),
       'type' => MENU_CALLBACK,
     );
     $items[] = array('path' => 'admin/build/contact/settings',
       'title' => t('settings'),
-      'callback' => 'contact_admin_settings',
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('contact_admin_settings'),
       'access' => user_access('administer site configuration'),
       'type' => MENU_LOCAL_TASK,
       'weight' => 2,
     );
     $items[] = array('path' => 'contact',
       'title' => t('contact'),
-      'callback' => 'contact_mail_page',
+      'callback' => 'contact_site_page',
       'access' => user_access('access site-wide contact form'),
       'type' => MENU_SUGGESTED_ITEM,
     );
@@ -100,10 +104,9 @@ function contact_menu($may_cache) {
       global $user;
       $account = user_load(array('uid' => arg(1)));
       if (($user->uid != $account->uid && $account->contact) || user_access('administer users')) {
-        global $user;
         $items[] = array('path' => 'user/'. arg(1) .'/contact',
           'title' => t('contact'),
-          'callback' => 'contact_mail_user',
+          'callback' => 'contact_user_page',
           'type' => MENU_LOCAL_TASK,
           'access' => ($user->uid && user_access('access personal contact forms')),
           'weight' => 2,
@@ -199,7 +202,7 @@ function contact_admin_edit($cid = NULL) {
     '#value' => t('Submit'),
   );
 
-  return drupal_get_form('contact_admin_edit', $form);
+  return $form;
 }
 
 /**
@@ -260,7 +263,7 @@ function contact_admin_delete($cid = NULL) {
       '#value' => $info->category,
     );
 
-    return confirm_form('contact_admin_delete', $form, t('Are you sure you want to delete %category?', array('%category' => $info->category)), 'admin/build/contact', t('This action cannot be undone.'), t('Delete'), t('Cancel'));
+    return confirm_form($form, t('Are you sure you want to delete %category?', array('%category' => $info->category)), 'admin/build/contact', t('This action cannot be undone.'), t('Delete'), t('Cancel'));
   }
   else {
     drupal_set_message(t('Category not found.'), 'error');
@@ -297,20 +300,13 @@ function contact_admin_settings() {
     '#default_value' => variable_get('contact_default_status', 1),
     '#description' => t('Default status of the personal contact form for new users.'),
   );
-  $form['submit'] = array('#type' => 'submit',
-    '#value' => t('Save configuration'),
-  );
-  $form['reset'] = array('#type' => 'submit',
-    '#value' => t('Reset to defaults'),
-  );
-
-  return drupal_get_form('contact_admin_settings', $form, 'system_settings_form');
+  return system_settings_form($form);
 }
 
 /**
  * Personal contact page.
  */
-function contact_mail_user() {
+function contact_user_page() {
   global $user;
 
   if ($account = user_load(array('uid' => arg(1)))) {
@@ -322,33 +318,7 @@ function contact_mail_user() {
     }
     else {
       drupal_set_title($account->name);
-
-      $form['#token'] = $user->name . $user->mail;
-      $form['from'] = array('#type' => 'item',
-        '#title' => t('From'),
-        '#value' => $user->name .' &lt;'. $user->mail .'&gt;',
-      );
-      $form['to'] = array('#type' => 'item',
-        '#title' => t('To'),
-        '#value' => $account->name,
-      );
-      $form['subject'] = array('#type' => 'textfield',
-        '#title' => t('Subject'),
-        '#maxlength' => 50,
-        '#required' => TRUE,
-      );
-      $form['message'] = array('#type' => 'textarea',
-        '#title' => t('Message'),
-        '#rows' => 15,
-        '#required' => TRUE,
-      );
-      $form['copy'] = array('#type' => 'checkbox',
-        '#title' => t('Send yourself a copy.'),
-      );
-      $form['submit'] = array('#type' => 'submit',
-        '#value' => t('Send e-mail'),
-      );
-      $output = drupal_get_form('contact_mail_user', $form);
+      $output = drupal_get_form('contact_mail_user');
     }
 
     return $output;
@@ -356,6 +326,36 @@ function contact_mail_user() {
   else {
     drupal_not_found();
   }
+}
+
+function contact_mail_user() {
+  global $user;
+  $form['#token'] = $user->name . $user->mail;
+  $form['from'] = array('#type' => 'item',
+    '#title' => t('From'),
+    '#value' => $user->name .' &lt;'. $user->mail .'&gt;',
+  );
+  $form['to'] = array('#type' => 'item',
+    '#title' => t('To'),
+    '#value' => $account->name,
+  );
+  $form['subject'] = array('#type' => 'textfield',
+    '#title' => t('Subject'),
+    '#maxlength' => 50,
+    '#required' => TRUE,
+  );
+  $form['message'] = array('#type' => 'textarea',
+    '#title' => t('Message'),
+    '#rows' => 15,
+    '#required' => TRUE,
+  );
+  $form['copy'] = array('#type' => 'checkbox',
+    '#title' => t('Send yourself a copy.'),
+  );
+  $form['submit'] = array('#type' => 'submit',
+    '#value' => t('Send e-mail'),
+  );
+  return $form;
 }
 
 /**
@@ -409,84 +409,85 @@ function contact_mail_user_submit($form_id, $edit) {
 /**
  * Site-wide contact page
  */
-function contact_mail_page() {
+function contact_site_page() {
   global $user;
 
   if (!flood_is_allowed('contact', variable_get('contact_hourly_threshold', 3))) {
     $output = t("You cannot send more than %number messages per hour. Please try again later.", array('%number' => variable_get('contact_hourly_threshold', 3)));
   }
   else {
-    if ($user->uid) {
-      $edit['name'] = $user->name;
-      $edit['mail'] = $user->mail;
-    }
-
-    $result = db_query('SELECT cid, category, selected FROM {contact} ORDER BY weight, category');
-    while ($category = db_fetch_object($result)) {
-      $categories[$category->cid] = $category->category;
-      if ($category->selected) {
-        $default_category = $category->cid;
-      }
-    }
-
-    if (count($categories) > 0) {
-      $form['#token'] = $user->name . $user->mail;
-      $form['contact_information'] = array('#value' => filter_xss_admin(variable_get('contact_form_information', t('You can leave us a message using the contact form below.'))));
-      $form['name'] = array('#type' => 'textfield',
-        '#title' => t('Your name'),
-        '#maxlength' => 255,
-        '#default_value' => $edit['name'],
-        '#required' => TRUE,
-      );
-      $form['mail'] = array('#type' => 'textfield',
-        '#title' => t('Your e-mail address'),
-        '#maxlength' => 255,
-        '#default_value' => $edit['mail'],
-        '#required' => TRUE,
-      );
-      $form['subject'] = array('#type' => 'textfield',
-        '#title' => t('Subject'),
-        '#maxlength' => 255,
-        '#required' => TRUE,
-      );
-      if (count($categories) > 1) {
-        // If there is more than one category available and no default category has been selected,
-        // prepend a default placeholder value.
-        if (!isset($default_category)) {
-          $categories = array(t('--')) + $categories;
-        }
-        $form['cid'] = array('#type' => 'select',
-          '#title' => t('Category'),
-          '#default_value' => $default_category,
-          '#options' => $categories,
-          '#required' => TRUE,
-        );
-      }
-      else {
-        // If there is only one category, store its cid.
-        $category_keys = array_keys($categories);
-        $form['cid'] = array('#type' => 'value',
-          '#value' => array_shift($category_keys),
-        );
-      }
-      $form['message'] = array('#type' => 'textarea',
-        '#title' => t('Message'),
-        '#required' => TRUE,
-      );
-      $form['copy'] = array('#type' => 'checkbox',
-        '#title' => t('Send yourself a copy.'),
-      );
-      $form['submit'] = array('#type' => 'submit',
-        '#value' => t('Send e-mail'),
-      );
-      $output = drupal_get_form('contact_mail_page', $form);
-    }
-    else {
-      $output = t('The contact form has not been configured.');
-    }
+    $output = drupal_get_form('contact_mail_page');
   }
 
   return $output;
+}
+
+function contact_mail_page() {
+  global $user;
+
+  $result = db_query('SELECT cid, category, selected FROM {contact} ORDER BY weight, category');
+  while ($category = db_fetch_object($result)) {
+    $categories[$category->cid] = $category->category;
+    if ($category->selected) {
+      $default_category = $category->cid;
+    }
+  }
+
+  if (count($categories) > 0) {
+    $form['#token'] = $user->name . $user->mail;
+    $form['contact_information'] = array('#value' => filter_xss_admin(variable_get('contact_form_information', t('You can leave us a message using the contact form below.'))));
+    $form['name'] = array('#type' => 'textfield',
+      '#title' => t('Your name'),
+      '#maxlength' => 255,
+      '#default_value' => $user->uid ? $user->name : '',
+      '#required' => TRUE,
+    );
+    $form['mail'] = array('#type' => 'textfield',
+      '#title' => t('Your e-mail address'),
+      '#maxlength' => 255,
+      '#default_value' => $user->uid ? $user->mail : '',
+      '#required' => TRUE,
+    );
+    $form['subject'] = array('#type' => 'textfield',
+      '#title' => t('Subject'),
+      '#maxlength' => 255,
+      '#required' => TRUE,
+    );
+    if (count($categories) > 1) {
+      // If there is more than one category available and no default category has been selected,
+      // prepend a default placeholder value.
+      if (!isset($default_category)) {
+        $categories = array(t('--')) + $categories;
+      }
+      $form['cid'] = array('#type' => 'select',
+        '#title' => t('Category'),
+        '#default_value' => $default_category,
+        '#options' => $categories,
+        '#required' => TRUE,
+      );
+    }
+    else {
+      // If there is only one category, store its cid.
+      $category_keys = array_keys($categories);
+      $form['cid'] = array('#type' => 'value',
+        '#value' => array_shift($category_keys),
+      );
+    }
+    $form['message'] = array('#type' => 'textarea',
+      '#title' => t('Message'),
+      '#required' => TRUE,
+    );
+    $form['copy'] = array('#type' => 'checkbox',
+      '#title' => t('Send yourself a copy.'),
+    );
+    $form['submit'] = array('#type' => 'submit',
+      '#value' => t('Send e-mail'),
+    );
+  }
+  else {
+    $form['#error'] = array('#value' => t('The contact form has not been configured.'));
+  }
+  return $form;
 }
 
 /**
@@ -551,3 +552,4 @@ function contact_mail_page_submit($form_id, $edit) {
   // Jump to home page rather than back to contact page to avoid contradictory messages if flood control has been activated.
   return('');
 }
+

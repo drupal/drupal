@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.302 2006/08/18 12:16:59 unconed Exp $
+// $Id: taxonomy.module,v 1.303 2006/08/18 18:58:46 dries Exp $
 
 /**
  * @file
@@ -260,7 +260,7 @@ function taxonomy_form_vocabulary($edit = array()) {
     $form['vid'] = array('#type' => 'value', '#value' => $edit['vid']);
     $form['module'] = array('#type' => 'value', '#value' => $edit['module']);
   }
-  return drupal_get_form('taxonomy_form_vocabulary', $form);
+  return $form;
 }
 
 /**
@@ -327,13 +327,13 @@ function taxonomy_del_vocabulary($vid) {
   return SAVED_DELETED;
 }
 
-function _taxonomy_confirm_del_vocabulary($vid) {
+function taxonomy_vocabulary_confirm_delete($vid) {
   $vocabulary = taxonomy_get_vocabulary($vid);
 
   $form['type'] = array('#type' => 'value', '#value' => 'vocabulary');
   $form['vid'] = array('#type' => 'value', '#value' => $vid);
   $form['name'] = array('#type' => 'value', '#value' => $vocabulary->name);
-  return confirm_form('taxonomy_vocabulary_confirm_delete', $form,
+  return confirm_form($form,
                   t('Are you sure you want to delete the vocabulary %title?',
                   array('%title' => $vocabulary->name)),
                   'admin/content/taxonomy', t('Deleting a vocabulary will delete all the terms in it. This action cannot be undone.'),
@@ -401,7 +401,7 @@ function taxonomy_form_term($edit = array()) {
     $form['destination'] = array('#type' => 'hidden', '#value' => $_GET['q']);
   }
 
-  return drupal_get_form('taxonomy_form_term', $form);
+  return $form;
 }
 
 /**
@@ -513,13 +513,13 @@ function taxonomy_del_term($tid) {
   return SAVED_DELETED;
 }
 
-function _taxonomy_confirm_del_term($tid) {
+function taxonomy_term_confirm_delete($tid) {
   $term = taxonomy_get_term($tid);
 
   $form['type'] = array('#type' => 'value', '#value' => 'term');
   $form['name'] = array('#type' => 'value', '#value' => $term->name);
   $form['tid'] = array('#type' => 'value', '#value' => $tid);
-  return confirm_form('taxonomy_term_confirm_delete', $form,
+  return confirm_form($form,
                   t('Are you sure you want to delete the term %title?',
                   array('%title' => $term->name)),
                   'admin/content/taxonomy',
@@ -1285,12 +1285,12 @@ function taxonomy_term_page($str_tids = '', $depth = 0, $op = 'page') {
  */
 function taxonomy_admin_vocabulary_edit($vid = NULL) {
   if ($_POST['op'] == t('Delete') || $_POST['edit']['confirm']) {
-    return _taxonomy_confirm_del_vocabulary($vid);
+    return taxonomy_vocabulary_confirm_delete($vid);
   }
   elseif ($vid) {
     $vocabulary = (array)taxonomy_get_vocabulary($vid);
   }
-  return taxonomy_form_vocabulary($vocabulary);
+  return drupal_get_form('taxonomy_form_vocabulary', $vocabulary);
 }
 
 /**
@@ -1298,7 +1298,7 @@ function taxonomy_admin_vocabulary_edit($vid = NULL) {
  */
 function taxonomy_admin_term_edit($tid = NULL) {
   if ($_POST['op'] == t('Delete') || $_POST['edit']['confirm']) {
-    return _taxonomy_confirm_del_term($tid);
+    return taxonomy_term_confirm_delete($tid);
   }
   elseif ($tid) {
     $term = (array)taxonomy_get_term($tid);

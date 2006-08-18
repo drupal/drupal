@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.215 2006/08/18 12:16:57 unconed Exp $
+// $Id: block.module,v 1.216 2006/08/18 18:58:44 dries Exp $
 
 /**
  * @file
@@ -71,20 +71,24 @@ function block_menu($may_cache) {
       'title' => t('blocks'),
       'access' => user_access('administer blocks'),
       'description' => t('Configure what block content appears in your site\'s sidebars and other regions.'),
-      'callback' => 'block_admin_display');
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('block_admin_display'));
     $items[] = array('path' => 'admin/build/block/list', 'title' => t('list'),
       'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
     $items[] = array('path' => 'admin/build/block/configure', 'title' => t('configure block'),
       'access' => user_access('administer blocks'),
-      'callback' => 'block_admin_configure',
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('block_admin_configure'),
       'type' => MENU_CALLBACK);
     $items[] = array('path' => 'admin/build/block/delete', 'title' => t('delete block'),
       'access' => user_access('administer blocks'),
-      'callback' => 'block_box_delete',
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('block_box_delete'),
       'type' => MENU_CALLBACK);
     $items[] = array('path' => 'admin/build/block/add', 'title' => t('add block'),
       'access' => user_access('administer blocks'),
-      'callback' => 'block_box_add',
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('block_box_form'),
       'type' => MENU_LOCAL_TASK);
     foreach (list_themes() as $key => $theme) {
       if ($theme->status) {
@@ -245,7 +249,7 @@ function block_admin_display($theme = NULL) {
   }
   $form['submit'] = array('#type' => 'submit', '#value' => t('Save blocks'));
 
-  return drupal_get_form('block_admin_display', $form);
+  return $form;
 }
 
 /**
@@ -468,7 +472,7 @@ function block_admin_configure($module = NULL, $delta = 0) {
     '#value' => t('Save block'),
   );
 
-  return drupal_get_form('block_admin_configure', $form);
+  return $form;
 }
 
 function block_admin_configure_validate($form_id, $form_values) {
@@ -493,23 +497,13 @@ function block_admin_configure_submit($form_id, $form_values) {
   }
 }
 
-/**
- * Menu callback; displays the block creation form.
- */
-function block_box_add() {
-  $form = block_box_form();
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Save block'));
-
-  return drupal_get_form('block_box_add', $form);
-}
-
-function block_box_add_validate($form_id, $form_values) {
+function block_box_form_validate($form_id, $form_values) {
   if (empty($form_values['info']) || db_num_rows(db_query("SELECT info FROM {boxes} WHERE info = '%s'", $form_values['info']))) {
     form_set_error('info', t('Please ensure that each block description is unique.'));
   }
 }
 
-function block_box_add_submit($form_id, $form_values) {
+function block_box_form_submit($form_id, $form_values) {
   if (!form_get_errors()) {
     if (block_box_save($form_values)) {
       drupal_set_message(t('The block has been created.'));
@@ -526,13 +520,13 @@ function block_box_delete($bid = 0) {
   $form['info'] = array('#type' => 'hidden', '#value' => $box['info'] ? $box['info'] : $box['title']);
   $form['bid'] = array('#type' => 'hidden', '#value' => $bid);
 
-  return confirm_form('block_box_delete_confirm', $form, t('Are you sure you want to delete the block %name?', array('%name' => $box['info'])), 'admin/build/block', '', t('Delete'), t('Cancel'));
+  return confirm_form($form, t('Are you sure you want to delete the block %name?', array('%name' => $box['info'])), 'admin/build/block', '', t('Delete'), t('Cancel'));
 }
 
 /**
  * Deletion of custom blocks.
  */
-function block_box_delete_confirm_submit($form_id, $form_values) {
+function block_box_delete_submit($form_id, $form_values) {
   db_query('DELETE FROM {boxes} WHERE bid = %d', $form_values['bid']);
   drupal_set_message(t('The block %name has been removed.', array('%name' => $form_values['info'])));
   cache_clear_all();
@@ -567,6 +561,7 @@ function block_box_form($edit = array()) {
     '#weight' => -17,
   );
   $form['body_filter']['format'] = filter_form($edit['format'], -16);
+  $form['submit'] = array('#type' => 'submit', '#value' => t('Save block'));
 
   return $form;
 }

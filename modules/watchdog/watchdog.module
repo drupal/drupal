@@ -1,5 +1,5 @@
 <?php
-// $Id: watchdog.module,v 1.149 2006/08/18 12:17:00 unconed Exp $
+// $Id: watchdog.module,v 1.150 2006/08/18 18:58:47 dries Exp $
 
 /**
  * @file
@@ -83,10 +83,7 @@ function watchdog_user($op, &$edit, &$user) {
   }
 }
 
-/**
- * Menu callback; displays a listing of log messages.
- */
-function watchdog_overview() {
+function watchdog_form_overview() {
   $icons = array(WATCHDOG_NOTICE  => '',
                  WATCHDOG_WARNING => theme('image', 'misc/watchdog-warning.png', t('warning'), t('warning')),
                  WATCHDOG_ERROR   => theme('image', 'misc/watchdog-error.png', t('error'), t('error')));
@@ -107,10 +104,16 @@ function watchdog_overview() {
     '#options' => $names,
     '#default_value' => $_SESSION['watchdog_overview_filter']
   );
-  $form['#action'] = url('admin/logs');
-
   $form['submit'] = array('#type' => 'submit', '#value' =>t('Filter'));
-  $output = drupal_get_form('watchdog_form_overview', $form);
+  $form['#redirect'] = FALSE;
+
+  return $form;
+}
+/**
+ * Menu callback; displays a listing of log messages.
+ */
+function watchdog_overview() {
+  $output = drupal_get_form('watchdog_form_overview');
 
   $header = array(
     ' ',
