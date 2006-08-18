@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.296 2006/08/14 07:14:48 drumm Exp $
+// $Id: aggregator.module,v 1.297 2006/08/18 07:19:45 dries Exp $
 
 /**
  * @file
@@ -449,8 +449,8 @@ function aggregator_form_feed($edit = array()) {
   $values = array();
   $categories = db_query('SELECT c.cid, c.title, f.fid FROM {aggregator_category} c LEFT JOIN {aggregator_category_feed} f ON c.cid = f.cid AND f.fid = %d ORDER BY title', $edit['fid']);
   while ($category = db_fetch_object($categories)) {
-    $options[$category->cid] = $category->title;
-    if ($category->fid) $values[] = check_plain($category->cid);
+    $options[$category->cid] = check_plain($category->title);
+    if ($category->fid) $values[] = $category->cid;
   }
   if ($options) {
     $form['category'] = array('#type' => 'checkboxes',
