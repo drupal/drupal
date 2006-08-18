@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.257 2006/08/18 12:16:57 unconed Exp $
+// $Id: blog.module,v 1.258 2006/08/18 12:43:28 unconed Exp $
 
 /**
  * @file
@@ -142,7 +142,7 @@ function blog_page_user($uid) {
   $account = user_load(array((is_numeric($uid) ? 'uid' : 'name') => $uid, 'status' => 1));
 
   if ($account->uid) {
-    drupal_set_title($title = t("%name's blog", array('%name' => $account->name)));
+    drupal_set_title($title = t("@name's blog", array('@name' => $account->name)));
 
     if (($account->uid == $user->uid) && user_access('edit own blog')) {
       $output = '<li>'. l(t('Post new blog entry.'), "node/add/blog") .'</li>';
@@ -239,7 +239,7 @@ function blog_view($node, $teaser = FALSE, $page = FALSE) {
   if ($page) {
     // Breadcrumb navigation
     $breadcrumb[] = array('path' => 'blog', 'title' => t('blogs'));
-    $breadcrumb[] = array('path' => 'blog/'. $node->uid, 'title' => t("%name's blog", array('%name' => $node->name)));
+    $breadcrumb[] = array('path' => 'blog/'. $node->uid, 'title' => t("@name's blog", array('@name' => $node->name)));
     $breadcrumb[] = array('path' => 'node/'. $node->nid);
     menu_set_location($breadcrumb);
   }
