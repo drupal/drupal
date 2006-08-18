@@ -550,5 +550,27 @@ function install_goto($path) {
  */
 function st($string, $args = array()) {
   require_once './includes/theme.inc';
-  return strtr($string, array_map('theme_placeholder', $args));
+  $GLOBALS['theme'] = 'theme';
+  // Transform arguments before inserting them
+  array_walk($args, '_st');
+  return strtr($string, $args);
+}
+
+/**
+ * Helper function: apply the appropriate transformation to st() and t() placeholders.
+ */ 
+function _st(&$value, $key) {
+  switch ($key[0]) {
+    // Escaped only
+    case '@':
+      $value = check_plain($value);
+      return;
+    // Escaped and placeholder
+    case '%':
+    default:
+      $value = '<em>'. check_plain($value) .'</em>';
+      return;
+    // Pass-through
+    case '!':
+  }
 }
