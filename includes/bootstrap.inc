@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.114 2006/08/16 13:13:34 dries Exp $
+// $Id: bootstrap.inc,v 1.115 2006/08/18 19:24:52 dries Exp $
 
 /**
  * @file
@@ -615,12 +615,13 @@ function drupal_is_denied($type, $mask) {
  *
  * @return Object - the user object.
  */
-function drupal_anonymous_user() {
+function drupal_anonymous_user($session = '') {
   $user = new stdClass();
   $user->uid = 0;
   $user->hostname = $_SERVER['REMOTE_ADDR'];
   $user->roles = array();
   $user->roles[DRUPAL_ANONYMOUS_RID] = 'anonymous user';
+  $user->session = $session;
   return $user;
 }
 
