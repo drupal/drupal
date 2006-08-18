@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.556 2006/08/18 12:16:57 unconed Exp $
+// $Id: common.inc,v 1.557 2006/08/18 18:34:23 unconed Exp $
 
 /**
  * @file
@@ -618,6 +618,8 @@ function _t(&$value, $key) {
     default:
       $value = theme('placeholder', $value);
       return;
+    // Pass-through
+    case '!':
   }
 }
 
