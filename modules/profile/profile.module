@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.163 2006/08/14 07:14:49 drumm Exp $
+// $Id: profile.module,v 1.164 2006/08/18 07:43:44 dries Exp $
 
 /**
  * @file
@@ -436,7 +436,7 @@ function profile_browse() {
 
     // Compile a list of fields to show.
     $fields = array();
-    $result = db_query('SELECT name, title, type, weight FROM {profile_fields} WHERE fid != %d AND visibility = %d ORDER BY weight', $field->fid, PROFILE_PUBLIC_LISTINGS);
+    $result = db_query('SELECT name, title, type, weight, page FROM {profile_fields} WHERE fid != %d AND visibility = %d ORDER BY weight', $field->fid, PROFILE_PUBLIC_LISTINGS);
     while ($record = db_fetch_object($result)) {
       $fields[] = $record;
     }
@@ -489,7 +489,7 @@ function profile_browse() {
   else {
     // Compile a list of fields to show.
     $fields = array();
-    $result = db_query('SELECT name, title, type, weight FROM {profile_fields} WHERE visibility = %d ORDER BY category, weight', PROFILE_PUBLIC_LISTINGS);
+    $result = db_query('SELECT name, title, type, weight, page FROM {profile_fields} WHERE visibility = %d ORDER BY category, weight', PROFILE_PUBLIC_LISTINGS);
     while ($record = db_fetch_object($result)) {
       $fields[] = $record;
     }
