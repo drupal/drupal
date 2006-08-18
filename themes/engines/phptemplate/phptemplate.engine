@@ -1,5 +1,5 @@
 <?php
-// $Id: phptemplate.engine,v 1.41 2006/08/18 18:58:47 dries Exp $
+// $Id: phptemplate.engine,v 1.42 2006/08/18 19:16:01 dries Exp $
 
 /**
  * @file
@@ -279,7 +279,7 @@ function phptemplate_node($node, $teaser = 0, $page = 0) {
 
   // Display info only on certain node types.
   if (theme_get_setting('toggle_node_info_' . $node->type)) {
-    $variables['submitted'] = t('Submitted by %a on %b.', array('%a' => theme('username', $node), '%b' => format_date($node->created)));
+    $variables['submitted'] = t('Submitted by !a on @b.', array('!a' => theme('username', $node), '@b' => format_date($node->created)));
     $variables['picture'] = theme_get_setting('toggle_node_user_picture') ? theme('user_picture', $node) : '';
   }
   else {
@@ -303,9 +303,9 @@ function phptemplate_comment($comment, $links = 0) {
     'links'     => isset($links) ? theme('links', $links) : '',
     'new'       => $comment->new ? t('new') : '',
     'picture'   => theme_get_setting('toggle_comment_user_picture') ? theme('user_picture', $comment) : '',
-    'submitted' => t('Submitted by %a on %b.',
-                      array('%a' => theme('username', $comment),
-                            '%b' => format_date($comment->timestamp))),
+    'submitted' => t('Submitted by !a on @b.',
+                      array('!a' => theme('username', $comment),
+                            '@b' => format_date($comment->timestamp))),
     'title'     => l($comment->subject, $_GET['q'], NULL, NULL, "comment-$comment->cid")
   ));
 }
