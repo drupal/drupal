@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.7 2006/08/15 05:25:20 drumm Exp $
+// $Id: system.install,v 1.8 2006/08/18 08:39:21 dries Exp $
 
 function system_install() {
   switch ($GLOBALS['db_type']) {
@@ -587,7 +587,7 @@ function system_install() {
 
       db_query("CREATE TABLE {node_revisions} (
         nid int_unsigned NOT NULL,
-        vid int_unsigned NOT NULL,
+        vid serial CHECK (vid >= 0),
         uid int NOT NULL default '0',
         title varchar(128) NOT NULL default '',
         body text NOT NULL default '',
@@ -599,7 +599,6 @@ function system_install() {
       )");
       db_query("CREATE INDEX {node_revisions}_nid_idx ON {node_revisions} (nid)");
       db_query("CREATE INDEX {node_revisions}_uid_idx ON {node_revisions} (uid)");
-      db_query("CREATE SEQUENCE {node_revisions}_vid_seq INCREMENT 1 START 1");
 
       db_query("CREATE TABLE {node_type} (
         type varchar(32) NOT NULL,
@@ -734,7 +733,7 @@ function system_install() {
       db_query("CREATE INDEX {term_synonym}_name_idx ON {term_synonym} (substr(name, 1, 3))");
 
       db_query("CREATE TABLE {users} (
-        uid int_unsigned NOT NULL default '0',
+        uid serial CHECK (uid >= 0),
         name varchar(60) NOT NULL default '',
         pass varchar(32) NOT NULL default '',
         mail varchar(64) default '',
@@ -756,7 +755,6 @@ function system_install() {
         UNIQUE (name)
       )");
       db_query("CREATE INDEX {users}_access_idx ON {users} (access)");
-      db_query("CREATE SEQUENCE {users}_uid_seq INCREMENT 1 START 1");
 
       db_query("CREATE TABLE {users_roles} (
         uid int_unsigned NOT NULL default '0',
