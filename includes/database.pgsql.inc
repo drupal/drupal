@@ -1,5 +1,5 @@
 <?php
-// $Id: database.pgsql.inc,v 1.32 2006/07/26 07:16:08 drumm Exp $
+// $Id: database.pgsql.inc,v 1.33 2006/08/18 08:41:49 dries Exp $
 
 /**
  * @file
@@ -31,15 +31,24 @@ function db_connect($url) {
   }
 
   $url = parse_url($url);
+  $conn_string = '';
 
   // Decode url-encoded information in the db connection string
-  $url['user'] = urldecode($url['user']);
-  $url['pass'] = urldecode($url['pass']);
-  $url['host'] = urldecode($url['host']);
-  $url['path'] = urldecode($url['path']);
-
-  $conn_string = ' user='. $url['user'] .' dbname='. substr($url['path'], 1) .' password='. $url['pass'] . ' host=' . $url['host'];
-  $conn_string .= isset($url['port']) ? ' port=' . $url['port'] : '';
+  if (isset($url['user'])) {
+    $conn_string .= ' user=' . urldecode($url['user']);
+  }
+  if (isset($url['pass'])) {
+    $conn_string .= ' password=' . urldecode($url['pass']);
+  }
+  if (isset($url['host'])) {
+    $conn_string .= ' host=' . urldecode($url['host']);
+  }
+  if (isset($url['path'])) {
+    $conn_string .= ' dbname=' . substr(urldecode($url['path']), 1);
+  }
+  if (isset($url['port'])) {
+    $conn_string .= ' port=' . urldecode($url['port']);
+  }
 
   // pg_last_error() does not return a useful error message for database
   // connection errors. We must turn on error tracking to get at a good error
